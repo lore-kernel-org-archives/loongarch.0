@@ -1,31 +1,36 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60CA224677B
-	for <loongarch@lists.linux.dev>; Mon, 22 Jun 2026 03:05:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D33F9360EF4
+	for <loongarch@lists.linux.dev>; Mon, 22 Jun 2026 06:59:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782097520; cv=none; b=iSAf/wuTiG1Zh7SvrCBNzzbwE0lYO/htV3OLXbMYyQcHulf+Kh+1VfyQx5NSlzoPBYHP0amZReEzOkKeA2oDVrRuJ6uJSvBoDUzvqyLgAVWmEFDONCqDfzJkbf//xJTrv3yx4AKnyI5GkVSjacgqM9KRH7rrGMfucsisK/TZRrU=
+	t=1782111551; cv=none; b=IbNfeSaslIXm/nNDxu64/SMcuCV4GhfhhnQ8Rbp++dobtdA7w3rwXu5/YPkq4QrGrbC/ISo+E9h53/mUWnWLja/Vuuj1MNmSFsxxYB+bmsSRsG9FCiUysFpwjUkwnD63pjrV2/VwZxcaK1x1CDZr97JUH1R5e8wJE6s1nu3ImCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782097520; c=relaxed/simple;
-	bh=HbEL0S7oIDnZkdCYRRL8oNqyCil+lu6wvX/nASNTXc0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nowrxzprw+8zjFbFwzkupaEjA/X5eJ0VeSbzCNmG9cvr2VY5qD8wnvE34C2c2XpLwhjRbJ1Pg78G22wBnoHHCYGYHMZD8u9yZ3Mi/bnNnnjZnGtRuEgY0sDr/m/2Qb/sicEMSV6ewvJdArztoanZ5QxSuXzHvBVM00wJCtxXN58=
+	s=arc-20240116; t=1782111551; c=relaxed/simple;
+	bh=Kz4vcDRn2LY8H69ZCHoEMeajjezw/YfJDFkoZDEHYLE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Vc+aBPG5w5v8PbSiA60aDlOQwQ5drQtybAJQk536eIqpBxJAZcEe0YTj59n7kaL9RA1g5LzYziDdH2EY+iomWDPzSMuCBYF3EhHwHnMZuhITeL2wPSvA7waQ/VtTjIzT9yEfvRzuqJqU6Hif2aTbBEswdC3XhUp8UZYVN13WU+M=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8BxdnhlpjhqR3QWAA--.33369S3;
-	Mon, 22 Jun 2026 11:05:09 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJCxPMJlpjhqVn6uAA--.1562S2;
-	Mon, 22 Jun 2026 11:05:09 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
+Received: from loongson.cn (unknown [223.64.68.155])
+	by gateway (Coremail) with SMTP id _____8AxFek53Thqp4AWAA--.52311S3;
+	Mon, 22 Jun 2026 14:59:05 +0800 (CST)
+Received: from kernelserver (unknown [223.64.68.155])
+	by front1 (Coremail) with SMTP id qMiowJBxZcAz3ThqPLOuAA--.59305S2;
+	Mon, 22 Jun 2026 14:59:04 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>
-Cc: kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] LoongArch: KVM: Use internal API to deliver interrupt in kernel mode
-Date: Mon, 22 Jun 2026 11:05:08 +0800
-Message-Id: <20260622030508.2731279-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH] LoongArch: Add PIO for early access before ACPI PCI root register
+Date: Mon, 22 Jun 2026 14:58:43 +0800
+Message-ID: <20260622065843.3961572-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -33,180 +38,129 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxPMJlpjhqVn6uAA--.1562S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+X-CM-TRANSID:qMiowJBxZcAz3ThqPLOuAA--.59305S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxWr1Dtr13CFy3Cw4kWFWDKFX_yoWrJw4rpr
+	9Fkrn5GrWrWFn7Grn8Jwn8uF45J3WkC3y2q3W2g34SvF4jgryUZr4kAFyDuF15tan8KrW0
+	qF95t3Wa9F4UAagCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UUUUU==
 
-API kvm_vcpu_ioctl_interrupt() is mainly to used to deliver interrupt
-from user mode, and internal APIs kvm_queue_irq() and kvm_dequeue_irq()
-are used in kernel mode.
+For ACPI system we suppose the ISA/LPC PIO range is registered together
+with PCI root bridge. But the fact is there may be some early access to
+the ISA/LPC PIO range before ACPI PCI root register (most of them are
+due to abnormal BIOS). Unconditionally register the ISA/LPC PIO range
+usually causes ACPI PCI root register fail because of the address range
+confliction. So we add a pair of helpers: acpi_add_early_pio() to add
+PIO for early access, and acpi_remove_early_pio() to remove PIO before
+PCI root register. Since acpi_remove_early_pio() may be called multiple
+times, we add an acpi_pio flag to ensure PIO be removed only once.
 
-Also this patch removes unnecessary printk information with inject
-unsupported interrupt with number 0.
-
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
-v1 ... v2:
-  1. Add border check with ipnum in eiointc_set_sw_coreisr() and
-     eiointc_update_irq(), so that injected interrupt vector is valid.
+ arch/loongarch/include/asm/acpi.h |  2 ++
+ arch/loongarch/kernel/acpi.c      | 28 ++++++++++++++++++++++++++++
+ arch/loongarch/kernel/setup.c     |  2 ++
+ arch/loongarch/pci/acpi.c         |  2 ++
+ 4 files changed, 34 insertions(+)
 
-  2. Move IPI inject and ack within lock to avoid contention in
-     ipi_set() and ipi_clear().
-
-  3. Add kvm_arch_irqchip_in_kernel() check in user mode irq injection
-    in function kvm_vcpu_ioctl_interrupt(), contention of user mode irq
-    injection is assured from user mode VMM.
----
- arch/loongarch/kvm/intc/dmsintc.c |  7 ++++---
- arch/loongarch/kvm/intc/eiointc.c | 14 +++++++++-----
- arch/loongarch/kvm/intc/ipi.c     | 14 ++++++--------
- arch/loongarch/kvm/vcpu.c         |  7 ++++---
- 4 files changed, 23 insertions(+), 19 deletions(-)
-
-diff --git a/arch/loongarch/kvm/intc/dmsintc.c b/arch/loongarch/kvm/intc/dmsintc.c
-index de25735ce039..a726c6cafec3 100644
---- a/arch/loongarch/kvm/intc/dmsintc.c
-+++ b/arch/loongarch/kvm/intc/dmsintc.c
-@@ -47,7 +47,6 @@ void dmsintc_inject_irq(struct kvm_vcpu *vcpu)
- int dmsintc_deliver_msi_to_vcpu(struct kvm *kvm,
- 				struct kvm_vcpu *vcpu, u32 vector, int level)
- {
--	struct kvm_interrupt vcpu_irq;
- 	struct dmsintc_state *ds = &vcpu->arch.dmsintc_state;
+diff --git a/arch/loongarch/include/asm/acpi.h b/arch/loongarch/include/asm/acpi.h
+index eda9d4d0a493..c05168aedcaa 100644
+--- a/arch/loongarch/include/asm/acpi.h
++++ b/arch/loongarch/include/asm/acpi.h
+@@ -38,6 +38,8 @@ static inline bool acpi_has_cpu_in_madt(void)
+ extern struct list_head acpi_wakeup_device_list;
+ extern struct acpi_madt_core_pic acpi_core_pic[MAX_CORE_PIC];
  
- 	if (!level)
-@@ -57,9 +56,11 @@ int dmsintc_deliver_msi_to_vcpu(struct kvm *kvm,
- 	if (!ds)
- 		return -ENODEV;
++extern void acpi_add_early_pio(void);
++extern void acpi_remove_early_pio(void);
+ extern int __init parse_acpi_topology(void);
  
--	vcpu_irq.irq = INT_AVEC;
-+	if (!kvm_guest_has_msgint(&vcpu->arch))
-+		return -EINVAL;
+ #endif /* !CONFIG_ACPI */
+diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
+index 058f0dbe8e8f..8f650c9ffecd 100644
+--- a/arch/loongarch/kernel/acpi.c
++++ b/arch/loongarch/kernel/acpi.c
+@@ -16,6 +16,7 @@
+ #include <linux/memblock.h>
+ #include <linux/of_fdt.h>
+ #include <linux/serial_core.h>
++#include <linux/vmalloc.h>
+ #include <asm/io.h>
+ #include <asm/numa.h>
+ #include <asm/loongson.h>
+@@ -59,6 +60,33 @@ void __iomem *acpi_os_ioremap(acpi_physical_address phys, acpi_size size)
+ 		return ioremap_cache(phys, size);
+ }
+ 
++#define PIO_BASE (unsigned long)PCI_IOBASE
++#define PIO_SIZE ALIGN(ISA_IOSIZE, PAGE_SIZE)
 +
- 	set_bit(vector, (unsigned long *)&ds->vector_map);
--	kvm_vcpu_ioctl_interrupt(vcpu, &vcpu_irq);
-+	kvm_queue_irq(vcpu, INT_AVEC);
- 	kvm_vcpu_kick(vcpu);
- 
- 	return 0;
-diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
-index 2b14485d14a7..c6a309695030 100644
---- a/arch/loongarch/kvm/intc/eiointc.c
-+++ b/arch/loongarch/kvm/intc/eiointc.c
-@@ -17,7 +17,8 @@ static void eiointc_set_sw_coreisr(struct loongarch_eiointc *s)
- 		if (!(s->status & BIT(EIOINTC_ENABLE_INT_ENCODE))) {
- 			ipnum = count_trailing_zeros(ipnum);
- 			ipnum = ipnum < 4 ? ipnum : 0;
--		}
-+		} else if (ipnum >= LOONGSON_IP_NUM)
-+			ipnum = 0;
- 
- 		cpuid = ((u8 *)s->coremap)[irq];
- 		vcpu = kvm_get_vcpu_by_cpuid(s->kvm, cpuid);
-@@ -36,13 +37,13 @@ static void eiointc_update_irq(struct loongarch_eiointc *s, int irq, int level)
- {
- 	int ipnum, cpu, found;
- 	struct kvm_vcpu *vcpu;
--	struct kvm_interrupt vcpu_irq;
- 
- 	ipnum = (s->ipmap >> (irq / 32 * 8)) & 0xff;
- 	if (!(s->status & BIT(EIOINTC_ENABLE_INT_ENCODE))) {
- 		ipnum = count_trailing_zeros(ipnum);
- 		ipnum = ipnum < 4 ? ipnum : 0;
--	}
-+	} else if (ipnum >= LOONGSON_IP_NUM)
-+		ipnum = 0;
- 
- 	cpu = s->sw_coremap[irq];
- 	vcpu = kvm_get_vcpu_by_id(s->kvm, cpu);
-@@ -67,8 +68,11 @@ static void eiointc_update_irq(struct loongarch_eiointc *s, int irq, int level)
- 	if (found < EIOINTC_IRQS)
- 		return; /* other irq is handling, needn't update parent irq */
- 
--	vcpu_irq.irq = level ? (INT_HWI0 + ipnum) : -(INT_HWI0 + ipnum);
--	kvm_vcpu_ioctl_interrupt(vcpu, &vcpu_irq);
-+	if (level)
-+		kvm_queue_irq(vcpu, INT_HWI0 + ipnum);
-+	else
-+		kvm_dequeue_irq(vcpu, INT_HWI0 + ipnum);
-+	kvm_vcpu_kick(vcpu);
- }
- 
- static inline void eiointc_update_sw_coremap(struct loongarch_eiointc *s,
-diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.c
-index 4fa0897d7bdb..b7744dcbdd8e 100644
---- a/arch/loongarch/kvm/intc/ipi.c
-+++ b/arch/loongarch/kvm/intc/ipi.c
-@@ -10,16 +10,15 @@
- static void ipi_set(struct kvm_vcpu *vcpu, uint32_t data)
- {
- 	uint32_t status;
--	struct kvm_interrupt irq;
- 
- 	spin_lock(&vcpu->arch.ipi_state.lock);
- 	status = vcpu->arch.ipi_state.status;
- 	vcpu->arch.ipi_state.status |= data;
--	spin_unlock(&vcpu->arch.ipi_state.lock);
- 	if ((status == 0) && data) {
--		irq.irq = LARCH_INT_IPI;
--		kvm_vcpu_ioctl_interrupt(vcpu, &irq);
-+		kvm_queue_irq(vcpu, LARCH_INT_IPI);
-+		kvm_vcpu_kick(vcpu);
- 	}
-+	spin_unlock(&vcpu->arch.ipi_state.lock);
- }
- 
- static void ipi_send(struct kvm *kvm, uint64_t data)
-@@ -40,16 +39,15 @@ static void ipi_send(struct kvm *kvm, uint64_t data)
- static void ipi_clear(struct kvm_vcpu *vcpu, uint64_t data)
- {
- 	uint32_t status;
--	struct kvm_interrupt irq;
- 
- 	spin_lock(&vcpu->arch.ipi_state.lock);
- 	vcpu->arch.ipi_state.status &= ~data;
- 	status = vcpu->arch.ipi_state.status;
--	spin_unlock(&vcpu->arch.ipi_state.lock);
- 	if (status == 0) {
--		irq.irq = -LARCH_INT_IPI;
--		kvm_vcpu_ioctl_interrupt(vcpu, &irq);
-+		kvm_dequeue_irq(vcpu, LARCH_INT_IPI);
-+		kvm_vcpu_kick(vcpu);
- 	}
-+	spin_unlock(&vcpu->arch.ipi_state.lock);
- }
- 
- static uint64_t read_mailbox(struct kvm_vcpu *vcpu, int offset, int len)
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 20c207d80e31..82c96854df93 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -1465,6 +1465,9 @@ int kvm_vcpu_ioctl_interrupt(struct kvm_vcpu *vcpu, struct kvm_interrupt *irq)
- 	if (vector >= EXCCODE_INT_NUM)
- 		return -EINVAL;
- 
-+	if (kvm_arch_irqchip_in_kernel(vcpu->kvm))
-+		return -EINVAL;
++static bool acpi_pio;
 +
- 	if (!kvm_guest_has_msgint(&vcpu->arch) && (vector == INT_AVEC))
- 		return -EINVAL;
++/* Add PIO for early access */
++void acpi_add_early_pio(void)
++{
++	if (!acpi_disabled) {
++		acpi_pio = true;
++		vmap_page_range(PIO_BASE, PIO_BASE + PIO_SIZE,
++				LOONGSON_LIO_BASE, pgprot_device(PAGE_KERNEL));
++	}
++}
++
++/* Remove PIO for PCI register */
++void acpi_remove_early_pio(void)
++{
++	if (!acpi_pio)
++		return;
++
++	if (!acpi_disabled) {
++		acpi_pio = false;
++		vunmap_range(PIO_BASE, PIO_BASE + PIO_SIZE);
++	}
++}
++
+ #ifdef CONFIG_SMP
+ static int set_processor_mask(u32 id, u32 pass)
+ {
+diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+index 369262117c63..eaebb52bd36e 100644
+--- a/arch/loongarch/kernel/setup.c
++++ b/arch/loongarch/kernel/setup.c
+@@ -502,6 +502,8 @@ static __init int arch_reserve_pio_range(void)
+ {
+ 	struct device_node *np;
  
-@@ -1472,10 +1475,8 @@ int kvm_vcpu_ioctl_interrupt(struct kvm_vcpu *vcpu, struct kvm_interrupt *irq)
- 		kvm_queue_irq(vcpu, intr);
- 	else if (intr < 0)
- 		kvm_dequeue_irq(vcpu, -intr);
--	else {
--		kvm_err("%s: invalid interrupt ioctl %d\n", __func__, irq->irq);
-+	else
- 		return -EINVAL;
--	}
++	acpi_add_early_pio();
++
+ 	for_each_node_by_name(np, "isa") {
+ 		struct of_range range;
+ 		struct of_range_parser parser;
+diff --git a/arch/loongarch/pci/acpi.c b/arch/loongarch/pci/acpi.c
+index b02698a338ee..ccbcea61fcd9 100644
+--- a/arch/loongarch/pci/acpi.c
++++ b/arch/loongarch/pci/acpi.c
+@@ -65,6 +65,8 @@ static int acpi_prepare_root_resources(struct acpi_pci_root_info *ci)
+ 	struct resource_entry *entry, *tmp;
+ 	struct acpi_device *device = ci->bridge;
  
- 	kvm_vcpu_kick(vcpu);
- 
-
-base-commit: ef0c9f75a19532d7675384708fc8621e10850104
++	acpi_remove_early_pio();
++
+ 	status = acpi_pci_probe_root_resources(ci);
+ 	if (status > 0) {
+ 		acpi_evaluate_integer(device->handle, "PCIH", NULL, &pci_h);
 -- 
-2.39.3
+2.52.0
 
