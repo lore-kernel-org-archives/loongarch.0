@@ -1,174 +1,166 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-pj1-f68.google.com (mail-pj1-f68.google.com [209.85.216.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D304364028
-	for <loongarch@lists.linux.dev>; Tue, 23 Jun 2026 09:48:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782208132; cv=pass; b=LpQK3X9KLHObl5BY6GTCiGulGicV7SDIuxZgiSPN4XVSlUCRgLKb1js1jW5OEfkhd93CvBfEBbN2Si2o0GHNGycNT7JJAcQI26Q3tcQ/5+GVSqzCouVGt7FpvdKiccXbxUxXJaxRQrU7gC/7C7hiWNqlbrj55H8Mq9ZOXSPY9TY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782208132; c=relaxed/simple;
-	bh=NLmaxRvrb8f6B4kDmC2+4UaQy7jxgH0g76S/agud8TM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Nl8v5XESMz3poI27EAuLdvEi01KPqEPJzFz1CkNyKE7XVmzSV2hOPu8dKrL5rygUUil/BuqRT4VNhNYUF5psJVYfaNhTZCfHz86m9o2hUPI5dM9+wcb7FVbf4BGR/6GOJteFDY6oEEhLUXSdCOpzmzWWamtyFTj6Sf+TbfjVkI0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V9ztgk16; arc=pass smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53C6F36E498
+	for <loongarch@lists.linux.dev>; Tue, 23 Jun 2026 10:10:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.68
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782209446; cv=none; b=CgNYr+Jx4tZG8jO/QSSqkrXesq5W7va9RzU0/Jg+ld37YoOHQ1zAAm2NkHDTi8+6VymDPGa9vEmThLT0+W6zz6NC2hDssuCxYC9amqH9eXyCuhXWtVbpnZmng+5o0sOW4samXcJflL8bShrdw2xdh56SbJGoC+dR6cOVIlUAGaI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782209446; c=relaxed/simple;
+	bh=uhA+JyyRZIPxz0qljYM0uVmm3ahqPcFCCZcwfbgkmhI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=N3wzG84FdMQM6cm0NmyRa3uEX8jYpAB/LAyenkrDM1rovDDzwbhN+sFt6VYlix7W6Zo5gUoG62Ki6WGDLKWxmWeTQd0TsD9Lcvzx4FUibfl4oVv93jTXAcAguIPKabMmjBPDoL7y2REt4x+eDPm06MSFyeXOLYn61+D3EzYkhB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jmcadRt/; arc=none smtp.client-ip=209.85.216.68
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V9ztgk16"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-c0be5e548a4so494339566b.3
-        for <loongarch@lists.linux.dev>; Tue, 23 Jun 2026 02:48:50 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1782208129; cv=none;
-        d=google.com; s=arc-20240605;
-        b=UacG9XkVk9+OUke7NMIzj3VrLCZsCa+WyBJRk3WZi2SqDlcBcPbRYimkNFG0Vx8TJP
-         U03x9F6YF/yVQIAR63Vx4+ix6TzpHcw3Aodtk+PsqXhtkOCXuZIvnjKqLu38Ic5Ife0+
-         1aFqjeBuAfRtNRXA4ORU+phhRCad+QHt/Fb98vlvaZTzEIfBInIcU/M/h1+RoaJqhtJc
-         Zc+bDqtvzKTcWUMMSzbj5Mrr2AIQihAI1M3hbIDexfYcmD2NnfDiFRn6O/nwUheF3+xt
-         u+UkE55VK0Wk5G1iSz51IrSJy41sVCuk23DLsTT8iM5OlFlNEA9cnd3fA99ZfnuKFNb1
-         d+Gw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=O53+Q1MVmA/KpV4iIXUxkf9eprZju0Xtb/deZnAD0vM=;
-        fh=bChIw4EyvCY9h113csEmAMNGiq30Oura4AhqwgwGMnc=;
-        b=guYfhICk0EvtdWStGSXl+M0tTh6TfKZYUCGcAP8BJ0gpBPZ1FSR5EO8CDmy2QFuMfk
-         eXOSx0JErrySYli+YqCdtUDbMQv/mkPWBgoZCK+n/JKeUsX1H5a1E3e8ALdJq3Y0fGV0
-         P5RBNjtJnyI4mBgB8nWtcrt1sPkDJyl0WS9Tk5pnGUzhT6C9j3gV+CYPeUWsECO40wbO
-         uiPWmOhCFk3ViKedqTpz4kSV8Y707KsuEaPLYlzNCTMqW8wqGxB2JVSxW2vyBbGZooKw
-         Pm1g2T+3I2VAtHjCSmVDUIykAjysF7P0IS4eXSQlVoEhudTLc8JZR02iEfkpoSLnMu6l
-         cm2A==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jmcadRt/"
+Received: by mail-pj1-f68.google.com with SMTP id 98e67ed59e1d1-37cbcf49deaso2673690a91.1
+        for <loongarch@lists.linux.dev>; Tue, 23 Jun 2026 03:10:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782208129; x=1782812929; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1782209444; x=1782814244; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=O53+Q1MVmA/KpV4iIXUxkf9eprZju0Xtb/deZnAD0vM=;
-        b=V9ztgk16L/aziuHFFPDGlZhZ/qpslATToLuO+S7KBUGNe5bCVXyTyr05I3edKAa5kC
-         ttWqepT4U2eeTK4fulm4yl+i2AI/Mq/N+6CzquB904xFXs32if7kLZiJ8nTELP+cwNJ/
-         0lEpi/XRG9lliQCNe7upFpuBZzbdMGRwawJUHMuoeIG5ZUtbggN7GxH0s4nikAFUHCxB
-         7XBxNN3DDC/fcSnwJc9Q6Z/xAbRf5+M29SedVdZYUge2UMb8g5StaCVVBakXZDN/09Cw
-         FaxmdouWtXuPJW9AQ4Bu3efVudRSyHho6zM314rEkjVL39/QbbzsB4ugQR+Zp1Siai+R
-         L56A==
+        bh=q9xRyN5mmtNm+QB3YIDVLwBheiPW9GTxijNSPRoIWhA=;
+        b=jmcadRt/94lI4t/bfHXWl7FbDBxwVCQdz1fZiQYU+rqadkxEx8+R/eB6cVZF10RQUh
+         ltZfYwIK/kYz5yTh9e/ojhmb0nr6YPsCh2zCt9YsKsXOWAWNCt3AutrBbau3TpW15HNg
+         WKOrv/Kqs9hlPIOwnd+lMMD+D4zZl+71z3ORQancrD933gdglej5wuY1BpHN7NuFoaV5
+         phrjatrMIjaDSXd6NeqSIzHlRxYjKjHN6Reo8d8hVodDbSq/cTsoQrd1/p0MEWO66aAm
+         53ajD9USUf0iVbRI9KJPOGPXX/uE89d2mJK32aqBXakWDtCipYhBWTdYqYNyns0ScbbZ
+         Wl7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782208129; x=1782812929;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+        d=1e100.net; s=20251104; t=1782209444; x=1782814244;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=O53+Q1MVmA/KpV4iIXUxkf9eprZju0Xtb/deZnAD0vM=;
-        b=bPDSjDuVs0EE7cpO+YbkZTI1U8StMjxT1hDUWITG/qG/ElyEGS8oUZlVGkjEUwouZ+
-         WopN6jbTpC3vCZ6LX2M6H5OitdaNzAboFUpDitBA3AbmSvvTDKY+g0W+cFUv/Yt6x/XA
-         EKiEXAX1wPan7ht5wz2vSkyGyLKBGqwpUyuPY+6GENQZGjN1IQ7XLRxOVQEbWyQn+iin
-         KAU0jNmZQdhrt1w+v9NgTniX7ooMLUc9vMCOKruW3mSW/idkJKJofUC6CVwRdsPtFYG5
-         pxASo6RZMl+dTXnlLpOaM3jSefHNvsF/XMAzPkoxD4FZpXeQyLaw03uvp2lrse4sntSX
-         m5sA==
-X-Forwarded-Encrypted: i=1; AFNElJ/ai2V93HMwco4OMZ6gpRrBUARzgDmJORrPjsKWgTvOsB3QLGWCso7Vz5V9nDXA1fAr7NbKFetZO9I=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yzu5ccIvS4xlLts2+8k45iiztM+JjAodul88zkKg2AZOXEpPZr3
-	4Rkj5hRM05TL1BFozz1MWcVceYQjy76Q/bZrYOXehJ+DWJRpGwtXFZ9kTBhpGMXCH7V6YaIrOHP
-	GIH1sllrTHm6XfpS3+YOxnoZzQmXpD5ZV9e9/
-X-Gm-Gg: AfdE7cnynFx6c7+6JjmPftZVixxboDxG1X0U9a2m8C9mFtLw8rh6hPzI6qMNJz2wOXS
-	D8GvcRdturut7K4GAJy+g+kUPAbFJzV0XF6Y3QX3QG15a2id3Zd0p+m3oQRJlpYMWd7qJ+kTuHl
-	aXrhhlCjCsnQ79DuYQx6xoefIdsugVER3itA5qp8wAOM6MpVtr94aKMc1byTFL9iG1fofkCQVCu
-	sibyEV0srXNSEIucQ0k1qUqEoxv8hFBe/I2j90EOCCiPRkLbBeboQ1WaL+YGg2SWsv5AK+SD48=
-X-Received: by 2002:a17:907:728f:b0:c0c:ab91:cf3 with SMTP id
- a640c23a62f3a-c108cdf8e0bmr96073466b.1.1782208129192; Tue, 23 Jun 2026
- 02:48:49 -0700 (PDT)
+        bh=q9xRyN5mmtNm+QB3YIDVLwBheiPW9GTxijNSPRoIWhA=;
+        b=sI9mC7ENs9y8QPMUrs4jHUIEoBgwph81Rxnu++Pplf6T4m4GongaBwW1s/x0zHJJyc
+         uiMpS2uRKUQ+ry1UkHk4jDIKmkbxWd1zHYau+ZOS7rZ/u3CkYVWUGxN0d/+Oqt/ZLe2z
+         LuG1t7kj7EzOCvFwtPAtMEVsJreExE+znyIhYF4/LJcgoOuqN4uQfqFBRmworCBYSDnA
+         CuLXq7SvYTbK+zukZUeolPth4I0CZz1jni4fNHU32n+RM51tLRg5tvlixGff3vGTkxbF
+         08aTB9AHyWgqfK3n+VegfHpn9N0OWA7nFDl0sDnwu9ywTsEORTkl6/AcJqCSZ3SgSD2d
+         EJ/Q==
+X-Forwarded-Encrypted: i=1; AHgh+RpS57hliRPnV1U/+dMIFjYaFcIQc4H+G0X6z1VIaFF+THxmTV+b7NiRTiGnqxUsC7i+kbrGhO/iRFY=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwJgk6wfjQMTbDyOP98Myl5p5vTCmAOdvcGRVKSBd/TP/3/OTRP
+	bJPbfCn1d7qZ5jr7ffBiR1BlGJf0N+ZE09Uw+rZ17KnfTQhoyzYFxioe
+X-Gm-Gg: AfdE7cmbcoF/Hiw3cIGYMSdK7fCsTKMsWdns76kxqyvNqtYITxCGcqKWKHmzScdBeLk
+	L5gHs3njpDpirKwj5SN2cHBmmU0IwpR/7nthHF2+TT8TQ/2bknq/VzKosBtqWY8rrk1JYwTaYiX
+	ybpwhnZV1i/gr5pkkBrxpitx21F9janhfgyqTWPAPiEkCIirelbxiN1crZhjFw/wrL6CpI3dptP
+	XdBXyBdWU/zj4zdlrKsncq0/8Zqrh0nubgrzsKCKIaV+ohCWxRf+9vhIEduz0T2ggO+x0QciALI
+	Q8uFzi3/I3DY3fLLXvsdbO7lTdGN32QEDCZoJbHBgvYTHIkzmzulK5P5PccS1695Rz0edE0ByZa
+	wUQp4rLDeZDmFy9XHLukqm0NvDHzHXzchkCncDhfj+9CRzL64Snc5gGG0bmRTCvfkcsZwW1/YFU
+	bM5waP94LbRsmFhZ7Rhhg2IkYwXcaUcof7rg7zFM5p
+X-Received: by 2002:a17:902:ec8f:b0:2c0:e5ee:f56c with SMTP id d9443c01a7336-2c7c99def24mr17988445ad.20.1782209444473;
+        Tue, 23 Jun 2026 03:10:44 -0700 (PDT)
+Received: from zhr-ThinkStation-K.mioffice.cn ([2408:8607:1b00:8:ede9:3e72:37cf:55a2])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c7436f7e0asm118059125ad.30.2026.06.23.03.10.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2026 03:10:44 -0700 (PDT)
+From: Hongru Zhang <zhanghongru06@gmail.com>
+X-Google-Original-From: Hongru Zhang <zhanghongru@xiaomi.com>
+To: david@kernel.org
+Cc: akpm@linux-foundation.org,
+	baohua@kernel.org,
+	bhe@redhat.com,
+	chentao@kylinos.cn,
+	chrisl@kernel.org,
+	jack@suse.cz,
+	kasong@tencent.com,
+	kunwu.chan@gmail.com,
+	liam@infradead.org,
+	lianux.mm@gmail.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	liyangouwen1@oppo.com,
+	ljs@kernel.org,
+	loongarch@lists.linux.dev,
+	mhocko@suse.com,
+	nphamcs@gmail.com,
+	nzzhao@126.com,
+	pfalcato@suse.de,
+	rppt@kernel.org,
+	shikemeng@huaweicloud.com,
+	surenb@google.com,
+	vbabka@kernel.org,
+	wanglian@kylinos.cn,
+	willy@infradead.org,
+	youngjun.park@lge.com,
+	zhanghongru06@gmail.com
+Subject: Re: [PATCH v2 0/5] mm: reduce mmap_lock contention and improve page fault performance
+Date: Tue, 23 Jun 2026 18:10:09 +0800
+Message-ID: <20260623101009.522775-1-zhanghongru@xiaomi.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <d04f745d-eb3e-4d2c-8ea2-5fdcf2cf27b8@kernel.org>
+References: <d04f745d-eb3e-4d2c-8ea2-5fdcf2cf27b8@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260616115530.4012675-1-zhoubinbin@loongson.cn> <CAAhV-H6yHuEkhrozoN23T8fTDPpS9gkHwsk1sW8g2=UpnbQE-w@mail.gmail.com>
-In-Reply-To: <CAAhV-H6yHuEkhrozoN23T8fTDPpS9gkHwsk1sW8g2=UpnbQE-w@mail.gmail.com>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Tue, 23 Jun 2026 17:48:35 +0800
-X-Gm-Features: AVVi8CeuoCmkHRVC5IxAmhdRgY3P8BMIoasHa0FgNjXMPQMj2RjKruSCktXgPf8
-Message-ID: <CAMpQs4L79Bir2QfxFb65cQzFP17Uv5UzwHaDqFteNCHuTAC84A@mail.gmail.com>
-Subject: Re: [PATCH] mfd: ls2kbmc: Fix iomem pointer handling in video mode parsing
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Lee Jones <lee@kernel.org>, Corey Minyard <minyard@acm.org>, Chong Qiao <qiaochong@loongson.cn>, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	jeffbai@aosc.io, kexybiscuit@aosc.io, kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 19, 2026 at 3:12=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org>=
- wrote:
->
-> Hi, Binbin,
->
-> On Tue, Jun 16, 2026 at 7:56=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.=
-cn> wrote:
-> >
-> > Use pointers annotated with the __iomem marker for all iomem map calls,
-> > and creates a local copy of the mapped IO memory for future access in
-> > the code. memcpy_fromio() and memcpy_toio() are used to read/write data
-> > from/to mapped IO memory
-> >
-> > Fixes: 0d64f6d1ffe9 ("mfd: ls2kbmc: Introduce Loongson-2K BMC core driv=
-er")
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Closes: https://lore.kernel.org/oe-kbuild-all/202603021730.Yy3QXYTw-lkp=
-@intel.com/
-> > Closes: https://lore.kernel.org/oe-kbuild-all/202606120639.WG6eb8VU-lkp=
-@intel.com/
-> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > ---
-> >  drivers/mfd/ls2k-bmc-core.c | 13 ++++++++++---
-> >  1 file changed, 10 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/mfd/ls2k-bmc-core.c b/drivers/mfd/ls2k-bmc-core.c
-> > index 408056bfb2fe..c40b1a7c4ea4 100644
-> > --- a/drivers/mfd/ls2k-bmc-core.c
-> > +++ b/drivers/mfd/ls2k-bmc-core.c
-> > @@ -427,14 +427,21 @@ static int ls2k_bmc_init(struct ls2k_bmc_ddata *d=
-data)
-> >   */
-> >  static int ls2k_bmc_parse_mode(struct pci_dev *pdev, struct simplefb_p=
-latform_data *pd)
-> >  {
-> > -       char *mode;
-> > +       void *buf __free(kfree) =3D NULL;
-> > +       void __iomem *base;
-> >         int depth, ret;
-> > +       char *mode;
-> >
-> >         /* The last 16M of PCI BAR0 is used to store the resolution str=
-ing. */
-> > -       mode =3D devm_ioremap(&pdev->dev, pci_resource_start(pdev, 0) +=
- SZ_16M, SZ_16M);
-> > -       if (!mode)
-> > +       base =3D devm_ioremap(&pdev->dev, pci_resource_start(pdev, 0) +=
- SZ_16M, SZ_16M);
-> > +       if (!base)
-> > +               return -ENOMEM;
-> > +
-> > +       buf =3D kmalloc(SZ_16M, GFP_KERNEL);
-> > +       if (!buf)
-> >                 return -ENOMEM;
-> >
-> > +       mode =3D (char *)buf;
-> I think you miss "memcpy_fromio(buf, base, SZ_16M)" here.
-
-Yes, it was missed and will be added in the next version.
-Also, `buf` and `mode` can be combined into a single variable.
-
-` char *mode __free(kfree) =3D NULL;`
->
-> Huacai
->
-> >         /* The resolution field starts with the flag "video=3D". */
-> >         if (!strncmp(mode, "video=3D", 6))
-> >                 mode =3D mode + 6;
-> >
-> > base-commit: b07f7904e0523170856876e4412be852377d492a
-> > --
-> > 2.52.0
-> >
-
---
-Thanks.
-Binbin
+On 6/23/26 10:02, David Hildenbrand wrote:=0D
+> I know that especially browser usually use fork servers: a tiny=0D
+> (single-threaded) process just to create new child processes. Any informa=
+tion=0D
+> regarding the apps above that use fork() on small vs. large processes?=0D
+=0D
+I wrote a second BPF tool (fork_info) that captures nr_threads and=0D
+map_count (VMA count) from the calling process at the exact moment=0D
+fork() is triggered. Results from 3 representative apps:=0D
+=0D
+  App (category)          Fork caller        Threads   VMAs=0D
+  -----------------------------------------------------------=0D
+  Taobao (shopping)       DaemonThread-6        526    8,987=0D
+  Amap (navigation)       DaemonThread-6        289    7,120=0D
+  UC Browser (browser)    OneNativeThread       350    8,144=0D
+=0D
+These are all heavyweight multi-threaded processes (hundreds of threads,=0D
+7,000-9,000 VMAs), not fork servers.=0D
+=0D
+> Above you write "some call fork() from multiple threads". Any further=0D
+> information on that?=0D
+=0D
+Xiaohongshu (com.xingin.xhs, social media) is a clear example. In just=0D
+tens of seconds of normal usage, fork() was called 22 times from 4=0D
+different threads:=0D
+=0D
+  PID     COMM            THREADS    VMAS=0D
+  4206    com.xingin.xhs       85    4,140=0D
+  4216    Thread-2208          85    4,157=0D
+  4208    Thread-2208          90    4,211=0D
+  5200    Thread-3200         337    6,519=0D
+  5200    Thread-3200         343    6,563=0D
+  5200    Thread-3200         361    6,769=0D
+  5200    Thread-3200         453    7,793=0D
+  5200    Thread-3200         450    7,779=0D
+  5202    Thread-2219         459    7,846=0D
+  5202    Thread-2219         462    7,875=0D
+  5202    Thread-2219         465    7,899=0D
+  4219    Thread-2219         465    7,903=0D
+  4219    Thread-2219         468    7,922=0D
+  5202    Thread-2219         467    7,917=0D
+  4219    Thread-2219         467    7,921=0D
+  4219    Thread-2219         468    7,929=0D
+  5202    Thread-2219         464    7,909=0D
+  5202    Thread-2219         460    7,889=0D
+  5202    Thread-2219         459    7,884=0D
+  4219    Thread-2219         433    7,771=0D
+  4219    Thread-2219         433    7,771=0D
+  4219    Thread-2219         434    7,778=0D
+=0D
+The process grew from 85 threads / 4,140 VMAs at first fork to=0D
+434 threads / 7,778 VMAs at last fork, showing these are long-lived=0D
+heavyweight processes that fork repeatedly throughout their lifecycle.=0D
+=0D
+Tracing tool:=0D
+  https://gist.github.com/zhr250/ba7725d0ea55594bcafd3cd4806eed98=0D
+=0D
+Hongru=0D
