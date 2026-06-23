@@ -1,294 +1,184 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com [209.85.210.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B6FB36EA98
-	for <loongarch@lists.linux.dev>; Mon, 22 Jun 2026 21:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DA6F3C6A43
+	for <loongarch@lists.linux.dev>; Tue, 23 Jun 2026 07:58:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782164131; cv=none; b=S86cHPX8sZP83dMe/R7iMksYktYJAl/reHjKgk1cirRCJ/AJN3x0B4P6B+MU5YepzGLNSCIbD6Zwk+2NzvD6DB7W6tZRkD2gI0y2j3bwnK3pHLQYd/IOJCT43l5jVNf4JbZQQlUKnUfcw++i6BU0B3R6KdfoSA7Sues/pAAgCZs=
+	t=1782201517; cv=none; b=EAEv0e96DoK+XeF5+3Cv+4w+iqluScZwIOgoI3b+oGDkVg6m38eedl1m76hykneYQnyOkQek56tkcqzcdrZWW84kvZ9g8WkLRH5oubHf69wrgwXL+sZNdjBQWab+/TWpu+CqyITj3xKf7F0enuEfK1HMGugp/Lp1iU5+aApWShU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782164131; c=relaxed/simple;
-	bh=lPlVQd+zWUVCvDQi7lzd9fLfWohYirAJ8Y5S3U+A7I4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LAjm8gWDF2yO7uobiW3Kj7OaSU8iwnZFJYT3sXOXT+GzTixQ05JJBYeAH19w50Jz77ejitkDgH/vYw8LT5qVkGMAmBZypMCQAI9XCDP1m5oNloWbGETSLpQDKIS9KRKOJGnG0B/ef4miZl/dj701iW88y1K/PzVUJMfkV2K6qRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FDO4wxCc; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782201517; c=relaxed/simple;
+	bh=khSZG1eYL9cJlphxXcESKKq9MlcJFe3CM8UDVhNeGyk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Dql88D2MGrQKp8JBEz0RYeSBS7+SMOTO8r7BAh7WBuu6yK9onBvtW3Gw0sFwe15DdSglgqyndrR9wQaPO8OWIUNZoBCj9XilPkucFgMJpzBCtVXMxSKQ98U85MwIyye5BLfEjS3AgUEy9OcrwfoCpzrohJRGDzjkQWnsb7jU8s0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=sqcr4xOj; arc=none smtp.client-ip=209.85.210.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FDO4wxCc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0CC81F00ACF
-	for <loongarch@lists.linux.dev>; Mon, 22 Jun 2026 21:35:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782164129;
-	bh=HgImYFkLyD1hj/g9jIukArDdySmWi+kCTAd6Z7Own3s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=FDO4wxCceO99ohP1/DFe16yqc13aAhyLtsANUMoZJaX7e4BN8T4H0dkpqjjugodGy
-	 Txa5lG/gOuD6AqiT51VHSE3PxN+QAzVHy9GcXAGrKyIOdKpJ/Jof1EU0UeaDz/GyYs
-	 J07GqksE/VR0z/Vu4s2PiQiIdj3gI84epywArnyq80LgwUJekrx0AD1KXG7ugHe1uv
-	 56sIsexmvNJFOFZy2cTq6YRjz5dnKSRaY54cJMDkac7sjtnfv3A7BKEGdq4vwzdd/3
-	 oDqkfNSkiytSqmY05D7nIH0dcBmhNJPoFxVubsTZKaso7jAHBcCq1/aCN74pAcjQ2b
-	 ZEj7BseReSOZw==
-Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-5bbfc48715fso279581e0c.0
-        for <loongarch@lists.linux.dev>; Mon, 22 Jun 2026 14:35:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ8fB2tTy+cdZjrsvJkhwsHaFgqnD0uCoLYWjkhBA7xu3ZgnI+GiTk626L0V3z/F+EC6PxSlmxVn6/E=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxomzgf2p/PcWaawqm6lIH3SpyIrSSNxDsL/vFwk8rgMcj+yuI5
-	op6aNsKnLuASH3C9+RmXn+r9Al2wAvQF07V3/1nu9p2G5uU18JVyWNWEgGQGtRdNDcKbywjNdWb
-	fTbi/KUgYjSKbSUy+fPyW3vywHDy8RLk=
-X-Received: by 2002:a05:6102:3254:10b0:6cc:e6b1:7f84 with SMTP id
- ada2fe7eead31-72f85be19c5mr499665137.17.1782164129165; Mon, 22 Jun 2026
- 14:35:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sqcr4xOj"
+Received: by mail-pf1-f195.google.com with SMTP id d2e1a72fcca58-845369f60faso3163328b3a.3
+        for <loongarch@lists.linux.dev>; Tue, 23 Jun 2026 00:58:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782201516; x=1782806316; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ek6r0TkIKR0tiCQ28suwzM5bkNpctpIQyqr76NBcjWs=;
+        b=sqcr4xOjKAqsGR0aA/brkW9/A7KTaV4xOvqV4IWnRlUdzplrKD9rX8ZM5S6Og9QtRP
+         fLt30W1s3E3FlsPkfwZvOlSsu/oIjITJ1PoE9DGYC9rFWuQi9S10/STtMsjjYy6dx2uV
+         84kSsgiBr2pSSFHSlSXPzNiyObOm2sjTM7Kg0boH+PlS1KPc9CaOaDw/FSoKPjCvz3Mt
+         YhXQeZUU5FDj+vFZmf8/MVD832rUD8I8BTtMtdUQlUiJGL/tNdNI7QL5bBfCDA2wY3fU
+         JwnyfIJChPc7iRkBFsCjhSNLeDgmfUOI1fiQYlhGxkoqrcY5ZsegCji/0L9HVt5hJnS6
+         0sag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782201516; x=1782806316;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Ek6r0TkIKR0tiCQ28suwzM5bkNpctpIQyqr76NBcjWs=;
+        b=L6ehtPqxksU1N9JLax1cilD+cQOMwJzVhMUKCk7GlJCLvr76Lnt9I1oYteM6YjYz7e
+         RL2m5S7iM3PvuQQJqV2A9pRaDeoR5no3tRja5qEAAuO2SGl9AVPSigtiZIOBeDxt7qGT
+         qQeQp8B6oXel814N55MA9Mj4CWhLT4AJGZ9bqLKsAS3QyJuz2mzfGL1eDV+IMKhVxFXA
+         TfUTfMFQ8Q0+u8/iuciqponoK8xXaxH9QZqGGzW5uI1fav+sflgY2PfZpuSp1rX1DFXa
+         1FSgm5Spi4vI3yMDM9rFtSLJbiwzg0Y5vGkzHHdZrIiA0FzfKBP36FfLkXuDid4WB8vj
+         kQQA==
+X-Forwarded-Encrypted: i=1; AHgh+RptcQFZxIPqzJU6BaivkHxwTCfTr5gMOGoROYcYKpC1gwRIc2+5wHhYRV/k25G8jU6mQCXZFJJe1Nw=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyF4p9UXC4VcNXHnCL8iECJeePUCpO4AgU9RAU7rDwfaRGkmbpK
+	muckbxrAZHwUpTtddzkQulBsjaEH3kxpLaneIZJJII1rzm1Oh1M3XSPm
+X-Gm-Gg: AfdE7cmPsD6giz9+VKv2raLThUSMauZ+OKpTe5NU5mAZauOPWAbm5t1kiVOJvwqJ+Dn
+	+K1dznzxVJ1ZyMSobr7QX5IYAygexLp7Biw879wZvCl22TV3CUDry/CqMIWLbsRrjiHxIACo8TM
+	cc82twPhf9n4732Iag8RYd4godrwMY7Zev5ZQoAFe2VAajjY3PtZbZKKoJDhG0w+jmyVoi9eFZh
+	BnEMFtSAC3OBeqfC1TB9OGKm3+zcAkbRCxYD9zexNdN7GBYapRuzneqwB+GUi2vvLabN2Dwv3MV
+	v5sfSLnLBCpngxo6xGX35OYjK5005uIJqOpUoWE9b3A9PKkeI7P5JhzZ4flA1yx0TemJwwjkN2x
+	5fgXX2YL9Zvet3ps96QggFWtHyKeoSbejCuHKLk/H7g+iT3c/Ac5FEc5++LqFWtgyp3jrODKKDy
+	Ro9AeOtsNDglJHr/Vi2eLrmWYP0bOdfQATvLEiaNHw
+X-Received: by 2002:a05:6a00:1707:b0:838:29b3:9ed1 with SMTP id d2e1a72fcca58-84550900333mr19117203b3a.41.1782201515623;
+        Tue, 23 Jun 2026 00:58:35 -0700 (PDT)
+Received: from zhr-ThinkStation-K.mioffice.cn ([2408:8607:1b00:8:ede9:3e72:37cf:55a2])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84564e745besm9355930b3a.28.2026.06.23.00.58.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2026 00:58:35 -0700 (PDT)
+From: Hongru Zhang <zhanghongru06@gmail.com>
+X-Google-Original-From: Hongru Zhang <zhanghongru@xiaomi.com>
+To: david@kernel.org
+Cc: akpm@linux-foundation.org,
+	baohua@kernel.org,
+	bhe@redhat.com,
+	chentao@kylinos.cn,
+	chrisl@kernel.org,
+	jack@suse.cz,
+	kasong@tencent.com,
+	kunwu.chan@gmail.com,
+	liam@infradead.org,
+	lianux.mm@gmail.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	liyangouwen1@oppo.com,
+	ljs@kernel.org,
+	loongarch@lists.linux.dev,
+	mhocko@suse.com,
+	nphamcs@gmail.com,
+	nzzhao@126.com,
+	pfalcato@suse.de,
+	rppt@kernel.org,
+	shikemeng@huaweicloud.com,
+	surenb@google.com,
+	vbabka@kernel.org,
+	wanglian@kylinos.cn,
+	willy@infradead.org,
+	youngjun.park@lge.com,
+	zhanghongru06@gmail.com
+Subject: Re: [PATCH v2 0/5] mm: reduce mmap_lock contention and improve page fault performance
+Date: Tue, 23 Jun 2026 15:58:05 +0800
+Message-ID: <20260623075805.466317-1-zhanghongru@xiaomi.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <3be9475b-0e8a-4df8-a130-4262f993973d@kernel.org>
+References: <3be9475b-0e8a-4df8-a130-4262f993973d@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <ag4h87CBd-gph9zX@casper.infradead.org> <CAGsJ_4zA8afu0xXy0WS+tMe-eesDX1W6UBmfAsuouUpcAgK8JQ@mail.gmail.com>
- <ag4kj84EcKqamdB-@casper.infradead.org> <3be9475b-0e8a-4df8-a130-4262f993973d@kernel.org>
- <CAGsJ_4xC5LdhuoWV1=tK-RZ5rkjc8aOKOkmb1L_8BG_3gtJhDg@mail.gmail.com>
- <ahB6QyHgYq8ksj65@lucifer> <CAGsJ_4zxLvZ01i19vdo0xA47T1hxa1VRYvxLmiDhy5q1GDKPRg@mail.gmail.com>
- <CAJuCfpHTxaU4KdNmefU7C7cWZSLCFDLPdUrnqV6yzxzN+8RQ0Q@mail.gmail.com>
- <ajhOUdbWsswgQyl2@casper.infradead.org> <CAGsJ_4ybg5LGYopTUJTh5R2rN6X3uR9xoJSL+RdTYVtm1-xqLg@mail.gmail.com>
- <c5soxcu245cerfljr2ddto4h7xqksfxzxti47mq6sqn6pnmnxh@th5kxapvnaj3>
-In-Reply-To: <c5soxcu245cerfljr2ddto4h7xqksfxzxti47mq6sqn6pnmnxh@th5kxapvnaj3>
-From: Barry Song <baohua@kernel.org>
-Date: Tue, 23 Jun 2026 05:35:16 +0800
-X-Gmail-Original-Message-ID: <CAGsJ_4xeRmi_EtcLUpZm49zNO3pxscd1shDcO-wbBAZheyN9jQ@mail.gmail.com>
-X-Gm-Features: AVVi8CfVr0XrKkWqf7CvIbBvspzJJaewjz-ymsw_zXuVPurYIavkpzh5F1y4IKg
-Message-ID: <CAGsJ_4xeRmi_EtcLUpZm49zNO3pxscd1shDcO-wbBAZheyN9jQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] mm: reduce mmap_lock contention and improve page
- fault performance
-To: "Liam R. Howlett" <liam@infradead.org>
-Cc: Matthew Wilcox <willy@infradead.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Lorenzo Stoakes <ljs@kernel.org>, "David Hildenbrand (Arm)" <david@kernel.org>, akpm@linux-foundation.org, 
-	linux-mm@kvack.org, vbabka@kernel.org, rppt@kernel.org, mhocko@suse.com, 
-	jack@suse.cz, pfalcato@suse.de, wanglian@kylinos.cn, chentao@kylinos.cn, 
-	lianux.mm@gmail.com, kunwu.chan@gmail.com, liyangouwen1@oppo.com, 
-	chrisl@kernel.org, kasong@tencent.com, shikemeng@huaweicloud.com, 
-	nphamcs@gmail.com, bhe@redhat.com, youngjun.park@lge.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	Nanzhe Zhao <nzzhao@126.com>, Hongru Zhang <zhanghongru06@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 22, 2026 at 10:50=E2=80=AFPM Liam R. Howlett <liam@infradead.or=
-g> wrote:
->
-> On 26/06/22 08:15AM, Barry Song wrote:
-> > On Mon, Jun 22, 2026 at 4:49=E2=80=AFAM Matthew Wilcox <willy@infradead=
-.org> wrote:
-> > >
-> > > On Sat, Jun 20, 2026 at 04:48:57PM -0700, Suren Baghdasaryan wrote:
-> > > > Just checking in on the followup plans. IIUC the RFC mentioned will
-> > > > try to implement the solution we discussed at LSFMM: splitting
-> > > > VM_FAULT_RETRY into two flags - one for retrying under per-VMA lock=
-s
-> > > > and another one to fallback to mmap_lock.
-> > >
-> > > I continue to hate this idea.  I don't believe that those who were
-> > > pushing for it have ever tried to understand the whole fault path.
-> > > It's utterly byzantine.
-> > >
-> > > I defy anyone to make sense of this:
-> > >
-> > >         /*
-> > >          * NOTE! This will make us return with VM_FAULT_RETRY, but wi=
-th
-> > >          * the fault lock still held. That's how FAULT_FLAG_RETRY_NOW=
-AIT
-> > >          * is supposed to work. We have way too many special cases..
-> > >          */
-> > >         if (vmf->flags & FAULT_FLAG_RETRY_NOWAIT)
-> > >                 return 0;
-> > >
-> > >         *fpin =3D maybe_unlock_mmap_for_io(vmf, *fpin);
-> > >         if (vmf->flags & FAULT_FLAG_KILLABLE) {
-> > >                 if (__folio_lock_killable(folio)) {
-> > >                         /*
-> > >                          * We didn't have the right flags to drop the
-> > >                          * fault lock, but all fault_handlers only ch=
-eck
-> > >                          * for fatal signals if we return VM_FAULT_RE=
-TRY,
-> > >                          * so we need to drop the fault lock here and
-> > >                          * return 0 if we don't have a fpin.
-> > >                          */
-> > >                         if (*fpin =3D=3D NULL)
-> > >                                 release_fault_lock(vmf);
-> > >                         return 0;
-> > >                 }
-> > >
-> > > Wed need to simplify the fault path, not add additional complexity.
-> > > Josef has said he wouldn't've done the lock dropping had we had per-V=
-MA
-> > > locks.  We should rip it out.
-> >
-> > I think you have agreed that, at least for anon vma, we can
-> > keep the current policy, since anon vma is much more volatile
-> > than file vma.
->
-> I don't think any of the above has to do with anon vmas.  Does any anon
-> vma handling have anything to do with your problem?
-
-Hi Liam,
-
-I think there may be a misunderstanding about the motivation behind
-this series.
-
-Currently, for both file-backed and anonymous VMAs, when a page fault
-cannot lock the required folios=E2=80=94for example, because a folio is und=
-er
-I/O during a major fault=E2=80=94the fault handler drops any locks it is
-holding (either per-VMA locks or the mmap lock) and retries the fault
-under the mmap_lock. This page-fault retry pattern requiring the
-mmap_lock can lead to significant mmap_lock contention.
-
-The entire purpose of this series is to avoid reacquiring the mmap_lock
-where possible, while ensuring that the implementation does not
-introduce new priority inversion issues or unnecessary complexity.
-
-We have two possible approaches:
-
-1. Keep the page-fault retry path, but retry under the per-VMA lock
-whenever possible. In this case, we would need a flag to indicate
-whether the retry should be performed under the per-VMA lock or the
-mmap_lock.
-
-2. Remove the page-fault retry path entirely. Instead, wait for the
-folio to become lockable while retaining the locks currently held,
-and continue the fault handling without retrying the page fault.
-
-Approach 1 is the direction taken by both the current patch and the
-RFC that was suggested.
-
-Approach 2 is a potential alternative, but I have never posted an RFC
-proposing it.
-
-For Approach 1, the primary concern seems to be the added complexity.
-
-For Approach 2, my concern is the increased risk of priority
-inversion. With this approach, we may end up holding a lock while
-waiting for I/O completion, potentially for a considerable amount of
-time. As a result, a concurrent VMA writer, along with any subsequent
-mmap_lock acquirers blocked behind it, could be stalled for an
-extended period.
-
-If there is an approach 3, it could be:
-for file VMAs, we take approach 2; for anonymous VMAs, we take
-approach 1.
-
->
-> This would be needed if anon vmas were being faulted while being
-> unmapped or merged?  Do we really need a fast path for that?  Note that
-> anon vmas cannot be merged if the vma chain... you know what, I wonder
-> how many people know what I'm talking about here... Let's just say that
-> they can't be merged if they were around for a fork.
-
-In terms of fork(), this is the concern I raised when considering
-approach 2=E2=80=94holding the VMA lock while performing I/O, since a
-concurrent fork would need to acquire the VMA write lock.
-
-I had Hongru add some tracing code and run it against the top 200
-Android applications in the China market. All of them are heavily
-multi-threaded. Unfortunately, we found that 82 of these 200 Android
-applications call fork(), and some even call fork() from multiple
-threads.
-
-So, although it may be technically a bad idea to call fork() in a
-multi-threaded application, it appears that in practice it is still
-widely used in real-world applications.
-
-I guess Hongru (Cc-ed) will share his observations later today or
-tomorrow.
-
->
-> So, then, we're looking at anon vmas taking the mmap lock on:
-> 1. single task anon vmas being expanded and faulted at the same time
-> 2. single task anon vmas being unmapped and faulted at the same time
->
-> I think that's it?
-
-Yes and no. It could also include mprotect, UFFDIO_REGISTER,
-UFFDIO_UNREGISTER, and setting VMA names, etc.
-
-Note that Java GC may also invoke UFFDIO_REGISTER and
-UFFDIO_UNREGISTER on Java heaps.
-
-Note that priority inversion can still occur between threads that are
-not operating on the same VMA if we take approach 2.
-
-For example:
-
-Thread A: page fault in vma1, holding the VMA lock and waiting for I/O.
-
-Thread B: concurrent write on vma1 (takes mmap_lock and then waits for
-the VMA write lock);
-
-Thread C: concurrent write on vma2 or do VMA iteration (acquires
-mmap_lock).
-
-In this scenario, Thread C may end up indirectly waiting for Thread A.
-
->
-> But maybe I missed something critical about your use case here?
->
-> I don't understand why you are involving anon vmas in this discussion,
-> so I must have missed something with your IO completion issue.  Is there
-> an anon vma causing your priority inversion?
-
-As explained, the primary goal is to reduce mmap_lock contention by
-avoiding taking the mmap_lock whenever possible, while ensuring that
-the implementation does not introduce new priority inversion issues.
-
->
-> > Concurrent page faults and VMA modifications can happen more
-> > often than with file VMAs.
->
-> But it's only a problem for anon vmas with per-vma locking if it's the
-> same vma (or the vma lock sequence counter overflows, but let's say
-> that's a statistically insignificant non-zero value).
->
-> >
-> > For file vmas, how much code can we actually remove, given that
-> > the first page fault might already be holding mmap_lock?
->
-> How much complexity can we remove and maintain the performance, might be
-> a better question.
-
-Right, thanks for improving the question.
-
->
-> > It could be the case that lock_vma_under_rcu() fails, and then
-> > on the first page fault we end up holding mmap_lock before
-> > retrying. So are we also going to rip out the lock release,
-> > even if it risks holding mmap_lock for a long time?
-> >
-> >         vma =3D lock_vma_under_rcu(mm, addr);
-> >         if (!vma)
-> >                 goto lock_mmap;
-> >        ...
-> > lock_mmap:
-> >
-> >         vma =3D lock_mm_and_find_vma(mm, addr, regs);
-> >         if (unlikely(!vma)) {
-> >                 fault =3D 0;
-> >                 si_code =3D SEGV_MAPERR;
-> >                 goto bad_area;
-> >         }
-> >
-> > If we still need to keep the page fault retry code there, it
-> > doesn't seem like "ripping out" really reduces complexity in
-> > the page fault code?
->
-> This seems unrelated to be above complexity that might be the target of
-> removal?
-
-I think it is highly related. If we take approach 2=E2=80=94holding locks t=
-o
-perform I/O and removing the page-fault retry path=E2=80=94we need to
-consider whether the same behavior should also apply when we are
-already holding the mmap_lock. We should understand the full picture
-before focusing on a specific part in isolation.
-
-Thanks
-Barry
+> On 5/20/26 23:15, Matthew Wilcox wrote:=0D
+> > On Thu, May 21, 2026 at 05:14:20AM +0800, Barry Song wrote:=0D
+> >> My understanding is that we should not blame applications here. This i=
+s 2026:=0D
+> >> there are basically only two kinds of applications =E2=80=94 single-th=
+readed and=0D
+> >> multi-threaded =E2=80=94 and single-threaded applications are nearly e=
+xtinct.=0D
+> > =0D
+> > all of the applications i run are either single threaded or don't fork.=
+=0D
+> > what multithreaded applications call fork?=0D
+>=0D
+> Traditionally the problem was random libraries using fork+execve to launc=
+h other=0D
+> programs ... instead of using alternatives like posix_spwan (some use cas=
+es=0D
+> require more work done before execve and cannot yet switch to that). I'd =
+hope=0D
+> that that is less of a problem on Android.=0D
+>=0D
+> I assume Android zygote might be multi threaded? Maybe sshd as well? Syst=
+emd?=0D
+> But I'd be surprised if there are really performance implications.=0D
+>=0D
+> Not sure about webbroswers .... I think most of them switched to fork ser=
+vers,=0D
+> where I would assume fork servers would be single-threaded.=0D
+>=0D
+> So, yeah, getting a clear understanding how this ends up being a problem =
+on=0D
+> Android would be great.=0D
+=0D
+Barry asked me to share observations on fork() usage across Android=0D
+applications.=0D
+=0D
+I wrote a BPF-based tracing tool (kprobe on copy_process, checking=0D
+CLONE_VM to distinguish process creation from thread creation) and ran=0D
+it against the top 200 Android applications in the China market during=0D
+normal usage scenarios.=0D
+=0D
+Results:=0D
+- 82 out of 200 apps (41%) call fork() during normal operation=0D
+- Among these, some call fork() from multiple threads=0D
+=0D
+These are not zygote forks =E2=80=94 they are fork() calls initiated by app=
+=0D
+threads at runtime. Examples by category:=0D
+=0D
+  Browsers:     com.quark.browser, com.UCMobile, com.xunlei.browser=0D
+  Shopping:     com.taobao.taobao, com.tmall.wireless, com.achievo.vipshop=
+=0D
+  Video:        com.youku.phone, com.qiyi.video, com.hunantv.imgo.activity=
+=0D
+  Social/IM:    com.alibaba.android.rimet, com.ss.android.lark=0D
+  News:         com.ss.android.article.news, com.ss.android.article.lite=0D
+  Navigation:   com.autonavi.minimap, com.sdu.didi.psnger=0D
+  Finance:      com.eg.android.AlipayGphone, com.chinamworld.main=0D
+=0D
+This confirms that fork() is widely used in real-world multi-threaded=0D
+Android applications. Since dup_mmap() needs to acquire=0D
+vma_start_write() for every VMA, holding the VMA lock across I/O=0D
+would risk blocking fork() for unpredictable durations in these 82=0D
+applications.=0D
+=0D
+Tracing tool (two equivalent implementations):=0D
+  bpftrace:         https://gist.github.com/zhr250/bf4384202d598bb4cda71cb9=
+902f15ab=0D
+  libbpf-bootstrap: https://gist.github.com/zhr250/76189bdf51bdc8818500e4c8=
+917c6493=0D
+=0D
+Analysis results (top 200 apps):=0D
+  https://gist.github.com/zhr250/06f51092c84a49c602a55ac3d186e9ce=0D
+=0D
+Hongru=0D
+=0D
