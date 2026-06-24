@@ -1,186 +1,97 @@
-Received: from cache8.serv00.com (cache8.serv00.com [128.204.223.114])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAA1C33DEF7;
-	Wed, 24 Jun 2026 16:51:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.204.223.114
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E84A261B9B
+	for <loongarch@lists.linux.dev>; Wed, 24 Jun 2026 22:18:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782319915; cv=none; b=KIjELuLJ9q4mALpe20PkpoHpTn8hGGMq0YwIWXyQibBOrkc28JfUIP5QJ6uBQ6P1ibpMgdzQqt/4R0/MeGcOqEDZX6DlXr+mRhhzwPi2Nl3sLbZ6JKEuWmooAcm+ZHvPrYhFfbZvpVbdpebzD/GWmp5u1cXQFlti7WSj8OQIrRU=
+	t=1782339497; cv=none; b=OhSyXpwiNKxCCyVXReaXReE4RwZuM3pD/9NeucDJxsZbqvJYRd1vjLjfIwWTktaoiElzy64E6XMVLdWEcT5skfbevXk5QgBf+88VA8VZ7cocS3XaYyBFNeawDOB73CII2Zx1fRh90WwkgAsivyn+TM+8llBKBjWGKeTNiaxuems=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782319915; c=relaxed/simple;
-	bh=49+HNziQ6DaJS8BYEKYppoYy7/F7F+2/UbGJSXITjQ8=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=E7TTBIM5fHDW1iASYyLlWJxx2HR3Oa8lLpGa35FypnLFGvltVS+nUi86UlHKjSFMvPptH/ISPr0kjWyVhtoO5w3xZR43slTOq95TdFBFILmtk/wjTnosotc9YbMi8ESW04sbe9rWUKuZ7A0dHqd1Q4FVKpLNX3vURsBmj1RjbCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=simplelinux.cn.eu.org; spf=pass smtp.mailfrom=simplelinux.cn.eu.org; arc=none smtp.client-ip=128.204.223.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=simplelinux.cn.eu.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=simplelinux.cn.eu.org
-Message-ID: <a4c057ae-cba3-453d-8bd0-54c94dbfe491@simplelinux.cn.eu.org>
-Date: Thu, 25 Jun 2026 00:15:36 +0800
+	s=arc-20240116; t=1782339497; c=relaxed/simple;
+	bh=+n08tj1EOwrvRXhAdjTQyU8ESor+gSj0Ef3eitEyJk4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AxMZR40Ej8ecuLGDO/gtrmvGPBHRjVz7657yeLBDNeNORGmh3xLh8vA1GH5gScOkKdtHhPzscaqapArErkoIP971z+kZzwPB3G9B+TqSF+7afq6C3sGu1GH6oDEE4NdX9HyhOMKCPiBFxati7fpS9ZHsgwTJ8NfYLj2/uT68H7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [36.44.124.104])
+	by gateway (Coremail) with SMTP id _____8BxJemkVzxqx5MXAA--.54468S3;
+	Thu, 25 Jun 2026 06:18:12 +0800 (CST)
+Received: from [192.168.0.111] (unknown [36.44.124.104])
+	by front1 (Coremail) with SMTP id qMiowJCxPMKhVzxq_xCyAA--.8437S3;
+	Thu, 25 Jun 2026 06:18:10 +0800 (CST)
+Message-ID: <8afb0401-9c53-f469-30d7-8e97e63c0189@loongson.cn>
+Date: Thu, 25 Jun 2026 06:18:13 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Yuanzhen Gan <elysia-best@simplelinux.cn.eu.org>
-Subject: Re: [PATCH] LoongArch: Add PIO for early access before ACPI PCI root
- register
-Reply-To: elysia-best@simplelinux.cn.eu.org
-To: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, Xuefeng Li <lixuefeng@loongson.cn>,
- Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, Kexy Biscuit <kexybiscuit@aosc.io>,
- Mingcong Bai <jeffbai@aosc.io>
-References: <20260622065843.3961572-1-chenhuacai@loongson.cn>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [PATCH bpf-next v2 0/4] selftests/bpf: Add some tests for
+ LoongArch
 Content-Language: en-US
-Autocrypt: addr=elysia-best@simplelinux.cn.eu.org; keydata=
- xjMEaJsoJxYJKwYBBAHaRw8BAQdAmKn44BnjrSjnLk+4kelzELvhTTWpOZTPmez2jy8squ3N
- KkVseXNpYSA8ZWx5c2lhLWJlc3RAc2ltcGxlbGludXguY24uZXUub3JnPsKPBBMWCAA3FiEE
- dKkzyG7ab0S7lAwAAxs1vPhHLWAFAmibKCcFCQWjmoACGwMECwkIBwUVCAkKCwUWAgMBAAAK
- CRADGzW8+EctYL66AQDlhTx8ZtQRjonY5JZbBWPQVwKrtjiANGgP5/uQLMR6/wD8CXOeYIYb
- qQVkLZZmcf/iabf19/mheoBBsyh4BrUCPQzOOARomygnEgorBgEEAZdVAQUBAQdAbDmqQT+f
- Z6Ivru0sdFV+yHivtibOx9K+K4riXcwfajYDAQgHwn4EGBYIACYWIQR0qTPIbtpvRLuUDAAD
- GzW8+EctYAUCaJsoJwUJBaOagAIbDAAKCRADGzW8+EctYDIvAQCtWFldeDqEJZ5C/JDBcogi
- zbSGxdlsfdtUyI69Y86lWwD8DlA4dIOH0o5tohTYA6hw74fAmR1jMkPfEE8dsy0ohg8=
-In-Reply-To: <20260622065843.3961572-1-chenhuacai@loongson.cn>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ Alexei Starovoitov <ast@kernel.org>, Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, bpf@vger.kernel.org
+References: <20260615100506.19558-1-yangtiezhu@loongson.cn>
+ <DJ9QMPLAXOGG.2PDC3A2MUENPC@gmail.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+In-Reply-To: <DJ9QMPLAXOGG.2PDC3A2MUENPC@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-System-Sender: elysia-best@simplelinux.cn.eu.org
-X-System-UID: 5146
+X-CM-TRANSID:qMiowJCxPMKhVzxq_xCyAA--.8437S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Gw48Xr47CF1rKF4kXF4rCrX_yoW8Jr1kp3
+	9a9F97Kr1kWryUAFsIgw1xuF17Xw13ur97G3WkGr1Yyr9I9F1Fqr97uFW5XFnrCryFk3W2
+	vr4vg34DKa4UtagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Jr0_Gr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
+	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
+	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
+	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
+	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU70PfDUUU
+	U
 
-On Mon, 22 Jun 2026 14:58:43 +0800, Huacai Chen <chenhuacai@loongson.cn> 
-wrote:
-  > For ACPI system we suppose the ISA/LPC PIO range is registered together
-  > with PCI root bridge. But the fact is there may be some early access to
-  > the ISA/LPC PIO range before ACPI PCI root register (most of them are
-  > due to abnormal BIOS). Unconditionally register the ISA/LPC PIO range
-  > usually causes ACPI PCI root register fail because of the address range
-  > confliction. So we add a pair of helpers: acpi_add_early_pio() to add
-  > PIO for early access, and acpi_remove_early_pio() to remove PIO before
-  > PCI root register. Since acpi_remove_early_pio() may be called multiple
-  > times, we add an acpi_pio flag to ensure PIO be removed only once.
-  >
-  > Cc: <stable@vger.kernel.org>
-  > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-  > ---
-  >  arch/loongarch/include/asm/acpi.h |  2 ++
-  >  arch/loongarch/kernel/acpi.c      | 28 ++++++++++++++++++++++++++++
-  >  arch/loongarch/kernel/setup.c     |  2 ++
-  >  arch/loongarch/pci/acpi.c         |  2 ++
-  >  4 files changed, 34 insertions(+)
-  >
-  > diff --git a/arch/loongarch/include/asm/acpi.h 
-b/arch/loongarch/include/asm/acpi.h
-  > index eda9d4d0a493..c05168aedcaa 100644
-  > --- a/arch/loongarch/include/asm/acpi.h
-  > +++ b/arch/loongarch/include/asm/acpi.h
-  > @@ -38,6 +38,8 @@ static inline bool acpi_has_cpu_in_madt(void)
-  >  extern struct list_head acpi_wakeup_device_list;
-  >  extern struct acpi_madt_core_pic acpi_core_pic[MAX_CORE_PIC];
-  >
-  > +extern void acpi_add_early_pio(void);
-  > +extern void acpi_remove_early_pio(void);
-  >  extern int __init parse_acpi_topology(void);
-  >
-  >  #endif /* !CONFIG_ACPI */
-  > diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
-  > index 058f0dbe8e8f..8f650c9ffecd 100644
-  > --- a/arch/loongarch/kernel/acpi.c
-  > +++ b/arch/loongarch/kernel/acpi.c
-  > @@ -16,6 +16,7 @@
-  >  #include <linux/memblock.h>
-  >  #include <linux/of_fdt.h>
-  >  #include <linux/serial_core.h>
-  > +#include <linux/vmalloc.h>
-  >  #include <asm/io.h>
-  >  #include <asm/numa.h>
-  >  #include <asm/loongson.h>
-  > @@ -59,6 +60,33 @@ void __iomem 
-*acpi_os_ioremap(acpi_physical_address phys, acpi_size size)
-  >  		return ioremap_cache(phys, size);
-  >  }
-  >
-  > +#define PIO_BASE (unsigned long)PCI_IOBASE
-  > +#define PIO_SIZE ALIGN(ISA_IOSIZE, PAGE_SIZE)
-  > +
-  > +static bool acpi_pio;
-  > +
-  > +/* Add PIO for early access */
-  > +void acpi_add_early_pio(void)
-  > +{
-  > +	if (!acpi_disabled) {
-  > +		acpi_pio = true;
-  > +		vmap_page_range(PIO_BASE, PIO_BASE + PIO_SIZE,
-  > +				LOONGSON_LIO_BASE, pgprot_device(PAGE_KERNEL));
-  > +	}
-  > +}
-  > +
-  > +/* Remove PIO for PCI register */
-  > +void acpi_remove_early_pio(void)
-  > +{
-  > +	if (!acpi_pio)
-  > +		return;
-  > +
-  > +	if (!acpi_disabled) {
-  > +		acpi_pio = false;
-  > +		vunmap_range(PIO_BASE, PIO_BASE + PIO_SIZE);
-  > +	}
-  > +}
-  > +
-  >  #ifdef CONFIG_SMP
-  >  static int set_processor_mask(u32 id, u32 pass)
-  >  {
-  > diff --git a/arch/loongarch/kernel/setup.c 
-b/arch/loongarch/kernel/setup.c
-  > index 369262117c63..eaebb52bd36e 100644
-  > --- a/arch/loongarch/kernel/setup.c
-  > +++ b/arch/loongarch/kernel/setup.c
-  > @@ -502,6 +502,8 @@ static __init int arch_reserve_pio_range(void)
-  >  {
-  >  	struct device_node *np;
-  >
-  > +	acpi_add_early_pio();
-  > +
-  >  	for_each_node_by_name(np, "isa") {
-  >  		struct of_range range;
-  >  		struct of_range_parser parser;
-  > diff --git a/arch/loongarch/pci/acpi.c b/arch/loongarch/pci/acpi.c
-  > index b02698a338ee..ccbcea61fcd9 100644
-  > --- a/arch/loongarch/pci/acpi.c
-  > +++ b/arch/loongarch/pci/acpi.c
-  > @@ -65,6 +65,8 @@ static int acpi_prepare_root_resources(struct 
-acpi_pci_root_info *ci)
-  >  	struct resource_entry *entry, *tmp;
-  >  	struct acpi_device *device = ci->bridge;
-  >
-  > +	acpi_remove_early_pio();
-  > +
-  >  	status = acpi_pci_probe_root_resources(ci);
-  >  	if (status > 0) {
-  >  		acpi_evaluate_integer(device->handle, "PCIH", NULL, &pci_h);
+On 6/15/26 23:45, Alexei Starovoitov wrote:
+> On Mon Jun 15, 2026 at 3:05 AM PDT, Tiezhu Yang wrote:
+>> This series is based on the latest master branch of bpf-next tree.
+>> https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/
+>>
+>> Dependency Note:
+>> ================
+>> This series strictly depends on the following LoongArch core series,
+>> which moves thread_info into task_struct:
+>>
+>> "Move thread_info into task_struct for LoongArch"
+>> https://lore.kernel.org/loongarch/20260612011616.27771-1-yangtiezhu@loongson.cn/
+> 
+> Pls repost when this patch appears in bpf-next.
 
-I have tested this patch on my Loongson-3A6000 system with Kunlun 
-firmware. The patch successfully resolves the ACPI PCI root bridge 
-registration issue caused by early ISA/LPC PIO access.
+OK, this is reasonable. I agree with you and plan to do this.
 
-On this platform, the DSDT defines _CRS methods for UAR and LPT devices 
-that call the ENFG() and EXFG() methods from the ITE1 device. This 
-causes early writes to the ISA/LPC PIO range before PCI root bridge 
-registration. The patch's early PIO registration mechanism properly 
-handles this firmware quirk.
+But I noticed that this series has already been merged into
+the loongarch-next [1] tree, and there is something wrong
+between the code and commit message in the first patch [2].
 
-Test environment:
-- Platform: Seewo OEM 3A6000 (CB,L3A6.MA01 V1.0)
-- Firmware: Kunlun BIOS
-- CPU: Loongson-3A6000-HV @ 2.50 GHz
-- OS: AOSC OS 13.2.0 (loongarch64)
-- Kernel: Linux 7.0.13-aosc-main-16k
+I think this is not proper. I suggest to drop them from the
+loongarch-next tree.
 
-The system boots successfully when the patch is applied.
+Just FYI.
 
-Cc: Mingcong Bai <jeffbai@aosc.io>
-Cc: Kexy Biscuit <kexybiscuit@aosc.io>
-Tested-by: Yuanzhen Gan <elysia-best@simplelinux.cn.eu.org>
+[1] 
+https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git/
+
+[2] 
+https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git/commit/?h=loongarch-next&id=8796e11abddf
+
+Thanks,
+Tiezhu
 
