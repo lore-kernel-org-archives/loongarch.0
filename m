@@ -1,130 +1,78 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23AA335DA5B
-	for <loongarch@lists.linux.dev>; Thu, 25 Jun 2026 08:32:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74E2367F31
+	for <loongarch@lists.linux.dev>; Thu, 25 Jun 2026 08:47:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782376372; cv=none; b=m5nTBuzCbVHg08nZxm3V6CKQeZFaSJMqkqxiKb1rs2Ciu56HFFJT5gmyg/7NPXNYjltaTJuVViMTSjhFUQJRse9a1eX6mmfJCWb45N6coJSi2FuckmUMWCzc7EEht3s5dmE5Y8KOibi2TjyHPOAxbHU1/PgUfvb4JaJ3tYrZ8hM=
+	t=1782377222; cv=none; b=WuXvX2gIaqZHgPOCDDFEwACZ6OWZ/zOqzjjPDhgr75DgglNeQ0aMiBbd+26Dmjcm6BYFgjTXPpf6n6pJab2iJ9J/XeTTLDT6qCYiO1X0lIZs2wfXHEXR8vt2f+17JRuwUcY/VhH8j7gZGtVnt0uGe2S5sGlQo8dlB6bN5GKvsSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782376372; c=relaxed/simple;
-	bh=yThKp5mFhuRuvb6z97ASLajoXXHye6N71J4ltOFHR/Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qUyKli0TN5nEkAEa73Uc5nWVTXT6S7X59JPVx8Z41yh8Ety8bS4NA2RTo7r4ffJNvceoHJDFGAgUFLx6Qnt/s+l0O425QXjxbCLRNu/NHlGNN7rpC7QIFDWnD/ehtPY4nCWX02EvZqN8vsJ9WEZ7HcUReJ6IIVTCpzN/2LJSc6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tKFX3rij; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1782377222; c=relaxed/simple;
+	bh=9AUuMdNt8a1ethXnqnrijquHBTISslIgQzrk9e3NyYo=;
+	h=MIME-Version:Content-Type:Subject:From:To:Cc:In-Reply-To:
+	 References:Date:Message-Id; b=R9cZj5S0hkO2eVYsNx+lMd/jfUVwhgMHtnYQ7fwmG866P1/YJh6K28kjfJ0B2npIwMFmSYq7MPxe4lb1+bKiWyE9Shhf7CAEHxGQJmZfbe24DZCpoXi/ie+h8qx1v7ajWUsYDFPHzeyFSHMyCyRSSXVIBOMp2G5O5P6egIrUCrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=du4wyvFc; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tKFX3rij"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1782376369;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UUNI9HVJojfD4QXjQosjhgaZEtAM61ThFHovUKlA78o=;
-	b=tKFX3rijkHIvpaRTLtYUWBP+vVHJYVFOVBtx43BhVE5xCTtwDKHoULneghqJTlVDgkpEVi
-	2TK6P/HCx3Z98Q+sYRWbZ3I+MAGVnJVBAKbhrFxKPbaOC0kH3hrRT7lWYDDeCdrtC42uvV
-	RETfyOImHnF0/0+evGHHOqHRPdJYxbo=
-From: George Guo <dongtai.guo@linux.dev>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Hengqi Chen <hengqi.chen@gmail.com>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Jiri Olsa <jolsa@kernel.org>,
-	George Guo <guodongtai@kylinos.cn>,
-	bpf@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH bpf 2/2] LoongArch: BPF: Don't charge an empty prog_array slot to the tail call count
-Date: Thu, 25 Jun 2026 16:32:12 +0800
-Message-Id: <20260625083212.277417-3-dongtai.guo@linux.dev>
-In-Reply-To: <20260625083212.277417-1-dongtai.guo@linux.dev>
-References: <20260625083212.277417-1-dongtai.guo@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="du4wyvFc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 501611F00A3A;
+	Thu, 25 Jun 2026 08:46:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782377221;
+	bh=Wt19WGGroORa/wioMj0fJmzojKxoKhuinoNaN6kTkuY=;
+	h=Subject:From:To:Cc:In-Reply-To:References:Date;
+	b=du4wyvFcpe6h8cJqJ8+wwVFQIsPj3+N4yyrOgN/qduox/8HRpcOdji6jhccFrjrVm
+	 fe8cWu0TwoYUMUMvAnwH5ORIIJS4JfTppMLZ25rxdQvGMNgIkYe5fdXI5cjcxjOFOi
+	 pIVScnjWjkimeuSoBvuRunDdMYJRg2MNpvUeqdBcAvWj4Ajcj47cEbqJxmHXOXTbrq
+	 IEEjEz95TyfdFohXIjCZhgHI2OAqNKZ+Zb8mHmPCjMMrPDDcqgvM3Sqf2cNQbIJnHF
+	 SHC6Oq2q9FY3gbYFLnSDpvOpnDb4GmBPDmTyTMv6ojjv53h+5tNtueC1cRFQtHQxHf
+	 YQHHT5H1S8rpg==
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH 0/6] treewide: remove unnecessary invalid range checks
+ in memblock iteration loops
+From: Mike Rapoport <rppt@kernel.org>
+To: Sang-Heon Jeon <ekffu200098@gmail.com>
+Cc: Albert Ou <aou@eecs.berkeley.edu>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
+ Catalin Marinas <catalin.marinas@arm.com>, 
+ Huacai Chen <chenhuacai@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+ Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <pjw@kernel.org>, 
+ Will Deacon <will@kernel.org>, Alexander Potapenko <glider@google.com>, 
+ Alexandre Ghiti <alex@ghiti.fr>, Andrey Konovalov <andreyknvl@gmail.com>, 
+ David Hildenbrand <david@kernel.org>, Dmitry Vyukov <dvyukov@google.com>, 
+ kasan-dev@googlegroups.com, linux-arm-kernel@lists.infradead.org, 
+ linux-mm@kvack.org, linux-riscv@lists.infradead.org, 
+ loongarch@lists.linux.dev, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+ WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <20260621145919.1453-1-ekffu200098@gmail.com>
+References: <20260621145919.1453-1-ekffu200098@gmail.com>
+Date: Thu, 25 Jun 2026 11:46:51 +0300
+Message-Id: <178237721125.146960.11801589845266315987.b4-review@b4>
+X-Mailer: b4 0.15.2
 
-From: George Guo <guodongtai@kylinos.cn>
+On Sun, 21 Jun 2026 23:59:10 +0900, Sang-Heon Jeon <ekffu200098@gmail.com> wrote:
+> treewide: remove unnecessary invalid range checks in memblock iteration loops
+> 
+> The memblock API guarantees that for_each_mem_range() and
+> for_each_mem_pfn_range() never return an invalid range, meaning start is
+> always less than end.
+> 
+> Several memblock callers still have unnecessary invalid range checks in
+> their loop bodies, so remove them.
+> 
+> [...]
 
-emit_bpf_tail_call() bumped the tail call count and stored it back to
-*tcc_ptr before loading array->ptrs[index] and testing it for NULL.  A
-tail call that targets an empty slot therefore consumed one unit of the
-tail call budget even though control never transferred.
+Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-The interpreter increments tail_call_cnt only after the prog pointer is
-found to be non-NULL (kernel/bpf/core.c, BPF_TAIL_CALL), so a fall-through
-to an empty slot leaves the count untouched.  The JIT must do the same.
-
-This is visible with selftests/bpf tailcalls/tailcall_3, whose entry prog
-tail-calls an empty slot before the real target: the observed count is 32
-instead of the expected 33.
-
-Defer the store of the bumped count until after the NULL check.  The limit
-comparison is unchanged: t3 = *tcc_ptr + 1, and "t3 > MAX_TAIL_CALL_CNT" is
-equivalent to "*tcc_ptr >= MAX_TAIL_CALL_CNT".
-
-The check-before-NULL ordering dates back to the original JIT; commit
-c0fcc955ff82 ("LoongArch: BPF: Fix the tailcall hierarchy") reworked the
-counter into the *tcc_ptr form but preserved the same ordering.
-
-Fixes: 5dc615520c4d ("LoongArch: Add BPF JIT support")
-Cc: stable@vger.kernel.org
-Signed-off-by: George Guo <guodongtai@kylinos.cn>
----
- arch/loongarch/net/bpf_jit.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index f705de099f23..f2aa0b7f65ad 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -323,13 +323,18 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx, int insn)
- 		goto toofar;
- 
- 	/*
--	 * if ((*tcc_ptr)++ >= MAX_TAIL_CALL_CNT)
-+	 * if (*tcc_ptr + 1 > MAX_TAIL_CALL_CNT)
- 	 *      goto out;
-+	 *
-+	 * Compute the bumped count but do not write it back yet: the
-+	 * interpreter increments tail_call_cnt only after the prog pointer is
-+	 * found to be non-NULL, so a tail call to an empty slot must not
-+	 * consume the tail call budget.  The store is deferred until the call
-+	 * is known to be taken (below).
- 	 */
- 	emit_insn(ctx, ldd, REG_TCC, LOONGARCH_GPR_SP, tcc_ptr_off);
- 	emit_insn(ctx, ldd, t3, REG_TCC, 0);
- 	emit_insn(ctx, addid, t3, t3, 1);
--	emit_insn(ctx, std, t3, REG_TCC, 0);
- 	emit_insn(ctx, addid, t2, LOONGARCH_GPR_ZERO, MAX_TAIL_CALL_CNT);
- 	if (emit_tailcall_jmp(ctx, BPF_JSGT, t3, t2, jmp_offset) < 0)
- 		goto toofar;
-@@ -346,6 +351,9 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx, int insn)
- 	if (emit_tailcall_jmp(ctx, BPF_JEQ, t2, LOONGARCH_GPR_ZERO, jmp_offset) < 0)
- 		goto toofar;
- 
-+	/* (*tcc_ptr)++; the tail call is taken, so commit the bumped count */
-+	emit_insn(ctx, std, t3, REG_TCC, 0);
-+
- 	/* goto *(prog->bpf_func + 4); */
- 	off = offsetof(struct bpf_prog, bpf_func);
- 	emit_insn(ctx, ldd, t3, t2, off);
 -- 
-2.25.1
+Sincerely yours,
+Mike.
 
