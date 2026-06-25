@@ -1,102 +1,144 @@
-Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48293368296
-	for <loongarch@lists.linux.dev>; Thu, 25 Jun 2026 02:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B0CF34F492
+	for <loongarch@lists.linux.dev>; Thu, 25 Jun 2026 02:41:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782354451; cv=none; b=L1/N1s44gp434W9OYaitm/6Z7pUgErDUfZ+LQLrdqMAK7BygC/atdL///efScjuUHiCBtSOjFORAIGzH6bKLIJfMT9LCiyxzGX1SClBONRbBuIMI5YAhgn7RD7S4Np8DSn67OBZTlaeBpE/hHQwvDwHAdDYMnQiryuiJzNkTQWY=
+	t=1782355293; cv=none; b=frN2cwVWGSFutSLggFwmERTIO6/iE1O9owt58tempwWIV/hp6yDEAps3eNeyVXLgNCmBNSYgUp+C7sRleFOYJuzSPKlazmv6eeoSojP5INJ/Kihf/S5AlvY7yjcQ3lQfANPMW+3Wu5L0EKsUIT1yJXFHs/wAQ+t+wd5PIZSjPgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782354451; c=relaxed/simple;
-	bh=uhwCJjOx0RRcOeQ1GrJvK1wVL3EQ4y0qYMSWsJFYTvA=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=r5l50Q69lX8W2KjoEzmenaAjFo4iYL2PWrSUD/sYqDvGJst/Sd9JC0QFn59nWDd1wMxhV9w6aG6+hAxJ/TL6rwqcAaBFQOivjftVwYPDRhYfdSZRDyCDCcxGmIou3ZeuOa3pYZPRT8b6ziNZ7Zlqgph471aveDk8Jh1AHsfAwiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IIoCBHSH; arc=none smtp.client-ip=95.215.58.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IIoCBHSH"
-Message-ID: <404180d0-c734-4465-8752-f43279730692@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1782354448;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6RexzsFyKUpqnLGWUfFRnHWPPcCFNo2VQKsuPWYJRXY=;
-	b=IIoCBHSHl3qD/fmWl2OjeAOQvz+ZVqVu+W7E8m3Nf0z/nSU5zHcHTzXaYiKGsnFeErV8K5
-	yATz0GbIZQFeWqmJSJLRP/V0SGHk8YVD+kfBlnnrGEPfIZ34RhNEupXiLKMrQ3UqjSzIzL
-	UQ49vlLZhDrpmdNji2lByzESJ3zxl4g=
-Date: Thu, 25 Jun 2026 10:27:14 +0800
+	s=arc-20240116; t=1782355293; c=relaxed/simple;
+	bh=HmM/nvptwnuvFXCkHu8CqOdZVHrb04Hz8BG2nwCFCFk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oa1ge2lKzm/xN72F0JL4+vUj0+j9oMC8jDI1k0iB7rBDd1f6UwRCZxEm8ttpoKun4SymScbOZ+P76xk6kPhTkGmnpMVtDLq4eGNv1j+CJYkIlqEl74b0iH+qlxhepJun52BtakqxeKbkpkl9wmcU7uICOAmqC1Mx0S6YH6gjZow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.180.135.67])
+	by gateway (Coremail) with SMTP id _____8DxrcBWlTxqd6sXAA--.37227S3;
+	Thu, 25 Jun 2026 10:41:26 +0800 (CST)
+Received: from localhost.localdomain.org (unknown [10.180.135.67])
+	by front1 (Coremail) with SMTP id qMiowJAxHMJPlTxqtEuyAA--.10446S2;
+	Thu, 25 Jun 2026 10:41:20 +0800 (CST)
+From: Hongchen Zhang <zhanghongchen@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"David Hildenbrand (Arm)" <david@kernel.org>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Helge Deller <deller@gmx.de>,
+	WangYuli <wangyuli@aosc.io>,
+	Tianyang Zhang <zhangtianyang@loongson.cn>,
+	Alistair Popple <apopple@nvidia.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Hongchen Zhang <zhanghongchen@loongson.cn>,
+	stable@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: Fix missing dirty page tracking with HW PTW for both pte and pmd
+Date: Thu, 25 Jun 2026 10:40:43 +0800
+Message-Id: <20260625024043.2960754-1-zhanghongchen@loongson.cn>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Cc: cui.tao@linux.dev, kernel@xen0n.name, kvm@vger.kernel.org,
- Tao Cui <cuitao@kylinos.cn>
-Subject: Re: [PATCH v4 2/3] LoongArch: KVM: Implement guest-side PV TLB flush
-To: Bibo Mao <maobibo@loongson.cn>, zhaotianrui@loongson.cn,
- chenhuacai@kernel.org, loongarch@lists.linux.dev
-References: <20260615082154.42144-1-cui.tao@linux.dev>
- <20260615082154.42144-3-cui.tao@linux.dev>
- <0c47ce21-9a4d-4cdc-9bec-ce749e31512e@loongson.cn>
- <1bfa4941-b94b-410a-9b64-c13f2712edf9@linux.dev>
- <9ec9d22b-93fd-3dcb-c6b8-19563f1b7c0a@loongson.cn>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Cui <cui.tao@linux.dev>
-In-Reply-To: <9ec9d22b-93fd-3dcb-c6b8-19563f1b7c0a@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-CM-TRANSID:qMiowJAxHMJPlTxqtEuyAA--.10446S2
+X-CM-SenderInfo: x2kd0w5krqwupkhqwqxorr0wxvrqhubq/1tbiAgEJB2o7cbAYigAAsP
+X-Coremail-Antispam: 1Uk129KBj93XoWxCFWDZF18Gw47GF13ZrWUGFX_yoW5Cr45pF
+	Z7GFyvvF48KF1fGayDurW3Jryqkws7JF4UGFs8Cw1DW3s8W34DXr1Ikrn5XFWrAa9Yvay8
+	Zr4rtrykWFW7ArgCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4j6r4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
+	Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
+	vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
+	x2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
+	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8Dl1DUUUUU==
 
+When hardware page table walk (PTW) is enabled on LoongArch, the CPU
+may set _PAGE_DIRTY directly in the page table entry during a write
+TLB miss, without going through the software TLB store handler. The
+software TLB store handler (tlbex.S:254) sets both _PAGE_DIRTY and
+_PAGE_MODIFIED together:
 
-Hi Bibo, 
+    ori t0, t0, (_PAGE_VALID | _PAGE_DIRTY | _PAGE_MODIFIED)
 
-在 2026/6/17 09:05, Bibo Mao 写道:
-> 
->> Rather than argue from intuition, I'd like to try the hypercall approach
->> you suggested and measure the performance improvement against the current
->> path. I'll share the results with you once the testing is done, so we
->> can decide the direction based on the numbers.
-> well, that is the best. It is my pleasure to discuss this with you.
-> 
+But hardware PTW only sets _PAGE_DIRTY, the software-only bit
+_PAGE_MODIFIED is left unchanged. This creates a window where a PTE
+has _PAGE_DIRTY set (hardware knows the page is dirty) but
+_PAGE_MODIFIED clear (software is unaware).
 
-A quick update on the testing. I put both the hypercall and the
-steal-time variants through two benchmarks on an 8-core host with a
-4:1 overcommitted guest (32 vCPUs), and wanted to share where things
-stand.
+When fork() triggers copy-on-write, __copy_present_ptes() calls
+pte_wrprotect(), which unconditionally clears both _PAGE_WRITE and
+_PAGE_DIRTY:
 
-The two workloads:
- - ebizzy (all threads busy, mm-flush heavy)
- - tlb_bench in sleep-idle mode (1 flusher + 31 sleeping idle threads,
-   so the idle vCPUs get preempted)
+    pte_val(pte) &= ~(_PAGE_WRITE | _PAGE_DIRTY);
 
-ebizzy (records/s, higher is better), 32 vCPUs:
-  no-PV       ~103,737
-  hypercall   ~105,779
-  steal-time  ~105,872
-  -> all within noise (±2%); no measurable difference.
+Since _PAGE_MODIFIED was never set, the dirtiness information is
+completely lost. Subsequently, when memory pressure triggers page
+reclaim, page_mkclean() / try_to_unmap() sees the page as clean
+(pte_dirty() returns false) and the page may be freed without
+writeback, causing data corruption.
 
-tlb_bench sleep-idle (ns/flush, lower is better), 1 flusher + 31 idle:
-  no-PV       ~166,536
-  steal-time  ~149,553
-  hypercall    ~88,686
+Fix this by propagating _PAGE_DIRTY to _PAGE_MODIFIED in both
+pte_wrprotect() and pmd_wrprotect() before clearing writability bits:
 
-ebizzy's workload is mostly threads staying busy with alloc/copy/free,
-which drives remote TLB flushes against running vCPUs — that may not be
-the path this feature is meant to optimize, so the flat result there
-probably says more about the workload mismatch than about the feature
-itself. I need to take another look at whether the benchmark actually
-exercises the cases PV TLB flush targets before reading too much into
-the numbers, including the tlb_bench figure above.
+    if (pte_val(pte) & _PAGE_DIRTY)
+        pte_val(pte) |= _PAGE_MODIFIED;
 
-So I'd hold off on any conclusion for now. Next I'll re-examine the
-test setup / pick a workload that better matches the feature, and keep
-you posted once I have something more representative.
+The pmd_wrprotect() fix handles the CONFIG_TRANSPARENT_HUGEPAGE case,
+where pmd entries need the same treatment.
 
-Best,
-Tao
+This ensures the software dirty tracking bit (checked by pte_dirty(),
+which reads _PAGE_DIRTY | _PAGE_MODIFIED) is preserved across fork
+COW write-protection.
 
+The issue was found by LTP madvise09 test case, which exercises
+page reclaim after madvise(MADV_FREE)/write/fork on private anonymous
+mappings.
+
+Fixes: 09cfefb7fa70 ("LoongArch: Add memory management")
+Cc: stable@vger.kernel.org
+Co-developed-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Co-developed-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
+---
+ arch/loongarch/include/asm/pgtable.h | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
+index 2a0b63ae421f..223528c04d73 100644
+--- a/arch/loongarch/include/asm/pgtable.h
++++ b/arch/loongarch/include/asm/pgtable.h
+@@ -429,6 +429,8 @@ static inline pte_t pte_mkwrite_novma(pte_t pte)
+ 
+ static inline pte_t pte_wrprotect(pte_t pte)
+ {
++	if (pte_val(pte) & _PAGE_DIRTY)
++		pte_val(pte) |= _PAGE_MODIFIED;
+ 	pte_val(pte) &= ~(_PAGE_WRITE | _PAGE_DIRTY);
+ 	return pte;
+ }
+@@ -535,6 +537,8 @@ static inline pmd_t pmd_mkwrite_novma(pmd_t pmd)
+ 
+ static inline pmd_t pmd_wrprotect(pmd_t pmd)
+ {
++	if (pmd_val(pmd) & _PAGE_DIRTY)
++		pmd_val(pmd) |= _PAGE_MODIFIED;
+ 	pmd_val(pmd) &= ~(_PAGE_WRITE | _PAGE_DIRTY);
+ 	return pmd;
+ }
+-- 
+2.33.0
 
