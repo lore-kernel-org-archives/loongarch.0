@@ -1,97 +1,102 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E84A261B9B
-	for <loongarch@lists.linux.dev>; Wed, 24 Jun 2026 22:18:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48293368296
+	for <loongarch@lists.linux.dev>; Thu, 25 Jun 2026 02:27:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782339497; cv=none; b=OhSyXpwiNKxCCyVXReaXReE4RwZuM3pD/9NeucDJxsZbqvJYRd1vjLjfIwWTktaoiElzy64E6XMVLdWEcT5skfbevXk5QgBf+88VA8VZ7cocS3XaYyBFNeawDOB73CII2Zx1fRh90WwkgAsivyn+TM+8llBKBjWGKeTNiaxuems=
+	t=1782354451; cv=none; b=L1/N1s44gp434W9OYaitm/6Z7pUgErDUfZ+LQLrdqMAK7BygC/atdL///efScjuUHiCBtSOjFORAIGzH6bKLIJfMT9LCiyxzGX1SClBONRbBuIMI5YAhgn7RD7S4Np8DSn67OBZTlaeBpE/hHQwvDwHAdDYMnQiryuiJzNkTQWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782339497; c=relaxed/simple;
-	bh=+n08tj1EOwrvRXhAdjTQyU8ESor+gSj0Ef3eitEyJk4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AxMZR40Ej8ecuLGDO/gtrmvGPBHRjVz7657yeLBDNeNORGmh3xLh8vA1GH5gScOkKdtHhPzscaqapArErkoIP971z+kZzwPB3G9B+TqSF+7afq6C3sGu1GH6oDEE4NdX9HyhOMKCPiBFxati7fpS9ZHsgwTJ8NfYLj2/uT68H7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [36.44.124.104])
-	by gateway (Coremail) with SMTP id _____8BxJemkVzxqx5MXAA--.54468S3;
-	Thu, 25 Jun 2026 06:18:12 +0800 (CST)
-Received: from [192.168.0.111] (unknown [36.44.124.104])
-	by front1 (Coremail) with SMTP id qMiowJCxPMKhVzxq_xCyAA--.8437S3;
-	Thu, 25 Jun 2026 06:18:10 +0800 (CST)
-Message-ID: <8afb0401-9c53-f469-30d7-8e97e63c0189@loongson.cn>
-Date: Thu, 25 Jun 2026 06:18:13 +0800
+	s=arc-20240116; t=1782354451; c=relaxed/simple;
+	bh=uhwCJjOx0RRcOeQ1GrJvK1wVL3EQ4y0qYMSWsJFYTvA=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=r5l50Q69lX8W2KjoEzmenaAjFo4iYL2PWrSUD/sYqDvGJst/Sd9JC0QFn59nWDd1wMxhV9w6aG6+hAxJ/TL6rwqcAaBFQOivjftVwYPDRhYfdSZRDyCDCcxGmIou3ZeuOa3pYZPRT8b6ziNZ7Zlqgph471aveDk8Jh1AHsfAwiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IIoCBHSH; arc=none smtp.client-ip=95.215.58.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IIoCBHSH"
+Message-ID: <404180d0-c734-4465-8752-f43279730692@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1782354448;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6RexzsFyKUpqnLGWUfFRnHWPPcCFNo2VQKsuPWYJRXY=;
+	b=IIoCBHSHl3qD/fmWl2OjeAOQvz+ZVqVu+W7E8m3Nf0z/nSU5zHcHTzXaYiKGsnFeErV8K5
+	yATz0GbIZQFeWqmJSJLRP/V0SGHk8YVD+kfBlnnrGEPfIZ34RhNEupXiLKMrQ3UqjSzIzL
+	UQ49vlLZhDrpmdNji2lByzESJ3zxl4g=
+Date: Thu, 25 Jun 2026 10:27:14 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH bpf-next v2 0/4] selftests/bpf: Add some tests for
- LoongArch
-Content-Language: en-US
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
- Alexei Starovoitov <ast@kernel.org>, Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, bpf@vger.kernel.org
-References: <20260615100506.19558-1-yangtiezhu@loongson.cn>
- <DJ9QMPLAXOGG.2PDC3A2MUENPC@gmail.com>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-In-Reply-To: <DJ9QMPLAXOGG.2PDC3A2MUENPC@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qMiowJCxPMKhVzxq_xCyAA--.8437S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Gw48Xr47CF1rKF4kXF4rCrX_yoW8Jr1kp3
-	9a9F97Kr1kWryUAFsIgw1xuF17Xw13ur97G3WkGr1Yyr9I9F1Fqr97uFW5XFnrCryFk3W2
-	vr4vg34DKa4UtagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Jr0_Gr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
-	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
-	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
-	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
-	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
-	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU70PfDUUU
-	U
+Cc: cui.tao@linux.dev, kernel@xen0n.name, kvm@vger.kernel.org,
+ Tao Cui <cuitao@kylinos.cn>
+Subject: Re: [PATCH v4 2/3] LoongArch: KVM: Implement guest-side PV TLB flush
+To: Bibo Mao <maobibo@loongson.cn>, zhaotianrui@loongson.cn,
+ chenhuacai@kernel.org, loongarch@lists.linux.dev
+References: <20260615082154.42144-1-cui.tao@linux.dev>
+ <20260615082154.42144-3-cui.tao@linux.dev>
+ <0c47ce21-9a4d-4cdc-9bec-ce749e31512e@loongson.cn>
+ <1bfa4941-b94b-410a-9b64-c13f2712edf9@linux.dev>
+ <9ec9d22b-93fd-3dcb-c6b8-19563f1b7c0a@loongson.cn>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Tao Cui <cui.tao@linux.dev>
+In-Reply-To: <9ec9d22b-93fd-3dcb-c6b8-19563f1b7c0a@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 6/15/26 23:45, Alexei Starovoitov wrote:
-> On Mon Jun 15, 2026 at 3:05 AM PDT, Tiezhu Yang wrote:
->> This series is based on the latest master branch of bpf-next tree.
->> https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/
->>
->> Dependency Note:
->> ================
->> This series strictly depends on the following LoongArch core series,
->> which moves thread_info into task_struct:
->>
->> "Move thread_info into task_struct for LoongArch"
->> https://lore.kernel.org/loongarch/20260612011616.27771-1-yangtiezhu@loongson.cn/
+
+Hi Bibo, 
+
+在 2026/6/17 09:05, Bibo Mao 写道:
 > 
-> Pls repost when this patch appears in bpf-next.
+>> Rather than argue from intuition, I'd like to try the hypercall approach
+>> you suggested and measure the performance improvement against the current
+>> path. I'll share the results with you once the testing is done, so we
+>> can decide the direction based on the numbers.
+> well, that is the best. It is my pleasure to discuss this with you.
+> 
 
-OK, this is reasonable. I agree with you and plan to do this.
+A quick update on the testing. I put both the hypercall and the
+steal-time variants through two benchmarks on an 8-core host with a
+4:1 overcommitted guest (32 vCPUs), and wanted to share where things
+stand.
 
-But I noticed that this series has already been merged into
-the loongarch-next [1] tree, and there is something wrong
-between the code and commit message in the first patch [2].
+The two workloads:
+ - ebizzy (all threads busy, mm-flush heavy)
+ - tlb_bench in sleep-idle mode (1 flusher + 31 sleeping idle threads,
+   so the idle vCPUs get preempted)
 
-I think this is not proper. I suggest to drop them from the
-loongarch-next tree.
+ebizzy (records/s, higher is better), 32 vCPUs:
+  no-PV       ~103,737
+  hypercall   ~105,779
+  steal-time  ~105,872
+  -> all within noise (±2%); no measurable difference.
 
-Just FYI.
+tlb_bench sleep-idle (ns/flush, lower is better), 1 flusher + 31 idle:
+  no-PV       ~166,536
+  steal-time  ~149,553
+  hypercall    ~88,686
 
-[1] 
-https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git/
+ebizzy's workload is mostly threads staying busy with alloc/copy/free,
+which drives remote TLB flushes against running vCPUs — that may not be
+the path this feature is meant to optimize, so the flat result there
+probably says more about the workload mismatch than about the feature
+itself. I need to take another look at whether the benchmark actually
+exercises the cases PV TLB flush targets before reading too much into
+the numbers, including the tlb_bench figure above.
 
-[2] 
-https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git/commit/?h=loongarch-next&id=8796e11abddf
+So I'd hold off on any conclusion for now. Next I'll re-examine the
+test setup / pick a workload that better matches the feature, and keep
+you posted once I have something more representative.
 
-Thanks,
-Tiezhu
+Best,
+Tao
+
 
