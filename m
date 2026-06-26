@@ -1,156 +1,139 @@
-Received: from mail-yx1-f50.google.com (mail-yx1-f50.google.com [74.125.224.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52CAC3AC0EB
-	for <loongarch@lists.linux.dev>; Fri, 26 Jun 2026 10:59:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782471575; cv=pass; b=hxdy+vQRB3Doytw6aav6VfeVKvkyLO2+PqBwrV3xuyLqG/ff1awOCNajjLKCrV+KbYTTqzwO6oxegxJfFWfL/SdPhillgvhbU/zlQoYol1StCHshnQ3+qJhE3Y3VtyOtvmnfqKx/KYziMDJ1B/y4smzmc4FqxiRvL/SJAaRRdZk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782471575; c=relaxed/simple;
-	bh=4yYDYtXIlIrCfP2jjVqEgzPnko++m01eM6B6JBOeNrE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EAgjKNq+mT5wa5YCfdIVFMy86xzbXcq17V5zBXkCbOZ1iUpQPnxWyynCrpYTjEO4cBrxnfpKXzbcESAF5mFAOtA98kv0sDsGUwhMSvbGUxW5zYSzulrX6D5zKuqZl4Qx1DvNQxSQfLkn9SFzz3A1prqZOrjoSIaayfASVDiTBSo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eIvucT8p; arc=pass smtp.client-ip=74.125.224.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89FA403B01
+	for <loongarch@lists.linux.dev>; Fri, 26 Jun 2026 14:46:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782485171; cv=none; b=sPLenF1mKsGQhfGUzGDm4iaYobr5PG9YDxXnUNojhv87CeI4r3UfDlRMSDzlQMrsaInKSsJdlE+UBJCDt8d2BlHRyvLjSbMC2nAJ95I71uzkJTHoRqhrmF0S2Jekpwenqtj/IjoIf3NaGDcYuqyOPcT9lbyGquG/XCAneatd6VI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782485171; c=relaxed/simple;
+	bh=BgssH8vCKDppnzbwBoJeH2HdO6TiCS4MwxNCxIwOGxg=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=tsMueVxBSuFz8IUXliutD+YTOx+srAO4mR7lnOjcCbUM3+c/qxVJ2gIWmMy64uzlDuGtj8moo5zwI2TSqWtzq8jHuWMYLvwC6/+iwEldxGJPCsgznvnE4G1bcniwM/TZ5iR19pJOCyBegJPQJ8M0U4tYTPlwSPcXBbkztMNOUBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xBmLvvo9; arc=none smtp.client-ip=91.218.175.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eIvucT8p"
-Received: by mail-yx1-f50.google.com with SMTP id 956f58d0204a3-662fa4a4470so932209d50.0
-        for <loongarch@lists.linux.dev>; Fri, 26 Jun 2026 03:59:34 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1782471573; cv=none;
-        d=google.com; s=arc-20260327;
-        b=lMsX2Cg6mHGzGsWGpl99iXljaWeH2UFS7qoWPCCMLGAXgvOhcuis5m3VNpsXMpQcpd
-         AvTorBYRG+vKZdTNnXvADbDtZvp0FJ4Xt3i+1AUJ8FqbbSA+RojByIVEjnJhhGSVOK8p
-         WHB6z+kD/WyLjMtU45w/QC2gCxILdJn6k9Iyss3yJuQqhC8eSIKOna35iqOYp5TMEGQW
-         TVgAoqI5k9tRnF0ofOc9DNNRCKhnwAzP+RGn1l9DUo7qvZEA03wiuW1FkjqNilY34hOR
-         Xun5DcRor7LrltYhzyp4s+pqKXra34rX186fSlr1LKqXV6eAlWQheaIlhWPBGDbpT13w
-         npng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=5D+Arq0OSsap3F+LvB7ekAuzrcd4vf6SH4pb1GLsatI=;
-        fh=XZ9V7ajcNnXJFyToZv9jDNNOpNx5qzq4GUr1YcAUFmQ=;
-        b=IxRBNF78gQ3dh7aUr2c7uti/A6La07AfY1Kam7aA2JlquBMCp63hLYB/ZUKP50N00+
-         xaCUqzOuqDZfBECSRyY80BRCKmjBByjwjSmgxq/2tGUwUs48BcSfb4ESMJxMOZ9Q+Kcw
-         IkKvZEKGfsAyaqfLO6c78eF2XF5rAolXdcfbpVBSwZRFpg45q0thTQ0TvglSIW/BDlHs
-         aqBO6HcF5zX/L6itZPZIHfQ/PfKrgKCIJYHnm7orwUjkj6rk//Yj9KI2KW5CKZHoMbQ0
-         7GcNBFRPhmhqRn0M6Zil1Kq4DZyoxCQAV+C8jlXiwaI6/TyPHRYwi1R7o3/DHXT3jX9O
-         jm0g==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782471573; x=1783076373; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5D+Arq0OSsap3F+LvB7ekAuzrcd4vf6SH4pb1GLsatI=;
-        b=eIvucT8pvatisfO6ZDyP+QfP8EhNV0jMJjConjYVzo2AwRsEnyogtsPhCGTcZ5LBYy
-         n7IdLgMwRC6uH1yJIVGM6YuhHygJtU0fQ2RH24+gk8QC3RJkpoYhx/DcJefT3S531L/N
-         FzpDicU2m/IuSBdrvpRZZVRdneysfXkAzVwb1gAFcwXicNMiJ+R3VtZs9Ar77zBT7OTD
-         zwtHV/IBJRafyO06sqXnettxbgPlHztG3ZbNmn0Nus/tbk0cPgkE0ecPghT0Fmoz9iX4
-         GKP4sToRBBnSPDhY5uZ6uoTjLnwhjExaSXUtneOJW+4gLwdk6OzRo4yT1o0bonVc3kbQ
-         X2hA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782471573; x=1783076373;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=5D+Arq0OSsap3F+LvB7ekAuzrcd4vf6SH4pb1GLsatI=;
-        b=mMtOBODEG0rbV3pfH2d1/cQX05ti6qTAILaGmUtZ8mlMmwJ+qBHrE6cy55uJGc0Yuk
-         +oe0c3e+dWUE8n96SWdB5YEnRXbvN1hZqs21w3SlVjGPIUTDOjOLnYYPLCuZGzMlAXYI
-         k3I3KhpJdySlaYwpIdzEwVLekBIx1RwHLHLofZWT7AEI7Ax+fIOuYwdnAqECrPHTgPtH
-         wQYhcr15vjFyiuEz4LXClgU3BfoLE85LYy7XbIF/u4yk0BWRERATVWcQTuNItl5zBswU
-         YhJXAOy+4HDIfOgjJp1mVx/M4ZZf+Y+clkMmD4CA5wbh+xZUbcqtUAeMmBZmv+J46yEL
-         HtbA==
-X-Forwarded-Encrypted: i=1; AHgh+RqnOJGPGxWawKCZkRJkCgaBpzYYuH0gEDeAEQpiNi2Su04uklTOgKVriL/Lg8crIEumq03Y8RU8JRo=@lists.linux.dev
-X-Gm-Message-State: AOJu0YySsQkxwfDRQSb0TYi3zRsSC70+iT8mI9yueotesZyDAv5cs6Ou
-	A2A2oNVsy909ntl1R9szqnqhoDkhQHkr1XzvbhsAgykQ3HaYm0weZHBUDMuqQB/u+OyFhYfQuUf
-	4vSjQGf2jVCTPu/JQ+bI5+jzFCDXa/r4=
-X-Gm-Gg: AfdE7cni3duFMhaBv1cLtP5I0V9KrDNzxxgZgMAHszEeVNv+b7+TgmUBOX58zpH7KHS
-	lUHWYBuU690r+bxGTvDr3Ki/xpsNeiLHffHGweuFFwSrqeRFrdHJJnA6fSwqFsOaeraso7R5Sp4
-	rZ2QqmuFfXYnpkbZyePNvQSak8btmyeox4kYLs371Aauh2MFQA3q7Ug2JTeNNhXAT98ble1Sjjs
-	piEaOwEU45mlfI6m/zx2oUnzqpOfO80IuDTH2U6K3Eiugtvft+QAUelE2VUl9gwkpDLwQ==
-X-Received: by 2002:a05:690e:1686:b0:660:48b1:50fc with SMTP id
- 956f58d0204a3-66487e2f1b4mr5328375d50.29.1782471573329; Fri, 26 Jun 2026
- 03:59:33 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xBmLvvo9"
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <20260621145919.1453-1-ekffu200098@gmail.com> <aj426bA-YiOKt06m@kernel.org>
-In-Reply-To: <aj426bA-YiOKt06m@kernel.org>
-From: Sang-Heon Jeon <ekffu200098@gmail.com>
-Date: Fri, 26 Jun 2026 19:59:22 +0900
-X-Gm-Features: AVVi8CeTYWPFnSIqmIZ3cUOMnriJoMgLi6dkY_72NuzlW0NxE1cDivKv2fvqfq8
-Message-ID: <CABFDxME8wej3m8T5gn8y4dmpOLZutm=tDTa7ZcfhbWwScTu_5Q@mail.gmail.com>
-Subject: Re: [PATCH 0/6] treewide: remove unnecessary invalid range checks in
- memblock iteration loops
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Albert Ou <aou@eecs.berkeley.edu>, Andrew Morton <akpm@linux-foundation.org>, 
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
-	Oscar Salvador <osalvador@suse.de>, Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <pjw@kernel.org>, 
-	Will Deacon <will@kernel.org>, Alexander Potapenko <glider@google.com>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, David Hildenbrand <david@kernel.org>, 
-	Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com, 
-	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, 
-	linux-riscv@lists.infradead.org, loongarch@lists.linux.dev, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, WANG Xuerui <kernel@xen0n.name>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1782485154;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hLoe9hgpuLGAv9HcjQXiuki+Z1Eo9W05Z+080Efe+Rc=;
+	b=xBmLvvo9VeLWl6aCPOHJfACC84T1J3BTjH51kQr8iuIJvUHkpL0TY/1jmfKt3pAIas6Dh6
+	hMKA2it5f7Povtcv7HNEPaX/tbq52whxslXQwIYDMnFdkUFHHwDlaTZMjI6N1SUuxeL0dB
+	Mk0ZoJAcKfnjrWev0iaDEvycix+RYjk=
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 26 Jun 2026 14:45:45 +0000
+Message-Id: <DJJ28Z81JTQI.1SI0CNIP7W1JQ@linux.dev>
+Cc: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-doc@vger.kernel.org"
+ <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>, "kvmarm@lists.linux.dev"
+ <kvmarm@lists.linux.dev>, "linux-fsdevel@vger.kernel.org"
+ <linux-fsdevel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+ "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+ "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+ "kernel@xen0n.name" <kernel@xen0n.name>, "linux-riscv@lists.infradead.org"
+ <linux-riscv@lists.infradead.org>, "linux-s390@vger.kernel.org"
+ <linux-s390@vger.kernel.org>, "loongarch@lists.linux.dev"
+ <loongarch@lists.linux.dev>, "linux-pm@vger.kernel.org"
+ <linux-pm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>,
+ "corbet@lwn.net" <corbet@lwn.net>, "oupton@kernel.org" <oupton@kernel.org>,
+ "joey.gouly@arm.com" <joey.gouly@arm.com>, "suzuki.poulose@arm.com"
+ <suzuki.poulose@arm.com>, "yuzenghui@huawei.com" <yuzenghui@huawei.com>,
+ "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will@kernel.org"
+ <will@kernel.org>, "seanjc@google.com" <seanjc@google.com>,
+ "tglx@kernel.org" <tglx@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
+ "bp@alien8.de" <bp@alien8.de>, "dave.hansen@linux.intel.com"
+ <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>,
+ "hpa@zytor.com" <hpa@zytor.com>, "luto@kernel.org" <luto@kernel.org>,
+ "peterz@infradead.org" <peterz@infradead.org>, "willy@infradead.org"
+ <willy@infradead.org>, "akpm@linux-foundation.org"
+ <akpm@linux-foundation.org>, "david@kernel.org" <david@kernel.org>,
+ "lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>,
+ "vbabka@kernel.org" <vbabka@kernel.org>, "rppt@kernel.org"
+ <rppt@kernel.org>, "surenb@google.com" <surenb@google.com>,
+ "mhocko@suse.com" <mhocko@suse.com>, "ast@kernel.org" <ast@kernel.org>,
+ "daniel@iogearbox.net" <daniel@iogearbox.net>, "andrii@kernel.org"
+ <andrii@kernel.org>, "martin.lau@linux.dev" <martin.lau@linux.dev>,
+ "eddyz87@gmail.com" <eddyz87@gmail.com>, "song@kernel.org"
+ <song@kernel.org>, "yonghong.song@linux.dev" <yonghong.song@linux.dev>,
+ "john.fastabend@gmail.com" <john.fastabend@gmail.com>, "kpsingh@kernel.org"
+ <kpsingh@kernel.org>, "sdf@fomichev.me" <sdf@fomichev.me>,
+ "haoluo@google.com" <haoluo@google.com>, "jolsa@kernel.org"
+ <jolsa@kernel.org>, "jgg@ziepe.ca" <jgg@ziepe.ca>, "jhubbard@nvidia.com"
+ <jhubbard@nvidia.com>, "peterx@redhat.com" <peterx@redhat.com>,
+ "jannh@google.com" <jannh@google.com>, "pfalcato@suse.de"
+ <pfalcato@suse.de>, "skhan@linuxfoundation.org"
+ <skhan@linuxfoundation.org>, "riel@surriel.com" <riel@surriel.com>,
+ "ryan.roberts@arm.com" <ryan.roberts@arm.com>, "jgross@suse.com"
+ <jgross@suse.com>, "yu-cheng.yu@intel.com" <yu-cheng.yu@intel.com>,
+ "kas@kernel.org" <kas@kernel.org>, "coxu@redhat.com" <coxu@redhat.com>,
+ "ackerleytng@google.com" <ackerleytng@google.com>, "yosry@kernel.org"
+ <yosry@kernel.org>, "ajones@ventanamicro.com" <ajones@ventanamicro.com>,
+ "maobibo@loongson.cn" <maobibo@loongson.cn>, "tabba@google.com"
+ <tabba@google.com>, "prsampat@amd.com" <prsampat@amd.com>,
+ "wu.fei9@sanechips.com.cn" <wu.fei9@sanechips.com.cn>,
+ "mlevitsk@redhat.com" <mlevitsk@redhat.com>, "jmattson@google.com"
+ <jmattson@google.com>, "jthoughton@google.com" <jthoughton@google.com>,
+ "agordeev@linux.ibm.com" <agordeev@linux.ibm.com>, "alex@ghiti.fr"
+ <alex@ghiti.fr>, "borntraeger@linux.ibm.com" <borntraeger@linux.ibm.com>,
+ "chenhuacai@kernel.org" <chenhuacai@kernel.org>, "baolu.lu@linux.intel.com"
+ <baolu.lu@linux.intel.com>, "dev.jain@arm.com" <dev.jain@arm.com>,
+ "palmer@dabbelt.com" <palmer@dabbelt.com>, "pjw@kernel.org"
+ <pjw@kernel.org>, "shijie@os.amperecomputing.com"
+ <shijie@os.amperecomputing.com>, "thuth@redhat.com" <thuth@redhat.com>,
+ "yang@os.amperecomputing.com" <yang@os.amperecomputing.com>,
+ "Liam.Howlett@oracle.com" <Liam.Howlett@oracle.com>,
+ "zhengqi.arch@bytedance.com" <zhengqi.arch@bytedance.com>,
+ "lenb@kernel.org" <lenb@kernel.org>, "pavel@kernel.org" <pavel@kernel.org>,
+ "yangyicong@hisilicon.com" <yangyicong@hisilicon.com>,
+ "vannapurve@google.com" <vannapurve@google.com>, "jackmanb@google.com"
+ <jackmanb@google.com>, "patrick.roy@linux.dev" <patrick.roy@linux.dev>,
+ "Itazuri, Takahiro" <itazur@amazon.co.uk>
+Subject: Re: [PATCH v12 09/16] KVM: arm64: define
+ kvm_arch_gmem_supports_no_direct_map()
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Brendan Jackman" <brendan.jackman@linux.dev>
+To: "Marc Zyngier" <maz@kernel.org>, "Kalyazin, Nikita"
+ <kalyazin@amazon.co.uk>
+References: <20260410151746.61150-1-kalyazin@amazon.com>
+ <20260410151746.61150-10-kalyazin@amazon.com>
+ <86fr4o1ceu.wl-maz@kernel.org>
+In-Reply-To: <86fr4o1ceu.wl-maz@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, Jun 26, 2026 at 5:23=E2=80=AFPM Mike Rapoport <rppt@kernel.org> wro=
-te:
+On Tue Apr 21, 2026 at 4:55 PM UTC, Marc Zyngier wrote:
+> On Fri, 10 Apr 2026 16:19:24 +0100,
+> "Kalyazin, Nikita" <kalyazin@amazon.co.uk> wrote:
+>>=20
+>> From: Patrick Roy <patrick.roy@linux.dev>
+>>=20
+>> Support for GUEST_MEMFD_FLAG_NO_DIRECT_MAP on arm64 depends on 1) direct
+>> map manipulations at 4k granularity being possible, and 2) FEAT_S2FWB.
+>>=20
+>> 1) is met whenever the direct map is set up at 4k granularity (e.g. not
+>>  with huge/gigantic pages) at boottime, as due to ARM's
+>> break-before-make semantics, breaking huge mappings into 4k mappings in
+>> the direct map is not possible (BBM would require temporary invalidation
+>> of the entire huge mapping, even if only a 4k subrange should be zapped,
+>> which will probably crash the kernel). However, the current default for
+>> rodata_full is true, which forces a 4k direct map.
 >
-> On Sun, Jun 21, 2026 at 11:59:10PM +0900, Sang-Heon Jeon wrote:
-> > The memblock API guarantees that for_each_mem_range() and
-> > for_each_mem_pfn_range() never return an invalid range, meaning start i=
-s
-> > always less than end.
-> >
-> > Several memblock callers still have unnecessary invalid range checks in
-> > their loop bodies, so remove them.
-> >
-> > Sang-Heon Jeon (6):
-> >   arm64: mm: remove unreachable invalid range check in
-> >     kasan_init_shadow()
-> >   LoongArch: remove unreachable invalid range check in kasan_init()
-> >   riscv: remove unreachable invalid range check in
-> >     create_linear_mapping_page_table()
-> >   riscv: remove unreachable invalid range check in kasan_init()
-> >   mm: remove unnecessary empty range check in
-> >     early_calculate_totalpages()
-> >   mm/hugetlb: remove unnecessary empty range check in
-> >     hugetlb_bootmem_set_nodes()
->
-> I queued this for inclusion into memblock tree.
+> Where is this 4kB requirement enforced? Or is it that you means
+> "PAGE_SIZE"?
 
-Thank you, Mike.
-
-Could you please review and queue this patch [1] as well? It does the
-same kind of clean up, I just missed it at the time.
-
-[1] https://lore.kernel.org/all/20260626032902.703944-1-ekffu200098@gmail.c=
-om/
-
-> >  arch/arm64/mm/kasan_init.c     | 3 ---
-> >  arch/loongarch/mm/kasan_init.c | 3 ---
-> >  arch/riscv/mm/init.c           | 2 --
-> >  arch/riscv/mm/kasan_init.c     | 3 ---
-> >  mm/hugetlb.c                   | 3 +--
-> >  mm/mm_init.c                   | 3 +--
-> >  6 files changed, 2 insertions(+), 15 deletions(-)
-> >
-> > --
-> > 2.43.0
-> >
->
-> --
-> Sincerely yours,
-> Mike.
-
-Best Regards,
-Sang-Heon Jeon
+Yeah I believe this means PAGE_SIZE and that it's effectively enforced
+by checking can_set_direct_map() in
+kvm_arch_gmem_supports_no_direct_map().
