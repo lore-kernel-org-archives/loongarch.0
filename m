@@ -1,40 +1,42 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1AD3E832C
-	for <loongarch@lists.linux.dev>; Fri, 26 Jun 2026 10:38:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E9AA37188A
+	for <loongarch@lists.linux.dev>; Fri, 26 Jun 2026 10:52:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782470329; cv=none; b=CRRgHD5uN0I3Ptq/XF/aSX67qzLpEnzC1IrhM2fLN2flLSdjHKAcEVqvgMstoU3GSLvE8r/eVmteGAnDgPdLLybgHfv+IGvsoKPxeQP/X5B9wgWW1XVwUFR4vTaesxlbgl+ZFDp2yNwE3Sx/MHwPSlJOWHmw1h+7blAns1jij3Q=
+	t=1782471143; cv=none; b=A6Mk12qXAe6Z69EXuMvCX7O/BC7VCEXpSKFY9X/hoaCT37a7olz4mqo7IGNszlYV0VZgT0EptP6O4hXjA/AYrwTcKxecJDCO9nWTA7iquBBU6h5kX9DeaKGYvsjtqB8UOmb2NQRGDdjQoW6pdN8nvXYPHn5m5ufjHJgnkTAKtws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782470329; c=relaxed/simple;
+	s=arc-20240116; t=1782471143; c=relaxed/simple;
 	bh=d21F/jmMXz8n7tddwFZnpU9mN2PUUWdKMgoFTpQINnU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jbLF81rszS8xNtwEz4bWHcLl30iIEhsP82xSeOolFMOojNiCJM3qtaw+O7JCOVFlxwloKq71XY2LzIfWXyQUN7Gdd4pKHj5jGq2dIcIuxOgM2HVsxn1EZUvauxmTgxv/zRsG9ZzjbJ+XdAneaHG0CmVEsX7yXffcjsX2AYVIrVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VFZxB0NK; arc=none smtp.client-ip=95.215.58.187
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BE/Wfk1noL99PqqfCVZvviCeGnP6rRsKscKHh6fL7AEXD3Wcgpvqt2J4ufPAlK24Tw/O37gKop319HmEcfm3bdECXtcbhOGOsHN0ro0QyhjtU1UE2KyIPE3H0Ll18BuifNzU0J34Vh8gdZdDsirgrYHtCLktOjx950FDpWIw0oo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DUozc7xv; arc=none smtp.client-ip=95.215.58.183
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VFZxB0NK"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DUozc7xv"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1782470324;
+	t=1782471139;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding;
 	bh=HWktgbq7NgGGnrTybk5KiUwxIP14lnbdKeXbMxrkJ18=;
-	b=VFZxB0NK4gDXBNFmAR8CZaBKyj6pd2xcLQYfQ5Fn5yvaLUVp/IetpcjsxT/3LBnSegGWkp
-	VJjtzydSbfPq4nQiJO8pDzb3gMxwkgGEoW/TrZZx1cEEJ7tZBIRYh2k6A+0lgROecb6w3b
-	QvhhsxUAo76kAhh9zdarq1+CCsSlvnI=
+	b=DUozc7xvrlQColszuVMe2wf8lEvRUo6ixF+YdsKzpLmeoCd4SzX5BwWKOaTgpXD5je0HWt
+	c9MchlS1i1WtDSXqFlNjkbrHRUVI95MEP2X7Mgx+cr+iwivxglR1Ll0q091SeVaQaePCqj
+	f541jfdlTjqu/ViaSOjAVcNA71yuj80=
 From: George Guo <dongtai.guo@linux.dev>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: WANG Xuerui <kernel@xen0n.name>,
 	Qiang Ma <maqianga@uniontech.com>,
-	Kexin Liu <liukexin@kylinos.cn>,
 	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
+	linux-kernel@vger.kernel.org,
+	George Guo <guodongtai@kylinos.cn>,
+	kernel test robot <lkp@intel.com>,
+	Kexin Liu <liukexin@kylinos.cn>
 Subject: [PATCH] LoongArch: kexec: Fix address space mismatch in command line lookup
-Date: Fri, 26 Jun 2026 18:38:35 +0800
-Message-Id: <20260626103835.353818-1-dongtai.guo@linux.dev>
+Date: Fri, 26 Jun 2026 18:51:50 +0800
+Message-Id: <20260626105150.362203-1-dongtai.guo@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
