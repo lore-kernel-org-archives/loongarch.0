@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08EA827FD51;
-	Fri, 26 Jun 2026 08:21:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E1E13DA7FF;
+	Fri, 26 Jun 2026 08:21:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782462073; cv=none; b=F0nQZFnDiQhTt9c5MjvSYbcn/uk62jD2Gk9PNSKTtbTHLBWBe2udgowp4WO8xnzZamhn19B6KzeG7vmxtoBFmR6q6rF7h/HJSILrX3ZTeK5yWo1Umx9zHU5ULsgac/E0OtTOhD9zVrySRTk9rqS69Xpb/vl3bBcs1sf1TkrzmAw=
+	t=1782462086; cv=none; b=ICb2+IgDL5Hw9F1bxIiCFBflGJZLh/N8yvgfPfp4soeH+zxh+MiLoA+KBqNHkUZyNyD4u7pqXc3TPuV23FBYj55OIT2QQ1f63WVoqIJjr78T4rfKRLBTwvN9VQB1q1hxb0zoxyX9HBI5Sc/wlBQ0IqJTTMIMvUQfR3alID4dCvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782462073; c=relaxed/simple;
-	bh=1LBlkTheA3kClbGdWMDAwKTnWvFnD+kxP8XV/azEEVg=;
+	s=arc-20240116; t=1782462086; c=relaxed/simple;
+	bh=jozA/9hSSEl0LZa5zjviMwaxKKk6EFT508tBeV+rv90=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=hNldIJRmg1YLI2lNnat3lM+BlTlQhYkqEOeQQykeSZOXQ2aP5BFVrRqDL1OyVrToi1bWX6CNoMMdpEk8hns3PxNA1EVxLbiN57yIqGt+5QVjMWgN4Hn3A/juXhS+XqPzCIZzY6H4FzD1nleohLGjFkIdfoQKfL0jPHOUtTdbzyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VRNylShy; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:To:Cc; b=jyJ6BmXvJfCgDUAcxiqDBMIn1DsPL8pvp0NnYbKQh6eh3yNMkLspjF8zzzbNi+n6PQCDMKjo10yI9B3fwjlkaUvswtriQmnedRfkVrTcxLC6r/flgJGPet9LaZGIa0TuZCN7Q24zAT3+PkmORxSGzsLoU7QMxuJEx4E5nvUAk1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XcOuCqMe; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VRNylShy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97F631F000E9;
-	Fri, 26 Jun 2026 08:21:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XcOuCqMe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D08041F01558;
+	Fri, 26 Jun 2026 08:21:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782462071;
-	bh=iV8Y1qpbWig8yFM44HizyDZ9SD78GLMuCnUipxKToIg=;
+	s=k20260515; t=1782462084;
+	bh=E/4pqgcq9wOLsYE6QVsSxWSWz+ZXSQyYGZ30obGSCUs=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc;
-	b=VRNylShyN+OO0dqReJbUBK5qFI1f6x5ouAiqFCYrkYYUy8b1gMx/LM0S+wdPJVGQF
-	 jJ/q0NoPAVrPkfBKALquiLSi66MRTNQPndo+znqjmDQLg1xvBKHoopICntwZGcuu8X
-	 ikLcRHzizfC+yRm+bZ7OqmquLsXsx3wcYGymB8+hC4hw6j6FB7rvlCxdjjIDW9i03i
-	 E/eIBYBNSh2a2AMpC34HSlEWm0jMor1n5uqlth3PC9c/0gDQf2WRm6QHi6eYZoWMYY
-	 DrTngTHNnd66HVz+Vov38qbQvIoPF2E9rhyCjS5TazDwiUUoPzl699cy+/S32kavM1
-	 FKdrOosJGm0+w==
+	b=XcOuCqMetxebaok5K747BiRuwF263jUQf6yCWdNaDMF23/wT10XwviIPTA4JVVOgb
+	 hRJ7fmvjaJO0hVXMKrZUCfZooWH/3Hc7nUL4tCBnkBaXogndD+PeCVBixrS/bW7XaO
+	 dvKHJMmlqOkiKcgmDDgUBx8dz6IdWYyFHI8Ka/+4zqAOiGbYE8UC409sw8N1fVBxVN
+	 jIN+faUZCAstmP7Q4rPNVuxR9HqnLb8yKeiFOlsxXRjgbnGFAhKmjWIT8m/R2vKSk7
+	 B0YgUgN5Q+i/YL7zbEhLJy34F2qFUnwC/froHedJvhycoV0suw+233NPcpZHU4Osz8
+	 +8q+nGUMMfE0Q==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id D0C0B39389E8;
-	Fri, 26 Jun 2026 08:20:59 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 19ABB39389E8;
+	Fri, 26 Jun 2026 08:21:13 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -37,85 +37,62 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 01/18] raid6: turn the userspace test harness into a kunit
- test
+Subject: Re: [PATCH v3 00/11] kdump: reduce vmcore size and capture time
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <178246205852.3816447.1024923704586855592.git-patchwork-notify@kernel.org>
-Date: Fri, 26 Jun 2026 08:20:58 +0000
-References: <20260518051804.462141-2-hch@lst.de>
-In-Reply-To: <20260518051804.462141-2-hch@lst.de>
-To: Christoph Hellwig <hch@lst.de>
-Cc: linux-riscv@lists.infradead.org, akpm@linux-foundation.org,
- catalin.marinas@arm.com, will@kernel.org, ardb@kernel.org,
- chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com,
- mpe@ellerman.id.au, npiggin@gmail.com, chleroy@kernel.org, pjw@kernel.org,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, hca@linux.ibm.com,
- gor@linux.ibm.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
- svens@linux.ibm.com, tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- herbert@gondor.apana.org.au, dan.j.williams@intel.com, clm@fb.com,
- dsterba@suse.com, arnd@arndb.de, song@kernel.org, yukuai@fnnas.com,
- linan122@huawei.com, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
- linux-crypto@vger.kernel.org, linux-btrfs@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-raid@vger.kernel.org
+ <178246207180.3816447.2682390089667943548.git-patchwork-notify@kernel.org>
+Date: Fri, 26 Jun 2026 08:21:11 +0000
+References: <20260527032917.3385849-1-chenwandun1@gmail.com>
+In-Reply-To: <20260527032917.3385849-1-chenwandun1@gmail.com>
+To: Wandun <chenwandun1@gmail.com>
+Cc: linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ devicetree@vger.kernel.org, kexec@lists.infradead.org, iommu@lists.linux.dev,
+ zhaomeijing@lixiang.com, catalin.marinas@arm.com, will@kernel.org,
+ chenhuacai@kernel.org, kernel@xen0n.name, pjw@kernel.org, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, alex@ghiti.fr, robh@kernel.org, saravanak@kernel.org,
+ akpm@linux-foundation.org, bhe@redhat.com, rppt@kernel.org,
+ pasha.tatashin@soleen.com, pratyush@kernel.org, ruirui.yang@linux.dev,
+ m.szyprowski@samsung.com, robin.murphy@arm.com, quic_obabatun@quicinc.com
 
 Hello:
 
 This series was applied to riscv/linux.git (fixes)
-by Andrew Morton <akpm@linux-foundation.org>:
+by Rob Herring (Arm) <robh@kernel.org>:
 
-On Mon, 18 May 2026 07:17:44 +0200 you wrote:
-> Currently the raid6 code can be compiled as userspace code to run the
-> test suite.  Convert that to be a kunit case with minimal changes to
-> avoid mutating global state so that we can drop this requirement.
+On Wed, 27 May 2026 11:29:06 +0800 you wrote:
+> From: Wandun Chen <chenwandun@lixiang.com>
 > 
-> Note that this is not a good kunit test case yet and will need a lot more
-> work, but that is deferred until the raid6 code is moved to it's new
-> place, which is easier if the userspace makefile doesn't need adjustments
-> for the new location first.
+> On SoCs that carve out large firmware-owned reserved memory (GPU
+> firmware, DSP, modem, camera ISP, NPU, ...), kdump currently dumps
+> those carveouts as part of system RAM even though their contents are
+> firmware state that is not useful for kernel crash analysis.
 > 
 > [...]
 
 Here is the summary with links:
-  - [01/18] raid6: turn the userspace test harness into a kunit test
-    https://git.kernel.org/riscv/c/c4697486fc23
-  - [02/18] raid6: remove __KERNEL__ ifdefs
-    https://git.kernel.org/riscv/c/3d6beb659ddf
-  - [03/18] raid6: move to lib/raid/
-    https://git.kernel.org/riscv/c/3626738bc714
-  - [04/18] raid6: remove unused defines in pq.h
-    https://git.kernel.org/riscv/c/06d2a66fb7c0
-  - [05/18] raid6: remove raid6_get_zero_page
-    https://git.kernel.org/riscv/c/885d31423183
-  - [06/18] raid6: use named initializers for struct raid6_calls
-    https://git.kernel.org/riscv/c/7e91f76a9668
-  - [07/18] raid6: improve the public interface
-    https://git.kernel.org/riscv/c/35472bc6f31b
-  - [08/18] raid6: warn when using less than four devices
-    https://git.kernel.org/riscv/c/2790045a62eb
-  - [09/18] raid6: hide internals
+  - [v3,01/11] of: reserved_mem: handle NULL name in of_reserved_mem_lookup()
+    https://git.kernel.org/riscv/c/cfba13a18672
+  - [v3,02/11] kexec/crash: provide crash_exclude_mem_range() stub when CONFIG_CRASH_DUMP=n
     (no matching commit)
-  - [10/18] raid6: rework registration of optimized algorithms
+  - [v3,03/11] of: reserved_mem: avoid post-init UAF when alloc_reserved_mem_array() fails
     (no matching commit)
-  - [11/18] raid6: use static_call for gen_syndrom and xor_syndrom
-    https://git.kernel.org/riscv/c/10f4b8e2a164
-  - [12/18] raid6: use static_call for raid6_recov_2data and raid6_recov_datap
-    https://git.kernel.org/riscv/c/dd83de0341da
-  - [13/18] raid6: update top of file comments
-    https://git.kernel.org/riscv/c/30bf04bd13a5
-  - [14/18] raid6_kunit: use KUNIT_CASE_PARAM
-    https://git.kernel.org/riscv/c/2175395f76c3
-  - [15/18] raid6_kunit: dynamically allocate data buffers using vmalloc
-    https://git.kernel.org/riscv/c/d67c25712fe3
-  - [16/18] raid6_kunit: cleanup dataptr handling
-    https://git.kernel.org/riscv/c/562bcbfcb99b
-  - [17/18] raid6_kunit: randomize parameters and increase limits
-    https://git.kernel.org/riscv/c/fa0c812c0aa5
-  - [18/18] raid6_kunit: randomize buffer alignment
-    https://git.kernel.org/riscv/c/8cf0a6c4bb9e
+  - [v3,04/11] of: reserved_mem: zero total_reserved_mem_cnt if no valid /reserved-memory entry
+    https://git.kernel.org/riscv/c/50a488de5fcc
+  - [v3,05/11] of: reserved_mem: split alloc_reserved_mem_array() from fdt_scan_reserved_mem_late()
+    (no matching commit)
+  - [v3,06/11] of: reserved_mem: add dumpable flag to opt-in vmcore
+    (no matching commit)
+  - [v3,07/11] of: reserved_mem: save /memreserve/ entries into the reserved_mem array
+    (no matching commit)
+  - [v3,08/11] of: reserved_mem: add kdump helpers to exclude non-dumpable regions
+    (no matching commit)
+  - [v3,09/11] arm64: kdump: exclude non-dumpable reserved memory regions from vmcore
+    (no matching commit)
+  - [v3,10/11] riscv: kdump: exclude non-dumpable reserved memory regions from vmcore
+    (no matching commit)
+  - [v3,11/11] loongarch: kdump: exclude non-dumpable reserved memory regions from vmcore
+    (no matching commit)
 
 You are awesome, thank you!
 -- 
