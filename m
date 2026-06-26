@@ -1,132 +1,63 @@
-Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A813B71CA
-	for <loongarch@lists.linux.dev>; Fri, 26 Jun 2026 15:29:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9A8F3FBEBC;
+	Fri, 26 Jun 2026 15:45:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782487748; cv=none; b=ZZo4KvJg5S93h+xgIB9+XZD8LFzWG7p2hhCeYMV366sNvjxkN56prVZDkHVhB8zvxtkMForKQmgxcz7kJo/fAebRMOfJWT2aPJAVEE6XcBemzNvO4LozSLBslEPF+QUgp95ykELPiwKcnchqcPugIeiHvi7lRMd7458iopWeTOE=
+	t=1782488762; cv=none; b=Ep0jjknTu5Y4sSJkMUaZ+uMoEcRGBTybPzlJp75IKD872cFneMtbcBh5aR3niiypkypRrvE4ET5MUPmJGnma2PzIS3numHf5FDTocWvHml4uF3vW2tApua1pvTmQtRbmMy5saQsc7xs/yST7hP9wf3fQgHjSuqKBT4JkbiTZjuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782487748; c=relaxed/simple;
-	bh=Wy502H7G6EG5DDUhaqL8ZH31eQuVJEouI4PSOxFgm0M=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=AqFwXvrGh1jFkls0XBRWcdq11egauw5Cukm6tO0UvRgM1ZaJAubugQqqoSQnmojTmMSYf5hsmc3k0vVzPovkUyuwJtn50IliKJ5qsjh+T4PfV29XKqG71v100aH6M6YOj7YK94aP6PlXzsUX+YRO585fIFoWvLYbgt0D6Y0ivZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wIhePOhy; arc=none smtp.client-ip=95.215.58.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1782488762; c=relaxed/simple;
+	bh=CJwqEtdfRJX34wd0ry8j+3Jv/vzEDvBn2SCFF+ytdS4=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=ZM1Ca1xYDkZVLtH0C9XDeFE/y7yqJGmAZaCrVFwSwbdfbseoFN2Q+ZxLPPyBk/l2prZABJfBi8Az8Q15wuaVE3Gz4s3czaO2K5fYBJFb7crRqCcb1wmVchyRmAxjo7+Iz9OkF5XC6ZUdl9FQJW8pCBbCcpYxnWNcWKqZJ/87zAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UO2K4THu; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wIhePOhy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UO2K4THu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91EEA1F00A3A;
+	Fri, 26 Jun 2026 15:45:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782488758;
+	bh=krRrUZmxOCkwuAeBH42IFqaVYnBwFatCyK6/n9xdZaM=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc;
+	b=UO2K4THuvE1fdPL+1zKTF1HgHcZtR0deRsSeGpGZ6EbWiGdHZz3Voc60ysIL+IRC9
+	 lfk30hzbQYl7klu217yzlQ/s47UhgBzJahN405+Y+7bWCqgkXK+f2D9tX6DUSoZ82N
+	 q+hucMWUqzZtlMUj56OiXhOIU3ajyMRPlOthfXQ60ANTUXKJi4jGOHMwdk/T0zsz/z
+	 Pzfp+U1eQsq5isiIJExBt9dxUhw4H4U9x2h+KbC2/VOpTY32DJYDIeqnFTWkDOVFWF
+	 4pUKzSIBE9c/h26j8lMAVigw+L2agNVHgpULB8bCXZsxiYgk4m1ea58Ew9VUSlDi13
+	 XdYgZs1Un7OWQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 93E7F3938C49;
+	Fri, 26 Jun 2026 15:45:46 +0000 (UTC)
+Subject: Re: [GIT PULL] LoongArch changes for v7.2
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20260626150605.3967536-1-chenhuacai@loongson.cn>
+References: <20260626150605.3967536-1-chenhuacai@loongson.cn>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20260626150605.3967536-1-chenhuacai@loongson.cn>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-7.2
+X-PR-Tracked-Commit-Id: 262a3b4fa1792d40728c69995924e11cf761f5cf
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 51cb1aa1250c36269474b8b6ca6b6319e170f5a5
+Message-Id: <178248874526.1001923.7273945879011565611.pr-tracker-bot@kernel.org>
+Date: Fri, 26 Jun 2026 15:45:45 +0000
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1782487742;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=A9yV2d4U6Iq5tvwMQAZTQglaDvuPvKN3XGu5+n1GLLQ=;
-	b=wIhePOhyn6G6N5ff0edE/tWPIL0KMu4yLFZwEwWoqZZHrBK6tCDf3vdBAO8t9df+oI6kuQ
-	xLnpFgOEs4zA46/+kNEFwdQe2/mKKSiElfQZLqTo8viWrcXcy9xwbuopsxn4/7w4KV94aW
-	uCiQ2fhh93vV19Hi8UBA0NS234VnMPI=
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 26 Jun 2026 15:28:43 +0000
-Message-Id: <DJJ35VLH2PE5.DFD8OYXEOH97@linux.dev>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Brendan Jackman" <brendan.jackman@linux.dev>
-To: "Takahiro Itazuri" <itazur@amazon.com>, <seanjc@google.com>,
- <ljs@kernel.org>
-Cc: <Liam.Howlett@oracle.com>, <ackerleytng@google.com>,
- <agordeev@linux.ibm.com>, <ajones@ventanamicro.com>,
- <akpm@linux-foundation.org>, <alex@ghiti.fr>, <andrii@kernel.org>,
- <aou@eecs.berkeley.edu>, <ast@kernel.org>, <baolu.lu@linux.intel.com>,
- <catalin.marinas@arm.com>, <chenhuacai@kernel.org>, <corbet@lwn.net>,
- <coxu@redhat.com>, <daniel@iogearbox.net>, <dave.hansen@linux.intel.com>,
- <david@kernel.org>, <dev.jain@arm.com>, <itazur@amazon.co.uk>,
- <jackmanb@google.com>, <jannh@google.com>, <jhubbard@nvidia.com>,
- <jmattson@google.com>, <joey.gouly@arm.com>, <john.fastabend@gmail.com>,
- <jolsa@kernel.org>, <jthoughton@google.com>, <kas@kernel.org>,
- <kernel@xen0n.name>, <kpsingh@kernel.org>, <kvm@vger.kernel.org>,
- <kvmarm@lists.linux.dev>, <lenb@kernel.org>,
- <linux-arm-kernel@lists.infradead.org>, <linux-doc@vger.kernel.org>,
- <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-kselftest@vger.kernel.org>, <linux-mm@kvack.org>,
- <linux-pm@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
- <linux-s390@vger.kernel.org>, <loongarch@lists.linux.dev>,
- <lorenzo.stoakes@oracle.com>, <luto@kernel.org>, <maobibo@loongson.cn>,
- <martin.lau@linux.dev>, <maz@kernel.org>, <mhocko@suse.com>,
- <mingo@redhat.com>, <mlevitsk@redhat.com>, <nikita.kalyazin@linux.dev>,
- <oupton@kernel.org>, <palmer@dabbelt.com>, <patrick.roy@linux.dev>,
- <pavel@kernel.org>, <pbonzini@redhat.com>, <peterx@redhat.com>,
- <peterz@infradead.org>, <pfalcato@suse.de>, <pjw@kernel.org>,
- <prsampat@amd.com>, <rafael@kernel.org>, <riel@surriel.com>,
- <rppt@kernel.org>, <ryan.roberts@arm.com>, <sdf@fomichev.me>,
- <shijie@os.amperecomputing.com>, <skhan@linuxfoundation.org>,
- <song@kernel.org>, <surenb@google.com>, <suzuki.poulose@arm.com>,
- <svens@linux.ibm.com>, <tabba@google.com>, <tglx@kernel.org>,
- <thuth@redhat.com>, <urezki@gmail.com>, <vannapurve@google.com>,
- <vbabka@kernel.org>, <will@kernel.org>, <willy@infradead.org>,
- <wu.fei9@sanechips.com.cn>, <x86@kernel.org>,
- <yang@os.amperecomputing.com>, <yangyicong@hisilicon.com>,
- <yonghong.song@linux.dev>, <yosry@kernel.org>, <yu-cheng.yu@intel.com>,
- <yuzenghui@huawei.com>, <zhengqi.arch@bytedance.com>
-Subject: Re: [PATCH v12 00/16] Direct Map Removal Support for guest_memfd
-References: <aeennZlV60k81OBf@google.com>
- <20260506080753.14517-1-itazur@amazon.com>
-In-Reply-To: <20260506080753.14517-1-itazur@amazon.com>
-X-Migadu-Flow: FLOW_OUT
 
-On Wed May 6, 2026 at 8:07 AM UTC, Takahiro Itazuri wrote:
-> Hi Lorenzo and Sean,
->
-> Apologies for the delayed reply =E2=80=94 Nikita is leaving Amazon, and I=
-'m
-> taking over this series going forward. Thanks for your patience.
->
-> On Tue, Apr 21, 2026 at 01:40:00PM +0000, Lorenzo Stoakes wrote:
->> Hm, given this touches a fair bit of mm, I wonder if we shouldn't try to=
- do this
->> through the mm tree?
->
-> On Tue, Apr 21, 2026 at 04:36:00PM +0000, Sean Christopherson wrote:
->> Yeah, when the time comes, the mm pieces definitely need to go through t=
-he mm
->> tree.  Ideally, I think this would be merged in two separate parts, with=
- all mm
->> changes going through the mm tree, and then the KVM changes through the =
-KVM tree
->> using a stable topic branch/tag from Andrew.
->
-> Thanks for the guidance. The split makes sense to me; I'm planning to
-> follow this approach with patches 1-6 (mm) going through the mm tree
-> and patches 7-16 (KVM) through the KVM tree on top of a stable
-> branch/tag from mm. I'll confirm the exact boundary and coordination
-> details as I prepare the repost.
->
-> On Tue, Apr 21, 2026 at 01:40:00PM +0000, Lorenzo Stoakes wrote:
->> In any case, we definitely need a rebase on something not-next :) if not=
- mm then
->> Linus's tree at least maybe?
->>
->> I'm seeing a lot of conflicts against mm-unstable, it can't b4 shazam ev=
-en patch
->> 1 and in Linus's tree it's failing at an mm patch (mm: introduce
->> AS_NO_DIRECT_MAP).
->
+The pull request you sent on Fri, 26 Jun 2026 23:06:04 +0800:
 
-Just as an FYI, I am gonna look at trying to move this forward a bit
-while Takahiro ramps up on taking over (I spoke to him about this off
-list).
+> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-7.2
 
-My ulterior motive is that this would give me an excuse to add
-ALLOC_UNMAPPED (formerly __GFP_UNMAPPED) and the mermap [0] which
-unblocks various security nonsense including ASI [1]. (But also, this
-feature is a good idea).
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/51cb1aa1250c36269474b8b6ca6b6319e170f5a5
 
-[0] https://lore.kernel.org/all/20260320-page_alloc-unmapped-v2-0-28bf1bd54=
-f41@google.com/
-[1] https://linuxasi.dev
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
