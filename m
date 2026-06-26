@@ -1,244 +1,125 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97C4D3BB4A
-	for <loongarch@lists.linux.dev>; Fri, 26 Jun 2026 02:53:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08EA827FD51;
+	Fri, 26 Jun 2026 08:21:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782442412; cv=none; b=ShJvyythL4Y4I1jZ3iSwoBCI73gAtf3FXrrRpS/bUSu2qJAFKF3IwgcYB7QiaHHYt/WCP4oojm1jT9ndEQk+M9aaPES0zXQPOw3Kb457SFArHG3NgbpLFm+68hgos64tGIIHN4d2rkTGrOf84Gol/G45mERiiS3HJO/k4TNR0gA=
+	t=1782462073; cv=none; b=F0nQZFnDiQhTt9c5MjvSYbcn/uk62jD2Gk9PNSKTtbTHLBWBe2udgowp4WO8xnzZamhn19B6KzeG7vmxtoBFmR6q6rF7h/HJSILrX3ZTeK5yWo1Umx9zHU5ULsgac/E0OtTOhD9zVrySRTk9rqS69Xpb/vl3bBcs1sf1TkrzmAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782442412; c=relaxed/simple;
-	bh=gV1aOJZoZjxm0TX13e5rocssGvwodffJDsO8CKFxeEM=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Wvnmt4MmL0CO07U0RTRwEheg9sBWmv5OMQbokMjl6loeT61fjQ7U0Krt5AqFW4Jyob6fW5tRlW880SN1Pr/c+aNssB3j6Z668vEUyfxXDV3/0lN9l8wuhkHE4W4gZ32RKxVpd+q7E9cuwcprOLCFCRSt4naaVHG6xtVo3wnHEdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=b6aaERhY; arc=none smtp.client-ip=91.218.175.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1782462073; c=relaxed/simple;
+	bh=1LBlkTheA3kClbGdWMDAwKTnWvFnD+kxP8XV/azEEVg=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=hNldIJRmg1YLI2lNnat3lM+BlTlQhYkqEOeQQykeSZOXQ2aP5BFVrRqDL1OyVrToi1bWX6CNoMMdpEk8hns3PxNA1EVxLbiN57yIqGt+5QVjMWgN4Hn3A/juXhS+XqPzCIZzY6H4FzD1nleohLGjFkIdfoQKfL0jPHOUtTdbzyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VRNylShy; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="b6aaERhY"
-Message-ID: <d09a90f7-94b1-4a2f-bcea-d42802d2353e@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1782442408;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=I/kmCUr2FMukFT4QP+23bPCDsXUixLrGDX4iwtE8M1k=;
-	b=b6aaERhYcRMl2N43kzzCgYUUwU+ZjJGQIsa3oTCwdNbv9eV+kV34dAAD8gixRmHwP8nvTS
-	MVealMlQKavylimNZmBGNbF6QnykrdEYEKaa4UaEFVNNJ6nf/vC7cg4imadBX4r8ALGw88
-	A/y6nqd7FxpkJlKPrz2nt1pmeTgg78g=
-Date: Fri, 26 Jun 2026 10:53:19 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VRNylShy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97F631F000E9;
+	Fri, 26 Jun 2026 08:21:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782462071;
+	bh=iV8Y1qpbWig8yFM44HizyDZ9SD78GLMuCnUipxKToIg=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc;
+	b=VRNylShyN+OO0dqReJbUBK5qFI1f6x5ouAiqFCYrkYYUy8b1gMx/LM0S+wdPJVGQF
+	 jJ/q0NoPAVrPkfBKALquiLSi66MRTNQPndo+znqjmDQLg1xvBKHoopICntwZGcuu8X
+	 ikLcRHzizfC+yRm+bZ7OqmquLsXsx3wcYGymB8+hC4hw6j6FB7rvlCxdjjIDW9i03i
+	 E/eIBYBNSh2a2AMpC34HSlEWm0jMor1n5uqlth3PC9c/0gDQf2WRm6QHi6eYZoWMYY
+	 DrTngTHNnd66HVz+Vov38qbQvIoPF2E9rhyCjS5TazDwiUUoPzl699cy+/S32kavM1
+	 FKdrOosJGm0+w==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id D0C0B39389E8;
+	Fri, 26 Jun 2026 08:20:59 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Cc: cui.tao@linux.dev, kernel@xen0n.name, kvm@vger.kernel.org,
- Tao Cui <cuitao@kylinos.cn>
-Subject: Re: [PATCH v4 2/3] LoongArch: KVM: Implement guest-side PV TLB flush
-To: Bibo Mao <maobibo@loongson.cn>, zhaotianrui@loongson.cn,
- chenhuacai@kernel.org, loongarch@lists.linux.dev
-References: <20260615082154.42144-1-cui.tao@linux.dev>
- <20260615082154.42144-3-cui.tao@linux.dev>
- <0c47ce21-9a4d-4cdc-9bec-ce749e31512e@loongson.cn>
- <1bfa4941-b94b-410a-9b64-c13f2712edf9@linux.dev>
- <9ec9d22b-93fd-3dcb-c6b8-19563f1b7c0a@loongson.cn>
- <404180d0-c734-4465-8752-f43279730692@linux.dev>
- <6f837e00-e606-ddaa-b22b-dd30348a18fb@loongson.cn>
- <084d7bec-592c-31b5-aa44-099bff87af9a@loongson.cn>
- <013459e1-f817-42b5-a0fd-20b38d9b6140@linux.dev>
- <835a9c5c-2f66-293b-d093-fc59bac26a01@loongson.cn>
- <416dfbf8-f765-442e-b6de-6fc0fe1a4b5f@linux.dev>
- <a7e7a17c-fdaa-b168-2a7b-d4cd4018b662@loongson.cn>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Cui <cui.tao@linux.dev>
-In-Reply-To: <a7e7a17c-fdaa-b168-2a7b-d4cd4018b662@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Subject: Re: [PATCH 01/18] raid6: turn the userspace test harness into a kunit
+ test
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: 
+ <178246205852.3816447.1024923704586855592.git-patchwork-notify@kernel.org>
+Date: Fri, 26 Jun 2026 08:20:58 +0000
+References: <20260518051804.462141-2-hch@lst.de>
+In-Reply-To: <20260518051804.462141-2-hch@lst.de>
+To: Christoph Hellwig <hch@lst.de>
+Cc: linux-riscv@lists.infradead.org, akpm@linux-foundation.org,
+ catalin.marinas@arm.com, will@kernel.org, ardb@kernel.org,
+ chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com,
+ mpe@ellerman.id.au, npiggin@gmail.com, chleroy@kernel.org, pjw@kernel.org,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, hca@linux.ibm.com,
+ gor@linux.ibm.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+ svens@linux.ibm.com, tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ herbert@gondor.apana.org.au, dan.j.williams@intel.com, clm@fb.com,
+ dsterba@suse.com, arnd@arndb.de, song@kernel.org, yukuai@fnnas.com,
+ linan122@huawei.com, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+ linux-crypto@vger.kernel.org, linux-btrfs@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-raid@vger.kernel.org
 
+Hello:
 
+This series was applied to riscv/linux.git (fixes)
+by Andrew Morton <akpm@linux-foundation.org>:
 
-在 2026/6/26 09:37, Bibo Mao 写道:
+On Mon, 18 May 2026 07:17:44 +0200 you wrote:
+> Currently the raid6 code can be compiled as userspace code to run the
+> test suite.  Convert that to be a kunit case with minimal changes to
+> avoid mutating global state so that we can drop this requirement.
 > 
+> Note that this is not a good kunit test case yet and will need a lot more
+> work, but that is deferred until the raid6 code is moved to it's new
+> place, which is easier if the userspace makefile doesn't need adjustments
+> for the new location first.
 > 
-> On 2026/6/25 下午8:51, Tao Cui wrote:
->>
->>
->> 在 2026/6/25 15:36, Bibo Mao 写道:
->>>
->>>
->>> On 2026/6/25 下午3:15, Tao Cui wrote:
->>>>
->>>>
->>>> 在 2026/6/25 14:11, Bibo Mao 写道:
->>>>>
->>>>>
->>>>> On 2026/6/25 上午11:31, Bibo Mao wrote:
->>>>>>
->>>>>>
->>>>>> On 2026/6/25 上午10:27, Tao Cui wrote:
->>>>>>>
->>>>>>> Hi Bibo,
->>>>>>>
->>>>>>> 在 2026/6/17 09:05, Bibo Mao 写道:
->>>>>>>>
->>>>>>>>> Rather than argue from intuition, I'd like to try the hypercall approach
->>>>>>>>> you suggested and measure the performance improvement against the current
->>>>>>>>> path. I'll share the results with you once the testing is done, so we
->>>>>>>>> can decide the direction based on the numbers.
->>>>>>>> well, that is the best. It is my pleasure to discuss this with you.
->>>>>>>>
->>>>>>>
->>>>>>> A quick update on the testing. I put both the hypercall and the
->>>>>>> steal-time variants through two benchmarks on an 8-core host with a
->>>>>>> 4:1 overcommitted guest (32 vCPUs), and wanted to share where things
->>>>>>> stand.
->>>>>>>
->>>>>>> The two workloads:
->>>>>>>     - ebizzy (all threads busy, mm-flush heavy)
->>>>>>>     - tlb_bench in sleep-idle mode (1 flusher + 31 sleeping idle threads,
->>>>>>>       so the idle vCPUs get preempted)
->>>>>>>
->>>>>>> ebizzy (records/s, higher is better), 32 vCPUs:
->>>>>>>      no-PV       ~103,737
->>>>>>>      hypercall   ~105,779
->>>>>>>      steal-time  ~105,872
->>>>>>>      -> all within noise (±2%); no measurable difference.
->>>>>> Hi Tao,
->>>>>>
->>>>>> what is ebizzy command? ebizzy -m or ebizzy -M.
->>>>>>
->>>>>> could you try command on host and one VM without over-committed at first, and then two VMs and three VMs?
->>>>>>
->>>>>> Here is result on my 3C5000 Dual-way machines with 32 cores and two numa nodes:
->>>>>>                    ./ebizzy -m          ./ebizzy -M
->>>>>> host             8633                 158898
->>>>>> VM(32 vCPUs)     6610                 133153
->>>>>> VM/host          76%                  83%
->>>>>>
->>>>> just ./ebizzy -M is enough, it seems that CPU number is one key factor.
->>>>>
->>>>
->>>> Sorry for the delay — it turned out my ebizzy command was wrong. I had
->>>> been running `ebizzy -t <vcpus> -S 10`, which is neither -m nor -M, so
->>>> neither mmap mode was active and the workload wasn't really stressing
->>>> the TLB-flush path. Thanks for catching it.
->>>>
->>>> I re-ran with -m and -M on host and a single VM (8-core LoongArch
->>>> KVM host, 8 vCPU guest, 1:1, no overcommit).
->>>>
->>>>                    ebizzy -m        ebizzy -M
->>>> host             ~20,000          ~55,000
->>>> VM (8 vCPU,1:1)  ~17,000          ~53,000
->>>> VM/host          ~86%             ~97%
->>>>
->>>> The -m ratio (86%) is close to your 76%.
->>> On my 3C5000 Dual-way machine, VM has the same CPU/memory topology with physical machine, the kernel is mainline without any patch.
->>>                            ./ebizzy -M
->>> Host (32 pCPUs)           158898
->>> One VM(32 vCPUs)          133153                 83% of host
->>> Two VMs(32 vCPUs each)    9083 + 9630 = 18713    11% of host
->>>
->>> It seems that with ebizzy benchmark, there is big difference if vCPU is preempted. Even if vCPU is not preempted, the performance is only 83% of host on my 3C5000 Dual-way machine.
->>
->> After fixing the ebizzy command, I
->> have multi-VM overcommit results for both approaches.
->>
->> Setup: 8-core LoongArch (single-socket, single NUMA), KVM,
->> linux-next-20260623, 8 vCPU per VM. All VMs run ebizzy -M
->> simultaneously, 3 runs each. The PV-off baseline uses a guest kernel
->> with CONFIG_PARAVIRT=y but without the PV TLB flush patches, so
->> PV IPI and steal-time are active in all three columns.
->>
->> ebizzy -M, total records/s across all VMs:
->>
->>                PV-off      steal-time   hypercall
->>    1:1 (1VM)   53,600      53,800       53,900
->>    2:1 (2VM)    2,600      42,600       45,300
->>    3:1 (3VM)    2,800      44,700       46,000
->>
->> At 1:1 there is no difference — no vCPU gets preempted. Under
-> From the previous result, the score on host is 55,000, with 1:1 mode the virtualization efficiency is 97%, it is hard to improve actually. On my 3C5000 Dual-way machine, the virtualization efficiency is 83%, I think it can improve even with 1:1 mode.
-> 
-> Also the paper at https://dl.acm.org/doi/pdf/10.1145/2892242.2892245 proves it with 1:1 mode.
+> [...]
 
-Thanks for the reference. That makes sense — the 1:1 overhead is
-larger on multi-socket systems, so there may be room to improve
-even without overcommit.
+Here is the summary with links:
+  - [01/18] raid6: turn the userspace test harness into a kunit test
+    https://git.kernel.org/riscv/c/c4697486fc23
+  - [02/18] raid6: remove __KERNEL__ ifdefs
+    https://git.kernel.org/riscv/c/3d6beb659ddf
+  - [03/18] raid6: move to lib/raid/
+    https://git.kernel.org/riscv/c/3626738bc714
+  - [04/18] raid6: remove unused defines in pq.h
+    https://git.kernel.org/riscv/c/06d2a66fb7c0
+  - [05/18] raid6: remove raid6_get_zero_page
+    https://git.kernel.org/riscv/c/885d31423183
+  - [06/18] raid6: use named initializers for struct raid6_calls
+    https://git.kernel.org/riscv/c/7e91f76a9668
+  - [07/18] raid6: improve the public interface
+    https://git.kernel.org/riscv/c/35472bc6f31b
+  - [08/18] raid6: warn when using less than four devices
+    https://git.kernel.org/riscv/c/2790045a62eb
+  - [09/18] raid6: hide internals
+    (no matching commit)
+  - [10/18] raid6: rework registration of optimized algorithms
+    (no matching commit)
+  - [11/18] raid6: use static_call for gen_syndrom and xor_syndrom
+    https://git.kernel.org/riscv/c/10f4b8e2a164
+  - [12/18] raid6: use static_call for raid6_recov_2data and raid6_recov_datap
+    https://git.kernel.org/riscv/c/dd83de0341da
+  - [13/18] raid6: update top of file comments
+    https://git.kernel.org/riscv/c/30bf04bd13a5
+  - [14/18] raid6_kunit: use KUNIT_CASE_PARAM
+    https://git.kernel.org/riscv/c/2175395f76c3
+  - [15/18] raid6_kunit: dynamically allocate data buffers using vmalloc
+    https://git.kernel.org/riscv/c/d67c25712fe3
+  - [16/18] raid6_kunit: cleanup dataptr handling
+    https://git.kernel.org/riscv/c/562bcbfcb99b
+  - [17/18] raid6_kunit: randomize parameters and increase limits
+    https://git.kernel.org/riscv/c/fa0c812c0aa5
+  - [18/18] raid6_kunit: randomize buffer alignment
+    https://git.kernel.org/riscv/c/8cf0a6c4bb9e
 
->> overcommit, without PV TLB flush the throughput drops to ~3-5% of
->> the single-VM case, because every remote TLB flush sends IPIs to
->> preempted vCPUs. With either PV TLB flush variant, preempted vCPUs
->> are skipped, and total throughput stays at ~85-90% of single-VM
->> (bounded by physical cores).
->>
->> Hypercall is consistently 3-6% above steal-time in the overcommit
->> cases. A possible reason is that the hypercall hands the entire
->> target set to the host in one call, while steal-time still IPIs the
->> running vCPUs and only defers the preempted ones.
->>
->> On our 8-core machine the collapse is more severe than on your
->> 3C5000 (~5% vs 11% of host at 2 VMs), likely due to the smaller
->> core count and single-NUMA topology.
-> yeap, with more CPUs the benefit is more high. I think that this kind of patch had better be tested on server platform if there is such hardware by hand after all KVM is used in server platform in most time. I will test the patch in later.
-> 
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-I'll try to get access to a server-class LoongArch machine for
-further testing. If you're able to run the patches on the 3C5000,
-that would be great too.
-
-> Regards
-> Bibo Mao
->>
->> Thanks,
->> Tao
->>
->>>
->>> Regards
->>> Bibo Mao
->>>>
->>>> I then tried multi-VM overcommit (2 and 3 VMs, all running ebizzy -M
->>>> simultaneously). The initial result showed a large gap between the
->>>> PV-TLB-flush kernel and the baseline under overcommit. Both kernels
->>>> have CONFIG_PARAVIRT enabled (PV IPI and steal-time are active in
->>>> both), so PV TLB flush should be the main differentiator — but since
->>>> they are two separate kernel images rather than a clean on/off toggle,
->>>> there may be some noise from other differences. I'm now re-running
->>>> with a QEMU CPU property (kvm-pv-tlb-flush on/off) on the same kernel
->>>> to isolate the effect cleanly.
->>>>
->>>> I'll share the verified numbers once I have them.
->>>>
->>>> Thanks,
->>>> Tao
->>>>
->>>>>> Regards
->>>>>> Bibo Mao
->>>>>>
->>>>>>>
->>>>>>> tlb_bench sleep-idle (ns/flush, lower is better), 1 flusher + 31 idle:
->>>>>>>      no-PV       ~166,536
->>>>>>>      steal-time  ~149,553
->>>>>>>      hypercall    ~88,686
->>>>>>>
->>>>>>> ebizzy's workload is mostly threads staying busy with alloc/copy/free,
->>>>>>> which drives remote TLB flushes against running vCPUs — that may not be
->>>>>>> the path this feature is meant to optimize, so the flat result there
->>>>>>> probably says more about the workload mismatch than about the feature
->>>>>>> itself. I need to take another look at whether the benchmark actually
->>>>>>> exercises the cases PV TLB flush targets before reading too much into
->>>>>>> the numbers, including the tlb_bench figure above.
->>>>>>>
->>>>>>> So I'd hold off on any conclusion for now. Next I'll re-examine the
->>>>>>> test setup / pick a workload that better matches the feature, and keep
->>>>>>> you posted once I have something more representative.
->>>>>>>
->>>>>>> Best,
->>>>>>> Tao
->>>>>>>
->>>>>
->>>
-> 
 
