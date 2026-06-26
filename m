@@ -1,139 +1,152 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89FA403B01
-	for <loongarch@lists.linux.dev>; Fri, 26 Jun 2026 14:46:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF82B3769E6
+	for <loongarch@lists.linux.dev>; Fri, 26 Jun 2026 15:08:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782485171; cv=none; b=sPLenF1mKsGQhfGUzGDm4iaYobr5PG9YDxXnUNojhv87CeI4r3UfDlRMSDzlQMrsaInKSsJdlE+UBJCDt8d2BlHRyvLjSbMC2nAJ95I71uzkJTHoRqhrmF0S2Jekpwenqtj/IjoIf3NaGDcYuqyOPcT9lbyGquG/XCAneatd6VI=
+	t=1782486490; cv=none; b=Zva+8CeMpRvtD1ciiuECfUz0RywTiqwCOS6YhR6sT01CqqqdTdwpNi1HDiE50WBXTSVuaE4cx5nKuXogw7vDl5Er0yM3m7p1+EvCGfKk/QTrSg75QhPjAeRTHhQox7lClnLd21//uL4HUF6lkrRlxDIxQf5+0c/SM9sCjpAjVZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782485171; c=relaxed/simple;
-	bh=BgssH8vCKDppnzbwBoJeH2HdO6TiCS4MwxNCxIwOGxg=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=tsMueVxBSuFz8IUXliutD+YTOx+srAO4mR7lnOjcCbUM3+c/qxVJ2gIWmMy64uzlDuGtj8moo5zwI2TSqWtzq8jHuWMYLvwC6/+iwEldxGJPCsgznvnE4G1bcniwM/TZ5iR19pJOCyBegJPQJ8M0U4tYTPlwSPcXBbkztMNOUBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xBmLvvo9; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xBmLvvo9"
+	s=arc-20240116; t=1782486490; c=relaxed/simple;
+	bh=nHawKbVbsZKuniiw+r4XgINhMoVafVxexID6UXYmiRM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fvN654M4rTod08h1TF7EPZmUnOSjViR5cZb818P1AMN3nvh912Dd/TZgbIUhf3fIjEtv7MTvBX24LAsy+sX4dlgYB/Z9LHf3PTxym2Rxn+Mx6H4Q1NtoW0fLEQQfztxK1kmCxMnwsFrd/jAXHqidJqQoAXtS72EQ0mAVkCh+GmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.155])
+	by gateway (Coremail) with SMTP id _____8AxX+trlT5qK2UYAA--.62186S3;
+	Fri, 26 Jun 2026 23:06:19 +0800 (CST)
+Received: from kernelserver (unknown [223.64.68.155])
+	by front1 (Coremail) with SMTP id qMiowJAxVcBklT5qwhm0AA--.60682S2;
+	Fri, 26 Jun 2026 23:06:17 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch changes for v7.2
+Date: Fri, 26 Jun 2026 23:06:04 +0800
+Message-ID: <20260626150605.3967536-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1782485154;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hLoe9hgpuLGAv9HcjQXiuki+Z1Eo9W05Z+080Efe+Rc=;
-	b=xBmLvvo9VeLWl6aCPOHJfACC84T1J3BTjH51kQr8iuIJvUHkpL0TY/1jmfKt3pAIas6Dh6
-	hMKA2it5f7Povtcv7HNEPaX/tbq52whxslXQwIYDMnFdkUFHHwDlaTZMjI6N1SUuxeL0dB
-	Mk0ZoJAcKfnjrWev0iaDEvycix+RYjk=
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Fri, 26 Jun 2026 14:45:45 +0000
-Message-Id: <DJJ28Z81JTQI.1SI0CNIP7W1JQ@linux.dev>
-Cc: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-doc@vger.kernel.org"
- <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>, "kvmarm@lists.linux.dev"
- <kvmarm@lists.linux.dev>, "linux-fsdevel@vger.kernel.org"
- <linux-fsdevel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
- "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
- "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
- "kernel@xen0n.name" <kernel@xen0n.name>, "linux-riscv@lists.infradead.org"
- <linux-riscv@lists.infradead.org>, "linux-s390@vger.kernel.org"
- <linux-s390@vger.kernel.org>, "loongarch@lists.linux.dev"
- <loongarch@lists.linux.dev>, "linux-pm@vger.kernel.org"
- <linux-pm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>,
- "corbet@lwn.net" <corbet@lwn.net>, "oupton@kernel.org" <oupton@kernel.org>,
- "joey.gouly@arm.com" <joey.gouly@arm.com>, "suzuki.poulose@arm.com"
- <suzuki.poulose@arm.com>, "yuzenghui@huawei.com" <yuzenghui@huawei.com>,
- "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will@kernel.org"
- <will@kernel.org>, "seanjc@google.com" <seanjc@google.com>,
- "tglx@kernel.org" <tglx@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
- "bp@alien8.de" <bp@alien8.de>, "dave.hansen@linux.intel.com"
- <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>,
- "hpa@zytor.com" <hpa@zytor.com>, "luto@kernel.org" <luto@kernel.org>,
- "peterz@infradead.org" <peterz@infradead.org>, "willy@infradead.org"
- <willy@infradead.org>, "akpm@linux-foundation.org"
- <akpm@linux-foundation.org>, "david@kernel.org" <david@kernel.org>,
- "lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>,
- "vbabka@kernel.org" <vbabka@kernel.org>, "rppt@kernel.org"
- <rppt@kernel.org>, "surenb@google.com" <surenb@google.com>,
- "mhocko@suse.com" <mhocko@suse.com>, "ast@kernel.org" <ast@kernel.org>,
- "daniel@iogearbox.net" <daniel@iogearbox.net>, "andrii@kernel.org"
- <andrii@kernel.org>, "martin.lau@linux.dev" <martin.lau@linux.dev>,
- "eddyz87@gmail.com" <eddyz87@gmail.com>, "song@kernel.org"
- <song@kernel.org>, "yonghong.song@linux.dev" <yonghong.song@linux.dev>,
- "john.fastabend@gmail.com" <john.fastabend@gmail.com>, "kpsingh@kernel.org"
- <kpsingh@kernel.org>, "sdf@fomichev.me" <sdf@fomichev.me>,
- "haoluo@google.com" <haoluo@google.com>, "jolsa@kernel.org"
- <jolsa@kernel.org>, "jgg@ziepe.ca" <jgg@ziepe.ca>, "jhubbard@nvidia.com"
- <jhubbard@nvidia.com>, "peterx@redhat.com" <peterx@redhat.com>,
- "jannh@google.com" <jannh@google.com>, "pfalcato@suse.de"
- <pfalcato@suse.de>, "skhan@linuxfoundation.org"
- <skhan@linuxfoundation.org>, "riel@surriel.com" <riel@surriel.com>,
- "ryan.roberts@arm.com" <ryan.roberts@arm.com>, "jgross@suse.com"
- <jgross@suse.com>, "yu-cheng.yu@intel.com" <yu-cheng.yu@intel.com>,
- "kas@kernel.org" <kas@kernel.org>, "coxu@redhat.com" <coxu@redhat.com>,
- "ackerleytng@google.com" <ackerleytng@google.com>, "yosry@kernel.org"
- <yosry@kernel.org>, "ajones@ventanamicro.com" <ajones@ventanamicro.com>,
- "maobibo@loongson.cn" <maobibo@loongson.cn>, "tabba@google.com"
- <tabba@google.com>, "prsampat@amd.com" <prsampat@amd.com>,
- "wu.fei9@sanechips.com.cn" <wu.fei9@sanechips.com.cn>,
- "mlevitsk@redhat.com" <mlevitsk@redhat.com>, "jmattson@google.com"
- <jmattson@google.com>, "jthoughton@google.com" <jthoughton@google.com>,
- "agordeev@linux.ibm.com" <agordeev@linux.ibm.com>, "alex@ghiti.fr"
- <alex@ghiti.fr>, "borntraeger@linux.ibm.com" <borntraeger@linux.ibm.com>,
- "chenhuacai@kernel.org" <chenhuacai@kernel.org>, "baolu.lu@linux.intel.com"
- <baolu.lu@linux.intel.com>, "dev.jain@arm.com" <dev.jain@arm.com>,
- "palmer@dabbelt.com" <palmer@dabbelt.com>, "pjw@kernel.org"
- <pjw@kernel.org>, "shijie@os.amperecomputing.com"
- <shijie@os.amperecomputing.com>, "thuth@redhat.com" <thuth@redhat.com>,
- "yang@os.amperecomputing.com" <yang@os.amperecomputing.com>,
- "Liam.Howlett@oracle.com" <Liam.Howlett@oracle.com>,
- "zhengqi.arch@bytedance.com" <zhengqi.arch@bytedance.com>,
- "lenb@kernel.org" <lenb@kernel.org>, "pavel@kernel.org" <pavel@kernel.org>,
- "yangyicong@hisilicon.com" <yangyicong@hisilicon.com>,
- "vannapurve@google.com" <vannapurve@google.com>, "jackmanb@google.com"
- <jackmanb@google.com>, "patrick.roy@linux.dev" <patrick.roy@linux.dev>,
- "Itazuri, Takahiro" <itazur@amazon.co.uk>
-Subject: Re: [PATCH v12 09/16] KVM: arm64: define
- kvm_arch_gmem_supports_no_direct_map()
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Brendan Jackman" <brendan.jackman@linux.dev>
-To: "Marc Zyngier" <maz@kernel.org>, "Kalyazin, Nikita"
- <kalyazin@amazon.co.uk>
-References: <20260410151746.61150-1-kalyazin@amazon.com>
- <20260410151746.61150-10-kalyazin@amazon.com>
- <86fr4o1ceu.wl-maz@kernel.org>
-In-Reply-To: <86fr4o1ceu.wl-maz@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAxVcBklT5qwhm0AA--.60682S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxZFWUCrW3Jr4rKFW7GFyUArc_yoWrWrWUpF
+	9xurnxJr48GryfXFnxt343urn8Jr1kG34aq3Way34rCF47ZryUXr1xGrykXFyUJ3yrJry0
+	qr1rKwn0gF4UJ3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	AVWUtwAv7VC2z280aVAFwI0_Cr0_Gr1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x
+	0EwIxGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
+	bVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E74
+	80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0
+	I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04
+	k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7Cj
+	xVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8xsqJUUUUU==
 
-On Tue Apr 21, 2026 at 4:55 PM UTC, Marc Zyngier wrote:
-> On Fri, 10 Apr 2026 16:19:24 +0100,
-> "Kalyazin, Nikita" <kalyazin@amazon.co.uk> wrote:
->>=20
->> From: Patrick Roy <patrick.roy@linux.dev>
->>=20
->> Support for GUEST_MEMFD_FLAG_NO_DIRECT_MAP on arm64 depends on 1) direct
->> map manipulations at 4k granularity being possible, and 2) FEAT_S2FWB.
->>=20
->> 1) is met whenever the direct map is set up at 4k granularity (e.g. not
->>  with huge/gigantic pages) at boottime, as due to ARM's
->> break-before-make semantics, breaking huge mappings into 4k mappings in
->> the direct map is not possible (BBM would require temporary invalidation
->> of the entire huge mapping, even if only a 4k subrange should be zapped,
->> which will probably crash the kernel). However, the current default for
->> rodata_full is true, which forces a 4k direct map.
->
-> Where is this 4kB requirement enforced? Or is it that you means
-> "PAGE_SIZE"?
+The following changes since commit 8cd9520d35a6c38db6567e97dd93b1f11f185dc6:
 
-Yeah I believe this means PAGE_SIZE and that it's effectively enforced
-by checking can_set_direct_map() in
-kvm_arch_gmem_supports_no_direct_map().
+  Linux 7.1 (2026-06-14 15:58:38 +0100)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-7.2
+
+for you to fetch changes up to 262a3b4fa1792d40728c69995924e11cf761f5cf:
+
+  selftests/bpf: Test jited inline of bpf_get_smp_processor_id() for LoongArch (2026-06-25 13:08:58 +0800)
+
+----------------------------------------------------------------
+LoongArch changes for v7.2
+
+1, Add THREAD_INFO_IN_TASK implementation;
+2, Add build salt to the vDSO;
+3, Add some BPF JIT inline helpers;
+4, Update DTS for I2C clocks and clock-frequency;
+5, Some bug fixes and other small changes.
+
+I'm sorry for the late Pull-Request because a 32BIT build error is
+reported and fixed recently.
+----------------------------------------------------------------
+Bastian Blank (1):
+      LoongArch: Add build salt to the vDSO
+
+Hongchen Zhang (1):
+      LoongArch: Fix missing dirty page tracking in {pte,pmd}_wrprotect()
+
+Hongliang Wang (3):
+      LoongArch: dts: Add i2c clocks and clock-frequency properties to LS2K0500
+      LoongArch: dts: Add i2c clocks and clock-frequency properties to LS2K1000
+      LoongArch: dts: Add i2c clocks and clock-frequency properties to LS2K2000
+
+Huacai Chen (3):
+      Merge tag 'bpf-next-7.2' into loongarch-next
+      LoongArch: Add PIO for early access before ACPI PCI root register
+      LoongArch: Report dying CPU to RCU in stop_this_cpu()
+
+Tiezhu Yang (9):
+      LoongArch: Add THREAD_INFO_IN_TASK implementation
+      LoongArch: BPF: Fix outdated tail call comments
+      LoongArch: BPF: Fix off-by-one error in tail call
+      LoongArch: BPF: Inline bpf_get_current_task/_btf() helpers
+      LoongArch: BPF: Inline bpf_get_smp_processor_id() helper
+      selftests/bpf: Add get_preempt_count() support for LoongArch
+      selftests/bpf: Add __arch_loongarch to limit test cases for LoongArch
+      selftests/bpf: Test jited inline of bpf_get_current_task() for LoongArch
+      selftests/bpf: Test jited inline of bpf_get_smp_processor_id() for LoongArch
+
+Xuewen Wang (1):
+      LoongArch: Fix nr passing in set_direct_map_valid_noflush()
+
+谢致邦 (XIE Zhibang) (1):
+      LoongArch: Move struct kimage forward declaration before use
+
+ .../core/thread-info-in-task/arch-support.txt      |  2 +-
+ arch/loongarch/Kconfig                             |  1 +
+ arch/loongarch/boot/dts/loongson-2k0500.dtsi       | 12 +++++
+ arch/loongarch/boot/dts/loongson-2k1000.dtsi       |  4 ++
+ arch/loongarch/boot/dts/loongson-2k2000.dtsi       |  4 ++
+ arch/loongarch/include/asm/acpi.h                  |  2 +
+ arch/loongarch/include/asm/current.h               | 31 +++++++++++++
+ arch/loongarch/include/asm/kexec.h                 |  3 +-
+ arch/loongarch/include/asm/percpu.h                |  1 -
+ arch/loongarch/include/asm/pgtable.h               |  4 ++
+ arch/loongarch/include/asm/smp.h                   |  3 +-
+ arch/loongarch/include/asm/stackframe.h            | 10 ++--
+ arch/loongarch/include/asm/switch_to.h             |  7 ++-
+ arch/loongarch/include/asm/thread_info.h           | 10 ----
+ arch/loongarch/kernel/acpi.c                       | 28 +++++++++++
+ arch/loongarch/kernel/asm-offsets.c                |  6 +--
+ arch/loongarch/kernel/entry.S                      |  7 ++-
+ arch/loongarch/kernel/head.S                       | 18 +++++---
+ arch/loongarch/kernel/process.c                    |  2 +
+ arch/loongarch/kernel/relocate.c                   |  2 +-
+ arch/loongarch/kernel/setup.c                      |  3 ++
+ arch/loongarch/kernel/smp.c                        |  7 ++-
+ arch/loongarch/kernel/switch.S                     | 14 +++---
+ arch/loongarch/kernel/traps.c                      |  8 ++++
+ arch/loongarch/mm/pageattr.c                       |  2 +-
+ arch/loongarch/net/bpf_jit.c                       | 54 +++++++++++++++++++---
+ arch/loongarch/pci/acpi.c                          |  2 +
+ arch/loongarch/vdso/elf.S                          |  3 ++
+ tools/testing/selftests/bpf/bpf_experimental.h     |  7 +++
+ tools/testing/selftests/bpf/progs/bpf_misc.h       |  1 +
+ .../selftests/bpf/progs/verifier_jit_inline.c      | 13 ++++++
+ tools/testing/selftests/bpf/test_loader.c          |  5 ++
+ 32 files changed, 226 insertions(+), 50 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/current.h
+
