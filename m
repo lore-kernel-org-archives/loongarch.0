@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7193033C1AD;
-	Fri, 26 Jun 2026 08:21:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11493E63B7;
+	Fri, 26 Jun 2026 08:21:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782462088; cv=none; b=r67WLPmcgIdj78kxFfVSWGfTWR5uFFiGwPss+U+sr7mV2lpUXZdUWCV/7mpiDPGa/QRPA2z3gKMaUB6/CmlYAirXxl7rHJDiapOLY69QkkhfFU/LypZjyBQeTK4wpxKo9/RWJSetAnhNClDyUyNI5hPf8XZz5ewn0+RCkjw+AoM=
+	t=1782462089; cv=none; b=X9ajK4f5TsE3Q6sinJQV5NJrhhW/fkau7LFiEWLz2LK0NpVIFPFEBSMCYKEurlrXiXl0oJWGjKJwHT9LFsj/zHY4KIeUqNn3o9zGJV5eIHVTFRpk3KFAbFMwwB6VwalP0Z7bha+j9vTc5JTxFvNC4x7LqgiePKOYze2N93StIZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782462088; c=relaxed/simple;
-	bh=gjxS0uNdvbRMwyFGc5xVYSwTFrigLCR+dmWJeZKb1X0=;
+	s=arc-20240116; t=1782462089; c=relaxed/simple;
+	bh=FhxzUr3xSIqVmKLvLbWazz7YlCkIyFnNgG5krqvMrm0=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=hculBsYa+I+kvH9QRro8M7ZwAD78mPiwHDgXKdmAysW8rbwC64x1Y5rg6Bnew4/lp6MQAiM7xP7SvfwiSBvyE9xsa44KSQDZ1Nvvsy02ZxmD/AXMroYgEOLKnhQJY6ycZXIPY7A9xCAg4bgcdYM7SQwwzYNuYJoM1GGANO55bkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MC6yAmsd; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:To:Cc; b=nlFJBv/IfCoJULEApBddUwXA3QqpSAmtN53M8M3f/dEXSQB3W3sDP5XpiRdHhdLun5lzU1pxfsn3mVK7iWyWq6+RLNdgBsryA1O3OqCyqme2yP1s0VoZGj/ClLWPcGnnJN7rlJsxRpq/tJ/a5S0SH5hMX5+6AFs8ueXyAGXZP9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P2rMods2; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MC6yAmsd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3FFB1F00AC4;
-	Fri, 26 Jun 2026 08:21:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P2rMods2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1A8B1F00A3A;
+	Fri, 26 Jun 2026 08:21:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782462081;
-	bh=cnDZkcdojzG6TP+7FyMqVMauu4QrpFoQrKFZui4fel0=;
+	s=k20260515; t=1782462087;
+	bh=8Gh35kQAbF9NJda9I6lHvwWhKBgWUfcBmP3w8KkXOio=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc;
-	b=MC6yAmsds/bx8R7anvknX1AQ8wYErykOAlLqPC3rBrW/haRJJv9chUhiwT+CvnTmN
-	 khK/Dcw19LSCUFchb8D/hw+DpMaTb1XpLahGVWuQ2ovAXgjD87gIQurL0gIl9+xHit
-	 ncTog7IyU918i0n0R2d/om837p9tvnVMwNZwfwlMdGa5QlmnH1j/rqWXUCSJ6gUh9Z
-	 brR2GYKjb1zdGevtCBdmugxCTe8YRqU7Ur91VQYGPcJyxomzPIKGl4smPb/Yxi36dG
-	 9lOJILFIUiOpBT1cUYSLvvKVEE9Xu8TR8Q7d0eK5LtRY1OrEVkIWnTXlTpm48x7ej4
-	 4HMiz7mE0JbVg==
+	b=P2rMods2RZJ2WUH9fceMLGk+MpRiyzpYQRjH4L1pJ6AqR61HFQvucLW938qDFyqSa
+	 FrkrECMukEjHEVzuIjf3V5yv1Q9p5xzHWGE+6HTZgD9e8Q+Z7nOezHkV6X/Sw+wiEW
+	 UPxEJFogBt7IvXPhQEsLsvxrjA2ZUZ+sJUU/SjGsUQqENcjHgmsRWXaKB8JJOigNrD
+	 z/e7SPqqHF1NDBLkiCfywon1PNKm2pb6Q3QrCHZx2g16/jVLKpx0YZhOf14SdseVff
+	 79jb5rym05v6a+Y09V7n67Wwd7zqoPAjo6ZU1rDj2vUgGPcpWRf3ejlG4/+MASOcl2
+	 CdcLmqI3QOqjA==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 198C839389E8;
-	Fri, 26 Jun 2026 08:21:10 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 199D739389E8;
+	Fri, 26 Jun 2026 08:21:16 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -37,84 +37,52 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 01/19] btrfs: require at least 4 devices for RAID 6
+Subject: Re: [PATCH 0/5] mm/sparse-vmemmap: provide generic vmemmap_set_pmd()
+ and
+ vmemmap_check_pmd()
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <178246206859.3816447.16178589769412306177.git-patchwork-notify@kernel.org>
-Date: Fri, 26 Jun 2026 08:21:08 +0000
-References: <20260512052230.2947683-2-hch@lst.de>
-In-Reply-To: <20260512052230.2947683-2-hch@lst.de>
-To: Christoph Hellwig <hch@lst.de>
-Cc: linux-riscv@lists.infradead.org, akpm@linux-foundation.org,
- catalin.marinas@arm.com, will@kernel.org, ardb@kernel.org,
- chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com,
- mpe@ellerman.id.au, npiggin@gmail.com, chleroy@kernel.org, pjw@kernel.org,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, hca@linux.ibm.com,
- gor@linux.ibm.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
- svens@linux.ibm.com, tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- herbert@gondor.apana.org.au, dan.j.williams@intel.com, clm@fb.com,
- dsterba@suse.com, arnd@arndb.de, song@kernel.org, yukuai@fnnas.com,
- linan122@huawei.com, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
- linux-crypto@vger.kernel.org, linux-btrfs@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-raid@vger.kernel.org
+ <178246207479.3816447.9419541647213093704.git-patchwork-notify@kernel.org>
+Date: Fri, 26 Jun 2026 08:21:14 +0000
+References: <20260404071720.3577290-1-songmuchun@bytedance.com>
+In-Reply-To: <20260404071720.3577290-1-songmuchun@bytedance.com>
+To: Muchun Song <songmuchun@bytedance.com>
+Cc: linux-riscv@lists.infradead.org, catalin.marinas@arm.com, will@kernel.org,
+ chenhuacai@kernel.org, pjw@kernel.org, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, davem@davemloft.net, andreas@gaisler.com,
+ akpm@linux-foundation.org, david@kernel.org, muchun.song@linux.dev,
+ kernel@xen0n.name, alex@ghiti.fr, ljs@kernel.org, Liam.Howlett@oracle.com,
+ vbabka@kernel.org, rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+ ryan.roberts@arm.com, kevin.brodsky@arm.com, dev.jain@arm.com,
+ anshuman.khandual@arm.com, yang@os.amperecomputing.com,
+ chaitanyas.prakash@arm.com, wangyuquan1236@phytium.com.cn, ptesarik@suse.com,
+ austin.kim@lge.com, vishal.moola@gmail.com, junhui.liu@pigmoral.tech,
+ willy@infradead.org, alexs@kernel.org, chengkaitao@kylinos.cn,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, sparclinux@vger.kernel.org, linux-mm@kvack.org
 
 Hello:
 
 This series was applied to riscv/linux.git (fixes)
 by Andrew Morton <akpm@linux-foundation.org>:
 
-On Tue, 12 May 2026 07:20:41 +0200 you wrote:
-> While the RAID6 algorithm could in theory support 3 devices by just
-> copying the data disk to the two parity disks, this version is not only
-> useless because it is a suboptimal version of 3-way mirroring, but also
-> broken with various crashes and incorrect parity generation in various
-> architecture-optimized implementations.  Disallow it similar to mdraid
-> which requires at least 4 devices for RAID 6.
+On Sat,  4 Apr 2026 15:17:04 +0800 you wrote:
+> The two weak functions vmemmap_set_pmd() and vmemmap_check_pmd() are
+> currently no-ops on every architecture, forcing each platform that needs
+> them to duplicate the same handful of lines. Provide a generic implementation:
+> 
+> - vmemmap_set_pmd() simply sets a huge PMD with PAGE_KERNEL protection.
+> 
+> - vmemmap_check_pmd() verifies that the PMD is present and leaf,
+>   then calls the existing vmemmap_verify() helper.
 > 
 > [...]
 
 Here is the summary with links:
-  - [01/19] btrfs: require at least 4 devices for RAID 6
-    (no matching commit)
-  - [02/19] raid6: turn the userspace test harness into a kunit test
-    (no matching commit)
-  - [03/19] raid6: remove __KERNEL__ ifdefs
-    https://git.kernel.org/riscv/c/3d6beb659ddf
-  - [04/19] raid6: move to lib/raid/
-    (no matching commit)
-  - [05/19] raid6: remove unused defines in pq.h
-    https://git.kernel.org/riscv/c/06d2a66fb7c0
-  - [06/19] raid6: remove raid6_get_zero_page
-    https://git.kernel.org/riscv/c/885d31423183
-  - [07/19] raid6: use named initializers for struct raid6_calls
-    https://git.kernel.org/riscv/c/7e91f76a9668
-  - [08/19] raid6: improve the public interface
-    (no matching commit)
-  - [09/19] raid6: hide internals
-    (no matching commit)
-  - [10/19] raid6: rework the init helpers
-    (no matching commit)
-  - [11/19] raid6: use static_call for gen_syndrom and xor_syndrom
-    https://git.kernel.org/riscv/c/10f4b8e2a164
-  - [12/19] raid6: use static_call for raid6_recov_2data and raid6_recov_datap
-    (no matching commit)
-  - [13/19] raid6: update top of file comments
-    https://git.kernel.org/riscv/c/30bf04bd13a5
-  - [14/19] raid6_kunit: use KUNIT_CASE_PARAM
-    https://git.kernel.org/riscv/c/2175395f76c3
-  - [15/19] raid6_kunit: dynamically allocate data buffers using vmalloc
-    https://git.kernel.org/riscv/c/d67c25712fe3
-  - [16/19] raid6_kunit: cleanup dataptr handling
-    https://git.kernel.org/riscv/c/562bcbfcb99b
-  - [17/19] raid6_kunit: randomize parameters and increase limits
-    (no matching commit)
-  - [18/19] raid6_kunit: randomize parameters and increase limits
-    (no matching commit)
-  - [19/19] raid6_kunit: randomize buffer alignment
-    https://git.kernel.org/riscv/c/8cf0a6c4bb9e
+  - [2/4] riscv/mm: drop vmemmap_pmd helpers and use generic code
+    https://git.kernel.org/riscv/c/abff0ecf7602
+  - [3/5] riscv/mm: drop vmemmap_pmd helpers and use generic code
+    https://git.kernel.org/riscv/c/abff0ecf7602
 
 You are awesome, thank you!
 -- 
