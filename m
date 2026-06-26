@@ -1,105 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB2C43E959A;
-	Fri, 26 Jun 2026 10:01:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1AD3E832C
+	for <loongarch@lists.linux.dev>; Fri, 26 Jun 2026 10:38:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782468067; cv=none; b=pVv7GzL9aQpLWFA/39o4Y5++MauTkfFp1G0/j/3fSTHGwKkJ1eVs6AFrZBMzgeTRR+Vmvo2m2rX3xGYg+OR8PZu2FDgVTeWIDyUmBHr9Fjiy0skEq2rhHQTgOAeQQLVtXX0g80U6RnxeP5V34PkRdnBhKWpncPxeqWysvoqNon8=
+	t=1782470329; cv=none; b=CRRgHD5uN0I3Ptq/XF/aSX67qzLpEnzC1IrhM2fLN2flLSdjHKAcEVqvgMstoU3GSLvE8r/eVmteGAnDgPdLLybgHfv+IGvsoKPxeQP/X5B9wgWW1XVwUFR4vTaesxlbgl+ZFDp2yNwE3Sx/MHwPSlJOWHmw1h+7blAns1jij3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782468067; c=relaxed/simple;
-	bh=VsB0CD1HkS3lq47VJs/Rpbt0mPm7G830RQHJ360GdGo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cagp1FBYlix6ywCjFSvxLsHXh0o9jebHXxiYTWws7f0Lz44+WSP3oZCYbJvbB9MroWrBJ+agra8hdWvjpEoEvq6J+1JeYBgUb8KlNmWGTnPa0bOWqAxmDGFV3FLMbpsukugT4Ugb6KMZJ7QoWqdd94RjfNwCJsaDrTWWd4VqKYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DPWoIgmH; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782470329; c=relaxed/simple;
+	bh=d21F/jmMXz8n7tddwFZnpU9mN2PUUWdKMgoFTpQINnU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jbLF81rszS8xNtwEz4bWHcLl30iIEhsP82xSeOolFMOojNiCJM3qtaw+O7JCOVFlxwloKq71XY2LzIfWXyQUN7Gdd4pKHj5jGq2dIcIuxOgM2HVsxn1EZUvauxmTgxv/zRsG9ZzjbJ+XdAneaHG0CmVEsX7yXffcjsX2AYVIrVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VFZxB0NK; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DPWoIgmH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6EE91F000E9;
-	Fri, 26 Jun 2026 10:01:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782468066;
-	bh=8N0bDgWZfE2GABNpHeg8dcQfMiUnvnDma5jLyH/GBD4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=DPWoIgmHPh83Wzw4VzQmjMyZFZarHK6UMW/Besl4t46R/1wmWc2TZwasByGNcgg9k
-	 j/eJhagACInRHaud00EFb5h22q47Nstj/mdWvqpmznT8uNWC6H41ROq2/ZWFdXPacF
-	 eCvYRz9GpeCU92UFcYxAQXyzwBUrcsQQCs+11O7FCCbVi+ffMvV3GRXjoTf8tP39ri
-	 iRnXNRBRqhQbrXKR+nURUocQ1L3A1HHcLzyf09qDUPmwe+ueOL1fxAczaDp2XdfL73
-	 YxQiBt3SZk+SCtxBHYhFh3RHAraBWpoJtd8JRBa0TmgeiAMyD2VrJ3aQK6RIUbi/5Q
-	 h8o1vjmtb6X8Q==
-Date: Fri, 26 Jun 2026 12:01:03 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, 
-	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Keguang Zhang <keguang.zhang@gmail.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
-	linux-sound@vger.kernel.org
-Subject: Re: [PATCH v3 7/9] ASoC: dt-bindings: loongson,ls-audio-card: Add
- ATK-DL2K0300B compatible
-Message-ID: <20260626-devout-vulture-of-reading-4fbfad@quoll>
-References: <cover.1782439646.git.zhoubinbin@loongson.cn>
- <71430fcee5951fb7a7d52e2091a87707db85e06c.1782439646.git.zhoubinbin@loongson.cn>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VFZxB0NK"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1782470324;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=HWktgbq7NgGGnrTybk5KiUwxIP14lnbdKeXbMxrkJ18=;
+	b=VFZxB0NK4gDXBNFmAR8CZaBKyj6pd2xcLQYfQ5Fn5yvaLUVp/IetpcjsxT/3LBnSegGWkp
+	VJjtzydSbfPq4nQiJO8pDzb3gMxwkgGEoW/TrZZx1cEEJ7tZBIRYh2k6A+0lgROecb6w3b
+	QvhhsxUAo76kAhh9zdarq1+CCsSlvnI=
+From: George Guo <dongtai.guo@linux.dev>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Qiang Ma <maqianga@uniontech.com>,
+	Kexin Liu <liukexin@kylinos.cn>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: kexec: Fix address space mismatch in command line lookup
+Date: Fri, 26 Jun 2026 18:38:35 +0800
+Message-Id: <20260626103835.353818-1-dongtai.guo@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <71430fcee5951fb7a7d52e2091a87707db85e06c.1782439646.git.zhoubinbin@loongson.cn>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, Jun 26, 2026 at 10:27:28AM +0800, Binbin Zhou wrote:
-> Add new compatible for the ATK-DL2K0300B development board based on
-> Loongson-2K0300.
-> 
-> Unlike others, this board features GPIO-controlled headphone detection,
-> headphone control, and speaker enable.
-> 
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
->  .../sound/loongson,ls-audio-card.yaml         | 38 +++++++++++++++++++
->  1 file changed, 38 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/loongson,ls-audio-card.yaml b/Documentation/devicetree/bindings/sound/loongson,ls-audio-card.yaml
-> index 8c214e5d04b1..dc7f4afbb777 100644
-> --- a/Documentation/devicetree/bindings/sound/loongson,ls-audio-card.yaml
-> +++ b/Documentation/devicetree/bindings/sound/loongson,ls-audio-card.yaml
-> @@ -23,6 +23,7 @@ properties:
->      enum:
->        - loongson,ls-audio-card  # Loongson-2K1000/Loongson-2K2000/LS7A
->        - loongson,ls2k0300-forever-pi-audio-card # CTCISZ Forever Pi
-> +      - loongson,ls2k0300-dl2k0300b-audio-card # ATK-DL2K0300B
->  
->    mclk-fs:
->      $ref: simple-card.yaml#/definitions/mclk-fs
-> @@ -47,6 +48,18 @@ properties:
->      required:
->        - sound-dai
->  
-> +  spkr-en-gpios:
-> +    maxItems: 1
-> +    description: The GPIO that enables the speakers
-> +
-> +  hp-ctl-gpios:
-> +    maxItems: 1
-> +    description: The GPIO that control the headphones
-> +
-> +  hp-det-gpios:
-> +    maxItems: 1
-> +    description: The GPIO that detect headphones are plugged in
-> +
+From: George Guo <guodongtai@kylinos.cn>
 
-Add allOf:if:then: block after "required:" block and disallow these
-("...: false") for other variants.
+When searching the loaded segments for the "kexec" command line marker,
+the kexec_load(2) path (file_mode == 0) passes the user-space segment
+buffer straight to strncmp() through a bogus (char __user *) cast. This
+dereferences a user pointer in kernel context, which is wrong and is
+flagged by sparse:
 
-If these stay, because I have doubts. spkr-en-gpios sounds like
-enable-gpios of each speaker, so not suitable here but should go to
-individual speaker codec nodes.
+  arch/loongarch/kernel/machine_kexec.c:84:51: sparse: incorrect type in
+  argument 2 (different address spaces) @@ expected char const * @@ got
+  char [noderef] __user *
 
-Best regards,
-Krzysztof
+Copy the marker-sized prefix of each segment into a small on-stack
+buffer with copy_from_user() before comparing, and skip segments that
+fault. The subsequent copy_from_user() that stages the full command line
+into the safe area is left unchanged.
+
+Fixes: 4a03b2ac06a5 ("LoongArch: Add kexec support")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202605051639.aEPioXdD-lkp@intel.com/
+Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
+Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
+Signed-off-by: George Guo <guodongtai@kylinos.cn>
+---
+ arch/loongarch/kernel/machine_kexec.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kernel/machine_kexec.c
+index d7fafda1d541..6f563175ddbf 100644
+--- a/arch/loongarch/kernel/machine_kexec.c
++++ b/arch/loongarch/kernel/machine_kexec.c
+@@ -42,7 +42,7 @@ static unsigned long first_ind_entry;
+ int machine_kexec_prepare(struct kimage *kimage)
+ {
+ 	int i;
+-	char *bootloader = "kexec";
++	static const char bootloader[] = "kexec";
+ 	void *cmdline_ptr = (void *)KEXEC_CMDLINE_ADDR;
+ 
+ 	kimage->arch.efi_boot = fw_arg0;
+@@ -57,9 +57,13 @@ int machine_kexec_prepare(struct kimage *kimage)
+ 					strlen((char *)kimage->arch.cmdline_ptr) + 1);
+ 		kimage->arch.cmdline_ptr = (unsigned long)KEXEC_CMDLINE_ADDR;
+ 	} else {
++		char tmp[sizeof(bootloader)];
++
+ 		/* Find the command line */
+ 		for (i = 0; i < kimage->nr_segments; i++) {
+-			if (!strncmp(bootloader, (char __user *)kimage->segment[i].buf, strlen(bootloader))) {
++			if (copy_from_user(tmp, kimage->segment[i].buf, strlen(bootloader)))
++				continue;
++			if (!strncmp(bootloader, tmp, strlen(bootloader))) {
+ 				if (!copy_from_user(cmdline_ptr, kimage->segment[i].buf, COMMAND_LINE_SIZE))
+ 					kimage->arch.cmdline_ptr = (unsigned long)cmdline_ptr;
+ 				break;
+-- 
+2.25.1
 
