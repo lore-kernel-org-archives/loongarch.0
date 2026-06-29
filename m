@@ -1,271 +1,146 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DCC9342517
-	for <loongarch@lists.linux.dev>; Mon, 29 Jun 2026 07:58:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F2553E0C4D
+	for <loongarch@lists.linux.dev>; Mon, 29 Jun 2026 08:55:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782719884; cv=none; b=s8qWjrBNT1RxEqryZHvYExCCRrbUsh2KoUBulJnoRy1BNXhD5sI5FmRRdWmTqMKXItS60KqBFVg6ePXvVc0+vrCZrlPGNHpLtOq8RezhLUvIodVGU3PJwHEfrAS7RZdyrW+PaSZwBjNPOB8zWQjkioEjNzKIwRE9nBpEpPtVyJI=
+	t=1782723329; cv=none; b=R0M+GWVRw47/p5iUQis1MVnajyV8Uv86G2I9FhrlZcbTPOT9nWDBvXijo7mExSRN1uHj1zcLZ0+d0NFpN8cONotz7ofomMbq+KNpmIiWsk942I1T2heBsPnn/WxCl4DIXNse9PuxLZ144sbOC0Nuvqi54tCXBpYK/eNp1oZfc44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782719884; c=relaxed/simple;
-	bh=5n0fnq+Hutfte3U6TyqL5qF4Xdqip5As7mrjblHjUcY=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=jZq2Qpb6520dkOOmmL9UGY8MK0Mau44nCmPTkTC6FZVt5YV0eKVRtuCBnr6x8HXPwtTjCKXkl9ClkndcItu2VgHJrLOU/jYgV1f/bbcwjdf/9pUWOsa9T6Cu6rKkwEvUFgxX85FfMWqq8Y4T7DYwYBM8e5nBtNEIJsaijXXlOIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8DxVeiFJUJqRBcZAA--.58243S3;
-	Mon, 29 Jun 2026 15:57:57 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJCxHOF+JUJqCme3AA--.19891S3;
-	Mon, 29 Jun 2026 15:57:53 +0800 (CST)
-Subject: Re: [PATCH v4 2/3] LoongArch: KVM: Implement guest-side PV TLB flush
-To: Tao Cui <cui.tao@linux.dev>, zhaotianrui@loongson.cn,
- chenhuacai@kernel.org, loongarch@lists.linux.dev
-Cc: kernel@xen0n.name, kvm@vger.kernel.org, Tao Cui <cuitao@kylinos.cn>
-References: <20260615082154.42144-1-cui.tao@linux.dev>
- <20260615082154.42144-3-cui.tao@linux.dev>
- <0c47ce21-9a4d-4cdc-9bec-ce749e31512e@loongson.cn>
- <1bfa4941-b94b-410a-9b64-c13f2712edf9@linux.dev>
- <9ec9d22b-93fd-3dcb-c6b8-19563f1b7c0a@loongson.cn>
- <404180d0-c734-4465-8752-f43279730692@linux.dev>
- <6f837e00-e606-ddaa-b22b-dd30348a18fb@loongson.cn>
- <084d7bec-592c-31b5-aa44-099bff87af9a@loongson.cn>
- <013459e1-f817-42b5-a0fd-20b38d9b6140@linux.dev>
- <835a9c5c-2f66-293b-d093-fc59bac26a01@loongson.cn>
- <416dfbf8-f765-442e-b6de-6fc0fe1a4b5f@linux.dev>
- <a7e7a17c-fdaa-b168-2a7b-d4cd4018b662@loongson.cn>
- <d09a90f7-94b1-4a2f-bcea-d42802d2353e@linux.dev>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <9701d2ee-1f5b-f576-b831-471111b6e5ba@loongson.cn>
-Date: Mon, 29 Jun 2026 15:54:36 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1782723329; c=relaxed/simple;
+	bh=koXZVkv+H5aUy7dUnGtXaW5EVAc1bVhhL44/jbs3IwY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=fJ6i1IOhHL4DOoFxSVZzfxTtfuZVHZjOCy13/p2SBV7zlI1nloDavxyrNSHnPCx3ZiHNQKBQjGVdIMdCZ0zJb/RYhdFzYrlMNLgwGB2QSW5rti5yYL6CTpMjreDu5Wv+f5Zr096l5+YEY3sHucqj867lKSSstpuwIuYstOPsxv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TXVkzdY4; arc=none smtp.client-ip=95.215.58.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TXVkzdY4"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1782723324;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZeKM9BOzEu5hGJchdfeYskOLG9RiF3XxK5/9qzeUnhM=;
+	b=TXVkzdY4CG/j8CYOc1oXlbULUVWgDOzy0uYtUJAktYZFGAH+JKQZfwKbk1E85RSxTbkFvA
+	cLlNJJT4srV/aO9ozLPGaBUs0rk9b7q8m3XkCY0r4n6hhr6osi/7TRSy42MaKlf0R+AXkc
+	RlVIlX5WdTR3jPzghh9PbQsHbhH4DOQ=
+From: George Guo <dongtai.guo@linux.dev>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Hengqi Chen <hengqi.chen@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	George Guo <guodongtai@kylinos.cn>,
+	bpf@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH bpf v2] LoongArch: BPF: Fix tail call count pointer offset for arena programs
+Date: Mon, 29 Jun 2026 16:55:11 +0800
+Message-Id: <20260629085511.359546-1-dongtai.guo@linux.dev>
+In-Reply-To: <20260625083212.277417-1-dongtai.guo@linux.dev>
+References: <20260625083212.277417-1-dongtai.guo@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <d09a90f7-94b1-4a2f-bcea-d42802d2353e@linux.dev>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxHOF+JUJqCme3AA--.19891S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3GFWfWrWDZFWxKw4ruF4fXrc_yoWfWr48pr
-	W8JFyUtrWDGry8Ar1Utr1UXryjyr1UJ3WUXr1UtFy8Jrn8tr1jqr1UXr1j9F1DWr48Jr1U
-	tr1UJry7Zr1UJrcCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	XVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
-	Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E
-	14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4oGQDUUUU
+X-Migadu-Flow: FLOW_OUT
 
+From: George Guo <guodongtai@kylinos.cn>
 
+The tail call count (TCC) and its pointer occupy the two deepest slots of
+the callee-saved area set up by build_prologue(). An arena program reserves
+one extra word for REG_ARENA (arena_vm_start) right above them:
 
-On 2026/6/26 上午10:53, Tao Cui wrote:
-> 
-> 
-> 在 2026/6/26 09:37, Bibo Mao 写道:
->>
->>
->> On 2026/6/25 下午8:51, Tao Cui wrote:
->>>
->>>
->>> 在 2026/6/25 15:36, Bibo Mao 写道:
->>>>
->>>>
->>>> On 2026/6/25 下午3:15, Tao Cui wrote:
->>>>>
->>>>>
->>>>> 在 2026/6/25 14:11, Bibo Mao 写道:
->>>>>>
->>>>>>
->>>>>> On 2026/6/25 上午11:31, Bibo Mao wrote:
->>>>>>>
->>>>>>>
->>>>>>> On 2026/6/25 上午10:27, Tao Cui wrote:
->>>>>>>>
->>>>>>>> Hi Bibo,
->>>>>>>>
->>>>>>>> 在 2026/6/17 09:05, Bibo Mao 写道:
->>>>>>>>>
->>>>>>>>>> Rather than argue from intuition, I'd like to try the hypercall approach
->>>>>>>>>> you suggested and measure the performance improvement against the current
->>>>>>>>>> path. I'll share the results with you once the testing is done, so we
->>>>>>>>>> can decide the direction based on the numbers.
->>>>>>>>> well, that is the best. It is my pleasure to discuss this with you.
->>>>>>>>>
->>>>>>>>
->>>>>>>> A quick update on the testing. I put both the hypercall and the
->>>>>>>> steal-time variants through two benchmarks on an 8-core host with a
->>>>>>>> 4:1 overcommitted guest (32 vCPUs), and wanted to share where things
->>>>>>>> stand.
->>>>>>>>
->>>>>>>> The two workloads:
->>>>>>>>      - ebizzy (all threads busy, mm-flush heavy)
->>>>>>>>      - tlb_bench in sleep-idle mode (1 flusher + 31 sleeping idle threads,
->>>>>>>>        so the idle vCPUs get preempted)
->>>>>>>>
->>>>>>>> ebizzy (records/s, higher is better), 32 vCPUs:
->>>>>>>>       no-PV       ~103,737
->>>>>>>>       hypercall   ~105,779
->>>>>>>>       steal-time  ~105,872
->>>>>>>>       -> all within noise (±2%); no measurable difference.
->>>>>>> Hi Tao,
->>>>>>>
->>>>>>> what is ebizzy command? ebizzy -m or ebizzy -M.
->>>>>>>
->>>>>>> could you try command on host and one VM without over-committed at first, and then two VMs and three VMs?
->>>>>>>
->>>>>>> Here is result on my 3C5000 Dual-way machines with 32 cores and two numa nodes:
->>>>>>>                     ./ebizzy -m          ./ebizzy -M
->>>>>>> host             8633                 158898
->>>>>>> VM(32 vCPUs)     6610                 133153
->>>>>>> VM/host          76%                  83%
->>>>>>>
->>>>>> just ./ebizzy -M is enough, it seems that CPU number is one key factor.
->>>>>>
->>>>>
->>>>> Sorry for the delay — it turned out my ebizzy command was wrong. I had
->>>>> been running `ebizzy -t <vcpus> -S 10`, which is neither -m nor -M, so
->>>>> neither mmap mode was active and the workload wasn't really stressing
->>>>> the TLB-flush path. Thanks for catching it.
->>>>>
->>>>> I re-ran with -m and -M on host and a single VM (8-core LoongArch
->>>>> KVM host, 8 vCPU guest, 1:1, no overcommit).
->>>>>
->>>>>                     ebizzy -m        ebizzy -M
->>>>> host             ~20,000          ~55,000
->>>>> VM (8 vCPU,1:1)  ~17,000          ~53,000
->>>>> VM/host          ~86%             ~97%
->>>>>
->>>>> The -m ratio (86%) is close to your 76%.
->>>> On my 3C5000 Dual-way machine, VM has the same CPU/memory topology with physical machine, the kernel is mainline without any patch.
->>>>                             ./ebizzy -M
->>>> Host (32 pCPUs)           158898
->>>> One VM(32 vCPUs)          133153                 83% of host
->>>> Two VMs(32 vCPUs each)    9083 + 9630 = 18713    11% of host
->>>>
->>>> It seems that with ebizzy benchmark, there is big difference if vCPU is preempted. Even if vCPU is not preempted, the performance is only 83% of host on my 3C5000 Dual-way machine.
->>>
->>> After fixing the ebizzy command, I
->>> have multi-VM overcommit results for both approaches.
->>>
->>> Setup: 8-core LoongArch (single-socket, single NUMA), KVM,
->>> linux-next-20260623, 8 vCPU per VM. All VMs run ebizzy -M
->>> simultaneously, 3 runs each. The PV-off baseline uses a guest kernel
->>> with CONFIG_PARAVIRT=y but without the PV TLB flush patches, so
->>> PV IPI and steal-time are active in all three columns.
->>>
->>> ebizzy -M, total records/s across all VMs:
->>>
->>>                 PV-off      steal-time   hypercall
->>>     1:1 (1VM)   53,600      53,800       53,900
->>>     2:1 (2VM)    2,600      42,600       45,300
->>>     3:1 (3VM)    2,800      44,700       46,000
->>>
->>> At 1:1 there is no difference — no vCPU gets preempted. Under
->>  From the previous result, the score on host is 55,000, with 1:1 mode the virtualization efficiency is 97%, it is hard to improve actually. On my 3C5000 Dual-way machine, the virtualization efficiency is 83%, I think it can improve even with 1:1 mode.
->>
->> Also the paper at https://dl.acm.org/doi/pdf/10.1145/2892242.2892245 proves it with 1:1 mode.
-> 
-> Thanks for the reference. That makes sense — the 1:1 overhead is
-> larger on multi-socket systems, so there may be room to improve
-> even without overcommit.
-> 
->>> overcommit, without PV TLB flush the throughput drops to ~3-5% of
->>> the single-VM case, because every remote TLB flush sends IPIs to
->>> preempted vCPUs. With either PV TLB flush variant, preempted vCPUs
->>> are skipped, and total throughput stays at ~85-90% of single-VM
->>> (bounded by physical cores).
->>>
->>> Hypercall is consistently 3-6% above steal-time in the overcommit
->>> cases. A possible reason is that the hypercall hands the entire
->>> target set to the host in one call, while steal-time still IPIs the
->>> running vCPUs and only defers the preempted ones.
->>>
->>> On our 8-core machine the collapse is more severe than on your
->>> 3C5000 (~5% vs 11% of host at 2 VMs), likely due to the smaller
->>> core count and single-NUMA topology.
->> yeap, with more CPUs the benefit is more high. I think that this kind of patch had better be tested on server platform if there is such hardware by hand after all KVM is used in server platform in most time. I will test the patch in later.
->>
-> 
-> I'll try to get access to a server-class LoongArch machine for
-> further testing. If you're able to run the patches on the 3C5000,
-> that would be great too.
-Sure, I will verify it on Server board. The flow may be slow since there 
-  are still many pending issues such as:
-   1. which TLB flush APIs should be hooked
-   2. On KVM hypervisor side, should fine-grained TLB flush be supported?
-      all TLBs or TLBs from GVA->GPA, or asid based TLBs flush
-   3. Or at first use a basic TLB flush method, and then optimize in later.
+    ra fp s0 s1 s2 s3 s4 s5      <- 8 words
+    [ REG_ARENA ]                <- only if ctx->arena_vm_start
+    tail_call_cnt
+    tail_call_cnt_ptr            <- loaded on tail call / bpf2bpf call
 
-All these require that there are the same test bed and test cases, then 
-we discuss it based the real performance data.
+BPF_TAIL_CALL_CNT_PTR_STACK_OFF() hardcodes the pointer at
+round_up(stack, 16) - 80, which is only correct when REG_ARENA is absent.
+For an arena program the extra word shifts every slot below it down by 8
+bytes, so the macro resolves to the tail_call_cnt slot (the counter value)
+instead of tail_call_cnt_ptr. The JIT then loads the counter value and
+dereferences it as the TCC pointer, corrupting memory or panicking the
+kernel whenever an arena program performs a tail call or a bpf2bpf call.
 
-Regards
-Bibo Mao
-> 
->> Regards
->> Bibo Mao
->>>
->>> Thanks,
->>> Tao
->>>
->>>>
->>>> Regards
->>>> Bibo Mao
->>>>>
->>>>> I then tried multi-VM overcommit (2 and 3 VMs, all running ebizzy -M
->>>>> simultaneously). The initial result showed a large gap between the
->>>>> PV-TLB-flush kernel and the baseline under overcommit. Both kernels
->>>>> have CONFIG_PARAVIRT enabled (PV IPI and steal-time are active in
->>>>> both), so PV TLB flush should be the main differentiator — but since
->>>>> they are two separate kernel images rather than a clean on/off toggle,
->>>>> there may be some noise from other differences. I'm now re-running
->>>>> with a QEMU CPU property (kvm-pv-tlb-flush on/off) on the same kernel
->>>>> to isolate the effect cleanly.
->>>>>
->>>>> I'll share the verified numbers once I have them.
->>>>>
->>>>> Thanks,
->>>>> Tao
->>>>>
->>>>>>> Regards
->>>>>>> Bibo Mao
->>>>>>>
->>>>>>>>
->>>>>>>> tlb_bench sleep-idle (ns/flush, lower is better), 1 flusher + 31 idle:
->>>>>>>>       no-PV       ~166,536
->>>>>>>>       steal-time  ~149,553
->>>>>>>>       hypercall    ~88,686
->>>>>>>>
->>>>>>>> ebizzy's workload is mostly threads staying busy with alloc/copy/free,
->>>>>>>> which drives remote TLB flushes against running vCPUs — that may not be
->>>>>>>> the path this feature is meant to optimize, so the flat result there
->>>>>>>> probably says more about the workload mismatch than about the feature
->>>>>>>> itself. I need to take another look at whether the benchmark actually
->>>>>>>> exercises the cases PV TLB flush targets before reading too much into
->>>>>>>> the numbers, including the tlb_bench figure above.
->>>>>>>>
->>>>>>>> So I'd hold off on any conclusion for now. Next I'll re-examine the
->>>>>>>> test setup / pick a workload that better matches the feature, and keep
->>>>>>>> you posted once I have something more representative.
->>>>>>>>
->>>>>>>> Best,
->>>>>>>> Tao
->>>>>>>>
->>>>>>
->>>>
->>
+Replace the macro with a helper that accounts for the REG_ARENA slot,
+mirroring the reservation logic in build_prologue().
+
+Fixes: ef54c517a937 ("LoongArch: BPF: Implement PROBE_MEM32 pseudo instructions")
+Cc: stable@vger.kernel.org
+Signed-off-by: George Guo <guodongtai@kylinos.cn>
+---
+v2:
+ - Dropped the second patch ("Don't charge an empty prog_array slot to
+   the tail call count"); that off-by-one was fixed independently by
+   commit 0379d10f09bc ("LoongArch: BPF: Fix off-by-one error in tail
+   call"), now in 7.2-rc1. The arena tail call count pointer offset bug
+   addressed here is independent and still unfixed.
+ - No code change; reworded the commit message and rebased on 7.2-rc1.
+ - v1: https://lore.kernel.org/all/20260625083212.277417-1-dongtai.guo@linux.dev
+
+ arch/loongarch/net/bpf_jit.c | 22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
+
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index ad7e28375aa9..5e34e9e3f508 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -25,7 +25,23 @@
+ 
+ #define REG_TCC		LOONGARCH_GPR_A6
+ #define REG_ARENA	LOONGARCH_GPR_S6 /* For storing arena_vm_start */
+-#define BPF_TAIL_CALL_CNT_PTR_STACK_OFF(stack) (round_up(stack, 16) - 80)
++
++static int tail_call_cnt_ptr_stack_off(struct jit_ctx *ctx)
++{
++	/* Ten words are pushed below the BPF stack: ra, fp, s0-s5, and the
++	 * tail call count plus its pointer, which occupy the two deepest
++	 * slots of the callee-saved area.
++	 */
++	int offset = sizeof(long) * 10;
++
++	/* An arena program reserves one extra word above them (REG_ARENA),
++	 * which pushes the tail call count pointer down by one slot.
++	 */
++	if (ctx->arena_vm_start)
++		offset += sizeof(long);
++
++	return round_up(ctx->stack_size, 16) - offset;
++}
+ 
+ static const int regmap[] = {
+ 	/* return value from in-kernel function, and exit value for eBPF program */
+@@ -291,7 +307,7 @@ bool bpf_jit_supports_far_kfunc_call(void)
+ static int emit_bpf_tail_call(struct jit_ctx *ctx, int insn)
+ {
+ 	int off, tc_ninsn = 0;
+-	int tcc_ptr_off = BPF_TAIL_CALL_CNT_PTR_STACK_OFF(ctx->stack_size);
++	int tcc_ptr_off = tail_call_cnt_ptr_stack_off(ctx);
+ 	u8 a1 = LOONGARCH_GPR_A1;
+ 	u8 a2 = LOONGARCH_GPR_A2;
+ 	u8 t1 = LOONGARCH_GPR_T1;
+@@ -1181,7 +1197,7 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 			return ret;
+ 
+ 		if (insn->src_reg == BPF_PSEUDO_CALL) {
+-			tcc_ptr_off = BPF_TAIL_CALL_CNT_PTR_STACK_OFF(ctx->stack_size);
++			tcc_ptr_off = tail_call_cnt_ptr_stack_off(ctx);
+ 			emit_insn(ctx, ldd, REG_TCC, LOONGARCH_GPR_SP, tcc_ptr_off);
+ 		}
+ 
+-- 
+2.25.1
 
