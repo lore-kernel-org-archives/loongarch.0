@@ -1,97 +1,83 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D05E44DB7B
-	for <loongarch@lists.linux.dev>; Mon, 29 Jun 2026 16:37:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F12C244DB7B
+	for <loongarch@lists.linux.dev>; Mon, 29 Jun 2026 16:38:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782751073; cv=none; b=OIetOsIoFXeGnM6+SDMSzYH+D3zRHe/lRzKZS3fzWtS6Ud7vAl6Qyss2lchHkXDquRm+NqhuQztKuUe2jgYC1g09VldgDNMoYQ3tFs8j6lQfk5Vvg98AqvxEZGAhX3Y8lT+aB46SQBPCzqUOAvxiMciMw1eiYbFXQadicXQQm/o=
+	t=1782751086; cv=none; b=NkTQe1Q33860/yfnkauyg1Q+goiFgr7vVap6NI6gvPuGmVZ+EsDBrZQV/H43HZjXdchzyHG4o/+TZsIQUvJ3IycBviCOULjRoqTALtkv52FCDBj1IK7c19st0s5zV5eW0+iI/68Puix3wJw76N7ZLHxFnNeDizfoMhD455+PwoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782751073; c=relaxed/simple;
-	bh=lkcIz3qvkxY+ER46lV44lW4dSHsjOn7etxjpOY7fKEo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gOBKl0bVTAR9PDhqpypYfsRPS2F3cXkN7YN3YrD+DLII26meYJqEhYEf0oSndwCUVeRcQRAXgpi/Y7Pj02TXFOgo8evwVn0eOrBpdAer8rJzn40aH+SDKS83nP2J+Oho1HxZh3CjyjivgtR3SuKBy/ga78k+e8usJisdKzyl8Ug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QWR5nLNH; arc=none smtp.client-ip=209.85.210.178
+	s=arc-20240116; t=1782751086; c=relaxed/simple;
+	bh=tp+nqf2DUMuFDtMIt8NG1Uwm75QdQij8nQIbIElDjlU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=s+vXxI7VMSmO6Gwin0KhWYCFL+6RaVwc+dGsawJRTrMDQiRyGlTtsXwSkqPhVdo4E3PFkwdbTQNgBGMgXUEdJ5YIyTU5B6J2h/ahjZzJLfqB8G/FOwkt/eOcrU+pYninaFcwgQypyPUIJApmUbfdQxkP9iewgpBqYAQCwTed4gU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BsRI5U0n; arc=none smtp.client-ip=209.85.210.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QWR5nLNH"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-84794e800f4so393221b3a.0
-        for <loongarch@lists.linux.dev>; Mon, 29 Jun 2026 09:37:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BsRI5U0n"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-8454160043aso2972190b3a.3
+        for <loongarch@lists.linux.dev>; Mon, 29 Jun 2026 09:38:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782751071; x=1783355871; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rGoS9kJnOsBC1GLvPLCMMJFTI12ls42atzGQpoe5Bdw=;
-        b=QWR5nLNHSPuaALb0ZUBGLzprRpdWfwNLdA6Kw4fTw4foAN246OXf6LjNDb8O6lT2Jl
-         lC9k4JBOFAye/Dfnl8gkPnbUEPBH+bUScrvqCUWFTw9tae21D7cxb21CBvfSOnix/gUn
-         SVDW15Nwr6g1HXLMtY26x10TIZ37YO16DNC37uxv/Tz81GjD9vnCEFPUklhBOQbrQ9Nb
-         YomKtOUueq2CzUmLT67PEVAxMxYcm3N0zGp88tj/TqYdyo8TAACbbxZy0Wxysq13Xp06
-         uZi70kjX4kFc12kMUMQATvIGyupr8TRd+fHesOjRvmnJo6O2OBmWbfFux+I3KsXft1aa
-         LOzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782751071; x=1783355871;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1782751084; x=1783355884; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rGoS9kJnOsBC1GLvPLCMMJFTI12ls42atzGQpoe5Bdw=;
-        b=tSfwhvwouTQVDtj31yrB2hS43Y+PaBdLn5gLyd4XbuIPLoh40x7BsjTefE0lz4njKy
-         /fkuMon8w9PTVqnqcK0qKisC9rxebbXnfdY3yYjGoDtcU95lo3kOlp6ZgpNnoV+35pqY
-         oBW7gdeSGoTfVsuPXq72yjiXe17ziBAjyxogTCNluILk72/qtKHUCqSYAKPZHu245Cy6
-         ktN5+9P6V9VXPZJelugycJeZCQSrHOx0kGObFwnkYeACPXp8Wuh5XUHsJMoKGQ+urDzx
-         hL9cZJ8TwBJ2v2ZtKQsYkJl0D448JCQ/y/Y6hYgjknBeLmf039ABg+xYKdi+D+LZ3h7C
-         s4Jg==
-X-Forwarded-Encrypted: i=1; AFNElJ9NKfDYlqVAdlLb4/AYAvC/DMrdMc93JBHXEP9dogSKssYbY8zE+8ZPXiHz0UuS3+65An5XzoFSE9M=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwUIW9rKFXzfegWUjGI/LKzFVd7l9gVUmdW8v6SovC0inV/ebxE
-	dLWIhC6Ty1XFF9y+pDbjiZlkFLQZd5J0Cdt4Qxv8C5baujKFhDcGu8Ei
-X-Gm-Gg: AfdE7cmoZ1vXl8UowBglQaLxp5XmSYg5lanifxdSS1CA1Ev2a1vKWRu0h1wGSOROOS2
-	EI2t0tLzj0EEkzJ3H2HL0SB+V1CyVIaFzJjBhfr+NEoioMJOLS26jJSAgaGAMn5W2ON/mZ2BOTY
-	/PtayghjV1Dtdk1t4c4XaBI62+gh+UC3K6YvF2NI/tsgFQE+LV28sFvdydIZs5rRUDWyiOPT8I2
-	yQpwqEtcQPbzPyQfjiPzJYCgNZ5rrVYhfgUVjo4uXpLoJQbgaeY5B95I4iBKl+0EWVFAku2JI/N
-	YyF6tt5pnMqVTj3DeSsvaCWvBxAXSYPcfk8ZtbDqo01GKHYnqX7tn9L8pNdUEIt1JZ0nlTyZglN
-	h1GODNRXMDYm17vvb9ABpBJCiDUuupbZJTejWTHIKBG0hBNflvExSDvA0UWL+3vWC1axpOBhgvG
-	mtgeEKltA=
-X-Received: by 2002:a05:6a00:92a5:b0:847:8337:64e4 with SMTP id d2e1a72fcca58-8479f1f553amr205069b3a.30.1782751071179;
-        Mon, 29 Jun 2026 09:37:51 -0700 (PDT)
+        bh=Xo8uO5n6psQwUEUWovccxe/ZWX+n25l9kiG0x3jxhi4=;
+        b=BsRI5U0nn6Te4v11anM3bfTwjAC7fIGGSb9SjJGRSwLhyxah0FYBF+Wm9YO0nT1mU0
+         jExZK5eXGD0bPhpsRp7x32BadJ8AHmFpQWBE0zwX+ipSqDPEwpJ06W8xHH2Il6P5Ccfb
+         290jk5nct8tDr1Morjie6HGHJ5zTVpGjXqlTzjwDgVIdBh4lMsTzvlCMvjub05pVHnOR
+         NdKQPcLg6tK/VqFoEG1IHxVCo5UL37UpY2jLn4oBFn2NZDBK3hEnMZ7/JdpgW/iJhzQi
+         g1R7ab2ViUo48KmigWEXamaE+LAV0dMV4WSC5js6RbRBrTAAH7GH+3wiML0uQeynUL1A
+         EypQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782751084; x=1783355884;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Xo8uO5n6psQwUEUWovccxe/ZWX+n25l9kiG0x3jxhi4=;
+        b=JFTsvo4fZccPv4YKyntpfd69vT860gXIS4gktC3zXdL5GzScYEKsSs5tZjlgH3dmqk
+         NFx0oEqDsXlY2RUuecRG7dGmSF6iHCnNj47gWAPOApTD4E10l5JoIpo0CJ7A99n7KCq+
+         Nq+S0GjYqdKng8vykqhhc7oo5tPISPlFuFl6676Bq4XC5vJDWxmfXwQKemoSwNJbuliW
+         nxBL0EELGKlgB5fCleNxtbnUXpOdOJgOYZeW6QWNGNkL75U5hxKH6+vGC8DKDtYzPjQn
+         wHY81y/TbJTDq92+mjzvJWLcCem1v3zm4CmVyy9xw0f09vg2Jo4QSfocZIxZwUfTKphz
+         b/ww==
+X-Forwarded-Encrypted: i=1; AHgh+RrqcW89Mec2ylcSyTkl27Q2p8jtRCb47jDAmPXpj3aNZE5un+eur1p/tOotqc6weuXzPDm7q9cucpU=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz+I4f+6fjlNKbLf4AnI8vT3Jtl0PKjcbbUAdlmGADp9wsfCrZD
+	/GiMPsE6vfIuDogjNziq7vrKhlXTCljavleYQSLpzbBOFxAxlbCq0Dj7
+X-Gm-Gg: AfdE7ckycQ+O4b44pIfpGsmkZVHJ9F4iYFcZH5gfaLtfc5tL1PZsFhPT4zMKU272qse
+	vuzL0QApGplhh/GALZdXBH3q0E6T07Xv7/sHPAW5e62DOqt4bmvto8JSjp4yHw7GW0p5gkMOCRK
+	dPWIegm+aRLOIA8F4oWO9NagL9g2YKTjPbNw7LmMkO3IiGiN0bJOPNrhj9ubgtup3QlLs8NqamR
+	iKyHsq+BaVUTiqUHW16BH4UCojWzxRM0B5Q1f/wCnvsN4ROwyciYmi6hqQWS1xA2AHT5qnJdyfr
+	eNz9RdwX6oH5hpPt4ZQ2lNxHMXbvJWd0antzgueMXPsviHXAc0aNWY4CC82IeZwqz+oGhPKn7xz
+	cJIxsHINEax0K3orLcOQsmErGt4X3185bqzo0yHo21F0tYOFSrgWbbL1b5TlvjUfd4m2So4XV3n
+	ZYnCMm7Mk=
+X-Received: by 2002:a05:6a00:17a6:b0:845:36a0:9eb2 with SMTP id d2e1a72fcca58-8479f236947mr209923b3a.34.1782751083985;
+        Mon, 29 Jun 2026 09:38:03 -0700 (PDT)
 Received: from ubuntu.. ([110.9.142.4])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-847a02d41c0sm18474b3a.33.2026.06.29.09.37.46
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-847a02d41c0sm18474b3a.33.2026.06.29.09.38.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2026 09:37:50 -0700 (PDT)
+        Mon, 29 Jun 2026 09:38:03 -0700 (PDT)
 From: Sang-Heon Jeon <ekffu200098@gmail.com>
 To: rppt@kernel.org,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Andrew Morton <akpm@linux-foundation.org>,
 	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <pjw@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Will Deacon <will@kernel.org>
+	Huacai Chen <chenhuacai@kernel.org>
 Cc: linux-mm@kvack.org,
 	Sang-Heon Jeon <ekffu200098@gmail.com>,
 	Alexander Potapenko <glider@google.com>,
-	Alexandre Ghiti <alex@ghiti.fr>,
 	Andrey Konovalov <andreyknvl@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	David Hildenbrand <david@kernel.org>,
 	Dmitry Vyukov <dvyukov@google.com>,
 	kasan-dev@googlegroups.com,
-	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
 	loongarch@lists.linux.dev,
-	Nicholas Piggin <npiggin@gmail.com>,
 	Vincenzo Frascino <vincenzo.frascino@arm.com>,
 	WANG Xuerui <kernel@xen0n.name>
-Subject: [PATCH v2 0/8] treewide: remove unnecessary invalid range checks in memblock iteration loops
-Date: Tue, 30 Jun 2026 01:37:28 +0900
-Message-ID: <20260629163736.1606688-1-ekffu200098@gmail.com>
+Subject: [PATCH v2 2/8] LoongArch: remove unreachable invalid range check in kasan_init()
+Date: Tue, 30 Jun 2026 01:37:30 +0900
+Message-ID: <20260629163736.1606688-3-ekffu200098@gmail.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260629163736.1606688-1-ekffu200098@gmail.com>
+References: <20260629163736.1606688-1-ekffu200098@gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -100,64 +86,34 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The memblock API guarantees that for_each_mem_range() and
-for_each_mem_pfn_range() never return an invalid range, meaning start is
-always less than end.
+kasan_init() populates the linear mapping shadow with for_each_mem_range()
+and breaks the loop when start >= end. for_each_mem_range() never returns
+an invalid range, so start < end always.
 
-Several memblock callers still have unnecessary invalid range checks in
-their loop bodies, so remove them.
+Therefore the start >= end check is unreachable, so remove it.
 
-Patches 1-6 cover for_each_mem_range() callers. memblock never stores a
-zero-size region, so the range it returns always has start < end. Some
-callers apply __va() or __phys_to_virt() before comparing, but these keep
-start < end too, so the check is unreachable.
+No functional change.
 
-Patches 7-8 cover for_each_mem_pfn_range() callers. __next_mem_pfn_range()
-skips any region that contains no whole page, so it only ever returns
-start_pfn < end_pfn and the check is unnecessary.
-
-For reference, commit 36ca7f4be809 ("arm64: mm: Remove bogus stop
-condition from map_mem() loop") did a similar cleanup in arm64 map_mem().
-
-All these checks are in different trees, so I split the change into one
-patch per arch/subsystem. The patches are independent and can be applied
-separately.
-
+Signed-off-by: Sang-Heon Jeon <ekffu200098@gmail.com>
+Reviewed-by: Andrey Ryabinin <ryabinin.a.a@gmail.com>
 ---
-Changes from v1 [1]
-- Add review-by, tested-by tags from v1
-- Add missing simliar patches(5,6) to patch series
-- Change base to rppt/for-next
+ arch/loongarch/mm/kasan_init.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-[1] https://lore.kernel.org/all/20260621145919.1453-1-ekffu200098@gmail.com/
----
-
-Sang-Heon Jeon (8):
-  arm64: mm: remove unreachable invalid range check in
-    kasan_init_shadow()
-  LoongArch: remove unreachable invalid range check in kasan_init()
-  riscv: remove unreachable invalid range check in
-    create_linear_mapping_page_table()
-  riscv: remove unreachable invalid range check in kasan_init()
-  ARM: remove unreachable invalid range check in kasan_init()
-  powerpc64/kasan: Remove unreachable invalid range check in
-    kasan_init_phys_region()
-  mm: remove unnecessary empty range check in
-    early_calculate_totalpages()
-  mm/hugetlb: remove unnecessary empty range check in
-    hugetlb_bootmem_set_nodes()
-
- arch/arm/mm/kasan_init.c               | 6 ------
- arch/arm64/mm/kasan_init.c             | 3 ---
- arch/loongarch/mm/kasan_init.c         | 3 ---
- arch/powerpc/mm/kasan/init_book3e_64.c | 3 ---
- arch/powerpc/mm/kasan/init_book3s_64.c | 3 ---
- arch/riscv/mm/init.c                   | 2 --
- arch/riscv/mm/kasan_init.c             | 3 ---
- mm/hugetlb.c                           | 3 +--
- mm/mm_init.c                           | 3 +--
- 9 files changed, 2 insertions(+), 27 deletions(-)
-
+diff --git a/arch/loongarch/mm/kasan_init.c b/arch/loongarch/mm/kasan_init.c
+index 0fc02ca06457..92ca0ba86406 100644
+--- a/arch/loongarch/mm/kasan_init.c
++++ b/arch/loongarch/mm/kasan_init.c
+@@ -305,9 +305,6 @@ void __init kasan_init(void)
+ 		void *start = (void *)phys_to_virt(pa_start);
+ 		void *end   = (void *)phys_to_virt(pa_end);
+ 
+-		if (start >= end)
+-			break;
+-
+ 		kasan_map_populate((unsigned long)mem_to_shadow(start),
+ 			(unsigned long)mem_to_shadow(end), NUMA_NO_NODE);
+ 	}
 -- 
 2.43.0
 
