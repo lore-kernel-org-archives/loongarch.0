@@ -1,37 +1,41 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B3EE3C5827
-	for <loongarch@lists.linux.dev>; Mon, 29 Jun 2026 07:24:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 884B53CF1E3
+	for <loongarch@lists.linux.dev>; Mon, 29 Jun 2026 07:44:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782717890; cv=none; b=q7VYpFYGLuIRU35ERsNdaD5mtjKvr/QD5NzLc6V3pda1ZJy1JFTNlW4tO0wHNInwDLMvC1Tesm7fQKfIGhB6sGiKI+pmEtEEDa5k0DMcTobsgvbIkKAbRb7geKII8HaGvKQnojq4QEHuno8LpI3o3JmOdhpimAKGhgeHvtxHAN4=
+	t=1782719087; cv=none; b=AV+Ghw65p9ERD8ajr0ji5/r5GUHzIO6lN5eGRk++Nr/4Z4DQbKwCehDgWYdRrYoQt6UJGRwTaYFdhf5z8sN4zGtiBEqXl7qhBTyzGGBJhrSuYMRsFtbIdILhhhqI8Bk1cgTv4pwK+85s8orh2PxpuMx8nXTZ6cDuV/CTnian0Gg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782717890; c=relaxed/simple;
-	bh=de8LDif55Fqz7zOA1XBNJhXlpAtdvJS1158BAzuFqPw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mmqdnxK32jN8yuflAgeEeNtCSA4hGom+MCg42K+H5efhk5UQN/IpHRgsYd7ppQTzru/fY1j86sBdCc/WeLVAcfV/xPNXTVu8VthsDHQzWMrTYriFlDAfKmWrWHMzwLC4n9Ka0Dd49Fc7Zbmho/TrkSlm/UmnBAxj+7vdFZRtvU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.40.54.123])
-	by gateway (Coremail) with SMTP id _____8DxrcC9HUJqnBMZAA--.40396S3;
-	Mon, 29 Jun 2026 15:24:45 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.40.54.123])
-	by front1 (Coremail) with SMTP id qMiowJDxhcCxHUJqJl63AA--.61324S4;
-	Mon, 29 Jun 2026 15:24:45 +0800 (CST)
-From: Qunqin Zhao <zhaoqunqin@loongson.cn>
-To: lee@kernel.org
-Cc: chenhuacai@kernel.org,
-	xry111@xry111.site,
+	s=arc-20240116; t=1782719087; c=relaxed/simple;
+	bh=QSVwLsSs4FEqC00GALi3iveivUqlb6NjyRWWlRoHsMI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aP0w0FByeX1Dp+t8uNXdRjsqRlvr9rHtBh+uumfgIGJiqG+sLzBjO3PYd/yoK3ItcqR18OkyDp2DLd5yXX+gCd2hQv2EM8arqWnFUSAoaqyBPF0Mx7m/AMp9ZrvmX6BbdcYLm7prGrx+PuS5O5iNfpqnORWYKqDFPU5u0fNAI8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VMQmRKU8; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VMQmRKU8"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1782719075;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=enUi8s33YMtcNMu0cUPvylJsFKbIfnnmtLi/VTHPnEE=;
+	b=VMQmRKU8Wcpx1pIYXLRejhjJoC7WTv6ZPkm49qmUqyO90XAqFen+QEDmSUeSB0MaVf44gW
+	akLRGw6k6puiD41gHB2D0OY6khJz+BZ3fGptpdMbkAZwIVlMXDAxYOBrXffalM9ePyma9p
+	6vYxmMH/EQSkytBVr8eG/esCrhrBHfk=
+From: haoran.jiang@linux.dev
+To: chenhuacai@kernel.org
+Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-crypto@vger.kernel.org,
-	Qunqin Zhao <zhaoqunqin@loongson.cn>
-Subject: [PATCH v4 2/2] mfd: loongson-se: Add multi-node support
-Date: Mon, 29 Jun 2026 15:11:09 +0800
-Message-ID: <20260629071109.7341-3-zhaoqunqin@loongson.cn>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20260629071109.7341-1-zhaoqunqin@loongson.cn>
-References: <20260629071109.7341-1-zhaoqunqin@loongson.cn>
+	kernel@xen0n.name,
+	yangtiezhu@loongson.cn,
+	Haoran Jiang <jianghaoran@kylinos.cn>,
+	Xiujie Jiang <jiangxiujie@kylinos.cn>
+Subject: [PATCH] LoongArch: Add support to dump the kernel page tables
+Date: Mon, 29 Jun 2026 15:43:35 +0800
+Message-Id: <20260629074335.448256-1-haoran.jiang@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -39,71 +43,571 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxhcCxHUJqJl63AA--.61324S4
-X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7urW8tFW7Zw48Jr4fAry7Arc_yoW8AF18pF
-	WDuayY9F4UuF10kwn8Za1DWF1YyFWft39xGanrXw47Aas8JwnxXFy3tFy2gr4fCFy8Xayj
-	qrWrKFWruFW8uFcCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUco7KUUUUU
+X-Migadu-Flow: FLOW_OUT
 
-On the Loongson platform, each node is equipped with a security engine
-device. However, due to a hardware flaw, only the device on node 0 can
-trigger interrupts. Therefore, interrupts from other nodes are forwarded
-by node 0. We need to check in the interrupt handler of node 0 whether
-this interrupt is intended for other nodes, this can be accomplished via
-shared interrupt handling.
+From: Haoran Jiang <jianghaoran@kylinos.cn>
 
-Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+In a similar manner to riscv,arm64,x86 etc.,this patch allows
+dumping the page tables of the LoongArch page-mapped virtual memory
+region via a debugfs file, which is useful for kernel developers to
+inspect page table layouts and verify permissions and type settings.
+
+Co-developed-by: Xiujie Jiang <jiangxiujie@kylinos.cn>
+Signed-off-by: Xiujie Jiang <jiangxiujie@kylinos.cn>
+Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
 ---
- drivers/mfd/loongson-se.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ arch/loongarch/Kconfig              |   1 +
+ arch/loongarch/include/asm/ptdump.h |  61 ++++
+ arch/loongarch/mm/Makefile          |   2 +
+ arch/loongarch/mm/ptdump.c          | 417 ++++++++++++++++++++++++++++
+ arch/loongarch/mm/ptdump_debugfs.c  |  22 ++
+ 5 files changed, 503 insertions(+)
+ create mode 100644 arch/loongarch/include/asm/ptdump.h
+ create mode 100644 arch/loongarch/mm/ptdump.c
+ create mode 100644 arch/loongarch/mm/ptdump_debugfs.c
 
-diff --git a/drivers/mfd/loongson-se.c b/drivers/mfd/loongson-se.c
-index aa34e663c4..2f296faa97 100644
---- a/drivers/mfd/loongson-se.c
-+++ b/drivers/mfd/loongson-se.c
-@@ -142,6 +142,11 @@ static irqreturn_t se_irq_handler(int irq, void *dev_id)
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index bec7cc1d72ee..e97fe97e1955 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -25,6 +25,7 @@ config LOONGARCH
+ 	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+ 	select ARCH_HAS_PREEMPT_LAZY
+ 	select ARCH_HAS_PTE_SPECIAL if 64BIT
++	select ARCH_HAS_PTDUMP
+ 	select ARCH_HAS_SET_MEMORY
+ 	select ARCH_HAS_SET_DIRECT_MAP
+ 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+diff --git a/arch/loongarch/include/asm/ptdump.h b/arch/loongarch/include/asm/ptdump.h
+new file mode 100644
+index 000000000000..4590ea56abe6
+--- /dev/null
++++ b/arch/loongarch/include/asm/ptdump.h
+@@ -0,0 +1,61 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++
++#ifndef __ASM_PTDUMP_H
++#define __ASM_PTDUMP_H
++
++#include <linux/ptdump.h>
++#include <linux/mm_types.h>
++#include <linux/seq_file.h>
++
++/*
++ * The page dumper groups page table entries of the same type into a single
++ * description. It uses pg_state to track the range information while
++ * iterating over the pte entries. When the continuity is broken it then
++ * dumps out a description of the range.
++ */
++struct pg_state {
++	struct ptdump_state ptdump;
++	struct seq_file *seq;
++	const struct addr_marker *marker;
++	unsigned long start_address;
++	unsigned long start_pa;
++	unsigned long last_pa;
++	int level;
++	u64 current_prot;
++	bool check_wx;
++	unsigned long wx_pages;
++};
++
++/* Address marker */
++struct addr_marker {
++	unsigned long start_address;
++	const char *name;
++};
++
++/* Private information for debugfs */
++struct ptd_mm_info {
++	struct mm_struct                *mm;
++	const struct addr_marker        *markers;
++	unsigned long base_addr;
++	unsigned long end;
++};
++
++/* Page Table Entry */
++struct prot_bits {
++	u64 mask;
++	u64 val;
++	const char *set;
++	const char *clear;
++};
++
++/* Page Level */
++struct pg_level {
++	const char *name;
++	u64 mask;
++};
++
++void ptdump_walk(struct seq_file *s, struct ptd_mm_info *pinfo);
++void __init ptdump_debugfs_register(struct ptd_mm_info *info, const char *name);
++
++#endif /* __ASM_PTDUMP_H */
++
+diff --git a/arch/loongarch/mm/Makefile b/arch/loongarch/mm/Makefile
+index 2aae3773de77..da9e6fee0439 100644
+--- a/arch/loongarch/mm/Makefile
++++ b/arch/loongarch/mm/Makefile
+@@ -10,5 +10,7 @@ obj-y				+= init.o cache.o tlb.o tlbex.o extable.o \
+ obj-$(CONFIG_HIGHMEM)		+= highmem.o
+ obj-$(CONFIG_HUGETLB_PAGE)	+= hugetlbpage.o
+ obj-$(CONFIG_KASAN)		+= kasan_init.o
++obj-$(CONFIG_PTDUMP)            += ptdump.o
++obj-$(CONFIG_PTDUMP_DEBUGFS)    += ptdump_debugfs.o
  
- 	int_status = readl(se->base + SE_S2LINT_STAT);
- 
-+	if (int_status == 0) {
-+		spin_unlock(&se->dev_lock);
-+		return IRQ_NONE;
+ KASAN_SANITIZE_kasan_init.o     := n
+diff --git a/arch/loongarch/mm/ptdump.c b/arch/loongarch/mm/ptdump.c
+new file mode 100644
+index 000000000000..cab6dad18150
+--- /dev/null
++++ b/arch/loongarch/mm/ptdump.c
+@@ -0,0 +1,417 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Derived from riscv implementation
++ */
++
++#include <linux/init.h>
++#include <linux/debugfs.h>
++#include <linux/seq_file.h>
++#include <linux/ptdump.h>
++#include <linux/pgtable.h>
++#include <asm/kasan.h>
++#include <asm/ptdump.h>
++
++#define _PAGE_PLV_VAL 0x0
++
++#define pt_dump_seq_printf(m, fmt, args...)	\
++({						\
++	if (m)					\
++		seq_printf(m, fmt, ##args);	\
++})
++
++#define pt_dump_seq_puts(m, fmt)	\
++({					\
++	if (m)				\
++		seq_puts(m, fmt);	\
++})
++
++enum address_markers_idx {
++	PCI_IO_START_NR,
++	PCI_IO_END_NR,
++	MODULES_START_NR,
++	MODULES_END_NR,
++	VMALLOC_START_NR,
++	VMALLOC_END_NR,
++#ifdef CONFIG_SPARSEMEM_VMEMMAP
++	VMEMMAP_START_NR,
++	VMEMMAP_END_NR,
++#endif
++#ifdef CONFIG_KFENCE
++	KFENCE_AREA_START_NR,
++	KFENCE_AREA_END_NR,
++#endif
++#ifdef CONFIG_KASAN
++	KASAN_SHADOW_START_NR,
++	KASAN_SHADOW_END_NR,
++#endif
++	FIXMAP_START_NR,
++	FIXMAP_END_NR,
++	END_OF_SPACE_NR
++};
++
++
++
++static struct addr_marker address_markers[] = {
++	{0, "PCI I/O start"},
++	{0, "PCI I/O end"},
++	{0, "modules start"},
++	{0, "modules end"},
++	{0, "vmalloc() area"},
++	{0, "vmalloc() end"},
++#ifdef CONFIG_SPARSEMEM_VMEMMAP
++	{0, "vmemmap start"},
++	{0, "vmemmap end"},
++#endif
++#ifdef CONFIG_KFENCE
++	{0, "kfence area start"},
++	{0, "kfence area end"},
++#endif
++#ifdef CONFIG_KASAN
++	{0, "Kasan shadow start"},
++	{0, "Kasan shadow end"},
++#endif
++	{0, "Fixmap start"},
++	{0, "Fixmap end"},
++	{-1, NULL},
++};
++
++
++static struct ptd_mm_info kernel_ptd_info = {
++	.mm		= &init_mm,
++	.markers	= address_markers,
++	.base_addr	= 0,
++	.end		= ULONG_MAX,
++};
++
++static const struct prot_bits pte_bits[] = {
++	{
++		.mask = _PAGE_VALID,
++		.val = _PAGE_VALID,
++		.set = "V",
++		.clear = " ",
++	}, {
++		.mask = _PAGE_DIRTY,
++		.val = _PAGE_DIRTY,
++		.set = "D",
++		.clear = " ",
++	}, {
++		.mask = _PAGE_PLV,
++		.val = _PAGE_PLV_VAL,
++		.set = "KERN",
++		.clear = "USR ",
++	}, {
++		.mask = _CACHE_MASK,
++		.val = _CACHE_MASK,
++		.set = "  ",
++		.clear = "SUC",
++	}, {
++		.mask = _PAGE_GLOBAL,
++		.val = _PAGE_GLOBAL,
++		.set = "G",
++		.clear = " ",
++	}, {
++		.mask = _PAGE_PRESENT,
++		.val = _PAGE_PRESENT,
++		.set = "P",
++		.clear = " ",
++	}, {
++		.mask = _PAGE_WRITE,
++		.val = _PAGE_WRITE,
++		.set = "W",
++		.clear = " ",
++	}, {
++		.mask = _PAGE_HGLOBAL,
++		.val = _PAGE_HGLOBAL,
++		.set = "HG",
++		.clear = "  ",
++	}, {
++		.mask = _PAGE_NO_READ,
++		.val = _PAGE_NO_READ,
++		.set = "NR",
++		.clear = "  ",
++	}, {
++		.mask = _PAGE_NO_EXEC,
++		.val = _PAGE_NO_EXEC,
++		.set = "NX",
++		.clear = "  ",
++	}, {
++		.mask = _PAGE_RPLV,
++		.val = _PAGE_RPLV,
++		.set = "RPLV",
++		.clear = "    ",
++	}
++};
++
++static struct pg_level pg_level[] = {
++	{ /* pgd */
++		.name = "PGD",
++	}, { /* p4d */
++		.name = (CONFIG_PGTABLE_LEVELS > 4) ? "P4D" : "PGD",
++	}, { /* pud */
++		.name = (CONFIG_PGTABLE_LEVELS > 3) ? "PUD" : "PGD",
++	}, { /* pmd */
++		.name = (CONFIG_PGTABLE_LEVELS > 2) ? "PMD" : "PGD",
++	}, { /* pte */
++		.name = "PTE",
++	},
++};
++
++static void dump_prot(struct pg_state *st)
++{
++
++	unsigned int i;
++
++	for (i = 0; i < ARRAY_SIZE(pte_bits); i++) {
++		const char *s;
++
++		if (pte_bits[i].mask == _CACHE_MASK) {
++			if ((st->current_prot & pte_bits[i].mask) == _CACHE_CC)
++				s = "CC ";
++			else if ((st->current_prot & pte_bits[i].mask) == _CACHE_WUC)
++				s = "WUC";
++			else
++				s = pte_bits[i].clear;
++		} else if (pte_bits[i].mask == _PAGE_GLOBAL) {
++			if ((st->current_prot & pte_bits[i].mask) == pte_bits[i].val) {
++				if (st->level != 4)
++					s = "PSE";
++				else
++					s = pte_bits[i].set;
++			} else {
++				s = pte_bits[i].clear;
++			}
++
++		} else {
++			if ((st->current_prot & pte_bits[i].mask) == pte_bits[i].val)
++				s = pte_bits[i].set;
++			else
++				s = pte_bits[i].clear;
++		}
++
++
++		if (s)
++			pt_dump_seq_printf(st->seq, " %s", s);
 +	}
 +
- 	/* For controller */
- 	if (int_status & SE_INT_CONTROLLER) {
- 		complete(&se->cmd_completion);
-@@ -222,7 +227,7 @@ static int loongson_se_probe(struct platform_device *pdev)
- 
- 	for (i = 0; i < nr_irq; i++) {
- 		irq = platform_get_irq(pdev, i);
--		err = devm_request_irq(dev, irq, se_irq_handler, 0, "loongson-se", se);
-+		err = devm_request_irq(dev, irq, se_irq_handler, IRQF_SHARED, "loongson-se", se);
- 		if (err) {
- 			dev_err(dev, "failed to request IRQ: %d\n", irq);
- 			return err;
-@@ -233,7 +238,7 @@ static int loongson_se_probe(struct platform_device *pdev)
- 	if (err)
- 		return err;
- 
--	return devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE, engines,
-+	return devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, engines,
- 				    ARRAY_SIZE(engines), NULL, 0, NULL);
- }
- 
++}
++
++
++#ifdef CONFIG_64BIT
++#define ADDR_FORMAT	"0x%016lx"
++#else
++#define ADDR_FORMAT	"0x%08lx"
++#endif
++static void dump_addr(struct pg_state *st, unsigned long addr)
++{
++	static const char units[] = "KMGTPE";
++	const char *unit = units;
++	unsigned long delta;
++
++	pt_dump_seq_printf(st->seq, ADDR_FORMAT "-" ADDR_FORMAT "   ",
++			   st->start_address, addr);
++
++	pt_dump_seq_printf(st->seq, " " ADDR_FORMAT " ", st->start_pa);
++	delta = (addr - st->start_address) >> 10;
++
++	while (!(delta & 1023) && unit[1]) {
++		delta >>= 10;
++		unit++;
++	}
++
++	pt_dump_seq_printf(st->seq, "%9lu%c %s", delta, *unit,
++			   pg_level[st->level].name);
++}
++
++static void note_prot_wx(struct pg_state *st, unsigned long addr)
++{
++	if (!st->check_wx)
++		return;
++	if ((st->current_prot & _PAGE_WRITE) == 0)
++		return;
++	if ((st->current_prot & _PAGE_NO_EXEC) == _PAGE_NO_EXEC)
++		return;
++
++	st->wx_pages += (addr - st->start_address) / PAGE_SIZE;
++
++}
++
++static void note_page(struct ptdump_state *pt_st, unsigned long addr,
++		      int level, u64 val)
++{
++	struct pg_state *st = container_of(pt_st, struct pg_state, ptdump);
++	u64 pa = PFN_PHYS(pte_pfn(__pte(val)));
++	u64 prot = 0;
++
++	if (level >= 0)
++		prot = val & pg_level[level].mask;
++
++	if (st->level == -1) {
++		st->level = level;
++		st->current_prot = prot;
++		st->start_address = addr;
++		st->start_pa = pa;
++		st->last_pa = pa;
++		pt_dump_seq_printf(st->seq, "---[ %s ]---\n", st->marker->name);
++	} else if (prot != st->current_prot ||
++		   level != st->level || addr >= st->marker[1].start_address) {
++		if (st->current_prot) {
++			note_prot_wx(st, addr);
++			dump_addr(st, addr);
++			dump_prot(st);
++			pt_dump_seq_puts(st->seq, "\n");
++		}
++
++		while (addr >= st->marker[1].start_address) {
++			st->marker++;
++			pt_dump_seq_printf(st->seq, "---[ %s ]---\n",
++					   st->marker->name);
++		}
++
++		st->start_address = addr;
++		st->start_pa = pa;
++		st->last_pa = pa;
++		st->current_prot = prot;
++		st->level = level;
++	} else {
++		st->last_pa = pa;
++	}
++}
++
++static void note_page_pte(struct ptdump_state *pt_st, unsigned long addr, pte_t pte)
++{
++	note_page(pt_st, addr, 4, pte_val(pte));
++}
++
++static void note_page_pmd(struct ptdump_state *pt_st, unsigned long addr, pmd_t pmd)
++{
++	note_page(pt_st, addr, 3, pmd_val(pmd));
++}
++
++static void note_page_pud(struct ptdump_state *pt_st, unsigned long addr, pud_t pud)
++{
++	note_page(pt_st, addr, 2, pud_val(pud));
++}
++
++static void note_page_p4d(struct ptdump_state *pt_st, unsigned long addr, p4d_t p4d)
++{
++	note_page(pt_st, addr, 1, p4d_val(p4d));
++}
++
++static void note_page_pgd(struct ptdump_state *pt_st, unsigned long addr, pgd_t pgd)
++{
++	note_page(pt_st, addr, 0, pgd_val(pgd));
++}
++
++static void note_page_flush(struct ptdump_state *pt_st)
++{
++	pte_t pte_zero = {0};
++
++	note_page(pt_st, 0, -1, pte_val(pte_zero));
++}
++
++void ptdump_walk(struct seq_file *s, struct ptd_mm_info *pinfo)
++{
++	struct pg_state st = {
++		.seq = s,
++		.marker = pinfo->markers,
++		.level = -1,
++		.ptdump = {
++			.note_page_pte = note_page_pte,
++			.note_page_pmd = note_page_pmd,
++			.note_page_pud = note_page_pud,
++			.note_page_p4d = note_page_p4d,
++			.note_page_pgd = note_page_pgd,
++			.note_page_flush = note_page_flush,
++			.range = (struct ptdump_range[]) {
++				{pinfo->base_addr, pinfo->end},
++				{0, 0}
++			}
++		}
++	};
++
++	ptdump_walk_pgd(&st.ptdump, pinfo->mm, NULL);
++}
++
++bool ptdump_check_wx(void)
++{
++	struct pg_state st = {
++		.seq = NULL,
++		.marker = (struct addr_marker[]) {
++			{0, NULL},
++			{-1, NULL},
++		},
++		.level = -1,
++		.check_wx = true,
++		.ptdump = {
++			.note_page_pte = note_page_pte,
++			.note_page_pmd = note_page_pmd,
++			.note_page_pud = note_page_pud,
++			.note_page_p4d = note_page_p4d,
++			.note_page_pgd = note_page_pgd,
++			.note_page_flush = note_page_flush,
++			.range = (struct ptdump_range[]) {
++				{vm_map_base, ULONG_MAX},
++				{0, 0}
++			}
++		}
++	};
++
++	ptdump_walk_pgd(&st.ptdump, &init_mm, NULL);
++
++	if (st.wx_pages) {
++		pr_warn("Checked W+X mappings: failed, %lu W+X pages found\n",
++			st.wx_pages);
++
++		return false;
++	}
++
++	pr_info("Checked W+X mappings: passed, no W+X pages found\n");
++
++	return true;
++}
++
++
++static int __init ptdump_init(void)
++{
++	unsigned int i, j;
++
++	address_markers[PCI_IO_START_NR].start_address = (unsigned long)PCI_IOBASE;
++	address_markers[PCI_IO_END_NR].start_address = (unsigned long)PCI_IOBASE + IO_SPACE_LIMIT;
++
++	address_markers[MODULES_START_NR].start_address = MODULES_VADDR;
++	address_markers[MODULES_END_NR].start_address = MODULES_END;
++
++	address_markers[VMALLOC_START_NR].start_address = VMALLOC_START;
++	address_markers[VMALLOC_END_NR].start_address = VMALLOC_END;
++
++#ifdef CONFIG_SPARSEMEM_VMEMMAP
++	address_markers[VMEMMAP_START_NR].start_address = (unsigned long)vmemmap;
++	address_markers[VMEMMAP_END_NR].start_address = VMEMMAP_END;
++#endif
++
++#ifdef CONFIG_KFENCE
++	address_markers[KFENCE_AREA_START_NR].start_address = KFENCE_AREA_START;
++	address_markers[KFENCE_AREA_END_NR].start_address = KFENCE_AREA_END;
++#endif
++
++#ifdef CONFIG_KASAN
++	address_markers[KASAN_SHADOW_START_NR].start_address = KASAN_SHADOW_START;
++	address_markers[KASAN_SHADOW_END_NR].start_address = KASAN_SHADOW_END;
++#endif
++
++	address_markers[FIXMAP_START_NR].start_address = FIXADDR_START;
++	address_markers[FIXMAP_END_NR].start_address = FIXADDR_TOP;
++
++	kernel_ptd_info.base_addr = vm_map_base;
++
++	for (i = 0; i < ARRAY_SIZE(pg_level); i++) {
++		for (j = 0; j < ARRAY_SIZE(pte_bits); j++)
++			pg_level[i].mask |= pte_bits[j].mask;
++	}
++
++	ptdump_debugfs_register(&kernel_ptd_info, "kernel_page_tables");
++
++	return 0;
++}
++
++device_initcall(ptdump_init);
+diff --git a/arch/loongarch/mm/ptdump_debugfs.c b/arch/loongarch/mm/ptdump_debugfs.c
+new file mode 100644
+index 000000000000..aa6169f6aa3a
+--- /dev/null
++++ b/arch/loongarch/mm/ptdump_debugfs.c
+@@ -0,0 +1,22 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/debugfs.h>
++#include <linux/seq_file.h>
++
++#include <asm/ptdump.h>
++#include <asm/pgtable.h>
++#include <asm/kasan.h>
++
++static int ptdump_show(struct seq_file *m, void *v)
++{
++	struct ptd_mm_info *info = m->private;
++
++	ptdump_walk(m, info);
++	return 0;
++}
++DEFINE_SHOW_ATTRIBUTE(ptdump);
++
++void __init ptdump_debugfs_register(struct ptd_mm_info *info, const char *name)
++{
++	debugfs_create_file(name, 0400, NULL, info, &ptdump_fops);
++}
++
 -- 
-2.47.2
+2.43.0
 
