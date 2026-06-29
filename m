@@ -1,149 +1,658 @@
-Received: from canpmsgout12.his.huawei.com (canpmsgout12.his.huawei.com [113.46.200.227])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2652440802B
-	for <loongarch@lists.linux.dev>; Mon, 29 Jun 2026 13:07:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.227
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AAFE32B118
+	for <loongarch@lists.linux.dev>; Mon, 29 Jun 2026 14:01:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782738480; cv=none; b=qPlz+rkE//J6Hd1M3bABbC4i65PFvrpiXNMWYL2BMYIPzYwlJSDF2mI+mpI77Cx8xKjl0zFFskKF6EwvPxpiGdsOSIaFHERc+FC52lrcsLfuEhutJBKOHcC/18CcYGufAO6yu819cOo/18LeXFMwVQ4bZxrXtMu03ZeqAmwM4Is=
+	t=1782741672; cv=none; b=FNh2KMmLg8SiLIz8EKJUbB2Td9Lbucw/b5Nhans3OZ8Ehyn0JP+Gi1RwwkeZeXC3//+olzGevxQ9hks+VUwcz1mHrAsNgJiU7599E413ytClFPdP9mQ5X5eN3jxKEK/K2Ioec5NZGcy2VExd/Jnaldt0ebHBrcEULCXJsKg1arg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782738480; c=relaxed/simple;
-	bh=OdHSko/zczx8ujiWfn1DqHfqt0tTl02PWSTnINrpaRM=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SLRz1hu6a35o5dDWd3VJdGUoOs66BZGRyiuyBPUrWsb65SmQArWn8Yr/HUOa1nVa8TZEsb2gmevMmqDpN9ptgFHQaBOP13/yUt5LaYVYaGCTax2U5vD2xMNmh/WGb6Xg+CAYt388DwPKwnLb/Q/9UTFrPrK2c6CezlUIT/e3wh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=n8efmFXZ; arc=none smtp.client-ip=113.46.200.227
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1782741672; c=relaxed/simple;
+	bh=BL+yQf5YdvvHrzxIABF6MTo73wW8lsQoQFDAKxJy7BE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iNgP5JlyFlmEQuySk5+uf8lRAOMzzW200piDsyxBVb4sj6ROnFeHfHwqI8U1Xgr6xcGpuLmxkLdveYgbI+mrRvLQx0yCx9lwTUAIrCrkXXyBU74jdL8VVY0I/aKnfSynKD1f5m511bfBM4nSt5+2NtTim90dFBakq5418/xXlTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ABYJtzxf; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="n8efmFXZ"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=nXlEqg7p36Jks1c4yuaOXWFRq7Kp2sLsUwczenqjsfU=;
-	b=n8efmFXZdzG/h0lZ6Y0o4MsHme01XM8L7okaKbD/TR5W3fhAEUiS3084Q2F4FbdJWy9onNHJn
-	NoyvX82wTsDRv9G5PxGTgVIRQ7Jcm5Hx10ZCpPXtHg6aMkk03hx8R8iCitsSqg5zLYEjQwsADbU
-	ewPWK6UfSGus42FOPWCcAkU=
-Received: from mail.maildlp.com (unknown [172.19.163.163])
-	by canpmsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4gpmZ82YsKznTbW;
-	Mon, 29 Jun 2026 20:59:12 +0800 (CST)
-Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5D6CF40588;
-	Mon, 29 Jun 2026 21:07:53 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
- (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 29 Jun
- 2026 21:07:49 +0800
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-To: <oleg@redhat.com>, <richard.henderson@linaro.org>, <mattst88@gmail.com>,
-	<linmag7@gmail.com>, <linux@armlinux.org.uk>, <catalin.marinas@arm.com>,
-	<will@kernel.org>, <kees@kernel.org>, <guoren@kernel.org>,
-	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <geert@linux-m68k.org>,
-	<tsbogend@alpha.franken.de>, <James.Bottomley@HansenPartnership.com>,
-	<deller@gmx.de>, <maddy@linux.ibm.com>, <mpe@ellerman.id.au>,
-	<npiggin@gmail.com>, <chleroy@kernel.org>, <pjw@kernel.org>,
-	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <alex@ghiti.fr>,
-	<hca@linux.ibm.com>, <gor@linux.ibm.com>, <agordeev@linux.ibm.com>,
-	<borntraeger@linux.ibm.com>, <svens@linux.ibm.com>,
-	<ysato@users.sourceforge.jp>, <dalias@libc.org>,
-	<glaubitz@physik.fu-berlin.de>, <richard@nod.at>,
-	<anton.ivanov@cambridgegreys.com>, <johannes@sipsolutions.net>,
-	<luto@kernel.org>, <tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <chris@zankel.net>,
-	<jcmvbkbc@gmail.com>, <peterz@infradead.org>, <wad@chromium.org>,
-	<ruanjinjie@huawei.com>, <thuth@redhat.com>, <mark.rutland@arm.com>,
-	<ada.coupriediaz@arm.com>, <kevin.brodsky@arm.com>, <linusw@kernel.org>,
-	<yeoreum.yun@arm.com>, <song@kernel.org>, <james.morse@arm.com>,
-	<anshuman.khandual@arm.com>, <broonie@kernel.org>, <liqiang01@kylinos.cn>,
-	<pengcan@kylinos.cn>, <ryan.roberts@arm.com>, <yangtiezhu@loongson.cn>,
-	<sshegde@linux.ibm.com>, <mchauras@linux.ibm.com>, <austin.kim@lge.com>,
-	<jchrist@linux.ibm.com>, <arnd@arndb.de>, <thomas.weissschuh@linutronix.de>,
-	<sohil.mehta@intel.com>, <andrew.cooper3@citrix.com>, <jgross@suse.com>,
-	<kas@kernel.org>, <x86@kernel.org>, <linux-alpha@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mm@kvack.org>, <linux-csky@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linux-m68k@lists.linux-m68k.org>,
-	<linux-mips@vger.kernel.org>, <linux-parisc@vger.kernel.org>,
-	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
-	<linux-s390@vger.kernel.org>, <linux-sh@vger.kernel.org>,
-	<linux-um@lists.infradead.org>
-Subject: [PATCH v16 18/18] arm64: vdso: Expose sigreturn address on vdso to the kernel
-Date: Mon, 29 Jun 2026 21:06:16 +0800
-Message-ID: <20260629130616.642022-19-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260629130616.642022-1-ruanjinjie@huawei.com>
-References: <20260629130616.642022-1-ruanjinjie@huawei.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ABYJtzxf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D35271F000E9
+	for <loongarch@lists.linux.dev>; Mon, 29 Jun 2026 14:01:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782741671;
+	bh=nmhT6r8vXJA2t0o4a7S5/AbOl38OeAHwBvGya5uCSZQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=ABYJtzxfzaXTidiLJoy5I2U4Gb9+T8oxttT1IoTQe+PAMkQoefUZ/MgOVCkCaiaWI
+	 AjOx3wxNVWJGdWZ0cCsPk6/4o1jL09LoTDeX7nda35yn9fA3kWk5L+umUyGLKgeLxV
+	 WISFb+2C8RjH8RcMbS09LIjXJ6O3ANoem4d2morKUNL/VsXe3xk0iYSO0eil3QW3aj
+	 GpFD8uqub63/fHf6ZOkbQa36q0AldzI1yl/Q4Mv+EXI1G/5r/fFAv3BcOd+/zatgNk
+	 CF+8aSMc3E2Wam1aDoX3x3q2tK65AZQo4airwBveyidOaevtb62IHOJPHdoqShx09X
+	 FGgEnF+kkhKtQ==
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-697bd21fdc2so6022971a12.1
+        for <loongarch@lists.linux.dev>; Mon, 29 Jun 2026 07:01:10 -0700 (PDT)
+X-Gm-Message-State: AOJu0Ywy0vL8w+YWbwAugH9KwiZ0OPju/W+8Oh/vcsRg77G2/kAy785f
+	zqk+fSEqhsgSITt7kFARrNFTqjeVkexe1BTodXO2+lakKoEUiSlyPt+G1kwcJ7GSyZ64wPQ/TU0
+	drF0AROnBrxBdXh0GRaX0ectuo0cW23U=
+X-Received: by 2002:a05:6402:916:b0:698:3b7c:3b48 with SMTP id
+ 4fb4d7f45d1cf-6983b7c3f15mr4128570a12.39.1782741668235; Mon, 29 Jun 2026
+ 07:01:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
- dggpemf500011.china.huawei.com (7.185.36.131)
+References: <20260629074335.448256-1-haoran.jiang@linux.dev>
+In-Reply-To: <20260629074335.448256-1-haoran.jiang@linux.dev>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 29 Jun 2026 22:00:53 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6MTP_eU-8CeHzChvBGmjxP3KFcZDMypiFH4EsF4F3u_A@mail.gmail.com>
+X-Gm-Features: AVVi8CejQTR9WD0G-sNkeSp5KeqaBpyBDtAXh-FqO34rzPJhcbCcfT-ye8UezT4
+Message-ID: <CAAhV-H6MTP_eU-8CeHzChvBGmjxP3KFcZDMypiFH4EsF4F3u_A@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Add support to dump the kernel page tables
+To: haoran.jiang@linux.dev
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, kernel@xen0n.name, 
+	yangtiezhu@loongson.cn, Haoran Jiang <jianghaoran@kylinos.cn>, 
+	Xiujie Jiang <jiangxiujie@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Syscall User Dispatch (SUD) requires the signal trampoline code to not be
-intercepted. This is necessary to support returning with a locked selector
-while avoiding infinite recursion back into the signal handler.
+Hi, Haoran,
 
-Implement arch_syscall_is_vdso_sigreturn() for arm64 to support this
-exclusion mechanism. For native 64-bit tasks, it checks whether the current
-PC matches the 'svc #0' instruction inside the vDSO sigreturn trampoline.
+On Mon, Jun 29, 2026 at 3:44=E2=80=AFPM <haoran.jiang@linux.dev> wrote:
+>
+> From: Haoran Jiang <jianghaoran@kylinos.cn>
+>
+> In a similar manner to riscv,arm64,x86 etc.,this patch allows
+> dumping the page tables of the LoongArch page-mapped virtual memory
+> region via a debugfs file, which is useful for kernel developers to
+> inspect page table layouts and verify permissions and type settings.
+I like the RISC-V version that put everything in ptdump.c.
 
-	SYM_CODE_START(__kernel_rt_sigreturn)
-	        mov     x8, #__NR_rt_sigreturn
-	        svc     #0
-	SYM_CODE_END(__kernel_rt_sigreturn)
-
-For COMPAT tasks, it verifies if the instruction falls within
-the architecture's 'sigpage' range, allowing the kernel to safely bypass
-dispatching syscalls originating from these areas back to userspace.
-
-Suggested-by: Kevin Brodsky <kevin.brodsky@arm.com>
-Suggested-by: kemal <kmal@cock.li>
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
----
- arch/arm64/include/asm/elf.h |  1 +
- arch/arm64/kernel/vdso.c     | 16 ++++++++++++++++
- 2 files changed, 17 insertions(+)
-
-diff --git a/arch/arm64/include/asm/elf.h b/arch/arm64/include/asm/elf.h
-index d2779d604c7b..f43d4dea916a 100644
---- a/arch/arm64/include/asm/elf.h
-+++ b/arch/arm64/include/asm/elf.h
-@@ -185,6 +185,7 @@ do {									\
- struct linux_binprm;
- extern int arch_setup_additional_pages(struct linux_binprm *bprm,
- 				       int uses_interp);
-+extern bool arch_syscall_is_vdso_sigreturn(struct pt_regs *regs);
- 
- /* 1GB of VA */
- #ifdef CONFIG_COMPAT
-diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
-index 592dd8668de4..5a0314a3c26e 100644
---- a/arch/arm64/kernel/vdso.c
-+++ b/arch/arm64/kernel/vdso.c
-@@ -343,3 +343,19 @@ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
- 
- 	return ret;
- }
-+
-+bool arch_syscall_is_vdso_sigreturn(struct pt_regs *regs)
-+{
-+	unsigned long sigtramp;
-+
-+#ifdef CONFIG_COMPAT
-+	if (is_compat_task()) {
-+		unsigned long sigpage = (unsigned long)current->mm->context.sigpage;
-+
-+		return regs->pc >= sigpage && regs->pc < (sigpage + PAGE_SIZE);
-+	}
-+#endif
-+	sigtramp = (unsigned long)VDSO_SYMBOL(current->mm->context.vdso, sigtramp);
-+
-+	return regs->pc == (sigtramp + 8);
-+}
--- 
-2.34.1
-
+Huacai
+>
+> Co-developed-by: Xiujie Jiang <jiangxiujie@kylinos.cn>
+> Signed-off-by: Xiujie Jiang <jiangxiujie@kylinos.cn>
+> Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
+> ---
+>  arch/loongarch/Kconfig              |   1 +
+>  arch/loongarch/include/asm/ptdump.h |  61 ++++
+>  arch/loongarch/mm/Makefile          |   2 +
+>  arch/loongarch/mm/ptdump.c          | 417 ++++++++++++++++++++++++++++
+>  arch/loongarch/mm/ptdump_debugfs.c  |  22 ++
+>  5 files changed, 503 insertions(+)
+>  create mode 100644 arch/loongarch/include/asm/ptdump.h
+>  create mode 100644 arch/loongarch/mm/ptdump.c
+>  create mode 100644 arch/loongarch/mm/ptdump_debugfs.c
+>
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index bec7cc1d72ee..e97fe97e1955 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -25,6 +25,7 @@ config LOONGARCH
+>         select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+>         select ARCH_HAS_PREEMPT_LAZY
+>         select ARCH_HAS_PTE_SPECIAL if 64BIT
+> +       select ARCH_HAS_PTDUMP
+>         select ARCH_HAS_SET_MEMORY
+>         select ARCH_HAS_SET_DIRECT_MAP
+>         select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+> diff --git a/arch/loongarch/include/asm/ptdump.h b/arch/loongarch/include=
+/asm/ptdump.h
+> new file mode 100644
+> index 000000000000..4590ea56abe6
+> --- /dev/null
+> +++ b/arch/loongarch/include/asm/ptdump.h
+> @@ -0,0 +1,61 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +
+> +#ifndef __ASM_PTDUMP_H
+> +#define __ASM_PTDUMP_H
+> +
+> +#include <linux/ptdump.h>
+> +#include <linux/mm_types.h>
+> +#include <linux/seq_file.h>
+> +
+> +/*
+> + * The page dumper groups page table entries of the same type into a sin=
+gle
+> + * description. It uses pg_state to track the range information while
+> + * iterating over the pte entries. When the continuity is broken it then
+> + * dumps out a description of the range.
+> + */
+> +struct pg_state {
+> +       struct ptdump_state ptdump;
+> +       struct seq_file *seq;
+> +       const struct addr_marker *marker;
+> +       unsigned long start_address;
+> +       unsigned long start_pa;
+> +       unsigned long last_pa;
+> +       int level;
+> +       u64 current_prot;
+> +       bool check_wx;
+> +       unsigned long wx_pages;
+> +};
+> +
+> +/* Address marker */
+> +struct addr_marker {
+> +       unsigned long start_address;
+> +       const char *name;
+> +};
+> +
+> +/* Private information for debugfs */
+> +struct ptd_mm_info {
+> +       struct mm_struct                *mm;
+> +       const struct addr_marker        *markers;
+> +       unsigned long base_addr;
+> +       unsigned long end;
+> +};
+> +
+> +/* Page Table Entry */
+> +struct prot_bits {
+> +       u64 mask;
+> +       u64 val;
+> +       const char *set;
+> +       const char *clear;
+> +};
+> +
+> +/* Page Level */
+> +struct pg_level {
+> +       const char *name;
+> +       u64 mask;
+> +};
+> +
+> +void ptdump_walk(struct seq_file *s, struct ptd_mm_info *pinfo);
+> +void __init ptdump_debugfs_register(struct ptd_mm_info *info, const char=
+ *name);
+> +
+> +#endif /* __ASM_PTDUMP_H */
+> +
+> diff --git a/arch/loongarch/mm/Makefile b/arch/loongarch/mm/Makefile
+> index 2aae3773de77..da9e6fee0439 100644
+> --- a/arch/loongarch/mm/Makefile
+> +++ b/arch/loongarch/mm/Makefile
+> @@ -10,5 +10,7 @@ obj-y                         +=3D init.o cache.o tlb.o=
+ tlbex.o extable.o \
+>  obj-$(CONFIG_HIGHMEM)          +=3D highmem.o
+>  obj-$(CONFIG_HUGETLB_PAGE)     +=3D hugetlbpage.o
+>  obj-$(CONFIG_KASAN)            +=3D kasan_init.o
+> +obj-$(CONFIG_PTDUMP)            +=3D ptdump.o
+> +obj-$(CONFIG_PTDUMP_DEBUGFS)    +=3D ptdump_debugfs.o
+>
+>  KASAN_SANITIZE_kasan_init.o     :=3D n
+> diff --git a/arch/loongarch/mm/ptdump.c b/arch/loongarch/mm/ptdump.c
+> new file mode 100644
+> index 000000000000..cab6dad18150
+> --- /dev/null
+> +++ b/arch/loongarch/mm/ptdump.c
+> @@ -0,0 +1,417 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Derived from riscv implementation
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/debugfs.h>
+> +#include <linux/seq_file.h>
+> +#include <linux/ptdump.h>
+> +#include <linux/pgtable.h>
+> +#include <asm/kasan.h>
+> +#include <asm/ptdump.h>
+> +
+> +#define _PAGE_PLV_VAL 0x0
+> +
+> +#define pt_dump_seq_printf(m, fmt, args...)    \
+> +({                                             \
+> +       if (m)                                  \
+> +               seq_printf(m, fmt, ##args);     \
+> +})
+> +
+> +#define pt_dump_seq_puts(m, fmt)       \
+> +({                                     \
+> +       if (m)                          \
+> +               seq_puts(m, fmt);       \
+> +})
+> +
+> +enum address_markers_idx {
+> +       PCI_IO_START_NR,
+> +       PCI_IO_END_NR,
+> +       MODULES_START_NR,
+> +       MODULES_END_NR,
+> +       VMALLOC_START_NR,
+> +       VMALLOC_END_NR,
+> +#ifdef CONFIG_SPARSEMEM_VMEMMAP
+> +       VMEMMAP_START_NR,
+> +       VMEMMAP_END_NR,
+> +#endif
+> +#ifdef CONFIG_KFENCE
+> +       KFENCE_AREA_START_NR,
+> +       KFENCE_AREA_END_NR,
+> +#endif
+> +#ifdef CONFIG_KASAN
+> +       KASAN_SHADOW_START_NR,
+> +       KASAN_SHADOW_END_NR,
+> +#endif
+> +       FIXMAP_START_NR,
+> +       FIXMAP_END_NR,
+> +       END_OF_SPACE_NR
+> +};
+> +
+> +
+> +
+> +static struct addr_marker address_markers[] =3D {
+> +       {0, "PCI I/O start"},
+> +       {0, "PCI I/O end"},
+> +       {0, "modules start"},
+> +       {0, "modules end"},
+> +       {0, "vmalloc() area"},
+> +       {0, "vmalloc() end"},
+> +#ifdef CONFIG_SPARSEMEM_VMEMMAP
+> +       {0, "vmemmap start"},
+> +       {0, "vmemmap end"},
+> +#endif
+> +#ifdef CONFIG_KFENCE
+> +       {0, "kfence area start"},
+> +       {0, "kfence area end"},
+> +#endif
+> +#ifdef CONFIG_KASAN
+> +       {0, "Kasan shadow start"},
+> +       {0, "Kasan shadow end"},
+> +#endif
+> +       {0, "Fixmap start"},
+> +       {0, "Fixmap end"},
+> +       {-1, NULL},
+> +};
+> +
+> +
+> +static struct ptd_mm_info kernel_ptd_info =3D {
+> +       .mm             =3D &init_mm,
+> +       .markers        =3D address_markers,
+> +       .base_addr      =3D 0,
+> +       .end            =3D ULONG_MAX,
+> +};
+> +
+> +static const struct prot_bits pte_bits[] =3D {
+> +       {
+> +               .mask =3D _PAGE_VALID,
+> +               .val =3D _PAGE_VALID,
+> +               .set =3D "V",
+> +               .clear =3D " ",
+> +       }, {
+> +               .mask =3D _PAGE_DIRTY,
+> +               .val =3D _PAGE_DIRTY,
+> +               .set =3D "D",
+> +               .clear =3D " ",
+> +       }, {
+> +               .mask =3D _PAGE_PLV,
+> +               .val =3D _PAGE_PLV_VAL,
+> +               .set =3D "KERN",
+> +               .clear =3D "USR ",
+> +       }, {
+> +               .mask =3D _CACHE_MASK,
+> +               .val =3D _CACHE_MASK,
+> +               .set =3D "  ",
+> +               .clear =3D "SUC",
+> +       }, {
+> +               .mask =3D _PAGE_GLOBAL,
+> +               .val =3D _PAGE_GLOBAL,
+> +               .set =3D "G",
+> +               .clear =3D " ",
+> +       }, {
+> +               .mask =3D _PAGE_PRESENT,
+> +               .val =3D _PAGE_PRESENT,
+> +               .set =3D "P",
+> +               .clear =3D " ",
+> +       }, {
+> +               .mask =3D _PAGE_WRITE,
+> +               .val =3D _PAGE_WRITE,
+> +               .set =3D "W",
+> +               .clear =3D " ",
+> +       }, {
+> +               .mask =3D _PAGE_HGLOBAL,
+> +               .val =3D _PAGE_HGLOBAL,
+> +               .set =3D "HG",
+> +               .clear =3D "  ",
+> +       }, {
+> +               .mask =3D _PAGE_NO_READ,
+> +               .val =3D _PAGE_NO_READ,
+> +               .set =3D "NR",
+> +               .clear =3D "  ",
+> +       }, {
+> +               .mask =3D _PAGE_NO_EXEC,
+> +               .val =3D _PAGE_NO_EXEC,
+> +               .set =3D "NX",
+> +               .clear =3D "  ",
+> +       }, {
+> +               .mask =3D _PAGE_RPLV,
+> +               .val =3D _PAGE_RPLV,
+> +               .set =3D "RPLV",
+> +               .clear =3D "    ",
+> +       }
+> +};
+> +
+> +static struct pg_level pg_level[] =3D {
+> +       { /* pgd */
+> +               .name =3D "PGD",
+> +       }, { /* p4d */
+> +               .name =3D (CONFIG_PGTABLE_LEVELS > 4) ? "P4D" : "PGD",
+> +       }, { /* pud */
+> +               .name =3D (CONFIG_PGTABLE_LEVELS > 3) ? "PUD" : "PGD",
+> +       }, { /* pmd */
+> +               .name =3D (CONFIG_PGTABLE_LEVELS > 2) ? "PMD" : "PGD",
+> +       }, { /* pte */
+> +               .name =3D "PTE",
+> +       },
+> +};
+> +
+> +static void dump_prot(struct pg_state *st)
+> +{
+> +
+> +       unsigned int i;
+> +
+> +       for (i =3D 0; i < ARRAY_SIZE(pte_bits); i++) {
+> +               const char *s;
+> +
+> +               if (pte_bits[i].mask =3D=3D _CACHE_MASK) {
+> +                       if ((st->current_prot & pte_bits[i].mask) =3D=3D =
+_CACHE_CC)
+> +                               s =3D "CC ";
+> +                       else if ((st->current_prot & pte_bits[i].mask) =
+=3D=3D _CACHE_WUC)
+> +                               s =3D "WUC";
+> +                       else
+> +                               s =3D pte_bits[i].clear;
+> +               } else if (pte_bits[i].mask =3D=3D _PAGE_GLOBAL) {
+> +                       if ((st->current_prot & pte_bits[i].mask) =3D=3D =
+pte_bits[i].val) {
+> +                               if (st->level !=3D 4)
+> +                                       s =3D "PSE";
+> +                               else
+> +                                       s =3D pte_bits[i].set;
+> +                       } else {
+> +                               s =3D pte_bits[i].clear;
+> +                       }
+> +
+> +               } else {
+> +                       if ((st->current_prot & pte_bits[i].mask) =3D=3D =
+pte_bits[i].val)
+> +                               s =3D pte_bits[i].set;
+> +                       else
+> +                               s =3D pte_bits[i].clear;
+> +               }
+> +
+> +
+> +               if (s)
+> +                       pt_dump_seq_printf(st->seq, " %s", s);
+> +       }
+> +
+> +}
+> +
+> +
+> +#ifdef CONFIG_64BIT
+> +#define ADDR_FORMAT    "0x%016lx"
+> +#else
+> +#define ADDR_FORMAT    "0x%08lx"
+> +#endif
+> +static void dump_addr(struct pg_state *st, unsigned long addr)
+> +{
+> +       static const char units[] =3D "KMGTPE";
+> +       const char *unit =3D units;
+> +       unsigned long delta;
+> +
+> +       pt_dump_seq_printf(st->seq, ADDR_FORMAT "-" ADDR_FORMAT "   ",
+> +                          st->start_address, addr);
+> +
+> +       pt_dump_seq_printf(st->seq, " " ADDR_FORMAT " ", st->start_pa);
+> +       delta =3D (addr - st->start_address) >> 10;
+> +
+> +       while (!(delta & 1023) && unit[1]) {
+> +               delta >>=3D 10;
+> +               unit++;
+> +       }
+> +
+> +       pt_dump_seq_printf(st->seq, "%9lu%c %s", delta, *unit,
+> +                          pg_level[st->level].name);
+> +}
+> +
+> +static void note_prot_wx(struct pg_state *st, unsigned long addr)
+> +{
+> +       if (!st->check_wx)
+> +               return;
+> +       if ((st->current_prot & _PAGE_WRITE) =3D=3D 0)
+> +               return;
+> +       if ((st->current_prot & _PAGE_NO_EXEC) =3D=3D _PAGE_NO_EXEC)
+> +               return;
+> +
+> +       st->wx_pages +=3D (addr - st->start_address) / PAGE_SIZE;
+> +
+> +}
+> +
+> +static void note_page(struct ptdump_state *pt_st, unsigned long addr,
+> +                     int level, u64 val)
+> +{
+> +       struct pg_state *st =3D container_of(pt_st, struct pg_state, ptdu=
+mp);
+> +       u64 pa =3D PFN_PHYS(pte_pfn(__pte(val)));
+> +       u64 prot =3D 0;
+> +
+> +       if (level >=3D 0)
+> +               prot =3D val & pg_level[level].mask;
+> +
+> +       if (st->level =3D=3D -1) {
+> +               st->level =3D level;
+> +               st->current_prot =3D prot;
+> +               st->start_address =3D addr;
+> +               st->start_pa =3D pa;
+> +               st->last_pa =3D pa;
+> +               pt_dump_seq_printf(st->seq, "---[ %s ]---\n", st->marker-=
+>name);
+> +       } else if (prot !=3D st->current_prot ||
+> +                  level !=3D st->level || addr >=3D st->marker[1].start_=
+address) {
+> +               if (st->current_prot) {
+> +                       note_prot_wx(st, addr);
+> +                       dump_addr(st, addr);
+> +                       dump_prot(st);
+> +                       pt_dump_seq_puts(st->seq, "\n");
+> +               }
+> +
+> +               while (addr >=3D st->marker[1].start_address) {
+> +                       st->marker++;
+> +                       pt_dump_seq_printf(st->seq, "---[ %s ]---\n",
+> +                                          st->marker->name);
+> +               }
+> +
+> +               st->start_address =3D addr;
+> +               st->start_pa =3D pa;
+> +               st->last_pa =3D pa;
+> +               st->current_prot =3D prot;
+> +               st->level =3D level;
+> +       } else {
+> +               st->last_pa =3D pa;
+> +       }
+> +}
+> +
+> +static void note_page_pte(struct ptdump_state *pt_st, unsigned long addr=
+, pte_t pte)
+> +{
+> +       note_page(pt_st, addr, 4, pte_val(pte));
+> +}
+> +
+> +static void note_page_pmd(struct ptdump_state *pt_st, unsigned long addr=
+, pmd_t pmd)
+> +{
+> +       note_page(pt_st, addr, 3, pmd_val(pmd));
+> +}
+> +
+> +static void note_page_pud(struct ptdump_state *pt_st, unsigned long addr=
+, pud_t pud)
+> +{
+> +       note_page(pt_st, addr, 2, pud_val(pud));
+> +}
+> +
+> +static void note_page_p4d(struct ptdump_state *pt_st, unsigned long addr=
+, p4d_t p4d)
+> +{
+> +       note_page(pt_st, addr, 1, p4d_val(p4d));
+> +}
+> +
+> +static void note_page_pgd(struct ptdump_state *pt_st, unsigned long addr=
+, pgd_t pgd)
+> +{
+> +       note_page(pt_st, addr, 0, pgd_val(pgd));
+> +}
+> +
+> +static void note_page_flush(struct ptdump_state *pt_st)
+> +{
+> +       pte_t pte_zero =3D {0};
+> +
+> +       note_page(pt_st, 0, -1, pte_val(pte_zero));
+> +}
+> +
+> +void ptdump_walk(struct seq_file *s, struct ptd_mm_info *pinfo)
+> +{
+> +       struct pg_state st =3D {
+> +               .seq =3D s,
+> +               .marker =3D pinfo->markers,
+> +               .level =3D -1,
+> +               .ptdump =3D {
+> +                       .note_page_pte =3D note_page_pte,
+> +                       .note_page_pmd =3D note_page_pmd,
+> +                       .note_page_pud =3D note_page_pud,
+> +                       .note_page_p4d =3D note_page_p4d,
+> +                       .note_page_pgd =3D note_page_pgd,
+> +                       .note_page_flush =3D note_page_flush,
+> +                       .range =3D (struct ptdump_range[]) {
+> +                               {pinfo->base_addr, pinfo->end},
+> +                               {0, 0}
+> +                       }
+> +               }
+> +       };
+> +
+> +       ptdump_walk_pgd(&st.ptdump, pinfo->mm, NULL);
+> +}
+> +
+> +bool ptdump_check_wx(void)
+> +{
+> +       struct pg_state st =3D {
+> +               .seq =3D NULL,
+> +               .marker =3D (struct addr_marker[]) {
+> +                       {0, NULL},
+> +                       {-1, NULL},
+> +               },
+> +               .level =3D -1,
+> +               .check_wx =3D true,
+> +               .ptdump =3D {
+> +                       .note_page_pte =3D note_page_pte,
+> +                       .note_page_pmd =3D note_page_pmd,
+> +                       .note_page_pud =3D note_page_pud,
+> +                       .note_page_p4d =3D note_page_p4d,
+> +                       .note_page_pgd =3D note_page_pgd,
+> +                       .note_page_flush =3D note_page_flush,
+> +                       .range =3D (struct ptdump_range[]) {
+> +                               {vm_map_base, ULONG_MAX},
+> +                               {0, 0}
+> +                       }
+> +               }
+> +       };
+> +
+> +       ptdump_walk_pgd(&st.ptdump, &init_mm, NULL);
+> +
+> +       if (st.wx_pages) {
+> +               pr_warn("Checked W+X mappings: failed, %lu W+X pages foun=
+d\n",
+> +                       st.wx_pages);
+> +
+> +               return false;
+> +       }
+> +
+> +       pr_info("Checked W+X mappings: passed, no W+X pages found\n");
+> +
+> +       return true;
+> +}
+> +
+> +
+> +static int __init ptdump_init(void)
+> +{
+> +       unsigned int i, j;
+> +
+> +       address_markers[PCI_IO_START_NR].start_address =3D (unsigned long=
+)PCI_IOBASE;
+> +       address_markers[PCI_IO_END_NR].start_address =3D (unsigned long)P=
+CI_IOBASE + IO_SPACE_LIMIT;
+> +
+> +       address_markers[MODULES_START_NR].start_address =3D MODULES_VADDR=
+;
+> +       address_markers[MODULES_END_NR].start_address =3D MODULES_END;
+> +
+> +       address_markers[VMALLOC_START_NR].start_address =3D VMALLOC_START=
+;
+> +       address_markers[VMALLOC_END_NR].start_address =3D VMALLOC_END;
+> +
+> +#ifdef CONFIG_SPARSEMEM_VMEMMAP
+> +       address_markers[VMEMMAP_START_NR].start_address =3D (unsigned lon=
+g)vmemmap;
+> +       address_markers[VMEMMAP_END_NR].start_address =3D VMEMMAP_END;
+> +#endif
+> +
+> +#ifdef CONFIG_KFENCE
+> +       address_markers[KFENCE_AREA_START_NR].start_address =3D KFENCE_AR=
+EA_START;
+> +       address_markers[KFENCE_AREA_END_NR].start_address =3D KFENCE_AREA=
+_END;
+> +#endif
+> +
+> +#ifdef CONFIG_KASAN
+> +       address_markers[KASAN_SHADOW_START_NR].start_address =3D KASAN_SH=
+ADOW_START;
+> +       address_markers[KASAN_SHADOW_END_NR].start_address =3D KASAN_SHAD=
+OW_END;
+> +#endif
+> +
+> +       address_markers[FIXMAP_START_NR].start_address =3D FIXADDR_START;
+> +       address_markers[FIXMAP_END_NR].start_address =3D FIXADDR_TOP;
+> +
+> +       kernel_ptd_info.base_addr =3D vm_map_base;
+> +
+> +       for (i =3D 0; i < ARRAY_SIZE(pg_level); i++) {
+> +               for (j =3D 0; j < ARRAY_SIZE(pte_bits); j++)
+> +                       pg_level[i].mask |=3D pte_bits[j].mask;
+> +       }
+> +
+> +       ptdump_debugfs_register(&kernel_ptd_info, "kernel_page_tables");
+> +
+> +       return 0;
+> +}
+> +
+> +device_initcall(ptdump_init);
+> diff --git a/arch/loongarch/mm/ptdump_debugfs.c b/arch/loongarch/mm/ptdum=
+p_debugfs.c
+> new file mode 100644
+> index 000000000000..aa6169f6aa3a
+> --- /dev/null
+> +++ b/arch/loongarch/mm/ptdump_debugfs.c
+> @@ -0,0 +1,22 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <linux/debugfs.h>
+> +#include <linux/seq_file.h>
+> +
+> +#include <asm/ptdump.h>
+> +#include <asm/pgtable.h>
+> +#include <asm/kasan.h>
+> +
+> +static int ptdump_show(struct seq_file *m, void *v)
+> +{
+> +       struct ptd_mm_info *info =3D m->private;
+> +
+> +       ptdump_walk(m, info);
+> +       return 0;
+> +}
+> +DEFINE_SHOW_ATTRIBUTE(ptdump);
+> +
+> +void __init ptdump_debugfs_register(struct ptd_mm_info *info, const char=
+ *name)
+> +{
+> +       debugfs_create_file(name, 0400, NULL, info, &ptdump_fops);
+> +}
+> +
+> --
+> 2.43.0
+>
