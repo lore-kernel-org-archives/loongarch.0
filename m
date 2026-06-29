@@ -1,122 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 301B73BADB1
-	for <loongarch@lists.linux.dev>; Mon, 29 Jun 2026 11:44:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCAE13FF1D8
+	for <loongarch@lists.linux.dev>; Mon, 29 Jun 2026 12:22:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782733450; cv=none; b=uPf8iiqjJUvBAonea0kVf/yUYRt0PlBLFgWeS+S7Gauw6YNCTQn84gHoddmELpjgEIdQ31fY+mX2XnW+CAnmoF0CHHezKUG+oAJJ7/BjMp5lkgn6m7I9gghcwgVsYKvr+Pg+Pio6V2vHiHR13VumbTzHMP6OiEVcki7Pfavwsl4=
+	t=1782735726; cv=none; b=mYPCdwbXXgk22QfY/TCFzPUDPteoUWnjUyUbpCuu+UgwGYbZymY7FPaTnpPsnjDjfh0D4xe2DKlqO8rFKOsFBlU44JHyjpouoz0GKomvT6OTpKvodAejWcbIkyDWJ8VXuBxQ2GvDYhNHZgcJHCj6W22gbw67OQzxgNjpTbzqVgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782733450; c=relaxed/simple;
-	bh=+gIhZGUGGo7IJ0/XYxjtwQXhRUbMyTRwS992Ojb0MHQ=;
+	s=arc-20240116; t=1782735726; c=relaxed/simple;
+	bh=iXiWJaNmrgEVAFaZ3zGsQNIPOs7ChWbqNeUDOQroWWY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eduSzELLs6gW5nGuTyyXS0FZ7H4nBh8EJw2wFuH/aOZyNj5O/2iPbaKM0LxImvkFA8im9C85fZi6lAmS/j7K3gzvvAtu/IgMDzkZnIIYSm4oGy6unhNOhstmtkwhuAwhWG9Y1BAzJl9q6ViyOFbXjDq0C5oR6puAIakoGYvl4sE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q8m5WZPQ; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q8m5WZPQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8D281F000E9;
-	Mon, 29 Jun 2026 11:44:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782733448;
-	bh=ViaMG4AIx4t7Xw8EOKV5lY2S4wNOCDcLNhNIuR/tVoE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Q8m5WZPQxys7TASSEPS79b1PS7Camd9Fn+c6d1C9gq57MCQiYrcQnCXQfgL5Pom18
-	 DEi/W04AGewzD/rKoMQlj7PH7ZlvfhgT5wCxco8mN/yozzeDJebmnwHsmAjUc92Hvw
-	 6FvQmlN57DCT6ekazGvEXvtaVtlZGacM99DDCOSxpOBVSleTe4irqCX5KbtC2izNKF
-	 T291dor9anDtABM3b/yxgkDP56ANzslcvn4NGksr9xxTxzQ33O68zYsFM+1kAbKewL
-	 8f2NZFEXGGeHuNzx86QM2uiAaWdYbAx+u9ZKEshlHOlDMKPf26u4dffwBuDK6k7Dw4
-	 85OiP+UwZqwrw==
-Date: Mon, 29 Jun 2026 14:43:57 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Sang-Heon Jeon <ekffu200098@gmail.com>
-Cc: Albert Ou <aou@eecs.berkeley.edu>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=q0L5Dmk14nNVbJkCAdY9mC9JZwJorCM1M8DUvqrc+8GJbLcp1nM/+SDM9DRTOB/02SBZyxxUcYNALcMuoOzGlykD3zaG0P8onrCfBxuu5Q7VjH7v1a+jQZ16lEDQPhJ1/AYbPodbVXW09EpwgQLlJ6b8WdbscQkzjI/+MLb6YWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id E5ACE68AFE; Mon, 29 Jun 2026 14:21:52 +0200 (CEST)
+Date: Mon, 29 Jun 2026 14:21:52 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Christoph Hellwig <hch@lst.de>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
 	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
 	Huacai Chen <chenhuacai@kernel.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <pjw@kernel.org>,
-	Will Deacon <will@kernel.org>,
-	Alexander Potapenko <glider@google.com>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	David Hildenbrand <david@kernel.org>,
-	Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
-	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-	linux-riscv@lists.infradead.org, loongarch@lists.linux.dev,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	WANG Xuerui <kernel@xen0n.name>
-Subject: Re: [PATCH 0/6] treewide: remove unnecessary invalid range checks in
- memblock iteration loops
-Message-ID: <akJafRKJJBd5Jrv0@kernel.org>
-References: <20260621145919.1453-1-ekffu200098@gmail.com>
- <aj426bA-YiOKt06m@kernel.org>
- <CABFDxME8wej3m8T5gn8y4dmpOLZutm=tDTa7ZcfhbWwScTu_5Q@mail.gmail.com>
+	WANG Xuerui <kernel@xen0n.name>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Dan Williams <dan.j.williams@intel.com>, Chris Mason <clm@fb.com>,
+	David Sterba <dsterba@suse.com>, Arnd Bergmann <arnd@arndb.de>,
+	Song Liu <song@kernel.org>,
+	Yu Kuai <yukuai@alb-78bjiv52429oh8qptp.cn-shenzhen.alb.aliyuncs.com>,
+	Li Nan <linan122@huawei.com>, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-btrfs@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-raid@vger.kernel.org
+Subject: Re: cleanup the RAID6 P/Q library v3
+Message-ID: <20260629122152.GA21344@lst.de>
+References: <20260518051804.462141-1-hch@lst.de> <20260518141205.c100f76eec5f58e78bbbf7af@linux-foundation.org> <20260519082432.GA14956@lst.de> <7d8efc7c-65e3-49f8-9381-910de7affef2@zytor.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABFDxME8wej3m8T5gn8y4dmpOLZutm=tDTa7ZcfhbWwScTu_5Q@mail.gmail.com>
+In-Reply-To: <7d8efc7c-65e3-49f8-9381-910de7affef2@zytor.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Fri, Jun 26, 2026 at 07:59:22PM +0900, Sang-Heon Jeon wrote:
-> On Fri, Jun 26, 2026 at 5:23 PM Mike Rapoport <rppt@kernel.org> wrote:
-> >
-> > On Sun, Jun 21, 2026 at 11:59:10PM +0900, Sang-Heon Jeon wrote:
-> > > The memblock API guarantees that for_each_mem_range() and
-> > > for_each_mem_pfn_range() never return an invalid range, meaning start is
-> > > always less than end.
-> > >
-> > > Several memblock callers still have unnecessary invalid range checks in
-> > > their loop bodies, so remove them.
-> > >
-> > > Sang-Heon Jeon (6):
-> > >   arm64: mm: remove unreachable invalid range check in
-> > >     kasan_init_shadow()
-> > >   LoongArch: remove unreachable invalid range check in kasan_init()
-> > >   riscv: remove unreachable invalid range check in
-> > >     create_linear_mapping_page_table()
-> > >   riscv: remove unreachable invalid range check in kasan_init()
-> > >   mm: remove unnecessary empty range check in
-> > >     early_calculate_totalpages()
-> > >   mm/hugetlb: remove unnecessary empty range check in
-> > >     hugetlb_bootmem_set_nodes()
-> >
-> > I queued this for inclusion into memblock tree.
+On Fri, Jun 26, 2026 at 05:52:18PM -0700, H. Peter Anvin wrote:
+> On 2026-05-19 01:24, Christoph Hellwig wrote:
+> > 
+> > raid6: rework registration of optimized algorithms
+> > 
+> >  - avx2 instead of avx512 is probably the right thing for no
+> >    benchmarking, but if it was intentional (it wasn't), that should
+> >    be document.  So I'll just switch back to the previous version to
+> >    keep the state of the art
 > 
-> Thank you, Mike.
+> It is unlikely to be the right thing *going forward*, though.
 > 
-> Could you please review and queue this patch [1] as well? It does the
-> same kind of clean up, I just missed it at the time.
+> The very unfortunate performance inversion is likely model-specific. It is one
+> of those things where you largely would have to have a list of quirks :(
 
-Can you please resend them all as a single set?
- 
-> [1] https://lore.kernel.org/all/20260626032902.703944-1-ekffu200098@gmail.com/
-> 
-> > >  arch/arm64/mm/kasan_init.c     | 3 ---
-> > >  arch/loongarch/mm/kasan_init.c | 3 ---
-> > >  arch/riscv/mm/init.c           | 2 --
-> > >  arch/riscv/mm/kasan_init.c     | 3 ---
-> > >  mm/hugetlb.c                   | 3 +--
-> > >  mm/mm_init.c                   | 3 +--
-> > >  6 files changed, 2 insertions(+), 15 deletions(-)
-> > >
-> > > --
-> > > 2.43.0
-> > >
-> >
-> > --
-> > Sincerely yours,
-> > Mike.
-> 
-> Best Regards,
-> Sang-Heon Jeon
+Note that the default is still to benchmark the implementations.
+This is just about the case where the user explicitly disabled that
+benchmark-based selection.
 
--- 
-Sincerely yours,
-Mike.
