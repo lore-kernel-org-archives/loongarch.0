@@ -1,658 +1,160 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AAFE32B118
-	for <loongarch@lists.linux.dev>; Mon, 29 Jun 2026 14:01:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A9B34A76F
+	for <loongarch@lists.linux.dev>; Mon, 29 Jun 2026 14:06:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782741672; cv=none; b=FNh2KMmLg8SiLIz8EKJUbB2Td9Lbucw/b5Nhans3OZ8Ehyn0JP+Gi1RwwkeZeXC3//+olzGevxQ9hks+VUwcz1mHrAsNgJiU7599E413ytClFPdP9mQ5X5eN3jxKEK/K2Ioec5NZGcy2VExd/Jnaldt0ebHBrcEULCXJsKg1arg=
+	t=1782742005; cv=none; b=g5sUP6f/cSapdx7XpY+OZ+Wdjrn9NKsZgkIFw/XTsLk8D7JNV0RPuwfobhrgsj/IfyIq5j2+9XpnVJN3xcK52/lFAHIEwfaILCdmaU2qydQtCzP4VG2jV/UOXvVdlrQJPelMZ9IzvIYSHUEmm0gEBf4odPD5rPCHjHJDj1c6FSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782741672; c=relaxed/simple;
-	bh=BL+yQf5YdvvHrzxIABF6MTo73wW8lsQoQFDAKxJy7BE=;
+	s=arc-20240116; t=1782742005; c=relaxed/simple;
+	bh=UdGgD202kmpSxxYT4J05GWIPjOk0Ws37g6zt4Nd+Hes=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iNgP5JlyFlmEQuySk5+uf8lRAOMzzW200piDsyxBVb4sj6ROnFeHfHwqI8U1Xgr6xcGpuLmxkLdveYgbI+mrRvLQx0yCx9lwTUAIrCrkXXyBU74jdL8VVY0I/aKnfSynKD1f5m511bfBM4nSt5+2NtTim90dFBakq5418/xXlTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ABYJtzxf; arc=none smtp.client-ip=100.103.45.18
+	 To:Cc:Content-Type; b=NzOCfWYEGvRA2Jvdxg9KSP4PmM8wW3mVBHxeUDWof2umsQGZqgvz8cA7uAURmjAr59C0FIyEN1nc3yzumkh0Kez/ODEJkh7H3ctabFs5gHArZTPHfWdYf/A1VCDBJ/U8Yp250+S9FXnS3v7KMNr9+HNeIsCcc5lzviCOt4sOiIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=buQkPgzW; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ABYJtzxf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D35271F000E9
-	for <loongarch@lists.linux.dev>; Mon, 29 Jun 2026 14:01:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="buQkPgzW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 787641F00A3D
+	for <loongarch@lists.linux.dev>; Mon, 29 Jun 2026 14:06:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782741671;
-	bh=nmhT6r8vXJA2t0o4a7S5/AbOl38OeAHwBvGya5uCSZQ=;
+	s=k20260515; t=1782742004;
+	bh=TsWICWmCbFgOrwIgQkr26i3mCTVFW8ZK2mjI3gYPCOc=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=ABYJtzxfzaXTidiLJoy5I2U4Gb9+T8oxttT1IoTQe+PAMkQoefUZ/MgOVCkCaiaWI
-	 AjOx3wxNVWJGdWZ0cCsPk6/4o1jL09LoTDeX7nda35yn9fA3kWk5L+umUyGLKgeLxV
-	 WISFb+2C8RjH8RcMbS09LIjXJ6O3ANoem4d2morKUNL/VsXe3xk0iYSO0eil3QW3aj
-	 GpFD8uqub63/fHf6ZOkbQa36q0AldzI1yl/Q4Mv+EXI1G/5r/fFAv3BcOd+/zatgNk
-	 CF+8aSMc3E2Wam1aDoX3x3q2tK65AZQo4airwBveyidOaevtb62IHOJPHdoqShx09X
-	 FGgEnF+kkhKtQ==
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-697bd21fdc2so6022971a12.1
-        for <loongarch@lists.linux.dev>; Mon, 29 Jun 2026 07:01:10 -0700 (PDT)
-X-Gm-Message-State: AOJu0Ywy0vL8w+YWbwAugH9KwiZ0OPju/W+8Oh/vcsRg77G2/kAy785f
-	zqk+fSEqhsgSITt7kFARrNFTqjeVkexe1BTodXO2+lakKoEUiSlyPt+G1kwcJ7GSyZ64wPQ/TU0
-	drF0AROnBrxBdXh0GRaX0ectuo0cW23U=
-X-Received: by 2002:a05:6402:916:b0:698:3b7c:3b48 with SMTP id
- 4fb4d7f45d1cf-6983b7c3f15mr4128570a12.39.1782741668235; Mon, 29 Jun 2026
- 07:01:08 -0700 (PDT)
+	b=buQkPgzWyFJqQ7Y66P7XHlSFzIw99omalCsFi03WEotCt0tnCcyYXQl1t6QAimkla
+	 IB0LPW0rooXODndOLkrcI8Pzy7QEYx5eHxPZosBrn2tKk2rM7D38cqquelJYEmmqZ0
+	 uNjYOdvO+ighyOK4Y2b69LVupHl2mnSOa9Xqj06voGMjdNa18RN/tpXl+ttS/e4UwZ
+	 MBn037Bl3QovNQ0SnKoGN1QLZuR0C4m/WE7oGf0N9Obc4YAPpMRmtoEyxfx8HblaQW
+	 eu0w5AGlbnZ9rWrt20URLAjkzACd8+bhj+jfbKSxr5EB231OD0Sl9RXZF0yLUfaj/Y
+	 /6mMtLR3A5Vow==
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-6982e71dfb0so3857687a12.0
+        for <loongarch@lists.linux.dev>; Mon, 29 Jun 2026 07:06:44 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RqBkX/bjLcXuM90FUnMUwW46z7y+Jmtc0sgBzSLsMt63BLoRo5UIhDjJThkrhbTBmA39eY7FrsAc7Y=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxOvP9duPwAHNHiFHg/HgodWrQzSJ3OpMXcAW6WqrrTgvm51kdj
+	RwRhtu58gFhiiwQV+fiSiUchChYCnpJFj8oFmHTC9pRzGfLgRXgaH79absJ76ie1FF3Edb5AOh8
+	RK5TT5Qv1MRPZGLJQFOatUiMqThcYpwc=
+X-Received: by 2002:a05:6402:1941:b0:697:fc6b:10c2 with SMTP id
+ 4fb4d7f45d1cf-69836541a48mr4573055a12.16.1782742003131; Mon, 29 Jun 2026
+ 07:06:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260629074335.448256-1-haoran.jiang@linux.dev>
-In-Reply-To: <20260629074335.448256-1-haoran.jiang@linux.dev>
+References: <20260604114106.391502-1-dongtai.guo@linux.dev>
+In-Reply-To: <20260604114106.391502-1-dongtai.guo@linux.dev>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 29 Jun 2026 22:00:53 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6MTP_eU-8CeHzChvBGmjxP3KFcZDMypiFH4EsF4F3u_A@mail.gmail.com>
-X-Gm-Features: AVVi8CejQTR9WD0G-sNkeSp5KeqaBpyBDtAXh-FqO34rzPJhcbCcfT-ye8UezT4
-Message-ID: <CAAhV-H6MTP_eU-8CeHzChvBGmjxP3KFcZDMypiFH4EsF4F3u_A@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Add support to dump the kernel page tables
-To: haoran.jiang@linux.dev
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, kernel@xen0n.name, 
-	yangtiezhu@loongson.cn, Haoran Jiang <jianghaoran@kylinos.cn>, 
-	Xiujie Jiang <jiangxiujie@kylinos.cn>
+Date: Mon, 29 Jun 2026 22:06:17 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7JBakFFEhRCe=KHPCHLmQYmqaXN7dv8DzLCUJ2pEe8=g@mail.gmail.com>
+X-Gm-Features: AVVi8CcPUW9BdyuDm2g4t8sg63P9dez3lhyd5K8WSCVo5tjNvVay-mEGd7YVPIg
+Message-ID: <CAAhV-H7JBakFFEhRCe=KHPCHLmQYmqaXN7dv8DzLCUJ2pEe8=g@mail.gmail.com>
+Subject: Re: [PATCH v3] LoongArch: kexec: use core control page for relocation
+ trampoline to avoid QEMU FDT conflict
+To: George Guo <dongtai.guo@linux.dev>
+Cc: maobibo@loongson.cn, loongarch@lists.linux.dev, kexec@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, George Guo <guodongtai@kylinos.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Haoran,
+Hi, George,
 
-On Mon, Jun 29, 2026 at 3:44=E2=80=AFPM <haoran.jiang@linux.dev> wrote:
+On Thu, Jun 4, 2026 at 7:41=E2=80=AFPM George Guo <dongtai.guo@linux.dev> w=
+rote:
 >
-> From: Haoran Jiang <jianghaoran@kylinos.cn>
+> From: George Guo <guodongtai@kylinos.cn>
 >
-> In a similar manner to riscv,arm64,x86 etc.,this patch allows
-> dumping the page tables of the LoongArch page-mapped virtual memory
-> region via a debugfs file, which is useful for kernel developers to
-> inspect page table layouts and verify permissions and type settings.
-I like the RISC-V version that put everything in ptdump.c.
+> KEXEC_CONTROL_CODE was hardcoded to TO_CACHE(0x100000).  QEMU places its
+> machine FDT at physical 0x100000 when booting with '-kernel', so
+> machine_kexec_prepare() overwrote the FDT with the relocation trampoline.
+> The kexec'd kernel's fdt_setup() then read trampoline code instead of a
+> valid FDT, earlycon auto-detection failed, and the second kernel booted
+> silently with no console output.
+>
+> The trampoline does not need a fixed address.  It is executed by the
+> current kernel to relocate and enter the new kernel, and is dead once the
+> new kernel starts.  Drop KEXEC_CONTROL_CODE and reuse the
+> control_code_page that the kexec core already allocates (as arm64 and
+> riscv do).  That page is excluded from the relocation copy and lives
+> nowhere near 0x100000, so the QEMU FDT is left intact.
+>
+> Signed-off-by: George Guo <guodongtai@kylinos.cn>
+> ---
+> Changes in v3:
+> - Only the relocation trampoline is moved off the hardcoded address onto
+>   the core-allocated control_code_page.  v2 also moved the kernel command
+>   line to a kexec control page, but as Huacai pointed out a control page
+>   only avoids being clobbered by the relocation copy in the current
+>   kernel; it is not reserved in the new kernel, which reads the command
+>   line early in boot.  The command line therefore stays at the existing
+>   fixed KEXEC_CMDLINE_ADDR in the reserved first 2MB (unchanged).
+Then how to avoid the cmdline overlapping FDT, and how to avoid the
+control page being corrupted by the new kernel?
 
 Huacai
+
 >
-> Co-developed-by: Xiujie Jiang <jiangxiujie@kylinos.cn>
-> Signed-off-by: Xiujie Jiang <jiangxiujie@kylinos.cn>
-> Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
-> ---
->  arch/loongarch/Kconfig              |   1 +
->  arch/loongarch/include/asm/ptdump.h |  61 ++++
->  arch/loongarch/mm/Makefile          |   2 +
->  arch/loongarch/mm/ptdump.c          | 417 ++++++++++++++++++++++++++++
->  arch/loongarch/mm/ptdump_debugfs.c  |  22 ++
->  5 files changed, 503 insertions(+)
->  create mode 100644 arch/loongarch/include/asm/ptdump.h
->  create mode 100644 arch/loongarch/mm/ptdump.c
->  create mode 100644 arch/loongarch/mm/ptdump_debugfs.c
+> Changes in v2:
+> - Instead of moving KEXEC_CONTROL_CODE to a different fixed address, reus=
+e
+>   the kexec core's control_code_page for the trampoline.
 >
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index bec7cc1d72ee..e97fe97e1955 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -25,6 +25,7 @@ config LOONGARCH
->         select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
->         select ARCH_HAS_PREEMPT_LAZY
->         select ARCH_HAS_PTE_SPECIAL if 64BIT
-> +       select ARCH_HAS_PTDUMP
->         select ARCH_HAS_SET_MEMORY
->         select ARCH_HAS_SET_DIRECT_MAP
->         select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
-> diff --git a/arch/loongarch/include/asm/ptdump.h b/arch/loongarch/include=
-/asm/ptdump.h
-> new file mode 100644
-> index 000000000000..4590ea56abe6
-> --- /dev/null
-> +++ b/arch/loongarch/include/asm/ptdump.h
-> @@ -0,0 +1,61 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +
-> +#ifndef __ASM_PTDUMP_H
-> +#define __ASM_PTDUMP_H
-> +
-> +#include <linux/ptdump.h>
-> +#include <linux/mm_types.h>
-> +#include <linux/seq_file.h>
-> +
+> v2: https://lore.kernel.org/all/20260601033820.38805-1-dongtai.guo@linux.=
+dev/
+> v1: https://lore.kernel.org/all/20260528135828.196953-1-dongtai.guo@linux=
+.dev/
+>
+>  arch/loongarch/kernel/machine_kexec.c | 21 ++++++++++++++++-----
+>  1 file changed, 16 insertions(+), 5 deletions(-)
+>
+> diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kerne=
+l/machine_kexec.c
+> index d7fafda1d541..3527da57234d 100644
+> --- a/arch/loongarch/kernel/machine_kexec.c
+> +++ b/arch/loongarch/kernel/machine_kexec.c
+> @@ -21,8 +21,14 @@
+>  #include <asm/cacheflush.h>
+>  #include <asm/page.h>
+>
+> -/* 0x100000 ~ 0x200000 is safe */
+> -#define KEXEC_CONTROL_CODE     TO_CACHE(0x100000UL)
 > +/*
-> + * The page dumper groups page table entries of the same type into a sin=
-gle
-> + * description. It uses pg_state to track the range information while
-> + * iterating over the pte entries. When the continuity is broken it then
-> + * dumps out a description of the range.
+> + * The kexec'd kernel reads its command line from this pointer early in
+> + * boot, so the command line must live in memory the new kernel will not
+> + * reuse.  Keep it at a fixed address in the first 2MB, which both the
+> + * current and the kexec'd kernel always keep reserved (see
+> + * memblock_reserve(PHYS_OFFSET, 0x200000) in arch/loongarch/kernel/mem.=
+c).
+> + * 0x108000 does not overlap QEMU's machine FDT at 0x100000.
 > + */
-> +struct pg_state {
-> +       struct ptdump_state ptdump;
-> +       struct seq_file *seq;
-> +       const struct addr_marker *marker;
-> +       unsigned long start_address;
-> +       unsigned long start_pa;
-> +       unsigned long last_pa;
-> +       int level;
-> +       u64 current_prot;
-> +       bool check_wx;
-> +       unsigned long wx_pages;
-> +};
-> +
-> +/* Address marker */
-> +struct addr_marker {
-> +       unsigned long start_address;
-> +       const char *name;
-> +};
-> +
-> +/* Private information for debugfs */
-> +struct ptd_mm_info {
-> +       struct mm_struct                *mm;
-> +       const struct addr_marker        *markers;
-> +       unsigned long base_addr;
-> +       unsigned long end;
-> +};
-> +
-> +/* Page Table Entry */
-> +struct prot_bits {
-> +       u64 mask;
-> +       u64 val;
-> +       const char *set;
-> +       const char *clear;
-> +};
-> +
-> +/* Page Level */
-> +struct pg_level {
-> +       const char *name;
-> +       u64 mask;
-> +};
-> +
-> +void ptdump_walk(struct seq_file *s, struct ptd_mm_info *pinfo);
-> +void __init ptdump_debugfs_register(struct ptd_mm_info *info, const char=
- *name);
-> +
-> +#endif /* __ASM_PTDUMP_H */
-> +
-> diff --git a/arch/loongarch/mm/Makefile b/arch/loongarch/mm/Makefile
-> index 2aae3773de77..da9e6fee0439 100644
-> --- a/arch/loongarch/mm/Makefile
-> +++ b/arch/loongarch/mm/Makefile
-> @@ -10,5 +10,7 @@ obj-y                         +=3D init.o cache.o tlb.o=
- tlbex.o extable.o \
->  obj-$(CONFIG_HIGHMEM)          +=3D highmem.o
->  obj-$(CONFIG_HUGETLB_PAGE)     +=3D hugetlbpage.o
->  obj-$(CONFIG_KASAN)            +=3D kasan_init.o
-> +obj-$(CONFIG_PTDUMP)            +=3D ptdump.o
-> +obj-$(CONFIG_PTDUMP_DEBUGFS)    +=3D ptdump_debugfs.o
+>  #define KEXEC_CMDLINE_ADDR     TO_CACHE(0x108000UL)
 >
->  KASAN_SANITIZE_kasan_init.o     :=3D n
-> diff --git a/arch/loongarch/mm/ptdump.c b/arch/loongarch/mm/ptdump.c
-> new file mode 100644
-> index 000000000000..cab6dad18150
-> --- /dev/null
-> +++ b/arch/loongarch/mm/ptdump.c
-> @@ -0,0 +1,417 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Derived from riscv implementation
-> + */
-> +
-> +#include <linux/init.h>
-> +#include <linux/debugfs.h>
-> +#include <linux/seq_file.h>
-> +#include <linux/ptdump.h>
-> +#include <linux/pgtable.h>
-> +#include <asm/kasan.h>
-> +#include <asm/ptdump.h>
-> +
-> +#define _PAGE_PLV_VAL 0x0
-> +
-> +#define pt_dump_seq_printf(m, fmt, args...)    \
-> +({                                             \
-> +       if (m)                                  \
-> +               seq_printf(m, fmt, ##args);     \
-> +})
-> +
-> +#define pt_dump_seq_puts(m, fmt)       \
-> +({                                     \
-> +       if (m)                          \
-> +               seq_puts(m, fmt);       \
-> +})
-> +
-> +enum address_markers_idx {
-> +       PCI_IO_START_NR,
-> +       PCI_IO_END_NR,
-> +       MODULES_START_NR,
-> +       MODULES_END_NR,
-> +       VMALLOC_START_NR,
-> +       VMALLOC_END_NR,
-> +#ifdef CONFIG_SPARSEMEM_VMEMMAP
-> +       VMEMMAP_START_NR,
-> +       VMEMMAP_END_NR,
-> +#endif
-> +#ifdef CONFIG_KFENCE
-> +       KFENCE_AREA_START_NR,
-> +       KFENCE_AREA_END_NR,
-> +#endif
-> +#ifdef CONFIG_KASAN
-> +       KASAN_SHADOW_START_NR,
-> +       KASAN_SHADOW_END_NR,
-> +#endif
-> +       FIXMAP_START_NR,
-> +       FIXMAP_END_NR,
-> +       END_OF_SPACE_NR
-> +};
-> +
-> +
-> +
-> +static struct addr_marker address_markers[] =3D {
-> +       {0, "PCI I/O start"},
-> +       {0, "PCI I/O end"},
-> +       {0, "modules start"},
-> +       {0, "modules end"},
-> +       {0, "vmalloc() area"},
-> +       {0, "vmalloc() end"},
-> +#ifdef CONFIG_SPARSEMEM_VMEMMAP
-> +       {0, "vmemmap start"},
-> +       {0, "vmemmap end"},
-> +#endif
-> +#ifdef CONFIG_KFENCE
-> +       {0, "kfence area start"},
-> +       {0, "kfence area end"},
-> +#endif
-> +#ifdef CONFIG_KASAN
-> +       {0, "Kasan shadow start"},
-> +       {0, "Kasan shadow end"},
-> +#endif
-> +       {0, "Fixmap start"},
-> +       {0, "Fixmap end"},
-> +       {-1, NULL},
-> +};
-> +
-> +
-> +static struct ptd_mm_info kernel_ptd_info =3D {
-> +       .mm             =3D &init_mm,
-> +       .markers        =3D address_markers,
-> +       .base_addr      =3D 0,
-> +       .end            =3D ULONG_MAX,
-> +};
-> +
-> +static const struct prot_bits pte_bits[] =3D {
-> +       {
-> +               .mask =3D _PAGE_VALID,
-> +               .val =3D _PAGE_VALID,
-> +               .set =3D "V",
-> +               .clear =3D " ",
-> +       }, {
-> +               .mask =3D _PAGE_DIRTY,
-> +               .val =3D _PAGE_DIRTY,
-> +               .set =3D "D",
-> +               .clear =3D " ",
-> +       }, {
-> +               .mask =3D _PAGE_PLV,
-> +               .val =3D _PAGE_PLV_VAL,
-> +               .set =3D "KERN",
-> +               .clear =3D "USR ",
-> +       }, {
-> +               .mask =3D _CACHE_MASK,
-> +               .val =3D _CACHE_MASK,
-> +               .set =3D "  ",
-> +               .clear =3D "SUC",
-> +       }, {
-> +               .mask =3D _PAGE_GLOBAL,
-> +               .val =3D _PAGE_GLOBAL,
-> +               .set =3D "G",
-> +               .clear =3D " ",
-> +       }, {
-> +               .mask =3D _PAGE_PRESENT,
-> +               .val =3D _PAGE_PRESENT,
-> +               .set =3D "P",
-> +               .clear =3D " ",
-> +       }, {
-> +               .mask =3D _PAGE_WRITE,
-> +               .val =3D _PAGE_WRITE,
-> +               .set =3D "W",
-> +               .clear =3D " ",
-> +       }, {
-> +               .mask =3D _PAGE_HGLOBAL,
-> +               .val =3D _PAGE_HGLOBAL,
-> +               .set =3D "HG",
-> +               .clear =3D "  ",
-> +       }, {
-> +               .mask =3D _PAGE_NO_READ,
-> +               .val =3D _PAGE_NO_READ,
-> +               .set =3D "NR",
-> +               .clear =3D "  ",
-> +       }, {
-> +               .mask =3D _PAGE_NO_EXEC,
-> +               .val =3D _PAGE_NO_EXEC,
-> +               .set =3D "NX",
-> +               .clear =3D "  ",
-> +       }, {
-> +               .mask =3D _PAGE_RPLV,
-> +               .val =3D _PAGE_RPLV,
-> +               .set =3D "RPLV",
-> +               .clear =3D "    ",
-> +       }
-> +};
-> +
-> +static struct pg_level pg_level[] =3D {
-> +       { /* pgd */
-> +               .name =3D "PGD",
-> +       }, { /* p4d */
-> +               .name =3D (CONFIG_PGTABLE_LEVELS > 4) ? "P4D" : "PGD",
-> +       }, { /* pud */
-> +               .name =3D (CONFIG_PGTABLE_LEVELS > 3) ? "PUD" : "PGD",
-> +       }, { /* pmd */
-> +               .name =3D (CONFIG_PGTABLE_LEVELS > 2) ? "PMD" : "PGD",
-> +       }, { /* pte */
-> +               .name =3D "PTE",
-> +       },
-> +};
-> +
-> +static void dump_prot(struct pg_state *st)
-> +{
-> +
-> +       unsigned int i;
-> +
-> +       for (i =3D 0; i < ARRAY_SIZE(pte_bits); i++) {
-> +               const char *s;
-> +
-> +               if (pte_bits[i].mask =3D=3D _CACHE_MASK) {
-> +                       if ((st->current_prot & pte_bits[i].mask) =3D=3D =
-_CACHE_CC)
-> +                               s =3D "CC ";
-> +                       else if ((st->current_prot & pte_bits[i].mask) =
-=3D=3D _CACHE_WUC)
-> +                               s =3D "WUC";
-> +                       else
-> +                               s =3D pte_bits[i].clear;
-> +               } else if (pte_bits[i].mask =3D=3D _PAGE_GLOBAL) {
-> +                       if ((st->current_prot & pte_bits[i].mask) =3D=3D =
-pte_bits[i].val) {
-> +                               if (st->level !=3D 4)
-> +                                       s =3D "PSE";
-> +                               else
-> +                                       s =3D pte_bits[i].set;
-> +                       } else {
-> +                               s =3D pte_bits[i].clear;
-> +                       }
-> +
-> +               } else {
-> +                       if ((st->current_prot & pte_bits[i].mask) =3D=3D =
-pte_bits[i].val)
-> +                               s =3D pte_bits[i].set;
-> +                       else
-> +                               s =3D pte_bits[i].clear;
-> +               }
-> +
-> +
-> +               if (s)
-> +                       pt_dump_seq_printf(st->seq, " %s", s);
-> +       }
-> +
-> +}
-> +
-> +
-> +#ifdef CONFIG_64BIT
-> +#define ADDR_FORMAT    "0x%016lx"
-> +#else
-> +#define ADDR_FORMAT    "0x%08lx"
-> +#endif
-> +static void dump_addr(struct pg_state *st, unsigned long addr)
-> +{
-> +       static const char units[] =3D "KMGTPE";
-> +       const char *unit =3D units;
-> +       unsigned long delta;
-> +
-> +       pt_dump_seq_printf(st->seq, ADDR_FORMAT "-" ADDR_FORMAT "   ",
-> +                          st->start_address, addr);
-> +
-> +       pt_dump_seq_printf(st->seq, " " ADDR_FORMAT " ", st->start_pa);
-> +       delta =3D (addr - st->start_address) >> 10;
-> +
-> +       while (!(delta & 1023) && unit[1]) {
-> +               delta >>=3D 10;
-> +               unit++;
-> +       }
-> +
-> +       pt_dump_seq_printf(st->seq, "%9lu%c %s", delta, *unit,
-> +                          pg_level[st->level].name);
-> +}
-> +
-> +static void note_prot_wx(struct pg_state *st, unsigned long addr)
-> +{
-> +       if (!st->check_wx)
-> +               return;
-> +       if ((st->current_prot & _PAGE_WRITE) =3D=3D 0)
-> +               return;
-> +       if ((st->current_prot & _PAGE_NO_EXEC) =3D=3D _PAGE_NO_EXEC)
-> +               return;
-> +
-> +       st->wx_pages +=3D (addr - st->start_address) / PAGE_SIZE;
-> +
-> +}
-> +
-> +static void note_page(struct ptdump_state *pt_st, unsigned long addr,
-> +                     int level, u64 val)
-> +{
-> +       struct pg_state *st =3D container_of(pt_st, struct pg_state, ptdu=
-mp);
-> +       u64 pa =3D PFN_PHYS(pte_pfn(__pte(val)));
-> +       u64 prot =3D 0;
-> +
-> +       if (level >=3D 0)
-> +               prot =3D val & pg_level[level].mask;
-> +
-> +       if (st->level =3D=3D -1) {
-> +               st->level =3D level;
-> +               st->current_prot =3D prot;
-> +               st->start_address =3D addr;
-> +               st->start_pa =3D pa;
-> +               st->last_pa =3D pa;
-> +               pt_dump_seq_printf(st->seq, "---[ %s ]---\n", st->marker-=
->name);
-> +       } else if (prot !=3D st->current_prot ||
-> +                  level !=3D st->level || addr >=3D st->marker[1].start_=
-address) {
-> +               if (st->current_prot) {
-> +                       note_prot_wx(st, addr);
-> +                       dump_addr(st, addr);
-> +                       dump_prot(st);
-> +                       pt_dump_seq_puts(st->seq, "\n");
-> +               }
-> +
-> +               while (addr >=3D st->marker[1].start_address) {
-> +                       st->marker++;
-> +                       pt_dump_seq_printf(st->seq, "---[ %s ]---\n",
-> +                                          st->marker->name);
-> +               }
-> +
-> +               st->start_address =3D addr;
-> +               st->start_pa =3D pa;
-> +               st->last_pa =3D pa;
-> +               st->current_prot =3D prot;
-> +               st->level =3D level;
-> +       } else {
-> +               st->last_pa =3D pa;
-> +       }
-> +}
-> +
-> +static void note_page_pte(struct ptdump_state *pt_st, unsigned long addr=
-, pte_t pte)
-> +{
-> +       note_page(pt_st, addr, 4, pte_val(pte));
-> +}
-> +
-> +static void note_page_pmd(struct ptdump_state *pt_st, unsigned long addr=
-, pmd_t pmd)
-> +{
-> +       note_page(pt_st, addr, 3, pmd_val(pmd));
-> +}
-> +
-> +static void note_page_pud(struct ptdump_state *pt_st, unsigned long addr=
-, pud_t pud)
-> +{
-> +       note_page(pt_st, addr, 2, pud_val(pud));
-> +}
-> +
-> +static void note_page_p4d(struct ptdump_state *pt_st, unsigned long addr=
-, p4d_t p4d)
-> +{
-> +       note_page(pt_st, addr, 1, p4d_val(p4d));
-> +}
-> +
-> +static void note_page_pgd(struct ptdump_state *pt_st, unsigned long addr=
-, pgd_t pgd)
-> +{
-> +       note_page(pt_st, addr, 0, pgd_val(pgd));
-> +}
-> +
-> +static void note_page_flush(struct ptdump_state *pt_st)
-> +{
-> +       pte_t pte_zero =3D {0};
-> +
-> +       note_page(pt_st, 0, -1, pte_val(pte_zero));
-> +}
-> +
-> +void ptdump_walk(struct seq_file *s, struct ptd_mm_info *pinfo)
-> +{
-> +       struct pg_state st =3D {
-> +               .seq =3D s,
-> +               .marker =3D pinfo->markers,
-> +               .level =3D -1,
-> +               .ptdump =3D {
-> +                       .note_page_pte =3D note_page_pte,
-> +                       .note_page_pmd =3D note_page_pmd,
-> +                       .note_page_pud =3D note_page_pud,
-> +                       .note_page_p4d =3D note_page_p4d,
-> +                       .note_page_pgd =3D note_page_pgd,
-> +                       .note_page_flush =3D note_page_flush,
-> +                       .range =3D (struct ptdump_range[]) {
-> +                               {pinfo->base_addr, pinfo->end},
-> +                               {0, 0}
-> +                       }
-> +               }
-> +       };
-> +
-> +       ptdump_walk_pgd(&st.ptdump, pinfo->mm, NULL);
-> +}
-> +
-> +bool ptdump_check_wx(void)
-> +{
-> +       struct pg_state st =3D {
-> +               .seq =3D NULL,
-> +               .marker =3D (struct addr_marker[]) {
-> +                       {0, NULL},
-> +                       {-1, NULL},
-> +               },
-> +               .level =3D -1,
-> +               .check_wx =3D true,
-> +               .ptdump =3D {
-> +                       .note_page_pte =3D note_page_pte,
-> +                       .note_page_pmd =3D note_page_pmd,
-> +                       .note_page_pud =3D note_page_pud,
-> +                       .note_page_p4d =3D note_page_p4d,
-> +                       .note_page_pgd =3D note_page_pgd,
-> +                       .note_page_flush =3D note_page_flush,
-> +                       .range =3D (struct ptdump_range[]) {
-> +                               {vm_map_base, ULONG_MAX},
-> +                               {0, 0}
-> +                       }
-> +               }
-> +       };
-> +
-> +       ptdump_walk_pgd(&st.ptdump, &init_mm, NULL);
-> +
-> +       if (st.wx_pages) {
-> +               pr_warn("Checked W+X mappings: failed, %lu W+X pages foun=
-d\n",
-> +                       st.wx_pages);
-> +
-> +               return false;
-> +       }
-> +
-> +       pr_info("Checked W+X mappings: passed, no W+X pages found\n");
-> +
-> +       return true;
-> +}
-> +
-> +
-> +static int __init ptdump_init(void)
-> +{
-> +       unsigned int i, j;
-> +
-> +       address_markers[PCI_IO_START_NR].start_address =3D (unsigned long=
-)PCI_IOBASE;
-> +       address_markers[PCI_IO_END_NR].start_address =3D (unsigned long)P=
-CI_IOBASE + IO_SPACE_LIMIT;
-> +
-> +       address_markers[MODULES_START_NR].start_address =3D MODULES_VADDR=
-;
-> +       address_markers[MODULES_END_NR].start_address =3D MODULES_END;
-> +
-> +       address_markers[VMALLOC_START_NR].start_address =3D VMALLOC_START=
-;
-> +       address_markers[VMALLOC_END_NR].start_address =3D VMALLOC_END;
-> +
-> +#ifdef CONFIG_SPARSEMEM_VMEMMAP
-> +       address_markers[VMEMMAP_START_NR].start_address =3D (unsigned lon=
-g)vmemmap;
-> +       address_markers[VMEMMAP_END_NR].start_address =3D VMEMMAP_END;
-> +#endif
-> +
-> +#ifdef CONFIG_KFENCE
-> +       address_markers[KFENCE_AREA_START_NR].start_address =3D KFENCE_AR=
-EA_START;
-> +       address_markers[KFENCE_AREA_END_NR].start_address =3D KFENCE_AREA=
-_END;
-> +#endif
-> +
-> +#ifdef CONFIG_KASAN
-> +       address_markers[KASAN_SHADOW_START_NR].start_address =3D KASAN_SH=
-ADOW_START;
-> +       address_markers[KASAN_SHADOW_END_NR].start_address =3D KASAN_SHAD=
-OW_END;
-> +#endif
-> +
-> +       address_markers[FIXMAP_START_NR].start_address =3D FIXADDR_START;
-> +       address_markers[FIXMAP_END_NR].start_address =3D FIXADDR_TOP;
-> +
-> +       kernel_ptd_info.base_addr =3D vm_map_base;
-> +
-> +       for (i =3D 0; i < ARRAY_SIZE(pg_level); i++) {
-> +               for (j =3D 0; j < ARRAY_SIZE(pte_bits); j++)
-> +                       pg_level[i].mask |=3D pte_bits[j].mask;
-> +       }
-> +
-> +       ptdump_debugfs_register(&kernel_ptd_info, "kernel_page_tables");
-> +
-> +       return 0;
-> +}
-> +
-> +device_initcall(ptdump_init);
-> diff --git a/arch/loongarch/mm/ptdump_debugfs.c b/arch/loongarch/mm/ptdum=
-p_debugfs.c
-> new file mode 100644
-> index 000000000000..aa6169f6aa3a
-> --- /dev/null
-> +++ b/arch/loongarch/mm/ptdump_debugfs.c
-> @@ -0,0 +1,22 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <linux/debugfs.h>
-> +#include <linux/seq_file.h>
-> +
-> +#include <asm/ptdump.h>
-> +#include <asm/pgtable.h>
-> +#include <asm/kasan.h>
-> +
-> +static int ptdump_show(struct seq_file *m, void *v)
-> +{
-> +       struct ptd_mm_info *info =3D m->private;
-> +
-> +       ptdump_walk(m, info);
-> +       return 0;
-> +}
-> +DEFINE_SHOW_ATTRIBUTE(ptdump);
-> +
-> +void __init ptdump_debugfs_register(struct ptd_mm_info *info, const char=
- *name)
-> +{
-> +       debugfs_create_file(name, 0400, NULL, info, &ptdump_fops);
-> +}
-> +
+>  static unsigned long reboot_code_buffer;
+> @@ -72,9 +78,14 @@ int machine_kexec_prepare(struct kimage *kimage)
+>                 }
+>         }
+>
+> -       /* kexec/kdump need a safe page to save reboot_code_buffer */
+> -       kimage->control_code_page =3D virt_to_page((void *)KEXEC_CONTROL_=
+CODE);
+> -
+> +       /*
+> +        * kexec/kdump need a safe page to save reboot_code_buffer.  Reus=
+e the
+> +        * control_code_page allocated by the kexec core (as arm64 and ri=
+scv
+> +        * do) instead of a fixed address: the trampoline is only execute=
+d by
+> +        * the current kernel before entering the new kernel, so it needs=
+ no
+> +        * fixed or reserved location.  This also stops machine_kexec_pre=
+pare()
+> +        * from overwriting QEMU's machine FDT at 0x100000.
+> +        */
+>         reboot_code_buffer =3D (unsigned long)page_address(kimage->contro=
+l_code_page);
+>         memcpy((void *)reboot_code_buffer, relocate_new_kernel, relocate_=
+new_kernel_size);
+>
 > --
-> 2.43.0
+> 2.25.1
 >
