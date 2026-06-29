@@ -1,178 +1,269 @@
-Received: from mail-yx1-f53.google.com (mail-yx1-f53.google.com [74.125.224.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from flow-a8-smtp.messagingengine.com (flow-a8-smtp.messagingengine.com [103.168.172.143])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B2C34657E3
-	for <loongarch@lists.linux.dev>; Mon, 29 Jun 2026 16:48:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782751721; cv=pass; b=RJJvVz6J1/YAhUz4C1fhmWs8WduoOl34LZ7vtdzlK78Y+l9rGd4r4WRMzBanihgfafPVWcLKme8oQ1ltf9LjX3wh4IU+ETDHI54u+kG8cZbKhtgrvRNE/j618gm9rg1L9s1GxG/sq24HOUiE1odRrZSufiqJBkYxShG6yuhnauA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782751721; c=relaxed/simple;
-	bh=EuAiuVmlCqTEy5Hkkw0uXrTGdiZ3bKlr3/IgmKi3PxQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g8osE9bVkoFa1km/bEwjC+oCjm3T/foXq6WQLS/FTpmmxhXdIxrvBTBvxnnS8mJ3+pr0jQxYvdPfrcbs1VWi4A+ynjMAKMUkDdof05P2whtaWKB+LaCdx4QgnzN6l7hkDCewnUDogkzYZ2l/YZThYjHfbA3Td9xSIjWwPOQhpKg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=n/dZUouV; arc=pass smtp.client-ip=74.125.224.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19A543B71B9;
+	Mon, 29 Jun 2026 23:58:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.143
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782777504; cv=none; b=emT2c/1XRTQA4nYwBB210PbZwDn4Zr7TsPCfpx/aZBXIcg/qV3jS1qjOP488mlerCzjU/TQFGePENg6TdB/tVN7oHIdgHotoaekishfnxjd82RGoz0iu47uR4cRVBNmjOiCuSBemRWyRBdX/H5h/1SK3wIfaOz+NWWiRjiKKmI8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782777504; c=relaxed/simple;
+	bh=qx9osW3wKKlKpE0YvFkVp52jSRf+weom0e3+8EbHzJg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PSNUouzR0lUnJ8+TdOrAqv5ol1qwFlX5yRnbW3xPodh/UECFd+A5m0XM8xFtxyFUEkk8gV2X9DBUU0hAZuwsvDBEvGE9c4/S+Hj2qQ5LsnPPFDgE9r1BEZhJ7hxLUL7sHYe4lYDyU/3ds19k9mkG1RqNK8bPanZd9nZdl8h8q7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=v8s/eY4L; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=RMKRqs/f; arc=none smtp.client-ip=103.168.172.143
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n/dZUouV"
-Received: by mail-yx1-f53.google.com with SMTP id 956f58d0204a3-664dd23829eso1076066d50.3
-        for <loongarch@lists.linux.dev>; Mon, 29 Jun 2026 09:48:40 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1782751719; cv=none;
-        d=google.com; s=arc-20260327;
-        b=LVgScsmyK9NfQxlSNkYtrjnbEynlF0N/jLTCCIOffUITD94/nybusrQ9gzkDp6F+a1
-         jdQUGRP39mFa34EWw0Ivr1Z9uM12sUlJEq1WHRYDg+wVlnrdw5H2z6YHu1be0tkP9uR1
-         oA40CT4/lqc4ZuDANXOT01D7TXOzQDD7+sVSp7n7wfe3MZG3gjvaarjS0Oknzc5oC+9S
-         CFAj7UXPJ34jXxdcOoSdu05mSRCRHy3etiCFo+3B/sWAk0OmXQH8v//vILZGgZlWq/ur
-         /inEX6Eh3D9feOpI4buQ8tE2okzMlx71Q03LasIPS7N82Bg0sg2OnLgCDJxnlAEmeWkc
-         aqwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=pqu0ijd46YxLc8T2KWk89iPbnUD8g36UVIY5VbePUtk=;
-        fh=ibF43IYishmMKqYF9QilfPcOXTKxS5OZYkHRyLtqWxg=;
-        b=N7yH5BBEmmDyF5TbvljjVWgRCWu0sJPCrb+0cOi93Yf18hwfqCkl7btN0JJwHPRa95
-         G1GGKNgS/QVkkJteDsKGS9vfR0KuVvlFu60l3hirqrfLK2CrEGDwBx5TKsesegjESgHV
-         Sl5lticpotS0i26YuIkOkeLkxkq+PsYzVoRQ0Y9U8AyYhk3MaQpidTf0XCZCq8jujDGj
-         O10ymVLJx+bwVgNDSJbEtRdEYEY0tf7kPsHQXR+ablC3MIPp1cO+rONptBgMSWFOffrY
-         4sRy2EAJgxmujbbLRpaAf4YJH2YXq4DJgaRjRcLMzX3FoqkG852k1i+ce4DYWFHO6V88
-         AVZw==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782751719; x=1783356519; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=pqu0ijd46YxLc8T2KWk89iPbnUD8g36UVIY5VbePUtk=;
-        b=n/dZUouVJ+ojEqbPYTv1G3LDSbWz0SoEHzVTXzTMwwkUXFrCRw2QTvhtnq3F8u81Nx
-         TZ7PGogPrL8iybw2ydCm0kWHoAm+AB4PzQ6Ni/TInAUHvqI9pTmFJt/2wKI/z2l+pii4
-         bMuMMl2BczcNBiGfNqKwqzCtrYegmwfG0uXfKQub6uu5YC1vWmkPLst+eJqJpTMj3Ic8
-         9s/x9T5TwqUJFNZojHYG24ol14P2sd5z5dYc+jw9+jhyTwsrlE5p0Hi8sL06hhJoZy4z
-         tCiHqS75DCe3gHGLh0zASulYK3DVAOZXVm/JiNU5TzD9L8wucLDlVFw+KEfnG7Z+fbFq
-         HLHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782751719; x=1783356519;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=pqu0ijd46YxLc8T2KWk89iPbnUD8g36UVIY5VbePUtk=;
-        b=Y8oIskexfQostwx6zPo9FCbc00yAormOHRENKDK7Evb9Pie69B83QBvv5RDogtASNA
-         +0TadAXXZk3IaN3S1JvXR5p8hPYOS0X91xu06GHM/zVO7EvxkI+NoLj2QmfsetNXk4MM
-         UgWX9AlBs++VIg5IkDBlBFICAXpyXYMQ5uPWSvq/5yqMs1eorwJzKWnon+sDVmU6zXAY
-         Sw322Isr1D0uTqzCF5axm1Hxsr13RYqueR3mQqpIektXIPs2TRX0zpcZOVhzdsqewZPu
-         GnivOpP3iuOW7dJRmXJiKJHzJd/GskAPEWQjFZhCN9DpCU/PVlfaXjujJSdXjbsz0F4T
-         iLWg==
-X-Forwarded-Encrypted: i=1; AHgh+Rq320L84gQ/ml2jkx5Es+bfiHE+f2yPS4CARZ0XkwL0HdpF42BT7eVOkvIvVAk43hqQFnEbgDFo5Co=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxRY9bz6BT2/SBxz0kWMU4UCNtJpYS+jjlrOo4N0h0Gft0Ehd7S
-	K/BN5VPaC65w+sLRjSiZVD8iNE1o7YrjJdihVWoLerRg3aqLAhmlUNgj6MYbqQmiR04dia2dKBV
-	tJs3ME127FWkz9/BVn8xsNBoo64Or4cJIII1izF4=
-X-Gm-Gg: AfdE7ckbnIpYc3OdFI+xVVf4Y09fnEXoDMwzsKLrvjb6ljTzIQPfx197JdTP0VFyuS1
-	QUsU7HP1estNQYz8+y+oEhgEahpWO14UQUYZ+Qsd7A6PRWnMoyLUh20IIYitVbuZHrfRCDnf0c4
-	KR52Nmqy0os72d/HR6NpggOMMI8wyMpWe/CB+Zj47jxZe0uUXLSMzvR+tb5DYb1UQAVU5W5cbqs
-	Z9mA79y+ygeIgHrhVjh5fMBH5VieZsEJXT4zKI0mnUf6vCShDuyuHgUAnJV9M7GVs5/Og==
-X-Received: by 2002:a53:a7cd:0:b0:664:c1a2:36ed with SMTP id
- 956f58d0204a3-664f9a828b9mr336123d50.63.1782751719282; Mon, 29 Jun 2026
- 09:48:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="v8s/eY4L";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RMKRqs/f"
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailflow.phl.internal (Postfix) with ESMTP id 0BA48138039B;
+	Mon, 29 Jun 2026 19:58:21 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-05.internal (MEProxy); Mon, 29 Jun 2026 19:58:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
+	 h=cc:cc:content-transfer-encoding:content-type:content-type
+	:date:date:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:subject:subject:to:to; s=fm1;
+	 t=1782777501; x=1782784701; bh=ntoVNrERxl6CnLB0Obl/d+Xz+xme4tJI
+	lufgMOjhiwA=; b=v8s/eY4L5HFOcjqnQZ823UAS/LHyaUEm85qu0XmCc71uXnG2
+	cvkOxCYPzFLBCTTDnPAcBSYZzJ2+yE6N4fPa6sEGIBJIYZcOAN8qpj2nfzQLi9F5
+	jV1vvPyEhEYVlWNvh8/BzDIhVuyYzX2LsFle0pATeuiAfDmcO3X28y0E1iNUPJEo
+	v25JyyyfCNSgY9W7bLDK2Py5B4SD2vS47HoLtwLlZyt9XfpB5i8DFFy195aCWoC2
+	x+AKL61GGQIyWrIINs+YyoIPvM9+DgmiU0kab1MThff7LoEH0Es/Wytho4Ztqxwh
+	iCSNYBGhKHSWeVvvsd1OdF/pOZcK2ttl+46V3A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1782777501; x=
+	1782784701; bh=ntoVNrERxl6CnLB0Obl/d+Xz+xme4tJIlufgMOjhiwA=; b=R
+	MKRqs/flHUni4dlOeHuhwjnnYx/qu2zwQCJtPfIIEPz3gE6dP2SS+kO/SxtUM2p+
+	fXsMgk2rDlTf/sTkRba30Ghras5RPXULAH1/GPHEEhmblWPHjyqELBYhA/qibNmQ
+	ECYEK6oVYBifehsJjj32qWlobcGKFSrZa0HHgz9Iqwgpdu9YvkzR7VNNHw/jTwz+
+	bqoNgLB8cMrHpQ6+9NaoaPyDNO4HCQS72/HZv8UteAS8Rigl8p00Y6G1kFdS+1jK
+	6qPb3zwn5qYMTokX9EPzqE5AEbRmeo/zQ0VssHNfuoJG0EVsyiXKgURmOHD0sUV1
+	H0rRl8dpjOEVmRoTwUZ1Q==
+X-ME-Sender: <xms:mQZDaluSBeKP6-3dxlZW1Qy-wiZuV30hOCgoY0KTdW_FR9USmttnIA>
+    <xme:mQZDaqsTDIOLYRFhhc3J9nrb24WnM6JX0P1jalpuT12eGcDRrsNO7C0AiHmIdhI6S
+    wZZ_GAF_hVaMLpQHvr5u3l1DmczGXIt02C9zTRQlweayP0y6j60MtE>
+X-ME-Received: <xmr:mQZDaiaKXC3v0RK_n7k7uRKLanjcoEkW0Ynaj3uQGwXdvyRJ9nlk3vd6xHlSeNwReywIoC38Dirstc3cHFJimVEGnsusng>
+X-ME-Proxy-Cause: dmFkZTE1nPznX32V2kRYPd7dlOJ1rQMxQ97lS3kACD5+oEF3K9KIS5kEvZ60kMOO9SW4/K
+    QPw1fJ0Uyhmt7TDZBpmrns6QqSMdNA56CqP8WoSfum8fnJ6ROXsuIW1V0IRazJ9YoofPdA
+    sTTZjseo2amkBTK2yB8676gAjYCnTj4WiXvzDEoqMGHljUjgOtAHWVMwabts+S3qWRtyzK
+    4E9/EeTGdZ7uavjZ/gsD8IHy6BDQ3FsBKJrzbjVNgjW3Z/maBbDFLwVIvKVTB+FB58t2Nf
+    6IC6zRUoalXGvpiS7NeraM3cciwz14beoWbfR17QqVpm8xj9z6j1i325oVQMRhakNlULd5
+    LZDHjkZMhVaJOCK5sNu7C567TC6G74BcKbIUFX8Y7L5R/J5HFqJpTz5QFRAfF6pNDZXMRw
+    NNT721SX2qmWOzpsbLjvz7baHpP6tE5XnMymltgojO/d+aMQ8ZSVKdM2OoEzaoH016syXZ
+    LXR91cDsgFgly6bjeAUpymfC5EHpfadwr1qHn8fxadSgempnoWd6aBNScmoRMpmKbMNqfw
+    SOO/eYhVEtRjJvkDcQZ5ZyEDYkQzi3vZqOB51rSkn6prTNuNuxVGEjwdaA6cQo5MEz4nhz
+    PKvXIWkmhe258dVI/0CMIo7RXUSN9DEF8/fLk8wWAe6GpwU+34F0ICv2ylcg
+X-ME-Proxy: <xmx:mQZDasgnrDakzWEqB7_AjeS2c_t5Xc3WBZuoKa0aZ4s3n7SEHjJv-Q>
+    <xmx:mQZDavUcRf_YCMSZCbYUJMoSGXurxjrs99xK4QubABtZxnkbGNT_Mg>
+    <xmx:mQZDauVcra2E5kWpNBgjezjqhXIgqwPYvcnnMt7uQ1KIYOQ6F3GKDw>
+    <xmx:mQZDajhAFNO6LVldX5NJt5ll8F8-azSI6SjWkRx169oeJqn6IZVlXA>
+    <xmx:nQZDaqvpp383SrPNL_mk4gMnSCyGdO9-6LDFSBkbgsdwZ1j1U-4qLPWs>
+Feedback-ID: ie8e14432:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 29 Jun 2026 19:58:06 -0400 (EDT)
+Date: Tue, 30 Jun 2026 08:58:04 +0900
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig_=28The_Capable_Hub=29?= <u.kleine-koenig@baylibre.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Mark Brown <broonie@kernel.org>,	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,	Justin Stitt <justinstitt@google.com>,
+	Raag Jadav <raag.jadav@intel.com>,	Sohil Mehta <sohil.mehta@intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,	Len Brown <lenb@kernel.org>,
+ Andi Shyti <andi.shyti@kernel.org>,	linux-kernel@vger.kernel.org,
+	Yemike Abhilash Chandra <y-abhilashchandra@ti.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,	linux-media@vger.kernel.org,
+	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,	Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>,	Heiko Stuebner <heiko@sntech.de>,
+	linux-rockchip@lists.infradead.org, linux-sound@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,	Danilo Krummrich <dakr@kernel.org>,
+ driver-core@lists.linux.dev,	Jonathan Cameron <jic23@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	Pei Xiao <xiaopei01@kylinos.cn>,
+	Shashank Balaji <shashank.mahadasyam@sony.com>,
+	Ben Horgan <ben.horgan@arm.com>, Johan Hovold <johan@kernel.org>,
+	linux-usb@vger.kernel.org, Nikita Kravets <teackot@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-i2c@vger.kernel.org,	Daniel Scally <dan.scally@ideasonboard.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Minas Harutyunyan <hminas@synopsys.com>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,	Bibo Mao <maobibo@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>,	WANG Xuerui <kernel@xen0n.name>,
+ kvm@vger.kernel.org,	loongarch@lists.linux.dev
+Subject: Re: [PATCH v3 00/16] mod_devicetable.h: Split into per subsystem
+ headers
+Message-ID: <20260629235804.GA414914@sakamocchi.jp>
+Mail-Followup-To: Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig_=28The_Capable_Hub=29?=
+ <u.kleine-koenig@baylibre.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Mark Brown <broonie@kernel.org>,	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,	Justin Stitt <justinstitt@google.com>,
+	Raag Jadav <raag.jadav@intel.com>,	Sohil Mehta <sohil.mehta@intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,	Len Brown <lenb@kernel.org>,
+ Andi Shyti <andi.shyti@kernel.org>,	linux-kernel@vger.kernel.org,
+	Yemike Abhilash Chandra <y-abhilashchandra@ti.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,	linux-media@vger.kernel.org,
+	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,	Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>,	Heiko Stuebner <heiko@sntech.de>,
+	linux-rockchip@lists.infradead.org, linux-sound@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,	Danilo Krummrich <dakr@kernel.org>,
+ driver-core@lists.linux.dev,	Jonathan Cameron <jic23@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	Pei Xiao <xiaopei01@kylinos.cn>,
+	Shashank Balaji <shashank.mahadasyam@sony.com>,
+	Ben Horgan <ben.horgan@arm.com>, Johan Hovold <johan@kernel.org>,
+	linux-usb@vger.kernel.org, Nikita Kravets <teackot@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-i2c@vger.kernel.org,	Daniel Scally <dan.scally@ideasonboard.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Minas Harutyunyan <hminas@synopsys.com>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,	Bibo Mao <maobibo@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>,	WANG Xuerui <kernel@xen0n.name>,
+ kvm@vger.kernel.org,	loongarch@lists.linux.dev
+References: <cover.1782682124.git.ukleinek@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260621145919.1453-1-ekffu200098@gmail.com> <aj426bA-YiOKt06m@kernel.org>
- <CABFDxME8wej3m8T5gn8y4dmpOLZutm=tDTa7ZcfhbWwScTu_5Q@mail.gmail.com> <akJafRKJJBd5Jrv0@kernel.org>
-In-Reply-To: <akJafRKJJBd5Jrv0@kernel.org>
-From: Sang-Heon Jeon <ekffu200098@gmail.com>
-Date: Tue, 30 Jun 2026 01:48:27 +0900
-X-Gm-Features: AVVi8Ce7e8tTlZ7wLMJcBpYQ1j4KVXqbB4X7R45vGUUSJRnYUp1U99vuoyq3ILs
-Message-ID: <CABFDxMFTfFO_jePBnM_uZXcmLBHJM3db-=VzFE+bxSYgm1G-1Q@mail.gmail.com>
-Subject: Re: [PATCH 0/6] treewide: remove unnecessary invalid range checks in
- memblock iteration loops
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Albert Ou <aou@eecs.berkeley.edu>, Andrew Morton <akpm@linux-foundation.org>, 
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
-	Oscar Salvador <osalvador@suse.de>, Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <pjw@kernel.org>, 
-	Will Deacon <will@kernel.org>, Alexander Potapenko <glider@google.com>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, David Hildenbrand <david@kernel.org>, 
-	Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com, 
-	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, 
-	linux-riscv@lists.infradead.org, loongarch@lists.linux.dev, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, WANG Xuerui <kernel@xen0n.name>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.1782682124.git.ukleinek@kernel.org>
 
-On Mon, Jun 29, 2026 at 8:44=E2=80=AFPM Mike Rapoport <rppt@kernel.org> wro=
-te:
->
-> On Fri, Jun 26, 2026 at 07:59:22PM +0900, Sang-Heon Jeon wrote:
-> > On Fri, Jun 26, 2026 at 5:23=E2=80=AFPM Mike Rapoport <rppt@kernel.org>=
- wrote:
-> > >
-> > > On Sun, Jun 21, 2026 at 11:59:10PM +0900, Sang-Heon Jeon wrote:
-> > > > The memblock API guarantees that for_each_mem_range() and
-> > > > for_each_mem_pfn_range() never return an invalid range, meaning sta=
-rt is
-> > > > always less than end.
-> > > >
-> > > > Several memblock callers still have unnecessary invalid range check=
-s in
-> > > > their loop bodies, so remove them.
-> > > >
-> > > > Sang-Heon Jeon (6):
-> > > >   arm64: mm: remove unreachable invalid range check in
-> > > >     kasan_init_shadow()
-> > > >   LoongArch: remove unreachable invalid range check in kasan_init()
-> > > >   riscv: remove unreachable invalid range check in
-> > > >     create_linear_mapping_page_table()
-> > > >   riscv: remove unreachable invalid range check in kasan_init()
-> > > >   mm: remove unnecessary empty range check in
-> > > >     early_calculate_totalpages()
-> > > >   mm/hugetlb: remove unnecessary empty range check in
-> > > >     hugetlb_bootmem_set_nodes()
-> > >
-> > > I queued this for inclusion into memblock tree.
-> >
-> > Thank you, Mike.
-> >
-> > Could you please review and queue this patch [1] as well? It does the
-> > same kind of clean up, I just missed it at the time.
->
-> Can you please resend them all as a single set?
+Hi,
 
-Thanks for considering, Mike.
-I've sent v2 patch series [1] that includes the missing patches.
+On Sun, Jun 28, 2026 at 11:58:35PM +0200, Uwe Kleine-König (The Capable Hub) wrote:
+> Hello,
+> 
+> v2 is available at
+> https://lore.kernel.org/lkml/cover.1782490566.git.u.kleine-koenig@baylibre.com
+> .
+> 
+> Changes since then:
+> 
+>  - rebased to v7.2-rc1
+>  - rename the directory containing the new per device-id headers from
+>    "mod_device_id" to "device-id".
+>  - Adding Acks received
+>  - ASoC patch (formerly patch #3) dropped as it was already merged as
+>    commit 83d53eca7e55 ("ASoC: rockchip: rockchip_sai: #include
+>    <linux/platform_device.h> explicitly") in v7.2-rc1.
+> 
+> This series survived an allmodconfig build on alpha, arc, arm64,
+> loongarch, m68k, mips, powerpc, riscv, s390, sh, sparc, and x86_64.
+> (Well, some failures, but I see these also on vanilla v7.2-rc1.)
+> 
+> There are a few headers left that include <linux/mod_devicetable.h>, but
+> these can be addressed in the next dev cycle without much impact as all
+> the much included headers are covered here.
+> 
+> I will apply this series to
+> 
+> 	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git device-id-rework
+> 
+> which is included in next to expose it to the build bots and testers (in
+> the hope that there won't occur much merge conflict with v7.3 material).
+> I will add review tags and address (the hopefully very few) build issues
+> that might pop up. My plan is to let Linus merge it end of the week for
+> -rc2.
+> 
+> Best regards
+> Uwe
+> 
+> Uwe Kleine-König (The Capable Hub) (16):
+>   mod_devicetable.h: Split into per subsystem headers
+>   media: ti: vpe: #include <linux/platform_device.h> explicitly
+>   driver: core: Include headers for acpi_device_id and of_device_id for
+>     struct device_driver
+>   driver core: platform: Include header for struct platform_device_id
+>   usb: serial: Include <linux/usb.h> in <linux/usb/serial.h>
+>   platform/x86: msi-ec: Ensure dmi_system_id is defined
+>   of: Explicitly include <linux/types.h> and <linux/err.h>
+>   i2c: Let i2c-core.h include <linux/i2c.h>
+>   platform/x86: x86-android-tablets: Add include defining struct
+>     dmi_system_id
+>   platform/x86: int3472: Add include defining struct dmi_system_id
+>   usb: dwc2: Add include defining struct pci_device_id
+>   ALSA: hda/core: Add include defining struct hda_device_id
+>   LoongArch: KVM: Add include defining struct cpu_feature
+>   media: em28xx: Add include for struct usb_device_id
+>   Replace <linux/mod_devicetable.h> by more specific
+>     <linux/device-id/*.h> (headers)
+>   Replace <linux/mod_devicetable.h> by more specific
+>     <linux/device-id/*.h> (c files)
+> 
+>  ...
+>  drivers/firewire/core-device.c                |    1 -
+>  drivers/firewire/net.c                        |    1 -
+>  drivers/firewire/sbp2.c                       |    1 -
+>  ...
+>  drivers/media/firewire/firedtv-fw.c           |    1 -
+>  ...
+>  include/linux/firewire.h                      |    3 +-
+>  ...
+>  sound/firewire/isight.c                       |    1 -
+>  ...
+>  1649 files changed, 1575 insertions(+), 2544 deletions(-)
+>  ...
+>  create mode 100644 include/linux/device-id/ieee1394.h
 
-[1] https://lore.kernel.org/all/20260629163736.1606688-1-ekffu200098@gmail.=
-com/#t
+I have no objection to the above changes relevant to firewire subsystem.
 
-> > [1] https://lore.kernel.org/all/20260626032902.703944-1-ekffu200098@gma=
-il.com/
-> >
-> > > >  arch/arm64/mm/kasan_init.c     | 3 ---
-> > > >  arch/loongarch/mm/kasan_init.c | 3 ---
-> > > >  arch/riscv/mm/init.c           | 2 --
-> > > >  arch/riscv/mm/kasan_init.c     | 3 ---
-> > > >  mm/hugetlb.c                   | 3 +--
-> > > >  mm/mm_init.c                   | 3 +--
-> > > >  6 files changed, 2 insertions(+), 15 deletions(-)
-> > > >
-> > > > --
-> > > > 2.43.0
-> > > >
-> > >
-> > > --
-> > > Sincerely yours,
-> > > Mike.
-> >
-> > Best Regards,
-> > Sang-Heon Jeon
->
-> --
-> Sincerely yours,
-> Mike.
+Acked-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-Best Regards,
-Sang-Heon Jeon
+Consequently, unit drivers just include include/linux/firewire.h to refer 
+to 'struct ieee1394_device_id'. After merging the changes, I'll post more
+patches to modify the following unit drivers, since they are left from the
+patchset.
+
+* drivers/media/firewire/firedtv.h
+* sound/firewire/bebob/bebob.h
+* sound/firewire/dice/dice.h
+* sound/firewire/digi00x/digi00x.h
+* sound/firewire/fireface/ff.h
+* sound/firewire/fireworks/fireworks.h
+* sound/firewire/motu/motu.h
+* sound/firewire/oxfw/oxfw.h
+* sound/firewire/tascam/tascam.h
+
+By the way, the changes touch so many files. If it takes more time to
+apply, I think it better to make steps to modify across several kernel
+generation. For example, getting rid of direct reference of
+mod_devicetable.h from drivers at first (in the case of firewire
+subsystem, for 'Replace <linux/mod_devicetable.h> by more specific
+<linux/device-id/*.h> (headers))', then adding these per-subsystem
+headers and applying relevant changes.
+
+Of course, I don't mind to apply the v3 patchset as is in upstream.
+
+
+Thanks
+
+Takashi Sakamoto
