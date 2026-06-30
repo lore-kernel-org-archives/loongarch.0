@@ -1,171 +1,167 @@
-Received: from flow-b1-smtp.messagingengine.com (flow-b1-smtp.messagingengine.com [202.12.124.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FB2F413D66;
-	Tue, 30 Jun 2026 13:12:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64CAC282F39
+	for <loongarch@lists.linux.dev>; Tue, 30 Jun 2026 15:04:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782825133; cv=none; b=GfARJkMyFkONBAPE6B/mdfwZ5wv10ZZlJi319bdlykfut/Ekd/d7FbanQrIZa0qWFRimAsf/OCn5zv51XrRymeqWnz+M2jjWz6DYR964e/I71T6+GpQlE9B6PQUtRGkwHIljSMkd3DwkOaCy6iG3fx+f42lc3kcB2prKzzOdiqU=
+	t=1782831868; cv=none; b=nrjGah67dl2LbiSnihUD3sW26l1MR61aiJkOHTS6OWj5ZZmrYb16RGJQk6+4x3KXa2UAasLJKWnUbkuiHzrvJUOWCVMKI4OXQllrZqpSo8uHUsfnDZ3KCH6koI7Q99oKrJYgBj9czlBNnLLxMJqGKzCtOMlCnEPMEOCUT8kvAAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782825133; c=relaxed/simple;
-	bh=8BXpW32i3b+MZ6T6RR8FcwEOaRbjJVuX738hyO6aW4c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R/MUQG5JA+xFmpEiEpKTFK1utf57cpvCrYXbOyPhGd5WBIDlBXAYsu01cWkid9VRPeRMfEsXWNVijgh0ezjoqiotaHFp+U/3ruApzc5CYmmCrdFVdcldqJ3LgeO+c+jL1UId9iV/d0GwPs9/4p7VAK3bFuY5CSNz6pXDlPZdvH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=PJXGwFB3; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=NhGlSUZC; arc=none smtp.client-ip=202.12.124.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
+	s=arc-20240116; t=1782831868; c=relaxed/simple;
+	bh=gaAQyPseazQlRE79YeFw65+HAz9m9NvImoW94Wfk5XI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oCwK0UtHers2JIhsFpOTNT4pXBbNqcGVPpzi8mycRxjdvF3D0KMB0FP6knzDoXQ5hYAxDCmGH7AI4aSvY+PEujrQyRwdqixxLsRQEsHM4mNVdNq4LilrbixEoPKkIXbimeBaqX993QYkw41n4WQBZ7COxLyZXnI3TN4EpgZiahM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=tI28KK3K; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="PJXGwFB3";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NhGlSUZC"
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailflow.stl.internal (Postfix) with ESMTP id 39F0B1300071;
-	Tue, 30 Jun 2026 09:12:10 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-02.internal (MEProxy); Tue, 30 Jun 2026 09:12:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-	 h=cc:cc:content-transfer-encoding:content-type:content-type
-	:date:date:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:subject:subject:to:to; s=fm1;
-	 t=1782825130; x=1782832330; bh=8BXpW32i3b+MZ6T6RR8FcwEOaRbjJVuX
-	738hyO6aW4c=; b=PJXGwFB30fcai5mjfKu2R+eBg2ljAsikpExxGKLPRLVa0NOP
-	M1ycgbJJE0ZZEK9IDOqVM27W/XC2rtksn2dtwcDDEp0E0XqpMetCb1S9u1QS9vRs
-	1RpG9E1DxiYICt1E4S5M+M8o0AO3d/lDRbaMGoAYitA0nB4ffxb6+I9mxnMRuZrW
-	cLANa2sjxxxgEEOTOGsqEZ1+sVQ56b8BPrZ+TWxHeLWXOSBqkQGZ4b/gNvoCcROA
-	YQ/iYGPf+7CaH81chhSp9iO5517lx8P174SsCtLkHncpI+lxouQgklo6Fl5c6kVj
-	JNiImW96RfYUAODI1gVUSpzWqjiMshFdXgzT2Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1782825130; x=
-	1782832330; bh=8BXpW32i3b+MZ6T6RR8FcwEOaRbjJVuX738hyO6aW4c=; b=N
-	hGlSUZC5FJjbCQGE1G49NdD+d7cILSk+XoFg/PLocO85LTUqUcTTnA2qOez5xa/1
-	7olGYURUII1QwbW7/5l/NHKGC5XPwDnnvdkTi9seGSIfK7ewoJm9gkjQJ5QixhPY
-	YbiNvMDK64Ve9tqPDFF8ueJ3fFg4ZJr1ngimgTgkSEjWxANu3u9xdk+qeBWL6v2T
-	nZWr7xCFbFxxlaMB1GLbgnNlMtvs11OY/SGxKARwTz9fGm77EVUE0gQcxCPI8nOp
-	SWw1G+J+mz2oQD8MbsyZtTn7pTd3ZWq9QMuTxBctShNEVb6Y4gepeOn3zYb5wFmi
-	9B5JpaDHEJ6cfA89KcJPg==
-X-ME-Sender: <xms:p8BDaq0NvsKE4Bwmrv7s6iPNrlRLMROJJfeP0PtkiGSW7gsRd0-TDw>
-    <xme:p8BDaowX_ucL4yAoCMkD8zUpTEubysfFuSXF0rmTIEEd6kwqgbgIHD5cSY_RiP5q7
-    e94Qqk9PxtgNPph5Dh-eQn0ewvop-u96XOrG5qKJv32fgGLhp4LwQ>
-X-ME-Received: <xmr:p8BDapzG2fnajZZ032F6c5k00KAk68fe5vP2RzELkgMs08TO2FJvPbVaiAuGz8lvK1JDMAGE4tF7lFNPlbFs-ViUMGr_wQ>
-X-ME-Proxy-Cause: dmFkZTGWMpslQBp5MoMOGT3m9w2jgI36XruuqnR1pq0xzO86H7HHpTyefggyPo3gnlbJ2+
-    oUnJ5655lI+FwSC+uR7gX7xFFGOmQJDOgf9Cba3Anoe3HTOIfOGCIAsgo1oJZtDql3wBBu
-    SB3jkp1L6LCEgtQxQMxyoy5Barght9IrAsceMzQUUBw7yzWpezkYTkGw46uvF5pwbOwhQA
-    zC2+AIIkGLJOKN5oP5DOt5CpV0EjBg1Q504AwM3NXu2EdDiyHhIj+1boTpwxsX4uWP3Dtq
-    q1Sx/fGVa2o1PfHLSAbSC97hryNKZ1Xkg+kcpXHWnkeOBgW28cM/lKBZYCocptO7oNw7Xp
-    RRRp1lmFluW4GD3WBSjnVRt7ShmNMV8JxE7I4KxMCGy1xK939sWK596jv4gWLGFVVsl58z
-    0zIbon8UG8BOgTKT9obCI77IUrcmzyKVUgxH9BcBIXTiSVJX0hzVYDYb3z8plG9r6Qmqhw
-    5XKD5CserZlglD6zl422xOx0BpMhzXw+CBy3CC9PpBgPIN0QWoaRgkg5YjLzHpvaWYMvAP
-    kswZxHVzkddqUnlH+ytcMyHDd4N7HF8kZdvxlKCIeSI9lHErBxpIgzgCgK6MYR3Gs4kNlt
-    yXG+xUduKp0+yACN9ZkEHsRE3C1r15KrySGCNt8HsxIUOsWWgxHUpptffVtw
-X-ME-Proxy: <xmx:p8BDagp55rfDi1q_D4dxVo_2Op9MhmMsNnjsFNrFYNaOD4Ef6nhgRQ>
-    <xmx:p8BDatqsCMbaET8mYMnWUgekQi8JdiMi195_l061CoO2xWwR_o3QkA>
-    <xmx:p8BDahiyYZ_k6dahNCS0o5fMpNgmC8HjicFh_VY9pLuXWpbV6L1mBA>
-    <xmx:p8BDauz6N3_C5O0MFtj-iENsXLL0iCKDuafUA3tyEHBXnnTDZ7XB5g>
-    <xmx:qsBDamtebrD5hnYxkpqIAnk8VBxhqbqHUrgJns-p6CEdQOutmOtpa6T6>
-Feedback-ID: ie8e14432:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 30 Jun 2026 09:11:58 -0400 (EDT)
-Date: Tue, 30 Jun 2026 22:11:55 +0900
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig_=28The_Capable_Hub=29?= <u.kleine-koenig@baylibre.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Mark Brown <broonie@kernel.org>,	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,	Justin Stitt <justinstitt@google.com>,
-	Raag Jadav <raag.jadav@intel.com>,	Sohil Mehta <sohil.mehta@intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,	Len Brown <lenb@kernel.org>,
- Andi Shyti <andi.shyti@kernel.org>,	linux-kernel@vger.kernel.org,
-	Yemike Abhilash Chandra <y-abhilashchandra@ti.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,	linux-media@vger.kernel.org,
-	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,	Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>,	Heiko Stuebner <heiko@sntech.de>,
-	linux-rockchip@lists.infradead.org, linux-sound@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,	Danilo Krummrich <dakr@kernel.org>,
- driver-core@lists.linux.dev,	Jonathan Cameron <jic23@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-	Pei Xiao <xiaopei01@kylinos.cn>,
-	Shashank Balaji <shashank.mahadasyam@sony.com>,
-	Ben Horgan <ben.horgan@arm.com>, Johan Hovold <johan@kernel.org>,
-	linux-usb@vger.kernel.org, Nikita Kravets <teackot@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-i2c@vger.kernel.org,	Daniel Scally <dan.scally@ideasonboard.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,	Bibo Mao <maobibo@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>,	WANG Xuerui <kernel@xen0n.name>,
- kvm@vger.kernel.org,	loongarch@lists.linux.dev
-Subject: Re: [PATCH v3 00/16] mod_devicetable.h: Split into per subsystem
- headers
-Message-ID: <20260630131155.GA39400@sakamocchi.jp>
-Mail-Followup-To: Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig_=28The_Capable_Hub=29?=
- <u.kleine-koenig@baylibre.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Mark Brown <broonie@kernel.org>,	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,	Justin Stitt <justinstitt@google.com>,
-	Raag Jadav <raag.jadav@intel.com>,	Sohil Mehta <sohil.mehta@intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,	Len Brown <lenb@kernel.org>,
- Andi Shyti <andi.shyti@kernel.org>,	linux-kernel@vger.kernel.org,
-	Yemike Abhilash Chandra <y-abhilashchandra@ti.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,	linux-media@vger.kernel.org,
-	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,	Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>,	Heiko Stuebner <heiko@sntech.de>,
-	linux-rockchip@lists.infradead.org, linux-sound@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,	Danilo Krummrich <dakr@kernel.org>,
- driver-core@lists.linux.dev,	Jonathan Cameron <jic23@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-	Pei Xiao <xiaopei01@kylinos.cn>,
-	Shashank Balaji <shashank.mahadasyam@sony.com>,
-	Ben Horgan <ben.horgan@arm.com>, Johan Hovold <johan@kernel.org>,
-	linux-usb@vger.kernel.org, Nikita Kravets <teackot@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-i2c@vger.kernel.org,	Daniel Scally <dan.scally@ideasonboard.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,	Bibo Mao <maobibo@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>,	WANG Xuerui <kernel@xen0n.name>,
- kvm@vger.kernel.org,	loongarch@lists.linux.dev
-References: <cover.1782682124.git.ukleinek@kernel.org>
- <20260629235804.GA414914@sakamocchi.jp>
- <akNYUdAS3sbEdRqC@monoceros>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tI28KK3K"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2c9c1779fc8so11332065ad.3
+        for <loongarch@lists.linux.dev>; Tue, 30 Jun 2026 08:04:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782831866; x=1783436666; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hkhDPMkIn7o4S+p4EJjWg1/vRnrXI2zfxcLsfb3CwqA=;
+        b=tI28KK3Kyp92UT+MCSCh7eB/fc9zc5hebpAY4x2HnUPhNzhjUnJOzKtdZIOpT53lts
+         C9m8TCxXfRlZtdlRLcGb3DIiK/Ex828RkTuYN4NGAWIxA794QFhSn0/LDFAvl8jl90p8
+         IKQDEVDy0soJi7ybeGcAikNwWLRn4hZ7FfW4MDEW395tavId9XjhFkdc/MUd2+Sw0n8w
+         zbL47vekLVtlFH3Zn/kHgifvfcZlxNL6/bVXy55wgeEGbXjEpPalHADPMSHyrfMTN7oE
+         i/dtryyb0NqccG9jpyczkniIGjP7K96YzuTMesJKH4WKUpRPirl9YDDKk0uG/C5GtzXY
+         1BIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782831866; x=1783436666;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hkhDPMkIn7o4S+p4EJjWg1/vRnrXI2zfxcLsfb3CwqA=;
+        b=HqJiIiCvXo/jdq8VVfqEpHKyI1OnoWKrIUGY/z0KRnmnckySvexjL59aI2GfBQiKUk
+         WKzr+neFBgwtat3X49+nVYr7ka1htzSa4a8XIt3q1ziybMXabnwt0Wimn4WO8qVfuehi
+         obDF47f/fgZ1l9thf+N04cdbTAdIkxJLxS5FZgqibbCxNwcTp6R3CuLDGWDhSzBjmXKj
+         8Z+Gq0yT1vR3OyPq2ma7z+vxMBe84MIlvOOiZjuCLuvP4e8YfdZ1Ss1Y2QRBSTwKcnUq
+         00xJ6sEsQCx7SCclPHB1TbhwmoO4DfTyKrEsqgPjNyX4E3Ma/k08L1fqpwmAW1sRn87u
+         1m/Q==
+X-Forwarded-Encrypted: i=1; AHgh+RrnelVDZoEEz+5dnmbf0rZit6Ec1uINEK4wo9x3ea+BCwDVDTKccIDzrLZEELCKEaC75a31EIp/kTc=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzOiCFJYR5EiMuS8/ngNItILawqBH4Qets7WKkwiXxxO4I0GYp5
+	1PxkT07fSDUcIy3lR08ngUq3yxv6OnbrheiA8KixW0xiiC4GElP5XK8C
+X-Gm-Gg: AfdE7cmIv5uBUSTltTW6M2MuPtTlT1a1zRh0raBXkZH3/2sjAiKZHMA+v6Y6fTi01hD
+	y0/ELWdJ8SybUFP/b5Q3px209VR6q3nQ1junjS4W1XNg0rAeqV92Y5jZ/kEs25iQMvfCA7a8+Cs
+	sIy6Y/KMUQKavvbWRXGXKKzkz9PQALMjJ+T0PEG8zUknNIP0Ij9js8ZIRORP5ZlAzWiJw+nGFj8
+	fO1rYoqJxqyP+Y0S1xmWBxEk0/8Q3wqItH69yCHO9hzBi4hSYPIIZRSOYgjWld8eE5lWgCrUYFh
+	6VMeaQFI9tEwBmCtdauBd1muDEToJAkzgQtnQp874ng4YXcS+1cgLZA7HNXfgrrlCE16nUPL54n
+	/MGx2yMoTZdvisswA5YFXhapvgRdLB/D5NcLFl97Jenrkp5QkQius9Akn3HhOkcT0fjIefV3KRl
+	2IA+llEi0=
+X-Received: by 2002:a17:902:e541:b0:2c9:97a7:71ac with SMTP id d9443c01a7336-2ca2ea23674mr32988355ad.39.1782831866110;
+        Tue, 30 Jun 2026 08:04:26 -0700 (PDT)
+Received: from ubuntu.. ([110.9.142.4])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ca37a70bc0sm16250465ad.10.2026.06.30.08.04.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2026 08:04:25 -0700 (PDT)
+From: Sang-Heon Jeon <ekffu200098@gmail.com>
+To: rppt@kernel.org,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <pjw@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Will Deacon <will@kernel.org>
+Cc: linux-mm@kvack.org,
+	Sang-Heon Jeon <ekffu200098@gmail.com>,
+	Alexander Potapenko <glider@google.com>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	David Hildenbrand <david@kernel.org>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	kasan-dev@googlegroups.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	WANG Xuerui <kernel@xen0n.name>
+Subject: [PATCH v3 0/8] treewide: remove unnecessary invalid range checks in memblock iteration loops
+Date: Wed,  1 Jul 2026 00:04:05 +0900
+Message-ID: <20260630150413.1718632-1-ekffu200098@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <akNYUdAS3sbEdRqC@monoceros>
 
-On Tue, Jun 30, 2026 at 08:04:26AM +0200, Uwe Kleine-König (The Capable Hub) wrote:
-> The impact of these firewire changes is limited to the firewire
-> subsystem. So doing these later is a smaller issue. I plan to tackle
-> these when this series is in. (But if you want to care about the
-> firewire bits, that's fine, too.)
+The memblock API guarantees that for_each_mem_range() and
+for_each_mem_pfn_range() never return an invalid range, meaning start is
+always less than end.
 
-I promise it for firewire subsystem. Just focus on your good work ;)
+Several memblock callers still have unnecessary invalid range checks in
+their loop bodies, so remove them.
 
+Patches 1-6 cover for_each_mem_range() callers. memblock never stores a
+zero-size region, so the range it returns always has start < end. Some
+callers apply __va() or __phys_to_virt() before comparing, but these keep
+start < end too, so the check is unreachable.
 
-Thanks
+Patches 7-8 cover for_each_mem_pfn_range() callers. __next_mem_pfn_range()
+skips any region that contains no whole page, so it only ever returns
+start_pfn < end_pfn and the check is unnecessary.
 
-Takashi Sakamoto
+For reference, commit 36ca7f4be809 ("arm64: mm: Remove bogus stop
+condition from map_mem() loop") did a similar cleanup in arm64 map_mem().
+
+All these checks are in different trees, so I split the change into one
+patch per arch/subsystem. The patches are independent and can be applied
+separately.
+
+---
+Changes from v1 [1]
+- Add review-by, tested-by tags from v1
+- Add missing simliar patches(5,6) to patch series
+- Change base to rppt/for-next
+
+Changes from v2 [2]
+- Remove unused local variable and braces
+
+[1] https://lore.kernel.org/all/20260621145919.1453-1-ekffu200098@gmail.com/
+[2] https://lore.kernel.org/all/20260629163736.1606688-1-ekffu200098@gmail.com/
+---
+
+Sang-Heon Jeon (8):
+  arm64: mm: remove unreachable invalid range check in
+    kasan_init_shadow()
+  LoongArch: remove unreachable invalid range check in kasan_init()
+  riscv: remove unreachable invalid range check in
+    create_linear_mapping_page_table()
+  riscv: remove unreachable invalid range check in kasan_init()
+  ARM: remove unreachable invalid range check in kasan_init()
+  powerpc64/kasan: Remove unreachable invalid range check in
+    kasan_init_phys_region()
+  mm: remove unnecessary empty range check in
+    early_calculate_totalpages()
+  mm/hugetlb: remove unnecessary empty range check in
+    hugetlb_bootmem_set_nodes()
+
+ arch/arm/mm/kasan_init.c               | 6 ------
+ arch/arm64/mm/kasan_init.c             | 3 ---
+ arch/loongarch/mm/kasan_init.c         | 3 ---
+ arch/powerpc/mm/kasan/init_book3e_64.c | 3 ---
+ arch/powerpc/mm/kasan/init_book3s_64.c | 3 ---
+ arch/riscv/mm/init.c                   | 2 --
+ arch/riscv/mm/kasan_init.c             | 3 ---
+ mm/hugetlb.c                           | 7 ++-----
+ mm/mm_init.c                           | 3 +--
+ 9 files changed, 3 insertions(+), 30 deletions(-)
+
+-- 
+2.43.0
+
