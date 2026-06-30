@@ -1,35 +1,48 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CA30367B9C
-	for <loongarch@lists.linux.dev>; Tue, 30 Jun 2026 02:27:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A5522A817
+	for <loongarch@lists.linux.dev>; Tue, 30 Jun 2026 02:58:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782786441; cv=none; b=TpKtD3ML82ZezHtQU26E/wVpW1tWImn71aYdQ/JZ50CUQxe+c4ANphwuO0BOBzgdXecN7ujGL+T2Co/B16hVIJ5DF+LAHpL6A+TnOisLX2fuyej/tAb68rjwdo0CH1QMUZaeaJKQUp4NXDGkovuTTaK5bh6F0xL6NR5dtAaZIa8=
+	t=1782788309; cv=none; b=kodgKD30j2yg+yODTmx8yLpwI+d5G3QigSDlHClqR2VvOaKhDvEAue5VfUM90OvCc4KYZHbgnMFp5Ye9JGYH2LowmBvRwyk1pTi2x+PgcDfweUgqgj8cJdhh6uBZeffh4r+Szdd6Emu71ZI4mGe7GPZ7GOdkI3V2caAGgKfYEYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782786441; c=relaxed/simple;
-	bh=df1PM/UFAncMmhwncHAXEcUL/9wbCpS8UU8f/sv3xek=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QkipL+Ow7+atcXHAP/V+cw7TZo2Pln9PTRvsX+1c+KKUszyid53CyNFaK4B4z93EI98OQK0ABFsjCuLJy+PMt6AtUP45hH1n/gf+llcbyeKr4bmdTJz33+6j63P+TdHgES+Q3+mvug0lyHG3OUkoO8I5p53uVfemPZa++kDJFys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxFOh_KUNq33cZAA--.59353S3;
-	Tue, 30 Jun 2026 10:27:11 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJBxbcJ6KUNqIH24AA--.20759S6;
-	Tue, 30 Jun 2026 10:27:10 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Hengqi Chen <hengqi.chen@gmail.com>
-Cc: loongarch@lists.linux.dev,
+	s=arc-20240116; t=1782788309; c=relaxed/simple;
+	bh=tPLinYbJb80Iz/qFBGacknXcBvQq+tUEq9miK6254Iw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uaTTpTOmqi0Xds50WrfVYZOi2SK6JeFQeOzW/DzRJXl7z44z58SEQZRomDwo/3GvDlyEnR8DOXsSODrBdsT9oc5nNCfpc9KLN6eV108oDaDDBlLEhA2QGZAvAQ8KVuvwj31VoZxfEzrUA233iuvvRjZPwZjcV72Hw2sTN/s40Pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Z9L8pjtG; arc=none smtp.client-ip=91.218.175.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Z9L8pjtG"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1782788304;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=OsYagQzu6qHNQWTSa0S7+sdlg1USYp8Up3WJKT3wYiY=;
+	b=Z9L8pjtGtgPdqqpvLzsFUS0JgIr7gs5/l0Zlddd83H+CvT7uKHQtMwmYrlV6Tsh63ry97E
+	OFOIsKp/Ozxz8x74bPxw1/pzsiywZpP2FFzGFO6/dgznVQAkNR69uhXfo7g/UuPUQr6Rno
+	BZMfGaLbzGgqyjJGLP0GVUyFWT8fgCc=
+From: George Guo <dongtai.guo@linux.dev>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: Eduard Zingerman <eddyz87@gmail.com>,
+	Emil Tsalapatis <emil@etsalapatis.com>,
+	Mykola Lysenko <mykolal@fb.com>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	George Guo <guodongtai@kylinos.cn>,
 	bpf@vger.kernel.org,
+	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 4/4] LoongArch: BPF: Implement branchless conditional move for TCC
-Date: Tue, 30 Jun 2026 10:27:05 +0800
-Message-ID: <20260630022705.11536-5-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20260630022705.11536-1-yangtiezhu@loongson.cn>
-References: <20260630022705.11536-1-yangtiezhu@loongson.cn>
+Subject: [PATCH bpf] selftests/bpf: Skip libarena when the BPF backend lacks 32-bit arena cmpxchg
+Date: Tue, 30 Jun 2026 10:58:09 +0800
+Message-Id: <20260630025809.74043-1-dongtai.guo@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -37,219 +50,118 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxbcJ6KUNqIH24AA--.20759S6
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3GFW8KFykur1kJrWDJF4DJrc_yoW3Kw1fpa
-	sFkrsYgr4kXF13tFnrAa18urZ5Aws5CrW3WF1DJrWvy3sxury5W3WUKr1agFW5Crn5Zr10
-	qr1Yvw42va1DJ3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAF
-	wI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
-	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
-	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6x
-	IIjxv20xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x
-	0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8QJ57UUUUU==
+X-Migadu-Flow: FLOW_OUT
 
-The current implementation handles combined bpf2bpf and tail calls by
-checking at runtime whether REG_TCC holds a count or an address via a
-conditional jump (BPF_JGT against 33). This adds non-negligible branch
-prediction overhead in the hot path of tail call execution.
+From: George Guo <guodongtai@kylinos.cn>
 
-To eliminate this runtime conditional branch in prologue, refactor the
-logic of prepare_bpf_tail_call_cnt() with a branchless conditional move
-mechanism using unsigned comparison and mask instructions.
+The arena qspinlock pulled in by libarena (bpf_arena_spin_lock.h) performs
+a 32-bit atomic compare-and-exchange on an arena (address space 1) pointer
+via atomic_try_cmpxchg_acquire() on the 32-bit atomic_t lock word. Not
+every LLVM BPF backend can select that operation; releases such as clang 19
+abort instruction selection with:
 
-When the program is a main program (is_main_prog), the branchless logic
-classifies and blends the incoming REG_TCC based on its physical content
-according to three possible entrance statuses:
+  error: unsupported atomic operation, please use 64 bit version
+  fatal error: error in backend: Cannot select: AtomicCmpSwap<(s32)> ...
+  In function: arena_spin_lock_slowpath
 
-1) Initial Entry (Scalar): Enter via a standard event, where REG_TCC is
-   initialized to a pure scalar 0.
-2) Inherited Entry (Scalar): Enter via a flat main-to-main tail call,
-   where REG_TCC carries an accumulated scalar count (1 to 33) reloaded
-   from the prior stack frame.
-3) Inherited Entry (Pointer): Enter via a tail call from a subprogram,
-   where REG_TCC inherits and carries a massive kernel pointer address
-   reloaded from the prior stack frame.
+Because libarena/libarena.skel.h is an unconditional dependency of
+test_progs, this aborts the entire selftests/bpf build before test_progs is
+ever linked, so none of the other tests can be built or run. This was
+observed building selftests/bpf for LoongArch with clang 19, but it is a
+property of the BPF backend, not of the host architecture.
 
-To handle these cases seamlessly without branching:
-- sltui identifies the type of REG_TCC. For cases 1 and 2 (scalar count),
-  it sets the temporary register T8 to 1. For case 3 (kernel pointer), it
-  sets T8 to 0.
-- maskeqz handles the local stack pointer (T7). If T8 == 1, it keeps T7
-  intact. If T8 == 0, it clears T7 to 0.
-- masknez handles the incoming REG_TCC to prevent register pollution.
-  If T8 == 1, it clears REG_TCC to 0 (erasing 1~33 scalars). If T8 == 0,
-  it keeps the massive kernel pointer intact.
-- or combines the results. The scalar cases yield a clean local stack
-  pointer by evaluating REG_TCC (0) | T7, while the pointer case leaves
-  the inherited global pointer intact by evaluating REG_TCC | T7 (0).
+Mirror the existing CLANG_HAS_ARENA_ASAN feature probe: detect whether the
+backend can compile a 32-bit arena cmpxchg, and only build libarena when it
+can. Define HAS_BPF_ARENA in that case and guard prog_tests/libarena.c
+behind it - exactly the way prog_tests/libarena_asan.c is guarded behind
+HAS_BPF_ARENA_ASAN - so the test still compiles and reports as skipped when
+libarena is not built. When the operation is unsupported, libarena is
+skipped and the rest of test_progs builds and links as before.
 
-For subprograms, the logic directly backs up the verified TCC pointer
-inherited via REG_TCC into its own local "tcc" slot, ensuring the global
-counter reference remains safely propagated across function frames.
-
-Finally, the finalized REG_TCC pointer is unconditionally backed up into
-the adjacent "tcc_ptr" slot, completing the expected dual-slot stack
-layout identically across all entry paths.
-
-This optimization refactors the inner logic of the helper function,
-unifies the offset decrement at the function entry, and uses safe
-internal temporary registers (T7 and T8) to prevent any JIT register
-conflicts, completely removing all runtime branching from the prologue
-hot path.
-
-When exposed to complex bpf2bpf + tailcall interleaved control flows,
-where inputs shuffle dynamically between a scalar count (0 to 33) and
-a massive kernel pointer address, clear improvements are demonstrated.
-Furthermore, the optimization significantly eliminated uncertainty in
-the execution path, making the performance more stable and predictable.
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Fixes: d5327480a12a ("selftests/bpf: Add basic libarena scaffolding")
+Signed-off-by: George Guo <guodongtai@kylinos.cn>
 ---
- arch/loongarch/include/asm/inst.h |  6 +++
- arch/loongarch/net/bpf_jit.c      | 74 +++++++++++++++++--------------
- 2 files changed, 46 insertions(+), 34 deletions(-)
+ tools/testing/selftests/bpf/Makefile          | 14 ++++++++++++++
+ .../selftests/bpf/prog_tests/libarena.c       | 19 ++++++++++++++++++-
+ 2 files changed, 32 insertions(+), 1 deletion(-)
 
-diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-index 76b723590023..19feae166e1c 100644
---- a/arch/loongarch/include/asm/inst.h
-+++ b/arch/loongarch/include/asm/inst.h
-@@ -97,6 +97,7 @@ enum reg2i6_op {
- };
+diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
+index b642ee489ea6..0098d892cb39 100644
+--- a/tools/testing/selftests/bpf/Makefile
++++ b/tools/testing/selftests/bpf/Makefile
+@@ -91,6 +91,17 @@ CLANG_HAS_ARENA_ASAN := $(shell echo 'int x;' | \
+ 	-mllvm -asan-shadow-addr-space=1 \
+ 	-x c -c - -o /dev/null 2>/dev/null && echo 1)
  
- enum reg2i12_op {
-+	sltui_op	= 0x09,
- 	addiw_op	= 0x0a,
- 	addid_op	= 0x0b,
- 	lu52id_op	= 0x0c,
-@@ -153,6 +154,8 @@ enum reg3_op {
- 	addd_op		= 0x21,
- 	subw_op		= 0x22,
- 	subd_op		= 0x23,
-+	maskeqz_op	= 0x26,
-+	masknez_op	= 0x27,
- 	nor_op		= 0x28,
- 	and_op		= 0x29,
- 	or_op		= 0x2a,
-@@ -644,6 +647,7 @@ static inline void emit_##NAME(union loongarch_instruction *insn,	\
- 	insn->reg2i12_format.rj = rj;					\
++# The arena qspinlock used by libarena performs a 32-bit atomic cmpxchg on an
++# arena (address space 1) pointer. Not every LLVM BPF backend can select it;
++# older releases bail out with "unsupported atomic operation, please use 64 bit
++# version", which aborts the whole selftests build. Probe for the operation and
++# skip libarena (and its dependent tests) when the backend cannot handle it.
++CLANG_HAS_ARENA_CMPXCHG32 := $(shell printf '%s\n' \
++	'struct s { int counter; };' \
++	'int f(struct s __attribute__((address_space(1))) *l, int o, int n)' \
++	'{ return __sync_val_compare_and_swap(&l->counter, o, n); }' | \
++	$(CLANG) --target=bpf -O2 -x c -c - -o /dev/null 2>/dev/null && echo 1)
++
+ # Order correspond to 'make run_tests' order
+ TEST_GEN_PROGS = test_verifier test_tag test_maps test_lru_map test_progs \
+ 	test_sockmap \
+@@ -835,10 +846,13 @@ LIBARENA_BPF_DEPS := $(wildcard libarena/Makefile		\
+ 				 libarena/selftests/*		\
+ 				 libarena/*.bpf.o)
+ 
++ifneq ($(CLANG_HAS_ARENA_CMPXCHG32),)
+ LIBARENA_SKEL := libarena/libarena.skel.h
++CFLAGS += -DHAS_BPF_ARENA
+ 
+ $(LIBARENA_SKEL): $(INCLUDE_DIR)/vmlinux.h $(BPFOBJ) $(LIBARENA_BPF_DEPS)
+ 	+$(MAKE) -C libarena libarena.skel.h $(LIBARENA_MAKE_ARGS)
++endif
+ 
+ ifneq ($(CLANG_HAS_ARENA_ASAN),)
+ LIBARENA_ASAN_SKEL := libarena/libarena_asan.skel.h
+diff --git a/tools/testing/selftests/bpf/prog_tests/libarena.c b/tools/testing/selftests/bpf/prog_tests/libarena.c
+index 61ea68dce410..a7ede72c7256 100644
+--- a/tools/testing/selftests/bpf/prog_tests/libarena.c
++++ b/tools/testing/selftests/bpf/prog_tests/libarena.c
+@@ -1,6 +1,8 @@
+ // SPDX-License-Identifier: LGPL-2.1 OR BSD-2-Clause
+ /* Copyright (c) 2026 Meta Platforms, Inc. and affiliates. */
+ #include <test_progs.h>
++
++#ifdef HAS_BPF_ARENA
+ #include <unistd.h>
+ 
+ #include <libarena/common.h>
+@@ -198,7 +200,7 @@ static void run_libarena_parallel_test(struct libarena *skel, struct bpf_program
+ 	run_libarena_parallel_fini(skel, name, prefixlen);
  }
  
-+DEF_EMIT_REG2I12_FORMAT(sltui, sltui_op)
- DEF_EMIT_REG2I12_FORMAT(addiw, addiw_op)
- DEF_EMIT_REG2I12_FORMAT(addid, addid_op)
- DEF_EMIT_REG2I12_FORMAT(lu52id, lu52id_op)
-@@ -749,6 +753,8 @@ DEF_EMIT_REG3_FORMAT(divd, divd_op)
- DEF_EMIT_REG3_FORMAT(modd, modd_op)
- DEF_EMIT_REG3_FORMAT(divdu, divdu_op)
- DEF_EMIT_REG3_FORMAT(moddu, moddu_op)
-+DEF_EMIT_REG3_FORMAT(maskeqz, maskeqz_op)
-+DEF_EMIT_REG3_FORMAT(masknez, masknez_op)
- DEF_EMIT_REG3_FORMAT(and, and_op)
- DEF_EMIT_REG3_FORMAT(or, or_op)
- DEF_EMIT_REG3_FORMAT(xor, xor_op)
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index b30132f44541..ec46d598e8a9 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -52,50 +52,56 @@ static void prepare_bpf_tail_call_cnt(struct jit_ctx *ctx, int *store_offset)
- 	const struct bpf_prog *prog = ctx->prog;
- 	const bool is_main_prog = !bpf_is_subprog(prog);
- 
-+	*store_offset -= sizeof(long);
- 	if (is_main_prog) {
--		/*
--		 * LOONGARCH_GPR_T3 = MAX_TAIL_CALL_CNT
--		 * if (REG_TCC > T3 )
--		 *	std REG_TCC -> LOONGARCH_GPR_SP + store_offset
--		 * else
--		 *	std REG_TCC -> LOONGARCH_GPR_SP + store_offset
--		 *	REG_TCC = LOONGARCH_GPR_SP + store_offset
--		 *
--		 * std REG_TCC -> LOONGARCH_GPR_SP + store_offset
--		 *
--		 * The purpose of this code is to first push the TCC into stack,
--		 * and then push the address of TCC into stack.
--		 * In cases where bpf2bpf and tailcall are used in combination,
--		 * the value in REG_TCC may be a count or an address,
--		 * these two cases need to be judged and handled separately.
--		 */
--		emit_insn(ctx, addid, LOONGARCH_GPR_T3, LOONGARCH_GPR_ZERO, MAX_TAIL_CALL_CNT);
--		*store_offset -= sizeof(long);
--
--		emit_cond_jmp(ctx, BPF_JGT, REG_TCC, LOONGARCH_GPR_T3, 4);
--
--		/*
--		 * If REG_TCC < MAX_TAIL_CALL_CNT, the value in REG_TCC is a count,
--		 * push tcc into stack
--		 */
-+		/* Save entrance TCC state (scalar count or kernel pointer) to local 'tcc' slot */
- 		emit_insn(ctx, std, REG_TCC, LOONGARCH_GPR_SP, *store_offset);
- 
--		/* Push the address of TCC into the REG_TCC */
--		emit_insn(ctx, addid, REG_TCC, LOONGARCH_GPR_SP, *store_offset);
--
--		emit_uncond_jmp(ctx, 2);
-+		/* Compute the absolute pointer to the local 'tcc' slot */
-+		emit_insn(ctx, addid, LOONGARCH_GPR_T7, LOONGARCH_GPR_SP, *store_offset);
- 
- 		/*
--		 * If REG_TCC > MAX_TAIL_CALL_CNT, the value in REG_TCC is an address,
--		 * push tcc_ptr into stack
-+		 * Branchless classification and blending:
-+		 *
-+		 * In combined bpf2bpf and tailcall scenarios, REG_TCC can carry
-+		 * either a scalar count (0 to 33) or an inherited kernel pointer address.
-+		 *
-+		 * Entrance status for a main program based on REG_TCC physical content:
-+		 * 1) Initial Entry (Scalar): Enter via a standard event, where REG_TCC
-+		 *    is initialized to a pure scalar 0.
-+		 * 2) Inherited Entry (Scalar): Enter via a flat main-to-main tail call,
-+		 *    where REG_TCC carries an accumulated scalar count (1 to 33) reloaded
-+		 *    from the prior stack frame.
-+		 * 3) Inherited Entry (Pointer): Enter via a tail call from a subprogram,
-+		 *    where REG_TCC inherits and carries a massive kernel pointer address
-+		 *    reloaded from the prior stack frame.
-+		 *
-+		 * sltui:   Identify the type of REG_TCC.
-+		 *          If REG_TCC < MAX_TAIL_CALL_CNT + 1 (scalar 0~33), sets T8 = 1.
-+		 *          If REG_TCC >= MAX_TAIL_CALL_CNT + 1 (kernel pointer), sets T8 = 0.
-+		 *
-+		 * maskeqz: Handle the local stack pointer (T7).
-+		 *          If T8 == 1, keeps T7 intact.
-+		 *          If T8 == 0, clears T7 to 0.
-+		 *
-+		 * masknez: Handle the incoming REG_TCC to prevent register pollution.
-+		 *          If T8 == 1, clears REG_TCC to 0 (erasing 1~33 scalars).
-+		 *          If T8 == 0, keeps the massive kernel pointer intact.
-+		 *
-+		 * or:      Combine the results.
-+		 *          Scalar Case:  REG_TCC = 0 | T7       -> Clean local stack pointer.
-+		 *          Pointer Case: REG_TCC = REG_TCC | 0  -> Clean inherited global pointer.
- 		 */
--		emit_insn(ctx, std, REG_TCC, LOONGARCH_GPR_SP, *store_offset);
-+		emit_insn(ctx, sltui, LOONGARCH_GPR_T8, REG_TCC, MAX_TAIL_CALL_CNT + 1);
-+		emit_insn(ctx, maskeqz, LOONGARCH_GPR_T7, LOONGARCH_GPR_T7, LOONGARCH_GPR_T8);
-+		emit_insn(ctx, masknez, REG_TCC, REG_TCC, LOONGARCH_GPR_T8);
-+		emit_insn(ctx, or, REG_TCC, REG_TCC, LOONGARCH_GPR_T7);
- 	} else {
--		*store_offset -= sizeof(long);
-+		/* Subprograms: backup the verified TCC pointer inherited via REG_TCC */
- 		emit_insn(ctx, std, REG_TCC, LOONGARCH_GPR_SP, *store_offset);
- 	}
- 
--	/* Push tcc_ptr into stack */
-+	/* Store the finalized TCC pointer value securely into the local 'tcc_ptr' slot */
- 	*store_offset -= sizeof(long);
- 	emit_insn(ctx, std, REG_TCC, LOONGARCH_GPR_SP, *store_offset);
+-void test_libarena(void)
++static void run_test(void)
+ {
+ 	struct arena_alloc_reserve_args args;
+ 	struct libarena *skel;
+@@ -251,3 +253,18 @@ void test_libarena(void)
+ out:
+ 	libarena__destroy(skel);
  }
++
++#endif /* HAS_BPF_ARENA */
++
++/*
++ * Run the test only if the BPF backend can compile the arena programs
++ * libarena depends on (see CLANG_HAS_ARENA_CMPXCHG32 in the Makefile).
++ */
++void test_libarena(void)
++{
++#ifdef HAS_BPF_ARENA
++	run_test();
++#else
++	test__skip();
++#endif
++}
 -- 
-2.42.0
+2.25.1
 
