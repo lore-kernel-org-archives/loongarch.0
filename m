@@ -1,115 +1,137 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B354F3C5832
-	for <loongarch@lists.linux.dev>; Tue, 30 Jun 2026 08:14:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EEED2D0C82
+	for <loongarch@lists.linux.dev>; Tue, 30 Jun 2026 08:25:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782807298; cv=none; b=apIrtG8vLFgjWKGGCAa55FYT8aWtXlW2tODiGDFkdGZP3hdvowz4U3MqYKEvdcrT6WpYSDoTA98fCiR/m5fYxA7fw+RkEjZOwF0OmDujj6r3HGgmGbduQdYXzihTECpGwIWzypQ7d9TxUGgme6SXol/Flc8DnmaOlIyoLhCuGac=
+	t=1782807928; cv=none; b=o9cAKmTk3HTWLrlns4/wEzcDhZhofZ06kkEFZaK1zklDx3CbwWTkKBqed4Yq1++jNerfkG51rmjHrgHUw09JGqiRSJv5AyxF8HIWGV/BtLMBwZZfARtS9fP6angsTcoG/5STw4yORMoLY1fFKdbgI1VsA+behBVzDh5HYy5ALko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782807298; c=relaxed/simple;
-	bh=voJ9BPJrGeyZ2ItfClp571G1LtIqFS5nvI+xO3xG7kI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=q/XPvgnhYKPGDBNUNdKADz3IAUcVnhnrmwY3XPyvcTiUrGSIlz+/lieJ03FB7QvWIcXDKjzKI0tUcugDiNJbgRgzbUKXwc7Gf2MO184Gevcu0RKhJyN8oz56e8clKGYBxBMd8x3sx1TiXZfLF+EX0omzhwSAZK3asLWlsIBa4ek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.155])
-	by gateway (Coremail) with SMTP id _____8Dxhun_ekNqGZEZAA--.65132S3;
-	Tue, 30 Jun 2026 16:14:55 +0800 (CST)
-Received: from kernelserver (unknown [223.64.68.155])
-	by front1 (Coremail) with SMTP id qMiowJBxJMD0ekNqDda4AA--.20127S2;
-	Tue, 30 Jun 2026 16:14:55 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH] LoongArch: Fix build errors due to wrong instructions for 32BIT
-Date: Tue, 30 Jun 2026 16:14:38 +0800
-Message-ID: <20260630081438.2832564-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.52.0
+	s=arc-20240116; t=1782807928; c=relaxed/simple;
+	bh=hWrP7VE369+d02oj7SDMsHMoTaSZHw3pSZBRLjS6W9w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=f1wSYfThBZ9FZBNb2kSs1mLYA/jxBHF/fZQugeoJQbR4HU2Xfuc1DqLiKk7B9YhF+Usf5hqHe4e3vgyE9Hxsz8uJP9Z+yZJcOTUm6p2SlK3V13Ui6gPGeREIQigTpsaonTGYYIP1b9FQHilB74B1t+vvZifRuO2wnhJOJHkhuxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d3aLfAuR; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d3aLfAuR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E32FF1F000E9
+	for <loongarch@lists.linux.dev>; Tue, 30 Jun 2026 08:25:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782807926;
+	bh=JTtdTTtLsZUC68GVRzjAtIZTHPz5tCNr1Mr5Q83suFc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=d3aLfAuRJ5bbuctwv/FBA/2LKkNXAkVwl3JeNsj1p7cRYO6OJ+/aUahNce/UuGaOE
+	 cvtWpDkZzp88iqe3lcl7A36NOhIdw1XcZGeuPOf+kbU5t0roWDm9gyPJtl88Eb+v8e
+	 TDuL59j8V36egcgconU1x06OMFow2zs/EgTm9rRIHOmb+lZrAYbw5SRjhJe6Qokhw8
+	 frvs1HX59DVA0Mcr6RSCFJyMIKF1YYUdVECcIk+7TJJIMVLcPHUi6jBgEL7I37aI8J
+	 M2PX1kI5uRCfx2LX1waoCn7AYZIHDvq4NA/nXMHwP2+//mWig/UZzRL/ja7YiEdrIw
+	 nH1/68V/wM5Vw==
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-698562f10e7so3703372a12.0
+        for <loongarch@lists.linux.dev>; Tue, 30 Jun 2026 01:25:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+Rof2yO5lSNBj0XQ4B7XHiM2uE/WpPXtzfEjieKdZfjv9iw5Ud4w8Pvv7UJ9YSKrcG2gdxopE4O6UKY=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzkKZIDUCCtV3K5Ie9m0ZeQBryXRiyvS/JLhCV0b300Xe3ZrVfe
+	X3HOldjl8dk+npdoc+warvELSmlQ2zbTXzSQpJ4VIVbQHahftLTqUvlHmjetfm9DWg+O+32yGSI
+	ECY7RQJmf2FigGz8cQ7tqZdw5poLGDmw=
+X-Received: by 2002:a05:6402:234f:b0:68d:4e6:7187 with SMTP id
+ 4fb4d7f45d1cf-69879dfe077mr1210935a12.23.1782807925655; Tue, 30 Jun 2026
+ 01:25:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxJMD0ekNqDda4AA--.20127S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7WFy5uF47XF1kGryruryxtFc_yoW8WrWUpr
-	yfZwn8ZFWUurnrtrW7ArWkWFWjqws5Aw43u3ZrXw4rCas5ArykJr48CrnxGFWrtw4fur1S
-	qw4rArZ2qFs7J3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jOb18UUUUU=
+References: <20260626105150.362203-1-dongtai.guo@linux.dev>
+In-Reply-To: <20260626105150.362203-1-dongtai.guo@linux.dev>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 30 Jun 2026 16:25:50 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H44SLq=5ZYP8+63Pwcz9cJZsS5idOek7EdAMf23+Nb8SQ@mail.gmail.com>
+X-Gm-Features: AVVi8CcYEPxxLKEfGxSniebHblaYRpYd723gGgrRBElmGtQv2txfLzy2jfu1FEE
+Message-ID: <CAAhV-H44SLq=5ZYP8+63Pwcz9cJZsS5idOek7EdAMf23+Nb8SQ@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: kexec: Fix address space mismatch in command
+ line lookup
+To: George Guo <dongtai.guo@linux.dev>
+Cc: WANG Xuerui <kernel@xen0n.name>, Qiang Ma <maqianga@uniontech.com>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, George Guo <guodongtai@kylinos.cn>, 
+	kernel test robot <lkp@intel.com>, Kexin Liu <liukexin@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In some assembly files there are some instructions that only valid for
-64BIT, but those files can be compiled for 32BIT and cause build errors.
+Hi, George,
 
-So, replace those instructions with macros:
-li.d --> LONG_LI (li.w or li.d), addi.d --> PTR_ADDI (addi.w or addi.d).
+On Fri, Jun 26, 2026 at 6:52=E2=80=AFPM George Guo <dongtai.guo@linux.dev> =
+wrote:
+>
+> From: George Guo <guodongtai@kylinos.cn>
+>
+> When searching the loaded segments for the "kexec" command line marker,
+> the kexec_load(2) path (file_mode =3D=3D 0) passes the user-space segment
+> buffer straight to strncmp() through a bogus (char __user *) cast. This
+> dereferences a user pointer in kernel context, which is wrong and is
+> flagged by sparse:
+>
+>   arch/loongarch/kernel/machine_kexec.c:84:51: sparse: incorrect type in
+>   argument 2 (different address spaces) @@ expected char const * @@ got
+>   char [noderef] __user *
+>
+> Copy the marker-sized prefix of each segment into a small on-stack
+> buffer with copy_from_user() before comparing, and skip segments that
+> fault. The subsequent copy_from_user() that stages the full command line
+> into the safe area is left unchanged.
+>
+> Fixes: 4a03b2ac06a5 ("LoongArch: Add kexec support")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202605051639.aEPioXdD-lkp@i=
+ntel.com/
+> Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
+> Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
+> Signed-off-by: George Guo <guodongtai@kylinos.cn>
+> ---
+>  arch/loongarch/kernel/machine_kexec.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kerne=
+l/machine_kexec.c
+> index d7fafda1d541..6f563175ddbf 100644
+> --- a/arch/loongarch/kernel/machine_kexec.c
+> +++ b/arch/loongarch/kernel/machine_kexec.c
+> @@ -42,7 +42,7 @@ static unsigned long first_ind_entry;
+>  int machine_kexec_prepare(struct kimage *kimage)
+>  {
+>         int i;
+> -       char *bootloader =3D "kexec";
+> +       static const char bootloader[] =3D "kexec";
+>         void *cmdline_ptr =3D (void *)KEXEC_CMDLINE_ADDR;
+>
+>         kimage->arch.efi_boot =3D fw_arg0;
+> @@ -57,9 +57,13 @@ int machine_kexec_prepare(struct kimage *kimage)
+>                                         strlen((char *)kimage->arch.cmdli=
+ne_ptr) + 1);
+>                 kimage->arch.cmdline_ptr =3D (unsigned long)KEXEC_CMDLINE=
+_ADDR;
+>         } else {
+> +               char tmp[sizeof(bootloader)];
+Just define it as "head[8]" near bootloader, and bootloader is
+unnecessary to modify.
 
-BTW, Re-tab the indention in the assembly files for alignment.
+Huacai
 
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/kernel/rethook_trampoline.S | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/arch/loongarch/kernel/rethook_trampoline.S b/arch/loongarch/kernel/rethook_trampoline.S
-index d4ceb2fa2a5c..2e009fbea53f 100644
---- a/arch/loongarch/kernel/rethook_trampoline.S
-+++ b/arch/loongarch/kernel/rethook_trampoline.S
-@@ -71,27 +71,27 @@
- 	cfi_ld	s7, PT_R30
- 	cfi_ld	s8, PT_R31
- 	LONG_L  t0, sp, PT_CRMD
--	li.d	t1, 0x7 /* mask bit[1:0] PLV, bit[2] IE */
-+	LONG_LI	t1, 0x7 /* mask bit[1:0] PLV, bit[2] IE */
- 	csrxchg t0, t1, LOONGARCH_CSR_CRMD
- 	.endm
- 
- SYM_CODE_START(arch_rethook_trampoline)
- 	UNWIND_HINT_UNDEFINED
--	addi.d	sp, sp, -PT_SIZE
-+	PTR_ADDI sp, sp, -PT_SIZE
- 	save_all_base_regs
- 
--	addi.d	t0, sp, PT_SIZE
--	LONG_S	t0, sp, PT_R3
-+	PTR_ADDI t0, sp, PT_SIZE
-+	LONG_S	 t0, sp, PT_R3
- 
--	move a0, sp /* pt_regs */
-+	move	 a0, sp /* pt_regs */
- 
--	bl arch_rethook_trampoline_callback
-+	bl	 arch_rethook_trampoline_callback
- 
- 	/* use the result as the return-address */
--	move ra, a0
-+	move	 ra, a0
- 
- 	restore_all_base_regs
--	addi.d	sp, sp, PT_SIZE
-+	PTR_ADDI sp, sp, PT_SIZE
- 
--	jr ra
-+	jr	 ra
- SYM_CODE_END(arch_rethook_trampoline)
--- 
-2.52.0
-
+> +
+>                 /* Find the command line */
+>                 for (i =3D 0; i < kimage->nr_segments; i++) {
+> -                       if (!strncmp(bootloader, (char __user *)kimage->s=
+egment[i].buf, strlen(bootloader))) {
+> +                       if (copy_from_user(tmp, kimage->segment[i].buf, s=
+trlen(bootloader)))
+> +                               continue;
+> +                       if (!strncmp(bootloader, tmp, strlen(bootloader))=
+) {
+>                                 if (!copy_from_user(cmdline_ptr, kimage->=
+segment[i].buf, COMMAND_LINE_SIZE))
+>                                         kimage->arch.cmdline_ptr =3D (uns=
+igned long)cmdline_ptr;
+>                                 break;
+> --
+> 2.25.1
+>
+>
