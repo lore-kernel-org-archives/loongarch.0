@@ -1,215 +1,176 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-pj1-f66.google.com (mail-pj1-f66.google.com [209.85.216.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E4B22E7366
-	for <loongarch@lists.linux.dev>; Tue, 30 Jun 2026 06:04:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAEF53E2ADA
+	for <loongarch@lists.linux.dev>; Tue, 30 Jun 2026 07:47:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782799474; cv=none; b=nuyC+YtTpX7nqjVuNgXindEwNkLVapmOvOErLuvSA55PohOrMAQfewhWgsEGWTP36d+Z2X7lfOmQ1u00Vy+Mw0kDZJ9M+ETHTtixw2/Qvy0U66ldpoc9FA650yxwLueYKYe3cCDC7BzOndMSMifFHc0V/MxJCg4tDS3yONL8JvI=
+	t=1782805651; cv=none; b=Fqt12c+o6nxNiTRDyaCiPnbJB0mjvglx1PWWgBUOXbtZVT14mzvyInPALUh1jcWjADDG6ccEg6qsRJbyqe9EcisD1E4OF2L2/R9RR//brxOtEQa6sBEY6HPdKbGtQnt5hQ6gNThfBX9uZKV5Yu6zzLMaJaz83YC4Xv0DBcNBxoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782799474; c=relaxed/simple;
-	bh=q9HQDf6uU3KOpf7X+h0FkXT0BRmTsT0Ka85jPZxYGjU=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aD6CNsxxq98Rp5lXeyw8qz6jhVLQbo8LlR+9i9S/r+FLKlAVHhArrM3zKmuU6SeWkSbdeMmvboOBztTiUTkf8CHFRLkEOO/lBdGNXzkIg7CqKgxvLjTTtjLf5uwflIf78JbSkeAjRVh9nEeWjXwgz0kb028oFrFoF3/PaUz0AJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=JN7rPcnY; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1782805651; c=relaxed/simple;
+	bh=heKSEPDt49FyXQkUR7yX+hI6qaeXiquq+AzKfj9m46s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AJw+Q3BxBU9rK3dN3h4trcZDMLa0zUP6HQGJJsc1+tsESDKFVqH+gjz13Jm6dohWKSJmJlD7UuUGeWCRB7kcqrQZ30O0MoOaie5QICAsKTewP/sxn1XT7JvyVKXpG2iDqMGIEE6B4+pBK2MBjup5JKSZTq4ekdXT7B2u9JgLgB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mUxYEyqe; arc=none smtp.client-ip=209.85.216.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="JN7rPcnY"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-493a613571eso18093055e9.3
-        for <loongarch@lists.linux.dev>; Mon, 29 Jun 2026 23:04:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mUxYEyqe"
+Received: by mail-pj1-f66.google.com with SMTP id 98e67ed59e1d1-380544d00b1so232722a91.0
+        for <loongarch@lists.linux.dev>; Tue, 30 Jun 2026 00:47:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre.com; s=google; t=1782799469; x=1783404269; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=b5BBnItCnxunKMbKk5r5XGq35MhHqmNERXs298mNYZQ=;
-        b=JN7rPcnYqreHwsjZUUVdUUUu07OyoJW7KIbpiHdNos8buuQ02xC2/RllClWSBKvz4a
-         iGR9609aSCPWbPp8xYzlTHXvPpNL4PlJFDMwoykIIpoRhpApA/g6jAsXJOJHaQM3gvO9
-         rf92PfHE3Z6V51ugHE8NmiMTgA2mGVHuOzGgtqkdPzzyDb23QLtAhVsHpmA+OPP8uOq4
-         gyUl4SMoCwhGONnuqNqx4YpqXa9EW9NXyC4m96Xw1PjyleoQoCK9Y3DQMCmvYzZwAgAr
-         fLPDKxXFyTQ/+12YDk5n4ODaR6J7ImV0eylqX7SAIJ4JC0SR8aBD9KHIabTpeZf7CfCQ
-         rxcQ==
+        d=gmail.com; s=20251104; t=1782805649; x=1783410449; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+GS4Pj9gB+OIxG6eqcIUsdmhCCBXu3Ye2u2fsYJSw7Q=;
+        b=mUxYEyqeEiNKSyhDE3ZKm61Q9+SlLReltxM7xexAZchQ47vtgjFsSz+XooOsBpomk5
+         cH4JED0DnZJuRdvy9CbupG7Guj2iEFAmqFzII8zu0dq2Spajgo0h4WFwf0PdTWLuZMWM
+         +l9EdsPO2xVV25jPM+tXJzENxYTemJiB47W2HJvijEfnu+e+oeoOS0c4iyYhiRtl5vyj
+         gjhaJf0sa5lN5eKw0TBXD4h9uG2ngRk99Kx7GG23DpQgtFLdlJ8HvJzLSWeNHvDV7PdN
+         yb67NGCa0kxp9SkxI4Af7D0VTS+nrMWIc6N3F2SmYQFoDNj7Iiwtc+DpSHS/tTzUecvM
+         nsVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782799469; x=1783404269;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=b5BBnItCnxunKMbKk5r5XGq35MhHqmNERXs298mNYZQ=;
-        b=i6OS84oSYjjydXgrx6DfEWVdsC7hGzIgKxzrE4HcUMaPpGV2UU6zFwKVCY/MMgBAtc
-         e209mQE9YItLQHvNUcryiF2ChnSq+shOsNve1Bb08CWxANFEbAbNWTk2hyHopnxzq9Ul
-         aLs1ggqgaOW7hx30YIorTPovJ5THN+FSIejl5QH6mEf5pxzfZf1MyH92e5OVswoSNa3H
-         RleClkTK+NSf89QKH4La72AV6+7/AixVBf5g/gsw17h53Iw3MhdthIxzVMrlLK/lmCuB
-         CEYxlBBMtLKVYBVdgjEg4JjbhBfT8cdy+azwoyBcCPU9boLy8c2mioQi4poZevQINN9F
-         1rVQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9sjxL0JSK4YBhafCbU4OXh52DH8H15g90jSh4kt0WDlpKZumwpZo/YF/MKbafYnbJ5griuunFIOXc=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzrlJjcy9u7qaCCptoeRGXYiOpP2tzt9zRW/nlQnTEsXJv9pQM4
-	juBGyhamC1M31vWJ7Qy4lxFskxALmBfL9ZOXvwpdtxlNqoR61qovmcboW3kojGdO86M=
-X-Gm-Gg: AfdE7clwD4gFkjlVs4S5mmi4E1Kzl+FlcUQW0dukyrBYcpoKMDAd+vqeNy4P0PFpVzF
-	E1lL4FtYVI0l8ebNP5Sx5ohglUi/kdS/rHoloZya/Rv0Etep3oQZGdWc4bje3mMqESKTJCYfKwQ
-	0JPS+cCjg6E8qh2NH7cUkcivXb+Ih/YhW5/ZVFpu0MjeZuNI1ZnZtfe0xx9bkrSZTCNgMsH7jvi
-	ihyRRpNGdwxXTkmaVd+V5KLxSZTmHjwkP9szyVOZDgM2rxxvsDfivAApsRTWEHtdCUlYB/n0ubU
-	z2iMzzR5qTtYg3Jakw766z+yHunEoW/oGBDrO/bP6NzhSCIQYJ+M+Yx0fWG837bWMgWdefDvQdi
-	ryM+PH20pMoi1eBxLeAIWdkuRW7RuLxMzGnoXGmeby3I00/kVn137AXN1Pkyo1PfBhfJLKR51iH
-	B913UuXmCWwPJ5QNx6rQ==
-X-Received: by 2002:a05:600c:8285:b0:493:bacb:1341 with SMTP id 5b1f17b1804b1-493bacb176dmr13964925e9.4.1782799468463;
-        Mon, 29 Jun 2026 23:04:28 -0700 (PDT)
-Received: from localhost ([2a02:8071:56d1:2de0:559d:eec2:887f:c200])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-493b8cd3018sm45429405e9.5.2026.06.29.23.04.27
+        d=1e100.net; s=20251104; t=1782805649; x=1783410449;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+GS4Pj9gB+OIxG6eqcIUsdmhCCBXu3Ye2u2fsYJSw7Q=;
+        b=kEBcoH0WhRDXDoP3k+Dgf3VTzW3RnLEMOvLFWRiSYCSwcjRJkndmhLPhFsAFMgqeQ0
+         7BAR7GsgI/n1vrXYhsu7A3zoPJt9w8KA3cFHK3LmrjlmCDLu8XvaNidO6+zWVPHB2eKE
+         D/g+9iGzuxf3DdXOtuaNqt6lURg8BcIEEq6LUbp89wtCn/MLbCsf4z/UHMrGOMJHVLoI
+         49ff9aajq5fvlzE1+wbLKc6KRXi4i+I6+2dExIbpJwrdCYFR4azKPWbvGpyGefQGthky
+         zj9trPoO0PzkqFLbfjbWcRCZ3vFO55Bi9Ji+zLyylyGBl0lPrkTSoXB4J23B9MZYBLT3
+         FPCA==
+X-Forwarded-Encrypted: i=1; AHgh+RpusIL2BQUiB9Noa3YRPaP/z3S2X0tf8qoPTcE2RQroNzFMR3rZmbBCBlCYGPvol71aLoLdoIy7/o4=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwXLSvqwSzSDTFP8NqN6cKx90dpJPHtWjbr/mgki/3HjxKfxHa4
+	h78K0lBOwmC2BOtlX/s/LPHQd/N5xbCC4f6AudBtbGMsbs5rM7WsVHh0
+X-Gm-Gg: AfdE7cnWal9JndNouYwj7T20IYMYbYM8I2CHXfCFcmOWgApL2RLYyatEsIlE1Ho9N0f
+	yMvsRwg9zgflQg+ACp0k19L6RbYJACPU36QDTWPoBzPLH6wT4Y1c8h8gQlRdWrPzQ0JTTr1M2Ah
+	utLJHwpWhnIP1deG3iNYX92Ib62MnXM6JNBMLa6xKwTVUvqrOvEDCg/CuGE01L4dJo2DtEamh+c
+	V+unHyVE4u7Pi4YouL4hEKf41IdJORRF5EizQ2mnc+Btyt7FZ9YnEW7gj40/e5nn7UivbfGwPl/
+	FKA5b9kKYaLEs2uLzqsIJFdRAik8XFlpPA3kFAbrjx1VC41wj/5lJES5Tino+Oe9fjaMp+j6FQc
+	C5c3PkCJraqQX731Kx67JmjRErxdrpXhMdMTGvs2z9eXzZahoTKllNe06qjT2p7Js+v0bAJpsVG
+	lNb6l4JDMaF5M7B1PuZgbtziE64Q==
+X-Received: by 2002:a17:903:46cf:b0:2c9:f0e3:e20a with SMTP id d9443c01a7336-2ca2ea178a7mr21382995ad.33.1782805648953;
+        Tue, 30 Jun 2026 00:47:28 -0700 (PDT)
+Received: from intel.company.local ([210.184.73.204])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ca382a2d3dsm7821045ad.55.2026.06.30.00.47.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2026 23:04:27 -0700 (PDT)
-Date: Tue, 30 Jun 2026 08:04:26 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig_=28The_Capable_Hub=29?= <u.kleine-koenig@baylibre.com>
-To: Takashi Sakamoto <o-takashi@sakamocchi.jp>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Mark Brown <broonie@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Raag Jadav <raag.jadav@intel.com>, 
-	Sohil Mehta <sohil.mehta@intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Len Brown <lenb@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, linux-kernel@vger.kernel.org, 
-	Yemike Abhilash Chandra <y-abhilashchandra@ti.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	linux-media@vger.kernel.org, Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, linux-sound@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, Danilo Krummrich <dakr@kernel.org>, driver-core@lists.linux.dev, 
-	Jonathan Cameron <jic23@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Pei Xiao <xiaopei01@kylinos.cn>, 
-	Shashank Balaji <shashank.mahadasyam@sony.com>, Ben Horgan <ben.horgan@arm.com>, Johan Hovold <johan@kernel.org>, 
-	linux-usb@vger.kernel.org, Nikita Kravets <teackot@gmail.com>, 
-	Hans de Goede <hansg@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	platform-driver-x86@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	Daniel Scally <dan.scally@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev
-Subject: Re: [PATCH v3 00/16] mod_devicetable.h: Split into per subsystem
- headers
-Message-ID: <akNYUdAS3sbEdRqC@monoceros>
-References: <cover.1782682124.git.ukleinek@kernel.org>
- <20260629235804.GA414914@sakamocchi.jp>
+        Tue, 30 Jun 2026 00:47:28 -0700 (PDT)
+From: Wandun Chen <chenwandun1@gmail.com>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	pjw@kernel.org,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	robh@kernel.org,
+	saravanak@kernel.org,
+	bhe@redhat.com,
+	rppt@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	kexec@lists.infradead.org,
+	iommu@lists.linux.dev,
+	zhaomeijing@lixiang.com
+Cc: catalin.marinas@arm.com,
+	will@kernel.org,
+	alex@ghiti.fr,
+	akpm@linux-foundation.org,
+	pasha.tatashin@soleen.com,
+	pratyush@kernel.org,
+	ruirui.yang@linux.dev,
+	m.szyprowski@samsung.com,
+	robin.murphy@arm.com
+Subject: [PATCH v4 00/10] kdump: reduce vmcore size and capture time
+Date: Tue, 30 Jun 2026 15:47:04 +0800
+Message-ID: <20260630074715.4126796-1-chenwandun1@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="bjsp2vxvxtx3lqot"
-Content-Disposition: inline
-In-Reply-To: <20260629235804.GA414914@sakamocchi.jp>
+Content-Transfer-Encoding: 8bit
+
+From: Wandun Chen <chenwandun@lixiang.com>
+
+On SoCs that carve out large firmware-owned reserved memory (GPU
+firmware, DSP, modem, camera ISP, NPU, ...), kdump currently dumps
+those carveouts as part of system RAM even though their contents are
+firmware state that is not useful for kernel crash analysis.
+
+This series introduces an opt-in 'dumpable' flag [1] on struct
+reserved_mem and uses it to filter the elfcorehdr PT_LOAD ranges on
+DT-based architectures (arm64, riscv, loongarch). By default reserved
+regions are treated as non-dumpable; CMA regions are explicitly opted
+in because their pages are returned to the buddy allocator and may
+carry key crash-analysis data.
+
+Since the reserved memory regions are filtered out, the vmcore is
+smaller in size and faster to produce. The reserved memory
+has already been filtered out in x86; the optimizations in this series
+apply to systems that use DTS such as arm64/riscv/loongarch.
+
+The series is organized as follows:
+Patches 1-4: Small prepare changes and cleanups.
+Patches 5: Add dumpable flag to opt-in vmcore.
+Patches 6: Append /memreserve/ entries into reserved_mem[].
+Patch 7: Add generic kdump helpers.
+Patches 8-10: Wire the helpers into arm64, riscv and loongarch kdump
+              elfcorehdr preparation.
+
+v3 --> v4:
+1. Rebase this series on v7.2-rc1.
+2. Add two cleanup patches (patch 02/03).
+3. Simplify patch 03 to avoid checking whether initial_boot_params is
+   NULL multiple times, suggested by Rob.
+
+v2 --> v3:
+1. Fix out-of-bounds issue if device tree lacks /reserved-memory node.[2]
+2. Fix UAF issue when alloc_reserved_mem_array() fails.
+3. Add some prepare patches.
+
+v1 --> v2:
+1. v1 added an opt-out DT property ('linux,no-dump'). Per Rob's
+   feedback [1], v2 drop that property and exclude reserve memory
+   by default.
+2. Split some prepared patches from the original patches.
+3. Address coding-style comments on patch 5 from Rob.
+
+[1] https://lore.kernel.org/lkml/20260506144542.GA2072596-robh@kernel.org/
+[2] https://sashiko.dev/#/patchset/20260520091844.592753-1-chenwandun%40lixiang.com?part=4
 
 
---bjsp2vxvxtx3lqot
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 00/16] mod_devicetable.h: Split into per subsystem
- headers
-MIME-Version: 1.0
+Wandun Chen (10):
+  kexec/crash: provide crash_exclude_mem_range() stub when
+    CONFIG_CRASH_DUMP=n
+  of: reserved_mem: dedup and relocate reserved-memory messages
+  of: reserved_mem: skip late scan when no regions are reserved
+  of: reserved_mem: split alloc_reserved_mem_array() from
+    fdt_scan_reserved_mem_late()
+  of: reserved_mem: add dumpable flag to opt-in vmcore
+  of: reserved_mem: save /memreserve/ entries into the reserved_mem
+    array
+  of: reserved_mem: add kdump helpers to exclude non-dumpable regions
+  arm64: kdump: exclude non-dumpable reserved memory regions from vmcore
+  riscv: kdump: exclude non-dumpable reserved memory regions from vmcore
+  loongarch: kdump: exclude non-dumpable reserved memory regions from
+    vmcore
 
-Hello Takashi,
+ arch/arm64/kernel/machine_kexec_file.c     |   6 ++
+ arch/loongarch/kernel/machine_kexec_file.c |   6 ++
+ arch/riscv/kernel/machine_kexec_file.c     |   4 +
+ drivers/of/fdt.c                           |  11 ++-
+ drivers/of/of_private.h                    |   3 +
+ drivers/of/of_reserved_mem.c               | 108 ++++++++++++++++++---
+ include/linux/crash_core.h                 |   6 ++
+ include/linux/of_reserved_mem.h            |  15 +++
+ kernel/dma/contiguous.c                    |   1 +
+ 9 files changed, 142 insertions(+), 18 deletions(-)
 
-On Tue, Jun 30, 2026 at 08:58:04AM +0900, Takashi Sakamoto wrote:
-> On Sun, Jun 28, 2026 at 11:58:35PM +0200, Uwe Kleine-K=F6nig (The Capable=
- Hub) wrote:
-> >  ...
-> >  drivers/firewire/core-device.c                |    1 -
-> >  drivers/firewire/net.c                        |    1 -
-> >  drivers/firewire/sbp2.c                       |    1 -
-> >  ...
-> >  drivers/media/firewire/firedtv-fw.c           |    1 -
-> >  ...
-> >  include/linux/firewire.h                      |    3 +-
-> >  ...
-> >  sound/firewire/isight.c                       |    1 -
-> >  ...
-> >  1649 files changed, 1575 insertions(+), 2544 deletions(-)
-> >  ...
-> >  create mode 100644 include/linux/device-id/ieee1394.h
->=20
-> I have no objection to the above changes relevant to firewire subsystem.
->=20
-> Acked-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+-- 
+2.43.0
 
-Thanks! Added to my tree.
-
-> Consequently, unit drivers just include include/linux/firewire.h to refer=
-=20
-> to 'struct ieee1394_device_id'. After merging the changes, I'll post more
-> patches to modify the following unit drivers, since they are left from the
-> patchset.
->=20
-> * drivers/media/firewire/firedtv.h
-> * sound/firewire/bebob/bebob.h
-> * sound/firewire/dice/dice.h
-> * sound/firewire/digi00x/digi00x.h
-> * sound/firewire/fireface/ff.h
-> * sound/firewire/fireworks/fireworks.h
-> * sound/firewire/motu/motu.h
-> * sound/firewire/oxfw/oxfw.h
-> * sound/firewire/tascam/tascam.h
->=20
-> By the way, the changes touch so many files. If it takes more time to
-> apply, I think it better to make steps to modify across several kernel
-> generation.
-
-Touching so many files is the motivation to do all the high-impact
-changes in a single go. As of v7.2-rc1 <linux/mod_devicetable.h> is
-included (transitively) in ~18000 of 21500 .o files below drivers/ for a
-x86_64 allmodconfig[1]. So touching that file requires a near complete
-rebuild. If we spread the changes over several trees/kernel releases the
-need to recompile the whole tree repeats more often than necessary. Note
-this bites not only during the merge window when building the
-development tree, but also during bisection.
-
-> For example, getting rid of direct reference of
-> mod_devicetable.h from drivers at first (in the case of firewire
-> subsystem, for 'Replace <linux/mod_devicetable.h> by more specific
-> <linux/device-id/*.h> (headers))', then adding these per-subsystem
-> headers and applying relevant changes.
-
-The impact of these firewire changes is limited to the firewire
-subsystem. So doing these later is a smaller issue. I plan to tackle
-these when this series is in. (But if you want to care about the
-firewire bits, that's fine, too.)
-=20
-> Of course, I don't mind to apply the v3 patchset as is in upstream.
-
-There are a few changes that I collected (Added SPDX markers, a few less
-#includes added as my script evolved, a new patch to fix a hppa
-fallout), so I will send a v4 later today.
-
-Best regards
-Uwe
-
-[1] I did in my build tree (with the series applied)
-
-	$ find drivers -name \*.o.cmd -not -name \*.mod.o.cmd | xargs grep -l /dev=
-ice-id/ | wc -l
-	19221
-	$ find drivers -name \*.o.cmd -not -name \*.mod.o.cmd | wc -l
-	21597
-
-That's a bit wrong as my series changes the numbers, but the ballpark
-should be right. In
-https://lore.kernel.org/all/20260622210733.1743063-2-u.kleine-koenig@baylib=
-re.com/
-I found similar numbers for 7.1 (17038/21330).
-
---bjsp2vxvxtx3lqot
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmpDXGcACgkQj4D7WH0S
-/k6p0wf8C/fqLWElPKeEJ6VYZOMbHAVQFFSaiocKgLhyatujJO/xABylQtIrG2bm
-oNQHPUayrcWacObHGF3fEjQy4hRJLu10iu9WrGW/FvZUPjhCWUzPdhuXpmSnE4fH
-zd/NVmkNUTbomy4rUfxcWTKfXtWxqi+pwwPvcbEeQBUCqK/R3MK9MTJPeo+fuS0w
-N7J2Vv4yLihgZU1OW8Y9uT+TbrHb5Kn77XyKCF3bvRyrDK82GHBAEy0UIojDpJnT
-sIhHykaiFL1/5jUZb/iCqMx0+2OUeNz8HOywoSete10zzE2qFPFgI683oSrO6gcY
-cBQF6NX+zboS6GmYI42xlkzJTj7ODw==
-=GSrp
------END PGP SIGNATURE-----
-
---bjsp2vxvxtx3lqot--
