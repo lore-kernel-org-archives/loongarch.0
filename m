@@ -1,96 +1,35 @@
-Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FCE43E8C67
-	for <loongarch@lists.linux.dev>; Tue, 30 Jun 2026 07:49:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D54503438AF
+	for <loongarch@lists.linux.dev>; Tue, 30 Jun 2026 08:14:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782805753; cv=none; b=VnzkUeNKUWjzW50etvjB7efZT081yU7JT6zMhBf3RQuJoYq/AMAYf7Yxr8LffO0JELsYFx+xXuebk+m2yLhgh1ekofnFjIif3LBoI60xfwmRlR3leo7npJThdDn7YYdOY56cX4+PjW1oRGZsy60kXH7lxlbZ468kxkzVm4fM3Eo=
+	t=1782807271; cv=none; b=d4nwEtIAT2yADRHd8hFpezErLNdkqP1KRhZdPXk7ip6UwKWFTq2Rae1Cw2Z8vkba3QgSVP+SnvbwUQWgcZeGJEnWMOVBUV6LuFs0V3y3iEjjQE/WBzPGXosFSAFrxJZleeVHXHtqt+b9GavVr6qdf57EpQv0xbpZgGdRcEQl6eo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782805753; c=relaxed/simple;
-	bh=uLOeasSEYWAvpT8ERSE9h3DlJwiheu4obyaLXpGYn9A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Lbws3qUKCycqvldvIP2pI6OG1AV87lQctv7Xdm4FFyoQ+IOVSFg+9gVBjPSuDij3pcRSNQJimXQdvjZ59UzpZrWllCEoXMLfuybl2KOkaKJFEaIp/o1cfXGMNWXtqUYmXYujyAHbmZohGACfZNYiBsSDBZgg7OhSwxEQ+9x5zf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T1yPDjPN; arc=none smtp.client-ip=209.85.214.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T1yPDjPN"
-Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-2c821a50615so21160515ad.0
-        for <loongarch@lists.linux.dev>; Tue, 30 Jun 2026 00:49:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782805751; x=1783410551; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HcszoUDc7316A03Dx3QXGOd8FcU7DWvjuNUEWPnVcI4=;
-        b=T1yPDjPNcWOvZS0erpveW510X4++HFrycaDTJnLpRd5O4ANGqhqfau3TJaKMT+Uh9c
-         gnKfb8wMtlOWJDH6u5ia1q16kdJ1T2r8k7zl7XfRr5wOF8uDnfmGb4VXvKCRsCjFhLWe
-         YOIP+in+s5gM5mDpKVkhqtKCK8YY8C3q7YUo1vLo1DX275AFCfoq+gmlDvM0DS6GG69G
-         w0VI+Uzk5NlB1aseRNzVLaFt1JXkxdsEvFQvglSflW5XaHXCxYcTcueoagDzHbRD43bn
-         MV/+l3vv4DOwOD2L/1hyQDxRBYCzNd0MPMuI0Z6A/NSAOiuqaNrt6jWoxYOL2C+BEwOM
-         qKWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782805751; x=1783410551;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=HcszoUDc7316A03Dx3QXGOd8FcU7DWvjuNUEWPnVcI4=;
-        b=NtEhaou01GEgsPc1fCsHozGtwvhL5U4UXcYSZVG4Yg37hrpPOL8rYnwUlObCeYDQtf
-         lo7anUwotKi9xVVralOV1mBsTza813UEqOm8UajVx2/Qu5yAviwBTvNLYxHULiQoOxIc
-         QSwvpinHX2LdcSRXhH5YOiKEVadcjJEohHxs6AFQvqe7re29h3q/Zir5zK0XSnRRAF/Y
-         mHBX09MnTFReEqjhNdhPvYqboq56FtSGKfiTJ/OKaXiQC1QVYmPP2pTydzF6KJNJu10M
-         uxGPjsjloacwzNCr0e7u6uIhLzCHuy0SnpAffpus4GLTYqS8NNJk+7ziFf3JOd0L1JZu
-         bckQ==
-X-Forwarded-Encrypted: i=1; AHgh+RpZbVm3SmUFKiTFJTM/6xRMvpkGEcSqdanZIidxgo3tBg04pm6ooz6feKQPp4ntkyqYdE3n5ItSHoY=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxz8Q8a4k1E73trk3LcAAL6scbdfKaSpeGAPTAcnqAlodeVlzzs
-	AE9oisg+PLZq8Ywt1JkasY2NAOTKIjle0maWX2fjTdNXaycbqKfjXRlL
-X-Gm-Gg: AfdE7cnWbxKDT8kvuZxhV9RwI0AoeJkJ3sPdxUFxgTdpu0sy3fMuXbdtF+s0KMmuiRj
-	vyq2IKhOuzQ2bDHupNvSIsBSgxRcf2lBDXa9h32inq/0Qy1kcoYk7hDcWFrL2i80xhdXv18SnSB
-	sh2/xfbw+FS1T5R7bJCdQlto+C1aQiLvvOBeqEo3U8LfZ216ulkRtdhYALCF23Z+XEtc61tmQkB
-	hukj862ZYqeaW8eB0gMK2/mh5ihfjQ0Lsaol7zK5zKoICxiZ1E6ZUMH8Qfeuz9WfxXkHLveXDbM
-	PLjdWOx4lsOHYuYjdohyTooP3ICwOnuSECIRo/X/vxeBfpeOl2HE99FSYdjgx7Ws9ShMloazlcb
-	VkNksWQxQEfTzFMa4piBsGG5vBDVAmf1EGAdodmtxUWcevP1iHQfBdT/rQhU/KSLPShxOaSbev8
-	Wi9AGerSYULvY6oY+qanOra4fxxg==
-X-Received: by 2002:a17:902:c94c:b0:2c0:cb0e:ac3a with SMTP id d9443c01a7336-2ca2e71832cmr21250665ad.23.1782805751208;
-        Tue, 30 Jun 2026 00:49:11 -0700 (PDT)
-Received: from intel.company.local ([210.184.73.204])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ca382a2d3dsm7821045ad.55.2026.06.30.00.49.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2026 00:49:10 -0700 (PDT)
-From: Wandun Chen <chenwandun1@gmail.com>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	pjw@kernel.org,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	robh@kernel.org,
-	saravanak@kernel.org,
-	bhe@redhat.com,
-	rppt@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
+	s=arc-20240116; t=1782807271; c=relaxed/simple;
+	bh=gTuWJ7ZJ0lbCIKJ8ZsOONdoLF6hx2seOgK42oPgK7dM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dIMtwPwN1JGf9ye88Z6jXkB/nokyGmLdKWjWE57EpOxWP3Xx+yX4sG5COCRXM0bvGHFWz3aUZYfY14i6wi7MOmY0jUMrGKpfnkF+I4JluDyz1+GW13kPddf1cyJNfCMYU+NLf4oRbeqASMnjaAePqT/7xgwlpzV8PknW9VUGfSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.155])
+	by gateway (Coremail) with SMTP id _____8BxdnjgekNqB5EZAA--.40624S3;
+	Tue, 30 Jun 2026 16:14:25 +0800 (CST)
+Received: from kernelserver (unknown [223.64.68.155])
+	by front1 (Coremail) with SMTP id qMiowJCxecHUekNq5dW4AA--.3288S2;
+	Tue, 30 Jun 2026 16:14:24 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
 	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	kexec@lists.infradead.org,
-	iommu@lists.linux.dev,
-	zhaomeijing@lixiang.com
-Cc: catalin.marinas@arm.com,
-	will@kernel.org,
-	alex@ghiti.fr,
-	akpm@linux-foundation.org,
-	pasha.tatashin@soleen.com,
-	pratyush@kernel.org,
-	ruirui.yang@linux.dev,
-	m.szyprowski@samsung.com,
-	robin.murphy@arm.com
-Subject: [PATCH v4 10/10] loongarch: kdump: exclude non-dumpable reserved memory regions from vmcore
-Date: Tue, 30 Jun 2026 15:47:14 +0800
-Message-ID: <20260630074715.4126796-11-chenwandun1@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260630074715.4126796-1-chenwandun1@gmail.com>
-References: <20260630074715.4126796-1-chenwandun1@gmail.com>
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: Increase TASK_STRUCT_OFFSET up to 2040 for 32BIT
+Date: Tue, 30 Jun 2026 16:14:05 +0800
+Message-ID: <20260630081405.2832303-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -98,50 +37,49 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxecHUekNq5dW4AA--.3288S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7XrW7CF47WryDKr4UKrWUKFX_yoWfXFX_u3
+	WIqw4kur18JFZ7Kw1qvw1rZw1qga18tFsY9Fyv9rnxA3s8tFn8Ww4vgwn5Zw1Yk39IkFs5
+	ua1vqFy3Aw1jkosvyTuYvTs0mTUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbS8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
+	6r1DMcIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
+	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
+	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
+	14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jOeOJUUUUU=
 
-From: Wandun Chen <chenwandun@lixiang.com>
+THREAD_INFO_IN_TASK increase the size of task_struct, which casuses a
+build error for the 32BIT kernel if RANDSTRUCT is enabled. So increase
+TASK_STRUCT_OFFSET as big as possible (2040), but can still be aligned
+and be fit in the addi.w instruction.
 
-Apply the same non-dumpable reserved memory filtering to LoongArch
-kdump as was done for arm64. Use of_reserved_mem_kdump_exclude() to
-drop flagged regions from the elfcorehdr PT_LOAD segments, and
-of_reserved_mem_kdump_nr_ranges() to pre-size the crash_mem array.
-
-Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- arch/loongarch/kernel/machine_kexec_file.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/loongarch/include/asm/asmmacro.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
-index 5584b798ba46..4b918c3d4a28 100644
---- a/arch/loongarch/kernel/machine_kexec_file.c
-+++ b/arch/loongarch/kernel/machine_kexec_file.c
-@@ -14,6 +14,7 @@
- #include <linux/kernel.h>
- #include <linux/kexec.h>
- #include <linux/memblock.h>
-+#include <linux/of_reserved_mem.h>
- #include <linux/slab.h>
- #include <linux/string.h>
- #include <linux/types.h>
-@@ -67,6 +68,7 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
- 	nr_ranges = 2; /* for exclusion of crashkernel region */
- 	for_each_mem_range(i, &start, &end)
- 		nr_ranges++;
-+	nr_ranges += of_reserved_mem_kdump_nr_ranges();
+diff --git a/arch/loongarch/include/asm/asmmacro.h b/arch/loongarch/include/asm/asmmacro.h
+index a648be5f723f..b7423d1ac568 100644
+--- a/arch/loongarch/include/asm/asmmacro.h
++++ b/arch/loongarch/include/asm/asmmacro.h
+@@ -14,7 +14,7 @@
+ #ifdef CONFIG_64BIT
+ #define TASK_STRUCT_OFFSET 0
+ #else
+-#define TASK_STRUCT_OFFSET 2000
++#define TASK_STRUCT_OFFSET 2040
+ #endif
  
- 	cmem = kmalloc_flex(*cmem, ranges, nr_ranges);
- 	if (!cmem)
-@@ -91,6 +93,10 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
- 			goto out;
- 	}
- 
-+	ret = of_reserved_mem_kdump_exclude(cmem);
-+	if (ret)
-+		goto out;
-+
- 	ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
- 
- out:
+ 	.macro	cpu_save_nonscratch thread
 -- 
-2.43.0
+2.52.0
 
