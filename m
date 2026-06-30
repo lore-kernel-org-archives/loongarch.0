@@ -1,48 +1,38 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A5522A817
-	for <loongarch@lists.linux.dev>; Tue, 30 Jun 2026 02:58:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE659233957
+	for <loongarch@lists.linux.dev>; Tue, 30 Jun 2026 03:01:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782788309; cv=none; b=kodgKD30j2yg+yODTmx8yLpwI+d5G3QigSDlHClqR2VvOaKhDvEAue5VfUM90OvCc4KYZHbgnMFp5Ye9JGYH2LowmBvRwyk1pTi2x+PgcDfweUgqgj8cJdhh6uBZeffh4r+Szdd6Emu71ZI4mGe7GPZ7GOdkI3V2caAGgKfYEYw=
+	t=1782788521; cv=none; b=oLZMosWx+zwoWZOLO92NGxyzyRGbfVwbyGQvj49wNXdMXX8BltDCc3exuV3gUjdo3Cin8oRhBvVvtcHDkUSMnl7tSUl/JfMKJyRXp9EwLXl35kudDvfm8LJvkIbrGwHM9s7PkUv6Qao89B+MIV0pXLMzBOep/85/dF+hfiR8lwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782788309; c=relaxed/simple;
-	bh=tPLinYbJb80Iz/qFBGacknXcBvQq+tUEq9miK6254Iw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uaTTpTOmqi0Xds50WrfVYZOi2SK6JeFQeOzW/DzRJXl7z44z58SEQZRomDwo/3GvDlyEnR8DOXsSODrBdsT9oc5nNCfpc9KLN6eV108oDaDDBlLEhA2QGZAvAQ8KVuvwj31VoZxfEzrUA233iuvvRjZPwZjcV72Hw2sTN/s40Pc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Z9L8pjtG; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Z9L8pjtG"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1782788304;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=OsYagQzu6qHNQWTSa0S7+sdlg1USYp8Up3WJKT3wYiY=;
-	b=Z9L8pjtGtgPdqqpvLzsFUS0JgIr7gs5/l0Zlddd83H+CvT7uKHQtMwmYrlV6Tsh63ry97E
-	OFOIsKp/Ozxz8x74bPxw1/pzsiywZpP2FFzGFO6/dgznVQAkNR69uhXfo7g/UuPUQr6Rno
-	BZMfGaLbzGgqyjJGLP0GVUyFWT8fgCc=
-From: George Guo <dongtai.guo@linux.dev>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: Eduard Zingerman <eddyz87@gmail.com>,
-	Emil Tsalapatis <emil@etsalapatis.com>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	George Guo <guodongtai@kylinos.cn>,
-	bpf@vger.kernel.org,
+	s=arc-20240116; t=1782788521; c=relaxed/simple;
+	bh=LNhW0c1bJhR6LZlA6GfUP3CL5jcQ92LEgGB4Bcz9a4I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NYZJJqlbqC8P2ou5RAbQp+GKHudvNFoFUbeZ4qe5g3l4uyP97i0Y827i+0JH8XF8/ahWzPcQJ0GPnrWzhWyp0aIFXI/GnDZMzf2mUjs7PlISDK//aaEZy/n5GZf0PGAiVGqx7X1GvjyoXSVgtIlhxPANbcMFvAcrwBZ/480ZzHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.155])
+	by gateway (Coremail) with SMTP id _____8DxsOqjMUNqBnsZAA--.65423S3;
+	Tue, 30 Jun 2026 11:01:56 +0800 (CST)
+Received: from kernelserver (unknown [223.64.68.155])
+	by front1 (Coremail) with SMTP id qMiowJBx68GcMUNqG4e4AA--.19681S2;
+	Tue, 30 Jun 2026 11:01:50 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	Vincent Mailhol <mailhol@kernel.org>,
+	Bingxiong Li <libingxiong@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
 	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH bpf] selftests/bpf: Skip libarena when the BPF backend lacks 32-bit arena cmpxchg
-Date: Tue, 30 Jun 2026 10:58:09 +0800
-Message-Id: <20260630025809.74043-1-dongtai.guo@linux.dev>
+	linux-can@vger.kernel.org,
+	jeffbai@aosc.io,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v3 0/2] Add Loongson CAN-FD controller driver
+Date: Tue, 30 Jun 2026 11:01:39 +0800
+Message-ID: <cover.1782787997.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -50,118 +40,106 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-CM-TRANSID:qMiowJBx68GcMUNqG4e4AA--.19681S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAgENCGpCCTEOsAACsq
+X-Coremail-Antispam: 1Uk129KBj93XoWxCryDuFWkGr47KF18trW5urX_yoW5Xr1kpF
+	4Yk3sxur1DKr4xAFs3JayrCF15A3Z3Jr43Wa9xtw10kas8Z342gw1Sk3W5Zry29rW5CFWj
+	q3y8uFyfuFn8AFgCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
+	6r1DMcIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
+	cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
+	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
+	14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jeq2NUUUUU=
 
-From: George Guo <guodongtai@kylinos.cn>
+Hi all:
 
-The arena qspinlock pulled in by libarena (bpf_arena_spin_lock.h) performs
-a 32-bit atomic compare-and-exchange on an arena (address space 1) pointer
-via atomic_try_cmpxchg_acquire() on the 32-bit atomic_t lock word. Not
-every LLVM BPF backend can select that operation; releases such as clang 19
-abort instruction selection with:
+This patchset adds support for the CAN-FD controller found on Loongson
+CPUs.
 
-  error: unsupported atomic operation, please use 64 bit version
-  fatal error: error in backend: Cannot select: AtomicCmpSwap<(s32)> ...
-  In function: arena_spin_lock_slowpath
+Patch 1 introduces the basic CAN-FD controller driver with support
+for classic CAN and CAN FD, including bit timing, error handling,
+NAPI-based RX, and multiple TX buffers.
 
-Because libarena/libarena.skel.h is an unconditional dependency of
-test_progs, this aborts the entire selftests/bpf build before test_progs is
-ever linked, so none of the other tests can be built or run. This was
-observed building selftests/bpf for LoongArch with clang 19, but it is a
-property of the BPF backend, not of the host architecture.
+Patch 2 adds optional DMA support for RX path using the Loongson APB
+CMC DMA engine, which significantly reduces CPU load under high
+receive throughput.
 
-Mirror the existing CLANG_HAS_ARENA_ASAN feature probe: detect whether the
-backend can compile a 32-bit arena cmpxchg, and only build libarena when it
-can. Define HAS_BPF_ARENA in that case and guard prog_tests/libarena.c
-behind it - exactly the way prog_tests/libarena_asan.c is guarded behind
-HAS_BPF_ARENA_ASAN - so the test still compiles and reports as skipped when
-libarena is not built. When the operation is unsupported, libarena is
-skipped and the rest of test_progs builds and links as before.
+The driver has been tested on Loongson-2K3000 platforms with various
+CAN/CAN FD traffic patterns.
 
-Fixes: d5327480a12a ("selftests/bpf: Add basic libarena scaffolding")
-Signed-off-by: George Guo <guodongtai@kylinos.cn>
----
- tools/testing/selftests/bpf/Makefile          | 14 ++++++++++++++
- .../selftests/bpf/prog_tests/libarena.c       | 19 ++++++++++++++++++-
- 2 files changed, 32 insertions(+), 1 deletion(-)
+Finally, I'd like to thank Bingxiong, the original author of this driver,
+for his efforts in working on the patch.
 
-diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
-index b642ee489ea6..0098d892cb39 100644
---- a/tools/testing/selftests/bpf/Makefile
-+++ b/tools/testing/selftests/bpf/Makefile
-@@ -91,6 +91,17 @@ CLANG_HAS_ARENA_ASAN := $(shell echo 'int x;' | \
- 	-mllvm -asan-shadow-addr-space=1 \
- 	-x c -c - -o /dev/null 2>/dev/null && echo 1)
- 
-+# The arena qspinlock used by libarena performs a 32-bit atomic cmpxchg on an
-+# arena (address space 1) pointer. Not every LLVM BPF backend can select it;
-+# older releases bail out with "unsupported atomic operation, please use 64 bit
-+# version", which aborts the whole selftests build. Probe for the operation and
-+# skip libarena (and its dependent tests) when the backend cannot handle it.
-+CLANG_HAS_ARENA_CMPXCHG32 := $(shell printf '%s\n' \
-+	'struct s { int counter; };' \
-+	'int f(struct s __attribute__((address_space(1))) *l, int o, int n)' \
-+	'{ return __sync_val_compare_and_swap(&l->counter, o, n); }' | \
-+	$(CLANG) --target=bpf -O2 -x c -c - -o /dev/null 2>/dev/null && echo 1)
-+
- # Order correspond to 'make run_tests' order
- TEST_GEN_PROGS = test_verifier test_tag test_maps test_lru_map test_progs \
- 	test_sockmap \
-@@ -835,10 +846,13 @@ LIBARENA_BPF_DEPS := $(wildcard libarena/Makefile		\
- 				 libarena/selftests/*		\
- 				 libarena/*.bpf.o)
- 
-+ifneq ($(CLANG_HAS_ARENA_CMPXCHG32),)
- LIBARENA_SKEL := libarena/libarena.skel.h
-+CFLAGS += -DHAS_BPF_ARENA
- 
- $(LIBARENA_SKEL): $(INCLUDE_DIR)/vmlinux.h $(BPFOBJ) $(LIBARENA_BPF_DEPS)
- 	+$(MAKE) -C libarena libarena.skel.h $(LIBARENA_MAKE_ARGS)
-+endif
- 
- ifneq ($(CLANG_HAS_ARENA_ASAN),)
- LIBARENA_ASAN_SKEL := libarena/libarena_asan.skel.h
-diff --git a/tools/testing/selftests/bpf/prog_tests/libarena.c b/tools/testing/selftests/bpf/prog_tests/libarena.c
-index 61ea68dce410..a7ede72c7256 100644
---- a/tools/testing/selftests/bpf/prog_tests/libarena.c
-+++ b/tools/testing/selftests/bpf/prog_tests/libarena.c
-@@ -1,6 +1,8 @@
- // SPDX-License-Identifier: LGPL-2.1 OR BSD-2-Clause
- /* Copyright (c) 2026 Meta Platforms, Inc. and affiliates. */
- #include <test_progs.h>
-+
-+#ifdef HAS_BPF_ARENA
- #include <unistd.h>
- 
- #include <libarena/common.h>
-@@ -198,7 +200,7 @@ static void run_libarena_parallel_test(struct libarena *skel, struct bpf_program
- 	run_libarena_parallel_fini(skel, name, prefixlen);
- }
- 
--void test_libarena(void)
-+static void run_test(void)
- {
- 	struct arena_alloc_reserve_args args;
- 	struct libarena *skel;
-@@ -251,3 +253,18 @@ void test_libarena(void)
- out:
- 	libarena__destroy(skel);
- }
-+
-+#endif /* HAS_BPF_ARENA */
-+
-+/*
-+ * Run the test only if the BPF backend can compile the arena programs
-+ * libarena depends on (see CLANG_HAS_ARENA_CMPXCHG32 in the Makefile).
-+ */
-+void test_libarena(void)
-+{
-+#ifdef HAS_BPF_ARENA
-+	run_test();
-+#else
-+	test__skip();
-+#endif
-+}
+Thanks.
+Binbin
+
+=========
+V3:
+Patch (1/2):
+ - Replace the switch-case statement with a calculated mask in
+   `loongson_canfd_get_txbuf_sts()`;
+ - Change `loongson_canfd_reset()` return type to `void`;
+ - Drop old code in `loongson_canfd_set_btr()`;
+ - Rename `loongson_canfd_set_mode()` to `loongson_canfd_set_conf_mode()`;
+ - Drop `cf->__res*` usage;
+ - Drop unnecessary macro definitions;
+ - Add `netif_napi_del()` in probe error route path;
+ - Replace ternary operator with `if-else`;
+ - Drop stats->rx_packets and stats->rx_bytes count in CAN error frames;
+ - Add ethtool_ops;
+ - Add CAN_CTRLMODE_CC_LEN8_DLC;
+
+Patch (2/2):
+ - Fix W=2 warning;
+ - Rename get_rx_frc() -> get_rxbuf_empty();
+ - Put `loongson_canfd_rxdma_remove()` before free_candev();
+ - Adjust the RXDMA probe process.
+
+Link to V2:
+https://lore.kernel.org/all/cover.1780908445.git.zhoubinbin@loongson.cn/
+
+V2:
+Patch (1/2):
+ - Put all code into one file;
+ - Add COMPILE_TEST Kconfig option;
+ - Rewrite Kconfig description;
+ - Use `regmap_test_bits()` to simplify bit field checks;
+ - Drop odd FIELD_GET() usage;
+ - Don't use FIELD_GET() for a single bit;
+ - Use an if/else instead of the ternary operator;
+ - Use the CAN TDC framework to get the SSP value;
+ - Use guard(spinlock)/scoped_guard(spinlock);
+ - Use netdev_debug() to be less verboss;
+ - Check for memory allocation failure;
+ - Add CAN_ERR_CNT flag;
+ - Drop unused REG_DATA_xx_yy_W_DATA_yy definition;
+ - Add more function comment;
+
+Link to V1:
+https://lore.kernel.org/all/cover.1777273055.git.zhoubinbin@loongson.cn/
+
+Binbin Zhou (2):
+  can: Add Loongson CAN-FD controller driver
+  can: loongson_canfd: Add RXDMA support
+
+ MAINTAINERS                      |    7 +
+ drivers/net/can/Kconfig          |   11 +
+ drivers/net/can/Makefile         |    1 +
+ drivers/net/can/loongson_canfd.c | 1859 ++++++++++++++++++++++++++++++
+ 4 files changed, 1878 insertions(+)
+ create mode 100644 drivers/net/can/loongson_canfd.c
+
+
+base-commit: b266bacba796ff5c4dcd2ae2fc08aacf7ab39153
 -- 
-2.25.1
+2.52.0
 
