@@ -1,83 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B9A3FBEB9;
-	Tue, 30 Jun 2026 10:51:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08BCF3FDBE7
+	for <loongarch@lists.linux.dev>; Tue, 30 Jun 2026 10:55:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782816717; cv=none; b=Ws5rVFRzA8af5fVCDfnZVMb7mWPnSTQLD4Pd1MQ2JAg9QhHRqWsOumdbFPDlNaSa806pZJ5QCY4xMbOiKXASQg4TGB6y3esWoNASEi0pDg2IxmbEsUrWXSsL62VpW1OOFvNABkwZjkHCIYKHwtxI8xhNzIM55kR30QGdl4YMNSw=
+	t=1782816924; cv=none; b=YciWZJvu/G7p14QmfLaKvohVT+rs6x+UZ3h+McBZu7KuTOn5Y2Dh9dUmKXx1gLKFmRTYxli4WAkq7uXTrdp5GhyUKS9BOuZFfHbZ+wX/jgwp4Fr/0k/SJ9zB6EJ47f5LAmB9OGJa3OZnjM3DlbqCEPB/dJ01FzODm0Ezx60kr+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782816717; c=relaxed/simple;
-	bh=t3KLlyy/JqupcBXRQMag42bOWd2ihCRnoKD9RX4B6co=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uDQerDWwykYP8R2v38iIaQtCRvCVlqHFDyUsDWK1Zdp811KOzi7oe5Hcf3mdaW9bcb7NMo4hBFdCszV38RIHYIQd9j09VHG3eJFhxcpoguthvd9CDIj0w2rAORiyMVYppZKvGSFzBfWQ0sUzcBZCBtqUn6IRkX8yIOBHOtcGcJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B1u/Y2Pf; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782816924; c=relaxed/simple;
+	bh=qSUtpQyBjxZ2D2uiJLh9kaqj5j88aU8VMGZNXW+BBOc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UEgow8MMn9+bCaak4DhXi7Pzc5jR5nzxsb1+Ln4ay2LNCsWkcmO7mWxSBhZ0NwNqyKMqDgPanVtaZQS90IqEz1QrgsLwLvzdjeHt18BM6EK22/mjMcVJNoz0l03K6nI5AioeDkpvXOuRNxJn2NaSQoOYAECmjLzA/i5pnd1S6CU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a4sK+8R1; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B1u/Y2Pf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8AA31F00A3A;
-	Tue, 30 Jun 2026 10:51:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a4sK+8R1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BD311F00A3D
+	for <loongarch@lists.linux.dev>; Tue, 30 Jun 2026 10:55:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782816707;
-	bh=LSagnXkfjr27HV2tQfAz+rj7AUU5/hzRn7I5KK3CMLU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=B1u/Y2Pf6zMk7tnbTzi4v6nU2Lv2weLjO53pAUXXJHjaSnLhV3I5y/EU4ZQI2Ms8y
-	 s7aCEHs5W1c7/Xqrm428GfYbtuEYXFNpcaZi6NuVn5iPNk8vFMEz4RCD2HVTiSHZic
-	 +PbRGt49XhFnG50RlWiHtmRFq97MIDncdkWoc21g8UP9tcviNTjNyN0Cz2Y4R2GxEV
-	 F5w5AA+32iv+09J11nDfNsQTIJ3TUdwGbllDMnKejLr9iYGbIcm9lgJEHJC1Lfqp5b
-	 3x+g7YwFCe8wuwkIZIzl8vuFrD0OpK1/LuyJfMFn3QUaR/mmPuExwJ8jZIw3x7KL9a
-	 2BoQHjkpr8SXQ==
-Date: Tue, 30 Jun 2026 12:51:39 +0200
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>,
-	Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Anup Patel <anup@brainfault.org>, Hanjun Guo <guohanjun@huawei.com>,
-	Sudeep Holla <sudeep.holla@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev
-Subject: Re: [PATCH v2 6/6] irqchip/gic-v5: Enable GICv5 IWB ACPI probe
- ordering detection
-Message-ID: <akOfu2EIQq3CJgqw@lpieralisi>
-References: <20260603-gic-v5-acpi-iwb-probe-deferral-v2-0-23ffa16b6ebb@kernel.org>
- <20260603-gic-v5-acpi-iwb-probe-deferral-v2-6-23ffa16b6ebb@kernel.org>
- <CAJZ5v0ibZKfzJwGyUb92-K1N9C_ab0QujpAKCrvMdyygquS1Vw@mail.gmail.com>
+	s=k20260515; t=1782816921;
+	bh=QS02Y4ZTkCaY+8KNH+aFUHWmz4C6FfgfF/SB6ePyOlU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=a4sK+8R1ugLnIFAsbH0lz8AUe7kRH/N+y63uSUgrKVXOkND+PCeWRv4/rDdnx5VZ+
+	 HEAYjfubry0IAxUVqH2gtygSX54hRtbd/gji/L+InYJsudr4Mq4+w3C/W5mBNbGXx4
+	 O2MNTIAnfTm5czNImtNraZW8xQckJeYL1T0zG7bKSDuNCJOq/ctejSZHbwXJIqGslK
+	 WRjP4Fgozdg17w9FwGA/HUZGQgBnsWcPGAdsV4Ey491dOrvLqSomra9Ra4V4mHcEC5
+	 7fIMRI53Jkdc6trZxUuojgL6mR2wNEErxGEK/kNeaeCG6Mw0YBLSt0Wi/WKsA/T4KK
+	 tY1hYwLOS2ZSw==
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-39b1026e171so20673851fa.1
+        for <loongarch@lists.linux.dev>; Tue, 30 Jun 2026 03:55:21 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+Rp9PtNAv29Bw3MfLjI4mQe7ZNXU4ZtzuGtSJelatqI8pLBqvvkDj5F+hpDUpFnA9ghC06LRf5draIw=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx+rXZpbebOvGBj6zDGjqViNqtD9IgI1r7SFCvA/XECQufFa2E1
+	zpLjRPLE3+hgtHLv8weKpbYwzESb1+TQ3JY71g0AOgnrs6e0ibTp9oaRSDD3GFrWEZHaesWgj4O
+	YpA8CrZDYkgtBziRmX1dU2ZVbeYkn5vA=
+X-Received: by 2002:a05:651c:41d1:b0:399:b07e:daa7 with SMTP id
+ 38308e7fff4ca-39b1df87889mr5327631fa.24.1782816919764; Tue, 30 Jun 2026
+ 03:55:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0ibZKfzJwGyUb92-K1N9C_ab0QujpAKCrvMdyygquS1Vw@mail.gmail.com>
+References: <20260603-gic-v5-acpi-iwb-probe-deferral-v2-0-23ffa16b6ebb@kernel.org>
+ <20260603-gic-v5-acpi-iwb-probe-deferral-v2-6-23ffa16b6ebb@kernel.org>
+ <CAJZ5v0ibZKfzJwGyUb92-K1N9C_ab0QujpAKCrvMdyygquS1Vw@mail.gmail.com> <akOfu2EIQq3CJgqw@lpieralisi>
+In-Reply-To: <akOfu2EIQq3CJgqw@lpieralisi>
+From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
+Date: Tue, 30 Jun 2026 12:55:05 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hUUz0TPKEdn5Z-4My2R59YeJPenU6ksF6Y6mvXoxQsSw@mail.gmail.com>
+X-Gm-Features: AVVi8CckYFzmEyQcHXV6OSl_5EYAouUcgCGftnfBtVwhGCqpemZWNGkMfRNVdZQ
+Message-ID: <CAJZ5v0hUUz0TPKEdn5Z-4My2R59YeJPenU6ksF6Y6mvXoxQsSw@mail.gmail.com>
+Subject: Re: [PATCH v2 6/6] irqchip/gic-v5: Enable GICv5 IWB ACPI probe
+ ordering detection
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Sunil V L <sunilvl@ventanamicro.com>, Marc Zyngier <maz@kernel.org>, 
+	Thomas Gleixner <tglx@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
+	Anup Patel <anup@brainfault.org>, Hanjun Guo <guohanjun@huawei.com>, 
+	Sudeep Holla <sudeep.holla@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 08, 2026 at 07:18:15PM +0200, Rafael J. Wysocki wrote:
+On Tue, Jun 30, 2026 at 12:51=E2=80=AFPM Lorenzo Pieralisi
+<lpieralisi@kernel.org> wrote:
+>
+> On Mon, Jun 08, 2026 at 07:18:15PM +0200, Rafael J. Wysocki wrote:
+>
+> [...]
+>
+> > > +#ifdef CONFIG_ACPI
+> > > +       if (has_acpi_companion(&pdev->dev))
+> > > +               acpi_dev_clear_dependencies(ACPI_COMPANION(&pdev->dev=
+));
+> > > +#endif
+> >
+> > I would rather add a wrapper for this, along with an empty stub for
+> > the !CONFIG_ACPI case.
+>
+> #ifdef CONFIG_ACPI
+> static inline void acpi_device_clear_dep(struct device *dev)
+> {
+>         if (has_acpi_companion(dev))
+>                 acpi_dev_clear_dependencies(ACPI_COMPANION(dev));
+>
+> }
+> #else
+> static inline void acpi_device_clear_dep(struct device *dev) {}
+> #endif
+>
+> Something like that ?
 
-[...]
-
-> > +#ifdef CONFIG_ACPI
-> > +       if (has_acpi_companion(&pdev->dev))
-> > +               acpi_dev_clear_dependencies(ACPI_COMPANION(&pdev->dev));
-> > +#endif
-> 
-> I would rather add a wrapper for this, along with an empty stub for
-> the !CONFIG_ACPI case.
-
-#ifdef CONFIG_ACPI
-static inline void acpi_device_clear_dep(struct device *dev)
-{
-	if (has_acpi_companion(dev))
-		acpi_dev_clear_dependencies(ACPI_COMPANION(dev));
-
-}
-#else
-static inline void acpi_device_clear_dep(struct device *dev) {}
-#endif
-
-Something like that ?
-
-Thanks,
-Lorenzo
+Yup.
