@@ -1,184 +1,359 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 627EA282F34
-	for <loongarch@lists.linux.dev>; Tue, 30 Jun 2026 01:13:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FDCE33F8B2
+	for <loongarch@lists.linux.dev>; Tue, 30 Jun 2026 02:23:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782782043; cv=none; b=HhkkivYJxmIhy2jpBiks8wZIjLpSm+RMTOTshk53ys/G+F4whNndV1yr3tsLJTdtpFTuREEuBFn8enNINlrDf+S7tMnUfSqDp+rFScL7S/+PFaM5wMl6N0VnNUnsceqL+PrZRr2j3eflZiQnQgm8xqRrqssRD0gqHZ861/46sjQ=
+	t=1782786207; cv=none; b=ks8GmR07UtqBwIlw/oeKlaMuh3BsZoZoPoQLa0A4h3N/W0xaJ4SnueTSosYRyA6xfouQCguwGZUaJf7OhzQAhoniLCsD0S+KIBF7XYDCpIN2ZCCcriFv1Xz+LYTwkuf+tTSHvF4x8gHMUHHvjhl84OVJge0PhCTx09p8COjEwcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782782043; c=relaxed/simple;
-	bh=gYPpa6Sqm4w7uMS5KVTf1sAiXmd6DsTtkDuR6g8v6gI=;
-	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=FyVeiXn0C2FFH78gYkhcK1mgXgI8L1L/YhH3qh5gDa6ElGcAYsqQkVgsEVL7LWY6UYeqLZaDyZcMftI3G7jtIBHJQZdn1yC/iLcvKrFDChAZYnad+BczQOWT8fQXCxBTye1R6FS4M/8ke4M+QXQjFxXFjaeYjhTKh5lW2taf2EU=
+	s=arc-20240116; t=1782786207; c=relaxed/simple;
+	bh=tILK3UZ5xjayGmPu6PGgRCBolLMcHF//tJUxYt9WR4Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FSzYxULgK3xOWRLR5B0nqaITqkSrU1k4i4gu44qCFhq2jAVfDkh6dwsshkiTGW5C9ISrSCZgEuUz6l/unnInqzxwlvk2quVi6EuMOZfNPqbq5beRb/jcp3tmWC16uNwFa3eSvR+Tz4W3QpCqqpbQO5M/orhxM/HvATiDmRCDYeM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxFelLGENqr3IZAA--.59138S3;
-	Tue, 30 Jun 2026 09:13:47 +0800 (CST)
-Received: from [10.130.40.83] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJAx28FCGENq6me4AA--.20790S3;
-	Tue, 30 Jun 2026 09:13:39 +0800 (CST)
-Subject: Re: [PATCH bpf-next v4] bpf: Fix unaligned interpreter panic on JIT
- fallback path
+	by gateway (Coremail) with SMTP id _____8DxlniWKENqe3cZAA--.40524S3;
+	Tue, 30 Jun 2026 10:23:19 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJBxbcKLKENqIHy4AA--.20751S2;
+	Tue, 30 Jun 2026 10:23:08 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>
-Cc: Puranjay Mohan <puranjay@kernel.org>, loongarch@lists.linux.dev,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260615025316.24429-1-yangtiezhu@loongson.cn>
-Message-ID: <ed0326b4-2953-16a6-0472-5fa96df1d63e@loongson.cn>
-Date: Tue, 30 Jun 2026 09:13:38 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+To: Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>
+Cc: loongarch@lists.linux.dev,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH bpf-next v1] selftests/bpf: Add benchmark for tail call performance
+Date: Tue, 30 Jun 2026 10:23:06 +0800
+Message-ID: <20260630022306.10017-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20260615025316.24429-1-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAx28FCGENq6me4AA--.20790S3
+X-CM-TRANSID:qMiowJBxbcKLKENqIHy4AA--.20751S2
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxuryfGw4xAw1UJr4xCw43CFX_yoWrArW8pF
-	WkCw4akr48XF4I9a1xJw42vw15K3yrGFWUGa93Ga4FkF1Yqrn7WF4UKw40gFZxGr409F1S
-	vw42vFy29w18JagCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW3tr17KryfWryDuF17Cw45Arc_yoWDZF4Dpa
+	yxG3s0krWrXF17Ca17Ww48JrW3Cr1kZry5Gw1FkryYvrsxJr92gF1IyFW8GF9xCrWrtry3
+	ur92vF1Uua1rJ3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
 	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UU
-	UUU==
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU7XTmDUUUU
 
-On 2026/6/15 上午10:53, Tiezhu Yang wrote:
-> When an architecture implements bpf_jit_inlines_helper_call(), such
-> as LoongArch, ARM64, and RISC-V, the BPF verifier skips rewriting
-> the helper call offset (insn->imm) during the bpf_do_misc_fixups()
-> phase if the helper is expected to be inlined by the JIT compiler.
-> As a result, insn->imm remains as the raw helper enum ID.
-> 
-> However, if JIT is disabled at runtime (net.core.bpf_jit_enable=0)
-> or if the JIT compilation later dynamically fails (e.g., due to OOM
-> during bpf_jit_alloc_exec()), the core BPF subsystem falls back to
-> the BPF interpreter.
-> 
-> When the fallback interpreter executes (__bpf_call_base + insn->imm)
-> with the unpatched raw helper ID, it jumps into an unaligned invalid
-> address space, triggering a fatal instruction alignment fault (ADEF)
-> or illegal memory access kernel panic.
-> 
-> This issue impacts all architectures that support helper inlining,
-> so introduce a late fixup pass via bpf_fixup_fallback_helpers() in
-> __bpf_prog_select_runtime() to fix this panic.
-> 
-> When JIT compilation fails or is disabled, the helper call offsets
-> originally skipped for inlining are rewritten to relative memory
-> offsets right before transferring control to the interpreter.
-> 
-> 1. Test case (test_panic.c):
-> 
->    #include <linux/bpf.h>
->    #include <bpf/bpf_helpers.h>
-> 
->    SEC("kprobe/sys_getpid")
->    int test_panic(void *ctx)
->    {
->    	struct task_struct *task;
-> 
->    	task = (struct task_struct *)bpf_get_current_task();
->    	if (task)
->    		bpf_printk("Task address: %p\n", task);
-> 
->    	return 0;
->    }
-> 
->    char LICENSE[] SEC("license") = "GPL";
-> 
-> 2. Reproduction steps:
-> 
->    $ clang -target bpf -O2 -g -c test_panic.c -o test_panic.o
->    $ sudo sysctl -w net.core.bpf_jit_enable=0
->    $ sudo bpftool prog load test_panic.o /sys/fs/bpf/test_panic autoattach
->    $ sudo cat /sys/kernel/debug/tracing/trace_pipe
-> 
-> 3. Panic information on LoongArch:
-> 
->    Kernel ade access[#1]:
->    ...
->        ra: 9000000000486e50 ___bpf_prog_run+0x1370/0x36b0
->       ERA: 9000000000485383 __bpf_prog_ret0_warn+0x13/0x20
->    ...
->     ESTAT: 00080000 [ADEF] (IS= ECode=8 EsubCode=0)
-> 
-> Fixes: 2ddec2c80b44 ("riscv, bpf: inline bpf_get_smp_processor_id()")
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> Acked-by: Leon Hwang <leon.hwang@linux.dev>
-> Tested-by: Xu Kuohai <xukuohai@huawei.com>
-> ---
-> v4:
->    - Rename the static function to bpf_fixup_fallback_helpers() to
->      be more accurate and concise, following the file's naming style.
->    - Remove redundant helper ID bounds check since invalid helper
->      IDs are already filtered out in bpf_jit_inlines_helper_call().
->    - Simplify code by merging nested if statements for helper checks.
-> 
->   kernel/bpf/core.c | 22 ++++++++++++++++++++++
->   1 file changed, 22 insertions(+)
-> 
-> diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-> index 649cce41e13f..0db6e55bad52 100644
-> --- a/kernel/bpf/core.c
-> +++ b/kernel/bpf/core.c
-> @@ -2608,6 +2608,25 @@ static struct bpf_prog *bpf_prog_jit_compile(struct bpf_verifier_env *env, struc
->   	return prog;
->   }
->   
-> +/* Fix up helper call offsets on JIT fallback path. */
-> +static void bpf_fixup_fallback_helpers(struct bpf_verifier_env *env, struct bpf_prog *fp)
-> +{
-> +	struct bpf_insn *insn = fp->insnsi;
-> +	const struct bpf_func_proto *fn;
-> +	int i;
-> +
-> +	if (!env || !env->ops->get_func_proto)
-> +		return;
-> +
-> +	for (i = 0; i < fp->len; i++, insn++) {
-> +		if (bpf_helper_call(insn) && bpf_jit_inlines_helper_call(insn->imm)) {
-> +			fn = env->ops->get_func_proto(insn->imm, env->prog);
-> +			if (fn && fn->func)
-> +				insn->imm = fn->func - __bpf_call_base;
-> +		}
-> +	}
-> +}
-> +
->   struct bpf_prog *__bpf_prog_select_runtime(struct bpf_verifier_env *env, struct bpf_prog *fp,
->   					   int *err)
->   {
-> @@ -2643,6 +2662,9 @@ struct bpf_prog *__bpf_prog_select_runtime(struct bpf_verifier_env *env, struct
->   			*err = -ENOTSUPP;
->   			return fp;
->   		}
-> +
-> +		if (!fp->jited)
-> +			bpf_fixup_fallback_helpers(env, fp);
->   	} else {
->   		*err = bpf_prog_offload_compile(fp);
->   		if (*err)
-> 
+Add a dedicated benchmark to measure the runtime performance and overhead
+of tail calls. This helps developers detect performance regressions across
+different kernel versions and optimization phases.
 
-Ping? Any more comments?
+The benchmark sets up a standard tracepoint to intercept syscalls triggered
+by a dedicated producer thread running a dead loop. The execution path is
+strictly bounded by the tail call depth limit, safely preventing any core
+lockup or infinite recursion risks.
 
-Thanks,
-Tiezhu
+To eliminate cacheline bouncing and global locking variance, Per-CPU array
+maps are utilized to track execution hits across multiple cores.
+
+To evaluate the JIT compiler architecture under complex control flows, it
+interleaves direct tail calls with bpf2bpf tail calls.
+
+This forces the tracking context at the target program's entry prologue to
+toggle dynamically between a scalar count (0 to 33) and a massive kernel
+pointer address, providing a robust micro-architectural stress test which
+consists of:
+
+1. tailcall_bench_main: The entry program filtering processes by PID, and
+   introducing a high-frequency alternating execution path via the syscall
+   arguments to switch between a direct tail call and a bpf2bpf tail call.
+2. tailcall_bench_target: The final target destination hop which safely
+   terminates the mixed execution flow and increments the step counter.
+
+All functions utilize explicit "struct tracepoint_raw_syscalls_sys_enter"
+context types to ensure strict type alignment and clear pointer provenance
+for the BPF verifier.
+
+Additionally, provide a test script run_bench_tailcall.sh to automate the
+execution under strict core affinity and isolation for reliable profiling,
+formatting the captured metrics directly into the performance report.
+
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ tools/testing/selftests/bpf/Makefile          |  2 +
+ tools/testing/selftests/bpf/bench.c           |  2 +
+ .../selftests/bpf/benchs/bench_tailcall.c     | 90 +++++++++++++++++++
+ .../bpf/benchs/run_bench_tailcall.sh          | 18 ++++
+ .../selftests/bpf/progs/tailcall_bench.c      | 89 ++++++++++++++++++
+ 5 files changed, 201 insertions(+)
+ create mode 100644 tools/testing/selftests/bpf/benchs/bench_tailcall.c
+ create mode 100755 tools/testing/selftests/bpf/benchs/run_bench_tailcall.sh
+ create mode 100644 tools/testing/selftests/bpf/progs/tailcall_bench.c
+
+diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
+index b642ee489ea6..584504bc87a6 100644
+--- a/tools/testing/selftests/bpf/Makefile
++++ b/tools/testing/selftests/bpf/Makefile
+@@ -980,6 +980,7 @@ $(OUTPUT)/bench_lpm_trie_map.o: $(OUTPUT)/lpm_trie_bench.skel.h $(OUTPUT)/lpm_tr
+ $(OUTPUT)/bench_bpf_nop.o: $(OUTPUT)/bpf_nop_bench.skel.h bench_bpf_timing.h
+ $(OUTPUT)/bench_xdp_lb.o: $(OUTPUT)/xdp_lb_bench.skel.h bench_bpf_timing.h
+ $(OUTPUT)/bench_bpf_timing.o: bench_bpf_timing.h
++$(OUTPUT)/bench_tailcall.o: $(OUTPUT)/tailcall_bench.skel.h
+ $(OUTPUT)/bench.o: bench.h testing_helpers.h $(BPFOBJ)
+ $(OUTPUT)/bench: LDLIBS += -lm
+ $(OUTPUT)/bench: $(OUTPUT)/bench.o \
+@@ -1005,6 +1006,7 @@ $(OUTPUT)/bench: $(OUTPUT)/bench.o \
+ 		 $(OUTPUT)/bench_bpf_timing.o \
+ 		 $(OUTPUT)/bench_bpf_nop.o \
+ 		 $(OUTPUT)/bench_xdp_lb.o \
++		 $(OUTPUT)/bench_tailcall.o \
+ 		 $(OUTPUT)/usdt_1.o \
+ 		 $(OUTPUT)/usdt_2.o \
+ 		 #
+diff --git a/tools/testing/selftests/bpf/bench.c b/tools/testing/selftests/bpf/bench.c
+index 3d9d2cd7764b..a79b86316d28 100644
+--- a/tools/testing/selftests/bpf/bench.c
++++ b/tools/testing/selftests/bpf/bench.c
+@@ -582,6 +582,7 @@ extern const struct bench bench_lpm_trie_delete;
+ extern const struct bench bench_lpm_trie_free;
+ extern const struct bench bench_bpf_nop;
+ extern const struct bench bench_xdp_lb;
++extern const struct bench bench_tailcall;
+ 
+ static const struct bench *benchs[] = {
+ 	&bench_count_global,
+@@ -665,6 +666,7 @@ static const struct bench *benchs[] = {
+ 	&bench_lpm_trie_free,
+ 	&bench_bpf_nop,
+ 	&bench_xdp_lb,
++	&bench_tailcall,
+ };
+ 
+ static void find_benchmark(void)
+diff --git a/tools/testing/selftests/bpf/benchs/bench_tailcall.c b/tools/testing/selftests/bpf/benchs/bench_tailcall.c
+new file mode 100644
+index 000000000000..a203017f5e28
+--- /dev/null
++++ b/tools/testing/selftests/bpf/benchs/bench_tailcall.c
+@@ -0,0 +1,90 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <sys/types.h>
++#include <unistd.h>
++#include <sys/syscall.h>
++#include <bpf/bpf.h>
++#include "bench.h"
++#include "tailcall_bench.skel.h"
++
++static struct ctx {
++	struct tailcall_bench *skel;
++	struct bpf_link *link;
++	int map_fd;
++	int ncpus;
++	unsigned int percpu_size;
++} ctx;
++
++static void tailcall_measure(struct bench_res *res)
++{
++	__u32 key = 0;
++	__u8 *values;
++	__u64 total_hits = 0;
++
++	values = calloc(ctx.ncpus, ctx.percpu_size);
++	if (!values)
++		return;
++
++	if (bpf_map_lookup_elem(ctx.map_fd, &key, values) != 0)
++		return;
++
++	for (int i = 0; i < ctx.ncpus; i++)
++		total_hits += *(__u64 *)(values + i * ctx.percpu_size);
++
++	res->hits = total_hits;
++	free(values);
++}
++
++static void *tailcall_producer(void *input)
++{
++	unsigned long arg = 0;
++
++	while (true) {
++		/* Toggle the argument between 0 and 1 on every iteration */
++		syscall(__NR_getpgid, arg & 1);
++		arg++;
++	}
++
++	return NULL;
++}
++
++static void tailcall_setup(void)
++{
++	int main_fd, target_fd, jmp_map_fd;
++	__u32 key1 = 1;
++
++	ctx.skel = tailcall_bench__open();
++	if (!ctx.skel)
++		exit(1);
++
++	ctx.skel->data->my_pid = getpid();
++	ctx.ncpus = libbpf_num_possible_cpus();
++
++	if (tailcall_bench__load(ctx.skel))
++		exit(1);
++
++	jmp_map_fd = bpf_map__fd(ctx.skel->maps.jmp_table);
++	ctx.map_fd = bpf_map__fd(ctx.skel->maps.pcpu_hits_map);
++	ctx.percpu_size = bpf_map__value_size(ctx.skel->maps.pcpu_hits_map);
++
++	if (ctx.map_fd < 0 || jmp_map_fd < 0)
++		exit(1);
++
++	main_fd = bpf_program__fd(ctx.skel->progs.tailcall_bench_main);
++	target_fd = bpf_program__fd(ctx.skel->progs.tailcall_bench_target);
++
++	/* Map key 1 directly to the final target program */
++	bpf_map_update_elem(jmp_map_fd, &key1, &target_fd, BPF_ANY);
++
++	ctx.link = bpf_program__attach(ctx.skel->progs.tailcall_bench_main);
++	if (!ctx.link)
++		exit(1);
++}
++
++const struct bench bench_tailcall = {
++	.name = "tailcall",
++	.setup = tailcall_setup,
++	.producer_thread = tailcall_producer,
++	.measure = tailcall_measure,
++	.report_progress = ops_report_progress,
++	.report_final = ops_report_final,
++};
+diff --git a/tools/testing/selftests/bpf/benchs/run_bench_tailcall.sh b/tools/testing/selftests/bpf/benchs/run_bench_tailcall.sh
+new file mode 100755
+index 000000000000..c687f34455e8
+--- /dev/null
++++ b/tools/testing/selftests/bpf/benchs/run_bench_tailcall.sh
+@@ -0,0 +1,18 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++
++# 1. Load the official common benchmark utilities
++source ./benchs/run_common.sh
++
++# 2. Strict error handling configurations
++set -eufo pipefail
++
++# 3. Use default bench binary path if not exported by the framework
++BENCH_BIN=${BENCH:-./bench}
++
++# 4. Run with strict core affinity and isolation for reliable profiling
++RUN_BENCH="numactl --physcpubind=0,2 --membind=0 nice -n -20 $BENCH_BIN -w5 -d20 -a"
++
++# 5. Capture the output string and pass it straight into summarize_ops
++# This satisfies the framework's internal parameter bounds without triggering set -u.
++summarize_ops "tailcall" "$($RUN_BENCH tailcall)"
+diff --git a/tools/testing/selftests/bpf/progs/tailcall_bench.c b/tools/testing/selftests/bpf/progs/tailcall_bench.c
+new file mode 100644
+index 000000000000..68a50c7b1d06
+--- /dev/null
++++ b/tools/testing/selftests/bpf/progs/tailcall_bench.c
+@@ -0,0 +1,89 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/bpf.h>
++#include <bpf/bpf_helpers.h>
++#include <bpf/bpf_tracing.h>
++
++/*
++ * Define the standard kernel tracepoint context structure explicitly
++ * to provide the Clang compiler with exact memory offsets.
++ */
++struct tracepoint_raw_syscalls_sys_enter {
++	unsigned long long unused;
++	long id;
++	unsigned long args[6];
++};
++
++__u32 my_pid SEC(".data") = 0;
++
++/* High-performance Per-CPU Array Map to eliminate global lock variance */
++struct {
++	__uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
++	__uint(max_entries, 1);
++	__type(key, __u32);
++	__type(value, __u64);
++} pcpu_hits_map SEC(".maps");
++
++struct {
++	__uint(type, BPF_MAP_TYPE_PROG_ARRAY);
++	__uint(max_entries, 2);
++	__type(key, __u32);
++	__type(value, __u32);
++} jmp_table SEC(".maps");
++
++static __always_inline void increment_pcpu_counter(void)
++{
++	__u32 key = 0;
++	__u64 *val;
++
++	val = bpf_map_lookup_elem(&pcpu_hits_map, &key);
++	if (val) {
++		/* Lockless and stable per-CPU increment without cacheline bounce */
++		(*val)++;
++	}
++}
++
++/* Target Program: The final destination of the tail call */
++SEC("tracepoint/raw_syscalls/sys_enter")
++int tailcall_bench_target(struct tracepoint_raw_syscalls_sys_enter *ctx)
++{
++	increment_pcpu_counter();
++	return 0;
++}
++
++/* bpf2bpf Sub-function driving a tail call to pointerize the counter */
++static __noinline int bpf2bpf_tailcall(struct tracepoint_raw_syscalls_sys_enter *ctx)
++{
++	bpf_tail_call(ctx, &jmp_table, 1);
++	return 0;
++}
++
++/* Main program: Entry point for filtered syscall tracepoints */
++SEC("tracepoint/raw_syscalls/sys_enter")
++int tailcall_bench_main(struct tracepoint_raw_syscalls_sys_enter *ctx)
++{
++	__u32 current_pid = bpf_get_current_pid_tgid() >> 32;
++
++	if (current_pid != my_pid)
++		return 0;
++
++	increment_pcpu_counter();
++
++	/*
++	 * Branch based on the syscall's first argument from user space.
++	 * Alternating between a direct tail call and a bpf2bpf tail call
++	 * forces the tail call counter at the target program's prologue to
++	 * swing dynamically between a pure scalar value and an inherited
++	 * kernel pointer.
++	 */
++	if (ctx->args[0] & 1) {
++		/* Path A: Direct tail call -> pure scalar value */
++		bpf_tail_call(ctx, &jmp_table, 1);
++	} else {
++		/* Path B: bpf2bpf tail call -> inherited kernel pointer */
++		bpf2bpf_tailcall(ctx);
++	}
++
++	return 0;
++}
++
++char _license[] SEC("license") = "GPL";
+-- 
+2.42.0
 
