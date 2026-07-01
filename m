@@ -1,103 +1,104 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 852C33563FA
-	for <loongarch@lists.linux.dev>; Wed,  1 Jul 2026 02:37:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F326F2BE7B6;
+	Wed,  1 Jul 2026 06:22:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782873480; cv=none; b=uct1K11iWLzFyUm207k3T7jsK3g+b4SVhy55A2BAfsPVxO3FV3qytDJxk6+gCG4DlET5khDp9aCU/gtPNjkjvrq919Q22cusVn40WjjgC0GyO/Yov6Fsujt546SLd9otZjWQ14qSXNQsmYbl0YF1IwmeeAo/LK60b1oPZghWOZk=
+	t=1782886980; cv=none; b=n6A4o1LraLJBW1zIkzSuLkA0Torm45PHdtvV5ISl8p5zqHQxSvpV4jxaQvqTayU5sK+FirQaiDPNhfEwO91y0zsFiPwlC56zrVsyk1XTfpCfGlkOL052vc2sOcVjK1jSDDgBdZfEhprBeOXA92K3AnrVJKERhwy1nY1sGAgQSoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782873480; c=relaxed/simple;
-	bh=sJeFtNWNQFWD5DZ7Xw5WSusiBMOujnik7uaGYfOv168=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fB0uR4N1KEBE/7e9KDIVIp1Lj0hvOSHqy6gibm6VP/+0CTcaiK4jnTEtMcAm8tOBSl3yKSh+FAzNV4F+qb69FrDLAEjR2qvdw+AAhbpthdjl2vjQht+m1DJOQuKbNVYK1UriI3vLsb1uk8sUzpcy5EabonNYBBcW+Z+ygX6aTgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=M8bzV9um; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1782886980; c=relaxed/simple;
+	bh=YFHRAndkxHof11Ban0BO3B1Ad+eUPToawmYmZpGr0Xo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=t1c+xJ1Neh1AfJwAfF7sJh81nDJkbAzMMQWLoi+r5SLTpK4z4szSV93AywXCAvH9pImd0Az9aM7J28N3wZ18up939etv5Opo1yjuD02smsnPe4d8lgn4+XC7+oj57LEVHD89cqaKkkTZGHY+jBAKthyWj+ePF/gqrUmQy+CCtfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mebOUl/b; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="M8bzV9um"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1782873477;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=pHoh8o/QWhJCzSrJY8JVqppzRvN0Tsw7Zl7f0oT1ZIg=;
-	b=M8bzV9umqzFhCszP0S+0qnYrXFPSUkvWrxY/eIhJiNNbhZOUHh6cOiLN1XzaivFQY2W7vu
-	EmbSUcq5gJeaRi2SNMNTQigja9xMmkRzhAclTswjz/3AbQPneNlCJKrFE8yf+4Ubv9nMDG
-	0ZGmYJpVI5XFc/BEAq72YAZb/K1WltI=
-From: George Guo <dongtai.guo@linux.dev>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	Qiang Ma <maqianga@uniontech.com>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	George Guo <guodongtai@kylinos.cn>,
-	kernel test robot <lkp@intel.com>,
-	Kexin Liu <liukexin@kylinos.cn>
-Subject: [PATCH v2] LoongArch: kexec: Fix address space mismatch in command line lookup
-Date: Wed,  1 Jul 2026 10:37:47 +0800
-Message-Id: <20260701023747.56221-1-dongtai.guo@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mebOUl/b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CCAF1F000E9;
+	Wed,  1 Jul 2026 06:22:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782886979;
+	bh=+CV7vM2cx+5CJ4FbmSzaWHO/QerFhIw/VFpB9UKLnag=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date;
+	b=mebOUl/bwwqf4S7w7kuJFeK55aOXArL3TFyTg+YwHZM0Aqo11A2cwS2qc5uyoKBt3
+	 dO1KZT7hVdrx3UQSma8+4XOmo21d0bOAN1LIlAgM9Y8eOKJY0Am34vRTyrvlFkADQo
+	 x2jOHdyCdZ4ScD80uScfDrZqs4dIm7ltOQlidHQ4sEnEeMHf6nhJANmcdrRyxybp9x
+	 JiBCaAsNQyVRCHvCxSm8C+u/RhJQ7nrDRUq8ub8VwDsYeOka1bmYijdNL1YvAxDwRy
+	 dbxGH1+8CZ5cX5Q+oodtuhxPWpU3U8Kh2r3L9QxGBPoQqcrIq4NLslPud4kI2Fins+
+	 hgjq0enJu8OWw==
+From: Mike Rapoport <rppt@kernel.org>
+To: Albert Ou <aou@eecs.berkeley.edu>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
+ Catalin Marinas <catalin.marinas@arm.com>, 
+ Huacai Chen <chenhuacai@kernel.org>, 
+ Madhavan Srinivasan <maddy@linux.ibm.com>, 
+ Michael Ellerman <mpe@ellerman.id.au>, Muchun Song <muchun.song@linux.dev>, 
+ Oscar Salvador <osalvador@suse.de>, Palmer Dabbelt <palmer@dabbelt.com>, 
+ Paul Walmsley <pjw@kernel.org>, Russell King <linux@armlinux.org.uk>, 
+ Will Deacon <will@kernel.org>, Sang-Heon Jeon <ekffu200098@gmail.com>
+Cc: linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, 
+ Alexandre Ghiti <alex@ghiti.fr>, Andrey Konovalov <andreyknvl@gmail.com>, 
+ "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
+ David Hildenbrand <david@kernel.org>, Dmitry Vyukov <dvyukov@google.com>, 
+ kasan-dev@googlegroups.com, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+ linux-riscv@lists.infradead.org, loongarch@lists.linux.dev, 
+ Nicholas Piggin <npiggin@gmail.com>, 
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+ WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <20260630150413.1718632-1-ekffu200098@gmail.com>
+References: <20260630150413.1718632-1-ekffu200098@gmail.com>
+Subject: Re: [PATCH v3 0/8] treewide: remove unnecessary invalid range
+ checks in memblock iteration loops
+Message-Id: <178288696837.1179975.5183177963398478769.b4-ty@b4>
+Date: Wed, 01 Jul 2026 09:22:48 +0300
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15.2
 
-From: George Guo <guodongtai@kylinos.cn>
+On Wed, 01 Jul 2026 00:04:05 +0900, Sang-Heon Jeon wrote:
+> treewide: remove unnecessary invalid range checks in memblock iteration loops
+> 
+> The memblock API guarantees that for_each_mem_range() and
+> for_each_mem_pfn_range() never return an invalid range, meaning start is
+> always less than end.
+> 
+> Several memblock callers still have unnecessary invalid range checks in
+> their loop bodies, so remove them.
+> 
+> [...]
 
-When searching the loaded segments for the "kexec" command line marker,
-the kexec_load(2) path (file_mode == 0) passes the user-space segment
-buffer straight to strncmp() through a bogus (char __user *) cast. This
-dereferences a user pointer in kernel context, which is wrong and is
-flagged by sparse:
+Applied to range-checks branch of memblock.git tree, thanks!
 
-  arch/loongarch/kernel/machine_kexec.c:84:51: sparse: incorrect type in
-  argument 2 (different address spaces) @@ expected char const * @@ got
-  char [noderef] __user *
+[1/8] arm64: mm: remove unreachable invalid range check in kasan_init_shadow()
+      commit: f6e6c57f2e100813be6d5882060fef81cb6f32de
+[2/8] LoongArch: remove unreachable invalid range check in kasan_init()
+      commit: 68d3b7d58237b8794d9343210d4c90b8381cfa96
+[3/8] riscv: remove unreachable invalid range check in create_linear_mapping_page_table()
+      commit: 99e60ebe108817fd48791f2cb81f1e672ad8285b
+[4/8] riscv: remove unreachable invalid range check in kasan_init()
+      commit: 8008f6995d0c0cf22e7b4d60e95fe14085c10f35
+[5/8] ARM: remove unreachable invalid range check in kasan_init()
+      commit: 3db1a9ccf9290ea3fe01aadf3bd743ef7032b24a
+[6/8] powerpc64/kasan: Remove unreachable invalid range check in kasan_init_phys_region()
+      commit: 21e95a4b6f34770571eeeaa6adb535efba1b7281
+[7/8] mm: remove unnecessary empty range check in early_calculate_totalpages()
+      commit: c6af91e48594191f62ad3c1fcc8269b1eb539ef8
+[8/8] mm/hugetlb: remove unnecessary empty range check in hugetlb_bootmem_set_nodes()
+      commit: 2db44dc8bdd3cfc933a3193724f4d38b03e35b80
 
-Copy the marker-sized prefix of each segment into a small on-stack
-buffer with copy_from_user() before comparing, and skip segments that
-fault. The subsequent copy_from_user() that stages the full command line
-into the safe area is left unchanged.
+tree: https://git.kernel.org/pub/scm/linux/kernel/git/rppt/memblock
+branch: range-checks
 
-Fixes: 4a03b2ac06a5 ("LoongArch: Add kexec support")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202605051639.aEPioXdD-lkp@intel.com/
-Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
-Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
-Signed-off-by: George Guo <guodongtai@kylinos.cn>
----
-Changes in v2:
-- Keep `bootloader` unchanged and copy into a fixed `char head[8]` instead of
-  turning `bootloader` into an array just to size the temporary buffer (Huacai).
+--
+Sincerely yours,
+Mike.
 
-v1: https://lore.kernel.org/all/20260626105150.362203-1-dongtai.guo@linux.dev/
-
- arch/loongarch/kernel/machine_kexec.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kernel/machine_kexec.c
-index d7fafda1d541..ced49194d9de 100644
---- a/arch/loongarch/kernel/machine_kexec.c
-+++ b/arch/loongarch/kernel/machine_kexec.c
-@@ -57,9 +57,13 @@ int machine_kexec_prepare(struct kimage *kimage)
- 					strlen((char *)kimage->arch.cmdline_ptr) + 1);
- 		kimage->arch.cmdline_ptr = (unsigned long)KEXEC_CMDLINE_ADDR;
- 	} else {
-+		char head[8];
-+
- 		/* Find the command line */
- 		for (i = 0; i < kimage->nr_segments; i++) {
--			if (!strncmp(bootloader, (char __user *)kimage->segment[i].buf, strlen(bootloader))) {
-+			if (copy_from_user(head, kimage->segment[i].buf, strlen(bootloader)))
-+				continue;
-+			if (!strncmp(bootloader, head, strlen(bootloader))) {
- 				if (!copy_from_user(cmdline_ptr, kimage->segment[i].buf, COMMAND_LINE_SIZE))
- 					kimage->arch.cmdline_ptr = (unsigned long)cmdline_ptr;
- 				break;
--- 
-2.25.1
 
