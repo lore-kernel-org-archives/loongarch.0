@@ -1,104 +1,100 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F326F2BE7B6;
-	Wed,  1 Jul 2026 06:22:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 471E0226CFE;
+	Wed,  1 Jul 2026 11:49:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782886980; cv=none; b=n6A4o1LraLJBW1zIkzSuLkA0Torm45PHdtvV5ISl8p5zqHQxSvpV4jxaQvqTayU5sK+FirQaiDPNhfEwO91y0zsFiPwlC56zrVsyk1XTfpCfGlkOL052vc2sOcVjK1jSDDgBdZfEhprBeOXA92K3AnrVJKERhwy1nY1sGAgQSoI=
+	t=1782906545; cv=none; b=lEJItMVmh0LEfnoFg6j+p+wQfiAfPAQvOysiPWWxKm2g/T8F1WJIpyRPPheK5zbBTLgHQzpNlZ5wrIYKmUC7mDjD5GYq6S/mogm9+P6OHeQZBf4CiJcMzIJoS1a+jimwLfWaFcpNv0LoCoG2mBUCRd4vEgxZC5KPFf/FJ06lvcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782886980; c=relaxed/simple;
-	bh=YFHRAndkxHof11Ban0BO3B1Ad+eUPToawmYmZpGr0Xo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=t1c+xJ1Neh1AfJwAfF7sJh81nDJkbAzMMQWLoi+r5SLTpK4z4szSV93AywXCAvH9pImd0Az9aM7J28N3wZ18up939etv5Opo1yjuD02smsnPe4d8lgn4+XC7+oj57LEVHD89cqaKkkTZGHY+jBAKthyWj+ePF/gqrUmQy+CCtfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mebOUl/b; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782906545; c=relaxed/simple;
+	bh=Ne25Eb6hfiwFz29OTK617AXvzuu7M9hFTX1/pZmdnQ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k7ioChLSVrR4+Z37imSyi2vGo/hwuY7z32QK4MArqQp310Bb09ETdxjXM5r8617mGsrM/KsDY7CJPZmuTt9pKX9NCQcF6OgedxWOiTl2FxwuTECIssSn2Kq2JqZo6W5TwKhey3PaorqbE9pkzNLO7hps0f+Xz1bAMaq7vn7OwOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OUYTSL6n; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mebOUl/b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CCAF1F000E9;
-	Wed,  1 Jul 2026 06:22:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OUYTSL6n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B45AB1F000E9;
+	Wed,  1 Jul 2026 11:49:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782886979;
-	bh=+CV7vM2cx+5CJ4FbmSzaWHO/QerFhIw/VFpB9UKLnag=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=mebOUl/bwwqf4S7w7kuJFeK55aOXArL3TFyTg+YwHZM0Aqo11A2cwS2qc5uyoKBt3
-	 dO1KZT7hVdrx3UQSma8+4XOmo21d0bOAN1LIlAgM9Y8eOKJY0Am34vRTyrvlFkADQo
-	 x2jOHdyCdZ4ScD80uScfDrZqs4dIm7ltOQlidHQ4sEnEeMHf6nhJANmcdrRyxybp9x
-	 JiBCaAsNQyVRCHvCxSm8C+u/RhJQ7nrDRUq8ub8VwDsYeOka1bmYijdNL1YvAxDwRy
-	 dbxGH1+8CZ5cX5Q+oodtuhxPWpU3U8Kh2r3L9QxGBPoQqcrIq4NLslPud4kI2Fins+
-	 hgjq0enJu8OWw==
-From: Mike Rapoport <rppt@kernel.org>
-To: Albert Ou <aou@eecs.berkeley.edu>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
- Catalin Marinas <catalin.marinas@arm.com>, 
- Huacai Chen <chenhuacai@kernel.org>, 
- Madhavan Srinivasan <maddy@linux.ibm.com>, 
- Michael Ellerman <mpe@ellerman.id.au>, Muchun Song <muchun.song@linux.dev>, 
- Oscar Salvador <osalvador@suse.de>, Palmer Dabbelt <palmer@dabbelt.com>, 
- Paul Walmsley <pjw@kernel.org>, Russell King <linux@armlinux.org.uk>, 
- Will Deacon <will@kernel.org>, Sang-Heon Jeon <ekffu200098@gmail.com>
-Cc: linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, 
- Alexandre Ghiti <alex@ghiti.fr>, Andrey Konovalov <andreyknvl@gmail.com>, 
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
- David Hildenbrand <david@kernel.org>, Dmitry Vyukov <dvyukov@google.com>, 
- kasan-dev@googlegroups.com, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
- linux-riscv@lists.infradead.org, loongarch@lists.linux.dev, 
- Nicholas Piggin <npiggin@gmail.com>, 
- Vincenzo Frascino <vincenzo.frascino@arm.com>, 
- WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <20260630150413.1718632-1-ekffu200098@gmail.com>
-References: <20260630150413.1718632-1-ekffu200098@gmail.com>
-Subject: Re: [PATCH v3 0/8] treewide: remove unnecessary invalid range
- checks in memblock iteration loops
-Message-Id: <178288696837.1179975.5183177963398478769.b4-ty@b4>
-Date: Wed, 01 Jul 2026 09:22:48 +0300
+	s=k20260515; t=1782906543;
+	bh=esUM6XiE9H9/VDV25mzx0G8FhbMIdZGBvt/U6SFGFso=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=OUYTSL6nxV/Ah7RowxkS1kK45aEmSLlDmVOHKWf8eRGnc3kc5iOki0HSxPP2I5U5+
+	 0fHFct57n39066Xh+lJiEtFDLURZ8tL7PDwLABKqbK8XDjmWPw8cMXCVtdbC+em8Qe
+	 WXoSp1XcDkFplnbYrlJBd+0yfkt8JMWqJATy9weYXg8O1T83xKrZbfWPlYnHCEQCuM
+	 HCLi6L6zADAh1yATEY2inxpmK1DqB8Zj3c9aX8cU2hmtT+mCqSPKmPKPgFNjYHtIOH
+	 XfxRnqSEVfE1jVFIobGQTmYccajHWq4Th/LfAiDPjPLPzYobyNW5sbUrNO6p479YAl
+	 I4yODRsmUybuQ==
+Date: Wed, 1 Jul 2026 12:48:58 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Keguang Zhang <keguang.zhang@gmail.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org, linux-sound@vger.kernel.org
+Subject: Re: [PATCH v3 6/9] ASoC: loongson: Add Loongson-2K0300 CTCISZ
+ Forever Pi sound card support
+Message-ID: <c9361380-b28a-4f7d-9ae5-a00042189b79@sirena.org.uk>
+References: <cover.1782439646.git.zhoubinbin@loongson.cn>
+ <ed1314e1d3275fd20aff47397345a88fad6e9368.1782439646.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15.2
-
-On Wed, 01 Jul 2026 00:04:05 +0900, Sang-Heon Jeon wrote:
-> treewide: remove unnecessary invalid range checks in memblock iteration loops
-> 
-> The memblock API guarantees that for_each_mem_range() and
-> for_each_mem_pfn_range() never return an invalid range, meaning start is
-> always less than end.
-> 
-> Several memblock callers still have unnecessary invalid range checks in
-> their loop bodies, so remove them.
-> 
-> [...]
-
-Applied to range-checks branch of memblock.git tree, thanks!
-
-[1/8] arm64: mm: remove unreachable invalid range check in kasan_init_shadow()
-      commit: f6e6c57f2e100813be6d5882060fef81cb6f32de
-[2/8] LoongArch: remove unreachable invalid range check in kasan_init()
-      commit: 68d3b7d58237b8794d9343210d4c90b8381cfa96
-[3/8] riscv: remove unreachable invalid range check in create_linear_mapping_page_table()
-      commit: 99e60ebe108817fd48791f2cb81f1e672ad8285b
-[4/8] riscv: remove unreachable invalid range check in kasan_init()
-      commit: 8008f6995d0c0cf22e7b4d60e95fe14085c10f35
-[5/8] ARM: remove unreachable invalid range check in kasan_init()
-      commit: 3db1a9ccf9290ea3fe01aadf3bd743ef7032b24a
-[6/8] powerpc64/kasan: Remove unreachable invalid range check in kasan_init_phys_region()
-      commit: 21e95a4b6f34770571eeeaa6adb535efba1b7281
-[7/8] mm: remove unnecessary empty range check in early_calculate_totalpages()
-      commit: c6af91e48594191f62ad3c1fcc8269b1eb539ef8
-[8/8] mm/hugetlb: remove unnecessary empty range check in hugetlb_bootmem_set_nodes()
-      commit: 2db44dc8bdd3cfc933a3193724f4d38b03e35b80
-
-tree: https://git.kernel.org/pub/scm/linux/kernel/git/rppt/memblock
-branch: range-checks
-
---
-Sincerely yours,
-Mike.
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="nvCzlV8SN6qnzl1W"
+Content-Disposition: inline
+In-Reply-To: <ed1314e1d3275fd20aff47397345a88fad6e9368.1782439646.git.zhoubinbin@loongson.cn>
+X-Cookie: Do unto others before they undo you.
 
 
+--nvCzlV8SN6qnzl1W
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Jun 26, 2026 at 10:27:27AM +0800, Binbin Zhou wrote:
+
+> The Loongson-2K0300 audio card uses a different DAI format compared to
+> existing Loongson platforms.
+
+>  	},
+> @@ -177,6 +189,10 @@ static int loongson_asoc_card_probe(struct platform_=
+device *pdev)
+>  	if (!ls_priv)
+>  		return -ENOMEM;
+> =20
+> +	ls_priv->cfg =3D (const struct loongson_card_config *)device_get_match_=
+data(dev);
+> +	if (!ls_priv->cfg)
+> +		return -EINVAL;
+> +
+
+Does this do the right thing on ACPI systems?  I'm not seeing anything
+that'd get us match data there.
+
+--nvCzlV8SN6qnzl1W
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmpE/qkACgkQJNaLcl1U
+h9DwJwf8Dqs0X2LW9Q5jMZrgRxIKUIRNqzHQNFQaPYgHJ/S+xZqZvvZls6dyM48n
+OWeXEllmQv4oEZiXMhEwASAz+bhbaESbIE3FqWuTj2GN0P84dNHKMdG2UHogg85x
+Ivsz5rTYO4vwRWud9E1KfAZo8aCi/srpKeA4y9oTfZi2xLAvCgMCIknGmTgp4L7w
+6uVk5s1goARtkbhmRjeSxVtumtnJwvH9tFduronxWnHeF69CgljZDa0PrDgOUCed
+D6m86zSz6wX00NZcik8BChTc98+vbGAdibKIznxak7WV5M0oUkYSyKq10YucsaYb
+XO75xavWoyxkQIkY7CHEPV3j7yALJA==
+=nVdn
+-----END PGP SIGNATURE-----
+
+--nvCzlV8SN6qnzl1W--
