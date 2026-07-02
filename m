@@ -1,190 +1,172 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1736C2E7F39
-	for <loongarch@lists.linux.dev>; Thu,  2 Jul 2026 07:20:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EC75394492
+	for <loongarch@lists.linux.dev>; Thu,  2 Jul 2026 08:13:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782976832; cv=none; b=qBva+zY1xaKXtxlkMwf4wdYp8UA33y/xgQ7Nm6XP3a6Bb5dPq/C2k/Jrbchfy/Q+38zJ3mZ3B20PaHYbjns6eTHacnXtITkecZeFEb01qQDcfsM+XHEZe5q/4I/wuVthVRe+uasO7AhxrazHiM00fvwGuLeECUv3zw60KvD/V/4=
+	t=1782980031; cv=none; b=ewbv60wDTxW2rChJgXqJiuFY2g+c5bPvim76/NTeiqQRMNrxamR73dyJUj/VQLt8EoxAYyvgtXmcIy7PndmCLmpJTomVYrctLwR9kQ6laBZG450H0H0nMYfYSPbBUS4XTRkeaEIvL8vs54PrC8FeH3QWNIDHqZgZAEzEboFhbf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782976832; c=relaxed/simple;
-	bh=SEOsQgUF4DRi2+CHY7uhpWinmVqROYTwmseFKyd78aE=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=frLx1o16Eqw6YwwbhHl+3vV4N9GNmAdwV2r9oRIxiRgyTPZstSUn7b9Xy5TjtT0z8tfHmvI/Txgsjx8waNacz6Y0+UmHKRu3KrfnjQsLDB3Kkdplphi9V1rSHrsI/U5RXbkYPo8xIfG0QG0VrEaGPO8HUIndkvqQ7vkUJNhpV50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxVvA4EUZqDs8AAA--.4670S3;
-	Thu, 02 Jul 2026 15:20:24 +0800 (CST)
-Received: from [10.130.40.83] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJBxpsA2EUZqvbu7AA--.59525S3;
-	Thu, 02 Jul 2026 15:20:23 +0800 (CST)
-Subject: Re: [PATCH bpf-next v6] bpf: Reject programs with inlined helpers if
- JIT is unavailable
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Eduard Zingerman <eddyz87@gmail.com>,
- Kumar Kartikeya Dwivedi <memxor@gmail.com>,
- Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
- Emil Tsalapatis <emil@etsalapatis.com>, KaFai Wan <kafai.wan@linux.dev>,
- bpf <bpf@vger.kernel.org>, loongarch@lists.linux.dev,
- Leon Hwang <leon.hwang@linux.dev>, Puranjay Mohan <puranjay@kernel.org>,
- =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-References: <20260702053127.23599-1-yangtiezhu@loongson.cn>
- <CAADnVQJodzDppDUjSYXra-jCo3J32t7=h32bHm4tQei-+5P72w@mail.gmail.com>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <a234d790-699d-4029-261a-9db131398e7b@loongson.cn>
-Date: Thu, 2 Jul 2026 15:20:22 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1782980031; c=relaxed/simple;
+	bh=hqCLUVUGlo7JiPK9HmHjC+v213ae/U7iW09vTUMaQAg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=I5Rkmfd+oSqwxkpO98WRr3Se7yScj5pAQg/WaL9q4iZTw4QlfO/CMPCbMUzSzDbBtukRZHfAhyCD39gAQvJXYAb9GaUQQ5H7vHKAvlpB+M70IRdsN5kmKoWgLnio1k2BMZyMoWaIEKjru5YOE+lsc0bMHxm9qwLrZqIcqw/3Fp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=pZK8TbTJ; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pZK8TbTJ"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6621KlGo2509852;
+	Thu, 2 Jul 2026 08:12:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=hqCLUV
+	UGlo7JiPK9HmHjC+v213ae/U7iW09vTUMaQAg=; b=pZK8TbTJnNMAyZxjXBKemz
+	WG95jwJ+gE68MwV5sSXtJd4BF5pREzpXbDk24iP/dPZpCrj+6o23XVWuWs+IAErT
+	BbHfEuYE7GaSRUt7JZO2upuMd8p7Q3sOwF/X9o9jSOIZE5T+fPCCzCFNSW8Xe46S
+	32wY8T03xrM5wqOEaF50gohxKSBymr4TWcd815Mm4QBvbcGQl/LZZ71WNEgVhWQ4
+	Bb0xSU+IZisDQ6y8SqNyIweWlkpNOiPMVRMU0HJvrwLCKuyK5gwIrMKa6TrITK72
+	04L3zVt3tzqIZh2FJIZl8F+aPVcpgj53SwloGZ6OyHO0JcrkF81IrZ/Fh3NptQ4w
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f26pe8wrx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 02 Jul 2026 08:12:41 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 662855Gj005192;
+	Thu, 2 Jul 2026 08:12:40 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4f2u2gjxrg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 02 Jul 2026 08:12:40 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6628CaKk47186188
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 2 Jul 2026 08:12:36 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5C63F20043;
+	Thu,  2 Jul 2026 08:12:36 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E9CE120040;
+	Thu,  2 Jul 2026 08:12:35 +0000 (GMT)
+Received: from tuxmaker.linux.ibm.com (unknown [9.87.85.9])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu,  2 Jul 2026 08:12:35 +0000 (GMT)
+From: Sven Schnelle <svens@linux.ibm.com>
+To: Michal =?utf-8?Q?Such=C3=A1nek?= <msuchanek@suse.de>
+Cc: Peter Zijlstra <peterz@infradead.org>, Jonathan Corbet
+ <corbet@lwn.net>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Huacai Chen
+ <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+        Madhavan
+ Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Christophe Leroy (CS GROUP)"
+ <chleroy@kernel.org>,
+        Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt
+ <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti
+ <alex@ghiti.fr>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
+ <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Andy Lutomirski
+ <luto@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+        Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin"
+ <hpa@zytor.com>,
+        Andrew Donnellan <andrew+kernel@donnellan.id.au>,
+        Mark
+ Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>,
+        Jiaxun
+ Yang <jiaxun.yang@flygoat.com>,
+        Ryan Roberts <ryan.roberts@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mukesh Kumar Chaurasiya
+ <mkchauras@linux.ibm.com>,
+        Shrikanth Hegde <sshegde@linux.ibm.com>, Zong
+ Li <zong.li@sifive.com>,
+        Nam Cao <namcao@linutronix.de>, Deepak Gupta
+ <debug@rivosinc.com>,
+        Lukas Gerlach <lukas.gerlach@cispa.de>,
+        Rui Qi
+ <qirui.001@bytedance.com>, Kees Cook <kees@kernel.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org
+Subject: Re: [RFC] entry: Untangle the return value of
+ syscall_enter_from_user_mode from syscall NR
+In-Reply-To: <akVRcPsD_R_CE1qW@kunlun.suse.cz>
+References: <akVRcPsD_R_CE1qW@kunlun.suse.cz>
+Date: Thu, 02 Jul 2026 10:12:35 +0200
+Message-ID: <yt9dechlbyj0.fsf@linux.ibm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAADnVQJodzDppDUjSYXra-jCo3J32t7=h32bHm4tQei-+5P72w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxpsA2EUZqvbu7AA--.59525S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxZw47Jw4rCry5Kw1fGw1xZwc_yoWrWF1UpF
-	yDCa1kCrWUX39F9as7Ja18ur4aq393GF17K3Z8Gw1Fk34qgwn3JF1agF1Y9F98Wr48u3WI
-	vrnFgF17Zw15JFcCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	XVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
-	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWx
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUxUGYDU
-	UUU
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-GUID: DKlldyY4bhkCnlcbefPy2HU56VqtiBGr
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzAyMDA3OSBTYWx0ZWRfXyOQuthEL9my+
+ L3goQ8RSe3aEKWelY2bJXttBAFwFZ3nxAMd4YsPCcEXn38MypvsePfJ6K0Xa0t/CkI83BjCtnVw
+ m6hD2NKtpMS8QTJ1dKDLehpY3uSIRHk=
+X-Authority-Analysis: v=2.4 cv=edsNubEH c=1 sm=1 tr=0 ts=6a461d79 cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=H7Grb0cKppj6FskhoBQA:9
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzAyMDA3OSBTYWx0ZWRfX/oe4D2SHEsm8
+ fnh8Zogh7aWRM7RCWhvCxl9KxCazzx0GZhXpTwQ6IVs2rk1Lht0I2Pw7XYWwx94bCT3Ez7rq8Dg
+ lg8HV4ioS+8K8e2rqvVEnOYfMVPDiJZERcROKpg9FVgHynbSsV/0kzAosEQ+xeI4rV2SVE0ldfP
+ T/9tPCQSRrH3OFOXXIOJF8xBBCWy/L2bfBCsah4ga0qm4ebPbs3ZjFLYIwziTnpFKZxHXHmd98N
+ MYh5DqQ2fp7GI0HPArVfNFgaDdDflOraiPWOnzhqFhPDp2lG56c8K0xzWRL3jW6kUeiDKuXG+Nk
+ YxA5p0vWRe8IkAgAj8cQkTfxSxUnmjY99x2Cj4BgrgbekYiNXkLROH5O2zrOMUrrb+POiYKlvOZ
+ HnQMDbLmGSoz9dPTQu7oFDFNks2D4/MlmtTaw+2HyBz8naZWPeeOO6fVfljQpTQ/9wmpAyeBa30
+ MxGwR6nRsgmgvSeCamw==
+X-Proofpoint-ORIG-GUID: BbxRzj5OULkjMR0AZe7xHLImpWA5FvbD
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-07-02_01,2026-06-26_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 malwarescore=0 adultscore=0 impostorscore=0 bulkscore=0
+ spamscore=0 suspectscore=0 clxscore=1011 lowpriorityscore=0 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607020079
 
-On 2026/7/2 下午1:45, Alexei Starovoitov wrote:
-> On Wed, Jul 1, 2026 at 10:31 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->>
->> When an architecture implements bpf_jit_inlines_helper_call(), such as
->> LoongArch, ARM64, PowerPC, and RISC-V, the verifier skips rewriting the
->> helper call offset (insn->imm) during the bpf_do_misc_fixups() phase,
->> because the helper is expected to be inlined by the JIT compiler. As a
->> result, insn->imm remains as the raw helper enum ID.
->>
->> However, if JIT is disabled at runtime (net.core.bpf_jit_enable=0) or
->> if the JIT compilation later dynamically fails (e.g., due to OOM), the
->> core BPF subsystem falls back to the BPF interpreter.
->>
->> When the interpreter executes (__bpf_call_base + insn->imm) with the
->> unpatched raw helper ID, it jumps into an unaligned invalid address
->> space, triggering an instruction alignment fault or a memory access
->> panic.
->>
->> To avoid modifying the BPF interpreter's complexity for JIT-specific
->> paths, just introduce a 'jit_required' flag in struct bpf_prog. When
->> a program contains helper calls that skip rewriting for JIT inlining,
->> set this flag to 1. During runtime selection, if JIT compilation is
->> not available, explicitly reject loading with -ENOTSUPP instead of
->> falling back to the interpreter, safely preventing the kernel panic.
->>
->> Fixes: 2ddec2c80b44 ("riscv, bpf: inline bpf_get_smp_processor_id()")
->> Suggested-by: Alexei Starovoitov <ast@kernel.org>
->> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->> ---
->> v6:
->>    - Place 'jit_required' as a standalone u8 field right before 'stats'
->>      to reuse the existing 4-byte struct hole (offset 52) based on pahole
->>      analysis, avoiding the u16->u32 bitfield conversion in v5 which
->>      unintentionally changed the layout/alignment of subsequent fields.
-> 
-> v5 had AI written all over it. v6 is not any better.
-> Please ask AI whether your v6 is any better than v5 ?
-> Then analyze replies as a human.
+Michal Such=C3=A1nek <msuchanek@suse.de> writes:
 
-The v6 code is a significant layout improvement over v5.
+> The return value of syscall_enter_from_user_mode is used both for the
+> adjusted syscall number and the indicator that a syscall should be
+> skipped.
+>
+> As seccomp can be invoked on any syscall, including invalid ones this
+> somewhat undermines seccomp.
+>
+> While the seccomp variants that terminate the process do not need to
+> care about this for the filter that sets the syscall return value this
+> disctinction is required.
+>
+> Pass the syscall number as a pointer to the inline entry functions, and
+> use the return value exclusively for the indication that the syscall is
+> already handled.
+>
+> This should avoid the need for the s390 PIF_SYSCALL_RET_SET which is the
+> workaround for exactly this deficiency.
 
-v5 broke natural 4-byte alignment, while v6 rolls back the bitfield
-and utilizes a 4-byte hole at offset 52 for 'jit_required'.
-
-Here is the partial pahole output for v6:
-
-struct bpf_prog {
-     ...
-	u8                         jit_required;         /*    52     1 */
-	/* XXX 3 bytes hole, try to pack */
-     ...
-	/* size: 96, cachelines: 2, members: 29 */
-};
-
-The layout preserves 16-bit packing, alignment, and 96-byte size.
-
-Here is the full pahole output for v6:
-
-fedora@linux:~/702jit.git$ pahole -C bpf_prog ./vmlinux
-struct bpf_prog {
-	u16                        pages;                /*     0     2 */
-	u16                        jited:1;              /*     2: 0  2 */
-	u16                        jit_requested:1;      /*     2: 1  2 */
-	u16                        gpl_compatible:1;     /*     2: 2  2 */
-	u16                        cb_access:1;          /*     2: 3  2 */
-	u16                        dst_needed:1;         /*     2: 4  2 */
-	u16                        blinding_requested:1; /*     2: 5  2 */
-	u16                        blinded:1;            /*     2: 6  2 */
-	u16                        is_func:1;            /*     2: 7  2 */
-	u16                        kprobe_override:1;    /*     2: 8  2 */
-	u16                        has_callchain_buf:1;  /*     2: 9  2 */
-	u16                        enforce_expected_attach_type:1; /*     2:10 
-2 */
-	u16                        call_get_stack:1;     /*     2:11  2 */
-	u16                        call_get_func_ip:1;   /*     2:12  2 */
-	u16                        call_session_cookie:1; /*     2:13  2 */
-	u16                        tstamp_type_access:1; /*     2:14  2 */
-	u16                        sleepable:1;          /*     2:15  2 */
-	enum bpf_prog_type         type;                 /*     4     4 */
-	enum bpf_attach_type       expected_attach_type; /*     8     4 */
-	u32                        len;                  /*    12     4 */
-	u32                        jited_len;            /*    16     4 */
-	union {
-		u8                 digest[32];           /*    20    32 */
-		u8                 tag[8];               /*    20     8 */
-	};                                               /*    20    32 */
-	u8                         jit_required;         /*    52     1 */
-
-	/* XXX 3 bytes hole, try to pack */
-
-	struct bpf_prog_stats *    stats;                /*    56     8 */
-	/* --- cacheline 1 boundary (64 bytes) --- */
-	u8 *                       active;               /*    64     8 */
-	unsigned int               (*bpf_func)(const void  *, const struct 
-bpf_insn  *); /*    72     8 */
-	struct bpf_prog_aux *      aux;                  /*    80     8 */
-	struct sock_fprog_kern *   orig_prog;            /*    88     8 */
-	union {
-		struct {
-			struct {
-			} __empty_insns;                 /*    96     0 */
-			struct sock_filter insns[0];     /*    96     0 */
-		};                                       /*    96     0 */
-		struct {
-			struct {
-			} __empty_insnsi;                /*    96     0 */
-			struct bpf_insn insnsi[0];       /*    96     0 */
-		};                                       /*    96     0 */
-	};                                               /*    96     0 */
-
-	/* size: 96, cachelines: 2, members: 29 */
-	/* sum members: 91, holes: 1, sum holes: 3 */
-	/* sum bitfield members: 16 bits (2 bytes) */
-	/* last cacheline: 32 bytes */
-};
-
-Thanks,
-Tiezhu
-
+I'm not sure whether PIF_SYSCALL_RET_SET can be removed - the syscall
+return might still get set by PTRACE_SET_SYSCALL_INFO when the tracee is
+stopped. This might be a positive number which can't be distinguished
+from a syscall number. But maybe i'm missing something? It's been quite
+a while since I touched all that ptrace stuff.
