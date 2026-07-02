@@ -1,138 +1,196 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C140331EB0;
-	Thu,  2 Jul 2026 15:57:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF85B37BE6F
+	for <loongarch@lists.linux.dev>; Thu,  2 Jul 2026 20:00:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783007828; cv=none; b=P92qZ2DvnQtAh6/Hw4NoYdIxL7itdgWGA+EVEjY9ZUzMuEzrQ9z61C6X4U8kWO4jKHftwuJRhauC5KrigPTv7E8Zq1GSEoyjdvbt5mz8AhKC6VpQUg92g8Z16TjrW93vxEQBTb7EFsXHA/S3oQfe9eMD06Rrw3AGC1pXaFUMlPE=
+	t=1783022429; cv=none; b=MJL0us9Cv+2KGkKmQkssSVPvg7wFapFGj71DIgHMbjPjG3hGDvqOTKtr7X2XP/c9gPpzOiQxNVaPBKSBIaqGlTALchWiOAvE64HrH+z9qKj4yRYIl7wMB+kyK0mBUGwpMwvzTnl55vT/gb4jlK4GbuhnTcReEqDo8u7NpvlL+TY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783007828; c=relaxed/simple;
-	bh=2iAoVKzQBY1Uh7UEn/Lf0QRZa8p/bvywbliuLtP54lQ=;
+	s=arc-20240116; t=1783022429; c=relaxed/simple;
+	bh=rACSdKpoLnV/hBjV8rM9vAK5K4UQ0NdFBrLa4EE/F8s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e6lq+E/nDEteMztPyocYwLDGtkTaELDsS9S9XCHr6p+BvIiv/gCfRYNk53i3ladwkVKouyCQm7WCm5vTNGk8aWHEakB5dLsVZKY/WFpUtkEiwlYq/ZOyX5y4joGJfemHokit7OomsNwNb8KB3Hhtl/osbGwy1+stLOCyzyDhosQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dJfJi47L; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type:Content-Disposition; b=J0+mwcIrJl1UMJtfa1uywmsqRdSZ/7VsGzNmxF4RarNtNTOiXVOnkJVVj61vqbRZxKWLYdSz9OdYLN0VH/CDt4/g4PgTt/m7DCDbOXX/S/EcZPFyPgPNkdQFppMyAbZZf4gTVDFC9WNJPBxeS3PW+leNVlutnZ8eeL9dHM2RiLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ODKVAGY3; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dJfJi47L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 743041F000E9;
-	Thu,  2 Jul 2026 15:57:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783007827;
-	bh=/VIzTTQUgt1nPTnywwymt2yL+OH5Mmjv9XoixgXKKXk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=dJfJi47Ly/QO9LO1bFTU0f5Cb/W7dOUk3pM5wAua4eC7RImqZitnHULG2sMd4B3lt
-	 l+4HqEBt6Tq1Pn1GyW/Ouyx9Uh6XqMw9qrhX0UbtWEFINtumU1PApOoeW1+bSBoZHh
-	 AJF4CVZNxqDOb6cRpn/TJHmp4QQyS9rie6t9ngpHPhgIS586m3mrfN17bbcnLK3zGb
-	 iLeT54ZYPzMrWugYEoSvN1GzsaGbLfIprrmX1/0/2iiNLTn9Due2HukxAo9pZ7js5m
-	 KHPgWOL4Tv9hCPCOLYBJbg9yJSbmI2e7XyuL1CV/h3P+Ijf6jdbpcku3f7SCKAt5YG
-	 aA9c71TG0r5VA==
-Date: Thu, 2 Jul 2026 16:57:01 +0100
-From: Lee Jones <lee@kernel.org>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Corey Minyard <minyard@acm.org>, Chong Qiao <qiaochong@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, jeffbai@aosc.io, kexybiscuit@aosc.io,
-	zhuyunfei@loongson.cn, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v2] mfd: ls2kbmc: mfd: ls2kbmc: Fix iomem pointer
- handling in video mode parsing
-Message-ID: <20260702155701.GY2108533@google.com>
-References: <20260624085550.1508771-1-zhoubinbin@loongson.cn>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ODKVAGY3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1783022424;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l/lB8bTJ0EyNsIX6BYhLdG+YbNBS2otPFvnCug1uqq4=;
+	b=ODKVAGY3hWW673GeLdk24xjAArlCNNKo4JELqLF9rxMWdvowkyQWRw0+KJpcnj0y42904g
+	4tyt5ZpXhGfZWmgdDjoO5+5WKfol4GAUf2BkluLu81L9NnkczlwA8ThtRlFuAzEw4GcTC+
+	UgMhu+Z3Mmdx+yKDLH/iRtrqMz8ByJY=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-43-XxULGeL9MfegSBDwmfEAEw-1; Thu,
+ 02 Jul 2026 16:00:19 -0400
+X-MC-Unique: XxULGeL9MfegSBDwmfEAEw-1
+X-Mimecast-MFC-AGG-ID: XxULGeL9MfegSBDwmfEAEw_1783022416
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4D1ED195419B;
+	Thu,  2 Jul 2026 20:00:14 +0000 (UTC)
+Received: from redhat.com (unknown [10.22.80.46])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8B0153002D2F;
+	Thu,  2 Jul 2026 20:00:07 +0000 (UTC)
+Date: Thu, 2 Jul 2026 16:00:04 -0400
+From: Joe Lawrence <joe.lawrence@redhat.com>
+To: George Guo <dongtai.guo@linux.dev>
+Cc: chenhuacai@kernel.org, jpoimboe@kernel.org, peterz@infradead.org,
+	jikos@kernel.org, mbenes@suse.cz, pmladek@suse.com,
+	kernel@xen0n.name, rostedt@goodmis.org, ardb@kernel.org,
+	nathan@kernel.org, nick.desaulniers+lkml@gmail.com,
+	yangtiezhu@loongson.cn, jiaxun.yang@flygoat.com,
+	liukexin@kylinos.cn, guodongtai@kylinos.cn, xry111@xry111.site,
+	wangyuli@aosc.io, loongarch@lists.linux.dev,
+	live-patching@vger.kernel.org, llvm@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/8] LoongArch: Add livepatch build (KLP) support
+Message-ID: <akbDROiVKjbkqMZL@redhat.com>
+References: <20260608100852.325413-1-dongtai.guo@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <20260608100852.325413-1-dongtai.guo@linux.dev>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Mimecast-MFC-PROC-ID: 6HZkTGg8lC5DhS0GOpWFLmEIFn_y8bF_-nGS4IVIW9U_1783022416
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260624085550.1508771-1-zhoubinbin@loongson.cn>
 
-Please consider these:
+On Mon, Jun 08, 2026 at 06:08:44PM +0800, George Guo wrote:
+> This series adds LoongArch support for the klp-build livepatch tooling,
+> enabling automated livepatch module generation using objtool on
+> LoongArch.
+>
+> It is based on Josh Poimboeuf's klp-build series [1] (see base-commit
+> below) and extends it with the LoongArch-specific objtool and build
+> pieces, plus a few LoongArch toolchain/relocation fixes required to make
+> livepatch modules load and run correctly.
+>
 
-/* Sashiko Automation: Issues Found (4 Findings) */
+Ok, what am I doing wrong here:
 
-On Wed, 24 Jun 2026, Binbin Zhou wrote:
+- Git tree is jpoimboe/klp-build-arm64 + this patchset
+- Using clang v21.1.8 and a defconfig + CONFIG_LIVEPATCH requirements
+- A simple patch to net/core/dev.c :: netif_rx_internal()
 
-> Use pointers annotated with the __iomem marker for all iomem map calls,
-> and creates a local copy of the mapped IO memory for future access in
-> the code. memcpy_fromio() and memcpy_toio() are used to read/write data
-> from/to mapped IO memory
-> 
-> Fixes: 0d64f6d1ffe9 ("mfd: ls2kbmc: Introduce Loongson-2K BMC core driver")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202603021730.Yy3QXYTw-lkp@intel.com/
-> Closes: https://lore.kernel.org/oe-kbuild-all/202606120639.WG6eb8VU-lkp@intel.com/
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
-> V2:
->  - Add the missing memcpy_fromio();
->  - Drop the unnecessary `buf` variable.
-> 
-> Link to V1:
-> https://lore.kernel.org/all/20260616115530.4012675-1-zhoubinbin@loongson.cn/
-> 
->  drivers/mfd/ls2k-bmc-core.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/mfd/ls2k-bmc-core.c b/drivers/mfd/ls2k-bmc-core.c
-> index 408056bfb2fe..1312812860c0 100644
-> --- a/drivers/mfd/ls2k-bmc-core.c
-> +++ b/drivers/mfd/ls2k-bmc-core.c
-> @@ -427,14 +427,20 @@ static int ls2k_bmc_init(struct ls2k_bmc_ddata *ddata)
->   */
->  static int ls2k_bmc_parse_mode(struct pci_dev *pdev, struct simplefb_platform_data *pd)
->  {
-> -	char *mode;
-> +	char *mode __free(kfree) = NULL;
-> +	void __iomem *base;
->  	int depth, ret;
->  
->  	/* The last 16M of PCI BAR0 is used to store the resolution string. */
-> -	mode = devm_ioremap(&pdev->dev, pci_resource_start(pdev, 0) + SZ_16M, SZ_16M);
-> +	base = devm_ioremap(&pdev->dev, pci_resource_start(pdev, 0) + SZ_16M, SZ_16M);
-> +	if (!base)
-> +		return -ENOMEM;
-> +
-> +	mode = kmalloc(SZ_16M, GFP_KERNEL);
+$ clang --version
+clang version 21.1.8 (Fedora 21.1.8-4.fc43)
+Target: x86_64-redhat-linux-gnu
+Thread model: posix
+InstalledDir: /usr/bin
+Configuration file: /etc/clang/x86_64-redhat-linux-gnu-clang.cfg
 
-[Severity: High]
-Will this 16MB allocation unconditionally fail on systems where
-KMALLOC_MAX_SIZE is smaller, such as 4MB with 4K pages?
+Setup and build the reference kernel:
 
-Even if successful, is it necessary to synchronously copy 16MB of device
-I/O memory just to read a short resolution string?
+  $ ARCH=loongarch LLVM=1 make defconfig
+  $ ./scripts/config --file .config \
+           --set-val CONFIG_FTRACE y \
+           --set-val CONFIG_KALLSYMS_ALL y \
+           --set-val CONFIG_FUNCTION_TRACER y \
+           --set-val CONFIG_DYNAMIC_FTRACE y \
+           --set-val CONFIG_DYNAMIC_DEBUG y \
+           --set-val CONFIG_LIVEPATCH y
+  $ ARCH=loongarch LLVM=1 make olddefconfig
+  $ grep LIVEPATCH .config
+  CONFIG_HAVE_LIVEPATCH=y
+  CONFIG_LIVEPATCH=y
 
+  $ ARCH=loongarch LLVM=1 make -j$(nproc)
+  ...
 
->  	if (!mode)
->  		return -ENOMEM;
->  
-> +	memcpy_fromio(mode, base, SZ_16M);
+Then provide this small patch:
 
-[Severity: High]
-This is a pre-existing issue, but since the buffer is now allocated on the
-heap via kmalloc() and copied directly from device memory, will string
-functions like strncmp() and strsep() read out-of-bounds if the 16MB
-region lacks a null terminator byte?
+  $ cat test.patch
+  diff --git a/net/core/dev.c b/net/core/dev.c
+  index 06c195906231..14fd3d5f351a 100644
+  --- a/net/core/dev.c
+  +++ b/net/core/dev.c
+  @@ -5717,6 +5717,7 @@ static int netif_rx_internal(struct sk_buff *skb)
+                  unsigned int qtail;
 
+                  ret = enqueue_to_backlog(skb, smp_processor_id(), &qtail);
+  +               pr_info("test");
+          }
+          return ret;
+   }
 
->  	/* The resolution field starts with the flag "video=". */
->  	if (!strncmp(mode, "video=", 6))
->  		mode = mode + 6;
+to klp-build:
 
-[Severity: High]
-Since mode was declared with __free(kfree), will advancing the pointer
-here cause kfree() to be called with a mid-buffer pointer and crash the
-allocator when ls2k_bmc_parse_mode() returns?
+  $ ARCH=loongarch LLVM=1 ./scripts/livepatch/klp-build -T test.patch
+  Validating patch(es)
+  Building original kernel
+  LoongArch detected: adding -fno-direct-access-external-data to KBUILD_CFLAGS_KERNEL
+  Cannot find symbol for section 5: .text.sched_clock.
+  kernel/sched/build_utility.o: failed
 
+The "Cannot find symbol for section" error message comes out of the
+recordmcount script.
 
-> 
-> base-commit: c454531af72e0df811600601413bb8d3d039ed08
-> -- 
-> 2.52.0
-> 
+What's strange is that arch/loongarch/Makefile wants to use patchable
+function entry:
 
--- 
-Lee Jones
+  ifdef CONFIG_DYNAMIC_FTRACE
+  KBUILD_CPPFLAGS += -DCC_USING_PATCHABLE_FUNCTION_ENTRY
+  CC_FLAGS_FTRACE := -fpatchable-function-entry=2
+  endif
+
+but Kconfig doesn't set it up for LoongArch.  If I select when
+DYNAMIC_FTRACE is turned on, like:
+
+  diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+  index 1dbf51ba9d6a..6d9bc4a580d9 100644
+  --- a/arch/loongarch/Kconfig
+  +++ b/arch/loongarch/Kconfig
+  @@ -139,6 +139,7 @@ config LOONGARCH
+          select HAVE_DMA_CONTIGUOUS
+          select HAVE_DYNAMIC_FTRACE
+          select HAVE_DYNAMIC_FTRACE_WITH_ARGS
+  +       select FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY if DYNAMIC_FTRACE
+          select HAVE_FTRACE_REGS_HAVING_PT_REGS
+          select HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+          select HAVE_DYNAMIC_FTRACE_WITH_REGS
+
+then rebuild the kernel and retry klp-build, it at least completes the
+original and patched kernel builds:
+
+  $ ARCH=loongarch LLVM=1 ./scripts/livepatch/klp-build -T test.patch
+  Validating patch(es)
+  Building original kernel
+  LoongArch detected: adding -fno-direct-access-external-data to KBUILD_CFLAGS_KERNEL
+  vmlinux.o: warning: objtool: __efistub_efi_boot_kernel(): unexpected end of section .init.text.efi_boot_kernel
+  Copying original object files
+  Fixing patch(es)
+  Building patched kernel
+  LoongArch detected: adding -fno-direct-access-external-data to KBUILD_CFLAGS_KERNEL
+  vmlinux.o: warning: objtool: __efistub_efi_boot_kernel(): unexpected end of section .init.text.efi_boot_kernel
+  Copying patched object files
+  Generating original checksums
+  Generating patched checksums
+  Diffing objects
+  vmlinux.o: changed function: netif_rx_internal
+  vmlinux.o: error: objtool: __jump_table_23683+0x8: duplicate reloc
+  error: klp-build: objtool klp diff failed
+  error: klp-build: line 829: '( cd "$ORIG_CSUM_DIR"; [[ -v VERBOSE ]] && echo "cd $ORIG_CSUM_DIR && ${cmd[*]}"; "${cmd[@]}" > >(tee -a "$log") 2> >(tee -a "$log" | "${filter[@]}" 1>&2) || die "objtool klp diff failed" )'
+
+but ends with a new error on "duplicate reloc" out of klp-build.
+
+What compiler / kernel config should I be trying with this patchset?
+
+Thanks,
+
+--
+Joe
+
