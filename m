@@ -1,135 +1,152 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EE0B2BDC26
-	for <loongarch@lists.linux.dev>; Thu,  2 Jul 2026 01:39:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782956347; cv=pass; b=VvfCpspox/EHuVnA+U0S/WvLrDdI1hq9uOzJS7U1Z5tCIgo6BUfEbJ3YncMcvWKcHNRPkFfviExkeYvNIYi/qpD8u4fugJLTd9vfxQS0L1/8tZ+EOgVd+SoEX1eatX+TC0yTW0J7OcAdc+U5Iu7USb9cjqLKDGPjE7xd7ly4LWk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782956347; c=relaxed/simple;
-	bh=mVL87EttaNCUS0ArSfV9Dq8wYEb+97u4sdSR2BpS7RI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iZjOKzb1zR0WHNUaAc6+H0CazSGjTa04iLIMcpVy6a8kvl51v3+FADJp8nreSTmKVkLiE3euFOYXqo1X6htfbrN/ptvgayrodNKCAMYaEfK0Nw0WQauXBsZmaVymCyfvTS3dhKf+RqjVj15PVDHpLH+AZTJCjDa416a/xxkg5RQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S2LhoNOQ; arc=pass smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S2LhoNOQ"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-c126e47a82cso160625766b.2
-        for <loongarch@lists.linux.dev>; Wed, 01 Jul 2026 18:39:04 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1782956343; cv=none;
-        d=google.com; s=arc-20260327;
-        b=NdfsomKmZjTsTit0EZWaYJnUoTo8MuSJp+wSleH8YK0ztqXvr4OMmJ3CcGTlzE36ze
-         dXGR9W5H0IxoLn4MwIZBS9mmbAxJHxbddIWB1MrxXLjnUQLKw98YCmtrpeUUL3NNd0rK
-         dL4bQWCIwVtkucJgUL1afKoHOuy6GlH7J83YBszk0LWsaLemW0yI9h1h3ruu9XPDzO8y
-         8mH+FOmW2nqhL3V4Gy82IIARxIfEvYGrhtduiV53i7rMDWf2EOKpmnVzd793zlf9M0JK
-         6dJPVobQzvZHJi4uU+TbxpeHR+slMfRhmWl0bc/HmkVX8pESXBgSGvSapgFaUrZwMXfl
-         G0qg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=gqxqwLiGZi4KRbu+1ajZ1YFNLw0ON224oZgbthL9Ai4=;
-        fh=/bhK0CcEaxLBL4ivFSjWwgo9IGYrD/jRnoCvACgz8jk=;
-        b=An6t7J5DCLeIucJ0ifR5mGQOWTxCeCIzf3UJTihhvz7VUKy+x9l9NmJ4UEnX8bLaff
-         9bZWRdgctayN2gGn6jlORJR9sA91s5iFBPIXnc8W85XusyMg+LvfcaQR9tmwWU+kZA0R
-         5erB9fC3Nl0sITDQqgw8W0bTSA1SozJm1QzpGc3BJPrf38p7gUfDe9BSJ48jCRmHH7NC
-         +ycD40mU/5TloEtrHdjvezoVZzzk6gnOIJVdojV7zapqkIKaqB6G39ZbMxnwkEolc7tX
-         Rlpxq35/Rq//B5yIAdVkqf56eEuA3xBRDPFS2Wf+1v9ae39idRCrtqsW0w8ycRTGNE9G
-         0vTg==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782956343; x=1783561143; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gqxqwLiGZi4KRbu+1ajZ1YFNLw0ON224oZgbthL9Ai4=;
-        b=S2LhoNOQmdOU4kB/cU2Dfa51AOgNxRPsc4dtffxF62L/shSsj+70Kfg5ul2nTz4srD
-         0XK9TPp2gCG0IxABIu4TLLzFjza3FLnTTrkyzGcnB7U3cQgAszkBVuWbn+/oX19Hasz2
-         dHgjEOtyfI56+LjG024Az2pHoZermqXme38uAY3xrKWiPvCNeXWnwi+rSd7YDUVcM2ZL
-         fMscfbZoh/G2IXj/yuFLhgK77mr6AfMSKPBwIO2pTjOMqlFmZdk4SAtqOwXDhCAC1eMo
-         Yh5e/KqqLPi5ooa3YEE/ieSufVVz0O/eBJJyigqIknlU58Qxvyfm0w6tdvEtBLdrMYJM
-         AFDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782956343; x=1783561143;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=gqxqwLiGZi4KRbu+1ajZ1YFNLw0ON224oZgbthL9Ai4=;
-        b=LDn2GKogchbM4XPBPoIuunH6J2/fIoGwyI38ADLQEp5MY4Tmg+aKl6haPuyw0HtsrK
-         uZwlp/yk8Lh6iLoM7Ym1+okVgHzqZOnonJYq8vtafGjXtFr8Fx7QJrTkhJA5V8y/Tqty
-         u72wIy5jM5P5MZX+tf8Tr+55fSdc0+I6VeWxUKN1TjGiUbkQppQfP3SjznhdznuzmlhF
-         WP1xMFAfAI94L3kBjouphETK34DXrk94ylg9PlQ1+sap/T59JznFnzD5NKioC98Vc9iE
-         wS/5yZ50YqCclVVNsS0CVQcRDDCziNnSPsN+FvUr00euvUVNxkbke+eZgbJdEJmOM6Tj
-         1WvA==
-X-Forwarded-Encrypted: i=1; AHgh+RrryKUBvRiKCISZBSkftrrP8+r7bseO4wgUtEdmw+gcB7ldeNYs1DScTLJhiH+hdfpWT4dJKYkpogY=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxxq2ccYyiqX51D6a9NffciTpUdnW8fL8r0MwovC5BzLwR22u5n
-	FnPUfYvc4A2cjYO2mJXRE2OBKvmKoqxaQIcP4HpxD6Q+aJ0vT9Biy5x7tSmjf+WSfdwZIuTKfBp
-	d+xnnWt5alK4fAlSF6XMPfS0z7ibBrcg=
-X-Gm-Gg: AfdE7cn779cUTicoQv4AQPX9vJYMeIq8+L7VU19AtkLd/rFyZOhb1+4fcMAfym6nk4B
-	FOAqQ5fYIoqCM9ID91RQ/2u4d5wGj1wCYMIES/0EWaks3RpH6WppDQxUIoV5+f2J9wQKpAMgeNO
-	e63lpuXMvQdjCJNIfNwOB3H02mnDqaZTaKWHbet+Ce3Sxf1zrjgCVdKO1y6DinJydmzCR50Xv2e
-	PQEU4dRriPbxncjXDmcpmRnIztQ2cAklcSTJZF5isAyGpohh6EuitWQ4T6EtMXui4VWel+blmM=
-X-Received: by 2002:a17:906:b89a:b0:c12:1c9a:48a3 with SMTP id
- a640c23a62f3a-c12a9d8ffc2mr170080866b.22.1782956342673; Wed, 01 Jul 2026
- 18:39:02 -0700 (PDT)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F439254B18
+	for <loongarch@lists.linux.dev>; Thu,  2 Jul 2026 02:21:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782958879; cv=none; b=aR/nzSKc0iA1fdP+pvKS65i9Y2vAA5BzWzLxn4MvdbK2OnRzJQ4fdJwmaBvfa7IOD9NqrYj0QIzJtcPtXohKvmCjdFyBAR6eaQhRCUXp4v6QVFaVIMR9OHFuZv1kHX8PummWhRe6TrwGJ4WwVwtp3Q58BmuGwbSk4JQdT50z5PU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782958879; c=relaxed/simple;
+	bh=wY913XJBoNw3wtoxup1g0+gEBADQrvWUQ9ZrluiGm8M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Cy/HoCpX2qArAXmFSkXf+kWeboGaW69alno6fVBgkndu1YqDyPHsoCPqmzONnYniebQL7swMVUJnMal9PEnIbvecvaOYHGi2MkPgR6MuWEi7CXi+Qf1iVHD/t4Sc5F1FVTLsbfzmmgHzs8i711aKyN/JbWATptUSc2cIwkVDVW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Dx_+sZy0VqZr4AAA--.3950S3;
+	Thu, 02 Jul 2026 10:21:13 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJBxbcIUy0VqqGy7AA--.26372S2;
+	Thu, 02 Jul 2026 10:21:10 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Emil Tsalapatis <emil@etsalapatis.com>,
+	KaFai Wan <kafai.wan@linux.dev>
+Cc: bpf@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Leon Hwang <leon.hwang@linux.dev>
+Subject: [PATCH bpf-next v5] bpf: Reject programs with inlined helpers if JIT is unavailable
+Date: Thu,  2 Jul 2026 10:21:08 +0800
+Message-ID: <20260702022108.17693-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1782439646.git.zhoubinbin@loongson.cn> <ed1314e1d3275fd20aff47397345a88fad6e9368.1782439646.git.zhoubinbin@loongson.cn>
- <c9361380-b28a-4f7d-9ae5-a00042189b79@sirena.org.uk>
-In-Reply-To: <c9361380-b28a-4f7d-9ae5-a00042189b79@sirena.org.uk>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Thu, 2 Jul 2026 09:38:50 +0800
-X-Gm-Features: AVVi8CcmZHG289kX0-X2lVThLi6Vah5Fc-yy-AopmD9GwRf3FHHrHRDDZC-S9I0
-Message-ID: <CAMpQs4+Za8=7hUm0SJ_Tp17_Hg+p=RHTsRPeutuPFfTs1rOABg@mail.gmail.com>
-Subject: Re: [PATCH v3 6/9] ASoC: loongson: Add Loongson-2K0300 CTCISZ Forever
- Pi sound card support
-To: Mark Brown <broonie@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Keguang Zhang <keguang.zhang@gmail.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
-	linux-sound@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBxbcIUy0VqqGy7AA--.26372S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxZr18Xr17XF13AF4fCw1UCFX_yoW5KryrpF
+	n8C3y7Cr4IqF4I9asrJw4xuw1Yqa1rG3W7Ga18GrW0ya1aqFn2qanYgFyFvFWfCr4vkr1S
+	vwnF9r10ka4UXFXCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
+	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+	6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+	0xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
+	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
+	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8qXdUUUUUU==
 
-Hi Mark:
+When an architecture implements bpf_jit_inlines_helper_call(), such as
+LoongArch, ARM64, PowerPC, and RISC-V, the verifier skips rewriting the
+helper call offset (insn->imm) during the bpf_do_misc_fixups() phase,
+because the helper is expected to be inlined by the JIT compiler. As a
+result, insn->imm remains as the raw helper enum ID.
 
-Thanks for your reply.
+However, if JIT is disabled at runtime (net.core.bpf_jit_enable=0) or
+if the JIT compilation later dynamically fails (e.g., due to OOM), the
+core BPF subsystem falls back to the BPF interpreter.
 
-On Wed, Jul 1, 2026 at 7:49=E2=80=AFPM Mark Brown <broonie@kernel.org> wrot=
-e:
->
-> On Fri, Jun 26, 2026 at 10:27:27AM +0800, Binbin Zhou wrote:
->
-> > The Loongson-2K0300 audio card uses a different DAI format compared to
-> > existing Loongson platforms.
->
-> >       },
-> > @@ -177,6 +189,10 @@ static int loongson_asoc_card_probe(struct platfor=
-m_device *pdev)
-> >       if (!ls_priv)
-> >               return -ENOMEM;
-> >
-> > +     ls_priv->cfg =3D (const struct loongson_card_config *)device_get_=
-match_data(dev);
-> > +     if (!ls_priv->cfg)
-> > +             return -EINVAL;
-> > +
->
-> Does this do the right thing on ACPI systems?  I'm not seeing anything
-> that'd get us match data there.
+When the interpreter executes (__bpf_call_base + insn->imm) with the
+unpatched raw helper ID, it jumps into an unaligned invalid address
+space, triggering an instruction alignment fault or a memory access
+panic.
 
-Yes, that's correct for ACPI. I tested it on the Loongson-2K2000.
-The ACPI system for the LoongArch I2S card uses `PRP0001` as the
-hardware ID, which also matches `loongson,ls-audio-card` compatible.
+To avoid modifying the BPF interpreter's complexity for JIT-specific
+paths, just introduce a 'jit_required' flag in struct bpf_prog. When
+a program contains helper calls that skip rewriting for JIT inlining,
+set this flag to 1. During runtime selection, if JIT compilation is
+not available, explicitly reject loading with -ENOTSUPP instead of
+falling back to the interpreter, safely preventing the kernel panic.
 
---=20
-Thanks.
-Binbin
+Fixes: 2ddec2c80b44 ("riscv, bpf: inline bpf_get_smp_processor_id()")
+Suggested-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+v5:
+  - Drop the fallback interpreter fixups as per maintainer's feedback.
+  - Introduce 'jit_required' member in struct bpf_prog to flag programs
+    that strictly rely on JIT.
+  - Reject loading with -ENOTSUPP in __bpf_prog_select_runtime() if JIT
+    fails or is disabled for these programs.
+  - Upgrade 'jited' bitfield group type from u16 to u32 in struct bpf_prog
+    to prevent 17-bit overflow warning.
+
+ include/linux/bpf.h | 3 ++-
+ kernel/bpf/core.c   | 2 +-
+ kernel/bpf/fixups.c | 4 +++-
+ 3 files changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index ba09795e0bfd..463fae6a5c33 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -1865,8 +1865,9 @@ struct bpf_prog_aux {
+ 
+ struct bpf_prog {
+ 	u16			pages;		/* Number of allocated pages */
+-	u16			jited:1,	/* Is our filter JIT'ed? */
++	u32			jited:1,	/* Is our filter JIT'ed? */
+ 				jit_requested:1,/* archs need to JIT the prog */
++				jit_required:1, /* program strictly requires JIT compiler */
+ 				gpl_compatible:1, /* Is filter GPL compatible? */
+ 				cb_access:1,	/* Is control block accessed? */
+ 				dst_needed:1,	/* Do we need dst entry? */
+diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+index 649cce41e13f..a55754bcc593 100644
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -2639,7 +2639,7 @@ struct bpf_prog *__bpf_prog_select_runtime(struct bpf_verifier_env *env, struct
+ 
+ 		fp = bpf_prog_jit_compile(env, fp);
+ 		bpf_prog_jit_attempt_done(fp);
+-		if (!fp->jited && jit_needed) {
++		if (!fp->jited && (jit_needed || fp->jit_required)) {
+ 			*err = -ENOTSUPP;
+ 			return fp;
+ 		}
+diff --git a/kernel/bpf/fixups.c b/kernel/bpf/fixups.c
+index 12a8a4eb757f..94e0457a0aa3 100644
+--- a/kernel/bpf/fixups.c
++++ b/kernel/bpf/fixups.c
+@@ -1841,8 +1841,10 @@ int bpf_do_misc_fixups(struct bpf_verifier_env *env)
+ 		}
+ 
+ 		/* Skip inlining the helper call if the JIT does it. */
+-		if (bpf_jit_inlines_helper_call(insn->imm))
++		if (bpf_jit_inlines_helper_call(insn->imm)) {
++			prog->jit_required = 1;
+ 			goto next_insn;
++		}
+ 
+ 		if (insn->imm == BPF_FUNC_get_route_realm)
+ 			prog->dst_needed = 1;
+-- 
+2.42.0
+
