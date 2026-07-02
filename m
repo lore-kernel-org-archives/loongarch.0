@@ -1,206 +1,138 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF9C949553A
-	for <loongarch@lists.linux.dev>; Thu,  2 Jul 2026 14:38:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C140331EB0;
+	Thu,  2 Jul 2026 15:57:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783003134; cv=none; b=UG1zreJUYVbB6xV3t30zlXCpItvKQpXonfQsIVEFc/7cJw6rkgpqd7d5ZPqXoLZfFjEE3c0V0OfV+DRtajbJVfbQVhevmT6K2hamHq1HcLC7v1s2j/HYjdNIpqtKvQKWGjrz6lvTmrzgx2+dz1x76/iRqDeglqfVZes7IG25ti0=
+	t=1783007828; cv=none; b=P92qZ2DvnQtAh6/Hw4NoYdIxL7itdgWGA+EVEjY9ZUzMuEzrQ9z61C6X4U8kWO4jKHftwuJRhauC5KrigPTv7E8Zq1GSEoyjdvbt5mz8AhKC6VpQUg92g8Z16TjrW93vxEQBTb7EFsXHA/S3oQfe9eMD06Rrw3AGC1pXaFUMlPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783003134; c=relaxed/simple;
-	bh=H88g9hW4UZ+8YvbJreYAaYNBhxdmpJiqEb2cx/0GvAg=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=UWiE1+HQqEmEw9KNUfxE4Q4cV718kMNEvTcnDFbdc9HsSNxifGMOXjpwkfw4UCJJL9dpwq98Qlu4RbnvslUHjjgGjGPE3g+Hsouq34bf9GrFs3bA7DCPNpxQcljV2+JH2hEPnsCGhIYe0eQ0TnRcGxX5p7sCJIoqGnyznc8CwL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Dx_+v6d0ZqrPEAAA--.4952S3;
-	Thu, 02 Jul 2026 22:38:50 +0800 (CST)
-Received: from [10.130.40.83] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJBxacH4d0ZqXUa8AA--.15763S3;
-	Thu, 02 Jul 2026 22:38:49 +0800 (CST)
-Subject: Re: [PATCH bpf-next v6] bpf: Reject programs with inlined helpers if
- JIT is unavailable
-To: KaFai Wan <kafai.wan@linux.dev>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Eduard Zingerman <eddyz87@gmail.com>,
- Kumar Kartikeya Dwivedi <memxor@gmail.com>,
- Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
- Emil Tsalapatis <emil@etsalapatis.com>
-Cc: bpf@vger.kernel.org, loongarch@lists.linux.dev,
- Leon Hwang <leon.hwang@linux.dev>, Puranjay Mohan <puranjay@kernel.org>,
- =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-References: <20260702053127.23599-1-yangtiezhu@loongson.cn>
- <f61c41783f56fc259b56141e8d438a56c9dfa31b.camel@linux.dev>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <f8e82ae2-78cd-bf91-ee7b-99a49289552a@loongson.cn>
-Date: Thu, 2 Jul 2026 22:38:48 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1783007828; c=relaxed/simple;
+	bh=2iAoVKzQBY1Uh7UEn/Lf0QRZa8p/bvywbliuLtP54lQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e6lq+E/nDEteMztPyocYwLDGtkTaELDsS9S9XCHr6p+BvIiv/gCfRYNk53i3ladwkVKouyCQm7WCm5vTNGk8aWHEakB5dLsVZKY/WFpUtkEiwlYq/ZOyX5y4joGJfemHokit7OomsNwNb8KB3Hhtl/osbGwy1+stLOCyzyDhosQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dJfJi47L; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dJfJi47L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 743041F000E9;
+	Thu,  2 Jul 2026 15:57:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783007827;
+	bh=/VIzTTQUgt1nPTnywwymt2yL+OH5Mmjv9XoixgXKKXk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=dJfJi47Ly/QO9LO1bFTU0f5Cb/W7dOUk3pM5wAua4eC7RImqZitnHULG2sMd4B3lt
+	 l+4HqEBt6Tq1Pn1GyW/Ouyx9Uh6XqMw9qrhX0UbtWEFINtumU1PApOoeW1+bSBoZHh
+	 AJF4CVZNxqDOb6cRpn/TJHmp4QQyS9rie6t9ngpHPhgIS586m3mrfN17bbcnLK3zGb
+	 iLeT54ZYPzMrWugYEoSvN1GzsaGbLfIprrmX1/0/2iiNLTn9Due2HukxAo9pZ7js5m
+	 KHPgWOL4Tv9hCPCOLYBJbg9yJSbmI2e7XyuL1CV/h3P+Ijf6jdbpcku3f7SCKAt5YG
+	 aA9c71TG0r5VA==
+Date: Thu, 2 Jul 2026 16:57:01 +0100
+From: Lee Jones <lee@kernel.org>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Corey Minyard <minyard@acm.org>, Chong Qiao <qiaochong@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org, jeffbai@aosc.io, kexybiscuit@aosc.io,
+	zhuyunfei@loongson.cn, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v2] mfd: ls2kbmc: mfd: ls2kbmc: Fix iomem pointer
+ handling in video mode parsing
+Message-ID: <20260702155701.GY2108533@google.com>
+References: <20260624085550.1508771-1-zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <f61c41783f56fc259b56141e8d438a56c9dfa31b.camel@linux.dev>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxacH4d0ZqXUa8AA--.15763S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxZw48ArWkGF1fXw4UXF1rZrc_yoWrXFWfpF
-	ykC3WvkrWrWrZ2g397Ca18ur4avrZrCr9rKayrGr1YkFyqgrnaq3W7Kr1YyrsxWr48W3WI
-	vwnFqFykGr1rXFXCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPlb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
-	xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
-	Jw0_WrylYx0Ex4A2jsIE14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64
-	vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0E
-	wIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F4
-	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_Wryl
-	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW5JVW7JwCI42IY6xIIjxv20xvEc7CjxV
-	AFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWx
-	JVW8Jr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07
-	j8qXdUUUUU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260624085550.1508771-1-zhoubinbin@loongson.cn>
 
-On 2026/7/2 下午8:16, KaFai Wan wrote:
-> On Thu, 2026-07-02 at 13:31 +0800, Tiezhu Yang wrote:
->> When an architecture implements bpf_jit_inlines_helper_call(), such as
->> LoongArch, ARM64, PowerPC, and RISC-V, the verifier skips rewriting the
->> helper call offset (insn->imm) during the bpf_do_misc_fixups() phase,
->> because the helper is expected to be inlined by the JIT compiler. As a
->> result, insn->imm remains as the raw helper enum ID.
+Please consider these:
 
-...
+/* Sashiko Automation: Issues Found (4 Findings) */
 
->> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
->> index ba09795e0bfd..f5c283af3cf7 100644
->> --- a/include/linux/bpf.h
->> +++ b/include/linux/bpf.h
->> @@ -1889,6 +1889,7 @@ struct bpf_prog {
->>   		u8 digest[SHA256_DIGEST_SIZE];
->>   		u8 tag[BPF_TAG_SIZE];
->>   	};
->> +	u8			jit_required;	/* program strictly requires JIT compiler */
+On Wed, 24 Jun 2026, Binbin Zhou wrote:
+
+> Use pointers annotated with the __iomem marker for all iomem map calls,
+> and creates a local copy of the mapped IO memory for future access in
+> the code. memcpy_fromio() and memcpy_toio() are used to read/write data
+> from/to mapped IO memory
 > 
-> maybe 1 bit is enough. I'm not sure the layout matters, if not we can put behind sleepable:1.
+> Fixes: 0d64f6d1ffe9 ("mfd: ls2kbmc: Introduce Loongson-2K BMC core driver")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202603021730.Yy3QXYTw-lkp@intel.com/
+> Closes: https://lore.kernel.org/oe-kbuild-all/202606120639.WG6eb8VU-lkp@intel.com/
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> ---
+> V2:
+>  - Add the missing memcpy_fromio();
+>  - Drop the unnecessary `buf` variable.
+> 
+> Link to V1:
+> https://lore.kernel.org/all/20260616115530.4012675-1-zhoubinbin@loongson.cn/
+> 
+>  drivers/mfd/ls2k-bmc-core.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mfd/ls2k-bmc-core.c b/drivers/mfd/ls2k-bmc-core.c
+> index 408056bfb2fe..1312812860c0 100644
+> --- a/drivers/mfd/ls2k-bmc-core.c
+> +++ b/drivers/mfd/ls2k-bmc-core.c
+> @@ -427,14 +427,20 @@ static int ls2k_bmc_init(struct ls2k_bmc_ddata *ddata)
+>   */
+>  static int ls2k_bmc_parse_mode(struct pci_dev *pdev, struct simplefb_platform_data *pd)
+>  {
+> -	char *mode;
+> +	char *mode __free(kfree) = NULL;
+> +	void __iomem *base;
+>  	int depth, ret;
+>  
+>  	/* The last 16M of PCI BAR0 is used to store the resolution string. */
+> -	mode = devm_ioremap(&pdev->dev, pci_resource_start(pdev, 0) + SZ_16M, SZ_16M);
+> +	base = devm_ioremap(&pdev->dev, pci_resource_start(pdev, 0) + SZ_16M, SZ_16M);
+> +	if (!base)
+> +		return -ENOMEM;
+> +
+> +	mode = kmalloc(SZ_16M, GFP_KERNEL);
 
-Hi KaFai,
+[Severity: High]
+Will this 16MB allocation unconditionally fail on systems where
+KMALLOC_MAX_SIZE is smaller, such as 4MB with 4K pages?
 
-Thanks for the guidance.
+Even if successful, is it necessary to synchronously copy 16MB of device
+I/O memory just to read a short resolution string?
 
-I have placed jit_required:1 right behind sleepable:1
-to keep the layout clean, and refactored the kfunc path.
 
-I have just sent out the formal v7 patch series with
-Suggested-by tags.
+>  	if (!mode)
+>  		return -ENOMEM;
+>  
+> +	memcpy_fromio(mode, base, SZ_16M);
 
-Here is the full pahole output for v7:
+[Severity: High]
+This is a pre-existing issue, but since the buffer is now allocated on the
+heap via kmalloc() and copied directly from device memory, will string
+functions like strncmp() and strsep() read out-of-bounds if the 16MB
+region lacks a null terminator byte?
 
-```
-fedora@linux:~/703jit.git$ pahole -C bpf_prog ./vmlinux
-struct bpf_prog {
-	u16                        pages;                /*     0     2 */
-	u16                        jited:1;              /*     2: 0  2 */
-	u16                        jit_requested:1;      /*     2: 1  2 */
-	u16                        gpl_compatible:1;     /*     2: 2  2 */
-	u16                        cb_access:1;          /*     2: 3  2 */
-	u16                        dst_needed:1;         /*     2: 4  2 */
-	u16                        blinding_requested:1; /*     2: 5  2 */
-	u16                        blinded:1;            /*     2: 6  2 */
-	u16                        is_func:1;            /*     2: 7  2 */
-	u16                        kprobe_override:1;    /*     2: 8  2 */
-	u16                        has_callchain_buf:1;  /*     2: 9  2 */
-	u16                        enforce_expected_attach_type:1; /*     2:10 
-2 */
-	u16                        call_get_stack:1;     /*     2:11  2 */
-	u16                        call_get_func_ip:1;   /*     2:12  2 */
-	u16                        call_session_cookie:1; /*     2:13  2 */
-	u16                        tstamp_type_access:1; /*     2:14  2 */
-	u16                        sleepable:1;          /*     2:15  2 */
-	u16                        jit_required:1;       /*     4: 0  2 */
 
-	/* XXX 15 bits hole, try to pack */
-	/* XXX 2 bytes hole, try to pack */
+>  	/* The resolution field starts with the flag "video=". */
+>  	if (!strncmp(mode, "video=", 6))
+>  		mode = mode + 6;
 
-	enum bpf_prog_type         type;                 /*     8     4 */
-	enum bpf_attach_type       expected_attach_type; /*    12     4 */
-	u32                        len;                  /*    16     4 */
-	u32                        jited_len;            /*    20     4 */
-	union {
-		u8                 digest[32];           /*    24    32 */
-		u8                 tag[8];               /*    24     8 */
-	};                                               /*    24    32 */
-	struct bpf_prog_stats *    stats;                /*    56     8 */
-	/* --- cacheline 1 boundary (64 bytes) --- */
-	u8 *                       active;               /*    64     8 */
-	unsigned int               (*bpf_func)(const void  *, const struct 
-bpf_insn  *); /*    72     8 */
-	struct bpf_prog_aux *      aux;                  /*    80     8 */
-	struct sock_fprog_kern *   orig_prog;            /*    88     8 */
-	union {
-		struct {
-			struct {
-			} __empty_insns;                 /*    96     0 */
-			struct sock_filter insns[0];     /*    96     0 */
-		};                                       /*    96     0 */
-		struct {
-			struct {
-			} __empty_insnsi;                /*    96     0 */
-			struct bpf_insn insnsi[0];       /*    96     0 */
-		};                                       /*    96     0 */
-	};                                               /*    96     0 */
+[Severity: High]
+Since mode was declared with __free(kfree), will advancing the pointer
+here cause kfree() to be called with a mid-buffer pointer and crash the
+allocator when ls2k_bmc_parse_mode() returns?
 
-	/* size: 96, cachelines: 2, members: 29 */
-	/* sum members: 90, holes: 1, sum holes: 2 */
-	/* sum bitfield members: 17 bits, bit holes: 1, sum bit holes: 15 bits */
-	/* last cacheline: 32 bytes */
-};
-```
 
-Here is the local test log for v7 when JIT is disabled,
-it correctly rejects loading with -ENOTSUPP (-524) and
-prevents the panic.
+> 
+> base-commit: c454531af72e0df811600601413bb8d3d039ed08
+> -- 
+> 2.52.0
+> 
 
-```
-fedora@linux:~$ cat test_panic.c
-   #include <linux/bpf.h>
-   #include <bpf/bpf_helpers.h>
-
-   SEC("kprobe/sys_getpid")
-   int test_panic(void *ctx)
-   {
-   	struct task_struct *task;
-
-   	task = (struct task_struct *)bpf_get_current_task();
-   	if (task)
-   		bpf_printk("Task address: %p\n", task);
-
-   	return 0;
-   }
-
-   char LICENSE[] SEC("license") = "GPL";
-fedora@linux:~$ clang -target bpf -O2 -g -c test_panic.c -o test_panic.o
-fedora@linux:~$ sudo sysctl -w net.core.bpf_jit_enable=0
-[sudo] password for fedora:
-net.core.bpf_jit_enable = 0
-fedora@linux:~$ sudo bpftool prog load test_panic.o 
-/sys/fs/bpf/test_panic autoattach
-libbpf: prog 'test_panic': BPF program load failed: unknown error (-524)
-libbpf: prog 'test_panic': -- BEGIN PROG LOAD LOG --
-processed 10 insns (limit 1000000) max_states_per_insn 0 total_states 1 
-peak_states 1 mark_read 0
--- END PROG LOAD LOG --
-libbpf: prog 'test_panic': failed to load: -524
-libbpf: failed to load object 'test_panic.o'
-Error: failed to load object file
-```
-
-Thanks,
-Tiezhu
-
+-- 
+Lee Jones
