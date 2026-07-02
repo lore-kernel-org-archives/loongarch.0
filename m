@@ -1,32 +1,32 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A29F2F8EA3
-	for <loongarch@lists.linux.dev>; Thu,  2 Jul 2026 02:23:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00C12EBDFA
+	for <loongarch@lists.linux.dev>; Thu,  2 Jul 2026 02:24:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782959041; cv=none; b=gjIlijBOIXXOQRkCokZE9OzbPEKYE7w7nCw+o7vwj6KDq/+kg+s27jt6OVEkGceP9bcdkHSKfDMuGMTXU0c31Rf0Yt3PNWSPCkVmdhjhgfmfu8K+Najmoms+EBnZGRU6acbD809ggBdIfnLP+F+XcOIRU+kveqfaINBUlVtUQRI=
+	t=1782959070; cv=none; b=Qe3chycj/xM0LM8saYEuvHtHsHexJIoCtfpOjoqepjoYcW+LAbb1osT5iP3F4gI/A1CkNWfMU9t7IB/AvxgttqHH+1TN60vIX0o//kDLh7in/onExzmjxaUFsdqu+pnKOzMq7zU/fYhrParBIhyVJeZ1Jao5d+7GK09NPv7DxQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782959041; c=relaxed/simple;
-	bh=2YumHmT4R4gKfwEUrU+wl2y3oDnZcbSwBUhQbNWpBFQ=;
+	s=arc-20240116; t=1782959070; c=relaxed/simple;
+	bh=bTc+6+MU3AieKzk7mlwNK0uCeTNHZ3qAtx1qWHhjn7E=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JY/CRzAD8r83Nh5HDKMuWiFuCX8r/R0H1bQ+Guib7QfwvFDeUt3WHO5AoVFEr+JxA/v9XDmB4FZKdJHJ1Y5TeFx/DPRE/N1dfXkItTay3kFoxUIarx0cr22BZ+65gJc0T+GibHJbS/uaG+fZ/n1GqA1gylJ4bxqlC+Jnp3iIwEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vfaR7vDl; arc=none smtp.client-ip=91.218.175.179
+	 MIME-Version; b=bsRks5/MeBdK1NjBaZD+IPwdKJkd7C2Dwn0EjBVozyHI+Gl7kzQemaFh8QawDztOR1x2MVU7L3jDsUHvbc7gnPIZ4YFm5d5YhZS8UruGyJ4uJnZFzoUjKYlbhNno17Patx00SaGjCtSO4pk1NyQtulJo5JH1Q64eze5nU6tG1yM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Wxt1il90; arc=none smtp.client-ip=95.215.58.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vfaR7vDl"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Wxt1il90"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1782959037;
+	t=1782959067;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=eg2XUtsWbE8d0hRsNi6uEMkuMS8sIDRfMXn4zdVKrcA=;
-	b=vfaR7vDlEzr7H511Y1gM++5ovrA2aW+i+R8Ajuq0pU+xoE1rT9C4vVAxO/1Fm/SqWeCY3k
-	rU+VFE7jK+x3xdRIfd5bJDosqli5Mk4hTiVKYBiIssCjJW/LQo1LBvQv2iKpUD1pPDovTT
-	lXXbEW8NxLsQkK8dcNTOYVrTWGusjU8=
+	bh=ZBqzt++b2Rtqd7Ud6I1gpN0Fo7cumb2X1wVjVk4svFU=;
+	b=Wxt1il90E7IvBSyN4tqjVovsMLtNT7F3+nPCIGefmyICIqZAcvnMt9YV1GSjboBBQ5zz9Z
+	K3mxxuFmt7dpaVGleZa43aW7AI6ajX74Ia/EUjVXZ7WxJX3ZeYkogbKltE4fLsBFxeepx3
+	6KgZhkKWyq9/hS97JbAw4bDQnR+yecA=
 From: George Guo <dongtai.guo@linux.dev>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	Tiezhu Yang <yangtiezhu@loongson.cn>,
@@ -45,9 +45,9 @@ Cc: WANG Xuerui <kernel@xen0n.name>,
 	bpf@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH bpf-next v2 02/11] LoongArch: BPF: Support internal-only MOV to resolve per-CPU addrs
-Date: Thu,  2 Jul 2026 10:23:13 +0800
-Message-Id: <20260702022322.51033-3-dongtai.guo@linux.dev>
+Subject: [PATCH bpf-next v2 03/11] LoongArch: BPF: Add timed may_goto support
+Date: Thu,  2 Jul 2026 10:23:14 +0800
+Message-Id: <20260702022322.51033-4-dongtai.guo@linux.dev>
 In-Reply-To: <20260702022322.51033-1-dongtai.guo@linux.dev>
 References: <20260702022322.51033-1-dongtai.guo@linux.dev>
 Precedence: bulk
@@ -61,59 +61,58 @@ X-Migadu-Flow: FLOW_OUT
 
 From: George Guo <guodongtai@kylinos.cn>
 
-Support the internal-only BPF_MOV instruction that resolves the absolute
-address of per-CPU data from its per-CPU offset. This instruction is used
-only for internal inlining optimizations between the BPF verifier and the
-JITs (e.g. inlining bpf_get_smp_processor_id() and per-CPU map lookups).
+Implement arch_bpf_timed_may_goto() and advertise it through
+bpf_jit_supports_timed_may_goto() so the verifier lowers may_goto into
+the timed variant: instead of a fixed iteration counter, the loop is
+bounded by a wall-clock timeout maintained in a per-loop stack slot.
 
-LoongArch keeps the per-CPU offset of the current CPU in $r21
-(__my_cpu_offset), so resolving a per-CPU address only requires adding
-$r21 to the source register holding the per-CPU offset. Advertise the
-capability via bpf_jit_supports_percpu_insn().
+arch_bpf_timed_may_goto() uses a custom calling convention: the verifier
+passes the count/timestamp stack offset in BPF_REG_AX and expects the
+updated count back in the same register. The JIT call path therefore skips
+the usual 'BPF_REG_0 = C return value' move for this helper.
 
 Signed-off-by: George Guo <guodongtai@kylinos.cn>
 ---
- arch/loongarch/include/asm/inst.h |  1 +
- arch/loongarch/net/bpf_jit.c      | 14 ++++++++++++++
- 2 files changed, 15 insertions(+)
+ arch/loongarch/net/Makefile             |  2 +-
+ arch/loongarch/net/bpf_jit.c            | 13 ++++++-
+ arch/loongarch/net/bpf_timed_may_goto.S | 47 +++++++++++++++++++++++++
+ 3 files changed, 60 insertions(+), 2 deletions(-)
+ create mode 100644 arch/loongarch/net/bpf_timed_may_goto.S
 
-diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-index 76b723590023..44fb5ad26d1a 100644
---- a/arch/loongarch/include/asm/inst.h
-+++ b/arch/loongarch/include/asm/inst.h
-@@ -404,6 +404,7 @@ enum loongarch_gpr {
- 	LOONGARCH_GPR_T6,
- 	LOONGARCH_GPR_T7,
- 	LOONGARCH_GPR_T8,
-+	LOONGARCH_GPR_U0 = 21,	/* Kernel per-CPU base register ($r21) */
- 	LOONGARCH_GPR_FP = 22,
- 	LOONGARCH_GPR_S0 = 23,
- 	LOONGARCH_GPR_S1,
+diff --git a/arch/loongarch/net/Makefile b/arch/loongarch/net/Makefile
+index 1ec12a0c324a..8d9ddb48f9ea 100644
+--- a/arch/loongarch/net/Makefile
++++ b/arch/loongarch/net/Makefile
+@@ -4,4 +4,4 @@
+ #
+ # Copyright (C) 2022 Loongson Technology Corporation Limited
+ #
+-obj-$(CONFIG_BPF_JIT) += bpf_jit.o
++obj-$(CONFIG_BPF_JIT) += bpf_jit.o bpf_timed_may_goto.o
 diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index 5e34e9e3f508..b4208fa3a242 100644
+index b4208fa3a242..bb84b985cb45 100644
 --- a/arch/loongarch/net/bpf_jit.c
 +++ b/arch/loongarch/net/bpf_jit.c
-@@ -759,6 +759,15 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
- 			move_reg(ctx, dst, t1);
- 			break;
- 		}
-+		if (insn_is_mov_percpu_addr(insn)) {
-+			if (dst != src)
-+				move_reg(ctx, dst, src);
-+#ifdef CONFIG_SMP
-+			/* dst += __my_cpu_offset, held in $r21 */
-+			emit_insn(ctx, addd, dst, dst, LOONGARCH_GPR_U0);
-+#endif
-+			break;
-+		}
- 		switch (off) {
- 		case 0:
- 			move_reg(ctx, dst, src);
-@@ -2406,6 +2415,11 @@ bool bpf_jit_supports_fsession(void)
+@@ -1229,7 +1229,13 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 		move_addr(ctx, t1, func_addr);
+ 		emit_insn(ctx, jirl, LOONGARCH_GPR_RA, t1, 0);
+ 
+-		if (insn->src_reg != BPF_PSEUDO_CALL)
++		/*
++		 * Call to arch_bpf_timed_may_goto() uses a custom calling
++		 * convention with the argument and return value in BPF_REG_AX,
++		 * so skip moving the C return value into BPF_REG_0.
++		 */
++		if (insn->src_reg != BPF_PSEUDO_CALL &&
++		    func_addr != (u64)arch_bpf_timed_may_goto)
+ 			move_reg(ctx, regmap[BPF_REG_0], LOONGARCH_GPR_A0);
+ 
+ 		break;
+@@ -2420,6 +2426,11 @@ bool bpf_jit_supports_percpu_insn(void)
  	return true;
  }
  
-+bool bpf_jit_supports_percpu_insn(void)
++bool bpf_jit_supports_timed_may_goto(void)
 +{
 +	return true;
 +}
@@ -121,6 +120,59 @@ index 5e34e9e3f508..b4208fa3a242 100644
  /* Indicate the JIT backend supports mixing bpf2bpf and tailcalls. */
  bool bpf_jit_supports_subprog_tailcalls(void)
  {
+diff --git a/arch/loongarch/net/bpf_timed_may_goto.S b/arch/loongarch/net/bpf_timed_may_goto.S
+new file mode 100644
+index 000000000000..8a4c15418998
+--- /dev/null
++++ b/arch/loongarch/net/bpf_timed_may_goto.S
+@@ -0,0 +1,47 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Author: George Guo <guodongtai@kylinos.cn>
++ * Copyright (C) 2026 KylinSoft Corporation.
++ */
++
++#include <asm/asmmacro.h>
++#include <asm/regdef.h>
++#include <linux/export.h>
++#include <linux/linkage.h>
++
++SYM_FUNC_START(arch_bpf_timed_may_goto)
++	addi.d		sp, sp, -64
++	st.d		ra, sp, 56
++
++	/* Save BPF registers R0 - R5 (a5, a0 - a4) */
++	st.d		a5, sp, 8
++	st.d		a0, sp, 16
++	st.d		a1, sp, 24
++	st.d		a2, sp, 32
++	st.d		a3, sp, 40
++	st.d		a4, sp, 48
++
++	/*
++	 * BPF_REG_AX (t0) holds the offset passed in by the verifier; add it
++	 * to BPF_REG_FP (s4) to get the pointer to the count and timestamp,
++	 * then pass it as the first argument in a0.
++	 *
++	 * The verifier emits a load using FP right before this call, so
++	 * BPF_REG_FP (s4) is always set up by the JIT in this case.
++	 */
++	add.d		a0, t0, s4
++	bl		bpf_check_timed_may_goto
++	/* BPF_REG_AX (t0) will be stored into count, so move the return value to it. */
++	move		t0, a0
++
++	ld.d		ra, sp, 56
++	ld.d		a5, sp, 8
++	ld.d		a0, sp, 16
++	ld.d		a1, sp, 24
++	ld.d		a2, sp, 32
++	ld.d		a3, sp, 40
++	ld.d		a4, sp, 48
++	addi.d		sp, sp, 64
++
++	jr		ra
++SYM_FUNC_END(arch_bpf_timed_may_goto)
 -- 
 2.25.1
 
