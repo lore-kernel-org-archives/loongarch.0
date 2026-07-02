@@ -1,220 +1,202 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEDFD2C3251
-	for <loongarch@lists.linux.dev>; Thu,  2 Jul 2026 12:13:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A84E47D948
+	for <loongarch@lists.linux.dev>; Thu,  2 Jul 2026 12:17:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782994419; cv=none; b=U4op3xma/ky9Ec3WUVcrUQVyTOzrn2J9k2GWWB/taKPHXjOUuKV7RhthgJ+W/UEOEoDrXfN7fgM+YrpO1ofV/jr22vERMRcA+mMozV0jREPTuyD3DjY3wcxIGWNJWTi3Nubv3FuPh0xa5E1Dmkiw+0R6bgSs/iKSaJK7q7eujwk=
+	t=1782994626; cv=none; b=LMU0XHQSbStvkYGZn/V9AMxUSA19DygUInCOxZW/5xbWU2VHS9me6nOZ+JlukvF/JTHwmUed/gxi4/aZCLVY3gCavIGMoAvWnVAXJSccE+SZI45Dqs2Q5PaA8I9HCUJdD137HP3vkoyTFPcVyrShAwcHeS+meCIdP/gNL4NUjpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782994419; c=relaxed/simple;
-	bh=/fGg/zbDCYjldDdholXovvIhwt1j0HCiZaqUgsZ72EM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IkaylT2HtV3+/keYmKZbglpel3QZ/qH+puoMO5cmg5riiKtdlt4fwovtpDBHdeFFrszT3VruHMi7z/mgBmIiQluN7Y5uZ/VvGlUwThqMkxuzIsE7kiOE9hlOeXyNLABu9OxDye5YuPdvkxT/GsloypOzns6bdiUKP667+fiQpiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=jr565Sgc; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=/WOwDBpZ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=jr565Sgc; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=/WOwDBpZ; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1782994626; c=relaxed/simple;
+	bh=yJRAPWNo21RnCUG4ESG0w7KE2hT1JrFP2dLUEQ9co58=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=sd81sJ6kLTRceo2Svwzcs7rCXY2q2KfUEq0GhqYNfsH+pUKTPhKOQ1Z8fPGzhZ82GBgQbcIRjHf8g8l2AWtWxLHV6amxeUhXUGx0yOf7mhv2P0dmICp1iKvUIn0LYLDeJ9W30v2Eo0YPZ2pVTmBcaPULbmlCTV4zBmuWJ/8aA64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=erGT8SnZ; arc=none smtp.client-ip=91.218.175.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="jr565Sgc";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/WOwDBpZ";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="jr565Sgc";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/WOwDBpZ"
-Received: from kunlun.suse.cz (unknown [IPv6:2a07:de40:b306:2000::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id F0D9E760CD;
-	Thu,  2 Jul 2026 12:13:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1782994416; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="erGT8SnZ"
+Message-ID: <f61c41783f56fc259b56141e8d438a56c9dfa31b.camel@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1782994622;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pG91nP4Qi8D32QeUd4BsitFSNWDgLGqTgIw8xUNh8+A=;
-	b=jr565SgcttfGFJ57yj5mW/Caf6TLN9+Lx6mq64PxA+O9ATWQUkPkG0RxXNcrg1a93uYcSk
-	5zgmkUirTTGYfY4obUtbHl6tDLZUi/BiqNPNDbagEgDg/HZEIrATKmtx601l1BjmgZhO3w
-	bVm0WF4IJ/zBK2LKchVEPi87ayF4k5c=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1782994416;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pG91nP4Qi8D32QeUd4BsitFSNWDgLGqTgIw8xUNh8+A=;
-	b=/WOwDBpZkW/kZJAISaF6tFoIBWgRZQ8bt0TWva7XM2NIT68dvWn8p8bB5zOLrjpDr24bSX
-	dzqh10mmIkHj/TDA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=jr565Sgc;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="/WOwDBpZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1782994416; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pG91nP4Qi8D32QeUd4BsitFSNWDgLGqTgIw8xUNh8+A=;
-	b=jr565SgcttfGFJ57yj5mW/Caf6TLN9+Lx6mq64PxA+O9ATWQUkPkG0RxXNcrg1a93uYcSk
-	5zgmkUirTTGYfY4obUtbHl6tDLZUi/BiqNPNDbagEgDg/HZEIrATKmtx601l1BjmgZhO3w
-	bVm0WF4IJ/zBK2LKchVEPi87ayF4k5c=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1782994416;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pG91nP4Qi8D32QeUd4BsitFSNWDgLGqTgIw8xUNh8+A=;
-	b=/WOwDBpZkW/kZJAISaF6tFoIBWgRZQ8bt0TWva7XM2NIT68dvWn8p8bB5zOLrjpDr24bSX
-	dzqh10mmIkHj/TDA==
-Date: Thu, 2 Jul 2026 14:13:34 +0200
-From: Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-To: Sven Schnelle <svens@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andrew Donnellan <andrew+kernel@donnellan.id.au>,
-	Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Mukesh Kumar Chaurasiya <mkchauras@linux.ibm.com>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	Zong Li <zong.li@sifive.com>, Nam Cao <namcao@linutronix.de>,
-	Deepak Gupta <debug@rivosinc.com>,
-	Lukas Gerlach <lukas.gerlach@cispa.de>,
-	Rui Qi <qirui.001@bytedance.com>, Kees Cook <kees@kernel.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org
-Subject: Re: [RFC] entry: Untangle the return value of
- syscall_enter_from_user_mode from syscall NR
-Message-ID: <akZV7kjVh37z63Nz@kunlun.suse.cz>
-References: <akVRcPsD_R_CE1qW@kunlun.suse.cz>
- <yt9dechlbyj0.fsf@linux.ibm.com>
- <akYreY_BHuRbxSsO@kunlun.suse.cz>
- <yt9d5x2xbny9.fsf@linux.ibm.com>
+	bh=X/OZ//ON7orm4N2x26XRJAtujrag+hI9dhYZcyvpa9g=;
+	b=erGT8SnZepaErUEWINQJbvD6sNy5wb++XQ/UXVzWWUf/yU+mrjClpSe3AcpmFvcPI5spfT
+	TKs+JjskWm6VF6uPrlWhrOKalC6pHXE3OegnyOXUKW4/iUZgWIdsQcrmVsUxJXlqjNlMcp
+	St0U9fSg5Wfw8v3pdXahLN+WmHglgCI=
+Subject: Re: [PATCH bpf-next v6] bpf: Reject programs with inlined helpers
+ if JIT is unavailable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: KaFai Wan <kafai.wan@linux.dev>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>, Alexei Starovoitov
+ <ast@kernel.org>,  Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko
+ <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,  Kumar Kartikeya
+ Dwivedi <memxor@gmail.com>, Martin KaFai Lau <martin.lau@linux.dev>, Song
+ Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa
+ <jolsa@kernel.org>, Emil Tsalapatis <emil@etsalapatis.com>
+Cc: bpf@vger.kernel.org, loongarch@lists.linux.dev, Leon Hwang
+	 <leon.hwang@linux.dev>, Puranjay Mohan <puranjay@kernel.org>, 
+ =?ISO-8859-1?Q?Bj=F6rn_T=F6pel?=
+	 <bjorn@kernel.org>
+Date: Thu, 02 Jul 2026 20:16:51 +0800
+In-Reply-To: <20260702053127.23599-1-yangtiezhu@loongson.cn>
+References: <20260702053127.23599-1-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <yt9d5x2xbny9.fsf@linux.ibm.com>
-X-Spam-Flag: YES
-X-Rspamd-Action: add header
-X-Spam-Level: ****************
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [16.56 / 50.00];
-	SPAM_FLAG(5.00)[];
-	NEURAL_SPAM_LONG(3.50)[1.000];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_SPAM_SHORT(2.87)[0.958];
-	HFILTER_HOSTNAME_UNKNOWN(2.50)[];
-	RDNS_NONE(2.00)[];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ONCE_RECEIVED(1.20)[];
-	HFILTER_HELO_IP_A(1.00)[kunlun.suse.cz];
-	HFILTER_HELO_NORES_A_OR_MX(0.30)[kunlun.suse.cz];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[45];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b306:2000::2:from];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b306:2000::2:from];
-	RCVD_COUNT_ZERO(0.00)[0];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TAGGED_RCPT(0.00)[kernel];
-	R_RATELIMIT(0.00)[to_ip_from(RL5ct4uf71gj8hk4gmisc87btw)];
-	MISSING_XM_UA(0.00)[];
-	FREEMAIL_CC(0.00)[infradead.org,lwn.net,linuxfoundation.org,kernel.org,xen0n.name,linux.ibm.com,ellerman.id.au,gmail.com,dabbelt.com,eecs.berkeley.edu,ghiti.fr,redhat.com,alien8.de,linux.intel.com,zytor.com,donnellan.id.au,arm.com,arndb.de,flygoat.com,sifive.com,linutronix.de,rivosinc.com,cispa.de,bytedance.com,vger.kernel.org,lists.linux.dev,lists.ozlabs.org,lists.infradead.org];
-	DKIM_TRACE(0.00)[suse.de:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b306:2000::2:from]
-X-Spamd-Bar: ++++++++++++++++
-X-Rspamd-Queue-Id: F0D9E760CD
-X-Spam-Score: 16.56
-X-Spam: Yes
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Jul 02, 2026 at 02:01:02PM +0200, Sven Schnelle wrote:
-> Michal Suchánek <msuchanek@suse.de> writes:
-> 
-> > On Thu, Jul 02, 2026 at 10:12:35AM +0200, Sven Schnelle wrote:
-> >> Michal Suchánek <msuchanek@suse.de> writes:
-> >> 
-> >> > The return value of syscall_enter_from_user_mode is used both for the
-> >> > adjusted syscall number and the indicator that a syscall should be
-> >> > skipped.
-> >> >
-> >> > As seccomp can be invoked on any syscall, including invalid ones this
-> >> > somewhat undermines seccomp.
-> >> >
-> >> > While the seccomp variants that terminate the process do not need to
-> >> > care about this for the filter that sets the syscall return value this
-> >> > disctinction is required.
-> >> >
-> >> > Pass the syscall number as a pointer to the inline entry functions, and
-> >> > use the return value exclusively for the indication that the syscall is
-> >> > already handled.
-> >> >
-> >> > This should avoid the need for the s390 PIF_SYSCALL_RET_SET which is the
-> >> > workaround for exactly this deficiency.
-> >> 
-> >> I'm not sure whether PIF_SYSCALL_RET_SET can be removed - the syscall
-> >> return might still get set by PTRACE_SET_SYSCALL_INFO when the tracee is
-> >> stopped. This might be a positive number which can't be distinguished
-> >> from a syscall number. But maybe i'm missing something? It's been quite
-> >> a while since I touched all that ptrace stuff.
-> >
-> > When the syscall return value is set (in the registers) the return value
-> > which is also the modified syscall number is set to -1 indicating the
-> > syscall was handled. At least that's how the API is described.
-> >
-> > So yes, if the syscall number range is restricted or the syscall number
-> > is returned through a path different from the function return value the
-> > flag should not be needed in the entry path because the case can be
-> > detected through the return value alone.
-> 
-> I'm still failing to see how this would work without an additional
-> flag. Assume a program (the tracee) is stopped because of a syscall
-> entry. The tracer then decides to skip the syscall and changes
-> regs->gpr2 (which contains either the syscall number or return value)
-> to contain 42. When the tracer than restarts the syscall, how does
-> do_syscall() know that gpr2 is now a return value and not a syscall number?
+On Thu, 2026-07-02 at 13:31 +0800, Tiezhu Yang wrote:
+> When an architecture implements bpf_jit_inlines_helper_call(), such as
+> LoongArch, ARM64, PowerPC, and RISC-V, the verifier skips rewriting the
+> helper call offset (insn->imm) during the bpf_do_misc_fixups() phase,
+> because the helper is expected to be inlined by the JIT compiler. As a
+> result, insn->imm remains as the raw helper enum ID.
+>=20
+> However, if JIT is disabled at runtime (net.core.bpf_jit_enable=3D0) or
+> if the JIT compilation later dynamically fails (e.g., due to OOM), the
+> core BPF subsystem falls back to the BPF interpreter.
+>=20
+> When the interpreter executes (__bpf_call_base + insn->imm) with the
+> unpatched raw helper ID, it jumps into an unaligned invalid address
+> space, triggering an instruction alignment fault or a memory access
+> panic.
+>=20
+> To avoid modifying the BPF interpreter's complexity for JIT-specific
+> paths, just introduce a 'jit_required' flag in struct bpf_prog. When
+> a program contains helper calls that skip rewriting for JIT inlining,
+> set this flag to 1. During runtime selection, if JIT compilation is
+> not available, explicitly reject loading with -ENOTSUPP instead of
+> falling back to the interpreter, safely preventing the kernel panic.
+>=20
+> Fixes: 2ddec2c80b44 ("riscv, bpf: inline bpf_get_smp_processor_id()")
+> Suggested-by: Alexei Starovoitov <ast@kernel.org>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+> v6:
+> =C2=A0 - Place 'jit_required' as a standalone u8 field right before 'stat=
+s'
+> =C2=A0=C2=A0=C2=A0 to reuse the existing 4-byte struct hole (offset 52) b=
+ased on pahole
+> =C2=A0=C2=A0=C2=A0 analysis, avoiding the u16->u32 bitfield conversion in=
+ v5 which=20
+> =C2=A0=C2=A0=C2=A0 unintentionally changed the layout/alignment of subseq=
+uent fields.
+>=20
+> v5:
+> =C2=A0 - Drop the fallback interpreter fixups as per maintainer's feedbac=
+k.
+> =C2=A0 - Introduce 'jit_required' member in struct bpf_prog to flag progr=
+ams
+> =C2=A0=C2=A0=C2=A0 that strictly rely on JIT.
+> =C2=A0 - Reject loading with -ENOTSUPP in __bpf_prog_select_runtime() if =
+JIT
+> =C2=A0=C2=A0=C2=A0 fails or is disabled for these programs.
+> =C2=A0 - Upgrade 'jited' bitfield group type from u16 to u32 in struct bp=
+f_prog
+> =C2=A0=C2=A0=C2=A0 to prevent 17-bit overflow warning.
+>=20
+> =C2=A0include/linux/bpf.h | 1 +
+> =C2=A0kernel/bpf/core.c=C2=A0=C2=A0 | 2 +-
+> =C2=A0kernel/bpf/fixups.c | 4 +++-
+> =C2=A03 files changed, 5 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+> index ba09795e0bfd..f5c283af3cf7 100644
+> --- a/include/linux/bpf.h
+> +++ b/include/linux/bpf.h
+> @@ -1889,6 +1889,7 @@ struct bpf_prog {
+> =C2=A0		u8 digest[SHA256_DIGEST_SIZE];
+> =C2=A0		u8 tag[BPF_TAG_SIZE];
+> =C2=A0	};
+> +	u8			jit_required;	/* program strictly requires JIT compiler */
 
-Because then the return value from the syscall_enter_from_user_mode
-machinery would be -1 indicating the syscall should be skipped. That is
-how the return value of syscall_enter_from_user_mode is documented, I
-did not verify that it actually works that way for the tracing case on
-s390.
+maybe 1 bit is enough. I'm not sure the layout matters, if not we can put b=
+ehind sleepable:1.
 
-So long as it is clarified that -1 is not a syscall number or the
-syscall number is retuned elsewhere there is no doubt, the -1 indicates
-already handled syscall without the need for an additional flag.
+> =C2=A0	struct bpf_prog_stats __percpu *stats;
+> =C2=A0	u8 __percpu		*active;	/* u8[BPF_NR_CONTEXTS] for recursion protect=
+ion
+> */
+> =C2=A0	unsigned int		(*bpf_func)(const void *ctx,
+> diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+> index 649cce41e13f..a55754bcc593 100644
+> --- a/kernel/bpf/core.c
+> +++ b/kernel/bpf/core.c
+> @@ -2639,7 +2639,7 @@ struct bpf_prog *__bpf_prog_select_runtime(struct b=
+pf_verifier_env *env,
+> struct
+> =C2=A0
+> =C2=A0		fp =3D bpf_prog_jit_compile(env, fp);
+> =C2=A0		bpf_prog_jit_attempt_done(fp);
+> -		if (!fp->jited && jit_needed) {
+> +		if (!fp->jited && (jit_needed || fp->jit_required)) {
 
-Thanks
+You ignore Alexei's feedback. Should be =20
 
-Michal
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -2619,8 +2619,7 @@ struct bpf_prog *__bpf_prog_select_runtime(struct bpf=
+_verifier_env *env,
+struct
+ 	if (fp->bpf_func)
+ 		goto finalize;
+=20
+-	if (IS_ENABLED(CONFIG_BPF_JIT_ALWAYS_ON) ||
+-	    bpf_prog_has_kfunc_call(fp))
++	if (IS_ENABLED(CONFIG_BPF_JIT_ALWAYS_ON) || fp->jit_required)
+ 		jit_needed =3D true;
+
+so we can set fp->jit_required when need, without change the rest.
+
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 25aea4271cd0..3b2fb0163db7 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -2712,6 +2712,7 @@ int bpf_add_kfunc_call(struct bpf_verifier_env *env, =
+u32 func_id, u16 offset)
+ 		if (!tab)
+ 			return -ENOMEM;
+ 		prog_aux->kfunc_tab =3D tab;
++		env->prog->jit_required =3D true;
+ 	}
+
+So the patch#1 is a refactor, some sort of this, I'm not sure it's right.
+
+> =C2=A0			*err =3D -ENOTSUPP;
+> =C2=A0			return fp;
+> =C2=A0		}
+> diff --git a/kernel/bpf/fixups.c b/kernel/bpf/fixups.c
+> index 12a8a4eb757f..94e0457a0aa3 100644
+> --- a/kernel/bpf/fixups.c
+> +++ b/kernel/bpf/fixups.c
+> @@ -1841,8 +1841,10 @@ int bpf_do_misc_fixups(struct bpf_verifier_env *en=
+v)
+> =C2=A0		}
+> =C2=A0
+> =C2=A0		/* Skip inlining the helper call if the JIT does it. */
+> -		if (bpf_jit_inlines_helper_call(insn->imm))
+> +		if (bpf_jit_inlines_helper_call(insn->imm)) {
+> +			prog->jit_required =3D 1;
+
+This's the patch#2.
+
+> =C2=A0			goto next_insn;
+> +		}
+> =C2=A0
+> =C2=A0		if (insn->imm =3D=3D BPF_FUNC_get_route_realm)
+> =C2=A0			prog->dst_needed =3D 1;
+
+and the rest.
+
+--=20
+Thanks,
+KaFai
