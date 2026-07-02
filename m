@@ -1,41 +1,51 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F439254B18
-	for <loongarch@lists.linux.dev>; Thu,  2 Jul 2026 02:21:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3882D2765ED
+	for <loongarch@lists.linux.dev>; Thu,  2 Jul 2026 02:23:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782958879; cv=none; b=aR/nzSKc0iA1fdP+pvKS65i9Y2vAA5BzWzLxn4MvdbK2OnRzJQ4fdJwmaBvfa7IOD9NqrYj0QIzJtcPtXohKvmCjdFyBAR6eaQhRCUXp4v6QVFaVIMR9OHFuZv1kHX8PummWhRe6TrwGJ4WwVwtp3Q58BmuGwbSk4JQdT50z5PU=
+	t=1782959027; cv=none; b=X6Ss9FdOHq65fhXYckYQBUgnxf6J3/dZ4ioDtHYHn4Cv+qwxCHVDNpspMxo3dFPT+PIFW/73VZlDlqbPfp3CRhPO7QaBhE0tMQL65ESjorqokR9wFaMKkZrERVovv+ZEvgvkKUr824EJ/jFJDN3gLaTYui8ClHwHdJvggJ28ijI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782958879; c=relaxed/simple;
-	bh=wY913XJBoNw3wtoxup1g0+gEBADQrvWUQ9ZrluiGm8M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Cy/HoCpX2qArAXmFSkXf+kWeboGaW69alno6fVBgkndu1YqDyPHsoCPqmzONnYniebQL7swMVUJnMal9PEnIbvecvaOYHGi2MkPgR6MuWEi7CXi+Qf1iVHD/t4Sc5F1FVTLsbfzmmgHzs8i711aKyN/JbWATptUSc2cIwkVDVW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Dx_+sZy0VqZr4AAA--.3950S3;
-	Thu, 02 Jul 2026 10:21:13 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJBxbcIUy0VqqGy7AA--.26372S2;
-	Thu, 02 Jul 2026 10:21:10 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Alexei Starovoitov <ast@kernel.org>,
+	s=arc-20240116; t=1782959027; c=relaxed/simple;
+	bh=yplBL66WLmZGYDHw0TI7wnH5gX+F/2Udmn6htXB7G18=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VBDXNjJPGFl7f2KtstU14Y5ile0JEUJn/HPPkr1GfpvQrtsRfM+2XNis338tc1VE05xipx8sRFufSQSyQvoNnecW94kSzDmMpnJ5bBWiLq7isqkZXV98mnQKjmr9aSLq3q20scEIuO1tpeCxzbIoq6k/MppQ2KB9t1Gg+KtpBfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vJDpm7Gb; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vJDpm7Gb"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1782959023;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=cX5Z8YeR97ZszPR6LJ2fsh+c2SruApAoDhLXDRoFhzg=;
+	b=vJDpm7Gbx5bIZSlrN1GTZ7oArsFFkvQIONWe+nDfAQqEFZb0XBgyEEcjEsUi56Y2ZXZXk6
+	qyXj0xOkeHVpS28LrPAwoEN9fsq1a01pfnHybIlKIPmYYecZ5qGhD/UvRFu5GzO4hBef3B
+	icGDQrh+QlS9S8IteqSvdFaRkUig5Lo=
+From: George Guo <dongtai.guo@linux.dev>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Hengqi Chen <hengqi.chen@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
 	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
 	Eduard Zingerman <eddyz87@gmail.com>,
 	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
 	Song Liu <song@kernel.org>,
 	Yonghong Song <yonghong.song@linux.dev>,
 	Jiri Olsa <jolsa@kernel.org>,
-	Emil Tsalapatis <emil@etsalapatis.com>,
-	KaFai Wan <kafai.wan@linux.dev>
-Cc: bpf@vger.kernel.org,
+	George Guo <guodongtai@kylinos.cn>,
+	bpf@vger.kernel.org,
 	loongarch@lists.linux.dev,
-	Leon Hwang <leon.hwang@linux.dev>
-Subject: [PATCH bpf-next v5] bpf: Reject programs with inlined helpers if JIT is unavailable
-Date: Thu,  2 Jul 2026 10:21:08 +0800
-Message-ID: <20260702022108.17693-1-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
+	linux-kernel@vger.kernel.org
+Subject: [PATCH bpf-next v2 00/11] LoongArch: BPF: arena features, exceptions, private stack and may_goto
+Date: Thu,  2 Jul 2026 10:23:11 +0800
+Message-Id: <20260702022322.51033-1-dongtai.guo@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -43,110 +53,76 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxbcIUy0VqqGy7AA--.26372S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxZr18Xr17XF13AF4fCw1UCFX_yoW5KryrpF
-	n8C3y7Cr4IqF4I9asrJw4xuw1Yqa1rG3W7Ga18GrW0ya1aqFn2qanYgFyFvFWfCr4vkr1S
-	vwnF9r10ka4UXFXCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
-	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
-	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8qXdUUUUUU==
+X-Migadu-Flow: FLOW_OUT
 
-When an architecture implements bpf_jit_inlines_helper_call(), such as
-LoongArch, ARM64, PowerPC, and RISC-V, the verifier skips rewriting the
-helper call offset (insn->imm) during the bpf_do_misc_fixups() phase,
-because the helper is expected to be inlined by the JIT compiler. As a
-result, insn->imm remains as the raw helper enum ID.
+This series adds the remaining LoongArch BPF JIT features and enables the
+matching selftests:
 
-However, if JIT is disabled at runtime (net.core.bpf_jit_enable=0) or
-if the JIT compilation later dynamically fails (e.g., due to OOM), the
-core BPF subsystem falls back to the BPF interpreter.
+  - internal-only MOV for per-CPU address resolution
+  - timed may_goto
+  - per-program private stacks
+  - exceptions (bpf_throw)
+  - sign-extending loads from arena (PROBE_MEM32SX)
+  - atomics on arena pointers (PROBE_ATOMIC)
+  - selftests: struct_ops private stack, arena LDSX, arena atomics, and a
+    LoongArch deny list
 
-When the interpreter executes (__bpf_call_base + insn->imm) with the
-unpatched raw helper ID, it jumps into an unaligned invalid address
-space, triggering an instruction alignment fault or a memory access
-panic.
+Patch 1 ("LoongArch: BPF: Fix tail call count pointer offset for arena
+programs") is the same fix already posted separately for the bpf tree;
+several patches in this series (notably exceptions, patch 5) build on
+top of the helper it introduces, so it is included here, unchanged, to
+keep the series self-contained and applicable on bpf-next. It can be
+dropped once it lands via the bpf tree.
 
-To avoid modifying the BPF interpreter's complexity for JIT-specific
-paths, just introduce a 'jit_required' flag in struct bpf_prog. When
-a program contains helper calls that skip rewriting for JIT inlining,
-set this flag to 1. During runtime selection, if JIT compilation is
-not available, explicitly reject loading with -ENOTSUPP instead of
-falling back to the interpreter, safely preventing the kernel panic.
+  LoongArch: BPF: Fix tail call count pointer offset for arena programs
+  https://lore.kernel.org/all/20260629085511.359546-1-dongtai.guo@linux.dev
 
-Fixes: 2ddec2c80b44 ("riscv, bpf: inline bpf_get_smp_processor_id()")
-Suggested-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
-v5:
-  - Drop the fallback interpreter fixups as per maintainer's feedback.
-  - Introduce 'jit_required' member in struct bpf_prog to flag programs
-    that strictly rely on JIT.
-  - Reject loading with -ENOTSUPP in __bpf_prog_select_runtime() if JIT
-    fails or is disabled for these programs.
-  - Upgrade 'jited' bitfield group type from u16 to u32 in struct bpf_prog
-    to prevent 17-bit overflow warning.
+Based on 7.2-rc1.
 
- include/linux/bpf.h | 3 ++-
- kernel/bpf/core.c   | 2 +-
- kernel/bpf/fixups.c | 4 +++-
- 3 files changed, 6 insertions(+), 3 deletions(-)
+v2:
+ - Included the tail call count pointer offset fix as patch 1/11 (see
+   above) instead of only referencing it, so the series applies cleanly
+   on bpf-next without waiting on the bpf tree; the empty prog_array
+   off-by-one was fixed independently upstream by commit 0379d10f09bc
+   ("LoongArch: BPF: Fix off-by-one error in tail call"), now in 7.2-rc1.
+ - timed may_goto: store $ra at the ORC-mandated .ra_offset = -8 slot in
+   the trampoline (it was stored at the wrong slot in v1), per Tiezhu
+   Yang's review.
+ - Consolidated the earlier per-CPU MOV / timed may_goto and arena gating
+   postings into one series; rebased on 7.2-rc1.
+ - selftests: use the upstream __arch_loongarch / "LOONGARCH" test_loader
+   support now in 7.2-rc1 instead of introducing it.
+ - Prior postings:
+   https://lore.kernel.org/all/20260609041407.122384-1-dongtai.guo@linux.dev
+   https://lore.kernel.org/all/20260618033809.98253-1-dongtai.guo@linux.dev
 
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index ba09795e0bfd..463fae6a5c33 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -1865,8 +1865,9 @@ struct bpf_prog_aux {
- 
- struct bpf_prog {
- 	u16			pages;		/* Number of allocated pages */
--	u16			jited:1,	/* Is our filter JIT'ed? */
-+	u32			jited:1,	/* Is our filter JIT'ed? */
- 				jit_requested:1,/* archs need to JIT the prog */
-+				jit_required:1, /* program strictly requires JIT compiler */
- 				gpl_compatible:1, /* Is filter GPL compatible? */
- 				cb_access:1,	/* Is control block accessed? */
- 				dst_needed:1,	/* Do we need dst entry? */
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index 649cce41e13f..a55754bcc593 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -2639,7 +2639,7 @@ struct bpf_prog *__bpf_prog_select_runtime(struct bpf_verifier_env *env, struct
- 
- 		fp = bpf_prog_jit_compile(env, fp);
- 		bpf_prog_jit_attempt_done(fp);
--		if (!fp->jited && jit_needed) {
-+		if (!fp->jited && (jit_needed || fp->jit_required)) {
- 			*err = -ENOTSUPP;
- 			return fp;
- 		}
-diff --git a/kernel/bpf/fixups.c b/kernel/bpf/fixups.c
-index 12a8a4eb757f..94e0457a0aa3 100644
---- a/kernel/bpf/fixups.c
-+++ b/kernel/bpf/fixups.c
-@@ -1841,8 +1841,10 @@ int bpf_do_misc_fixups(struct bpf_verifier_env *env)
- 		}
- 
- 		/* Skip inlining the helper call if the JIT does it. */
--		if (bpf_jit_inlines_helper_call(insn->imm))
-+		if (bpf_jit_inlines_helper_call(insn->imm)) {
-+			prog->jit_required = 1;
- 			goto next_insn;
-+		}
- 
- 		if (insn->imm == BPF_FUNC_get_route_realm)
- 			prog->dst_needed = 1;
+George Guo (11):
+  LoongArch: BPF: Fix tail call count pointer offset for arena programs
+  LoongArch: BPF: Support internal-only MOV to resolve per-CPU addrs
+  LoongArch: BPF: Add timed may_goto support
+  LoongArch: BPF: Add private stack support
+  LoongArch: BPF: Add exceptions (bpf_throw) support
+  LoongArch: BPF: Support sign-extending loads from arena
+  LoongArch: BPF: Support atomics on arena pointers
+  selftests/bpf: Enable struct_ops private stack test for LoongArch
+  selftests/bpf: Enable arena LDSX tests on LoongArch
+  selftests/bpf: Enable arena atomics tests on LoongArch
+  selftests/bpf: Add LoongArch deny list
+
+ arch/loongarch/include/asm/inst.h             |   1 +
+ arch/loongarch/kernel/stacktrace.c            |  52 +++
+ arch/loongarch/net/Makefile                   |   2 +-
+ arch/loongarch/net/bpf_jit.c                  | 397 ++++++++++++++++--
+ arch/loongarch/net/bpf_jit.h                  |   1 +
+ arch/loongarch/net/bpf_timed_may_goto.S       |  47 +++
+ .../testing/selftests/bpf/DENYLIST.loongarch  |   1 +
+ .../bpf/prog_tests/struct_ops_private_stack.c |   2 +-
+ .../selftests/bpf/progs/arena_atomics.c       |   3 +
+ .../selftests/bpf/progs/verifier_ldsx.c       |  17 +
+ 10 files changed, 485 insertions(+), 38 deletions(-)
+ create mode 100644 arch/loongarch/net/bpf_timed_may_goto.S
+ create mode 100644 tools/testing/selftests/bpf/DENYLIST.loongarch
+
 -- 
-2.42.0
+2.25.1
 
