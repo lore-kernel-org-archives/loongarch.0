@@ -1,195 +1,94 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94E07220F2A
-	for <loongarch@lists.linux.dev>; Fri,  3 Jul 2026 16:14:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4982F36A341;
+	Fri,  3 Jul 2026 20:52:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783095271; cv=none; b=ki7w9QF1+YDPpYlkC+E57ek042p7tgw2Af6mzWgVCs4QLOqnrAiK83Y4ZjTncEttGiAh5dXiGZF3ijydp7GbvamZ4Wvz0TybwTjDV4xQYh9qLp5ZHIro+kbIuX2hYIbMYoEPrxtcckLCgNeUETGsGpViNm+LjbT9RPmugzMI35s=
+	t=1783111967; cv=none; b=fWJeNc/ITi0T/TlAs2jIOubPQg3oDMaIaAdUBk5w9iAeKEi7Mj2GpdLsC+qk6fTCVir3t30iI5kJuIV31NOmSc8EUgUHK/W71boD7kNkXlApZ1BRXgCcWTtntqILcCitQHfQGSRVgRQhj4UeCNUuBbyQxJfAH8Rqk4+xEKsTPX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783095271; c=relaxed/simple;
-	bh=7w/X1cc13jwOkMFd7WkIJ0IZogAONd76gWlycTImxpM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DeN+TMuNginslT1+LgUuJCEPVj+hHgzSrHK5AxeOH8D5KN1StJ0eb4YxfWX0q81fFJP1tT6v7tq1ZihOw6lMW5kg4W1Au/DvPMg0rrP01gR+ZlmbrM0Ktio/iCfXODY4Uc1SN2o2VFPEIxeWmLNoLHP9ZxJLvEtYYSFIpO4JPAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [36.44.120.111])
-	by gateway (Coremail) with SMTP id _____8BxXevi30dqh2UBAA--.376S3;
-	Sat, 04 Jul 2026 00:14:26 +0800 (CST)
-Received: from [192.168.0.111] (unknown [36.44.120.111])
-	by front1 (Coremail) with SMTP id qMiowJBxacHe30dqDju+AA--.19487S3;
-	Sat, 04 Jul 2026 00:14:25 +0800 (CST)
-Message-ID: <2d1babdf-a4d9-9902-77b0-3f5640871323@loongson.cn>
-Date: Sat, 4 Jul 2026 00:14:28 +0800
+	s=arc-20240116; t=1783111967; c=relaxed/simple;
+	bh=xnBU3ce/vpLN9V3n2dw5RmzeomvK81+Van+F8Cle4zc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=c71j+n+SVCcJnTphP52WkImR0PatWcLUaLm7TEVP3d0bbV9o/xElRj/xyCJmD0dr16GyRBYIB0Vulc2mIK8UHQz8HkMfoEjx/TYoWDAJZ/6LFdSfEWYdDFQLPn6OrbAYSUxrjz8/xNs8yn7W4rLMsQLGSrmMRiQHEOoFDEwQSo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m/AEFhD/; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m/AEFhD/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49A6E1F00A3E;
+	Fri,  3 Jul 2026 20:52:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783111965;
+	bh=qc6RQIMJ3TCgtwMlpFywp2lkPnh2VJAI6hIxptvIyMs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=m/AEFhD/QQMVr60LVSSrHBJhZzSHloaCLPk21mBJcgCOInHXk9skqaY/SzJJ84tEX
+	 UmT6M2g7SmZe+Xfl7u66KmHjHFowNBAw9iuDKrQPpkA0d+AKOFoNGiI4ScRdGq9tzV
+	 5Bw71e6tMbrrNqTc7h68y+P8wFXYypmrKhsg4IoUL3B2t/kFt2ZfrsDK6qF5Axq7m+
+	 0X+YpoR5DWk7RItGPbLuh218SieWYIlmdker7qyk9wbsyvgoZgAjV4Uu3czl1MVLAt
+	 DcAB4UvUtBhMMozkhoRv21B/k0znEvzlBngIXWCHw9H0yTbipW6aseVsPvTnj3WZDs
+	 DRMEjZMu/EqhQ==
+From: Thomas Gleixner <tglx@kernel.org>
+To: Kevin Brodsky <kevin.brodsky@arm.com>, Michal =?utf-8?Q?Such=C3=A1nek?=
+ <msuchanek@suse.de>, Mark Rutland <mark.rutland@arm.com>
+Cc: Jinjie Ruan <ruanjinjie@huawei.com>, oleg@redhat.com,
+ richard.henderson@linaro.org, mattst88@gmail.com, linmag7@gmail.com,
+ linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
+ kees@kernel.org, guoren@kernel.org, chenhuacai@kernel.org,
+ kernel@xen0n.name, geert@linux-m68k.org, tsbogend@alpha.franken.de,
+ James.Bottomley@hansenpartnership.com, deller@gmx.de, maddy@linux.ibm.com,
+ mpe@ellerman.id.au, npiggin@gmail.com, chleroy@kernel.org, pjw@kernel.org,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+ hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
+ borntraeger@linux.ibm.com, svens@linux.ibm.com,
+ ysato@users.sourceforge.jp, dalias@libc.org, glaubitz@physik.fu-berlin.de,
+ richard@nod.at, anton.ivanov@cambridgegreys.com,
+ johannes@sipsolutions.net, luto@kernel.org, mingo@redhat.com,
+ bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+ chris@zankel.net, jcmvbkbc@gmail.com, peterz@infradead.org,
+ wad@chromium.org, thuth@redhat.com, ada.coupriediaz@arm.com,
+ linusw@kernel.org, yeoreum.yun@arm.com, song@kernel.org,
+ james.morse@arm.com, anshuman.khandual@arm.com, broonie@kernel.org,
+ liqiang01@kylinos.cn, pengcan@kylinos.cn, ryan.roberts@arm.com,
+ yangtiezhu@loongson.cn, sshegde@linux.ibm.com, mchauras@linux.ibm.com,
+ austin.kim@lge.com, jchrist@linux.ibm.com, arnd@arndb.de,
+ thomas.weissschuh@linutronix.de, sohil.mehta@intel.com,
+ andrew.cooper3@citrix.com, jgross@suse.com, kas@kernel.org,
+ x86@kernel.org, linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+ linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, linux-um@lists.infradead.org
+Subject: Re: [PATCH v16 01/18] seccomp: Convert __secure_computing() to
+ return boolean
+In-Reply-To: <fa1f5b39-2703-40a1-81d6-3feba87e19b0@arm.com>
+References: <20260629130616.642022-1-ruanjinjie@huawei.com>
+ <20260629130616.642022-2-ruanjinjie@huawei.com>
+ <akdp6GAu77-ipsXA@kunlun.suse.cz> <87cxx4mmim.ffs@fw13>
+ <akeIK5TRCjlKbzbp@J2N7QTR9R3> <akeOjqMy7HVgRRCr@kunlun.suse.cz>
+ <fa1f5b39-2703-40a1-81d6-3feba87e19b0@arm.com>
+Date: Fri, 03 Jul 2026 22:52:43 +0200
+Message-ID: <87echjlrs4.ffs@fw13>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH bpf-next v7 1/2] bpf: Introduce jit_required flag and
- refactor kfunc path
-Content-Language: en-US
-To: KaFai Wan <kafai.wan@linux.dev>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Eduard Zingerman <eddyz87@gmail.com>,
- Kumar Kartikeya Dwivedi <memxor@gmail.com>,
- Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
- Emil Tsalapatis <emil@etsalapatis.com>
-Cc: bpf@vger.kernel.org, loongarch@lists.linux.dev,
- Leon Hwang <leon.hwang@linux.dev>, Puranjay Mohan <puranjay@kernel.org>,
- =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-References: <20260702143656.28845-1-yangtiezhu@loongson.cn>
- <20260702143656.28845-2-yangtiezhu@loongson.cn>
- <ba5679e744e0209ca10788c2c385c6727eddb8a5.camel@linux.dev>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-In-Reply-To: <ba5679e744e0209ca10788c2c385c6727eddb8a5.camel@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxacHe30dqDju+AA--.19487S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxZr4xtw43Ww17KrWUuF1UXFc_yoWrurykpF
-	ykGasrCF109r409F9rJF48ZrW5t3W0kr17Kry8Kry09r1qgw1vga48G3sxZa9Yqr4vkr10
-	vF9FvrWUt34UZFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUP0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Jr0_Gr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
-	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
-	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
-	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUtVW8ZwC20s026c02F40E14v26r
-	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij
-	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
-	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
-	0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8m9aDUUUUU==
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 7/3/26 21:55, KaFai Wan wrote:
-> On Thu, 2026-07-02 at 22:36 +0800, Tiezhu Yang wrote:
->> Introduce a 'jit_required' bitfield flag at the end of the
->> flags group in struct bpf_prog. This bit tracks whether a
->> program strictly requires the JIT compiler.
->>
->> Set this flag to 1 when a kfunc call is added at the end of
->> bpf_add_kfunc_call().
->>
->> In __bpf_prog_select_runtime(), check with fp->jit_required
->> rather than bpf_prog_has_kfunc_call() to unify the logic.
->>
->> Suggested-by: Alexei Starovoitov <ast@kernel.org>
->> Suggested-by: KaFai Wan <kafai.wan@linux.dev>
->> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->> ---
->>   include/linux/bpf.h   | 3 ++-
->>   kernel/bpf/core.c     | 3 +--
->>   kernel/bpf/verifier.c | 2 ++
->>   3 files changed, 5 insertions(+), 3 deletions(-)
->>
->> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
->> index ba09795e0bfd..4e2b059d71f3 100644
->> --- a/include/linux/bpf.h
->> +++ b/include/linux/bpf.h
->> @@ -1880,7 +1880,8 @@ struct bpf_prog {
->>   				call_get_func_ip:1, /* Do we call get_func_ip() */
->>   				call_session_cookie:1, /* Do we call bpf_session_cookie() */
->>   				tstamp_type_access:1, /* Accessed __sk_buff->tstamp_type */
->> -				sleepable:1;	/* BPF program is sleepable */
->> +				sleepable:1,	/* BPF program is sleepable */
->> +				jit_required:1;	/* program strictly requires JIT compiler
->> */
-> 
-> In v6 you're using 'u8 jit_required', I thought it would be 'u8 jit_required:1', so we use one byte
-> and left 3 byte hole for future use.
-> 
-> This version left 2 bytes hole, same as v5, but it can easily be misleading because of the u16 type,
-> since we used 17 bits. I prefer v5, it has better readability.
+On Fri, Jul 03 2026 at 13:59, Kevin Brodsky wrote:
+> On 03/07/2026 12:27, Michal Such=C3=A1nek wrote:
+>>> If we're changing the return type, it might be worth renaming the
+>>> function something like:
+>>>
+>>> 	seccomp_permits_syscall()
+>> Then not only it is clear which way the boolean value should be
+>> interpreted, it also pervents the accidental inversion of existing
+>> calls. Overall great.
+>
+> Totally agreed, if we have the opportunity to rename a completely
+> undescriptive function name like "secure_computing" we should take it.
 
-OK, I will use the previous layout in v8, like this:
-
-```
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index ba09795e0bfd..463fae6a5c33 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -1865,8 +1865,9 @@ struct bpf_prog_aux {
-
-  struct bpf_prog {
-  	u16			pages;		/* Number of allocated pages */
--	u16			jited:1,	/* Is our filter JIT'ed? */
-+	u32			jited:1,	/* Is our filter JIT'ed? */
-  				jit_requested:1,/* archs need to JIT the prog */
-+				jit_required:1, /* program strictly requires JIT compiler */
-  				gpl_compatible:1, /* Is filter GPL compatible? */
-  				cb_access:1,	/* Is control block accessed? */
-  				dst_needed:1,	/* Do we need dst entry? */
-```
-
-> 
->>   	enum bpf_prog_type	type;		/* Type of BPF program */
->>   	enum bpf_attach_type	expected_attach_type; /* For some prog types */
->>   	u32			len;		/* Number of filter blocks */
->> diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
->> index 649cce41e13f..5fcd19ccb41a 100644
->> --- a/kernel/bpf/core.c
->> +++ b/kernel/bpf/core.c
->> @@ -2619,8 +2619,7 @@ struct bpf_prog *__bpf_prog_select_runtime(struct bpf_verifier_env *env,
->> struct
->>   	if (fp->bpf_func)
->>   		goto finalize;
->>   
->> -	if (IS_ENABLED(CONFIG_BPF_JIT_ALWAYS_ON) ||
->> -	    bpf_prog_has_kfunc_call(fp))
->> +	if (IS_ENABLED(CONFIG_BPF_JIT_ALWAYS_ON) || fp->jit_required)
->>   		jit_needed = true;
->>   
->>   	if (!bpf_prog_select_interpreter(fp))
->> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
->> index 25aea4271cd0..f496b45b9da4 100644
->> --- a/kernel/bpf/verifier.c
->> +++ b/kernel/bpf/verifier.c
->> @@ -2765,6 +2765,8 @@ int bpf_add_kfunc_call(struct bpf_verifier_env *env, u32 func_id, u16
->> offset)
->>   	desc->func_model = func_model;
->>   	sort(tab->descs, tab->nr_descs, sizeof(tab->descs[0]),
->>   	     kfunc_desc_cmp_by_id_off, NULL);
->> +
->> +	env->prog->jit_required = 1;
-> 
-> That's ok, and I think Sashiko is right about this patch.
-> 
->>   	return 0;
->>   }
-
-As discussed in another thread, I will update bpf_prog_has_kfunc_call()
-in v8, like this:
-
-```
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 25aea4271cd0..c34cc524651a 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -2770,7 +2770,7 @@ int bpf_add_kfunc_call(struct bpf_verifier_env
-*env, u32 func_id, u16 offset)
-
-   bool bpf_prog_has_kfunc_call(const struct bpf_prog *prog)
-   {
--       return !!prog->aux->kfunc_tab;
-+       return prog->aux->kfunc_tab && prog->aux->kfunc_tab->nr_descs;
-   }
-
-   static int add_subprog_and_kfunc(struct bpf_verifier_env *env)
-```
-
-IIUC, there are two places to modify so far:
-(1) struct bpf_prog
-(2) bpf_prog_has_kfunc_call()
-
-If you have any more comments, please let me know.
-
-Thanks,
-Tiezhu
-
+Absolutely no objections from my side on that.
