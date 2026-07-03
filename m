@@ -1,113 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 694BC30F526;
-	Fri,  3 Jul 2026 09:48:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 865A22FFF81
+	for <loongarch@lists.linux.dev>; Fri,  3 Jul 2026 10:00:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783072135; cv=none; b=BX9VmHTZQ0RzPychKaQyMzLJsUgM+avTi34bAgaMqrC5x5+aMrTFmWtKUUyF7SwdUeu/UsiOuX53xSI4m7QkbNMAAyzHoeji9XZ9ASyFsyN7jXAwDRSFqer31JTXCECom49VYhBPFPssS5GY+8+ke21+jIRTixt1UJbcih9OzjQ=
+	t=1783072826; cv=none; b=fAnQJGKEln9BUsol4Inek1Afn4Oq2qxjFJ6nN7eeMam/Esn+FGrU3v6FAM8121VRe3UJXenGNf7hQmolYF5FJZ+HdewAfFbStzJ5Z2BTojmna4PUJRLP3eOuCPmmWOWKbNG3sjbbdAwjC4rfFQm4Gn5Rifq9TmnLVjQMZ9bcP3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783072135; c=relaxed/simple;
-	bh=8kejrO9LhiPEpTZKQPYpACtGP4GHxTIPVgx0h5k5Qx8=;
+	s=arc-20240116; t=1783072826; c=relaxed/simple;
+	bh=XkZRwCRa2XhLgna4NJMGvoHXqep1IUGIjBvB5bpJuls=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=q7QUcNabgRH5O8JFasFQnD4OiMpqEzI7GXx524v57KWVSR2FzZnzAI1w6Jg4JVZa83R4XrXLmHO+jiPveRrdrcMdcxzVvkzNBZUfbZfP35GY5KoPKHYKv+KZi62TWX/oPhoUHSgc4DTwc11WQm6VZEiomm1WDBG8AU4QREiajn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kTHi5+aa; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=kjrAnRwVxGVTXKx7LP2VRiNyKnvG8vmlakWMMXYN2CtHfJv6GzkKonuRFlV3ueTD3rW20bBXqMCtL6u4eG93BoWhM7mGHhLT7SNgjVYJkEDoDmUbDbN/FMzU9v89KNK7Fn7PMZTp9kTLXjseN5MlvQ1yoK55UdAO7laQ4a/nvyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=sNzsJBSJ; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kTHi5+aa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6F641F000E9;
-	Fri,  3 Jul 2026 09:48:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783072132;
-	bh=GU2sQW+BHbRyl8stT+ES8Av3G6KBfsKpnc1VSiXAaH8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=kTHi5+aaAp/rX4HTakkhjR3bFvlbbboB2hx19Nen/OQCynsTw3x/WIdUXu+frxwFV
-	 89SbG0+Shaxd2FOCH4dmgKGnOQNd95ufhEkEGXGpT/32v4K6RPBMgJaLR03++i0XQv
-	 HLnWwMqbhfMA9VGMcYWioEN6EpIjQeekAAIeSA8n3p4PU3sGcDhY+SXTEkDi6qWsvN
-	 N6ri66YT0BOjRUFOiXivtMgrlnMXxRLN30aljrlnw5thKW/fQEv2TszzuBrW0Uq2oE
-	 Hw8BoXQe/baC4Oi3LETFSwEwu7qrQBQfRHShyZgwSnxBg2nijHTJWdtguxJWbMqGZ5
-	 OSuwx+53eId9w==
-From: Thomas Gleixner <tglx@kernel.org>
-To: Michal =?utf-8?Q?Such=C3=A1nek?= <msuchanek@suse.de>, Jinjie Ruan
- <ruanjinjie@huawei.com>
-Cc: oleg@redhat.com, richard.henderson@linaro.org, mattst88@gmail.com,
- linmag7@gmail.com, linux@armlinux.org.uk, catalin.marinas@arm.com,
- will@kernel.org, kees@kernel.org, guoren@kernel.org,
- chenhuacai@kernel.org, kernel@xen0n.name, geert@linux-m68k.org,
- tsbogend@alpha.franken.de, James.Bottomley@hansenpartnership.com,
- deller@gmx.de, maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
- chleroy@kernel.org, pjw@kernel.org, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, alex@ghiti.fr, hca@linux.ibm.com,
- gor@linux.ibm.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
- svens@linux.ibm.com, ysato@users.sourceforge.jp, dalias@libc.org,
- glaubitz@physik.fu-berlin.de, richard@nod.at,
- anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
- luto@kernel.org, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, chris@zankel.net,
- jcmvbkbc@gmail.com, peterz@infradead.org, wad@chromium.org,
- thuth@redhat.com, mark.rutland@arm.com, ada.coupriediaz@arm.com,
- kevin.brodsky@arm.com, linusw@kernel.org, yeoreum.yun@arm.com,
- song@kernel.org, james.morse@arm.com, anshuman.khandual@arm.com,
- broonie@kernel.org, liqiang01@kylinos.cn, pengcan@kylinos.cn,
- ryan.roberts@arm.com, yangtiezhu@loongson.cn, sshegde@linux.ibm.com,
- mchauras@linux.ibm.com, austin.kim@lge.com, jchrist@linux.ibm.com,
- arnd@arndb.de, thomas.weissschuh@linutronix.de, sohil.mehta@intel.com,
- andrew.cooper3@citrix.com, jgross@suse.com, kas@kernel.org,
- x86@kernel.org, linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
- linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
- linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, linux-um@lists.infradead.org
-Subject: Re: [PATCH v16 01/18] seccomp: Convert __secure_computing() to
- return boolean
-In-Reply-To: <akdp6GAu77-ipsXA@kunlun.suse.cz>
-References: <20260629130616.642022-1-ruanjinjie@huawei.com>
- <20260629130616.642022-2-ruanjinjie@huawei.com>
- <akdp6GAu77-ipsXA@kunlun.suse.cz>
-Date: Fri, 03 Jul 2026 11:48:49 +0200
-Message-ID: <87cxx4mmim.ffs@fw13>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="sNzsJBSJ"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6636JW2R1762888;
+	Fri, 3 Jul 2026 09:59:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=XkZRwCRa2XhLgna4NJMGvoHXqep1IU
+	GIjBvB5bpJuls=; b=sNzsJBSJE0At5moOOpohmVjQzetUDhecbWJtU/m6Bze7zq
+	z+RrCESoaCZmvBe++NZ1sOGEfWnxfJFd31TdIHLW/TxZO1nxuCSC7zqBofLiGUt7
+	eY9t51b8vVsYwVu5zi2pHQUeRg0uooWAhwfH64a1V1CSxYVhEITXRkMoPZEwgKSI
+	3LVExr7ylz5KDKZQJyFauWLV26RwjqkUwgElPJxZqNL7sPGCYZ/QkjXnAHGLxz2o
+	AadgZh2Nx47mH+l9cfY2Puqix6XBXJPgRDm4gypdKviCzsIDlio9B6EBH2jOZ53r
+	LP9GtE8SPV4qoBaQhkyE3iSOH/EoHLMhgyTUpSpQ==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f26mk63uk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 03 Jul 2026 09:59:13 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 6639na9h008970;
+	Fri, 3 Jul 2026 09:59:12 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4f2s7wgamb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 03 Jul 2026 09:59:12 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6639x8AG50135304
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 3 Jul 2026 09:59:08 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AB02320043;
+	Fri,  3 Jul 2026 09:59:08 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 419EF20040;
+	Fri,  3 Jul 2026 09:59:08 +0000 (GMT)
+Received: from tuxmaker.linux.ibm.com (unknown [9.87.85.9])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri,  3 Jul 2026 09:59:08 +0000 (GMT)
+From: Sven Schnelle <svens@linux.ibm.com>
+To: Thomas Gleixner <tglx@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>,
+        Michal =?utf-8?Q?Such=C3=A1nek?=
+ <msuchanek@suse.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Huacai Chen
+ <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+        Madhavan
+ Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Christophe Leroy (CS GROUP)"
+ <chleroy@kernel.org>,
+        Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt
+ <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti
+ <alex@ghiti.fr>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
+ <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Andy Lutomirski
+ <luto@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov
+ <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Andrew Donnellan <andrew+kernel@donnellan.id.au>,
+        Mark
+ Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>,
+        Jiaxun
+ Yang <jiaxun.yang@flygoat.com>,
+        Ryan Roberts <ryan.roberts@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mukesh Kumar Chaurasiya
+ <mkchauras@linux.ibm.com>,
+        Shrikanth Hegde <sshegde@linux.ibm.com>, Zong
+ Li <zong.li@sifive.com>,
+        Nam Cao <namcao@linutronix.de>, Deepak Gupta
+ <debug@rivosinc.com>,
+        Lukas Gerlach <lukas.gerlach@cispa.de>,
+        Rui Qi
+ <qirui.001@bytedance.com>, Kees Cook <kees@kernel.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org
+Subject: Re: [RFC] entry: Untangle the return value of
+ syscall_enter_from_user_mode from syscall NR
+In-Reply-To: <87ldbsmnie.ffs@fw13>
+References: <akVRcPsD_R_CE1qW@kunlun.suse.cz>
+	<BA7CD91D-C0E5-47A1-B49C-BC6AF6604182@zytor.com> <87h5mhnjsr.ffs@fw13>
+	<yt9dwlvca8rn.fsf@linux.ibm.com> <87ldbsmnie.ffs@fw13>
+Date: Fri, 03 Jul 2026 11:59:07 +0200
+Message-ID: <yt9d5x2w5r84.fsf@linux.ibm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzAzMDA5NCBTYWx0ZWRfX9FMLwetAf5KQ
+ ndfxMBLSR49ue71Xv2NR40Icekc2MOvRbwixUqeEGtjdNkCalSSoGb966whocZ1gXXqpEriij7i
+ lynNNC3vb2CQvMQydbLaS3VAu0jrXMOm+jrv0ORIZSdXnj7Vi1yorOQLGdSZSAOdWCDMFX3r3pN
+ OuxRPVsNiZ9CQ3hGPyW9d4jjGhtQEH4JbcTwHIUqcZ7kznMyp1iLXVpiAu42PsAq9HSVzRZ1xeF
+ OvamAeXQ82LGybWvpxvCiyLv5wDWgXgkKO8Hf7eaiVVVSAu3moZrspj1/CUqHGOp0ZISuFiCOfm
+ 6AWwmNs4Kr04L5enCaF4YgWYGrYLmt6j4D8H0M1WcGM1ayQeiM6Yok1G5GskscCRoSEIeV8DpbU
+ tkC4ar4pU/D2r9uqicbUF56hge/NSmTFC3OSbbHRYF3sz6B3Za9sH3Juh93DjTwWc9D28Pc5hiX
+ 1sXDVTwSc86kcB2B9Rg==
+X-Proofpoint-GUID: fyPeOXFOcSecTLM12SqKB2NhFn9No9dY
+X-Authority-Analysis: v=2.4 cv=Z8bc2nRA c=1 sm=1 tr=0 ts=6a4787f2 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=RzCfie-kr_QcCd8fBx8p:22 a=VwQbUJbxAAAA:8 a=QZGpZFnrDBDqr2p2_-4A:9
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzAzMDA5NCBTYWx0ZWRfXw6X4LK9BAJr/
+ jeW91FBp5LTSjcZFRxjPIFSbzH40kzNpBhFPHP3F9N4dLBEIibxelkNLlh5TXnBBP24GksYOxGs
+ cdYngkRwuJr0O4yJ1YvQBiRfSdFRCMk=
+X-Proofpoint-ORIG-GUID: Zheb6wdsp5g_GwqVLO_LBTgHraVWDNxT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-07-03_02,2026-06-26_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 adultscore=0 spamscore=0 priorityscore=1501 impostorscore=0
+ malwarescore=0 phishscore=0 bulkscore=0 lowpriorityscore=0 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607030094
 
-On Fri, Jul 03 2026 at 09:51, Michal Such=C3=A1nek wrote:
-> On Mon, Jun 29, 2026 at 09:05:59PM +0800, Jinjie Ruan wrote:
->> -	if (secure_computing())
->> +	if (!secure_computing())
->>  		return -1;
+Thomas Gleixner <tglx@kernel.org> writes:
+
+> On Fri, Jul 03 2026 at 08:26, Sven Schnelle wrote:
+>> Thomas Gleixner <tglx@kernel.org> writes:
+>>> It's less than obvious and I have no objections to clean that up and
+>>> make it more intuitive, but I still fail to see what Michal is actually
+>>> trying to solve and what the magic flag is for. If s390 requires it,
+>>> then that's an s390 problem, but definitely x86 does not.
+>>
+>> The difference between x86 and s390 is that on s390, regs->gprs[2] is
+>> used for both the syscall number and the syscall return value.
+>> That was a design mistake early in the begin about 25 years ago, but
+>> it's ABI now, so it cannot be changed.
 >
-> Hello,
+> Cute.
 >
-> I am not fond of this logic inversion. The boolean is meaningless in
-> itself.
+>> When seccomp decides to skip a syscall, it write a return value into
+>> regs->gprs[2]. When syscall_enter_from_user_mode_work() returns, it
+>> returns this number. If it's negative all is good - the 'if (likely(nr <
+>> NR_syscalls))' conditiion would just catch it and skip the syscall.
+>>
+>> But if it's a positive number, the code cannot distinguish whether
+>> that's a return value or a syscall number.
+>>
+>> So I introduced PIF_SYSCALL_RET_SET when converting s390 to generic
+>> entry. This flag tells the syscall code that a return value was set in
+>> ptregs and the syscall should be skipped.
 >
-> Previously -1 was used to indicate that the syscall was filtered but you
-> chose to invert the logic choosing true to mean syscall was not filtered.
->
-> You could choose true to mean that syscall was fitered avoiding this
-> inversion.
+> You also could have added a 'syscall_ret' member to pt_regs, operate
+> on that for the return values (seccomp, syscall...) and swap it into
+> gprs[2] right before returning to user space.
 
-That's just wrong. Boolean logic makes more sense with having
-(!condition()). Just because the old 0/-1 nonsense had it the other way
-round does not mean it has to stay that way.
-
-> Sashiko points out some places in existing code where it supposedly
-> explodes which might or might not be true
-
-The vsyscall one is correct, but that's a bug like any other one and should
-be caught in review.
-
-The blurb about bypass is AI halluzination nonsense.
-
-> but any in-flight patches that use secure_computing would also be
-> affected.
-
-Maintainers know how to deal with collisions of that kind. Stop making
-problems up.
-
+That would likely also work, but I found it easier to read and
+understand to have an additional flag with a descriptive name than having
+yet another 'somehow-related-to-gpr2' member in ptregs.
