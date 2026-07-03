@@ -1,142 +1,142 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E39237E316
-	for <loongarch@lists.linux.dev>; Fri,  3 Jul 2026 10:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D40EB3C9885
+	for <loongarch@lists.linux.dev>; Fri,  3 Jul 2026 10:02:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783072835; cv=none; b=t7r2DtoIvHWzG8azKV6mTQRJ6QvN9NibIqlm27GGYIhgNrlCwHbfHmvgNAQAQ6S43RjwA3lrNDkYxEVZ5+lyt23mpS6Isyn3h8g2G9bgY8SPRQQLLY6uv/P6QR+YDG3HyqWj+7IKDUQGaOmLZBewfQoA2apo/ZmRoRt3E1AQBDY=
+	t=1783072971; cv=none; b=tNseNiA3Q8plzWUs7IfnGM0JEChGMM+uwDYqfsoq/Xn+h5vpM2+nVkq9RFkmq0qXopbSIc5kGwO+AxaIUqxxPENGEammkVUq8PF9bxc32GTP8k1HecymYSm32TMg69+AjfDaqbptJFswmq7DGeEy9v2q4Ez3OesCbU8dhZu3yC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783072835; c=relaxed/simple;
-	bh=aCTCeigzdW+DLmQcURYHBbc2LLCBHkNsbpfYvvGCiJA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rya5QCFaebx0Yo5CbxdJXl8iAd1RCZaeKhKTW5S4F8DI73R3dfrIhs1QFbXI/DwuTj31eqFBBcG4xZ1dasFLsSSDkDOGi8GTtNvOsmRP/rD/fVdTESZ2+rvDmPc7Eimvf2a8DqcdSKWF8LBoriIfrUVLA77xWn8cwM5tFloJ8rE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=S7QhjRah; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1783072971; c=relaxed/simple;
+	bh=P9QJK2xz/jdfVnMlUFOmfxp+TBzPlMUUfk9wzKX/jwE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lJLDDS4Uy6ZrjpYAERgz7Z9eiH9jLkS9n16nj7Cqiq0ARzW/V1ejq3JeyuAbH9AUJqGhDEWoaClcNmHqazwQ4CVuDGINE5ryide6o7P8tqzNPnNOPcpuFPEYjK5W8hsPnRMdsnqh6t1jawdb0JYzbcitDkX+zoin8ZTgQTO7C4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gQ7Q04KK; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="S7QhjRah"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 77B231FC4;
-	Fri,  3 Jul 2026 03:00:23 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A98773FAA1;
-	Fri,  3 Jul 2026 03:00:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1783072827; bh=aCTCeigzdW+DLmQcURYHBbc2LLCBHkNsbpfYvvGCiJA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S7QhjRah1ACbDsWq1fyjeQXt+EKdqlo9vLYGLe10grZ3du51t6ZFb4OLnHfKmugvC
-	 xYIGBaOHJhM7/+St8RX1L1+kEfNfOXq3codPouX1rlw+gMBwRumJ3t0IzbR4AAn6ks
-	 AEhSYO6Tc+ug7ijrNB2evf01wmU75WbW8DbnvJvM=
-Date: Fri, 3 Jul 2026 11:00:11 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Thomas Gleixner <tglx@kernel.org>
-Cc: Michal =?utf-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>,
-	Jinjie Ruan <ruanjinjie@huawei.com>, oleg@redhat.com,
-	richard.henderson@linaro.org, mattst88@gmail.com, linmag7@gmail.com,
-	linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
-	kees@kernel.org, guoren@kernel.org, chenhuacai@kernel.org,
-	kernel@xen0n.name, geert@linux-m68k.org, tsbogend@alpha.franken.de,
-	James.Bottomley@hansenpartnership.com, deller@gmx.de,
-	maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
-	chleroy@kernel.org, pjw@kernel.org, palmer@dabbelt.com,
-	aou@eecs.berkeley.edu, alex@ghiti.fr, hca@linux.ibm.com,
-	gor@linux.ibm.com, agordeev@linux.ibm.com,
-	borntraeger@linux.ibm.com, svens@linux.ibm.com,
-	ysato@users.sourceforge.jp, dalias@libc.org,
-	glaubitz@physik.fu-berlin.de, richard@nod.at,
-	anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
-	luto@kernel.org, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, hpa@zytor.com, chris@zankel.net,
-	jcmvbkbc@gmail.com, peterz@infradead.org, wad@chromium.org,
-	thuth@redhat.com, ada.coupriediaz@arm.com, kevin.brodsky@arm.com,
-	linusw@kernel.org, yeoreum.yun@arm.com, song@kernel.org,
-	james.morse@arm.com, anshuman.khandual@arm.com, broonie@kernel.org,
-	liqiang01@kylinos.cn, pengcan@kylinos.cn, ryan.roberts@arm.com,
-	yangtiezhu@loongson.cn, sshegde@linux.ibm.com,
-	mchauras@linux.ibm.com, austin.kim@lge.com, jchrist@linux.ibm.com,
-	arnd@arndb.de, thomas.weissschuh@linutronix.de,
-	sohil.mehta@intel.com, andrew.cooper3@citrix.com, jgross@suse.com,
-	kas@kernel.org, x86@kernel.org, linux-alpha@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mm@kvack.org, linux-csky@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	linux-um@lists.infradead.org
-Subject: Re: [PATCH v16 01/18] seccomp: Convert __secure_computing() to
- return boolean
-Message-ID: <akeIK5TRCjlKbzbp@J2N7QTR9R3>
-References: <20260629130616.642022-1-ruanjinjie@huawei.com>
- <20260629130616.642022-2-ruanjinjie@huawei.com>
- <akdp6GAu77-ipsXA@kunlun.suse.cz>
- <87cxx4mmim.ffs@fw13>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gQ7Q04KK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0C651F00ADE
+	for <loongarch@lists.linux.dev>; Fri,  3 Jul 2026 10:02:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783072969;
+	bh=GxICZniZLiTs1zHK8UE4JL2NE8iCjWZD2BK5CrwX6M8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=gQ7Q04KKbVll2/T84XVbDiCdXpC0k671DQfMVJp+FzCxGj72PckPhFYoQan8Bj2yx
+	 TiGWTRS9294/uNQZLrOSRjg2tLj9/vpgQddHMcd5C3YsEITdmZbyNi+jlLF1+yWJ/E
+	 CYDkUdRLQCl12TzMRa4lJKLA5Bp084C7nwUAVCgRZeUudcEonglNjFYYEo9UX873xQ
+	 BPElgHL99gOhXkuIKTLNv62MytWbZhBEUtjDcyDUS691K7UA4PyLUT32ckctbR3+Lj
+	 uIGewKGLdb3tFqZstiWIq8v1RrWhFqeVmsi54wBC4hTdMm2Qcpc2eSpfccRfrru3ux
+	 GhUbLtSXMaifA==
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-6983f20a8bfso712387a12.1
+        for <loongarch@lists.linux.dev>; Fri, 03 Jul 2026 03:02:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RpX9BHGtxmuSBKQt7nso4ZlRmUKNEIkkro7OHEs+KBlRdGLA9pcDd8sxDyrpxF07cZKfwSJ4j0BgqQ=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwLwV+1i7ho1rbXfg3A35bhRAxHxC/bK+n8Inlf7+aiR7/gyQjg
+	mcNv+9e96zd6NLxfuiGzdZiZy3dPm6wh9sP4kBEchZU4wWW/HS4x84t4HZXubiZnJygRZdqQidB
+	J0EO8mcklgjSt0+kkHmVRSctJC8kfka0=
+X-Received: by 2002:a05:6402:51cc:b0:698:9ea5:d195 with SMTP id
+ 4fb4d7f45d1cf-6989f38e7d2mr4357031a12.23.1783072968125; Fri, 03 Jul 2026
+ 03:02:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87cxx4mmim.ffs@fw13>
+References: <1782119051687451.15056.seg@mailgw.kylinos.cn>
+In-Reply-To: <1782119051687451.15056.seg@mailgw.kylinos.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 3 Jul 2026 18:03:13 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4zaPuBjfsujbW2QiYMMDhy3G+0eLOn_DbdHMmGitGEZQ@mail.gmail.com>
+X-Gm-Features: AVVi8CciMHHIh2DiT8jHK9TEKRaAsAY0P6iPzY60Z8u1moayozVW4gt-jf4mfsI
+Message-ID: <CAAhV-H4zaPuBjfsujbW2QiYMMDhy3G+0eLOn_DbdHMmGitGEZQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] LoongArch bpf kptr xchg inline support
+To: Chenguang Zhao <zhaochenguang@kylinos.cn>
+Cc: kernel@xen0n.name, ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
+	martin.lau@linux.dev, eddyz87@gmail.com, memxor@gmail.com, 
+	yangtiezhu@loongson.cn, hengqi.chen@gmail.com, song@kernel.org, 
+	yonghong.song@linux.dev, jolsa@kernel.org, shuah@kernel.org, 
+	loongarch@lists.linux.dev, bpf@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 03, 2026 at 11:48:49AM +0200, Thomas Gleixner wrote:
-> On Fri, Jul 03 2026 at 09:51, Michal Suchánek wrote:
-> > On Mon, Jun 29, 2026 at 09:05:59PM +0800, Jinjie Ruan wrote:
-> >> -	if (secure_computing())
-> >> +	if (!secure_computing())
-> >>  		return -1;
-> >
-> > Hello,
-> >
-> > I am not fond of this logic inversion. The boolean is meaningless in
-> > itself.
-> >
-> > Previously -1 was used to indicate that the syscall was filtered but you
-> > chose to invert the logic choosing true to mean syscall was not filtered.
-> >
-> > You could choose true to mean that syscall was fitered avoiding this
-> > inversion.
-> 
-> That's just wrong. Boolean logic makes more sense with having
-> (!condition()). Just because the old 0/-1 nonsense had it the other way
-> round does not mean it has to stay that way.
+Hi, Tiezhu and Hengqi,
 
-100% agreed!
+Could you please pay some time to review this series?
 
-Bikeshedding below; sorry.
+Huacai
 
-I think the bigger problem is just that secure_computing() is a terrible
-name that does not express the intended semantic -- it's not clear
-whether "secure computing" means "seccomp permit the syscall" or
-"seccomp is enabled and some special rules now apply" or something else
-entirely.
-
-If we're changing the return type, it might be worth renaming the
-function something like:
-
-	seccomp_permits_syscall()
-
-... so for the code quoted at the start of the mail, we'd have:
-
-	if (!seccomp_permits_syscall())
-		return -1;
-
-... or for arm64, where we have NO_SYSCALL:
-
-	 if (!seccomp_permits_syscall())
-	 	return NO_SYSCALL.
-
-Thomas, any thoughts on that?
-
-It's also odd that seccomp aquires the syscall number itself via , rather
-than than being passed down explicitly by the arch code. That completely
-obscures what seccomp is doing, vs having:
-
-	if (!seccomp_permis_syscall(syscall))
-		...
-
-... but I guess that saves some duplication in the ptrace code.
-
-Mark.
+On Mon, Jun 22, 2026 at 5:04=E2=80=AFPM Chenguang Zhao <zhaochenguang@kylin=
+os.cn> wrote:
+>
+> This series enables the BPF verifier to inline bpf_kptr_xchg() into BPF_X=
+CHG
+> on LoongArch64, and fixes the underlying JIT atomic ordering that makes s=
+uch
+> inlining safe.
+> The BPF verifier can lower bpf_kptr_xchg() to a single BPF_XCHG atomic wh=
+en
+> the JIT advertises ptr xchg support via bpf_jit_supports_ptr_xchg(). This
+> removes helper-call overhead from the kptr exchange fast path. Inlining i=
+s
+> only correct when the JITed exchange provides the same sequentially consi=
+stent
+> ordering as the bpf_kptr_xchg() helper.
+> Patch 1 fixes memory ordering for all value-returning BPF atomic RMW oper=
+ations
+> emitted by the LoongArch bpf JIT. Per LKMM, value-returning atomic RMW mu=
+st
+> provide sequentially consistent ordering. Plain AMO instructions and bare
+> ll/sc loops on LoongArch do not satisfy this by themselves:
+>  - BPF_FETCH (ADD/AND/OR/XOR): switch to am*_db.{b,h,w,d}
+>  - BPF_XCHG: switch to amswap_db.{b,h,w,d}
+>  - BPF_CMPXCHG: emit dbar 0x700 after the ll/sc loop, matching
+>    __WEAK_LLSC_MB in cmpxchg.h
+> Non-value-returning RMW ops (plain BPF_ADD, BPF_AND, etc.) remain weakly
+> ordered, consistent with LKMM. This fix is independent of kptr inlining a=
+nd
+> benefits all BPF programs using value-returning atomics on LoongArch.
+> Patch 2 implements bpf_jit_supports_ptr_xchg() so the verifier may inline
+> bpf_kptr_xchg() on LoongArch64.
+> Patches 3 and 4 extend bpf selftests: functional coverage via kptr_xchg_i=
+nline,
+> and an optional kptr-xchg benchmark to compare helper vs inlined paths.
+>
+> Chenguang Zhao (4):
+>   LoongArch: bpf: Fix memory ordering for value-returning atomics
+>   LoongArch: bpf: Advertise JIT support for kptr xchg inline
+>   selftests/bpf: Enable kptr_xchg_inline test on LoongArch
+>   selftests/bpf: Add kptr-xchg benchmark
+>
+>  arch/loongarch/include/asm/inst.h             | 18 ++++
+>  arch/loongarch/net/bpf_jit.c                  | 37 ++++---
+>  tools/testing/selftests/bpf/Makefile          |  2 +
+>  tools/testing/selftests/bpf/bench.c           |  2 +
+>  .../selftests/bpf/benchs/bench_kptr_xchg.c    | 96 +++++++++++++++++++
+>  .../bpf/prog_tests/kptr_xchg_inline.c         |  3 +-
+>  .../selftests/bpf/progs/kptr_xchg_bench.c     | 49 ++++++++++
+>  7 files changed, 192 insertions(+), 15 deletions(-)
+>  create mode 100644 tools/testing/selftests/bpf/benchs/bench_kptr_xchg.c
+>  create mode 100644 tools/testing/selftests/bpf/progs/kptr_xchg_bench.c
+>
+> ---
+> v3:
+>  - Expand the JIT ordering fix beyond BPF_XCHG w/d to all value-returning
+>    atomic RMW ops (BPF_FETCH, BPF_XCHG, BPF_CMPXCHG), using barrier-carry=
+ing
+>    AMO variants and dbar after ll/sc as required by LKMM.
+>  - Add __btf_root() in the benchmark BPF program so bpf_obj_drop() remain=
+s
+>    visible to libbpf's kfunc linker when bpf_kptr_xchg() is inlined.
+>
+> v2:
+>  - https://lore.kernel.org/all/20260603100438.2177817-1-zhaochenguang@kyl=
+inos.cn/
+>
+> v1:
+>  - https://lore.kernel.org/all/20260602021515.214560-1-zhaochenguang@kyli=
+nos.cn/
+>
+> --
+> 2.25.1
+>
+>
