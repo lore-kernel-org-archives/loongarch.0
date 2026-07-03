@@ -1,35 +1,91 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49982224B1E
-	for <loongarch@lists.linux.dev>; Fri,  3 Jul 2026 03:24:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE86B320A00
+	for <loongarch@lists.linux.dev>; Fri,  3 Jul 2026 04:13:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783049064; cv=none; b=fcrgtzJ9Zw6LlYvlSKzogoeWSYLDRpxMMQ7j0fyJdDq96ocZJo8xKUruk2Mwg0hB666aWEm7wKDXBDP3E5BG60+Fj42rPGHvdshUayhyvtQmko/POxLJvndhGGQobtiIGZxk0lTGWWaTx4LC24QVJmI22Spmp38SuLsdNp7EvvE=
+	t=1783052033; cv=none; b=Q6nZxGy+FExlMEiMA6hc0E7lZQEu+K0jyDjmkWZL1F4qNOhsWlEZjYJe6pqHL0DkH55G5MAZ727n9gZvqi5gDL9+gPvy0UVzxq0EvOYzPs8WC3zkv7jCXjBz8AqYP+EhwbLWxcMzoY8ayawkDiTR/ZFvMAY0VedDukK0UMo9Sy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783049064; c=relaxed/simple;
-	bh=WLhtM4LR+BPW9RgUYblWUaBUz6QY5+Fp3CFlYzKVqKY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=U6lb1PSRcqhfoAu1M2gvCRg2i6f0X+wX/dQedK0pwERIsaPnkAu2pFgCFTRoPolSWunwXuiYUpW5RFdorJcEjRBkeMYP765tykHyRGjFUwNCLsJrKWhP79NdAa4bOWNDZGSKv1sOxaYfFIRxr6Ch8MS05RBN30oDjIJrPnUdVYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.155])
-	by gateway (Coremail) with SMTP id _____8DxZvBbK0dqmTABAA--.6521S3;
-	Fri, 03 Jul 2026 11:24:11 +0800 (CST)
-Received: from kernelserver (unknown [223.64.68.155])
-	by front1 (Coremail) with SMTP id qMiowJBxDOFYK0dqamS9AA--.8247S2;
-	Fri, 03 Jul 2026 11:24:10 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: Xuerui Wang <kernel@xen0n.name>,
-	stable@vger.kernel.org,
+	s=arc-20240116; t=1783052033; c=relaxed/simple;
+	bh=OUpPeEes/y+ArXs2upxEA1BNgKsnrkR9ayItzVy6vm0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=inzVTj/F18QKAcoTRq369AjF6MjcgouA2RVBjtYBx/REsaBM3lvXs1sWkDN/ZFi8Vx/iOynQhCnE0Anzr0YuQE8C9E1U2Q7tJfH5CDJxjb/LmZqaNWOkKn86DHAppOT8S28uz474m9JpwDCD8koZy94QUE/BR4XjPcUz+LMh0gw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O3Fw87lw; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O3Fw87lw"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-847a483e344so121724b3a.0
+        for <loongarch@lists.linux.dev>; Thu, 02 Jul 2026 21:13:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783052021; x=1783656821; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=A6npnmvUqCM8/66CqqYCk/mzyWieSpjEbi8Gph9LP44=;
+        b=O3Fw87lwD0cqVs7NtG7CvjvoKmJIH7G8kBnNr8YqQTNC5gPL5/eeA88aXuWLC07E6w
+         d7dwx22TonYKJkddk+042T5iGBvXbWjGHTVreAfAZErJjgBUMVsgDtPuAI75CfvGOYBt
+         x3bK0zoDjPMz+JmcNRwOvokzqwv1dChE1vi9v4hkHUF1+bIDTCnombCKDBNdj0mfmmA4
+         ri/P42Tuolw9XgRkBA+YTBLCwJjWe3MgSkh9xA0MxBbxLaswAVPyxay2iSxmYySYB2ed
+         Avay5PZE0p1cugkfPGmktz85muaavM83GB00kobTzFyh/JblawCfBFLJCyd+Mr1X/5mS
+         m50A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783052021; x=1783656821;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A6npnmvUqCM8/66CqqYCk/mzyWieSpjEbi8Gph9LP44=;
+        b=AlvqwV0uAa2B2bKvIH6rEvRKty+iS+hS6X2onzL5r2kR5ZpEvRcFLBYe2/Q3vdKgjJ
+         bu/tQJgM9FDzl/q5pu+b2cpfULboWGcd2SaA6C8tbTnVj0qMRzJI+MersBVbmcnLKnOq
+         pcHj4d+M2xN2XRnbF/GO5BRrdTvIsNlqnrhs8W5JjrxER8tAXPi2CFZiFY11SBZTGXwg
+         A6v2GiPVv2yfn984eP5f8Rg2SfEZ/t8B84aYffQHhikMJTETBodkjCdPa4d47CgS95+m
+         3xHW47ITxvWjZVWESJFySNXx51zabDyPr/yH8OmfWDBzhkApOPGCiAGbGJE4RDCBbRUd
+         YoxA==
+X-Forwarded-Encrypted: i=1; AHgh+Rr+Re5wZSSNuT7F4d/VnHio5saheJG94EtpOeewu+LbUMWNdrn17rHE/dehF7nbeOH2gcXRQVU2AxQ=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyAQk06K/n3/w2A8i9VOms0PfT/fy/UsHNeRwzguqcbkLsZmPoD
+	5rmw6FUCseeCrI29ryK0KM7nNXWm5rTHGeCLLsmJ+MpN3lMmWaXQabZy
+X-Gm-Gg: AfdE7ckOn64NrhnhRGgWpd9oU738+enWs9KqGhIN/OQa0caQgQhs/Uk8qleJsN84ugt
+	/uzDCFaNft+YQ8/v6iMYyvoV7vKoMhAoPssfTV3VerPni+Tdc7PdDmqC5TECRFLBujEeg5U2485
+	QlW6fy8lzM8UJl2bV8SSLRCzEAocgfPqlS1sFGYvyyn2kB6mK2nXdmn4S5R4TkNCQEyuGG6pILH
+	EmM8fRo2kLnxT6OshVFDECjrkuWX2zgN1Z2P+48vuCD0fRoJmtXm/Uhdaj93KUAR3u0lIalCm8j
+	7wB/mXRpC3Xixy3GTGAe4Rt9+isg6briOmH15kEfXk1x3YNRsguftFeailMEB/91ofNoB2KH/7y
+	/hu/wzwY3VXLXvOuNFLBua5nPRdv39PoJn729fLSGlVL2L6v62iN8r8LJMc0HmYrhNDvOuUKn7a
+	w4C32HQXlZMTEDSkr6/g==
+X-Received: by 2002:a05:6a00:244d:b0:842:63f5:d097 with SMTP id d2e1a72fcca58-847e17360d9mr2456212b3a.3.1783052020555;
+        Thu, 02 Jul 2026 21:13:40 -0700 (PDT)
+Received: from ubuntu.. ([110.9.142.4])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-847cb94bd7esm2207768b3a.38.2026.07.02.21.13.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2026 21:13:40 -0700 (PDT)
+From: Sang-Heon Jeon <ekffu200098@gmail.com>
+To: rppt@kernel.org,
+	akpm@linux-foundation.org,
+	Andy Lutomirski <luto@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>
+Cc: linux-mm@kvack.org,
+	Sang-Heon Jeon <ekffu200098@gmail.com>,
+	devicetree@vger.kernel.org,
+	driver-core@lists.linux.dev,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Len Brown <lenb@kernel.org>,
+	linux-acpi@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	loongarch@lists.linux.dev,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH 6.1 & 6.6] LoongArch: Report dying CPU to RCU in stop_this_cpu()
-Date: Fri,  3 Jul 2026 11:24:00 +0800
-Message-ID: <20260703032401.857553-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.52.0
+	WANG Xuerui <kernel@xen0n.name>,
+	x86@kernel.org
+Subject: [PATCH v2 0/9] treewide, numa_memblks: remove redundant work during NUMA init
+Date: Fri,  3 Jul 2026 13:13:20 +0900
+Message-ID: <20260703041329.2797584-1-ekffu200098@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -37,78 +93,67 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxDOFYK0dqamS9AA--.8247S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7ZFW3Xw47JrW7WFy3Jr17XFc_yoW5Jr43pr
-	WFkrn5Zw4kWr1vv3s8J34xWryqyrs3Kw12q3Z3GrZ3Aay5tF1UZw1SqFyjvFyFgws3u34I
-	vFnYv3yvv3WUAagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
-	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j83kZUUUUU=
 
-commit f2539c56c74691e7a88af6372ba2b48c06ed2fe4 upstream.
+Every existing numa_add_memblk() caller passes a valid node id and
+separately marks that node in numa_nodes_parsed with node_set(). In
+addition, numa_nodemask_from_meminfo() recomputes the same "nodes that own
+memory" set from numa_meminfo, which numa_nodes_parsed already contains.
 
-This is a port of MIPS commit 9f3f3bdc6d9dac1 ("MIPS: smp: report dying
-CPU to RCU in stop_this_cpu()"). smp_send_stop() parks all secondary
-CPUs in stop_this_cpu(). And the function marks the CPU offline for the
-scheduler via set_cpu_online(false) but never informs RCU, so RCU keeps
-expecting a quiescent state from CPUs that are now spinning forever with
-interrupts disabled.
+This redundancy implicitly depends on the callers' node_set(). So, before
+removing the redundancy, make numa_add_memblk() set the node in
+numa_nodes_parsed explicitly. Then remove the per-caller node_set() and
+numa_nodemask_from_meminfo().
 
-As long as nothing waits for an RCU grace period after smp_send_stop()
-this is harmless, which is why it went unnoticed. However, since commit
-91840be8f710370 ("irq_work: Fix use-after-free in irq_work_single() on
-PREEMPT_RT"), irq_work_sync() calls synchronize_rcu() on architectures
-without an irq_work self-IPI, i.e. where arch_irq_work_has_interrupt()
-returns false. Any irq_work_sync() issued in the reboot/shutdown/halt
-path after smp_send_stop() then blocks on a grace period that can never
-complete, hanging the reboot:
+Also, since the generic numa_register_meminfo() already sets
+node_possible_map to numa_nodes_parsed, remove the duplicate assignment in
+arch_numa's numa_register_nodes().
 
-  WARNING: CPU: 0 PID: 15 at kernel/irq_work.c:144 irq_work_queue_on
-  ...
-  rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-  rcu: Offline CPU 1 blocking current GP.
-  rcu: Offline CPU 2 blocking current GP.
-  rcu: Offline CPU 3 blocking current GP.
+Patch 1 adds the node_set() to numa_add_memblk() itself, so every memblk's
+node is set in numa_nodes_parsed on add.
 
-This issue needs some hacks to reproduce, and it was not noticed on
-LoongArch because arch_irq_work_has_interrupt() usually returns true.
+Patches 2-6 depend on patch 1 and remove the redundant per-caller node_set()
+from all callers.
 
-Call rcutree_report_cpu_dead() once interrupts are disabled, mirroring
-the generic CPU-hotplug offline path, so RCU stops waiting on the parked
-CPUs and grace periods can still complete. LoongArch shuts down all CPUs
-here without going through the CPU-hotplug mechanism, so this report is
-not otherwise issued.
+Patch 7 removes both numa_nodemask_from_meminfo() call sites and the unused
+function itself.
 
-Cc: <stable@vger.kernel.org>
-Fixes: 91840be8f710 ("irq_work: Fix use-after-free in irq_work_single() on PREEMPT_RT")
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Patch 8 removes the duplicate node_possible_map assignment in arch_numa.
+
+Patch 9 is a minor cleanup, using the existing numa_add_reserved_memblk()
+wrapper in numa_cleanup_meminfo().
+
+No functional change.
+
 ---
- arch/loongarch/kernel/smp.c | 1 +
- 1 file changed, 1 insertion(+)
+Changes from v1 [1]
+- remove warning in numa_add_memblk_to() when start == end
+- add Acked-by tag
+- rebased onto latest mm-new
 
-diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-index d66007fbfdda..0ab9dedd7a69 100644
---- a/arch/loongarch/kernel/smp.c
-+++ b/arch/loongarch/kernel/smp.c
-@@ -691,6 +691,7 @@ static void stop_this_cpu(void *dummy)
- 	set_cpu_online(smp_processor_id(), false);
- 	calculate_cpu_foreign_map();
- 	local_irq_disable();
-+	rcu_report_dead(smp_processor_id());
- 	while (true);
- }
- 
+[1] https://lore.kernel.org/all/20260628135828.1393120-1-ekffu200098@gmail.com/
+--- 
+
+Sang-Heon Jeon (9):
+  mm: numa_memblks: set numa_nodes_parsed in numa_add_memblk()
+  ACPI: NUMA: remove redundant numa_nodes_parsed node_set()
+  of/numa: remove redundant numa_nodes_parsed node_set()
+  x86/numa: remove redundant numa_nodes_parsed node_set()
+  arch_numa: remove redundant numa_nodes_parsed node_set()
+  LoongArch: remove redundant numa_nodes_parsed node_set()
+  mm: numa_memblks: remove redundant numa_nodemask_from_meminfo()
+  arch_numa: remove redundant node_possible_map assignment
+  mm: numa_memblks: use numa_add_reserved_memblk() in
+    numa_cleanup_meminfo()
+
+ arch/loongarch/kernel/numa.c |  1 -
+ arch/x86/mm/amdtopology.c    |  1 -
+ arch/x86/mm/numa.c           |  1 -
+ drivers/acpi/numa/srat.c     |  2 --
+ drivers/base/arch_numa.c     |  4 ----
+ drivers/of/of_numa.c         |  5 +----
+ mm/numa_memblks.c            | 39 +++++++++++++++++-------------------
+ 7 files changed, 19 insertions(+), 34 deletions(-)
+
 -- 
-2.52.0
+2.43.0
 
