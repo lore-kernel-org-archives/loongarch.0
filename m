@@ -1,183 +1,65 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C0F380FC2
-	for <loongarch@lists.linux.dev>; Fri,  3 Jul 2026 06:27:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6FF2D12EE;
+	Fri,  3 Jul 2026 07:37:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783060051; cv=none; b=mElx5HQqwBwZ94cLNBKMgybce73JujsI8GeidUp2Vvtm0Hcj0ejIdgv2nUnYhjV47hyUT5n3d0PYHb6B4hFzRkcNSrx36+yYvd70kPpLODI9xjZI8KiIlj0bvmu6hjxUxFE4U+6wuiQ/RJhkXXKHam/nnq6WZ1P+kB6ZG8q0Tto=
+	t=1783064275; cv=none; b=YxJAf2Uoj2J2FzV71Au/s7OL5wa/l9PuWmrsEi3/SoED0Vn55IuDKGTjcIxG50l/WLThWdvj8ygKI9fsGAw1O/91Luq1I4aaQM8VdGgkSWHLo1jTqpQ/YBiIFcM1oDRoTZr7K0x5q78NY/M+sOktHteCtRVBrG8x40K15645iYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783060051; c=relaxed/simple;
-	bh=bzSJ5oINpFJ908+/DlXAb6mMKV/rQA7/s/nikIgFT8M=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=e9y/fhfeHfcK9V/VJTOmDfEZAw4/3Yt9RIxQ0Hv5mn26/C3rELUh7I0Ucfytlavw/QNi02KWpnO/YnQBbjsHa0XjRHwKY77tHewio81BvZYCsdniH1+x2xcn1WTfmD2Rj/W7ObxQLGW5t1qTjIV7vLN1nN7V18TfBPY6SGxjikc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Pw6s5+Cm; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1783064275; c=relaxed/simple;
+	bh=/zEdjDHHDOZlLYDj/HrAahZZ9YvreIDGoxRLp/b3nmc=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=GGt190/paI8ppa/vkzHoMhH7vj2FjlLiaXho3tJL5WVg+G9SXLyGzNhzqYKDWN612x/NqkfDqn6C2ZwYBAI8jS6tntZXySna6YiIwTVs5HetdDAF9U92csY1UroNZY6Uv2F/rjXxmyTey+B1E/TlUjzhDIX3grldEVFXVJsqP4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E7fzZHQj; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Pw6s5+Cm"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6636IOgf1930697;
-	Fri, 3 Jul 2026 06:26:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=bzSJ5oINpFJ908+/DlXAb6mMKV/rQA
-	7/s/nikIgFT8M=; b=Pw6s5+CmmFCb80gIoq6tsI0q0aCGJX6vTC9bDMoCWv8rCQ
-	BQwT/k3RlVT5PB9oWiN3yIzwYfdrpmtzUdOduS56aevlvXaQj3i/71DPXlv5pAom
-	jQa7qZgOiU2Snvpu77TNqHz2DYwzG7DqMhjcrK3gcsJTPvoSEa1M3WeZfwIc0zpb
-	YvyPQWRATqXq60c7TJJAiUzJCyhIhkCsoFUFvxpJjsM2ey9v5BdeITB2p/3n6IBK
-	E5eu6p2C164OppwPOcYhHC99iNQfPsu61NFaORG3G0fLEjM5YPMJqdA8z9mJ+xEr
-	FzyiId6iEfjL9fio1XMXnvIrEBqQfpm84/TrO/KQ==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f26pedu3m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 03 Jul 2026 06:26:43 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 6636JeVe018576;
-	Fri, 3 Jul 2026 06:26:42 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4f2s7wfmh7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 03 Jul 2026 06:26:41 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6636Qb3J10551638
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 3 Jul 2026 06:26:37 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9948E20040;
-	Fri,  3 Jul 2026 06:26:37 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 196EF20043;
-	Fri,  3 Jul 2026 06:26:37 +0000 (GMT)
-Received: from tuxmaker.linux.ibm.com (unknown [9.87.85.9])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri,  3 Jul 2026 06:26:37 +0000 (GMT)
-From: Sven Schnelle <svens@linux.ibm.com>
-To: Thomas Gleixner <tglx@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>,
-        Michal =?utf-8?Q?Such=C3=A1nek?=
- <msuchanek@suse.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Huacai Chen
- <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
-        Madhavan
- Srinivasan <maddy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Christophe Leroy (CS GROUP)"
- <chleroy@kernel.org>,
-        Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt
- <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti
- <alex@ghiti.fr>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
- <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Andy Lutomirski
- <luto@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov
- <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Andrew Donnellan <andrew+kernel@donnellan.id.au>,
-        Mark
- Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>,
-        Jiaxun
- Yang <jiaxun.yang@flygoat.com>,
-        Ryan Roberts <ryan.roberts@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mukesh Kumar Chaurasiya
- <mkchauras@linux.ibm.com>,
-        Shrikanth Hegde <sshegde@linux.ibm.com>, Zong
- Li <zong.li@sifive.com>,
-        Nam Cao <namcao@linutronix.de>, Deepak Gupta
- <debug@rivosinc.com>,
-        Lukas Gerlach <lukas.gerlach@cispa.de>,
-        Rui Qi
- <qirui.001@bytedance.com>, Kees Cook <kees@kernel.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org
-Subject: Re: [RFC] entry: Untangle the return value of
- syscall_enter_from_user_mode from syscall NR
-In-Reply-To: <87h5mhnjsr.ffs@fw13>
-References: <akVRcPsD_R_CE1qW@kunlun.suse.cz>
-	<BA7CD91D-C0E5-47A1-B49C-BC6AF6604182@zytor.com> <87h5mhnjsr.ffs@fw13>
-Date: Fri, 03 Jul 2026 08:26:36 +0200
-Message-ID: <yt9dwlvca8rn.fsf@linux.ibm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E7fzZHQj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A43E41F000E9;
+	Fri,  3 Jul 2026 07:37:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783064274;
+	bh=BNjc89ZTwEE6sAh5F09SyQEpJODWyJuS+YsA1L114gk=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc;
+	b=E7fzZHQjHbuqRbfY5w8N/zq/LIGZMJY1SK41CeUUib7CZ4WxWm5MqtADiZytRVf8k
+	 B6AmxstGKgmn9k/gnWEMrYU/U8prhEH9/KBSrez2/6+NEuF1ehCnCime+EeHT7H/Vc
+	 3uPHNJ7e7l0I0rxnW+Hr072aIgsDpQNOHShnhFE32hDNXp6obtBsRggP9gjJ9qOPxF
+	 gm5mTrJ5kP99/8S/EVRiBrZq6SeYg8SxwOWKk+cApIcZjDHtKLqJQAQJJvgyCJU9Xh
+	 uvtmeyMNf/xe4qOOa2+jWsvz9DD00nDyID+u4LEyyFtC11nrDHmkAIGykMv8cZ9zSV
+	 H59njUBru/Yjw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 56D2B39389CB;
+	Fri,  3 Jul 2026 07:37:38 +0000 (UTC)
+Subject: Re: [GIT PULL] Split <linux/mod_devicetable.h> in per subsystem headers
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <akdIS8mW2IubUWQh@monoceros>
+References: <akdIS8mW2IubUWQh@monoceros>
+X-PR-Tracked-List-Id: <devicetree.vger.kernel.org>
+X-PR-Tracked-Message-Id: <akdIS8mW2IubUWQh@monoceros>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git tags/device-id-rework
+X-PR-Tracked-Commit-Id: 995832b2cebe6969d1b42635db698803ee31294d
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: d2c9a99135da931377240942d44f3dea104cedb8
+Message-Id: <178306425679.2510133.17664517627067155845.pr-tracker-bot@kernel.org>
+Date: Fri, 03 Jul 2026 07:37:36 +0000
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Raag Jadav <raag.jadav@intel.com>, Sohil Mehta <sohil.mehta@intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, linux-kernel@vger.kernel.org, Yemike Abhilash Chandra <y-abhilashchandra@ti.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, linux-sound@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Dani
+ lo Krummrich <dakr@kernel.org>, driver-core@lists.linux.dev, Jonathan Cameron <jic23@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Pei Xiao <xiaopei01@kylinos.cn>, Shashank Balaji <shashank.mahadasyam@sony.com>, Ben Horgan <ben.horgan@arm.com>, Johan Hovold <johan@kernel.org>, linux-usb@vger.kernel.org, Nikita Kravets <teackot@gmail.com>, Hans de Goede <hansg@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, platform-driver-x86@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, Daniel Scally <dan.scally@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, loongarch@lists.linux.dev, Geert Uytterhoeven <geert@linux-m68k.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@ker
+ nel.org>, Takashi Sakamoto <o-takashi@sakamocchi.jp>, Wolfram Sang <wsa+renesas@sang-engineering.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-GUID: V512ICONGfIMzJeZgVibyqNOAgCIuMj8
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzAzMDA1OCBTYWx0ZWRfX9npPGr21F1Qu
- IxrtK/vAbfCr/GjsGc0u2aK9/RjeRqQQxIqfLJKEbYS2rVdUgC0sRFh4WVLTWusnXUlzaONkVSv
- QpZLyXZQc1kKsiJGmHdrvgQ2beaxoYk=
-X-Authority-Analysis: v=2.4 cv=edsNubEH c=1 sm=1 tr=0 ts=6a475624 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=iQ6ETzBq9ecOQQE5vZCe:22 a=VwQbUJbxAAAA:8 a=CrRPdQPxwsYmpd-Ypb0A:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzAzMDA1OCBTYWx0ZWRfX6VwZUBxp6jeb
- YMK4Efb+Qc4f6HI3qRM6LEVMnYXnaV7F2JIWD9cC8n/1Ua0yROt/ntMjQ7JjawRqYb2UhuJEhIf
- kwff4gdG3VgvqVsSfAcTszHO1TVWNO8+/UxgPZ8zWhBBCttRy2m+q4SNKXaJq7tBN1MSLpUj8M0
- 7W4FP1ssOGWe8L+/ua2YzHBud8HlGnMOWBzHt+GDxv3KTwfzuHqZ/kVo2rwvOV731TLu1Jpnt1e
- jWK2FjpN2ieAhYzNCHjrSOUjUqKO+qMBIEW8xL1CXx73aSSAQCNyNVpp6dCu6gaRnOJzPqT0ZfH
- sGkwpzfIYoBDH9tmtUWbOrSgC3Ic5tyrmNxrdnyp6ONquF4Srhz07xLlirUJImU90/i7eUG1W0K
- JAD4aY7gp37lGzleaK0YwCjHEWTB4OpcPGWdlh1FKYX5CIhKuawlelq8rIa7CO8kac5pdLoBC65
- sK8KQichxzL7mL8vqcQ==
-X-Proofpoint-ORIG-GUID: 48DwgYVDq6x5ccTjcsfSLPConSUTJzSs
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-07-03_02,2026-06-26_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 malwarescore=0 adultscore=0 impostorscore=0 bulkscore=0
- spamscore=0 suspectscore=0 clxscore=1015 lowpriorityscore=0 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607030058
 
-Thomas Gleixner <tglx@kernel.org> writes:
+The pull request you sent on Fri, 3 Jul 2026 08:04:04 +0200:
 
-> If seccomp overwrites regs->eax and aborts any syscall (including -1) by
-> returning -1, then the value seccomp wrote into regs->eax is preserved
-> and returned to user space.
->
-> The same applies for syscall_user_dispatch() and ptrace...() if they
-> decide to overwrite regs->eax _and_ abort the syscall by letting
-> syscall_enter_from_user_mode() return -1.
->
-> trace_syscall_enter() is not any different. If the magic BPF in there
-> rewrites the syscall number to -1 then either the original -ENOSYS or
-> the BPF induced overwrite is returned to user space.
->
-> It's less than obvious and I have no objections to clean that up and
-> make it more intuitive, but I still fail to see what Michal is actually
-> trying to solve and what the magic flag is for. If s390 requires it,
-> then that's an s390 problem, but definitely x86 does not.
+> https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git tags/device-id-rework
 
-The difference between x86 and s390 is that on s390, regs->gprs[2] is
-used for both the syscall number and the syscall return value.
-That was a design mistake early in the begin about 25 years ago, but
-it's ABI now, so it cannot be changed.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/d2c9a99135da931377240942d44f3dea104cedb8
 
-When seccomp decides to skip a syscall, it write a return value into
-regs->gprs[2]. When syscall_enter_from_user_mode_work() returns, it
-returns this number. If it's negative all is good - the 'if (likely(nr <
-NR_syscalls))' conditiion would just catch it and skip the syscall.
+Thank you!
 
-But if it's a positive number, the code cannot distinguish whether
-that's a return value or a syscall number.
-
-So I introduced PIF_SYSCALL_RET_SET when converting s390 to generic
-entry. This flag tells the syscall code that a return value was set in
-ptregs and the syscall should be skipped.
-
-I'd like to see something like the change from Michal going in - cleaned
-up of course. It would allow us to get rid of PIF_SYSCALL_RET_SET.
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
