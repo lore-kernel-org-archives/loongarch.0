@@ -1,205 +1,196 @@
-Received: from mail.srv.csmantle.top (mail.srv.csmantle.top [77.93.157.103])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37D8D19CD0A;
-	Sat,  4 Jul 2026 14:17:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.93.157.103
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65E8F35E1B1
+	for <loongarch@lists.linux.dev>; Sat,  4 Jul 2026 17:24:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783174649; cv=none; b=H/fEfxFj7NHHa3vLCwlcrKW7rFyHZLDwuhRXGcl7nPCSJyMSCkeWGpKefELJmr1BMbLW+iEeycVElvnp7CnDlJU597uEp3obLMMhf+8Yhw8HtbRbbFwndVFBFIyn5c/0+DpgHgQ3ytVTbrKjDZWOJ4vPdzAtu2grcEFT5CfnjK4=
+	t=1783185881; cv=none; b=oXOZ94bkeVwioUTEOuvsosWGFoJv8FNuKLKrkdOXRZYLwkgLJaLdUkQ1etTMDvc+w5Psr8I0HAL+xb0U3kuAyyBtu+9biWEueMeuGsLUP/fvjEGGSWOghgrAGPBujOYNTUMnORabHXcHrPQsLfIReaCV0JCjXSZeZy9lfJL2KyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783174649; c=relaxed/simple;
-	bh=DYP/fAuTfWaqhSK56kenBZaNNFwDCi7MO9GMC1TyvwM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ujqdPl81g4/FcVzzPzSNlq0zE6esW/Wf3+Ep/iLXD681D6KbWgIN9qB5M9ljCvd+CLKT8/E/hWauai06t5s04TUUvFeKZE49z5V3g8osK7GvDMUK9zEHzruoR4xd5DCmO3pBsQ6YloyM0cizR3GCvMuYf+rY5fJd69JsO3h/CuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csmantle.top; spf=pass smtp.mailfrom=csmantle.top; dkim=permerror (0-bit key) header.d=csmantle.top header.i=@csmantle.top header.b=oNWTO6pW; dkim=pass (3072-bit key) header.d=csmantle.top header.i=@csmantle.top header.b=FRE6nmWT; arc=none smtp.client-ip=77.93.157.103
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csmantle.top
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csmantle.top
+	s=arc-20240116; t=1783185881; c=relaxed/simple;
+	bh=GlbrVZfffgmCmrnHeZOxQiX+KuR8ARx7J8bnFp/Vd90=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=Y6bC1XxssoJM/qDtL7fs2+dyCmFOM1XhVyA/GpCM5g8sBjSzbO4FjUos5YytVVAfucbfgymtQ/2JLdqtdfC2yKgxtIzNEY7iuMMa1xzzk74XDOvNapMT5I7d429nX3KOEhVaBuKj5O78aARLrM5sf3JGYIDKh6WRYSv3VND+YLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=ddFVpaRA; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=csmantle.top header.i=@csmantle.top header.b="oNWTO6pW";
-	dkim=pass (3072-bit key) header.d=csmantle.top header.i=@csmantle.top header.b="FRE6nmWT"
-DKIM-Signature: v=1; a=ed25519-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=csmantle.top; s=self-ed25519; h=BIMI-Selector:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:In-Reply-To:References:BIMI-Selector;
-	bh=SceegF9V2UMZyJU5wVXKWyTzveddd4TbiOOhUTBe0qI=; t=1783174648; x=1783779448; 
-	b=oNWTO6pWSvvK/zKvz0vQrF8g9ANPoal8UxzKxD18u4hHZ+VwnBXScf7FLssiahLBFIFYAY0wqTi
-	Y/6FVfjblDw==;
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=csmantle.top; s=self-rsa3072; h=BIMI-Selector:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:In-Reply-To:References:BIMI-Selector;
-	bh=SceegF9V2UMZyJU5wVXKWyTzveddd4TbiOOhUTBe0qI=; t=1783174648; x=1783779448; 
-	b=FRE6nmWTYhjjKSRxCdqH3XWeQh9uAvwDWhc+hUmrQpKVVLBQPO0x4p74HyyWsbiaSvVvYqxVJCw
-	I++3IhAfgNwTA4WyxTI871X9RuSnQ7HD9VKBuUroKZKuboY8JG4vK8M/sdUUCsoOktQYY4ykDgsSB
-	I0SzPczuSkrqCFkNFjHdrAFLwtVQwzSCQCvMDNupAJat/H6q6aznqc+ac9YQZ0DKIiPBdLugsWnvS
-	UTzCQ5NKy8keCBvXTI6/rWuemWeN0+Ej0JUwEmMYElkA8pz15p1T8TTqBXv3j581K+3GkHmmXawSd
-	0GEcQaaOjO/fkwyrTTskVcCmYQtEyXCugo5j16ZChH4zukwC3wmanIMNBs6GWVe/3YgaER+87To1G
-	cRix1zZueLFJIEUq47vJDri7DkweJmNrEZBfeS2u0su4LB7x7RwhvUtO4Uez9c3N872iRfWa5Qj0f
-	abJk9jKBAtnVKXyXHrL4G2Qir6/cH+atbPovs5IN45Slrh1iOib0;
-Received: from [103.167.64.98] (helo=loongcatbox)
-	by mail.srv.csmantle.top with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <rong.bao@csmantle.top>)
-	id 1wg0vG-00000000N64-0KOj;
-	Sat, 04 Jul 2026 22:00:46 +0800
-From: Rong Bao <rong.bao@csmantle.top>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Xi Ruoyao <xry111@xry111.site>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Chengwen Feng <fengchengwen@huawei.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Rong Bao <rong.bao@csmantle.top>,
-	"Rafael J. Wysocki (Intel)" <rafael@kernel.org>,
-	Guo Ren <guoren@kernel.org>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Thierry Reding <treding@nvidia.com>,
-	Thomas Gleixner <tglx@kernel.org>
-Cc: Kexy Biscuit <kexybiscuit@aosc.io>,
-	Mingcong Bai <jeffbai@aosc.io>,
-	stable@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] loongarch: retrieve CPU package ID from PPTT when available
-Date: Sat,  4 Jul 2026 21:59:22 +0800
-Message-ID: <20260704135932.4072912-1-rong.bao@csmantle.top>
-X-Mailer: git-send-email 2.54.0
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ddFVpaRA"
+Received: from ehlo.thunderbird.net (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 664HNJRr1739853
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Sat, 4 Jul 2026 10:23:20 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 664HNJRr1739853
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2026062701; t=1783185802;
+	bh=laVgWzETVzPyfy8TL8hiLjbkrz+X11MaGvxM78c56UQ=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=ddFVpaRAV0DC0OsSpEM1RIGHdBDJycmv5PNIh79X6gjmuMgZhFXuXaEyZMuGKQziN
+	 OXk7biHUDHT0id4zqijW2S9+E1K2MG3eQgRHESaRXSn6bOYCiocdts3lN+RepzSoZw
+	 TOOQ7IFrPKYiQXilVte+NFU7pH4AfLGwtMm+BT8IuAwsfOXlg8V88nAoWj3ssgp7L8
+	 ugiLZlzclplOyDd/yAEDi+QXxhgXjjoy3ynstiJ/KRiwHjrTYdeKJ88yjtqBF39aRs
+	 qeK/eeXW2dOUDGPSJXmYE43L0c6Vl+pbFzkWgHwreiQ+kRpM4ZyEWkWN2b5QpPTl1+
+	 hYinKg61do8cg==
+Date: Sat, 04 Jul 2026 10:23:14 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Thomas Gleixner <tglx@kernel.org>,
+        =?ISO-8859-1?Q?Michal_Such=E1nek?= <msuchanek@suse.de>,
+        Peter Zijlstra <peterz@infradead.org>
+CC: Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+        Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+        Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>, Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Andrew Donnellan <andrew+kernel@donnellan.id.au>,
+        Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Ryan Roberts <ryan.roberts@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mukesh Kumar Chaurasiya <mkchauras@linux.ibm.com>,
+        Shrikanth Hegde <sshegde@linux.ibm.com>, Zong Li <zong.li@sifive.com>,
+        Nam Cao <namcao@linutronix.de>, Deepak Gupta <debug@rivosinc.com>,
+        Lukas Gerlach <lukas.gerlach@cispa.de>,
+        Rui Qi <qirui.001@bytedance.com>, Kees Cook <kees@kernel.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BRFC=5D_entry=3A_Untangle_the_return_value_of?=
+ =?US-ASCII?Q?_syscall=5Fenter=5Ffrom=5Fuser=5Fmode_from_syscall_NR?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <87h5mhnjsr.ffs@fw13>
+References: <akVRcPsD_R_CE1qW@kunlun.suse.cz> <BA7CD91D-C0E5-47A1-B49C-BC6AF6604182@zytor.com> <87h5mhnjsr.ffs@fw13>
+Message-ID: <3DD62076-5420-4D2B-8E7E-9FE0446BD8A0@zytor.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rcpt-Check: Accepted by authentication
-X-42: Don't panic! 
-BIMI-Selector: v=BIMI1; s=me
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Currently, the LoongArch CPU topology initialization code calculates
-each core's package ID by dividing its physical ID by
-loongson_sysconf.cores_per_package. This relies on the assumption that
-cores_per_package counts in the same domain as physical IDs.
+On July 2, 2026 2:49:56 PM PDT, Thomas Gleixner <tglx@kernel=2Eorg> wrote:
+>On Wed, Jul 01 2026 at 11:29, H=2E Peter Anvin wrote:
+>
+>Can you please trim your replies? Scrolling through hundred lines of
+>useless quoted text is just annoying=2E
+>
+>> On July 1, 2026 10:42:08 AM PDT, "Michal Such=C3=A1nek" <msuchanek@suse=
+=2Ede> wrote:
+>>>-static __always_inline long syscall_enter_from_user_mode(struct pt_reg=
+s *regs, long syscall)
+>>>+static __always_inline long syscall_enter_from_user_mode(struct pt_reg=
+s *regs, long *syscall)
+>>> {
+>>> 	long ret;
+>>>
+>
+>> 1=2E The type for a system call is int=2E
+>
+>That ship has sailed long ago=2E man syscall =2E=2E=2E
+>
+>> 2=2E A valid system call number is always going to be positive=2E
+>
+>That's true today=2E
+>
+>> 3=2E Bits [30:24] are available for architecture ABI use=2E The
+>>    "architecture independent" part of the system call number is therefo=
+re
+>>    24 bits wide=2E
+>>
+>> 4=2E The exact ABI is platform-specific, obviously, but as a general
+>>    guideline (especially for new platforms/ABIs) should follow the rule=
+s
+>>    for a platform "int" if practical=2E Notably, when passing a value i=
+n a
+>>    register larger than 32 bits, which side of the calling interface is
+>>    responsible for sign-extending a value passed in a register=2E If ca=
+ller
+>>    side, the kernel should validate, if callee side the kernel should
+>>    ignore the additional bits and do the extension=2E
+>
+>The kernel sign expands today already, i=2Ee=2E for compat syscalls=2E
+>
+>> 5=2E A negative system call number is guaranteed to return -ENOSYS
+>>    (unless intercepted by seccomp, ptrace, or another mechanism under
+>>    user space control=2E)
+>
+>That's true today=2E
+>
+>ASM entry:
+>       regs->eax =3D -ENOSYS;
+>
+>C entry:
+>       nr =3D syscall_enter_from_user_mode(regs, nr);
+>
+>       if ((unsigned)nr < SYSCALL_MAX)
+>       	    regs->eax =3D handle_syscall();
+>       else if (nr !=3D -1)
+>       	    regs->eax =3D -ENOSYS;
+>
+>       =2E=2E=2E=2E
+>
+>If seccomp overwrites regs->eax and aborts any syscall (including -1) by
+>returning -1, then the value seccomp wrote into regs->eax is preserved
+>and returned to user space=2E
+>
+>The same applies for syscall_user_dispatch() and ptrace=2E=2E=2E() if the=
+y
+>decide to overwrite regs->eax _and_ abort the syscall by letting
+>syscall_enter_from_user_mode() return -1=2E
+>
+>trace_syscall_enter() is not any different=2E If the magic BPF in there
+>rewrites the syscall number to -1 then either the original -ENOSYS or
+>the BPF induced overwrite is returned to user space=2E
+>
+>It's less than obvious and I have no objections to clean that up and
+>make it more intuitive, but I still fail to see what Michal is actually
+>trying to solve and what the magic flag is for=2E If s390 requires it,
+>then that's an s390 problem, but definitely x86 does not=2E
+>
+>> 6=2E If the platform needs to algorithmically modify the system call
+>>    number due to platform-specific concerns (say, the platform uses a
+>>    16-bit special purpose register for the syscall number, or it has
+>>    multiple kernel entry points with different behavior), it should if =
+at
+>>    all possible transcode the system call number as necessary to match
+>>    this convention in APIs that are exposed to general kernel code=2E
+>>
+>> For example, in the future I could very much see the IA32 code in the
+>> x86 kernel using bit 29 internally to indicate an ia32 system call,
+>> simplifying the is_compat implementation on x86=2E
+>
+>I don't see how that makes it simpler=2E Those are two different entry
+>code paths and magic bits wont make that go away=2E
+>
+>> It should not mean that passing bit 29 to either the syscall
+>> instruction or int $0x80 will be accepted=2E
+>
+>Your proposal looks even more like a solution in search of a problem
+>than the original one=2E
+>
+>Thanks,
+>
+>        tglx
+>
+>
 
-On Loongson 3B6000 (XB612B0V_1.2), cores_per_package matches the visible
-core count -- 24 in this case. However, the physical IDs range from 0 to
-31 in a noncontinuous fashion:
+The type in syscall(3) is irrelevant=2E The argument passed to the kernel =
+is treated as an int and sign-extended from 32 bits=2E=20
 
-        $ cat /proc/cpuinfo | grep -i -F 'global_id'
-        global_id               : 0
-        global_id               : 1
-        global_id               : 4
-        global_id               : 5
-        global_id               : 6
-        global_id               : 7
-        global_id               : 8
-        global_id               : 9
-        global_id               : 10
-        global_id               : 11
-        global_id               : 14
-        global_id               : 15
-        global_id               : 16
-        global_id               : 17
-        global_id               : 20
-        global_id               : 21
-        global_id               : 22
-        global_id               : 23
-        global_id               : 26
-        global_id               : 27
-        global_id               : 28
-        global_id               : 29
-        global_id               : 30
-        global_id               : 31
+I'm explicitly not trying to invent things; I'm trying to document the sta=
+tus quo to avoid further confusion and to create mistakes=2E=20
 
-Retrieve the exact package ID from ACPI PPTT when available, in the same
-style as retrieving the core ID and thread ID in parse_acpi_topology().
-Use this information in loongson_init_secondary() when PPTT readout is
-successful. The original division logic is kept as a fallback.
-
-Meanwhile, since some code paths like loongson3_cpufreq expect a
-continuous integer sequence of package IDs in [0, MAX_PACKAGES) when
-retrieving from cpu_data[], we also canonicalize the package ID to be
-filled in parse_acpi_topology() to meet such an expectation.
-
-Cc: stable@vger.kernel.org
-Co-developed-by: Xi Ruoyao <xry111@xry111.site>
-Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-Signed-off-by: Rong Bao <rong.bao@csmantle.top>
----
-
-v1 -> v2:
-- Addressed and incorporated package ID canonicalization code suggested
-  by Ruoyao
-- Rebased onto present master
-
-v1: https://lore.kernel.org/loongarch/e18efdbb.AXMAAIuqLC8AAAAAAAAAA-ma1qEAAYKJPtkAAAAAADNVAQBpc5ot@mailjet.com/
-
----
- arch/loongarch/kernel/acpi.c | 28 +++++++++++++++++++++++++++-
- arch/loongarch/kernel/smp.c  |  2 +-
- 2 files changed, 28 insertions(+), 2 deletions(-)
-
-diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
-index 8f650c9ffecdecdac6bcb324123e222bd04dbcf2..9ad25c642dbc50485ad54a02ed818a34e639f219 100644
---- a/arch/loongarch/kernel/acpi.c
-+++ b/arch/loongarch/kernel/acpi.c
-@@ -202,9 +202,12 @@ static void __init acpi_process_madt(void)
- 
- int pptt_enabled;
- 
-+static int acpi_package_ids[MAX_PACKAGES];
-+static int acpi_nr_packages;
-+
- int __init parse_acpi_topology(void)
- {
--	int cpu, topology_id;
-+	int cpu, topology_id, i;
- 
- 	for_each_possible_cpu(cpu) {
- 		topology_id = find_acpi_cpu_topology(cpu, 0);
-@@ -222,6 +225,29 @@ int __init parse_acpi_topology(void)
- 
- 			cpu_data[cpu].core = topology_id;
- 		}
-+
-+		topology_id = find_acpi_cpu_topology_package(cpu);
-+		if (topology_id < 0) {
-+			pr_warn("Invalid BIOS PPTT\n");
-+			return -ENOENT;
-+		}
-+
-+		for (i = 0; i < acpi_nr_packages; i++)
-+			if (acpi_package_ids[i] == topology_id)
-+				break;
-+
-+		if (i == acpi_nr_packages)
-+			acpi_package_ids[acpi_nr_packages++] = topology_id;
-+
-+		cpu_data[cpu].package = topology_id;
-+	}
-+
-+	for_each_possible_cpu(cpu) {
-+		for (int i = 0; i < acpi_nr_packages; i++)
-+			if (cpu_data[cpu].package == acpi_package_ids[i]) {
-+				cpu_data[cpu].package = i;
-+				break;
-+			}
- 	}
- 
- 	pptt_enabled = 1;
-diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-index 5d792256bbb99a41d0032add6b5ffacffb20b684..9d148b6e41b488daca71a970e1b75cc18638d564 100644
---- a/arch/loongarch/kernel/smp.c
-+++ b/arch/loongarch/kernel/smp.c
-@@ -426,7 +426,7 @@ void loongson_init_secondary(void)
- 	numa_add_cpu(cpu);
- #endif
- 	per_cpu(cpu_state, cpu) = CPU_ONLINE;
--	cpu_data[cpu].package =
-+	cpu_data[cpu].package = pptt_enabled ? cpu_data[cpu].package :
- 		     cpu_logical_map(cpu) / loongson_sysconf.cores_per_package;
- 	cpu_data[cpu].core = pptt_enabled ? cpu_data[cpu].core :
- 		     cpu_logical_map(cpu) % loongson_sysconf.cores_per_package;
-
-base-commit: 87320be9f0d24fce67631b7eef919f0b79c3e45c
--- 
-2.54.0
-
+I'm sorry I muddled the waters with what was intended to be a hypothetical=
+ example=2E
