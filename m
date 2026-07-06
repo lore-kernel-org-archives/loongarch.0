@@ -1,90 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1368414A04;
-	Mon,  6 Jul 2026 12:33:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6CE447ECE8
+	for <loongarch@lists.linux.dev>; Mon,  6 Jul 2026 21:41:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783341208; cv=none; b=ba7kKQomqyBjO1TvG0Ipa4koyrGr6KAFEfCY+eDLJj1nZJx6o4E/4kgddKX1Bymp8LSeCX4etFi/rjNyqp0btA0qweqgkQmt5pcZ1vSGzje4KjRf7iGO/EzNNckkTyrsRsVALlOqK+B6nm3PNpJ0rgMjUgu56K2OLahXyjKIEog=
+	t=1783374110; cv=none; b=NqMqFilsRPgkZqqJuQk1xTI9sMUa7k3kWOZB4+kbeK4YM6i0HufnbYybGXmE3rswkM/eFJSI5tnWtVT+wWU87NXr9KWrEVB5FGiFjU5UNWnSVNTqk8nn3CKlcXYyV7HyolDw9EUkjZ5hB3wQXMEJOgWMJGNoajFizyiiHQZ6LA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783341208; c=relaxed/simple;
-	bh=IZwmi8Dh5dC52ztDQBstSi8jpZvhUbFjaLZ+lzlijiw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UjAzJeb9MbtbB0BProEA0/MGVjPzdziSb/qCytweIDpf1zECSxwCcsR3O+k1KKSRQP+vyv/oxUXaI6uyWK//Z4IJxLOKbThvxGBeXEPpgVS14i6H7NAq3ufz+lzEP3AEeKvuH9L4qR3AOvEYyGKZ3IUgwHByo9Cqh+Cx5zgcY1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fkZQDUe7; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783374110; c=relaxed/simple;
+	bh=+zlMuA2f63v5NWpjsw4zSCanE6j88FQ9OFKGCMT/pr8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=IwHmfRt6pONLUjybsJljoReHX3KButDR8+x4dOZWOWDjUE6SK+WHlAF6nGbyOIRE8e+4GX9tI/fyDEuO/4EXtFrwqhmFKlMmhiZCLBwdKNXnXjUO+aP/ECphZ+g9YcuPH7d+ZodU1WpTzgf6pq/yBRuN+P/gonbWm4s9ZHFkjmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CaEq/eQS; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fkZQDUe7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BED481F000E9;
-	Mon,  6 Jul 2026 12:33:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783341206;
-	bh=janF2X2dIHPCZDye4lc7EkaV6cFt55A8vWTTLJeaFx4=;
-	h=From:To:Cc:Subject:Date;
-	b=fkZQDUe7ohGU8ikQrO8CPZAQQBqGSPIdEzX01viUDQvpGusGLVBCsY0D36+r7j1tL
-	 Fe0n7/W7/jqQc4+f3r4Jf9IsNHio/BQZ68VJ0qqAq0Ul6pYM8CIWmEIUZIa9G4XmU7
-	 jfBxjVejkognWYIsHBx2uzNr6SupB41LlqT/wGoNM8ldQDRYhjVbi6q9gV745S3HVN
-	 Ys/b7OMgfVVDgVxBykGSMgkwOso79aSOPLw8FyvEXrMgcRGmWFJAARb/FQNPhLdYq8
-	 5VQeXCu5TLQAIySIQtcKNOT0rKfNUx2bJIHTfszdfNJ29u+T1OUqwlwOnIwF7MSsag
-	 WXmIPBqgnIblA==
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-To: loongarch@lists.linux.dev, Linux ACPI <linux-acpi@vger.kernel.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Hans de Goede <hansg@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- LKML <linux-kernel@vger.kernel.org>
-Subject:
- [PATCH v1] platform/loongarch: laptop: Stop setting acpi_device_class()
-Date: Mon, 06 Jul 2026 14:33:23 +0200
-Message-ID: <2444678.ElGaqSPkdT@rafael.j.wysocki>
-Organization: Linux Kernel Development - Intel
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CaEq/eQS"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-381ed661712so3090874a91.2
+        for <loongarch@lists.linux.dev>; Mon, 06 Jul 2026 14:41:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783374108; x=1783978908; darn=lists.linux.dev;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=+zlMuA2f63v5NWpjsw4zSCanE6j88FQ9OFKGCMT/pr8=;
+        b=CaEq/eQSQuNDBkI5Id2o3H53EnCVyi58EK/cDh9P6VlGmpJu/aripk9oEL/Jm2ilEL
+         /eyWVis6dLIxFovyHZR3sqlNtLoFJqZQfsyKJ64DMAEcx9oLCnb9B5ZboXZmhSQMdQjc
+         mCylCMcmYlsbR28XxuyOEDbiKQ9/n8KrNOrqXwqjbId1Pf/k50jsEuESm4ib0RKGU9H+
+         IR7urFeYLJXQl7oTvosCVNv+OBg85yGdH+VgqojziwUsNoo3fVEZ71K0oGZq1q5ecx8P
+         IH+07dOBlNQOyymTulNgB8oLt0+kL589+suXZL1FEyt4WH40VtcqDsV7eZKeZpXvZx65
+         nHuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783374108; x=1783978908;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+zlMuA2f63v5NWpjsw4zSCanE6j88FQ9OFKGCMT/pr8=;
+        b=rn80eTrhpDyAGdzUsNULkpUUIJHWJQbjjPTOPNPep+h0UUCtrkmp8V65AnSbB6OECL
+         SfBM4EDhlRcrgpQrZRC2Tx4GkUBv1wgii1gx/OHraLKrdYKtrnS4SmQLC8XI5Mzv8F1F
+         aBvAWuLBAjpEj++CWVp1i+BbjPzupabO4M96w+ovzVVDTw/u2EGkQTcUu8NZ/py1TRQj
+         aC3/M+PHgtrCUeoDkt0f2Ed6h/57mwCXj5eh3M3VDJK168qEDxq1pP+/RfFZ/nbyHRBM
+         9haxdk2Q2h07Y8ybWRZfHAtG0q/cOam0qOTPjSNp24HcQjo5FcvUwha7R0IIk2c3BjuD
+         g0bQ==
+X-Forwarded-Encrypted: i=1; AHgh+Rp8Ayt02Q8d6l4Ttky8b/tZ+AproCERTrYZTExkIQZSIS0CkIKQOVlvA82RENpkbfLPHrS5ghhefIA=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzA+ZbudDYP0EE7UoFTsMsFrUHYIuAwn4WjFF12+GrM0RhVr0UD
+	YUoGCcHNu03ie2sFvRm6gSQ3i7YX/4Mn9vGmxSf5bTQfEuB2W8gRLjER
+X-Gm-Gg: AfdE7ckVehKlawR+/PlgyCDtsLOX5JOXD0NRAEiRyAK0CwlwnAlbazA+9pe6CXcoDDf
+	o+PT2hL8uexi81347lxVkB60wst+yvnE70ZRDgiv+P26oy3Lu6aeVPhRa8s9zTCKEvnjZaYkvCr
+	FUEYySTLRu3Rs3yuDxYYw502fxZt7++PyPIGoTWndTT/AGJvRlimF/EnCuK15OJFqrcS9AOuWFU
+	TSNQcLODaINEJeouW3wbUsOSYZOw0N5tdKMGOzU/RGitKyZw6M8IyTXPa+op0o043hBUtP6zuyh
+	6ROvxBh8gCzfGG8YCg3dQFYgbIDdbtLiwAL4lf91KptFZCPtWOWaeb/Wx31kkQoNWLJs2n06hWN
+	UGEy4i0HsbBSpTuEwRiOw0K6WRLIJtfpIdvUWCwYhXz3aCOlk83b8K9d8332ZppuRbTocCHO8Xn
+	HosJaOiCO3aX+apTcIbzjoILEG2VOoQCYR0FkSxuSXvJrSL9byEeqGSWzQakKdPFJPYFw0YA==
+X-Received: by 2002:a05:6a21:e8b:b0:3bf:b931:b3ec with SMTP id adf61e73a8af0-3c08effc8c8mr2675609637.57.1783374108056;
+        Mon, 06 Jul 2026 14:41:48 -0700 (PDT)
+Received: from ?IPv6:2a03:83e0:115c:1:612f:7084:be32:532a? ([2620:10d:c090:500::1:55b9])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3117483e0a2sm587541eec.12.2026.07.06.14.41.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2026 14:41:47 -0700 (PDT)
+Message-ID: <abd697d839043d80e0230d2b9ab30b214dfa34d7.camel@gmail.com>
+Subject: Re: [PATCH bpf-next v8 2/2] bpf: Reject programs with inlined
+ helpers if JIT is not available
+From: Eduard Zingerman <eddyz87@gmail.com>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>, Alexei Starovoitov
+ <ast@kernel.org>,  Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko
+ <andrii@kernel.org>, Kumar Kartikeya Dwivedi	 <memxor@gmail.com>, Martin
+ KaFai Lau <martin.lau@linux.dev>, Song Liu	 <song@kernel.org>, Yonghong
+ Song <yonghong.song@linux.dev>, Jiri Olsa	 <jolsa@kernel.org>, Emil
+ Tsalapatis <emil@etsalapatis.com>, KaFai Wan	 <kafai.wan@linux.dev>
+Cc: bpf@vger.kernel.org, loongarch@lists.linux.dev, Leon Hwang
+	 <leon.hwang@linux.dev>, Puranjay Mohan <puranjay@kernel.org>, 
+ =?ISO-8859-1?Q?Bj=F6rn_T=F6pel?=
+	 <bjorn@kernel.org>
+Date: Mon, 06 Jul 2026 14:41:45 -0700
+In-Reply-To: <20260706040006.10331-3-yangtiezhu@loongson.cn>
+References: <20260706040006.10331-1-yangtiezhu@loongson.cn>
+	 <20260706040006.10331-3-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.60.1 (3.60.1-1.fc44) 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+On Mon, 2026-07-06 at 12:00 +0800, Tiezhu Yang wrote:
+> When an architecture (such as LoongArch, ARM64, and RISC-V) implements
+> bpf_jit_inlines_helper_call(), the verifier skips rewriting the helper
+> call offset (insn->imm) during the bpf_do_misc_fixups() phase, because
+> the helper is expected to be inlined by the JIT compiler. As a result,
+> insn->imm remains as the raw helper enum ID.
+>=20
+> However, if JIT is disabled at runtime (net.core.bpf_jit_enable=3D0) or
+> if the JIT compilation later dynamically fails (e.g., due to OOM), the
+> core BPF subsystem falls back to the BPF interpreter.
+>=20
+> When the interpreter executes (__bpf_call_base + insn->imm) with the
+> unpatched raw helper ID, it jumps into an unaligned invalid address
+> space, triggering an instruction alignment fault or a memory access
+> panic.
+>=20
+> Fix this by setting 'jit_required' to 1 when helper call rewriting is
+> skipped for JIT inlining. Loading will be rejected early with -EINVAL
+> if JIT is disabled, or safely rejected with -ENOTSUPP during runtime
+> selection if JIT compilation dynamically fails, effectively preventing
+> the kernel panic.
+>=20
+> Fixes: 2ddec2c80b44 ("riscv, bpf: inline bpf_get_smp_processor_id()")
+> Suggested-by: Alexei Starovoitov <ast@kernel.org>
+> Suggested-by: KaFai Wan <kafai.wan@linux.dev>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
 
-The driver populates acpi_device_class() which is never read afterward,
-so make it stop doing that and drop the symbol defined specifically for
-this purpose.
+Sorry, I'm late to the party.
+As far as I understand, the patch #1 doesn't really change anything functio=
+nally,
+it just adds the flag, right?
 
-No intentional functional impact.
+As for the patch #2 and looking at the helpers that jits currently inline:
+- bpf_get_smp_processor_id (implemented as a function in the helpers.c)
+- bpf_get_current_task (implemented as a function in the bpf_trace.c)
+- bpf_get_current_task_btf (implemented as a function in the bpf_trace.c)
 
-This will facilitate the removal of device_class from struct
-acpi_device_pnp in the future.
+It is perfectly fine to call these as helper functions even if jit is
+not available. But this was broken since:
+2ddec2c80b44 ("riscv, bpf: inline bpf_get_smp_processor_id()")
+from May 2024, so I guess nobody really cares?
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/platform/loongarch/loongson-laptop.c | 3 ---
- 1 file changed, 3 deletions(-)
+Imo, the simplest and least intrusive fix is to add a wrapper in the
+verifier.c that would call both bpf_jit_inlines_helper_call() and
+check if the jit is enabled and use that wrapper instead of direct
+calls to bpf_jit_inlines_helper_call().
 
-diff --git a/drivers/platform/loongarch/loongson-laptop.c b/drivers/platform/loongarch/loongson-laptop.c
-index 61b18ac206c9..f2dcc6d78051 100644
---- a/drivers/platform/loongarch/loongson-laptop.c
-+++ b/drivers/platform/loongarch/loongson-laptop.c
-@@ -30,7 +30,6 @@
- #define LOONGSON_ACPI_HKEY_HID	"LOON0000"
- 
- #define ACPI_LAPTOP_NAME "loongson-laptop"
--#define ACPI_LAPTOP_ACPI_EVENT_PREFIX "loongson"
- 
- #define MAX_ACPI_ARGS			3
- #define GENERIC_HOTKEY_MAP_MAX		64
-@@ -167,8 +166,6 @@ static int __init setup_acpi_notify(struct generic_sub_driver *sub_driver)
- 	}
- 
- 	sub_driver->device->driver_data = sub_driver;
--	sprintf(acpi_device_class(sub_driver->device), "%s/%s",
--		ACPI_LAPTOP_ACPI_EVENT_PREFIX, sub_driver->name);
- 
- 	status = acpi_install_notify_handler(*sub_driver->handle,
- 			sub_driver->type, dispatch_acpi_notify, sub_driver);
--- 
-2.51.0
+Anyway, since this was broken all-along, might as well land as-is.
+Thoughts?
 
-
-
-
+[...]
