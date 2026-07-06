@@ -1,219 +1,97 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6892A433E86
-	for <loongarch@lists.linux.dev>; Mon,  6 Jul 2026 05:28:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF8F52222D0
+	for <loongarch@lists.linux.dev>; Mon,  6 Jul 2026 05:31:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783315711; cv=none; b=XQo8FtsMj4Xoe99S7B1NEeyaDvY00kPkSxNKeRp+FpOatoHAfzmJocRxrENMVxVqyi2sIEtx5vavyj89a0Qd9zjJozn8aWbZw6huNOZ6PqrmKejzVqGYRTrv42FvAAO9nLG3Dl23EH13SD2tB6HLd2fGpCRPsA0QtzHOXDwXw3I=
+	t=1783315921; cv=none; b=TdMk9qIZxtaLcVCkVpoyiASXSa69RETnoirCF9VGGS02x+GkIP41bygnM6mrBTEbtns8ASUYpbOdQN3aX1Egwa2yrQFRm0UO1oPr+p/mf8LSjL3fhefqHzYYVh26lkwQy3my1R846VH/DhU5jjEKpeO7V37Yexx5DxASQYSvewE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783315711; c=relaxed/simple;
-	bh=Op7YrmDRvG3IQNqVgcMBaMgVoL5djEN1e5l0//V33j4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=MNtzm8K/i+TFkFHzTGkg6jeysyQAxichgbzy2EEmTkxyhrRAVJdetXmhcHuwDeBCsjkH/rmXDRiQZmJlrdl8zVrZ+tWcdq/WuVUi4UT/G4/0H9fjl3/T+k7wWu2ZkZkxqLSgyUbTN4BlUslK3L4ICbN4fC8hKLGfM/18jnIwOLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=NqCvs3pY; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NqCvs3pY"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 665MIDNn2197654;
-	Mon, 6 Jul 2026 05:27:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=qyT8QO
-	PwSCCU+wrCNesdHnEoidpizVQFXDm2JOPh3Ls=; b=NqCvs3pY15h1C7mpnIjIaN
-	6jlCH42vtL2ODLXxmTALUdQExNoGcX68JO94EtwfUAL21T7CaUG/plS81M6YmYMU
-	k6FtpqURKyqbAvIOV0ibqzLJhP2o68nJBh7er1hWV/J4dU9y3r7MLI0G54UwszRj
-	fzvtb5Ii5fzFCyrJ+m3hrCWGbb7MgT2o8FZ2ODTNu93yFGfhODuQsf7BjXrNRKur
-	5zXNA6HnZ2gf0SeENwLApCO7qKJ5TFesQ0PxQ/7sXzUSxj43bz/1g2ujukK9Y8m0
-	8i9DFq3s+9sqM3pGje6tZ8wTkDXeDPsLQ82NRJ++2CsXKUSZWGtQu3uqVpmsfjKQ
-	==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f6sw4fqrh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 06 Jul 2026 05:27:24 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 6665JdIY031696;
-	Mon, 6 Jul 2026 05:27:22 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4f7e0h430r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 06 Jul 2026 05:27:22 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6665RI5U51511744
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 6 Jul 2026 05:27:18 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A3CE120043;
-	Mon,  6 Jul 2026 05:27:18 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 20E0C20040;
-	Mon,  6 Jul 2026 05:27:18 +0000 (GMT)
-Received: from tuxmaker.linux.ibm.com (unknown [9.87.85.9])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon,  6 Jul 2026 05:27:18 +0000 (GMT)
-From: Sven Schnelle <svens@linux.ibm.com>
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Michal =?utf-8?Q?Such=C3=A1nek?= <msuchanek@suse.de>,
-        Peter Zijlstra
- <peterz@infradead.org>,
-        Thomas Gleixner <tglx@kernel.org>, Jonathan
- Corbet <corbet@lwn.net>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Huacai
- Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
-        Madhavan
- Srinivasan <maddy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Christophe Leroy (CS GROUP)"
- <chleroy@kernel.org>,
-        Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt
- <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti
- <alex@ghiti.fr>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
- <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Andy Lutomirski
- <luto@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov
- <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Andrew Donnellan <andrew+kernel@donnellan.id.au>,
-        Mark
- Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>,
-        Jiaxun
- Yang <jiaxun.yang@flygoat.com>,
-        Ryan Roberts <ryan.roberts@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mukesh Kumar Chaurasiya
- <mkchauras@linux.ibm.com>,
-        Shrikanth Hegde <sshegde@linux.ibm.com>, Zong
- Li <zong.li@sifive.com>,
-        Nam Cao <namcao@linutronix.de>, Deepak Gupta
- <debug@rivosinc.com>,
-        Lukas Gerlach <lukas.gerlach@cispa.de>,
-        Rui Qi
- <qirui.001@bytedance.com>, Kees Cook <kees@kernel.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org
-Subject: Re: [RFC] entry: Untangle the return value of
- syscall_enter_from_user_mode from syscall NR
-In-Reply-To: <69ACC6A7-7845-41B4-B0D0-2E6FCDA7443D@zytor.com>
-References: <akVRcPsD_R_CE1qW@kunlun.suse.cz>
-	<BA7CD91D-C0E5-47A1-B49C-BC6AF6604182@zytor.com> <87h5mhnjsr.ffs@fw13>
-	<yt9dwlvca8rn.fsf@linux.ibm.com> <87ldbsmnie.ffs@fw13>
-	<yt9d5x2w5r84.fsf@linux.ibm.com>
-	<20260703105718.GO751831@noisy.programming.kicks-ass.net>
-	<akecJWAJP-e5CYP_@kunlun.suse.cz> <yt9dtsqg480p.fsf@linux.ibm.com>
-	<69ACC6A7-7845-41B4-B0D0-2E6FCDA7443D@zytor.com>
-Date: Mon, 06 Jul 2026 07:27:17 +0200
-Message-ID: <yt9dwlv8adsa.fsf@linux.ibm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1783315921; c=relaxed/simple;
+	bh=8T3VCJzYxStzRHTE/+7VFWzOVRfpXJ0wsBY+aIIl7EI=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=JbnSqpQgBtpoaGmtJbldXzfCP5ux/WkIVtF8Ei3DjreWUJWOHvM24NXJSXcwu0wirTMKNTXa92/L41327SB4AkxlJDe0f4v+YeB6t7LonG0ke4bBJRhkYt+GvcwyxK3LNI+cctAvK5x955CKX8BGf643H0U5eANTtO/u8Use5iM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxmuvOPUtqBUsAAA--.1374S3;
+	Mon, 06 Jul 2026 13:31:58 +0800 (CST)
+Received: from [10.130.40.83] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJAx3cbMPUtqmdgBAA--.11475S3;
+	Mon, 06 Jul 2026 13:31:57 +0800 (CST)
+Subject: Re: [PATCH v2 3/4] LoongArch: BPF: Refactor jump offset calculation
+ in tail call
+To: bot+bpf-ci@kernel.org, chenhuacai@kernel.org, hengqi.chen@gmail.com
+Cc: loongarch@lists.linux.dev, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, ast@kernel.org, andrii@kernel.org,
+ daniel@iogearbox.net, martin.lau@kernel.org, eddyz87@gmail.com,
+ yonghong.song@linux.dev, clm@meta.com, ihor.solodrai@linux.dev
+References: <20260706033906.1988-4-yangtiezhu@loongson.cn>
+ <4101e743dcdd3be2ff84acb696e37dfe9c67116e89568cbbf985679c8862d047@mail.kernel.org>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <544cdfed-a90a-af77-eebd-4031e12f7f4a@loongson.cn>
+Date: Mon, 6 Jul 2026 13:31:56 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-GUID: PVkMc2zyQ0D-fUI5jf8JPax52k-2R9m6
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA2MDA1MCBTYWx0ZWRfX4qHTNGyBlHze
- ZpjjhVXVNWUf52+eH/j3Xj275yLvQIX9M5+SfrKeFVExBXF3r8VQK7M4tt8Et5rma8xzWEUxOye
- +Dm8prjgMBXEoa/9S0SMzMEpqSbYfMlMqMhsiRtF8j6NbGqjQAlv2ikwCzE1288nR/F43heFGQX
- 8+8uMJ4Q/fmxYy0YasNluoqfxvSGTcHc9er9G/Zp/2d6fZEZs7HKrufFkld/iHPCWGL8rdCKPwJ
- K9giRvtbCnCiTL+FmCUbnj0P9Zi7MgRA0tfj2R1TjbFSlKyLgkwvhDY1Pc3M2MRBe7MsbFs7FZ1
- nxBXSQA+y+IAdsPPdmIvbKJfUuBDeIkbubPAVgd/Jnt0CI+mnzetibKeul6Tdue5QowHOnF32J5
- 6URwC4eT3UI9Tskf2Szq1xngH6vioDy9MLJ0ahrSeimGXO4WRBwDhrcsVJwI0R9HB6YZGjRoDEA
- lGo2MhmSUrdNq5tTP6g==
-X-Proofpoint-ORIG-GUID: DB5Cizx3s3LIu5FN8bbo5Zw1FptATo2x
-X-Authority-Analysis: v=2.4 cv=FqQ1OWrq c=1 sm=1 tr=0 ts=6a4b3cbc cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=oGMlB6cnAAAA:8
- a=VnNF1IyMAAAA:8 a=MuErSGU5NpPTm9C_53oA:9 a=QEXdDO2ut3YA:10
- a=NdAtdrkLVvyUPsUoGJp4:22
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA2MDA1MCBTYWx0ZWRfX+MY8RMEHb64s
- y8kuegBntKLPrluFLndLQY7dg8NCbGkUX7kXz8/Z7uIHXtMeQlR3E2d6vH13gFXOSJAb+B/Rugv
- TNusXlfi/XZQLeaclmqkQoCtkwFx/OM=
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-07-05_02,2026-07-03_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 impostorscore=0 clxscore=1015 malwarescore=0 lowpriorityscore=0
- priorityscore=1501 bulkscore=0 suspectscore=0 spamscore=0 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607060050
+In-Reply-To: <4101e743dcdd3be2ff84acb696e37dfe9c67116e89568cbbf985679c8862d047@mail.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAx3cbMPUtqmdgBAA--.11475S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7KryfWFyfGryDJF1fuF4UGFX_yoW8Gr18pF
+	Wvqw15Ja43Xr40yFs7Gr93W3W0kws5CF45Xrn8Gr1qyrZ0vr1YvFWYka1Uua93ZrZFva47
+	Wrs0gF13ZF1DCFcCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBGb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
+	67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2
+	xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC
+	6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
+	026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF
+	0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0x
+	vE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2z280
+	aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07j1eHDUUUUU=
 
-"H. Peter Anvin" <hpa@zytor.com> writes:
+On 2026/7/6 下午12:43, bot+bpf-ci@kernel.org wrote:
+>> In emit_bpf_tail_call(), the macro-based jmp_offset calculation relies
+>> on a fragile prediction equation: "tc_ninsn - (ctx->idx - idx0)". This
+>> calculation model utilizes tc_ninsn from the previous pass to estimate
+>> the remaining stride of the active tail call code block.
 
-> On July 3, 2026 4:39:18 AM PDT, Sven Schnelle <svens@linux.ibm.com>
-> wrote:
->>Michal Such=C3=A1nek <msuchanek@suse.de> writes:
->>
->>> The same could be asked of syscall_enter_from_user_mode. I find it
-> very
->>> odd. Why does it conflate the syscall number with its return value?
->>>
->>> It never uses the syscall number passed in except when returning it
->>> unchanged. When it pokes the registers it reads the syscall number
-> from
->>> them.
->>>
->>> If the caller of syscall_enter_from_user_mode only read the syscall
->>> number from the registers when syscall_enter_from_user_mode returns
-> and
->>> indicates the syscall should be still executed this whole shenigan
-> would
->>
->>I agree. The fact that if (nr < NR_syscall) just works because -1
-> gets
->>casted to 0xffffffff and is therefore out of bounds is very odd.
->>
->
-> Not at all strange. It is an *extremely* common construct in C,
-> especially for range checking values into [0, n).
+...
 
-A clear indication that this is not as common as you think is that
-there's an extra comment in arch/x86/entry/syscall_64.c:
+> 
+> This looks like a fix for wrong branch offsets in the tail call path.
+> Should it carry a Fixes: tag?  The tc_ninsn macro and the
+> 
+>    tc_ninsn = insn ? ctx->offset[insn+1] - ctx->offset[insn] : ctx->offset[0];
+> 
+> calculation being removed here were introduced by:
+> 
+>    Fixes: cd39d9e6b7e4 ("LoongArch: BPF: Fix jump offset calculation in tailcall")
+> 
+> This isn't a bug, but could the changelog be tightened?  Phrases such as
+> "rock-solid target label", "deterministic arithmetic model",
+> "initialization bottleneck", "eBPF business instruction" and "all code
+> size dimensions" read as fairly ornate for an offset-formula refactor.
+> 
+> Could it just state that the old macro derived jmp_offset from a stale
+> prior-pass stride while the new form anchors on ctx->offset[insn + 1],
+> with the ctx->image == NULL guard avoiding a false 16-bit range abort
+> during size estimation?
 
-       /*
-	* Convert negative numbers to very high and thus out of range
-	* numbers for comparisons.
-	*/
+OK, I will add the Fixes tag and trim the commit message in v3.
 
-If everyone knows what this is the comment wouldn't be necessary. But
-that cast is not the thing i'm really interested in - if it stays
-that way, fine with me. But I would like to see the change from Michal
-going in which untangles the secure_computing() return value from the
-syscall number. Because this behaviour is very subtle and removing that
-would make things easier. (And also easier to read/audit, which is
-always importand with security related code, which seccomp/syscall
-clearly is).
+Thanks,
+Tiezhu
 
-> In addition to being idiomatic, keep in mind that this is one of the
-> absolutely most performance critical paths in the entire kernel. One
-> of the fundamental cornerstones behind Unix is to keep system calls
-> cheap so that they can be simple building blocks for more complex
-> operations. It is not the only possible design philosophy, but it is
-> the one we chose to adopt, quite successfully.
->
-> The downside? Squeezing every possible cycle out of the system call
-> path becomes one of the most essential tuning tasks. The good part is
-> that keeping the system call path clean also makes it maintainable,
-> even when there are quirks.
-
-I haven't measured it, but I doubt that the unsigned vs signed syscall
-bounds check makes a difference in real world scenarios. Even for
-ni_syscall cases it would be small. With the C entry code we have
-nowadays such optimizations should be left to the compiler. I wouldn't
-be surprised if the generated code is even the same.
-
-But as written above, I don't really care about this.
