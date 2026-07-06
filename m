@@ -1,183 +1,208 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41766376BD1
-	for <loongarch@lists.linux.dev>; Mon,  6 Jul 2026 02:34:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A371F38888F
+	for <loongarch@lists.linux.dev>; Mon,  6 Jul 2026 02:58:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783305302; cv=none; b=bDzZB340TiXTHQrRzMw7DZVvtaIy2upO+c20W6zGakh0bLe1gWameNyNI5fslyo7zJKP4yYc6N5gHmnwgl4B8GUwfRVN6/Iz5uI1+QPmUFSWxG2fO0xy383K0oauDkfhUMwh72yjeTToNRPKtvumvlfCQCLreJ5YETIPufKtv1o=
+	t=1783306723; cv=none; b=dFzYhkmey6DMSKUeG7QleQ4vWoHFqFemOKPwUaBRWG/f9ZfX2p/DLqBsCfmV9aqgduwm5bePTubMQc/fpMz954QrEBVCyKOt0sojE0ZEK+FAcmz9bX2+YxpZwr8uKCP8lqRE1saXv+eYQTANzgGj8qa093Eg6YNJeiFYpgikbLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783305302; c=relaxed/simple;
-	bh=bGVfpODRYTOPWw8MO04AR1OR9mfO9GVzMrditrCeZwo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i/xuryPRmZ+KGNLX7T3nN+nUG4WPo3lRH24RubdRZXFvkIEoc7X00Zg6IpWr831x1aZViDdm+IYOyh4ryzP+6+3pXejz7XUbO2RojW5m7md6C02k5ikcpsWZxTUNxRH3zjC0Q67tpiL21L/GbOmAqAwfuVHfq4LV49sCTRn5YPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gDil9Iro; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783306723; c=relaxed/simple;
+	bh=zWMLAltis/gGzTCBAkuWo6mi2BsY773R0tgyf3USLhs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=cHTXq9UUSRyFCpNgGfZuP4Nek+flzjAVXrejhBQsVEfIvmhZceOYcZNbrNdtVMDE1aqCde67jVVeRJsrrDrOACz3tX+Y7z6ENjY0QFV/KuMkMydEe7AgO1j3gyxErO/XsO2s4Zx6XpvoTxNso8cSA0LXetUMZmHTwemST5a1Xis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=6kW0tTks; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=6kW0tTks; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gDil9Iro"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA4481F01558
-	for <loongarch@lists.linux.dev>; Mon,  6 Jul 2026 02:34:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783305296;
-	bh=22CkwgfrVerzyYBreK9SVLhFVeqTRhuZq9yxw53V0Wo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=gDil9IroSj8nU9nEJdL3sIKnUMJkBx5d9rQgu7Pa9CCnHGxcGm8JWWW5vg9MCe08j
-	 +0h1yWYaMfu4a5FQE/++J1Y3LbKkq97WoWzud2WWEKGUiBU5htsFMyagWfhPyevRyp
-	 GeSFMo2m5tjB6ikn9CnZJarHK+xDYjdIhaZFDXAs9qqQ1y6/zaQnot3v+CvG8aRvM4
-	 wv7TGGFK2yaU1nZK3dwfT05nkMdljdYM/21cxfpJLqVEAQs/Cuz2ige9uEq834hQiQ
-	 7+T+MDM/+MjqN148Arzlcr59tux43QEPAZ7Xv6A+W7aA6mPYVyBF0A71Sek9KGFnod
-	 l6cZb4qZ/0Ozw==
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-96387efc30aso1014348241.3
-        for <loongarch@lists.linux.dev>; Sun, 05 Jul 2026 19:34:56 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RpK2n4d+TtysiYPe56A295yuYoE6JQMWbbvJ1jrAAn7b7XkbTl9enxwjIBHbB5APfRwymrtjl54k0A=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwsvhFMXQ10v3ETtbeO6F4eg2+7Hh3VpttP/i9fLNiZdG0gFtKk
-	1tLymC6UDnYf+n3glx8DPO4E/YB2oLhh9t+jngySE/waXYQXvxDJRmjrfeZKg1yzPMVM2UTwYz+
-	a9MQIk5AhLs+xDLETigwMjl0LJYUmRzM=
-X-Received: by 2002:a05:6102:1483:b0:631:4cda:3ebb with SMTP id
- ada2fe7eead31-7427e5f8144mr3352981137.24.1783305295988; Sun, 05 Jul 2026
- 19:34:55 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="6kW0tTks";
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="6kW0tTks"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=tLzU64zcWCpCqtKqdJfi72+8jOLqHwm6rAX9TlEnpBE=;
+	b=6kW0tTks7I4JJHDfBVjF8dEaDL2J766PtNvpdA6LbQQFpMfTqMznvyBNQeh9wxbc/IYSzn3ZU
+	f2djYQecToR3moTosPPfqQapkuoiHKQieMFK0sbmqWZPM62GXgOZ9REO2UonKr5TBLANxucel3h
+	3onSIAA/PUlP2PaW4QIuLbU=
+Received: from canpmsgout05.his.huawei.com (unknown [172.19.92.145])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTPS id 4gtpWr518bz126M0H
+	for <loongarch@lists.linux.dev>; Mon,  6 Jul 2026 10:41:12 +0800 (CST)
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=tLzU64zcWCpCqtKqdJfi72+8jOLqHwm6rAX9TlEnpBE=;
+	b=6kW0tTks7I4JJHDfBVjF8dEaDL2J766PtNvpdA6LbQQFpMfTqMznvyBNQeh9wxbc/IYSzn3ZU
+	f2djYQecToR3moTosPPfqQapkuoiHKQieMFK0sbmqWZPM62GXgOZ9REO2UonKr5TBLANxucel3h
+	3onSIAA/PUlP2PaW4QIuLbU=
+Received: from mail.maildlp.com (unknown [172.19.163.0])
+	by canpmsgout05.his.huawei.com (SkyGuard) with ESMTPS id 4gtpL20K7Pz12LHv;
+	Mon,  6 Jul 2026 10:32:42 +0800 (CST)
+Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id 836134057A;
+	Mon,  6 Jul 2026 10:41:22 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 6 Jul 2026 10:41:17 +0800
+Message-ID: <e53b3d1f-c9fe-428c-bf1c-6505b3bcb894@huawei.com>
+Date: Mon, 6 Jul 2026 10:41:16 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260706021909.2346535-1-zhoubinbin@loongson.cn>
-In-Reply-To: <20260706021909.2346535-1-zhoubinbin@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 6 Jul 2026 10:35:19 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5VUDCKAGKDFRNySzJYX9ok5j_VAmV_tBFkqBmfTQ_O8g@mail.gmail.com>
-X-Gm-Features: AVVi8CeDWjQjxOKXJ_wTEeFwyOh_W_uaEHj9oKvjoc1VBbySFBXklB3GDeKd3-I
-Message-ID: <CAAhV-H5VUDCKAGKDFRNySzJYX9ok5j_VAmV_tBFkqBmfTQ_O8g@mail.gmail.com>
-Subject: Re: [PATCH v3] mfd: ls2kbmc: mfd: ls2kbmc: Fix iomem pointer handling
- in video mode parsing
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Lee Jones <lee@kernel.org>, Corey Minyard <minyard@acm.org>, Chong Qiao <qiaochong@loongson.cn>, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, mfd@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, openipmi-developer@lists.sourceforge.net, 
-	jeffbai@aosc.io, zhuyunfei@loongson.cn, stable@vger.kernel.org, 
-	kernel test robot <lkp@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v16 01/18] seccomp: Convert __secure_computing() to return
+ boolean
+To: Ada Couprie Diaz <ada.coupriediaz@arm.com>
+CC: <oleg@redhat.com>, <richard.henderson@linaro.org>, <mattst88@gmail.com>,
+	<linmag7@gmail.com>, <linux@armlinux.org.uk>, <catalin.marinas@arm.com>,
+	<will@kernel.org>, <kees@kernel.org>, <guoren@kernel.org>,
+	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <geert@linux-m68k.org>,
+	<tsbogend@alpha.franken.de>, <James.Bottomley@HansenPartnership.com>,
+	<deller@gmx.de>, <maddy@linux.ibm.com>, <mpe@ellerman.id.au>,
+	<npiggin@gmail.com>, <chleroy@kernel.org>, <pjw@kernel.org>,
+	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <alex@ghiti.fr>,
+	<hca@linux.ibm.com>, <gor@linux.ibm.com>, <agordeev@linux.ibm.com>,
+	<borntraeger@linux.ibm.com>, <svens@linux.ibm.com>,
+	<ysato@users.sourceforge.jp>, <dalias@libc.org>,
+	<glaubitz@physik.fu-berlin.de>, <richard@nod.at>,
+	<anton.ivanov@cambridgegreys.com>, <johannes@sipsolutions.net>,
+	<luto@kernel.org>, <tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <chris@zankel.net>,
+	<jcmvbkbc@gmail.com>, <peterz@infradead.org>, <wad@chromium.org>,
+	<thuth@redhat.com>, <mark.rutland@arm.com>, <kevin.brodsky@arm.com>,
+	<linusw@kernel.org>, <yeoreum.yun@arm.com>, <song@kernel.org>,
+	<james.morse@arm.com>, <anshuman.khandual@arm.com>, <broonie@kernel.org>,
+	<liqiang01@kylinos.cn>, <pengcan@kylinos.cn>, <ryan.roberts@arm.com>,
+	<yangtiezhu@loongson.cn>, <sshegde@linux.ibm.com>, <mchauras@linux.ibm.com>,
+	<austin.kim@lge.com>, <jchrist@linux.ibm.com>, <arnd@arndb.de>,
+	<thomas.weissschuh@linutronix.de>, <sohil.mehta@intel.com>,
+	<andrew.cooper3@citrix.com>, <jgross@suse.com>, <kas@kernel.org>,
+	<x86@kernel.org>, <linux-alpha@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mm@kvack.org>, <linux-csky@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linux-m68k@lists.linux-m68k.org>,
+	<linux-mips@vger.kernel.org>, <linux-parisc@vger.kernel.org>,
+	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
+	<linux-s390@vger.kernel.org>, <linux-sh@vger.kernel.org>,
+	<linux-um@lists.infradead.org>
+References: <20260629130616.642022-1-ruanjinjie@huawei.com>
+ <20260629130616.642022-2-ruanjinjie@huawei.com>
+ <b8f3b5cd-8d8a-4396-ba0c-011a83234dd9@arm.com>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <b8f3b5cd-8d8a-4396-ba0c-011a83234dd9@arm.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ dggpemf500011.china.huawei.com (7.185.36.131)
 
-Hi, Binbin,
 
-On Mon, Jul 6, 2026 at 10:19=E2=80=AFAM Binbin Zhou <zhoubinbin@loongson.cn=
-> wrote:
->
-> Use pointers annotated with the __iomem marker for all iomem map calls,
-> and creates a local copy of the mapped IO memory for future access in
-> the code. memcpy_fromio() and memcpy_toio() are used to read/write data
-> from/to mapped IO memory
->
-> Cc: stable@vger.kernel.org # v6.18+
-> Fixes: 0d64f6d1ffe9 ("mfd: ls2kbmc: Introduce Loongson-2K BMC core driver=
-")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202603021730.Yy3QXYTw-lkp@i=
-ntel.com/
-> Closes: https://lore.kernel.org/oe-kbuild-all/202606120639.WG6eb8VU-lkp@i=
-ntel.com/
-> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
-> V3:
->  - Reduce the range of `ioremap` from `SZ_16M` to `SZ_64`;
->  - Define a new variable `pos` to iterate through the string;
->  - Add failure handling for `strncmp()`.
->
-> Link to V2:
-> https://lore.kernel.org/all/20260624085550.1508771-1-zhoubinbin@loongson.=
-cn/
->
-> V2:
->  - Add the missing memcpy_fromio();
->  - Drop the unnecessary `buf` variable.
->
-> Link to V1:
-> https://lore.kernel.org/all/20260616115530.4012675-1-zhoubinbin@loongson.=
-cn/
->
->  drivers/mfd/ls2k-bmc-core.c | 29 ++++++++++++++++++++++-------
->  1 file changed, 22 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/mfd/ls2k-bmc-core.c b/drivers/mfd/ls2k-bmc-core.c
-> index 408056bfb2fe..a2aee2131529 100644
-> --- a/drivers/mfd/ls2k-bmc-core.c
-> +++ b/drivers/mfd/ls2k-bmc-core.c
-> @@ -66,6 +66,9 @@
->  /* Maximum time to wait for U-Boot and DDR to be ready with ms. */
->  #define LS2K_BMC_RESET_WAIT_TIME       10000
->
-> +/* The length of the LS2K BMC display resolution string stored in PCI BA=
-R0 */
-> +#define LS2K_RESOLUTION_STR_LEN                SZ_64
-> +
->  /* It's an experience value */
->  #define LS7A_BAR0_CHECK_MAX_TIMES      2000
->
-> @@ -427,27 +430,39 @@ static int ls2k_bmc_init(struct ls2k_bmc_ddata *dda=
-ta)
->   */
->  static int ls2k_bmc_parse_mode(struct pci_dev *pdev, struct simplefb_pla=
-tform_data *pd)
->  {
-> -       char *mode;
-> +       char *mode __free(kfree) =3D NULL;
-> +       void __iomem *base;
-> +       char *pos =3D NULL;
-Don't need to initialize, and you can define it in the same line as mode.
 
->         int depth, ret;
->
->         /* The last 16M of PCI BAR0 is used to store the resolution strin=
-g. */
-> -       mode =3D devm_ioremap(&pdev->dev, pci_resource_start(pdev, 0) + S=
-Z_16M, SZ_16M);
-> +       base =3D devm_ioremap(&pdev->dev, pci_resource_start(pdev, 0) + S=
-Z_16M,
-> +                           LS2K_RESOLUTION_STR_LEN);
-IOREMAP is page based, so just use PAGE_SIZE rather than
-LS2K_RESOLUTION_STR_LEN.
+On 7/1/2026 12:37 AM, Ada Couprie Diaz wrote:
+> Hi Jinjie,
+> 
+> On 29/06/2026 14:05, Jinjie Ruan wrote:
+>> The return value of __secure_computing() currently uses 0 to indicate
+>> that a system call should be allowed, and -1 to indicate that it should
+>> be blocked/killed. This 0/-1 pattern is non-intuitive for a security
+>> check function and makes the control flow at the call sites less
+>> readable.
+>>
+>> Furthermore, any potential future changes to these return values would
+>> require a high-risk, error-prone audit of all its users across different
+>> architectures.
+>>
+>> Sanitize this logic by converting the return type of __secure_computing()
+>> to a proper boolean, where 'true' explicitly means 'allow' and 'false'
+>> means 'fail/deny'.
+>>
+>> Update all the two dozen or so call sites across the tree to align with
+>> this new boolean semantic. No functional changes are intended, as the
+>> callers still return -1 to the lower-level assembly entry code upon
+>> seccomp denial.
+> Would it be relevant to mention that this fixes the unsound return value of
+> `syscall_trace_enter()` in generic entry, which motivated the patch
+> initially[0] ?
 
-Huacai
+That's a very good point. It's definitely worth mentioning
 
-> +       if (!base)
-> +               return -ENOMEM;
-> +
-> +       mode =3D kmalloc(LS2K_RESOLUTION_STR_LEN, GFP_KERNEL);
->         if (!mode)
->                 return -ENOMEM;
->
-> +       memcpy_fromio(mode, base, LS2K_RESOLUTION_STR_LEN);
-> +
->         /* The resolution field starts with the flag "video=3D". */
-> -       if (!strncmp(mode, "video=3D", 6))
-> -               mode =3D mode + 6;
-> +       if (strncmp(mode, "video=3D", 6)) {
-> +               dev_err(&pdev->dev, "Simpledrm resolution missing or corr=
-upt!\n");
-> +               return -EINVAL;
-> +       }
->
-> -       ret =3D kstrtoint(strsep(&mode, "x"), 10, &pd->width);
-> +       pos =3D mode + 6;
-> +       ret =3D kstrtoint(strsep(&pos, "x"), 10, &pd->width);
->         if (ret)
->                 return ret;
->
-> -       ret =3D kstrtoint(strsep(&mode, "-"), 10, &pd->height);
-> +       ret =3D kstrtoint(strsep(&pos, "-"), 10, &pd->height);
->         if (ret)
->                 return ret;
->
-> -       ret =3D kstrtoint(strsep(&mode, "@"), 10, &depth);
-> +       ret =3D kstrtoint(strsep(&pos, "@"), 10, &depth);
->         if (ret)
->                 return ret;
->
->
-> base-commit: d5d2d7a8d8be18681a0864f58e3875f1c639e11c
-> --
-> 2.52.0
->
+>> Suggested-by: Thomas Gleixner <tglx@kernel.org>
+>> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+>> ---
+>>   arch/alpha/kernel/ptrace.c            |  2 +-
+>>   arch/arm/kernel/ptrace.c              |  2 +-
+>>   arch/arm64/kernel/ptrace.c            |  2 +-
+>>   arch/csky/kernel/ptrace.c             |  2 +-
+>>   arch/m68k/kernel/ptrace.c             |  2 +-
+>>   arch/mips/kernel/ptrace.c             |  2 +-
+>>   arch/parisc/kernel/ptrace.c           |  2 +-
+>>   arch/sh/kernel/ptrace_32.c            |  2 +-
+>>   arch/um/kernel/skas/syscall.c         |  2 +-
+>>   arch/x86/entry/vsyscall/vsyscall_64.c |  2 +-
+>>   arch/xtensa/kernel/ptrace.c           |  3 +--
+>>   include/linux/entry-common.h          |  7 +++---
+>>   include/linux/seccomp.h               | 10 ++++----
+>>   kernel/seccomp.c                      | 34 +++++++++++++--------------
+>>   14 files changed, 36 insertions(+), 38 deletions(-)
+> 
+> This is missing an update to the Kconfig documentation, a possible
+> suggestion :
+
+Will update it.
+
+> 
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index fa7507ac8e13..9e3d40088afb 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -637,7 +637,7 @@ config HAVE_ARCH_SECCOMP_FILTER
+>           - syscall_set_return_value()
+>           - SIGSYS siginfo_t support
+>           - secure_computing is called from a ptrace_event()-safe context
+> -         - secure_computing return value is checked and a return value
+> of -1
+> +         - secure_computing return value is checked and if false
+>             results in the system call being skipped immediately.
+>           - seccomp syscall wired up
+>           - if !HAVE_SPARSE_SYSCALL_NR, have SECCOMP_ARCH_NATIVE,
+> 
+>> [...]
+>> diff --git a/include/linux/entry-common.h b/include/linux/entry-common.h
+>> index 416a3352261f..3f66320e46d3 100644
+>> --- a/include/linux/entry-common.h
+>> +++ b/include/linux/entry-common.h
+>> @@ -100,9 +100,8 @@ static __always_inline long
+>> syscall_trace_enter(struct pt_regs *regs, unsigned l
+>>         /* Do seccomp after ptrace, to catch any tracer changes. */
+>>       if (work & SYSCALL_WORK_SECCOMP) {
+>> -        ret = __secure_computing();
+>> -        if (ret == -1L)
+>> -            return ret;
+>> +        if (!__secure_computing())
+>> +            return -1L;
+>>       }
+>>         /* Either of the above might have changed the syscall number */
+>> @@ -113,7 +112,7 @@ static __always_inline long
+>> syscall_trace_enter(struct pt_regs *regs, unsigned l
+>>         syscall_enter_audit(regs, syscall);
+>>   -    return ret ? : syscall;
+>> +    return syscall;
+>>   }
+>> [...]
+> 
+> Otherwise this feels like a more appropriate change with regards to
+> "safeguarding against new `secure_computing()` return value" !
+> 
+> With the updated Kconfig :
+> Reviewed-by: Ada Couprie Diaz <ada.coupriediaz@arm.com>
+> 
+> Thanks,
+> Ada
+> 
+> [0]: https://lore.kernel.org/r/20260511092103.1974980-2-
+> ruanjinjie@huawei.com
+> 
+> 
+
