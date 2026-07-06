@@ -1,22 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 134633ADB98
-	for <loongarch@lists.linux.dev>; Mon,  6 Jul 2026 04:00:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D66F53AEF4C
+	for <loongarch@lists.linux.dev>; Mon,  6 Jul 2026 04:00:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783310429; cv=none; b=KJb2/rm9Yif5QrWBOyWMYBZ5A8FQrpc+Pg9KbPO4USKeZmU54ZGOVlVsfnJe9ISAVI28aLtw7K80hxnueXQJoqTSiiEGwk7FXPz+ABJD3T8IawR+4t+f3v5zogG5R4dtKYXlNQJYIk1BC52Z8g7v3aegEzFjzxj5nJ2w5izunb4=
+	t=1783310441; cv=none; b=BpQKMiOGRlS/qwHHwcDWp7TCEBoFX5XtQGznp7QbZG+gETHbXhYZ6Va//JjEoq1veNK+rKtcxvZIiaPJuo0UfVuF/JPLeeLxj3hBV26Ozha6T4NcH9syfnUvRquyM0EWp6AyW0E47DmRdwqc5u+1Vx13c8RB6lJMtD93H8ymQfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783310429; c=relaxed/simple;
-	bh=xaZLghahuAKDgBH0MeBFRv6MdroClVLRholyo4h6rMg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RDxw85sp9/6eGnO3R5gLgXwlRitTtpUMvUAJ7h730XCaoXgaVHHnOubv2SoQtoBBFqNyi/WujKrQEVzXLivn82b84zcKAuBGRL9M1ug0x0HCAD13VTf9qYp7wfbYZVqhNd9gzyroSPwqrtTLfj5P/evHzeGOLO8n38X5eII8Efs=
+	s=arc-20240116; t=1783310441; c=relaxed/simple;
+	bh=ouEvup5SmzL+Sext62AtEMzbECZoeT+gXd08LMOU41U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=YNJ85GqtX3oKosJ5ZFv4OiqNFmAmcGXO71AClm2OKzT0ArYmRbV0ZT1K5YwQVVqAVaP7+EGvQG4ORk18CYoVPLAuTzIJ0UYvPpnK3Pm6LGaNcmWwA/O/JiYb6J6qksTPNi/bLHhKa7dZsCuek8eJcCKMnnTrQHjI/3yvA2uKBvk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Dx9+pSKEtqnUUAAA--.1290S3;
-	Mon, 06 Jul 2026 12:00:18 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8BxyvBjKEtqvkUAAA--.1314S3;
+	Mon, 06 Jul 2026 12:00:35 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJDxfsVHKEtqQ8MBAA--.9722S2;
-	Mon, 06 Jul 2026 12:00:08 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJDxfsVHKEtqQ8MBAA--.9722S4;
+	Mon, 06 Jul 2026 12:00:25 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Alexei Starovoitov <ast@kernel.org>,
 	Daniel Borkmann <daniel@iogearbox.net>,
@@ -34,10 +35,12 @@ Cc: bpf@vger.kernel.org,
 	Leon Hwang <leon.hwang@linux.dev>,
 	Puranjay Mohan <puranjay@kernel.org>,
 	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>
-Subject: [PATCH bpf-next v8 0/2] Introduce jit_required to prevent a kernel panic
-Date: Mon,  6 Jul 2026 12:00:04 +0800
-Message-ID: <20260706040006.10331-1-yangtiezhu@loongson.cn>
+Subject: [PATCH bpf-next v8 2/2] bpf: Reject programs with inlined helpers if JIT is not available
+Date: Mon,  6 Jul 2026 12:00:06 +0800
+Message-ID: <20260706040006.10331-3-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20260706040006.10331-1-yangtiezhu@loongson.cn>
+References: <20260706040006.10331-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -45,48 +48,71 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxfsVHKEtqQ8MBAA--.9722S2
+X-CM-TRANSID:qMiowJDxfsVHKEtqQ8MBAA--.9722S4
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7XFWfWF4rKrWxCryDAFWkuFX_yoW3ZrX_ur
-	W0q3s7Xrs3ZFyav3W7Gr1ftrn5KrWxKr40y392qrWfJr13Wa1UJFW8XFy7uF9Iva1vyrZ8
-	tws3Ar4vvryruosvyTuYvTs0mTUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbS8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
-	Jw1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-	xGrwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
-	JVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
-	vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IY
-	x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26c
-	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAF
-	wI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jwnYwUUUUU=
+X-Coremail-Antispam: 1Uk129KBj93XoW7tFWkAw15Zryruw4rurW7GFX_yoW8Cw4Dpr
+	9Ykw42krZrX3WI9ay7tw4xu345Xay8AF47GFs5CFZ2k3W3XFn2qr4agr409F1fCr4v9F1S
+	yr4Iy3y09w1DGFXCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
+	wI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
+	xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	Jw0_WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x
+	0EwIxGrwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
+	bVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E74
+	80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0
+	I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04
+	k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7Cj
+	xVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jz-eOUUUUU=
 
-This series introduces a 'jit_required' flag in struct bpf_prog
-to track programs that strictly require JIT.
+When an architecture (such as LoongArch, ARM64, and RISC-V) implements
+bpf_jit_inlines_helper_call(), the verifier skips rewriting the helper
+call offset (insn->imm) during the bpf_do_misc_fixups() phase, because
+the helper is expected to be inlined by the JIT compiler. As a result,
+insn->imm remains as the raw helper enum ID.
 
-The aim is to prevent a kernel panic by rejecting programs with
-inlined helpers when JIT is not available.
+However, if JIT is disabled at runtime (net.core.bpf_jit_enable=0) or
+if the JIT compilation later dynamically fails (e.g., due to OOM), the
+core BPF subsystem falls back to the BPF interpreter.
 
-v8:
-  -- Completely remove bpf_prog_has_kfunc_call().
-  -- Set jit_required at the entry of bpf_add_kfunc_call().
-  -- Generalize the error message to:
-     "program requires BPF JIT compiler but it is not available"
+When the interpreter executes (__bpf_call_base + insn->imm) with the
+unpatched raw helper ID, it jumps into an unaligned invalid address
+space, triggering an instruction alignment fault or a memory access
+panic.
 
-Tiezhu Yang (2):
-  bpf: Introduce jit_required flag and remove bpf_prog_has_kfunc_call()
-  bpf: Reject programs with inlined helpers if JIT is not available
+Fix this by setting 'jit_required' to 1 when helper call rewriting is
+skipped for JIT inlining. Loading will be rejected early with -EINVAL
+if JIT is disabled, or safely rejected with -ENOTSUPP during runtime
+selection if JIT compilation dynamically fails, effectively preventing
+the kernel panic.
 
- include/linux/bpf.h   | 9 ++-------
- kernel/bpf/core.c     | 3 +--
- kernel/bpf/fixups.c   | 9 +++++----
- kernel/bpf/verifier.c | 7 ++-----
- 4 files changed, 10 insertions(+), 18 deletions(-)
+Fixes: 2ddec2c80b44 ("riscv, bpf: inline bpf_get_smp_processor_id()")
+Suggested-by: Alexei Starovoitov <ast@kernel.org>
+Suggested-by: KaFai Wan <kafai.wan@linux.dev>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ kernel/bpf/fixups.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
+diff --git a/kernel/bpf/fixups.c b/kernel/bpf/fixups.c
+index 02246df2f6c3..d3be972714b2 100644
+--- a/kernel/bpf/fixups.c
++++ b/kernel/bpf/fixups.c
+@@ -1840,8 +1840,10 @@ int bpf_do_misc_fixups(struct bpf_verifier_env *env)
+ 		}
+ 
+ 		/* Skip inlining the helper call if the JIT does it. */
+-		if (bpf_jit_inlines_helper_call(insn->imm))
++		if (bpf_jit_inlines_helper_call(insn->imm)) {
++			prog->jit_required = 1;
+ 			goto next_insn;
++		}
+ 
+ 		if (insn->imm == BPF_FUNC_get_route_realm)
+ 			prog->dst_needed = 1;
 -- 
 2.42.0
 
