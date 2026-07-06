@@ -1,205 +1,157 @@
-Received: from mail.srv.csmantle.top (mail.srv.csmantle.top [77.93.157.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66C7231E824;
-	Sun,  5 Jul 2026 09:36:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.93.157.103
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B4EF175A87
+	for <loongarch@lists.linux.dev>; Mon,  6 Jul 2026 00:56:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783244216; cv=none; b=C9i7mDD0yauIB6Y1ro0cCUV/49rqNn5lF37vTlKDUM9JJimDpS44r9BNUTN36nWVkOiITZHmgKqPtD/KsDzEC0tPrb3LS0virkfknEPmTTqolH568sbHnvQfiC/S6pvMT1PwOglrUVckaigf2NnGYoRsuYxJtc4RLgGcSHv1xXg=
+	t=1783299414; cv=none; b=diHqnPI1EaHWyzErkQZ4DfamGpRz23XZiKN41R6puhYDaHhU/uJym/VK65fr78BimxRZoaL1t7s72vBJEI1G93wEtLLIvSvIKwYU6c9MkTF0eUKF/7rCPUfurFTVg9KD4ipIsKepXKqiRwS0je/PKQ95p/YtXTpe0op+QFZmzjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783244216; c=relaxed/simple;
-	bh=DYP/fAuTfWaqhSK56kenBZaNNFwDCi7MO9GMC1TyvwM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=p834Rz3N+16o4vpUahvVc7YXdF1tt0vpvX0a3fy73LVw6qPuJ5nena6Knhz98PIyYPiueFguj4b2dKhalolADZDdiE9JUddRI/D+c7l8wwUj7BsTlwnUtfppKdaDhe65vXQ1vdBhdO26LHr/k40Lw21jbd31lZ3giWhLwrZO0QU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csmantle.top; spf=pass smtp.mailfrom=csmantle.top; dkim=permerror (0-bit key) header.d=csmantle.top header.i=@csmantle.top header.b=bHC7lTc6; dkim=pass (3072-bit key) header.d=csmantle.top header.i=@csmantle.top header.b=Z6A4CxMk; arc=none smtp.client-ip=77.93.157.103
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csmantle.top
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csmantle.top
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=csmantle.top header.i=@csmantle.top header.b="bHC7lTc6";
-	dkim=pass (3072-bit key) header.d=csmantle.top header.i=@csmantle.top header.b="Z6A4CxMk"
-DKIM-Signature: v=1; a=ed25519-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=csmantle.top; s=self-ed25519; h=BIMI-Selector:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:In-Reply-To:References:BIMI-Selector;
-	bh=SceegF9V2UMZyJU5wVXKWyTzveddd4TbiOOhUTBe0qI=; t=1783244215; x=1783849015; 
-	b=bHC7lTc616rU//1j/gP5adwKdzZ6gAcAIBdyd40lU46KRbRosWhBVV52szCX53KGUZRizQtGT0e
-	thZnuSafmBg==;
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=csmantle.top; s=self-rsa3072; h=BIMI-Selector:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:In-Reply-To:References:BIMI-Selector;
-	bh=SceegF9V2UMZyJU5wVXKWyTzveddd4TbiOOhUTBe0qI=; t=1783244215; x=1783849015; 
-	b=Z6A4CxMkmIh/FsEnT6Br2cnfWRe0grcbNmr3rb/unNVyK/D8CyTfC03K7iNlAIpIOhotmkJaoyE
-	Y4vyKupa0IZVqgADk3Fk2DRgv0meV0JR0sAedY923vcrs0c14PXXTapBjeS5D+RVYQWUJbLyJvL6q
-	tjoZqqouiu245boKfPQ9KnKEhtG+fU53QA+udgBrLaPDcYvDFI1Uh/gJbw2Gp/kFCn1IcziKVQKM8
-	ft7LpYwuM0n3NIh9yu2SItQyDDdm+WfLhMIlrvFu3mIi6UuBgP13A3+BZeU+oUE81MGfFCrya+P7c
-	AEApvdx0BnIClpZb1KrVvYc6sh7/FSpgKTD9wtfhJ3sSoD9RxspIaPYS2RPV16cmPxckfuhpRhDiE
-	Zr4Lz7yFZRKRsku8iK03s45WGBIW0DNzQRoyE5jEd87VPqNPtwnyHiIEjO6mkCkSZRVmhpsEnikUf
-	fgl+hzx2m7i0LLghuP0TxoZDcscRQVbytWcXoRiqjiT7A1U+J0y6;
-Received: from [103.167.64.98] (helo=loongcatbox)
-	by mail.srv.csmantle.top with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <rong.bao@csmantle.top>)
-	id 1wgJHG-00000000O6x-2we4;
-	Sun, 05 Jul 2026 17:36:42 +0800
-From: Rong Bao <rong.bao@csmantle.top>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Chengwen Feng <fengchengwen@huawei.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Xi Ruoyao <xry111@xry111.site>,
-	Rong Bao <rong.bao@csmantle.top>,
-	Guo Ren <guoren@kernel.org>,
-	Thierry Reding <treding@nvidia.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	"Rafael J. Wysocki (Intel)" <rafael@kernel.org>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Kexy Biscuit <kexybiscuit@aosc.io>,
-	Mingcong Bai <jeffbai@aosc.io>,
-	stable@vger.kernel.org,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 RESEND] loongarch: retrieve CPU package ID from PPTT when available
-Date: Sun,  5 Jul 2026 17:36:14 +0800
-Message-ID: <20260705093624.1079988-1-rong.bao@csmantle.top>
-X-Mailer: git-send-email 2.54.0
+	s=arc-20240116; t=1783299414; c=relaxed/simple;
+	bh=FulFPZYiAaI5jV6suIOR9VjlPvn1tII/OQ/NkyH0Zw0=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=KlQzyMrGBmXJ2HoN6c2Y6ebkHEB6I5dkPVc6MnvR7Sqmt3LhwhJ/h7LR/DJlvJ8H5BkPUhM+ML/W00cha1VRx+PNMXD2n6HxNu1LVzN+DkRxFgKFvF7oYwgGPb5jBxA7r7Vy/IQnUW4C1nUZZxvcay6dViOAab7yKcAdR2UfFQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8CxqutL_UpqrjMAAA--.1013S3;
+	Mon, 06 Jul 2026 08:56:43 +0800 (CST)
+Received: from [10.130.40.83] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJCxIuRI_Upq9YoBAA--.9420S3;
+	Mon, 06 Jul 2026 08:56:41 +0800 (CST)
+Subject: Re: [PATCH bpf-next v7 1/2] bpf: Introduce jit_required flag and
+ refactor kfunc path
+To: KaFai Wan <kafai.wan@linux.dev>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Eduard Zingerman <eddyz87@gmail.com>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
+ Emil Tsalapatis <emil@etsalapatis.com>
+Cc: bpf@vger.kernel.org, loongarch@lists.linux.dev,
+ Leon Hwang <leon.hwang@linux.dev>, Puranjay Mohan <puranjay@kernel.org>,
+ =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+References: <20260702143656.28845-1-yangtiezhu@loongson.cn>
+ <20260702143656.28845-2-yangtiezhu@loongson.cn>
+ <ba5679e744e0209ca10788c2c385c6727eddb8a5.camel@linux.dev>
+ <2d1babdf-a4d9-9902-77b0-3f5640871323@loongson.cn>
+ <2240908fb833182e502d1804b392874cccf17b6c.camel@linux.dev>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <aa26b3fc-9717-4273-dd76-a0dd6b15ff61@loongson.cn>
+Date: Mon, 6 Jul 2026 08:56:40 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <2240908fb833182e502d1804b392874cccf17b6c.camel@linux.dev>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Rcpt-Check: Accepted by authentication
-X-42: Don't panic! 
-BIMI-Selector: v=BIMI1; s=me
+X-CM-TRANSID:qMiowJCxIuRI_Upq9YoBAA--.9420S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxJF13uFWrAF13Cw45Aw17twc_yoW5Gw1fpF
+	95J34jkFWqqr4SvFsrJ3Wxur13Ww18Ww4UKF4kGr9akF1UXasxtF1fG342qFW3Wr9rtayF
+	vr4Iva48Ww18uacCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUP0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Jr0_Gr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
+	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r
+	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij
+	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
+	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8m9aDUUUUU==
 
-Currently, the LoongArch CPU topology initialization code calculates
-each core's package ID by dividing its physical ID by
-loongson_sysconf.cores_per_package. This relies on the assumption that
-cores_per_package counts in the same domain as physical IDs.
+On 2026/7/4 上午9:57, KaFai Wan wrote:
+> On Sat, 2026-07-04 at 00:14 +0800, Tiezhu Yang wrote:
+>> On 7/3/26 21:55, KaFai Wan wrote:
+>>> On Thu, 2026-07-02 at 22:36 +0800, Tiezhu Yang wrote:
 
-On Loongson 3B6000 (XB612B0V_1.2), cores_per_package matches the visible
-core count -- 24 in this case. However, the physical IDs range from 0 to
-31 in a noncontinuous fashion:
+...
 
-        $ cat /proc/cpuinfo | grep -i -F 'global_id'
-        global_id               : 0
-        global_id               : 1
-        global_id               : 4
-        global_id               : 5
-        global_id               : 6
-        global_id               : 7
-        global_id               : 8
-        global_id               : 9
-        global_id               : 10
-        global_id               : 11
-        global_id               : 14
-        global_id               : 15
-        global_id               : 16
-        global_id               : 17
-        global_id               : 20
-        global_id               : 21
-        global_id               : 22
-        global_id               : 23
-        global_id               : 26
-        global_id               : 27
-        global_id               : 28
-        global_id               : 29
-        global_id               : 30
-        global_id               : 31
+>>
+>> IIUC, there are two places to modify so far:
+>> (1) struct bpf_prog
+> 
+> yes
+> 
+>> (2) bpf_prog_has_kfunc_call()
+> 
+> I think we can remove this func.
+> 
+> actually, I feed your patch to dsv4-pro and gpt-5.4 yesterday, both point out the we should do this
+> and change the log message.
+> 
+> diff --git a/kernel/bpf/fixups.c b/kernel/bpf/fixups.c
+> index 12a8a4eb757f..7fb92b5fa415 100644
+> --- a/kernel/bpf/fixups.c
+> +++ b/kernel/bpf/fixups.c
+> @@ -1378,7 +1378,6 @@ int bpf_fixup_call_args(struct bpf_verifier_env *env)
+>   #ifndef CONFIG_BPF_JIT_ALWAYS_ON
+>   	struct bpf_prog *prog = env->prog;
+>   	struct bpf_insn *insn = prog->insnsi;
+> -	bool has_kfunc_call = bpf_prog_has_kfunc_call(prog);
+>   	int depth;
+>   #endif
+>   	int i, err = 0;
+> @@ -1404,7 +1403,7 @@ int bpf_fixup_call_args(struct bpf_verifier_env *env)
+>   			return err;
+>   	}
+>   #ifndef CONFIG_BPF_JIT_ALWAYS_ON
+> -	if (has_kfunc_call) {
+> +	if (prog->jit_required) {
+>   		verbose(env, "calling kernel functions are not allowed in non-JITed programs\n");
+>   		return -EINVAL;
+>   	}
+> 
+> I think we can change the log message for general purpose no just for kunc, so we can know why prog
+> failed in patch#2 as you test yesterday.
 
-Retrieve the exact package ID from ACPI PPTT when available, in the same
-style as retrieving the core ID and thread ID in parse_acpi_topology().
-Use this information in loongson_init_secondary() when PPTT readout is
-successful. The original division logic is kept as a fallback.
+Hi KaFai,
 
-Meanwhile, since some code paths like loongson3_cpufreq expect a
-continuous integer sequence of package IDs in [0, MAX_PACKAGES) when
-retrieving from cpu_data[], we also canonicalize the package ID to be
-filled in parse_acpi_topology() to meet such an expectation.
+Thanks a lot for the explanations and suggestions,
+I really appreciate it.
 
-Cc: stable@vger.kernel.org
-Co-developed-by: Xi Ruoyao <xry111@xry111.site>
-Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-Signed-off-by: Rong Bao <rong.bao@csmantle.top>
----
+I will do the following changes in the next version v8:
 
-v1 -> v2:
-- Addressed and incorporated package ID canonicalization code suggested
-  by Ruoyao
-- Rebased onto present master
+1. Completely remove bpf_prog_has_kfunc_call().
+2. Set jit_required at the entry of bpf_add_kfunc_call().
+3. Generalize the error message to:
+    "program requires BPF JIT compiler but it is not available"
 
-v1: https://lore.kernel.org/loongarch/e18efdbb.AXMAAIuqLC8AAAAAAAAAA-ma1qEAAYKJPtkAAAAAADNVAQBpc5ot@mailjet.com/
+I have tested the updated v8 patch on LoongArch.
+Here are the test results:
 
----
- arch/loongarch/kernel/acpi.c | 28 +++++++++++++++++++++++++++-
- arch/loongarch/kernel/smp.c  |  2 +-
- 2 files changed, 28 insertions(+), 2 deletions(-)
+1. net.core.bpf_jit_enable = 1 and JIT compilation succeeded:
+=> test PASS
 
-diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
-index 8f650c9ffecdecdac6bcb324123e222bd04dbcf2..9ad25c642dbc50485ad54a02ed818a34e639f219 100644
---- a/arch/loongarch/kernel/acpi.c
-+++ b/arch/loongarch/kernel/acpi.c
-@@ -202,9 +202,12 @@ static void __init acpi_process_madt(void)
- 
- int pptt_enabled;
- 
-+static int acpi_package_ids[MAX_PACKAGES];
-+static int acpi_nr_packages;
-+
- int __init parse_acpi_topology(void)
- {
--	int cpu, topology_id;
-+	int cpu, topology_id, i;
- 
- 	for_each_possible_cpu(cpu) {
- 		topology_id = find_acpi_cpu_topology(cpu, 0);
-@@ -222,6 +225,29 @@ int __init parse_acpi_topology(void)
- 
- 			cpu_data[cpu].core = topology_id;
- 		}
-+
-+		topology_id = find_acpi_cpu_topology_package(cpu);
-+		if (topology_id < 0) {
-+			pr_warn("Invalid BIOS PPTT\n");
-+			return -ENOENT;
-+		}
-+
-+		for (i = 0; i < acpi_nr_packages; i++)
-+			if (acpi_package_ids[i] == topology_id)
-+				break;
-+
-+		if (i == acpi_nr_packages)
-+			acpi_package_ids[acpi_nr_packages++] = topology_id;
-+
-+		cpu_data[cpu].package = topology_id;
-+	}
-+
-+	for_each_possible_cpu(cpu) {
-+		for (int i = 0; i < acpi_nr_packages; i++)
-+			if (cpu_data[cpu].package == acpi_package_ids[i]) {
-+				cpu_data[cpu].package = i;
-+				break;
-+			}
- 	}
- 
- 	pptt_enabled = 1;
-diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-index 5d792256bbb99a41d0032add6b5ffacffb20b684..9d148b6e41b488daca71a970e1b75cc18638d564 100644
---- a/arch/loongarch/kernel/smp.c
-+++ b/arch/loongarch/kernel/smp.c
-@@ -426,7 +426,7 @@ void loongson_init_secondary(void)
- 	numa_add_cpu(cpu);
- #endif
- 	per_cpu(cpu_state, cpu) = CPU_ONLINE;
--	cpu_data[cpu].package =
-+	cpu_data[cpu].package = pptt_enabled ? cpu_data[cpu].package :
- 		     cpu_logical_map(cpu) / loongson_sysconf.cores_per_package;
- 	cpu_data[cpu].core = pptt_enabled ? cpu_data[cpu].core :
- 		     cpu_logical_map(cpu) % loongson_sysconf.cores_per_package;
+2. net.core.bpf_jit_enable = 0 and JIT compilation succeeded:
+=> returns -EINVAL (-22) and prints:
+"program requires BPF JIT compiler but it is not available"
 
-base-commit: 87320be9f0d24fce67631b7eef919f0b79c3e45c
--- 
-2.54.0
+3. net.core.bpf_jit_enable = 1 and JIT compilation failed:
+=> returns -ENOTSUPP (-524)
+
+4. net.core.bpf_jit_enable = 0 and JIT compilation failed:
+=> returns -EINVAL (-22) and prints:
+"program requires BPF JIT compiler but it is not available"
+
+As long as net.core.bpf_jit_enable = 0, it always returns early
+in bpf_fixup_call_args() with -EINVAL and prints the error log.
+
+Only when net.core.bpf_jit_enable = 1 and the runtime JIT compilation
+dynamically fails, it safely falls back to the -ENOTSUPP runtime check.
+
+I think it works exactly as expected.
+
+Thanks,
+Tiezhu
 
