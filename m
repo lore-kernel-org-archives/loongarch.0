@@ -1,157 +1,164 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B4EF175A87
-	for <loongarch@lists.linux.dev>; Mon,  6 Jul 2026 00:56:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DBA537C90F;
+	Mon,  6 Jul 2026 02:19:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783299414; cv=none; b=diHqnPI1EaHWyzErkQZ4DfamGpRz23XZiKN41R6puhYDaHhU/uJym/VK65fr78BimxRZoaL1t7s72vBJEI1G93wEtLLIvSvIKwYU6c9MkTF0eUKF/7rCPUfurFTVg9KD4ipIsKepXKqiRwS0je/PKQ95p/YtXTpe0op+QFZmzjI=
+	t=1783304377; cv=none; b=q0lqgZg3WnIFRQa2DRvcG/fT/EdqEB8mSQvpTp60welklm2EcQhg+9AVlxstyB4kAbf499R+3phoygjlhQpcAefiGPL75ZcM3KCZGX3g2zeS8i9AiVOfyqwJgFxxkcV8vkcB4VbEnM1TKRv1U0WqYmi43KOWjtSvDf5g3gatxqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783299414; c=relaxed/simple;
-	bh=FulFPZYiAaI5jV6suIOR9VjlPvn1tII/OQ/NkyH0Zw0=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=KlQzyMrGBmXJ2HoN6c2Y6ebkHEB6I5dkPVc6MnvR7Sqmt3LhwhJ/h7LR/DJlvJ8H5BkPUhM+ML/W00cha1VRx+PNMXD2n6HxNu1LVzN+DkRxFgKFvF7oYwgGPb5jBxA7r7Vy/IQnUW4C1nUZZxvcay6dViOAab7yKcAdR2UfFQ8=
+	s=arc-20240116; t=1783304377; c=relaxed/simple;
+	bh=IobvKxkbFJ5qT7MyauMU1AGgh84gAbCRuxoVLRGQ5cU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=o74beV5i3EvOSgig5MnMDv4WW+1D0735sg8zj+JReSNCCpXKANCqEw5Vi4ifoeGcJbCcwoi+K4+BbjEbh5UtKjc+2gtoLjnEk3j+Xf2HLZL4ApCq8WuKpIjf4GDylVMktzhuJLWQm4Esmhwpd9BkygseOUC3D6wsTnWvU8LukaQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxqutL_UpqrjMAAA--.1013S3;
-	Mon, 06 Jul 2026 08:56:43 +0800 (CST)
-Received: from [10.130.40.83] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJCxIuRI_Upq9YoBAA--.9420S3;
-	Mon, 06 Jul 2026 08:56:41 +0800 (CST)
-Subject: Re: [PATCH bpf-next v7 1/2] bpf: Introduce jit_required flag and
- refactor kfunc path
-To: KaFai Wan <kafai.wan@linux.dev>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Eduard Zingerman <eddyz87@gmail.com>,
- Kumar Kartikeya Dwivedi <memxor@gmail.com>,
- Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
- Emil Tsalapatis <emil@etsalapatis.com>
-Cc: bpf@vger.kernel.org, loongarch@lists.linux.dev,
- Leon Hwang <leon.hwang@linux.dev>, Puranjay Mohan <puranjay@kernel.org>,
- =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-References: <20260702143656.28845-1-yangtiezhu@loongson.cn>
- <20260702143656.28845-2-yangtiezhu@loongson.cn>
- <ba5679e744e0209ca10788c2c385c6727eddb8a5.camel@linux.dev>
- <2d1babdf-a4d9-9902-77b0-3f5640871323@loongson.cn>
- <2240908fb833182e502d1804b392874cccf17b6c.camel@linux.dev>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <aa26b3fc-9717-4273-dd76-a0dd6b15ff61@loongson.cn>
-Date: Mon, 6 Jul 2026 08:56:40 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from loongson.cn (unknown [223.64.68.155])
+	by gateway (Coremail) with SMTP id _____8Cx5+qzEEtqOj8AAA--.1204S3;
+	Mon, 06 Jul 2026 10:19:31 +0800 (CST)
+Received: from kernelserver (unknown [223.64.68.155])
+	by front1 (Coremail) with SMTP id qMiowJCxIuSlEEtqqqYBAA--.10129S2;
+	Mon, 06 Jul 2026 10:19:18 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Lee Jones <lee@kernel.org>,
+	Corey Minyard <minyard@acm.org>,
+	Chong Qiao <qiaochong@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	mfd@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net,
+	jeffbai@aosc.io,
+	zhuyunfei@loongson.cn,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	stable@vger.kernel.org,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH v3] mfd: ls2kbmc: mfd: ls2kbmc: Fix iomem pointer handling in video mode parsing
+Date: Mon,  6 Jul 2026 10:19:09 +0800
+Message-ID: <20260706021909.2346535-1-zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <2240908fb833182e502d1804b392874cccf17b6c.camel@linux.dev>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxIuRI_Upq9YoBAA--.9420S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxJF13uFWrAF13Cw45Aw17twc_yoW5Gw1fpF
-	95J34jkFWqqr4SvFsrJ3Wxur13Ww18Ww4UKF4kGr9akF1UXasxtF1fG342qFW3Wr9rtayF
-	vr4Iva48Ww18uacCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:qMiowJCxIuSlEEtqqqYBAA--.10129S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQEACGpJ200Q5wAAsK
+X-Coremail-Antispam: 1Uk129KBj93XoWxZFy5Aw13Wr1UXryfAFy7urX_yoW5ur4kpa
+	yrZ34Y9ry5tFWxXa9ayr4fuF9Yyw1FqrWUGF4fAwn8Zwn8uayjyw1Skan8XF90gFykKFy5
+	trs5JF1I9a45ZFcCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUP0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUUvEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Jr0_Gr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
-	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
-	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
-	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r
-	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij
-	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
-	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
-	0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8m9aDUUUUU==
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
+	AwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y
+	6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
+	AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE
+	2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcV
+	C2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73
+	UjIFyTuYvjxU2MKZDUUUU
 
-On 2026/7/4 上午9:57, KaFai Wan wrote:
-> On Sat, 2026-07-04 at 00:14 +0800, Tiezhu Yang wrote:
->> On 7/3/26 21:55, KaFai Wan wrote:
->>> On Thu, 2026-07-02 at 22:36 +0800, Tiezhu Yang wrote:
+Use pointers annotated with the __iomem marker for all iomem map calls,
+and creates a local copy of the mapped IO memory for future access in
+the code. memcpy_fromio() and memcpy_toio() are used to read/write data
+from/to mapped IO memory
 
-...
+Cc: stable@vger.kernel.org # v6.18+
+Fixes: 0d64f6d1ffe9 ("mfd: ls2kbmc: Introduce Loongson-2K BMC core driver")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202603021730.Yy3QXYTw-lkp@intel.com/
+Closes: https://lore.kernel.org/oe-kbuild-all/202606120639.WG6eb8VU-lkp@intel.com/
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+---
+V3:
+ - Reduce the range of `ioremap` from `SZ_16M` to `SZ_64`;
+ - Define a new variable `pos` to iterate through the string;
+ - Add failure handling for `strncmp()`.
 
->>
->> IIUC, there are two places to modify so far:
->> (1) struct bpf_prog
-> 
-> yes
-> 
->> (2) bpf_prog_has_kfunc_call()
-> 
-> I think we can remove this func.
-> 
-> actually, I feed your patch to dsv4-pro and gpt-5.4 yesterday, both point out the we should do this
-> and change the log message.
-> 
-> diff --git a/kernel/bpf/fixups.c b/kernel/bpf/fixups.c
-> index 12a8a4eb757f..7fb92b5fa415 100644
-> --- a/kernel/bpf/fixups.c
-> +++ b/kernel/bpf/fixups.c
-> @@ -1378,7 +1378,6 @@ int bpf_fixup_call_args(struct bpf_verifier_env *env)
->   #ifndef CONFIG_BPF_JIT_ALWAYS_ON
->   	struct bpf_prog *prog = env->prog;
->   	struct bpf_insn *insn = prog->insnsi;
-> -	bool has_kfunc_call = bpf_prog_has_kfunc_call(prog);
->   	int depth;
->   #endif
->   	int i, err = 0;
-> @@ -1404,7 +1403,7 @@ int bpf_fixup_call_args(struct bpf_verifier_env *env)
->   			return err;
->   	}
->   #ifndef CONFIG_BPF_JIT_ALWAYS_ON
-> -	if (has_kfunc_call) {
-> +	if (prog->jit_required) {
->   		verbose(env, "calling kernel functions are not allowed in non-JITed programs\n");
->   		return -EINVAL;
->   	}
-> 
-> I think we can change the log message for general purpose no just for kunc, so we can know why prog
-> failed in patch#2 as you test yesterday.
+Link to V2:
+https://lore.kernel.org/all/20260624085550.1508771-1-zhoubinbin@loongson.cn/
 
-Hi KaFai,
+V2:
+ - Add the missing memcpy_fromio();
+ - Drop the unnecessary `buf` variable.
 
-Thanks a lot for the explanations and suggestions,
-I really appreciate it.
+Link to V1:
+https://lore.kernel.org/all/20260616115530.4012675-1-zhoubinbin@loongson.cn/
 
-I will do the following changes in the next version v8:
+ drivers/mfd/ls2k-bmc-core.c | 29 ++++++++++++++++++++++-------
+ 1 file changed, 22 insertions(+), 7 deletions(-)
 
-1. Completely remove bpf_prog_has_kfunc_call().
-2. Set jit_required at the entry of bpf_add_kfunc_call().
-3. Generalize the error message to:
-    "program requires BPF JIT compiler but it is not available"
+diff --git a/drivers/mfd/ls2k-bmc-core.c b/drivers/mfd/ls2k-bmc-core.c
+index 408056bfb2fe..a2aee2131529 100644
+--- a/drivers/mfd/ls2k-bmc-core.c
++++ b/drivers/mfd/ls2k-bmc-core.c
+@@ -66,6 +66,9 @@
+ /* Maximum time to wait for U-Boot and DDR to be ready with ms. */
+ #define LS2K_BMC_RESET_WAIT_TIME	10000
+ 
++/* The length of the LS2K BMC display resolution string stored in PCI BAR0 */
++#define LS2K_RESOLUTION_STR_LEN		SZ_64
++
+ /* It's an experience value */
+ #define LS7A_BAR0_CHECK_MAX_TIMES	2000
+ 
+@@ -427,27 +430,39 @@ static int ls2k_bmc_init(struct ls2k_bmc_ddata *ddata)
+  */
+ static int ls2k_bmc_parse_mode(struct pci_dev *pdev, struct simplefb_platform_data *pd)
+ {
+-	char *mode;
++	char *mode __free(kfree) = NULL;
++	void __iomem *base;
++	char *pos = NULL;
+ 	int depth, ret;
+ 
+ 	/* The last 16M of PCI BAR0 is used to store the resolution string. */
+-	mode = devm_ioremap(&pdev->dev, pci_resource_start(pdev, 0) + SZ_16M, SZ_16M);
++	base = devm_ioremap(&pdev->dev, pci_resource_start(pdev, 0) + SZ_16M,
++			    LS2K_RESOLUTION_STR_LEN);
++	if (!base)
++		return -ENOMEM;
++
++	mode = kmalloc(LS2K_RESOLUTION_STR_LEN, GFP_KERNEL);
+ 	if (!mode)
+ 		return -ENOMEM;
+ 
++	memcpy_fromio(mode, base, LS2K_RESOLUTION_STR_LEN);
++
+ 	/* The resolution field starts with the flag "video=". */
+-	if (!strncmp(mode, "video=", 6))
+-		mode = mode + 6;
++	if (strncmp(mode, "video=", 6)) {
++		dev_err(&pdev->dev, "Simpledrm resolution missing or corrupt!\n");
++		return -EINVAL;
++	}
+ 
+-	ret = kstrtoint(strsep(&mode, "x"), 10, &pd->width);
++	pos = mode + 6;
++	ret = kstrtoint(strsep(&pos, "x"), 10, &pd->width);
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = kstrtoint(strsep(&mode, "-"), 10, &pd->height);
++	ret = kstrtoint(strsep(&pos, "-"), 10, &pd->height);
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = kstrtoint(strsep(&mode, "@"), 10, &depth);
++	ret = kstrtoint(strsep(&pos, "@"), 10, &depth);
+ 	if (ret)
+ 		return ret;
+ 
 
-I have tested the updated v8 patch on LoongArch.
-Here are the test results:
-
-1. net.core.bpf_jit_enable = 1 and JIT compilation succeeded:
-=> test PASS
-
-2. net.core.bpf_jit_enable = 0 and JIT compilation succeeded:
-=> returns -EINVAL (-22) and prints:
-"program requires BPF JIT compiler but it is not available"
-
-3. net.core.bpf_jit_enable = 1 and JIT compilation failed:
-=> returns -ENOTSUPP (-524)
-
-4. net.core.bpf_jit_enable = 0 and JIT compilation failed:
-=> returns -EINVAL (-22) and prints:
-"program requires BPF JIT compiler but it is not available"
-
-As long as net.core.bpf_jit_enable = 0, it always returns early
-in bpf_fixup_call_args() with -EINVAL and prints the error log.
-
-Only when net.core.bpf_jit_enable = 1 and the runtime JIT compilation
-dynamically fails, it safely falls back to the -ENOTSUPP runtime check.
-
-I think it works exactly as expected.
-
-Thanks,
-Tiezhu
+base-commit: d5d2d7a8d8be18681a0864f58e3875f1c639e11c
+-- 
+2.52.0
 
