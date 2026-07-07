@@ -1,32 +1,32 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B662B3DCDA0
-	for <loongarch@lists.linux.dev>; Tue,  7 Jul 2026 07:22:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0342414A11
+	for <loongarch@lists.linux.dev>; Tue,  7 Jul 2026 07:23:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783408986; cv=none; b=RlhkQUYRVZ8exMjry9h2GFYcFLNzZvdh9gH66I7KI+BQy4jhC2wIsQJ4a+LhzL9BBtWqXuCL+o6auxixTV6Qym8I1QMNCc26UHGvsPV1shC8dmSK+JyRwWLXyQXeKWGOolvSG1hj2BaJnK7/8YbfX3SHReb58BNBUwbkXW3Dx3Q=
+	t=1783408992; cv=none; b=LcvsniXY/sHQBjEnHcovciFFAO096oeRIoBlvJ/Z/PMFF1k3saZeJ30Xt4LJ0q9+kbTo7cY8rWHe8Y1aE/bhxFiej10cKZdIU+baipMTnTAIVEJoDXH2pIAW4ViAbtAPI5oJF1XEmtFumEMC+va/On3D58FFp89GY+ZPj2egzvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783408986; c=relaxed/simple;
-	bh=dydZVhth1y6JE7+fyLmn2w7NHqI4W6Xits7j2exGHig=;
+	s=arc-20240116; t=1783408992; c=relaxed/simple;
+	bh=CEIAnlvL0rhnO6ZzKUdVEs7J/+earQCHbO4otn4jgzY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tMSSJ3bc9nDG8QmLf1dfMTAuKExU4gE8HQcGVTKVLY3tsl0EX0G8IrYr9ZmbAnz+mBOZqAn3bygFAOakyujNu3UcJdzt00tADo5Mtf9i+Z/k9NeBaICNI3kTpVcLsFtKrNlslHcc1MLkmLWPoYmglGumyg4VgBZGVuqjAvArfkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wBsYJKmU; arc=none smtp.client-ip=91.218.175.181
+	 MIME-Version; b=MSKxjfpg3LKwEtfAY0Atn+0mSwU+uhzrCdZY1tMS7YZZiP5yrtAFnjzaO/dYqo1HYV7JdxRRlPdb33H2uflUA4aFSclD1Kg6GZgvZ+uqE1QCMH/OT/lwsNLawtZ1Xs3vUJ0cnOvTlZO0pBhT1+tpXosXkr5V8SjMean4MqzTyfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LHUIJ8/A; arc=none smtp.client-ip=91.218.175.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wBsYJKmU"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LHUIJ8/A"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1783408975;
+	t=1783408980;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2K4imcceEzYpUOx6xUchhbO3GzKewULjWdUSxLezYq8=;
-	b=wBsYJKmUkD1vZIENhJ/jjIMVXtfHDfhtcXUWtsRsJm5VOlKMsz5smqzWuuDtl+m5OObTV2
-	BOxiErW5YNItSa17xZT8cEy3Za9zTwTq0zBar9ntvj5b8r+4sGcvi2dSm2PMwvofLZucrg
-	kTgTIDpp258zYXFH54i/K4Ci5MiJ2ZU=
+	bh=BZal1eUFT5zCvAjnUL3zj5MffVR6wFyaxSxRBYF+dwo=;
+	b=LHUIJ8/Al7b5qM5Trz9ljpyGxHPfiqbFUiCiaeABuQ3JOjCb1KBSvT9tWx67pp+qVHig2t
+	A6vH8R97zNnHLUDjQhP7zacsbNvqgsZ4chTlZ7zNoM5y0rsZ9IUQScB7IO4XHLjY8fPXan
+	hecPxUdaPOUHEM9EJuiymdkjvQX2QlY=
 From: George Guo <dongtai.guo@linux.dev>
 To: chenhuacai@kernel.org,
 	jpoimboe@kernel.org,
@@ -50,9 +50,9 @@ Cc: kernel@xen0n.name,
 	live-patching@vger.kernel.org,
 	llvm@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 07/12] klp-build: Add LoongArch syscall patching macro
-Date: Tue,  7 Jul 2026 15:20:26 +0800
-Message-Id: <20260707072031.231066-8-dongtai.guo@linux.dev>
+Subject: [PATCH v3 08/12] LoongArch: Add livepatch build (KLP) support
+Date: Tue,  7 Jul 2026 15:20:27 +0800
+Message-Id: <20260707072031.231066-9-dongtai.guo@linux.dev>
 In-Reply-To: <20260707072031.231066-1-dongtai.guo@linux.dev>
 References: <20260707072031.231066-1-dongtai.guo@linux.dev>
 Precedence: bulk
@@ -66,49 +66,42 @@ X-Migadu-Flow: FLOW_OUT
 
 From: George Guo <guodongtai@kylinos.cn>
 
-Add LoongArch support for KLP_SYSCALL_DEFINEx(), mirroring the generic
-__SYSCALL_DEFINEx() pattern from include/linux/syscalls.h.
+This allows automated livepatch module generation using objtool.
 
 Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
 Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
 Signed-off-by: George Guo <guodongtai@kylinos.cn>
 ---
- include/linux/livepatch_helpers.h | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ arch/loongarch/Kconfig | 1 +
+ tools/objtool/Makefile | 3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/livepatch_helpers.h b/include/linux/livepatch_helpers.h
-index 4b647b83865f..a8aad067177b 100644
---- a/include/linux/livepatch_helpers.h
-+++ b/include/linux/livepatch_helpers.h
-@@ -91,6 +91,28 @@
- 	}								\
- 	static inline long __klp_do_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__))
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 3b042dbb2c41..1dbf51ba9d6a 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -159,6 +159,7 @@ config LOONGARCH
+ 	select HAVE_IOREMAP_PROT
+ 	select HAVE_IRQ_EXIT_ON_IRQ_STACK
+ 	select HAVE_IRQ_TIME_ACCOUNTING
++	select HAVE_KLP_BUILD
+ 	select HAVE_KPROBES
+ 	select HAVE_KPROBES_ON_FTRACE
+ 	select HAVE_KRETPROBES
+diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
+index 94aabeee9736..83d645675ed9 100644
+--- a/tools/objtool/Makefile
++++ b/tools/objtool/Makefile
+@@ -8,7 +8,8 @@ ifeq ($(SRCARCH),x86)
+ endif
  
-+#elif defined(CONFIG_LOONGARCH)
-+
-+#define __KLP_SYSCALL_DEFINEx(x, name, ...)                             \
-+	__diag_push();                                                  \
-+	__diag_ignore(GCC, 8, "-Wattribute-alias",                      \
-+		      "Type aliasing is used to sanitize syscall arguments");\
-+	asmlinkage long sys##name(__MAP(x,__SC_DECL,__VA_ARGS__))       \
-+		__attribute__((alias(__stringify(__se_sys##name))));    \
-+	ALLOW_ERROR_INJECTION(sys##name, ERRNO);                        \
-+	static inline long __klp_do_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__));\
-+	asmlinkage long __se_sys##name(__MAP(x,__SC_LONG,__VA_ARGS__)); \
-+	asmlinkage long __attribute__((optimize("-fno-optimize-sibling-calls")))\
-+			__se_sys##name(__MAP(x,__SC_LONG,__VA_ARGS__))  \
-+	{                                                               \
-+		long ret = __klp_do_sys##name(__MAP(x,__SC_CAST,__VA_ARGS__));\
-+		__MAP(x,__SC_TEST,__VA_ARGS__);                         \
-+		__PROTECT(x, ret,__MAP(x,__SC_ARGS,__VA_ARGS__));       \
-+		return ret;                                             \
-+	}                                                               \
-+	__diag_pop();                                                   \
-+	static inline long __klp_do_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__))
-+
- #endif
+ ifeq ($(SRCARCH),loongarch)
+-	BUILD_ORC	   := y
++	BUILD_ORC    := y
++	ARCH_HAS_KLP := y
+ endif
  
- #endif /* _LINUX_LIVEPATCH_HELPERS_H */
+ ifeq ($(SRCARCH),arm64)
 -- 
 2.25.1
 
