@@ -1,106 +1,128 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 478552FF164
-	for <loongarch@lists.linux.dev>; Tue,  7 Jul 2026 01:43:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B5617BCA
+	for <loongarch@lists.linux.dev>; Tue,  7 Jul 2026 02:03:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783388607; cv=none; b=nqBUaTwS8gV6TaGr8/DFSbt638xWVcLtR+zndKHNFrD/TwxQSLFv/zIuh6eHsRtq5jKE1xYLp9pPx+br3C8Oq6+82siU08EwLLpwCrguXb55SO2ELhWnsMjIXPDzm0GkpukWHXewd48OuzCsjn2EXtM1CBVpPTLl6fC7uTbsXMk=
+	t=1783389796; cv=none; b=H3sSZyTrCgwnnwfk/3d7N3grG7nCIwwxkSG7JrToH4ZA0DKpolF7vde8YD/7M1dLZBE9/+96qrQ+b1PMZM/GAvRVF0bdsWCo3r23j3VlDhHR81GuifnRHfQbLVU+MY3HV7j0vpe/7rvgOBOXuSVHoHNRMMGKXybOj2am3/4LZ5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783388607; c=relaxed/simple;
-	bh=1KLDLn1/AV9Q0MmGNPPoIwUxq9gsKK4UK/Fj5QI7r8I=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=uTWslGdriBNJdl5kTdv/bIt1S6Nq5FI87PSl+Xk2pSvBvE0MnJBHF+wRm92PPACROXdBMQ9R7gZs64fj5/nPKWclRMh+3Q1bTLMF3+wBuHUOyGkgVkT9Qa0sdQts3alN2wStUcptJsEyFiIVbjW96fQeHXcy+kFviZK2f5d6HMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxGfC6WUxqpL4AAA--.3274S3;
-	Tue, 07 Jul 2026 09:43:22 +0800 (CST)
-Received: from [10.130.40.83] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJCxvMa2WUxqE1QDAA--.19908S3;
-	Tue, 07 Jul 2026 09:43:19 +0800 (CST)
-Subject: Re: [PATCH bpf-next v8 1/2] bpf: Introduce jit_required flag and
- remove bpf_prog_has_kfunc_call()
-To: KaFai Wan <kafai.wan@linux.dev>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Eduard Zingerman <eddyz87@gmail.com>,
- Kumar Kartikeya Dwivedi <memxor@gmail.com>,
- Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
- Emil Tsalapatis <emil@etsalapatis.com>
-Cc: bpf@vger.kernel.org, loongarch@lists.linux.dev,
- Leon Hwang <leon.hwang@linux.dev>, Puranjay Mohan <puranjay@kernel.org>,
- =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-References: <20260706040006.10331-1-yangtiezhu@loongson.cn>
- <20260706040006.10331-2-yangtiezhu@loongson.cn>
- <dd75b7afbe2b5507ac818df14dd44aff32db1e18.camel@linux.dev>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <00c9880d-000b-d9a6-d981-b3033126cc16@loongson.cn>
-Date: Tue, 7 Jul 2026 09:43:17 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1783389796; c=relaxed/simple;
+	bh=pzhXqQJWUzVyJeN0FWY9ha5GoBBPo1m8KqsCffY7KoM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=epFyt2bqhdfGsjc1+NjuzG9s9iQJXkHtOV/mVnefLorz9G/t+zHLB9GTB5BbaHvUE5rGwCPoanfnFZenDytXpcdBrgg6xMGHv/61sKNbom6w/EzDf9jmXXJ5eNJUahbhpsLRt5zPV09bnF6O9edAQcGNSgwQpj3o0lCPD/HUAbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=c3Wb93rv; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="c3Wb93rv"
+Message-ID: <e86ba5c0-41c2-4492-a316-7693c7d8d3fd@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1783389792;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pZijWm4GdBO99h0mVu1NLMKXZxw20wl2J7qO9trTUvs=;
+	b=c3Wb93rvq6ra5wM8trKYU7Hsj3cphHNseVyd7hbg9uRnS8wruJRWn08uK0Y8mKDXjPoQSC
+	9a/6GCOwmLDGb1ZKPZSndzK20TSJ0W7yHHDpPHKG4qnWTVTVF7RdglKNuadhHe8s6qIlY6
+	3ZPdioAZpQweKjt+KtRzcMg+FD6CAjM=
+Date: Tue, 7 Jul 2026 10:03:00 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <dd75b7afbe2b5507ac818df14dd44aff32db1e18.camel@linux.dev>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Subject: Re: [PATCH bpf-next v8 2/2] bpf: Reject programs with inlined helpers
+ if JIT is not available
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxvMa2WUxqE1QDAA--.19908S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Zw4xZr1rJF1fKr1fArWkGrX_yoW8Gryfpa
-	yrZ34qkF1kKF4IyFnrJrsrAw12grWa9ry2yr1kGryIgr15ua1xXF1Fka4a9ayFgr18Ja12
-	vayqva47J3WqkacCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUP2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_
-	WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
-	CYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48J
-	MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI
-	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y
-	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1l
-	IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8EPfPUUUU
-	U==
+To: Eduard Zingerman <eddyz87@gmail.com>, Tiezhu Yang
+ <yangtiezhu@loongson.cn>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
+ Emil Tsalapatis <emil@etsalapatis.com>, KaFai Wan <kafai.wan@linux.dev>
+Cc: bpf@vger.kernel.org, loongarch@lists.linux.dev,
+ Puranjay Mohan <puranjay@kernel.org>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@kernel.org>
+References: <20260706040006.10331-1-yangtiezhu@loongson.cn>
+ <20260706040006.10331-3-yangtiezhu@loongson.cn>
+ <abd697d839043d80e0230d2b9ab30b214dfa34d7.camel@gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Leon Hwang <leon.hwang@linux.dev>
+In-Reply-To: <abd697d839043d80e0230d2b9ab30b214dfa34d7.camel@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On 2026/7/6 下午7:39, KaFai Wan wrote:
+On 7/7/26 05:41, Eduard Zingerman wrote:
 > On Mon, 2026-07-06 at 12:00 +0800, Tiezhu Yang wrote:
->> Introduce a 'jit_required' bitfield flag in struct bpf_prog. This bit
->> tracks whether a BPF program strictly requires the JIT compiler to run,
->> preventing dangerous runtime fallback to the interpreter for features
->> not implemented there.
+>> When an architecture (such as LoongArch, ARM64, and RISC-V) implements
+>> bpf_jit_inlines_helper_call(), the verifier skips rewriting the helper
+>> call offset (insn->imm) during the bpf_do_misc_fixups() phase, because
+>> the helper is expected to be inlined by the JIT compiler. As a result,
+>> insn->imm remains as the raw helper enum ID.
 >>
->> Set the flag 'jit_required' to 1 at the entry of bpf_add_kfunc_call()
->> right after the kfunc_tab allocation succeeds. This cleanly marks the
->> lifecycle of any program attempting to utilize kernel functions.
+>> However, if JIT is disabled at runtime (net.core.bpf_jit_enable=0) or
+>> if the JIT compilation later dynamically fails (e.g., due to OOM), the
+>> core BPF subsystem falls back to the BPF interpreter.
 >>
->> Furthermore, completely remove the bpf_prog_has_kfunc_call() helper,
->> as its logic is now unified under the 'jit_required' flag.
+>> When the interpreter executes (__bpf_call_base + insn->imm) with the
+>> unpatched raw helper ID, it jumps into an unaligned invalid address
+>> space, triggering an instruction alignment fault or a memory access
+>> panic.
 >>
->> In bpf_fixup_call_args(), check with 'prog->jit_required' rather than
->> bpf_prog_has_kfunc_call(), and generalize the error message to generic
->> BPF JIT availability.
+>> Fix this by setting 'jit_required' to 1 when helper call rewriting is
+>> skipped for JIT inlining. Loading will be rejected early with -EINVAL
+>> if JIT is disabled, or safely rejected with -ENOTSUPP during runtime
+>> selection if JIT compilation dynamically fails, effectively preventing
+>> the kernel panic.
 >>
->> In __bpf_prog_select_runtime(), check with 'fp->jit_required' rather
->> than bpf_prog_has_kfunc_call() to unify the logic.
->>
+>> Fixes: 2ddec2c80b44 ("riscv, bpf: inline bpf_get_smp_processor_id()")
+>> Suggested-by: Alexei Starovoitov <ast@kernel.org>
+>> Suggested-by: KaFai Wan <kafai.wan@linux.dev>
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>> ---
 > 
-> If you have a new version, I think we could simplify the description of the code details a bit.
+> Sorry, I'm late to the party.
+> As far as I understand, the patch #1 doesn't really change anything functionally,
+> it just adds the flag, right?
+> 
+> As for the patch #2 and looking at the helpers that jits currently inline:
+> - bpf_get_smp_processor_id (implemented as a function in the helpers.c)
+> - bpf_get_current_task (implemented as a function in the bpf_trace.c)
+> - bpf_get_current_task_btf (implemented as a function in the bpf_trace.c)
+> 
+> It is perfectly fine to call these as helper functions even if jit is
+> not available. But this was broken since:
+> 2ddec2c80b44 ("riscv, bpf: inline bpf_get_smp_processor_id()")
+> from May 2024, so I guess nobody really cares?
 
-OK, will do it in v9.
 
-> The code is fine by me, others might have comments.
+Vincent Thiberville reported an interpreter fallback issue for the
+internal BPF_ADDR_PERCPU insn [1]. And, I was trying to fix assorted
+interpreter fallback issues [2].
 
-As suggested by Leon and you, I will modify the code to:
-"fp->jit_required = IS_ENABLED(CONFIG_BPF_JIT_ALWAYS_ON)"
-in v9.
+I think it is worth fixing the interpreter fallback issue for the JIT
+inlineable helper.
+
+[1]
+https://lore.kernel.org/bpf/MR1P264MB331494502C9D13D8A9EAFB99B7E82@MR1P264MB3314.FRAP264.PROD.OUTLOOK.COM/
+[2] https://lore.kernel.org/bpf/20260626154330.33619-1-leon.hwang@linux.dev/
 
 Thanks,
-Tiezhu
+Leon
+
+> 
+> Imo, the simplest and least intrusive fix is to add a wrapper in the
+> verifier.c that would call both bpf_jit_inlines_helper_call() and
+> check if the jit is enabled and use that wrapper instead of direct
+> calls to bpf_jit_inlines_helper_call().
+> 
+> Anyway, since this was broken all-along, might as well land as-is.
+> Thoughts?
+> 
+> [...]
 
