@@ -1,238 +1,180 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A66342A14A;
-	Tue,  7 Jul 2026 07:23:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF1B53909B5
+	for <loongarch@lists.linux.dev>; Tue,  7 Jul 2026 09:13:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783409034; cv=none; b=eZNe+tB7hY7VqTKgbK6N7EBBX+IguZDmA7Z5KAqwCQBwIZRZPwQSuED3cPHiUwC3oWZ3KMLH337Wc47iXC8d83vjRIlAjm5VbGqBV3cb/cGJ2R6UUouGCvlHlCJ//wa6oMB5MZLMcpOo55aq4MdzEiaZYwTfevQ8RTA8NJol6JE=
+	t=1783415615; cv=none; b=Jh0NWBzZZ+tlZ1h6tmzfnGAh6tGiuaE4oo8KrjlZsUuuSeyztLRVuo9JhflycveZZIEL4JPrEOAB5go3nRNQlzLHK5QGt8iAHOgILIfiG7234BlhizqSVRHu4ntQkG2x5w0/OBStVOhU4Hy8iyNFj4a5UnloUD2oHgMBIT3q8FU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783409034; c=relaxed/simple;
-	bh=4xpsKQT0sIXN8YfZqyI5uDhGSFAUCUDLKrsALoCftLI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kKfaS12FWWNuNJqABXAidx+rCtlE0Qd7yEa55exUkoRMTC7ZaD/dwxlFpiH18ffwELwf8M2bKT550sX7shjwghVkCU28J1xTk3uuuBZCiFA3Q1Rsi1/lKZJoIruPTRYIc57SXEzZtzvcPf+EC5uPL6FxrWxh5P+DojilkvLoAkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=l/gsU6+/; arc=none smtp.client-ip=95.215.58.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1783415615; c=relaxed/simple;
+	bh=SAMsfCqQ90e8Mr+Byud3oSw6Ke4rL+V87eU2pPZa88k=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=N+5oN5rT4V9pLa61qfOK+7LCxCDrtw1BtIk7ImzGy+VER8MJ0hGoMmCxt8mrR2A7DsmsGpNcf7D/MS2mxg1IscuMhk2TUNe1hsO80XuJSfcQaV3i0VBjaxNCt88rLc601UkWGOTQpcVQ5j+xGtvzi7rB3sxiwQ3QNZKJE583zJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZCHFCrVp; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="l/gsU6+/"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1783409024;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9FJ2LdWpihcFZMdGQ2dBam2UiMhzklP1ri1WDx8T5rI=;
-	b=l/gsU6+/SC0eCHB4Jdda35a+zuTvRw4uiCZQKeo4brLFpug/LxSNHtwJdPqiSf4YeUfgPw
-	pG6LMIAxR0k91NzvxZtXgtMwNPvfare5fgH/AVWZrN/5ahEfhUe9C/IW8yXe7qDBoWerkl
-	H3k8LJdzQt03xjnt4PdVg27J84VnX68=
-From: George Guo <dongtai.guo@linux.dev>
-To: chenhuacai@kernel.org,
-	jpoimboe@kernel.org,
-	peterz@infradead.org,
-	jikos@kernel.org,
-	mbenes@suse.cz,
-	pmladek@suse.com
-Cc: kernel@xen0n.name,
-	joe.lawrence@redhat.com,
-	rostedt@goodmis.org,
-	ardb@kernel.org,
-	nathan@kernel.org,
-	nick.desaulniers+lkml@gmail.com,
-	yangtiezhu@loongson.cn,
-	jiaxun.yang@flygoat.com,
-	liukexin@kylinos.cn,
-	guodongtai@kylinos.cn,
-	xry111@xry111.site,
-	wangyuli@aosc.io,
-	loongarch@lists.linux.dev,
-	live-patching@vger.kernel.org,
-	llvm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 12/12] objtool/klp: Fold LoongArch paired ADD/SUB relocations into PCREL
-Date: Tue,  7 Jul 2026 15:20:31 +0800
-Message-Id: <20260707072031.231066-13-dongtai.guo@linux.dev>
-In-Reply-To: <20260707072031.231066-1-dongtai.guo@linux.dev>
-References: <20260707072031.231066-1-dongtai.guo@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZCHFCrVp"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-c9b373d5af0so2962325a12.2
+        for <loongarch@lists.linux.dev>; Tue, 07 Jul 2026 02:13:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783415613; x=1784020413; darn=lists.linux.dev;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=U/SgXEBGKzfENQtAx4I6q1a9J5/Avyd8/iNOtQpGsWw=;
+        b=ZCHFCrVpU1Sm2/CWENqNxAasplOeanyTbA3fQgA76J3XMnWW6IpVq+pWfZfvav7/eZ
+         ImSyXakcitrpe1jeZaNiBmNGAsA5x1dPH9oV0HL9O1qRXBNAvMwPBYBr8yXyPNAP9GfK
+         p7D8pVcuS6G+kZhf7qjuvLT1jvwFXeSXMc9FiIiTh5xsUkX3FuJqQ7U9tUv5YHkvBDRI
+         bhl7CVKe/iZzUYurBnZsPSTz0vGs4DhSd5darYatqhXmvFWNIJOP67Ab+Fts2P/CLETg
+         5Y7zWHzz73s/JyET3wA6LaqjZR9CvYd5eUSj60vVC0Y1LVg0nxasMZLxf4hwSVQTKBjF
+         dpIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783415613; x=1784020413;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=U/SgXEBGKzfENQtAx4I6q1a9J5/Avyd8/iNOtQpGsWw=;
+        b=MIt7QJg12k5CjZxqs1sKiaWLRo5qzqHS0PyGndOobjzQz57T+rSCE6Jdn1TU8XmwAO
+         zpGSwXVsccq13lo5Ot/iyilOAHCvtYuOQGgsYi4f1HrOEcQlnFUGQ83nk2k83d8HCPUY
+         8m0O4yMqif2VP/LBXgcUbN6dXPyiviNLhq86zqERERV59zAHuMXSkkYlQlhYIUQIGOKk
+         6GcIfkIxyAISSjCWwz+FFSNScM0k6N7fXw8AQXIpY3dhCmS0m5yK4ZmCn36rzlQgKpN2
+         OEc1aqcrtfwJ8W4SRuTrd9d6YcqHfvPWSzLKGFAA72ljKDkb3McvnJBjPSYiyRUkjpCU
+         UqZQ==
+X-Forwarded-Encrypted: i=1; AHgh+RoYSyf+OSryStBM8sE9MkzUp57M41U20cO1CpYcLKPT1zLNux20bx1KTW/2Wzcmv17hvs9hJ1nMMBE=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxpALcLjXe3xwuaBchby8+mtnnZV691J9RrAyE99UdIU4W9iVoj
+	9kLVjbIcxzHh+VsPU4FWdUQGr/fgcXHYWA5Bn7uZwmjTMbOaIwTpif4M
+X-Gm-Gg: AfdE7ckgnZ2ZGnQ1hFJvlpmRSgyF/dIgXQCLNi0gf8pgmCAgTTYY+Z1PEL5qghzKC+v
+	7ywaGcETvwUa/hW0iU+G0IBKzBzsliIw7yihsuRxCkF7AeDQQcJ5T9Sn5huRaD92bt5w7g2NURk
+	3paIGBn125iFXOVpaOnSZ+Qies4SfTcgv/NlpTfCKVegXWRagcgAoNkLn/+EAvpL9subqfXXqiu
+	7OhmmFRtPgsIOIVod+eqS2lrWmPPt/tmRCzO8YjBfni2ChvGVLO7HrA6RdBKkIan1mLBaMbU2ye
+	Q/Qv8tLwhnnnkgtDY63DamAfyjrRmfopcWd+LHdYkdIQ4PQdKD41oJYDxV+D2nmaxnq3FgZKMps
+	dAP3GBoLi5MGnEIkKIIBHglua1E5nI6bFEt1IQppBDMMkIJ4ddshZbkqf/IT1+hUwn5srhrVc47
+	b6cAW17gCPnRrSI6GVvWjyAcb+aiXAfB+Li+msjxh1
+X-Received: by 2002:a05:6a21:7a43:b0:3b2:b1ed:d1df with SMTP id adf61e73a8af0-3c08ee5184amr5383065637.29.1783415613019;
+        Tue, 07 Jul 2026 02:13:33 -0700 (PDT)
+Received: from [192.168.0.13] ([38.34.87.7])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ca5b3a2e42bsm650999a12.30.2026.07.07.02.13.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2026 02:13:32 -0700 (PDT)
+Message-ID: <cab476b7a3e205164d43f791d84b0e0b8101d974.camel@gmail.com>
+Subject: Re: [PATCH bpf-next v8 2/2] bpf: Reject programs with inlined
+ helpers if JIT is not available
+From: Eduard Zingerman <eddyz87@gmail.com>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>, Alexei Starovoitov
+ <ast@kernel.org>,  Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko
+ <andrii@kernel.org>, Kumar Kartikeya Dwivedi	 <memxor@gmail.com>, Martin
+ KaFai Lau <martin.lau@linux.dev>, Song Liu	 <song@kernel.org>, Yonghong
+ Song <yonghong.song@linux.dev>, Jiri Olsa	 <jolsa@kernel.org>, Emil
+ Tsalapatis <emil@etsalapatis.com>, KaFai Wan	 <kafai.wan@linux.dev>
+Cc: bpf@vger.kernel.org, loongarch@lists.linux.dev, Leon Hwang
+	 <leon.hwang@linux.dev>, Puranjay Mohan <puranjay@kernel.org>, 
+ =?ISO-8859-1?Q?Bj=F6rn_T=F6pel?=
+	 <bjorn@kernel.org>
+Date: Tue, 07 Jul 2026 02:13:29 -0700
+In-Reply-To: <33d3eb99-ef5a-5413-b2f6-3217b54cce4d@loongson.cn>
+References: <20260706040006.10331-1-yangtiezhu@loongson.cn>
+	 <20260706040006.10331-3-yangtiezhu@loongson.cn>
+	 <abd697d839043d80e0230d2b9ab30b214dfa34d7.camel@gmail.com>
+	 <33d3eb99-ef5a-5413-b2f6-3217b54cce4d@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-10 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-From: George Guo <guodongtai@kylinos.cn>
+On Tue, 2026-07-07 at 09:37 +0800, Tiezhu Yang wrote:
+> On 2026/7/7 =E4=B8=8A=E5=8D=885:41, Eduard Zingerman wrote:
+> > On Mon, 2026-07-06 at 12:00 +0800, Tiezhu Yang wrote:
+> > > When an architecture (such as LoongArch, ARM64, and RISC-V) implement=
+s
+> > > bpf_jit_inlines_helper_call(), the verifier skips rewriting the helpe=
+r
+> > > call offset (insn->imm) during the bpf_do_misc_fixups() phase, becaus=
+e
+> > > the helper is expected to be inlined by the JIT compiler. As a result=
+,
+> > > insn->imm remains as the raw helper enum ID.
+> > >=20
+> > > However, if JIT is disabled at runtime (net.core.bpf_jit_enable=3D0) =
+or
+> > > if the JIT compilation later dynamically fails (e.g., due to OOM), th=
+e
+> > > core BPF subsystem falls back to the BPF interpreter.
+> > >=20
+> > > When the interpreter executes (__bpf_call_base + insn->imm) with the
+> > > unpatched raw helper ID, it jumps into an unaligned invalid address
+> > > space, triggering an instruction alignment fault or a memory access
+> > > panic.
+> > >=20
+> > > Fix this by setting 'jit_required' to 1 when helper call rewriting is
+> > > skipped for JIT inlining. Loading will be rejected early with -EINVAL
+> > > if JIT is disabled, or safely rejected with -ENOTSUPP during runtime
+> > > selection if JIT compilation dynamically fails, effectively preventin=
+g
+> > > the kernel panic.
+> > >=20
+> > > Fixes: 2ddec2c80b44 ("riscv, bpf: inline bpf_get_smp_processor_id()")
+> > > Suggested-by: Alexei Starovoitov <ast@kernel.org>
+> > > Suggested-by: KaFai Wan <kafai.wan@linux.dev>
+> > > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> > > ---
+> >=20
+> > Sorry, I'm late to the party.
+> > As far as I understand, the patch #1 doesn't really change anything fun=
+ctionally,
+> > it just adds the flag, right?
+> >=20
+> > As for the patch #2 and looking at the helpers that jits currently inli=
+ne:
+> > - bpf_get_smp_processor_id (implemented as a function in the helpers.c)
+> > - bpf_get_current_task (implemented as a function in the bpf_trace.c)
+> > - bpf_get_current_task_btf (implemented as a function in the bpf_trace.=
+c)
+> >=20
+> > It is perfectly fine to call these as helper functions even if jit is
+> > not available. But this was broken since:
+> > 2ddec2c80b44 ("riscv, bpf: inline bpf_get_smp_processor_id()")
+> > from May 2024, so I guess nobody really cares?
+> >=20
+> > Imo, the simplest and least intrusive fix is to add a wrapper in the
+> > verifier.c that would call both bpf_jit_inlines_helper_call() and
+> > check if the jit is enabled and use that wrapper instead of direct
+> > calls to bpf_jit_inlines_helper_call().
+> >=20
+> > Anyway, since this was broken all-along, might as well land as-is.
+> > Thoughts?
+>=20
+> In the previous v4 [1], there is a similar way to fix unaligned
+> interpreter panic on JIT fallback path, but it was explicitly
+> rejected by the BPF maintainer Alexei [2].
 
-On LoongArch, the "key - ." field of a __jump_table entry can come out
-as two relocations at the same offset, R_LARCH_ADD64 plus
-R_LARCH_SUB64.  clang's integrated assembler emits this pair when the
-key symbol is not defined in the same translation unit (for example
-__tracepoint_netif_rx); GAS, and clang for locally-defined keys,
-produce a single R_LARCH_64_PCREL instead, which is why GCC builds do
-not hit this.  objtool's elf_create_reloc() allows only one relocation
-per offset, so cloning such an entry fails with:
+bpf_fixup_fallback_helpers() is not at all what I suggest and is
+indeed a terrible idea. What I suggest is something like:
 
-  vmlinux.o: error: objtool: __jump_table_23683+0x8: duplicate reloc
+  bool bpf_inline_helper_call(...)
+  {
+	return bpf_jit_inlines_helper_call(...) && <jit-is-enabled>;
+  }
 
-When the SUB half points at the relocation's own position (the
-"sym - ." pattern), the pair means the same thing as one PC-relative
-relocation.  Add arch_normalize_paired_reloc() which rewrites the ADD
-half to R_LARCH_32_PCREL/R_LARCH_64_PCREL and skips the SUB half.  The
-LoongArch module loader supports both forms.
+Used in verifier.c and fixups.c to decide whether to inline the helper.
 
-Reported-by: Joe Lawrence <joe.lawrence@redhat.com>
-Signed-off-by: George Guo <guodongtai@kylinos.cn>
----
- tools/objtool/arch/loongarch/decode.c         | 62 +++++++++++++++++++
- .../objtool/arch/loongarch/include/arch/elf.h | 18 ++++++
- tools/objtool/klp-diff.c                      | 13 ++++
- 3 files changed, 93 insertions(+)
-
-diff --git a/tools/objtool/arch/loongarch/decode.c b/tools/objtool/arch/loongarch/decode.c
-index 12facd0cc8d1..273398ea4486 100644
---- a/tools/objtool/arch/loongarch/decode.c
-+++ b/tools/objtool/arch/loongarch/decode.c
-@@ -39,6 +39,68 @@ u64 arch_adjusted_addend(struct reloc *reloc)
- 	return reloc_addend(reloc);
- }
- 
-+/*
-+ * A cross-section difference like the "key - ." field of a __jump_table
-+ * entry may come out as a paired R_LARCH_ADD plus R_LARCH_SUB relocation
-+ * at the same offset: clang's integrated assembler does this when the
-+ * symbol is not defined in the same translation unit (GAS, and clang for
-+ * locally-defined symbols, emit a single PCREL instead).  objtool allows
-+ * only one relocation per offset, so the pair breaks cloning.
-+ *
-+ * When the SUB half points at the reloc's own position ("sym - ."), the
-+ * pair means the same as a single PC-relative relocation, which the
-+ * module loader also supports: rewrite the ADD half to R_LARCH_*_PCREL
-+ * and tell the caller to skip the SUB half.
-+ *
-+ * Return 1 to skip the reloc, 0 to proceed, -1 on error.
-+ */
-+int arch_normalize_paired_reloc(struct elf *elf, struct reloc *reloc)
-+{
-+	struct section *rsec = reloc->sec;
-+	unsigned int sub_type, pcrel_type;
-+	struct reloc *sub, *add;
-+
-+	switch (reloc_type(reloc)) {
-+	case R_LARCH_ADD32:
-+		sub_type = R_LARCH_SUB32;
-+		pcrel_type = R_LARCH_32_PCREL;
-+		break;
-+	case R_LARCH_ADD64:
-+		sub_type = R_LARCH_SUB64;
-+		pcrel_type = R_LARCH_64_PCREL;
-+		break;
-+	case R_LARCH_SUB32:
-+	case R_LARCH_SUB64:
-+		/*
-+		 * Skip only if the paired ADD (the preceding reloc) has
-+		 * been rewritten to PCREL; otherwise leave the pair
-+		 * intact so a failed conversion stays loud.
-+		 */
-+		add = reloc_idx(reloc) ? reloc - 1 : NULL;
-+		if (add && reloc_offset(add) == reloc_offset(reloc) &&
-+		    (reloc_type(add) == R_LARCH_32_PCREL ||
-+		     reloc_type(add) == R_LARCH_64_PCREL))
-+			return 1;
-+		return 0;
-+	default:
-+		return 0;
-+	}
-+
-+	/* The paired SUB reloc immediately follows the ADD */
-+	sub = rsec_next_reloc(rsec, reloc);
-+	if (!sub || reloc_offset(sub) != reloc_offset(reloc) ||
-+	    reloc_type(sub) != sub_type)
-+		return 0;
-+
-+	/* Only a "sym - ." difference is PC-relative */
-+	if (sub->sym->sec != rsec->base ||
-+	    sub->sym->offset + reloc_addend(sub) != reloc_offset(sub))
-+		return 0;
-+
-+	set_reloc_type(elf, reloc, pcrel_type);
-+	return 0;
-+}
-+
- bool arch_pc_relative_reloc(struct reloc *reloc)
- {
- 	return false;
-diff --git a/tools/objtool/arch/loongarch/include/arch/elf.h b/tools/objtool/arch/loongarch/include/arch/elf.h
-index ec79062c9554..0103f27fccfc 100644
---- a/tools/objtool/arch/loongarch/include/arch/elf.h
-+++ b/tools/objtool/arch/loongarch/include/arch/elf.h
-@@ -15,6 +15,18 @@
- #ifndef R_LARCH_64
- #define R_LARCH_64		2
- #endif
-+#ifndef R_LARCH_ADD32
-+#define R_LARCH_ADD32		50
-+#endif
-+#ifndef R_LARCH_ADD64
-+#define R_LARCH_ADD64		51
-+#endif
-+#ifndef R_LARCH_SUB32
-+#define R_LARCH_SUB32		55
-+#endif
-+#ifndef R_LARCH_SUB64
-+#define R_LARCH_SUB64		56
-+#endif
- #ifndef R_LARCH_32_PCREL
- #define R_LARCH_32_PCREL	99
- #endif
-@@ -34,4 +46,10 @@
- #define R_TEXT32		R_LARCH_32_PCREL
- #define R_TEXT64		R_LARCH_32_PCREL
- 
-+#define ARCH_HAS_PAIRED_RELOCS	1
-+
-+struct elf;
-+struct reloc;
-+int arch_normalize_paired_reloc(struct elf *elf, struct reloc *reloc);
-+
- #endif /* _OBJTOOL_ARCH_ELF_H */
-diff --git a/tools/objtool/klp-diff.c b/tools/objtool/klp-diff.c
-index 0fa3ce324346..02b2150e3ca3 100644
---- a/tools/objtool/klp-diff.c
-+++ b/tools/objtool/klp-diff.c
-@@ -1504,6 +1504,13 @@ static bool is_uncorrelated_section(struct section *sec)
- 	       strstarts(sec->name, ".data..Lanon.");		/* Clang */
- }
- 
-+#ifndef ARCH_HAS_PAIRED_RELOCS
-+static inline int arch_normalize_paired_reloc(struct elf *elf, struct reloc *reloc)
-+{
-+	return 0;
-+}
-+#endif
-+
- /*
-  * Convert a relocation symbol reference to the needed format: either a section
-  * symbol or the underlying symbol itself.  Return -1 error, 0 success, 1 skip.
-@@ -1511,10 +1518,16 @@ static bool is_uncorrelated_section(struct section *sec)
- static int convert_reloc_sym(struct elf *elf, struct reloc *reloc)
- {
- 	struct section *sec = reloc->sym->sec;
-+	int ret;
- 
- 	if (reloc_type(reloc) == R_NONE)
- 		return 1;
- 
-+	/* Fold paired ADD/SUB relocs (LoongArch) into a single PCREL */
-+	ret = arch_normalize_paired_reloc(elf, reloc);
-+	if (ret)
-+		return ret;
-+
- 	if (is_uncorrelated_section(sec))
- 		return convert_reloc_sym_to_secsym(elf, reloc);
- 
--- 
-2.25.1
-
+> Furthermore, Alexei
+> said "The interpreter has to be removed completely... sooner
+> or later." [3]. So if JIT is not available, rejecting the program
+> load is the intended design.
+>=20
+> [1]=20
+> https://lore.kernel.org/bpf/20260615025316.24429-1-yangtiezhu@loongson.cn=
+/
+> [2] https://lore.kernel.org/bpf/DJMRIZ5PDWP4.12OOZ8H881H6O@gmail.com/
+> [3] https://lore.kernel.org/bpf/DJN001X0S57Y.18CKUS4NDDQT1@gmail.com/
+>=20
+> Thanks,
+> Tiezhu
