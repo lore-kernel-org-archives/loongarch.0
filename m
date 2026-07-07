@@ -1,42 +1,38 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9E95330659
-	for <loongarch@lists.linux.dev>; Tue,  7 Jul 2026 03:53:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8780B38887D
+	for <loongarch@lists.linux.dev>; Tue,  7 Jul 2026 06:28:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783396404; cv=none; b=Yj+Q7PoQltZrfqnNFMXor9QvibMMYK/xH9P3Jm2T4sVTe6Sb5O2RrAitxrXv65gFDF2PM0G/VjvK2DPkgRRBsXRXDGT64gCV2vQqXWHFvoWRrNd0fm90zCX3niEpFimDMBZSMxWJWLHsBH337BLjzF9CRnF1qLH2C43TboZJNNk=
+	t=1783405718; cv=none; b=S5Fq38Uw7Z5k8tg2mzJjyx5z06GrBa5Mh6fmg8yHW89nahGvfTsCDeUyGB5SIlT9C2XPwNcAU5pX8jL19VgFIEB+RXt6UEw1mD2IJTn4P0Y/81bOd6Im5ajfGRCzfkBC72V94HvJKBqnNt+abQJrlwUgriZNWv0SjkrGEb/Lt+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783396404; c=relaxed/simple;
-	bh=5A3JLo0kESX1OiYCTzKz3yebxAnvlQMiHKNdZqjvGkQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=d4Gyg6q0hDeUx0dA1dV2Ajw2+vmIpScObrVLBbV+fVT5iCH666JgekP24Wk36BkAY0tWQ7lYw/7BdsOTuPRPBMBkbG9rux+waYXvToiU1clB/jBzq1ycEDUUVKRPYvIjUHc7io20b6h5uKdWBDQ79A2SpNWL40jAFs6MvN5ZQH4=
+	s=arc-20240116; t=1783405718; c=relaxed/simple;
+	bh=Jxc6BQ7X8PdLAFU1Gj5E30FmO+UIQirgB3K4R8kQ0GQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ek8dmnnVIsNXWoB8kNtHiYjKYFe5aP3sI7f7f+hACkOrauRdUMWFFXlZEaOjJ1Gy340nr3g4wYdxc5HnDVU1TyPqgpLpyx95RtV1PZbGWQry2E+zaua3fqRSG2VDRIm/6JE7X2SKRQBKCaOek6Cq9RVe/wT8RU89nJe1BNjym1s=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.101])
-	by gateway (Coremail) with SMTP id _____8CxZeoxeExqQMUAAA--.1917S3;
-	Tue, 07 Jul 2026 11:53:21 +0800 (CST)
-Received: from loongson-pc.loongson.cn (unknown [10.20.42.101])
-	by front1 (Coremail) with SMTP id qMiowJAxX8creExqYXcDAA--.21037S4;
-	Tue, 07 Jul 2026 11:53:21 +0800 (CST)
-From: Hongliang Wang <wanghongliang@loongson.cn>
-To: Hongliang Wang <wanghongliang@loongson.cn>,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	loongarch@lists.linux.dev,
+Received: from loongson.cn (unknown [223.64.68.155])
+	by gateway (Coremail) with SMTP id _____8BxWeuRnExqv80AAA--.3522S3;
+	Tue, 07 Jul 2026 14:28:33 +0800 (CST)
+Received: from kernelserver (unknown [223.64.68.155])
+	by front1 (Coremail) with SMTP id qMiowJCxvMaPnExqbpoDAA--.21344S2;
+	Tue, 07 Jul 2026 14:28:31 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH v7 2/2] i2c: ls2x: Add clocks property parsing and adjust bus speed
-Date: Tue,  7 Jul 2026 11:51:04 +0800
-Message-Id: <20260707035104.3092-3-wanghongliang@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20260707035104.3092-1-wanghongliang@loongson.cn>
-References: <20260707035104.3092-1-wanghongliang@loongson.cn>
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	Vincent Mailhol <mailhol@kernel.org>,
+	Bingxiong Li <libingxiong@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	linux-can@vger.kernel.org,
+	jeffbai@aosc.io,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v4 0/2] Add Loongson CAN-FD controller driver
+Date: Tue,  7 Jul 2026 14:28:23 +0800
+Message-ID: <cover.1783391759.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -44,139 +40,121 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxX8creExqYXcDAA--.21037S4
-X-CM-SenderInfo: pzdqwxxrqjzxhdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxCr15KF15uw15Xw1DAw4fZwc_yoWrXry8pF
-	Z8CF95Gr4qqF42grsxtw18ZFy3tws5Jay8GFy7tw1xW3Z3Arn8Za4ftFnI9F4v9F97XayU
-	XayDGrsxCFWjvrXCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:qMiowJCxvMaPnExqbpoDAA--.21344S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAgEBCGpMhCwBIwAAsm
+X-Coremail-Antispam: 1Uk129KBj93XoWxCryDuFWkGr47KF18trW5urX_yoW5Zr4xpF
+	4Yk3sxur1DKr4xAFs3JayrCF15Awn3Jr13WFZFyw109as0v3y2g34Fk3W5ZryUurZ5CFWj
+	qrWfuFyruas8ZFgCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
 	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE
-	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
 	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
 	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
 	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jOdb8UUUUU=
+	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1wL05UUUUU==
 
-The i2c-ls2x driver supports dts and acpi parameter passing.
+Hi all:
 
-In dts, uses clock framework, by parsing clocks property to
-get i2c bus reference clock, and define the div of reference
-clock by device data.
+This patchset adds support for the CAN-FD controller found on Loongson
+CPUs.
 
-In acpi, by passing clocks property to describe i2c bus reference
-clock and clock-div property to describe the div of reference clock.
+Patch 1 introduces the basic CAN-FD controller driver with support
+for classic CAN and CAN FD, including bit timing, error handling,
+NAPI-based RX, and multiple TX buffers.
 
-Based on i2c bus reference clock(clock_a), i2c bus speed(clock_s)
-and div, calculate the prcescale of i2c divider register. The
-calculation formula is
+Patch 2 adds optional DMA support for RX path using the Loongson APB
+CMC DMA engine, which significantly reduces CPU load under high
+receive throughput.
 
-prcescale = (clock_a*10)/(div*clock_s)-1
+The driver has been tested on Loongson-2K3000 platforms with various
+CAN/CAN FD traffic patterns.
 
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-Cc: stable@vger.kernel.org
-Signed-off-by: Hongliang Wang <wanghongliang@loongson.cn>
----
- drivers/i2c/busses/i2c-ls2x.c | 36 ++++++++++++++++++++++++++++++++---
- 1 file changed, 33 insertions(+), 3 deletions(-)
+Finally, I'd like to thank Bingxiong, the original author of this driver,
+for his efforts in working on the patch.
 
-diff --git a/drivers/i2c/busses/i2c-ls2x.c b/drivers/i2c/busses/i2c-ls2x.c
-index b475dd27b7af..18b79dc759bf 100644
---- a/drivers/i2c/busses/i2c-ls2x.c
-+++ b/drivers/i2c/busses/i2c-ls2x.c
-@@ -12,6 +12,7 @@
- 
- #include <linux/bitfield.h>
- #include <linux/bits.h>
-+#include <linux/clk.h>
- #include <linux/completion.h>
- #include <linux/device.h>
- #include <linux/iopoll.h>
-@@ -63,11 +64,19 @@
- /* The default bus frequency, which is an empirical value */
- #define LS2X_I2C_FREQ_STD	(33 * HZ_PER_KHZ)
- 
-+/* The div of i2c reference clock on LS2K0500/2K1000/2K2000 */
-+#define LS2X_I2C_2K_CLOCK_DIV	40
-+
-+/* The div of i2c reference clock on LS7A1000/7A2000 */
-+#define LS2X_I2C_7A_CLOCK_DIV	50
-+
- struct ls2x_i2c_priv {
- 	struct i2c_adapter	adapter;
- 	void __iomem		*base;
- 	struct i2c_timings	i2c_t;
- 	struct completion	cmd_complete;
-+	unsigned int		div;
-+	unsigned int		pclk;
- };
- 
- /*
-@@ -107,12 +116,13 @@ static void ls2x_i2c_adjust_bus_speed(struct ls2x_i2c_priv *priv)
- 	else
- 		t->bus_freq_hz = LS2X_I2C_FREQ_STD;
- 
-+	val = (priv->pclk * 10) / (priv->div * t->bus_freq_hz) - 1;
-+
- 	/*
- 	 * According to the chip manual, we can only access the registers as bytes,
- 	 * otherwise the high bits will be truncated.
- 	 * So set the I2C frequency with a sequential writeb() instead of writew().
- 	 */
--	val = LS2X_I2C_PCLK_FREQ / (5 * t->bus_freq_hz) - 1;
- 	writeb(FIELD_GET(GENMASK(7, 0), val), priv->base + I2C_LS2X_PRER_LO);
- 	writeb(FIELD_GET(GENMASK(15, 8), val), priv->base + I2C_LS2X_PRER_HI);
- }
-@@ -287,6 +297,7 @@ static const struct i2c_algorithm ls2x_i2c_algo = {
- static int ls2x_i2c_probe(struct platform_device *pdev)
- {
- 	int ret, irq;
-+	struct clk *clk;
- 	struct i2c_adapter *adap;
- 	struct ls2x_i2c_priv *priv;
- 	struct device *dev = &pdev->dev;
-@@ -304,6 +315,25 @@ static int ls2x_i2c_probe(struct platform_device *pdev)
- 	if (irq < 0)
- 		return irq;
- 
-+	if (dev_of_node(dev)) {
-+		clk = devm_clk_get_optional_enabled(dev, NULL);
-+		if (!IS_ERR_OR_NULL(clk))
-+			priv->pclk = clk_get_rate(clk);
-+		else
-+			priv->pclk = LS2X_I2C_PCLK_FREQ;
-+
-+		priv->div = (unsigned long)device_get_match_data(dev);
-+	} else {
-+		/* clocks and clock-div are only ACPI properties. */
-+		ret = device_property_read_u32(dev, "clocks", &priv->pclk);
-+		if (ret)
-+			priv->pclk = LS2X_I2C_PCLK_FREQ;
-+
-+		ret = device_property_read_u32(dev, "clock-div", &priv->div);
-+		if (ret || !priv->div)
-+			priv->div = LS2X_I2C_7A_CLOCK_DIV;
-+	}
-+
- 	/* Add the i2c adapter */
- 	adap = &priv->adapter;
- 	adap->retries = 5;
-@@ -349,8 +379,8 @@ static DEFINE_RUNTIME_DEV_PM_OPS(ls2x_i2c_pm_ops,
- 				 ls2x_i2c_suspend, ls2x_i2c_resume, NULL);
- 
- static const struct of_device_id ls2x_i2c_id_table[] = {
--	{ .compatible = "loongson,ls2k-i2c" },
--	{ .compatible = "loongson,ls7a-i2c" },
-+	{ .compatible = "loongson,ls2k-i2c", .data = (void *)LS2X_I2C_2K_CLOCK_DIV, },
-+	{ .compatible = "loongson,ls7a-i2c", .data = (void *)LS2X_I2C_7A_CLOCK_DIV, },
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, ls2x_i2c_id_table);
+Thanks.
+Binbin
+
+=========
+V4:
+- Fix some issues from sashiko.
+Patch (1/2):
+ - Update commit message;
+ - Use common APIs to calculate DLC;
+ - Correct CAN_RTR_FLAG judgement;
+ - Add skb check for CAN_STATE_ERROR_ACTIVE case;
+ - Use regmap_write() rather than regmap_update_bits() to
+   disable all interrupts;
+ - Add napi_disable() in error paths;
+ - Add `clock-frequency` return value check;
+ - More comments for macros.
+
+Link to V3:
+https://lore.kernel.org/all/cover.1782787997.git.zhoubinbin@loongson.cn/
+
+V3:
+Patch (1/2):
+ - Replace the switch-case statement with a calculated mask in
+   `loongson_canfd_get_txbuf_sts()`;
+ - Change `loongson_canfd_reset()` return type to `void`;
+ - Drop old code in `loongson_canfd_set_btr()`;
+ - Rename `loongson_canfd_set_mode()` to `loongson_canfd_set_conf_mode()`;
+ - Drop `cf->__res*` usage;
+ - Drop unnecessary macro definitions;
+ - Add `netif_napi_del()` in probe error route path;
+ - Replace ternary operator with `if-else`;
+ - Drop stats->rx_packets and stats->rx_bytes count in CAN error frames;
+ - Add ethtool_ops;
+ - Add CAN_CTRLMODE_CC_LEN8_DLC;
+
+Patch (2/2):
+ - Fix W=2 warning;
+ - Rename get_rx_frc() -> get_rxbuf_empty();
+ - Put `loongson_canfd_rxdma_remove()` before free_candev();
+ - Adjust the RXDMA probe process.
+
+Link to V2:
+https://lore.kernel.org/all/cover.1780908445.git.zhoubinbin@loongson.cn/
+
+V2:
+Patch (1/2):
+ - Put all code into one file;
+ - Add COMPILE_TEST Kconfig option;
+ - Rewrite Kconfig description;
+ - Use `regmap_test_bits()` to simplify bit field checks;
+ - Drop odd FIELD_GET() usage;
+ - Don't use FIELD_GET() for a single bit;
+ - Use an if/else instead of the ternary operator;
+ - Use the CAN TDC framework to get the SSP value;
+ - Use guard(spinlock)/scoped_guard(spinlock);
+ - Use netdev_debug() to be less verboss;
+ - Check for memory allocation failure;
+ - Add CAN_ERR_CNT flag;
+ - Drop unused REG_DATA_xx_yy_W_DATA_yy definition;
+ - Add more function comment;
+
+Link to V1:
+https://lore.kernel.org/all/cover.1777273055.git.zhoubinbin@loongson.cn/
+
+Binbin Zhou (2):
+  can: Add Loongson CAN-FD controller driver
+  can: loongson_canfd: Add RXDMA support
+
+ MAINTAINERS                      |    7 +
+ drivers/net/can/Kconfig          |   11 +
+ drivers/net/can/Makefile         |    1 +
+ drivers/net/can/loongson_canfd.c | 1853 ++++++++++++++++++++++++++++++
+ 4 files changed, 1872 insertions(+)
+ create mode 100644 drivers/net/can/loongson_canfd.c
+
+
+base-commit: b266bacba796ff5c4dcd2ae2fc08aacf7ab39153
 -- 
-2.47.2
+2.52.0
 
