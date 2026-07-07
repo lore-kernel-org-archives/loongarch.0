@@ -1,45 +1,56 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 750403ABD90
-	for <loongarch@lists.linux.dev>; Tue,  7 Jul 2026 06:47:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C047C3B8130;
+	Tue,  7 Jul 2026 07:21:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783406872; cv=none; b=WMgDHWUslLxijcoRZH0smpkFPvcKfZ8aEWRWpTlOhIOO0lPKFPE8fzAA04ieOyoFTGYs7weI8YI3xV9IDP1EWjlIIhiK/HiSFS0e4HkqF3aTlAaE5Dl9HAmMhU2PTlyI7ND2jqovSdlqTz1MhGkwHZ8Mk4OdfNVUb33p57MMgqA=
+	t=1783408894; cv=none; b=tc+qV+p8Jl8zBY3OFNcayy+DwAsvuFc2+3o0I64R5fTb5c9IOUQr95mYQnztoLOIigaFOGY1/nHWYMsCBpwsWIQq36pFF6GMr8R9nE+aoFpWe3YwumsIPHHcCiWx2nVsTSYzBYqvLwG7yzR9UjB3Am2zdwoDnEq6k4xyVFC/idU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783406872; c=relaxed/simple;
-	bh=SsZpmwGPyG/d5MkuvyqBSVwYAx4Vkr8Q3+3h+a5P+rY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LwatlLSCOFXvveUo6c80Y09Rwfk1d/2fRQtETsgC3aeHxfQ1AVeJVd1jiS86j+vuoE5DmiwJR8WzAkFmK/wHKyQS/2oaPilwu1JDYhYJnFyAQvGLsMa5qyhWWpd91q/mFhZ+Jkwo4DO7Cxxg1zq+3VseCIrl98AaW4XPL3SDY24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=XDp4osp2; arc=none smtp.client-ip=91.218.175.171
+	s=arc-20240116; t=1783408894; c=relaxed/simple;
+	bh=MeQcpc2tDQ5s9leAsYyxZOMA2rT3vEy3DB+XblR7N2w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gKxgSM7wFy9RlDMs3eRBSlgYs8NpEof/WUA3sl/X9cpKYs/xsypjTX0F5gVzzJPrcz1NRDyVod37IQ2SY97CyyNy1bfQzsP25mLJTqpooLgK6LtV9UhKiBRjhKd7tUIkFMJgNEf+UJFdf10BiAYkWXC+i2YexSw+Q3IYgECDax4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qUnewggN; arc=none smtp.client-ip=95.215.58.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XDp4osp2"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qUnewggN"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1783406868;
+	t=1783408884;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=H+ZbaHB8r4c4OtxkmyaRaJ+GF9AV1trwxBbCUaJXsoI=;
-	b=XDp4osp2qthRNLpT4rK7vqUjlRYnLRKOU+jN6Rcv4dUa+h4bTZdzG01zUEHpf0E3pcWmIg
-	cR2RGjTp9aZ/nRmWCaenAhtwLl1Hn+919dDO6IXTMJQ9ooAUy/3oiIfoGulGV63KVroDQ+
-	2ASttmAgNICXUsWXug5rswDNqwWG4mc=
-From: haoran.jiang@linux.dev
-To: loongarch@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org,
-	chenhuacai@kernel.org,
-	kernel@xen0n.name,
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Bmv7zXhBcj7/STN4MChdYvHH/8l8XAPSnk/Tz1Mkcho=;
+	b=qUnewggN+jE8Zis1Z074O4hdxEkeuSABbiV/SKUs1UKRlG2PitGdjzLOLt87yKuoxVe/Nc
+	Wtzl0CjBH8xM0KsERViMsgsAqW8uS9XgeOv0OwRKfCOhruQX4LUx4rXATEb5Z66XYCU0so
+	fFvAKmzS8/RqZfV3+ynfHR6umHkBFi4=
+From: George Guo <dongtai.guo@linux.dev>
+To: chenhuacai@kernel.org,
+	jpoimboe@kernel.org,
+	peterz@infradead.org,
+	jikos@kernel.org,
+	mbenes@suse.cz,
+	pmladek@suse.com
+Cc: kernel@xen0n.name,
+	joe.lawrence@redhat.com,
+	rostedt@goodmis.org,
+	ardb@kernel.org,
+	nathan@kernel.org,
+	nick.desaulniers+lkml@gmail.com,
 	yangtiezhu@loongson.cn,
-	Haoran Jiang <jianghaoran@kylinos.cn>,
-	Xiujie Jiang <jiangxiujie@kylinos.cn>
-Subject: [PATCH 2/2] LoongArch: Add support to dump the kernel page tables
-Date: Tue,  7 Jul 2026 14:45:56 +0800
-Message-Id: <20260707064556.371881-3-haoran.jiang@linux.dev>
-In-Reply-To: <20260707064556.371881-1-haoran.jiang@linux.dev>
-References: <20260707064556.371881-1-haoran.jiang@linux.dev>
+	jiaxun.yang@flygoat.com,
+	liukexin@kylinos.cn,
+	guodongtai@kylinos.cn,
+	xry111@xry111.site,
+	wangyuli@aosc.io,
+	loongarch@lists.linux.dev,
+	live-patching@vger.kernel.org,
+	llvm@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 00/12] LoongArch: Add livepatch build (KLP) support
+Date: Tue,  7 Jul 2026 15:20:19 +0800
+Message-Id: <20260707072031.231066-1-dongtai.guo@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -49,526 +60,175 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-From: Haoran Jiang <jianghaoran@kylinos.cn>
+This series adds LoongArch support for the klp-build livepatch tooling,
+enabling automated livepatch module generation using objtool on
+LoongArch.
 
-In a similar manner to riscv,arm64,x86 etc.,this patch allows
-dumping the page tables of the LoongArch page-mapped virtual memory
-region via a debugfs file, which is useful for kernel developers to
-inspect page table layouts and verify permissions and type settings.
+It is based on Josh Poimboeuf's klp-build series [1] (see base-commit
+below, unchanged from v1/v2) and extends it with the LoongArch-specific
+objtool and build pieces, plus toolchain/relocation fixes required to
+make livepatch modules load, generate, and run correctly under both GCC
+and Clang.
 
-Co-developed-by: Xiujie Jiang <jiangxiujie@kylinos.cn>
-Signed-off-by: Xiujie Jiang <jiangxiujie@kylinos.cn>
-Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
----
- arch/loongarch/Kconfig     |   1 +
- arch/loongarch/mm/Makefile |   1 +
- arch/loongarch/mm/ptdump.c | 474 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 476 insertions(+)
- create mode 100644 arch/loongarch/mm/ptdump.c
+Overview:
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 2c5de66bf047..632998c64a74 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -25,6 +25,7 @@ config LOONGARCH
- 	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
- 	select ARCH_HAS_PREEMPT_LAZY
- 	select ARCH_HAS_PTE_SPECIAL if 64BIT
-+	select ARCH_HAS_PTDUMP
- 	select ARCH_HAS_SET_MEMORY
- 	select ARCH_HAS_SET_DIRECT_MAP
- 	select ARCH_HAS_STRICT_MODULE_RWX
-diff --git a/arch/loongarch/mm/Makefile b/arch/loongarch/mm/Makefile
-index 2aae3773de77..0be8ee87fc5b 100644
---- a/arch/loongarch/mm/Makefile
-+++ b/arch/loongarch/mm/Makefile
-@@ -10,5 +10,6 @@ obj-y				+= init.o cache.o tlb.o tlbex.o extable.o \
- obj-$(CONFIG_HIGHMEM)		+= highmem.o
- obj-$(CONFIG_HUGETLB_PAGE)	+= hugetlbpage.o
- obj-$(CONFIG_KASAN)		+= kasan_init.o
-+obj-$(CONFIG_PTDUMP_DEBUGFS)            += ptdump.o
- 
- KASAN_SANITIZE_kasan_init.o     := n
-diff --git a/arch/loongarch/mm/ptdump.c b/arch/loongarch/mm/ptdump.c
-new file mode 100644
-index 000000000000..003ed1d55615
---- /dev/null
-+++ b/arch/loongarch/mm/ptdump.c
-@@ -0,0 +1,474 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Derived from riscv implementation
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/debugfs.h>
-+#include <linux/seq_file.h>
-+#include <linux/ptdump.h>
-+#include <linux/pgtable.h>
-+#include <asm/kasan.h>
-+
-+#define _PAGE_PLV_VAL 0x0
-+
-+#define pt_dump_seq_printf(m, fmt, args...)	\
-+({						\
-+	if (m)					\
-+		seq_printf(m, fmt, ##args);	\
-+})
-+
-+#define pt_dump_seq_puts(m, fmt)	\
-+({					\
-+	if (m)				\
-+		seq_puts(m, fmt);	\
-+})
-+
-+/*
-+ * The page dumper groups page table entries of the same type into a single
-+ * description. It uses pg_state to track the range information while
-+ * iterating over the pte entries. When the continuity is broken it then
-+ * dumps out a description of the range.
-+ */
-+struct pg_state {
-+	struct ptdump_state ptdump;
-+	struct seq_file *seq;
-+	const struct addr_marker *marker;
-+	unsigned long start_address;
-+	unsigned long start_pa;
-+	unsigned long last_pa;
-+	int level;
-+	u64 current_prot;
-+	bool check_wx;
-+	unsigned long wx_pages;
-+};
-+
-+/* Address marker */
-+struct addr_marker {
-+	unsigned long start_address;
-+	const char *name;
-+};
-+
-+/* Private information for debugfs */
-+struct ptd_mm_info {
-+	struct mm_struct                *mm;
-+	const struct addr_marker        *markers;
-+	unsigned long base_addr;
-+	unsigned long end;
-+};
-+
-+/* Page Table Entry */
-+struct prot_bits {
-+	u64 mask;
-+	u64 val;
-+	const char *set;
-+	const char *clear;
-+};
-+
-+/* Page Level */
-+struct pg_level {
-+	const char *name;
-+	u64 mask;
-+};
-+
-+enum address_markers_idx {
-+	PCI_IO_START_NR,
-+	PCI_IO_END_NR,
-+	MODULES_START_NR,
-+	MODULES_END_NR,
-+	VMALLOC_START_NR,
-+	VMALLOC_END_NR,
-+#ifdef CONFIG_SPARSEMEM_VMEMMAP
-+	VMEMMAP_START_NR,
-+	VMEMMAP_END_NR,
-+#endif
-+#ifdef CONFIG_KFENCE
-+	KFENCE_AREA_START_NR,
-+	KFENCE_AREA_END_NR,
-+#endif
-+#ifdef CONFIG_KASAN
-+	KASAN_SHADOW_START_NR,
-+	KASAN_SHADOW_END_NR,
-+#endif
-+	FIXMAP_START_NR,
-+	FIXMAP_END_NR,
-+	END_OF_SPACE_NR
-+};
-+
-+
-+
-+static struct addr_marker address_markers[] = {
-+	{0, "PCI I/O start"},
-+	{0, "PCI I/O end"},
-+	{0, "modules start"},
-+	{0, "modules end"},
-+	{0, "vmalloc() area"},
-+	{0, "vmalloc() end"},
-+#ifdef CONFIG_SPARSEMEM_VMEMMAP
-+	{0, "vmemmap start"},
-+	{0, "vmemmap end"},
-+#endif
-+#ifdef CONFIG_KFENCE
-+	{0, "kfence area start"},
-+	{0, "kfence area end"},
-+#endif
-+#ifdef CONFIG_KASAN
-+	{0, "Kasan shadow start"},
-+	{0, "Kasan shadow end"},
-+#endif
-+	{0, "Fixmap start"},
-+	{0, "Fixmap end"},
-+	{-1, NULL},
-+};
-+
-+
-+static struct ptd_mm_info kernel_ptd_info = {
-+	.mm		= &init_mm,
-+	.markers	= address_markers,
-+	.base_addr	= 0,
-+	.end		= ULONG_MAX,
-+};
-+
-+static const struct prot_bits pte_bits[] = {
-+	{
-+		.mask = _PAGE_VALID,
-+		.val = _PAGE_VALID,
-+		.set = "V",
-+		.clear = " ",
-+	}, {
-+		.mask = _PAGE_DIRTY,
-+		.val = _PAGE_DIRTY,
-+		.set = "D",
-+		.clear = " ",
-+	}, {
-+		.mask = _PAGE_PLV,
-+		.val = _PAGE_PLV_VAL,
-+		.set = "KERN",
-+		.clear = "USR ",
-+	}, {
-+		.mask = _CACHE_MASK,
-+		.val = _CACHE_MASK,
-+		.set = "  ",
-+		.clear = "SUC",
-+	}, {
-+		.mask = _PAGE_GLOBAL,
-+		.val = _PAGE_GLOBAL,
-+		.set = "G",
-+		.clear = " ",
-+	}, {
-+		.mask = _PAGE_PRESENT,
-+		.val = _PAGE_PRESENT,
-+		.set = "P",
-+		.clear = " ",
-+	}, {
-+		.mask = _PAGE_WRITE,
-+		.val = _PAGE_WRITE,
-+		.set = "W",
-+		.clear = " ",
-+	}, {
-+		.mask = _PAGE_HGLOBAL,
-+		.val = _PAGE_HGLOBAL,
-+		.set = "G",
-+		.clear = "  ",
-+	}, {
-+		.mask = _PAGE_NO_READ,
-+		.val = _PAGE_NO_READ,
-+		.set = "NR",
-+		.clear = "  ",
-+	}, {
-+		.mask = _PAGE_NO_EXEC,
-+		.val = _PAGE_NO_EXEC,
-+		.set = "NX",
-+		.clear = "  ",
-+	}, {
-+		.mask = _PAGE_RPLV,
-+		.val = _PAGE_RPLV,
-+		.set = "RPLV",
-+		.clear = "    ",
-+	}
-+};
-+
-+static struct pg_level pg_level[] = {
-+	{ /* pgd */
-+		.name = "PGD",
-+	}, { /* p4d */
-+		.name = (CONFIG_PGTABLE_LEVELS > 4) ? "P4D" : "PGD",
-+	}, { /* pud */
-+		.name = (CONFIG_PGTABLE_LEVELS > 3) ? "PUD" : "PGD",
-+	}, { /* pmd */
-+		.name = (CONFIG_PGTABLE_LEVELS > 2) ? "PMD" : "PGD",
-+	}, { /* pte */
-+		.name = "PTE",
-+	},
-+};
-+
-+static void dump_prot(struct pg_state *st)
-+{
-+
-+	unsigned int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(pte_bits); i++) {
-+		const char *s;
-+
-+		if (pte_bits[i].mask == _CACHE_MASK) {
-+			if ((st->current_prot & pte_bits[i].mask) == _CACHE_CC)
-+				s = "CC ";
-+			else if ((st->current_prot & pte_bits[i].mask) == _CACHE_WUC)
-+				s = "WUC";
-+			else
-+				s = pte_bits[i].clear;
-+		} else if (pte_bits[i].mask == _PAGE_GLOBAL) {
-+			if ((st->current_prot & pte_bits[i].mask) == pte_bits[i].val) {
-+				if (st->level != 4)
-+					s = "PSE";
-+				else
-+					s = pte_bits[i].set;
-+			} else {
-+				s = pte_bits[i].clear;
-+			}
-+
-+		} else {
-+			if ((st->current_prot & pte_bits[i].mask) == pte_bits[i].val)
-+				s = pte_bits[i].set;
-+			else
-+				s = pte_bits[i].clear;
-+		}
-+
-+
-+		if (s)
-+			pt_dump_seq_printf(st->seq, " %s", s);
-+	}
-+
-+}
-+
-+
-+#ifdef CONFIG_64BIT
-+#define ADDR_FORMAT	"0x%016lx"
-+#else
-+#define ADDR_FORMAT	"0x%08lx"
-+#endif
-+static void dump_addr(struct pg_state *st, unsigned long addr)
-+{
-+	static const char units[] = "KMGTPE";
-+	const char *unit = units;
-+	unsigned long delta;
-+
-+	pt_dump_seq_printf(st->seq, ADDR_FORMAT "-" ADDR_FORMAT "   ",
-+			   st->start_address, addr);
-+
-+	pt_dump_seq_printf(st->seq, " " ADDR_FORMAT " ", st->start_pa);
-+	delta = (addr - st->start_address) >> 10;
-+
-+	while (!(delta & 1023) && unit[1]) {
-+		delta >>= 10;
-+		unit++;
-+	}
-+
-+	pt_dump_seq_printf(st->seq, "%9lu%c %s", delta, *unit,
-+			   pg_level[st->level].name);
-+}
-+
-+static void note_prot_wx(struct pg_state *st, unsigned long addr)
-+{
-+	if (!st->check_wx)
-+		return;
-+	if ((st->current_prot & _PAGE_WRITE) == 0)
-+		return;
-+	if ((st->current_prot & _PAGE_NO_EXEC) == _PAGE_NO_EXEC)
-+		return;
-+
-+	WARN_ONCE(1, "loongarch/mm: Found insecure W+X mapping at address %p/%pS\n",
-+			(void *)st->start_address, (void *)st->start_address);
-+
-+	st->wx_pages += (addr - st->start_address) / PAGE_SIZE;
-+
-+}
-+
-+static void note_page(struct ptdump_state *pt_st, unsigned long addr,
-+		      int level, u64 val)
-+{
-+	struct pg_state *st = container_of(pt_st, struct pg_state, ptdump);
-+	u64 pa = PFN_PHYS(pte_pfn(__pte(val)));
-+	u64 prot = 0;
-+
-+	if (level >= 0)
-+		prot = val & pg_level[level].mask;
-+
-+	if (st->level == -1) {
-+		st->level = level;
-+		st->current_prot = prot;
-+		st->start_address = addr;
-+		st->start_pa = pa;
-+		st->last_pa = pa;
-+		pt_dump_seq_printf(st->seq, "---[ %s ]---\n", st->marker->name);
-+	} else if (prot != st->current_prot ||
-+		   level != st->level || addr >= st->marker[1].start_address) {
-+		if (st->current_prot) {
-+			note_prot_wx(st, addr);
-+			dump_addr(st, addr);
-+			dump_prot(st);
-+			pt_dump_seq_puts(st->seq, "\n");
-+		}
-+
-+		while (addr >= st->marker[1].start_address) {
-+			st->marker++;
-+			pt_dump_seq_printf(st->seq, "---[ %s ]---\n",
-+					   st->marker->name);
-+		}
-+
-+		st->start_address = addr;
-+		st->start_pa = pa;
-+		st->last_pa = pa;
-+		st->current_prot = prot;
-+		st->level = level;
-+	} else {
-+		st->last_pa = pa;
-+	}
-+}
-+
-+static void note_page_pte(struct ptdump_state *pt_st, unsigned long addr, pte_t pte)
-+{
-+	note_page(pt_st, addr, 4, pte_val(pte));
-+}
-+
-+static void note_page_pmd(struct ptdump_state *pt_st, unsigned long addr, pmd_t pmd)
-+{
-+	note_page(pt_st, addr, 3, pmd_val(pmd));
-+}
-+
-+static void note_page_pud(struct ptdump_state *pt_st, unsigned long addr, pud_t pud)
-+{
-+	note_page(pt_st, addr, 2, pud_val(pud));
-+}
-+
-+static void note_page_p4d(struct ptdump_state *pt_st, unsigned long addr, p4d_t p4d)
-+{
-+	note_page(pt_st, addr, 1, p4d_val(p4d));
-+}
-+
-+static void note_page_pgd(struct ptdump_state *pt_st, unsigned long addr, pgd_t pgd)
-+{
-+	note_page(pt_st, addr, 0, pgd_val(pgd));
-+}
-+
-+static void note_page_flush(struct ptdump_state *pt_st)
-+{
-+	pte_t pte_zero = {0};
-+
-+	note_page(pt_st, 0, -1, pte_val(pte_zero));
-+}
-+
-+static void ptdump_walk(struct seq_file *s, struct ptd_mm_info *pinfo)
-+{
-+	struct pg_state st = {
-+		.seq = s,
-+		.marker = pinfo->markers,
-+		.level = -1,
-+		.ptdump = {
-+			.note_page_pte = note_page_pte,
-+			.note_page_pmd = note_page_pmd,
-+			.note_page_pud = note_page_pud,
-+			.note_page_p4d = note_page_p4d,
-+			.note_page_pgd = note_page_pgd,
-+			.note_page_flush = note_page_flush,
-+			.range = (struct ptdump_range[]) {
-+				{pinfo->base_addr, pinfo->end},
-+				{0, 0}
-+			}
-+		}
-+	};
-+
-+	ptdump_walk_pgd(&st.ptdump, pinfo->mm, NULL);
-+}
-+
-+bool ptdump_check_wx(void)
-+{
-+	struct pg_state st = {
-+		.seq = NULL,
-+		.marker = (struct addr_marker[]) {
-+			{0, NULL},
-+			{-1, NULL},
-+		},
-+		.level = -1,
-+		.check_wx = true,
-+		.ptdump = {
-+			.note_page_pte = note_page_pte,
-+			.note_page_pmd = note_page_pmd,
-+			.note_page_pud = note_page_pud,
-+			.note_page_p4d = note_page_p4d,
-+			.note_page_pgd = note_page_pgd,
-+			.note_page_flush = note_page_flush,
-+			.range = (struct ptdump_range[]) {
-+				{vm_map_base, ULONG_MAX},
-+				{0, 0}
-+			}
-+		}
-+	};
-+
-+	ptdump_walk_pgd(&st.ptdump, &init_mm, NULL);
-+
-+	if (st.wx_pages) {
-+		pr_warn("Checked W+X mappings: failed, %lu W+X pages found\n",
-+			st.wx_pages);
-+
-+		return false;
-+	}
-+
-+	pr_info("Checked W+X mappings: passed, no W+X pages found\n");
-+
-+	return true;
-+}
-+
-+static int ptdump_show(struct seq_file *m, void *v)
-+{
-+	struct ptd_mm_info *info = m->private;
-+
-+	ptdump_walk(m, info);
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(ptdump);
-+
-+static int __init ptdump_init(void)
-+{
-+	unsigned int i, j;
-+
-+	address_markers[PCI_IO_START_NR].start_address = (unsigned long)PCI_IOBASE;
-+	address_markers[PCI_IO_END_NR].start_address = (unsigned long)PCI_IOBASE + IO_SPACE_LIMIT;
-+
-+	address_markers[MODULES_START_NR].start_address = MODULES_VADDR;
-+	address_markers[MODULES_END_NR].start_address = MODULES_END;
-+
-+	address_markers[VMALLOC_START_NR].start_address = VMALLOC_START;
-+	address_markers[VMALLOC_END_NR].start_address = VMALLOC_END;
-+
-+#ifdef CONFIG_SPARSEMEM_VMEMMAP
-+	address_markers[VMEMMAP_START_NR].start_address = (unsigned long)vmemmap;
-+	address_markers[VMEMMAP_END_NR].start_address = VMEMMAP_END;
-+#endif
-+
-+#ifdef CONFIG_KFENCE
-+	address_markers[KFENCE_AREA_START_NR].start_address = KFENCE_AREA_START;
-+	address_markers[KFENCE_AREA_END_NR].start_address = KFENCE_AREA_END;
-+#endif
-+
-+#ifdef CONFIG_KASAN
-+	address_markers[KASAN_SHADOW_START_NR].start_address = KASAN_SHADOW_START;
-+	address_markers[KASAN_SHADOW_END_NR].start_address = KASAN_SHADOW_END;
-+#endif
-+
-+	address_markers[FIXMAP_START_NR].start_address = FIXADDR_START;
-+	address_markers[FIXMAP_END_NR].start_address = FIXADDR_TOP;
-+
-+	kernel_ptd_info.base_addr = vm_map_base;
-+
-+	for (i = 0; i < ARRAY_SIZE(pg_level); i++) {
-+		for (j = 0; j < ARRAY_SIZE(pte_bits); j++)
-+			pg_level[i].mask |= pte_bits[j].mask;
-+	}
-+
-+	debugfs_create_file("kernel_page_tables", 0400, NULL, &kernel_ptd_info, &ptdump_fops);
-+
-+	return 0;
-+}
-+
-+device_initcall(ptdump_init);
+ - Patches 1-8 are unchanged from v2 [3]: the LoongArch objtool hooks,
+   special-section marking, the -fPIC/-mdirect-extern-access fixes,
+   EFI linking, KLP_SYSCALL_DEFINEx() support, and finally wiring up
+   LoongArch klp-build (kept last so the series stays bisectable).
+ - Patches 9-12 are new in v3, fixing issues Joe Lawrence found across
+   two rounds of review by actually running the full klp-build flow
+   (see Changes since v2 below for details).
+
+All new patches (9-12) fix bugs in objtool/klp-diff.c and the LoongArch
+Kconfig; none of them touch other architectures.
+
+Testing:
+
+GCC on LoongArch hardware: livepatch modules generated, loaded, and
+exercised (unchanged from v2).
+
+Clang 21.1.8 on LoongArch hardware, reproduced end to end with Joe's
+exact test case (test-joe.patch below), since it happens to exercise
+patches 10-12 together: netif_rx_internal() has __ex_table entries,
+a __bug_table entry, and three __jump_table static keys, one of which
+(a tracepoint's key) is unexported and not defined in the same
+translation unit -- exactly the case patch 12 fixes.
+
+  $ cat test-joe.patch
+  diff --git a/net/core/dev.c b/net/core/dev.c
+  index 06c195906231..14fd3d5f351a 100644
+  --- a/net/core/dev.c
+  +++ b/net/core/dev.c
+  @@ -5717,6 +5717,7 @@ static int netif_rx_internal(struct sk_buff *skb)
+                  unsigned int qtail;
+
+                  ret = enqueue_to_backlog(skb, smp_processor_id(), &qtail);
+  +               pr_info("test");
+          }
+          return ret;
+   }
+
+  $ LLVM=/path/to/clang-21/bin/ ./scripts/livepatch/klp-build -T test-joe.patch
+  ...
+  $ ls livepatch-test-joe.ko
+
+klp-build completes cleanly: no "duplicate reloc" (patch 12), no
+"Cannot find symbol for section" (patch 9), and the __ex_table/
+__jump_table entries for netif_rx_internal are present in the output
+module (patches 10-11).  The module was then loaded into a VM running
+a matching Clang-built kernel:
+
+  # insmod livepatch-test-joe.ko
+  [  105.584252] livepatch: enabling patch 'livepatch_test_joe'
+  [  105.586141] livepatch: 'livepatch_test_joe': starting patching transition
+  [  106.824310] livepatch: 'livepatch_test_joe': patching complete
+  [  120.036530] test
+
+  # cat /sys/kernel/livepatch/livepatch_test_joe/{enabled,transition}
+  1
+  0
+
+Toggling the netif_rx tracepoint exercises the jump-table relocation
+patch 12 folds for the unexported __tracepoint_netif_rx key, and lets
+us cross-check the patch's own pr_info() against independent evidence
+that the static branch actually flipped:
+
+  # echo 1 > /sys/kernel/debug/tracing/events/net/netif_rx/enable
+  # ping -c2 127.0.0.1
+  # cat /sys/kernel/debug/tracing/trace | tail -4
+              ping-1267    [001] b....   472.753651: netif_rx: dev=lo skbaddr=... len=84
+              ping-1267    [001] b.s2.   472.753671: netif_rx: dev=lo skbaddr=... len=84
+              ping-1267    [001] b....   473.762993: netif_rx: dev=lo skbaddr=... len=84
+              ping-1267    [001] b.s2.   473.763096: netif_rx: dev=lo skbaddr=... len=84
+  # dmesg | tail -4
+  [  472.753653] test
+  [  472.753671] test
+  [  473.762994] test
+  [  473.763096] test
+
+Each traced packet has a matching "test" line at the same timestamp
+(microsecond-aligned), confirming the tracepoint's static-key
+relocation and the patch's own code path are both live at once.
+Disabling and unloading works cleanly:
+
+  # echo 0 > /sys/kernel/livepatch/livepatch_test_joe/enabled
+  [  557.922932] livepatch: 'livepatch_test_joe': starting unpatching transition
+  [  558.905248] livepatch: 'livepatch_test_joe': unpatching complete
+  # rmmod livepatch_test_joe
+
+Changes since v2 [3]:
+ - Patches 1-8 are unchanged.
+ - New patch 9: select FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY.
+   arch/loongarch/Makefile already builds with
+   -fpatchable-function-entry=2, but nothing selected this, so kbuild
+   ran a pointless recordmcount pass on every object.  Harmless under
+   GCC (GAS always emits a section symbol for recordmcount to anchor
+   on), but it fails under Clang with -ffunction-sections (as klp-build
+   uses) for any __weak function that ends up alone in its section,
+   e.g. sched_clock.  (Joe Lawrence)
+ - New patch 10: convert local-label references in special sections.
+   GCC/GAS on LoongArch reference __ex_table/__bug_table/__jump_table
+   entries via a local text label instead of the usual "section symbol
+   + offset" that objtool's klp-diff.c assumes; the label is never
+   cloned into the livepatch module, so such entries were silently
+   dropped from GCC-built modules with no error at build or load time.
+   (Joe Lawrence)
+ - New patch 11: fix ANNOTATE_DATA_SPECIAL parsing for the same local
+   label references.  create_fake_symbols() computed each annotated
+   entry's offset from the relocation's addend alone, which is only
+   correct for the section-symbol form; with local labels, every entry
+   in a special section got offset 0, producing a single fake symbol
+   that covered (and pulled into the output module) the section's
+   entire contents instead of just the patched function's entries.
+   Found while verifying patch 10 with a real special-section entry.
+ - New patch 12: fold LoongArch's paired ADD/SUB relocations into a
+   single PC-relative one.  The "key - ." field of a __jump_table entry
+   can come out as two relocations at the same offset (R_LARCH_ADD64 +
+   R_LARCH_SUB64) when Clang's integrated assembler encounters a key
+   that isn't defined in the same translation unit (e.g. a tracepoint's
+   static key); objtool only allows one relocation per offset, so
+   cloning such an entry failed with "duplicate reloc".  (Joe Lawrence)
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux.git/log/?h=klp-build-arm64
+[2] https://lore.kernel.org/all/20260604065317.219777-1-dongtai.guo@linux.dev/
+[3] https://lore.kernel.org/all/20260608100852.325413-1-dongtai.guo@linux.dev/
+
+George Guo (12):
+  objtool/LoongArch: Add arch_adjusted_addend() for KLP support
+  LoongArch: Mark special sections for KLP support
+  livepatch/klp-build: disable direct-extern-access for LoongArch to fix
+    kernel panic
+  livepatch/klp-build: build LoongArch with -fPIC to keep GOT-indirect
+    symbol references
+  LoongArch: Fix EFI linking with -fdata-sections
+  objtool/klp: Add LoongArch jump opcode bytes support
+  klp-build: Add LoongArch syscall patching macro
+  LoongArch: Add livepatch build (KLP) support
+  LoongArch: Select FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY
+  objtool/klp: Convert local label references in special sections
+  objtool/klp: Fix ANNOTATE_DATA_SPECIAL parsing for local label
+    references
+  objtool/klp: Fold LoongArch paired ADD/SUB relocations into PCREL
+
+ arch/loongarch/Kconfig                        |   2 +
+ arch/loongarch/include/asm/alternative-asm.h  |   5 +-
+ arch/loongarch/include/asm/alternative.h      |   6 +-
+ arch/loongarch/include/asm/asm-extable.h      |  10 +-
+ arch/loongarch/include/asm/bug.h              |   1 +
+ arch/loongarch/include/asm/jump_label.h       |   2 +
+ arch/loongarch/kernel/asm-offsets.c           |  20 ++++
+ arch/loongarch/kernel/vmlinux.lds.S           |   2 +-
+ include/linux/livepatch_helpers.h             |  22 ++++
+ scripts/livepatch/klp-build                   |  36 +++++-
+ tools/objtool/Makefile                        |   3 +-
+ tools/objtool/arch/loongarch/decode.c         | 108 ++++++++++++++++++
+ .../objtool/arch/loongarch/include/arch/elf.h |  18 +++
+ tools/objtool/klp-diff.c                      |  57 ++++++++-
+ 14 files changed, 280 insertions(+), 12 deletions(-)
+
+
+base-commit: 85afaba140a4b9f20fe8c8a64b24fc85f022d981
 -- 
-2.43.0
+2.25.1
 
