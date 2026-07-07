@@ -1,32 +1,32 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7FD83E025C
-	for <loongarch@lists.linux.dev>; Tue,  7 Jul 2026 07:22:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C333FDBF8;
+	Tue,  7 Jul 2026 07:22:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783408977; cv=none; b=pLBP7NkPOKVwkMrzcLR51XGGd3I46RH0riq4bAGt4zr/UJojfF/PdQMg8Vh/zgLpnNW8UmPl9aW95H47fQ0f3qs0ZTkTriK/vG/LFXlleHYrrPVQu1CWT15ws4mvO4JHZQKxwKs82sYX4O+7sK6aglc3TU1AU3Jnb2XgnJKQ+h0=
+	t=1783408984; cv=none; b=Gt2P/b24PwuijNaUpOld1DJL4d860qHjo/X/ll98tn2B6Nm0L+oNQyxFpBx6AR3tZ3/zY6NRrRcAI7spP4eRdG4NOi+jY0Ezpxveui07yWODUKpruI3Zleijfyx74cvso3BAuPZoIxPitIgj9GKtnf+lDyUz+cBvPc3LE3r0mYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783408977; c=relaxed/simple;
-	bh=OvI7222dt3pd1EshIbEJENw5/OnwTK2o+TJyWMgUtYI=;
+	s=arc-20240116; t=1783408984; c=relaxed/simple;
+	bh=cDfZSz3ivvl1QfWZ9jvAA+VablcjicxvJ0V6T4B9iOk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=N0mMiarO/glgtrC12Pbjx6mLpGofGqY0c3E3x7LYss/rIRcqRAAhA8kcJmwpy1XoXGJxf4ybe1McQUAoQ5UYomVoiRhsg9QdFz/nam64qhSTxs3I/pm6fWfNFBKXfEKDE0XgUe37nw+ZgHyulseo59Pv415rY1JRPGOJjVZbhoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lyZghniN; arc=none smtp.client-ip=95.215.58.179
+	 MIME-Version; b=P6ZkHOH7yblUDsYPOGQoqCGutSAWJGGlpAr+3nrYPu+JJf+qGJ8hEwUhRgKe6sv7Bd7r+8vNmEDWl7/FZAdRChJhaIFq5EJ2LsIBquKVSHN4Ptmi0wN4VyChcjtGleqlshpKP1cT4MUBGXGtp73403nnXghNBTP1Ckly6tIGEWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EMUY7YzG; arc=none smtp.client-ip=91.218.175.189
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lyZghniN"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EMUY7YzG"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1783408964;
+	t=1783408970;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=D3PtV/wdUNwaqt62doo9rdFl9ViQ6FDPrsmGB6jLREY=;
-	b=lyZghniNuv5oKni/+djF6R42b4KpSDFfaqiqzfVVx4qx2Ys1ReRT8GirINeedr+xn9EYWh
-	QTJlmJcT8zanvI4ffBY3sD6r5MxLIIgivY9xVkknTK8w8tVbeRTyvi19/qrrKJljAfv5kS
-	dOF8nx8//K/WdDh2HRmsx4cxhpsJfRc=
+	bh=WjOt6p1vyAYaMNIqwKJQkplVc88EqcFx+7171iEr4bE=;
+	b=EMUY7YzG9AtkFmqwvhtARSVTRoiK1iG1WCkW7gzzFJJG5LaNBTu0R7WHGPlv0/RT9FEKJr
+	VPKo4VAQt6YZkBMg92w1w7W3dKyZyMVK6QG2ZbDrchn2imEQajdxP3Xy+VhtoO06LTHe8P
+	F5e4qcZNGb+yKwseATxHXnOUKRKw0Rk=
 From: George Guo <dongtai.guo@linux.dev>
 To: chenhuacai@kernel.org,
 	jpoimboe@kernel.org,
@@ -50,9 +50,9 @@ Cc: kernel@xen0n.name,
 	live-patching@vger.kernel.org,
 	llvm@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 05/12] LoongArch: Fix EFI linking with -fdata-sections
-Date: Tue,  7 Jul 2026 15:20:24 +0800
-Message-Id: <20260707072031.231066-6-dongtai.guo@linux.dev>
+Subject: [PATCH v3 06/12] objtool/klp: Add LoongArch jump opcode bytes support
+Date: Tue,  7 Jul 2026 15:20:25 +0800
+Message-Id: <20260707072031.231066-7-dongtai.guo@linux.dev>
 In-Reply-To: <20260707072031.231066-1-dongtai.guo@linux.dev>
 References: <20260707072031.231066-1-dongtai.guo@linux.dev>
 Precedence: bulk
@@ -66,30 +66,76 @@ X-Migadu-Flow: FLOW_OUT
 
 From: George Guo <guodongtai@kylinos.cn>
 
-When building with func-fdata-sections, the .init.bss section gets split
-up into a bunch of .init.bss.<var> sections.  Make sure they get linked
-into .init.data.
+Implement arch_jump_opcode_bytes() for LoongArch so that klp checksums
+for jump/call instructions with non-relocated destination offsets are
+position-independent, mirroring the x86 and arm64 implementations.
+
+Mask out the embedded branch offset while preserving the opcode and the
+register operands, which differ per instruction format:
+
+  - B/BL (reg0i26):                  no regs -> 0xfc000000
+  - BEQZ/BNEZ/BCEQZ/BCNEZ (reg1i21): keep rj/cj -> 0xfc0003e0
+  - JIRL/BEQ/BNE/.../BGEU (reg2i16): keep rj/rd -> 0xfc0003ff
 
 Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
 Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
 Signed-off-by: George Guo <guodongtai@kylinos.cn>
 ---
- arch/loongarch/kernel/vmlinux.lds.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/objtool/arch/loongarch/decode.c | 41 +++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
 
-diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kernel/vmlinux.lds.S
-index 840d944c2f73..dc5fa017db94 100644
---- a/arch/loongarch/kernel/vmlinux.lds.S
-+++ b/arch/loongarch/kernel/vmlinux.lds.S
-@@ -96,7 +96,7 @@ SECTIONS
- #endif
- 
- 	.init.bss : {
--		*(.init.bss)
-+		*(.init.bss .init.bss.*)
+diff --git a/tools/objtool/arch/loongarch/decode.c b/tools/objtool/arch/loongarch/decode.c
+index 674e4efd138f..12facd0cc8d1 100644
+--- a/tools/objtool/arch/loongarch/decode.c
++++ b/tools/objtool/arch/loongarch/decode.c
+@@ -432,6 +432,47 @@ unsigned long arch_jump_table_sym_offset(struct reloc *reloc, struct reloc *tabl
  	}
- 	. = ALIGN(PECOFF_SEGMENT_ALIGN);
- 	__initdata_end = .;
+ }
+ 
++size_t arch_jump_opcode_bytes(struct objtool_file *file, struct instruction *insn,
++			      unsigned char *buf)
++{
++	union loongarch_instruction *code;
++	u32 insn_word;
++
++	insn_word = le32toh(*(u32 *)(insn->sec->data->d_buf + insn->offset));
++	code = (union loongarch_instruction *)&insn_word;
++
++	switch (code->reg0i26_format.opcode) {
++	case b_op:
++	case bl_op:
++		/* reg0i26: 26-bit offset, no register operands */
++		insn_word &= 0xfc000000;
++		break;
++	case beqz_op:
++	case bnez_op:
++	case bceqz_op:		/* == bcnez_op */
++		/* reg1i21: keep opcode + rj/cj at bits[9:5] */
++		insn_word &= 0xfc0003e0;
++		break;
++	case jirl_op:
++	case beq_op:
++	case bne_op:
++	case blt_op:
++	case bge_op:
++	case bltu_op:
++	case bgeu_op:
++		/* reg2i16: keep opcode + rj/rd at bits[9:0] */
++		insn_word &= 0xfc0003ff;
++		break;
++	default:
++		break;
++	}
++
++	insn_word = htole32(insn_word);
++	memcpy(buf, &insn_word, sizeof(insn_word));
++
++	return LOONGARCH_INSN_SIZE;
++}
++
+ #ifdef DISAS
+ 
+ int arch_disas_info_init(struct disassemble_info *dinfo)
 -- 
 2.25.1
 
