@@ -1,353 +1,151 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670A73FE667
-	for <loongarch@lists.linux.dev>; Wed,  8 Jul 2026 22:32:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBDB931CA4E;
+	Wed,  8 Jul 2026 23:14:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783549981; cv=none; b=bZ4ylwB51kv57GIZhGX+MsFPa25UkQakmwkAXIqkOcjsk3FX8tqzz2Z3ec+rhNVJCUCAavbjJnmVGbYE5QSeqb9ZTfKf+2TDEJlr3xgSnBUjNcOST+FMKGJ8czWdA0ghvgO6Gg5yszkKu4ZlFAlkUV+HnOFxA+9Smq/2YpIORc0=
+	t=1783552469; cv=none; b=cNTZ8Ibo6UElWrWrTIczEnoQMAnftapAtr0+NTB61KVqVcuOZUCr/wWLwowzEQq3Es2TQXBXE29j7Bvan0OAj9LHlPKyL/Fb2LDYGQoEq6AGtloOm2sCvVEf2U3Uvs/FXx9x5OzKZciCHxFPP+ZpLU8CzzI7wG5uRk4M9k33QR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783549981; c=relaxed/simple;
-	bh=swODgbekQmS1CFeZ9iG/ZEs5COm4cAVix6GliQDtetY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=juTxTro6Q6hTA024/Aq9vgUTJv0Ai4KkEkfzDbRWNymStSLNKy7stn4ZZVETLSoCqYTg3J0R68KSrVNwHq/EwedBkHMc2XLEOKfO7oey78VyHSQuhBl+1HED/VU857eeDv7hiVXyCfL8SF5sej7m2oNLxfY8h6wnjTJGVNF+f/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i30FM5q0; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1783552469; c=relaxed/simple;
+	bh=SkGVtiGzBaQGD2MgVwXs0xyAs7utyWEIxaZuHZIRv7w=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=f7p5kr5T+wzMvNGKNCOxRfwU3zwlO9zN5niZQ18wj+W+rBNLr1lI/ZV4guElwcFMatjmpaIkLpcnL2RKYvtF9hI8HWtWI9RZCSmkEGurICiuAYoMih46iz5Ey370a/iGrv0R0qnnY7jZZD3GQdq7ldOEtbMi17YwtCC/QlI80CY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U7j9DuQ2; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i30FM5q0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1783549978;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=E/T4EWXW79x7TDZV95U66XrCatSBiUQKKPW4UkScdA4=;
-	b=i30FM5q00I0oABY5gcXKrCmikM6YCbdeiOirSOycTsAsRD00WAxy3tYbzuMcY6LlOm0wnA
-	dAdbSPX+Pi9E7/hRBal8X11dlUTOwHPYeb0GGtvsFpo17+6KEyXOoASpuy24yN3zajf+7n
-	Bgh3bF5k6lLRXHf5VROvQ0XLcbDnQr4=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-152-c4VGxBctPoqaxYYIYg0UGQ-1; Wed,
- 08 Jul 2026 18:32:51 -0400
-X-MC-Unique: c4VGxBctPoqaxYYIYg0UGQ-1
-X-Mimecast-MFC-AGG-ID: c4VGxBctPoqaxYYIYg0UGQ_1783549969
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BA54F1956041;
-	Wed,  8 Jul 2026 22:32:46 +0000 (UTC)
-Received: from redhat.com (unknown [10.22.80.46])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5C1BA1800592;
-	Wed,  8 Jul 2026 22:32:40 +0000 (UTC)
-Date: Wed, 8 Jul 2026 18:32:37 -0400
-From: Joe Lawrence <joe.lawrence@redhat.com>
-To: George Guo <dongtai.guo@linux.dev>
-Cc: chenhuacai@kernel.org, jpoimboe@kernel.org, peterz@infradead.org,
-	jikos@kernel.org, mbenes@suse.cz, pmladek@suse.com,
-	kernel@xen0n.name, rostedt@goodmis.org, ardb@kernel.org,
-	nathan@kernel.org, nick.desaulniers+lkml@gmail.com,
-	yangtiezhu@loongson.cn, jiaxun.yang@flygoat.com,
-	liukexin@kylinos.cn, guodongtai@kylinos.cn, xry111@xry111.site,
-	wangyuli@aosc.io, loongarch@lists.linux.dev,
-	live-patching@vger.kernel.org, llvm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 02/12] LoongArch: Mark special sections for KLP support
-Message-ID: <ak7QBSm3mmDlB-4u@redhat.com>
-References: <20260707072031.231066-1-dongtai.guo@linux.dev>
- <20260707072031.231066-3-dongtai.guo@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U7j9DuQ2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5FD11F000E9;
+	Wed,  8 Jul 2026 23:14:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783552467;
+	bh=znSNM+MGjR1fppYrLy7qoTqjpqFxQICpffN75ccsbrI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=U7j9DuQ2nc8ydd23uGNZv2p9cQUiXygCkAVxSq71mj+NkX2cdLrmoGsFASFGg4Ml0
+	 bDwc3/JpNMt1iiuBfO2+u2t8OwVWEKPRBEqFojt4WTEHrS5dyU+Rrl+iHhRZJ43XFU
+	 Tp4PiEAswwCoD7KapE0e4aTY0MQO/lRQruojDYgw6tkvWRm9BrYDb1Uy0bxO7Zv6Ig
+	 NQWzkZJfqj2mxHN2D5QfuxwgKNzrkIccqqWhDuluZJB6zK0q7BbhRN+Pi08TxExqdC
+	 M1JIWRaFxQmoW8FElnvw5Vst8d3UaIMnUJuT2C8niIgtq2a4qubF9EJ5FQZPKi1rPF
+	 fpIGbT8HGVkAQ==
+From: Thomas Gleixner <tglx@kernel.org>
+To: Michal =?utf-8?Q?Such=C3=A1nek?= <msuchanek@suse.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Michael Ellerman <mpe@ellerman.id.au>, Shrikanth
+ Hegde <sshegde@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org, Kees Cook
+ <kees@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+ loongarch@lists.linux.dev, Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt
+ <palmer@dabbelt.com>, linux-riscv@lists.infradead.org, Sven Schnelle
+ <svens@linux.ibm.com>, linux-s390@vger.kernel.org, x86@kernel.org, Mark
+ Rutland <mark.rutland@arm.com>, Jinjie Ruan <ruanjinjie@huawei.com>, Andy
+ Lutomirski <luto@kernel.org>, Oleg Nesterov <oleg@redhat.com>, Richard
+ Henderson <richard.henderson@linaro.org>, Russell King
+ <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Guo
+ Ren <guoren@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Thomas
+ Bogendoerfer <tsbogend@alpha.franken.de>, Helge Deller <deller@gmx.de>,
+ Yoshinori Sato <ysato@users.sourceforge.jp>, Richard Weinberger
+ <richard@nod.at>, Chris Zankel <chris@zankel.net>,
+ linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org,
+ linux-csky@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linux-sh@vger.kernel.org, linux-um@lists.infradead.org, Arnd Bergmann
+ <arnd@arndb.de>, Vineet Gupta <vgupta@kernel.org>, Will Deacon
+ <will@kernel.org>, Brian Cain <bcain@kernel.org>, Michal Simek
+ <monstr@monstr.eu>, Dinh Nguyen <dinguyen@kernel.org>, "David S. Miller"
+ <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>,
+ linux-snps-arc@lists.infradead.org, linux-hexagon@vger.kernel.org,
+ linux-openrisc@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-arch@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+ linux-doc@vger.kernel.org
+Subject: Re: [patch 13/18] entry: Make trace_syscall_enter() return type bool
+In-Reply-To: <87se5tqkyp.ffs@fw13>
+References: <20260707181957.433213175@kernel.org>
+ <20260707190254.338083894@kernel.org> <ak5ySpil83TNWxeq@kunlun.suse.cz>
+ <87se5tqkyp.ffs@fw13>
+Date: Thu, 09 Jul 2026 01:14:24 +0200
+Message-ID: <87ik6pqdkf.ffs@fw13>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20260707072031.231066-3-dongtai.guo@linux.dev>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: OPFtrJyYNnGkLY0Tdv1SmknRlHdUdEBeL3V4Ux8W2yw_1783549969
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 07, 2026 at 03:20:21PM +0800, George Guo wrote:
-> From: George Guo <guodongtai@kylinos.cn>
-> 
-> objtool needs to split the kernel's special sections into per-entry
-> symbols when generating livepatch modules. Mark them so it can:
-> 
->  - .altinstructions and __ex_table are read-only, so set an explicit
->    entry size via SHF_MERGE (ALT_INSTR_SIZE / EXTABLE_SIZE).
-> 
->  - __bug_table and __jump_table are writable. SHF_MERGE cannot be
->    combined with SHF_WRITE (Clang rejects it), so annotate each entry
->    with ANNOTATE_DATA_SPECIAL instead, mirroring x86/arm64.
-> 
-> Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
-> Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
-> Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> ---
->  arch/loongarch/include/asm/alternative-asm.h |  5 +++--
->  arch/loongarch/include/asm/alternative.h     |  6 ++++--
->  arch/loongarch/include/asm/asm-extable.h     | 10 ++++++++--
->  arch/loongarch/include/asm/bug.h             |  1 +
->  arch/loongarch/include/asm/jump_label.h      |  2 ++
->  arch/loongarch/kernel/asm-offsets.c          | 20 ++++++++++++++++++++
->  6 files changed, 38 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/loongarch/include/asm/alternative-asm.h b/arch/loongarch/include/asm/alternative-asm.h
-> index 7dc29bd9b2f0..d940d9d2c0e1 100644
-> --- a/arch/loongarch/include/asm/alternative-asm.h
-> +++ b/arch/loongarch/include/asm/alternative-asm.h
-> @@ -5,6 +5,7 @@
->  #ifdef __ASSEMBLER__
->  
->  #include <asm/asm.h>
-> +#include <generated/asm-offsets.h>
->  
->  /*
->   * Issue one struct alt_instr descriptor entry (need to put it into
-> @@ -33,7 +34,7 @@
->  	.fill - (((144f-143f)-(141b-140b)) > 0) * ((144f-143f)-(141b-140b)) / 4, 4, 0x03400000
->  142 :
->  
-> -	.pushsection .altinstructions, "a"
-> +	.pushsection .altinstructions, "aM", @progbits, ALT_INSTR_SIZE
->  	altinstruction_entry 140b, 143f, \feature, 142b-140b, 144f-143f
->  	.popsection
->  
-> @@ -63,7 +64,7 @@
->  		(alt_max_short(new_len1, new_len2) - (old_len)) / 4, 4, 0x03400000
->  142 :
->  
-> -	.pushsection .altinstructions, "a"
-> +	.pushsection .altinstructions, "aM", @progbits, ALT_INSTR_SIZE
->  	altinstruction_entry 140b, 143f, \feature1, 142b-140b, 144f-143f, 142b-141b
->  	altinstruction_entry 140b, 144f, \feature2, 142b-140b, 145f-144f, 142b-141b
->  	.popsection
-> diff --git a/arch/loongarch/include/asm/alternative.h b/arch/loongarch/include/asm/alternative.h
-> index b5bae21fb3c8..8f7712ed2f4e 100644
-> --- a/arch/loongarch/include/asm/alternative.h
-> +++ b/arch/loongarch/include/asm/alternative.h
-> @@ -70,7 +70,8 @@ extern void apply_alternatives(struct alt_instr *start, struct alt_instr *end);
->  /* alternative assembly primitive: */
->  #define ALTERNATIVE(oldinstr, newinstr, feature)			\
->  	OLDINSTR(oldinstr, 1)						\
-> -	".pushsection .altinstructions,\"a\"\n"				\
-> +	".pushsection .altinstructions, \"aM\", @progbits, "            \
-> +		 __stringify(ALT_INSTR_SIZE) "\n"                       \
->  	ALTINSTR_ENTRY(feature, 1)					\
->  	".popsection\n"							\
->  	".subsection 1\n" \
-> @@ -79,7 +80,8 @@ extern void apply_alternatives(struct alt_instr *start, struct alt_instr *end);
->  
->  #define ALTERNATIVE_2(oldinstr, newinstr1, feature1, newinstr2, feature2)\
->  	OLDINSTR_2(oldinstr, 1, 2)					\
-> -	".pushsection .altinstructions,\"a\"\n"				\
-> +	".pushsection .altinstructions, \"aM\", @progbits, "            \
-> +			__stringify(ALT_INSTR_SIZE) "\n"                \
->  	ALTINSTR_ENTRY(feature1, 1)					\
->  	ALTINSTR_ENTRY(feature2, 2)					\
->  	".popsection\n"							\
-> diff --git a/arch/loongarch/include/asm/asm-extable.h b/arch/loongarch/include/asm/asm-extable.h
-> index d60bdf2e6377..2d7eef7c0b39 100644
-> --- a/arch/loongarch/include/asm/asm-extable.h
-> +++ b/arch/loongarch/include/asm/asm-extable.h
-> @@ -7,10 +7,15 @@
->  #define EX_TYPE_UACCESS_ERR_ZERO	2
->  #define EX_TYPE_BPF			3
->  
-> +#ifndef COMPILE_OFFSETS
-> +#include <asm/asm-offsets.h>
-> +#endif
-> +
->  #ifdef __ASSEMBLER__
->  
->  #define __ASM_EXTABLE_RAW(insn, fixup, type, data)	\
-> -	.pushsection	__ex_table, "a";		\
-> +	.pushsection    __ex_table, "aM", @progbits,    \
-> +			EXTABLE_SIZE;                   \
->  	.balign		4;				\
->  	.long		((insn) - .);			\
->  	.long		((fixup) - .);			\
-> @@ -29,7 +34,8 @@
->  #include <asm/gpr-num.h>
->  
->  #define __ASM_EXTABLE_RAW(insn, fixup, type, data)	\
-> -	".pushsection	__ex_table, \"a\"\n"		\
-> +	".pushsection   __ex_table, \"aM\", @progbits, "\
-> +	 __stringify(EXTABLE_SIZE) "\n"                 \
->  	".balign	4\n"				\
->  	".long		((" insn ") - .)\n"		\
->  	".long		((" fixup ") - .)\n"		\
-> diff --git a/arch/loongarch/include/asm/bug.h b/arch/loongarch/include/asm/bug.h
-> index d090a5bec5eb..14e3acbaad8d 100644
-> --- a/arch/loongarch/include/asm/bug.h
-> +++ b/arch/loongarch/include/asm/bug.h
-> @@ -25,6 +25,7 @@
->  #define __BUG_ENTRY(cond_str, flags)				\
->  		.pushsection __bug_table, "aw";			\
->  		.align 2;					\
-> +		__ANNOTATE_DATA_SPECIAL;				\
->  	10000:	.long 10001f - .;				\
->  		_BUGVERBOSE_LOCATION(WARN_CONDITION_STR(cond_str) __FILE__, __LINE__) \
->  		.short flags;					\
-> diff --git a/arch/loongarch/include/asm/jump_label.h b/arch/loongarch/include/asm/jump_label.h
-> index 7ef4ae3abf08..d20f0fa24b6b 100644
-> --- a/arch/loongarch/include/asm/jump_label.h
-> +++ b/arch/loongarch/include/asm/jump_label.h
-> @@ -12,6 +12,7 @@
->  #include <linux/types.h>
->  #include <linux/stringify.h>
->  #include <asm/asm.h>
-> +#include <linux/objtool.h>
->  
->  #define HAVE_JUMP_LABEL_BATCH
->  
-> @@ -27,6 +28,7 @@
->  #define JUMP_TABLE_ENTRY(key, label)			\
->  	 ".pushsection	__jump_table, \"aw\"	\n\t"	\
->  	 ".align	" __stringify(PTRLOG) "	\n\t"	\
-> +	 ANNOTATE_DATA_SPECIAL "\n\t"			\
->  	 ".long		1b - ., " label " - .	\n\t"	\
->  	 JUMP_LABEL_TYPE  key " - .		\n\t"	\
->  	 ".popsection				\n\t"
-> diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/asm-offsets.c
-> index 2cc953f113ac..470323aa022c 100644
-> --- a/arch/loongarch/kernel/asm-offsets.c
-> +++ b/arch/loongarch/kernel/asm-offsets.c
-> @@ -18,6 +18,8 @@
->  #include <asm/ftrace.h>
->  #include <asm/sigframe.h>
->  #include <vdso/datapage.h>
-> +#include <asm/alternative.h>
-> +#include <asm/extable.h>
->  
->  static void __used output_ptreg_defines(void)
+On Wed, Jul 08 2026 at 22:34, Thomas Gleixner wrote:
+> On Wed, Jul 08 2026 at 17:52, Michal Such=C3=A1nek wrote:
+> Q: Is it perfect?
+> A: No
+>
+> Q: Can it be made perfect?
+> A: No, because you can't change history and established practice.
+>
+> Just for illustration. Changing the logic in trace_syscall_enter() to:
+>
+> --- a/kernel/entry/syscall-common.c
+> +++ b/kernel/entry/syscall-common.c
+> @@ -9,13 +9,15 @@
+>=20=20
+>  bool trace_syscall_enter(struct pt_regs *regs, long *syscall)
 >  {
-> @@ -323,3 +325,21 @@ static void __used output_vdso_defines(void)
->  	DEFINE(__VDSO_PAGES, VDSO_NR_PAGES);
->  	BLANK();
+> +	long orig_syscall =3D *syscall;
+> +
+>  	trace_sys_enter(regs, *syscall);
+>  	/*
+>  	 * Probes or BPF hooks in the tracepoint may have changed the
+>  	 * system call number. Reread it.
+>  	 */
+>  	*syscall =3D syscall_get_nr(current, regs);
+> -	return *syscall !=3D -1L;
+> +	return *syscall =3D=3D orig_syscall || *syscall !=3D -1L;
 >  }
-> +
-> +static void __used output_extable_defines(void)
-> +{
-> +	COMMENT("LoongArch exception table entry offsets.");
-> +
-> +	DEFINE(EXTABLE_SIZE, sizeof(struct exception_table_entry));
-> +	BLANK();
-> +}
-> +
-> +static void __used output_alt_instr_defines(void)
-> +{
-> +	COMMENT("LoongArch alternative instructions offsets.");
-> +
-> +	DEFINE(ALT_INSTR_SIZE, sizeof(struct alt_instr));
-> +	BLANK();
-> +}
-> +
-> +
-> -- 
-> 2.25.1
-> 
+>=20=20
+>  void trace_syscall_exit(struct pt_regs *regs, long ret)
+>
+> does not make #2 magically go away. It's still the same problem whether
+> you like it or not.
 
-Hello George,
+And just to be entirely clear, the syscall() interface has to be correct
+in the first place, but then it's all about performance.
 
-I've run into another test case while exercising v3 on LoongArch (Clang
-build).I
-       a
-Setup
-=====
+So the sequence of:
 
-Maybe my config was too small, but I couldn't find any existing vmlinux
-.c file that emits .altinstructions on LoongArch, all in-tree
-ALTERNATIVE() sites are in arch/loongarch/lib/*.S, which we can't modify
-with klp-build.
+   pt_regs =3D PUSH_REGS();
+   syscall =3D pt_regs->syscall_reg;
+   pt_regs->result =3D -ENOSYS;
 
-I added a minimal dummy function to arch/loongarch/kernel/alternative.c
-so I could test:
-
-  $ cat base-vmlinux.patch
-  diff --git a/arch/loongarch/kernel/alternative.c b/arch/loongarch/kernel/alternative.c
-  index 0e0c766df1e3..01d81db79b3f 100644
-  --- a/arch/loongarch/kernel/alternative.c
-  +++ b/arch/loongarch/kernel/alternative.c
-  @@ -3,6 +3,7 @@
-   #include <linux/mm.h>
-   #include <linux/module.h>
-   #include <asm/alternative.h>
-  +#include <asm/cpu.h>
-   #include <asm/cacheflush.h>
-   #include <asm/inst.h>
-   #include <asm/sections.h>
-  @@ -245,3 +246,15 @@ void __init alternative_instructions(void)
-   
-          alternatives_patched = 1;
+   arch_syscall(pt_regs, syscall) {
+      if (likely(syscall_enter_from_user_mode(pt_regs, &syscall) {
+         if (syscall < SYSCALL_max)
+            pt_regs->result =3D invoke_syscall(pt_regs, syscall);
+      }
+      ,,,,
    }
-  +
-  +/*
-  + * klp-build repro hook: vmlinux .c function with ALTERNATIVE().
-  + */I
-  +staatic int klp_build_alt_test_base = 10;
-  +
-  +static noinline int __used klp_build_alt_test_compute(int input)
-  +{
-  +       asm volatile(ALTERNATIVE("nop", "nop", CPU_FEATURE_FPU) : : : "memory");
-  +
-  +       return input + klp_build_alt_test_base;
-  +}
+   pt_regs->($RETURN_VALUE) =3D pt_regs->result;
+   POP_REGS();
+   return;
 
-Then a one-line klp-build patch to modify the function:
+is the correct and obviuosly most efficient way idependent of the -1L
+return value overload in the original implementation, which this series
+gets rid of for clarity.
 
-  $ cat test-alternatives.patch
-  diff --git a/arch/loongarch/kernel/alternative.c b/arch/loongarch/kernel/alternative.c
-  index 01d81db79b3f..f5d5c4f0d8ef 100644
-  --- a/arch/loongarch/kernel/alternative.c
-  +++ b/arch/loongarch/kernel/alternative.c
-  @@ -256,5 +256,5 @@ static noinline int __used klp_build_alt_test_compute(int input)
-   {
-          asm volatile(ALTERNATIVE("nop", "nop", CPU_FEATURE_FPU) : : : "memory");
-   
-  -       return input + klp_build_alt_test_base;
-  +       return input + klp_build_alt_test_base + 1;
+If an architecture decide[sd] to do otherwise and makes up it's own rules
+which only cover parts of the problem then it _is_ an architecture
+problem and not something which has to be solved by claiming that every
+architecture has to implement the same nonsense as you falsely claimed
+in your RFC^WPOC^Whack thread:
 
-Repro
-=====
+  "However, the API should be specified in a way that does not require
+   everyone implementing such flag."
 
-Build the kernel as usual, then klp-build the test-alternatives.patch:
+There is _ZERO_ requirement for any architecture to implement that
+flag. Just because S390 decided it's a brilliant idea to do so does not
+make it a requirement for everyone.
 
-  $ patch -p1 < base-vmlinux.patch
-  patching file arch/loongarch/kernel/alternative.c
-  $ ARCH=loongarch LLVM=1 make -j$(nproc)
-  ...
-  $ ARCH=loongarch LLVM=1 ./sIcripts/livepatch/klp-build -T test-alternatives.patch
-                             a
-Result
-======
+No. Every other architecture got it right because they looked at the
+historical patterns despite having correct documentation at hand.
 
-klp-build gets through the diff step, then fails linking the livepatch
-module:
+Feel free to prove me wrong with actual facts.
 
-  ...
-  Diffing objects
-  vmlinux.o: changed function: klp_build_alt_test_compute
-  Building patch module: livepatch-test-alternatives.ko
-  livepatch-test-alternatives.o: error: objtool: .text.klp_build_alt_test_compute+0x14: special: can't find new instruction
-  make[3]: *** [/home/jolawren/src/linux/scripts/Makefile.build:507: livepatch-test-alternatives.o] Error 255
-  make[3]: *** Deleting file 'livepatch-test-alternatives.o'
-  make[2]: *** [/home/jolawren/src/linux/Makefile:2141: .] Error 2
-  make[1]: *** [/home/jolawren/src/linux/Makefile:248: __sub-make] Error 2
-  make: *** [Makefile:248: __sub-make] Error 2
-  error: klp-build: line 964: '"${cmd[@]}" > >(tee -a "$log") 2> >(tee -a "$log" 1>&2)'
+Thanks,
 
-Should v3 (or a follow-up patch) include the inline alternative
-cloning support?  Or is patching functions that contain ALTERNATIVE()
-intentionally out of scope for LoongArch KLP for now?
-
-If the latter, it would be worth calling out explicitly as this patch
-reads as though .altinstructions is supported end-to-end. 
-
-Regards,
---
-Joe
-
+        tglx
