@@ -1,123 +1,199 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5799C3A2576
-	for <loongarch@lists.linux.dev>; Wed,  8 Jul 2026 19:18:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779FD3E00BD;
+	Wed,  8 Jul 2026 20:34:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783538308; cv=none; b=jNOkEeUeP5/SAM8wSkypEhNR1Y4H/pJmne4lx7xLbA1ewuJNbqdJU22eDHqLqcKdXHyAevkdY637ZRCO41BukLkistdM4p4bihlYnt8K3BCcurTvBei9Jg5WdSoPIC7Qghhg368id0VvysuFvdJ5tekE2dLBVxyode2kOADiy+0=
+	t=1783542882; cv=none; b=Di1mqWoiLRZeNH3bh97qyMZtTVEUYMgYZc6Rov9w+JJ0SE0Y5V/at9Q9yihVRDp4IHjcnd/H1Zzj8fa3ZdtuEAX08jI8wefWzBqQ4tCc+Vv+3g/stq26pzCjaBEnAQIAmqfh8XgxhnBSPZ9utkvLMZ3iOe5SKBrhTixATKIkV7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783538308; c=relaxed/simple;
-	bh=Nuobs42GWN9jY9nFDEzqJGYWYg8zA3CPFZD6afRvhWo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=mxgG7PJxoZI0P8JvUxlJmxTbXXxZiK4pQ62q5oBCZ1zM4mffvuuLlhc3rlFcEbCpy0MtlLlod+Pj4KCgKoQ+nDsQZdqvAplbsfbO1dGSyv81y5KHD+oXxfNs6cTRp0Bn8235J3t7vwltiTYYWYKyAf4D6P/ykRemChjvyTjVeJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=B8e0M+aR; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1783542882; c=relaxed/simple;
+	bh=3v+6WJABaaO66B/xl+FmF/glWoWCQWj5sfHWj7p866k=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=LwlLDYiQylTeWkl1l6JiJ/SYMMcRryEJQYDkj6lq+iIXZlC/AEcAJ0Xos3jglIGVuaXoM3G/0NEumFX37QDzJZORNBFge9tj2ZESescXgSq4gP90KKDESWY9grsXVgp0NXi6hBVqRmd9dNOEw/BCBxFSPWLN2e2oDCDaoip0kng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KBWaMMj7; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B8e0M+aR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1783538306;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BvzY/mZGKEJx6zIsYvZa88M0P3VBfNQj1yFZq68GFbc=;
-	b=B8e0M+aRiW5j0+e0JrAYCPlgv3zD9MTbbguoqLpu5jIz05WoFJ2806UYEs8YBp4HgpR16u
-	xIA0KC6CibkjTtPb6vs83V42GDMSIcSz6QBf4xFph6NMJ2DOOykN4VsBKPrdfEVjhxvW0l
-	ASGmbA6rcWOEHoaGlpIFDtniMIro/vE=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-20-Ks6cFFghP2WYJsger330qw-1; Wed,
- 08 Jul 2026 15:18:19 -0400
-X-MC-Unique: Ks6cFFghP2WYJsger330qw-1
-X-Mimecast-MFC-AGG-ID: Ks6cFFghP2WYJsger330qw_1783538297
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 565A91800615;
-	Wed,  8 Jul 2026 19:18:15 +0000 (UTC)
-Received: from redhat.com (unknown [10.22.80.46])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EB6591800370;
-	Wed,  8 Jul 2026 19:18:09 +0000 (UTC)
-Date: Wed, 8 Jul 2026 15:18:07 -0400
-From: Joe Lawrence <joe.lawrence@redhat.com>
-To: George Guo <dongtai.guo@linux.dev>
-Cc: chenhuacai@kernel.org, jpoimboe@kernel.org, peterz@infradead.org,
-	jikos@kernel.org, mbenes@suse.cz, pmladek@suse.com,
-	kernel@xen0n.name, rostedt@goodmis.org, ardb@kernel.org,
-	nathan@kernel.org, nick.desaulniers+lkml@gmail.com,
-	yangtiezhu@loongson.cn, jiaxun.yang@flygoat.com,
-	liukexin@kylinos.cn, guodongtai@kylinos.cn, xry111@xry111.site,
-	wangyuli@aosc.io, loongarch@lists.linux.dev,
-	live-patching@vger.kernel.org, llvm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 07/12] klp-build: Add LoongArch syscall patching macro
-Message-ID: <ak6ibxwACKMK8it2@redhat.com>
-References: <20260707072031.231066-1-dongtai.guo@linux.dev>
- <20260707072031.231066-8-dongtai.guo@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KBWaMMj7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 409811F000E9;
+	Wed,  8 Jul 2026 20:34:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783542881;
+	bh=XV21Gvu/Emr9nQ/q86judRNj/QbZCrZ1m+LE1leOgZo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=KBWaMMj7fzOLrPcoUgRkEtUqRrOJt9n/xdiqN+Vs1q483RrbzeqFzVIrn8qMV348q
+	 fzALagUxxo9GHkkXN5K0/pDuyT5lcQFCVrkB3TakI/fH+yX9o21lm17cG/w9mcHlZt
+	 oOe4IwVYpbdQ7YFJViRdEjACSmNZ7bCvgRqE44efYSbmZ/P80pUYjPSalQk74K4UGs
+	 q1YlQWzgYxg2l/Bqj4QTlBIMbTxy/KKKjGg1H5q7buDTYhJYNVZ+fvvvrIQPf0vACG
+	 w9E8v6hcqzE35uRohSqIVauWdUc6/brHFDi4/JJnpbWlnb2h8H6ZQU4FGa9vyFJjCE
+	 1BJealh9MtrdA==
+From: Thomas Gleixner <tglx@kernel.org>
+To: Michal =?utf-8?Q?Such=C3=A1nek?= <msuchanek@suse.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Michael Ellerman <mpe@ellerman.id.au>, Shrikanth
+ Hegde <sshegde@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org, Kees Cook
+ <kees@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+ loongarch@lists.linux.dev, Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt
+ <palmer@dabbelt.com>, linux-riscv@lists.infradead.org, Sven Schnelle
+ <svens@linux.ibm.com>, linux-s390@vger.kernel.org, x86@kernel.org, Mark
+ Rutland <mark.rutland@arm.com>, Jinjie Ruan <ruanjinjie@huawei.com>, Andy
+ Lutomirski <luto@kernel.org>, Oleg Nesterov <oleg@redhat.com>, Richard
+ Henderson <richard.henderson@linaro.org>, Russell King
+ <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Guo
+ Ren <guoren@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Thomas
+ Bogendoerfer <tsbogend@alpha.franken.de>, Helge Deller <deller@gmx.de>,
+ Yoshinori Sato <ysato@users.sourceforge.jp>, Richard Weinberger
+ <richard@nod.at>, Chris Zankel <chris@zankel.net>,
+ linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org,
+ linux-csky@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linux-sh@vger.kernel.org, linux-um@lists.infradead.org, Arnd Bergmann
+ <arnd@arndb.de>, Vineet Gupta <vgupta@kernel.org>, Will Deacon
+ <will@kernel.org>, Brian Cain <bcain@kernel.org>, Michal Simek
+ <monstr@monstr.eu>, Dinh Nguyen <dinguyen@kernel.org>, "David S. Miller"
+ <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>,
+ linux-snps-arc@lists.infradead.org, linux-hexagon@vger.kernel.org,
+ linux-openrisc@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-arch@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+ linux-doc@vger.kernel.org
+Subject: Re: [patch 13/18] entry: Make trace_syscall_enter() return type bool
+In-Reply-To: <ak5ySpil83TNWxeq@kunlun.suse.cz>
+References: <20260707181957.433213175@kernel.org>
+ <20260707190254.338083894@kernel.org> <ak5ySpil83TNWxeq@kunlun.suse.cz>
+Date: Wed, 08 Jul 2026 22:34:38 +0200
+Message-ID: <87se5tqkyp.ffs@fw13>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20260707072031.231066-8-dongtai.guo@linux.dev>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: LZFSm4aXDWLmpXo2z5dEvCv6og0o3U868Rt0ATrUBzU_1783538297
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 07, 2026 at 03:20:26PM +0800, George Guo wrote:
-> From: George Guo <guodongtai@kylinos.cn>
-> 
-> Add LoongArch support for KLP_SYSCALL_DEFINEx(), mirroring the generic
-> __SYSCALL_DEFINEx() pattern from include/linux/syscalls.h.
-> 
-> Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
-> Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
-> Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> ---
->  include/linux/livepatch_helpers.h | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/include/linux/livepatch_helpers.h b/include/linux/livepatch_helpers.h
-> index 4b647b83865f..a8aad067177b 100644
-> --- a/include/linux/livepatch_helpers.h
-> +++ b/include/linux/livepatch_helpers.h
-> @@ -91,6 +91,28 @@
->  	}								\
->  	static inline long __klp_do_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__))
->  
-> +#elif defined(CONFIG_LOONGARCH)
-> +
-> +#define __KLP_SYSCALL_DEFINEx(x, name, ...)                             \
-> +	__diag_push();                                                  \
-> +	__diag_ignore(GCC, 8, "-Wattribute-alias",                      \
-> +		      "Type aliasing is used to sanitize syscall arguments");\
-> +	asmlinkage long sys##name(__MAP(x,__SC_DECL,__VA_ARGS__))       \
-> +		__attribute__((alias(__stringify(__se_sys##name))));    \
-> +	ALLOW_ERROR_INJECTION(sys##name, ERRNO);                        \
-> +	static inline long __klp_do_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__));\
-> +	asmlinkage long __se_sys##name(__MAP(x,__SC_LONG,__VA_ARGS__)); \
-> +	asmlinkage long __attribute__((optimize("-fno-optimize-sibling-calls")))\
-> +			__se_sys##name(__MAP(x,__SC_LONG,__VA_ARGS__))  \
-> +	{                                                               \
-> +		long ret = __klp_do_sys##name(__MAP(x,__SC_CAST,__VA_ARGS__));\
-> +		__MAP(x,__SC_TEST,__VA_ARGS__);                         \
-> +		__PROTECT(x, ret,__MAP(x,__SC_ARGS,__VA_ARGS__));       \
-> +		return ret;                                             \
-> +	}                                                               \
-> +	__diag_pop();                                                   \
-> +	static inline long __klp_do_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__))
-> +
->  #endif
+On Wed, Jul 08 2026 at 17:52, Michal Such=C3=A1nek wrote:
+> On Tue, Jul 07, 2026 at 09:06:48PM +0200, Thomas Gleixner wrote:
+>> In preparation of converting the return value of
+>> syscall_enter_from_user_mode[_work]() bool, rework trace_syscall_enter()=
+ to
+>>=20
+>>  - update the syscall number via a pointer argument
+>>=20
+>>  - Return True if the syscall number is !=3D -1, False otherwise
+>
+> This does not achieve the goal of the initial RFC: To detangle the
+> return value of syscall_enter_from_user_mode from the syscall number.
 
-Nit: The other macros in livepatch_helpers use tabs to pad out to the
-line continuation '\'.
+As I explained to you before: Your RFC broke the implicit assumption of
+tracing, which is way worse than having this oddity.
 
---
-Joe
+> This still conflates them, making it impossible to tell if the syscall
+> was rejected or syscall number was -1 to start with. Now also obfuscated
+> by performing the check deeper inside the common code.
 
+That's where it belongs. It's a problem to solve within the given
+semantics of trace_syscall_enter() and not a problem to be worked around
+at the call sites if you want to have consolidated semantics.
+
+>> The only difference is that this also returns False, when the syscall
+>> number was already -1 to begin with, but there is not much which can be
+>> done about that. As the architecture has to preset the return value to
+>> -ENOSYS anyway, that results in the correct return value for such an
+>> invalid syscall.
+>
+> That's not possible to do for architectures where the syscall number and
+> the syscall return value are in the same register.
+>
+> You suggested that it is possible to not write the return value into an
+> actual register but use an additional field for that, and have the exit
+> code write the register.
+>
+> However, that's not what is documented, nor what is currently done.
+
+Just because S390 screwed up their ABI and then on top of that failed to
+do what _every_ other architecture in the kernel does, i.e. having a
+result storage which is preset to -ENOSYS does not mean that S390 did
+the right thing just because it was not documented. Kernel documentation
+is known to be incomplete and I fixed it up in the last patch as you
+might have noticed.
+
+Just for the record. Presetting the return value to -ENOSYS has been
+practice for three decades. I couldn't be bothered to do a full search
+in the history trees to figure out the exact point, but as of 2.1.9,
+which was released in Nov. 1996, this is definitely the case.
+
+So don't tell me that because S390 missed the train when it was
+added to mainline in 2007 (, i.e. 11 years _after_ this "undocumented" rule=
+ was
+established that now 20 years later the world has to revolve around S390
+and your personal idea of "clear and intelligible":
+
+> While this is an improvement in some respects the goal to have clear and
+> intelligible API around the generic entry is not acheived.
+
+I'm honestly not sure whether I should laugh or cry.
+
+You are completely missing the point:
+
+  1) The set in stone rule is that if the entry code returns -1L as the
+     syscall number then the architecture code has to skip the syscall
+     invocation _and_ is not supposed to change the return value.
+
+  2) There is no guarantee and never has been that any of the involved
+     mechanisms (ptrace, seccomp, tracing) will change the return value
+     when it sets the syscall number to -1L.
+
+     Quite the contrary there has been a long time (30 years at least)
+     expectation that the return value has been preset to -ENOSYS.
+
+  3) It's trivial as demonstrated to make ptrace and seccomp more
+     comprehensible but that does not invalidate #2
+
+  4) Due to the historical integration of tracing (+probes/BPF) there is
+     an implicit assumption that the return code is preset to -ENOSYS.
+     See #2
+
+  5) There is an obvious ambiguity between the initial syscall number
+     being -1 and the change of syscall number to -1 in the case of
+     tracing, but that's not unique to tracing:
+
+     If e.g. seccomp() observes the handed in syscall number to be -1
+     and tells in the return code to skip the syscall, then it can
+     rightfully assume that the return code will be -ENOSYS and has no
+     obligation to set it explicitly. See #2
+
+Q: Is it perfect?
+A: No
+
+Q: Can it be made perfect?
+A: No, because you can't change history and established practice.
+
+Just for illustration. Changing the logic in trace_syscall_enter() to:
+
+--- a/kernel/entry/syscall-common.c
++++ b/kernel/entry/syscall-common.c
+@@ -9,13 +9,15 @@
+=20
+ bool trace_syscall_enter(struct pt_regs *regs, long *syscall)
+ {
++	long orig_syscall =3D *syscall;
++
+ 	trace_sys_enter(regs, *syscall);
+ 	/*
+ 	 * Probes or BPF hooks in the tracepoint may have changed the
+ 	 * system call number. Reread it.
+ 	 */
+ 	*syscall =3D syscall_get_nr(current, regs);
+-	return *syscall !=3D -1L;
++	return *syscall =3D=3D orig_syscall || *syscall !=3D -1L;
+ }
+=20
+ void trace_syscall_exit(struct pt_regs *regs, long ret)
+
+does not make #2 magically go away. It's still the same problem whether
+you like it or not.
+
+Thanks,
+
+        tglx
+---
+        Ignorance is bliss --  Thomas Gray, 1742
