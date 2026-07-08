@@ -1,122 +1,123 @@
-Received: from mail.mindbit.ro (xs1.mindbit.ro [80.86.107.70])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1783647F2E1
-	for <loongarch@lists.linux.dev>; Wed,  8 Jul 2026 18:37:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.86.107.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5799C3A2576
+	for <loongarch@lists.linux.dev>; Wed,  8 Jul 2026 19:18:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783535862; cv=none; b=A7q8l0oYpirr0jbIhE5FsFug1SJlolGeGKDp9hegvX+uZU55SNzqdwjgJLO7zLub3tm7Nev/5JQRxc4LCRdQErkKEcwgCgdsR8iv+6YgtEgS5s8Npwvh5sTvVFS0nv4PSdWH561bVq33pIik5Z0DA1PD3bfsog22GK22A53s7Wc=
+	t=1783538308; cv=none; b=jNOkEeUeP5/SAM8wSkypEhNR1Y4H/pJmne4lx7xLbA1ewuJNbqdJU22eDHqLqcKdXHyAevkdY637ZRCO41BukLkistdM4p4bihlYnt8K3BCcurTvBei9Jg5WdSoPIC7Qghhg368id0VvysuFvdJ5tekE2dLBVxyode2kOADiy+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783535862; c=relaxed/simple;
-	bh=47mfftpidT/9Wsw+p7VvEqhivHeFAm8tBlZdw0i+e70=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=S9oWHaFtomVUlmtGsxZty2Pz4tueIXe4+wr9+/lnofLwMKs9TdZhxaI1nk0gkfGZDucYyXrtaOa7kWEqWwEXKCRygXWWUFnEaLdrB9rX+X+0Ev01ReAM56Nxu1INJ1tVe7tXwt3fIqNYx5UfFBMGNppJ8pQGVQk0jE2KSIxca84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=rendec.net; spf=pass smtp.mailfrom=rendec.net; dkim=pass (2048-bit key) header.d=rendec.net header.i=@rendec.net header.b=MYg2quQs; arc=none smtp.client-ip=80.86.107.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=rendec.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rendec.net
+	s=arc-20240116; t=1783538308; c=relaxed/simple;
+	bh=Nuobs42GWN9jY9nFDEzqJGYWYg8zA3CPFZD6afRvhWo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=mxgG7PJxoZI0P8JvUxlJmxTbXXxZiK4pQ62q5oBCZ1zM4mffvuuLlhc3rlFcEbCpy0MtlLlod+Pj4KCgKoQ+nDsQZdqvAplbsfbO1dGSyv81y5KHD+oXxfNs6cTRp0Bn8235J3t7vwltiTYYWYKyAf4D6P/ykRemChjvyTjVeJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=B8e0M+aR; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rendec.net header.i=@rendec.net header.b="MYg2quQs"
-Received: from bat.kanata.rendec.net (unknown [24.114.111.125])
-	by mail.mindbit.ro (Postfix) with ESMTPSA id BD677C343E;
-	Wed,  8 Jul 2026 21:37:17 +0300 (EEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.mindbit.ro BD677C343E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rendec.net;
-	s=default; t=1783535859;
-	bh=J8eh6Rp71aMkUZPGbdf4HwpQyZ/mRcCB+VtPzFZfm0s=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=MYg2quQsJUR7e8ayAFMJcRvjHsrwKzUQqkhrJdU4nanpzL1jX14m8Z+Ds91DdqoKn
-	 QJReaLyNa/iLaBx/8t9LaIJgpO/V9u0Qk+ctVFHOLXc1PsNN77To6wbQLDR/wbO2Jd
-	 LI7Oyckd8G3uDywiL3AEPP+/6veZtLhQL8vDm8MBdhsqbXlk1PXB64z0Yki4BQsRic
-	 1MYR+Jrgudnmn+eQyNCJp23VAJq+mVC5zubA5AQHg1rSP6wds0PtsFuUt0GISnCwHY
-	 EbF0YrfTMJrddRnwe6si6lyEajabery7sEfS+bc1aT49zcfePemMerT/qsFH4wmqB6
-	 HEkaGc5AmP+eg==
-Message-ID: <335387752ace30084a3f709acf34556443300d1f.camel@rendec.net>
-Subject: Re: [patch 04/18] loongarch/syscall: Use
- syscall_enter_from_user_mode_randomize_stack()
-From: Radu Rendec <radu@rendec.net>
-To: Thomas Gleixner <tglx@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Huacai Chen
- <chenhuacai@kernel.org>, 	loongarch@lists.linux.dev, Michael Ellerman
- <mpe@ellerman.id.au>, Shrikanth Hegde <sshegde@linux.ibm.com>,
- linuxppc-dev@lists.ozlabs.org, Kees Cook <kees@kernel.org>,  Paul Walmsley	
- <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	linux-riscv@lists.infradead.org, Sven Schnelle <svens@linux.ibm.com>, 
-	linux-s390@vger.kernel.org, x86@kernel.org, Mark Rutland
- <mark.rutland@arm.com>,  Jinjie Ruan <ruanjinjie@huawei.com>, Andy
- Lutomirski <luto@kernel.org>, Oleg Nesterov <oleg@redhat.com>,  Richard
- Henderson <richard.henderson@linaro.org>, Russell King
- <linux@armlinux.org.uk>, Catalin Marinas	 <catalin.marinas@arm.com>, Guo
- Ren <guoren@kernel.org>, Geert Uytterhoeven	 <geert@linux-m68k.org>, Thomas
- Bogendoerfer <tsbogend@alpha.franken.de>,  Helge Deller	 <deller@gmx.de>,
- Yoshinori Sato <ysato@users.sourceforge.jp>, Richard Weinberger
- <richard@nod.at>, Chris Zankel <chris@zankel.net>,
- linux-arm-kernel@lists.infradead.org, 	linux-alpha@vger.kernel.org,
- linux-csky@vger.kernel.org, 	linux-m68k@lists.linux-m68k.org,
- linux-mips@vger.kernel.org, 	linux-parisc@vger.kernel.org,
- linux-sh@vger.kernel.org, 	linux-um@lists.infradead.org, Arnd Bergmann
- <arnd@arndb.de>, Vineet Gupta	 <vgupta@kernel.org>, Will Deacon
- <will@kernel.org>, Brian Cain <bcain@kernel.org>,  Michal Simek
- <monstr@monstr.eu>, Dinh Nguyen <dinguyen@kernel.org>, "David S. Miller"
- <davem@davemloft.net>,  Andreas Larsson <andreas@gaisler.com>,
- linux-snps-arc@lists.infradead.org, linux-hexagon@vger.kernel.org, 
-	linux-openrisc@vger.kernel.org, sparclinux@vger.kernel.org, 
-	linux-arch@vger.kernel.org, Michal =?ISO-8859-1?Q?Such=E1nek?=	
- <msuchanek@suse.de>, Jonathan Corbet <corbet@lwn.net>, 
-	linux-doc@vger.kernel.org
-Date: Wed, 08 Jul 2026 14:37:13 -0400
-In-Reply-To: <20260707190253.865955911@kernel.org>
-References: <20260707181957.433213175@kernel.org>
-	 <20260707190253.865955911@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B8e0M+aR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1783538306;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BvzY/mZGKEJx6zIsYvZa88M0P3VBfNQj1yFZq68GFbc=;
+	b=B8e0M+aRiW5j0+e0JrAYCPlgv3zD9MTbbguoqLpu5jIz05WoFJ2806UYEs8YBp4HgpR16u
+	xIA0KC6CibkjTtPb6vs83V42GDMSIcSz6QBf4xFph6NMJ2DOOykN4VsBKPrdfEVjhxvW0l
+	ASGmbA6rcWOEHoaGlpIFDtniMIro/vE=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-20-Ks6cFFghP2WYJsger330qw-1; Wed,
+ 08 Jul 2026 15:18:19 -0400
+X-MC-Unique: Ks6cFFghP2WYJsger330qw-1
+X-Mimecast-MFC-AGG-ID: Ks6cFFghP2WYJsger330qw_1783538297
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 565A91800615;
+	Wed,  8 Jul 2026 19:18:15 +0000 (UTC)
+Received: from redhat.com (unknown [10.22.80.46])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EB6591800370;
+	Wed,  8 Jul 2026 19:18:09 +0000 (UTC)
+Date: Wed, 8 Jul 2026 15:18:07 -0400
+From: Joe Lawrence <joe.lawrence@redhat.com>
+To: George Guo <dongtai.guo@linux.dev>
+Cc: chenhuacai@kernel.org, jpoimboe@kernel.org, peterz@infradead.org,
+	jikos@kernel.org, mbenes@suse.cz, pmladek@suse.com,
+	kernel@xen0n.name, rostedt@goodmis.org, ardb@kernel.org,
+	nathan@kernel.org, nick.desaulniers+lkml@gmail.com,
+	yangtiezhu@loongson.cn, jiaxun.yang@flygoat.com,
+	liukexin@kylinos.cn, guodongtai@kylinos.cn, xry111@xry111.site,
+	wangyuli@aosc.io, loongarch@lists.linux.dev,
+	live-patching@vger.kernel.org, llvm@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 07/12] klp-build: Add LoongArch syscall patching macro
+Message-ID: <ak6ibxwACKMK8it2@redhat.com>
+References: <20260707072031.231066-1-dongtai.guo@linux.dev>
+ <20260707072031.231066-8-dongtai.guo@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <20260707072031.231066-8-dongtai.guo@linux.dev>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Mimecast-MFC-PROC-ID: LZFSm4aXDWLmpXo2z5dEvCv6og0o3U868Rt0ATrUBzU_1783538297
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tue, 2026-07-07 at 21:06 +0200, Thomas Gleixner wrote:
-> syscall_enter_from_user_mode_randomize_stack() replaces
-> syscall_enter_from_user_mode() and the subsequent invocation of
-> add_random_kstack_offset().
->=20
-> The advantage is that it applies the stack randomization right after
-> enter_from_user_mode() and thereby avoids the overhead of get/put_cpu_var=
-()
-> as that code is invoked with interrupts disabled.
->=20
-> No functional change.
->=20
-> Signed-off-by: Thomas Gleixner <tglx@kernel.org>
-> Cc: Huacai Chen <chenhuacai@kernel.org>
-> Cc: loongarch@lists.linux.dev
+On Tue, Jul 07, 2026 at 03:20:26PM +0800, George Guo wrote:
+> From: George Guo <guodongtai@kylinos.cn>
+> 
+> Add LoongArch support for KLP_SYSCALL_DEFINEx(), mirroring the generic
+> __SYSCALL_DEFINEx() pattern from include/linux/syscalls.h.
+> 
+> Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
+> Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
+> Signed-off-by: George Guo <guodongtai@kylinos.cn>
 > ---
-> =C2=A0arch/loongarch/kernel/syscall.c |=C2=A0=C2=A0=C2=A0 5 +----
-> =C2=A01 file changed, 1 insertion(+), 4 deletions(-)
->=20
-> --- a/arch/loongarch/kernel/syscall.c
-> +++ b/arch/loongarch/kernel/syscall.c
-> @@ -11,7 +11,6 @@
-> =C2=A0#include <linux/linkage.h>
-> =C2=A0#include <linux/nospec.h>
-> =C2=A0#include <linux/objtool.h>
-> -#include <linux/randomize_kstack.h>
-> =C2=A0#include <linux/syscalls.h>
-> =C2=A0#include <linux/unistd.h>
-> =C2=A0
-> @@ -70,9 +69,7 @@ void noinstr __no_stack_protector do_sys
-> =C2=A0	regs->orig_a0 =3D regs->regs[4];
-> =C2=A0	regs->regs[4] =3D -ENOSYS;
-> =C2=A0
-> -	nr =3D syscall_enter_from_user_mode(regs, nr);
-> -
-> -	add_random_kstack_offset();
-> +	nr =3D syscall_enter_from_user_mode_randomize_stack(regs, nr);
-> =C2=A0
-> =C2=A0	if (nr < NR_syscalls) {
-> =C2=A0		syscall_fn =3D sys_call_table[array_index_nospec(nr, NR_syscalls)=
-];
+>  include/linux/livepatch_helpers.h | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/include/linux/livepatch_helpers.h b/include/linux/livepatch_helpers.h
+> index 4b647b83865f..a8aad067177b 100644
+> --- a/include/linux/livepatch_helpers.h
+> +++ b/include/linux/livepatch_helpers.h
+> @@ -91,6 +91,28 @@
+>  	}								\
+>  	static inline long __klp_do_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__))
+>  
+> +#elif defined(CONFIG_LOONGARCH)
+> +
+> +#define __KLP_SYSCALL_DEFINEx(x, name, ...)                             \
+> +	__diag_push();                                                  \
+> +	__diag_ignore(GCC, 8, "-Wattribute-alias",                      \
+> +		      "Type aliasing is used to sanitize syscall arguments");\
+> +	asmlinkage long sys##name(__MAP(x,__SC_DECL,__VA_ARGS__))       \
+> +		__attribute__((alias(__stringify(__se_sys##name))));    \
+> +	ALLOW_ERROR_INJECTION(sys##name, ERRNO);                        \
+> +	static inline long __klp_do_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__));\
+> +	asmlinkage long __se_sys##name(__MAP(x,__SC_LONG,__VA_ARGS__)); \
+> +	asmlinkage long __attribute__((optimize("-fno-optimize-sibling-calls")))\
+> +			__se_sys##name(__MAP(x,__SC_LONG,__VA_ARGS__))  \
+> +	{                                                               \
+> +		long ret = __klp_do_sys##name(__MAP(x,__SC_CAST,__VA_ARGS__));\
+> +		__MAP(x,__SC_TEST,__VA_ARGS__);                         \
+> +		__PROTECT(x, ret,__MAP(x,__SC_ARGS,__VA_ARGS__));       \
+> +		return ret;                                             \
+> +	}                                                               \
+> +	__diag_pop();                                                   \
+> +	static inline long __klp_do_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__))
+> +
+>  #endif
 
-Reviewed-by: Radu Rendec <radu@rendec.net>
+Nit: The other macros in livepatch_helpers use tabs to pad out to the
+line continuation '\'.
+
+--
+Joe
+
