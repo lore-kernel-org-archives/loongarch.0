@@ -1,226 +1,173 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A043DD521;
-	Wed,  8 Jul 2026 15:03:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5680D409268
+	for <loongarch@lists.linux.dev>; Wed,  8 Jul 2026 15:05:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783523037; cv=none; b=ZF4u+RqgrrCFss8agW2CLAyakwH13STtT6civ8q5wqCulph7v8649OPXoDOSX4RBevKCAhoRVf0AHB/sudD2i7YmoGC1DqI92PL/2GAUaXSqFwjt5o8mCT5PZbYohoRh7eKMb6J4s6LG/QlO0RYQNSpSXrzlrYmTDm70wI1yaow=
+	t=1783523123; cv=none; b=AYUtWQhV9g5InyBRdwkq2fqAWC7BUMVg8uAT4K7H8dsjotlVA880nDbOPF6fYJ5QKPjRo+fGVzP5gomBXXOb7YavxUkBHrl3Ll5D2D8gUYxFoKM4t9PIHTZZMhx0WSns6XPb2h5LtjANVKNrEKGE48MMzyVHvdajIAVVkgEAf0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783523037; c=relaxed/simple;
-	bh=ozbDkpERH6eS7Si13V6qz2k1Ockh5KC4ASIiPUGSquM=;
+	s=arc-20240116; t=1783523123; c=relaxed/simple;
+	bh=45nCfmPtRGhWwWGA/UlmV0ZkrWyvtYCwuI7ANzgmblk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pzoXD8s0Y7vtEjaD24cpdWu2m3XS+hNjTCFah44/punG74VAgsEPOJYDfCisJqe/YmqG4VQDI0P0i1oqW7Z/VMxOA22P+KzAJG8Mp2zZeeDINaR1Yd8KvhDOxwUv8uoCrNnqlKmFbbsjQtAANOQbyT6vpseklUyUFEyhLe6HiXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VZE4IpdL; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type:Content-Disposition; b=C7SSUn4L0f4WnXZ/CAuWK8i3FWFx620WUBKpzH3lJYU94yz7wDI1ndN90lCnGuL6T/gcs16/aZ25fSH3PEk4RLSu13eI4lDVIJVCThiOzS/4Aq/5knOyYwvgzD5hK2NFDHCv4ScCn22n3ltytJJYQbHc6RDfUUynxF11okB43KQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GTzPQLPV; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VZE4IpdL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E142E1F000E9;
-	Wed,  8 Jul 2026 15:03:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783523035;
-	bh=6lOoLeoST3DsMEdt45LFc9dqUSr7Eq3hHB2+CBF1gOw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=VZE4IpdLkxSA6/ssYYZglkjwkarWp6PACqjBRVN7rZMu33kN7uVCm/knysW6QSxZW
-	 qeND1nAPyQQJmjSqDfNZ71w1L5I+fdTjACI7TO14Yh12lHGkEhmY+U370bqAf71zSZ
-	 o2GXktfup2Kkp4owd9aOPSiKZ6Gm0OHtDX2o/DqBTWkNZLk/bwtuDvykxzbjlFb5NR
-	 tUd+i6MlfWmAAyeF2BnbsrH7kdHbB0c93/WSBstR/gp9FQe+86i2xqf8sPTcPFZVC4
-	 EzuSibQyyuupSkfC0kvE1koG9lxW2yshIiE8CZBCmN3RRAGUFANXL/K5+ubEDeXPOT
-	 +rNumVN+199nw==
-Date: Wed, 8 Jul 2026 16:03:51 +0100
-From: Lee Jones <lee@kernel.org>
-To: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Cc: chenhuacai@kernel.org, xry111@xry111.site, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-crypto@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] mfd: loongson-se: Add multi-node support
-Message-ID: <20260708150351.GI2108533@google.com>
-References: <20260629071109.7341-1-zhaoqunqin@loongson.cn>
- <20260629071109.7341-3-zhaoqunqin@loongson.cn>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GTzPQLPV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1783523121;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oiHynRISoOwm99WuNq3SEqzdBDkhCTcAiYfgAom2HcA=;
+	b=GTzPQLPVFNUcITFlkYy/dneHZ1uYS6/qGN/33vobylc2Kk0ZV+LVonGYlucmaLibx4UQSq
+	nva5/q65KGjZAYJ9bV8VB06y25FTkoDqAp2byAnZxNPExWhDPeX2HctzbsPiI6IGf7tz5z
+	cKRLZnJwApV8+/Pbo3l2gokqIhdEnLY=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-77-q4fSLNdbNEK7TUm6eLmJzQ-1; Wed,
+ 08 Jul 2026 11:05:18 -0400
+X-MC-Unique: q4fSLNdbNEK7TUm6eLmJzQ-1
+X-Mimecast-MFC-AGG-ID: q4fSLNdbNEK7TUm6eLmJzQ_1783523114
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 57F8918052CC;
+	Wed,  8 Jul 2026 15:05:12 +0000 (UTC)
+Received: from redhat.com (unknown [10.22.80.46])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 916951955F7B;
+	Wed,  8 Jul 2026 15:05:05 +0000 (UTC)
+Date: Wed, 8 Jul 2026 11:05:03 -0400
+From: Joe Lawrence <joe.lawrence@redhat.com>
+To: George Guo <dongtai.guo@linux.dev>
+Cc: chenhuacai@kernel.org, jpoimboe@kernel.org, peterz@infradead.org,
+	jikos@kernel.org, mbenes@suse.cz, pmladek@suse.com,
+	kernel@xen0n.name, rostedt@goodmis.org, ardb@kernel.org,
+	nathan@kernel.org, nick.desaulniers+lkml@gmail.com,
+	yangtiezhu@loongson.cn, jiaxun.yang@flygoat.com,
+	liukexin@kylinos.cn, guodongtai@kylinos.cn, xry111@xry111.site,
+	wangyuli@aosc.io, loongarch@lists.linux.dev,
+	live-patching@vger.kernel.org, llvm@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 04/12] livepatch/klp-build: build LoongArch with -fPIC
+ to keep GOT-indirect symbol references
+Message-ID: <ak5nH60j4Rdn50n-@redhat.com>
+References: <20260707072031.231066-1-dongtai.guo@linux.dev>
+ <20260707072031.231066-5-dongtai.guo@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <20260707072031.231066-5-dongtai.guo@linux.dev>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Mimecast-MFC-PROC-ID: l2MFqPR8YCOGTr4dGEWrTaVWfWaqVc0aaiBYrr2unw8_1783523114
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260629071109.7341-3-zhaoqunqin@loongson.cn>
 
-Same here please.
-
-/* Sashiko Automation: Issues Found (6 Findings) */
-
-On Mon, 29 Jun 2026, Qunqin Zhao wrote:
-
-> On the Loongson platform, each node is equipped with a security engine
-> device. However, due to a hardware flaw, only the device on node 0 can
-> trigger interrupts. Therefore, interrupts from other nodes are forwarded
-> by node 0. We need to check in the interrupt handler of node 0 whether
-> this interrupt is intended for other nodes, this can be accomplished via
-> shared interrupt handling.
+On Tue, Jul 07, 2026 at 03:20:23PM +0800, George Guo wrote:
+> From: George Guo <guodongtai@kylinos.cn>
 > 
-> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+> On LoongArch, klp-build livepatch modules panic when a patched function
+> references a global defined in the same compilation unit (e.g.
+> SYSCALL_DEFINE1(newuname) -> 'uts_sem' in kernel/sys.c).
+> 
+> With CONFIG_RELOCATABLE=y the kernel is already -fPIE, so this is not
+> absolute addressing; the problem is GOT indirection. For a same-unit
+> global, -fPIE emits a direct PC-relative reference (R_LARCH_PCALA_*) and
+> skips the GOT, while -fPIC routes it through the GOT (R_LARCH_GOT_PC_*).
+> klp-build extracts the patched function into a separate module while
+> 'uts_sem' stays in the core kernel, and the klp relocation machinery can
+> only redirect such a cross-object reference through a GOT entry. The
+> direct -fPIE reference has no GOT slot to fix up, so once the function is
+> relocated its target is wrong and it faults.
+> 
+> Force -fPIC for LoongArch KLP builds; -fPIE is not enough, as it
+> optimizes away the very GOT indirection KLP relies on.
+> 
+> This depends on the preceding patch: -fPIC is passed via KCFLAGS, but the
+> arch adds -fPIE via KBUILD_CFLAGS_KERNEL, which kbuild applies after
+> KCFLAGS (so -fPIE would win). That patch's command-line
+> KBUILD_CFLAGS_KERNEL= assignment replaces the arch value and drops -fPIE,
+> letting -fPIC take effect. The two patches must stay together.
+> 
+
+This might be my personal preference, but I think it would be quicker to
+review patches: ("livepatch/klp-build: disable direct-extern-access for
+LoongArch to fix kernel panic") ("livepatch/klp-build: build LoongArch
+with -fPIC to keep GOT-indirect symbol references") if they were
+squashed into one patch.
+
+With that, the commit messages can drop the forward/backward references,
+while the combined commit remains complete thought, i.e. for LoongArch
+KLP builds, replace the arch's KBUILD_CFLAGS_KERNEL (dropping -fPIE and
+-mdirect-extern-access) and add -fPIC via KCFLAGS instead.
+
+> Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
+> Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
+> Signed-off-by: George Guo <guodongtai@kylinos.cn>
 > ---
->  drivers/mfd/loongson-se.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
+>  scripts/livepatch/klp-build | 19 +++++++++++++++++--
+>  1 file changed, 17 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/mfd/loongson-se.c b/drivers/mfd/loongson-se.c
-> index aa34e663c4..2f296faa97 100644
-> --- a/drivers/mfd/loongson-se.c
-> +++ b/drivers/mfd/loongson-se.c
-> @@ -142,6 +142,11 @@ static irqreturn_t se_irq_handler(int irq, void *dev_id)
+> diff --git a/scripts/livepatch/klp-build b/scripts/livepatch/klp-build
+> index 27fe8824ef12..42cd58aff3d8 100755
+> --- a/scripts/livepatch/klp-build
+> +++ b/scripts/livepatch/klp-build
+> @@ -557,8 +557,15 @@ build_kernel() {
+>  	local cmd=()
 >  
->  	int_status = readl(se->base + SE_S2LINT_STAT);
+>  	local ARCH_KBUILD_CFLAGS_KERNEL=""
+> +	local ARCH_KCFLAGS=""
 >  
-> +	if (int_status == 0) {
-> +		spin_unlock(&se->dev_lock);
-> +		return IRQ_NONE;
-> +	}
+>  	if [[ -v CONFIG_LOONGARCH && "$CONFIG_LOONGARCH" == "y" ]]; then
+> +		# -fPIC replaces the kernel's -fPIE (added under CONFIG_RELOCATABLE);
+> +		# without that config there is no -fPIE to replace.
+> +		[[ "${CONFIG_RELOCATABLE:-}" == "y" ]] || \
+> +			die "LoongArch klp-build requires CONFIG_RELOCATABLE=y"
+> +		ARCH_KCFLAGS="-fPIC"
 > +
->  	/* For controller */
->  	if (int_status & SE_INT_CONTROLLER) {
->  		complete(&se->cmd_completion);
-> @@ -222,7 +227,7 @@ static int loongson_se_probe(struct platform_device *pdev)
+>  		# -mdirect-extern-access only exists under explicit relocs, and this
+>  		# function replaces KBUILD_CFLAGS_KERNEL wholesale (safe only then;
+>  		# the non-explicit build puts -Wa,-mla-global-with-pcrel there).
+> @@ -599,8 +606,16 @@ build_kernel() {
+>  		cmd+=("-s")
+>  	fi
+>  	cmd+=("-j$JOBS")
+> -	cmd+=("KCFLAGS=-ffunction-sections -fdata-sections")
+> -	cmd+=("KBUILD_CFLAGS_KERNEL=$ARCH_KBUILD_CFLAGS_KERNEL")
+> +	cmd+=("KCFLAGS=-ffunction-sections -fdata-sections${ARCH_KCFLAGS:+ $ARCH_KCFLAGS}")
+> +	# -fPIC is added for KLP via KCFLAGS above; the arch adds -fPIE via
+> +	# KBUILD_CFLAGS_KERNEL, which kbuild places after KCFLAGS on the
+> +	# built-in compile line.  -fPIC/-fPIE is last-one-wins, so -fPIE would
+> +	# win.  Setting KBUILD_CFLAGS_KERNEL on the command line replaces the
+> +	# arch value (not append), which drops -fPIE and lets -fPIC win.  Only
+> +	# do this when an arch needs it (LoongArch).
+> +	if [[ -n "$ARCH_KBUILD_CFLAGS_KERNEL" ]]; then
+> +		cmd+=("KBUILD_CFLAGS_KERNEL=$ARCH_KBUILD_CFLAGS_KERNEL")
+> +	fi
+>  	cmd+=("vmlinux")
+>  	cmd+=("modules")
 >  
->  	for (i = 0; i < nr_irq; i++) {
->  		irq = platform_get_irq(pdev, i);
-> -		err = devm_request_irq(dev, irq, se_irq_handler, 0, "loongson-se", se);
-> +		err = devm_request_irq(dev, irq, se_irq_handler, IRQF_SHARED, "loongson-se", se);
 
-[Severity: High]
-Could unmasking interrupts before registering the shared handler create a
-race condition?
+I'd also pull out the configuration checks into validate_config() to be
+consistent:
 
-Because writel(SE_INT_ALL, se->base + SE_S2LINT_EN) is called earlier in
-loongson_se_probe() to unmask interrupts, registering a shared interrupt
-handler here means that if node 1's interrupts are unmasked, it could
-instantly assert the shared IRQ line.
+  if [[ -v CONFIG_LOONGARCH ]]; then
+       [[ -v CONFIG_AS_HAS_EXPLICIT_RELOCS ]] || \
+           die "LoongArch klp-build requires CONFIG_AS_HAS_EXPLICIT_RELOCS=y"
+       [[ -v CONFIG_RELOCATABLE ]] || \
+           die "LoongArch klp-build requires CONFIG_RELOCATABLE=y"
+  fi
 
-Since node 1 hasn't fully registered its handler yet, node 0's handler might
-return IRQ_NONE, causing the kernel to repeatedly receive an unhandled
-interrupt and eventually disable the IRQ line.
+and then build_kernel() only needs to adjust the cmd / flags accordingly.
 
+--
+Joe
 
-
-[Severity: High]
-This is a pre-existing issue, but might the new use of IRQF_SHARED expose an
-uninitialized completion object in the interrupt handler?
-
-The completion structures for the engines are zero-allocated via
-devm_kzalloc() in loongson_se_probe() and are only initialized later in
-loongson_se_init_engine().
-
-If a pending or spurious engine interrupt fires on the shared line before
-the child engine devices are fully initialized, the handler will execute:
-
-se_irq_handler()
-    ...
-    while (int_status) {
-        id = __ffs(int_status);
-        if (id < SE_ENGINE_MAX)
-            complete(&se->engines[id].completion);
-
-Calling complete() here on a zeroed structure dereferences a NULL
-wait.head.next pointer, which could cause a kernel panic.
-
-
->  		if (err) {
->  			dev_err(dev, "failed to request IRQ: %d\n", irq);
->  			return err;
-> @@ -233,7 +238,7 @@ static int loongson_se_probe(struct platform_device *pdev)
->  	if (err)
->  		return err;
->  
-> -	return devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE, engines,
-> +	return devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, engines,
->  				    ARRAY_SIZE(engines), NULL, 0, NULL);
->  }
-
-[Severity: Critical]
-This isn't a bug introduced by this patch, but does the probe error path leak
-running hardware state?
-
-loongson_se_init() configures the hardware to use the allocated DMA memory
-and sends SE_CMD_START. If devm_mfd_add_devices() fails here, the probe
-returns an error and devres frees the DMA memory.
-
-However, the hardware is never sent SE_CMD_STOP in the error path. It
-remains active and retains a pointer to the freed DMA memory, which could
-allow it to corrupt system memory via DMA.
-
-
-
-[Severity: High]
-This is a pre-existing issue, but are hardware interrupts left globally
-enabled if probe fails or the device is removed?
-
-loongson_se_probe() unconditionally enables all hardware interrupts earlier
-via writel(SE_INT_ALL, se->base + SE_S2LINT_EN). If devm_mfd_add_devices()
-fails, the probe function returns an error and the IRQ handler is
-unregistered, but the hardware interrupts are never masked.
-
-Similarly, loongson_se_remove() stops the controller but fails to write 0
-to the interrupt enable register.
-
-Because the IRQ is shared, a pending interrupt from this device could
-continuously trigger the shared IRQ line without a registered handler to
-clear it, causing an unhandled interrupt storm that forces the kernel to
-permanently disable the IRQ line.
-
-While reviewing the completion handling in this driver, I noticed a couple
-other pre-existing issues outside the scope of this diff:
-
-
-
-[Severity: High]
-This isn't a bug introduced by this patch, but does re-initializing the
-completion variable after triggering the hardware create a race condition?
-
-Looking at loongson_se_send_engine_cmd():
-
-loongson_se_send_engine_cmd()
-    ...
-    loongson_se_poll() // triggers hardware and reenables interrupts
-    ...
-    reinit_completion(&engine->completion);
-    ...
-    wait_for_completion_interruptible(&engine->completion);
-
-If the hardware completes the command quickly after loongson_se_poll()
-unmasks interrupts, it triggers an interrupt. The handler will call
-complete(), but then execution resumes in loongson_se_send_engine_cmd()
-where reinit_completion() clears the completion state.
-
-This would cause the subsequent wait_for_completion_interruptible() to hang
-indefinitely since the completion event was lost.
-
-
-
-[Severity: High]
-This is a pre-existing issue, but could missing completion re-initialization
-cause controller commands to falsely return success?
-
-Looking at loongson_se_send_controller_cmd():
-
-loongson_se_send_controller_cmd()
-    ...
-    // hardware triggered
-    return wait_for_completion_interruptible(&se->cmd_completion);
-
-The function waits on the completion without first calling
-reinit_completion() to clear any leftover state.
-
-If a previous wait was interrupted by a signal (returning -ERESTARTSYS),
-the hardware may still complete later, leaving a positive done count in
-the completion structure. On the next call to
-loongson_se_send_controller_cmd(), wait_for_completion_interruptible()
-would immediately consume the leftover count and return success before the
-new hardware command has actually finished. This could break serialization
-and corrupt hardware or DMA state.
-
->  
-> -- 
-> 2.47.2
-> 
-
--- 
-Lee Jones
