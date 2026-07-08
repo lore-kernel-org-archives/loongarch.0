@@ -1,107 +1,81 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895792E3AF1
-	for <loongarch@lists.linux.dev>; Wed,  8 Jul 2026 13:54:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 599F643DA4C
+	for <loongarch@lists.linux.dev>; Wed,  8 Jul 2026 14:06:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783518890; cv=none; b=tRl3MPye8TanqoP0S1eQmdveqaPzYxFXV0lpHyEHLdQVoQQ7pVSXluFE8gc4Fq/z14hOOrxk9/KnOARs3M3GYRimyFuZJoUPj+zPCOsgqogfFyM4Rk1IppiHDzzLQhpQRlSbeqFclPlKN1FgLgQfXyBunKMywsp//9XPnzxqKJg=
+	t=1783519579; cv=none; b=JYco/ouMxfvAH+oly2gEotgD8kCC7MwRobK2ZiwXQdvWfKmw5hM9I0KkIlYhzvjZN2aLupSvmYKKwa6ZGLT/Ig54CSEzQWOlaPEqmsKLBYUk8JC6qeowmpcAT3nj1ARPEs/PcUAV4PTDvurnjoCB/EviZOKEiMdWS/9Vfx+QJRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783518890; c=relaxed/simple;
-	bh=SjiW6ERHS9Z2yaDAhoQdEShUzxO6v2nFKQKuoJ2Vge8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=fGEG/+WIx2/BC+7j3ijF8otMY2YEmDxQ7Ws/s/34xYo7H+JOq2hQfqlBomlBIBmPrL9gpWdkQsz3guHfKVhNqiCJ1kG3DK80f61qE1etJxC2xTT+Bsz6oTNNK5F6yA+qmZDAihoAcgYj34/o7jaT3xDw13WYQAuLIp/N4TAfsfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Aa227MDb; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1783519579; c=relaxed/simple;
+	bh=7xNbzB9jjCG6bvFrhPqvltUsQggTUJDVxMLHfoYPPD4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i3btHORrzrh+gQ1YpiLG6KPGwsP3rJ8eX+tbajzTpQ4wJO7wVB9lg/x7R8NXZDXOfshqdRQiKOf+pMz5C6dt9eqaXVaZ6mTsFm667LLlM6xYu04qLU9jnkNzM2Ui+hnBv8BphVzxNYVqUd9WCi0KmTAWArf76birJV5+ohi/a+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Qv4MRnfp; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Aa227MDb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1783518872;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Qv4MRnfp"
+Message-ID: <69e0b5f5-ea05-4740-a7a6-4ea4ab67cf92@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1783519575;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KDn+ZB5QDmMZlAymNbimx46tA1OJX7SIC3YtbFxxLtw=;
-	b=Aa227MDbuYyReU+KFb0aSh9TOsik1xUzCGUFycUpheZkXp0PvaL9jbQuc+WbMdCrGc+NQq
-	BztfYa/tEvWsywJUpNvfvfAesGnPqiCDaoma70ElWRkQNlmheqx5Aklq4Oi09l8Uy/mZ7x
-	HCLqzhw3vDryOyXo13b+CaD2KaCs30Q=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-304-2nD2FG_uMEybatzCU5d3YA-1; Wed,
- 08 Jul 2026 09:54:29 -0400
-X-MC-Unique: 2nD2FG_uMEybatzCU5d3YA-1
-X-Mimecast-MFC-AGG-ID: 2nD2FG_uMEybatzCU5d3YA_1783518866
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 838B01800EF8;
-	Wed,  8 Jul 2026 13:54:24 +0000 (UTC)
-Received: from redhat.com (unknown [10.22.80.46])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 98BA31800347;
-	Wed,  8 Jul 2026 13:54:18 +0000 (UTC)
-Date: Wed, 8 Jul 2026 09:54:16 -0400
-From: Joe Lawrence <joe.lawrence@redhat.com>
-To: George Guo <dongtai.guo@linux.dev>
-Cc: chenhuacai@kernel.org, jpoimboe@kernel.org, peterz@infradead.org,
-	jikos@kernel.org, mbenes@suse.cz, pmladek@suse.com,
-	kernel@xen0n.name, rostedt@goodmis.org, ardb@kernel.org,
-	nathan@kernel.org, nick.desaulniers+lkml@gmail.com,
-	yangtiezhu@loongson.cn, jiaxun.yang@flygoat.com,
-	liukexin@kylinos.cn, guodongtai@kylinos.cn, xry111@xry111.site,
-	wangyuli@aosc.io, loongarch@lists.linux.dev,
-	live-patching@vger.kernel.org, llvm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 05/12] LoongArch: Fix EFI linking with -fdata-sections
-Message-ID: <ak5WiNb51kGB1p2f@redhat.com>
-References: <20260707072031.231066-1-dongtai.guo@linux.dev>
- <20260707072031.231066-6-dongtai.guo@linux.dev>
+	bh=msVeMcRLOPlLNlcheQfQ90JtoLtKfwLl8M9ATng8S8I=;
+	b=Qv4MRnfpwg+HDy8x1ionVzTwx5xV395lLCKUqh0QrYMoaXh365/t18M5YNYJa7IQgCCdut
+	9qH/jMPLwto3MKysZqAF0ljcvywS3Tayvd7lkKsTHfAVbLgKR0t1s0cyMTfGH0AysxXmHf
+	h1Wvs/6sKrnUEQux4x3IRvtiRIxlvBA=
+Date: Wed, 8 Jul 2026 22:06:04 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20260707072031.231066-6-dongtai.guo@linux.dev>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Mimecast-MFC-PROC-ID: ozFqp05X6154bhTI0Mxu34FlBCVnB2ryM9-ulhNLmTc_1783518866
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Subject: Re: [PATCH bpf-next v9 0/2] Introduce jit_required to prevent a
+ kernel panic
+To: Tiezhu Yang <yangtiezhu@loongson.cn>, Alexei Starovoitov
+ <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
+ Emil Tsalapatis <emil@etsalapatis.com>, KaFai Wan <kafai.wan@linux.dev>
+Cc: bpf@vger.kernel.org, loongarch@lists.linux.dev,
+ Puranjay Mohan <puranjay@kernel.org>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@kernel.org>
+References: <20260708101806.18885-1-yangtiezhu@loongson.cn>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Leon Hwang <leon.hwang@linux.dev>
+In-Reply-To: <20260708101806.18885-1-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Jul 07, 2026 at 03:20:24PM +0800, George Guo wrote:
-> From: George Guo <guodongtai@kylinos.cn>
+On 2026/7/8 18:18, Tiezhu Yang wrote:
+> This series introduces a 'jit_required' flag in struct bpf_prog
+> to track programs that strictly require JIT.
 > 
-> When building with func-fdata-sections, the .init.bss section gets split
+> The aim is to prevent a kernel panic by rejecting programs with
+> inlined helpers when JIT is not available.
 
-nit: s/func-fdata-sections/-fdata-sections
 
-> up into a bunch of .init.bss.<var> sections.  Make sure they get linked
-> into .init.data.
-> 
-> Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
-> Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
-> Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> ---
->  arch/loongarch/kernel/vmlinux.lds.S | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kernel/vmlinux.lds.S
-> index 840d944c2f73..dc5fa017db94 100644
-> --- a/arch/loongarch/kernel/vmlinux.lds.S
-> +++ b/arch/loongarch/kernel/vmlinux.lds.S
-> @@ -96,7 +96,7 @@ SECTIONS
->  #endif
->  
->  	.init.bss : {
-> -		*(.init.bss)
-> +		*(.init.bss .init.bss.*)
+lgtm,
 
-Both arch/arm64/kernel/vmlinux.lds.S and
-arch/loongarch/kernel/vmlinux.lds.S contain a "/* from the EFI stub */"
-comment documenting the wildcard.  Might be worth adding for v4.
+Acked-by: Leon Hwang <leon.hwang@linux.dev>
 
---
-Joe
 
+Beyond this fix and the other assorted interpreter fallback issues [1],
+I think it's time to come up with a plan to retire the interpreter,
+given that it's considered a security hole. I'll post an RFC on
+interpreter retirement in the near future.
+
+[1] https://lore.kernel.org/bpf/20260626154330.33619-1-leon.hwang@linux.dev/
+
+Thanks,
+Leon
+
+> [...]
