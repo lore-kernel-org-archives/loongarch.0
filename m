@@ -1,127 +1,113 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C019375F8A
-	for <loongarch@lists.linux.dev>; Wed,  8 Jul 2026 16:04:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A223B1034
+	for <loongarch@lists.linux.dev>; Wed,  8 Jul 2026 16:07:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783526696; cv=none; b=VveKsb7BNo+Zjmm8OYC0jvw6nu8zELr8umLQMrTJHwNj8Jz5LRH1sf22hYTMa4/0KBuU9g/Kb7w8OudfPnTnNN4SNkFifQ2ANUkCPMqLvwhpZcYGrJCnREpLLt0XM/NMDsYVkrrIbQzNdomrBF+nMXsvi16jsDSfXofPK4j+kGc=
+	t=1783526860; cv=none; b=ffXpg/idoC36QZNTLzSb+97ywd2tCzl/5PQJW7nBJBO55nLhUFY2qO1sjpTcug4JGc2/31dBD6F3/3GC0sOaAlAxP2TJyA/Y+m2VwKLsw3vdrdXritC6qCK0DUmSkD+5izrfobdKPw/AOzK1Rvf5/19pXYve8QerqX5U4uvMm3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783526696; c=relaxed/simple;
-	bh=rkZTTrKDp1fLIJPaNfi+EBow6fHXCvgjUtBGn831Gm0=;
+	s=arc-20240116; t=1783526860; c=relaxed/simple;
+	bh=5yyIDddQ130JfzRDQqOGfDTnzMapL4KsOGQiNwYnIrY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=tEqEWdbCC/qdX6VQB1Z8hhSJUsclbu3O59OpaQ2d6thhzJwd/S4DlSbfFGQH/dWIkAmPIQKXxfpu4EYwub6/7YTiHjRQLAOXpic9zuUMQ8pM6R3R0KYrSzFCowy4jXHbm75yb4FgM3LLPIDexWM5kWDkzZqU74zzq1wAZCbNgq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=B/Yjd3nN; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type:Content-Disposition; b=fHbxXqTYC7csyZvrurS2EtPdd7aaWKeSmnIu1XaTZoOyHozP5KpUq2fEpshoCj2Nu6nZcgmSjeS7VikI9wEn5nnWL7XFWv2mWpD5+7nUA3jtR5i7BO3Fbg2R8BXEoh+xJXxbcao02Eyi7fWKPiU75G3kCGtIo3ehhpay8BM3Dvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O9moPJcy; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B/Yjd3nN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O9moPJcy"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1783526693;
+	s=mimecast20190719; t=1783526857;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=8P/ciXzD2S1KvjG8yWg06YK1HrAoM9H+3p3KtWGqU68=;
-	b=B/Yjd3nNog6ML28mQqDIu3O1cF1Z/+20DrK1T9sApXE6mqjeXGY6b3FBEhMRGXyyc/qjgs
-	9D44NYOcSeg0MkQR0coJkZEcxRWupA4+fVOu+zegxNgckASRHlNqalrZ45jng8L6BQtKpS
-	WeWBcCsiKBTr+127Zp1o1mW6XM+VsDA=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=pT4s58Ja3ICOTpX9Abz1gYYrYRAssFWhDyT+DCkKwyw=;
+	b=O9moPJcy0kF21kT4cgrf48ipNgkFzn6Yp8KcK6Cbb2y3R4GVi6dz9hSOANAte0PBWVDzAJ
+	5GZXjLGGYgKhD2I1GDzJ3cg7oblhzOPHPW3Yatde8lk5E5NTXvWoD565FFLeBsotKNwEe4
+	REeqjM0kLaH4RxsDGLkBrakFneo+/6E=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-595-fn1pYKmRPGGlbjH-rSP4QA-1; Wed,
- 08 Jul 2026 12:04:48 -0400
-X-MC-Unique: fn1pYKmRPGGlbjH-rSP4QA-1
-X-Mimecast-MFC-AGG-ID: fn1pYKmRPGGlbjH-rSP4QA_1783526682
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-654-djR_dbNLPkSNDJ4oNMlB2Q-1; Wed,
+ 08 Jul 2026 12:07:33 -0400
+X-MC-Unique: djR_dbNLPkSNDJ4oNMlB2Q-1
+X-Mimecast-MFC-AGG-ID: djR_dbNLPkSNDJ4oNMlB2Q_1783526850
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0E37718009D8;
-	Wed,  8 Jul 2026 16:04:40 +0000 (UTC)
-Received: from fedora (unknown [10.44.33.83])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 1D1D21956040;
-	Wed,  8 Jul 2026 16:04:21 +0000 (UTC)
-Received: by fedora (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed,  8 Jul 2026 18:04:39 +0200 (CEST)
-Date: Wed, 8 Jul 2026 18:04:19 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Thomas Gleixner <tglx@kernel.org>
-Cc: Jinjie Ruan <ruanjinjie@huawei.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Mark Rutland <mark.rutland@arm.com>, Kees Cook <kees@kernel.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Guo Ren <guoren@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Helge Deller <deller@gmx.de>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Richard Weinberger <richard@nod.at>,
-	Chris Zankel <chris@zankel.net>,
-	linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org,
-	linux-csky@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linux-sh@vger.kernel.org, linux-um@lists.infradead.org,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	linuxppc-dev@lists.ozlabs.org, Huacai Chen <chenhuacai@kernel.org>,
-	loongarch@lists.linux.dev, Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	linux-riscv@lists.infradead.org,
-	Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org,
-	x86@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
-	Brian Cain <bcain@kernel.org>, Michal Simek <monstr@monstr.eu>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	linux-snps-arc@lists.infradead.org, linux-hexagon@vger.kernel.org,
-	linux-openrisc@vger.kernel.org, sparclinux@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Subject: Re: [patch 11/18] seccomp, treewide: Rename and convert
- __secure_computing() to return boolean
-Message-ID: <ak51A77h1YRIl5tz@redhat.com>
-References: <20260707181957.433213175@kernel.org>
- <20260707190254.230735780@kernel.org>
- <2e6ed364-ce8f-4b4b-8675-acd07f140f4f@huawei.com>
- <871pddsuzl.ffs@fw13>
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 66B391955DA1;
+	Wed,  8 Jul 2026 16:07:28 +0000 (UTC)
+Received: from redhat.com (unknown [10.22.80.46])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8A2763000B4B;
+	Wed,  8 Jul 2026 16:07:22 +0000 (UTC)
+Date: Wed, 8 Jul 2026 12:07:20 -0400
+From: Joe Lawrence <joe.lawrence@redhat.com>
+To: George Guo <dongtai.guo@linux.dev>
+Cc: chenhuacai@kernel.org, jpoimboe@kernel.org, peterz@infradead.org,
+	jikos@kernel.org, mbenes@suse.cz, pmladek@suse.com,
+	kernel@xen0n.name, rostedt@goodmis.org, ardb@kernel.org,
+	nathan@kernel.org, nick.desaulniers+lkml@gmail.com,
+	yangtiezhu@loongson.cn, jiaxun.yang@flygoat.com,
+	liukexin@kylinos.cn, guodongtai@kylinos.cn, xry111@xry111.site,
+	wangyuli@aosc.io, loongarch@lists.linux.dev,
+	live-patching@vger.kernel.org, llvm@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 05/12] LoongArch: Fix EFI linking with -fdata-sections
+Message-ID: <ak51uLgw09N8gCqQ@redhat.com>
+References: <20260707072031.231066-1-dongtai.guo@linux.dev>
+ <20260707072031.231066-6-dongtai.guo@linux.dev>
+ <ak5WiNb51kGB1p2f@redhat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <871pddsuzl.ffs@fw13>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
-X-Mimecast-MFC-PROC-ID: 7lRycpaTdnm1vt7BBdo5WjFmu58GVqAKThXb0P_3QLY_1783526682
+In-Reply-To: <ak5WiNb51kGB1p2f@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Mimecast-MFC-PROC-ID: qM8MWazXtOQXbYe8giL65Zhgeh3O-GYRrAjMNFatjkY_1783526850
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On 07/08, Thomas Gleixner wrote:
->
-> On Wed, Jul 08 2026 at 09:43, Jinjie Ruan wrote:
-> >
-> > The return value of __seccomp_filter is checked in the wrong way, check
-> > -1 should be replaced with check false, maybe:
-> >
-> > -               if (__seccomp_filter(this_syscall, true))
-> > -                       return -1;
-> > +               if (!__seccomp_filter(this_syscall, true))
-> > +                       return false;
+On Wed, Jul 08, 2026 at 09:54:16AM -0400, Joe Lawrence wrote:
+> On Tue, Jul 07, 2026 at 03:20:24PM +0800, George Guo wrote:
+> > From: George Guo <guodongtai@kylinos.cn>
+> > 
+> > When building with func-fdata-sections, the .init.bss section gets split
+> 
+> nit: s/func-fdata-sections/-fdata-sections
+> 
+> > up into a bunch of .init.bss.<var> sections.  Make sure they get linked
+> > into .init.data.
+> > 
+> > Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
+> > Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
+> > Signed-off-by: George Guo <guodongtai@kylinos.cn>
+> > ---
+> >  arch/loongarch/kernel/vmlinux.lds.S | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kernel/vmlinux.lds.S
+> > index 840d944c2f73..dc5fa017db94 100644
+> > --- a/arch/loongarch/kernel/vmlinux.lds.S
+> > +++ b/arch/loongarch/kernel/vmlinux.lds.S
+> > @@ -96,7 +96,7 @@ SECTIONS
+> >  #endif
+> >  
+> >  	.init.bss : {
+> > -		*(.init.bss)
+> > +		*(.init.bss .init.bss.*)
+> 
+> Both arch/arm64/kernel/vmlinux.lds.S and
+> arch/loongarch/kernel/vmlinux.lds.S contain a "/* from the EFI stub */"
 
-Or simply
+^^ typo: I meant the riscv version as well
 
-	return __seccomp_filter(this_syscall, true);
+Also the commit message says, "Make sure they get linked into
+.init.data," but should that read, "... into .init.bss"?
 
-and remove "return true" below ?
-
-Either way, I personally like this change, I was always confused by these -1's.
-
-Acked-by: Oleg Nesterov <oleg@redhat.com>
+--
+Joe
 
