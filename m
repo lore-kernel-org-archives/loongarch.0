@@ -1,127 +1,163 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E8E9264617
-	for <loongarch@lists.linux.dev>; Thu,  9 Jul 2026 13:21:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33681218845
+	for <loongarch@lists.linux.dev>; Thu,  9 Jul 2026 13:32:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783603284; cv=none; b=LyjKETNU3G+NeHX4tstQKcBYy7i9lnqncbXnlsfAORZpNDIXEEzxDOYxUu0qPDWHQVnVxHCFjnnnxfggQLmPZcgbYHRiaoNbgF1xSTzeTxRWeS7WKxvERI1MiJcNdh9JJjAb1+3LdtusiFZiZvxlHFfAdJVvejhHIe0ic0LKl2M=
+	t=1783603945; cv=none; b=c8Ry3TibINr3tiCp8NKfOJ1VwxnpJrtlQenXatiUf9fM/y8NEqFDdBxAHJVMEMkcDv053W9caXBJTnuuPZLfpZZ1lMGK5BJfACY/HojFlB78MedyR3BNl4vA2xYoaMrn2qRl8Ag8IHLcoznJfi9zkjZg81prq/70IZGSr2IqBiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783603284; c=relaxed/simple;
-	bh=xaKUCAB0WTbjM/EIu1+mEKZq624rHW8NkbLsI88gSxc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FKk3B2hTTbfIuUODDNbuvB/pzFn9MsMZGuI5qUk4gxam61vaGeQrCUz2aX/HRGnx7436ZmYlxw0eru/BRumzHJjVYQXQFxakpUCPLSN7dQS8tl1ED63wOBDTyg1nT5muHnqdatlKY+kWHx9M3ad5RJRpUr8fzPpeTXlGbfcCmIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BwZJKYr+; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1783603945; c=relaxed/simple;
+	bh=Lr0/JzLsZHU7DE9GHdkhy4GABMoazF4KGSvu2e2cCiU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=s0xLI8eTda6xyQVHZ5i/BFVm4m8s6ihinTdQfaYDgh8rPKq+XsGDBD5qqrfGfRtHROh1EHygFsoVQKJ4YRLngE4SKoQ2Xr+9GtUEzWAcuLbWhfd4tAsFZrjOZ1JJxxthMqIWUpqmqSR8NLN0NfQdT7nt81V3B6KbSKcRVTYWt1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g283wSg4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BwZJKYr+"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1783603279;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YZTMZOseQABETX94dSN5QTo6IogqS7uJz7MvnyKnz3k=;
-	b=BwZJKYr+0I3fgRIqFwcYOJfj3JoV5pGqNQ3QLtKjuUKsRhSznhLH87WmYc5xiEFBwbeE2C
-	PAgHQNd/1RLHmeuGzsbdb24lg6UjA/nZ0CQc/utrOinK3/+HgZi4vJkN2o2YsYEqk/mpT8
-	4ZoYvDbatIHFw2zK49l9Ls96iqStmFI=
-From: George Guo <dongtai.guo@linux.dev>
-To: chenhuacai@kernel.org
-Cc: jpoimboe@kernel.org,
-	joe.lawrence@redhat.com,
-	wangyuli@aosc.io,
-	peterz@infradead.org,
-	jikos@kernel.org,
-	mbenes@suse.cz,
-	pmladek@suse.com,
-	kernel@xen0n.name,
-	rostedt@goodmis.org,
-	ardb@kernel.org,
-	nathan@kernel.org,
-	nick.desaulniers+lkml@gmail.com,
-	yangtiezhu@loongson.cn,
-	jiaxun.yang@flygoat.com,
-	liukexin@kylinos.cn,
-	guodongtai@kylinos.cn,
-	xry111@xry111.site,
-	linux-kernel@vger.kernel.org,
-	live-patching@vger.kernel.org,
-	llvm@lists.linux.dev,
-	loongarch@lists.linux.dev
-Subject: Re: [PATCH v3 00/12] LoongArch: Add livepatch build (KLP) support
-Date: Thu,  9 Jul 2026 21:21:03 +0800
-Message-ID: <20260709132103.16433-1-dongtai.guo@linux.dev>
-In-Reply-To: <CAAhV-H4cr9xBkM-SEUHXm9t0yQ=r3B9pkNdmUDftP00hvVsZrQ@mail.gmail.com>
-References: <CAAhV-H4cr9xBkM-SEUHXm9t0yQ=r3B9pkNdmUDftP00hvVsZrQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g283wSg4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E07BE1F00ACF
+	for <loongarch@lists.linux.dev>; Thu,  9 Jul 2026 13:32:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783603943;
+	bh=2tewPeVsAxKBBt/hHzLYO7y76PO1MYevgazh3aupzok=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=g283wSg4xREH65kKxISY22wUVdxl54rWeKsiKW2RXCvPyegxW2ONGX7hhCLFYdJB5
+	 WVgLRkH6a07mp/jtKrDnS68YtSwIhRktV10UFYiiB+xxprgqItF53QbtCZxsxbMkDS
+	 JN3E8m04+5O6cGShbbswRsC1Ygrx5joUh3+SK17xr2RJLBDr+I7dnnSidqFxktJKTq
+	 6XWPCUD9zTB0RwlWe0RFr9HHkRABXAQnPxPjfI6QH7HkehkPmkn4W5uJSvJTR/xfDR
+	 SiHSgpl21xpnSVLy/TblRrj6vW0W/3JcePp5IfUyn5OVZOAWtcTaYX3On5/I0VuioN
+	 YK/dOBWElbPVQ==
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5aeb98460c6so2090171e87.2
+        for <loongarch@lists.linux.dev>; Thu, 09 Jul 2026 06:32:23 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RovhPZYEknPY6ylrYkiWnYA0qGQFCZ/7M9ZE+1r2MWVjGK07TTDjI2ol3fUU826HdbeRq0o71p29SQ=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyrUvDFrmvzu08r2tV8lp0g09XzlK281mYKfuyI+jUMwoi/m+It
+	vqEcGaZodDMGhekS4PZ3fdJOkaclKFutq434os0IMcFLXVN5aLlKmGVb+A7x+CafM9Co7l1WA9n
+	kJmhlCGmJb3RqkJacDbE+/SOE0HI7G/U=
+X-Received: by 2002:a05:6512:64a8:b0:5b0:12cf:ae3f with SMTP id
+ 2adb3069b0e04-5b012cfb1e8mr1407950e87.31.1783603942165; Thu, 09 Jul 2026
+ 06:32:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20260709-gic-v5-acpi-iwb-probe-deferral-v4-0-48dae790f871@kernel.org>
+In-Reply-To: <20260709-gic-v5-acpi-iwb-probe-deferral-v4-0-48dae790f871@kernel.org>
+From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
+Date: Thu, 9 Jul 2026 15:32:10 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hDK+C+ZJ4YKd0xbyHW+vEot9z-YrivWSrg1ag7Ebx4cA@mail.gmail.com>
+X-Gm-Features: AUfX_my3RabqhVkiaUs2JZU-hHXS-RHiCuP5fgE1pk66iBa2OI-yzz3XlXSUIdk
+Message-ID: <CAJZ5v0hDK+C+ZJ4YKd0xbyHW+vEot9z-YrivWSrg1ag7Ebx4cA@mail.gmail.com>
+Subject: Re: [PATCH v4 0/7] irqchip/ACPI: Arm GICv5 IWB ACPI IRQ probe deferral
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Sunil V L <sunilvl@ventanamicro.com>, Marc Zyngier <maz@kernel.org>, 
+	Thomas Gleixner <tglx@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
+	Anup Patel <anup@brainfault.org>, Hanjun Guo <guohanjun@huawei.com>, 
+	Sudeep Holla <sudeep.holla@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, 
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Sunil V L <sunilvl@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Huacai,
+On Thu, Jul 9, 2026 at 10:41=E2=80=AFAM Lorenzo Pieralisi <lpieralisi@kerne=
+l.org> wrote:
+>
+> On Arm GICv5 systems, the IWB (Interrupt Wire Bridge) handles wired inter=
+rupts
+> and it is in charge of translating interrupt wires to GICv5 ITS messages.
+>
+> In ACPI systems, an IWB is backed by a platform device. Device drivers fo=
+r
+> devices whose IRQs are routed to an IWB might probe earlier than the IWB =
+device
+> driver, which can result in failures in that until the IWB driver is prob=
+ed and
+> its IRQ domain is duly registered, IRQs routed to it cannot be resolved.
+>
+> Some interrupt controllers for the RISC-V architecture suffer from the sa=
+me
+> issue; RISC-V, in its ACPI IRQ layer solved the problem by automatically
+> creating device dependencies that result in the interrupt controllers dri=
+vers
+> being probed before any device driver whose devices IRQs are routed to th=
+em is
+> probed.
+>
+> Instead of reinventing the wheel, this series move the aforementioned RIS=
+C-V
+> code to generic ACPI IRQ handling code (while fixing some bits and pieces=
+) and
+> implement GICv5 IWB ACPI probe deferral on top of it.
+>
+> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> ---
+> Changes in v4:
+> - Applied v3 review comments and tags
+> - Link to v3: https://patch.msgid.link/20260701-gic-v5-acpi-iwb-probe-def=
+erral-v3-0-c5562cf0fe29@kernel.org
+>
+> Changes in v3:
+> - Added stub to clear ACPI device dependencies
+> - Added review tags
+> - Rebased against v7.2-rc1
+> - Link to v2: https://patch.msgid.link/20260603-gic-v5-acpi-iwb-probe-def=
+erral-v2-0-23ffa16b6ebb@kernel.org
+>
+> Changes in v2:
+> - Split the patchset in several logic units according to review
+> - Link to v1: https://patch.msgid.link/20260505-gic-v5-acpi-iwb-probe-def=
+erral-v1-0-b37b85998362@kernel.org
+>
+> To: "Rafael J. Wysocki" <rafael@kernel.org>
+> To: Len Brown <lenb@kernel.org>
+> To: Sunil V L <sunilvl@ventanamicro.com>
+> To: Marc Zyngier <maz@kernel.org>
+> To: Thomas Gleixner <tglx@kernel.org>
+> To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> To: Huacai Chen <chenhuacai@kernel.org>
+> To: Anup Patel <anup@brainfault.org>
+> To: Hanjun Guo <guohanjun@huawei.com>
+> To: Sudeep Holla <sudeep.holla@kernel.org>
+> To: Catalin Marinas <catalin.marinas@arm.com>
+> To: Will Deacon <will@kernel.org>
+> Cc: linux-acpi@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> Cc: linux-riscv@lists.infradead.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: loongarch@lists.linux.dev
+>
+> ---
+> Lorenzo Pieralisi (7):
+>       ACPI: Add acpi_device_clear_deps() helper function
+>       ACPI: RISC-V: Fix riscv_acpi_irq_get_dep() loop termination
+>       ACPI: RISC-V: Check acpi_get_handle() status in riscv_acpi_add_prt_=
+dep()
+>       ACPI: RISC-V: Fix riscv_acpi_add_prt_dep() loop handling
+>       ACPI: irq: Move RISC-V interrupt controllers autodep to ACPI IRQ co=
+de
+>       ACPI/IORT: Implement ACPI infrastructure to enable GICv5 IWB probe =
+deferral
+>       irqchip/gic-v5: Enable GICv5 IWB ACPI probe ordering detection
+>
+>  arch/riscv/include/asm/acpi.h       |   1 +
+>  drivers/acpi/arm64/iort.c           |  22 ++++-
+>  drivers/acpi/irq.c                  | 172 ++++++++++++++++++++++++++++++=
++++++-
+>  drivers/acpi/riscv/irq.c            | 141 +----------------------------
+>  drivers/acpi/scan.c                 |   1 +
+>  drivers/irqchip/irq-gic-v3.c        |   2 +-
+>  drivers/irqchip/irq-gic-v5-iwb.c    |   2 +
+>  drivers/irqchip/irq-gic-v5.c        |  13 ++-
+>  drivers/irqchip/irq-gic.c           |   2 +-
+>  drivers/irqchip/irq-loongarch-cpu.c |   2 +-
+>  drivers/irqchip/irq-riscv-intc.c    |   3 +-
+>  include/linux/acpi.h                |  13 ++-
+>  include/linux/acpi_iort.h           |   3 +-
+>  13 files changed, 223 insertions(+), 154 deletions(-)
+> ---
 
-Thank you for raising this -- I take the concern seriously, and I'd like
-to lay out the full history so everyone is working from the same facts.
-
-> 2. ... Wang Yuli had already alerted you in your v1. At that point, you
-> had two options: a) abandon your own patches ... or b) thank Wang Yuli
-> for the reminder and assistance, then seek to collaborate on
-> development. However, you did neither
-
-I did take option (b). Wang Yuli's v1 messages were code review, and I
-thanked him on-list and folded every point into v2:
-
-  https://lore.kernel.org/all/20260608103302.340456-1-dongtai.guo@linux.dev/
-
-  "Thanks for the review -- all three points are addressed in v2. ...
-   You were right that this had not been properly exercised before ..."
-
-His "awM is dangerous, see how x86 did" comment in particular led
-directly to the ANNOTATE_DATA_SPECIAL rework that is in the series now.
-The review made these patches better and I'm grateful for it.
-
-> 1. Wang Yuli released his version first; re-releasing it without any
-> prior communication is simply rude.
-
-On priority: this series is not a fork of Wang Yuli's. I have been
-carrying LoongArch livepatch tooling since kpatch, which is klp-build's
-predecessor (same maintainer, later folded into the kernel). My kpatch
-LoongArch support was posted on 2024-12-05 and merged 2026-01-12:
-
-  https://github.com/dynup/kpatch/pull/1427
-
-developed over several review rounds with Joe Lawrence. When Josh
-announced the kpatch -> klp-build transition, he listed the LoongArch
-port as coming from me:
-
-  https://github.com/dynup/kpatch/issues/1498
-  ("loongarch ... shared by @georgejguo below, coming soon")
-
-So this klp-build series is the continuation of my own earlier work,
-not a takeover of someone else's.
-
-On scope: Wang Yuli's own suggestion in v1 was to use his patch to
-replace "these two patches" -- i.e. the basic arch-enablement piece.
-This series is the objtool/klp-diff and build-tooling integration
-(12 patches), including four fixes Joe found by running the full
-klp-build flow end to end. The overlap is just the arch-enablement part.
-
-> does that mean Wang Yuli can now throw yours in the trash when he
-> releases his v2?
-
-I don't see this as anyone's to throw away -- it's shared work toward
-the same goal, and I'd much rather converge than duplicate. Concretely:
-I'm happy to fold the overlapping arch-enablement patch in with Wang
-Yuli as author (or Co-developed-by), and to work with him on the rest.
-
-Wang Yuli, if you're up for it, let's coordinate -- I can take the
-objtool/klp-diff pieces and we land one clean series together.
-
-Thanks,
-George
+All applied as 7.3 material, thanks!
