@@ -1,114 +1,139 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B0BE3E0241
-	for <loongarch@lists.linux.dev>; Thu,  9 Jul 2026 08:49:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A9023DE44C;
+	Thu,  9 Jul 2026 08:58:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783586957; cv=none; b=V+NInupKzD5hPLtoSFfwP7xUwQ2fSRhj2uuNFsPEZbLSIu6iwJE7KBPgiMZ9gVkouEYLvPqUalJMhCVvisAsrRVzp868BDY3mdG2nKeUItjHGeqcy293IlEosSd0oULESD9jtVrR9jC7ytR6CFN3pW1S23RtlT3OYiOgM+fzVFc=
+	t=1783587501; cv=none; b=s27h3GZRhWsoyzwJpbq2BQEVHusnaOISidRnRGC7irgwelkh1r9Vs+Wq6Q1twOR7qxUITuAChVer06S+/CulYNwb+Jh8TXtju19jvFh+58jr7EOyhmlOxsDbZs4hpWcNpSJl6GLwudvCzZR1WT4Z2smFEorFHb46V7XkBfXXNTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783586957; c=relaxed/simple;
-	bh=vcIYcFn8wOu64JToHCd3V3ghUBsco6aWxPDuriYHfZc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qcIu4iKsjgWNmrnU35XLo3gKUfRIRYEkTPhZrCGJEZ5eovdrATMky2pgUrL0pkQb3ByGRGREq4G/BD3nl0mRI+bNQCDTQHZDkrSVAnP7leQwyMTLF2m+8bKXtWbwAW+jV1NIu/JeQytLX5tkETN/P5ZUnZSXNIqjRRGOz+yCxTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-385b78b44a0so1584223a91.0
-        for <loongarch@lists.linux.dev>; Thu, 09 Jul 2026 01:49:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783586956; x=1784191756;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=O3mkBNkViagFAJs3obyg41kBlrTMtmvpPUP/R2gZOPo=;
-        b=VP/nkLkPJIGCWY56jTnAf8zX60PkAw52ZEO1F+h/I+/cIiuOERo4tZuMfrzzMnsZKZ
-         Qh3K5FDnuHdPF/G9FAVzqYUzYAOOm8XLJ3aSV6uhvMo5iYuJtoacxnML1P+C2U3Al2eb
-         fSYdS74Zo9+BpqLkfjvkIOv4lhLOlt3DlqrnxJMgvWHEjmVssMX/6X7MLgGRFb2ehOex
-         tb5GklyF/NBpFQm4nUu+CJN2df4IRoNHsU5NS/GG2Mzm9q/HKIkbdJRJNl2lQ+H296C1
-         mCse0xLBtbgj7St3gcSblmLcFhHfXH56oOKn6utC+PYGwdzdzlfdr+BDDBpnlUEwt5E0
-         A0Xw==
-X-Forwarded-Encrypted: i=1; AHgh+RpmM3dB9NPIe0kTdchTl76gAKjYkW+XBFBabJNkjRHzjTW7v+0KiUPJ86Q0D7cBV+El/WpZmnAYWKI=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwGrLerVFGBuoMK2XV6z88fhQl4ePJZDr/r+jWRrWEd/eMirgV0
-	TN1Ab2hDNrd54hB9GO/mh2T8klJNzOwrp12RYvFeonKeW5tUODzyuGaKfjjRpi4wOWI=
-X-Gm-Gg: AfdE7cnIikrelkH4vardbTEfReVyd+JreivbSFyYKfskGiifNKsYQ6wUh7eqi5/6WcT
-	ilAOrjXQ+JULbNl0ebzVGAdG6SNOT2khAR6e1oXpb3OJEdpV4XXJpytfFcjbUH1XfbAKtDmBAfg
-	rW790pP6Spwl0UADdjxtZa6tL5e5v5JZKdnbkA31zzn7/Oq+2C61qnvLvtBQlz0D4GCDvBytfON
-	6Bg4I7dK1BKArLxIMI00hkAMsUnrNP7R5BXZMrJjwRWMSH4mRlK7O5N4AgxJq/keqdkkqo+4Ct9
-	5SnTtVLR9lBXsTItofXPfdKSYKmj0Rs8TVDw0081wR4kx3HLwlGagDifNdO6F54B6NzcZ2c5J0E
-	zYgZ2rB9B3QopyAfReKVFDmxiggfbfJOS4QmMtoVfFMZCEakIbto3hS2+VE2IOS5EwhdRNTb3Gl
-	5EEdnWKoo9UMNYa9zzW43cDzPKIu0o5hRgJ0Mn9CH503CS9vzjKdWEzwYTWtyJFYvF
-X-Received: by 2002:a17:90b:57cc:b0:381:720d:240 with SMTP id 98e67ed59e1d1-3894063c1efmr6122922a91.14.1783586955665;
-        Thu, 09 Jul 2026 01:49:15 -0700 (PDT)
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com. [209.85.210.170])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-38a583a16c2sm808016a91.13.2026.07.09.01.49.15
-        for <loongarch@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jul 2026 01:49:15 -0700 (PDT)
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-848643382fcso147504b3a.1
-        for <loongarch@lists.linux.dev>; Thu, 09 Jul 2026 01:49:15 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+Rowhu1iGSZWA3vL6Nypnw9wS1QOeBoNIWjpJhAJ5p179sf6mvAvPcezJKrBu3kqYbioCki1TMi41dg=@lists.linux.dev
-X-Received: by 2002:a05:6102:6895:b0:738:9dd5:9b03 with SMTP id
- ada2fe7eead31-744e03a337dmr3306957137.20.1783586528282; Thu, 09 Jul 2026
- 01:42:08 -0700 (PDT)
+	s=arc-20240116; t=1783587501; c=relaxed/simple;
+	bh=p1Oy7/s2LdHQyB5UzoUPUlsGyyzMDwCj4pMnGUs7Yjw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pE8b5rucFfwTOrk2RrZMJMmLidCkfOpnHt1B/G0bjtqHKzIfTqQBeL1/uuYYd+B98VDzev4qHSPDPvSJTeQgaKENdpdmYfprmP1N8s23rz4tBW4eSlIqEw0yeVy3NNmcRV3HTpEuqp9yYk3amGLN6cNTFINrKckGhS77CUYdqA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=DHrocTN0; arc=none smtp.client-ip=213.133.104.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="DHrocTN0"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=qAWKoI7QfOE19eHyLyr3k+FJWvqF88CPxVy83uz+8DE=; b=DHrocTN0871WUGe0d6bbZay2wK
+	Vr6DuKEmsJKnkJne9G06W7VwiM6fbPydElyXna0pgEY8CZHLYENFGSjG4NZi+LHXDpYi+BUGMOqS0
+	sFw7tAh45bFM4ya1m3AB76EDRtu7EJSeh9xyqunjgFQibr6vGg/OcxprYuRGAyZXLO8nzGq0+VNAl
+	b5R7XR2zS5YLzHQn/jchzICp/D7o8g6XJ9JujV2YfljqrUGx4YNl55QON2ip7keoqjNpaNFRMeUcR
+	17bjofYIu4G4JjsDooHioeU1eu40C9lYJ6HZqbPLInLFX53I0HBDzJS9I+eqhX28pHubB8Nl08ntE
+	LoPW9B2Q==;
+Received: from sslproxy07.your-server.de ([78.47.199.104])
+	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1whkaF-0001AF-1o;
+	Thu, 09 Jul 2026 10:58:15 +0200
+Received: from localhost ([127.0.0.1])
+	by sslproxy07.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1whkaF-000GpQ-2k;
+	Thu, 09 Jul 2026 10:58:15 +0200
+Message-ID: <5c81752f-5c57-47c4-afad-7cef78729feb@iogearbox.net>
+Date: Thu, 9 Jul 2026 10:58:14 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260707181957.433213175@kernel.org> <20260707190254.280015701@kernel.org>
-In-Reply-To: <20260707190254.280015701@kernel.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 9 Jul 2026 10:41:56 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWe1D0CZrav5h6EhDDbeJzgJcHvT89jrs6109Bdj-pdTw@mail.gmail.com>
-X-Gm-Features: AUfX_mw8w2Kp5VuAYozzfDNS6gDbdKhQdYzfXsv-G72F3LS58UBytbGwOmplITc
-Message-ID: <CAMuHMdWe1D0CZrav5h6EhDDbeJzgJcHvT89jrs6109Bdj-pdTw@mail.gmail.com>
-Subject: Re: [patch 12/18] ptrace, treewide: Rename ptrace_report_syscall_entry()
- to ptrace_report_syscall_permit_entry()
-To: Thomas Gleixner <tglx@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Oleg Nesterov <oleg@redhat.com>, 
-	Richard Henderson <richard.henderson@linaro.org>, Vineet Gupta <vgupta@kernel.org>, 
-	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>, Brian Cain <bcain@kernel.org>, 
-	Michal Simek <monstr@monstr.eu>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Dinh Nguyen <dinguyen@kernel.org>, Helge Deller <deller@gmx.de>, 
-	Yoshinori Sato <ysato@users.sourceforge.jp>, "David S. Miller" <davem@davemloft.net>, 
-	Andreas Larsson <andreas@gaisler.com>, Chris Zankel <chris@zankel.net>, linux-alpha@vger.kernel.org, 
-	linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, 
-	linux-um@lists.infradead.org, linux-arch@vger.kernel.org, 
-	Michael Ellerman <mpe@ellerman.id.au>, Shrikanth Hegde <sshegde@linux.ibm.com>, 
-	linuxppc-dev@lists.ozlabs.org, Kees Cook <kees@kernel.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, 
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org, 
-	Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org, x86@kernel.org, 
-	Mark Rutland <mark.rutland@arm.com>, Jinjie Ruan <ruanjinjie@huawei.com>, 
-	Andy Lutomirski <luto@kernel.org>, Richard Weinberger <richard@nod.at>, =?UTF-8?Q?Michal_Such=C3=A1nek?= <msuchanek@suse.de>, 
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/4] Fix and optimize BPF tailcall for LoongArch
+To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen
+ <chenhuacai@kernel.org>, Hengqi Chen <hengqi.chen@gmail.com>
+Cc: loongarch@lists.linux.dev, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20260707101508.32283-1-yangtiezhu@loongson.cn>
+Content-Language: en-US
+From: Daniel Borkmann <daniel@iogearbox.net>
+Autocrypt: addr=daniel@iogearbox.net; keydata=
+ xsFNBGNAkI0BEADiPFmKwpD3+vG5nsOznvJgrxUPJhFE46hARXWYbCxLxpbf2nehmtgnYpAN
+ 2HY+OJmdspBntWzGX8lnXF6eFUYLOoQpugoJHbehn9c0Dcictj8tc28MGMzxh4aK02H99KA8
+ VaRBIDhmR7NJxLWAg9PgneTFzl2lRnycv8vSzj35L+W6XT7wDKoV4KtMr3Szu3g68OBbp1TV
+ HbJH8qe2rl2QKOkysTFRXgpu/haWGs1BPpzKH/ua59+lVQt3ZupePpmzBEkevJK3iwR95TYF
+ 06Ltpw9ArW/g3KF0kFUQkGXYXe/icyzHrH1Yxqar/hsJhYImqoGRSKs1VLA5WkRI6KebfpJ+
+ RK7Jxrt02AxZkivjAdIifFvarPPu0ydxxDAmgCq5mYJ5I/+BY0DdCAaZezKQvKw+RUEvXmbL
+ 94IfAwTFA1RAAuZw3Rz5SNVz7p4FzD54G4pWr3mUv7l6dV7W5DnnuohG1x6qCp+/3O619R26
+ 1a7Zh2HlrcNZfUmUUcpaRPP7sPkBBLhJfqjUzc2oHRNpK/1mQ/+mD9CjVFNz9OAGD0xFzNUo
+ yOFu/N8EQfYD9lwntxM0dl+QPjYsH81H6zw6ofq+jVKcEMI/JAgFMU0EnxrtQKH7WXxhO4hx
+ 3DFM7Ui90hbExlFrXELyl/ahlll8gfrXY2cevtQsoJDvQLbv7QARAQABzSZEYW5pZWwgQm9y
+ a21hbm4gPGRhbmllbEBpb2dlYXJib3gubmV0PsLBkQQTAQoAOxYhBCrUdtCTcZyapV2h+93z
+ cY/jfzlXBQJjQJCNAhsDBQkHhM4ACAsJCAcNDAsKBRUKCQgLAh4BAheAAAoJEN3zcY/jfzlX
+ dkUQAIFayRgjML1jnwKs7kvfbRxf11VI57EAG8a0IvxDlNKDcz74mH66HMyhMhPqCPBqphB5
+ ZUjN4N5I7iMYB/oWUeohbuudH4+v6ebzzmgx/EO+jWksP3gBPmBeeaPv7xOvN/pPDSe/0Ywp
+ dHpl3Np2dS6uVOMnyIsvmUGyclqWpJgPoVaXrVGgyuer5RpE/a3HJWlCBvFUnk19pwDMMZ8t
+ 0fk9O47HmGh9Ts3O8pGibfdREcPYeGGqRKRbaXvcRO1g5n5x8cmTm0sQYr2xhB01RJqWrgcj
+ ve1TxcBG/eVMmBJefgCCkSs1suriihfjjLmJDCp9XI/FpXGiVoDS54TTQiKQinqtzP0jv+TH
+ 1Ku+6x7EjLoLH24ISGyHRmtXJrR/1Ou22t0qhCbtcT1gKmDbTj5TcqbnNMGWhRRTxgOCYvG0
+ 0P2U6+wNj3HFZ7DePRNQ08bM38t8MUpQw4Z2SkM+jdqrPC4f/5S8JzodCu4x80YHfcYSt+Jj
+ ipu1Ve5/ftGlrSECvy80ZTKinwxj6lC3tei1bkI8RgWZClRnr06pirlvimJ4R0IghnvifGQb
+ M1HwVbht8oyUEkOtUR0i0DMjk3M2NoZ0A3tTWAlAH8Y3y2H8yzRrKOsIuiyKye9pWZQbCDu4
+ ZDKELR2+8LUh+ja1RVLMvtFxfh07w9Ha46LmRhpCzsFNBGNAkI0BEADJh65bNBGNPLM7cFVS
+ nYG8tqT+hIxtR4Z8HQEGseAbqNDjCpKA8wsxQIp0dpaLyvrx4TAb/vWIlLCxNu8Wv4W1JOST
+ wI+PIUCbO/UFxRy3hTNlb3zzmeKpd0detH49bP/Ag6F7iHTwQQRwEOECKKaOH52tiJeNvvyJ
+ pPKSKRhmUuFKMhyRVK57ryUDgowlG/SPgxK9/Jto1SHS1VfQYKhzMn4pWFu0ILEQ5x8a0RoX
+ k9p9XkwmXRYcENhC1P3nW4q1xHHlCkiqvrjmWSbSVFYRHHkbeUbh6GYuCuhqLe6SEJtqJW2l
+ EVhf5AOp7eguba23h82M8PC4cYFl5moLAaNcPHsdBaQZznZ6NndTtmUENPiQc2EHjHrrZI5l
+ kRx9hvDcV3Xnk7ie0eAZDmDEbMLvI13AvjqoabONZxra5YcPqxV2Biv0OYp+OiqavBwmk48Z
+ P63kTxLddd7qSWbAArBoOd0wxZGZ6mV8Ci/ob8tV4rLSR/UOUi+9QnkxnJor14OfYkJKxot5
+ hWdJ3MYXjmcHjImBWplOyRiB81JbVf567MQlanforHd1r0ITzMHYONmRghrQvzlaMQrs0V0H
+ 5/sIufaiDh7rLeZSimeVyoFvwvQPx5sXhjViaHa+zHZExP9jhS/WWfFE881fNK9qqV8pi+li
+ 2uov8g5yD6hh+EPH6wARAQABwsF8BBgBCgAmFiEEKtR20JNxnJqlXaH73fNxj+N/OVcFAmNA
+ kI0CGwwFCQeEzgAACgkQ3fNxj+N/OVfFMhAA2zXBUzMLWgTm6iHKAPfz3xEmjtwCF2Qv/TT3
+ KqNUfU3/0VN2HjMABNZR+q3apm+jq76y0iWroTun8Lxo7g89/VDPLSCT0Nb7+VSuVR/nXfk8
+ R+OoXQgXFRimYMqtP+LmyYM5V0VsuSsJTSnLbJTyCJVu8lvk3T9B0BywVmSFddumv3/pLZGn
+ 17EoKEWg4lraXjPXnV/zaaLdV5c3Olmnj8vh+14HnU5Cnw/dLS8/e8DHozkhcEftOf+puCIl
+ Awo8txxtLq3H7KtA0c9kbSDpS+z/oT2S+WtRfucI+WN9XhvKmHkDV6+zNSH1FrZbP9FbLtoE
+ T8qBdyk//d0GrGnOrPA3Yyka8epd/bXA0js9EuNknyNsHwaFrW4jpGAaIl62iYgb0jCtmoK/
+ rCsv2dqS6Hi8w0s23IGjz51cdhdHzkFwuc8/WxI1ewacNNtfGnorXMh6N0g7E/r21pPeMDFs
+ rUD9YI1Je/WifL/HbIubHCCdK8/N7rblgUrZJMG3W+7vAvZsOh/6VTZeP4wCe7Gs/cJhE2gI
+ DmGcR+7rQvbFQC4zQxEjo8fNaTwjpzLM9NIp4vG9SDIqAm20MXzLBAeVkofixCsosUWUODxP
+ owLbpg7pFRJGL9YyEHpS7MGPb3jSLzucMAFXgoI8rVqoq6si2sxr2l0VsNH5o3NgoAgJNIg=
+In-Reply-To: <20260707101508.32283-1-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: Clear (ClamAV 1.4.3/28055/Thu Jul  9 08:25:20 2026)
 
-On Tue, 7 Jul 2026 at 21:06, Thomas Gleixner <tglx@kernel.org> wrote:
-> The return value of that function is boolean and tells the caller whether
-> to permit the syscall processing or not.
->
-> Rename the function so the purpose is clear and make the return type bool.
+On 7/7/26 12:15 PM, Tiezhu Yang wrote:
+> Based on 7.2-rc2, tested on a Loongson-3A6000 physical machine.
+> 
+> Here are the test results:
+> 
+>    $ sudo modprobe test_bpf test_suite=test_tail_calls
+>    $ dmesg -t | tail -1
+>    test_bpf: test_tail_calls: Summary: 10 PASSED, 0 FAILED, [10/10 JIT'ed]
+> 
+>    $ sudo ./test_progs -t tailcalls | tail -1
+>    Summary: 1/37 PASSED, 0 SKIPPED, 0 FAILED
+> 
+> v2 -> v3:
+>    -- Patch 1: Add Fixes tag.
+>    -- Patch 2: Update the commit message and add Fixes tag.
+>    -- Patch 3: Update the commit message and add Fixes tag.
+>    -- Patch 4: Condense the code comments and update the commit message.
+> 
+> No code changes.
 
->  arch/m68k/kernel/ptrace.c       |    2 +-
+Tiezhu/Huacai, do you want us to route these via bpf-next tree?
 
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org> # m68k
+> Tiezhu Yang (4):
+>    LoongArch: BPF: Optimize redundant TCC loads in epilogue
+>    LoongArch: BPF: Move arena register slot below TCC context
+>    LoongArch: BPF: Refactor jump offset calculation in tail call
+>    LoongArch: BPF: Implement branchless conditional move for TCC
+> 
+>   arch/loongarch/include/asm/inst.h |  6 +++
+>   arch/loongarch/net/bpf_jit.c      | 85 +++++++++++--------------------
+>   2 files changed, 36 insertions(+), 55 deletions(-)
+> 
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
