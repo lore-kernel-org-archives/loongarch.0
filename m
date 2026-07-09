@@ -1,99 +1,105 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 145C53F4106
-	for <loongarch@lists.linux.dev>; Thu,  9 Jul 2026 09:15:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 087AA3FFAB0
+	for <loongarch@lists.linux.dev>; Thu,  9 Jul 2026 09:25:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783588557; cv=none; b=JC48ytS6c0Jucuf3kOAu5DOQH5i6n89FHAoccs3uB3ujGYqkFI6q+v8dmkzE1+5LklQakh+fK0z4l4Iiu0PEPtMFc384MATNOhjc5cM3VT3mimBjL+aE7F23xSRZwdzs9l7M3Zq0kl33G4Xy4EXZfAKMt622o9m0af7fqKJN1uM=
+	t=1783589132; cv=none; b=uRYdjk7m3hAZW3pz5vRfT21AMYV/m32zDIcFtAjvOjDAUzE5+lb79EkOv1aO8x9QgQI/4meghS9WZK77WO0Gry00r+GdzAfljn2AqtA7xhWizMhcrHY6XKpmEbeWr9svrGMIIodqeab3Yl9G/4MOfmM9kq9Y45VX21Lh4B+dA/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783588557; c=relaxed/simple;
-	bh=95kto79XIg/fwnZy8w9ySlHeQVhkoETxSGtvTW7SOiU=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=egMpVYAJ1qGWSsAR3FRfICUcg3nxjxqltK0SkvNs2P8597kJGd/99aFRQshgPdbelJrrC8GZgbII/FBRL0cpz3L9dPQJ5/59VVY6T4ea1fHMdm+gE+b0mx6YIvWktzmXZo8FrGjXrqo/RbxcONBEYMwLWiRqIEM4rGwdwNmKpdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxBOrFZk9qCMsBAA--.2447S3;
-	Thu, 09 Jul 2026 17:15:49 +0800 (CST)
-Received: from [10.130.40.83] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJBxEuTBZk9qULEGAA--.13628S2;
-	Thu, 09 Jul 2026 17:15:46 +0800 (CST)
-Subject: Re: [PATCH v3 0/4] Fix and optimize BPF tailcall for LoongArch
-To: Daniel Borkmann <daniel@iogearbox.net>,
- Huacai Chen <chenhuacai@kernel.org>, Hengqi Chen <hengqi.chen@gmail.com>
-Cc: loongarch@lists.linux.dev, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20260707101508.32283-1-yangtiezhu@loongson.cn>
- <5c81752f-5c57-47c4-afad-7cef78729feb@iogearbox.net>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <054a69e5-c497-d8de-6acd-1625333d0ca8@loongson.cn>
-Date: Thu, 9 Jul 2026 17:15:45 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1783589132; c=relaxed/simple;
+	bh=INljEtR9XuimqnnnM0cBOeMB6UbVuHZzfXfOlFCEE18=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RbzXjDUq6S85Wa6EvyDKYhOJDBTdSF9VPjyOSH65aYIHct20OlBzDOjp+T5K77k0E7Qc/gqWpFWiJ6L1V1gzBECP2qMa3gkepqoGcDUfd9T4KMTFu21XK4MoaSxm3ifFJW93cfzkW2SQ4hUeyXhoAe+E6yI9aqrXhSv6fyuUdYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bw0Y1lxj; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bw0Y1lxj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A55841F00A3A
+	for <loongarch@lists.linux.dev>; Thu,  9 Jul 2026 09:25:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783589130;
+	bh=pZ+whLM1ddrhmsje/lOYyteKiFq3zY0rHsjFJw3yK/M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=Bw0Y1lxjwAa0ERK7GDH3hMU2jFCmTJCUEMAGRudJaj0Lg6mFi5jV/xWHehRmEM54e
+	 WPoJuZqfmeWEm0w6bj7gbEe3JfR1wL/7yTMunFYyOpm4c5EwNhHlviDCy4W1b3u5Sk
+	 AOXHiBnvo7wyynvxZnjv/wcT8wfatN0UVrtVp3aJ9uV1cLA1JeXwU8mSQxELkoJwNG
+	 6+ac45FIyqdteyMv9Q1+GhC4Ji9ZfsJiVmEpsPreU0wFcHA+O0VxDTPh61vErUrqum
+	 haIQ89PaprkeZM3Bnz5POfYJ7GZczCrGMLCSlaj/cHxVmLRK293wqPSv0s10R1G8sK
+	 gbhJqnvkFvTKw==
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-6986578d8c0so1049352a12.1
+        for <loongarch@lists.linux.dev>; Thu, 09 Jul 2026 02:25:30 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RptZCozJn1LGIErzlFK05Hxfboo1SebhMw/mt6c7+y2C7Wyna06UTVyMh7DA2eEmw3DOb9KxN70rao=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzvEfrAR613+TMTc98v2yz/Dwmw/GHDAlMbODGR7s/j2LsB9HV7
+	k0t7uIcfvDoKnYniAW7xx0x4moLCxU0Z73k27W3c5vFe7aj0FeAwcGgZfzvDlaHpO/LMRB1qESi
+	eBQxlbPcm6wQwoE8zQvsK58BpRVTni5k=
+X-Received: by 2002:a05:6402:e8d:b0:69a:a036:e164 with SMTP id
+ 4fb4d7f45d1cf-69ab4493b99mr2574789a12.25.1783589129333; Thu, 09 Jul 2026
+ 02:25:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <5c81752f-5c57-47c4-afad-7cef78729feb@iogearbox.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxEuTBZk9qULEGAA--.13628S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7Xw17Jr4rKry3ZF17Kr1rAFc_yoWkJFX_uw
-	nFv3s7GrW8ua13AFn7trs5ZrZ3Zw1jyw1DJrWkXrnrCa47A3s5Wrs8Jry0v398W398Krnr
-	Jw4DXF47ZF9IkosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbaAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
-	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
-	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E
-	14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4
-	CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1x
-	MIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF
-	4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsG
-	vfC2KfnxnUUI43ZEXa7IU8PCzJUUUUU==
+References: <20260707101508.32283-1-yangtiezhu@loongson.cn>
+ <5c81752f-5c57-47c4-afad-7cef78729feb@iogearbox.net> <054a69e5-c497-d8de-6acd-1625333d0ca8@loongson.cn>
+In-Reply-To: <054a69e5-c497-d8de-6acd-1625333d0ca8@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 9 Jul 2026 17:25:55 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H55YcyXRewC+0YzTHXb1jab0GkAV13EF9nFbTx=UkX4ww@mail.gmail.com>
+X-Gm-Features: AUfX_mwfnNTVafM0_AL0AV1DHSYXFI2uglDgd1xN9bSw3VK9g5Lg-9qKZrX_qYQ
+Message-ID: <CAAhV-H55YcyXRewC+0YzTHXb1jab0GkAV13EF9nFbTx=UkX4ww@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] Fix and optimize BPF tailcall for LoongArch
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Daniel Borkmann <daniel@iogearbox.net>, Hengqi Chen <hengqi.chen@gmail.com>, 
+	loongarch@lists.linux.dev, bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2026/7/9 下午4:58, Daniel Borkmann wrote:
-> On 7/7/26 12:15 PM, Tiezhu Yang wrote:
->> Based on 7.2-rc2, tested on a Loongson-3A6000 physical machine.
->>
->> Here are the test results:
->>
->>    $ sudo modprobe test_bpf test_suite=test_tail_calls
->>    $ dmesg -t | tail -1
->>    test_bpf: test_tail_calls: Summary: 10 PASSED, 0 FAILED, [10/10 
->> JIT'ed]
->>
->>    $ sudo ./test_progs -t tailcalls | tail -1
->>    Summary: 1/37 PASSED, 0 SKIPPED, 0 FAILED
->>
->> v2 -> v3:
->>    -- Patch 1: Add Fixes tag.
->>    -- Patch 2: Update the commit message and add Fixes tag.
->>    -- Patch 3: Update the commit message and add Fixes tag.
->>    -- Patch 4: Condense the code comments and update the commit message.
->>
->> No code changes.
-> 
-> Tiezhu/Huacai, do you want us to route these via bpf-next tree?
+Hi, Tiezhu and Daniel,
 
-Hi Daniel,
+On Thu, Jul 9, 2026 at 5:15=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn>=
+ wrote:
+>
+> On 2026/7/9 =E4=B8=8B=E5=8D=884:58, Daniel Borkmann wrote:
+> > On 7/7/26 12:15 PM, Tiezhu Yang wrote:
+> >> Based on 7.2-rc2, tested on a Loongson-3A6000 physical machine.
+> >>
+> >> Here are the test results:
+> >>
+> >>    $ sudo modprobe test_bpf test_suite=3Dtest_tail_calls
+> >>    $ dmesg -t | tail -1
+> >>    test_bpf: test_tail_calls: Summary: 10 PASSED, 0 FAILED, [10/10
+> >> JIT'ed]
+> >>
+> >>    $ sudo ./test_progs -t tailcalls | tail -1
+> >>    Summary: 1/37 PASSED, 0 SKIPPED, 0 FAILED
+> >>
+> >> v2 -> v3:
+> >>    -- Patch 1: Add Fixes tag.
+> >>    -- Patch 2: Update the commit message and add Fixes tag.
+> >>    -- Patch 3: Update the commit message and add Fixes tag.
+> >>    -- Patch 4: Condense the code comments and update the commit messag=
+e.
+> >>
+> >> No code changes.
+> >
+> > Tiezhu/Huacai, do you want us to route these via bpf-next tree?
+>
+> Hi Daniel,
+>
+> Yes, routing via bpf-next looks better to me
+> because it is updated much more frequently,
+> allowing developers to rebase quickly.
+>
+> However, Huacai usually takes LoongArch BPF
+> JIT patches into the loongarch-next tree.
+> Let's hear his thoughts on this.
+Yes, I indeed prefer to take these patches into the arch tree, which
+is similar to powerpc.
 
-Yes, routing via bpf-next looks better to me
-because it is updated much more frequently,
-allowing developers to rebase quickly.
-
-However, Huacai usually takes LoongArch BPF
-JIT patches into the loongarch-next tree.
-Let's hear his thoughts on this.
-
-Thanks,
-Tiezhu
-
+Huacai
+>
+> Thanks,
+> Tiezhu
+>
