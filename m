@@ -1,122 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE9343F7896;
-	Thu,  9 Jul 2026 08:41:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B0BE3E0241
+	for <loongarch@lists.linux.dev>; Thu,  9 Jul 2026 08:49:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783586504; cv=none; b=Osg36UGb+Z8baDel3aB9+8ncvHfoSyP/CbtP7tyfK/OGV2ol4jW4FaOvdQxjikF7FM03578tTf/MmTd5HPKa5ZhiziChuREd1yWqiyxoj3nZ8KI/yoYPLis6mE69B0J/N33aeSBy5D33RDDc8TbOMO3ghMjPgSjHOq/nYRh+4Io=
+	t=1783586957; cv=none; b=V+NInupKzD5hPLtoSFfwP7xUwQ2fSRhj2uuNFsPEZbLSIu6iwJE7KBPgiMZ9gVkouEYLvPqUalJMhCVvisAsrRVzp868BDY3mdG2nKeUItjHGeqcy293IlEosSd0oULESD9jtVrR9jC7ytR6CFN3pW1S23RtlT3OYiOgM+fzVFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783586504; c=relaxed/simple;
-	bh=CMV4lL7ngpQVFvZ8tUkY6kT3071eH2WHYCGUdD1P6jk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GkgRXDOVBSrHbMYK+ESRyPB1Nc0BUWNF7xtAfPGqXwGihiuPlBFReALlO3k5xI7g29ApijFjAI7IGGO3ApwVQnn6PgH9paXftDMhnJezPD6428eEC29Mu3yZfPWqJY27JaW//woMigb+aLcM1Ix0uiStl6XabtU1siYjEimGdAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OmbAWQo3; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OmbAWQo3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9D2D1F000E9;
-	Thu,  9 Jul 2026 08:41:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783586495;
-	bh=ecImaVODLVOxEnkUNCWWVGw4w1ZBDtqZLEFNEzk/9+A=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=OmbAWQo3wBZIxANXQYHWt3OSeKui0bFE6UyaKewf9f5Rr6UcTp65cM7t6GTKtH/iu
-	 4UJ0duEpjGPO4k+CwOd+lGZQkfl1USb7fNmTzREUUHg/28BhwbHOqz02w84IIzTXET
-	 gajyZFXFTWtcV7Fxykhzr05uElgl7Gaf9l3lb1PbxPvzOQurMITSfLzuaWLYEBmbih
-	 WfO7VMoHIskfj4jzfUGPA2G1w/iX5Lo5IyxQoCntKSE2SuUs5g0uo/jIhyBOWbrhUN
-	 0wOuYsKmNSLfHhmA+IE+KLfVdRI6DwbgpnOa4RxXGdBcoqKM/p2Q00rQkeFZRpGrGE
-	 gS6Yg1GbQ77ag==
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Date: Thu, 09 Jul 2026 10:40:17 +0200
-Subject: [PATCH v4 7/7] irqchip/gic-v5: Enable GICv5 IWB ACPI probe
- ordering detection
+	s=arc-20240116; t=1783586957; c=relaxed/simple;
+	bh=vcIYcFn8wOu64JToHCd3V3ghUBsco6aWxPDuriYHfZc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qcIu4iKsjgWNmrnU35XLo3gKUfRIRYEkTPhZrCGJEZ5eovdrATMky2pgUrL0pkQb3ByGRGREq4G/BD3nl0mRI+bNQCDTQHZDkrSVAnP7leQwyMTLF2m+8bKXtWbwAW+jV1NIu/JeQytLX5tkETN/P5ZUnZSXNIqjRRGOz+yCxTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-385b78b44a0so1584223a91.0
+        for <loongarch@lists.linux.dev>; Thu, 09 Jul 2026 01:49:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783586956; x=1784191756;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=O3mkBNkViagFAJs3obyg41kBlrTMtmvpPUP/R2gZOPo=;
+        b=VP/nkLkPJIGCWY56jTnAf8zX60PkAw52ZEO1F+h/I+/cIiuOERo4tZuMfrzzMnsZKZ
+         Qh3K5FDnuHdPF/G9FAVzqYUzYAOOm8XLJ3aSV6uhvMo5iYuJtoacxnML1P+C2U3Al2eb
+         fSYdS74Zo9+BpqLkfjvkIOv4lhLOlt3DlqrnxJMgvWHEjmVssMX/6X7MLgGRFb2ehOex
+         tb5GklyF/NBpFQm4nUu+CJN2df4IRoNHsU5NS/GG2Mzm9q/HKIkbdJRJNl2lQ+H296C1
+         mCse0xLBtbgj7St3gcSblmLcFhHfXH56oOKn6utC+PYGwdzdzlfdr+BDDBpnlUEwt5E0
+         A0Xw==
+X-Forwarded-Encrypted: i=1; AHgh+RpmM3dB9NPIe0kTdchTl76gAKjYkW+XBFBabJNkjRHzjTW7v+0KiUPJ86Q0D7cBV+El/WpZmnAYWKI=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwGrLerVFGBuoMK2XV6z88fhQl4ePJZDr/r+jWRrWEd/eMirgV0
+	TN1Ab2hDNrd54hB9GO/mh2T8klJNzOwrp12RYvFeonKeW5tUODzyuGaKfjjRpi4wOWI=
+X-Gm-Gg: AfdE7cnIikrelkH4vardbTEfReVyd+JreivbSFyYKfskGiifNKsYQ6wUh7eqi5/6WcT
+	ilAOrjXQ+JULbNl0ebzVGAdG6SNOT2khAR6e1oXpb3OJEdpV4XXJpytfFcjbUH1XfbAKtDmBAfg
+	rW790pP6Spwl0UADdjxtZa6tL5e5v5JZKdnbkA31zzn7/Oq+2C61qnvLvtBQlz0D4GCDvBytfON
+	6Bg4I7dK1BKArLxIMI00hkAMsUnrNP7R5BXZMrJjwRWMSH4mRlK7O5N4AgxJq/keqdkkqo+4Ct9
+	5SnTtVLR9lBXsTItofXPfdKSYKmj0Rs8TVDw0081wR4kx3HLwlGagDifNdO6F54B6NzcZ2c5J0E
+	zYgZ2rB9B3QopyAfReKVFDmxiggfbfJOS4QmMtoVfFMZCEakIbto3hS2+VE2IOS5EwhdRNTb3Gl
+	5EEdnWKoo9UMNYa9zzW43cDzPKIu0o5hRgJ0Mn9CH503CS9vzjKdWEzwYTWtyJFYvF
+X-Received: by 2002:a17:90b:57cc:b0:381:720d:240 with SMTP id 98e67ed59e1d1-3894063c1efmr6122922a91.14.1783586955665;
+        Thu, 09 Jul 2026 01:49:15 -0700 (PDT)
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com. [209.85.210.170])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-38a583a16c2sm808016a91.13.2026.07.09.01.49.15
+        for <loongarch@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2026 01:49:15 -0700 (PDT)
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-848643382fcso147504b3a.1
+        for <loongarch@lists.linux.dev>; Thu, 09 Jul 2026 01:49:15 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+Rowhu1iGSZWA3vL6Nypnw9wS1QOeBoNIWjpJhAJ5p179sf6mvAvPcezJKrBu3kqYbioCki1TMi41dg=@lists.linux.dev
+X-Received: by 2002:a05:6102:6895:b0:738:9dd5:9b03 with SMTP id
+ ada2fe7eead31-744e03a337dmr3306957137.20.1783586528282; Thu, 09 Jul 2026
+ 01:42:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260709-gic-v5-acpi-iwb-probe-deferral-v4-7-48dae790f871@kernel.org>
-References: <20260709-gic-v5-acpi-iwb-probe-deferral-v4-0-48dae790f871@kernel.org>
-In-Reply-To: <20260709-gic-v5-acpi-iwb-probe-deferral-v4-0-48dae790f871@kernel.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
- Sunil V L <sunilvl@ventanamicro.com>, Marc Zyngier <maz@kernel.org>, 
- Thomas Gleixner <tglx@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
- Anup Patel <anup@brainfault.org>, Hanjun Guo <guohanjun@huawei.com>, 
- Sudeep Holla <sudeep.holla@kernel.org>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- loongarch@lists.linux.dev, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-X-Mailer: b4 0.15.2
+References: <20260707181957.433213175@kernel.org> <20260707190254.280015701@kernel.org>
+In-Reply-To: <20260707190254.280015701@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 9 Jul 2026 10:41:56 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWe1D0CZrav5h6EhDDbeJzgJcHvT89jrs6109Bdj-pdTw@mail.gmail.com>
+X-Gm-Features: AUfX_mw8w2Kp5VuAYozzfDNS6gDbdKhQdYzfXsv-G72F3LS58UBytbGwOmplITc
+Message-ID: <CAMuHMdWe1D0CZrav5h6EhDDbeJzgJcHvT89jrs6109Bdj-pdTw@mail.gmail.com>
+Subject: Re: [patch 12/18] ptrace, treewide: Rename ptrace_report_syscall_entry()
+ to ptrace_report_syscall_permit_entry()
+To: Thomas Gleixner <tglx@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Oleg Nesterov <oleg@redhat.com>, 
+	Richard Henderson <richard.henderson@linaro.org>, Vineet Gupta <vgupta@kernel.org>, 
+	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>, Brian Cain <bcain@kernel.org>, 
+	Michal Simek <monstr@monstr.eu>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Dinh Nguyen <dinguyen@kernel.org>, Helge Deller <deller@gmx.de>, 
+	Yoshinori Sato <ysato@users.sourceforge.jp>, "David S. Miller" <davem@davemloft.net>, 
+	Andreas Larsson <andreas@gaisler.com>, Chris Zankel <chris@zankel.net>, linux-alpha@vger.kernel.org, 
+	linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
+	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, 
+	linux-um@lists.infradead.org, linux-arch@vger.kernel.org, 
+	Michael Ellerman <mpe@ellerman.id.au>, Shrikanth Hegde <sshegde@linux.ibm.com>, 
+	linuxppc-dev@lists.ozlabs.org, Kees Cook <kees@kernel.org>, 
+	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, 
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org, 
+	Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org, x86@kernel.org, 
+	Mark Rutland <mark.rutland@arm.com>, Jinjie Ruan <ruanjinjie@huawei.com>, 
+	Andy Lutomirski <luto@kernel.org>, Richard Weinberger <richard@nod.at>, =?UTF-8?Q?Michal_Such=C3=A1nek?= <msuchanek@suse.de>, 
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Register an ACPI hook in the ACPI interrupt management code for GICv5 to
-retrieve the ACPI interrupt controller handle (if any) of the controller
-handling a specific GSI, by updating the acpi_set_irq_model() call with
-the gic_v5_get_gsi_handle() function pointer parameter.
+On Tue, 7 Jul 2026 at 21:06, Thomas Gleixner <tglx@kernel.org> wrote:
+> The return value of that function is boolean and tells the caller whether
+> to permit the syscall processing or not.
+>
+> Rename the function so the purpose is clear and make the return type bool.
 
-gicv5_get_gsi_handle() allows ACPI core to detect the ACPI handle
-of the controller that manages a specific GSI interrupt.
+>  arch/m68k/kernel/ptrace.c       |    2 +-
 
-Update the IWB driver to clear device dependencies in ACPI core once the
-IWB driver has probed.
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org> # m68k
 
-Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Acked-by: Thomas Gleixner <tglx@kernel.org>
-Acked-by: Marc Zyngier <maz@kernel.org>
-Cc: Thomas Gleixner <tglx@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>
----
- drivers/irqchip/irq-gic-v5-iwb.c |  2 ++
- drivers/irqchip/irq-gic-v5.c     | 11 ++++++++++-
- 2 files changed, 12 insertions(+), 1 deletion(-)
+Gr{oetje,eeting}s,
 
-diff --git a/drivers/irqchip/irq-gic-v5-iwb.c b/drivers/irqchip/irq-gic-v5-iwb.c
-index 9103feb70ce8..6b02b90d9cce 100644
---- a/drivers/irqchip/irq-gic-v5-iwb.c
-+++ b/drivers/irqchip/irq-gic-v5-iwb.c
-@@ -269,6 +269,8 @@ static int gicv5_iwb_device_probe(struct platform_device *pdev)
- 	if (IS_ERR(iwb_node))
- 		return PTR_ERR(iwb_node);
- 
-+	acpi_device_clear_deps(&pdev->dev);
-+
- 	return 0;
- }
- 
-diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
-index 7ea39cb19f75..5dcf404ab4c8 100644
---- a/drivers/irqchip/irq-gic-v5.c
-+++ b/drivers/irqchip/irq-gic-v5.c
-@@ -1231,6 +1231,14 @@ static struct fwnode_handle *gic_v5_get_gsi_domain_id(u32 gsi)
- 	return gsi_domain_handle;
- }
- 
-+static acpi_handle gic_v5_get_gsi_handle(u32 gsi)
-+{
-+	if (FIELD_GET(GICV5_GSI_IC_TYPE, gsi) == GICV5_GSI_IWB_TYPE)
-+		return iort_iwb_handle(FIELD_GET(GICV5_GSI_IWB_FRAME_ID, gsi));
-+
-+	return NULL;
-+}
-+
- static int __init gic_acpi_init(union acpi_subtable_headers *header, const unsigned long end)
- {
- 	struct acpi_madt_gicv5_irs *irs = (struct acpi_madt_gicv5_irs *)header;
-@@ -1251,7 +1259,8 @@ static int __init gic_acpi_init(union acpi_subtable_headers *header, const unsig
- 	if (ret)
- 		goto out_irs;
- 
--	acpi_set_irq_model(ACPI_IRQ_MODEL_GIC_V5, gic_v5_get_gsi_domain_id, NULL);
-+	acpi_set_irq_model(ACPI_IRQ_MODEL_GIC_V5, gic_v5_get_gsi_domain_id,
-+			   gic_v5_get_gsi_handle);
- 
- 	return 0;
- 
+                        Geert
 
 -- 
-2.34.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
