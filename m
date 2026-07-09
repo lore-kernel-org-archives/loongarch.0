@@ -1,45 +1,47 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 845EC41B37F
-	for <loongarch@lists.linux.dev>; Thu,  9 Jul 2026 11:32:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD64F41DEF0
+	for <loongarch@lists.linux.dev>; Thu,  9 Jul 2026 11:32:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783596764; cv=none; b=kQ+YGU4+A5soWJ70kWTRZk4oi+OlmuyT76dGyEWAf7CqJ0Z6gBpgOVydb7u1CZOMT3Y5fuawpn2Wz7pyWxxp1OgC2hbTGkyDubpAAau3OKDDvaJSjW/B7ohLf6YlJpjMxfX8+4o05YAOxNVzMG+HzryOzMxB/Ugx/Cl9aQLCi2k=
+	t=1783596764; cv=none; b=Xb87TzGyeAF3t1F/f6rYBdeJHMyUAg9RNlYScsGwUwSXGpdYF5FzjJTGXZ7Ul/zQu73qe+zrM9O/3+jx3TKYY3S/B5/EKFwriE+gwtK3QXke4rennZ1FPLlp5N52NTPHYsHtiehHP6LYVnu4ssouDzxlQ+KCEl8NHvEh91zbjX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1783596764; c=relaxed/simple;
-	bh=bd62m/ysnHtkfVSUaGn+V8oLxmFUlxg59T9FJQBkVtY=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=boWVRdvqAK4IT/3mSa2NsdViw6KWpWLmyKte3R4QIyNMEJbKeFnlsDJLQmHUDSW2zlH8vBZ/jMwKEutOUD2GzWXP05JpdBQVw4rt5PGcIkbPfRVvuZfWgB3Qt2I15MPPZptFrILVN/aLgjXJZ+k2ukZG8vMNWi1zdz44hkOcNPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=giBxjz3T; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dhUA7ErG; arc=none smtp.client-ip=193.142.43.55
+	bh=Cb6TJFKXRTGuFsy7vLwZziq8FlUUov9IjfcXVp4by3I=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=OyA6dklBkfVgAJX0QZ+upwIlNUeSdOdHI7fxVVWEIkNa9p9NgJ0d9JA2eo4UGWMlvYyXc365cmOcOowUJUM7fsiNpqHWdeYV/79GcYwp7QXqX8muIcd8qnxoAaMMmSRhgTZS0cGH8Ub+Vj2gwdCizihuPH5Y1Hkdz645Dekxo8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XTtNxmBf; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1XrX6rcc; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="giBxjz3T";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dhUA7ErG"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XTtNxmBf";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1XrX6rcc"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1783596759;
+	s=2020; t=1783596761;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=3h/womV9Fbhg3p/L/491wrRWOveYAatastwr60h0rPA=;
-	b=giBxjz3T0P2S6MQBaE7q0V1Y+P8GtU/83OH5yvA/IJYRF6rEaZNH72uhWRmoHYQPBvSeaM
-	aYnR4r1jdyxlKCtHofIYIu21ZYJGKVw0zu+eZEOXrVSQ4jqcThtvVq/2UTbCrBN/YEV7Tq
-	5tFNpsN0J1iSkT07jP/gg2PBJPINWCi3E3tnw+Fa9V9beR+M/vw5jMh1JmIJ1HAhyEjrfH
-	hpRUEFeMrvg4MVEEMmBLkDNRDEghr9gcOcOvOWEXIrt33Fhbgz7NP8tocFyKQBWNFVbmLa
-	pbX1QoRmmZ62rssps6gM9ElrjWLJL8LCmFPjAHg1v8EZF9vB/RLuN7DuE5bxiA==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ig+DEThEdu93PL9Y6RxYfj8TwNueHZcwpbqWNPHipMQ=;
+	b=XTtNxmBftIu/MuEyBv5NcpO6SIRsipn237MfFlx7TSonp7OgY2UIoXl2AvNfI9F6j+Rlms
+	hS07KntUIQPgEQx/PlNm8jaePOqAfVqdTbSenZGaWdLQlhLy9dvG8/25x+wET/ErFKSq5M
+	rvEzVK6bX7+simtsL+h3rxTa36pBFopWWJe1ju6QUuPhCE0q48qRN87I+79ghmh3aPyEHx
+	cPa20BRIG43799DXjtIXqP7azrLvJ7i6hfiId8mhIGNMj/dTObASOdZMBGWSZgsxmfFSv0
+	whKQJuWBZgNd3b7pFbOfXeOhV876KWTbDqaXnJNxv3XmS48fH+dm2E+SFCzaPg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1783596759;
+	s=2020e; t=1783596761;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=3h/womV9Fbhg3p/L/491wrRWOveYAatastwr60h0rPA=;
-	b=dhUA7ErG68WNBRzhRd+NtTZFYpT3et+sDudNK/W2f5/GDKNvhVYhhGh6UArQIQUKejGRLk
-	3THQK4lIsGB1LlCg==
-Subject: [PATCH 0/7] vDSO: Replace CONFIG_GENERIC_GETTIMEOFDAY ifdeffery
- with IS_ENABLED()
-Date: Thu, 09 Jul 2026 13:32:36 +0200
-Message-Id: <20260709-vdso-arch-clockmodes-v1-0-3fd780bbf851@linutronix.de>
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ig+DEThEdu93PL9Y6RxYfj8TwNueHZcwpbqWNPHipMQ=;
+	b=1XrX6rcc7PYG2uPlLX5PqTQEDfbbYIEXYq56t/8GngEFlHVf7AeZ0HOWQaVfv13O99O3Dd
+	F+PS8VM6pQ+A/TCA==
+Date: Thu, 09 Jul 2026 13:32:40 +0200
+Subject: [PATCH 4/7] clocksource/drivers/mips-gic-timer: Replace
+ CONFIG_GENERIC_GETTIMEOFDAY ifdeffery with IS_ENABLED()
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -48,10 +50,9 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/x3MQQqEMAxA0atI1gZqUVGvMrioaarBGTs0UATx7
- haXb/H/BcpJWGGqLkicRSUeBU1dAW3uWBnFF4M1tje96TB7jegSbUjfSPsvelZcArkwOktDO0B
- J/4mDnO/2M9/3Ayijr3NmAAAA
-X-Change-ID: 20260605-vdso-arch-clockmodes-bfcaf9a2c848
+Message-Id: <20260709-vdso-arch-clockmodes-v1-4-3fd780bbf851@linutronix.de>
+References: <20260709-vdso-arch-clockmodes-v1-0-3fd780bbf851@linutronix.de>
+In-Reply-To: <20260709-vdso-arch-clockmodes-v1-0-3fd780bbf851@linutronix.de>
 To: Arnd Bergmann <arnd@arndb.de>, Andy Lutomirski <luto@kernel.org>, 
  Thomas Gleixner <tglx@kernel.org>, 
  Vincenzo Frascino <vincenzo.frascino@arm.com>, 
@@ -67,43 +68,40 @@ Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
  loongarch@lists.linux.dev, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1783596759; l=1590;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1783596759; l=988;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=bd62m/ysnHtkfVSUaGn+V8oLxmFUlxg59T9FJQBkVtY=;
- b=v0PUn23gIRlT3wMLw6uvxNhG8MDsFLklGKvI5FMtQ09FTJRHMHBj0/elS9bs0Z3CEgLqrSM8/
- LBkRruGlMC/DM32fLjupE7GsD6pdIWQ+TzzZgMOdIZkoEhk+dyQS3TE
+ bh=Cb6TJFKXRTGuFsy7vLwZziq8FlUUov9IjfcXVp4by3I=;
+ b=RqWMWGndZRR40I+i7U91NW8lFYhmkW3JwUOT571+ZTuaS4OojMQf/+6pQOQe6/Lf4q+EONycO
+ Khh/sU1tyFFBtvKuLdI1BUf79Qu52hobMz0j1UJgLb4NcuwFphHLTVO
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Provide dummy declarations of the VDSO_CLOCKMODE_* constants and use
-those to replace some ugly ifdeffery with cleaner IS_ENABLED() checks.
+Now that there is a dummy declaration of VDSO_CLOCKMODE_GIC, even if no
+vDSO is built, the ugly ifdeffery can be replaced with a cleaner
+IS_ENABLED() check.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
-Thomas Weißschuh (7):
-      kbuild: support generated asm-headers in subdirectories
-      vDSO: Make clockmode constants available without CONFIG_GENERIC_GETTIMEOFDAY
-      MIPS: csrc-r4k: Replace CONFIG_GENERIC_GETTIMEOFDAY ifdeffery with IS_ENABLED()
-      clocksource/drivers/mips-gic-timer: Replace CONFIG_GENERIC_GETTIMEOFDAY ifdeffery with IS_ENABLED()
-      clocksource/drivers/arm_arch_timer: Replace CONFIG_GENERIC_GETTIMEOFDAY ifdeffery with IS_ENABLED()
-      clocksource/drivers/timer-riscv: Replace CONFIG_GENERIC_GETTIMEOFDAY ifdeffery with IS_ENABLED()
-      LoongArch: Replace CONFIG_GENERIC_GETTIMEOFDAY ifdeffery with IS_ENABLED()
+ drivers/clocksource/mips-gic-timer.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
- arch/loongarch/kernel/time.c           |  5 ++---
- arch/mips/kernel/csrc-r4k.c            |  4 +---
- drivers/clocksource/arm_arch_timer.c   |  7 ++-----
- drivers/clocksource/mips-gic-timer.c   |  5 ++---
- drivers/clocksource/timer-riscv.c      |  7 ++-----
- include/asm-generic/Kbuild             |  1 +
- include/asm-generic/vdso/clocksource.h |  0
- include/vdso/clocksource.h             |  7 +++++--
- scripts/Makefile.asm-headers           | 11 +++++------
- 9 files changed, 20 insertions(+), 27 deletions(-)
----
-base-commit: dc59e4fea9d83f03bad6bddf3fa2e52491777482
-change-id: 20260605-vdso-arch-clockmodes-bfcaf9a2c848
+diff --git a/drivers/clocksource/mips-gic-timer.c b/drivers/clocksource/mips-gic-timer.c
+index a1669266c94d..0dd30ba3cce7 100644
+--- a/drivers/clocksource/mips-gic-timer.c
++++ b/drivers/clocksource/mips-gic-timer.c
+@@ -198,9 +198,8 @@ static struct clocksource gic_clocksource = {
+ 	.name			= "GIC",
+ 	.read			= gic_hpt_read,
+ 	.flags			= CLOCK_SOURCE_IS_CONTINUOUS,
+-#ifdef CONFIG_GENERIC_GETTIMEOFDAY
+-	.vdso_clock_mode	= VDSO_CLOCKMODE_GIC,
+-#endif
++	.vdso_clock_mode	= IS_ENABLED(CONFIG_GENERIC_GETTIMEOFDAY) ?
++					VDSO_CLOCKMODE_GIC : VDSO_CLOCKMODE_NONE,
+ };
+ 
+ static void gic_clocksource_unstable(char *reason)
 
-Best regards,
---  
-Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+-- 
+2.55.0
 
