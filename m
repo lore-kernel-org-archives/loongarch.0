@@ -1,44 +1,60 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D36315E5BB
-	for <loongarch@lists.linux.dev>; Thu,  9 Jul 2026 12:48:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E8E9264617
+	for <loongarch@lists.linux.dev>; Thu,  9 Jul 2026 13:21:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783601338; cv=none; b=ahSpSz6nGPorjhJgQ189p32nnfoxfG6QAXV4CWBbDI1pS+8+QoduGyt0Owv/rN9WBuyZJ4Ao0UDNnhyXa82uSVxFp0ImmSQ9okSh0qb2OZTyi8H3kLu4KfBoedrp2kt7N0RjvMe2QFySB4YPY6vElDq/6GayUYMVVLeI61MYEnc=
+	t=1783603284; cv=none; b=LyjKETNU3G+NeHX4tstQKcBYy7i9lnqncbXnlsfAORZpNDIXEEzxDOYxUu0qPDWHQVnVxHCFjnnnxfggQLmPZcgbYHRiaoNbgF1xSTzeTxRWeS7WKxvERI1MiJcNdh9JJjAb1+3LdtusiFZiZvxlHFfAdJVvejhHIe0ic0LKl2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783601338; c=relaxed/simple;
-	bh=8OUUT8qKzTxyLqKTXaf6utKezb1ei0lgRETyjCKwMRo=;
+	s=arc-20240116; t=1783603284; c=relaxed/simple;
+	bh=xaKUCAB0WTbjM/EIu1+mEKZq624rHW8NkbLsI88gSxc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jvIv1nvggVlAWbWi1unN+WghaKqJ1qk1UC8IxCKL/YuAadxeFtZ0BYqVWskFeObdqgLM3J+YMNRSzbJQ46gR3gsC3a0KlPAH59jr6E1cJIIyiyHrKr9hmQTaEOhfM3BeXX7/gehz/qnwxqUezQ1/9hjN9N+KiNtYZZcr2z719qg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Iycg/KIV; arc=none smtp.client-ip=91.218.175.177
+	 MIME-Version; b=FKk3B2hTTbfIuUODDNbuvB/pzFn9MsMZGuI5qUk4gxam61vaGeQrCUz2aX/HRGnx7436ZmYlxw0eru/BRumzHJjVYQXQFxakpUCPLSN7dQS8tl1ED63wOBDTyg1nT5muHnqdatlKY+kWHx9M3ad5RJRpUr8fzPpeTXlGbfcCmIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BwZJKYr+; arc=none smtp.client-ip=95.215.58.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Iycg/KIV"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BwZJKYr+"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1783601334;
+	t=1783603279;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=egEQegkzVd6qWuiMRf57t7zF7MyRk5jNUn1HniJAO8k=;
-	b=Iycg/KIVqDMfLX8Xy+tVV/5u6vC42kFOn0WbRUUEikqUEe+PnvXScKlmERZNC+QZDq/4l9
-	mJztvFMEpgk1ET9hT3h2VfL9kJwZhtygo99555KQ6Vyk05NJLziCH3xjbLtzs6Tk4c2jQx
-	0CqbzLokzg0DSOA7mnIWVA4lJ1+bCx4=
+	bh=YZTMZOseQABETX94dSN5QTo6IogqS7uJz7MvnyKnz3k=;
+	b=BwZJKYr+0I3fgRIqFwcYOJfj3JoV5pGqNQ3QLtKjuUKsRhSznhLH87WmYc5xiEFBwbeE2C
+	PAgHQNd/1RLHmeuGzsbdb24lg6UjA/nZ0CQc/utrOinK3/+HgZi4vJkN2o2YsYEqk/mpT8
+	4ZoYvDbatIHFw2zK49l9Ls96iqStmFI=
 From: George Guo <dongtai.guo@linux.dev>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: maobibo@loongson.cn,
-	loongarch@lists.linux.dev,
-	kexec@lists.infradead.org,
+To: chenhuacai@kernel.org
+Cc: jpoimboe@kernel.org,
+	joe.lawrence@redhat.com,
+	wangyuli@aosc.io,
+	peterz@infradead.org,
+	jikos@kernel.org,
+	mbenes@suse.cz,
+	pmladek@suse.com,
+	kernel@xen0n.name,
+	rostedt@goodmis.org,
+	ardb@kernel.org,
+	nathan@kernel.org,
+	nick.desaulniers+lkml@gmail.com,
+	yangtiezhu@loongson.cn,
+	jiaxun.yang@flygoat.com,
+	liukexin@kylinos.cn,
+	guodongtai@kylinos.cn,
+	xry111@xry111.site,
 	linux-kernel@vger.kernel.org,
-	George Guo <guodongtai@kylinos.cn>
-Subject: Re: [PATCH v4 0/2] LoongArch: kexec: avoid clobbering the QEMU FDT
-Date: Thu,  9 Jul 2026 20:48:30 +0800
-Message-ID: <20260709124830.15417-1-dongtai.guo@linux.dev>
-In-Reply-To: <CAAhV-H7S9_hPDFoCtzgfY9TeH_koN9NfKq9mo8y9BmLA5-7how@mail.gmail.com>
-References: <CAAhV-H7S9_hPDFoCtzgfY9TeH_koN9NfKq9mo8y9BmLA5-7how@mail.gmail.com>
+	live-patching@vger.kernel.org,
+	llvm@lists.linux.dev,
+	loongarch@lists.linux.dev
+Subject: Re: [PATCH v3 00/12] LoongArch: Add livepatch build (KLP) support
+Date: Thu,  9 Jul 2026 21:21:03 +0800
+Message-ID: <20260709132103.16433-1-dongtai.guo@linux.dev>
+In-Reply-To: <CAAhV-H4cr9xBkM-SEUHXm9t0yQ=r3B9pkNdmUDftP00hvVsZrQ@mail.gmail.com>
+References: <CAAhV-H4cr9xBkM-SEUHXm9t0yQ=r3B9pkNdmUDftP00hvVsZrQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -50,44 +66,62 @@ X-Migadu-Flow: FLOW_OUT
 
 Hi Huacai,
 
-Thanks for the correction, and I am sorry for the way I handled this.
+Thank you for raising this -- I take the concern seriously, and I'd like
+to lay out the full history so everyone is working from the same facts.
 
-> Who told you the trampoline is dead code? All non-boot CPUs are
-> running in the trampoline, you can use maxcpus=1 to go to the new
-> kernel, and do something, and then hotplug the non-boot CPUs at any
-> time.
+> 2. ... Wang Yuli had already alerted you in your v1. At that point, you
+> had two options: a) abandon your own patches ... or b) thank Wang Yuli
+> for the reminder and assistance, then seek to collaborate on
+> development. However, you did neither
 
-You are right, and I was wrong to call the trampoline dead once the new
-kernel starts.  The non-boot CPUs spin in kexec_smp_wait inside the
-trampoline buffer and only leave it when the new kernel brings them
-online, so with maxcpus=1 they stay there until a later CPU hotplug.
-The buffer has to stay valid the whole time.
+I did take option (b). Wang Yuli's v1 messages were code review, and I
+thanked him on-list and folded every point into v2:
 
-That breaks my patch 1.  control_code_page is allocated by the kexec
-core and is not reserved in the new kernel, so the new kernel can reuse
-that page while the non-boot CPUs are still spinning in it, and small
-memory makes that more likely.  The fixed KEXEC_CONTROL_CODE at 0x100000
-avoided this because the first 2MB is memblock_reserve()d in both
-kernels; its only problem was that it overlaps QEMU's machine FDT at
-0x100000.  So my Q2 answer in the cover letter was also wrong, and "as
-arm64/riscv do" does not apply here.
+  https://lore.kernel.org/all/20260608103302.340456-1-dongtai.guo@linux.dev/
 
-So the trampoline still needs to live in the cross-kexec reserved first
-2MB, just not on top of the FDT.  The FDT declares fdt_totalsize 1MB and
-covers [0x100000, 0x200000), so the room left is below 0x100000.
+  "Thanks for the review -- all three points are addressed in v2. ...
+   You were right that this had not been properly exercised before ..."
 
-Do you have a different fix in mind? I would like to agree on the
-direction with you before I send anything.
+His "awM is dangerous, see how x86 did" comment in particular led
+directly to the ANNOTATE_DATA_SPECIAL rework that is in the series now.
+The review made these patches better and I'm grateful for it.
 
-> BTW,  you have never replied to my comments, all you have done is
-> submit new versions again and again.
+> 1. Wang Yuli released his version first; re-releasing it without any
+> prior communication is simply rude.
 
-That is fair, and it was my mistake.  I should have replied to your
-review in the thread and discussed it before sending a new version,
-instead of putting my answers in a cover letter.  I will reply to
-comments first from now on.
+On priority: this series is not a fork of Wang Yuli's. I have been
+carrying LoongArch livepatch tooling since kpatch, which is klp-build's
+predecessor (same maintainer, later folded into the kernel). My kpatch
+LoongArch support was posted on 2024-12-05 and merged 2026-01-12:
 
-I will hold the series until we settle the trampoline approach.
+  https://github.com/dynup/kpatch/pull/1427
+
+developed over several review rounds with Joe Lawrence. When Josh
+announced the kpatch -> klp-build transition, he listed the LoongArch
+port as coming from me:
+
+  https://github.com/dynup/kpatch/issues/1498
+  ("loongarch ... shared by @georgejguo below, coming soon")
+
+So this klp-build series is the continuation of my own earlier work,
+not a takeover of someone else's.
+
+On scope: Wang Yuli's own suggestion in v1 was to use his patch to
+replace "these two patches" -- i.e. the basic arch-enablement piece.
+This series is the objtool/klp-diff and build-tooling integration
+(12 patches), including four fixes Joe found by running the full
+klp-build flow end to end. The overlap is just the arch-enablement part.
+
+> does that mean Wang Yuli can now throw yours in the trash when he
+> releases his v2?
+
+I don't see this as anyone's to throw away -- it's shared work toward
+the same goal, and I'd much rather converge than duplicate. Concretely:
+I'm happy to fold the overlapping arch-enablement patch in with Wang
+Yuli as author (or Co-developed-by), and to work with him on the rest.
+
+Wang Yuli, if you're up for it, let's coordinate -- I can take the
+objtool/klp-diff pieces and we land one clean series together.
 
 Thanks,
 George
