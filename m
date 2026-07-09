@@ -1,34 +1,31 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFA8F3F1646
-	for <loongarch@lists.linux.dev>; Thu,  9 Jul 2026 08:28:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 370B03EDE70
+	for <loongarch@lists.linux.dev>; Thu,  9 Jul 2026 08:28:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783585720; cv=none; b=NCtjAgj5wTjRTDIlLXrGjWorK7yemHNTHNZgnfp/FcXAttP0ETRwzab8ulBG7u3MBzgcEgoZy5GaFCl0F5bxj219FEMs6ZuL9RFh9rO/jP3GkLZLy8uE5wEnJ5CDx6nyXhVs7PBmg2YcG7ROqL7iLSaQXN9crp3mDpueI4XVfpQ=
+	t=1783585728; cv=none; b=fJ29cTOLyVS/0xcjJ3UmV/oGS0P1vthKTDZxlfwN6zr7fIIP5jeA/OV7WSM4K9iGvXtXQBMlEzGCfZIQvuK8QX3SNIahPfNYknnZEKB3W99VBi1a3NGQDH5I6SEt/EaFIo3dPcuL09ZRZIkPzEkc3RC2A4ZIhtApi1lu/asuTjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783585720; c=relaxed/simple;
-	bh=ZOBYqUzynzbbeqmJp5ITc+Z7Z+YycfW67Fe6Xad+MIo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HZ1L73vhVYjWMjIg0mzratjHqqOR3G1v/Z/L9M706u5IOFmno5hNyuIeFzwfQbRfxP8bjv0B3OBhVy16Vs/nlBvpZf5xocSJKgamgOPdQQgWKFsOZaz7rbqcLTi20cPR5qlgBdw6rpKritv/nLL5zefK3qZK9LH2HYQv95KBc08=
+	s=arc-20240116; t=1783585728; c=relaxed/simple;
+	bh=x3dA87p9m1F7Kqr7HZ5lh44BEly4Z5S9sFstBxptAE8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eTOmmAHthhMxzyAnE09rUlu/WeCDdbETNHH4le35VicbLmYs14F0f3JR6jFJbyt7hQc9TAYyUJdoDopPfzLhv5BWYxhNKXmW3CQYPnMpy+RVS4leYBN2rgw39yRBHKrjR30fKKxTPpAOBrw3Zu2VtQIE8fplR37FSCvVI4NOZSM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8CxZeqyW09q7MYBAA--.6055S3;
-	Thu, 09 Jul 2026 16:28:34 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8BxGOuuW09q4cYBAA--.7629S3;
+	Thu, 09 Jul 2026 16:28:30 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJDxTseyW09q46IGAA--.32661S2;
-	Thu, 09 Jul 2026 16:28:34 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJAxnMapW09q3qIGAA--.32266S2;
+	Thu, 09 Jul 2026 16:28:25 +0800 (CST)
 From: Bibo Mao <maobibo@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: kvm@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 4/4] LoongArch: KVM: Use internal API to deliver interrupt in kernel mode
-Date: Thu,  9 Jul 2026 16:21:09 +0800
-Message-Id: <20260709082109.1361767-5-maobibo@loongson.cn>
+Subject: [PATCH v4 0/4] LoongArch: KVM: Harden interrupt injection
+Date: Thu,  9 Jul 2026 16:21:05 +0800
+Message-Id: <20260709082109.1361767-1-maobibo@loongson.cn>
 X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20260709082109.1361767-1-maobibo@loongson.cn>
-References: <20260709082109.1361767-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -36,7 +33,7 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxTseyW09q46IGAA--.32661S2
+X-CM-TRANSID:qMiowJAxnMapW09q3qIGAA--.32266S2
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
@@ -44,147 +41,52 @@ X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 
 API kvm_vcpu_ioctl_interrupt() is mainly to used to deliver interrupt
 from user mode, and internal APIs kvm_queue_irq() and kvm_dequeue_irq()
-are used in kernel mode.
+are used in kernel mode, also moves IPI interrupt handling within lock
+protection.
 
-Also move IPI inject and ack within lock protection to avoid contention
-in ipi_set() and ipi_clear().
+Also this patch replaces kvm_err() with WARN_ONCE() to avoid noise
+kernel log.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
- arch/loongarch/kvm/intc/dmsintc.c |  7 ++++---
- arch/loongarch/kvm/intc/eiointc.c | 14 +++++++++-----
- arch/loongarch/kvm/intc/ipi.c     | 14 ++++++--------
- arch/loongarch/kvm/vcpu.c         |  3 +++
- 4 files changed, 22 insertions(+), 16 deletions(-)
+v3 ... v4:
+  1. From AI assist, replace kvm_err() with kvm_pr_unimpl() rather than
+     WARN_ONCE(), since host may crash with WARN_ONCE() when kernel
+     parameter panic_on_warn=1 is set.
+  2. Add one new patch 3 which returns directly when IPI address is not
+     aligned, rather than only print WARN_ON_ONCE() and continue to run.
 
-diff --git a/arch/loongarch/kvm/intc/dmsintc.c b/arch/loongarch/kvm/intc/dmsintc.c
-index 622d3127d898..8e538fc0eeca 100644
---- a/arch/loongarch/kvm/intc/dmsintc.c
-+++ b/arch/loongarch/kvm/intc/dmsintc.c
-@@ -47,7 +47,6 @@ void dmsintc_inject_irq(struct kvm_vcpu *vcpu)
- int dmsintc_deliver_msi_to_vcpu(struct kvm *kvm,
- 				struct kvm_vcpu *vcpu, u32 vector, int level)
- {
--	struct kvm_interrupt vcpu_irq;
- 	struct dmsintc_state *ds = &vcpu->arch.dmsintc_state;
- 
- 	if (!level)
-@@ -57,9 +56,11 @@ int dmsintc_deliver_msi_to_vcpu(struct kvm *kvm,
- 	if (!ds)
- 		return -ENODEV;
- 
--	vcpu_irq.irq = INT_AVEC;
-+	if (!kvm_guest_has_msgint(&vcpu->arch))
-+		return -EINVAL;
-+
- 	set_bit(vector, (unsigned long *)&ds->vector_map);
--	kvm_vcpu_ioctl_interrupt(vcpu, &vcpu_irq);
-+	kvm_queue_irq(vcpu, INT_AVEC);
- 	kvm_vcpu_kick(vcpu);
- 
- 	return 0;
-diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
-index fd089d54da10..e04aadbd68db 100644
---- a/arch/loongarch/kvm/intc/eiointc.c
-+++ b/arch/loongarch/kvm/intc/eiointc.c
-@@ -17,7 +17,8 @@ static void eiointc_set_sw_coreisr(struct loongarch_eiointc *s)
- 		if (!(s->status & BIT(EIOINTC_ENABLE_INT_ENCODE))) {
- 			ipnum = count_trailing_zeros(ipnum);
- 			ipnum = ipnum < 4 ? ipnum : 0;
--		}
-+		} else if (ipnum >= LOONGSON_IP_NUM)
-+			ipnum = 0;
- 
- 		cpuid = ((u8 *)s->coremap)[irq];
- 		vcpu = kvm_get_vcpu_by_cpuid(s->kvm, cpuid);
-@@ -36,13 +37,13 @@ static void eiointc_update_irq(struct loongarch_eiointc *s, int irq, int level)
- {
- 	int ipnum, cpu, found;
- 	struct kvm_vcpu *vcpu;
--	struct kvm_interrupt vcpu_irq;
- 
- 	ipnum = (s->ipmap >> (irq / 32 * 8)) & 0xff;
- 	if (!(s->status & BIT(EIOINTC_ENABLE_INT_ENCODE))) {
- 		ipnum = count_trailing_zeros(ipnum);
- 		ipnum = ipnum < 4 ? ipnum : 0;
--	}
-+	} else if (ipnum >= LOONGSON_IP_NUM)
-+		ipnum = 0;
- 
- 	cpu = s->sw_coremap[irq];
- 	vcpu = kvm_get_vcpu_by_id(s->kvm, cpu);
-@@ -67,8 +68,11 @@ static void eiointc_update_irq(struct loongarch_eiointc *s, int irq, int level)
- 	if (found < EIOINTC_IRQS)
- 		return; /* other irq is handling, needn't update parent irq */
- 
--	vcpu_irq.irq = level ? (INT_HWI0 + ipnum) : -(INT_HWI0 + ipnum);
--	kvm_vcpu_ioctl_interrupt(vcpu, &vcpu_irq);
-+	if (level)
-+		kvm_queue_irq(vcpu, INT_HWI0 + ipnum);
-+	else
-+		kvm_dequeue_irq(vcpu, INT_HWI0 + ipnum);
-+	kvm_vcpu_kick(vcpu);
- }
- 
- static inline void eiointc_update_sw_coremap(struct loongarch_eiointc *s,
-diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.c
-index 8ec40e09c5ab..603b04704d12 100644
---- a/arch/loongarch/kvm/intc/ipi.c
-+++ b/arch/loongarch/kvm/intc/ipi.c
-@@ -10,16 +10,15 @@
- static void ipi_set(struct kvm_vcpu *vcpu, uint32_t data)
- {
- 	uint32_t status;
--	struct kvm_interrupt irq;
- 
- 	spin_lock(&vcpu->arch.ipi_state.lock);
- 	status = vcpu->arch.ipi_state.status;
- 	vcpu->arch.ipi_state.status |= data;
--	spin_unlock(&vcpu->arch.ipi_state.lock);
- 	if ((status == 0) && data) {
--		irq.irq = LARCH_INT_IPI;
--		kvm_vcpu_ioctl_interrupt(vcpu, &irq);
-+		kvm_queue_irq(vcpu, LARCH_INT_IPI);
-+		kvm_vcpu_kick(vcpu);
- 	}
-+	spin_unlock(&vcpu->arch.ipi_state.lock);
- }
- 
- static void ipi_send(struct kvm *kvm, uint64_t data)
-@@ -40,16 +39,15 @@ static void ipi_send(struct kvm *kvm, uint64_t data)
- static void ipi_clear(struct kvm_vcpu *vcpu, uint64_t data)
- {
- 	uint32_t status;
--	struct kvm_interrupt irq;
- 
- 	spin_lock(&vcpu->arch.ipi_state.lock);
- 	vcpu->arch.ipi_state.status &= ~data;
- 	status = vcpu->arch.ipi_state.status;
--	spin_unlock(&vcpu->arch.ipi_state.lock);
- 	if (status == 0) {
--		irq.irq = -LARCH_INT_IPI;
--		kvm_vcpu_ioctl_interrupt(vcpu, &irq);
-+		kvm_dequeue_irq(vcpu, LARCH_INT_IPI);
-+		kvm_vcpu_kick(vcpu);
- 	}
-+	spin_unlock(&vcpu->arch.ipi_state.lock);
- }
- 
- static uint64_t read_mailbox(struct kvm_vcpu *vcpu, int offset, int len)
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 1a0cf6c81df6..f81dadc62c98 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -1465,6 +1465,9 @@ int kvm_vcpu_ioctl_interrupt(struct kvm_vcpu *vcpu, struct kvm_interrupt *irq)
- 	if (vector >= EXCCODE_INT_NUM)
- 		return -EINVAL;
- 
-+	if (kvm_arch_irqchip_in_kernel(vcpu->kvm))
-+		return -EINVAL;
-+
- 	if (!kvm_guest_has_msgint(&vcpu->arch) && (vector == INT_AVEC))
- 		return -EINVAL;
- 
+v2 ... v3:
+  1. Split the patches into three smaller ones, the first patch removes
+     old default case and kvm_err() since it is impossible to happen.
+     And the second patch replaces kvm_err() with WARN_ONCE().
+
+v1 ... v2:
+  1. Add border check with ipnum in eiointc_set_sw_coreisr() and
+     eiointc_update_irq(), so that injected interrupt vector is valid.
+
+  2. Move IPI inject and ack within lock to avoid contention in
+     ipi_set() and ipi_clear().
+
+  3. Add kvm_arch_irqchip_in_kernel() check in user mode irq injection
+    in function kvm_vcpu_ioctl_interrupt(), contention of user mode irq
+    injection is assured from user mode VMM.
+---
+Bibo Mao (4):
+  LoongArch: KVM: Set default MAILBOX access size with 8
+  LoongArch: KVM: Replace kvm_err() with kvm_pr_unimpl()
+  LoongArch: KVM: Return directly when IPI address is not aligned
+  LoongArch: KVM: Use internal API to deliver interrupt in kernel mode
+
+ arch/loongarch/kvm/exit.c         | 16 +++----
+ arch/loongarch/kvm/intc/dmsintc.c | 15 ++++---
+ arch/loongarch/kvm/intc/eiointc.c | 32 +++++++------
+ arch/loongarch/kvm/intc/ipi.c     | 75 +++++++++++++------------------
+ arch/loongarch/kvm/intc/pch_pic.c | 12 ++---
+ arch/loongarch/kvm/vcpu.c         |  5 ++-
+ 6 files changed, 76 insertions(+), 79 deletions(-)
+
+
+base-commit: 0e35b9b6ec0ffcc5e23cbdec09f5c622ad532b53
 -- 
 2.39.3
 
