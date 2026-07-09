@@ -1,130 +1,236 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEDE636DA0F
-	for <loongarch@lists.linux.dev>; Thu,  9 Jul 2026 02:57:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66E9C38F226
+	for <loongarch@lists.linux.dev>; Thu,  9 Jul 2026 03:36:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783565831; cv=none; b=p5lYXrRjI1aoGLe1FR4B7uLyadwOcGHuFjiipF7ziKELdU+I4iU91Ug5NJntwBjXVOf7pA7/SkTwSDspuzBgBSRjCVBDn5yAMuBkCJs/LBtLaU7uy/T1So/OwHKMIaPugJN6GsO6jSCKMtlICg/eP8zSOMwWXtG05hIIUpVoM2M=
+	t=1783568218; cv=none; b=mSlq42fc7a3o5bfIYXAhTzM+vE9yrUaCIcJ3LJivweVo1BzqXg9U3HTqr4GycP73gXaUbFUR6INRd0fZjS0y9WIzgpT2iJHsYh+sEV9Thzc6kTy++6jnjQoY8OFWWrpoXQ7kT0uWZlckMDRBpCFnUBPaJ9aBM5RvXv2mRhf8Hak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783565831; c=relaxed/simple;
-	bh=ZJSABZNvC56nQ+Wmu75P1o5dGoNQlvs18t2e6a6C208=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=LXP5y9zngpsQVzMOkvh+xoomgJGH3xFjjgTkAn3j+jO7/wG1GhhFqxmh9FEszv9aANLlmkkuW17CwH2IT5w95XATOeb8dP0WBt1XBBBf6w72RzBCvbuw9y/md5vFQrUGrNwuIgOd+W6UXPgIpS8Yvt2Mtc8UwSuWz1E4nLp4XJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=mS5YZyj2; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=mS5YZyj2; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="mS5YZyj2";
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="mS5YZyj2"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=nU1CGqVFGwcos7tENR0k8m0Nt+0Ib81104RzXou1iFc=;
-	b=mS5YZyj2x7rhaVjaYemm20YschmeI6DYoCPf1ckgP1bFplP7hmfasEJ2cQ3lFnxkosy4gRDH6
-	5A3UDFD/i0ErGjIgBF7FK3s94x8FnBN5At2LVKpAuncaOLkMO9riVJHrSoiSkjJwSI7QJddrQjq
-	Bi9rtHGbQw+1uEpZnaaKZjE=
-Received: from canpmsgout09.his.huawei.com (unknown [172.19.92.135])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTPS id 4gwfLQ1v5Zz1BG5m
-	for <loongarch@lists.linux.dev>; Thu,  9 Jul 2026 10:39:26 +0800 (CST)
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=nU1CGqVFGwcos7tENR0k8m0Nt+0Ib81104RzXou1iFc=;
-	b=mS5YZyj2x7rhaVjaYemm20YschmeI6DYoCPf1ckgP1bFplP7hmfasEJ2cQ3lFnxkosy4gRDH6
-	5A3UDFD/i0ErGjIgBF7FK3s94x8FnBN5At2LVKpAuncaOLkMO9riVJHrSoiSkjJwSI7QJddrQjq
-	Bi9rtHGbQw+1uEpZnaaKZjE=
-Received: from mail.maildlp.com (unknown [172.19.163.127])
-	by canpmsgout09.his.huawei.com (SkyGuard) with ESMTPS id 4gwf7h4m4Jz1cyVV;
-	Thu,  9 Jul 2026 10:30:08 +0800 (CST)
-Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id AF5D840572;
-	Thu,  9 Jul 2026 10:39:21 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 9 Jul 2026 10:39:19 +0800
-Message-ID: <5102cd31-1f44-4651-b681-6b3f56d3b225@huawei.com>
-Date: Thu, 9 Jul 2026 10:39:17 +0800
+	s=arc-20240116; t=1783568218; c=relaxed/simple;
+	bh=lngESO5xPN08rbasMRTXTycsJ8gEcJ7PWqC94sL11ME=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=Qa/LsOsn8/aN+L804TfDsV6+3C26e5iuvJXCXzdSR/YOc8cTdOadn0s+vBwSXNrzsxvZks1bqKk5GPzidBrOSWJo1yf/hM/hcNNPX9a/7UR4Kxp+vGS6lYk7p56ok2tUvlSHu3q3d0Lx1cabXDb8PgbSR4aszxFofmhDb3rCRZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8DxNOpVF09qoLUBAA--.5985S3;
+	Thu, 09 Jul 2026 11:36:53 +0800 (CST)
+Received: from [10.130.40.83] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJDxDcdKF09qFWwGAA--.11651S2;
+	Thu, 09 Jul 2026 11:36:43 +0800 (CST)
+Subject: Re: [PATCH bpf-next v9 2/2] bpf: Reject programs with inlined helpers
+ if JIT is not available
+To: bot+bpf-ci@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+ andrii@kernel.org, eddyz87@gmail.com, memxor@gmail.com,
+ martin.lau@linux.dev, song@kernel.org, yonghong.song@linux.dev,
+ jolsa@kernel.org, emil@etsalapatis.com, kafai.wan@linux.dev
+Cc: bpf@vger.kernel.org, loongarch@lists.linux.dev, leon.hwang@linux.dev,
+ puranjay@kernel.org, bjorn@kernel.org, martin.lau@kernel.org, clm@meta.com,
+ ihor.solodrai@linux.dev
+References: <20260708101806.18885-3-yangtiezhu@loongson.cn>
+ <ec55680c84f90a8fdd97e0788926d322ea765e18df1604bf71fbd00b45b52f73@mail.kernel.org>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <02442c90-9467-ccb3-17a4-4c01f1bc3b38@loongson.cn>
+Date: Thu, 9 Jul 2026 11:36:42 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [patch 07/18] s390/syscall: Use
- enter_from_user_mode_randomize_stack()
-To: Thomas Gleixner <tglx@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-CC: Peter Zijlstra <peterz@infradead.org>, Sven Schnelle
-	<svens@linux.ibm.com>, <linux-s390@vger.kernel.org>, Michael Ellerman
-	<mpe@ellerman.id.au>, Shrikanth Hegde <sshegde@linux.ibm.com>,
-	<linuxppc-dev@lists.ozlabs.org>, Kees Cook <kees@kernel.org>, Huacai Chen
-	<chenhuacai@kernel.org>, <loongarch@lists.linux.dev>, Paul Walmsley
-	<pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	<linux-riscv@lists.infradead.org>, <x86@kernel.org>, Mark Rutland
-	<mark.rutland@arm.com>, Andy Lutomirski <luto@kernel.org>, Oleg Nesterov
-	<oleg@redhat.com>, Richard Henderson <richard.henderson@linaro.org>, Russell
- King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Guo
- Ren <guoren@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Thomas
- Bogendoerfer <tsbogend@alpha.franken.de>, Helge Deller <deller@gmx.de>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>, Richard Weinberger
-	<richard@nod.at>, Chris Zankel <chris@zankel.net>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-alpha@vger.kernel.org>,
-	<linux-csky@vger.kernel.org>, <linux-m68k@lists.linux-m68k.org>,
-	<linux-mips@vger.kernel.org>, <linux-parisc@vger.kernel.org>,
-	<linux-sh@vger.kernel.org>, <linux-um@lists.infradead.org>, Arnd Bergmann
-	<arnd@arndb.de>, Vineet Gupta <vgupta@kernel.org>, Will Deacon
-	<will@kernel.org>, Brian Cain <bcain@kernel.org>, Michal Simek
-	<monstr@monstr.eu>, Dinh Nguyen <dinguyen@kernel.org>, "David S. Miller"
-	<davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>,
-	<linux-snps-arc@lists.infradead.org>, <linux-hexagon@vger.kernel.org>,
-	<linux-openrisc@vger.kernel.org>, <sparclinux@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, =?UTF-8?Q?Michal_Such=C3=A1nek?=
-	<msuchanek@suse.de>, Jonathan Corbet <corbet@lwn.net>,
-	<linux-doc@vger.kernel.org>
-References: <20260707181957.433213175@kernel.org>
- <20260707190254.030598804@kernel.org>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <20260707190254.030598804@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- dggpemf500011.china.huawei.com (7.185.36.131)
+In-Reply-To: <ec55680c84f90a8fdd97e0788926d322ea765e18df1604bf71fbd00b45b52f73@mail.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxDcdKF09qFWwGAA--.11651S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Gr13CrWrGFW3CF1fCFW5XFc_yoWxCrykpF
+	Z0qw48Kr4kX34I93y7Jw4UAr15tw4DAF15CFyrGr1rC3W5Xr18XFyxK3y29Fs0yr4UKw17
+	Zr4jyw12k3WDXagCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUP2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4j6r4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
+	Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48J
+	MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI
+	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y
+	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+	IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8qXdUUUUU
+	U==
 
+On 2026/7/8 下午6:59, bot+bpf-ci@kernel.org wrote:
+>> When an architecture (such as LoongArch, ARM64, and RISC-V) implements
+>> bpf_jit_inlines_helper_call(), the verifier skips rewriting the helper
+>> call offset (insn->imm) in bpf_do_misc_fixups(). This is because the
+>> helper is expected to be inlined by the JIT compiler later. Therefore,
+>> insn->imm remains as the raw helper enum ID.
+>>
+>> However, if JIT is disabled at runtime (net.core.bpf_jit_enable=0) or
+>> if JIT compilation fails dynamically (e.g., due to OOM), the program
+>> falls back to the BPF interpreter.
+>>
+>> When the interpreter executes (__bpf_call_base + insn->imm) with the
+>> unpatched raw ID, it jumps into an invalid address space, triggering
+>> an instruction alignment fault or a kernel panic.
+>>
+>> Although these helpers have valid C implementations in the kernel, the
+>> omission of offset rewriting makes runtime interpreter fallback fatal.
+>>
+>> Fix this by setting 'prog->jit_required = 1' when helper call rewriting
+>> is skipped for JIT inlining. This ensures that such programs are safely
+>> rejected if JIT is not available, preventing the runtime kernel panic.
+> 
+> The commit message gives two reasons for the interpreter fallback:
+> 
+>> However, if JIT is disabled at runtime (net.core.bpf_jit_enable=0) or
+>> if JIT compilation fails dynamically (e.g., due to OOM), the program
+>> falls back to the BPF interpreter.
+> 
+> Is the "fails dynamically (e.g., due to OOM)" part accurate?
+> 
+> The JIT decision looks like it is settled before verification runs:
+> bpf_prog_alloc_no_stats() sets fp->jit_requested ahead of the bpf_check()
+> call in bpf_prog_load(), so the choice between JIT and interpreter appears
+> to be made at load time rather than changing after a dynamic JIT failure.
+> 
+>> diff --git a/kernel/bpf/fixups.c b/kernel/bpf/fixups.c
+>> index 02246df2f6c3..d3be972714b2 100644
+>> --- a/kernel/bpf/fixups.c
+>> +++ b/kernel/bpf/fixups.c
+>> @@ -1840,8 +1840,10 @@ int bpf_do_misc_fixups(struct bpf_verifier_env *env)
+>>   		}
+>>
+>>   		/* Skip inlining the helper call if the JIT does it. */
+>> -		if (bpf_jit_inlines_helper_call(insn->imm))
+>> +		if (bpf_jit_inlines_helper_call(insn->imm)) {
+>> +			prog->jit_required = 1;
+>>   			goto next_insn;
+>> +		}
+> 
+> If the JIT decision is final at load time, would gating on
+> bpf_jit_inlines_helper_call() together with the jit-enabled state be
+> enough here, without depending on the dynamic-failure rationale?
+> 
+> This point was raised during review of an earlier version of the series
+> and does not appear to have been answered before this version, and the
+> disputed wording is still present in the commit message.
 
+I tested on a real hardware (Loongson-3A6000 physical machine).
 
-On 7/8/2026 3:06 AM, Thomas Gleixner wrote:
-> enter_from_user_mode_randomize_stack() replaces enter_from_user_mode() and
-> the subsequent invocation of add_random_kstack_offset_irqsoff().
-> 
-> As a bonus this avoids the overhead of get/put_cpu_var() in
-> add_random_kstack_offset().
-> 
-> No functional change.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@kernel.org>
-> Cc: Sven Schnelle <svens@linux.ibm.com>
-> Cc: linux-s390@vger.kernel.org
-> ---
->  arch/s390/kernel/syscall.c |    4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> --- a/arch/s390/kernel/syscall.c
-> +++ b/arch/s390/kernel/syscall.c
-> @@ -97,8 +97,8 @@ void noinstr __do_syscall(struct pt_regs
->  {
->  	unsigned long nr;
->  
-> -	enter_from_user_mode(regs);
-> -	add_random_kstack_offset();
-> +	enter_from_user_mode_randomize_stack(regs);
+Only with the first patch and without this second patch,
+keep net.core.bpf_jit_enable=1, simulate a dynamic JIT
+failure like this:
 
-Reviewed-by: Jinjie Ruan <ruanjinjie@huawei.com>
+```
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index 2738b4db1165..fa56a593ac1a 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -2208,7 +2208,7 @@ struct bpf_prog *bpf_int_jit_compile(struct 
+bpf_verifier_env *env, struct bpf_pr
+          * If BPF JIT was not enabled then we must fall back to
+          * the interpreter.
+          */
+-       if (!prog->jit_requested)
++       if (prog->jit_requested)
+                 return prog;
 
-> +
->  	regs->psw = get_lowcore()->svc_old_psw;
->  	regs->int_code = get_lowcore()->svc_int_code;
->  	update_timer_sys();
-> 
+         jit_data = prog->aux->jit_data;
+```
+
+CONFIG_BPF_JIT_ALWAYS_ON is disabled, the kernel panics.
+
+Here are the test logs:
+
+```
+fedora@linux:~$ cat test_panic.c
+   #include <linux/bpf.h>
+   #include <bpf/bpf_helpers.h>
+
+   SEC("kprobe/sys_getpid")
+   int test_panic(void *ctx)
+   {
+   	struct task_struct *task;
+
+   	task = (struct task_struct *)bpf_get_current_task_btf();
+   	if (task)
+   		bpf_printk("Task address: %p\n", task);
+
+   	return 0;
+   }
+
+   char LICENSE[] SEC("license") = "GPL";
+fedora@linux:~$ clang -target bpf -O2 -g -c test_panic.c -o test_panic.o
+fedora@linux:~$ sudo sysctl -w net.core.bpf_jit_enable=1
+net.core.bpf_jit_enable = 1
+fedora@linux:~$ sudo bpftool prog load test_panic.o 
+/sys/fs/bpf/test_panic autoattach
+fedora@linux:~$ sudo cat /sys/kernel/debug/tracing/trace_pipe
+Segmentation fault
+
+[  662.150034] Kernel ade access[#1]:
+[  662.153416] CPU: 5 UID: 0 PID: 1224 Comm: (udev-worker) Not tainted 
+7.2.0-rc1bpf+ #7 PREEMPT(full)
+[  662.162408] Hardware name: Loongson 
+Loongson-3A6000-7A2000-1w-V0.1-EVB/Loongson-3A6000-7A2000-1w-EVB-V1.21, 
+BIOS Loongson-UDK2018-V4.0.05878.1-stable20241
+[  662.176149] pc 9000000000f6a02e ra 9000000000f6ba70 tp 
+9000000122539000 sp 900000015ef33ad0
+[  662.184447] a0 900000015ef33d20 a1 0000000000000000 a2 
+0000000000000000 a3 0000000000000000
+[  662.192745] a4 0000000000000000 a5 00007ffffb7ebe4b a6 
+00007ffffb7ebe4b a7 00000000000000ac
+[  662.201044] t0 9000000000f6a02e t1 000000000000009e t2 
+c1cd71039fc4e000 t3 00000000000000f4
+[  662.209342] t4 900000016ebcdb00 t5 9000000122539000 t6 
+0000000000000000 t7 0000000000ff0100
+[  662.217640] t8 900000015ef33e60 u0 00000004749f0000 s9 
+900000015ef33ec0 s0 ffff800032be0060
+[  662.225938] s1 0000000000000051 s2 00000000000000f1 s3 
+0000000000000040 s4 0000000000000000
+[  662.234236] s5 900000015ef33b40 s6 9000000003520148 s7 
+900000012218f9d0 s8 0000000000000000
+[  662.242534]    ra: 9000000000f6ba70 ___bpf_prog_run+0x1370/0x36b0
+[  662.248590]   ERA: 9000000000f6a02e __traceiter_xdp_exception+0x4e/0x90
+[  662.255161]  CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=CC DACM=CC -WE)
+[  662.261307]  PRMD: 00000004 (PPLV0 +PIE -PWE)
+[  662.265633]  EUEN: 00000007 (+FPE +SXE +ASXE -BTE)
+[  662.270392]  ECFG: 00071c1d (LIE=0,2-4,10-12 VS=7)
+[  662.275150] ESTAT: 00080000 [ADEF] (IS= ECode=8 EsubCode=0)
+[  662.280686]  BADV: 9000000000f6a02e
+[  662.284146]  PRID: 0014d000 (Loongson-64bit, Loongson-3A6000)
+```
+
+The root cause can be easily seen in `__bpf_prog_select_runtime()`
+after only applying patch 1:
+
+1. Without patch 2, `fp->jit_required` remains `false` for programs
+    using JIT-inlined helpers, so `jit_needed` initializes to `false`.
+2. When the JIT compiler fails dynamically (returning `!fp->jited`),
+    the program incorrectly falls back to the interpreter.
+
+Thus the following conditions are not matched in
+`__bpf_prog_select_runtime()`:
+
+                 if (!fp->jited && jit_needed) {
+                         *err = -ENOTSUPP;
+                         return fp;
+                 }
+
+`!fp->jited` is true, but `jit_needed` is false.
+
+3. As a result, the program incorrectly falls back to the interpreter
+with unpatched instruction raw IDs, causing the fatal kernel panic.
+
+IMO, there is no problem in the commit message.
+
+Thanks,
+Tiezhu
 
