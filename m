@@ -1,94 +1,62 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA0C230E84A
-	for <loongarch@lists.linux.dev>; Thu,  9 Jul 2026 20:16:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5D8A346A19
+	for <loongarch@lists.linux.dev>; Thu,  9 Jul 2026 22:22:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783628197; cv=none; b=hH/WftJ9JapR9xTHf2hIGtWKD+3VpCvxCAf5HxAdwtaCG0mWA3LnkL4ObG1dn/ceVSaIpe5C3dXK9tVrm683tBOEQrFB1Osein7Y8oYLL4BzH2ivTwbLDIhGh4SqKVDxDAoxNh8iUV50n0owaqYTvZxeDO95c1RUdvaRakW0764=
+	t=1783635777; cv=none; b=FWhAZYsfdaRGnxV2rphf39SAvGnqrdKzLDb3xuO071o/kN/ip7/tV6tfif4YvRKO4dcjiS6Q/ntuuuZYWCJtJ/uBxFv/KMdoD5gY218RS8STm+JrKxIGkGaWbitmTAAjrw01P+rvTT4eymGDWk8YP5cIDcpPbWgOJ7PEjv0H4wk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783628197; c=relaxed/simple;
-	bh=sCIzHr6LIKs/1PVbD9pk77j9HIdph/3wuYTdeeKTPZI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PP3hG+zfx/9hb4OSQIKRiz/v+bUJHo4Wcn566oDTga6pmtDVq4dblN3uC5GSv85GhDn9+SyBdzClNpRNRl3zWM736nPKvGgAaSRXbLIEnMpFvAZas+dx9Qqe6UzYIScGJC4zmFiZgFkcRnSfpZJhA1FMV1YKrlyLgbUjsmsx10U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=pG0wJjpG; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1783635777; c=relaxed/simple;
+	bh=x97uFTIjXkGA6Az31J4eQq5SV3sdoZkgFYZLe5sZj3o=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=IMo/l18PbE4yCJUu2lt/UQDZL+jdgw3LqEzEgEnmRzZ7MPQZ/MBRuMZxWk15CVDXPS+pOzzBGvgpu5BfngbLyuAYJEfpxs+um8WZzGCaSFPR0dGxtIlaZhRfiso5fRoB7qBOtT7PLHdQe0LhOinl4G6RmZBDyfoqPSWsbOy3crk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RGKl2dGd; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pG0wJjpG"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-c999f162c9aso140734a12.3
-        for <loongarch@lists.linux.dev>; Thu, 09 Jul 2026 13:16:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783628195; x=1784232995; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=5lqgggpghOuMWXpzCLQ94POSykk42wtAfFSu9QYNYOQ=;
-        b=pG0wJjpGtngDILnJGKlL0iMswY7tFrFF/pbhugFZadoLFLgVIK0gRKluD+XjxT301m
-         m9uOVDhu+tacOs9vzfThlJXlqszwuhJnDMjljcbLyFTFFG+6SgPz/gjj4S/KV9GngxtI
-         qEVCHLJHgmMylZVytbAZ04ZixPZbqij7Dp6AaYKY/NOOSbm6T0k82WvWcYegESHsuvGI
-         k/75SUX/Yz4CSiRi8iolDnjE8be1FX/urSvU/Y+BIUM8HILWb3txGK58vcL7dxKdBEz5
-         LewCdcC4WbeYJkjI/+d2fzYOdnm9+iy7z9sqnTBxEbb4TuJP1rbWmycJylmPYQ/J9YeG
-         4bEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783628195; x=1784232995;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=5lqgggpghOuMWXpzCLQ94POSykk42wtAfFSu9QYNYOQ=;
-        b=pQSZeEyNkPm0d+Ro41xULpwb75OUldKV5aehAvJ5Mp9zzSd3mQuPP4WSMf+ZPf2k7b
-         XLVI6HGRx20G1U7rZfghNlOnD1/QXhK/cv65YEtRyZCNqWAAXQVZpxNPvyxl0uiOI4UO
-         YMProcv/URW/shYaH4kan//6hX1M2rlOIDKP16oWLf3ybxnNUU/8fZ+YLsT5YIGPhdlW
-         aRzznCnD/gNGhU9/OJXcsMaCMhZpPy/UTd9rasxbxiCL39S1uN8kRLLZn8D7BqCJkDki
-         lfzyGJ8pGB9y4rT2WTng0SWGaG9hbR7CTzt3G/w4t1TKul+FtcysY9RLwZk551iB9BPU
-         huFQ==
-X-Forwarded-Encrypted: i=1; AHgh+RodKSXmm33ecMpeB8mB7c6ewifJsibTI0pci/+eHzhUNkXa2l+LF+r9nGGYRph6kaCLkFvFUU2AfwQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwXJdqlrmnbWjeU3sai0Jcu+BOcKcDceDdYC7XqxmVGiJhvycA7
-	tEYibIep3l9PfoKete92B849abt2XoggeR7oyGRYOX/LGpO+C9pOcomR
-X-Gm-Gg: AfdE7cmgXfQqqRIsqSBrYiUshvgWA6o73BwJV34P22VeI3KaKnGHcUmwB8tEWINf+xb
-	KVzd7dOs+YwGBEpDqGTKhPcAncSsm8u1UmLztkyppPTdbjUji8L9d/IWoJthcaF2CPXGl6WQ9kt
-	Ta6i8lFc4xhwk0ih2O/xVBbpGSXYHSHM5efrAVIEIR8D8faoukxLYSzvS1MfAnMqE9big5sna9v
-	AHRNbqUedVxFtSfHOdQakoG0QAz6w0GafeIRbdmeJLJkhLhDgqUUHRblshbKqaWkvDlySA+2zgA
-	AOdzJnZStqzUAiCgDf3hQvXlcMZHyQ1yq5wSTrRW6gFd2ICaL9BkAslDryV/Z+X3LHMSy94zWgJ
-	ivGrgzzju9KunqX6bJZdvWZ2BUgCU6FRydhX/pVj+AgTuat0pRJz6c+HLF0OUbyn1+P1n7+R8D5
-	bSqwWnRvhPzcgB0Jn+frnlkx0amkH1Mwn+2I9bytRqfH7mKTWmELfFlpkgXz1i
-X-Received: by 2002:a05:6a20:12d0:b0:3b1:882a:607b with SMTP id adf61e73a8af0-3c0bc95630amr10563387637.22.1783628195005;
-        Thu, 09 Jul 2026 13:16:35 -0700 (PDT)
-Received: from li-1a3e774c-28e4-11b2-a85c-acc9f2883e29.ibm.com ([106.51.160.236])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-31174a583bcsm38446663eec.19.2026.07.09.13.16.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2026 13:16:34 -0700 (PDT)
-Date: Fri, 10 Jul 2026 01:46:15 +0530
-From: Mukesh Kumar Chaurasiya <mkchauras@gmail.com>
-To: Thomas Gleixner <tglx@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Shrikanth Hegde <sshegde@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org, Kees Cook <kees@kernel.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org, 
-	Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org, x86@kernel.org, 
-	Mark Rutland <mark.rutland@arm.com>, Jinjie Ruan <ruanjinjie@huawei.com>, 
-	Andy Lutomirski <luto@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Richard Henderson <richard.henderson@linaro.org>, Russell King <linux@armlinux.org.uk>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Guo Ren <guoren@kernel.org>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Helge Deller <deller@gmx.de>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
-	Richard Weinberger <richard@nod.at>, Chris Zankel <chris@zankel.net>, 
-	linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org, linux-csky@vger.kernel.org, 
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	linux-sh@vger.kernel.org, linux-um@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, 
-	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>, Brian Cain <bcain@kernel.org>, 
-	Michal Simek <monstr@monstr.eu>, Dinh Nguyen <dinguyen@kernel.org>, 
-	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
-	linux-snps-arc@lists.infradead.org, linux-hexagon@vger.kernel.org, linux-openrisc@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-arch@vger.kernel.org, 
-	Michal =?utf-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Subject: Re: [patch 03/18] entry: Provide
- [syscall_]enter_from_user_mode_randomize_stack()
-Message-ID: <alABgaW3OpGvH_Oc@li-1a3e774c-28e4-11b2-a85c-acc9f2883e29.ibm.com>
-References: <20260707181957.433213175@kernel.org>
- <20260707190253.816918647@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RGKl2dGd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1783635776; x=1815171776;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=x97uFTIjXkGA6Az31J4eQq5SV3sdoZkgFYZLe5sZj3o=;
+  b=RGKl2dGdyr3REkNeEOIXabHBTZWt5cYg8vG+L/xfyE01v8sGtPGa6eEI
+   qlw0ofUyZvPPQUd/TMw/0Izs2NAzPdzr14AAfjxVoYeJBz9lfTth+o3Ih
+   fqh65RGPlJh/YP/DngxfvNGpd7b7qHlea7z/g2+UcwCtZ1gZh3qzvws/Z
+   YrRVsnJeEG4uT97+6qbYAjqaxrqL5eIdSYacsWnytZE0n8K31kwu45KH1
+   7wrFf8WnfzLh3XWeEUmWO54S7MXG4U6VSDT5i4Z+CElb57AEbe6CW2sfW
+   PxBiN1uwohhwsFLI9Wr4niUwTl2igPaNonuY1iPtIX4jNNoS4/jO/cVJ+
+   w==;
+X-CSE-ConnectionGUID: kKSCy+zDRCGBJQDkkdTGeA==
+X-CSE-MsgGUID: zcX2ZEdMTeuQZo1+/Jw4gw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="109881426"
+X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
+   d="scan'208";a="109881426"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 15:22:55 -0700
+X-CSE-ConnectionGUID: wvvVwSEEQaq78hYluA9Epg==
+X-CSE-MsgGUID: iOtP4/thR++qD9bVJxDDWg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
+   d="scan'208";a="256638305"
+Received: from guptapa-desk.jf.intel.com (HELO desk) ([10.165.239.46])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 15:22:55 -0700
+Date: Thu, 9 Jul 2026 15:22:54 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: stable@vger.kernel.org, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>
+Cc: bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+	x86@kernel.org, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Dave Hansen <dave.hansen@linux.intel.com>
+Subject: [PATCH 7.1.y 0/6] cBPF JIT spray hardening
+Message-ID: <20260709-cbpf-jit-spray-hardening-7-1-y-v1-0-5ac5a2d6797f@linux.intel.com>
+X-B4-Tracking: v=1; b=H4sIADQeUGoC/yWNsQ6CMBRFf4W82Udaaqy4ERdHBzfj0JZXeAyVt
+ GgkhH+36HjuTc5ZIFFkSnAqFoj05sTPkEHuCnC9CR0ht5mhEtVBaFGjs6PHgSdMYzQz9ia2FDh
+ 0qFHijFYpu1de1pqOkCVjJM+fX+AO1+Z2vmyrLmU5w+P/p5cdyE1bBdb1CwOyz3GSAAAA
+X-Change-ID: 20260709-cbpf-jit-spray-hardening-7-1-y-b33b43f197e8
+X-Mailer: b4 0.16-dev
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -97,109 +65,64 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260707190253.816918647@kernel.org>
 
-On Tue, Jul 07, 2026 at 09:06:07PM +0200, Thomas Gleixner wrote:
-> Randomizing the syscall stack can only happen after state is established
-> via enter_from_user_mode() or syscall_enter_from_user_mode(). The earlier
-> it happens the better.
-> 
-> Provide two new macros to consolidate that:
-> 
->   - enter_from_user_mode_randomize_stack()
-> 	enter_from_user_mode();
-> 	add_random_kstack_offset_irqsoff();
-> 
->   - syscall_enter_from_user_mode_randomize_stack()
-> 	enter_from_user_mode_randomize_stack();
-> 	syscall_enter_from_user_mode_work();
->     
-> to reduce boiler plate code.
-> 
-> Those are macros and not inline functions as the latter would limit the
-> stack randomization scope to the inline function itself.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@kernel.org>
-> ---
->  include/linux/entry-common.h |   56 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 56 insertions(+)
-> 
-> --- a/include/linux/entry-common.h
-> +++ b/include/linux/entry-common.h
-> @@ -6,6 +6,7 @@
->  #include <linux/irq-entry-common.h>
->  #include <linux/livepatch.h>
->  #include <linux/ptrace.h>
-> +#include <linux/randomize_kstack.h>
->  #include <linux/resume_user_mode.h>
->  #include <linux/seccomp.h>
->  #include <linux/sched.h>
-> @@ -150,6 +151,61 @@ static __always_inline long syscall_ente
->  }
->  
->  /**
-> + * enter_from_user_mode_randomize_stack - Establish state and add stack randomization
-> + *					  before invoking syscall_enter_from_user_mode_work()
-> + * @regs:	Pointer to currents pt_regs
-> + *
-> + * Invoked from architecture specific syscall entry code with interrupts
-> + * disabled. The calling code has to be non-instrumentable. When the function
-> + * returns all state is correct, interrupts are still disabled and the
-> + * subsequent functions can be instrumented.
-> + *
-> + * Implemented as a macro so that the stack randomization is effective
-> + * throughout the function in which it is invoked. An inline would only make it
-> + * effective in the scope of the inline function.
-> + */
-> +#define enter_from_user_mode_randomize_stack(regs)			\
-> +do {									\
-> +	enter_from_user_mode(regs);					\
-> +	instrumentation_begin();					\
-> +	add_random_kstack_offset_irqsoff();				\
-> +	instrumentation_end();						\
-> +} while (0)
-> +
-> +/**
-> + * syscall_enter_from_user_mode_randomize_stack - Establish state and check and handle work
-> + *						  before invoking a syscall
-> + * @regs:	Pointer to currents pt_regs
-> + * @syscall:	The syscall number
-> + *
-> + * Invoked from architecture specific syscall entry code with interrupts
-> + * disabled. The calling code has to be non-instrumentable. When the
-> + * function returns all state is correct, interrupts are enabled and the
-> + * subsequent functions can be instrumented.
-> + *
-> + * This is the combination of enter_from_user_mode_randomize_stack() and
-> + * syscall_enter_from_user_mode_work() to be used when there is no
-> + * architecture specific work to be done between the two.
-> + *
-> + * Returns: The original or a modified syscall number. See
-> + * syscall_enter_from_user_mode_work() for further explanation.
-> + *
-> + * Implemented as a macro to make stack randomization effective in the calling
-> + * scope.
-> + */
-> +#define syscall_enter_from_user_mode_randomize_stack(regs, syscall)	\
-> +({									\
-> +	enter_from_user_mode_randomize_stack(regs);			\
-> +									\
-> +	instrumentation_begin();					\
-> +	local_irq_enable();						\
-> +	long _ret = syscall_enter_from_user_mode_work(regs, syscall);	\
-> +	instrumentation_end();						\
-> +									\
-> +	_ret;								\
-> +})
-> +
-> +/**
->   * syscall_enter_from_user_mode - Establish state and check and handle work
->   *				  before invoking a syscall
->   * @regs:	Pointer to currents pt_regs
-> 
-Reviewed-by: Mukesh Kumar Chaurasiya (IBM) <mkchauras@gmail.com>
-> 
-> _______________________________________________
-> linux-snps-arc mailing list
-> linux-snps-arc@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-snps-arc
+Hi,
+
+These backports harden BPF JIT against spectre-v2 class of attacks. Without
+a predictor flush, execution of new BPF program may use stale prediction
+left behind by the freed one.
+
+To avoid this, issue an IBPB flush on all CPUs on JIT program allocation.
+The flush is conditional to spectre-v2 mitigation applied.
+
+Patch 1-2: Adds the predictor flush hook and enables it on x86 via IBPB.
+
+	  bpf: Support for hardening against JIT spraying
+	  x86/bugs: Enable IBPB flush on BPF JIT allocation
+
+Patch 3-6: Narrow the flush to only unprivileged JIT allocations
+	   to avoid redundant flushes. Also adds pack-selection changes
+	   that minimizes flushes.
+
+	  bpf: Restrict JIT predictor flush to cBPF
+	  bpf: Skip redundant IBPB in pack allocator
+	  bpf: Prefer packs that won't trigger an IBPB flush on allocation
+	  bpf: Prefer dirty packs for eBPF allocations
+
+Note: Patches were only build tested on x86 (they applied smoothly without
+any conflict).
+
+Thanks,
+Pawan
+
+---
+Pawan Gupta (6):
+      bpf: Support for hardening against JIT spraying
+      x86/bugs: Enable IBPB flush on BPF JIT allocation
+      bpf: Restrict JIT predictor flush to cBPF
+      bpf: Skip redundant IBPB in pack allocator
+      bpf: Prefer packs that won't trigger an IBPB flush on allocation
+      bpf: Prefer dirty packs for eBPF allocations
+
+ arch/arm64/net/bpf_jit_comp.c        |  4 +--
+ arch/loongarch/net/bpf_jit.c         |  5 +--
+ arch/powerpc/net/bpf_jit_comp.c      |  4 +--
+ arch/riscv/net/bpf_jit_comp64.c      |  2 +-
+ arch/riscv/net/bpf_jit_core.c        |  3 +-
+ arch/x86/include/asm/nospec-branch.h |  4 +++
+ arch/x86/kernel/cpu/bugs.c           | 50 +++++++++++++++++++++++---
+ arch/x86/net/bpf_jit_comp.c          |  5 +--
+ include/linux/filter.h               | 15 ++++++--
+ kernel/bpf/core.c                    | 68 ++++++++++++++++++++++++++++++++----
+ kernel/bpf/dispatcher.c              |  2 +-
+ 11 files changed, 138 insertions(+), 24 deletions(-)
+---
+base-commit: 199c9959d3a9b53f346c221757fc7ac507fbac50
+change-id: 20260709-cbpf-jit-spray-hardening-7-1-y-b33b43f197e8
+
+Best regards,
+--  
+Thanks,
+Pawan
+
+
