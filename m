@@ -1,40 +1,51 @@
-Received: from canpmsgout11.his.huawei.com (canpmsgout11.his.huawei.com [113.46.200.226])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8697D370AE7
-	for <loongarch@lists.linux.dev>; Thu,  9 Jul 2026 02:55:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.226
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEDE636DA0F
+	for <loongarch@lists.linux.dev>; Thu,  9 Jul 2026 02:57:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783565737; cv=none; b=LwywEBGbsAZCASBBzvYbJZ8fkTJ3a6BxHRhtSgodjo2d+NAwHor1ToaoH6VCPzk6/zpdD5Jz8VxpinIst3R0PX00CymR+o7FyUFy6+YedmJn3cAu6RlEr7EKlCmWhgoGx78ugD7V8XWXzcOnDVmqKZDO8ulpjjw22DSEJs83RiA=
+	t=1783565831; cv=none; b=p5lYXrRjI1aoGLe1FR4B7uLyadwOcGHuFjiipF7ziKELdU+I4iU91Ug5NJntwBjXVOf7pA7/SkTwSDspuzBgBSRjCVBDn5yAMuBkCJs/LBtLaU7uy/T1So/OwHKMIaPugJN6GsO6jSCKMtlICg/eP8zSOMwWXtG05hIIUpVoM2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783565737; c=relaxed/simple;
-	bh=6z6shxm0VomiVB/0CDqlEOacVIgWdbaKb5EXpCfIKCY=;
+	s=arc-20240116; t=1783565831; c=relaxed/simple;
+	bh=ZJSABZNvC56nQ+Wmu75P1o5dGoNQlvs18t2e6a6C208=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=NNYQ5jg5Ml5xHaEMKkwiXUYBRAZYLaTrlmdDpW5cXNbbJJr/GZwkZHWOcM0Br+9efBFeDV+SVMSP7D7GHAgu3wG3GY/sRRh6F77ezJ8HMGTgVGvIQCviTnPPu6tzPyABYw/AlcG6SlGfjAcr96vQWXP0RqJFvAFWl4m2JxwghPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=thFA5tBr; arc=none smtp.client-ip=113.46.200.226
+	 In-Reply-To:Content-Type; b=LXP5y9zngpsQVzMOkvh+xoomgJGH3xFjjgTkAn3j+jO7/wG1GhhFqxmh9FEszv9aANLlmkkuW17CwH2IT5w95XATOeb8dP0WBt1XBBBf6w72RzBCvbuw9y/md5vFQrUGrNwuIgOd+W6UXPgIpS8Yvt2Mtc8UwSuWz1E4nLp4XJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=mS5YZyj2; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=mS5YZyj2; arc=none smtp.client-ip=45.249.212.187
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="thFA5tBr"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="mS5YZyj2";
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="mS5YZyj2"
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=anxdR+vCsrXIdO5WleMXd+QVx9rE9sRRtEs8cuXxkx8=;
-	b=thFA5tBrS52775v/1sgEOCDpqo9UJ007PspB8urA6kVaevJyEOvuQkvWzdOaLWq6Xx/1eMn5Z
-	A/b2IWRpV/0Piw4SCuwzsg3g+vdgdjnGu2VRpcttACWjYP9fu2kSuIM/Q3ignQ5N4UJmT6yKcYm
-	V+2fe4p1lhxwJaTzWBRn7Ik=
+	bh=nU1CGqVFGwcos7tENR0k8m0Nt+0Ib81104RzXou1iFc=;
+	b=mS5YZyj2x7rhaVjaYemm20YschmeI6DYoCPf1ckgP1bFplP7hmfasEJ2cQ3lFnxkosy4gRDH6
+	5A3UDFD/i0ErGjIgBF7FK3s94x8FnBN5At2LVKpAuncaOLkMO9riVJHrSoiSkjJwSI7QJddrQjq
+	Bi9rtHGbQw+1uEpZnaaKZjE=
+Received: from canpmsgout09.his.huawei.com (unknown [172.19.92.135])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTPS id 4gwfLQ1v5Zz1BG5m
+	for <loongarch@lists.linux.dev>; Thu,  9 Jul 2026 10:39:26 +0800 (CST)
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=nU1CGqVFGwcos7tENR0k8m0Nt+0Ib81104RzXou1iFc=;
+	b=mS5YZyj2x7rhaVjaYemm20YschmeI6DYoCPf1ckgP1bFplP7hmfasEJ2cQ3lFnxkosy4gRDH6
+	5A3UDFD/i0ErGjIgBF7FK3s94x8FnBN5At2LVKpAuncaOLkMO9riVJHrSoiSkjJwSI7QJddrQjq
+	Bi9rtHGbQw+1uEpZnaaKZjE=
 Received: from mail.maildlp.com (unknown [172.19.163.127])
-	by canpmsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4gwfVH24kdzKm60;
-	Thu,  9 Jul 2026 10:46:15 +0800 (CST)
+	by canpmsgout09.his.huawei.com (SkyGuard) with ESMTPS id 4gwf7h4m4Jz1cyVV;
+	Thu,  9 Jul 2026 10:30:08 +0800 (CST)
 Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 43B58402AB;
-	Thu,  9 Jul 2026 10:55:32 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id AF5D840572;
+	Thu,  9 Jul 2026 10:39:21 +0800 (CST)
 Received: from [10.67.109.254] (10.67.109.254) by
  dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 9 Jul 2026 10:55:28 +0800
-Message-ID: <710049c4-8568-48c9-b378-0cb64c8ee68d@huawei.com>
-Date: Thu, 9 Jul 2026 10:55:27 +0800
+ 15.2.1544.11; Thu, 9 Jul 2026 10:39:19 +0800
+Message-ID: <5102cd31-1f44-4651-b681-6b3f56d3b225@huawei.com>
+Date: Thu, 9 Jul 2026 10:39:17 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -42,15 +53,16 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [patch 10/18] entry: Use syscall number instead of rereading it
+Subject: Re: [patch 07/18] s390/syscall: Use
+ enter_from_user_mode_randomize_stack()
 To: Thomas Gleixner <tglx@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-CC: Peter Zijlstra <peterz@infradead.org>, Michael Ellerman
+CC: Peter Zijlstra <peterz@infradead.org>, Sven Schnelle
+	<svens@linux.ibm.com>, <linux-s390@vger.kernel.org>, Michael Ellerman
 	<mpe@ellerman.id.au>, Shrikanth Hegde <sshegde@linux.ibm.com>,
 	<linuxppc-dev@lists.ozlabs.org>, Kees Cook <kees@kernel.org>, Huacai Chen
 	<chenhuacai@kernel.org>, <loongarch@lists.linux.dev>, Paul Walmsley
 	<pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	<linux-riscv@lists.infradead.org>, Sven Schnelle <svens@linux.ibm.com>,
-	<linux-s390@vger.kernel.org>, <x86@kernel.org>, Mark Rutland
+	<linux-riscv@lists.infradead.org>, <x86@kernel.org>, Mark Rutland
 	<mark.rutland@arm.com>, Andy Lutomirski <luto@kernel.org>, Oleg Nesterov
 	<oleg@redhat.com>, Richard Henderson <richard.henderson@linaro.org>, Russell
  King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Guo
@@ -72,9 +84,9 @@ CC: Peter Zijlstra <peterz@infradead.org>, Michael Ellerman
 	<msuchanek@suse.de>, Jonathan Corbet <corbet@lwn.net>,
 	<linux-doc@vger.kernel.org>
 References: <20260707181957.433213175@kernel.org>
- <20260707190254.181086755@kernel.org>
+ <20260707190254.030598804@kernel.org>
 From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <20260707190254.181086755@kernel.org>
+In-Reply-To: <20260707190254.030598804@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
@@ -83,49 +95,36 @@ X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
 
 
 On 7/8/2026 3:06 AM, Thomas Gleixner wrote:
-> rseq_syscall_enter_work() is invoked before the syscall number can be
-> modified. So there is no point in rereading it from pt_regs.
+> enter_from_user_mode_randomize_stack() replaces enter_from_user_mode() and
+> the subsequent invocation of add_random_kstack_offset_irqsoff().
+> 
+> As a bonus this avoids the overhead of get/put_cpu_var() in
+> add_random_kstack_offset().
+> 
+> No functional change.
 > 
 > Signed-off-by: Thomas Gleixner <tglx@kernel.org>
+> Cc: Sven Schnelle <svens@linux.ibm.com>
+> Cc: linux-s390@vger.kernel.org
 > ---
->  include/linux/entry-common.h |    9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
+>  arch/s390/kernel/syscall.c |    4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> --- a/include/linux/entry-common.h
-> +++ b/include/linux/entry-common.h
-> @@ -70,9 +70,10 @@ static inline void syscall_enter_audit(s
->  	}
->  }
->  
-> -static __always_inline long syscall_trace_enter(struct pt_regs *regs, unsigned long work)
-> +static __always_inline long syscall_trace_enter(struct pt_regs *regs, unsigned long work,
-> +						long syscall)
+> --- a/arch/s390/kernel/syscall.c
+> +++ b/arch/s390/kernel/syscall.c
+> @@ -97,8 +97,8 @@ void noinstr __do_syscall(struct pt_regs
 >  {
-> -	long syscall, ret = 0;
-> +	long ret = 0;
+>  	unsigned long nr;
 >  
->  	/*
->  	 * Handle Syscall User Dispatch.  This must comes first, since
-> @@ -90,7 +91,7 @@ static __always_inline long syscall_trac
->  	 * through hrtimer_interrupt().
->  	 */
->  	if (work & SYSCALL_WORK_SYSCALL_RSEQ_SLICE)
-> -		rseq_syscall_enter_work(syscall_get_nr(current, regs));
-> +		rseq_syscall_enter_work(syscall);
->  
->  	/* Handle ptrace */
->  	if (work & (SYSCALL_WORK_SYSCALL_TRACE | SYSCALL_WORK_SYSCALL_EMU)) {
-> @@ -145,7 +146,7 @@ static __always_inline long syscall_ente
->  	unsigned long work = READ_ONCE(current_thread_info()->syscall_work);
->  
->  	if (work & SYSCALL_WORK_ENTER)
-> -		syscall = syscall_trace_enter(regs, work);
-> +		syscall = syscall_trace_enter(regs, work, syscall);
+> -	enter_from_user_mode(regs);
+> -	add_random_kstack_offset();
+> +	enter_from_user_mode_randomize_stack(regs);
 
 Reviewed-by: Jinjie Ruan <ruanjinjie@huawei.com>
 
->  
->  	return syscall;
->  }
+> +
+>  	regs->psw = get_lowcore()->svc_old_psw;
+>  	regs->int_code = get_lowcore()->svc_int_code;
+>  	update_timer_sys();
 > 
 
