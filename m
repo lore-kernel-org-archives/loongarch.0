@@ -1,202 +1,114 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 752543ED10D
-	for <loongarch@lists.linux.dev>; Thu,  9 Jul 2026 08:28:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B30E23ED5BB
+	for <loongarch@lists.linux.dev>; Thu,  9 Jul 2026 08:28:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783585682; cv=none; b=JbQAkgbbbagnl1unDERmSGUt8ewQEcQa4ta9xlvurB+TOqGt1Cl7z6m50Favl0uA45754yBbB3Kgmp0eb0T2IcPyQOhUvgQXkqs6gG2BcpPwZvLJ4Yab9nibJhhSs3CfhYKYcBSQjCYekOJIRAMm5qeWggA+pLu40uKyJDXuL0E=
+	t=1783585716; cv=none; b=KeHs0rT/rpcPAadAPi9MqTPD0mHvq5dCZHoFdlF/xjq0WWp/4iLqWKQbKLFbROKsXJEmnPsQc5ZUbcjoo3nwtREv+EDLL/3iuSp/tllJ16LjkM/Lw0AypmNp89vCRdSIHGkj/O5/DUGO5gABHh6H5yHgcT/M03yJaaz3mVYq0KU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783585682; c=relaxed/simple;
-	bh=McNy21JbctdAzJIaiuV0Ewj4m4N9SbyWYC9f1O58gfw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RJ53OBKDtGBmAFTm2buGLzXumNZrkwnsYCQRGr4c2ntREE6uXeWFriomXizNFFH9fjyIC8vvV2OmPY7HWEqzaif2g9ldidDEjS2blgmgaA2r2MFN4CAttJAJrH4MAlk5paV64KmNQtKVSNCppgr6uWAcv6XoVDelkECXQW4gJtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UMXxHBpp; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ja1LHTEE; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UMXxHBpp";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ja1LHTEE"
-Date: Thu, 9 Jul 2026 10:27:59 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1783585679;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Lx0GPfIb+p9dvxHOdBuxBw9NKashWf8lY5lGPcZuetQ=;
-	b=UMXxHBppphhTbYxa+BqOd80W4ngqWYhzPYL77GljpeFMyXukW5uGAsLDprtKEJyeETmgFN
-	msqYnUBjEJpozd4qRINi/gEyl3eXmF2JPhb5bRF2Yb5RUoZMBkLPEgJNOqb7n5jnrIsz1J
-	T/EBLiEGVbgE7kFtiNNGRfmCBxiNT6X9Xm8U+cdKwvRKu4vfD+B+cdupmGQos4JbCaBuBM
-	3S2JvvwStqAxmiRXN9m9xk6wUV5Sz8TVKl60PYbK5h/Xqn/t8B/VKJmV+gEAfJXWT5pqum
-	3QEumRjVd9w0RwuzH4WlnvukX96IcDYpjIFc4OGRgiDohFmqu7XaFHUL9oUstQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1783585679;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Lx0GPfIb+p9dvxHOdBuxBw9NKashWf8lY5lGPcZuetQ=;
-	b=ja1LHTEEnpn4UBUpRMLUNv43JZPCLqwtNJbKK8I1pjYisGl/FUXT1xQeXCjf2brcux0Cb1
-	vjeEfDRtTffYYZCQ==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: oleg@redhat.com, richard.henderson@linaro.org, mattst88@gmail.com, 
-	linmag7@gmail.com, linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, 
-	kees@kernel.org, guoren@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name, 
-	geert@linux-m68k.org, tsbogend@alpha.franken.de, James.Bottomley@hansenpartnership.com, 
-	deller@gmx.de, maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com, 
-	chleroy@kernel.org, pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
-	alex@ghiti.fr, hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com, 
-	borntraeger@linux.ibm.com, svens@linux.ibm.com, ysato@users.sourceforge.jp, dalias@libc.org, 
-	glaubitz@physik.fu-berlin.de, richard@nod.at, anton.ivanov@cambridgegreys.com, 
-	johannes@sipsolutions.net, luto@kernel.org, tglx@kernel.org, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, hpa@zytor.com, chris@zankel.net, jcmvbkbc@gmail.com, 
-	peterz@infradead.org, wad@chromium.org, thuth@redhat.com, mark.rutland@arm.com, 
-	ada.coupriediaz@arm.com, kevin.brodsky@arm.com, linusw@kernel.org, yeoreum.yun@arm.com, 
-	song@kernel.org, james.morse@arm.com, anshuman.khandual@arm.com, 
-	broonie@kernel.org, liqiang01@kylinos.cn, pengcan@kylinos.cn, ryan.roberts@arm.com, 
-	yangtiezhu@loongson.cn, sshegde@linux.ibm.com, mchauras@linux.ibm.com, 
-	austin.kim@lge.com, jchrist@linux.ibm.com, arnd@arndb.de, sohil.mehta@intel.com, 
-	andrew.cooper3@citrix.com, jgross@suse.com, kas@kernel.org, x86@kernel.org, 
-	linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, linux-csky@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, linux-um@lists.infradead.org
-Subject: Re: [PATCH v16 18/18] arm64: vdso: Expose sigreturn address on vdso
- to the kernel
-Message-ID: <20260709102117-c4dc4d58-f8d9-46b0-8246-61e8fb8825ce@linutronix.de>
-References: <20260629130616.642022-1-ruanjinjie@huawei.com>
- <20260629130616.642022-19-ruanjinjie@huawei.com>
- <20260630172619-6c78c2e2-c2d3-44be-88e6-6c82de12baf4@linutronix.de>
- <21875fb4-434b-480d-b68b-e2ffd5fff5ae@huawei.com>
- <20260709090525-b1e5ae06-1fb4-454e-919c-6503dcf3d073@linutronix.de>
- <d9c9686c-dfd8-4539-b301-8726bab7443b@huawei.com>
+	s=arc-20240116; t=1783585716; c=relaxed/simple;
+	bh=++JNIRDcmqDW09//3t1KfwK6Ve49mGiUWaRQoN47vpE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=gPbCqbJsXQMSw4yiimo0F0s92QEFAKUX+G+A4ou1Iei4ZBBggqSzVblFkMWWIFoT2G9EpcWiqTcScZFw3FtaO6LQZJj6KKshkC/Jq7ajbh0PGfl+ep7IZQF6Pb833ceR/aSuW3FONyXFoiK6rHjKTV9GF9P+vLSPguotzIMlExw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8CxaeuwW09q6cYBAA--.7554S3;
+	Thu, 09 Jul 2026 16:28:32 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowJAxnMapW09q3qIGAA--.32266S5;
+	Thu, 09 Jul 2026 16:28:31 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 3/4] LoongArch: KVM: Return directly when IPI address is not aligned
+Date: Thu,  9 Jul 2026 16:21:08 +0800
+Message-Id: <20260709082109.1361767-4-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20260709082109.1361767-1-maobibo@loongson.cn>
+References: <20260709082109.1361767-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <d9c9686c-dfd8-4539-b301-8726bab7443b@huawei.com>
+X-CM-TRANSID:qMiowJAxnMapW09q3qIGAA--.32266S5
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-On Thu, Jul 09, 2026 at 04:15:15PM +0800, Jinjie Ruan wrote:
-> On 7/9/2026 3:17 PM, Thomas Weißschuh wrote:
-> > On Thu, Jul 09, 2026 at 02:37:05PM +0800, Jinjie Ruan wrote:
-> >> On 6/30/2026 11:32 PM, Thomas Weißschuh wrote:
-> >>> On Mon, Jun 29, 2026 at 09:06:16PM +0800, Jinjie Ruan wrote:
-> > (..)
-> > 
-> >>>> diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
-> >>>> index 592dd8668de4..5a0314a3c26e 100644
-> >>>> --- a/arch/arm64/kernel/vdso.c
-> >>>> +++ b/arch/arm64/kernel/vdso.c
-> >>>> @@ -343,3 +343,19 @@ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
-> >>>>  
-> >>>>  	return ret;
-> >>>>  }
-> >>>> +
-> >>>> +bool arch_syscall_is_vdso_sigreturn(struct pt_regs *regs)
-> >>>> +{
-> >>>> +	unsigned long sigtramp;
-> >>>> +
-> >>>> +#ifdef CONFIG_COMPAT
-> >>>> +	if (is_compat_task()) {
-> >>>> +		unsigned long sigpage = (unsigned long)current->mm->context.sigpage;
-> >>>> +
-> >>>> +		return regs->pc >= sigpage && regs->pc < (sigpage + PAGE_SIZE);
-> >>>> +	}
-> >>>> +#endif
-> >>>> +	sigtramp = (unsigned long)VDSO_SYMBOL(current->mm->context.vdso, sigtramp);
-> >>>> +
-> >>>> +	return regs->pc == (sigtramp + 8);
-> >>>
-> >>> Instead of hardcoding 'sigtramp + 8' you could add a new label to the 'svc #0'
-> >>> instruction and use that with VDSO_SYMBOL().
-> >>
-> >> It seems that the modification of __kernel_rt_sigreturn() is not recommended
-> > 
-> > For the changes to the object code of the function this is obvious and
-> > well explained in the comments.
-> > 
-> > Such a label however would not change the object code of the function.
-> > In fact it would not change any bit whatsoever in the final vDSO,
-> > save for a new build ID.
-> 
-> Yes, and using labels is easier to maintain than hardcoding offsets
-> directly.
-> 
-> Similar to the code below?
+When IPI address is not aligned with its access size, it should return
+directly in read/write operations, rather than only print WARN_ON_ONCE().
+The method is the same with in kernel extioi and pch_pic operations.
 
-Exactly.
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/kvm/intc/ipi.c | 24 ++++++++++--------------
+ 1 file changed, 10 insertions(+), 14 deletions(-)
 
-(...)
+diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.c
+index bccdfd963e5b..8ec40e09c5ab 100644
+--- a/arch/loongarch/kvm/intc/ipi.c
++++ b/arch/loongarch/kvm/intc/ipi.c
+@@ -181,9 +181,12 @@ static int loongarch_ipi_readl(struct kvm_vcpu *vcpu, gpa_t addr, int len, void
+ 	uint32_t offset;
+ 	uint64_t res = 0;
+ 
+-	offset = (uint32_t)(addr & 0x1ff);
+-	WARN_ON_ONCE(offset & (len - 1));
++	if (addr & (len - 1)) {
++		kvm_pr_unimpl("%s: ipi not aligned addr %llx len %d\n", __func__, addr, len);
++		return 0;
++	}
+ 
++	offset = addr - IOCSR_IPI_BASE;
+ 	switch (offset) {
+ 	case IOCSR_IPI_STATUS:
+ 		spin_lock(&vcpu->arch.ipi_state.lock);
+@@ -199,11 +202,6 @@ static int loongarch_ipi_readl(struct kvm_vcpu *vcpu, gpa_t addr, int len, void
+ 	case IOCSR_IPI_CLEAR:
+ 		break;
+ 	case IOCSR_IPI_BUF_20 ... IOCSR_IPI_BUF_38 + 7:
+-		if (offset + len > IOCSR_IPI_BUF_38 + 8) {
+-			kvm_pr_unimpl("%s: invalid offset or len: offset = %d, len = %d\n",
+-				__func__, offset, len);
+-			break;
+-		}
+ 		res = read_mailbox(vcpu, offset, len);
+ 		break;
+ 	default:
+@@ -222,9 +220,12 @@ static int loongarch_ipi_writel(struct kvm_vcpu *vcpu, gpa_t addr, int len, cons
+ 
+ 	data = *(uint64_t *)val;
+ 
+-	offset = (uint32_t)(addr & 0x1ff);
+-	WARN_ON_ONCE(offset & (len - 1));
++	if (addr & (len - 1)) {
++		kvm_pr_unimpl("%s: ipi not aligned addr %llx len %d\n", __func__, addr, len);
++		return 0;
++	}
+ 
++	offset = addr - IOCSR_IPI_BASE;
+ 	switch (offset) {
+ 	case IOCSR_IPI_STATUS:
+ 		break;
+@@ -241,11 +242,6 @@ static int loongarch_ipi_writel(struct kvm_vcpu *vcpu, gpa_t addr, int len, cons
+ 		ipi_clear(vcpu, data);
+ 		break;
+ 	case IOCSR_IPI_BUF_20 ... IOCSR_IPI_BUF_38 + 7:
+-		if (offset + len > IOCSR_IPI_BUF_38 + 8) {
+-			kvm_pr_unimpl("%s: invalid offset or len: offset = %d, len = %d\n",
+-				__func__, offset, len);
+-			break;
+-		}
+ 		write_mailbox(vcpu, offset, data, len);
+ 		break;
+ 	case IOCSR_IPI_SEND:
+-- 
+2.39.3
 
-> diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
-> index 592dd8668de4..609d7bcd8308 100644
-> --- a/arch/arm64/kernel/vdso.c
-> +++ b/arch/arm64/kernel/vdso.c
-> @@ -343,3 +343,19 @@ int arch_setup_additional_pages(struct linux_binprm
-> *bprm, int uses_interp)
-> 
->         return ret;
->  }
-> +
-> +bool arch_syscall_is_vdso_sigreturn(struct pt_regs *regs)
-> +{
-> +       unsigned long sigtramp;
-
-Could be named better now.
-
-> +#ifdef CONFIG_COMPAT
-> +       if (is_compat_task()) {
-> +               unsigned long sigpage = (unsigned
-> long)current->mm->context.sigpage;
-> +
-> +               return regs->pc >= sigpage && regs->pc < (sigpage +
-> PAGE_SIZE);
-> +       }
-> +#endif
-> +       sigtramp = (unsigned long)VDSO_SYMBOL(current->mm->context.vdso,
-> sigreturn_landing_pad);
-> +
-> +       return regs->pc == sigtramp;
-> +}
-> diff --git a/arch/arm64/kernel/vdso/sigreturn.S
-> b/arch/arm64/kernel/vdso/sigreturn.S
-> index 0e18729abc3b..8d2d413ff45e 100644
-> --- a/arch/arm64/kernel/vdso/sigreturn.S
-> +++ b/arch/arm64/kernel/vdso/sigreturn.S
-> @@ -73,6 +73,7 @@ SYM_CODE_START(__kernel_rt_sigreturn)
->         mov     x8, #__NR_rt_sigreturn
->  //     PLEASE DO NOT MODIFY
->         svc     #0
-> +       SYM_INNER_LABEL(__sigreturn_landing_pad, SYM_L_GLOBAL)
->  //     PLEASE DO NOT MODIFY
->  //     .cfi_endproc
->  SYM_CODE_END(__kernel_rt_sigreturn)
-> diff --git a/arch/arm64/kernel/vdso/vdso.lds.S
-> b/arch/arm64/kernel/vdso/vdso.lds.S
-> index 52314be29191..5fee2927e4c5 100644
-> --- a/arch/arm64/kernel/vdso/vdso.lds.S
-> +++ b/arch/arm64/kernel/vdso/vdso.lds.S
-> @@ -104,6 +104,7 @@ VERSION
->                 __kernel_clock_gettime;
->                 __kernel_clock_getres;
->                 __kernel_getrandom;
-> +               __sigreturn_landing_pad;
-
-This should not be done. The symbol is not intended to be used by userspace.
-
->         local: *;
->         };
->  }
-> @@ -112,3 +113,4 @@ VERSION
->   * Make the sigreturn code visible to the kernel.
->   */
->  VDSO_sigtramp          = __kernel_rt_sigreturn;
-> +VDSO_sigreturn_landing_pad     = __sigreturn_landing_pad;
