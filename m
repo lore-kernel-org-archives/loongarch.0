@@ -1,46 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CF6A42189D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C23242189B
 	for <loongarch@lists.linux.dev>; Thu,  9 Jul 2026 11:32:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783596766; cv=none; b=lADFquiht9qLD2zx5EUVNFVuyYaHFSWX4Zq6GJOQcclIFyyQdufF5Oczetj8jGot7AqgoqUTJcnoeoWM84cK4UFTWRm1/dnQVppl3OyWa2AR2u+kZ/JptmefkpZsmX+7Vqu725t2ZP3JDSLbR8O0VFPifwfgZ0kNzTobC9+soxc=
+	t=1783596766; cv=none; b=cQMS+n8/lk9IRRur8DsuNz4eZJDYELlLg6EAw2XADA1v8H5yV6Eyo1E4kqcuJPd/I97csVHPbU8fF+s+o5un8g8HOtRiO5grDgP49GQ9n2fXPMPvlRspHbKZcM6WvIztZE9aj2pj5XMMHafZRptUvtwqZarvLS8guTKFKH4Zj+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1783596766; c=relaxed/simple;
-	bh=7G4NMoLshPcdVswq+VZJCTeRBiPlUiYrF8fwlrRj/uk=;
+	bh=HBDbLxQ/mmLThuSCavhDFNuAv2+3px29VTHQ8QYWw1w=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DRSutitqxkTBeVXgP37zIg1lIlclsFg3R7dXHYdDDmYLfMzrL6EYMnvCnVxrugjBlS17nmRYIhzIfnfe8P6C8zw0uZL/R94v7tycm6BtyQ64FJGMOplaEWeGqlU3iJ3nMC57IBSKS0jw07GA6m/jtpMmjhVcLoB47NDLKZKAoio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=G1B5E6g1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cwSqdujT; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=TYi/HoK0e8lphUw4XFEfSLDOoxSgzYIKiDBWCXtZo8HAgcqYvPWjEUudnbe+zl3r9zPwx6biVJ+pfT31aT4FZfj52G0tDr2L+/+75CNRSDxH7ttqUgg5jB41Xqkz956DTbQGnJKXLOZFip6PUilThKsS7YdS9txiXvrCoODaYXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xLBBBBbh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OgMhKys2; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="G1B5E6g1";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cwSqdujT"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xLBBBBbh";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OgMhKys2"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1783596762;
+	s=2020; t=1783596761;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=js0vaP5nbNwcNIYrCXst9vVmG9tcENf2qeLGcWeiwxA=;
-	b=G1B5E6g1lV0WBctrCeAuI2EktZx6NZNOCwaU4W+HwWbS+gvAsponEz1VMyQ8tM40Hc8owF
-	+x5uQMIevWKuDtG7FF2RbnPweHb1b0+u7UGRz4RuCN5pKEzPa7ZgAQB3vRWEaYrG1ZfEcd
-	huGAFbrT50h4C6acrIhMA6hAirN0klf2sC1OPGwPHQItJQonDNKSvIOQ62djPQJiOQKrZZ
-	U6k8VZY9wKLYQZONhdskn+yM2kiUn2rc/aEWr18ieOE5DSr1WJAHa6iZ1RDRcScByCCFQZ
-	Xd6y59j2a7OHEsFmjwqJeRHL83aD712bCkozDQotGzUtGi3XqdLPObXOzMnktw==
+	bh=3ukFASTVcwJCA9KHs65XStV/NanPY9+t/aJWekQ6IKw=;
+	b=xLBBBBbh4/VWO9XnxdBWWEUvqzn9mmxKtghNmN65V+Cf4har8MzUX9hyoH+gOUFNJ0QDZH
+	mhrQzKul8EzypjUmmlpwnx86X/j6mp+M74+44prDPC5Lb8pQqlkpFANr1hPoiweBhjIMvL
+	IJQ6MiL3Yuyh11sCsUB/qGlCV3fC2EXReRUTsEgy1o+ZC4hqFkeSEsi0TIZ4voWO+rfnY1
+	Dv8Px5LpQHM/R1zjHRBtez08FAjNDJgYULJlhWKa/IrL6yP6/p/2kOaw2JHAzOmlqglsU6
+	/03UR9MkVzy/rbOrYQVZ342ujoRW8Tk7nPvjQmW03SqWiWzVIxa6VuNOlviODw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1783596762;
+	s=2020e; t=1783596761;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=js0vaP5nbNwcNIYrCXst9vVmG9tcENf2qeLGcWeiwxA=;
-	b=cwSqdujTT7iDvRMcmoMRrwAXfht7s86XKdpgPR8idw5KvHg0klV/uFbi10aLdEX93n5iPm
-	w+zwV6MbyExus/Ag==
-Date: Thu, 09 Jul 2026 13:32:42 +0200
-Subject: [PATCH 6/7] clocksource/drivers/timer-riscv: Replace
+	bh=3ukFASTVcwJCA9KHs65XStV/NanPY9+t/aJWekQ6IKw=;
+	b=OgMhKys2yLyiiIrzt/ebS8mgwv4WAKvLSUlGBZDOz+da0ok2x1dai57gPiCFIfoQeTZIiC
+	uHk5AT5qmEA4l1Dg==
+Date: Thu, 09 Jul 2026 13:32:41 +0200
+Subject: [PATCH 5/7] clocksource/drivers/arm_arch_timer: Replace
  CONFIG_GENERIC_GETTIMEOFDAY ifdeffery with IS_ENABLED()
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20260709-vdso-arch-clockmodes-v1-6-3fd780bbf851@linutronix.de>
+Message-Id: <20260709-vdso-arch-clockmodes-v1-5-3fd780bbf851@linutronix.de>
 References: <20260709-vdso-arch-clockmodes-v1-0-3fd780bbf851@linutronix.de>
 In-Reply-To: <20260709-vdso-arch-clockmodes-v1-0-3fd780bbf851@linutronix.de>
 To: Arnd Bergmann <arnd@arndb.de>, Andy Lutomirski <luto@kernel.org>, 
@@ -68,11 +68,11 @@ Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
  loongarch@lists.linux.dev, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1783596759; l=1080;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1783596759; l=1366;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=7G4NMoLshPcdVswq+VZJCTeRBiPlUiYrF8fwlrRj/uk=;
- b=+3rICIuTC6LYbv8a3J2iDAsVddreeZXz8SonYTwvPP3IpMLBejhyOnRPxIEPY1IWeVWIRnUod
- AqapUTyoS+sA1bO2X6bjVrHoXXReK7U+ezdW0CvqFmzOuexzTPSsCgr
+ bh=HBDbLxQ/mmLThuSCavhDFNuAv2+3px29VTHQ8QYWw1w=;
+ b=/EvHsm6ydzGcPsxrNvqkQUB75XQjGIMB3dJQHMvHaYcR1e6vOjowSLWMYmBC9iC39j5MyPR+r
+ GKnBIHG7yBIC0ZzIDI8rObHsO7fQLB+a+bRP7h1extXlNquFlV9wR/m
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
@@ -82,27 +82,27 @@ a cleaner IS_ENABLED() check.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- drivers/clocksource/timer-riscv.c | 7 ++-----
+ drivers/clocksource/arm_arch_timer.c | 7 ++-----
  1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/clocksource/timer-riscv.c b/drivers/clocksource/timer-riscv.c
-index cfc4d83c42c0..82bd380b3dda 100644
---- a/drivers/clocksource/timer-riscv.c
-+++ b/drivers/clocksource/timer-riscv.c
-@@ -98,11 +98,8 @@ static struct clocksource riscv_clocksource = {
- 	.mask		= CLOCKSOURCE_MASK(64),
- 	.flags		= CLOCK_SOURCE_IS_CONTINUOUS,
- 	.read		= riscv_clocksource_rdtime,
--#if IS_ENABLED(CONFIG_GENERIC_GETTIMEOFDAY)
--	.vdso_clock_mode = VDSO_CLOCKMODE_ARCHTIMER,
+diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+index 4adf756423de..d67125a8730a 100644
+--- a/drivers/clocksource/arm_arch_timer.c
++++ b/drivers/clocksource/arm_arch_timer.c
+@@ -56,11 +56,8 @@ static struct clock_event_device __percpu *arch_timer_evt;
+ static enum arch_timer_ppi_nr arch_timer_uses_ppi __ro_after_init = ARCH_TIMER_VIRT_PPI;
+ static bool arch_timer_c3stop __ro_after_init;
+ static bool arch_counter_suspend_stop __ro_after_init;
+-#ifdef CONFIG_GENERIC_GETTIMEOFDAY
+-static enum vdso_clock_mode vdso_default = VDSO_CLOCKMODE_ARCHTIMER;
 -#else
--	.vdso_clock_mode = VDSO_CLOCKMODE_NONE,
--#endif
-+	.vdso_clock_mode = IS_ENABLED(CONFIG_GENERIC_GETTIMEOFDAY) ?
-+				VDSO_CLOCKMODE_ARCHTIMER : VDSO_CLOCKMODE_NONE,
- };
+-static enum vdso_clock_mode vdso_default = VDSO_CLOCKMODE_NONE;
+-#endif /* CONFIG_GENERIC_GETTIMEOFDAY */
++static enum vdso_clock_mode vdso_default = IS_ENABLED(CONFIG_GENERIC_GETTIMEOFDAY) ?
++	VDSO_CLOCKMODE_ARCHTIMER : VDSO_CLOCKMODE_NONE;
  
- static int riscv_timer_starting_cpu(unsigned int cpu)
+ static cpumask_t evtstrm_available = CPU_MASK_NONE;
+ static bool evtstrm_enable __ro_after_init = IS_ENABLED(CONFIG_ARM_ARCH_TIMER_EVTSTREAM);
 
 -- 
 2.55.0
