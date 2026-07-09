@@ -1,163 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33681218845
-	for <loongarch@lists.linux.dev>; Thu,  9 Jul 2026 13:32:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D4F242E8E2;
+	Thu,  9 Jul 2026 16:22:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783603945; cv=none; b=c8Ry3TibINr3tiCp8NKfOJ1VwxnpJrtlQenXatiUf9fM/y8NEqFDdBxAHJVMEMkcDv053W9caXBJTnuuPZLfpZZ1lMGK5BJfACY/HojFlB78MedyR3BNl4vA2xYoaMrn2qRl8Ag8IHLcoznJfi9zkjZg81prq/70IZGSr2IqBiY=
+	t=1783614128; cv=none; b=Y5BEaKvyfj9umFm4LQIHUj2Q+C1HHaGaOZiMjaGdkY+h1in51AiLOfZZAwtD1mDTCLnq1PsJq3N+993yD71Mwqrq7lJSFi7EvScvGcfrMPkEFLhwIn4HFl1aMCOIMnfzsu6oDQtVcjM7+YBvC5hZOdnu4xnR3OxIYafkcQPclxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783603945; c=relaxed/simple;
-	bh=Lr0/JzLsZHU7DE9GHdkhy4GABMoazF4KGSvu2e2cCiU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s0xLI8eTda6xyQVHZ5i/BFVm4m8s6ihinTdQfaYDgh8rPKq+XsGDBD5qqrfGfRtHROh1EHygFsoVQKJ4YRLngE4SKoQ2Xr+9GtUEzWAcuLbWhfd4tAsFZrjOZ1JJxxthMqIWUpqmqSR8NLN0NfQdT7nt81V3B6KbSKcRVTYWt1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g283wSg4; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783614128; c=relaxed/simple;
+	bh=VI3Ojo7ccWWfCHnU/9oqVcNO820ulcvMp+VbcWTgRSA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VHunwbQbfxwTT//vRwY1WPAj9TINyxq93S9KS8Hv4UWeVHU/crfjJaceQPtzMIfJaVbzKpSCmJGgsvnetcwsSFzAb4CLjXn/A9xTVfnHl0xPR4XRN3IxCHJ8PZ+usMuBEMg0l5BZW2Bhy5tecgiPpR+DN4aQ8rvYFKFlflQ329o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S/Uien6v; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g283wSg4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E07BE1F00ACF
-	for <loongarch@lists.linux.dev>; Thu,  9 Jul 2026 13:32:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S/Uien6v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B0FB1F000E9;
+	Thu,  9 Jul 2026 16:22:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783603943;
-	bh=2tewPeVsAxKBBt/hHzLYO7y76PO1MYevgazh3aupzok=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=g283wSg4xREH65kKxISY22wUVdxl54rWeKsiKW2RXCvPyegxW2ONGX7hhCLFYdJB5
-	 WVgLRkH6a07mp/jtKrDnS68YtSwIhRktV10UFYiiB+xxprgqItF53QbtCZxsxbMkDS
-	 JN3E8m04+5O6cGShbbswRsC1Ygrx5joUh3+SK17xr2RJLBDr+I7dnnSidqFxktJKTq
-	 6XWPCUD9zTB0RwlWe0RFr9HHkRABXAQnPxPjfI6QH7HkehkPmkn4W5uJSvJTR/xfDR
-	 SiHSgpl21xpnSVLy/TblRrj6vW0W/3JcePp5IfUyn5OVZOAWtcTaYX3On5/I0VuioN
-	 YK/dOBWElbPVQ==
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5aeb98460c6so2090171e87.2
-        for <loongarch@lists.linux.dev>; Thu, 09 Jul 2026 06:32:23 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RovhPZYEknPY6ylrYkiWnYA0qGQFCZ/7M9ZE+1r2MWVjGK07TTDjI2ol3fUU826HdbeRq0o71p29SQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyrUvDFrmvzu08r2tV8lp0g09XzlK281mYKfuyI+jUMwoi/m+It
-	vqEcGaZodDMGhekS4PZ3fdJOkaclKFutq434os0IMcFLXVN5aLlKmGVb+A7x+CafM9Co7l1WA9n
-	kJmhlCGmJb3RqkJacDbE+/SOE0HI7G/U=
-X-Received: by 2002:a05:6512:64a8:b0:5b0:12cf:ae3f with SMTP id
- 2adb3069b0e04-5b012cfb1e8mr1407950e87.31.1783603942165; Thu, 09 Jul 2026
- 06:32:22 -0700 (PDT)
+	s=k20260515; t=1783614126;
+	bh=E3GKiVGCG/M7FltpcGzY43WO5HnNe5q++QmCFGBnpG0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=S/Uien6vGeymdukHshCIRbD/qQirZnmNv1fkPyrZGO6+K+ckkFdEYSDwlnKFpi2BF
+	 tuyJKBhR0dyYdYiHulLx/LgusylN0RPtbaGzeJM/aCdOjZzg650pi7YEBbg+JGqSHR
+	 64dXPeQbq2evJa22r52hBC05ICSGISNW2xikw530YpQ+nCbruCjZdneQ5mim5aCUCw
+	 Xf0AYTbfJ+wFGM1bNULmUZblGmQ7iYYE8zwgMJIETdC1+LLXgejWycDXueD9QUnxdI
+	 F83JV94XXQwp5V/iZ2sAm+8m4as7p5Y/PmHH5g0nCXnFS05/jmhxEmyZJZGFezfdfB
+	 UQzRtgW6GQfPA==
+Date: Thu, 9 Jul 2026 09:22:06 -0700
+From: Kees Cook <kees@kernel.org>
+To: Thomas Gleixner <tglx@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jinjie Ruan <ruanjinjie@huawei.com>,
+	Andy Lutomirski <luto@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Guo Ren <guoren@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Helge Deller <deller@gmx.de>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Richard Weinberger <richard@nod.at>,
+	Chris Zankel <chris@zankel.net>,
+	linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org,
+	linux-csky@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linux-sh@vger.kernel.org, linux-um@lists.infradead.org,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	linuxppc-dev@lists.ozlabs.org, Huacai Chen <chenhuacai@kernel.org>,
+	loongarch@lists.linux.dev, Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	linux-riscv@lists.infradead.org,
+	Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org,
+	x86@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
+	Brian Cain <bcain@kernel.org>, Michal Simek <monstr@monstr.eu>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	linux-snps-arc@lists.infradead.org, linux-hexagon@vger.kernel.org,
+	linux-openrisc@vger.kernel.org, sparclinux@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Subject: Re: [patch 11/18] seccomp, treewide: Rename and convert
+ __secure_computing() to return boolean
+Message-ID: <202607090921.ABE4BB4A@keescook>
+References: <20260707181957.433213175@kernel.org>
+ <20260707190254.230735780@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260709-gic-v5-acpi-iwb-probe-deferral-v4-0-48dae790f871@kernel.org>
-In-Reply-To: <20260709-gic-v5-acpi-iwb-probe-deferral-v4-0-48dae790f871@kernel.org>
-From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Date: Thu, 9 Jul 2026 15:32:10 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hDK+C+ZJ4YKd0xbyHW+vEot9z-YrivWSrg1ag7Ebx4cA@mail.gmail.com>
-X-Gm-Features: AUfX_my3RabqhVkiaUs2JZU-hHXS-RHiCuP5fgE1pk66iBa2OI-yzz3XlXSUIdk
-Message-ID: <CAJZ5v0hDK+C+ZJ4YKd0xbyHW+vEot9z-YrivWSrg1ag7Ebx4cA@mail.gmail.com>
-Subject: Re: [PATCH v4 0/7] irqchip/ACPI: Arm GICv5 IWB ACPI IRQ probe deferral
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Sunil V L <sunilvl@ventanamicro.com>, Marc Zyngier <maz@kernel.org>, 
-	Thomas Gleixner <tglx@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
-	Anup Patel <anup@brainfault.org>, Hanjun Guo <guohanjun@huawei.com>, 
-	Sudeep Holla <sudeep.holla@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, 
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Sunil V L <sunilvl@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260707190254.230735780@kernel.org>
 
-On Thu, Jul 9, 2026 at 10:41=E2=80=AFAM Lorenzo Pieralisi <lpieralisi@kerne=
-l.org> wrote:
->
-> On Arm GICv5 systems, the IWB (Interrupt Wire Bridge) handles wired inter=
-rupts
-> and it is in charge of translating interrupt wires to GICv5 ITS messages.
->
-> In ACPI systems, an IWB is backed by a platform device. Device drivers fo=
-r
-> devices whose IRQs are routed to an IWB might probe earlier than the IWB =
-device
-> driver, which can result in failures in that until the IWB driver is prob=
-ed and
-> its IRQ domain is duly registered, IRQs routed to it cannot be resolved.
->
-> Some interrupt controllers for the RISC-V architecture suffer from the sa=
-me
-> issue; RISC-V, in its ACPI IRQ layer solved the problem by automatically
-> creating device dependencies that result in the interrupt controllers dri=
-vers
-> being probed before any device driver whose devices IRQs are routed to th=
-em is
-> probed.
->
-> Instead of reinventing the wheel, this series move the aforementioned RIS=
-C-V
-> code to generic ACPI IRQ handling code (while fixing some bits and pieces=
-) and
-> implement GICv5 IWB ACPI probe deferral on top of it.
->
-> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> ---
-> Changes in v4:
-> - Applied v3 review comments and tags
-> - Link to v3: https://patch.msgid.link/20260701-gic-v5-acpi-iwb-probe-def=
-erral-v3-0-c5562cf0fe29@kernel.org
->
-> Changes in v3:
-> - Added stub to clear ACPI device dependencies
-> - Added review tags
-> - Rebased against v7.2-rc1
-> - Link to v2: https://patch.msgid.link/20260603-gic-v5-acpi-iwb-probe-def=
-erral-v2-0-23ffa16b6ebb@kernel.org
->
-> Changes in v2:
-> - Split the patchset in several logic units according to review
-> - Link to v1: https://patch.msgid.link/20260505-gic-v5-acpi-iwb-probe-def=
-erral-v1-0-b37b85998362@kernel.org
->
-> To: "Rafael J. Wysocki" <rafael@kernel.org>
-> To: Len Brown <lenb@kernel.org>
-> To: Sunil V L <sunilvl@ventanamicro.com>
-> To: Marc Zyngier <maz@kernel.org>
-> To: Thomas Gleixner <tglx@kernel.org>
-> To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> To: Huacai Chen <chenhuacai@kernel.org>
-> To: Anup Patel <anup@brainfault.org>
-> To: Hanjun Guo <guohanjun@huawei.com>
-> To: Sudeep Holla <sudeep.holla@kernel.org>
-> To: Catalin Marinas <catalin.marinas@arm.com>
-> To: Will Deacon <will@kernel.org>
-> Cc: linux-acpi@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-> Cc: linux-riscv@lists.infradead.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: loongarch@lists.linux.dev
->
-> ---
-> Lorenzo Pieralisi (7):
->       ACPI: Add acpi_device_clear_deps() helper function
->       ACPI: RISC-V: Fix riscv_acpi_irq_get_dep() loop termination
->       ACPI: RISC-V: Check acpi_get_handle() status in riscv_acpi_add_prt_=
-dep()
->       ACPI: RISC-V: Fix riscv_acpi_add_prt_dep() loop handling
->       ACPI: irq: Move RISC-V interrupt controllers autodep to ACPI IRQ co=
-de
->       ACPI/IORT: Implement ACPI infrastructure to enable GICv5 IWB probe =
-deferral
->       irqchip/gic-v5: Enable GICv5 IWB ACPI probe ordering detection
->
->  arch/riscv/include/asm/acpi.h       |   1 +
->  drivers/acpi/arm64/iort.c           |  22 ++++-
->  drivers/acpi/irq.c                  | 172 ++++++++++++++++++++++++++++++=
-+++++-
->  drivers/acpi/riscv/irq.c            | 141 +----------------------------
->  drivers/acpi/scan.c                 |   1 +
->  drivers/irqchip/irq-gic-v3.c        |   2 +-
->  drivers/irqchip/irq-gic-v5-iwb.c    |   2 +
->  drivers/irqchip/irq-gic-v5.c        |  13 ++-
->  drivers/irqchip/irq-gic.c           |   2 +-
->  drivers/irqchip/irq-loongarch-cpu.c |   2 +-
->  drivers/irqchip/irq-riscv-intc.c    |   3 +-
->  include/linux/acpi.h                |  13 ++-
->  include/linux/acpi_iort.h           |   3 +-
->  13 files changed, 223 insertions(+), 154 deletions(-)
-> ---
+On Tue, Jul 07, 2026 at 09:06:40PM +0200, Thomas Gleixner wrote:
+> From: Jinjie Ruan <ruanjinjie@huawei.com>
+> 
+> The return value of __secure_computing() currently uses 0 to indicate
+> that a system call should be allowed, and -1 to indicate that it should
+> be blocked/killed. This 0/-1 pattern is non-intuitive for a security
+> check function and makes the control flow at the call sites less readable.
 
-All applied as 7.3 material, thanks!
+Conceptually, I'm good with this. Just make sure that the
+tools/testing/selftests/seccomp/seccomp_bpf tests still passes. :)
+
+-- 
+Kees Cook
