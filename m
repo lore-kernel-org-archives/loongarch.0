@@ -1,92 +1,143 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 370B03EDE70
-	for <loongarch@lists.linux.dev>; Thu,  9 Jul 2026 08:28:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E5D3F8705;
+	Thu,  9 Jul 2026 08:41:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783585728; cv=none; b=fJ29cTOLyVS/0xcjJ3UmV/oGS0P1vthKTDZxlfwN6zr7fIIP5jeA/OV7WSM4K9iGvXtXQBMlEzGCfZIQvuK8QX3SNIahPfNYknnZEKB3W99VBi1a3NGQDH5I6SEt/EaFIo3dPcuL09ZRZIkPzEkc3RC2A4ZIhtApi1lu/asuTjY=
+	t=1783586474; cv=none; b=tAVCT0jb1UTKltx/xFj2gswNIBR8F+DOqril7FfWrCH3CM0tGnkmy44BDlbIK61YBgMwqQVUzLkrCnfSn/9Mlr7NdYUcfx+LV2yH8fvGmVVY8zCPhrHmM0mJl71pZnzi+ynO++cjcFnxZGXEhuYOAmUq5BgSSHP4M7iOkK9FQQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783585728; c=relaxed/simple;
-	bh=x3dA87p9m1F7Kqr7HZ5lh44BEly4Z5S9sFstBxptAE8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eTOmmAHthhMxzyAnE09rUlu/WeCDdbETNHH4le35VicbLmYs14F0f3JR6jFJbyt7hQc9TAYyUJdoDopPfzLhv5BWYxhNKXmW3CQYPnMpy+RVS4leYBN2rgw39yRBHKrjR30fKKxTPpAOBrw3Zu2VtQIE8fplR37FSCvVI4NOZSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8BxGOuuW09q4cYBAA--.7629S3;
-	Thu, 09 Jul 2026 16:28:30 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJAxnMapW09q3qIGAA--.32266S2;
-	Thu, 09 Jul 2026 16:28:25 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 0/4] LoongArch: KVM: Harden interrupt injection
-Date: Thu,  9 Jul 2026 16:21:05 +0800
-Message-Id: <20260709082109.1361767-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	s=arc-20240116; t=1783586474; c=relaxed/simple;
+	bh=3hDsoBZkjo4pr4F43GJKc0fqYV4voq1DnKXaZdhJ+kk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=iurMH9eOMAbepys8/osbLeC7OFpC+aKvPmOcqAZ9rVm9Cfj3JnEGq3qHfGWE0UDRkqtD/gUypE4Td1bjkxbeG757MdTIE6gUe0iQHk3+6kUFnAMOfTcg2WkeXJWqWDC1Gjl+lmbzhZnq3eUckXWQKgpMpZvmc4REgjHzrCU5QXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TF+sRJn9; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TF+sRJn9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D089B1F000E9;
+	Thu,  9 Jul 2026 08:40:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783586462;
+	bh=D4umqGeoeFLr6ftk+dGLX5Hz/2l8UNfoWaVJnZJbcDk=;
+	h=From:Subject:Date:To:Cc;
+	b=TF+sRJn9wetWvMfU0qANWtkHuUr6cJTyk9itf1gBHkAh32EYt1HTY2pL0rxdNrjzV
+	 3fs6VMBOFuLWXmxOcWpiJRRwukZuLhSzgntG1d2zMAsmYnNIvcAGXnLFvHxYFReGvK
+	 LIzak11bgPIsrJAsh6Azp8TIiGVrWLyBwDgmcHC809MyfqoIaHaqnGlR4rJKtdc8/b
+	 xb9QvH6auIofaK7mlzSB/wpXkcesBMymRDmkBcOwBbi480wbYden5ujV4QsTC66oO3
+	 Z/FYvFFqVdozJlsMUdnkdXDFCJLIe17Rhs1qz8/BCDAkwdsYPgQDXMcP0ofaGRjUcr
+	 rb0iTUeFcYb/Q==
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Subject: [PATCH v4 0/7] irqchip/ACPI: Arm GICv5 IWB ACPI IRQ probe deferral
+Date: Thu, 09 Jul 2026 10:40:10 +0200
+Message-Id: <20260709-gic-v5-acpi-iwb-probe-deferral-v4-0-48dae790f871@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxnMapW09q3qIGAA--.32266S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGpeT2oC/4XOQU7DMBCF4atUXjPIHsdO0hX3QCxsZ5waqiQaF
+ wOqcnecdlEhFlk+afT9cxWZOFEWx8NVMJWU0zzV0TwdRDi5aSRIQ90CJVrZYAtjClAMuLAkSF8
+ eFp49wUCRmN0ZwhC6pvfKdaYRFVmYYvq+BV7f7jt/+ncKl03dLk4pX2b+uX1Q1HZ3jxlp9mJFg
+ QSvW9+Zvu+0xZcP4onOzzOPYqsVfHhW6l0Pq4c6Rqest+T9P08/vFaqXU9XLxhjMUQZCfs/3rq
+ uv8jwKKl/AQAA
+X-Change-ID: 20260427-gic-v5-acpi-iwb-probe-deferral-cdc849b1a854
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+ Sunil V L <sunilvl@ventanamicro.com>, Marc Zyngier <maz@kernel.org>, 
+ Thomas Gleixner <tglx@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
+ Anup Patel <anup@brainfault.org>, Hanjun Guo <guohanjun@huawei.com>, 
+ Sudeep Holla <sudeep.holla@kernel.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ loongarch@lists.linux.dev, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, 
+ Sunil V L <sunilvl@oss.qualcomm.com>
+X-Mailer: b4 0.15.2
 
-API kvm_vcpu_ioctl_interrupt() is mainly to used to deliver interrupt
-from user mode, and internal APIs kvm_queue_irq() and kvm_dequeue_irq()
-are used in kernel mode, also moves IPI interrupt handling within lock
-protection.
+On Arm GICv5 systems, the IWB (Interrupt Wire Bridge) handles wired interrupts
+and it is in charge of translating interrupt wires to GICv5 ITS messages.
 
-Also this patch replaces kvm_err() with WARN_ONCE() to avoid noise
-kernel log.
+In ACPI systems, an IWB is backed by a platform device. Device drivers for
+devices whose IRQs are routed to an IWB might probe earlier than the IWB device
+driver, which can result in failures in that until the IWB driver is probed and
+its IRQ domain is duly registered, IRQs routed to it cannot be resolved.
+
+Some interrupt controllers for the RISC-V architecture suffer from the same
+issue; RISC-V, in its ACPI IRQ layer solved the problem by automatically
+creating device dependencies that result in the interrupt controllers drivers
+being probed before any device driver whose devices IRQs are routed to them is
+probed.
+
+Instead of reinventing the wheel, this series move the aforementioned RISC-V
+code to generic ACPI IRQ handling code (while fixing some bits and pieces) and
+implement GICv5 IWB ACPI probe deferral on top of it.
+
+Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+---
+Changes in v4:
+- Applied v3 review comments and tags
+- Link to v3: https://patch.msgid.link/20260701-gic-v5-acpi-iwb-probe-deferral-v3-0-c5562cf0fe29@kernel.org
+
+Changes in v3:
+- Added stub to clear ACPI device dependencies
+- Added review tags
+- Rebased against v7.2-rc1
+- Link to v2: https://patch.msgid.link/20260603-gic-v5-acpi-iwb-probe-deferral-v2-0-23ffa16b6ebb@kernel.org
+
+Changes in v2:
+- Split the patchset in several logic units according to review
+- Link to v1: https://patch.msgid.link/20260505-gic-v5-acpi-iwb-probe-deferral-v1-0-b37b85998362@kernel.org
+
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+To: Len Brown <lenb@kernel.org>
+To: Sunil V L <sunilvl@ventanamicro.com>
+To: Marc Zyngier <maz@kernel.org>
+To: Thomas Gleixner <tglx@kernel.org>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Huacai Chen <chenhuacai@kernel.org>
+To: Anup Patel <anup@brainfault.org>
+To: Hanjun Guo <guohanjun@huawei.com>
+To: Sudeep Holla <sudeep.holla@kernel.org>
+To: Catalin Marinas <catalin.marinas@arm.com>
+To: Will Deacon <will@kernel.org>
+Cc: linux-acpi@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: linux-riscv@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: loongarch@lists.linux.dev
 
 ---
-v3 ... v4:
-  1. From AI assist, replace kvm_err() with kvm_pr_unimpl() rather than
-     WARN_ONCE(), since host may crash with WARN_ONCE() when kernel
-     parameter panic_on_warn=1 is set.
-  2. Add one new patch 3 which returns directly when IPI address is not
-     aligned, rather than only print WARN_ON_ONCE() and continue to run.
+Lorenzo Pieralisi (7):
+      ACPI: Add acpi_device_clear_deps() helper function
+      ACPI: RISC-V: Fix riscv_acpi_irq_get_dep() loop termination
+      ACPI: RISC-V: Check acpi_get_handle() status in riscv_acpi_add_prt_dep()
+      ACPI: RISC-V: Fix riscv_acpi_add_prt_dep() loop handling
+      ACPI: irq: Move RISC-V interrupt controllers autodep to ACPI IRQ code
+      ACPI/IORT: Implement ACPI infrastructure to enable GICv5 IWB probe deferral
+      irqchip/gic-v5: Enable GICv5 IWB ACPI probe ordering detection
 
-v2 ... v3:
-  1. Split the patches into three smaller ones, the first patch removes
-     old default case and kvm_err() since it is impossible to happen.
-     And the second patch replaces kvm_err() with WARN_ONCE().
-
-v1 ... v2:
-  1. Add border check with ipnum in eiointc_set_sw_coreisr() and
-     eiointc_update_irq(), so that injected interrupt vector is valid.
-
-  2. Move IPI inject and ack within lock to avoid contention in
-     ipi_set() and ipi_clear().
-
-  3. Add kvm_arch_irqchip_in_kernel() check in user mode irq injection
-    in function kvm_vcpu_ioctl_interrupt(), contention of user mode irq
-    injection is assured from user mode VMM.
+ arch/riscv/include/asm/acpi.h       |   1 +
+ drivers/acpi/arm64/iort.c           |  22 ++++-
+ drivers/acpi/irq.c                  | 172 +++++++++++++++++++++++++++++++++++-
+ drivers/acpi/riscv/irq.c            | 141 +----------------------------
+ drivers/acpi/scan.c                 |   1 +
+ drivers/irqchip/irq-gic-v3.c        |   2 +-
+ drivers/irqchip/irq-gic-v5-iwb.c    |   2 +
+ drivers/irqchip/irq-gic-v5.c        |  13 ++-
+ drivers/irqchip/irq-gic.c           |   2 +-
+ drivers/irqchip/irq-loongarch-cpu.c |   2 +-
+ drivers/irqchip/irq-riscv-intc.c    |   3 +-
+ include/linux/acpi.h                |  13 ++-
+ include/linux/acpi_iort.h           |   3 +-
+ 13 files changed, 223 insertions(+), 154 deletions(-)
 ---
-Bibo Mao (4):
-  LoongArch: KVM: Set default MAILBOX access size with 8
-  LoongArch: KVM: Replace kvm_err() with kvm_pr_unimpl()
-  LoongArch: KVM: Return directly when IPI address is not aligned
-  LoongArch: KVM: Use internal API to deliver interrupt in kernel mode
+base-commit: dc59e4fea9d83f03bad6bddf3fa2e52491777482
+change-id: 20260427-gic-v5-acpi-iwb-probe-deferral-cdc849b1a854
 
- arch/loongarch/kvm/exit.c         | 16 +++----
- arch/loongarch/kvm/intc/dmsintc.c | 15 ++++---
- arch/loongarch/kvm/intc/eiointc.c | 32 +++++++------
- arch/loongarch/kvm/intc/ipi.c     | 75 +++++++++++++------------------
- arch/loongarch/kvm/intc/pch_pic.c | 12 ++---
- arch/loongarch/kvm/vcpu.c         |  5 ++-
- 6 files changed, 76 insertions(+), 79 deletions(-)
-
-
-base-commit: 0e35b9b6ec0ffcc5e23cbdec09f5c622ad532b53
--- 
-2.39.3
+Best regards,
+--  
+Lorenzo Pieralisi <lpieralisi@kernel.org>
 
