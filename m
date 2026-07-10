@@ -1,86 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2958C3AFD08;
-	Thu,  9 Jul 2026 22:52:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07DC444998F
+	for <loongarch@lists.linux.dev>; Fri, 10 Jul 2026 07:38:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783637527; cv=none; b=kmXyJAKrihYBT82ouOJCHgRljwcY5yo9gnarNird0PmQavcuKCG84kBkf73uqOy8x+Fd8vYwzPtRzs1mgAvvbphgdtMTSoeFd+QPnScgpRi+KeVyyUUWkDtAvr7TM94akqcOD/9szsdr5XSK9w2B1si+AIDPIYbrV9ws4k+p6Nk=
+	t=1783669140; cv=none; b=j4hJaBIsp8KSKBJcEpFtG0bXeOBp9qkcdUtIx37kXAKODD/5oTRegtMTzXFkM9SqgWlrkse+OzqhJPTLSLV2HTgXqlGWE6X8YinsujEbMwR7YHmtMRIJk7S84E8TfvHZlWVm/P2MuubWpfgbH5+h8eQV0WMkHGrX6ZAB0bL3kdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783637527; c=relaxed/simple;
-	bh=gBaIPN33LfmDg4hHIaBoNItQlZ83Bm6USbEWS9KyhIY=;
-	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
-	 Subject:From:To:Cc:Date; b=i3Z9tKAi7XOwYz4w2dZDmrJnd4ZzdViE8PTL3Y2KKXQJkjkO1F3zmceT03ZlBJOw+o0JszkpLf0M4q18Se/Q+kaiffE27ftMWvDUCOeEQE8FR9VUx04Im6h8m42UViPtL/r4/GDvew+yJsopmhlcOnkTivcr5tjJHWflbP0b0t4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=casgykTh; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783669140; c=relaxed/simple;
+	bh=xSNIeyQeUHQgZHGjLA322pu93/7oHBT7D8w6q7YwSZU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MfchZ8op2OGOcvK0FyQoMf4bFLRBEJipIlYOBZ9Kb3NEDSntK3ZXWgYeSV4YZPjlppUWCgwFfisRGpyJknb8e4RfF71ZF7MmQ2cRyMJCvz3FjdfZ0Otmh30BuKM1Th15ylb3Vbw5TALZUE9YDrMnqaqHCgkZ29LIFA8pXcXVSBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KCdmfVNq; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="casgykTh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 791EE1F000E9;
-	Thu,  9 Jul 2026 22:52:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783637524;
-	bh=Hw0YEWuasSELzyN3iJrE8ZYwT4ynNuVYIAHj0t2PlKA=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date;
-	b=casgykThI4O4unGWnXTN9WG4KF/VKUV9GE6wYwIRge1Tt+l0NfI/WlVJnsZzjY+Dn
-	 FPytoxw9GkCKjWGqUuHcEuDMu38yUmPcrSFXSAYAG08vHsPut/iQvlgqLzQeRpqunK
-	 SlYYhv7OobZIYv4bhXb/mK9KVFa9Ff/2fMi9UEXHWUSzBlq1xGLr0LpXT5uqy5Ap73
-	 WyILKIFInr0hVE29AWhzb1PjGfL0WBJmPtIctAzxitq98MJ/5Cg/lHePzfoxYtyZtI
-	 sCf+/tG8zIvS8yNKLqRZ0VImJ4H+4D7g0gp0P2dE6i/524P30v40jS/HNxRPNe2Akd
-	 twoEoZCkL4JWA==
-Content-Type: multipart/mixed; boundary="===============2104876237906351994=="
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KCdmfVNq"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1783669127;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xSNIeyQeUHQgZHGjLA322pu93/7oHBT7D8w6q7YwSZU=;
+	b=KCdmfVNqyUT+aXz3av1Mlph3kPfUMFvt9IgSgl9i9QJvbLNnPzbn5BL/edpQDexUYk5Hsd
+	foiRM5fDCMMMM50djFYVXvJXBq4Jqc6CAfYRiBVdkmkv81vVneipr84BsiWqiSPCTiqm1t
+	32MvIDJjIvV1wzIg9suxmuSZ+bGKH1U=
+From: George Guo <dongtai.guo@linux.dev>
+To: joe.lawrence@redhat.com
+Cc: chenhuacai@kernel.org,
+	jpoimboe@kernel.org,
+	peterz@infradead.org,
+	jikos@kernel.org,
+	mbenes@suse.cz,
+	pmladek@suse.com,
+	kernel@xen0n.name,
+	rostedt@goodmis.org,
+	ardb@kernel.org,
+	nathan@kernel.org,
+	nick.desaulniers+lkml@gmail.com,
+	yangtiezhu@loongson.cn,
+	jiaxun.yang@flygoat.com,
+	liukexin@kylinos.cn,
+	guodongtai@kylinos.cn,
+	xry111@xry111.site,
+	wangyuli@aosc.io,
+	loongarch@lists.linux.dev,
+	live-patching@vger.kernel.org,
+	llvm@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 04/12] livepatch/klp-build: build LoongArch with -fPIC to keep GOT-indirect symbol references
+Date: Fri, 10 Jul 2026 15:38:27 +0800
+Message-ID: <20260710073827.27064-1-dongtai.guo@linux.dev>
+In-Reply-To: <ak5nH60j4Rdn50n-@redhat.com>
+References: <ak5nH60j4Rdn50n-@redhat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-Id: <de3ebfe684f280473617b560a9dcf501df07833f835a08eb6e75720cd03662b4@mail.kernel.org>
-In-Reply-To: <20260709-cbpf-jit-spray-hardening-7-1-y-v1-1-5ac5a2d6797f@linux.intel.com>
-References: <20260709-cbpf-jit-spray-hardening-7-1-y-v1-1-5ac5a2d6797f@linux.intel.com>
-Subject: Re: [PATCH 7.1.y 1/6] bpf: Support for hardening against JIT spraying
-From: bot+bpf-ci@kernel.org
-To: pawan.kumar.gupta@linux.intel.com,stable@vger.kernel.org,gregkh@linuxfoundation.org,sashal@kernel.org
-Cc: bpf@vger.kernel.org,linux-arm-kernel@lists.infradead.org,loongarch@lists.linux.dev,linuxppc-dev@lists.ozlabs.org,linux-riscv@lists.infradead.org,x86@kernel.org,ast@kernel.org,daniel@iogearbox.net,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
-Date: Thu,  9 Jul 2026 22:52:04 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
---===============2104876237906351994==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Hi Joe,
 
-> commit 96cce16e26dd02a8678f1e87f88a4b5cdb63b995 upstream.
-> The BPF JIT allocator packs many small programs into larger executable
-> allocations and reuses space within those allocations as programs are
-> loaded and freed. When fresh code is written into space that a previous
-> program occupied, an indirect jump into the new program can reuse a branch
-> prediction left behind by the old one.
-> Flush the indirect branch predictors before reusing JIT memory so that
-> indirect jumps into a newly written program don't reuse predictions from an
-> old program that occupied the same space.
-> Introduce bpf_arch_pred_flush_enabled static key and bpf_arch_pred_flush
-> static call for flushing the branch predictors on JIT memory reuse.
-> Architectures that need a flush, can update it to a predictor flush
-> function. By default, its a NOP and does not emit any CALL.
-> Allocations larger than a pack are not covered by this flush. That is safe
-> because cBPF programs (the unprivileged attack surface) are bounded well
-> below a pack size. Issue a warning if this assumption is ever violated
-> while the flush is active.
-> Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-> Acked-by: Daniel Borkmann <daniel@iogearbox.net>
-> Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+> This might be my personal preference, but I think it would be quicker to
+> review patches: [...] if they were squashed into one patch.
+[...]
+> the combined commit remains complete thought, i.e. for LoongArch
+> KLP builds, replace the arch's KBUILD_CFLAGS_KERNEL (dropping -fPIE and
+> -mdirect-extern-access) and add -fPIC via KCFLAGS instead.
 
-The reuse path this patch hardens (bpf_prog_pack_alloc() finding a free
-area within a pack, and the size > BPF_PROG_PACK_SIZE branch) comes from
-the pack allocator that first packed many programs into shared executable
-allocations and reused freed space within a pack.
+Makes sense. I'll squash patches 03 and 04 into a single patch and drop
+the forward/backward references from the commit message.
 
-Should this carry a Fixes: tag pointing at that commit?
+> I'd also pull out the configuration checks into validate_config() to be
+> consistent:
+[...]
+> and then build_kernel() only needs to adjust the cmd / flags accordingly.
 
-  Fixes: 57631054fae6 ("bpf: Introduce bpf_prog_pack allocator")
+Agreed. I'll move the CONFIG_RELOCATABLE / CONFIG_AS_HAS_EXPLICIT_RELOCS
+checks into validate_config() and leave build_kernel() to just set the
+flags.
 
-
----
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/29054648899
---===============2104876237906351994==--
+Thanks,
+George
