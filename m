@@ -1,149 +1,128 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7280B3FBB6A
-	for <loongarch@lists.linux.dev>; Fri, 10 Jul 2026 12:32:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F306403E94
+	for <loongarch@lists.linux.dev>; Fri, 10 Jul 2026 12:52:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783686739; cv=none; b=W1kBXp7pE+jDRCupJtvvMCH7hTjl/ilIB+D5mvyUy/S/PxLole4l0h1ZZqWS0YqVRDnISDxWBNt0RcDXjO9RNXCFLyhpOTSXRclZ6UDLGOVV2EhyCt8S5NjouXpYpv9GwrcJHZyTGaJiw0OQodDSXGY3cOR1Zy24E2pR5joZXuo=
+	t=1783687964; cv=none; b=PzX6OuQE2nFf19m9IVdnVOu1BPH3/Cw8kT6/zkgybq3TCYbetn5njoO1otJuXXvV7g4IBHDJWY6JvG5oJ6C6DDePMO4rHV1CALEHWfD3rcn/VsF3Jqvu7vS7Q9wV9t/Lr9KlrOO8fm32FAKY+ecj65AqkkcdZLYha4Jt21a2BPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783686739; c=relaxed/simple;
-	bh=ys9eY4ViqB4VHoA/lZua2Zw3TzyK+DqDveJx1YabTEI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SZNs168oX3OD8C2bhf+CBkJmYfI8cgYTdmWXVk+DN+ET7O9eUDrmfyp3BnannCCE3VXI80wpvEAPdURfFCPub2TTdYqtqPL+SRc1UEUOxWObicy/vnMCOP4/rrxsFLm1kcjbrGS5iFZsvWW38sb3esC75Wgx25Bzu099H1/Dapw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from kunlun.suse.cz (unknown [IPv6:2a07:de40:b306:2000::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id AE9AB764C1;
-	Fri, 10 Jul 2026 12:32:14 +0000 (UTC)
-Authentication-Results: smtp-out2.suse.de;
-	none
-Date: Fri, 10 Jul 2026 14:32:13 +0200
-From: Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Thomas Gleixner <tglx@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	linuxppc-dev@lists.ozlabs.org, Kees Cook <kees@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	linux-riscv@lists.infradead.org,
-	Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org,
-	x86@kernel.org, Mark Rutland <mark.rutland@arm.com>,
-	Jinjie Ruan <ruanjinjie@huawei.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Guo Ren <guoren@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Helge Deller <deller@gmx.de>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Richard Weinberger <richard@nod.at>,
-	Chris Zankel <chris@zankel.net>,
-	linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org,
-	linux-csky@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linux-sh@vger.kernel.org, linux-um@lists.infradead.org,
-	Arnd Bergmann <arnd@arndb.de>, Vineet Gupta <vgupta@kernel.org>,
-	Will Deacon <will@kernel.org>, Brian Cain <bcain@kernel.org>,
-	Michal Simek <monstr@monstr.eu>, Dinh Nguyen <dinguyen@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	linux-snps-arc@lists.infradead.org, linux-hexagon@vger.kernel.org,
-	linux-openrisc@vger.kernel.org, sparclinux@vger.kernel.org,
-	linux-arch@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-	linux-doc@vger.kernel.org
-Subject: Re: [patch 13/18] entry: Make trace_syscall_enter() return type bool
-Message-ID: <alDmTcgzMlKiio9H@kunlun.suse.cz>
-References: <20260707181957.433213175@kernel.org>
- <20260707190254.338083894@kernel.org>
- <ak5ySpil83TNWxeq@kunlun.suse.cz>
- <87se5tqkyp.ffs@fw13>
- <alDQ7isUKJFl8Va4@kunlun.suse.cz>
- <alDaOw8t-e3rxIPm@redhat.com>
+	s=arc-20240116; t=1783687964; c=relaxed/simple;
+	bh=AzDfBwQS2I0z3VQojQVGuftJ6+yTgQ8GbV020NKnw5M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WYcKkAE9IMckZzXTOcTuqG45cNpIX56lOsNQ07uDCikW7NEbNGXTeaN4p7wE2ybmyOSbrRZ5XFaMWSHVLN0HyXQ9ke9Qr89QBVewM3dr0Av8/kBfePXi2YkIQR7x4uzr4gMLLmxVuo9bY8rSbFNKUGJ3jFo/fdXL8zxMdU6dEgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PQ1G1VuR; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PQ1G1VuR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75EF01F00A3A
+	for <loongarch@lists.linux.dev>; Fri, 10 Jul 2026 12:52:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783687963;
+	bh=XUVP+WFMdP+TCX3id+9l0wCEL74Rof95/+D8WXkSiQ8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=PQ1G1VuREl4wzomtLegwBBWa0w4rD3CrXIHnk5M0dTl4aLwslskEyclf8/iEf+ROr
+	 Tj6HPUXmC0TLVyVgsEMwZVlGslbHGOqSYrR2iC+SLKvIvhgiGz6uElJh98gtdbccil
+	 ahzB9hcDbB4IwNLA1iVwdhbCZmqADYq7uc2wDr5CF8WKU6AJcNeRLc6sndqQw3CsF/
+	 eiwKzfUEtiUg38aNl3LtC3i6Y4lSyq1tN3sU1Qq6ZrLAaLoanEsqzlWnfbb8rtO7dH
+	 JEsbZRMkXlh53TbLxwL0b9hVn/tqItBZzpxhcWbTaA1OiMtgJvuIaM4tHVj8WwSU9q
+	 Rik56R6OqDqVg==
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-69c108fee0aso1067936a12.3
+        for <loongarch@lists.linux.dev>; Fri, 10 Jul 2026 05:52:43 -0700 (PDT)
+X-Gm-Message-State: AOJu0YwazpiEYVRnZKHL9ebC2hN48mfSYbMe1sn0/ohKTnuMLHBstVlE
+	Hf6cODlas7Uywf40Z9P1VJgIyBZ3KvesmtFPbXI+0/a4UCmnTEN7FwFSEitS24FOCtmdGSE06x1
+	Sp3FMIECtFt0/USXAg6gCSnfrAiMmkDo=
+X-Received: by 2002:a05:6402:4502:b0:698:4405:4feb with SMTP id
+ 4fb4d7f45d1cf-69ab4453aadmr4761526a12.3.1783687962131; Fri, 10 Jul 2026
+ 05:52:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <alDaOw8t-e3rxIPm@redhat.com>
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Spam-Flag: NO
-X-Spam-Score: -2.00
-X-Spam-Level: 
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-2.00 / 50.00];
-	REPLY(-4.00)[];
-	RDNS_NONE(2.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RLrpyf51xp5ujasy9bitsaikab)]
-X-Rspamd-Queue-Id: AE9AB764C1
-X-Rspamd-Action: no action
+References: <20260707064556.371881-1-haoran.jiang@linux.dev>
+In-Reply-To: <20260707064556.371881-1-haoran.jiang@linux.dev>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 10 Jul 2026 20:52:30 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7GwHp1q-c5igf82h5gk1G5uDx+-gcrtqZsYHn_vbnR1g@mail.gmail.com>
+X-Gm-Features: AUfX_mzKGKJ1Nh9M-pX-NWTZX0hXwxVypZ-QWS578Kinu7KnwDNw1mJPPd9sKdg
+Message-ID: <CAAhV-H7GwHp1q-c5igf82h5gk1G5uDx+-gcrtqZsYHn_vbnR1g@mail.gmail.com>
+Subject: Re: [PATCH 0/2] Add support to dump the kernel page tables
+To: haoran.jiang@linux.dev
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, kernel@xen0n.name, 
+	yangtiezhu@loongson.cn, Haoran Jiang <jianghaoran@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 10, 2026 at 01:40:43PM +0200, Oleg Nesterov wrote:
-> On 07/10, Michal Suchánek wrote:
-> >
-> > On Wed, Jul 08, 2026 at 10:34:38PM +0200, Thomas Gleixner wrote:
-> > >
-> > >   1) The set in stone rule is that if the entry code returns -1L as the
-> > >      syscall number then the architecture code has to skip the syscall
-> > >      invocation _and_ is not supposed to change the return value.
-> >
-> > Which stone?
-> >
-> > Pics or it did not happen.
-> >
-> > >
-> > >   2) There is no guarantee and never has been that any of the involved
-> > >      mechanisms (ptrace, seccomp, tracing) will change the return value
-> > >      when it sets the syscall number to -1L.
-> >
-> > For ptrace to correctly emulate a syscall it needs to set the syscall nr
-> > to an invalid value on entry, and the desired result if the syscall on
-> > exit AFAICT.
-> 
-> I can only say that ptrace users do want to skip the syscall and set the
-> return value on entry.
-> 
-> See
-> 	[PATCH v5 1/2] ptrace: add PTRACE_SET_SYSCALL_INFO syscall skipping support
-> 	https://lore.kernel.org/all/20260709100949.94345-2-renzo@cs.unibo.it/
-> 
-> The changelog explains that currently this doesn't work because
-> among the arches which define HAVE_ARCH_TRACEHOOK (at least) arch/mips is
-> broken in this regard.
+Hi, Haoran,
 
-Or it could be documented that setting the return value has to be done
-in the exit trace, and that would than work on any architecture AFAICT.
+On Tue, Jul 7, 2026 at 2:47=E2=80=AFPM <haoran.jiang@linux.dev> wrote:
+>
+> From: Haoran Jiang <jianghaoran@kylinos.cn>
+>
+> Enforce the W^X principle on page tables,
+> and also support the kernel page dump feature.
+>
+> The following tests were performed:
+>
+> kdb:
+> echo kgdbts=3DV1 > /sys/module/kgdbts/parameters/kgdbts
+>
+> ebpf:
+> ./test_progs -t struct_ops -d struct_ops_multi_pages
+> ./test_progs -t fexit_stress
+> ./test_progs -t module_fentry_shadow
+> ./test_progs -t fentry_test/fentry
+> ./test_progs -t fexit_test/fexit
+> ./test_progs -t modify_return
+> ./test_progs -t fexit_sleep
+> ./test_progs -t test_overhead
+> ./test_progs -t trampoline_count
+> ./test_progs -t kprobe
+> ./test_progs -t uprobe
+>
+> livepatch:
+> insmod samples/livepatch/livepatch_sample.ko
+>
+> kprobe:
+> insmod samples/kprobes/kprobe_example.ko
+> insmod samples/kprobes/kretprobe_example.ko
+>
+> unxibench:
+> before this patch:
+> running 1 parallel copy of tests: 1492
+> running 128 parallel copies of tests:  8765
+>
+> after this patch:
+> running 1 parallel copy of tests:  1440
+> running 128 parallel copies of tests:  8749
+>
+I hope you have verified ftrace, kprobes, jump label, kgdb, etc. on
+modules, not only on the kernel itself. Otherwise the tests are not
+enough.
 
-With ppc and s390 using the same register for the syscall number and
-syscall return value it's very much impossible to poke the return value
-on entry into a register using the generic register access function. As
-of now there is no place to store the value ot of the return value
-outside of the registers, either.
+@Tiezhu, you are familiar with all the above mechanisms, so please
+help to review, and double check whether uprobes need to be modified.
 
-And the current PTRACE_SET_SYSCALL_INFO indeed sets the syscall nr and
-arguments on entry and the syscall return value on exit, that
-disctincion is implemented.
+Huacai
 
-Not sure how the patchset you point out is relevant, it only adds
-changes in the exit case.
-
-Thanks
-
-Michal
+>
+> Haoran Jiang (2):
+>   LoongArch: Enforce W^X for page-mapped virtual memory region
+>   LoongArch: Add support to dump the kernel page tables
+>
+>  arch/loongarch/Kconfig                    |   2 +
+>  arch/loongarch/include/asm/pgtable-bits.h |  12 +-
+>  arch/loongarch/kernel/ftrace_dyn.c        |  16 +
+>  arch/loongarch/kernel/inst.c              |  25 +-
+>  arch/loongarch/kernel/jump_label.c        |   3 +
+>  arch/loongarch/kernel/kgdb.c              |  50 +++
+>  arch/loongarch/kernel/kprobes.c           |   4 +-
+>  arch/loongarch/mm/Makefile                |   1 +
+>  arch/loongarch/mm/ptdump.c                | 474 ++++++++++++++++++++++
+>  9 files changed, 575 insertions(+), 12 deletions(-)
+>  create mode 100644 arch/loongarch/mm/ptdump.c
+>
+> --
+> 2.43.0
+>
