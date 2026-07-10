@@ -1,150 +1,381 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2A74279EE
-	for <loongarch@lists.linux.dev>; Fri, 10 Jul 2026 12:53:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D009A282F06
+	for <loongarch@lists.linux.dev>; Fri, 10 Jul 2026 13:03:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783688003; cv=none; b=UXYe9voy154tnlhxYjfZxkjLQkqkGaWB0mFafKnWrW5muqtUfizvZaIrMFrexVFDSzRu9lCKyD2wVSO66ZvUr9ycXgK00/S8UxXULXKu3GkIgWgZp2J7TQWvmRtNFV8zWtXRyJA/QsKjm9DXCl+Su6/ua+FGmNajOCyiq7BLAJg=
+	t=1783688614; cv=none; b=Vy5lk8h66Diu3LH00UnQlYjwvozdvlGc52gmJcnFtIuBsCG11N/OG8lxWxNl269lbWJuyKvTrw2ndD0vFhC51mnD/nE4XdgE1Ec3l/0JEOuwBGzmKLoJ6lQJNhML/76QFyNpUCTXcUtNjDeWWuYepK7VwSc4qmKESbU5OwT0jwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783688003; c=relaxed/simple;
-	bh=sxv6a13OPgrK6TOsUQ/kBJYeYtA4hSsjpL/QVUw8MJI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=YV91nMj+nFnCpoutyz/W/McXZJtY+9cjYSnLCK7B5XFQQ6xvPcOLRhi7bMndQyHcXO+TsERmLaQrtkZ6VKC+bLFvdFYBTEFBzA8A8anuy+yqIG+YwiPxQzUq1RY4oHu4elr88/ywMX4mQXuF1MjtAY48N6n64QrnteEDm2OxkIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O2AA42wc; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1783688614; c=relaxed/simple;
+	bh=OV7h+5uYjqODTa5Z3gtOifbhO3tErEWGApV0KnHxMr4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EB8leT0fCEIukZqG60JoTxA/uWN6zedDk93IVqTJ4uupz0hKb11cinRb45P7MlkpS/trInMurM8j6gD1f/TxX31tRzCJfy+hpEFPm8nLGIY3I5YTY8ty3R+w3NsWxi5EqsJyvugE69LyjbpNCdasrqNG6CyfQhjeZLixA/R+HqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AG9YBtU4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O2AA42wc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1783688000;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XTxMckJ71iKdcnC625lbZ9WJQgTp+gyXuVTaxsSZYeA=;
-	b=O2AA42wc0EFpHFaeTcNaA+5w2Vxj2dLQZ00YjfR5A3+JB1y4OPtfyeY1VNKeuyYVDjlqoy
-	TzMenwjfF9q+zFqyZXi8XP+H48JHs7nMPojLVdTC4UG6U94iupybkM9uqpYd1CMMtl1uyc
-	pySLQjyn0zU5XCWVDK7TvBD50TiZKnw=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-640-duefXCb_NOaqJcpTJsNlCw-1; Fri,
- 10 Jul 2026 08:53:17 -0400
-X-MC-Unique: duefXCb_NOaqJcpTJsNlCw-1
-X-Mimecast-MFC-AGG-ID: duefXCb_NOaqJcpTJsNlCw_1783687991
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AAE061801379;
-	Fri, 10 Jul 2026 12:53:07 +0000 (UTC)
-Received: from fedora (unknown [10.44.49.164])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 8AEF2180029C;
-	Fri, 10 Jul 2026 12:52:47 +0000 (UTC)
-Received: by fedora (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Fri, 10 Jul 2026 14:53:07 +0200 (CEST)
-Date: Fri, 10 Jul 2026 14:52:40 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-Cc: Thomas Gleixner <tglx@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	linuxppc-dev@lists.ozlabs.org, Kees Cook <kees@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	linux-riscv@lists.infradead.org,
-	Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org,
-	x86@kernel.org, Mark Rutland <mark.rutland@arm.com>,
-	Jinjie Ruan <ruanjinjie@huawei.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Guo Ren <guoren@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Helge Deller <deller@gmx.de>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Richard Weinberger <richard@nod.at>,
-	Chris Zankel <chris@zankel.net>,
-	linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org,
-	linux-csky@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linux-sh@vger.kernel.org, linux-um@lists.infradead.org,
-	Arnd Bergmann <arnd@arndb.de>, Vineet Gupta <vgupta@kernel.org>,
-	Will Deacon <will@kernel.org>, Brian Cain <bcain@kernel.org>,
-	Michal Simek <monstr@monstr.eu>, Dinh Nguyen <dinguyen@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	linux-snps-arc@lists.infradead.org, linux-hexagon@vger.kernel.org,
-	linux-openrisc@vger.kernel.org, sparclinux@vger.kernel.org,
-	linux-arch@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-	linux-doc@vger.kernel.org
-Subject: Re: [patch 13/18] entry: Make trace_syscall_enter() return type bool
-Message-ID: <alDrGBMdTuoLcVyy@redhat.com>
-References: <20260707181957.433213175@kernel.org>
- <20260707190254.338083894@kernel.org>
- <ak5ySpil83TNWxeq@kunlun.suse.cz>
- <87se5tqkyp.ffs@fw13>
- <alDQ7isUKJFl8Va4@kunlun.suse.cz>
- <alDaOw8t-e3rxIPm@redhat.com>
- <alDmTcgzMlKiio9H@kunlun.suse.cz>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AG9YBtU4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71F111F00A3F
+	for <loongarch@lists.linux.dev>; Fri, 10 Jul 2026 13:03:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783688612;
+	bh=wCytsM4LZXG1WYU+MdFPlf49ZntIOQI8Jxglq+DMy/0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=AG9YBtU4XLkkLikTlgrZ6T+NXgGnvsNnPzYW63U+xLdgFMGfNE+4qcKOFCWlp5VkI
+	 rFoz+miTFbO+31WD4WmMkmUF6meYDX2ehbBcJXTbfUxSpTjvrGQA2kh1yLiDhvWSTL
+	 Oi7ttUSTi2aBjICOOPpkwjrHKUAadMATpFA+5SyK/+uwrqku2jn2T/4oQtwCePemlE
+	 UAkdgeOqFg0jX01iPWdyHcH+GhFN1w4ni9ywXfdbJzTjf6IIQ3NakivFTNfg0f9cd5
+	 9C+LhSc15sVTK682vfT9yEy2FaQZ8yvKpEnR89S2GMZLxCZNyhyUDSB+VUCG3/lyYa
+	 vkJuEZkUZgXrg==
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-698e5859a3cso1683798a12.0
+        for <loongarch@lists.linux.dev>; Fri, 10 Jul 2026 06:03:32 -0700 (PDT)
+X-Gm-Message-State: AOJu0YyMpGhljl60ivqXZG60MQ8+aejhDP/A4OYIjjd+Lt1DYfI4tS7X
+	5NK47rLcoORtb5yWzxcudcRQpdCIsyzrb6nbne96k11RPDCzVSTtdX43SYRmi3tRivbIlbNk+NA
+	f0HkfN6xB4L5zYGTmd/9Y8cgAXYEWnMs=
+X-Received: by 2002:a05:6402:1808:b0:69a:3652:9d33 with SMTP id
+ 4fb4d7f45d1cf-69c24ea1251mr1132423a12.19.1783688610953; Fri, 10 Jul 2026
+ 06:03:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <alDmTcgzMlKiio9H@kunlun.suse.cz>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: rN2snzuWlYmMX2uiPY3uHdEBlUjhtCragHLn5vloEvY_1783687991
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+References: <20260707064556.371881-1-haoran.jiang@linux.dev> <20260707064556.371881-2-haoran.jiang@linux.dev>
+In-Reply-To: <20260707064556.371881-2-haoran.jiang@linux.dev>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 10 Jul 2026 21:03:19 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6LcvzOSOKW4eAHqZwCNRKn6dWB6GZNLha8oT9-pj2AeA@mail.gmail.com>
+X-Gm-Features: AUfX_mz-fjU8JL1lI5rbs-TBpmtaAgCHD8hIzvUZXwvA4ggDKxhj6yGVC6XHPM4
+Message-ID: <CAAhV-H6LcvzOSOKW4eAHqZwCNRKn6dWB6GZNLha8oT9-pj2AeA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] LoongArch: Enforce W^X for page-mapped virtual memory region
+To: haoran.jiang@linux.dev
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, kernel@xen0n.name, 
+	yangtiezhu@loongson.cn, Haoran Jiang <jianghaoran@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 07/10, Michal Suchánek wrote:
+Hi, Haoran,
+
+On Tue, Jul 7, 2026 at 2:47=E2=80=AFPM <haoran.jiang@linux.dev> wrote:
 >
-> On Fri, Jul 10, 2026 at 01:40:43PM +0200, Oleg Nesterov wrote:
-> >
-> > I can only say that ptrace users do want to skip the syscall and set the
-> > return value on entry.
-> >
-> > See
-> > 	[PATCH v5 1/2] ptrace: add PTRACE_SET_SYSCALL_INFO syscall skipping support
-> > 	https://lore.kernel.org/all/20260709100949.94345-2-renzo@cs.unibo.it/
-> >
-> > The changelog explains that currently this doesn't work because
-> > among the arches which define HAVE_ARCH_TRACEHOOK (at least) arch/mips is
-> > broken in this regard.
+> From: Haoran Jiang <jianghaoran@kylinos.cn>
 >
-> Or it could be documented that setting the return value has to be done
-> in the exit trace, and that would than work on any architecture AFAICT.
-
-Well, ptrace users know the problem. And this what they have to do
-currently.
-
-> With ppc and s390 using the same register for the syscall number and
-> syscall return value it's very much impossible to poke the return value
-> on entry into a register using the generic register access function. As
-> of now there is no place to store the value ot of the return value
-> outside of the registers, either.
-
-I know nothing about ppc and s390. Can't comment right now.
-
-> And the current PTRACE_SET_SYSCALL_INFO indeed sets the syscall nr and
-> arguments on entry and the syscall return value on exit, that
-> disctincion is implemented.
+> Add the non-executable permission flag `_PAGE_NO_EXEC` to
+> the default attributes of kernel page tables, so that page
+> table permissions comply with the W^X (Write XOR Execute)
+> principle by default. Also enable `STRICT_MODULE_RWX` to
+> enforce strict memory permissions on the module region,
+> making the code region non=E2=80=91writable, the data region non=E2=80=91=
+executable,
+> and the read=E2=80=91only data region both non=E2=80=91writable and non=
+=E2=80=91executable.
+> When code section modifications are needed, the `set_memory_xx()`
+> API is used to temporarily alter the read/write permissions
+> of the code section.
 >
-> Not sure how the patchset you point out is relevant, it only adds
-> changes in the exit case.
+> Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
+> ---
+>  arch/loongarch/Kconfig                    |  1 +
+>  arch/loongarch/include/asm/pgtable-bits.h | 12 +++---
+>  arch/loongarch/kernel/ftrace_dyn.c        | 16 ++++++++
+>  arch/loongarch/kernel/inst.c              | 25 ++++++++++--
+>  arch/loongarch/kernel/jump_label.c        |  3 ++
+>  arch/loongarch/kernel/kgdb.c              | 50 +++++++++++++++++++++++
+>  arch/loongarch/kernel/kprobes.c           |  4 +-
+>  7 files changed, 99 insertions(+), 12 deletions(-)
+>
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index bec7cc1d72ee..2c5de66bf047 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -27,6 +27,7 @@ config LOONGARCH
+>         select ARCH_HAS_PTE_SPECIAL if 64BIT
+>         select ARCH_HAS_SET_MEMORY
+>         select ARCH_HAS_SET_DIRECT_MAP
+> +       select ARCH_HAS_STRICT_MODULE_RWX
+>         select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+>         select ARCH_HAS_UBSAN
+>         select ARCH_HAS_VDSO_ARCH_DATA
+> diff --git a/arch/loongarch/include/asm/pgtable-bits.h b/arch/loongarch/i=
+nclude/asm/pgtable-bits.h
+> index b565573cd82e..8ad5dccb312e 100644
+> --- a/arch/loongarch/include/asm/pgtable-bits.h
+> +++ b/arch/loongarch/include/asm/pgtable-bits.h
+> @@ -110,17 +110,17 @@
+>  #define _HPAGE_CHG_MASK        (_PAGE_MODIFIED | _PAGE_SPECIAL | _PFN_MA=
+SK | _CACHE_MASK | _PAGE_PLV | _PAGE_HUGE)
+>
+>  #define PAGE_NONE      __pgprot(_PAGE_PROTNONE | _PAGE_NO_READ | \
+> -                                _PAGE_USER | _CACHE_CC)
+> +                                _PAGE_USER | _CACHE_CC | _PAGE_NO_EXEC)
+>  #define PAGE_SHARED    __pgprot(_PAGE_PRESENT | _PAGE_WRITE | \
+> -                                _PAGE_USER | _CACHE_CC)
+> -#define PAGE_READONLY  __pgprot(_PAGE_PRESENT | _PAGE_USER | _CACHE_CC)
+> +                                _PAGE_USER | _CACHE_CC | _PAGE_NO_EXEC)
+> +#define PAGE_READONLY  __pgprot(_PAGE_PRESENT | _PAGE_USER | _CACHE_CC |=
+ _PAGE_NO_EXEC)
+>
+>  #define PAGE_KERNEL    __pgprot(_PAGE_PRESENT | __READABLE | __WRITEABLE=
+ | \
+> -                                _PAGE_GLOBAL | _PAGE_KERN | _CACHE_CC)
+> +                                _PAGE_GLOBAL | _PAGE_KERN | _CACHE_CC | =
+_PAGE_NO_EXEC)
+>  #define PAGE_KERNEL_SUC __pgprot(_PAGE_PRESENT | __READABLE | __WRITEABL=
+E | \
+> -                                _PAGE_GLOBAL | _PAGE_KERN |  _CACHE_SUC)
+> +                                _PAGE_GLOBAL | _PAGE_KERN |  _CACHE_SUC =
+| _PAGE_NO_EXEC)
+>  #define PAGE_KERNEL_WUC __pgprot(_PAGE_PRESENT | __READABLE | __WRITEABL=
+E | \
+> -                                _PAGE_GLOBAL | _PAGE_KERN |  _CACHE_WUC)
+> +                                _PAGE_GLOBAL | _PAGE_KERN |  _CACHE_WUC =
+| _PAGE_NO_EXEC)
+>
+>  #ifndef __ASSEMBLER__
+>
+> diff --git a/arch/loongarch/kernel/ftrace_dyn.c b/arch/loongarch/kernel/f=
+trace_dyn.c
+> index d5d81d74034c..d1d8c4c2da75 100644
+> --- a/arch/loongarch/kernel/ftrace_dyn.c
+> +++ b/arch/loongarch/kernel/ftrace_dyn.c
+> @@ -8,10 +8,24 @@
+>  #include <linux/ftrace.h>
+>  #include <linux/kprobes.h>
+>  #include <linux/uaccess.h>
+> +#include <linux/memory.h>
+>
+>  #include <asm/inst.h>
+>  #include <asm/module.h>
+>
+> +
+> +void ftrace_arch_code_modify_prepare(void)
+> +       __acquires(&text_mutex)
+> +{
+> +       mutex_lock(&text_mutex);
+> +}
+> +
+> +void ftrace_arch_code_modify_post_process(void)
+> +       __releases(&text_mutex)
+> +{
+> +       mutex_unlock(&text_mutex);
+> +}
+> +
+>  static int ftrace_modify_code(unsigned long pc, u32 old, u32 new, bool v=
+alidate)
+>  {
+>         u32 replaced;
+> @@ -171,6 +185,8 @@ int ftrace_init_nop(struct module *mod, struct dyn_ft=
+race *rec)
+>         u32 old, new;
+>         unsigned long pc;
+>
+> +       guard(mutex)(&text_mutex);
+> +
+>         pc =3D rec->ip;
+>         old =3D larch_insn_gen_nop();
+>         new =3D larch_insn_gen_move(LOONGARCH_GPR_T0, LOONGARCH_GPR_RA);
+> diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
+> index 0b9228b7c13a..3de94d465c3c 100644
+> --- a/arch/loongarch/kernel/inst.c
+> +++ b/arch/loongarch/kernel/inst.c
+> @@ -6,12 +6,11 @@
+>  #include <linux/uaccess.h>
+>  #include <linux/set_memory.h>
+>  #include <linux/stop_machine.h>
+> +#include <linux/memory.h>
+>
+>  #include <asm/cacheflush.h>
+>  #include <asm/inst.h>
+>
+> -static DEFINE_RAW_SPINLOCK(patch_lock);
+> -
+>  void simu_pc(struct pt_regs *regs, union loongarch_instruction insn)
+>  {
+>         unsigned long pc =3D regs->csr_era;
+> @@ -207,14 +206,32 @@ int larch_insn_read(void *addr, u32 *insnp)
+>  int larch_insn_write(void *addr, u32 insn)
+>  {
+>         int ret;
+> +       int err =3D 0;
+I think it doesn't need to initialize.
 
-No. It allows to skip-and-set-retval on PTRACE_EVENT_SECCOMP.
+> +       size_t start;
+Use "unsigned long" is better, because set_memory need "unsigned long".
 
-But ENTRY -> EXIT transition is not yet allowed due to the problems
-above.
+>         unsigned long flags =3D 0;
+>
+>         if ((unsigned long)addr & 3)
+>                 return -EINVAL;
+>
+> -       raw_spin_lock_irqsave(&patch_lock, flags);
+> +       start =3D round_down((size_t)addr, PAGE_SIZE);
+> +
+> +       lockdep_assert_held(&text_mutex);
+> +
+> +       err =3D set_memory_rw(start, 1);
+> +       if (err) {
+> +               pr_info("%s: set_memory_rw() failed\n", __func__);
+> +               return err;
+> +       }
+> +
+> +       local_irq_save(flags);
+>         ret =3D copy_to_kernel_nofault(addr, &insn, LOONGARCH_INSN_SIZE);
+> -       raw_spin_unlock_irqrestore(&patch_lock, flags);
+> +       local_irq_restore(flags);
+> +
+> +       err =3D set_memory_rox(start, 1);
+> +       if (err) {
+> +               pr_info("%s: set_memory_rox() failed\n", __func__);
+> +               return err;
+> +       }
+>
+>         return ret;
+>  }
+> diff --git a/arch/loongarch/kernel/jump_label.c b/arch/loongarch/kernel/j=
+ump_label.c
+> index 24a3f4d8540c..e6bb040fe4c5 100644
+> --- a/arch/loongarch/kernel/jump_label.c
+> +++ b/arch/loongarch/kernel/jump_label.c
+> @@ -6,6 +6,7 @@
+>   */
+>  #include <linux/kernel.h>
+>  #include <linux/jump_label.h>
+> +#include <linux/memory.h>
+>  #include <asm/cacheflush.h>
+>  #include <asm/inst.h>
+>
+> @@ -19,7 +20,9 @@ bool arch_jump_label_transform_queue(struct jump_entry =
+*entry, enum jump_label_t
+>         else
+>                 insn =3D larch_insn_gen_nop();
+>
+> +       mutex_lock(&text_mutex);
+>         larch_insn_write(addr, insn);
+> +       mutex_unlock(&text_mutex);
+>
+>         return true;
+>  }
+> diff --git a/arch/loongarch/kernel/kgdb.c b/arch/loongarch/kernel/kgdb.c
+> index 17664a6043b1..cacaff338f90 100644
+> --- a/arch/loongarch/kernel/kgdb.c
+> +++ b/arch/loongarch/kernel/kgdb.c
+> @@ -21,6 +21,7 @@
+>  #include <asm/irq_regs.h>
+>  #include <asm/ptrace.h>
+>  #include <asm/sigcontext.h>
+> +#include <asm/tlbflush.h>
+>
+>  int kgdb_watch_activated;
+>  static unsigned int stepped_opcode;
+> @@ -233,6 +234,51 @@ noinline void arch_kgdb_breakpoint(void)
+>  }
+>  STACK_FRAME_NON_STANDARD(arch_kgdb_breakpoint);
+>
+> +static inline bool kgdb_set_page_rwx(unsigned long addr, bool protect)
 
-Oleg.
+kgdb_set_page_rw() is better than kgdb_set_page_rwx() because you
+don't touch x here, and "bool ro" is better than "bool protect"
+because "protect" is too general.
 
+> +{
+> +       pte_t *pte =3D virt_to_kpte(addr);
+> +
+> +       if (WARN_ON(!pte) || pte_none(ptep_get(pte)))
+> +               return false;
+> +
+> +       if (protect)
+> +               set_pte(pte, __pte(pte_val(ptep_get(pte)) & ~(_PAGE_WRITE=
+ | _PAGE_DIRTY)));
+> +       else
+> +               set_pte(pte, __pte(pte_val(ptep_get(pte)) | (_PAGE_WRITE =
+| _PAGE_DIRTY)));
+> +
+> +       local_flush_tlb_one(addr);
+> +       return true;
+> +}
+> +
+> +int kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt)
+> +{
+> +       int err;
+> +
+> +       err =3D copy_from_kernel_nofault(bpt->saved_instr, (char *)bpt->b=
+pt_addr,
+> +                                       BREAK_INSTR_SIZE);
+> +       if (err)
+> +               return err;
+> +
+> +       kgdb_set_page_rwx(bpt->bpt_addr, 0);
+The type is bool, so please use true and false rather than 0 and 1.
+
+Huacai
+
+> +       err =3D copy_to_kernel_nofault((char *)bpt->bpt_addr,
+> +                                       arch_kgdb_ops.gdb_bpt_instr, BREA=
+K_INSTR_SIZE);
+> +       kgdb_set_page_rwx(bpt->bpt_addr, 1);
+> +       return err;
+> +}
+> +
+> +int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt)
+> +{
+> +       int err;
+> +
+> +       kgdb_set_page_rwx(bpt->bpt_addr, 0);
+> +       err =3D copy_to_kernel_nofault((char *)bpt->bpt_addr,
+> +                                       (char *)bpt->saved_instr, BREAK_I=
+NSTR_SIZE);
+> +       kgdb_set_page_rwx(bpt->bpt_addr, 1);
+> +
+> +       return err;
+> +}
+> +
+> +
+>  /*
+>   * Calls linux_debug_hook before the kernel dies. If KGDB is enabled,
+>   * then try to fall into the debugger
+> @@ -393,9 +439,11 @@ static int do_single_step(struct pt_regs *regs)
+>
+>         stepped_address =3D addr;
+>
+> +       kgdb_set_page_rwx(stepped_address, 0);
+>         /* Replace the opcode with the break instruction */
+>         error =3D copy_to_kernel_nofault((void *)stepped_address,
+>                                        arch_kgdb_ops.gdb_bpt_instr, BREAK=
+_INSTR_SIZE);
+> +       kgdb_set_page_rwx(stepped_address, 1);
+>         flush_icache_range(addr, addr + BREAK_INSTR_SIZE);
+>
+>         if (error) {
+> @@ -413,8 +461,10 @@ static int do_single_step(struct pt_regs *regs)
+>  static void undo_single_step(struct pt_regs *regs)
+>  {
+>         if (stepped_opcode) {
+> +               kgdb_set_page_rwx(stepped_address, 0);
+>                 copy_to_kernel_nofault((void *)stepped_address,
+>                                        (void *)&stepped_opcode, BREAK_INS=
+TR_SIZE);
+> +               kgdb_set_page_rwx(stepped_address, 1);
+>                 flush_icache_range(stepped_address, stepped_address + BRE=
+AK_INSTR_SIZE);
+>         }
+>
+> diff --git a/arch/loongarch/kernel/kprobes.c b/arch/loongarch/kernel/kpro=
+bes.c
+> index 1985ed30dd16..cb3565178bb4 100644
+> --- a/arch/loongarch/kernel/kprobes.c
+> +++ b/arch/loongarch/kernel/kprobes.c
+> @@ -12,8 +12,8 @@ DEFINE_PER_CPU(struct kprobe_ctlblk, kprobe_ctlblk);
+>
+>  static void arch_prepare_ss_slot(struct kprobe *p)
+>  {
+> -       p->ainsn.insn[0] =3D *p->addr;
+> -       p->ainsn.insn[1] =3D KPROBE_SSTEPBP_INSN;
+> +       larch_insn_patch_text(p->ainsn.insn, *p->addr);
+> +       larch_insn_patch_text(p->ainsn.insn + 1, KPROBE_SSTEPBP_INSN);
+>         p->ainsn.restore =3D (unsigned long)p->addr + LOONGARCH_INSN_SIZE=
+;
+>  }
+>  NOKPROBE_SYMBOL(arch_prepare_ss_slot);
+> --
+> 2.43.0
+>
