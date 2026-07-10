@@ -1,216 +1,201 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27372363C43
-	for <loongarch@lists.linux.dev>; Fri, 10 Jul 2026 15:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 554FD426410;
+	Fri, 10 Jul 2026 16:21:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783696809; cv=none; b=Ddgw3/bBV8KGrk8SCS22maqSlAKT8JfAsyfUfmO8hJGN+XeGOom+hIBh9BKlvUD4ZZoYkFn7xTrCE1rnfFYA5PgMkJ18MLrbeTpdZlOh0QKeDTOUiL+Mz1gAdsGSYcYEB/T/mjvB5bfqp9tJKZvOaxHo0hzwkPWQWRgXciU9GD4=
+	t=1783700493; cv=none; b=l9eBSG9/7agWioJErbPfdZcZQkgE01vY7qDR5zLGWrkOoeDEu2SMyyHVKdrBC1GHIy36wdqLUNFESIj0nUMAZEVg4ZlAdBE+mwuotmvj/qLDQEomJXysVLs18imX5kTJB+SnTRWFIfoRk+mqD0zwakpTPq5wDFa0Lz3742Fmwys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783696809; c=relaxed/simple;
-	bh=bhIYmmI03GH5yV64n+12XWMrt5l5IMtbkoVv62BqL3M=;
+	s=arc-20240116; t=1783700493; c=relaxed/simple;
+	bh=090bQxO8vlcwYjrZvOptfagoaSHKHG3fev16M5tnUtg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ur0TmFum/u8MnMVXLWcQ8+b5fZZF8I5i/FbK78/YJqlCLQOZPi5nzsCVOtYySaGDXodD7JaRf5OSdXm3SBAmwVhPX/DSAS5kCuOxVE2BnrAyef7pUTViA8ocUEbi7JbWXKetetjn064zrneamdTu4KVogRwXjvFOMHDlNVHyed8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rRfHvU7h; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=pk/+bbw3; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=PEvxjgpH; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=p4USxO4M; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=nZ7oPexsMhxx/NQnOqgN01hKXBBaX771RIZG/2U6wcoVUvgCXhXYdNbnWt/CF/XrZoUvQRbU3thHKUbVAHFGhtHoizieNPRfyN5hXuqHUUZ+uSSgZHvtL07j63MKCyfHCwoZyy7sAG7AAUjoeQe7h3xDYTeXSSg3qREarXsyo00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aBEmVcr6; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rRfHvU7h";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="pk/+bbw3";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="PEvxjgpH";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="p4USxO4M"
-Received: from kunlun.suse.cz (unknown [IPv6:2a07:de40:b306:2000::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id B43DE76801;
-	Fri, 10 Jul 2026 15:20:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1783696805; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PZQD0gbHT/+/4nEi6V44a4a6X/c8Qb54PXXTiWjk/u8=;
-	b=rRfHvU7hwvxSxH/yhWy3u/UmnKewb4V/Z4b30wYyACRHS2pvvGsK3hzGOrADXnhSphQb6B
-	TJO7bjd1/2FVOhXCYNiRGDpELYNIfYY2dwQ6Y49rIZ1WBugDexsBsCaHyF140dt8k3TjmV
-	UWP5O1yIlbcNFepPxleuBxi0o0QQDRg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1783696805;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PZQD0gbHT/+/4nEi6V44a4a6X/c8Qb54PXXTiWjk/u8=;
-	b=pk/+bbw3K3lpKh/bJanZxO9C8hJb0ZZOIjqryyeda12Q6eGbOK0xFb2lDAgDT0IE8bAo9T
-	Y31J/JbRgJZSmhDA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=PEvxjgpH;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=p4USxO4M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1783696804; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PZQD0gbHT/+/4nEi6V44a4a6X/c8Qb54PXXTiWjk/u8=;
-	b=PEvxjgpHDkYAsWHBvOJnCwi8Aqh7iUKS6UnrUW8IsLNixt7v9VdTF6VpKe/6vGC/h1xgM2
-	uQXypgGxDhZQFurqRWyXGrIHbe4ykOmc1FofcTQPuLdfVOHR9PXQBW7Js2xqnQRuLq0aZj
-	LLSWX+cwuBo/Mg5E6/LeKOba5LZ7xYM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1783696804;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PZQD0gbHT/+/4nEi6V44a4a6X/c8Qb54PXXTiWjk/u8=;
-	b=p4USxO4MP+4N45GZtMpBPez/DEQVEMysX4p56b8ql7l7r16Ar/kLpYHwhTAobjb9FOy99M
-	EDSZAKc2nxg1qgBA==
-Date: Fri, 10 Jul 2026 17:20:03 +0200
-From: Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Thomas Gleixner <tglx@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	linuxppc-dev@lists.ozlabs.org, Kees Cook <kees@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	linux-riscv@lists.infradead.org,
-	Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org,
-	x86@kernel.org, Mark Rutland <mark.rutland@arm.com>,
-	Jinjie Ruan <ruanjinjie@huawei.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Guo Ren <guoren@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Helge Deller <deller@gmx.de>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Richard Weinberger <richard@nod.at>,
-	Chris Zankel <chris@zankel.net>,
-	linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org,
-	linux-csky@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linux-sh@vger.kernel.org, linux-um@lists.infradead.org,
-	Arnd Bergmann <arnd@arndb.de>, Vineet Gupta <vgupta@kernel.org>,
-	Will Deacon <will@kernel.org>, Brian Cain <bcain@kernel.org>,
-	Michal Simek <monstr@monstr.eu>, Dinh Nguyen <dinguyen@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	linux-snps-arc@lists.infradead.org, linux-hexagon@vger.kernel.org,
-	linux-openrisc@vger.kernel.org, sparclinux@vger.kernel.org,
-	linux-arch@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-	linux-doc@vger.kernel.org
-Subject: Re: [patch 13/18] entry: Make trace_syscall_enter() return type bool
-Message-ID: <alENozSQmA3nU86B@kunlun.suse.cz>
-References: <20260707181957.433213175@kernel.org>
- <20260707190254.338083894@kernel.org>
- <ak5ySpil83TNWxeq@kunlun.suse.cz>
- <87se5tqkyp.ffs@fw13>
- <alDQ7isUKJFl8Va4@kunlun.suse.cz>
- <alDaOw8t-e3rxIPm@redhat.com>
- <alDmTcgzMlKiio9H@kunlun.suse.cz>
- <alDrGBMdTuoLcVyy@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aBEmVcr6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E17F1F000E9;
+	Fri, 10 Jul 2026 16:21:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783700486;
+	bh=CJDU3D9yg4K1vmjkdjLK8KGWRUqIASourvqWCH96tRA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=aBEmVcr64U4zmgO7KIxPxoyeEunXb4HqnJsHV9esELWfpM/SS9DZPwdUKGSR13iEA
+	 GM67Ro+nmI6UBC5S9UsHeO8NTBI1XiBZgK7QGjBtRzhNSrcviRTOZNBJwUZ6/n8rcF
+	 Cc6KgQqZsj5tOq4RCLOGJpTADCDQD0yB2Xg5i4AgNjeDleNFk97BmIPFSIBrwPX67F
+	 9QCyCzDB1l2KVmfOeBkOjUpEHdrOyXhvn4aSjlxu7lUX61eUF0S838clVdKvYhQtUW
+	 vFBJge/pPywsceIMkd0rLAiz5P93gQguCyU1rCpcJ8rM/p490JHPw8VbbTyE/UJGQL
+	 Mwpj0dgppokCw==
+Date: Fri, 10 Jul 2026 17:21:22 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: thermal: loongson,ls2k-thermal: Add
+ compatible for Loongson-2K0300
+Message-ID: <20260710-game-late-9347baafa7ab@spud>
+References: <cover.1783670011.git.zhoubinbin@loongson.cn>
+ <7df0780e1b3d4c499a48cd862a12bda895e7818f.1783670011.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="PRGKOus06or6gaTT"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <alDrGBMdTuoLcVyy@redhat.com>
-X-Spam-Flag: YES
-X-Rspamd-Action: add header
-X-Spam-Level: ***************
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [15.15 / 50.00];
-	SPAM_FLAG(5.00)[];
-	NEURAL_SPAM_LONG(3.50)[1.000];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_SPAM_SHORT(2.96)[0.987];
-	HFILTER_HOSTNAME_UNKNOWN(2.50)[];
-	RDNS_NONE(2.00)[];
-	ONCE_RECEIVED(1.20)[];
-	HFILTER_HELO_IP_A(1.00)[kunlun.suse.cz];
-	HFILTER_HELO_NORES_A_OR_MX(0.30)[kunlun.suse.cz];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b306:2000::2:from];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FREEMAIL_ENVRCPT(0.00)[gmx.de];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[52];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_ZERO(0.00)[0];
-	R_RATELIMIT(0.00)[to_ip_from(RLrpyf51xp5ujasy9bitsaikab)];
-	MISSING_XM_UA(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,infradead.org,ellerman.id.au,linux.ibm.com,lists.ozlabs.org,lists.linux.dev,dabbelt.com,lists.infradead.org,arm.com,huawei.com,linaro.org,armlinux.org.uk,linux-m68k.org,alpha.franken.de,gmx.de,users.sourceforge.jp,nod.at,zankel.net,lists.linux-m68k.org,arndb.de,monstr.eu,davemloft.net,gaisler.com,lwn.net];
-	DKIM_TRACE(0.00)[suse.de:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[kunlun.suse.cz:helo,kunlun.suse.cz:mid,suse.de:dkim]
-X-Spamd-Bar: +++++++++++++++
-X-Rspamd-Queue-Id: B43DE76801
-X-Spam-Score: 15.15
-X-Spam: Yes
+In-Reply-To: <7df0780e1b3d4c499a48cd862a12bda895e7818f.1783670011.git.zhoubinbin@loongson.cn>
 
-On Fri, Jul 10, 2026 at 02:52:40PM +0200, Oleg Nesterov wrote:
-> On 07/10, Michal Suchánek wrote:
-> >
-> > On Fri, Jul 10, 2026 at 01:40:43PM +0200, Oleg Nesterov wrote:
-> > >
-> > > I can only say that ptrace users do want to skip the syscall and set the
-> > > return value on entry.
-> > >
-> > > See
-> > > 	[PATCH v5 1/2] ptrace: add PTRACE_SET_SYSCALL_INFO syscall skipping support
-> > > 	https://lore.kernel.org/all/20260709100949.94345-2-renzo@cs.unibo.it/
-> > >
-> > > The changelog explains that currently this doesn't work because
-> > > among the arches which define HAVE_ARCH_TRACEHOOK (at least) arch/mips is
-> > > broken in this regard.
-> >
-> > Or it could be documented that setting the return value has to be done
-> > in the exit trace, and that would than work on any architecture AFAICT.
-> 
-> Well, ptrace users know the problem. And this what they have to do
-> currently.
-> 
-> > With ppc and s390 using the same register for the syscall number and
-> > syscall return value it's very much impossible to poke the return value
-> > on entry into a register using the generic register access function. As
-> > of now there is no place to store the value ot of the return value
-> > outside of the registers, either.
-> 
-> I know nothing about ppc and s390. Can't comment right now.
-> 
-> > And the current PTRACE_SET_SYSCALL_INFO indeed sets the syscall nr and
-> > arguments on entry and the syscall return value on exit, that
-> > disctincion is implemented.
-> >
-> > Not sure how the patchset you point out is relevant, it only adds
-> > changes in the exit case.
-> 
-> No. It allows to skip-and-set-retval on PTRACE_EVENT_SECCOMP.
+--PRGKOus06or6gaTT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-And if it was hooked correctly to seccomp indicating to seccomp that the
-syscall needs to be skipped it could work but it is not, and will fail
-on ppc.
+On Fri, Jul 10, 2026 at 04:24:59PM +0800, Binbin Zhou wrote:
+> Add a new compatible string `loongson,ls2k0300-thermal` for the thermal
+> sensor found on the Loongson-2K0300 SoC.
+>=20
+> The hardware differs from the existing SoCs in its register layout: it
+> requires two register regions (one for the thermal sensor control and
+> another for the CPU ID).
+>=20
+> Update the binding to describe this new requirement.
+>=20
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> ---
+>  .../thermal/loongson,ls2k-thermal.yaml        | 68 ++++++++++++++-----
+>  1 file changed, 50 insertions(+), 18 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/thermal/loongson,ls2k-ther=
+mal.yaml b/Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.=
+yaml
+> index 79e691b08341..b5cbfd201105 100644
+> --- a/Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.yaml
+> +++ b/Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.yaml
+> @@ -10,13 +10,11 @@ maintainers:
+>    - zhanghongchen <zhanghongchen@loongson.cn>
+>    - Yinbo Zhu <zhuyinbo@loongson.cn>
+> =20
+> -allOf:
+> -  - $ref: /schemas/thermal/thermal-sensor.yaml#
+> -
+>  properties:
+>    compatible:
+>      oneOf:
+>        - enum:
+> +          - loongson,ls2k0300-thermal
+>            - loongson,ls2k1000-thermal
+>            - loongson,ls2k2000-thermal
+>        - items:
+> @@ -39,23 +37,46 @@ required:
+>    - reg
+>    - interrupts
+> =20
+> -if:
+> -  properties:
+> -    compatible:
+> -      contains:
+> -        enum:
+> -          - loongson,ls2k2000-thermal
+> +allOf:
+> +  - $ref: /schemas/thermal/thermal-sensor.yaml#
+> =20
+> -then:
+> -  properties:
+> -    reg:
+> -      minItems: 2
+> -      maxItems: 2
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - loongson,ls2k0300-thermal
+> +    then:
+> +      properties:
+> +        reg:
+> +          items:
+> +            - description: Thermal base register region
+> +            - description: CPU ID register region
+> =20
+> -else:
+> -  properties:
+> -    reg:
+> -      maxItems: 1
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - loongson,ls2k1000-thermal
+> +    then:
+> +      properties:
+> +        reg:
+> +          items:
+> +            - description: Thermal base register region
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - loongson,ls2k2000-thermal
+> +    then:
+> +      properties:
+> +        reg:
+> +          items:
+> +            - description: Thermal base register region
+> +            - description: Thermal data output register region
+> =20
+>  unevaluatedProperties: false
+> =20
+> @@ -69,3 +90,14 @@ examples:
+>          interrupts =3D <7 IRQ_TYPE_LEVEL_LOW>;
+>          #thermal-sensor-cells =3D <1>;
+>      };
+> +
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    thermal-sensor@16001500 {
+> +       compatible =3D "loongson,ls2k0300-thermal";
+> +       reg =3D <0x16001500 0x30>,
+> +             <0x16003ff0 0x8>;
 
-Thanks
+Quite frankly, the address and size of this look like the second
+register region here is actually a few bytes in a syscon that is being
+misrepresented.
+What lies at the addresses immediately before and after 0x16003ff0?
 
-Michal
 
-> 
-> But ENTRY -> EXIT transition is not yet allowed due to the problems
-> above.
-> 
-> Oleg.
-> 
+Thanks,
+Conor.
+
+> +       interrupt-parent =3D <&liointc1>;
+> +       interrupts =3D <20 IRQ_TYPE_LEVEL_HIGH>;
+> +       #thermal-sensor-cells =3D <1>;
+> +    };
+> --=20
+> 2.52.0
+>=20
+
+--PRGKOus06or6gaTT
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCalEcAQAKCRB4tDGHoIJi
+0mhNAP0ZA31Cl7Igl+boWiSEHApgBG27Ywh7URn4L+9jTyAXLQEA09T1ur9ba+9F
+I+IZTamEPx6OiS+wb3FBxviBZBqzngA=
+=0pH9
+-----END PGP SIGNATURE-----
+
+--PRGKOus06or6gaTT--
