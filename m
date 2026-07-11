@@ -1,35 +1,32 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A0DD37AA99
-	for <loongarch@lists.linux.dev>; Sat, 11 Jul 2026 10:10:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 274473403E4
+	for <loongarch@lists.linux.dev>; Sat, 11 Jul 2026 10:17:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783764611; cv=none; b=QGmJtk+FcTSA5f9fydSGbqgSS4iNeKzSFtoEqG60j/d6qMZwPrdUJ7JK8w0p+ftls7+AGNzfeRaBVW7pXrVOiWeHGg8ij2R7m0Wfi1ch/dMZlJAS8fWRktijQqF1bnC0lzvME+sZ9IHXYQIB7rcAE45o/VaBBe2Nm3yhUNLwC5E=
+	t=1783765023; cv=none; b=nqumUaX+ZtW31qDO6vIfkHxlrinE84JJaxtos47K3tG62S/3+zHB6Ni1mxf0wfqDurmbfzA+2wuAQ+BbPHOxZSgji98Gg/fa9pjrCL9N5o1I40iRFOoAZUKKd9FSNqf3/WTBxRhNpEUfuVoGR9sN0umyrNwnZA6JpBDGsaRXwzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783764611; c=relaxed/simple;
-	bh=w8zIGyzCl2Br4soKquLqAXcNYNTCI4ddHmmc29vYsnk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=otX5xW+Zm9RhUrEi5VRcJN5cJZqLkiHgS0u4gAlzXp268qDwcQtL5SOYJqn0nfBCwXWvoLjLFN9b9bhn39RQ6+RdvP8P5jdh7a/bi5xd8iqsoKoQp0VuElvyMut5Fta8jFnG4cEEODkX8TIgV02gUPAlnLayjaffzUXuR8aKIG0=
+	s=arc-20240116; t=1783765023; c=relaxed/simple;
+	bh=Kt5hPWtkN4dT61m010hzXOpLI0gc+A1mZaKPOzaZU8w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IaTR4YhmJ7DGUf3kdUsziYF0Ob6qYxzONdY+C6u6M8IRp2UK1GHjZHRpNejyOdvJFbCfJTNkVmumwwhswIwd0SRNGt+p0/YtgEMijb3lYU5bocD8WVYv/LM7eAOBKF64d9z2wUTfs3k1yZhN1PPDVeBK7qr5T1SHZKVLSEmjd5c=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxKOt4FlJq0ZgCAA--.10820S3;
-	Sat, 11 Jul 2026 18:10:00 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8BxmusbGFJqDZkCAA--.10700S3;
+	Sat, 11 Jul 2026 18:16:59 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJAxTOV1FlJqVnAJAA--.36096S5;
-	Sat, 11 Jul 2026 18:10:00 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJBxb8cZGFJqZ3EJAA--.35766S2;
+	Sat, 11 Jul 2026 18:16:57 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	Hengqi Chen <hengqi.chen@gmail.com>
 Cc: loongarch@lists.linux.dev,
 	bpf@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 3/3] LoongArch: BPF: Split unconditional branch JA paths statically
-Date: Sat, 11 Jul 2026 18:09:56 +0800
-Message-ID: <20260711100956.4351-4-yangtiezhu@loongson.cn>
+Subject: [PATCH RFC 0/2] LoongArch: BPF: Optimize 32-bit zero/sign extensions
+Date: Sat, 11 Jul 2026 18:16:54 +0800
+Message-ID: <20260711101656.7415-1-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20260711100956.4351-1-yangtiezhu@loongson.cn>
-References: <20260711100956.4351-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -37,61 +34,43 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxTOV1FlJqVnAJAA--.36096S5
+X-CM-TRANSID:qMiowJBxb8cZGFJqZ3EJAA--.35766S2
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7WFyUXw17Xr4rZF48Kw18tFc_yoW8Gr13pr
-	n8ur90yr4SgryrXFsrX39rWa45tws3Gry2qFWDKw48JrZIq3s8XF1rKw1agF98Gwn3Z3WI
-	gF9Y9rnxu3WDAacCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AK
-	xVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I
-	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcCD7UUUUU
+X-Coremail-Antispam: 1Uk129KBj9xXoWrKw13Gr1kZFykGFy8Cry3trc_yoWxZrX_Ca
+	yxCFykGw4rZay5ZFWjgr15JFy3AFWrKa1ru3Z0qF48ur1aywn8JFs5Kw4UZa10gF4rGrZ0
+	qrW7Jrn3Ar1jvosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb7xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8
+	JVW8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v2
+	6r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jOdb8UUUUU=
 
-In build_insn(), both 32-bit and 64-bit unconditional branch JA paths
-currently share a single case block. It relies on a runtime condition
-check to multiplex between the 'off' and 'imm' fields.
+Based on 7.2-rc1 and the following series:
 
-Since the instruction classes are already resolved at compile-time via
-distinct switch-case labels, this runtime check is redundant.
+https://lore.kernel.org/loongarch/20260711100956.4351-1-yangtiezhu@loongson.cn/
 
-Split the two paths into individual case blocks to remove the redundant
-runtime check.
+Not tested yet, only RFC.
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/net/bpf_jit.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+Eliminate frequent and redundant zero-extensions and sign-extensions,
+resulting in a cleaner native instruction stream and reduced JIT image
+size.
 
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index 5f32b205a6ac..69bc30f88c44 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -1150,11 +1150,12 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
- 
- 	/* PC += off */
- 	case BPF_JMP | BPF_JA:
-+		jmp_offset = bpf2la_offset(i, off, ctx);
-+		if (emit_uncond_jmp(ctx, jmp_offset) < 0)
-+			goto toofar;
-+		break;
- 	case BPF_JMP32 | BPF_JA:
--		if (BPF_CLASS(code) == BPF_JMP)
--			jmp_offset = bpf2la_offset(i, off, ctx);
--		else
--			jmp_offset = bpf2la_offset(i, imm, ctx);
-+		jmp_offset = bpf2la_offset(i, imm, ctx);
- 		if (emit_uncond_jmp(ctx, jmp_offset) < 0)
- 			goto toofar;
- 		break;
+Tiezhu Yang (2):
+  LoongArch: BPF: Eliminate zero-extension for memory load operations
+  LoongArch: BPF: Eliminate zero/sign extensions for 32-bit operations
+
+ arch/loongarch/net/bpf_jit.c | 378 ++++++++++++++++++++---------------
+ arch/loongarch/net/bpf_jit.h |  25 +--
+ 2 files changed, 219 insertions(+), 184 deletions(-)
+
 -- 
 2.42.0
 
