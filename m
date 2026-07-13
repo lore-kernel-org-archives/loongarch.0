@@ -1,102 +1,209 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDEE0335BB4
-	for <loongarch@lists.linux.dev>; Mon, 13 Jul 2026 16:37:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46BBB1DF261
+	for <loongarch@lists.linux.dev>; Mon, 13 Jul 2026 17:00:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783960677; cv=none; b=DNXh07RExGkrublSGIRDtzN6NiiL8X4ElGMhIyX5EfPUgqtHqY5hmSqlV8yD/rbZcFuqzQcGIyXGnYdJMeEmGJ6iwC46eYH0H9Xa0njaMI6Xczn/SmTgOZTgVSlT4ofJKEzaS8zpMC8wbTZ0O3f4G1S7qlCeaJdfffDh6TFnn2I=
+	t=1783962043; cv=none; b=iRSqUZKKm3/DYYaV1ppJbgUD91u4BVp8b7vsw0ai8VtvYBqfc5Fk7Z4Sh5KqaRvhpzHCk85wXEdLU5CVxZO/x0vFQUpzsDNvMaJS3ahFImwUXvbinrPwbLKyo/T6fdwNouTPvlh1fKz59U+A86ZEFeuEOe8vp8dv4Zf3wVU+rdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783960677; c=relaxed/simple;
-	bh=4kZEQHCKkpYpxkKyYJlUA0Zza6SQ8vOAw/fP08uqXDo=;
+	s=arc-20240116; t=1783962043; c=relaxed/simple;
+	bh=Uq6y9uUt5K2cHJBKpDRXgStFcdRTfQPD697wVLKCLjY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u5Mxp+gC5nGh/VDI6VHs/uxsnt3DsCYFS3colBIARdbMo9Cbb3CLnF54tv4M4758cgozKMi6wjiLFSzHRzfYqxGPCbvBra/T/UJqYMbIf2nD0T3se4Hl9Db83u331mYfBoKeHeIKlfIXLUoaPMmuxk34AMuWciRkKt4XTb8JKbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nQz4E89H; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=hCHDLsj9rVV5nv8IHfx7kLh2B01JR8A05vDmEbIfXXCCsKnJz68Nanvrc/tvvPGweAM7PIa3vuyoS4Rw10P3IIwUe/8oLKD42yoMr/1kzE2ZDoWo0L7JgK9MgzE/Ikbke7tAqIrKSw9bNGVQ1/U4Uhqxqz2PAbyKzlP9V43fp0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=k38U9VGp; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=MxosFHDV; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=k38U9VGp; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=MxosFHDV; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nQz4E89H"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783960674; x=1815496674;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4kZEQHCKkpYpxkKyYJlUA0Zza6SQ8vOAw/fP08uqXDo=;
-  b=nQz4E89HUMitOZCEmSWVBv4LAWu95S4/LyNlzqY33xqbbJekqldVxGBl
-   Rar6VjCG/IegZ+jR5JTkmbVw5sVEVPlYRvNRp+LwJ7qCOOFBYV4GyUTR4
-   8cOUkAWSJWCouvfywIxlWeARU8zSeeg7xoRebivytAAvk2EpaK9EOlP2V
-   nO0Cv9hmvY4LqaExxP8dgdDrwiB3OtT3je8VAoY6dF/82V7KrXPXP7i2q
-   zLSaQ8ZyDzHYqZ1T4kKAtKTXzF7bgXMFXBBEWqiMpGpo9B2OHNmn0WJGy
-   rZS5IOuQHYLtdn2o8hLTl2RSXG4wrk8oQZCsVnJhH5BxLlhFsx8PqR8qI
-   Q==;
-X-CSE-ConnectionGUID: BI7z9hKBQJyYA9OkABcZWg==
-X-CSE-MsgGUID: GZ7fTRPtSTGVRGXte/Db4Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="84768093"
-X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="84768093"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2026 09:37:53 -0700
-X-CSE-ConnectionGUID: hWdotUdbRAyEFlX+x/kfWQ==
-X-CSE-MsgGUID: leJxOZsNRQSKnAtRZj8eFA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="249245643"
-Received: from guptapa-desk.jf.intel.com (HELO desk) ([10.165.239.46])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2026 09:37:52 -0700
-Date: Mon, 13 Jul 2026 09:37:45 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: bot+bpf-ci@kernel.org
-Cc: stable@vger.kernel.org, gregkh@linuxfoundation.org, sashal@kernel.org, 
-	bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, x86@kernel.org, ast@kernel.org, 
-	daniel@iogearbox.net, andrii@kernel.org, martin.lau@kernel.org, eddyz87@gmail.com, 
-	yonghong.song@linux.dev, clm@meta.com, ihor.solodrai@linux.dev
-Subject: Re: [PATCH 7.1.y 1/6] bpf: Support for hardening against JIT spraying
-Message-ID: <ehtglcrfzb4feb2ysknrcyvz7t2vc2ui2nfbunypteeexbsfu7@x477johvq6pl>
-References: <20260709-cbpf-jit-spray-hardening-7-1-y-v1-1-5ac5a2d6797f@linux.intel.com>
- <de3ebfe684f280473617b560a9dcf501df07833f835a08eb6e75720cd03662b4@mail.kernel.org>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="k38U9VGp";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="MxosFHDV";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="k38U9VGp";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="MxosFHDV"
+Received: from kunlun.suse.cz (unknown [IPv6:2a07:de40:b306:2000::2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 4259676096;
+	Mon, 13 Jul 2026 17:00:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1783962040; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LMin0ELA0S/qDIAUfN3e2MLbd1C3d6yAWrkFWIFj3NM=;
+	b=k38U9VGpm3QZqwrMgrGYZhudou4TosLelMu1WbunbvSqmO5dksCD5c26659+zHqwJbyw5B
+	OnaRta1F0bmNDqlN3+ON9Uxo2d7b049PRrpYzcOh97KfrWO12qACQkUqugBnPgNSWNxXQI
+	3mihV17Sf95o+W95SmBDGgfrGizSPG4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1783962040;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LMin0ELA0S/qDIAUfN3e2MLbd1C3d6yAWrkFWIFj3NM=;
+	b=MxosFHDVPDEv59mXM8XmLBMD+Iwc2VP3NSHMdXmxpSw/bQ0Sq1kGSda3TOcu5V9qfpd2Si
+	8X9qIT6NRCoVcFDA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=k38U9VGp;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=MxosFHDV
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1783962040; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LMin0ELA0S/qDIAUfN3e2MLbd1C3d6yAWrkFWIFj3NM=;
+	b=k38U9VGpm3QZqwrMgrGYZhudou4TosLelMu1WbunbvSqmO5dksCD5c26659+zHqwJbyw5B
+	OnaRta1F0bmNDqlN3+ON9Uxo2d7b049PRrpYzcOh97KfrWO12qACQkUqugBnPgNSWNxXQI
+	3mihV17Sf95o+W95SmBDGgfrGizSPG4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1783962040;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LMin0ELA0S/qDIAUfN3e2MLbd1C3d6yAWrkFWIFj3NM=;
+	b=MxosFHDVPDEv59mXM8XmLBMD+Iwc2VP3NSHMdXmxpSw/bQ0Sq1kGSda3TOcu5V9qfpd2Si
+	8X9qIT6NRCoVcFDA==
+Date: Mon, 13 Jul 2026 19:00:39 +0200
+From: Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
+To: Thomas Gleixner <tglx@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	linuxppc-dev@lists.ozlabs.org, Huacai Chen <chenhuacai@kernel.org>,
+	loongarch@lists.linux.dev, Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	linux-riscv@lists.infradead.org,
+	Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org,
+	x86@kernel.org, Mark Rutland <mark.rutland@arm.com>,
+	Jinjie Ruan <ruanjinjie@huawei.com>,
+	Magnus Lindholm <linmag7@gmail.com>,
+	"Mukesh Kumar Chaurasiya (IBM)" <mkchauras@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>, Radu Rendec <radu@rendec.net>
+Subject: Re: [patch 4/4] entry, treewide: Make
+ syscall_enter_from_user_mode[_work]() indicate syscall execution
+Message-ID: <alUZt76QncJ_fbxr@kunlun.suse.cz>
+References: <20260712134433.549076055@kernel.org>
+ <20260712141346.772209074@kernel.org>
+ <alSlg72c8xmjaj48@kunlun.suse.cz>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <de3ebfe684f280473617b560a9dcf501df07833f835a08eb6e75720cd03662b4@mail.kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <alSlg72c8xmjaj48@kunlun.suse.cz>
+X-Spamd-Bar: ++
+X-Rspamd-Queue-Id: 4259676096
+X-Spam-Flag: NO
+X-Spam-Score: 2.49
+X-Spam-Level: **
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spamd-Result: default: False [2.49 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	HFILTER_HOSTNAME_UNKNOWN(2.50)[];
+	RDNS_NONE(2.00)[];
+	ONCE_RECEIVED(1.20)[];
+	HFILTER_HELO_IP_A(1.00)[kunlun.suse.cz];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HFILTER_HELO_NORES_A_OR_MX(0.30)[kunlun.suse.cz];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,ellerman.id.au,linux.ibm.com,lists.ozlabs.org,kernel.org,lists.linux.dev,dabbelt.com,lists.infradead.org,arm.com,huawei.com,gmail.com,lwn.net,rendec.net];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b306:2000::2:from];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_ZERO(0.00)[0];
+	TO_DN_SOME(0.00)[]
 
-On Thu, Jul 09, 2026 at 10:52:04PM +0000, bot+bpf-ci@kernel.org wrote:
-> > commit 96cce16e26dd02a8678f1e87f88a4b5cdb63b995 upstream.
-> > The BPF JIT allocator packs many small programs into larger executable
-> > allocations and reuses space within those allocations as programs are
-> > loaded and freed. When fresh code is written into space that a previous
-> > program occupied, an indirect jump into the new program can reuse a branch
-> > prediction left behind by the old one.
-> > Flush the indirect branch predictors before reusing JIT memory so that
-> > indirect jumps into a newly written program don't reuse predictions from an
-> > old program that occupied the same space.
-> > Introduce bpf_arch_pred_flush_enabled static key and bpf_arch_pred_flush
-> > static call for flushing the branch predictors on JIT memory reuse.
-> > Architectures that need a flush, can update it to a predictor flush
-> > function. By default, its a NOP and does not emit any CALL.
-> > Allocations larger than a pack are not covered by this flush. That is safe
-> > because cBPF programs (the unprivileged attack surface) are bounded well
-> > below a pack size. Issue a warning if this assumption is ever violated
-> > while the flush is active.
-> > Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-> > Acked-by: Daniel Borkmann <daniel@iogearbox.net>
-> > Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+On Mon, Jul 13, 2026 at 10:44:51AM +0200, Michal Suchánek wrote:
+> Hello,
 > 
-> The reuse path this patch hardens (bpf_prog_pack_alloc() finding a free
-> area within a pack, and the size > BPF_PROG_PACK_SIZE branch) comes from
-> the pack allocator that first packed many programs into shared executable
-> allocations and reused freed space within a pack.
+> On Sun, Jul 12, 2026 at 11:25:32PM +0200, Thomas Gleixner wrote:
+> > The return values of syscall_enter_from_user_mode[_work]() are
+> > non-intuitive. Both functions return the syscall number which should be
+> > invoked by the architecture specific syscall entry code. The returned
+> > number can be:
+> > 
+> >   - the unmodified syscall number which was handed in by the caller
+> > 
+> >   - a modified syscall number (ptrace, seccomp, trace/probe/bpf)
+> > 
+> > That has an additional twist. If the return value is -1L then the caller is
+> > not allowed to modify the return value as that indicates that the modifying
+> > entity requests to abort the syscall and set the return value already. That
+> > can obviously not be differentiated from a syscall which handed in -1 as
+> > syscall number.
+> > 
+> > The most trivial way to deal with that is:
+> > 
+> >     set_return_value(regs, -ENOSYS);
+> >     nr = syscall_enter_from_user_mode(regs, nr);
+> >     if (valid(nr))
+> >     	handle_syscall(regs, nr);
+> > 
+> > That's what LOONGARCH, RISCV, and X86 do. But PowerPC and S390 do not
+> > preset the return value, so when user space hands in -1 and there is
+> > nothing setting the return value in the entry work code, then the syscall
+> > is skipped but the return value is whatever random data has been in the
+> > return value register.
 > 
-> Should this carry a Fixes: tag pointing at that commit?
+> The reason why PowerPC and S390 do not preset the return value is that
+> the return value uses the same register as the syscall number. There are
+> apparently other architectures on which the return value overlaps with
+> the arguments which also do not preset the return value for that reason.
+> If they would use the generic entry the same problem would arise.
 > 
->   Fixes: 57631054fae6 ("bpf: Introduce bpf_prog_pack allocator")
+> > Change the return values of syscall_enter_from_user_mode[_work]() to
+> > boolean and return false, when either ptrace or seccomp request to skip the
+> 
+> There is a difference between seccomp and ptrace.
+> 
+> When seccomp indicates to skip the syscall it has also set the syscall
+> return value.
+> 
+> However, when the syscall number is -1 and the return value is not
+> preset that does not indicate anything.
+> 
+> The return value can still hold garbage. ptrace does not have the
+> ability to indicate that a syscall is to be skipped, at least on the
+> entry trace. It needs to be skipped based on the syscall number being
+> invalid.
 
-It doesn't add much value. This commit insn't really buggy, it needs no fix
-for the eBPF. The fact that cBPF is unprivileged, opens a window for a JIT
-spraying attack. Also, the the patch is a backport, so it should stay close
-to upstream.
+To be very clear here: When seccomp_permit_syscall() returns false based
+on filter result (other than trace filter) it guarantees that the return
+value has been set, and then the syscall processing can be skipped, and
+it has to be skipped on ppc because the syscall number has been
+overwritten by the return value.
+
+ptrace, on the other hand, does not ever provide such guarantee. It does
+something unspecified to the registers. Even in the case that the syscall
+number is set to -1 nothing is known about the return value.
+
+While on x86 it is preset to -ENOSYS this is an architectural quirk that
+the code cannot rely on in general. On ppc the syscall has to be
+processed so that the invalid syscall processing sets the return value
+to -ENOSYS after syscall_enter_from_user_mode() is done.
+
+ptrace_report_syscall_permit_entry() breaks that by indicating to
+skip the syscall processing, resulting in the return value of -1 instead
+of -ENOSYS for the -1 syscall.
+
+Thanks
+
+Michal
