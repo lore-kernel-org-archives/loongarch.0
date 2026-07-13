@@ -1,191 +1,347 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEB4043441F;
-	Mon, 13 Jul 2026 13:53:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2650F436379
+	for <loongarch@lists.linux.dev>; Mon, 13 Jul 2026 13:56:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783950803; cv=none; b=DMaOlCjZN7RqtkWdVno2IoXES7q0DzcuY3tcTY8H/H8V5ozLd9ae0+WphGrmhEq797Wu8ExJJvD7A8fh16Jni5fgc+QSykQ3xRHOxUI7WCiS8YHcQ0Vrb0wnTbxo1RKcO+a5MI+y3LYUKd7xCZIymvoxnvBO+hztr0JwoWQyT9s=
+	t=1783950993; cv=none; b=G/5z6MW1PCZXGCBrD6978ziUtBSRCi3zwDcEjvHmmW5B3t+OzMTZk9Lq3tkebsNH+oXvAHBq0bLJikeLwpkUPndIKMFjwi/ZTQQcElN2GbfMEf6sC/NGxK3NWNFtV9x2yA2rMVTFyIy4u2FWrEb/HzDdCp4Px51Zcghl0hhEUUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783950803; c=relaxed/simple;
-	bh=v1UpSbzmVIB8EYupcNf3qovayQhHdE6QFZfkEMZ/GqE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=VByijcgznei3TlTFZa91uM7atE15D5RAaOvU9kBmnG8gJjRHTicABX0I/l0APGkQin8rdDC5S1bePtmK/90s+sbXFUrDl1vvoeKJWfUMcTq/Uf4XLLZ/Gx6w+WebpB3tkGFDA0AUT3vUVqy3NWFI5VvVIRNZOi9oGrkUAPfxhn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MyCiIiJ4; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783950993; c=relaxed/simple;
+	bh=a803yHhNKkzlLM5udi9zzm2zAj+wvACzTi3ySnyKLew=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MNs7wXa9Qf1dPAoojMinfUbDzLcyn2QPAZSarIcGxQ7SF3oPQJ4saiaPg9gP59witnNCZ8sRKMs6OjITLIQGbW6JbKT/WBFKeNHv5sqceDivCebB8wDwI0xUcnu5ThZe2us39ZCjhSgpUieusaMD+9qitA8rERx3yxyokQe1Vho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=jgMpd1XN; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MyCiIiJ4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 355461F000E9;
-	Mon, 13 Jul 2026 13:53:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783950801;
-	bh=1JZ+jUbgiNbISG81jCDR/cTHkAMPJnKZyn2UCpJwgV4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=MyCiIiJ4Z9PQMTe3vSTzQZjL3wKH3oq36AhbOGoKljo9Op8Y16arXocVLbzr5h8ss
-	 u/Mp9/VNgcEY1+mLXvifJSjxQ7PlWOTiqsQaWARzohogCB2BMxl52A4LcnmuRENFy9
-	 RnXgdT3fd7JOWjV0MPZI/0g4tCdPS3qaeQ3DuPdcRZIk2nqi6GS0f9GY5Ans2xY/1/
-	 lcD5BVKPLq5vMStTF5bcK9GDjT6+XJYclDUKo6FcZpHlNoBOf3+Bzu+gEV0k/08+PV
-	 KBDTWYDnUOJF2vfuHAczxsTQNf3Nf7UWXNhNLu7fu5RY+K+kdTNQRs8aUJUkVdzojM
-	 7DOEsnr+LAerA==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: George Guo <dongtai.guo@linux.dev>
-Cc: Huacai Chen <chenhuacai@kernel.org>,  Mike Rapoport <rppt@kernel.org>,
-  Pasha Tatashin <pasha.tatashin@soleen.com>,  Pratyush Yadav
- <pratyush@kernel.org>,  Shuah Khan <shuah@kernel.org>,  George Guo
- <guodongtai@kylinos.cn>,  WANG Xuerui <kernel@xen0n.name>,  Alexander Graf
- <graf@amazon.com>,  loongarch@lists.linux.dev,
-  linux-kernel@vger.kernel.org,  kexec@lists.infradead.org,
-  linux-mm@kvack.org,  linux-kselftest@vger.kernel.org,  Kexin Liu
- <liukexin@kylinos.cn>
-Subject: Re: [PATCH v3 1/3] LoongArch: kexec: add KHO support for FDT-based
-In-Reply-To: <20260601093930.112758-1-dongtai.guo@linux.dev> (George Guo's
-	message of "Mon, 1 Jun 2026 17:39:28 +0800")
-References: <20260601092823.110362-1-dongtai.guo@linux.dev>
-	<20260601093930.112758-1-dongtai.guo@linux.dev>
-Date: Mon, 13 Jul 2026 15:53:17 +0200
-Message-ID: <2vxzjyqzj8s2.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="jgMpd1XN"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E30B71576;
+	Mon, 13 Jul 2026 06:56:24 -0700 (PDT)
+Received: from e129823.cambridge.arm.com (e129823.arm.com [10.2.213.3])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id EC1153F7B4;
+	Mon, 13 Jul 2026 06:56:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1783950989; bh=a803yHhNKkzlLM5udi9zzm2zAj+wvACzTi3ySnyKLew=;
+	h=From:To:Cc:Subject:Date:From;
+	b=jgMpd1XNQv71U7DXeJ1h7jnvieXwYpoUFE20Nk1qreF39M5EDswShoN8YI1iYonao
+	 mpbbq893Ohfpd/mgYuCRux/Rcp6Kx9soqI0ZGO7Z8o4N5y6pRlcAocE+2YLNFetElg
+	 7W3XeJO4AuPs2v4nW1+sFx6aMUzfa+PGz771bJow=
+From: Yeoreum Yun <yeoreum.yun@arm.com>
+To: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	kvm-riscv@lists.infradead.org,
+	linux-riscv@lists.infradead.org,
+	x86@kernel.org,
+	linux-mm@kvack.org,
+	kasan-dev@googlegroups.com,
+	linux-csky@vger.kernel.org,
+	linux-m68k@lists.linux-m68k.org,
+	linux-openrisc@vger.kernel.org
+Cc: david@kernel.org,
+	linux@armlinux.org.uk,
+	akpm@linux-foundation.org,
+	ankur.a.arora@oracle.com,
+	rppt@kernel.org,
+	linmag7@gmail.com,
+	chleroy@kernel.org,
+	klarasmodin@gmail.com,
+	chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	kas@kernel.org,
+	zhangtianyang@loongson.cn,
+	wangyuli@aosc.io,
+	tsbogend@alpha.franken.de,
+	ljs@kernel.org,
+	jgg@ziepe.ca,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	arnd@arndb.de,
+	ryan.roberts@arm.com,
+	pasha.tatashin@soleen.com,
+	rmclure@linux.ibm.com,
+	baolin.wang@linux.alibaba.com,
+	tj@kernel.org,
+	kevin.brodsky@arm.com,
+	anup@brainfault.org,
+	atish.patra@linux.dev,
+	pjw@kernel.org,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr,
+	dave.hansen@linux.intel.com,
+	luto@kernel.org,
+	peterz@infradead.org,
+	tglx@kernel.org,
+	mingo@redhat.com,
+	bp@alien8.de,
+	hpa@zytor.com,
+	hannes@cmpxchg.org,
+	mhocko@kernel.org,
+	qi.zheng@linux.dev,
+	shakeel.butt@linux.dev,
+	kasong@tencent.com,
+	baohua@kernel.org,
+	axelrasmussen@google.com,
+	yuanchu@google.com,
+	weixugc@google.com,
+	ryabinin.a.a@gmail.com,
+	glider@google.com,
+	andreyknvl@gmail.com,
+	dvyukov@google.com,
+	vincenzo.frascino@arm.com,
+	anshuman.khandual@arm.com,
+	yang@os.amperecomputing.com,
+	chaitanyas.prakash@arm.com,
+	ardb@kernel.org,
+	guoren@kernel.org,
+	yang.li85200@gmail.com,
+	viro@zeniv.linux.org.uk,
+	dinguyen@kernel.org,
+	schuster.simon@siemens-energy.com,
+	wangruikang@iscas.ac.cn,
+	junhui.liu@pigmoral.tech,
+	muchun.song@linux.dev,
+	vishal.moola@gmail.com,
+	namcao@linutronix.de,
+	pavel@kernel.org,
+	djbw@kernel.org,
+	yu-cheng.yu@intel.com,
+	baolu.lu@linux.intel.com,
+	Jonathan.Cameron@huawei.com,
+	coxu@redhat.com,
+	andreas@gaisler.com,
+	liam@infradead.org,
+	vbabka@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	geert@linux-m68k.org,
+	shorne@gmail.com,
+	jonas@southpole.se,
+	stefan.kristiansson@saunalahti.fi,
+	Yeoreum Yun <yeoreum.yun@arm.com>
+Subject: [RFC PATCH 00/34] mm: optimize unnecessary loads due to ptep_get() and friends out
+Date: Mon, 13 Jul 2026 14:55:39 +0100
+Message-ID: <20260713135614.1618183-1-yeoreum.yun@arm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 01 2026, George Guo wrote:
+Using ptep_get() and its counterparts in common code is suboptimal on
+kernel configurations with generic compile-time folded page tables.
+By default, ptep_get() and its friends expands to READ_ONCE(),
+forcing the compiler to emit a load even when the value is not used afterwards.
 
-> From: George Guo <guodongtai@kylinos.cn>
->
-> Enable Kexec Handover (KHO) on LoongArch64 for FDT-based systems.
->
-> - Kconfig: select ARCH_SUPPORTS_KEXEC_HANDOVER for CONFIG_64BIT
-> - kexec.h: add fdt/fdt_mem fields to kimage_arch to hold the KHO FDT
->   kexec segment virtual and physical addresses
-> - machine_kexec_file.c: add kho_load_fdt() which copies the running
->   kernel's FDT (initial_boot_params), appends linux,kho-fdt and
->   linux,kho-scratch properties to /chosen, and loads the result as a
->   kexec segment; called from load_other_segments().  Returns -EINVAL
->   when initial_boot_params is NULL (ACPI-only boot) since that path
->   requires separate handling.
-> - machine_kexec.c: before jumping to the new kernel, update the
->   DEVICE_TREE_GUID entry in the EFI config table to point to the KHO
->   FDT segment so the second kernel finds it via efi_fdt_pointer() and
->   early_init_dt_check_kho() calls kho_populate()
->
-> Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
-> Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
-> Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> ---
->  arch/loongarch/Kconfig                     |   3 +
->  arch/loongarch/include/asm/kexec.h         |   4 +
->  arch/loongarch/kernel/machine_kexec.c      |  27 +++++
->  arch/loongarch/kernel/machine_kexec_file.c | 118 +++++++++++++++++++++
->  4 files changed, 152 insertions(+)
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 606597da46b8..d494418545f5 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -684,6 +684,9 @@ config ARCH_SUPPORTS_KEXEC
->  config ARCH_SUPPORTS_KEXEC_FILE
->  	def_bool 64BIT
->  
-> +config ARCH_SUPPORTS_KEXEC_HANDOVER
-> +	def_bool 64BIT
-> +
->  config ARCH_SELECTS_KEXEC_FILE
->  	def_bool 64BIT
->  	depends on KEXEC_FILE
-> diff --git a/arch/loongarch/include/asm/kexec.h b/arch/loongarch/include/asm/kexec.h
-> index 209fa43222e1..adf54bfcdd49 100644
-> --- a/arch/loongarch/include/asm/kexec.h
-> +++ b/arch/loongarch/include/asm/kexec.h
-> @@ -39,6 +39,10 @@ struct kimage_arch {
->  	unsigned long efi_boot;
->  	unsigned long cmdline_ptr;
->  	unsigned long systable_ptr;
-> +#ifdef CONFIG_KEXEC_HANDOVER
-> +	void *fdt;		/* virtual address of KHO FDT segment buffer */
-> +	unsigned long fdt_mem;	/* physical address of KHO FDT segment */
-> +#endif
->  };
->  
->  #ifdef CONFIG_KEXEC_FILE
-> diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kernel/machine_kexec.c
-> index ad27fef098f1..98529c71d001 100644
-> --- a/arch/loongarch/kernel/machine_kexec.c
-> +++ b/arch/loongarch/kernel/machine_kexec.c
-> @@ -6,6 +6,7 @@
->   */
->  #include <linux/compiler.h>
->  #include <linux/cpu.h>
-> +#include <linux/efi.h>
->  #include <linux/kexec.h>
->  #include <linux/crash_dump.h>
->  #include <linux/delay.h>
-> @@ -289,6 +290,32 @@ void machine_kexec(struct kimage *image)
->  	pr_notice("We will call new kernel at 0x%lx\n", start_addr);
->  	pr_notice("Bye ...\n");
->  
-> +#ifdef CONFIG_KEXEC_HANDOVER
-> +	/*
-> +	 * Point the EFI FDTPTR config table entry at the modified FDT so the
-> +	 * second kernel picks up the linux,kho-fdt and linux,kho-scratch
-> +	 * properties via early_init_dt_check_kho().
-> +	 */
-> +	if (internal->fdt_mem) {
-> +		/*
-> +		 * FDT-based system: DEVICE_TREE_GUID already exists in the EFI
-> +		 * config table; just update its pointer to our KHO FDT.
-> +		 */
-> +		efi_system_table_t *st =
-> +			(efi_system_table_t *)TO_CACHE(systable_ptr);
-> +		efi_config_table_t *ct =
-> +			(efi_config_table_t *)TO_CACHE((unsigned long)st->tables);
-> +		unsigned long i;
-> +
-> +		for (i = 0; i < st->nr_tables; i++) {
-> +			if (!efi_guidcmp(ct[i].guid, DEVICE_TREE_GUID)) {
-> +				ct[i].table = (void *)internal->fdt_mem;
-> +				break;
-> +			}
-> +		}
-> +	}
-> +#endif
+This issue was recently reported by Christophe Leroy [1] for ppc32
+preventing futher code conversion to ptep_get()/pmdp_get()/... helper
+and the same behavior can also be observed on arm64 when built with
+2- or 3-level page tables
 
-Honestly this and the ACPI stuff looks worse to me than what your
-previous version did. Now I am not an expert on EFI and architecture
-stuff, and know nothing about Loongarch, but to me this looks hacky and
-I am not sure if it is doing the right thing.
+e.g) perf_get_page_size() in arm64 with CONFIG_PGTABLE_LEVEL=3:
 
-I think you should get some alignment with Loongarch maintainers on what
-the kexec boot protocol looks like. It looked odd to me, but if the
-Loongarch maintainers are fine with using the kernel cmdline for
-bootloader to pass data to the kernel, then I think we should go back to
-that.
+00000000000052a0 <perf_get_page_size>:
+    ...
+    52dc: d53b4234     	mrs	x20, DAIF
+    52e0: d50343df     	msr	DAIFSet, #0x3
+    ...
+    52fc: d35e9a69     	ubfx	x9, x19, #30, #9        /* pud_offset_lockless() */
+    5300: f9403508     	ldr	x8, [x8, #0x68]
+    5304: f869790a     	ldr	x10, [x8, x9, lsl #3]   /* pudp_get() */
+    5308: f90007ea     	str	x10, [sp, #0x8]
+    530c: f8697908     	ldr	x8, [x8, x9, lsl #3]    /* pudp_get() */
+    ...
+    5360: 90000009     	adrp	x9, 0x5000 <perf_prepare_sample+0x548>
+    5364: 92746908     	and	x8, x8, #0x7ffffff000
+    5368: d3557675     	ubfx	x21, x19, #21, #9       /* pmd_offset_lockless() */
+    ...
+    5394: f8757ac8     	ldr	x8, [x22, x21, lsl #3]  /* pmdp_get() */
 
-Huacai, do you have any thoughts? For KHO we essentially need a way for
-the pre-kexec kernel to tell the post-kexec kernel about a blob of
-memory that has some information it can use. For x86, we do that via
-setup data. See arch/x86/include/uapi/asm/setup_data.h and struct
-kho_data for example. On arm64, we use the boot FDT's /chosen node. See
-kho_add_chosen() in drivers/of/kexec.c.
+Though PGTABLE_LEVEL=3, since the pudp_get() still remain with
+READ_ONCE(), there's redundant load for the pud which is folded.
 
-Ideally, all device tree platforms should use the FDT path. But
-Loongarch also has ACPI only and I don't know what a good idea for that
-is.
+To prevent generating suboptimal code, define dummy pXdp_get() and
+pXd_offset_lockless() in the pgtable-nopXd.h to handle folded page tables
+properly.
 
-So, do you have any suggestions on where to best place a pointer to this
-blob of data on Loongarch? v1 of this series put it in the kernel
-commandline, but I found that odd and asked if it can be done via DT
-instead. But to me, this code looks even more hacky.
+As the pXdp_get() can return *dummy* entry, some of code using
+the stack value where saves the pXdp_get() could be a problematic:
 
-> +
->  	/* Make reboot code buffer available to the boot CPU. */
->  	flush_cache_all();
->  
-[...]
+  1. Passing address of stack value where saves the pXdp_get() result
+     to pXd_offset() for example:
 
+       pud_t *pudp, pud;
+       pmd_t *pmdp;
+
+       pud = pudp_get(pudp, address);
+       pmdp = pmd_offset(&pud, pud, address);
+
+     (e.g. host_pfn_mapping_level() in loongarch).
+
+  2. Using the pXdp_get() result to use as argument of pXd_val() and
+     to check prot without checking pgtable is folded.
+     for example, x86's effective_prot().
+
+  3. Using set_pXd() with pXdp_get() will set problematic dummy entry
+     in folded page table like:
+
+       set_pXd(pxdp, pXdp_get(pxdp_k));
+
+     To prevent this, Let set_pXd() triggers the compile error
+     to catch the wrong usage of set_pXd() in the generic compile-time
+     folded page table and change the set_pgd() usage to set the
+     first-level page table with the proper set_pXd().
+
+  4. Using pgd_page_vaddr() to get the first-level pgtable.
+     passing dummy pxdp_get() for pgd_page_vaddr() will return wrong
+     address. Therefore, make pgd_page_vaddr() and pXd_pgtable() to
+     trigger the error for improper usage in the generic compile-time
+     folded pgtable.
+
+Thanksfully, above cases are rare since (1) most of usage using
+pXd_offset() with result of upper pXd_offset(), (2) it's extreamely
+rare to use pXd_val() for non-leaf entry in the kernel,
+(3) is to handle the vmalloc_fault or set the first level of page table
+and (4) to setup early page table and etc.
+
+Therefore, convert this kind of problematic rare pattern properly.
+
+Furthermore, passing the ptep_get() (or its counterparts) as argument
+directly to pte_present() and related helpers can generate suboptimal code,
+in arm64 as the current macro implementation may evaluate its argument
+more than once like:
+
+  !pte_val(READ_ONCE(*pte) || pte_present_invalid(READ_ONCE(*pte))
+
+resulting in redundant loads.
+
+A typical example is pud_free_pmd_page(), where the expansion of
+pmd_present() generates:
+    ...
+    /* pmd_present() (x20 = pmdp) */
+    1b88: f9400288     ldr	x8, [x20]        // read pmdp.
+    1b8c: f9000fa8     str	x8, [x29, #0x18]
+    1b90: 3707fec8     tbnz	w8, #0x0, 0x1b68 <pud_free_pmd_page+0xd0>
+    1b94: f9400288     ldr	x8, [x20]        // redundant read of pmdp.
+    1b98: 8a170109     and	x9, x8, x23
+    1b9c: f9000fa8     str	x8, [x29, #0x18]
+    1ba0: f120013f     cmp	x9, #0x800
+    1ba4: 54fffe20     b.eq	0x1b68 <pud_free_pmd_page+0xd0>
+    1ba8: 17fffff4     b	0x1b78 <pud_free_pmd_page+0xe0>
+    ...
+
+To address this in arm64, convert pte_present() macro and its friends
+to static inline function.
+
+Future work
+===========
+ - print_bad_page_map() and show_pte() still prints dummy values
+   instead of printing the same content for all generic compile-time
+   folded page tables. We might want to skip printing dummy values later.
+
+ - We currently catch abuse of dummy values on the stack at compile-time by
+   relying on constant propagation by the compiler. Usama's work [3] on using
+   distinct types for sw vs. hw PTEs could help here as well."
+
+Link: [1] https://lore.kernel.org/all/0019d675-ce3d-4a5c-89ed-f126c45145c9@kernel.org/
+Link: [2] https://lore.kernel.org/all/20251113014656.2605447-1-samuel.holland@sifive.com/
+Link: [3] https://lore.kernel.org/r/74182e50-b54f-4d2d-a27f-3a59a538d6bc@arm.com
+
+David Hildenbrand (Arm) (13):
+  ARM: mm: make nommu pgd_t a scalar
+  ARM: mm: make 2-level pgd_t a scalar
+  ARM: mm: remove custom pgdp_get()
+  LoongArch: mm: define pud_leaf() only when PUD exists
+  MIPS: mm: define pud_leaf() only when PUD exists
+  mm/pgtable: define (pgd|p4d|pud)_leaf() for folded page tables
+  mm/pgtable: define (pgd|p4d|pud)_offset_lockless() for folded page
+    tables
+  x86: mm: carve out the generic compile-time folded pgtable case in
+    effective_prot()
+  mm/pgtable: disallow calling folded set_pgd/set_p4d/set_pud
+  mm/pgtable: disallow calling folded (pgd|p4d|pud)_page,
+    pgd_page_vaddr() and (p4d|pud)_pgtable
+  mm/pgtable: optimize pmdp_get() and friends for folded pagetable
+    levels
+  openrisc/pgtable: drop __pmd_offset()
+  mm/pgtable: catch abuse of folded dummy pgd_t/p4d_t/pud_t
+
+Yeoreum Yun (21):
+  loongarch: kvm: remove stack copy address of pXd in pXd_offset()
+  riscv: kvm: remove stack copy address of pXd in pXd_offset()
+  mm: vmscan: remove stack copy address of pud pass in wallk_pud_range()
+  arm64: mm: use proper set_pXd() for generic compile-time folded
+    patable in kasan_early_init()
+  arm64: mm: define pud_set_huge() when __PGTABLE_PMD_FOLDED not defined
+  csky: mm: use proper set_pXd() for generic compile-time folded patable
+    in vmalloc_fault()
+  mips: mm: use proper set_pXd() for generic compile-time folded patable
+    in vmalloc_fault path
+  nios2: mm: use proper set_pXd() for generic compile-time folded
+    patable in vmalloc_fault path
+  riscv: mm: use proper set_pXd() for generic compile-time folded
+    patable in vmalloc_fault()
+  riscv: mm: use proper set_pXd() for generic compile-time folded
+    patable in setup_vm_final()
+  x86: power: use proper set_pXd() for generic compile-time folded
+    patable in resume_one_md_table_init()
+  x86: kexec: use proper set_pXd() for generic compile-time folded
+    patable in machine_kexec_page_table_set_one()
+  x86: platform: use proper set_pXd() for generic compile-time folded
+    patable in setup_olpc_ofw_pgd()
+  x86: mm: use proper set_pXd() for generic compile-time folded patable
+    in one_md_table_init()
+  x86: mm: skip pud setup when using generic compile-time folded
+    pagetable
+  x86: mm: call try_to_free_pmd_page() when CONFIG_PGTABLE_LEVELS > 2
+  x86: mm: remove usage of pgd_page_vaddr() for CONFIG_x86_PAE
+  x86: mm: define pudp_set_access_flags() when
+    CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD is enabled only.
+  m68k: mm: remove usage of pgd_page_vaddr() for CONFIG_PGTABLE_LEVELS=3
+  arm: mm: use proper pgtable APIs for generic compile-time folded
+    patable in kasan_init()
+  arm64: pgtable: convert pte_present() from macro to static inline
+
+ arch/arm/include/asm/page-nommu.h           |  4 +-
+ arch/arm/include/asm/pgtable-2level-types.h | 13 ++++--
+ arch/arm/include/asm/pgtable.h              |  2 -
+ arch/arm/mm/kasan_init.c                    |  8 ++--
+ arch/arm64/include/asm/pgtable.h            | 35 ++++----------
+ arch/arm64/mm/kasan_init.c                  | 26 ++++++++++-
+ arch/arm64/mm/mmu.c                         |  2 +
+ arch/csky/mm/fault.c                        | 35 +++++---------
+ arch/loongarch/include/asm/pgtable.h        |  2 +
+ arch/loongarch/kvm/mmu.c                    | 20 ++++----
+ arch/m68k/mm/init.c                         |  2 +-
+ arch/m68k/mm/motorola.c                     |  2 +-
+ arch/mips/include/asm/pgtable.h             |  2 +
+ arch/mips/mm/fault.c                        | 13 ++++--
+ arch/nios2/mm/fault.c                       | 36 +++++---------
+ arch/openrisc/include/asm/pgtable.h         |  3 --
+ arch/riscv/kvm/mmu.c                        | 20 ++++----
+ arch/riscv/mm/fault.c                       | 52 +++++++++++++--------
+ arch/riscv/mm/init.c                        |  7 ++-
+ arch/x86/kernel/machine_kexec_32.c          |  8 ++--
+ arch/x86/mm/dump_pagetables.c               | 18 ++++++-
+ arch/x86/mm/init_32.c                       | 10 ++--
+ arch/x86/mm/pat/set_memory.c                |  9 ++--
+ arch/x86/mm/pgtable.c                       | 43 ++++++++++-------
+ arch/x86/platform/olpc/olpc_ofw.c           |  5 +-
+ arch/x86/power/hibernate_32.c               | 14 ++----
+ include/asm-generic/pgtable-nop4d.h         | 45 ++++++++++++++----
+ include/asm-generic/pgtable-nopmd.h         | 46 +++++++++++++-----
+ include/asm-generic/pgtable-nopud.h         | 46 ++++++++++++++----
+ include/linux/pgtable.h                     |  5 ++
+ mm/vmscan.c                                 |  2 +-
+ 31 files changed, 329 insertions(+), 206 deletions(-)
+
+
+base-commit: bdc38bfc1262e3d1432afadd2aa2ffd83d139dbb
 -- 
-Regards,
-Pratyush Yadav
+LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+
