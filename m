@@ -1,107 +1,126 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DCAC31326A
-	for <loongarch@lists.linux.dev>; Mon, 13 Jul 2026 07:02:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85330365A00
+	for <loongarch@lists.linux.dev>; Mon, 13 Jul 2026 07:06:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783926122; cv=none; b=L9GBha2VSM8BNXY46GyXhrwpdPEbNKJcw/qe+Mo2PfVmEI2O2EeGEDuAt45vAVD/9vbLM3Tu+zdXy2bJlSiBgJbvW8DmstyXp2FigxHFy1fvT4G3DoBa7uap3bSD653Dsp6bXVU/B5kZGmXAmM4WCVuNVIyl0aJfV7eyzdeg108=
+	t=1783926386; cv=none; b=m7/2rNHdoJtrc9amWgv7w6PXlDyTy9GeSoprWr92og+Ru6l7vZTuJdvBHivAPeh9yL+1600ywFAne+BrHtU9VlcuiwjRv9olaJYYg/wTtdIvOUrWrE1TF/mxTT1Qs16FPsBO1dfU7NRe10H83L1L1oOzVpHrjg8DO7rjMtxaWW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783926122; c=relaxed/simple;
-	bh=7qgYWfsFyZ2RgA/27lsYmYQZTrcjl45mKP6ePkNwd3s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=svanMww944CtflAxxBJpZgW05eghBvm4eae4VLck3EvrhMOP8vO3TuPaeOUCaYe5PfZxM1z5Ykek9wFG0UhRyBHfDGrciaos9XF2l8MGhupa/u+iw3yRxmafHpEeLb7XhrOJR+HNOUStP6dsGW5YMEe8FrF18HfHIO/Z0fsn9tA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xuFdla/6; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cXVv1a5z; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1783926386; c=relaxed/simple;
+	bh=hCeMAFawqUQZK5TTzZSun5coCAr0fqMieti9jZqRw7A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Tb02BiBeAPGeRznTOv1xnDgMUJaBnmWoHy5c9nURod5liG2ObxheQGz3+I71QlLdjXj0N91rhHd0s+GgRg1lPaAxRIygK1S85CD+J6zDgCt5t/6TSx9SSOMS7sFZwZfQVgTIZlh6iBF513321emOhYBLqTY9je7z0lUL4mD83h8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TbglOxZr; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xuFdla/6";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cXVv1a5z"
-Date: Mon, 13 Jul 2026 09:01:56 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1783926118;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gnmxNdHqKoh6xuYofsr73YiT+W94DI4jpIiM80uad1k=;
-	b=xuFdla/6ifWVxs+wZ/ziKIXPwTG8sNl1CvOxpSkj7lA5470k6wTgjpeu7/nlRL+oihS2Qs
-	JADuHCTtvX5KsRBE+2BwukLfzUJWDi3WmNcefXD07sqWlxw7cq54WE1/rhAb0H08RGTG54
-	NKVh6zGp+juLKf0xn/ZZ/iHAUAMgZL1Gz+AEf4FCljbY9Gs2UrRNV9CQfA9ZnvX7iuY/CR
-	+eH0hO+UwyFjJgLhe6cGdJg9VIHjkyqxDiQcyzD1kAE21gJQJA90gnhj4aClj+bpR70P1/
-	PyuEkKpTBKkI7DGLCZkpzwWyVeBOFCXJejv6p2QBYbd8qAfd3VxT9OjpsNrVgw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1783926118;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gnmxNdHqKoh6xuYofsr73YiT+W94DI4jpIiM80uad1k=;
-	b=cXVv1a5zXQlrcFC6I4GHPNC9QKNeWn00sP2uqrUVvBJohK68NTBxPt4JyPk2bcommOIhMi
-	q3BAQe+PJhx4WPDw==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com, 
-	mpe@ellerman.id.au, npiggin@gmail.com, chleroy@kernel.org, pjw@kernel.org, 
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, hca@linux.ibm.com, 
-	gor@linux.ibm.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com, 
-	svens@linux.ibm.com, tglx@kernel.org, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, hpa@zytor.com, nathan@kernel.org, kees@kernel.org, 
-	xur@google.com, arnd@arndb.de, peterz@infradead.org, gourry@gourry.net, 
-	lukas.bulwahn@redhat.com, ryan.roberts@arm.com, yangtiezhu@loongson.cn, 
-	mchauras@linux.ibm.com, sshegde@linux.ibm.com, austin.kim@lge.com, jchrist@linux.ibm.com, 
-	x86@kernel.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org
-Subject: Re: [PATCH RESEND] syscall_user_dispatch: Introduce
- ARCH_SUPPORTS_SYSCALL_USER_DISPATCH
-Message-ID: <20260713085930-c6e454ac-cb4d-4016-8971-49df521e1d8d@linutronix.de>
-References: <20260713035422.582771-1-ruanjinjie@huawei.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TbglOxZr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 395781F0155F
+	for <loongarch@lists.linux.dev>; Mon, 13 Jul 2026 07:06:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783926384;
+	bh=MaoMLNzrQSdilHBAPxvn7cFGYo6KCQRZiQrYmmdeSDg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=TbglOxZrZc+8ho1Z2BcK0IhS3egNUSq0c5Yekd6nxDBKZQhVPPnrHghm6ItjXrvW8
+	 myYXJ6x6lFh7QX5ecmuh/vq7Qwc4aN3eTk8kvvmFs1d8wRQY7vrvAGfQK8ML7sZ4Yj
+	 k2WeLrzUteazWoeRwgjCCUDZJ2+PWRLzL1ozd2prV95l5uW3ki91C/T/KpUndY2saf
+	 +I1D4H0CLwMJu74DptZISJOOYDmUct5uhnCyLsAUx2HSrcK3fC5VZsBannIxQYZ7Rq
+	 GNjV6d1+IgN8jsegZ7lli5dbQ5dULez5iyH6dt+oUZzipNLSJVSN9n9AB3HDQyztKw
+	 NLk2nciGwWqEA==
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-493ae59eca6so12586425e9.1
+        for <loongarch@lists.linux.dev>; Mon, 13 Jul 2026 00:06:24 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RrCXlX6r0wBMvBp08Hj4MPPcH1VanoxRqdhrH4XI/Psh8aeBLMnRXgBCqY7gkGNApKuspBr6Hujsls=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzMb231Y7oIZnGG0vHgLXFe5+3UBGIrjfHeORn/wxNChzi3Tpek
+	LLMIzC2/IUYtxT6f9U8eZMyyS8ICXJyxrFLzK37E0zVu5Bn90YmFCnb8V5sCniQNFN33cokk+1G
+	tC+rJDlMs+KqY0i3+fle7zYuko0HlcWM=
+X-Received: by 2002:a05:6000:186c:b0:476:d13f:bb74 with SMTP id
+ ffacd0b85a97d-47f2dc9bac8mr8770361f8f.15.1783926382749; Mon, 13 Jul 2026
+ 00:06:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260713035422.582771-1-ruanjinjie@huawei.com>
+References: <20260707181957.433213175@kernel.org> <20260707190253.974626922@kernel.org>
+In-Reply-To: <20260707190253.974626922@kernel.org>
+From: Guo Ren <guoren@kernel.org>
+Date: Mon, 13 Jul 2026 15:06:10 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTTjW0RfZsJmHVAqrRsHpK4cJ+01G_Kkytt=0Wpm4sZpkg@mail.gmail.com>
+X-Gm-Features: AUfX_mzuKA4JwmuMUWB774bzpkP7q4a7PrJvxtp8N1GWwrENQwGP0BULxiqlyqc
+Message-ID: <CAJF2gTTjW0RfZsJmHVAqrRsHpK4cJ+01G_Kkytt=0Wpm4sZpkg@mail.gmail.com>
+Subject: Re: [patch 06/18] riscv/syscall: Use syscall_enter_from_user_mode_randomize_stack()
+To: Thomas Gleixner <tglx@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org, 
+	Michael Ellerman <mpe@ellerman.id.au>, Shrikanth Hegde <sshegde@linux.ibm.com>, 
+	linuxppc-dev@lists.ozlabs.org, Kees Cook <kees@kernel.org>, 
+	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, 
+	Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org, x86@kernel.org, 
+	Mark Rutland <mark.rutland@arm.com>, Jinjie Ruan <ruanjinjie@huawei.com>, 
+	Andy Lutomirski <luto@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Richard Henderson <richard.henderson@linaro.org>, Russell King <linux@armlinux.org.uk>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Helge Deller <deller@gmx.de>, 
+	Yoshinori Sato <ysato@users.sourceforge.jp>, Richard Weinberger <richard@nod.at>, 
+	Chris Zankel <chris@zankel.net>, linux-arm-kernel@lists.infradead.org, 
+	linux-alpha@vger.kernel.org, linux-csky@vger.kernel.org, 
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, linux-sh@vger.kernel.org, 
+	linux-um@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, 
+	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>, Brian Cain <bcain@kernel.org>, 
+	Michal Simek <monstr@monstr.eu>, Dinh Nguyen <dinguyen@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
+	linux-snps-arc@lists.infradead.org, linux-hexagon@vger.kernel.org, 
+	linux-openrisc@vger.kernel.org, sparclinux@vger.kernel.org, 
+	linux-arch@vger.kernel.org, =?UTF-8?Q?Michal_Such=C3=A1nek?= <msuchanek@suse.de>, 
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 13, 2026 at 11:54:22AM +0800, Jinjie Ruan wrote:
-> Currently, only x86 genuinely implements and supports Syscall User
-> Dispatch (SUD). Multiple architectures provide a stub
-> arch_syscall_is_vdso_sigreturn() returning 'false' simply to satisfy
-> GENERIC_ENTRY compilation, which creates a false impression of feature
-> support.
-> 
-> Introduce ARCH_SUPPORTS_SYSCALL_USER_DISPATCH to decouple this mechanism
-> from GENERIC_ENTRY. Select it exclusively on x86 and remove the redundant
-> stub functions from other architectures.
-> 
-> Link: https://lore.kernel.org/linux-arm-kernel/akZgV0Y4YAmB43_g@J2N7QTR9R3.cambridge.arm.com/
-> Cc: Thomas Gleixner <tglx@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Gregory Price <gourry@gourry.net>
-> Cc: Ada Couprie Diaz <ada.coupriediaz@arm.com>
-> Cc: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
-> Suggested-by: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-
-Reviewed-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
-
+On Wed, Jul 8, 2026 at 3:06=E2=80=AFAM Thomas Gleixner <tglx@kernel.org> wr=
+ote:
+>
+> syscall_enter_from_user_mode_randomize_stack() replaces
+> syscall_enter_from_user_mode() and the subsequent invocation of
+> add_random_kstack_offset().
+>
+> The advantage is that it applies the stack randomization right after
+> enter_from_user_mode() and thereby avoids the overhead of get/put_cpu_var=
+()
+> as that code is invoked with interrupts disabled.
+>
+> No functional change.
+>
+> Signed-off-by: Thomas Gleixner <tglx@kernel.org>
+> Cc: Paul Walmsley <pjw@kernel.org>
+> Cc: Palmer Dabbelt <palmer@dabbelt.com>
+> Cc: linux-riscv@lists.infradead.org
 > ---
-> v1 -> RESEND
-> - Define missing ARCH_SUPPORTS_SYSCALL_USER_DISPATCH.
+>  arch/riscv/kernel/traps.c |    5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+>
+> --- a/arch/riscv/kernel/traps.c
+> +++ b/arch/riscv/kernel/traps.c
+> @@ -7,7 +7,6 @@
+>  #include <linux/kernel.h>
+>  #include <linux/init.h>
+>  #include <linux/irqflags.h>
+> -#include <linux/randomize_kstack.h>
+>  #include <linux/sched.h>
+>  #include <linux/sched/debug.h>
+>  #include <linux/sched/signal.h>
+> @@ -333,9 +332,7 @@ void do_trap_ecall_u(struct pt_regs *reg
+>
+>                 riscv_v_vstate_discard(regs);
+>
+> -               syscall =3D syscall_enter_from_user_mode(regs, syscall);
+> -
+> -               add_random_kstack_offset();
+> +               syscall =3D syscall_enter_from_user_mode_randomize_stack(=
+regs, syscall);
 
-If code is changed it is not a resend. Instead it should have been v2.
+Reviewed-by: Guo Ren <guoren@kernel.org>
 
-> ---
->  arch/Kconfig                         | 4 ++++
->  arch/loongarch/include/asm/syscall.h | 6 ------
->  arch/powerpc/include/asm/syscall.h   | 5 -----
->  arch/riscv/include/asm/syscall.h     | 5 -----
->  arch/s390/include/asm/syscall.h      | 5 -----
->  arch/x86/Kconfig                     | 1 +
->  6 files changed, 5 insertions(+), 21 deletions(-)
-
-(...)
+--=20
+Best Regards
+ Guo Ren
