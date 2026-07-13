@@ -1,160 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1890835CBCB
-	for <loongarch@lists.linux.dev>; Mon, 13 Jul 2026 21:40:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6725423C4FA;
+	Mon, 13 Jul 2026 22:20:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783978824; cv=none; b=hMyEsr+YBQ9f5ufXXkiPjJ3lF0g1U+Tg1iEGgSJ5NWIhCaU9v791wn9GSiuOSgmomwk8kxTFO6bz12W8u7n0t9G4UAksOpKd/enkh3/+jKaECUG8Ythxzk9wcnqsZ4LZm2JoowGcG6aRsbc0Ldx/pYFK1Z1ZS1jnKt3cCCdKfJA=
+	t=1783981254; cv=none; b=L7upuRMsJObjE12Xae573cSNI7LpgrG3qEMhBayS/TOa44nMCodpGgKzcAM2gSknAfK7gqAARRPQGzc0awe2X8OsdzXz+qVc8puJVJ6QRVH7YYOrMUuHLtRhxrqxVZ7ovvy6AuKvFdLhqZOD2Cz7SJUE843Xf/1Updhv8yuuJro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783978824; c=relaxed/simple;
-	bh=bTce3NANGkMxQwl5/BPNI0R4Y8vE5s2I+Fl2WAV2VZU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=vEqH21+i3/e2qfQWh23iTpPguXWDdVMkVLQQmrBAXNt3+kJOSYbVcLTvuTvOHnMlZpg/DmbA4GR9Yqu2NruJICT7B8P5dpXLKoxJrk30Db7+k3EPhKRwneDijlpnum9z0fFePzq+Bz0KDe4dxmnDuae22Ow0cDQ/l7zezQy7cjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UymcwPwT; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1783981254; c=relaxed/simple;
+	bh=eNloClgB8bthsqEFuAmXeRONmHZt1uaE5aOkgLqtA3I=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=NOZ5BKVfyRY9zerUoXCcclbm2Y634D8jujD7Y4uFevAbDQnqmBn7kQ7azQ7h0XB48z/6eZ0GpjsdSbVEbpvuG9nwHfkqtUYSCzt2rZR4RbqpCV0a0+wnyTNo5a0YNLA1W6tmSdyshlsaZLgkK+PdetuVvNlCPZtnB4nUtIm/Smo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MpMCkP0Q; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UymcwPwT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783978822; x=1815514822;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=bTce3NANGkMxQwl5/BPNI0R4Y8vE5s2I+Fl2WAV2VZU=;
-  b=UymcwPwT4fk+ndFiIN4vBBVQWeDkcwBN2wd+x4Ew6AciGmecAeRpbav1
-   4v7zlJBjQd1bcFpmzO1Nm559+3FQq8PusLcUoPzN/bsBxtFJQqM+kavi9
-   b1b4ehunKFKA9cDNdRpDqpwQW1Jku02HRA7xLBGNkhJaltP6Ia1FoxFkZ
-   n/YeC/0sJo1JQe8lSUxuzdiFX3cqHdJkZu0tcNR04LOWY8WEqI03AlRQK
-   AQ52w2WJvPQCmEPkXmfkx96cWPH8PVAboIutSFhYmyScVsl/zv0j7Sy9G
-   7V3zDGwOjr7ap4Md1VXjAFqYk/9VzJm0o2nv6AhJoXmUlT25ib8pyaZ4r
-   w==;
-X-CSE-ConnectionGUID: Gd/HMPH+SouDNOgRRyqzfg==
-X-CSE-MsgGUID: Y2eFSnY+TWGAD+2W4dC2aQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="84613479"
-X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="84613479"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2026 14:40:21 -0700
-X-CSE-ConnectionGUID: zjSlVSWlTm2TZi8lRy7/jQ==
-X-CSE-MsgGUID: Ohjm+R33SxugWQdGgvdrlA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="253927987"
-Received: from smithj1-mobl2.amr.corp.intel.com (HELO [10.125.108.83]) ([10.125.108.83])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2026 14:40:18 -0700
-Message-ID: <14e250db-1641-4085-8d13-02f819657d5f@intel.com>
-Date: Mon, 13 Jul 2026 14:40:18 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MpMCkP0Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AFF31F000E9;
+	Mon, 13 Jul 2026 22:20:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783981253;
+	bh=w3UBKxF49r1FocG/e6uCyLxV81MIS/cKXMKj7GFa2dY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=MpMCkP0Q6zqib0sjSPapvsNNpIi4SuIbRx2KpQXXh5WymOk/U9BYtzwUFKFSDJeFr
+	 cs5Si8k2Jro4QstLfelU9720P5WxeuRbAnaxnadJdzaNvoaow0D7p7lmUZbQ5oMrrN
+	 3o5UyHWDonKsgHBAuyv9ZXOcFD4wg3E4vkt4dz4QCFld69S4V95QQDPnbS7bjngziq
+	 2jPG3bUh3nPhORy/xTSX0II1pDeNiDEJxCtsVmFL58A3GaH2iLUQD/2RQGNNGo+4RY
+	 8iH8Ua+ASe9SPzJRnmuCPKTYmEYeFYtAmbx6vPkwBxZlSMFDBbTa0wDk4N8IQubbaz
+	 LFd4xigUG0cCA==
+From: Thomas Gleixner <tglx@kernel.org>
+To: Michal =?utf-8?Q?Such=C3=A1nek?= <msuchanek@suse.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, Michael Ellerman
+ <mpe@ellerman.id.au>, Shrikanth Hegde <sshegde@linux.ibm.com>,
+ linuxppc-dev@lists.ozlabs.org, Huacai Chen <chenhuacai@kernel.org>,
+ loongarch@lists.linux.dev, Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt
+ <palmer@dabbelt.com>, linux-riscv@lists.infradead.org, Sven Schnelle
+ <svens@linux.ibm.com>, linux-s390@vger.kernel.org, x86@kernel.org, Mark
+ Rutland <mark.rutland@arm.com>, Jinjie Ruan <ruanjinjie@huawei.com>,
+ Magnus Lindholm <linmag7@gmail.com>, "Mukesh Kumar Chaurasiya (IBM)"
+ <mkchauras@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Radu Rendec
+ <radu@rendec.net>
+Subject: Re: [patch 4/4] entry, treewide: Make
+ syscall_enter_from_user_mode[_work]() indicate syscall execution
+In-Reply-To: <alSlg72c8xmjaj48@kunlun.suse.cz>
+References: <20260712134433.549076055@kernel.org>
+ <20260712141346.772209074@kernel.org> <alSlg72c8xmjaj48@kunlun.suse.cz>
+Date: Tue, 14 Jul 2026 00:20:49 +0200
+Message-ID: <871pd6r0ou.ffs@fw13>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 10/34] x86: mm: carve out the generic compile-time
- folded pgtable case in effective_prot()
-To: "David Hildenbrand (Arm)" <david@kernel.org>,
- Yeoreum Yun <yeoreum.yun@arm.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, linux-arch@vger.kernel.org,
- kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
- x86@kernel.org, linux-mm@kvack.org, kasan-dev@googlegroups.com,
- linux-csky@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
- linux-openrisc@vger.kernel.org
-Cc: linux@armlinux.org.uk, akpm@linux-foundation.org,
- ankur.a.arora@oracle.com, rppt@kernel.org, linmag7@gmail.com,
- chleroy@kernel.org, klarasmodin@gmail.com, chenhuacai@kernel.org,
- kernel@xen0n.name, kas@kernel.org, zhangtianyang@loongson.cn,
- wangyuli@aosc.io, tsbogend@alpha.franken.de, ljs@kernel.org, jgg@ziepe.ca,
- catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de,
- ryan.roberts@arm.com, pasha.tatashin@soleen.com, rmclure@linux.ibm.com,
- baolin.wang@linux.alibaba.com, tj@kernel.org, kevin.brodsky@arm.com,
- anup@brainfault.org, atish.patra@linux.dev, pjw@kernel.org,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
- dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
- tglx@kernel.org, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
- hannes@cmpxchg.org, mhocko@kernel.org, qi.zheng@linux.dev,
- shakeel.butt@linux.dev, kasong@tencent.com, baohua@kernel.org,
- axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com,
- ryabinin.a.a@gmail.com, glider@google.com, andreyknvl@gmail.com,
- dvyukov@google.com, vincenzo.frascino@arm.com, anshuman.khandual@arm.com,
- yang@os.amperecomputing.com, chaitanyas.prakash@arm.com, ardb@kernel.org,
- guoren@kernel.org, yang.li85200@gmail.com, viro@zeniv.linux.org.uk,
- dinguyen@kernel.org, schuster.simon@siemens-energy.com,
- wangruikang@iscas.ac.cn, junhui.liu@pigmoral.tech, muchun.song@linux.dev,
- vishal.moola@gmail.com, namcao@linutronix.de, pavel@kernel.org,
- djbw@kernel.org, yu-cheng.yu@intel.com, baolu.lu@linux.intel.com,
- Jonathan.Cameron@huawei.com, coxu@redhat.com, andreas@gaisler.com,
- liam@infradead.org, vbabka@kernel.org, surenb@google.com, mhocko@suse.com,
- geert@linux-m68k.org, shorne@gmail.com, jonas@southpole.se,
- stefan.kristiansson@saunalahti.fi
-References: <20260713135614.1618183-1-yeoreum.yun@arm.com>
- <20260713135614.1618183-11-yeoreum.yun@arm.com>
- <c3edfb13-08ec-419c-bc05-8f3f64186b24@intel.com>
- <ac365196-8ccc-4d8b-83d7-28fec763e75c@kernel.org>
- <710b7eb0-8e0c-4f07-991c-2285c77e1beb@intel.com>
- <6007625e-c3f9-4ad6-99a8-61396bccbcec@kernel.org>
- <32d459d1-ad19-4baf-bbb1-0565458001d2@intel.com>
- <3ea30f8a-bb29-4bf5-8400-1c4840d46a88@kernel.org>
- <7e84b200-25eb-43a6-b5e2-5f27f2d82a77@intel.com>
- <31988089-095a-4eed-b5e2-c677c70f79f6@kernel.org>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <31988089-095a-4eed-b5e2-c677c70f79f6@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 7/13/26 14:17, David Hildenbrand (Arm) wrote:
->> To me, the double READ_ONCE() is a non-issue.
-> To other arch maintainers, it is!
+On Mon, Jul 13 2026 at 10:44, Michal Such=C3=A1nek wrote:
+> On Sun, Jul 12, 2026 at 11:25:32PM +0200, Thomas Gleixner wrote:
+>> The return values of syscall_enter_from_user_mode[_work]() are
+>> non-intuitive. Both functions return the syscall number which should be
+>> invoked by the architecture specific syscall entry code. The returned
+>> number can be:
+>>=20
+>>   - the unmodified syscall number which was handed in by the caller
+>>=20
+>>   - a modified syscall number (ptrace, seccomp, trace/probe/bpf)
+>>=20
+>> That has an additional twist. If the return value is -1L then the caller=
+ is
+>> not allowed to modify the return value as that indicates that the modify=
+ing
+>> entity requests to abort the syscall and set the return value already. T=
+hat
+>> can obviously not be differentiated from a syscall which handed in -1 as
+>> syscall number.
+>>=20
+>> The most trivial way to deal with that is:
+>>=20
+>>     set_return_value(regs, -ENOSYS);
+>>     nr =3D syscall_enter_from_user_mode(regs, nr);
+>>     if (valid(nr))
+>>     	handle_syscall(regs, nr);
+>>=20
+>> That's what LOONGARCH, RISCV, and X86 do. But PowerPC and S390 do not
+>> preset the return value, so when user space hands in -1 and there is
+>> nothing setting the return value in the entry work code, then the syscall
+>> is skipped but the return value is whatever random data has been in the
+>> return value register.
+>
+> The reason why PowerPC and S390 do not preset the return value is that
+> the return value uses the same register as the syscall number. There are
+> apparently other architectures on which the return value overlaps with
+> the arguments which also do not preset the return value for that reason.
+> If they would use the generic entry the same problem would arise.
 
-Ahh, so it seems like Christophe in ppc32 land was looking at this more
-like a regression that needed to get fixed.
+That's an implementation choice of PPC/S390 as I explained before, which
+could trivially be solved by having an explicit pt_regs->return_val
+member,
 
-Christophe, just out of curiosity, was this something that was causing
-you practical problems like measurable performance regressions, or was
-it really just insane code generation that seems unacceptably suboptimal?
+>> Change the return values of syscall_enter_from_user_mode[_work]() to
+>> boolean and return false, when either ptrace or seccomp request to skip =
+the
+>
+> There is a difference between seccomp and ptrace.
+>
+> When seccomp indicates to skip the syscall it has also set the syscall
+> return value.
+>
+> However, when the syscall number is -1 and the return value is not
+> preset that does not indicate anything.
+
+I agree it's an invalid syscall, but the current generic entry code made
+the rightful assumption that returning -1L as the syscall number either
+results in -ENOSYS or in the value which was set by one of the entry
+mechanisms as that code originated from the x86 implementation.
+
+It's not the fault of that code that PPC and S390 converted their stuff
+over without paying attention to that detail.
+
+> The return value can still hold garbage. ptrace does not have the
+> ability to indicate that a syscall is to be skipped, at least on the
+> entry trace. It needs to be skipped based on the syscall number being
+> invalid.
+
+That's what I explained you before and you told me I'm all wrong.
+
+But that's moot as this latest version does not care anymore. The
+architectures whixh preset the return value are correct under all
+circumstances and PPC/S390 can keep their own world view.
+
+Thanks,
+
+        tglx
