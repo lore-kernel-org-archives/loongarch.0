@@ -1,183 +1,260 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D7FF49550D
-	for <loongarch@lists.linux.dev>; Tue, 14 Jul 2026 16:51:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35EC44DB56C;
+	Tue, 14 Jul 2026 16:54:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784047877; cv=none; b=M7vM0LPFKCZlgivii+8OxIR1roKhzcMzCj2zaLwfznKCRD6mfY+9vOg++TyGFIACLSpaA9tcWFSmpVjYq2lZUWHxX0UbLmJ7Pagtsjn/Ma/rXC1SxlFN/fly55HP1uU0ocPiZyEUmMhmvCyMxLRWVFVrNLbE2s1Pm4A+oU72IuY=
+	t=1784048063; cv=none; b=q2U9qnJp0IvjgeYJBDLFSmxKqgThdU2gXAOIpiVNKR428Atp11kvNDFeXVwdIgixhFfTqFFric1Tx4DMqT84BLzhxMlAE3a4WMf12yXb/EsG5oyIkXTiO/s+YmgK6J8OT/jIv3hQDyXn9Ty0eGDULwjYN++WuF0RRqq/VpR+e0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784047877; c=relaxed/simple;
-	bh=UvBhg+nD12g2Xn0O2D0o4P28bmGT2yfpQKOxtSEnl1I=;
+	s=arc-20240116; t=1784048063; c=relaxed/simple;
+	bh=Sm1SxbPpqj/ww3QZH1OjL/J5OFtjvvxD40VS6UtKY4c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZbI25fBSMuZeUMwC6sEzI0NqA91QjG2ONyWHZ4jDcb/h7vDiaoZEQO0kWvzeZoAarr2waFXiZS1mT0mFwDyQXEKnVNSRY8y8HH3QDJ564aIrx1p0Etd2w2ysaGRG3DP/8/hmgeh2l7e1vs0SXx4AGqgjnddwbGZ5uPmk0duRZcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=LJE9Gnqg; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ampeU1l/73GTLLZd7HDbRKRG9aqfSnEJcF2Dv+WkavlEwJ9MjBE1syaacpcUOPX3Bx4eCwmEAC8vwERwkKCFAjNYdfVjjpYlfTnYbqXGE5ETwIfgp+v0OsH3FmAXO0fF2Kec6+tIOFRaKGy8xms4+uVO3G2YUueFoM7S1ewZZVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QOP03A3Q; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="LJE9Gnqg"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 34AC11477;
-	Tue, 14 Jul 2026 09:51:10 -0700 (PDT)
-Received: from e129823.arm.com (e129823.arm.com [10.2.213.3])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 92B183F7B4;
-	Tue, 14 Jul 2026 09:51:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1784047873; bh=UvBhg+nD12g2Xn0O2D0o4P28bmGT2yfpQKOxtSEnl1I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LJE9GnqgPAJTHNyrHvXiGytDU8Y+XMmq5qcc7VQwk9xF51NV6qToYp1rk0iHEdw2c
-	 SQefERcHjF0VMLdrLpD4VYdyPuCv0noF41iChasEg/du+6t2wy8gA1iDS6Ph+r4Igc
-	 KCRrQeoHcKvxhPGR+tFzzHZ+eCmo3MvDkxCNZGoc=
-Date: Tue, 14 Jul 2026 17:51:01 +0100
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Yeoreum Yun <yeoreum.yun@arm.com>,
-	"David Hildenbrand (Arm)" <david@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	linux-arch@vger.kernel.org, kvm-riscv@lists.infradead.org,
-	linux-riscv@lists.infradead.org, x86@kernel.org, linux-mm@kvack.org,
-	kasan-dev@googlegroups.com, linux-csky@vger.kernel.org,
-	linux-m68k@lists.linux-m68k.org, linux-openrisc@vger.kernel.org,
-	linux@armlinux.org.uk, akpm@linux-foundation.org,
-	ankur.a.arora@oracle.com, rppt@kernel.org, linmag7@gmail.com,
-	chleroy@kernel.org, klarasmodin@gmail.com, chenhuacai@kernel.org,
-	kernel@xen0n.name, kas@kernel.org, zhangtianyang@loongson.cn,
-	wangyuli@aosc.io, tsbogend@alpha.franken.de, ljs@kernel.org,
-	jgg@ziepe.ca, catalin.marinas@arm.com, will@kernel.org,
-	arnd@arndb.de, ryan.roberts@arm.com, pasha.tatashin@soleen.com,
-	rmclure@linux.ibm.com, baolin.wang@linux.alibaba.com, tj@kernel.org,
-	kevin.brodsky@arm.com, anup@brainfault.org, atish.patra@linux.dev,
-	pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-	alex@ghiti.fr, dave.hansen@linux.intel.com, luto@kernel.org,
-	peterz@infradead.org, tglx@kernel.org, mingo@redhat.com,
-	bp@alien8.de, hpa@zytor.com, hannes@cmpxchg.org, mhocko@kernel.org,
-	qi.zheng@linux.dev, shakeel.butt@linux.dev, kasong@tencent.com,
-	baohua@kernel.org, axelrasmussen@google.com, yuanchu@google.com,
-	weixugc@google.com, ryabinin.a.a@gmail.com, glider@google.com,
-	andreyknvl@gmail.com, dvyukov@google.com, vincenzo.frascino@arm.com,
-	anshuman.khandual@arm.com, yang@os.amperecomputing.com,
-	chaitanyas.prakash@arm.com, ardb@kernel.org, guoren@kernel.org,
-	yang.li85200@gmail.com, viro@zeniv.linux.org.uk,
-	dinguyen@kernel.org, schuster.simon@siemens-energy.com,
-	wangruikang@iscas.ac.cn, junhui.liu@pigmoral.tech,
-	muchun.song@linux.dev, vishal.moola@gmail.com, namcao@linutronix.de,
-	pavel@kernel.org, djbw@kernel.org, yu-cheng.yu@intel.com,
-	baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
-	coxu@redhat.com, andreas@gaisler.com, liam@infradead.org,
-	vbabka@kernel.org, surenb@google.com, mhocko@suse.com,
-	geert@linux-m68k.org, shorne@gmail.com, jonas@southpole.se,
-	stefan.kristiansson@saunalahti.fi
-Subject: Re: [RFC PATCH 10/34] x86: mm: carve out the generic compile-time
- folded pgtable case in effective_prot()
-Message-ID: <alZo9feSrSB_StfO@e129823.arm.com>
-References: <6007625e-c3f9-4ad6-99a8-61396bccbcec@kernel.org>
- <32d459d1-ad19-4baf-bbb1-0565458001d2@intel.com>
- <3ea30f8a-bb29-4bf5-8400-1c4840d46a88@kernel.org>
- <7e84b200-25eb-43a6-b5e2-5f27f2d82a77@intel.com>
- <31988089-095a-4eed-b5e2-c677c70f79f6@kernel.org>
- <14e250db-1641-4085-8d13-02f819657d5f@intel.com>
- <d83c76b3-ea4d-4c41-b4c5-f5ae558ace55@kernel.org>
- <alYgMxKqRnF6_X0A@e129823.arm.com>
- <6df814c9-405c-48d8-96ea-929c4b28949b@intel.com>
- <alZe-Cu7yQw9qRXU@e129823.arm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QOP03A3Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46EFC1F00A3A;
+	Tue, 14 Jul 2026 16:54:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784048062;
+	bh=Q+tLcyOwHtF2vvwf2acxQjCBICX2eNchtDxbM2AnFOs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=QOP03A3QAhh4nkGMFgFpCegL6XCrStv7YQS8bIi7KUlu3F27XjlSE2EGt0jOsK3HX
+	 0d/CFKzHpL0J4xggxpeZtVFTWPAaA+50KeuLt30r+jJYkZmTiicJhvdlW92q6LhNcJ
+	 Dxvg/J99U95HozGHJGubsNdW8sVqUL69Zkc51n1URbMKZl7TBlHLONv7e1D3XUz7be
+	 9nXGa0vy9oo24HThn/6X54YVQA7VN4+aW9MlA6t7Ktt1y9hkI8kLHdnjwMyT31E5db
+	 V+dGaRWihiYlQ7kDBrCSnJxoZE9S459WaozPER9pNwoXHIlL4F8pyAy2nGNKG4vVLT
+	 m1ATK56XdRCXg==
+Date: Tue, 14 Jul 2026 17:54:17 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: thermal: loongson,ls2k-thermal: Add
+ compatible for Loongson-2K0300
+Message-ID: <20260714-irritate-varying-9055895097b0@spud>
+References: <cover.1783670011.git.zhoubinbin@loongson.cn>
+ <7df0780e1b3d4c499a48cd862a12bda895e7818f.1783670011.git.zhoubinbin@loongson.cn>
+ <20260710-game-late-9347baafa7ab@spud>
+ <CAMpQs4+zXcNnZQnxWM7WUAM-heBYrTejm_dy3yVA4EFUrjA4CQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="mxs6UIz3nJYmRMyR"
 Content-Disposition: inline
-In-Reply-To: <alZe-Cu7yQw9qRXU@e129823.arm.com>
+In-Reply-To: <CAMpQs4+zXcNnZQnxWM7WUAM-heBYrTejm_dy3yVA4EFUrjA4CQ@mail.gmail.com>
 
-On Tue, Jul 14, 2026 at 05:08:24PM +0100, Yeoreum Yun wrote:
-> On Tue, Jul 14, 2026 at 07:35:19AM -0700, Dave Hansen wrote:
-> > On 7/14/26 04:40, Yeoreum Yun wrote:
-> > > @@ -254,22 +255,8 @@ static void effective_prot(struct ptdump_state *pt_st, int level, u64 val)
-> > >         struct pg_state *st = container_of(pt_st, struct pg_state, ptdump);
-> > >         pgprotval_t prot = val & PTE_FLAGS_MASK;
-> > >         pgprotval_t effective;
-> > > -       bool first_level = false;
-> > > 
-> > > -       /* Ignore folded levels ... */
-> > > -       if (((level == 0) && mm_p4d_folded(st->mm)) ||
-> > > -           ((level == 1) && mm_pud_folded(st->mm)) ||
-> > > -           ((level == 2) && mm_pmd_folded(st->mm)))
-> > > -               return;
+--mxs6UIz3nJYmRMyR
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Jul 14, 2026 at 02:53:40PM +0800, Binbin Zhou wrote:
+> Hi Conor:
+>=20
+> Thanks for your reply.
+>=20
+> On Sat, Jul 11, 2026 at 12:21=E2=80=AFAM Conor Dooley <conor@kernel.org> =
+wrote:
+> >
+> > On Fri, Jul 10, 2026 at 04:24:59PM +0800, Binbin Zhou wrote:
+> > > Add a new compatible string `loongson,ls2k0300-thermal` for the therm=
+al
+> > > sensor found on the Loongson-2K0300 SoC.
+> > >
+> > > The hardware differs from the existing SoCs in its register layout: it
+> > > requires two register regions (one for the thermal sensor control and
+> > > another for the CPU ID).
+> > >
+> > > Update the binding to describe this new requirement.
+> > >
+> > > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > > ---
+> > >  .../thermal/loongson,ls2k-thermal.yaml        | 68 ++++++++++++++---=
+--
+> > >  1 file changed, 50 insertions(+), 18 deletions(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/thermal/loongson,ls2k-=
+thermal.yaml b/Documentation/devicetree/bindings/thermal/loongson,ls2k-ther=
+mal.yaml
+> > > index 79e691b08341..b5cbfd201105 100644
+> > > --- a/Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal=
+=2Eyaml
+> > > +++ b/Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal=
+=2Eyaml
+> > > @@ -10,13 +10,11 @@ maintainers:
+> > >    - zhanghongchen <zhanghongchen@loongson.cn>
+> > >    - Yinbo Zhu <zhuyinbo@loongson.cn>
+> > >
+> > > -allOf:
+> > > -  - $ref: /schemas/thermal/thermal-sensor.yaml#
 > > > -
-> > > -       /* ... and make the actual first level remember the protection. */
-> > > -       if (((level == 0)) ||
-> > > -           ((level == 1) && mm_p4d_folded(st->mm)) ||
-> > > -           ((level == 2) && mm_pud_folded(st->mm)) ||
-> > > -           ((level == 3) && mm_pmd_folded(st->mm)))
-> > > -               first_level = true;
-> > > -
-> > > -       if (!first_level) {
-> > > +       if (first_level > st->first_level) {
-> > >                 pgprotval_t higher_prot = st->prot_levels[level - 1];
-> > > 
-> > >                 effective = (higher_prot & prot & (_PAGE_USER | _PAGE_RW)) |
-> > > @@ -471,6 +458,15 @@ bool ptdump_walk_pgd_level_core(struct seq_file *m,
-> > >                 .seq            = m
-> > >         };
-> > > 
-> > > +       if (mm_pmd_folded (mm))
-> > > +               st->first_level = 3;
-> > > +       else if (mm_pud_folded (mm))
-> > > +               st->first_level = 2;
-> > > +       else if (mm_p4d_folded (mm))
-> > > +               st->first_level = 1;
-> > > +       else
-> > > +               st->first_level = 0;
+> > >  properties:
+> > >    compatible:
+> > >      oneOf:
+> > >        - enum:
+> > > +          - loongson,ls2k0300-thermal
+> > >            - loongson,ls2k1000-thermal
+> > >            - loongson,ls2k2000-thermal
+> > >        - items:
+> > > @@ -39,23 +37,46 @@ required:
+> > >    - reg
+> > >    - interrupts
+> > >
+> > > -if:
+> > > -  properties:
+> > > -    compatible:
+> > > -      contains:
+> > > -        enum:
+> > > -          - loongson,ls2k2000-thermal
+> > > +allOf:
+> > > +  - $ref: /schemas/thermal/thermal-sensor.yaml#
+> > >
+> > > -then:
+> > > -  properties:
+> > > -    reg:
+> > > -      minItems: 2
+> > > -      maxItems: 2
+> > > +  - if:
+> > > +      properties:
+> > > +        compatible:
+> > > +          contains:
+> > > +            enum:
+> > > +              - loongson,ls2k0300-thermal
+> > > +    then:
+> > > +      properties:
+> > > +        reg:
+> > > +          items:
+> > > +            - description: Thermal base register region
+> > > +            - description: CPU ID register region
+> > >
+> > > -else:
+> > > -  properties:
+> > > -    reg:
+> > > -      maxItems: 1
+> > > +  - if:
+> > > +      properties:
+> > > +        compatible:
+> > > +          contains:
+> > > +            enum:
+> > > +              - loongson,ls2k1000-thermal
+> > > +    then:
+> > > +      properties:
+> > > +        reg:
+> > > +          items:
+> > > +            - description: Thermal base register region
 > > > +
-> > >         ptdump_walk_pgd(&st.ptdump, mm, pgd);
-> > 
-> > This is indeed an improvement and a step in the right direction! Thanks
-> > for looking at this.
-> > 
-> > But one of my test for whether it's good x86 code is whether there's any
-> > actually x86-specific logic in it. Isn't this basically a translation
-> > between the integer level number and whether it is folded?
-> > 
-> > That seems like a common helper that more than one arch could use. Could
-> > this be stuck in a helper so that all arch/x86 has to do is:
-> > 
-> > 	if (mm_pt_level_folded(mm, level))
-> > 		return;
-> 
-> Yes. at least the level semantic in ptdump (pgd is level 0,
-> p4d is level 1, ...) is same to all archs where use ptdump.
-> So It seems reasonable to add this common helper in ptdump.c
-> 
+> > > +  - if:
+> > > +      properties:
+> > > +        compatible:
+> > > +          contains:
+> > > +            enum:
+> > > +              - loongson,ls2k2000-thermal
+> > > +    then:
+> > > +      properties:
+> > > +        reg:
+> > > +          items:
+> > > +            - description: Thermal base register region
+> > > +            - description: Thermal data output register region
+> > >
+> > >  unevaluatedProperties: false
+> > >
+> > > @@ -69,3 +90,14 @@ examples:
+> > >          interrupts =3D <7 IRQ_TYPE_LEVEL_LOW>;
+> > >          #thermal-sensor-cells =3D <1>;
+> > >      };
+> > > +
+> > > +  - |
+> > > +    #include <dt-bindings/interrupt-controller/irq.h>
+> > > +    thermal-sensor@16001500 {
+> > > +       compatible =3D "loongson,ls2k0300-thermal";
+> > > +       reg =3D <0x16001500 0x30>,
+> > > +             <0x16003ff0 0x8>;
+> >
+> > Quite frankly, the address and size of this look like the second
+> > register region here is actually a few bytes in a syscon that is being
+> > misrepresented.
+> > What lies at the addresses immediately before and after 0x16003ff0?
+>=20
+> Yes, it can be viewed as part of the system configuration registers,
+> which appear somewhat disorganized. Within this section,
+> 0x16003fe0=E2=80=930x16003ffc represents eight chip ID registers.
+>=20
+> 0x16003fe0 --> the 4th chip id
+> 0x16003fe4 --> the 5th chip id
+> 0x16003fe8 --> the 6th chip id
+> 0x16003fec --> the 7th chip id
+> 0x16003ff0 --> the 0th chip id
+> 0x16003ff4 --> the 1st chip id
+> 0x16003ff8 --> the 2nd chip id
+> 0x16003ffc --> the 3rd chip id
+>=20
+> Perhaps I shouldn=E2=80=99t have referenced `0x16003ff0` separately here.=
+ It
+> would be more reasonable to declare the entire chip ID address space
+> as a separate syscon and have it referenced by thermal driver.
 
-Furthermore, the effective_prot() need to require to identify whether
-it's the first pgtable to prevent the inheriting from dummy value.
-So I think it seems to make a ptdump_pt_level_first() like:
+Probably, but even being of size 0x20 feels suspiciously small and that
+it is likely that this is part of an even larger grouping of misc.
+registers.
 
-diff --git a/mm/ptdump.c b/mm/ptdump.c
-index 973020000096c..2ec5700e4be5e 100644
---- a/mm/ptdump.c
-+++ b/mm/ptdump.c
-@@ -190,6 +190,23 @@ void ptdump_walk_pgd(struct ptdump_state *st, struct mm_struct *mm, pgd_t *pgd)
-        st->note_page_flush(st);
- }
+>=20
+> For example:
+>=20
+> In DTS{i}:
+> chipid_syscon: syscon@16003fe0 {
+>        compatible =3D =E2=80=9Cloongson,ls2k0300-cphipid-syscon=E2=80=9D,=
+ =E2=80=9Csyscon=E2=80=9D;
+>        reg =3D <0x0 0x16003fe0 0x0 0x20>;
+> };
+>=20
+> In thermal driver:
+> Use
+> `syscon_regmap_lookup_by_phandle(np, "loongson,chipid"); `
+> Or:
+> `syscon_regmap_lookup_by_compatible("loongson,ls2k0300-cphipid-syscon");`
+>=20
+> get the chip id address space.
+>=20
+> >
+> >
+> > Thanks,
+> > Conor.
+> >
+> > > +       interrupt-parent =3D <&liointc1>;
+> > > +       interrupts =3D <20 IRQ_TYPE_LEVEL_HIGH>;
+> > > +       #thermal-sensor-cells =3D <1>;
+> > > +    };
+> > > --
+> > > 2.52.0
+> > >
+>=20
+> --=20
+> Thanks.
+> Binbin
 
-+bool pdtump_pt_level_first(struct mm_struct *mm, int level)
-+{
-+       if (!mm || level > CONFIG_PGTABLE_LEVELS)
-+               return false;
-+
-+       if (mm_pmd_folded(mm) && level == 3)
-+               return true;
-+       if (mm_pud_folded(mm) && level == 2)
-+               return true;
-+       if (mm_p4d_folded(mm) && level == 1)
-+               return true;
-+       if (level == 0)
-+               return true;
-+
-+       return false;
-+}
+--mxs6UIz3nJYmRMyR
+Content-Type: application/pgp-signature; name=signature.asc
 
--- 
-Sincerely,
-Yeoreum Yun
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCalZpuQAKCRB4tDGHoIJi
+0hrJAP9oL8N9deSXz9dWt+ZEZYfbS19yv8wqpWxkFNHzB6DWwQEAtSc8DI7IDfPv
+ibyhUOue/ShcNI/iaFNCSty4HW1vkw0=
+=x7Y7
+-----END PGP SIGNATURE-----
+
+--mxs6UIz3nJYmRMyR--
