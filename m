@@ -1,143 +1,185 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23E42448CF1
-	for <loongarch@lists.linux.dev>; Tue, 14 Jul 2026 12:24:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6D36453497
+	for <loongarch@lists.linux.dev>; Tue, 14 Jul 2026 12:28:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784031890; cv=none; b=CLmw6IJGzSB18sinDw01nmcGv+JpHmB39+fKUaOdccCwgMTIYtJrcu45cSHhZXMm2/QBRv2w0ERPTlVV34GWZ1VRJlPdo0vkrkOpv7+43As6OzYtTQm9U6kFalUnhEcL8E7mV4NGcghTNmGvN6balzXH/jRIRpYlTTEAEN41Fbo=
+	t=1784032085; cv=none; b=BSrENSuDI/CZTPypgAIODD18X/pd09rqmRxLYieRXam9n3vvaknsgxjhUkJo0FSjRuI2WoffLwgk2m3ARQzGrDnkgU/sl3ZVA4iwmaWVFHlUkqIl6nghPXLbjTZm0oih82vqIVIi9qf6IghmexhKqoBgVhcOiqLzfrcN6F+5HJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784031890; c=relaxed/simple;
-	bh=W8ZEAAsctvhMV/lSd+JvSOmw5u89I0PFAnjWYkoST5Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PApSZZcWmte8avCzylG7a8jtbKH3vXuM34PTpTy65D5rHOcwYLnagWt6h+F5v2MgwOi4P23UF6JfrYaahOK7YN9v/kao7Q/tqR9CNU/4iy+MLt4+4jlfbiQR2zENhhWXK2jsGHtb1RitIjDQH1mfgG2RzHXT3v1H2eOBK4D8+FU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: f50091e67f7e11f1aa26b74ffac11d73-20260714
-X-CID-CACHE: Type:Local,Time:202607142005+08,HitQuantity:2
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.12,REQID:a529a0cb-0ae0-487c-b705-fb5807ec727e,IP:0,U
-	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:e7bac3a,CLOUDID:cba8596f62e32872ce6a6c719d677505,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:81|82|102|850|865|898,TC:nil,Content:0|1
-	5|50,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI
-	:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: f50091e67f7e11f1aa26b74ffac11d73-20260714
-X-User: lihaofeng@kylinos.cn
-Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <lihaofeng@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 53178156; Tue, 14 Jul 2026 20:24:27 +0800
-From: Haofeng Li <lihaofeng@kylinos.cn>
-To: tglx@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Haofeng Li <13266079573@163.com>,
-	Haofeng Li <lihaofeng@kylinos.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Tianyang Zhang <zhangtianyang@loongson.cn>,
-	Liupu Wang <wangliupu@loongson.cn>,
-	loongarch@lists.linux.dev
-Subject: [PATCH 02/16] irqchip/loongarch-ir: fix redirect free and alloc leaks
-Date: Tue, 14 Jul 2026 20:23:37 +0800
-Message-Id: <20260714122351.3274006-3-lihaofeng@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20260714122351.3274006-1-lihaofeng@kylinos.cn>
-References: <20260714122351.3274006-1-lihaofeng@kylinos.cn>
+	s=arc-20240116; t=1784032085; c=relaxed/simple;
+	bh=LUyrhPHF6LD5ke9CfQJg0CxJp7pi61DwH3+Jof/M6oY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DkFxojQtNFrqnXLigG55TwYotgD7y4U9U/PMIiltYs0LgJbY3hWK4kOCaOS+FlJsg02kRFawnVOY75VcDmeMdHiM2eWbcnXWh/UWSWIrjxJCkjNsZsigdvexz4nWYa4a0LqmJvaSTVifiNa2DFKvzIjS0/XkX/8CjfmIkpzbZQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ZlsG22+2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SHQYjcVL; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ZlsG22+2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SHQYjcVL; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ZlsG22+2";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SHQYjcVL";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ZlsG22+2";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SHQYjcVL"
+Received: from kunlun.suse.cz (unknown [IPv6:2a07:de40:b306:2000::2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 7B1CE77E59;
+	Tue, 14 Jul 2026 12:27:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1784032079; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Mv55jrFDO93gjGYIsU0f7D2xrkBLg3m+YQNtif0jQGw=;
+	b=ZlsG22+2qJHsdTgdkxvwmSlcE2jpD1rDFltZ2XBaaBUdxSXZ9XTNs5pK/w4lCTCHx6x/us
+	rdRAWawR7siq4niXzhUqnNnE5zb9rtW+qo+o2fR+aSW99C2RM5JEfmFuQ+Ug1+/rcEi/8D
+	zneyg7bhMeggThQytWIj8e9LdbZpxPk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1784032079;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Mv55jrFDO93gjGYIsU0f7D2xrkBLg3m+YQNtif0jQGw=;
+	b=SHQYjcVL5VrOKoaQAh2ZpNoUXIv2pbv4B/7Mv1feXJEdCMZcbfPGQCL5NBPQDmIOG9kGxC
+	PRv0lwkN6hB1BSAQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ZlsG22+2;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=SHQYjcVL
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1784032079; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Mv55jrFDO93gjGYIsU0f7D2xrkBLg3m+YQNtif0jQGw=;
+	b=ZlsG22+2qJHsdTgdkxvwmSlcE2jpD1rDFltZ2XBaaBUdxSXZ9XTNs5pK/w4lCTCHx6x/us
+	rdRAWawR7siq4niXzhUqnNnE5zb9rtW+qo+o2fR+aSW99C2RM5JEfmFuQ+Ug1+/rcEi/8D
+	zneyg7bhMeggThQytWIj8e9LdbZpxPk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1784032079;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Mv55jrFDO93gjGYIsU0f7D2xrkBLg3m+YQNtif0jQGw=;
+	b=SHQYjcVL5VrOKoaQAh2ZpNoUXIv2pbv4B/7Mv1feXJEdCMZcbfPGQCL5NBPQDmIOG9kGxC
+	PRv0lwkN6hB1BSAQ==
+Date: Tue, 14 Jul 2026 14:27:58 +0200
+From: Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
+To: Thomas Gleixner <tglx@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	linuxppc-dev@lists.ozlabs.org, Huacai Chen <chenhuacai@kernel.org>,
+	loongarch@lists.linux.dev, Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	linux-riscv@lists.infradead.org,
+	Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org,
+	x86@kernel.org, Mark Rutland <mark.rutland@arm.com>,
+	Jinjie Ruan <ruanjinjie@huawei.com>,
+	Magnus Lindholm <linmag7@gmail.com>,
+	"Mukesh Kumar Chaurasiya (IBM)" <mkchauras@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>, Radu Rendec <radu@rendec.net>
+Subject: Re: [patch 0/4] entry: Rework syscall skip logic
+Message-ID: <alYrTktEcosLvGiw@kunlun.suse.cz>
+References: <20260712134433.549076055@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260712134433.549076055@kernel.org>
+X-Spamd-Bar: ++
+X-Rspamd-Queue-Id: 7B1CE77E59
+X-Spam-Flag: NO
+X-Spam-Score: 2.49
+X-Spam-Level: **
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spamd-Result: default: False [2.49 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	HFILTER_HOSTNAME_UNKNOWN(2.50)[];
+	RDNS_NONE(2.00)[];
+	ONCE_RECEIVED(1.20)[];
+	HFILTER_HELO_IP_A(1.00)[kunlun.suse.cz];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HFILTER_HELO_NORES_A_OR_MX(0.30)[kunlun.suse.cz];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[vger.kernel.org,ellerman.id.au,linux.ibm.com,lists.ozlabs.org,kernel.org,lists.linux.dev,dabbelt.com,lists.infradead.org,arm.com,huawei.com,gmail.com,lwn.net,rendec.net];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b306:2000::2:from];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_ZERO(0.00)[0];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[kunlun.suse.cz:mid,kunlun.suse.cz:helo,suse.de:email,suse.de:dkim]
 
-redirect_irde_free() ignores its irde argument and always frees
-redirect_descs (node 0). Multi-node teardown therefore leaks non-zero
-nodes.
+On Sun, Jul 12, 2026 at 11:25:12PM +0200, Thomas Gleixner wrote:
+> This are the reworked leftovers of the larger entry logic rework series,
+> which can be found here:
+> 
+>   https://lore.kernel.org/lkml/20260707181957.433213175@kernel.org
+> 
+> The undisputed part of the series has been merged into:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core/entry
+> 
+> After a fruitless discussion about the most resilent approach, I decided to
+> give up wasting my time and reworked the series so it caters to the desire
+> of powerpc and s390 to be special.
+> 
+> That results in almost identical behavior except for the case where
+> tracing/probe/BPF sets the syscall number to -1 (or any other out of range
+> value) and also sets the syscall return value to something different than
+> -ENOSYS.
+> 
+> PowerPC and S390 will overwrite that value with -ENOSYS.
+> 
+> Loongarch, RISC-V and x86 will not overwrite it because those architectures
+> preset the return value to -ENOSYS and skip out of range syscalls
+> completely. Loongarch and RISC-V always did the out of range skip. X86
+> gained that in the already applied rework, which means that the final patch
+> which splits the skip decision from the syscall number does not longer
+> change x86 behavior for the above case.
+> 
+> Documentation is also updated and describes the two implementation variants
+> and the subtle difference in the resulting behavior.
+> 
+> The series applies on top of:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core/entry
+> 
+> and is also available from git:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git entry/rework
 
-On the alloc path, a failed redirect_table_alloc() after
-irq_domain_alloc_irqs_parent() returns without freeing parent IRQs.
-A mid-loop gpid allocation failure also leaks the current item (chip_data
-is not set yet) and never releases the bitmap region obtained from
-bitmap_find_free_region().
+Hello,
 
-Free &irde->ird_table and &irde->inv_queue, free parent IRQs on table
-alloc failure, kfree(item) on gpid failure, and release the full bitmap
-region on the error path.
+applying this on top of 7.2~rc3 and running tests for the cases that
+were reported as problematic I see results as expected.
 
-Fixes: 71619266e0a2 ("irqchip/loongarch-ir: Add IR (interrupt redirection) irqchip support")
-Signed-off-by: Haofeng Li <lihaofeng@kylinos.cn>
----
- drivers/irqchip/irq-loongarch-ir.c | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+This version of the patchset works for me.
 
-diff --git a/drivers/irqchip/irq-loongarch-ir.c b/drivers/irqchip/irq-loongarch-ir.c
-index 21c649a89a70..695dfef6570a 100644
---- a/drivers/irqchip/irq-loongarch-ir.c
-+++ b/drivers/irqchip/irq-loongarch-ir.c
-@@ -219,6 +219,20 @@ static int redirect_table_alloc(int node, u32 nr_irqs)
- 	return index;
- }
- 
-+static void redirect_table_free_region(int node, int index, u32 nr_irqs)
-+{
-+	struct redirect_table *ird_table = &redirect_descs[node].ird_table;
-+	int order = 0;
-+
-+	if (nr_irqs > 1) {
-+		nr_irqs = __roundup_pow_of_two(nr_irqs);
-+		order = ilog2(nr_irqs);
-+	}
-+
-+	guard(raw_spinlock_irqsave)(&ird_table->lock);
-+	bitmap_release_region(ird_table->bitmap, index, order);
-+}
-+
- static void redirect_table_free(struct redirect_item *item)
- {
- 	struct redirect_table *ird_table = &item->irde->ird_table;
-@@ -324,6 +338,7 @@ static int redirect_domain_alloc(struct irq_domain *domain, unsigned int virq,
- 	index = redirect_table_alloc(node, nr_irqs);
- 	if (index < 0) {
- 		pr_err("Alloc redirect table entry failed\n");
-+		irq_domain_free_irqs_parent(domain, virq, nr_irqs);
- 		return -EINVAL;
- 	}
- 
-@@ -347,6 +362,7 @@ static int redirect_domain_alloc(struct irq_domain *domain, unsigned int virq,
- 		item->gpid = kzalloc_node(sizeof(*item->gpid), GFP_KERNEL, node);
- 		if (!item->gpid) {
- 			pr_err("Alloc redirect GPID failed\n");
-+			kfree(item);
- 			goto out_free_resources;
- 		}
- 		item->index = index + i;
-@@ -361,6 +377,7 @@ static int redirect_domain_alloc(struct irq_domain *domain, unsigned int virq,
- 
- out_free_resources:
- 	redirect_free_resources(domain, virq, nr_irqs);
-+	redirect_table_free_region(node, index, nr_irqs);
- 	irq_domain_free_irqs_common(domain, virq, nr_irqs);
- 
- 	return -ENOMEM;
-@@ -436,8 +453,8 @@ static void redirect_irde_cfg(struct redirect_desc *irde)
- 
- static void __init redirect_irde_free(struct redirect_desc *irde)
- {
--	struct redirect_table *ird_table = &redirect_descs->ird_table;
--	struct redirect_queue *inv_queue = &redirect_descs->inv_queue;
-+	struct redirect_table *ird_table = &irde->ird_table;
-+	struct redirect_queue *inv_queue = &irde->inv_queue;
- 
- 	if (ird_table->table) {
- 		folio_put(virt_to_folio(ird_table->table));
--- 
-2.25.1
+Tested-by: Michal Suchánek <msuchanek@suse.de>
 
+This is certainly not comprehensive, there are many corner cases not
+tested. Some were broken to start with as well.
+
+Thanks
+
+Michal
