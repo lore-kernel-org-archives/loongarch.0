@@ -1,225 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 533563C0A0A
-	for <loongarch@lists.linux.dev>; Tue, 14 Jul 2026 12:17:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23E42448CF1
+	for <loongarch@lists.linux.dev>; Tue, 14 Jul 2026 12:24:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784031425; cv=none; b=R/zCHM+jsv8d/VRpWYavfuQiXg/S2eL3x4KvxkHc5Urt0nItCNFTXq/rv7KRlTA/yZmwQw/0N3kslMcG/UZEXBEFCFWs561sfZbU6BRLp9uSWa/FKjSVL384BWWaZLcH4dI1wUqzNE1a3Y9yKPSTNzyVwV2QSLR4G21kGPcZ8Rw=
+	t=1784031890; cv=none; b=CLmw6IJGzSB18sinDw01nmcGv+JpHmB39+fKUaOdccCwgMTIYtJrcu45cSHhZXMm2/QBRv2w0ERPTlVV34GWZ1VRJlPdo0vkrkOpv7+43As6OzYtTQm9U6kFalUnhEcL8E7mV4NGcghTNmGvN6balzXH/jRIRpYlTTEAEN41Fbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784031425; c=relaxed/simple;
-	bh=4FOmCbRkjtyqUknu75vO3Enpin5oL1Kk7tq0fO5zQWM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AuoqVScI4xnxp1bU4Ynhp7JbAObiev3e9N3GA/Ghmj9zDqeZSlmeIpqokd3C1ddsob6cIIZe4XY/Mc0EegIzo+Q2yl+CeI9e44aN5sq5xgh61doaa1iY5jsQBXZCBSN2u8of8xtP78FYwiLQb/7dAHWOhgPkadAM8eCtQQ4MfUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=daQnjhci; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="daQnjhci"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39DBD1F00ACF
-	for <loongarch@lists.linux.dev>; Tue, 14 Jul 2026 12:17:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784031421;
-	bh=ObYWkLNfQi85p38uahLx6yranNyzKYkaSbUyvi+K6ZM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=daQnjhcicbJzzzDaAuFYC6b8ZcYAs9CAE+dZjOfq5dbSgkVQwiNPgO9MRAxwXqH3M
-	 frDdW60C9rIy4AQot91BiEaZCb0SCnuGD61TraVaNNcc5VsahjP/J8WpPGZthzFyE3
-	 wqHvAQmiLyFXK8cFDxO5QeMIdXDFc7fWF/UcVBYpg8XrvEZIMixtV9kxHwgSz4HZvR
-	 gJzt3e4715WhNhMLe2N7EbbM8orlnN7teYudfE692wxRhsI1aVImOeJaucjq2DZ2/t
-	 QC7jxAMJ+OrLhzuv9LF7i3GZ9sqF1S0C/Ie48KpNLLEiDr5Gb8IRo9oVZx9NVlnO7b
-	 zZFswpfh9K8pg==
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-697bd21fdc2so1623816a12.1
-        for <loongarch@lists.linux.dev>; Tue, 14 Jul 2026 05:17:01 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RpLlwZWD6gxNPC8/iMCnMUWcCzpuqgfLFPszObLmhq9H01Arcja3nwGsjj39HenDGNVEr0Pki+p1xI=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyQbMWksSFpFtcwaYbJzeOBmi8lomYTwd7om3qnWNmjNUT0WZMu
-	oU+2ZaZcDa53HEhGbLRPa/BDUCEM3TiOJjJlaUEdZ/AZZ8Mai4WpwEVcPOQLvgQY5U4azIVeSL1
-	Lcna3mKfZNWwbyHi8UnGPOrzHWo4Aocc=
-X-Received: by 2002:a05:6402:5187:b0:698:5610:76e5 with SMTP id
- 4fb4d7f45d1cf-69c5ef85585mr5895270a12.6.1784031419744; Tue, 14 Jul 2026
- 05:16:59 -0700 (PDT)
+	s=arc-20240116; t=1784031890; c=relaxed/simple;
+	bh=W8ZEAAsctvhMV/lSd+JvSOmw5u89I0PFAnjWYkoST5Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=PApSZZcWmte8avCzylG7a8jtbKH3vXuM34PTpTy65D5rHOcwYLnagWt6h+F5v2MgwOi4P23UF6JfrYaahOK7YN9v/kao7Q/tqR9CNU/4iy+MLt4+4jlfbiQR2zENhhWXK2jsGHtb1RitIjDQH1mfgG2RzHXT3v1H2eOBK4D8+FU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: f50091e67f7e11f1aa26b74ffac11d73-20260714
+X-CID-CACHE: Type:Local,Time:202607142005+08,HitQuantity:2
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.12,REQID:a529a0cb-0ae0-487c-b705-fb5807ec727e,IP:0,U
+	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:e7bac3a,CLOUDID:cba8596f62e32872ce6a6c719d677505,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:81|82|102|850|865|898,TC:nil,Content:0|1
+	5|50,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI
+	:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: f50091e67f7e11f1aa26b74ffac11d73-20260714
+X-User: lihaofeng@kylinos.cn
+Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
+	(envelope-from <lihaofeng@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 53178156; Tue, 14 Jul 2026 20:24:27 +0800
+From: Haofeng Li <lihaofeng@kylinos.cn>
+To: tglx@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Haofeng Li <13266079573@163.com>,
+	Haofeng Li <lihaofeng@kylinos.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Tianyang Zhang <zhangtianyang@loongson.cn>,
+	Liupu Wang <wangliupu@loongson.cn>,
+	loongarch@lists.linux.dev
+Subject: [PATCH 02/16] irqchip/loongarch-ir: fix redirect free and alloc leaks
+Date: Tue, 14 Jul 2026 20:23:37 +0800
+Message-Id: <20260714122351.3274006-3-lihaofeng@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20260714122351.3274006-1-lihaofeng@kylinos.cn>
+References: <20260714122351.3274006-1-lihaofeng@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260601092823.110362-1-dongtai.guo@linux.dev>
- <20260601093930.112758-1-dongtai.guo@linux.dev> <2vxzjyqzj8s2.fsf@kernel.org>
-In-Reply-To: <2vxzjyqzj8s2.fsf@kernel.org>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 14 Jul 2026 20:17:25 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5B6Mj2-AffkstJ4f8EEmvvPOGXoDy2QNudKD2kSz2XkA@mail.gmail.com>
-X-Gm-Features: AUfX_mxp11E4giDW39QHMMI9j_IZOTy-7xjXpv5wTuK8FeqnLx4XCv9zSCzZnnY
-Message-ID: <CAAhV-H5B6Mj2-AffkstJ4f8EEmvvPOGXoDy2QNudKD2kSz2XkA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] LoongArch: kexec: add KHO support for FDT-based
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: George Guo <dongtai.guo@linux.dev>, Mike Rapoport <rppt@kernel.org>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Shuah Khan <shuah@kernel.org>, 
-	George Guo <guodongtai@kylinos.cn>, WANG Xuerui <kernel@xen0n.name>, 
-	Alexander Graf <graf@amazon.com>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-mm@kvack.org, 
-	linux-kselftest@vger.kernel.org, Kexin Liu <liukexin@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi, Pratyush,
+redirect_irde_free() ignores its irde argument and always frees
+redirect_descs (node 0). Multi-node teardown therefore leaks non-zero
+nodes.
 
-On Mon, Jul 13, 2026 at 9:53=E2=80=AFPM Pratyush Yadav <pratyush@kernel.org=
-> wrote:
->
-> On Mon, Jun 01 2026, George Guo wrote:
->
-> > From: George Guo <guodongtai@kylinos.cn>
-> >
-> > Enable Kexec Handover (KHO) on LoongArch64 for FDT-based systems.
-> >
-> > - Kconfig: select ARCH_SUPPORTS_KEXEC_HANDOVER for CONFIG_64BIT
-> > - kexec.h: add fdt/fdt_mem fields to kimage_arch to hold the KHO FDT
-> >   kexec segment virtual and physical addresses
-> > - machine_kexec_file.c: add kho_load_fdt() which copies the running
-> >   kernel's FDT (initial_boot_params), appends linux,kho-fdt and
-> >   linux,kho-scratch properties to /chosen, and loads the result as a
-> >   kexec segment; called from load_other_segments().  Returns -EINVAL
-> >   when initial_boot_params is NULL (ACPI-only boot) since that path
-> >   requires separate handling.
-> > - machine_kexec.c: before jumping to the new kernel, update the
-> >   DEVICE_TREE_GUID entry in the EFI config table to point to the KHO
-> >   FDT segment so the second kernel finds it via efi_fdt_pointer() and
-> >   early_init_dt_check_kho() calls kho_populate()
-> >
-> > Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
-> > Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
-> > Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> > ---
-> >  arch/loongarch/Kconfig                     |   3 +
-> >  arch/loongarch/include/asm/kexec.h         |   4 +
-> >  arch/loongarch/kernel/machine_kexec.c      |  27 +++++
-> >  arch/loongarch/kernel/machine_kexec_file.c | 118 +++++++++++++++++++++
-> >  4 files changed, 152 insertions(+)
-> >
-> > diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> > index 606597da46b8..d494418545f5 100644
-> > --- a/arch/loongarch/Kconfig
-> > +++ b/arch/loongarch/Kconfig
-> > @@ -684,6 +684,9 @@ config ARCH_SUPPORTS_KEXEC
-> >  config ARCH_SUPPORTS_KEXEC_FILE
-> >       def_bool 64BIT
-> >
-> > +config ARCH_SUPPORTS_KEXEC_HANDOVER
-> > +     def_bool 64BIT
-> > +
-> >  config ARCH_SELECTS_KEXEC_FILE
-> >       def_bool 64BIT
-> >       depends on KEXEC_FILE
-> > diff --git a/arch/loongarch/include/asm/kexec.h b/arch/loongarch/includ=
-e/asm/kexec.h
-> > index 209fa43222e1..adf54bfcdd49 100644
-> > --- a/arch/loongarch/include/asm/kexec.h
-> > +++ b/arch/loongarch/include/asm/kexec.h
-> > @@ -39,6 +39,10 @@ struct kimage_arch {
-> >       unsigned long efi_boot;
-> >       unsigned long cmdline_ptr;
-> >       unsigned long systable_ptr;
-> > +#ifdef CONFIG_KEXEC_HANDOVER
-> > +     void *fdt;              /* virtual address of KHO FDT segment buf=
-fer */
-> > +     unsigned long fdt_mem;  /* physical address of KHO FDT segment */
-> > +#endif
-> >  };
-> >
-> >  #ifdef CONFIG_KEXEC_FILE
-> > diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/ker=
-nel/machine_kexec.c
-> > index ad27fef098f1..98529c71d001 100644
-> > --- a/arch/loongarch/kernel/machine_kexec.c
-> > +++ b/arch/loongarch/kernel/machine_kexec.c
-> > @@ -6,6 +6,7 @@
-> >   */
-> >  #include <linux/compiler.h>
-> >  #include <linux/cpu.h>
-> > +#include <linux/efi.h>
-> >  #include <linux/kexec.h>
-> >  #include <linux/crash_dump.h>
-> >  #include <linux/delay.h>
-> > @@ -289,6 +290,32 @@ void machine_kexec(struct kimage *image)
-> >       pr_notice("We will call new kernel at 0x%lx\n", start_addr);
-> >       pr_notice("Bye ...\n");
-> >
-> > +#ifdef CONFIG_KEXEC_HANDOVER
-> > +     /*
-> > +      * Point the EFI FDTPTR config table entry at the modified FDT so=
- the
-> > +      * second kernel picks up the linux,kho-fdt and linux,kho-scratch
-> > +      * properties via early_init_dt_check_kho().
-> > +      */
-> > +     if (internal->fdt_mem) {
-> > +             /*
-> > +              * FDT-based system: DEVICE_TREE_GUID already exists in t=
-he EFI
-> > +              * config table; just update its pointer to our KHO FDT.
-> > +              */
-> > +             efi_system_table_t *st =3D
-> > +                     (efi_system_table_t *)TO_CACHE(systable_ptr);
-> > +             efi_config_table_t *ct =3D
-> > +                     (efi_config_table_t *)TO_CACHE((unsigned long)st-=
->tables);
-> > +             unsigned long i;
-> > +
-> > +             for (i =3D 0; i < st->nr_tables; i++) {
-> > +                     if (!efi_guidcmp(ct[i].guid, DEVICE_TREE_GUID)) {
-> > +                             ct[i].table =3D (void *)internal->fdt_mem=
-;
-> > +                             break;
-> > +                     }
-> > +             }
-> > +     }
-> > +#endif
->
-> Honestly this and the ACPI stuff looks worse to me than what your
-> previous version did. Now I am not an expert on EFI and architecture
-> stuff, and know nothing about Loongarch, but to me this looks hacky and
-> I am not sure if it is doing the right thing.
->
-> I think you should get some alignment with Loongarch maintainers on what
-> the kexec boot protocol looks like. It looked odd to me, but if the
-> Loongarch maintainers are fine with using the kernel cmdline for
-> bootloader to pass data to the kernel, then I think we should go back to
-> that.
->
-> Huacai, do you have any thoughts? For KHO we essentially need a way for
-> the pre-kexec kernel to tell the post-kexec kernel about a blob of
-> memory that has some information it can use. For x86, we do that via
-> setup data. See arch/x86/include/uapi/asm/setup_data.h and struct
-> kho_data for example. On arm64, we use the boot FDT's /chosen node. See
-> kho_add_chosen() in drivers/of/kexec.c.
->
-> Ideally, all device tree platforms should use the FDT path. But
-> Loongarch also has ACPI only and I don't know what a good idea for that
-> is.
->
-> So, do you have any suggestions on where to best place a pointer to this
-> blob of data on Loongarch? v1 of this series put it in the kernel
-> commandline, but I found that odd and asked if it can be done via DT
-> instead. But to me, this code looks even more hacky.
-I don't know which is the best way, but I can give some information.
+On the alloc path, a failed redirect_table_alloc() after
+irq_domain_alloc_irqs_parent() returns without freeing parent IRQs.
+A mid-loop gpid allocation failure also leaks the current item (chip_data
+is not set yet) and never releases the bitmap region obtained from
+bitmap_find_free_region().
 
-ARM64 and RISC-V create a FDT to contain all needed boot information
-(EFI system table, command line, etc.) in efistub. In other words,
-both ACPI booting and FDT booting have an existing FDT to pass the
-blob.
+Free &irde->ird_table and &irde->inv_queue, free parent IRQs on table
+alloc failure, kfree(item) on gpid failure, and release the full bitmap
+region on the error path.
 
-But LoongArch is different, the efistub doesn't create a FDT, instead
-it passes the EFI system table and command line to the core kernel
-directly.
+Fixes: 71619266e0a2 ("irqchip/loongarch-ir: Add IR (interrupt redirection) irqchip support")
+Signed-off-by: Haofeng Li <lihaofeng@kylinos.cn>
+---
+ drivers/irqchip/irq-loongarch-ir.c | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/irqchip/irq-loongarch-ir.c b/drivers/irqchip/irq-loongarch-ir.c
+index 21c649a89a70..695dfef6570a 100644
+--- a/drivers/irqchip/irq-loongarch-ir.c
++++ b/drivers/irqchip/irq-loongarch-ir.c
+@@ -219,6 +219,20 @@ static int redirect_table_alloc(int node, u32 nr_irqs)
+ 	return index;
+ }
+ 
++static void redirect_table_free_region(int node, int index, u32 nr_irqs)
++{
++	struct redirect_table *ird_table = &redirect_descs[node].ird_table;
++	int order = 0;
++
++	if (nr_irqs > 1) {
++		nr_irqs = __roundup_pow_of_two(nr_irqs);
++		order = ilog2(nr_irqs);
++	}
++
++	guard(raw_spinlock_irqsave)(&ird_table->lock);
++	bitmap_release_region(ird_table->bitmap, index, order);
++}
++
+ static void redirect_table_free(struct redirect_item *item)
+ {
+ 	struct redirect_table *ird_table = &item->irde->ird_table;
+@@ -324,6 +338,7 @@ static int redirect_domain_alloc(struct irq_domain *domain, unsigned int virq,
+ 	index = redirect_table_alloc(node, nr_irqs);
+ 	if (index < 0) {
+ 		pr_err("Alloc redirect table entry failed\n");
++		irq_domain_free_irqs_parent(domain, virq, nr_irqs);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -347,6 +362,7 @@ static int redirect_domain_alloc(struct irq_domain *domain, unsigned int virq,
+ 		item->gpid = kzalloc_node(sizeof(*item->gpid), GFP_KERNEL, node);
+ 		if (!item->gpid) {
+ 			pr_err("Alloc redirect GPID failed\n");
++			kfree(item);
+ 			goto out_free_resources;
+ 		}
+ 		item->index = index + i;
+@@ -361,6 +377,7 @@ static int redirect_domain_alloc(struct irq_domain *domain, unsigned int virq,
+ 
+ out_free_resources:
+ 	redirect_free_resources(domain, virq, nr_irqs);
++	redirect_table_free_region(node, index, nr_irqs);
+ 	irq_domain_free_irqs_common(domain, virq, nr_irqs);
+ 
+ 	return -ENOMEM;
+@@ -436,8 +453,8 @@ static void redirect_irde_cfg(struct redirect_desc *irde)
+ 
+ static void __init redirect_irde_free(struct redirect_desc *irde)
+ {
+-	struct redirect_table *ird_table = &redirect_descs->ird_table;
+-	struct redirect_queue *inv_queue = &redirect_descs->inv_queue;
++	struct redirect_table *ird_table = &irde->ird_table;
++	struct redirect_queue *inv_queue = &irde->inv_queue;
+ 
+ 	if (ird_table->table) {
+ 		folio_put(virt_to_folio(ird_table->table));
+-- 
+2.25.1
 
-Huacai
-
->
-> > +
-> >       /* Make reboot code buffer available to the boot CPU. */
-> >       flush_cache_all();
-> >
-> [...]
->
-> --
-> Regards,
-> Pratyush Yadav
