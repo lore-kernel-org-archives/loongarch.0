@@ -1,156 +1,100 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40FD43EDE59
-	for <loongarch@lists.linux.dev>; Tue, 14 Jul 2026 07:29:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7A0C3F0AA0
+	for <loongarch@lists.linux.dev>; Tue, 14 Jul 2026 07:32:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784014163; cv=none; b=M/rh0V9sc0wCfCUZs2vUiTy6GDJnQz5PLRzBC/6bD3AVpDsgFu0Ok7Mm4s9c/wY31d8uwayP14rFq0VGhsDqqyPiDjhqicOpkcd6vQ9KzfbyYPt/Nyceb9pIMW7WDX1Qjp8MjfHJ9vguL6CZEw3SUBsmBn4FY0e60RT4tA5Ajfg=
+	t=1784014362; cv=none; b=O8GbaoWTIATpft4CaFNmDDIidU22FOdkeu8+GNYIPbqA+m17/3hfbsyG6GY383IDmoPrNVMZbMZbRjTg8CnIiehVnKkQIQDGVj6gFwbU/UoXY7xM+Tb+egQwT2Oktb3S/Pq6Qah10aZVYI5eROP6vGQ78JFDPYyoGNHEf+XEGBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784014163; c=relaxed/simple;
-	bh=qDt93a+EwrorpyaBSh1iasbFveXzrdCrAoSZ4MwufC0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dyD6JFP7i2uvR6PL2MS7QioQNifeqmmYLSyvzy2/cSB64pKt7G8kg6igIDIi/14hDl3mqHlFIAxtZSYppp5Ub5jA5BJDRN+8PT8GajmN92jv1+UNhwvI9Aw1+KJr2EGveiiAmZhG6gCsupJyW1b7tFV58j3n6pIUosDvjUtROlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from kunlun.suse.cz (unknown [IPv6:2a07:de40:b306:2000::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id D0B5C77D39;
-	Tue, 14 Jul 2026 07:29:14 +0000 (UTC)
-Authentication-Results: smtp-out1.suse.de;
-	none
-Date: Tue, 14 Jul 2026 09:29:13 +0200
-From: Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-To: Thomas Gleixner <tglx@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	linuxppc-dev@lists.ozlabs.org, Huacai Chen <chenhuacai@kernel.org>,
-	loongarch@lists.linux.dev, Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	linux-riscv@lists.infradead.org,
-	Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org,
-	x86@kernel.org, Mark Rutland <mark.rutland@arm.com>,
-	Jinjie Ruan <ruanjinjie@huawei.com>,
-	Magnus Lindholm <linmag7@gmail.com>,
-	"Mukesh Kumar Chaurasiya (IBM)" <mkchauras@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>, Radu Rendec <radu@rendec.net>
-Subject: Re: [patch 4/4] entry, treewide: Make
- syscall_enter_from_user_mode[_work]() indicate syscall execution
-Message-ID: <alXlSUcT2TWOlM7r@kunlun.suse.cz>
-References: <20260712134433.549076055@kernel.org>
- <20260712141346.772209074@kernel.org>
- <alSlg72c8xmjaj48@kunlun.suse.cz>
- <871pd6r0ou.ffs@fw13>
+	s=arc-20240116; t=1784014362; c=relaxed/simple;
+	bh=qAffaHm6/TpGJjNLk9UlccagJgs9s2OcvC5BAnws2v8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fWImEYNUCH8w3b+J9NoxOC3ExCbh1fdZti9mkFKLrS+zIPiz9Xp73bIO+IHjf84ok1xBdeHftkLHUw+c1GR/B7Vdb06Np9oqSYJ7nGnvTBF5ETJlqc20wvegRUi30RjgbZlVSBVCbj69h36Vj2Kev+acj3y9iwp2/LTYsr9Xwkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8Cx7+sT5lVqpFMDAA--.13392S3;
+	Tue, 14 Jul 2026 15:32:35 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowJCxIuQT5lVqzZEMAA--.38917S2;
+	Tue, 14 Jul 2026 15:32:35 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Song Gao <gaosong@loongson.cn>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/5] LoongArch: KVM: Harden interrupt injection
+Date: Tue, 14 Jul 2026 15:25:15 +0800
+Message-Id: <20260714072520.2745942-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <871pd6r0ou.ffs@fw13>
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Queue-Id: D0B5C77D39
-X-Spam-Flag: NO
-X-Spam-Score: -2.00
-X-Spam-Level: 
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Spamd-Result: default: False [-2.00 / 50.00];
-	REPLY(-4.00)[];
-	RDNS_NONE(2.00)[]
+X-CM-TRANSID:qMiowJCxIuQT5lVqzZEMAA--.38917S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-On Tue, Jul 14, 2026 at 12:20:49AM +0200, Thomas Gleixner wrote:
-> On Mon, Jul 13 2026 at 10:44, Michal Suchánek wrote:
-> > On Sun, Jul 12, 2026 at 11:25:32PM +0200, Thomas Gleixner wrote:
-> >> The return values of syscall_enter_from_user_mode[_work]() are
-> >> non-intuitive. Both functions return the syscall number which should be
-> >> invoked by the architecture specific syscall entry code. The returned
-> >> number can be:
-> >> 
-> >>   - the unmodified syscall number which was handed in by the caller
-> >> 
-> >>   - a modified syscall number (ptrace, seccomp, trace/probe/bpf)
-> >> 
-> >> That has an additional twist. If the return value is -1L then the caller is
-> >> not allowed to modify the return value as that indicates that the modifying
-> >> entity requests to abort the syscall and set the return value already. That
-> >> can obviously not be differentiated from a syscall which handed in -1 as
-> >> syscall number.
-> >> 
-> >> The most trivial way to deal with that is:
-> >> 
-> >>     set_return_value(regs, -ENOSYS);
-> >>     nr = syscall_enter_from_user_mode(regs, nr);
-> >>     if (valid(nr))
-> >>     	handle_syscall(regs, nr);
-> >> 
-> >> That's what LOONGARCH, RISCV, and X86 do. But PowerPC and S390 do not
-> >> preset the return value, so when user space hands in -1 and there is
-> >> nothing setting the return value in the entry work code, then the syscall
-> >> is skipped but the return value is whatever random data has been in the
-> >> return value register.
-> >
-> > The reason why PowerPC and S390 do not preset the return value is that
-> > the return value uses the same register as the syscall number. There are
-> > apparently other architectures on which the return value overlaps with
-> > the arguments which also do not preset the return value for that reason.
-> > If they would use the generic entry the same problem would arise.
-> 
-> That's an implementation choice of PPC/S390 as I explained before, which
-> could trivially be solved by having an explicit pt_regs->return_val
-> member,
-> 
-> >> Change the return values of syscall_enter_from_user_mode[_work]() to
-> >> boolean and return false, when either ptrace or seccomp request to skip the
-> >
-> > There is a difference between seccomp and ptrace.
-> >
-> > When seccomp indicates to skip the syscall it has also set the syscall
-> > return value.
-> >
-> > However, when the syscall number is -1 and the return value is not
-> > preset that does not indicate anything.
-> 
-> I agree it's an invalid syscall, but the current generic entry code made
-> the rightful assumption that returning -1L as the syscall number either
-> results in -ENOSYS or in the value which was set by one of the entry
-> mechanisms as that code originated from the x86 implementation.
+API kvm_vcpu_ioctl_interrupt() is mainly to used to deliver interrupt
+from user mode, and internal APIs kvm_queue_irq() and kvm_dequeue_irq()
+are used in kernel mode, also moves IPI interrupt handling within lock
+protection.
 
-You know, the world is not x86. For 20+ years that is not true.
+Also this patch replaces kvm_err() with WARN_ONCE() to avoid noise
+kernel log.
 
-> 
-> It's not the fault of that code that PPC and S390 converted their stuff
-> over without paying attention to that detail.
+---
+v4 ... v5:
+  1. Add one new patch and fix uninitialized stack variable issue with
+     dmsintc.
+  2. In patch 2, set return value with 0 to prevent information leak
+     where return directly with non-aligned address in IPI irqchip.
 
-So this is not generic entry but rather x86-like entry do I get it
-correct?
+v3 ... v4:
+  1. From AI assist, replace kvm_err() with kvm_pr_unimpl() rather than
+     WARN_ONCE(), since host may crash with WARN_ONCE() when kernel
+     parameter panic_on_warn=1 is set.
+  2. Add one new patch 3 which returns directly when IPI address is not
+     aligned, rather than only print WARN_ON_ONCE() and continue to run.
 
-> 
-> > The return value can still hold garbage. ptrace does not have the
-> > ability to indicate that a syscall is to be skipped, at least on the
-> > entry trace. It needs to be skipped based on the syscall number being
-> > invalid.
-> 
-> That's what I explained you before and you told me I'm all wrong.
-> 
-> But that's moot as this latest version does not care anymore. The
-> architectures whixh preset the return value are correct under all
-> circumstances and PPC/S390 can keep their own world view.
+v2 ... v3:
+  1. Split the patches into three smaller ones, the first patch removes
+     old default case and kvm_err() since it is impossible to happen.
+     And the second patch replaces kvm_err() with WARN_ONCE().
 
-So do I get it that you do not care about breaking userspace then?
+v1 ... v2:
+  1. Add border check with ipnum in eiointc_set_sw_coreisr() and
+     eiointc_update_irq(), so that injected interrupt vector is valid.
 
-Thanks
+  2. Move IPI inject and ack within lock to avoid contention in
+     ipi_set() and ipi_clear().
 
-Michal
+  3. Add kvm_arch_irqchip_in_kernel() check in user mode irq injection
+    in function kvm_vcpu_ioctl_interrupt(), contention of user mode irq
+    injection is assured from user mode VMM.
+---
+Bibo Mao (5):
+  LoongArch: KVM: Fix uninitialized stack variable issue with dmsintc
+  LoongArch: KVM: Return directly when IPI address is not aligned
+  LoongArch: KVM: Set default MAILBOX access size with 8
+  LoongArch: KVM: Replace kvm_err() with kvm_pr_unimpl()
+  LoongArch: KVM: Use internal API to deliver interrupt in kernel mode
+
+ arch/loongarch/kvm/exit.c         | 16 +++----
+ arch/loongarch/kvm/intc/dmsintc.c | 17 ++++---
+ arch/loongarch/kvm/intc/eiointc.c | 32 ++++++++------
+ arch/loongarch/kvm/intc/ipi.c     | 73 ++++++++++++++-----------------
+ arch/loongarch/kvm/intc/pch_pic.c | 12 ++---
+ arch/loongarch/kvm/vcpu.c         |  5 ++-
+ 6 files changed, 80 insertions(+), 75 deletions(-)
+
+
+base-commit: a13c140cc289c0b7b3770bce5b3ad42ab35074aa
+-- 
+2.39.3
+
