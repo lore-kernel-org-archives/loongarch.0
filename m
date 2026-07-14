@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0013E3F7877
-	for <loongarch@lists.linux.dev>; Tue, 14 Jul 2026 14:35:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8096447ECC1
+	for <loongarch@lists.linux.dev>; Tue, 14 Jul 2026 14:47:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784039724; cv=none; b=HM2jLeVHyg9FR+g02tOgmjwHE+vEU23iyjtkVWE5RZE30psdZ25SC+lyd5bftjuTgn6VPjUxcttzm2LdTPAkfe7V/04W+mZZ3JeYwpLgHq7tsRITiyvkC7gVmIRN/yYOzU7fUoaaZUrSS+dDVnHcHQ7Fo07LEVSq881Z/YgG4pI=
+	t=1784040473; cv=none; b=A5NotTWh5vvcRBNKvg0k4IUokBl1H1gD8gcv/fOlTDGfT1tZ8VkIY+BwPwTohomAIlZ56zE5+RV3X0XLrUoZTlF9veVeSrMCVXAYALftMJZH2gJkizHuLg/lN+MmZAX5IM90dKUqLQ0vC/te5+AX3Pzi8QL81o5XHViQt3WQLM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784039724; c=relaxed/simple;
-	bh=i5/E15ZfVaqiuuKoJQ87M+N/djH9xHCxPqEUyKVfGrw=;
+	s=arc-20240116; t=1784040473; c=relaxed/simple;
+	bh=7jYtKOqMf6Pgdjyp1ryXf3vuWp1YoknSmjWLVoh7LoQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TL0kfeaEGYLIaclF19beVwMLHjWlD2jiendrMbBmnv6Hqyd/LYiyTTozZaK5H7Feo+jd5p2WaFtu3fMXetjl7MV3r0dN4Bb7kUjqcm+vANJ/NzQTKXJm68QpKhRJH3YsAJuHBXr2sMtFkO5h/3u+KfWZbYCKtktn5XF24jUepWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PT9p6kVK; arc=none smtp.client-ip=198.175.65.11
+	 In-Reply-To:Content-Type; b=MKIUXa9tm4nHniQAu7asl2fLKJNm1HXoWrhJV1ae/7q20nFC3cBzTIiLTK15xheaHJ2FKDb+sxBlV7WwQjwHee8lGiAMPOwKU1qSzirpvBxO4C6e37wOhUJ7BzThxTf1g8posxOzR+qTCZvKUUBkLZ70QrKw4pmAS0LiJNirFvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JxsOa1fd; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PT9p6kVK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JxsOa1fd"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784039722; x=1815575722;
+  t=1784040466; x=1815576466;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=i5/E15ZfVaqiuuKoJQ87M+N/djH9xHCxPqEUyKVfGrw=;
-  b=PT9p6kVKBMseeEazonXCoMabpg9Kq3yoJq3rwwuRxudATf1Q8mCLRxe1
-   B0C3O6MYlB+MSnGZGkAB5bsL/PVamgNn/bDEZsKGC61KTdHaO90azKKPc
-   L6NocDan1pxFJNHyPbm5ZDfJThN3ZhnyjPvKW1bDvMgBvkexrFXIUigV/
-   N3Wv8pe1nN5KI+3vha3THTZFRTYo3UuOcD0iA51QVnxhDrhr7xj3zZ9rS
-   VjI1yaUv2ZGcNM/bqBbqhUzHymQekDvWgGlv9MnsFw9zDU8QmpjTtIcGn
-   NGopm7jSabJxE5yrxI074c/rdV98ONMZo1r8uNPAOc8iBAnb4pT6B8Zcj
-   A==;
-X-CSE-ConnectionGUID: 9AC5mZhJS4uZy505urtszQ==
-X-CSE-MsgGUID: 2nUshemwRva/eAami4jhog==
-X-IronPort-AV: E=McAfee;i="6800,10657,11846"; a="95015707"
+  bh=7jYtKOqMf6Pgdjyp1ryXf3vuWp1YoknSmjWLVoh7LoQ=;
+  b=JxsOa1fdVkrdX+WNBd7vo/l3//PhXR3TlfzqsMMWYnOP5sSrsl/DspUm
+   LbI0HaNuZ3n6P98JwuAfoBc6D29PbwITrzzp3VFzjdHtBi8p05NU1AMy3
+   RGAvxbaMJQ6KkjftrDxSi2tAgLw3r0ne7vWkoS9IabECk74Az4NsFJJVe
+   fWqbtOfKQBfWZXGyDGZUF7MJVCuhY+WZU4Wty6d4711wPR8kQhBqcQjyi
+   w2KcCl6nWbKatPZ/UtuAuNbw/1S2FBNcDh8cphD4LPRDw8NjD25/LwvgW
+   TVhNn0EUQ1oLWB/BpUih3qKFgbwcVd2gQd2kcQ173tqi89y7TQw3ra0rU
+   Q==;
+X-CSE-ConnectionGUID: A2Z+eh27SAGnHwVBrKnR9A==
+X-CSE-MsgGUID: o622Sy/XR06wKx+7Tmy81Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11846"; a="83786112"
 X-IronPort-AV: E=Sophos;i="6.25,163,1779174000"; 
-   d="scan'208";a="95015707"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2026 07:35:18 -0700
-X-CSE-ConnectionGUID: 5hRFZimjRjCWuRRr57rVCw==
-X-CSE-MsgGUID: RKPE0CprSrCJXONJSEZTnw==
+   d="scan'208";a="83786112"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2026 07:47:42 -0700
+X-CSE-ConnectionGUID: OiCJe9CqT02Oh0NQ/2atrA==
+X-CSE-MsgGUID: jVw5jRu8SdCoOkbVGYZT+Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,163,1779174000"; 
-   d="scan'208";a="254749396"
+   d="scan'208";a="249522242"
 Received: from aschende-mobl.amr.corp.intel.com (HELO [10.125.108.120]) ([10.125.108.120])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2026 07:35:17 -0700
-Message-ID: <6df814c9-405c-48d8-96ea-929c4b28949b@intel.com>
-Date: Tue, 14 Jul 2026 07:35:19 -0700
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2026 07:47:40 -0700
+Message-ID: <71045fa8-89fe-4a0b-a05b-67e19ce89834@intel.com>
+Date: Tue, 14 Jul 2026 07:47:43 -0700
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -52,54 +52,44 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 10/34] x86: mm: carve out the generic compile-time
- folded pgtable case in effective_prot()
-To: Yeoreum Yun <yeoreum.yun@arm.com>,
- "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
- linux-arch@vger.kernel.org, kvm-riscv@lists.infradead.org,
- linux-riscv@lists.infradead.org, x86@kernel.org, linux-mm@kvack.org,
- kasan-dev@googlegroups.com, linux-csky@vger.kernel.org,
- linux-m68k@lists.linux-m68k.org, linux-openrisc@vger.kernel.org,
- linux@armlinux.org.uk, akpm@linux-foundation.org, ankur.a.arora@oracle.com,
- rppt@kernel.org, linmag7@gmail.com, chleroy@kernel.org,
- klarasmodin@gmail.com, chenhuacai@kernel.org, kernel@xen0n.name,
- kas@kernel.org, zhangtianyang@loongson.cn, wangyuli@aosc.io,
- tsbogend@alpha.franken.de, ljs@kernel.org, jgg@ziepe.ca,
- catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de,
- ryan.roberts@arm.com, pasha.tatashin@soleen.com, rmclure@linux.ibm.com,
- baolin.wang@linux.alibaba.com, tj@kernel.org, kevin.brodsky@arm.com,
- anup@brainfault.org, atish.patra@linux.dev, pjw@kernel.org,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
- dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
- tglx@kernel.org, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
- hannes@cmpxchg.org, mhocko@kernel.org, qi.zheng@linux.dev,
- shakeel.butt@linux.dev, kasong@tencent.com, baohua@kernel.org,
- axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com,
- ryabinin.a.a@gmail.com, glider@google.com, andreyknvl@gmail.com,
- dvyukov@google.com, vincenzo.frascino@arm.com, anshuman.khandual@arm.com,
- yang@os.amperecomputing.com, chaitanyas.prakash@arm.com, ardb@kernel.org,
- guoren@kernel.org, yang.li85200@gmail.com, viro@zeniv.linux.org.uk,
- dinguyen@kernel.org, schuster.simon@siemens-energy.com,
- wangruikang@iscas.ac.cn, junhui.liu@pigmoral.tech, muchun.song@linux.dev,
- vishal.moola@gmail.com, namcao@linutronix.de, pavel@kernel.org,
- djbw@kernel.org, yu-cheng.yu@intel.com, baolu.lu@linux.intel.com,
- Jonathan.Cameron@huawei.com, coxu@redhat.com, andreas@gaisler.com,
- liam@infradead.org, vbabka@kernel.org, surenb@google.com, mhocko@suse.com,
- geert@linux-m68k.org, shorne@gmail.com, jonas@southpole.se,
- stefan.kristiansson@saunalahti.fi
-References: <c3edfb13-08ec-419c-bc05-8f3f64186b24@intel.com>
- <ac365196-8ccc-4d8b-83d7-28fec763e75c@kernel.org>
- <710b7eb0-8e0c-4f07-991c-2285c77e1beb@intel.com>
- <6007625e-c3f9-4ad6-99a8-61396bccbcec@kernel.org>
- <32d459d1-ad19-4baf-bbb1-0565458001d2@intel.com>
- <3ea30f8a-bb29-4bf5-8400-1c4840d46a88@kernel.org>
- <7e84b200-25eb-43a6-b5e2-5f27f2d82a77@intel.com>
- <31988089-095a-4eed-b5e2-c677c70f79f6@kernel.org>
- <14e250db-1641-4085-8d13-02f819657d5f@intel.com>
- <d83c76b3-ea4d-4c41-b4c5-f5ae558ace55@kernel.org>
- <alYgMxKqRnF6_X0A@e129823.arm.com>
+Subject: Re: [PATCH 03/22] mm: introduce MMF_KERNEL flag and set it for
+ init_mm
+To: Kevin Brodsky <kevin.brodsky@arm.com>, linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Ryan Roberts <ryan.roberts@arm.com>, linux-arm-kernel@lists.infradead.org,
+ Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org,
+ Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>, linux-s390@vger.kernel.org,
+ "David S. Miller" <davem@davemloft.net>,
+ Andreas Larsson <andreas@gaisler.com>, sparclinux@vger.kernel.org,
+ Richard Weinberger <richard@nod.at>,
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+ Johannes Berg <johannes@sipsolutions.net>, linux-um@lists.infradead.org,
+ Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ning Sun <ning.sun@intel.com>,
+ x86@kernel.org, tboot-devel@lists.sourceforge.net,
+ Ard Biesheuvel <ardb@kernel.org>,
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>, linux-efi@vger.kernel.org,
+ Vishal Moola <vishal.moola@gmail.com>, Alistair Popple <apopple@nvidia.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+References: <20260714-remove_pgtable_cdtor-v1-0-44be8a7685d7@arm.com>
+ <20260714-remove_pgtable_cdtor-v1-3-44be8a7685d7@arm.com>
 From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
 Autocrypt: addr=dave.hansen@intel.com; keydata=
@@ -145,77 +135,27 @@ Autocrypt: addr=dave.hansen@intel.com; keydata=
  MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
  hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
  vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <alYgMxKqRnF6_X0A@e129823.arm.com>
+In-Reply-To: <20260714-remove_pgtable_cdtor-v1-3-44be8a7685d7@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 7/14/26 04:40, Yeoreum Yun wrote:
-> @@ -254,22 +255,8 @@ static void effective_prot(struct ptdump_state *pt_st, int level, u64 val)
->         struct pg_state *st = container_of(pt_st, struct pg_state, ptdump);
->         pgprotval_t prot = val & PTE_FLAGS_MASK;
->         pgprotval_t effective;
-> -       bool first_level = false;
-> 
-> -       /* Ignore folded levels ... */
-> -       if (((level == 0) && mm_p4d_folded(st->mm)) ||
-> -           ((level == 1) && mm_pud_folded(st->mm)) ||
-> -           ((level == 2) && mm_pmd_folded(st->mm)))
-> -               return;
-> -
-> -       /* ... and make the actual first level remember the protection. */
-> -       if (((level == 0)) ||
-> -           ((level == 1) && mm_p4d_folded(st->mm)) ||
-> -           ((level == 2) && mm_pud_folded(st->mm)) ||
-> -           ((level == 3) && mm_pmd_folded(st->mm)))
-> -               first_level = true;
-> -
-> -       if (!first_level) {
-> +       if (first_level > st->first_level) {
->                 pgprotval_t higher_prot = st->prot_levels[level - 1];
-> 
->                 effective = (higher_prot & prot & (_PAGE_USER | _PAGE_RW)) |
-> @@ -471,6 +458,15 @@ bool ptdump_walk_pgd_level_core(struct seq_file *m,
->                 .seq            = m
->         };
-> 
-> +       if (mm_pmd_folded (mm))
-> +               st->first_level = 3;
-> +       else if (mm_pud_folded (mm))
-> +               st->first_level = 2;
-> +       else if (mm_p4d_folded (mm))
-> +               st->first_level = 1;
-> +       else
-> +               st->first_level = 0;
-> +
->         ptdump_walk_pgd(&st.ptdump, mm, pgd);
+On 7/14/26 07:03, Kevin Brodsky wrote:
+> +static inline bool mm_is_kernel(const struct mm_struct *mm)
+> +{
+> +	return mm && mm_flags_test(MMF_KERNEL, mm);
+> +}
 
-This is indeed an improvement and a step in the right direction! Thanks
-for looking at this.
+Could we give this some nice comments explaining what a kernel mm is,
+please? Part of the problem with the init_mm checks is that they're
+magic and it's not always clear what's special about init_mm.
 
-But one of my test for whether it's good x86 code is whether there's any
-actually x86-specific logic in it. Isn't this basically a translation
-between the integer level number and whether it is folded?
+Maybe start with this list?
 
-That seems like a common helper that more than one arch could use. Could
-this be stuck in a helper so that all arch/x86 has to do is:
+1. There's only one of them.
+2. All kernel threads share it. tsk->mm is the same for all kernel
+   threads.
+3. It holds the reference copy of the kernel page tables
+4. Userspace can't be entered when it is the current mm
+5. It has different TLB flushing rules than userspace mms
 
-	if (mm_pt_level_folded(mm, level))
-		return;
-
-This makes a *ton* of sense in effective_prot() especially. Its entire
-job is mirroring the hardware's job of inheriting permissions from
-higher levels of the page tables and enforcing them on lower level leaf
-entries. If a higher level is folded, there's nothing to inherit.
-
-I also think it's worth taking a brief pause on the coding to think
-about what kind of design would actually be nice here. If the design
-really is that the pgd is folded, the 'struct mm_walk_ops' code would
-ideally not even call ->pgd_entry(). It would just (for example) *start*
-at ->pud_entry() for a 3-level hardware page table.
-
-If there are no pgds, why bother calling ->pgd_entry()? It couldn't be
-done transparently to mm_walk users of course but it could be done
-incrementally where users move one at a time over to a new scheme.
-
-BTW, I'm not saying this needs to be done in this series. But it would
-be nice to have an eye on the prize.
+I _think_ those are universal across all architectures.
