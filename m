@@ -1,32 +1,32 @@
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2723435A92
-	for <loongarch@lists.linux.dev>; Wed, 15 Jul 2026 10:07:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D18B43B6E5
+	for <loongarch@lists.linux.dev>; Wed, 15 Jul 2026 10:08:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784110077; cv=none; b=XzJ4M4h6JboSXq+Ht4UMBUixrNRXNlOgvGU3mlvXago2bH6tdBBp7W2L7Q2VpcE4wbhFBrpJ8WVRrsMyR7bQrCsYZCSGYzOgvgJMHtEu7/6IFN5ILLbkXPr1hrnZm2kyBw5VYGHcPGo9hdkF30JNGxpMrAsIyGS+paaJoBhHH14=
+	t=1784110085; cv=none; b=oMmAgKoYDeOZUbxuhVZN8GEubnTenZu+1BFdQNOBsNvE5duGpilqF+04eOA6/6fXXPuP5J6qyGaggStpTWjvRUYZI5Qp49zmFqDn6nVwtc/ll4cP7vlSTRpcaJzyqaFQVZws7b+NlRoFMCm47uvT0+nA7bKMQfomuOkRXiUHKgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784110077; c=relaxed/simple;
-	bh=zaA7OdCUzLoiUyzJ6WpyD5E74PUenSftdecj7aPIY6s=;
+	s=arc-20240116; t=1784110085; c=relaxed/simple;
+	bh=jwL2VVOUYGADmSgZcAaNYMGdQm4xwKzF1Gf0glTzcGY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HAkVyLteIJbY6UEVx2XlKj0CGo+h8u10XK4uTJscxy9is0SOBefRi2R0JYPvAF/EKxd8WV2VtBabpZVIEIb/MjihCSBnPPJX3DeQ0qaggkccv86gqrA1rdPXEQadeslSUIjnwQFZUM7KXZmiPGzOpJz5RZoWEQxqGXheNXyA2tQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=f7MAtujn; arc=none smtp.client-ip=95.215.58.180
+	 MIME-Version; b=SC+ETZmziIjbj7v/rVRKk7OADwC4lweVRs/rfG7DuCW+az8RrGJwZ/A8i/5gJeIfQZ3S9e6TBVhSZSiHOwYJf7llmrxJxZMJJeWyIFoToOR8PYKhQSTiCDoGE/xaUYdugaxt6yeEV2XR5josVdUwD+GfdmvmYQYY9v+Uq+ZLRgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DM5sOdSA; arc=none smtp.client-ip=95.215.58.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="f7MAtujn"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DM5sOdSA"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1784110073;
+	t=1784110078;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xAoPsHa9NGlk8EddEQFkn1GqKcBgQkpv2Ti86GFuf7o=;
-	b=f7MAtujnmBEZbL5Prt/A6smARaOWUo8+SmTb5mbPKNG0ygSZVurDjoKQQ2JOkzb3SFXf4m
-	teyzDJtr3G9/QQO8qf7gKdgIH1T3mZIIUMD22xXixefUVC7X+a8263tRWOOSST8ANuTOwu
-	K6Q2AKPBSSIBNSiR0KwGGXFHM5G3fMg=
+	bh=f5qVLCZa1c2w+E9hBDTxNVuxS7FTqNEweZ/mKnccpyY=;
+	b=DM5sOdSAIjIRmvvbRpqpAQH5cFOM6xaEcS6mgqu4dnYWJ9zTMrso3AFA4Tqn0vCeIqoxKo
+	YAlPOXCTkoV6H75fLJB2hcYQnS4fCx/JVAa7RRNHDqyPfm11VHirBK3JG9SUJSkP8t5l3o
+	hu4UEVsKxoP+oXownQAOxYaNc+tQ2XI=
 From: Tao Cui <cui.tao@linux.dev>
 To: zhaotianrui@loongson.cn,
 	maobibo@loongson.cn
@@ -38,9 +38,9 @@ Cc: chenhuacai@kernel.org,
 	lixianglai@loongson.cn,
 	cuitao@kylinos.cn,
 	cui.tao@linux.dev
-Subject: [PATCH v3 1/2] LoongArch: KVM: Reload one-shot TVAL on migration destination
-Date: Wed, 15 Jul 2026 18:06:39 +0800
-Message-ID: <20260715100640.1454413-2-cui.tao@linux.dev>
+Subject: [PATCH v3 2/2] LoongArch: KVM: Prevent division by zero in periodic timer restore
+Date: Wed, 15 Jul 2026 18:06:40 +0800
+Message-ID: <20260715100640.1454413-3-cui.tao@linux.dev>
 In-Reply-To: <20260715100640.1454413-1-cui.tao@linux.dev>
 References: <20260715100640.1454413-1-cui.tao@linux.dev>
 Precedence: bulk
@@ -54,49 +54,32 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Tao Cui <cuitao@kylinos.cn>
 
-kvm_restore_timer() rebuilds the remaining timer countdown from
-vcpu->arch.expire, which is host-internal and is not part of the migrated
-vCPU state. On the migration destination it is still 0, so for a one-shot
-timer that has not expired yet the computed delta is 0 and
-write_gcsr_timertick(0) injects the timer interrupt immediately instead of
-after the remaining time.
+A guest can write CSR_TCFG with the periodic bit set but a period value
+of zero.  When kvm_restore_timer() later enters the periodic branch,
+period = cfg & CSR_TCFG_VAL evaluates to 0, causing delta % period to
+trigger a division by zero and crash the host kernel.
 
-The expired one-shot case (TVAL = -1) is already handled earlier. When
-expire has not been set (i.e. on the migration destination), reload the
-remaining countdown from the migrated TVAL. This covers both one-shot and
-periodic timers. The regular preempt/resume path on the source, where
-expire is valid, is unchanged.
+Clamp the period to 1 to avoid the panic.
 
-Suggested-by: Bibo Mao <maobibo@loongson.cn>
 Fixes: a5857b9ff6e0 ("LoongArch: KVM: Implement vcpu timer operations")
 Signed-off-by: Tao Cui <cuitao@kylinos.cn>
 ---
- arch/loongarch/kvm/timer.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/loongarch/kvm/timer.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/arch/loongarch/kvm/timer.c b/arch/loongarch/kvm/timer.c
-index 3829f35a4070..96f33e34855a 100644
+index 96f33e34855a..524d4096bac0 100644
 --- a/arch/loongarch/kvm/timer.c
 +++ b/arch/loongarch/kvm/timer.c
-@@ -119,6 +119,18 @@ void kvm_restore_timer(struct kvm_vcpu *vcpu)
- 	delta = 0;
- 	now = ktime_get();
- 	expire = vcpu->arch.expire;
-+	if (!expire) {
-+		/*
-+		 * vcpu->arch.expire is host-internal and is not migrated,
-+		 * so it is 0 after migration. Reload the remaining countdown
-+		 * from the migrated TVAL. This covers both one-shot and
-+		 * periodic timers.
-+		 */
-+		if (ticks < cfg)
-+			delta = tick_to_ns(vcpu, ticks);
-+		expire = ktime_add_ns(now, delta);
-+	}
-+
- 	if (ktime_before(now, expire))
+@@ -135,6 +135,8 @@ void kvm_restore_timer(struct kvm_vcpu *vcpu)
  		delta = ktime_to_tick(vcpu, ktime_sub(expire, now));
  	else if (cfg & CSR_TCFG_PERIOD) {
+ 		period = cfg & CSR_TCFG_VAL;
++		if (!period)
++			period = 1;
+ 		delta = ktime_to_tick(vcpu, ktime_sub(now, expire));
+ 		delta = period - (delta % period);
+ 
 -- 
 2.43.0
 
