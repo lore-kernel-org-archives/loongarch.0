@@ -1,159 +1,113 @@
-Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ABD631D362
-	for <loongarch@lists.linux.dev>; Wed, 15 Jul 2026 06:44:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1711238423D;
+	Wed, 15 Jul 2026 07:29:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784097897; cv=none; b=XHmt0EsruqBLP9lEboBUHGiIArNL8pyE93noEIJyt144s7Xg84/w8qH+URwNFECNJOq287ndpoLZy4y/mPm/kO8KNnz2m4veNTS6+enYYQqAmPjigbSwl2xl2WkMJo+8R12Z178RtVC93JDA88bgyFajPltRyVGZsjH8dtampuU=
+	t=1784100574; cv=none; b=SqUMsxgRt5HJo4EWepF7qx+TtwSLiDzj7LKx5ewtjSvZYc9M8oBdTgbTQ3eFI7/fNRtoFPeH3Gjcau3ZlkR/822n+Z5pA50WByVe0NTPfmBao7g5xAMGN5rMtOu37ZWzBncvIvM7Ja/OqkpYaYoPIP+1etiodWD8DqwKfb6yJ00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784097897; c=relaxed/simple;
-	bh=JkyMY/sgrPjWT9eBvFu/JdWUkcmlyKhHRSr3cA6Zprg=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=uitJ+9uzgTjDJSjj9IiPsP5KNk+eljczNCfgaXvrrdtqTBj76QTLM903muVpR066a2L67tSxwutkauo8Rdm2gsc/+sxqyTgMw8F+DV3xxGwKo1Eckyfw/UTcJ02hHYrdKtau+5UlqkWIagy2L7tlr76/qITt/Gl7odgoTRiUjQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=K/cg+s6Z; arc=none smtp.client-ip=95.215.58.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1784100574; c=relaxed/simple;
+	bh=tiqPd9mBkUzeSfUEuQX09eSn+SMM0nvXgq6NfrOX4W8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=rka1QKCF+UIcmsKv++YZE3rWF4e8ZqP6SOqont3d+s7aCU0Nb5islNHba2D3G0UfjyEo7Q6xXKvvrh0rt+TWYyt+FUeXJr9y1M46DmHNNnWJdDmDM4gtrK91jSqUa3DLFBuL74uO0EHAKwbD9s4N7FE7a5thkkJcwZJG9Q0v9WY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RJ0obCk2; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="K/cg+s6Z"
-Message-ID: <307287c7-9f08-48d2-b238-ef83081570bb@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1784097893;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1DiiSS3Xk0KtU3EIg267oZbsDRPjJKGw4ANPn0xW1mM=;
-	b=K/cg+s6ZPlqsup+zL0UfxK29lJ7oSNJ4i/rtKbVKxmPIoxb5CqEEnKnoRW+IZsJ5HPKIl7
-	s3wHtfmmwkKcbMJdZ+6QC69Gk8gtoO0ulWrVPrfwDjUAAkB6nchCmpJ71hCukAHvWSMncm
-	09tRgpBJU1EX0fa6uHZCMPVNw1kt4i8=
-Date: Wed, 15 Jul 2026 14:44:44 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RJ0obCk2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AC081F000E9;
+	Wed, 15 Jul 2026 07:29:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784100571;
+	bh=oxqnySUc8Q87H9Bf1NcMH+aFYiamz3WK9FMyyvPdOHQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=RJ0obCk28CVa5NZXZuu1pUdenmJYIQlEs6MMF67avt9Mea6LpcXDIVL7emcqswy6r
+	 UgkNH7iltfdTsoSvDqFc79LhJfEhvqLhukc8Y/Q7laC5Z3yORMErsR1kYSgdpXfpDv
+	 H294L8Bf0ZCUGCplE4gq8sNMKQkSdNub3bGtTv3li48WsKckEvHNQXqbU3oeh1YSIp
+	 LcPVP513nmLfDBhvxLMKjr6P7w/49KZEyBsdIErNONwnpRw9kAf9IjWCSHp51bmaed
+	 mJ2iLNKEjZ3M2DA8TSMw2ugIPQced7dtn11Lt7Kygqdu+qA7a2QO/oKJt7ahGJJVzL
+	 mLJU3KRFXEyxA==
+From: Thomas Gleixner <tglx@kernel.org>
+To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Arnd Bergmann
+ <arnd@arndb.de>, Andy Lutomirski <luto@kernel.org>, Vincenzo Frascino
+ <vincenzo.frascino@arm.com>, Nathan Chancellor <nathan@kernel.org>,
+ Nicolas Schier <nsc@kernel.org>, Thomas Bogendoerfer
+ <tsbogend@alpha.franken.de>, Daniel Lezcano <daniel.lezcano@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <maz@kernel.org>, Paul
+ Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Huacai Chen
+ <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
+Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, linux-mips@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org,
+ loongarch@lists.linux.dev, Thomas =?utf-8?Q?Wei=C3=9Fschuh?=
+ <thomas.weissschuh@linutronix.de>
+Subject: Re: [PATCH 2/7] vDSO: Make clockmode constants available without
+ CONFIG_GENERIC_GETTIMEOFDAY
+In-Reply-To: <20260709-vdso-arch-clockmodes-v1-2-3fd780bbf851@linutronix.de>
+References: <20260709-vdso-arch-clockmodes-v1-0-3fd780bbf851@linutronix.de>
+ <20260709-vdso-arch-clockmodes-v1-2-3fd780bbf851@linutronix.de>
+Date: Wed, 15 Jul 2026 09:29:26 +0200
+Message-ID: <87zezsogmh.ffs@fw13>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Cc: cui.tao@linux.dev, chenhuacai@kernel.org, kernel@xen0n.name,
- kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, lixianglai@loongson.cn, cuitao@kylinos.cn
-Subject: Re: [PATCH] LoongArch: KVM: Reload one-shot TVAL on migration
- destination
-To: Bibo Mao <maobibo@loongson.cn>, zhaotianrui@loongson.cn
-References: <20260715032831.1411664-1-cui.tao@linux.dev>
- <a93bc0fe-58b9-f5af-aefb-f5659e54304f@loongson.cn>
- <5c4f0ea6-b13c-4263-964f-cc4653c5cf6d@linux.dev>
- <7ce5c447-87b7-2e8f-9c58-af1d8a211f0a@loongson.cn>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Cui <cui.tao@linux.dev>
-In-Reply-To: <7ce5c447-87b7-2e8f-9c58-af1d8a211f0a@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-
-
-在 2026/7/15 14:21, Bibo Mao 写道:
-> 
-> 
-> On 2026/7/15 下午1:53, Tao Cui wrote:
->>
->>
->> 在 2026/7/15 11:49, Bibo Mao 写道:
->>>
->>>
->>> On 2026/7/15 上午11:28, Tao Cui wrote:
->>>> From: Tao Cui <cuitao@kylinos.cn>
->>>>
->>>> kvm_restore_timer() rebuilds the remaining timer countdown from
->>>> vcpu->arch.expire, which is host-internal and is not part of the migrated
->>>> vCPU state. On the migration destination it is still 0, so for a one-shot
->>>> timer that has not expired yet the computed delta is 0 and
->>>> write_gcsr_timertick(0) injects the timer interrupt immediately instead of
->>>> after the remaining time. The guest observes a premature timer event right
->>>> after migration.
->>>>
->>>> The expired one-shot case (TVAL = -1) is already handled earlier, so only
->>>> the non-expired one-shot path is affected. When expire has not been set
->>>> (i.e. on the destination), reload the remaining countdown from the
->>>> migrated TVAL. The regular preempt/resume path on the source, where
->>>> expire is valid, is unchanged.
->>>>
->>>> Fixes: a5857b9ff6e0 ("LoongArch: KVM: Implement vcpu timer operations")
->>>> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
->>>> ---
->>>>    arch/loongarch/kvm/timer.c | 8 ++++++++
->>>>    1 file changed, 8 insertions(+)
->>>>
->>>> diff --git a/arch/loongarch/kvm/timer.c b/arch/loongarch/kvm/timer.c
->>>> index 3829f35a4070..57f53d19a00a 100644
->>>> --- a/arch/loongarch/kvm/timer.c
->>>> +++ b/arch/loongarch/kvm/timer.c
->>>> @@ -132,6 +132,14 @@ void kvm_restore_timer(struct kvm_vcpu *vcpu)
->>>>             * during injecting intr async
->>>>             */
->>>>            kvm_queue_irq(vcpu, INT_TI);
->>>> +    } else if (!expire) {
->>>> +        /*
->>>> +         * One-shot timer on the migration destination: vcpu->arch.expire
->>>> +         * is host-internal and is not migrated, so it is still 0 here.
->>> Good catch, I ever noticed this issue before however without good method. My previous method is to recalculate vcpu->arch.expire in function _kvm_setcsr() when LOONGARCH_CSR_TVAL is set and value of vcpu->arch.expire is 0.
->>>
->> Thanks for the review and for sharing your idea. I also considered
->> recalculating expire in _kvm_setcsr() when TVAL is restored, but ended
->> up keeping the change within kvm_restore_timer() to avoid touching the
->> core CSR write path. Both approaches are functionally equivalent since
->> the first save_timer() after restore will set expire correctly either
->> way.
->>
->> That said, if you prefer the _kvm_setcsr() approach, I'm happy to
-> The problem in _kvm_setcsr() is that there is only register LOONGARCH_CSR_TVAL however no context of LOONGARCH_CSR_TCFG register, it seems that it is better in to restore it in kvm_restore_timer() function where all registers about CPU timer are set.
-> 
-> How about something like this, it should work with period timer mode when migration.
-> @@ -119,6 +119,17 @@ void kvm_restore_timer(struct kvm_vcpu *vcpu)
->         delta = 0;
->         now = ktime_get();
->         expire = vcpu->arch.expire;
-> +       if (!expire) {
-> +             /*
-> +              * The field vcpu->arch.expire is host-internal and is not
-> +              * migrated, so it is 0 after migration. Reload the
-> +              * remaining countdown from the migrated TVAL.
-> +              */
-> +               if (ticks < cfg)
-> +                       delta = tick_to_ns(vcpu, ticks);
-> +               expire = ktime_add_ns(ktime_get(), delta);
-> +       }
+On Thu, Jul 09 2026 at 13:32, Thomas Wei=C3=9Fschuh wrote:
+> diff --git a/include/asm-generic/Kbuild b/include/asm-generic/Kbuild
+> index 15df9dcb42a5..2bc00c67dc54 100644
+> --- a/include/asm-generic/Kbuild
+> +++ b/include/asm-generic/Kbuild
+> @@ -62,6 +62,7 @@ mandatory-y +=3D topology.h
+>  mandatory-y +=3D trace_clock.h
+>  mandatory-y +=3D uaccess.h
+>  mandatory-y +=3D unwind_user.h
+> +mandatory-y +=3D vdso/clocksource.h
+>  mandatory-y +=3D vermagic.h
+>  mandatory-y +=3D vga.h
+>  mandatory-y +=3D video.h
+> diff --git a/include/asm-generic/vdso/clocksource.h b/include/asm-generic=
+/vdso/clocksource.h
+> new file mode 100644
+> index 000000000000..e69de29bb2d1
+> diff --git a/include/vdso/clocksource.h b/include/vdso/clocksource.h
+> index c682e7c60273..63ee8c4ea15c 100644
+> --- a/include/vdso/clocksource.h
+> +++ b/include/vdso/clocksource.h
+> @@ -4,9 +4,12 @@
+>=20=20
+>  #include <vdso/limits.h>
+>=20=20
+> -#ifdef CONFIG_GENERIC_GETTIMEOFDAY
+>  #include <asm/vdso/clocksource.h>
+> -#endif /* CONFIG_GENERIC_GETTIMEOFDAY */
 > +
+> +#if !IS_ENABLED(CONFIG_GENERIC_GETTIMEOFDAY) && defined(VDSO_ARCH_CLOCKM=
+ODES)
+> +/* Unlinkable dummy stubs */
+> +extern int VDSO_ARCH_CLOCKMODES;
+> +#endif
 
-Thank you for the suggestion. I agree that kvm_restore_timer() is the
-right place since all timer registers (TCFG/TVAL) are available there.
+I'm utterly confused by this. What's this unlinkable stub for?
 
-I've updated the patch to compute expire from the migrated TVAL before
-the normal path, which also fixes the period timer case during migration.
-Suggested-by added.
+The only usage of VDSO_ARCH_CLOCKMODES is in enum vdso_clock_modes where
+it is guarded with CONFIG_GENERIC_GETTIMEOFDAY.
 
-Will send v2 shortly.
+And your change log says:
+
+> Provide unlinkable dummy definitions. These can be used with
+> IS_ENABLED(CONFIG_GENERIC_GETTIMEOFDAY).
+
+which is even more confusing because that's related to the actual
+architecture specific defines and not to VDSO_ARCH_CLOCKMODES.
+
+None of this makes sense to me.
 
 Thanks,
-Tao
->> rework the patch accordingly.
-> ok, that is fine. Thanks for catching this issue.
-> 
-> Regards
-> Bibo Mao
->>
->> Thanks,
->> Tao
->>> Regards
->>> Bibo Mao
->>>> +         * Reload the remaining countdown from the migrated TVAL instead
->>>> +         * of firing the timer immediately.
->>>> +         */
->>>> +        delta = ticks;
->>>>        }
->>>>          write_gcsr_timertick(delta);
->>>>
->>>
-> 
 
+        tglx
