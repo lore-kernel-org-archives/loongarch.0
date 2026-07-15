@@ -1,116 +1,183 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from flow-a6-smtp.messagingengine.com (flow-a6-smtp.messagingengine.com [103.168.172.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 125A830674C
-	for <loongarch@lists.linux.dev>; Wed, 15 Jul 2026 05:53:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5F84379EE2
+	for <loongarch@lists.linux.dev>; Wed, 15 Jul 2026 06:12:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784094831; cv=none; b=j5vgPjJL/faSXIxGhgLqjhGTboDBkt0hiulhLjRBQQvnxxtGE9FAyoRrKqeKmr61wUNPpUYxBN2z3IL7wT08UhXCMp2zhbMgVUmbg0uWTeErTKuXNVpHtzrgEpzMZFpGHSeQSyPqV+oza2GJFzWE4/voxg68AhwTEEy5jX+iZ8I=
+	t=1784095927; cv=none; b=GCuba8a/ZruyB+Nxwmby3UAmQrTMCFrDL8PKO/YitsnjtWYFLGE54Vp3aaINHCrVr1TQRWIPSDfBSe/Cs/7e2KJsRSZRdLMlL9DdIz02jZT4UTSMey33yXrK6ftJ6aPaV0Ed6EV3qNpAZrkRV8HO7hmRXUgL8n57YvunOdmugOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784094831; c=relaxed/simple;
-	bh=mh1vCbq0AjnG2jjglQrce4FGyktG13wVT2zI0y1Swhk=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=UvxILgCP/hg6cIGm1zn5eS6hScQgrlKmOYaQm/iql6zESKtUd5/DwCjJjlMgW+zrS0ry2jxQWHFjqmP+uRKLtyAPaKfUJWdnwjZvLyXaFgFm4/Y8C0gVLQcCe8BABuINyXA8g1a0jy5LDF4lTxcC6eayVNNz9lBCoMZ53+7oVsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BeDlWy/0; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1784095927; c=relaxed/simple;
+	bh=/NwvcGOFd2qRl7ff0UZ/P5oojljx0vFAqe2dxfnyqx4=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=uEK3U97cfg/MYUZ38oBb4ordTttRmzM0YDDpqUSznVIaeullbXIOYigok2AuGBVKIrGOOUStunZho6Cf4D5nZOYp7i//Uuta+BQki6/nuGnesvkdPMSS6UlGz8QvTDANDQ5YgTTMRfmzgDQ29ywEXrn61KgtCyuMuad7852aHOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=a8RAtuNH; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Jr1iBAn+; arc=none smtp.client-ip=103.168.172.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BeDlWy/0"
-Message-ID: <5c4f0ea6-b13c-4263-964f-cc4653c5cf6d@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1784094826;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=n+scqyocUQL7GsnyVGF39blNq5Nv51aV4mHYAk+g538=;
-	b=BeDlWy/04CNtpBUg/5Z0ZA7jYM2UVVNXEzawfTnPK1umlI+99iw/+LPQX/lRKftUbtjqss
-	fdj1HMwb0uo87PLqLth8gJf6ELWmrwjyreUhCQXyLjBFenatpxE4JEN/bzI01uuETJu3Tb
-	SzXVUfErW4oecSdro13eZ3w51ak/mvk=
-Date: Wed, 15 Jul 2026 13:53:40 +0800
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="a8RAtuNH";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Jr1iBAn+"
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailflow.phl.internal (Postfix) with ESMTP id B2B0C1380119;
+	Wed, 15 Jul 2026 02:12:04 -0400 (EDT)
+Received: from phl-imap-05 ([10.202.2.95])
+  by phl-compute-04.internal (MEProxy); Wed, 15 Jul 2026 02:12:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1784095924;
+	 x=1784103124; bh=EUNLiWQIu7iTIlSyfAVZR84DufWom2g2RocOGGt7G9c=; b=
+	a8RAtuNHzJgQpRc7/V/O9hKgDUcjQuU4FAYwrHP9pWXQ1LGjnWdufjScf0CPwLXl
+	ebuDD6/m8uMBMtjsmLyRxDwVm1W5D0UJ0qFrV0ql5UaaznPi/OAuQsTYCEfebhpp
+	JHIhGETCVDZx0JCaK9T9XiGI+2yaxkBs8jBbV10wvybX7j6xe0sWdssCQibesp9r
+	8ZMwvxPimz5JxUH87zSSHB/s3y19KyXU5yXlSf0yZzwka5szmKRHrUeXKTOPvbxu
+	8UFr61JQoQs0kR0U0732WlMu3psRIJPB7il4skw3eB3PnoehddPNJJ7Z6aIeeXcJ
+	ul6zn0HGzKLpoMSy/XjsvA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1784095924; x=
+	1784103124; bh=EUNLiWQIu7iTIlSyfAVZR84DufWom2g2RocOGGt7G9c=; b=J
+	r1iBAn+v7XqSR2sRD6G+XUnRGoxSwquZxwHfJPlKD5bUqHSELpk97BYD0EI7qYuB
+	tWPI68KHKqboodxMu2iPmU+7Uedw5ij7bDSpzusWe1PzwiizuSoR7PsPJkwFOAQr
+	7TPp2tbWpukaZ8XIir6cdpKNlalTJRq9E4cNzSIIAGTgF6mrZH25az8g3Hd2T4NB
+	azOIXT0CQfO2WJ/tJg/fW7aTy/7uAKCIs9WoNMGmYLB1hshS6J5WksM8AcR43gHn
+	Snwxa1Y/HFo9DknVQUJNoJ9eaM7isTSaAOA9nPwbhGSy8SQYoHrXcnJDBDL/x/Yy
+	PUj7y749VmENuoYCyqf4w==
+X-ME-Sender: <xms:ryRXamxegDT7PDmJNNPgLswItiV1L0wADqQ55UdRMZ1ltF3sBg21_w>
+    <xme:ryRXatEPnD47JuD9gtMrdA80Zx5AuYb_KJjzokHu0vEJRORd3VW5eC0IF6w3LN35z
+    51IafVJylssdT0E2yYiYe0hVEKysEzyz3cHKOnAoA9mfqtNj47zCyiI>
+X-ME-Proxy-Cause: dmFkZTGFJUT9q0RQslH+2LbGJNpjb93/J6MhXke5wQ0bwjzy+neOq13hjf56wjlruzpSKf
+    YmQ8WX1FNCCuKclqu4rBYjdK+D9Fgwgeg5Cv9tvMeiYLsueu8zGPzHHzgdW8nhVvRSu7sd
+    Adqa+XD8nn68rTK01FmplsUZnMHbxOBRt/Onegc1p4/ensfrizVXWshbh6naWEPhzyQb/h
+    ZU3V0wHuBvzTGhcjIY7HBhH4r1pbDyidwblxIuDazjX/A64isrjWWp33IvQYz2XBSkFm2z
+    vXCH/0NzPAchHQOC4XNZPKm1lTi0avCvBxltVxR8oZ5vaE5uQ/r8uxDe6hFyc5XAHHPMP1
+    Ca3gLCSlhDaJMXMB/cNV90FOM/5FsDVccx+UMiFyGSSOCZH1gLSBoeRsW+OB8cS8yHkX9P
+    0oxzCUds8E++pvQSsElVI1d6rJw7dSCHBSo1I+Ra1KDy2P7SgXUbS1AsPzIUBbxY8XxaDX
+    rJt/bMPTYoQte8pVgPCNmTjaADKFnid+D+Hi9XFCuMQdsX8uYEx6JY/ru3lwl4mxF/21O4
+    1LJGVV+PHrWsBtp6R6m3VX9gyDeiH/sJW2YGARSv6w1T0Vp3iqzKE58cKA467FvKs/R1MT
+    QFAnYmCsN4PVXVZLmJvc0YtS1dw86/rcfWf9MV22qTW9UKDOpN9kexkBYKKQ
+X-ME-Proxy: <xmx:sCRXahm_eEKhKv0bT_bm3ckpgyWzIY0tMOn02kO6iYQkbS1lslkAHg>
+    <xmx:sCRXaqizgUvqruPJ3B5irYcNhpEnpTDlGmnQKfe63XHaekM5e1IlaQ>
+    <xmx:sCRXavtVEWvBAmUP25RuhVS1F5dVNlz5NZeNWYAatfQ0I-E2bXxEDQ>
+    <xmx:sCRXap8AdlLW1OLuSsMNrFn9w4kjhfhTG_k4v-qvGOs35ggJ6BXMJw>
+    <xmx:tCRXanaMRI-1Cl0xSo1dwVai7gVVaK0YQWMAziD5wV1tzfGL7RowtiwY>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id DA915182007E; Wed, 15 Jul 2026 02:11:59 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Cc: cui.tao@linux.dev, chenhuacai@kernel.org, kernel@xen0n.name,
- kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, lixianglai@loongson.cn, cuitao@kylinos.cn
-Subject: Re: [PATCH] LoongArch: KVM: Reload one-shot TVAL on migration
- destination
-To: Bibo Mao <maobibo@loongson.cn>, zhaotianrui@loongson.cn
-References: <20260715032831.1411664-1-cui.tao@linux.dev>
- <a93bc0fe-58b9-f5af-aefb-f5659e54304f@loongson.cn>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Cui <cui.tao@linux.dev>
-In-Reply-To: <a93bc0fe-58b9-f5af-aefb-f5659e54304f@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-ThreadId: ASU80-mPZ9gg
+Date: Wed, 15 Jul 2026 08:11:39 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "David Laight" <david.laight.linux@gmail.com>
+Cc: "Pedro Falcato" <pfalcato@suse.de>, "Yeoreum Yun" <yeoreum.yun@arm.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ Linux-Arch <linux-arch@vger.kernel.org>, kvm-riscv@lists.infradead.org,
+ linux-riscv@lists.infradead.org, x86@kernel.org, linux-mm@kvack.org,
+ kasan-dev@googlegroups.com,
+ "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+ linux-m68k@lists.linux-m68k.org,
+ "linux-openrisc@vger.kernel.org" <linux-openrisc@vger.kernel.org>,
+ "David Hildenbrand (Red Hat)" <david@kernel.org>,
+ "Russell King" <linux@armlinux.org.uk>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Ankur Arora" <ankur.a.arora@oracle.com>,
+ "Mike Rapoport" <rppt@kernel.org>, "Magnus Lindholm" <linmag7@gmail.com>,
+ "Christophe Leroy" <chleroy@kernel.org>,
+ "Klara Modin" <klarasmodin@gmail.com>,
+ "Huacai Chen" <chenhuacai@kernel.org>, "WANG Xuerui" <kernel@xen0n.name>,
+ "Kirill A. Shutemov" <kas@kernel.org>, zhangtianyang@loongson.cn,
+ wangyuli@aosc.io, "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ "Lorenzo Stoakes" <ljs@kernel.org>, "Jason Gunthorpe" <jgg@ziepe.ca>,
+ "Catalin Marinas" <catalin.marinas@arm.com>,
+ "Will Deacon" <will@kernel.org>, "Ryan Roberts" <ryan.roberts@arm.com>,
+ "Pasha Tatashin" <pasha.tatashin@soleen.com>,
+ "Rohan McLure" <rmclure@linux.ibm.com>,
+ "Baolin Wang" <baolin.wang@linux.alibaba.com>,
+ "Tejun Heo" <tj@kernel.org>, "Kevin Brodsky" <kevin.brodsky@arm.com>,
+ "Anup Patel" <anup@brainfault.org>, atish.patra@linux.dev,
+ "Paul Walmsley" <pjw@kernel.org>, "Palmer Dabbelt" <palmer@dabbelt.com>,
+ "Albert Ou" <aou@eecs.berkeley.edu>, "Alexandre Ghiti" <alex@ghiti.fr>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>,
+ "Andy Lutomirski" <luto@kernel.org>,
+ "Peter Zijlstra" <peterz@infradead.org>,
+ "Thomas Gleixner" <tglx@kernel.org>, "Ingo Molnar" <mingo@redhat.com>,
+ "Borislav Petkov" <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
+ "Johannes Weiner" <hannes@cmpxchg.org>,
+ "Michal Hocko" <mhocko@kernel.org>, qi.zheng@linux.dev,
+ "Shakeel Butt" <shakeel.butt@linux.dev>,
+ "Kairui Song" <kasong@tencent.com>, "Barry Song" <baohua@kernel.org>,
+ "Axel Rasmussen" <axelrasmussen@google.com>,
+ "Yuanchu Xie" <yuanchu@google.com>, "Wei Xu" <weixugc@google.com>,
+ "Andrey Ryabinin" <ryabinin.a.a@gmail.com>,
+ "Alexander Potapenko" <glider@google.com>,
+ "Andrey Konovalov" <andreyknvl@gmail.com>,
+ "Dmitry Vyukov" <dvyukov@google.com>,
+ "Vincenzo Frascino" <vincenzo.frascino@arm.com>,
+ "Anshuman Khandual" <anshuman.khandual@arm.com>,
+ "Yang Shi" <yang@os.amperecomputing.com>, chaitanyas.prakash@arm.com,
+ "Ard Biesheuvel" <ardb@kernel.org>, guoren <guoren@kernel.org>,
+ yang.li85200@gmail.com, "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "Dinh Nguyen" <dinguyen@kernel.org>,
+ "schuster.simon@siemens-energy.com" <schuster.simon@siemens-energy.com>,
+ "Vivian Wang" <wangruikang@iscas.ac.cn>, junhui.liu@pigmoral.tech,
+ "Muchun Song" <muchun.song@linux.dev>,
+ "Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
+ "Nam Cao" <namcao@linutronix.de>, "Pavel Machek" <pavel@kernel.org>,
+ djbw@kernel.org, yu-cheng.yu@intel.com,
+ "Baolu Lu" <baolu.lu@linux.intel.com>,
+ "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
+ "Coiby Xu" <coxu@redhat.com>, "Andreas Larsson" <andreas@gaisler.com>,
+ "Liam R. Howlett" <liam@infradead.org>,
+ "Vlastimil Babka (SUSE)" <vbabka@kernel.org>,
+ "Suren Baghdasaryan" <surenb@google.com>,
+ "Michal Hocko" <mhocko@suse.com>,
+ "Geert Uytterhoeven" <geert@linux-m68k.org>,
+ "Stafford Horne" <shorne@gmail.com>, "Jonas Bonn" <jonas@southpole.se>,
+ "Stefan Kristiansson" <stefan.kristiansson@saunalahti.fi>
+Message-Id: <d0b34b90-fb12-4579-a965-ea5b90284f18@app.fastmail.com>
+In-Reply-To: <20260714224553.583c8445@pumpkin>
+References: <20260713135614.1618183-1-yeoreum.yun@arm.com>
+ <20260713135614.1618183-3-yeoreum.yun@arm.com> <alYL7B0HAvmLVHGU@pedro-suse>
+ <b7dbc476-1477-4004-93b3-c5e667e24df8@app.fastmail.com>
+ <20260714143450.61a94085@pumpkin>
+ <aceb8582-bafa-41b3-8f56-77fec89a4d90@app.fastmail.com>
+ <20260714224553.583c8445@pumpkin>
+Subject: Re: [RFC PATCH 02/34] ARM: mm: make 2-level pgd_t a scalar
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
+On Tue, Jul 14, 2026, at 23:45, David Laight wrote:
+> On Tue, 14 Jul 2026 17:06:00 +0200
+> "Arnd Bergmann" <arnd@arndb.de> wrote:
+> > For the 2-level page table, this only concerns pgd_t, which is
+> > rarely passed around or returned by value. The 3-level page
+> > table has a 64-bit pte_t, which means we probably won't
+> > want STRICT_MM_TYPECHECKS there.
+>
+> Is the 64bit pte_t needed to get the extra modified and accessed
+> flags there aren't free bits for in the hardware pte?
+> Would it have been possible to use bits that are fixed in the hardware
+> pte for the extra bits and write the value to pte[0] and pte[256] fixing
+> up the value written to pte[0] (that the hardware reads).
 
+The 64-bit pte_t for 3-level tables (armv7ve/lpae) is the hardware
+table entry, following the same format as arm64, and similar to
+how x86/pae works.
 
-在 2026/7/15 11:49, Bibo Mao 写道:
-> 
-> 
-> On 2026/7/15 上午11:28, Tao Cui wrote:
->> From: Tao Cui <cuitao@kylinos.cn>
->>
->> kvm_restore_timer() rebuilds the remaining timer countdown from
->> vcpu->arch.expire, which is host-internal and is not part of the migrated
->> vCPU state. On the migration destination it is still 0, so for a one-shot
->> timer that has not expired yet the computed delta is 0 and
->> write_gcsr_timertick(0) injects the timer interrupt immediately instead of
->> after the remaining time. The guest observes a premature timer event right
->> after migration.
->>
->> The expired one-shot case (TVAL = -1) is already handled earlier, so only
->> the non-expired one-shot path is affected. When expire has not been set
->> (i.e. on the destination), reload the remaining countdown from the
->> migrated TVAL. The regular preempt/resume path on the source, where
->> expire is valid, is unchanged.
->>
->> Fixes: a5857b9ff6e0 ("LoongArch: KVM: Implement vcpu timer operations")
->> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
->> ---
->>   arch/loongarch/kvm/timer.c | 8 ++++++++
->>   1 file changed, 8 insertions(+)
->>
->> diff --git a/arch/loongarch/kvm/timer.c b/arch/loongarch/kvm/timer.c
->> index 3829f35a4070..57f53d19a00a 100644
->> --- a/arch/loongarch/kvm/timer.c
->> +++ b/arch/loongarch/kvm/timer.c
->> @@ -132,6 +132,14 @@ void kvm_restore_timer(struct kvm_vcpu *vcpu)
->>            * during injecting intr async
->>            */
->>           kvm_queue_irq(vcpu, INT_TI);
->> +    } else if (!expire) {
->> +        /*
->> +         * One-shot timer on the migration destination: vcpu->arch.expire
->> +         * is host-internal and is not migrated, so it is still 0 here.
-> Good catch, I ever noticed this issue before however without good method. My previous method is to recalculate vcpu->arch.expire in function _kvm_setcsr() when LOONGARCH_CSR_TVAL is set and value of vcpu->arch.expire is 0.
-> 
-Thanks for the review and for sharing your idea. I also considered
-recalculating expire in _kvm_setcsr() when TVAL is restored, but ended
-up keeping the change within kvm_restore_timer() to avoid touching the
-core CSR write path. Both approaches are functionally equivalent since
-the first save_timer() after restore will set expire correctly either
-way.
+The special cases with double pmd_t entries four 1024 byte tables to
+hold hardware and software entries that David Hildenbrand cited
+is only for the old 2-level tables (armv3 through armv7-a).
+The Linux pte_t is only 32-bit wide here, and gets copied into
+the CPU specific hardware pte in the cpu_*_set_pte_ext() function.
 
-That said, if you prefer the _kvm_setcsr() approach, I'm happy to
-rework the patch accordingly.
-
-Thanks,
-Tao
-> Regards
-> Bibo Mao
->> +         * Reload the remaining countdown from the migrated TVAL instead
->> +         * of firing the timer immediately.
->> +         */
->> +        delta = ticks;
->>       }
->>         write_gcsr_timertick(delta);
->>
-> 
-
+    Arnd
