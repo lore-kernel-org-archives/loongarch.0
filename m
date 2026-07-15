@@ -1,138 +1,267 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75CBD42BC58
-	for <loongarch@lists.linux.dev>; Wed, 15 Jul 2026 15:07:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C64403AE1A2;
+	Wed, 15 Jul 2026 16:05:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784128040; cv=none; b=IVvNafFWVP8J+Hppqv2yk29PL2ApuFOK4c5qCtu/+PoTPOSVZ2a1fcnAz60xl5/SLbZ/hlvmV9YsVUSWlHEyBpEVzSJgPdSrnJoQEQPBq1Vvr/Z1cCMPK0xhjOidQdeZpq6sZl23DrgTKL81i8WQ0fNF+Sy1mKYKocpOHx494N4=
+	t=1784131541; cv=none; b=GoBtCtbkKNOpVxfcBYx2kBub2NZgAoMUins4ntIjm0wTq86m4erdA5PtWmUra0oEA+POenD8F5ZzrvROIAqVlWvZP7ev0DphLDALyBsClNBvMzRfzRPQtfeVSLDgdcTA6K4TOZgpjlykJXS470+zj2R3uJJD5C0GhKjJB5L1IqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784128040; c=relaxed/simple;
-	bh=+jFMWWv220aZ8z/A3E0zhi9BB4H/u0SqqJRjY/UOWiM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S4sDuHt4fLZwdres2R1OuCSecel6zALaLiWY1dcKQXNDpTSRfSMrIiBB0VNLqWA0l934diTAkV32LxUI//1mYPRSYF5+h9h91tFbEHTGN1ccsCKxbV8ZsLzBDYvqB8gXjswDccFFxL13paeITeFdsjO48Trz9v+tnT9pY7WAdRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Z5zyq2Hj; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1784131541; c=relaxed/simple;
+	bh=nNURNQIDiS1ooR+480wYZx+MKMeLkiR4OpihSyIBdEs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lII/GfCQDDaWniPTlMioGQczOx3/sBEcMYZqtcIxhCYNAD0cIgtlXkhCPjeqCyjrwW68VVrLJh8MvDIRbxvoCBMFfXq92ydQVQqH5JeAWjWrzFZvGOLXboQ9fqA5dSNLsau4r84ttvWMUJhNtOjKYmrEytadR2IQGvvuBAqcqUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CT13x8J0; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Z5zyq2Hj"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9F6BE152B;
-	Wed, 15 Jul 2026 08:07:13 -0700 (PDT)
-Received: from [10.57.82.220] (unknown [10.57.82.220])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 28E1B3F905;
-	Wed, 15 Jul 2026 08:07:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1784128037; bh=+jFMWWv220aZ8z/A3E0zhi9BB4H/u0SqqJRjY/UOWiM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Z5zyq2HjC1J3H+2sS3zu5v1h+CSpo+X2JamGTGR0pKplJ+iyMq9LehKG+jacWhbPZ
-	 WPUxV70PTchy+e9ITMIQB1lc3Qrkdac2O7M9gEkdlvEpppy6u5k2BxIx/dsQ5U+PV6
-	 B4YDMFmLqLte+c5rOhprH1XGuK2zbmrCTYOVdNc8=
-Message-ID: <6d167aaa-e9b0-4687-970c-1c67d0df6344@arm.com>
-Date: Wed, 15 Jul 2026 17:07:02 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CT13x8J0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 272CC1F000E9;
+	Wed, 15 Jul 2026 16:05:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784131531;
+	bh=rT7bsQS8/zf1rCHInjAW3HLxDf78or085sWYXQzWL+I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=CT13x8J0V73sHX37wE1JTb+Dosg4T+RPnhqaRbxU6BaTbiZ+bBMEL9pq0qYRL8K5M
+	 Ooq6cUEDrr558+WKU4nLzUK3oRgrNzR8Tc3PYYMVZ3NDyfg5w5aIoWcf1muNH09QyR
+	 YH3++eKpb0AyLFVmWXkNaP6Zvske3SKhf5b53pce8/s01fJBYF/Br71fJxwt3n88N9
+	 t38XbqmGVbyRK2QSA3IDZc/I18sY+wxluAKMY+A/4LXtxCo4oHE3CF0Td72ALqpzOV
+	 DVk0La/sx2l5+ao+hMLA8Lmlvo9DTENuwFuubAHwiV0/nbivoJ8m6BHOufP04soxRO
+	 EQg2asVRqpOCQ==
+Date: Wed, 15 Jul 2026 17:05:27 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: thermal: loongson,ls2k-thermal: Add
+ compatible for Loongson-2K0300
+Message-ID: <20260715-trickle-trash-afa8904a2aa8@spud>
+References: <cover.1783670011.git.zhoubinbin@loongson.cn>
+ <7df0780e1b3d4c499a48cd862a12bda895e7818f.1783670011.git.zhoubinbin@loongson.cn>
+ <20260710-game-late-9347baafa7ab@spud>
+ <CAMpQs4+zXcNnZQnxWM7WUAM-heBYrTejm_dy3yVA4EFUrjA4CQ@mail.gmail.com>
+ <20260714-irritate-varying-9055895097b0@spud>
+ <CAMpQs4Kd=qc6HNaup6GyWufPwhgd+cafLzRXhga1Z=Ez7LPXHA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/22] Simplify special kernel page table handling
-To: linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
- Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Ryan Roberts <ryan.roberts@arm.com>, linux-arm-kernel@lists.infradead.org,
- Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org,
- Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>, linux-s390@vger.kernel.org,
- "David S. Miller" <davem@davemloft.net>,
- Andreas Larsson <andreas@gaisler.com>, sparclinux@vger.kernel.org,
- Richard Weinberger <richard@nod.at>,
- Anton Ivanov <anton.ivanov@cambridgegreys.com>,
- Johannes Berg <johannes@sipsolutions.net>, linux-um@lists.infradead.org,
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Ning Sun <ning.sun@intel.com>,
- x86@kernel.org, tboot-devel@lists.sourceforge.net,
- Ard Biesheuvel <ardb@kernel.org>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>, linux-efi@vger.kernel.org,
- Vishal Moola <vishal.moola@gmail.com>, Alistair Popple <apopple@nvidia.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
-References: <20260714-remove_pgtable_cdtor-v1-0-44be8a7685d7@arm.com>
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20260714-remove_pgtable_cdtor-v1-0-44be8a7685d7@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="FboiViZLpLn3+H5A"
+Content-Disposition: inline
+In-Reply-To: <CAMpQs4Kd=qc6HNaup6GyWufPwhgd+cafLzRXhga1Z=Ez7LPXHA@mail.gmail.com>
 
-On 14/07/2026 16:03, Kevin Brodsky wrote:
-> Page table constructors and destructors were originally introduced
-> specifically for user PTE pages. Over time, their use became more
-> widespread, and starting from v6.16 they are called at all levels
-> and for both user and kernel page tables [1]. Or so I thought. Turns
-> out, we still have various special kernel page tables where the
-> ctor/dtor are not called; vmemmap page tables is one such case.
->
-> Looking closer, we do not actually need per-level ctors for kernel
-> page tables. In fact we do not need ctors for them at all, because
-> nothing is specific to kernel page tables in the ctor/dtor and
-> nowadays they should be allocated with pagetable_alloc().
->
-> Here's the plan: all the generic page table handling moves to
-> pagetable_{alloc,free}(). Whatever is left is specific to user page
-> tables; the ctor/dtor are only called for user page tables at the
-> required levels (PTE/PMD), and renamed to make that clear.
->
-> Doing this will allow us to remove a good amount of special casing,
-> but there's quite a bit of churn to get there. Here's what this
-> series does:
->
-> 1. Introduce the concept of "kernel mm" and replace most comparisons
->    with &init_mm with a flag check (patch 1-12); no functional change
->    so far.
->
-> 2. Move the page table accounting/type setting to pagetable_{alloc,free}
->    (patch 13-15). Kernel mm's do not need to call the ctor/dtor any
->    more.
+--FboiViZLpLn3+H5A
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The underlying assumption here is that pagetable_{alloc,free} are used
-wherever the ctor/dtor are called, and as Sashiko pointed out there are
-counterexamples:
+On Wed, Jul 15, 2026 at 04:31:21PM +0800, Binbin Zhou wrote:
+> Hi Conor:
+>=20
+> On Wed, Jul 15, 2026 at 12:54=E2=80=AFAM Conor Dooley <conor@kernel.org> =
+wrote:
+> >
+> > On Tue, Jul 14, 2026 at 02:53:40PM +0800, Binbin Zhou wrote:
+> > > Hi Conor:
+> > >
+> > > Thanks for your reply.
+> > >
+> > > On Sat, Jul 11, 2026 at 12:21=E2=80=AFAM Conor Dooley <conor@kernel.o=
+rg> wrote:
+> > > >
+> > > > On Fri, Jul 10, 2026 at 04:24:59PM +0800, Binbin Zhou wrote:
+> > > > > Add a new compatible string `loongson,ls2k0300-thermal` for the t=
+hermal
+> > > > > sensor found on the Loongson-2K0300 SoC.
+> > > > >
+> > > > > The hardware differs from the existing SoCs in its register layou=
+t: it
+> > > > > requires two register regions (one for the thermal sensor control=
+ and
+> > > > > another for the CPU ID).
+> > > > >
+> > > > > Update the binding to describe this new requirement.
+> > > > >
+> > > > > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > > > > ---
+> > > > >  .../thermal/loongson,ls2k-thermal.yaml        | 68 +++++++++++++=
++-----
+> > > > >  1 file changed, 50 insertions(+), 18 deletions(-)
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/thermal/loongson,l=
+s2k-thermal.yaml b/Documentation/devicetree/bindings/thermal/loongson,ls2k-=
+thermal.yaml
+> > > > > index 79e691b08341..b5cbfd201105 100644
+> > > > > --- a/Documentation/devicetree/bindings/thermal/loongson,ls2k-the=
+rmal.yaml
+> > > > > +++ b/Documentation/devicetree/bindings/thermal/loongson,ls2k-the=
+rmal.yaml
+> > > > > @@ -10,13 +10,11 @@ maintainers:
+> > > > >    - zhanghongchen <zhanghongchen@loongson.cn>
+> > > > >    - Yinbo Zhu <zhuyinbo@loongson.cn>
+> > > > >
+> > > > > -allOf:
+> > > > > -  - $ref: /schemas/thermal/thermal-sensor.yaml#
+> > > > > -
+> > > > >  properties:
+> > > > >    compatible:
+> > > > >      oneOf:
+> > > > >        - enum:
+> > > > > +          - loongson,ls2k0300-thermal
+> > > > >            - loongson,ls2k1000-thermal
+> > > > >            - loongson,ls2k2000-thermal
+> > > > >        - items:
+> > > > > @@ -39,23 +37,46 @@ required:
+> > > > >    - reg
+> > > > >    - interrupts
+> > > > >
+> > > > > -if:
+> > > > > -  properties:
+> > > > > -    compatible:
+> > > > > -      contains:
+> > > > > -        enum:
+> > > > > -          - loongson,ls2k2000-thermal
+> > > > > +allOf:
+> > > > > +  - $ref: /schemas/thermal/thermal-sensor.yaml#
+> > > > >
+> > > > > -then:
+> > > > > -  properties:
+> > > > > -    reg:
+> > > > > -      minItems: 2
+> > > > > -      maxItems: 2
+> > > > > +  - if:
+> > > > > +      properties:
+> > > > > +        compatible:
+> > > > > +          contains:
+> > > > > +            enum:
+> > > > > +              - loongson,ls2k0300-thermal
+> > > > > +    then:
+> > > > > +      properties:
+> > > > > +        reg:
+> > > > > +          items:
+> > > > > +            - description: Thermal base register region
+> > > > > +            - description: CPU ID register region
+> > > > >
+> > > > > -else:
+> > > > > -  properties:
+> > > > > -    reg:
+> > > > > -      maxItems: 1
+> > > > > +  - if:
+> > > > > +      properties:
+> > > > > +        compatible:
+> > > > > +          contains:
+> > > > > +            enum:
+> > > > > +              - loongson,ls2k1000-thermal
+> > > > > +    then:
+> > > > > +      properties:
+> > > > > +        reg:
+> > > > > +          items:
+> > > > > +            - description: Thermal base register region
+> > > > > +
+> > > > > +  - if:
+> > > > > +      properties:
+> > > > > +        compatible:
+> > > > > +          contains:
+> > > > > +            enum:
+> > > > > +              - loongson,ls2k2000-thermal
+> > > > > +    then:
+> > > > > +      properties:
+> > > > > +        reg:
+> > > > > +          items:
+> > > > > +            - description: Thermal base register region
+> > > > > +            - description: Thermal data output register region
+> > > > >
+> > > > >  unevaluatedProperties: false
+> > > > >
+> > > > > @@ -69,3 +90,14 @@ examples:
+> > > > >          interrupts =3D <7 IRQ_TYPE_LEVEL_LOW>;
+> > > > >          #thermal-sensor-cells =3D <1>;
+> > > > >      };
+> > > > > +
+> > > > > +  - |
+> > > > > +    #include <dt-bindings/interrupt-controller/irq.h>
+> > > > > +    thermal-sensor@16001500 {
+> > > > > +       compatible =3D "loongson,ls2k0300-thermal";
+> > > > > +       reg =3D <0x16001500 0x30>,
+> > > > > +             <0x16003ff0 0x8>;
+> > > >
+> > > > Quite frankly, the address and size of this look like the second
+> > > > register region here is actually a few bytes in a syscon that is be=
+ing
+> > > > misrepresented.
+> > > > What lies at the addresses immediately before and after 0x16003ff0?
+> > >
+> > > Yes, it can be viewed as part of the system configuration registers,
+> > > which appear somewhat disorganized. Within this section,
+> > > 0x16003fe0=E2=80=930x16003ffc represents eight chip ID registers.
+> > >
+> > > 0x16003fe0 --> the 4th chip id
+> > > 0x16003fe4 --> the 5th chip id
+> > > 0x16003fe8 --> the 6th chip id
+> > > 0x16003fec --> the 7th chip id
+> > > 0x16003ff0 --> the 0th chip id
+> > > 0x16003ff4 --> the 1st chip id
+> > > 0x16003ff8 --> the 2nd chip id
+> > > 0x16003ffc --> the 3rd chip id
+> > >
+> > > Perhaps I shouldn=E2=80=99t have referenced `0x16003ff0` separately h=
+ere. It
+> > > would be more reasonable to declare the entire chip ID address space
+> > > as a separate syscon and have it referenced by thermal driver.
+> >
+> > Probably, but even being of size 0x20 feels suspiciously small and that
+> > it is likely that this is part of an even larger grouping of misc.
+> > registers.
+>=20
+> According to the manual, the chip configuration registers are not
+> contiguous but are scattered throughout the memory. They are generally
+> as follows:
+>=20
+> 0x16000100 - 0x16000154:  General Chip Configuration / Chip Sampling
+> Parameters / Chip Counter Registers
+> 0x16000400 - 0x16000424:  PLL Clock Configuration Registers -> This is
+> already used in clk driver;
+> 0x16000490 - 0x160004a8:  GPIO Remapping Configuration Register ->
+> This is already used in pinctrl driver;
+> 0x16000500 - 0x1600050c:  USB PHY Configuration Register
+> 0x16001040 - 0x160014c0:  Interrupt routing Registers -> This is
+> already used in irqchip driver;
+> 0x16001500 - 0x16001524:  Thermal Registers -> This is already used in
+> thermal driver;
+> 0x16001600 - 0x1600180c:  External Interrupt Registers -> EIO irqchip dri=
+ver;
+> 0x16003fe0  - 0x16003ffc:  CHIP ID Registers
+>=20
+> Expanding the range to `0x16000100 - 0x16003ffc` might not be the best ap=
+proach.
+> In contrast, the chip ID register is independent. Additionally, apart
+> from the first section of general-purpose chip configuration
+> registers, the other registers are referenced by their respective
+> modules.
+>=20
+> So, is `reg =3D <0x0 0x16003fe0 0x0 0x20>;` a good choice?
 
-1. sparc32 calls the ctor/dtor for user PTE pages, but uses a custom
-allocator.
+Yeah, it is genuinely not a contiguous region, suspect as it may look!
+This seems fine, thanks.
 
-2. archs that do not select MMU_GATHER_TABLE_FREE do not use
-pagetable_free() in tlb_remove_table().
+--FboiViZLpLn3+H5A
+Content-Type: application/pgp-signature; name=signature.asc
 
-3. arch_remove_memory() and vmemmap_free() are a bit of a mess - some
-archs call the dtor and/or use pagetable_free() for freeing the direct
-map page tables, some don't.
+-----BEGIN PGP SIGNATURE-----
 
-How I'm thinking to address these:
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCalevxwAKCRB4tDGHoIJi
+0lDLAQDu6AjKg74+kqvhVdYkB1JqPrZjz5kG+X3lErk6G60FLQEA9RG17mVZ9OR3
+FOsdEYDvAtMg60UdM8V4VKu68e/qZAQ=
+=XcdU
+-----END PGP SIGNATURE-----
 
-1. sparc32 does not use split ptlocks, so maybe doing the memory
-accounting explicitly? Otherwise, we may need to keep the page type
-handling + memory accounting in a separate helper that sparc32 can
-explicitly call.
-
-2. Always enable MMU_GATHER_TABLE_FREE. pagetable_free() should always
-be used for pages allocated with pagetable_alloc().
-
-3. Go through all the implementations of memory hotplug and vmemmap, and
-ensure that pagetable_free() is used for those pages allocated with
-pagetable_free() (and only those). That may well call for a separate series.
-
-- Kevin
+--FboiViZLpLn3+H5A--
