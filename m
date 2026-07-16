@@ -1,142 +1,148 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2422314F112
-	for <loongarch@lists.linux.dev>; Thu, 16 Jul 2026 04:46:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECDF3388873
+	for <loongarch@lists.linux.dev>; Thu, 16 Jul 2026 06:09:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784177196; cv=none; b=P1jO3NkMbKYqu84C8kofV6jpoxBzrA0QSs3lMz1k7fVZsS3X4msfnCSzOkYqCJUyoRstEsjbcFP3TH9uEIZEvYJCliAZKXkjeU7bk4BuPtl1Ev4usMadwKKjNYHaBFQHTjisg1U7AW49Q2b809IEpLBNcDGBCmqby7jbNDvS860=
+	t=1784182150; cv=none; b=i9lNsX+puitQNAJk3n8pLvQO9Y5LezA671ggceHC70atDZe6bSbcDMPYe5zsjtsH9FboK9JHmFyyxVMgD8GK6gq0FUZTeR36+uVt2PxZjxqpIlsKA7d5wZuwmWNBglLxlWH8S6q3Nl3IxI+8MxZ5Pfrx/7/gt+PEUTqgjWeNmLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784177196; c=relaxed/simple;
-	bh=PLge3ahmGHSUSYjY+q3DA+gXzkxSblEk5wH0z+3EJKg=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=HGfXEBYeEz3LaCjkjfC7WldgWefkLnuzZKZ+hZPxWrkzefRiD4QwtjBchLGdY6LREDS8whGqEOUJplyW89HegweLJMbG0sKwD6GiyHK2RUR7WhGmp55dY0df2soHHlQSiTqiX3er8t7nqvO8GTEvlEzzNDLHlwlT7s9KKgDH/M0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fWxUDD7x; arc=none smtp.client-ip=91.218.175.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fWxUDD7x"
-Message-ID: <6ea8e8dd-b65f-4ada-8376-54f207d95b3d@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1784177190;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FclzmYUSWhBMXSxmeiWZ93Np1Bc9uMRxbrMcQ2zEB6g=;
-	b=fWxUDD7x8GQoJX8drEA5IXW6P3YuKpTetzFbx5p+Z/WyvJVI3BkLW25UlQgfGhxuedvU2d
-	s/kPXUFpVMV7WYjzbiDmSSC29dTgVuU52MeHsRDBAOwT/0BIFsgrzor9WqD6NAMrO6y9ou
-	XmDvwYXTXkpLpRA/KFyhJOOT3Y7nNTs=
-Date: Thu, 16 Jul 2026 12:46:23 +0800
+	s=arc-20240116; t=1784182150; c=relaxed/simple;
+	bh=8Dc13cT8C0WD7lesMjkVxHLB2QK+UUaqpnJ0Z36bBoQ=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=X/Pg2mlQj1ltvzRzv0NbcIKhWaz1JljIAKloPNoEg6A7VMwGY4nOUqcmnT2LkX7OKNrhNOUAEozBBnctCqwG6bSI9zO3JLr0BETHeEbpalyiq5fUmFiNVSmJ4JjZp+vgwsjd0fADXm5v2lPe9Hn26pgVaPh0ha/Xgdpg7SuGcKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8BxGOt6dVhqvhYEAA--.16368S3;
+	Thu, 16 Jul 2026 14:08:58 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJCxq8R5dVhq3qsOAA--.19013S2;
+	Thu, 16 Jul 2026 14:08:57 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: KVM: Allow to set pv_feature until vCPU run
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, Tao Cui <cui.tao@linux.dev>,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <20260716013823.3259816-1-maobibo@loongson.cn>
+ <CAAhV-H4RUWDWHRZ5FJ388e0ZcMD5VS=rPThY3kYNR+WY917i5w@mail.gmail.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <66e63cac-7768-b33c-132e-fa0a76336e1d@loongson.cn>
+Date: Thu, 16 Jul 2026 14:08:49 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Cc: cui.tao@linux.dev, WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH] LoongArch: KVM: Allow to set pv_feature until vCPU run
-To: Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-References: <20260716013823.3259816-1-maobibo@loongson.cn>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Cui <cui.tao@linux.dev>
-In-Reply-To: <20260716013823.3259816-1-maobibo@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <CAAhV-H4RUWDWHRZ5FJ388e0ZcMD5VS=rPThY3kYNR+WY917i5w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-CM-TRANSID:qMiowJCxq8R5dVhq3qsOAA--.19013S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxCF4kCw1rWr1fuFWkZFykCrX_yoW5Xw4kpF
+	92kF4DWrWrKr12k3ZFqwn09r90vr4kKr12ga4jqayFyFn09r98Wr4kKrWDZFn8JwsY93WI
+	gF1rtw15uFn0yacCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
+	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
+	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
+	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
+	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU70Pf
+	DUUUU
 
 
 
-在 2026/7/16 09:38, Bibo Mao 写道:
-> Now pv_feature can be set only once, there is problem with VM migration.
-> Where it is set when vCPU is created and after migration, here it is
-> allow to set for many times, until vCPU starts to run.
+On 2026/7/16 下午12:27, Huacai Chen wrote:
+> Hi, Bibo,
 > 
-Hi Bibo,
+> On Thu, Jul 16, 2026 at 9:45 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>
+>> Now pv_feature can be set only once, there is problem with VM migration.
+>> Where it is set when vCPU is created and after migration, here it is
+>> allow to set for many times, until vCPU starts to run.
+>>
+>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>> ---
+>>   arch/loongarch/include/asm/kvm_host.h |  4 +++-
+>>   arch/loongarch/kvm/vcpu.c             | 15 +++++++++++----
+>>   2 files changed, 14 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+>> index 23cfbecebbd7..af376fc44c44 100644
+>> --- a/arch/loongarch/include/asm/kvm_host.h
+>> +++ b/arch/loongarch/include/asm/kvm_host.h
+>> @@ -163,7 +163,6 @@ enum emulation_result {
+>>   #define KVM_LARCH_SWCSR_LATEST (0x1 << 3)
+>>   #define KVM_LARCH_HWCSR_USABLE (0x1 << 4)
+>>
+>> -#define LOONGARCH_PV_FEAT_UPDATED      BIT_ULL(63)
+>>   #define LOONGARCH_PV_FEAT_MASK         (BIT(KVM_FEATURE_IPI) |         \
+>>                                           BIT(KVM_FEATURE_PREEMPT) |     \
+>>                                           BIT(KVM_FEATURE_STEAL_TIME) |  \
+>> @@ -250,6 +249,9 @@ struct kvm_vcpu_arch {
+>>          /* cpucfg */
+>>          u32 cpucfg[KVM_MAX_CPUCFG_REGS];
+>>
+>> +       /* VCPU ran at least once */
+>> +       bool ran_atleast_once;
+> So long a name? Maybe has_run is enough?
+well, will use has_run for short.
 
-The Sashiko AI review raised two concerns on this patch that I think
-are valid:
-
-1. Since ran_atleast_once is per-vCPU but pv_features is VM-wide,
-   userspace could run vCPU 0 and then use vCPU 1 (whose
-   ran_atleast_once is still false) to change pv_features while
-   vCPU 0 is executing.
-
-2. Without the old LOONGARCH_PV_FEAT_UPDATED latch, setting different
-   PV features on different un-run vCPUs silently overwrites
-   pv_features instead of returning -EINVAL.
-
-Both stem from using a per-vCPU flag to protect VM-wide state.
-Would a VM-level bool in kvm_arch (e.g. pv_features_configured),
-set on first SET_ATTR or first RUN of any vCPU, work?  It would
-not be migrated since it is not exposed via any ioctl.
-
-Thanks,
-Tao
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
->  arch/loongarch/include/asm/kvm_host.h |  4 +++-
->  arch/loongarch/kvm/vcpu.c             | 15 +++++++++++----
->  2 files changed, 14 insertions(+), 5 deletions(-)
+Regards
+Bibo Mao
 > 
-> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-> index 23cfbecebbd7..af376fc44c44 100644
-> --- a/arch/loongarch/include/asm/kvm_host.h
-> +++ b/arch/loongarch/include/asm/kvm_host.h
-> @@ -163,7 +163,6 @@ enum emulation_result {
->  #define KVM_LARCH_SWCSR_LATEST	(0x1 << 3)
->  #define KVM_LARCH_HWCSR_USABLE	(0x1 << 4)
->  
-> -#define LOONGARCH_PV_FEAT_UPDATED	BIT_ULL(63)
->  #define LOONGARCH_PV_FEAT_MASK		(BIT(KVM_FEATURE_IPI) |		\
->  					 BIT(KVM_FEATURE_PREEMPT) |	\
->  					 BIT(KVM_FEATURE_STEAL_TIME) |	\
-> @@ -250,6 +249,9 @@ struct kvm_vcpu_arch {
->  	/* cpucfg */
->  	u32 cpucfg[KVM_MAX_CPUCFG_REGS];
->  
-> +	/* VCPU ran at least once */
-> +	bool ran_atleast_once;
-> +
->  	/* paravirt steal time */
->  	struct {
->  		u64 guest_addr;
-> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-> index 20c207d80e31..ce6a1b06d50d 100644
-> --- a/arch/loongarch/kvm/vcpu.c
-> +++ b/arch/loongarch/kvm/vcpu.c
-> @@ -1164,11 +1164,14 @@ static int kvm_loongarch_cpucfg_set_attr(struct kvm_vcpu *vcpu,
->  		if (val & ~valid)
->  			return -EINVAL;
->  
-> -		/* All vCPUs need set the same PV features */
-> -		if ((kvm->arch.pv_features & LOONGARCH_PV_FEAT_UPDATED)
-> -				&& ((kvm->arch.pv_features & valid) != val))
-> +		if ((kvm->arch.pv_features & valid) == val)
-> +			return 0;
-> +
-> +		if (vcpu->arch.ran_atleast_once)
->  			return -EINVAL;
-> -		kvm->arch.pv_features = val | LOONGARCH_PV_FEAT_UPDATED;
-> +
-> +		/* All vCPUs need set the same PV features */
-> +		kvm->arch.pv_features = val;
->  		return 0;
->  	default:
->  		return -ENXIO;
-> @@ -1851,6 +1854,10 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
->  	int r = -EINTR;
->  	struct kvm_run *run = vcpu->run;
->  
-> +	/* Mark this VCPU ran at least once */
-> +	if (!vcpu->arch.ran_atleast_once)
-> +		vcpu->arch.ran_atleast_once = true;
-> +
->  	if (vcpu->mmio_needed) {
->  		if (!vcpu->mmio_is_write)
->  			kvm_complete_mmio_read(vcpu, run);
-> 
-> base-commit: a13c140cc289c0b7b3770bce5b3ad42ab35074aa
+> Huacai
+>> +
+>>          /* paravirt steal time */
+>>          struct {
+>>                  u64 guest_addr;
+>> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+>> index 20c207d80e31..ce6a1b06d50d 100644
+>> --- a/arch/loongarch/kvm/vcpu.c
+>> +++ b/arch/loongarch/kvm/vcpu.c
+>> @@ -1164,11 +1164,14 @@ static int kvm_loongarch_cpucfg_set_attr(struct kvm_vcpu *vcpu,
+>>                  if (val & ~valid)
+>>                          return -EINVAL;
+>>
+>> -               /* All vCPUs need set the same PV features */
+>> -               if ((kvm->arch.pv_features & LOONGARCH_PV_FEAT_UPDATED)
+>> -                               && ((kvm->arch.pv_features & valid) != val))
+>> +               if ((kvm->arch.pv_features & valid) == val)
+>> +                       return 0;
+>> +
+>> +               if (vcpu->arch.ran_atleast_once)
+>>                          return -EINVAL;
+>> -               kvm->arch.pv_features = val | LOONGARCH_PV_FEAT_UPDATED;
+>> +
+>> +               /* All vCPUs need set the same PV features */
+>> +               kvm->arch.pv_features = val;
+>>                  return 0;
+>>          default:
+>>                  return -ENXIO;
+>> @@ -1851,6 +1854,10 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>>          int r = -EINTR;
+>>          struct kvm_run *run = vcpu->run;
+>>
+>> +       /* Mark this VCPU ran at least once */
+>> +       if (!vcpu->arch.ran_atleast_once)
+>> +               vcpu->arch.ran_atleast_once = true;
+>> +
+>>          if (vcpu->mmio_needed) {
+>>                  if (!vcpu->mmio_is_write)
+>>                          kvm_complete_mmio_read(vcpu, run);
+>>
+>> base-commit: a13c140cc289c0b7b3770bce5b3ad42ab35074aa
+>> --
+>> 2.39.3
+>>
 
