@@ -1,86 +1,154 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7736342FCD3
-	for <loongarch@lists.linux.dev>; Thu, 16 Jul 2026 17:00:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C0D8344DAE
+	for <loongarch@lists.linux.dev>; Thu, 16 Jul 2026 19:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784221255; cv=none; b=i8bP/DI2UHg3dJxX4ZZNUo1oYheVmxRw5mne26kKnSX5ceCHf8npftzvl8VcGqjzBmg538ODaiytmL5JyNrT6M6ezS03qwj2XKcpje8SOlRqhXfp4Ov7QBPjCUW6V/APhvRSZrdXSGmHRPfWFn3kthO31dBhYRgFxYTBneQA2Ec=
+	t=1784228713; cv=none; b=jy6JvzaVxHrOjFr0wCqlrSZ0hVma8i63jMjHVmPfJv3DdpOa1GmnRUKLvkLjC598pNsz6ZTIj7yqaPaFmn2mG7PBPC5poqq99N54NPMgSL14el9zlFAsK6cQYTbPiDvQc3idJOwF3sKUCyVlE73prz0ylym8hHbL9xYo20EJ13k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784221255; c=relaxed/simple;
-	bh=ryLZfzu7w/33tZHMEAX5YS1AtIi6A75xAvSnQuDhpy8=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=K4CgQvOU50sAP8hvDID10GIa0U4xctAl1hdCbl9mSJ0GHNqWbr7VlHpTa3ZRiD5EJj+dQK1XORvxeEQgsrtGGTlCi2Ww2ujK2S4G7YL8BVQ0MXtUnsB4Rx7otg7ocF8HkNTicBI7nwQc8x8nzmw11M4xLecE2jaSehKotFB186A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=gKXuKFc/; arc=none smtp.client-ip=95.215.58.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1784228713; c=relaxed/simple;
+	bh=f1ULhbuK1iL4hbXSB2hrLrFezeJ/gE3hgeZAl2sOvUs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cxpm6Nbjr9VYfcbmg89uUS4vjVTep79+CAWkkVR3PBGhQECRNIGrM/M1qWgN4zcSKe4TbE+ah0/xsPdKUcfPNEKWV+7O+zNbgUnRzTqINj5YZgAb0CMoD1P6fU9NdxZEnYP1XS9pZW1VdLFoy49RoD7EnIjSmyapD9Ssp49N2TM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=gqrSwabc; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="gKXuKFc/"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="gqrSwabc"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C1121477;
+	Thu, 16 Jul 2026 12:05:05 -0700 (PDT)
+Received: from e129823.arm.com (e129823.arm.com [10.2.213.3])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 138523F66F;
+	Thu, 16 Jul 2026 12:04:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1784228709; bh=f1ULhbuK1iL4hbXSB2hrLrFezeJ/gE3hgeZAl2sOvUs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gqrSwabcapydV8BcaRXrJ+3InJ/tYr8/7EQjfec8M11rV1LYtTO+i0hHOG3fWMVI8
+	 dzyFvALZUm6i3TwmO5xjMl+fdsthUr0DH07IaBF30UE5oiJvESqOEKP1mAzb+bHmtc
+	 WHJaM3g6tBoTuQz7uLK9ZM2XZRplDibEbr4kfqX4=
+Date: Thu, 16 Jul 2026 20:04:56 +0100
+From: Yeoreum Yun <yeoreum.yun@arm.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Pedro Falcato <pfalcato@suse.de>, Yeoreum Yun <yeoreum.yun@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	Linux-Arch <linux-arch@vger.kernel.org>,
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+	x86@kernel.org, linux-mm@kvack.org, kasan-dev@googlegroups.com,
+	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+	linux-m68k@lists.linux-m68k.org,
+	"linux-openrisc@vger.kernel.org" <linux-openrisc@vger.kernel.org>,
+	"David Hildenbrand (Red Hat)" <david@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Ankur Arora <ankur.a.arora@oracle.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Magnus Lindholm <linmag7@gmail.com>,
+	Christophe Leroy <chleroy@kernel.org>,
+	Klara Modin <klarasmodin@gmail.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	"Kirill A. Shutemov" <kas@kernel.org>, zhangtianyang@loongson.cn,
+	wangyuli@aosc.io, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Lorenzo Stoakes <ljs@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Rohan McLure <rmclure@linux.ibm.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Tejun Heo <tj@kernel.org>, Kevin Brodsky <kevin.brodsky@arm.com>,
+	Anup Patel <anup@brainfault.org>, atish.patra@linux.dev,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>, qi.zheng@linux.dev,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Kairui Song <kasong@tencent.com>, Barry Song <baohua@kernel.org>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Alexander Potapenko <glider@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Yang Shi <yang@os.amperecomputing.com>, chaitanyas.prakash@arm.com,
+	Ard Biesheuvel <ardb@kernel.org>, guoren <guoren@kernel.org>,
+	yang.li85200@gmail.com, Alexander Viro <viro@zeniv.linux.org.uk>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	"schuster.simon@siemens-energy.com" <schuster.simon@siemens-energy.com>,
+	Vivian Wang <wangruikang@iscas.ac.cn>, junhui.liu@pigmoral.tech,
+	Muchun Song <muchun.song@linux.dev>,
+	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
+	Nam Cao <namcao@linutronix.de>, Pavel Machek <pavel@kernel.org>,
+	djbw@kernel.org, yu-cheng.yu@intel.com,
+	Baolu Lu <baolu.lu@linux.intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Coiby Xu <coxu@redhat.com>, Andreas Larsson <andreas@gaisler.com>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	"Vlastimil Babka (SUSE)" <vbabka@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Stafford Horne <shorne@gmail.com>, Jonas Bonn <jonas@southpole.se>,
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+Subject: Re: [RFC PATCH 02/34] ARM: mm: make 2-level pgd_t a scalar
+Message-ID: <alkrWNECXmoxkrUC@e129823.arm.com>
+References: <20260713135614.1618183-1-yeoreum.yun@arm.com>
+ <20260713135614.1618183-3-yeoreum.yun@arm.com>
+ <alYL7B0HAvmLVHGU@pedro-suse>
+ <b7dbc476-1477-4004-93b3-c5e667e24df8@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1784221248;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ryLZfzu7w/33tZHMEAX5YS1AtIi6A75xAvSnQuDhpy8=;
-	b=gKXuKFc/Zc+x61YZilf5Od0LX0/TnweLJkY6B0iS5dDK1rmx2rZT6ibR+q4XB4vp98ECAJ
-	usgRE3P9Y3i2YNrl1JiIwqE/t23GTZbcDGdg5R0zMUXBaD+s+ENmZK2riqG0XJstPAQl7N
-	n59nA6ONzcF/mPCm/md31OknwLidCVI=
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 16 Jul 2026 17:00:38 +0000
-Message-Id: <DK05N5JBJWQB.2QSODJ6JABRIN@linux.dev>
-To: "Brendan Jackman" <jackmanb@google.com>, "Andrew Morton"
- <akpm@linux-foundation.org>, "David Hildenbrand" <david@kernel.org>,
- "Lorenzo Stoakes" <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>,
- "Vlastimil Babka" <vbabka@kernel.org>, "Mike Rapoport" <rppt@kernel.org>,
- "Suren Baghdasaryan" <surenb@google.com>, "Michal Hocko" <mhocko@suse.com>,
- "Johannes Weiner" <hannes@cmpxchg.org>, "Zi Yan" <ziy@nvidia.com>, "Matthew
- Wilcox (Oracle)" <willy@infradead.org>, "Jan Kara" <jack@suse.cz>, "Joshua
- Hahn" <joshua.hahnjy@gmail.com>, "Byungchul Park" <byungchul@sk.com>,
- "Gregory Price" <gourry@gourry.net>, "Ying Huang"
- <ying.huang@linux.alibaba.com>, "Alistair Popple" <apopple@nvidia.com>,
- "Hugh Dickins" <hughd@google.com>, "Baolin Wang"
- <baolin.wang@linux.alibaba.com>, "Chris Li" <chrisl@kernel.org>, "Kairui
- Song" <kasong@tencent.com>, "Kemeng Shi" <shikemeng@huaweicloud.com>, "Nhat
- Pham" <nphamcs@gmail.com>, "Baoquan He" <baoquan.he@linux.dev>, "Barry
- Song" <baohua@kernel.org>, "Youngjun Park" <youngjun.park@lge.com>, "Joerg
- Roedel (AMD)" <joro@8bytes.org>, "Will Deacon" <will@kernel.org>, "Robin
- Murphy" <robin.murphy@arm.com>, "Huacai Chen" <chenhuacai@kernel.org>,
- "WANG Xuerui" <kernel@xen0n.name>, "Thomas Gleixner" <tglx@kernel.org>,
- "Chuck Lever" <cel@kernel.org>, "Jeff Layton" <jlayton@kernel.org>,
- "NeilBrown" <neil@brown.name>, "Olga Kornievskaia" <okorniev@redhat.com>,
- "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>, "Trond
- Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>, "David
- S. Miller" <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>,
- "Jakub Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>,
- "Simon Horman" <horms@kernel.org>
-Cc: <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
- <linux-fsdevel@vger.kernel.org>, <iommu@lists.linux.dev>,
- <loongarch@lists.linux.dev>, <linux-nfs@vger.kernel.org>,
- <netdev@vger.kernel.org>
-Subject: Re: [PATCH 2/3] mm, treewide: replace __folio_alloc_node() with
- folio_alloc_node()
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Brendan Jackman" <brendan.jackman@linux.dev>
-References: <20260716-folio-alloc-cleanups-v1-0-5363b8e92d33@google.com>
- <20260716-folio-alloc-cleanups-v1-2-5363b8e92d33@google.com>
-In-Reply-To: <20260716-folio-alloc-cleanups-v1-2-5363b8e92d33@google.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b7dbc476-1477-4004-93b3-c5e667e24df8@app.fastmail.com>
 
-On Thu Jul 16, 2026 at 2:30 PM UTC, Brendan Jackman wrote:
-> Commit 5b584d2d22dca ("mm: remove __alloc_pages_node()") removed the __
+[...]
 
-Oh, I just remembered this commit hash is unstable. In fact it's already
-wrong.
+> > Ugh. This isn't correct C code. It only works because the kernel passes
+> > -fno-strict-aliasing.
+> 
+> I think the bigger problem is the code dereferencing the pgd
+> pointer in the first place: Since the pgd pair is written in
+> 32-bit units in __pmd_populate(), anything reading it would
+> technically have to operate on both entries.
+> 
+> As the kernel relies on -fno-strict-aliasing, the type mismatch
+> is less of a problem than actually doing the potentially wrong
+> thing.
+> 
+> As far as I can tell, we are however saved by pgd_val()
+> only ever being used for debug prints, where printing
+> the first entry is likely all that is needed to analyse
+> the real bug.
+> 
+> > I would recommend either forcing a struct here, or
+> > using a u64 with bitmasks/shifts.
+> 
+> That would require extra complexity for the big-endian
+> case though.
 
-> variant of alloc_pages_node(), after users had been migrated off it,
-> since it just complicates the API (requiring users to handle
-> NUMA_NO_NODE, or risking hotplug bugs) for no real benefit.
+Agree. And since the users of pgd_val() mostly uses with
+pmd_pfn(), pmd_page() and etc. I think it doesn't matter to return
+lower pmdval_t or higher one.
 
+Therefore, without considering endianess, it's enough with downcast
+like:
+
+   #define pgd_val(x)      ((pmdval_t)x)
+
+Could we apply this in next version?
+
+-- 
+Sincerely,
+Yeoreum Yun
