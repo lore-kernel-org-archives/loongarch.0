@@ -1,115 +1,374 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A062D43F0AF
-	for <loongarch@lists.linux.dev>; Thu, 16 Jul 2026 01:45:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784166344; cv=none; b=gXpTOnG0kWnHZtEM5GsW/TryN3GoNu8oC507fTHiPELmpPnNaP+4A4AAR7Rj1c1U5pntDj247mDEZQsmz66JNFQE0UUJwrFsotG4TguFanxgS4aXzx+6yCKAgRBVX0HgdLd/WgyVJ5bmltbcRnO2KZJDmEz0buP2biXssUMtmRM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784166344; c=relaxed/simple;
-	bh=uq/aXDtxYFUZ7dkSAeZFowZ+YQvMpSe3O8e/pAb9hR8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GgcUrw95TlfBL0LlhiNC/QTJdFXNxz3U6xaO8iAXrriucse+y45am2Ld2CKyrbunG3e3Kggb/sLXciB6p0Qd0Q7bsMbIMitYXg49JceUs1tqbJC4MZw/zBRhOYgqmKGK13Bdpcdzu7GKM2/4kkq2qYnwpvNv0QPFhrA6akfUip4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8CxquvDN1hqdAoEAA--.16242S3;
-	Thu, 16 Jul 2026 09:45:39 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJCxIuTCN1hqq44OAA--.41171S2;
-	Thu, 16 Jul 2026 09:45:38 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	Tao Cui <cui.tao@linux.dev>,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH] LoongArch: KVM: Allow to set pv_feature until vCPU run
-Date: Thu, 16 Jul 2026 09:38:23 +0800
-Message-Id: <20260716013823.3259816-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0C813B584
+	for <loongarch@lists.linux.dev>; Thu, 16 Jul 2026 02:31:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784169100; cv=pass; b=eGtXD0hN0WP5sPnKCXKykN+/s6uOpXJDOPhmfcDJLPvtF76Ndpgoea7+mWWIGH0PbHo9cfoM+dyQEhx0WhISFgDqyFohdyQWLtFt3G8+Q1ypgb2uSwCr8YRGROmz/1i5IhPgYbIBWU7xv3FVpi9/Z22BrGQfUabPqylphU1MCpI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784169100; c=relaxed/simple;
+	bh=R12zT8nSn9I0UCnw+iJtdZou5moWo+Kod+zyFuStb+A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cWcwzCL4YWFY8CLt6LdqeO4gcnlKgvvTBFD2XGMfv1dxV4LCiHW5IcV52Hc0sau8OB+Jc1SHBVhYJhoRniuMxzeZPajzGv/1bewOX0DVQJ3lJUNxiAl6WLGnaUi5Fw4vfrWdxErkM7yVv7XxgEJD5NXB59HN/SEl9fuDHZr360k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FpSsk+g5; arc=pass smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FpSsk+g5"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-c167bda216fso229209566b.2
+        for <loongarch@lists.linux.dev>; Wed, 15 Jul 2026 19:31:38 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1784169097; cv=none;
+        d=google.com; s=arc-20260327;
+        b=KdRRSKIrkuCM0O77d1HWbrnBL35wm4RZmveUjwmS4RWG+8guiRPAgMzofrOvPmI7oU
+         wHvSeDmVD1hQDONO8YbtncBo2tiSySFpMLWJCiRUqMUGsdRiE3bi6sPB6TVVW5Jd8FYS
+         /yutt7+okK28+FJ5cNkRHXtqngGNT4GQhaYLnvq1ZugVFW4H/0VJa4igYcc4HUNIv5kX
+         hl8iyIp9zBN7c9NcSUxCclr67hR+KTTcA2MkO8vupteTXHfHMkRIwP3Ljt3TN/j/u+GX
+         QxXQOnGZzFJ2W4PdBjDdbxykwyaBSx66vuhULE0V86bNPlRCX/2pY0dpkyeYp3PqKobD
+         gyzA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=q9RYbpoJ3iiaewLH/Dkbk54m1hisFAlN4vItAzmGB5U=;
+        fh=AYB31CdIqMV3KY1Ywn2V9MAUsEYM+BvX/GpooIzcLIQ=;
+        b=LC6sFoySvZhq/XJa5JgPZu4/HDU2+LUARkxXLwWjX0nocKeteWTVX6Sg51TbppOaQm
+         CGhOeYpkAx8KipFSL6xAVteeuXNh8u8JCPUh+Rx2WYteFx8cyJhrWAyDXbOi8LtyReZz
+         NnbAqsPw6CkEnl/R5MO0DRvzTiBeRTUDiA9Run2ucgGU2RrQFhuk2AFyaIKSON29sSpo
+         ah2wjVSENGPDEl5OJWleJmHii8sBNWTa9EcDwLhlAH1j9VM52GsKh5mgEp+p3nWo3XXT
+         EURJ7FilURDiQSOwuADjG9KkqpE9fDwp4vmUS1jZQjGCj3yG6wDCa3FjmMUFf31hR7Ve
+         SgGg==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1784169097; x=1784773897; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=q9RYbpoJ3iiaewLH/Dkbk54m1hisFAlN4vItAzmGB5U=;
+        b=FpSsk+g5AonKlf5Gr6TViIFQa4+wBy5ZVRLI40QRJt8wPzgZlAK4mJ/HWxHPql9B3o
+         Ih/bjXF0d2t8Xev2C+9xmjKi9Nz6RJNPBaiXjJ+u2WT9/xOx/0s7rQ7XNDr9TxS1kCU3
+         puOMgr+6NllCZ7pcGta4pEjP8GH63o6CtTgfocGLCB/pL9p+fCE49hyHk21hLqO8GmCG
+         tADE/vc6VPmwdEXSEQ/aKDw29CyWRDFD0F2TUjmsbIceo5qEi3dKQWNB9L9GywfQh189
+         JTWLsBZYcNP3ro/aIZN4e2/Vw420LizxTbGaxYdn7tTDs7yl6IZa/bP9rNpgZD4zckeF
+         akOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784169097; x=1784773897;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=q9RYbpoJ3iiaewLH/Dkbk54m1hisFAlN4vItAzmGB5U=;
+        b=FZnMKC1dXob8G4FdDRFQ0eCnlCSBiNa4JqxPt1AWTwE8Q81jgbN0fPamUL66VHY4o3
+         EvmaCNu3rLe9/uAF4bzKKY21GSYp7eAtfhQNSkF/KGYa2MqNUvIk+aPE2+wWsDe+vxMH
+         q3EhjJKT+ophSj+tWYRdGGyzDtV7HsL7BurRdcUqVdH3TsDPBdtq5/Rh5uXfhCAd1uvw
+         7SowcHWsFNhYnH6OxIfr8XsCw2b8wJbxyq4PdMwgRamtmeJ1wNugZEcZqjp0QY/rBb3n
+         N8AYA/9Pez0n811xzMSoE2zLDKACqS2tRB5IRyuQG01X+FEYUALP9C7XsPo5PdJogTj1
+         HfeQ==
+X-Forwarded-Encrypted: i=1; AHgh+RpKmPLwPZXWek3OKJzCvY+sTUyuadH1cL+rGCua/VX85+pY1OLTLuLrj3UuWnyegTsLmKmMHZk0pJU=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxyGLTWUDMqWs2WEEF6Gq+/mPWZX0p75wbRJ75gUD+8IJziWC8R
+	oVhTqK5p2Z1eKn69IGnAvjgV1rR6+WJ4nB8r2PbulADVoFqFjR9BGo/aPT6TZF4W2qAAU1kv6j3
+	AuyX1ubjnv1eys5Zj8R3P/JorzyW3DR4=
+X-Gm-Gg: AfdE7ckCNfQOUJ+ddxrgUHy+cGfb1DCN2KjH4s7dhekdU4mXOwAW7QKGacCuGT0EoXE
+	AWbc7WR318u87l9Aam0OORN8BGztfL0Xnulfn0Emxu8F1peuff2zZXZSmtR8mKDMBCNvza1/u3L
+	uxVJJ4o+dnDJ64VUtWCIJDziBwF3vUUdMxep8hRFf7Rj8oeB9F07EZT+GbmiV2Mgg3YFq4XY/GY
+	4Sycn8fW9KS+jqBP4rsFETiM/JJhmVnToDem5Vz2NRHoaIqCtwr1PWGq4nHkxgy
+X-Received: by 2002:a05:6938:a08e:20b0:c16:8931:245c with SMTP id
+ a640c23a62f3a-c16893125d4mr103944966b.21.1784169096566; Wed, 15 Jul 2026
+ 19:31:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxIuTCN1hqq44OAA--.41171S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+References: <cover.1783670011.git.zhoubinbin@loongson.cn> <e5a574b2ae0e5e0ec32fe81c0ccd03eb3ad5a164.1783670011.git.zhoubinbin@loongson.cn>
+ <CAAhV-H6Ae=J9a6y6C9WE-sfUJnrypWpc8e01VHJ3ndVt-F+RXA@mail.gmail.com>
+In-Reply-To: <CAAhV-H6Ae=J9a6y6C9WE-sfUJnrypWpc8e01VHJ3ndVt-F+RXA@mail.gmail.com>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Thu, 16 Jul 2026 10:31:23 +0800
+X-Gm-Features: AUfX_mxc3FOZacVEQWuO-hOpQgpgQhvkeExldue96dEwy1_jdBhNox5YznqP9aE
+Message-ID: <CAMpQs4JQTnP96akj9V8iHjnPSj10_zmv=0+0j-6RbUB304BF0w@mail.gmail.com>
+Subject: Re: [PATCH 2/2] thermal/drivers/loongson2: Add thermal driver support
+ for Loongson-2K0300
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
+	linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Now pv_feature can be set only once, there is problem with VM migration.
-Where it is set when vCPU is created and after migration, here it is
-allow to set for many times, until vCPU starts to run.
+Hi:
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/include/asm/kvm_host.h |  4 +++-
- arch/loongarch/kvm/vcpu.c             | 15 +++++++++++----
- 2 files changed, 14 insertions(+), 5 deletions(-)
+On Fri, Jul 10, 2026 at 10:32=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org=
+> wrote:
+>
+> Hi, Binbin,
+>
+> On Fri, Jul 10, 2026 at 4:25=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.=
+cn> wrote:
+> >
+> > The Loongson-2K0300 SoC uses a new thermal sensor that requires reading
+> > a separate CPU ID register to obtain hardware version information. This
+> > version info is used as a correction factor (fix_data) in the
+> > temperature calculation formula.
+> >
+> > Its thermal sensor requires the following hardware-specific handling:
+> >  - Read chip ID register (offset 0x0 and 0x4) to get the compensation
+> >    value (comp_val). The value is stored in either bits [31:20] of the
+> >    ID0 register or bits [15:0] of the ID1 register, depending on the
+> >    EXTERN_ID bit.
+> >
+> >  - The compensation value is a signed 15-bit field; extract the value
+> >    and apply sign accordingly.
+> >
+> > Additionally, some early Loongson-2K0300 chips may have an old fuse tha=
+t
+> > yields invalid temperature readings outside the -55 to 125 range. In
+> > such cases, the driver falls back to a simplified formula (raw * 569 -
+> > 394700) and logs a warning, ensuring the system can still function
+> > without crashing.
+> >
+> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > ---
+> >  drivers/thermal/loongson2_thermal.c | 83 ++++++++++++++++++++++++++---
+> >  1 file changed, 77 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/thermal/loongson2_thermal.c b/drivers/thermal/loon=
+gson2_thermal.c
+> > index ea4dd2fb1f47..a7eb87070aa9 100644
+> > --- a/drivers/thermal/loongson2_thermal.c
+> > +++ b/drivers/thermal/loongson2_thermal.c
+> > @@ -2,9 +2,11 @@
+> >  /*
+> >   * Author: zhanghongchen <zhanghongchen@loongson.cn>
+> >   *         Yinbo Zhu <zhuyinbo@loongson.cn>
+> > - * Copyright (C) 2022-2023 Loongson Technology Corporation Limited
+> > + *         Binbin Zhou <zhoubinbin@loongson.cn>
+> > + * Copyright (C) 2022-2026 Loongson Technology Corporation Limited
+> >   */
+> >
+> > +#include <linux/bitfield.h>
+> >  #include <linux/interrupt.h>
+> >  #include <linux/io.h>
+> >  #include <linux/minmax.h>
+> > @@ -23,27 +25,44 @@
+> >  #define LOONGSON2_THSENS_CTRL_LOW_REG  0x8
+> >  #define LOONGSON2_THSENS_STATUS_REG    0x10
+> >  #define LOONGSON2_THSENS_OUT_REG       0x14
+> > +#define LOONGSON2_THSENS_CFG_REG       0x18
+> >
+> >  #define LOONGSON2_THSENS_INT_LO                BIT(0)
+> >  #define LOONGSON2_THSENS_INT_HIGH      BIT(1)
+> >  #define LOONGSON2_THSENS_INT_EN                (LOONGSON2_THSENS_INT_L=
+O | \
+> >                                          LOONGSON2_THSENS_INT_HIGH)
+> >  #define LOONGSON2_THSENS_OUT_MASK      0xFF
+> > +#define LS2K0300_THSENS_OUT_MASK       GENMASK(10, 0)
+> The naming is a little strange, maybe use LOONGSON2_THSENS_OUT_8B_MASK
+> and LOONGSON2_THSENS_OUT_10B_MASK?
+>
+> > +
+> > +#define LS2K0300_CHIP_ID1              0x4
+> Also define LS2K0300_CHIP_ID0 here?
+>
+> > +#define LS2K0300_EXTERN_ID             BIT(4)
+> > +#define LS2K0300_ID0_VAL_MASK          GENMASK(31, 20)
+> > +#define LS2K0300_ID1_VAL_MASK          GENMASK(15, 0)
+> > +
+> > +#define LS2K0300_COMP_VAL_MASK         GENMASK(14, 0)
+> > +#define LS2K0300_COMP_SIGN_BIT         BIT(15)
+> > +
+> > +#define LS2K0300_LOWEST_VALID_TEMP     (-55000)
+> > +#define LS2K0300_HIGHEST_VALID_TEMP    (125000)
+> >
+> >  /*
+> >   * This flag is used to indicate the temperature reading
+> >   * method of the Loongson-2K2000
+> >   */
+> >  #define LS2K2000_THSENS_OUT_FLAG       BIT(0)
+> > +#define LS2K0300_CHIP_ID_FLAG          BIT(1)
+> >
+> >  struct loongson2_thermal_chip_data {
+> >         unsigned int thermal_sensor_sel;
+> >         unsigned int flags;
+> > +       const struct thermal_zone_device_ops *thermal_ops;
+> >  };
+> >
+> >  struct loongson2_thermal_data {
+> > +       struct device *dev;
+> >         void __iomem *ctrl_reg;
+> >         void __iomem *temp_reg;
+> > +       void __iomem *id_reg;
+> >         const struct loongson2_thermal_chip_data *chip_data;
+> >  };
+> >
+> > @@ -71,6 +90,38 @@ static int loongson2_thermal_set(struct loongson2_th=
+ermal_data *data,
+> >         return 0;
+> >  }
+> >
+> > +static int loongson2_2k0300_get_temp(struct thermal_zone_device *tz, i=
+nt *temp)
+> > +{
+> > +       struct loongson2_thermal_data *tdata =3D thermal_zone_device_pr=
+iv(tz);
+> > +       int calib_data, calib_offset, temp_mc, raw_adc;
+> > +       u32 chip_id0, chip_id1;
+> > +
+> > +       raw_adc =3D FIELD_GET(LS2K0300_THSENS_OUT_MASK,
+> > +                           readl(tdata->ctrl_reg + LOONGSON2_THSENS_OU=
+T_REG));
+> > +       chip_id0 =3D readl(tdata->id_reg);
+> > +       chip_id1 =3D readl(tdata->id_reg + LS2K0300_CHIP_ID1);
+> > +
+> > +       if (chip_id0 & LS2K0300_EXTERN_ID)
+> > +               calib_data =3D FIELD_GET(LS2K0300_ID1_VAL_MASK, chip_id=
+1);
+> > +       else
+> > +               calib_data =3D FIELD_GET(LS2K0300_ID0_VAL_MASK, chip_id=
+0);
+> > +
+> > +       calib_offset =3D FIELD_GET(LS2K0300_COMP_VAL_MASK, calib_data);
+> > +       if (calib_data & LS2K0300_COMP_SIGN_BIT)
+> > +               calib_offset =3D -calib_offset;
+> > +
+> > +       temp_mc =3D (raw_adc + calib_offset) * 570 - 394700;
+> > +
+> > +       /* For old fuse which can not read right thermal data */
+> > +       if (temp_mc < LS2K0300_LOWEST_VALID_TEMP || temp_mc > LS2K0300_=
+HIGHEST_VALID_TEMP) {
+> Is there a better way to detect the old fuse? Because I think temp_mc
+> between LS2K0300_LOWEST_VALID_TEMP and  LS2K0300_HIGHEST_VALID_TEMP is
+> also not valid for the old fuse.
 
-diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index 23cfbecebbd7..af376fc44c44 100644
---- a/arch/loongarch/include/asm/kvm_host.h
-+++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -163,7 +163,6 @@ enum emulation_result {
- #define KVM_LARCH_SWCSR_LATEST	(0x1 << 3)
- #define KVM_LARCH_HWCSR_USABLE	(0x1 << 4)
- 
--#define LOONGARCH_PV_FEAT_UPDATED	BIT_ULL(63)
- #define LOONGARCH_PV_FEAT_MASK		(BIT(KVM_FEATURE_IPI) |		\
- 					 BIT(KVM_FEATURE_PREEMPT) |	\
- 					 BIT(KVM_FEATURE_STEAL_TIME) |	\
-@@ -250,6 +249,9 @@ struct kvm_vcpu_arch {
- 	/* cpucfg */
- 	u32 cpucfg[KVM_MAX_CPUCFG_REGS];
- 
-+	/* VCPU ran at least once */
-+	bool ran_atleast_once;
-+
- 	/* paravirt steal time */
- 	struct {
- 		u64 guest_addr;
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 20c207d80e31..ce6a1b06d50d 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -1164,11 +1164,14 @@ static int kvm_loongarch_cpucfg_set_attr(struct kvm_vcpu *vcpu,
- 		if (val & ~valid)
- 			return -EINVAL;
- 
--		/* All vCPUs need set the same PV features */
--		if ((kvm->arch.pv_features & LOONGARCH_PV_FEAT_UPDATED)
--				&& ((kvm->arch.pv_features & valid) != val))
-+		if ((kvm->arch.pv_features & valid) == val)
-+			return 0;
-+
-+		if (vcpu->arch.ran_atleast_once)
- 			return -EINVAL;
--		kvm->arch.pv_features = val | LOONGARCH_PV_FEAT_UPDATED;
-+
-+		/* All vCPUs need set the same PV features */
-+		kvm->arch.pv_features = val;
- 		return 0;
- 	default:
- 		return -ENXIO;
-@@ -1851,6 +1854,10 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
- 	int r = -EINTR;
- 	struct kvm_run *run = vcpu->run;
- 
-+	/* Mark this VCPU ran at least once */
-+	if (!vcpu->arch.ran_atleast_once)
-+		vcpu->arch.ran_atleast_once = true;
-+
- 	if (vcpu->mmio_needed) {
- 		if (!vcpu->mmio_is_write)
- 			kvm_complete_mmio_read(vcpu, run);
+Try communicating in person; there=E2=80=99s no better way. The current
+judgment criteria can only accommodate the standard temperature range.
 
-base-commit: a13c140cc289c0b7b3770bce5b3ad42ab35074aa
--- 
-2.39.3
+Also, the `old fuse` refers to the very first batch of chips, so I
+don=E2=80=99t think the scope of the issue will be very broad.
+>
+> Huacai
+>
+> > +               dev_warn_once(tdata->dev, "It's an old fuse, thermal %d=
+ is not right\n", temp_mc);
+> > +               temp_mc =3D raw_adc * 569 - 394700;
+> > +       }
+> > +       *temp =3D temp_mc;
+> > +
+> > +       return 0;
+> > +}
+> > +
+> >  static int loongson2_2k1000_get_temp(struct thermal_zone_device *tz, i=
+nt *temp)
+> >  {
+> >         int val;
+> > @@ -112,6 +163,11 @@ static int loongson2_thermal_set_trips(struct ther=
+mal_zone_device *tz, int low,
+> >         return loongson2_thermal_set(data, low/MILLI, high/MILLI, true)=
+;
+> >  }
+> >
+> > +static const struct thermal_zone_device_ops loongson2_2k0300_of_therma=
+l_ops =3D {
+> > +       .get_temp =3D loongson2_2k0300_get_temp,
+> > +       .set_trips =3D loongson2_thermal_set_trips,
+> > +};
+> > +
+> >  static const struct thermal_zone_device_ops loongson2_2k1000_of_therma=
+l_ops =3D {
+> >         .get_temp =3D loongson2_2k1000_get_temp,
+> >         .set_trips =3D loongson2_thermal_set_trips,
+> > @@ -124,7 +180,6 @@ static const struct thermal_zone_device_ops loongso=
+n2_2k2000_of_thermal_ops =3D {
+> >
+> >  static int loongson2_thermal_probe(struct platform_device *pdev)
+> >  {
+> > -       const struct thermal_zone_device_ops *thermal_ops;
+> >         struct device *dev =3D &pdev->dev;
+> >         struct loongson2_thermal_data *data;
+> >         struct thermal_zone_device *tzd;
+> > @@ -134,6 +189,7 @@ static int loongson2_thermal_probe(struct platform_=
+device *pdev)
+> >         if (!data)
+> >                 return -ENOMEM;
+> >
+> > +       data->dev =3D dev;
+> >         data->chip_data =3D device_get_match_data(dev);
+> >
+> >         data->ctrl_reg =3D devm_platform_ioremap_resource(pdev, 0);
+> > @@ -145,10 +201,13 @@ static int loongson2_thermal_probe(struct platfor=
+m_device *pdev)
+> >                 data->temp_reg =3D devm_platform_ioremap_resource(pdev,=
+ 1);
+> >                 if (IS_ERR(data->temp_reg))
+> >                         return PTR_ERR(data->temp_reg);
+> > +       }
+> >
+> > -               thermal_ops =3D &loongson2_2k2000_of_thermal_ops;
+> > -       } else {
+> > -               thermal_ops =3D &loongson2_2k1000_of_thermal_ops;
+> > +       /* The chip id register is needed for Loongson-2K0300 */
+> > +       if (data->chip_data->flags & LS2K0300_CHIP_ID_FLAG) {
+> > +               data->id_reg =3D devm_platform_ioremap_resource(pdev, 1=
+);
+> > +               if (IS_ERR(data->id_reg))
+> > +                       return PTR_ERR(data->id_reg);
+> >         }
+> >
+> >         irq =3D platform_get_irq(pdev, 0);
+> > @@ -160,7 +219,7 @@ static int loongson2_thermal_probe(struct platform_=
+device *pdev)
+> >         loongson2_thermal_set(data, 0, 0, false);
+> >
+> >         for (i =3D 0; i <=3D LOONGSON2_MAX_SENSOR_SEL_NUM; i++) {
+> > -               tzd =3D devm_thermal_of_zone_register(dev, i, data, the=
+rmal_ops);
+> > +               tzd =3D devm_thermal_of_zone_register(dev, i, data, dat=
+a->chip_data->thermal_ops);
+> >
+> >                 if (!IS_ERR(tzd))
+> >                         break;
+> > @@ -181,17 +240,29 @@ static int loongson2_thermal_probe(struct platfor=
+m_device *pdev)
+> >         return 0;
+> >  }
+> >
+> > +static const struct loongson2_thermal_chip_data loongson2_thermal_ls2k=
+0300_data =3D {
+> > +       .thermal_sensor_sel =3D 0,
+> > +       .flags =3D LS2K0300_CHIP_ID_FLAG,
+> > +       .thermal_ops =3D &loongson2_2k0300_of_thermal_ops,
+> > +};
+> > +
+> >  static const struct loongson2_thermal_chip_data loongson2_thermal_ls2k=
+1000_data =3D {
+> >         .thermal_sensor_sel =3D 0,
+> >         .flags =3D 0,
+> > +       .thermal_ops =3D &loongson2_2k1000_of_thermal_ops,
+> >  };
+> >
+> >  static const struct loongson2_thermal_chip_data loongson2_thermal_ls2k=
+2000_data =3D {
+> >         .thermal_sensor_sel =3D 0,
+> >         .flags =3D LS2K2000_THSENS_OUT_FLAG,
+> > +       .thermal_ops =3D &loongson2_2k2000_of_thermal_ops,
+> >  };
+> >
+> >  static const struct of_device_id of_loongson2_thermal_match[] =3D {
+> > +       {
+> > +               .compatible =3D "loongson,ls2k0300-thermal",
+> > +               .data =3D &loongson2_thermal_ls2k0300_data,
+> > +       },
+> >         {
+> >                 .compatible =3D "loongson,ls2k1000-thermal",
+> >                 .data =3D &loongson2_thermal_ls2k1000_data,
+> > --
+> > 2.52.0
+> >
 
+--=20
+Thanks.
+Binbin
