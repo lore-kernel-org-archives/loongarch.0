@@ -1,150 +1,134 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80C733F39E2
-	for <loongarch@lists.linux.dev>; Thu, 16 Jul 2026 10:57:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2543B2D5412
+	for <loongarch@lists.linux.dev>; Thu, 16 Jul 2026 14:30:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784199436; cv=none; b=Git7IkNC5GR5VKebDOn3ESgiTcpzd+r5XXfQ8bVv3ziIFVgdN6eNfnv+yFmvEMQMy0+XdCdt41lMTcthoEZWN7ZkEo7F226fcun5QY7FPq1Jo9vCaP6Hk/D3DPKtNE6nVxP2v3uXlzFgUhkRy2O2QiiBEuzsfB+BXbLQ8zowwMQ=
+	t=1784212219; cv=none; b=fVAsSGBfcgNyPEkQfSFoUOEc03bIQE1UwK+MSBi62SYbZeYcgnmQWwtgEUBjfnqdBW90CsAhvsjzFeTBXZauOis8XCBkMxGljmYKB2EIxOnvn1LPI/TT66lK8/+HALwzxChcLCtg+z+DKWnHB4zXxhD8t4gipnBa+UpnL4tgK7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784199436; c=relaxed/simple;
-	bh=183FD52geXzLnicj8PRvEsp/u5QGzLUNfdkFvdlvTLc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jo1h+wQOIyE+4xLUmaZzjN/jTTMN/AthoffiiAagWiZRFFdUEuIVTV7EXiIe+eX/QMI6i15rIqCAuMW5ETtgmtQts7p5zEBV/WXeeHXt2Zt2dU44HIOlWl21lxWxu/kItuCFRxBuNk5hkjo27vbFnfg3cQ5hdRjIFhG8UyJ6f3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=d5tkmkG5; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1784212219; c=relaxed/simple;
+	bh=AhFdR2QfFg1cCilOo4nyPNsp0iHkjl8xgc5O9th0jWk=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=eH7ZG6NesbiMsytB7PKg4RZ+D12XjWL7v1nP/NW5aTWZ7ne0QJWF73iV8wayhiWwTAbIuE5thxzF71Cwe5rC/BSweUuxjH8/vJC1MhFoNbcoS71hXFahvybkugMcBthYJYGZYrrC6ZK65GjTrOPvBLbzKb3jP5DwGINocu+00IU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aKIJk3Ms; arc=none smtp.client-ip=209.85.221.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="d5tkmkG5"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 878791477;
-	Thu, 16 Jul 2026 03:57:10 -0700 (PDT)
-Received: from e129823.arm.com (e129823.arm.com [10.2.213.3])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 517673F7B4;
-	Thu, 16 Jul 2026 03:57:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1784199434; bh=183FD52geXzLnicj8PRvEsp/u5QGzLUNfdkFvdlvTLc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=d5tkmkG5Kp9Oy0MkBeywkl/rzGCiym7zyN9Xb6/iGX41TcFOTCCI9eR7n1jDeY++C
-	 MtXWXxwIyUA2P3b5+IQeTXGcW4DMtqA0RMDGfpR/q3XGIcPnKOXQYVi9AyUle/pECm
-	 jJ4P3dTj7+rJAFitSQuPUx0nY/0/JxwJCdCuhuF4=
-Date: Thu, 16 Jul 2026 11:56:58 +0100
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Yeoreum Yun <yeoreum.yun@arm.com>, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
-	x86@kernel.org, linux-mm@kvack.org, kasan-dev@googlegroups.com,
-	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
-	linux-m68k@lists.linux-m68k.org,
-	"linux-openrisc@vger.kernel.org" <linux-openrisc@vger.kernel.org>,
-	"David Hildenbrand (Red Hat)" <david@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ankur Arora <ankur.a.arora@oracle.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Magnus Lindholm <linmag7@gmail.com>,
-	Christophe Leroy <chleroy@kernel.org>,
-	Klara Modin <klarasmodin@gmail.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	"Kirill A. Shutemov" <kas@kernel.org>, zhangtianyang@loongson.cn,
-	wangyuli@aosc.io, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Lorenzo Stoakes <ljs@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Rohan McLure <rmclure@linux.ibm.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Tejun Heo <tj@kernel.org>, Kevin Brodsky <kevin.brodsky@arm.com>,
-	Anup Patel <anup@brainfault.org>, atish.patra@linux.dev,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>, qi.zheng@linux.dev,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Kairui Song <kasong@tencent.com>, Barry Song <baohua@kernel.org>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Yang Shi <yang@os.amperecomputing.com>, chaitanyas.prakash@arm.com,
-	Ard Biesheuvel <ardb@kernel.org>, guoren <guoren@kernel.org>,
-	yang.li85200@gmail.com, Alexander Viro <viro@zeniv.linux.org.uk>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	"schuster.simon@siemens-energy.com" <schuster.simon@siemens-energy.com>,
-	Vivian Wang <wangruikang@iscas.ac.cn>, junhui.liu@pigmoral.tech,
-	Muchun Song <muchun.song@linux.dev>,
-	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
-	Nam Cao <namcao@linutronix.de>, Pavel Machek <pavel@kernel.org>,
-	djbw@kernel.org, yu-cheng.yu@intel.com,
-	Baolu Lu <baolu.lu@linux.intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Coiby Xu <coxu@redhat.com>, Andreas Larsson <andreas@gaisler.com>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	"Vlastimil Babka (SUSE)" <vbabka@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Stafford Horne <shorne@gmail.com>, Jonas Bonn <jonas@southpole.se>,
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
-Subject: Re: [RFC PATCH 02/34] ARM: mm: make 2-level pgd_t a scalar
-Message-ID: <ali4-ibN7Jp9n22Q@e129823.arm.com>
-References: <20260713135614.1618183-1-yeoreum.yun@arm.com>
- <20260713135614.1618183-3-yeoreum.yun@arm.com>
- <4a0f9161-961e-47f9-8672-9a06e52fefea@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aKIJk3Ms"
+Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-47485fde05aso3991406f8f.0
+        for <loongarch@lists.linux.dev>; Thu, 16 Jul 2026 07:30:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1784212215; x=1784817015; darn=lists.linux.dev;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=KK1D0Jn0y9eqfBTpCLM4Znrw9w5QYL14n9pJHOvIIK8=;
+        b=aKIJk3MswEFcFYEMWuxnJoWxQ6XrVWZ7wAs64oJbC8i3kh5Gu48skWA+1+5LbxDy1+
+         0e0cWD5MYM6hwB0tqVmKwVmb4qUB+ngZw0ETuZASmR3WMN3Z0W1Jt1ObjfTAXflP6+HF
+         9J+kNYbalK0djk77D9sJIij1GFaqvtbbTafvPbQa7dDhCxhWujObC5Z7zizRjwaO9b1P
+         WRR4WP1LeDiJYUCC9YfmXZaF/qaiommyx4HR+FHWmzGJFB+qAdGMuf30T2FSqPSvZGIE
+         +2XVNe1dDvYHVbEaH2MBdLSWqPDR00RZCKa5KTFtxHuQVYOtKNXYfjLRrnKIIObnodNf
+         p55g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784212215; x=1784817015;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=KK1D0Jn0y9eqfBTpCLM4Znrw9w5QYL14n9pJHOvIIK8=;
+        b=LZe6wBEi2DMY0MpjxUQTN6NoSjyOl5HVxsfXGlB96phbc7MRBgddiCeSaJu3bG3tbF
+         SGNzt5HjtMuI409IA4Aol9PXl/C4xemBuZS+A0EMimKPJFelca0d4w9NcR36WKr/8oF1
+         ltyEUWkBwFBfBXBfZM/gLPhzscHBnf7S6D47uhAB25bWbgoG3gY7IawWqdIEYEI1mcos
+         QZt/PAezHL76b54Bg3Ye+eaoNI9UodCNVD/IFsoE7bObA4xqL9iEcEz61eZnzZtaStYT
+         XSxDWIFV4+Xn5vBqPg4qih0S9Jl7o5JKY4pfgL5YzdSzx0RqLytBPx1gtS9d7YR9np1O
+         TGxg==
+X-Forwarded-Encrypted: i=1; AHgh+RqP8pPuTAsX43Xb3zoJFOU4RWOzrpgM3+dHBJcFz3jkmdFixTsn8PkumU+cvJ12RZJHpdkPy4mOF5Q=@lists.linux.dev
+X-Gm-Message-State: AOJu0YymZV/0x3JANMAQZum+gs7tIgjDm2xqTBU/sLc8UBwNmQb9pqwQ
+	zJLg3vjmgM1jJGmxm8z0uuAi12a23jSsYVPqnX9SG2aPTk/j+HQCQvhq3VhJCutab9JWyhIXt3W
+	9eEDJSrYfYywbgw==
+X-Received: from wmbdr12.prod.google.com ([2002:a05:600c:608c:b0:490:b58a:2c80])
+ (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:a4a:b0:495:3e81:770f with SMTP id 5b1f17b1804b1-4953e817874mr72103905e9.15.1784212214740;
+ Thu, 16 Jul 2026 07:30:14 -0700 (PDT)
+Date: Thu, 16 Jul 2026 14:30:09 +0000
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4a0f9161-961e-47f9-8672-9a06e52fefea@app.fastmail.com>
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAPHqWGoC/yXMQQqDMBBA0avIrDuQRFDbq5Qu4nSiIyGRTC2Ce
+ Pem7fIt/j9AuQgr3JoDCr9FJacKe2mAZp8mRnlWgzOuM73tMOQoGX2MmZAi+7StiiZwa6/jMFh yUNO1cJD9t70//tZtXJhe3xec5wfuKVxBeAAAAA==
+X-Change-Id: 20260716-folio-alloc-cleanups-0fe319b881c2
+X-Mailer: b4 0.15.2
+Message-ID: <20260716-folio-alloc-cleanups-v1-0-5363b8e92d33@google.com>
+Subject: [PATCH 0/3] mm: yet more cleanups for page_alloc APIs
+From: Brendan Jackman <jackmanb@google.com>
+To: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, 
+	Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Byungchul Park <byungchul@sk.com>, 
+	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
+	Alistair Popple <apopple@nvidia.com>, Hugh Dickins <hughd@google.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Chris Li <chrisl@kernel.org>, 
+	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+	Nhat Pham <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>, Barry Song <baohua@kernel.org>, 
+	Youngjun Park <youngjun.park@lge.com>, "Joerg Roedel (AMD)" <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+	Robin Murphy <robin.murphy@arm.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Thomas Gleixner <tglx@kernel.org>, Chuck Lever <cel@kernel.org>, 
+	Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, 
+	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-fsdevel@vger.kernel.org, iommu@lists.linux.dev, 
+	loongarch@lists.linux.dev, linux-nfs@vger.kernel.org, netdev@vger.kernel.org, 
+	Brendan Jackman <jackmanb@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-Hi,
+Based on mm-new.
 
-> On Mon, Jul 13, 2026, at 15:55, Yeoreum Yun wrote:
-> 
-> >  typedef pteval_t pte_t;
-> >  typedef pmdval_t pmd_t;
-> > -typedef pmdval_t pgd_t[2];
-> > +typedef pgdval_t pgd_t;
-> >  typedef pteval_t pgprot_t;
-> > 
-> 
-> Just noticed one more issue here, I think this will break these
-> two macros that now access four entries instead of two:
-> 
-> #define copy_pmd(pmdpd,pmdps)           \
->         do {                            \
->                 pmdpd[0] = pmdps[0];    \
->                 pmdpd[1] = pmdps[1];    \
->                 flush_pmd_entry(pmdpd); \
->         } while (0)
-> 
-> #define pmd_clear(pmdp)                 \
->         do {                            \
->                 pmdp[0] = __pmd(0);     \
->                 pmdp[1] = __pmd(0);     \
->                 clean_pmd_entry(pmdp);  \
->         } while (0)
-> 
->     Arnd
+Align some APIs with recent cleanups [0][1], and hide more mm-internal APIs
+from public headers.
 
-I don't this this change wouldn't affect for this macros since
-both of them still uses *pmd_t* which is u32.
-So it still only changes tow entries.
+Part of this was also proposed by Vlastimil right as I was writing it:
+https://lore.kernel.org/all/ed4572f4-0074-45c5-993d-7b6533eddc31@kernel.org/
 
--- 
-Sincerely,
-Yeoreum Yun
+And just like with my other recent patches, this has the ulterior motive
+of enabling later incoming patches to add alloc_flags arguments to these
+internal functions. (But, I do think these are justified as cleanups in
+their own right).
+
+[0]: https://lore.kernel.org/all/20260715-spin-trylock-followup-v3-0-fc4d246f705d@google.com/
+[1]: https://lore.kernel.org/all/20260703-alloc-trylock-v5-0-c87b714e19d3@google.com/
+
+Signed-off-by: Brendan Jackman <jackmanb@google.com>
+---
+Brendan Jackman (3):
+      mm: move internal mempolicy APIs to new internal header
+      mm, treewide: replace __folio_alloc_node() with folio_alloc_node()
+      mm: move __folio_alloc() to page_alloc.h
+
+ MAINTAINERS                        |  1 +
+ drivers/iommu/iommu-pages.c        |  9 +--------
+ drivers/irqchip/irq-loongarch-ir.c |  4 ++--
+ include/linux/gfp.h                | 25 +++----------------------
+ mm/filemap.c                       |  4 +++-
+ mm/mempolicy.c                     |  1 +
+ mm/mempolicy.h                     | 31 +++++++++++++++++++++++++++++++
+ mm/migrate.c                       |  2 +-
+ mm/page_alloc.c                    | 18 +++++++++++++++---
+ mm/page_alloc.h                    |  4 ++++
+ mm/shmem.c                         |  1 +
+ mm/swap_state.c                    |  1 +
+ net/sunrpc/svc.c                   |  2 +-
+ 13 files changed, 65 insertions(+), 38 deletions(-)
+---
+base-commit: 512c82e906fe2c26023e307c7951d53e90910b57
+change-id: 20260716-folio-alloc-cleanups-0fe319b881c2
+
+Best regards,
+--  
+Brendan Jackman <jackmanb@google.com>
+
