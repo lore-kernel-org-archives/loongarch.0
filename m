@@ -1,198 +1,142 @@
-Received: from flow-b7-smtp.messagingengine.com (flow-b7-smtp.messagingengine.com [202.12.124.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0391280CC1
-	for <loongarch@lists.linux.dev>; Fri, 17 Jul 2026 06:18:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.142
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C0E63B9DAD;
+	Fri, 17 Jul 2026 06:44:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784269092; cv=none; b=Nn+0SegszrEJS5x2GADUptw0G1OpHeBbQUxgs/lZKakQ6BZQJ9aCIbEwUjbH2SFNNz7AkC8g6VNiSp/8bq/wputzIljVyKy0vJ3U0mUTk3/qRbQ8CRNsKRV/3XBg4rsKAdsRBhZGGp70JsQ3PYjP1TdqsGeq8H4mivUSq5LCoEg=
+	t=1784270695; cv=none; b=tRhGH+y//erNHcBqp+TduTrZieMTK4heIA0/tncx2h857kLECDChaWq8J8xObh/NmvUxgDZnHVjwjZXD2Ul7BbH1xVM1U0BXKzTHVRn6TXrTEPx+DX4GQLgnU+O8cGagAyaDL0M2Icnoap8iHAEWz8k0+I9992GjyHGo/HYCoXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784269092; c=relaxed/simple;
-	bh=1rpBdiF18TYSJ+Ia8zFd3UYs+lR0SkQsXit3jO8Xc4M=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=NMquz+0W93ql2Bv/CSN5dGtukgybuFGhiE91HBGdXAbSyBInYN3lQLEkwVfMmwDlfUTdLJep7MwLj1EIsvTaXnkEbCQ+ZwOWvIfivcmtBoF8ftB8eJ5g1xmJBANsMfXo83VseohAEvA2pmfDf849G3BmlMXN/rHfmk4kqPmLTzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=qJurhs5J; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=SNFPT9EY; arc=none smtp.client-ip=202.12.124.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="qJurhs5J";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SNFPT9EY"
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailflow.stl.internal (Postfix) with ESMTP id C9D6E1300108;
-	Fri, 17 Jul 2026 02:18:08 -0400 (EDT)
-Received: from phl-imap-05 ([10.202.2.95])
-  by phl-compute-04.internal (MEProxy); Fri, 17 Jul 2026 02:18:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1784269088;
-	 x=1784276288; bh=DIwsi7KwJyaKhQst6GtgDPKu/03zqC/ceJLNUsU0G7I=; b=
-	qJurhs5JdXDOPoUVTQH/c7wlS654Wk2iQcPnJ/CfxGI+lDliQ5WoXu9PkdWdggbW
-	4d8b/pP1UoIb+cUshsR429F+4jAmsqxfXulbery4qx9QQ9L3k+CuBjhMRAcJ508P
-	hkFpMA3/09yB51NIbjjASJyhc4gDS65tiI7/bPl+e6FpPcMswXKJWDAOkLhGoqnj
-	HfqcoQ3m4Kfmmvcx/bzssrZ+hwlg6Dm2Q58Y1+XLiXurzsv9XLe/lU2RHonAjrmT
-	Rv8BYN1KEYHV5Vnvxz9qEvOgjyUxplJIK+PqCHpYIathhx7GXGR9hFZ9zhMg6XKd
-	bY7i6Vl1mKinY8/PcRF8Pg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1784269088; x=
-	1784276288; bh=DIwsi7KwJyaKhQst6GtgDPKu/03zqC/ceJLNUsU0G7I=; b=S
-	NFPT9EYrba01yD5+bxd0o86ReIuerWFEUX4KTVAPRJpdmcVvwba+/+L9NrYNYEqz
-	GNFOhIqqFlmQEic5XKMgufYnt51BOVzJ8oDuEigx6ZTwQNCDwNABsx0yaefvPyAq
-	OSVnT7Tk53WZGASdhTaErR5DhzAyaNihwPtUYvF8CprRClo4GENwngWSfd4DUaAQ
-	EMRcoeeFZRfQ650IbUBfrdYE669ijsQbPxh0v80NFCLXPm16uJm+D7nmUC9SBQ0g
-	dCX7TAfRWr6pfs/wSbK1bJr1MAJw50n1HthqFPfXnFg7BhG8N/GGqs/ei+tMgQeU
-	WuOo19ntWRmsneHGOshlQ==
-X-ME-Sender: <xms:HMlZagVQAqiQ2wrxcfzlM64OJgs_v7E5hozglxjLbZA3oFDx16Q4Sg>
-    <xme:HMlZavZjC5M5VU4vv_x6XA8Q9mGZD-v9gYlS1ZunodCNZxSELR3_B5xqo0NQQ1Kkk
-    S3Vnm8TCLvFoV9aetukmCzWBHrmtSXqTSyvspwykP4Js9EywzxWvA>
-X-ME-Proxy-Cause: dmFkZTEsnogHl3/584/D3E3UL21JNIJ0IpLGex2XJCrBcpEOIptBGsASC8eWXQmjmgrrA+
-    DsJi/6WKuBBi5F7OuvHSL+g/7EoKzEioTp1iZcObcFlCUdN9FQiLyhQ2WJckBsyhX/9Aho
-    5zQIT0Bvwp2+NRIJWoZWWMC8SmjxWARp06CdfI/xQXVcnw57hiZzQkOQc2pwFGFa0PD3Ig
-    VJ+Fd0xeZxtZewuZTM7xNyzpSHGuXpGq3mqq0soJ2shLfJD66nl9DGJFWVxpf76R9pb+Fn
-    JOiGB9PJjr5FAsfP8hraRM4k548vGuSqGP1eA/PLgcn2VY+22D2Q5gmScaUtFJHkQeGQl0
-    qOdJSMCXCOKVo2GYO0c8fM24yoitw5qkoNohPbWnf30vjF6onkva4ikrIgyRvIKEJvZNRA
-    2o7FLDlhqcoPYk1+SmVJ4d4YE9GOtue1HKQ96xeNVuknOhecYVmSMo0VsLMLmjY8/FISBD
-    gWTMCij41tnxpv39fvK9ULBw+8sWNQSqKe16iK2O+3X4VjSrm4lXzDGTiCUanjHSVT38ZI
-    vviFiqNWzxfI/YQs5BbNcV3zIA9lOiFNZ/YeaHhcz7lLGZ/gbDMi5asWUg1zuEVqw7zMyu
-    qV8v8QTwW2fXPoxCr2PY3YezqzuWa0Y6IrZCF0DlJYjYcHwuiRvpQbFeuHgw
-X-ME-Proxy: <xmx:HMlZatns8IaYGj1VLUytOw4spltodteAcr4k00MZgvzHgwqZMovQtA>
-    <xmx:HMlZahNXyXTuH2E6lbACeQcbmNWaNrYAiCMfDDD8K8uf2luwqFnldQ>
-    <xmx:HMlZat5qsP5jnznKN1zDwch0mVoi_kuQo9F-CYJkyvhZNwwUsQEKRA>
-    <xmx:HMlZaiL-pxHqt-gDvYbR-kuRnd0nkUgMhwofbEfTT8VK3P-i3s-mPw>
-    <xmx:IMlZakFwaTi3Bb2V5_o7u3qejYOcKPIj7XfIuyMLQ8lJxF0u_ZM4Y94W>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 0ADC3182007E; Fri, 17 Jul 2026 02:18:03 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1784270695; c=relaxed/simple;
+	bh=7hRA0dProPOutyB2IiNvsAo+dWkQqnYN8bcnIHOQuo8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=hUSdKpN5DgS+jgSUAdVb8MiGeWEz4hi0Of2L1dV3GLh4wHYtRbJvpDfXfsoHrpQnunOjTvTmy8WPQm0voAKmBLOYpQ3Fa97wNAonn1e/uXfSJu8J5oej1BdpxgMtkWq4Rj7L0lsuDesZlA+MOQPwqpq8ccB8Jju8XbKuAA4VJVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8AxCOtVz1lqJ3YEAA--.17822S3;
+	Fri, 17 Jul 2026 14:44:37 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowJAxHsdMz1lqgcoPAA--.43739S3;
+	Fri, 17 Jul 2026 14:44:37 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>
+Cc: Len Brown <lenb@kernel.org>,
+	Saket Dumbre <saket.dumbre@intel.com>,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-acpi@vger.kernel.org,
+	acpica-devel@lists.linux.dev,
+	lixianglai@loongson.cn
+Subject: [PATCH v2 1/4] ACPI: LoongArch: Add acpi_arch_[late]_init()
+Date: Fri, 17 Jul 2026 14:37:10 +0800
+Message-Id: <20260717063713.3638059-2-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20260717063713.3638059-1-maobibo@loongson.cn>
+References: <20260717063713.3638059-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-ThreadId: ASU80-mPZ9gg
-Date: Fri, 17 Jul 2026 08:16:55 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Yeoreum Yun" <yeoreum.yun@arm.com>
-Cc: "Pedro Falcato" <pfalcato@suse.de>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
- kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
- x86@kernel.org, linux-mm@kvack.org, kasan-dev@googlegroups.com,
- "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
- linux-m68k@lists.linux-m68k.org,
- "linux-openrisc@vger.kernel.org" <linux-openrisc@vger.kernel.org>,
- "David Hildenbrand (Red Hat)" <david@kernel.org>,
- "Russell King" <linux@armlinux.org.uk>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Ankur Arora" <ankur.a.arora@oracle.com>,
- "Mike Rapoport" <rppt@kernel.org>, "Magnus Lindholm" <linmag7@gmail.com>,
- "Christophe Leroy" <chleroy@kernel.org>,
- "Klara Modin" <klarasmodin@gmail.com>,
- "Huacai Chen" <chenhuacai@kernel.org>, "WANG Xuerui" <kernel@xen0n.name>,
- "Kirill A. Shutemov" <kas@kernel.org>, zhangtianyang@loongson.cn,
- wangyuli@aosc.io, "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "Lorenzo Stoakes" <ljs@kernel.org>, "Jason Gunthorpe" <jgg@ziepe.ca>,
- "Catalin Marinas" <catalin.marinas@arm.com>,
- "Will Deacon" <will@kernel.org>, "Ryan Roberts" <ryan.roberts@arm.com>,
- "Pasha Tatashin" <pasha.tatashin@soleen.com>,
- "Rohan McLure" <rmclure@linux.ibm.com>,
- "Baolin Wang" <baolin.wang@linux.alibaba.com>,
- "Tejun Heo" <tj@kernel.org>, "Kevin Brodsky" <kevin.brodsky@arm.com>,
- "Anup Patel" <anup@brainfault.org>, atish.patra@linux.dev,
- "Paul Walmsley" <pjw@kernel.org>, "Palmer Dabbelt" <palmer@dabbelt.com>,
- "Albert Ou" <aou@eecs.berkeley.edu>, "Alexandre Ghiti" <alex@ghiti.fr>,
- "Dave Hansen" <dave.hansen@linux.intel.com>,
- "Andy Lutomirski" <luto@kernel.org>,
- "Peter Zijlstra" <peterz@infradead.org>,
- "Thomas Gleixner" <tglx@kernel.org>, "Ingo Molnar" <mingo@redhat.com>,
- "Borislav Petkov" <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
- "Johannes Weiner" <hannes@cmpxchg.org>,
- "Michal Hocko" <mhocko@kernel.org>, qi.zheng@linux.dev,
- "Shakeel Butt" <shakeel.butt@linux.dev>,
- "Kairui Song" <kasong@tencent.com>, "Barry Song" <baohua@kernel.org>,
- "Axel Rasmussen" <axelrasmussen@google.com>,
- "Yuanchu Xie" <yuanchu@google.com>, "Wei Xu" <weixugc@google.com>,
- "Andrey Ryabinin" <ryabinin.a.a@gmail.com>,
- "Alexander Potapenko" <glider@google.com>,
- "Andrey Konovalov" <andreyknvl@gmail.com>,
- "Dmitry Vyukov" <dvyukov@google.com>,
- "Vincenzo Frascino" <vincenzo.frascino@arm.com>,
- "Anshuman Khandual" <anshuman.khandual@arm.com>,
- "Yang Shi" <yang@os.amperecomputing.com>, chaitanyas.prakash@arm.com,
- "Ard Biesheuvel" <ardb@kernel.org>, guoren <guoren@kernel.org>,
- yang.li85200@gmail.com, "Alexander Viro" <viro@zeniv.linux.org.uk>,
- "Dinh Nguyen" <dinguyen@kernel.org>,
- "schuster.simon@siemens-energy.com" <schuster.simon@siemens-energy.com>,
- "Vivian Wang" <wangruikang@iscas.ac.cn>, junhui.liu@pigmoral.tech,
- "Muchun Song" <muchun.song@linux.dev>,
- "Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
- "Nam Cao" <namcao@linutronix.de>, "Pavel Machek" <pavel@kernel.org>,
- djbw@kernel.org, yu-cheng.yu@intel.com,
- "Baolu Lu" <baolu.lu@linux.intel.com>,
- "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
- "Coiby Xu" <coxu@redhat.com>, "Andreas Larsson" <andreas@gaisler.com>,
- "Liam R. Howlett" <liam@infradead.org>,
- "Vlastimil Babka (SUSE)" <vbabka@kernel.org>,
- "Suren Baghdasaryan" <surenb@google.com>,
- "Michal Hocko" <mhocko@suse.com>,
- "Geert Uytterhoeven" <geert@linux-m68k.org>,
- "Stafford Horne" <shorne@gmail.com>, "Jonas Bonn" <jonas@southpole.se>,
- "Stefan Kristiansson" <stefan.kristiansson@saunalahti.fi>
-Message-Id: <4c3067df-20f0-43e8-8e62-354888afac04@app.fastmail.com>
-In-Reply-To: <alkrWNECXmoxkrUC@e129823.arm.com>
-References: <20260713135614.1618183-1-yeoreum.yun@arm.com>
- <20260713135614.1618183-3-yeoreum.yun@arm.com> <alYL7B0HAvmLVHGU@pedro-suse>
- <b7dbc476-1477-4004-93b3-c5e667e24df8@app.fastmail.com>
- <alkrWNECXmoxkrUC@e129823.arm.com>
-Subject: Re: [RFC PATCH 02/34] ARM: mm: make 2-level pgd_t a scalar
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAxHsdMz1lqgcoPAA--.43739S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-On Thu, Jul 16, 2026, at 21:04, Yeoreum Yun wrote:
->>
->> > Ugh. This isn't correct C code. It only works because the kernel passes
->> > -fno-strict-aliasing.
->> 
->> I think the bigger problem is the code dereferencing the pgd
->> pointer in the first place: Since the pgd pair is written in
->> 32-bit units in __pmd_populate(), anything reading it would
->> technically have to operate on both entries.
->> 
->> As the kernel relies on -fno-strict-aliasing, the type mismatch
->> is less of a problem than actually doing the potentially wrong
->> thing.
->> 
->> As far as I can tell, we are however saved by pgd_val()
->> only ever being used for debug prints, where printing
->> the first entry is likely all that is needed to analyse
->> the real bug.
->> 
->> > I would recommend either forcing a struct here, or
->> > using a u64 with bitmasks/shifts.
->> 
->> That would require extra complexity for the big-endian
->> case though.
->
-> Agree. And since the users of pgd_val() mostly uses with
-> pmd_pfn(), pmd_page() and etc. I think it doesn't matter to return
-> lower pmdval_t or higher one.
->
-> Therefore, without considering endianess, it's enough with downcast
-> like:
->
->    #define pgd_val(x)      ((pmdval_t)x)
->
-> Could we apply this in next version?
+LoongArch IOMMU scanning flow is similar with virtio-iommu,
+there is early init and late_init. In early init function, PCI
+ACS is enabled if there is IOMMU table, and late_init is called
+after PCI device scanning, where IOVT table scanning function is
+executed.
 
-I would just leave the original version here, at least it
-keeps the current behavior for something that is easy to
-get wrong. Taking the second entry on big-endian sounds
-counterintuitive, especially when you have a hugetlb
-mapping where the two don't just point to the same page.
+Here add acpi_arch_init() and acpi_arch_late_init() API on LoongArch,
+now they are both empty, In the future, IOVT table parsing will be
+added.
 
-      Arnd
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ drivers/acpi/Makefile           |  2 +-
+ drivers/acpi/bus.c              |  2 ++
+ drivers/acpi/loongarch/Makefile |  2 ++
+ drivers/acpi/loongarch/init.c   | 11 +++++++++++
+ include/linux/acpi.h            |  1 +
+ 5 files changed, 17 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/acpi/loongarch/Makefile
+ create mode 100644 drivers/acpi/loongarch/init.c
+
+diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
+index d1b0affb844f..91584a3c1e01 100644
+--- a/drivers/acpi/Makefile
++++ b/drivers/acpi/Makefile
+@@ -131,6 +131,6 @@ obj-y				+= dptf/
+ obj-$(CONFIG_ARM64)		+= arm64/
+ 
+ obj-$(CONFIG_ACPI_VIOT)		+= viot.o
+-
++obj-$(CONFIG_LOONGARCH)		+= loongarch/
+ obj-$(CONFIG_RISCV)		+= riscv/
+ obj-$(CONFIG_X86)		+= x86/
+diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
+index a30a904f6535..5f6924b9e29d 100644
+--- a/drivers/acpi/bus.c
++++ b/drivers/acpi/bus.c
+@@ -1571,6 +1571,7 @@ struct kobject *acpi_kobj;
+ EXPORT_SYMBOL_GPL(acpi_kobj);
+ 
+ void __weak __init acpi_arch_init(void) { }
++void __weak __init acpi_arch_late_init(void) { }
+ 
+ static int __init acpi_init(void)
+ {
+@@ -1609,6 +1610,7 @@ static int __init acpi_init(void)
+ 	acpi_wakeup_device_init();
+ 	acpi_debugger_init();
+ 	acpi_setup_sb_notify_handler();
++	acpi_arch_late_init();
+ 	acpi_viot_init();
+ 	return 0;
+ }
+diff --git a/drivers/acpi/loongarch/Makefile b/drivers/acpi/loongarch/Makefile
+new file mode 100644
+index 000000000000..d3764139dfaf
+--- /dev/null
++++ b/drivers/acpi/loongarch/Makefile
+@@ -0,0 +1,2 @@
++# SPDX-License-Identifier: GPL-2.0-only
++obj-y					+= init.o
+diff --git a/drivers/acpi/loongarch/init.c b/drivers/acpi/loongarch/init.c
+new file mode 100644
+index 000000000000..b11aa5c7d928
+--- /dev/null
++++ b/drivers/acpi/loongarch/init.c
+@@ -0,0 +1,11 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++#include <linux/acpi.h>
++
++void __init acpi_arch_init(void)
++{
++}
++
++void __init acpi_arch_late_init(void)
++{
++}
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index 60ab50cb8930..c6a180341c2d 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -1617,6 +1617,7 @@ static inline int acpi_pptt_get_cpumask_from_cache_id(u32 cache_id,
+ #endif
+ 
+ void acpi_arch_init(void);
++void acpi_arch_late_init(void);
+ 
+ #ifdef CONFIG_ACPI_PCC
+ void acpi_init_pcc(void);
+-- 
+2.39.3
+
