@@ -1,44 +1,47 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4F773AB269
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E47973AB26D
 	for <loongarch@lists.linux.dev>; Fri, 17 Jul 2026 06:15:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784268903; cv=none; b=RpCXQagzligCcX9VHgZdzHAtO2TLMnv7oY8Tf/sKYyGEMURs2oVGiEPfY7UQbZCLv7Qdqdy73UDdwK6oEjtIHqZFdRTuHf2xV+Ay75siM8Uj6MbfCA6BLqw+KUmGWkJgR5Y83YWgAKCof6qpvWJBOcV5S2nu4Z6I5bKC0btX4gw=
+	t=1784268903; cv=none; b=ufC7h12PyI6kyplQT09nARKy/rEVXjidLAWO2L6+ssxaHW1f8QIxaNyFmJwSEiI8WX2MhIupsO1rEW/ZzrIYbVm94sSAi74W07CkBbxIqpaBROpyrkCABpHTlTVv/qQvSlaKcF6IJJ6z3c/M4s3Xygf7tqTsbsnVMGcgpPXHvgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1784268903; c=relaxed/simple;
-	bh=8Y+Yy1ieOzwCkyGF/eXMgH3qclcc67hiENNCHRZvyAk=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Pfnl7COhA5H4vHUNlQ/EfDqokNJh9vaxinr+WqBacmYduTaX91MHXtovBkdLJIlGx/d7OAexhCKe+6fqFQnKf1XTEew833DMLyfSP6J63HML5skTcfmqnUEgox/DoJvkzdd+O7edJEC9Sz8X25RXAyUjehFq/T7rJa4U1xz6HMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JTbNI3FS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=7eoXt+Or; arc=none smtp.client-ip=193.142.43.55
+	bh=KQ1WIDNBrUDk8ykSofgmkt90oehDLy0q9zMVnaVz/hY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=VYieY2BvLKdbINdHzCp6Xb2z0YFTbWHYunKA9f2WRQI3EnCWLVRfmIWlzD2Va1mGCdLbi7O1ItEQCJt8nnMYYPg4d2qZ1oTdxSRdr8Vs6RG4idqo/68TJkjETx+6jOncMw7kDHkY0b8HOfpwEgcFI9ur8PNklgPIyF02viZQvwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KoPu31+M; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wa74C2r4; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JTbNI3FS";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="7eoXt+Or"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KoPu31+M";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wa74C2r4"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1784268899;
+	s=2020; t=1784268900;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=vDo3uHkwGXTE/lPbik782MNUamlRta61JxiZ5JxymY8=;
-	b=JTbNI3FSHq/Fpng7meaJkQIsEze2XlETAmMvjMKZfNHpobXscI4+cnOJ1lbhuMoKERWzjZ
-	96egokN77J+wzn8yTtijN+QwcnZLbe9cEL8NaIGBldkk7rDJX4axCsGiSyhtMdQoCx9SK8
-	PJNIxUvQFozleMEMuUWEqglbvwgk7Xjy8SUU86WjazsEKt9WvUuWT9KOWEiCG6+ky2nu36
-	Ce+8hcJKoVJujOmFrYFz6CvZNqwXT6fAXmXY+Ji6jEnbcEWsdls5m6791TAUIs6BhBk+M0
-	Dfgo7gu7PJuZ5E30O68v0y8Wr9BvIF4PseysMT3tvTa2iNTMvoqzFAU8AG0smg==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mzzp3V1NULRIcEaysPzAb8Zz8VZI2+Qui09INH6ftAA=;
+	b=KoPu31+M7DEJiGuxQyx87dja2+v/0wKUI3+h9/FKeCZtg7vu6/6k3IHnT/lggBxuTpdntR
+	qTpibhqKNZZw4BM7V52gSHPIGAqwL01HRWaLAY/CyVENRBuihCsSSoLSONe4mcshGUSF0q
+	x1egn4G9nU4Hq1ziCP8cszabnt8j66MU9765uVx4IdSoMa22sfMqIA+1+kBJv7pHbty77r
+	8JL852FBeOqGeuCgQlR+rI6tA5JxuVRA5fMCYTeBp3VVSIgQW6lvCbl4Ge+/vvfZwApTkL
+	SXuRIo71QG8c+aOrHL1qvrYYeRQ3v/5VKqsuZ7FB3n2oZ8FEeiaD0wUiCV5mHg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1784268899;
+	s=2020e; t=1784268900;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=vDo3uHkwGXTE/lPbik782MNUamlRta61JxiZ5JxymY8=;
-	b=7eoXt+Or1AL6mPmMAetpEU2Tuu1APEAYjpfx2qknwlYY6tK/532jdvQsnfUotbSfFcbZlD
-	TflIPpizrvKYHtDg==
-Subject: [PATCH v2 0/7] vDSO: Remove CONFIG_GENERIC_GETTIMEOFDAY ifdeffery
-Date: Fri, 17 Jul 2026 08:14:44 +0200
-Message-Id: <20260717-vdso-arch-clockmodes-v2-0-756f5a5d1467@linutronix.de>
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mzzp3V1NULRIcEaysPzAb8Zz8VZI2+Qui09INH6ftAA=;
+	b=wa74C2r4MpFvkqyig9S12yVatlxVHvwGiDm9hCwn4Aa/EXwi5mYVrVLxO3FkXBDRxqcDTt
+	gqEJT59qxV7O5zCg==
+Date: Fri, 17 Jul 2026 08:14:45 +0200
+Subject: [PATCH v2 1/7] kbuild: support generated asm-headers in
+ subdirectories
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -47,11 +50,9 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/22Nyw6CMBBFf4XM2jGlChRW/odhUfqQidiaFhsM4
- d+tuHV5TnLPXSGaQCZCV6wQTKJI3mXghwLUKN3NIOnMwBmvWc0qTDp6lEGNqCav7g+vTcTBKml
- byZU4C8jTZzCWlj177TOPFGcf3vtLKr/2F2xY+z+YSmR4sroRbBisqMrLRO41B+9oOWoD/bZtH
- yDv5Xi8AAAA
-X-Change-ID: 20260605-vdso-arch-clockmodes-bfcaf9a2c848
+Message-Id: <20260717-vdso-arch-clockmodes-v2-1-756f5a5d1467@linutronix.de>
+References: <20260717-vdso-arch-clockmodes-v2-0-756f5a5d1467@linutronix.de>
+In-Reply-To: <20260717-vdso-arch-clockmodes-v2-0-756f5a5d1467@linutronix.de>
 To: Arnd Bergmann <arnd@arndb.de>, Andy Lutomirski <luto@kernel.org>, 
  Thomas Gleixner <tglx@kernel.org>, 
  Vincenzo Frascino <vincenzo.frascino@arm.com>, 
@@ -67,48 +68,56 @@ Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
  loongarch@lists.linux.dev, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1784268894; l=1620;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1784268894; l=1604;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=8Y+Yy1ieOzwCkyGF/eXMgH3qclcc67hiENNCHRZvyAk=;
- b=hPrf2I9P1jU+kYEQu+8UEVHQqvJVt9vTUkaHvWWuPnWeyIPtAGGgCMh+q1tvIaF2hG8/+l6fB
- 1e3psZgJHTJAzl+YEzQIFGQjtwBaQb6XZCgdGDQxgN9JP9EzMeJ0Zsd
+ bh=KQ1WIDNBrUDk8ykSofgmkt90oehDLy0q9zMVnaVz/hY=;
+ b=FAa52uWU8Xpsj6/KnjDGFaQteDoJ46kN18BOC30sIzWBVPkX7m8aVVcepzXZCGIf/pCAK73n6
+ Px23A0W+U/IDAGHdf9QdjcpyUWd3nX+GH5AVWxgvfVFA8ghJZ3TLpQJ
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Always provide the definitions of the VDSO_CLOCKMODE_* constants and
-remove some ifdeffery from the clocksource drivers.
+Extend the asm-header stub generation to also handle subdirectories.
+An upcoming vdso/ header refactoring requires this.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
-Changes in v2:
-- Also drep the IS_ENABLED() logic.
-- Link to v1: https://patch.msgid.link/20260709-vdso-arch-clockmodes-v1-0-3fd780bbf851@linutronix.de
+ scripts/Makefile.asm-headers | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
----
-Thomas Weißschuh (7):
-      kbuild: support generated asm-headers in subdirectories
-      vDSO: Make clockmode constants available without CONFIG_GENERIC_GETTIMEOFDAY
-      MIPS: csrc-r4k: Remove CONFIG_GENERIC_GETTIMEOFDAY ifdeffery
-      clocksource/drivers/mips-gic-timer: Remove CONFIG_GENERIC_GETTIMEOFDAY ifdeffery
-      clocksource/drivers/arm_arch_timer: Remove CONFIG_GENERIC_GETTIMEOFDAY ifdeffery
-      clocksource/drivers/timer-riscv: Remove CONFIG_GENERIC_GETTIMEOFDAY ifdeffery
-      LoongArch: Remove CONFIG_GENERIC_GETTIMEOFDAY ifdeffery
+diff --git a/scripts/Makefile.asm-headers b/scripts/Makefile.asm-headers
+index 8a4856e74180..772b53ffdeb4 100644
+--- a/scripts/Makefile.asm-headers
++++ b/scripts/Makefile.asm-headers
+@@ -48,14 +48,13 @@ syscall-y   := $(addprefix $(obj)/, $(syscall-y))
+ generated-y := $(addprefix $(obj)/, $(generated-y))
+ 
+ # Remove stale wrappers when the corresponding files are removed from generic-y
+-old-headers := $(wildcard $(obj)/*.h)
++old-headers := $(shell test -d $(obj) && find $(obj) -name *.h)
+ unwanted    := $(filter-out $(generic-y) $(generated-y) $(syscall-y),$(old-headers))
+ 
+-quiet_cmd_wrap = WRAP    $@
+-      cmd_wrap = echo "\#include <asm-generic/$*.h>" > $@
++filechk_wrap = echo "\#include <asm-generic/$*.h>"
+ 
+ quiet_cmd_remove = REMOVE  $(unwanted)
+-      cmd_remove = rm -f $(unwanted)
++      cmd_remove = rm -f $(unwanted); find $(obj) -type -d -empty -delete
+ 
+ quiet_cmd_syshdr = SYSHDR  $@
+       cmd_syshdr = $(CONFIG_SHELL) $(syshdr) \
+@@ -74,8 +73,8 @@ all: $(generic-y) $(syscall-y)
+ 	$(if $(unwanted),$(call cmd,remove))
+ 	@:
+ 
+-$(obj)/%.h: $(srctree)/$(generic)/%.h
+-	$(call cmd,wrap)
++$(obj)/%.h: $(srctree)/$(generic)/%.h FORCE
++	$(call filechk,wrap)
+ 
+ $(obj)/unistd_%.h: $(syscalltbl) $(syshdr) FORCE
+ 	$(call if_changed,syshdr)
 
- arch/loongarch/kernel/time.c           |  2 --
- arch/mips/kernel/csrc-r4k.c            |  2 --
- drivers/clocksource/arm_arch_timer.c   |  4 ----
- drivers/clocksource/mips-gic-timer.c   |  2 --
- drivers/clocksource/timer-riscv.c      |  4 ----
- include/asm-generic/Kbuild             |  1 +
- include/asm-generic/vdso/clocksource.h |  0
- include/vdso/clocksource.h             |  4 +---
- scripts/Makefile.asm-headers           | 11 +++++------
- 9 files changed, 7 insertions(+), 23 deletions(-)
----
-base-commit: ecacc9c8d3ed0f63065f4a1e94bfd8bf65a3ffaf
-change-id: 20260605-vdso-arch-clockmodes-bfcaf9a2c848
-
-Best regards,
---  
-Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+-- 
+2.55.0
 
