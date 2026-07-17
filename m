@@ -1,268 +1,120 @@
-Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A7A3D6CA6
-	for <loongarch@lists.linux.dev>; Fri, 17 Jul 2026 07:15:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF12B3D4131
+	for <loongarch@lists.linux.dev>; Fri, 17 Jul 2026 07:16:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784272514; cv=none; b=K2H8UTmfkIdTH2CQqyHjMpsX0lY+4EBthj8iTBFEyNk5aKngbGpIOy1POxzQ5LUjEiRkM7ChF4ycwy/n173XGMWTwi9BJRZWcOhvQvm8hYXCHJBK8zKP9YybrhkDERrGdDq/hOPKYxCAL8hmi8lYMMVgZuJ4tOiFfwiQwxvuuT8=
+	t=1784272602; cv=none; b=or8psi11LhuR/yByqzPONahMVGlPv0MtwSASHzUZkCjTv1PL+2dgRARMYbPWzkqD+7t9Nr8bZaaROHZTvCYTlPieMglcrmqd68gA237kBbcaJnIOpsJs75mUTw1xEH1zwdvWRTHZFoqJWsTG0ALn0PrL1SmTxetDFt9YehfOOpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784272514; c=relaxed/simple;
-	bh=4jUq8ca4YM4DN4X85WpzzvKc/YYNjLoW2CiGNuLsi8w=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=owGfSivF3nfzQdud8paC1wwU+qv+V430NqLkyxfPOG6Bek+lS3M2uVw2QHS7lNx9ziMc2k9WJtgttQviuyIOcgqS8o2UlWfvF+GeDlQLrdp/DoRakjxBMGj0AU5+nUnSR9TzoPWrruig/YZpBCov7Viu5H4q8pNyPhgRhJZf6GU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=oTwUZFP5; arc=none smtp.client-ip=95.215.58.182
+	s=arc-20240116; t=1784272602; c=relaxed/simple;
+	bh=sm7/91cqsAlwz5MSdYN8PiNKzNq6F13Lp6/BqPPrD8Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ZFr4sK6wnYHU1rcqgHmnN4qWtX75f6U3bbty9DShTkhoU1ljM8q/JARvS7fsx22d9yMBgYMNYv7BuD8yJRXLL4yP/sNrp3NaMdG5l6PrW2wSDOaP8MqcFaWhKrvVzWvfaJk75MiIqWtepVL55lvoPlDzuOhwDmbOvITeWuGHi9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HZthQBFw; arc=none smtp.client-ip=91.218.175.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="oTwUZFP5"
-Message-ID: <4d07b052-8986-4de2-8926-538a4465bcd1@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HZthQBFw"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1784272508;
+	t=1784272598;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=veGuUK9FTLSBnsRPwaz0n3BeD8re6OmsH0Ms11ENDx4=;
-	b=oTwUZFP5TXCMr7qtv6/DZLN9d//xbv0W+ubi7h4Immrx0ISYtxgCLxKl6g/SoiWpd4NkQe
-	2yJ+Ny/Zqd6M0V88A6v2ahoW/bq+5NBzN7GleJKE6MQ0ypkEzF3Cu/YUYZd/4dqUWFjSGi
-	55eHigbrZ/vN7P61Bw0Q/IS26LrGYAs=
-Date: Fri, 17 Jul 2026 15:14:54 +0800
+	bh=Ykj7j2TDvNrFWyx2wOeD7eQtBc+/mXRhuYo6V5jMIW4=;
+	b=HZthQBFwTPafqA7/z8vwiqrBkzvUO6Y6RY+wDUW/8KsrKgOfmqOmtCh+mGmkMr2L4Vu/M5
+	gVElcxGlKit8oIvT+BaHiUEX62Tu6aJm0C2oMC3Ndfi1kOMtncpa4xVEXsSgUwTKrLyQaa
+	8jRfWaIKaro9zHCU4gTAPlMG3G069xI=
+From: George Guo <dongtai.guo@linux.dev>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Pratyush Yadav <pratyush@kernel.org>
+Cc: Mike Rapoport <rppt@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Shuah Khan <shuah@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Alexander Graf <graf@amazon.com>,
+	Kexin Liu <liukexin@kylinos.cn>,
+	George Guo <guodongtai@kylinos.cn>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] LoongArch: kexec: add KHO support for FDT-based
+Date: Fri, 17 Jul 2026 15:15:51 +0800
+Message-ID: <20260717071551.11904-1-dongtai.guo@linux.dev>
+In-Reply-To: <CAAhV-H5B6Mj2-AffkstJ4f8EEmvvPOGXoDy2QNudKD2kSz2XkA@mail.gmail.com>
+References: <CAAhV-H5B6Mj2-AffkstJ4f8EEmvvPOGXoDy2QNudKD2kSz2XkA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Cc: cui.tao@linux.dev, kernel@xen0n.name, kvm@vger.kernel.org,
- Tao Cui <cuitao@kylinos.cn>
-Subject: Re: [PATCH v4 0/3] LoongArch: KVM: Add PV TLB flush support
-To: Bibo Mao <maobibo@loongson.cn>, zhaotianrui@loongson.cn,
- chenhuacai@kernel.org, loongarch@lists.linux.dev
-References: <20260615082154.42144-1-cui.tao@linux.dev>
- <438d76ac-b447-1613-1c00-7c2186ac4014@loongson.cn>
- <0bfeca34-cdfe-4b05-a216-b57f3d00ed7f@linux.dev>
- <ec45b752-630a-a6cf-3f27-e330a9c4204d@loongson.cn>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Cui <cui.tao@linux.dev>
-In-Reply-To: <ec45b752-630a-a6cf-3f27-e330a9c4204d@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
+Hi Huacai, Pratyush,
 
+Thanks for the direction.  You were both right that the v3 approach was
+the wrong shape, and I have dropped it.
 
-在 2026/7/17 14:53, Bibo Mao 写道:
-> 
-> 
-> On 2026/7/17 上午11:56, Tao Cui wrote:
->>
->>
->> 在 2026/7/16 14:22, Bibo Mao 写道:
->>>
->>>
->>> On 2026/6/15 下午4:21, Tao Cui wrote:
->>>> From: Tao Cui <cuitao@kylinos.cn>
->>>>
->>>> This series implements paravirtualized TLB flush for LoongArch KVM
->>>> guests.
->>>>
->>>> In multi-vCPU KVM guests, remote TLB flushes broadcast IPIs to all
->>>> target vCPUs, including those preempted by the host. Sending IPIs to
->>>> preempted vCPUs causes unnecessary VM exits and grows with vCPU count,
->>>> becoming severe in overcommitted deployments.
->>>>
->>>> Reuse the existing steal-time shared memory page by adding a new
->>>> KVM_VCPU_FLUSH_TLB flag to the preempted byte. On the guest side,
->>>> skip IPIs to preempted vCPUs and set the flag via cmpxchg instead.
->>>> On the host side, when re-entering a vCPU in kvm_update_stolen_time(),
->>>> check and clear the flag; if set, drop the VPID to trigger a full TLB
->>>> flush on the next VM entry. No new shared memory page, hypercall, or
->>>> Kconfig option is needed.
->>> After a second thought, the PV TLB flush can only work on hardware PTW, there is problem on software PTW.
->>>
->>> With TLB flush flow, the current CPU sends IPI interrupter to other CPUs to flush TLB. With software PTW, other CPUs may execute TLB refill or TLB exception with interrupt disabled. IPI interrupt will not trigger until TLB refill/exception finishes, however with PV TLB method, other vCPUs will trap to host and flush TLBs, and continue to execute TLB refill/exception, stale TLB may be added.
->>>
->>
->> Sorry for that.
->>
->> This is indeed something I had overlooked -- thank you for catching it. It
->> is a correctness issue, not just a performance one, so it has to gate the
->> feature.
->>
->> I understand the race exactly as you describe it. With software PTW, a
->> TLB miss runs the guest's refill handler with interrupts disabled, and
->> that handler may already have loaded the old PTE into a register. A
->> native remote flush sends an IPI, but the IPI is held until IE is
->> re-enabled, so the flush always lands *after* the refill completes -- any
->> stale entry the refill wrote gets purged. The PV path breaks this: the
->> host flushes the target's TLB (drops the VPID) at an arbitrary instant,
->> then the target resumes its disabled refill handler and writes the stale
->> entry back with tlbfill/tlbwr, and nothing flushes it afterwards. The
->> same applies to the steal-time variant if a vCPU is preempted mid-refill:
->> it is flushed on re-entry and then resumes the refill. Only a hardware
->> PTW is safe, because the refill is atomic and always reads the current
->> table.
->>
->> So the feature must only be offered when the guest actually uses a
->> hardware PTW. The real condition is on the *guest* -- a -cpu la464 guest
->> still does software refill even on a PTW host -- so the host gate alone
->> is not enough; a non-PTW guest must not observe the feature either.
->>
->> For the host side, cpu_has_ptw is the natural precondition, and there's
->> already a precedent in kvm_vm_init_features() where
->> KVM_LOONGARCH_VM_FEAT_PTW is gated on cpu_has_ptw. I'd wrap the
->> advertisement the same way:
->>
->>      if (cpu_has_ptw) {
->>          kvm->arch.pv_features  |= BIT(KVM_FEATURE_PV_TLB_FLUSH);
->>          kvm->arch.kvm_features |= BIT(KVM_LOONGARCH_VM_FEAT_PV_TLB_FLUSH);
->>      }
->>
->> For the guest side: the guest discovers the feature by reading the
->> CPUCFG_KVM_FEATURE leaf, so if feasible I'd mask KVM_FEATURE_PV_TLB_FLUSH
->> off right there -- in kvm_emu_cpucfg() (the CPUCFG_KVM_FEATURE case in
->> exit.c) and the matching one_reg getter kvm_loongarch_cpucfg_get_attr()
->> in vcpu.c -- whenever the guest's own CPUCFG2.PTW (vcpu->arch.cpucfg[2],
->> bit 24) is clear. The equivalent could also be done in QEMU alongside
->> the companion patch, since QEMU already controls the guest model's PTW
->> bit. Both look implementable; I'll need to actually test them to see how
->> they behave.
->>
->> On the hardware side, I checked the box I ran the benchmarks on. It
->> reports as a 3A6000 / LA664, but reading CPUCFG2 directly gives 0x7e7cccc7
->> with the PTW bit (24) clear, so it has no hardware PTW either -- likely
->> an early part. Your 3C5000 is LA464, which is software PTW too. That
->> means the ebizzy and tlb_bench numbers I shared earlier were collected
->> with PV TLB flush active on a -cpu la464 (software-refill) guest, i.e.
->> exactly the unsafe configuration you pointed out. They show the mechanism
->> works and its direction (hypercall ahead of steal-time, and PV preventing
->> the overcommit collapse), but they were measured in a correctness-broken
->> config, so I won't use them to justify enabling the feature on
->> software-PTW silicon.
->>
->> For now I don't have a PTW-capable machine to test on. My reading is that
->> a software-PTW-safe variant isn't really possible -- the native IPI is
->> safe precisely because the flush is deferred past the IE=0 refill window,
->> and a host-side flush can't reproduce that ordering without effectively
->> becoming an IPI again. I'll spend some time confirming that, but
->> unless I've missed something, gating to hardware-PTW guests is the
-> PV TLB flush is a good technology, it can be verified again when there is hardware with HW PTW supported.
-> 
-Thanks a lot for all the help on this. You raised a real correctness
-issue I'd missed, and I genuinely enjoyed working through it with you --
-learned a good bit too. Yeah, makes sense to revisit PV TLB flush once
-there's HW-PTW hardware to test on.
+Let me restate the constraint and report what I did.
 
-Looking forward to next time.
+> But LoongArch is different, the efistub doesn't create a FDT, instead
+> it passes the EFI system table and command line to the core kernel
+> directly.
 
-Cheers,
-Tao
-> Regards
-> Bibo Mao
->> answer.
->>
->> Thanks,
->> Tao
->>
->>> Regards
->>> Bibo Mao
->>>>
->>>> The feature is advertised through the existing KVM PV feature
->>>> negotiation: the kernel exposes KVM_LOONGARCH_VM_FEAT_PV_TLB_FLUSH as
->>>> a VM-level capability, and userspace (QEMU) sets
->>>> KVM_FEATURE_PV_TLB_FLUSH in the guest's CPUCFG_KVM_FEATURE mask after
->>>> probing it. A corresponding QEMU patch ("target/loongarch: Enable PV
->>>> TLB flush advertisement to the guest") is posted alongside this
->>>> series.
->>>>
->>>> - Host side: only trace a PV TLB flush request when one is observed.
->>>> - (Carried over) Host uses amand_db.w to atomically read and clear the
->>>>     preempted byte; selftest gained input validation and failure cleanup.
->>>>
->>>> Testing: the PV TLB flush path itself is unchanged from v3, so the
->>>> benchmark numbers below still hold.  Note that, unlike v3, the feature
->>>> must now be enabled by userspace: run a QEMU built with the companion
->>>> patch (or with -cpu kvm-pv-tlb-flush=on) so the guest actually observes
->>>> KVM_FEATURE_PV_TLB_FLUSH.  Boot a 32-vCPU guest and run the selftest
->>>> inside it with sleep-idle (PV helps) and busy-spin (PV cannot optimize)
->>>> modes respectively:
->>>>
->>>>     qemu-system-loongarch64 \
->>>>       -m 4G -smp 32 --cpu la464 --machine virt \
->>>>       -bios .../QEMU_EFI.fd \
->>>>       -kernel .../vmlinuz-...-pvtlb-v4+ \
->>>>       -initrd /tmp/ramdisk_test.gz \
->>>>       -serial mon:stdio \
->>>>       -netdev tap,id=net0,ifname=tap0,script=no,downscript=no \
->>>>       -device virtio-net-pci,netdev=net0 \
->>>>       -append "root=/dev/ram rdinit=/sbin/init console=ttyS0,115200" -nographic
->>>>
->>>>     # PV TLB flush enabled (idle threads sleep, vCPUs get preempted)
->>>>     guest# ./pv_tlb_flush_test 1 31 50000 0
->>>>
->>>>     # Baseline (idle threads busy-spin, all vCPUs stay active)
->>>>     guest# ./pv_tlb_flush_test 1 31 50000 1
->>>>
->>>>     With PV TLB flush (sleep idle):    ~152,285 ns/flush
->>>>     Without PV TLB flush (busy-spin):  ~481,045 ns/flush
->>>>
->>>>     Improvement: ~68% latency reduction (~3.2x throughput increase)
->>>>
->>>> Tao Cui (3):
->>>>     LoongArch: KVM: Add PV TLB flush support via steal-time shared memory
->>>>     LoongArch: KVM: Implement guest-side PV TLB flush
->>>>     KVM: selftests: loongarch: Add PV TLB flush performance test
->>>>
->>>>    arch/loongarch/include/asm/kvm_host.h              |   1 +
->>>>    arch/loongarch/include/asm/kvm_para.h              |   9 +
->>>>    arch/loongarch/include/asm/paravirt.h              |  21 +++
->>>>    arch/loongarch/include/uapi/asm/kvm.h              |   1 +
->>>>    arch/loongarch/include/uapi/asm/kvm_para.h         |   1 +
->>>>    arch/loongarch/kernel/paravirt.c                   |  60 ++++++
->>>>    arch/loongarch/kernel/smp.c                        |  30 +++-
->>>>    arch/loongarch/kvm/trace.h                         |  15 ++
->>>>    arch/loongarch/kvm/vcpu.c                          |  34 +++-
->>>>    arch/loongarch/kvm/vm.c                            |   3 +
->>>>    .../selftests/kvm/loongarch/pv_tlb_flush_test.c    | 194 +++++++++++++++++++++
->>>>    11 files changed, 362 insertions(+), 7 deletions(-)
->>>>
->>>> ---
->>>> Changes in v4:
->>>> - Drop the "Preserve auto-enabled PV features on userspace override"
->>>>     patch: forcing auto-enabled features back on is migration-unsafe, and
->>>>     for PV TLB flush (which cannot degrade gracefully) a missed flush
->>>>     would corrupt the guest.  Enablement now follows the usual KVM model
->>>>     -- the kernel advertises KVM_LOONGARCH_VM_FEAT_PV_TLB_FLUSH and
->>>>     userspace (QEMU) explicitly sets KVM_FEATURE_PV_TLB_FLUSH after
->>>>     probing it; a companion QEMU patch is posted alongside, and the
->>>>     feature can be kept off for an older destination
->>>>     (-cpu kvm-pv-tlb-flush=off).
->>>>
->>>> Changes in v3:
->>>> - Host side: replace amswap_db.w with amand_db.w to atomically read
->>>>     and clear only the preempted byte, preserving the pad bytes for
->>>>     future UAPI use.  Issue a normal load (unsafe_get_user) before the
->>>>     atomic amand_db.w to avoid operating on stale cache data.
->>>> - Host side: move the pv_auto_features OR operation before the
->>>>     compatibility check in kvm_loongarch_cpucfg_set_attr() so that
->>>>     userspace does not need updating for pure kernel-internal PV
->>>>     feature additions.
->>>> - Selftest: add input validation, error checking on pthread_create,
->>>>     and cleanup handling on failure.
->>>>
->>>> Changes in v2:
->>>> - Host side: replace non-atomic unsafe_get_user + unsafe_put_user with
->>>>     atomic amswap_db.w inline assembly. This fixes two issues:
->>>>     1) unsafe_put_user failure could skip the TLB flush entirely
->>>>     2) non-atomic read+write race with guest-side try_cmpxchg could
->>>>        cause FLUSH_TLB requests to be lost
->>>> - Guest side: consolidate two separate READ_ONCE calls into a single
->>>>     READ_ONCE to eliminate a TOCTOU race where the host could clear
->>>>     preempted between the two reads. Also switch from byte-sized
->>>>     try_cmpxchg to 32-bit try_cmpxchg on the aligned word containing
->>>>     preempted.
->>>>
->>>
-> 
+So LoongArch has no boot FDT, and the arm64 /chosen path does not apply.
+My v3 synthesized an FDT and rewrote the DEVICE_TREE_GUID entry only to
+reuse the generic reader.  That was the hacky part, and it is gone.
 
+I followed the x86 model instead.  x86 has no boot FDT either; it carries
+the KHO pointer in setup_data (struct kho_data) and calls kho_populate()
+directly.  LoongArch has no setup_data, but it does pass the EFI system
+table.  So I use the EFI configuration table as the channel:
+
+- The first kernel builds a small handover struct (the KHO FDT and
+  scratch addresses), adds a dedicated GUID entry pointing to it, and
+  loads both as kexec segments.  machine_kexec() switches the system
+  table to the extended table before jumping.
+- The next kernel scans the configuration table for that GUID, reads the
+  struct, and calls kho_populate() directly.
+
+There is no synthesized FDT, no DEVICE_TREE_GUID rewrite, and nothing on
+the command line.  I did not go back to the v1 command line because that
+exposes the addresses to unprivileged userspace through /proc/cmdline.
+
+I tested this on real LoongArch hardware (ACPI/UEFI) with the live update
+two-stage kexec test and the test passes:
+
+$ sudo ./luo_kexec_simple --stage 1
+# [STAGE 1] Starting pre-kexec setup...
+# [STAGE 1] Creating state file for next stage (2)...
+# [STAGE 1] Creating session 'test-session' and preserving memfd...
+# [STAGE 1] Forking persistent child to hold sessions...
+# [STAGE 1] Child PID: 1242. Resources are pinned.
+# [STAGE 1] You may now perform kexec reboot.
+$ sudo kexec -l /boot/vmlinuz-7.1.0-rc6 --initrd=/boot/initramfs-7.1.0-rc6.img --reuse-cmdline
+$ sudo kexec -e
+
+$ sudo ./luo_kexec_simple --stage 2
+# [STAGE 2] Starting post-kexec verification...
+# [STAGE 2] Retrieving session 'test-session'...
+# [STAGE 2] Restoring and verifying memfd (token 0x1a)...
+# [STAGE 2] Test data verified successfully.
+# [STAGE 2] Finalizing test session...
+# [STAGE 2] Finalizing state session...
+#
+--- SIMPLE KEXEC TEST PASSED ---
+$ sudo dmesg | grep kexec
+[    0.000000] [      T0] KHO: found kexec handover data.
+
+I will send this as v4, folding in Mike's two selftest comments.  If you
+see a problem with the EFI configuration table approach, please tell me
+before I post.
+
+Thanks,
+George
