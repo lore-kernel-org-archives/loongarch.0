@@ -1,47 +1,47 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812F23A874D
-	for <loongarch@lists.linux.dev>; Fri, 17 Jul 2026 06:15:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EFF83AB26B
+	for <loongarch@lists.linux.dev>; Fri, 17 Jul 2026 06:15:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784268903; cv=none; b=ajc2kPAlR/QMQiuWf+pRQThk0fXBjPWl1gImNkv1snw3w0tt+KlnkYJb4dEmzR0UReC690IU+L0rKFtR6Jt1Ttqu0FroMR7/Nwyltj45FErnmKDTEoPrEipG5zgyWLI5/WF1IzZu5U2NUSC4XQ21kGHbBBm8dbO9vqCJBLL44ls=
+	t=1784268904; cv=none; b=DHhZPQlj5F7omWoQD5433VUANHn6JyHpHoICxKgxv+VNChFQ4RPhkDnAnNn5zaOU08Y4yRQ7QAQ1mH9joHlz18kg/r/8RzeQTnjakSNe4Uxr1TbW6E3slyjc7h39Jlgqqtuu6imgQ8wkVc8WssnjwVEpaxOQ3zmx+3baADRotAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784268903; c=relaxed/simple;
-	bh=p9rZWKtD6/YfP8onrdLafhoNLyPoeTcrsrG5G4dPJoE=;
+	s=arc-20240116; t=1784268904; c=relaxed/simple;
+	bh=t3APLy9t2SZVxR8iClS2KaGCf82ju0LDxr/0aH1HIvc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Eiq1thNzg40QVeqb3SkIua9DyDqFsjdsQrXI5HQLfk/F650VTZ7Z9qvJHf4pPq02UYdMigGdlJRpN7iif3pW+P8rjtmPy8Y9yFpVQzkzM1KH5eFbx/LtwCSvc4mqIMwhn/Fb8zAN1H5OxmW2b+I8iTH/Evt5S1+sIs9Pg8eZ3Kg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=17HRzV4Z; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3yRzgF+E; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=k/k38fSdNlLgY/h8m8aguYAHoAcE3LWptIRZDVeZx4jyhv0uBybZYPRRRYHR5x9pVkQWuv6PNwoD7Cf11wRHuFmdwoRSfMVgQeotvnnaOwt4sufdRcIezJ+lUIR5IKHjj1vwWglTB3Ye8vZ0/IRaOnzFD3ThjSFA/fMKkVVFlek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ovjYqPfP; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=r4tWelha; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="17HRzV4Z";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3yRzgF+E"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ovjYqPfP";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="r4tWelha"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1784268900;
+	s=2020; t=1784268901;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=itu6k/7LjVC4xl50fE8uK9psTIOXzEDbu436igm+MQo=;
-	b=17HRzV4Z0zlFiD4PG/2rWK1+7U7sk2iNELCWctH6MBXHjK2ETGdyaAoYCDTGJ3LrDrFvro
-	wV16qiQ5nojRN3PcU8BRBo/4Br54fUZ+uvByQqQAJ3ATnWj3jVFIJ9r4Z9Cd2K9jROAzwx
-	3TTkDkfSXLIEH6BVBrclGo4ilXSE4QvO+qxZN+v3HIvPor3fkAOn3a+rkl+hmOpBbWYwYh
-	p+kUVZGCOmDqaWfGERQjDQtWA3sxAGzIt1+9W+K2/dFTvoYpJmLOst3y/V2JqvsbKqDyr+
-	3sqSY3sRea6JwKgYKvyAtqIccNkdKLHRN2TlVLioucRWRYCNPGOLvpeYIVpMzA==
+	bh=vQbno2WvTFVUJzsRinFLe6H6OiW8r6h0VjyMcplhKIo=;
+	b=ovjYqPfP49nfKV50tUridaUCmN2wEut8eA8C8vu1HpUDDDG4MKVHrU+TXQvRmHTHW/SZG9
+	eBN4eN4cj8OOVwsHfa7RzuAN+xk7krnjKS5R+GB1U3UxER99/Eqb1/ZtQgpHkjTVKVWXUx
+	6hNRIh6jvfY2o+Tys7CVxCKW9AjEmKTLZMeK7CIPuXd3YnXe12XnfHniJ6ECaxNzycCOsb
+	NVYeZ3UvZzPN8GQ73OQ/rjH0KM3zUS0Xr5Mb1wLpmkM5S5XGbOO9e2Co0c+UZR21PGGTH0
+	qM5qhKiWB6+VgQ1nxscWhy9jyFC5VfsKAWTvv53Q+rGOpW9cpcD9ssalzRtHIQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1784268900;
+	s=2020e; t=1784268901;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=itu6k/7LjVC4xl50fE8uK9psTIOXzEDbu436igm+MQo=;
-	b=3yRzgF+EmD5sj4Dx06hxldC/keHbN8d+rP0Sdm3QquL3zoaK85M7hsoDRJT/bWsR6NOyHZ
-	5RmG/Bme8ZCvrUDw==
-Date: Fri, 17 Jul 2026 08:14:46 +0200
-Subject: [PATCH v2 2/7] vDSO: Make clockmode constants available without
- CONFIG_GENERIC_GETTIMEOFDAY
+	bh=vQbno2WvTFVUJzsRinFLe6H6OiW8r6h0VjyMcplhKIo=;
+	b=r4tWelhaNShXcQKY3JDouYaui2eyhEbnWAbHyyJe+5Jr4uhktzkJdfKjWxywa+MG1Bb1hX
+	dMs3a1rcRJ+vIyBA==
+Date: Fri, 17 Jul 2026 08:14:47 +0200
+Subject: [PATCH v2 3/7] MIPS: csrc-r4k: Remove CONFIG_GENERIC_GETTIMEOFDAY
+ ifdeffery
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20260717-vdso-arch-clockmodes-v2-2-756f5a5d1467@linutronix.de>
+Message-Id: <20260717-vdso-arch-clockmodes-v2-3-756f5a5d1467@linutronix.de>
 References: <20260717-vdso-arch-clockmodes-v2-0-756f5a5d1467@linutronix.de>
 In-Reply-To: <20260717-vdso-arch-clockmodes-v2-0-756f5a5d1467@linutronix.de>
 To: Arnd Bergmann <arnd@arndb.de>, Andy Lutomirski <luto@kernel.org>, 
@@ -68,66 +68,41 @@ Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
  loongarch@lists.linux.dev, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1784268894; l=1814;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1784268894; l=1015;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=p9rZWKtD6/YfP8onrdLafhoNLyPoeTcrsrG5G4dPJoE=;
- b=udpLwy9jwLglOQZMDRkLQ+0ay9CxwhEU9AUOW0opBLf8VjiBjnYIcthAPCsMXPCGNmjqmBrF1
- Wc3RBEpM/TLAmmUd4/wBA4QiNO/5mDrOoBQ10HU1Y7P+0ELeuNkD+6b
+ bh=t3APLy9t2SZVxR8iClS2KaGCf82ju0LDxr/0aH1HIvc=;
+ b=xI8NbmAXSs8ogUaOoFJQHyozFpyiKZY+gTXc6elvzxJ/8aAMz++2OBYOxxmDzQezptzAU4LCo
+ C3mfof7qJeGDv8TsxQP4KGhrtSCFjQ1QLt4BHVyXQNIUkV1JNwmDam6
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Some code, for example clocksource drivers, may want to use the vDSO
-clockmode constants even when CONFIG_GENERIC_GETTIMEOFDAY=n.
-But the symbols are completely hidden in that case, making ugly
-ifdeffery necessary.
-
-Provide unlinkable dummy definitions. These can be used with
-IS_ENABLED(CONFIG_GENERIC_GETTIMEOFDAY).
-
-As not all architectures provide asm/vdso/clocksource.h,
-provide an empty stub in asm-generic for it.
+Now that there is a definition of VDSO_CLOCKMODE_R4K even if no
+vDSO is built, the ugly ifdeffery can be removed.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- include/asm-generic/Kbuild             | 1 +
- include/asm-generic/vdso/clocksource.h | 0
- include/vdso/clocksource.h             | 4 +---
- 3 files changed, 2 insertions(+), 3 deletions(-)
+ arch/mips/kernel/csrc-r4k.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/include/asm-generic/Kbuild b/include/asm-generic/Kbuild
-index 15df9dcb42a5..2bc00c67dc54 100644
---- a/include/asm-generic/Kbuild
-+++ b/include/asm-generic/Kbuild
-@@ -62,6 +62,7 @@ mandatory-y += topology.h
- mandatory-y += trace_clock.h
- mandatory-y += uaccess.h
- mandatory-y += unwind_user.h
-+mandatory-y += vdso/clocksource.h
- mandatory-y += vermagic.h
- mandatory-y += vga.h
- mandatory-y += video.h
-diff --git a/include/asm-generic/vdso/clocksource.h b/include/asm-generic/vdso/clocksource.h
-new file mode 100644
-index 000000000000..e69de29bb2d1
-diff --git a/include/vdso/clocksource.h b/include/vdso/clocksource.h
-index c682e7c60273..bce81c02a7c6 100644
---- a/include/vdso/clocksource.h
-+++ b/include/vdso/clocksource.h
-@@ -4,13 +4,11 @@
- 
- #include <vdso/limits.h>
+diff --git a/arch/mips/kernel/csrc-r4k.c b/arch/mips/kernel/csrc-r4k.c
+index 241a934543a8..59eca397f297 100644
+--- a/arch/mips/kernel/csrc-r4k.c
++++ b/arch/mips/kernel/csrc-r4k.c
+@@ -126,14 +126,12 @@ int __init init_r4k_clocksource(void)
+ 	clocksource_mips.rating = 200;
+ 	clocksource_mips.rating += clamp(mips_hpt_frequency / 10000000, 0, 99);
  
 -#ifdef CONFIG_GENERIC_GETTIMEOFDAY
- #include <asm/vdso/clocksource.h>
--#endif /* CONFIG_GENERIC_GETTIMEOFDAY */
+ 	/*
+ 	 * R2 onwards makes the count accessible to user mode so it can be used
+ 	 * by the VDSO (HWREna is configured by configure_hwrena()).
+ 	 */
+ 	if (cpu_has_mips_r2_r6 && rdhwr_count_usable())
+ 		clocksource_mips.vdso_clock_mode = VDSO_CLOCKMODE_R4K;
+-#endif
  
- enum vdso_clock_mode {
- 	VDSO_CLOCKMODE_NONE,
--#ifdef CONFIG_GENERIC_GETTIMEOFDAY
-+#ifdef VDSO_ARCH_CLOCKMODES
- 	VDSO_ARCH_CLOCKMODES,
- #endif
- 	VDSO_CLOCKMODE_MAX,
+ 	clocksource_register_hz(&clocksource_mips, mips_hpt_frequency);
+ 
 
 -- 
 2.55.0
