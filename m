@@ -1,116 +1,99 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CAD83750CF
-	for <loongarch@lists.linux.dev>; Fri, 17 Jul 2026 03:28:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F6A367B90
+	for <loongarch@lists.linux.dev>; Fri, 17 Jul 2026 03:33:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784258883; cv=none; b=lU+dfJKEDu8Kx20+o1TmaTIKHe4ztbh/q5l1DSbvZVgDbJ7rVQ5cNEwJUlFDoLB2hXOaqvGGvzoRvCzhkMQXC8Ccx8k+EOqul9N4iiWy1ZVFz1wl/prw3qZp3a1qjgQyuYqLMBq2xfzF78Dz42af+aHMDd09bpG0G3KK6BtUcWE=
+	t=1784259209; cv=none; b=KwFAhM+45Gc+B+DL/IRKlOvfo0TpWfuQAdaFioq6mmbJ9gGXnGL+wGpzIQUlElaC0URKiTuKfQ+emEGycGTjkHXDXIf8H1CcKc6BkC7PgOUwG5WIcWmXVR5weJZkz2hcy9NbZaFC3gUVuYBbD1vGCzDRD0Em5arLcdaZeUZkeog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784258883; c=relaxed/simple;
-	bh=688qOdZO5qTRHmNZD++Vf0ThUov9gtw6SNx/sJTqAvw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jZKn9dUSGxe0JtyH3uljcJjrqUstt+Q4c1XsF41UvinoPHK95YzeOpoAWwbzQWBUW3BCQW7pjgbp4vdvxZBbaZUnmcHaBVhwgospBagRO3j4CxdPEKGNn+RWBVH2KL4uyy5WDRv3OyHlOpdAVq1AtQ53QASQL1oe8KHiF4ltlzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 800cb096818f11f1aa26b74ffac11d73-20260717
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
-	HR_CTT_TXT, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
-	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
-	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
-	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_TRUSTED, SA_EXISTED
-	SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_GOOD
-	CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_GOOD
-	ABX_MISS_RDNS
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.12,REQID:f934ee42-9f08-4529-b43e-65feb3035b57,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:10
-X-CID-INFO: VERSION:1.3.12,REQID:f934ee42-9f08-4529-b43e-65feb3035b57,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:10
-X-CID-META: VersionHash:e7bac3a,CLOUDID:5a0e7c2c1c593d0bbe50fad15e7a357f,BulkI
-	D:260717112756N64A4KQO,BulkQuantity:0,Recheck:0,SF:17|19|66|78|102|127|865
-	|898,TC:nil,Content:0|15|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS
-	:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,A
-	RC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 800cb096818f11f1aa26b74ffac11d73-20260717
-X-User: husong@kylinos.cn
-Received: from ctao-book.. [(223.70.159.239)] by mailgw.kylinos.cn
-	(envelope-from <husong@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 2051884231; Fri, 17 Jul 2026 11:27:55 +0800
-From: Song Hu <husong@kylinos.cn>
-To: chenhuacai@kernel.org
-Cc: kernel@xen0n.name,
-	yangtiezhu@loongson.cn,
-	jiaxun.yang@flygoat.com,
-	arnd@arndb.de,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Song Hu <husong@kylinos.cn>
-Subject: [PATCH] LoongArch: align range before sizing in local_flush_tlb_kernel_range
-Date: Fri, 17 Jul 2026 11:27:21 +0800
-Message-ID: <20260717032721.1993891-1-husong@kylinos.cn>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1784259209; c=relaxed/simple;
+	bh=fRDWC3Hc+XEUebBylZAOw0u/iRsn4rqaU/q/RJMqsGY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=th3k/GiheSoxCRSFIlhE3HlVewffKEPOLn0JcKrf24AOkxCZWb4RMxJX7dzgqFosr5dVThic+lmqhc5aIgn8+C+MMHevOqzyihnYvqHVTSMMGB1/2VdJ1TXM5ohSc+bIZBIE793lNxY2l2cn0NlTW+DMqd8DsMt2khb71yDNlwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gs0ID5ES; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gs0ID5ES"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71D921F000E9
+	for <loongarch@lists.linux.dev>; Fri, 17 Jul 2026 03:33:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784259208;
+	bh=uw6HonlBa/V9swRBxulEiHRoC+FSg7o2dOlYUFKGjcU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=Gs0ID5ESv1we/DCuIBP2i2yY10c5nxkD2rvpWvuVNrfHNA+U2J0jHlH0PyKDHZ/qb
+	 IXcO2/mxqo2xKVDGkyie+3GcQxVCz6mvNwZq7ByjUXA6rnWWOi2w4M2tuxwQdPcJC7
+	 dF5pComhGK5WRrYD8T81KxnEtzICbEXFS26HqHSVJe/DYZLnAXxIiDiBOnr4x8yPAi
+	 EzS22kh+LYAJkuX23/7UZkibqnN06l8RfYqwmAjdh9y7G6pbj6RyqDGD/0dQY4GQFN
+	 v9levCMmDahyb0IssUPhISUa0TsSWYB9sbxRKbuM1Hi+FI38Zj+etTS+f1hdqmJPOz
+	 4+vzMhy37ZVLQ==
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-697bd21fdc2so4220171a12.1
+        for <loongarch@lists.linux.dev>; Thu, 16 Jul 2026 20:33:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RqwGXrUvNGaQBJ1nS8hT1mRXDWBwJXur9A1CEfJ/arLhlBXvctrvQC8Q46eO95WwW7KoJKMhX97in0=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwXRR6RrnTht2fPwn7uhhmOsjLoLdY5+nsfH1e0JtAUWbpUagew
+	x41vxmbPJX77+pENC4QjKHZLDGF+Fw6wEDNyQZn7hNgnLR4tRe28NhkJreL90gh2+6QpSxYdKer
+	PFWQyRk7AYDyhfGeXaMt+tZazqZ998MA=
+X-Received: by 2002:a05:6402:44db:b0:69c:30dd:deec with SMTP id
+ 4fb4d7f45d1cf-69e6528acf6mr146101a12.17.1784259207067; Thu, 16 Jul 2026
+ 20:33:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20260717023712.1989650-1-husong@kylinos.cn>
+In-Reply-To: <20260717023712.1989650-1-husong@kylinos.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 17 Jul 2026 11:33:52 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5sgnvth4_uKSrz0U+0gPOWMT7E5YODyNVVzHq_Y+cgmw@mail.gmail.com>
+X-Gm-Features: AUfX_mww3Mt4EWMeIrU4O0nCo90ev5WJ0RyWn4Vr0U1wHryL9jqbAUwk0aYwRKw
+Message-ID: <CAAhV-H5sgnvth4_uKSrz0U+0gPOWMT7E5YODyNVVzHq_Y+cgmw@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: warn when per-CPU TLB vector allocation fails
+To: Song Hu <husong@kylinos.cn>
+Cc: kernel@xen0n.name, yangtiezhu@loongson.cn, jiaxun.yang@flygoat.com, 
+	arnd@arndb.de, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-local_flush_tlb_kernel_range() sizes the flush from the unaligned caller
-range and aligns start/end only afterwards — the opposite order of its
-sibling local_flush_tlb_range(), which aligns first.  Align start/end
-first, then size, to match the sibling.
+Hi, Song,
 
-The order matters for unaligned ranges: the original size is derived from
-the raw caller range, not the 2-page-aligned range the per-entry invtlb()
-loop actually iterates, so it can fall one entry short, and the
-tlbsize/8-vs-tlbsize/2 threshold may then pick the per-entry loop when a
-full local_flush_tlb_kernel() would be cheaper.
+On Fri, Jul 17, 2026 at 10:38=E2=80=AFAM Song Hu <husong@kylinos.cn> wrote:
+>
+> On a secondary CPU, setup_tlb_handler() allocates a NUMA-local page
+> for the per-CPU TLB exception vectors and silently returns if the
+> allocation fails.  The CPU keeps running on the shared vectors that
+> configure_exception_vector() installed earlier in per_cpu_trap_init(),
+> losing NUMA locality with nothing logged.  Warn so the fallback is
+> observable.
+>
+> Signed-off-by: Song Hu <husong@kylinos.cn>
+> ---
+>  arch/loongarch/mm/tlb.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/loongarch/mm/tlb.c b/arch/loongarch/mm/tlb.c
+> index aaf7d685cc2a..e5220653279c 100644
+> --- a/arch/loongarch/mm/tlb.c
+> +++ b/arch/loongarch/mm/tlb.c
+> @@ -297,8 +297,11 @@ static void setup_tlb_handler(int cpu)
+>                         return;
+>
+>                 page =3D alloc_pages_node(cpu_to_node(cpu), GFP_ATOMIC, g=
+et_order(vec_sz));
+> -               if (!page)
+> +               if (!page) {
+> +                       pr_warn("CPU%d: TLB vector allocation failed; "
+> +                               "using shared vectors\n", cpu);
+>                         return;
+> +               }
+A warning usually make users nervous, this failure completely doesn't
+hurt anything, why you want to shout loudly here?
 
-Both strategies flush correctly; the change only makes the sizing heuristic
-match the sibling and reflect the real flush count.
+Huacai
 
-Signed-off-by: Song Hu <husong@kylinos.cn>
----
- arch/loongarch/mm/tlb.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
-
-diff --git a/arch/loongarch/mm/tlb.c b/arch/loongarch/mm/tlb.c
-index 4b3d7120da73..a3c90841edbd 100644
---- a/arch/loongarch/mm/tlb.c
-+++ b/arch/loongarch/mm/tlb.c
-@@ -90,16 +90,13 @@ void local_flush_tlb_kernel_range(unsigned long start, unsigned long end)
- 	unsigned long size, flags;
- 
- 	local_irq_save(flags);
--	size = (end - start + (PAGE_SIZE - 1)) >> PAGE_SHIFT;
--	size = (size + 1) >> 1;
-+	start &= (PAGE_MASK << 1);
-+	end += ((PAGE_SIZE << 1) - 1);
-+	end &= (PAGE_MASK << 1);
-+	size = (end - start) >> (PAGE_SHIFT + 1);
- 	if (size <= (current_cpu_data.tlbsizestlbsets ?
- 		     current_cpu_data.tlbsize / 8 :
- 		     current_cpu_data.tlbsize / 2)) {
--
--		start &= (PAGE_MASK << 1);
--		end += ((PAGE_SIZE << 1) - 1);
--		end &= (PAGE_MASK << 1);
--
- 		while (start < end) {
- 			invtlb_addr(INVTLB_ADDR_GTRUE_OR_ASID, 0, start);
- 			start += (PAGE_SIZE << 1);
--- 
-2.43.0
-
+>
+>                 addr =3D page_address(page);
+>                 pcpu_handlers[cpu] =3D (unsigned long)addr;
+> --
+> 2.43.0
+>
