@@ -1,83 +1,171 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AFCF218ADD
-	for <loongarch@lists.linux.dev>; Sun, 19 Jul 2026 15:33:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EB7437EFFB
+	for <loongarch@lists.linux.dev>; Mon, 20 Jul 2026 07:16:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784475233; cv=none; b=InUMOFDIBBs+wXOWVX8Cl6iayyWV1lGmvg0ZOsDvYSEeVFy8TSAIyV1Wu8QKpb0DRUx+cmaASxndRkmtehheoAANp5rtZ0yPtKMR3rev/hqCe5xs8FJTbwWjgeqF37pxseCuI+AbDeVjNcMJFDTOVWbjBtgsf08ZSH3T38mmydw=
+	t=1784531805; cv=none; b=mZZ7X+dj1AmA7eQ9onieKtazsHm2MQtnCeZLT6JjwxA6okcPZINcblD5Q5H46MmLaBOV3S6X6KNW6QcfPYECJGeNHP7+4FpTa5Dexx/I1QmZNDzJF0bfGtPbmYCXfwaejk20DWWyMmaySmFai1038lz0EYDc/jY8ZrwzY/3WPDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784475233; c=relaxed/simple;
-	bh=/uFlyb+28tTvPicpyZS5LtL4/WBr4ICoyLUmuQn3zho=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=KD16ml9es2wAm6ypUBjP0dQo/7SVPYEZxBo2AcnkRJysaacSe3SiEaW7a/mpEt6vJhSoGA9J8bJVHbBT473xsAhW2O5mUgpSDINC9bNj4m5uPglqnfPxlnbCFa4zcq137tGfCTUAsX3tcVBswT7Rr208J08amtqnTXPH7TtMq1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=Y8kU9WkK; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="Y8kU9WkK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1784474890;
-	bh=M9cLc5KCeavLvqvey8T3GJaSSlkbnhyK7B2xSlP36cQ=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Y8kU9WkK+cdpVa1FWwTNo33TCNLbqs+CtsMBNDUsubka/GMmKe7voYk++QzGXo1L+
-	 JnXolGtLv2PvKOgNQ/Mu1ieUXJ0QLNEwPf3JkqXb28VssziLakwknNZRItJrAB7c75
-	 hbLVp5xY69RnooxwRJA47xHYIUpzfbP0Djr+5zYQ=
-Received: from [127.0.0.1] (2607-8700-5500-e873-0000-0000-0000-1001.16clouds.com [IPv6:2607:8700:5500:e873::1001])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id E34CE65982;
-	Sun, 19 Jul 2026 11:28:08 -0400 (EDT)
-Message-ID: <ba8b2723b563cd290c5c00fb4ec2402626fba06c.camel@xry111.site>
+	s=arc-20240116; t=1784531805; c=relaxed/simple;
+	bh=+IjgbjCv4P0y37DnHkhxGrCbfehB9lijpXwuGmDsbRM=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=gE/+ZlyRN0LjGB4cgjHtclSAOU2mtdfXJBpor5DcBy8WL4Z/WLvpdny1RfUGT+zlVy/YIa6Osd6gc+wWKw77V2kC8rXBc+UN64ABgp5KJLKwmQXjg2v8WcxCd64kqWUf4U2GJKHRpoPJCWBP8NYUNeyKENaWIGxU43f4p3y8Iaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxBOpOy11qAi4FAA--.15465S3;
+	Mon, 20 Jul 2026 15:16:30 +0800 (CST)
+Received: from [10.130.40.83] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJBxEuRJy11qT50SAA--.31041S2;
+	Mon, 20 Jul 2026 15:16:27 +0800 (CST)
 Subject: Re: [PATCH v1 2/2] LoongArch: mm: Expand modules virtual address
  space to 2GB
-From: Xi Ruoyao <xry111@xry111.site>
-To: Mike Rapoport <rppt@kernel.org>, Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Huacai Chen
-	 <chenhuacai@kernel.org>, linux-mm@kvack.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Date: Sun, 19 Jul 2026 23:28:06 +0800
-In-Reply-To: <alySgaaQen6ZtwSo@kernel.org>
+To: Xi Ruoyao <xry111@xry111.site>, Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Huacai Chen <chenhuacai@kernel.org>, linux-mm@kvack.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 References: <20260717075715.25513-1-yangtiezhu@loongson.cn>
-	 <20260717075715.25513-3-yangtiezhu@loongson.cn>
-	 <alySgaaQen6ZtwSo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.60.2 
+ <20260717075715.25513-3-yangtiezhu@loongson.cn> <alySgaaQen6ZtwSo@kernel.org>
+ <ba8b2723b563cd290c5c00fb4ec2402626fba06c.camel@xry111.site>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <8ea92daa-ab71-92fd-4449-af51b5557c22@loongson.cn>
+Date: Mon, 20 Jul 2026 15:16:25 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <ba8b2723b563cd290c5c00fb4ec2402626fba06c.camel@xry111.site>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBxEuRJy11qT50SAA--.31041S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxAr1UKFW5JF4xXF43ury5KFX_yoWrJF18pF
+	4fAws5Cr48JrnrJw40y3WkWayUu347uFW2qF98Jry29wn8ZFy5AFsxtry3XFy7ur1Fyw42
+	gryvqw4jqa4DAabCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
+	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
+	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
+	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
+	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7_Ma
+	UUUUU
 
-On Sun, 2026-07-19 at 12:01 +0300, Mike Rapoport wrote:
-> On Fri, Jul 17, 2026 at 03:57:15PM +0800, Tiezhu Yang wrote:
-> > Frequent "execmem: unable to allocate memory" warnings are observed
-> > during kernel module loading when updating the latest kernel.
-> >=20
-> > This is because the modules virtual address region on LoongArch is
-> > tightly constrained to 256MB, while ARM64 and RISC-V are natively
-> > configured with a spacious 2GB region.
->=20
-> The constraint follows architecture ability to address kernel instruction=
-s
-> and data from modules code.
->=20
-> I don't know what are loongarch requirements, but I remember that arm64
-> added a layer of relocation support to allow 2G module address space.
+On 2026/7/19 下午11:28, Xi Ruoyao wrote:
+> On Sun, 2026-07-19 at 12:01 +0300, Mike Rapoport wrote:
+>> On Fri, Jul 17, 2026 at 03:57:15PM +0800, Tiezhu Yang wrote:
+>>> Frequent "execmem: unable to allocate memory" warnings are observed
+>>> during kernel module loading when updating the latest kernel.
+>>>
+>>> This is because the modules virtual address region on LoongArch is
+>>> tightly constrained to 256MB, while ARM64 and RISC-V are natively
+>>> configured with a spacious 2GB region.
+>>
+>> The constraint follows architecture ability to address kernel instructions
+>> and data from modules code.
+>>
+>> I don't know what are loongarch requirements, but I remember that arm64
+>> added a layer of relocation support to allow 2G module address space.
+> 
+> IIUC on LoongArch the size of one module is limited to 256MB, but the
+> total size of modules can be up to 2GB, as the module loader creates PLT
+> entries for calls across the module boundary.
+> 
+> I'd seen the "execmem: unable to allocate memory" error loading the
+> large amdgpu module.  But after I stripped the amdgpu module those
+> warnings gone away.  To me this is very strange: shouldn't the module
+> loader just ignore the debug info even if it's not stripped instead of
+> requesting execmem for it???
 
-IIUC on LoongArch the size of one module is limited to 256MB, but the
-total size of modules can be up to 2GB, as the module loader creates PLT
-entries for calls across the module boundary.
+Yes, after "strip --strip-debug drivers/gpu/drm/amd/amdgpu/amdgpu.ko",
+there are no "execmem: unable to allocate memory" warnings anymore.
 
-I'd seen the "execmem: unable to allocate memory" error loading the
-large amdgpu module.  But after I stripped the amdgpu module those
-warnings gone away.  To me this is very strange: shouldn't the module
-loader just ignore the debug info even if it's not stripped instead of
-requesting execmem for it???
+But we usually need the debuginfo, here are the details:
 
---=20
-Xi Ruoyao <xry111@xry111.site>
+$ readelf -S drivers/gpu/drm/amd/amdgpu/amdgpu.ko
+There are 78 section headers, starting at offset 0x3acdf0a0:
+
+Section Headers:
+   [Nr] Name              Type             Address           Offset
+        Size              EntSize          Flags  Link  Info  Align
+   ...
+   [23] .debug_info       PROGBITS         0000000000000000  00b73fa9
+        000000000bfde1bc  0000000000000000           0     0     1
+   [24] .rela.debug_info  RELA             0000000000000000  280f2e40
+        0000000011f754a8  0000000000000018   I      75    23     8
+   ...
+
+
+$ objdump -h drivers/gpu/drm/amd/amdgpu/amdgpu.ko
+
+drivers/gpu/drm/amd/amdgpu/amdgpu.ko:     file format elf64-loongarch
+
+Sections:
+Idx Name          Size      VMA               LMA               File off 
+  Algn
+  ...
+  14 .debug_info   0bfde1bc  0000000000000000  0000000000000000 
+00b73fa9  2**0
+                   CONTENTS, RELOC, READONLY, DEBUGGING, OCTETS
+  ...
+
+The size of .debug_info is 0x0bfde1bc (191.87 MB),
+the flag of .debug_info is not SHF_EXECINSTR or SHF_ALLOC.
+The size of .rela.debug_info is 0x11f754a8 (287.46 MB),
+the flag of .rela.debug_info is I (SHF_INFO_LINK).
+
+Furthermore, I think the following changes are also necessary:
+
+```
+diff --git a/arch/loongarch/kernel/module.c b/arch/loongarch/kernel/module.c
+index 7d4d571ee55e..5a4cbd27f97d 100644
+--- a/arch/loongarch/kernel/module.c
++++ b/arch/loongarch/kernel/module.c
+@@ -484,6 +484,7 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const char 
+*strtab,
+         Elf_Addr v;
+         Elf_Sym *sym;
+         Elf_Rela *rel = (void *) sechdrs[relsec].sh_addr;
++       Elf_Shdr *dst_sec = sechdrs + sechdrs[relsec].sh_info;
+
+         pr_debug("%s: Applying relocate section %u to %u\n", __func__, 
+relsec,
+                sechdrs[relsec].sh_info);
+@@ -522,6 +523,10 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const 
+char *strtab,
+
+                 v = sym->st_value + rel[i].r_addend;
+
++               /* Skip advanced address pairing for non-exec sections */
++               if (!(dst_sec->sh_flags & SHF_EXECINSTR))
++                       goto apply_normal;
++
+                 if (type == R_LARCH_PCADD_LO12 || type == 
+R_LARCH_GOT_PCADD_LO12) {
+                         bool found = false;
+                         unsigned int j = idx;
+@@ -562,6 +567,7 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const char 
+*strtab,
+                         idx = j; /* Record the previous j-loop end index */
+                 }
+
++apply_normal:
+                 switch (type) {
+                 case R_LARCH_B26:
+                         err = apply_r_larch_b26(mod, sechdrs, location,
+```
+
+Thanks,
+Tiezhu
+
