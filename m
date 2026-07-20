@@ -1,188 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE5A430F819;
-	Mon, 20 Jul 2026 18:34:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8122937E5FD
+	for <loongarch@lists.linux.dev>; Mon, 20 Jul 2026 19:05:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784572498; cv=none; b=Xx1xEDacKkdJdoGw8kLht04og/u+ksBvFe+dtAxkdxh5wGmzRfJ0mfeC05y0Lw8MGsgjp/zd9cAh/4KItYD1t3Q833EvzGBaBh28d+5cq3rZnykr95X4K0F1lKh/PKGFUBc1OB1TimsTAjuiPCfJ8IZd9O4zvFD66CZ47lZrOII=
+	t=1784574315; cv=none; b=anqP9tvYXBuvEIVWLgZsiWmeyFG5m9zMVh3pNm0hi6NjPQHIppE1RbF24M0RTQiGhOOm1d3W0PgWcWM/8uzzUkmQRCcwAA64BPwDe3IDW54uv5lj5nw5csTLhD2MgfMCDmH5FPGw4MFmMaoe4ctQIfbvA55SXQ3HAPYsUtmn1nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784572498; c=relaxed/simple;
-	bh=qah1/aSKPEDFSj7W77/Rln10asl9Y/DbD1Rx8TyGT6k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lp686Dmsv/wwwVf4iEiAADQr8Rkq5feQqZMeMN7J0F/tjh/q0Vo7gf8ujdQ90x1tcgKVuffRjqbfQgn8RZg+ok2C56iGEnGuPWTxfNVbx/0tEKmo62u/0giIkL4qW/LE4JIX07UH4BebwuIcyZWK6RX0304yJ0l06C9mNhK8GvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZiqkYHDV; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784574315; c=relaxed/simple;
+	bh=fnW288skhTtWEbrTN/fD9Nt9dtFSRpG2InOVP3xSzZg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GrxR19dspSbdjHkf07luPj6KoUC6O/DFOufgcnA/t1afPsgQSLmKYUUCvHlvQyQ/AFhigpAkRJGTzUTxwQL9QAJgRbxgP0LLR6xScPIW9yJ1HbtzNCMapC7tD2ILJDCmdK2NTxcfDhUmO5XDpkAvjPiTn2ueixGcBZMIL43+P/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nChhInmW; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZiqkYHDV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1DD11F000E9;
-	Mon, 20 Jul 2026 18:34:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784572496;
-	bh=12wl43ytAtcYJQLm/kZ5324fHnyuY88/G9Pd9OM4gBc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=ZiqkYHDVP2qkeVDecGOc/AL68ExHIOa+N9wf6zpElcuP8BjzityNR3fXpRouD6Ehq
-	 SdhdP31mB10JONwQr43IdwScZQ0O9KA+2TbSs4W6g+buFus1/MlM8ZHq2/r01JZlM9
-	 x7sClSPxNJzz/QvGIHJW2TFFLwGz+7DH1e8xjftrXWo+THqHwQo/1NyW/TLiNO3Mob
-	 /ybNNXpfQVmyYt1dGckJaW1LhAkeXWYiZSJRhtLaLkwXbgcehTU18uwEXF7aDRKC5U
-	 VuVs7WZtYZqcDvudkDPLsNWDkBan+T70HzWEq+a/NRI3WoVrCkG9e7VBh1ExQsde45
-	 +F1UqfaKQKX/g==
-Message-ID: <51810eba-2a60-49f9-b879-7f806546e600@kernel.org>
-Date: Mon, 20 Jul 2026 20:34:44 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nChhInmW"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2cc7e86e7aeso77530655ad.2
+        for <loongarch@lists.linux.dev>; Mon, 20 Jul 2026 12:05:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1784574313; x=1785179113; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=kPMaiKQm/Lrn2+15jJw1Tz84+egEdnjBHflNkHpDaxg=;
+        b=nChhInmWd9vFvicDaYvJi7AlvuqkJL6hIRj/Uvakv/u5sAhVsWnIfiVqJENsJaVtvX
+         uWbxu3sOX5gMGmWdTz6JwWWLJz65bN5TBJAGKp405KsR9TgL5G+AV/a5rN3HaL5dBLHu
+         TUqdrIqPsUs4GjjEMx7B8tqgegC/QQmtAEkT1ufH/X8+d62Kw6AOV1pCC0Pza95Jh+aK
+         dxpuOisj7zwAwivevu40Nw8IU1vZKxOOy19nfltq3ti1TI+n4xGtEhu1fE9vSXD5hhRf
+         9E9w2kYZwiJrwn2eDMRiluNfypD4i8qYAk3eahfCPi0J15dyp+hwGy4RxMabgO0befjY
+         TIeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784574313; x=1785179113;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=kPMaiKQm/Lrn2+15jJw1Tz84+egEdnjBHflNkHpDaxg=;
+        b=PCFWWReUrfhrQ0SfspcxVpRmE8UTzuU8zl52LiO8D7ZvG8uld2aORj2g8cgRlYTv6i
+         1Lez1Q5ogacrwxo5NCbkHdmvnD70pY8FzcmLggX1zQeSqiOubmI7OdXanZJTwWC+SxhD
+         8XNLAegQJotN96apbbtf2kDMbuaI6A6KqtIIcsxlvq6idh5s0/W/9h5n//ibT+PYUyjE
+         pYJOBM8S8hnrQt1QkjZJMsTPWjMZ3asLpJy5fyTLZ6ixWxWx/LJqNezFYB5+d7rMRh8D
+         jbRbLNph0SXajRpc2peNn8FKD7t/w7nancmqz3+zyo1LsAG9mn3OdZXo648huoYOU8jt
+         gZGA==
+X-Forwarded-Encrypted: i=1; AHgh+Rprly5K0IyS9CJ5Ht3fchILUd1zm/NoA1HbsLqzbDDG4GAMIMf6PUVKC7TUpzUg3w4g9TrnF3GREr8=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzmqkwvt7Ze2biSh+4gcLIiGmFJ2EunfD2LFwb+crPOmgbyhl/e
+	LlillClSNMl2oBHNZHEkGV5fr6GRym+BjfsIaEmLJ27Zis7yq05uZ9cm
+X-Gm-Gg: AR+sD13754SxdPTEAr6yKNtgO3DPFN1znMq3L8vv6PwScw1gr6BMfqjInNDflX7rHqt
+	aoLx9kjUurqggbfjqmbnO3LAynlmp7HCqWZrzPi7vizZkX9a1b1XEL3kk5kp4l2EijVLsUAwbdf
+	axBQ9dQiyFq7U29ZcFj/C8ujuyeAuKtV5vbxM+3WsmrkehkKzzqAB4bpV5owlXKkCbPQiMY/n4Q
+	/S4T7cqbDIcsfEascd54SWFo9NQDk24S/5OBAknjvwpMDL7kTXqHt5aIPnqx7x56GbGR9Yo6FUC
+	zE7hPWZ43vv2BACzH+++i12AFdMHkEnRDMT+E/REA6DP7J0w3Wa26Y9Tt6askYtmv1Jm67p29f7
+	C+1uXVATcC1OhBHgIXkUwlOMG0Io6Dw2vrc/loGJw5uZBFVkKR+g1qm694aEgspJCKfJqhtM8/w
+	F3PQdDg2ESY4Q6LoQd0aAJS02oM1Ha51e9aA==
+X-Received: by 2002:a17:902:f681:b0:2ca:3e3f:4956 with SMTP id d9443c01a7336-2cf34a35445mr164591015ad.44.1784574312756;
+        Mon, 20 Jul 2026 12:05:12 -0700 (PDT)
+Received: from fedora ([2601:644:937c:6c90:6d4e:7b2d:4a39:fb0c])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2cf3448f73esm60735085ad.16.2026.07.20.12.05.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2026 12:05:11 -0700 (PDT)
+Date: Mon, 20 Jul 2026 12:05:08 -0700
+From: Vishal Moola <vishal.moola@gmail.com>
+To: Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	linuxppc-dev@lists.ozlabs.org, Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	linux-s390@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>, sparclinux@vger.kernel.org,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	linux-um@lists.infradead.org, Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ning Sun <ning.sun@intel.com>, x86@kernel.org,
+	tboot-devel@lists.sourceforge.net, Ard Biesheuvel <ardb@kernel.org>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	linux-efi@vger.kernel.org, Alistair Popple <apopple@nvidia.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: Re: [PATCH 14/22] mm: set page table page type when allocated
+Message-ID: <al5xZHiFwatn518I@fedora>
+References: <20260714-remove_pgtable_cdtor-v1-0-44be8a7685d7@arm.com>
+ <20260714-remove_pgtable_cdtor-v1-14-44be8a7685d7@arm.com>
+ <alZSwAM4pwmMOeaD@fedora>
+ <f3afa5df-73f3-49da-87a6-d75eb5f3610f@arm.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] mm: move internal mempolicy APIs to new internal
- header
-Content-Language: en-US
-To: Matthew Wilcox <willy@infradead.org>,
- Brendan Jackman <brendan.jackman@linux.dev>
-Cc: Brendan Jackman <jackmanb@google.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
- "Liam R. Howlett" <liam@infradead.org>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
- Jan Kara <jack@suse.cz>, Joshua Hahn <joshua.hahnjy@gmail.com>,
- Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
- Ying Huang <ying.huang@linux.alibaba.com>,
- Alistair Popple <apopple@nvidia.com>, Hugh Dickins <hughd@google.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>, Chris Li <chrisl@kernel.org>,
- Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
- Nhat Pham <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>,
- Barry Song <baohua@kernel.org>, Youngjun Park <youngjun.park@lge.com>,
- "Joerg Roedel (AMD)" <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Robin Murphy <robin.murphy@arm.com>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Thomas Gleixner <tglx@kernel.org>,
- Chuck Lever <cel@kernel.org>, Jeff Layton <jlayton@kernel.org>,
- NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>,
- Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, iommu@lists.linux.dev,
- loongarch@lists.linux.dev, linux-nfs@vger.kernel.org, netdev@vger.kernel.org
-References: <20260716-folio-alloc-cleanups-v1-0-5363b8e92d33@google.com>
- <20260716-folio-alloc-cleanups-v1-1-5363b8e92d33@google.com>
- <alkLSzQvzT9zJbY1@casper.infradead.org> <DK05KUIDJVLZ.61UIWOL0K3OT@linux.dev>
- <al5gQgnBCjNCSD_4@casper.infradead.org>
-From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-Autocrypt: addr=vbabka@kernel.org; keydata=
- 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
-In-Reply-To: <al5gQgnBCjNCSD_4@casper.infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f3afa5df-73f3-49da-87a6-d75eb5f3610f@arm.com>
 
-On 7/20/26 19:52, Matthew Wilcox wrote:
-> On Thu, Jul 16, 2026 at 04:57:37PM +0000, Brendan Jackman wrote:
->> On Thu Jul 16, 2026 at 4:48 PM UTC, Matthew Wilcox wrote:
->> > On Thu, Jul 16, 2026 at 02:30:10PM +0000, Brendan Jackman wrote:
->> >> There are no external users for this surface, reduce the scope.
->> >> -struct folio *folio_alloc_mpol_noprof(gfp_t gfp, unsigned int order,
->> >> -		struct mempolicy *mpol, pgoff_t ilx, int nid);
->> >
->> > Hm.  So what we're saying is that allocations which respect mempolicy are
->> > only for core mm and not for, eg, device drivers to do.  Is that really
->> > what we want to say?  I don't think so, because that's inconsistent
->> > with having just widened __filemap_get_folio_mpol to allow guest_memfd
->> > to specify a mempolicy.
-
-guest_memfd is practically mm internal though, IMHO.
-
->> Yeah I agree, mempolicy definitely seems like a "public concept".  All
->> I'm saying here is this specific function doesn't have any external
->> users so it doesn't need to be an external header. 
+On Thu, Jul 16, 2026 at 11:49:31AM +0200, Kevin Brodsky wrote:
+> On 14/07/2026 17:16, Vishal Moola wrote:
+> > On Tue, Jul 14, 2026 at 03:04:03PM +0100, Kevin Brodsky wrote:
+> >> As a step towards removing pagetable ctor/dtor calls for kernel
+> >> mm's, move the page type updates from the ctor/dtor to
+> >> pagetable_{alloc,free}.
+> > Thanks for doing this patchset.
 > 
-> I don't think that should be the metric for moving things to internal.h.
-> To me, internal.h is a signifier that these interfaces should only be
-> used by the MM.  Not that "all current users are within the MM".
-
-Perhaps. It can be also useful to move them outside only when someone asks.
-
->> ... With the ulterior motive that I want to add a new parameter to it
->> that actually _is_ mm-internal. Namely, alloc_flags, so I can add
->> ALLOC_UNMAPPED to implement AS_NO_DIRECT_MAP, i.e. the next iteration of
->> [0]. So basically this is
->> about trying to extend the allocator without creating a GFP flag.
+> Thanks for suggesting it :) It's turning out to be quite a bit more
+> involved than I expected though! (There are multiple cases where we call
+> the ctor/dtor without using pagetable_{alloc,free}, see my reply to the
+> cover letter.)
 > 
-> Yeah.  I'm not sold on the whole alloc_flags thing, but I'm too busy to
-> sit down and think it through properly to get involved in a proper
-> argument about how it should work.
-
-Well it's basically a workaround for limited gfp flags space. So we can
-extend it without making that a cost for everybody, as long as those that
-need the new functionality are limited.
-
-> My entirely unresearched and ill-considered opinion is that the __GFP
-> flags should _be_ the ALLOC flags.  We shoudn't be translating GFP flags
-> into ALLOC flags that are what the allocator actually uses, the
-
-It uses both.
-
-> translation should be done at compile time.  So if GFP_KERNEL and
-
-That would assume the gfp flags are also known at compile time, which is not
-always the case.
-
-> GFP_ATOMIC need to be composed of different flags with different
-
-The flags we are adding/considering to add are not about GFP_KERNEL vs
-GFP_ATOMIC context, however.
-
-> semantics, then we should do that, not invent a different set of flags
-> that special people can use for special purposes.
-
-Yep it's ugly and pragmatic, as usual. At least it's not immortalized as an
-UAPI, so we can deal with exploring in a wrong direction and fixing it later.
-
->> So I'm envisaging if an external user arises for it later, we'd slap two
->> underscores on the beginning of the internal one, (with the alloc_flags
->> arg), and then bring back the public one as a wrapper.
->> 
->> Does that make sense?
+> > We should switch over from __folio_set_pgtable() to __SetPagePgtable()
+> > in this patch. Ptdescs and folios should be treated as distinctly
+> > independent of each other.
 > 
-> We have a long history of people just moving stuff around in patches
-> without knowing what the intent was if it should be moved.
+> I sure remember the previous discussion, but my reading of your comments
+> [1] is that we cannot really change this as long as pagetable_alloc()
+> can be called with order > 0, right? Multiple archs still rely on that.
 
-I guess this patch is not critical to the rest, if that's an issue.
+Kinda...
+
+The concern was about callers accessing tail pages directly for that
+information. Using the folio API ensures that we always look into the
+head page.
+
+Since we're now doing it at allocation time, we know we always have the
+head page, so it's fine.
+
+The dtor/free should be more questionable because the underlying api
+uses virt_to_page() which could look at a tail page... oopsie. I
+haven't seen any reports tied to it so its probably fine (the
+setting/clearing has been using the folio API since ptdescs).
+
+We can say thats a happy accident that makes distinguishing ptdescs
+and folios easier :)
+
+> > Eventually, we want to replace the memcg accounting as well, but
+> > there's no existing API for that right now. Lets leave that as is for
+> > now; this patchset is big enough already ;)
+> 
+> Yep, looks like there was an attempt to improve this but it had to be
+> reverted [2].
+> 
+> - Kevin
+> 
+> [1] https://lore.kernel.org/all/aha321ndGSdReBJR@fedora/
+> [2]
+> https://lore.kernel.org/all/20260225002434.2953895-1-axelrasmussen@google.com/
+> 
