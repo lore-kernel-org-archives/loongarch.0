@@ -1,291 +1,158 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95103D649F
-	for <loongarch@lists.linux.dev>; Mon, 20 Jul 2026 10:35:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 048CB3D75AD
+	for <loongarch@lists.linux.dev>; Mon, 20 Jul 2026 10:40:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784543709; cv=none; b=b0vlTvhkBb9nKTj2sBwU8lNYws1EAQNcKObZO1NHCoMEeKAcRso4T4TdZE6v01WqLvDN8RdOWqmt7x079lBnxQLSxenitD9/vjn58hflPDQ/iz/nemrIMREs73SjB+dBhqfsFo+hwlX2rYyWKqjcC8Bt97is6S7zvqmn7j0jrZg=
+	t=1784544056; cv=none; b=Q07VFotpt8BWupBIxG4ssKNLw3ANL5te8D5Oq4/yyKCKoUacclGdF71s/Muo8df9G6uTuxBJgMwJhWvIpCPbPqZQO8QDlSezvOtt/tkYYfPccaM002bTdl/Tw1wgTpcPtxO4/CPaWfeRCSFdhN3RvLrXE4B53uhpCtu6rpYLSuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784543709; c=relaxed/simple;
-	bh=k37RWmWff7zt+PtsvHIuhzz9otckpy6kRhbc8EISwX4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HYqtx/q8dRYETdV0ZJ8G2b5h/WJJQh8ueeV/4MEBm7GNiAkxgS94yFGjw7y9eXsrHfmqay8pGwJtcXoELYvZAE9/sUsA41ZMGaCMJ9oqkBhZQvdhIMCTIRDa64xas76ZbgKY2VVQeXO6vplbm+iHhPDYFxhSVTOyfNXWb+9bq7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=HpIk/WTu; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="HpIk/WTu"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4955158f26aso11052185e9.3
-        for <loongarch@lists.linux.dev>; Mon, 20 Jul 2026 03:35:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1784543705; x=1785148505; darn=lists.linux.dev;
-        h=content-type:in-reply-to:autocrypt:from:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=k37RWmWff7zt+PtsvHIuhzz9otckpy6kRhbc8EISwX4=;
-        b=HpIk/WTu1HHwOvedtK6UbQelxpmpYRAaY2uLr97YrW3QfVCGBWAfnoZ8RNtd2T2J/O
-         ALEWhlq+z0MYuN7kpNFuGwRN/UFuvqdX7cDcL+Dgv1mMyejeuXCpTA1lUFnjwEhaA/2O
-         6JHI7OMi87QRjxyObhYeciMWR/3qhoZJu3ocdDuxVUwCk6s/2TcdPP7Kk9r9OzK9w4/c
-         BmRmL5IOP0GjkTPyiR34ZPqjaDeT7Sz3ZDCb61yGbWeWlapjmImna6f2t+UE9OAjZASi
-         rk4KWnNYQzEurCr1LtRST2GVrWanD2Vrpw7LzQQT2312ASHzsFOoSI7LpPtS89UTy2Lf
-         +1fQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784543705; x=1785148505;
-        h=content-type:in-reply-to:autocrypt:from:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=k37RWmWff7zt+PtsvHIuhzz9otckpy6kRhbc8EISwX4=;
-        b=IdkG8Mh0qphTY2cMkyvdMy5xQMLpjoNisjHzn7XXKd523e32/AWvujJwFeFftVLSmC
-         zmbmPq2PkGmhgJqJrHOpr75s0YgABQ8YdHJr10Je/i7hjVmJBTEhuQ3oTZG63PqkT9oY
-         aXVunmU1oroMuV1EgNhFvVkOEhBSv5nXixQCrrCUNQQFcTNs8O1dCII9ViBDwzOK5fXZ
-         mjgdNymiS1ovWn37FKEmkCBm6uHatBuUBp92TkPQiBZhRO+TlFL0FYs8OQDhk0cGF/Kk
-         JU5RlJIvkGDARYgRVJdS7KoaTGuqDingpFXlggbGwYh0d+JNPiu+qcuZ8YeDMGiR9+N2
-         wy/g==
-X-Forwarded-Encrypted: i=1; AHgh+RoZzxKtqInwAArGpXMgk3F9KdZ75Siqn2Bcxt8+kvkl4CbKXRKSoRV2WervcOKkxpoW/IF4Ywzf1/0=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwX+hzN33wdSTwwvo+RLcM87RRjD+m5QekIKMz84Vdh/HQ33WdC
-	HgjsI/C7iXuExnLoVHDdlV4fZbeZEiIVq5m+l4S6s9YAEyWQ8RXaCIIrnA2ROoD+7Ek=
-X-Gm-Gg: AfdE7ckWLyRXo3Z8WCy5nqTduzpZv8xLEvq2FNp9gBjEKIZcdHvQ+LEb8/Sa9G6xgPB
-	RakvrX3MMfcBk86lgN3Jm36GyvG/S/FUi8R28G57LOqF+T2jHVlpKN3nAOPm3wp2kmm3vqfwdUB
-	yROLhM05lM5zXWNro42HUvGT60fkC3WuhYQQWs6oYxASSdhyq0RhzXL9y67SKTw2GV9y4W6V7d7
-	3swArjqaHBITRTIxQrwWZQtCx+O3QTZ5nxIK1TV7ek/doF397u4Mu0JRatvAvoN2b2rcKE2sjPh
-	sYMDOhoCWqi0zLggiy8+VJb3qk6Tqyb8CtvzvSyMbGhpIjO5IBzE8WpoHtzaVpf3Ath3KnCPMlh
-	2+bfIgGATrftF4F6zy700o6JxVOIwJD4T1GDy439gAVY+bk7O+7Rob04u4DKHdsURaZTH+Tov8B
-	ZYfZOqnfgaKPAFAu3x63f3AfNi8/Ru/In4j1raUSc93rvKGEdUUtJabJKrpv7tV9E8YTY34T1RZ
-	vBoSADRt/rNEivP/8uAfKLCT4MsIoNh
-X-Received: by 2002:a05:600c:4f14:b0:495:5ce6:9c18 with SMTP id 5b1f17b1804b1-4955ce6a33cmr61097885e9.27.1784543704827;
-        Mon, 20 Jul 2026 03:35:04 -0700 (PDT)
-Received: from ?IPV6:2a00:12d0:af5d:ad01:5d3f:14e6:9bcb:5112? (2a00-12d0-af5d-ad01-5d3f-14e6-9bcb-5112.ip.tng.de. [2a00:12d0:af5d:ad01:5d3f:14e6:9bcb:5112])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4954a2b074csm291431975e9.6.2026.07.20.03.35.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jul 2026 03:35:04 -0700 (PDT)
-Message-ID: <e258581c-a17f-4b5a-aafd-82e513a6288e@suse.com>
-Date: Mon, 20 Jul 2026 12:35:02 +0200
+	s=arc-20240116; t=1784544056; c=relaxed/simple;
+	bh=dzXSNrm5ivREgGs/tD6QrqtHxbGOYzsk6uHJjTBDMd0=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=K1R/MIMEyiv3nKet8pXn/mSz+qojGW93TmQ5wbr5Xq6i/I1hQAC7Zzxgql3XMDiLgYQ0r94wjpTMOs3RFHsSHhse27ZmibLIzKDe4SROOkl1gWd7rKr47Kz67dN1iXQUAJYeJcu2uB3CZMqZ5ucZY4E3GoUFcgKd6p4bEEEJvXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Cx7+sv+11qEz8FAA--.20800S3;
+	Mon, 20 Jul 2026 18:40:47 +0800 (CST)
+Received: from [10.130.40.83] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJAxTOUr+11qZNMSAA--.34772S2;
+	Mon, 20 Jul 2026 18:40:45 +0800 (CST)
+Subject: Re: [PATCH v1 2/2] LoongArch: mm: Expand modules virtual address
+ space to 2GB
+To: Xi Ruoyao <xry111@xry111.site>, Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Huacai Chen <chenhuacai@kernel.org>, linux-mm@kvack.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20260717075715.25513-1-yangtiezhu@loongson.cn>
+ <20260717075715.25513-3-yangtiezhu@loongson.cn> <alySgaaQen6ZtwSo@kernel.org>
+ <ba8b2723b563cd290c5c00fb4ec2402626fba06c.camel@xry111.site>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <38d130e6-7036-e296-e058-433c8ba7a265@loongson.cn>
+Date: Mon, 20 Jul 2026 18:40:43 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] sched: Convert paravirt_steal to new static key APIs
-To: Hongyan Xia <hongyan.xia@transsion.com>,
- "mingo@redhat.com" <mingo@redhat.com>,
- "peterz@infradead.org" <peterz@infradead.org>,
- "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
- "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
- "dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>,
- "rostedt@goodmis.org" <rostedt@goodmis.org>,
- "bsegall@google.com" <bsegall@google.com>, "mgorman@suse.de"
- <mgorman@suse.de>, "vschneid@redhat.com" <vschneid@redhat.com>,
- "kprateek.nayak@amd.com" <kprateek.nayak@amd.com>,
- Ajay Kaher <ajay.kaher@broadcom.com>,
- Alexey Makhalov <alexey.makhalov@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
- Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
- Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "x86@kernel.org"
- <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Vitaly Kuznetsov <vkuznets@redhat.com>,
- Stefano Stabellini <sstabellini@kernel.org>,
- Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Cc: Jiazi Li <jiazi.li@transsion.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "virtualization@lists.linux.dev" <virtualization@lists.linux.dev>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
- "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
- "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
-References: <cover.1784538478.git.hongyan.xia@transsion.com>
- <773bbd8fcd5ef2ebfe1c64303c7a71a56368de69.1784538478.git.hongyan.xia@transsion.com>
+In-Reply-To: <ba8b2723b563cd290c5c00fb4ec2402626fba06c.camel@xry111.site>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <773bbd8fcd5ef2ebfe1c64303c7a71a56368de69.1784538478.git.hongyan.xia@transsion.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------xRaoXSGgLc0vY9TPQoiqAmqD"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAxTOUr+11qZNMSAA--.34772S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxAr1UKFW5JF4xXF43ury5KFX_yoWrXF18pF
+	45Ga1rCr4kJFn8Ca1xAw1UuFyY93y5CFW5trZxury2vr15Zry09FsrKw15ZFy7Cr1Fyr1U
+	KFykXa1UtFyDAabCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	XVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
+	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
+	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
+	14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4oGQDUUUU
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------xRaoXSGgLc0vY9TPQoiqAmqD
-Content-Type: multipart/mixed; boundary="------------GCGLUHAC00omEipMv2gl1qSr";
- protected-headers="v1"
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-To: Hongyan Xia <hongyan.xia@transsion.com>,
- "mingo@redhat.com" <mingo@redhat.com>,
- "peterz@infradead.org" <peterz@infradead.org>,
- "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
- "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
- "dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>,
- "rostedt@goodmis.org" <rostedt@goodmis.org>,
- "bsegall@google.com" <bsegall@google.com>, "mgorman@suse.de"
- <mgorman@suse.de>, "vschneid@redhat.com" <vschneid@redhat.com>,
- "kprateek.nayak@amd.com" <kprateek.nayak@amd.com>,
- Ajay Kaher <ajay.kaher@broadcom.com>,
- Alexey Makhalov <alexey.makhalov@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
- Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
- Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "x86@kernel.org"
- <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Vitaly Kuznetsov <vkuznets@redhat.com>,
- Stefano Stabellini <sstabellini@kernel.org>,
- Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Cc: Jiazi Li <jiazi.li@transsion.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "virtualization@lists.linux.dev" <virtualization@lists.linux.dev>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
- "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
- "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
-Message-ID: <e258581c-a17f-4b5a-aafd-82e513a6288e@suse.com>
-Subject: Re: [PATCH 2/3] sched: Convert paravirt_steal to new static key APIs
-References: <cover.1784538478.git.hongyan.xia@transsion.com>
- <773bbd8fcd5ef2ebfe1c64303c7a71a56368de69.1784538478.git.hongyan.xia@transsion.com>
-In-Reply-To: <773bbd8fcd5ef2ebfe1c64303c7a71a56368de69.1784538478.git.hongyan.xia@transsion.com>
+On 2026/7/19 下午11:28, Xi Ruoyao wrote:
+> On Sun, 2026-07-19 at 12:01 +0300, Mike Rapoport wrote:
+>> On Fri, Jul 17, 2026 at 03:57:15PM +0800, Tiezhu Yang wrote:
+>>> Frequent "execmem: unable to allocate memory" warnings are observed
+>>> during kernel module loading when updating the latest kernel.
+>>>
+>>> This is because the modules virtual address region on LoongArch is
+>>> tightly constrained to 256MB, while ARM64 and RISC-V are natively
+>>> configured with a spacious 2GB region.
+>>
+>> The constraint follows architecture ability to address kernel instructions
+>> and data from modules code.
+>>
+>> I don't know what are loongarch requirements, but I remember that arm64
+>> added a layer of relocation support to allow 2G module address space.
+> 
+> IIUC on LoongArch the size of one module is limited to 256MB, but the
+> total size of modules can be up to 2GB, as the module loader creates PLT
+> entries for calls across the module boundary.
+> 
+> I'd seen the "execmem: unable to allocate memory" error loading the
+> large amdgpu module.  But after I stripped the amdgpu module those
+> warnings gone away.  To me this is very strange: shouldn't the module
+> loader just ignore the debug info even if it's not stripped instead of
+> requesting execmem for it???
 
---------------GCGLUHAC00omEipMv2gl1qSr
-Content-Type: multipart/mixed; boundary="------------mHisnunnxH4NBSrCYMbsXcuq"
+I did the following changes based on the original 7.2-rc4 for debugging:
 
---------------mHisnunnxH4NBSrCYMbsXcuq
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+```
+diff --git a/kernel/module/main.c b/kernel/module/main.c
+index 46dd8d25a605..5eab1ab8b195 100644
+--- a/kernel/module/main.c
++++ b/kernel/module/main.c
+@@ -2972,7 +2972,6 @@ static struct module *layout_and_allocate(struct 
+load_info *info, int flags)
+          * special cases for the architectures.
+          */
+         layout_sections(info->mod, info);
+-       layout_symtab(info->mod, info);
 
-T24gMjAuMDcuMjYgMTE6MzgsIEhvbmd5YW4gWGlhIHdyb3RlOg0KPiBGcm9tOiBIb25neWFu
-IFhpYSA8aG9uZ3lhbi54aWFAdHJhbnNzaW9uLmNvbT4NCj4gDQo+IHBhcmF2aXJ0X3N0ZWFs
-X3JxX2VuYWJsZWQgYW5kIHBhcmF2aXJ0X3N0ZWFsX2VuYWJsZWQgdXNlIHJhdyBzdGF0aWNf
-a2V5DQo+IEFQSXMgd2hpY2ggYXJlIG5vdyBkZXByZWNhdGVkLiBVc2UgdGhlIG5ldyBBUEkg
-aW5zdGVhZC4NCj4gDQo+IE5vIGZ1bmN0aW9uYWwgY2hhbmdlLg0KPiANCj4gU2lnbmVkLW9m
-Zi1ieTogSG9uZ3lhbiBYaWEgPGhvbmd5YW4ueGlhQHRyYW5zc2lvbi5jb20+DQoNCkFja2Vk
-LWJ5OiBKdWVyZ2VuIEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+DQoNCg0KSnVlcmdlbg0K
---------------mHisnunnxH4NBSrCYMbsXcuq
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+         /* Allocate and move to the final place */
+         err = move_module(info->mod, info);
+@@ -3013,9 +3012,6 @@ static int post_relocation(struct module *mod, 
+const struct load_info *info)
+         percpu_modcopy(mod, (void 
+*)info->sechdrs[info->index.pcpu].sh_addr,
+                        info->sechdrs[info->index.pcpu].sh_size);
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+-       /* Setup kallsyms-specific fields. */
+-       add_kallsyms(mod, info);
+-
+         /* Arch-specific module finalizing. */
+         return module_finalize(info->hdr, info->sechdrs, mod);
+  }
+```
 
-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
-kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
-=3DeeAB
------END PGP PUBLIC KEY BLOCK-----
+With this diff, the "execmem: unable to allocate memory" warnings disappear
+completely:
 
---------------mHisnunnxH4NBSrCYMbsXcuq--
+fedora@linux:~/7.2-rc4.git$ dmesg -t | grep "execmem:"
+fedora@linux:~/7.2-rc4.git$ readelf -S 
+drivers/gpu/drm/amd/amdgpu/amdgpu.ko | grep -A 1 -E "debug_info|symtab"
+   [23] .debug_info       PROGBITS         0000000000000000  00b73fa9
+        000000000bfde1bc  0000000000000000           0     0     1
+   [24] .rela.debug_info  RELA             0000000000000000  280f2e40
+        0000000011f754a8  0000000000000018   I      75    23     8
+--
+   [75] .symtab           SYMTAB           0000000000000000  18934e78
+        000000000f1a0dd8  0000000000000018          76   10548226     8
 
---------------GCGLUHAC00omEipMv2gl1qSr--
+This test proves that the "execmem: unable to allocate memory" warning is
+entirely triggered by the massive unstripped .symtab section (~241.63 MB)
+rather than the debug sections themselves.
 
---------------xRaoXSGgLc0vY9TPQoiqAmqD
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+As the readelf data shows, the ~500MB debug sections remain fully present
+in the static file, yet the memory allocation succeeds without any errors.
 
------BEGIN PGP SIGNATURE-----
+This confirms that the generic loader successfully ignores non-SHF_ALLOC
+sections during layout_sections().
 
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmpd+dYFAwAAAAAACgkQsN6d1ii/Ey+9
-dQf+MNwHi0AEoRwM0kGFqoNIkbCEeUDIsEPaZE6ECmiLVl6im8D6Tu03Xw92X3m4V6P4h8KP0cln
-E8xuh65pmvJfOkhbG6w3tnHb2DSaHJ3uBB1XN0hhnoe5LC2FjhTSrxSvUC9FTEmia3pQ/bsUMq1g
-s1BGaaxWDZhqOb5KP+W7tHOds08mT0VosshO8KzjtGtIpD+Hge6qd/LrxV6unk6MKQNSVdDJWwEl
-jB01KSXN6J0RnTSyvU9e/oCJWCrUdEBsjxd2JOFyef4dVLLVeFCm0gp0PLDEZEA+1VQSW0CE6Rjk
-TWjyd5V7/0D5UL8U6E38KHqqAuYS7WBJJGJF/Nx96Q==
-=Pl2M
------END PGP SIGNATURE-----
+However, layout_symtab() must put the massive .symtab into memory to
+support kallsyms and oops backtraces. Combined with the driver core code,
+the total memory request reaches ~252.86 MB. This immediately triggers
+allocation failures because 252.86 MB is too close to the narrow 256MB
+limit on LoongArch, especially when virtual memory fragmentation exists.
 
---------------xRaoXSGgLc0vY9TPQoiqAmqD--
+We cannot strip modules or remove layout_symtab() because we need
+backtrace symbols for debugging. Therefore, the ~252MB memory demand is
+a hard requirement, and expanding MODULES_END to 2GB is necessary for
+large modern drivers on LoongArch.
+
+Thanks,
+Tiezhu
+
