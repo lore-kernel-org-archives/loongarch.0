@@ -1,158 +1,154 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 048CB3D75AD
-	for <loongarch@lists.linux.dev>; Mon, 20 Jul 2026 10:40:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 822A244605D
+	for <loongarch@lists.linux.dev>; Mon, 20 Jul 2026 17:40:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784544056; cv=none; b=Q07VFotpt8BWupBIxG4ssKNLw3ANL5te8D5Oq4/yyKCKoUacclGdF71s/Muo8df9G6uTuxBJgMwJhWvIpCPbPqZQO8QDlSezvOtt/tkYYfPccaM002bTdl/Tw1wgTpcPtxO4/CPaWfeRCSFdhN3RvLrXE4B53uhpCtu6rpYLSuw=
+	t=1784569247; cv=none; b=r7rKiPSO/ga6XqAIKEMb1KoYKgoR8y4E95LB3r7w3+zhzgfQ17AUcrY18j+GGMCVwx0WecioUOJnHGanlkDYBmwV2oGmYGwrh6EqB+NUpkPOCTuk/dbNormDjRHVV4oIwejDpGNO5ZrZOZLwfjLiaZGEZXFYOMYcCSU945ZyfLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784544056; c=relaxed/simple;
-	bh=dzXSNrm5ivREgGs/tD6QrqtHxbGOYzsk6uHJjTBDMd0=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=K1R/MIMEyiv3nKet8pXn/mSz+qojGW93TmQ5wbr5Xq6i/I1hQAC7Zzxgql3XMDiLgYQ0r94wjpTMOs3RFHsSHhse27ZmibLIzKDe4SROOkl1gWd7rKr47Kz67dN1iXQUAJYeJcu2uB3CZMqZ5ucZY4E3GoUFcgKd6p4bEEEJvXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Cx7+sv+11qEz8FAA--.20800S3;
-	Mon, 20 Jul 2026 18:40:47 +0800 (CST)
-Received: from [10.130.40.83] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJAxTOUr+11qZNMSAA--.34772S2;
-	Mon, 20 Jul 2026 18:40:45 +0800 (CST)
-Subject: Re: [PATCH v1 2/2] LoongArch: mm: Expand modules virtual address
- space to 2GB
-To: Xi Ruoyao <xry111@xry111.site>, Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Huacai Chen <chenhuacai@kernel.org>, linux-mm@kvack.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20260717075715.25513-1-yangtiezhu@loongson.cn>
- <20260717075715.25513-3-yangtiezhu@loongson.cn> <alySgaaQen6ZtwSo@kernel.org>
- <ba8b2723b563cd290c5c00fb4ec2402626fba06c.camel@xry111.site>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <38d130e6-7036-e296-e058-433c8ba7a265@loongson.cn>
-Date: Mon, 20 Jul 2026 18:40:43 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1784569247; c=relaxed/simple;
+	bh=VvNwpImo0jiiWGhT5ruq5O3iE3zAj0qXWWnRC1CSvCY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BsNgpo2DFASoS2AZNatPOYABgdPHddLRcos0hGo56FG4b87tYV7qn15+zDY1WORjhgnboYAtrag3vogNe3fjl361o3w0JIOAX9epVwDwEYpyVOWTTtpW8lrj1GWng8a3twccUTeudpo3vxhA5EapxnEWd8o279X0EMqyHLaCsNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=W9FUcATW; arc=none smtp.client-ip=209.85.219.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="W9FUcATW"
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-8eefd0c5f59so72981006d6.3
+        for <loongarch@lists.linux.dev>; Mon, 20 Jul 2026 10:40:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1784569243; x=1785174043; darn=lists.linux.dev;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=STnxksxeYU5ANSzKJlg5+nS1izTc7aC2ZhhV2DsN+ME=;
+        b=W9FUcATWR5K3hwk/mItzN0i0JRO1VlqqkLFctQUi+9ABr4XCZY4L0lszLJi/y3pRVV
+         GqgGFEAwlkx45qBF4l68NCThfT4vgDsM7/ahtyWqM9Ks5YuzuKFTrYQRUEQ7jprUYl9e
+         8pn7L8AkApWxmfOsGmWTx+ct+c+sQ+UOzDQv+y93dVC65ezyIf7FGK6rmIzDKl/IoXPz
+         71MijtZ3y/qA9LDps1vAlF6pqq+wECCIb6XK6fUzllcJxKx0t3fCn3WYw3NVXyF+6dSr
+         VJ9PH8DESOKaeUAL/L0LjzA+pHmkCTrX+fY8EeqQZO1opkfnAU8xbBfT39GsXTgWSrfV
+         2lSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784569243; x=1785174043;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=STnxksxeYU5ANSzKJlg5+nS1izTc7aC2ZhhV2DsN+ME=;
+        b=iTdgEwEzI4oWuW4mnSIhyiofT9gcmwweNXrqsJcG+opxT9DUjXQpPhox+U13erWjWJ
+         /FpBfS0tmyXc9qE3adGgX1ny6MzbS2tBYOUrbYwbmBpDPmITDfEGMUg2bK6CfEbbAQwu
+         Dr3oHoBM7Ig4GktYlEyGgNhavypEBGGH8VHEN4P2dDK6uhR5a5mS5g9yuoHUfMh8qwYc
+         I3o4KRGfCo77vGre1bn/9qMpf6vcKMuPuTO95TCPz3bjLzW0ptn/5CIW6BFl5yDtrPap
+         NGdPHb91UpKdu9MQ1VMJqex8MfWHGs13ehkBPYKSqJvvKhOK5agAwZ+IWoEHAgnW5i8B
+         QiFA==
+X-Forwarded-Encrypted: i=1; AHgh+RpqbEzhwj/SmFDlUyXEm3Na+wCc6cAYLrsqlz/kMB3TGSnOzyp7WPO2fVEYJxRCUphGc+CF2D2pfWk=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzH7gzJ1EWKm78T+zdlJcYKx6GKxcs6tba2Ce0EkYj8GXvEu+2g
+	ggwiurJ1309ykWezO/+3RBOyLiANsYA2GSV2EqgbZLORrt0t+a1PDV00M2XWIVYm7Bo=
+X-Gm-Gg: AR+sD13L7aDhlCyz6Cxqcsl5XlQQIlTmrS31VyPmEdp0eRh3ZswSitcgps2YxfCgFdd
+	FkdgWBexHQYkTgpxpmRPUXSABmvLM0Ru0IN4FITxF/U8hP6+H189aP8VjVccJ2QNYx52UUXEVCR
+	2X5AzWLoe09Vhto3BaaraTamNeMqLamRSaHfGS660UjRFuMTRYhVYWwx9avSbPHeqJp5MIUkaar
+	2gQpHnZibrK6JMnpi+6ETSL+cr3hjcCl8SsF1VueFir+nHtQsmlRoCNWXUejQgLdEBZNwp1nwQI
+	t25kVQtvXg2S/Q+pWjYpJoqDqp/379Vy8Szr0XeFAVE3CkA7YrUDOXkZe84pK9dW7mhfimPnkKo
+	91A0r6ENCUJIdhSlpNk2M1odiaDgS588OJcQSjayuIDlNDuHH/2Gohqejm976UrPoQcvAjXM9p2
+	Eil383s0dlajvVgbhUzwrhuFvf3KqLzkyON9PT5CYJxzyzccMj7EdpkQuWJQ==
+X-Received: by 2002:a05:6214:54c8:b0:8e9:f62b:8f93 with SMTP id 6a1803df08f44-9077853b82amr163551916d6.57.1784569243441;
+        Mon, 20 Jul 2026 10:40:43 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-907786ed2e2sm95014956d6.33.2026.07.20.10.40.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2026 10:40:42 -0700 (PDT)
+Date: Mon, 20 Jul 2026 13:40:37 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Brendan Jackman <brendan.jackman@linux.dev>
+Cc: Matthew Wilcox <willy@infradead.org>, 
+	Brendan Jackman <jackmanb@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
+	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, 
+	Jan Kara <jack@suse.cz>, Joshua Hahn <joshua.hahnjy@gmail.com>, 
+	Byungchul Park <byungchul@sk.com>, Ying Huang <ying.huang@linux.alibaba.com>, 
+	Alistair Popple <apopple@nvidia.com>, Hugh Dickins <hughd@google.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, 
+	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>, 
+	Barry Song <baohua@kernel.org>, Youngjun Park <youngjun.park@lge.com>, 
+	"Joerg Roedel (AMD)" <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+	Robin Murphy <robin.murphy@arm.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Thomas Gleixner <tglx@kernel.org>, Chuck Lever <cel@kernel.org>, 
+	Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, 
+	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
+	iommu@lists.linux.dev, loongarch@lists.linux.dev, linux-nfs@vger.kernel.org, 
+	netdev@vger.kernel.org
+Subject: Re: [PATCH 1/3] mm: move internal mempolicy APIs to new internal
+ header
+Message-ID: <al5cqn34Xq19f5HG@gourry-fedora-PF4VCD3F>
+References: <20260716-folio-alloc-cleanups-v1-0-5363b8e92d33@google.com>
+ <20260716-folio-alloc-cleanups-v1-1-5363b8e92d33@google.com>
+ <alkLSzQvzT9zJbY1@casper.infradead.org>
+ <DK05KUIDJVLZ.61UIWOL0K3OT@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <ba8b2723b563cd290c5c00fb4ec2402626fba06c.camel@xry111.site>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxTOUr+11qZNMSAA--.34772S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxAr1UKFW5JF4xXF43ury5KFX_yoWrXF18pF
-	45Ga1rCr4kJFn8Ca1xAw1UuFyY93y5CFW5trZxury2vr15Zry09FsrKw15ZFy7Cr1Fyr1U
-	KFykXa1UtFyDAabCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	XVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
-	Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
-	14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4oGQDUUUU
+In-Reply-To: <DK05KUIDJVLZ.61UIWOL0K3OT@linux.dev>
 
-On 2026/7/19 下午11:28, Xi Ruoyao wrote:
-> On Sun, 2026-07-19 at 12:01 +0300, Mike Rapoport wrote:
->> On Fri, Jul 17, 2026 at 03:57:15PM +0800, Tiezhu Yang wrote:
->>> Frequent "execmem: unable to allocate memory" warnings are observed
->>> during kernel module loading when updating the latest kernel.
->>>
->>> This is because the modules virtual address region on LoongArch is
->>> tightly constrained to 256MB, while ARM64 and RISC-V are natively
->>> configured with a spacious 2GB region.
->>
->> The constraint follows architecture ability to address kernel instructions
->> and data from modules code.
->>
->> I don't know what are loongarch requirements, but I remember that arm64
->> added a layer of relocation support to allow 2G module address space.
+On Thu, Jul 16, 2026 at 04:57:37PM +0000, Brendan Jackman wrote:
+> On Thu Jul 16, 2026 at 4:48 PM UTC, Matthew Wilcox wrote:
+> > On Thu, Jul 16, 2026 at 02:30:10PM +0000, Brendan Jackman wrote:
+> >> There are no external users for this surface, reduce the scope.
+> >> -struct folio *folio_alloc_mpol_noprof(gfp_t gfp, unsigned int order,
+> >> -		struct mempolicy *mpol, pgoff_t ilx, int nid);
+> >
+> > Hm.  So what we're saying is that allocations which respect mempolicy are
+> > only for core mm and not for, eg, device drivers to do.  Is that really
+> > what we want to say?  I don't think so, because that's inconsistent
+> > with having just widened __filemap_get_folio_mpol to allow guest_memfd
+> > to specify a mempolicy.
 > 
-> IIUC on LoongArch the size of one module is limited to 256MB, but the
-> total size of modules can be up to 2GB, as the module loader creates PLT
-> entries for calls across the module boundary.
+> Yeah I agree, mempolicy definitely seems like a "public concept".� All
+> I'm saying here is this specific function doesn't have any external
+> users so it doesn't need to be an external header. 
 > 
-> I'd seen the "execmem: unable to allocate memory" error loading the
-> large amdgpu module.  But after I stripped the amdgpu module those
-> warnings gone away.  To me this is very strange: shouldn't the module
-> loader just ignore the debug info even if it's not stripped instead of
-> requesting execmem for it???
+> ... With the ulterior motive that I want to add a new parameter to it
+> that actually _is_ mm-internal. Namely, alloc_flags, so I can add
+> ALLOC_UNMAPPED to implement AS_NO_DIRECT_MAP, i.e. the next iteration of
+> [0]. So basically this is
+> about trying to extend the allocator without creating a GFP flag.
+> 
+> So I'm envisaging if an external user arises for it later, we'd slap two
+> underscores on the beginning of the internal one, (with the alloc_flags
+> arg), and then bring back the public one as a wrapper.
+> 
+> Does that make sense?
+> 
+> [0]: https://lore.kernel.org/all/20260410151746.61150-1-kalyazin@amazon.com/
+> 
 
-I did the following changes based on the original 7.2-rc4 for debugging:
+fwiw i've been fiddling with a module side mempolicy interface for a bit
+to allow a clean guest_memfd() + mempolicy() interaction [0][1].
 
-```
-diff --git a/kernel/module/main.c b/kernel/module/main.c
-index 46dd8d25a605..5eab1ab8b195 100644
---- a/kernel/module/main.c
-+++ b/kernel/module/main.c
-@@ -2972,7 +2972,6 @@ static struct module *layout_and_allocate(struct 
-load_info *info, int flags)
-          * special cases for the architectures.
-          */
-         layout_sections(info->mod, info);
--       layout_symtab(info->mod, info);
+I saw this and thought "maybe, maybe not entirely".
 
-         /* Allocate and move to the final place */
-         err = move_module(info->mod, info);
-@@ -3013,9 +3012,6 @@ static int post_relocation(struct module *mod, 
-const struct load_info *info)
-         percpu_modcopy(mod, (void 
-*)info->sechdrs[info->index.pcpu].sh_addr,
-                        info->sechdrs[info->index.pcpu].sh_size);
+there is definitely some oddities in the mempolicy uapi (internal-only
+flags that are exposed to the uapi is odd) that some of the interface is
+worth internalizing.
 
--       /* Setup kallsyms-specific fields. */
--       add_kallsyms(mod, info);
--
-         /* Arch-specific module finalizing. */
-         return module_finalize(info->hdr, info->sechdrs, mod);
-  }
-```
+(fyi i've converted my private node work on top of the alloc_flags
+ addition + new zonelists, new rfc is being posted today, your recent
+ merges were timely).
 
-With this diff, the "execmem: unable to allocate memory" warnings disappear
-completely:
+~Gregory
 
-fedora@linux:~/7.2-rc4.git$ dmesg -t | grep "execmem:"
-fedora@linux:~/7.2-rc4.git$ readelf -S 
-drivers/gpu/drm/amd/amdgpu/amdgpu.ko | grep -A 1 -E "debug_info|symtab"
-   [23] .debug_info       PROGBITS         0000000000000000  00b73fa9
-        000000000bfde1bc  0000000000000000           0     0     1
-   [24] .rela.debug_info  RELA             0000000000000000  280f2e40
-        0000000011f754a8  0000000000000018   I      75    23     8
---
-   [75] .symtab           SYMTAB           0000000000000000  18934e78
-        000000000f1a0dd8  0000000000000018          76   10548226     8
-
-This test proves that the "execmem: unable to allocate memory" warning is
-entirely triggered by the massive unstripped .symtab section (~241.63 MB)
-rather than the debug sections themselves.
-
-As the readelf data shows, the ~500MB debug sections remain fully present
-in the static file, yet the memory allocation succeeds without any errors.
-
-This confirms that the generic loader successfully ignores non-SHF_ALLOC
-sections during layout_sections().
-
-However, layout_symtab() must put the massive .symtab into memory to
-support kallsyms and oops backtraces. Combined with the driver core code,
-the total memory request reaches ~252.86 MB. This immediately triggers
-allocation failures because 252.86 MB is too close to the narrow 256MB
-limit on LoongArch, especially when virtual memory fragmentation exists.
-
-We cannot strip modules or remove layout_symtab() because we need
-backtrace symbols for debugging. Therefore, the ~252MB memory demand is
-a hard requirement, and expanding MODULES_END to 2GB is necessary for
-large modern drivers on LoongArch.
-
-Thanks,
-Tiezhu
-
+[0] https://github.com/gourryinverse/linux/commit/b25bb27602fe512733450a97ac31ef4387b7e727
+[1] https://github.com/gourryinverse/linux/commit/670f7dd81ef33a9385985a54b8ad6bc070b2d581
