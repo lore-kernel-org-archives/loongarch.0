@@ -1,355 +1,291 @@
-Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazon11022078.outbound.protection.outlook.com [40.107.75.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9815A3D413C;
-	Mon, 20 Jul 2026 09:38:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.75.78
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784540296; cv=fail; b=bJiq6n3axCaCT/a27PazSYrhvOOpuLKiBne92kYQENtD0OOp6nIPe1iLo6aY97jzGsVSRaWfi/zKvHJ/8H3/qeUYOBchE9YFIfGlnpzAYNNuDC/DbwzI86EjsSzdrTTqTzHIXH3wPujwgHFsuNlbCa1KOfRqNhdx2Muv+ke1+Ko=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784540296; c=relaxed/simple;
-	bh=bnNBOMszt+Wbbe72kwGdJztzUM2yKhoSIFYNGqjBB10=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=mrlcOo3NP3mIebdRL2A0K5jzWdST8T8xvWt9hz9fCvS0pJbznDJVajeC/y7ddGMTCUNFGTLS9lR5veOqxtWYBidS0I0RgruyE0QSKMgYbIiI4ghoM7EdRmX6c8cDA1GeqbO/EBFGOf5KdlQhyUBOXktm7iVcj+yEcAqhnvLnLf0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=transsion.com; spf=pass smtp.mailfrom=transsion.com; dkim=pass (1024-bit key) header.d=transsion.com header.i=@transsion.com header.b=UWH7Mfa2; arc=fail smtp.client-ip=40.107.75.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=transsion.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=transsion.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95103D649F
+	for <loongarch@lists.linux.dev>; Mon, 20 Jul 2026 10:35:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784543709; cv=none; b=b0vlTvhkBb9nKTj2sBwU8lNYws1EAQNcKObZO1NHCoMEeKAcRso4T4TdZE6v01WqLvDN8RdOWqmt7x079lBnxQLSxenitD9/vjn58hflPDQ/iz/nemrIMREs73SjB+dBhqfsFo+hwlX2rYyWKqjcC8Bt97is6S7zvqmn7j0jrZg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784543709; c=relaxed/simple;
+	bh=k37RWmWff7zt+PtsvHIuhzz9otckpy6kRhbc8EISwX4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HYqtx/q8dRYETdV0ZJ8G2b5h/WJJQh8ueeV/4MEBm7GNiAkxgS94yFGjw7y9eXsrHfmqay8pGwJtcXoELYvZAE9/sUsA41ZMGaCMJ9oqkBhZQvdhIMCTIRDa64xas76ZbgKY2VVQeXO6vplbm+iHhPDYFxhSVTOyfNXWb+9bq7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=HpIk/WTu; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=transsion.com header.i=@transsion.com header.b="UWH7Mfa2"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MYQFWwU4BhmfJKviDLZGgEgrjOyJ+2Kovi4iEAGG/TbAHrmiyVh217EI+RIi1AFmj9vP8dEUlkqSY97qUB4pci07pKAqCFLH6R6HI/37wXr15XY35WDl9PY/rywFB8GRgcUgMQ4oL8a/MEcwrQhq/6ucoaocb96oCV539xORC0SI93WHkMffH3ufF2v7P32MxjPNmmJNuv6xFyDUbV3owU9ZdMv8Yw6UrgWpmEuitGfD2cuXYbwhO7Iob0t8HVSiKh0ytHare30w62ALyQ6NOemlPBxD0bHO3l3tUFmPXPWA4k6/zvvc64+R1kkW5ICJiy0obpKGYUmLN+V916RAeg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=S0tdWGsY8ovK8tJeJyM3lFSP9EHZNI48Z0Uy16r6Azs=;
- b=KvOeDp4or4NHf3vkt+CvwU8QCX+OQz23zdo/nGiE4hEHtZ8IYanCl+xawHths7oDR7NAGXP2yIfqBLnPFSS+7/ucLmuI2l3lZpL90EGsKb3YGThAq+ao7S8kiMrxmyx6E+E2IXqXLjXRZ18hbL1rnRViEi9LmHTkBPbTfvgo7a4A3I6jbAlBLwtGxSgm6esKpSKbX9JtZLnaLL/SFsXMOIu8gQk1qiLJ+4S+Kp0EHeuV1plZNw20eyFw/LHxZo1QKxljKjsIOFM9zZAWanuUSPR6VvFwVF8PAEniiHzlFAG8rhEKXcGUZgQLoiM9JBQV805wtMAXn6JmZRxuM2mYgA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=transsion.com; dmarc=pass action=none
- header.from=transsion.com; dkim=pass header.d=transsion.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=transsion.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=S0tdWGsY8ovK8tJeJyM3lFSP9EHZNI48Z0Uy16r6Azs=;
- b=UWH7Mfa20aRABHcBN1gY0dimzV9YAvCxgfcai7PVU+DoZgHr5bwVKoag4Xef+2N9eEhhC3NReSxtiVjsnG0WoWMK3XnVYNpFibMNmNE2P/ReIuhlhihfdlPZ+/9FD9COTBdIYnlT86LPtuCMYbJn9vKKnDuyz9yHqgnxwSfLi48=
-Received: from KL1PR0401MB6196.apcprd04.prod.outlook.com
- (2603:1096:820:c7::13) by TYSPR04MB7923.apcprd04.prod.outlook.com
- (2603:1096:405:8f::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.245.6; Mon, 20 Jul
- 2026 09:38:10 +0000
-Received: from KL1PR0401MB6196.apcprd04.prod.outlook.com
- ([fe80::f2ee:1e28:9022:99f3]) by KL1PR0401MB6196.apcprd04.prod.outlook.com
- ([fe80::f2ee:1e28:9022:99f3%3]) with mapi id 15.21.0245.009; Mon, 20 Jul 2026
- 09:38:10 +0000
-From: Hongyan Xia <hongyan.xia@transsion.com>
-To: "mingo@redhat.com" <mingo@redhat.com>, "peterz@infradead.org"
-	<peterz@infradead.org>, "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
-	"vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
-	"dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>, "rostedt@goodmis.org"
-	<rostedt@goodmis.org>, "bsegall@google.com" <bsegall@google.com>,
-	"mgorman@suse.de" <mgorman@suse.de>, "vschneid@redhat.com"
-	<vschneid@redhat.com>, "kprateek.nayak@amd.com" <kprateek.nayak@amd.com>,
-	Juergen Gross <jgross@suse.com>, Ajay Kaher <ajay.kaher@broadcom.com>, Alexey
- Makhalov <alexey.makhalov@broadcom.com>, Broadcom internal kernel review list
-	<bcm-kernel-feedback-list@broadcom.com>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Huacai Chen
-	<chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Madhavan Srinivasan
-	<maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
-	<npiggin@gmail.com>, "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Paul
- Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Thomas Gleixner
-	<tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, Dave Hansen
-	<dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, "H. Peter
- Anvin" <hpa@zytor.com>, Paolo Bonzini <pbonzini@redhat.com>, Vitaly Kuznetsov
-	<vkuznets@redhat.com>, Stefano Stabellini <sstabellini@kernel.org>, Oleksandr
- Tyshchenko <oleksandr_tyshchenko@epam.com>
-CC: Jiazi Li <jiazi.li@transsion.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "virtualization@lists.linux.dev"
-	<virtualization@lists.linux.dev>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "loongarch@lists.linux.dev"
-	<loongarch@lists.linux.dev>, "linuxppc-dev@lists.ozlabs.org"
-	<linuxppc-dev@lists.ozlabs.org>, "linux-riscv@lists.infradead.org"
-	<linux-riscv@lists.infradead.org>, "kvm@vger.kernel.org"
-	<kvm@vger.kernel.org>, "xen-devel@lists.xenproject.org"
-	<xen-devel@lists.xenproject.org>
-Subject: [PATCH 2/3] sched: Convert paravirt_steal to new static key APIs
-Thread-Topic: [PATCH 2/3] sched: Convert paravirt_steal to new static key APIs
-Thread-Index: AQHdGCt41jgQ0Gd26kKdzbVxHXHoxA==
-Date: Mon, 20 Jul 2026 09:38:07 +0000
-Message-ID:
- <773bbd8fcd5ef2ebfe1c64303c7a71a56368de69.1784538478.git.hongyan.xia@transsion.com>
-References: <cover.1784538478.git.hongyan.xia@transsion.com>
-In-Reply-To: <cover.1784538478.git.hongyan.xia@transsion.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=transsion.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: KL1PR0401MB6196:EE_|TYSPR04MB7923:EE_
-x-ms-office365-filtering-correlation-id: 63fea150-c8cb-4d86-a7ac-08dee6429caa
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|366016|376014|23010399003|7416014|10067099003|56012099006|11063799006|38070700021|6133799003|22082099003|18002099003|921020;
-x-microsoft-antispam-message-info:
- yh5mlue1Iw8cl0uEdIvMARq0emXCCTnLQUzpkmJ/bGuZg1DAJNMCdD0eZgjEQ5YoKdbt7wJiu4uINN5s8w4qI32lIAA1yhm8hecS/eyEPjlvFfcmTgExOVgF7SvRQAeK3uweD05fpdKR24cNVFSWdU2LCCJgMPO5YfERS25h7q52/esYgCQnbLJ0uMZ+6gCTVAWbBuW2o86hVWqRWZnsRJEAtpQd1bXSkchaN0T7/G6CMUXOMzmJpNwXj7Msp52kdHyi8Pl/5e8NB5PcF8jbI9HuJ4T5ik5D45L6MH2wze+PHtqytWSUWQG02n5TxSFbVAv0DCSS21XwoX4LjOU60NlnZmmhEG96wz8pboybvvI80Z5esLacGPji0hypFz5EHkR4awn3Z2qhFwd/NWgfuN1JbXjejzQdbEwOtBaNOvX0gPNpZ1lp0pOk30I+BzDJ1MorSb+TWs/3ETgleLUFFusDOj2kaVtBhV7oWFYgfswVIYhF8XG6KnRIhCUoOcXkv2bqdOiIA5geQdGwf7Oc6sbLGpqBopRbOWa37Isf7/J378wzb+HiXcGk8elu0UY7O+S1gOe8c9HlmfyIG5Jbu7DjGUW1Lw1IvNrx+rSrVx2fr324geruXdtX2JzpAIvSMSodSKwaLnpGDV3Cf9heUhlIL7lFQtCbphC9qfMwQuDCZSU6JIili1Ki9Wnsk0AKlOKIVaP+PgISQjz5tzaMuxrOocKEA75LyQBhnQkF2IPcosfvF2E+y1cKRjKZsMId
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KL1PR0401MB6196.apcprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(23010399003)(7416014)(10067099003)(56012099006)(11063799006)(38070700021)(6133799003)(22082099003)(18002099003)(921020);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?eBUVMW7/w2cI/IxTnB8SV7GR+w1qa7lThnaWmawlaQG7fv5lnQhEw/06Hk?=
- =?iso-8859-1?Q?A20S/9p8yJp8vMFMFBt64Q+ktwMGf5YzVjOdUJUZWUywbOOGQQ6Xd8SOlx?=
- =?iso-8859-1?Q?RviphnmYISWfbpOlM6wuN9IKxvjiPPcNDLm7oy4CQ7+vRl0+nkJfyzVtIe?=
- =?iso-8859-1?Q?0/c9DLzDaxMb1SnDc0KgeXxo0Zhcztbuw33qtKBiNypfFOLK46wosVUpcI?=
- =?iso-8859-1?Q?UOwCPMou35+Ax8fJPfNnS7eEAX5kFsROGoeZoqt87hX59FLl89nn/n0727?=
- =?iso-8859-1?Q?ce79hLA4m3GOWMdqm+NZINaIOYBoA+zMjvJO60NzkwIc29xiKE6hFvMOG2?=
- =?iso-8859-1?Q?PV1oLK6NXsnR2GYRGStPQhnfRnhFuYBBy+tpyAazgCfPpRirt6mKTpc48L?=
- =?iso-8859-1?Q?rK/SsL5N4AqYpitxTM+NZr/pWYU6GrzZ+BAZdVmh7IPo1LTS92Eoau8FTV?=
- =?iso-8859-1?Q?qdCT6a1CMLBVjqNWT6lJvXb8fdElZCPHHghvLyzqtNme8Bv95swiP8fJvm?=
- =?iso-8859-1?Q?ENEqgzaASdoWVTfIWJeONkB7QltIG8krk4kU0KgaQHq3tsTPeLOdOTtpsK?=
- =?iso-8859-1?Q?dvqj8Jo1IBAdeneHidkf1yXY6x7BDJRTeqDNu/QTLsUTz/JCPuU5pxU3xD?=
- =?iso-8859-1?Q?6mY7C+Jv8P86aLqEVNGgq/mz7wukYbhepaOuLfB7j8oM47XCTbkvW5QvC7?=
- =?iso-8859-1?Q?a39sOPR64joC5WttLC9a9BRIcj9JZuWyc7j9BYYKPtrYCA9ThPuFan2gI9?=
- =?iso-8859-1?Q?1R3bnKS6WeAkjsgz4Kvqp9AErbttAWgSEx+uMz7jB2rIsL9XKMWwpsz/UQ?=
- =?iso-8859-1?Q?3PzcqhENmQ19aWZknX0ceaNxsB1muHeiD5THFa+/VNsELRIde7PofXo3SJ?=
- =?iso-8859-1?Q?fL3tNtiAK0buMdj9AhRJX6Tr03vdCVB1DHCPgw0JXpPkF3saJ7PC1hN4ze?=
- =?iso-8859-1?Q?/7EKK5OpK0ZJAk8/0fhxf58v5hUU3bYMe43UsQZ7q7Jt7QMgTsaFkV/E4a?=
- =?iso-8859-1?Q?XLSy+IcwA+duL52gB+3N+MAHZ6GW3KLVjmIPZsOIPSOW3A51HoyA2XEk9G?=
- =?iso-8859-1?Q?Hu4xF8MWvCTdAV9gXB66bUtFUSODAwVnPUmM4OHCBY38y7MjhJ0W84P2B7?=
- =?iso-8859-1?Q?PLxfEy4nc4nT3juDVA0PgTR47otXzvqOu0q6Zse9qdgNDh3ynLKBdwXD7i?=
- =?iso-8859-1?Q?95p/uQKUrXqJADAdYHA5A3h5sxRWbQ643qfBP1R6Yk5hvPBT0AF0yP7xVb?=
- =?iso-8859-1?Q?RoQAigoZK0MiIvisRFMKldDLnd5xcEEEk9GHj25Okd6hUa++CGMLY9a+xI?=
- =?iso-8859-1?Q?XF5MZT6FtNwYMN8pperlWmmaP1gEGVg0nHj5+1nNiDpbfonE0KRo3DfBe3?=
- =?iso-8859-1?Q?HDdmPLiqv6ZAAi+GstAc8xUvkfV7LUrtHMs2f61KRsNL5S4asGVjr6oCar?=
- =?iso-8859-1?Q?uYn/uPai2zvo+zUDaTDWOd/o2ggmoE3UeqsTWGfxjekNxEbMS1lXt9zXND?=
- =?iso-8859-1?Q?wZm0OqEcDec2LUHyk6wyHCoTyVVixmL3eUQOjO7+/1z4WzMe7OwM6FSOyV?=
- =?iso-8859-1?Q?4WB8GwXVKp2BNQKVNGV6TC0eg48ph/XC0/AuxCxwtOWFKIb4wzrNp4bk0m?=
- =?iso-8859-1?Q?iNEZa/d9+1EQ5XCy/bYoVFNte9DEkJ2t1EzMmsmIXom5fR2o2x5lL5RL5Z?=
- =?iso-8859-1?Q?19/kFehHikj4+xEeCu/8nJPXEwkup2SrDquFZ0RDJfY1WpzRsr+zGk2ESe?=
- =?iso-8859-1?Q?mF7JqZFjwzKdT2wu8cgUO8JEEtwfzVrPPUZAAGouRnAqacoprVJoH3AE9l?=
- =?iso-8859-1?Q?Oh1w4/zEdg=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="HpIk/WTu"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4955158f26aso11052185e9.3
+        for <loongarch@lists.linux.dev>; Mon, 20 Jul 2026 03:35:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1784543705; x=1785148505; darn=lists.linux.dev;
+        h=content-type:in-reply-to:autocrypt:from:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=k37RWmWff7zt+PtsvHIuhzz9otckpy6kRhbc8EISwX4=;
+        b=HpIk/WTu1HHwOvedtK6UbQelxpmpYRAaY2uLr97YrW3QfVCGBWAfnoZ8RNtd2T2J/O
+         ALEWhlq+z0MYuN7kpNFuGwRN/UFuvqdX7cDcL+Dgv1mMyejeuXCpTA1lUFnjwEhaA/2O
+         6JHI7OMi87QRjxyObhYeciMWR/3qhoZJu3ocdDuxVUwCk6s/2TcdPP7Kk9r9OzK9w4/c
+         BmRmL5IOP0GjkTPyiR34ZPqjaDeT7Sz3ZDCb61yGbWeWlapjmImna6f2t+UE9OAjZASi
+         rk4KWnNYQzEurCr1LtRST2GVrWanD2Vrpw7LzQQT2312ASHzsFOoSI7LpPtS89UTy2Lf
+         +1fQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784543705; x=1785148505;
+        h=content-type:in-reply-to:autocrypt:from:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=k37RWmWff7zt+PtsvHIuhzz9otckpy6kRhbc8EISwX4=;
+        b=IdkG8Mh0qphTY2cMkyvdMy5xQMLpjoNisjHzn7XXKd523e32/AWvujJwFeFftVLSmC
+         zmbmPq2PkGmhgJqJrHOpr75s0YgABQ8YdHJr10Je/i7hjVmJBTEhuQ3oTZG63PqkT9oY
+         aXVunmU1oroMuV1EgNhFvVkOEhBSv5nXixQCrrCUNQQFcTNs8O1dCII9ViBDwzOK5fXZ
+         mjgdNymiS1ovWn37FKEmkCBm6uHatBuUBp92TkPQiBZhRO+TlFL0FYs8OQDhk0cGF/Kk
+         JU5RlJIvkGDARYgRVJdS7KoaTGuqDingpFXlggbGwYh0d+JNPiu+qcuZ8YeDMGiR9+N2
+         wy/g==
+X-Forwarded-Encrypted: i=1; AHgh+RoZzxKtqInwAArGpXMgk3F9KdZ75Siqn2Bcxt8+kvkl4CbKXRKSoRV2WervcOKkxpoW/IF4Ywzf1/0=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwX+hzN33wdSTwwvo+RLcM87RRjD+m5QekIKMz84Vdh/HQ33WdC
+	HgjsI/C7iXuExnLoVHDdlV4fZbeZEiIVq5m+l4S6s9YAEyWQ8RXaCIIrnA2ROoD+7Ek=
+X-Gm-Gg: AfdE7ckWLyRXo3Z8WCy5nqTduzpZv8xLEvq2FNp9gBjEKIZcdHvQ+LEb8/Sa9G6xgPB
+	RakvrX3MMfcBk86lgN3Jm36GyvG/S/FUi8R28G57LOqF+T2jHVlpKN3nAOPm3wp2kmm3vqfwdUB
+	yROLhM05lM5zXWNro42HUvGT60fkC3WuhYQQWs6oYxASSdhyq0RhzXL9y67SKTw2GV9y4W6V7d7
+	3swArjqaHBITRTIxQrwWZQtCx+O3QTZ5nxIK1TV7ek/doF397u4Mu0JRatvAvoN2b2rcKE2sjPh
+	sYMDOhoCWqi0zLggiy8+VJb3qk6Tqyb8CtvzvSyMbGhpIjO5IBzE8WpoHtzaVpf3Ath3KnCPMlh
+	2+bfIgGATrftF4F6zy700o6JxVOIwJD4T1GDy439gAVY+bk7O+7Rob04u4DKHdsURaZTH+Tov8B
+	ZYfZOqnfgaKPAFAu3x63f3AfNi8/Ru/In4j1raUSc93rvKGEdUUtJabJKrpv7tV9E8YTY34T1RZ
+	vBoSADRt/rNEivP/8uAfKLCT4MsIoNh
+X-Received: by 2002:a05:600c:4f14:b0:495:5ce6:9c18 with SMTP id 5b1f17b1804b1-4955ce6a33cmr61097885e9.27.1784543704827;
+        Mon, 20 Jul 2026 03:35:04 -0700 (PDT)
+Received: from ?IPV6:2a00:12d0:af5d:ad01:5d3f:14e6:9bcb:5112? (2a00-12d0-af5d-ad01-5d3f-14e6-9bcb-5112.ip.tng.de. [2a00:12d0:af5d:ad01:5d3f:14e6:9bcb:5112])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4954a2b074csm291431975e9.6.2026.07.20.03.35.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Jul 2026 03:35:04 -0700 (PDT)
+Message-ID: <e258581c-a17f-4b5a-aafd-82e513a6288e@suse.com>
+Date: Mon, 20 Jul 2026 12:35:02 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-OriginatorOrg: transsion.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: KL1PR0401MB6196.apcprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 63fea150-c8cb-4d86-a7ac-08dee6429caa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jul 2026 09:38:07.6005
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 2e8503a6-2d01-4333-8e36-6ab7c8cd7ae2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: iL3zE7b8rMUVTzwzyUk7DRTgOGTS2BPssQcGsgjIRskDDC2269Ewz5hnWQ43ECc/YJhsXvWGFpyzWFVs5qeCW6ZWLNABU9tWKNQnzoaHuJY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYSPR04MB7923
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] sched: Convert paravirt_steal to new static key APIs
+To: Hongyan Xia <hongyan.xia@transsion.com>,
+ "mingo@redhat.com" <mingo@redhat.com>,
+ "peterz@infradead.org" <peterz@infradead.org>,
+ "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
+ "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
+ "dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>,
+ "rostedt@goodmis.org" <rostedt@goodmis.org>,
+ "bsegall@google.com" <bsegall@google.com>, "mgorman@suse.de"
+ <mgorman@suse.de>, "vschneid@redhat.com" <vschneid@redhat.com>,
+ "kprateek.nayak@amd.com" <kprateek.nayak@amd.com>,
+ Ajay Kaher <ajay.kaher@broadcom.com>,
+ Alexey Makhalov <alexey.makhalov@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+ Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+ Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, "x86@kernel.org"
+ <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Vitaly Kuznetsov <vkuznets@redhat.com>,
+ Stefano Stabellini <sstabellini@kernel.org>,
+ Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Cc: Jiazi Li <jiazi.li@transsion.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "virtualization@lists.linux.dev" <virtualization@lists.linux.dev>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+ "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+ "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
+References: <cover.1784538478.git.hongyan.xia@transsion.com>
+ <773bbd8fcd5ef2ebfe1c64303c7a71a56368de69.1784538478.git.hongyan.xia@transsion.com>
+Content-Language: en-US
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Autocrypt: addr=jgross@suse.com; keydata=
+ xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
+ ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
+ dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
+ NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
+ XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
+ AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
+ CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
+ mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
+ G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
+ kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
+ Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
+ RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
+ vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
+ sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
+ aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
+ w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
+ auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
+ 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
+ fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
+ HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
+ QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
+ ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
+In-Reply-To: <773bbd8fcd5ef2ebfe1c64303c7a71a56368de69.1784538478.git.hongyan.xia@transsion.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------xRaoXSGgLc0vY9TPQoiqAmqD"
 
-From: Hongyan Xia <hongyan.xia@transsion.com>=0A=
-=0A=
-paravirt_steal_rq_enabled and paravirt_steal_enabled use raw static_key=0A=
-APIs which are now deprecated. Use the new API instead.=0A=
-=0A=
-No functional change.=0A=
-=0A=
-Signed-off-by: Hongyan Xia <hongyan.xia@transsion.com>=0A=
----=0A=
- arch/arm64/kernel/paravirt.c           | 4 ++--=0A=
- arch/loongarch/kernel/paravirt.c       | 4 ++--=0A=
- arch/powerpc/platforms/pseries/setup.c | 4 ++--=0A=
- arch/riscv/kernel/paravirt.c           | 4 ++--=0A=
- arch/x86/kernel/cpu/vmware.c           | 4 ++--=0A=
- arch/x86/kernel/kvm.c                  | 4 ++--=0A=
- drivers/xen/time.c                     | 4 ++--=0A=
- include/linux/sched/cputime.h          | 6 +++---=0A=
- kernel/sched/core.c                    | 4 ++--=0A=
- kernel/sched/cputime.c                 | 4 ++--=0A=
- 10 files changed, 21 insertions(+), 21 deletions(-)=0A=
-=0A=
-diff --git a/arch/arm64/kernel/paravirt.c b/arch/arm64/kernel/paravirt.c=0A=
-index 572efb96b23f..30bf61d031eb 100644=0A=
---- a/arch/arm64/kernel/paravirt.c=0A=
-+++ b/arch/arm64/kernel/paravirt.c=0A=
-@@ -157,9 +157,9 @@ int __init pv_time_init(void)=0A=
- =0A=
- 	static_call_update(pv_steal_clock, para_steal_clock);=0A=
- =0A=
--	static_key_slow_inc(&paravirt_steal_enabled);=0A=
-+	static_branch_inc(&paravirt_steal_enabled);=0A=
- 	if (steal_acc)=0A=
--		static_key_slow_inc(&paravirt_steal_rq_enabled);=0A=
-+		static_branch_inc(&paravirt_steal_rq_enabled);=0A=
- =0A=
- 	pr_info("using stolen time PV\n");=0A=
- =0A=
-diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/parav=
-irt.c=0A=
-index 10821cce554c..e8965a3f8082 100644=0A=
---- a/arch/loongarch/kernel/paravirt.c=0A=
-+++ b/arch/loongarch/kernel/paravirt.c=0A=
-@@ -308,10 +308,10 @@ int __init pv_time_init(void)=0A=
- =0A=
- 	static_call_update(pv_steal_clock, paravt_steal_clock);=0A=
- =0A=
--	static_key_slow_inc(&paravirt_steal_enabled);=0A=
-+	static_branch_inc(&paravirt_steal_enabled);=0A=
- #ifdef CONFIG_PARAVIRT_TIME_ACCOUNTING=0A=
- 	if (steal_acc)=0A=
--		static_key_slow_inc(&paravirt_steal_rq_enabled);=0A=
-+		static_branch_inc(&paravirt_steal_rq_enabled);=0A=
- #endif=0A=
- =0A=
- 	if (static_key_enabled(&virt_preempt_key))=0A=
-diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platform=
-s/pseries/setup.c=0A=
-index 1223dc961242..8dcbc4bb7025 100644=0A=
---- a/arch/powerpc/platforms/pseries/setup.c=0A=
-+++ b/arch/powerpc/platforms/pseries/setup.c=0A=
-@@ -852,9 +852,9 @@ static void __init pSeries_setup_arch(void)=0A=
- 			static_branch_enable(&shared_processor);=0A=
- 			pv_spinlocks_init();=0A=
- #ifdef CONFIG_PARAVIRT_TIME_ACCOUNTING=0A=
--			static_key_slow_inc(&paravirt_steal_enabled);=0A=
-+			static_branch_inc(&paravirt_steal_enabled);=0A=
- 			if (steal_acc)=0A=
--				static_key_slow_inc(&paravirt_steal_rq_enabled);=0A=
-+				static_branch_inc(&paravirt_steal_rq_enabled);=0A=
- #endif=0A=
- 		}=0A=
- =0A=
-diff --git a/arch/riscv/kernel/paravirt.c b/arch/riscv/kernel/paravirt.c=0A=
-index 5f56be79cd06..9c13a6f1ea2a 100644=0A=
---- a/arch/riscv/kernel/paravirt.c=0A=
-+++ b/arch/riscv/kernel/paravirt.c=0A=
-@@ -116,9 +116,9 @@ int __init pv_time_init(void)=0A=
- =0A=
- 	static_call_update(pv_steal_clock, pv_time_steal_clock);=0A=
- =0A=
--	static_key_slow_inc(&paravirt_steal_enabled);=0A=
-+	static_branch_inc(&paravirt_steal_enabled);=0A=
- 	if (steal_acc)=0A=
--		static_key_slow_inc(&paravirt_steal_rq_enabled);=0A=
-+		static_branch_inc(&paravirt_steal_rq_enabled);=0A=
- =0A=
- 	pr_info("Computing paravirt steal-time\n");=0A=
- =0A=
-diff --git a/arch/x86/kernel/cpu/vmware.c b/arch/x86/kernel/cpu/vmware.c=0A=
-index 34b73573b108..f7ab9e7902cf 100644=0A=
---- a/arch/x86/kernel/cpu/vmware.c=0A=
-+++ b/arch/x86/kernel/cpu/vmware.c=0A=
-@@ -328,9 +328,9 @@ static int vmware_cpu_down_prepare(unsigned int cpu)=0A=
- static __init int activate_jump_labels(void)=0A=
- {=0A=
- 	if (has_steal_clock) {=0A=
--		static_key_slow_inc(&paravirt_steal_enabled);=0A=
-+		static_branch_inc(&paravirt_steal_enabled);=0A=
- 		if (steal_acc)=0A=
--			static_key_slow_inc(&paravirt_steal_rq_enabled);=0A=
-+			static_branch_inc(&paravirt_steal_rq_enabled);=0A=
- 	}=0A=
- =0A=
- 	return 0;=0A=
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c=0A=
-index dcef84da304b..d3dcd64f22c2 100644=0A=
---- a/arch/x86/kernel/kvm.c=0A=
-+++ b/arch/x86/kernel/kvm.c=0A=
-@@ -1052,9 +1052,9 @@ const __initconst struct hypervisor_x86 x86_hyper_kvm=
- =3D {=0A=
- static __init int activate_jump_labels(void)=0A=
- {=0A=
- 	if (has_steal_clock) {=0A=
--		static_key_slow_inc(&paravirt_steal_enabled);=0A=
-+		static_branch_inc(&paravirt_steal_enabled);=0A=
- 		if (steal_acc)=0A=
--			static_key_slow_inc(&paravirt_steal_rq_enabled);=0A=
-+			static_branch_inc(&paravirt_steal_rq_enabled);=0A=
- 	}=0A=
- =0A=
- 	return 0;=0A=
-diff --git a/drivers/xen/time.c b/drivers/xen/time.c=0A=
-index a2be0a4d45b0..a02d48a2aa68 100644=0A=
---- a/drivers/xen/time.c=0A=
-+++ b/drivers/xen/time.c=0A=
-@@ -169,7 +169,7 @@ void __init xen_time_setup_guest(void)=0A=
- =0A=
- 	static_call_update(pv_steal_clock, xen_steal_clock);=0A=
- =0A=
--	static_key_slow_inc(&paravirt_steal_enabled);=0A=
-+	static_branch_inc(&paravirt_steal_enabled);=0A=
- 	if (xen_runstate_remote)=0A=
--		static_key_slow_inc(&paravirt_steal_rq_enabled);=0A=
-+		static_branch_inc(&paravirt_steal_rq_enabled);=0A=
- }=0A=
-diff --git a/include/linux/sched/cputime.h b/include/linux/sched/cputime.h=
-=0A=
-index e90efaf6d26e..694126411dfe 100644=0A=
---- a/include/linux/sched/cputime.h=0A=
-+++ b/include/linux/sched/cputime.h=0A=
-@@ -182,9 +182,9 @@ extern unsigned long long=0A=
- task_sched_runtime(struct task_struct *task);=0A=
- =0A=
- #ifdef CONFIG_PARAVIRT=0A=
--struct static_key;=0A=
--extern struct static_key paravirt_steal_enabled;=0A=
--extern struct static_key paravirt_steal_rq_enabled;=0A=
-+#include <linux/jump_label.h>=0A=
-+DECLARE_STATIC_KEY_FALSE(paravirt_steal_enabled);=0A=
-+DECLARE_STATIC_KEY_FALSE(paravirt_steal_rq_enabled);=0A=
- =0A=
- #ifdef CONFIG_HAVE_PV_STEAL_CLOCK_GEN=0A=
- u64 dummy_steal_clock(int cpu);=0A=
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c=0A=
-index 96226707c2f6..786975d4ca1e 100644=0A=
---- a/kernel/sched/core.c=0A=
-+++ b/kernel/sched/core.c=0A=
-@@ -795,7 +795,7 @@ struct rq *_task_rq_lock(struct task_struct *p, struct =
-rq_flags *rf)=0A=
- =0A=
- /* Use CONFIG_PARAVIRT as this will avoid more #ifdef in arch code. */=0A=
- #ifdef CONFIG_PARAVIRT=0A=
--struct static_key paravirt_steal_rq_enabled;=0A=
-+DEFINE_STATIC_KEY_FALSE(paravirt_steal_rq_enabled);=0A=
- #endif=0A=
- =0A=
- static void update_rq_clock_task(struct rq *rq, s64 delta)=0A=
-@@ -834,7 +834,7 @@ static void update_rq_clock_task(struct rq *rq, s64 del=
-ta)=0A=
- 	}=0A=
- #endif=0A=
- #ifdef CONFIG_PARAVIRT_TIME_ACCOUNTING=0A=
--	if (static_key_false((&paravirt_steal_rq_enabled))) {=0A=
-+	if (static_branch_unlikely(&paravirt_steal_rq_enabled)) {=0A=
- 		u64 prev_steal;=0A=
- =0A=
- 		steal =3D prev_steal =3D paravirt_steal_clock(cpu_of(rq));=0A=
-diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c=0A=
-index 06bddaa738e5..f16970ca81d0 100644=0A=
---- a/kernel/sched/cputime.c=0A=
-+++ b/kernel/sched/cputime.c=0A=
-@@ -255,7 +255,7 @@ void __account_forceidle_time(struct task_struct *p, u6=
-4 delta)=0A=
-  * occasion account more time than the calling functions think elapsed.=0A=
-  */=0A=
- #ifdef CONFIG_PARAVIRT=0A=
--struct static_key paravirt_steal_enabled;=0A=
-+DEFINE_STATIC_KEY_FALSE(paravirt_steal_enabled);=0A=
- =0A=
- #ifdef CONFIG_HAVE_PV_STEAL_CLOCK_GEN=0A=
- static u64 native_steal_clock(int cpu)=0A=
-@@ -270,7 +270,7 @@ DEFINE_STATIC_CALL(pv_steal_clock, native_steal_clock);=
-=0A=
- static __always_inline u64 steal_account_process_time(u64 maxtime)=0A=
- {=0A=
- #ifdef CONFIG_PARAVIRT=0A=
--	if (static_key_false(&paravirt_steal_enabled)) {=0A=
-+	if (static_branch_unlikely(&paravirt_steal_enabled)) {=0A=
- 		u64 steal;=0A=
- =0A=
- 		steal =3D paravirt_steal_clock(smp_processor_id());=0A=
--- =0A=
-2.47.3=0A=
-=0A=
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------xRaoXSGgLc0vY9TPQoiqAmqD
+Content-Type: multipart/mixed; boundary="------------GCGLUHAC00omEipMv2gl1qSr";
+ protected-headers="v1"
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+To: Hongyan Xia <hongyan.xia@transsion.com>,
+ "mingo@redhat.com" <mingo@redhat.com>,
+ "peterz@infradead.org" <peterz@infradead.org>,
+ "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
+ "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
+ "dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>,
+ "rostedt@goodmis.org" <rostedt@goodmis.org>,
+ "bsegall@google.com" <bsegall@google.com>, "mgorman@suse.de"
+ <mgorman@suse.de>, "vschneid@redhat.com" <vschneid@redhat.com>,
+ "kprateek.nayak@amd.com" <kprateek.nayak@amd.com>,
+ Ajay Kaher <ajay.kaher@broadcom.com>,
+ Alexey Makhalov <alexey.makhalov@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+ Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+ Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, "x86@kernel.org"
+ <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Vitaly Kuznetsov <vkuznets@redhat.com>,
+ Stefano Stabellini <sstabellini@kernel.org>,
+ Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Cc: Jiazi Li <jiazi.li@transsion.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "virtualization@lists.linux.dev" <virtualization@lists.linux.dev>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+ "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+ "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
+Message-ID: <e258581c-a17f-4b5a-aafd-82e513a6288e@suse.com>
+Subject: Re: [PATCH 2/3] sched: Convert paravirt_steal to new static key APIs
+References: <cover.1784538478.git.hongyan.xia@transsion.com>
+ <773bbd8fcd5ef2ebfe1c64303c7a71a56368de69.1784538478.git.hongyan.xia@transsion.com>
+In-Reply-To: <773bbd8fcd5ef2ebfe1c64303c7a71a56368de69.1784538478.git.hongyan.xia@transsion.com>
+
+--------------GCGLUHAC00omEipMv2gl1qSr
+Content-Type: multipart/mixed; boundary="------------mHisnunnxH4NBSrCYMbsXcuq"
+
+--------------mHisnunnxH4NBSrCYMbsXcuq
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
+
+T24gMjAuMDcuMjYgMTE6MzgsIEhvbmd5YW4gWGlhIHdyb3RlOg0KPiBGcm9tOiBIb25neWFu
+IFhpYSA8aG9uZ3lhbi54aWFAdHJhbnNzaW9uLmNvbT4NCj4gDQo+IHBhcmF2aXJ0X3N0ZWFs
+X3JxX2VuYWJsZWQgYW5kIHBhcmF2aXJ0X3N0ZWFsX2VuYWJsZWQgdXNlIHJhdyBzdGF0aWNf
+a2V5DQo+IEFQSXMgd2hpY2ggYXJlIG5vdyBkZXByZWNhdGVkLiBVc2UgdGhlIG5ldyBBUEkg
+aW5zdGVhZC4NCj4gDQo+IE5vIGZ1bmN0aW9uYWwgY2hhbmdlLg0KPiANCj4gU2lnbmVkLW9m
+Zi1ieTogSG9uZ3lhbiBYaWEgPGhvbmd5YW4ueGlhQHRyYW5zc2lvbi5jb20+DQoNCkFja2Vk
+LWJ5OiBKdWVyZ2VuIEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+DQoNCg0KSnVlcmdlbg0K
+--------------mHisnunnxH4NBSrCYMbsXcuq
+Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjri
+oyspZKOBycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2
+kaV2KL9650I1SJvedYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i
+1TXkH09XSSI8mEQ/ouNcMvIJNwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/B
+BLUVbDa4+gmzDC9ezlZkTZG2t14zWPvxXP3FAp2pkW0xqG7/377qptDmrk42GlSK
+N4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEBAAHNHEp1ZXJnZW4gR3Jvc3Mg
+PGpnQHBmdXBmLm5ldD7CwHkEEwECACMFAlOMcBYCGwMHCwkIBwMCAQYVCAIJCgsE
+FgIDAQIeAQIXgAAKCRCw3p3WKL8TL0KdB/93FcIZ3GCNwFU0u3EjNbNjmXBKDY4F
+UGNQH2lvWAUy+dnyThpwdtF/jQ6j9RwE8VP0+NXcYpGJDWlNb9/JmYqLiX2Q3Tye
+vpB0CA3dbBQp0OW0fgCetToGIQrg0MbD1C/sEOv8Mr4NAfbauXjZlvTj30H2jO0u
++6WGM6nHwbh2l5O8ZiHkH32iaSTfN7Eu5RnNVUJbvoPHZ8SlM4KWm8rG+lIkGurq
+qu5gu8q8ZMKdsdGC4bBxdQKDKHEFExLJK/nRPFmAuGlId1E3fe10v5QL+qHI3EIP
+tyfE7i9Hz6rVwi7lWKgh7pe0ZvatAudZ+JNIlBKptb64FaiIOAWDCx1SzR9KdWVy
+Z2VuIEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+wsB5BBMBAgAjBQJTjHCvAhsDBwsJ
+CAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQsN6d1ii/Ey/HmQf/RtI7kv5A2PS4
+RF7HoZhPVPogNVbC4YA6lW7DrWf0teC0RR3MzXfy6pJ+7KLgkqMlrAbN/8Dvjoz7
+8X+5vhH/rDLa9BuZQlhFmvcGtCF8eR0T1v0nC/nuAFVGy+67q2DH8As3KPu0344T
+BDpAvr2uYM4tSqxK4DURx5INz4ZZ0WNFHcqsfvlGJALDeE0LhITTd9jLzdDad1pQ
+SToCnLl6SBJZjDOX9QQcyUigZFtCXFst4dlsvddrxyqT1f17+2cFSdu7+ynLmXBK
+7abQ3rwJY8SbRO2iRulogc5vr/RLMMlscDAiDkaFQWLoqHHOdfO9rURssHNN8WkM
+nQfvUewRz80hSnVlcmdlbiBHcm9zcyA8amdyb3NzQG5vdmVsbC5jb20+wsB5BBMB
+AgAjBQJTjHDXAhsDBwsJCAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQsN6d1ii/
+Ey8PUQf/ehmgCI9jB9hlgexLvgOtf7PJnFOXgMLdBQgBlVPO3/D9R8LtF9DBAFPN
+hlrsfIG/SqICoRCqUcJ96Pn3P7UUinFG/I0ECGF4EvTE1jnDkfJZr6jrbjgyoZHi
+w/4BNwSTL9rWASyLgqlA8u1mf+c2yUwcGhgkRAd1gOwungxcwzwqgljf0N51N5Jf
+VRHRtyfwq/ge+YEkDGcTU6Y0sPOuj4Dyfm8fJzdfHNQsWq3PnczLVELStJNdapwP
+OoE+lotufe3AM2vAEYJ9rTz3Cki4JFUsgLkHFqGZarrPGi1eyQcXeluldO3m91NK
+/1xMI3/+8jbO0tsn1tqSEUGIJi7ox80eSnVlcmdlbiBHcm9zcyA8amdyb3NzQHN1
+c2UuZGU+wsB5BBMBAgAjBQJTjHDrAhsDBwsJCAcDAgEGFQgCCQoLBBYCAwECHgEC
+F4AACgkQsN6d1ii/Ey+LhQf9GL45eU5vOowA2u5N3g3OZUEBmDHVVbqMtzwlmNC4
+k9Kx39r5s2vcFl4tXqW7g9/ViXYuiDXb0RfUpZiIUW89siKrkzmQ5dM7wRqzgJpJ
+wK8Bn2MIxAKArekWpiCKvBOB/Cc+3EXE78XdlxLyOi/NrmSGRIov0karw2RzMNOu
+5D+jLRZQd1Sv27AR+IP3I8U4aqnhLpwhK7MEy9oCILlgZ1QZe49kpcumcZKORmzB
+TNh30FVKK1EvmV2xAKDoaEOgQB4iFQLhJCdP1I5aSgM5IVFdn7v5YgEYuJYx37Io
+N1EblHI//x/e2AaIHpzK5h88NEawQsaNRpNSrcfbFmAg987ATQRTjHAWAQgAyzH6
+AOODMBjgfWE9VeCgsrwH3exNAU32gLq2xvjpWnHIs98ndPUDpnoxWQugJ6MpMncr
+0xSwFmHEgnSEjK/PAjppgmyc57BwKII3sV4on+gDVFJR6Y8ZRwgnBC5mVM6JjQ5x
+Dk8WRXljExRfUX9pNhdE5eBOZJrDRoLUmmjDtKzWaDhIg/+1Hzz93X4fCQkNVbVF
+LELU9bMaLPBG/x5q4iYZ2k2ex6d47YE1ZFdMm6YBYMOljGkZKwYde5ldM9mo45mm
+we0icXKLkpEdIXKTZeKDO+Hdv1aqFuAcccTg9RXDQjmwhC3yEmrmcfl0+rPghO0I
+v3OOImwTEe4co3c1mwARAQABwsBfBBgBAgAJBQJTjHAWAhsMAAoJELDendYovxMv
+Q/gH/1ha96vm4P/L+bQpJwrZ/dneZcmEwTbe8YFsw2V/Buv6Z4Mysln3nQK5ZadD
+534CF7TDVft7fC4tU4PONxF5D+/tvgkPfDAfF77zy2AH1vJzQ1fOU8lYFpZXTXIH
+b+559UqvIB8AdgR3SAJGHHt4RKA0F7f5ipYBBrC6cyXJyyoprT10EMvU8VGiwXvT
+yJz3fjoYsdFzpWPlJEBRMedCot60g5dmbdrZ5DWClAr0yau47zpWj3enf1tLWaqc
+suylWsviuGjKGw7KHQd3bxALOknAp4dN3QwBYCKuZ7AddY9yjynVaD5X7nF9nO5B
+jR/i1DG86lem3iBDXzXsZDn8R3/CwO0EGAEIACAWIQSFEmdy6PYElKXQl/ew3p3W
+KL8TLwUCWt3w0AIbAgCBCRCw3p3WKL8TL3YgBBkWCAAdFiEEUy2wekH2OPMeOLge
+gFxhu0/YY74FAlrd8NAACgkQgFxhu0/YY75NiwD/fQf/RXpyv9ZX4n8UJrKDq422
+bcwkujisT6jix2mOOwYBAKiip9+mAD6W5NPXdhk1XraECcIspcf2ff5kCAlG0DIN
+aTUH/RIwNWzXDG58yQoLdD/UPcFgi8GWtNUp0Fhc/GeBxGipXYnvuWxwS+Qs1Qay
+7/Nbal/v4/eZZaWs8wl2VtrHTS96/IF6q2o0qMey0dq2AxnZbQIULiEndgR625EF
+RFg+IbO4ldSkB3trsF2ypYLij4ZObm2casLIP7iB8NKmQ5PndL8Y07TtiQ+Sb/wn
+g4GgV+BJoKdDWLPCAlCMilwbZ88Ijb+HF/aipc9hsqvW/hnXC2GajJSAY3Qs9Mib
+4Hm91jzbAjmp7243pQ4bJMfYHemFFBRaoLC7ayqQjcsttN2ufINlqLFPZPR/i3IX
+kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
+=3DeeAB
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------mHisnunnxH4NBSrCYMbsXcuq--
+
+--------------GCGLUHAC00omEipMv2gl1qSr--
+
+--------------xRaoXSGgLc0vY9TPQoiqAmqD
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmpd+dYFAwAAAAAACgkQsN6d1ii/Ey+9
+dQf+MNwHi0AEoRwM0kGFqoNIkbCEeUDIsEPaZE6ECmiLVl6im8D6Tu03Xw92X3m4V6P4h8KP0cln
+E8xuh65pmvJfOkhbG6w3tnHb2DSaHJ3uBB1XN0hhnoe5LC2FjhTSrxSvUC9FTEmia3pQ/bsUMq1g
+s1BGaaxWDZhqOb5KP+W7tHOds08mT0VosshO8KzjtGtIpD+Hge6qd/LrxV6unk6MKQNSVdDJWwEl
+jB01KSXN6J0RnTSyvU9e/oCJWCrUdEBsjxd2JOFyef4dVLLVeFCm0gp0PLDEZEA+1VQSW0CE6Rjk
+TWjyd5V7/0D5UL8U6E38KHqqAuYS7WBJJGJF/Nx96Q==
+=Pl2M
+-----END PGP SIGNATURE-----
+
+--------------xRaoXSGgLc0vY9TPQoiqAmqD--
