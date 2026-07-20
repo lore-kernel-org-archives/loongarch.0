@@ -1,65 +1,65 @@
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A26448396
-	for <loongarch@lists.linux.dev>; Mon, 20 Jul 2026 17:42:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96DC843B3D0
+	for <loongarch@lists.linux.dev>; Mon, 20 Jul 2026 17:44:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784569341; cv=none; b=WsYD90rM5NMVT+RxDfaCx0YIKcT/C/dzljnJ4SjhvgdvpR5jVzwu0bQoQQizgVVuKrr89Kvi4d38r4B7TxnuGFrWXfmree1DxmSvEoVyCOb8xpsa3kQglW3SSwg2ZJyl7/oqxjhTjKB+Y+rK4m5gII9ScV++la1UVVTErLajPE4=
+	t=1784569491; cv=none; b=HCN3Y6eADM6uHy6PIy2txM2QhR4JXpIQWkZf+eFGBvLZymCj9z5522RL8eljjsgSxWpt6VoyNtp1e0f8Bbzkj46dUgVs3hk8s+otq+8u525FTCUMzt1anwx+J2WZs8TFJTFNlbzSRAeBNpuI24h6zkUo5gZwgAhqTk33j4tr2fI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784569341; c=relaxed/simple;
-	bh=3QhE2AsLZJkKzhZ4fqbxNv5piEktj9SfRnMs3xay2QA=;
+	s=arc-20240116; t=1784569491; c=relaxed/simple;
+	bh=eQwLG50FQTlGIaxFUWOZqCCOrmund6wJNcAiP3xOaXA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oByDma6BRZBcaUMoiVGB5WivqcN879+UhMbzYwphFfQO/5a4HTKmMW+jvBdFowLtAXOUIReJ2hKvMOckjhMJfxiNwolQX6kVhO5STO0NawnVxmFPzFd8JPyzi/r9od4t8jXCrf3yTCN07djRnoq/iSkPDBVcrhlQnRGxljOMnWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=cTiQ5oy5; arc=none smtp.client-ip=209.85.219.50
+	 Content-Type:Content-Disposition:In-Reply-To; b=pGlgH8adXoKYyeQaSgi8UZw/BWdYi7YqYG269TDbKFEF5ONUNFcPmUWhnE+yjVB/Wbp1AEqA3rV+InDZoYJhnnxM3p7oY/foBwbPrB6tx2cIt14FNoNiVAQAGLvGilm5xmc/cDRRBw4UMbJi34N4SKgi7rmxkWl4W7jVctSTx3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=L6oWXhYE; arc=none smtp.client-ip=209.85.160.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="cTiQ5oy5"
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-902fc790cd5so97291196d6.1
-        for <loongarch@lists.linux.dev>; Mon, 20 Jul 2026 10:42:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="L6oWXhYE"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-51c21495722so73980051cf.3
+        for <loongarch@lists.linux.dev>; Mon, 20 Jul 2026 10:44:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1784569337; x=1785174137; darn=lists.linux.dev;
+        d=gourry.net; s=google; t=1784569485; x=1785174285; darn=lists.linux.dev;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=FEiCtTnsRTKK1dIfrBs2bZV/1x4AsbAJwsKiFa/5Flg=;
-        b=cTiQ5oy5ruCelKrCdSxoLKEMZYI3f9bhhSMjrk4j7dBBLIknHkS5jHsL/7al95O7mw
-         K0H+auMUKte4HJZgz4inei52Ffo7sj+Lv2DmK7BXaJESdecbUOPHwDwECaZKGm9k0/V4
-         n7p+5IzaQAFvR/k6PbvhlkrVNE/5c1l9gpU5k9ytJJ3+ZuDmdooRsigJuG5JcPFi/4Y7
-         qJmrBLdwiSEaQRVsPNFZ5FmXQyBTTV9nu2vLIj4dy2JfSdaL0mm+22rFZjBqKO0Hqd8B
-         07dAlgtCNPF0d8EOyBkv0efCtvOUkHUgeQ4mylh8IL2Z9qaeYy9NvZIcSS5XWIRYi9TG
-         t1GA==
+        bh=Fh0Ky+WC8JAb92VghcxhTRFBn6Go7CAcxa18f3039ho=;
+        b=L6oWXhYEF36n0bRKPvz5emMmp9SD+Uhh8E0/vFw//BazCUTnEpGGWCp4OqxRSF4VD9
+         THT+52xJwG8ehYSnJmhrtmoEFbc1mGyw/btYRxbg2idy1CfC8/o/D2LVCAAV6K+GvqNa
+         ZO4D/s/BjOJw588c3gzwLho3/ERPNyGCe1+LuzjUhelnwFw9X243f1QDWQRb+oV0KCD4
+         Bjep26TH1mTs1D74HCXPtp16gKhnqbcq3rTgDd/fYtzvsjooKxnXtbT+WmVrCFKAAFwu
+         Ch4KjKmORvbssoRoZT1oQe1FumzKOm1a6LiHq+y5SGA1qubAe/+nRXDAwe8c6AszXy1L
+         87Og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784569337; x=1785174137;
+        d=1e100.net; s=20251104; t=1784569485; x=1785174285;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=FEiCtTnsRTKK1dIfrBs2bZV/1x4AsbAJwsKiFa/5Flg=;
-        b=VgMYTGe4R18NSy53V9uekFL9BFBirUXkXrlYEGW1YPlsPc2H24Z54qyFxTttP2orXg
-         7Ufb+OikJ65eUgNjRsc/sl5Y15vKwJm4AmsZlykParsaOb1qXqG0sRme9Zeu2BRm/48T
-         dorMRpKWqxT3RWac41P6DstmeH8RpD/VAFqu0WFbHU9E/bC480XUQXJnIWZigl0niU1A
-         2n+7fXUnMhB+YsjpUawK0DZVQ1Tqf8JZwiH2tUhyU9aNQ/h7y7tvy/IQVRrnX8PUB8DD
-         WUgoanN9y4L5Fl2AwJio7PX7nlzw+kr7m03svfWn2QBQV7LTYPRyFrLa8WBdwbxomJDB
-         /qcA==
-X-Forwarded-Encrypted: i=1; AHgh+RrlFlT73HJAXsa44MvCb57wc8YG44ED4EGr/COi3Aoj2Th1p2EeRbHr9L3zNEEJqJNI+zXpaXOUbHM=@lists.linux.dev
-X-Gm-Message-State: AOJu0YymH9VogqcG0GLgr6oKpRJBf0LmEwRxwZomTvpHDhAMz4orcr+Z
-	26AKaFza7wADktel8/hXdYKwJ1UIbsqxEvUhgFt0ir3jfDSYmvkLoo76IJ6hRfpZWmI=
-X-Gm-Gg: AR+sD12W0EwIw4FMsTWF/PaFxQrob6kfJcnoLXP8ElWsUJ37CmS4ByGHY7Dafx7D18K
-	6dnEf4enjiT3dWvX+Wly3su/LtwgaQ27YViu4GknUrlMQ1Yc0Dl5TxvZwZ6v0nb+iR8ZaiTH4J9
-	r/RDK5YOkBVi6PpE9k06NCUMwVdGKULYZyBmn/hHyVUCmzn9k94ihdXXJl7Zgi9ahURzYpFfnZZ
-	sItMzO6ISyTi2hd8fOcTP0OWylh0NoTpRBXlwmE/0GCuwR1tbnEFofQtNSWPcy/lqvaJrfSqFVc
-	i6dt4RI3Pej9OUbYHg6iV9mzlIgtsAsQlmkMYd+SN75LCEj2E85gVBuLb799tRIH46o3tSnn2sE
-	VklasAs8Yb1u9G7kA9fkAso6bTWw08UlurHBvp0h+eakNgEn/Z9wmpcNOjd3/GwfRtoONJ3Nta+
-	4mE3u/UQhjxMkaFlFM+a8jEyP1lCA1LT5te+3XGmecazo1O1mEK8dxovtPtA==
-X-Received: by 2002:a05:6214:2349:b0:8ef:6b06:44c8 with SMTP id 6a1803df08f44-907783d1d3fmr150837746d6.48.1784569336788;
-        Mon, 20 Jul 2026 10:42:16 -0700 (PDT)
+        bh=Fh0Ky+WC8JAb92VghcxhTRFBn6Go7CAcxa18f3039ho=;
+        b=EYYf03Wj2MKBNPIeLcBlI+pQY6FtrmTga3/Wps6IjV+e652wFowD3kTYsnefogQFR1
+         e5TTsvQ5/ERIqgRnvohcrlL4QfS7pqR0yMk0eOgkk8qcqsQ3efmpZ4s+reXG5BpUc9PM
+         4KZDMwlOziSILM0Zwnm2L6M0+tMcyRpv2fQunKeFgIpmdasgY+HYYragIHGpLUdRotNi
+         r2/qjWMeWDb72hH8qkFSZcjPouWAZkT2sa1T76PoRApW9UZAQSf83e4VsbfeoHAJHITL
+         NHSUSd2GdxdWrlwzL4dTYsVF4rXVSxLIoLXpcBpTAsO7ypjQ5cH2lpiQWT3A79baVKMH
+         o5VQ==
+X-Forwarded-Encrypted: i=1; AHgh+RpiMrRtv/yXjXS4QD2OQ5wZwsQyLaZQg+Q5RQsMu1tesFqVKl9lEKYdPRSB46fg9gUF3JzJbhIiO1o=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzJKpJWMmUb0H3qZ/UZD+E7gJ3t9NsfyQd/GzuUKeLxpyHP7gRw
+	LNDfxR/a1AYcymV5c+HD4II1xxb1iq49PSusVGe+UGOQhL2VZ6Phv9P11T73pgSC/1s=
+X-Gm-Gg: AfdE7cnlx59ZPcJLtbN3mqfCQLu1hA1QDjGP9lv1BwvdtifTEyPpXTo297SJ195ngKP
+	9yNYH1fsf9AxfJSXLiERrZWXRlpjXIAyWdT9uTTLY+wwzMZgex8xLVAHm+bsU3blkOiJNFEWtAY
+	db9tbcuGn5OfLgWYnc/rOB1RzW+J88g7VUv5dSwhS5YSb9lLH+sEjAM5kbM+BXkXORdfXwgNOXa
+	7FnFE/M/WM7Y8vfB2pEYyzs9k1nhKqvT6/1wyoPpxy5juhPC/nqi0Z2VZ8jh72bBU6K0bdoN1f1
+	7z4GEYRitxdtRfrIOvNkVOjcapmDeib17f29rymCuYSQFpCBd4V1ej22ehTwU6t0sWVY3xP0mSG
+	rEgjEUJXcPcouzfQT2+jYDI4nv7fc7J4XWrlhio5ahssfplAOL8JvcHVEYN2pTdrfgvftq/V8yl
+	MhuaKJX0y/c72DHCK4lcip2XN8RdFPMzVhc6UxovLiN+KBKCAhjO8d2cI1Qg==
+X-Received: by 2002:a05:622a:1107:b0:51b:fddc:1de8 with SMTP id d75a77b69052e-5213e67e2c1mr141645811cf.65.1784569485065;
+        Mon, 20 Jul 2026 10:44:45 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-90778567f09sm95835516d6.15.2026.07.20.10.42.15
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5214cda7dbfsm77462971cf.9.2026.07.20.10.44.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2026 10:42:16 -0700 (PDT)
-Date: Mon, 20 Jul 2026 13:42:11 -0400
+        Mon, 20 Jul 2026 10:44:44 -0700 (PDT)
+Date: Mon, 20 Jul 2026 13:44:39 -0400
 From: Gregory Price <gourry@gourry.net>
 To: Brendan Jackman <jackmanb@google.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>, 
@@ -84,11 +84,10 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
 	iommu@lists.linux.dev, loongarch@lists.linux.dev, linux-nfs@vger.kernel.org, 
 	netdev@vger.kernel.org
-Subject: Re: [PATCH 2/3] mm, treewide: replace __folio_alloc_node() with
- folio_alloc_node()
-Message-ID: <al5d1K9yHhT2-yVX@gourry-fedora-PF4VCD3F>
+Subject: Re: [PATCH 3/3] mm: move __folio_alloc() to page_alloc.h
+Message-ID: <al5eCOfvXR3OZjVi@gourry-fedora-PF4VCD3F>
 References: <20260716-folio-alloc-cleanups-v1-0-5363b8e92d33@google.com>
- <20260716-folio-alloc-cleanups-v1-2-5363b8e92d33@google.com>
+ <20260716-folio-alloc-cleanups-v1-3-5363b8e92d33@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -97,186 +96,20 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260716-folio-alloc-cleanups-v1-2-5363b8e92d33@google.com>
+In-Reply-To: <20260716-folio-alloc-cleanups-v1-3-5363b8e92d33@google.com>
 
-On Thu, Jul 16, 2026 at 02:30:11PM +0000, Brendan Jackman wrote:
-> Commit 5b584d2d22dca ("mm: remove __alloc_pages_node()") removed the __
-> variant of alloc_pages_node(), after users had been migrated off it,
-> since it just complicates the API (requiring users to handle
-> NUMA_NO_NODE, or risking hotplug bugs) for no real benefit.
+On Thu, Jul 16, 2026 at 02:30:12PM +0000, Brendan Jackman wrote:
+> This is no longer used outside of mm so reduce the scope.
 > 
-> This patch brings __folio_alloc_node() into line too for exactly the
-> same reasons (including the ulterior motive of freeing up the __ variant
-> for use as an internal API).
+> Ulterior motive for the move to mm/: A later patch will add an
+> alloc_flags arg here.
 > 
-> This time, it's done as a single patch because A) the users are fewer
-> and B) folio_alloc_node() does not already exist like
-> alloc_pages_node() did.
-> 
-> No functional change intended.
-> 
-> Suggested-by: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-> Link: https://lore.kernel.org/all/ed4572f4-0074-45c5-993d-7b6533eddc31@kernel.org/
+
+I have a similar commit that is coming in on my next private node rfc,
+i'll reference this, but i wanted to make sure i hit a solid mm-new base
+so sashiko picks it up and people can actually apply it.
+
 > Signed-off-by: Brendan Jackman <jackmanb@google.com>
 
-Reviewed-by: Gregory Price <gourry@gourry.net>
+Reviewed-by:Gregory Price <gourry@gourry.net>
 
-> ---
->  drivers/iommu/iommu-pages.c        |  9 +--------
->  drivers/irqchip/irq-loongarch-ir.c |  4 ++--
->  include/linux/gfp.h                | 12 +++---------
->  mm/filemap.c                       |  2 +-
->  mm/migrate.c                       |  2 +-
->  mm/page_alloc.c                    | 17 +++++++++++++++--
->  net/sunrpc/svc.c                   |  2 +-
->  7 files changed, 24 insertions(+), 24 deletions(-)
-> 
-> diff --git a/drivers/iommu/iommu-pages.c b/drivers/iommu/iommu-pages.c
-> index 3bab175d85571..47e0759f0e0ae 100644
-> --- a/drivers/iommu/iommu-pages.c
-> +++ b/drivers/iommu/iommu-pages.c
-> @@ -56,14 +56,7 @@ void *iommu_alloc_pages_node_sz(int nid, gfp_t gfp, size_t size)
->  	 */
->  	order = get_order(size);
->  
-> -	/*
-> -	 * __folio_alloc_node() does not handle NUMA_NO_NODE like
-> -	 * alloc_pages_node() did.
-> -	 */
-> -	if (nid == NUMA_NO_NODE)
-> -		nid = numa_mem_id();
-> -
-> -	folio = __folio_alloc_node(gfp | __GFP_ZERO, order, nid);
-> +	folio = folio_alloc_node(gfp | __GFP_ZERO, order, nid);
->  	if (unlikely(!folio))
->  		return NULL;
->  
-> diff --git a/drivers/irqchip/irq-loongarch-ir.c b/drivers/irqchip/irq-loongarch-ir.c
-> index 21c649a89a706..427f7fd3cad42 100644
-> --- a/drivers/irqchip/irq-loongarch-ir.c
-> +++ b/drivers/irqchip/irq-loongarch-ir.c
-> @@ -384,7 +384,7 @@ static int redirect_table_init(struct redirect_desc *irde)
->  	unsigned long *bitmap;
->  	struct folio *folio;
->  
-> -	folio = __folio_alloc_node(GFP_KERNEL | __GFP_ZERO, IRD_TABLE_PAGE_ORDER, irde->node);
-> +	folio = folio_alloc_node(GFP_KERNEL | __GFP_ZERO, IRD_TABLE_PAGE_ORDER, irde->node);
->  	if (!folio) {
->  		pr_err("Node [%d] redirect table alloc pages failed!\n", irde->node);
->  		return -ENOMEM;
-> @@ -410,7 +410,7 @@ static int redirect_queue_init(struct redirect_desc *irde)
->  	struct redirect_queue *inv_queue = &irde->inv_queue;
->  	struct folio *folio;
->  
-> -	folio = __folio_alloc_node(GFP_KERNEL | __GFP_ZERO, INV_QUEUE_PAGE_ORDER, irde->node);
-> +	folio = folio_alloc_node(GFP_KERNEL | __GFP_ZERO, INV_QUEUE_PAGE_ORDER, irde->node);
->  	if (!folio) {
->  		pr_err("Node [%d] invalid queue alloc pages failed!\n", irde->node);
->  		return -ENOMEM;
-> diff --git a/include/linux/gfp.h b/include/linux/gfp.h
-> index e4e974a6e5f90..572605d84e30e 100644
-> --- a/include/linux/gfp.h
-> +++ b/include/linux/gfp.h
-> @@ -251,15 +251,9 @@ static inline void warn_if_node_offline(int this_node, gfp_t gfp_mask)
->  	dump_stack();
->  }
->  
-> -static inline
-> -struct folio *__folio_alloc_node_noprof(gfp_t gfp, unsigned int order, int nid)
-> -{
-> -	warn_if_node_offline(nid, gfp);
-> +struct folio *folio_alloc_node_noprof(gfp_t gfp, unsigned int order, int nid);
->  
-> -	return __folio_alloc_noprof(gfp, order, nid, NULL);
-> -}
-> -
-> -#define  __folio_alloc_node(...)		alloc_hooks(__folio_alloc_node_noprof(__VA_ARGS__))
-> +#define  folio_alloc_node(...)		alloc_hooks(folio_alloc_node_noprof(__VA_ARGS__))
->  
->  /*
->   * Allocate pages, preferring the node given as nid. When nid == NUMA_NO_NODE,
-> @@ -282,7 +276,7 @@ static inline struct page *alloc_pages_noprof(gfp_t gfp_mask, unsigned int order
->  }
->  static inline struct folio *folio_alloc_noprof(gfp_t gfp, unsigned int order)
->  {
-> -	return __folio_alloc_node_noprof(gfp, order, numa_node_id());
-> +	return folio_alloc_node_noprof(gfp, order, numa_node_id());
->  }
->  static inline struct folio *vma_alloc_folio_noprof(gfp_t gfp, int order,
->  		struct vm_area_struct *vma, unsigned long addr)
-> diff --git a/mm/filemap.c b/mm/filemap.c
-> index 0dd8e2a15d746..1cf91970a6850 100644
-> --- a/mm/filemap.c
-> +++ b/mm/filemap.c
-> @@ -1007,7 +1007,7 @@ struct folio *filemap_alloc_folio_noprof(gfp_t gfp, unsigned int order,
->  		do {
->  			cpuset_mems_cookie = read_mems_allowed_begin();
->  			n = cpuset_mem_spread_node();
-> -			folio = __folio_alloc_node_noprof(gfp, order, n);
-> +			folio = folio_alloc_node_noprof(gfp, order, n);
->  		} while (!folio && read_mems_allowed_retry(cpuset_mems_cookie));
->  
->  		return folio;
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index 222c8c15f782f..b7836b02f32db 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -2682,7 +2682,7 @@ static struct folio *alloc_misplaced_dst_folio(struct folio *src,
->  			__GFP_NOWARN;
->  		gfp &= ~__GFP_RECLAIM;
->  	}
-> -	return __folio_alloc_node(gfp, order, nid);
-> +	return folio_alloc_node(gfp, order, nid);
->  }
->  
->  /*
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 37a3c1c00e169..86922270df157 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -5435,12 +5435,25 @@ EXPORT_SYMBOL(alloc_pages_node_noprof);
->  struct folio *__folio_alloc_noprof(gfp_t gfp, unsigned int order, int preferred_nid,
->  		nodemask_t *nodemask)
->  {
-> -	struct page *page = __alloc_pages_noprof(gfp | __GFP_COMP, order,
-> -					preferred_nid, nodemask, ALLOC_DEFAULT);
-> +	struct page *page;
-> +
-> +	if (preferred_nid == NUMA_NO_NODE)
-> +		preferred_nid = numa_mem_id();
-> +
-> +	warn_if_node_offline(preferred_nid, gfp);
-> +
-> +	page = __alloc_pages_noprof(gfp | __GFP_COMP, order,
-> +				    preferred_nid, nodemask, ALLOC_DEFAULT);
->  	return page_rmappable_folio(page);
->  }
->  EXPORT_SYMBOL(__folio_alloc_noprof);
->  
-> +struct folio *folio_alloc_node_noprof(gfp_t gfp, unsigned int order, int nid)
-> +{
-> +	return __folio_alloc_noprof(gfp, order, nid, NULL);
-> +}
-> +EXPORT_SYMBOL(folio_alloc_node_noprof);
-> +
->  /*
->   * Common helper functions. Never use with __GFP_HIGHMEM because the returned
->   * address cannot represent highmem pages. Use alloc_pages and then kmap if
-> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-> index ae9ec4bf34f72..74350a2e07036 100644
-> --- a/net/sunrpc/svc.c
-> +++ b/net/sunrpc/svc.c
-> @@ -711,7 +711,7 @@ svc_prepare_thread(struct svc_serv *serv, struct svc_pool *pool, int node)
->  	rqstp->rq_server = serv;
->  	rqstp->rq_pool = pool;
->  
-> -	rqstp->rq_scratch_folio = __folio_alloc_node(GFP_KERNEL, 0, node);
-> +	rqstp->rq_scratch_folio = folio_alloc_node(GFP_KERNEL, 0, node);
->  	if (!rqstp->rq_scratch_folio)
->  		goto out_enomem;
->  
-> 
-> -- 
-> 2.54.0
-> 
-> 
