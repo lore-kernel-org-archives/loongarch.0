@@ -1,34 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38A893E49EE;
-	Tue, 21 Jul 2026 16:24:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A333D4DD6FD;
+	Tue, 21 Jul 2026 16:24:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784651071; cv=none; b=UTabFuEjultos+2n6uP3KnGYS0JZiF8mEAKySSY5s27X5WK56REPUpIO3tO/d4DIhT1bcdu70kpvbj9gNrZbhnSI+mBeyV+lu0z6E2JJiV7LR0lqppFp1uMFrvpPMz9wQ0ukkGQhpYpvbBB9zVvEfrAqqJGmmB8g7FGL6RSPAzk=
+	t=1784651077; cv=none; b=QU2lV1B7Ht5OZXXo+cavTVt4cYEB8XLDlEi8i1Ca9j4jqyms+YjZ9aqWYsSONIBXdTCqX5mY2YvSIZAI2C31LG0FCG0P7H07SYMNPDaEfXtxfmIsLXgErW8gx95WE4eWTz9f+mqcC9+7CFJFF5muWBXMjn9qoxMdu8qBp4YSbXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784651071; c=relaxed/simple;
-	bh=KGFir+qDOZoKQXUhWE1jblcsLbP/mf0lkIC7/pMjfT8=;
+	s=arc-20240116; t=1784651077; c=relaxed/simple;
+	bh=ZyULvIQHjX0BEINxRsy6s9H95na0E7R/g5l9tojUy5c=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gFLJ0jmgdnjE90Z7C3S7k+0C9PTD9ASAdGtIlYbyaeg/mQ5NONKU4kt+ejlEEqYCZBskNU9IyNUYe3AXh7SrwdGUy2F7LBu3WmZb+OV0DA+Y1Ho1WfDFGH8oKSrGxqk1tRWiBiNBSr+e7ZrC5B9DN8ohYr5yA+ahQvCasXmYLek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JhVsU+dw; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:To:Cc; b=KIcQcaebguyKYuvbcLqReLm8axCKarKUHb1+2C6nHsQ/NH5bwtcQw3sVo5myeOihb4oUHlSfheYEUgbf8xNiN9M11/2X8MBQdl15bo2VeTZcYnasRWsOV91IRr2Ds6WTiILX3qlQauCk+bofX84S1oplEExKKrfChhMNPzrxPj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y40sTc2v; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JhVsU+dw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DF361F00A3A;
-	Tue, 21 Jul 2026 16:24:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y40sTc2v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 370D11F000E9;
+	Tue, 21 Jul 2026 16:24:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784651069;
-	bh=N3plug0lpgCKrfv29ZibOjCkE+S+2rGS3Cp9/6Aa2Hw=;
+	s=k20260515; t=1784651076;
+	bh=s+fAGwkj37+ME7Pb0rsrK6LPOBZGydYbqjFxeMM43qs=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=JhVsU+dw1uwxmH+EE0axkr86r9H4Da8cc7CfnWCI4wWPzlF5gUGtel5DmYZ9NErCS
-	 XCKTR6iq7tkNHolyed9vXfwK3qbIarzEac15Db3nrnBnAG4uRipAWCZkqSJzfxRXF9
-	 RcLT4nTwwlotjyOqY+NRUMsWXiwXX8py7JLCE9CYhay2srofX1xLhpmO7N8VDLJDIB
-	 Vg2DnuMbWSwC+kAoJpfiIiq1LniqN/W9Wdr5VH0LjFr3rE24wGTjUnarOu7LxSybaX
-	 m2pvdkDDd1Qr1gwirFPPNEW6TO3uzcNKIXQjoIqkG2nqlKt19gnHV3wZcVJCxLkt0M
-	 GaSPW60FCIAEg==
+	b=Y40sTc2vrbeiNxDRxijWQmoLZupCjYYBLIzRIrURtoo3cDYHr5ZhKX2eqWO5Ns/9M
+	 VWE7/yT06n+QRfyjogcDC45ebqMMD7SdkLyRKsNKmMuL5obaqIIuDsCjanWsgfwzrw
+	 cNesCrWBJcDQ75nQP1mhcRx593LcEO94fvoZMWlfhl1r0xwzsbMZ9+NX+FEMYVsT+F
+	 mKy8et9CuedtDDog/EjWVPYtVcr1/Kaiz0PWF3WoioZkDaWdkK8y+MHKL1arlrbJeB
+	 Ph2fAs7rl++yRte5vI2YNioSX3LdjWLts0yl4+kaXBmoTOVKSN+a2vBm/IfjtVTZq6
+	 sZT1yAdoXsXcA==
 From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Date: Tue, 21 Jul 2026 19:23:30 +0300
-Subject: [PATCH RFC 07/18] x86/mm/pat: introduce cpa_handle_large_page()
+Date: Tue, 21 Jul 2026 19:23:31 +0300
+Subject: [PATCH RFC 08/18] x86/mm/pat: use cpa_split_data structure to pass
+ split parameters
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -37,7 +38,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260721-generic-set-memory-v0-1-v1-7-2c1fc62306b3@kernel.org>
+Message-Id: <20260721-generic-set-memory-v0-1-v1-8-2c1fc62306b3@kernel.org>
 References: <20260721-generic-set-memory-v0-1-v1-0-2c1fc62306b3@kernel.org>
 In-Reply-To: <20260721-generic-set-memory-v0-1-v1-0-2c1fc62306b3@kernel.org>
 To: linux-mm@kvack.org
@@ -60,106 +61,154 @@ Cc: Albert Ou <aou@eecs.berkeley.edu>,
  linux-riscv@lists.infradead.org, loongarch@lists.linux.dev, x86@kernel.org
 X-Mailer: b4 0.16-dev
 
-Currently should_split_large_page() and split_large_page() duplicate
-some of the operations, like PTE lookup inside the lock including
-detection of NX and RW bits and large page size calculation.
+Keeping all split parameters in a struct between
+should_split_large_page() and split_large_page() allows maintaining the
+split state that is initially established in cpa_handle_large_page(),
+then this state is updated in should_split_large_page() and finally
+consumed by split_large_page().
 
-This duplication can be avoided if the split parameters are passed
-between these two functions in a structure and the page table allocation
-and locking order is slightly reorganized.
+Start passing parameters between should_split_large_page() and
+split_large_page() in cpa_split_data structure.
 
-As the first step in this refactoring, introduce cpa_handle_large_page()
-helper that wraps should_split_large_page() and split_large_page().
+As the first step only pass the existing parameters in the new
+structure.
 
 No functional change intended.
 
 Assisted-by: Copilot:claude-opus-4.8
 Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 ---
- arch/x86/mm/pat/set_memory.c | 54 ++++++++++++++++++++++++++++----------------
- 1 file changed, 34 insertions(+), 20 deletions(-)
+ arch/x86/mm/pat/set_memory.c | 49 ++++++++++++++++++++++++++++----------------
+ 1 file changed, 31 insertions(+), 18 deletions(-)
 
 diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index 2a087dcedf84..a9d270e986ff 100644
+index a9d270e986ff..c2a72cd8b832 100644
 --- a/arch/x86/mm/pat/set_memory.c
 +++ b/arch/x86/mm/pat/set_memory.c
-@@ -1191,6 +1191,35 @@ static int split_large_page(struct cpa_data *cpa, pte_t *kpte,
+@@ -53,6 +53,15 @@ struct cpa_data {
+ 	struct page	**pages;
+ };
+ 
++/*
++ * context for checking for a split a large page and splitting it if required.
++ */
++struct cpa_split_data {
++	unsigned long	address;
++	pte_t		*kpte;
++	struct ptdesc	*ptdesc;
++};
++
+ enum cpa_warn {
+ 	CPA_CONFLICT,
+ 	CPA_PROTECT,
+@@ -869,12 +878,14 @@ static pgprot_t pgprot_clear_protnone_bits(pgprot_t prot)
+ 	return prot;
+ }
+ 
+-static int __should_split_large_page(pte_t *kpte, unsigned long address,
+-				     struct cpa_data *cpa)
++static int __should_split_large_page(struct cpa_data *cpa,
++				     struct cpa_split_data *sd)
+ {
+ 	unsigned long numpages, pmask, psize, lpaddr, pfn, old_pfn;
+ 	pgprot_t old_prot, new_prot, req_prot, chk_prot;
++	unsigned long address = sd->address;
+ 	enum pgtable_level level;
++	pte_t *kpte = sd->kpte;
+ 	pte_t new_pte, *tmp;
+ 	bool nx, rw;
+ 
+@@ -1016,8 +1027,8 @@ static int __should_split_large_page(pte_t *kpte, unsigned long address,
  	return 0;
  }
  
-+static int cpa_handle_large_page(struct cpa_data *cpa, pte_t *kpte,
-+				  unsigned long address)
-+{
-+	int do_split, err;
-+
-+	/*
-+	 * Check, whether we can keep the large page intact
-+	 * and just change the pte:
-+	 */
-+	do_split = should_split_large_page(kpte, address, cpa);
-+	/*
-+	 * When the range fits into the existing large page, no split is
-+	 * required.
-+	 * should_split_large_page() updated the large page attributes and
-+	 * cpa->numpages and cpa->pfn.
-+	 */
-+	if (do_split <= 0)
-+		return do_split;
-+
-+	/*
-+	 * We have to split the large page:
-+	 */
-+	err = split_large_page(cpa, kpte, address);
-+	if (err)
-+		return err;
-+
-+	return do_split;
-+}
-+
- static int collapse_pmd_page(pmd_t *pmd, unsigned long addr,
- 			     struct list_head *pgtables)
+-static int should_split_large_page(pte_t *kpte, unsigned long address,
+-				   struct cpa_data *cpa)
++static int should_split_large_page(struct cpa_data *cpa,
++				   struct cpa_split_data *sd)
  {
-@@ -1790,7 +1819,7 @@ static int __cpa_process_fault(struct cpa_data *cpa, unsigned long vaddr,
- static int __change_page_attr(struct cpa_data *cpa, int primary)
- {
- 	unsigned long address;
--	int do_split, err;
-+	int split_res;
- 	unsigned int level;
- 	pte_t *kpte, old_pte;
- 	bool nx, rw;
-@@ -1842,27 +1871,12 @@ static int __change_page_attr(struct cpa_data *cpa, int primary)
- 		return 0;
- 	}
+ 	int do_split;
  
--	/*
--	 * Check, whether we can keep the large page intact
--	 * and just change the pte:
--	 */
--	do_split = should_split_large_page(kpte, address, cpa);
--	/*
--	 * When the range fits into the existing large page,
--	 * return. cp->numpages and cpa->tlbflush have been updated in
--	 * try_large_page:
--	 */
--	if (do_split <= 0)
--		return do_split;
--
--	/*
--	 * We have to split the large page:
--	 */
--	err = split_large_page(cpa, kpte, address);
--	if (!err)
-+	/* Update large page or split it */
-+	split_res = cpa_handle_large_page(cpa, kpte, address);
-+	if (split_res > 0)
- 		goto repeat;
+@@ -1025,7 +1036,7 @@ static int should_split_large_page(pte_t *kpte, unsigned long address,
+ 		return 1;
  
--	return err;
-+	return split_res;
+ 	spin_lock(&pgd_lock);
+-	do_split = __should_split_large_page(kpte, address, cpa);
++	do_split = __should_split_large_page(cpa, sd);
+ 	spin_unlock(&pgd_lock);
+ 
+ 	return do_split;
+@@ -1067,13 +1078,14 @@ static void split_set_pte(struct cpa_data *cpa, pte_t *pte, unsigned long pfn,
+ 	set_pte(pte, pfn_pte(pfn, ref_prot));
  }
  
- static int __change_page_attr_set_clr(struct cpa_data *cpa, int primary);
+-static int
+-__split_large_page(struct cpa_data *cpa, pte_t *kpte, unsigned long address,
+-		   struct ptdesc *ptdesc)
++static int __split_large_page(struct cpa_data *cpa, struct cpa_split_data *sd)
+ {
+ 	unsigned long lpaddr, lpinc, ref_pfn, pfn, pfninc = 1;
++	struct ptdesc *ptdesc = sd->ptdesc;
+ 	struct page *base = ptdesc_page(ptdesc);
+ 	pte_t *pbase = (pte_t *)page_address(base);
++	unsigned long address = sd->address;
++	pte_t *kpte = sd->kpte;
+ 	unsigned int i, level;
+ 	pgprot_t ref_prot;
+ 	bool nx, rw;
+@@ -1174,19 +1186,16 @@ __split_large_page(struct cpa_data *cpa, pte_t *kpte, unsigned long address,
+ 	return 0;
+ }
+ 
+-static int split_large_page(struct cpa_data *cpa, pte_t *kpte,
+-			    unsigned long address)
++static int split_large_page(struct cpa_data *cpa, struct cpa_split_data *sd)
+ {
+-	struct ptdesc *ptdesc;
+-
+ 	spin_unlock(&cpa_lock);
+-	ptdesc = pagetable_alloc(GFP_KERNEL, 0);
++	sd->ptdesc = pagetable_alloc(GFP_KERNEL, 0);
+ 	spin_lock(&cpa_lock);
+-	if (!ptdesc)
++	if (!sd->ptdesc)
+ 		return -ENOMEM;
+ 
+-	if (__split_large_page(cpa, kpte, address, ptdesc))
+-		pagetable_free(ptdesc);
++	if (__split_large_page(cpa, sd))
++		pagetable_free(sd->ptdesc);
+ 
+ 	return 0;
+ }
+@@ -1194,13 +1203,17 @@ static int split_large_page(struct cpa_data *cpa, pte_t *kpte,
+ static int cpa_handle_large_page(struct cpa_data *cpa, pte_t *kpte,
+ 				  unsigned long address)
+ {
++	struct cpa_split_data sd = {
++		.address = address,
++		.kpte = kpte,
++	};
+ 	int do_split, err;
+ 
+ 	/*
+ 	 * Check, whether we can keep the large page intact
+ 	 * and just change the pte:
+ 	 */
+-	do_split = should_split_large_page(kpte, address, cpa);
++	do_split = should_split_large_page(cpa, &sd);
+ 	/*
+ 	 * When the range fits into the existing large page, no split is
+ 	 * required.
+@@ -1213,7 +1226,7 @@ static int cpa_handle_large_page(struct cpa_data *cpa, pte_t *kpte,
+ 	/*
+ 	 * We have to split the large page:
+ 	 */
+-	err = split_large_page(cpa, kpte, address);
++	err = split_large_page(cpa, &sd);
+ 	if (err)
+ 		return err;
+ 
 
 -- 
 2.53.0
