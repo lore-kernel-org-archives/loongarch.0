@@ -1,161 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFE7E3EEAC7
-	for <loongarch@lists.linux.dev>; Tue, 21 Jul 2026 19:10:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A35B433042
+	for <loongarch@lists.linux.dev>; Tue, 21 Jul 2026 19:55:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784661051; cv=none; b=UpJVHEkdAdsJzrukQhEDYNN47QPM/CSpCFNr7ONpMI5aaqUQP/keQyB4a7PbmPpQNXo4VjakE2RakJsEEv/nid9aiCuRc55lAhARSVVcL5PPdG3NQcXxg5ed/9D9HdHMNBp78fYugRHJ7UA/6GCN9SIJZWLXSfQkINZE9Q1T/W8=
+	t=1784663734; cv=none; b=al/qjQNTHx4e7yU07se/KtQEPv+OvvA0E7Z0hH9nb1r7f1ibNvPaYMz1rOP49Xum77xDC+m6wKPJ13Q4u/1BDxXTbDxfJW6JvtfoRng+LmPAvBcslFYeDWVCTQSwZwchDSf5/wK3T1nRlvQR+wij3ypSmoMpzLD/N3aHTdK5G7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784661051; c=relaxed/simple;
-	bh=j8KiH6EQ1lym59qNYMlAoDtQS8lVG0Famynb0hjdySo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CfZnpwm50AuS6f64PGcdeuH3w6mGv0mkQmboF/4UdoHnbxef/3jEXzGyoR3ahgOTbIRoLYLSIPIXYvCtz7imTh36YJSNkQDU+dgn8bQ7+a2q0/Y2dupeZLFdTr0N1vh4l4wQzMm7xPf45K1gMoa8B4H4YVBgYmERJAx6rdZXBIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QN75EZ4s; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784663734; c=relaxed/simple;
+	bh=OSVca3K2RdhXUQ1PWj+BwLEsCMnTBfJCxjNhQBtZdZo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J7+3dXdeARXsFH9v/yqFk0ghABYjUVXBhU8cm+aWuqlhTYni1zjjLY67pZZzZnM5gVwPqEwtmtqGrYllmHpROZG44yvy9q0fiTbUeTOztSeg6oCyCCkw3+8Y4jGTGbEH2d0j+I1S59mZ0c6iC151zyPhn2+TU6+h0h9m6Xrzbkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Xran02uK; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QN75EZ4s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A97E31F00A3D
-	for <loongarch@lists.linux.dev>; Tue, 21 Jul 2026 19:10:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784661049;
-	bh=tNtHHVFwGpxQHaVpMXKF8FRmpeZ8wZl2sb4A1ijCd6s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=QN75EZ4s+pECSeY+AiTQ8ykVak65il0Z/+rk5+eBINPjctUSh34PwrZphOiK3egli
-	 IkRtmCdZeXjwXfx73U3yzYUJKDeIEYqaR4acWaNw9xO/W6McuKN0EDEUs8tpjZYpnG
-	 x5bRGM426AlTRwqf/TiUYED0sfrHQCDJ8WrJwFDOpYIe5ePm1urDkIZFQzdDBmTxo+
-	 1Dt9woBsL2q/8226DOZkpr73WKLUOnYdNwRS75oAWxR9Y2nUcAguzYdldllnKQkvkt
-	 iGz9hfIJbNROxoal7vPyQAZVTy5q7nHwd+4E7dd6pr0CLLwDhDWsVS92rzUSlAzP/k
-	 +MkCYvfB2m2bA==
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5b00d083818so4313293e87.1
-        for <loongarch@lists.linux.dev>; Tue, 21 Jul 2026 12:10:49 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RqptRFqsRtKyeD+aBbaha7OGKaj1EzG0KwZ3SEtjxLVCSwePyQTSy6uzfZ2grWx/1V/RRjdnw1ZyzM=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyGx3PAI6vVd/+z98QBBsiPcvRsRJZjGMESeB3IP/cGi5Ru8qAk
-	ocm8plUbzvpq6HHg+Se8WXGCaq5DTYn9jAIwCRu18TqhYWq6LAAPAboq+2dLG5L0fpCs9Z20K1o
-	vm9NPPDiUX+L6WIX1rklA1i9K5TxNJIo=
-X-Received: by 2002:a05:6512:1287:b0:5ae:a500:e368 with SMTP id
- 2adb3069b0e04-5b2a9b6e05bmr198262e87.3.1784661048138; Tue, 21 Jul 2026
- 12:10:48 -0700 (PDT)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Xran02uK"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 72DC140E00E6;
+	Tue, 21 Jul 2026 19:55:30 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id BFh35W6ojD13; Tue, 21 Jul 2026 19:55:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1784663720; bh=mHZ6KR0HBY/A+4ayC9BCwjfVh3BlnXge75QXQoZQPFo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Xran02uKyC5edtPpDYP3zrYWvM/wd+TuG8TczFdXanmHqJhF4EQsJramNEgpUqMwo
+	 qKjV7yxLOGcs3wwnXmjjsCK5Wsw3coj0OmWWhxSEvMj6q5BqKwChVtk+5XngQLUbCr
+	 /O1lX0OhBtGD757bPtSiNIuD8gDwKolYacrfjk729yTU/wd41XvJ+Txnbfg+WR8ucu
+	 ZpiWXmpQ5StCU0PcoZvEj867IEcdyNscwc/HZQrbWpF4lscz3jaXE7vdz8WjzoJQfL
+	 GDpLxjoBWUV0QWk2qVOLe/DigHevMVj41j2DrfnWbCar8FMZNrvwr3ceq+FvFEtLNw
+	 rekRCUCLPFqCLIs4bS3oJFRNFimbOqu5sqM4nf0pMGmLcuR9HFD3php75HDfUvDgiN
+	 G3IRK97tDDj5J+3sEGwfflva1Z+sNvEsTc+mALCDIjJ399i+n5nWTNTnzk1l1NCNT7
+	 JP0i3sSqMhy7J5xHbWKX0Ki3IvtL51oonXbpv3Xo8OESr1ABKFqZPkXBIXMKwWkrRE
+	 YxiTGeQOVesK2TUnUn9AIBV5+Z3L52z/SIJ2k0j6W0aaosNAqJwgh897ftzD+uInQh
+	 31m6kPgkYEz4Z4fslke2woWDCwHQLFhtW8IJVLJ7H12rRG/CN+c6+j3GaBs5bmc3Ng
+	 XIgXGRuajM3fuCnBC+JRBOxs=
+Received: from stx.tnic (unknown [IPv6:2600:1700:38ca:c00::2b])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C109E40E016E;
+	Tue, 21 Jul 2026 19:54:48 +0000 (UTC)
+Date: Tue, 21 Jul 2026 12:54:46 -0700
+From: Borislav Petkov <bp@alien8.de>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: linux-mm@kvack.org, Albert Ou <aou@eecs.berkeley.edu>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Brendan Jackman <jackmanb@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Hildenbrand <david@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Kevin Brodsky <kevin.brodsky@arm.com>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Lorenzo Stoakes <ljs@kernel.org>, Michal Hocko <mhocko@suse.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <pjw@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Vlastimil Babka <vbabka@kernel.org>, Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, loongarch@lists.linux.dev,
+	x86@kernel.org, Dave Hansen <dave.hansen@intel.com>,
+	Juergen Gross <jgross@suse.com>
+Subject: Re: [PATCH RFC 00/18] arch, mm: create a generic
+ set_memory/change_page_attr core
+Message-ID: <20260721195446.GHal_OhkuBCWQjmLQW@fat_crate.local>
+References: <20260721-generic-set-memory-v0-1-v1-0-2c1fc62306b3@kernel.org>
+ <20260721171943.GEal-qLx4p5YbocQNV@fat_crate.local>
+ <al-6aLMJONOMfW2v@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260717063713.3638059-1-maobibo@loongson.cn> <20260717063713.3638059-2-maobibo@loongson.cn>
-In-Reply-To: <20260717063713.3638059-2-maobibo@loongson.cn>
-From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Date: Tue, 21 Jul 2026 21:10:35 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0j4w01XhqQ1EHKCMXOs=v-cddPu=NtdtX3wL7vAi6Y9Rg@mail.gmail.com>
-X-Gm-Features: AUfX_mzo6bTT_wAyHF9BAu_bjJXrJRhvsHrxVulWaK89ORoD5JeRVhgH6vEsSzA
-Message-ID: <CAJZ5v0j4w01XhqQ1EHKCMXOs=v-cddPu=NtdtX3wL7vAi6Y9Rg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] ACPI: LoongArch: Add acpi_arch_[late]_init()
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>, 
-	Len Brown <lenb@kernel.org>, Saket Dumbre <saket.dumbre@intel.com>, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-acpi@vger.kernel.org, 
-	acpica-devel@lists.linux.dev, lixianglai@loongson.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <al-6aLMJONOMfW2v@kernel.org>
 
-On Fri, Jul 17, 2026 at 8:44=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrot=
-e:
->
-> LoongArch IOMMU scanning flow is similar with virtio-iommu,
-> there is early init and late_init. In early init function, PCI
-> ACS is enabled if there is IOMMU table, and late_init is called
-> after PCI device scanning, where IOVT table scanning function is
-> executed.
->
-> Here add acpi_arch_init() and acpi_arch_late_init() API on LoongArch,
-> now they are both empty, In the future, IOVT table parsing will be
-> added.
->
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
->  drivers/acpi/Makefile           |  2 +-
->  drivers/acpi/bus.c              |  2 ++
->  drivers/acpi/loongarch/Makefile |  2 ++
->  drivers/acpi/loongarch/init.c   | 11 +++++++++++
->  include/linux/acpi.h            |  1 +
->  5 files changed, 17 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/acpi/loongarch/Makefile
->  create mode 100644 drivers/acpi/loongarch/init.c
->
-> diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
-> index d1b0affb844f..91584a3c1e01 100644
-> --- a/drivers/acpi/Makefile
-> +++ b/drivers/acpi/Makefile
-> @@ -131,6 +131,6 @@ obj-y                               +=3D dptf/
->  obj-$(CONFIG_ARM64)            +=3D arm64/
->
->  obj-$(CONFIG_ACPI_VIOT)                +=3D viot.o
-> -
-> +obj-$(CONFIG_LOONGARCH)                +=3D loongarch/
->  obj-$(CONFIG_RISCV)            +=3D riscv/
->  obj-$(CONFIG_X86)              +=3D x86/
-> diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
-> index a30a904f6535..5f6924b9e29d 100644
-> --- a/drivers/acpi/bus.c
-> +++ b/drivers/acpi/bus.c
-> @@ -1571,6 +1571,7 @@ struct kobject *acpi_kobj;
->  EXPORT_SYMBOL_GPL(acpi_kobj);
->
->  void __weak __init acpi_arch_init(void) { }
-> +void __weak __init acpi_arch_late_init(void) { }
->
->  static int __init acpi_init(void)
->  {
-> @@ -1609,6 +1610,7 @@ static int __init acpi_init(void)
->         acpi_wakeup_device_init();
->         acpi_debugger_init();
->         acpi_setup_sb_notify_handler();
-> +       acpi_arch_late_init();
->         acpi_viot_init();
->         return 0;
->  }
-> diff --git a/drivers/acpi/loongarch/Makefile b/drivers/acpi/loongarch/Mak=
-efile
-> new file mode 100644
-> index 000000000000..d3764139dfaf
-> --- /dev/null
-> +++ b/drivers/acpi/loongarch/Makefile
-> @@ -0,0 +1,2 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +obj-y                                  +=3D init.o
-> diff --git a/drivers/acpi/loongarch/init.c b/drivers/acpi/loongarch/init.=
-c
-> new file mode 100644
-> index 000000000000..b11aa5c7d928
-> --- /dev/null
-> +++ b/drivers/acpi/loongarch/init.c
-> @@ -0,0 +1,11 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +
-> +#include <linux/acpi.h>
-> +
-> +void __init acpi_arch_init(void)
-> +{
-> +}
-> +
-> +void __init acpi_arch_late_init(void)
-> +{
-> +}
-> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> index 60ab50cb8930..c6a180341c2d 100644
-> --- a/include/linux/acpi.h
-> +++ b/include/linux/acpi.h
-> @@ -1617,6 +1617,7 @@ static inline int acpi_pptt_get_cpumask_from_cache_=
-id(u32 cache_id,
->  #endif
->
->  void acpi_arch_init(void);
-> +void acpi_arch_late_init(void);
->
->  #ifdef CONFIG_ACPI_PCC
->  void acpi_init_pcc(void);
-> --
+On Tue, Jul 21, 2026 at 09:28:56PM +0300, Mike Rapoport wrote:
+> I'll take it via the memblock tree? ;-)
 
-Please fold this one into the patch in which the new function is actually u=
-sed.
+Definitely not.
 
-Thanks!
+Unless you folks want to carve out the bits of set_memory.c which interact
+with core mm and mark it as maintained by someone else. I personally don't
+mind too much.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
