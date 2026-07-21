@@ -1,35 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56CA1449B27;
-	Tue, 21 Jul 2026 16:24:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38A893E49EE;
+	Tue, 21 Jul 2026 16:24:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784651064; cv=none; b=N8h7Fyzf8yLh2SjOzn2TvK9cN8H1PfpvB4e/cdwDCkfyWkXq0VzGegaxbvr61teov+dS/1/uUpiXOlWkN+4Uf/3b0Xu+zf2HC59rcnXJ2azI2gBpcLQrZdZfzYeDTlE4HhsAyzqgjGrGaXJ/JKiV/LO15UQk6OR6hhX9PDqFCb0=
+	t=1784651071; cv=none; b=UTabFuEjultos+2n6uP3KnGYS0JZiF8mEAKySSY5s27X5WK56REPUpIO3tO/d4DIhT1bcdu70kpvbj9gNrZbhnSI+mBeyV+lu0z6E2JJiV7LR0lqppFp1uMFrvpPMz9wQ0ukkGQhpYpvbBB9zVvEfrAqqJGmmB8g7FGL6RSPAzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784651064; c=relaxed/simple;
-	bh=WA9gsppc/aQ/EE5uHkeXjo1TTDNI7O1i8DReN2UVGOM=;
+	s=arc-20240116; t=1784651071; c=relaxed/simple;
+	bh=KGFir+qDOZoKQXUhWE1jblcsLbP/mf0lkIC7/pMjfT8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ckL7gUGwk/kEA+s1DE7uePH6aHLc1yU6seKd5fNXmBJ+TTq2MIN8bhunlgQyyUD9tcVmlWY0yaCETt5hF7nr1Qal3GeLWFiO3pa0yqHThYXl/6EaYUuRjRDAwh0rTKPAP8GJ+G08+tllsPG6ufOlEAHiIUFoIv3rJjjZlrJ+cEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jpW44nJz; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:To:Cc; b=gFLJ0jmgdnjE90Z7C3S7k+0C9PTD9ASAdGtIlYbyaeg/mQ5NONKU4kt+ejlEEqYCZBskNU9IyNUYe3AXh7SrwdGUy2F7LBu3WmZb+OV0DA+Y1Ho1WfDFGH8oKSrGxqk1tRWiBiNBSr+e7ZrC5B9DN8ohYr5yA+ahQvCasXmYLek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JhVsU+dw; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jpW44nJz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 832A61F000E9;
-	Tue, 21 Jul 2026 16:24:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JhVsU+dw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DF361F00A3A;
+	Tue, 21 Jul 2026 16:24:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784651062;
-	bh=MLtKmgePsVMTaeM3LRrhXggCl62wc5rCPPnL48yidIo=;
+	s=k20260515; t=1784651069;
+	bh=N3plug0lpgCKrfv29ZibOjCkE+S+2rGS3Cp9/6Aa2Hw=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=jpW44nJzttT3pWAEhrIKz5B4sMBsyhohfB0x3ncv13vYzuBX+eor5vRrEJsAn1GEC
-	 8buYNNPOKdsYbmQq4LUYFKbNl9hjm9cLuyrrmuj2vS7L92z3roHNEuY3rwGa7SLFla
-	 mVWiAz9B/42AJBbg/tlAC/rzlktFkH1KdlYTHVvbh+z6r7JDzdaFEoJe4k3cYL4Vn0
-	 CEM3jZKRS8JnGvVzs60HuN1d6KQxlrY56SsI3GVHxg1BN5fUoLnKf3K0RBbDod0UQk
-	 MUO1T9opH9P+jmqCFdx3mbZ949Kz8DemL18bQ0aug9DwEw51oCZgNWGYZpjANkk1fk
-	 cdcD3utSbh+tg==
+	b=JhVsU+dw1uwxmH+EE0axkr86r9H4Da8cc7CfnWCI4wWPzlF5gUGtel5DmYZ9NErCS
+	 XCKTR6iq7tkNHolyed9vXfwK3qbIarzEac15Db3nrnBnAG4uRipAWCZkqSJzfxRXF9
+	 RcLT4nTwwlotjyOqY+NRUMsWXiwXX8py7JLCE9CYhay2srofX1xLhpmO7N8VDLJDIB
+	 Vg2DnuMbWSwC+kAoJpfiIiq1LniqN/W9Wdr5VH0LjFr3rE24wGTjUnarOu7LxSybaX
+	 m2pvdkDDd1Qr1gwirFPPNEW6TO3uzcNKIXQjoIqkG2nqlKt19gnHV3wZcVJCxLkt0M
+	 GaSPW60FCIAEg==
 From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Date: Tue, 21 Jul 2026 19:23:29 +0300
-Subject: [PATCH RFC 06/18] x86/mm/pat: introduce an inline helper to check
- if alias needs update
+Date: Tue, 21 Jul 2026 19:23:30 +0300
+Subject: [PATCH RFC 07/18] x86/mm/pat: introduce cpa_handle_large_page()
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -38,7 +37,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260721-generic-set-memory-v0-1-v1-6-2c1fc62306b3@kernel.org>
+Message-Id: <20260721-generic-set-memory-v0-1-v1-7-2c1fc62306b3@kernel.org>
 References: <20260721-generic-set-memory-v0-1-v1-0-2c1fc62306b3@kernel.org>
 In-Reply-To: <20260721-generic-set-memory-v0-1-v1-0-2c1fc62306b3@kernel.org>
 To: linux-mm@kvack.org
@@ -61,194 +60,106 @@ Cc: Albert Ou <aou@eecs.berkeley.edu>,
  linux-riscv@lists.infradead.org, loongarch@lists.linux.dev, x86@kernel.org
 X-Mailer: b4 0.16-dev
 
-Once core parts of change_page_attr() would be moved to common code,
-the processing of alias mappings would be out of line and would require
-a function call for each modified PTE even if the primary target of
-change_page_attr() does not have alias mappings.
+Currently should_split_large_page() and split_large_page() duplicate
+some of the operations, like PTE lookup inside the lock including
+detection of NX and RW bits and large page size calculation.
 
-Calling a function per PTE just to find out it has nothing to do is
-expensive and resulted in ~30% regression in instrumented cpa-test.
+This duplication can be avoided if the split parameters are passed
+between these two functions in a structure and the page table allocation
+and locking order is slightly reorganized.
 
-Although cpa-test is a microbenchmark, ~30% regression is still a lot
-and can be easily avoided by inlining the checks that gates processing
-of the alias mapping.
-
-Introduce cpa_should_update_alias() inline helper that checks if the
-alias update is required.
-
-Since on 64-bit an alias could be in the high kernel mapping, pull
-__cpa_pfn_in_highmap() along and rename it to pfn_is_kernel().
+As the first step in this refactoring, introduce cpa_handle_large_page()
+helper that wraps should_split_large_page() and split_large_page().
 
 No functional change intended.
 
 Assisted-by: Copilot:claude-opus-4.8
 Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 ---
- arch/x86/include/asm/set_memory.h | 50 +++++++++++++++++++++++++++++++
- arch/x86/mm/pat/set_memory.c      | 62 +++------------------------------------
- 2 files changed, 54 insertions(+), 58 deletions(-)
+ arch/x86/mm/pat/set_memory.c | 54 ++++++++++++++++++++++++++++----------------
+ 1 file changed, 34 insertions(+), 20 deletions(-)
 
-diff --git a/arch/x86/include/asm/set_memory.h b/arch/x86/include/asm/set_memory.h
-index 4362c26aa992..332ec300c2ed 100644
---- a/arch/x86/include/asm/set_memory.h
-+++ b/arch/x86/include/asm/set_memory.h
-@@ -3,12 +3,62 @@
- #define _ASM_X86_SET_MEMORY_H
- 
- #include <asm/page.h>
-+#include <asm/sections.h>
- #include <asm-generic/set_memory.h>
- #include <asm/pgtable.h>
- 
- #define set_memory_rox set_memory_rox
- int set_memory_rox(unsigned long addr, int numpages);
- 
-+#ifdef CONFIG_X86_64
-+/*
-+ * The kernel image is mapped into two places in the virtual address space
-+ * (addresses without KASLR, of course):
-+ *
-+ * 1. The kernel direct map (0xffff880000000000)
-+ * 2. The "high kernel map" (0xffffffff81000000)
-+ *
-+ * We actually execute out of #2. If we get the address of a kernel symbol, it
-+ * points to #2, but almost all physical-to-virtual translations point to #1.
-+ *
-+ * This is so that we can have both a directmap of all physical memory *and*
-+ * take full advantage of the limited (s32) immediate addressing range (2G)
-+ * of x86_64.
-+ *
-+ * See Documentation/arch/x86/x86_64/mm.rst for more detail.
-+ */
-+static inline bool pfn_is_kernel(unsigned long pfn)
-+{
-+	unsigned long spfn = __pa_symbol(_text) >> PAGE_SHIFT;
-+	/* Do not reference a physical address outside the kernel. */
-+	unsigned long epfn = __pa_symbol(roundup(_brk_end, PMD_SIZE) - 1) >> PAGE_SHIFT;
-+
-+	return pfn >= spfn && pfn <= epfn;
-+}
-+#else
-+static inline bool pfn_is_kernel(unsigned long pfn)
-+{
-+	/* There is no highmap on 32-bit */
-+	return false;
-+}
-+#endif
-+
-+static inline bool cpa_should_update_alias(unsigned long vaddr,
-+					   unsigned long pfn)
-+{
-+	/* Primary is not in the direct map, its direct map alias needs update */
-+	if (vaddr < PAGE_OFFSET ||
-+	    vaddr >= PAGE_OFFSET + (max_pfn_mapped << PAGE_SHIFT))
-+		return true;
-+
-+	/* direct map page that is also part of the kernel highmap */
-+	if ((vaddr < (unsigned long)_text || vaddr >= _brk_end) &&
-+	    pfn_is_kernel(pfn))
-+		return true;
-+
-+	return false;
-+}
-+
- /*
-  * The set_memory_* API can be used to change various attributes of a virtual
-  * address range. The attributes include:
 diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index ee40962d4ee9..2a087dcedf84 100644
+index 2a087dcedf84..a9d270e986ff 100644
 --- a/arch/x86/mm/pat/set_memory.c
 +++ b/arch/x86/mm/pat/set_memory.c
-@@ -224,61 +224,6 @@ within(unsigned long addr, unsigned long start, unsigned long end)
- 	return addr >= start && addr < end;
+@@ -1191,6 +1191,35 @@ static int split_large_page(struct cpa_data *cpa, pte_t *kpte,
+ 	return 0;
  }
  
--#ifdef CONFIG_X86_64
--
--static inline int
--within_inclusive(unsigned long addr, unsigned long start, unsigned long end)
--{
--	return addr >= start && addr <= end;
--}
--
--/*
-- * The kernel image is mapped into two places in the virtual address space
-- * (addresses without KASLR, of course):
-- *
-- * 1. The kernel direct map (0xffff880000000000)
-- * 2. The "high kernel map" (0xffffffff81000000)
-- *
-- * We actually execute out of #2. If we get the address of a kernel symbol, it
-- * points to #2, but almost all physical-to-virtual translations point to #1.
-- *
-- * This is so that we can have both a directmap of all physical memory *and*
-- * take full advantage of the limited (s32) immediate addressing range (2G)
-- * of x86_64.
-- *
-- * See Documentation/arch/x86/x86_64/mm.rst for more detail.
-- */
--
--static inline unsigned long highmap_start_pfn(void)
--{
--	return __pa_symbol(_text) >> PAGE_SHIFT;
--}
--
--static inline unsigned long highmap_end_pfn(void)
--{
--	/* Do not reference physical address outside the kernel. */
--	return __pa_symbol(roundup(_brk_end, PMD_SIZE) - 1) >> PAGE_SHIFT;
--}
--
--static bool __cpa_pfn_in_highmap(unsigned long pfn)
--{
--	/*
--	 * Kernel text has an alias mapping at a high address, known
--	 * here as "highmap".
--	 */
--	return within_inclusive(pfn, highmap_start_pfn(), highmap_end_pfn());
--}
--
--#else
--
--static bool __cpa_pfn_in_highmap(unsigned long pfn)
--{
--	/* There is no highmap on 32-bit */
--	return false;
--}
--
--#endif
--
- /*
-  * See set_mce_nospec().
-  *
-@@ -1830,7 +1775,7 @@ static int __cpa_process_fault(struct cpa_data *cpa, unsigned long vaddr,
- 		cpa->pfn = __pa(vaddr) >> PAGE_SHIFT;
++static int cpa_handle_large_page(struct cpa_data *cpa, pte_t *kpte,
++				  unsigned long address)
++{
++	int do_split, err;
++
++	/*
++	 * Check, whether we can keep the large page intact
++	 * and just change the pte:
++	 */
++	do_split = should_split_large_page(kpte, address, cpa);
++	/*
++	 * When the range fits into the existing large page, no split is
++	 * required.
++	 * should_split_large_page() updated the large page attributes and
++	 * cpa->numpages and cpa->pfn.
++	 */
++	if (do_split <= 0)
++		return do_split;
++
++	/*
++	 * We have to split the large page:
++	 */
++	err = split_large_page(cpa, kpte, address);
++	if (err)
++		return err;
++
++	return do_split;
++}
++
+ static int collapse_pmd_page(pmd_t *pmd, unsigned long addr,
+ 			     struct list_head *pgtables)
+ {
+@@ -1790,7 +1819,7 @@ static int __cpa_process_fault(struct cpa_data *cpa, unsigned long vaddr,
+ static int __change_page_attr(struct cpa_data *cpa, int primary)
+ {
+ 	unsigned long address;
+-	int do_split, err;
++	int split_res;
+ 	unsigned int level;
+ 	pte_t *kpte, old_pte;
+ 	bool nx, rw;
+@@ -1842,27 +1871,12 @@ static int __change_page_attr(struct cpa_data *cpa, int primary)
  		return 0;
+ 	}
  
--	} else if (__cpa_pfn_in_highmap(cpa->pfn)) {
-+	} else if (pfn_is_kernel(cpa->pfn)) {
- 		/* Faults in the highmap are OK, so do not warn: */
- 		return -EFAULT;
- 	} else {
-@@ -1968,7 +1913,7 @@ static int cpa_process_alias(struct cpa_data *cpa)
- 	 * to touch the high mapped kernel as well:
- 	 */
- 	if (!within(vaddr, (unsigned long)_text, _brk_end) &&
--	    __cpa_pfn_in_highmap(cpa->pfn)) {
-+	    pfn_is_kernel(cpa->pfn)) {
- 		unsigned long temp_cpa_vaddr = (cpa->pfn << PAGE_SHIFT) +
- 					       __START_KERNEL_map - phys_base;
- 		alias_cpa = *cpa;
-@@ -2026,7 +1971,8 @@ static int __change_page_attr_set_clr(struct cpa_data *cpa, int primary)
- 		if (ret)
- 			goto out;
+-	/*
+-	 * Check, whether we can keep the large page intact
+-	 * and just change the pte:
+-	 */
+-	do_split = should_split_large_page(kpte, address, cpa);
+-	/*
+-	 * When the range fits into the existing large page,
+-	 * return. cp->numpages and cpa->tlbflush have been updated in
+-	 * try_large_page:
+-	 */
+-	if (do_split <= 0)
+-		return do_split;
+-
+-	/*
+-	 * We have to split the large page:
+-	 */
+-	err = split_large_page(cpa, kpte, address);
+-	if (!err)
++	/* Update large page or split it */
++	split_res = cpa_handle_large_page(cpa, kpte, address);
++	if (split_res > 0)
+ 		goto repeat;
  
--		if (primary && !(cpa->flags & CPA_NO_CHECK_ALIAS)) {
-+		if (primary && !(cpa->flags & CPA_NO_CHECK_ALIAS) &&
-+		    cpa_should_update_alias(__cpa_addr(cpa, cpa->curpage), cpa->pfn)) {
- 			ret = cpa_process_alias(cpa);
- 			if (ret)
- 				goto out;
+-	return err;
++	return split_res;
+ }
+ 
+ static int __change_page_attr_set_clr(struct cpa_data *cpa, int primary);
 
 -- 
 2.53.0
