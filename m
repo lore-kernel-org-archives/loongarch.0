@@ -1,111 +1,207 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D815946EC82;
-	Tue, 21 Jul 2026 18:30:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA2A47010D
+	for <loongarch@lists.linux.dev>; Tue, 21 Jul 2026 19:07:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784658640; cv=none; b=tcIpGWOj/6HNQ0NtkUK+A+g7NTzwa2dRmFBOY+mVRH1Ul8E8/I1+DZxAZj03rUF7/dRA+bqgzx2EJuFfS7kNfvy+7EWHb7dffQiMDcaSafvfhG66yToRSS3n44L6oe5yfBidaP/BPn/bxnCQfd1i24jVrrW+12UOXyAu9x7327w=
+	t=1784660871; cv=none; b=AqO80ix7DWoN3T94sZgTj9Wm7QRfB2/X6PyyBUq/dfh01B/a7OwuroFuuLBQkimT3PTsndCwnlrU+6/PfySoz186ZOnv4s/cd8WBRudtvfnZLdM88hR6dyU0oL8yyfXq6XnMDbPt0ADbmytEJxnpqgGjrVfebmSIaCJtkKntDuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784658640; c=relaxed/simple;
-	bh=/aFc89nixD+QIjmNHoz3F8OmF6BNsVwmqXuVp7Jw548=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rhuS1h6yn52Y2pH3n5Ecfq7mDLbedDu+iQNbV04NjmPWJXIeZHwf85/XvRGbZGdaxTB+glFHXg+DnZ24ro7SwnpFdYKYHwaDhTwRHSmHf79YOhDSCiLAc6c2EPWfVX+HkgJtgYucr3+my1En1itXPE/xxdfpRr4CUKJl5+IcKF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ByYK4o3C; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784660871; c=relaxed/simple;
+	bh=4tscBzJRZUgYvFBQ2Ez5nEJRmnnnNOwGe2pX21ahzsc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eDi0BdN+3yVjpokU3mVcVzoE4fAoAkuabCdpUgA6w3q3sk04LBMcnjB1erMQK0Rfxw695bUuJbeR0NlXvmY3oEa28qicw6dhssU8aOPs8Ges6U5UXI5PGMXLeI0WvXYa0OpT3jTGf7g3GMAaCtI5lQEQqcgaLXAqtyo4S+7VvCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I8MArcLm; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ByYK4o3C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E0DE1F00A3A;
-	Tue, 21 Jul 2026 18:30:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I8MArcLm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A77B71F00A3A
+	for <loongarch@lists.linux.dev>; Tue, 21 Jul 2026 19:07:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784658638;
-	bh=9zO9yiMTAazx5bwGvEvIyBcvPS46sW+B44wcbxVnE5g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ByYK4o3Cka+hTsFRrAZAJRNYhFGvW7e38UptX/Hs7lUB1boZoKI/JB79A96h/sJlt
-	 YKqi6ru/0HEtyn5K1g1fKFvrrOvAs55HrxyU1PfQKIYMBQpvNRutYSbErst/xzLFT2
-	 5geUT2eCxPXWhMAI7fAevDyJeTIGeFMK22SP/rV56hOgG5rIOPcfSZnBK8/yramW/9
-	 5j646seiC6BJN7K+hbtAwOp0ZDuR1NSGUi+9LNhopPTljgCIcz8FIMem/5jmuNKlHz
-	 M1MQRG8RBAEZdihKmF6FW6rAvGtDzXs9xOhBrO2BggxJWR7HuxG3+1Sm2YW2C5sGbx
-	 a0g4ar95F9w/A==
-Date: Tue, 21 Jul 2026 21:30:26 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: linux-mm@kvack.org, Albert Ou <aou@eecs.berkeley.edu>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Brendan Jackman <jackmanb@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Hildenbrand <david@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Kevin Brodsky <kevin.brodsky@arm.com>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Michal Hocko <mhocko@suse.com>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <pjw@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Vlastimil Babka <vbabka@kernel.org>, Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, loongarch@lists.linux.dev,
-	x86@kernel.org, Dave Hansen <dave.hansen@intel.com>
-Subject: Re: [PATCH RFC 01/18] x86/mm/pat: Don't gate cpa_lock on
- debug_pagealloc_enabled()
-Message-ID: <al-6woCPBH5d-lwP@kernel.org>
-References: <20260721-generic-set-memory-v0-1-v1-0-2c1fc62306b3@kernel.org>
- <20260721-generic-set-memory-v0-1-v1-1-2c1fc62306b3@kernel.org>
- <al-oTOKY7vkdPHr5@lucifer>
+	s=k20260515; t=1784660869;
+	bh=mY/U83vwkvbX7tXXW/e0fMaqcVSx08EyQlycU/zxvjo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=I8MArcLmoSDoh/Kvxr2f7QQqNEhT29Xq6ToGPuF0OMBT5IQMCkwTBo8W0+D4XE2P9
+	 RsOyjekqAW9PkAecmJJ0aNN5FaMTfzkaux4ChanTEibnc60dpjoSKNX3C1WovHpmaT
+	 ThzW/qhR30LifEf/OHfzNpE0mnK+7Q37mVvHDTIMs4iNaUdf/wwWqTLs06EpEmkuzw
+	 oFWsv2eEo/n1h01439GJl6PFeNJm1pbQ33HnlbuAPQVjGDKLyE9glkYEcAgWJw9STT
+	 AAtyl2pYrqAqZzCTdr5NVMNr5IK62qwuVz2TnQzeks6yRsawE1ZtVR1a9VjJ4iXv8H
+	 cDIef/rHWSuxw==
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5b015b2d792so13298452e87.3
+        for <loongarch@lists.linux.dev>; Tue, 21 Jul 2026 12:07:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RqgaMp6AI9ia7yd5CDe2cJoaC5tQmDC+WseMX7LUQmmNtxKKdlQyRmBKJ/edUpMCI4CoV2k9I+b7pI=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyMtdDlMY+2USIthbt+R5YzCChn2CCqkggtc8ELDGFqIWC1SX2p
+	D52/Uy/i0p45lBveHxN+pbzdKNNT8ZF7UPnKBF3Dg6kdRvRkDtgfuqEQDMLAGNc2AdXHprPJJsG
+	/azXPYOOSxck46EAY2xqYXf57Gtsxy1k=
+X-Received: by 2002:a05:6512:2398:b0:5ae:bb4b:9357 with SMTP id
+ 2adb3069b0e04-5b28f9930e4mr4206431e87.27.1784660868128; Tue, 21 Jul 2026
+ 12:07:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <al-oTOKY7vkdPHr5@lucifer>
+References: <20260717063713.3638059-1-maobibo@loongson.cn> <20260717063713.3638059-4-maobibo@loongson.cn>
+In-Reply-To: <20260717063713.3638059-4-maobibo@loongson.cn>
+From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
+Date: Tue, 21 Jul 2026 21:07:35 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gupBWfJu-Mh73N8AjgBBHXBirhzKE9Byc=Cp+ULZNVkA@mail.gmail.com>
+X-Gm-Features: AUfX_mzAE98KbZL8elWTwvXZukto__3D8X1U89kF73ZK73S8pr01QGvatVVTcqU
+Message-ID: <CAJZ5v0gupBWfJu-Mh73N8AjgBBHXBirhzKE9Byc=Cp+ULZNVkA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] ACPI: scan: Add support for LoongArch in acpi_iommu_configure_id()
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>, 
+	Len Brown <lenb@kernel.org>, Saket Dumbre <saket.dumbre@intel.com>, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-acpi@vger.kernel.org, 
+	acpica-devel@lists.linux.dev, lixianglai@loongson.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 21, 2026 at 06:16:33PM +0100, Lorenzo Stoakes (ARM) wrote:
-> On Tue, Jul 21, 2026 at 07:23:24PM +0300, Mike Rapoport (Microsoft) wrote:
-> > The splitting and merging of kernel page table mappings between small and
-> > large is protected by cpa_lock. The merging is relatively new but the
-> > splitting is ancient.
-> >
-> > The splitting has a locking optimization: since DEBUG_PAGEALLOC forces all
-> > mappings to 4k, there are no large pages to split. So the code that *might*
-> > cause a split can just skip the locking (and a few other things).
-> >
-> > This is entertaining, but it adds complexity and makes for weird locking
-> > rules. Plus it's all for a debugging feature which makes the kernel super
-> > slow in the first place. Optimizing something which is already super slow
-> > and not used in production is not the best way to spend our complexity
-> > budget.
-> >
-> > Stop gating cpa_lock on debug_pagealloc_enabled() to simplify the code
-> > and the locking rules.
-> >
-> > [ dhansen: flesh out changelog ]
-> >
-> > Suggested-by: Dave Hansen <dave.hansen@intel.com>
-> > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> > Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-> > Link: https://patch.msgid.link/20260715144519.934289-1-rppt@kernel.org
-> > Link: https://lore.kernel.org/all/aab44f08-89f8-47fe-bee4-0ab6b25968c6@intel.com/
-> 
-> Hmm this patch is already taken separately though? ([0]) (obv. commented there
-> already with review feedback).
-> 
-> Intended to be with this series as some kind of background or? Probably better
-> to separate out given it's a live patch
+On Fri, Jul 17, 2026 at 8:44=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
+>
+> acpi_iommu_configure_id() currently supports only IORT and VIOT. Add
+> support for IOVT as well.
+>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 
-From the cover letter:
+The one-liner in scan.c is fine with me, so
 
-  Patch 1 is already applied to the tip tree and I posted patch 2
-  separately [4], but I included them both here for the completeness.
- 
-> Thanks, Lorenzo
+Acked-by: Rafael J. Wysocki (Intel) <rafael@kernel.org> # ACPI core
 
--- 
-Sincerely yours,
-Mike.
+for this one, but conditional on the acceptance of the Loongarch-specific p=
+arts.
+
+Thanks!
+
+> ---
+>  drivers/acpi/loongarch/iovt.c | 61 +++++++++++++++++++++++++++++++++++
+>  drivers/acpi/scan.c           |  3 ++
+>  include/linux/acpi_iovt.h     | 13 ++++++++
+>  3 files changed, 77 insertions(+)
+>  create mode 100644 include/linux/acpi_iovt.h
+>
+> diff --git a/drivers/acpi/loongarch/iovt.c b/drivers/acpi/loongarch/iovt.=
+c
+> index fb384664ba78..09fcf09e0f85 100644
+> --- a/drivers/acpi/loongarch/iovt.c
+> +++ b/drivers/acpi/loongarch/iovt.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>
+>  #include <linux/acpi.h>
+> +#include <linux/acpi_iovt.h>
+>  #include <linux/pci.h>
+>  #include "init.h"
+>
+> @@ -217,3 +218,63 @@ void __init acpi_iovt_late_init(void)
+>         iovt_init_devices(hdr);
+>         acpi_put_table(hdr);
+>  }
+> +
+> +static int iovt_pci_dev_iommu_init(struct pci_dev *pdev, u16 dev_id, voi=
+d *data)
+> +{
+> +       u32 sbdf;
+> +       struct iovt_fwnode *np;
+> +       struct device *aliased_dev =3D data;
+> +       u32 domain =3D pci_domain_nr(pdev->bus);
+> +       struct iovt_device_entry *entry;
+> +       bool found =3D false;
+> +
+> +       list_for_each_entry(np, &iovt_fwnode_list, list) {
+> +               if (domain !=3D np->segment)
+> +                       continue;
+> +
+> +               /* We're not translating ourself */
+> +               if (dev_id =3D=3D np->devid)
+> +                       return -EINVAL;
+> +
+> +               if (np->flag & ACPI_IOVT_MAGAGE_BY_SEGMENT) {
+> +                       found =3D true;
+> +                       break;
+> +               }
+> +
+> +               list_for_each_entry(entry, &np->ep_list, list) {
+> +                       if (dev_id < entry->start_devid)
+> +                               continue;
+> +
+> +                       if (dev_id > entry->end_devid)
+> +                               continue;
+> +
+> +                       found =3D true;
+> +                       break;
+> +               }
+> +
+> +               if (found)
+> +                       break;
+> +       }
+> +
+> +       if (!found)
+> +               return -ENODEV;
+> +
+> +       sbdf =3D (domain << 16) + dev_id;
+> +       return acpi_iommu_fwspec_init(aliased_dev, sbdf, np->fwnode);
+> +}
+> +
+> +/*
+> + * iovt_iommu_configure_id - Set-up IOMMU configuration for a device.
+> + *
+> + * @dev: device to configure
+> + * @id_in: optional input id const value pointer
+> + *
+> + * Returns: 0 on success, <0 on failure
+> + */
+> +int iovt_iommu_configure_id(struct device *dev, const u32 *id_in)
+> +{
+> +       if (!dev_is_pci(dev))
+> +               return -ENODEV;
+> +
+> +       return pci_for_each_dma_alias(to_pci_dev(dev), iovt_pci_dev_iommu=
+_init, dev);
+> +}
+> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> index 9a7ac2eb9ce0..508575f25e10 100644
+> --- a/drivers/acpi/scan.c
+> +++ b/drivers/acpi/scan.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/acpi.h>
+>  #include <linux/acpi_iort.h>
+> +#include <linux/acpi_iovt.h>
+>  #include <linux/acpi_rimt.h>
+>  #include <linux/acpi_viot.h>
+>  #include <linux/iommu.h>
+> @@ -1629,6 +1630,8 @@ static int acpi_iommu_configure_id(struct device *d=
+ev, const u32 *id_in)
+>                 err =3D rimt_iommu_configure_id(dev, id_in);
+>         if (err && err !=3D -EPROBE_DEFER)
+>                 err =3D viot_iommu_configure(dev);
+> +       if (err && err !=3D -EPROBE_DEFER)
+> +               err =3D iovt_iommu_configure_id(dev, id_in);
+>
+>         mutex_unlock(&iommu_probe_device_lock);
+>
+> diff --git a/include/linux/acpi_iovt.h b/include/linux/acpi_iovt.h
+> new file mode 100644
+> index 000000000000..25a846b96260
+> --- /dev/null
+> +++ b/include/linux/acpi_iovt.h
+> @@ -0,0 +1,13 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +
+> +#ifndef __ACPI_IOVT_H__
+> +#define __ACPI_IOVT_H__
+> +
+> +#if defined(CONFIG_IOMMU_API) && defined(CONFIG_ACPI_IOVT)
+> +int iovt_iommu_configure_id(struct device *dev, const u32 *id_in);
+> +#else
+> +static inline int iovt_iommu_configure_id(struct device *dev, const u32 =
+*id_in)
+> +{ return -ENODEV; }
+> +#endif
+> +
+> +#endif
+> --
+> 2.39.3
+>
