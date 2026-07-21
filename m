@@ -1,49 +1,37 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 171CA24E4C4;
-	Tue, 21 Jul 2026 12:26:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C95D24886A
+	for <loongarch@lists.linux.dev>; Tue, 21 Jul 2026 12:28:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784636812; cv=none; b=eGcPcNSdkJOp6NUfFwSP/Sxam3J8w/m6FW0Kb33ggqjMgCl34XliaOTQYIxf5mYKJpkzgq96dRfgaNSWPi+lMPc1IixKxlbuQyRn97D5xaPm+knFH6UD9ewu6mUUbRf5HlJJORc0mPNWbtwvZK1S9e6FgR7V6yr/zivMMO8bIDw=
+	t=1784636902; cv=none; b=nB5sT3lxkGsLApMKIaaR6P6CcGkhoBY5L2XDqW3M5AbCRTenTMhAYT5Ra8sdvs9UW+pWIVzn/iQeQzWM9sjaPyEbrYt3Bc5ADrGeNNO733y99nop9ChZFrp56xkw1GXUIblboOYDhYYIyp6DE8ROGIvZ45GZ/ZZINM+hschm3Do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784636812; c=relaxed/simple;
-	bh=hAd/n3f/aPd0kv/ld47dJjfh5HgbJegGDG2sWqzBw8A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Z7VPHsikWgsTpqFc6emvq+zhmPhVYLWLWyl9p50pthsDV0mWmb+TRbtMhdCOXd+SnufzlvQl4erVsx1TGbA+TeNeVIw+rmQ0wSWiDTiSHAZPTNpjTD10s31hTAbPsHOU4uhwATgvylm4luPe0mjGN/wqJ2e6/WRAXvsq2Iq5gok=
+	s=arc-20240116; t=1784636902; c=relaxed/simple;
+	bh=YGMDm11CQkfYYc9yn7gOSIxhVG8GGptyn+J3qaxkNFM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XMTb+MXXWGC3hhHz9kU4JJvNGSPjruuYqfstJ+b8uLq/zqs/Qwj1SLh8YiVHIOmOvFMdSqYdqNnUcyFpgGVV8i8/+SRrkk32Baeeeornzi7WeLunoqXhJBHezGaCvXLiZeiLm2G/AKWxrWaKcCNzI4EgOINhqdASDJRG1ck7Obo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.205])
-	by gateway (Coremail) with SMTP id _____8AxSeuIZV9qMKEFAA--.22007S3;
-	Tue, 21 Jul 2026 20:26:48 +0800 (CST)
-Received: from kernelserver (unknown [223.64.68.205])
-	by front1 (Coremail) with SMTP id qMiowJCxPsdxZV9qofsTAA--.41890S3;
-	Tue, 21 Jul 2026 20:26:45 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
+Received: from loongson.cn (unknown [10.20.42.101])
+	by gateway (Coremail) with SMTP id _____8BxVerjZV9qg6EFAA--.20768S3;
+	Tue, 21 Jul 2026 20:28:19 +0800 (CST)
+Received: from loongson-pc.loongson.cn (unknown [10.20.42.101])
+	by front1 (Coremail) with SMTP id qMiowJBxWsThZV9qTfwTAA--.6622S2;
+	Tue, 21 Jul 2026 20:28:17 +0800 (CST)
+From: Hongliang Wang <wanghongliang@loongson.cn>
+To: Hongliang Wang <wanghongliang@loongson.cn>,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	Andi Shyti <andi.shyti@kernel.org>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Lee Jones <lee@kernel.org>,
-	Yinbo Zhu <zhuyinbo@loongson.cn>,
-	zhanghongchen <zhanghongchen@loongson.cn>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-i2c@vger.kernel.org,
 	devicetree@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	mfd@lists.linux.dev,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH v2 4/4] thermal/drivers/loongson2: Add support for Loongson-2K0300
-Date: Tue, 21 Jul 2026 20:26:18 +0800
-Message-ID: <25a52158e4281a9ae666f46b840527f78497e95a.1784619512.git.zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <cover.1784619512.git.zhoubinbin@loongson.cn>
-References: <cover.1784619512.git.zhoubinbin@loongson.cn>
+	loongarch@lists.linux.dev
+Subject: [PATCH v8 0/2] i2c: ls2x: Add clock- related properties and parsing
+Date: Tue, 21 Jul 2026 20:26:02 +0800
+Message-Id: <20260721122604.12717-1-wanghongliang@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -51,267 +39,108 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxPsdxZV9qofsTAA--.41890S3
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQEPCGpe808JFwAAsR
-X-Coremail-Antispam: 1Uk129KBj93XoW3WFyUurWxGw43Zr1kWrWfWFX_yoWfAr43pa
-	47AFy5KFZ7Gr48uw1jyr1DZr4Yvr13tFZxXFs7Gw1rW393t34agFy7tF1FvrWfCFZ8JFy7
-	ZryDKFWUua4DX3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:qMiowJBxWsThZV9qTfwTAA--.6622S2
+X-CM-SenderInfo: pzdqwxxrqjzxhdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxZr1rWFy7WF4fWFyrGr1Dtwc_yoW5Zr4rpF
+	sxCFWrGr1jga409rsxt3yxuFyFqws8J397Grn7Zw15uw4ayws8ZF1xKrs09FykurZ2kayU
+	u393KF1qkF98AabCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBvb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
-	xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
-	Wrv_ZF1lYx0Ex4A2jsIE14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2
-	Ij64vIr41lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Y
-	z7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE
-	2Ix0cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6x
-	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jxvtAUUUUU=
+	wI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
+	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280
+	aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28Icx
+	kI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2Iq
+	xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42
+	IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY
+	6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aV
+	CY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU25EfUUUUU
 
-Add support for the thermal sensor found on the Loongson-2K0300 SoC.
+Hi all:
 
-The Loongson-2K0300 thermal sensor uses a 10-bit ADC and requires
-per-chip calibration. The calibration offset is stored in the CHIP ID
-registers, which are accessed via syscon. The driver reads this offset
-and applies it when converting the raw ADC value to millicelsius.
+This patch set adds clock related properties and parsing in dts and acpi.
 
-To handle old fuse versions that cannot be calibrated correctly, the
-driver includes a fallback formula and a validity check. Once invalid
-data is detected, the driver falls back to the old formula for future
-reads and warns the user.
+======
+V8:
+Patch (2/2):
+Fix the potential issues from Sashiko AI review:
+ - Add error checking for the pointer returned by devm_clk_get_optional_enabled();
+ - Add zero-value checking for the match data to provide default div.
 
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- drivers/thermal/loongson2_thermal.c | 112 +++++++++++++++++++++++++---
- 1 file changed, 100 insertions(+), 12 deletions(-)
+Link to V7:
+https://lore.kernel.org/all/20260707035104.3092-1-wanghongliang@loongson.cn/
 
-diff --git a/drivers/thermal/loongson2_thermal.c b/drivers/thermal/loongson2_thermal.c
-index d7d221c3136d..e8d11e592a1f 100644
---- a/drivers/thermal/loongson2_thermal.c
-+++ b/drivers/thermal/loongson2_thermal.c
-@@ -2,9 +2,11 @@
- /*
-  * Author: zhanghongchen <zhanghongchen@loongson.cn>
-  *         Yinbo Zhu <zhuyinbo@loongson.cn>
-- * Copyright (C) 2022-2023 Loongson Technology Corporation Limited
-+ *         Binbin Zhou <zhoubinbin@loongson.cn>
-+ * Copyright (C) 2022-2026 Loongson Technology Corporation Limited
-  */
- 
-+#include <linux/bitfield.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/minmax.h>
-@@ -14,6 +16,9 @@
- #include <linux/property.h>
- #include <linux/thermal.h>
- #include <linux/units.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/regmap.h>
-+#include <linux/syscore_ops.h>
- 
- #include "thermal_hwmon.h"
- 
-@@ -23,28 +28,48 @@
- #define LOONGSON2_THSENS_CTRL_LOW_REG	0x8
- #define LOONGSON2_THSENS_STATUS_REG	0x10
- #define LOONGSON2_THSENS_OUT_REG	0x14
-+#define LOONGSON2_THSENS_CFG_REG	0x18
- 
- #define LOONGSON2_THSENS_INT_LO		BIT(0)
- #define LOONGSON2_THSENS_INT_HIGH	BIT(1)
- #define LOONGSON2_THSENS_INT_EN		(LOONGSON2_THSENS_INT_LO | \
- 					 LOONGSON2_THSENS_INT_HIGH)
--#define LOONGSON2_THSENS_OUT_MASK	0xFF
-+#define LOONGSON2_THSENS_OUT_8B_MASK	0xFF
-+#define LOONGSON2_THSENS_OUT_10B_MASK	GENMASK(10, 0)
-+
-+#define LS2K0300_CHIP_ID0		0x10
-+#define LS2K0300_CHIP_ID1		0x14
-+#define LS2K0300_EXTERN_ID		BIT(4)
-+#define LS2K0300_ID0_VAL_MASK		GENMASK(31, 20)
-+#define LS2K0300_ID1_VAL_MASK		GENMASK(15, 0)
-+
-+#define LS2K0300_COMP_VAL_MASK		GENMASK(14, 0)
-+#define LS2K0300_COMP_SIGN_BIT		BIT(15)
-+
-+#define LS2K0300_LOWEST_VALID_TEMP	(-55000)
-+#define LS2K0300_HIGHEST_VALID_TEMP	(125000)
- 
- /*
-  * This flag is used to indicate the temperature reading
-  * method of the Loongson-2K2000
-  */
- #define LS2K2000_THSENS_OUT_FLAG	BIT(0)
-+#define LS2K0300_CHIP_ID_FLAG		BIT(1)
-+#define LS2K0300_OLD_FUSE_FLAG		BIT(2)
- 
- struct loongson2_thermal_chip_data {
- 	unsigned int thermal_sensor_sel;
- 	unsigned int flags;
-+	const struct thermal_zone_device_ops *thermal_ops;
- };
- 
- struct loongson2_thermal_data {
-+	int calib_offset;
-+	struct device *dev;
- 	void __iomem *ctrl_reg;
- 	void __iomem *temp_reg;
--	const struct loongson2_thermal_chip_data *chip_data;
-+	struct regmap *regmap_cfg;
-+	struct loongson2_thermal_chip_data *chip_data;
- };
- 
- static void loongson2_set_ctrl_regs(struct loongson2_thermal_data *data,
-@@ -71,13 +96,55 @@ static int loongson2_thermal_set(struct loongson2_thermal_data *data,
- 	return 0;
- }
- 
-+static int loongson2_2k0300_get_temp(struct thermal_zone_device *tz, int *temp)
-+{
-+	struct loongson2_thermal_data *tdata = thermal_zone_device_priv(tz);
-+	int calib_data, calib_offset, temp_mc, raw_adc;
-+	u32 chip_id0, chip_id1;
-+
-+	writel(0xff03, tdata->ctrl_reg + LOONGSON2_THSENS_CFG_REG);
-+	raw_adc = FIELD_GET(LOONGSON2_THSENS_OUT_10B_MASK,
-+			    readl(tdata->ctrl_reg + LOONGSON2_THSENS_OUT_REG));
-+
-+	if (tdata->chip_data->flags & LS2K0300_OLD_FUSE_FLAG) {
-+		*temp = raw_adc * 569 - 394700;
-+		return 0;
-+	}
-+
-+	regmap_read(tdata->regmap_cfg, LS2K0300_CHIP_ID0, &chip_id0);
-+	regmap_read(tdata->regmap_cfg, LS2K0300_CHIP_ID1, &chip_id1);
-+
-+	if (chip_id0 & LS2K0300_EXTERN_ID) {
-+		calib_data = FIELD_GET(LS2K0300_ID1_VAL_MASK, chip_id1);
-+		calib_offset = FIELD_GET(LS2K0300_COMP_VAL_MASK, calib_data);
-+		if (calib_data & LS2K0300_COMP_SIGN_BIT)
-+			calib_offset = -calib_offset;
-+	} else {
-+		calib_data = FIELD_GET(LS2K0300_ID0_VAL_MASK, chip_id0);
-+		calib_offset = FIELD_GET(LS2K0300_COMP_VAL_MASK, calib_data);
-+	}
-+
-+	tdata->calib_offset = calib_offset;
-+	temp_mc = (raw_adc + calib_offset) * 570 - 394700;
-+
-+	/* For old fuse which can not read right thermal data */
-+	if (temp_mc < LS2K0300_LOWEST_VALID_TEMP || temp_mc > LS2K0300_HIGHEST_VALID_TEMP) {
-+		dev_warn_once(tdata->dev, "It's an old fuse, thermal %d is not right\n", temp_mc);
-+		tdata->chip_data->flags |= LS2K0300_OLD_FUSE_FLAG;
-+		temp_mc = raw_adc * 569 - 394700;
-+	}
-+	*temp = temp_mc;
-+
-+	return 0;
-+}
-+
- static int loongson2_2k1000_get_temp(struct thermal_zone_device *tz, int *temp)
- {
- 	int val;
- 	struct loongson2_thermal_data *data = thermal_zone_device_priv(tz);
- 
- 	val = readl(data->ctrl_reg + LOONGSON2_THSENS_OUT_REG);
--	*temp = ((val & LOONGSON2_THSENS_OUT_MASK) - HECTO) * KILO;
-+	*temp = ((val & LOONGSON2_THSENS_OUT_8B_MASK) - HECTO) * KILO;
- 
- 	return 0;
- }
-@@ -112,6 +179,11 @@ static int loongson2_thermal_set_trips(struct thermal_zone_device *tz, int low,
- 	return loongson2_thermal_set(data, low/MILLI, high/MILLI, true);
- }
- 
-+static const struct thermal_zone_device_ops loongson2_2k0300_of_thermal_ops = {
-+	.get_temp = loongson2_2k0300_get_temp,
-+	.set_trips = loongson2_thermal_set_trips,
-+};
-+
- static const struct thermal_zone_device_ops loongson2_2k1000_of_thermal_ops = {
- 	.get_temp = loongson2_2k1000_get_temp,
- 	.set_trips = loongson2_thermal_set_trips,
-@@ -124,7 +196,6 @@ static const struct thermal_zone_device_ops loongson2_2k2000_of_thermal_ops = {
- 
- static int loongson2_thermal_probe(struct platform_device *pdev)
- {
--	const struct thermal_zone_device_ops *thermal_ops;
- 	struct device *dev = &pdev->dev;
- 	struct loongson2_thermal_data *data;
- 	struct thermal_zone_device *tzd;
-@@ -134,7 +205,8 @@ static int loongson2_thermal_probe(struct platform_device *pdev)
- 	if (!data)
- 		return -ENOMEM;
- 
--	data->chip_data = device_get_match_data(dev);
-+	data->dev = dev;
-+	data->chip_data = (struct loongson2_thermal_chip_data *)device_get_match_data(dev);
- 
- 	data->ctrl_reg = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(data->ctrl_reg))
-@@ -145,10 +217,14 @@ static int loongson2_thermal_probe(struct platform_device *pdev)
- 		data->temp_reg = devm_platform_ioremap_resource(pdev, 1);
- 		if (IS_ERR(data->temp_reg))
- 			return PTR_ERR(data->temp_reg);
-+	}
- 
--		thermal_ops = &loongson2_2k2000_of_thermal_ops;
--	} else {
--		thermal_ops = &loongson2_2k1000_of_thermal_ops;
-+	/* The chip id register is needed for Loongson-2K0300 */
-+	if (data->chip_data->flags & LS2K0300_CHIP_ID_FLAG) {
-+		data->regmap_cfg =
-+			syscon_regmap_lookup_by_phandle(dev->of_node, "loongson,chipid");
-+		if (IS_ERR(data->regmap_cfg))
-+			return PTR_ERR(data->regmap_cfg);
- 	}
- 
- 	irq = platform_get_irq(pdev, 0);
-@@ -160,7 +236,7 @@ static int loongson2_thermal_probe(struct platform_device *pdev)
- 	loongson2_thermal_set(data, 0, 0, false);
- 
- 	for (i = 0; i <= LOONGSON2_MAX_SENSOR_SEL_NUM; i++) {
--		tzd = devm_thermal_of_zone_register(dev, i, data, thermal_ops);
-+		tzd = devm_thermal_of_zone_register(dev, i, data, data->chip_data->thermal_ops);
- 		if (!IS_ERR(tzd))
- 			break;
- 
-@@ -183,17 +259,29 @@ static int loongson2_thermal_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
--static const struct loongson2_thermal_chip_data loongson2_thermal_ls2k1000_data = {
-+static struct loongson2_thermal_chip_data loongson2_thermal_ls2k0300_data = {
-+	.thermal_sensor_sel = 0,
-+	.flags = LS2K0300_CHIP_ID_FLAG,
-+	.thermal_ops = &loongson2_2k0300_of_thermal_ops,
-+};
-+
-+static struct loongson2_thermal_chip_data loongson2_thermal_ls2k1000_data = {
- 	.thermal_sensor_sel = 0,
- 	.flags = 0,
-+	.thermal_ops = &loongson2_2k1000_of_thermal_ops,
- };
- 
--static const struct loongson2_thermal_chip_data loongson2_thermal_ls2k2000_data = {
-+static struct loongson2_thermal_chip_data loongson2_thermal_ls2k2000_data = {
- 	.thermal_sensor_sel = 0,
- 	.flags = LS2K2000_THSENS_OUT_FLAG,
-+	.thermal_ops = &loongson2_2k2000_of_thermal_ops,
- };
- 
- static const struct of_device_id of_loongson2_thermal_match[] = {
-+	{
-+		.compatible = "loongson,ls2k0300-thermal",
-+		.data = &loongson2_thermal_ls2k0300_data,
-+	},
- 	{
- 		.compatible = "loongson,ls2k1000-thermal",
- 		.data = &loongson2_thermal_ls2k1000_data,
+V7:
+Patch (2/2):
+Fix the potential issues from Sashiko AI review:
+ - Move the clock property parsing process to probe function to solve the issue
+   of calling `devm_clk_get_optional_enabled()` dynamically causes unbounded memory
+   leaks and unbalanced clock enable counts.
+ - Add non-zero checking to priv->div.
+
+Link to V6:
+https://lore.kernel.org/all/20260608024533.32419-1-wanghongliang@loongson.cn/
+
+V6:
+- Add Reviewed-by tag from Huacai, thanks. 
+Patch (1/2):
+ - Remove CC stable. 
+
+Link to V5:
+https://lore.kernel.org/all/20260604015848.18643-1-wanghongliang@loongson.cn/ 
+
+V5:
+Patch (1/2):
+ - Adjust the position of #include <dt-bindings/clock/loongson,ls2k-clk.h>;
+ - Add CC stable; 
+ - Fix Signed-off-by.
+Patch (2/2):
+ - Replace 2K0500/2K1000/2K2000 with LS2K0500/2K1000/2K2000;
+ - Replace 7A1000/7A2000 with LS7A1000/7A2000;
+ - Replace if (clk && !IS_ERR(clk)) with if(!IS_ERR_OR_NULL(clk));
+ - Add document that clocks and clock-div are only ACPI properties in ACPI;
+ - Remove unsigned int cast in code (unsigned long)device_get_match_data(dev);
+ - Add CC stable; 
+ - Fix Signed-off-by.
+
+Link to V4:
+https://lore.kernel.org/all/20260526031021.32662-1-wanghongliang@loongson.cn/
+
+V4:
+- Add Acked-by tag from Conor Dooley, thanks.
+Patch (2/2):
+ - Adjust the position of #include <linux/clk.h>;
+ - Remove struct ls2x_i2c_chip_data and use macro to describe div;
+ - Use div instead of factor in ls2x_i2c_adjust_bus_speed;
+ - Reverse the "if & else" code logic in ls2x_i2c_adjust_bus_speed;
+
+Link to V2:
+The PATCH v3 is incomplete, v4 is the replacement of v3, so the previous patch link is v2.
+
+[PATCH v2] dt-bindings: i2c: ls2x-i2c: Add clocks and clock-frequency properties
+https://lore.kernel.org/all/20260507081010.12810-1-wanghongliang@loongson.cn/
+[PATCH v2] i2c: ls2x: Add clocks property parsing and adjust bus speed
+https://lore.kernel.org/all/20260507081010.12810-2-wanghongliang@loongson.cn/
+
+V2:
+[PATCH v2] dt-bindings: i2c: ls2x-i2c: Add clocks and clock-frequency properties
+- Remove the custom properties clock-input and clock-div, use clock framework;
+[PATCH v2] i2c: ls2x: Add clocks property parsing and adjust bus speed
+- Use clock framework to obtain the i2c reference clock in dts.
+
+Link to V1:
+https://lore.kernel.org/all/20260325011852.19079-1-wanghongliang@loongson.cn/
+
+Hongliang Wang (2):
+  dt-bindings: i2c: ls2x-i2c: Add clocks and clock-frequency properties
+  i2c: ls2x: Add clocks property parsing and adjust bus speed
+
+ .../bindings/i2c/loongson,ls2x-i2c.yaml       |  3 ++
+ drivers/i2c/busses/i2c-ls2x.c                 | 40 +++++++++++++++++--
+ 2 files changed, 40 insertions(+), 3 deletions(-)
+
 -- 
-2.52.0
+2.47.2
 
