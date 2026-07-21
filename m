@@ -1,110 +1,181 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50C903C1F46
-	for <loongarch@lists.linux.dev>; Tue, 21 Jul 2026 09:06:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 939D339E176
+	for <loongarch@lists.linux.dev>; Tue, 21 Jul 2026 10:44:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784624782; cv=none; b=WnvoWWK7pu+mwffr4yM6Jf3cF+E+laHLN2y6gQicAneE+/f0TWzlC4Gg98QBSgLsmZF+jOGEsbRKNQ6L10PtTOgpxoIHapXQNp2BwRX+4VvpKKiExFdxtKPnGy+31jqIEsFHlsixtxWnEpenl8LsWvXFPbsR061vFXO7KkZbHn4=
+	t=1784630693; cv=none; b=HKpAL09weJM9rBfJXgaQXNE+rpF8AY/qf8tnmM0sBgnom9VRhRSeBvymlQPOEw0s3upcJrI8is1rUzmPybtZXnJ+5todRwAgF+qWOBY6MRRAE5vjbhhN9pP3gJcBe/xiALVNbv6CKzxvBOyRxudeq5SL5ieJkJFLwCGgGq8TzbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784624782; c=relaxed/simple;
-	bh=6hnBbVGYNLzPEo64qDSzGAeZsF8r3FudhQWYUFXijLQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qNubbl91g+ayDmoXKXAqNOQKvTEvUmgfxzgg/O2OSr4MjbikAUV3TjQim0tqPCSpWD0QTGXvuFimXl4RIzgeRJo3YjA9mUpFjMt/cOnzIrRjpVbPdCd3YMEnoVhodcCGOI2I1/j/kEpcnCsjJpv5WDDERxbmwu4LhOijFgOxiY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxSeuCNl9qKpMFAA--.21823S3;
-	Tue, 21 Jul 2026 17:06:10 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJBxb8d_Nl9qdssTAA--.39236S4;
-	Tue, 21 Jul 2026 17:06:09 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: linux-mm@kvack.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mike Rapoport <rppt@kernel.org>
-Subject: [PATCH v2 2/2] LoongArch: Skip address pairing for non-exec sections
-Date: Tue, 21 Jul 2026 17:06:06 +0800
-Message-ID: <20260721090606.8982-3-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20260721090606.8982-1-yangtiezhu@loongson.cn>
-References: <20260721090606.8982-1-yangtiezhu@loongson.cn>
+	s=arc-20240116; t=1784630693; c=relaxed/simple;
+	bh=SHxQMuzcUvEU6vlDszhMl8raJZxJiuhFTw/tuNzN+z8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qzf+T+7ZS8b8erEPwXFkcC3Ygi0rrkk90QfI4jBX3C8rUvK5XfhpI4/mNZJYl2H2EvmUo7ggORfKBhTer48+LKITZU/5w55B2AEIvrKodeFL95T3ujCdVzJzM0vfz5h4fb6BeU+IuRX5yyQwZRLEcDrhPFIlD7/CTZW25FtYo4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=JtQP6lge; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=y2frQJ8p; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=JtQP6lge; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=y2frQJ8p; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="JtQP6lge";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="y2frQJ8p";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="JtQP6lge";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="y2frQJ8p"
+Received: from kunlun.suse.cz (unknown [IPv6:2a07:de40:b306:2000::2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 531843E07;
+	Tue, 21 Jul 2026 10:44:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1784630678; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=B0Py5B3mwQHc+JOXafe3hbEgSFjr03UEdbTua5LDYRg=;
+	b=JtQP6lged4KTQ9qwSmJWoFVAqDxIRDZ+BQwSXLtHg+hxvrs0KZqezKv7NOpLhu1e843nkg
+	JT1pK7pnMGMQMv8FU5RcH5t+x4oxP4g/E6bssli90KGK+L+lwzEkt2iJceUzwLYI/PZ++9
+	PvGiUBNZ/4KSC7Vpjng9OD92j/wQyII=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1784630678;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=B0Py5B3mwQHc+JOXafe3hbEgSFjr03UEdbTua5LDYRg=;
+	b=y2frQJ8pJWgRl/gkkNhGtA7abbAg0ghd3xXR7bRLXh8+ijdsEq5T6omONmmn2klKmyD0HA
+	vXo1mY9eOZlpodCA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=JtQP6lge;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=y2frQJ8p
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1784630678; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=B0Py5B3mwQHc+JOXafe3hbEgSFjr03UEdbTua5LDYRg=;
+	b=JtQP6lged4KTQ9qwSmJWoFVAqDxIRDZ+BQwSXLtHg+hxvrs0KZqezKv7NOpLhu1e843nkg
+	JT1pK7pnMGMQMv8FU5RcH5t+x4oxP4g/E6bssli90KGK+L+lwzEkt2iJceUzwLYI/PZ++9
+	PvGiUBNZ/4KSC7Vpjng9OD92j/wQyII=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1784630678;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=B0Py5B3mwQHc+JOXafe3hbEgSFjr03UEdbTua5LDYRg=;
+	b=y2frQJ8pJWgRl/gkkNhGtA7abbAg0ghd3xXR7bRLXh8+ijdsEq5T6omONmmn2klKmyD0HA
+	vXo1mY9eOZlpodCA==
+Date: Tue, 21 Jul 2026 12:44:37 +0200
+From: Michal Suchanek <msuchanek@suse.de>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Kees Cook <kees@kernel.org>, Andy Lutomirski <luto@amacapital.net>,
+	Will Drewry <wad@chromium.org>, Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+	Thomas Gleixner <tglx@kernel.org>,
+	Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	linuxppc-dev@lists.ozlabs.org, Huacai Chen <chenhuacai@kernel.org>,
+	loongarch@lists.linux.dev, Sven Schnelle <svens@linux.ibm.com>,
+	linux-s390@vger.kernel.org, x86@kernel.org,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jinjie Ruan <ruanjinjie@huawei.com>,
+	Magnus Lindholm <linmag7@gmail.com>,
+	"Mukesh Kumar Chaurasiya (IBM)" <mkchauras@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>, Radu Rendec <radu@rendec.net>,
+	Renzo Davoli <renzo@cs.unibo.it>, Oleg Nesterov <oleg@redhat.com>
+Subject: [PATCH] seccomp: Fix syscall skip logic on ptrace
+Message-ID: <al9NlZi20xHMvla2@kunlun.suse.cz>
+References: <20260707181957.433213175@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxb8d_Nl9qdssTAA--.39236S4
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7CrW8Zr18tryxKw4kKrWfJFc_yoW8CFWkpr
-	sxCws5Zr48GrnxJws5J3WkWa4UGaykWw4aqF95J3s2yFsxXF9Yy3Z3KrnxXayUuw4rAw10
-	qryFqwn8Z3WUCFbCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Yb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q
-	6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
-	vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_
-	Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
-	AY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAI
-	cVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42
-	IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIev
-	Ja73UjIFyTuYvjxU4AhLUUUUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260707181957.433213175@kernel.org>
+X-Spam-Flag: NO
+X-Rspamd-Action: no action
+X-Spam-Level: **
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [2.49 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	HFILTER_HOSTNAME_UNKNOWN(2.50)[];
+	RDNS_NONE(2.00)[];
+	ONCE_RECEIVED(1.20)[];
+	HFILTER_HELO_IP_A(1.00)[kunlun.suse.cz];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HFILTER_HELO_NORES_A_OR_MX(0.30)[kunlun.suse.cz];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b306:2000::2:from];
+	ARC_NA(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCPT_COUNT_TWELVE(0.00)[28];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_TRACE(0.00)[suse.de:+];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,amacapital.net,chromium.org,dabbelt.com,eecs.berkeley.edu,ghiti.fr,vger.kernel.org,lists.infradead.org,suse.de,ellerman.id.au,linux.ibm.com,lists.ozlabs.org,lists.linux.dev,arm.com,huawei.com,gmail.com,lwn.net,rendec.net,cs.unibo.it,redhat.com];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b306:2000::2:from];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_ZERO(0.00)[0];
+	R_RATELIMIT(0.00)[to_ip_from(RLgmbm6kmdycgna1ji64zx9jke)];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,kunlun.suse.cz:helo,kunlun.suse.cz:mid]
+X-Spamd-Bar: ++
+X-Rspamd-Queue-Id: 531843E07
+X-Spam-Score: 2.49
 
-The module loader currently runs expensive address pairing logic for all
-sections blindly during relocation. For massive modules like amdgpu, this
-causes the loader to waste lots of CPU cycles analyzing non-exec sections.
+seccomp takes a shortcut here. When the syscall number is re-read after
+ptrace and the sign bit is set in the syscall number the syscall is
+skipped right away.
 
-Furthermore, there is an inconsistency since module_frob_arch_sections()
-already ignores non-exec sections during the counting phase.
+This works fairly well on x86 where the return value of the syscall is
+preset before seccomp is processed.
 
-Check the SHF_EXECINSTR flag in apply_relocate_add(). If the section is
-non-exec, skip address pairing and then jump to normal relocation. This
-eliminates redundant search loops to improve module loading efficiency.
+However, on some architectures the syscall return value overlaps with
+the syscall number or syscall arguments, and as a result the return
+value cannot be preset in advance.
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+For these architectures seccomp needs to exit without flagging the
+syscall as skipped. Then processing of invalid syscall number in the
+architecture code should set the return value to -ENOSYS and skip the
+syscall.
+
+This introduces a change: If the syscall number has the sign bit
+set, such as -1, previously the filter re-check would not be done, not
+applying the filter after trace. Now the re-check is done both for
+syscall nubers with and without sign bit set. This would only make a
+difference if the syscall number or the filter was changed by the
+tracer. Otherwise the filter would be resolved the first time around.
+
+Signed-off-by: Michal Suchanek <msuchanek@suse.de>
 ---
- arch/loongarch/kernel/module.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ kernel/seccomp.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/arch/loongarch/kernel/module.c b/arch/loongarch/kernel/module.c
-index 7d4d571ee55e..c84ac1546dc6 100644
---- a/arch/loongarch/kernel/module.c
-+++ b/arch/loongarch/kernel/module.c
-@@ -484,6 +484,7 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
- 	Elf_Addr v;
- 	Elf_Sym *sym;
- 	Elf_Rela *rel = (void *) sechdrs[relsec].sh_addr;
-+	Elf_Shdr *dst_sec = sechdrs + sechdrs[relsec].sh_info;
+diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+index 066909393c38..9e40a38aaedf 100644
+--- a/kernel/seccomp.c
++++ b/kernel/seccomp.c
+@@ -1318,11 +1318,8 @@ static int __seccomp_filter(int this_syscall, const bool recheck_after_trace)
+ 		 */
+ 		if (fatal_signal_pending(current))
+ 			goto skip;
+-		/* Check if the tracer forced the syscall to be skipped. */
+-		this_syscall = syscall_get_nr(current, current_pt_regs());
+-		if (this_syscall < 0)
+-			goto skip;
  
- 	pr_debug("%s: Applying relocate section %u to %u\n", __func__, relsec,
- 	       sechdrs[relsec].sh_info);
-@@ -522,6 +523,10 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
- 
- 		v = sym->st_value + rel[i].r_addend;
- 
-+		/* Skip address pairing for non-exec sections */
-+		if (!(dst_sec->sh_flags & SHF_EXECINSTR))
-+			goto apply_normal;
-+
- 		if (type == R_LARCH_PCADD_LO12 || type == R_LARCH_GOT_PCADD_LO12) {
- 			bool found = false;
- 			unsigned int j = idx;
-@@ -562,6 +567,7 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
- 			idx = j; /* Record the previous j-loop end index */
- 		}
- 
-+apply_normal:
- 		switch (type) {
- 		case R_LARCH_B26:
- 			err = apply_r_larch_b26(mod, sechdrs, location,
++		this_syscall = syscall_get_nr(current, current_pt_regs());
+ 		/*
+ 		 * Recheck the syscall, since it may have changed. This
+ 		 * intentionally uses a NULL struct seccomp_data to force
 -- 
-2.42.0
+2.51.0
 
