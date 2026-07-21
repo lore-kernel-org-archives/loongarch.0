@@ -1,43 +1,46 @@
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64F7D82866
-	for <loongarch@lists.linux.dev>; Tue, 21 Jul 2026 12:19:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 492A324E4C4;
+	Tue, 21 Jul 2026 12:25:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784636355; cv=none; b=Heq6a93ddgtvtdktw4VupdtF/liFF2crmXqBnaQ1fCkINnbBf1YLoj9zlA2K5XXhSHoE4tseCSU2h88EIcgIUz1EvAT4+dl1IqN4dGJbAoA9Rnzz0XMr0QSW2g2vriJZWp4AB1wU/vxISQe7IimXEiEEpfQsJB4nR1WiqdAIW20=
+	t=1784636703; cv=none; b=DgnpjR6sPfC5ZNO40Ua2tgaEGUo1ya8WKBPUy7bw9PBILfDQimanIJC4Qt14cXsPMdAQhQVuf7UDogCtWE0li9Isqmw+L8KXN3Q6kZLvbcgsn8yOjNXyDiJyLjpZs/RpUYIqd28opjsjsPkIIF6gDKPq72ywOMwmHW7+vDtuN4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784636355; c=relaxed/simple;
-	bh=9KJqTDqMpyZpIV8Sku76sfGqrDIuQy4BP+Z94rKnUmI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HahXOihWmWBtHRV7f7TpzaFFc489pBiL6GWIDg7CrxAnlLYXGzDp2NQlED40jNV2/knFF9OM9/V8oHJNKyxnp52DRXtwmDgi9YIRxYmIi4aPCzbhaed/YtIe2wbqtJR76Tz8DZAvzPF0KWf/dJPLkvs6FoTPtMaHpVAv/ByeR3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=F5DGkZ8P; arc=none smtp.client-ip=95.215.58.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="F5DGkZ8P"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1784636350;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=I8HKgpy6k1D2rLobvwWeAJVu3Js45J7lc1vfiKHfJD4=;
-	b=F5DGkZ8Pr3E/pamavNdQtpgM34+hKzjSSfmb6C+FF5kQDHZQNMk3sF47J+XOVy5xEgFdUh
-	JEwiX9RXnqkw1NWGPEL/N4uSg3i8bbxOzs1WL7P2GOiCLDSNixpA1Yy2oI8jgSzWGdqyVr
-	165JlRUTpEOp63m1H104ktV9vyvbZxs=
-From: Tao Cui <cui.tao@linux.dev>
-To: zhaotianrui@loongson.cn,
-	maobibo@loongson.cn
-Cc: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	kvm@vger.kernel.org,
+	s=arc-20240116; t=1784636703; c=relaxed/simple;
+	bh=4hN4hmPKPUnTu7oC1iEny9YOmWeIwosCRJq4ublZ9nU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jtGlBCljpLHkNJVfUQ23kfUE8gZnFe1f6Ld7MRwc+4lEtggy7wlJw304md1XvtmAc29cXih2dnEO86X10vHyxAEo+kkduToqwVhtOqFEGTFFMdOtOA1zS+TpvSff993BrqJmB8AvaamSyAJcm/WdjPLFhzGDiBKG6JXxBDmh3RY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.205])
+	by gateway (Coremail) with SMTP id _____8BxWesaZV9qyaAFAA--.21838S3;
+	Tue, 21 Jul 2026 20:24:58 +0800 (CST)
+Received: from kernelserver (unknown [223.64.68.205])
+	by front1 (Coremail) with SMTP id qMiowJCxq8QRZV9qRfsTAA--.52432S2;
+	Tue, 21 Jul 2026 20:24:55 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Lee Jones <lee@kernel.org>,
+	Yinbo Zhu <zhuyinbo@loongson.cn>,
+	zhanghongchen <zhanghongchen@loongson.cn>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
 	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	cui.tao@linux.dev,
-	cuitao@kylinos.cn
-Subject: [PATCH] LoongArch: KVM: Implement KVM_GET/SET_SREGS for bulk CSR migration
-Date: Tue, 21 Jul 2026 20:18:42 +0800
-Message-ID: <20260721121842.156025-1-cui.tao@linux.dev>
+	devicetree@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	mfd@lists.linux.dev,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v2 0/4] thermal: loongson2: Add support for Loongson-2K0300 SoC
+Date: Tue, 21 Jul 2026 20:24:19 +0800
+Message-ID: <cover.1784619512.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -45,114 +48,77 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-CM-TRANSID:qMiowJCxq8QRZV9qRfsTAA--.52432S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAgEPCGpe+S4IbAAAsD
+X-Coremail-Antispam: 1Uk129KBj93XoWxJrW5CFy7JFy5Kr48GF13Jrc_yoW8Aw4kpa
+	y5u3sxCF1DGFyUAws3Jw47AF4YvrnYqa9rXF4fGwn8uwn8GFyayrWUta15ZryxCrW09FW2
+	vr1vkrWDCF4kuFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	XVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
+	6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
+	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xII
+	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
+	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x02
+	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0Urc3UUUUU==
 
-From: Tao Cui <cuitao@kylinos.cn>
+Hi all:
 
-KVM_GET/SET_SREGS has so far returned -ENOIOCTLCMD with an empty
-struct kvm_sregs, so migrating a vCPU's CSR state takes one
-KVM_GET/SET_ONE_REG ioctl per register -- thousands of syscalls for a
-large VM.
+This patch series adds thermal zone support for the Loongson-2K0300 SoC.
 
-Define struct kvm_sregs as a flat array of 0x184 entries (the core CSR
-range 0x0-0x183, up to DMWIN3) and implement the two ioctls:
+The Loongson-2K0300's thermal sensor is generally compatible with the
+existing Loongson-2K series, but it features several key differences:
+1. It has an independent CPU ID register for reading chip version
+information.
+2. The raw temperature output field has been extended from 8 bits to 11
+bits.
+3. The temperature calculation formula has been updated to incorporate a
+correction factor based on the version information.
 
-- get_sregs does a single vcpu_load/put, which also pulls pending
-  interrupts into ESTAT, avoiding the per-register load/put side-effect
-  that made ONE_REG snapshots of ESTAT order-sensitive.
-- set_sregs writes all CSRs via _kvm_setcsr in one pass, propagates
-  _kvm_setcsr errors, and clears KVM_LARCH_HWCSR_USABLE up front so a
-  mid-loop failure still forces the next vcpu_load() to reload from SW,
-  matching KVM_SET_ONE_REG.
+To ensure robustness on older hardware revisions, a fallback mechanism
+is included: if the calculated temperature falls outside the valid range
+(-55 TO 125),  the driver falls back to a simpler calculation and prints
+a warning.
 
-CSRs above 0x183 (debug, breakpoint, PMU) stay on KVM_GET/SET_ONE_REG.
-struct kvm_sregs was empty, so enlarging it -- and the _IOWR-derived
-ioctl number -- breaks no userspace; userspace built against the updated
-UAPI header can adopt the bulk ioctl.
+The patches have been validated on the Loongson-2K0300 development board.
 
-On a Loongson 3A6000, snapshotting one vCPU's core CSR range drops from
-388 KVM_GET_ONE_REG calls (~2 ms) to a single KVM_GET_SREGS ioctl
-(~5 us).
+Thanks.
+Binbin
 
-Signed-off-by: Tao Cui <cuitao@kylinos.cn>
----
- arch/loongarch/include/uapi/asm/kvm.h |  3 ++
- arch/loongarch/kvm/vcpu.c             | 43 +++++++++++++++++++++++++--
- 2 files changed, 44 insertions(+), 2 deletions(-)
+=========
+V2:
+Patch (1/4):
+ - New patch form Sashiko;
+Patch (2/4):
+ - New patch for adding chipid syscon compatible;
+Patch (3/4):
+ - Use `loongson,chipid` phandle replace chipid reg property;
+Patch (3/4):
+ - Refact `calib_offset` calculate routing;
+ - Add LS2K0300_OLD_FUSE_FLAG flag.
 
-diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
-index cd0b5c11ca9c..dc091f29963d 100644
---- a/arch/loongarch/include/uapi/asm/kvm.h
-+++ b/arch/loongarch/include/uapi/asm/kvm.h
-@@ -124,7 +124,10 @@ struct kvm_sync_regs {
- };
- 
- /* dummy definition */
-+#define KVM_LOONGARCH_NR_SREGS	0x184
-+
- struct kvm_sregs {
-+	__u64 csr[KVM_LOONGARCH_NR_SREGS];
- };
- 
- struct kvm_iocsr_entry {
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 20c207d80e31..0890b68efa2a 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -1001,12 +1001,51 @@ static int kvm_set_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
- 
- int kvm_arch_vcpu_ioctl_get_sregs(struct kvm_vcpu *vcpu, struct kvm_sregs *sregs)
- {
--	return -ENOIOCTLCMD;
-+	int i;
-+	unsigned long estat, gintc;
-+	struct loongarch_csrs *csr = vcpu->arch.csr;
-+
-+	/*
-+	 * Pull pending interrupts into ESTAT with a single vcpu_load/put so
-+	 * the ESTAT value read below matches the current interrupt state.
-+	 * This also avoids the per-register load/put side-effect that makes
-+	 * the ONE_REG path's ESTAT snapshot order-sensitive.  The SW CSR
-+	 * reads run under vcpu->mutex, which serialises this ioctl.
-+	 */
-+	preempt_disable();
-+	vcpu_load(vcpu);
-+	kvm_deliver_intr(vcpu);
-+	vcpu->arch.aux_inuse &= ~KVM_LARCH_SWCSR_LATEST;
-+	vcpu_put(vcpu);
-+	preempt_enable();
-+
-+	for (i = 0; i < KVM_LOONGARCH_NR_SREGS; i++) {
-+		if (i == LOONGARCH_CSR_ESTAT) {
-+			gintc = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_GINTC) & KVM_GINTC_IRQ_MASK;
-+			estat = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_ESTAT) & ~KVM_ESTAT_EXTI_MASK;
-+			sregs->csr[i] = estat | (gintc << VIP_DELTA);
-+		} else {
-+			sregs->csr[i] = kvm_read_sw_gcsr(csr, i);
-+		}
-+	}
-+
-+	return 0;
- }
- 
- int kvm_arch_vcpu_ioctl_set_sregs(struct kvm_vcpu *vcpu, struct kvm_sregs *sregs)
- {
--	return -ENOIOCTLCMD;
-+	int i, ret;
-+
-+	/* Clear first so a failing _kvm_setcsr still forces a HW reload. */
-+	vcpu->arch.aux_inuse &= ~KVM_LARCH_HWCSR_USABLE;
-+
-+	for (i = 0; i < KVM_LOONGARCH_NR_SREGS; i++) {
-+		ret = _kvm_setcsr(vcpu, i, sregs->csr[i]);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
- }
- 
- int kvm_arch_vcpu_ioctl_get_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
+Link to V1:
+https://lore.kernel.org/all/cover.1783670011.git.zhoubinbin@loongson.cn/
+
+Binbin Zhou (4):
+  thermal/drivers/loongson2: Correct thermal sensor registration loop
+  dt-bindings: mfd: syscon: Allow syscon compatible for Loongson-2K0300
+    chip id
+  dt-bindings: thermal: loongson,ls2k-thermal: Add compatible for
+    Loongson-2K0300
+  thermal/drivers/loongson2: Add support for Loongson-2K0300
+
+ .../devicetree/bindings/mfd/syscon.yaml       |   2 +
+ .../thermal/loongson,ls2k-thermal.yaml        |  73 ++++++++---
+ drivers/thermal/loongson2_thermal.c           | 120 +++++++++++++++---
+ 3 files changed, 162 insertions(+), 33 deletions(-)
+
 -- 
-2.43.0
+2.52.0
 
