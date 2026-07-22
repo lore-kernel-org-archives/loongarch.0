@@ -1,102 +1,208 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A35B433042
-	for <loongarch@lists.linux.dev>; Tue, 21 Jul 2026 19:55:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 671A11A3166
+	for <loongarch@lists.linux.dev>; Wed, 22 Jul 2026 01:43:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784663734; cv=none; b=al/qjQNTHx4e7yU07se/KtQEPv+OvvA0E7Z0hH9nb1r7f1ibNvPaYMz1rOP49Xum77xDC+m6wKPJ13Q4u/1BDxXTbDxfJW6JvtfoRng+LmPAvBcslFYeDWVCTQSwZwchDSf5/wK3T1nRlvQR+wij3ypSmoMpzLD/N3aHTdK5G7Y=
+	t=1784684600; cv=none; b=NVdw9AaEpZ5ue1ue6TtAo9O9Ru5zzgH12zXL3dv2Cr7sjJ3/tIlLRxxUAK292vzOzE06nsyjN6swN1edEvWWLkR6Qjyv6hS7mx3Ef/3NRJJFQaLRwNG6ytS04FPhA5+PdoP30tM4C82cLkIXPNIIeHw4G1p8ONZY0E3JM4CvDvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784663734; c=relaxed/simple;
-	bh=OSVca3K2RdhXUQ1PWj+BwLEsCMnTBfJCxjNhQBtZdZo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J7+3dXdeARXsFH9v/yqFk0ghABYjUVXBhU8cm+aWuqlhTYni1zjjLY67pZZzZnM5gVwPqEwtmtqGrYllmHpROZG44yvy9q0fiTbUeTOztSeg6oCyCCkw3+8Y4jGTGbEH2d0j+I1S59mZ0c6iC151zyPhn2+TU6+h0h9m6Xrzbkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Xran02uK; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Xran02uK"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 72DC140E00E6;
-	Tue, 21 Jul 2026 19:55:30 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id BFh35W6ojD13; Tue, 21 Jul 2026 19:55:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1784663720; bh=mHZ6KR0HBY/A+4ayC9BCwjfVh3BlnXge75QXQoZQPFo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Xran02uKyC5edtPpDYP3zrYWvM/wd+TuG8TczFdXanmHqJhF4EQsJramNEgpUqMwo
-	 qKjV7yxLOGcs3wwnXmjjsCK5Wsw3coj0OmWWhxSEvMj6q5BqKwChVtk+5XngQLUbCr
-	 /O1lX0OhBtGD757bPtSiNIuD8gDwKolYacrfjk729yTU/wd41XvJ+Txnbfg+WR8ucu
-	 ZpiWXmpQ5StCU0PcoZvEj867IEcdyNscwc/HZQrbWpF4lscz3jaXE7vdz8WjzoJQfL
-	 GDpLxjoBWUV0QWk2qVOLe/DigHevMVj41j2DrfnWbCar8FMZNrvwr3ceq+FvFEtLNw
-	 rekRCUCLPFqCLIs4bS3oJFRNFimbOqu5sqM4nf0pMGmLcuR9HFD3php75HDfUvDgiN
-	 G3IRK97tDDj5J+3sEGwfflva1Z+sNvEsTc+mALCDIjJ399i+n5nWTNTnzk1l1NCNT7
-	 JP0i3sSqMhy7J5xHbWKX0Ki3IvtL51oonXbpv3Xo8OESr1ABKFqZPkXBIXMKwWkrRE
-	 YxiTGeQOVesK2TUnUn9AIBV5+Z3L52z/SIJ2k0j6W0aaosNAqJwgh897ftzD+uInQh
-	 31m6kPgkYEz4Z4fslke2woWDCwHQLFhtW8IJVLJ7H12rRG/CN+c6+j3GaBs5bmc3Ng
-	 XIgXGRuajM3fuCnBC+JRBOxs=
-Received: from stx.tnic (unknown [IPv6:2600:1700:38ca:c00::2b])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C109E40E016E;
-	Tue, 21 Jul 2026 19:54:48 +0000 (UTC)
-Date: Tue, 21 Jul 2026 12:54:46 -0700
-From: Borislav Petkov <bp@alien8.de>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: linux-mm@kvack.org, Albert Ou <aou@eecs.berkeley.edu>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Brendan Jackman <jackmanb@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Hildenbrand <david@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Kevin Brodsky <kevin.brodsky@arm.com>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Lorenzo Stoakes <ljs@kernel.org>, Michal Hocko <mhocko@suse.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <pjw@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Vlastimil Babka <vbabka@kernel.org>, Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, loongarch@lists.linux.dev,
-	x86@kernel.org, Dave Hansen <dave.hansen@intel.com>,
-	Juergen Gross <jgross@suse.com>
-Subject: Re: [PATCH RFC 00/18] arch, mm: create a generic
- set_memory/change_page_attr core
-Message-ID: <20260721195446.GHal_OhkuBCWQjmLQW@fat_crate.local>
-References: <20260721-generic-set-memory-v0-1-v1-0-2c1fc62306b3@kernel.org>
- <20260721171943.GEal-qLx4p5YbocQNV@fat_crate.local>
- <al-6aLMJONOMfW2v@kernel.org>
+	s=arc-20240116; t=1784684600; c=relaxed/simple;
+	bh=HDKnuZB020B1NFw5Aks/rAa/Gx9BkOkDO5X/X00aR7g=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=CwLjUSWwnt36+soLewSHBFQ4xjdjt/0xYP48XB6e7ZZno2uY3sWWtkwzUaCQkM4x20tr/Qd0kgZg0wvambYYeJaDTprMsd9iCTPKAOL4WKqlPeMkGicYwJH3+J8+HZJ4mfpDw3OCUEvrOYH9tC4mDbS6ziJXlOf/4XqM8u7JMvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8Axz+syIGBqztgFAA--.22820S3;
+	Wed, 22 Jul 2026 09:43:14 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJCxq8QpIGBqpZ0UAA--.56319S2;
+	Wed, 22 Jul 2026 09:43:05 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: KVM: Implement KVM_GET/SET_SREGS for bulk CSR
+ migration
+To: Tao Cui <cui.tao@linux.dev>, zhaotianrui@loongson.cn
+Cc: chenhuacai@kernel.org, kernel@xen0n.name, kvm@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, cuitao@kylinos.cn
+References: <20260721121842.156025-1-cui.tao@linux.dev>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <63410558-e04d-7cbf-4acb-e85619d22236@loongson.cn>
+Date: Wed, 22 Jul 2026 09:42:54 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <al-6aLMJONOMfW2v@kernel.org>
+In-Reply-To: <20260721121842.156025-1-cui.tao@linux.dev>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxq8QpIGBqpZ0UAA--.56319S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3XFyxWFy8tF1UGr4furyUJwc_yoW7Wry3pF
+	WUAFZ8WrWrWrn7C34SqFn8ur1Y9397Grs3ua47WrWYyFnFvr15JF18KrWDuFy5uw40gF4I
+	9F1Ykw4rCa1qywbCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zwZ7UU
+	UUU==
 
-On Tue, Jul 21, 2026 at 09:28:56PM +0300, Mike Rapoport wrote:
-> I'll take it via the memblock tree? ;-)
 
-Definitely not.
 
-Unless you folks want to carve out the bits of set_memory.c which interact
-with core mm and mark it as maintained by someone else. I personally don't
-mind too much.
+On 2026/7/21 下午8:18, Tao Cui wrote:
+> From: Tao Cui <cuitao@kylinos.cn>
+> 
+> KVM_GET/SET_SREGS has so far returned -ENOIOCTLCMD with an empty
+> struct kvm_sregs, so migrating a vCPU's CSR state takes one
+> KVM_GET/SET_ONE_REG ioctl per register -- thousands of syscalls for a
+> large VM.
+> 
+> Define struct kvm_sregs as a flat array of 0x184 entries (the core CSR
+> range 0x0-0x183, up to DMWIN3) and implement the two ioctls:
+> 
+> - get_sregs does a single vcpu_load/put, which also pulls pending
+>    interrupts into ESTAT, avoiding the per-register load/put side-effect
+>    that made ONE_REG snapshots of ESTAT order-sensitive.
+> - set_sregs writes all CSRs via _kvm_setcsr in one pass, propagates
+>    _kvm_setcsr errors, and clears KVM_LARCH_HWCSR_USABLE up front so a
+>    mid-loop failure still forces the next vcpu_load() to reload from SW,
+>    matching KVM_SET_ONE_REG.
+> 
+> CSRs above 0x183 (debug, breakpoint, PMU) stay on KVM_GET/SET_ONE_REG.
+> struct kvm_sregs was empty, so enlarging it -- and the _IOWR-derived
+> ioctl number -- breaks no userspace; userspace built against the updated
+> UAPI header can adopt the bulk ioctl.
+> 
+> On a Loongson 3A6000, snapshotting one vCPU's core CSR range drops from
+> 388 KVM_GET_ONE_REG calls (~2 ms) to a single KVM_GET_SREGS ioctl
+> (~5 us).
+Great, I think getting register with bulk method is good.
+> 
+> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
+> ---
+>   arch/loongarch/include/uapi/asm/kvm.h |  3 ++
+>   arch/loongarch/kvm/vcpu.c             | 43 +++++++++++++++++++++++++--
+>   2 files changed, 44 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
+> index cd0b5c11ca9c..dc091f29963d 100644
+> --- a/arch/loongarch/include/uapi/asm/kvm.h
+> +++ b/arch/loongarch/include/uapi/asm/kvm.h
+> @@ -124,7 +124,10 @@ struct kvm_sync_regs {
+>   };
+>   
+>   /* dummy definition */
+> +#define KVM_LOONGARCH_NR_SREGS	0x184
+> +
+>   struct kvm_sregs {
+> +	__u64 csr[KVM_LOONGARCH_NR_SREGS];
 
--- 
-Regards/Gruss,
-    Boris.
+I think that get/set registers one by one is not so better. There are 
+two possible potential problems with this method:
+   1. With hard-code size 0x184, there may be compatible issue, in 
+future there may be CSR register with index larger than 0x184
+   2. There may be order dependency with CSR get or set, such 
+timer,interrupt, or feature ctrl registers. Only that there is SW CSR 
+shadow CSR register in KVM, so dependency relation disappears with this 
+method.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+In generic, I think KVM_GET_MSRS/KVM_SET_MSRS is a better method, VMM 
+needs know the index and dependency at first, this API can be changed as 
+generic and not relative with detailed architecture.
+
+When we submit KVM to community in the beginning, this method was used, 
+however the community suggests that new API 
+KVM_GET_ONE_REG/KVM_SET_ONE_REG is added, it should be used. Maybe mixed 
+of KVM_GET_BULK_REGS/KVM_GET_ONE_REG can be used :)
+
+There is piece of UAPI with KVM_GET_MSRS/KVM_SET_MSRS.
+struct kvm_msr_entry {
+         __u32 index;
+         __u32 reserved;
+         __u64 data;
+};
+
+/* for KVM_GET_MSRS and KVM_SET_MSRS */
+struct kvm_msrs {
+         __u32 nmsrs; /* number of msrs in entries */
+         __u32 pad;
+
+         __DECLARE_FLEX_ARRAY(struct kvm_msr_entry, entries);
+};
+
+Regards
+Bibo Mao
+>   };
+>   
+>   struct kvm_iocsr_entry {
+> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> index 20c207d80e31..0890b68efa2a 100644
+> --- a/arch/loongarch/kvm/vcpu.c
+> +++ b/arch/loongarch/kvm/vcpu.c
+> @@ -1001,12 +1001,51 @@ static int kvm_set_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
+>   
+>   int kvm_arch_vcpu_ioctl_get_sregs(struct kvm_vcpu *vcpu, struct kvm_sregs *sregs)
+>   {
+> -	return -ENOIOCTLCMD;
+> +	int i;
+> +	unsigned long estat, gintc;
+> +	struct loongarch_csrs *csr = vcpu->arch.csr;
+> +
+> +	/*
+> +	 * Pull pending interrupts into ESTAT with a single vcpu_load/put so
+> +	 * the ESTAT value read below matches the current interrupt state.
+> +	 * This also avoids the per-register load/put side-effect that makes
+> +	 * the ONE_REG path's ESTAT snapshot order-sensitive.  The SW CSR
+> +	 * reads run under vcpu->mutex, which serialises this ioctl.
+> +	 */
+> +	preempt_disable();
+> +	vcpu_load(vcpu);
+> +	kvm_deliver_intr(vcpu);
+> +	vcpu->arch.aux_inuse &= ~KVM_LARCH_SWCSR_LATEST;
+> +	vcpu_put(vcpu);
+> +	preempt_enable();
+> +
+> +	for (i = 0; i < KVM_LOONGARCH_NR_SREGS; i++) {
+> +		if (i == LOONGARCH_CSR_ESTAT) {
+> +			gintc = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_GINTC) & KVM_GINTC_IRQ_MASK;
+> +			estat = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_ESTAT) & ~KVM_ESTAT_EXTI_MASK;
+> +			sregs->csr[i] = estat | (gintc << VIP_DELTA);
+> +		} else {
+> +			sregs->csr[i] = kvm_read_sw_gcsr(csr, i); > +		}
+> +	}
+> +
+> +	return 0;
+>   }
+>   
+>   int kvm_arch_vcpu_ioctl_set_sregs(struct kvm_vcpu *vcpu, struct kvm_sregs *sregs)
+>   {
+> -	return -ENOIOCTLCMD;
+> +	int i, ret;
+> +
+> +	/* Clear first so a failing _kvm_setcsr still forces a HW reload. */
+> +	vcpu->arch.aux_inuse &= ~KVM_LARCH_HWCSR_USABLE;
+> +
+> +	for (i = 0; i < KVM_LOONGARCH_NR_SREGS; i++) {
+> +		ret = _kvm_setcsr(vcpu, i, sregs->csr[i]);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+>   }
+>   
+>   int kvm_arch_vcpu_ioctl_get_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
+> 
+
