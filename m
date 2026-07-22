@@ -1,111 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B7304BC032;
-	Wed, 22 Jul 2026 08:56:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80EAE442129
+	for <loongarch@lists.linux.dev>; Wed, 22 Jul 2026 11:23:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784710568; cv=none; b=MJH5DrrwUGL+034XASflehwDdredYLadYxZEwDEWTz3MXOQu8NyFPopAjJr5p1KsW824x6UEPSjNU08LBM/msRTxaC/KbZUlvsOQq4W+rXMePgBzumRktwueR0YHTLAgnJaK70lZy+lY+T5rQGAaxYMOBK1J0+Hq2RhzOrgikp0=
+	t=1784719401; cv=none; b=EGVHL12qObyfoseGCN94mQxzd/4yThtSX4MRNYzWG2P1/K20kZvIpEdAV+YFIVerAKX2ZL9ytYwHRT67dpFzhZ/2PEjbEF+NqSTwdeIuTztZMTQAiQiMNiOrKK4MRQsmbtSfpeFd1NQHKsoAnhvb8Csvy1tAdxwwDvNR4ZmBx+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784710568; c=relaxed/simple;
-	bh=+w42vAOIG9qeeanUexnb5qrE06m0v5IDT9RJD/nDDqQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cmvgvrx+9Kaflt2fzIHVhoMjipze4lcpIk8D1KoI6u613gdbff/WnVWxyR7k5dCA7jqJKaxSdrFZgwQ4hbinsvPGlZYWmtp8xexGNY2bukM5KIXqzHXAnQATai0xeawtu20pI/UKmEY1jZQqg44zQ/7FIbmaZDnwer7dcxl8Uiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LDc46chI; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LDc46chI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C7D71F000E9;
-	Wed, 22 Jul 2026 08:55:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784710566;
-	bh=aee5s1edqbgsHAo4tjJhHBYFBXZbzIQhAfflgu0Qfl0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=LDc46chI52fVENs42kG9+KBWM0nMhxZUJWhF2TcA//k7EVRXGYtJIEDCNw2MhaQxf
-	 rAF7wicCMnhKVgjkDR5Va+tqdiK93/9KRL0amUDK1fkF/CYvi+4b0yXY0txmWTHBzm
-	 FN3BEIyh2bx7nj0aCMQm2RenxGNCsPp3x2xisyF711bY3BDHZJZ9cBgDQ/wkNXvhIf
-	 qeOmqal8BqfD6umsvhZ23KsidOUZWvPxo4euKNMG6AxVL0LbwZcNyrf3FjZpQ5BNd/
-	 UqsVNpLJjq1PTHsuaT0kzYYLLQVD1E7gJWUegOsyo5+fFSYuWRWanDXNRVLIlnutd/
-	 QQ65f9GU69gTg==
-Date: Wed, 22 Jul 2026 09:55:46 +0100
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: linux-mm@kvack.org, Albert Ou <aou@eecs.berkeley.edu>, 
-	Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>, 
-	Borislav Petkov <bp@alien8.de>, Brendan Jackman <jackmanb@google.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	David Hildenbrand <david@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
-	Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Kevin Brodsky <kevin.brodsky@arm.com>, "Liam R. Howlett" <liam@infradead.org>, 
-	Michal Hocko <mhocko@suse.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Paul Walmsley <pjw@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	"H. Peter Anvin" <hpa@zytor.com>, Suren Baghdasaryan <surenb@google.com>, 
-	Thomas Gleixner <tglx@kernel.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, loongarch@lists.linux.dev, 
-	x86@kernel.org, Dave Hansen <dave.hansen@intel.com>
-Subject: Re: [PATCH RFC 01/18] x86/mm/pat: Don't gate cpa_lock on
- debug_pagealloc_enabled()
-Message-ID: <amCFgFTmP1Jy_uRG@lucifer>
-References: <20260721-generic-set-memory-v0-1-v1-0-2c1fc62306b3@kernel.org>
- <20260721-generic-set-memory-v0-1-v1-1-2c1fc62306b3@kernel.org>
- <al-oTOKY7vkdPHr5@lucifer>
- <al-6woCPBH5d-lwP@kernel.org>
+	s=arc-20240116; t=1784719401; c=relaxed/simple;
+	bh=fBEeqmACQDY5WIY0T8WlkdCTwAlasa8DmUujb9gNHaY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FK2nq4+A0fdlduLghU09MFvVHWxnWA7hFgty+Y17L2CspD80tAzHa0FLX+PN+glTINp44d0pvU0l/rRtNWMCJq1ArbmJANPygudhxjMa8pQU3e8uX1RQi/v+vaz3OHiO6KAj3x7EH6O089lr5YLEFdsPpmOjgRaTDgREpyG/K80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxVegeqGBq_P4FAA--.236S3;
+	Wed, 22 Jul 2026 19:23:10 +0800 (CST)
+Received: from localhost.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJBxEuQcqGBqew4VAA--.45648S2;
+	Wed, 22 Jul 2026 19:23:09 +0800 (CST)
+From: Kanglong Wang <wangkanglong@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: Move jump_label_init() before parse_early_param()
+Date: Wed, 22 Jul 2026 19:23:08 +0800
+Message-Id: <20260722112308.9120-1-wangkanglong@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <al-6woCPBH5d-lwP@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBxEuQcqGBqew4VAA--.45648S2
+X-CM-SenderInfo: 5zdqwyxdqjz0tqj6z05rqj20fqof0/1tbiAQEQAmpgRM8HAgABsX
+X-Coremail-Antispam: 1Uk129KBj93XoW7Zr4DZw1UWw4DWr4ftryfZrc_yoW8Xr47p3
+	48Zr95G3y8GFZ7Ja45A34rurs8u3s7G3y2qaya9a48AF17Ar4UAF10qrZIvF1vq3yvyF4F
+	v3WrtFn29ayUG3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
+	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jnUUUUUUUU=
 
-On Tue, Jul 21, 2026 at 09:30:26PM +0300, Mike Rapoport wrote:
-> On Tue, Jul 21, 2026 at 06:16:33PM +0100, Lorenzo Stoakes (ARM) wrote:
-> > On Tue, Jul 21, 2026 at 07:23:24PM +0300, Mike Rapoport (Microsoft) wrote:
-> > > The splitting and merging of kernel page table mappings between small and
-> > > large is protected by cpa_lock. The merging is relatively new but the
-> > > splitting is ancient.
-> > >
-> > > The splitting has a locking optimization: since DEBUG_PAGEALLOC forces all
-> > > mappings to 4k, there are no large pages to split. So the code that *might*
-> > > cause a split can just skip the locking (and a few other things).
-> > >
-> > > This is entertaining, but it adds complexity and makes for weird locking
-> > > rules. Plus it's all for a debugging feature which makes the kernel super
-> > > slow in the first place. Optimizing something which is already super slow
-> > > and not used in production is not the best way to spend our complexity
-> > > budget.
-> > >
-> > > Stop gating cpa_lock on debug_pagealloc_enabled() to simplify the code
-> > > and the locking rules.
-> > >
-> > > [ dhansen: flesh out changelog ]
-> > >
-> > > Suggested-by: Dave Hansen <dave.hansen@intel.com>
-> > > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> > > Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-> > > Link: https://patch.msgid.link/20260715144519.934289-1-rppt@kernel.org
-> > > Link: https://lore.kernel.org/all/aab44f08-89f8-47fe-bee4-0ab6b25968c6@intel.com/
-> >
-> > Hmm this patch is already taken separately though? ([0]) (obv. commented there
-> > already with review feedback).
-> >
-> > Intended to be with this series as some kind of background or? Probably better
-> > to separate out given it's a live patch
->
-> From the cover letter:
->
->   Patch 1 is already applied to the tip tree and I posted patch 2
->   separately [4], but I included them both here for the completeness.
+When enabling CONFIG_MEM_ALLOC_PROFILING=y and
+CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT=y, then diabling memory
+profiling by adding the boot parameter 'sysctl.vm.mem_profiling=0', will
+cause the kernel failed to boot.
 
-Well that'll teach me for skipping the cover letter ;) Fair enough!
+After analysis, this is because jump_label_init() must be called before
+parse_early_param(), early param handlers may modify static keys by
+static_branch_enable/disable().
 
->
-> > Thanks, Lorenzo
->
-> --
-> Sincerely yours,
-> Mike.
+Fix this by moving jump_label_init() before parse_early_param(). The
+solution is similar to other architectures.
 
-Cheers, Lorenzo
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Kanglong Wang <wangkanglong@loongson.cn>
+---
+ arch/loongarch/kernel/setup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+index eaebb52bd36e..deeff4a1b411 100644
+--- a/arch/loongarch/kernel/setup.c
++++ b/arch/loongarch/kernel/setup.c
+@@ -603,6 +603,7 @@ void __init setup_arch(char **cmdline_p)
+ 	memblock_init();
+ 	pagetable_init();
+ 	bootcmdline_init(cmdline_p);
++	jump_label_init(); /* Initialise the static keys for parse_early_param */
+ 	parse_early_param();
+ 	reserve_initrd_mem();
+ 
+@@ -610,7 +611,6 @@ void __init setup_arch(char **cmdline_p)
+ 	arch_mem_init(cmdline_p);
+ 
+ 	resource_init();
+-	jump_label_init(); /* Initialise the static keys for paravirtualization */
+ 
+ #ifdef CONFIG_SMP
+ 	plat_smp_setup();
+-- 
+2.20.1
+
