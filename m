@@ -1,213 +1,114 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+Received: from relay2.mymailcheap.com (relay2.mymailcheap.com [217.182.113.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF3C39185E
-	for <loongarch@lists.linux.dev>; Wed, 22 Jul 2026 03:30:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F005F40BCA4
+	for <loongarch@lists.linux.dev>; Wed, 22 Jul 2026 04:45:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.182.113.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784691025; cv=none; b=bbn7WIMwP3++RZAfbSpdLzcPWzg0STG+hflzNcPdXsGGw/ziUAXJdur5sSblwNCOl3LeXKIFHJCLawNZPNqojM1JnkFtiDxSFzXAsWV9iXSNDdgxDQM1UQq6OXv0SBXQM3djqH6LzNd9GnpMV+Sga4bRXWPD5BMnygU3BSDzcec=
+	t=1784695521; cv=none; b=Bz7jZw/8E8COLA4gMKDa8cyuQnBUR4vFXSs/tSA7HGjKHE2uvOpBSOACrKk6L0y3pTGZz/AVRD4vuXThZuUHxoz0m0a+4fFnPL3di0OdhUFAJsWoB3IUb1nuqLgGNj3thcgBlUljMmHJoOVkuOK0Y+dS83VZR3dlqK7kmihIBFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784691025; c=relaxed/simple;
-	bh=3s/eOfHuNeTTwpvxWVr0O920a/lF9voKEPPHw5g5zUU=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=qXrh97zg4Pj70CaIt1zDzhzTvU4WRfYD69GQWdj41TRFlDyUwFM+tyieyXDe/vjhVgLgDa7u7N66OI+tP4g5m+tLxRcpdfQdv2kGwAojry8flA4MLaU/zxY9Gws0RUb0b/Axqnm4eUNFYsPsIVCIORh4ABajLsxZ81HzcKjWYrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=gvHnfXjm; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1784695521; c=relaxed/simple;
+	bh=VI3sLFMDSUlR1JhhWI6vW8oeTPKDhZKcXhMcS1NZXNA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NqMANBMqU9vYyj1H9TENDJPPCuP+/s0tN2/sNaf85WNf3KcwdeajH3Y4whLipciv4nAtp3Sar/dErCIr/ptFNn2Xv7D75LZ3wRPeaed4F9IMPdkH9ZuHhnPd53Rn+iO5daG5UfiRYlgbIkEH0xYxWRstwI0rGWJEKPckcqEy6vM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=Ia8npmvw; arc=none smtp.client-ip=217.182.113.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aosc.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="gvHnfXjm"
-Message-ID: <775ddf2f-a7e1-4fd4-b484-01e952c332bb@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1784691020;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PxQSL7BiLvygHJAsAZ5TxacMFqKXC6qmayAdZzXY9rA=;
-	b=gvHnfXjmBHS1KR495ryvC4JFbSIqDXeXZjh0PdSwrrCDzcRIyTuXJ+Yolk4wi0VI9J9jrK
-	OgpyX8M6c7znOUc7cMMdH+X8V32P3omSraKH298T44KYl/MAwUPmBX0QxEjZlfwRUkS2HN
-	hmYp79t+dj5Ih31HFKhfW7DVQr3nZh8=
-Date: Wed, 22 Jul 2026 11:29:56 +0800
+	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="Ia8npmvw"
+Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
+	by relay2.mymailcheap.com (Postfix) with ESMTPS id 13C3E3E877;
+	Wed, 22 Jul 2026 04:45:11 +0000 (UTC)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+	by nf1.mymailcheap.com (Postfix) with ESMTPSA id C3D34400E2;
+	Wed, 22 Jul 2026 04:45:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+	t=1784695510; bh=VI3sLFMDSUlR1JhhWI6vW8oeTPKDhZKcXhMcS1NZXNA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Ia8npmvwIgazIuW0/7eGpRpv3dD9oFvsTnIyXhuiqav37YyTDK6sPYuGmrZ2HyLMv
+	 iyY6tlFolE4pXyymA0LyzEjamZ6HJwaJ30Phb7IJiY3ndgsyVG31QmRCQZBCsjW/+S
+	 NQwLnKIFM0GKHKJhOc/+ILR2kc5qBHZNPzxPf6WI=
+Received: from liushuyu-la64 (unknown [117.151.12.168])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 9E03441283;
+	Wed, 22 Jul 2026 04:45:05 +0000 (UTC)
+From: liushuyu@aosc.io
+To: linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Yao Zi <ziyao@disroot.org>
+Cc: loongarch@lists.linux.dev,
+	Mingcong Bai <jeffbai@aosc.io>,
+	Kexy Biscuit <kexybiscuit@aosc.io>,
+	Zixing Liu <liushuyu@aosc.io>,
+	stable@vger.kernel.org
+Subject: [PATCH] platform/loongarch: laptop: explicitly reset the bl_powered state when resuming
+Date: Wed, 22 Jul 2026 12:44:50 +0800
+Message-ID: <20260722044457.1333404-1-liushuyu@aosc.io>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Cc: cui.tao@linux.dev, chenhuacai@kernel.org, kernel@xen0n.name,
- kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, cuitao@kylinos.cn
-Subject: Re: [PATCH] LoongArch: KVM: Implement KVM_GET/SET_SREGS for bulk CSR
- migration
-To: Bibo Mao <maobibo@loongson.cn>, zhaotianrui@loongson.cn
-References: <20260721121842.156025-1-cui.tao@linux.dev>
- <63410558-e04d-7cbf-4acb-e85619d22236@loongson.cn>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Cui <cui.tao@linux.dev>
-In-Reply-To: <63410558-e04d-7cbf-4acb-e85619d22236@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-Rspamd-Server: nf1.mymailcheap.com
+X-Rspamd-Queue-Id: C3D34400E2
+X-Spamd-Result: default: False [1.20 / 10.00];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.10)[+mx];
+	MIME_GOOD(-0.10)[text/plain];
+	R_DKIM_ALLOW(-0.10)[aosc.io:s=default];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	FROM_NO_DN(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_ONE(0.00)[1];
+	TO_DN_SOME(0.00)[];
+	LOCAL_OUTBOUND(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	DKIM_TRACE(0.00)[aosc.io:+];
+	FROM_EQ_ENVFROM(0.00)[];
+	DMARC_POLICY_ALLOW(0.00)[aosc.io,quarantine];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[]
+X-Rspamd-Action: no action
 
+From: Zixing Liu <liushuyu@aosc.io>
 
+On EAECIS NL60R with EC firmware version 1.11, resuming from S3 has a very
+high chance (>= 90%) of causing the EC to lose the previous backlight
+power state. When this happens, the laptop resumes normally from S3, but
+the backlight remains off (when shining on the screen with a flash light,
+we can see the screen contents are updating normally).
 
-在 2026/7/22 09:42, Bibo Mao 写道:
-> 
-> 
-> On 2026/7/21 下午8:18, Tao Cui wrote:
->> From: Tao Cui <cuitao@kylinos.cn>
->>
->> KVM_GET/SET_SREGS has so far returned -ENOIOCTLCMD with an empty
->> struct kvm_sregs, so migrating a vCPU's CSR state takes one
->> KVM_GET/SET_ONE_REG ioctl per register -- thousands of syscalls for a
->> large VM.
->>
->> Define struct kvm_sregs as a flat array of 0x184 entries (the core CSR
->> range 0x0-0x183, up to DMWIN3) and implement the two ioctls:
->>
->> - get_sregs does a single vcpu_load/put, which also pulls pending
->>    interrupts into ESTAT, avoiding the per-register load/put side-effect
->>    that made ONE_REG snapshots of ESTAT order-sensitive.
->> - set_sregs writes all CSRs via _kvm_setcsr in one pass, propagates
->>    _kvm_setcsr errors, and clears KVM_LARCH_HWCSR_USABLE up front so a
->>    mid-loop failure still forces the next vcpu_load() to reload from SW,
->>    matching KVM_SET_ONE_REG.
->>
->> CSRs above 0x183 (debug, breakpoint, PMU) stay on KVM_GET/SET_ONE_REG.
->> struct kvm_sregs was empty, so enlarging it -- and the _IOWR-derived
->> ioctl number -- breaks no userspace; userspace built against the updated
->> UAPI header can adopt the bulk ioctl.
->>
->> On a Loongson 3A6000, snapshotting one vCPU's core CSR range drops from
->> 388 KVM_GET_ONE_REG calls (~2 ms) to a single KVM_GET_SREGS ioctl
->> (~5 us).
-> Great, I think getting register with bulk method is good.
->>
->> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
->> ---
->>   arch/loongarch/include/uapi/asm/kvm.h |  3 ++
->>   arch/loongarch/kvm/vcpu.c             | 43 +++++++++++++++++++++++++--
->>   2 files changed, 44 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
->> index cd0b5c11ca9c..dc091f29963d 100644
->> --- a/arch/loongarch/include/uapi/asm/kvm.h
->> +++ b/arch/loongarch/include/uapi/asm/kvm.h
->> @@ -124,7 +124,10 @@ struct kvm_sync_regs {
->>   };
->>     /* dummy definition */
->> +#define KVM_LOONGARCH_NR_SREGS    0x184
->> +
->>   struct kvm_sregs {
->> +    __u64 csr[KVM_LOONGARCH_NR_SREGS];
-> 
-Thanks for the review.
-> I think that get/set registers one by one is not so better. There are two possible potential problems with this method:
->   1. With hard-code size 0x184, there may be compatible issue, in future there may be CSR register with index larger than 0x184
+Since there is no generic way to query the EC's backlight state on
+Loongson laptop platforms, assume the worst-case scenario and restart the
+backlight power inside the kernel each time the system resumes.
 
-On the fixed 0x184: agreed, that's a real ABI trap. I'll switch to the
-index+data form you suggested, like KVM_GET_MSRS:
+Cc: stable@vger.kernel.org
+Fixes: 53c762b47f72 ("platform/loongarch: laptop: Add backlight power control support")
+Signed-off-by: Zixing Liu <liushuyu@aosc.io>
+---
+ drivers/platform/loongarch/loongson-laptop.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-    struct kvm_loongarch_csr_entry { __u32 index; __u32 reserved; __u64 data; };
-    struct kvm_loongarch_csrs { __u32 ncsrs; __u32 pad;
-                                struct kvm_loongarch_csr_entry entries[]; };
-
-One ioctl, same perf win, and new CSRs just add an index -- no ABI change.
-
->   2. There may be order dependency with CSR get or set, such timer,interrupt, or feature ctrl registers. Only that there is SW CSR shadow CSR register in KVM, so dependency relation disappears with this method.
-
-On ordering: the SW CSR shadow already absorbs it -- get reads
-kvm_read_sw_gcsr(), set writes _kvm_setcsr(), both on the SW copy, so
-order within one ioctl doesn't matter. get also folds pending IRQs into
-ESTAT via a single vcpu_load/put + kvm_deliver_intr(), and set clears
-KVM_LARCH_HWCSR_USABLE up front, matching KVM_SET_ONE_REG.
-
-> 
-> In generic, I think KVM_GET_MSRS/KVM_SET_MSRS is a better method, VMM needs know the index and dependency at first, this API can be changed as generic and not relative with detailed architecture.
-> 
-
-A generic bulk-reg ioctl is the cleaner long-term direction, but I'd
-land the LoongArch-specific one first and revisit generic later.
-
-v2 coming. Thanks again.
-
-Thanks,
-Tao
-> When we submit KVM to community in the beginning, this method was used, however the community suggests that new API KVM_GET_ONE_REG/KVM_SET_ONE_REG is added, it should be used. Maybe mixed of KVM_GET_BULK_REGS/KVM_GET_ONE_REG can be used :)
-> 
-> There is piece of UAPI with KVM_GET_MSRS/KVM_SET_MSRS.
-> struct kvm_msr_entry {
->         __u32 index;
->         __u32 reserved;
->         __u64 data;
-> };
-> 
-> /* for KVM_GET_MSRS and KVM_SET_MSRS */
-> struct kvm_msrs {
->         __u32 nmsrs; /* number of msrs in entries */
->         __u32 pad;
-> 
->         __DECLARE_FLEX_ARRAY(struct kvm_msr_entry, entries);
-> };
-> 
-> Regards
-> Bibo Mao
->>   };
->>     struct kvm_iocsr_entry {
->> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
->> index 20c207d80e31..0890b68efa2a 100644
->> --- a/arch/loongarch/kvm/vcpu.c
->> +++ b/arch/loongarch/kvm/vcpu.c
->> @@ -1001,12 +1001,51 @@ static int kvm_set_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
->>     int kvm_arch_vcpu_ioctl_get_sregs(struct kvm_vcpu *vcpu, struct kvm_sregs *sregs)
->>   {
->> -    return -ENOIOCTLCMD;
->> +    int i;
->> +    unsigned long estat, gintc;
->> +    struct loongarch_csrs *csr = vcpu->arch.csr;
->> +
->> +    /*
->> +     * Pull pending interrupts into ESTAT with a single vcpu_load/put so
->> +     * the ESTAT value read below matches the current interrupt state.
->> +     * This also avoids the per-register load/put side-effect that makes
->> +     * the ONE_REG path's ESTAT snapshot order-sensitive.  The SW CSR
->> +     * reads run under vcpu->mutex, which serialises this ioctl.
->> +     */
->> +    preempt_disable();
->> +    vcpu_load(vcpu);
->> +    kvm_deliver_intr(vcpu);
->> +    vcpu->arch.aux_inuse &= ~KVM_LARCH_SWCSR_LATEST;
->> +    vcpu_put(vcpu);
->> +    preempt_enable();
->> +
->> +    for (i = 0; i < KVM_LOONGARCH_NR_SREGS; i++) {
->> +        if (i == LOONGARCH_CSR_ESTAT) {
->> +            gintc = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_GINTC) & KVM_GINTC_IRQ_MASK;
->> +            estat = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_ESTAT) & ~KVM_ESTAT_EXTI_MASK;
->> +            sregs->csr[i] = estat | (gintc << VIP_DELTA);
->> +        } else {
->> +            sregs->csr[i] = kvm_read_sw_gcsr(csr, i); > +        }
->> +    }
->> +
->> +    return 0;
->>   }
->>     int kvm_arch_vcpu_ioctl_set_sregs(struct kvm_vcpu *vcpu, struct kvm_sregs *sregs)
->>   {
->> -    return -ENOIOCTLCMD;
->> +    int i, ret;
->> +
->> +    /* Clear first so a failing _kvm_setcsr still forces a HW reload. */
->> +    vcpu->arch.aux_inuse &= ~KVM_LARCH_HWCSR_USABLE;
->> +
->> +    for (i = 0; i < KVM_LOONGARCH_NR_SREGS; i++) {
->> +        ret = _kvm_setcsr(vcpu, i, sregs->csr[i]);
->> +        if (ret)
->> +            return ret;
->> +    }
->> +
->> +    return 0;
->>   }
->>     int kvm_arch_vcpu_ioctl_get_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
->>
-> 
+diff --git a/drivers/platform/loongarch/loongson-laptop.c b/drivers/platform/loongarch/loongson-laptop.c
+index 61b18ac206c9e..742a585b0647c 100644
+--- a/drivers/platform/loongarch/loongson-laptop.c
++++ b/drivers/platform/loongarch/loongson-laptop.c
+@@ -200,6 +200,7 @@ static int loongson_hotkey_resume(struct device *dev)
+ 
+ 	bd = backlight_device_get_by_type(BACKLIGHT_PLATFORM);
+ 	if (bd) {
++		bl_powered = false;
+ 		loongson_laptop_backlight_update(bd) ?
+ 		pr_warn("Loongson_backlight: resume brightness failed") :
+ 		pr_info("Loongson_backlight: resume brightness %d\n", bd->props.brightness);
+-- 
+2.52.0
 
