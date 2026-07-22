@@ -1,299 +1,219 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E1435C6A0
-	for <loongarch@lists.linux.dev>; Wed, 22 Jul 2026 14:28:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BEF8343892
+	for <loongarch@lists.linux.dev>; Wed, 22 Jul 2026 15:16:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784730505; cv=none; b=uRzcpKPKRHXVSoxYsmwPpDHflOTYATk6rivOvTLEiQxxBDtOozcmMEX9HFRXRMjm4KoyjBNJdypsU//TpsdEibBOCaqTorOTPlzIfEl/C+JLWz521brHzhC7BHMym0+FABxg76s43muW7gtS+r/yBFsOhzjVBBnt/Qp/hsNqLNk=
+	t=1784733379; cv=none; b=T2St+zcLTNyZwxxte1utpWTA/cQujNIK6CUIc/mX9fiuwFdhD9qja3bpaJJlXEwNo1CvY2wUbnT8mEL0R1CGKodzgh0FkRQ3GVfgggBtrdc0XFaENREubRy9R0UNYr8OOMjoK7RtRawpgQWo0qFiqk0rci0UGIwA80wmrthE9bE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784730505; c=relaxed/simple;
-	bh=ixMwHZ47HGXENRxXri6xY/LEinEZSkTYaah0z6PePds=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a9WixZMlAhj0Q9z6voV9NUhNnCb8rW7eJHGGBcon2KCeuBijsGmnoLrBNAZ2EoI4IFUFDPNpt5Nl/yU+oz2RMLBLFDcNLPiO+mE6jtPPvMHt7Hgs/2CsdEOLPDjxQuCBUaEr2lcCKlaV6XvGySDO0T/Lp3ORt1h/Oxx69++Esuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tZKqehc8; arc=none smtp.client-ip=95.215.58.187
+	s=arc-20240116; t=1784733379; c=relaxed/simple;
+	bh=pZqfDNtrlt4xKRG3c0BiAsT2DXo0fiEXSQUodX9iZ3w=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=XSNeiAATLqpU7sG5e7k/wdI5zzEZK6i71KlCR3x83Cl/YYm+mOZ96piYsT4sbUDIZ19Md+VsD597KM1N1R/vO5X/QGoVxEmUILcRyPZJVxRDBhCm8kA6uks+DS2DDe0FbkJBoP8yShVjHTPvNUIuyBqrYSyjdGEP241SOoHUNrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bW3PreC0; arc=none smtp.client-ip=91.218.175.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tZKqehc8"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1784730499;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=P8Ix8reVveZHfHEhLYG0PtOZEEt7xDip8rzqk215UCI=;
-	b=tZKqehc8ZHeJjhVcmYIcju3EV5MnhUqSy0ih9G+gtBUast/ZCkvfQ4F0387BKDiA4MItKy
-	d2LxPdPCt26JSVW0F0FkZjts4pJAd4L88U4ZpEyl5HLiGyPWcGfJkPrQnihuJW7DW4Dz60
-	JXGv2oyrkh09DoogmBtbYzP+EenCLFE=
-From: Tao Cui <cui.tao@linux.dev>
-To: zhaotianrui@loongson.cn,
-	maobibo@loongson.cn
-Cc: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	cui.tao@linux.dev,
-	cuitao@kylinos.cn
-Subject: [PATCH v3] LoongArch: KVM: Add KVM_LOONGARCH_GET/SET_CSR for bulk CSR migration
-Date: Wed, 22 Jul 2026 22:28:05 +0800
-Message-ID: <20260722142805.278325-1-cui.tao@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bW3PreC0"
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1784733365;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=r9xnLf5kCYeKS0y9dx48KGdZi3PUN8z8TKfUOdx3pcY=;
+	b=bW3PreC0YSLDGRKBpNSz9D3HV9IBx4wlSIMZcxjKlW2NgHj/d2JJNShI5MXv07j8MqQQS+
+	NPjHWhOdZSBYQK8zlzTLb67RaU+lo+jSdYPczWGuvi2XKtwcuonThN72rQpi4GauyQiL7a
+	183xUjaWt/QyKalqhxboM/IvbhPi1ME=
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 22 Jul 2026 15:15:52 +0000
+Message-Id: <DK5767A146ZW.3LV5JXS7T4W1C@linux.dev>
+Cc: "Brendan Jackman" <jackmanb@google.com>, "Andrew Morton"
+ <akpm@linux-foundation.org>, "David Hildenbrand" <david@kernel.org>,
+ "Lorenzo Stoakes" <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>,
+ "Mike Rapoport" <rppt@kernel.org>, "Suren Baghdasaryan"
+ <surenb@google.com>, "Michal Hocko" <mhocko@suse.com>, "Johannes Weiner"
+ <hannes@cmpxchg.org>, "Zi Yan" <ziy@nvidia.com>, "Jan Kara" <jack@suse.cz>,
+ "Joshua Hahn" <joshua.hahnjy@gmail.com>, "Byungchul Park"
+ <byungchul@sk.com>, "Gregory Price" <gourry@gourry.net>, "Ying Huang"
+ <ying.huang@linux.alibaba.com>, "Alistair Popple" <apopple@nvidia.com>,
+ "Hugh Dickins" <hughd@google.com>, "Baolin Wang"
+ <baolin.wang@linux.alibaba.com>, "Chris Li" <chrisl@kernel.org>, "Kairui
+ Song" <kasong@tencent.com>, "Kemeng Shi" <shikemeng@huaweicloud.com>, "Nhat
+ Pham" <nphamcs@gmail.com>, "Baoquan He" <baoquan.he@linux.dev>, "Barry
+ Song" <baohua@kernel.org>, "Youngjun Park" <youngjun.park@lge.com>, "Joerg
+ Roedel (AMD)" <joro@8bytes.org>, "Will Deacon" <will@kernel.org>, "Robin
+ Murphy" <robin.murphy@arm.com>, "Huacai Chen" <chenhuacai@kernel.org>,
+ "WANG Xuerui" <kernel@xen0n.name>, "Thomas Gleixner" <tglx@kernel.org>,
+ "Chuck Lever" <cel@kernel.org>, "Jeff Layton" <jlayton@kernel.org>,
+ "NeilBrown" <neil@brown.name>, "Olga Kornievskaia" <okorniev@redhat.com>,
+ "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>, "Trond
+ Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>, "David
+ S. Miller" <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>,
+ "Jakub Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>,
+ "Simon Horman" <horms@kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-mm@kvack.org>, <linux-fsdevel@vger.kernel.org>,
+ <iommu@lists.linux.dev>, <loongarch@lists.linux.dev>,
+ <linux-nfs@vger.kernel.org>, <netdev@vger.kernel.org>
+Subject: Re: [PATCH 1/3] mm: move internal mempolicy APIs to new internal
+ header
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Brendan Jackman" <brendan.jackman@linux.dev>
+To: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>, "Matthew Wilcox"
+ <willy@infradead.org>, "Brendan Jackman" <brendan.jackman@linux.dev>
+References: <20260716-folio-alloc-cleanups-v1-0-5363b8e92d33@google.com>
+ <20260716-folio-alloc-cleanups-v1-1-5363b8e92d33@google.com>
+ <alkLSzQvzT9zJbY1@casper.infradead.org>
+ <DK05KUIDJVLZ.61UIWOL0K3OT@linux.dev>
+ <al5gQgnBCjNCSD_4@casper.infradead.org>
+ <51810eba-2a60-49f9-b879-7f806546e600@kernel.org>
+In-Reply-To: <51810eba-2a60-49f9-b879-7f806546e600@kernel.org>
 X-Migadu-Flow: FLOW_OUT
 
-From: Tao Cui <cuitao@kylinos.cn>
+On Mon Jul 20, 2026 at 6:34 PM UTC, Vlastimil Babka (SUSE) wrote:
+> On 7/20/26 19:52, Matthew Wilcox wrote:
+>> On Thu, Jul 16, 2026 at 04:57:37PM +0000, Brendan Jackman wrote:
+>>> On Thu Jul 16, 2026 at 4:48 PM UTC, Matthew Wilcox wrote:
+>>> > On Thu, Jul 16, 2026 at 02:30:10PM +0000, Brendan Jackman wrote:
+>>> >> There are no external users for this surface, reduce the scope.
+>>> >> -struct folio *folio_alloc_mpol_noprof(gfp_t gfp, unsigned int order=
+,
+>>> >> -		struct mempolicy *mpol, pgoff_t ilx, int nid);
+>>> >
+>>> > Hm.  So what we're saying is that allocations which respect mempolicy=
+ are
+>>> > only for core mm and not for, eg, device drivers to do.  Is that real=
+ly
+>>> > what we want to say?  I don't think so, because that's inconsistent
+>>> > with having just widened __filemap_get_folio_mpol to allow guest_memf=
+d
+>>> > to specify a mempolicy.
+>
+> guest_memfd is practically mm internal though, IMHO.
+>
+>>> Yeah I agree, mempolicy definitely seems like a "public concept".=C2=A0=
+ All
+>>> I'm saying here is this specific function doesn't have any external
+>>> users so it doesn't need to be an external header.=20
+>>=20
+>> I don't think that should be the metric for moving things to internal.h.
+>> To me, internal.h is a signifier that these interfaces should only be
+>> used by the MM.  Not that "all current users are within the MM".
+>
+> Perhaps. It can be also useful to move them outside only when someone ask=
+s.
 
-Migrating a vCPU's CSR state takes one KVM_GET/SET_ONE_REG ioctl per
-register, thousands of syscalls for a large VM.
+Yeah I can see this both ways. It makes sense to only expose functions
+to the scope that currently needs them, but I think Matthew's right that
+moving it to internal.h does kinda signal "this is private, don't touch
+this" which isn't intended.
 
-Add a bulk pair, KVM_LOONGARCH_GET_CSR / KVM_SET_CSR.  Userspace passes
-an array of {index, data} entries; the kernel fills entries[].data on
-GET and applies them on SET, both in a single call:
+>>> ... With the ulterior motive that I want to add a new parameter to it
+>>> that actually _is_ mm-internal. Namely, alloc_flags, so I can add
+>>> ALLOC_UNMAPPED to implement AS_NO_DIRECT_MAP, i.e. the next iteration o=
+f
+>>> [0]. So basically this is
+>>> about trying to extend the allocator without creating a GFP flag.
+>>=20
+>> Yeah.  I'm not sold on the whole alloc_flags thing, but I'm too busy to
+>> sit down and think it through properly to get involved in a proper
+>> argument about how it should work.
+>
+> Well it's basically a workaround for limited gfp flags space. So we can
+> extend it without making that a cost for everybody, as long as those that
+> need the new functionality are limited.
+>
+>> My entirely unresearched and ill-considered opinion is that the __GFP
+>> flags should _be_ the ALLOC flags.  We shoudn't be translating GFP flags
+>> into ALLOC flags that are what the allocator actually uses, the
+>
+> It uses both.
+>
+>> translation should be done at compile time.  So if GFP_KERNEL and
+>
+> That would assume the gfp flags are also known at compile time, which is =
+not
+> always the case.
+>
+>> GFP_ATOMIC need to be composed of different flags with different
+>
+> The flags we are adding/considering to add are not about GFP_KERNEL vs
+> GFP_ATOMIC context, however.
+>
+>> semantics, then we should do that, not invent a different set of flags
+>> that special people can use for special purposes.
+>
+> Yep it's ugly and pragmatic, as usual. At least it's not immortalized as =
+an
+> UAPI, so we can deal with exploring in a wrong direction and fixing it la=
+ter.
 
-- KVM_LOONGARCH_GET_CSR does a single vcpu_load/put with
-  kvm_deliver_intr(), which pulls pending interrupts into ESTAT,
-  avoiding the per-register load/put side-effect that made ONE_REG
-  snapshots of ESTAT order-sensitive.
-- KVM_LOONGARCH_SET_CSR writes all CSRs via _kvm_setcsr in one pass,
-  propagates _kvm_setcsr errors, and clears KVM_LARCH_HWCSR_USABLE up
-  front so a mid-loop failure still forces the next vcpu_load() to
-  reload from SW, matching KVM_SET_ONE_REG.
+FWIW I suspect the "proper" design requirements are something like:
 
-Entries are {index, data} rather than a positional array, so future CSRs
-can be added without resizing the struct or changing the ioctl number.
-CSRs above the core range (debug, breakpoint, PMU) stay on
-KVM_GET/SET_ONE_REG; struct kvm_sregs is left empty, so the new ioctls
-break no userspace, and userspace probes them via KVM_CAP_LOONGARCH_CSR.
+1. We want some flags that we can happily squeeze into places like
+   struct xa_node, and other flags that we can add bits to relatively
+   freely.
 
-The ioctl hands get_gcsr_flag() a user-controlled index, so switch that
-helper (and the set_gcsr_sw_flag/set_gcsr_hw_flag init helpers) to an
-unsigned index; the csr < CSR_MAX_NUMS bound check is then robust against
-a sign-extended value regardless of the caller.
+2. We want some flags that are "public" and some that are "private",
+   although this is intentionally vaguely defined.
 
-On a Loongson 3A6000, snapshotting one vCPU's core CSR range (0x0-0x183)
-drops from 388 KVM_GET_ONE_REG calls (~2 ms) to a single
-KVM_LOONGARCH_GET_CSR ioctl (~6 us).
+The current ALLOC_/GFP_ flags split is something that kinda inelegantly
+attempts to solve both at once even though they are actually probably
+orthogonal requirements. Do we care about this inelegance? I think it's
+pretty harmless.
 
-Signed-off-by: Tao Cui <cuitao@kylinos.cn>
----
+Another thing that's pretty inelegant about it is that both sets of
+flags percolate into the allocator at once. This is quite
+confusing/tiresome when you are reading page_alloc.c (I tried to
+ameliorate that with [0]) but I don't think it has much of an
+architectural impact?
 
-Changes since v2:
-  - Bound-check the CSR index (< CSR_MAX_NUMS) and make
-    get_gcsr_flag()/set_gcsr_*_flag() take an unsigned index.  An index
-    with bit 31 set was implicitly converted to a negative signed int,
-    bypassing the csr < CSR_MAX_NUMS check and causing an out-of-bounds
-    read/write into the SW CSR shadow.
-  - Reject non-zero pad/reserved fields with -EINVAL so they stay reserved.
-  - Add KVM_CAP_LOONGARCH_CSR for userspace feature detection.
+[0]: https://lore.kernel.org/all/20260703-alloc-trylock-v5-2-c87b714e19d3@g=
+oogle.com/
 
- arch/loongarch/include/asm/kvm_host.h |  2 +-
- arch/loongarch/include/uapi/asm/kvm.h | 13 +++++
- arch/loongarch/kvm/main.c             |  6 +--
- arch/loongarch/kvm/vcpu.c             | 77 +++++++++++++++++++++++++++
- arch/loongarch/kvm/vm.c               |  1 +
- include/uapi/linux/kvm.h              |  5 ++
- 6 files changed, 100 insertions(+), 4 deletions(-)
+In the back of my mind I suspect the "neat and tidy" solution would be
+something like: a single flags namespace that is split into two separate
+enums, one "public" and one "private", and then a separate mechanism to
+"compress" these flags into a small number of bits. But yeah I'm just
+not sure working on that nice elegant cleanup would really unlock
+anything of practical value. Boring little cleanups like "split out this
+API from internal.h into its own header" seem like more useful ways to
+spend refactoring energy in this space.
 
-diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index 23cfbecebbd7..aacf5d84217f 100644
---- a/arch/loongarch/include/asm/kvm_host.h
-+++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -362,7 +362,7 @@ extern struct kvm_world_switch *kvm_loongarch_ops;
- #define HW_GCSR		(1 << 1)
- #define INVALID_GCSR	(1 << 2)
- 
--int get_gcsr_flag(int csr);
-+int get_gcsr_flag(unsigned int csr);
- void set_hw_gcsr(int csr_id, unsigned long val);
- 
- #endif /* __ASM_LOONGARCH_KVM_HOST_H__ */
-diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
-index cd0b5c11ca9c..59b3b7efa039 100644
---- a/arch/loongarch/include/uapi/asm/kvm.h
-+++ b/arch/loongarch/include/uapi/asm/kvm.h
-@@ -127,6 +127,19 @@ struct kvm_sync_regs {
- struct kvm_sregs {
- };
- 
-+/* bulk CSR entries for VM migration */
-+struct kvm_loongarch_csr_entry {
-+	__u32 index;
-+	__u32 reserved;
-+	__u64 data;
-+};
-+
-+struct kvm_loongarch_csrs {
-+	__u32 ncsrs;	/* number of csr entries */
-+	__u32 pad;
-+	__DECLARE_FLEX_ARRAY(struct kvm_loongarch_csr_entry, entries);
-+};
-+
- struct kvm_iocsr_entry {
- 	__u32 addr;
- 	__u32 pad;
-diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
-index 3e1005526f4b..d802d393cd44 100644
---- a/arch/loongarch/kvm/main.c
-+++ b/arch/loongarch/kvm/main.c
-@@ -19,7 +19,7 @@ struct kvm_world_switch *kvm_loongarch_ops;
- static int gcsr_flag[CSR_MAX_NUMS];
- static struct kvm_context __percpu *vmcs;
- 
--int get_gcsr_flag(int csr)
-+int get_gcsr_flag(unsigned int csr)
- {
- 	if (csr < CSR_MAX_NUMS)
- 		return gcsr_flag[csr];
-@@ -27,13 +27,13 @@ int get_gcsr_flag(int csr)
- 	return INVALID_GCSR;
- }
- 
--static inline void set_gcsr_sw_flag(int csr)
-+static inline void set_gcsr_sw_flag(unsigned int csr)
- {
- 	if (csr < CSR_MAX_NUMS)
- 		gcsr_flag[csr] |= SW_GCSR;
- }
- 
--static inline void set_gcsr_hw_flag(int csr)
-+static inline void set_gcsr_hw_flag(unsigned int csr)
- {
- 	if (csr < CSR_MAX_NUMS)
- 		gcsr_flag[csr] |= HW_GCSR;
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 20c207d80e31..2bb6a7e0ea87 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -1009,6 +1009,77 @@ int kvm_arch_vcpu_ioctl_set_sregs(struct kvm_vcpu *vcpu, struct kvm_sregs *sregs
- 	return -ENOIOCTLCMD;
- }
- 
-+/* max CSR entries handled per ioctl */
-+#define KVM_LOONGARCH_MAX_CSR_REGS	0x400
-+
-+/* Bulk get/set of CSR state for VM migration. */
-+static int kvm_loongarch_csr_io(struct kvm_vcpu *vcpu,
-+				struct kvm_loongarch_csrs __user *ucsrs,
-+				bool write)
-+{
-+	int i, ret = 0;
-+	unsigned long size;
-+	struct kvm_loongarch_csrs csrs;
-+	struct kvm_loongarch_csr_entry *entries;
-+	struct loongarch_csrs *csr = vcpu->arch.csr;
-+
-+	if (copy_from_user(&csrs, ucsrs, sizeof(csrs)))
-+		return -EFAULT;
-+
-+	if (csrs.pad)
-+		return -EINVAL;
-+
-+	if (csrs.ncsrs > KVM_LOONGARCH_MAX_CSR_REGS)
-+		return -E2BIG;
-+
-+	size = array_size(csrs.ncsrs, sizeof(*entries));
-+	entries = memdup_user(ucsrs->entries, size);
-+	if (IS_ERR(entries))
-+		return PTR_ERR(entries);
-+
-+	if (write) {
-+		vcpu->arch.aux_inuse &= ~KVM_LARCH_HWCSR_USABLE;
-+	} else {
-+		preempt_disable();
-+		vcpu_load(vcpu);
-+		kvm_deliver_intr(vcpu);
-+		vcpu->arch.aux_inuse &= ~KVM_LARCH_SWCSR_LATEST;
-+		vcpu_put(vcpu);
-+		preempt_enable();
-+	}
-+
-+	for (i = 0; i < csrs.ncsrs; i++) {
-+		unsigned int id = entries[i].index;
-+
-+		if (entries[i].reserved || id >= CSR_MAX_NUMS ||
-+		    (get_gcsr_flag(id) & INVALID_GCSR)) {
-+			ret = -EINVAL;
-+			break;
-+		}
-+
-+		if (write) {
-+			ret = _kvm_setcsr(vcpu, id, entries[i].data);
-+			if (ret)
-+				break;
-+		} else if (id == LOONGARCH_CSR_ESTAT) {
-+			unsigned long estat, gintc;
-+
-+			/* ESTAT IP0~IP7 come from GINTC */
-+			gintc = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_GINTC) & KVM_GINTC_IRQ_MASK;
-+			estat = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_ESTAT) & ~KVM_ESTAT_EXTI_MASK;
-+			entries[i].data = estat | (gintc << VIP_DELTA);
-+		} else {
-+			entries[i].data = kvm_read_sw_gcsr(csr, id);
-+		}
-+	}
-+
-+	if (!write && copy_to_user(ucsrs->entries, entries, size))
-+		ret = -EFAULT;
-+
-+	kfree(entries);
-+	return ret;
-+}
-+
- int kvm_arch_vcpu_ioctl_get_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
- {
- 	int i;
-@@ -1266,6 +1337,12 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
- 			r = kvm_get_reg(vcpu, &reg);
- 		break;
- 	}
-+	case KVM_LOONGARCH_GET_CSR:
-+		r = kvm_loongarch_csr_io(vcpu, argp, false);
-+		break;
-+	case KVM_LOONGARCH_SET_CSR:
-+		r = kvm_loongarch_csr_io(vcpu, argp, true);
-+		break;
- 	case KVM_ENABLE_CAP: {
- 		struct kvm_enable_cap cap;
- 
-diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
-index 1317c718f896..785f2fa0d164 100644
---- a/arch/loongarch/kvm/vm.c
-+++ b/arch/loongarch/kvm/vm.c
-@@ -122,6 +122,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 	case KVM_CAP_IOEVENTFD:
- 	case KVM_CAP_MP_STATE:
- 	case KVM_CAP_SET_GUEST_DEBUG:
-+	case KVM_CAP_LOONGARCH_CSR:
- 		r = 1;
- 		break;
- 	case KVM_CAP_NR_VCPUS:
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 419011097fa8..45d9eb06cb8a 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -997,6 +997,7 @@ struct kvm_enable_cap {
- #define KVM_CAP_S390_KEYOP 247
- #define KVM_CAP_S390_VSIE_ESAMODE 248
- #define KVM_CAP_S390_HPAGE_2G 249
-+#define KVM_CAP_LOONGARCH_CSR	250
- 
- struct kvm_irq_routing_irqchip {
- 	__u32 irqchip;
-@@ -1670,4 +1671,8 @@ struct kvm_pre_fault_memory {
- 	__u64 padding[5];
- };
- 
-+/* LoongArch: bulk CSR get/set for migration */
-+#define KVM_LOONGARCH_GET_CSR	_IOWR(KVMIO, 0xd6, struct kvm_loongarch_csrs)
-+#define KVM_LOONGARCH_SET_CSR	_IOW(KVMIO,  0xd7, struct kvm_loongarch_csrs)
-+
- #endif /* __LINUX_KVM_H */
--- 
-2.43.0
+Quite likely I'm missing potential unlocks though. E.g. maybe there's
+some place we currently put a gfp_t that could benefit from a "separate
+compression mechanism" that could usefully shrink it to 8 bits or
+whatever.
 
+>>> So I'm envisaging if an external user arises for it later, we'd slap tw=
+o
+>>> underscores on the beginning of the internal one, (with the alloc_flags
+>>> arg), and then bring back the public one as a wrapper.
+>>>=20
+>>> Does that make sense?
+>>=20
+>> We have a long history of people just moving stuff around in patches
+>> without knowing what the intent was if it should be moved.
+>
+> I guess this patch is not critical to the rest, if that's an issue.
+
+Well, for ALLOC_UNMAPPED we really do need an alloc_flags arg for this
+function, but we can always just go straight to what I described above.
+I.e. I can create the __ variant + wrapper from the start. It's just a
+question of whether we prefer:
+
+- "Yuck, there's a public wrapper here that we don't actually need", or
+
+- "We hid this mempolicy API and people might think we'd NACK a patch to
+  un-hide it".0
+
+  https://lore.kernel.org/all/20260703-alloc-trylock-v5-2-c87b714e19d3@goog=
+le.com/
