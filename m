@@ -1,47 +1,47 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2239472F64
-	for <loongarch@lists.linux.dev>; Wed, 22 Jul 2026 07:54:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B55CD4746C2
+	for <loongarch@lists.linux.dev>; Wed, 22 Jul 2026 07:54:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784706850; cv=none; b=AZw3w6MSdPZEXqSfPZGiZxuPKYzja9Pk4CRXoJ1PE5qFD5R7LlQMV8fIirgchtLmyaa8Pbuc0VXNbfksM0ZiGevN7WPoqEtztcrw8dRv3rQ3OLUt4ozKie1MUOJTEWAi5pWU4yhM27GcGwb4opd3lXmOIYCZ+cU+/TqiAqwDrkU=
+	t=1784706853; cv=none; b=Wb1YgUrP/1QVhQnvlJuQ0iehpYHEGu2TMabC8TOHyKXyA4Tod2EX69bm9CHcHJkvt2AoExP8al6Fg0NTe9MadgsYBm9J7qc9XJoKZz+nnOQ+7f+szoEt24T2i4J+T8/zK3LchjQ62ngP6V0Nz0ifKUuNTnsnGcoS22W4e1fkaTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784706850; c=relaxed/simple;
-	bh=iYdmmwYnitqCJzJDOgChDbBElLI/0ThiAUZVrCungs4=;
+	s=arc-20240116; t=1784706853; c=relaxed/simple;
+	bh=/YNIeu5dDcZIdRrt5u3jACXGrJAGqwCKT4gDnUxNTGQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ph8UcpU1tp3PZBtVbEwYQssF0mGvvDbUkESEqKyk/gF+JuAq2FyVLnlEkVbv9EcCoFK+lQScR1Hlt4wH3viiJOnQudhwNm1XImerlcv0lh0HkUsFReyvnfY/GzYN2ec4dyyUr87hTYNy6FfvWPcVRfEeVa7k3dTN2jXD8zCHdEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=skRTAQ+a; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=8AtRNNGI; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=EwaHu3km8gVExT9U3Kyr/bijf0dHZMx2QeqT2dCIymezcUSrhiCMEHLp6r0dSH29OKSSC5+WafL0IPL3oWq2l1sP4QVKida1S1IiNLiEnuTAmzE3z4NbeO6gucFcUbIqsQe8Etk5S+z6eYtYwofd7w61gbh1q0vRokBdvvxTv5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lj6BiwqY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pZ9riHf1; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="skRTAQ+a";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8AtRNNGI"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lj6BiwqY";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pZ9riHf1"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1784706845;
+	s=2020; t=1784706847;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Wy4A5Bpkj2zzKdn6eNsWOzDqtG3uGM/7aAgamplxzrs=;
-	b=skRTAQ+a8QkdkqSL6xqu6N+jYG2V/9BTt/U29MOBwUwpB58zKwXDFacwgyzsv9PR/OhetJ
-	AMBFz87o1iWRhHiM0AggqZXnBUXq6g5peqYAdEe4s6R1yoN8K4/ZmqnFGHR/unGR4npwhP
-	JWcSxoa+h2GYIEGrPnaZ7Rwh8CdZxnuvhQ68UNVntkBmFmurkg5yGwh8kwBb2eRrEniOtj
-	4aiyUgoRC1b9R8UdXHuN2b2zAcNEQv/X+gWm0g1uozCyNiPVZSHWHyl9bLVgmpmekt35uh
-	NzIIuYghVZsZCNhbtfPbWlBIpEjs76T2U0ktXIizUhHTaqifUyFsFXOjC+UI3Q==
+	bh=cIw1nW13D3Q7KVGq3dxw/myoCljjqPSm8YvxUaQYWA0=;
+	b=lj6BiwqYOrE0aDK2EFCLrYh5Af/utIViNCL2jpjzeuhVjQY2o7E0syWc3xaDMlXsmophVW
+	vMt2uiv93KyIbRt7vixOBsrVneDYRipZK14F9VpCu+fpzjub1m/VWYsGQHhSoQX71uzNWC
+	4lbdPT0NBdY0mDocXFy4QuPf9m3IoNH5gdfE2ZGwdwns9EUxDDUrQbHZI1ZJ/30erVO577
+	ECLGCRDHiqOgj95JBz/0saAvAKtzknTaEYtXJEYcCzHqXYv08isH1DeEgyN0SfyDONbkEo
+	lStk+Ha1FFp8PegCpYZuz8zXM4w9PjeaFdWHlO/j3s93+cKvsep/Q+DJj+r6Ug==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1784706845;
+	s=2020e; t=1784706847;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Wy4A5Bpkj2zzKdn6eNsWOzDqtG3uGM/7aAgamplxzrs=;
-	b=8AtRNNGIfGgq400WNhL47QMz7+eYI9iW6miEUp5mJtZ3BphfmYuREg/ZmGBLZNWC1JZjXo
-	fxzBl0/UCwOjKSBA==
-Date: Wed, 22 Jul 2026 09:53:30 +0200
-Subject: [PATCH v3 4/7] clocksource/drivers/mips-gic-timer: Remove
- CONFIG_GENERIC_GETTIMEOFDAY ifdeffery
+	bh=cIw1nW13D3Q7KVGq3dxw/myoCljjqPSm8YvxUaQYWA0=;
+	b=pZ9riHf1XBn+9Il8f07lihrpmD6LcwQuQjzR6UhCqua7uPaoroJ1pr0/k8yptxhrEorYbB
+	2KA8S3Gcgs6D4PDQ==
+Date: Wed, 22 Jul 2026 09:53:33 +0200
+Subject: [PATCH v3 7/7] LoongArch: Remove CONFIG_GENERIC_GETTIMEOFDAY
+ ifdeffery
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20260722-vdso-arch-clockmodes-v3-4-4c5753191cc4@linutronix.de>
+Message-Id: <20260722-vdso-arch-clockmodes-v3-7-4c5753191cc4@linutronix.de>
 References: <20260722-vdso-arch-clockmodes-v3-0-4c5753191cc4@linutronix.de>
 In-Reply-To: <20260722-vdso-arch-clockmodes-v3-0-4c5753191cc4@linutronix.de>
 To: Arnd Bergmann <arnd@arndb.de>, Andy Lutomirski <luto@kernel.org>, 
@@ -68,36 +68,36 @@ Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
  loongarch@lists.linux.dev, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1784706840; l=811;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1784706840; l=780;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=iYdmmwYnitqCJzJDOgChDbBElLI/0ThiAUZVrCungs4=;
- b=ERed7CvjPkQB+1xB34BBcq2YhhyH5BFC82wAhQY2D11iV4dEU3WVmHHH6AE1BxKn7aJGwh1Eh
- Dojk58JDkaPB6GGxSmj/XKZ9QlXGjtLVgQE2uHLhUKznA+bhY3yCB7j
+ bh=/YNIeu5dDcZIdRrt5u3jACXGrJAGqwCKT4gDnUxNTGQ=;
+ b=Twbp4yMRDwWEmhDfIOAFA28rWYRwAbqDc0G17Sn33XZK9XFt8oiKPwZa1+eguZlEquMr4FJPP
+ MwusKRX/awmAQUdQzwVFaeuP/TuKXw+pg7+hNPizD1GzYkynl7tsPHw
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Now that there is a definition of VDSO_CLOCKMODE_GIC even if no
+Now that there is a definition of VDSO_CLOCKMODE_CPU even if no
 vDSO is built, the ugly ifdeffery can be removed.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- drivers/clocksource/mips-gic-timer.c | 2 --
+ arch/loongarch/kernel/time.c | 2 --
  1 file changed, 2 deletions(-)
 
-diff --git a/drivers/clocksource/mips-gic-timer.c b/drivers/clocksource/mips-gic-timer.c
-index a1669266c94d..1501c7db9a8e 100644
---- a/drivers/clocksource/mips-gic-timer.c
-+++ b/drivers/clocksource/mips-gic-timer.c
-@@ -198,9 +198,7 @@ static struct clocksource gic_clocksource = {
- 	.name			= "GIC",
- 	.read			= gic_hpt_read,
- 	.flags			= CLOCK_SOURCE_IS_CONTINUOUS,
+diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.c
+index dbaaabcaf6f0..5892f6da07a5 100644
+--- a/arch/loongarch/kernel/time.c
++++ b/arch/loongarch/kernel/time.c
+@@ -212,9 +212,7 @@ static struct clocksource clocksource_const = {
+ 	.read = read_const_counter,
+ 	.mask = CLOCKSOURCE_MASK(64),
+ 	.flags = CLOCK_SOURCE_IS_CONTINUOUS,
 -#ifdef CONFIG_GENERIC_GETTIMEOFDAY
- 	.vdso_clock_mode	= VDSO_CLOCKMODE_GIC,
+ 	.vdso_clock_mode = VDSO_CLOCKMODE_CPU,
 -#endif
  };
  
- static void gic_clocksource_unstable(char *reason)
+ int __init constant_clocksource_init(void)
 
 -- 
 2.55.0
