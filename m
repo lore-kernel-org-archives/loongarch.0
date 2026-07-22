@@ -1,219 +1,117 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BEF8343892
-	for <loongarch@lists.linux.dev>; Wed, 22 Jul 2026 15:16:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B33583546FE
+	for <loongarch@lists.linux.dev>; Wed, 22 Jul 2026 15:17:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784733379; cv=none; b=T2St+zcLTNyZwxxte1utpWTA/cQujNIK6CUIc/mX9fiuwFdhD9qja3bpaJJlXEwNo1CvY2wUbnT8mEL0R1CGKodzgh0FkRQ3GVfgggBtrdc0XFaENREubRy9R0UNYr8OOMjoK7RtRawpgQWo0qFiqk0rci0UGIwA80wmrthE9bE=
+	t=1784733447; cv=none; b=onfSb2AIW6oVXSs5DBrmAVswiUzhFoxY2X1NlH0LXayMWkEQR/GpNa38w4RqEPXYzekFMNTO7o8/BnO8rmw5inOsWTcUsUSnpJwRsmacfn+/qb49yvsq37ELsVacA2Qq88i3GugWJ5q4W8Bb/mhPiqRK2sd6oXXU9bnIz+KN8Rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784733379; c=relaxed/simple;
-	bh=pZqfDNtrlt4xKRG3c0BiAsT2DXo0fiEXSQUodX9iZ3w=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=XSNeiAATLqpU7sG5e7k/wdI5zzEZK6i71KlCR3x83Cl/YYm+mOZ96piYsT4sbUDIZ19Md+VsD597KM1N1R/vO5X/QGoVxEmUILcRyPZJVxRDBhCm8kA6uks+DS2DDe0FbkJBoP8yShVjHTPvNUIuyBqrYSyjdGEP241SOoHUNrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bW3PreC0; arc=none smtp.client-ip=91.218.175.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1784733447; c=relaxed/simple;
+	bh=wPugwrYdz63MXO3I83prBjOWnOOFwc22g/qmZ3IV0aM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sn33+FN533GAPyM8e8q6gWe13beITydG5iZmvAkJXauEAHPDHWXbYmxBVtIM+sCJBFrVMWGjgYuJlSpai+HpKzzI/lvi70Qsyk0Dtw/t5HuTS3k1xNHWR+miRmNcYD+fmdZZobWXBUPQ0o6qkjLh+eehsuqNv04PD9MeZNu4f1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rUL73MRh; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bW3PreC0"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rUL73MRh"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-c1740c36c5cso767757666b.2
+        for <loongarch@lists.linux.dev>; Wed, 22 Jul 2026 08:17:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1784733444; x=1785338244; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=Upjmrh5JJYyxIf1oGA8lLlYd9DJQLFwgC7+8SiJQqeY=;
+        b=rUL73MRhw10LeR9DUHec5MlvAnKYWBfhJzDVTGc2QwPEIqi4XPF3wcAbymvUjR10AT
+         6hwD9At4p09rdmTO2jSLkLGiVoP10Ad3+P1Sy9I+dfDlHcdJxan7eAte9rh6moEXCZzw
+         WXG+62OBctEQDpc293TXDMcCp8wEL3lIVoLZzyIa5QzSLTPcWhH1qGUadkx5Bn5ZWwnd
+         g14Oo5J53BFJDiJ91UJwnX2bJMi1euAOsHcfeuFV+LMoAizQO8DnzxU3XJ2vd4Ij7wW4
+         /SoOr52E+wDL8q5Y/eFbDtgVYlblfNYRc1jH1zQGhDWVQdSEPHwJNF3mtwYqzbFXGrC2
+         De2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784733444; x=1785338244;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Upjmrh5JJYyxIf1oGA8lLlYd9DJQLFwgC7+8SiJQqeY=;
+        b=qBqH4nMIAnmncxOPddpWXGoGSLhnEl8VbUbAUMI+QQJE6A6xVX7l/fNQRTm4UN6jqc
+         n+PyynnJ1OHS8Zw+DV+44UFQn+swQ2H4MmqoFTNGnVVAALoCw6a8I61khtlApxEe0Glt
+         InJA8b39ZwgVku6Yq4ReRcDAkXKTOGp18QIsZCfXDpngGuBckRcxZhrRA2f3RY9zxi9O
+         bGZwSgzVre4tdmcrUc0b3PiTSHeKw/KLCdmzNcfJIQMbZIt8iHojbq+nZCxkTBvVczvK
+         0xnVedFLlCFrleTiPkYxOieBIP5hv5Aj/8uhLzCF7vdtEG45VlTMQlgdu4Oksk2pbnT/
+         uR5A==
+X-Forwarded-Encrypted: i=1; AHgh+Rrvco0yXUwDXlhnfA7gDyfWELF3TbFli64+ipnhIBltyztCBc17WUTRQkAbZpZJZ6ZJy2TKiz24gTg=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxw7ZlB6WRN+dgrS/2pSzArlk1KeVIz7/ky7PfRDnDCkOa832sa
+	WxTT3IbFT4QQz0M4F0y4iP5qazMocqX4Z95fG4wAiBSY2EaVRIxiozjpRXPgL46IyA==
+X-Gm-Gg: AR+sD13C6iwQfvXidVx77TkZ+sc3cjSmpxiK6nnhjGaz+Nl07wt4kbvcTshFeHmejtE
+	UM1Y1F7H5D+uPJ6V2Vfw2drrGvGiMtFL/osk9kIo1RdDp/UfIZb+r56cFGYzLjdiSB4pAAxXyNM
+	GdfJ7IrNtHMowd2rYEcLXu6HBzG9Xf4cl//1SqNhO1iAws5w0XAlgHjBysN43VruTSqHRFnkGcf
+	CK0CyakUN9h410GIs9epX52JYEVNycJixmQiYk+rvQuVQqgKcK+4j/lyp8MilEG1OJAe7iKxhKc
+	joxgJoEpu/l3d39me3T8iaQjp7WzFK9wGMfkhnzmAEwZJqbJ3npVnGRhnLIAgALQFWjhIz0B5Qf
+	7rRdLCTbYa5TmfUWg+GvfjP+E49NeqtvkQ4EsbC9ZDeOWbabIPCxQL7sBWsilF8Gsf0mU9ah2Gz
+	pfRcSrCXjbBGO6mnT3W/IJBshkbtRAhDJAbs/kNYoMytQD
+X-Received: by 2002:a17:907:d5a4:b0:c16:a484:90df with SMTP id a640c23a62f3a-c16b485513emr815970066b.35.1784733443140;
+        Wed, 22 Jul 2026 08:17:23 -0700 (PDT)
+Received: from google.com (152.118.155.104.bc.googleusercontent.com. [104.155.118.152])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c1c32a78229sm131383566b.1.2026.07.22.08.17.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2026 08:17:22 -0700 (PDT)
+Date: Wed, 22 Jul 2026 15:17:19 +0000
+From: Adrian =?utf-8?Q?Barna=C5=9B?= <abarnas@google.com>
+To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+Cc: linux-mm@kvack.org, Albert Ou <aou@eecs.berkeley.edu>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Brendan Jackman <jackmanb@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Hildenbrand <david@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Kevin Brodsky <kevin.brodsky@arm.com>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Lorenzo Stoakes <ljs@kernel.org>, Michal Hocko <mhocko@suse.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <pjw@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Vlastimil Babka <vbabka@kernel.org>, Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, loongarch@lists.linux.dev,
+	x86@kernel.org, Dave Hansen <dave.hansen@intel.com>,
+	Juergen Gross <jgross@suse.com>
+Subject: Re: [PATCH RFC 00/18] arch, mm: create a generic
+ set_memory/change_page_attr core
+Message-ID: <amDe_3KFBc9CcIbo@google.com>
+References: <20260721-generic-set-memory-v0-1-v1-0-2c1fc62306b3@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1784733365;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=r9xnLf5kCYeKS0y9dx48KGdZi3PUN8z8TKfUOdx3pcY=;
-	b=bW3PreC0YSLDGRKBpNSz9D3HV9IBx4wlSIMZcxjKlW2NgHj/d2JJNShI5MXv07j8MqQQS+
-	NPjHWhOdZSBYQK8zlzTLb67RaU+lo+jSdYPczWGuvi2XKtwcuonThN72rQpi4GauyQiL7a
-	183xUjaWt/QyKalqhxboM/IvbhPi1ME=
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 22 Jul 2026 15:15:52 +0000
-Message-Id: <DK5767A146ZW.3LV5JXS7T4W1C@linux.dev>
-Cc: "Brendan Jackman" <jackmanb@google.com>, "Andrew Morton"
- <akpm@linux-foundation.org>, "David Hildenbrand" <david@kernel.org>,
- "Lorenzo Stoakes" <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>,
- "Mike Rapoport" <rppt@kernel.org>, "Suren Baghdasaryan"
- <surenb@google.com>, "Michal Hocko" <mhocko@suse.com>, "Johannes Weiner"
- <hannes@cmpxchg.org>, "Zi Yan" <ziy@nvidia.com>, "Jan Kara" <jack@suse.cz>,
- "Joshua Hahn" <joshua.hahnjy@gmail.com>, "Byungchul Park"
- <byungchul@sk.com>, "Gregory Price" <gourry@gourry.net>, "Ying Huang"
- <ying.huang@linux.alibaba.com>, "Alistair Popple" <apopple@nvidia.com>,
- "Hugh Dickins" <hughd@google.com>, "Baolin Wang"
- <baolin.wang@linux.alibaba.com>, "Chris Li" <chrisl@kernel.org>, "Kairui
- Song" <kasong@tencent.com>, "Kemeng Shi" <shikemeng@huaweicloud.com>, "Nhat
- Pham" <nphamcs@gmail.com>, "Baoquan He" <baoquan.he@linux.dev>, "Barry
- Song" <baohua@kernel.org>, "Youngjun Park" <youngjun.park@lge.com>, "Joerg
- Roedel (AMD)" <joro@8bytes.org>, "Will Deacon" <will@kernel.org>, "Robin
- Murphy" <robin.murphy@arm.com>, "Huacai Chen" <chenhuacai@kernel.org>,
- "WANG Xuerui" <kernel@xen0n.name>, "Thomas Gleixner" <tglx@kernel.org>,
- "Chuck Lever" <cel@kernel.org>, "Jeff Layton" <jlayton@kernel.org>,
- "NeilBrown" <neil@brown.name>, "Olga Kornievskaia" <okorniev@redhat.com>,
- "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>, "Trond
- Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>, "David
- S. Miller" <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>,
- "Jakub Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>,
- "Simon Horman" <horms@kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-mm@kvack.org>, <linux-fsdevel@vger.kernel.org>,
- <iommu@lists.linux.dev>, <loongarch@lists.linux.dev>,
- <linux-nfs@vger.kernel.org>, <netdev@vger.kernel.org>
-Subject: Re: [PATCH 1/3] mm: move internal mempolicy APIs to new internal
- header
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Brendan Jackman" <brendan.jackman@linux.dev>
-To: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>, "Matthew Wilcox"
- <willy@infradead.org>, "Brendan Jackman" <brendan.jackman@linux.dev>
-References: <20260716-folio-alloc-cleanups-v1-0-5363b8e92d33@google.com>
- <20260716-folio-alloc-cleanups-v1-1-5363b8e92d33@google.com>
- <alkLSzQvzT9zJbY1@casper.infradead.org>
- <DK05KUIDJVLZ.61UIWOL0K3OT@linux.dev>
- <al5gQgnBCjNCSD_4@casper.infradead.org>
- <51810eba-2a60-49f9-b879-7f806546e600@kernel.org>
-In-Reply-To: <51810eba-2a60-49f9-b879-7f806546e600@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20260721-generic-set-memory-v0-1-v1-0-2c1fc62306b3@kernel.org>
 
-On Mon Jul 20, 2026 at 6:34 PM UTC, Vlastimil Babka (SUSE) wrote:
-> On 7/20/26 19:52, Matthew Wilcox wrote:
->> On Thu, Jul 16, 2026 at 04:57:37PM +0000, Brendan Jackman wrote:
->>> On Thu Jul 16, 2026 at 4:48 PM UTC, Matthew Wilcox wrote:
->>> > On Thu, Jul 16, 2026 at 02:30:10PM +0000, Brendan Jackman wrote:
->>> >> There are no external users for this surface, reduce the scope.
->>> >> -struct folio *folio_alloc_mpol_noprof(gfp_t gfp, unsigned int order=
-,
->>> >> -		struct mempolicy *mpol, pgoff_t ilx, int nid);
->>> >
->>> > Hm.  So what we're saying is that allocations which respect mempolicy=
- are
->>> > only for core mm and not for, eg, device drivers to do.  Is that real=
-ly
->>> > what we want to say?  I don't think so, because that's inconsistent
->>> > with having just widened __filemap_get_folio_mpol to allow guest_memf=
-d
->>> > to specify a mempolicy.
->
-> guest_memfd is practically mm internal though, IMHO.
->
->>> Yeah I agree, mempolicy definitely seems like a "public concept".=C2=A0=
- All
->>> I'm saying here is this specific function doesn't have any external
->>> users so it doesn't need to be an external header.=20
->>=20
->> I don't think that should be the metric for moving things to internal.h.
->> To me, internal.h is a signifier that these interfaces should only be
->> used by the MM.  Not that "all current users are within the MM".
->
-> Perhaps. It can be also useful to move them outside only when someone ask=
-s.
+On Tue, Jul 21, 2026 at 07:23:23PM +0300, Mike Rapoport (Microsoft) wrote:
 
-Yeah I can see this both ways. It makes sense to only expose functions
-to the scope that currently needs them, but I think Matthew's right that
-moving it to internal.h does kinda signal "this is private, don't touch
-this" which isn't intended.
+Hi Mike,
 
->>> ... With the ulterior motive that I want to add a new parameter to it
->>> that actually _is_ mm-internal. Namely, alloc_flags, so I can add
->>> ALLOC_UNMAPPED to implement AS_NO_DIRECT_MAP, i.e. the next iteration o=
-f
->>> [0]. So basically this is
->>> about trying to extend the allocator without creating a GFP flag.
->>=20
->> Yeah.  I'm not sold on the whole alloc_flags thing, but I'm too busy to
->> sit down and think it through properly to get involved in a proper
->> argument about how it should work.
->
-> Well it's basically a workaround for limited gfp flags space. So we can
-> extend it without making that a cost for everybody, as long as those that
-> need the new functionality are limited.
->
->> My entirely unresearched and ill-considered opinion is that the __GFP
->> flags should _be_ the ALLOC flags.  We shoudn't be translating GFP flags
->> into ALLOC flags that are what the allocator actually uses, the
->
-> It uses both.
->
->> translation should be done at compile time.  So if GFP_KERNEL and
->
-> That would assume the gfp flags are also known at compile time, which is =
-not
-> always the case.
->
->> GFP_ATOMIC need to be composed of different flags with different
->
-> The flags we are adding/considering to add are not about GFP_KERNEL vs
-> GFP_ATOMIC context, however.
->
->> semantics, then we should do that, not invent a different set of flags
->> that special people can use for special purposes.
->
-> Yep it's ugly and pragmatic, as usual. At least it's not immortalized as =
-an
-> UAPI, so we can deal with exploring in a wrong direction and fixing it la=
-ter.
+>Once this settles, the next step I'm planning is to convert arm64. This
+>would be much more involved than loongarch and riscv together, so I
+>didn't even aspire to include arm64 in the first RFC. That said, I have
+>a very ugly arm64 prototype that rewrites arch/arm64/pageattr.c to use
+>the generic CPA infrastructure and replaces the existing implementation
+>of page table splits for systems that support bbml2. But there's a lot
+>of yak shaving there to get from a PoC to actual patches.
 
-FWIW I suspect the "proper" design requirements are something like:
+Could you share your PoC for ARM64. I can help you with that and align my 
+execmem rox cache for ARM64  changes to the desired shape of this API.    
 
-1. We want some flags that we can happily squeeze into places like
-   struct xa_node, and other flags that we can add bits to relatively
-   freely.
-
-2. We want some flags that are "public" and some that are "private",
-   although this is intentionally vaguely defined.
-
-The current ALLOC_/GFP_ flags split is something that kinda inelegantly
-attempts to solve both at once even though they are actually probably
-orthogonal requirements. Do we care about this inelegance? I think it's
-pretty harmless.
-
-Another thing that's pretty inelegant about it is that both sets of
-flags percolate into the allocator at once. This is quite
-confusing/tiresome when you are reading page_alloc.c (I tried to
-ameliorate that with [0]) but I don't think it has much of an
-architectural impact?
-
-[0]: https://lore.kernel.org/all/20260703-alloc-trylock-v5-2-c87b714e19d3@g=
-oogle.com/
-
-In the back of my mind I suspect the "neat and tidy" solution would be
-something like: a single flags namespace that is split into two separate
-enums, one "public" and one "private", and then a separate mechanism to
-"compress" these flags into a small number of bits. But yeah I'm just
-not sure working on that nice elegant cleanup would really unlock
-anything of practical value. Boring little cleanups like "split out this
-API from internal.h into its own header" seem like more useful ways to
-spend refactoring energy in this space.
-
-Quite likely I'm missing potential unlocks though. E.g. maybe there's
-some place we currently put a gfp_t that could benefit from a "separate
-compression mechanism" that could usefully shrink it to 8 bits or
-whatever.
-
->>> So I'm envisaging if an external user arises for it later, we'd slap tw=
-o
->>> underscores on the beginning of the internal one, (with the alloc_flags
->>> arg), and then bring back the public one as a wrapper.
->>>=20
->>> Does that make sense?
->>=20
->> We have a long history of people just moving stuff around in patches
->> without knowing what the intent was if it should be moved.
->
-> I guess this patch is not critical to the rest, if that's an issue.
-
-Well, for ALLOC_UNMAPPED we really do need an alloc_flags arg for this
-function, but we can always just go straight to what I described above.
-I.e. I can create the __ variant + wrapper from the start. It's just a
-question of whether we prefer:
-
-- "Yuck, there's a public wrapper here that we don't actually need", or
-
-- "We hid this mempolicy API and people might think we'd NACK a patch to
-  un-hide it".0
-
-  https://lore.kernel.org/all/20260703-alloc-trylock-v5-2-c87b714e19d3@goog=
-le.com/
+Best regards,
+Adrian
