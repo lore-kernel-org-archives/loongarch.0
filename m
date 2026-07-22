@@ -1,148 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FB75466AE4
-	for <loongarch@lists.linux.dev>; Wed, 22 Jul 2026 16:40:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784738418; cv=none; b=RTkkafuPrxIt9VVKrYmcx3GjhkKl+0G/c9ctQqkEseTpgYChLod7ZyNp2Ee19WFJUBYQuAnJUUeOco8a2Xq3xlR/uzBqUvqkj4F5XFhwg5zwZauDiFGLXjzw3hNEFKQ8xPDK4Mdvp+QW1aI8BfKx5XqmsM25ErzyBdu5bdsdtug=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784738418; c=relaxed/simple;
-	bh=/98dYKgaEjXUHmhDXcXS0PG8tx66UbdoKo0v/OS5kvQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kfLWAJzqWpUz+DRpHV9i4S3xiXjMkfi+7nF/yV/Q0Wld3uGzT0N0MT3rH0fYizj+2bvSoI13jMDMysM1rST0LyQZIY6zLE32wZFzg7OBB4lP3WjcRPaDbTDlgbcOJCzpRV113vl6hFQ33MEAOPzA03wz0NwE6I9O9M3yQ6l4m0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g6NMNy13; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95AB7471CE5
+	for <loongarch@lists.linux.dev>; Wed, 22 Jul 2026 16:40:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784738439; cv=pass; b=FDEmaJnG/y3HaZ2hpJrNRfaJ1YYwVHoViQZBRSj6mcNJaFAfjeMhNheAxnzJjWMPud6f/R67r8sJ89nltM/8Ny8JYYA0bXrJ+bGmHEgmsGh18ye3fjLNEsCRnVQSSdS//1xjKNCGFU/99CGYSAqkF2VXp+WRjfa+1KWetbqTWtk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784738439; c=relaxed/simple;
+	bh=Hqd3Wa56l8zrCTwp+7xadt4cULrUkJxHXjy6wNs66S8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MSQLJkKL3d8PR7LIkwu9crtI9LtdL6IybDdbKJ/8/4VsZoPVjEYKOQYQxNYOq8I9DEr2Rz1FEBrAuU11nqTVu1xAsohuUb1ewZvut1pEYShEwHNhrEGuzvxjHqIt2dQCaEjkHykOCe7k5M3RJ5vYsILH9JpbWCXP/Oklcev8VU4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ziyao.cc; spf=pass smtp.mailfrom=ziyao.cc; dkim=pass (1024-bit key) header.d=ziyao.cc header.i=me@ziyao.cc header.b=EnkHAL99; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ziyao.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziyao.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g6NMNy13"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784738410; x=1816274410;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=/98dYKgaEjXUHmhDXcXS0PG8tx66UbdoKo0v/OS5kvQ=;
-  b=g6NMNy130pxSNDEC3440LH/yiYhVLnZw6K/qsXZKfLfBV99iuTKwjE80
-   y9Y8OTRxI+G54uf0IzURoNWjhkRwKndf72CHwaX/vsVIKo7CdNlHyfxHN
-   mr4AudqT7gxDiyw7N5zALwustYyu9MBhfrS0OIiAtQspjToS2w9cMlwC+
-   bCVAavEOUey+uqtL9coi0rRk8tlv/IuJlIlG5RFfDqvjgVHlPoo+PRdB0
-   2RLTQdEoshA3fP2cCjIqHHv1OTWdQs+VXIAmKlaCr8rxZH+nH9XBGJ8FC
-   OODAauZEJ4hVZrJ3xGBPaG6jMgiVnYSGH2ysOhBK4jcSHVnZ4OJ+ANzli
-   w==;
-X-CSE-ConnectionGUID: oTYMKumzSL6p87Vl1ZM7mg==
-X-CSE-MsgGUID: Tl/E93cuTP+t09swvTMrVw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11854"; a="85499621"
-X-IronPort-AV: E=Sophos;i="6.25,178,1779174000"; 
-   d="scan'208";a="85499621"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2026 09:40:07 -0700
-X-CSE-ConnectionGUID: QDZCp4urSb2T9DOMvZJ/wQ==
-X-CSE-MsgGUID: b4+1UeHkQWiP7OyD9JmXeg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,178,1779174000"; 
-   d="scan'208";a="253773856"
-Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.110.58]) ([10.125.110.58])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2026 09:40:04 -0700
-Message-ID: <0143b927-08c5-4e94-ae6e-2a0d7bfe950f@intel.com>
-Date: Wed, 22 Jul 2026 09:40:03 -0700
+	dkim=pass (1024-bit key) header.d=ziyao.cc header.i=me@ziyao.cc header.b="EnkHAL99"
+ARC-Seal: i=1; a=rsa-sha256; t=1784738413; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=VvrCmdmIeAP+oHE3sQxIA438g7kMdBAJxBc/5MSdQ278fwNQVWag2tA36Mm425SGY/u04Ig56vT4Q/uyOmgPp3r6nyRRUocm6kzTqPRAPEPccj003TZjdvL7BGkcSjZkl8qEpEaEzD4e/ko7SloG8SvprHNlSPsEqUsUdUCSDXs=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1784738413; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=CFWy8us/akwOtk1Shi3kFXagj21q2YwusuaALSq7GP0=; 
+	b=DNQvvbCH91niP29JhYXBGcc9QnfTHcKl9JOH5jlUnKZWBQowZnhlGqqPof+B7DS0hE/gitAUSJSxPzHGMTSUgIBQeziKJBrj/u1TD8NoZIOoH1vDtDTXGLxf1AGux6T2euVGDijAEfb+/u8zVLd6uQaHr5kxp+IkYKoAlI6udqg=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=ziyao.cc;
+	spf=pass  smtp.mailfrom=me@ziyao.cc;
+	dmarc=pass header.from=<me@ziyao.cc>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1784738413;
+	s=zmail; d=ziyao.cc; i=me@ziyao.cc;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=CFWy8us/akwOtk1Shi3kFXagj21q2YwusuaALSq7GP0=;
+	b=EnkHAL994i7MjiPYJwIs9mPD+iem5vMahUKoh5altZ5+J9so3XpHydS1E3XS+LtO
+	IYDwHCJQImi2JhGLv60v3bhiNFzT+wZOqnfbUfjZvv2sQ/82d/2eepz8h11sfvIdRSv
+	mRq4Q20R1QxpFm5UysqgA1QRv09ZHyls9OTsPy+c=
+Received: by mx.zohomail.com with SMTPS id 1784738410484852.0707588581733;
+	Wed, 22 Jul 2026 09:40:10 -0700 (PDT)
+Date: Wed, 22 Jul 2026 16:39:59 +0000
+From: Yao Zi <me@ziyao.cc>
+To: liushuyu@aosc.io, linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Jianmin Lv <lvjianmin@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
+	Yao Zi <ziyao@disroot.org>
+Cc: loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>,
+	Kexy Biscuit <kexybiscuit@aosc.io>, stable@vger.kernel.org,
+	Yao Zi <me@ziyao.cc>
+Subject: Re: [PATCH] platform/loongarch: laptop: explicitly reset the
+ bl_powered state when resuming
+Message-ID: <amDyX9gPxjT4Pd1d@pie>
+References: <20260722044457.1333404-1-liushuyu@aosc.io>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v2 00/20] mm: optimize unnecessary loads due to
- ptep_get() and friends out
-To: Yeoreum Yun <yeoreum.yun@arm.com>, Russell King <linux@armlinux.org.uk>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>,
- Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Barry Song <baohua@kernel.org>,
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
- David Hildenbrand <david@kernel.org>, Michal Hocko <mhocko@kernel.org>,
- Lorenzo Stoakes <ljs@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>,
- Bibo Mao <maobibo@loongson.cn>, Anup Patel <anup@brainfault.org>,
- Atish Patra <atish.patra@linux.dev>, Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, Dave Hansen <dave.hansen@linux.intel.com>,
- Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, "Liam R. Howlett" <liam@infradead.org>,
- Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Jonas Bonn <jonas@southpole.se>,
- Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
- Stafford Horne <shorne@gmail.com>
-Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, linux-arch@vger.kernel.org, linux-mm@kvack.org,
- kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
- linux-riscv@lists.infradead.org, linux-openrisc@vger.kernel.org
-References: <20260722-dummy_ptxp3-v2-0-d9e4bad31e0a@arm.com>
-Content-Language: en-US
-From: Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20260722-dummy_ptxp3-v2-0-d9e4bad31e0a@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260722044457.1333404-1-liushuyu@aosc.io>
+X-Zoho-Virus-Status: 1
+X-Zoho-AV-Stamp: zmail-av-0.2.10.1.5.2/284.732.17
+X-ZohoMailClient: External
 
-One of my nits about v1 was that it didn't really frame the series
-precisely. It talks about "optimization" instead of fundamentally
-changing the way that the kernel deals with folded page table levels.
+On Wed, Jul 22, 2026 at 12:44:50PM +0800, liushuyu@aosc.io wrote:
+> From: Zixing Liu <liushuyu@aosc.io>
+> 
+> On EAECIS NL60R with EC firmware version 1.11, resuming from S3 has a very
+> high chance (>= 90%) of causing the EC to lose the previous backlight
+> power state. When this happens, the laptop resumes normally from S3, but
+> the backlight remains off (when shining on the screen with a flash light,
+> we can see the screen contents are updating normally).
+> 
+> Since there is no generic way to query the EC's backlight state on
+> Loongson laptop platforms, assume the worst-case scenario and restart the
+> backlight power inside the kernel each time the system resumes.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 53c762b47f72 ("platform/loongarch: laptop: Add backlight power control support")
+> Signed-off-by: Zixing Liu <liushuyu@aosc.io>
 
-The optimization that this *wants* to talk about kinda falls out of that
-refactoring. It's not really the core of the series, IMNHO.
+Tested on my TongFang L860-T2 3A5000 laptop, which isn't affected by
+the EC issue, after resuming from S3 the brightness kept unchanged,
+no regression is observed.
 
-This series effectively changes the rules about where and how folded
-page table levels can be manipulated. In doing that, the door is opened
-to optimizing out the unnecessary loads.
+Tested-by: Yao Zi <me@ziyao.cc>
 
-Oh, and I'm pulling linux-arm-kernel@lists.infradead.org off cc. If
-anyone has the juju, please fix it so it stops spamming replies with
-"Your message to linux-arm-kernel awaits moderator approval".
+Regards,
+Yao Zi
