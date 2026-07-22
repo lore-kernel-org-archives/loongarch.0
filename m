@@ -1,53 +1,47 @@
-Received: from relay2.mymailcheap.com (relay2.mymailcheap.com [217.182.113.132])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F005F40BCA4
-	for <loongarch@lists.linux.dev>; Wed, 22 Jul 2026 04:45:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.182.113.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9F844AB92;
+	Wed, 22 Jul 2026 06:02:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784695521; cv=none; b=Bz7jZw/8E8COLA4gMKDa8cyuQnBUR4vFXSs/tSA7HGjKHE2uvOpBSOACrKk6L0y3pTGZz/AVRD4vuXThZuUHxoz0m0a+4fFnPL3di0OdhUFAJsWoB3IUb1nuqLgGNj3thcgBlUljMmHJoOVkuOK0Y+dS83VZR3dlqK7kmihIBFU=
+	t=1784700121; cv=none; b=T4rq2t9beI333bsRPMXCGRzq13EfEoH4kn5s9Z9s8W4Z9PRurZja6EvAjl6JGerMNJzE4OHdfvsQy26++4L6wGVNx1j33pwCZA6NGeJB5WMgxzEeGwixje49diFge0SEFRPRiZ34l57n8H0TToNkBHXFcCnpcPFwr6J+diK/PJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784695521; c=relaxed/simple;
-	bh=VI3sLFMDSUlR1JhhWI6vW8oeTPKDhZKcXhMcS1NZXNA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NqMANBMqU9vYyj1H9TENDJPPCuP+/s0tN2/sNaf85WNf3KcwdeajH3Y4whLipciv4nAtp3Sar/dErCIr/ptFNn2Xv7D75LZ3wRPeaed4F9IMPdkH9ZuHhnPd53Rn+iO5daG5UfiRYlgbIkEH0xYxWRstwI0rGWJEKPckcqEy6vM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=Ia8npmvw; arc=none smtp.client-ip=217.182.113.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aosc.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
+	s=arc-20240116; t=1784700121; c=relaxed/simple;
+	bh=FyBEUgvIq/x91xup4zlZzMj00wtsmCXCmN6f8ssx764=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mnTq1GF7KS6EHEvtDjulCRp3fXJIBjnp/z7/gFMvX/Z7HvrRL3VIYYwhfWZD708+irXQfcG8OnDhRZI4UvgjysnSuOsDO7lkHnkNavTOrJQHKQz0yC/yV1eB6I8KGLke7aIUD85mrUx/TJGt8x16iVgQD5OJ5wQUKHRDJgYrSrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zjh6wimG; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="Ia8npmvw"
-Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
-	by relay2.mymailcheap.com (Postfix) with ESMTPS id 13C3E3E877;
-	Wed, 22 Jul 2026 04:45:11 +0000 (UTC)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf1.mymailcheap.com (Postfix) with ESMTPSA id C3D34400E2;
-	Wed, 22 Jul 2026 04:45:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-	t=1784695510; bh=VI3sLFMDSUlR1JhhWI6vW8oeTPKDhZKcXhMcS1NZXNA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Ia8npmvwIgazIuW0/7eGpRpv3dD9oFvsTnIyXhuiqav37YyTDK6sPYuGmrZ2HyLMv
-	 iyY6tlFolE4pXyymA0LyzEjamZ6HJwaJ30Phb7IJiY3ndgsyVG31QmRCQZBCsjW/+S
-	 NQwLnKIFM0GKHKJhOc/+ILR2kc5qBHZNPzxPf6WI=
-Received: from liushuyu-la64 (unknown [117.151.12.168])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 9E03441283;
-	Wed, 22 Jul 2026 04:45:05 +0000 (UTC)
-From: liushuyu@aosc.io
-To: linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zjh6wimG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 762731F000E9;
+	Wed, 22 Jul 2026 06:01:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784700120;
+	bh=c9NHI8JRoVoQgLmkSRAE8PekdlmvFjRvXZuDMiKAChc=;
+	h=From:To:Cc:Subject:Date;
+	b=Zjh6wimGOsQ2uFprcHSBo+8Jt6voc0rfHqWMC9MQIKv++ccaCarqBCErAt/IkH4wv
+	 lvhjwe5ZJb+Q8kBfRPRRvRw6xDcxD5jbaUcgHkuwmew9kEeOJZde4Ii+/F3oBFmSGM
+	 Ev40V6Nb3v4sO8j0bSvdfzonOmiOA1WOudj325vERGhfsaLGk4ROgsKhdbR51fdoD3
+	 6oX/tUzusA4Wb/zTCGvC7vbcGDKgxIYPMyA5X+xdech2Io37gT+AayYRnRxR5HFy5T
+	 jNxYFElg17i+PQvBeTju8dNE7zrhyG8YNRPa+/fiGIanIl+xQ91b16qr1Axd/0J9Xw
+	 nyOa8IqmJFd8w==
+From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+To: jack@suse.cz
+Cc: linux-kernel@vger.kernel.org,
+	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jan Kara <jack@suse.com>,
+	Yangtao Li <frank.li@vivo.com>,
 	Huacai Chen <chenhuacai@kernel.org>,
-	Jianmin Lv <lvjianmin@loongson.cn>,
 	WANG Xuerui <kernel@xen0n.name>,
-	Yao Zi <ziyao@disroot.org>
-Cc: loongarch@lists.linux.dev,
-	Mingcong Bai <jeffbai@aosc.io>,
-	Kexy Biscuit <kexybiscuit@aosc.io>,
-	Zixing Liu <liushuyu@aosc.io>,
-	stable@vger.kernel.org
-Subject: [PATCH] platform/loongarch: laptop: explicitly reset the bl_powered state when resuming
-Date: Wed, 22 Jul 2026 12:44:50 +0800
-Message-ID: <20260722044457.1333404-1-liushuyu@aosc.io>
-X-Mailer: git-send-email 2.52.0
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Subject: [PATCH] quota: remove CONFIG_PRINT_QUOTA_WARNING code
+Date: Wed, 22 Jul 2026 08:01:55 +0200
+Message-ID: <20260722060155.1111519-1-jirislaby@kernel.org>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -55,60 +49,268 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Server: nf1.mymailcheap.com
-X-Rspamd-Queue-Id: C3D34400E2
-X-Spamd-Result: default: False [1.20 / 10.00];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.10)[+mx];
-	MIME_GOOD(-0.10)[text/plain];
-	R_DKIM_ALLOW(-0.10)[aosc.io:s=default];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	FROM_NO_DN(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_COUNT_ONE(0.00)[1];
-	TO_DN_SOME(0.00)[];
-	LOCAL_OUTBOUND(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	DKIM_TRACE(0.00)[aosc.io:+];
-	FROM_EQ_ENVFROM(0.00)[];
-	DMARC_POLICY_ALLOW(0.00)[aosc.io,quarantine];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[]
-X-Rspamd-Action: no action
 
-From: Zixing Liu <liushuyu@aosc.io>
+CONFIG_PRINT_QUOTA_WARNING was marked as BROKEN in 2023 by 36d532d713db
+("quota: mark PRINT_QUOTA_WARNING as BROKEN").
 
-On EAECIS NL60R with EC firmware version 1.11, resuming from S3 has a very
-high chance (>= 90%) of causing the EC to lose the previous backlight
-power state. When this happens, the laptop resumes normally from S3, but
-the backlight remains off (when shining on the screen with a flash light,
-we can see the screen contents are updating normally).
+The code is apparently unused and uninteresting, so remove it all, incl.
+the abuse of TTY.
 
-Since there is no generic way to query the EC's backlight state on
-Loongson laptop platforms, assume the worst-case scenario and restart the
-backlight power inside the kernel each time the system resumes.
-
-Cc: stable@vger.kernel.org
-Fixes: 53c762b47f72 ("platform/loongarch: laptop: Add backlight power control support")
-Signed-off-by: Zixing Liu <liushuyu@aosc.io>
+Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jan Kara <jack@suse.com>
+Cc: Yangtao Li <frank.li@vivo.com>
 ---
- drivers/platform/loongarch/loongson-laptop.c | 1 +
- 1 file changed, 1 insertion(+)
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: loongarch@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-mips@vger.kernel.org
+Cc: linux-serial@vger.kernel.org
+---
+ arch/loongarch/configs/loongson32_defconfig |  1 -
+ arch/loongarch/configs/loongson64_defconfig |  1 -
+ arch/mips/configs/bigsur_defconfig          |  1 -
+ arch/mips/configs/ip22_defconfig            |  1 -
+ arch/mips/configs/loongson2k_defconfig      |  1 -
+ drivers/tty/tty_io.c                        | 27 -------
+ fs/quota/Kconfig                            | 10 ---
+ fs/quota/dquot.c                            | 81 +--------------------
+ 8 files changed, 2 insertions(+), 121 deletions(-)
 
-diff --git a/drivers/platform/loongarch/loongson-laptop.c b/drivers/platform/loongarch/loongson-laptop.c
-index 61b18ac206c9e..742a585b0647c 100644
---- a/drivers/platform/loongarch/loongson-laptop.c
-+++ b/drivers/platform/loongarch/loongson-laptop.c
-@@ -200,6 +200,7 @@ static int loongson_hotkey_resume(struct device *dev)
+diff --git a/arch/loongarch/configs/loongson32_defconfig b/arch/loongarch/configs/loongson32_defconfig
+index 7c8f01513ed2..3d552eb526fe 100644
+--- a/arch/loongarch/configs/loongson32_defconfig
++++ b/arch/loongarch/configs/loongson32_defconfig
+@@ -974,7 +974,6 @@ CONFIG_FS_VERITY=y
+ CONFIG_FANOTIFY=y
+ CONFIG_FANOTIFY_ACCESS_PERMISSIONS=y
+ CONFIG_QUOTA=y
+-# CONFIG_PRINT_QUOTA_WARNING is not set
+ CONFIG_QFMT_V1=m
+ CONFIG_QFMT_V2=m
+ CONFIG_AUTOFS_FS=y
+diff --git a/arch/loongarch/configs/loongson64_defconfig b/arch/loongarch/configs/loongson64_defconfig
+index 8e3906d3bd70..195cf40cdbca 100644
+--- a/arch/loongarch/configs/loongson64_defconfig
++++ b/arch/loongarch/configs/loongson64_defconfig
+@@ -1005,7 +1005,6 @@ CONFIG_FS_VERITY=y
+ CONFIG_FANOTIFY=y
+ CONFIG_FANOTIFY_ACCESS_PERMISSIONS=y
+ CONFIG_QUOTA=y
+-# CONFIG_PRINT_QUOTA_WARNING is not set
+ CONFIG_QFMT_V1=m
+ CONFIG_QFMT_V2=m
+ CONFIG_AUTOFS_FS=y
+diff --git a/arch/mips/configs/bigsur_defconfig b/arch/mips/configs/bigsur_defconfig
+index 611dc0dd392d..d2b18d5033be 100644
+--- a/arch/mips/configs/bigsur_defconfig
++++ b/arch/mips/configs/bigsur_defconfig
+@@ -140,7 +140,6 @@ CONFIG_EXT4_FS_SECURITY=y
+ CONFIG_EXT4_FS=y
+ CONFIG_QUOTA=y
+ CONFIG_QUOTA_NETLINK_INTERFACE=y
+-# CONFIG_PRINT_QUOTA_WARNING is not set
+ CONFIG_QFMT_V2=m
+ CONFIG_AUTOFS_FS=m
+ CONFIG_FUSE_FS=m
+diff --git a/arch/mips/configs/ip22_defconfig b/arch/mips/configs/ip22_defconfig
+index 009e66299b69..09a77e5b249c 100644
+--- a/arch/mips/configs/ip22_defconfig
++++ b/arch/mips/configs/ip22_defconfig
+@@ -238,7 +238,6 @@ CONFIG_XFS_FS=m
+ CONFIG_XFS_QUOTA=y
+ CONFIG_QUOTA=y
+ CONFIG_QUOTA_NETLINK_INTERFACE=y
+-# CONFIG_PRINT_QUOTA_WARNING is not set
+ CONFIG_QFMT_V2=m
+ CONFIG_AUTOFS_FS=m
+ CONFIG_FUSE_FS=m
+diff --git a/arch/mips/configs/loongson2k_defconfig b/arch/mips/configs/loongson2k_defconfig
+index ca534a6b66de..8fd863f4f7b0 100644
+--- a/arch/mips/configs/loongson2k_defconfig
++++ b/arch/mips/configs/loongson2k_defconfig
+@@ -303,7 +303,6 @@ CONFIG_XFS_FS=y
+ CONFIG_XFS_QUOTA=y
+ CONFIG_XFS_POSIX_ACL=y
+ CONFIG_QUOTA=y
+-# CONFIG_PRINT_QUOTA_WARNING is not set
+ CONFIG_AUTOFS_FS=y
+ CONFIG_FUSE_FS=m
+ CONFIG_ISO9660_FS=m
+diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
+index 6b283fd03ff8..a77bbccb274d 100644
+--- a/drivers/tty/tty_io.c
++++ b/drivers/tty/tty_io.c
+@@ -1032,33 +1032,6 @@ static ssize_t iterate_tty_write(struct tty_ldisc *ld, struct tty_struct *tty,
+ 	return ret;
+ }
  
- 	bd = backlight_device_get_by_type(BACKLIGHT_PLATFORM);
- 	if (bd) {
-+		bl_powered = false;
- 		loongson_laptop_backlight_update(bd) ?
- 		pr_warn("Loongson_backlight: resume brightness failed") :
- 		pr_info("Loongson_backlight: resume brightness %d\n", bd->props.brightness);
+-#ifdef CONFIG_PRINT_QUOTA_WARNING
+-/**
+- * tty_write_message - write a message to a certain tty, not just the console.
+- * @tty: the destination tty_struct
+- * @msg: the message to write
+- *
+- * This is used for messages that need to be redirected to a specific tty. We
+- * don't put it into the syslog queue right now maybe in the future if really
+- * needed.
+- *
+- * We must still hold the BTM and test the CLOSING flag for the moment.
+- *
+- * This function is DEPRECATED, do not use in new code.
+- */
+-void tty_write_message(struct tty_struct *tty, char *msg)
+-{
+-	if (tty) {
+-		mutex_lock(&tty->atomic_write_lock);
+-		tty_lock(tty);
+-		if (tty->ops->write && tty->count > 0)
+-			tty->ops->write(tty, msg, strlen(msg));
+-		tty_unlock(tty);
+-		tty_write_unlock(tty);
+-	}
+-}
+-#endif
+-
+ static ssize_t file_tty_write(struct file *file, struct kiocb *iocb, struct iov_iter *from)
+ {
+ 	struct tty_struct *tty = file_tty(file);
+diff --git a/fs/quota/Kconfig b/fs/quota/Kconfig
+index 818083a36bef..68eb441328ef 100644
+--- a/fs/quota/Kconfig
++++ b/fs/quota/Kconfig
+@@ -25,16 +25,6 @@ config QUOTA_NETLINK_INTERFACE
+ 	  hardlimit, etc.) will be reported through netlink interface. If unsure,
+ 	  say Y.
+ 
+-config PRINT_QUOTA_WARNING
+-	bool "Print quota warnings to console (OBSOLETE)"
+-	depends on QUOTA && BROKEN
+-	default y
+-	help
+-	  If you say Y here, quota warnings (about exceeding softlimit, reaching
+-	  hardlimit, etc.) will be printed to the process' controlling terminal.
+-	  Note that this behavior is currently deprecated and may go away in
+-	  future. Please use notification via netlink socket instead.
+-
+ config QUOTA_DEBUG
+ 	bool "Additional quota sanity checks"
+ 	depends on QUOTA
+diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
+index 9850de3955d3..204afc5e984b 100644
+--- a/fs/quota/dquot.c
++++ b/fs/quota/dquot.c
+@@ -153,7 +153,7 @@ void __quota_error(struct super_block *sb, const char *func,
+ }
+ EXPORT_SYMBOL(__quota_error);
+ 
+-#if defined(CONFIG_QUOTA_DEBUG) || defined(CONFIG_PRINT_QUOTA_WARNING)
++#ifdef CONFIG_QUOTA_DEBUG
+ static char *quotatypes[] = INITQFNAMES;
+ #endif
+ static struct quota_format_type *quota_formats;	/* List of registered formats */
+@@ -1208,72 +1208,6 @@ static int warning_issued(struct dquot *dquot, const int warntype)
+ 	return test_and_set_bit(flag, &dquot->dq_flags);
+ }
+ 
+-#ifdef CONFIG_PRINT_QUOTA_WARNING
+-static int flag_print_warnings = 1;
+-
+-static int need_print_warning(struct dquot_warn *warn)
+-{
+-	if (!flag_print_warnings)
+-		return 0;
+-
+-	switch (warn->w_dq_id.type) {
+-		case USRQUOTA:
+-			return uid_eq(current_fsuid(), warn->w_dq_id.uid);
+-		case GRPQUOTA:
+-			return in_group_p(warn->w_dq_id.gid);
+-		case PRJQUOTA:
+-			return 1;
+-	}
+-	return 0;
+-}
+-
+-/* Print warning to user which exceeded quota */
+-static void print_warning(struct dquot_warn *warn)
+-{
+-	char *msg = NULL;
+-	struct tty_struct *tty;
+-	int warntype = warn->w_type;
+-
+-	if (warntype == QUOTA_NL_IHARDBELOW ||
+-	    warntype == QUOTA_NL_ISOFTBELOW ||
+-	    warntype == QUOTA_NL_BHARDBELOW ||
+-	    warntype == QUOTA_NL_BSOFTBELOW || !need_print_warning(warn))
+-		return;
+-
+-	tty = get_current_tty();
+-	if (!tty)
+-		return;
+-	tty_write_message(tty, warn->w_sb->s_id);
+-	if (warntype == QUOTA_NL_ISOFTWARN || warntype == QUOTA_NL_BSOFTWARN)
+-		tty_write_message(tty, ": warning, ");
+-	else
+-		tty_write_message(tty, ": write failed, ");
+-	tty_write_message(tty, quotatypes[warn->w_dq_id.type]);
+-	switch (warntype) {
+-		case QUOTA_NL_IHARDWARN:
+-			msg = " file limit reached.\r\n";
+-			break;
+-		case QUOTA_NL_ISOFTLONGWARN:
+-			msg = " file quota exceeded too long.\r\n";
+-			break;
+-		case QUOTA_NL_ISOFTWARN:
+-			msg = " file quota exceeded.\r\n";
+-			break;
+-		case QUOTA_NL_BHARDWARN:
+-			msg = " block limit reached.\r\n";
+-			break;
+-		case QUOTA_NL_BSOFTLONGWARN:
+-			msg = " block quota exceeded too long.\r\n";
+-			break;
+-		case QUOTA_NL_BSOFTWARN:
+-			msg = " block quota exceeded.\r\n";
+-			break;
+-	}
+-	tty_write_message(tty, msg);
+-	tty_kref_put(tty);
+-}
+-#endif
+-
+ static void prepare_warning(struct dquot_warn *warn, struct dquot *dquot,
+ 			    int warntype)
+ {
+@@ -1296,9 +1230,7 @@ static void flush_warnings(struct dquot_warn *warn)
+ 	for (i = 0; i < MAXQUOTAS; i++) {
+ 		if (warn[i].w_type == QUOTA_NL_NOWARN)
+ 			continue;
+-#ifdef CONFIG_PRINT_QUOTA_WARNING
+-		print_warning(&warn[i]);
+-#endif
++
+ 		quota_send_warning(warn[i].w_dq_id,
+ 				   warn[i].w_sb->s_dev, warn[i].w_type);
+ 	}
+@@ -3008,15 +2940,6 @@ static const struct ctl_table fs_dqstats_table[] = {
+ 		.mode		= 0444,
+ 		.proc_handler	= do_proc_dqstats,
+ 	},
+-#ifdef CONFIG_PRINT_QUOTA_WARNING
+-	{
+-		.procname	= "warnings",
+-		.data		= &flag_print_warnings,
+-		.maxlen		= sizeof(int),
+-		.mode		= 0644,
+-		.proc_handler	= proc_dointvec,
+-	},
+-#endif
+ };
+ 
+ static int __init dquot_init(void)
 -- 
-2.52.0
+2.55.0
 
