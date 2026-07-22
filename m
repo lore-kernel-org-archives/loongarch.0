@@ -1,117 +1,101 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B33583546FE
-	for <loongarch@lists.linux.dev>; Wed, 22 Jul 2026 15:17:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E345E3612F6
+	for <loongarch@lists.linux.dev>; Wed, 22 Jul 2026 15:18:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784733447; cv=none; b=onfSb2AIW6oVXSs5DBrmAVswiUzhFoxY2X1NlH0LXayMWkEQR/GpNa38w4RqEPXYzekFMNTO7o8/BnO8rmw5inOsWTcUsUSnpJwRsmacfn+/qb49yvsq37ELsVacA2Qq88i3GugWJ5q4W8Bb/mhPiqRK2sd6oXXU9bnIz+KN8Rw=
+	t=1784733494; cv=none; b=Peki0YJeyhFbeYDaLmm8P5xkETk1o9G6th1SdRstFwBGso1Rd61mvgw/Xl9MFiUC2/s2OArk/LRzX3qRNo1Qz3B54PObYYaH/mO/e+/d/qO3zGvKR2j5ZIrg95B9eAoYHuZe/Q07cSD9T4Go7e/T3AJjLP8JQHkTbJT+PHj7VOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784733447; c=relaxed/simple;
-	bh=wPugwrYdz63MXO3I83prBjOWnOOFwc22g/qmZ3IV0aM=;
+	s=arc-20240116; t=1784733494; c=relaxed/simple;
+	bh=eIJCq0U0nvzWtAAiZhSd0Lkda2QdVkytVVFdCRV0V4Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sn33+FN533GAPyM8e8q6gWe13beITydG5iZmvAkJXauEAHPDHWXbYmxBVtIM+sCJBFrVMWGjgYuJlSpai+HpKzzI/lvi70Qsyk0Dtw/t5HuTS3k1xNHWR+miRmNcYD+fmdZZobWXBUPQ0o6qkjLh+eehsuqNv04PD9MeZNu4f1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rUL73MRh; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=jRIxYvt1ETPxedFvPhUnTmLoNmPOdQA7Y7AXACtyMbtTPlCmvCH4d6SYNCuSv+qJTjKXvnzUsdkHrHfJCKmNfva4C73F2sbBjXxKgZYsOdCfYSZXq/vkkuuCYmbhSQnUPLkMTonZwcSnErdnJS3LH5so8jM0gIDjrEvYcuI9JTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EiSY9JuH; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rUL73MRh"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-c1740c36c5cso767757666b.2
-        for <loongarch@lists.linux.dev>; Wed, 22 Jul 2026 08:17:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1784733444; x=1785338244; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Upjmrh5JJYyxIf1oGA8lLlYd9DJQLFwgC7+8SiJQqeY=;
-        b=rUL73MRhw10LeR9DUHec5MlvAnKYWBfhJzDVTGc2QwPEIqi4XPF3wcAbymvUjR10AT
-         6hwD9At4p09rdmTO2jSLkLGiVoP10Ad3+P1Sy9I+dfDlHcdJxan7eAte9rh6moEXCZzw
-         WXG+62OBctEQDpc293TXDMcCp8wEL3lIVoLZzyIa5QzSLTPcWhH1qGUadkx5Bn5ZWwnd
-         g14Oo5J53BFJDiJ91UJwnX2bJMi1euAOsHcfeuFV+LMoAizQO8DnzxU3XJ2vd4Ij7wW4
-         /SoOr52E+wDL8q5Y/eFbDtgVYlblfNYRc1jH1zQGhDWVQdSEPHwJNF3mtwYqzbFXGrC2
-         De2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784733444; x=1785338244;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Upjmrh5JJYyxIf1oGA8lLlYd9DJQLFwgC7+8SiJQqeY=;
-        b=qBqH4nMIAnmncxOPddpWXGoGSLhnEl8VbUbAUMI+QQJE6A6xVX7l/fNQRTm4UN6jqc
-         n+PyynnJ1OHS8Zw+DV+44UFQn+swQ2H4MmqoFTNGnVVAALoCw6a8I61khtlApxEe0Glt
-         InJA8b39ZwgVku6Yq4ReRcDAkXKTOGp18QIsZCfXDpngGuBckRcxZhrRA2f3RY9zxi9O
-         bGZwSgzVre4tdmcrUc0b3PiTSHeKw/KLCdmzNcfJIQMbZIt8iHojbq+nZCxkTBvVczvK
-         0xnVedFLlCFrleTiPkYxOieBIP5hv5Aj/8uhLzCF7vdtEG45VlTMQlgdu4Oksk2pbnT/
-         uR5A==
-X-Forwarded-Encrypted: i=1; AHgh+Rrvco0yXUwDXlhnfA7gDyfWELF3TbFli64+ipnhIBltyztCBc17WUTRQkAbZpZJZ6ZJy2TKiz24gTg=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxw7ZlB6WRN+dgrS/2pSzArlk1KeVIz7/ky7PfRDnDCkOa832sa
-	WxTT3IbFT4QQz0M4F0y4iP5qazMocqX4Z95fG4wAiBSY2EaVRIxiozjpRXPgL46IyA==
-X-Gm-Gg: AR+sD13C6iwQfvXidVx77TkZ+sc3cjSmpxiK6nnhjGaz+Nl07wt4kbvcTshFeHmejtE
-	UM1Y1F7H5D+uPJ6V2Vfw2drrGvGiMtFL/osk9kIo1RdDp/UfIZb+r56cFGYzLjdiSB4pAAxXyNM
-	GdfJ7IrNtHMowd2rYEcLXu6HBzG9Xf4cl//1SqNhO1iAws5w0XAlgHjBysN43VruTSqHRFnkGcf
-	CK0CyakUN9h410GIs9epX52JYEVNycJixmQiYk+rvQuVQqgKcK+4j/lyp8MilEG1OJAe7iKxhKc
-	joxgJoEpu/l3d39me3T8iaQjp7WzFK9wGMfkhnzmAEwZJqbJ3npVnGRhnLIAgALQFWjhIz0B5Qf
-	7rRdLCTbYa5TmfUWg+GvfjP+E49NeqtvkQ4EsbC9ZDeOWbabIPCxQL7sBWsilF8Gsf0mU9ah2Gz
-	pfRcSrCXjbBGO6mnT3W/IJBshkbtRAhDJAbs/kNYoMytQD
-X-Received: by 2002:a17:907:d5a4:b0:c16:a484:90df with SMTP id a640c23a62f3a-c16b485513emr815970066b.35.1784733443140;
-        Wed, 22 Jul 2026 08:17:23 -0700 (PDT)
-Received: from google.com (152.118.155.104.bc.googleusercontent.com. [104.155.118.152])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c1c32a78229sm131383566b.1.2026.07.22.08.17.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2026 08:17:22 -0700 (PDT)
-Date: Wed, 22 Jul 2026 15:17:19 +0000
-From: Adrian =?utf-8?Q?Barna=C5=9B?= <abarnas@google.com>
-To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Cc: linux-mm@kvack.org, Albert Ou <aou@eecs.berkeley.edu>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Brendan Jackman <jackmanb@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Hildenbrand <david@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Kevin Brodsky <kevin.brodsky@arm.com>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Lorenzo Stoakes <ljs@kernel.org>, Michal Hocko <mhocko@suse.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <pjw@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Vlastimil Babka <vbabka@kernel.org>, Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, loongarch@lists.linux.dev,
-	x86@kernel.org, Dave Hansen <dave.hansen@intel.com>,
-	Juergen Gross <jgross@suse.com>
-Subject: Re: [PATCH RFC 00/18] arch, mm: create a generic
- set_memory/change_page_attr core
-Message-ID: <amDe_3KFBc9CcIbo@google.com>
-References: <20260721-generic-set-memory-v0-1-v1-0-2c1fc62306b3@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EiSY9JuH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1784733493; x=1816269493;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=eIJCq0U0nvzWtAAiZhSd0Lkda2QdVkytVVFdCRV0V4Q=;
+  b=EiSY9JuHAfHyy0ZtuUSMtCoT5PHI3PiiinuZ7p0ewsDMVeN6SlMMkwkP
+   L8ZXAH6YljNAdM3MqAjYhgI+ep0m8TxqC+K7DkAPa3E7DQKAxh42tfzZr
+   ImAunlj31w/e0IGPdDvm+joYRXhJajgD3TD07h4JJUlb++k8zXTxz8lZU
+   vCQYSv3eIC8oLlbBitDw4fm69yLJ2JKgWtZA2MiUiH1UkjyTv7GPv+lKv
+   wxHbKZLdJHvDktaIq6z+cVPj6ttq6zvOEX9i0yaBLiSQHw7rRD3EvW5JV
+   mLNnwksMivieLtCLu8+ZpGxfRF+iWS10oK5kTm5/uK93/zsoPC0lAat+2
+   w==;
+X-CSE-ConnectionGUID: guMfFC4VRW+Sv307/AKLbw==
+X-CSE-MsgGUID: etJ9ayvqRD+p1oOImeVVJg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11854"; a="102920097"
+X-IronPort-AV: E=Sophos;i="6.25,178,1779174000"; 
+   d="scan'208";a="102920097"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2026 08:18:12 -0700
+X-CSE-ConnectionGUID: hLa2fyDLSsyVnjwP3QieRw==
+X-CSE-MsgGUID: XxCvddLSRgOcXJMGgzV5yQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,178,1779174000"; 
+   d="scan'208";a="282641187"
+Received: from guptapa-desk.jf.intel.com (HELO desk) ([10.165.239.46])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2026 08:18:12 -0700
+Date: Wed, 22 Jul 2026 08:18:03 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>, 
+	bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, x86@kernel.org, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: [PATCH 6.16.y 0/6] cBPF JIT spray hardening
+Message-ID: <gymgr5t5ocl3v5gykum2xlb5u3jhejmurgnodca534i6lih5q4@n7e6n3qf7szu>
+References: <20260714-cbpf-jit-spray-hardening-6-16-y-v1-0-2fc3e16263ac@linux.intel.com>
+ <2026072151-outsell-suburb-64ea@gregkh>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260721-generic-set-memory-v0-1-v1-0-2c1fc62306b3@kernel.org>
+In-Reply-To: <2026072151-outsell-suburb-64ea@gregkh>
 
-On Tue, Jul 21, 2026 at 07:23:23PM +0300, Mike Rapoport (Microsoft) wrote:
+On Tue, Jul 21, 2026 at 03:08:11PM +0200, Greg Kroah-Hartman wrote:
+> On Tue, Jul 14, 2026 at 11:58:24AM -0700, Pawan Gupta wrote:
+> > Hi,
+> > 
+> > These backports harden BPF JIT against spectre-v2 class of attacks. Without
+> > a predictor flush, execution of new BPF program may use stale prediction
+> > left behind by the freed one.
+> > 
+> > To avoid this, issue an IBPB flush on all CPUs on JIT program allocation.
+> > The flush is conditional to spectre-v2 mitigation applied.
+> > 
+> > Patch 1-2: Adds the predictor flush hook and enables it on x86 via IBPB.
+> > 
+> > 	  bpf: Support for hardening against JIT spraying
+> > 	  x86/bugs: Enable IBPB flush on BPF JIT allocation
+> > 
+> > Patch 3-6: Narrow the flush to only unprivileged JIT allocations
+> > 	   to avoid redundant flushes. Also adds pack-selection changes
+> > 	   that minimizes flushes.
+> > 
+> > 	  bpf: Restrict JIT predictor flush to cBPF
+> > 	  bpf: Skip redundant IBPB in pack allocator
+> > 	  bpf: Prefer packs that won't trigger an IBPB flush on allocation
+> > 	  bpf: Prefer dirty packs for eBPF allocations
+> > 
+> > This one is mostly similar to 6.18:
+> > 
+> >   https://lore.kernel.org/all/20260713-cbpf-jit-spray-hardening-6-18-y-v1-0-755f60c55705@linux.intel.com/
+> 
+> There is no active 6.16.y kernel branch, so why is this being sent to
+> us?
 
-Hi Mike,
-
->Once this settles, the next step I'm planning is to convert arm64. This
->would be much more involved than loongarch and riscv together, so I
->didn't even aspire to include arm64 in the first RFC. That said, I have
->a very ugly arm64 prototype that rewrites arch/arm64/pageattr.c to use
->the generic CPA infrastructure and replaces the existing implementation
->of page table splits for systems that support bbml2. But there's a lot
->of yak shaving there to get from a PoC to actual patches.
-
-Could you share your PoC for ARM64. I can help you with that and align my 
-execmem rox cache for ARM64  changes to the desired shape of this API.    
-
-Best regards,
-Adrian
+Sorry that was a mistake. I had an old 6.16.y worktree in my machine and I
+assumed it was still active. Please ignore.
