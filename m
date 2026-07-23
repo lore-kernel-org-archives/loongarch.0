@@ -1,42 +1,74 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from relay2-g.mailbaby.net (relay2-g.mailbaby.net [68.168.211.162])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29D4E46AF03
-	for <loongarch@lists.linux.dev>; Thu, 23 Jul 2026 11:16:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67C8543CE7B
+	for <loongarch@lists.linux.dev>; Thu, 23 Jul 2026 12:25:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.168.211.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784805384; cv=none; b=K0MyrQQc1m7oQOa/yH5it1kIt0q9/3Ny3aelNuXXQeMBtbtwUb25xl4C7dImpNj8xdccJ3E4FQjbzvxUdGa+wM+VnRtS+UU+TlKgLj/yPsUdth6EF9ZEWQGO68bSUIhtElBgDzSXJ42egXgnop9lfPERrgoJUuuOSCFFTcHiLas=
+	t=1784809557; cv=none; b=uvqh/ST8G8zcxVTVLiSbz7hTV1ojU7F2a16dfQctxoGKhSF8qoTiJiUMpEGsAGyu9qxyIViBGRK2Uocz7Hj3XSowhFITZ8d1EydiuZIOnaHEJPaNYE/dG2Wq57yCfo7e8j7AsOJtAfuLjW0FwnhRkyNitdxewAOB52T6FLXfOH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784805384; c=relaxed/simple;
-	bh=BXHfDBkLjwk/p9tPeFmqdKMra6gUzMwV0Qp1he+QsWk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gExSrxenjJY8HVvfFxg61R907dlVGtUJKrGLt4cZWriVvExQRuQWeaTm28HG1cxcPCSPKyaDuy0GSNKcKCNH4UffmKRQ9dMJ0bv0NsIML7XCdQajt9X+Nxuwr2LIEi5amej5eOhF58/6pD3C8tYppM4zNbTyfGW/SV6wQXaU5ks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=V8Z54e7C; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1784809557; c=relaxed/simple;
+	bh=FBLCbbYxVg9bN2I/QJieY7weejpM20hbOF4DGCBW0Xg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HjR3tcfFoZoye2z9ZiIIqdBMA3mAkxeMAWwNzTXXzq1JoGcgxYoiEEEeEmEimONHZsmlTQ5Ntl58oMCXl9Ue9i//XKf0OTDzw39oyFsPCl0HLXQIq1YbGu1vlj5xvbVsDwxaWCL+N1i6fcynnFNbRzO+eVdaPGrAv4iGlbO2Jvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=mailbaby.net header.i=@mailbaby.net header.b=eAVzlLI+; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=tRZKOONG; arc=none smtp.client-ip=68.168.211.162
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aosc.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="V8Z54e7C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=GK
-	ZRI4b2nI9B4m6WAsZUHWrKS9FQXYqlTvwRckczEkk=; b=V8Z54e7CEHrNs+R9em
-	gEtu3w40tFqfcjQyF3Q2Vd+PH4/rWIPYh/5uyffBxkJ+AEg6IQhmmGFqmFFRCZXM
-	2CQQtFVf77ft0YrOk/qNZaUNrRWnrZkRb8HCzHO9KhFSvjMsXygCPrzSEV5/L/lT
-	HXiUldJjUE5cNjYawDLWhF8iA=
-Received: from zengchi (unknown [])
-	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wBXL9v392Fq4JzILA--.10535S2;
-	Thu, 23 Jul 2026 19:16:07 +0800 (CST)
-From: Zeng Chi <zeng_chi911@163.com>
-To: zhaotianrui@loongson.cn,
-	maobibo@loongson.cn,
-	chenhuacai@kernel.org,
-	kernel@xen0n.name
-Cc: kvm@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=mailbaby.net header.i=@mailbaby.net header.b="eAVzlLI+";
+	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="tRZKOONG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbaby.net;
+ q=dns/txt; s=bambino; bh=A81Ouq2PDfiZ94aINMnRYhsDKQkNXOpshNpqe6HlYN4=;
+ h=from:subject:date:message-id:to:cc:mime-version:content-transfer-encoding:feedback-id;
+ b=eAVzlLI+5tnOQePzC6i8NeLk5jXqTn+IUq+RRQhUz/rm8EUufcGLoiVXjPyglHwcIhxhoMntY
+ p8FeFn4eWpCCt4VE5qc2TYqIqK8MyUZB1UG9IhwIsCCqY+zN7jCFTqi8wD8x46IPF0i9+r5UOvg
+ f+u+Yf6Alsot/MR4yNfxGaY=
+Received: from mb-nj-kvm1.internal (mb-nj-kvm1.internal [10.10.2.10])
+ (Authenticated sender: mb86144)
+ by relay2-g.mailbaby.net (MailBabyMTA) with ESMTPSA id 19f8eeba604000520b.001
+ for <loongarch@lists.linux.dev>
+ (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+ Thu, 23 Jul 2026 12:20:35 +0000
+X-Zone-Loop: f9fd86bbb5a899ea6d6badac2da3c1384b8146836432
+X-MB-ID: mb86144
+X-SPF: pass
+Feedback-ID: mb86144:19f8ee:587f4d465843594778405947455d:mbaby
+X-MAILBABY-ORIGIN: PASS
+Received: from relay1.mymailcheap.com (relay1.mymailcheap.com [149.56.97.132])
+	by relay5.mymailcheap.com (Postfix) with ESMTPS id A29DB200C0
+	for <loongarch@lists.linux.dev>; Thu, 23 Jul 2026 12:20:26 +0000 (UTC)
+Received: from nf2.mymailcheap.com (nf2.mymailcheap.com [54.39.180.165])
+	by relay1.mymailcheap.com (Postfix) with ESMTPS id 0012C3E904;
+	Thu, 23 Jul 2026 12:20:18 +0000 (UTC)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+	by nf2.mymailcheap.com (Postfix) with ESMTPSA id 5EE1940085;
+	Thu, 23 Jul 2026 12:20:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+	t=1784809217; bh=FBLCbbYxVg9bN2I/QJieY7weejpM20hbOF4DGCBW0Xg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=tRZKOONGOPZek3mTUraSJC73qRgKKIY+BnHU4QHz8qOgQ2XJfMGqXpXOjF2cXfrBq
+	 eCsboL4oTYaJa2jzVWquZqf7WhaY9JW7DLZnEYupOVLPhHnlm7w1sC75MYmuOltjMz
+	 aVP7LqYGUS3c/yCIu1JrAzwnoK1lh8LOIssoZEQ0=
+Received: from liushuyu-p15 (unknown [111.4.16.59])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail20.mymailcheap.com (Postfix) with ESMTPSA id E221040AAA;
+	Thu, 23 Jul 2026 12:20:13 +0000 (UTC)
+From: Zixing Liu <liushuyu@aosc.io>
+To: linux-kernel@vger.kernel.org,
+	Yao Zi <ziyao@disroot.org>,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: Kexy Biscuit <kexybiscuit@aosc.io>,
+	Mingcong Bai <jeffbai@aosc.io>,
 	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	zengchi@kylinos.cn
-Subject: [PATCH 2/2] KVM: LoongArch: selftests: Add in-kernel MMIO read fast path test
-Date: Thu, 23 Jul 2026 19:16:05 +0800
-Message-Id: <20260723111605.1630027-1-zeng_chi911@163.com>
-X-Mailer: git-send-email 2.25.1
+	Zixing Liu <liushuyu@aosc.io>,
+	stable@vger.kernel.org
+Subject: [PATCH v2] platform/loongarch: laptop: explicitly reset the bl_powered state when resuming
+Date: Thu, 23 Jul 2026 20:18:39 +0800
+Message-ID: <20260723121840.1120953-2-liushuyu@aosc.io>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -44,145 +76,63 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wBXL9v392Fq4JzILA--.10535S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxGFy5CFyxCw1UKr1UXFy7KFg_yoWrZFWxpa
-	y0kw1Yyr48Gr17Gr1xGws8uw4fKrs5JF4xXFn3XryS9r45JF9YqF1xKas7Xa43K3yFqr1a
-	va48GF1Y93WDJaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jerWrUUUUU=
-X-CM-SenderInfo: 52hqws5fklmiqr6rljoofrz/xtbCwBgv6mph9-jVRQAA3J
+X-Rspamd-Queue-Id: 5EE1940085
+X-Rspamd-Server: nf2.mymailcheap.com
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [1.20 / 10.00];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.10)[aosc.io:s=default];
+	R_SPF_ALLOW(-0.10)[+mx];
+	MIME_GOOD(-0.10)[text/plain];
+	LOCAL_OUTBOUND(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_ONE(0.00)[1];
+	TO_DN_SOME(0.00)[];
+	DMARC_POLICY_ALLOW(0.00)[aosc.io,quarantine];
+	FROM_HAS_DN(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	DKIM_TRACE(0.00)[aosc.io:+];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[]
 
-From: Zeng Chi <zengchi@kylinos.cn>
+On EAECIS NL60R with EC firmware version 1.11, resuming from S3 has a very
+high chance (>= 90%) of causing the EC to lose the previous backlight
+power state. When this happens, the laptop resumes normally from S3, but
+the backlight remains off (when shining on the screen with a flash light,
+we can see the screen contents are updating normally).
 
-Add a test that exercises the in-kernel MMIO read fast path of
-kvm_emu_mmio_read(). The guest performs an MMIO read from an in-kernel
-emulated PCH-PIC, immediately followed by a marker instruction, and the
-test verifies that the marker instruction is executed, i.e. that the PC
-advances by exactly one instruction instead of skipping the instruction
-after the MMIO read.
+Since there is no generic way to query the EC's backlight state on
+Loongson laptop platforms, assume the worst-case scenario and restart the
+backlight power inside the kernel each time the system resumes.
 
-The test skips gracefully when the host KVM cannot create a PCH-PIC
-device.
-
-Signed-off-by: Zeng Chi <zengchi@kylinos.cn>
+Cc: stable@vger.kernel.org
+Fixes: 53c762b47f72 ("platform/loongarch: laptop: Add backlight power control support")
+Signed-off-by: Zixing Liu <liushuyu@aosc.io>
 ---
- tools/testing/selftests/kvm/Makefile.kvm      |  3 +-
- .../selftests/kvm/loongarch/mmio_read_test.c  | 89 +++++++++++++++++++
- 2 files changed, 91 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/kvm/loongarch/mmio_read_test.c
+Changes in v2:
+- Move bl_powered reset logic to loongson_hotkey_suspend.
+- Link to v1: https://lore.kernel.org/loongarch/20260722044457.1333404-1-liushuyu@aosc.io/
 
-diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
-index 6fc34e9bf8e1..4daf90caaabc 100644
---- a/tools/testing/selftests/kvm/Makefile.kvm
-+++ b/tools/testing/selftests/kvm/Makefile.kvm
-@@ -228,7 +228,8 @@ TEST_GEN_PROGS_riscv += mmu_stress_test
- TEST_GEN_PROGS_riscv += rseq_test
- TEST_GEN_PROGS_riscv += steal_time
+---
+ drivers/platform/loongarch/loongson-laptop.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/platform/loongarch/loongson-laptop.c b/drivers/platform/loongarch/loongson-laptop.c
+index 61b18ac206c9..dc8142f4fa95 100644
+--- a/drivers/platform/loongarch/loongson-laptop.c
++++ b/drivers/platform/loongarch/loongson-laptop.c
+@@ -189,6 +189,7 @@ static int __init setup_acpi_notify(struct generic_sub_driver *sub_driver)
  
--TEST_GEN_PROGS_loongarch = loongarch/pmu_test
-+TEST_GEN_PROGS_loongarch = loongarch/mmio_read_test
-+TEST_GEN_PROGS_loongarch += loongarch/pmu_test
- TEST_GEN_PROGS_loongarch += arch_timer
- TEST_GEN_PROGS_loongarch += coalesced_io_test
- TEST_GEN_PROGS_loongarch += demand_paging_test
-diff --git a/tools/testing/selftests/kvm/loongarch/mmio_read_test.c b/tools/testing/selftests/kvm/loongarch/mmio_read_test.c
-new file mode 100644
-index 000000000000..7f64ca91ca8f
---- /dev/null
-+++ b/tools/testing/selftests/kvm/loongarch/mmio_read_test.c
-@@ -0,0 +1,89 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * LoongArch KVM in-kernel MMIO read fast path test
-+ *
-+ * When an MMIO read hits a device emulated inside KVM (such as the
-+ * PCH-PIC), kvm_emu_mmio_read() completes the access without returning
-+ * to user space and advances the guest PC by one instruction.
-+ *
-+ * This test issues such an in-kernel MMIO read immediately followed by
-+ * a marker instruction and checks that the marker instruction actually
-+ * runs, i.e. that the PC advanced by exactly one instruction (4 bytes)
-+ * rather than skipping the instruction after the MMIO read.
-+ */
-+#include "kvm_util.h"
-+#include "processor.h"
-+#include "test_util.h"
-+#include "loongarch/processor.h"
-+
-+/* Physical base the in-kernel PCH-PIC is mapped at (no memslot backs it) */
-+#define PCH_PIC_BASE		0x10000000UL
-+
-+static void guest_code(void)
-+{
-+	unsigned long marker = 0;
-+	unsigned int val = 0;
-+
-+	/*
-+	 * 'ld.w' faults out as an MMIO read and is emulated in kernel.
-+	 * The following 'addi.d' must execute; it is skipped if the MMIO
-+	 * read fast path advances the PC twice (by 8 instead of 4).
-+	 */
-+	asm volatile(
-+		"ld.w	%[val], %[base], 0\n\t"
-+		"addi.d	%[marker], %[marker], 1\n\t"
-+		: [val] "=&r" (val), [marker] "+&r" (marker)
-+		: [base] "r" (PCH_PIC_BASE)
-+		: "memory");
-+
-+	GUEST_PRINTF("mmio read val=0x%x, marker=%lu\n", val, marker);
-+	GUEST_ASSERT_EQ(marker, 1);
-+	GUEST_DONE();
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	struct kvm_vcpu *vcpu;
-+	struct kvm_vm *vm;
-+	struct ucall uc;
-+	uint64_t addr = PCH_PIC_BASE;
-+	int dev_fd;
-+
-+	vm = vm_create(VM_MODE_P47V47_16K);
-+	vcpu = vm_vcpu_add(vm, 0, guest_code);
-+
-+	/* Create the in-kernel PCH-PIC and map it at PCH_PIC_BASE */
-+	dev_fd = __kvm_create_device(vm, KVM_DEV_TYPE_LOONGARCH_PCHPIC);
-+	if (dev_fd < 0) {
-+		print_skip("PCH-PIC device not supported by host KVM");
-+		kvm_vm_free(vm);
-+		return KSFT_SKIP;
-+	}
-+	kvm_device_attr_set(dev_fd, KVM_DEV_LOONGARCH_PCH_PIC_GRP_CTRL,
-+			    KVM_DEV_LOONGARCH_PCH_PIC_CTRL_INIT, &addr);
-+	close(dev_fd);
-+
-+	/* Identity-map the MMIO page so the guest can reach the device */
-+	virt_map(vm, PCH_PIC_BASE, PCH_PIC_BASE, 1);
-+
-+	while (1) {
-+		vcpu_run(vcpu);
-+		switch (get_ucall(vcpu, &uc)) {
-+		case UCALL_PRINTF:
-+			pr_info("%s", uc.buffer);
-+			break;
-+		case UCALL_DONE:
-+			goto done;
-+		case UCALL_ABORT:
-+			REPORT_GUEST_ASSERT(uc);
-+			goto done;
-+		default:
-+			TEST_FAIL("Unexpected exit: %s",
-+				  exit_reason_str(vcpu->run->exit_reason));
-+		}
-+	}
-+
-+done:
-+	kvm_vm_free(vm);
-+	return 0;
-+}
+ static int loongson_hotkey_suspend(struct device *dev)
+ {
++	bl_powered = false;
+ 	return 0;
+ }
+ 
 -- 
-2.25.1
-
-
-No virus found
-		Checked by Hillstone Network AntiVirus
+2.55.0
 
