@@ -1,138 +1,408 @@
-Received: from relay2-g.mailbaby.net (relay2-g.mailbaby.net [68.168.211.162])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67C8543CE7B
-	for <loongarch@lists.linux.dev>; Thu, 23 Jul 2026 12:25:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.168.211.162
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53852265629;
+	Thu, 23 Jul 2026 12:45:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784809557; cv=none; b=uvqh/ST8G8zcxVTVLiSbz7hTV1ojU7F2a16dfQctxoGKhSF8qoTiJiUMpEGsAGyu9qxyIViBGRK2Uocz7Hj3XSowhFITZ8d1EydiuZIOnaHEJPaNYE/dG2Wq57yCfo7e8j7AsOJtAfuLjW0FwnhRkyNitdxewAOB52T6FLXfOH8=
+	t=1784810725; cv=none; b=W6UGEqIsiETD3mDZpfIL5/bPPd4rCHeqV7n96KJr6m7Ajf1FaLI0d4DkSs6EoKF2uYbBJb0XLlHmjKxKacFJ/l3h/DgrVl/DVK2MfrwtQGH/nYIDRir2970nhgIow0ISLeSFOgE6jjThaV197VNY8SjXKr7z9N42N6PPOEQJ5Xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784809557; c=relaxed/simple;
-	bh=FBLCbbYxVg9bN2I/QJieY7weejpM20hbOF4DGCBW0Xg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HjR3tcfFoZoye2z9ZiIIqdBMA3mAkxeMAWwNzTXXzq1JoGcgxYoiEEEeEmEimONHZsmlTQ5Ntl58oMCXl9Ue9i//XKf0OTDzw39oyFsPCl0HLXQIq1YbGu1vlj5xvbVsDwxaWCL+N1i6fcynnFNbRzO+eVdaPGrAv4iGlbO2Jvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=mailbaby.net header.i=@mailbaby.net header.b=eAVzlLI+; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=tRZKOONG; arc=none smtp.client-ip=68.168.211.162
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aosc.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailbaby.net header.i=@mailbaby.net header.b="eAVzlLI+";
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="tRZKOONG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbaby.net;
- q=dns/txt; s=bambino; bh=A81Ouq2PDfiZ94aINMnRYhsDKQkNXOpshNpqe6HlYN4=;
- h=from:subject:date:message-id:to:cc:mime-version:content-transfer-encoding:feedback-id;
- b=eAVzlLI+5tnOQePzC6i8NeLk5jXqTn+IUq+RRQhUz/rm8EUufcGLoiVXjPyglHwcIhxhoMntY
- p8FeFn4eWpCCt4VE5qc2TYqIqK8MyUZB1UG9IhwIsCCqY+zN7jCFTqi8wD8x46IPF0i9+r5UOvg
- f+u+Yf6Alsot/MR4yNfxGaY=
-Received: from mb-nj-kvm1.internal (mb-nj-kvm1.internal [10.10.2.10])
- (Authenticated sender: mb86144)
- by relay2-g.mailbaby.net (MailBabyMTA) with ESMTPSA id 19f8eeba604000520b.001
- for <loongarch@lists.linux.dev>
- (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Thu, 23 Jul 2026 12:20:35 +0000
-X-Zone-Loop: f9fd86bbb5a899ea6d6badac2da3c1384b8146836432
-X-MB-ID: mb86144
-X-SPF: pass
-Feedback-ID: mb86144:19f8ee:587f4d465843594778405947455d:mbaby
-X-MAILBABY-ORIGIN: PASS
-Received: from relay1.mymailcheap.com (relay1.mymailcheap.com [149.56.97.132])
-	by relay5.mymailcheap.com (Postfix) with ESMTPS id A29DB200C0
-	for <loongarch@lists.linux.dev>; Thu, 23 Jul 2026 12:20:26 +0000 (UTC)
-Received: from nf2.mymailcheap.com (nf2.mymailcheap.com [54.39.180.165])
-	by relay1.mymailcheap.com (Postfix) with ESMTPS id 0012C3E904;
-	Thu, 23 Jul 2026 12:20:18 +0000 (UTC)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf2.mymailcheap.com (Postfix) with ESMTPSA id 5EE1940085;
-	Thu, 23 Jul 2026 12:20:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-	t=1784809217; bh=FBLCbbYxVg9bN2I/QJieY7weejpM20hbOF4DGCBW0Xg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=tRZKOONGOPZek3mTUraSJC73qRgKKIY+BnHU4QHz8qOgQ2XJfMGqXpXOjF2cXfrBq
-	 eCsboL4oTYaJa2jzVWquZqf7WhaY9JW7DLZnEYupOVLPhHnlm7w1sC75MYmuOltjMz
-	 aVP7LqYGUS3c/yCIu1JrAzwnoK1lh8LOIssoZEQ0=
-Received: from liushuyu-p15 (unknown [111.4.16.59])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id E221040AAA;
-	Thu, 23 Jul 2026 12:20:13 +0000 (UTC)
-From: Zixing Liu <liushuyu@aosc.io>
-To: linux-kernel@vger.kernel.org,
-	Yao Zi <ziyao@disroot.org>,
-	Jianmin Lv <lvjianmin@loongson.cn>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: Kexy Biscuit <kexybiscuit@aosc.io>,
-	Mingcong Bai <jeffbai@aosc.io>,
-	loongarch@lists.linux.dev,
-	Zixing Liu <liushuyu@aosc.io>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] platform/loongarch: laptop: explicitly reset the bl_powered state when resuming
-Date: Thu, 23 Jul 2026 20:18:39 +0800
-Message-ID: <20260723121840.1120953-2-liushuyu@aosc.io>
-X-Mailer: git-send-email 2.55.0
+	s=arc-20240116; t=1784810725; c=relaxed/simple;
+	bh=qkSNxqQydAUDO3QKDANudnrhaibr2+P6r42fvBadoKE=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=dFVPB80F2jIxPV2W2aGpt53aqKuX8C6JywhrtLsu1xC6aNu68MnlyUGDfHPI8VS7+/jx7TL4UI9c9KIrvR8gqi6mFuZzSHdFu97dYV5mO8kBb9Jis224wZbVpGwYEojtYNXcFDmspYFdiGbM76qusTFgTM2IoD+66JiRXJo/UAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8Dx9+rYDGJq83wGAA--.24500S3;
+	Thu, 23 Jul 2026 20:45:12 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJAxTsXWDGJqjEYWAA--.51964S2;
+	Thu, 23 Jul 2026 20:45:12 +0800 (CST)
+Subject: Re: [PATCH v2 2/4] ACPI: LoongArch: Add IOVT device entry table
+ scanning
+To: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Len Brown <lenb@kernel.org>,
+ Saket Dumbre <saket.dumbre@intel.com>, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-acpi@vger.kernel.org,
+ acpica-devel@lists.linux.dev, lixianglai@loongson.cn
+References: <20260717063713.3638059-1-maobibo@loongson.cn>
+ <20260717063713.3638059-3-maobibo@loongson.cn>
+ <CAJZ5v0iN6qP0WMXRoC5AXTN8RLG=ZQpnen_2HbbAXvTx=0jfVQ@mail.gmail.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <e8530063-65ad-c9cd-64d5-6d82baa53ad0@loongson.cn>
+Date: Thu, 23 Jul 2026 20:44:59 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <CAJZ5v0iN6qP0WMXRoC5AXTN8RLG=ZQpnen_2HbbAXvTx=0jfVQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 5EE1940085
-X-Rspamd-Server: nf2.mymailcheap.com
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [1.20 / 10.00];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.10)[aosc.io:s=default];
-	R_SPF_ALLOW(-0.10)[+mx];
-	MIME_GOOD(-0.10)[text/plain];
-	LOCAL_OUTBOUND(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_ONE(0.00)[1];
-	TO_DN_SOME(0.00)[];
-	DMARC_POLICY_ALLOW(0.00)[aosc.io,quarantine];
-	FROM_HAS_DN(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	DKIM_TRACE(0.00)[aosc.io:+];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[]
+X-CM-TRANSID:qMiowJAxTsXWDGJqjEYWAA--.51964S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWfGFWDtry3JF4UXF47GF4UGFX_yoWDAF4UpF
+	WkCFW7GF4xJr4xGr1jqr98uFZxtws2kFy29ryrKa4jkF4qkryrAFWxtFy3ua4kA39rua1I
+	vF1jgrnrKF4qy3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GF
+	ylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-
+	e5UUUUU==
 
-On EAECIS NL60R with EC firmware version 1.11, resuming from S3 has a very
-high chance (>= 90%) of causing the EC to lose the previous backlight
-power state. When this happens, the laptop resumes normally from S3, but
-the backlight remains off (when shining on the screen with a flash light,
-we can see the screen contents are updating normally).
 
-Since there is no generic way to query the EC's backlight state on
-Loongson laptop platforms, assume the worst-case scenario and restart the
-backlight power inside the kernel each time the system resumes.
 
-Cc: stable@vger.kernel.org
-Fixes: 53c762b47f72 ("platform/loongarch: laptop: Add backlight power control support")
-Signed-off-by: Zixing Liu <liushuyu@aosc.io>
----
-Changes in v2:
-- Move bl_powered reset logic to loongson_hotkey_suspend.
-- Link to v1: https://lore.kernel.org/loongarch/20260722044457.1333404-1-liushuyu@aosc.io/
+On 2026/7/22 上午3:09, Rafael J. Wysocki (Intel) wrote:
+> On Fri, Jul 17, 2026 at 8:44 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>
+>> Similar with acpi_arch_init()/acpi_arch_late_init(), here function
+>> acpi_iovt_init()/acpi_iovt_late_init() is added. Function
+>> acpi_iovt_init() is to enable PCI ACS function if IOMMU device exists
+>> in IOVT table, and function acpi_iovt_late_init() is to scan IOVT
+>> table, add IOMMU devices.
+>>
+>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>> ---
+>>   drivers/acpi/Kconfig            |   4 +
+>>   drivers/acpi/loongarch/Kconfig  |   7 +
+>>   drivers/acpi/loongarch/Makefile |   1 +
+>>   drivers/acpi/loongarch/init.c   |   5 +
+>>   drivers/acpi/loongarch/init.h   |   5 +
+>>   drivers/acpi/loongarch/iovt.c   | 219 ++++++++++++++++++++++++++++++++
+>>   include/acpi/actbl2.h           |   3 +
+> 
+> The actbl2.h change should go through upstream ACPICA, shouldn't it?
+yes, will update these macro definitions in upstream ACPICA firstly.
 
----
- drivers/platform/loongarch/loongson-laptop.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/platform/loongarch/loongson-laptop.c b/drivers/platform/loongarch/loongson-laptop.c
-index 61b18ac206c9..dc8142f4fa95 100644
---- a/drivers/platform/loongarch/loongson-laptop.c
-+++ b/drivers/platform/loongarch/loongson-laptop.c
-@@ -189,6 +189,7 @@ static int __init setup_acpi_notify(struct generic_sub_driver *sub_driver)
- 
- static int loongson_hotkey_suspend(struct device *dev)
- {
-+	bl_powered = false;
- 	return 0;
- }
- 
--- 
-2.55.0
+Regards
+Bibo Mao
+> 
+>>   7 files changed, 244 insertions(+)
+>>   create mode 100644 drivers/acpi/loongarch/Kconfig
+>>   create mode 100644 drivers/acpi/loongarch/init.h
+>>   create mode 100644 drivers/acpi/loongarch/iovt.c
+>>
+>> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
+>> index f165d14cf61a..192e6f18eda1 100644
+>> --- a/drivers/acpi/Kconfig
+>> +++ b/drivers/acpi/Kconfig
+>> @@ -550,6 +550,10 @@ if ARM64
+>>   source "drivers/acpi/arm64/Kconfig"
+>>   endif
+>>
+>> +if LOONGARCH
+>> +source "drivers/acpi/loongarch/Kconfig"
+>> +endif
+>> +
+>>   if RISCV
+>>   source "drivers/acpi/riscv/Kconfig"
+>>   endif
+>> diff --git a/drivers/acpi/loongarch/Kconfig b/drivers/acpi/loongarch/Kconfig
+>> new file mode 100644
+>> index 000000000000..91ba3c35b9bf
+>> --- /dev/null
+>> +++ b/drivers/acpi/loongarch/Kconfig
+>> @@ -0,0 +1,7 @@
+>> +# SPDX-License-Identifier: GPL-2.0-only
+>> +#
+>> +# ACPI Configuration for LOONGARCH
+>> +#
+>> +
+>> +config ACPI_IOVT
+>> +       bool
+>> diff --git a/drivers/acpi/loongarch/Makefile b/drivers/acpi/loongarch/Makefile
+>> index d3764139dfaf..c338d3102fc1 100644
+>> --- a/drivers/acpi/loongarch/Makefile
+>> +++ b/drivers/acpi/loongarch/Makefile
+>> @@ -1,2 +1,3 @@
+>>   # SPDX-License-Identifier: GPL-2.0-only
+>>   obj-y                                  += init.o
+>> +obj-$(CONFIG_ACPI_IOVT)                        += iovt.o
+>> diff --git a/drivers/acpi/loongarch/init.c b/drivers/acpi/loongarch/init.c
+>> index b11aa5c7d928..e7272ee197c7 100644
+>> --- a/drivers/acpi/loongarch/init.c
+>> +++ b/drivers/acpi/loongarch/init.c
+>> @@ -1,11 +1,16 @@
+>>   // SPDX-License-Identifier: GPL-2.0-only
+>>
+>>   #include <linux/acpi.h>
+>> +#include "init.h"
+>>
+>>   void __init acpi_arch_init(void)
+>>   {
+>> +       if (IS_ENABLED(CONFIG_ACPI_IOVT))
+>> +               acpi_iovt_init();
+>>   }
+>>
+>>   void __init acpi_arch_late_init(void)
+>>   {
+>> +       if (IS_ENABLED(CONFIG_ACPI_IOVT))
+>> +               acpi_iovt_late_init();
+>>   }
+>> diff --git a/drivers/acpi/loongarch/init.h b/drivers/acpi/loongarch/init.h
+>> new file mode 100644
+>> index 000000000000..85e5197553ad
+>> --- /dev/null
+>> +++ b/drivers/acpi/loongarch/init.h
+>> @@ -0,0 +1,5 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> +#include <linux/init.h>
+>> +
+>> +void __init acpi_iovt_init(void);
+>> +void __init acpi_iovt_late_init(void);
+>> diff --git a/drivers/acpi/loongarch/iovt.c b/drivers/acpi/loongarch/iovt.c
+>> new file mode 100644
+>> index 000000000000..fb384664ba78
+>> --- /dev/null
+>> +++ b/drivers/acpi/loongarch/iovt.c
+>> @@ -0,0 +1,219 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +
+>> +#include <linux/acpi.h>
+>> +#include <linux/pci.h>
+>> +#include "init.h"
+>> +
+>> +struct iovt_device_entry {
+>> +       struct list_head list;
+>> +       int start_devid;
+>> +       int end_devid;
+>> +};
+>> +
+>> +struct iovt_fwnode {
+>> +       struct list_head list;
+>> +       struct fwnode_handle *fwnode;
+>> +       int flag;
+>> +       int segment;
+>> +       int devid;
+>> +       int nid;
+>> +       struct list_head ep_list;
+>> +};
+>> +
+>> +/* Root pointer to the mapped IOVT table */
+>> +static LIST_HEAD(iovt_fwnode_list);
+>> +static DEFINE_SPINLOCK(iovt_fwnode_lock);
+>> +
+>> +#ifdef CONFIG_PCI
+>> +static void __init iovt_enable_acs(struct acpi_iovt_iommu *iommu)
+>> +{
+>> +       static bool acs_enabled __initdata;
+>> +
+>> +       if (acs_enabled)
+>> +               return;
+>> +
+>> +       /* IOMMU V1 only supports PCI device management */
+>> +       if ((iommu->header.type == ACPI_IOVT_IOMMU_V1) ||
+>> +               (iommu->flags & (ACPI_IOVT_PCI_DEVICE | ACPI_IOVT_MAGAGE_BY_SEGMENT))) {
+>> +               pci_request_acs();
+>> +               acs_enabled = true;
+>> +       }
+>> +}
+>> +#else
+>> +static inline void iovt_enable_acs(struct acpi_iovt_iommu *iommu) { }
+>> +#endif
+>> +
+>> +static int __init iovt_get_pci_iommu_fwnode(struct iovt_fwnode *np, u16 segment, u16 bdf)
+>> +{
+>> +       struct pci_dev *pdev;
+>> +       struct fwnode_handle *fwnode;
+>> +
+>> +       pdev = pci_get_domain_bus_and_slot(segment, PCI_BUS_NUM(bdf), bdf & 0xff);
+>> +       if (!pdev) {
+>> +               pr_err("No PCI IOMMU found for segment 0x%x bdf 0x%x\n", segment, bdf);
+>> +               return -ENODEV;
+>> +       }
+>> +
+>> +       fwnode = dev_fwnode(&pdev->dev);
+>> +       if (!fwnode) {
+>> +               /*
+>> +                * PCI devices aren't necessarily described by ACPI. Create a
+>> +                * fwnode so the IOMMU subsystem can identify this device.
+>> +                */
+>> +               fwnode = acpi_alloc_fwnode_static();
+>> +               if (!fwnode) {
+>> +                       pci_dev_put(pdev);
+>> +                       return -ENOMEM;
+>> +               }
+>> +               set_primary_fwnode(&pdev->dev, fwnode);
+>> +       }
+>> +
+>> +       np->fwnode = dev_fwnode(&pdev->dev);
+>> +       if (np->flag & ACPI_IOVT_PXM_VALID)
+>> +               set_dev_node(&pdev->dev, np->nid);
+>> +       pci_dev_put(pdev);
+>> +       return 0;
+>> +}
+>> +
+>> +static int __init iovt_add_iommu(struct acpi_iovt_iommu *iommu)
+>> +{
+>> +       struct iovt_fwnode *np;
+>> +       struct fwnode_handle *fwnode;
+>> +       struct acpi_iovt_device_entry *ep;
+>> +       struct iovt_device_entry *entry;
+>> +       int i, ret, start_devid;
+>> +       bool is_start = false;
+>> +
+>> +       np = kzalloc_obj(struct iovt_fwnode, GFP_ATOMIC);
+>> +       if (WARN_ON(!np))
+>> +               return -ENOMEM;
+>> +
+>> +       INIT_LIST_HEAD(&np->list);
+>> +       np->flag = iommu->flags;
+>> +       np->segment = iommu->segment;
+>> +       if (np->flag & ACPI_IOVT_PXM_VALID)
+>> +               np->nid = pxm_to_node(iommu->proximity_domain);
+>> +
+>> +       if (np->flag & ACPI_IOVT_PCI_DEVICE) {
+>> +               np->devid = iommu->device_id;
+>> +               ret = iovt_get_pci_iommu_fwnode(np, np->segment, np->devid);
+>> +               if (ret) {
+>> +                       kfree(np);
+>> +                       return ret;
+>> +               }
+>> +
+>> +       } else {
+>> +               fwnode = acpi_alloc_fwnode_static();
+>> +               if (!fwnode) {
+>> +                       kfree(np);
+>> +                       return -ENOMEM;
+>> +               }
+>> +
+>> +               np->fwnode = fwnode;
+>> +       }
+>> +
+>> +       /* All devices in the segment are managed by this IOMMU */
+>> +       if (np->flag & ACPI_IOVT_MAGAGE_BY_SEGMENT)
+>> +               goto skip;
+>> +
+>> +       INIT_LIST_HEAD(&np->ep_list);
+>> +       ep = ACPI_ADD_PTR(struct acpi_iovt_device_entry, iommu, iommu->device_entry_offset);
+>> +       for (i = 0; i < iommu->device_entry_num; i++) {
+>> +               switch (ep->type) {
+>> +               case ACPI_IOVT_DEVICE_ENTRY_START:
+>> +                       is_start = true;
+>> +                       start_devid = ep->device_id;
+>> +                       break;
+>> +               case ACPI_IOVT_DEVICE_ENTRY_END:
+>> +                       if (!is_start)
+>> +                               break;
+>> +
+>> +                       entry = kzalloc_obj(struct iovt_device_entry, GFP_ATOMIC);
+>> +                       if (!entry)
+>> +                               return -ENOMEM;
+>> +
+>> +                       entry->start_devid = start_devid;
+>> +                       entry->end_devid = ep->device_id;
+>> +                       list_add_tail(&entry->list, &np->ep_list);
+>> +                       is_start = false;
+>> +                       break;
+>> +               case ACPI_IOVT_DEVICE_ENTRY_SINGLE:
+>> +                       entry = kzalloc_obj(struct iovt_device_entry, GFP_ATOMIC);
+>> +                       if (!entry)
+>> +                               return -ENOMEM;
+>> +
+>> +                       entry->start_devid = ep->device_id;
+>> +                       entry->end_devid = ep->device_id;
+>> +                       list_add_tail(&entry->list, &np->ep_list);
+>> +                       is_start = false;
+>> +                       break;
+>> +               default:
+>> +                       break;
+>> +               }
+>> +               ep = ACPI_ADD_PTR(struct acpi_iovt_device_entry, ep, ep->length);
+>> +       }
+>> +
+>> +skip:
+>> +       spin_lock(&iovt_fwnode_lock);
+>> +       list_add_tail(&np->list, &iovt_fwnode_list);
+>> +       spin_unlock(&iovt_fwnode_lock);
+>> +       return 0;
+>> +}
+>> +
+>> +static void __init iovt_init_devices(struct acpi_table_header *header)
+>> +{
+>> +       struct acpi_iovt_iommu *iommu;
+>> +       struct acpi_table_iovt *iovt;
+>> +       int i;
+>> +
+>> +       /* Get the first IOVT node */
+>> +       iovt = (struct acpi_table_iovt *)header;
+>> +       iommu = ACPI_ADD_PTR(struct acpi_iovt_iommu, iovt, iovt->iommu_offset);
+>> +       for (i = 0; i < iovt->iommu_count; i++) {
+>> +               iovt_add_iommu(iommu);
+>> +               iommu = ACPI_ADD_PTR(struct acpi_iovt_iommu, iommu, iommu->header.length);
+>> +       }
+>> +}
+>> +
+>> +void __init acpi_iovt_init(void)
+>> +{
+>> +       acpi_status status;
+>> +       struct acpi_table_header *hdr;
+>> +       struct acpi_table_iovt *iovt;
+>> +       struct acpi_iovt_iommu *iommu;
+>> +       int i;
+>> +
+>> +       status = acpi_get_table(ACPI_SIG_IOVT, 0, &hdr);
+>> +       if (ACPI_FAILURE(status)) {
+>> +               if (status != AE_NOT_FOUND)
+>> +                       pr_err("Failed to get table, %s\n", acpi_format_exception(status));
+>> +
+>> +               return;
+>> +       }
+>> +
+>> +       iovt = (struct acpi_table_iovt *)&hdr;
+>> +       iommu = ACPI_ADD_PTR(struct acpi_iovt_iommu, iovt, iovt->iommu_offset);
+>> +       for (i = 0; i < iovt->iommu_count; i++) {
+>> +               iovt_enable_acs(iommu);
+>> +               iommu = ACPI_ADD_PTR(struct acpi_iovt_iommu, iommu, iommu->header.length);
+>> +       }
+>> +
+>> +       acpi_put_table(hdr);
+>> +}
+>> +
+>> +void __init acpi_iovt_late_init(void)
+>> +{
+>> +       acpi_status status;
+>> +       struct acpi_table_header *hdr;
+>> +
+>> +       status = acpi_get_table(ACPI_SIG_IOVT, 0, &hdr);
+>> +       if (ACPI_FAILURE(status)) {
+>> +               if (status != AE_NOT_FOUND)
+>> +                       pr_err("Failed to get table, %s\n", acpi_format_exception(status));
+>> +
+>> +               return;
+>> +       }
+>> +
+>> +       iovt_init_devices(hdr);
+>> +       acpi_put_table(hdr);
+>> +}
+>> diff --git a/include/acpi/actbl2.h b/include/acpi/actbl2.h
+>> index baef525367b5..acc51a42c3ed 100644
+>> --- a/include/acpi/actbl2.h
+>> +++ b/include/acpi/actbl2.h
+>> @@ -892,6 +892,9 @@ struct acpi_iovt_header {
+>>
+>>   /* Values for Type field above */
+>>
+>> +#define ACPI_IOVT_PCI_DEVICE           BIT(0)
+>> +#define ACPI_IOVT_PXM_VALID            BIT(1)
+>> +#define ACPI_IOVT_MAGAGE_BY_SEGMENT    BIT(2)
+>>   enum acpi_iovt_iommu_type {
+>>          ACPI_IOVT_IOMMU_V1 = 0x00,
+>>          ACPI_IOVT_IOMMU_RESERVED = 0x01 /* 1 and greater are reserved */
+>> --
+>> 2.39.3
+>>
 
