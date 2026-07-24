@@ -1,84 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D70391E52;
-	Thu, 23 Jul 2026 23:41:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EE058003D
+	for <loongarch@lists.linux.dev>; Fri, 24 Jul 2026 01:23:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784850088; cv=none; b=QOggmjj3YL5Wu+/j/bo4cnDDUxu7QxHkjji0mlbmGl2xeGuCz58uPEYu504EvQO8Z+WzVTNa7+juil4kNKcgqfJ6R00iWY53pwXwUgtehQewUH9Osq/JVV+ZochEL6/xFeiodftht/P6yuIJEciy48QxlBA2dMSdJObmHq/EXPE=
+	t=1784856241; cv=none; b=pjcvgnR+5VvXaRl+Onnp/5aegTmrQoCqeeSYZSlf0x+2AJ9Du58VC4psQqIAbVklJBbfQTA33CsQJ4YeLAPEQ+fPyJVVXjd0dx8KPeiGKWmFlo2933gwlTVJ0K64iuSySmu9UaB3fKwl17Fte3Se1aUugACntXwGasMr8NJOzaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784850088; c=relaxed/simple;
-	bh=rsLBmWPt+d8HynrSKwwtAyKBlpprMn+1W/b6KFlRyoQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=suyJy93I60GYPhH8KIUfIxbKiHwou3T0C8E0b954sifcGKASN/nd6FFzqCt9Qw9sNu82E8cNd5lLn5Rk3cfSEgvAi8BUvFJw1LGQQF66f98BV5V+uUJWfbQ9+4azJakVAATAFF50z1uh/GxKGCwXfcg2Z0zwHWJE9uK+xgUAlEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kpEjksWj; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kpEjksWj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDB031F000E9;
-	Thu, 23 Jul 2026 23:41:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784850087;
-	bh=aTz69KdUrI3yfZjC00J0USCMLwe6vP8ekewkBIJx+Jo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=kpEjksWjdQXtZwWWaMoVcRqzfxVl8o/AELIT483th2iPV4PHPE/tXzOrxye73GGrd
-	 0BduEfPAauWn/khDpp+SpMMp5BWZvjrO1h6Lrojf3nqUJGzS/WLpuRDW/gTlJmL4Vg
-	 +Zd57H+BfepSW0VaRvrbPBkJ909SGIvyXaANU5sn/1GxbMrwPXrtbu5drYbbCKzDM2
-	 IGVmciX6iYsLqEMnwMp03bZa5ucXZSmDr4/K8XqYsjTBbHYyB1gofwdafgzCkK5TkZ
-	 OdF0R/ZVRPfKlT8yEMf2WRFGE10m8S8sEtQmLe04rNEvyhBP35pujz6Rl6lppsYd1Y
-	 ua08B36pmYRYg==
-Date: Thu, 23 Jul 2026 18:41:26 -0500
-From: Rob Herring <robh@kernel.org>
-To: Wandun Chen <chenwandun1@gmail.com>
-Cc: chenhuacai@kernel.org, kernel@xen0n.name, pjw@kernel.org,
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, saravanak@kernel.org,
-	bhe@redhat.com, rppt@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, kexec@lists.infradead.org,
-	iommu@lists.linux.dev, zhaomeijing@lixiang.com,
-	catalin.marinas@arm.com, will@kernel.org, alex@ghiti.fr,
-	akpm@linux-foundation.org, pasha.tatashin@soleen.com,
-	pratyush@kernel.org, ruirui.yang@linux.dev,
-	m.szyprowski@samsung.com, robin.murphy@arm.com
-Subject: Re: [PATCH v4 00/10] kdump: reduce vmcore size and capture time
-Message-ID: <20260723234126.GA3253409-robh@kernel.org>
-References: <20260630074715.4126796-1-chenwandun1@gmail.com>
+	s=arc-20240116; t=1784856241; c=relaxed/simple;
+	bh=taN91dFcLCpwpbFxf+d9rzxKsaivBEyRJUX8U5ebtpc=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=RBlKOQlYjgxExIvifI4dpHzfa2TaRbz7zodGeTNCvZ4t+a8LC6C0ge8cVdvwIQ3FgH9vsmJ+LSlNzXsZLKkDF1gK86xUidMfXbqdujKgHykmLNDTikFmp5w78fA163C6WacVeJNY83hcuR2Y47c3ZomteJLwGagUwWBnOIZ0G9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8BxVeqpvmJqyMQGAA--.23818S3;
+	Fri, 24 Jul 2026 09:23:53 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJCxq8ShvmJq__MWAA--.3360S2;
+	Fri, 24 Jul 2026 09:23:47 +0800 (CST)
+Subject: Re: [PATCH 1/2] LoongArch: KVM: Fix PC double advance in kernel MMIO
+ read fast path
+To: Zeng Chi <zeng_chi911@163.com>, zhaotianrui@loongson.cn,
+ chenhuacai@kernel.org, kernel@xen0n.name
+Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, zengchi@kylinos.cn, stable@vger.kernel.org
+References: <20260723111552.1623996-1-zeng_chi911@163.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <c7d6c9ab-9df2-89fc-0a2e-1389b6f5d3ed@loongson.cn>
+Date: Fri, 24 Jul 2026 09:23:33 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260630074715.4126796-1-chenwandun1@gmail.com>
+In-Reply-To: <20260723111552.1623996-1-zeng_chi911@163.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxq8ShvmJq__MWAA--.3360S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Kry7GF4kAFW7tFy5XFyfKrX_yoW8Wr15p3
+	45Z34rCF48Jr47ZwnrJ393Aw42v3yrKr17WF13tFsaqr4qqFn5WFyFkF4DuFy3KwsYkw1I
+	q3Wktas0ka1UAacCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
+	XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	k0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
+	Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
+	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
+	cVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI
+	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v2
+	6r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4AhLUUUUU
 
-On Tue, Jun 30, 2026 at 03:47:04PM +0800, Wandun Chen wrote:
-> From: Wandun Chen <chenwandun@lixiang.com>
+
+
+On 2026/7/23 下午7:15, Zeng Chi wrote:
+> From: Zeng Chi <zengchi@kylinos.cn>
 > 
-> On SoCs that carve out large firmware-owned reserved memory (GPU
-> firmware, DSP, modem, camera ISP, NPU, ...), kdump currently dumps
-> those carveouts as part of system RAM even though their contents are
-> firmware state that is not useful for kernel crash analysis.
+> In the in-kernel MMIO read fast path of kvm_emu_mmio_read(),
+> kvm_complete_mmio_read() already advances the guest PC via update_pc().
+> The explicit update_pc() call right after it advances the PC a second
+> time, so PC moves forward by 8 instead of 4 and the instruction
+> following the MMIO read is silently skipped.
+> 
+> The user space MMIO read completion path in kvm_arch_vcpu_ioctl_run()
+> calls kvm_complete_mmio_read() only once, and the MMIO write fast path
+> advances the PC exactly once as well.
+> 
+> Remove the redundant update_pc() so the kernel MMIO read fast path
+> advances the PC by a single instruction.
+> 
+> Fixes: 80edf90831a2 ("LoongArch: KVM: Add sign extension with kernel MMIO read emulation")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Zeng Chi <zengchi@kylinos.cn>
+> ---
+>   arch/loongarch/kvm/exit.c | 1 -
+>   1 file changed, 1 deletion(-)
+> 
+> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+> index 8572b63478bb..482ba17bcd3d 100644
+> --- a/arch/loongarch/kvm/exit.c
+> +++ b/arch/loongarch/kvm/exit.c
+> @@ -481,7 +481,6 @@ int kvm_emu_mmio_read(struct kvm_vcpu *vcpu, larch_inst inst)
+>   		srcu_read_unlock(&vcpu->kvm->srcu, idx);
+>   		if (!ret) {
+>   			kvm_complete_mmio_read(vcpu, run);
+> -			update_pc(&vcpu->arch);
+>   			vcpu->mmio_needed = 0;
+>   			return EMULATE_DONE;
+>   		}
+> 
+Hi Zeng,
 
-What about reserved regions on ACPI based systems?
+Thanks for finding this problem, it is a big critical potential issue :(
 
-> This series introduces an opt-in 'dumpable' flag [1] on struct
-> reserved_mem and uses it to filter the elfcorehdr PT_LOAD ranges on
-> DT-based architectures (arm64, riscv, loongarch). By default reserved
-> regions are treated as non-dumpable; CMA regions are explicitly opted
-> in because their pages are returned to the buddy allocator and may
-> carry key crash-analysis data.
+Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 
-I never like seeing the same change being made to each architecture. 
-That's generally a sign of restructuring needed. loongarch and arm64 
-prepare_elf_headers() look about the same. riscv version uses 
-walk_system_ram_res() for some reason. 
-
-Perhaps the dumpable flag belongs in memblock instead? Then at least we 
-wouldn't need more DT APIs exposed to the arch code, and the code stays 
-independent of the firmware API.
-
-I'd really like Marek's review on the reserved memory code changes.
-
-Rob
