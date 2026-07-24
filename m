@@ -1,201 +1,130 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C0B0283FCE
-	for <loongarch@lists.linux.dev>; Fri, 24 Jul 2026 01:28:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D4BB279DAF
+	for <loongarch@lists.linux.dev>; Fri, 24 Jul 2026 02:14:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784856483; cv=none; b=C+6eT0r8bi5L0afppYZ4jtqZ1U7TqmxHY80Z8JDc94NUkBl1xCgN69ZruqUcoDXfUu9tlrnayZIWgRic1QWATR9+K8uro/rFlu+YNeZVyCAnm4L4D54db1ffs4jvXUH7UxOPfaR0hvi16U35peEd2bd0xL3SzFp8e3gvNspLf88=
+	t=1784859282; cv=none; b=GoP0g1ahWXbOE3r5DZ5oGRGUHdaDFc2GuhEUAkRgx1Ou1rTXoT7BOj95bXg3KijYeU6FAviaQl/OwJnHjpuAFsnIdCrWY/rp19QzEbACIfnok3Gp0wOlzokXQtfIfmgYYykAvvrILQp485sK2lnDdXgnOuZxhp/i9NKXofBYntU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784856483; c=relaxed/simple;
-	bh=qKouplLjOdtzuc16h6lYcEmL1cPt5tO/vvWJ+HuiOEU=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=dmBq9mxWcDqqcQB/CQlKX43Z4VtaCjB7ikQAUjlNzq8nTgEumxzMF1ejbE1uVdymMceAsVKM0ubRjdjPr8iPSwGLvF2avY6xC6hHTHU2qNpu3wC1ex8HLgIs+893oNX2qWlYkCwd7abFoCW7k0FdzmLGlAtvAYxlrX3XSJJJI60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8CxNOifv2Jq9cQGAA--.2019S3;
-	Fri, 24 Jul 2026 09:27:59 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJAxSsScv2JqfvQWAA--.4346S2;
-	Fri, 24 Jul 2026 09:27:58 +0800 (CST)
-Subject: Re: [PATCH 2/2] KVM: LoongArch: selftests: Add in-kernel MMIO read
- fast path test
-To: Zeng Chi <zeng_chi911@163.com>, zhaotianrui@loongson.cn,
- chenhuacai@kernel.org, kernel@xen0n.name
-Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, zengchi@kylinos.cn
-References: <20260723111605.1630027-1-zeng_chi911@163.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <146b5e27-2ab0-da17-7b98-09235ef4f9c4@loongson.cn>
-Date: Fri, 24 Jul 2026 09:27:44 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1784859282; c=relaxed/simple;
+	bh=C2IH9lN6ISt8C5qJl7zLutJbyLDuah7mmkj1ow/z4U4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Fv3H1F6Vze+5CwfzIgmqijcQFs2FRdhq5JPNqxum63+gG2kAAdSG050m5nSAijrgTF512MmN4cXk4IUcnM/beeEg7HrRHtIoLUtnSU1bV2un+AUFoxVrMLzG3ZJ8pD7GttaykpegIa5rwn6y/A7AgxlCTEvGCRuHyQ1Y/uyuyhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=e4V5LBZg; arc=none smtp.client-ip=220.197.31.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="e4V5LBZg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=R0
+	fZk7cw47NM3PZyeQotTKEsd6zLI7x4WIDlkM2CwcM=; b=e4V5LBZgUcm5oq799U
+	7a3h6abrPnRrCCVAvummdZRPY8PbC0JeoIi/jMUsu3oBmHVz0vsso+pLxULG/D1v
+	xCoCVPqs72DWoIg/AsQRHgzlMviTeGpOYmqNBW1jHGynpeFYHGo6XiuVKyQ4sbm/
+	oxpAlt6fWlzkbCvbLcBdYsNNA=
+Received: from song-MS-7D48.. (unknown [])
+	by gzsmtp2 (Coremail) with SMTP id PSkvCgDnr+wRymJqH7z4DA--.34972S4;
+	Fri, 24 Jul 2026 10:12:43 +0800 (CST)
+From: Song Chen <chensong_2000@126.com>
+To: arnd@arndb.de,
+	kees@kernel.org,
+	clm@fb.com,
+	dsterba@suse.com,
+	linux@armlinux.org.uk,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	guoren@kernel.org,
+	kernel@xen0n.name,
+	maddy@linux.ibm.com,
+	mpe@ellerman.id.au,
+	npiggin@gmail.com,
+	chleroy@kernel.org,
+	pjw@kernel.org,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr,
+	gor@linux.ibm.com,
+	borntraeger@linux.ibm.com,
+	agordeev@linux.ibm.com,
+	svens@linux.ibm.com,
+	tglx@kernel.org,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	jpoimboe@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Song Chen <chensong_2000@126.com>
+Subject: [RFC PATCH v2 2/3] btrfs: Allow error injection on btrfs_data_csum_ok
+Date: Fri, 24 Jul 2026 10:12:28 +0800
+Message-ID: <20260724021229.47302-3-chensong_2000@126.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260724021229.47302-1-chensong_2000@126.com>
+References: <20260724021229.47302-1-chensong_2000@126.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20260723111605.1630027-1-zeng_chi911@163.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxSsScv2JqfvQWAA--.4346S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxGF4DWr1rXFyfCFyxur1fXwc_yoWrKrWUpa
-	y0vw1akrWxJr17Grn7Gws8ua1fWr4ktF4xZF1fXry5Cr15JasaqF4kKa1kX3W3t3ykXryS
-	v3WrWrs093WDJabCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AK
-	xVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07josjUU
-	UUUU=
+X-CM-TRANSID:PSkvCgDnr+wRymJqH7z4DA--.34972S4
+X-Coremail-Antispam: 1Uf129KBjvJXoW7uFWfZr4kWFykJw4xJFWrXwb_yoW8Xw4fpr
+	WUGw1ruFWDXr97Wrs7Gay09ryFg3yDWa10gFnxZw4YywsIkw1FqrZay3WxGa48KrZrX343
+	Z3Z0gw17ZF1DAFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07USeH9UUUUU=
+X-CM-SenderInfo: xfkh02prqjsjqqqqqiyswou0bp/xtbBpRvra2piyhtNggAA3o
 
+btrfs_data_csum_ok validates the checksum of a data block
+after a read I/O completes. A mismatch between the on-disk
+checksum and the one computed from the read data indicates
+silent data corruption, which can be caused by bit flips due
+to DRAM errors, storage media degradation, or bus transmission
+faults.
 
+Testing the error handling path that responds to such
+corruption, including any warning output and uspace
+notification, normally requires reproducing the hardware
+fault, which is not always feasible.
 
-On 2026/7/23 下午7:16, Zeng Chi wrote:
-> From: Zeng Chi <zengchi@kylinos.cn>
-> 
-> Add a test that exercises the in-kernel MMIO read fast path of
-> kvm_emu_mmio_read(). The guest performs an MMIO read from an in-kernel
-> emulated PCH-PIC, immediately followed by a marker instruction, and the
-> test verifies that the marker instruction is executed, i.e. that the PC
-> advances by exactly one instruction instead of skipping the instruction
-> after the MMIO read.
-> 
-> The test skips gracefully when the host KVM cannot create a PCH-PIC
-> device.
-> 
-> Signed-off-by: Zeng Chi <zengchi@kylinos.cn>
-> ---
->   tools/testing/selftests/kvm/Makefile.kvm      |  3 +-
->   .../selftests/kvm/loongarch/mmio_read_test.c  | 89 +++++++++++++++++++
->   2 files changed, 91 insertions(+), 1 deletion(-)
->   create mode 100644 tools/testing/selftests/kvm/loongarch/mmio_read_test.c
-> 
-> diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
-> index 6fc34e9bf8e1..4daf90caaabc 100644
-> --- a/tools/testing/selftests/kvm/Makefile.kvm
-> +++ b/tools/testing/selftests/kvm/Makefile.kvm
-> @@ -228,7 +228,8 @@ TEST_GEN_PROGS_riscv += mmu_stress_test
->   TEST_GEN_PROGS_riscv += rseq_test
->   TEST_GEN_PROGS_riscv += steal_time
->   
-> -TEST_GEN_PROGS_loongarch = loongarch/pmu_test
-> +TEST_GEN_PROGS_loongarch = loongarch/mmio_read_test
-> +TEST_GEN_PROGS_loongarch += loongarch/pmu_test
->   TEST_GEN_PROGS_loongarch += arch_timer
->   TEST_GEN_PROGS_loongarch += coalesced_io_test
->   TEST_GEN_PROGS_loongarch += demand_paging_test
-> diff --git a/tools/testing/selftests/kvm/loongarch/mmio_read_test.c b/tools/testing/selftests/kvm/loongarch/mmio_read_test.c
-> new file mode 100644
-> index 000000000000..7f64ca91ca8f
-> --- /dev/null
-> +++ b/tools/testing/selftests/kvm/loongarch/mmio_read_test.c
-> @@ -0,0 +1,89 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * LoongArch KVM in-kernel MMIO read fast path test
-> + *
-> + * When an MMIO read hits a device emulated inside KVM (such as the
-> + * PCH-PIC), kvm_emu_mmio_read() completes the access without returning
-> + * to user space and advances the guest PC by one instruction.
-> + *
-> + * This test issues such an in-kernel MMIO read immediately followed by
-> + * a marker instruction and checks that the marker instruction actually
-> + * runs, i.e. that the PC advanced by exactly one instruction (4 bytes)
-> + * rather than skipping the instruction after the MMIO read.
-> + */
-> +#include "kvm_util.h"
-> +#include "processor.h"
-> +#include "test_util.h"
-> +#include "loongarch/processor.h"
-> +
-> +/* Physical base the in-kernel PCH-PIC is mapped at (no memslot backs it) */
-> +#define PCH_PIC_BASE		0x10000000UL
-> +
-> +static void guest_code(void)
-> +{
-> +	unsigned long marker = 0;
-> +	unsigned int val = 0;
-> +
-> +	/*
-> +	 * 'ld.w' faults out as an MMIO read and is emulated in kernel.
-> +	 * The following 'addi.d' must execute; it is skipped if the MMIO
-> +	 * read fast path advances the PC twice (by 8 instead of 4).
-> +	 */
-> +	asm volatile(
-> +		"ld.w	%[val], %[base], 0\n\t"
-> +		"addi.d	%[marker], %[marker], 1\n\t"
-> +		: [val] "=&r" (val), [marker] "+&r" (marker)
-> +		: [base] "r" (PCH_PIC_BASE)
-> +		: "memory");
-By my understanding, the kvm selftest is mainly to test function. It 
-will be better if it is to verify irq handling with in-kernel PCH-PIC 
-irqchip.
+Mark btrfs_data_csum_ok with ALLOW_ERROR_INJECTION so that
+the fail_function infrastructure can override its return value
+to false, simulating a checksum mismatch without requiring
+actual data corruption. This enables validation of the full
+error detection and reporting path in a controlled environment.
 
-Regards
-Bibo Mao
-> +
-> +	GUEST_PRINTF("mmio read val=0x%x, marker=%lu\n", val, marker);
-> +	GUEST_ASSERT_EQ(marker, 1);
-> +	GUEST_DONE();
-> +}
-> +
-> +int main(int argc, char *argv[])
-> +{
-> +	struct kvm_vcpu *vcpu;
-> +	struct kvm_vm *vm;
-> +	struct ucall uc;
-> +	uint64_t addr = PCH_PIC_BASE;
-> +	int dev_fd;
-> +
-> +	vm = vm_create(VM_MODE_P47V47_16K);
-> +	vcpu = vm_vcpu_add(vm, 0, guest_code);
-> +
-> +	/* Create the in-kernel PCH-PIC and map it at PCH_PIC_BASE */
-> +	dev_fd = __kvm_create_device(vm, KVM_DEV_TYPE_LOONGARCH_PCHPIC);
-> +	if (dev_fd < 0) {
-> +		print_skip("PCH-PIC device not supported by host KVM");
-> +		kvm_vm_free(vm);
-> +		return KSFT_SKIP;
-> +	}
-> +	kvm_device_attr_set(dev_fd, KVM_DEV_LOONGARCH_PCH_PIC_GRP_CTRL,
-> +			    KVM_DEV_LOONGARCH_PCH_PIC_CTRL_INIT, &addr);
-> +	close(dev_fd);
-> +
-> +	/* Identity-map the MMIO page so the guest can reach the device */
-> +	virt_map(vm, PCH_PIC_BASE, PCH_PIC_BASE, 1);
-> +
-> +	while (1) {
-> +		vcpu_run(vcpu);
-> +		switch (get_ucall(vcpu, &uc)) {
-> +		case UCALL_PRINTF:
-> +			pr_info("%s", uc.buffer);
-> +			break;
-> +		case UCALL_DONE:
-> +			goto done;
-> +		case UCALL_ABORT:
-> +			REPORT_GUEST_ASSERT(uc);
-> +			goto done;
-> +		default:
-> +			TEST_FAIL("Unexpected exit: %s",
-> +				  exit_reason_str(vcpu->run->exit_reason));
-> +		}
-> +	}
-> +
-> +done:
-> +	kvm_vm_free(vm);
-> +	return 0;
-> +}
-> 
+Usage:
+        cd /sys/kernel/debug/fail_function
+        echo btrfs_data_csum_ok > inject
+        echo 0 > btrfs_data_csum_ok/retval
+        echo 100 > probability
+        echo N > times
+
+Signed-off-by: Song Chen <chensong_2000@126.com>
+---
+ fs/btrfs/inode.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index 906d5c21ebc4..6be3e920b954 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -3574,6 +3574,7 @@ bool btrfs_data_csum_ok(struct btrfs_bio *bbio, struct btrfs_device *dev,
+ 		memzero_page(phys_to_page(paddrs[i]), offset_in_page(paddrs[i]), step);
+ 	return false;
+ }
++ALLOW_ERROR_INJECTION(btrfs_data_csum_ok, FALSE);
+ 
+ /*
+  * Perform a delayed iput on @inode.
+-- 
+2.43.0
 
