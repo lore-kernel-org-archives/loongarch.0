@@ -1,32 +1,32 @@
-Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EED933D6F9
-	for <loongarch@lists.linux.dev>; Fri, 24 Jul 2026 11:44:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E27142AF8C
+	for <loongarch@lists.linux.dev>; Fri, 24 Jul 2026 11:44:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784893456; cv=none; b=gw2AvqjSZsy9+KhXSmKhOi0P7GTCeKIrp6LfdQ5wWu4HD3KcxIbZ5WRAWmgc6Hi2yZdKIKs3ffwhm1cCBh6w+D1LWqyRDnZIk3KT8nkrUAiz2GqHkXuekigJpQ4yxKUNNVzXOZR9tbwAY+ol1iUqoTJscw0cHmeM+f15bKsn5eQ=
+	t=1784893461; cv=none; b=pazGQaYM1uUhCmMWdT4R1fc7vhw6GIqVmlKyZJDcdyjPXVH0E1kZeqwQ8jIOFsi4aO3EQDk1SkAGn+NdVGiWsa3mJ30iRiviqzWv+1l3bTq5D1nzku86vi886mF3aPseRMfmaevlKL7w9izuO51to12ZH3Outt5/ZlXDqJeWjX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784893456; c=relaxed/simple;
-	bh=slM7L03r6D2OjaW+kBk0O9AeKJGNMLiGB01zwBQGGbc=;
+	s=arc-20240116; t=1784893461; c=relaxed/simple;
+	bh=awtKp8GoTpZLRWN4FwmOYGzyrNm8WEnDX2kSQMbAf3g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=r8rBXvDgjKJbmVyjH2/KICjo7S2zVo6w514J7vLZN1qEek6/e9fJDNi0eAamDRXcOJye1NmbuH+S9zH+3iPD9P63QPLSISmXcT2fDn/Me9e6a6Qi4XMjxOR9+WK/4rWfe3ISz5HAb9D99LJozeixl74qu9e+Nd+FZJJm3uUAykg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=o8O8t7cH; arc=none smtp.client-ip=95.215.58.176
+	 MIME-Version; b=aSv57yGN3knhFvHbxGVnylyMvHgowzFc6E15qmBYv0ivPCeC/3mYgTPcmHG3F0l/I2Fq2Jk3AsaZXMfwiTLf/RIEUiUJ2eYuuWlkdUL0rgp7dKU1l8TYEN69vpYKLyr5j6wMHkhLD2AkrMfsHvuOyM9BXCwNIUH+BWyi6F5F454=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bR5xhC9B; arc=none smtp.client-ip=91.218.175.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="o8O8t7cH"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bR5xhC9B"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1784893443;
+	t=1784893453;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6K7yvO3rVvrbt7FhGRcAwJSEYj6FUU71+bm2uI+UzLw=;
-	b=o8O8t7cHGKxUHuoLeHx6f4lX3uv1xEOGhdDQjMdKfnZcSHPNQQJO75g/KfFNt3YIh4PVZ2
-	BcjVIXQZa+K3qhM8tu5c5q3OSLpTLDzpjDMLse7wpDss+cXzglYk2TPgRHbO/qIvSXXcfI
-	SrZn3ABwq4/RjtohaA3Yg0QZA0ibHPg=
+	bh=kOBS5OEfLhdRCerIgpAYs/smL6UyfBzQi4+mASVl25M=;
+	b=bR5xhC9Bgyt/yKBqDd/C/Wrn9LBAv2aJQootVDKCjJqxRtpe3W5wUTs/AOmBWAbdBooqyv
+	u7aOPiUEHwXVpF2RxV+CRK/AgkJwGx0l1ljlsrvx4DXHCI14bDY0E229eR5ZugHyIcEVTK
+	/nqOlf2WKj2CJeyuCR0CiF/07YIHbGc=
 From: George Guo <dongtai.guo@linux.dev>
 To: chenhuacai@kernel.org,
 	jpoimboe@kernel.org,
@@ -51,9 +51,9 @@ Cc: kernel@xen0n.name,
 	live-patching@vger.kernel.org,
 	llvm@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 08/14] LoongArch: Select FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY
-Date: Fri, 24 Jul 2026 19:41:21 +0800
-Message-ID: <20260724114128.31451-9-dongtai.guo@linux.dev>
+Subject: [PATCH v4 09/14] objtool/klp: Convert local label references
+Date: Fri, 24 Jul 2026 19:41:22 +0800
+Message-ID: <20260724114128.31451-10-dongtai.guo@linux.dev>
 In-Reply-To: <20260724114128.31451-1-dongtai.guo@linux.dev>
 References: <20260724114128.31451-1-dongtai.guo@linux.dev>
 Precedence: bulk
@@ -67,49 +67,119 @@ X-Migadu-Flow: FLOW_OUT
 
 From: George Guo <guodongtai@kylinos.cn>
 
-arch/loongarch/Makefile uses -fpatchable-function-entry=2 when
-CONFIG_DYNAMIC_FTRACE is set, but nothing selects
-FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY, so kbuild falls back to
-FTRACE_MCOUNT_USE_RECORDMCOUNT and runs recordmcount on every object.
-The pass is useless here: there are no _mcount calls to find, and the
-real ftrace sites come from the __patchable_function_entries section
-anyway.
+Some toolchains reference an object through a local assembler label (.L*)
+rather than a section symbol plus offset.  The assembler keeps the label
+because a "section + constant offset" reference would go stale under
+linker relaxation, while a symbol reference can be recomputed afterwards.
+Such labels are assembler-local, absent from kallsyms, and are never
+cloned into the livepatch object.
 
-It is not just wasted time.  recordmcount needs a non-weak symbol in
-each text section, to use as the base of the __mcount_loc relocations
-it writes (see find_secsym_ndx()).  GAS emits a section symbol for
-every section, so GCC objects always have one.  Clang's integrated
-assembler drops unreferenced section symbols, so a clang object must
-use the function's own symbol -- but find_secsym_ndx() skips weak
-symbols.  So with -ffunction-sections (which klp-build uses), a __weak
-function like sched_clock is alone in its section with no usable
-symbol, and recordmcount fails:
+Two toolchains hit this:
 
-  Cannot find symbol for section 5: .text.sched_clock.
-  kernel/sched/build_utility.o: failed
+  - GCC/GAS on LoongArch references special section entries (__ex_table,
+    __bug_table, __jump_table, .altinstructions) through local text
+    labels instead of a section symbol.
 
-Select FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY like arm64 and riscv
-do, which disables the recordmcount pass altogether.
+  - Clang emits a switch jump table through a local label (.LJTI*) in a
+    SHF_MERGE|SHF_STRINGS .rodata section, where the table shares the
+    section with the livepatch's klp_func name strings.
+
+convert_reloc_secsym_to_sym() only handled the section symbol form and
+returned early for a label reference, so the label was never converted
+and the reference resolved incorrectly, with no error at build or load
+time:
+
+  - GCC: should_keep_special_sym() cannot correlate the entry with an
+    included function and silently drops it, so the livepatch module is
+    missing the patched function's __ex_table / __bug_table /
+    __jump_table entries.
+
+  - Clang: the jump table is not cloned, and its base label resolves into
+    the name strings that occupy the same offset; the switch's indirect
+    jump then lands on a wild address and the patched function oopses at
+    runtime.
+
+Redirect a local label reference off the label, mirroring the section
+symbol case:
+
+  - In a text section, to the containing function symbol.  A label with
+    no containing function symbol (e.g. hand-written asm in a plain .text
+    section) can't be correlated; skip it rather than failing, since such
+    entries belong to unchanged code and are dropped anyway.
+
+  - In a non-text section (e.g. the .rodata jump table), to the section
+    symbol plus the full offset.
 
 Reported-by: Joe Lawrence <joe.lawrence@redhat.com>
 Suggested-by: Joe Lawrence <joe.lawrence@redhat.com>
+Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
+Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
 Signed-off-by: George Guo <guodongtai@kylinos.cn>
 ---
- arch/loongarch/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ tools/objtool/klp-diff.c | 49 +++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 48 insertions(+), 1 deletion(-)
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 1dbf51ba9d6a..a1549003c871 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -88,6 +88,7 @@ config LOONGARCH
- 	select CPU_PM
- 	select EDAC_SUPPORT
- 	select EFI
-+	select FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY if DYNAMIC_FTRACE
- 	select GENERIC_ATOMIC64 if 32BIT
- 	select GENERIC_CLOCKEVENTS
- 	select GENERIC_CMOS_UPDATE
+diff --git a/tools/objtool/klp-diff.c b/tools/objtool/klp-diff.c
+index b9624bd9439b..3e573b73fe6b 100644
+--- a/tools/objtool/klp-diff.c
++++ b/tools/objtool/klp-diff.c
+@@ -1423,8 +1423,55 @@ static int convert_reloc_secsym_to_sym(struct elf *elf, struct reloc *reloc)
+ 	if (!strcmp(reloc->sec->name, ".rela__patchable_function_entries"))
+ 		return convert_pfe_reloc(elf, reloc);
+ 
+-	if (!is_sec_sym(sym))
++	if (!is_sec_sym(sym)) {
++		/*
++		 * Most toolchains reference special-section entries via the
++		 * section symbol plus an offset.  GCC/GAS on LoongArch instead
++		 * references a local text label (.L*): LoongArch linker
++		 * relaxation is the reason GAS keeps the label rather than
++		 * reducing it to a section symbol reference.  Such a label is
++		 * never cloned into the livepatch object, so the entry would be
++		 * silently dropped.  Redirect the relocation to the containing
++		 * function, mirroring the section-symbol case below.
++		 */
++		if (is_local_label(sym)) {
++			unsigned long offset = sym->offset + reloc_addend(reloc);
++
++			if (is_text_sec(sec)) {
++				sym = find_symbol_containing_inclusive(sec, offset);
++				if (!sym) {
++					/*
++					 * A local label with no containing function
++					 * symbol (e.g. hand-written asm in a plain .text
++					 * section).  It can't be correlated to a function,
++					 * so skip it rather than failing the build; such
++					 * entries belong to unchanged code and are dropped
++					 * anyway.
++					 */
++					return 1;
++				}
++
++				reloc->sym = sym;
++				set_reloc_sym(elf, reloc, sym->idx);
++				set_reloc_addend(elf, reloc, offset - sym->offset);
++			} else {
++				/*
++				 * A local label in a non-text section, e.g. Clang's
++				 * .LJTI* switch jump table in .rodata.  It isn't
++				 * cloned into the livepatch either, so redirect the
++				 * reloc to the section symbol plus the full offset,
++				 * mirroring the section-symbol case below.
++				 */
++				if (!sec->sym && !elf_create_section_symbol(elf, sec))
++					return -1;
++				reloc->sym = sec->sym;
++				set_reloc_sym(elf, reloc, sec->sym->idx);
++				set_reloc_addend(elf, reloc, offset);
++			}
++		}
++
+ 		return 0;
++	}
+ 
+ 	sym = find_symbol_containing_inclusive(sec, arch_adjusted_addend(reloc));
+ 	if (!sym) {
 -- 
 2.53.0
 
