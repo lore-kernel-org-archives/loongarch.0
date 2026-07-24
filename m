@@ -1,30 +1,29 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.9])
+Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D4BB279DAF
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3846C1C5F13
 	for <loongarch@lists.linux.dev>; Fri, 24 Jul 2026 02:14:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.9
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784859282; cv=none; b=GoP0g1ahWXbOE3r5DZ5oGRGUHdaDFc2GuhEUAkRgx1Ou1rTXoT7BOj95bXg3KijYeU6FAviaQl/OwJnHjpuAFsnIdCrWY/rp19QzEbACIfnok3Gp0wOlzokXQtfIfmgYYykAvvrILQp485sK2lnDdXgnOuZxhp/i9NKXofBYntU=
+	t=1784859282; cv=none; b=RZiQraCF7DXYfxJPTZcXey/79EecF8wTQs5THr745XhKd+2N8kaZgB3ABr/EwFS6Yx36Ehtjr3W9IE5QK5hloQuPMit5Xr89onk/E4Zia+tpqyqsu0pfIRTxAXlfJH1Wa+k3iz6eGmIPi2/AWDmPzPzy4A+nYR2EvJcW64IUwTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1784859282; c=relaxed/simple;
-	bh=C2IH9lN6ISt8C5qJl7zLutJbyLDuah7mmkj1ow/z4U4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Fv3H1F6Vze+5CwfzIgmqijcQFs2FRdhq5JPNqxum63+gG2kAAdSG050m5nSAijrgTF512MmN4cXk4IUcnM/beeEg7HrRHtIoLUtnSU1bV2un+AUFoxVrMLzG3ZJ8pD7GttaykpegIa5rwn6y/A7AgxlCTEvGCRuHyQ1Y/uyuyhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=e4V5LBZg; arc=none smtp.client-ip=220.197.31.9
+	bh=LKtT/eMA/HP7kj2W7H5SSET9KgmXLRS52Vtq6yJWNx8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IpMVgY2vyeqV57AL0N0ZudEyqKcOP2hk4SByGrmI6uWzz4VpbMWp3DHoEcgJ/82RejbVTjd87kxEUQDdrEoL5+VoStJ5Uygzh2uE4vgDsCEHxODi30whsU5nEmCQHJ9wfHrRpcmH5+qcsJ9Wtz7uTrLA0YstgPxO91MmdU+oGiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=A58Q0hC7; arc=none smtp.client-ip=220.197.31.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="e4V5LBZg"
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="A58Q0hC7"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=R0
-	fZk7cw47NM3PZyeQotTKEsd6zLI7x4WIDlkM2CwcM=; b=e4V5LBZgUcm5oq799U
-	7a3h6abrPnRrCCVAvummdZRPY8PbC0JeoIi/jMUsu3oBmHVz0vsso+pLxULG/D1v
-	xCoCVPqs72DWoIg/AsQRHgzlMviTeGpOYmqNBW1jHGynpeFYHGo6XiuVKyQ4sbm/
-	oxpAlt6fWlzkbCvbLcBdYsNNA=
+	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=77
+	TlUQQ5Ug6Bo+r9yStAO1cYSC7lbr5tqO3K9ciX64s=; b=A58Q0hC7pBgmyd1P0k
+	hLdauK2xNyRBVzvhAisrBvhwe51IYuU3v9CdBPEmeUuNhaOUQCGDOQWF5MJocr6d
+	sUDDytIRZ4RCNVAsuNo5OmI5d3/Yw40nyoy5CkXb3KuvjzGCqY5FdMsT584qwXjb
+	/BY0wrzWkU1UlbE8vhPU3x/hE=
 Received: from song-MS-7D48.. (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id PSkvCgDnr+wRymJqH7z4DA--.34972S4;
-	Fri, 24 Jul 2026 10:12:43 +0800 (CST)
+	by gzsmtp2 (Coremail) with SMTP id PSkvCgDnr+wRymJqH7z4DA--.34972S2;
+	Fri, 24 Jul 2026 10:12:35 +0800 (CST)
 From: Song Chen <chensong_2000@126.com>
 To: arnd@arndb.de,
 	kees@kernel.org,
@@ -63,12 +62,10 @@ Cc: linux-arm-kernel@lists.infradead.org,
 	linux-arch@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Song Chen <chensong_2000@126.com>
-Subject: [RFC PATCH v2 2/3] btrfs: Allow error injection on btrfs_data_csum_ok
-Date: Fri, 24 Jul 2026 10:12:28 +0800
-Message-ID: <20260724021229.47302-3-chensong_2000@126.com>
+Subject: [RFC PATCH v2 0/3] btrfs: add error injection support for checksum verification
+Date: Fri, 24 Jul 2026 10:12:26 +0800
+Message-ID: <20260724021229.47302-1-chensong_2000@126.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260724021229.47302-1-chensong_2000@126.com>
-References: <20260724021229.47302-1-chensong_2000@126.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -76,55 +73,50 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PSkvCgDnr+wRymJqH7z4DA--.34972S4
-X-Coremail-Antispam: 1Uf129KBjvJXoW7uFWfZr4kWFykJw4xJFWrXwb_yoW8Xw4fpr
-	WUGw1ruFWDXr97Wrs7Gay09ryFg3yDWa10gFnxZw4YywsIkw1FqrZay3WxGa48KrZrX343
-	Z3Z0gw17ZF1DAFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07USeH9UUUUU=
-X-CM-SenderInfo: xfkh02prqjsjqqqqqiyswou0bp/xtbBpRvra2piyhtNggAA3o
+X-CM-TRANSID:PSkvCgDnr+wRymJqH7z4DA--.34972S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7CF1xWr1UWw47tryUKF4Durg_yoW8GF1rpr
+	y3u3s3uryrC34fCrnxAay8Zw1Fkrs5W34UXFnrG348W343Za4qq3WkKa4UJ3WS9rWUGw17
+	X3WUKr4UWr1UAFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UonmiUUUUU=
+X-CM-SenderInfo: xfkh02prqjsjqqqqqiyswou0bp/xtbBsxPpaWpiyhNNnAAA3g
 
-btrfs_data_csum_ok validates the checksum of a data block
-after a read I/O completes. A mismatch between the on-disk
-checksum and the one computed from the read data indicates
-silent data corruption, which can be caused by bit flips due
-to DRAM errors, storage media degradation, or bus transmission
-faults.
+This patchset adds fault injection support for btrfs_data_csum_ok,
+enabling controlled simulation of checksum mismatches to test btrfs
+silent data corruption detection and reporting paths.
 
-Testing the error handling path that responds to such
-corruption, including any warning output and uspace
-notification, normally requires reproducing the hardware
-fault, which is not always feasible.
+The first patch extends the error injection framework with a new type,
+EI_ETYPE_FALSE, which allows bool-returning functions to be overridden
+with a false return value directly.
 
-Mark btrfs_data_csum_ok with ALLOW_ERROR_INJECTION so that
-the fail_function infrastructure can override its return value
-to false, simulating a checksum mismatch without requiring
-actual data corruption. This enables validation of the full
-error detection and reporting path in a controlled environment.
+The second patch marks btrfs_data_csum_ok with ALLOW_ERROR_INJECTION
+using this new type.
 
-Usage:
-        cd /sys/kernel/debug/fail_function
-        echo btrfs_data_csum_ok > inject
-        echo 0 > btrfs_data_csum_ok/retval
-        echo 100 > probability
-        echo N > times
+The third patch adds a parent field to fei_attr to allow fault injection
+on a function only when called from a specific parent function. 
 
-Signed-off-by: Song Chen <chensong_2000@126.com>
+Song Chen (3):
+  error-injection: Introduce EI_ETYPE_FALSE for fail_function
+  btrfs: Allow error injection on btrfs_data_csum_ok
+  error-injection: Introduce parent in fei_attr
+
+ arch/arm/lib/error-inject.c           |  6 ++
+ arch/arm64/lib/error-inject.c         |  6 ++
+ arch/csky/lib/error-inject.c          |  6 ++
+ arch/loongarch/lib/error-inject.c     |  6 ++
+ arch/powerpc/lib/error-inject.c       |  6 ++
+ arch/riscv/lib/error-inject.c         |  6 ++
+ arch/s390/lib/error-inject.c          |  6 ++
+ arch/x86/lib/error-inject.c           |  6 ++
+ fs/btrfs/inode.c                      |  1 +
+ include/asm-generic/error-injection.h |  6 ++
+ kernel/fail_function.c                | 98 ++++++++++++++++++++++++++-
+ 11 files changed, 152 insertions(+), 1 deletion(-)
+
 ---
- fs/btrfs/inode.c | 1 +
- 1 file changed, 1 insertion(+)
+changelog:
+v1 --- v2:
+Add a parent field to struct fei_attr.
 
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index 906d5c21ebc4..6be3e920b954 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -3574,6 +3574,7 @@ bool btrfs_data_csum_ok(struct btrfs_bio *bbio, struct btrfs_device *dev,
- 		memzero_page(phys_to_page(paddrs[i]), offset_in_page(paddrs[i]), step);
- 	return false;
- }
-+ALLOW_ERROR_INJECTION(btrfs_data_csum_ok, FALSE);
- 
- /*
-  * Perform a delayed iput on @inode.
 -- 
 2.43.0
 
