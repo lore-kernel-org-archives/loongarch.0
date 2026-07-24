@@ -1,123 +1,201 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D21A73D092F
-	for <loongarch@lists.linux.dev>; Fri, 24 Jul 2026 08:15:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F249F3EEADE
+	for <loongarch@lists.linux.dev>; Fri, 24 Jul 2026 09:08:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784880943; cv=none; b=gHs1GEHr0ql6bEiX+xKGWllDT5VXmjZbisO4Tlxg9j0XmaZCCob7y2JKzce4Xndb6KhOhfo4viD+ZJptGv8dvmH9hLSihaAAOoX9J8RxVleSze/zNNOrZfWp3lfJWL2vC9WeJrYJGvKOG9gDuDm+DwQcubA3abWi/zqufgzNSdk=
+	t=1784884101; cv=none; b=eF/B5jC2b2Qa7m84cEFccT4PB4cpqlsEcJYDI2pwq2mCM9WpHIkpCMsOVJTMCEqHEo3l7sXgLVz3NgQxYpwtRVFk2oljSIQpHuxgHQWLZ8T1rkK4h8i9pJj2eMmS2TuhE0aE6Z0fXUm8y2dQ7F7QRYVsIvjnx8JS0ny4/Ay1W1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784880943; c=relaxed/simple;
-	bh=dFS3SwniN56yN953lBsYRwJV4Ml4pZslzmVnQcgYyiw=;
+	s=arc-20240116; t=1784884101; c=relaxed/simple;
+	bh=HghB87T9wuVK0V8ssQsbWKMB0URUxQqrvPe+4/pIBD4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=W0ae9VcjELZrVEMelN77LACz6rB3mnWeQuN5hHIO/Rz8BKG1on5MKvgq2lVMlAHc6AZApiiAWPuWGOQ6MuYRlqcdXx0ASGwIqmk2tG7HqpmwfG8mgcopW0lcVV24isivl7/JP+zwzD8oSbbnms0iSKhR/B8Qoc3PoNDHH/Gex/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CXDMnSPR; arc=none smtp.client-ip=100.103.45.18
+	 To:Cc:Content-Type; b=ua6+dFdlg4/2XjQRear+L96Cl+DuZ8t3jLdiX42XJjXuYSaiLhpiXj1pRrhUgCAmCa/OuNnbeM03ziaV90/Fy6SapYVTTjeQDB8o/6nCiXqXTsLrTwU+r0JiD2tpfdWfKVvO2WCz8NTCXDKm5YlTUUTESwnQOKjVtSxYlfcMJPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b0FGlJmo; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CXDMnSPR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76E4E1F0155C
-	for <loongarch@lists.linux.dev>; Fri, 24 Jul 2026 08:15:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b0FGlJmo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62C571F00AC4
+	for <loongarch@lists.linux.dev>; Fri, 24 Jul 2026 09:08:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784880930;
-	bh=9XXBW7U+B1ikb/dzSlj+P+GEinyJBTwSTBEBBDOINL4=;
+	s=k20260515; t=1784884096;
+	bh=p3A/4pifL2L3HVg1ufHCi9uHYCA1/oVSrgNwE9h/on0=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=CXDMnSPRMBG/Jea/TZwLnSr3TFArZis60Y7Oal7c7NUuCCruPRDTCz92QaZUxYmM2
-	 rgx2CCx/q6VXsv1rLl7R6yoeuSlRG9JUXNJDV4hRTvAzcbdq7ZmLSH5UGSkH6jYa/p
-	 tVjC4Ax8lftOhAF/tTus42oRsO7cF+93vBqg5ZUVEAgWX8debmOjCgJo1mtWEiHiEC
-	 iJeLIvUdQgpD68y5Aan4cTJKEsUtGDZm9s0984YkEtgpDQ0HKWT/AXpC/E8fw3VHRb
-	 GsBSNCchI2yY9dEUMVjqRTJ1g5tbMZ11gBWdSYAEn8s+ozy1udcN7waJ5dY03kIPyg
-	 mFpJM6MsvQXTw==
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-c15e03c2763so30924666b.0
-        for <loongarch@lists.linux.dev>; Fri, 24 Jul 2026 01:15:30 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+Rp3lQLQcZ3V/nO+HpAP0hlXwlDUYtE/ibRB1WiOoUa+Vce8J7BMFPIkGY4sRlKqT88mtk/LnZtrwZA=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwDtd3pyoqbG/d3FMXg+eFfinStKuT5DPZqyvk/pYoJ49v70JD5
-	34T0QD2Hwb4StrwlAN9rsUF5f0wUGs5e5DUz1PIDDyHTdLfDuCGpttiiMu0HTBh/QJu8Br+Ttum
-	vxmdULjGYs6++Mby0SlCRkMYkLqTQYCY=
-X-Received: by 2002:a17:907:70a:b0:c15:c323:36e5 with SMTP id
- a640c23a62f3a-c1c536b9134mr271178666b.10.1784880928984; Fri, 24 Jul 2026
- 01:15:28 -0700 (PDT)
+	b=b0FGlJmoxLUWAbL5EySvN/iorG54cNgcEbPcOopN1zxTkSOQM7iS6Y5GebEXE8tuo
+	 i2AAT0nyMYutEohZDbHYiKqj4scpCbnNH5ZnmuNrIhqM6TDmkoLTrX9iUFTs6rNkTL
+	 xBuEyHohtFe2axC1uWt92aaOSyR3AyHHhpHTEg0IC9LFLCpJ8UmXEfJfc8aGwhWAgW
+	 4KJ46Hu1Zv0NxhQmAvFVll4yba08ty8pd5oOCt6shiXDJoquZqSpSYdqVZdc6YupjC
+	 jmZieSrU7Hc8Ix23o4jdBahuSrzTNbd67pIjXOJXCvX1/eQsz2odlVCAKKrQNPCRtR
+	 m8Srnh0BEz9PQ==
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-6984169c126so335769a12.1
+        for <loongarch@lists.linux.dev>; Fri, 24 Jul 2026 02:08:16 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RpUYspVXFAvm5vQKCo1539/M7QxNfhFF88pj/KCOCll363Ge7hUv8qKXmpIFpTYdcBCAhW9vXke+PI=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyvgE4Okv3jsHF1yB8e+6qtsLpqmso73NDDWFjPqCjB2QWOs4rR
+	fKT+5zPeiARplkdOlYNr866HVV/L2SAIvH1zc11T1VKSHxLGm6CiCWPGJlwmYscglLjN8Kl5ct8
+	blRWZ/ZU29CW3J3Y6RxYLxVU0zaMp7DU=
+X-Received: by 2002:a05:6402:13cd:b0:69e:9b48:f3db with SMTP id
+ 4fb4d7f45d1cf-69f6c70e467mr2950108a12.29.1784884094973; Fri, 24 Jul 2026
+ 02:08:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260722112754.1615201-1-pulehui@huaweicloud.com>
- <20260722112754.1615201-3-pulehui@huaweicloud.com> <d856fb28-273e-99ec-f1dd-426ea087ea24@loongson.cn>
-In-Reply-To: <d856fb28-273e-99ec-f1dd-426ea087ea24@loongson.cn>
+References: <cover.1784597141.git.zhoubinbin@loongson.cn>
+In-Reply-To: <cover.1784597141.git.zhoubinbin@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 24 Jul 2026 16:15:55 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7CQVz45B0jFQpyo-A1-DHR+3pQ2-aRcquQ4Ak=y_+kKA@mail.gmail.com>
-X-Gm-Features: AUfX_mzqiUuV55_MiU1_fajGusPeXXKUGeSkSaSNeO6ISe29gAe7Gb7ZDog0mPQ
-Message-ID: <CAAhV-H7CQVz45B0jFQpyo-A1-DHR+3pQ2-aRcquQ4Ak=y_+kKA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 2/4] LoongArch: BPF: Fix memory leak in bpf_jit_free
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Pu Lehui <pulehui@huaweicloud.com>, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Kumar Kartikeya Dwivedi <memxor@gmail.com>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Yonghong Song <yonghong.song@linux.dev>, 
-	Song Liu <song@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Emil Tsalapatis <emil@etsalapatis.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, 
-	Puranjay Mohan <puranjay@kernel.org>, Xu Kuohai <xukuohai@huaweicloud.com>, 
-	Hengqi Chen <hengqi.chen@gmail.com>, Pu Lehui <pulehui@huawei.com>, loongarch@lists.linux.dev
+Date: Fri, 24 Jul 2026 17:08:40 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H65TkXw-Vbh_uJ3=EwObzrvMohzVEJR2hi+4Z-3RQ==+Q@mail.gmail.com>
+X-Gm-Features: AUfX_mwyj_QkLtDGP2oQlcn51XkEJOg4fpVQhWZEemOZS0A9nc_n_x6jlaC2KvQ
+Message-ID: <CAAhV-H65TkXw-Vbh_uJ3=EwObzrvMohzVEJR2hi+4Z-3RQ==+Q@mail.gmail.com>
+Subject: Re: [PATCH v6 0/2] Add Loongson CAN-FD controller driver
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Marc Kleine-Budde <mkl@pengutronix.de>, Vincent Mailhol <mailhol@kernel.org>, 
+	Bingxiong Li <libingxiong@loongson.cn>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	linux-can@vger.kernel.org, jeffbai@aosc.io
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 24, 2026 at 4:05=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+For the whole series:
+
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+
+On Tue, Jul 21, 2026 at 7:44=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn=
 > wrote:
 >
-> Cc: Huacai Chen <chenhuacai@kernel.org> loongarch@lists.linux.dev
+> Hi all:
 >
-> On 2026/7/22 =E4=B8=8B=E5=8D=887:27, Pu Lehui wrote:
-> > From: Pu Lehui <pulehui@huawei.com>
-> >
-> > When bpf_int_jit_compile() is called for subprograms, it returns early
-> > during the first pass (!prog->is_func || extra_pass is false), keeping
-> > ctx->offset alive for the subsequent extra pass.
-> >
-> > If JIT compilation fails for a later subprogram, the BPF core aborts an=
-d
-> > calls bpf_jit_free() to clean up the first subprogram. However,
-> > bpf_jit_free() fails to free jit_data->ctx.offset, which causes a memor=
-y
-> > leak of the JIT context offsets array.
-> >
-> > Fix this by adding the missing kvfree(jit_data->ctx.offset) in
-> > bpf_jit_free().
-> >
-> > Fixes: 4ab17e762b34 ("LoongArch: BPF: Use BPF prog pack allocator")
-> > Reported-by: Sashiko <sashiko-bot@kernel.org>
-> > Signed-off-by: Pu Lehui <pulehui@huawei.com>
-> > ---
-> >   arch/loongarch/net/bpf_jit.c | 1 +
-> >   1 file changed, 1 insertion(+)
-> >
-> > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.=
-c
-> > index 2738b4db1165..3d3ed1677d01 100644
-> > --- a/arch/loongarch/net/bpf_jit.c
-> > +++ b/arch/loongarch/net/bpf_jit.c
-> > @@ -2361,6 +2361,7 @@ void bpf_jit_free(struct bpf_prog *prog)
-> >                */
-> >               if (jit_data) {
-> >                       bpf_jit_binary_pack_finalize(jit_data->ro_header,=
- jit_data->header);
-> > +                     kvfree(jit_data->ctx.offset);
-> >                       kfree(jit_data);
-> >               }
-> >               hdr =3D bpf_jit_binary_pack_hdr(prog);
-> >
+> This patchset adds support for the CAN-FD controller found on Loongson
+> CPUs.
 >
-> Here is the link:
-> https://lore.kernel.org/bpf/20260722112754.1615201-3-pulehui@huaweicloud.=
-com/
+> Patch 1 introduces the basic CAN-FD controller driver with support
+> for classic CAN and CAN FD, including bit timing, error handling,
+> NAPI-based RX, and multiple TX buffers.
 >
-> Acked-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Applied, thanks.
-
-Huacai
+> Patch 2 adds optional DMA support for RX path using the Loongson APB
+> CMC DMA engine, which significantly reduces CPU load under high
+> receive throughput.
 >
-> Thanks,
-> Tiezhu
+> The driver has been tested on Loongson-2K3000 platforms with various
+> CAN/CAN FD traffic patterns.
 >
+> Finally, I'd like to thank Bingxiong, the original author of this driver,
+> for his efforts in working on the patch.
+>
+> Thanks.
+> Binbin
+>
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D
+> V6:
+> - Rebase on linux-can/master;
+> Patch (1/2):
+>  - Drop CAN_CTRLMODE_3_SAMPLES ctrlmode;
+>  - Replace kfree_skb() with dev_kfree_skb_any();
+>  - Drop REG_CMD_ERCRST operation;
+>  - Rewrite `loongson_canfd_tx_interrupt()` to prevent duplicate handling
+>    of TX completion';
+> Patch (2/2):
+>  - Added a fallback to true when dmaengine_tx_status() returns an error;
+>  - Replaced all direct regmap_read() from LOONGSON_CANFD_RX_DATA with
+>    the priv->get_rx_data() callback;
+>  - Release the DMA channel and clear priv->rx_ch on dma_alloc_coherent()
+>    failure;
+>
+> Link to V5:
+> https://lore.kernel.org/all/cover.1783670733.git.zhoubinbin@loongson.cn/
+>
+> V5:
+> Patch (1/2):
+>  - Fix tseg1_max const value;
+>  - Empty FIFO when SKB allocate failed.
+>  - Use REG_FRAME_META1_RWCNT as the playload read count value;
+>  - Only clean processed interrupt flags in
+>    loongson_canfd_err_interrupt();
+>  - Refact loongson_canfd_tx_interrupt();
+>  - Add LOONGSON_CANFD_TRV_DLY into loongson_canfd_volatile_reg();
+> Patch (2/2):
+>  - Fix dma_request_chan() error path;
+>  - Fix build error;
+>  - Fix loongson_canfd_rxdma_init() error path;
+>
+> Link to V4:
+> https://lore.kernel.org/all/cover.1783391759.git.zhoubinbin@loongson.cn/
+>
+> V4:
+> - Fix some issues from sashiko.
+> Patch (1/2):
+>  - Update commit message;
+>  - Use common APIs to calculate DLC;
+>  - Correct CAN_RTR_FLAG judgement;
+>  - Add skb check for CAN_STATE_ERROR_ACTIVE case;
+>  - Use regmap_write() rather than regmap_update_bits() to
+>    disable all interrupts;
+>  - Add napi_disable() in error paths;
+>  - Add `clock-frequency` return value check;
+>  - More comments for macros.
+>
+> Link to V3:
+> https://lore.kernel.org/all/cover.1782787997.git.zhoubinbin@loongson.cn/
+>
+> V3:
+> Patch (1/2):
+>  - Replace the switch-case statement with a calculated mask in
+>    `loongson_canfd_get_txbuf_sts()`;
+>  - Change `loongson_canfd_reset()` return type to `void`;
+>  - Drop old code in `loongson_canfd_set_btr()`;
+>  - Rename `loongson_canfd_set_mode()` to `loongson_canfd_set_conf_mode()`=
+;
+>  - Drop `cf->__res*` usage;
+>  - Drop unnecessary macro definitions;
+>  - Add `netif_napi_del()` in probe error route path;
+>  - Replace ternary operator with `if-else`;
+>  - Drop stats->rx_packets and stats->rx_bytes count in CAN error frames;
+>  - Add ethtool_ops;
+>  - Add CAN_CTRLMODE_CC_LEN8_DLC;
+>
+> Patch (2/2):
+>  - Fix W=3D2 warning;
+>  - Rename get_rx_frc() -> get_rxbuf_empty();
+>  - Put `loongson_canfd_rxdma_remove()` before free_candev();
+>  - Adjust the RXDMA probe process.
+>
+> Link to V2:
+> https://lore.kernel.org/all/cover.1780908445.git.zhoubinbin@loongson.cn/
+>
+> V2:
+> Patch (1/2):
+>  - Put all code into one file;
+>  - Add COMPILE_TEST Kconfig option;
+>  - Rewrite Kconfig description;
+>  - Use `regmap_test_bits()` to simplify bit field checks;
+>  - Drop odd FIELD_GET() usage;
+>  - Don't use FIELD_GET() for a single bit;
+>  - Use an if/else instead of the ternary operator;
+>  - Use the CAN TDC framework to get the SSP value;
+>  - Use guard(spinlock)/scoped_guard(spinlock);
+>  - Use netdev_debug() to be less verboss;
+>  - Check for memory allocation failure;
+>  - Add CAN_ERR_CNT flag;
+>  - Drop unused REG_DATA_xx_yy_W_DATA_yy definition;
+>  - Add more function comment;
+>
+> Link to V1:
+> https://lore.kernel.org/all/cover.1777273055.git.zhoubinbin@loongson.cn/
+>
+> Binbin Zhou (2):
+>   can: Add Loongson CAN-FD controller driver
+>   can: loongson_canfd: Add RXDMA support
+>
+>  MAINTAINERS                      |    7 +
+>  drivers/net/can/Kconfig          |   11 +
+>  drivers/net/can/Makefile         |    1 +
+>  drivers/net/can/loongson_canfd.c | 1877 ++++++++++++++++++++++++++++++
+>  4 files changed, 1896 insertions(+)
+>  create mode 100644 drivers/net/can/loongson_canfd.c
+>
+>
+> base-commit: 1cb8553c02e93e5a150cebd42f9ee3db0ece4707
+> --
+> 2.52.0
 >
