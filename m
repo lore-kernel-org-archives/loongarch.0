@@ -1,201 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F249F3EEADE
-	for <loongarch@lists.linux.dev>; Fri, 24 Jul 2026 09:08:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C27D423EAD
+	for <loongarch@lists.linux.dev>; Fri, 24 Jul 2026 10:39:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784884101; cv=none; b=eF/B5jC2b2Qa7m84cEFccT4PB4cpqlsEcJYDI2pwq2mCM9WpHIkpCMsOVJTMCEqHEo3l7sXgLVz3NgQxYpwtRVFk2oljSIQpHuxgHQWLZ8T1rkK4h8i9pJj2eMmS2TuhE0aE6Z0fXUm8y2dQ7F7QRYVsIvjnx8JS0ny4/Ay1W1E=
+	t=1784889555; cv=none; b=JLWdp+yfLC2KhLIwzueuqqC5gDtcGgO+6444ohJLDLJlKEkpLebOm0t7r0hHB/RUrJTdXLM9j5lsMoQGsZIj7xQfY/uA2S1GOlv0G8Q/evvkQXBTzJowK7lQSjiPxqHXs1vgLsNjtpwryfM0+dUNSmoFJguFGO+D6bhU14Vda4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784884101; c=relaxed/simple;
-	bh=HghB87T9wuVK0V8ssQsbWKMB0URUxQqrvPe+4/pIBD4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ua6+dFdlg4/2XjQRear+L96Cl+DuZ8t3jLdiX42XJjXuYSaiLhpiXj1pRrhUgCAmCa/OuNnbeM03ziaV90/Fy6SapYVTTjeQDB8o/6nCiXqXTsLrTwU+r0JiD2tpfdWfKVvO2WCz8NTCXDKm5YlTUUTESwnQOKjVtSxYlfcMJPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b0FGlJmo; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784889555; c=relaxed/simple;
+	bh=8ucxzJzKRncGbmLH/iEQkI2exC3zh2zSlJ8zSRx26rg=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=OTxLsZIssiZG+rs1k78NzjfeY6rGu5gaBsEOTEmgL7etjf4bb/ESJjxkB8IrsdnK2V4guC1rD+2pakdt6BRNtOgEd6PZ/jyxb/oNZVMHapTTJiUsdUwGc+/aYr97/HwuMdsaNFjPL8l17XXA9DdvvZQBHj2jpfStqZRj5SbP/4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=nPz4q9Un; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b0FGlJmo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62C571F00AC4
-	for <loongarch@lists.linux.dev>; Fri, 24 Jul 2026 09:08:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784884096;
-	bh=p3A/4pifL2L3HVg1ufHCi9uHYCA1/oVSrgNwE9h/on0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=b0FGlJmoxLUWAbL5EySvN/iorG54cNgcEbPcOopN1zxTkSOQM7iS6Y5GebEXE8tuo
-	 i2AAT0nyMYutEohZDbHYiKqj4scpCbnNH5ZnmuNrIhqM6TDmkoLTrX9iUFTs6rNkTL
-	 xBuEyHohtFe2axC1uWt92aaOSyR3AyHHhpHTEg0IC9LFLCpJ8UmXEfJfc8aGwhWAgW
-	 4KJ46Hu1Zv0NxhQmAvFVll4yba08ty8pd5oOCt6shiXDJoquZqSpSYdqVZdc6YupjC
-	 jmZieSrU7Hc8Ix23o4jdBahuSrzTNbd67pIjXOJXCvX1/eQsz2odlVCAKKrQNPCRtR
-	 m8Srnh0BEz9PQ==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-6984169c126so335769a12.1
-        for <loongarch@lists.linux.dev>; Fri, 24 Jul 2026 02:08:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RpUYspVXFAvm5vQKCo1539/M7QxNfhFF88pj/KCOCll363Ge7hUv8qKXmpIFpTYdcBCAhW9vXke+PI=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyvgE4Okv3jsHF1yB8e+6qtsLpqmso73NDDWFjPqCjB2QWOs4rR
-	fKT+5zPeiARplkdOlYNr866HVV/L2SAIvH1zc11T1VKSHxLGm6CiCWPGJlwmYscglLjN8Kl5ct8
-	blRWZ/ZU29CW3J3Y6RxYLxVU0zaMp7DU=
-X-Received: by 2002:a05:6402:13cd:b0:69e:9b48:f3db with SMTP id
- 4fb4d7f45d1cf-69f6c70e467mr2950108a12.29.1784884094973; Fri, 24 Jul 2026
- 02:08:14 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="nPz4q9Un"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E56B1477;
+	Fri, 24 Jul 2026 03:39:06 -0700 (PDT)
+Received: from [10.2.198.93] (unknown [10.2.198.93])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5EF243F66F;
+	Fri, 24 Jul 2026 03:38:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1784889550; bh=8ucxzJzKRncGbmLH/iEQkI2exC3zh2zSlJ8zSRx26rg=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=nPz4q9UnTmIpC3f1IrnhhOXc+A/Z2VLc2MvO7S07Y0dMBj6vYrB5Dye4ym8oVNhXD
+	 BOcxcXhOs2SceDUmzESNakuvRw/Lz60Kb4I5oFZwEpDHzbiEUv3iW7H4ZPf9e+CZSj
+	 HrNea7YK425Wt8aVXd2zUUsc5hB2FRPkxg9XWQf4=
+Message-ID: <85146377-9c7a-43d9-a5af-b976d25cb93f@arm.com>
+Date: Fri, 24 Jul 2026 11:38:40 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1784597141.git.zhoubinbin@loongson.cn>
-In-Reply-To: <cover.1784597141.git.zhoubinbin@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 24 Jul 2026 17:08:40 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H65TkXw-Vbh_uJ3=EwObzrvMohzVEJR2hi+4Z-3RQ==+Q@mail.gmail.com>
-X-Gm-Features: AUfX_mwyj_QkLtDGP2oQlcn51XkEJOg4fpVQhWZEemOZS0A9nc_n_x6jlaC2KvQ
-Message-ID: <CAAhV-H65TkXw-Vbh_uJ3=EwObzrvMohzVEJR2hi+4Z-3RQ==+Q@mail.gmail.com>
-Subject: Re: [PATCH v6 0/2] Add Loongson CAN-FD controller driver
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Marc Kleine-Budde <mkl@pengutronix.de>, Vincent Mailhol <mailhol@kernel.org>, 
-	Bingxiong Li <libingxiong@loongson.cn>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-can@vger.kernel.org, jeffbai@aosc.io
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Cc: usama.anjum@arm.com, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linux-arch@vger.kernel.org, linux-mm@kvack.org,
+ kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+ linux-riscv@lists.infradead.org, linux-openrisc@vger.kernel.org
+Subject: Re: [PATCH RFC v2 08/20] mm: vmscan: remove stack copy address of pud
+ pass in wallk_pud_range()
+To: Yeoreum Yun <yeoreum.yun@arm.com>, Russell King <linux@armlinux.org.uk>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>,
+ Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Barry Song <baohua@kernel.org>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ David Hildenbrand <david@kernel.org>, Michal Hocko <mhocko@kernel.org>,
+ Lorenzo Stoakes <ljs@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>,
+ Bibo Mao <maobibo@loongson.cn>, Anup Patel <anup@brainfault.org>,
+ Atish Patra <atish.patra@linux.dev>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, "Liam R. Howlett" <liam@infradead.org>,
+ Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Jonas Bonn <jonas@southpole.se>,
+ Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+ Stafford Horne <shorne@gmail.com>
+References: <20260722-dummy_ptxp3-v2-0-d9e4bad31e0a@arm.com>
+ <20260722-dummy_ptxp3-v2-8-d9e4bad31e0a@arm.com>
+From: Usama Anjum <usama.anjum@arm.com>
+Content-Language: en-US
+In-Reply-To: <20260722-dummy_ptxp3-v2-8-d9e4bad31e0a@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-For the whole series:
+On 22/07/2026 4:30 pm, Yeoreum Yun wrote:
+> The behaviour of pXdp_get() will change with generic compile-time folded
+> page tables. To prepare for that, replace passing the address of a stack
+> copy of a pXd to walk_pmd_range() with passing the pud pointer directly,
+> allowing folded entries to be ignored.
+> 
+> There should be no functional change.
+> 
+> Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+Probably my reviewed-by tag was lost in previous version. Posting here again:
 
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+Reviewed-by: Muhammad Usama Anjum <usama.anjum@arm.com>
 
-On Tue, Jul 21, 2026 at 7:44=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn=
-> wrote:
->
-> Hi all:
->
-> This patchset adds support for the CAN-FD controller found on Loongson
-> CPUs.
->
-> Patch 1 introduces the basic CAN-FD controller driver with support
-> for classic CAN and CAN FD, including bit timing, error handling,
-> NAPI-based RX, and multiple TX buffers.
->
-> Patch 2 adds optional DMA support for RX path using the Loongson APB
-> CMC DMA engine, which significantly reduces CPU load under high
-> receive throughput.
->
-> The driver has been tested on Loongson-2K3000 platforms with various
-> CAN/CAN FD traffic patterns.
->
-> Finally, I'd like to thank Bingxiong, the original author of this driver,
-> for his efforts in working on the patch.
->
-> Thanks.
-> Binbin
->
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D
-> V6:
-> - Rebase on linux-can/master;
-> Patch (1/2):
->  - Drop CAN_CTRLMODE_3_SAMPLES ctrlmode;
->  - Replace kfree_skb() with dev_kfree_skb_any();
->  - Drop REG_CMD_ERCRST operation;
->  - Rewrite `loongson_canfd_tx_interrupt()` to prevent duplicate handling
->    of TX completion';
-> Patch (2/2):
->  - Added a fallback to true when dmaengine_tx_status() returns an error;
->  - Replaced all direct regmap_read() from LOONGSON_CANFD_RX_DATA with
->    the priv->get_rx_data() callback;
->  - Release the DMA channel and clear priv->rx_ch on dma_alloc_coherent()
->    failure;
->
-> Link to V5:
-> https://lore.kernel.org/all/cover.1783670733.git.zhoubinbin@loongson.cn/
->
-> V5:
-> Patch (1/2):
->  - Fix tseg1_max const value;
->  - Empty FIFO when SKB allocate failed.
->  - Use REG_FRAME_META1_RWCNT as the playload read count value;
->  - Only clean processed interrupt flags in
->    loongson_canfd_err_interrupt();
->  - Refact loongson_canfd_tx_interrupt();
->  - Add LOONGSON_CANFD_TRV_DLY into loongson_canfd_volatile_reg();
-> Patch (2/2):
->  - Fix dma_request_chan() error path;
->  - Fix build error;
->  - Fix loongson_canfd_rxdma_init() error path;
->
-> Link to V4:
-> https://lore.kernel.org/all/cover.1783391759.git.zhoubinbin@loongson.cn/
->
-> V4:
-> - Fix some issues from sashiko.
-> Patch (1/2):
->  - Update commit message;
->  - Use common APIs to calculate DLC;
->  - Correct CAN_RTR_FLAG judgement;
->  - Add skb check for CAN_STATE_ERROR_ACTIVE case;
->  - Use regmap_write() rather than regmap_update_bits() to
->    disable all interrupts;
->  - Add napi_disable() in error paths;
->  - Add `clock-frequency` return value check;
->  - More comments for macros.
->
-> Link to V3:
-> https://lore.kernel.org/all/cover.1782787997.git.zhoubinbin@loongson.cn/
->
-> V3:
-> Patch (1/2):
->  - Replace the switch-case statement with a calculated mask in
->    `loongson_canfd_get_txbuf_sts()`;
->  - Change `loongson_canfd_reset()` return type to `void`;
->  - Drop old code in `loongson_canfd_set_btr()`;
->  - Rename `loongson_canfd_set_mode()` to `loongson_canfd_set_conf_mode()`=
-;
->  - Drop `cf->__res*` usage;
->  - Drop unnecessary macro definitions;
->  - Add `netif_napi_del()` in probe error route path;
->  - Replace ternary operator with `if-else`;
->  - Drop stats->rx_packets and stats->rx_bytes count in CAN error frames;
->  - Add ethtool_ops;
->  - Add CAN_CTRLMODE_CC_LEN8_DLC;
->
-> Patch (2/2):
->  - Fix W=3D2 warning;
->  - Rename get_rx_frc() -> get_rxbuf_empty();
->  - Put `loongson_canfd_rxdma_remove()` before free_candev();
->  - Adjust the RXDMA probe process.
->
-> Link to V2:
-> https://lore.kernel.org/all/cover.1780908445.git.zhoubinbin@loongson.cn/
->
-> V2:
-> Patch (1/2):
->  - Put all code into one file;
->  - Add COMPILE_TEST Kconfig option;
->  - Rewrite Kconfig description;
->  - Use `regmap_test_bits()` to simplify bit field checks;
->  - Drop odd FIELD_GET() usage;
->  - Don't use FIELD_GET() for a single bit;
->  - Use an if/else instead of the ternary operator;
->  - Use the CAN TDC framework to get the SSP value;
->  - Use guard(spinlock)/scoped_guard(spinlock);
->  - Use netdev_debug() to be less verboss;
->  - Check for memory allocation failure;
->  - Add CAN_ERR_CNT flag;
->  - Drop unused REG_DATA_xx_yy_W_DATA_yy definition;
->  - Add more function comment;
->
-> Link to V1:
-> https://lore.kernel.org/all/cover.1777273055.git.zhoubinbin@loongson.cn/
->
-> Binbin Zhou (2):
->   can: Add Loongson CAN-FD controller driver
->   can: loongson_canfd: Add RXDMA support
->
->  MAINTAINERS                      |    7 +
->  drivers/net/can/Kconfig          |   11 +
->  drivers/net/can/Makefile         |    1 +
->  drivers/net/can/loongson_canfd.c | 1877 ++++++++++++++++++++++++++++++
->  4 files changed, 1896 insertions(+)
->  create mode 100644 drivers/net/can/loongson_canfd.c
->
->
-> base-commit: 1cb8553c02e93e5a150cebd42f9ee3db0ece4707
-> --
-> 2.52.0
->
+> ---
+>  mm/vmscan.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index 06e103f9781e..0c9c4ac89e09 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -3727,7 +3727,7 @@ static int walk_pud_range(p4d_t *p4d, unsigned long start, unsigned long end,
+>  		if (!pud_present(val) || WARN_ON_ONCE(pud_leaf(val)))
+>  			continue;
+>  
+> -		walk_pmd_range(&val, addr, next, args);
+> +		walk_pmd_range(pud + i, addr, next, args);
+>  
+>  		if (need_resched() || walk->batched >= MAX_LRU_BATCH) {
+>  			end = (addr | ~PUD_MASK) + 1;
+> 
+
