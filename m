@@ -1,63 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79AA3EFFC5;
-	Sat, 25 Jul 2026 17:25:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785000330; cv=none; b=jJZLUlQuJuuvghO7wN7bRPHqas4P35O5pwTHHjyOXo8GID1Sluk2ml3Hl2ERO+avg2B3hJcX++MmpLFmDmWnPW81/6MCDTp+B/tJLPqqDdK/gRxc7P/+TGIHuznhBBcwRrq/NH5MGeHEd6wvfR2iqlxeRWSqUBATbvOaCnktsNs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785000330; c=relaxed/simple;
-	bh=8A9cub11mVRHKNbEWIe9RLS0k9ZLzftJZiz5lW+hEYU=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=NDGOPje7hxvr0Mzd8E5/TI0JHDrOOCTeM4ygc/M/xZjT1tebkNwIbSGe/Di1uU011n6k2dnhIHvhhRdFYsvIiYZvHLLm+Xi+mmKrXQIERGAPFhvXtEn3imdCMTd9iKj1k7sEJa1a4VFPTd/SFj7QW28uNt0DXUtHQ6q1jnF03c8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RXgv49LY; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFFF6288C2D
+	for <loongarch@lists.linux.dev>; Sat, 25 Jul 2026 17:36:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785000989; cv=pass; b=jOh6W++m7qRK7iA5yOCLieSxPW6We0+KdNzEG/4NMFiABv4KtQuP5Ve29JbxNsqaHpHUI+XNOIK62Cb2MxR0dRMaxvZXcVLvdY551PJw0QZXucV7W03i22x0fL5CA/kqvgqLJCNP8sVaYpiaqrbFBbXoBWD6gvsbcMRSdBJZ3L0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785000989; c=relaxed/simple;
+	bh=aaT4bSz5HqqnTrLzg36MqwkeRkeee05kQBWMOuFMa9A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SwK0RrWWb4JKU2l9bGL7LF3Caq4GpaGJmpYSyjq4ZiYg55/a0Ys3v3bnTymURpWrTSzHD4UAYZR72Ogw0L60+pritfdsGijucDP6Ys39i+tdRbPfp0Z/35I5R/XOXaPOxGUryNCqZ32w0tg6uBRrfYTbwmRTHRHazDA3eB/kmJI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ziyao.cc; spf=pass smtp.mailfrom=ziyao.cc; dkim=pass (1024-bit key) header.d=ziyao.cc header.i=me@ziyao.cc header.b=czLI0mj3; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ziyao.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziyao.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RXgv49LY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD45B1F000E9;
-	Sat, 25 Jul 2026 17:25:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785000329;
-	bh=HAerAqqVGKG5pMjup5Rli4t0uA9uguIuDiFSvSQ5oIU=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc;
-	b=RXgv49LYzf4rKpYrqUyQWOvVUlYmYaMu6dkKYtbtW9WSNqAUfpgb3WXGw/fbSHyWe
-	 jEQAjIyC1KbjDqKat3+ZFZ1pRgRfbO5JL/ScABz5YJ4vMlJPeD1H+B8tJJjEW4VPNx
-	 sHW377lxDR1nfJKhyv38tiF8ZrmgVrxpNdvMmW2Hjg9Te3ytRAQQi7I8SwPFR4avzO
-	 5g08F1Ar5F9G7A3R2npPDacdetO/ez2pahFvbJHEAqzVGEzj0jXD6aKXAVIDYypTmm
-	 YI8G7bhbE1tO+y9G/JloaWGCshVkgSouHIthXHoJ/1ZviRiWUHJfeOBYGPswZPM4eF
-	 5rDpUa7elqItA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 89F7C38119C5;
-	Sat, 25 Jul 2026 17:24:57 +0000 (UTC)
-Subject: Re: [GIT PULL] LoongArch fixes for v7.2-rc5
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20260725103658.815114-1-chenhuacai@loongson.cn>
-References: <20260725103658.815114-1-chenhuacai@loongson.cn>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20260725103658.815114-1-chenhuacai@loongson.cn>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-7.2-1
-X-PR-Tracked-Commit-Id: 91a70492c03040d51b36f595530d6491d5d6c541
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3fb11702e4b2fe9eaaed7369bbe7e63177cc04a6
-Message-Id: <178500029614.3569165.6075673664777645319.pr-tracker-bot@kernel.org>
-Date: Sat, 25 Jul 2026 17:24:56 +0000
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+	dkim=pass (1024-bit key) header.d=ziyao.cc header.i=me@ziyao.cc header.b="czLI0mj3"
+ARC-Seal: i=1; a=rsa-sha256; t=1785000972; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=RYuLiCNK/wLM+A1AL+pi7reeRfYUqTvJfzNwaUYFST6oGvWU0r/XmZYJ/AtLCufWD6zOqco+OFwVexiNNKiyMNzMFgDeBMEwOCBMXk+KBjfM98jtxol281qb2kUzhPB/xFTwIi+h+B8NMMyUPokv4m68Gj14JnfE032O2Xpnky0=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1785000972; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=WKq3a9nQc3N0aKZSTpXVKdyLOSqPpQF428qAw79wyQs=; 
+	b=OiaSQ4bVUWFXJWQ32dSTu6iCPU20ymm1qO3bfgbiP9u6Bi8KI0imxjdqCz+Hk8fiByK2lNEpucjp1o3obfikW4XaMcqcF6Ln5hFd9kUdJR51XAQ2IXAtOafnhc9geB5wNwFkd1YCV4jIfDWQmZrL1ZwW6f2fCx0UF4cqsDMmjVE=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=ziyao.cc;
+	spf=pass  smtp.mailfrom=me@ziyao.cc;
+	dmarc=pass header.from=<me@ziyao.cc>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1785000972;
+	s=zmail; d=ziyao.cc; i=me@ziyao.cc;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=WKq3a9nQc3N0aKZSTpXVKdyLOSqPpQF428qAw79wyQs=;
+	b=czLI0mj30hc4LWFO1Tueq8WRo+KJA6tmUGbitGWug78ATEAVdjpHjgTshFYnnnL9
+	GffR3iyKrM9FoDvcOWcWJG0r2mI3vU3ty77K1tdQXpFVb0AcB7HIMqFqfQwjkjk//mX
+	sv18y8/olrNMmEFss6B0Go/gNmPlPX0cdjmvv8ao=
+Received: by mx.zohomail.com with SMTPS id 1785000966591653.2956125819782;
+	Sat, 25 Jul 2026 10:36:06 -0700 (PDT)
+Date: Sat, 25 Jul 2026 17:35:57 +0000
+From: Yao Zi <me@ziyao.cc>
+To: Zixing Liu <liushuyu@aosc.io>, linux-kernel@vger.kernel.org,
+	Yao Zi <ziyao@disroot.org>, Jianmin Lv <lvjianmin@loongson.cn>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: Kexy Biscuit <kexybiscuit@aosc.io>, Mingcong Bai <jeffbai@aosc.io>,
+	loongarch@lists.linux.dev, stable@vger.kernel.org,
+	Yao Zi <me@ziyao.cc>
+Subject: Re: [PATCH v2] platform/loongarch: laptop: explicitly reset the
+ bl_powered state when resuming
+Message-ID: <amTz4qZ6CE7fn7QS@pie>
+References: <20260723121840.1120953-2-liushuyu@aosc.io>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260723121840.1120953-2-liushuyu@aosc.io>
+X-Zoho-Virus-Status: 1
+X-Zoho-AV-Stamp: zmail-av-0.2.10.1.5.2/284.966.17
+X-ZohoMailClient: External
 
-The pull request you sent on Sat, 25 Jul 2026 18:36:58 +0800:
+On Thu, Jul 23, 2026 at 08:18:39PM +0800, Zixing Liu wrote:
+> On EAECIS NL60R with EC firmware version 1.11, resuming from S3 has a very
+> high chance (>= 90%) of causing the EC to lose the previous backlight
+> power state. When this happens, the laptop resumes normally from S3, but
+> the backlight remains off (when shining on the screen with a flash light,
+> we can see the screen contents are updating normally).
+> 
+> Since there is no generic way to query the EC's backlight state on
+> Loongson laptop platforms, assume the worst-case scenario and restart the
+> backlight power inside the kernel each time the system resumes.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 53c762b47f72 ("platform/loongarch: laptop: Add backlight power control support")
+> Signed-off-by: Zixing Liu <liushuyu@aosc.io>
+> ---
+> Changes in v2:
+> - Move bl_powered reset logic to loongson_hotkey_suspend.
+> - Link to v1: https://lore.kernel.org/loongarch/20260722044457.1333404-1-liushuyu@aosc.io/
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-7.2-1
+Again on my TongFang L860-T2 3A5000 laptop, no regression is observed.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3fb11702e4b2fe9eaaed7369bbe7e63177cc04a6
+Tested-by: Yao Zi <me@ziyao.cc>
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Best regards.
+Yao Zi
