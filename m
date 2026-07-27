@@ -1,82 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AD47374A0F
-	for <loongarch@lists.linux.dev>; Mon, 27 Jul 2026 04:25:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F36B0309DB5
+	for <loongarch@lists.linux.dev>; Mon, 27 Jul 2026 07:29:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785126353; cv=none; b=sYDPYYoFZHdtCPQlwMsYTvuoyF8KNXLWMdafddenwP4X3DVNYtdUOdorWoa9ILZeoYLWJBRZXhD5vrywTzmh3TfnOjJWD5Xprdy1QdYRrN25DsUepGX/7PCDJAlPFfZQ9ytarNfT8vnL7lOcNlk/ZtJicSfz0j2ZcjIuiUai2y0=
+	t=1785137349; cv=none; b=LmA/p8tjkYJtrkUfMfT5YGmB7odHwma77ffZcralDOIzA1ia8c6J4YApPtpZqv30mX5x5XiNaV/u1jTa3bsQN0XuxfdUGL0UALsAbw16GGSHmk15PSB/+f2suEbiTLHV4rQbigZLK45nC14gJc47iiNIKxAuyFSUTHHkVcfRl3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785126353; c=relaxed/simple;
-	bh=BmecPjwXE0g3LVvgD0gIsyctVAEVhKzbfQpXZKpRGxk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q8ZTSFgV2bMW72otWjIxnjqrUaVH6jrP4CnVyxe6fTBrJ+nwyoHxMcOMPSW6SoenK6qTQx/u+D9PbTpDq8bRXHbjx06ETeLMQ+zvSWEK1UZzdG8hH8Kkjz9w7I8INk02he7brbzJga/3Ue+SHOLbcVO+zc3Ls5QvEaeAsNIh2g0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MDACPeTu; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MDACPeTu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AB121F00A3D
-	for <loongarch@lists.linux.dev>; Mon, 27 Jul 2026 04:25:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785126352;
-	bh=DSdoq66NS4mLpngWsgXUV33SUbyEXoCvLVhEEJHKSEo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=MDACPeTu842gSbBLAenyljL6FHGYTW5pmhPm4et/q3N//x+XwJ3YyTHPbzRhs4wa3
-	 iZ856JUjbdyJnLCA1mKwjkIM4+L+jgUkzICFbrj6X+abG8UpJDdboVhCTv2xf+IP+O
-	 QTl0w2hkM9vi9XqohS5kGH+DcOzVK68SS3Ej0nDXLm9+i+uG6LwvnZgQG1QK8Qz3hk
-	 xtLK0tdp6Bqwo9mXPwBp0OcTbemXMyQ+PTS1Ga9PbNeOGAIagTGanXxd1GXbkyE4KU
-	 NRvaFAcTrjRNBpMfiC0CyIHuGkSDAgvPQEoYQPzBIYMBsIbmorjFSXsrAMPv7e/hmY
-	 foMtuopizADyw==
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-69c7ab350e9so3147346a12.0
-        for <loongarch@lists.linux.dev>; Sun, 26 Jul 2026 21:25:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+Rra2QZZRI8mQjBSK+ddWQ29K5lMvu84azsJRbc++t2Q+Q0a5xfB8fE02+BfY5MqaqOtBYoSXnzEptc=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwrrhhGLLM3wy957Vhe/x/Qd0RvDAJAe+PU2kQd3vCHWS2sDCD9
-	sASDtto96oPr1IStRkv6lVJEqnXspbtXhW2t4HQQT1dXbiI3NRLDfnqr/RFlG4StVtB9hp+rJZZ
-	VfUD58F7w1zaBksk6g28nZQdBz4rkncI=
-X-Received: by 2002:a05:6402:90b:b0:698:3e99:815b with SMTP id
- 4fb4d7f45d1cf-69fc119090bmr3108624a12.37.1785126350613; Sun, 26 Jul 2026
- 21:25:50 -0700 (PDT)
+	s=arc-20240116; t=1785137349; c=relaxed/simple;
+	bh=JI3ByRaXDwvPX2HdoIVbFTjzgLG3tFY7TEZptfZD30w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bUfFccjqVFsjcXrjdWe0CpvPHNCucFhYgsXVUQ+Xbi32Y2THbfrmFA1rf4psFEo5Ebow0qXxSbeNa9TgL7ICngCroV234GgwHQMHCwR4UFEeU16CYXCytRLb1uFMCkQ1h/rDUIgMsBQQxOmmTlcoq8xqFSvt2zh+j5UcJAGs/Vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8AxFOjACGdqK6kHAA--.4032S3;
+	Mon, 27 Jul 2026 15:29:04 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowJCxKcSYCGdq8j0aAA--.1000S2;
+	Mon, 27 Jul 2026 15:28:24 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Xi Ruoyao <xry111@xry111.site>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/6] LoongArch: KVM: Add separate vmid support
+Date: Mon, 27 Jul 2026 15:21:03 +0800
+Message-Id: <20260727072109.2151675-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260711100956.4351-1-yangtiezhu@loongson.cn>
-In-Reply-To: <20260711100956.4351-1-yangtiezhu@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 27 Jul 2026 12:26:17 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4Pc2qzFYRp2WbsChWuN4orvmq4YGTc2cxDWmO=S825Wg@mail.gmail.com>
-X-Gm-Features: AUfX_mx9aZopj85iVSKfRjgkFJ-iSl24CvZPnt86045kqxbl-tA4xRYJcv6Mo2A
-Message-ID: <CAAhV-H4Pc2qzFYRp2WbsChWuN4orvmq4YGTc2cxDWmO=S825Wg@mail.gmail.com>
-Subject: Re: [PATCH v1 0/3] LoongArch: BPF: clean up for build_insn() paths
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Hengqi Chen <hengqi.chen@gmail.com>, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxKcSYCGdq8j0aAA--.1000S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Applied, thanks.
+LoongArch KVM hypervisor supports two-level MMU, vpid index is used
+for stage1 MMU and vmid index is used for stage2 MMU.
 
-Huacai
+On 3A5000, vmid must be the same with vpid. On 3A6000 platform vmid
+may separate from vpid. There are such advantages if separate vmid
+is supported.
+  1. One VM uses one vmid, vCPUs on the same VM can share the same vmid.
+  2. If one vCPU switch between different physical CPU, old vmid can be
+     still useful if the old vmid is not expired
+  3. For remote tlb flush, it is to flush TLBs which are mapping
+     GPA --> HPA, only vmid need update and vpid need not.
 
-On Sat, Jul 11, 2026 at 6:10=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> Based on 7.2-rc1, tested on a Loongson-3A6000 physical machine.
->
-> Remove redundant or dead code, and eliminate the unnecessary runtime
-> check.
->
-> Tiezhu Yang (3):
->   LoongArch: BPF: Remove redundant zext jumping in move_imm()
->   LoongArch: BPF: Remove dead move_imm() call in BPF_NEG path
->   LoongArch: BPF: Split unconditional branch JA paths statically
->
->  arch/loongarch/net/bpf_jit.c | 10 +++++-----
->  arch/loongarch/net/bpf_jit.h |  2 +-
->  2 files changed, 6 insertions(+), 6 deletions(-)
->
-> --
-> 2.42.0
->
->
+Here add separate vmid feature support, vmid feature detecting method
+comes from LVZ version with 2 and LVZ is enabled.
+
+Bibo Mao (6):
+  LoongArch: KVM: Add vmid support for stage2 MMU
+  LoongArch: KVM: Add separate vCPU and VM id update function
+  LoongArch: KVM: Add separate vmid feature support
+  LoongArch: KVM: implement vmid updating logic
+  LoongArch: KVM: Add remote tlb flushing support
+  LoongArch: KVM: Enable separate vmid feature
+
+ arch/loongarch/include/asm/kvm_host.h  | 10 ++++
+ arch/loongarch/include/asm/loongarch.h |  2 +
+ arch/loongarch/kernel/asm-offsets.c    |  1 +
+ arch/loongarch/kernel/cpu-probe.c      |  7 ++-
+ arch/loongarch/kvm/main.c              | 76 ++++++++++++++++++++++++--
+ arch/loongarch/kvm/mmu.c               | 16 ++++++
+ arch/loongarch/kvm/switch.S            |  5 +-
+ arch/loongarch/kvm/tlb.c               | 19 ++++++-
+ arch/loongarch/kvm/vcpu.c              |  7 ++-
+ 9 files changed, 133 insertions(+), 10 deletions(-)
+
+
+base-commit: f5098b6bae761e346ebcd9da7f95622c04733cff
+-- 
+2.39.3
+
