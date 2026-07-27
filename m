@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE6F03C1412;
-	Mon, 27 Jul 2026 10:16:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C56423F822B;
+	Mon, 27 Jul 2026 10:22:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785147376; cv=none; b=M1pLUty4kWcjpXbT7rEtuT2rboDTlPEXcqV6LmPVLBDkohaPEg2nfFXn78U6WsA9kIFxCNU5Ne0ywPEWj+FRb2QPuDYuFsSQwrNCeOIzIyQVkZpjzGEMi4wO8fJukoyEpri/k3PAC45Y+hAONZ+JmrgyPAQ1OygH8BvsoD4o+lM=
+	t=1785147744; cv=none; b=e9sRrJ8YrLLrc+0poIfdUEzN1tW4sDQ7giyE4LcW7d+nsccOGeyDa3H+WGcpa2HRl4msPHgEcczNRxC0eLwl7xnA+vO1hIIIWWU4dBUZ4n65J2nlmE5zwUeZpscuN5u3QytK77i1Cn3R47sdSFpx/osAe373n5H/infRsTD1jK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785147376; c=relaxed/simple;
-	bh=XDd9sD3kB3qr/D6VjaQq8a2zEi+DCyljxrHDR/C5+xI=;
+	s=arc-20240116; t=1785147744; c=relaxed/simple;
+	bh=iiLJNHU6xEHzqqi/KV52NPqARYyozF5uapPv9GfdchM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=haQh6U6KpBo6JhMBfi/jM0RcL27WPr9Uy7LdlCj7oo1ww/ruDSTC9tCUoFJfHmQpOagjxMKg3zIT6G8hR/do96AbGwBzQra/C5bH0QOTH2JvRYtlsS+48/h7qyRnXiPf6bEFNqYf8yFkq+Vno6pRUihIAsMXphJZi5T5LP+jvPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aeXLGKxn; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=iOtykk259eHmRbST2/ka8cRfqA83OKne3PB8tEZsDeBS8LGSEreaho+z0uqUVRp1A9KhUAtfPRRSJMs0U36zM5zFjgLb99VqNa7wgf9mu1M0yY4MugO9lZDOZvqji+sAdG3OxSlzzOmX/0HMZ1RARbMoDa6xkINhLJqoLWmeFms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gsYY3yMs; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aeXLGKxn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE0021F000E9;
-	Mon, 27 Jul 2026 10:16:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gsYY3yMs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5E151F000E9;
+	Mon, 27 Jul 2026 10:22:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785147375;
-	bh=aPvuz+aL88c21S8YC4GLGVYZg37SgTBgz+cPgSwl5YY=;
+	s=k20260515; t=1785147743;
+	bh=/JnmBgXxFDtCMN2wDB2IoufqkaTKn0f8mfPW/klL5BI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=aeXLGKxn+RhuEpjDFbt/ECV2BxYK5diVi7xVn6tULU7vDF7IK7Nil1nVqd/uTLs0a
-	 j54JY+fifjoQHmXB9CR+jCM4rvP6pUcAJpAIgW91yTz1VWA8cFXD1DZoURmpEUqlBo
-	 Tq8KvwKyQ4fOEXf51Jdb/5lt35sWrjNBv7X3ON5nEjg++ndjFL8fdwh7RQt7DAiufK
-	 NEu++wGQ+modaUWU4wmPBGb6eEqXBiiWFcOGq4t079CkA4z0301GVt3RVtw+hHhHy4
-	 jlT37q6tmmybvVR0a4m6cIFpSFH0potJvfTJYgzoIW0uyrUmfcVfT1diLwjHu9fMt5
-	 gbvr2kjjgFHYQ==
-Date: Mon, 27 Jul 2026 13:16:01 +0300
+	b=gsYY3yMsnWmKGvnXvXG4cAJ9uYD/g70GCEZQyJYYALUaBP30DL0mK8UiL1pB/EbhK
+	 nc+d8D//BvpV+fsOKUHm9FDZGks+LTCZNNnpygfauGfGDeviZ7a4Gqo4kdtWxeck/h
+	 N5qCMmAK1Dz1wbvXTixVEc38OGcBuCgNrMt0sN0dX9WpHNIOzTARNfgEcid/hOxfeT
+	 3z4xkHMzT2u5IB1Guj2HJz8xjNhJ7A/m+YluYaX2fPMRcTaMbRpym80eUIvDHQmf4G
+	 ID4MUbBHhJPHP/6PWnOj7KYtY4zzJo2RU/OQ8P+F7MVjo8Q1DldhHmb47Hgfz1kxZd
+	 WoAIbmR4uVBoA==
+Date: Mon, 27 Jul 2026 13:22:09 +0300
 From: Mike Rapoport <rppt@kernel.org>
-To: Adrian =?utf-8?Q?Barna=C5=9B?= <abarnas@google.com>
-Cc: linux-mm@kvack.org, Albert Ou <aou@eecs.berkeley.edu>,
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Borislav Petkov <bp@alien8.de>, linux-mm@kvack.org,
+	Albert Ou <aou@eecs.berkeley.edu>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Andy Lutomirski <luto@kernel.org>,
 	Brendan Jackman <jackmanb@google.com>,
 	Catalin Marinas <catalin.marinas@arm.com>,
 	Dave Hansen <dave.hansen@linux.intel.com>,
@@ -49,47 +50,47 @@ Cc: linux-mm@kvack.org, Albert Ou <aou@eecs.berkeley.edu>,
 	Vlastimil Babka <vbabka@kernel.org>, Will Deacon <will@kernel.org>,
 	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
 	linux-riscv@lists.infradead.org, loongarch@lists.linux.dev,
-	x86@kernel.org, Dave Hansen <dave.hansen@intel.com>,
-	Juergen Gross <jgross@suse.com>
+	x86@kernel.org, Juergen Gross <jgross@suse.com>
 Subject: Re: [PATCH RFC 00/18] arch, mm: create a generic
  set_memory/change_page_attr core
-Message-ID: <amcv4Q_jxriraFzU@kernel.org>
+Message-ID: <amcxUS95HBsQhvWn@kernel.org>
 References: <20260721-generic-set-memory-v0-1-v1-0-2c1fc62306b3@kernel.org>
- <amDe_3KFBc9CcIbo@google.com>
+ <20260721171943.GEal-qLx4p5YbocQNV@fat_crate.local>
+ <fa75382e-878a-4064-a9b1-43bd2c9dedce@intel.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <amDe_3KFBc9CcIbo@google.com>
+In-Reply-To: <fa75382e-878a-4064-a9b1-43bd2c9dedce@intel.com>
 
-Hi Adrian,
+On Wed, Jul 22, 2026 at 10:03:03AM -0700, Dave Hansen wrote:
+> On 7/21/26 10:19, Borislav Petkov wrote:
+> > On Tue, Jul 21, 2026 at 07:23:23PM +0300, Mike Rapoport (Microsoft) wrote:
+> >> Currently there are 6 independent implementations for set_memory and
+> >> set_direct_map APIs.
+> > So with all mm/x86/CPA patches flying around, can we first agree on which tree
+> > is going to collect everything?
+> > 
+> > And if I want to review patches in that area, what am I applying it ontop?
+> > linux-next perhaps...
+> > 
+> > Let's sort out the workflow first so that we don't get lost on fruitless bug
+> > chases and fingerpointing.
+> 
+> Just practically, I think this series needs to be ignored for a bit. Bug
+> fixes first, features and cleanups second.
 
-On Wed, Jul 22, 2026 at 03:17:19PM +0000, Adrian Barnaś wrote:
-> On Tue, Jul 21, 2026 at 07:23:23PM +0300, Mike Rapoport (Microsoft) wrote:
-> 
-> Hi Mike,
-> 
-> > Once this settles, the next step I'm planning is to convert arm64. This
-> > would be much more involved than loongarch and riscv together, so I
-> > didn't even aspire to include arm64 in the first RFC. That said, I have
-> > a very ugly arm64 prototype that rewrites arch/arm64/pageattr.c to use
-> > the generic CPA infrastructure and replaces the existing implementation
-> > of page table splits for systems that support bbml2. But there's a lot
-> > of yak shaving there to get from a PoC to actual patches.
-> 
-> Could you share your PoC for ARM64. I can help you with that and align my
-> execmem rox cache for ARM64  changes to the desired shape of this API.
-
-It's too ugly and more importantly it cuts too many edges. 
-I'll try to bring it into a better shape and will share then Really Soon :)
+Ignored is a bit strong, I'd still love to get feedback on the concept.
  
-> Best regards,
-> Adrian
+> When the time is right, it probably needs to get get acks from all the
+> affected architectures and go through mm. Folks can ack it now, but I
+> don't think anyone should even consider merging it until ~7.3-rc1.
+
+FWIF, I didn't plan to send non-RFC version before 7.3-rc1.
 
 -- 
 Sincerely yours,
