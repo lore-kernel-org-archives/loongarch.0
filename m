@@ -1,70 +1,88 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE08F423782
-	for <loongarch@lists.linux.dev>; Tue, 28 Jul 2026 10:10:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B560E3B5DEE
+	for <loongarch@lists.linux.dev>; Tue, 28 Jul 2026 12:39:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785233456; cv=none; b=udhbzxxnSwVl1q+RUzC0Z6mwlFI2J8LYR58PGuvzrXXsQIHHJTooIsrHiPX4zXrUevupiUktnFTR2cgHjzDIxoUjYBOboeQym22ieogwyDc1/HGGpG4I80lQLWY8DGlh+gPAfSBa6aom2m3zadGF8JOpOuoLoKoGk0DcJ0ToMdA=
+	t=1785242360; cv=none; b=SBFHnOomqUIlhx8nPOgZ7DlCUWRSdYMrAHwlqT+igh7xMIunjiVoVD7kSR+ENsO4dl/LC1x9tuOnjNhXF4HaULRtPehC5vjCKDGM4qg1P8Yg6VzZnrG5vOx0udgpHX02oAT2mRoLmaXeJcd/zhx2Oo9s1bcmDlj+kF0lwMG9Kwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785233456; c=relaxed/simple;
-	bh=RQImHR6qhT155woOGURk6FhVGY0I5SCU/vt0LoIP6/I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mEu+YrKbWD4ZzzGqwO0wIYdYVyF/Htnc+kKKwIHJvYPTDobEGbne3EJG14SzCinrqHYIVf8f2stTaA7r4pdde1rGthtY2lqqfxCq9h10T+Z7+zyFX/jTFk9ZhkvzBnQofzhvPOGvy+GWnKmZwpGGqStWHqwloWKIFIDT7LU2qdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=hn+zyD2F; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="hn+zyD2F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=RQImHR6qhT155woOGURk6FhVGY0I5SCU/vt0LoIP6/I=;
-	b=hn+zyD2FVJrxucXbV7P5h5sDCR/9G1rm5BjSFW99rfZh6ZusULAD0YJAGUq4hb
-	FGnq1FVzhX1nznc2JwphxnH+jfMeT/4/IcuOBhff7dCPUXm5ZqHTicxAPvecMS7G
-	04PM9bICvm7xZVSK8H1Rf4U37PJ+us+uWPdSAe6FL6opU=
-Received: from [10.42.12.146] (unknown [])
-	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wBXQPYTgGhqHSDdKg--.200S2;
-	Tue, 28 Jul 2026 18:10:29 +0800 (CST)
-Message-ID: <92289f9a-67be-4839-8fe4-c6935871a349@163.com>
-Date: Tue, 28 Jul 2026 18:10:26 +0800
-Precedence: bulk
-X-Mailing-List: loongarch@lists.linux.dev
-List-Id: <loongarch.lists.linux.dev>
-List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+	s=arc-20240116; t=1785242360; c=relaxed/simple;
+	bh=BB/iNYIWb4K37ubQH44SrWBVyo1MmDQe/KwE3U3XcKY=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=TnSINXmDzqGoNyb9Xwyh+o/C5bckEMo4xNUYG/jlLaRCptrcVszf0THeqVlZVnaBN1dcUCrM5QdCs0cxGD2eN1mcAgBkk5QXwO1XXkkMGzJ0sy2pXN7nAQdfms+iHz1VIrpOX23ux7GgrknaUgmSQDLY0k9E6APk0q8t94FSvvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8CxaevyomhqkR8IAA--.28450S3;
+	Tue, 28 Jul 2026 20:39:14 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJBxb8fvomhqRJ4bAA--.18382S2;
+	Tue, 28 Jul 2026 20:39:13 +0800 (CST)
 Subject: Re: [PATCH 2/2] KVM: LoongArch: selftests: Add in-kernel MMIO read
  fast path test
-To: Huacai Chen <chenhuacai@kernel.org>, Bibo Mao <maobibo@loongson.cn>
+To: Zeng Chi <zeng_chi911@163.com>, Huacai Chen <chenhuacai@kernel.org>
 Cc: zhaotianrui@loongson.cn, kernel@xen0n.name, kvm@vger.kernel.org,
  loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, zengchi@kylinos.cn,
  cui.tao@linux.dev
 References: <20260723111605.1630027-1-zeng_chi911@163.com>
  <146b5e27-2ab0-da17-7b98-09235ef4f9c4@loongson.cn>
  <CAAhV-H7pLEUeKWGmCZqDdF+2vr=2aexOFVCMa_UxTrDpUY+gvA@mail.gmail.com>
+ <92289f9a-67be-4839-8fe4-c6935871a349@163.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <2663aa71-f713-c458-368a-61fdb9634338@loongson.cn>
+Date: Tue, 28 Jul 2026 20:38:58 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+Precedence: bulk
+X-Mailing-List: loongarch@lists.linux.dev
+List-Id: <loongarch.lists.linux.dev>
+List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+In-Reply-To: <92289f9a-67be-4839-8fe4-c6935871a349@163.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-From: Zeng Chi <zeng_chi911@163.com>
-In-Reply-To: <CAAhV-H7pLEUeKWGmCZqDdF+2vr=2aexOFVCMa_UxTrDpUY+gvA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wBXQPYTgGhqHSDdKg--.200S2
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUO8nYDUUUU
-X-CM-SenderInfo: 52hqws5fklmiqr6rljoofrz/xtbC6BXZlWpogBVvQgAA3L
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBxb8fvomhqRJ4bAA--.18382S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrKF1UAw4UWFWrCF45tr4UJrc_yoWxAFc_uF
+	WDC397Ca1DXF4rXa17KF10vrZ3C3yDX34rJw48Xr4aq343tr4kJFWfGrnavFsrtayrtFnI
+	grnYvr4S93W29osvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbfAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y
+	6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
+	vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
+	x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
+	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8hiSPUUUUU==
 
-On Sat, Jul 25, 2026 at 5:41 PM Huacai Chen <chenhuacai@kernel.org> wrote:
-> I think the fist patch is just enough. :)
-Agreed. Please just take patch 1 and drop this one -- I will not
-resend the series.
 
-Bibo is right that the test only asserts that the PC advances by one
-instruction, which is an implementation detail rather than observable
-guest behaviour. If a PCH-PIC selftest is still wanted, I will send it
-separately as one that injects an irq and verifies the guest actually
-takes it.
 
-Bibo, Tao, thanks for the reviews.
+On 2026/7/28 下午6:10, Zeng Chi wrote:
+> On Sat, Jul 25, 2026 at 5:41 PM Huacai Chen <chenhuacai@kernel.org> wrote:
+>> I think the fist patch is just enough. :)
+> Agreed. Please just take patch 1 and drop this one -- I will not
+> resend the series.
+> 
+> Bibo is right that the test only asserts that the PC advances by one
+> instruction, which is an implementation detail rather than observable
+> guest behaviour. If a PCH-PIC selftest is still wanted, I will send it
+> separately as one that injects an irq and verifies the guest actually
+> takes it.
+It is not necessary, just patch 1 is ok.
 
-Zeng Chi
+Regards
+Bibo Mao
+> 
+> Bibo, Tao, thanks for the reviews.
+> 
+> Zeng Chi
+> 
 
