@@ -1,88 +1,126 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B560E3B5DEE
-	for <loongarch@lists.linux.dev>; Tue, 28 Jul 2026 12:39:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E40B31159C
+	for <loongarch@lists.linux.dev>; Wed, 29 Jul 2026 02:29:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785242360; cv=none; b=SBFHnOomqUIlhx8nPOgZ7DlCUWRSdYMrAHwlqT+igh7xMIunjiVoVD7kSR+ENsO4dl/LC1x9tuOnjNhXF4HaULRtPehC5vjCKDGM4qg1P8Yg6VzZnrG5vOx0udgpHX02oAT2mRoLmaXeJcd/zhx2Oo9s1bcmDlj+kF0lwMG9Kwg=
+	t=1785292196; cv=none; b=QslXMeQ3fz3/6/6KkFfMA9QpBbbdIWEYFlygiucSTn1da6JuLy2QXLb0VrTYct3LA0xqOKUx0NqTtyVi/nednrypL4V+wEgwYkl3Z3+D0pnv0H0wzgpnI9LKvXR+Gn/l7V9fYrGD7bW2y7NKexzevYsSKbQYiRyv+5XUsa8yTCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785242360; c=relaxed/simple;
-	bh=BB/iNYIWb4K37ubQH44SrWBVyo1MmDQe/KwE3U3XcKY=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=TnSINXmDzqGoNyb9Xwyh+o/C5bckEMo4xNUYG/jlLaRCptrcVszf0THeqVlZVnaBN1dcUCrM5QdCs0cxGD2eN1mcAgBkk5QXwO1XXkkMGzJ0sy2pXN7nAQdfms+iHz1VIrpOX23ux7GgrknaUgmSQDLY0k9E6APk0q8t94FSvvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8CxaevyomhqkR8IAA--.28450S3;
-	Tue, 28 Jul 2026 20:39:14 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJBxb8fvomhqRJ4bAA--.18382S2;
-	Tue, 28 Jul 2026 20:39:13 +0800 (CST)
-Subject: Re: [PATCH 2/2] KVM: LoongArch: selftests: Add in-kernel MMIO read
- fast path test
-To: Zeng Chi <zeng_chi911@163.com>, Huacai Chen <chenhuacai@kernel.org>
-Cc: zhaotianrui@loongson.cn, kernel@xen0n.name, kvm@vger.kernel.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, zengchi@kylinos.cn,
- cui.tao@linux.dev
-References: <20260723111605.1630027-1-zeng_chi911@163.com>
- <146b5e27-2ab0-da17-7b98-09235ef4f9c4@loongson.cn>
- <CAAhV-H7pLEUeKWGmCZqDdF+2vr=2aexOFVCMa_UxTrDpUY+gvA@mail.gmail.com>
- <92289f9a-67be-4839-8fe4-c6935871a349@163.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <2663aa71-f713-c458-368a-61fdb9634338@loongson.cn>
-Date: Tue, 28 Jul 2026 20:38:58 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1785292196; c=relaxed/simple;
+	bh=S/5a3tZKaG1DhHr+vr7kXCnj7Webr6UiI9jqlWXgH/g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Zoafby6kP6WfMwqlAifIxg97SVhWzVMu7NKYTu/K4CUPOmTp0zvPXQcWtqklgF19RufBco/CCaGUT+DWaNga7ys3snYZvfWv1/kdcg63muggPsxIVZZSsqrpRyevjHH5C1XmmUKP0XIJ3qQfBD08Ss1TqhXgxjHVo4A2O/HimeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=uIsOq2l6; arc=none smtp.client-ip=95.215.58.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uIsOq2l6"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1785292192;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=bgK4DkmBX3WByoHXl7Q/Ih8jzCTq/qOCycXaOJxX9Qs=;
+	b=uIsOq2l6e8igoM1RmPvodxi5IDAu9uX8uvK5vKuHWUPdf8QiDo59TEQCfKe/KZ2xaIs5tc
+	4l90xgNtZIaxeMOqjnfVLTG1BLFPZA90eKKieTpZLfqeu2AU4vhe0/WTsmfueCExAdVed+
+	0qak5n1me/BSuTKP7Y7Tpr5AGgXKwj4=
+From: Chenguang Zhao <chenguang.zhao@linux.dev>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	memxor@gmail.com,
+	yangtiezhu@loongson.cn
+Cc: hengqi.chen@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	jolsa@kernel.org,
+	shuah@kernel.org,
+	loongarch@lists.linux.dev,
+	bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	chenguang.zhao@linux.dev,
+	Chenguang Zhao <zhaochenguang@kylinos.cn>
+Subject: [PATCH v4 0/4] LoongArch bpf kptr xchg inline support
+Date: Wed, 29 Jul 2026 10:28:33 +0800
+Message-Id: <20260729022837.355549-1-chenguang.zhao@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <92289f9a-67be-4839-8fe4-c6935871a349@163.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxb8fvomhqRJ4bAA--.18382S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrKF1UAw4UWFWrCF45tr4UJrc_yoWxAFc_uF
-	WDC397Ca1DXF4rXa17KF10vrZ3C3yDX34rJw48Xr4aq343tr4kJFWfGrnavFsrtayrtFnI
-	grnYvr4S93W29osvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbfAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y
-	6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
-	1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
-	JVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
-	vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
-	x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
-	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
-	wI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8hiSPUUUUU==
+X-Migadu-Flow: FLOW_OUT
 
+From: Chenguang Zhao <zhaochenguang@kylinos.cn>
 
+This series enables the BPF verifier to inline bpf_kptr_xchg()
+into BPF_XCHG on LoongArch64, and fixes the underlying JIT
+atomic ordering that makes such inlining safe.
 
-On 2026/7/28 下午6:10, Zeng Chi wrote:
-> On Sat, Jul 25, 2026 at 5:41 PM Huacai Chen <chenhuacai@kernel.org> wrote:
->> I think the fist patch is just enough. :)
-> Agreed. Please just take patch 1 and drop this one -- I will not
-> resend the series.
-> 
-> Bibo is right that the test only asserts that the PC advances by one
-> instruction, which is an implementation detail rather than observable
-> guest behaviour. If a PCH-PIC selftest is still wanted, I will send it
-> separately as one that injects an irq and verifies the guest actually
-> takes it.
-It is not necessary, just patch 1 is ok.
+The BPF verifier can lower bpf_kptr_xchg() to a single BPF_XCHG
+atomic when the JIT advertises ptr xchg support via
+bpf_jit_supports_ptr_xchg(). This removes helper-call overhead
+from the kptr exchange fast path. Inlining is only correct when
+the JITed exchange provides the same sequentially consistent
+ordering as the bpf_kptr_xchg() helper.
 
-Regards
-Bibo Mao
-> 
-> Bibo, Tao, thanks for the reviews.
-> 
-> Zeng Chi
-> 
+Patch 1 fixes memory ordering for all value-returning BPF atomic
+RMW operations emitted by the LoongArch bpf JIT. Per LKMM,
+value-returning atomic RMW must provide sequentially consistent
+ordering. Plain AMO instructions and bare ll/sc loops on LoongArch
+do not satisfy this by themselves:
+ - BPF_FETCH (ADD/AND/OR/XOR): switch to am*_db.{b,h,w,d}
+ - BPF_XCHG: switch to amswap_db.{b,h,w,d}
+ - BPF_CMPXCHG: emit dbar 0x700 after the ll/sc loop, matching
+   __WEAK_LLSC_MB in cmpxchg.h
+Non-value-returning RMW ops (plain BPF_ADD, BPF_AND, etc.)
+remain weakly ordered, consistent with LKMM. This fix is independent
+of kptr inlining and benefits all BPF programs using value-returning
+atomics on LoongArch.
+
+Patch 2 implements bpf_jit_supports_ptr_xchg() so the verifier
+may inline bpf_kptr_xchg() on LoongArch64.
+
+Patches 3 and 4 extend bpf selftests: functional coverage via
+kptr_xchg_inline, and an optional kptr-xchg benchmark to compare
+helper vs inlined paths.
+
+Chenguang Zhao (4):
+  LoongArch: bpf: Fix memory ordering for value-returning atomics
+  LoongArch: bpf: Advertise JIT support for kptr xchg inline
+  selftests/bpf: Enable kptr_xchg_inline test on LoongArch
+  selftests/bpf: Add kptr-xchg benchmark
+
+ arch/loongarch/include/asm/inst.h             | 18 ++++
+ arch/loongarch/net/bpf_jit.c                  | 37 ++++---
+ tools/testing/selftests/bpf/Makefile          |  2 +
+ tools/testing/selftests/bpf/bench.c           |  2 +
+ .../selftests/bpf/benchs/bench_kptr_xchg.c    | 96 +++++++++++++++++++
+ .../bpf/prog_tests/kptr_xchg_inline.c         |  3 +-
+ .../selftests/bpf/progs/kptr_xchg_bench.c     | 49 ++++++++++
+ 7 files changed, 192 insertions(+), 15 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/benchs/bench_kptr_xchg.c
+ create mode 100644 tools/testing/selftests/bpf/progs/kptr_xchg_bench.c
+
+---
+v4:
+ - Resend patches against new kernel.
+
+v3:
+ - https://lore.kernel.org/all/1782119051687451.15056.seg@mailgw.kylinos.cn/
+
+v2:
+ - https://lore.kernel.org/all/20260603100438.2177817-1-zhaochenguang@kylinos.cn/
+
+v1:
+ - https://lore.kernel.org/all/20260602021515.214560-1-zhaochenguang@kylinos.cn/
+
+-- 
+2.25.1
 
