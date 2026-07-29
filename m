@@ -1,194 +1,109 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E326742B33E
-	for <loongarch@lists.linux.dev>; Wed, 29 Jul 2026 08:09:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A34BD3CDBD3
+	for <loongarch@lists.linux.dev>; Wed, 29 Jul 2026 11:50:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785312579; cv=none; b=ho/NPFzTVSuOleE9WFco0Sghg7a1wZsjl+mG3WC3fDOX4m0glAS0wli+GF70iAzHyVUQ1QR5oDAnqYB328x94QVwSwYFNwfYYmykMICN8bJscD6tXm9osn+sP6EsbZQhofCxAHcf+BqMY6WxlaRgwMDGo42ZH+v72Y9PEI/G+B8=
+	t=1785325845; cv=none; b=Ah+AQfIdGyk2EwMq4Lv9uuHZz2FI4MIu9+Q8bVHQEp7ticZW+L2NGpWjFwEjfss0RIBYeqBkZGy/hD1t+KdJtbC6wLwtXnsFnXNT7T+aEfYfmt8rOxN7dfNdVQHMx86tqCwPbQu05KQycjJxMaEb5KMjXrs1JQB0XOTWhuu5B0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785312579; c=relaxed/simple;
-	bh=FKRCzNl9iXi9B2N+9NYj5FAjRRrTLfK+wJOxreVTgFs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=mpi+DxejJq4k683bZ9XUJMe93FX06Kz/lwrTtuQNzVa/iyliI0gNTXvxUd4g0HXbijE2kn9MkF+RR46jTSaDnR6EQ/hH8WqJWHodNuuxdLSUNqgm2xAZ5qDFrsnvrmxKj8PIAmUcUxEFvvFaBHdyCKgImgWvzLumMOlSJSxdM6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=WhwvIDxd; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1785325845; c=relaxed/simple;
+	bh=k5Z2HfoamLNSQvohUbrABdGCh5ajWnauXreNAn0e4ig=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=uiy/F2sCWb7Yr5lJ34Vh01PVTgKpbgG7EL8laJgXM1kQsaW9GAsHCxMoHZp3NyG614fyawO8Vp7UpSjGQUnpn9U+IScmsxnmtz3qOdgKL7w6wGDNBbLa1VCqv1xzfHilaYa3R+d51dgVua6KUlrS9ZCvGLD0E/XGkm/UIu9tSGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=r2lsqEoY; arc=none smtp.client-ip=91.218.175.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="WhwvIDxd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1785312576;
-	bh=EDLt92zXnWfQkNO/nMchV0mYN1bzrdRqmWVRBvOZuQ8=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=WhwvIDxddwF8BefP8Ku3WrZ9cHlrrGRjUlcYodcN4r0I0OdASSpQgC033WV/tvz1e
-	 uTlW62UoIqsdZfpb/wrwr9ez80VpUpXFbVV9UKBkB8H/D7tCACaE34x7oa7JC7L9/v
-	 yWb+mHk6LhoYZa9BPjSsvyh3f2jHy+Rosad7Uj6Q=
-Received: from [127.0.0.1] (2607-8700-5500-e873-0000-0000-0000-1001.16clouds.com [IPv6:2607:8700:5500:e873::1001])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 8C52765AAE;
-	Wed, 29 Jul 2026 04:09:33 -0400 (EDT)
-Message-ID: <affa49c80b0762b5b9e6ae4f4fa4ae787afecbd8.camel@xry111.site>
-Subject: Re: [PATCH v8 2/2] i2c: ls2x: Add clocks property parsing and
- adjust bus speed
-From: Xi Ruoyao <xry111@xry111.site>
-To: Hongliang Wang <wanghongliang@loongson.cn>, Binbin Zhou
-	 <zhoubinbin@loongson.cn>, Andi Shyti <andi.shyti@kernel.org>, Rob Herring
-	 <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
-	 <conor+dt@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	loongarch@lists.linux.dev, Huacai Chen <chenhuacai@loongson.cn>, 
-	stable@vger.kernel.org
-Date: Wed, 29 Jul 2026 16:09:31 +0800
-In-Reply-To: <20260721122604.12717-3-wanghongliang@loongson.cn>
-References: <20260721122604.12717-1-wanghongliang@loongson.cn>
-	 <20260721122604.12717-3-wanghongliang@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.60.2 
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="r2lsqEoY"
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1785325840;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RW4sNREqQBsxBWcBVOxGkaAhxGnf2SK3CsBZlJEr+CI=;
+	b=r2lsqEoYAQ1KGpOstBBL26uqJoRA/RKskIVz/NmP2P1yJGaJGxiK351ItTrzmwafZrTrgF
+	N3Vc5HNWYU1L2pUZk/uW+BQB/+yzxmdArbOwj40bXQCJd+LfcHhw5WJrU4lzVIGwsJfnLj
+	EmJU9F1CtAj8Nu+CAAOxOxo9skdsMYc=
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 29 Jul 2026 11:50:32 +0000
+Message-Id: <DKB16T0X5I9D.2GCNPBS9VC95V@linux.dev>
+Subject: Re: [PATCH 1/3] mm: move internal mempolicy APIs to new internal
+ header
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Brendan Jackman" <brendan.jackman@linux.dev>
+To: "Brendan Jackman" <brendan.jackman@linux.dev>, "Vlastimil Babka (SUSE)"
+ <vbabka@kernel.org>, "Matthew Wilcox" <willy@infradead.org>
+Cc: "Brendan Jackman" <jackmanb@google.com>, "Andrew Morton"
+ <akpm@linux-foundation.org>, "David Hildenbrand" <david@kernel.org>,
+ "Lorenzo Stoakes" <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>,
+ "Mike Rapoport" <rppt@kernel.org>, "Suren Baghdasaryan"
+ <surenb@google.com>, "Michal Hocko" <mhocko@suse.com>, "Johannes Weiner"
+ <hannes@cmpxchg.org>, "Zi Yan" <ziy@nvidia.com>, "Jan Kara" <jack@suse.cz>,
+ "Joshua Hahn" <joshua.hahnjy@gmail.com>, "Byungchul Park"
+ <byungchul@sk.com>, "Gregory Price" <gourry@gourry.net>, "Ying Huang"
+ <ying.huang@linux.alibaba.com>, "Alistair Popple" <apopple@nvidia.com>,
+ "Hugh Dickins" <hughd@google.com>, "Baolin Wang"
+ <baolin.wang@linux.alibaba.com>, "Chris Li" <chrisl@kernel.org>, "Kairui
+ Song" <kasong@tencent.com>, "Kemeng Shi" <shikemeng@huaweicloud.com>, "Nhat
+ Pham" <nphamcs@gmail.com>, "Baoquan He" <baoquan.he@linux.dev>, "Barry
+ Song" <baohua@kernel.org>, "Youngjun Park" <youngjun.park@lge.com>, "Joerg
+ Roedel (AMD)" <joro@8bytes.org>, "Will Deacon" <will@kernel.org>, "Robin
+ Murphy" <robin.murphy@arm.com>, "Huacai Chen" <chenhuacai@kernel.org>,
+ "WANG Xuerui" <kernel@xen0n.name>, "Thomas Gleixner" <tglx@kernel.org>,
+ "Chuck Lever" <cel@kernel.org>, "Jeff Layton" <jlayton@kernel.org>,
+ "NeilBrown" <neil@brown.name>, "Olga Kornievskaia" <okorniev@redhat.com>,
+ "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>, "Trond
+ Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>, "David
+ S. Miller" <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>,
+ "Jakub Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>,
+ "Simon Horman" <horms@kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-mm@kvack.org>, <linux-fsdevel@vger.kernel.org>,
+ <iommu@lists.linux.dev>, <loongarch@lists.linux.dev>,
+ <linux-nfs@vger.kernel.org>, <netdev@vger.kernel.org>
+References: <20260716-folio-alloc-cleanups-v1-0-5363b8e92d33@google.com>
+ <20260716-folio-alloc-cleanups-v1-1-5363b8e92d33@google.com>
+ <alkLSzQvzT9zJbY1@casper.infradead.org>
+ <DK05KUIDJVLZ.61UIWOL0K3OT@linux.dev>
+ <al5gQgnBCjNCSD_4@casper.infradead.org>
+ <51810eba-2a60-49f9-b879-7f806546e600@kernel.org>
+ <DK5767A146ZW.3LV5JXS7T4W1C@linux.dev>
+In-Reply-To: <DK5767A146ZW.3LV5JXS7T4W1C@linux.dev>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, 2026-07-21 at 20:26 +0800, Hongliang Wang wrote:
-> The i2c-ls2x driver supports dts and acpi parameter passing.
->=20
-> In dts, uses clock framework, by parsing clocks property to
-> get i2c bus reference clock, and define the div of reference
-> clock by device data.
->=20
-> In acpi, by passing clocks property to describe i2c bus reference
-> clock and clock-div property to describe the div of reference clock.
->=20
-> Based on i2c bus reference clock(clock_a), i2c bus speed(clock_s)
-> and div, calculate the prcescale of i2c divider register. The
-> calculation formula is
->=20
-> prcescale =3D (clock_a*10)/(div*clock_s)-1
->=20
-> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Hongliang Wang <wanghongliang@loongson.cn>
+On Wed Jul 22, 2026 at 3:15 PM UTC, Brendan Jackman wrote:
+...
+>>> We have a long history of people just moving stuff around in patches
+>>> without knowing what the intent was if it should be moved.
+>>
+>> I guess this patch is not critical to the rest, if that's an issue.
+>
+> Well, for ALLOC_UNMAPPED we really do need an alloc_flags arg for this
+> function, but we can always just go straight to what I described above.
+> I.e. I can create the __ variant + wrapper from the start. It's just a
+> question of whether we prefer:
+>
+> - "Yuck, there's a public wrapper here that we don't actually need", or
+>
+> - "We hid this mempolicy API and people might think we'd NACK a patch to
+>   un-hide it".0
+>
+>   https://lore.kernel.org/all/20260703-alloc-trylock-v5-2-c87b714e19d3@go=
+ogle.com/
 
-This resolves the jittery touchpad input on the EAECIS NL60R laptop.
+Uh yeah so in v3 I did not depend on this patch, I just went straight to
+creating __folio_alloc_mpol_noprof() here:
 
-Tested-by: Xi Ruoyao <xry111@xry111.site>
+https://lore.kernel.org/all/20260726-page_alloc-unmapped-v3-25-6f5729aa9832=
+@google.com/
 
-> ---
-> =C2=A0drivers/i2c/busses/i2c-ls2x.c | 40 ++++++++++++++++++++++++++++++++=
----
-> =C2=A01 file changed, 37 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/i2c/busses/i2c-ls2x.c b/drivers/i2c/busses/i2c-ls2x.=
-c
-> index b475dd27b7af..25f8301ae14f 100644
-> --- a/drivers/i2c/busses/i2c-ls2x.c
-> +++ b/drivers/i2c/busses/i2c-ls2x.c
-> @@ -12,6 +12,7 @@
-> =C2=A0
-> =C2=A0#include <linux/bitfield.h>
-> =C2=A0#include <linux/bits.h>
-> +#include <linux/clk.h>
-> =C2=A0#include <linux/completion.h>
-> =C2=A0#include <linux/device.h>
-> =C2=A0#include <linux/iopoll.h>
-> @@ -63,11 +64,19 @@
-> =C2=A0/* The default bus frequency, which is an empirical value */
-> =C2=A0#define LS2X_I2C_FREQ_STD	(33 * HZ_PER_KHZ)
-> =C2=A0
-> +/* The div of i2c reference clock on LS2K0500/2K1000/2K2000 */
-> +#define LS2X_I2C_2K_CLOCK_DIV	40
-> +
-> +/* The div of i2c reference clock on LS7A1000/7A2000 */
-> +#define LS2X_I2C_7A_CLOCK_DIV	50
-> +
-> =C2=A0struct ls2x_i2c_priv {
-> =C2=A0	struct i2c_adapter	adapter;
-> =C2=A0	void __iomem		*base;
-> =C2=A0	struct i2c_timings	i2c_t;
-> =C2=A0	struct completion	cmd_complete;
-> +	unsigned int		div;
-> +	unsigned int		pclk;
-> =C2=A0};
-> =C2=A0
-> =C2=A0/*
-> @@ -107,12 +116,13 @@ static void ls2x_i2c_adjust_bus_speed(struct ls2x_i=
-2c_priv *priv)
-> =C2=A0	else
-> =C2=A0		t->bus_freq_hz =3D LS2X_I2C_FREQ_STD;
-> =C2=A0
-> +	val =3D (priv->pclk * 10) / (priv->div * t->bus_freq_hz) - 1;
-> +
-> =C2=A0	/*
-> =C2=A0	 * According to the chip manual, we can only access the registers =
-as bytes,
-> =C2=A0	 * otherwise the high bits will be truncated.
-> =C2=A0	 * So set the I2C frequency with a sequential writeb() instead of =
-writew().
-> =C2=A0	 */
-> -	val =3D LS2X_I2C_PCLK_FREQ / (5 * t->bus_freq_hz) - 1;
-> =C2=A0	writeb(FIELD_GET(GENMASK(7, 0), val), priv->base + I2C_LS2X_PRER_L=
-O);
-> =C2=A0	writeb(FIELD_GET(GENMASK(15, 8), val), priv->base + I2C_LS2X_PRER_=
-HI);
-> =C2=A0}
-> @@ -287,6 +297,7 @@ static const struct i2c_algorithm ls2x_i2c_algo =3D {
-> =C2=A0static int ls2x_i2c_probe(struct platform_device *pdev)
-> =C2=A0{
-> =C2=A0	int ret, irq;
-> +	struct clk *clk;
-> =C2=A0	struct i2c_adapter *adap;
-> =C2=A0	struct ls2x_i2c_priv *priv;
-> =C2=A0	struct device *dev =3D &pdev->dev;
-> @@ -304,6 +315,29 @@ static int ls2x_i2c_probe(struct platform_device *pd=
-ev)
-> =C2=A0	if (irq < 0)
-> =C2=A0		return irq;
-> =C2=A0
-> +	if (dev_of_node(dev)) {
-> +		clk =3D devm_clk_get_optional_enabled(dev, NULL);
-> +		if (IS_ERR(clk))
-> +			return PTR_ERR(clk);
-> +		if (clk)
-> +			priv->pclk =3D clk_get_rate(clk);
-> +		else
-> +			priv->pclk =3D LS2X_I2C_PCLK_FREQ;
-> +
-> +		priv->div =3D (unsigned long)device_get_match_data(dev);
-> +		if (!priv->div)
-> +			priv->div =3D LS2X_I2C_2K_CLOCK_DIV;
-> +	} else {
-> +		/* clocks and clock-div are only ACPI properties. */
-> +		ret =3D device_property_read_u32(dev, "clocks", &priv->pclk);
-> +		if (ret)
-> +			priv->pclk =3D LS2X_I2C_PCLK_FREQ;
-> +
-> +		ret =3D device_property_read_u32(dev, "clock-div", &priv->div);
-> +		if (ret || !priv->div)
-> +			priv->div =3D LS2X_I2C_7A_CLOCK_DIV;
-> +	}
-> +
-> =C2=A0	/* Add the i2c adapter */
-> =C2=A0	adap =3D &priv->adapter;
-> =C2=A0	adap->retries =3D 5;
-> @@ -349,8 +383,8 @@ static DEFINE_RUNTIME_DEV_PM_OPS(ls2x_i2c_pm_ops,
-> =C2=A0				 ls2x_i2c_suspend, ls2x_i2c_resume, NULL);
-> =C2=A0
-> =C2=A0static const struct of_device_id ls2x_i2c_id_table[] =3D {
-> -	{ .compatible =3D "loongson,ls2k-i2c" },
-> -	{ .compatible =3D "loongson,ls7a-i2c" },
-> +	{ .compatible =3D "loongson,ls2k-i2c", .data =3D (void *)LS2X_I2C_2K_CL=
-OCK_DIV, },
-> +	{ .compatible =3D "loongson,ls7a-i2c", .data =3D (void *)LS2X_I2C_7A_CL=
-OCK_DIV, },
-> =C2=A0	{ /* sentinel */ }
-> =C2=A0};
-> =C2=A0MODULE_DEVICE_TABLE(of, ls2x_i2c_id_table);
-
---=20
-Xi Ruoyao <xry111@xry111.site>
+So yeah I'd say we can just drop this controversial patch and move
+forwards with the other two?
