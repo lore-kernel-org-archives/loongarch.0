@@ -1,278 +1,194 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECC8937F01D
-	for <loongarch@lists.linux.dev>; Wed, 29 Jul 2026 02:30:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E326742B33E
+	for <loongarch@lists.linux.dev>; Wed, 29 Jul 2026 08:09:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785292212; cv=none; b=dTcjAgQQvii02E7LYXfp5LwomdTz7ph9mlYD8zPVTCwfTvj9+++prTIVC48VxdSIfMb7rCr98aw5VudQ0YgqZRh2Kiw0Zl6tzTynmuUh43urrIHmXg1qceEHZNap7rvv2w/IqBP5NT4WFAQlu++btOPGYX04UWwKBfWJDpbI1LY=
+	t=1785312579; cv=none; b=ho/NPFzTVSuOleE9WFco0Sghg7a1wZsjl+mG3WC3fDOX4m0glAS0wli+GF70iAzHyVUQ1QR5oDAnqYB328x94QVwSwYFNwfYYmykMICN8bJscD6tXm9osn+sP6EsbZQhofCxAHcf+BqMY6WxlaRgwMDGo42ZH+v72Y9PEI/G+B8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785292212; c=relaxed/simple;
-	bh=Dp5GppK4ZvVX+9JPvJB+9cuubEsYP4GcZG5AFv0g7BM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=q2/ax1aCkCeCPNC3ANLXktYlJr4b8sHkYCO82ba0Xsg1yLGb1AoWAGfhoMkaTjKtVJfH4/hOpP9O0e8mm7/lIlZlAuCJbnxP6NtQ01oCnrxYINJC28ZdkJEWHUCPYQTdQaMrafS59ULra7AbbSUugjC/tYvGt9ib/oC7zv+taNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=W+bBnAr5; arc=none smtp.client-ip=95.215.58.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1785312579; c=relaxed/simple;
+	bh=FKRCzNl9iXi9B2N+9NYj5FAjRRrTLfK+wJOxreVTgFs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=mpi+DxejJq4k683bZ9XUJMe93FX06Kz/lwrTtuQNzVa/iyliI0gNTXvxUd4g0HXbijE2kn9MkF+RR46jTSaDnR6EQ/hH8WqJWHodNuuxdLSUNqgm2xAZ5qDFrsnvrmxKj8PIAmUcUxEFvvFaBHdyCKgImgWvzLumMOlSJSxdM6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=WhwvIDxd; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="W+bBnAr5"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1785292209;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=53rSFkRK1meF5ukodk7lUVFAh+3imCSI4cF438grTO8=;
-	b=W+bBnAr5on7CqNhsijDkum2f14Xg+CG76EhQKbEegjroovmn8LyHQC6ek+V/5uMXBFNVJk
-	/4DcllPcQFz9ofTfoZmQmUsMWzDCHT7wgX1k9V4C6IYPva/oZVTfxClMzUVAmDb7075xxk
-	1NO4/ZpjYcfBumSHu/Scr2tr8jC7iOk=
-From: Chenguang Zhao <chenguang.zhao@linux.dev>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	memxor@gmail.com,
-	yangtiezhu@loongson.cn
-Cc: hengqi.chen@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	jolsa@kernel.org,
-	shuah@kernel.org,
-	loongarch@lists.linux.dev,
-	bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	chenguang.zhao@linux.dev,
-	Chenguang Zhao <zhaochenguang@kylinos.cn>
-Subject: [PATCH v4 4/4] selftests/bpf: Add kptr-xchg benchmark
-Date: Wed, 29 Jul 2026 10:28:37 +0800
-Message-Id: <20260729022837.355549-5-chenguang.zhao@linux.dev>
-In-Reply-To: <20260729022837.355549-1-chenguang.zhao@linux.dev>
-References: <20260729022837.355549-1-chenguang.zhao@linux.dev>
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="WhwvIDxd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1785312576;
+	bh=EDLt92zXnWfQkNO/nMchV0mYN1bzrdRqmWVRBvOZuQ8=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=WhwvIDxddwF8BefP8Ku3WrZ9cHlrrGRjUlcYodcN4r0I0OdASSpQgC033WV/tvz1e
+	 uTlW62UoIqsdZfpb/wrwr9ez80VpUpXFbVV9UKBkB8H/D7tCACaE34x7oa7JC7L9/v
+	 yWb+mHk6LhoYZa9BPjSsvyh3f2jHy+Rosad7Uj6Q=
+Received: from [127.0.0.1] (2607-8700-5500-e873-0000-0000-0000-1001.16clouds.com [IPv6:2607:8700:5500:e873::1001])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 8C52765AAE;
+	Wed, 29 Jul 2026 04:09:33 -0400 (EDT)
+Message-ID: <affa49c80b0762b5b9e6ae4f4fa4ae787afecbd8.camel@xry111.site>
+Subject: Re: [PATCH v8 2/2] i2c: ls2x: Add clocks property parsing and
+ adjust bus speed
+From: Xi Ruoyao <xry111@xry111.site>
+To: Hongliang Wang <wanghongliang@loongson.cn>, Binbin Zhou
+	 <zhoubinbin@loongson.cn>, Andi Shyti <andi.shyti@kernel.org>, Rob Herring
+	 <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	 <conor+dt@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
+	loongarch@lists.linux.dev, Huacai Chen <chenhuacai@loongson.cn>, 
+	stable@vger.kernel.org
+Date: Wed, 29 Jul 2026 16:09:31 +0800
+In-Reply-To: <20260721122604.12717-3-wanghongliang@loongson.cn>
+References: <20260721122604.12717-1-wanghongliang@loongson.cn>
+	 <20260721122604.12717-3-wanghongliang@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.60.2 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-From: Chenguang Zhao <zhaochenguang@kylinos.cn>
+On Tue, 2026-07-21 at 20:26 +0800, Hongliang Wang wrote:
+> The i2c-ls2x driver supports dts and acpi parameter passing.
+>=20
+> In dts, uses clock framework, by parsing clocks property to
+> get i2c bus reference clock, and define the div of reference
+> clock by device data.
+>=20
+> In acpi, by passing clocks property to describe i2c bus reference
+> clock and clock-div property to describe the div of reference clock.
+>=20
+> Based on i2c bus reference clock(clock_a), i2c bus speed(clock_s)
+> and div, calculate the prcescale of i2c divider register. The
+> calculation formula is
+>=20
+> prcescale =3D (clock_a*10)/(div*clock_s)-1
+>=20
+> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Hongliang Wang <wanghongliang@loongson.cn>
 
-Add a bpf selftest benchmark that exercises bpf_kptr_xchg() in a tight loop
-so helper vs inlined JIT paths can be compared on supported architectures.
+This resolves the jittery touchpad input on the EAECIS NL60R laptop.
 
-Signed-off-by: Chenguang Zhao <zhaochenguang@kylinos.cn>
+Tested-by: Xi Ruoyao <xry111@xry111.site>
+
+> ---
+> =C2=A0drivers/i2c/busses/i2c-ls2x.c | 40 ++++++++++++++++++++++++++++++++=
 ---
- tools/testing/selftests/bpf/Makefile          |  2 +
- tools/testing/selftests/bpf/bench.c           |  2 +
- .../selftests/bpf/benchs/bench_kptr_xchg.c    | 96 +++++++++++++++++++
- .../selftests/bpf/progs/kptr_xchg_bench.c     | 49 ++++++++++
- 4 files changed, 149 insertions(+)
- create mode 100644 tools/testing/selftests/bpf/benchs/bench_kptr_xchg.c
- create mode 100644 tools/testing/selftests/bpf/progs/kptr_xchg_bench.c
+> =C2=A01 file changed, 37 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/i2c/busses/i2c-ls2x.c b/drivers/i2c/busses/i2c-ls2x.=
+c
+> index b475dd27b7af..25f8301ae14f 100644
+> --- a/drivers/i2c/busses/i2c-ls2x.c
+> +++ b/drivers/i2c/busses/i2c-ls2x.c
+> @@ -12,6 +12,7 @@
+> =C2=A0
+> =C2=A0#include <linux/bitfield.h>
+> =C2=A0#include <linux/bits.h>
+> +#include <linux/clk.h>
+> =C2=A0#include <linux/completion.h>
+> =C2=A0#include <linux/device.h>
+> =C2=A0#include <linux/iopoll.h>
+> @@ -63,11 +64,19 @@
+> =C2=A0/* The default bus frequency, which is an empirical value */
+> =C2=A0#define LS2X_I2C_FREQ_STD	(33 * HZ_PER_KHZ)
+> =C2=A0
+> +/* The div of i2c reference clock on LS2K0500/2K1000/2K2000 */
+> +#define LS2X_I2C_2K_CLOCK_DIV	40
+> +
+> +/* The div of i2c reference clock on LS7A1000/7A2000 */
+> +#define LS2X_I2C_7A_CLOCK_DIV	50
+> +
+> =C2=A0struct ls2x_i2c_priv {
+> =C2=A0	struct i2c_adapter	adapter;
+> =C2=A0	void __iomem		*base;
+> =C2=A0	struct i2c_timings	i2c_t;
+> =C2=A0	struct completion	cmd_complete;
+> +	unsigned int		div;
+> +	unsigned int		pclk;
+> =C2=A0};
+> =C2=A0
+> =C2=A0/*
+> @@ -107,12 +116,13 @@ static void ls2x_i2c_adjust_bus_speed(struct ls2x_i=
+2c_priv *priv)
+> =C2=A0	else
+> =C2=A0		t->bus_freq_hz =3D LS2X_I2C_FREQ_STD;
+> =C2=A0
+> +	val =3D (priv->pclk * 10) / (priv->div * t->bus_freq_hz) - 1;
+> +
+> =C2=A0	/*
+> =C2=A0	 * According to the chip manual, we can only access the registers =
+as bytes,
+> =C2=A0	 * otherwise the high bits will be truncated.
+> =C2=A0	 * So set the I2C frequency with a sequential writeb() instead of =
+writew().
+> =C2=A0	 */
+> -	val =3D LS2X_I2C_PCLK_FREQ / (5 * t->bus_freq_hz) - 1;
+> =C2=A0	writeb(FIELD_GET(GENMASK(7, 0), val), priv->base + I2C_LS2X_PRER_L=
+O);
+> =C2=A0	writeb(FIELD_GET(GENMASK(15, 8), val), priv->base + I2C_LS2X_PRER_=
+HI);
+> =C2=A0}
+> @@ -287,6 +297,7 @@ static const struct i2c_algorithm ls2x_i2c_algo =3D {
+> =C2=A0static int ls2x_i2c_probe(struct platform_device *pdev)
+> =C2=A0{
+> =C2=A0	int ret, irq;
+> +	struct clk *clk;
+> =C2=A0	struct i2c_adapter *adap;
+> =C2=A0	struct ls2x_i2c_priv *priv;
+> =C2=A0	struct device *dev =3D &pdev->dev;
+> @@ -304,6 +315,29 @@ static int ls2x_i2c_probe(struct platform_device *pd=
+ev)
+> =C2=A0	if (irq < 0)
+> =C2=A0		return irq;
+> =C2=A0
+> +	if (dev_of_node(dev)) {
+> +		clk =3D devm_clk_get_optional_enabled(dev, NULL);
+> +		if (IS_ERR(clk))
+> +			return PTR_ERR(clk);
+> +		if (clk)
+> +			priv->pclk =3D clk_get_rate(clk);
+> +		else
+> +			priv->pclk =3D LS2X_I2C_PCLK_FREQ;
+> +
+> +		priv->div =3D (unsigned long)device_get_match_data(dev);
+> +		if (!priv->div)
+> +			priv->div =3D LS2X_I2C_2K_CLOCK_DIV;
+> +	} else {
+> +		/* clocks and clock-div are only ACPI properties. */
+> +		ret =3D device_property_read_u32(dev, "clocks", &priv->pclk);
+> +		if (ret)
+> +			priv->pclk =3D LS2X_I2C_PCLK_FREQ;
+> +
+> +		ret =3D device_property_read_u32(dev, "clock-div", &priv->div);
+> +		if (ret || !priv->div)
+> +			priv->div =3D LS2X_I2C_7A_CLOCK_DIV;
+> +	}
+> +
+> =C2=A0	/* Add the i2c adapter */
+> =C2=A0	adap =3D &priv->adapter;
+> =C2=A0	adap->retries =3D 5;
+> @@ -349,8 +383,8 @@ static DEFINE_RUNTIME_DEV_PM_OPS(ls2x_i2c_pm_ops,
+> =C2=A0				 ls2x_i2c_suspend, ls2x_i2c_resume, NULL);
+> =C2=A0
+> =C2=A0static const struct of_device_id ls2x_i2c_id_table[] =3D {
+> -	{ .compatible =3D "loongson,ls2k-i2c" },
+> -	{ .compatible =3D "loongson,ls7a-i2c" },
+> +	{ .compatible =3D "loongson,ls2k-i2c", .data =3D (void *)LS2X_I2C_2K_CL=
+OCK_DIV, },
+> +	{ .compatible =3D "loongson,ls7a-i2c", .data =3D (void *)LS2X_I2C_7A_CL=
+OCK_DIV, },
+> =C2=A0	{ /* sentinel */ }
+> =C2=A0};
+> =C2=A0MODULE_DEVICE_TABLE(of, ls2x_i2c_id_table);
 
-diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
-index b642ee489ea6..6dfc81748584 100644
---- a/tools/testing/selftests/bpf/Makefile
-+++ b/tools/testing/selftests/bpf/Makefile
-@@ -980,6 +980,7 @@ $(OUTPUT)/bench_lpm_trie_map.o: $(OUTPUT)/lpm_trie_bench.skel.h $(OUTPUT)/lpm_tr
- $(OUTPUT)/bench_bpf_nop.o: $(OUTPUT)/bpf_nop_bench.skel.h bench_bpf_timing.h
- $(OUTPUT)/bench_xdp_lb.o: $(OUTPUT)/xdp_lb_bench.skel.h bench_bpf_timing.h
- $(OUTPUT)/bench_bpf_timing.o: bench_bpf_timing.h
-+$(OUTPUT)/bench_kptr_xchg.o: $(OUTPUT)/kptr_xchg_bench.skel.h
- $(OUTPUT)/bench.o: bench.h testing_helpers.h $(BPFOBJ)
- $(OUTPUT)/bench: LDLIBS += -lm
- $(OUTPUT)/bench: $(OUTPUT)/bench.o \
-@@ -1005,6 +1006,7 @@ $(OUTPUT)/bench: $(OUTPUT)/bench.o \
- 		 $(OUTPUT)/bench_bpf_timing.o \
- 		 $(OUTPUT)/bench_bpf_nop.o \
- 		 $(OUTPUT)/bench_xdp_lb.o \
-+		 $(OUTPUT)/bench_kptr_xchg.o \
- 		 $(OUTPUT)/usdt_1.o \
- 		 $(OUTPUT)/usdt_2.o \
- 		 #
-diff --git a/tools/testing/selftests/bpf/bench.c b/tools/testing/selftests/bpf/bench.c
-index 3d9d2cd7764b..550290d6701a 100644
---- a/tools/testing/selftests/bpf/bench.c
-+++ b/tools/testing/selftests/bpf/bench.c
-@@ -582,6 +582,7 @@ extern const struct bench bench_lpm_trie_delete;
- extern const struct bench bench_lpm_trie_free;
- extern const struct bench bench_bpf_nop;
- extern const struct bench bench_xdp_lb;
-+extern const struct bench bench_kptr_xchg;
- 
- static const struct bench *benchs[] = {
- 	&bench_count_global,
-@@ -665,6 +666,7 @@ static const struct bench *benchs[] = {
- 	&bench_lpm_trie_free,
- 	&bench_bpf_nop,
- 	&bench_xdp_lb,
-+	&bench_kptr_xchg,
- };
- 
- static void find_benchmark(void)
-diff --git a/tools/testing/selftests/bpf/benchs/bench_kptr_xchg.c b/tools/testing/selftests/bpf/benchs/bench_kptr_xchg.c
-new file mode 100644
-index 000000000000..b8a0d346fda6
---- /dev/null
-+++ b/tools/testing/selftests/bpf/benchs/bench_kptr_xchg.c
-@@ -0,0 +1,96 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (C) 2026. Loongson Technology Corporation Limited */
-+#include <argp.h>
-+#include "bench.h"
-+#include "kptr_xchg_bench.skel.h"
-+
-+static struct ctx {
-+	struct kptr_xchg_bench *skel;
-+} ctx;
-+
-+static struct {
-+	__u32 nr_loops;
-+} args = {
-+	.nr_loops = 256,
-+};
-+
-+enum {
-+	ARG_NR_LOOPS = 7000,
-+};
-+
-+static const struct argp_option opts[] = {
-+	{ "nr_loops", ARG_NR_LOOPS, "nr_loops", 0,
-+	  "Set number of bpf_kptr_xchg() calls per trigger"},
-+	{},
-+};
-+
-+static error_t parse_arg(int key, char *arg, struct argp_state *state)
-+{
-+	switch (key) {
-+	case ARG_NR_LOOPS:
-+		args.nr_loops = strtol(arg, NULL, 10);
-+		break;
-+	default:
-+		return ARGP_ERR_UNKNOWN;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct argp bench_kptr_xchg_argp = {
-+	.options = opts,
-+	.parser = parse_arg,
-+};
-+
-+static void validate(void)
-+{
-+	if (env.consumer_cnt != 0) {
-+		fprintf(stderr, "benchmark doesn't support consumer!\n");
-+		exit(1);
-+	}
-+}
-+
-+static void *producer(void *input)
-+{
-+	while (true)
-+		syscall(__NR_getpgid);
-+
-+	return NULL;
-+}
-+
-+static void measure(struct bench_res *res)
-+{
-+	res->hits = atomic_swap(&ctx.skel->bss->hits, 0);
-+}
-+
-+static void setup(void)
-+{
-+	struct bpf_link *link;
-+
-+	setup_libbpf();
-+
-+	ctx.skel = kptr_xchg_bench__open_and_load();
-+	if (!ctx.skel) {
-+		fprintf(stderr, "failed to open skeleton\n");
-+		exit(1);
-+	}
-+
-+	ctx.skel->data->nr_loops = args.nr_loops;
-+
-+	link = bpf_program__attach(ctx.skel->progs.benchmark);
-+	if (!link) {
-+		fprintf(stderr, "failed to attach program!\n");
-+		exit(1);
-+	}
-+}
-+
-+const struct bench bench_kptr_xchg = {
-+	.name = "kptr-xchg",
-+	.argp = &bench_kptr_xchg_argp,
-+	.validate = validate,
-+	.setup = setup,
-+	.producer_thread = producer,
-+	.measure = measure,
-+	.report_progress = ops_report_progress,
-+	.report_final = ops_report_final,
-+};
-diff --git a/tools/testing/selftests/bpf/progs/kptr_xchg_bench.c b/tools/testing/selftests/bpf/progs/kptr_xchg_bench.c
-new file mode 100644
-index 000000000000..363883073e2c
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/kptr_xchg_bench.c
-@@ -0,0 +1,49 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (C) 2026. Loongson Technology Corporation Limited */
-+#include "vmlinux.h"
-+#include <bpf/bpf_helpers.h>
-+
-+#include "bpf_experimental.h"
-+#include "bpf_misc.h"
-+
-+char _license[] SEC("license") = "GPL";
-+
-+#define MAX_XCHG_LOOPS 4096
-+
-+struct bin_data {
-+	char blob[32];
-+};
-+
-+#define private(name) SEC(".bss." #name) __hidden __attribute__((aligned(8)))
-+
-+private(kptr) struct bin_data __kptr *ptr;
-+u32 nr_loops = 256;
-+long hits;
-+
-+SEC("fentry/" SYS_PREFIX "sys_getpgid")
-+int benchmark(void *ctx)
-+{
-+	struct bin_data *old;
-+	u32 i;
-+
-+	for (i = 0; i < MAX_XCHG_LOOPS; i++) {
-+		if (i >= nr_loops)
-+			break;
-+
-+		old = bpf_kptr_xchg(&ptr, NULL);
-+		if (old)
-+			bpf_obj_drop(old);
-+	}
-+
-+	__sync_add_and_fetch(&hits, i);
-+	return 0;
-+}
-+
-+/*
-+ * BTF FUNC records are not generated for kfuncs referenced only through
-+ * optimized paths. Keep bpf_obj_drop() visible to libbpf's kfunc linker.
-+ */
-+void __btf_root(void)
-+{
-+	bpf_obj_drop(NULL);
-+}
--- 
-2.25.1
-
+--=20
+Xi Ruoyao <xry111@xry111.site>
