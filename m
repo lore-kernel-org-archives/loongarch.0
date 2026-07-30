@@ -1,352 +1,68 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D3F53D3001
-	for <loongarch@lists.linux.dev>; Thu, 30 Jul 2026 08:40:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7502445AF8;
+	Thu, 30 Jul 2026 16:20:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785400860; cv=none; b=qoMRWzro5x8zIJ08hbHe9WB20mEM0CC1nmLjiAAsN9LhJT2InMjsZYrjQ91fK712Hrhd+7SprNthxrOeSUVPiVJbrYubkEckePsX2UftqOQLqLXFOMxofK3mWu2iP022FJCuZFLlucpSaeD8Eaug9xN0WshOkxMd8OhVgazoGGg=
+	t=1785428407; cv=none; b=kJCVxLFiBhpq+TMmwegcP1JwLT1zzRkHgvFTWwm8CMqWDwpJcmwlE0/1rwj+CgUI/ZaOoRmuA5hBgnsPkIKz3UBB5G2TDAmJDyja43RBU3Ol8k10mX5wAaRuHI5RUeyKgeVeyhvBGkKDkQz2tdcUBRr3J9zLOlZJOzbtCjn3wGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785400860; c=relaxed/simple;
-	bh=9bYnK7Lrhqbih1LeaBhp06hhsWEebkhR4HhD87C4eoM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d+MPfq26UcO/UEEEix0ubcr4ByLYjpA86IKp6e98SU8A6aG72jDOeDyH4xP97RYSRo3csRFLt1M9+se97Des0tnvar/uMLpOnOMkncI2IY0ncAFcdF5GAHLC/G+1wdl7BfUaTTSOwT3SeeJ9f/XpVBP/aBPzH/QtGKUbLa0XWa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.40.54.123])
-	by gateway (Coremail) with SMTP id _____8AxFOgYDmtqG80IAA--.6750S3;
-	Thu, 30 Jul 2026 16:40:56 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.40.54.123])
-	by front1 (Coremail) with SMTP id qMiowJAxTsUNDmtqc50dAA--.27500S4;
-	Thu, 30 Jul 2026 16:40:55 +0800 (CST)
-From: Qunqin Zhao <zhaoqunqin@loongson.cn>
-To: lee@kernel.org
-Cc: chenhuacai@kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-crypto@vger.kernel.org,
-	Qunqin Zhao <zhaoqunqin@loongson.cn>
-Subject: [PATCH v5 2/2] mfd: loongson-se: Fix miscellaneous issues
-Date: Thu, 30 Jul 2026 16:26:08 +0800
-Message-ID: <20260730082608.1929-3-zhaoqunqin@loongson.cn>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20260730082608.1929-1-zhaoqunqin@loongson.cn>
-References: <20260730082608.1929-1-zhaoqunqin@loongson.cn>
+	s=arc-20240116; t=1785428407; c=relaxed/simple;
+	bh=NG/Hf9uKQiJmdoislCB0y7wGpGQwRGVVUCDKwXWtQ1E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tNHEWPiSbdOKXIDAqRqt5Qe/VNPweAfoUnfKPzISqMVK75AD1dLacXmfHfpnUoluUi2BPZxJPXnOKq/i2OeUCmtbjCznWwo0eUT4xHHs1VTEjquOO9XjM/7CKhtnp3lnik5wCS8MyvJ/ALTZy1Amo59onmDbwQDbM5DXM25SPZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=zvSST8bd; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="zvSST8bd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15A601F000E9;
+	Thu, 30 Jul 2026 16:20:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
+	s=korg; t=1785428406;
+	bh=QYLU6RYr3yfEPtc/KMYVr/k2ZzhyQ8RzBCm4m1OE4s0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=zvSST8bdPg82qSZ8SRa5S0ItPvKCkNFYYi7/9Hh085X/cpng9dT7BeY0sr2eybj2l
+	 +XTGVPLY9Hk6GSSnWltFjPGBddhCi2mchWFvw/sRVup2j/EFvjItU9KKuigfJpufha
+	 3UFomj0Ci97bk2O2WzJUE1niRxJxjS+4jGv+zQBs=
+Date: Thu, 30 Jul 2026 16:48:16 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Jan Kara <jack@suse.cz>
+Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+	linux-kernel@vger.kernel.org, Jan Kara <jack@suse.com>,
+	Yangtao Li <frank.li@vivo.com>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Subject: Re: [PATCH] quota: remove CONFIG_PRINT_QUOTA_WARNING code
+Message-ID: <2026073007-nearby-debtless-cfd6@gregkh>
+References: <20260722060155.1111519-1-jirislaby@kernel.org>
+ <5cxumyfngrzddts3igtfqhogyabpjf5jywabpjclimnzy5pug6@e34tyng6thbg>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxTsUNDmtqc50dAA--.27500S4
-X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxtrWDtw1xWFW7CrW7ZF13trc_yoWftFy5pF
-	45C3yYkr4jqr48Cws8J3s8uF4avr95trZrCa9Iqa1xAF1DJ34rWFy5tFyUWayfCrWqqF17
-	XFZ5KFWruF1rA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU7tx6UUUUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5cxumyfngrzddts3igtfqhogyabpjf5jywabpjclimnzy5pug6@e34tyng6thbg>
 
-Address multiple historical driver issues discovered by the Sashiko
-Automation system within the loongson_se_probe() initialization flow
-and the driver's interrupt service routines [1].
+On Mon, Jul 27, 2026 at 09:53:30PM +0200, Jan Kara wrote:
+> On Wed 22-07-26 08:01:55, Jiri Slaby (SUSE) wrote:
+> > CONFIG_PRINT_QUOTA_WARNING was marked as BROKEN in 2023 by 36d532d713db
+> > ("quota: mark PRINT_QUOTA_WARNING as BROKEN").
+> > 
+> > The code is apparently unused and uninteresting, so remove it all, incl.
+> > the abuse of TTY.
+> > 
+> > Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: Jan Kara <jack@suse.com>
+> > Cc: Yangtao Li <frank.li@vivo.com>
+> 
+> OK, I'm for trying this because so far nobody was complaining about the
+> feature getting marked as BROKEN. Let's see how it goes...
 
-- Add an explicit bounds check in se_irq_handler() before accessing
-  the engines array to prevent out-of-bounds memory writes.
+Great!
 
-- Switch from devm_kmalloc() to devm_kzalloc() and explicitly
-  initialize all engine completion structures in probe() to avoid a
-  kernel panic from complete() dereferencing a NULL wait head when a
-  spurious interrupt fires before child drivers call
-  loongson_se_init_engine().
-
-- Replace engine_init_lock with a broader cmd_lock mutex that
-  serializes all command submissions, and move the lock into
-  loongson_se_send_controller_cmd() and
-  loongson_se_send_engine_cmd() to cover the full register write +
-  poll + wait sequence.
-
-- Drop the spin_lock_irq from loongson_se_poll() so that interrupts
-  are not disabled for up to 10 ms during the poll.  Keep the
-  readl_relaxed_poll_timeout_atomic() busy-wait to avoid scheduling
-  latency for fast hardware completions.
-
-- Add reinit_completion() to loongson_se_send_controller_cmd() and
-  loongson_se_send_engine_cmd() before waiting to prevent stale
-  completions from falsely returning success after a signal
-  interruption.
-
-- Fix EPROBE_DEFER handling: propagate the error directly from
-  platform_irq_count() instead of overwriting it with ENODEV so that
-  probe deferral works when the interrupt provider is not yet ready.
-
-- Validate dmam_size from firmware against the minimum required size
-  to prevent command buffers from pointing outside the allocated
-  DMA region.
-
-- Return the error code from devm_request_irq() instead of silently
-  continuing to prevent an indefinite hang.
-
-- Disable hardware interrupts in the probe error path when
-  loongson_se_init() fails to prevent an unhandled interrupt storm.
-
-- Add a loongson_se_stop() cleanup handler registered with
-  devm_add_action_or_reset() to send SE_CMD_STOP to the controller
-  and mask all interrupts during device removal.  Using devres
-  ensures that child MFD devices are unbound before the controller
-  is stopped.  The STOP command uses a non-interruptible wait to
-  avoid leaving hardware running while DMA buffers are freed.
-
-- Zero-initialize the local controller command structure in
-  loongson_se_init() to prevent uninitialized stack memory from
-  being written to device registers.
-
-- Add the SE_CMD_STOP command definition.
-
-Link: https://lore.kernel.org/all/20260618095949.GB1672911@google.com/ [1]
-Fixes: e551fa3159e3 ("mfd: Add support for Loongson Security Engine chip controller")
-Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
----
- drivers/mfd/loongson-se.c       | 87 ++++++++++++++++++++++++++-------
- include/linux/mfd/loongson-se.h |  1 +
- 2 files changed, 69 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/mfd/loongson-se.c b/drivers/mfd/loongson-se.c
-index 7f552a8ee6..2c8afad1b0 100644
---- a/drivers/mfd/loongson-se.c
-+++ b/drivers/mfd/loongson-se.c
-@@ -28,7 +28,7 @@ struct loongson_se {
- 	void *dmam_base;
- 	int dmam_size;
- 
--	struct mutex engine_init_lock;
-+	struct mutex cmd_lock;
- 	struct loongson_se_engine engines[SE_ENGINE_MAX];
- };
- 
-@@ -42,8 +42,6 @@ static int loongson_se_poll(struct loongson_se *se, u32 int_bit)
- 	u32 status;
- 	int err;
- 
--	spin_lock_irq(&se->dev_lock);
--
- 	/* Notify the controller that the engine needs to be started */
- 	writel(int_bit, se->base + SE_L2SINT_SET);
- 
-@@ -52,8 +50,6 @@ static int loongson_se_poll(struct loongson_se *se, u32 int_bit)
- 						!(status & int_bit),
- 						1, LOONGSON_ENGINE_CMD_TIMEOUT_US);
- 
--	spin_unlock_irq(&se->dev_lock);
--
- 	return err;
- }
- 
-@@ -63,24 +59,40 @@ static int loongson_se_send_controller_cmd(struct loongson_se *se,
- 	u32 *send_cmd = (u32 *)cmd;
- 	int err, i;
- 
-+	mutex_lock(&se->cmd_lock);
-+
-+	reinit_completion(&se->cmd_completion);
-+
- 	for (i = 0; i < SE_SEND_CMD_REG_LEN; i++)
- 		writel(send_cmd[i], se->base + SE_SEND_CMD_REG + i * 4);
- 
- 	err = loongson_se_poll(se, SE_INT_CONTROLLER);
- 	if (err)
--		return err;
-+		goto out;
-+
-+	err = wait_for_completion_interruptible(&se->cmd_completion);
- 
--	return wait_for_completion_interruptible(&se->cmd_completion);
-+out:
-+	mutex_unlock(&se->cmd_lock);
-+	return err;
- }
- 
- int loongson_se_send_engine_cmd(struct loongson_se_engine *engine)
- {
-+	int err;
-+
-+	mutex_lock(&engine->se->cmd_lock);
-+
-+	reinit_completion(&engine->completion);
-+
- 	/*
- 	 * After engine initialization, the controller already knows
- 	 * where to obtain engine commands from. Now all we need to
- 	 * do is notify the controller that the engine needs to be started.
- 	 */
--	int err = loongson_se_poll(engine->se, BIT(engine->id));
-+	err = loongson_se_poll(engine->se, BIT(engine->id));
-+
-+	mutex_unlock(&engine->se->cmd_lock);
- 
- 	if (err)
- 		return err;
-@@ -97,7 +109,7 @@ struct loongson_se_engine *loongson_se_init_engine(struct device *dev, int id)
- 
- 	engine->se = se;
- 	engine->id = id;
--	init_completion(&engine->completion);
-+	reinit_completion(&engine->completion);
- 
- 	/* Divide DMA memory equally among all engines */
- 	engine->buffer_size = se->dmam_size / SE_ENGINE_MAX;
-@@ -113,8 +125,6 @@ struct loongson_se_engine *loongson_se_init_engine(struct device *dev, int id)
- 	engine->command = se->dmam_base + id * (2 * SE_ENGINE_CMD_SIZE);
- 	engine->command_ret = engine->command + SE_ENGINE_CMD_SIZE;
- 
--	mutex_lock(&se->engine_init_lock);
--
- 	/* Tell the controller where to find engine command */
- 	cmd.command_id = SE_CMD_SET_ENGINE_CMDBUF;
- 	cmd.info[0] = id;
-@@ -124,8 +134,6 @@ struct loongson_se_engine *loongson_se_init_engine(struct device *dev, int id)
- 	if (loongson_se_send_controller_cmd(se, &cmd))
- 		engine = NULL;
- 
--	mutex_unlock(&se->engine_init_lock);
--
- 	return engine;
- }
- EXPORT_SYMBOL_GPL(loongson_se_init_engine);
-@@ -155,7 +163,8 @@ static irqreturn_t se_irq_handler(int irq, void *dev_id)
- 	/* For engines */
- 	while (int_status) {
- 		id = __ffs(int_status);
--		complete(&se->engines[id].completion);
-+		if (id < SE_ENGINE_MAX)
-+			complete(&se->engines[id].completion);
- 		int_status &= ~BIT(id);
- 		writel(BIT(id), se->base + SE_S2LINT_CL);
- 	}
-@@ -167,7 +176,7 @@ static irqreturn_t se_irq_handler(int irq, void *dev_id)
- 
- static int loongson_se_init(struct loongson_se *se, dma_addr_t addr, int size)
- {
--	struct loongson_se_controller_cmd cmd;
-+	struct loongson_se_controller_cmd cmd = {0};
- 	int err;
- 
- 	cmd.command_id = SE_CMD_START;
-@@ -188,6 +197,30 @@ static const struct mfd_cell engines[] = {
- 	{ .name = "tpm_loongson" },
- };
- 
-+static void loongson_se_stop(void *data)
-+{
-+	struct loongson_se *se = data;
-+	struct loongson_se_controller_cmd cmd = {0};
-+	u32 *send_cmd = (u32 *)&cmd;
-+	int i;
-+
-+	mutex_lock(&se->cmd_lock);
-+
-+	cmd.command_id = SE_CMD_STOP;
-+
-+	reinit_completion(&se->cmd_completion);
-+
-+	for (i = 0; i < SE_SEND_CMD_REG_LEN; i++)
-+		writel(send_cmd[i], se->base + SE_SEND_CMD_REG + i * 4);
-+
-+	if (!loongson_se_poll(se, SE_INT_CONTROLLER))
-+		wait_for_completion(&se->cmd_completion);
-+
-+	writel(0, se->base + SE_S2LINT_EN);
-+
-+	mutex_unlock(&se->cmd_lock);
-+}
-+
- static int loongson_se_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -195,19 +228,25 @@ static int loongson_se_probe(struct platform_device *pdev)
- 	int nr_irq, irq, err, i;
- 	dma_addr_t paddr;
- 
--	se = devm_kmalloc(dev, sizeof(*se), GFP_KERNEL);
-+	se = devm_kzalloc(dev, sizeof(*se), GFP_KERNEL);
- 	if (!se)
- 		return -ENOMEM;
- 
- 	dev_set_drvdata(dev, se);
- 	init_completion(&se->cmd_completion);
- 	spin_lock_init(&se->dev_lock);
--	mutex_init(&se->engine_init_lock);
-+	mutex_init(&se->cmd_lock);
-+
-+	for (i = 0; i < SE_ENGINE_MAX; i++)
-+		init_completion(&se->engines[i].completion);
- 
- 	dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
- 	if (device_property_read_u32(dev, "dmam_size", &se->dmam_size))
- 		return -ENODEV;
- 
-+	if (se->dmam_size < (SE_ENGINE_MAX * 2 * SE_ENGINE_CMD_SIZE))
-+		return -EINVAL;
-+
- 	se->dmam_base = dmam_alloc_coherent(dev, se->dmam_size, &paddr, GFP_KERNEL);
- 	if (!se->dmam_base)
- 		return -ENOMEM;
-@@ -217,21 +256,31 @@ static int loongson_se_probe(struct platform_device *pdev)
- 		return PTR_ERR(se->base);
- 
- 	nr_irq = platform_irq_count(pdev);
--	if (nr_irq <= 0)
-+	if (nr_irq == 0)
- 		return -ENODEV;
-+	if (nr_irq < 0)
-+		return nr_irq;
- 
- 	writel(SE_INT_ALL, se->base + SE_S2LINT_CL);
- 
- 	for (i = 0; i < nr_irq; i++) {
- 		irq = platform_get_irq(pdev, i);
- 		err = devm_request_irq(dev, irq, se_irq_handler, IRQF_SHARED, "loongson-se", se);
--		if (err)
-+		if (err) {
- 			dev_err(dev, "failed to request IRQ: %d\n", irq);
-+			return err;
-+		}
- 	}
- 
- 	writel(SE_INT_ALL, se->base + SE_S2LINT_EN);
- 
- 	err = loongson_se_init(se, paddr, se->dmam_size);
-+	if (err) {
-+		writel(0, se->base + SE_S2LINT_EN);
-+		return err;
-+	}
-+
-+	err = devm_add_action_or_reset(dev, loongson_se_stop, se);
- 	if (err)
- 		return err;
- 
-diff --git a/include/linux/mfd/loongson-se.h b/include/linux/mfd/loongson-se.h
-index 07afa0c252..8237ccab7b 100644
---- a/include/linux/mfd/loongson-se.h
-+++ b/include/linux/mfd/loongson-se.h
-@@ -9,6 +9,7 @@
- #define SE_SEND_CMD_REG_LEN		0x8
- /* Controller command ID */
- #define SE_CMD_START			0x0
-+#define SE_CMD_STOP			0x1
- #define SE_CMD_SET_DMA			0x3
- #define SE_CMD_SET_ENGINE_CMDBUF	0x4
- 
--- 
-2.47.3
-
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
