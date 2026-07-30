@@ -1,134 +1,211 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7FA34E764
-	for <loongarch@lists.linux.dev>; Thu, 30 Jul 2026 01:14:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DB1B33DED1
+	for <loongarch@lists.linux.dev>; Thu, 30 Jul 2026 06:45:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785374070; cv=none; b=GB8GMUprJI61Vb3GdQF+0TNM52IqP9vTwJ1ydDUMnGvcm/ZenvAaWt8PHS25EwtF8C/01s4j92xPN7gcWQxEtVVojHxJajumMwwfZEetdfW59AiFsnSP1FlZYPvr7+zSc9AX+m2VneLKu0gF4Lf/+xplG3gPxh5sAk7/0c2oqQg=
+	t=1785393954; cv=none; b=MneGctX31DZJoddlpmkuoNioP3xOK8e/lIaPpDn2Z9WCuLSUiLcc858yIZ5D3/2JnrDBT0nwX+frHqAuI7icER6RO/3NbwreEIxGQqvyikaOGTggrcymEs4dmNu5gH8OHV7NSJkG+CkUFbecpCJr8MHLZS9nTlh/Tj8MbybrG6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785374070; c=relaxed/simple;
-	bh=Q8LqcvCRulwlmm/Efnm76HOirpHJ/zu+2osri09jxeA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=frSCXt1Y7pF16CIc18c6RLn3cgt7fbx1xo7XyEPYbGUQVOm9M/atyeeG2BtEaGBvnS1tTU73pVDL79PI5ATNZPBrb71DkoCanC/9vqtsm3Rf58ZvDh3u/s2W/E1VHN12xVz4zMaA9/ndiF5LbX0dVtd8Rm/h0g2xobAZIDHUERo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=X7qZKe9v; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X7qZKe9v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1785374068;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oep9GUzmGHr26u2If40/oW9YH4ApgXIqp1l7c/0lb/w=;
-	b=X7qZKe9vCvVLzBl4dkdGtP7hW2kj4Ga2VoilCro+kQjHmJHLtRmiotqN2KyjcS8rbx10gg
-	TrAZBgyoLW7QVX/I7QmnLA707sgnpKCJ9Dx2wyQZI4Rat8hzJHo/SWXNJJOGcFFxy0AWmv
-	diIc4mMpUJdOt3XIDkG1ErXNNUCVFJ0=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-561-_2QrTJkqNL6GEL1URfKMOw-1; Wed,
- 29 Jul 2026 21:14:24 -0400
-X-MC-Unique: _2QrTJkqNL6GEL1URfKMOw-1
-X-Mimecast-MFC-AGG-ID: _2QrTJkqNL6GEL1URfKMOw_1785374061
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B967119560A2;
-	Thu, 30 Jul 2026 01:14:19 +0000 (UTC)
-Received: from localhost (unknown [10.22.81.218])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CB8531956094;
-	Thu, 30 Jul 2026 01:14:15 +0000 (UTC)
-Date: Wed, 29 Jul 2026 22:14:14 -0300
-From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Waiman Long <longman@redhat.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Clark Williams <clrkwllms@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev,
-	Ada Couprie Diaz <ada.coupriediaz@arm.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Russell King <linux@armlinux.org.uk>,
-	WANG Xuerui <kernel@xen0n.name>, linux-perf-users@vger.kernel.org,
-	loongarch@lists.linux.dev
-Subject: Re: [RFC PATCH] ARM, ARM64, LOONGARCH: Delay HW BP notification to
- task_work()
-Message-ID: <amqlZiO8rxu_k08L@redhat.com>
-References: <20260713144939.FuCj9yvZ@linutronix.de>
+	s=arc-20240116; t=1785393954; c=relaxed/simple;
+	bh=PdPkFaOhhCBBPlfTPH5dcG1V7OQFmrg3p2bGSZsOK40=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Xw10DG2ERJwtGpihUmlEP09+5DiqttVQS6uo8IAaWJ5fgqFC7UTIYXMQK3CBXW0lpbmyIgVDAoXa4qBY7DSdS1uIKyXiXBZEAZVwvHiwmEMKK8LBNjtzo/9p7UuWFu4O1JtzCfWa/5qrTmrm5Xdctn56fZFqOYSsKEUPLyd1jAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.40.54.123])
+	by gateway (Coremail) with SMTP id _____8AxqKAU82pqpMQIAA--.6612S3;
+	Thu, 30 Jul 2026 14:45:41 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.40.54.123])
+	by front1 (Coremail) with SMTP id qMiowJAxSsQU82pq8IUdAA--.41200S2;
+	Thu, 30 Jul 2026 14:45:40 +0800 (CST)
+From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+To: bp@alien8.de
+Cc: tony.luck@intel.com,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Wang Jinwei <wangjinwei@loongson.cn>,
+	Yulong Wang <wangyulong@loongson.cn>,
+	Dongyan Qian <qiandongyan@loongson.cn>,
+	Chao Li <lichao@loongson.cn>,
+	Qunqin Zhao <zhaoqunqin@loongson.cn>
+Subject: [PATCH 1/3] EDAC/loongson: Encode node and MC info into mc_idx
+Date: Thu, 30 Jul 2026 14:30:33 +0800
+Message-ID: <20260730063035.230686-1-zhaoqunqin@loongson.cn>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20260713144939.FuCj9yvZ@linutronix.de>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
-X-Mimecast-MFC-PROC-ID: E_3o4QfEki7OTkg1UhJTRDerZkc8h4kpwTLaEDIYgPg_1785374061
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAxSsQU82pq8IUdAA--.41200S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxGF4ftr18trWUGF1UXr1kZwc_yoWrtr18pF
+	47u3Z0qrW5trnxuanYyr1UAF1akFn5Ka9Fq392v3y8Cry2yw1kXFyftFy2yF9xCryrGFyU
+	Xas3Kws7ua1DJFcCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1QVy3UUUUU==
 
-On Mon, Jul 13, 2026 at 04:49:39PM +0200, Sebastian Andrzej Siewior wrote:
-> Waiman, Luis, Ada reported that HW breakpoints on ARM64 trigger
-> "sleeping while atomic" warnings on PREEMPT_RT. The hardware event is
-> delivered with disabled interrupts and perf intrastrucure expects
-> disabled interrupts while the overflow callback is invoked.
-> 
-> The callback then sends a SIGTRAP signal for which it acquires
-> sighand_struct::siglock, a spinlock_t which becomes a sleeping lock and
-> must not be acquired in atomic context.
-> 
-> Delay the event callback until the return to userland.
-> Add perf_arch_hwbp_notify(), a generic perf callback which delayes the
-> actual callback invocation to task_work_add() callback. This callback
-> invokes the architecture defines callback arch_hwbp_send_sig().
-> This requires struct callback_head and the functions require
-> ARCH_NEED_PERF_HW_NOTIF to be defined.
-> 
-> This was reported against ARM64. ARM and LongARCH follow the same
-> pattern are also converted.
-> 
-> Reported-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
-> Reported-by: Waiman Long <longman@redhat.com>
-> Closes: https://lore.kernel.org/all/aho0eqjMESuHxECr@redhat.com/
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
-> 
-> This is approximately the fifth iteration at which point I think I can
-> share what I have.
-> 
-> Could this be tested, please? I tested it on arm64 for arm64 based on
-> Luis' test. ARM compiles my HW lacks support for this I think (gdb
-> aborts early). I hope the best for LoongARCH.
+From: Wang Jinwei <wangjinwei@loongson.cn>
 
-I tested your patch on baremetal (3 different aarch64 machines) and 3
-different Virtual Machines. Apart from the one VM that didn't provide the
-HW breakpoints the test used, I was able to reproduce the problem with
-v7.2-rc5-rt3 and earlier kernels in all the other setups. Applying your
-patch eliminated the backtraces. I ran several batches of 2000 and 10000
-executions in a row of the gdb test from the original thread without a
-glitch.
+On Loongson multi-node systems, memory controllers are distributed
+across multiple nodes. Encode node and MC information into mc_idx
+so that sysfs entries uniquely identify each controller.
 
-Having DEBUG_ATOMIC_SLEEP enabled in the kernel (along with PREEMPT_RT)
-was all I needed to reproduce the problem with the unpatched kernel. After
-I applied the patch I run tests with and without lockdep. No backtrace,
-no complaints.
+The driver gets mc-idx from ACPI _DSD property 'mc-idx' if firmware
+provides it. If not, it falls back to edac_device_alloc_index() for
+legacy firmware compatibility.
 
-I started working on trying to reproduce the (possible) problem Sashiko
-highlighted, but so far, no luck in reproducing that specific scenario.
+The number of memory controllers per node (mc-per-node) is obtained
+from firmware via ACPI _DSD property, with a default of 4 for
+backward compatibility. The node and MC IDs are decoded from mc_idx:
+     node = mc_idx / mc_per_node
+     mc = mc_idx % mc_per_node
 
-Best regards,
-Luis
+For example, with mc-per-node=4:
+     mc-idx 0-3   -> node0 mc0-mc3
+     mc-idx 4-7   -> node1 mc0-mc3
+     ...
+     mc-idx 28-31 -> node7 mc0-mc3
+
+The dmesg output looks like this：
+Before: (no _DSD mc-idx)
+EDAC MC3: 510 CE error on MC#3Channel#0_DIMM#0 (channel:0 slot:0
+page:0x0 offset:0x0 grain:8 syndrome:0x0)
+
+After: (_DSD mc-idx)
+EDAC MC3: 510 CE error on MC#3Channel#0_DIMM#0 (channel:0 slot:0
+page:0x0 offset:0x0 grain:8 syndrome:0x0 - node:0 mc:3)
+
+Cc: Yulong Wang <wangyulong@loongson.cn>
+Cc: Dongyan Qian <qiandongyan@loongson.cn>
+Cc: Chao Li <lichao@loongson.cn>
+Signed-off-by: Wang Jinwei <wangjinwei@loongson.cn>
+Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+---
+ drivers/edac/loongson_edac.c | 38 +++++++++++++++++++++++++++++++-----
+ 1 file changed, 33 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/edac/loongson_edac.c b/drivers/edac/loongson_edac.c
+index 38745800ed..f2452e98f5 100644
+--- a/drivers/edac/loongson_edac.c
++++ b/drivers/edac/loongson_edac.c
+@@ -9,6 +9,7 @@
+ #include <linux/io-64-nonatomic-lo-hi.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
++#include <linux/property.h>
+ #include "edac_module.h"
+ 
+ #define ECC_CS_COUNT_REG	0x18
+@@ -23,6 +24,8 @@ struct loongson_edac_pvt {
+ 	 * register state.
+ 	 */
+ 	int last_ce_count;
++	int mc_per_node;
++	bool mc_idx_valid;
+ };
+ 
+ static int read_ecc(struct mem_ctl_info *mci)
+@@ -44,7 +47,8 @@ static int read_ecc(struct mem_ctl_info *mci)
+ static void edac_check(struct mem_ctl_info *mci)
+ {
+ 	struct loongson_edac_pvt *pvt = mci->pvt_info;
+-	int new, add;
++	char other_detail[64];
++	int new, add, node, mc;
+ 
+ 	new = read_ecc(mci);
+ 	add = new - pvt->last_ce_count;
+@@ -52,8 +56,17 @@ static void edac_check(struct mem_ctl_info *mci)
+ 	if (add <= 0)
+ 		return;
+ 
++	if (pvt->mc_idx_valid) {
++		node = mci->mc_idx / pvt->mc_per_node;
++		mc = mci->mc_idx % pvt->mc_per_node;
++		snprintf(other_detail, sizeof(other_detail),
++				"node:%d mc:%d", node, mc);
++	} else {
++		other_detail[0] = '\0';
++	}
++
+ 	edac_mc_handle_error(HW_EVENT_ERR_CORRECTED, mci, add,
+-			     0, 0, 0, 0, 0, -1, "error", "");
++			     0, 0, 0, 0, 0, -1, "error", other_detail);
+ }
+ 
+ static void dimm_config_init(struct mem_ctl_info *mci)
+@@ -72,20 +85,26 @@ static void dimm_config_init(struct mem_ctl_info *mci)
+ 	dimm->grain = 8;
+ }
+ 
+-static void pvt_init(struct mem_ctl_info *mci, void __iomem *vbase)
++static void pvt_init(struct mem_ctl_info *mci, void __iomem *vbase,
++		bool mc_idx_valid, int mc_per_node)
+ {
+ 	struct loongson_edac_pvt *pvt = mci->pvt_info;
+ 
+ 	pvt->ecc_base = vbase;
+ 	pvt->last_ce_count = read_ecc(mci);
++	pvt->mc_idx_valid = mc_idx_valid;
++	pvt->mc_per_node = mc_per_node;
+ }
+ 
+ static int edac_probe(struct platform_device *pdev)
+ {
+ 	struct edac_mc_layer layers[2];
+ 	struct mem_ctl_info *mci;
++	struct device *dev = &pdev->dev;
+ 	void __iomem *vbase;
++	u32 mc_per_node;
+ 	int ret;
++	bool mc_idx_valid;
+ 
+ 	vbase = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(vbase))
+@@ -102,7 +121,6 @@ static int edac_probe(struct platform_device *pdev)
+ 	if (mci == NULL)
+ 		return -ENOMEM;
+ 
+-	mci->mc_idx = edac_device_alloc_index();
+ 	mci->mtype_cap = MEM_FLAG_RDDR4;
+ 	mci->edac_ctl_cap = EDAC_FLAG_NONE;
+ 	mci->edac_cap = EDAC_FLAG_NONE;
+@@ -114,7 +132,17 @@ static int edac_probe(struct platform_device *pdev)
+ 	mci->error_desc.grain = 8;
+ 	mci->edac_check = edac_check;
+ 
+-	pvt_init(mci, vbase);
++	if (device_property_read_u32(dev, "mc-idx", &mci->mc_idx)) {
++		mci->mc_idx = edac_device_alloc_index();
++		mc_idx_valid = false;
++	} else {
++		mc_idx_valid = true;
++	}
++
++	if (device_property_read_u32(dev, "mc-per-node", &mc_per_node))
++		mc_per_node = 4;
++
++	pvt_init(mci, vbase, mc_idx_valid, mc_per_node);
+ 	dimm_config_init(mci);
+ 
+ 	ret = edac_mc_add_mc(mci);
+
+base-commit: dc59e4fea9d83f03bad6bddf3fa2e52491777482
+-- 
+2.47.2
 
