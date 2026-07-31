@@ -1,209 +1,139 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D444733ADBA
-	for <loongarch@lists.linux.dev>; Fri, 31 Jul 2026 07:37:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0247357D0B;
+	Fri, 31 Jul 2026 21:42:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785483462; cv=none; b=WI2d//BMDAs79D/n9B6h4vyYPnNWzP5Na9kfjgR/m4sDWM43dalLFCDM7uKUb0fPDKm3Yg9CWihR6IZgxXu41jVsTFLwKSfiU5dm0w6lLyVRgvHCGoE7FyxpHlbxuHVcScqS1JmhtZ882IPAVXz6hutKLnBK898q2zrrYq5tMOw=
+	t=1785534138; cv=none; b=adCXGXCPl5z+khrvV0F2PVZOdy0Ga7sinj4aZd8EzgiUkNaANWEwNB43Ath71U2ynUTypxh1ABfzJgszSNczL/ddsBrK+fzcaH4ZTzYiYvG0LlKPzg4G5WBbQHo/qrgyUiFBhGVkoam/SLEoqBVlaGMV1PowND0cw4ROw6xt1nM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785483462; c=relaxed/simple;
-	bh=d/jX83tfsqpZnpeKKEgRG/rITvCNee3IxJzndUG8nrk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jfoO8DyP8LxQLcnAriINDoSDQ+IguY5Pi0wy9D4kzSQqFpmfVEJMhfXLlSCX+HZLnqpoGnpyE3kHFK3wi6/HEp0ULKX7mh9DEpqjj6BzM3vTXsjHwuv2uJ5LS8i60QFEizDPOJmxD4IoMVQnkNWUhx5/xKvDgNQmMDjBenb0YB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aeW+P7az; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785534138; c=relaxed/simple;
+	bh=0NOOYwwQ1TIVKt92gkmVVRgXfsAdTy/V3Md4uvzdGuI=;
+	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
+	 Subject:From:To:Cc:Date; b=bkpmSq2AAuNcGwpOsjp2oxGpGDvRDSzAbJKwMtN5ic9ReFwzWQnzgjSNZabduKaCKNC2f0QUVrfbSqGHi4wQF0tIK4ePszJ5XG8AokdRDdFdd0q3yDucMknMuppHaRYQJ++JDb4mxkSBYfxKZjKfI8wQ31JIsRl0sR28G9pOdkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g+xKsEbs; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aeW+P7az"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E5581F00A3F
-	for <loongarch@lists.linux.dev>; Fri, 31 Jul 2026 07:37:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g+xKsEbs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF4AD1F00AC4;
+	Fri, 31 Jul 2026 21:42:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785483460;
-	bh=0iZQHz7NeGZMsBVItQcixhsFj58C0OgYWDKDkF6Dau0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=aeW+P7azcEYrHe4APercn3sqTRSCmhLfiQydckmu95XOSwR5slHPjMPKNfiiO+QIk
-	 MjpaHYQS87Iwp62b/ZOxFoxaXIXEsw013z04i7iXlXlKryDdsrhYOhQuJO70p6XqUJ
-	 8AZTyUcOsFG0Zhj+yyo/LE1xMp+Sre+E9pO1F86eDnf5tX1TS/qAwRkgHYhq/lKgIv
-	 DRMlTwyq24QHCTmw+mTMRrwF5xrJqYgBulqNZjIPPdKI5ZZMpS6UcMKAOBrzepRQUx
-	 sO59Jp+/TnHl6XkE+TftXu83SPycyKXJMC115uN1uMPkJoywOERNDwr8b4pwFLhxOj
-	 ZtQkF/ZYlT5MQ==
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6a08a2b7e5bso1015121a12.1
-        for <loongarch@lists.linux.dev>; Fri, 31 Jul 2026 00:37:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RpwF5FdJH4VR7X8MWvPIECHfcG1qZmlRjh9/L32M6G/LK173NwCMcI+6teAZs9K84yIob/AAisNVW0=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwHShy09P93Aqqvcy3+0jFjgVi03GNdk92mDT+xr6YqW8yGiJVu
-	81vtebuV8s1WP3I02iZFEB4CX1A70+8ar/HA4V9CTdtdiwTi0QZZ11hedDD/gjgUbP6TmOAZPIm
-	OMiKXLmbJe+3Kd9Dwkiyo5UI2/A8ZifU=
-X-Received: by 2002:a05:6402:44d9:b0:697:eb97:a4ed with SMTP id
- 4fb4d7f45d1cf-6a09ba1f2f9mr302833a12.7.1785483459137; Fri, 31 Jul 2026
- 00:37:39 -0700 (PDT)
+	s=k20260515; t=1785534137;
+	bh=+YeiBRqriyWttSnuVzJ8T2X/WzHiPJ8L0llstU+niuM=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date;
+	b=g+xKsEbsDA8dZ/RaksT9NkQFNEAGRd2/OCnGdcBJYszTJO4OcnKXIIWcMvd0rq2Y5
+	 We+xV1qBOp8pk7uqX6W/cc2612jOiHVxu2r+8NU2B6HXpO/bvlsD+ubQrJPzhFK55P
+	 oNoV4aaCzDEz8rXyhDTqYQpplNhViZd5yZCHxrfeUv4kTzu9QDawzyp1ayhjLcexLb
+	 B4EFSVW/vJMr51xqalCYJN65Fs3VtPoAfSN5kACPD+6QWIWcT35aE8gXojtuXzri94
+	 lOT/Lc2+0UOARXpOrHWHAXdQeUaSq9Z6+o/g/glRh83e654dOVCHWOX23jIwuFpD88
+	 LBKyqIfHZqTDA==
+Content-Type: multipart/mixed; boundary="===============2028487587190646803=="
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260721090606.8982-1-yangtiezhu@loongson.cn> <20260721090606.8982-3-yangtiezhu@loongson.cn>
- <11c42b7c-7805-cce7-305d-6e52c14db20e@loongson.cn>
-In-Reply-To: <11c42b7c-7805-cce7-305d-6e52c14db20e@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 31 Jul 2026 15:38:05 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H47kc-=A2syzJNLWOD1=TWumvyYWObL+xutrbSRy=WpWA@mail.gmail.com>
-X-Gm-Features: AUfX_mwnrI87ZsEoe4v5LzD35XC58e3JtwAHKXTs3OkJso5rEbEdY1NBlQ3IO_I
-Message-ID: <CAAhV-H47kc-=A2syzJNLWOD1=TWumvyYWObL+xutrbSRy=WpWA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] LoongArch: Skip address pairing for non-exec sections
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: linux-mm@kvack.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Mike Rapoport <rppt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-Id: <ca219edf78ea1ea8db81654d615a481b4837a6c9bc971b91050c2be047f65c10@mail.kernel.org>
+In-Reply-To: <20260728031615.9389-2-yangtiezhu@loongson.cn>
+References: <20260728031615.9389-2-yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v1 1/2] LoongArch: BPF: Clean up and decouple is32 parameter from move_imm()
+From: bot+bpf-ci@kernel.org
+To: yangtiezhu@loongson.cn,chenhuacai@kernel.org,hengqi.chen@gmail.com
+Cc: loongarch@lists.linux.dev,bpf@vger.kernel.org,linux-kernel@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
+Date: Fri, 31 Jul 2026 21:42:16 +0000 (UTC)
 
-Hi, Tiezhu,
+--===============2028487587190646803==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jul 24, 2026 at 2:07=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
+> diff --git a/arch/loongarch/net/bpf_jit.h b/arch/loongarch/net/bpf_jit.h
+> index a8e29be35fa8..9438fce49e69 100644
+> --- a/arch/loongarch/net/bpf_jit.h
+> +++ b/arch/loongarch/net/bpf_jit.h
+> @@ -137,7 +137,7 @@ static inline void move_addr(struct jit_ctx *ctx, enum loongarch_gpr rd, u64 add
+>  	emit_insn(ctx, lu52id, rd, rd, imm_63_52);
+>  }
 >
-> On 2026/7/21 =E4=B8=8B=E5=8D=885:06, Tiezhu Yang wrote:
-> > The module loader currently runs expensive address pairing logic for al=
-l
-> > sections blindly during relocation. For massive modules like amdgpu, th=
-is
-> > causes the loader to waste lots of CPU cycles analyzing non-exec sectio=
-ns.
-> >
-> > Furthermore, there is an inconsistency since module_frob_arch_sections(=
-)
-> > already ignores non-exec sections during the counting phase.
-> >
-> > Check the SHF_EXECINSTR flag in apply_relocate_add(). If the section is
-> > non-exec, skip address pairing and then jump to normal relocation. This
-> > eliminates redundant search loops to improve module loading efficiency.
-> >
-> > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> > ---
-> >   arch/loongarch/kernel/module.c | 6 ++++++
-> >   1 file changed, 6 insertions(+)
-> >
-> > diff --git a/arch/loongarch/kernel/module.c b/arch/loongarch/kernel/mod=
-ule.c
-> > index 7d4d571ee55e..c84ac1546dc6 100644
-> > --- a/arch/loongarch/kernel/module.c
-> > +++ b/arch/loongarch/kernel/module.c
-> > @@ -484,6 +484,7 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const cha=
-r *strtab,
-> >       Elf_Addr v;
-> >       Elf_Sym *sym;
-> >       Elf_Rela *rel =3D (void *) sechdrs[relsec].sh_addr;
-> > +     Elf_Shdr *dst_sec =3D sechdrs + sechdrs[relsec].sh_info;
-> >
-> >       pr_debug("%s: Applying relocate section %u to %u\n", __func__, re=
-lsec,
-> >              sechdrs[relsec].sh_info);
-> > @@ -522,6 +523,10 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const ch=
-ar *strtab,
-> >
-> >               v =3D sym->st_value + rel[i].r_addend;
-> >
-> > +             /* Skip address pairing for non-exec sections */
-> > +             if (!(dst_sec->sh_flags & SHF_EXECINSTR))
-> > +                     goto apply_normal;
-> > +
-> >               if (type =3D=3D R_LARCH_PCADD_LO12 || type =3D=3D R_LARCH=
-_GOT_PCADD_LO12) {
-> >                       bool found =3D false;
-> >                       unsigned int j =3D idx;
-> > @@ -562,6 +567,7 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const cha=
-r *strtab,
-> >                       idx =3D j; /* Record the previous j-loop end inde=
-x */
-> >               }
-> >
-> > +apply_normal:
-> >               switch (type) {
-> >               case R_LARCH_B26:
-> >                       err =3D apply_r_larch_b26(mod, sechdrs, location,
-> >
+> -static inline void move_imm(struct jit_ctx *ctx, enum loongarch_gpr rd, long imm, bool is32)
+> +static inline void move_imm(struct jit_ctx *ctx, enum loongarch_gpr rd, long imm)
+>  {
+>  	long imm_11_0, imm_31_12, imm_51_32, imm_63_52, imm_51_0, imm_51_31;
 >
-> According to the LoongArch ABI specification, the following relocation
-> types exist exclusively in executable code sections:
+> @@ -150,7 +150,7 @@ static inline void move_imm(struct jit_ctx *ctx, enum loongarch_gpr rd, long imm
+>  	/* addiw rd, $zero, imm_11_0 */
+>  	if (is_signed_imm12(imm)) {
+>  		emit_insn(ctx, addiw, rd, LOONGARCH_GPR_ZERO, imm);
+> -		goto zext;
+> +		return;
+>  	}
 >
-> R_LARCH_PCADD_LO12
-> R_LARCH_GOT_PCADD_LO12
-> R_LARCH_B26
-> R_LARCH_GOT_PC_HI20...R_LARCH_GOT_PC_LO12
-> R_LARCH_GOT_PCADD_HI20...R_LARCH_GOT_PCADD_LO12
-> R_LARCH_SOP_PUSH_PLT_PCREL
->
-> https://github.com/loongson/la-abi-specs/blob/release/laelf.adoc
->
-> Thus, here is a better way:
->
-> ```
-> diff --git a/arch/loongarch/kernel/module.c b/arch/loongarch/kernel/modul=
-e.c
-> index 7d4d571ee55e..b1452b8adc63 100644
-> --- a/arch/loongarch/kernel/module.c
-> +++ b/arch/loongarch/kernel/module.c
-> @@ -484,6 +484,8 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const char
-> *strtab,
->          Elf_Addr v;
->          Elf_Sym *sym;
->          Elf_Rela *rel =3D (void *) sechdrs[relsec].sh_addr;
-> +       Elf_Shdr *dst_sec =3D sechdrs + sechdrs[relsec].sh_info;
-> +       bool is_exec =3D !!(dst_sec->sh_flags & SHF_EXECINSTR);
->
->          pr_debug("%s: Applying relocate section %u to %u\n", __func__,
-> relsec,
->                 sechdrs[relsec].sh_info);
-> @@ -522,6 +524,14 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const
-> char *strtab,
->
->                  v =3D sym->st_value + rel[i].r_addend;
->
-> +               /* Skip relocation types that exist exclusively in
-> executable sections */
-> +               if (!is_exec) {
-> +                       err =3D handler(mod, location, v, rela_stack,
-> &rela_stack_top, type);
-> +                       if (err)
-> +                               return err;
-> +                       continue;
-> +               }
-> +
->                  if (type =3D=3D R_LARCH_PCADD_LO12 || type =3D=3D
-> R_LARCH_GOT_PCADD_LO12) {
->                          bool found =3D false;
->                          unsigned int j =3D idx;
-> ```
->
-> For the non-exec sections such as .orc_unwind_ip:
->
-> fedora@linux:~/7.2-rc3.git$ objdump -h
-> drivers/gpu/drm/amd/amdgpu/amdgpu.ko | grep -A 1 .orc_unwind_ip
->   32 .orc_unwind_ip 000ac104  0000000000000000  0000000000000000
-> 18592470  2**0
->                    CONTENTS, ALLOC, LOAD, RELOC, READONLY, DATA
->
-> there are 176193 relocation entries:
->
-> fedora@linux:~/7.2-rc3.git$ readelf -rW
-> drivers/gpu/drm/amd/amdgpu/amdgpu.o | grep .rela.orc_unwind_ip
-> Relocation section '.rela.orc_unwind_ip' at offset 0x3a5321e8 contains
-> 176193 entries:
->
-> Using the section flag check reduces the operation to a single check for
-> massive data sections; otherwise, the loader would have to perform six
-> redundant type comparisons across the if-statement and switch-case for
-> every single relocation entry.
-Please just drop this patch and make the first one better.
+>  	/* ori rd, $zero, imm_11_0 */
+>  	if (is_unsigned_imm12(imm)) {
+>  		emit_insn(ctx, ori, rd, LOONGARCH_GPR_ZERO, imm);
+>  		goto zext;
+                     ^^^^^^^^^^
 
-Now the first patch has a risk that the distance between .init.text
-and .text of the same module exceeds 128MB. I solved it and you can
-verify:
-https://github.com/chenhuacai/linux/commit/f87f9d82869ebc71dca4c02bdff1cd20=
-3913a98f
+Does this code compile? The is_signed_imm12 branch now returns early, but
+the is_unsigned_imm12 branch still jumps to the zext label that was removed
+by the same commit:
 
-Huacai
->
-> Thanks,
-> Tiezhu
->
+> @@ -195,9 +195,6 @@ static inline void move_imm(struct jit_ctx *ctx, enum loongarch_gpr rd, long imm
+>  		if (!is_signed_imm52(imm))
+>  			emit_insn(ctx, lu52id, rd, rd, imm_63_52);
+>  	}
+> -
+> -zext:
+> -	emit_zext_32(ctx, rd, is32);
+>  }
+
+This dangling goto zext; at the is_unsigned_imm12 path has no target after
+the label was deleted. Should this become 'return;' to match the
+is_signed_imm12 path?
+
+[ ... ]
+
+> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+> index 2738b4db1165..d676936e5b98 100644
+> --- a/arch/loongarch/net/bpf_jit.c
+> +++ b/arch/loongarch/net/bpf_jit.c
+
+[ ... ]
+
+> @@ -765,7 +765,8 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+>  	/* dst = imm */
+>  	case BPF_ALU | BPF_MOV | BPF_K:
+>  	case BPF_ALU64 | BPF_MOV | BPF_K:
+> -		move_imm(ctx, dst, imm, is32);
+> +		move_imm(ctx, dst, imm);
+> +		emit_zext_32(ctx, dst, is32);
+>  		break;
+
+[ ... ]
+
+> @@ -843,12 +847,13 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+>  	case BPF_ALU | BPF_DIV | BPF_K:
+>  	case BPF_ALU64 | BPF_DIV | BPF_K:
+>  		if (!off) {
+> -			move_imm(ctx, t1, imm, is32);
+> +			move_imm(ctx, t1, imm);
+> +			emit_zext_32(ctx, t1, is32);
+
+All these call sites were updated to the three-argument form (as expected
+after move_imm changed from taking four parameters to three). However:
+
+build_insn() has a BPF_NEG case just before the BPF_AND case. Can you check
+whether it was updated? Looking at the diff hunks: the BPF_MOD | BPF_K case
+ends near line 895, and the next hunk starts at BPF_AND | BPF_K near line
+918. The BPF_ALU/BPF_ALU64 | BPF_NEG cases fall between these two hunks, so
+they would not appear in the diff if they were left unchanged. If the NEG
+case still has 'move_imm(ctx, t1, imm, is32);' with four arguments, that
+would be a function call with too many arguments and fail to compile.
+
+
+---
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
+
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/30326478489
+--===============2028487587190646803==--
