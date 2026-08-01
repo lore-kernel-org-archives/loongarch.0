@@ -1,253 +1,90 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C771357D1D
-	for <loongarch@lists.linux.dev>; Sat,  1 Aug 2026 09:19:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9882C2360;
+	Sat,  1 Aug 2026 20:05:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785575987; cv=none; b=SxAPc3kQALgM7M7w1LWUjES2crKgjjzWVe6c/N7nARthyBruRqXv2elAvqTWWPYR/k6/SHF/LMeGeGhPDF7cvPJ1pd9TItg59S6S1KIFevo759/8PipARVSdf/WvS7HygsSIaSxD/GjRA6yp0k7s9ShwV+u0RTCg6P3PHEq4BzI=
+	t=1785614760; cv=none; b=cXxAcCkztgxSGN4TRACYF+YdYcgCj6gt2xe1154n90V+n2M3/exyWFCAsAxNL7xPkpwT+00HU7Q7kwn6cwM5y3EdwmsGkpqP3kUe9kGW+w8clJeiV+678rju4YIETTUjG5l+YBvP0zByfOmXcZeyawtcaejR6O29ImouE97l7Uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785575987; c=relaxed/simple;
-	bh=ajaevt4YwTaopIChz2raCCOWlCysctaxK5fPuVWE6IQ=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=b8UDjyKVJKXnGrFJSV9Fmi9PVt0/QDU9nS4DmaZzAeZzP/OEhvsDyPKYOOl25gUarDSWpyTgvtCbDvvOlOOTH1/4YrsDnX4kA6eIsZEF++N29zj+bxkRjBosuhRHos71efgnQvkN7e7MRuH+da+c5pHmPtS7O/IG9VYbXiYdqo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.101])
-	by gateway (Coremail) with SMTP id _____8Dx8+kuum1q3HYJAA--.22234S3;
-	Sat, 01 Aug 2026 17:19:42 +0800 (CST)
-Received: from [10.20.42.101] (unknown [10.20.42.101])
-	by front1 (Coremail) with SMTP id qMiowJBxLscqum1qjcofAA--.55195S3;
-	Sat, 01 Aug 2026 17:19:40 +0800 (CST)
-Subject: Re: [PATCH v8 2/2] i2c: ls2x: Add clocks property parsing and adjust
- bus speed
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>,
- linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
- loongarch@lists.linux.dev, Huacai Chen <chenhuacai@loongson.cn>,
- stable@vger.kernel.org
-References: <20260721122604.12717-1-wanghongliang@loongson.cn>
- <20260721122604.12717-3-wanghongliang@loongson.cn>
- <amPz7-dljqdfwNGc@zenone.zhora.eu>
-From: Hongliang Wang <wanghongliang@loongson.cn>
-Message-ID: <c317044c-e579-d9f0-8a37-83dbf2a96df2@loongson.cn>
-Date: Sat, 1 Aug 2026 17:17:24 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1785614760; c=relaxed/simple;
+	bh=hyvnLIsEr6YFMopwXWzXNGytrS5QqrEiawI+BeNL0+w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KSwN8RqoLXVc6YlQ98xjnrCVaSyiUDTKNGFbUYbYaO+O36DK3jBt8orNoAOONpoBSiJAItPdQr9G2PkPmodIRNnKSqBAHC/9k7amMlYN41PIrxIhUtuJItpCZXGXwOw/cOQVrmRlrjb8Q5vYSQXqRiH5m1e1puib7TQoNSEwiqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c6dNkhwM; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c6dNkhwM"
+Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id 96D7D1F00AC4;
+	Sat,  1 Aug 2026 20:05:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785614759;
+	bh=o45YvK+S7OLeve9Yx/dzHWbAcWKWifTwkY56jWeeVrM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=c6dNkhwM5uKM18Qer5XP+tW/4CrLiuLTGCy9FyARO7A6UjJ04jlRC4Qmzl2oCSh/K
+	 7cC9x7476wW6hLiYqkai7A2GftMybhQYzVPv9zlZiKy99ypB7E32TEf/eG++UlALEE
+	 Ifi7AeGaaZDa4fT1rEA0ePzz2tw9jnx6Xz6w22UHxTBlZLSVMvhDjdJ+0D8DJclM0m
+	 fdDFWswAV4KpvS5YhCjwMeX/W4gyflkz4R+YdLn5AjmHD73af5JVRXG8ZWtcmYe1ml
+	 z6Tc+WvYbABNifglg9On52MZDCkQ6ogEhTKXR1eBP4ZZYUTYOA9lW1aUdLZ3cyy1Cd
+	 BwQ7cjuQsaReQ==
+Date: Sat, 1 Aug 2026 21:30:27 +0200
+From: Nicolas Schier <nsc@kernel.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Arnd Bergmann <arnd@arndb.de>, Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Daniel Lezcano <daniel.lezcano@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <maz@kernel.org>,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, loongarch@lists.linux.dev
+Subject: Re: [PATCH v4 1/7] kbuild: support generated asm-headers in
+ subdirectories
+Message-ID: <am5JU9IBVzXABmsK@levanger>
+Mail-Followup-To: Nicolas Schier <nsc@kernel.org>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+	Arnd Bergmann <arnd@arndb.de>, Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Daniel Lezcano <daniel.lezcano@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <maz@kernel.org>,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, loongarch@lists.linux.dev
+References: <20260724-vdso-arch-clockmodes-v4-0-ddbe447be860@linutronix.de>
+ <20260724-vdso-arch-clockmodes-v4-1-ddbe447be860@linutronix.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <amPz7-dljqdfwNGc@zenone.zhora.eu>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowJBxLscqum1qjcofAA--.55195S3
-X-CM-SenderInfo: pzdqwxxrqjzxhdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxtFWDXry3KrW8Ww4DXr47GFX_yoW3WFy5pr
-	W8GF4UJryDJr1xKwnrtr1UZFy5Aw1DJa1UJF1UJF1UJr15Jr1jqFy2qrn0gryUJr48A3W5
-	X3WUXrnruF4UZFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU92b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AK
-	xVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
-	AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI
-	42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
-	IF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVF
-	xhVjvjDU0xZFpf9x07j1LvtUUUUU=
+In-Reply-To: <20260724-vdso-arch-clockmodes-v4-1-ddbe447be860@linutronix.de>
 
-Hi Andi,
+On Fri, Jul 24, 2026 at 03:36:18PM +0200, Thomas Wei�schuh wrote:
+> Extend the asm-header stub generation to also handle subdirectories.
+> An upcoming vdso/ header refactoring requires this.
+> 
+> Signed-off-by: Thomas Wei�schuh <thomas.weissschuh@linutronix.de>
+> ---
+>  scripts/Makefile.asm-headers | 11 +++++------
+>  1 file changed, 5 insertions(+), 6 deletions(-)
 
-On 2026/7/25 上午7:39, Andi Shyti wrote:
-> On Tue, Jul 21, 2026 at 08:26:04PM +0800, Hongliang Wang wrote:
->> The i2c-ls2x driver supports dts and acpi parameter passing.
->>
->> In dts, uses clock framework, by parsing clocks property to
->> get i2c bus reference clock, and define the div of reference
->> clock by device data.
->>
->> In acpi, by passing clocks property to describe i2c bus reference
->> clock and clock-div property to describe the div of reference clock.
->>
->> Based on i2c bus reference clock(clock_a), i2c bus speed(clock_s)
->> and div, calculate the prcescale of i2c divider register. The
->> calculation formula is
->>
->> prcescale = (clock_a*10)/(div*clock_s)-1
-> This commit log is not understandable, what did you actually do
-> here? Please read carefully the submitting-patches documentation
-> (under the "Describe your changes" paragraph).
-I'm sorry for the unclear commit message in this version.
-In the next revision I will rewrite the commit description properly,
-following the Describe your changes guidelines, to clearly explain
-what this patch does:
+For kbuild:
 
-The original driver uses a fixed PCLK frequency(LS2X_I2C_PCLK_FREQ) and
-fixed div(5) for I2C bus speed calculation. As PCLK frequency and div
-vary on different SoCs and ACPI platforms, this leads to inaccurate I2C
-bus speed calculation and poor adaptability across platforms.
-
-Improve the accuracy of I2C bus speed calculation across different
-platforms by parsing the real I2C bus reference clock (PCLK) and div.
-Support both DTS and ACPI.
-
-For DTS:
-- Retrieve I2C bus reference clock via the common clock framework
-- Fetch div from match data for LS2K/LS7A series
-- Fallback to default values if clock lookup fails or the obtained
-   pclk or div is zero
-
-For ACPI:
-- Parse "clocks" property to get I2C bus reference clock
-- Parse "clock-div" property to get div
-- Fallback to the default values if property parsing fails or the
-   obtained pclk or div is zero
-
-Calculate the I2C clock prescaler based on reference clock, div and
-target bus frequency with the formula:
-prescale = (pclk * 10) / (div * bus_freq_hz) - 1
-
-Dynamically acquiring PCLK and div per platform ensures accurate I2C bus
-speed calculation and reliable operation across different platforms.
->> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-> I haven't seen Huacai's review on patch 2, as far as I've seen he
-> has reviewed only patch 1. Have I missed anything?
->
-Huacai has already confirmed on the mailing list during the v6 discussion
-that he agrees with this patch and the tag can be retained. So this 
-Reviewed-by
-is valid.
-
-Link: https://lore.kernel.org/r/ai-3ZiF7RL8J4lNP@zenone.zhora.eu/
-
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Hongliang Wang <wanghongliang@loongson.cn>
-> Is this a Fix? I asked you this already. Please read carefully
-> the paragraph I suggested and add the necessary tag.
->
-This is a correctness improvement, not a fix for a bug introduced by
-a specific commit. Therefore no Fixes tag is applicable here.
-
-The Cc stable was added on suggestion in v4 from Huacai Chen, in order 
-to keep
-clock configuration consistent and accurate across stable kernel 
-releases for
-Loongson platforms. If this improvement is not suitable for stable, I will
-remove it in v9.
-
-Link: 
-https://lore.kernel.org/all/CAAhV-H71ZiakZaLVKYg2Qvp8ZJiT7hr9P9bAmXCrjWkHg+-vGg@mail.gmail.com/
->> ---
->>   drivers/i2c/busses/i2c-ls2x.c | 40 ++++++++++++++++++++++++++++++++---
->>   1 file changed, 37 insertions(+), 3 deletions(-)
->>
-> ...
->
->> @@ -107,12 +116,13 @@ static void ls2x_i2c_adjust_bus_speed(struct ls2x_i2c_priv *priv)
->>   	else
->>   		t->bus_freq_hz = LS2X_I2C_FREQ_STD;
->>   
->> +	val = (priv->pclk * 10) / (priv->div * t->bus_freq_hz) - 1;
-> Sashiko pointed out that this might overflow. While your replied
-> that the expected platform values may not overflow, the code does
-> not enforce those constraints.
->
-> The clock rate comes from firmware or the clock framework, so at
-> least a zero rate should be rejected. Using 64-bit arithmetic here
-> would also avoid relying on undocumented assumptions about the
-> input range at essentially no cost.
->
-I will fix these issues in the next version:
-- Use 64-bit arithmetic to avoid integer overflow during the clock 
-calculation
-- Add checks to reject zero clock rates and ensure valid clock inputs
-
-The code is modified as follows:
-
---- a/drivers/i2c/busses/i2c-ls2x.c
-+++ b/drivers/i2c/busses/i2c-ls2x.c
-@@ -116,7 +116,7 @@ static void ls2x_i2c_adjust_bus_speed(struct 
-ls2x_i2c_priv *priv)
-         else
-                 t->bus_freq_hz = LS2X_I2C_FREQ_STD;
-
--       val = (priv->pclk * 10) / (priv->div * t->bus_freq_hz) - 1;
-+       val = ((u64)priv->pclk * 10) / ((u64)priv->div * t->bus_freq_hz) 
-- 1;
-
-         /*
-          * According to the chip manual, we can only access the 
-registers as bytes,
-@@ -319,10 +319,13 @@ static int ls2x_i2c_probe(struct platform_device 
-*pdev)
-                 clk = devm_clk_get_optional_enabled(dev, NULL);
-                 if (IS_ERR(clk))
-                         return PTR_ERR(clk);
--               if (clk)
-+               if (clk) {
-                         priv->pclk = clk_get_rate(clk);
--               else
-+                       if (!priv->pclk)
-+                               priv->pclk = LS2X_I2C_PCLK_FREQ;
-+               } else {
-                         priv->pclk = LS2X_I2C_PCLK_FREQ;
-+               }
-
-                 priv->div = (unsigned long)device_get_match_data(dev);
-                 if (!priv->div)
-@@ -330,7 +333,7 @@ static int ls2x_i2c_probe(struct platform_device *pdev)
-         } else {
-                 /* clocks and clock-div are only ACPI properties. */
-                 ret = device_property_read_u32(dev, "clocks", &priv->pclk);
--               if (ret)
-+               if (ret || !priv->pclk)
-                         priv->pclk = LS2X_I2C_PCLK_FREQ;
-
-                 ret = device_property_read_u32(dev, "clock-div", 
-&priv->div);
-
->> +
-> ...
->
->> +	if (dev_of_node(dev)) {
->> +		clk = devm_clk_get_optional_enabled(dev, NULL);
->> +		if (IS_ERR(clk))
->> +			return PTR_ERR(clk);
->> +		if (clk)
->> +			priv->pclk = clk_get_rate(clk);
->> +		else
->> +			priv->pclk = LS2X_I2C_PCLK_FREQ;
->> +
->> +		priv->div = (unsigned long)device_get_match_data(dev);
->> +		if (!priv->div)
->> +			priv->div = LS2X_I2C_2K_CLOCK_DIV;
->> +	} else {
->> +		/* clocks and clock-div are only ACPI properties. */
-> clocks is also DT property.
-The comment is intended to indicate that the clocks and clock-div properties
-are used only in the ACPI path, as requested by Krzysztof in the v4 review.
-For DT, clocks are handled through the common clock framework instead.
-
-Link: 
-https://lore.kernel.org/all/20260526-pompous-gopher-of-serendipity-d72f1f@quoll/
-
-I will update the comment to
-"clocks and clock-div properties are used only in ACPI path" to make the
-distinction clearer in the next version.
-> Andi
->
->> +		ret = device_property_read_u32(dev, "clocks", &priv->pclk);
->> +		if (ret)
->> +			priv->pclk = LS2X_I2C_PCLK_FREQ;
-Best regards,
-Hongliang Wang
+Reviewed-by: Nicolas Schier <nsc@kernel.org>
 
