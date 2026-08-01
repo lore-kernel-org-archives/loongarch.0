@@ -1,139 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0247357D0B;
-	Fri, 31 Jul 2026 21:42:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EF3B41DDE4
+	for <loongarch@lists.linux.dev>; Sat,  1 Aug 2026 03:29:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785534138; cv=none; b=adCXGXCPl5z+khrvV0F2PVZOdy0Ga7sinj4aZd8EzgiUkNaANWEwNB43Ath71U2ynUTypxh1ABfzJgszSNczL/ddsBrK+fzcaH4ZTzYiYvG0LlKPzg4G5WBbQHo/qrgyUiFBhGVkoam/SLEoqBVlaGMV1PowND0cw4ROw6xt1nM=
+	t=1785554960; cv=none; b=PrzLr7VMdJNzc4qLGv8tBjigh6qkS4LPBaLHPR3r4NqWqJnQ0KPkn0AHmZ9l25vm1acIuLoFGF31dKeCFY/rRXjOB+CJqIzx57Fwu3L7mEllzrUIWYRaudPC6JWklRALDtjLkkl/sB7pLUoUxOlaVum0wGel4w5eorp6QbZua/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785534138; c=relaxed/simple;
-	bh=0NOOYwwQ1TIVKt92gkmVVRgXfsAdTy/V3Md4uvzdGuI=;
-	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
-	 Subject:From:To:Cc:Date; b=bkpmSq2AAuNcGwpOsjp2oxGpGDvRDSzAbJKwMtN5ic9ReFwzWQnzgjSNZabduKaCKNC2f0QUVrfbSqGHi4wQF0tIK4ePszJ5XG8AokdRDdFdd0q3yDucMknMuppHaRYQJ++JDb4mxkSBYfxKZjKfI8wQ31JIsRl0sR28G9pOdkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g+xKsEbs; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g+xKsEbs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF4AD1F00AC4;
-	Fri, 31 Jul 2026 21:42:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785534137;
-	bh=+YeiBRqriyWttSnuVzJ8T2X/WzHiPJ8L0llstU+niuM=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date;
-	b=g+xKsEbsDA8dZ/RaksT9NkQFNEAGRd2/OCnGdcBJYszTJO4OcnKXIIWcMvd0rq2Y5
-	 We+xV1qBOp8pk7uqX6W/cc2612jOiHVxu2r+8NU2B6HXpO/bvlsD+ubQrJPzhFK55P
-	 oNoV4aaCzDEz8rXyhDTqYQpplNhViZd5yZCHxrfeUv4kTzu9QDawzyp1ayhjLcexLb
-	 B4EFSVW/vJMr51xqalCYJN65Fs3VtPoAfSN5kACPD+6QWIWcT35aE8gXojtuXzri94
-	 lOT/Lc2+0UOARXpOrHWHAXdQeUaSq9Z6+o/g/glRh83e654dOVCHWOX23jIwuFpD88
-	 LBKyqIfHZqTDA==
-Content-Type: multipart/mixed; boundary="===============2028487587190646803=="
+	s=arc-20240116; t=1785554960; c=relaxed/simple;
+	bh=Avb4CLerqE3hPW40DFNg/oUG/VYLcuNEOl0gjcFpI4k=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=YHmtownbQjRQf1e2/tEkW8TBuuicUJjIkDzAXyxRSR8NVSm0Eq5Lw8WDmfrG1XNVh1F8JtsIa4jPz+fOuEYWjpmdamjTnpvZn6W/MScLnCR29QJTR4jXfWbqkCYqD7lHI6f+LdUqVcXOpT3U/oCOB3imliMkylzuTt2oCkO6KO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [123.138.236.242])
+	by gateway (Coremail) with SMTP id _____8CxqusLaG1q9mwJAA--.31688S3;
+	Sat, 01 Aug 2026 11:29:15 +0800 (CST)
+Received: from [10.130.40.83] (unknown [123.138.236.242])
+	by front1 (Coremail) with SMTP id qMiowJDxDccJaG1qf3YfAA--.37140S2;
+	Sat, 01 Aug 2026 11:29:14 +0800 (CST)
+Subject: Re: [PATCH v2 2/2] LoongArch: Skip address pairing for non-exec
+ sections
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: linux-mm@kvack.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ Mike Rapoport <rppt@kernel.org>
+References: <20260721090606.8982-1-yangtiezhu@loongson.cn>
+ <20260721090606.8982-3-yangtiezhu@loongson.cn>
+ <11c42b7c-7805-cce7-305d-6e52c14db20e@loongson.cn>
+ <CAAhV-H47kc-=A2syzJNLWOD1=TWumvyYWObL+xutrbSRy=WpWA@mail.gmail.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <0471efa9-d2b4-22d1-6059-acfa6a150a94@loongson.cn>
+Date: Sat, 1 Aug 2026 11:29:13 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-Id: <ca219edf78ea1ea8db81654d615a481b4837a6c9bc971b91050c2be047f65c10@mail.kernel.org>
-In-Reply-To: <20260728031615.9389-2-yangtiezhu@loongson.cn>
-References: <20260728031615.9389-2-yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v1 1/2] LoongArch: BPF: Clean up and decouple is32 parameter from move_imm()
-From: bot+bpf-ci@kernel.org
-To: yangtiezhu@loongson.cn,chenhuacai@kernel.org,hengqi.chen@gmail.com
-Cc: loongarch@lists.linux.dev,bpf@vger.kernel.org,linux-kernel@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
-Date: Fri, 31 Jul 2026 21:42:16 +0000 (UTC)
+In-Reply-To: <CAAhV-H47kc-=A2syzJNLWOD1=TWumvyYWObL+xutrbSRy=WpWA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxDccJaG1qf3YfAA--.37140S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Zw4UuryDZw1kAF4DJw15WrX_yoW8Gry5pr
+	45GFZYkF4qv3yxAFs7Kwn8uFyjgrsYvFWjqr95Xw1vyas0g3ZYy3WDKr15tFWkua9YkF12
+	vayaq3yrZ3WDAFcCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Jr0_Gr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
+	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
+	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
+	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
+	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7_MaUUUU
+	U
 
---===============2028487587190646803==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+On 2026/7/31 下午3:38, Huacai Chen wrote:
+> Hi, Tiezhu,
+> 
+> On Fri, Jul 24, 2026 at 2:07 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>>
+>> On 2026/7/21 下午5:06, Tiezhu Yang wrote:
+>>> The module loader currently runs expensive address pairing logic for all
+>>> sections blindly during relocation. For massive modules like amdgpu, this
+>>> causes the loader to waste lots of CPU cycles analyzing non-exec sections.
 
-> diff --git a/arch/loongarch/net/bpf_jit.h b/arch/loongarch/net/bpf_jit.h
-> index a8e29be35fa8..9438fce49e69 100644
-> --- a/arch/loongarch/net/bpf_jit.h
-> +++ b/arch/loongarch/net/bpf_jit.h
-> @@ -137,7 +137,7 @@ static inline void move_addr(struct jit_ctx *ctx, enum loongarch_gpr rd, u64 add
->  	emit_insn(ctx, lu52id, rd, rd, imm_63_52);
->  }
->
-> -static inline void move_imm(struct jit_ctx *ctx, enum loongarch_gpr rd, long imm, bool is32)
-> +static inline void move_imm(struct jit_ctx *ctx, enum loongarch_gpr rd, long imm)
->  {
->  	long imm_11_0, imm_31_12, imm_51_32, imm_63_52, imm_51_0, imm_51_31;
->
-> @@ -150,7 +150,7 @@ static inline void move_imm(struct jit_ctx *ctx, enum loongarch_gpr rd, long imm
->  	/* addiw rd, $zero, imm_11_0 */
->  	if (is_signed_imm12(imm)) {
->  		emit_insn(ctx, addiw, rd, LOONGARCH_GPR_ZERO, imm);
-> -		goto zext;
-> +		return;
->  	}
->
->  	/* ori rd, $zero, imm_11_0 */
->  	if (is_unsigned_imm12(imm)) {
->  		emit_insn(ctx, ori, rd, LOONGARCH_GPR_ZERO, imm);
->  		goto zext;
-                     ^^^^^^^^^^
+...
 
-Does this code compile? The is_signed_imm12 branch now returns early, but
-the is_unsigned_imm12 branch still jumps to the zext label that was removed
-by the same commit:
+>> Using the section flag check reduces the operation to a single check for
+>> massive data sections; otherwise, the loader would have to perform six
+>> redundant type comparisons across the if-statement and switch-case for
+>> every single relocation entry.
+> Please just drop this patch and make the first one better.
 
-> @@ -195,9 +195,6 @@ static inline void move_imm(struct jit_ctx *ctx, enum loongarch_gpr rd, long imm
->  		if (!is_signed_imm52(imm))
->  			emit_insn(ctx, lu52id, rd, rd, imm_63_52);
->  	}
-> -
-> -zext:
-> -	emit_zext_32(ctx, rd, is32);
->  }
+OK.
 
-This dangling goto zext; at the is_unsigned_imm12 path has no target after
-the label was deleted. Should this become 'return;' to match the
-is_signed_imm12 path?
+> Now the first patch has a risk that the distance between .init.text
+> and .text of the same module exceeds 128MB. I solved it and you can
+> verify:
+> https://github.com/chenhuacai/linux/commit/f87f9d82869ebc71dca4c02bdff1cd203913a98f
 
-[ ... ]
+Looks good to me, I think it is safe.
 
-> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-> index 2738b4db1165..d676936e5b98 100644
-> --- a/arch/loongarch/net/bpf_jit.c
-> +++ b/arch/loongarch/net/bpf_jit.c
+static int module_memory_alloc(struct module *mod, enum mod_mem_type type)
+{
+...
 
-[ ... ]
+	if (mod_mem_type_is_data(type))
+		execmem_type = EXECMEM_MODULE_DATA;
+	else
+		execmem_type = EXECMEM_MODULE_TEXT;
 
-> @@ -765,7 +765,8 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
->  	/* dst = imm */
->  	case BPF_ALU | BPF_MOV | BPF_K:
->  	case BPF_ALU64 | BPF_MOV | BPF_K:
-> -		move_imm(ctx, dst, imm, is32);
-> +		move_imm(ctx, dst, imm);
-> +		emit_zext_32(ctx, dst, is32);
->  		break;
+	ptr = execmem_alloc_rw(execmem_type, size);
+	if (!ptr)
+		return -ENOMEM;
 
-[ ... ]
+...
+}
 
-> @@ -843,12 +847,13 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
->  	case BPF_ALU | BPF_DIV | BPF_K:
->  	case BPF_ALU64 | BPF_DIV | BPF_K:
->  		if (!off) {
-> -			move_imm(ctx, t1, imm, is32);
-> +			move_imm(ctx, t1, imm);
-> +			emit_zext_32(ctx, t1, is32);
+Thanks,
+Tiezhu
 
-All these call sites were updated to the three-argument form (as expected
-after move_imm changed from taking four parameters to three). However:
-
-build_insn() has a BPF_NEG case just before the BPF_AND case. Can you check
-whether it was updated? Looking at the diff hunks: the BPF_MOD | BPF_K case
-ends near line 895, and the next hunk starts at BPF_AND | BPF_K near line
-918. The BPF_ALU/BPF_ALU64 | BPF_NEG cases fall between these two hunks, so
-they would not appear in the diff if they were left unchanged. If the NEG
-case still has 'move_imm(ctx, t1, imm, is32);' with four arguments, that
-would be a function call with too many arguments and fail to compile.
-
-
----
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/30326478489
---===============2028487587190646803==--
