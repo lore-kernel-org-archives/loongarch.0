@@ -1,30 +1,32 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from out-167.mta1.migadu.com (out-167.mta1.migadu.com [95.215.58.167])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B5D746EF75
-	for <loongarch@lists.linux.dev>; Tue,  4 Aug 2026 15:46:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D46FB468C3A
+	for <loongarch@lists.linux.dev>; Tue,  4 Aug 2026 15:46:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.167
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785858382; cv=none; b=nZZn/bqcuq98+biMkzBY51BvjV4SO9qfymYuWy0FkssS46C7rgQ0DzPuMs7OmdnEwEG6ErmK7sc8PB0ukdF6mXJLTee3+NTwmLLM+8dDIvQMEiuxFGKRLLe/Via4SHJ3p1oju8PEK0vytGZxxtzmROncgQ4+HHpWRfNb60bv9yE=
+	t=1785858406; cv=none; b=jW2nA05x2S14a+op78vdVtG9NThiJe/ExS4I3Aj8hHN1kD76i33yQh8CJe3gqgjnFjJQeAkbMiq9/gfqxLhRbBpLsefmzN0mEVmQ2t+4CL28pfRwHKcADhDEoPS6jXCKbO6czu6yxLqC5d4NqooBu7c8OYO58Z0NKmTWbVDbe/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785858382; c=relaxed/simple;
-	bh=nJFzd+F+G5tRxVPylPz5UKp4EjTg+zGE87rtMnRS9iU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BX/K3fMhzc7QBYVZhlhKIrchWn/6o/tLBUb+lBgfuTNNYwvVcSsCPccw6DuhZTHWdy3VQTCwLXmQ/onsqG1a++7VDvZqTD/xXyhxl7vJzz8431q32jgpNHlVtuJJTACZlNDHmgqAR2r+PPBccDigvISgUV72JtC13+ZiX9IOMaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=WdWLom7I; arc=none smtp.client-ip=91.218.175.171
+	s=arc-20240116; t=1785858406; c=relaxed/simple;
+	bh=IqS6oyBgIDjHtaQHvzSbG4MM9UaB29p+F+ApFnitYfQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=sJk4kagE6rImVk0tJj1Afv/jHqc/zX+vzkz4hvRrJo4apbh6OtaaLOUu+l+QHB+rXUZcKvkgdvqvk0dB3BQ9iCIFoELLpvyXF1YwbD8vlP3gkZchFhaQnZ4RY5fo1+TVFUNoebdnVDUhH9MMQydjoD4DfQsj0o4rcE8SknAmgNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=i+Ap7AAb; arc=none smtp.client-ip=95.215.58.167
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="WdWLom7I"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="i+Ap7AAb"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1785858376;
+	t=1785858402;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=xKg7CzqahB1AxtniHPBuBrCNyBYROeJyzCI1lIiHen8=;
-	b=WdWLom7Id0Mnu2dx8qclhVH16B/uElwCXpdRoQazKZsDBOD+1dkGKJt0PLqItCF6seIu0i
-	rerpLvJwfPI3tEJaTX0ohrzFEZI+Bt/SpbOBoj+PeSSmWyb3FX3IUTJNbg5SnNmV5Nsvj3
-	OlZeafv/o0mtyqpHXRjsulGSgvcMEoY=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MZajl5Xdn8pCbprwTdxblPIPdG7FZfeAhKaqi9LI+wg=;
+	b=i+Ap7AAb+2UL+WGGv3vKg5oW4oFGgvO/ojWdNxgpOnwkcMV6S0FdYpUjkKDVHpwcxGsRAR
+	4qN9P8PkcKjYkShHhEAEuAIXVlTDMzXmeyTBY3GA+fytqo1KmAYvwIZEqPj4ybZsVY+Njc
+	1AsKMlEBwuvomFbGJGrrP8QWpIU9EAI=
 From: George Guo <dongtai.guo@linux.dev>
 To: chenhuacai@kernel.org,
 	yangtiezhu@loongson.cn,
@@ -43,9 +45,11 @@ Cc: kernel@xen0n.name,
 	bpf@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/2] LoongArch: BPF: per-CPU address resolution and timed may_goto
-Date: Tue,  4 Aug 2026 23:39:36 +0800
-Message-ID: <20260804153938.16129-1-dongtai.guo@linux.dev>
+Subject: [PATCH v3 1/2] LoongArch: BPF: Support internal-only MOV to resolve per-CPU addrs
+Date: Tue,  4 Aug 2026 23:39:37 +0800
+Message-ID: <20260804153938.16129-2-dongtai.guo@linux.dev>
+In-Reply-To: <20260804153938.16129-1-dongtai.guo@linux.dev>
+References: <20260804153938.16129-1-dongtai.guo@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -55,66 +59,68 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-These are the first two patches of the LoongArch BPF JIT feature work,
-sent on their own to make review easier. The remaining pieces
-(per-program private stacks, exceptions/bpf_throw, sign-extending loads
-and atomics on arena pointers, and the matching selftests) will follow in
-a later series.
+From: George Guo <guodongtai@kylinos.cn>
 
-Both patches are independent of each other. They apply on top of Chenguang
-Zhao's "LoongArch bpf kptr xchg inline support" v4 series:
+Support the internal-only BPF_MOV instruction that resolves the absolute
+address of per-CPU data from its per-CPU offset. This instruction is used
+only for internal inlining optimizations between the BPF verifier and the
+JITs (e.g. inlining bpf_get_smp_processor_id() and per-CPU map lookups).
 
-  https://lore.kernel.org/all/20260729022837.355549-1-chenguang.zhao@linux.dev/
+LoongArch keeps the per-CPU offset of the current CPU in $r21
+(__my_cpu_offset), so resolving a per-CPU address only requires adding
+$r21 to the source register holding the per-CPU offset. Advertise the
+capability via bpf_jit_supports_percpu_insn().
 
-Patch 1 adds the internal-only BPF MOV that resolves a per-CPU offset to
-the current CPU's address, advertised through
-bpf_jit_supports_percpu_insn(). LoongArch keeps the current CPU's per-CPU
-base in $r21 (__my_cpu_offset), so the resolution is a single add.
-Exercised by the cpumask and percpu_alloc selftests.
+Signed-off-by: George Guo <guodongtai@kylinos.cn>
+---
+ arch/loongarch/include/asm/inst.h |  1 +
+ arch/loongarch/net/bpf_jit.c      | 14 ++++++++++++++
+ 2 files changed, 15 insertions(+)
 
-Patch 2 implements arch_bpf_timed_may_goto() and advertises it, so the
-verifier lowers may_goto to its timed variant, which bounds the loop by a
-wall-clock timeout kept in a per-loop stack slot. It uses a custom calling
-convention: the count/timestamp stack offset is passed in BPF_REG_AX and
-returned there, so the JIT call path skips the usual "BPF_REG_0 = return
-value" move for this helper. Exercised by the iters selftests.
-
-Selftest results (all PASS):
-
-  Feature                          Test(s)
-  --------------------------------------------------------------
-  1  internal-only MOV (percpu)     cpumask, percpu_alloc
-  2  timed may_goto                 iters
-
-$ sudo ./test_progs -t cpumask
-...
-Summary: 1/35 PASSED, 0 SKIPPED, 0 FAILED
-
-$ sudo ./test_progs -t percpu_alloc
-...
-Summary: 1/18 PASSED, 0 SKIPPED, 0 FAILED
-
-$ sudo ./test_progs -t iters
-...
-Summary: 1/93 PASSED, 0 SKIPPED, 0 FAILED
-
-Based on loongarch-next:
-  https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git/log/?h=loongarch-next
-
-These two patches are split from the full v2 series (11 patches):
-  https://lore.kernel.org/all/20260702022322.51033-1-dongtai.guo@linux.dev/
-
-George Guo (2):
-  LoongArch: BPF: Support internal-only MOV to resolve per-CPU addrs
-  LoongArch: BPF: Add timed may_goto support
-
- arch/loongarch/include/asm/inst.h       |  1 +
- arch/loongarch/net/Makefile             |  2 +-
- arch/loongarch/net/bpf_jit.c            | 27 +++++++++++++-
- arch/loongarch/net/bpf_timed_may_goto.S | 47 +++++++++++++++++++++++++
- 4 files changed, 75 insertions(+), 2 deletions(-)
- create mode 100644 arch/loongarch/net/bpf_timed_may_goto.S
-
+diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
+index 54f35bcd0f66..585667e361c2 100644
+--- a/arch/loongarch/include/asm/inst.h
++++ b/arch/loongarch/include/asm/inst.h
+@@ -411,6 +411,7 @@ enum loongarch_gpr {
+ 	LOONGARCH_GPR_T6,
+ 	LOONGARCH_GPR_T7,
+ 	LOONGARCH_GPR_T8,
++	LOONGARCH_GPR_U0 = 21,	/* Kernel per-CPU base register ($r21) */
+ 	LOONGARCH_GPR_FP = 22,
+ 	LOONGARCH_GPR_S0 = 23,
+ 	LOONGARCH_GPR_S1,
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index aa88f904a5ca..b8dd956d46bd 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -722,6 +722,15 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 			move_reg(ctx, dst, t1);
+ 			break;
+ 		}
++		if (insn_is_mov_percpu_addr(insn)) {
++			if (dst != src)
++				move_reg(ctx, dst, src);
++#ifdef CONFIG_SMP
++			/* dst += __my_cpu_offset, held in $r21 */
++			emit_insn(ctx, addd, dst, dst, LOONGARCH_GPR_U0);
++#endif
++			break;
++		}
+ 		switch (off) {
+ 		case 0:
+ 			move_reg(ctx, dst, src);
+@@ -2376,6 +2385,11 @@ bool bpf_jit_supports_ptr_xchg(void)
+ 	return true;
+ }
+ 
++bool bpf_jit_supports_percpu_insn(void)
++{
++	return true;
++}
++
+ /* Indicate the JIT backend supports mixing bpf2bpf and tailcalls. */
+ bool bpf_jit_supports_subprog_tailcalls(void)
+ {
 -- 
 2.53.0
 
