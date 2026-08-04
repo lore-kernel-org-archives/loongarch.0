@@ -1,194 +1,349 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D8183E6DD5
-	for <loongarch@lists.linux.dev>; Tue,  4 Aug 2026 14:15:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4290E2F12A1
+	for <loongarch@lists.linux.dev>; Tue,  4 Aug 2026 14:30:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785852917; cv=none; b=oSTXqbQYvBm2I6Wv2rDZlG//h09JpeLOHmg1K77pVNyUo9FgC6TqfgVeRdCvDqoTLSdD5Y0vQm4+ROK8TnYXV36pdI5DqpnRxWQKFDOsFZ+y+zKLO3RZKAokBjzZcAqZ4PZ180ymSgq1KUbfOKqnMMOmBdVk8P6CKhEe+o/zUNA=
+	t=1785853817; cv=none; b=uQBUN8qsLHNUuBa6kApMrYsqQHyOdjw6opvmnk+kJJRvHH7cv1xUXFK3dUR/I9dwISC6gYnHJHNtcPimE7W4hZcnhxP4ubh4VG0z7AdylvRwwdKal1AhLDTD9+q1kWwilfwwKWbSfH8V6Ud1PNRyCyqURgqIQ1A0r/DjYvyXfBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785852917; c=relaxed/simple;
-	bh=hbJ62aqpLTsM66S6wHrku8hFAvk5HdEuTAAR3gH0Ul4=;
+	s=arc-20240116; t=1785853817; c=relaxed/simple;
+	bh=/worik6565MmGqxB83xHC4oGsL7LqUXQzALqNM6g5s0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uMuEra/wg7sL0bbrbu29Sju3yvWC/6ThsdqDmA8LWv4666NP0YdRQaHrr4dym5G+F/5CQ4sNp6GkeYvP4OrAo6SIXLJjjc2kHc5XeFoSDQt36zFZImy3COXsER1uyvi/Kdac70crHt4z89zzBzaidJXDer6fwBGIipXUzWQ2dSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k4DGjquK; arc=none smtp.client-ip=100.103.45.18
+	 To:Cc:Content-Type; b=URQ/aOqkIFdn3uDekDOOmOQ4UAIFMTpIgNAxOwc1BLP6GleU2G7q2erW1I6YZtHRIL7Jny0BfycerGZp5yzZI2ykyWBnHtOjwSXrYZ+kepDQdgi7rB90zAUoWJkzc8D9NAGcEsqh9RK6Dto+OnL1t9lm21pWiNQgYrdiOdCBU4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oKCEBF5f; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k4DGjquK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0C241F00A3A
-	for <loongarch@lists.linux.dev>; Tue,  4 Aug 2026 14:15:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oKCEBF5f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6CFE1F00A3A
+	for <loongarch@lists.linux.dev>; Tue,  4 Aug 2026 14:30:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785852900;
-	bh=CPZMZqBF06dOeVIaCafEAQlSYdT1fcS0N4LwzoJzryA=;
+	s=k20260515; t=1785853802;
+	bh=TN+O16PcjDT2/zjFc4V9cDVHBtAUzFJCqlHG51a8Lvo=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=k4DGjquKRxnqnr/gYhqZD0P/X56SPjoMWBiwkNqbKXacgc+xxRdA4G0Je4qK10dTK
-	 E02RLNPh5NAM4SMyNc2Soa4YBHKEi5nLXcI7kx7fW8rRLOGFby412LNi7fitrlXZ8p
-	 /TZnB9eypsxTFXLdzWZdQmkyuSoZDiIpSsj4TpLu4EdsuuwZHJc4zQOFCq0i0GwkD9
-	 DPHAicmTpz9HXo/++4xViPEFO2S2BpJ5mjGoO+Yu5GONe28DL1YUghlxcoKhxiUXlE
-	 2/RR0BQRzL0BgDMZRoyESMnMVOFERQim6C0CcB5EHiTPr4ja/nHo1o7Msr6TaFwFfR
-	 OyilaibHWCY/w==
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-6a0a4a28cbdso6099518a12.3
-        for <loongarch@lists.linux.dev>; Tue, 04 Aug 2026 07:15:00 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RoyJ+jZ4KeTiEXGOiMA0QgRJjfHWod5fqmR2/cCHCc0XAuKd/bxNUXveIxwaH2D1FnSmj/UwRH1e2A=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxutg8i0Q7nkeDhjIE5ptpBaSmJoz9hgF5Z/j09k5tXkJe5aYGp
-	UCSCr3Bi8fY/ZFuf7+k8I3aV4o6GXaHzhI63zghXHUeWn7PaK5ryJ/lyWEtj1s8sVev6StQGzbk
-	X40kqXCj/SL87FyLYQLewFdL6Ldq6KKw=
-X-Received: by 2002:a05:6402:52d1:b0:69e:8ad:5162 with SMTP id
- 4fb4d7f45d1cf-6a0a7c60ee0mr12411296a12.1.1785852899218; Tue, 04 Aug 2026
- 07:14:59 -0700 (PDT)
+	b=oKCEBF5f6UR/Jh14E1F2hfu/5LqjM3COBgSYX6V7z/PtqGj6UFuNJmSwG7U1pidAD
+	 kON+Bdfij7Xidptn9O7lwfrHUPC14g4bqW8sQS7KiJd3BhaliFrzZ4rxaUiLxLJanB
+	 dErHAi+PykAl1Gaq4d/W2BmD3LD2W9yS89tgBymyo2HPylbsKpMMlSK07oiVEnmUr/
+	 uNSEOqUmdqKouf9IEwXeX9QIYvfXvUH1k+9+iUanhnMDWhyLYzdLVpJAdOakt10nnv
+	 i63mAZyJvoedpf35+sWERm1vZJnps9jVBTHmOfHcJmKED5EDsThXWbucDz6+MywO5H
+	 qTkI/KBnGm6Yg==
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-6a144c8eea2so421738a12.0
+        for <loongarch@lists.linux.dev>; Tue, 04 Aug 2026 07:30:02 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RpkSvr6WEfLx1w/v24NwN1GMw51p0m9Yc1OZ+tABFonkVSSNuWU/33Ek6GFlfEPYUXYiu3pcrn/wzQ=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwnmN6uldjAot6pJXBG4ISqYjjkkPlgwg75IXCOS0mKyVCVITQv
+	1uQ4evc/PO1+GO/gwIM5DQj6iYuUwvZJwARYgAYkk+YvuUgI4N/PmDf8t/iQkxuzOg5scNFOvi7
+	QtC5vb9sSbkQh02Om+QEi6zR4Dp117gk=
+X-Received: by 2002:a05:6402:21cf:b0:697:5140:a146 with SMTP id
+ 4fb4d7f45d1cf-6a0a7c60f80mr12328098a12.5.1785853801090; Tue, 04 Aug 2026
+ 07:30:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260727072109.2151675-1-maobibo@loongson.cn> <20260727072109.2151675-2-maobibo@loongson.cn>
- <CAAhV-H6sEXa6XM-4=OTuPw=gNKgVxC7ZwqO6T-F81pvt_gBN8Q@mail.gmail.com> <dc67eb43-adb2-c26b-a54f-ccd52ce910eb@loongson.cn>
-In-Reply-To: <dc67eb43-adb2-c26b-a54f-ccd52ce910eb@loongson.cn>
+References: <20260730082608.1929-1-zhaoqunqin@loongson.cn> <20260730082608.1929-3-zhaoqunqin@loongson.cn>
+ <CAAhV-H4V6NWDcw1nVZzaXKJF_QS0sz5jTsrnwbq-xki2mJLVtQ@mail.gmail.com> <b284a9a5-6f71-46c7-80f1-ed15276330da@loongson.cn>
+In-Reply-To: <b284a9a5-6f71-46c7-80f1-ed15276330da@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 4 Aug 2026 22:14:48 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7C+NbBOWtypwaLrn5Ehc6kv=W2jABz=r4O941QjAWhvQ@mail.gmail.com>
-X-Gm-Features: AUfX_myE34GOouLsv_7onMyDrRdwXubQq2NijLpSA5X_wQqWY1OkBrLGAqUQu3E
-Message-ID: <CAAhV-H7C+NbBOWtypwaLrn5Ehc6kv=W2jABz=r4O941QjAWhvQ@mail.gmail.com>
-Subject: Re: [PATCH 1/6] LoongArch: KVM: Add vmid support for stage2 MMU
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	WANG Xuerui <kernel@xen0n.name>, Arnd Bergmann <arnd@arndb.de>, Xi Ruoyao <xry111@xry111.site>, 
-	kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Date: Tue, 4 Aug 2026 22:29:51 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H79JdBRmNpCKPEfHxMARr5zNVAnP3mJYOWo6zwBpF2q2Q@mail.gmail.com>
+X-Gm-Features: AUfX_mwaemQ5Zfj5LQECc_lmJjGuSKKQLXSC8JsWrz0Hlk2yLKHvGjQrzbl3zAo
+Message-ID: <CAAhV-H79JdBRmNpCKPEfHxMARr5zNVAnP3mJYOWo6zwBpF2q2Q@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] mfd: loongson-se: Fix miscellaneous issues
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: lee@kernel.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-crypto@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 3, 2026 at 9:21=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrote=
-:
+On Tue, Aug 4, 2026 at 10:09=E2=80=AFAM Qunqin Zhao <zhaoqunqin@loongson.cn=
+> wrote:
 >
 >
->
-> On 2026/8/2 =E4=B8=8B=E5=8D=8810:11, Huacai Chen wrote:
-> > Hi, Bibo,
+> =E5=9C=A8 2026/8/3 16:01, Huacai Chen =E5=86=99=E9=81=93:
+> > Hi, Qunqin,
 > >
-> > On Mon, Jul 27, 2026 at 3:29=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> =
-wrote:
+> > On Thu, Jul 30, 2026 at 4:41=E2=80=AFPM Qunqin Zhao <zhaoqunqin@loongso=
+n.cn> wrote:
+> >> Address multiple historical driver issues discovered by the Sashiko
+> >> Automation system within the loongson_se_probe() initialization flow
+> >> and the driver's interrupt service routines [1].
 > >>
-> >> LoongArch KVM hypervisor supports two-level MMU, vpid index is used
-> >> for stage1 MMU and vmid index is used for stage2 MMU.
+> >> - Add an explicit bounds check in se_irq_handler() before accessing
+> >>    the engines array to prevent out-of-bounds memory writes.
 > >>
-> >> On 3A5000, vmid must be the same with vpid. On 3A6000 platform vmid
-> >> may separate from vpid. If vcpu migrate to different physical CPUs,
-> >> vpid need change however vmid can keep the same with old value. Also
-> >> vmid index of the while VM machine on physical CPU the same, all vCPUs
-> >> on the VM can share the same vmid index on one physical CPU.
+> >> - Switch from devm_kmalloc() to devm_kzalloc() and explicitly
+> >>    initialize all engine completion structures in probe() to avoid a
+> >>    kernel panic from complete() dereferencing a NULL wait head when a
+> >>    spurious interrupt fires before child drivers call
+> >>    loongson_se_init_engine().
 > >>
-> >> Here vmid index is added and it keeps the same with vpid still.
+> >> - Replace engine_init_lock with a broader cmd_lock mutex that
+> >>    serializes all command submissions, and move the lock into
+> >>    loongson_se_send_controller_cmd() and
+> >>    loongson_se_send_engine_cmd() to cover the full register write +
+> >>    poll + wait sequence.
 > >>
-> >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> >> - Drop the spin_lock_irq from loongson_se_poll() so that interrupts
+> >>    are not disabled for up to 10 ms during the poll.  Keep the
+> >>    readl_relaxed_poll_timeout_atomic() busy-wait to avoid scheduling
+> >>    latency for fast hardware completions.
+> >>
+> >> - Add reinit_completion() to loongson_se_send_controller_cmd() and
+> >>    loongson_se_send_engine_cmd() before waiting to prevent stale
+> >>    completions from falsely returning success after a signal
+> >>    interruption.
+> >>
+> >> - Fix EPROBE_DEFER handling: propagate the error directly from
+> >>    platform_irq_count() instead of overwriting it with ENODEV so that
+> >>    probe deferral works when the interrupt provider is not yet ready.
+> >>
+> >> - Validate dmam_size from firmware against the minimum required size
+> >>    to prevent command buffers from pointing outside the allocated
+> >>    DMA region.
+> >>
+> >> - Return the error code from devm_request_irq() instead of silently
+> >>    continuing to prevent an indefinite hang.
+> >>
+> >> - Disable hardware interrupts in the probe error path when
+> >>    loongson_se_init() fails to prevent an unhandled interrupt storm.
+> >>
+> >> - Add a loongson_se_stop() cleanup handler registered with
+> >>    devm_add_action_or_reset() to send SE_CMD_STOP to the controller
+> >>    and mask all interrupts during device removal.  Using devres
+> >>    ensures that child MFD devices are unbound before the controller
+> >>    is stopped.  The STOP command uses a non-interruptible wait to
+> >>    avoid leaving hardware running while DMA buffers are freed.
+> >>
+> >> - Zero-initialize the local controller command structure in
+> >>    loongson_se_init() to prevent uninitialized stack memory from
+> >>    being written to device registers.
+> >>
+> >> - Add the SE_CMD_STOP command definition.
+> >>
+> >> Link: https://lore.kernel.org/all/20260618095949.GB1672911@google.com/=
+ [1]
+> >> Fixes: e551fa3159e3 ("mfd: Add support for Loongson Security Engine ch=
+ip controller")
+> >> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
 > >> ---
-> >>   arch/loongarch/include/asm/kvm_host.h | 3 +++
-> >>   arch/loongarch/kernel/asm-offsets.c   | 1 +
-> >>   arch/loongarch/kvm/main.c             | 1 +
-> >>   arch/loongarch/kvm/switch.S           | 5 ++---
-> >>   arch/loongarch/kvm/tlb.c              | 5 ++++-
-> >>   5 files changed, 11 insertions(+), 4 deletions(-)
+> >>   drivers/mfd/loongson-se.c       | 87 ++++++++++++++++++++++++++-----=
+--
+> >>   include/linux/mfd/loongson-se.h |  1 +
+> >>   2 files changed, 69 insertions(+), 19 deletions(-)
 > >>
-> >> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/in=
-clude/asm/kvm_host.h
-> >> index 23cfbecebbd7..ec7b0c402385 100644
-> >> --- a/arch/loongarch/include/asm/kvm_host.h
-> >> +++ b/arch/loongarch/include/asm/kvm_host.h
-> >> @@ -189,6 +189,9 @@ struct kvm_vcpu_arch {
-> >>          unsigned long host_tp;
-> >>          unsigned long host_pgd;
+> >> diff --git a/drivers/mfd/loongson-se.c b/drivers/mfd/loongson-se.c
+> >> index 7f552a8ee6..2c8afad1b0 100644
+> >> --- a/drivers/mfd/loongson-se.c
+> >> +++ b/drivers/mfd/loongson-se.c
+> >> @@ -28,7 +28,7 @@ struct loongson_se {
+> >>          void *dmam_base;
+> >>          int dmam_size;
 > >>
-> >> +       /* vmid info for guest VM */
-> >> +       unsigned long vmid;
-> > Put it near vpid?
-> yes, it it better to near vpid. will do this.
+> >> -       struct mutex engine_init_lock;
+> >> +       struct mutex cmd_lock;
+> >>          struct loongson_se_engine engines[SE_ENGINE_MAX];
+> >>   };
+> >>
+> >> @@ -42,8 +42,6 @@ static int loongson_se_poll(struct loongson_se *se, =
+u32 int_bit)
+> >>          u32 status;
+> >>          int err;
+> >>
+> >> -       spin_lock_irq(&se->dev_lock);
+> > You said you don't want to disable irq here, but I think the spinlock
+> > is still needed. That means you should use spin_lock/spin_unlock to
+> > replace spin_lock_irq/spin_unlock_irq.
+> Since loongson_se_poll always executes in the thread context, is it
+> better to use mutex_lock(
+> mutex_lock(&se->cmd_lock)  outside of loongson_se_poll) for
+> synchronization?
+If all callers have used mutex_lock(&se->cmd_lock), then spinlock is
+unnecessary.
+
 > >
+> >> -
+> >>          /* Notify the controller that the engine needs to be started =
+*/
+> >>          writel(int_bit, se->base + SE_L2SINT_SET);
+> >>
+> >> @@ -52,8 +50,6 @@ static int loongson_se_poll(struct loongson_se *se, =
+u32 int_bit)
+> >>                                                  !(status & int_bit),
+> >>                                                  1, LOONGSON_ENGINE_CM=
+D_TIMEOUT_US);
+> >>
+> >> -       spin_unlock_irq(&se->dev_lock);
+> >> -
+> >>          return err;
+> >>   }
+> >>
+> >> @@ -63,24 +59,40 @@ static int loongson_se_send_controller_cmd(struct =
+loongson_se *se,
+> >>          u32 *send_cmd =3D (u32 *)cmd;
+> >>          int err, i;
+> >>
+> >> +       mutex_lock(&se->cmd_lock);
 > >> +
-> >>          /* Host CSRs are used when handling exits from guest */
-> >>          unsigned long badi;
-> >>          unsigned long badv;
-> >> diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kern=
-el/asm-offsets.c
-> >> index 1b861cbc5e10..32ef6adfc8dd 100644
-> >> --- a/arch/loongarch/kernel/asm-offsets.c
-> >> +++ b/arch/loongarch/kernel/asm-offsets.c
-> >> @@ -300,6 +300,7 @@ static void __used output_kvm_defines(void)
-> >>          OFFSET(KVM_ARCH_HSP, kvm_vcpu_arch, host_sp);
-> >>          OFFSET(KVM_ARCH_HTP, kvm_vcpu_arch, host_tp);
-> >>          OFFSET(KVM_ARCH_HPGD, kvm_vcpu_arch, host_pgd);
-> >> +       OFFSET(KVM_ARCH_VMID, kvm_vcpu_arch, vmid);
-> >>          OFFSET(KVM_ARCH_KVMPGD, kvm_vcpu_arch, kvm_pgd);
-> >>          OFFSET(KVM_ARCH_HANDLE_EXIT, kvm_vcpu_arch, handle_exit);
-> >>          OFFSET(KVM_ARCH_HEENTRY, kvm_vcpu_arch, host_eentry);
-> >> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
-> >> index 3e1005526f4b..6e3e8efa1dc2 100644
-> >> --- a/arch/loongarch/kvm/main.c
-> >> +++ b/arch/loongarch/kvm/main.c
-> >> @@ -223,6 +223,7 @@ static void kvm_update_vpid(struct kvm_vcpu *vcpu,=
- int cpu)
+> >> +       reinit_completion(&se->cmd_completion);
+> >> +
+> >>          for (i =3D 0; i < SE_SEND_CMD_REG_LEN; i++)
+> >>                  writel(send_cmd[i], se->base + SE_SEND_CMD_REG + i * =
+4);
 > >>
-> >>          context->vpid_cache =3D vpid;
-> >>          vcpu->arch.vpid =3D vpid;
-> >> +       vcpu->arch.vmid =3D vcpu->arch.vpid & vpid_mask;
-> >
-> > I think both vpid and vmid need "& vpid_mask".
-> vpid used in function kvm_check_vcpuid() includes version information
-> also. vmid here is hardware id directly used by LOONGARCH_CSR_GTLBC in
-> arch/loongarch/kvm/switch.S.
-I'm not sure, but it seems both vpid and vmid have a sw version and a
-hw version? The hw version will be written into register so its width
-is limited, while the sw version is 64bit. If I'm right, I think the
-"& vpid_mask" is only used when writing registers, in other places
-they are full 64bit (in other words, they need the same treatment).
+> >>          err =3D loongson_se_poll(se, SE_INT_CONTROLLER);
+> >>          if (err)
+> >> -               return err;
+> >> +               goto out;
+> >> +
+> >> +       err =3D wait_for_completion_interruptible(&se->cmd_completion)=
+;
+> >>
+> >> -       return wait_for_completion_interruptible(&se->cmd_completion);
+> >> +out:
+> >> +       mutex_unlock(&se->cmd_lock);
+> >> +       return err;
+> >>   }
+> >>
+> >>   int loongson_se_send_engine_cmd(struct loongson_se_engine *engine)
+> >>   {
+> >> +       int err;
+> >> +
+> >> +       mutex_lock(&engine->se->cmd_lock);
+> >> +
+> >> +       reinit_completion(&engine->completion);
+> >> +
+> >>          /*
+> >>           * After engine initialization, the controller already knows
+> >>           * where to obtain engine commands from. Now all we need to
+> >>           * do is notify the controller that the engine needs to be st=
+arted.
+> >>           */
+> >> -       int err =3D loongson_se_poll(engine->se, BIT(engine->id));
+> >> +       err =3D loongson_se_poll(engine->se, BIT(engine->id));
+> >> +
+> >> +       mutex_unlock(&engine->se->cmd_lock);
+> >>
+> >>          if (err)
+> >>                  return err;
+> >> @@ -97,7 +109,7 @@ struct loongson_se_engine *loongson_se_init_engine(=
+struct device *dev, int id)
+> >>
+> >>          engine->se =3D se;
+> >>          engine->id =3D id;
+> >> -       init_completion(&engine->completion);
+> >> +       reinit_completion(&engine->completion);
+> > I'm not sure, but I think loongson_se_init_engine() is only called at
+> > init, so we need init_completion here.
+>
+> To prevent an spurious interrupt from completing an uninitialized object,
+> all objects have already been fully initialized with init_completion duri=
+ng the probe stage.
+In my opinion, if a function can be called multiple times, we need
+reinit_completion(), if it is only called for probe, we need
+init_completion(), and loongson_se_init_engine() looks like the later
+case.
 
 Huacai
 
 >
-> Regards
-> Bibo Mao
-> >
 > >
 > > Huacai
 > >
+> >>          /* Divide DMA memory equally among all engines */
+> >>          engine->buffer_size =3D se->dmam_size / SE_ENGINE_MAX;
+> >> @@ -113,8 +125,6 @@ struct loongson_se_engine *loongson_se_init_engine=
+(struct device *dev, int id)
+> >>          engine->command =3D se->dmam_base + id * (2 * SE_ENGINE_CMD_S=
+IZE);
+> >>          engine->command_ret =3D engine->command + SE_ENGINE_CMD_SIZE;
+> >>
+> >> -       mutex_lock(&se->engine_init_lock);
+> >> -
+> >>          /* Tell the controller where to find engine command */
+> >>          cmd.command_id =3D SE_CMD_SET_ENGINE_CMDBUF;
+> >>          cmd.info[0] =3D id;
+> >> @@ -124,8 +134,6 @@ struct loongson_se_engine *loongson_se_init_engine=
+(struct device *dev, int id)
+> >>          if (loongson_se_send_controller_cmd(se, &cmd))
+> >>                  engine =3D NULL;
+> >>
+> >> -       mutex_unlock(&se->engine_init_lock);
+> >> -
+> >>          return engine;
 > >>   }
+> >>   EXPORT_SYMBOL_GPL(loongson_se_init_engine);
+> >> @@ -155,7 +163,8 @@ static irqreturn_t se_irq_handler(int irq, void *d=
+ev_id)
+> >>          /* For engines */
+> >>          while (int_status) {
+> >>                  id =3D __ffs(int_status);
+> >> -               complete(&se->engines[id].completion);
+> >> +               if (id < SE_ENGINE_MAX)
+> >> +                       complete(&se->engines[id].completion);
+> >>                  int_status &=3D ~BIT(id);
+> >>                  writel(BIT(id), se->base + SE_S2LINT_CL);
+> >>          }
+> >> @@ -167,7 +176,7 @@ static irqreturn_t se_irq_handler(int irq, void *d=
+ev_id)
 > >>
-> >>   void kvm_check_vpid(struct kvm_vcpu *vcpu)
-> >> diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
-> >> index 936e4ae3e408..af972394fd55 100644
-> >> --- a/arch/loongarch/kvm/switch.S
-> >> +++ b/arch/loongarch/kvm/switch.S
-> >> @@ -66,9 +66,8 @@
-> >>          ld.d    t0, a2, KVM_ARCH_KVMPGD
-> >>          csrwr   t0, LOONGARCH_CSR_PGDL
-> >>
-> >> -       /* Mix GID and RID */
-> >> -       csrrd           t1, LOONGARCH_CSR_GSTAT
-> >> -       bstrpick.w      t1, t1, CSR_GSTAT_GID_SHIFT_END, CSR_GSTAT_GID=
-_SHIFT
-> >> +       /* Set VMID for gpa --> hpa mapping */
-> >> +       ld.d            t1, a2, KVM_ARCH_VMID
-> >>          csrrd           t0, LOONGARCH_CSR_GTLBC
-> >>          bstrins.w       t0, t1, CSR_GTLBC_TGID_SHIFT_END, CSR_GTLBC_T=
-GID_SHIFT
-> >>          csrwr           t0, LOONGARCH_CSR_GTLBC
-> >> diff --git a/arch/loongarch/kvm/tlb.c b/arch/loongarch/kvm/tlb.c
-> >> index ebdbe9264e9c..38daf936021d 100644
-> >> --- a/arch/loongarch/kvm/tlb.c
-> >> +++ b/arch/loongarch/kvm/tlb.c
-> >> @@ -23,7 +23,10 @@ void kvm_flush_tlb_all(void)
-> >>
-> >>   void kvm_flush_tlb_gpa(struct kvm_vcpu *vcpu, unsigned long gpa)
+> >>   static int loongson_se_init(struct loongson_se *se, dma_addr_t addr,=
+ int size)
 > >>   {
-> >> +       unsigned int vmid;
-> >> +
-> >>          lockdep_assert_irqs_disabled();
-> >>          gpa &=3D (PAGE_MASK << 1);
-> >> -       invtlb(INVTLB_GID_ADDR, read_csr_gstat() & CSR_GSTAT_GID, gpa)=
-;
-> >> +       vmid =3D (vcpu->arch.vmid << CSR_GSTAT_GID_SHIFT) & CSR_GSTAT_=
-GID;
-> >> +       invtlb(INVTLB_GID_ADDR, vmid, gpa);
-> >>   }
-> >> --
-> >> 2.39.3
+> >> -       struct loongson_se_controller_cmd cmd;
+> >> +       struct loongson_se_controller_cmd cmd =3D {0};
+> >>          int err;
 > >>
+> >>          cmd.command_id =3D SE_CMD_START;
+> >> @@ -188,6 +197,30 @@ static const struct mfd_cell engines[] =3D {
+> >>          { .name =3D "tpm_loongson" },
+> >>   };
+> >>
+> >> +static void loongson_se_stop(void *data)
+> >> +{
+> >> +       struct loongson_se *se =3D data;
+> >> +       struct loongson_se_controller_cmd cmd =3D {0};
+> >> +       u32 *send_cmd =3D (u32 *)&cmd;
+> >> +       int i;
+> >> +
+> >> +       mutex_lock(&se->cmd_lock);
+> >> +
+> >> +       cmd.command_id =3D SE_CMD_STOP;
+> >> +
+> >> +       reinit_completion(&se->cmd_completion);
+> >> +
+> >> +       for (i =3D 0; i < SE_SEND_CMD_REG_LEN; i++)
+> >> +               writel(send_cmd[i], se->base + SE_SEND_CMD_REG + i * 4=
+);
+> >> +
+> >> +       if (!loongson_se_poll(se, SE_INT_CONTROLLER))
+> >> +               wait_for_completion(&se->cmd_completion);
+> >> +
+> >> +       writel(0, se->base + SE_S2LINT_EN);
+> >> +
+> >> +       mutex_unlock(&se->cmd_lock);
+> >> +}
+> >> +
+> >>   static int loongson_se_probe(struct platform_device *pdev)
+> >>   {
+> >>          struct device *dev =3D &pdev->dev;
+> >> @@ -195,19 +228,25 @@ static int loongson_se_probe(struct platform_dev=
+ice *pdev)
+> >>          int nr_irq, irq, err, i;
+> >>          dma_addr_t paddr;
+> >>
+> >> -       se =3D devm_kmalloc(dev, sizeof(*se), GFP_KERNEL);
+> >> +       se =3D devm_kzalloc(dev, sizeof(*se), GFP_KERNEL);
+> >>          if (!se)
+> >>                  return -ENOMEM;
+> >>
+> >>          dev_set_drvdata(dev, se);
+> >>          init_completion(&se->cmd_completion);
+> >>          spin_lock_init(&se->dev_lock);
+> >> -       mutex_init(&se->engine_init_lock);
+> >> +       mutex_init(&se->cmd_lock);
+> >> +
+> >> +       for (i =3D 0; i < SE_ENGINE_MAX; i++)
+> >> +               init_completion(&se->engines[i].completion);
+> Thanks
 >
