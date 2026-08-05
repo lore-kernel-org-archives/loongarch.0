@@ -1,149 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADFE83DAACA
-	for <loongarch@lists.linux.dev>; Wed,  5 Aug 2026 07:11:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C42133E7BD0
+	for <loongarch@lists.linux.dev>; Wed,  5 Aug 2026 09:09:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785913868; cv=none; b=KeZ+O5ialEbORReiRHfOPwq0k3OFOvWTu9mcoqG+N1ZY+8ZVo6gKXxF+jDbA+v2dR3yTR6F3qbTFivqGVQAOAiotnIL0nKrZieVijrAMM2qD3UauS9XkK/QLXXyRvzPKKcsk6bWUzdQtZFLmSQp33jBQc1MbQOdaaYKdXJkZr4E=
+	t=1785920954; cv=none; b=Hwb6WmHcC6r2WNGbXwk0b1VdDuJzcApVU32ojlTu8w+vH2CUl1oWdFTo6gP698QYlQ5x8eZ3n7ByHc8MvZGbV6uSlAX8GpZU/mp0fn9qHIuq+DBVeOOubIvXTcH/LQAsE8xCnTkaePC6Ys71RbxYWyyyQGkThe+nZuViOEuwMS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785913868; c=relaxed/simple;
-	bh=V95nZY2DUdzB3XlruL1YJbJ30g/hbzlVgN7SCfwoeHA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K/+X4eprCJUggLbOcCNSQt3mVfS46ohBXmMvSn34qHGJmA2siyRnl/yfBreAq0XO+fOF6gH0phDrJYHsDlpvRmDkAU55vqV/5b8GWJd3Wb/71vZM3k8oVQxpbLKOYD/NfCaXaUvPT64vCWZTcWWF3RH2Qu3GsC9/vdBs52CVJds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SlQnakZq; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SlQnakZq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 924DD1F00ACF
-	for <loongarch@lists.linux.dev>; Wed,  5 Aug 2026 07:11:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785913867;
-	bh=NbfQ7k85ZTEqgT5DB4j34irEcBPm8KPdK6D+//VHNkE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=SlQnakZqNLWXcIXCuGY1TlUXSrotxqULvaau70YC6WwU1/BXQevTPOyyv/YAin2Js
-	 pOvtocKC3SBZ3eZRFFwlCGoR8XCgiNy/QT2tHGG3HO1Wtxn0Eqr5T0e3xx2FYcOnnP
-	 1WjH8ENo4c2IKl0WrWZxyyDE1RQKVPaAMMEcCujl50Epd/suGnOtjxcBIqzmXkBWlu
-	 sICEAgljSWdi1FoFQvy3ELsnxh3CWJspqzzk98+5UFS7nMN+tmfErI2zVTqvuuaPL1
-	 WC3VLHl8GMApZ6od9gLK66NWCAwPKZbAIhPxTVSdvHnQ8eq+f05iaFl4iU8I+cgRNs
-	 OmAvH26eeCoZg==
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-6a144c8eea2so637535a12.0
-        for <loongarch@lists.linux.dev>; Wed, 05 Aug 2026 00:11:07 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RrFK2C0S5uyZQQsqka19+wXFiP64p+/p4SlTlFqk0/b3Nr9Cp2xOko3qh3eTIo5La27XLR+PSYyiD8=@lists.linux.dev
-X-Gm-Message-State: AOJu0Ywtr1YGkDi1P0sTLvbZpvz8qyhzKGGC2Yc+3cG3n0cXPlWkJaCs
-	paJzvFHmStgQFC6UMhk/1QRKqdR03VMgAOjoGzENOi3IY8WAHzUCmmwgRAMD7f1RNBPFcKvh0qm
-	uoH8Ofo1ID4eta6Wb4+pJL/3Y3/npE6c=
-X-Received: by 2002:a05:6402:2714:b0:69e:8ad:515f with SMTP id
- 4fb4d7f45d1cf-6a14f0c508emr2238510a12.6.1785913866030; Wed, 05 Aug 2026
- 00:11:06 -0700 (PDT)
+	s=arc-20240116; t=1785920954; c=relaxed/simple;
+	bh=NmM88NINLb/ASdCHL6bGaPRXrnlYX+Lzr3QVcXwPwv8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kdfm7HEyfAL8mriVpuLUOCimbjMkNhWmC1BQGqLPvwXRxAVIvcaVc0/vbtK8i2XmRtV7AmO5CWGM/8BIGIgRzvREIAtGWzdCUZl3mnxF3E9cDuhDlZoZ3ljqtqKy4zdd8KaLSk8vJ2E2sy/K+WaOPH2pvCRF6k0CfX9RpLo3aYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.40.54.123])
+	by gateway (Coremail) with SMTP id _____8Bxmuu2_XJqSJgKAA--.34200S3;
+	Wed, 05 Aug 2026 17:09:10 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.40.54.123])
+	by front1 (Coremail) with SMTP id qMiowJBxEuSx_XJqe4okAA--.973S2;
+	Wed, 05 Aug 2026 17:09:05 +0800 (CST)
+From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+To: bp@alien8.de
+Cc: tony.luck@intel.com,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	chenhuacai@kernel.org,
+	Qunqin Zhao <zhaoqunqin@loongson.cn>
+Subject: [PATCH v2 0/3] EDAC/loongson: Improvements for Loongson EDAC driver
+Date: Wed,  5 Aug 2026 16:54:11 +0800
+Message-ID: <20260805085414.1482-1-zhaoqunqin@loongson.cn>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260804153938.16129-1-dongtai.guo@linux.dev>
-In-Reply-To: <20260804153938.16129-1-dongtai.guo@linux.dev>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 5 Aug 2026 15:11:31 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7aPXsN_jami_2MKJ9CTcpr8YviSJXUxT8s1GMRUEP7wA@mail.gmail.com>
-X-Gm-Features: AUfX_myd1nSMgH06aammgwFHKIkCfd6d7Kf-63KnUo1vwkOZmZkIKlEBTEaeGUs
-Message-ID: <CAAhV-H7aPXsN_jami_2MKJ9CTcpr8YviSJXUxT8s1GMRUEP7wA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] LoongArch: BPF: per-CPU address resolution and
- timed may_goto
-To: George Guo <dongtai.guo@linux.dev>
-Cc: yangtiezhu@loongson.cn, hengqi.chen@gmail.com, ast@kernel.org, 
-	daniel@iogearbox.net, andrii@kernel.org, kernel@xen0n.name, 
-	martin.lau@linux.dev, eddyz87@gmail.com, memxor@gmail.com, song@kernel.org, 
-	yonghong.song@linux.dev, jolsa@kernel.org, guodongtai@kylinos.cn, 
-	bpf@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBxEuSx_XJqe4okAA--.973S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7tr4xZF1fKw17KrWrGF18CrX_yoW8ZFykpr
+	W3ua98tr4qqrn2k3sayw12v3Z0k395Jr4DXan2qw18Zr13Z34UXr4SyrW5uFnrAr48tr15
+	Wa4jgFn3WFWDJ3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1WlkUUUUU=
 
-Hi, George,
+This series contains three patches for the Loongson EDAC driver:
 
-In V1 it is independent,
+Patch 1: Encode node and MC info into mc_idx so that on multi-node
+systems, sysfs entries uniquely identify each controller.
 
-In V2 it is part of
-https://lore.kernel.org/loongarch/20260702022322.51033-1-dongtai.guo@linux.=
-dev/T/#t
+Patch 2: Get DIMM size from ACPI _DSM method instead of using hardcoded
+values, enabling correct display of memory size in sysfs.
 
-In V3 it is independent again.
+Patch 3: Add CS4-7 timeout filter for cross-node access on 3C6000
+multi-node systems to prevent false CE error reports.
 
-What do you want? You can ask Tiezhu and Hengqi to review your
-patches, but don't do such confusing things.
+Changes in v2:
+
+Patch 1 "Encode node and MC info into mc_idx":
+- mc_per_node -> mcs_per_node
+- Use char other_detail[64] = {0} and drop the else branch
+- Put snprintf() on one line
+- If the definition of pvt_init is placed on a single line, it will
+  exceed 100 characters, so the line break is kept.
+
+- Use a temporary u32 variable for mc-idx to silence incompatible
+  pointer type warning from device_property_read_u32(). Then keep
+  the 'else' branch.
+- Validate mc-per-node firmware property is non-zero to prevent
+  division by zero
+
+Patch 2 "get DIMM size from ACPI _DSM method":
+- No changes; rebased on top of updated patch 1.
+
+Patch 3 "Add CS4-7 timeout filter for cross-node access":
+- Assign valid_cs_bits before calling read_ecc() in pvt_init() to
+  prevent using uninitialized data when establishing the baseline
+  error count
+- Add bounds check for valid_cs_bits < 64 to guard against undefined
+  behavior when shifting a 64-bit value by 64 bits
+- Rename device property valid_cs_bits -> valid-cs-bits to match
+  standard DT/ACPI _DSD hyphen convention
+
+v1: https://lore.kernel.org/all/20260730063035.230686-1-zhaoqunqin@loongson.cn/
+
+Qunqin Zhao (1):
+  EDAC/loongson: Add CS4-7 timeout filter for cross-node access
+
+Wang Jinwei (2):
+  EDAC/loongson: Encode node and MC info into mc_idx
+  EDAC/loongson: get DIMM size from ACPI _DSM method
+
+ drivers/edac/loongson_edac.c | 84 ++++++++++++++++++++++++++++++++----
+ 1 file changed, 76 insertions(+), 8 deletions(-)
 
 
-Huacai
+base-commit: dc59e4fea9d83f03bad6bddf3fa2e52491777482
+-- 
+2.47.3
 
-On Tue, Aug 4, 2026 at 11:46=E2=80=AFPM George Guo <dongtai.guo@linux.dev> =
-wrote:
->
-> These are the first two patches of the LoongArch BPF JIT feature work,
-> sent on their own to make review easier. The remaining pieces
-> (per-program private stacks, exceptions/bpf_throw, sign-extending loads
-> and atomics on arena pointers, and the matching selftests) will follow in
-> a later series.
->
-> Both patches are independent of each other. They apply on top of Chenguan=
-g
-> Zhao's "LoongArch bpf kptr xchg inline support" v4 series:
->
->   https://lore.kernel.org/all/20260729022837.355549-1-chenguang.zhao@linu=
-x.dev/
->
-> Patch 1 adds the internal-only BPF MOV that resolves a per-CPU offset to
-> the current CPU's address, advertised through
-> bpf_jit_supports_percpu_insn(). LoongArch keeps the current CPU's per-CPU
-> base in $r21 (__my_cpu_offset), so the resolution is a single add.
-> Exercised by the cpumask and percpu_alloc selftests.
->
-> Patch 2 implements arch_bpf_timed_may_goto() and advertises it, so the
-> verifier lowers may_goto to its timed variant, which bounds the loop by a
-> wall-clock timeout kept in a per-loop stack slot. It uses a custom callin=
-g
-> convention: the count/timestamp stack offset is passed in BPF_REG_AX and
-> returned there, so the JIT call path skips the usual "BPF_REG_0 =3D retur=
-n
-> value" move for this helper. Exercised by the iters selftests.
->
-> Selftest results (all PASS):
->
->   Feature                          Test(s)
->   --------------------------------------------------------------
->   1  internal-only MOV (percpu)     cpumask, percpu_alloc
->   2  timed may_goto                 iters
->
-> $ sudo ./test_progs -t cpumask
-> ...
-> Summary: 1/35 PASSED, 0 SKIPPED, 0 FAILED
->
-> $ sudo ./test_progs -t percpu_alloc
-> ...
-> Summary: 1/18 PASSED, 0 SKIPPED, 0 FAILED
->
-> $ sudo ./test_progs -t iters
-> ...
-> Summary: 1/93 PASSED, 0 SKIPPED, 0 FAILED
->
-> Based on loongarch-next:
->   https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongs=
-on.git/log/?h=3Dloongarch-next
->
-> These two patches are split from the full v2 series (11 patches):
->   https://lore.kernel.org/all/20260702022322.51033-1-dongtai.guo@linux.de=
-v/
->
-> George Guo (2):
->   LoongArch: BPF: Support internal-only MOV to resolve per-CPU addrs
->   LoongArch: BPF: Add timed may_goto support
->
->  arch/loongarch/include/asm/inst.h       |  1 +
->  arch/loongarch/net/Makefile             |  2 +-
->  arch/loongarch/net/bpf_jit.c            | 27 +++++++++++++-
->  arch/loongarch/net/bpf_timed_may_goto.S | 47 +++++++++++++++++++++++++
->  4 files changed, 75 insertions(+), 2 deletions(-)
->  create mode 100644 arch/loongarch/net/bpf_timed_may_goto.S
->
-> --
-> 2.53.0
->
