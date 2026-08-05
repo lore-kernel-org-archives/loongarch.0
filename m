@@ -1,114 +1,139 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E35813AD51E
-	for <loongarch@lists.linux.dev>; Wed,  5 Aug 2026 09:43:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79DCF40B0E5
+	for <loongarch@lists.linux.dev>; Wed,  5 Aug 2026 09:45:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785922996; cv=none; b=ARvpb9YwPb8lJoZLzkE/tRU3fBqC5lE9GTe99sXbjfz6piM1TMhKscA273wApFtJvQ1yjxQtCspZjr7hFDpDj4UZjF9491uUHY9+TXlkEKeiWCpTaey2GdqduNgZ4Z2PSuUgxoTGmQaItdfMwf7YJDk3bcvGR7X6sE8Nb5imjRc=
+	t=1785923123; cv=none; b=XDUdYPHmTZ8fvqwH4megr/VXdWJi5OWX+U2f56nmyDuQQK+kWwt4zQ7VW1R0IOtlszfOLXXovh4qX0xzwpVMcyekGF2AADRbf3T2yd2qZqyE9RsZLTaSu5DGjgndrtgPV/fLGgEvHVFRBRnY4jcyhq6HbqIN6qfTk3bFEzlPNVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785922996; c=relaxed/simple;
-	bh=PZ9qpgLXeYgqdznCFDrzlwXU084N8JPofmf+Oikc1Dk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ogOMSitciKNVcel06zXjWre3x75xn9JaMW7QYjffqgC97TONMMJ5dgwZpaJ3/oZu5Bd1CwWaiQMTbuO0Wxr/l94N61ZS6Q8mY+d1K+ha4SwtnEA8geEIgUSnhDw03fsCjdFCUHFVuioF2axg/nf7crd5K1b36ckhcsnJvsr4yb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.102])
-	by gateway (Coremail) with SMTP id _____8DxWqGvBXNqj5oKAA--.11288S3;
-	Wed, 05 Aug 2026 17:43:12 +0800 (CST)
-Received: from [10.20.42.102] (unknown [10.20.42.102])
-	by front1 (Coremail) with SMTP id qMiowJBxb8etBXNqA5UkAA--.3824S2;
-	Wed, 05 Aug 2026 17:43:11 +0800 (CST)
-Message-ID: <917e48ca-d0dc-4cb6-9399-4f5b9102c0a2@loongson.cn>
-Date: Wed, 5 Aug 2026 17:42:20 +0800
+	s=arc-20240116; t=1785923123; c=relaxed/simple;
+	bh=M6M22eNuM/s4bt7wR6ZMpzecnUxuvbjsB1x2gihMNpc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=N6LKvVJHU+XLjK/V0MK/lvQRoq7WeECBvqFCXC0MyE7BP0rRPfhtyVduHxtV5Uy6aw220cgjumJoXW48vv16C2zM0Bqc2GUdQ830KK0NpOJ0lTiERqb5ZMmDs3CAcRtiro2Bz6lsvgxSuCx2Jk0y4pWebe43MhvG8JrbfHRcosE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aDuI6ZX6; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aDuI6ZX6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4198E1F00A3F
+	for <loongarch@lists.linux.dev>; Wed,  5 Aug 2026 09:45:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785923120;
+	bh=gxgh1d/xpX3+wS7satcqo9P+8LuVtMKLa33NMQ0hV24=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=aDuI6ZX64UaiCKZMUI29iGPa7IYyMJrwLfcnW5+WZdGHQm66OYVOuD2/pUcgFdNfJ
+	 eT6B/Y2J/yVhiD56h8KM2UfEHystrP1I3pSbEp60DYR5lhV5vULjn6ohKv5b5AVJ6G
+	 JdqfQqSZwnz2E25LMEPc+OJ+t6F5hDdbOXD3IhQiDuPIoGPzR/W+0dJw8jVo9LWcLV
+	 ea3LXcDQDI58PtxS6qTviCWISYfcYXGxQ+FwytF75zyYOFWftmVN3OClQ73Ak3Eo/f
+	 yHbw4rtmp8S7Z3FaWo22nzY3bONobk6omw7mn7bqILrHuEfqMQaIUgx3tVx4WaPw0I
+	 eaLRS5yVeKuHw==
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-6a144c8f01fso1626700a12.1
+        for <loongarch@lists.linux.dev>; Wed, 05 Aug 2026 02:45:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RqxOxyXHcxYobTcPw+0xBWqE/6nnzbow5ZibQk1jTL7gyXUc/2v6G5gXs6WAkw7TxO8vzDyLrFBDPU=@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywh62Cd59EFaYQf7QDQdcg/RHrN+uEj3TlLv7c+jKGNTEDu4G+Q
+	wVrcBE2xobCpyRcuGz68wACRKBtNm+u47bK3g0gn+Bsr1iiX67QwzXGWygKtJTH7MyRa7Xz/57O
+	ryIeysv3MtXt1j60bCKbJN117l92bIzs=
+X-Received: by 2002:a05:6402:44d2:b0:6a0:de1e:c4c4 with SMTP id
+ 4fb4d7f45d1cf-6a14efdb72fmr2769899a12.10.1785923118945; Wed, 05 Aug 2026
+ 02:45:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/2] mfd: loongson-se: Fix miscellaneous issues
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: lee@kernel.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- linux-crypto@vger.kernel.org
-References: <20260730082608.1929-1-zhaoqunqin@loongson.cn>
- <20260730082608.1929-3-zhaoqunqin@loongson.cn>
- <CAAhV-H4V6NWDcw1nVZzaXKJF_QS0sz5jTsrnwbq-xki2mJLVtQ@mail.gmail.com>
- <b284a9a5-6f71-46c7-80f1-ed15276330da@loongson.cn>
- <CAAhV-H79JdBRmNpCKPEfHxMARr5zNVAnP3mJYOWo6zwBpF2q2Q@mail.gmail.com>
-Content-Language: en-US
-From: Qunqin Zhao <zhaoqunqin@loongson.cn>
-In-Reply-To: <CAAhV-H79JdBRmNpCKPEfHxMARr5zNVAnP3mJYOWo6zwBpF2q2Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxb8etBXNqA5UkAA--.3824S2
-X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7CFy3uF17tw1UAFW3WF4rJFc_yoW8Aw15pF
-	WDG3W3CF4UXr4vkwnxX34jkF12v3sYgrZrC3Z5tF18AFykKrnaqryYqr4Uu3yUCw4vqF1I
-	qF4DKFWfu3WrC3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I
-	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUwmhFDUUUU
+References: <20260729022837.355549-1-chenguang.zhao@linux.dev>
+In-Reply-To: <20260729022837.355549-1-chenguang.zhao@linux.dev>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 5 Aug 2026 17:45:43 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5LbD2XdRXHQTkaZqLSZdsjaeBn-KuoVyu8Yp66KfaX9Q@mail.gmail.com>
+X-Gm-Features: AUfX_mx1UvDsqSZzPQWe7AmI5apUT3t7cOKVNthWTP0DokSaabnM8Rqxd8-Qlrc
+Message-ID: <CAAhV-H5LbD2XdRXHQTkaZqLSZdsjaeBn-KuoVyu8Yp66KfaX9Q@mail.gmail.com>
+Subject: Re: [PATCH v4 0/4] LoongArch bpf kptr xchg inline support
+To: Chenguang Zhao <chenguang.zhao@linux.dev>
+Cc: kernel@xen0n.name, ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
+	martin.lau@linux.dev, eddyz87@gmail.com, memxor@gmail.com, 
+	yangtiezhu@loongson.cn, hengqi.chen@gmail.com, song@kernel.org, 
+	yonghong.song@linux.dev, jolsa@kernel.org, shuah@kernel.org, 
+	loongarch@lists.linux.dev, bpf@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, Chenguang Zhao <zhaochenguang@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Queued the first 3 patches, since the last one is not LoongArch-specific.
 
-在 2026/8/4 22:29, Huacai Chen 写道:
-> On Tue, Aug 4, 2026 at 10:09 AM Qunqin Zhao <zhaoqunqin@loongson.cn> wrote:
->>
->> 在 2026/8/3 16:01, Huacai Chen 写道:
->>> Hi, Qunqin,
->>>
->>> On Thu, Jul 30, 2026 at 4:41 PM Qunqin Zhao <zhaoqunqin@loongson.cn> wrote:
->>>    int loongson_se_send_engine_cmd(struct loongson_se_engine *engine)
->>>    {
->>> +       int err;
->>> +
->>> +       mutex_lock(&engine->se->cmd_lock);
->>> +
->>> +       reinit_completion(&engine->completion);
->>> +
->>>           /*
->>>            * After engine initialization, the controller already knows
->>>            * where to obtain engine commands from. Now all we need to
->>>            * do is notify the controller that the engine needs to be started.
->>>            */
->>> -       int err = loongson_se_poll(engine->se, BIT(engine->id));
->>> +       err = loongson_se_poll(engine->se, BIT(engine->id));
->>> +
->>> +       mutex_unlock(&engine->se->cmd_lock);
->>>
->>>           if (err)
->>>                   return err;
->>> @@ -97,7 +109,7 @@ struct loongson_se_engine *loongson_se_init_engine(struct device *dev, int id)
->>>
->>>           engine->se = se;
->>>           engine->id = id;
->>> -       init_completion(&engine->completion);
->>> +       reinit_completion(&engine->completion);
->>> I'm not sure, but I think loongson_se_init_engine() is only called at
->>> init, so we need init_completion here.
->> To prevent an spurious interrupt from completing an uninitialized object,
->> all objects have already been fully initialized with init_completion during the probe stage.
-> In my opinion, if a function can be called multiple times, we need
-> reinit_completion(), if it is only called for probe, we need
-> init_completion(), and loongson_se_init_engine() looks like the later
-> case.
+Huacai
 
-I'm not sure. If init_completion twice works too, let's go with 
-init_completion then.
-
-Thanks
-
+On Wed, Jul 29, 2026 at 10:29=E2=80=AFAM Chenguang Zhao
+<chenguang.zhao@linux.dev> wrote:
 >
-> Huacai
+> From: Chenguang Zhao <zhaochenguang@kylinos.cn>
 >
-
+> This series enables the BPF verifier to inline bpf_kptr_xchg()
+> into BPF_XCHG on LoongArch64, and fixes the underlying JIT
+> atomic ordering that makes such inlining safe.
+>
+> The BPF verifier can lower bpf_kptr_xchg() to a single BPF_XCHG
+> atomic when the JIT advertises ptr xchg support via
+> bpf_jit_supports_ptr_xchg(). This removes helper-call overhead
+> from the kptr exchange fast path. Inlining is only correct when
+> the JITed exchange provides the same sequentially consistent
+> ordering as the bpf_kptr_xchg() helper.
+>
+> Patch 1 fixes memory ordering for all value-returning BPF atomic
+> RMW operations emitted by the LoongArch bpf JIT. Per LKMM,
+> value-returning atomic RMW must provide sequentially consistent
+> ordering. Plain AMO instructions and bare ll/sc loops on LoongArch
+> do not satisfy this by themselves:
+>  - BPF_FETCH (ADD/AND/OR/XOR): switch to am*_db.{b,h,w,d}
+>  - BPF_XCHG: switch to amswap_db.{b,h,w,d}
+>  - BPF_CMPXCHG: emit dbar 0x700 after the ll/sc loop, matching
+>    __WEAK_LLSC_MB in cmpxchg.h
+> Non-value-returning RMW ops (plain BPF_ADD, BPF_AND, etc.)
+> remain weakly ordered, consistent with LKMM. This fix is independent
+> of kptr inlining and benefits all BPF programs using value-returning
+> atomics on LoongArch.
+>
+> Patch 2 implements bpf_jit_supports_ptr_xchg() so the verifier
+> may inline bpf_kptr_xchg() on LoongArch64.
+>
+> Patches 3 and 4 extend bpf selftests: functional coverage via
+> kptr_xchg_inline, and an optional kptr-xchg benchmark to compare
+> helper vs inlined paths.
+>
+> Chenguang Zhao (4):
+>   LoongArch: bpf: Fix memory ordering for value-returning atomics
+>   LoongArch: bpf: Advertise JIT support for kptr xchg inline
+>   selftests/bpf: Enable kptr_xchg_inline test on LoongArch
+>   selftests/bpf: Add kptr-xchg benchmark
+>
+>  arch/loongarch/include/asm/inst.h             | 18 ++++
+>  arch/loongarch/net/bpf_jit.c                  | 37 ++++---
+>  tools/testing/selftests/bpf/Makefile          |  2 +
+>  tools/testing/selftests/bpf/bench.c           |  2 +
+>  .../selftests/bpf/benchs/bench_kptr_xchg.c    | 96 +++++++++++++++++++
+>  .../bpf/prog_tests/kptr_xchg_inline.c         |  3 +-
+>  .../selftests/bpf/progs/kptr_xchg_bench.c     | 49 ++++++++++
+>  7 files changed, 192 insertions(+), 15 deletions(-)
+>  create mode 100644 tools/testing/selftests/bpf/benchs/bench_kptr_xchg.c
+>  create mode 100644 tools/testing/selftests/bpf/progs/kptr_xchg_bench.c
+>
+> ---
+> v4:
+>  - Resend patches against new kernel.
+>
+> v3:
+>  - https://lore.kernel.org/all/1782119051687451.15056.seg@mailgw.kylinos.=
+cn/
+>
+> v2:
+>  - https://lore.kernel.org/all/20260603100438.2177817-1-zhaochenguang@kyl=
+inos.cn/
+>
+> v1:
+>  - https://lore.kernel.org/all/20260602021515.214560-1-zhaochenguang@kyli=
+nos.cn/
+>
+> --
+> 2.25.1
+>
+>
