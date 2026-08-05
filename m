@@ -1,95 +1,149 @@
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C7503D9667
-	for <loongarch@lists.linux.dev>; Wed,  5 Aug 2026 05:46:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADFE83DAACA
+	for <loongarch@lists.linux.dev>; Wed,  5 Aug 2026 07:11:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785908779; cv=none; b=TAWglAqvP9GmrpcIRxHxtSWBvktXFrkc+36Y4oAsqHQ3vXCTPbNPPPjqoYJxR+3vHpiam6R7xl8hgw28HfHTxTC4PQ9b8XY55S3TsyhMJZInvIdK4hTV4NPwuHdUZ6xQieU1i87psbLqrHk0uiKv77MvcYsEFf3zPpUF3Hguc54=
+	t=1785913868; cv=none; b=KeZ+O5ialEbORReiRHfOPwq0k3OFOvWTu9mcoqG+N1ZY+8ZVo6gKXxF+jDbA+v2dR3yTR6F3qbTFivqGVQAOAiotnIL0nKrZieVijrAMM2qD3UauS9XkK/QLXXyRvzPKKcsk6bWUzdQtZFLmSQp33jBQc1MbQOdaaYKdXJkZr4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785908779; c=relaxed/simple;
-	bh=vaKNIEBZelWchPfm7/fqoe6xrkAvsarEnLBxT9PUXqo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=piEXWguero3QhP7XqPYGBQSqdf0SPAqZZYCRWseRgh85F8CiYn/MB1PNTBv49+KT2Io2ylzcIRf+ODwsp+kwdKr5zF11zXS2AIBEN6rhHuMZBifZzosNeBDe5HRGoomxyAGRwn7JgIYssJmUfri/Ii0KhluQRFjvIkGamBkWY6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cOvtqnJw; arc=none smtp.client-ip=95.215.58.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1785913868; c=relaxed/simple;
+	bh=V95nZY2DUdzB3XlruL1YJbJ30g/hbzlVgN7SCfwoeHA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K/+X4eprCJUggLbOcCNSQt3mVfS46ohBXmMvSn34qHGJmA2siyRnl/yfBreAq0XO+fOF6gH0phDrJYHsDlpvRmDkAU55vqV/5b8GWJd3Wb/71vZM3k8oVQxpbLKOYD/NfCaXaUvPT64vCWZTcWWF3RH2Qu3GsC9/vdBs52CVJds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SlQnakZq; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cOvtqnJw"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1785908775;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=fv3F37YwyrErPSl69qBUjTJbxlH3Hl4dP6cRAtWROGc=;
-	b=cOvtqnJwreftTXpZkJBunpLozlY39LVS5mpQcea6Rpl9q5DDlLWRW86MQ7KryvWtsXKeIb
-	liGQTlkjSclGG2ezm7tl8FTqbpAHhveBZ08u6pJtM6RH0q18h18VuTAzNNj6gRLDQuNEyB
-	q5+T46xi4ZUF8pzkTyfvWeOyIWus4Ek=
-From: Tao Cui <cui.tao@linux.dev>
-To: zhaotianrui@loongson.cn,
-	maobibo@loongson.cn
-Cc: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	cui.tao@linux.dev
-Subject: [PATCH v2] LoongArch: KVM: Advertise already-supported capabilities
-Date: Wed,  5 Aug 2026 13:45:49 +0800
-Message-ID: <20260805054549.287648-1-cui.tao@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SlQnakZq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 924DD1F00ACF
+	for <loongarch@lists.linux.dev>; Wed,  5 Aug 2026 07:11:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785913867;
+	bh=NbfQ7k85ZTEqgT5DB4j34irEcBPm8KPdK6D+//VHNkE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=SlQnakZqNLWXcIXCuGY1TlUXSrotxqULvaau70YC6WwU1/BXQevTPOyyv/YAin2Js
+	 pOvtocKC3SBZ3eZRFFwlCGoR8XCgiNy/QT2tHGG3HO1Wtxn0Eqr5T0e3xx2FYcOnnP
+	 1WjH8ENo4c2IKl0WrWZxyyDE1RQKVPaAMMEcCujl50Epd/suGnOtjxcBIqzmXkBWlu
+	 sICEAgljSWdi1FoFQvy3ELsnxh3CWJspqzzk98+5UFS7nMN+tmfErI2zVTqvuuaPL1
+	 WC3VLHl8GMApZ6od9gLK66NWCAwPKZbAIhPxTVSdvHnQ8eq+f05iaFl4iU8I+cgRNs
+	 OmAvH26eeCoZg==
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-6a144c8eea2so637535a12.0
+        for <loongarch@lists.linux.dev>; Wed, 05 Aug 2026 00:11:07 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RrFK2C0S5uyZQQsqka19+wXFiP64p+/p4SlTlFqk0/b3Nr9Cp2xOko3qh3eTIo5La27XLR+PSYyiD8=@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywtr1YGkDi1P0sTLvbZpvz8qyhzKGGC2Yc+3cG3n0cXPlWkJaCs
+	paJzvFHmStgQFC6UMhk/1QRKqdR03VMgAOjoGzENOi3IY8WAHzUCmmwgRAMD7f1RNBPFcKvh0qm
+	uoH8Ofo1ID4eta6Wb4+pJL/3Y3/npE6c=
+X-Received: by 2002:a05:6402:2714:b0:69e:8ad:515f with SMTP id
+ 4fb4d7f45d1cf-6a14f0c508emr2238510a12.6.1785913866030; Wed, 05 Aug 2026
+ 00:11:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20260804153938.16129-1-dongtai.guo@linux.dev>
+In-Reply-To: <20260804153938.16129-1-dongtai.guo@linux.dev>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 5 Aug 2026 15:11:31 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7aPXsN_jami_2MKJ9CTcpr8YviSJXUxT8s1GMRUEP7wA@mail.gmail.com>
+X-Gm-Features: AUfX_myd1nSMgH06aammgwFHKIkCfd6d7Kf-63KnUo1vwkOZmZkIKlEBTEaeGUs
+Message-ID: <CAAhV-H7aPXsN_jami_2MKJ9CTcpr8YviSJXUxT8s1GMRUEP7wA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] LoongArch: BPF: per-CPU address resolution and
+ timed may_goto
+To: George Guo <dongtai.guo@linux.dev>
+Cc: yangtiezhu@loongson.cn, hengqi.chen@gmail.com, ast@kernel.org, 
+	daniel@iogearbox.net, andrii@kernel.org, kernel@xen0n.name, 
+	martin.lau@linux.dev, eddyz87@gmail.com, memxor@gmail.com, song@kernel.org, 
+	yonghong.song@linux.dev, jolsa@kernel.org, guodongtai@kylinos.cn, 
+	bpf@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Several LoongArch KVM features are fully implemented but were never
-reported through their standard KVM_CHECK_EXTENSION probes, so userspace
-cannot discover them.  Advertise the ones that already work and have a
-real consumer:
+Hi, George,
 
-  - KVM_CAP_STEAL_TIME: steal time works end-to-end (host-side record
-    plus guest paravirt side), and the probe returns kvm_pvtime_supported().
+In V1 it is independent,
 
-  - KVM_CAP_VCPU_ATTRIBUTES: per-vCPU device-attribute ioctls are
-    implemented (CPUCFG, PVTIME control); advertise the discovery cap.
+In V2 it is part of
+https://lore.kernel.org/loongarch/20260702022322.51033-1-dongtai.guo@linux.=
+dev/T/#t
 
-This adds no new functionality; it only makes existing features
-discoverable via the standard probe.
+In V3 it is independent again.
 
-Signed-off-by: Tao Cui <cui.tao@linux.dev>
----
-Changes in v2:
-  - Drop KVM_CAP_IRQFD_RESAMPLE: the only consumer is VFIO INTx, which
-    needs IOMMU/VFIO not yet available on LoongArch.
-  - Drop KVM_CAP_VM_GPA_BITS: the cap implies a GPA-width setter that
-    LoongArch does not implement.
+What do you want? You can ask Tiezhu and Hengqi to review your
+patches, but don't do such confusing things.
 
- arch/loongarch/kvm/vm.c | 4 ++++
- 1 file changed, 4 insertions(+)
 
-diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
-index 1317c718f896..0a51931d6f6e 100644
---- a/arch/loongarch/kvm/vm.c
-+++ b/arch/loongarch/kvm/vm.c
-@@ -122,6 +122,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 	case KVM_CAP_IOEVENTFD:
- 	case KVM_CAP_MP_STATE:
- 	case KVM_CAP_SET_GUEST_DEBUG:
-+	case KVM_CAP_VCPU_ATTRIBUTES:
- 		r = 1;
- 		break;
- 	case KVM_CAP_NR_VCPUS:
-@@ -136,6 +137,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 	case KVM_CAP_NR_MEMSLOTS:
- 		r = KVM_USER_MEM_SLOTS;
- 		break;
-+	case KVM_CAP_STEAL_TIME:
-+		r = kvm_pvtime_supported();
-+		break;
- 	default:
- 		r = 0;
- 		break;
+Huacai
+
+On Tue, Aug 4, 2026 at 11:46=E2=80=AFPM George Guo <dongtai.guo@linux.dev> =
+wrote:
+>
+> These are the first two patches of the LoongArch BPF JIT feature work,
+> sent on their own to make review easier. The remaining pieces
+> (per-program private stacks, exceptions/bpf_throw, sign-extending loads
+> and atomics on arena pointers, and the matching selftests) will follow in
+> a later series.
+>
+> Both patches are independent of each other. They apply on top of Chenguan=
+g
+> Zhao's "LoongArch bpf kptr xchg inline support" v4 series:
+>
+>   https://lore.kernel.org/all/20260729022837.355549-1-chenguang.zhao@linu=
+x.dev/
+>
+> Patch 1 adds the internal-only BPF MOV that resolves a per-CPU offset to
+> the current CPU's address, advertised through
+> bpf_jit_supports_percpu_insn(). LoongArch keeps the current CPU's per-CPU
+> base in $r21 (__my_cpu_offset), so the resolution is a single add.
+> Exercised by the cpumask and percpu_alloc selftests.
+>
+> Patch 2 implements arch_bpf_timed_may_goto() and advertises it, so the
+> verifier lowers may_goto to its timed variant, which bounds the loop by a
+> wall-clock timeout kept in a per-loop stack slot. It uses a custom callin=
+g
+> convention: the count/timestamp stack offset is passed in BPF_REG_AX and
+> returned there, so the JIT call path skips the usual "BPF_REG_0 =3D retur=
+n
+> value" move for this helper. Exercised by the iters selftests.
+>
+> Selftest results (all PASS):
+>
+>   Feature                          Test(s)
+>   --------------------------------------------------------------
+>   1  internal-only MOV (percpu)     cpumask, percpu_alloc
+>   2  timed may_goto                 iters
+>
+> $ sudo ./test_progs -t cpumask
+> ...
+> Summary: 1/35 PASSED, 0 SKIPPED, 0 FAILED
+>
+> $ sudo ./test_progs -t percpu_alloc
+> ...
+> Summary: 1/18 PASSED, 0 SKIPPED, 0 FAILED
+>
+> $ sudo ./test_progs -t iters
+> ...
+> Summary: 1/93 PASSED, 0 SKIPPED, 0 FAILED
+>
+> Based on loongarch-next:
+>   https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongs=
+on.git/log/?h=3Dloongarch-next
+>
+> These two patches are split from the full v2 series (11 patches):
+>   https://lore.kernel.org/all/20260702022322.51033-1-dongtai.guo@linux.de=
+v/
+>
+> George Guo (2):
+>   LoongArch: BPF: Support internal-only MOV to resolve per-CPU addrs
+>   LoongArch: BPF: Add timed may_goto support
+>
+>  arch/loongarch/include/asm/inst.h       |  1 +
+>  arch/loongarch/net/Makefile             |  2 +-
+>  arch/loongarch/net/bpf_jit.c            | 27 +++++++++++++-
+>  arch/loongarch/net/bpf_timed_may_goto.S | 47 +++++++++++++++++++++++++
+>  4 files changed, 75 insertions(+), 2 deletions(-)
+>  create mode 100644 arch/loongarch/net/bpf_timed_may_goto.S
+>
+> --
+> 2.53.0
+>
