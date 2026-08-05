@@ -1,178 +1,217 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17B2468C3A
-	for <loongarch@lists.linux.dev>; Tue,  4 Aug 2026 15:46:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 917362931F1
+	for <loongarch@lists.linux.dev>; Wed,  5 Aug 2026 01:21:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785858415; cv=none; b=RJsD4xS3R4o5zAtsz3QN/esNoOS4wwxPxlma1r2DpDWbZFsf/Qq+Xoi/AT5J6vTcOc7xYiHBDDQitl/qzFRDEwJF8Rdqo4jFB3j0N8Br/SIovrbG9jSSNgKqDU3mArlrSOkmNyddX2UkbMdALkOKh7vFSfqkkGgBTIM3z8Y86Is=
+	t=1785892922; cv=none; b=WVe7SXZR7MSU29qk6s0R6q4FPbpIIOPOFiRn5dRVCamsBnsM3w9JHMwHLuQisveaV5M/qbObHwp6lAWt+ib4lxweU/1hN1t+JTSh32vx/KVJLJ2MclBEuEZwOh9UD0OpR+PS/eqq+GKLeMwbVCJYXdUUADX+UJFeK0Rn2KlaKLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785858415; c=relaxed/simple;
-	bh=UkvTxU0c2KcE5jFeR4XX4JR57uXmgvH73AtGAwrlKzk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ERBF6hodMFHhsQ+c5VR6EdWoN7PUraSOESsI1H2HEnMnF9e5ISA+r9tteRKpIK7omz6UuYGBRteRGcx3w3SK8z40WVsryvUDn6G5PzWL/dfBu8Hg7SsSkoJzSw+8+7n32xfdtbcdB4ltxuDfp7ikA1n8bAAUYpopWfrnNO9k/D0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LNUCVGYZ; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LNUCVGYZ"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1785858411;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oSVnprZ4KaeR41KPt5lEBSjzlm/HBklaQ8jOsYV0o8o=;
-	b=LNUCVGYZQoKtwmckWUWCwzkQLC4YE4zGBIc+sDZXx9efG8Y+xVIKWJjX/dyltbrzSnGT96
-	5og8lI3TFw6JTfzEjGuxfT+cObKohK0AuTu02VVcMRIp8DWNKVkYYkkra8fmMHY3V0B8ie
-	RWZs5cV1shBDakXFQzWNqQArlOP5iZs=
-From: George Guo <dongtai.guo@linux.dev>
-To: chenhuacai@kernel.org,
-	yangtiezhu@loongson.cn,
-	hengqi.chen@gmail.com,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org
-Cc: kernel@xen0n.name,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	memxor@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	jolsa@kernel.org,
-	guodongtai@kylinos.cn,
-	bpf@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] LoongArch: BPF: Add timed may_goto support
-Date: Tue,  4 Aug 2026 23:39:38 +0800
-Message-ID: <20260804153938.16129-3-dongtai.guo@linux.dev>
-In-Reply-To: <20260804153938.16129-1-dongtai.guo@linux.dev>
-References: <20260804153938.16129-1-dongtai.guo@linux.dev>
+	s=arc-20240116; t=1785892922; c=relaxed/simple;
+	bh=DI+wDnoY2lneZk4a7R3EPl9DQU2UjDGuZ05DBh26Tj4=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=jUFIcvmhE4oN1lj5APSL/hXLAKEsULARvCAOLGplvjAcj3mrZNNREyBu+U2E7OsxfNPnoE5zAH9RD8pchxEYZp/nretPLyW6TwZ1jCDFRLc29rDOqvWlk8+1VMSvVz3eOdOA8X89mGxuOThRDLrBY+iOQC4CHaOeJvVFkuMUum0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8BxXZs0kHJqHH0KAA--.10918S3;
+	Wed, 05 Aug 2026 09:21:56 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJDxu8QykHJq0h8kAA--.13293S2;
+	Wed, 05 Aug 2026 09:21:56 +0800 (CST)
+Subject: Re: [PATCH 1/6] LoongArch: KVM: Add vmid support for stage2 MMU
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Sean Christopherson <seanjc@google.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, WANG Xuerui <kernel@xen0n.name>,
+ Arnd Bergmann <arnd@arndb.de>, Xi Ruoyao <xry111@xry111.site>,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20260727072109.2151675-1-maobibo@loongson.cn>
+ <20260727072109.2151675-2-maobibo@loongson.cn>
+ <CAAhV-H6sEXa6XM-4=OTuPw=gNKgVxC7ZwqO6T-F81pvt_gBN8Q@mail.gmail.com>
+ <dc67eb43-adb2-c26b-a54f-ccd52ce910eb@loongson.cn>
+ <CAAhV-H7C+NbBOWtypwaLrn5Ehc6kv=W2jABz=r4O941QjAWhvQ@mail.gmail.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <ba9ef849-65c7-b377-e5f5-9c6ca4a712c7@loongson.cn>
+Date: Wed, 5 Aug 2026 09:21:37 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <CAAhV-H7C+NbBOWtypwaLrn5Ehc6kv=W2jABz=r4O941QjAWhvQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-CM-TRANSID:qMiowJDxu8QykHJq0h8kAA--.13293S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3JF13uF1kKw1UCryruryrXwc_yoW7trWUpF
+	yUCF4kCr48WrykAa4qqw1Fgrn0q34DKw12gF1xtFyFyrnFqF1xJry8CryDuFy5Jw4rJF40
+	vF95KanI9F4Dt3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zwZ7UU
+	UUU==
 
-From: George Guo <guodongtai@kylinos.cn>
 
-Implement arch_bpf_timed_may_goto() and advertise it through
-bpf_jit_supports_timed_may_goto() so the verifier lowers may_goto into
-the timed variant: instead of a fixed iteration counter, the loop is
-bounded by a wall-clock timeout maintained in a per-loop stack slot.
 
-arch_bpf_timed_may_goto() uses a custom calling convention: the verifier
-passes the count/timestamp stack offset in BPF_REG_AX and expects the
-updated count back in the same register. The JIT call path therefore skips
-the usual 'BPF_REG_0 = C return value' move for this helper.
+On 2026/8/4 下午10:14, Huacai Chen wrote:
+> On Mon, Aug 3, 2026 at 9:21 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>
+>>
+>>
+>> On 2026/8/2 下午10:11, Huacai Chen wrote:
+>>> Hi, Bibo,
+>>>
+>>> On Mon, Jul 27, 2026 at 3:29 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>
+>>>> LoongArch KVM hypervisor supports two-level MMU, vpid index is used
+>>>> for stage1 MMU and vmid index is used for stage2 MMU.
+>>>>
+>>>> On 3A5000, vmid must be the same with vpid. On 3A6000 platform vmid
+>>>> may separate from vpid. If vcpu migrate to different physical CPUs,
+>>>> vpid need change however vmid can keep the same with old value. Also
+>>>> vmid index of the while VM machine on physical CPU the same, all vCPUs
+>>>> on the VM can share the same vmid index on one physical CPU.
+>>>>
+>>>> Here vmid index is added and it keeps the same with vpid still.
+>>>>
+>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>>>> ---
+>>>>    arch/loongarch/include/asm/kvm_host.h | 3 +++
+>>>>    arch/loongarch/kernel/asm-offsets.c   | 1 +
+>>>>    arch/loongarch/kvm/main.c             | 1 +
+>>>>    arch/loongarch/kvm/switch.S           | 5 ++---
+>>>>    arch/loongarch/kvm/tlb.c              | 5 ++++-
+>>>>    5 files changed, 11 insertions(+), 4 deletions(-)
+>>>>
+>>>> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+>>>> index 23cfbecebbd7..ec7b0c402385 100644
+>>>> --- a/arch/loongarch/include/asm/kvm_host.h
+>>>> +++ b/arch/loongarch/include/asm/kvm_host.h
+>>>> @@ -189,6 +189,9 @@ struct kvm_vcpu_arch {
+>>>>           unsigned long host_tp;
+>>>>           unsigned long host_pgd;
+>>>>
+>>>> +       /* vmid info for guest VM */
+>>>> +       unsigned long vmid;
+>>> Put it near vpid?
+>> yes, it it better to near vpid. will do this.
+>>>
+>>>> +
+>>>>           /* Host CSRs are used when handling exits from guest */
+>>>>           unsigned long badi;
+>>>>           unsigned long badv;
+>>>> diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/asm-offsets.c
+>>>> index 1b861cbc5e10..32ef6adfc8dd 100644
+>>>> --- a/arch/loongarch/kernel/asm-offsets.c
+>>>> +++ b/arch/loongarch/kernel/asm-offsets.c
+>>>> @@ -300,6 +300,7 @@ static void __used output_kvm_defines(void)
+>>>>           OFFSET(KVM_ARCH_HSP, kvm_vcpu_arch, host_sp);
+>>>>           OFFSET(KVM_ARCH_HTP, kvm_vcpu_arch, host_tp);
+>>>>           OFFSET(KVM_ARCH_HPGD, kvm_vcpu_arch, host_pgd);
+>>>> +       OFFSET(KVM_ARCH_VMID, kvm_vcpu_arch, vmid);
+>>>>           OFFSET(KVM_ARCH_KVMPGD, kvm_vcpu_arch, kvm_pgd);
+>>>>           OFFSET(KVM_ARCH_HANDLE_EXIT, kvm_vcpu_arch, handle_exit);
+>>>>           OFFSET(KVM_ARCH_HEENTRY, kvm_vcpu_arch, host_eentry);
+>>>> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+>>>> index 3e1005526f4b..6e3e8efa1dc2 100644
+>>>> --- a/arch/loongarch/kvm/main.c
+>>>> +++ b/arch/loongarch/kvm/main.c
+>>>> @@ -223,6 +223,7 @@ static void kvm_update_vpid(struct kvm_vcpu *vcpu, int cpu)
+>>>>
+>>>>           context->vpid_cache = vpid;
+>>>>           vcpu->arch.vpid = vpid;
+>>>> +       vcpu->arch.vmid = vcpu->arch.vpid & vpid_mask;
+>>>
+>>> I think both vpid and vmid need "& vpid_mask".
+>> vpid used in function kvm_check_vcpuid() includes version information
+>> also. vmid here is hardware id directly used by LOONGARCH_CSR_GTLBC in
+>> arch/loongarch/kvm/switch.S.
+> I'm not sure, but it seems both vpid and vmid have a sw version and a
+> hw version? The hw version will be written into register so its width
+> is limited, while the sw version is 64bit. If I'm right, I think the
+yes, it is.
 
-Signed-off-by: George Guo <guodongtai@kylinos.cn>
----
- arch/loongarch/net/Makefile             |  2 +-
- arch/loongarch/net/bpf_jit.c            | 13 ++++++-
- arch/loongarch/net/bpf_timed_may_goto.S | 47 +++++++++++++++++++++++++
- 3 files changed, 60 insertions(+), 2 deletions(-)
- create mode 100644 arch/loongarch/net/bpf_timed_may_goto.S
+> "& vpid_mask" is only used when writing registers, in other places
+> they are full 64bit (in other words, they need the same treatment).
+If vmid includes version, it requires one extra shift operation when 
+writing to real HW in file arch/loongarch/kvm/switch.S.
+-       /* Mix GID and RID */
+-       csrrd           t1, LOONGARCH_CSR_GSTAT
+-       bstrpick.w      t1, t1, CSR_GSTAT_GID_SHIFT_END, CSR_GSTAT_GID_SHIFT
++       /* Set VMID for gpa --> hpa mapping */
++       ld.d            t1, a2, KVM_ARCH_VMID
+          csrrd           t0, LOONGARCH_CSR_GTLBC
+          bstrins.w       t0, t1, CSR_GTLBC_TGID_SHIFT_END,
 
-diff --git a/arch/loongarch/net/Makefile b/arch/loongarch/net/Makefile
-index 1ec12a0c324a..8d9ddb48f9ea 100644
---- a/arch/loongarch/net/Makefile
-+++ b/arch/loongarch/net/Makefile
-@@ -4,4 +4,4 @@
- #
- # Copyright (C) 2022 Loongson Technology Corporation Limited
- #
--obj-$(CONFIG_BPF_JIT) += bpf_jit.o
-+obj-$(CONFIG_BPF_JIT) += bpf_jit.o bpf_timed_may_goto.o
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index b8dd956d46bd..004a139e0f49 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -1192,7 +1192,13 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
- 		move_addr(ctx, t1, func_addr);
- 		emit_insn(ctx, jirl, LOONGARCH_GPR_RA, t1, 0);
- 
--		if (insn->src_reg != BPF_PSEUDO_CALL)
-+		/*
-+		 * Call to arch_bpf_timed_may_goto() uses a custom calling
-+		 * convention with the argument and return value in BPF_REG_AX,
-+		 * so skip moving the C return value into BPF_REG_0.
-+		 */
-+		if (insn->src_reg != BPF_PSEUDO_CALL &&
-+		    func_addr != (u64)arch_bpf_timed_may_goto)
- 			move_reg(ctx, regmap[BPF_REG_0], LOONGARCH_GPR_A0);
- 
- 		break;
-@@ -2390,6 +2396,11 @@ bool bpf_jit_supports_percpu_insn(void)
- 	return true;
- }
- 
-+bool bpf_jit_supports_timed_may_goto(void)
-+{
-+	return true;
-+}
-+
- /* Indicate the JIT backend supports mixing bpf2bpf and tailcalls. */
- bool bpf_jit_supports_subprog_tailcalls(void)
- {
-diff --git a/arch/loongarch/net/bpf_timed_may_goto.S b/arch/loongarch/net/bpf_timed_may_goto.S
-new file mode 100644
-index 000000000000..8a4c15418998
---- /dev/null
-+++ b/arch/loongarch/net/bpf_timed_may_goto.S
-@@ -0,0 +1,47 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Author: George Guo <guodongtai@kylinos.cn>
-+ * Copyright (C) 2026 KylinSoft Corporation.
-+ */
-+
-+#include <asm/asmmacro.h>
-+#include <asm/regdef.h>
-+#include <linux/export.h>
-+#include <linux/linkage.h>
-+
-+SYM_FUNC_START(arch_bpf_timed_may_goto)
-+	addi.d		sp, sp, -64
-+	st.d		ra, sp, 56
-+
-+	/* Save BPF registers R0 - R5 (a5, a0 - a4) */
-+	st.d		a5, sp, 8
-+	st.d		a0, sp, 16
-+	st.d		a1, sp, 24
-+	st.d		a2, sp, 32
-+	st.d		a3, sp, 40
-+	st.d		a4, sp, 48
-+
-+	/*
-+	 * BPF_REG_AX (t0) holds the offset passed in by the verifier; add it
-+	 * to BPF_REG_FP (s4) to get the pointer to the count and timestamp,
-+	 * then pass it as the first argument in a0.
-+	 *
-+	 * The verifier emits a load using FP right before this call, so
-+	 * BPF_REG_FP (s4) is always set up by the JIT in this case.
-+	 */
-+	add.d		a0, t0, s4
-+	bl		bpf_check_timed_may_goto
-+	/* BPF_REG_AX (t0) will be stored into count, so move the return value to it. */
-+	move		t0, a0
-+
-+	ld.d		ra, sp, 56
-+	ld.d		a5, sp, 8
-+	ld.d		a0, sp, 16
-+	ld.d		a1, sp, 24
-+	ld.d		a2, sp, 32
-+	ld.d		a3, sp, 40
-+	ld.d		a4, sp, 48
-+	addi.d		sp, sp, 64
-+
-+	jr		ra
-+SYM_FUNC_END(arch_bpf_timed_may_goto)
--- 
-2.53.0
+vpid is per-vcpu and it is represented with *vcpu->arch.vpid*, vmid is 
+per-vm,it is shared by vCPUs and represented with 
+*vcpu->kvm->arch.vmid[cpu]*. Instead arch.vmid is special for HW 
+register writing with LOONGARCH_CSR_GTLBC, if there is misleading, how 
+about renaming it with hw_vmid?
+
+Regards
+Bibo Mao
+
+> 
+> Huacai
+> 
+>>
+>> Regards
+>> Bibo Mao
+>>>
+>>>
+>>> Huacai
+>>>
+>>>>    }
+>>>>
+>>>>    void kvm_check_vpid(struct kvm_vcpu *vcpu)
+>>>> diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
+>>>> index 936e4ae3e408..af972394fd55 100644
+>>>> --- a/arch/loongarch/kvm/switch.S
+>>>> +++ b/arch/loongarch/kvm/switch.S
+>>>> @@ -66,9 +66,8 @@
+>>>>           ld.d    t0, a2, KVM_ARCH_KVMPGD
+>>>>           csrwr   t0, LOONGARCH_CSR_PGDL
+>>>>
+>>>> -       /* Mix GID and RID */
+>>>> -       csrrd           t1, LOONGARCH_CSR_GSTAT
+>>>> -       bstrpick.w      t1, t1, CSR_GSTAT_GID_SHIFT_END, CSR_GSTAT_GID_SHIFT
+>>>> +       /* Set VMID for gpa --> hpa mapping */
+>>>> +       ld.d            t1, a2, KVM_ARCH_VMID
+>>>>           csrrd           t0, LOONGARCH_CSR_GTLBC
+>>>>           bstrins.w       t0, t1, CSR_GTLBC_TGID_SHIFT_END, CSR_GTLBC_TGID_SHIFT
+>>>>           csrwr           t0, LOONGARCH_CSR_GTLBC
+>>>> diff --git a/arch/loongarch/kvm/tlb.c b/arch/loongarch/kvm/tlb.c
+>>>> index ebdbe9264e9c..38daf936021d 100644
+>>>> --- a/arch/loongarch/kvm/tlb.c
+>>>> +++ b/arch/loongarch/kvm/tlb.c
+>>>> @@ -23,7 +23,10 @@ void kvm_flush_tlb_all(void)
+>>>>
+>>>>    void kvm_flush_tlb_gpa(struct kvm_vcpu *vcpu, unsigned long gpa)
+>>>>    {
+>>>> +       unsigned int vmid;
+>>>> +
+>>>>           lockdep_assert_irqs_disabled();
+>>>>           gpa &= (PAGE_MASK << 1);
+>>>> -       invtlb(INVTLB_GID_ADDR, read_csr_gstat() & CSR_GSTAT_GID, gpa);
+>>>> +       vmid = (vcpu->arch.vmid << CSR_GSTAT_GID_SHIFT) & CSR_GSTAT_GID;
+>>>> +       invtlb(INVTLB_GID_ADDR, vmid, gpa);
+>>>>    }
+>>>> --
+>>>> 2.39.3
+>>>>
+>>
 
