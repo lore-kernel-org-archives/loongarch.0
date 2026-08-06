@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60B843B95E7
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 628753B95E9
 	for <loongarch@lists.linux.dev>; Thu,  6 Aug 2026 02:15:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785982503; cv=none; b=Xi0t/IfSAYf3lG038ISMii9ROMLdbaclUVajYI23hy1S9G7KnkRCzgVKjsUMa62Xa08vLEVmKlDLOAdyY9dakL+atM15NQ9nC6E/bCPkfrvvOUJIehK/Bz2WhT12vzF18Z5y8GZkeBUWma3OmtOONzbsKtusG7PvngVelBINvcw=
+	t=1785982503; cv=none; b=hgMvDNYbn7SUuOYajm3Y5QnoIbsqXx0nCrRVC0OSpBazOKcA22Mt1GeikdWwW1lu5BhLw1lz21ucKDNcr3YkgtxelPvgpcRwFBtFra48UfF4bH/7mGFk5t8GwURsKjE8J33QnknCOHG6EE+rBn+Qn1Wuu0zpuqtw0kmn4PC/d0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1785982503; c=relaxed/simple;
-	bh=odb8gyvTrWJ1VPtBH6EFBmPze/YZHWTjZGsZosBDE70=;
+	bh=SrwofF6fkmtOFWRnvfCn/7l/BmUSaJg3/yEnOArDwjU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=iYj+Uxo0k+SJBIpnjXDQ6yLgnlWpWGqu4Pjt82nhMyB/GUprcSvsFMKH0ttlV9EuCsmXTl6OynavbTNWTfZaVr06PtlqL3JSxN+B9HpPUmyBVEcnIPYVoI9MWi1BQ3o441ZZ3Ys9f+ns0aOTcIpABgh+AdCyuFyeItbBpoXUbwI=
+	 MIME-Version; b=QnQn8F/+Do8VmkdugphK/3cNux1DZovANfT75kZNrbOmj2+ROscJpePBOptuLDt24Q3NSvPycr1zH7baDXnJj5V0NEWopB/DCiKRF41WLUH2wxQT4cGhEOcIfESDaSv6KQt4+AfP3oJA541lmXBXrQ1/Sq7ua0F5Ect/7wuCfE8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8Dx2KAf7nNqH9sKAA--.11727S3;
-	Thu, 06 Aug 2026 10:14:55 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxFOgj7nNqQtsKAA--.11777S3;
+	Thu, 06 Aug 2026 10:14:59 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJBx3wce7nNqB1QlAA--.7102S3;
-	Thu, 06 Aug 2026 10:14:54 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJDxzMYi7nNqCFQlAA--.58013S3;
+	Thu, 06 Aug 2026 10:14:58 +0800 (CST)
 From: Bibo Mao <maobibo@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: Sean Christopherson <seanjc@google.com>,
@@ -28,9 +28,9 @@ Cc: Sean Christopherson <seanjc@google.com>,
 	kvm@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/5] LoongArch: KVM: Add vmid support for stage2 MMU
-Date: Thu,  6 Aug 2026 10:07:35 +0800
-Message-Id: <20260806020739.2149268-2-maobibo@loongson.cn>
+Subject: [PATCH v2 5/5] LoongArch: KVM: Enable separate vmid feature
+Date: Thu,  6 Aug 2026 10:07:39 +0800
+Message-Id: <20260806020739.2149268-6-maobibo@loongson.cn>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20260806020739.2149268-1-maobibo@loongson.cn>
 References: <20260806020739.2149268-1-maobibo@loongson.cn>
@@ -41,103 +41,86 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBx3wce7nNqB1QlAA--.7102S3
+X-CM-TRANSID:qMiowJDxzMYi7nNqCFQlAA--.58013S3
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-LoongArch KVM hypervisor supports two-level MMU, vpid index is used
-for stage1 MMU and vmid index is used for stage2 MMU.
-
-On 3A5000, vmid must be the same with vpid. On 3A6000 platform vmid
-may separate from vpid. If vCPU migrate to different physical CPUs,
-vpid need change however vmid can keep unchanged, so that TLB entries
-for stage2 MMU is valid still. Also vmid index of the whole VM machine
-is the same on one physical CPU, all vCPUs on the VM can share the
-same vmid index on one physical CPU.
-
-Here hw vmid index is added and it keeps the same with hw vpid still.
+With CSR GTLBC shortname for Guest TLB Control Register, separate vmid
+feature will be enabled if bit 14 CSR_GTLBC_USEVMID is set. Enable
+this feature if cpu_has_guestid is true when LVZ is enabled and the LVZ
+version is 2.
 
 Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
- arch/loongarch/include/asm/kvm_host.h | 3 +++
- arch/loongarch/kernel/asm-offsets.c   | 1 +
- arch/loongarch/kvm/main.c             | 1 +
- arch/loongarch/kvm/switch.S           | 5 ++---
- arch/loongarch/kvm/tlb.c              | 5 ++++-
- 5 files changed, 11 insertions(+), 4 deletions(-)
+ arch/loongarch/include/asm/loongarch.h | 5 +++++
+ arch/loongarch/kernel/cpu-probe.c      | 6 ++++++
+ arch/loongarch/kvm/main.c              | 4 +++-
+ 3 files changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index 23cfbecebbd7..78f97dea124d 100644
---- a/arch/loongarch/include/asm/kvm_host.h
-+++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -232,6 +232,9 @@ struct kvm_vcpu_arch {
- 	/* Cache for pages needed inside spinlock regions */
- 	struct kvm_mmu_memory_cache mmu_page_cache;
+diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
+index 2a6bc99177d8..a20fb68d8ac4 100644
+--- a/arch/loongarch/include/asm/loongarch.h
++++ b/arch/loongarch/include/asm/loongarch.h
+@@ -138,6 +138,9 @@
+ #define  CPUCFG6_PMBITS_SHIFT		8
+ #define  CPUCFG6_UPM			BIT(14)
  
-+	/* hw vmid info for guest VM */
-+	unsigned long hw_vmid;
++#define LOONGARCH_CPUCFG8		0x8
++#define  CPUCFG8_VMID			BIT(8)
 +
- 	/* vcpu's vpid */
- 	u64 vpid;
- 	gpa_t flush_gpa;
-diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/asm-offsets.c
-index 1b861cbc5e10..065ced1f3c1f 100644
---- a/arch/loongarch/kernel/asm-offsets.c
-+++ b/arch/loongarch/kernel/asm-offsets.c
-@@ -300,6 +300,7 @@ static void __used output_kvm_defines(void)
- 	OFFSET(KVM_ARCH_HSP, kvm_vcpu_arch, host_sp);
- 	OFFSET(KVM_ARCH_HTP, kvm_vcpu_arch, host_tp);
- 	OFFSET(KVM_ARCH_HPGD, kvm_vcpu_arch, host_pgd);
-+	OFFSET(KVM_ARCH_VMID, kvm_vcpu_arch, hw_vmid);
- 	OFFSET(KVM_ARCH_KVMPGD, kvm_vcpu_arch, kvm_pgd);
- 	OFFSET(KVM_ARCH_HANDLE_EXIT, kvm_vcpu_arch, handle_exit);
- 	OFFSET(KVM_ARCH_HEENTRY, kvm_vcpu_arch, host_eentry);
+ #define LOONGARCH_CPUCFG16		0x10
+ #define  CPUCFG16_L1_IUPRE		BIT(0)
+ #define  CPUCFG16_L1_IUUNIFY		BIT(1)
+@@ -350,6 +353,8 @@
+ #define  CSR_GTLBC_TGID_WIDTH		8
+ #define  CSR_GTLBC_TGID_SHIFT_END	(CSR_GTLBC_TGID_SHIFT + CSR_GTLBC_TGID_WIDTH - 1)
+ #define  CSR_GTLBC_TGID			(_ULCAST_(0xff) << CSR_GTLBC_TGID_SHIFT)
++#define  CSR_GTLBC_USEVMID_SHIFT	14
++#define  CSR_GTLBC_USEVMID		(_ULCAST_(0x1) << CSR_GTLBC_USEVMID_SHIFT)
+ #define  CSR_GTLBC_TOTI_SHIFT		13
+ #define  CSR_GTLBC_TOTI			(_ULCAST_(0x1) << CSR_GTLBC_TOTI_SHIFT)
+ #define  CSR_GTLBC_USETGID_SHIFT	12
+diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
+index 74d31f260dfd..fc68f695d49c 100644
+--- a/arch/loongarch/kernel/cpu-probe.c
++++ b/arch/loongarch/kernel/cpu-probe.c
+@@ -241,6 +241,12 @@ static void cpu_probe_common(struct cpuinfo_loongarch *c)
+ 	if (config & CPUCFG6_PMP)
+ 		c->options |= LOONGARCH_CPU_PMP;
+ 
++	if (c->options & LOONGARCH_CPU_LVZ) {
++		config = read_cpucfg(LOONGARCH_CPUCFG8);
++		if (config & CPUCFG8_VMID)
++			c->options |= LOONGARCH_CPU_GUESTID;
++	}
++
+ 	config = csr_read32(LOONGARCH_CSR_ASID);
+ 	config = (config & CSR_ASID_BIT) >> CSR_ASID_BIT_SHIFT;
+ 	asid_mask = GENMASK(config - 1, 0);
 diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
-index 3e1005526f4b..401c84f38e8c 100644
+index 72c1d23156e5..712b078db0d5 100644
 --- a/arch/loongarch/kvm/main.c
 +++ b/arch/loongarch/kvm/main.c
-@@ -223,6 +223,7 @@ static void kvm_update_vpid(struct kvm_vcpu *vcpu, int cpu)
+@@ -359,7 +359,7 @@ int kvm_arch_enable_virtualization_cpu(void)
+ 	write_csr_gcfg(0);
+ 	write_csr_gstat(0);
+ 	write_csr_gintc(0);
+-	clear_csr_gtlbc(CSR_GTLBC_USETGID | CSR_GTLBC_TOTI);
++	clear_csr_gtlbc(CSR_GTLBC_USETGID | CSR_GTLBC_TOTI | CSR_GTLBC_USEVMID);
  
- 	context->vpid_cache = vpid;
- 	vcpu->arch.vpid = vpid;
-+	vcpu->arch.hw_vmid = vcpu->arch.vpid & vpid_mask;
- }
+ 	/*
+ 	 * Enable virtualization features granting guest direct control of
+@@ -382,6 +382,8 @@ int kvm_arch_enable_virtualization_cpu(void)
  
- void kvm_check_vpid(struct kvm_vcpu *vcpu)
-diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
-index 936e4ae3e408..af972394fd55 100644
---- a/arch/loongarch/kvm/switch.S
-+++ b/arch/loongarch/kvm/switch.S
-@@ -66,9 +66,8 @@
- 	ld.d	t0, a2, KVM_ARCH_KVMPGD
- 	csrwr	t0, LOONGARCH_CSR_PGDL
+ 	/* Enable using TGID  */
+ 	set_csr_gtlbc(CSR_GTLBC_USETGID);
++	if (cpu_has_guestid)
++		set_csr_gtlbc(CSR_GTLBC_USEVMID);
+ 	kvm_debug("GCFG:%lx GSTAT:%lx GINTC:%lx GTLBC:%lx",
+ 		  read_csr_gcfg(), read_csr_gstat(), read_csr_gintc(), read_csr_gtlbc());
  
--	/* Mix GID and RID */
--	csrrd		t1, LOONGARCH_CSR_GSTAT
--	bstrpick.w	t1, t1, CSR_GSTAT_GID_SHIFT_END, CSR_GSTAT_GID_SHIFT
-+	/* Set VMID for gpa --> hpa mapping */
-+	ld.d		t1, a2, KVM_ARCH_VMID
- 	csrrd		t0, LOONGARCH_CSR_GTLBC
- 	bstrins.w	t0, t1, CSR_GTLBC_TGID_SHIFT_END, CSR_GTLBC_TGID_SHIFT
- 	csrwr		t0, LOONGARCH_CSR_GTLBC
-diff --git a/arch/loongarch/kvm/tlb.c b/arch/loongarch/kvm/tlb.c
-index ebdbe9264e9c..b25847aab968 100644
---- a/arch/loongarch/kvm/tlb.c
-+++ b/arch/loongarch/kvm/tlb.c
-@@ -23,7 +23,10 @@ void kvm_flush_tlb_all(void)
- 
- void kvm_flush_tlb_gpa(struct kvm_vcpu *vcpu, unsigned long gpa)
- {
-+	unsigned int vmid;
-+
- 	lockdep_assert_irqs_disabled();
- 	gpa &= (PAGE_MASK << 1);
--	invtlb(INVTLB_GID_ADDR, read_csr_gstat() & CSR_GSTAT_GID, gpa);
-+	vmid = (vcpu->arch.hw_vmid << CSR_GSTAT_GID_SHIFT) & CSR_GSTAT_GID;
-+	invtlb(INVTLB_GID_ADDR, vmid, gpa);
- }
 -- 
 2.39.3
 
