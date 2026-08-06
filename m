@@ -1,151 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CA9A442109
-	for <loongarch@lists.linux.dev>; Thu,  6 Aug 2026 12:22:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6747347C6
+	for <loongarch@lists.linux.dev>; Thu,  6 Aug 2026 12:23:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786018958; cv=none; b=ZRgs8uj6y63t/srx1DlGXRSwA0mrRxPQkZN0KFZkdoGXdhp01J39R2epeDgdoB3GgPxvsZViHT1n7JgOs2qmxqXOlCo46p5U01vhSSav/bvNOtfK3j/EiDBWV3osGreqW3kvRwT2mcn0//cem+iELy9izFL5uU/WzsalsZ8P7VQ=
+	t=1786018997; cv=none; b=pMzf5wYX4EidLdLIJBL+PCRPERKRDobnUeXu6nX31dkwgvFHc7Ry27UErKjZmLxyFog9YltKr+3Ork3kNfNKUIR1uf8agPep4AsMZAlOOoqpkxfnRpyRSHJu1AUhCLIZq7g1+caa7aNKBbejp9rZ9ALv93SSiyTNCbCxBWhTMTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786018958; c=relaxed/simple;
-	bh=hnf4hqy69IQdbWBygkWSRpLlXwajx1CU04pakKqyZG4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GMSX7rZDiTpOxavDP6gIUsgPaZNpEXilRQWUcU+2AYsAHzDLqjYw6NyqfxM0gIM5DBBsqc5CmBuUWz7AdbF+sESrTeHgoGd+KrLF1HnGgXUN/ATF+QI479kteIV/TZDp8b01j+XOoYzdq9MEtmXUW3dEohIXL6v5zDAAFekYm70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UJdbXw8n; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UJdbXw8n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B79C1F00ACA
-	for <loongarch@lists.linux.dev>; Thu,  6 Aug 2026 12:22:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786018957;
-	bh=iCsijIwkaNymZGj1vk+tTx1FeRBXQYksHd8ZjnFTCaM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=UJdbXw8nth7UzFXh2+VAPq7VFFlrY/HXPZ3KxqyaIYouVwe/PUY4NuB6Vh4OBB9dA
-	 2dIgs5tXzE/kwqtk7b0B2qQyndPIG8beFYBMrUA20ftfucSTbswRUekGs+IH//2pT5
-	 XrqvioHOMRO9GeH6y2Yy9Ro83UTEHwW8pWYKn3Ps8MB/GnV7v8VgkC4kNLQ5QTvd7G
-	 n1ymsar+qdnhLosFcyALcDeSc88D+Uci+hjWCO7MqQxPZ/j2HPjc5Xc3fpRUaQV4fw
-	 1x9c40Dus4FC+5na20u+bR8q8jmJ27XzkVOrfVOyS0veK0Egh3fqdAoZazsv+Zj3hZ
-	 qEgMm0qUjM3Lg==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-6a0794669a6so2999671a12.2
-        for <loongarch@lists.linux.dev>; Thu, 06 Aug 2026 05:22:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RrTSrGbQ13TNKH6MKyZ0RaDjsophVH0cvMByf5bAnAD87+mmixyPOXkhky9ruHbBvvc8kaMwGCVl8A=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyI7+aSzota9Uwte2nyufVT36gLNbHl0Z0J0zfjgJ39Q1FsdtNA
-	F/QdEbZmLNUZXSsy9BF7M1K/UBoDI6RrKcfPqjutAIPdFX9oKTxFaxvcxNrfC+69ly6tqAbUAkK
-	H0xftYqbChcETUXNI4fquElfuTTjplI4=
-X-Received: by 2002:a05:6402:3222:b0:69c:72e2:a3d9 with SMTP id
- 4fb4d7f45d1cf-6a14f26c0f4mr8060415a12.21.1786018955737; Thu, 06 Aug 2026
- 05:22:35 -0700 (PDT)
+	s=arc-20240116; t=1786018997; c=relaxed/simple;
+	bh=7TY4VO0V35MkHMTOVsR6vRafUYEoqU02CR/tnCI6tFA=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=oE+rT6kxMAoNPnn+Wl1NvaWgD0SVpDFNnrQYthhy4UobLBdv6vlMtyqCuCy6SRwXO1N5O+/h0tA4fprschpdxYH86Fqbvv1rf9fDTUtO9oTo3bIknx4EDarPgPSNz5za+LxRIzaOhkyC0AfydJ4Areu2mJCFVq0XkFemqZPoVIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [123.138.236.242])
+	by gateway (Coremail) with SMTP id _____8Bx+aCgfHRqsvsKAA--.12205S3;
+	Thu, 06 Aug 2026 20:22:56 +0800 (CST)
+Received: from [10.130.40.83] (unknown [123.138.236.242])
+	by front1 (Coremail) with SMTP id qMiowJBxEuSffHRqGcYlAA--.7072S2;
+	Thu, 06 Aug 2026 20:22:56 +0800 (CST)
+Subject: Re: [PATCH v3 0/2] LoongArch: BPF: per-CPU address resolution and
+ timed may_goto
+To: George Guo <dongtai.guo@linux.dev>, chenhuacai@kernel.org,
+ hengqi.chen@gmail.com, ast@kernel.org, daniel@iogearbox.net,
+ andrii@kernel.org
+Cc: kernel@xen0n.name, martin.lau@linux.dev, eddyz87@gmail.com,
+ memxor@gmail.com, song@kernel.org, yonghong.song@linux.dev,
+ jolsa@kernel.org, guodongtai@kylinos.cn, bpf@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20260804153938.16129-1-dongtai.guo@linux.dev>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <936e5942-5722-c86e-2c5b-c048199ed6e6@loongson.cn>
+Date: Thu, 6 Aug 2026 20:22:55 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260806020739.2149268-1-maobibo@loongson.cn> <20260806020739.2149268-4-maobibo@loongson.cn>
-In-Reply-To: <20260806020739.2149268-4-maobibo@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 6 Aug 2026 20:23:01 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5vPyKNR63hzxWkyZzyEJ09DtuudqTaiQHCfxai6S23DQ@mail.gmail.com>
-X-Gm-Features: AUfX_myhEc5vr2_ySaQBGF3U0VQwxpWXtrvWI31rwOQmqUfAo6z_2KKUHl_Oo0Y
-Message-ID: <CAAhV-H5vPyKNR63hzxWkyZzyEJ09DtuudqTaiQHCfxai6S23DQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/5] LoongArch: KVM: Add separate vmid feature support
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	WANG Xuerui <kernel@xen0n.name>, Arnd Bergmann <arnd@arndb.de>, Xi Ruoyao <xry111@xry111.site>, 
-	kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20260804153938.16129-1-dongtai.guo@linux.dev>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBxEuSffHRqGcYlAA--.7072S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrtF1ftrWxJw13uFyxXrWrZwc_yoWxCFgEgF
+	97GFn8Gr18Xry3Ar4IgrW5JFZrX3ya9F429rs7J34UJ3sIv34kXrs0qr13A3W0g39Yyan3
+	ta9IvF1fAryFgosvyTuYvTs0mTUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbqkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q
+	6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxG
+	rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4U
+	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jz-eOUUU
+	UU=
 
-Hi, Bibo,
+On 2026/8/4 下午11:39, George Guo wrote:
+> These are the first two patches of the LoongArch BPF JIT feature work,
+> sent on their own to make review easier. The remaining pieces
+> (per-program private stacks, exceptions/bpf_throw, sign-extending loads
+> and atomics on arena pointers, and the matching selftests) will follow in
+> a later series.
 
-On Thu, Aug 6, 2026 at 10:15=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrot=
-e:
->
-> Feature cpu_has_guestid is used to check whether separate vmid/vpid
-> is supported or not. It is disabled by default, add this feature
-> checking, there is no function change.
->
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
->  arch/loongarch/kvm/main.c | 14 +++++++++-----
->  arch/loongarch/kvm/mmu.c  |  6 ++++--
->  arch/loongarch/kvm/vcpu.c |  3 ++-
->  3 files changed, 15 insertions(+), 8 deletions(-)
->
-> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
-> index ac804e77e844..c36e62ab0d91 100644
-> --- a/arch/loongarch/kvm/main.c
-> +++ b/arch/loongarch/kvm/main.c
-> @@ -218,7 +218,8 @@ static void kvm_update_vpid(struct kvm_vcpu *vcpu, in=
-t cpu)
->                 ++vpid; /* vpid 0 reserved for root */
->
->                 /* start new vpid cycle */
-> -               kvm_flush_tlb_all();
-> +               if (!cpu_has_guestid)
-> +                       kvm_flush_tlb_all();
->         }
->
->         context->vpid_cache =3D vpid;
-> @@ -282,10 +283,13 @@ static void __kvm_check_vmid(struct kvm_vcpu *vcpu)
->  {
->         unsigned long vmid;
->
-> -       vmid =3D vcpu->arch.vpid & vpid_mask;
-> -       if (vcpu->arch.hw_vmid !=3D vmid) {
-> -               vcpu->arch.hw_vmid =3D vcpu->arch.vpid & vpid_mask;
-> -               kvm_clear_request(KVM_REQ_TLB_FLUSH_GPA, vcpu);
-> +       /* On some machines like 3A5000, vmid needs the same with vpid */
-> +       if (!cpu_has_guestid) {
-> +               vmid =3D vcpu->arch.vpid & vpid_mask;
-> +               if (vcpu->arch.hw_vmid !=3D vmid) {
-> +                       vcpu->arch.hw_vmid =3D vcpu->arch.vpid & vpid_mas=
-k;
-> +                       kvm_clear_request(KVM_REQ_TLB_FLUSH_GPA, vcpu);
-> +               }
-Merge Patch#3 and Patch#4, then __kvm_check_vmid() can handle both
-cpu_has_guestid and !cpu_has_guestid cases together.
+The patches apply cleanly on top of Chenguang's series.
 
+The following selftests passed on LoongArch:
 
-Huacai
+   # ./test_progs -t cpumask
+   # ./test_progs -t percpu_alloc
+   # ./test_progs -t iters
 
->         }
->  }
->
-> diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
-> index e104897aa532..714640a2e614 100644
-> --- a/arch/loongarch/kvm/mmu.c
-> +++ b/arch/loongarch/kvm/mmu.c
-> @@ -929,8 +929,10 @@ int kvm_handle_mm_fault(struct kvm_vcpu *vcpu, unsig=
-ned long gpa, bool write, in
->                  *
->                  * With SW PTW, invalid TLB is added in TLB refill except=
-ion.
->                  */
-> -               vcpu->arch.flush_gpa =3D gpa;
-> -               kvm_make_request(KVM_REQ_TLB_FLUSH_GPA, vcpu);
-> +               if (!cpu_has_guestid) {
-> +                       vcpu->arch.flush_gpa =3D gpa;
-> +                       kvm_make_request(KVM_REQ_TLB_FLUSH_GPA, vcpu);
-> +               }
->         }
->
->         return 0;
-> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-> index 20c207d80e31..0b2355aec932 100644
-> --- a/arch/loongarch/kvm/vcpu.c
-> +++ b/arch/loongarch/kvm/vcpu.c
-> @@ -210,7 +210,8 @@ static int kvm_check_requests(struct kvm_vcpu *vcpu)
->                 return RESUME_GUEST;
->
->         if (kvm_check_request(KVM_REQ_TLB_FLUSH, vcpu))
-> -               vcpu->arch.vpid =3D 0;  /* Drop vpid for this vCPU */
-> +               if (!cpu_has_guestid)
-> +                       vcpu->arch.vpid =3D 0;  /* Drop vpid for this vCP=
-U */
->
->         if (kvm_dirty_ring_check_request(vcpu))
->                 return RESUME_HOST;
-> --
-> 2.39.3
->
+Acked-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Tested-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+
+Thanks,
+Tiezhu
+
