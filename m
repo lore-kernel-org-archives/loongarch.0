@@ -1,114 +1,174 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4327647126B
-	for <loongarch@lists.linux.dev>; Thu,  6 Aug 2026 11:51:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D79247A88B
+	for <loongarch@lists.linux.dev>; Thu,  6 Aug 2026 12:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786017070; cv=none; b=Tilga+stOJZBO4u3xa8bxGkhEqo5GI6sVH+zS4TKtsvRI/lAbSjPlMeIMNiwcSe0VnR6IZiQwyQ5U1NeMslE71ZuKl8hvuqsiFE+lKDSmWxmNFHTqgd7EC4r/Ly3FhB1hLVQqvNqkCnbhtuMQQ0AOdM6A8gnRmjYJu9mVgD/PEA=
+	t=1786018802; cv=none; b=OZ4vAjHxbXO8a5wLEGHQa7J0JNGBc1pTT6uznjt1LJgjrMynmzHllD4HLLAYw36R2CvgMty6OiGtS2Rf4y2wtvCfV0pGfzyEf9hi6Xl7h8UHoFxNP0JhJ23fSiD6xggTdd9KL/I1RCa41dROcCWnpYN7MZ97pxYXLZqFhbtk7iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786017070; c=relaxed/simple;
-	bh=7Co5UYXoO5lbl+rVZQi/bGU12JJJ75/BSuuZzGSrEd0=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=ToStzlHFTHsxvsXagYri7YnVsoH8mjGrmhBMJ+iHZCBaxVLQ9ppcuXeC6ejbm9V/D/R5huTRFnIZ+wn4RDTdUy8Saqr/DAzDjh+Bn0bhCU5Cr+jUFPMqqzuBvIxwCEQCDizkkLUr5HZtSkcxdd8yuDrl0Ugswwtpe5vEaPYQy4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8BxXZspdXRq2_kKAA--.12088S3;
-	Thu, 06 Aug 2026 19:51:05 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJDxDccodXRqTL4lAA--.6833S2;
-	Thu, 06 Aug 2026 19:51:05 +0800 (CST)
-Subject: Re: [PATCH v2] LoongArch: KVM: Advertise already-supported
- capabilities
-To: Tao Cui <cui.tao@linux.dev>, zhaotianrui@loongson.cn
-Cc: chenhuacai@kernel.org, kernel@xen0n.name, kvm@vger.kernel.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20260805054549.287648-1-cui.tao@linux.dev>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <c1c2ca63-7999-36e3-bfdd-29e0f872c94d@loongson.cn>
-Date: Thu, 6 Aug 2026 19:50:48 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1786018802; c=relaxed/simple;
+	bh=ZDUdqg0GT6z/Ew2H+PbtNLlYMwA/2zC8ZELf7UqhWLw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OVdbfuV4ItpllKVmcb7e2KEs/xFKTRYtt7o0pIthbwL6EKS/2gY82jy0yatovXCtgulNf5IfJZh9Pgc+/pzjYQvGEAtQ07pxSo5nhwIHt0ZQMi7/M6T8h35tcvWvBTsjBteFK/C4wMsXtG+7H27CLUxqc8jRI5tEbr1Up34ITiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iRHLi2U3; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iRHLi2U3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 235981F00ACF
+	for <loongarch@lists.linux.dev>; Thu,  6 Aug 2026 12:20:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786018801;
+	bh=Xc+U+TDw+WwC711T0oP5kgNp4GKrrHajAHm5+7UYGkg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=iRHLi2U3Icn0tvTRyWoSRg433TdjGHk4pq6u8S2H8Wq9N0xiHKeol+1bT23bNTt19
+	 w7Vp18dHwqMREzHrnn26zXgWSwYUDeWDyPeF2+pH5IU/AOG1JdjyHkSoU62LV+ZQoe
+	 AJlSOQBcstdvWuXHlL7FxHRbXIIG12LCRgE022X1kwskdU9NRcZir5GNmydazJZOot
+	 7cHqdQO1SE4F9cU/b0rPGczG6nF+TXBXz/xE3cJUzL4YxISOpVK2pKDeducMNHQbIG
+	 GMlkjNQ7Ef89TaW/Z+8wpCUsFKurmULVG2yH20rez5J8iEaHAP3bPmfY3HRBo78YLY
+	 wDt3j54upgVGg==
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-6a1b51723a9so105662a12.1
+        for <loongarch@lists.linux.dev>; Thu, 06 Aug 2026 05:20:01 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+Ron+3EEODVVKE40D4epBW71Z6uwhDnR8MMp/3i2pI4KRY4/6Ri12hvGE01kgyN1l2n4mt6cAfVtQvY=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyKWN4HRuNSTfm9H2sc8tSuut9XQ6NgTwZkS9tvrOeuUCMnQXzZ
+	aH5DV7bAJkg6wsaC4yBvyrC3yqCrE8NMT0qcuBATjBa+hSmVw4Pbcjc72Ku6sWKkpvDvo0FycAn
+	vHQPzpt3pyiGmlEUQgnkzyNYcmA1rIc0=
+X-Received: by 2002:a05:6402:551b:b0:6a0:7a06:3031 with SMTP id
+ 4fb4d7f45d1cf-6a14f0a151cmr7823036a12.3.1786018799598; Thu, 06 Aug 2026
+ 05:19:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20260805054549.287648-1-cui.tao@linux.dev>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxDccodXRqTL4lAA--.6833S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxJrWDJr47ZrWrKF1DAr18Zwc_yoW8Aw4xpr
-	W8Ca1qkF48trn2vF97J395Wr4S9wn7JrWIqFyYvryUAw43Kwn5GF10krs0qF4rJw1fWFyI
-	qFnYvrnYqFWDJwcCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
-	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jn
-	UUUUUUUU=
+References: <20260806020739.2149268-1-maobibo@loongson.cn> <20260806020739.2149268-2-maobibo@loongson.cn>
+In-Reply-To: <20260806020739.2149268-2-maobibo@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 6 Aug 2026 20:20:23 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6TLMaD9iv4eksPB+=VjjyR_YXVyzdx8ou9LF0mSYz_4g@mail.gmail.com>
+X-Gm-Features: AUfX_myrIoDmH_xGqvAw0UpS82Ox6-HCNIghtK9T2ar-By_lxQPEXnHbz4nf5bE
+Message-ID: <CAAhV-H6TLMaD9iv4eksPB+=VjjyR_YXVyzdx8ou9LF0mSYz_4g@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] LoongArch: KVM: Add vmid support for stage2 MMU
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	WANG Xuerui <kernel@xen0n.name>, Arnd Bergmann <arnd@arndb.de>, Xi Ruoyao <xry111@xry111.site>, 
+	kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi, Bibo,
+
+On Thu, Aug 6, 2026 at 10:14=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
+>
+> LoongArch KVM hypervisor supports two-level MMU, vpid index is used
+> for stage1 MMU and vmid index is used for stage2 MMU.
+>
+> On 3A5000, vmid must be the same with vpid. On 3A6000 platform vmid
+> may separate from vpid. If vCPU migrate to different physical CPUs,
+> vpid need change however vmid can keep unchanged, so that TLB entries
+> for stage2 MMU is valid still. Also vmid index of the whole VM machine
+> is the same on one physical CPU, all vCPUs on the VM can share the
+> same vmid index on one physical CPU.
+>
+> Here hw vmid index is added and it keeps the same with hw vpid still.
+HW VPID means GSTAT.GID, HW VMID means GTLBC.TGID, right? It is useful
+to describe it in the commit message.
 
 
-
-On 2026/8/5 下午1:45, Tao Cui wrote:
-> Several LoongArch KVM features are fully implemented but were never
-> reported through their standard KVM_CHECK_EXTENSION probes, so userspace
-> cannot discover them.  Advertise the ones that already work and have a
-> real consumer:
-> 
->    - KVM_CAP_STEAL_TIME: steal time works end-to-end (host-side record
->      plus guest paravirt side), and the probe returns kvm_pvtime_supported().
-> 
->    - KVM_CAP_VCPU_ATTRIBUTES: per-vCPU device-attribute ioctls are
->      implemented (CPUCFG, PVTIME control); advertise the discovery cap.
-> 
-> This adds no new functionality; it only makes existing features
-> discoverable via the standard probe.
-> 
-> Signed-off-by: Tao Cui <cui.tao@linux.dev>
+>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 > ---
-> Changes in v2:
->    - Drop KVM_CAP_IRQFD_RESAMPLE: the only consumer is VFIO INTx, which
->      needs IOMMU/VFIO not yet available on LoongArch.
->    - Drop KVM_CAP_VM_GPA_BITS: the cap implies a GPA-width setter that
->      LoongArch does not implement.
-> 
->   arch/loongarch/kvm/vm.c | 4 ++++
->   1 file changed, 4 insertions(+)
-> 
-> diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
-> index 1317c718f896..0a51931d6f6e 100644
-> --- a/arch/loongarch/kvm/vm.c
-> +++ b/arch/loongarch/kvm/vm.c
-> @@ -122,6 +122,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
->   	case KVM_CAP_IOEVENTFD:
->   	case KVM_CAP_MP_STATE:
->   	case KVM_CAP_SET_GUEST_DEBUG:
-> +	case KVM_CAP_VCPU_ATTRIBUTES:
->   		r = 1;
->   		break;
->   	case KVM_CAP_NR_VCPUS:
-> @@ -136,6 +137,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
->   	case KVM_CAP_NR_MEMSLOTS:
->   		r = KVM_USER_MEM_SLOTS;
->   		break;
-> +	case KVM_CAP_STEAL_TIME:
-> +		r = kvm_pvtime_supported();
-> +		break;
->   	default:
->   		r = 0;
->   		break;
-> 
-Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+>  arch/loongarch/include/asm/kvm_host.h | 3 +++
+>  arch/loongarch/kernel/asm-offsets.c   | 1 +
+>  arch/loongarch/kvm/main.c             | 1 +
+>  arch/loongarch/kvm/switch.S           | 5 ++---
+>  arch/loongarch/kvm/tlb.c              | 5 ++++-
+>  5 files changed, 11 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/inclu=
+de/asm/kvm_host.h
+> index 23cfbecebbd7..78f97dea124d 100644
+> --- a/arch/loongarch/include/asm/kvm_host.h
+> +++ b/arch/loongarch/include/asm/kvm_host.h
+> @@ -232,6 +232,9 @@ struct kvm_vcpu_arch {
+>         /* Cache for pages needed inside spinlock regions */
+>         struct kvm_mmu_memory_cache mmu_page_cache;
+>
+> +       /* hw vmid info for guest VM */
+> +       unsigned long hw_vmid;
+Since this is only used to write GCNTC.TGID, simply rename it to tgid
+can eliminate confusion.
 
+> +
+>         /* vcpu's vpid */
+>         u64 vpid;
+>         gpa_t flush_gpa;
+> diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/=
+asm-offsets.c
+> index 1b861cbc5e10..065ced1f3c1f 100644
+> --- a/arch/loongarch/kernel/asm-offsets.c
+> +++ b/arch/loongarch/kernel/asm-offsets.c
+> @@ -300,6 +300,7 @@ static void __used output_kvm_defines(void)
+>         OFFSET(KVM_ARCH_HSP, kvm_vcpu_arch, host_sp);
+>         OFFSET(KVM_ARCH_HTP, kvm_vcpu_arch, host_tp);
+>         OFFSET(KVM_ARCH_HPGD, kvm_vcpu_arch, host_pgd);
+> +       OFFSET(KVM_ARCH_VMID, kvm_vcpu_arch, hw_vmid);
+>         OFFSET(KVM_ARCH_KVMPGD, kvm_vcpu_arch, kvm_pgd);
+>         OFFSET(KVM_ARCH_HANDLE_EXIT, kvm_vcpu_arch, handle_exit);
+>         OFFSET(KVM_ARCH_HEENTRY, kvm_vcpu_arch, host_eentry);
+> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+> index 3e1005526f4b..401c84f38e8c 100644
+> --- a/arch/loongarch/kvm/main.c
+> +++ b/arch/loongarch/kvm/main.c
+> @@ -223,6 +223,7 @@ static void kvm_update_vpid(struct kvm_vcpu *vcpu, in=
+t cpu)
+>
+>         context->vpid_cache =3D vpid;
+>         vcpu->arch.vpid =3D vpid;
+> +       vcpu->arch.hw_vmid =3D vcpu->arch.vpid & vpid_mask;
+Merge Patch#1 and Patch#2, then we can avoid adding this line and then
+remove it immediately.
+
+
+>  }
+>
+>  void kvm_check_vpid(struct kvm_vcpu *vcpu)
+> diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
+> index 936e4ae3e408..af972394fd55 100644
+> --- a/arch/loongarch/kvm/switch.S
+> +++ b/arch/loongarch/kvm/switch.S
+> @@ -66,9 +66,8 @@
+>         ld.d    t0, a2, KVM_ARCH_KVMPGD
+>         csrwr   t0, LOONGARCH_CSR_PGDL
+>
+> -       /* Mix GID and RID */
+> -       csrrd           t1, LOONGARCH_CSR_GSTAT
+> -       bstrpick.w      t1, t1, CSR_GSTAT_GID_SHIFT_END, CSR_GSTAT_GID_SH=
+IFT
+> +       /* Set VMID for gpa --> hpa mapping */
+> +       ld.d            t1, a2, KVM_ARCH_VMID
+>         csrrd           t0, LOONGARCH_CSR_GTLBC
+>         bstrins.w       t0, t1, CSR_GTLBC_TGID_SHIFT_END, CSR_GTLBC_TGID_=
+SHIFT
+>         csrwr           t0, LOONGARCH_CSR_GTLBC
+> diff --git a/arch/loongarch/kvm/tlb.c b/arch/loongarch/kvm/tlb.c
+> index ebdbe9264e9c..b25847aab968 100644
+> --- a/arch/loongarch/kvm/tlb.c
+> +++ b/arch/loongarch/kvm/tlb.c
+> @@ -23,7 +23,10 @@ void kvm_flush_tlb_all(void)
+>
+>  void kvm_flush_tlb_gpa(struct kvm_vcpu *vcpu, unsigned long gpa)
+>  {
+> +       unsigned int vmid;
+> +
+>         lockdep_assert_irqs_disabled();
+>         gpa &=3D (PAGE_MASK << 1);
+> -       invtlb(INVTLB_GID_ADDR, read_csr_gstat() & CSR_GSTAT_GID, gpa);
+> +       vmid =3D (vcpu->arch.hw_vmid << CSR_GSTAT_GID_SHIFT) & CSR_GSTAT_=
+GID;
+> +       invtlb(INVTLB_GID_ADDR, vmid, gpa);
+>  }
+> --
+> 2.39.3
+>
