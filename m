@@ -1,87 +1,158 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6747347C6
-	for <loongarch@lists.linux.dev>; Thu,  6 Aug 2026 12:23:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64FA233955
+	for <loongarch@lists.linux.dev>; Thu,  6 Aug 2026 12:39:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786018997; cv=none; b=pMzf5wYX4EidLdLIJBL+PCRPERKRDobnUeXu6nX31dkwgvFHc7Ry27UErKjZmLxyFog9YltKr+3Ork3kNfNKUIR1uf8agPep4AsMZAlOOoqpkxfnRpyRSHJu1AUhCLIZq7g1+caa7aNKBbejp9rZ9ALv93SSiyTNCbCxBWhTMTo=
+	t=1786019946; cv=none; b=Ptq39xKN+uOi1g3ZtuArCpeXD7oLLBWNXD4xu/8P/qooeLzvOgUC9NZ/wXsqaHUjgzw4gV6BkgvDRZdA4owUqiKQ6ivpkBN2yo1gVfl5qPx9p7kBXBSZCTzHoGWdxCaiJKjLdZ+5BqiD06H3eUD3Py+ctIjmRtAamhFU9bG25No=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786018997; c=relaxed/simple;
-	bh=7TY4VO0V35MkHMTOVsR6vRafUYEoqU02CR/tnCI6tFA=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=oE+rT6kxMAoNPnn+Wl1NvaWgD0SVpDFNnrQYthhy4UobLBdv6vlMtyqCuCy6SRwXO1N5O+/h0tA4fprschpdxYH86Fqbvv1rf9fDTUtO9oTo3bIknx4EDarPgPSNz5za+LxRIzaOhkyC0AfydJ4Areu2mJCFVq0XkFemqZPoVIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [123.138.236.242])
-	by gateway (Coremail) with SMTP id _____8Bx+aCgfHRqsvsKAA--.12205S3;
-	Thu, 06 Aug 2026 20:22:56 +0800 (CST)
-Received: from [10.130.40.83] (unknown [123.138.236.242])
-	by front1 (Coremail) with SMTP id qMiowJBxEuSffHRqGcYlAA--.7072S2;
-	Thu, 06 Aug 2026 20:22:56 +0800 (CST)
-Subject: Re: [PATCH v3 0/2] LoongArch: BPF: per-CPU address resolution and
- timed may_goto
-To: George Guo <dongtai.guo@linux.dev>, chenhuacai@kernel.org,
- hengqi.chen@gmail.com, ast@kernel.org, daniel@iogearbox.net,
- andrii@kernel.org
-Cc: kernel@xen0n.name, martin.lau@linux.dev, eddyz87@gmail.com,
- memxor@gmail.com, song@kernel.org, yonghong.song@linux.dev,
- jolsa@kernel.org, guodongtai@kylinos.cn, bpf@vger.kernel.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20260804153938.16129-1-dongtai.guo@linux.dev>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <936e5942-5722-c86e-2c5b-c048199ed6e6@loongson.cn>
-Date: Thu, 6 Aug 2026 20:22:55 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1786019946; c=relaxed/simple;
+	bh=BqV15x6vu4Q2f5LzS6NZT09VzzZvGF8kWgNWZqDcwew=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m/fwYzBbKqE0BcxpMFajCI+7YTZeoi5GLh9Wc0WV9w5lCg+hcF4tpBdjqrtU2CNQZtKV9J7MI2rylAYSVl0YtrTX7bdwhRzz6kFjBsx+ro2z0nCBI+wrvUNqiqNCWhsbCUsDJXKo4nGaIRPeC8aV2bg/vWbWWOLyuORBQPrth18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=behTB2t5; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="behTB2t5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 491E01F00A3A
+	for <loongarch@lists.linux.dev>; Thu,  6 Aug 2026 12:39:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786019944;
+	bh=2vS3qOhEvUKhNLFGQtuxwqpkMA9igZqCrUwfBBq5lzc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=behTB2t5WkzZpDM2vBDoGYE90PMvR3bh9tySrIHcgQ1Sk9bR57CcMdX1snrtpBY5g
+	 iOHPmMWIuSq3W4qeef2DY8B9s1NpmjjQuyZsO4WailRwx0EOlhnM/9sqGdmzYuKv9p
+	 MfERWoIjY+xdyPuRjKXYae/ifeSSEfzEF0uBUeA8yNusX8B92Cz4V7kpBcUCL9nVYS
+	 1PQZYysIzBHvWBvt+f38IglU/lG7b5KFNGgUct6K4rr9NCTps3VBQt0lATbbBF9O2k
+	 vrIvkkkrF4sntYmo30C3oI9DT2xc3CjbFeAimRWUcDTMVew1P5O7a0pDlquhh0ccH5
+	 344Uty0Wv4lmQ==
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-6a18e24ad25so1327117a12.1
+        for <loongarch@lists.linux.dev>; Thu, 06 Aug 2026 05:39:04 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RpewLFS6yrAJ5QsxBySaQyoHS+d55h/ddB2FItb2EzcPEShp8YTsb3rX+Z/bowqzwb7uTfk23q6/hE=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzKLPezoegyg8brjzhvENf45JgiFKVKTIFkGO2KQ70XChHbNVg9
+	tELP2de5mtRdZ9Jmqw7S4M97B6f8Kb+lT3fmiBvZ/uDLy0jFLzbzcqYV8hIcpFm4hIb/QY6Piti
+	N/rJjbcCGbeB85vLcfncmqnGajFFtmsQ=
+X-Received: by 2002:a05:6402:3222:b0:69c:72e2:a3d9 with SMTP id
+ 4fb4d7f45d1cf-6a14f26c0f4mr8117939a12.21.1786019942971; Thu, 06 Aug 2026
+ 05:39:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20260804153938.16129-1-dongtai.guo@linux.dev>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxEuSffHRqGcYlAA--.7072S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrtF1ftrWxJw13uFyxXrWrZwc_yoWxCFgEgF
-	97GFn8Gr18Xry3Ar4IgrW5JFZrX3ya9F429rs7J34UJ3sIv34kXrs0qr13A3W0g39Yyan3
-	ta9IvF1fAryFgosvyTuYvTs0mTUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbqkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q
-	6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
-	1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxG
-	rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4U
-	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jz-eOUUU
-	UU=
+References: <20260806020739.2149268-1-maobibo@loongson.cn> <20260806020739.2149268-6-maobibo@loongson.cn>
+In-Reply-To: <20260806020739.2149268-6-maobibo@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 6 Aug 2026 20:39:27 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6cTtqzCGfr5aZNgpPBpG1YLkmZ9axq45ViAf2_x69fjg@mail.gmail.com>
+X-Gm-Features: AUfX_mwEdiLE7YKW7xuVLNV25NqOMrismXeRJ7LJqpnjb63snPcwDtc-huE5Oys
+Message-ID: <CAAhV-H6cTtqzCGfr5aZNgpPBpG1YLkmZ9axq45ViAf2_x69fjg@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] LoongArch: KVM: Enable separate vmid feature
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	WANG Xuerui <kernel@xen0n.name>, Arnd Bergmann <arnd@arndb.de>, Xi Ruoyao <xry111@xry111.site>, 
+	kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2026/8/4 下午11:39, George Guo wrote:
-> These are the first two patches of the LoongArch BPF JIT feature work,
-> sent on their own to make review easier. The remaining pieces
-> (per-program private stacks, exceptions/bpf_throw, sign-extending loads
-> and atomics on arena pointers, and the matching selftests) will follow in
-> a later series.
+Hi, Bibo,
 
-The patches apply cleanly on top of Chenguang's series.
+On Thu, Aug 6, 2026 at 10:15=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
+>
+> With CSR GTLBC shortname for Guest TLB Control Register, separate vmid
+> feature will be enabled if bit 14 CSR_GTLBC_USEVMID is set. Enable
+> this feature if cpu_has_guestid is true when LVZ is enabled and the LVZ
+> version is 2.
+>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> ---
+>  arch/loongarch/include/asm/loongarch.h | 5 +++++
+>  arch/loongarch/kernel/cpu-probe.c      | 6 ++++++
+>  arch/loongarch/kvm/main.c              | 4 +++-
+>  3 files changed, 14 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/incl=
+ude/asm/loongarch.h
+> index 2a6bc99177d8..a20fb68d8ac4 100644
+> --- a/arch/loongarch/include/asm/loongarch.h
+> +++ b/arch/loongarch/include/asm/loongarch.h
+> @@ -138,6 +138,9 @@
+>  #define  CPUCFG6_PMBITS_SHIFT          8
+>  #define  CPUCFG6_UPM                   BIT(14)
+>
+> +#define LOONGARCH_CPUCFG8              0x8
+> +#define  CPUCFG8_VMID                  BIT(8)
+> +
+>  #define LOONGARCH_CPUCFG16             0x10
+>  #define  CPUCFG16_L1_IUPRE             BIT(0)
+>  #define  CPUCFG16_L1_IUUNIFY           BIT(1)
+> @@ -350,6 +353,8 @@
+>  #define  CSR_GTLBC_TGID_WIDTH          8
+>  #define  CSR_GTLBC_TGID_SHIFT_END      (CSR_GTLBC_TGID_SHIFT + CSR_GTLBC=
+_TGID_WIDTH - 1)
+>  #define  CSR_GTLBC_TGID                        (_ULCAST_(0xff) << CSR_GT=
+LBC_TGID_SHIFT)
+> +#define  CSR_GTLBC_USEVMID_SHIFT       14
+> +#define  CSR_GTLBC_USEVMID             (_ULCAST_(0x1) << CSR_GTLBC_USEVM=
+ID_SHIFT)
 
-The following selftests passed on LoongArch:
+Other fields in GTLBC is TGID, so it is better to name it
+CSR_GTLBC_USETGID, just use vpid/vmid for software purely.
 
-   # ./test_progs -t cpumask
-   # ./test_progs -t percpu_alloc
-   # ./test_progs -t iters
 
-Acked-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Tested-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-Thanks,
-Tiezhu
+Huacai
 
+>  #define  CSR_GTLBC_TOTI_SHIFT          13
+>  #define  CSR_GTLBC_TOTI                        (_ULCAST_(0x1) << CSR_GTL=
+BC_TOTI_SHIFT)
+>  #define  CSR_GTLBC_USETGID_SHIFT       12
+> diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cp=
+u-probe.c
+> index 74d31f260dfd..fc68f695d49c 100644
+> --- a/arch/loongarch/kernel/cpu-probe.c
+> +++ b/arch/loongarch/kernel/cpu-probe.c
+> @@ -241,6 +241,12 @@ static void cpu_probe_common(struct cpuinfo_loongarc=
+h *c)
+>         if (config & CPUCFG6_PMP)
+>                 c->options |=3D LOONGARCH_CPU_PMP;
+>
+> +       if (c->options & LOONGARCH_CPU_LVZ) {
+> +               config =3D read_cpucfg(LOONGARCH_CPUCFG8);
+> +               if (config & CPUCFG8_VMID)
+> +                       c->options |=3D LOONGARCH_CPU_GUESTID;
+> +       }
+> +
+>         config =3D csr_read32(LOONGARCH_CSR_ASID);
+>         config =3D (config & CSR_ASID_BIT) >> CSR_ASID_BIT_SHIFT;
+>         asid_mask =3D GENMASK(config - 1, 0);
+> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+> index 72c1d23156e5..712b078db0d5 100644
+> --- a/arch/loongarch/kvm/main.c
+> +++ b/arch/loongarch/kvm/main.c
+> @@ -359,7 +359,7 @@ int kvm_arch_enable_virtualization_cpu(void)
+>         write_csr_gcfg(0);
+>         write_csr_gstat(0);
+>         write_csr_gintc(0);
+> -       clear_csr_gtlbc(CSR_GTLBC_USETGID | CSR_GTLBC_TOTI);
+> +       clear_csr_gtlbc(CSR_GTLBC_USETGID | CSR_GTLBC_TOTI | CSR_GTLBC_US=
+EVMID);
+>
+>         /*
+>          * Enable virtualization features granting guest direct control o=
+f
+> @@ -382,6 +382,8 @@ int kvm_arch_enable_virtualization_cpu(void)
+>
+>         /* Enable using TGID  */
+>         set_csr_gtlbc(CSR_GTLBC_USETGID);
+> +       if (cpu_has_guestid)
+> +               set_csr_gtlbc(CSR_GTLBC_USEVMID);
+>         kvm_debug("GCFG:%lx GSTAT:%lx GINTC:%lx GTLBC:%lx",
+>                   read_csr_gcfg(), read_csr_gstat(), read_csr_gintc(), re=
+ad_csr_gtlbc());
+>
+> --
+> 2.39.3
+>
