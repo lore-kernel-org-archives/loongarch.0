@@ -1,122 +1,240 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA85537D11F;
-	Thu,  6 Aug 2026 04:17:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3396A1D5160
+	for <loongarch@lists.linux.dev>; Thu,  6 Aug 2026 06:20:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785989835; cv=none; b=gyA5GKe3mts9ytSEDr7hUWCotw2bk130oSL6a0VmUgLx4fmx8c5u1+ULhcDjajwebakRzlyK4tY2z6R9StuvXC92AQNjnkT1UijUOJOjbAkDHHB+qyVVfETeLlITdFkJIPV8m0Iu3ezOOcKW6qTarHtf90rRnfuJalb1egkr7ag=
+	t=1785997223; cv=none; b=MuEOY9DqeTzAWanRI++75hfNYYwVCgbPyLO7OFKzX/z+EB4f5hts5O2CnjBWnl9h1Orx/UmcYkm6kFgkx2hPUSbvn8HlQOnugRfhCQZ30U1CdrQB6rs+fRrTPWDsJ8XHqF1AMgLtj5sZo6i34FfuXF8bhW5syvTVSEc8iKsKtvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785989835; c=relaxed/simple;
-	bh=UJNN0zMBMODzscybLgnfShli4inyPSqWKMxUBWBw/tQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FFRzEzXYAwI8KYnWEQV+n7FX8aaFx1Wi5hzqk+et13XWsvCT9fNMsSZ+gTKISVeQ7M43Nh5UXnomF0MImiyE5/uN/YnaOl04JIZwlLBav/Gf8rcDbam715IdWVAw6ONJaJIz6REJOTO4YAFUrckn3A7zqKXkrjJIGKp5Sho+734=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cNBowQI6; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1785997223; c=relaxed/simple;
+	bh=NMxnNJsT6066501VRvx3K1qDB78bj12uazEtEJflWS0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PevIug93JqaxfMXPd7PRSkmI5VHcjtdmsw+S5jF1E146+PuesNOiYelTMTQ5FpTyoXT2cNN9Om+XHpi54ZjxdpY/79IoquYuc38LmLhyUIXC6aPo5PQrA+L/HPjsLSj65a8kzSNDvDn8qAQtdOBhmB8/RKVO+nQ3cr4fA9SPah8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dji/RrUF; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cNBowQI6"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 675NlhQx3403131;
-	Thu, 6 Aug 2026 04:16:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=sszeY5
-	T8kdjTI3h5ZiATF3+wdFCDT7FEX/8SRrV9FDc=; b=cNBowQI6WUqhJJQ9Fs84Fy
-	7ZuLl51EBO4dQIpmer+gKU4m6y+pa5FhQ712PTzsvUpaJIF795OOmG08p23/FbqF
-	TDbS+02gAzbQRTP0atgT0R0DnXFkPa7ExZZQZz+EN+sU54FKN34jdaofEdOJr/5m
-	oyhlS+KmFm1ueD2HBzygD0M4kJxEosNUFCbwJ5keqEk+ldf0MtIJDNtHRy8ba9UF
-	scFRFXg2YqKMujMc+qSUoR22dbHPgfvpnMHSJnzWr3wEznW995JSxCjKIyiv5Xgq
-	r1h0YhIWoNRkUVi9RLNNgNvpauRhhqzOngqpexFpu4pdxcNn2cRB4tuP9tVnxALQ
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fs8fqx70k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Aug 2026 04:16:50 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 6764BI1v014627;
-	Thu, 6 Aug 2026 04:16:49 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fswtysc5u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Aug 2026 04:16:49 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6764Gl5d48562628
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 6 Aug 2026 04:16:47 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C1D7F20049;
-	Thu,  6 Aug 2026 04:16:47 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 326A920040;
-	Thu,  6 Aug 2026 04:16:44 +0000 (GMT)
-Received: from Linuxdev.j9d-in.ibm.com (unknown [9.123.86.85])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  6 Aug 2026 04:16:43 +0000 (GMT)
-From: Madhavan Srinivasan <maddy@linux.ibm.com>
-To: harshpb@linux.ibm.com, zhaotianrui@loongson.cn, maobibo@loongson.cn,
-        chenhuacai@kernel.org, npiggin@gmail.com,
-        sashiko-reviews@lists.linux.dev, seanjc@google.com,
-        pbonzini@redhat.com, Yanfei Xu <yanfei.xu@bytedance.com>
-Cc: kvm@vger.kernel.org, stable@vger.kernel.org, loongarch@lists.linux.dev,
-        linuxppc-dev@lists.ozlabs.org, caixiangfeng@bytedance.com,
-        fangying.tommy@bytedance.com, isyanfei.xu@gmail.com
-Subject: Re: (subset) [v2 0/2] KVM: Validate irqchip index in routing entries
-Date: Thu,  6 Aug 2026 09:46:43 +0530
-Message-ID: <178598971883.942627.14864231076983027112.b4-ty@linux.ibm.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260531135326.2238555-1-yanfei.xu@bytedance.com>
-References: <20260531135326.2238555-1-yanfei.xu@bytedance.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dji/RrUF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04BBC1F00ADE
+	for <loongarch@lists.linux.dev>; Thu,  6 Aug 2026 06:20:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785997222;
+	bh=Px8v7D66Q7scAfLlL7p0Y6Wsaiu9tjwpUd392U5sx0E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=dji/RrUFYRJBT3iFvSp+mWkNWuP5jRZoaQfglvh2BaIv1EqKsqGHzACjUnPFN67YZ
+	 R3d7RQlYeJYvX+HTXOAsC/wTHsaXXLwvTJtbWcl0Zq/WPrcjJKm8nlMdMmLlKToAjv
+	 2g4QeU1BtVP3Dn9x8AogxgNWKrLIKfP7/2+2ClJVLi4phtsk/ZXm1RgPaVeGzpzOhq
+	 hKeXKCaxz7cfyKRcyfwr7JfEBmIlFyuJhDxL3ZecHLtD4ODcPR7jgL+7/IBTvxUnUw
+	 ++vr1hj5kyGZWAXveSawF4K7I/eD4PvmBoH3v3ku49zx1J38kNDE7cG3Bm0rHXL9mq
+	 EnEhMXtQt6ESw==
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-6a14f118a46so2603953a12.2
+        for <loongarch@lists.linux.dev>; Wed, 05 Aug 2026 23:20:21 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RpL1odTmEJal1vGZYK7OD+8PTec/3MtNN7tZaWDrq566xU2BwaskwhgfzhQ9KgiBWpPc6ZdkLZLdNw=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxfjphOSpIuwUc+FnMCwrdGbbCOrtBhPGw8KIxbu9/xgDgZnC+Z
+	n2QtcxLNgjRdvwMPjQBeFznH+BslWBBB8v8KnDTfZIxXmy+2RkSs51Fenvda8QBSqpSHKe8ncLj
+	P+RUWteX0gDiv4yHSKh3nLzvzFJa3H0U=
+X-Received: by 2002:a05:6402:a511:20b0:6a1:8ec3:766e with SMTP id
+ 4fb4d7f45d1cf-6a18ec377b9mr1498536a12.17.1785997220618; Wed, 05 Aug 2026
+ 23:20:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-GUID: 9XIrn19liHt_Gp35TI6FU0lszKKCE0M-
-X-Proofpoint-ORIG-GUID: ZrcnJp2922SmvrODV1LGkczb6OrRWGnT
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODA2MDAyNSBTYWx0ZWRfX87taHarZcbbK
- qrDRHczbdO398Rb71hhfyEUYsWWE+Wmg7lcOU2RQw7gFL6oj1Seyx9KWKQpzqlcFU3GsPKBUEf6
- GrldeJGEPQPB+HkOW9rLreC6KaImCwk=
-X-Authority-Analysis: v=2.4 cv=K8cS2SWI c=1 sm=1 tr=0 ts=6a740ab3 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=IkcTkHD0fZMA:10 a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VwQbUJbxAAAA:8
- a=4sZtcsWrhcTQ-q4STQgA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODA2MDAyNSBTYWx0ZWRfX8/SwQGbft3ST
- v5BFqbRjmEOCDVCQOhxrCwJK+YMEQHJdc1NYx53TngRpMsAed09kCqyI4eLvg2zgb+pqqkVthQ4
- JDOxb/NC2yXu0QZHFcCnnXYMKqZchcYDyLVtRyPucY1jFwEdpKg0O2tAe/9tfboFbZqyxY5V5T/
- 2240Wl0//jvzYLnMAbzIcCQItMC4XXJCBHF8XTi7J3V0kJ00/lHusCd0C6kIf4gwOWV8j0Q5VRq
- tdux4zoXsn+HhYk0CsB/dBwnZn1KndyLaANnKFHqBcbL8Q+P1LQzcwyhzIslOFFuanySdnvD+1g
- E+R1QqLWhiG42mb13lhLSEBJOEH3StemHUhegCXSpkVAxsoPZ+okI6j3RJgNcoT/hIXdN6onnBe
- dNAmUxRVMsQNHsEtknE3pAbY4g6d9hLJzvYESuDbZjP7qiQbb8SXDdts19J5TSXutHqnFdB4X31
- jk+dzPHLWXr+Y2aEMuw==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-08-05_06,2026-08-05_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1011 spamscore=0 impostorscore=0 bulkscore=0 priorityscore=1501
- lowpriorityscore=0 malwarescore=0 phishscore=0 suspectscore=0 adultscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2608060025
+References: <20260805085414.1482-1-zhaoqunqin@loongson.cn> <20260805085414.1482-2-zhaoqunqin@loongson.cn>
+ <CAAhV-H5F6JasjxgiDeDdsz64o186CoL1+EEkH6OJSHPZG0PDOQ@mail.gmail.com> <3fc94c7d-8ec1-4b7e-bce7-46628d196b1e@loongson.cn>
+In-Reply-To: <3fc94c7d-8ec1-4b7e-bce7-46628d196b1e@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 6 Aug 2026 14:20:45 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7Fz4TTdpUn1z8hRx5QOBDAhrScLFa2DOcMY=iRwcWk1Q@mail.gmail.com>
+X-Gm-Features: AUfX_mwt1o3Er3bwihM6i7DN-rHPDCPE39hyjX-vJGZd1WcETi8O6Wiws1sIrIg
+Message-ID: <CAAhV-H7Fz4TTdpUn1z8hRx5QOBDAhrScLFa2DOcMY=iRwcWk1Q@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] EDAC/loongson: Encode node and MC info into mc_idx
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: bp@alien8.de, tony.luck@intel.com, linux-edac@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	Wang Jinwei <wangjinwei@loongson.cn>, Yulong Wang <wangyulong@loongson.cn>, 
+	Dongyan Qian <qiandongyan@loongson.cn>, Chao Li <lichao@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, 31 May 2026 21:53:24 +0800, Yanfei Xu wrote:
-> Validate irqchip indexes for LoongArch and PowerPC irq routing entries
-> to reject out-of-range values before indexing the irqchip array.
-> 
-> v1->v2:
-> - Split the patch into two by architecture (Sean)
-> - Pick up Reviewed-by
-> 
-> [...]
+On Thu, Aug 6, 2026 at 9:36=E2=80=AFAM Qunqin Zhao <zhaoqunqin@loongson.cn>=
+ wrote:
+>
+>
+> =E5=9C=A8 2026/8/5 21:43, Huacai Chen =E5=86=99=E9=81=93:
+> > Hi, Qunqin,
+> >
+> > On Wed, Aug 5, 2026 at 5:09=E2=80=AFPM Qunqin Zhao <zhaoqunqin@loongson=
+.cn> wrote:
+> >> From: Wang Jinwei <wangjinwei@loongson.cn>
+> >>
+> >> On Loongson multi-node systems, memory controllers are distributed acr=
+oss
+> >> multiple nodes. Encode node and MC information into mc_idx so that sys=
+fs
+> >> entries uniquely identify each controller.
+> >>
+> >> The driver gets mc-idx from ACPI _DSD property if firmware provides it=
+.
+> >> If not, it falls back to edac_device_alloc_index() for legacy firmware
+> >> compatibility.
+> >>
+> >> The number of memory controllers per node (mcs-per-node) is obtained
+> >> from firmware via ACPI _DSD property, with a default of 4 for backward
+> >> compatibility. Validate that the firmware-provided value is non-zero t=
+o
+> >> prevent division by zero. The node and MC IDs are decoded from mc_idx:
+> >>      node =3D mc_idx / mcs_per_node
+> >>      mc =3D mc_idx % mcs_per_node
+> >>
+> >> Cc: Yulong Wang <wangyulong@loongson.cn>
+> >> Cc: Dongyan Qian <qiandongyan@loongson.cn>
+> >> Cc: Chao Li <lichao@loongson.cn>
+> >> Signed-off-by: Wang Jinwei <wangjinwei@loongson.cn>
+> >> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+> >> ---
+> >>   drivers/edac/loongson_edac.c | 35 ++++++++++++++++++++++++++++++----=
+-
+> >>   1 file changed, 30 insertions(+), 5 deletions(-)
+> >>
+> >> diff --git a/drivers/edac/loongson_edac.c b/drivers/edac/loongson_edac=
+.c
+> >> index 38745800ed..abfc1e60e0 100644
+> >> --- a/drivers/edac/loongson_edac.c
+> >> +++ b/drivers/edac/loongson_edac.c
+> >> @@ -9,6 +9,7 @@
+> >>   #include <linux/io-64-nonatomic-lo-hi.h>
+> >>   #include <linux/module.h>
+> >>   #include <linux/platform_device.h>
+> >> +#include <linux/property.h>
+> >>   #include "edac_module.h"
+> >>
+> >>   #define ECC_CS_COUNT_REG       0x18
+> >> @@ -23,6 +24,8 @@ struct loongson_edac_pvt {
+> >>           * register state.
+> >>           */
+> >>          int last_ce_count;
+> >> +       int mcs_per_node;
+> >> +       bool mc_idx_valid;
+> >>   };
+> >>
+> >>   static int read_ecc(struct mem_ctl_info *mci)
+> >> @@ -44,7 +47,8 @@ static int read_ecc(struct mem_ctl_info *mci)
+> >>   static void edac_check(struct mem_ctl_info *mci)
+> >>   {
+> >>          struct loongson_edac_pvt *pvt =3D mci->pvt_info;
+> >> -       int new, add;
+> >> +       char other_detail[64] =3D {0};
+> >> +       int new, add, node, mc;
+> >>
+> >>          new =3D read_ecc(mci);
+> >>          add =3D new - pvt->last_ce_count;
+> >> @@ -52,8 +56,14 @@ static void edac_check(struct mem_ctl_info *mci)
+> >>          if (add <=3D 0)
+> >>                  return;
+> >>
+> >> +       if (pvt->mc_idx_valid) {
+> >> +               node =3D mci->mc_idx / pvt->mcs_per_node;
+> >> +               mc =3D mci->mc_idx % pvt->mcs_per_node;
+> >> +               snprintf(other_detail, sizeof(other_detail), "node:%d =
+mc:%d", node, mc);
+> >> +       }
+> >> +
+> >>          edac_mc_handle_error(HW_EVENT_ERR_CORRECTED, mci, add,
+> >> -                            0, 0, 0, 0, 0, -1, "error", "");
+> >> +                            0, 0, 0, 0, 0, -1, "error", other_detail)=
+;
+> >>   }
+> >>
+> >>   static void dimm_config_init(struct mem_ctl_info *mci)
+> >> @@ -72,20 +82,26 @@ static void dimm_config_init(struct mem_ctl_info *=
+mci)
+> >>          dimm->grain =3D 8;
+> >>   }
+> >>
+> >> -static void pvt_init(struct mem_ctl_info *mci, void __iomem *vbase)
+> >> +static void pvt_init(struct mem_ctl_info *mci, void __iomem *vbase,
+> >> +                    bool mc_idx_valid, int mcs_per_node)
+> >>   {
+> >>          struct loongson_edac_pvt *pvt =3D mci->pvt_info;
+> >>
+> >>          pvt->ecc_base =3D vbase;
+> >>          pvt->last_ce_count =3D read_ecc(mci);
+> >> +       pvt->mc_idx_valid =3D mc_idx_valid;
+> >> +       pvt->mcs_per_node =3D mcs_per_node;
+> >>   }
+> >>
+> >>   static int edac_probe(struct platform_device *pdev)
+> >>   {
+> >>          struct edac_mc_layer layers[2];
+> >>          struct mem_ctl_info *mci;
+> >> +       struct device *dev =3D &pdev->dev;
+> >>          void __iomem *vbase;
+> >> +       u32 mcs_per_node, mc_idx_u32;
+> > Why do we need mc_idx_u32? The code in V1 doesn't work?
+>
+> V1 works. This is purely to fix the issue reported by sashiko:
+>
+> "The mc_idx field is defined as an int in struct mem_ctl_info, but
+> device_property_read_u32() expects a u32 *. Should this be read into a
+> temporary u32 variable first?"
+>
+> Should we ignore it?
+I think we should ignore it, because:
+1, it is impossible that mc_idx exceeds 2^31;
+2, if mc_idx really exceeds 2^31, use mc_idx_u32 is still wrong when
+assign it to mci->mc_idx.
 
-Applied to powerpc/next.
+Huacai
 
-[2/2] KVM: PPC: Validate irqchip index in MPIC routing
-      https://git.kernel.org/powerpc/c/5458b50b5291390ce0af2872a1baa51cc58e8f08
-
-cheers
+>
+> >
+> >>          int ret;
+> >> +       bool mc_idx_valid =3D true;
+> >>
+> >>          vbase =3D devm_platform_ioremap_resource(pdev, 0);
+> >>          if (IS_ERR(vbase))
+> >> @@ -102,7 +118,6 @@ static int edac_probe(struct platform_device *pdev=
+)
+> >>          if (mci =3D=3D NULL)
+> >>                  return -ENOMEM;
+> >>
+> >> -       mci->mc_idx =3D edac_device_alloc_index();
+> >>          mci->mtype_cap =3D MEM_FLAG_RDDR4;
+> >>          mci->edac_ctl_cap =3D EDAC_FLAG_NONE;
+> >>          mci->edac_cap =3D EDAC_FLAG_NONE;
+> >> @@ -114,7 +129,17 @@ static int edac_probe(struct platform_device *pde=
+v)
+> >>          mci->error_desc.grain =3D 8;
+> >>          mci->edac_check =3D edac_check;
+> >>
+> >> -       pvt_init(mci, vbase);
+> >> +       if (device_property_read_u32(dev, "mc-idx", &mc_idx_u32)) {
+> >> +               mci->mc_idx =3D edac_device_alloc_index();
+> >> +               mc_idx_valid =3D false;
+> >> +       } else {
+> >> +               mci->mc_idx =3D mc_idx_u32;
+> >> +       }
+> >> +
+> >> +       if (device_property_read_u32(dev, "mc-per-node", &mcs_per_node=
+) || mcs_per_node =3D=3D 0)
+> > The property should also be mcs-per-node.
+>
+> OK
+>
+> Thanks.
+>
+> > Huacai
+> >
+> >> +               mcs_per_node =3D 4;
+> >> +
+> >> +       pvt_init(mci, vbase, mc_idx_valid, mcs_per_node);
+> >>          dimm_config_init(mci);
+> >>
+> >>          ret =3D edac_mc_add_mc(mci);
+> >> --
+> >> 2.47.3
+> >>
+> >>
+>
