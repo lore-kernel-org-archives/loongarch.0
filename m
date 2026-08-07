@@ -1,54 +1,59 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B605C40D574
-	for <loongarch@lists.linux.dev>; Fri,  7 Aug 2026 10:39:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 038DF38552C;
+	Fri,  7 Aug 2026 22:14:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786099155; cv=none; b=SMz0ocIN/8H2hzPsur3OmtqM8D1u3BeV7D65/6wG7h1pMlrhWnNoWFoZ60zfvGb1Sce71gvigJpGaviEpGnhgwVr5K/BkbhWvIoh8Wdl5+ETpeOOIpMYy9W0BZXkmia0kEwyvCp7SUN+wYBcg9Wkmcgq28vlvadePYBMuHG5X0I=
+	t=1786140882; cv=none; b=jZ6gUDcRLvv1zc0ty4B7RUq2TIO3jiAkO2IMS1wTp+irBWJR4HD/bHTG3HDY1cayocflBpUjPMJLzeG5ivdJTBCYQdY7qmJafSiOdRxHZJiKRQTJu6Z8e8FcgVmI+qnWuzOg9FpmoPS9R1eVRt1bIOoWBSG2Ge2dL76vuGclgwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786099155; c=relaxed/simple;
-	bh=AthgqfGh33oNASpFzQIJ8i2cw1Ud1tKoUiRNJueEqJQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SnCSG5H7TW9LbOti0cyYzLPllalsJfUofPCY6IDH5cnlQ84wF8b7+6sdbjoTgY9vuMy9siLT02zTO6EJJNUvovxhUG+8GAAQsLSkpa7SNIUN0lv/uA3xmIWlStY7at2pHPQ/2JFQdeGhEJaCun15br3sGcel7kEiblo1Qkx/ajM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=leFCf1q7; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1786140882; c=relaxed/simple;
+	bh=1ZzlIvNpc8okggRlMNuOSYeEQuksrWKHdkMicIsD3Qw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sCUbmsoMQkvZIsSqM8jFrrrXazhhw9KXD/hVK2cE/aWKrx57pq9Wyh7PGhGK0PRIF2sdSqYtA5KseGTQwkAa8MYYf1fj0pO6y25UPcKb4bu+ooq0akcJbIhtSUXfD86DrIJAvCU57PrVPpegeBA9PUlSTdW0ieL4YQpr9cZ990c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q9HEd20v; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="leFCf1q7"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1786099147;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+cRL3uotexgsAYtLUosWyuQdevxVlf8Hhe38VeOp48k=;
-	b=leFCf1q7bWexhIlRym5mgLf1EOisTxXGgyEu7WyO9nLs6AFFzBa5eAN4zwjxXwdcx9Zca0
-	omPlm5ULbkJc4DAoXhz5sJcehdTr4IdR3WIHmsRnRF4G7Y5VNtpBLF9EzxE+TcLqPLTWwa
-	oHj3Bgs1ou/YKoTNmTnBdncag6GUT54=
-From: George Guo <dongtai.guo@linux.dev>
-To: chenhuacai@kernel.org,
-	rppt@kernel.org,
-	pasha.tatashin@soleen.com,
-	pratyush@kernel.org,
-	shuah@kernel.org,
-	ardb@kernel.org
-Cc: guodongtai@kylinos.cn,
-	kernel@xen0n.name,
-	graf@amazon.com,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q9HEd20v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 193981F000E9;
+	Fri,  7 Aug 2026 22:14:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786140880;
+	bh=fTBBp/gNut3PNIaiIMKAtMdux5qfIbqgE4sHisRqcBA=;
+	h=From:To:Cc:Subject:Date;
+	b=Q9HEd20vmC6B7tE6GWWGc/regbVKdRgKtew6QPAE46eqklmJhR8R4TorjdsI/LiDR
+	 0e9cldaGfdL/2laVsmkEoD55us3nn2mhX2H4Ef09Xk+CYH0cwX7F48rO3PyiFNCRg4
+	 uEgmBMbFdgGYS2VaZP22ZSg6yXArJIBjUHoEMZvdO6ZcemWzbcXi0+iw2YP3MTSpWv
+	 QyFic0TGkC6AsPpkKscfhcpg1550TvAV9NqvU85VaNhK0QkneIDpeKmfP7+/cdyPmw
+	 h1qxrYCTgVLM+Wm/zJAvnNqf0kSzFoApUIL/wjmoXiuH6LC60XDxg8mx4fMBld5IsT
+	 RYlqDJfJFmRxA==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: Miguel Ojeda <ojeda@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Linus Walleij <linusw@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: Boqun Feng <boqun@kernel.org>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Tamir Duberstein <tamird@kernel.org>,
+	Alexandre Courbot <acourbot@nvidia.com>,
+	=?UTF-8?q?Onur=20=C3=96zkan?= <work@onurozkan.dev>,
+	rust-for-linux@vger.kernel.org,
+	Drew Fustini <fustini@kernel.org>,
+	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers),
+	soc@lists.linux.dev,
+	WANG Xuerui <kernel@xen0n.name>,
 	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	linux-efi@vger.kernel.org,
-	Kexin Liu <liukexin@kylinos.cn>
-Subject: [PATCH v4 4/4] selftests/kho: add LoongArch vmtest support
-Date: Fri,  7 Aug 2026 18:37:14 +0800
-Message-ID: <20260807103714.33074-5-dongtai.guo@linux.dev>
-In-Reply-To: <20260807103714.33074-1-dongtai.guo@linux.dev>
-References: <20260807103714.33074-1-dongtai.guo@linux.dev>
+	stable@vger.kernel.org
+Subject: [PATCH] rust: bug: fix `dead_code` warning in `warn_on!`
+Date: Sat,  8 Aug 2026 00:14:29 +0200
+Message-ID: <20260807221429.155946-1-ojeda@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -56,119 +61,68 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-From: George Guo <guodongtai@kylinos.cn>
+On arm and loongarch64, or under `CONFIG_BUG=n`, the upcoming SRCU
+abstractions from commit
 
-Add loongarch.conf to configure QEMU's LoongArch virtual machine (VM)
-with a la464 CPU, enable the 8250 serial console, and set the kernel
-image to vmlinux.efi.  Extend vmtest.sh to recognise loongarch64 as a
-supported target and map it to the 'loongarch' kernel arch name.
+  59cf3a5bda61 ("rust: sync: add SRCU abstraction")
 
-QEMU's LoongArch VM provides no ACPI tables and relies on FDT to
-describe hardware.  Without 'earlycon' on the kernel command line, the
-FDT is not scanned for a console UART, no output reaches the console,
-and vmtest.sh's console log stays empty causing the test to always
-fail.  Add 'earlycon' to KERNEL_CMDLINE in loongarch.conf.
+use `warn_on!`, which in turn warns:
 
-QEMU's LoongArch VM has no i8042 PS/2 controller.  When PNP detection
-finds nothing, i8042_init() falls back to probing the ports directly.
-On LoongArch the I/O ports are memory-mapped, and the i8042 port
-addresses are not backed by any device on the VM, so i8042_flush() takes
-a page fault and the kernel panics:
+    error: constant `WARN_ON_FLAGS` is never used
+       --> rust/kernel/bug.rs:126:19
+        |
+    126 |               const WARN_ON_FLAGS: u32 = $crate::bug::bugflag_taint($crate::bindings::TAINT_WARN);
+        |                     ^^^^^^^^^^^^^
+        |
+       ::: rust/kernel/sync/srcu.rs:106:12
+        |
+    106 |           if crate::warn_on!(
+        |  ____________-
+    107 | |             // SAFETY: By the type invariants, `self` contains a valid and pinned `struct srcu_struct`
+    108 | |             // and `srcu_readers_active()` only checks the active reader count.
+    109 | |             unsafe { bindings::srcu_readers_active(ptr) }
+    110 | |         ) {
+        | |_________- in this macro invocation
+        |
+        = note: `-D dead-code` implied by `-D warnings`
+        = help: to override `-D warnings` add `#[allow(dead_code)]`
+        = note: this error originates in the macro `crate::warn_on` (in Nightly builds, run with -Z macro-backtrace for more info)
 
-  i8042: PNP: No PS/2 controller found.
-  i8042: Probing ports directly.
-  CPU 0 Unable to handle kernel paging request at virtual address ffff800000008064
-  ERA: i8042_flush+0x50/0x198
-   RA: i8042_init+0x2a8/0x35c
-  Kernel panic - not syncing: Attempted to kill init!
+The reason is that `warn_flags!` discards both arguments in those cases,
+and so the `const` becomes unused. And since it is a macro, it went
+unnoticed so far.
 
-Disable SERIO_I8042 and its dependents (KEYBOARD_ATKBD, MOUSE_PS2) in
-the QEMU_KCONFIG fragment to prevent the driver from being built.
-All three options are scoped to loongarch.conf; no other architecture
-is affected.
+Thus fix it by simplifying by removing the `const`.
 
-Wrap the QEMU invocation in run_qemu() with timeout(1) using a local
-time limit so the test always terminates, even when QEMU does not exit
-on its own.  This is useful for every architecture; on LoongArch, for
-example, QEMU provides no EFI runtime services and machine_restart()
-falls through to an idle loop after kexec, so QEMU would never exit
-otherwise.
-
-Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
-Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
-Signed-off-by: George Guo <guodongtai@kylinos.cn>
+Cc: stable@vger.kernel.org
+Fixes: dff64b072708 ("rust: Add warn_on macro")
+Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
 ---
- tools/testing/selftests/kho/loongarch.conf | 11 +++++++++++
- tools/testing/selftests/kho/vmtest.sh      | 22 +++++++++++++++-------
- 2 files changed, 26 insertions(+), 7 deletions(-)
- create mode 100644 tools/testing/selftests/kho/loongarch.conf
+Either this or adding an underscore.
 
-diff --git a/tools/testing/selftests/kho/loongarch.conf b/tools/testing/selftests/kho/loongarch.conf
-new file mode 100644
-index 000000000000..e45fe1014cf3
---- /dev/null
-+++ b/tools/testing/selftests/kho/loongarch.conf
-@@ -0,0 +1,11 @@
-+QEMU_CMD="qemu-system-loongarch64 -M virt -cpu la464"
-+QEMU_KCONFIG="
-+CONFIG_SERIAL_8250=y
-+CONFIG_SERIAL_8250_CONSOLE=y
-+CONFIG_SPARSEMEM_MANUAL=y
-+# CONFIG_KEYBOARD_ATKBD is not set
-+# CONFIG_MOUSE_PS2 is not set
-+# CONFIG_SERIO_I8042 is not set
-+"
-+KERNEL_IMAGE="vmlinux.efi"
-+KERNEL_CMDLINE="console=ttyS0 earlycon kho_scratch=16M,16M,16M"
-diff --git a/tools/testing/selftests/kho/vmtest.sh b/tools/testing/selftests/kho/vmtest.sh
-index 0014bd76e88d..de6aa59cf5a0 100755
---- a/tools/testing/selftests/kho/vmtest.sh
-+++ b/tools/testing/selftests/kho/vmtest.sh
-@@ -21,7 +21,7 @@ Options:
- 	-d)	path to the kernel build directory
- 	-j)	number of jobs for compilation, similar to -j in make
- 	-t)	run test for target_arch, requires CROSS_COMPILE set
--		supported targets: aarch64, x86_64
-+		supported targets: aarch64, x86_64, loongarch64
- 	-h)	display this help
- EOF
- }
-@@ -111,12 +111,19 @@ function run_qemu() {
- 
- 	cmdline="$cmdline kho=on panic=-1"
- 
--	$qemu_cmd -m 1G -smp 2 -no-reboot -nographic -nodefaults \
--		  -accel kvm -accel hvf -accel tcg  \
--		  -serial file:"$serial" \
--		  -append "$cmdline" \
--		  -kernel "$kernel" \
--		  -initrd "$initrd"
-+	local qemu_args=(
-+		-m 1G -smp 2 -no-reboot -nographic -nodefaults
-+		-accel kvm -accel hvf -accel tcg
-+		-serial file:"$serial"
-+		-append "$cmdline"
-+		-kernel "$kernel"
-+		-initrd "$initrd"
-+	)
-+
-+	# Bound the QEMU run so the test always terminates, even when QEMU
-+	# does not exit on its own (e.g. no EFI runtime services after kexec).
-+	local qemu_timeout=60
-+	timeout "$qemu_timeout" $qemu_cmd "${qemu_args[@]}" || true
- 
- 	grep "KHO restore succeeded" "$serial" &> /dev/null || fail "KHO failed"
- }
-@@ -127,6 +134,7 @@ function target_to_arch() {
- 	case $target in
- 	     aarch64) echo "arm64" ;;
- 	     x86_64) echo "x86" ;;
-+	     loongarch64) echo "loongarch" ;;
- 	     *) skip "architecture $target is not supported"
- 	esac
- }
--- 
-2.53.0
+ rust/kernel/bug.rs | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
+diff --git a/rust/kernel/bug.rs b/rust/kernel/bug.rs
+index ed943960f851..874adb93cdfe 100644
+--- a/rust/kernel/bug.rs
++++ b/rust/kernel/bug.rs
+@@ -123,9 +123,10 @@ macro_rules! warn_on {
+         const _COND_STR: &str = file!();
+
+         if cond {
+-            const WARN_ON_FLAGS: u32 = $crate::bug::bugflag_taint($crate::bindings::TAINT_WARN);
+-
+-            $crate::warn_flags!(_COND_STR, WARN_ON_FLAGS);
++            $crate::warn_flags!(
++                _COND_STR,
++                $crate::bug::bugflag_taint($crate::bindings::TAINT_WARN)
++            );
+         }
+         cond
+     }};
+
+base-commit: dc01dfb37b34beeefcfe1c3055364d41a4070c7e
+--
+2.55.0
