@@ -1,126 +1,132 @@
-Received: from flow-a6-smtp.messagingengine.com (flow-a6-smtp.messagingengine.com [103.168.172.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43517283142;
-	Sat,  8 Aug 2026 05:30:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.141
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786167027; cv=none; b=r+DiSer2ZYkcnTVR4CkV5PEMZb4uorqlarLoOMMVr5lyRjNvJw4TFP0JQJf1lmZqBzVVBVIcyx4TpjTFpmG15l5TNkdt4jZ+ckIzZFARA368T+NYj8dG6D4bNP3mz2BPVZNBmW7iJRE9UJobMt0tvs9U+98/AzgHZTbL8ao8FiI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786167027; c=relaxed/simple;
-	bh=Z7qqH7LW3+V54E3F+JyBOF+7QPST2EdHeRx2nwo8tsY=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=ERcaaTbcpHRhY5iQcuTNtR14km90uDaiA/g0Fp5olJA4VVCiFl2uWA+fUSULe4ecI5qrWHFXzwAjM0dDVPuVuRzZFQncASZ1lnI3S3D8cQjSyj3S0YFeyiI01yLZ2GSoU0A7VXowQX9uTbcMAGSQ7674yhh/s/EtVy5TiECJ7zI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=flapping.org; spf=pass smtp.mailfrom=flapping.org; dkim=pass (2048-bit key) header.d=flapping.org header.i=@flapping.org header.b=Jcz5oemF; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IxqkjLw+; arc=none smtp.client-ip=103.168.172.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=flapping.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flapping.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC8F37CD45
+	for <loongarch@lists.linux.dev>; Sat,  8 Aug 2026 19:41:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786218064; cv=pass; b=hP5KrgPjoIUUflpsITmHqMyeUE+3/KNKQW9dteUr5bmADen2kgILE3+ENYSl36ZPlgsHbr2bX+YgqijbIPta5BjcIwtmoMUcqpjM3REJqebkBDy+gpZJSLaDPW8YkgzD9Dl8NLa+XlIkkkdAvHlbD+BC+1P6MjsfNLgSYrauKSs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786218064; c=relaxed/simple;
+	bh=WKjEzMmiO0snanv+t+uNfhShpP5xYF0n9oP12NeJ3Ok=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fRKtAtfi0Eds+pxhyrfFotq1FQ0R8iHM/ly0evdcvCg6MmEa0Zywk6QkxLiDiuYYDKeHYSWlhQe5TnABa2pThhMfom5E0rznL0UhggAq0I2eYoKPz4/GNBvlCoHV5reSBPe1XDHEzcyrFp99Zg0kAjMhOahWtiVkvI73wqw5kQU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ewQCIlTS; arc=pass smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flapping.org header.i=@flapping.org header.b="Jcz5oemF";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IxqkjLw+"
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailflow.phl.internal (Postfix) with ESMTP id 1C4AC13800FD;
-	Sat,  8 Aug 2026 01:30:24 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-04.internal (MEProxy); Sat, 08 Aug 2026 01:30:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flapping.org; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1786167024;
-	 x=1786170624; bh=Z7qqH7LW3+V54E3F+JyBOF+7QPST2EdHeRx2nwo8tsY=; b=
-	Jcz5oemFNcwKRU0VF1OF5IYuMcQXEZ8vs2ZUs4hSKvoNbeTaKF8m4+us+FHkeTdv
-	ijJjMCBGiYqqW0ySD2LbZevioMsYqhzkCOzyOiRq6VA2gZx//IqaVmg4bbjVMSG8
-	IfSXaeHkV695Pyyml1gbazWhYo4zHlRR88rzK6i9EgSAZiF+ZTVJ1HzqXHUe7t2H
-	aEq8bSoJ9CixHyXFB4vEWqjlnV4HyHSzItbYeYeyErx8k6HBdvgv4mcuTQV0y7y5
-	XMqQTvqsuhMAvdkvL25t5We6A9IxE+NC78q2iQISTTTyN6gwtkg8aDTkNXD2YLmc
-	1gBOW5QDnP4uU4wX/LyiPg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1786167024; x=
-	1786170624; bh=Z7qqH7LW3+V54E3F+JyBOF+7QPST2EdHeRx2nwo8tsY=; b=I
-	xqkjLw+e5SnqNu2pvvtSL1ctzzGj3BFX65v8HlBRdPYLQb8fLSaOgVMgITdhSAzM
-	IrBPQo77D9OvW0E+ninknzEH9m/f1eYkCeU6L36fR67ddXTHmpziy1G5U+lMxYv7
-	kf3V0l83F9aD48QH2HvsHeYTtuPIzq6Froi4AgEIrD4zlZyPkeqn3MiPgZOECPJN
-	xLgmQD2PErBsnNsZjq/qYCt5Ed1PI/gdKFBNDVJd6rLv2seSvYHqLXtl6Hl3L/J6
-	4a7QqmbPZSV1RnlaNAskXp0PDJ89KPYa+/uGADUUN+Xf8neTd9SOvoHh/zGOJxbP
-	CenaAKLlfSjKt2FBgpKLg==
-X-ME-Sender: <xms:7r52ajLzauOFzcWe9NSyoWIXpMiG3NViCkWxAGVCy9tvjx7QkgLdJg>
-    <xme:7r52ageqfmoI-bOKo4BJ07tfx5NUUTsd8yMi5HKNouLyF49NDUd77OUthySg7rkZF
-    ZtSlVrfuxx3wZpnLiuZ_PbyDslQPdl6E_2s4Gnssqccgl_wqs3XKpU>
-X-ME-Received: <xmr:7r52ajsY9j43_OkBu7c-2meEDn4om7V_QIaKmRrcR_AalMo5jmGiSi1N20bk51wAVlj0ATId_x9LvxR5IkLbR8tI>
-X-ME-Proxy-Cause: dmFkZTFmBd0NuyB3aeGQKppgbGUY2cM5HAd/TJk9kA8lZc0wGCcICpb4AqwPBT1g/SzG+q
-    3/kqa12a9t5mbd5xNvhmx4qa4a/GgJwXgU7vRcoTgQBfz00n2Ju2OT+mOdRaXRSC8tZyhQ
-    TerJb4ASAtl0scbHr6YdI93TOJtnDYTcPICB0NFkabP/Abj+kC5uNsLnhJTjaNJqBPNl3S
-    PrsjFZeunp1YQb6IQ36Piz7Q2O6Ts8OkfRAGwzqzoAEnLdR0tq1h1R28dEiV4vjwh6ez8e
-    W5NVEuEbh9YhDTNqiV5doG6S0KXUeH/+If6ibEOCJ9dwLnHwqscx9QT84HbpEGtsbGxaTp
-    1Iqsj/hlrqndnlf5baJ36iO/mskY07RkwG7BfwAZFVR/7MPbX8t2KTC942I+sWJfChq+8N
-    UfJhG2/tqjcCFnhnagvK/J7JwAlaNO+/eZLbS3v3CYtsHeWGESvQ5VhLS3v30qBwX/UB2M
-    exCCxFVpLwSDTIvuD6MybO2PBmjVgPO6P828+t/h9cH3HGEalGkpPWtns+ykGEJWo3wLxC
-    IPrRpmBVP7B4qwx42Qh6bziIMf8SAR/8UdE+MfPanKYtW3MGebDf+9ACSV+XHpJQhDJv2L
-    ouBNvmBNhGqXRzfCDB4tuZW7VbcF/7ES5VN/ZD3Vr+jesqEjgAsA31nlmH+Q
-X-ME-Proxy: <xmx:7r52amGyAK2aKbReDRN5OTWIKNcqoVt819Fqto8JPVe3Jy275z0G-w>
-    <xmx:7r52alfD7Hxh2iap__dLFRPX2xNFRo4NJhYVVNBL3yrwFEwlzOt6Dw>
-    <xmx:7r52aquteibrkL2SWmaPhhlg73S4VKcLR4fiZJMtC9wYyfDlb-bY4w>
-    <xmx:7r52akmqi4fTiAPH08VW9NanUK-SDfekbtFPTvqAZ38tJwC5LvXXFQ>
-    <xmx:7752aj0MSQ36KqHGPYbqMvWPz-AvM2C4ihgveHSx_gTbkSYPLuvFJqFE>
-Feedback-ID: i51fe4b43:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 8 Aug 2026 01:30:16 -0400 (EDT)
-Date: Sat, 08 Aug 2026 14:30:13 +0900 (JST)
-Message-Id: <20260808.143013.1251068388254615351.tomo@flapping.org>
-To: miguel.ojeda.sandonis@gmail.com
-Cc: tomo@flapping.org, ojeda@kernel.org, arnd@arndb.de, krzk@kernel.org,
- alexandre.belloni@bootlin.com, linusw@kernel.org, chenhuacai@kernel.org,
- boqun@kernel.org, gary@garyguo.net, bjorn3_gh@protonmail.com,
- lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com,
- tmgross@umich.edu, dakr@kernel.org, daniel.almeida@collabora.com,
- tamird@kernel.org, acourbot@nvidia.com, work@onurozkan.dev,
- rust-for-linux@vger.kernel.org, fustini@kernel.org,
- linux-arm-kernel@lists.infradead.org, soc@lists.linux.dev,
- kernel@xen0n.name, loongarch@lists.linux.dev, stable@vger.kernel.org
-Subject: Re: [PATCH] rust: bug: fix `dead_code` warning in `warn_on!`
-From: FUJITA Tomonori <tomo@flapping.org>
-In-Reply-To: <CANiq72n4=fz=JNKY0Jdm8BnLa=RmHB2B7s0bO47YTJ7hygqBZg@mail.gmail.com>
-References: <20260807221429.155946-1-ojeda@kernel.org>
-	<20260808.074341.1056015191905819805.tomo@flapping.org>
-	<CANiq72n4=fz=JNKY0Jdm8BnLa=RmHB2B7s0bO47YTJ7hygqBZg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ewQCIlTS"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-381f03d7be0so155158a91.1
+        for <loongarch@lists.linux.dev>; Sat, 08 Aug 2026 12:41:03 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1786218063; cv=none;
+        d=google.com; s=arc-20260327;
+        b=jDozcByEVG3T2FyhjDudmmdhCtRJ8IWbHDbCFs5xOYJQ4tmYDmWruN3ZpsLQzDUdPt
+         EoESMhHVOsigcb7IQuQbYCY6Vcy5nMkrn9OCtgzM8Rp9jnlZGc/GdTJSCTHA8x1evYc+
+         qI/yTsaR529yHa/eQvKeCQR1v6ND5l1UZgqJ4RfkGQrDUs5XdIcw7z+psIvEp0J2BoHn
+         oTfCC/AZQCKWk3KXy/NQVmeaJl2Mh8Yezjuki5ufx8Vz1cYNSGZZyyEhV+UJa6bCTU2Q
+         pM1vEjay1Z0g8imcaFZpf/s/GlONXvFfUcEBp176H/P/HikkvN/ZSjvwMjZ8vhvG8pXj
+         7Tsw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=WKjEzMmiO0snanv+t+uNfhShpP5xYF0n9oP12NeJ3Ok=;
+        fh=NjOuOJy7/5zK7FnmuZ3E9jOHkaUvpuTMKRiXkXOXO6s=;
+        b=bXkurOC68Y6jNXabRZsiFSbWxkpsULdCJnjiM+e4A8VCW18DCinj4Pd6mD1gsv+Eot
+         OmBYv4hlWf8Dc6EfKbpD/4X2fMv/XxGZox6LYbH05O3osmbSLAx+GpyEDmgvuvRu47tJ
+         UI6rKComyS1Vurlu/IEJqHiR9VqImRVy3aqtZVEwhqrvtNOfFe2fqknmSxYX6hiip0et
+         9xC6RfpPrl9khfQTszKXxkVLgohGcfmF9piJ1DjzuroW2/fpP/oyYqgpbJIsPb2PrbGB
+         uax9VWGSXCddComBCfNJgwhj/ppG7725BeUO3RffhxZyFE5Pnd2FczpUGO9dnznTq/rO
+         rH8A==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786218063; x=1786822863; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=WKjEzMmiO0snanv+t+uNfhShpP5xYF0n9oP12NeJ3Ok=;
+        b=ewQCIlTSu/mzZps1D1hYLIjnV0Q/ErSWUt6bwbw3FAncXFlc07Tstc9nuoDMGixcCe
+         eM/Q83nz82D+A5F41SpZ4N2t1DvRHr3NUFgHkpWw41AHCxcWDCMD0rP53IJTxzNRBiL3
+         JWmXxpHUlQHfvsYJb1Tag6wN9Jdx0eCwUxHYFpENt1LgedNjTIC4J67VgqjjXkASU/2G
+         WT3jdek0oNdjD2X9q4ibypHUilvOZKtWAyMXx67yjXzN85LpC6bgt7viRsFjKmjTOFDU
+         uiDcaaFV9fvSNFgKl9NBDZfrFdQHrzjL6LRMVlrGOBYQRYZMApwNu/N2vX3OlW72ysja
+         vU6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786218063; x=1786822863;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=WKjEzMmiO0snanv+t+uNfhShpP5xYF0n9oP12NeJ3Ok=;
+        b=HeBk1N3mulXgY4jbIawWF9clS7uo7TBjXq9VPvXlwqvF4vuV8VYTT+Phav2S489GJ8
+         DrZCTyF2xVrN/kw7Y/b8lGU/EA99v0AHmn+Dz6Dezj6YslVG6Yc3zz6TJ5GkYPOrpj24
+         DwS2rrrT7Nkvcc9DHTkiF3Rz/VLNg+1WtpR10haFFiBt0tbF9fxvS6ZLt3u9ubcpJptP
+         VuUwt0KWSMZUamxFN2UDyVFYAF9vJhK87OnT4mOe54x8hJAQKeFkOxSfaBbgVDDlszCb
+         THob2w7SkflEK4rdp53My5L5BTSafrP4LLSXx6vqc9q0jH00X5qnQ30mIHQ0YD2jbRZ4
+         S02g==
+X-Forwarded-Encrypted: i=1; AHgh+RpVKuoEax3JX9GHVIRoy5J9SNndDGjqZL8uWN+fMQbq89HU5YnCe9PulurxvNPfxKjHFk9/loTcaaM=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzaSgpxlX9e4zssFfdlJpjNau2NGj68SltrCW8y7QzGDR2LGo90
+	vYzAG033vyiXrw3JTjtdZT91B9iowt/Gk5uwKPKqfyW9jzcHHex57SLb9NTJ3ZUWrYPUdSIWswM
+	F1wLoIi3Gc2l9L1VZltRQZIublqc8Nao=
+X-Gm-Gg: AR+sD13eA2S6l0tqmJtxwABNzU4/xAdFq7v6+wNciivUYf7eOtZxkHegnv2fJ7ZsFrh
+	e1H53kt79WTgWWu9XFz6MrsInHb2O0ijNIPhcCHnO0jQOXGgZX3NvwrL5ZVp46CPH/BlYaMPqH1
+	05mYPyMpd4JMShakRgYVORSk/U3qIsxYFRu1/qg2v/Q+lltQnT4FbcXN1ggfoYKkUeMnV0AMGfb
+	rEKr8yP3EfnxlZSFN8jnP7/zGMyYO8NTuwbF6bVi6N/troX4lfsfZ4IIZGtdq5n9NCUtI+v6SN4
+	e0plo+EXvpSR5DOy5vP4LoVDLtWe52EXzs7LK+1t7D9aqEeZa6YJnYyQYiDYVYrHz+DRPTOeB8q
+	bpt9Kfw8gSNoQ16BsQU6ol8080AVUGv8ypH/8FWcsmM3uqkmoGHUzYNfUUeaG
+X-Received: by 2002:a17:902:ec8a:b0:2c9:ed4a:c3a4 with SMTP id
+ d9443c01a7336-2d0ca1658f2mr275615635ad.0.1786218062739; Sat, 08 Aug 2026
+ 12:41:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=utf-8
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+References: <20260807221429.155946-1-ojeda@kernel.org> <20260808.074341.1056015191905819805.tomo@flapping.org>
+ <CANiq72n4=fz=JNKY0Jdm8BnLa=RmHB2B7s0bO47YTJ7hygqBZg@mail.gmail.com> <20260808.143013.1251068388254615351.tomo@flapping.org>
+In-Reply-To: <20260808.143013.1251068388254615351.tomo@flapping.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sat, 8 Aug 2026 21:40:49 +0200
+X-Gm-Features: AUfX_myY729uYjJW5IhCmENfsQg8ijuPS9VLtcEZjSqkZiEXciXEvujLP3Jq8gQ
+Message-ID: <CANiq72m70uWCRFnhs3axdymSTGCirBrYAvKh2BiT0xqW2j_3jg@mail.gmail.com>
+Subject: Re: [PATCH] rust: bug: fix `dead_code` warning in `warn_on!`
+To: FUJITA Tomonori <tomo@flapping.org>
+Cc: ojeda@kernel.org, arnd@arndb.de, krzk@kernel.org, 
+	alexandre.belloni@bootlin.com, linusw@kernel.org, chenhuacai@kernel.org, 
+	boqun@kernel.org, gary@garyguo.net, bjorn3_gh@protonmail.com, 
+	lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com, 
+	tmgross@umich.edu, dakr@kernel.org, daniel.almeida@collabora.com, 
+	tamird@kernel.org, acourbot@nvidia.com, work@onurozkan.dev, 
+	rust-for-linux@vger.kernel.org, fustini@kernel.org, 
+	linux-arm-kernel@lists.infradead.org, soc@lists.linux.dev, kernel@xen0n.name, 
+	loongarch@lists.linux.dev, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-T24gU2F0LCA4IEF1ZyAyMDI2IDAxOjIxOjIzICswMjAwDQpNaWd1ZWwgT2plZGEgPG1pZ3VlbC5v
-amVkYS5zYW5kb25pc0BnbWFpbC5jb20+IHdyb3RlOg0KDQo+IE9uIFNhdCwgQXVnIDgsIDIwMjYg
-YXQgMTI6NDPigK9BTSBGVUpJVEEgVG9tb25vcmkgPHRvbW9AZmxhcHBpbmcub3JnPiB3cm90ZToN
-Cj4+DQo+PiBJIHNlbnQgYSBmaXggZm9yIHRoaXMgYnVnIGEgZmV3IGRheXMgYWdvOg0KPj4NCj4+
-IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2FsbC8yMDI2MDgwMTAyNDg0MS43ODY2NjQtMS10b21v
-QGZsYXBwaW5nLm9yZy8NCj4gDQo+IEFoLCByaWdodCwgc29ycnkhIEkgYWxzbyBzYXcgYW5vdGhl
-ciBvbmUgd2l0aCBgcnVzdHRlc3RgIGZvciBhcm02NCBhbmQNCj4gcmlzY3Y2NC4gRGlkIHlvdSBz
-ZWUgdGhhdCBvbmU/IFdlIHByb2JhYmx5IG5lZWQgYSBgY2ZnKHRlc3RsaWIpYA0KPiBzcGxpdC4N
-Cg0KSXMgdGhpcyB0aGUgb25lIHlvdSBzYXc/DQoNCmVycm9yOiBpbnZhbGlkIGluc3RydWN0aW9u
-IG1uZW1vbmljICdicmsnDQogIC0tPiBydXN0L2tlcm5lbC9idWcucnM6NjM6MTcNCiAgIHwNCjYz
-IHwgLyAgICAgICAgICAgICAgICAgY29uY2F0ISgNCjY0IHwgfCAgICAgICAgICAgICAgICAgICAg
-ICIvKiB7c2l6ZX0gKi8iLA0KNjUgfCB8ICAgICAgICAgICAgICAgICAgICAgaW5jbHVkZSEoY29u
-Y2F0IShlbnYhKCJPQkpUUkVFIiksICIvcnVzdC9rZXJuZWwvZ2VuZXJhdGVkX2FyY2hfd2Fybl9h
-c20ucnMiKSksDQo2NiB8IHwgICAgICAgICAgICAgICAgICAgICBpbmNsdWRlIShjb25jYXQhKGVu
-diEoIk9CSlRSRUUiKSwgIi9ydXN0L2tlcm5lbC9nZW5lcmF0ZWRfYXJjaF9yZWFjaGFibGVfYXNt
-LnJzIikpKTsNCiAgIHwgfF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19eDQogICB8DQpub3RlOiBpbnN0YW50aWF0ZWQgaW50byBhc3NlbWJseSBoZXJlDQogIC0t
-PiA8aW5saW5lIGFzbT46MToxMTUNCiAgIHwNCiAxIHwgICAgIC8qIDggKi8ucHVzaHNlY3Rpb24g
-X19idWdfdGFibGUsImF3IjsgLmFsaWduIDI7IDE0NDcwOiAubG9uZyAxNDQ3MWYgLSAuOy5zaG9y
-dCAyMzA1Oy5hbGlnbiAyOyAucG9wc2VjdGlvbjsgMTQ0NzE6YnJrIDB4ODAwDQogICB8ICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF5e
-Xg0KDQpJdCBzaG93cyB1cCB3aGVuIGBtYWtlIHJ1c3R0ZXN0YCBydW5zIHdpdGggYEFSQ0g9YCBz
-ZXQgdG8gYW4NCmFyY2hpdGVjdHVyZSBvdGhlciB0aGFuIHRoZSBob3N0J3MuDQoNCkkgcG9zdGVk
-IGEgYGNmZyh0ZXN0bGliKWAgc3BsaXQgZm9yIGl0Og0KDQpodHRwczovL2xvcmUua2VybmVsLm9y
-Zy9hbGwvMjAyNjA4MDgwMjI2MDguMTEyNTE3NC0xLXRvbW9AZmxhcHBpbmcub3JnLw0KDQoNCldo
-aWxlIGF0IGl0LCBhIHF1ZXN0aW9uOiB3aGF0IGlzIGBydXN0dGVzdGAgbWVhbnQgdG8gY292ZXIg
-d2hlbg0KYEFSQ0g9YCBpcyBub3QgdGhlIGhvc3Qncz8NCg0K
+On Sat, Aug 8, 2026 at 7:30=E2=80=AFAM FUJITA Tomonori <tomo@flapping.org> =
+wrote:
+>
+> Is this the one you saw?
+
+Yeah, exactly.
+
+> I posted a `cfg(testlib)` split for it:
+>
+> https://lore.kernel.org/all/20260808022608.1125174-1-tomo@flapping.org/
+
+Thanks! It seems good to me.
+
+> While at it, a question: what is `rusttest` meant to cover when
+> `ARCH=3D` is not the host's?
+
+`rusttest` is meant to run tests on the host, regardless of the target.
+
+There aren't many tests there nowadays, since most of them moved to
+the actual kernel when we got support for that, but we can still do
+there things like testing proc macros.
+
+We could also use it for more things in the future, perhaps...
+
+Cheers,
+Miguel
