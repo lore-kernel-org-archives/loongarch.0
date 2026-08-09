@@ -1,108 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1A9155C97
-	for <loongarch@lists.linux.dev>; Sun,  9 Aug 2026 04:08:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6AB11C84BC
+	for <loongarch@lists.linux.dev>; Sun,  9 Aug 2026 04:09:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786248487; cv=none; b=YjHRpMdYxkOnMcmFW5vvyUo74AN6ueBEILCQqiboQnG/+vjIdL5aAyebJv/CsRqgt7d5tpWqRaFzXcqmNoraDB2YwEaKWBSEUlZZDRjqKJaYxuV6yRe1C2d822XBEeIgAMrDEml+Ls7AtGFXjB+ZFGxdR4sLPCJI52vcC4Xr6YY=
+	t=1786248574; cv=none; b=HDBEC8TOv+0n2kp8ck1aFiTgeEmkkmYyzrtzAySIs1SYbPeaishe/tHm2F5/yc5l0bTibS2rIRiaBITN9PAt+Uq6ihflE96qCQR/eKZLl5zQ58NrMTBYnPlBOUoFgxpLRKgONsyIvfLUK8Qq7xodEi7gFL0ireUrQPnb/lVOVCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786248487; c=relaxed/simple;
-	bh=DVH4IDH2JUFbfAJKtvWhR0yvk9oI7f1Wb+9Vj/W7N4Y=;
+	s=arc-20240116; t=1786248574; c=relaxed/simple;
+	bh=jU/j2rUIXe272yLidlHK69K9vHmOcR5rtahgU5rQ/y8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o5GcTuhTThOvfuxevTlZiZXA6WGwy0XoJKtmsmtG8H1mpFMOG4Y+lRmkHdYeS4zEhf3c8cLmohfZatlntRWmpifHiGSJdS+wOtCvA8bYG+QrSEqZJg8MeCfktiy55hrvqaXk54UOPGaTRiH5Ux6TuaqsBYWm6CH3MJY5JgH+NB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RRe3qLM6; arc=none smtp.client-ip=100.103.45.18
+	 To:Cc:Content-Type; b=Wevzgt1DjQi1YfZnAZSUtX5nuqGPstAzHz4uYZeCdmYdI539sFUxDkG0XGP3shcsdt7rBAyQQRSX4EMPOLxnX/87lfS2IGo13Io1vjIN5pFjq1PhY1o9njxr7iNQDBnGF64W9aaK6J7uuRRj6pQDl5lVEZoMwVyjeXPPzG8r5XQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fnVdlnMb; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RRe3qLM6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B435E1F00AC4
-	for <loongarch@lists.linux.dev>; Sun,  9 Aug 2026 04:08:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fnVdlnMb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 796441F00A3D
+	for <loongarch@lists.linux.dev>; Sun,  9 Aug 2026 04:09:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786248486;
-	bh=NDH0BIVJ0y5dH9ibs+UCIn1aXnjt6eR+IBwhFsTvFwA=;
+	s=k20260515; t=1786248573;
+	bh=pB3sQ7DJLZcngz+lrTTuMa4GxvzLNukpO5ld/ZUbobg=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=RRe3qLM6pJM0LFqPF+FhY1yGyD7psQIxZDB37j0WF7NNse9hC3hFIwxBIrjyK4nKT
-	 /v81OERaQ1w4LjnSuWozm5KQTSIObaku1RjLq/BoI269frZCtZnoXPJyeSWObfWiSX
-	 5zeHyE5TEgDQ3OVxYt+4GQP35cHTNYY5AB10qPeuz5lzmUIDgupEQjBhfud8Dbb6mr
-	 h2nytOVuH7X5momwGiIYELjS5Hc3n/uDH7d6DAQHLRuaQgsTj9q1Sxjv05E7p8wIm9
-	 OMOFLJ1fgGurncNZxJZwehjZNdyTpavTmHPDLxonPqMXX1SG7KYpf15JihURavjsDy
-	 CAwknTdWdmrjw==
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-6a1b51723a9so1231101a12.1
-        for <loongarch@lists.linux.dev>; Sat, 08 Aug 2026 21:08:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RrojpamVPr5nyYWKjwvvebef7uKpuKg55cwmvx7LDuOrR1IjZgX2bZc4+QSfvmCT9GTQcbwIFfFoxo=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyBhTkQd+EAFvtgKwmt/OjMzak9pUUPnryIpqw+Wmn7p1TNh+O3
-	ckgWDR80XXCzzZ+VHNDCvoENem9oUqOYCQveyJBL47JMX3XjcJG4GqtrKuAKT4ucj9g/cACk1hI
-	zIbYGHITMUh2UFFRJaixBsixZSBZyo7o=
-X-Received: by 2002:a05:6402:1f8d:b0:6a0:927e:39e2 with SMTP id
- 4fb4d7f45d1cf-6a14f0c5762mr16676115a12.5.1786248485411; Sat, 08 Aug 2026
- 21:08:05 -0700 (PDT)
+	b=fnVdlnMbVY9FzhNQjrc3pzxQfgkLauHiHOhsJUvDzCqukA+loD1aV/QSQh4uBZQnx
+	 0OKnS+jZhGpBGnzvnHtGognY9IFW+kYYQGDX0/UBrPTr0STRkD4wvVjbNlrko4Y9Ad
+	 n33Jt0esLnjIIBaAU6ltnVgg7+LXl+100gsOvI1y/wbPpfXfR/aOTXrKxspPALZAs3
+	 WoDjf4BYY3mqg+ZnqPCJIavJ+XCQz4b9dEvQZ9JWzsv/4ScAtHGTy8+9J3uL4v8xYi
+	 oN0SPjbI8QpgeNk/9tBprXKPuGVxHVB+o4vU2vKWj8mOQTUNf64S5lI2oPtmtPfKOA
+	 a8aB4JWbCua5g==
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-c15cb6f5c12so130621166b.0
+        for <loongarch@lists.linux.dev>; Sat, 08 Aug 2026 21:09:33 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+Rq/S1+1xTw6mjlMfPMoby0sR9hCYmQMg0H3aFnigUfGK4Si3Ubd+al7crDTu3J592djWE/iw3k4GEU=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzVzV+CS71c5S1wCHIajkoWrIhzcHG22KAWEu6hykxW55G5pDd/
+	nRRnfiBafReynNs9iSIfLDDoc/q/XohLslurMkwWAwv6F7JCIJTnEXTWTHsubLADdD7EKxfdJIi
+	lmWbtfr5HqdzA1M3igBbOyEJZlmBuUTQ=
+X-Received: by 2002:a17:907:1c2a:b0:c20:223e:940a with SMTP id
+ a640c23a62f3a-c2087572807mr576000566b.21.1786248572018; Sat, 08 Aug 2026
+ 21:09:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260804075719.1137338-1-maobibo@loongson.cn> <1793132c-dd25-4ee0-bc66-f3636522164a@linux.dev>
-In-Reply-To: <1793132c-dd25-4ee0-bc66-f3636522164a@linux.dev>
+References: <20260804153938.16129-1-dongtai.guo@linux.dev> <936e5942-5722-c86e-2c5b-c048199ed6e6@loongson.cn>
+In-Reply-To: <936e5942-5722-c86e-2c5b-c048199ed6e6@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 9 Aug 2026 12:07:55 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7900J7RwUHnJFN7nXb+_SZzoA-xZ1aUGF_6OrjTr1D6w@mail.gmail.com>
-X-Gm-Features: AUfX_mx-xYcnVUraXPcSrpDm5aEi4WRq8y2uR6OZvN7rbDLMbbNmWrUUKydL1iw
-Message-ID: <CAAhV-H7900J7RwUHnJFN7nXb+_SZzoA-xZ1aUGF_6OrjTr1D6w@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Fix acpi_package_ids array overflow
-To: Tao Cui <cui.tao@linux.dev>
-Cc: Bibo Mao <maobibo@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
-	Rong Bao <rong.bao@csmantle.top>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Date: Sun, 9 Aug 2026 12:09:22 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4ORtPmvFxByTgY2LOVbUNnv4KS+j1N+AbvHXabbAhQ4w@mail.gmail.com>
+X-Gm-Features: AUfX_mxO4KWRsZ8fMgJqkZeDEl0vHV-6qVX50wOy9LwGfkWGrj329fN3YTQg0f0
+Message-ID: <CAAhV-H4ORtPmvFxByTgY2LOVbUNnv4KS+j1N+AbvHXabbAhQ4w@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] LoongArch: BPF: per-CPU address resolution and
+ timed may_goto
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: George Guo <dongtai.guo@linux.dev>, hengqi.chen@gmail.com, ast@kernel.org, 
+	daniel@iogearbox.net, andrii@kernel.org, kernel@xen0n.name, 
+	martin.lau@linux.dev, eddyz87@gmail.com, memxor@gmail.com, song@kernel.org, 
+	yonghong.song@linux.dev, jolsa@kernel.org, guodongtai@kylinos.cn, 
+	bpf@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 4, 2026 at 4:57=E2=80=AFPM Tao Cui <cui.tao@linux.dev> wrote:
+On Thu, Aug 6, 2026 at 8:23=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn>=
+ wrote:
 >
+> On 2026/8/4 =E4=B8=8B=E5=8D=8811:39, George Guo wrote:
+> > These are the first two patches of the LoongArch BPF JIT feature work,
+> > sent on their own to make review easier. The remaining pieces
+> > (per-program private stacks, exceptions/bpf_throw, sign-extending loads
+> > and atomics on arena pointers, and the matching selftests) will follow =
+in
+> > a later series.
 >
+> The patches apply cleanly on top of Chenguang's series.
 >
-> =E5=9C=A8 2026/8/4 15:57, Bibo Mao =E5=86=99=E9=81=93:
-> > With LoongArch virt machine, one typical setting is one core per socket=
-,
-> > there will max 256 sockets on one VM. With PPTT acpi table, array
-> > acpi_package_ids will be overflowed.
-> >
-> > Here change array size of acpi_package_ids with max value of
-> > MAX_PACKAGES and KVM_MAX_VCPUS.
-> >
-> > Fixes: 4e8f58620f67 ("LoongArch: Retrieve CPU package ID from PPTT when=
- available")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> > ---
-> >  arch/loongarch/kernel/acpi.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.=
-c
-> > index 873e90990771..cb454ee92b20 100644
-> > --- a/arch/loongarch/kernel/acpi.c
-> > +++ b/arch/loongarch/kernel/acpi.c
-> > @@ -13,6 +13,7 @@
-> >  #include <linux/export.h>
-> >  #include <linux/irq.h>
-> >  #include <linux/irqdomain.h>
-> > +#include <linux/kvm_host.h>
-> >  #include <linux/memblock.h>
-> >  #include <linux/of_fdt.h>
-> >  #include <linux/serial_core.h>
-> > @@ -202,7 +203,7 @@ static void __init acpi_process_madt(void)
-> >
-> >  int pptt_enabled;
-> >  static int acpi_nr_packages;
-> > -static int acpi_package_ids[MAX_PACKAGES];
-> > +static int acpi_package_ids[MAX(MAX_PACKAGES, KVM_MAX_VCPUS)];
-> >
-> >  int __init parse_acpi_topology(void)
-> >  {
-> >
-> > base-commit: 075b74841bd0065a3bda3440873c747938e69b68
-> Reviewed-by: Tao Cui <cuitao@kylinos.cn>
+> The following selftests passed on LoongArch:
+>
+>    # ./test_progs -t cpumask
+>    # ./test_progs -t percpu_alloc
+>    # ./test_progs -t iters
+>
+> Acked-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> Tested-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 Applied, thanks.
 
 Huacai
+
+>
+> Thanks,
+> Tiezhu
 >
