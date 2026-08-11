@@ -1,140 +1,130 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 205374248A5
-	for <loongarch@lists.linux.dev>; Tue, 11 Aug 2026 09:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D71FB2DEA6B
+	for <loongarch@lists.linux.dev>; Tue, 11 Aug 2026 09:04:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786438832; cv=none; b=RC5AbsVJxDx+qKfi6TmvoLpVi6a1b3W6F21n53xh25bevQ7rn7cLt9UnI42DcjIER6rxG0phImJJnSEQnxNPcSxHh/gzTPKc1f05SiZG3gUITc94JT3jSANp8G9tBTE54R+zvgY3kV76ezBOZETrx3OZ33jTNnK2enigYTEXqgA=
+	t=1786439059; cv=none; b=i5Go815/5n8C1zp/H3bKqsjPA07Kt2wd7Sk7agrp64W9pWMDc5OSIkTiOOnSmMZooiF1KkwaCgMaJB+oUmeNN3TSYOLmBCPqH+E67Nv7cAT6/tyqgmXE27txAUyyK9xIQCA4ozVRXACT099ylJmTuffDKM17JqX4LdVmpXxOPi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786438832; c=relaxed/simple;
-	bh=tUiTGK9kLGJYJG38Hawj4v69yMlo3kmE+u/Tuup4Yg4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NwVoeoHiucB+e84Mr+KN7P0JLbzZmIRPkUATU0OD8QkRwEl3gBpBaz2esna69NRee3jdowQvlt9FOVqTz6SMvdHGivQzamtZ0L33DW4jSEuM5lqSPodPV+1+fFFzMUBxc+9w524pbszMHk3uwBrTVsyQAG0w6uOKeKulw5ALIdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=p0EklLMH; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1786439059; c=relaxed/simple;
+	bh=10qM44Kr9OeofzvV+8kWZ1WCNch+/hCgogkMD24DaHg=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=htKlymDCFhXQioyaWwhsFO+DFlhu/YRKoTySRisRjjW1xgWckHifLa+4uMisQelmGu/AjWitrogCLUWIkinjqrbu6QlYB83UpdTCqviYpQvWIIjfeuGKr2tpUP1VV2y+rhgqg6o2TpivsmptMcHZRFOUCkhHmaN8ySBK0j9bXSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HVmjra07; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="p0EklLMH"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7549F1516;
-	Tue, 11 Aug 2026 02:00:26 -0700 (PDT)
-Received: from [10.57.5.193] (unknown [10.57.5.193])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3B19F3F86F;
-	Tue, 11 Aug 2026 02:00:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1786438830; bh=tUiTGK9kLGJYJG38Hawj4v69yMlo3kmE+u/Tuup4Yg4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=p0EklLMHJGrKLnVqOINCl1ZfxhRZ+BNvpIRznN2rLsga1Dwdloi6U4xuE1VCQAm02
-	 kBFiXP3tqlA3ARY2zoYWjzb5WjBU+6w3Cb3dcRQRjE/0+/SN3iB10dvAMI84fhbPXQ
-	 52YnfLEkfwAxucsSI1ar27PS56iSCcvkFqLRrZM8=
-Message-ID: <643a624d-0106-44ed-a7f5-aaf9316f94fd@arm.com>
-Date: Tue, 11 Aug 2026 11:00:09 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HVmjra07"
+Message-ID: <c0e8eb3d-d99c-44d1-819a-f6f0e3b9502f@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1786439054;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ptBUeJ4msaOxN4Yk814gLrRaJ1d8EETljTID6YMlq8Q=;
+	b=HVmjra07geLqWSymDzhw1yRRUlKkLRGsj0QWMZkDF+n44463I0BHzEHrvCWqHEfm5b9U/R
+	tbl0QcTENU8g3FOTT8j4Hu62ye3wgUWIIQYBZbgEMCm/oS3ONFNn5g3ujVyd3FkrPxVt6l
+	O3C3s2vtIpiUXSu9V0JRRyuShbVtisA=
+Date: Tue, 11 Aug 2026 17:04:07 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 03/22] mm: introduce MMF_KERNEL flag and set it for
- init_mm
-To: David Laight <david.laight.linux@gmail.com>,
- "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, linux-mm@kvack.org,
- Andrew Morton <akpm@linux-foundation.org>, Lorenzo Stoakes <ljs@kernel.org>,
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
- Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Ryan Roberts <ryan.roberts@arm.com>, linux-arm-kernel@lists.infradead.org,
- Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org,
- Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>, linux-s390@vger.kernel.org,
- "David S. Miller" <davem@davemloft.net>,
- Andreas Larsson <andreas@gaisler.com>, sparclinux@vger.kernel.org,
- Richard Weinberger <richard@nod.at>,
- Anton Ivanov <anton.ivanov@cambridgegreys.com>,
- Johannes Berg <johannes@sipsolutions.net>, linux-um@lists.infradead.org,
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Ning Sun <ning.sun@intel.com>,
- x86@kernel.org, tboot-devel@lists.sourceforge.net,
- Ard Biesheuvel <ardb@kernel.org>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>, linux-efi@vger.kernel.org,
- Vishal Moola <vishal.moola@gmail.com>, Alistair Popple <apopple@nvidia.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
-References: <20260714-remove_pgtable_cdtor-v1-0-44be8a7685d7@arm.com>
- <20260714-remove_pgtable_cdtor-v1-3-44be8a7685d7@arm.com>
- <01f07ea2-8bdd-4450-8a49-548f8b646cfd@kernel.org>
- <33fc9d31-2866-4315-9510-0004deb93994@kernel.org>
- <20260811091016.5ca67143@pumpkin>
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20260811091016.5ca67143@pumpkin>
+Cc: cui.tao@linux.dev, zhaotianrui@loongson.cn,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [RFC] LoongArch: KVM: VCPU_EVENTS for pending interrupt/exception
+ migration
+To: Bibo Mao <maobibo@loongson.cn>
+References: <7e2648e9-e333-42f7-857a-8337ef033147@linux.dev>
+ <ca52efd4-5601-2448-b17c-6d73e1002fd7@loongson.cn>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Tao Cui <cui.tao@linux.dev>
+In-Reply-To: <ca52efd4-5601-2448-b17c-6d73e1002fd7@loongson.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 11/08/2026 10:10, David Laight wrote:
-> On Wed, 5 Aug 2026 14:07:01 +0200
-> "David Hildenbrand (Arm)" <david@kernel.org> wrote:
->
->> On 8/3/26 15:59, Christophe Leroy (CS GROUP) wrote:
->>>
->>> Le 14/07/2026 à 16:03, Kevin Brodsky a écrit :  
->>>> mm code often needs to know whether some mm represents a kernel or
->>>> user address space. This is currently done by comparing the mm
->>>> pointer with &init_mm; besides not being particularly elegant, this
->>>> ignores the fact that other mm's (e.g. efi_mm) may also represent
->>>> parts of the kernel address space.
->>>>
->>>> Introduce a new mm flag MMF_KERNEL and set it for init_mm.
->>>> Subsequent patches will use this flag to replace comparisons with
->>>> &init_mm. No functional change is introduced for now.  
->>> Did you consider performance impact ? This test is usually done in quite
->>> critical memory handling functions.
->>>
->>> init_mm is known at link time. Before your patch 08/22 there is just a
->>> comparison of mm (r3) with a constant (loaded in r10):
->>>
->>> c0014048 <assert_pte_locked>:
->>> c0014048:    3d 40 c1 09     lis     r10,-16119
->>> c001404c:    39 4a 03 98     addi    r10,r10,920
->>> c0014050:    7c 03 50 00     cmpw    r3,r10
->>> c0014054:    4d 82 00 20     beqlr
->>> ...
->>>
->>> After patch 08/22 we have, it first checks that mm is not 0, then it loads the
->>> word located at mm+528 then AND it with 0x1. This load might be costly.
->>>
->>> c0014048 <assert_pte_locked>:
->>> c0014048:    2c 03 00 00     cmpwi   r3,0
->>> c001404c:    7c 85 23 78     mr      r5,r4
->>> c0014050:    41 82 00 10     beq     c0014060 <assert_pte_locked+0x18>
->>> c0014054:    81 23 02 10     lwz     r9,528(r3)
->>> c0014058:    71 29 00 01     andi.   r9,r9,1
->>> c001405c:    4c 82 00 20     bnelr  
->> Is that a real problem, though?
-> The cost of the read is likely to matter most if the branch gets mispredicted.
-> I'd also guess the mm isn't usually NULL - so that branch needs to statically
-> predicted correctly as well.
-> I'd also not assume that the mm is in the cache (unless the surrounding code
-> has already accessed it), the L1 data caches are small.
 
-You're right, I didn't think about this the right way round - in general
-it may not be easy to predict that mm points to init_mm, and an
-arbitrary user mm isn't guaranteed to be cached. Repeated calls to
-mm_is_kernel(mm) in the same function shouldn't cost much though.
 
-Would some (micro)benchmark be particularly relevant to measure the
-overhead, if any?
+在 2026/8/6 16:48, Bibo Mao 写道:
+> Hi Tao,
+> 
+> On 2026/8/6 下午4:04, Tao Cui wrote:
+>> Hi Bibo,
+>>
+>> I'd like to get your feedback on an approach for migrating the pending
+>> interrupt and exception state (irq_pending, irq_clear, exception_pending,
+>> esubcode) that is currently not captured by the CSR-based migration path.
+>>
+>> I noticed your earlier work on this in the "Small enhancement about
+>> interrupt injection" series — specifically the kvm_vcpu_sync_intr() patch
+>> ([PATCH v3 6/6], 2026-05-19), which tried to fold irq_pending into the
+>> software ESTAT register before migration reads.  I see it was removed in
+>> v4 with the note that it "does not sync cached" state correctly, and the
+>> rest of the series was merged without it.
+>>
+>> The core difficulty, as I understand it, is that irq_pending represents
+>> queued-but-not-yet-delivered interrupts, while ESTAT represents the
+> The main problem is that dmsintc is added recently, AI agent reports that interrupt status of dmsintc should be synced also, and synced to software state LOONGARCH_CSR_ISR0-LOONGARCH_CSR_ISR3 register from local state ds->vector_map[], similiar with function dmsintc_inject_irq().
+> 
+> If dmsintc is synced to software state, hardware registers about CSR_ISR0-CSR_ISR3 will be stale. And it need to restore from software status in _kvm_vcpu_load() even if KVM_LARCH_HWCSR_USABLE in vcpu->arch.aux_inuse is set.
+> 
+> That will be bigger change, and also AI agent reports variable vector[] is accessed without initialized issue. So this patch is removed :( However I think that vcpu_load()/vcpu_put() can be removed in _kvm_getcsr() at final.
+Thanks for the explanation, the DMSINTC part makes sense now.
+> 
+>> already-delivered state — folding the former into the latter would make
+>> the guest see interrupts it should not yet see.
+>>
+>> My alternative approach is to add KVM_CAP_VCPU_EVENTS with a
+>> LoongArch-specific struct that captures these fields independently,
+>> without modifying ESTAT:
+>>
+>>    struct kvm_vcpu_events {
+>>        __u64 irq_pending;
+>>        __u64 irq_clear;
+>>        __u64 exception_pending;
+>>        __u32 esubcode;
+>>        __u32 reserved[11];
+>>    };
+> Adding new uapi will lead to compatible issue. I think it is not necessary.
+> 
+I'll drop the VCPU_EVENTS idea.
 
-- Kevin
+Since you're already working on this direction, I'll wait for your
+patch.  Happy to help test locally once it's ready.
+
+Thanks,
+Tao
+> Regards
+> Bibo Mao
+>>
+>> Userspace (QEMU) calls KVM_GET_VCPU_EVENTS during migration save and
+>> KVM_SET_VCPU_EVENTS during restore, keeping the queued/delivered
+>> distinction intact.  The kernel handler is straightforward — just
+>> read/write the four fields to/from vcpu->arch.
+>>
+>> I've implemented both sides and verified end-to-end on a 3A6000:
+>> - Kernel: 3-file patch (uapi struct + cap advertisement + GET/SET
+>>    ioctl handlers), built on linux-next 20260805.
+>> - QEMU: 4-file patch (LA kvm header struct + CPUState fields +
+>>    VMState subsection + get/put in save/load path), built on
+>>    QEMU 11.1-rc3.
+>> - strace on a real source→dest migration confirms QEMU probes
+>>    KVM_CAP_VCPU_EVENTS (=1), then issues KVM_GET_VCPU_EVENTS on save
+>>    and KVM_SET_VCPU_EVENTS on restore for both vCPUs (all return 0).
+>>
+>> Do you think this approach is reasonable?  I wanted to check with you
+>> before submitting, since you've worked in this area and might have
+>> insights on why the fold-into-ESTAT path was preferred (or if there
+>> are concerns with the separate-capture approach I'm missing).
+>>
+>> Thanks,
+>> Tao
+>>
+> 
+
