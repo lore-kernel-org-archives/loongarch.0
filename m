@@ -1,164 +1,186 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D144403AE1
-	for <loongarch@lists.linux.dev>; Tue, 11 Aug 2026 07:15:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABAC0414A13
+	for <loongarch@lists.linux.dev>; Tue, 11 Aug 2026 08:10:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786432537; cv=none; b=qi3VdRh8YERT00vZZ7aLX0juzygRLIsOBpgPEupk5n5lo+ToG43Ze2H0LQHtWR5l1lmLxKUv4+elkufPQu9OkDhGxIX3LGBg0acHjkBMZOgFZ7pMFeRvGlPLjnVZ+bWznuGydVUWWyNDTid7zZ+vt6zezYC0JIUUHSlcuem5aRk=
+	t=1786435822; cv=none; b=fsOSNiDLqF5p48x2q93OjZsOzO12Fv8S7ZDCdQbD/mcJtFNl7uOUP3YKGSV/lBYwXinRc1a4+KJxKOAYdGb2hQz+hH5ql5jWPczXXMBdEX6+MRGK0TuAVJVqTAYW05/lL6TigyP/Lb4euGYmXc1pk6O8hix81Ti/FSYckhT7Y5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786432537; c=relaxed/simple;
-	bh=c+gZP4P+2SCGAArVIUWbh7JWbpLAHkPV9zUZmRty/E8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FyKXfNl6v8cojiKQFjd3T1XlYXdcB4KjL0rIe03LrBl18NfpqH4UFTnLXUROPjAiCtMLEkHjejiW8E4Z6z28Yo1iKqzf3ATTD2OhUS0i2kZfBSwkdjcfYWqbAiPBb9/5YoEbohk/pxq9YCA1oLgCLtWMc/BZiT5UyTlV25bnTME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [123.138.236.242])
-	by gateway (Coremail) with SMTP id _____8Bxb9MGzHpq5hcAAA--.381S3;
-	Tue, 11 Aug 2026 15:15:18 +0800 (CST)
-Received: from linux.localdomain (unknown [123.138.236.242])
-	by front1 (Coremail) with SMTP id qMiowJAx3c79y3pqB0kAAA--.1776S2;
-	Tue, 11 Aug 2026 15:15:10 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Luis Chamberlain <mcgrof@kernel.org>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Daniel Gomez <da.gomez@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Aaron Tomlin <atomlin@atomlin.com>
-Cc: linux-modules@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] module/kallsyms: Filter out local mapping symbols during module load
-Date: Tue, 11 Aug 2026 15:15:07 +0800
-Message-ID: <20260811071507.24043-1-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
+	s=arc-20240116; t=1786435822; c=relaxed/simple;
+	bh=G1i7Hmp3x4MyiNkQbU9uiF4+QFCGLyrU0CXxtzNpVh0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Tzc+4eXSO3hSGxoZp2N2lInJCoMad2olb1y9IkJ8h0besJFWayM0SDijGS7EFVFSwyX31tSPniTZhAWkPni05d7vjjpPP+6iWAI94Zbe/LB18bI80ISMOUeqBmhmIQv5oazv83hKOZlcQbXZuE7PMO+YyjOK7pZibmakgsKLMbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ABE6D+Nw; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ABE6D+Nw"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-495757ccbc1so30678875e9.2
+        for <loongarch@lists.linux.dev>; Tue, 11 Aug 2026 01:10:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786435819; x=1787040619; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=kRDEH2ssIQhIkVPOR6PkKFR0aBPP8ALbaUyGO3LvVVE=;
+        b=ABE6D+NwziO7zzU74xi6We6KVUATDJjL7/prjHdMLk2mipma/3I48fDAP1RxZfxH6/
+         grhrs8SUhh1iLt96EO62hfULmM0ZQEHW57YqsbeUETcg/l5Ucp63LykMcyImPKeWLIlt
+         PNY+o2Go3jpq65kjT60TDRiOri259SuL9AZVPY6E/McggXR2ip2P7UkR2NH7SIm/GUaX
+         zsjQQEy0K93cD9CT3JmEfnFZNewcyVJcx3MGT1g7c1czaFXz52CIfkHrlKfHVgFuzNnD
+         ffKu1wj30z7AXyPqDhcim4hIS0h5pRLF3oviZIwCYX96ojjLaUQtdMb2bMewdDg9bMB5
+         E9dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786435819; x=1787040619;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=kRDEH2ssIQhIkVPOR6PkKFR0aBPP8ALbaUyGO3LvVVE=;
+        b=iEuGOMuyZsJS6Bs4bdsAZJDNxWVI/BXygMfgqw6eK1VCD+imTuGTou8v+uzjgPq5RJ
+         sVWc9rWMFjo+ZfiFOH7jW+RWjUadRdFkvrsnw96I5OIfQdl8IyeUS5RHG+NiBJSJs58F
+         3mIDIaSVkpb+5affcKmCT4ZuKE7+ijIeDXmUxnYM1i+X44H0AUp7TG8eOmIaestKJm3K
+         E1zlWxnZ5N7oKXwH0uvc/XYqm7cYfA1uHZ1tWRhhAxLYqPmNNYu60C4P6GibsTSwbcQF
+         BPphfkxT5Zj/z3D8sNQV4vp+MbvZ+z25Y5DyuP80+LqFFbBmb3se524ZDbPJCR53jXxM
+         I4pQ==
+X-Forwarded-Encrypted: i=1; AHgh+RoOI0CW99LGRxyijVLh9PJHlmIiuYmrw3jALTs46ze9R3i1Xe56r0zQUzffVt9E3In0CoaZ1B1ROps=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwTuKt42zx1Wos/znHYLaIqsDDpoOj6Cldh2u1Ue9CgA6uwba/c
+	dr3AylCGCrEfgKRFaeFg8w1b1Y1F/kDg9nv8o6uSm+FZJUscNJAGKIhO
+X-Gm-Gg: AR+sD10JmJxSsfUcypXOvXdcyPxJFqZ1+5YxLDpLxlMCjoHkRN61SEYKF89Zwv5oSHA
+	SRKfCee/izX8rmuUxIcP1Ascg4mtAeQUQCpcTKUogdqWITmspxC3F4p3az9zBLLa43k/xZzlgMx
+	MT+Tg5ZWQrwWHBCLb4YWVwPS2XJzKBECwirGwXfhYCFuT2NYYCq8i4nOvmtDiO8RxnLw/urzVTI
+	+m+TZEFC7/1TsXVTR0NZPLczh5nCdBWaUKHUYKS74Fb+a812TZiwQlXSGR7rKkvsIk7mtWh7oOd
+	29vmtgI0Rh9pgmamdlXaT33LNSHZVCJMKNDcCz3wthnw0IDWQ80eJDl1U5o7yVZg/fi6YSkmIwy
+	HQwHmpH0NcOb81EaVPwphYCY9uPIQYtOF8eG+t39UkB3V2I99F25OarTpob6S+n0z8gC38FaSVZ
+	LupLqm8AVK69erLwduJE+mz/7mYuR6kwrkzGmHBlVF+sjYPThGQ6yHjxBoeqUHoIVj1b0VwX8mM
+	p9EVwWezwBgsG/31xK1DG8ySgFsg1zQLeM=
+X-Received: by 2002:a05:600c:821b:b0:499:6a92:fff1 with SMTP id 5b1f17b1804b1-4997847e9b5mr25827975e9.18.1786435818734;
+        Tue, 11 Aug 2026 01:10:18 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4814a5ac6e6sm2454288f8f.6.2026.08.11.01.10.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Aug 2026 01:10:18 -0700 (PDT)
+Date: Tue, 11 Aug 2026 09:10:16 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Kevin Brodsky
+ <kevin.brodsky@arm.com>, linux-mm@kvack.org, Andrew Morton
+ <akpm@linux-foundation.org>, Lorenzo Stoakes <ljs@kernel.org>, "Liam R.
+ Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, Mike
+ Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal
+ Hocko <mhocko@suse.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Russell King <linux@armlinux.org.uk>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Ryan Roberts
+ <ryan.roberts@arm.com>, linux-arm-kernel@lists.infradead.org, Huacai Chen
+ <chenhuacai@kernel.org>, loongarch@lists.linux.dev, "James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>,
+ linux-parisc@vger.kernel.org, Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org, Paul
+ Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org, Heiko Carstens
+ <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
+ <agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+ linux-s390@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+ Andreas Larsson <andreas@gaisler.com>, sparclinux@vger.kernel.org, Richard
+ Weinberger <richard@nod.at>, Anton Ivanov
+ <anton.ivanov@cambridgegreys.com>, Johannes Berg
+ <johannes@sipsolutions.net>, linux-um@lists.infradead.org, Thomas Gleixner
+ <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+ <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin"
+ <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Ning Sun <ning.sun@intel.com>, x86@kernel.org,
+ tboot-devel@lists.sourceforge.net, Ard Biesheuvel <ardb@kernel.org>, Ilias
+ Apalodimas <ilias.apalodimas@linaro.org>, linux-efi@vger.kernel.org, Vishal
+ Moola <vishal.moola@gmail.com>, Alistair Popple <apopple@nvidia.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: Re: [PATCH 03/22] mm: introduce MMF_KERNEL flag and set it for
+ init_mm
+Message-ID: <20260811091016.5ca67143@pumpkin>
+In-Reply-To: <33fc9d31-2866-4315-9510-0004deb93994@kernel.org>
+References: <20260714-remove_pgtable_cdtor-v1-0-44be8a7685d7@arm.com>
+	<20260714-remove_pgtable_cdtor-v1-3-44be8a7685d7@arm.com>
+	<01f07ea2-8bdd-4450-8a49-548f8b646cfd@kernel.org>
+	<33fc9d31-2866-4315-9510-0004deb93994@kernel.org>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAx3c79y3pqB0kAAA--.1776S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxGFyDXry8Xr13GF1xZFWftFc_yoW5Zw17pr
-	n0k3yFqr48JF15Ka1kuws0gFy5GrWkWrWYgFn8K34fAFn5XFyYva1xtw13u3y7Xrnakryx
-	Kayvv3W3Za4UAagCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
-	AwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y
-	6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
-	AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE
-	2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcV
-	C2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73
-	UjIFyTuYvjxU2MKZDUUUU
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-The compiler toolchains generate internal local labels on certain
-architectures (such as LoongArch) for optimizations and relocations.
+On Wed, 5 Aug 2026 14:07:01 +0200
+"David Hildenbrand (Arm)" <david@kernel.org> wrote:
 
-While these local labels are filtered out during runtime lookups in
-find_kallsyms_symbol(), they still leak into the permanent symbol
-tables of loaded modules, because layout_symtab() and add_kallsyms()
-do not check for the mapping symbols during layout generation.
+> On 8/3/26 15:59, Christophe Leroy (CS GROUP) wrote:
+> >=20
+> >=20
+> > Le 14/07/2026 =C3=A0 16:03, Kevin Brodsky a =C3=A9crit=C2=A0: =20
+> >> mm code often needs to know whether some mm represents a kernel or
+> >> user address space. This is currently done by comparing the mm
+> >> pointer with &init_mm; besides not being particularly elegant, this
+> >> ignores the fact that other mm's (e.g. efi_mm) may also represent
+> >> parts of the kernel address space.
+> >>
+> >> Introduce a new mm flag MMF_KERNEL and set it for init_mm.
+> >> Subsequent patches will use this flag to replace comparisons with
+> >> &init_mm. No functional change is introduced for now. =20
+> >=20
+> > Did you consider performance impact ? This test is usually done in quite
+> > critical memory handling functions.
+> >=20
+> > init_mm is known at link time. Before your patch 08/22 there is just a
+> > comparison of mm (r3) with a constant (loaded in r10):
+> >=20
+> > c0014048 <assert_pte_locked>:
+> > c0014048:=C2=A0=C2=A0=C2=A0 3d 40 c1 09=C2=A0=C2=A0=C2=A0=C2=A0 lis=C2=
+=A0=C2=A0=C2=A0=C2=A0 r10,-16119
+> > c001404c:=C2=A0=C2=A0=C2=A0 39 4a 03 98=C2=A0=C2=A0=C2=A0=C2=A0 addi=C2=
+=A0=C2=A0=C2=A0 r10,r10,920
+> > c0014050:=C2=A0=C2=A0=C2=A0 7c 03 50 00=C2=A0=C2=A0=C2=A0=C2=A0 cmpw=C2=
+=A0=C2=A0=C2=A0 r3,r10
+> > c0014054:=C2=A0=C2=A0=C2=A0 4d 82 00 20=C2=A0=C2=A0=C2=A0=C2=A0 beqlr
+> > ...
+> >=20
+> > After patch 08/22 we have, it first checks that mm is not 0, then it lo=
+ads the
+> > word located at mm+528 then AND it with 0x1. This load might be costly.
+> >=20
+> > c0014048 <assert_pte_locked>:
+> > c0014048:=C2=A0=C2=A0=C2=A0 2c 03 00 00=C2=A0=C2=A0=C2=A0=C2=A0 cmpwi=
+=C2=A0=C2=A0 r3,0
+> > c001404c:=C2=A0=C2=A0=C2=A0 7c 85 23 78=C2=A0=C2=A0=C2=A0=C2=A0 mr=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 r5,r4
+> > c0014050:=C2=A0=C2=A0=C2=A0 41 82 00 10=C2=A0=C2=A0=C2=A0=C2=A0 beq=C2=
+=A0=C2=A0=C2=A0=C2=A0 c0014060 <assert_pte_locked+0x18>
+> > c0014054:=C2=A0=C2=A0=C2=A0 81 23 02 10=C2=A0=C2=A0=C2=A0=C2=A0 lwz=C2=
+=A0=C2=A0=C2=A0=C2=A0 r9,528(r3)
+> > c0014058:=C2=A0=C2=A0=C2=A0 71 29 00 01=C2=A0=C2=A0=C2=A0=C2=A0 andi.=
+=C2=A0=C2=A0 r9,r9,1
+> > c001405c:=C2=A0=C2=A0=C2=A0 4c 82 00 20=C2=A0=C2=A0=C2=A0=C2=A0 bnelr =
+=20
+>=20
+> Is that a real problem, though?
 
-Consequently, tracing tools like bpftrace resolve identical addresses
-into confusing local labels instead of actual clear C function names.
+The cost of the read is likely to matter most if the branch gets mispredict=
+ed.
+I'd also guess the mm isn't usually NULL - so that branch needs to statical=
+ly
+predicted correctly as well.
+I'd also not assume that the mm is in the cache (unless the surrounding code
+has already accessed it), the L1 data caches are small.
 
-Fix this by adding is_mapping_symbol() checks directly into the symbol
-tracking loops of layout_symtab() and add_kallsyms(). This prevents the
-mapping symbols from entering the module's memory symbol arrays at load
-time.
+	David
 
-For livepatch modules, core_kallsyms.symtab must remain a complete copy
-of the original ELF symbol table to prevent delayed relocation failures.
-Therefore, enforce is_livepatch_module() checking to skip the filtering
-for livepatch modules.
 
-Reproduce steps:
-
-1. Set up a LoongArch VM with "-accel kvm":
-
-   $ sudo qemu-system-loongarch64 -serial stdio \
-     -machine virt -cpu la464 -smp 4 -m 4G \
-     -bios /usr/share/edk2/loongarch64/QEMU_EFI.fd \
-     -nodefaults -no-reboot -nographic -accel kvm
-
-2. Use bpftrace to capture kstack when vCPU is scheduled out:
-
-   $ cat trace_sched.bt
-   kprobe:kvm:kvm_sched_out
-   {
-           if (pid == $1) {
-                   print(kstack());
-           }
-   }
-
-   $ sudo bpftrace trace_sched.bt `pgrep -o qemu-system`
-
-Test results:
-
-1. Before this patch (Confusing stack with local labels):
-
-        kvm_sched_out+0
-        __schedule+1584
-        schedule+48
-        .LVL3767+36
-        .LVL3801+8
-        .LVL285+12
-        .LVL425+44
-        .LVL1419+20
-        kvm_exc_entry+260
-
-2. After this patch (Accurate stack with function names):
-
-        kvm_sched_out+0
-        __schedule+1584
-        schedule+48
-        kvm_vcpu_block+112
-        kvm_vcpu_halt+104
-        kvm_emu_idle+284
-        kvm_handle_gspr+1316
-        kvm_handle_exit+456
-        kvm_exc_entry+260
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
-v2: Fix livepatch support as pointed out by Sashiko bot.
-
- kernel/module/kallsyms.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/kernel/module/kallsyms.c b/kernel/module/kallsyms.c
-index f23126d804b2..aece7aa49dd4 100644
---- a/kernel/module/kallsyms.c
-+++ b/kernel/module/kallsyms.c
-@@ -130,6 +130,10 @@ void layout_symtab(struct module *mod, struct load_info *info)
- 
- 	/* Compute total space required for the core symbols' strtab. */
- 	for (ndst = i = 0; i < nsrc; i++) {
-+		if (!is_livepatch_module(mod) &&
-+		    is_mapping_symbol(&info->strtab[src[i].st_name]))
-+			continue;
-+
- 		if (i == 0 || is_livepatch_module(mod) ||
- 		    is_core_symbol(src + i, info->sechdrs, info->hdr->e_shnum,
- 				   info->index.pcpu)) {
-@@ -198,6 +202,11 @@ void add_kallsyms(struct module *mod, const struct load_info *info)
- 	src = kallsyms->symtab;
- 	for (ndst = i = 0; i < kallsyms->num_symtab; i++) {
- 		kallsyms->typetab[i] = elf_type(src + i, info);
-+
-+		if (!is_livepatch_module(mod) &&
-+		    is_mapping_symbol(&kallsyms->strtab[src[i].st_name]))
-+			continue;
-+
- 		if (i == 0 || is_livepatch_module(mod) ||
- 		    is_core_symbol(src + i, info->sechdrs, info->hdr->e_shnum,
- 				   info->index.pcpu)) {
--- 
-2.42.0
+>=20
+> What we could do is to just keep the =3D=3D &init_mm check internally on =
+configs
+> where we know that there is only a single such MM context.
+>=20
+> Just a thought.
+>=20
 
