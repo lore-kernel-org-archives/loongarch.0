@@ -1,135 +1,137 @@
-Received: from cstnet.cn (smtp25.cstnet.cn [159.226.251.25])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A787139AD3B
-	for <loongarch@lists.linux.dev>; Tue, 11 Aug 2026 15:50:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.25
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1172C4052B1
+	for <loongarch@lists.linux.dev>; Tue, 11 Aug 2026 16:47:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786463407; cv=none; b=GkrjY/pj2EyclzpFNIXccGYQxf+gW5ElGqR552aerLs2JzRosTWVxXv0I1jG0SEW0QP41v/sD1rTpegis7oLDKylQH5/vEjrSZ/BcnWcspPwbS3WYIr1SiU51SC+7W+bLJjl2G5niuh66SnKeXI4/SjmKeQyiUQu7k5satxuGk8=
+	t=1786466871; cv=none; b=sXbxKF4K9Y3ykYHl4ftVhtieoQwqrt8+1dIOyYctZ3mZsPLsjxdKEOHgeo2rGFfBxBDIiGx34SvAl8R+JvmO++kAVkKPNLJX3loMGLg6UR8iLviTljJxW4HlThlS0pmZwd77d3j7x6WK0LDCatRzAJ2+FxZVmbmLOXZ9l6El3Bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786463407; c=relaxed/simple;
-	bh=o0A9jbfM9RUZcLpGp6Fj/ikWM8B6lTsDdepHmHG0R+o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JxaXRzXG212IkRaRCjkx3VqZkOySASEaXE36vO3OhaNG1Zxs+b4LUjIb8G54e6rtL9bt8jFrLhNDFRrUYH2zwLnh9gGIZTE9RUWMH+mLL9aUo/cXRp16h7FZxuqbTlTO01fOMmalMbZLqSLRDKFNNkOuyKE9xnh9VJVR/G3UC4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [223.166.93.127])
-	by APP-05 (Coremail) with SMTP id zQCowAB3qEIMQ3tqSXcKBQ--.29050S2;
-	Tue, 11 Aug 2026 23:43:09 +0800 (CST)
-From: Han Gao <gaohan@iscas.ac.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
-	Tianyang Zhang <zhangtianyang@loongson.cn>,
-	Magnus Lindholm <linmag7@gmail.com>,
-	Kiryl Shutsemau <kas@kernel.org>,
-	Han Gao <gaohan@iscas.ac.cn>,
-	Hongchen Zhang <zhanghongchen@loongson.cn>,
-	WangYuli <wangyuli@aosc.io>,
-	"Mingcong Bai" <jeffbai@aosc.io>,
-	"Zhang Yuhao" <xinmu@xinmu.moe>,
-	"Kexy Biscuit" <kexybiscuit@aosc.io>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	Han Gao <rabenda.cn@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] LoongArch: mm: Define DIRECT_MAP_PHYSMEM_END
-Date: Tue, 11 Aug 2026 23:43:06 +0800
-Message-ID: <20260811154306.3764527-1-gaohan@iscas.ac.cn>
-X-Mailer: git-send-email 2.47.3
+	s=arc-20240116; t=1786466871; c=relaxed/simple;
+	bh=k6fuvdQDvEP8Vgz2PTv5lXUtwGGjwj2b08wkJAsWaVA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qW1FYA0keoy4q9biUuHww2LSoKk6cXRLEoLC2e7s7BzMp21dm4Bn1dvpALAixwX3IFI1b/id/CHiFBz7spYL6zND+60UOee2THlbbGcV+kzxugFIwA0xMdqcFBjUHbPZTryLnuyOv3XbJs2AccokubjB2Tjf+lLyjDR6EV68MpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=gTV/2I8H; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="gTV/2I8H"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 392871516;
+	Tue, 11 Aug 2026 09:47:45 -0700 (PDT)
+Received: from [10.57.5.246] (unknown [10.57.5.246])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CAF723F86F;
+	Tue, 11 Aug 2026 09:47:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1786466869; bh=k6fuvdQDvEP8Vgz2PTv5lXUtwGGjwj2b08wkJAsWaVA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gTV/2I8He3BRcDFubFelv3SAtZiIJOlWDCGYb/PqwlMmSJRZUV+SfPlIf2y0trfly
+	 nKQsPwWsI+/aVoYR5dV3ihriAWJ5e9TgHciz8Ikf7zi44esgAkNV9YyJAGhPOgjzVd
+	 dWAjOsQ/MfHlSTn8IGEVVhT1EzNUwNUvSRhbFuk4=
+Message-ID: <ac24fe96-dbe2-419f-86eb-2d0f78912877@arm.com>
+Date: Tue, 11 Aug 2026 18:47:36 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 03/22] mm: introduce MMF_KERNEL flag and set it for
+ init_mm
+To: David Laight <david.laight.linux@gmail.com>,
+ "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Ryan Roberts <ryan.roberts@arm.com>, linux-arm-kernel@lists.infradead.org,
+ Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org,
+ Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>, linux-s390@vger.kernel.org,
+ "David S. Miller" <davem@davemloft.net>,
+ Andreas Larsson <andreas@gaisler.com>, sparclinux@vger.kernel.org,
+ Richard Weinberger <richard@nod.at>,
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+ Johannes Berg <johannes@sipsolutions.net>, linux-um@lists.infradead.org,
+ Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ning Sun <ning.sun@intel.com>,
+ x86@kernel.org, tboot-devel@lists.sourceforge.net,
+ Ard Biesheuvel <ardb@kernel.org>,
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>, linux-efi@vger.kernel.org,
+ Vishal Moola <vishal.moola@gmail.com>, Alistair Popple <apopple@nvidia.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+References: <20260714-remove_pgtable_cdtor-v1-0-44be8a7685d7@arm.com>
+ <20260714-remove_pgtable_cdtor-v1-3-44be8a7685d7@arm.com>
+ <01f07ea2-8bdd-4450-8a49-548f8b646cfd@kernel.org>
+ <20260811142507.4c6c760f@pumpkin>
+From: Kevin Brodsky <kevin.brodsky@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20260811142507.4c6c760f@pumpkin>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowAB3qEIMQ3tqSXcKBQ--.29050S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxGrW8Jr1UXF4kAw1fJF1xGrg_yoW5Xw1xpr
-	Z8ZwsxKr43trs2k397A3W5ZryUG3ZYkr4jg3W7C343ZwsrCa48Zw4kC3yaqFykX393Z3y0
-	grnIgrWkKw4jvw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9j14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
-	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
-	n2IY04v7MxkF7I0En4kS14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
-	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
-	17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
-	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4l
-	IxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvf
-	C2KfnxnUUI43ZEXa7sRidbbtUUUUU==
-X-CM-SenderInfo: xjdrxt3q6l2u1dvotugofq/1tbiBwcQDGp7L1Ap5wAAs8
 
-get_free_mem_region() and mhp_get_pluggable_range() bound their
-search to DIRECT_MAP_PHYSMEM_END.  LoongArch does not define it, so
-the fallback in include/linux/mm.h applies: under
-CONFIG_SPARSEMEM_VMEMMAP it is (1ULL << MAX_PHYSMEM_BITS) - 1, a
-compile-time constant that does not adapt to the CPU's physical
-address bits (cpu_pabits, probed from CPUCFG1).
+On 11/08/2026 15:25, David Laight wrote:
+> On Mon, 3 Aug 2026 15:59:35 +0200
+> "Christophe Leroy (CS GROUP)" <chleroy@kernel.org> wrote:
+>
+>> Le 14/07/2026 à 16:03, Kevin Brodsky a écrit :
+>>> mm code often needs to know whether some mm represents a kernel or
+>>> user address space. This is currently done by comparing the mm
+>>> pointer with &init_mm; besides not being particularly elegant, this
+>>> ignores the fact that other mm's (e.g. efi_mm) may also represent
+>>> parts of the kernel address space.
+>>>
+>>> Introduce a new mm flag MMF_KERNEL and set it for init_mm.
+>>> Subsequent patches will use this flag to replace comparisons with
+>>> &init_mm. No functional change is introduced for now.  
+>> Did you consider performance impact ? This test is usually done in quite 
+>> critical memory handling functions.
+>>
+>> init_mm is known at link time. Before your patch 08/22 there is just a 
+>> comparison of mm (r3) with a constant (loaded in r10):
+>>
+>> c0014048 <assert_pte_locked>:
+>> c0014048:	3d 40 c1 09 	lis     r10,-16119
+>> c001404c:	39 4a 03 98 	addi    r10,r10,920
+>> c0014050:	7c 03 50 00 	cmpw    r3,r10
+>> c0014054:	4d 82 00 20 	beqlr
+>> ...
+>>
+>> After patch 08/22 we have, it first checks that mm is not 0, then it 
+>> loads the word located at mm+528 then AND it with 0x1. This load might 
+>> be costly.
+>>
+>> c0014048 <assert_pte_locked>:
+>> c0014048:	2c 03 00 00 	cmpwi   r3,0
+>> c001404c:	7c 85 23 78 	mr      r5,r4
+>> c0014050:	41 82 00 10 	beq     c0014060 <assert_pte_locked+0x18>
+>> c0014054:	81 23 02 10 	lwz     r9,528(r3)
+>> c0014058:	71 29 00 01 	andi.   r9,r9,1
+>> c001405c:	4c 82 00 20 	bnelr
+>> ...
+> Thought...
+> Could the check be replaced by one that checks for kernel static data?
+> That would require that other mm that represent part of the kernel
+> address space be static (and probably not in modules).
+> ISTR there is an address range check that can be used - and might be
+> cheaper than the explicit test for init_mm on many 64bit archs.
 
-The vmemmap window only covers physical space below 2^(cpu_pabits+1)
-(VMEMMAP_SIZE), so on CPUs with fewer physical address bits than
-MAX_PHYSMEM_BITS the fallback allows get_free_mem_region() to return
-a ZONE_DEVICE region outside the vmemmap window;
-vmemmap_populate() then wraps the memmap range around and maps it
-into low memory, silently corrupting the page tables.  The same
-search also picked the top-of-address-space region that crashed
-memmap_init_zone_device() with amdkfd on 3C6000 in 6.16 [1];
-commit 2969b42c8f99 ("LoongArch/mm: align vmemmap to maximal folio
-size") keeps that region in bounds on current 3C6000 configs, but
-CPUs with smaller cpu_pabits (e.g. the 2K series) are still
-affected.
+That is actually an interesting idea. Finding those "kernel mms" boils
+down to looking for global mm_struct, so checking if mm points to global
+data would achieve essentially the same thing without a flag (and likely
+faster). I'm not sure we want to bake in the assumption that "kernel mm"
+is equivalent to "mm is global" though.
 
-Define DIRECT_MAP_PHYSMEM_END as the vmemmap-covered physical
-range, (1ULL << (cpu_pabits + 1)) - 1, capped at
-(1ULL << MAX_PHYSMEM_BITS) - 1 under CONFIG_SPARSEMEM, mirroring
-commit f3336b48cf9d ("riscv: mm: Define DIRECT_MAP_PHYSMEM_END").
-
-[1] https://lore.kernel.org/amd-gfx/20250814032153.227285-1-jeffbai@aosc.io/
-
-Cc: stable@vger.kernel.org # v6.13+
-Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
----
-Changes in v2:
-- Redefine DIRECT_MAP_PHYSMEM_END as the vmemmap-covered range
-  (1ULL << (cpu_pabits + 1)) - 1, capped at
-  (1ULL << MAX_PHYSMEM_BITS) - 1 under CONFIG_SPARSEMEM, per Huacai
-  Chen's review (the previous (1ULL << cpu_pabits) - 1 wrongly
-  limits CPUs with 48-bit physical addresses).
-- Note that 3C6000 has 48-bit physical addresses as well.
-- v1: https://lore.kernel.org/all/20260811115749.3465579-1-gaohan@iscas.ac.cn/
-
- arch/loongarch/include/asm/pgtable.h | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
-index 223528c04d73..8395aea209b5 100644
---- a/arch/loongarch/include/asm/pgtable.h
-+++ b/arch/loongarch/include/asm/pgtable.h
-@@ -125,6 +125,14 @@ struct vm_area_struct;
- 
- #endif
- 
-+/* Needed to limit get_free_mem_region() */
-+#ifndef CONFIG_SPARSEMEM
-+#define DIRECT_MAP_PHYSMEM_END ((1ULL << (cpu_pabits + 1)) - 1)
-+#else
-+#define DIRECT_MAP_PHYSMEM_END \
-+	min((1ULL << (cpu_pabits + 1)) - 1, (1ULL << MAX_PHYSMEM_BITS) - 1)
-+#endif
-+
- #define ptep_get(ptep) READ_ONCE(*(ptep))
- #define pmdp_get(pmdp) READ_ONCE(*(pmdp))
- 
--- 
-2.47.3
-
+- Kevin
