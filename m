@@ -1,131 +1,314 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024452877DE
-	for <loongarch@lists.linux.dev>; Tue, 11 Aug 2026 11:58:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D061642C4FD
+	for <loongarch@lists.linux.dev>; Tue, 11 Aug 2026 12:20:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786449539; cv=none; b=lF74KEXauRBOuXpPm9l2kIdrcaf84S4MsILNH8odgZfPg4yoXLK0R1kESDzjU5fGqx5xT96tgh4zVJvKMpI+OTX9AgQapyzgRtISPObXnW33Te4cML1DMrbhJxzONdZvx1p1Qhdh+BdfNj3oNWi/tt4ZY2OScIHiDNGqrGImtYs=
+	t=1786450809; cv=none; b=mn3DRmXwmt/GsRlgy4uUSSbvhnf6W1G69Jc18VHst/c5u45QDvR4wWK8mWS8E+AbnZrgUx4Z1Xuv57NtQXoN0u4SkFqKZf5MMTsXseubF3SIWr8K0xZNgKzzKjIQOsm/iV0FIhWxuI31uUOQULwpe8d5OkVERRwyulJz7W+r7FM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786449539; c=relaxed/simple;
-	bh=E+gZyeMlFEGdRRI2qzpFR6KyUhjBcjLzSzXgQm9btp0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iF0gvL5EXz1WDrWG3lCDLPm5D2pR9twbGFxwMZ042RG8SCKPmpc97PxKtracI76koE1VLT0tQrR2XwbWVQO2mL2VeSBVipa15/NIJiF2Qs+jfWhJca+OY+d0tN4rXc+8baj1PRnguYsKBrOho/tdkYQHB/WVNXMCxvbrQulM/mY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [223.166.93.127])
-	by APP-03 (Coremail) with SMTP id rQCowAAXHz1XDntqZQatBA--.2222S2;
-	Tue, 11 Aug 2026 19:58:32 +0800 (CST)
-From: Han Gao <gaohan@iscas.ac.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
-	Tianyang Zhang <zhangtianyang@loongson.cn>,
-	Magnus Lindholm <linmag7@gmail.com>,
-	Kiryl Shutsemau <kas@kernel.org>,
-	Han Gao <gaohan@iscas.ac.cn>,
-	Hongchen Zhang <zhanghongchen@loongson.cn>,
-	WangYuli <wangyuli@aosc.io>,
-	"Mingcong Bai" <jeffbai@aosc.io>,
-	"Zhang Yuhao" <xinmu@xinmu.moe>,
-	"Kexy Biscuit" <kexybiscuit@aosc.io>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	Han Gao <rabenda.cn@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] LoongArch: mm: Define DIRECT_MAP_PHYSMEM_END
-Date: Tue, 11 Aug 2026 19:57:49 +0800
-Message-ID: <20260811115749.3465579-1-gaohan@iscas.ac.cn>
-X-Mailer: git-send-email 2.47.3
+	s=arc-20240116; t=1786450809; c=relaxed/simple;
+	bh=4llsLWaEDSFkKqLTqmOe2KriepWDHwfSb/u+d2WeKqg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O4JatI6eXu0hNX96p1ILi/oHuVyhamfHdf8dFm1VoOPRdazpNE0e+f67aPAVZZzPV7KLWYTXa/N+IDdruhD6lsp5dvEhbQOsZVZRNTEkb8Bc9jfy0WXDV5GALuan4HrcTvqfSRsEqRBD479unu4G4SlgDTga2PjhYblDZp28pgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=WR98xEZI; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="WR98xEZI"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-49554ebb87dso28655975e9.3
+        for <loongarch@lists.linux.dev>; Tue, 11 Aug 2026 05:20:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1786450806; x=1787055606; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=gAOSYqRVcuEeGEvjxb4g0YtG8ZJHqRE+rYQE448XlH8=;
+        b=WR98xEZIx9agrDXgtizE+SXIFztf6hquBWh5LCd4InYJFbbz3/3UcP/xhvwGT3ADPM
+         zzQniCLzeBhGaUw8ZnS4gEJ5HBYhWmCjDzWqpx4TetTemsQ+w9tI3eJjildJeh2g9S7N
+         VoClnLLQgmPZT5NoxzX8mw88wasC8Pho+7wZ4WYqtMBrD/OFiXWPV4m9nj0eoKtwfZ0H
+         lZ5vILElPAxZQ67hrA8WjhXSS9taTn2lVS0x2IQDQzyG04Uls8bFoa4M++BuvBBZhHAi
+         0wGm2JVCjC20hUPwiw/CRjXdtkvbfldCHaRx9eMMBdNThj36faXcqVmlioDJ4FhtWXZE
+         dtrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786450806; x=1787055606;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=gAOSYqRVcuEeGEvjxb4g0YtG8ZJHqRE+rYQE448XlH8=;
+        b=gM8Jr/5krAHNMDJM8pHsj0evZQ0xds1RKH4f4dH/XoQEUxNu89FSrTiXZxRRqt6+IS
+         gPor9dFnn/t79ZlA9+6VNDtqEvN4NcZJZJ9jPpjvTmRXjARvyXVOKBzurunmZmf0iBNT
+         4kmI43dmpZR5C7SZepfEvs9uc68q6D6WNgctivsBuBqhBSmk/Q0NRH1v+MJtxb7wCb9l
+         tlBv6370E4sWic5NAbLfa4znQdCwebyxDUjrmxAnpG1S3KxcNqveTPHcYP7a9iDNA7yI
+         4OSaPfhihF1xMvYIlGVuyWu9hfEiuhYkhdNF+BStp7rEchNYVJ32NvC4Sbhxy1DWLUFN
+         m/3A==
+X-Forwarded-Encrypted: i=1; AHgh+Roaq/YPLlm7Alwpj6WEs/X/ejH2JVM+NJgexaqvS/uH4uy9HH6UOdA8UnNSUrRR9xYuGyW0e0K3byA=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxpW26HF2uC2IoQoGHOEAP8t5ORtlB3MyLtkcPeW19pFOONCTPW
+	4ZDMaOyUzB+G0rmJCS+vaxKWQpC5ETeMAf7tnByun1VUnkHNCvI6zS5QBUfk3m6POYc=
+X-Gm-Gg: AR+sD10j/oOIml5Spl8LoE53MP5FoSCdkAeEke4mQAK65lIgPaGOzt5x5sdJ3WxhhOC
+	jYSL+FwYzpQJWHef6GslQclCZzneU4N3zlAr7xrLASRvMGZkThXVzrxkrkh9O2mJS2jbvf+mtZJ
+	xEaR0h1zyrD/fWuZ4WaVXAJNw0uBwkc741SmWQc20AS6CmuY/2DoqJOOZSjKxkynftrJi6NUxvM
+	OyMo/gI5fgcqs94csiLBRhrDH7iQwlBdvBAJBIHm/xt0J3uDFNKs7UJjiounjbFz8pC6hJjkdsr
+	lNuEWnDB4Svm0OI+RHC83JmdvdXU2ctDTVSJK7nwgorS2216GX1W+iMArBpT6l39sshiDC+Nluu
+	W7O4QsswfjoZupM/xmDes7Pd0g5oVW/vI9yF1Eat5y1A1tkJSKXsNZCu7HY9HhdNlKUGDW89cr9
+	p1WeLRoxxOVDgB5czDesWlEp3xPFNFZJyC4MUX5jS7dXv7NlDQJe8fywuF3HpWMnKAPxfMwvd9d
+	Qn63sSMNcZjWt7cm/jZtvOTa2lMBmLZh7Wwxuq9gBhjB66OTR6JLydL9WX9btPpCoRVJlzpXlvO
+	CvLVUxF/prmgYmZA61/ZIpyX6iu0tes=
+X-Received: by 2002:a05:600c:1d2a:b0:499:52ab:a50c with SMTP id 5b1f17b1804b1-4997840c622mr44289915e9.1.1786450806038;
+        Tue, 11 Aug 2026 05:20:06 -0700 (PDT)
+Received: from ?IPV6:2a00:1028:838d:271e:8e3b:4aff:fe4c:a100? (dynamic-2a00-1028-838d-271e-8e3b-4aff-fe4c-a100.ipv6.o2.cz. [2a00:1028:838d:271e:8e3b:4aff:fe4c:a100])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-499788f17ccsm38388315e9.11.2026.08.11.05.20.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Aug 2026 05:20:05 -0700 (PDT)
+Message-ID: <39a48465-22b6-4b18-9f7e-ce258513181b@suse.com>
+Date: Tue, 11 Aug 2026 14:20:04 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowAAXHz1XDntqZQatBA--.2222S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxGrW8Jr1UXFy5JrykAr18Zrb_yoW5GFyrpr
-	9YyanxGr47KrZ2krWxZ3WUXFy8Wa1vkr42g3WUCry7AanxAF18Zr1vqFWaqFyvq397ua4F
-	gFnIqrW5Kw4UAw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9j14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
-	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
-	n2IY04v7MxkF7I0En4kS14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
-	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
-	17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
-	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4l
-	IxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvf
-	C2KfnxnUUI43ZEXa7sRidbbtUUUUU==
-X-CM-SenderInfo: xjdrxt3q6l2u1dvotugofq/1tbiBwUQDGp6vVv3bQAAsy
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] module/kallsyms: Filter out local mapping symbols
+ during module load
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, Daniel Gomez <da.gomez@kernel.org>,
+ Sami Tolvanen <samitolvanen@google.com>, Aaron Tomlin <atomlin@atomlin.com>,
+ linux-modules@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20260811071507.24043-1-yangtiezhu@loongson.cn>
+Content-Language: en-US
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <20260811071507.24043-1-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-get_free_mem_region() and mhp_get_pluggable_range() bound their
-search to DIRECT_MAP_PHYSMEM_END.  LoongArch does not define it, so
-the fallback in include/linux/mm.h applies: under
-CONFIG_SPARSEMEM_VMEMMAP it is (1ULL << MAX_PHYSMEM_BITS) - 1, a
-compile-time constant that does not adapt to the physical address
-bits of the CPU (cpu_pabits, probed from CPUCFG1: 48 on
-3A5000/3A6000, 47 on 3C6000, 40 on the 2K series).
+On 8/11/26 9:15 AM, Tiezhu Yang wrote:
+> The compiler toolchains generate internal local labels on certain
+> architectures (such as LoongArch) for optimizations and relocations.
+> 
+> While these local labels are filtered out during runtime lookups in
+> find_kallsyms_symbol(), they still leak into the permanent symbol
+> tables of loaded modules, because layout_symtab() and add_kallsyms()
+> do not check for the mapping symbols during layout generation.
+> 
+> Consequently, tracing tools like bpftrace resolve identical addresses
+> into confusing local labels instead of actual clear C function names.
+> 
+> Fix this by adding is_mapping_symbol() checks directly into the symbol
+> tracking loops of layout_symtab() and add_kallsyms(). This prevents the
+> mapping symbols from entering the module's memory symbol arrays at load
+> time.
 
-The vmemmap window only covers physical space below 2^(cpu_pabits+1)
-(VMEMMAP_SIZE), so on CPUs with fewer than 48 physical address bits
-get_free_mem_region() may hand ZONE_DEVICE a region with no struct
-page backing:
+This optimization looks sensible to me. Kallsyms in vmlinux also
+normally doesn't include information about local labels (.L<xyz>) and
+mapping symbols ($a, $d, ...), so it should be ok not to track them in
+modules either.
 
-- On the 2K series the region returned at the top of the 48-bit
-  physical space is outside the vmemmap window; vmemmap_populate()
-  wraps the range around and maps it into low memory, silently
-  corrupting the page tables.
-- On 3C6000 the vmemmap range of the region's last section used to
-  end exactly at 2^64 and wrap to 0, leaving vmemmap_populate() with
-  nothing to map, so memmap_init_zone_device() faulted while writing
-  struct page (reported with amdkfd on 6.16 [1]).  Commit 2969b42c8f99
-  ("LoongArch/mm: align vmemmap to maximal folio size") moved the
-  vmemmap base down by one PMD, which keeps that section in bounds on
-  current 3C6000 configs, but the 2K series is still affected and the
-  3C6000 case only holds for the current vmemmap layout.
+Note that the patch description mixes up these two symbol categories,
+presumably because the existing is_mapping_symbol() function conflates
+them as well.
 
-Define DIRECT_MAP_PHYSMEM_END as (1ULL << cpu_pabits) - 1 so that
-both searches stay within the vmemmap-covered physical space,
-mirroring commit f3336b48cf9d ("riscv: mm: Define
-DIRECT_MAP_PHYSMEM_END").
+> 
+> For livepatch modules, core_kallsyms.symtab must remain a complete copy
+> of the original ELF symbol table to prevent delayed relocation failures.
+> Therefore, enforce is_livepatch_module() checking to skip the filtering
+> for livepatch modules.
+> 
+> Reproduce steps:
+> 
+> 1. Set up a LoongArch VM with "-accel kvm":
+> 
+>    $ sudo qemu-system-loongarch64 -serial stdio \
+>      -machine virt -cpu la464 -smp 4 -m 4G \
+>      -bios /usr/share/edk2/loongarch64/QEMU_EFI.fd \
+>      -nodefaults -no-reboot -nographic -accel kvm
+> 
+> 2. Use bpftrace to capture kstack when vCPU is scheduled out:
+> 
+>    $ cat trace_sched.bt
+>    kprobe:kvm:kvm_sched_out
+>    {
+>            if (pid == $1) {
+>                    print(kstack());
+>            }
+>    }
+> 
+>    $ sudo bpftrace trace_sched.bt `pgrep -o qemu-system`
+> 
+> Test results:
+> 
+> 1. Before this patch (Confusing stack with local labels):
+> 
+>         kvm_sched_out+0
+>         __schedule+1584
+>         schedule+48
+>         .LVL3767+36
+>         .LVL3801+8
+>         .LVL285+12
+>         .LVL425+44
+>         .LVL1419+20
+>         kvm_exc_entry+260
 
-[1] https://lore.kernel.org/amd-gfx/20250814032153.227285-1-jeffbai@aosc.io/
+The description should mention that this change affects what appears in
+/proc/kallsyms, as that is the important part. bpftrace is only one user
+of this data and apparently gets confused because it does not apply any
+filtering of its own, unlike perf which has is_ignored_kernel_symbol().
 
-Cc: stable@vger.kernel.org # v6.13+
-Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
----
- arch/loongarch/include/asm/pgtable.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+> 
+> 2. After this patch (Accurate stack with function names):
+> 
+>         kvm_sched_out+0
+>         __schedule+1584
+>         schedule+48
+>         kvm_vcpu_block+112
+>         kvm_vcpu_halt+104
+>         kvm_emu_idle+284
+>         kvm_handle_gspr+1316
+>         kvm_handle_exit+456
+>         kvm_exc_entry+260
+> 
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+> v2: Fix livepatch support as pointed out by Sashiko bot.
+> 
+>  kernel/module/kallsyms.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/kernel/module/kallsyms.c b/kernel/module/kallsyms.c
+> index f23126d804b2..aece7aa49dd4 100644
+> --- a/kernel/module/kallsyms.c
+> +++ b/kernel/module/kallsyms.c
+> @@ -130,6 +130,10 @@ void layout_symtab(struct module *mod, struct load_info *info)
+>  
+>  	/* Compute total space required for the core symbols' strtab. */
+>  	for (ndst = i = 0; i < nsrc; i++) {
+> +		if (!is_livepatch_module(mod) &&
+> +		    is_mapping_symbol(&info->strtab[src[i].st_name]))
+> +			continue;
+> +
+>  		if (i == 0 || is_livepatch_module(mod) ||
+>  		    is_core_symbol(src + i, info->sechdrs, info->hdr->e_shnum,
+>  				   info->index.pcpu)) {
+> @@ -198,6 +202,11 @@ void add_kallsyms(struct module *mod, const struct load_info *info)
+>  	src = kallsyms->symtab;
+>  	for (ndst = i = 0; i < kallsyms->num_symtab; i++) {
+>  		kallsyms->typetab[i] = elf_type(src + i, info);
+> +
+> +		if (!is_livepatch_module(mod) &&
+> +		    is_mapping_symbol(&kallsyms->strtab[src[i].st_name]))
+> +			continue;
+> +
+>  		if (i == 0 || is_livepatch_module(mod) ||
+>  		    is_core_symbol(src + i, info->sechdrs, info->hdr->e_shnum,
+>  				   info->index.pcpu)) {
 
-diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
-index 223528c04d73..244931e4bc58 100644
---- a/arch/loongarch/include/asm/pgtable.h
-+++ b/arch/loongarch/include/asm/pgtable.h
-@@ -125,6 +125,13 @@ struct vm_area_struct;
+It is better to avoid duplicating the same logic in layout_symtab() and
+add_kallsyms(). The function is_core_symbol() can be renamed to
+something like is_kept_symbol() and can be solely responsible for
+deciding what to keep.
+
+The following prototype shows my suggestion:
+
+diff --git a/kernel/module/kallsyms.c b/kernel/module/kallsyms.c
+index 0fc11e45df9b..c86879cc5b66 100644
+--- a/kernel/module/kallsyms.c
++++ b/kernel/module/kallsyms.c
+@@ -75,23 +75,29 @@ static char elf_type(const Elf_Sym *sym, const struct load_info *info)
+ 	return '?';
+ }
  
+-static bool is_core_symbol(const Elf_Sym *src, const Elf_Shdr *sechdrs,
+-			   unsigned int shnum, unsigned int pcpundx)
++static bool is_kept_symbol(struct module *mod, const struct load_info *info,
++			   unsigned int symnum, const Elf_Sym *src)
+ {
+ 	const Elf_Shdr *sec;
+ 	enum mod_mem_type type;
+ 
++	if (symnum == 0 || is_livepatch_module(mod))
++		return true;
++
+ 	if (src->st_shndx == SHN_UNDEF ||
+-	    src->st_shndx >= shnum ||
++	    src->st_shndx >= info->hdr->e_shnum ||
+ 	    !src->st_name)
+ 		return false;
+ 
++	if (is_mapping_symbol(&info->strtab[src->st_name]))
++		return false;
++
+ #ifdef CONFIG_KALLSYMS_ALL
+-	if (src->st_shndx == pcpundx)
++	if (src->st_shndx == info->index.pcpu)
+ 		return true;
  #endif
  
-+/* Needed to limit get_free_mem_region() */
-+#if defined(CONFIG_FLATMEM) || defined(CONFIG_SPARSEMEM_VMEMMAP)
-+#define DIRECT_MAP_PHYSMEM_END ((1ULL << cpu_pabits) - 1)
-+#elif defined(CONFIG_SPARSEMEM)
-+/* DIRECT_MAP_PHYSMEM_END is not limited by VA space assignment in this case */
-+#endif
-+
- #define ptep_get(ptep) READ_ONCE(*(ptep))
- #define pmdp_get(pmdp) READ_ONCE(*(pmdp))
+-	sec = sechdrs + src->st_shndx;
++	sec = info->sechdrs + src->st_shndx;
+ 	type = sec->sh_entsize >> SH_ENTSIZE_TYPE_SHIFT;
+ 	if (!(sec->sh_flags & SHF_ALLOC)
+ #ifndef CONFIG_KALLSYMS_ALL
+@@ -130,12 +136,11 @@ void layout_symtab(struct module *mod, struct load_info *info)
  
--- 
-2.47.3
+ 	/* Compute total space required for the core symbols' strtab. */
+ 	for (ndst = i = 0; i < nsrc; i++) {
+-		if (i == 0 || is_livepatch_module(mod) ||
+-		    is_core_symbol(src + i, info->sechdrs, info->hdr->e_shnum,
+-				   info->index.pcpu)) {
+-			strtab_size += strlen(&info->strtab[src[i].st_name]) + 1;
+-			ndst++;
+-		}
++		if (!is_kept_symbol(mod, info, i, src + i))
++			continue;
++
++		strtab_size += strlen(&info->strtab[src[i].st_name]) + 1;
++		ndst++;
+ 	}
+ 
+ 	/* Append room for core symbols at end of core part. */
+@@ -197,23 +202,22 @@ void add_kallsyms(struct module *mod, const struct load_info *info)
+ 	strtab_size = info->core_typeoffs - info->stroffs;
+ 	src = kallsyms->symtab;
+ 	for (ndst = i = 0; i < kallsyms->num_symtab; i++) {
++		ssize_t ret;
++
+ 		kallsyms->typetab[i] = elf_type(src + i, info);
+-		if (i == 0 || is_livepatch_module(mod) ||
+-		    is_core_symbol(src + i, info->sechdrs, info->hdr->e_shnum,
+-				   info->index.pcpu)) {
+-			ssize_t ret;
+-
+-			mod->core_kallsyms.typetab[ndst] =
+-				kallsyms->typetab[i];
+-			dst[ndst] = src[i];
+-			dst[ndst++].st_name = s - mod->core_kallsyms.strtab;
+-			ret = strscpy(s, &kallsyms->strtab[src[i].st_name],
+-				      strtab_size);
+-			if (ret < 0)
+-				break;
+-			s += ret + 1;
+-			strtab_size -= ret + 1;
+-		}
++
++		if (!is_kept_symbol(mod, info, i, src + i))
++			continue;
++
++		mod->core_kallsyms.typetab[ndst] = kallsyms->typetab[i];
++		dst[ndst] = src[i];
++		dst[ndst++].st_name = s - mod->core_kallsyms.strtab;
++		ret = strscpy(s, &kallsyms->strtab[src[i].st_name],
++			      strtab_size);
++		if (ret < 0)
++			break;
++		s += ret + 1;
++		strtab_size -= ret + 1;
+ 	}
+ 
+ 	/* Set up to point into init section. */
 
+-- 
+Thanks,
+Petr
