@@ -1,91 +1,144 @@
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 979B4265623
-	for <loongarch@lists.linux.dev>; Wed, 12 Aug 2026 05:03:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 709BA393DCA
+	for <loongarch@lists.linux.dev>; Wed, 12 Aug 2026 06:28:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786511039; cv=none; b=e0whHu987hLm+c3TvqTppjNFxKc7SF+ha53RbOC3IlRhdypF/l/9VNOlgdcAQ+1e6Em8nUtxxxQoUPO2XEvygnW6dfhpKBOhYtC7QMrp6DQbEbGw0oIUQi0or1DiMQCg1lcsa993FRX8gdUz0cJT4lbRnpc67m/GRHK7f5SaYhs=
+	t=1786516138; cv=none; b=Db2wygHwbgRrOV0x743fkoPBP3S9qJDWbJzIv+kYWmzeQEd1KjxiVir/lUF4ADZrFHyyLY4YflnU8GD6NdKohjaUuoAjlSbW9F4pfQjxRcUF+p/ABvyeajUeCwEXpuQs/Gut3kwZu0/x9t8T7T1oQNmYurD6/33IzSe0ejuvhMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786511039; c=relaxed/simple;
-	bh=P6quvHka82pMC4VdW7C7Qal5ft4yAf7yJoK8kb99VM8=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=HokqizZM9H4dKPbjpdT9v8ncL2jYz2CzmJ2zsOTOb5CqAy6S6NxDNQ19GGxVIrQEpqbjt7tqEdp4GgvLH3sF1zh8jIU/V/4ZMAMjI9z9NnTmhT+HJNQfih3lYYgu1olmEggTEyJN64EC/AudocJh81/fqLgdDG/NMIStjdUpKPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=T8Q7vFvU; arc=none smtp.client-ip=91.218.175.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="T8Q7vFvU"
-Message-ID: <f257f84d-580a-4db9-9f43-85e9bd4d6ebc@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1786511035;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kaUuGlJnD0CcwE1VdpdGZnYU6rLAQXVP8/gj94h7utw=;
-	b=T8Q7vFvU4/c8Qzv4nYbcsK3xEYNs70S/2UyWgB3RvOpWvowkCsxNj8eY2Pcyb/7gRjnPVI
-	0YZOstpu/6SyrYFBw3fq0y39UYHDgC1R5lEhsBXW6r4gZqzOzg6VvqzCmdxKTqkDQ1eoKc
-	HvoWza5M38lRwCD17CLhD7q6y0p3vcY=
-Date: Wed, 12 Aug 2026 13:03:32 +0800
+	s=arc-20240116; t=1786516138; c=relaxed/simple;
+	bh=T8kakElG4snEzW77dQPkOzDc0BqkZCRH6iBBJQsn9s0=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=MbrtZ9xbBjKWHcB0oQdVM2IUiQZimF0ZZf8p1LrrKOiWFIAhefiUywG2WGy5FZxcfov+U72YIGGaqfN+AenAiBVEBF8kB+zzqsDXGHK3m4C68UvAvZ56bQJaBgVlg5r9irRhWMDg7WyXbIJ2+aoRIsRv0ydLkaNZMmUpSLbCe5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8Bx69GlEnxq7HMAAA--.1386S3;
+	Wed, 12 Aug 2026 14:28:53 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJAxmM2jEnxqoLEBAA--.10116S2;
+	Wed, 12 Aug 2026 14:28:52 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: KVM: Fix TOCTOU race on pv_features
+To: Tao Cui <cui.tao@linux.dev>, zhaotianrui@loongson.cn
+Cc: chenhuacai@kernel.org, kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Tao Cui <cuitao@kylinos.cn>
+References: <20260810081321.157258-1-cui.tao@linux.dev>
+ <da1badea-d9ef-45f4-b2ec-f3152b12c4ac@linux.dev>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <60496d81-7382-a49d-27a0-b21e07d905f7@loongson.cn>
+Date: Wed, 12 Aug 2026 14:28:39 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Cc: cui.tao@linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] LoongArch: KVM: Remove unused function
- kvm_arch_flush_remote_tlbs_memslot()
-To: Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-References: <20260812040132.113812-1-maobibo@loongson.cn>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Cui <cui.tao@linux.dev>
-In-Reply-To: <20260812040132.113812-1-maobibo@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <da1badea-d9ef-45f4-b2ec-f3152b12c4ac@linux.dev>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-CM-TRANSID:qMiowJAxmM2jEnxqoLEBAA--.10116S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxZw43trykWFW7JFWUKr4DGFX_yoW5Zr48pF
+	ZrCr98urs5Gr1xA3sIqw4fW3y5Ars7Gr4YqFnrta4jyFn8CryYqrW0y39xuFn8t34vg3WI
+	vFW0ka9rurn0y3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
+	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
+	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
+	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
+	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7_Ma
+	UUUUU
 
 
 
-在 2026/8/12 12:01, Bibo Mao 写道:
-> Function kvm_arch_flush_remote_tlbs_memslot() is not called any more,
-> and it is unused. Here remove this API.
+On 2026/8/10 下午4:17, Tao Cui wrote:
 > 
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
->  arch/loongarch/include/asm/kvm_host.h | 1 -
->  arch/loongarch/kvm/mmu.c              | 6 ------
->  2 files changed, 7 deletions(-)
+> Hi Bibo,
+> 在 2026/8/10 16:13, Tao Cui 写道:
+>> From: Tao Cui <cuitao@kylinos.cn>
+>>
+>> kvm_loongarch_cpucfg_set_attr() validates and writes the VM-wide
+>> pv_features with a lockless check-then-set, so two vCPUs racing it can
+>> both pass the "all-vCPUs-must-match" check and install divergent values.
+>> Make the check-then-set atomic with a cmpxchg loop; the UPDATED bit
+>> already packs the configured state into the same word.
+>>
 > 
-> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-> index 23cfbecebbd7..5682b8c847d1 100644
-> --- a/arch/loongarch/include/asm/kvm_host.h
-> +++ b/arch/loongarch/include/asm/kvm_host.h
-> @@ -350,7 +350,6 @@ static inline void kvm_arch_vcpu_block_finish(struct kvm_vcpu *vcpu) {}
->  static inline void kvm_arch_free_memslot(struct kvm *kvm, struct kvm_memory_slot *slot) {}
->  void kvm_check_vpid(struct kvm_vcpu *vcpu);
->  enum hrtimer_restart kvm_swtimer_wakeup(struct hrtimer *timer);
-> -void kvm_arch_flush_remote_tlbs_memslot(struct kvm *kvm, const struct kvm_memory_slot *memslot);
->  void kvm_init_vmcs(struct kvm *kvm);
->  void kvm_exc_entry(void);
->  int  kvm_enter_guest(struct kvm_run *run, struct kvm_vcpu *vcpu);
-> diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
-> index e104897aa532..2c08402bfd3e 100644
-> --- a/arch/loongarch/kvm/mmu.c
-> +++ b/arch/loongarch/kvm/mmu.c
-> @@ -939,9 +939,3 @@ int kvm_handle_mm_fault(struct kvm_vcpu *vcpu, unsigned long gpa, bool write, in
->  void kvm_arch_sync_dirty_log(struct kvm *kvm, struct kvm_memory_slot *memslot)
->  {
->  }
-> -
-> -void kvm_arch_flush_remote_tlbs_memslot(struct kvm *kvm,
-> -					const struct kvm_memory_slot *memslot)
-> -{
-> -	kvm_flush_remote_tlbs(kvm);
-> -}
+> I just sent a small patch for the pv_features TOCTOU we discussed. It
+> turns the check-then-set into a cmpxchg loop on the existing UPDATED
+> bit, so there's no new field or lock.
 > 
-> base-commit: f5bbbfec59b4e2fb7520a91de3df8a6174325d6a
-Reviewed-by: Tao Cui <cuitao@kylinos.cn>
+> While working on it I also looked at two other options and wanted to
+> mention them here.
+> 
+> One was a spinlock around the check-then-set. It works, but it needs a
+> new kvm_arch member just for this, which didn't seem worth it given the
+> UPDATED bit already keeps the value and flag in a single word.
+> 
+> The other is to move pv_features per-vCPU (vcpu->arch). That removes the
+> shared state altogether: no lock, no latch, no cross-vCPU check, and the
+> VMM just keeps the vCPUs in sync. It's the cleaner design, but a larger
+> change, since QEMU would need a matching change too. Today QEMU pushes
+> pv_features behind a process-wide `static int once` (only the first
+> vCPU), which relies on the per-VM storage. This is the per-CPU direction
+> you mentioned earlier [1]; if you're still planning to do it I'm happy to
+> hold off, otherwise I can put together the kernel + QEMU side.
+> 
+> All three were built and tested locally with a vCPU-attribute test (the
+> spinlock also came up clean under KCSAN).
+> 
+> Thanks,
+> Tao
+> 
+> [1] https://lore.kernel.org/all/9696e097-7399-96b2-e0ae-bbb0d2f8c0d7@loongson.cn/
+> 
+>> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
+>> ---
+>>   arch/loongarch/kvm/vcpu.c | 18 ++++++++++++------
+>>   1 file changed, 12 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+>> index 20c207d80e31..55030c37cf06 100644
+>> --- a/arch/loongarch/kvm/vcpu.c
+>> +++ b/arch/loongarch/kvm/vcpu.c
+>> @@ -1164,12 +1164,18 @@ static int kvm_loongarch_cpucfg_set_attr(struct kvm_vcpu *vcpu,
+>>   		if (val & ~valid)
+>>   			return -EINVAL;
+>>   
+>> -		/* All vCPUs need set the same PV features */
+>> -		if ((kvm->arch.pv_features & LOONGARCH_PV_FEAT_UPDATED)
+>> -				&& ((kvm->arch.pv_features & valid) != val))
+>> -			return -EINVAL;
+>> -		kvm->arch.pv_features = val | LOONGARCH_PV_FEAT_UPDATED;
+>> -		return 0;
+>> +		/* Atomically install val; the cmpxchg serializes concurrent setters. */
+>> +		for (;;) {
+>> +			unsigned long old, new;
+>> +
+>> +			old = READ_ONCE(kvm->arch.pv_features);
+>> +			if ((old & LOONGARCH_PV_FEAT_UPDATED) &&
+>> +			    ((old & valid) != val))
+>> +				return -EINVAL;
+>> +			new = val | LOONGARCH_PV_FEAT_UPDATED;
+>> +			if (cmpxchg(&kvm->arch.pv_features, old, new) == old)
+>> +				return 0;
+>> +		}
+The for loop sentence is a little strange, can we use spinlock method 
+rather than atomic cmpxchg method? It is not performance sensitive here.
+
+Regards
+Bibo Mao
+>>   	default:
+>>   		return -ENXIO;
+>>   	}
 
