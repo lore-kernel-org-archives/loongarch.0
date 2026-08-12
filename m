@@ -1,144 +1,121 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 709BA393DCA
-	for <loongarch@lists.linux.dev>; Wed, 12 Aug 2026 06:28:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 289B1343899
+	for <loongarch@lists.linux.dev>; Wed, 12 Aug 2026 06:56:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786516138; cv=none; b=Db2wygHwbgRrOV0x743fkoPBP3S9qJDWbJzIv+kYWmzeQEd1KjxiVir/lUF4ADZrFHyyLY4YflnU8GD6NdKohjaUuoAjlSbW9F4pfQjxRcUF+p/ABvyeajUeCwEXpuQs/Gut3kwZu0/x9t8T7T1oQNmYurD6/33IzSe0ejuvhMw=
+	t=1786517811; cv=none; b=O6/fk5Dj4EsRm6GdzpSn/+8mQHWvb2jDatRFGcos70l+Pg1LNLbeB8nGY71ld7aXR+te0/guBeIjIEAPNOlb0Pn5XJbnEUxOmwgkAecmJq0ExMyjiCX3xabeN+2v7O1is+PFneRkpXHwWya/zS8gcexwyzWeiUXEYpQoigjDQN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786516138; c=relaxed/simple;
-	bh=T8kakElG4snEzW77dQPkOzDc0BqkZCRH6iBBJQsn9s0=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=MbrtZ9xbBjKWHcB0oQdVM2IUiQZimF0ZZf8p1LrrKOiWFIAhefiUywG2WGy5FZxcfov+U72YIGGaqfN+AenAiBVEBF8kB+zzqsDXGHK3m4C68UvAvZ56bQJaBgVlg5r9irRhWMDg7WyXbIJ2+aoRIsRv0ydLkaNZMmUpSLbCe5U=
+	s=arc-20240116; t=1786517811; c=relaxed/simple;
+	bh=nweLy+dhiToADoTW6oCvB/QbMAtGdXPEmmFCoRpIUHk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WQHNNRADL9H31ZasklnLp5lw+oq6vc36kF/gLj0qKv7VyzqEJHpedgISGptrnCKRFQocZpaKhrW/m3sMmSs11HUBDjIsLXXPRd41VeCFqXsaxx5tk03Zk0qTIA5XuFkewV7Gd2+rRSOZd5UgeOuxMe07ZHQiM5+zuDeF3tAZMAE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8Bx69GlEnxq7HMAAA--.1386S3;
-	Wed, 12 Aug 2026 14:28:53 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJAxmM2jEnxqoLEBAA--.10116S2;
-	Wed, 12 Aug 2026 14:28:52 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: KVM: Fix TOCTOU race on pv_features
-To: Tao Cui <cui.tao@linux.dev>, zhaotianrui@loongson.cn
-Cc: chenhuacai@kernel.org, kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, Tao Cui <cuitao@kylinos.cn>
-References: <20260810081321.157258-1-cui.tao@linux.dev>
- <da1badea-d9ef-45f4-b2ec-f3152b12c4ac@linux.dev>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <60496d81-7382-a49d-27a0-b21e07d905f7@loongson.cn>
-Date: Wed, 12 Aug 2026 14:28:39 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from loongson.cn (unknown [10.40.54.123])
+	by gateway (Coremail) with SMTP id _____8AxHNItGXxqNnYAAA--.1474S3;
+	Wed, 12 Aug 2026 14:56:45 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.40.54.123])
+	by front1 (Coremail) with SMTP id qMiowJAxmM0sGXxqK7oBAA--.10384S2;
+	Wed, 12 Aug 2026 14:56:44 +0800 (CST)
+From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+To: bp@alien8.de
+Cc: tony.luck@intel.com,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	chenhuacai@kernel.org,
+	Qunqin Zhao <zhaoqunqin@loongson.cn>
+Subject: [PATCH v3 0/3] EDAC/loongson: Improvements for Loongson EDAC driver
+Date: Wed, 12 Aug 2026 14:41:36 +0800
+Message-ID: <20260812064139.1231-1-zhaoqunqin@loongson.cn>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <da1badea-d9ef-45f4-b2ec-f3152b12c4ac@linux.dev>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxmM2jEnxqoLEBAA--.10116S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxZw43trykWFW7JFWUKr4DGFX_yoW5Zr48pF
-	ZrCr98urs5Gr1xA3sIqw4fW3y5Ars7Gr4YqFnrta4jyFn8CryYqrW0y39xuFn8t34vg3WI
-	vFW0ka9rurn0y3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:qMiowJAxmM0sGXxqK7oBAA--.10384S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7tr4xZF1fKw17KrWrGF18CrX_yoW8tw1xpF
+	W5ua98Gr4qqr1Ik39ayw1Iv3Z8K395Jw4qqan2y34rZr13A34UXw4ftrW8uFnrAr4ftF15
+	XFy0gFnaganrA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
 	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
 	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
-	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
-	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
-	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
-	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
-	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7_Ma
-	UUUUU
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zwZ7UUUUU==
+
+This series contains three patches for the Loongson EDAC driver:
+
+Patch 1: Encode node and MC info into mc_idx so that on multi-node
+systems, sysfs entries uniquely identify each controller.
+
+Patch 2: Get DIMM size from ACPI _DSM method instead of using hardcoded
+values, enabling correct display of memory size in sysfs.
+
+Patch 3: Add CS4-7 timeout filter for cross-node access on 3C6000
+multi-node systems to prevent false CE error reports.
+
+Changes in v3:
+
+Patch 1 "Encode node and MC info into mc_idx":
+- Drop mc_idx_u32 temporary variable; pass &mci->mc_idx directly
+- Rename device property mc-per-node -> mcs-per-node
+
+Patch 2 "Get DIMM size from ACPI _DSM method":
+- Fix subject: get -> Get
+- No code changes
+
+Patch 3 "Add CS4-7 timeout filter for cross-node access":
+- No changes
+
+Changes in v2:
+
+Patch 1 "Encode node and MC info into mc_idx":
+- Use char other_detail[64] = {0} and drop the else branch
+- Put snprintf() on one line
+- Initialize mc_idx_valid = true and drop the else branch
+- Validate mc-per-node firmware property is non-zero to prevent
+  division by zero
+- Wrap pvt_init() function definition to satisfy 100-column limit
+
+Patch 2 "get DIMM size from ACPI _DSM method":
+- No changes; rebased on top of updated patch 1.
+
+Patch 3 "Add CS4-7 timeout filter for cross-node access":
+- Assign valid_cs_bits before calling read_ecc() in pvt_init() to
+  prevent using uninitialized data when establishing the baseline
+  error count
+- Add bounds check for valid_cs_bits < 64 to guard against undefined
+  behavior when shifting a 64-bit value by 64 bits
+- Rename device property valid_cs_bits -> valid-cs-bits to match
+  standard DT/ACPI _DSD hyphen convention
+
+v2: https://lore.kernel.org/all/20260805085414.1482-1-zhaoqunqin@loongson.cn/
+v1: https://lore.kernel.org/all/20260730063035.230686-1-zhaoqunqin@loongson.cn/
+
+Qunqin Zhao (1):
+  EDAC/loongson: Add CS4-7 timeout filter for cross-node access
+
+Wang Jinwei (2):
+  EDAC/loongson: Encode node and MC info into mc_idx
+  EDAC/loongson: Get DIMM size from ACPI _DSM method
+
+ drivers/edac/loongson_edac.c | 82 ++++++++++++++++++++++++++++++++----
+ 1 file changed, 74 insertions(+), 8 deletions(-)
 
 
-
-On 2026/8/10 下午4:17, Tao Cui wrote:
-> 
-> Hi Bibo,
-> 在 2026/8/10 16:13, Tao Cui 写道:
->> From: Tao Cui <cuitao@kylinos.cn>
->>
->> kvm_loongarch_cpucfg_set_attr() validates and writes the VM-wide
->> pv_features with a lockless check-then-set, so two vCPUs racing it can
->> both pass the "all-vCPUs-must-match" check and install divergent values.
->> Make the check-then-set atomic with a cmpxchg loop; the UPDATED bit
->> already packs the configured state into the same word.
->>
-> 
-> I just sent a small patch for the pv_features TOCTOU we discussed. It
-> turns the check-then-set into a cmpxchg loop on the existing UPDATED
-> bit, so there's no new field or lock.
-> 
-> While working on it I also looked at two other options and wanted to
-> mention them here.
-> 
-> One was a spinlock around the check-then-set. It works, but it needs a
-> new kvm_arch member just for this, which didn't seem worth it given the
-> UPDATED bit already keeps the value and flag in a single word.
-> 
-> The other is to move pv_features per-vCPU (vcpu->arch). That removes the
-> shared state altogether: no lock, no latch, no cross-vCPU check, and the
-> VMM just keeps the vCPUs in sync. It's the cleaner design, but a larger
-> change, since QEMU would need a matching change too. Today QEMU pushes
-> pv_features behind a process-wide `static int once` (only the first
-> vCPU), which relies on the per-VM storage. This is the per-CPU direction
-> you mentioned earlier [1]; if you're still planning to do it I'm happy to
-> hold off, otherwise I can put together the kernel + QEMU side.
-> 
-> All three were built and tested locally with a vCPU-attribute test (the
-> spinlock also came up clean under KCSAN).
-> 
-> Thanks,
-> Tao
-> 
-> [1] https://lore.kernel.org/all/9696e097-7399-96b2-e0ae-bbb0d2f8c0d7@loongson.cn/
-> 
->> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
->> ---
->>   arch/loongarch/kvm/vcpu.c | 18 ++++++++++++------
->>   1 file changed, 12 insertions(+), 6 deletions(-)
->>
->> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
->> index 20c207d80e31..55030c37cf06 100644
->> --- a/arch/loongarch/kvm/vcpu.c
->> +++ b/arch/loongarch/kvm/vcpu.c
->> @@ -1164,12 +1164,18 @@ static int kvm_loongarch_cpucfg_set_attr(struct kvm_vcpu *vcpu,
->>   		if (val & ~valid)
->>   			return -EINVAL;
->>   
->> -		/* All vCPUs need set the same PV features */
->> -		if ((kvm->arch.pv_features & LOONGARCH_PV_FEAT_UPDATED)
->> -				&& ((kvm->arch.pv_features & valid) != val))
->> -			return -EINVAL;
->> -		kvm->arch.pv_features = val | LOONGARCH_PV_FEAT_UPDATED;
->> -		return 0;
->> +		/* Atomically install val; the cmpxchg serializes concurrent setters. */
->> +		for (;;) {
->> +			unsigned long old, new;
->> +
->> +			old = READ_ONCE(kvm->arch.pv_features);
->> +			if ((old & LOONGARCH_PV_FEAT_UPDATED) &&
->> +			    ((old & valid) != val))
->> +				return -EINVAL;
->> +			new = val | LOONGARCH_PV_FEAT_UPDATED;
->> +			if (cmpxchg(&kvm->arch.pv_features, old, new) == old)
->> +				return 0;
->> +		}
-The for loop sentence is a little strange, can we use spinlock method 
-rather than atomic cmpxchg method? It is not performance sensitive here.
-
-Regards
-Bibo Mao
->>   	default:
->>   		return -ENXIO;
->>   	}
+base-commit: dc59e4fea9d83f03bad6bddf3fa2e52491777482
+-- 
+2.47.3
 
