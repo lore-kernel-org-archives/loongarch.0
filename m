@@ -1,96 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE05E3859D7
-	for <loongarch@lists.linux.dev>; Wed, 12 Aug 2026 15:17:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9910A3242AC
+	for <loongarch@lists.linux.dev>; Thu, 13 Aug 2026 04:34:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786547868; cv=none; b=hpPnO9PHwOakyrWNk/DJvooAQijCISxSoBDUIZZZOSy+AFpziddoRY183RMuFpIgpNA193hNyP9HAL+a7oSRBWGuFL0n6qQLT44Sr3ocl90rFUs0ykG60PppINewWVEKVoSgyR3aNxBWLngfXNRkOj6wQ0yr+Wbc0fZuOsyTgBk=
+	t=1786595662; cv=none; b=GzT0Vamh6EB4IYNMm3L97CwgWT1EkfdRW13GZpBMDv5XKcp21zk3i1uWgS6SG9jCql4XHG5i0YpXlKVBS+RGBpDVRliDN9dlH8J1bLyWltVEuhX/CYHBOFWFvI/M7OoPetrxUc+z232XFg/F/l9J+0PWIRcsr1MbnTuF4B7VrvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786547868; c=relaxed/simple;
-	bh=jwDMgUPHkbOCJu9ptvK1dhBFbozu9J2QR4s5hOwE6uQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z17IgDizMh5QlsK9NLv61E6qWS4EfHVLRsF7PqFG8kv6QYglCFnPO1G//f6cW87HV0Hy/32wUhWGTbxDFleJNB5n3BWJ1SieAkU88B3ypfw76LtTPKQyOvGXn6OSYNFCK6AB7MnlyJz6L6xBO+hnh6xIEamnh5CUG47lVR6CWFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IVrXFDs3; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786595662; c=relaxed/simple;
+	bh=mO6mrRKNqP+ykHI/mGROppdDnXxIwgWT7LgXJj+JezI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PSPFvuKsku569kd4Nk6gztsu27KRVylGr0S956nCg8L9fJetIHsu+xJFQEMxgxrAT1HDx2jmEvAejcsBY45T0xyeVjXC3KAXA4k+KUYzW9Q1nLwCb+TfDJzmakdvBaxbsUyJixpNi/AZs+dDshY/nMyWKSUbI7Tl7R64c92VeKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=ucFab0TP; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IVrXFDs3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C3B61F000E9
-	for <loongarch@lists.linux.dev>; Wed, 12 Aug 2026 15:17:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786547866;
-	bh=ik2fuz9TuLVHsuaLwF0Z/EF0E1lbisTBGZFFl5LwWfg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=IVrXFDs32DQqUoXDf1/vSKCOHOzs17duCXdbSVlqkNj7ZlTKnh+Tt35+diZGfHMoY
-	 o17p/OBO501lnBfXq4HVXh0pQre68o/+22fq4Ew19g4eoiSBvFNnB5mXKwng4fsaqq
-	 aqlzFL8ONbVGTTciy/81hzET3/wLZBsjQT8CR+HTd2lrwPW1k12EQcWPrjJ/aPNrqS
-	 yqBUlQOKVroKaJO/Ex+YvD8Pm2XgZzioS/f20+p6/nvflWbumYCA7/tCAXPoA2NcpE
-	 pxj9Re7Bag694sFGZDLpnH0J+8lEhlbZ4hkglOJolitMBKucDrQI/xEN5EmuCAOY4O
-	 vgZKv/+0oMRBA==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-6a157f90752so1777947a12.3
-        for <loongarch@lists.linux.dev>; Wed, 12 Aug 2026 08:17:46 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RqXkhbb8CAyIsr+CtgNXYP4CaNwZ/4/FQqayT3kkyudAo5nyfVFPIJ0CHfzxdoLW/OhoslQKJUbpgQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwZegy7UNAJs3KLiKhOpgUEhaRQXJNl1+XL5uPRlbtkLLgMGOar
-	KidGoOXEzO3AvjaickTEkgNivNRypKIdt6yUv5ZYkFXOU5eXGV03VcDHkvNRATnSNZdJE+Hxh7d
-	jVoSHb9Dd2n43gkuaXy2w9p72/xMYupo=
-X-Received: by 2002:a05:6402:ea0:b0:6a1:4458:7f2d with SMTP id
- 4fb4d7f45d1cf-6a375eadd01mr2786148a12.5.1786547865002; Wed, 12 Aug 2026
- 08:17:45 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="ucFab0TP"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B8A551596;
+	Wed, 12 Aug 2026 21:34:14 -0700 (PDT)
+Received: from localhost (a085714.arm.com [10.164.19.28])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E593D3F632;
+	Wed, 12 Aug 2026 21:34:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1786595658; bh=mO6mrRKNqP+ykHI/mGROppdDnXxIwgWT7LgXJj+JezI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ucFab0TPnxvbqz3KEVyBy+XPNcRzGlpGCroO3Eciy3LZ0+X/OxqSrfgUvooo+EVnM
+	 CkkbCWk5eaKn4RSc34lEp7tZQ4pnzvhzXI1BWphp8/e5uuWc6hv5uSnA/KhXLfZVFZ
+	 sIXAXG2CvPJZ7I27QA35Hy/JfVFzGZIK3afmsQfQ=
+Date: Thu, 13 Aug 2026 10:04:15 +0530
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, 
+	Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
+	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org, linux-arch@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC V2 1/6] loongarch/mm: Stop using pte_ERROR()
+Message-ID: <qymuy4grl654s6jwwyhlwwo6kfr3ongxpfnxifojkvism2ddwg@5lyq7iooel6b>
+References: <20260811042119.3652929-1-anshuman.khandual@arm.com>
+ <20260811042119.3652929-2-anshuman.khandual@arm.com>
+ <e0ada89f-26b2-4e82-8273-8ea7b391c147@kernel.org>
+ <9a66d741-536e-44ac-b02f-395b5fc8ab6d@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260812032807.15034-1-yangtiezhu@loongson.cn>
-In-Reply-To: <20260812032807.15034-1-yangtiezhu@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 12 Aug 2026 23:17:35 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5w8VVW_L6cRes-syjEvhbWmevSKWrZWPFapRkuemmjaw@mail.gmail.com>
-X-Gm-Features: AUfX_my7amXpUbUaFyOB9T3ZWwS1EoRkTROxoDguMKCdpASA4Taw_zoETGoew_I
-Message-ID: <CAAhV-H5w8VVW_L6cRes-syjEvhbWmevSKWrZWPFapRkuemmjaw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] Filter out local and mapping symbols during module load
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
-	Daniel Gomez <da.gomez@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
-	Aaron Tomlin <atomlin@atomlin.com>, linux-modules@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9a66d741-536e-44ac-b02f-395b5fc8ab6d@kernel.org>
 
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+On Wed, Aug 12, 2026 at 01:27:54PM +0200, David Hildenbrand (Arm) wrote:
+> On 8/12/26 13:19, David Hildenbrand (Arm) wrote:
+> > On 8/11/26 06:21, Anshuman Khandual wrote:
+> >> Directly use pr_err() in __set_fixmap() and drop pte_ERROR() which helps in
+> >> eventually dropping pte_ERROR() macro across the tree. In this new printing
+> >> __FILE__ and __LINE__ has been dropped because they are always the same and
+> >> don't really add any value.
+> >>
+> >> Cc: Huacai Chen <chenhuacai@kernel.org>
+> >> Cc: WANG Xuerui <kernel@xen0n.name>
+> >> Cc: loongarch@lists.linux.dev
+> >> Cc: linux-kernel@vger.kernel.org
+> >> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> >> ---
+> >>  arch/loongarch/include/asm/pgtable.h | 2 --
+> >>  arch/loongarch/mm/init.c             | 2 +-
+> >>  2 files changed, 1 insertion(+), 3 deletions(-)
+> >>
+> >> diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
+> >> index 223528c04d73..a32a8fff70c1 100644
+> >> --- a/arch/loongarch/include/asm/pgtable.h
+> >> +++ b/arch/loongarch/include/asm/pgtable.h
+> >> @@ -128,8 +128,6 @@ struct vm_area_struct;
+> >>  #define ptep_get(ptep) READ_ONCE(*(ptep))
+> >>  #define pmdp_get(pmdp) READ_ONCE(*(pmdp))
+> >>  
+> >> -#define pte_ERROR(e) \
+> >> -	pr_err("%s:%d: bad pte %016lx.\n", __FILE__, __LINE__, pte_val(e))
+> >>  #ifndef __PAGETABLE_PMD_FOLDED
+> >>  #define pmd_ERROR(e) \
+> >>  	pr_err("%s:%d: bad pmd %016lx.\n", __FILE__, __LINE__, pmd_val(e))
+> >> diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
+> >> index 3407030f3e7a..be9b127daef2 100644
+> >> --- a/arch/loongarch/mm/init.c
+> >> +++ b/arch/loongarch/mm/init.c
+> >> @@ -203,7 +203,7 @@ void __init __set_fixmap(enum fixed_addresses idx,
+> >>  
+> >>  	ptep = populate_kernel_pte(addr);
+> >>  	if (!pte_none(ptep_get(ptep))) {
+> >> -		pte_ERROR(*ptep);
+> >> +		pr_err("bad pte %016lx\n", pte_val(*ptep));
+> >>  		return;
+> >>  	}
+> >>  
+> > 
+> > Ah, I missed that we want to print actual values, I somehow thought that we
+> > would be printing pte_none() ...
+> > 
+> > Maybe we should just be more verbose while at it?
 
-But I still don't think renaming is_core_symbol() to is_kept_symbol()
-is necessary.
+Initially thought that these new prints should be right close to the
+original via pxd_ERROR() but I guess making them verbose while doing
+the replacements should be indeed acceptable.
 
-Huacai
+> > 
+> > pr_err("unexpected set PTE at %ul in __set_fixmap: %016lx\n",
+> >        addr, pte_val(*ptep));
+> > 
+> 
+> On second thought, why not simply use ptval_to_str() here as well?
 
-On Wed, Aug 12, 2026 at 11:28=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.c=
-n> wrote:
->
-> This series prevents compiler generated local and mapping symbols
-> from leaking into /proc/kallsyms for loaded modules. This ensures
-> tracing tools like bpftrace can resolve accurate kernel stacks on
-> architectures like LoongArch.
->
-> Based on the v2 discussion, the changes are now refactored into a
-> clean three-patch series to eliminate code duplication and clarify
-> naming.
->
-> Tiezhu Yang (3):
->   module/kallsyms: Rename is_mapping_symbol() to
->     is_local_mapping_symbol()
->   module/kallsyms: Refactor current symbol filtering into
->     is_kept_symbol()
->   module/kallsyms: Filter out local and mapping symbols during module
->     load
->
->  include/linux/module_symbol.h |  4 +--
->  kernel/module/kallsyms.c      | 59 ++++++++++++++++++-----------------
->  scripts/faddr2line            |  2 +-
->  scripts/mod/modpost.h         |  2 +-
->  4 files changed, 35 insertions(+), 32 deletions(-)
->
-> --
-> 2.42.0
->
->
+Sure will do the required changes - the following builds successfully.
+
+--- a/arch/loongarch/mm/init.c
++++ b/arch/loongarch/mm/init.c
+@@ -197,13 +197,15 @@ void __init __set_fixmap(enum fixed_addresses idx,
+                               phys_addr_t phys, pgprot_t flags)
+ {
+        unsigned long addr = __fix_to_virt(idx);
++       char str[PTVAL_STR_MAX];
+        pte_t *ptep;
+
+        BUG_ON(idx <= FIX_HOLE || idx >= __end_of_fixed_addresses);
+
+        ptep = populate_kernel_pte(addr);
+        if (!pte_none(ptep_get(ptep))) {
+-               pr_err("bad pte %016lx\n", pte_val(*ptep));
++               ptval_to_str(str, pte_val(*ptep));
++               pr_err("unexpected set PTE at %lx in __set_fixmap: %s\n", addr, str);
+                return;
+        }
+
+> 
+> -- 
+> Cheers,
+> 
+> David
