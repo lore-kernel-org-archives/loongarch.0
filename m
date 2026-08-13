@@ -1,57 +1,46 @@
-Received: from mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+Received: from mta1.migadu.com (out-103.mta1.migadu.com [95.215.58.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FDB8380FEB
-	for <loongarch@lists.linux.dev>; Thu, 13 Aug 2026 16:03:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D1E33EDE68
+	for <loongarch@lists.linux.dev>; Thu, 13 Aug 2026 23:26:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786637005; cv=none; b=dtaXW860i6pmeaRIsNXkpLmQS4m2hWp5mBCZvbQYAjHSIvNyj6g+9eookRuoAP2zNXFPs3q8UsH8O0yaoSr387gpJAaMb1ToAY9G9X9f499h5Lwv039X4vZqdE3kA1heY3hQKy0QJ83e5ujEgGVCwvWRSinQcBCnCaOTB2VNDsc=
+	t=1786663567; cv=none; b=pDXk79jE7YSYalsbMQoR9puwINj7bSWvgw3pvU+h+6Osj6VIv7QJKVOcHLWaWbjzmw6CET+YDBuNVR28hSFJEl4OOKoEd7maXCN504Bj7dQFXUvgYGs/a0cFLCnWESCj/UOFi1pzBtYc28+wKRCG+8pTgWfzSDC4YkjNRr+MMic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786637005; c=relaxed/simple;
-	bh=TfiVg463NFynci603WWT4ZTChHOhrPxJeP6Z8Zrf2Es=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ONihfDMwxewZy/iw58exTxVqgICLEZaEq/AbiMZPtrB9hJ/8akGGcXPXQ5jNSzcO5HPkfCIRgpOy2wxi3AafkcgBSL0cfjPJbk05FlVmk9R3NGWxVkf5EGJulDdi5rmNvbXrcYksRv2u0QS0Gz/QhnG1QOWbPS1G+y4zffnOP94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=df+P0iyd; arc=none smtp.client-ip=91.218.175.179
+	s=arc-20240116; t=1786663567; c=relaxed/simple;
+	bh=Enf+YsjOMprKXPN86ka3rREmGOuZZK8yt2Up1k9KAKw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WwEJRCXDWMsI3Q8V+1O8t8VX7RGhLOtjVvKd+IWIaSXHqg6tq2CsMo7r9OfK2j1kL23xAW9MH2FNidnLaD716ZTNH+EO9NXequW8Xg867SGEir/KLp10iQZq32Q1QGOfp4VbvA46v9CpPksrIA02SmKRiVjyy1EmNSlbSGnLaXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=GYgnuFiy; arc=none smtp.client-ip=95.215.58.103
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="df+P0iyd"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="GYgnuFiy"
 X-Envelope-To: loongarch@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=TfiVg463NFynci603WWT4ZTChHOhrPxJeP6Z8Zrf2Es=;
+DKIM-Signature: a=rsa-sha256; bh=Enf+YsjOMprKXPN86ka3rREmGOuZZK8yt2Up1k9KAKw=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1786637001; v=1; x=1787241801;
- b=df+P0iydAxatDkTrZt4CPpu4/tnJxx7MD2PP2muWf5oIRWwPJy9mbHIsuSfw9tAvGGToQhM4
- DTtvgoQcQ+WZ9zhdOew0XWRytTvkv81shLBDf6N+OwXBy2TxVfyI26s0NeOmIu/9ydI6V5HRtvo
- WJ26KiOslCu5EWb8lfrwXXfk=
+ t=1786663563; v=1; x=1787268363;
+ b=GYgnuFiywJelmMDqyrAbcjuaBp+wLG4LhQhiZYnoVnCJyednyUySthkf2/eVYcrCvNm7QipA
+ cYjndlou5iFK7dzysiXghQ0s/tLZvzS82uF4qx8Ha5AzrKPRULVFj3d+bpuHhU7A6JUvDOzCCrk
+ SsNnI7XEhspPscv+nGfIzNGM=
 X-Envelope-To: loongarch@lists.linux.dev
-Received: from localhost (223.70.159.239)
-	by smtp.migadu.com with ESMTPS id 86f3e37813a2a36a;
-	Thu, 13 Aug 2026 16:03:14 +0000
+Received: from ctao-book.. (111.162.215.50)
+	by smtp.migadu.com with ESMTPS id afc9b2f00fdf83c6;
+	Thu, 13 Aug 2026 23:25:53 +0000
 X-Migadu-Flow: FLOW_OUT
-From: George Guo <dongtai.guo@linux.dev>
-To: chenhuacai@kernel.org
-Cc: rppt@kernel.org,
-	pasha.tatashin@soleen.com,
-	pratyush@kernel.org,
-	shuah@kernel.org,
-	ardb@kernel.org,
-	guodongtai@kylinos.cn,
-	kernel@xen0n.name,
-	graf@amazon.com,
-	liukexin@kylinos.cn,
+From: Tao Cui <cui.tao@linux.dev>
+To: maobibo@loongson.cn
+Cc: zhaotianrui@loongson.cn,
+	chenhuacai@kernel.org,
+	kvm@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	linux-efi@vger.kernel.org
-Subject: Re: [PATCH v4 4/4] selftests/kho: add LoongArch vmtest support
-Date: Fri, 14 Aug 2026 00:03:07 +0800
-Message-ID: <20260813160307.15130-1-dongtai.guo@linux.dev>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <CAAhV-H7+1bv6ULPO1+SZ5R=XFxNTh+54rqnYQUAW26kF83kiMg@mail.gmail.com>
-References: <CAAhV-H7+1bv6ULPO1+SZ5R=XFxNTh+54rqnYQUAW26kF83kiMg@mail.gmail.com>
+	cui.tao@linux.dev,
+	Tao Cui <cuitao@kylinos.cn>
+Subject: [PATCH v2] LoongArch: KVM: Fix TOCTOU race on pv_features
+Date: Fri, 14 Aug 2026 07:25:42 +0800
+Message-ID: <20260813232542.2098930-1-cui.tao@linux.dev>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -60,59 +49,69 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi Huacai,
+From: Tao Cui <cuitao@kylinos.cn>
 
-On Sun, 9 Aug 2026 at 12:16, Huacai Chen <chenhuacai@kernel.org> wrote:
-> You never answer me why in your test you should disable i8042 from V1
-> until V4. In normal use we use a single kernel for both host and guest.
+The check-then-set on kvm->arch.pv_features in
+kvm_loongarch_cpucfg_set_attr() is lockless, so two vCPUs can race
+past the validation and set different values.  Add a spinlock to
+serialize it.
 
-I owe you an apology: I did not actually understand your question. I
-thought the commit message had already explained the reason (the
-i8042_flush() panic), so I treated it as answered and never addressed
-what you were really asking. Let me answer it directly now.
+Signed-off-by: Tao Cui <cuitao@kylinos.cn>
+---
 
-You are right that this is not just a selftest detail. i8042 is built on
-every LoongArch kernel: arch/loongarch/Kconfig selects
-ARCH_MIGHT_HAVE_PC_SERIO, and KEYBOARD_ATKBD and MOUSE_PS2 (both default
-y) select SERIO_I8042 under it. So your "single kernel for host and
-guest" point is correct -- a normal defconfig kernel has i8042 built in.
+Changes in v2: use a spinlock instead of a cmpxchg loop (Bibo Mao).
+Link: https://lore.kernel.org/all/20260810081321.157258-1-cui.tao@linux.dev/
 
-On the QEMU virtual machine there is no i8042, so PNP finds nothing and
-i8042_pnp_init() falls back to probing the i8042 status and data
-registers (I8042_STATUS_REG, I8042_DATA_REG) directly. On LoongArch those
-registers are memory-mapped, and on the virtual machine they are not backed
-by any device, so i8042_flush() takes a page fault and the kernel panics
-before userspace. A normal LoongArch defconfig kernel booted as a QEMU
-guest hits the same panic -- the "# CONFIG_SERIO_I8042 is not set" in
-loongarch.conf is only a workaround to let the KHO selftest boot, not a
-fix.
+ arch/loongarch/include/asm/kvm_host.h | 2 ++
+ arch/loongarch/kvm/vcpu.c             | 6 +++++-
+ arch/loongarch/kvm/vm.c               | 1 +
+ 3 files changed, 8 insertions(+), 1 deletion(-)
 
-The real fix is separate from the KHO series: make i8042 bail out on
-LoongArch when ACPI/PNP does not describe a controller, so the direct-port
-fallback never runs. I have prepared that as a standalone patch -- the
-relevant hunk is below -- and will send the full patch separately. The
-selftest workaround can be dropped once it lands.
+diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+index 23cfbecebbd7..cdbbd90e0584 100644
+--- a/arch/loongarch/include/asm/kvm_host.h
++++ b/arch/loongarch/include/asm/kvm_host.h
+@@ -128,6 +128,8 @@ struct kvm_arch {
+ 	struct kvm_phyid_map  *phyid_map;
+ 	/* Enabled PV features */
+ 	unsigned long pv_features;
++	/* Serializes pv_features updates */
++	spinlock_t pv_features_lock;
+ 	/* Supported KVM features */
+ 	unsigned long kvm_features;
+ 
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index 20c207d80e31..551ed39b2d1f 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -1165,10 +1165,14 @@ static int kvm_loongarch_cpucfg_set_attr(struct kvm_vcpu *vcpu,
+ 			return -EINVAL;
+ 
+ 		/* All vCPUs need set the same PV features */
++		spin_lock(&kvm->arch.pv_features_lock);
+ 		if ((kvm->arch.pv_features & LOONGARCH_PV_FEAT_UPDATED)
+-				&& ((kvm->arch.pv_features & valid) != val))
++				&& ((kvm->arch.pv_features & valid) != val)) {
++			spin_unlock(&kvm->arch.pv_features_lock);
+ 			return -EINVAL;
++		}
+ 		kvm->arch.pv_features = val | LOONGARCH_PV_FEAT_UPDATED;
++		spin_unlock(&kvm->arch.pv_features_lock);
+ 		return 0;
+ 	default:
+ 		return -ENXIO;
+diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
+index 1317c718f896..b984cc54f305 100644
+--- a/arch/loongarch/kvm/vm.c
++++ b/arch/loongarch/kvm/vm.c
+@@ -76,6 +76,7 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+ 		return -ENOMEM;
+ 	}
+ 	spin_lock_init(&kvm->arch.phyid_map_lock);
++	spin_lock_init(&kvm->arch.pv_features_lock);
+ 
+ 	kvm_init_vmcs(kvm);
+ 	kvm_vm_init_features(kvm);
+-- 
+2.43.0
 
-diff --git a/drivers/input/serio/i8042-acpipnpio.h b/drivers/input/serio/i8042-acpipnpio.h
---- a/drivers/input/serio/i8042-acpipnpio.h
-+++ b/drivers/input/serio/i8042-acpipnpio.h
-@@ -1633,8 +1633,14 @@ static int __init i8042_pnp_init(void)
- #else
-		pr_info("PNP: No PS/2 controller found.\n");
- #if defined(__loongarch__)
--		if (acpi_disabled == 0)
--			return -ENODEV;
-+		/*
-+		 * LoongArch legacy I/O ports are memory-mapped and are not
-+		 * safely probeable when no controller is present: a direct
-+		 * probe faults on the QEMU virtual machine and on any FDT-based
-+		 * boot.  Do not fall back to probing them directly; if ACPI/PNP
-+		 * did not describe a controller, assume there is none.
-+		 */
-+		return -ENODEV;
- #else
-                if (x86_platform.legacy.i8042 !=
-                                X86_LEGACY_I8042_EXPECTED_PRESENT)
-
-Thanks,
-George
