@@ -1,143 +1,185 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27844377AA7
-	for <loongarch@lists.linux.dev>; Thu, 13 Aug 2026 08:24:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D364378823
+	for <loongarch@lists.linux.dev>; Thu, 13 Aug 2026 08:24:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786609453; cv=none; b=u9iQU+sK6TnINM3C+YAjqqnOh406UmlKkDD/rqx3aQ9FBIS6H+reJvOMKfsdWb3RT/O5pF3XXX6X+3IBKdPM+BFiyZQAB2xxwLTKQCtOQBqitqZxSv67JMCaieuuvVYHEZsa3Qt2KB6YnpAPCeJImcLSp4kK8F8bqS4wm4cF9kw=
+	t=1786609460; cv=none; b=jRzB1/cXDn9+wCdzN+dBX9nLDoyHTV3od5wrbZujI7+8j+FmI044pTj3tXqC3oZcIOJV5YEVerRgCN6E6I2+DWXkLON5Kp/353//EuqKbSKoM4C6Qp/ENV7B3R2kMFqgtjSKCEgPlslHy8eBLz+npQj6ismjqOyGDuzl8m8d8Lk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786609453; c=relaxed/simple;
-	bh=RSICgLmtm1xRZiiIp0/AoqJMWfn4igydVeZCt0+fC+Q=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=uy71hegyRH7NFbCd22tRSNt43f0Zcm1YkRZtVufh+WkMquYisQ46EOL/l3dPPN1mQt1KGRe1/FtRWrUG+Y5haUfU1rXHpQ6PFu7y4Y73QGd8N1B98XRsQJiyVrJ5F/vvbj7eMitd5TNEwYUkdcc+zc7jE1Cvtip7lHqfQfq82OA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [123.138.236.242])
-	by gateway (Coremail) with SMTP id _____8CxfdIof31qM9gAAA--.2686S3;
-	Thu, 13 Aug 2026 16:24:08 +0800 (CST)
-Received: from [10.130.40.83] (unknown [123.138.236.242])
-	by front1 (Coremail) with SMTP id qMiowJDxTs8lf31qQSADAA--.21057S2;
-	Thu, 13 Aug 2026 16:24:06 +0800 (CST)
-Subject: Re: [PATCH bpf-next v1] selftests/bpf: Enable timed may_goto tests
- for LoongArch
-To: bot+bpf-ci@kernel.org, chenhuacai@kernel.org, hengqi.chen@gmail.com,
- ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, eddyz87@gmail.com,
- memxor@gmail.com
-Cc: loongarch@lists.linux.dev, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, martin.lau@kernel.org,
- yonghong.song@linux.dev, clm@meta.com, ihor.solodrai@linux.dev
-References: <20260813070906.5164-1-yangtiezhu@loongson.cn>
- <6a9f7ec666d4f36867e91cf21a36d7f8ef6a3872ac694f1eb468aa5278372ce3@mail.kernel.org>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <69daa817-a3cc-370e-dbb4-33450ab2cb43@loongson.cn>
-Date: Thu, 13 Aug 2026 16:24:03 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1786609460; c=relaxed/simple;
+	bh=4pw2dwEP7DmxYnN1amH69DYxJG9Qwgx5J6dXh6dhPrc=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oc/F1OmyW7FGBq5hErfyzxDqJLOK/i0JhIeW2u5uodS293NGpo5zmN3HdsP+/trhJwMJiES2hTXrbyUIhcO5lyO6M0HjqJu06kun0cdgetioP3pmr0MJWm/BKtAoXWakMS4TPC7XeO0b+q0T//p9DhhffsFt7eaq63gJIHyDHj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=K5Uu1EzR; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="K5Uu1EzR"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4980fe6b3beso4493825e9.0
+        for <loongarch@lists.linux.dev>; Thu, 13 Aug 2026 01:24:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1786609457; x=1787214257; darn=lists.linux.dev;
+        h=user-agent:in-reply-to:content-disposition:content-type
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=EBP/Xp/pFJQAiC3TlKU8K995p72mwD8OldQHfVB1iwE=;
+        b=K5Uu1EzRJmwklikMEk5ihou/EMrLrTp33OBxbsV+2izVrL5XRZsNaGRpFNo/gwRWKR
+         doNkL0rqCxnNnTliEihxcD3rG/T6TQi3EGFDQL4IPXygE2KsnZWeti4l8iXZEFUIebwz
+         nsswuJIJBqbzqBV1mH2TN/wJCQGuvoN2rPbTfil1Rvf30pfHIUOb5ayhXtrboMJHxS7Q
+         K4zW+XhYQ1EZlwZ6u2kZQopwNgeIiTzc7renBr0aiwJ16PpyctH+qXKxtiZZoGy/0ZcT
+         lBwG7TEXYywWGJdsX+o9Umqfc2h3hPkJvPwueOxTsuVxdXhxptd7fggNfvTflLZz+7Ub
+         yECQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786609457; x=1787214257;
+        h=user-agent:in-reply-to:content-disposition:content-type
+         :mime-version:references:message-id:subject:cc:to:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=EBP/Xp/pFJQAiC3TlKU8K995p72mwD8OldQHfVB1iwE=;
+        b=d2YYXi2f6P2TZgtvajvN3DNCBfqCNd84KXvrXyhF4yviTdLsmtuu0evIumTAeYdXbQ
+         NV5ESvkvcUw/ghouq0uBQNGx/a9+0J/1DqToLkWrOccmuYKCEKYBchTt6+vW+3ioK31z
+         Wggu1hF4m/x4b6yXPznpmc9f/cKO+NwzKFNUD+icIhrchJ+a3SKjDRGdBF11ID6bwJ+E
+         YUlnku3CdiZNyziRdtWn2whAhwiDOkf9jLK2oSr61QNIUklTkwltCmEnkC2FlWNCzMLh
+         mLshi53lTlzIoyJaOMkVB6ZscCehvoXVRSN0/0RCRQYx6U9mOFxQ9M5hpo4Dudh9jVZN
+         jkPQ==
+X-Forwarded-Encrypted: i=1; AHgh+RrRs3t6iI7y5ylUqPMjguhucylgad3FNdMDYLiVrVsAMnrxYF4mLxaflzr8lr4IDiMgCydSxPDr6W0=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzaHPvJntWtdZhakd18cPSfcez0AbhyWh2f/aMGkz8mikdcllbB
+	w5CtrW8QIiSXgL5/7J+ElkDzAYtxKe8ElRPtBKevJB1Qio+k6tdQ3LXocn/EVN90WdE=
+X-Gm-Gg: AR+sD10F83QDJ1YQgmwo3mNTWUzMjy4FCPCqvAzoCUbRCbFSu7b3SMwAqj3/lc5Dc8a
+	azTSoQVwad5S+bS65o2r/l2t37J49YiUNAbTohUL8qTyKxtvNG53yRTQDwPnuV9hYMGfsJMCUA0
+	zFVxkFhRuxYccmpDyaysR+YHJwx06HcISjuQFuFxOzwYgJOTpY09LC+JNBamzjJmQBaRxwaJoxw
+	bAMhv99Gp8z2thnR/k62BD9uL/dzzdqfJhE6sjnCDs5CGVEpUvAQli0gmvGpBfEU9CQs1etc7EG
+	dmkl53eQ6uAUtbm+7kBoZoTpbjdvygWC9A3qTXsy5TRSwDKE3RS12uv69YNQz01owGxYO2RekAU
+	Jn0oPYncoAkxDAw+9Kpbsxt5O+CUtH6p9G6AX9mo1/6kQdttAZEMMoBefshwP/NxnuoWDnY0GWu
+	fE1rzpQAetrlutpu9kwWreEVKmKqrIE0GSndglQncHR67ZXwdHMteUVNap37Bf1WPsNStLhppxv
+	nSiw3w=
+X-Received: by 2002:a05:600c:231a:b0:495:58fe:88e5 with SMTP id 5b1f17b1804b1-4998215464cmr34432165e9.2.1786609457289;
+        Thu, 13 Aug 2026 01:24:17 -0700 (PDT)
+Received: from r1chard ([61.222.76.173])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84fc5a1cd6esm503849b3a.36.2026.08.13.01.24.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Aug 2026 01:24:16 -0700 (PDT)
+From: Richard Lyu <richard.lyu@suse.com>
+X-Google-Original-From: Richard Lyu <r1chard@r1chard>
+Date: Thu, 13 Aug 2026 16:24:11 +0800
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev
+Subject: Re: [PATCH 1/3] efi: Turn boot memmap handling into shared code
+Message-ID: <an1_K40ZWobCkCky@r1chard>
+References: <20260813074506.643472-5-ardb@kernel.org>
+ <20260813074506.643472-6-ardb@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <6a9f7ec666d4f36867e91cf21a36d7f8ef6a3872ac694f1eb468aa5278372ce3@mail.kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxTs8lf31qQSADAA--.21057S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxAr48Wr4UXF43XrW5trWrJFc_yoW5KFW7pw
-	n29FZFqrn5Jan5G39Fy3WjvFyYvFyxJw43G3WxtrW5JF1Fq3ZrKFy8K3ZruFWFvF1UCw1r
-	tw45Za4UX3WUAFXCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBqb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE
-	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
-	AE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCj
-	c4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY
-	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6x
-	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY
-	1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8JfQtUUUUU==
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20260813074506.643472-6-ardb@kernel.org>
+User-Agent: Mutt/2.2.16 (2025-11-22)
 
-On 2026/8/13 下午4:11, bot+bpf-ci@kernel.org wrote:
->> selftests/bpf: Enable timed may_goto tests for LoongArch
->>
->> Enable stream_cond_break, may_goto_interaction, and verifier_may_goto_1
->> tests for LoongArch, aligning with recent architectural infrastructure
->> support (timed may_goto and arch_bpf_stack_walk JIT).
-> 
-> The changelog states the tests are enabled "aligning with recent
-> architectural infrastructure support (timed may_goto and arch_bpf_stack_walk
-> JIT)". Does LoongArch have this infrastructure at this commit?
-> 
-> Looking at the tree, bpf_jit_supports_timed_may_goto() is not implemented for
-> LoongArch (only the __weak false stub in kernel/bpf/core.c:3379 exists).
-> arch/loongarch/net/Makefile builds only bpf_jit.o -- there is no
-> bpf_timed_may_goto.S file, unlike arm64, riscv, s390, powerpc, and x86. Also,
-> arch_bpf_stack_walk() is not implemented for LoongArch (only arch_stack_walk()
-> exists in arch/loongarch/kernel/stacktrace.c, but not the BPF-specific
-> variant).
-> 
-> If the enabling JIT work is in a separate series or a different tree, should
-> the changelog name it and state the dependency? As applied, this patch makes
-> three previously-skipped subtests fail on LoongArch.
+On 2026/08/13 09:45, Ard Biesheuvel wrote:
+>Move the handling of the boot memmap config table from loongarch
+>specific code to code that is shared between all architectures that
+>select EFI_GENERIC_STUB (all EFI archs except x86).
+>
+>This will be used in a subsequent patch to replace the clunky FDT based
+>passing of the memmap parameters.
+>
+>Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+>---
+> arch/loongarch/kernel/efi.c | 10 ++++------
+> drivers/firmware/efi/efi.c  |  4 ++++
+> include/linux/efi.h         |  3 +++
+> 3 files changed, 11 insertions(+), 6 deletions(-)
+>
+>diff --git a/arch/loongarch/kernel/efi.c b/arch/loongarch/kernel/efi.c
+>index 69dd83f8082f..089378856bab 100644
+>--- a/arch/loongarch/kernel/efi.c
+>+++ b/arch/loongarch/kernel/efi.c
+>@@ -28,12 +28,10 @@
+> static unsigned long efi_nr_tables;
+> static unsigned long efi_config_table;
+>
+>-static unsigned long __initdata boot_memmap = EFI_INVALID_TABLE_ADDR;
+> static unsigned long __initdata fdt_pointer = EFI_INVALID_TABLE_ADDR;
+>
+> static efi_system_table_t *efi_systab;
+> static efi_config_table_type_t arch_tables[] __initdata = {
+>-	{LINUX_EFI_BOOT_MEMMAP_GUID,	&boot_memmap,	"MEMMAP" },
+> 	{DEVICE_TREE_GUID,		&fdt_pointer,	"FDTPTR" },
+> 	{},
+> };
+>@@ -132,14 +130,14 @@ void __init efi_init(void)
+> 	if (IS_ENABLED(CONFIG_EFI_EARLYCON) || IS_ENABLED(CONFIG_SYSFB))
+> 		init_primary_display();
+>
+>-	if (boot_memmap == EFI_INVALID_TABLE_ADDR)
+>+	if (efi.boot_memmap == EFI_INVALID_TABLE_ADDR)
+> 		return;
+>
+>-	tbl = early_memremap_ro(boot_memmap, sizeof(*tbl));
+>+	tbl = early_memremap_ro(efi.boot_memmap, sizeof(*tbl));
+> 	if (tbl) {
+> 		struct efi_memory_map_data data;
+>
+>-		data.phys_map		= boot_memmap + sizeof(*tbl);
+>+		data.phys_map		= efi.boot_memmap + sizeof(*tbl);
+> 		data.size		= tbl->map_size;
+> 		data.desc_size		= tbl->desc_size;
+> 		data.desc_version	= tbl->desc_ver;
+>@@ -156,7 +154,7 @@ void __init efi_init(void)
+> 		 * Also, set the EFI_PRESERVE_BS_REGIONS flag to indicate that
+> 		 * critical boot services code/data regions like this are preserved.
+> 		 */
+>-		memblock_reserve((phys_addr_t)boot_memmap, sizeof(*tbl) + data.size);
+>+		memblock_reserve((phys_addr_t)efi.boot_memmap, sizeof(*tbl) + data.size);
+> 		set_bit(EFI_PRESERVE_BS_REGIONS, &efi.flags);
+>
+> 		early_memunmap(tbl, sizeof(*tbl));
+>diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+>index 0327a39d31fa..d33760d6a527 100644
+>--- a/drivers/firmware/efi/efi.c
+>+++ b/drivers/firmware/efi/efi.c
+>@@ -55,6 +55,9 @@ struct efi __read_mostly efi = {
+> #ifdef CONFIG_UNACCEPTED_MEMORY
+> 	.unaccepted		= EFI_INVALID_TABLE_ADDR,
+> #endif
+>+#ifdef CONFIG_EFI_GENERIC_STUB
+>+	.boot_memmap		= EFI_INVALID_TABLE_ADDR,
+>+#endif
+> };
+> EXPORT_SYMBOL(efi);
+>
+>@@ -647,6 +650,7 @@ static const efi_config_table_type_t common_tables[] __initconst = {
+> 	{LINUX_EFI_UNACCEPTED_MEM_TABLE_GUID,	&efi.unaccepted,	"Unaccepted"	},
+> #endif
+> #ifdef CONFIG_EFI_GENERIC_STUB
+>+	{LINUX_EFI_BOOT_MEMMAP_GUID,		&efi.boot_memmap,	"MEMMAP"	},
+> 	{LINUX_EFI_PRIMARY_DISPLAY_TABLE_GUID,	&primary_display_table			},
+> #endif
+> 	{},
+>diff --git a/include/linux/efi.h b/include/linux/efi.h
+>index aa15ff88539b..bc1cd005ca0f 100644
+>--- a/include/linux/efi.h
+>+++ b/include/linux/efi.h
+>@@ -650,6 +650,9 @@ extern struct efi {
+> 	unsigned long			mokvar_table;		/* MOK variable config table */
+> 	unsigned long			coco_secret;		/* Confidential computing secret table */
+> 	unsigned long			unaccepted;		/* Unaccepted memory table */
+>+#ifdef CONFIG_EFI_GENERIC_STUB
+>+	unsigned long			boot_memmap;		/* The EFI memory map captured by the stub */
+>+#endif
+>
+> 	efi_get_time_t			*get_time;
+> 	efi_set_time_t			*set_time;
+>-- 
+>2.47.3
+>
+>
 
-Please see the additional comments after the --- marker line:
-
-"This patch is based on the latest bpf-next tree, it depends on the
-following two patches:
-
-LoongArch: BPF: Add timed may_goto support
-https://lore.kernel.org/loongarch/20260804153938.16129-3-dongtai.guo@linux.dev/
-
-LoongArch: BPF: Implement arch_bpf_stack_walk()
-https://lore.kernel.org/loongarch/20260813045306.21571-1-yangtiezhu@loongson.cn/
-
-They are expected to be merged into v7.3-rc1 during the upcoming merge
-window through the loongarch-next tree."
-
-Here are the test results:
-
-Before:
-$ sudo ./test_progs -a stream_success/stream_cond_break
-#466/2   stream_success/stream_cond_break:SKIP
-#466     stream_success:OK (SKIP: 1/14)
-Summary: 1/0 PASSED, 1 SKIPPED, 0/0 FAILED
-$ sudo ./test_progs -a verifier_bpf_fastcall/may_goto_interaction
-#580/24  verifier_bpf_fastcall/may_goto_interaction:SKIP
-#580     verifier_bpf_fastcall:OK (SKIP: 1/29)
-Summary: 1/0 PASSED, 1 SKIPPED, 0/0 FAILED
-$ sudo ./test_progs -a verifier_may_goto_1
-#635/1   verifier_may_goto_1/may_goto 0:SKIP
-#635/2   verifier_may_goto_1/batch 2 of may_goto 0:SKIP
-#635/3   verifier_may_goto_1/may_goto batch with offsets 2/1/0:SKIP
-#635/4   verifier_may_goto_1/may_goto batch with offsets 2/0:SKIP
-#635/5   verifier_may_goto_1/timed may_goto preserves R0-R5:SKIP
-#635     verifier_may_goto_1:SKIP
-Summary: 1/0 PASSED, 5 SKIPPED, 0/0 FAILED
-
-After:
-$ sudo ./test_progs -a stream_success/stream_cond_break
-#466/2   stream_success/stream_cond_break:OK
-#466     stream_success:OK
-Summary: 1/1 PASSED, 0 SKIPPED, 0/0 FAILED
-$ sudo ./test_progs -a verifier_bpf_fastcall/may_goto_interaction
-#580/24  verifier_bpf_fastcall/may_goto_interaction:OK
-#580     verifier_bpf_fastcall:OK
-Summary: 1/1 PASSED, 0 SKIPPED, 0/0 FAILED
-$ sudo ./test_progs -a verifier_may_goto_1
-#635/1   verifier_may_goto_1/may_goto 0:OK
-#635/2   verifier_may_goto_1/batch 2 of may_goto 0:OK
-#635/3   verifier_may_goto_1/may_goto batch with offsets 2/1/0:OK
-#635/4   verifier_may_goto_1/may_goto batch with offsets 2/0:OK
-#635/5   verifier_may_goto_1/timed may_goto preserves R0-R5:OK
-#635     verifier_may_goto_1:OK
-Summary: 1/5 PASSED, 0 SKIPPED, 0/0 FAILED
-
-Thanks,
-Tiezhu
-
+Reviewed-by: Richard Lyu <richard.lyu@suse.com>
