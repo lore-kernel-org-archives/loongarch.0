@@ -1,185 +1,138 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5689F43F0B4
-	for <loongarch@lists.linux.dev>; Thu, 13 Aug 2026 08:26:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F39B74195A7
+	for <loongarch@lists.linux.dev>; Thu, 13 Aug 2026 09:05:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786609562; cv=none; b=MltqoUvRJnGNSjnp2gG5mxvb/STFCQbrQHbFDECOL3rT+NqBMjuWQ/w8WPAEHlPZDAAeC76AIgZtSTRYpVMnofJPwCyZFPMwv/9E9E1nfEpampN9cM4F4QRwgqJG1sLAQ7yxxXkKCUunF+mGJR0RgAEBqiklP4V4zit6KcNG6p8=
+	t=1786611925; cv=none; b=IfoLE3XdWeGj93a4HmciSNdiiROJhlKML7V7Mx3kNQ7YvP7dAAZtQnmR8ejonRopH34Oti/78pYwIPBD+u8m0lROxsuzw6UtRQbp/f0UkHSrf9SXEQVPztMXEHf9tmG+Qo0eiy0k4EL5B3ZmJ8Tqi1nsOcG0v6tP/DhYZL1YwOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786609562; c=relaxed/simple;
-	bh=KA2ruE16PN9H+yf8WYCIc8Pu9NRx0u91ZqkzR5Q/MQ8=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aheIWuHlavRqPdA60/5C3xZMH0l6SflIZNI9ZoYbWJkeF1GBlviSZdrsS62/lUApt8ACF90qin80Rl+y6tYYlj046dGkEmXAIiOsYlmEfPdCbbnNWfP9m5VfjCOiwWZteswE7gAk4NN9XgPujcZmKEPfAkAw8GvW1qqga095TaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=bS1lV0RO; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="bS1lV0RO"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-49556f97a9dso11162935e9.1
-        for <loongarch@lists.linux.dev>; Thu, 13 Aug 2026 01:26:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1786609558; x=1787214358; darn=lists.linux.dev;
-        h=user-agent:in-reply-to:content-disposition:content-type
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=+SYyR6EQQIsM2Vg2lfNRN1vzD/kfGQIxnSaF9qwESjU=;
-        b=bS1lV0ROpdpdhycoqQH5Z4/qSE9xbonLHRfIFlHpxEBY7FKB+mn/w5r3y413R/hQ6j
-         3om5Mu45KuKpkPw6cNb5U2/b5kwOuK0AupDSd0h9BpW8vuCsjTyKCCdjiDLvyDmX75G4
-         wqYm8rr6RWc9OHtDUXzpMxb6SuUIGCZ/b7beQA3Zkq7on6qnzMhC8SuP49VL7hrvevbP
-         OASiPxtTaQxPRTWeLkQWoy0Zsnb5NdXW3hYYNQ1rMf7ahzxS4+2iSI6rMeIPkBahR0/G
-         SSLKwka4dquwzg1yiVKKSKBilVZ54nSYrohlXbci1qdwvyLrbvJo6yMzmDE57/v2QgPi
-         OQvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786609558; x=1787214358;
-        h=user-agent:in-reply-to:content-disposition:content-type
-         :mime-version:references:message-id:subject:cc:to:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=+SYyR6EQQIsM2Vg2lfNRN1vzD/kfGQIxnSaF9qwESjU=;
-        b=OPNNgT/hR7njmuAXM7cIuz7UGywHewUKD+7sqvjAgR80APGdQh5DbuqSB+SXTrI3o3
-         bz7zQoRGf6IkysrJKG0Ro0KSL7GeK5UusW4m84ymhBIYI4r/Kidb036HRxviTL0xJNO6
-         vj7I4isbOLAgU+nI1wgiOPDeHMDgskiRhz322smXPFcnMsbPp09WjW7q/0hhq+p+KAyv
-         6Pgno81LgKI3wxVz/ThUOdfDKSHjRDYgqyP3uhq7YX7/GkPaLg00hWb1lCce6Mey44sr
-         cKMfGP5TWzhMseSalB4PINw/6mvJ9ePu14C1lrY7Y8VUqFRFzZHowBLQzfD9xznzbxMx
-         0S2g==
-X-Forwarded-Encrypted: i=1; AHgh+RrUYz/xgTq8yhnGgImXag2DrJNJVc+UE7Kkc3cH3cU4Sck/WvA19kYsoWFVHxNrfGfYA7AgCq+Xbkc=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzisMMAwx63weGuQdJgMyhlDU4FPKUdTkTAGuZDpqYLvtHOaZyF
-	zlAmUnQyZLue8aGXoNzrfBr6gVowEuK9zvYHl1bnxevOyId6Q8OwHzTu2T0Q4xf9FAk=
-X-Gm-Gg: AR+sD12EdTqlJK5Qt74N/pysCRHFpUpqup8zmaAcAXthnXUNVIcun108w0nF9jQrXyU
-	RpAFFc1vCyFRKQ1HpLcEQDVlHmDqUTM2HipuvRIlfkI2ufid8Lcmri6dRNvJc+J4Ji3fONIEDjq
-	vYZtz/yO/CNXZyqOHeCJybtz4ti2htvkh/ulET1KF6DZCrkTxlffDDhNLik2z3oGkqw3ORVe2D7
-	WOpc9aTxaoTwhZeoKj4Sbr5fVfeYI2F3GibqsIYcvO81a9R7tMuNqSS+kzF6Wf1hLlcdqShwp58
-	YwSyhw4mFEAP1qO08PC1kIDhV2ggUv3eHp3Ouo0MN/0shGdqPuzlgSvz9J7VDr3tL0QsxRySRgo
-	Oy+MjNg3Jtr2Kw3QU8uk/n/Qthf1je2PwKO46XjeWupiQ0kmVNlkutOBY2ozH7ez1FHKl99MHP1
-	xb4LKmZgqKBY57II++S2UDmkJkhTsPepu/VZN8O+MN9lr+3uLR1fyojOD46Ek3QcK+yP10+96Jc
-	TTJdfw=
-X-Received: by 2002:a05:600c:3e8e:b0:499:79ba:ed92 with SMTP id 5b1f17b1804b1-499821d0652mr48629115e9.13.1786609558388;
-        Thu, 13 Aug 2026 01:25:58 -0700 (PDT)
-Received: from r1chard ([61.222.76.173])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3931cefe5fdsm2416153a91.13.2026.08.13.01.25.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2026 01:25:57 -0700 (PDT)
-From: Richard Lyu <richard.lyu@suse.com>
-X-Google-Original-From: Richard Lyu <r1chard@r1chard>
-Date: Thu, 13 Aug 2026 16:25:52 +0800
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev
-Subject: Re: [PATCH 3/3] efi: Make the 'linux,uefi-boot-memmap' DT property
- optional
-Message-ID: <an1_kKjIWebhWVT5@r1chard>
-References: <20260813074506.643472-5-ardb@kernel.org>
- <20260813074506.643472-8-ardb@kernel.org>
+	s=arc-20240116; t=1786611925; c=relaxed/simple;
+	bh=3ZUyFQHbnYN/MGnBhmvVH2l9QYhH3mmgtNdPKm0adCM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eeSFGIYTuNS6JuI3Osj0xHwol9PET5Bo42dhsX46dfykDgWdE17ulxi4WWmUHiuO7zDYg6RzOhRLvYqOZKthPlNEb+ywWjQ4ecRZO7f5731aZ2p9jDNR98rq+xRLDcHtNlQRF+H9I6DDXVDv9fDW7UpHDkibCfFdphJGpqhOECQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [123.138.236.242])
+	by gateway (Coremail) with SMTP id _____8CxQNHNiH1qLNsAAA--.2646S3;
+	Thu, 13 Aug 2026 17:05:17 +0800 (CST)
+Received: from linux.localdomain (unknown [123.138.236.242])
+	by front1 (Coremail) with SMTP id qMiowJAx2c3FiH1qbCsDAA--.21078S2;
+	Thu, 13 Aug 2026 17:05:10 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1] LoongArch: Use current_stack_pointer in current_pt_regs()
+Date: Thu, 13 Aug 2026 17:05:06 +0800
+Message-ID: <20260813090506.15574-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20260813074506.643472-8-ardb@kernel.org>
-User-Agent: Mutt/2.2.16 (2025-11-22)
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAx2c3FiH1qbCsDAA--.21078S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxWF1rJr45KrW8ZrykZrWrJFc_yoW5Aw48pa
+	93uFn7KF48CFyxAw1kta13Xr13Ja929347GFW3tw4SywnxXrn8XFn7WFy2kFWxAan5X340
+	qFyay34jvFsxAagCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
+	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
+	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU2DUUUUUUU
 
-On 2026/08/13 09:45, Ard Biesheuvel wrote:
->The 'linux,uefi-boot-memmap DT property' is redundant in principle,
->given that it carries a physical address that is also passed via a EFI
->config table entry.
->
->However, if SetVirtualAddressMap() has been called, the address of the
->config table array has been translated to virtual, and so the memory map
->is needed to translate it back to physical before it can be located.
->
->This means that passing the linux,uefi-boot-memmap DT property is only
->needed if SetVirtualAddressMap() has been called, which is a terrible
->idea anyway, and if it has not been called, the config table array can
->simply be parsed to look for LINUX_EFI_BOOT_MEMMAP_TABLE_GUID, and the
->address taken from there.
->
->So permit this, and make the boot memmap property optional.
->
->Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
->---
-> drivers/firmware/efi/fdtparams.c | 42 ++++++++++++++++++--
-> 1 file changed, 38 insertions(+), 4 deletions(-)
->
->diff --git a/drivers/firmware/efi/fdtparams.c b/drivers/firmware/efi/fdtparams.c
->index a54a76a6aaeb..89ffccf35fd7 100644
->--- a/drivers/firmware/efi/fdtparams.c
->+++ b/drivers/firmware/efi/fdtparams.c
->@@ -89,14 +89,15 @@ static int __init efi_get_fdt_prop(const void *fdt, int node, const char *pname,
-> u64 __init efi_get_fdt_params(struct efi_memory_map_data *mm)
-> {
-> 	const void *fdt = initial_boot_params;
->-	unsigned long systab, memmap;
->+	unsigned long systab, memmap = 0;
-> 	int i, j, node;
-> 	struct {
-> 		void	*var;
-> 		int	size;
->+		int	optional;
-> 	} target[] = {
-> 		[SYSTAB] = { &systab,		sizeof(systab) },
->-		[MEMMAP] = { &memmap,		sizeof(memmap) },
->+		[MEMMAP] = { &memmap,		sizeof(memmap), 1 },
-> #ifdef CONFIG_XEN
-> 		[MMBASE] = { &mm->phys_map,	sizeof(mm->phys_map) },
-> 		[MMSIZE] = { &mm->size,		sizeof(mm->size) },
->@@ -131,14 +132,47 @@ u64 __init efi_get_fdt_params(struct efi_memory_map_data *mm)
-> 				continue;
-> 			if (!j)
-> 				goto notfound;
->-			pr_err("Can't find property '%s' in DT!\n", pname);
->-			return 0;
->+			if (!target[j].optional) {
->+				pr_err("Can't find property '%s' in DT!\n", pname);
->+				return 0;
->+			}
-> 		}
-> 		if (IS_ENABLED(CONFIG_XEN) && dt_params[i].paravirt) {
-> 			set_bit(EFI_PARAVIRT, &efi.flags);
-> 		} else {
-> 			struct efi_boot_memmap *bm;
->
->+			if (!memmap) {
->+				unsigned long tables, nr_tables;
->+				efi_system_table_t *st;
->+				efi_config_table_t *tbl;
->+
->+				st = early_memremap_ro(systab, sizeof(*st));
->+				if (!st) {
->+					pr_err("Cannot remap EFI system table\n");
->+					return 0;
->+				}
->+
->+				tables		= st->tables;
->+				nr_tables	= st->nr_tables;
->+
->+				early_memunmap(st, sizeof(*st));
->+
->+				tbl = early_memremap_ro(tables, sizeof(*tbl) * nr_tables);
->+				if (!tbl) {
->+					pr_err("Cannot remap EFI config table array\n");
->+					return 0;
->+				}
->+
->+				for (int i = 0; i < nr_tables; i++) {
->+					if (!efi_guidcmp(tbl[i].guid, LINUX_EFI_BOOT_MEMMAP_GUID)) {
->+						memmap = (unsigned long)tbl[i].table;
->+						break;
->+					}
->+				}
->+				early_memunmap(tbl, sizeof(*tbl) * nr_tables);
->+			}
->+
-> 			bm = early_memremap_ro(memmap, sizeof(*bm));
-> 			if (!bm) {
-> 				pr_err("Cannot remap EFI boot memory map\n");
->-- 
->2.47.3
->
->
+The current implementation of current_pt_regs() relies on the compiler
+__builtin_frame_address(0). This introduces an unnecessary dependency
+on the frame pointer register, which forces the compiler to generate
+redundant prologue and epilogue code, create a larger stack frame, and
+perform redundant memory operations to preserve the frame pointer even
+in functions where it is otherwise unnecessary.
 
-Reviewed-by: Richard Lyu <richard.lyu@suse.com>
+Optimize this by switching to current_stack_pointer, which explicitly
+maps to the hardware stack pointer register. This allows the compiler
+to compute the stack alignment directly from the natively maintained
+$sp register, completely eliminating the overhead of preserving and
+restoring the frame pointer on the stack memory.
+
+As a prominent example, this optimization significantly improves the
+hot-path function copy_thread(). A localized disassembly comparison
+of copy_thread() illustrates the elimination of the frame pointer,
+the reduction of stack frame size from 48 bytes down to 32 bytes,
+and a more compact epilogue path:
+
+Before:
+00000000000004f0 <copy_thread>:
+ 4f0:   02ff4063        addi.d          $sp, $sp, -48
+ 4f4:   29c08076        st.d            $fp, $sp, 32
+ 4f8:   29c06077        st.d            $s0, $sp, 24
+ 4fc:   29c0a061        st.d            $ra, $sp, 40
+ 500:   02c0c076        addi.d          $fp, $sp, 48
+ ...
+ 54c:   1400006e        lu12i.w         $t2, 3
+ ...
+ 55c:   03bffdce        ori             $t2, $t2, 0xfff
+ 560:   00153ace        or              $t2, $fp, $t2
+ 564:   02fb05cd        addi.d          $t1, $t2, -319
+ ...
+ 628:   28c0a061        ld.d            $ra, $sp, 40
+ 62c:   28c08076        ld.d            $fp, $sp, 32
+ 630:   28c06077        ld.d            $s0, $sp, 24
+ 634:   00150004        move            $a0, $zero
+ 638:   02c0c063        addi.d          $sp, $sp, 48
+ 63c:   4c000020        ret
+
+After:
+00000000000004f0 <copy_thread>:
+ 4f0:   02ff8063        addi.d          $sp, $sp, -32
+ 4f4:   29c04077        st.d            $s0, $sp, 16
+ 4f8:   29c06061        st.d            $ra, $sp, 24
+ [ prologue st.d and addi.d for $fp are completely eliminated ]
+ ...
+ 544:   1400006e        lu12i.w         $t2, 3
+ ...
+ 554:   03bffdce        ori             $t2, $t2, 0xfff
+ 558:   0015386e        or              $t2, $sp, $t2
+ 55c:   02fb05cd        addi.d          $t1, $t2, -319
+ ...
+ 620:   28c06061        ld.d            $ra, $sp, 24
+ 624:   28c04077        ld.d            $s0, $sp, 16
+ 628:   00150004        move            $a0, $zero
+ [ epilogue ld.d for $fp is eliminated; exit path is shortened ]
+ 62c:   02c08063        addi.d          $sp, $sp, 32
+ 630:   4c000020        ret
+
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/loongarch/include/asm/ptrace.h | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/arch/loongarch/include/asm/ptrace.h b/arch/loongarch/include/asm/ptrace.h
+index e5d21e836d99..2a7ed442d905 100644
+--- a/arch/loongarch/include/asm/ptrace.h
++++ b/arch/loongarch/include/asm/ptrace.h
+@@ -170,11 +170,7 @@ static inline void die_if_kernel(const char *str, struct pt_regs *regs)
+ 		die(str, regs);
+ }
+ 
+-#define current_pt_regs()						\
+-({									\
+-	unsigned long sp = (unsigned long)__builtin_frame_address(0);	\
+-	(struct pt_regs *)((sp | (THREAD_SIZE - 1)) + 1) - 1;		\
+-})
++#define current_pt_regs() ((struct pt_regs *)((current_stack_pointer | (THREAD_SIZE - 1)) + 1) - 1)
+ 
+ /* Helpers for working with the user stack pointer */
+ 
+-- 
+2.42.0
+
