@@ -1,214 +1,160 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE64A179A3
-	for <loongarch@lists.linux.dev>; Thu, 13 Aug 2026 07:07:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4D84345729
+	for <loongarch@lists.linux.dev>; Thu, 13 Aug 2026 07:09:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786604831; cv=none; b=eu3iS2qPsvH5ibpSGYYkRSXHgVyCNQ8XwfAvC3vhNbXxqCRzlyYE+mF/GGshTN/zkg8zK/Og/X+d+p5shsKu0qaQBV+nNoDPAN1iQKS1UBTdYRlfFATa9up8HcS4jAAhBRZaih9dtTqBYz6qqhTChmjMEAyjKHM3xPy+E2rRHPQ=
+	t=1786604954; cv=none; b=sMU6U1OtSRmySN/icQiFIHBhQDnkL7wRy2QPf6LU0fqucQ/nF9e15PxOKFO3pkJcU2u+SHz178s0ghB52F+hA0RUdU1ttQLKiYlGIU4OVvfQk5oGZMwAYhcz98esd7IUGIi6CK4HsYF6pvToXwkD3g4FL/IPf0ACTZXQZBkM+bQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786604831; c=relaxed/simple;
-	bh=wOyFqwRT3urixhQakJtAvzNxo0cbYKSUpRn7y74plxY=;
-	h=From:Date:Subject:MIME-Version:Message-Id:To:Cc:Content-Type; b=QkNTP4qizWL9qRBmFeCCC7aQ0jfhhZH5KHz267FDkV9Ma1xJY/X5d2BV/5YCLz/JNQuN3ORjwb+IXYXtocaaA6HGabxyQSLBCKsfxlKHwE6XDLTRCUKtyOOIgxiMKxwHXPK2/+faKvI9RwGwcS8No3xJAWSn+vQ5twXWeKh02FA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IwbXggek; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IwbXggek"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1786604828;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=JiBEcYiE+KLh8+0hM55F9Ni/cU6OIiWXkgr39dKJ+1Q=;
-	b=IwbXggek0Lx80Ce4b6zZqvM/5s28sUnK9oRlYD5dBlKd+pmEXd7hMPjLG7SLGvwxrp4+D8
-	MzVgugu+Nu5yDbLfkcnLgakaLLsHqj2D3HGj9sKh25smDCEven4sJLkrpckkuUnmDzyzQS
-	MMK47GsgPCtAMPfLQOsPILalJA4a88s=
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
- [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-633-ZTeh5KptP8CEFTIbVaOyUQ-1; Thu, 13 Aug 2026 03:07:07 -0400
-X-MC-Unique: ZTeh5KptP8CEFTIbVaOyUQ-1
-X-Mimecast-MFC-AGG-ID: ZTeh5KptP8CEFTIbVaOyUQ_1786604827
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2cccfa32670so6757825ad.2
-        for <loongarch@lists.linux.dev>; Thu, 13 Aug 2026 00:07:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786604826; x=1787209626;
-        h=cc:to:message-id:content-transfer-encoding:content-type
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=JiBEcYiE+KLh8+0hM55F9Ni/cU6OIiWXkgr39dKJ+1Q=;
-        b=ISjdRocQFz2dlOujtbnLI/XLy1HZaD2+HPYRPOjmlsYUgM7jhujBchX0sQW9eYDxJV
-         E7Ey1qDN+lPPXg8Ii+rAurJ/xkklH/x6cYmhF1/sYY8NpRtEY+5YFsu8O7bTYZP18NAy
-         7uyATilxKlBKf63YjqRlZUyDUNQe83VOxw3BoXCqgAMxTTQ7oMNxuXwiL49nEma1zY5U
-         pi0HbX100pm7BMfvqV6tMKoYUvWX3BS4awmimDaEFSa+KLOF3bO4S05ORVEe2VNusVbT
-         d4p4gdbOJ6CBBadJpa1oYXE3hKikSbN0HI8Vkcz7oq4LNf007vnQnlf85tpf4dxMKsHI
-         SgEw==
-X-Forwarded-Encrypted: i=1; AHgh+RrXfERMBATSlR2XscJy+mhVy/2VUOXk+apwCjSXE07X4cI8nSSNNVKLT6396P0oj36XPaVFLIOc46c=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw6tyapqHNgssvBMTooOuN23U3HG7rLEA37LAbj2oXmMNIdrArb
-	POd+uvLrgcuadbEBRAcOr+jdNxn9fumXEIKkdyemklbHQLWDUJvOLbLhGzdxA5KqpmRgP2EL93K
-	2WktohZadnfDNfYQsHTvwEwnLul44ivSb9XXUWy+VMpsbUMFL7GDqBObiBKsyDw==
-X-Gm-Gg: AR+sD11yoMaqOBMC6YnkqNjTkDOHsQxF03qZmaYKISs0OicZk6AuzX9WK+VI7sgmUkG
-	Amae/Li29GDYllsmjhWmgZ62OknkxazEfDCdM+paz1P6PPYh5VKWId2AOTtturtHj6AOH94uA43
-	pY3ysfOS6fxBW3PS0tWjVPqYc7lfC3SsqCnqbPYfvl71aupWwH10niW5tO0/OVmnZxcqQvKyTQK
-	7umAEwufP7x8n/NloSXOBsHWVmqYE6Zr4nLfghs8tz/n7EnrPJmU7zQIY0donXBCEejJ6u2m3Qw
-	InTaU2i1g9GaSB7zZWEVdaqxmdp4+fHFevpmLUNfNa7MwXQOec4vsh5kBYjrMuwxCT0d58EX+uq
-	CbQHoDIO3Y4P2LDkp
-X-Received: by 2002:a17:903:234a:b0:2ca:d975:5bbd with SMTP id d9443c01a7336-2d37e8a4f49mr38123755ad.20.1786604826420;
-        Thu, 13 Aug 2026 00:07:06 -0700 (PDT)
-X-Received: by 2002:a17:903:234a:b0:2ca:d975:5bbd with SMTP id d9443c01a7336-2d37e8a4f49mr38123275ad.20.1786604825987;
-        Thu, 13 Aug 2026 00:07:05 -0700 (PDT)
-Received: from [127.0.0.1] ([115.110.157.234])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d37c48e438sm4877315ad.60.2026.08.13.00.06.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2026 00:07:05 -0700 (PDT)
-From: Mukesh Pilaniya <mpilaniy@redhat.com>
-Date: Thu, 13 Aug 2026 12:36:29 +0530
-Subject: [PATCH] kexec: return -ENOEXEC from image probe functions on
- mismatch
+	s=arc-20240116; t=1786604954; c=relaxed/simple;
+	bh=6Z1KVKHKC7XX4FfaZ954+tbK1vGqBHuDIcjuPObLF5w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LA5Dxr24Q9t1TcIgbBMvwdRKeS5RAt8F2tgXCzYNssMQlNjsB6raiR59R/s4Wk4h/noAA6rRNeYxegzgMoln89+XmWJc37DtwPruDno8pKee5rFK8aYF4nvfdhvN0Wfz4ofV04N7BNPvujMdmF+dQ5netNk3hVBf3YY+eay5Stk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [123.138.236.242])
+	by gateway (Coremail) with SMTP id _____8AxYdGVbX1qctMAAA--.2684S3;
+	Thu, 13 Aug 2026 15:09:09 +0800 (CST)
+Received: from linux.localdomain (unknown [123.138.236.242])
+	by front1 (Coremail) with SMTP id qMiowJCxNs2UbX1qrRADAA--.7861S2;
+	Thu, 13 Aug 2026 15:09:08 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Hengqi Chen <hengqi.chen@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>
+Cc: loongarch@lists.linux.dev,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH bpf-next v1] selftests/bpf: Enable timed may_goto tests for LoongArch
+Date: Thu, 13 Aug 2026 15:09:06 +0800
+Message-ID: <20260813070906.5164-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-Id: <20260813-mpilaniy-v1-1-777d4d0e30f7@redhat.com>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIzMDC0Nj3dyCzJzEvMxK3bS0JIPkZEujZGNDYyWg8oKi1LTMCrBR0bEQfnF
- pUlZqcglIv1JtLQC+l4AzbAAAAA==
-X-Change-ID: 20260813-mpilaniy-ffb0cc92c313
-To: Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
- Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- Baoquan He <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>, 
- Pasha Tatashin <pasha.tatashin@soleen.com>, 
- Pratyush Yadav <pratyush@kernel.org>, Tao Liu <ltao@redhat.com>, 
- Philipp Rudo <prudo@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
- kexec@lists.infradead.org, Mukesh Pilaniya <mpilaniy@redhat.com>
-X-Mailer: b4 0.15.2
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: qI1Mz-M7X-TmlO4PIjqMcPtEyqP717yBj9jM4VB8-F0_1786604827
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxNs2UbX1qrRADAA--.7861S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxWw48XFWfGw4fArWkWw4kAFc_yoW5KFWxpa
+	4kuasIkr18Jw1DJF9rGr4UWFW5Xrn293yaqr4ftryfAF17Jr97WF1xK34UKFyY9F4ruw4F
+	va129F98Xa18ArgCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1CPfJUUUUU==
 
-Several kexec_file_load() image probe functions return -EINVAL when
-they do not recognize the image format.  A probe function that rejects
-an image should return -ENOEXEC to indicate that the image is not a
-recognized executable format.  -EINVAL implies a problem with the
-syscall parameters, not with image recognition.
+Enable stream_cond_break, may_goto_interaction, and verifier_may_goto_1
+tests for LoongArch, aligning with recent architectural infrastructure
+support (timed may_goto and arch_bpf_stack_walk JIT).
 
-kexec_image_probe_default() iterates through registered loaders and
-returns the last probe's error code to the caller.  That error
-propagates as the kexec_file_load() return value to userspace.
-Returning -EINVAL from a probe when no loader matches is semantically
-incorrect and misleads userspace about the nature of the failure.
+With this patch, the following tests passed on LoongArch:
 
-Return -ENOEXEC from all probe functions and their helpers when the
-image format is not recognized.
+  sudo ./test_progs -a stream_success/stream_cond_break
+  sudo ./test_progs -a verifier_bpf_fastcall/may_goto_interaction
+  sudo ./test_progs -a verifier_may_goto_1
 
-Signed-off-by: Mukesh Pilaniya <mpilaniy@redhat.com>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
-branch: next-20260812
-base commit: 28d012efb4327f9c75d5e042a7c91e9a542efa98
----
- arch/arm64/kernel/kexec_image.c   | 4 ++--
- arch/loongarch/kernel/kexec_efi.c | 4 ++--
- arch/riscv/kernel/kexec_image.c   | 4 ++--
- kernel/kexec_elf.c                | 4 ++--
- 4 files changed, 8 insertions(+), 8 deletions(-)
+This patch is based on the latest bpf-next tree, it depends on the
+following two patches:
 
-diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
-index b70f4df15a1a..101259874d44 100644
---- a/arch/arm64/kernel/kexec_image.c
-+++ b/arch/arm64/kernel/kexec_image.c
-@@ -25,10 +25,10 @@ static int image_probe(const char *kernel_buf, unsigned long kernel_len)
- 		(const struct arm64_image_header *)(kernel_buf);
- 
- 	if (!h || (kernel_len < sizeof(*h)))
--		return -EINVAL;
-+		return -ENOEXEC;
- 
- 	if (memcmp(&h->magic, ARM64_IMAGE_MAGIC, sizeof(h->magic)))
--		return -EINVAL;
-+		return -ENOEXEC;
- 
- 	return 0;
- }
-diff --git a/arch/loongarch/kernel/kexec_efi.c b/arch/loongarch/kernel/kexec_efi.c
-index 5ee78ebb1546..28a1d0420ba3 100644
---- a/arch/loongarch/kernel/kexec_efi.c
-+++ b/arch/loongarch/kernel/kexec_efi.c
-@@ -24,12 +24,12 @@ static int efi_kexec_probe(const char *kernel_buf, unsigned long kernel_len)
- 
- 	if (!h || (kernel_len < sizeof(*h))) {
- 		kexec_dprintk("No LoongArch image header.\n");
--		return -EINVAL;
-+		return -ENOEXEC;
- 	}
- 
- 	if (!loongarch_header_check_dos_sig(h)) {
- 		kexec_dprintk("No LoongArch PE image header.\n");
--		return -EINVAL;
-+		return -ENOEXEC;
- 	}
- 
- 	return 0;
-diff --git a/arch/riscv/kernel/kexec_image.c b/arch/riscv/kernel/kexec_image.c
-index 51dc89259f16..963a25f5b55b 100644
---- a/arch/riscv/kernel/kexec_image.c
-+++ b/arch/riscv/kernel/kexec_image.c
-@@ -20,7 +20,7 @@ static int image_probe(const char *kernel_buf, unsigned long kernel_len)
- 	const struct riscv_image_header *h = (const struct riscv_image_header *)kernel_buf;
- 
- 	if (!h || kernel_len < sizeof(*h))
--		return -EINVAL;
-+		return -ENOEXEC;
- 
- 	/* According to Documentation/arch/riscv/boot-image-header.rst,
- 	 * use "magic2" field to check when version >= 0.2.
-@@ -28,7 +28,7 @@ static int image_probe(const char *kernel_buf, unsigned long kernel_len)
- 
- 	if (h->version >= RISCV_HEADER_VERSION &&
- 	    memcmp(&h->magic2, RISCV_IMAGE_MAGIC2, sizeof(h->magic2)))
--		return -EINVAL;
-+		return -ENOEXEC;
- 
- 	return 0;
- }
-diff --git a/kernel/kexec_elf.c b/kernel/kexec_elf.c
-index 3a5c25b2adc9..89a444a00693 100644
---- a/kernel/kexec_elf.c
-+++ b/kernel/kexec_elf.c
-@@ -172,7 +172,7 @@ static int elf_read_ehdr(const char *buf, size_t len, struct elfhdr *ehdr)
- 
- 	default:
- 		pr_debug("Unknown ELF class.\n");
--		return -EINVAL;
-+		return -ENOEXEC;
- 	}
- 
- 	return elf_is_ehdr_sane(ehdr, len) ? 0 : -ENOEXEC;
-@@ -236,7 +236,7 @@ static int elf_read_phdr(const char *buf, size_t len,
- 
- 	default:
- 		pr_debug("Unknown ELF class.\n");
--		return -EINVAL;
-+		return -ENOEXEC;
- 	}
- 
- 	return elf_is_phdr_sane(phdr, len) ? 0 : -ENOEXEC;
+LoongArch: BPF: Add timed may_goto support
+https://lore.kernel.org/loongarch/20260804153938.16129-3-dongtai.guo@linux.dev/
 
----
-base-commit: 28d012efb4327f9c75d5e042a7c91e9a542efa98
-change-id: 20260813-mpilaniy-ffb0cc92c313
+LoongArch: BPF: Implement arch_bpf_stack_walk()
+https://lore.kernel.org/loongarch/20260813045306.21571-1-yangtiezhu@loongson.cn/
 
-Best regards,
---  
-Mukesh Pilaniya <mpilaniy@redhat.com>
+They are expected to be merged into v7.3-rc1 during the upcoming merge
+window through the loongarch-next tree.
+
+ tools/testing/selftests/bpf/progs/stream.c                | 1 +
+ tools/testing/selftests/bpf/progs/verifier_bpf_fastcall.c | 1 +
+ tools/testing/selftests/bpf/progs/verifier_may_goto_1.c   | 5 +++++
+ 3 files changed, 7 insertions(+)
+
+diff --git a/tools/testing/selftests/bpf/progs/stream.c b/tools/testing/selftests/bpf/progs/stream.c
+index 00a37933e411..8e8e1339dc74 100644
+--- a/tools/testing/selftests/bpf/progs/stream.c
++++ b/tools/testing/selftests/bpf/progs/stream.c
+@@ -65,6 +65,7 @@ __arch_x86_64
+ __arch_arm64
+ __arch_s390x
+ __arch_riscv64
++__arch_loongarch
+ __success __retval(0)
+ __stderr("ERROR: Timeout detected for may_goto instruction")
+ __stderr("CPU: {{[0-9]+}} UID: 0 PID: {{[0-9]+}} Comm: {{.*}}")
+diff --git a/tools/testing/selftests/bpf/progs/verifier_bpf_fastcall.c b/tools/testing/selftests/bpf/progs/verifier_bpf_fastcall.c
+index 4cfaa6b4ab40..328cf630210a 100644
+--- a/tools/testing/selftests/bpf/progs/verifier_bpf_fastcall.c
++++ b/tools/testing/selftests/bpf/progs/verifier_bpf_fastcall.c
+@@ -665,6 +665,7 @@ __naked void may_goto_interaction_x86_64(void)
+ SEC("raw_tp")
+ __arch_arm64
+ __arch_riscv64
++__arch_loongarch
+ __log_level(4)
+ __msg("subprog 0 (may_goto_interaction) main {{.*}} stack 24")
+ /* may_goto counter at -24 */
+diff --git a/tools/testing/selftests/bpf/progs/verifier_may_goto_1.c b/tools/testing/selftests/bpf/progs/verifier_may_goto_1.c
+index 0e211f030d0d..db7e30da234f 100644
+--- a/tools/testing/selftests/bpf/progs/verifier_may_goto_1.c
++++ b/tools/testing/selftests/bpf/progs/verifier_may_goto_1.c
+@@ -12,6 +12,7 @@ __arch_x86_64
+ __arch_s390x
+ __arch_arm64
+ __arch_riscv64
++__arch_loongarch
+ __xlated("0: r0 = 1")
+ __xlated("1: exit")
+ __success
+@@ -33,6 +34,7 @@ __arch_x86_64
+ __arch_s390x
+ __arch_arm64
+ __arch_riscv64
++__arch_loongarch
+ __xlated("0: r0 = 1")
+ __xlated("1: exit")
+ __success
+@@ -56,6 +58,7 @@ __arch_x86_64
+ __arch_s390x
+ __arch_arm64
+ __arch_riscv64
++__arch_loongarch
+ __xlated("0: r0 = 1")
+ __xlated("1: exit")
+ __success
+@@ -83,6 +86,7 @@ __arch_x86_64
+ __arch_s390x
+ __arch_arm64
+ __arch_riscv64
++__arch_loongarch
+ __xlated("0: *(u64 *)(r10 -16) = 65535")
+ __xlated("1: *(u64 *)(r10 -8) = 0")
+ __xlated("2: r12 = *(u64 *)(r10 -16)")
+@@ -120,6 +124,7 @@ __arch_x86_64
+ __arch_s390x
+ __arch_arm64
+ __arch_riscv64
++__arch_loongarch
+ __success
+ __retval(0)
+ __naked void timed_may_goto_preserves_regs(void)
+-- 
+2.42.0
 
