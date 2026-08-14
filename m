@@ -1,121 +1,84 @@
-Received: from mta1.migadu.com (out-184.mta1.migadu.com [95.215.58.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D29422521
-	for <loongarch@lists.linux.dev>; Fri, 14 Aug 2026 09:47:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 573323BCD3C;
+	Fri, 14 Aug 2026 14:13:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786700875; cv=none; b=R5Sn/2CGTmwoP/j8qwZS16W6mDh0wGRgT48GmPHFat/NWY9ZabUQiigWjniqf8ixuhHf91YJeJJOFLVLA2yZprdoBl20Zgnz+I7l3UT+WR7IqjQsSCiZFd0NRg6KxQL4Ug76VvgGkCcSw+CNp9b7l6IgEOWJ+4+Tcukjq+c8z/4=
+	t=1786716850; cv=none; b=oPRDGl1gXmmsUSe4oG3l38R8jHu88wP0rhSzRWgNdAcoMNwbqqBDR8Fr7xRS7ZyHKCSCxPIsi/TJmFrW7YjueEurTaQtTko7vaKlmtXl39uCt9kszCJ5fDvYXqn6Gz1H30HpE3LRtNRSIsBVe4yABvVXDGTaSBYUtm6XkL1UmGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786700875; c=relaxed/simple;
-	bh=sjh+hkIiI+r1dCer0VvlH2yysDJcghD9yoIoJrbQ1pw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=K9pk1gJdAa3C5ZFEtfb5BdMNfn5XzMrWNo8NsTkLfw9KezEB1dUya/FJq8RQAim6TSS8O5bqdrY9jMP/PRM+yVMBjmtyKa2KAqAYu1yp0FVIBkYrw/f2tAx/JM77LzTD5WOTpNtW6CO/eFcxbd3fal/MsvV3UlnACsLlznjCjtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jBNBTLOt; arc=none smtp.client-ip=95.215.58.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1786716850; c=relaxed/simple;
+	bh=fIHdL745AHDexvPbgkhXw+cxoX3N43dLk6oZ/Ggxjz8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=nObU3rpOlDe0+JEIsmAGfKQnVrZZYgUy/3yfjVlMuobfD9Ln+6687ubnGXrrr+xbfN4771pLpAXsoJE9h2ww10mkI3nfQ/Zie0aS0aDgvuVBVDnVwfZ+97nlIJxkQTLO01qXAv4H29T42YXEDwzGYG1xzv4OQEe87x6JA7XAIps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VRIsCI+w; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jBNBTLOt"
-X-Envelope-To: loongarch@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=sjh+hkIiI+r1dCer0VvlH2yysDJcghD9yoIoJrbQ1pw=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1786700866; v=1; x=1787305666;
- b=jBNBTLOtySJ8JNzD+V9+50+12faaKKt7KRtAX3SVh2TLlosH8bJMvRQ9bweYpdY9EGOjsvEc
- JaiAk8szFyb3PsivAusMUaj75X73hvOFHbD0I24jCG30LbBpNVJm8QjnjPThNh/iB7ri1dFJYSE
- ru5ZzE95C6xmMY5jkbpZzvvE=
-X-Envelope-To: loongarch@lists.linux.dev
-Received: from ctao-book.. (111.162.215.50)
-	by smtp.migadu.com with ESMTPS id fccdeeeffe8d6076;
-	Fri, 14 Aug 2026 09:47:46 +0000
-X-Migadu-Flow: FLOW_OUT
-From: Tao Cui <cui.tao@linux.dev>
-To: chenhuacai@kernel.org,
-	maobibo@loongson.cn
-Cc: zhaotianrui@loongson.cn,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	cui.tao@linux.dev,
-	Tao Cui <cuitao@kylinos.cn>
-Subject: [PATCH v3] LoongArch: KVM: Fix TOCTOU race on pv_features
-Date: Fri, 14 Aug 2026 17:47:38 +0800
-Message-ID: <20260814094738.2552440-1-cui.tao@linux.dev>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VRIsCI+w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D8171F00ADB;
+	Fri, 14 Aug 2026 14:13:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786716834;
+	bh=+bcbWdhEjG87MX2EDCpS7KjqQqoX5OV3WWLuViRbRgg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=VRIsCI+wsyEJPBVrNxqIkYblBa0FJMS39qhQqpJVSpaa68D+KRJoneTkVv9Wg01nK
+	 +qyA6K77Yht+pbPVqui1YNP/9292nCif/6kF7yvT7ne4ZGaV6FExvwv2owHiZxFx5q
+	 AEjiFLNWibXageWnmRHWprOz+aGcR64gT2twrAWt8V39APc24rl5j/PAdRmEiGCxDw
+	 ZRr5tYhhaknltz5tF5igLnjglzhmOsgkf6d4b75sTSgxlMUYuFNNduZ++JCsD+JT4C
+	 IutIJIsr13BP1wADQsVBbyYSSvKbDW8cvFSskjxprq4txm+DsrUeK8Kkv0V0LnjKw3
+	 x5P5qtohP3Tog==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Mukesh Pilaniya <mpilaniy@redhat.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,  Will Deacon
+ <will@kernel.org>,  Mark Rutland <mark.rutland@arm.com>,  Huacai Chen
+ <chenhuacai@kernel.org>,  WANG Xuerui <kernel@xen0n.name>,  Paul Walmsley
+ <pjw@kernel.org>,  Palmer Dabbelt <palmer@dabbelt.com>,  Albert Ou
+ <aou@eecs.berkeley.edu>,  Alexandre Ghiti <alex@ghiti.fr>,  Andrew Morton
+ <akpm@linux-foundation.org>,  Baoquan He <baoquan.he@linux.dev>,  Mike
+ Rapoport <rppt@kernel.org>,  Pasha Tatashin <pasha.tatashin@soleen.com>,
+  Pratyush Yadav <pratyush@kernel.org>,  Tao Liu <ltao@redhat.com>,
+  Philipp Rudo <prudo@redhat.com>,  linux-arm-kernel@lists.infradead.org,
+  linux-kernel@vger.kernel.org,  loongarch@lists.linux.dev,
+  linux-riscv@lists.infradead.org,  kexec@lists.infradead.org
+Subject: Re: [PATCH] kexec: return -ENOEXEC from image probe functions on
+ mismatch
+In-Reply-To: <20260813-mpilaniy-v1-1-777d4d0e30f7@redhat.com> (Mukesh
+	Pilaniya's message of "Thu, 13 Aug 2026 12:36:29 +0530")
+References: <20260813-mpilaniy-v1-1-777d4d0e30f7@redhat.com>
+Date: Fri, 14 Aug 2026 16:13:49 +0200
+Message-ID: <2vxzv79c23j6.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-From: Tao Cui <cuitao@kylinos.cn>
+On Thu, Aug 13 2026, Mukesh Pilaniya wrote:
 
-The check-then-set on kvm->arch.pv_features in
-kvm_loongarch_cpucfg_set_attr() is lockless, so two vCPUs can race
-past the validation and set different values.  Add a spinlock to
-serialize it.
+> Several kexec_file_load() image probe functions return -EINVAL when
+> they do not recognize the image format.  A probe function that rejects
+> an image should return -ENOEXEC to indicate that the image is not a
+> recognized executable format.  -EINVAL implies a problem with the
+> syscall parameters, not with image recognition.
+>
+> kexec_image_probe_default() iterates through registered loaders and
+> returns the last probe's error code to the caller.  That error
+> propagates as the kexec_file_load() return value to userspace.
+> Returning -EINVAL from a probe when no loader matches is semantically
+> incorrect and misleads userspace about the nature of the failure.
+>
+> Return -ENOEXEC from all probe functions and their helpers when the
+> image format is not recognized.
 
-Reviewed-by: Bibo Mao <maobibo@loongson.cn>
-Signed-off-by: Tao Cui <cuitao@kylinos.cn>
----
+Sounds fine in principle but can you please also share what the real
+problem you face is and how changing these return codes helps? These
+error codes are uAPI and while we _can_ change them as long as we don't
+break something, there should be a clear motivation for doing so.
 
-Changes in v2: use a spinlock instead of a cmpxchg loop (Bibo Mao).
-Changes in v3: rename the lock to pv_setting_lock and place it next to
-phyid_map_lock (Huacai Chen).
+[...]
 
-v1: https://lore.kernel.org/all/20260810081321.157258-1-cui.tao@linux.dev/
-v2: https://lore.kernel.org/all/20260813232542.2098930-1-cui.tao@linux.dev/
-
- arch/loongarch/include/asm/kvm_host.h | 1 +
- arch/loongarch/kvm/vcpu.c             | 6 +++++-
- arch/loongarch/kvm/vm.c               | 1 +
- 3 files changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index 23cfbecebbd7..3538a199aac6 100644
---- a/arch/loongarch/include/asm/kvm_host.h
-+++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -125,6 +125,7 @@ struct kvm_arch {
- 	unsigned int  pte_shifts[MAX_PGTABLE_LEVELS];
- 	unsigned int  root_level;
- 	spinlock_t    phyid_map_lock;
-+	spinlock_t    pv_setting_lock;
- 	struct kvm_phyid_map  *phyid_map;
- 	/* Enabled PV features */
- 	unsigned long pv_features;
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 20c207d80e31..e47fa463a8be 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -1165,10 +1165,14 @@ static int kvm_loongarch_cpucfg_set_attr(struct kvm_vcpu *vcpu,
- 			return -EINVAL;
- 
- 		/* All vCPUs need set the same PV features */
-+		spin_lock(&kvm->arch.pv_setting_lock);
- 		if ((kvm->arch.pv_features & LOONGARCH_PV_FEAT_UPDATED)
--				&& ((kvm->arch.pv_features & valid) != val))
-+				&& ((kvm->arch.pv_features & valid) != val)) {
-+			spin_unlock(&kvm->arch.pv_setting_lock);
- 			return -EINVAL;
-+		}
- 		kvm->arch.pv_features = val | LOONGARCH_PV_FEAT_UPDATED;
-+		spin_unlock(&kvm->arch.pv_setting_lock);
- 		return 0;
- 	default:
- 		return -ENXIO;
-diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
-index 1317c718f896..86ba7d54e81f 100644
---- a/arch/loongarch/kvm/vm.c
-+++ b/arch/loongarch/kvm/vm.c
-@@ -76,6 +76,7 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
- 		return -ENOMEM;
- 	}
- 	spin_lock_init(&kvm->arch.phyid_map_lock);
-+	spin_lock_init(&kvm->arch.pv_setting_lock);
- 
- 	kvm_init_vmcs(kvm);
- 	kvm_vm_init_features(kvm);
 -- 
-2.43.0
-
+Regards,
+Pratyush Yadav
