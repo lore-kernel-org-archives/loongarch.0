@@ -1,241 +1,144 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17E242BEA4
-	for <loongarch@lists.linux.dev>; Fri, 14 Aug 2026 07:59:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C2DF3E1680
+	for <loongarch@lists.linux.dev>; Fri, 14 Aug 2026 08:24:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786694368; cv=none; b=dwJTqh8YLWUpMb9GlmBlfxLvNYCCxWJWu/4tou80V3o53ewv1y9mrgi/RSkMmwyYUwGQyC4KY/wGFslYNM4NToooYhQy0s1PT2953W2svVgOh23tSzEcSTqB8rBI1nwSCDPCFwfhkKIN4Mj5hr2TLapJD/+Mt/F5eUw+rQJfLto=
+	t=1786695844; cv=none; b=DvfHmyLMH2AU47JUss1emfPpEUpBfRYVdwwZ1va1tF0ry1Q5xl02d86UD53Jc6U/vnoBjcivM+MMzEkVFhCbC7BLGBThj0usCTMxNtk4mxIT23pi/3pPtZdo82g1KJupXc9lrunEb23wy7Lmco42+Cf2Zb2jIz9MlNab6nys4ME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786694368; c=relaxed/simple;
-	bh=YFZXXCTx4SOuXXY6Oz21P4RKwwP6/R0X0JZtRJSh9b8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ROb9TqF+FUT9HPzDO8vBMzDk1GoVzgaHUyeAwlrDyoE3N6WVB4GUm75PF3ZfWy7T8Yef79UTYv5Clhp6RlV8CH8h5f7NHZDEP+9Q60mlAEr0QknBaeRe7e6exB9KGF1uHdttNVQ2PhWL7jxq4VXDov4MsgSUwn3AWt4h/b6jB00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=G3jotJYd; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1786695844; c=relaxed/simple;
+	bh=wR/C1kAtiHxDqpvh2S+uIo9Vv3OJqdF6tLmrJLhlvpw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Pgnakx6y86PqGfj6cxtyzq3iRZaStaT9sOCfJUOs7G0Q5s5wN0GCK7dH9HR/vqjHp40Dc1bQtmjkpC+8xUfzt1yj+Ngpw2dRCyHaQbazq6i4HbEEggWDTP4tCqQcjj3qYzvXBdJuG8N6LPAhmthAkJbPzLyZiefBtTtfxyFnK+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eOfEzt96; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G3jotJYd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1786694365;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=F8O34Xc16ur4O9EtunTdCdf0boIbkU6LPLycJBfuzuA=;
-	b=G3jotJYdazNeGimrTGOXprIwT0bdpCwrzQ+n/TP39NgKitpSKIkECHy3s+v2Z/ml/aXdZL
-	qjyeVa0kEd/x5zYkFV73oKUAPWR22B4Knkn2MX8jJhVA7K8dI8owGLpzND7LnCJupGJhVM
-	mNJ1kefJni/l0BjuIm9FL11r41v9F7k=
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
- [209.85.210.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-93-1KmzYTzRNB28h1hFS61rjg-1; Fri, 14 Aug 2026 03:59:24 -0400
-X-MC-Unique: 1KmzYTzRNB28h1hFS61rjg-1
-X-Mimecast-MFC-AGG-ID: 1KmzYTzRNB28h1hFS61rjg_1786694363
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-84eee2147ffso785609b3a.0
-        for <loongarch@lists.linux.dev>; Fri, 14 Aug 2026 00:59:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786694363; x=1787299163;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=F8O34Xc16ur4O9EtunTdCdf0boIbkU6LPLycJBfuzuA=;
-        b=ZWz6dxPRtWufusrbkNljC0sQL3cPK94z+3XMJu+2naST9BeOyy7mCDQljtM1sd2dXd
-         ywZ0sZg49GKZTR1tErSmWEjh1S9ZeV4P7cB3GYDhDwcwVX0/xh0ZlgTjKAtFPVJJW/GE
-         bWM9U3hCmpZH2YIRvI2/E2xEVbvxBxCZ3WV2weslWPLaPIremK6Pw677cDeg8zUBUQ/i
-         O1pC9woSSKN4HLlhKuTAMR7n13/KnxNnzlOE1yavxroYYG6NDzGV4R2eAl7EhXn4GbJt
-         2Am97ynIHb/MqExmTUQrcIJb3PdYk6Zltmh3H0feAEF4BwiDeL3dT46u/EpmcdPMLi1j
-         hZKg==
-X-Forwarded-Encrypted: i=1; AHgh+RqDLhS28SvgMHXMjjPq+e5sJDps6nZgTa5FIMp3IZ9kDEwWqkrNUEQK+HCmJAw1O3MXprl7x8RYue0=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwVE2aCJOkevF6sGCyHc+tBevvwikDgI8HCv1uSm3Jc+bgBbBei
-	6kcv0gi+vQyPWoeux7EJE6ll09nxOJP2MizX6GjmCu4pwvHedjXSAT0z9vLJ8NHzGXBypG2CoYe
-	v8FBOVn7mjhm6jkgyeFBzhhAMzCRqzKarLFeOuYY+RAYu4uCu7G7wmv1BMYfiCg==
-X-Gm-Gg: AR+sD11/R5OLONttyHoR7WOjlCSqdRJJC6YR8F1YNTMA7sLsYZCZ6jc/mMMMNc35CVO
-	TpmMB0KmI4o0C2TzbGPnf1bmJw+a/XwjJrwVRoghpckAYjdxs4XIRlOD66+7j+M6o788dhO37yZ
-	Nb7zPqPMTdYPmS5N6I8+2BeYYdoox81P8oteNU66sCpsc4oUngy3hp6rRq4w+y+qd/uxUqBsvKL
-	CUvktUUIEIWRwY/82DNJ5U8cmj6J6UBtnRiticnbsK5lL2JJ0PMFirSWu/UezuWpTkQVaREV/Cj
-	Q40deizlNnPHtjre1LWvF1q8UDxVnG45sCoZqMw8EtT4XUhpLGnjqoKBs3z57gYWIJDrEAxdQQE
-	Ew+2WGt/BI1c0WyAJxw==
-X-Received: by 2002:a05:6a00:2d98:b0:84a:646f:193 with SMTP id d2e1a72fcca58-84fdde42b9bmr3951014b3a.0.1786694363303;
-        Fri, 14 Aug 2026 00:59:23 -0700 (PDT)
-X-Received: by 2002:a05:6a00:2d98:b0:84a:646f:193 with SMTP id d2e1a72fcca58-84fdde42b9bmr3950974b3a.0.1786694362810;
-        Fri, 14 Aug 2026 00:59:22 -0700 (PDT)
-Received: from [192.168.1.2] ([122.171.16.134])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8517d249b26sm121142b3a.43.2026.08.14.00.59.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Aug 2026 00:59:22 -0700 (PDT)
-Message-ID: <81cb568c-e65f-4359-9c6f-f994f910f2f1@redhat.com>
-Date: Fri, 14 Aug 2026 13:29:15 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eOfEzt96"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E98A81F000E9
+	for <loongarch@lists.linux.dev>; Fri, 14 Aug 2026 08:24:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786695841;
+	bh=0hqmR9c3eXhhXW7cmtY2SuWIqL7AV95zNfMVB0Hvwi4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=eOfEzt96NE2cFQifalQJACjdmrXQM6RiSjgoxUuzlUSEMsp4eDWckexNvNTu3qVrb
+	 6ZbOW00cw5K8NoEcR8D5yCiHu3UjEV0KeVNVFhG4ePrIHa3xV+hAqfmZTwIgTglGY+
+	 CzTfx8afzQEchl/5vOWnEaAM7zuK4xzDkk95GJAeMqdLBwhk89XOniog9LxselfppS
+	 ciSNp39EmeBfU138/uelTG5nwokZR7JzkWkFJdNK/Ht8O6TOSrzCy3o+g1sO39jNMA
+	 ZJcB1Qon7TToeEAPOC5iXzf6bWHkh0QaQKElNx75187ij5uYLzSnnYuSGuR6Po4U0n
+	 oV8CuLZxrmEng==
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-6a20319d030so984466a12.2
+        for <loongarch@lists.linux.dev>; Fri, 14 Aug 2026 01:24:01 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+Rpuo8m4LwIpyTC2fFl7swvF9ea52cC3SOqs51WNBtn8zUOZCT7orw/tN0GD4mooeoHhoqcfZuxmysE=@lists.linux.dev
+X-Gm-Message-State: AOJu0YykZwFTHZ6p+EUPoYr9UZ/QCPlEyEYdmRTvtRiEZxa+WZA806Rp
+	Z2AZutUzmD9BHC1aTjjkidS6/+hY5zoTRbotv0rsTkFOgfg7pRs08eFc/672MJGpqiJSkFYma6L
+	OYOQ0QQxNvIXSlkwH9flPLtNB2YH3deQ=
+X-Received: by 2002:a05:6402:2499:b0:6a0:9468:a025 with SMTP id
+ 4fb4d7f45d1cf-6a38a987f5emr1870736a12.15.1786695840548; Fri, 14 Aug 2026
+ 01:24:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] kexec: return -ENOEXEC from image probe functions on
- mismatch
-To: Philipp Rudo <prudo@redhat.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, Andrew Morton <akpm@linux-foundation.org>,
- Baoquan He <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pratyush Yadav <pratyush@kernel.org>, Tao Liu <ltao@redhat.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- kexec@lists.infradead.org
-References: <20260813-mpilaniy-v1-1-777d4d0e30f7@redhat.com>
- <20260813151350.6b511155@rotkaeppchen>
-From: Mukesh Pilaniya <mpilaniy@redhat.com>
-In-Reply-To: <20260813151350.6b511155@rotkaeppchen>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: uAhjm6rCv31Wqh2EecwRuHWFx7k3Wck6-3hOiCntFl0_1786694363
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20260813232542.2098930-1-cui.tao@linux.dev> <d26fdd03-dcfe-8ae0-d925-d121866e566d@loongson.cn>
+In-Reply-To: <d26fdd03-dcfe-8ae0-d925-d121866e566d@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 14 Aug 2026 16:24:27 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7b1sjB_-nP_UUN-rgv22YcPoiUAZDVfnDxHMs3cERWCQ@mail.gmail.com>
+X-Gm-Features: AUfX_mxWyDA1cTYIFkL42OxEwPe6ykxpQPlyZVW-jBB2ME5eEmgky5lvPETXtBc
+Message-ID: <CAAhV-H7b1sjB_-nP_UUN-rgv22YcPoiUAZDVfnDxHMs3cERWCQ@mail.gmail.com>
+Subject: Re: [PATCH v2] LoongArch: KVM: Fix TOCTOU race on pv_features
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Tao Cui <cui.tao@linux.dev>, zhaotianrui@loongson.cn, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Tao Cui <cuitao@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi, Tao,
 
-Hi Philipp,
+On Fri, Aug 14, 2026 at 9:09=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
+>
+>
+>
+> On 2026/8/14 =E4=B8=8A=E5=8D=887:25, Tao Cui wrote:
+> > From: Tao Cui <cuitao@kylinos.cn>
+> >
+> > The check-then-set on kvm->arch.pv_features in
+> > kvm_loongarch_cpucfg_set_attr() is lockless, so two vCPUs can race
+> > past the validation and set different values.  Add a spinlock to
+> > serialize it.
+> >
+> > Signed-off-by: Tao Cui <cuitao@kylinos.cn>
+> > ---
+> >
+> > Changes in v2: use a spinlock instead of a cmpxchg loop (Bibo Mao).
+> > Link: https://lore.kernel.org/all/20260810081321.157258-1-cui.tao@linux=
+.dev/
+> >
+> >   arch/loongarch/include/asm/kvm_host.h | 2 ++
+> >   arch/loongarch/kvm/vcpu.c             | 6 +++++-
+> >   arch/loongarch/kvm/vm.c               | 1 +
+> >   3 files changed, 8 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/inc=
+lude/asm/kvm_host.h
+> > index 23cfbecebbd7..cdbbd90e0584 100644
+> > --- a/arch/loongarch/include/asm/kvm_host.h
+> > +++ b/arch/loongarch/include/asm/kvm_host.h
+> > @@ -128,6 +128,8 @@ struct kvm_arch {
+> >       struct kvm_phyid_map  *phyid_map;
+> >       /* Enabled PV features */
+> >       unsigned long pv_features;
+> > +     /* Serializes pv_features updates */
+> > +     spinlock_t pv_features_lock;
+I think it is better to rename it to pv_setting_lock, and put it near
+phyid_map_lock.
 
-On 13/08/26 6:43 pm, Philipp Rudo wrote:
-> Hi Mukesh,
-> 
-> the patch looks good to me.
-> 
-> There is also a corresponding kexec-tools patch, which was accidentally
-> opened as a Github PR (https://github.com/horms/kexec-tools/pull/12).
-> It will be sent to kexec@lists.infradead.org shortly.
-> 
-> Thanks
-> 
-> Reviewed-by: Philipp Rudo <prudo@redhat.com>
-> 
-The kexec-tools patch has now been posted to the mailing list.
-It can be found here:
-https://lore.kernel.org/all/20260814075329.30203-1-mpilaniy@redhat.com/
+Huacai
 
-> On Thu, 13 Aug 2026 12:36:29 +0530
-> Mukesh Pilaniya <mpilaniy@redhat.com> wrote:
-> 
->> Several kexec_file_load() image probe functions return -EINVAL when
->> they do not recognize the image format.  A probe function that rejects
->> an image should return -ENOEXEC to indicate that the image is not a
->> recognized executable format.  -EINVAL implies a problem with the
->> syscall parameters, not with image recognition.
->>
->> kexec_image_probe_default() iterates through registered loaders and
->> returns the last probe's error code to the caller.  That error
->> propagates as the kexec_file_load() return value to userspace.
->> Returning -EINVAL from a probe when no loader matches is semantically
->> incorrect and misleads userspace about the nature of the failure.
->>
->> Return -ENOEXEC from all probe functions and their helpers when the
->> image format is not recognized.
->>
->> Signed-off-by: Mukesh Pilaniya <mpilaniy@redhat.com>
->> ---
->> branch: next-20260812
->> base commit: 28d012efb4327f9c75d5e042a7c91e9a542efa98
->> ---
->>   arch/arm64/kernel/kexec_image.c   | 4 ++--
->>   arch/loongarch/kernel/kexec_efi.c | 4 ++--
->>   arch/riscv/kernel/kexec_image.c   | 4 ++--
->>   kernel/kexec_elf.c                | 4 ++--
->>   4 files changed, 8 insertions(+), 8 deletions(-)
->>
->> diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
->> index b70f4df15a1a..101259874d44 100644
->> --- a/arch/arm64/kernel/kexec_image.c
->> +++ b/arch/arm64/kernel/kexec_image.c
->> @@ -25,10 +25,10 @@ static int image_probe(const char *kernel_buf, unsigned long kernel_len)
->>   		(const struct arm64_image_header *)(kernel_buf);
->>   
->>   	if (!h || (kernel_len < sizeof(*h)))
->> -		return -EINVAL;
->> +		return -ENOEXEC;
->>   
->>   	if (memcmp(&h->magic, ARM64_IMAGE_MAGIC, sizeof(h->magic)))
->> -		return -EINVAL;
->> +		return -ENOEXEC;
->>   
->>   	return 0;
->>   }
->> diff --git a/arch/loongarch/kernel/kexec_efi.c b/arch/loongarch/kernel/kexec_efi.c
->> index 5ee78ebb1546..28a1d0420ba3 100644
->> --- a/arch/loongarch/kernel/kexec_efi.c
->> +++ b/arch/loongarch/kernel/kexec_efi.c
->> @@ -24,12 +24,12 @@ static int efi_kexec_probe(const char *kernel_buf, unsigned long kernel_len)
->>   
->>   	if (!h || (kernel_len < sizeof(*h))) {
->>   		kexec_dprintk("No LoongArch image header.\n");
->> -		return -EINVAL;
->> +		return -ENOEXEC;
->>   	}
->>   
->>   	if (!loongarch_header_check_dos_sig(h)) {
->>   		kexec_dprintk("No LoongArch PE image header.\n");
->> -		return -EINVAL;
->> +		return -ENOEXEC;
->>   	}
->>   
->>   	return 0;
->> diff --git a/arch/riscv/kernel/kexec_image.c b/arch/riscv/kernel/kexec_image.c
->> index 51dc89259f16..963a25f5b55b 100644
->> --- a/arch/riscv/kernel/kexec_image.c
->> +++ b/arch/riscv/kernel/kexec_image.c
->> @@ -20,7 +20,7 @@ static int image_probe(const char *kernel_buf, unsigned long kernel_len)
->>   	const struct riscv_image_header *h = (const struct riscv_image_header *)kernel_buf;
->>   
->>   	if (!h || kernel_len < sizeof(*h))
->> -		return -EINVAL;
->> +		return -ENOEXEC;
->>   
->>   	/* According to Documentation/arch/riscv/boot-image-header.rst,
->>   	 * use "magic2" field to check when version >= 0.2.
->> @@ -28,7 +28,7 @@ static int image_probe(const char *kernel_buf, unsigned long kernel_len)
->>   
->>   	if (h->version >= RISCV_HEADER_VERSION &&
->>   	    memcmp(&h->magic2, RISCV_IMAGE_MAGIC2, sizeof(h->magic2)))
->> -		return -EINVAL;
->> +		return -ENOEXEC;
->>   
->>   	return 0;
->>   }
->> diff --git a/kernel/kexec_elf.c b/kernel/kexec_elf.c
->> index 3a5c25b2adc9..89a444a00693 100644
->> --- a/kernel/kexec_elf.c
->> +++ b/kernel/kexec_elf.c
->> @@ -172,7 +172,7 @@ static int elf_read_ehdr(const char *buf, size_t len, struct elfhdr *ehdr)
->>   
->>   	default:
->>   		pr_debug("Unknown ELF class.\n");
->> -		return -EINVAL;
->> +		return -ENOEXEC;
->>   	}
->>   
->>   	return elf_is_ehdr_sane(ehdr, len) ? 0 : -ENOEXEC;
->> @@ -236,7 +236,7 @@ static int elf_read_phdr(const char *buf, size_t len,
->>   
->>   	default:
->>   		pr_debug("Unknown ELF class.\n");
->> -		return -EINVAL;
->> +		return -ENOEXEC;
->>   	}
->>   
->>   	return elf_is_phdr_sane(phdr, len) ? 0 : -ENOEXEC;
->>
->> ---
->> base-commit: 28d012efb4327f9c75d5e042a7c91e9a542efa98
->> change-id: 20260813-mpilaniy-ffb0cc92c313
->>
->> Best regards,
->> --
->> Mukesh Pilaniya <mpilaniy@redhat.com>
->>
-> 
-
+> >       /* Supported KVM features */
+> >       unsigned long kvm_features;
+> >
+> > diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> > index 20c207d80e31..551ed39b2d1f 100644
+> > --- a/arch/loongarch/kvm/vcpu.c
+> > +++ b/arch/loongarch/kvm/vcpu.c
+> > @@ -1165,10 +1165,14 @@ static int kvm_loongarch_cpucfg_set_attr(struct=
+ kvm_vcpu *vcpu,
+> >                       return -EINVAL;
+> >
+> >               /* All vCPUs need set the same PV features */
+> > +             spin_lock(&kvm->arch.pv_features_lock);
+> >               if ((kvm->arch.pv_features & LOONGARCH_PV_FEAT_UPDATED)
+> > -                             && ((kvm->arch.pv_features & valid) !=3D =
+val))
+> > +                             && ((kvm->arch.pv_features & valid) !=3D =
+val)) {
+> > +                     spin_unlock(&kvm->arch.pv_features_lock);
+> >                       return -EINVAL;
+> > +             }
+> >               kvm->arch.pv_features =3D val | LOONGARCH_PV_FEAT_UPDATED=
+;
+> > +             spin_unlock(&kvm->arch.pv_features_lock);
+> >               return 0;
+> >       default:
+> >               return -ENXIO;
+> > diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
+> > index 1317c718f896..b984cc54f305 100644
+> > --- a/arch/loongarch/kvm/vm.c
+> > +++ b/arch/loongarch/kvm/vm.c
+> > @@ -76,6 +76,7 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long t=
+ype)
+> >               return -ENOMEM;
+> >       }
+> >       spin_lock_init(&kvm->arch.phyid_map_lock);
+> > +     spin_lock_init(&kvm->arch.pv_features_lock);
+> >
+> >       kvm_init_vmcs(kvm);
+> >       kvm_vm_init_features(kvm);
+> >
+> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+>
