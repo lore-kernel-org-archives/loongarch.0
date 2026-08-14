@@ -1,317 +1,140 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta1.migadu.com (out-132.mta1.migadu.com [95.215.58.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F2D32B105;
-	Fri, 14 Aug 2026 09:01:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBF023382F4
+	for <loongarch@lists.linux.dev>; Fri, 14 Aug 2026 09:28:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786698065; cv=none; b=a2e4n6zl0OqIz4cG0zDFpq0cdALvq8U3jexTCZ1vQGBmbNZH7N97Hr0ypZbSfTKfXRonm+eZn90MpIfX/x7QCZ/0VtcA+a31guBCIJKX5tVr3JGZP1cxP/IrNZ7HMsjinGEeJw/gq5CFamFPRgrr+3XTcX+RaQqsvjEZd3/aNeg=
+	t=1786699716; cv=none; b=oAt4EGCesB8BykIgM+3fmtnmCOwqrTwkZMRdwB0Ppmov7uIFx1dirvFQxlZxZ41laMduhXeY1S8Z+pm+kqNKv3pg8tWffrj5axIvhzYJX+f57qcXuE/bvXD3lvU6GhqFPcRrCdVZOq0b9+m80mJt1c0u+1dpuSf9VZrt2JFFCmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786698065; c=relaxed/simple;
-	bh=sGiCIIvFlsPmFhWjZ4J3M4vcqwrW4TaBn2qmj1Ji6tA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ImuYpBcegAy2J5at3y04XSHLZMj5xxGi2jNF38LwbgJKEeD+lYEgajVJiQEe6WIpJdIUQCuN7JWqtxnVNngJdgfctUzqKoH8SW51Uf5yrIuzgZu7exuCgPZQcvbsXAO5waBus1aCeEKDCWbdJuf8UxB/cWb3zNduk9Yo52cmwbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ol815WhQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=C4OcThFk; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1786699716; c=relaxed/simple;
+	bh=aKc6Ht70FpFYHMi3v//T6si9m2aQw7blmfmTGQZxG04=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Oj9DaXLrli5wl86zaaKPJSXYMQmekaHnhEozPQuIzZLMmY9tkbbWlYGwBDDWvEfYVASFezJ7IW1ecuE6LD1Kk6g4Q7h9TwErxRt9K6rPwNYbB9Tim//efMBj20PgeL+/bZqc9dGuuDwgNCklRPLthMBg8EzYa7i6xWNRcIKDeZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Ks8oAYzH; arc=none smtp.client-ip=95.215.58.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ol815WhQ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="C4OcThFk"
-Date: Fri, 14 Aug 2026 10:51:18 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1786697481;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=GVRImTDaZs6cs5rh3bC1e77VibQeuPdYT8n/nwR/meA=;
-	b=Ol815WhQ6JnzXMGAYywjq9AyasEVlbbLbEw38nKeKXE5qCHE2T58DWCpFs3xPEmF8rQbNI
-	9UTUaxkYxdSqMzv61/aeJEc/l/RP2UHi9M8emW5t0wmy1dc37InCmat1bbqouW9sBrP3Jc
-	hdTm/z7NjucvP7SG/te1SpHxDXhgKZ2g0YOkA3Uzhuv/v0AgQ28foEo51ig6cO+osb/oyH
-	LiYAg/9YhUmwKzO4Rg6YoN78JRWYTEQo+KHie3+jw0Q/fKg+RqbXQ15zYkKoKE8NM7onKe
-	WjBPpJm+lPfMj12ZbBqNudjg7ADrJjcsh7Q4rTVhcuAF7w7+oXEM0HdA/u9Ufg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1786697481;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=GVRImTDaZs6cs5rh3bC1e77VibQeuPdYT8n/nwR/meA=;
-	b=C4OcThFk7xmv/cu7KFw4W9DLDTGOj2lKXa52tH+vvetyG6iwEJozfD1iDDfNcTPpbbgGGN
-	cdO2nn8s6pTUvhAA==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev, linux-perf-users@vger.kernel.org,
-	loongarch@lists.linux.dev
-Cc: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
-	Waiman Long <longman@redhat.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Clark Williams <clrkwllms@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ada Couprie Diaz <ada.coupriediaz@arm.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Russell King <linux@armlinux.org.uk>,
-	WANG Xuerui <kernel@xen0n.name>
-Subject: [PATCH v2] ARM, ARM64, LONGARCH: Delay HW BP notification to
- task_work()
-Message-ID: <20260814085118.OPEA_Ssn@linutronix.de>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ks8oAYzH"
+X-Envelope-To: loongarch@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=aKc6Ht70FpFYHMi3v//T6si9m2aQw7blmfmTGQZxG04=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1786699712; v=1; x=1787304512;
+ b=Ks8oAYzHnx5RvCsRWtQbvI4hceWIX8H70sr8vqSld9LYxWM5+Fy00pEGrqgfDf5KR9z2q/1r
+ +Fh/dVqO9jlB4P3k4YSTLJv/8vBzRv+nl4CdWfVaiYs0aqM9Y/UuLfGkGyRDK6DNRVMpVR4qsC8
+ tzaAYgMtqkVNWemQG3FRmzZs=
+X-Envelope-To: loongarch@lists.linux.dev
+Received: from [192.168.1.116] (111.162.215.50)
+	by smtp.migadu.com with ESMTPS id 3cf49401cfb7d1c4;
+	Fri, 14 Aug 2026 09:28:32 +0000
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <5e5f26fb-8c8f-4326-bf47-ef25dbd62c01@linux.dev>
+Date: Fri, 14 Aug 2026 17:28:25 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Cc: cui.tao@linux.dev, zhaotianrui@loongson.cn, kvm@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Tao Cui <cuitao@kylinos.cn>
+Subject: Re: [PATCH v2] LoongArch: KVM: Fix TOCTOU race on pv_features
+To: Huacai Chen <chenhuacai@kernel.org>, Bibo Mao <maobibo@loongson.cn>
+References: <20260813232542.2098930-1-cui.tao@linux.dev>
+ <d26fdd03-dcfe-8ae0-d925-d121866e566d@loongson.cn>
+ <CAAhV-H7b1sjB_-nP_UUN-rgv22YcPoiUAZDVfnDxHMs3cERWCQ@mail.gmail.com>
+From: Tao Cui <cui.tao@linux.dev>
+In-Reply-To: <CAAhV-H7b1sjB_-nP_UUN-rgv22YcPoiUAZDVfnDxHMs3cERWCQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Waiman, Luis, Ada reported that HW breakpoints on ARM64 trigger
-"sleeping while atomic" warnings on PREEMPT_RT. The hardware event is
-delivered with disabled interrupts and perf intrastrucure expects
-disabled interrupts while the overflow callback is invoked.
+Hi Huacai,
 
-The callback then sends a SIGTRAP signal for which it acquires
-sighand_struct::siglock, a spinlock_t which becomes a sleeping lock and
-must not be acquired in atomic context.
+在 2026/8/14 16:24, Huacai Chen 写道:
+> Hi, Tao,
+> 
+> On Fri, Aug 14, 2026 at 9:09 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>
+>>
+>>
+>> On 2026/8/14 上午7:25, Tao Cui wrote:
+>>> From: Tao Cui <cuitao@kylinos.cn>
+>>>
+>>> The check-then-set on kvm->arch.pv_features in
+>>> kvm_loongarch_cpucfg_set_attr() is lockless, so two vCPUs can race
+>>> past the validation and set different values.  Add a spinlock to
+>>> serialize it.
+>>>
+>>> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
+>>> ---
+>>>
+>>> Changes in v2: use a spinlock instead of a cmpxchg loop (Bibo Mao).
+>>> Link: https://lore.kernel.org/all/20260810081321.157258-1-cui.tao@linux.dev/
+>>>
+>>>   arch/loongarch/include/asm/kvm_host.h | 2 ++
+>>>   arch/loongarch/kvm/vcpu.c             | 6 +++++-
+>>>   arch/loongarch/kvm/vm.c               | 1 +
+>>>   3 files changed, 8 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+>>> index 23cfbecebbd7..cdbbd90e0584 100644
+>>> --- a/arch/loongarch/include/asm/kvm_host.h
+>>> +++ b/arch/loongarch/include/asm/kvm_host.h
+>>> @@ -128,6 +128,8 @@ struct kvm_arch {
+>>>       struct kvm_phyid_map  *phyid_map;
+>>>       /* Enabled PV features */
+>>>       unsigned long pv_features;
+>>> +     /* Serializes pv_features updates */
+>>> +     spinlock_t pv_features_lock;
+> I think it is better to rename it to pv_setting_lock, and put it near
+> phyid_map_lock.
+> 
+Got it, v3 on the way with the rename and the lock moved.
 
-Delay the event callback until the return to userland.
-Add perf_arch_hwbp_notify(), a generic perf callback which delayes the
-actual callback invocation to task_work_add() callback. This callback
-invokes the architecture defines callback arch_hwbp_send_sig().
-This requires struct callback_head and the functions require
-ARCH_NEED_PERF_HW_NOTIF to be defined.
+Thanks,
+Tao
 
-This was reported against ARM64. ARM and LongARCH follow the same
-pattern are also converted.
-
-Reported-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
-Reported-by: Waiman Long <longman@redhat.com>
-Closes: https://lore.kernel.org/all/aho0eqjMESuHxECr@redhat.com/
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
-
-v1=E2=80=A6v2: https://lore.kernel.org/all/20260713144939.FuCj9yvZ@linutron=
-ix.de/
- - sashiko complained that a memory breakpoint might trigger several
-   times before a signal is sent if the syscall touches the memory (via
-   get_user()) more than once before returning back. This would lead to
-   list corruption in task_work_add(). To handle this, there is now a
-   variable which is set via xchg before task_work_add() and cleared
-   after the signal has been sent.
-
- arch/arm/include/asm/hw_breakpoint.h       |  1 +
- arch/arm/kernel/ptrace.c                   |  6 ++---
- arch/arm64/include/asm/hw_breakpoint.h     |  1 +
- arch/arm64/kernel/ptrace.c                 |  6 ++---
- arch/loongarch/include/asm/hw_breakpoint.h |  1 +
- arch/loongarch/kernel/ptrace.c             |  6 ++---
- include/linux/hw_breakpoint.h              |  3 +++
- include/linux/perf_event.h                 |  4 ++++
- kernel/events/core.c                       | 26 ++++++++++++++++++++++
- 9 files changed, 42 insertions(+), 12 deletions(-)
-
-diff --git a/arch/arm/include/asm/hw_breakpoint.h b/arch/arm/include/asm/hw=
-_breakpoint.h
-index e7f9961c53b2d..5b3a373348ff5 100644
---- a/arch/arm/include/asm/hw_breakpoint.h
-+++ b/arch/arm/include/asm/hw_breakpoint.h
-@@ -7,6 +7,7 @@
- struct task_struct;
-=20
- #ifdef CONFIG_HAVE_HW_BREAKPOINT
-+#define ARCH_NEED_PERF_HW_NOTIF
-=20
- struct arch_hw_breakpoint_ctrl {
- 		u32 __reserved	: 9,
-diff --git a/arch/arm/kernel/ptrace.c b/arch/arm/kernel/ptrace.c
-index 7951b2c06fec6..1650f12a04702 100644
---- a/arch/arm/kernel/ptrace.c
-+++ b/arch/arm/kernel/ptrace.c
-@@ -347,9 +347,7 @@ static long ptrace_hbp_idx_to_num(int idx)
- /*
-  * Handle hitting a HW-breakpoint.
-  */
--static void ptrace_hbptriggered(struct perf_event *bp,
--				     struct perf_sample_data *data,
--				     struct pt_regs *regs)
-+void arch_hwbp_send_sig(struct perf_event *bp)
- {
- 	struct arch_hw_breakpoint *bkpt =3D counter_arch_bp(bp);
- 	long num;
-@@ -424,7 +422,7 @@ static struct perf_event *ptrace_hbp_create(struct task=
-_struct *tsk, int type)
- 	attr.bp_type	=3D type;
- 	attr.disabled	=3D 1;
-=20
--	return register_user_hw_breakpoint(&attr, ptrace_hbptriggered, NULL,
-+	return register_user_hw_breakpoint(&attr, perf_arch_hwbp_notify, NULL,
- 					   tsk);
- }
-=20
-diff --git a/arch/arm64/include/asm/hw_breakpoint.h b/arch/arm64/include/as=
-m/hw_breakpoint.h
-index bd81cf17744af..58befb79c885c 100644
---- a/arch/arm64/include/asm/hw_breakpoint.h
-+++ b/arch/arm64/include/asm/hw_breakpoint.h
-@@ -124,6 +124,7 @@ extern void hw_breakpoint_pmu_read(struct perf_event *b=
-p);
- extern int hw_breakpoint_slots(int type);
-=20
- #ifdef CONFIG_HAVE_HW_BREAKPOINT
-+#define ARCH_NEED_PERF_HW_NOTIF
- extern void hw_breakpoint_thread_switch(struct task_struct *next);
- extern void ptrace_hw_copy_thread(struct task_struct *task);
- #else
-diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
-index 4d08598e2891d..df6122779ada6 100644
---- a/arch/arm64/kernel/ptrace.c
-+++ b/arch/arm64/kernel/ptrace.c
-@@ -168,9 +168,7 @@ void ptrace_disable(struct task_struct *child)
- /*
-  * Handle hitting a HW-breakpoint.
-  */
--static void ptrace_hbptriggered(struct perf_event *bp,
--				struct perf_sample_data *data,
--				struct pt_regs *regs)
-+void arch_hwbp_send_sig(struct perf_event *bp)
- {
- 	struct arch_hw_breakpoint *bkpt =3D counter_arch_bp(bp);
- 	const char *desc =3D "Hardware breakpoint trap (ptrace)";
-@@ -312,7 +310,7 @@ static struct perf_event *ptrace_hbp_create(unsigned in=
-t note_type,
- 	attr.bp_type	=3D type;
- 	attr.disabled	=3D 1;
-=20
--	bp =3D register_user_hw_breakpoint(&attr, ptrace_hbptriggered, NULL, tsk);
-+	bp =3D register_user_hw_breakpoint(&attr, perf_arch_hwbp_notify, NULL, ts=
-k);
- 	if (IS_ERR(bp))
- 		return bp;
-=20
-diff --git a/arch/loongarch/include/asm/hw_breakpoint.h b/arch/loongarch/in=
-clude/asm/hw_breakpoint.h
-index 5faa97a87a9e2..2b51922eb5492 100644
---- a/arch/loongarch/include/asm/hw_breakpoint.h
-+++ b/arch/loongarch/include/asm/hw_breakpoint.h
-@@ -120,6 +120,7 @@ void breakpoint_handler(struct pt_regs *regs);
- void watchpoint_handler(struct pt_regs *regs);
-=20
- #ifdef CONFIG_HAVE_HW_BREAKPOINT
-+#define ARCH_NEED_PERF_HW_NOTIF
- extern void ptrace_hw_copy_thread(struct task_struct *task);
- extern void hw_breakpoint_thread_switch(struct task_struct *next);
- #else
-diff --git a/arch/loongarch/kernel/ptrace.c b/arch/loongarch/kernel/ptrace.c
-index be38430f7e280..1d5e05a70b8d3 100644
---- a/arch/loongarch/kernel/ptrace.c
-+++ b/arch/loongarch/kernel/ptrace.c
-@@ -384,9 +384,7 @@ static int lbt_set(struct task_struct *target,
- /*
-  * Handle hitting a HW-breakpoint.
-  */
--static void ptrace_hbptriggered(struct perf_event *bp,
--				struct perf_sample_data *data,
--				struct pt_regs *regs)
-+void arch_hwbp_send_sig(struct perf_event *bp)
- {
- 	int i;
- 	struct arch_hw_breakpoint *bkpt =3D counter_arch_bp(bp);
-@@ -479,7 +477,7 @@ static struct perf_event *ptrace_hbp_create(unsigned in=
-t note_type,
- 	attr.bp_type	=3D type;
- 	attr.disabled	=3D 1;
-=20
--	bp =3D register_user_hw_breakpoint(&attr, ptrace_hbptriggered, NULL, tsk);
-+	bp =3D register_user_hw_breakpoint(&attr, perf_arch_hwbp_notify, NULL, ts=
-k);
- 	if (IS_ERR(bp))
- 		return bp;
-=20
-diff --git a/include/linux/hw_breakpoint.h b/include/linux/hw_breakpoint.h
-index db199d653dd1a..bb4c1064a103d 100644
---- a/include/linux/hw_breakpoint.h
-+++ b/include/linux/hw_breakpoint.h
-@@ -85,6 +85,9 @@ extern int register_perf_hw_breakpoint(struct perf_event =
-*bp);
- extern void unregister_hw_breakpoint(struct perf_event *bp);
- extern void unregister_wide_hw_breakpoint(struct perf_event * __percpu *cp=
-u_events);
- extern bool hw_breakpoint_is_used(void);
-+extern void arch_hwbp_send_sig(struct perf_event *bp);
-+extern void perf_arch_hwbp_notify(struct perf_event *bp, struct perf_sampl=
-e_data *data,
-+				  struct pt_regs *regs);
-=20
- extern int dbg_reserve_bp_slot(struct perf_event *bp);
- extern int dbg_release_bp_slot(struct perf_event *bp);
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 48d851fbd8ea5..45c8391975007 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -215,6 +215,10 @@ struct hw_perf_event {
-=20
- 	/* Last sync'ed generation of filters */
- 	unsigned long			addr_filters_gen;
-+#ifdef ARCH_NEED_PERF_HW_NOTIF
-+	struct callback_head		arch_hw_notif;
-+	int				arch_hw_notif_busy;
-+#endif
-=20
- /*
-  * hw_perf_event::state flags; used to track the PERF_EF_* state.
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index ba5bd6a78fe7b..1ca91208e1524 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -13338,6 +13338,28 @@ static void account_event(struct perf_event *event)
- 	account_pmu_sb_event(event);
- }
-=20
-+#ifdef ARCH_NEED_PERF_HW_NOTIF
-+static void perf_arch_hwbp_send_sig(struct callback_head *head)
-+{
-+	struct perf_event *bp;
-+
-+	bp =3D container_of(head, struct perf_event, hw.arch_hw_notif);
-+	arch_hwbp_send_sig(bp);
-+	xchg_relaxed(&bp->hw.arch_hw_notif_busy, 0);
-+	put_event(bp);
-+}
-+
-+void perf_arch_hwbp_notify(struct perf_event *bp, struct perf_sample_data =
-*data,
-+			   struct pt_regs *regs)
-+{
-+	if (WARN_ON_ONCE(!atomic_long_inc_not_zero(&bp->refcount)))
-+		return;
-+	if (xchg_relaxed(&bp->hw.arch_hw_notif_busy, 1) ||
-+	    WARN_ON_ONCE(task_work_add(current, &bp->hw.arch_hw_notif, TWA_RESUME=
-)))
-+		put_event(bp);
-+}
-+#endif
-+
- /*
-  * Allocate and initialize an event structure
-  */
-@@ -13443,6 +13465,10 @@ perf_event_alloc(struct perf_event_attr *attr, int=
- cpu,
- 	}
-=20
- 	if (overflow_handler) {
-+#ifdef ARCH_NEED_PERF_HW_NOTIF
-+		if (overflow_handler =3D=3D perf_arch_hwbp_notify)
-+			init_task_work(&event->hw.arch_hw_notif, perf_arch_hwbp_send_sig);
-+#endif
- 		event->overflow_handler	=3D overflow_handler;
- 		event->overflow_handler_context =3D context;
- 	} else if (is_write_backward(event)){
---=20
-2.55.0
+> Huacai
+> 
+>>>       /* Supported KVM features */
+>>>       unsigned long kvm_features;
+>>>
+>>> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+>>> index 20c207d80e31..551ed39b2d1f 100644
+>>> --- a/arch/loongarch/kvm/vcpu.c
+>>> +++ b/arch/loongarch/kvm/vcpu.c
+>>> @@ -1165,10 +1165,14 @@ static int kvm_loongarch_cpucfg_set_attr(struct kvm_vcpu *vcpu,
+>>>                       return -EINVAL;
+>>>
+>>>               /* All vCPUs need set the same PV features */
+>>> +             spin_lock(&kvm->arch.pv_features_lock);
+>>>               if ((kvm->arch.pv_features & LOONGARCH_PV_FEAT_UPDATED)
+>>> -                             && ((kvm->arch.pv_features & valid) != val))
+>>> +                             && ((kvm->arch.pv_features & valid) != val)) {
+>>> +                     spin_unlock(&kvm->arch.pv_features_lock);
+>>>                       return -EINVAL;
+>>> +             }
+>>>               kvm->arch.pv_features = val | LOONGARCH_PV_FEAT_UPDATED;
+>>> +             spin_unlock(&kvm->arch.pv_features_lock);
+>>>               return 0;
+>>>       default:
+>>>               return -ENXIO;
+>>> diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
+>>> index 1317c718f896..b984cc54f305 100644
+>>> --- a/arch/loongarch/kvm/vm.c
+>>> +++ b/arch/loongarch/kvm/vm.c
+>>> @@ -76,6 +76,7 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+>>>               return -ENOMEM;
+>>>       }
+>>>       spin_lock_init(&kvm->arch.phyid_map_lock);
+>>> +     spin_lock_init(&kvm->arch.pv_features_lock);
+>>>
+>>>       kvm_init_vmcs(kvm);
+>>>       kvm_vm_init_features(kvm);
+>>>
+>> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+>>
 
