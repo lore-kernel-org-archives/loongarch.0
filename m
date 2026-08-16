@@ -1,166 +1,142 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92B143AA4E0
-	for <loongarch@lists.linux.dev>; Fri, 14 Aug 2026 17:27:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03EE3DDAF5;
+	Sun, 16 Aug 2026 10:59:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786728470; cv=none; b=gjyiKuX72nQSa/RawOGkNgD/5A8Xj5sZ6sm17AG90+KppuYZjvB0MavwA+FJWNWxy1rZf1fXOTrfWmQUauFWRXFOVAVsCr2BWD5pWRAHgQGcRSNYMHJPVcZEfxZ8iL38hC1geH6PtD7zYXj8BGt6Hi68aIulIZ7lj1xZmwVrFmU=
+	t=1786877984; cv=none; b=YBmJAAkzCKqZH2ieGYWdJF3001uBxqGq5yfqNuVg2T1JWb2pnw8JoyjUWEia1v1jCWKcAplv2gPegbhnNsCvY78lpxpI+0emrakmCm9k/CwGw+M5diJ+oZ8P3yoivoU2808CXYiryYxxQmDsKHE4OqLz9vH22f0JK+rTyhq3tF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786728470; c=relaxed/simple;
-	bh=+Rip0zxiBV4f6VW9V8yC+4tAp3H7GBB761i0PoOEi98=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JQA//CVWb0UvBF4zmOOLL9rSBwsJO0nN/CC0zMsReZ0YZ54RwF+Bc+J9H17PNEn8uqX9BxJKmjebm2LYXK1oagv9yk/Zk0vFT38ZP85LWLifcd+Uvri1TmmC/VONB1e73jWLx6JDe0T2Q7fG9zJiQwANoTKpu2iCxZ/a45zFkBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KGjyFqK2; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1786877984; c=relaxed/simple;
+	bh=Dp/y+C/fFrXHny/NWuQXx1T+5aNdNaC6T4hmZHkAX7c=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=RMpBI6RdZybSio8V8lfgTGXXFqdklrWsnMu0kZX6gzJKAnksmZv7m8rVDO0iNDQ/YMzgP6EM8f/Lw/BmWn0VPuglL80eYzhzdk0FyIanEjdxovAy6g0qVxfwtgeeA5/6AUGiPcyYtEatK1ON1WwR20N3DIqE7+yXhBreioqUIBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mQiCOZPM; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KGjyFqK2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1786728467;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ALhGJdbaDFJ0vhwNsd55hO+rgDN52tftmXEPKqTi+XU=;
-	b=KGjyFqK2FsUXyVbx33uyyXM542P2RHujeIDJEH6aLwUbeaI4X2rLUJzDh7gAMz1RBqvyNv
-	UW1xQvjobleCl5Ppc+SZqISZ1uOkVhtmkJmJ1HS0l5xXf2VmAetvEP47EJfw7A1YsEV4q+
-	es0hHhyxPPDsAZPcCiKiRkIA7/xPEM0=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-360-hVduAXAhNqaKMhhomRmg-g-1; Fri, 14 Aug 2026 13:27:46 -0400
-X-MC-Unique: hVduAXAhNqaKMhhomRmg-g-1
-X-Mimecast-MFC-AGG-ID: hVduAXAhNqaKMhhomRmg-g_1786728465
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-38e7b87ce77so2666226a91.0
-        for <loongarch@lists.linux.dev>; Fri, 14 Aug 2026 10:27:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786728465; x=1787333265;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=ALhGJdbaDFJ0vhwNsd55hO+rgDN52tftmXEPKqTi+XU=;
-        b=XAIuAUfRd79Y0dzDKK7ONYGVuT9aMyWUNMJwNEk3Q5rChJDTXz8olWlG9BOqTQWVSu
-         Jvm+W0yMs0d3+8js/RAx4D6lOkjTz5YmKU+UBEYLmd4RnmO901666UVTJJhPc+b55zGG
-         ZuchryXdihQ/kCVB9Vtxw1rqlGkJk9OE6wmrT8UMFxTur7noc5zklg1UrXuJsch3F/b6
-         wkoHTJetCZVKisPRbcqVZ2VpkBYlTRWpHxZDlzxAVg00PVoD9S4KTQiKzIxbM2NAYDqs
-         ktsk5DaocJzGOsufx97OBFERrsWVqPMpxgFaKiPqBPdnmGSXpP8qVCRqY4sUQZv6TdrU
-         QHGw==
-X-Forwarded-Encrypted: i=1; AHgh+RqUlfMl4yJShfZFmTaaQRhz5BlYbio6S1fK0BFg+rVuVhHzJy8bbifdN77UT6gW/muHzQkT5oA5Ssc=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxVz7jvQJZVWwwNwhtBrLmPM+BukD5zkt1LGs+UH+52JFbOvojL
-	xKvdZ3W7Acx8PKGe/a+jT7i656e/YXcLhjcQ/5L4oOQZ0LPxAh5zuiR5M8yYOqlB51H3Xo0fxJh
-	G+mW8Mtm6/inboW4WMHpYa6x5KzHa3/BwphtawCt5SDeZjXf9uaycce1CU3MI7g==
-X-Gm-Gg: AR+sD11qtYvkj9/kEMukYGSYE5ZQADcpRoQu+1zRUD4KNGdc1Yhg9PqgY9zuLRlDWUp
-	nQN8Xbb4TdaR6921y3Fq16C/KvZVEG8BosVGcKm6WfUzFApxYHY55NVeaqdloIliF/83aGOvwoN
-	SvhJoGlHVqth1FV4B5lXJfc4CZ4wzYQqdGX2CWYwlKGgwsalzk0sSV0HGGR4PLn4iF+XSOT3DTL
-	prg+/Ty4k226n0Qkz00vQ4YUPiO7mUbsFlZJxwy48DgrVcI4cHAGUodSioxzwJzjXM9yG5COtyE
-	NkSosYsmvZbPfSrRk7PZ4rmkfhwvQzCWTnPgxDZ3Y+rqKksyJK/g9AtMTa8rT3gvQrNwM33AwZ2
-	DAkf4KypdpxNzMkNpRA==
-X-Received: by 2002:a17:90b:48ce:b0:390:b41a:b92b with SMTP id 98e67ed59e1d1-3933b6d05c3mr9535900a91.4.1786728464562;
-        Fri, 14 Aug 2026 10:27:44 -0700 (PDT)
-X-Received: by 2002:a17:90b:48ce:b0:390:b41a:b92b with SMTP id 98e67ed59e1d1-3933b6d05c3mr9535821a91.4.1786728463979;
-        Fri, 14 Aug 2026 10:27:43 -0700 (PDT)
-Received: from [192.168.1.2] ([122.171.16.134])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-394ebbcbb78sm3512184a91.13.2026.08.14.10.27.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Aug 2026 10:27:43 -0700 (PDT)
-Message-ID: <9cbe111c-ff63-4f24-b518-094ddd7cea30@redhat.com>
-Date: Fri, 14 Aug 2026 22:57:36 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mQiCOZPM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A78C61F000E9;
+	Sun, 16 Aug 2026 10:59:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786877980;
+	bh=EZMPuLn9lWRyJJinQ2c8b4OBBKHlDa+Kb1vfYZjvPU0=;
+	h=From:Subject:Date:To:Cc;
+	b=mQiCOZPM10WFNlwj6S+/etLcOZ5lICzoIZa7PUr5atzrLfNCvr7yIRbgAh4jotlxM
+	 5JyYhCmGz/YoEQDsBDLbHt0Y3c6AmaQ8D8x/q9pWH75AG7Ru5Mgprs/KNnXKyqaBsL
+	 ejEpD2MHgWO73u0i3IFYum3fH4NH4kLKFKL5lO5dSr8ry9s8ne7h/aTShk4Y6Vpn7i
+	 5CuWmafPB+x4jOqhGz0dGaKnl/EFmtwKu92IwkMy/uGbXJ4TNzKbV8gfkMfk2nTONT
+	 mXjoku8XZsHQEWPnLFJuHj0gUgLc1MIXrDVZ1zTgt+/HzmRe1K+5BFceKLBRkqx4gB
+	 ukxJvdpWvHM9g==
+From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+Subject: [PATCH 0/6] arch, mm/execmem: resolve confusion about
+ set_direct_map_valid_noflush()
+Date: Sun, 16 Aug 2026 13:59:23 +0300
+Message-Id: <20260816-execmem-set-vm-perms-v0-2-v1-0-90944a3ad43f@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] kexec: return -ENOEXEC from image probe functions on
- mismatch
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, Andrew Morton <akpm@linux-foundation.org>,
- Baoquan He <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>,
- Pasha Tatashin <pasha.tatashin@soleen.com>, Tao Liu <ltao@redhat.com>,
- Philipp Rudo <prudo@redhat.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- linux-riscv@lists.infradead.org, kexec@lists.infradead.org
-References: <20260813-mpilaniy-v1-1-777d4d0e30f7@redhat.com>
- <2vxzv79c23j6.fsf@kernel.org>
-From: Mukesh Pilaniya <mpilaniy@redhat.com>
-In-Reply-To: <2vxzv79c23j6.fsf@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: NrSZ_jKJ_QpaqGHiOqV75zbz9oxzVvnVP40Mgo8wRfw_1786728465
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWM0QqDMBAEf0XuuUc1iJX+SulDkq41pRclF0UQ/
+ 11tH2fZmZUUKUDpXqyUMAcNQzyguhTkexvf4PA6mExpmrKtGsYCLxBWZJ6FRyRRnks27Cza+mb
+ rrqk7OvwxoQvLr/14/lkn94HPZ/B8OKtgl2z0/TmJDFmuIjxFzdZ9Qdu2A009wYShAAAA
+X-Change-ID: 20260816-execmem-set-vm-perms-v0-2-bae847a4f64f
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: =?utf-8?q?Adrian_Barna=C5=9B?= <abarnas@google.com>, 
+ Albert Ou <aou@eecs.berkeley.edu>, 
+ Alexander Gordeev <agordeev@linux.ibm.com>, Alexandre Ghiti <alex@ghiti.fr>, 
+ Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>, 
+ Brendan Jackman <brendan.jackman@linux.dev>, 
+ Catalin Marinas <catalin.marinas@arm.com>, 
+ Christian Borntraeger <borntraeger@linux.ibm.com>, 
+ Dave Hansen <dave.hansen@linux.intel.com>, 
+ David Hildenbrand <david@kernel.org>, 
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
+ Heiko Carstens <hca@linux.ibm.com>, Huacai Chen <chenhuacai@kernel.org>, 
+ Ingo Molnar <mingo@redhat.com>, Len Brown <lenb@kernel.org>, 
+ Mike Rapoport <rppt@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+ Paul Walmsley <pjw@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+ Peter Zijlstra <peterz@infradead.org>, "H. Peter Anvin" <hpa@zytor.com>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Ryan Roberts <ryan.roberts@arm.com>, Sven Schnelle <svens@linux.ibm.com>, 
+ Thomas Gleixner <tglx@kernel.org>, Uladzislau Rezki <urezki@gmail.com>, 
+ Vasily Gorbik <gor@linux.ibm.com>, WANG Xuerui <kernel@xen0n.name>, 
+ Will Deacon <will@kernel.org>, x86@kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-mm@kvack.org, linux-pm@vger.kernel.org, 
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
+ loongarch@lists.linux.dev
+X-Mailer: b4 0.17-dev
 
+Recent discussion about implementation of execmem's ROX caches on arm64
+revealed a confusion about how set_direct_map_valid_noflush()
+implemented on different architectures.
 
-Hi Pratyush,
-On 14/08/26 7:43 pm, Pratyush Yadav wrote:
-> On Thu, Aug 13 2026, Mukesh Pilaniya wrote:
-> 
->> Several kexec_file_load() image probe functions return -EINVAL when
->> they do not recognize the image format.  A probe function that rejects
->> an image should return -ENOEXEC to indicate that the image is not a
->> recognized executable format.  -EINVAL implies a problem with the
->> syscall parameters, not with image recognition.
->>
->> kexec_image_probe_default() iterates through registered loaders and
->> returns the last probe's error code to the caller.  That error
->> propagates as the kexec_file_load() return value to userspace.
->> Returning -EINVAL from a probe when no loader matches is semantically
->> incorrect and misleads userspace about the nature of the failure.
->>
->> Return -ENOEXEC from all probe functions and their helpers when the
->> image format is not recognized.
-> 
-> Sounds fine in principle but can you please also share what the real
-> problem you face is and how changing these return codes helps? These
-> error codes are uAPI and while we _can_ change them as long as we don't
-> break something, there should be a clear motivation for doing so.
-> 
-> [...]
-> 
-While debugging a misleading error on s390x where kexec -s reported
-"syscall kexec_file_load not available" instead of the actual EINVAL
-from a kernel command line that exceeded the architecture limit, we
-traced the problem to the kexec-tools userspace utility treating
-EINVAL the same as ENOSYS and ENOEXEC -- as a signal to silently fall
-back to kexec_load().
+On arm64 it sets or clears the PTE_VALID bit marking a PTE as present or
+not present.
 
-kexec-tools supports two syscalls: kexec_file_load() and the older
-kexec_load(). With -a (the default), it tries kexec_file_load()
-first and falls back to kexec_load() when the syscall is not
-implemented (ENOSYS) or the kernel does not have a loader for the
-image format. With -s, it uses kexec_file_load() only with no
-fallback.
+On other architectures it's a range version of
+set_direct_map_invalid_noflush() and set_direct_map_default_noflush()
 
-When the kernel returns -EINVAL it means something went wrong while
-loading the image, not that the syscall is missing or the image
-format is unrecognized. kexec-tools should not fall back to the
-older syscall in that case. However, some kernel probe functions
-currently return -EINVAL when the image header does not match,
-instead of returning -ENOEXEC. Keeping EINVAL in the fallback set
-to accommodate these probes has the side effect of also hiding
-genuine loading errors like an oversized command line.
+Unlike arm64::set_direct_map_valid_noflush(),
+set_direct_map_default_noflush() not only marks PTE as present, but also
+sets its default protection mode.
 
-kexec-tools should only fall back when kexec_file_load() is not
-implemented or does not have a matching loader -- not when something
-goes wrong during load.
+Other than that, initial design of execmem ROX caches didn't rely on
+restoration of large mappings that's now available on x86, but
+completely removed the memory allocated for the ROX cache from the
+direct map to ensure that large mappings are not split. This precluded
+usage of VM_FLUSH_RESET_PERMS for the ROX cache allocations and required
+execmem to implement manipulation of the direct map alias.
 
-The fix on the kexec-tools side is to remove EINVAL from the fallback
-set, but that requires the kernel to be clean first -- probe functions
-must return -ENOEXEC when they do not recognize an image format, not -EINVAL.
+Current implementation of ROX caches does not remove the direct map
+alias but simply calls set_memory_rox() that updates the permissions in
+both vmalloc address space and the direct map and relies on
+collapse_large_pages() in x86 CPA to keep large mappings.
 
-kexec-tools patch:
-https://lore.kernel.org/all/20260814075329.30203-1-mpilaniy@redhat.com/
+This allow using VM_FLUSH_RESET_PERMS for execmem ROX cache allocations
+with small adjustments to set_direct_map APIs and vmalloc::reset_perms()
+behaviour: adding number of pages parameter to set_direct_map APIs and
+making resetting of the direct map permissions in vmalloc VMAP_HUGE
+friendly.
 
-A review of all kexec_file_ops.probe implementations found that arm64
-image_probe(), riscv image_probe(), and loongarch efi_kexec_probe()
-return -EINVAL where they should return -ENOEXEC. x86 bzImage64_probe()
-and s390 s390_elf_probe() already use -ENOEXEC correctly.
+Implement these adjustments, make execmem always use
+VM_FLUSH_RESET_PERMS and revert set_direct_map_valid_noflush() changes.
+
+[1] https://lore.kernel.org/all/20260611130144.1385343-4-abarnas@google.com
+
+---
+Mike Rapoport (Microsoft) (6):
+      set_memory: add number of pages parameter to set_direct_map APIs
+      mm/vmalloc: set area's page_order after allocation succeeds
+      mm/vmalloc: constify vm parameter of get_vm_area_page_order()
+      mm/vmalloc: make set_area_direct_map HUGE_VMAP friendly
+      mm/execmem: use VM_FLUSH_RESET_PERMS for ROX cache allocations
+      Revert "arch: introduce set_direct_map_valid_noflush()"
+
+ arch/arm64/include/asm/set_memory.h     |  5 ++--
+ arch/arm64/mm/pageattr.c                | 24 ++++---------------
+ arch/loongarch/include/asm/set_memory.h |  5 ++--
+ arch/loongarch/mm/pageattr.c            | 27 ++++-----------------
+ arch/riscv/include/asm/set_memory.h     |  5 ++--
+ arch/riscv/mm/pageattr.c                | 23 ++++--------------
+ arch/s390/include/asm/set_memory.h      |  5 ++--
+ arch/s390/mm/pageattr.c                 | 20 ++++------------
+ arch/x86/include/asm/set_memory.h       |  5 ++--
+ arch/x86/mm/pat/set_memory.c            | 16 ++++---------
+ include/linux/set_memory.h              | 12 ++++------
+ kernel/power/snapshot.c                 |  4 ++--
+ mm/execmem.c                            | 42 ++++++---------------------------
+ mm/secretmem.c                          |  6 ++---
+ mm/vmalloc.c                            | 31 ++++++++++++++++--------
+ mm/vmalloc.h                            |  2 +-
+ 16 files changed, 68 insertions(+), 164 deletions(-)
+---
+base-commit: 1029098ee3275ea5b78e329ce132262affa2f8cc
+change-id: 20260816-execmem-set-vm-perms-v0-2-bae847a4f64f
+
+--
+Sincerely yours,
+Mike.
 
