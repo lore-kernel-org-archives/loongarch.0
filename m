@@ -1,104 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta0.migadu.com (out-222.mta0.migadu.com [91.218.175.222])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F26853BD65D
-	for <loongarch@lists.linux.dev>; Mon, 17 Aug 2026 14:11:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B47F42AF87
+	for <loongarch@lists.linux.dev>; Mon, 17 Aug 2026 15:14:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.222
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786975889; cv=none; b=owPnpe1H405ZT2MKoZjDWzOw8TQ18WOM3M7qYHFCu9MSH2xE4qK/Lw3581YZWQ5hwFLh1gd+msthUw6q3bPQ7gljLfbfa9lhyUexc7K7TWRQKVu318FcBraeXL1YXv1Q/Mzat/Me6lfDlt4LCGwZEB2NQu97K+EYj6WWIFm8s90=
+	t=1786979669; cv=none; b=Arnd+Y8obeDfKKhR8j7y5QirSV631AdUcgJS4b5K7g0ckNnpHnAyN5HUMp53HHe76rLt07iBUJWKawo2b34EBg2ja4i7Z/TUEonwfczAZ92Z0czp0LHYXS9voMjwjqOKWBoLx3Qzgfj2NTORRNq9QZ0lgP3TAGEZaxsknlT6cds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786975889; c=relaxed/simple;
-	bh=qnOg0D4/8diPtWN+T3DOk2D5jQRcfRdXpNqDQU/QDgQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Mnc+SAvlemJhmAb42BzyVoGotOLSVBKTy8HyGsx0NiKWQXGOE8iZfGF7ytdALx0ngaVrFHBobw2RDNbRNKA6h+N+lzpAl4C/Eu8g8Fa3D8+tk/wHM1m6CFQ92NSOrTYXlth4jRZyu75KBIY/1CA6Ejl1uaml71vZajIC9+1/58s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BnqjfGcf; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786979669; c=relaxed/simple;
+	bh=/kpJHgkNpi750FH/SGpyKpVgqGqCSp4Wcpe2Zcb2oTU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=d0rsIiXHHo8FMXL65+5fwLfYlRcmSEGOIvaQF0OHqfZ3ohiGLqulHRFKGajAYhRs6pZUww3fm/ax1ULYo53G4QpvQzmLYkK2uu9RX3CD9G2dh9uiIlZRwGVNhHD6gWNOG8wPlhHMYH8I0A1aZ+H51rgWHUhY7iReftQ2qqRv3e4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=uk6XiQ57; arc=none smtp.client-ip=91.218.175.222
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BnqjfGcf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D97411F00A3D
-	for <loongarch@lists.linux.dev>; Mon, 17 Aug 2026 14:11:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786975887;
-	bh=SYKcaJ0mHUjl0bhwe5EZhlEr2W0alTSpd/bA190hrI8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=BnqjfGcf+ixEAaqA4x0x8SnWPnmB73aFtWBnmstoeHqjTc0JERkeEWCd2zFt0atn9
-	 NCZn/GltW4TsbrnXQBy6fPIIvfBOfjR0F9idiHJcj5BEa7jBLlXpT0vZl1NNOAW0tb
-	 6SRKYF32YHdXvYo4iv2Pz8BpAbAg33SnUTnDlTMT4cE734rr5wwBOGId16oaGUnEX6
-	 cmQB4Qf3pfn20QDM/KwFL40pUIZa8K9RcMbwWqIStH3uCaZQ3XKJOvcB4BBOVRPfJc
-	 wGp2/CLCm7moDObNQkuiPzvkM6LxG9c2i6RgalKkx3OgRwh+inZPLFP77yJ9NYCmfM
-	 izyKj8lSEx0Vw==
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-c1600d040e4so55006366b.1
-        for <loongarch@lists.linux.dev>; Mon, 17 Aug 2026 07:11:27 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+Rp2nVASlQwgs/3Y2xgHvDwlkiH/+AJ7v7oBnChm0McWJ8rsXclWdcnSeGHQzmDR4Yw3O+vfLwV60pg=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzVE4N7sS5hTvu9EtEkqGBD/ViyCtlulktfmkbL783YIeZsdGj6
-	hxYOpCqZfCe+dKwFaL+grJqF9kWl0HpGBnH3iZ3+YpC5QCLCBmi6dHN2icB2LgDr5y59CQTro1+
-	zYFwjWj4S3jGHjdKcKyA7oUmV2y4EkfI=
-X-Received: by 2002:a17:906:4788:b0:c20:ec9c:441a with SMTP id
- a640c23a62f3a-c210a21501dmr1624172066b.12.1786975886564; Mon, 17 Aug 2026
- 07:11:26 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uk6XiQ57"
+X-Envelope-To: loongarch@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=/kpJHgkNpi750FH/SGpyKpVgqGqCSp4Wcpe2Zcb2oTU=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1786979664; v=1; x=1787584464;
+ b=uk6XiQ57o1D6iibPFn5TKPWCDhnmKhFXuHkfhwAfmPyXniTm8i72E8hoRSgSS6FxCFvtJatD
+ kUmnfMkBx9oLsAHHiig6ksIVwQO3iIA/8ohr2/mwK3ZKLP8lPZNwYrmBTas2k/yJBioKWe+JgDx
+ DjSVklLEX0StH/n1O0kQZ3Bc=
+X-Envelope-To: loongarch@lists.linux.dev
+Received: from localhost (212.133.41.51)
+	by smtp.migadu.com with ESMTPS id b6551f00886cde4e;
+	Mon, 17 Aug 2026 15:14:23 +0000
+X-Migadu-Flow: FLOW_OUT
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <20260812032807.15034-1-yangtiezhu@loongson.cn> <CAAhV-H5w8VVW_L6cRes-syjEvhbWmevSKWrZWPFapRkuemmjaw@mail.gmail.com>
-In-Reply-To: <CAAhV-H5w8VVW_L6cRes-syjEvhbWmevSKWrZWPFapRkuemmjaw@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 17 Aug 2026 22:11:19 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4RzYY7KsVguLTFMip6uKX8csbDcssJV5vh3-CDxfcNbg@mail.gmail.com>
-X-Gm-Features: AcwNN1WbZm96lcAD50BeHds08TJmf_MRkLcccoa0xy48ekZ0232MIMZ-fBNyZYs
-Message-ID: <CAAhV-H4RzYY7KsVguLTFMip6uKX8csbDcssJV5vh3-CDxfcNbg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] Filter out local and mapping symbols during module load
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
-	Daniel Gomez <da.gomez@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
-	Aaron Tomlin <atomlin@atomlin.com>, linux-modules@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 17 Aug 2026 17:14:19 +0200
+Message-Id: <DKRBF6LQY1L7.13CIBHAU0A87D@linux.dev>
+Cc: =?utf-8?q?Adrian_Barna=C5=9B?= <abarnas@google.com>, "Albert Ou"
+ <aou@eecs.berkeley.edu>, "Alexander Gordeev" <agordeev@linux.ibm.com>,
+ "Alexandre Ghiti" <alex@ghiti.fr>, "Andy Lutomirski" <luto@kernel.org>,
+ "Borislav Petkov" <bp@alien8.de>, "Brendan Jackman"
+ <brendan.jackman@linux.dev>, "Catalin Marinas" <catalin.marinas@arm.com>,
+ "Christian Borntraeger" <borntraeger@linux.ibm.com>, "Dave Hansen"
+ <dave.hansen@linux.intel.com>, "David Hildenbrand" <david@kernel.org>,
+ "Gerald Schaefer" <gerald.schaefer@linux.ibm.com>, "Heiko Carstens"
+ <hca@linux.ibm.com>, "Huacai Chen" <chenhuacai@kernel.org>, "Ingo Molnar"
+ <mingo@redhat.com>, "Len Brown" <lenb@kernel.org>, "Palmer Dabbelt"
+ <palmer@dabbelt.com>, "Paul Walmsley" <pjw@kernel.org>, "Pavel Machek"
+ <pavel@kernel.org>, "Peter Zijlstra" <peterz@infradead.org>, "H. Peter
+ Anvin" <hpa@zytor.com>, "Rafael J. Wysocki" <rafael@kernel.org>, "Ryan
+ Roberts" <ryan.roberts@arm.com>, "Sven Schnelle" <svens@linux.ibm.com>,
+ "Thomas Gleixner" <tglx@kernel.org>, "Uladzislau Rezki" <urezki@gmail.com>,
+ "Vasily Gorbik" <gor@linux.ibm.com>, "WANG Xuerui" <kernel@xen0n.name>,
+ "Will Deacon" <will@kernel.org>, <x86@kernel.org>,
+ <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+ <linux-mm@kvack.org>, <linux-pm@vger.kernel.org>,
+ <linux-riscv@lists.infradead.org>, <linux-s390@vger.kernel.org>,
+ <loongarch@lists.linux.dev>, <yosry@kernel.org>
+Subject: Re: [PATCH 6/6] Revert "arch: introduce
+ set_direct_map_valid_noflush()"
+From: "Brendan Jackman" <brendan.jackman@linux.dev>
+To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>, "Andrew Morton"
+ <akpm@linux-foundation.org>
+X-Mailer: aerc 0.21.0
+References: <20260816-execmem-set-vm-perms-v0-2-v1-0-90944a3ad43f@kernel.org> <20260816-execmem-set-vm-perms-v0-2-v1-6-90944a3ad43f@kernel.org>
+In-Reply-To: <20260816-execmem-set-vm-perms-v0-2-v1-6-90944a3ad43f@kernel.org>
 
-On Wed, Aug 12, 2026 at 11:17=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org=
-> wrote:
+On Sun Aug 16, 2026 at 12:59 PM CEST, Mike Rapoport (Microsoft) wrote:
+> Commit 0c6378a71574 ("arch: introduce set_direct_map_valid_noflush()")
+> added set_direct_map_valid_noflush() to allow updating the direct map
+> for a physically contiguous range in execmem.
 >
-> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> As Brendan recently pointed out [1], this API is confusing because on
+> arm64 it means that is sets VALID bit in ptes, while on other
+> architectures it is an analog of set_direct_map_default_noflush().
 >
-> But I still don't think renaming is_core_symbol() to is_kept_symbol()
-> is necessary.
-And this series needs to backport to stable branches, no renaming can
-reduce the difficulty.
+> The only user of set_direct_map_valid_noflush() was execmem's ROX cache
+> freeing path and it was switched to utilize VM_FLUSH_RESET_PERMS for
+> resetting permissions of the direct map alias.
+>
+> With the last user gone and with set_direct_map_{invalid,default}_noflush=
+()
+> accepting number of pages as a parameter, set_direct_map_valid_noflush()
+> become a copy of set_memory_valid() on arm64 and a duplicate of
+> set_direct_map_{invalid,default}_noflush() on other architecture, it is
+> safe to remove set_direct_map_valid_noflush().
+>
+> Also drop a stale comment in arm64::__kernel_map_pages() that Linus
+> bothered to add when merging changes containing set_direct_map_valid_nofl=
+ush()
+> to his tree.
+>
+> This reverts commit 0c6378a71574daa6cd1534ad42a956e3262756c7.
+>
+> [1] https://lore.kernel.org/all/DJ69RCVRBO0Y.3JCYSW50IC4RC@linux.dev
+>
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-Huacai
+Quick dump of my understanding (ignoring the NG bit on arm64)
 
->
-> Huacai
->
-> On Wed, Aug 12, 2026 at 11:28=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson=
-.cn> wrote:
-> >
-> > This series prevents compiler generated local and mapping symbols
-> > from leaking into /proc/kallsyms for loaded modules. This ensures
-> > tracing tools like bpftrace can resolve accurate kernel stacks on
-> > architectures like LoongArch.
-> >
-> > Based on the v2 discussion, the changes are now refactored into a
-> > clean three-patch series to eliminate code duplication and clarify
-> > naming.
-> >
-> > Tiezhu Yang (3):
-> >   module/kallsyms: Rename is_mapping_symbol() to
-> >     is_local_mapping_symbol()
-> >   module/kallsyms: Refactor current symbol filtering into
-> >     is_kept_symbol()
-> >   module/kallsyms: Filter out local and mapping symbols during module
-> >     load
-> >
-> >  include/linux/module_symbol.h |  4 +--
-> >  kernel/module/kallsyms.c      | 59 ++++++++++++++++++-----------------
-> >  scripts/faddr2line            |  2 +-
-> >  scripts/mod/modpost.h         |  2 +-
-> >  4 files changed, 35 insertions(+), 32 deletions(-)
-> >
-> > --
-> > 2.42.0
-> >
-> >
+- set_direct_map_invalid_noflush():
+
+    x86: clear P and RW (and DIRTY)
+    arm64: clear VALID
+
+  So these look out of sync to me
+
+- set_direct_map_default_noflush():
+
+    x86: set P and RW
+    arm64: set VALID and WRITE, clear RDONLY
+
+- set_direct_map_valid_noflush(..., true):
+
+    x86: exactly the same as set_direct_map_default_noflush()
+         (but with a `nr` arg)
+    arm64: set VALID
+
+- set_direct_map_valid_noflush(..., false):
+
+    both archs: exactly the same as set_direct_map_invalid_noflush()
+         (but with a `nr` arg)
+
+So basically the big issue here is specifically that
+set_direct_map_valid_noflush(..., true) is special on arm64 and not x86.
+
+And we fix that by jut deleting the API. SGTM!
+
+The other issue I can see here is that set_direct_map_invalid_noflush()
+clears RW on x86 but doesn't set RDONLY on arm64. So if you unmap
+something using set_direct_map_invalid_noflush(), then map it again
+using something other than set_direct_map_default_noflush(), you get
+different behaviour between the archs.
+
+I think the answer to that is probably: doing that is a bug, i.e.
+_invalid_noflush() and _default_noflush() are a pair that you have to
+use together. But I haven't checked if this is currently the case. Maybe
+it would still make sense to just align these fully?
+
+Anyway, aside from all this yapping, getting rid of _valid_noflush()
+seems like an unambiguous win here so thanks for the cleanup!
+
+Reviewed-by: Brendan Jackman <brendan.jackman@linux.dev>
