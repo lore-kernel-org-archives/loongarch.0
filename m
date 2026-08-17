@@ -1,33 +1,33 @@
-Received: from mta1.migadu.com (out-244.mta1.migadu.com [95.215.58.244])
+Received: from mta1.migadu.com (out-185.mta1.migadu.com [95.215.58.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B8F3FCB0C
-	for <loongarch@lists.linux.dev>; Mon, 17 Aug 2026 12:10:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.244
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2D043FA5E7
+	for <loongarch@lists.linux.dev>; Mon, 17 Aug 2026 12:22:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786968661; cv=none; b=KksQDP04aa2gvVsaUd5txAp1wlX7p1vaAvlVDgilhyKSvto5ial1Q63niT4Hstw+bhEpRkCBwJAxWhT4MtBfobnM+hP+bMdW9EJ4s1ttp249MVl/8npQ0udtDIINKYkf3sVjnIZELd3+QiJ8bCNPn3XcCpyYeB6qp6JSTXsgCFE=
+	t=1786969326; cv=none; b=gp3aFK9lsFbkGVwiAIeFtOYm5QIHxYYxFxH5PwbRfLv9rwxrj8WupWbBAQpk/f4M0+3GEYoZm4dCxWbpQXbqD3OJwp9DQoGpq8RJaZyNYcl2Av7JUz+n/DrlmacyKIA9ueOGU2sLsCTTd0vSAI/V9qPX7gAXVBbHDiArue0muo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786968661; c=relaxed/simple;
-	bh=HixNdaF24ntDEuguIuhpK7haYmS/JSSrlBPi1Y1tptI=;
+	s=arc-20240116; t=1786969326; c=relaxed/simple;
+	bh=XUz20HjX88HKc3zhTmA9XIj0WBNTBdnuMyd7s0rygf4=;
 	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=tDl70I/dWI4Wzi+wgiaaKsYha9de2iX8oXDi6N+N8Jiq9A653tqH53uxAZGA9zdADxqXL/oRwUiW4vXRLl2P9dnZDCGpjjPex8CCie+DIIET1OKs3g4mRn6pkahmibypIwPfuhhzJPYquJPbTpwL4CCmdqfnjqINXxgpT30ghxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=QeEsg/dq; arc=none smtp.client-ip=95.215.58.244
+	 References:In-Reply-To; b=hq1SpX58kp/i/tls7FLL31Q+JQbGaeAzJhyo7/P/DGaNa1lIcD/KNox709l1SHhM1LV1bD+3hYZBtAfzvl4JKZZLVXWNGLwWBLrKBoJha7+mc6BVPuEahjRj/bElShc5/sQY5PRRKgrYH9H2IjT3nJWB2lzSZePRKnWqOr/QK2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=XkldS3CH; arc=none smtp.client-ip=95.215.58.185
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="QeEsg/dq"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XkldS3CH"
 X-Envelope-To: loongarch@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=HixNdaF24ntDEuguIuhpK7haYmS/JSSrlBPi1Y1tptI=;
+DKIM-Signature: a=rsa-sha256; bh=XUz20HjX88HKc3zhTmA9XIj0WBNTBdnuMyd7s0rygf4=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1786968655; v=1; x=1787573455;
- b=QeEsg/dqo1TZKqifzrBNzsykZmrFrlTHIwqmU/NfoUZuilMqfjcwRFQWsUqqIc1hgw0/A0kg
- JvEop+e9FDiowsS/ZKpFBBgvwCfaYypnG3Eq7CzMxKIlFsxztHVZ7HgwayE3nz2eXd+UkW0TJqe
- HoN2VbcomdRbSPmB6Q4EDzfU=
+ t=1786969322; v=1; x=1787574122;
+ b=XkldS3CHg9hCBivEOhkQQzkmUhdPITkRmMuNYQi3cCkftCjtJWWLDRiDP/+pw18b1esq4lNP
+ slbcZxty0whFStgDGAoQnHGUK2wfA2IpllM//lyHcu35MfQ6dkOPY6w42V/iiNp8rSh+jXtT66Q
+ Gkbjx9DvRnQfiagSi2bv5dsQ=
 X-Envelope-To: loongarch@lists.linux.dev
 Received: from localhost (185.201.63.253)
-	by smtp.migadu.com with ESMTPS id f0badc6dc42a8a86;
-	Mon, 17 Aug 2026 12:10:55 +0000
+	by smtp.migadu.com with ESMTPS id ac101bf52cfc1249;
+	Mon, 17 Aug 2026 12:22:02 +0000
 X-Migadu-Flow: FLOW_OUT
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -37,8 +37,8 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Mon, 17 Aug 2026 14:10:39 +0200
-Message-Id: <DKR7IK0VAERF.3ALVHRNQMSXZU@linux.dev>
+Date: Mon, 17 Aug 2026 14:21:41 +0200
+Message-Id: <DKR7R0BECQXX.2FCNF36EFETS8@linux.dev>
 Cc: =?utf-8?q?Adrian_Barna=C5=9B?= <abarnas@google.com>, "Albert Ou"
  <aou@eecs.berkeley.edu>, "Alexander Gordeev" <agordeev@linux.ibm.com>,
  "Alexandre Ghiti" <alex@ghiti.fr>, "Andy Lutomirski" <luto@kernel.org>,
@@ -60,51 +60,60 @@ Cc: =?utf-8?q?Adrian_Barna=C5=9B?= <abarnas@google.com>, "Albert Ou"
  <linux-mm@kvack.org>, <linux-pm@vger.kernel.org>,
  <linux-riscv@lists.infradead.org>, <linux-s390@vger.kernel.org>,
  <loongarch@lists.linux.dev>
-Subject: Re: [PATCH 1/6] set_memory: add number of pages parameter to
- set_direct_map APIs
+Subject: Re: [PATCH 4/6] mm/vmalloc: make set_area_direct_map HUGE_VMAP
+ friendly
 From: "Brendan Jackman" <brendan.jackman@linux.dev>
 To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>, "Andrew Morton"
  <akpm@linux-foundation.org>
 X-Mailer: aerc 0.21.0
-References: <20260816-execmem-set-vm-perms-v0-2-v1-0-90944a3ad43f@kernel.org> <20260816-execmem-set-vm-perms-v0-2-v1-1-90944a3ad43f@kernel.org>
-In-Reply-To: <20260816-execmem-set-vm-perms-v0-2-v1-1-90944a3ad43f@kernel.org>
+References: <20260816-execmem-set-vm-perms-v0-2-v1-0-90944a3ad43f@kernel.org> <20260816-execmem-set-vm-perms-v0-2-v1-4-90944a3ad43f@kernel.org>
+In-Reply-To: <20260816-execmem-set-vm-perms-v0-2-v1-4-90944a3ad43f@kernel.org>
 
 On Sun Aug 16, 2026 at 12:59 PM CEST, Mike Rapoport (Microsoft) wrote:
-> When set_direct_map APIs were introduced by the commit d253ca0c3865
-> ("x86/mm/cpa: Add set_direct_map_*() functions") the single page
-> parameter made sense because the initial callers (vmalloc and
-> hibernation) had sets of unsorted struct pages that required changes of
-> their mappings in the direct map.
+> set_area_direct_map() always updates direct map alias permissions in
+> single page increments.
 >
-> Since there is an increasing demand for direct map manipulation and it
-> is also desirable to be able to update larger physically contiguous
-> mappings, for example an entire large folio, extend set_direct_map APIs
-> to receive number of pages parameter.
+> For HUGE_VMAP areas it's suboptimal. Not only the loop in
+> set_area_direct_map() needlessly has more iterations (e.g times 512 on
+> x86), but it also causes fragmentation of the direct map that could be
+> avoided for the HUGE_VMAP areas populated with large pages.
 >
-> As there is still only a handful of callers, change the existing
-> functions directly and update all the call sites rather than adding
-> wrappers for single page case.
+> All pages in an area are always of the same order: either same-order
+> large pages when VM_ALLOW_HUGE_VMAP is set and all huge pages were
+> successfully allocated, or order-0 page when VM_ALLOW_HUGE_VMAP is
+> cleared or when huge pages allocation fails and fallback path is taken.
+>
+> Instead of updating the direct map permissions for every order-0 page in
+> an area, use the area's page_order as the loop increment and update the
+> large pages in one call to set_direct_map_{invalid,default}_noflush().
 >
 > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> ---
+>  mm/vmalloc.c | 13 ++++++++-----
+>  1 file changed, 8 insertions(+), 5 deletions(-)
+>
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index fc7993db4152..11170d1ee5be 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -3361,12 +3361,15 @@ static inline void set_area_direct_map(const stru=
+ct vm_struct *area,
+>  				       int (*set_direct_map)(struct page *page,
+>  							     unsigned int nr))
+>  {
+> -	unsigned long i;
+> +	unsigned int nr =3D (1U << vm_area_page_order(area));
+> +
+> +	for (unsigned long i =3D 0; i < area->nr_pages; i +=3D nr) {
+> +		if (page_address(area->pages[i])) {
+> +			int err =3D set_direct_map(area->pages[i], nr);
+> =20
+> -	/* HUGE_VMALLOC passes small pages to set_direct_map */
+> -	for (i =3D 0; i < area->nr_pages; i++)
+> -		if (page_address(area->pages[i]))
+> -			set_direct_map(area->pages[i], 1);
+> +			WARN_ON_ONCE(err);
 
-I think if we add this arg we also need to specify how the
-implementations are supposed to behave when they fail midway?
-
-IIUC the incumbent answer for stuff like this is:
-
-- The implementation might leave partial modifications behind when it
-  fails. The caller needs to deal with that.
-
-- ... But, that's gonna be due to allocation failure. So the caller can
-  just do the inverse operation in the failure path as a cleanup, and
-  assume that inverse operation succeeds since the pagetables are
-  already allocated up to the failure point.
-
-I guess it's worth making that a sort of explicit contract since it
-makes certain implementation details load-bearing, e.g. I think...
-
-- It forces the pagetable update algorithm to work in a fixed order.
-
-- it forbids us to e.g. merge PTEs into a PMD if the region might be
-  pending such a cleanup, since it would force that cleanup to
-  reallocate a PTE table.
+Nit: Maybe worth a comment on why this is expected to always succeed?
+I.e. I think we are assuming the only failure mode is allocation but=20
+because we know vm_area_page_order() there shouldn't be any allocation?
