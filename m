@@ -1,101 +1,165 @@
-Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77103285068
-	for <loongarch@lists.linux.dev>; Mon, 17 Aug 2026 08:48:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6823C3C4551
+	for <loongarch@lists.linux.dev>; Mon, 17 Aug 2026 09:04:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786956525; cv=none; b=BZ0aq2z4Kf3EPegENdviVMEHktvawOUdmqlf19nBD1uczJ4Jg+kFsM/tNKpr+22tqCI51ufmGHbPPM6W+nHPExM7dN1/K//O9uxQOKB9N2YhXIzj01AKB6+gJYZpRmq3P5jAFjIiK0gEj3C84d8XbdRJAUIpOTh1n+px4fFzE9M=
+	t=1786957452; cv=none; b=GdxVVNySFD12ld8vk8h8czCCCb1YV2tgvkBHNuh84M44zh0aB94gmHPjfOZIgZACMavUy9mZmqFIx6eBW076ZNi3d1pyy/yuK5hKjOWYPQSXYDV3igfgoYkjz5Fe45qAC1CNuZtAr0WTspyphr9Tzu5QLnJLBccCSY4bV08jsAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786956525; c=relaxed/simple;
-	bh=sBEqRV+X3NJ+d00hspKPL+K2GPhjRi1NUVyJkyc0LH0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=aCExyESrJr+KVK0MY5dCsADcYba0VACF8QnTK/k7KlU3iw5/cYccAknLLG0qAXTsMjrzGQjC+69IUZcZ+gj8kpeGXinJvw1WlRdvvVwxLFbJI2+MHqGw8kW3YS7IGvQioKcwdkKHX3pHl3bdicdF6czxtAOS4+q2I8VeEr9c3cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=U0ohtq5k; arc=none smtp.client-ip=54.243.244.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="U0ohtq5k"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1786956433;
-	bh=ShiEhLjgdRYcBEILZagrMbIlp206gnNqakMCvdm4POo=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=U0ohtq5k2ynC2DVuGOYZuZjrJvdmRWGHQU45bXsFROpB+VQBqU1snBPHPxfWgjcGG
-	 K02y0hK8klRLPyKUmNIW95DbTHg9wCEqNiGAnUowxv7c5005WYrZM5+HLhIFasko50
-	 PTr3fCZY0mqUanNObIqwBp++RRimn9EmyHiLVs9E=
-X-QQ-mid: esmtpgz13t1786956424t3965a016
-X-QQ-Originating-IP: TeRbYOE0z7epXa4Si/rfgGT/K8pzRUT/IIHKSyAVVyQ=
-Received: from localhost.localdomain ( [113.57.152.160])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 17 Aug 2026 16:47:02 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 3178264705605889229
-From: Wentao Guan <guanwentao@uniontech.com>
-To: vincent.mc.li@gmail.com
-Cc: alexei.starovoitov@gmail.com,
-	bpf@vger.kernel.org,
-	daniel@iogearbox.net,
-	eddyz87@gmail.com,
-	loongarch@lists.linux.dev,
-	martin.lau@linux.dev
-Subject: Re: bpf selftests timer_lockup intermittently locks up kernel
-Date: Mon, 17 Aug 2026 16:47:01 +0800
-Message-Id: <20260817084701.2600044-1-guanwentao@uniontech.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <CAK3+h2xOSEZUHhou7N2cRL-aGrZCNSm45g+P7thObMe+fpgYCA@mail.gmail.com>
-References: <CAK3+h2xOSEZUHhou7N2cRL-aGrZCNSm45g+P7thObMe+fpgYCA@mail.gmail.com>
+	s=arc-20240116; t=1786957452; c=relaxed/simple;
+	bh=/IMgB3/UFMGoS3Vaqy1X0xxwG0KSL7shNh4K3vC7JHk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Qp9dqIKIphd+fGTFLXLBfS4WVRLy5mGhDwl1k94ci4TiGZMl8r+Y67iNtRXT+0lf08j4WdkS2t0uKZZumf2zqrKSmznM9gJFPVClg9GGI7P0kzfuxDSxS1GlWMGnrH5awV9mQZO1fXSVYHA97tmqvzT0Ua2RaeOpEisAtv5ppjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.101])
+	by gateway (Coremail) with SMTP id _____8CxKvCHzoJq49IBAA--.5400S3;
+	Mon, 17 Aug 2026 17:04:07 +0800 (CST)
+Received: from loongson-pc.loongson.cn (unknown [10.20.42.101])
+	by front1 (Coremail) with SMTP id qMiowJBx6c2GzoJqWMIHAA--.7126S2;
+	Mon, 17 Aug 2026 17:04:06 +0800 (CST)
+From: Hongliang Wang <wanghongliang@loongson.cn>
+To: Hongliang Wang <wanghongliang@loongson.cn>,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: [PATCH v10 0/2] i2c: ls2x: Add clock- related properties and parsing
+Date: Mon, 17 Aug 2026 17:01:10 +0800
+Message-Id: <20260817090112.27151-1-wanghongliang@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=y
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpgz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz3a-0
-X-QQ-XMAILINFO: OHUP+eFjYHonn6hGGyhyqQXl85sHg+dnF0ZApoDdl9v/RzYNp7VFQ7d6
-	OS/PQcQ4nDSLIromW4ldFQlxTQQ+/i1ulG5VHanA6wybU3icw/8k6MZ4CZy6dJ6FsD8d91x
-	Cg6lE4A2qSjZh7tpCiMRqq8OLO3p0gl4yCywD0R+OYUL8/0eGQ+i2rUjJqZuK8dt/FCn/4k
-	j2f1W9AjnwQwVuj2JbvirET/1fTT7Iln/FcjkUdTnvhKJPjjloXZkajWuDyy7xA3HBP2c0Y
-	URB/iEsFufat2GlkqYtZLAeapuxU865W1xIHWiqbBmDCd3sfBsVlGK8ndy6UVSqkkWy7bzM
-	0Q64WgGcepR7vKpxfJDLhVTLJjhm2up7mnNiwVn5el/gI8tl3ZDF/fdX2SA3ZhnDIDc486P
-	/VFR/ECHTU/9XKJjwNBjmWZMMY0SCtPPOEAf/0a8fWUMcewgREAXlesvVxpfdRX1gCBX2tm
-	TfcHDqfTLt7xZX1xiEB6LJwYUzznCh42TJUtCWLBoy5j1Uro/bS4DgtV8EoU4dWkxpaPUjm
-	2/BKWFp9kVVmSZjcuEdfXnRgoBCIkUHep0nvB9wD8OYarqoJmP4+953t0ltOzsmcH1tZD5P
-	D19SOZaAlbF9k3An8Cw3s7+uCZ/CuKe6edwngvTT8w4fUpk7LPysG2DSeSEcNVONY1sAnN7
-	OpfQgZl5Xr7AA1X/9JTltOLW8/Kh5WZV85L3zYXu2luxTwAAqYlb5ODIFDi3wppQXzx/Qhi
-	aa5i/LAsunh95A0zfNCtSVghedLzgv1286Tzz8++Oim+s7WNojpfOK0evaTrJ+dY9fCgFmu
-	JVJQ5o2hD5TUJ7eECfKC2l7KHyVMjQGYE6oGzNMSnXie2HXDR+JfCyDKJ17os+TXO64FCyU
-	wqIRvROK9w2aKnfw1MzXGtB7/o9vRyIBys8ZIoASo769Si4N4CBM9qJi/laYIqMy1z8OVj9
-	ahpcjcGuND5f+6Fmfy0sYPE84FbWOB+QClwRfX4p7OpGUKK866zTrTzSNO1u0snukBHnKb5
-	M+nTxctAm52HBhyyb8g3sgCRDEBDo=
-X-QQ-XMRINFO: NI4Ajvh11aEjEMj13RCX7UuhPEoou2bs1g==
-X-QQ-RECHKSPAM: 0
+X-CM-TRANSID:qMiowJBx6c2GzoJqWMIHAA--.7126S2
+X-CM-SenderInfo: pzdqwxxrqjzxhdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUU9vb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E
+	14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wASzI0E04IjxsIE14AKx2xKxw
+	AqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8I
+	cVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjc
+	xG0xvY0x0EwIxGrwAKzVC20s0267AEwI8IwI0ExsIj0wCF04k20xvY0x0EwIxGrwCFx2Iq
+	xVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r
+	1j6r18MI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AK
+	xVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7
+	xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_
+	GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1CPfJUUUUU==
 
-Hello,
+Hi all:
 
-You may try netconsole to capture the crash log:
+This patch set adds clock related properties and parsing in dts and acpi.
 
-Reproducer Kernel config:
-CONFIG_NETCONSOLE + CONFIG_NETCONSOLE_DYNAMIC=y 
+======
+V10:
+Patch (2/2):
+- Replace '/' operator with div64_u64() to avoid __udivdi3 linker error on
+  32‑bit architectures with CONFIG_COMPILE_TEST.
 
-Recv server:
-run: nc -u -l -p 6666 | tee /tmp/klog.txt
+Link to V9:
+https://lore.kernel.org/all/20260810074927.25284-1-wanghongliang@loongson.cn/
 
-Reproducer:
+V9:
+Patch (2/2):
+- Rewrite the commit description
+- Use 64-bit arithmetic to avoid integer overflow during the clock calculation
+- Add checks to reject zero clock rates and ensure valid clock inputs
+- Modify the comment for clocks and clock-div properties
+- Add Tested-by tag from Xi Ruoyao, thanks
 
-1. modprobe netconsole/or y(skip)
-2. mount -t configfs none /sys/kernel/config or mounted(skip)
-3. mkdir /sys/kernel/config/netconsole/target1
-4. cd /sys/kernel/config/netconsole/target1
-5. echo 192.168.1.10 > local_ip # 192.168.1.10 is reproducer ip
-6. echo 6666 > local_port 
-7. echo 6666 > remote_port
-8. echo 192.168.1.20 > remote_ip $ recv ip
-9. echo 1 > enabled
-10. echo 8 > /proc/sys/kernel/printk
-11. optional: echo xxx > /dev/kmsg to test 
+Link to V8:
+https://lore.kernel.org/all/20260721122604.12717-1-wanghongliang@loongson.cn/
 
-BRs
-Wentao Guan
+V8:
+Patch (2/2):
+Fix the potential issues from Sashiko AI review:
+ - Add error checking for the pointer returned by devm_clk_get_optional_enabled();
+ - Add zero-value checking for the match data to provide default div.
+
+Link to V7:
+https://lore.kernel.org/all/20260707035104.3092-1-wanghongliang@loongson.cn/
+
+V7:
+Patch (2/2):
+Fix the potential issues from Sashiko AI review:
+ - Move the clock property parsing process to probe function to solve the issue
+   of calling `devm_clk_get_optional_enabled()` dynamically causes unbounded memory
+   leaks and unbalanced clock enable counts.
+ - Add non-zero checking to priv->div.
+
+Link to V6:
+https://lore.kernel.org/all/20260608024533.32419-1-wanghongliang@loongson.cn/
+
+V6:
+- Add Reviewed-by tag from Huacai, thanks. 
+Patch (1/2):
+ - Remove CC stable. 
+
+Link to V5:
+https://lore.kernel.org/all/20260604015848.18643-1-wanghongliang@loongson.cn/ 
+
+V5:
+Patch (1/2):
+ - Adjust the position of #include <dt-bindings/clock/loongson,ls2k-clk.h>;
+ - Add CC stable; 
+ - Fix Signed-off-by.
+Patch (2/2):
+ - Replace 2K0500/2K1000/2K2000 with LS2K0500/2K1000/2K2000;
+ - Replace 7A1000/7A2000 with LS7A1000/7A2000;
+ - Replace if (clk && !IS_ERR(clk)) with if(!IS_ERR_OR_NULL(clk));
+ - Add document that clocks and clock-div are only ACPI properties in ACPI;
+ - Remove unsigned int cast in code (unsigned long)device_get_match_data(dev);
+ - Add CC stable; 
+ - Fix Signed-off-by.
+
+Link to V4:
+https://lore.kernel.org/all/20260526031021.32662-1-wanghongliang@loongson.cn/
+
+V4:
+- Add Acked-by tag from Conor Dooley, thanks.
+Patch (2/2):
+ - Adjust the position of #include <linux/clk.h>;
+ - Remove struct ls2x_i2c_chip_data and use macro to describe div;
+ - Use div instead of factor in ls2x_i2c_adjust_bus_speed;
+ - Reverse the "if & else" code logic in ls2x_i2c_adjust_bus_speed;
+
+Link to V2:
+The PATCH v3 is incomplete, v4 is the replacement of v3, so the previous patch link is v2.
+
+[PATCH v2] dt-bindings: i2c: ls2x-i2c: Add clocks and clock-frequency properties
+https://lore.kernel.org/all/20260507081010.12810-1-wanghongliang@loongson.cn/
+[PATCH v2] i2c: ls2x: Add clocks property parsing and adjust bus speed
+https://lore.kernel.org/all/20260507081010.12810-2-wanghongliang@loongson.cn/
+
+V2:
+[PATCH v2] dt-bindings: i2c: ls2x-i2c: Add clocks and clock-frequency properties
+- Remove the custom properties clock-input and clock-div, use clock framework;
+[PATCH v2] i2c: ls2x: Add clocks property parsing and adjust bus speed
+- Use clock framework to obtain the i2c reference clock in dts.
+
+Link to V1:
+https://lore.kernel.org/all/20260325011852.19079-1-wanghongliang@loongson.cn/
+
+Hongliang Wang (2):
+  dt-bindings: i2c: ls2x-i2c: Add clocks and clock-frequency properties
+  i2c: ls2x: Add clocks property parsing and adjust bus speed
+
+ .../bindings/i2c/loongson,ls2x-i2c.yaml       |  3 ++
+ drivers/i2c/busses/i2c-ls2x.c                 | 44 +++++++++++++++++--
+ 2 files changed, 44 insertions(+), 3 deletions(-)
+
+-- 
+2.47.2
+
