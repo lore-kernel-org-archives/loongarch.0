@@ -1,200 +1,180 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10AC144C65C
-	for <loongarch@lists.linux.dev>; Mon, 17 Aug 2026 16:59:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F2E83DA5C5
+	for <loongarch@lists.linux.dev>; Mon, 17 Aug 2026 17:31:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786985973; cv=none; b=PtpG0U1yZZp7vpzesWqI7C3HvTB8UKZfkairiCK1zhzeRZeG3d8bPtuIkJ8syrvu7gcJTjpT0f6Ml9AWIjqKXUS7cDH5LaYWOlb1sMimYdDLuGwvDh+oHG+oWEk/yOf5mt56GPQK7vZgvrAXe18FdevN4yUFAyPu+OImNVVrtKw=
+	t=1786987883; cv=none; b=mQOuWdi78tH1w9S0at/5d2WKgRw/WR7nsJfSkWHbqh3EyIaZWcmxeIG4AiYE6rrZ5Na2SRcBiG0Xik7PYNMqdW0Hbw25cTB4A1SEKShcKsYFdcoB4gI7wEr0vgJcC1F+e44RDUWpXSEsHb9iRo8nywLnfOMIq7otQ99WbU4qSoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786985973; c=relaxed/simple;
-	bh=I9DTOyheYyPBwAxvgQtljKt2grxTR66OUmiIZz1Fnzk=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=usgGr1N1ARiqyaIRHvpWdAa09xVPcDuxPXbU9VG0t1BeH6nGlZK+P0VZNYcm1Q9hVW+Eyi/iHlMkVOAXz8e+C1h77EeCgK69kbEqitinV5tJzHcnGyO0CqjfX66a2RV7y+kUsFXVRzrjpIxBB+FkQl2ibSi9Pvx/PT6yz2SKUDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mnBw6EIW; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786987883; c=relaxed/simple;
+	bh=XuQIGnNEgl05hW1Pt/SRDZrKnxVKWtgOYyJNVYljJJk=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HbSeIU/bGipqZ83HoqVkInLo1P8XyUb17D62T0dSjLwUZMqVEcvKXTGgmt5fdKMQh8zgIX3/VsRicdaKbgHH/G97ucWksFScJEeI37/MRX4G1NtYIv5XNcMSjjrwcmsk0VIK3ARa0Uy1YBjIXBUpYGMIxL8k2q5Bc7spSDRZghE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=czYM/o43; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mnBw6EIW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2D021F00A3D;
-	Mon, 17 Aug 2026 16:59:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786985967;
-	bh=3llulX3328L3Ek3yxprc6vIvWXNUGeLhpBQoQq6NfSI=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=mnBw6EIWGNULVx0W8kvE/NLBA5bt3cfsKbMg12I2bZiOg0VYkksZvlnG53qFDLK/8
-	 rOlB9Oy/Lf22hL6rGJeu34lRvCh4Iyi0OP9c7PSMDgL7Tlqk1i+MM+5cyxe+JFwuIa
-	 8gdO1hQueYZ8IveAlXulQOSIIkJ09hHJRD8EfSbbFKknUkWGNyyOqOYSVJcx3QT+gT
-	 4r6V2cp6ugQANfoXV5CqvtPuqzaLRqvHupw0rBfjoHcxdv+3hGtnJLTO4hL3c6WA/H
-	 pQqhxMBd8h1vnaSwDEzwfBz4Hq1Nv479ulAyPlxO8jOY2YswIvXIGzhutpNseh7A4M
-	 gtlvYZ0B6a7Ew==
-Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
-	by mailfauth.ams.internal (Postfix) with ESMTP id F2635198005A;
-	Mon, 17 Aug 2026 12:59:24 -0400 (EDT)
-Received: from ams-imap-11 ([10.64.2.31])
-  by ams-compute-02.internal (MEProxy); Mon, 17 Aug 2026 12:59:24 -0400
-X-ME-Sender: <xms:6j2DajBLqUlsCMxiWpJVM57j4vDzsqoGdXqibdORWyEbL__RQA2yxw>
-    <xme:6j2DakX3cEIQiTkFEKIs2Hsw0opViKFDAnoFQis8ch5YRH--a5IadIO8fp9wXHiU8
-    3S0J5J-hhzVzp64TbCIgVNK8RQ8SFHf0q9W20G32plG7GZ0UT0IWXGR>
-X-ME-Proxy-Cause: dmFkZTGWu6WDxCMnrRb1S3oKmk5iStRE3JaOXC54KSBpqPeipijwwR2HrCmeM/GVeLZWSt
-    s/eB1469nVCVVflUTjbd+qswpbrqXXrhXA4ApuQS8LI2sKJzb8PHg/IImzC7JB/jP1Sytq
-    cReM4bk+nka73PAkzlFdd6UuaZaoz8JkNOhc7QqtpOuETM92JuVHOyJ7x7rTLP/wjCqjqY
-    9NyiJTlNHR0yJSfrSmL0vKxlP8oqqrzRKDlcVeYleOsVAfmnEgS3XmwJLrM/Z3kHOIJUpM
-    5+zA3bJtqp0uSdxO1KgwkeojQQEBxJnqtg2GqfHtQc+U7qpYO4ejNX5oomUoRv1XEqugFP
-    Lv0luHj88B6zo+rCCZvzIOUniSLQRL3ra1LLYQ/i/1RmW/dLvPc1wfhSo2nh0lnJecyffB
-    pgODSi+jzRs4nYeUbEHmgmnXH3b/fufoFdl/hcoQ6CcoRwoSDJwhXJwybouSvxVxA3zOrv
-    fyF2YwAYT3YQSyopA34B5JfBXsFMgx0M2jDPf209xPrH097NrNVsl0Ns34RTUI1yp4hiqH
-    n0fl2t0KRiyPRwnn7Vkyb44OePTmrmPN5SGUs18qYiojQAWmgDa+DDwvYAi4FV6ylkQRXf
-    c5bm2Eh0GkegawCm9g/SXOuBjEvPzfeF6xIElleYhtChO24izz/HiASSKI0Q
-X-ME-Proxy: <xmx:7D2Daj5q29beGjnbsbtA93utKnpj9jmj2wsgLPILJ8Cyuy4WuNVhCA>
-    <xmx:7D2Daplet-CiwwBZf6VZIRWLwcDLoDccMe7H2E08akQqO74c4x7fpQ>
-    <xmx:7D2DaoqR0ZcLFyx5S2nxSP0eUbVjvcFiyk6hgmnWPYLugRXHbo7NDg>
-    <xmx:7D2DaotTgha0tXeupLxmjBoNAs4--vN6aS7WieJPHzMFJ5mJTYSlSQ>
-    <xmx:7D2DatHPiq5B-tvkrlgYrlZ6-RrGWxOM-WUeyM0ssjBfIP7Vu-5t0RKY>
-Feedback-ID: ice86485a:Fastmail
-Received: by mailuser.ams.internal (Postfix, from userid 501)
-	id C4C4EF80071; Mon, 17 Aug 2026 12:59:22 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="czYM/o43"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5b0148201fbso3534364e87.3
+        for <loongarch@lists.linux.dev>; Mon, 17 Aug 2026 10:31:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786987880; x=1787592680; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=gdAST+PW7bd2DD1v0YjadB8+zi0iamo4AznH2c9tOUI=;
+        b=czYM/o43My4cVj/7aTbFDiRroWGMGOJRxx6RPMSjZ9YXTc4IsI0gJE3nVFwKghhZAb
+         5sHTFPhkGBPmKqh2ienXp1ZdjyoQ7+kcc5ORRuhjfWn7No8t0zu4K93SIDMlMCVEXBFV
+         7+riLpaKyZMCzMIAo3AVL4O2I/daLpMdbXl98e2tQJjlGiWm+gIecSfQXMu/enMouxzo
+         nYyn4cOBbetAavaYngYI9WhOrXwOBlHA7FERZBcZj8NqupD+zEp4AFXwATo5ziScvdbc
+         PzTeuzDZxTuQXJ9QHUHCRojchDe/DfHEpsgeefL7LRPz6NtF4NUrk9J0JkR1/ZmmL5Mn
+         5vTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786987880; x=1787592680;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=gdAST+PW7bd2DD1v0YjadB8+zi0iamo4AznH2c9tOUI=;
+        b=bRVcmCOwih8EFq2uAniy/sZnf/E6vMGyRjwU8XaPOT7b5qZ1HphAyVp3DmF+RhlfCe
+         WGIZpog3NkNFRztT9DKMTwBQd/xyN6lvUqiLs5nTbGG/8CDrQ0o3F0ukDk605IGJxhfL
+         bvE15xHKYzbUh46v6adSuk26ft2w1hMATXoYxzrO+EDiihKJXb70K+T3quibwFPADSah
+         neUiIRgdhEFxPmGRRZQ8fsd7LheGgATaj5ay48i8qn/lEnMk5zTsfOyEg/M/Dn1rP+I0
+         eR0fCA4iXwi6FnNADmXJh54+WyHFIcKLL/Thle6kQe/VypfVs4kmwURZgV7SuzT1QiWp
+         w/2w==
+X-Forwarded-Encrypted: i=1; AHgh+Rqu2Fydw2V+U4Q79jY/1+b7IzOulOKTXJhxs1sOY7BsaOy9JJ/FEme68peLT3IgVnfDJ1YKDhpqEh8=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyUz5XK5/piVm6KeOAphRf0cGPfyyW2T0GE6ORjTiihM9a/GAGb
+	FHleYTOwX3YJZyUkE8LlFEKQGBvMyI1BPC2n3jOoBDNjcCx9czUIwv4K
+X-Gm-Gg: AR+sD10iKvsPeLB+of3QmiEvntsQKwB+2lF1C2jXyhrQTbbntXG+sLi1Ux6q+ZTjJlD
+	WNBjx6czMrraH7jB1B2z4D2YnqT2P3Navr3c18B0SQToDoeyUsvyGKBkQ/dN36+4h9Wns2fHKNz
+	H2OAvF4v1zD1bIiIBzhGb85MkcHRpz88ufFb4EvF8IV3hnt+7b/ZNx5wEQNhAnTssNPiRWoPFoK
+	GO+LiNSi+5Q0BVlga2mx1ei3jkWUBJWp6YXggwWX7xAbWPARTrYQRXP/jDmLe+3LGKBJhux16Q3
+	GTlx6h3uEO1z2JYdROzCc7onhmu3Pk2fBjA0s/I4S1wg1TR3kJfJ9UxVo0TUAN5d/XAtwR3s82E
+	ywicL/d915ckh84tx2RmVZPLM1vJD9TVbEqFViyqzoZsPrLUXJQ3l/1WOeRFScE+M+JCoPyTpt9
+	io8PVtcml/jWsrjC65KhMlQnokQg==
+X-Received: by 2002:a05:6512:1284:b0:5b2:9358:b854 with SMTP id 2adb3069b0e04-5b459142afbmr3869031e87.42.1786987880080;
+        Mon, 17 Aug 2026 10:31:20 -0700 (PDT)
+Received: from milan ([2001:9b1:d5a0:a500::24b])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3a16b1f1852sm5885691fa.38.2026.08.17.10.31.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2026 10:31:19 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@milan>
+Date: Mon, 17 Aug 2026 19:31:17 +0200
+To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Adrian =?utf-8?Q?Barna=C5=9B?= <abarnas@google.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Alexandre Ghiti <alex@ghiti.fr>, Andy Lutomirski <luto@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Brendan Jackman <brendan.jackman@linux.dev>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Hildenbrand <david@kernel.org>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Len Brown <lenb@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <pjw@kernel.org>, Pavel Machek <pavel@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Vasily Gorbik <gor@linux.ibm.com>, WANG Xuerui <kernel@xen0n.name>,
+	Will Deacon <will@kernel.org>, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-pm@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: Re: [PATCH 2/6] mm/vmalloc: set area's page_order after allocation
+ succeeds
+Message-ID: <aoNFZU_QzghDBgbZ@milan>
+References: <20260816-execmem-set-vm-perms-v0-2-v1-0-90944a3ad43f@kernel.org>
+ <20260816-execmem-set-vm-perms-v0-2-v1-2-90944a3ad43f@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Mon, 17 Aug 2026 19:59:02 +0300
-From: "Ard Biesheuvel" <ardb@kernel.org>
-To: "Leif Lindholm" <leif.lindholm@oss.qualcomm.com>
-Cc: linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- "Huacai Chen" <chenhuacai@kernel.org>, "WANG Xuerui" <kernel@xen0n.name>,
- loongarch@lists.linux.dev
-Message-Id: <c3cd6952-87fd-442b-8d54-13c814b8d5f2@app.fastmail.com>
-In-Reply-To: <aoMV3TX0hgTsj3_m@leviathan>
-References: <20260813074506.643472-5-ardb@kernel.org>
- <20260813074506.643472-7-ardb@kernel.org> <an8xTBiCy_PEuwZi@leviathan>
- <a0d10b63-bf9a-4ad7-a9d8-ab748a9c0c2c@app.fastmail.com>
- <aoLR9BPGt4Kzbr3y@leviathan>
- <92baff04-d30b-4174-b5f5-87b24e6a1cc0@app.fastmail.com>
- <aoMV3TX0hgTsj3_m@leviathan>
-Subject: Re: [PATCH 2/3] efi: Pass EFI boot memmap struct address to core kernel
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260816-execmem-set-vm-perms-v0-2-v1-2-90944a3ad43f@kernel.org>
+
+On Sun, Aug 16, 2026 at 01:59:25PM +0300, Mike Rapoport (Microsoft) wrote:
+> __vmalloc_area_node() calls set_vm_area_page_order() to set area's
+> page_order before actually allocating pages to populate the area.
+> 
+> If allocation of large pages in HUGE_VMAP case fails midway, this leaves
+> the area with elevated page_order throughout the cleanup path.
+> 
+> There is no actual issue with this because the only place that currently
+> relies on area->page_order on the cleanup path is the loop calculating
+> the direct map alias range in vm_reset_perms() and it anyway skips
+> unpopulated pages.
+> 
+> But having set_vm_area_page_order() in the middle of __vmalloc_area_node()
+> makes things very obscure, hard to reason about and error prone against
+> future changes of the cleanup path.
+> 
+> Move the call to set_vm_area_page_order() after __vmalloc_area_node()
+> succeeded where page order is guaranteed.
+> 
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> ---
+>  mm/vmalloc.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index 22566e0b6e38..6822f0fe9583 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -3901,8 +3901,7 @@ static void *__vmalloc_area_node(struct vm_struct *area, gfp_t gfp_mask,
+>  		goto fail;
+>  	}
+>  
+> -	set_vm_area_page_order(area, page_shift - PAGE_SHIFT);
+> -	page_order = vm_area_page_order(area);
+> +	page_order = page_shift - PAGE_SHIFT;
+>  
+>  	/*
+>  	 * High-order nofail allocations are really expensive and
+> @@ -4106,6 +4105,14 @@ void *__vmalloc_node_range_noprof(unsigned long size, unsigned long align,
+>  	if (!ret)
+>  		goto fail;
+>  
+> +	/*
+> +	 * Set area->page_order once it's known exactly that the order of the
+> +	 * pages the area contains.
+> +	 * Even if we succeeded to partially populate the area with large pages,
+> +	 * still treat the area as populated with order-0 pages.
+> +	 */
+> +	set_vm_area_page_order(area, shift - PAGE_SHIFT);
+> +
+>  	/*
+>  	 * Mark the pages as accessible, now that they are mapped.
+>  	 * The condition for setting KASAN_VMALLOC_INIT should complement the
+> 
+> -- 
+> 2.53.0
+> 
+OK, can we just set it right after the:
+
+	area->nr_pages = vm_area_alloc_pages(
+			vmalloc_gfp_adjust(gfp_mask, page_order), node,
+			page_order, nr_small_pages, area->pages);
 
 
+succeeds?
 
-On Mon, 17 Aug 2026, at 17:08, Leif Lindholm wrote:
-> On Mon, Aug 17, 2026 at 14:00:16 +0300, Ard Biesheuvel wrote:
->> >> > Is it time to update the boot ABI to say x0 will hold the physical
->> >> > address of "device tree blob (dtb) or EFI System Table in system RAM"?
->> >> > They can be distinguished by 0xd00dfeed / "IBI SYST".
->> >> 
->> >> Let's avoid 'boot ABI' here, given that we are talking about an internal
->> >> interface between the EFI stub and the kernel proper.
->> >
->> > It's an internal business in the topic under discussion, but if we
->> > were to change it, that would mean updating booting.rst, which I
->> > consider an ABI.
->> >
->> 
->> But not an external ABI. It documents specifically how the EFI stub
->> interfaces with the kernel proper. This might change at any point,
->> without any obligation whatsoever to remain compatible with the
->> previous method.
->
-> So you're saying if the kernel proper decides to use x1 for something
-> else, we'll move to x2?
->
-> I agree that in the context of how the stub calls the kernel proper,
-> this is not ABI, but x1 is one of the registers currently marked as
-> "reserved for future use" in booting.rst. So it feels weird for me to
-> allocate one of those registers for this internal use then not mention
-> it.
->
+I am not sure there is a good reason to move it out of the
+__vmalloc_area_node().
 
-Whether we mention it or not is irrelevant: the only thing that matters
-is that this allocation is not something that OS loaders other than the
-EFI stub are able to rely upon, given that EFI boot on arm64 requires
-booting via the stub (except for Xen dom0).
-
-> In that case, couldn't we instead pick a register outside of the
-> reserved ones?
->
-
-It has to be a reserved one, given that the state of other registers is
-unspecified at boot. Otherwise, we'd have to reason about whether a non-zero
-value is accidental, or represents a physical address that we can map and
-dereference, which is needed even to check the system table's magin
-
->> ...
->> >> > Minor bikeshedding below.
->> >> >
->> >> >> @@ -123,8 +134,24 @@ u64 __init efi_get_fdt_params(struct efi_memory_map_data *mm)
->> >> >>  			pr_err("Can't find property '%s' in DT!\n", pname);
->> >> >>  			return 0;
->> >> >>  		}
->> >> >> -		if (dt_params[i].paravirt)
->> >> >> +		if (IS_ENABLED(CONFIG_XEN) && dt_params[i].paravirt) {
->> >> >>  			set_bit(EFI_PARAVIRT, &efi.flags);
->> >> >> +		} else {
->> >> >
->> >> > This condition branch doesn't in fact have anything to do with the fdt.
->> >> > Should it still live in fdtparams.c?
->> >> >
->> >> 
->> >> I don't follow. The EFI_PARAVIRT flag is set based on whether we are 
->> >> using the generic or the Xen-specific set of DT properties. What would
->> >> be a better place to decide this?
->> >
->> > Apologies, I may have commented confusingly - my comment was about the
->> > else branch:
->> >
->> > +
->> > +                       bm = early_memremap_ro(memmap, sizeof(*bm));
->> > +                       if (!bm) {
->> > +                               pr_err("Cannot remap EFI boot memory map\n");
->> > +                               return 0;
->> > +                       }
->> > +
->> > +                       mm->phys_map            = memmap + sizeof(*bm);
->> > +                       mm->size                = bm->map_size;
->> > +                       mm->desc_size           = bm->desc_size;
->> > +                       mm->desc_version        = bm->desc_ver;
->> > +
->> > +                       early_memunmap(bm, sizeof(*bm));
->> >
->> > So to restate - this function is called from efi_init():
->> > ---
->> >         /* Grab UEFI information placed in FDT by stub */
->> >         efi_system_table = efi_get_fdt_params(&data);
->> >         if (!efi_system_table)
->> >                 return;
->> > ---
->> >
->> > Before this set, this function called get_fdt_params() indeed gets
->> > "params" from a device tree. After this set, this function gets params
->> > from a device tree in some instances, and not in others.
->> > Which feels suboptimal.
->> >
->> > We could rename the function, but then there's still DT-unrelated
->> > code held in fdtparams.c.
->> >
->> > If we go down the route of passing the system table in x1 on boot,
->> > then I guess the effect of assigning efi_system_table will already be
->> > broken out. But should we then split the mm struct initialisation into
->> > separate DT and config table helper functions?
->> >
->> 
->> Not disagreeing but I think it is fine to leave it as I suggested at this
->> point.
->> 
->> Some additional work is needed to get rid of linux,uefi-boot-memmap
->> entirely, and until that happens, passing the EFI system table via
->> X1 and linux,uefi-boot-memmap via DT is not a huge improvement.
->> 
->> linux,uefi-boot-memmap is needed when SetVirtualAddressMap() is called
->> [with a non-1:1 mapping], as the EFI system table contains a remapped
->> address of the config table array in that case.
->
-> Of course, the devil on my shoulder suggests the stub could always
-> add an address fixup handler for the config table too...
->
-
-What is an address fixup handler? We cannot change this value back,
-as that might break the runtime services.
+--
+Uladzislau Rezki
