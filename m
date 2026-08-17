@@ -1,278 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 769683F889E
-	for <loongarch@lists.linux.dev>; Mon, 17 Aug 2026 11:00:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796923E00B3
+	for <loongarch@lists.linux.dev>; Mon, 17 Aug 2026 11:59:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786964445; cv=none; b=c/g+ypSjIQNPf+Kv2gfAnWBvPKvr6wCDkNsHQ+pjKPeOnukGvKWh0JnXNBep70HeX2ykbQcI12Ii2f9Q5kaPzm1vE/a5O7NaR6pk6F51AqcWHi6h0ytJd5nlNPeue352swxkmXIe7AMxazJBodhtSytZGD2jznTRXJsTZzAVhvM=
+	t=1786967944; cv=none; b=pmC8Nd0taQZUhJ8qlDeQwkN20jN5FiNNTS13HpOvUouXh4nlV2ezxGD2HNGWT8kN1p46Pto7cuNSj7XKZkNie3UFaJzOm4xT8JCt0ZCkpjthx0EB9BJgNuvEi982LTs7cSoJGhFgQg/bivDY+dkXseT+S6VG6XcrT70NAiQIf3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786964445; c=relaxed/simple;
-	bh=B15gJpb3+H8eGsq83CJ0lHjT9B+9QWiZs8zZvcYJqOI=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=j+D4SKtaPAVfgeWgy7HscJ0PEs7GN8rcvj9oinQ1lzvfq/Sl/w7wXRCC826hr2WqdKw4+79gvo6ZmHaHxZGtn8Mhy1HQsHWxbnjfdIACyrzpVz3rikVb569bDZQB0EL5QnLa76ai7fLCjasHnq2H9D4Kitft+/y38CNkgNSHLlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dWRNqIk7; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786967944; c=relaxed/simple;
+	bh=pPYiH65+N685rGNJJ16GtG0J6xDm4OpdInIOSAG6ZqY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AzCkr6FMsQQC+8vsmHat4O/jQicDGWfwL7nSG9o427mQhr8wk/1PE1HWcsvlmS/vqB8mbsqP0HtELZ9OcxicYTyYBfXmPB21E6bp7StvPCsOnhiOwFcSniohb/z8Q9q7pyILzHtdGhE9bdlRlsMNu+GMR6pZiESN7z3WtGG5iZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZVn1qN6K; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dWRNqIk7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C1981F000E9
-	for <loongarch@lists.linux.dev>; Mon, 17 Aug 2026 11:00:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786964441;
-	bh=WgZek3MLzFeMHdXhhGCcqInoE60fl4kfr+VHKyEfYgE=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=dWRNqIk7cNnrdC9KVfc4pjlHjvT6JTcBtP39Se/moY0Bc5vgnASsfnV4rApRGZr45
-	 NtB/VS407Gd04OpH/iDhBX3Oh4UB/FcvTD0KtedBItCTLaMaiRf6EFox/z+s71krER
-	 BcBWTEwxsBy44/LhxojdchIIkALMFiv9FAMO6vP7xOE36Mvo6zKlUJ6kFiOPemEcQm
-	 dR49a0EMh8ZW6jPTR1yzklIkRlKhhBbFS0X1hlO/ubSq7I6cWdMQ/34k7OksnwNyjZ
-	 sGRbDQ+DVX7QYxYtaxG92XWYuvkccdGf8qtVjzOVkO8tpHLzNVFhDQm7bef2tKC1t3
-	 tFZy2Rq7yUCew==
-Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
-	by mailfauth.ams.internal (Postfix) with ESMTP id CFF901980043;
-	Mon, 17 Aug 2026 07:00:39 -0400 (EDT)
-Received: from ams-imap-11 ([10.64.2.31])
-  by ams-compute-02.internal (MEProxy); Mon, 17 Aug 2026 07:00:39 -0400
-X-ME-Sender: <xms:1emCalKArvwvNmgaCKkLWBp44spTDS3Hj_8MpmN0uCk-0VSsycv0vQ>
-    <xme:1emCar8ivaBcTUFp-HIf0TgyWS8tAIuNW7FLrAu3KJhhOEK03kpUNRhIDDTyH89wC
-    7rI39k6Y5deLX_iRHOPV1XMVJcFdHO9uisq0y8DncYYr93VQVLI5QQ>
-X-ME-Proxy-Cause: dmFkZTGFUvGG64XM3aHdY4FfNtEGYmsaFPVJruv7HVb5v2o0qqPbtO0YoGtvtHfKaZwnBk
-    FOCn0qDvT5Xa8xaNUroCWfk1bYePNbxbkjOQUJxN3I3p0GnWn8s38tGqeST352hSjzEpRo
-    N+yYmchntE7ydUKwsED2FXXb12tjG5U3f4/Ea5fBtHOwqpGreH6W2QeJmUyEoxRVuJ2i96
-    pDu6xgg1EXMEncKmCSAzhEmFlVzHDFn5bQRx/7mNV6zC/Y2GuiI2F79Lr0WzfbwTiG2RkC
-    39uYQF3Eh6Cwb3bIwgWeobWy/vvhhvuykwjYMqqqdKexO11WlidV+Dyv+bZrWPIa8QhzR7
-    6ujRA7KxhSM5SCZr00yX183SRl1VIme2lwWQ1Wvy00IThid8mModNmch4OWd5GtA3p28VY
-    oxwIKAjJMPUceqFfHgjX+PO61zIvRfflljqRlOKSWcsh05T4EtTm3uqNpjq/Aadv9n5Arl
-    UR0cWqT08UdZa4oKpf81Ow4WFAc9N/SrIJqzQtAnstCR0r8wIc6mCgLDksmfUaMcNBb1tk
-    oKZKCuoywLbFHBtlfeN5lZXbI+YhNR4o9sE7tkjIqxFOXZS3kYAKujzicFnkKQlg281CJy
-    oTDrg7a7j2UaaWibCxknjjpwxB0APOVjWVUu8AZB/H4cG6xq2nbw07ry35Gg
-X-ME-Proxy: <xmx:1-mCapCHMpiJFeBG91Wj6Z9230jpPvZIjo9F-ajbTvOBKcuvBsjsrQ>
-    <xmx:1-mCaoOGvpqY5tzn1TlysnWF8iXqLWyAS_8fFBrey8f7S_IyD36dsg>
-    <xmx:1-mCaizMcfK9bCNNsS-cQTDPekbH4ErMeAXQ8gQRugLUsar53maiFA>
-    <xmx:1-mCaoXWwCpEqq7ERIiXJY07Xf7g55tWYrVjlhDFEc76SklptaE3Bg>
-    <xmx:1-mCakMwTQEF5PJ3TvZH1ZlK32efmBGjxaV7aJmRkXQ8m-9qzLp3xw91>
-Feedback-ID: ice86485a:Fastmail
-Received: by mailuser.ams.internal (Postfix, from userid 501)
-	id 63442F8006E; Mon, 17 Aug 2026 07:00:37 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZVn1qN6K"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-51c0c45c580so19731721cf.0
+        for <loongarch@lists.linux.dev>; Mon, 17 Aug 2026 04:59:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786967942; x=1787572742; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=AeJCLg2QU4dj3yR0M1UHRgHzRf38a6+0JGJIT48x0Gg=;
+        b=ZVn1qN6KBxUI92fSzfXyQV7nfTE12xIwAeOjdMaOItP6mT8XT468QYKHEJRWKwP+QM
+         Xl5fwzPtETHUA4jt7+BKBTBU3uV7KYHvGtAw+xxAq0FcTVf/w4EcEsslnSbhdBW4GL6p
+         fQqJ4N2lp5U59MfVkETHuDStdoCtN4VzFj2qbDOJagFHI50yfI/ElfL2an7wtaW81clW
+         z8YCbbD5cpyFDwU4Vpugq1DGJNvpa2c5XX6XNxzWeDudRf1tk8UrOez9hNPzgFA6Z/LS
+         37R4g7aIdFw7/VaP4Vgf9PbxHjGEN4/SOmGnVxhaqaUiM0L+fFnPBjbdtvdzhCFQXLR6
+         n1tQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786967942; x=1787572742;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=AeJCLg2QU4dj3yR0M1UHRgHzRf38a6+0JGJIT48x0Gg=;
+        b=ZzD6lwiR9Ehu+Bh0Dz0qTCh9O9sPY6v8QA4RtVzVvoTAy74sQAtYbkPkXjHd0hZaX0
+         /vHRdoHtj+ZU3iwJSkts8b3m0fZLN/GZXSvM/0I5B/VYiDhuZnFm3AEH/aBHJoH2xFtB
+         MQ1spVqmlJBIMadbVcNppJefM7irPycfTUHw1N2h0wXPBk9bys/2z00A4fL5yCGbDY83
+         e2kRkIpQbCkz9wJ7sT0g93I55JHFDtfRQN5We8DqdTdkBMjSjwHEuXmeYY4KARw0VPcZ
+         GzOIPnCoNL7uYiJp/Y4eztdfUnzDOZ9bspGj6AG6vys3/ND9CgHQywIJf+dZUeKIL6aM
+         t0LQ==
+X-Forwarded-Encrypted: i=1; AHgh+RrWjApu1PA4UtVbOtiv6iTGD7X6Uhoa31P9u1PSfIOMkWNsi7uS8TnH1lTeaL8Vm5QbNwFtU1pLPuM=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy4BUFaEQyLs2j9X0u0NDglr1or4NlVS61EbDp3peByl8+GVKg+
+	OY/00sS3kzjKvgyFYT9+7HbxFuhqvMjMC1nU2Q/mGURu33sWZXajqTyL
+X-Gm-Gg: AR+sD12psmpTIM6kKuVbAwhHrVF/NP1QbGI8GG1Dp9sndWYD4RUGBzrMUVeOM1NDvIW
+	viwEZGCP6TnM8Gu9s+pukSNsEvojOyh1GR70E884iEC53cIm76Yg4GLXU0nNAZ+EVLLMEOryyvz
+	TcaNoI7tFcu9yS86rFX3J9jjtly1K10d3XCYxFVGwFVTh7TxJp5c3SMn7V1Mrrc/CCLBoVqfIbh
+	804/awx8oBYZxy1JZmQN94p0eaeyhkY2L07c4HbS/13/+wTJLDzbchFFNYwHd+6Zxlgu6Y1Euvv
+	ocTLRPZu4AHGmIanA1Z8aY3jWizVYI+lPVmlO+48nVuT3QEY0oBdFlm21uJLxqoRFbyO2N5MxBx
+	iyTtq2lGK+J6nTWsVI37hly3yqg+SWsPCO3zm1wtpDwpbQ8mW8ByMfwCmAE6Rixbmzl6PIAFkDU
+	AUIHkc0vH5o/F5ubawpxRH+JK56sbhTKhJrvFErLzOYZ9CX+yHxMhXqkKUYwwtGbgEZe441vb+P
+	w==
+X-Received: by 2002:ac8:7e93:0:b0:51c:1c2c:a8bf with SMTP id d75a77b69052e-52d85584629mr242449191cf.43.1786967942289;
+        Mon, 17 Aug 2026 04:59:02 -0700 (PDT)
+Received: from amd.ban-spse ([165.204.217.251])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-52db6239ea7sm12681721cf.21.2026.08.17.04.58.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2026 04:59:02 -0700 (PDT)
+From: Chaithanya Lagisetty <nagachaithanya9911@gmail.com>
+To: zhaotianrui@loongson.cn,
+	maobibo@loongson.cn,
+	chenhuacai@kernel.org
+Cc: kernel@xen0n.name,
+	lixianglai@loongson.cn,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	nagachaithanya9911@gmail.com
+Subject: [PATCH] LoongArch: KVM: Fix memory leak in kvm_loongarch_env_init() error path
+Date: Mon, 17 Aug 2026 11:58:47 +0000
+Message-ID: <20260817115847.2705791-1-nagachaithanya9911@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Mon, 17 Aug 2026 14:00:16 +0300
-From: "Ard Biesheuvel" <ardb@kernel.org>
-To: "Leif Lindholm" <leif.lindholm@oss.qualcomm.com>
-Cc: linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- "Huacai Chen" <chenhuacai@kernel.org>, "WANG Xuerui" <kernel@xen0n.name>,
- loongarch@lists.linux.dev
-Message-Id: <92baff04-d30b-4174-b5f5-87b24e6a1cc0@app.fastmail.com>
-In-Reply-To: <aoLR9BPGt4Kzbr3y@leviathan>
-References: <20260813074506.643472-5-ardb@kernel.org>
- <20260813074506.643472-7-ardb@kernel.org> <an8xTBiCy_PEuwZi@leviathan>
- <a0d10b63-bf9a-4ad7-a9d8-ab748a9c0c2c@app.fastmail.com>
- <aoLR9BPGt4Kzbr3y@leviathan>
-Subject: Re: [PATCH 2/3] efi: Pass EFI boot memmap struct address to core kernel
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+kvm_loongarch_env_init() allocates the per-CPU kvm_context (vmcs) and
+kvm_loongarch_ops, and registers the perf callbacks, before registering
+the IPI/EIOINTC/PCH-PIC/DMSINTC KVM devices. If any of those device
+registrations fails, the function returned the error directly without
+freeing vmcs and kvm_loongarch_ops or unregistering the perf callbacks.
+kvm_loongarch_init() propagates the error without calling
+kvm_loongarch_env_exit(), so these resources are leaked.
 
+Unwind the already-acquired resources on the error path, mirroring
+kvm_loongarch_env_exit().
 
-On Mon, 17 Aug 2026, at 12:18, Leif Lindholm wrote:
-> On Mon, Aug 17, 2026 at 11:41:51 +0300, Ard Biesheuvel wrote:
->> On Fri, 14 Aug 2026, at 18:16, Leif Lindholm wrote:
->> > On Thu, Aug 13, 2026 at 09:45:09 +0200, Ard Biesheuvel wrote:
->> >> The EFI stub already passes a struct efi_boot_memmap populated with the
->> >> information of the EFI memory map as a configuration table, and so
->> >> passing the physical address, size, descriptor size and descriptor
->> >> version via 4 different DT properties is kind of redundant.
->> >> 
->> >> Instead, pass the physical address of this struct in memory so that the
->> >> kernel can just retrieve the values directly.
->> >> 
->> >> Unfortunately, the scheme with four separate properties is boot ABI for
->> >> Xen, and so this needs to remain supported.
->> >
->> > To clarify, you mean boot ABI when running under Xen?
->> >
->> 
->> Yes. We've allowed Xen dom0 to omit the EFI stub entirely, and boot the
->> kernel proper in EFI mode, passing the EFI system table and memory map
->> addresses via these special DT properties.
->> 
->> >> But for the EFI stub itself,
->> >> this is just an internal ABI that can be modified.
->> >
->> > Hmm...
->> >
->> > So this leaves only three properties that cannot be derived from the
->> > System Table:
->> > - The System Table address itself
->> > - kaslr-seed
->> > - bootargs
->> >
->> > The latter two could also be given the config table treatment.
->> >
->> 
->> The latter two are generic boot ABI for the arm64 kernel, and there
->> is no need to treat them differently for EFI boot. Note that we also
->> support passing the initrd directly via DT when doing EFI boot, rather
->> than via the EFI specific device path.
->
-> Ah, yes, noted.
->
->> > Is it time to update the boot ABI to say x0 will hold the physical
->> > address of "device tree blob (dtb) or EFI System Table in system RAM"?
->> > They can be distinguished by 0xd00dfeed / "IBI SYST".
->> 
->> Let's avoid 'boot ABI' here, given that we are talking about an internal
->> interface between the EFI stub and the kernel proper.
->
-> It's an internal business in the topic under discussion, but if we
-> were to change it, that would mean updating booting.rst, which I
-> consider an ABI.
->
+Fixes: c532de5a67a7 ("LoongArch: KVM: Add IPI device support")
+Signed-off-by: Chaithanya Lagisetty <nagachaithanya9911@gmail.com>
+---
+ arch/loongarch/kvm/main.c | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
-But not an external ABI. It documents specifically how the EFI stub
-interfaces with the kernel proper. This might change at any point,
-without any obligation whatsoever to remain compatible with the
-previous method.
-
->> This internal interface uses DT under the hood, even on ACPI platforms,
->> because it simplifies the early boot code. I don't think we should change
->> this.
->> 
->> Also, the DT provided by the bootloader (if any) may differ from the one
->> passed by the EFI stub, and so discovering the DT from the EFI system
->> table is not straight-forward - they are not the same, and making them
->> the same may have unintended side effects.
->
-> Right, but this confusion exists precisely because of the two ways the
-> device tree can be accessed with the curreent design.
->
-
-Both the EFI stub and the kernel have precisely one way to access the
-platform provided device tree each: the EFI stub uses the config table,
-and the kernel proper uses what is passed via X0.
-
-I don't think that should change, whatever we decide wrt passing the EFI
-system table pointer. The whole point of the EFI stub is impedance
-matching between the EFI loading/calling convention and the Linux/arm64
-boot ABI, and so passing the DTB, iff received via a EFI config table, on
-to the kernel in register X0 is literally its purpose in life.
-
-It would be nice if the EFI stub could pass the pristine DT without
-modifying it, so there is less ambiguity about where certain DT
-properties came from, but I don't think it justifies deviating from the
-above.
-
->> > The use of a generated DT when none was provided by firmware has led
->> > to both confusion and shenanigans, and might be nice to get rid of?
->> >
->> 
->> I don't disagree with that. But that would imply adding new code to the
->> early startup code doing command line parsing and KASLR randomization to
->> reason about whether these assets are passed via DT or via some other means.
->
-> I take your point about the invasiveness, so won't pursue that further
-> at this time. But I can't promise I won't bring it up again eventually :)
->
-
-Happy to debate this further at any point in the future :-)
-
->> What would make sense imo is to pass the EFI system table address via X1
->> when doing EFI boot, so we don't have to get anything at all from the DT.
->
-> That certainly sounds like a clear improvement.
->
-
-Ack. I'll prototype that to see how it looks.
-
-...
->> > Minor bikeshedding below.
->> >
->> >> @@ -123,8 +134,24 @@ u64 __init efi_get_fdt_params(struct efi_memory_map_data *mm)
->> >>  			pr_err("Can't find property '%s' in DT!\n", pname);
->> >>  			return 0;
->> >>  		}
->> >> -		if (dt_params[i].paravirt)
->> >> +		if (IS_ENABLED(CONFIG_XEN) && dt_params[i].paravirt) {
->> >>  			set_bit(EFI_PARAVIRT, &efi.flags);
->> >> +		} else {
->> >
->> > This condition branch doesn't in fact have anything to do with the fdt.
->> > Should it still live in fdtparams.c?
->> >
->> 
->> I don't follow. The EFI_PARAVIRT flag is set based on whether we are 
->> using the generic or the Xen-specific set of DT properties. What would
->> be a better place to decide this?
->
-> Apologies, I may have commented confusingly - my comment was about the
-> else branch:
->
-> +
-> +                       bm = early_memremap_ro(memmap, sizeof(*bm));
-> +                       if (!bm) {
-> +                               pr_err("Cannot remap EFI boot memory map\n");
-> +                               return 0;
-> +                       }
-> +
-> +                       mm->phys_map            = memmap + sizeof(*bm);
-> +                       mm->size                = bm->map_size;
-> +                       mm->desc_size           = bm->desc_size;
-> +                       mm->desc_version        = bm->desc_ver;
-> +
-> +                       early_memunmap(bm, sizeof(*bm));
->
-> So to restate - this function is called from efi_init():
-> ---
->         /* Grab UEFI information placed in FDT by stub */
->         efi_system_table = efi_get_fdt_params(&data);
->         if (!efi_system_table)
->                 return;
-> ---
->
-> Before this set, this function called get_fdt_params() indeed gets
-> "params" from a device tree. After this set, this function gets params
-> from a device tree in some instances, and not in others.
-> Which feels suboptimal.
->
-> We could rename the function, but then there's still DT-unrelated
-> code held in fdtparams.c.
->
-> If we go down the route of passing the system table in x1 on boot,
-> then I guess the effect of assigning efi_system_table will already be
-> broken out. But should we then split the mm struct initialisation into
-> separate DT and config table helper functions?
->
-
-Not disagreeing but I think it is fine to leave it as I suggested at this
-point.
-
-Some additional work is needed to get rid of linux,uefi-boot-memmap
-entirely, and until that happens, passing the EFI system table via
-X1 and linux,uefi-boot-memmap via DT is not a huge improvement.
-
-linux,uefi-boot-memmap is needed when SetVirtualAddressMap() is called
-[with a non-1:1 mapping], as the EFI system table contains a remapped
-address of the config table array in that case.
-
-There are currently two remaining reasons why calling
-SetVirtualAddressMap() is required:
-- some Ampere boxes crash otherwise (but these systems tolerate SVAM
-being called with a 1:1 mapping)
-- kernel configs with a VA space < 48 bits are not guaranteed to be
-able to map the EFI runtime services 1:1, so there, SVAM is still
-needed as well.
-
-Both can be fixed, and I have been meaning to address the latter by
-always making the EFI runtime map (which is essentially a 1:1 map)
-use 48 bits of VA in all configs. (The ID map already does the same)
-
-Then, the former can be addressed by installing a 1:1 mapping when
-calling SVAM.
-
-That would remove the need entirely to ever call SVAM() on arm64,
-and therefore the need to pass the address of the EFI memory map
-separately.
+diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+index 3e1005526f4b..685d334cf957 100644
+--- a/arch/loongarch/kvm/main.c
++++ b/arch/loongarch/kvm/main.c
+@@ -385,22 +385,33 @@ static int kvm_loongarch_env_init(void)
+ 	/* Register LoongArch IPI interrupt controller interface. */
+ 	ret = kvm_loongarch_register_ipi_device();
+ 	if (ret)
+-		return ret;
++		goto err;
+ 
+ 	/* Register LoongArch EIOINTC interrupt controller interface. */
+ 	ret = kvm_loongarch_register_eiointc_device();
+ 	if (ret)
+-		return ret;
++		goto err;
+ 
+ 	/* Register LoongArch PCH-PIC interrupt controller interface. */
+ 	ret = kvm_loongarch_register_pch_pic_device();
+ 	if (ret)
+-		return ret;
++		goto err;
+ 
+ 	/* Register LoongArch DMSINTC interrupt contrroller interface */
+-	if (cpu_has_msgint)
++	if (cpu_has_msgint) {
+ 		ret = kvm_loongarch_register_dmsintc_device();
++		if (ret)
++			goto err;
++	}
+ 
++	return 0;
++
++err:
++	kvm_unregister_perf_callbacks();
++	kfree(kvm_loongarch_ops);
++	kvm_loongarch_ops = NULL;
++	free_percpu(vmcs);
++	vmcs = NULL;
+ 	return ret;
+ }
+ 
+-- 
+2.43.0
 
