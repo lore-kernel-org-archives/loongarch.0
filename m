@@ -1,120 +1,278 @@
-Received: from mail-wr2-f0.google.com (mail-wr2-f0.google.com [74.125.225.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931D531F98D
-	for <loongarch@lists.linux.dev>; Mon, 17 Aug 2026 04:38:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E3F03A784A
+	for <loongarch@lists.linux.dev>; Mon, 17 Aug 2026 08:42:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786941530; cv=none; b=ElNPHdTyqdYXD3Bkx/3RJ8X/5/78bCs0nVaHZEnOPC1DiKaO1cI9y9B1PKxesT2EyVqY4FnUv6KiPUe1psm07bOLHBabBO4oA7NfjjbWJfvuAKXANJ/UvJwS5P52UkIENW4C7mt4uVuSqgvB1JOav/EE9mfoSGnobS37851sYTU=
+	t=1786956139; cv=none; b=uFhhCnxcTCmpoq9lJqTm+GvuMIGitooD5zxvcdQ1qUek7GOHE12ZMDkdsgrNohTC/SuqMU/9P0OhrWFRrFAXd9p3FVoHWkLjgdz5M/y14aWtfs6B8Ee9NtrLQzPUuPY6q7LhtzvXRyUcsfYFtTiRH5IIjdaKAh5QXDYHStA2TRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786941530; c=relaxed/simple;
-	bh=fkQiXS2dj0HIQT6nxsCnV4dj4UNnrygOECOoDn6j4q4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=TZ4KcVlUIsOR9mIlyFofYSj6wPax9p3DF+NOqTZYuIC+Yn+7DLHTDS0d/iqdXiWO7NZZ74fwQcVspmd9W41tWknniSJkVVSnGOwJRcOFULtD+IeOtDRxwGiWRsUXxCVIPJg0j55Rk4wFhX+rlFLo8mW/EDAlpAgZj/aj9b4bFPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=tMMUqA0V; arc=none smtp.client-ip=74.125.225.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1786956139; c=relaxed/simple;
+	bh=ItV4OzCRJMxPZyizd0dxik85ucTFHr0ZOTbd+3j+No4=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=FktWAfR4NdbGYkbL0j3FjuFjGwgJi3dhMq/aPyGDNZFJqCpt1FmXZr75TjUFA+2ZGwryew92oV4XjMvw9JXAuX1AHaPpNjan7NkfoqEfBZ8Pfzu8ev1tf2jkX9j8vS4G61YEp8tZBtJO5LX/LZXJ30ElR0OJ/UHYRWvqueiSS8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WIbWipfl; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tMMUqA0V"
-Received: by mail-wr2-f0.google.com with SMTP id ffacd0b85a97d-46cbf263216so1473075f8f.1
-        for <loongarch@lists.linux.dev>; Sun, 16 Aug 2026 21:38:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786941526; x=1787546326; darn=lists.linux.dev;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :content-type:content-transfer-encoding:mime-version:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=1c8foKhzrYQ6izTIE48GxSA/nmG3AeRv3jsPbmv5QtA=;
-        b=tMMUqA0VLeRsVKmKjKoFAxCuB6nO62/GdI91HmbIbVnXo1kx5JAVZVe878SbBnZs34
-         vvHor1g1MbPMw2YzPXmBPdicAFm/f9O/qGWQ4PFy6SkehM4r3vXCGe7IpY3tOzJEpfu2
-         VIaCwkLQne/GfLx0C2C6Nb/wkzMd8A6Lduyr84WmZWfXn/UxK36aAaf5WcPIlOFUOTsH
-         VkL4onMSb7rERtFyn71UGtDRxngR7QE4AfrguuPH69Y6hS0aUWxFCzaipGAAtFNMxTd4
-         L1q1S3/vpkeQZk5tWi92Q/IT2TT0YwlcLzrj7DH0RllPodNpGDJ1lwMPBijopW8GY9V3
-         8DAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786941526; x=1787546326;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :content-type:content-transfer-encoding:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=1c8foKhzrYQ6izTIE48GxSA/nmG3AeRv3jsPbmv5QtA=;
-        b=cuTje95nyk5Q75O0BxaHQtrLVQ3zSrBl1wggONuZFaIdhGIBl8B+LAoswWiDAG8VLZ
-         eP9VzpbTnLl2DPwbNEa7flNKmKHioRCLcZdkPQ3Tgz2uZfUs1JBCihn9lndpqZ19vXu5
-         ZZyg5+Es5gQYQZ9Nu0L2Wr7gBfAVMC0uzaHdDDRcjQh1/n7R80nB3Tqg1O3oVFxiaW+4
-         iPUSu61YaSkYWHqh4Qdn+fTXAfXqo5qIKAAj1C/ca8vfPIg2eElWglzCNdzzmO/RynZM
-         Rq+Uzrw/wIyFyqPLa7LVWhvRPveJgutF5Lyl0x0A91ibw3lFQpZhQRumlwZZxzd5IIZ9
-         tt8A==
-X-Forwarded-Encrypted: i=1; AHgh+RpZBZx2AazOle7aVt5toQuzcqOVcmcsMQrjth22ZLKua9fP7ZJmAZ6F48WtXG0OUqLiRcbwhKnWR7w=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxU/mwNmKXe+tGHszdJwHqen98YrUYWfmfoHVbop4wLWix7KDFL
-	ucgyRtXyylU4SKP1hz6nWUnxQJI1kVQNQ/kpe9tUO4x3ztkztqMQNCCQ
-X-Gm-Gg: AR+sD133/pNyM5pqlrdfytP8L0RmQ8QWA8dIbZtOsVhhCIQE8D3L9ySZm73I6ukmZcQ
-	G6zb7J/ymHsfcmmguxvgaetdMrcSiilLvCDpGdwQl4jzYNp3osPPT7o9peAmHYLoa4sW5KF1jt9
-	a7X0FsZriG1evOHolNqKOZdUg6FiDl1PisATEoO2qV/9ptFrOJszSlZSjqTPZ+Bcz89Ogxpz2Sa
-	moalgyqO9BFQdzr3HEKvDTG+EC9KMb9yPs8lVKpln8C+CvM8cufnO8KFLzkHzI2e4wHzjAeMutf
-	nAPeS7gViIDYsfJu4aAP/Te5fAbu6m+SvM3aG7tsJNNVpkJGSEf+ljaRD0QbwcmV9B9cqXNye1K
-	pCQOd+6uRJMtpJdULmIAc0UDaHNRzb26yWZQLYcXmGcQ071j83zl12IFmo0ad18YkRAXlLMxYd2
-	50kptv78tWzuGC8DKn0BgRj1wvfaKQOEL+fYc/OqYIwMbzq+cGYYqJW3VtU5eo2BqDooNyaHEUn
-	xS5udxrIKVoAgMOcm2OgTTgcl1H6y8x9/pJzXoqeWMFyj1+6Rtq+1JnWG240+GY6i+2c7m/ewwD
-	wgtbJsu0Bkqm23ewpI4z+onSaoU=
-X-Received: by 2002:a05:6000:25f4:b0:47f:7129:6e2d with SMTP id ffacd0b85a97d-48160751f31mr34517595f8f.17.1786941526370;
-        Sun, 16 Aug 2026 21:38:46 -0700 (PDT)
-Received: from localhost (nat-icclus-192-26-29-3.epfl.ch. [192.26.29.3])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-482a5a7c57fsm625297f8f.22.2026.08.16.21.38.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 16 Aug 2026 21:38:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WIbWipfl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF1371F000E9;
+	Mon, 17 Aug 2026 08:42:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786956138;
+	bh=ri4gnJzdgtbwijutHFkiBovuKwGB55QNnr5MBC0/7fs=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject;
+	b=WIbWipflzvqkALL8MHsg/pt9fGqGve5KsP3jw3A3TepgPImQzJ6Cj0FElbO3t08rX
+	 Zq7AckRc1FcoSN7MCHHINL30iG0Ly7Hm5WZEJTAgverrowrEsg7y28q6YsykSKZIlI
+	 W2iZ1SArcrsPaBeBUb2byLkomqvn0dp0i6ftykfPr6x44I+ybzW2zgEa0g0xpLf8/L
+	 SnNoQobxAtMmsDAdU2xENo05Ozgnrnu+vxOKE7zBOHb1e7R8CFqE0gB8aBFelzYt4g
+	 6KM0e3jVZV/b7fmTS8R3DftsOBUHWlfPVTeu1XCOdIqud6GS/4t/w9m405uyxukbd9
+	 f0q5oG4knJIFw==
+Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
+	by mailfauth.ams.internal (Postfix) with ESMTP id 4BB9D1980052;
+	Mon, 17 Aug 2026 04:42:16 -0400 (EDT)
+Received: from ams-imap-11 ([10.64.2.31])
+  by ams-compute-02.internal (MEProxy); Mon, 17 Aug 2026 04:42:16 -0400
+X-ME-Sender: <xms:ZcmCaqJRi71k3mjGH9Cla1A5sVb_PU_2-QKTuz8-9-qq9bvYi72Cfw>
+    <xme:ZcmCas8hkHjvNlv0IFtaHd3tE67F-tCxxR82c2pWBhnx6J4PnZ6u2FsMIaIaKUjtv
+    AUS73w0DXV-Jn5NFw3Rl6Hq37ZK-BSy-Qx7YxahcFCW6UQHdGj3hmXE>
+X-ME-Proxy-Cause: dmFkZTGALACgPRXbsmw4UDAcAPrv/ildNadA/tMoTacndsXYRrCyKJ8GplQuvicmAIJHP1
+    KTyoK2GFTmRqUMQPHAEpZpILciSEvLStMZbHw1VoQASIsR8rNVL4jFjE/LrK9oFRm+yKo7
+    VLsyCV8F8waGLR+S/YqD9HET5YJUcgdzq91D8hbzA6S3UYcl3nAFOxEromznTJqx3FpX25
+    vo6/Hd9Vc4N9gU7tNU+60lAAO6+rboZ8FOvcVd9PUgI+6XF1GsaOjxVrTvlMMyj2mF32yQ
+    UtfsNEd10wrUUGwsbymE8heJbZEGOu8x4NvHNkHLzZND2dwv2ff5OYe96lBZ/XUYJZiIfG
+    Zl6ep9iOi+H/Z9kDO/qlefIK9BOFpkNQhwlkWkSzcXbI2f+z21D0G4EAe9oWGFMFnt4TTL
+    kSAS8QYKdKytUiE+3MX0GLi+wGZqLHr6Qfud3PIR4MRm8mFN7EKRZBW2qBPXteb0CBPSNb
+    Loh/6sHnPDTd4bt1Q5OqqnRK65wnh2JlAwPg4czfP8/MwqRlk5adZ2BXXMjBAL5T7xCt/5
+    Ucf2zsXGmKuDGzHrOW2fuHGkdAp4TlzBb4jdGhVjiLZ1jkgY76ASMOZeQX3Yne+DrWdC5M
+    X9YD8neVbIlZQhgkHW79zmgs0+xYZ/HctkaZF9sh3/kBokn+fVcULw3+fvNw
+X-ME-Proxy: <xmx:aMmCamAAgoERI3vtkAG_TzrKeeN0W3Tt_gTqc8S4hADpxIluul4rVQ>
+    <xmx:aMmCahPX3xdiEuGusAEub_QuNcTn_0Z0iWJCQyQ86l_fNNSOIBoYTQ>
+    <xmx:aMmCanx5wkx27wI-whqLTwatVZhs9cRwRimNeC2a0rIvUD3ZpsS0eA>
+    <xmx:aMmCapWBkEA5Xg732XtTnA6YzS5_Gvczaz3bOGWWHcNI6Nx8-4JQVA>
+    <xmx:aMmCahNmKXFUXCFLzbckPrbEh_rgqf1xjbRGac7CZaHR1gLXqIe8zjSS>
+Feedback-ID: ice86485a:Fastmail
+Received: by mailuser.ams.internal (Postfix, from userid 501)
+	id DB124F80070; Mon, 17 Aug 2026 04:42:13 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 17 Aug 2026 06:38:45 +0200
-Message-Id: <DKQXWK0ILLSS.UF4CVFD9NO3I@gmail.com>
-To: "Tiezhu Yang" <yangtiezhu@loongson.cn>, "Vincent Li"
- <vincent.mc.li@gmail.com>, "bpf" <bpf@vger.kernel.org>
-Cc: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>, "Daniel Borkmann"
- <daniel@iogearbox.net>, "Eduard Zingerman" <eddyz87@gmail.com>, "Martin
- KaFai Lau" <martin.lau@linux.dev>, <loongarch@lists.linux.dev>
-Subject: Re: bpf selftests timer_lockup intermittently locks up kernel
-From: "Kumar Kartikeya Dwivedi" <memxor@gmail.com>
-X-Mailer: aerc 0.21.0
-References: <CAK3+h2xOSEZUHhou7N2cRL-aGrZCNSm45g+P7thObMe+fpgYCA@mail.gmail.com> <d06a7557-fb51-2be9-63cd-3269533476b2@loongson.cn>
-In-Reply-To: <d06a7557-fb51-2be9-63cd-3269533476b2@loongson.cn>
+MIME-Version: 1.0
+Date: Mon, 17 Aug 2026 11:41:51 +0300
+From: "Ard Biesheuvel" <ardb@kernel.org>
+To: "Leif Lindholm" <leif.lindholm@oss.qualcomm.com>
+Cc: linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ "Huacai Chen" <chenhuacai@kernel.org>, "WANG Xuerui" <kernel@xen0n.name>,
+ loongarch@lists.linux.dev
+Message-Id: <a0d10b63-bf9a-4ad7-a9d8-ab748a9c0c2c@app.fastmail.com>
+In-Reply-To: <an8xTBiCy_PEuwZi@leviathan>
+References: <20260813074506.643472-5-ardb@kernel.org>
+ <20260813074506.643472-7-ardb@kernel.org> <an8xTBiCy_PEuwZi@leviathan>
+Subject: Re: [PATCH 2/3] efi: Pass EFI boot memmap struct address to core kernel
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Mon Aug 17, 2026 at 6:04 AM CEST, Tiezhu Yang wrote:
-> On 2025/8/25 =E4=B8=8A=E5=8D=882:26, Vincent Li wrote:
->> Hi,
->>
->> I am running bpf selftests on a Loonarch PC and observed intermittent
->> kernel lockup by timer_lockup, then I can repeat the lockup just by
->> running the timer_lockup in while loop every 5 seconds, I could not
->> find a good x86 machine to test, and I think this might be
->> architecture independent. I don't have a good way to capture any
->> kernel log messages for the PC after the kernel hangs, and I had to
->> power reset the PC.
+
+On Fri, 14 Aug 2026, at 18:16, Leif Lindholm wrote:
+> On Thu, Aug 13, 2026 at 09:45:09 +0200, Ard Biesheuvel wrote:
+>> The EFI stub already passes a struct efi_boot_memmap populated with the
+>> information of the EFI memory map as a configuration table, and so
+>> passing the physical address, size, descriptor size and descriptor
+>> version via 4 different DT properties is kind of redundant.
+>> 
+>> Instead, pass the physical address of this struct in memory so that the
+>> kernel can just retrieve the values directly.
+>> 
+>> Unfortunately, the scheme with four separate properties is boot ABI for
+>> Xen, and so this needs to remain supported.
 >
-> ...
->
->> #458     timer_lockup:FAIL
->> Caught signal #11!
->
-> I recently spent some time investigating this and
-> managed to reliably reproduce the issue.
->
-> After adjusting some kernel configs and parameters,
-> I successfully captured the call trace.
->
-> The following patch fixes the issue, feel free to
-> test it:
->
-> LoongArch: Fix __smp_mb__{before,after}_atomic()
-> https://lore.kernel.org/loongarch/20260817035908.460-1-yangtiezhu@loongso=
-n.cn/
+> To clarify, you mean boot ABI when running under Xen?
 >
 
-This looks correct to me. Also, nice that the test actually reproduces the =
-issue
-without that store-load barrier present, which is good validation for the k=
-ernel
-side fix.
+Yes. We've allowed Xen dom0 to omit the EFI stub entirely, and boot the
+kernel proper in EFI mode, passing the EFI system table and memory map
+addresses via these special DT properties.
+
+>> But for the EFI stub itself,
+>> this is just an internal ABI that can be modified.
+>
+> Hmm...
+>
+> So this leaves only three properties that cannot be derived from the
+> System Table:
+> - The System Table address itself
+> - kaslr-seed
+> - bootargs
+>
+> The latter two could also be given the config table treatment.
+>
+
+The latter two are generic boot ABI for the arm64 kernel, and there
+is no need to treat them differently for EFI boot. Note that we also
+support passing the initrd directly via DT when doing EFI boot, rather
+than via the EFI specific device path.
+
+> Is it time to update the boot ABI to say x0 will hold the physical
+> address of "device tree blob (dtb) or EFI System Table in system RAM"?
+> They can be distinguished by 0xd00dfeed / "IBI SYST".
+>
+
+Let's avoid 'boot ABI' here, given that we are talking about an internal
+interface between the EFI stub and the kernel proper.
+
+This internal interface uses DT under the hood, even on ACPI platforms,
+because it simplifies the early boot code. I don't think we should change
+this.
+
+Also, the DT provided by the bootloader (if any) may differ from the one
+passed by the EFI stub, and so discovering the DT from the EFI system
+table is not straight-forward - they are not the same, and making them
+the same may have unintended side effects.
+ 
+> The use of a generated DT when none was provided by firmware has led
+> to both confusion and shenanigans, and might be nice to get rid of?
+>
+
+I don't disagree with that. But that would imply adding new code to the
+early startup code doing command line parsing and KASLR randomization to
+reason about whether these assets are passed via DT or via some other means.
+
+What would make sense imo is to pass the EFI system table address via X1
+when doing EFI boot, so we don't have to get anything at all from the DT.
+
+> Either way, it would be nice to get rid of all four of the
+> linux,uefi-mmap nodes if they're now completely redundant.
+>
+
+Indeed.
+
+> Minor bikeshedding below.
+>
+>> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+>> ---
+>>  Documentation/arch/arm/uefi.rst    | 10 +----
+>>  drivers/firmware/efi/fdtparams.c   | 39 ++++++++++++++++---
+>>  drivers/firmware/efi/libstub/fdt.c | 40 ++------------------
+>>  3 files changed, 37 insertions(+), 52 deletions(-)
+>> 
+>> diff --git a/Documentation/arch/arm/uefi.rst b/Documentation/arch/arm/uefi.rst
+>> index 2b7ad9bd7cd2..c19cf3720f27 100644
+>> --- a/Documentation/arch/arm/uefi.rst
+>> +++ b/Documentation/arch/arm/uefi.rst
+>> @@ -54,17 +54,9 @@ Name                        Type     Description
+>>  ==========================  ======   ===========================================
+>>  linux,uefi-system-table     64-bit   Physical address of the UEFI System Table.
+>>  
+>> -linux,uefi-mmap-start       64-bit   Physical address of the UEFI memory map,
+>> +linux,uefi-boot-memmap      64-bit   Physical address of a struct efi_boot_memmap
+>>                                       populated by the UEFI GetMemoryMap() call.
+>>  
+>> -linux,uefi-mmap-size        32-bit   Size in bytes of the UEFI memory map
+>> -                                     pointed to in previous entry.
+>> -
+>> -linux,uefi-mmap-desc-size   32-bit   Size in bytes of each entry in the UEFI
+>> -                                     memory map.
+>> -
+>> -linux,uefi-mmap-desc-ver    32-bit   Version of the mmap descriptor format.
+>> -
+>>  kaslr-seed                  64-bit   Entropy used to randomize the kernel image
+>>                                       base address location.
+>>  
+>> diff --git a/drivers/firmware/efi/fdtparams.c b/drivers/firmware/efi/fdtparams.c
+>> index b815d2a754ee..a54a76a6aaeb 100644
+>> --- a/drivers/firmware/efi/fdtparams.c
+>> +++ b/drivers/firmware/efi/fdtparams.c
+>> @@ -10,22 +10,30 @@
+>>  
+>>  #include <linux/unaligned.h>
+>>  
+>> +#include <asm/early_ioremap.h>
+>> +
+>>  enum {
+>>  	SYSTAB,
+>> +	MEMMAP,
+>> +#ifdef CONFIG_XEN
+>>  	MMBASE,
+>>  	MMSIZE,
+>>  	DCSIZE,
+>>  	DCVERS,
+>> +#endif
+>>  
+>>  	PARAMCOUNT
+>>  };
+>>  
+>>  static __initconst const char name[][22] = {
+>>  	[SYSTAB] = "System Table         ",
+>> +	[MEMMAP] = "Boot Memory Map      ",
+>> +#ifdef CONFIG_XEN
+>>  	[MMBASE] = "MemMap Address       ",
+>>  	[MMSIZE] = "MemMap Size          ",
+>>  	[DCSIZE] = "MemMap Desc. Size    ",
+>>  	[DCVERS] = "MemMap Desc. Version ",
+>> +#endif
+>>  };
+>>  
+>>  static __initconst const struct {
+>> @@ -49,10 +57,7 @@ static __initconst const struct {
+>>  		.path = "/chosen",
+>>  		.params = {	//  <-----------26----------->
+>>  			[SYSTAB] = "linux,uefi-system-table",
+>> -			[MMBASE] = "linux,uefi-mmap-start",
+>> -			[MMSIZE] = "linux,uefi-mmap-size",
+>> -			[DCSIZE] = "linux,uefi-mmap-desc-size",
+>> -			[DCVERS] = "linux,uefi-mmap-desc-ver",
+>> +			[MEMMAP] = "linux,uefi-boot-memmap",
+>>  		}
+>>  	}
+>>  };
+>> @@ -84,17 +89,20 @@ static int __init efi_get_fdt_prop(const void *fdt, int node, const char *pname,
+>>  u64 __init efi_get_fdt_params(struct efi_memory_map_data *mm)
+>>  {
+>>  	const void *fdt = initial_boot_params;
+>> -	unsigned long systab;
+>> +	unsigned long systab, memmap;
+>>  	int i, j, node;
+>>  	struct {
+>>  		void	*var;
+>>  		int	size;
+>>  	} target[] = {
+>>  		[SYSTAB] = { &systab,		sizeof(systab) },
+>> +		[MEMMAP] = { &memmap,		sizeof(memmap) },
+>> +#ifdef CONFIG_XEN
+>>  		[MMBASE] = { &mm->phys_map,	sizeof(mm->phys_map) },
+>>  		[MMSIZE] = { &mm->size,		sizeof(mm->size) },
+>>  		[DCSIZE] = { &mm->desc_size,	sizeof(mm->desc_size) },
+>>  		[DCVERS] = { &mm->desc_version,	sizeof(mm->desc_version) },
+>> +#endif
+>>  	};
+>>  
+>>  	BUILD_BUG_ON(ARRAY_SIZE(target) != ARRAY_SIZE(name));
+>> @@ -115,6 +123,9 @@ u64 __init efi_get_fdt_params(struct efi_memory_map_data *mm)
+>>  		for (j = 0; j < ARRAY_SIZE(target); j++) {
+>>  			const char *pname = dt_params[i].params[j];
+>>  
+>> +			if (pname[0] == '\0')
+>> +				continue;
+>> +
+>>  			if (!efi_get_fdt_prop(fdt, node, pname, name[j],
+>>  					      target[j].var, target[j].size))
+>>  				continue;
+>> @@ -123,8 +134,24 @@ u64 __init efi_get_fdt_params(struct efi_memory_map_data *mm)
+>>  			pr_err("Can't find property '%s' in DT!\n", pname);
+>>  			return 0;
+>>  		}
+>> -		if (dt_params[i].paravirt)
+>> +		if (IS_ENABLED(CONFIG_XEN) && dt_params[i].paravirt) {
+>>  			set_bit(EFI_PARAVIRT, &efi.flags);
+>> +		} else {
+>
+> This condition branch doesn't in fact have anything to do with the fdt.
+> Should it still live in fdtparams.c?
+>
+
+I don't follow. The EFI_PARAVIRT flag is set based on whether we are 
+using the generic or the Xen-specific set of DT properties. What would
+be a better place to decide this?
+
+
