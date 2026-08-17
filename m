@@ -1,147 +1,200 @@
-Received: from mta0.migadu.com (out-222.mta0.migadu.com [91.218.175.222])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B47F42AF87
-	for <loongarch@lists.linux.dev>; Mon, 17 Aug 2026 15:14:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.222
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10AC144C65C
+	for <loongarch@lists.linux.dev>; Mon, 17 Aug 2026 16:59:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786979669; cv=none; b=Arnd+Y8obeDfKKhR8j7y5QirSV631AdUcgJS4b5K7g0ckNnpHnAyN5HUMp53HHe76rLt07iBUJWKawo2b34EBg2ja4i7Z/TUEonwfczAZ92Z0czp0LHYXS9voMjwjqOKWBoLx3Qzgfj2NTORRNq9QZ0lgP3TAGEZaxsknlT6cds=
+	t=1786985973; cv=none; b=PtpG0U1yZZp7vpzesWqI7C3HvTB8UKZfkairiCK1zhzeRZeG3d8bPtuIkJ8syrvu7gcJTjpT0f6Ml9AWIjqKXUS7cDH5LaYWOlb1sMimYdDLuGwvDh+oHG+oWEk/yOf5mt56GPQK7vZgvrAXe18FdevN4yUFAyPu+OImNVVrtKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786979669; c=relaxed/simple;
-	bh=/kpJHgkNpi750FH/SGpyKpVgqGqCSp4Wcpe2Zcb2oTU=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=d0rsIiXHHo8FMXL65+5fwLfYlRcmSEGOIvaQF0OHqfZ3ohiGLqulHRFKGajAYhRs6pZUww3fm/ax1ULYo53G4QpvQzmLYkK2uu9RX3CD9G2dh9uiIlZRwGVNhHD6gWNOG8wPlhHMYH8I0A1aZ+H51rgWHUhY7iReftQ2qqRv3e4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=uk6XiQ57; arc=none smtp.client-ip=91.218.175.222
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1786985973; c=relaxed/simple;
+	bh=I9DTOyheYyPBwAxvgQtljKt2grxTR66OUmiIZz1Fnzk=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=usgGr1N1ARiqyaIRHvpWdAa09xVPcDuxPXbU9VG0t1BeH6nGlZK+P0VZNYcm1Q9hVW+Eyi/iHlMkVOAXz8e+C1h77EeCgK69kbEqitinV5tJzHcnGyO0CqjfX66a2RV7y+kUsFXVRzrjpIxBB+FkQl2ibSi9Pvx/PT6yz2SKUDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mnBw6EIW; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uk6XiQ57"
-X-Envelope-To: loongarch@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=/kpJHgkNpi750FH/SGpyKpVgqGqCSp4Wcpe2Zcb2oTU=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1786979664; v=1; x=1787584464;
- b=uk6XiQ57o1D6iibPFn5TKPWCDhnmKhFXuHkfhwAfmPyXniTm8i72E8hoRSgSS6FxCFvtJatD
- kUmnfMkBx9oLsAHHiig6ksIVwQO3iIA/8ohr2/mwK3ZKLP8lPZNwYrmBTas2k/yJBioKWe+JgDx
- DjSVklLEX0StH/n1O0kQZ3Bc=
-X-Envelope-To: loongarch@lists.linux.dev
-Received: from localhost (212.133.41.51)
-	by smtp.migadu.com with ESMTPS id b6551f00886cde4e;
-	Mon, 17 Aug 2026 15:14:23 +0000
-X-Migadu-Flow: FLOW_OUT
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mnBw6EIW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2D021F00A3D;
+	Mon, 17 Aug 2026 16:59:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786985967;
+	bh=3llulX3328L3Ek3yxprc6vIvWXNUGeLhpBQoQq6NfSI=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject;
+	b=mnBw6EIWGNULVx0W8kvE/NLBA5bt3cfsKbMg12I2bZiOg0VYkksZvlnG53qFDLK/8
+	 rOlB9Oy/Lf22hL6rGJeu34lRvCh4Iyi0OP9c7PSMDgL7Tlqk1i+MM+5cyxe+JFwuIa
+	 8gdO1hQueYZ8IveAlXulQOSIIkJ09hHJRD8EfSbbFKknUkWGNyyOqOYSVJcx3QT+gT
+	 4r6V2cp6ugQANfoXV5CqvtPuqzaLRqvHupw0rBfjoHcxdv+3hGtnJLTO4hL3c6WA/H
+	 pQqhxMBd8h1vnaSwDEzwfBz4Hq1Nv479ulAyPlxO8jOY2YswIvXIGzhutpNseh7A4M
+	 gtlvYZ0B6a7Ew==
+Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
+	by mailfauth.ams.internal (Postfix) with ESMTP id F2635198005A;
+	Mon, 17 Aug 2026 12:59:24 -0400 (EDT)
+Received: from ams-imap-11 ([10.64.2.31])
+  by ams-compute-02.internal (MEProxy); Mon, 17 Aug 2026 12:59:24 -0400
+X-ME-Sender: <xms:6j2DajBLqUlsCMxiWpJVM57j4vDzsqoGdXqibdORWyEbL__RQA2yxw>
+    <xme:6j2DakX3cEIQiTkFEKIs2Hsw0opViKFDAnoFQis8ch5YRH--a5IadIO8fp9wXHiU8
+    3S0J5J-hhzVzp64TbCIgVNK8RQ8SFHf0q9W20G32plG7GZ0UT0IWXGR>
+X-ME-Proxy-Cause: dmFkZTGWu6WDxCMnrRb1S3oKmk5iStRE3JaOXC54KSBpqPeipijwwR2HrCmeM/GVeLZWSt
+    s/eB1469nVCVVflUTjbd+qswpbrqXXrhXA4ApuQS8LI2sKJzb8PHg/IImzC7JB/jP1Sytq
+    cReM4bk+nka73PAkzlFdd6UuaZaoz8JkNOhc7QqtpOuETM92JuVHOyJ7x7rTLP/wjCqjqY
+    9NyiJTlNHR0yJSfrSmL0vKxlP8oqqrzRKDlcVeYleOsVAfmnEgS3XmwJLrM/Z3kHOIJUpM
+    5+zA3bJtqp0uSdxO1KgwkeojQQEBxJnqtg2GqfHtQc+U7qpYO4ejNX5oomUoRv1XEqugFP
+    Lv0luHj88B6zo+rCCZvzIOUniSLQRL3ra1LLYQ/i/1RmW/dLvPc1wfhSo2nh0lnJecyffB
+    pgODSi+jzRs4nYeUbEHmgmnXH3b/fufoFdl/hcoQ6CcoRwoSDJwhXJwybouSvxVxA3zOrv
+    fyF2YwAYT3YQSyopA34B5JfBXsFMgx0M2jDPf209xPrH097NrNVsl0Ns34RTUI1yp4hiqH
+    n0fl2t0KRiyPRwnn7Vkyb44OePTmrmPN5SGUs18qYiojQAWmgDa+DDwvYAi4FV6ylkQRXf
+    c5bm2Eh0GkegawCm9g/SXOuBjEvPzfeF6xIElleYhtChO24izz/HiASSKI0Q
+X-ME-Proxy: <xmx:7D2Daj5q29beGjnbsbtA93utKnpj9jmj2wsgLPILJ8Cyuy4WuNVhCA>
+    <xmx:7D2Daplet-CiwwBZf6VZIRWLwcDLoDccMe7H2E08akQqO74c4x7fpQ>
+    <xmx:7D2DaoqR0ZcLFyx5S2nxSP0eUbVjvcFiyk6hgmnWPYLugRXHbo7NDg>
+    <xmx:7D2DaotTgha0tXeupLxmjBoNAs4--vN6aS7WieJPHzMFJ5mJTYSlSQ>
+    <xmx:7D2DatHPiq5B-tvkrlgYrlZ6-RrGWxOM-WUeyM0ssjBfIP7Vu-5t0RKY>
+Feedback-ID: ice86485a:Fastmail
+Received: by mailuser.ams.internal (Postfix, from userid 501)
+	id C4C4EF80071; Mon, 17 Aug 2026 12:59:22 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 17 Aug 2026 17:14:19 +0200
-Message-Id: <DKRBF6LQY1L7.13CIBHAU0A87D@linux.dev>
-Cc: =?utf-8?q?Adrian_Barna=C5=9B?= <abarnas@google.com>, "Albert Ou"
- <aou@eecs.berkeley.edu>, "Alexander Gordeev" <agordeev@linux.ibm.com>,
- "Alexandre Ghiti" <alex@ghiti.fr>, "Andy Lutomirski" <luto@kernel.org>,
- "Borislav Petkov" <bp@alien8.de>, "Brendan Jackman"
- <brendan.jackman@linux.dev>, "Catalin Marinas" <catalin.marinas@arm.com>,
- "Christian Borntraeger" <borntraeger@linux.ibm.com>, "Dave Hansen"
- <dave.hansen@linux.intel.com>, "David Hildenbrand" <david@kernel.org>,
- "Gerald Schaefer" <gerald.schaefer@linux.ibm.com>, "Heiko Carstens"
- <hca@linux.ibm.com>, "Huacai Chen" <chenhuacai@kernel.org>, "Ingo Molnar"
- <mingo@redhat.com>, "Len Brown" <lenb@kernel.org>, "Palmer Dabbelt"
- <palmer@dabbelt.com>, "Paul Walmsley" <pjw@kernel.org>, "Pavel Machek"
- <pavel@kernel.org>, "Peter Zijlstra" <peterz@infradead.org>, "H. Peter
- Anvin" <hpa@zytor.com>, "Rafael J. Wysocki" <rafael@kernel.org>, "Ryan
- Roberts" <ryan.roberts@arm.com>, "Sven Schnelle" <svens@linux.ibm.com>,
- "Thomas Gleixner" <tglx@kernel.org>, "Uladzislau Rezki" <urezki@gmail.com>,
- "Vasily Gorbik" <gor@linux.ibm.com>, "WANG Xuerui" <kernel@xen0n.name>,
- "Will Deacon" <will@kernel.org>, <x86@kernel.org>,
- <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
- <linux-mm@kvack.org>, <linux-pm@vger.kernel.org>,
- <linux-riscv@lists.infradead.org>, <linux-s390@vger.kernel.org>,
- <loongarch@lists.linux.dev>, <yosry@kernel.org>
-Subject: Re: [PATCH 6/6] Revert "arch: introduce
- set_direct_map_valid_noflush()"
-From: "Brendan Jackman" <brendan.jackman@linux.dev>
-To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>, "Andrew Morton"
- <akpm@linux-foundation.org>
-X-Mailer: aerc 0.21.0
-References: <20260816-execmem-set-vm-perms-v0-2-v1-0-90944a3ad43f@kernel.org> <20260816-execmem-set-vm-perms-v0-2-v1-6-90944a3ad43f@kernel.org>
-In-Reply-To: <20260816-execmem-set-vm-perms-v0-2-v1-6-90944a3ad43f@kernel.org>
+MIME-Version: 1.0
+Date: Mon, 17 Aug 2026 19:59:02 +0300
+From: "Ard Biesheuvel" <ardb@kernel.org>
+To: "Leif Lindholm" <leif.lindholm@oss.qualcomm.com>
+Cc: linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ "Huacai Chen" <chenhuacai@kernel.org>, "WANG Xuerui" <kernel@xen0n.name>,
+ loongarch@lists.linux.dev
+Message-Id: <c3cd6952-87fd-442b-8d54-13c814b8d5f2@app.fastmail.com>
+In-Reply-To: <aoMV3TX0hgTsj3_m@leviathan>
+References: <20260813074506.643472-5-ardb@kernel.org>
+ <20260813074506.643472-7-ardb@kernel.org> <an8xTBiCy_PEuwZi@leviathan>
+ <a0d10b63-bf9a-4ad7-a9d8-ab748a9c0c2c@app.fastmail.com>
+ <aoLR9BPGt4Kzbr3y@leviathan>
+ <92baff04-d30b-4174-b5f5-87b24e6a1cc0@app.fastmail.com>
+ <aoMV3TX0hgTsj3_m@leviathan>
+Subject: Re: [PATCH 2/3] efi: Pass EFI boot memmap struct address to core kernel
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Sun Aug 16, 2026 at 12:59 PM CEST, Mike Rapoport (Microsoft) wrote:
-> Commit 0c6378a71574 ("arch: introduce set_direct_map_valid_noflush()")
-> added set_direct_map_valid_noflush() to allow updating the direct map
-> for a physically contiguous range in execmem.
+
+
+On Mon, 17 Aug 2026, at 17:08, Leif Lindholm wrote:
+> On Mon, Aug 17, 2026 at 14:00:16 +0300, Ard Biesheuvel wrote:
+>> >> > Is it time to update the boot ABI to say x0 will hold the physical
+>> >> > address of "device tree blob (dtb) or EFI System Table in system RAM"?
+>> >> > They can be distinguished by 0xd00dfeed / "IBI SYST".
+>> >> 
+>> >> Let's avoid 'boot ABI' here, given that we are talking about an internal
+>> >> interface between the EFI stub and the kernel proper.
+>> >
+>> > It's an internal business in the topic under discussion, but if we
+>> > were to change it, that would mean updating booting.rst, which I
+>> > consider an ABI.
+>> >
+>> 
+>> But not an external ABI. It documents specifically how the EFI stub
+>> interfaces with the kernel proper. This might change at any point,
+>> without any obligation whatsoever to remain compatible with the
+>> previous method.
 >
-> As Brendan recently pointed out [1], this API is confusing because on
-> arm64 it means that is sets VALID bit in ptes, while on other
-> architectures it is an analog of set_direct_map_default_noflush().
+> So you're saying if the kernel proper decides to use x1 for something
+> else, we'll move to x2?
 >
-> The only user of set_direct_map_valid_noflush() was execmem's ROX cache
-> freeing path and it was switched to utilize VM_FLUSH_RESET_PERMS for
-> resetting permissions of the direct map alias.
+> I agree that in the context of how the stub calls the kernel proper,
+> this is not ABI, but x1 is one of the registers currently marked as
+> "reserved for future use" in booting.rst. So it feels weird for me to
+> allocate one of those registers for this internal use then not mention
+> it.
 >
-> With the last user gone and with set_direct_map_{invalid,default}_noflush=
-()
-> accepting number of pages as a parameter, set_direct_map_valid_noflush()
-> become a copy of set_memory_valid() on arm64 and a duplicate of
-> set_direct_map_{invalid,default}_noflush() on other architecture, it is
-> safe to remove set_direct_map_valid_noflush().
+
+Whether we mention it or not is irrelevant: the only thing that matters
+is that this allocation is not something that OS loaders other than the
+EFI stub are able to rely upon, given that EFI boot on arm64 requires
+booting via the stub (except for Xen dom0).
+
+> In that case, couldn't we instead pick a register outside of the
+> reserved ones?
 >
-> Also drop a stale comment in arm64::__kernel_map_pages() that Linus
-> bothered to add when merging changes containing set_direct_map_valid_nofl=
-ush()
-> to his tree.
+
+It has to be a reserved one, given that the state of other registers is
+unspecified at boot. Otherwise, we'd have to reason about whether a non-zero
+value is accidental, or represents a physical address that we can map and
+dereference, which is needed even to check the system table's magin
+
+>> ...
+>> >> > Minor bikeshedding below.
+>> >> >
+>> >> >> @@ -123,8 +134,24 @@ u64 __init efi_get_fdt_params(struct efi_memory_map_data *mm)
+>> >> >>  			pr_err("Can't find property '%s' in DT!\n", pname);
+>> >> >>  			return 0;
+>> >> >>  		}
+>> >> >> -		if (dt_params[i].paravirt)
+>> >> >> +		if (IS_ENABLED(CONFIG_XEN) && dt_params[i].paravirt) {
+>> >> >>  			set_bit(EFI_PARAVIRT, &efi.flags);
+>> >> >> +		} else {
+>> >> >
+>> >> > This condition branch doesn't in fact have anything to do with the fdt.
+>> >> > Should it still live in fdtparams.c?
+>> >> >
+>> >> 
+>> >> I don't follow. The EFI_PARAVIRT flag is set based on whether we are 
+>> >> using the generic or the Xen-specific set of DT properties. What would
+>> >> be a better place to decide this?
+>> >
+>> > Apologies, I may have commented confusingly - my comment was about the
+>> > else branch:
+>> >
+>> > +
+>> > +                       bm = early_memremap_ro(memmap, sizeof(*bm));
+>> > +                       if (!bm) {
+>> > +                               pr_err("Cannot remap EFI boot memory map\n");
+>> > +                               return 0;
+>> > +                       }
+>> > +
+>> > +                       mm->phys_map            = memmap + sizeof(*bm);
+>> > +                       mm->size                = bm->map_size;
+>> > +                       mm->desc_size           = bm->desc_size;
+>> > +                       mm->desc_version        = bm->desc_ver;
+>> > +
+>> > +                       early_memunmap(bm, sizeof(*bm));
+>> >
+>> > So to restate - this function is called from efi_init():
+>> > ---
+>> >         /* Grab UEFI information placed in FDT by stub */
+>> >         efi_system_table = efi_get_fdt_params(&data);
+>> >         if (!efi_system_table)
+>> >                 return;
+>> > ---
+>> >
+>> > Before this set, this function called get_fdt_params() indeed gets
+>> > "params" from a device tree. After this set, this function gets params
+>> > from a device tree in some instances, and not in others.
+>> > Which feels suboptimal.
+>> >
+>> > We could rename the function, but then there's still DT-unrelated
+>> > code held in fdtparams.c.
+>> >
+>> > If we go down the route of passing the system table in x1 on boot,
+>> > then I guess the effect of assigning efi_system_table will already be
+>> > broken out. But should we then split the mm struct initialisation into
+>> > separate DT and config table helper functions?
+>> >
+>> 
+>> Not disagreeing but I think it is fine to leave it as I suggested at this
+>> point.
+>> 
+>> Some additional work is needed to get rid of linux,uefi-boot-memmap
+>> entirely, and until that happens, passing the EFI system table via
+>> X1 and linux,uefi-boot-memmap via DT is not a huge improvement.
+>> 
+>> linux,uefi-boot-memmap is needed when SetVirtualAddressMap() is called
+>> [with a non-1:1 mapping], as the EFI system table contains a remapped
+>> address of the config table array in that case.
 >
-> This reverts commit 0c6378a71574daa6cd1534ad42a956e3262756c7.
+> Of course, the devil on my shoulder suggests the stub could always
+> add an address fixup handler for the config table too...
 >
-> [1] https://lore.kernel.org/all/DJ69RCVRBO0Y.3JCYSW50IC4RC@linux.dev
->
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-Quick dump of my understanding (ignoring the NG bit on arm64)
-
-- set_direct_map_invalid_noflush():
-
-    x86: clear P and RW (and DIRTY)
-    arm64: clear VALID
-
-  So these look out of sync to me
-
-- set_direct_map_default_noflush():
-
-    x86: set P and RW
-    arm64: set VALID and WRITE, clear RDONLY
-
-- set_direct_map_valid_noflush(..., true):
-
-    x86: exactly the same as set_direct_map_default_noflush()
-         (but with a `nr` arg)
-    arm64: set VALID
-
-- set_direct_map_valid_noflush(..., false):
-
-    both archs: exactly the same as set_direct_map_invalid_noflush()
-         (but with a `nr` arg)
-
-So basically the big issue here is specifically that
-set_direct_map_valid_noflush(..., true) is special on arm64 and not x86.
-
-And we fix that by jut deleting the API. SGTM!
-
-The other issue I can see here is that set_direct_map_invalid_noflush()
-clears RW on x86 but doesn't set RDONLY on arm64. So if you unmap
-something using set_direct_map_invalid_noflush(), then map it again
-using something other than set_direct_map_default_noflush(), you get
-different behaviour between the archs.
-
-I think the answer to that is probably: doing that is a bug, i.e.
-_invalid_noflush() and _default_noflush() are a pair that you have to
-use together. But I haven't checked if this is currently the case. Maybe
-it would still make sense to just align these fully?
-
-Anyway, aside from all this yapping, getting rid of _valid_noflush()
-seems like an unambiguous win here so thanks for the cleanup!
-
-Reviewed-by: Brendan Jackman <brendan.jackman@linux.dev>
+What is an address fixup handler? We cannot change this value back,
+as that might break the runtime services.
