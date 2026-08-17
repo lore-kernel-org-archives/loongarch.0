@@ -1,181 +1,278 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B13B3E5EC2
-	for <loongarch@lists.linux.dev>; Mon, 17 Aug 2026 09:29:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 769683F889E
+	for <loongarch@lists.linux.dev>; Mon, 17 Aug 2026 11:00:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786958999; cv=none; b=BipL/DjZ1Op4GFb5kEEbOoAsXQb2bh6R459rQb47b3STMGacA/AEqOUD62T9D6ytzHnPUVuCaBanwYKlK7xNCrFpXeB3b17zU/UhgJWjs/CCkM3+XISyk164EOKkJsik4VkBYtQ+5aQtq1P5b32ZsFSOuyegIybhhWWBxJ4gvj8=
+	t=1786964445; cv=none; b=c/g+ypSjIQNPf+Kv2gfAnWBvPKvr6wCDkNsHQ+pjKPeOnukGvKWh0JnXNBep70HeX2ykbQcI12Ii2f9Q5kaPzm1vE/a5O7NaR6pk6F51AqcWHi6h0ytJd5nlNPeue352swxkmXIe7AMxazJBodhtSytZGD2jznTRXJsTZzAVhvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786958999; c=relaxed/simple;
-	bh=TMfdYKaYwHg/s+J0APHoiFkIoCECW5esCrTED4LVNXQ=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=QnrozKjDWNcpGVX2Q6/bWVY+jfl73VQXn0Lp08GlfCKuWLgLn/t4tHGpbKScRwatC/F2BBSjpnenvq+Gfstj9uJ9d8y4I0McJE12JXZPiylGRIVss5sdPdHamS/Drtq2aT8SrT3auVW8fGFG8/O0gW95guk61WSTtqpaOOMwBQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.101])
-	by gateway (Coremail) with SMTP id _____8DxpvBm1IJqzNUBAA--.5606S3;
-	Mon, 17 Aug 2026 17:29:11 +0800 (CST)
-Received: from [10.20.42.101] (unknown [10.20.42.101])
-	by front1 (Coremail) with SMTP id qMiowJBxrM5l1IJqu8oHAA--.7091S3;
-	Mon, 17 Aug 2026 17:29:10 +0800 (CST)
-Subject: Re: [PATCH v10 0/2] i2c: ls2x: Add clock- related properties and
- parsing
-To: Binbin Zhou <zhoubinbin@loongson.cn>, Andi Shyti <andi.shyti@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
- loongarch@lists.linux.dev
-References: <20260817090721.30582-1-wanghongliang@loongson.cn>
-From: Hongliang Wang <wanghongliang@loongson.cn>
-Message-ID: <668c5145-da87-d318-2338-738b0035a671@loongson.cn>
-Date: Mon, 17 Aug 2026 17:23:42 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1786964445; c=relaxed/simple;
+	bh=B15gJpb3+H8eGsq83CJ0lHjT9B+9QWiZs8zZvcYJqOI=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=j+D4SKtaPAVfgeWgy7HscJ0PEs7GN8rcvj9oinQ1lzvfq/Sl/w7wXRCC826hr2WqdKw4+79gvo6ZmHaHxZGtn8Mhy1HQsHWxbnjfdIACyrzpVz3rikVb569bDZQB0EL5QnLa76ai7fLCjasHnq2H9D4Kitft+/y38CNkgNSHLlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dWRNqIk7; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dWRNqIk7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C1981F000E9
+	for <loongarch@lists.linux.dev>; Mon, 17 Aug 2026 11:00:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786964441;
+	bh=WgZek3MLzFeMHdXhhGCcqInoE60fl4kfr+VHKyEfYgE=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject;
+	b=dWRNqIk7cNnrdC9KVfc4pjlHjvT6JTcBtP39Se/moY0Bc5vgnASsfnV4rApRGZr45
+	 NtB/VS407Gd04OpH/iDhBX3Oh4UB/FcvTD0KtedBItCTLaMaiRf6EFox/z+s71krER
+	 BcBWTEwxsBy44/LhxojdchIIkALMFiv9FAMO6vP7xOE36Mvo6zKlUJ6kFiOPemEcQm
+	 dR49a0EMh8ZW6jPTR1yzklIkRlKhhBbFS0X1hlO/ubSq7I6cWdMQ/34k7OksnwNyjZ
+	 sGRbDQ+DVX7QYxYtaxG92XWYuvkccdGf8qtVjzOVkO8tpHLzNVFhDQm7bef2tKC1t3
+	 tFZy2Rq7yUCew==
+Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
+	by mailfauth.ams.internal (Postfix) with ESMTP id CFF901980043;
+	Mon, 17 Aug 2026 07:00:39 -0400 (EDT)
+Received: from ams-imap-11 ([10.64.2.31])
+  by ams-compute-02.internal (MEProxy); Mon, 17 Aug 2026 07:00:39 -0400
+X-ME-Sender: <xms:1emCalKArvwvNmgaCKkLWBp44spTDS3Hj_8MpmN0uCk-0VSsycv0vQ>
+    <xme:1emCar8ivaBcTUFp-HIf0TgyWS8tAIuNW7FLrAu3KJhhOEK03kpUNRhIDDTyH89wC
+    7rI39k6Y5deLX_iRHOPV1XMVJcFdHO9uisq0y8DncYYr93VQVLI5QQ>
+X-ME-Proxy-Cause: dmFkZTGFUvGG64XM3aHdY4FfNtEGYmsaFPVJruv7HVb5v2o0qqPbtO0YoGtvtHfKaZwnBk
+    FOCn0qDvT5Xa8xaNUroCWfk1bYePNbxbkjOQUJxN3I3p0GnWn8s38tGqeST352hSjzEpRo
+    N+yYmchntE7ydUKwsED2FXXb12tjG5U3f4/Ea5fBtHOwqpGreH6W2QeJmUyEoxRVuJ2i96
+    pDu6xgg1EXMEncKmCSAzhEmFlVzHDFn5bQRx/7mNV6zC/Y2GuiI2F79Lr0WzfbwTiG2RkC
+    39uYQF3Eh6Cwb3bIwgWeobWy/vvhhvuykwjYMqqqdKexO11WlidV+Dyv+bZrWPIa8QhzR7
+    6ujRA7KxhSM5SCZr00yX183SRl1VIme2lwWQ1Wvy00IThid8mModNmch4OWd5GtA3p28VY
+    oxwIKAjJMPUceqFfHgjX+PO61zIvRfflljqRlOKSWcsh05T4EtTm3uqNpjq/Aadv9n5Arl
+    UR0cWqT08UdZa4oKpf81Ow4WFAc9N/SrIJqzQtAnstCR0r8wIc6mCgLDksmfUaMcNBb1tk
+    oKZKCuoywLbFHBtlfeN5lZXbI+YhNR4o9sE7tkjIqxFOXZS3kYAKujzicFnkKQlg281CJy
+    oTDrg7a7j2UaaWibCxknjjpwxB0APOVjWVUu8AZB/H4cG6xq2nbw07ry35Gg
+X-ME-Proxy: <xmx:1-mCapCHMpiJFeBG91Wj6Z9230jpPvZIjo9F-ajbTvOBKcuvBsjsrQ>
+    <xmx:1-mCaoOGvpqY5tzn1TlysnWF8iXqLWyAS_8fFBrey8f7S_IyD36dsg>
+    <xmx:1-mCaizMcfK9bCNNsS-cQTDPekbH4ErMeAXQ8gQRugLUsar53maiFA>
+    <xmx:1-mCaoXWwCpEqq7ERIiXJY07Xf7g55tWYrVjlhDFEc76SklptaE3Bg>
+    <xmx:1-mCakMwTQEF5PJ3TvZH1ZlK32efmBGjxaV7aJmRkXQ8m-9qzLp3xw91>
+Feedback-ID: ice86485a:Fastmail
+Received: by mailuser.ams.internal (Postfix, from userid 501)
+	id 63442F8006E; Mon, 17 Aug 2026 07:00:37 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20260817090721.30582-1-wanghongliang@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowJBxrM5l1IJqu8oHAA--.7091S3
-X-CM-SenderInfo: pzdqwxxrqjzxhdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxXw1rZF1fCw4rXF1UCF47Jrc_yoWrCry8pF
-	sxCay5Gr1Y9a48uwsxt3yxZF95Zws8J397Gr17Ww15ua1avr1DZF1xKr909rykZr4vkayY
-	gr9IgF1DKFW5AabCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	XVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
-	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWx
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUc3kuDU
-	UUU
-
-Hi all,
-
-Sorry for the duplicate 0/2 cover‑letter message in this thread.
-Only the 09:07 UTC full V10 series (0/2, 1/2, 2/2) is the intended one,
-please ignore the earlier 09:01 UTC standalone 0/2 cover‑letter.
-
-The patches 1/2 and 2/2 are correct.
-
-Thanks,
-Hongliang Wang
+Date: Mon, 17 Aug 2026 14:00:16 +0300
+From: "Ard Biesheuvel" <ardb@kernel.org>
+To: "Leif Lindholm" <leif.lindholm@oss.qualcomm.com>
+Cc: linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ "Huacai Chen" <chenhuacai@kernel.org>, "WANG Xuerui" <kernel@xen0n.name>,
+ loongarch@lists.linux.dev
+Message-Id: <92baff04-d30b-4174-b5f5-87b24e6a1cc0@app.fastmail.com>
+In-Reply-To: <aoLR9BPGt4Kzbr3y@leviathan>
+References: <20260813074506.643472-5-ardb@kernel.org>
+ <20260813074506.643472-7-ardb@kernel.org> <an8xTBiCy_PEuwZi@leviathan>
+ <a0d10b63-bf9a-4ad7-a9d8-ab748a9c0c2c@app.fastmail.com>
+ <aoLR9BPGt4Kzbr3y@leviathan>
+Subject: Re: [PATCH 2/3] efi: Pass EFI boot memmap struct address to core kernel
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
 
-On 2026/8/17 下午5:07, Hongliang Wang wrote:
-> Hi all:
+
+On Mon, 17 Aug 2026, at 12:18, Leif Lindholm wrote:
+> On Mon, Aug 17, 2026 at 11:41:51 +0300, Ard Biesheuvel wrote:
+>> On Fri, 14 Aug 2026, at 18:16, Leif Lindholm wrote:
+>> > On Thu, Aug 13, 2026 at 09:45:09 +0200, Ard Biesheuvel wrote:
+>> >> The EFI stub already passes a struct efi_boot_memmap populated with the
+>> >> information of the EFI memory map as a configuration table, and so
+>> >> passing the physical address, size, descriptor size and descriptor
+>> >> version via 4 different DT properties is kind of redundant.
+>> >> 
+>> >> Instead, pass the physical address of this struct in memory so that the
+>> >> kernel can just retrieve the values directly.
+>> >> 
+>> >> Unfortunately, the scheme with four separate properties is boot ABI for
+>> >> Xen, and so this needs to remain supported.
+>> >
+>> > To clarify, you mean boot ABI when running under Xen?
+>> >
+>> 
+>> Yes. We've allowed Xen dom0 to omit the EFI stub entirely, and boot the
+>> kernel proper in EFI mode, passing the EFI system table and memory map
+>> addresses via these special DT properties.
+>> 
+>> >> But for the EFI stub itself,
+>> >> this is just an internal ABI that can be modified.
+>> >
+>> > Hmm...
+>> >
+>> > So this leaves only three properties that cannot be derived from the
+>> > System Table:
+>> > - The System Table address itself
+>> > - kaslr-seed
+>> > - bootargs
+>> >
+>> > The latter two could also be given the config table treatment.
+>> >
+>> 
+>> The latter two are generic boot ABI for the arm64 kernel, and there
+>> is no need to treat them differently for EFI boot. Note that we also
+>> support passing the initrd directly via DT when doing EFI boot, rather
+>> than via the EFI specific device path.
 >
-> This patch set adds clock related properties and parsing in dts and acpi.
+> Ah, yes, noted.
 >
-> ======
-> V10:
-> Patch (2/2):
-> - Replace '/' operator with div64_u64() to avoid __udivdi3 linker error on
->    32‑bit architectures with CONFIG_COMPILE_TEST.
+>> > Is it time to update the boot ABI to say x0 will hold the physical
+>> > address of "device tree blob (dtb) or EFI System Table in system RAM"?
+>> > They can be distinguished by 0xd00dfeed / "IBI SYST".
+>> 
+>> Let's avoid 'boot ABI' here, given that we are talking about an internal
+>> interface between the EFI stub and the kernel proper.
 >
-> Link to V9:
-> https://lore.kernel.org/all/20260810074927.25284-1-wanghongliang@loongson.cn/
+> It's an internal business in the topic under discussion, but if we
+> were to change it, that would mean updating booting.rst, which I
+> consider an ABI.
 >
-> V9:
-> Patch (2/2):
-> - Rewrite the commit description
-> - Use 64-bit arithmetic to avoid integer overflow during the clock calculation
-> - Add checks to reject zero clock rates and ensure valid clock inputs
-> - Modify the comment for clocks and clock-div properties
-> - Add Tested-by tag from Xi Ruoyao, thanks
+
+But not an external ABI. It documents specifically how the EFI stub
+interfaces with the kernel proper. This might change at any point,
+without any obligation whatsoever to remain compatible with the
+previous method.
+
+>> This internal interface uses DT under the hood, even on ACPI platforms,
+>> because it simplifies the early boot code. I don't think we should change
+>> this.
+>> 
+>> Also, the DT provided by the bootloader (if any) may differ from the one
+>> passed by the EFI stub, and so discovering the DT from the EFI system
+>> table is not straight-forward - they are not the same, and making them
+>> the same may have unintended side effects.
 >
-> Link to V8:
-> https://lore.kernel.org/all/20260721122604.12717-1-wanghongliang@loongson.cn/
+> Right, but this confusion exists precisely because of the two ways the
+> device tree can be accessed with the curreent design.
 >
-> V8:
-> Patch (2/2):
-> Fix the potential issues from Sashiko AI review:
->   - Add error checking for the pointer returned by devm_clk_get_optional_enabled();
->   - Add zero-value checking for the match data to provide default div.
+
+Both the EFI stub and the kernel have precisely one way to access the
+platform provided device tree each: the EFI stub uses the config table,
+and the kernel proper uses what is passed via X0.
+
+I don't think that should change, whatever we decide wrt passing the EFI
+system table pointer. The whole point of the EFI stub is impedance
+matching between the EFI loading/calling convention and the Linux/arm64
+boot ABI, and so passing the DTB, iff received via a EFI config table, on
+to the kernel in register X0 is literally its purpose in life.
+
+It would be nice if the EFI stub could pass the pristine DT without
+modifying it, so there is less ambiguity about where certain DT
+properties came from, but I don't think it justifies deviating from the
+above.
+
+>> > The use of a generated DT when none was provided by firmware has led
+>> > to both confusion and shenanigans, and might be nice to get rid of?
+>> >
+>> 
+>> I don't disagree with that. But that would imply adding new code to the
+>> early startup code doing command line parsing and KASLR randomization to
+>> reason about whether these assets are passed via DT or via some other means.
 >
-> Link to V7:
-> https://lore.kernel.org/all/20260707035104.3092-1-wanghongliang@loongson.cn/
+> I take your point about the invasiveness, so won't pursue that further
+> at this time. But I can't promise I won't bring it up again eventually :)
 >
-> V7:
-> Patch (2/2):
-> Fix the potential issues from Sashiko AI review:
->   - Move the clock property parsing process to probe function to solve the issue
->     of calling `devm_clk_get_optional_enabled()` dynamically causes unbounded memory
->     leaks and unbalanced clock enable counts.
->   - Add non-zero checking to priv->div.
+
+Happy to debate this further at any point in the future :-)
+
+>> What would make sense imo is to pass the EFI system table address via X1
+>> when doing EFI boot, so we don't have to get anything at all from the DT.
 >
-> Link to V6:
-> https://lore.kernel.org/all/20260608024533.32419-1-wanghongliang@loongson.cn/
+> That certainly sounds like a clear improvement.
 >
-> V6:
-> - Add Reviewed-by tag from Huacai, thanks.
-> Patch (1/2):
->   - Remove CC stable.
+
+Ack. I'll prototype that to see how it looks.
+
+...
+>> > Minor bikeshedding below.
+>> >
+>> >> @@ -123,8 +134,24 @@ u64 __init efi_get_fdt_params(struct efi_memory_map_data *mm)
+>> >>  			pr_err("Can't find property '%s' in DT!\n", pname);
+>> >>  			return 0;
+>> >>  		}
+>> >> -		if (dt_params[i].paravirt)
+>> >> +		if (IS_ENABLED(CONFIG_XEN) && dt_params[i].paravirt) {
+>> >>  			set_bit(EFI_PARAVIRT, &efi.flags);
+>> >> +		} else {
+>> >
+>> > This condition branch doesn't in fact have anything to do with the fdt.
+>> > Should it still live in fdtparams.c?
+>> >
+>> 
+>> I don't follow. The EFI_PARAVIRT flag is set based on whether we are 
+>> using the generic or the Xen-specific set of DT properties. What would
+>> be a better place to decide this?
 >
-> Link to V5:
-> https://lore.kernel.org/all/20260604015848.18643-1-wanghongliang@loongson.cn/
+> Apologies, I may have commented confusingly - my comment was about the
+> else branch:
 >
-> V5:
-> Patch (1/2):
->   - Adjust the position of #include <dt-bindings/clock/loongson,ls2k-clk.h>;
->   - Add CC stable;
->   - Fix Signed-off-by.
-> Patch (2/2):
->   - Replace 2K0500/2K1000/2K2000 with LS2K0500/2K1000/2K2000;
->   - Replace 7A1000/7A2000 with LS7A1000/7A2000;
->   - Replace if (clk && !IS_ERR(clk)) with if(!IS_ERR_OR_NULL(clk));
->   - Add document that clocks and clock-div are only ACPI properties in ACPI;
->   - Remove unsigned int cast in code (unsigned long)device_get_match_data(dev);
->   - Add CC stable;
->   - Fix Signed-off-by.
+> +
+> +                       bm = early_memremap_ro(memmap, sizeof(*bm));
+> +                       if (!bm) {
+> +                               pr_err("Cannot remap EFI boot memory map\n");
+> +                               return 0;
+> +                       }
+> +
+> +                       mm->phys_map            = memmap + sizeof(*bm);
+> +                       mm->size                = bm->map_size;
+> +                       mm->desc_size           = bm->desc_size;
+> +                       mm->desc_version        = bm->desc_ver;
+> +
+> +                       early_memunmap(bm, sizeof(*bm));
 >
-> Link to V4:
-> https://lore.kernel.org/all/20260526031021.32662-1-wanghongliang@loongson.cn/
+> So to restate - this function is called from efi_init():
+> ---
+>         /* Grab UEFI information placed in FDT by stub */
+>         efi_system_table = efi_get_fdt_params(&data);
+>         if (!efi_system_table)
+>                 return;
+> ---
 >
-> V4:
-> - Add Acked-by tag from Conor Dooley, thanks.
-> Patch (2/2):
->   - Adjust the position of #include <linux/clk.h>;
->   - Remove struct ls2x_i2c_chip_data and use macro to describe div;
->   - Use div instead of factor in ls2x_i2c_adjust_bus_speed;
->   - Reverse the "if & else" code logic in ls2x_i2c_adjust_bus_speed;
+> Before this set, this function called get_fdt_params() indeed gets
+> "params" from a device tree. After this set, this function gets params
+> from a device tree in some instances, and not in others.
+> Which feels suboptimal.
 >
-> Link to V2:
-> The PATCH v3 is incomplete, v4 is the replacement of v3, so the previous patch link is v2.
+> We could rename the function, but then there's still DT-unrelated
+> code held in fdtparams.c.
 >
-> [PATCH v2] dt-bindings: i2c: ls2x-i2c: Add clocks and clock-frequency properties
-> https://lore.kernel.org/all/20260507081010.12810-1-wanghongliang@loongson.cn/
-> [PATCH v2] i2c: ls2x: Add clocks property parsing and adjust bus speed
-> https://lore.kernel.org/all/20260507081010.12810-2-wanghongliang@loongson.cn/
+> If we go down the route of passing the system table in x1 on boot,
+> then I guess the effect of assigning efi_system_table will already be
+> broken out. But should we then split the mm struct initialisation into
+> separate DT and config table helper functions?
 >
-> V2:
-> [PATCH v2] dt-bindings: i2c: ls2x-i2c: Add clocks and clock-frequency properties
-> - Remove the custom properties clock-input and clock-div, use clock framework;
-> [PATCH v2] i2c: ls2x: Add clocks property parsing and adjust bus speed
-> - Use clock framework to obtain the i2c reference clock in dts.
->
-> Link to V1:
-> https://lore.kernel.org/all/20260325011852.19079-1-wanghongliang@loongson.cn/
->
-> Hongliang Wang (2):
->    dt-bindings: i2c: ls2x-i2c: Add clocks and clock-frequency properties
->    i2c: ls2x: Add clocks property parsing and adjust bus speed
->
->   .../bindings/i2c/loongson,ls2x-i2c.yaml       |  3 ++
->   drivers/i2c/busses/i2c-ls2x.c                 | 44 +++++++++++++++++--
->   2 files changed, 44 insertions(+), 3 deletions(-)
->
+
+Not disagreeing but I think it is fine to leave it as I suggested at this
+point.
+
+Some additional work is needed to get rid of linux,uefi-boot-memmap
+entirely, and until that happens, passing the EFI system table via
+X1 and linux,uefi-boot-memmap via DT is not a huge improvement.
+
+linux,uefi-boot-memmap is needed when SetVirtualAddressMap() is called
+[with a non-1:1 mapping], as the EFI system table contains a remapped
+address of the config table array in that case.
+
+There are currently two remaining reasons why calling
+SetVirtualAddressMap() is required:
+- some Ampere boxes crash otherwise (but these systems tolerate SVAM
+being called with a 1:1 mapping)
+- kernel configs with a VA space < 48 bits are not guaranteed to be
+able to map the EFI runtime services 1:1, so there, SVAM is still
+needed as well.
+
+Both can be fixed, and I have been meaning to address the latter by
+always making the EFI runtime map (which is essentially a 1:1 map)
+use 48 bits of VA in all configs. (The ID map already does the same)
+
+Then, the former can be addressed by installing a 1:1 mapping when
+calling SVAM.
+
+That would remove the need entirely to ever call SVAM() on arm64,
+and therefore the need to pass the address of the EFI memory map
+separately.
 
