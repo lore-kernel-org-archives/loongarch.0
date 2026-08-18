@@ -1,180 +1,188 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F2E83DA5C5
-	for <loongarch@lists.linux.dev>; Mon, 17 Aug 2026 17:31:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F392F3AE194
+	for <loongarch@lists.linux.dev>; Tue, 18 Aug 2026 04:00:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786987883; cv=none; b=mQOuWdi78tH1w9S0at/5d2WKgRw/WR7nsJfSkWHbqh3EyIaZWcmxeIG4AiYE6rrZ5Na2SRcBiG0Xik7PYNMqdW0Hbw25cTB4A1SEKShcKsYFdcoB4gI7wEr0vgJcC1F+e44RDUWpXSEsHb9iRo8nywLnfOMIq7otQ99WbU4qSoc=
+	t=1787025648; cv=none; b=JmP9uvcuuTkjv6YKR6eJwjeIuatK1KE6cUoHHDXfABT+q6Y/+2YLjaUBCxnEDz5doKfJYGix4Rlq7oF69fj7K65k1bUosYqGJobK4sVk2qdv7FN2OIPneafy15NHDR4ruraFKrbXhQHKkcjYKfGIZvVN7S24ESsPN6q+eu62tyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786987883; c=relaxed/simple;
-	bh=XuQIGnNEgl05hW1Pt/SRDZrKnxVKWtgOYyJNVYljJJk=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HbSeIU/bGipqZ83HoqVkInLo1P8XyUb17D62T0dSjLwUZMqVEcvKXTGgmt5fdKMQh8zgIX3/VsRicdaKbgHH/G97ucWksFScJEeI37/MRX4G1NtYIv5XNcMSjjrwcmsk0VIK3ARa0Uy1YBjIXBUpYGMIxL8k2q5Bc7spSDRZghE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=czYM/o43; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1787025648; c=relaxed/simple;
+	bh=LRR2JW96qzLG8uXgU1+MfoOsPimHhtCsmfw/iXX8kB4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AEPhiq/8Y5bQnQYhJ6g3a1r+qSjC9fUuJNCQjO7aontKNnlzHDw6yJ4nKZ/cdq13IP2FewPUhxo3GZAOMF/WEMghiW9YxOfObDUc4AamqyEI25FafyIZoKtWh+zh3I2VSZuecyGufGfBj4Yb/c6ylqrVCnCF3zUjGSdRRWVTG2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=NtFRXij4; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="czYM/o43"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5b0148201fbso3534364e87.3
-        for <loongarch@lists.linux.dev>; Mon, 17 Aug 2026 10:31:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786987880; x=1787592680; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=gdAST+PW7bd2DD1v0YjadB8+zi0iamo4AznH2c9tOUI=;
-        b=czYM/o43My4cVj/7aTbFDiRroWGMGOJRxx6RPMSjZ9YXTc4IsI0gJE3nVFwKghhZAb
-         5sHTFPhkGBPmKqh2ienXp1ZdjyoQ7+kcc5ORRuhjfWn7No8t0zu4K93SIDMlMCVEXBFV
-         7+riLpaKyZMCzMIAo3AVL4O2I/daLpMdbXl98e2tQJjlGiWm+gIecSfQXMu/enMouxzo
-         nYyn4cOBbetAavaYngYI9WhOrXwOBlHA7FERZBcZj8NqupD+zEp4AFXwATo5ziScvdbc
-         PzTeuzDZxTuQXJ9QHUHCRojchDe/DfHEpsgeefL7LRPz6NtF4NUrk9J0JkR1/ZmmL5Mn
-         5vTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786987880; x=1787592680;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=gdAST+PW7bd2DD1v0YjadB8+zi0iamo4AznH2c9tOUI=;
-        b=bRVcmCOwih8EFq2uAniy/sZnf/E6vMGyRjwU8XaPOT7b5qZ1HphAyVp3DmF+RhlfCe
-         WGIZpog3NkNFRztT9DKMTwBQd/xyN6lvUqiLs5nTbGG/8CDrQ0o3F0ukDk605IGJxhfL
-         bvE15xHKYzbUh46v6adSuk26ft2w1hMATXoYxzrO+EDiihKJXb70K+T3quibwFPADSah
-         neUiIRgdhEFxPmGRRZQ8fsd7LheGgATaj5ay48i8qn/lEnMk5zTsfOyEg/M/Dn1rP+I0
-         eR0fCA4iXwi6FnNADmXJh54+WyHFIcKLL/Thle6kQe/VypfVs4kmwURZgV7SuzT1QiWp
-         w/2w==
-X-Forwarded-Encrypted: i=1; AHgh+Rqu2Fydw2V+U4Q79jY/1+b7IzOulOKTXJhxs1sOY7BsaOy9JJ/FEme68peLT3IgVnfDJ1YKDhpqEh8=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyUz5XK5/piVm6KeOAphRf0cGPfyyW2T0GE6ORjTiihM9a/GAGb
-	FHleYTOwX3YJZyUkE8LlFEKQGBvMyI1BPC2n3jOoBDNjcCx9czUIwv4K
-X-Gm-Gg: AR+sD10iKvsPeLB+of3QmiEvntsQKwB+2lF1C2jXyhrQTbbntXG+sLi1Ux6q+ZTjJlD
-	WNBjx6czMrraH7jB1B2z4D2YnqT2P3Navr3c18B0SQToDoeyUsvyGKBkQ/dN36+4h9Wns2fHKNz
-	H2OAvF4v1zD1bIiIBzhGb85MkcHRpz88ufFb4EvF8IV3hnt+7b/ZNx5wEQNhAnTssNPiRWoPFoK
-	GO+LiNSi+5Q0BVlga2mx1ei3jkWUBJWp6YXggwWX7xAbWPARTrYQRXP/jDmLe+3LGKBJhux16Q3
-	GTlx6h3uEO1z2JYdROzCc7onhmu3Pk2fBjA0s/I4S1wg1TR3kJfJ9UxVo0TUAN5d/XAtwR3s82E
-	ywicL/d915ckh84tx2RmVZPLM1vJD9TVbEqFViyqzoZsPrLUXJQ3l/1WOeRFScE+M+JCoPyTpt9
-	io8PVtcml/jWsrjC65KhMlQnokQg==
-X-Received: by 2002:a05:6512:1284:b0:5b2:9358:b854 with SMTP id 2adb3069b0e04-5b459142afbmr3869031e87.42.1786987880080;
-        Mon, 17 Aug 2026 10:31:20 -0700 (PDT)
-Received: from milan ([2001:9b1:d5a0:a500::24b])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3a16b1f1852sm5885691fa.38.2026.08.17.10.31.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2026 10:31:19 -0700 (PDT)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@milan>
-Date: Mon, 17 Aug 2026 19:31:17 +0200
-To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Adrian =?utf-8?Q?Barna=C5=9B?= <abarnas@google.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Alexandre Ghiti <alex@ghiti.fr>, Andy Lutomirski <luto@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Brendan Jackman <brendan.jackman@linux.dev>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Hildenbrand <david@kernel.org>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Len Brown <lenb@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <pjw@kernel.org>, Pavel Machek <pavel@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Vasily Gorbik <gor@linux.ibm.com>, WANG Xuerui <kernel@xen0n.name>,
-	Will Deacon <will@kernel.org>, x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-pm@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	loongarch@lists.linux.dev
-Subject: Re: [PATCH 2/6] mm/vmalloc: set area's page_order after allocation
- succeeds
-Message-ID: <aoNFZU_QzghDBgbZ@milan>
-References: <20260816-execmem-set-vm-perms-v0-2-v1-0-90944a3ad43f@kernel.org>
- <20260816-execmem-set-vm-perms-v0-2-v1-2-90944a3ad43f@kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="NtFRXij4"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 46004153B;
+	Mon, 17 Aug 2026 21:00:41 -0700 (PDT)
+Received: from localhost (a085714.arm.com [10.164.19.28])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6E5453F66F;
+	Mon, 17 Aug 2026 21:00:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1787025645; bh=LRR2JW96qzLG8uXgU1+MfoOsPimHhtCsmfw/iXX8kB4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=NtFRXij4Uhwnlv72AF85fJYzj/aymvsPMmb1FV54uYlLFKg3t/C+cIPPz6W0jsHV1
+	 9J4gARXAWELXnskJwPs+BnDvgT6ZNx/a8ZwzPVKYIGTlZF5fGPZRP4qKo2lnT7Fr1w
+	 ur0UrDi2dMsXj4xyEnxA47CkAD4o6o2g2lJDsONI=
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+To: linux-mm@kvack.org,
+	akpm@linux-foundation.org,
+	david@kernel.org
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	linux-alpha@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org,
+	linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC V3 0/8] mm: Drop pxd_ERROR()
+Date: Tue, 18 Aug 2026 09:30:33 +0530
+Message-ID: <20260818040041.1891769-1-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260816-execmem-set-vm-perms-v0-2-v1-2-90944a3ad43f@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Sun, Aug 16, 2026 at 01:59:25PM +0300, Mike Rapoport (Microsoft) wrote:
-> __vmalloc_area_node() calls set_vm_area_page_order() to set area's
-> page_order before actually allocating pages to populate the area.
-> 
-> If allocation of large pages in HUGE_VMAP case fails midway, this leaves
-> the area with elevated page_order throughout the cleanup path.
-> 
-> There is no actual issue with this because the only place that currently
-> relies on area->page_order on the cleanup path is the loop calculating
-> the direct map alias range in vm_reset_perms() and it anyway skips
-> unpopulated pages.
-> 
-> But having set_vm_area_page_order() in the middle of __vmalloc_area_node()
-> makes things very obscure, hard to reason about and error prone against
-> future changes of the cleanup path.
-> 
-> Move the call to set_vm_area_page_order() after __vmalloc_area_node()
-> succeeded where page order is guaranteed.
-> 
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> ---
->  mm/vmalloc.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> index 22566e0b6e38..6822f0fe9583 100644
-> --- a/mm/vmalloc.c
-> +++ b/mm/vmalloc.c
-> @@ -3901,8 +3901,7 @@ static void *__vmalloc_area_node(struct vm_struct *area, gfp_t gfp_mask,
->  		goto fail;
->  	}
->  
-> -	set_vm_area_page_order(area, page_shift - PAGE_SHIFT);
-> -	page_order = vm_area_page_order(area);
-> +	page_order = page_shift - PAGE_SHIFT;
->  
->  	/*
->  	 * High-order nofail allocations are really expensive and
-> @@ -4106,6 +4105,14 @@ void *__vmalloc_node_range_noprof(unsigned long size, unsigned long align,
->  	if (!ret)
->  		goto fail;
->  
-> +	/*
-> +	 * Set area->page_order once it's known exactly that the order of the
-> +	 * pages the area contains.
-> +	 * Even if we succeeded to partially populate the area with large pages,
-> +	 * still treat the area as populated with order-0 pages.
-> +	 */
-> +	set_vm_area_page_order(area, shift - PAGE_SHIFT);
-> +
->  	/*
->  	 * Mark the pages as accessible, now that they are mapped.
->  	 * The condition for setting KASAN_VMALLOC_INIT should complement the
-> 
-> -- 
-> 2.53.0
-> 
-OK, can we just set it right after the:
+pxd_ERROR() macros have been provided by all platforms, which are very much
+identical and can be dropped off completely if these pgtable printing could
+be moved to callers in generic MM aka all pxd_clear_bad().
 
-	area->nr_pages = vm_area_alloc_pages(
-			vmalloc_gfp_adjust(gfp_mask, page_order), node,
-			page_order, nr_small_pages, area->pages);
+But first cleanups and re-organizations are required in some platforms that
+are using these macros internally. Afterwards [pte|pmd|pud|p4d|pgd]_ERROR()
+macros have been completely dropped from the entire tree.
 
+This series is based on v7.2 after the following patch and has also been
+built tested on multiple platforms.
 
-succeeds?
+https://lore.kernel.org/all/20260709044334.1741263-1-anshuman.khandual@arm.com/
 
-I am not sure there is a good reason to move it out of the
-__vmalloc_area_node().
+Changes in RFC V3:
 
---
-Uladzislau Rezki
+- Moved ptrval_to_str() as header in a separate patch
+- Stopped using pxd_ERROR() in generic MM in a separate patch
+- Dropped pxd_ERRO() macros from all platforms in a separate patch
+- Dropped print_bad_pte() and also cleaned up set_pte_phys()
+- Added some pr_error() messages in __get_pte_phys()
+- Cleaned up error messages and used ptrval_to_str() in platforms
+
+Changes in RFC V2:
+
+https://lore.kernel.org/all/20260811042119.3652929-1-anshuman.khandual@arm.com/
+
+- Added clean up patches for platforms with existing pxd_ERROR() usage
+- Dropped __FILE__ and __LINE__ from all print sections per David
+
+Changes in RFC V1:
+
+https://lore.kernel.org/all/20260806080639.1916749-1-anshuman.khandual@arm.com/
+
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Rich Felker <dalias@libc.org>
+Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+Cc: Helge Deller <deller@gmx.de>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: linux-alpha@vger.kernel.org
+Cc: linux-snps-arc@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-csky@vger.kernel.org
+Cc: linux-hexagon@vger.kernel.org
+Cc: loongarch@lists.linux.dev
+Cc: linux-m68k@lists.linux-m68k.org
+Cc: linux-mips@vger.kernel.org
+Cc: linux-openrisc@vger.kernel.org
+Cc: linux-parisc@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-riscv@lists.infradead.org
+Cc: linux-s390@vger.kernel.org
+Cc: linux-sh@vger.kernel.org
+Cc: sparclinux@vger.kernel.org
+Cc: linux-um@lists.infradead.org
+Cc: linux-arch@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
+
+Anshuman Khandual (8):
+  mm: Make ptrval_to_str() generally available
+  mm: Stop using pxd_ERROR()
+  loongarch/mm: Stop using pte_ERROR()
+  parisc/mm: Directly use generic [pmd|pgd]_clear_bad()
+  sh/mm: Stop using pte_ERROR()
+  sh/mm: Stop using [p4d|pud|pmd]_ERROR()
+  sh/mm: Stop using pgd_ERROR()
+  mm: Drop pxd_ERROR()
+
+ arch/alpha/include/asm/pgtable.h              |  7 -------
+ arch/arc/include/asm/pgtable-levels.h         | 11 ----------
+ arch/arm/include/asm/pgtable.h                |  7 -------
+ arch/arm/kernel/traps.c                       | 17 ---------------
+ arch/arm64/include/asm/pgtable.h              | 15 -------------
+ arch/csky/include/asm/pgtable.h               |  4 ----
+ arch/hexagon/include/asm/pgtable.h            |  3 ---
+ arch/loongarch/include/asm/pgtable.h          | 13 ------------
+ arch/loongarch/mm/init.c                      |  4 +++-
+ arch/m68k/include/asm/mcf_pgtable.h           |  6 ------
+ arch/m68k/include/asm/motorola_pgtable.h      |  8 -------
+ arch/m68k/include/asm/sun3_pgtable.h          |  7 -------
+ arch/microblaze/include/asm/pgtable.h         |  7 -------
+ arch/mips/include/asm/pgtable-32.h            | 10 ---------
+ arch/mips/include/asm/pgtable-64.h            | 13 ------------
+ arch/nios2/include/asm/pgtable.h              |  7 -------
+ arch/openrisc/include/asm/pgtable.h           |  7 -------
+ arch/parisc/include/asm/pgtable.h             |  9 --------
+ arch/parisc/kernel/pci-dma.c                  |  6 ++----
+ arch/powerpc/include/asm/book3s/32/pgtable.h  |  2 --
+ arch/powerpc/include/asm/book3s/64/pgtable.h  |  7 -------
+ arch/powerpc/include/asm/nohash/32/pgtable.h  |  2 --
+ .../include/asm/nohash/64/pgtable-4k.h        |  3 ---
+ arch/powerpc/include/asm/nohash/64/pgtable.h  |  5 -----
+ arch/riscv/include/asm/pgtable-64.h           |  9 --------
+ arch/riscv/include/asm/pgtable.h              |  4 ----
+ arch/s390/include/asm/pgtable.h               | 11 ----------
+ arch/sh/include/asm/pgtable-3level.h          |  3 ---
+ arch/sh/include/asm/pgtable_32.h              | 13 ------------
+ arch/sh/mm/init.c                             | 16 +++++++-------
+ arch/sparc/include/asm/pgtable_32.h           |  3 ---
+ arch/sparc/include/asm/pgtable_64.h           | 10 ---------
+ arch/um/include/asm/pgtable-2level.h          |  7 -------
+ arch/um/include/asm/pgtable-4level.h          | 13 ------------
+ arch/x86/include/asm/pgtable-2level.h         |  5 -----
+ arch/x86/include/asm/pgtable-3level.h         | 11 ----------
+ arch/x86/include/asm/pgtable_64.h             | 18 ----------------
+ arch/xtensa/include/asm/pgtable.h             |  4 ----
+ include/asm-generic/pgtable-nop4d.h           |  1 -
+ include/asm-generic/pgtable-nopmd.h           |  1 -
+ include/asm-generic/pgtable-nopud.h           |  1 -
+ include/linux/mm_types.h                      | 15 +++++++++++++
+ mm/memory.c                                   | 16 ++------------
+ mm/pgtable-generic.c                          | 21 +++++++++++++++----
+ 44 files changed, 48 insertions(+), 314 deletions(-)
+
+-- 
+2.43.0
+
