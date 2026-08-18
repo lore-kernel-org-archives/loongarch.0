@@ -1,200 +1,128 @@
-Received: from mail-ej2-f2.google.com (mail-ej2-f2.google.com [74.125.228.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4537B2D9796
-	for <loongarch@lists.linux.dev>; Tue, 18 Aug 2026 14:05:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC2FA47DF95;
+	Tue, 18 Aug 2026 17:25:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787061924; cv=none; b=YQHe1ksfijRL7LZU6WlD/wLf8kKJH3onkM7VM2255rl1Qwjfh2RX2Ra1Y5cHheZQM47yt7+AW0wKRSNE3XgzLyg5BRrwPILI/01Zg6SHvSUkZsCbX4tJXpD8rPsojYfcsNJr94F9izg9V08HgSRaT9yDsLafnW8aF1peCMDQG/k=
+	t=1787073918; cv=none; b=nVWYLUiRN2AFeqBKZMYz19/zfXiOLgqoHl6vpNi7IU83/3kFoKhyv8otYEN+M5gieImURYwI2VLsOocuflqZbiSsy3nVkl9KvxyEB0JOqdaetXS/ejETA/rP+zUL6qdMI6iGz2uTPM0SoOUTO7QCjsplQhFI7SPLcFx/lI329MY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787061924; c=relaxed/simple;
-	bh=6lN7JRMhV++fUWBRY/mOyEZ6HBCxjfX02lNtSVCMpUg=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=CO/97Zy+sJuGdB91JcS4sM76sFppk1MelZZmiVeY/W8PyeF1+qEsofj4Zbt4quqXQZx6JVgDGKqX1CJvV0rehkiwevKETfQ/EytV1AjylOYIGdM6OhWTjE93OK25vhNMdNqyu+gCEvZPQJLTDVVxJbSiza5DROWpiqDpp34kFHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=s/N7TSTm; arc=none smtp.client-ip=74.125.228.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1787073918; c=relaxed/simple;
+	bh=UsyiP6uczL8lxNasR7yxPsTKZ8/aZxcPz1JoV+Bk3Dc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=vB2F/pkPkQ1efKM0zYJZeZMJhX/vrBOnHRMEnemg1UMDe+rkstSRM3YsmV5uf31/UU+3ISuM+HR/5HMnMr173tZ6SryFh+no60bzj+Xzk9GGql4biG+Vzf+7CHt9D5nSL+ZwEzCZhKYIN4PQ8mrohGhuRhaSW10C8vIDBtZ76RQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HHYuHZuq; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s/N7TSTm"
-Received: by mail-ej2-f2.google.com with SMTP id a640c23a62f3a-c16060ba9ecso41571866b.0
-        for <loongarch@lists.linux.dev>; Tue, 18 Aug 2026 07:05:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787061921; x=1787666721; darn=lists.linux.dev;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-type:content-transfer-encoding:mime-version:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=8J8uVRc1aTCENx69srR/YmAYw9UpjNQQND8eHx6fKtQ=;
-        b=s/N7TSTmeftDGSrA3yWltCs+9Uu1z047ZF44HRZ6qv+Y8dAsmkfD1Ixp+Q4Tb6y1fk
-         7R9enyJpp9KgNmAnC9kicRMnV1AFzbgPxM3a9qjN6QMoV3E5U89lchL7ZQk02XrAKHjL
-         KFlS4gwXEWW2QE5W0koWxPpxN21Q5wEc7/KgA/yc0yt9HeApiBGOIcXlWk26xMzXbfnP
-         Zoy4SGXCuqVnTdd+/kqQB6pm2UabNwfcPgKDswCg/xEbXOgQmaVCKVEIxpA1tMYjssZk
-         6dDIE/pXNo0sgNkJ2x0m1VTsxndk13pgzbLbGbP5OjZN87lb2D3+lgN76TCcohbcP5ou
-         /ZYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787061921; x=1787666721;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-type:content-transfer-encoding:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=8J8uVRc1aTCENx69srR/YmAYw9UpjNQQND8eHx6fKtQ=;
-        b=D7urSRMXC/FflHWs+01qX3Gly6aFlhsqscZxziUHq4uC46cAQ73VqniK1MobZCIBTk
-         hqvXXlUk5mtK7a3MlGlsbUSBD+goxQFRG/+emD8uOQPeKjoF6ssFDupI1vR86zJUgtCO
-         Oqh9cQNJy86nzyV/HP87PXIjl1sDB5nBu1ikDkinDlplidSeMdDFoIDpRZ9MrwQyocYR
-         rtX5q036gs7YJnbXpLP+b+Vk1KIJX3EN1FfDkZwTeeA4n2F1327oYDCipi6viloMPiYm
-         0XjdA2ezbbYKpvAoBH5nE2p3B5IpljCleVwoBGYA3lTcSp1eR9mDuAUoziu1CtfexVzF
-         83bA==
-X-Gm-Message-State: AOJu0YxCafeETybr3M8xo5OuNvv7lHXFItrOtJEoDjb9/z0CIk5DAWpw
-	NDJ39vZ1q6Mt4+fPz66XA7tiUf6xbyJRFq0XPLJAFzzBXStXOBxHH9Lv1Oi5u1Dr
-X-Gm-Gg: AR+sD13/K9CLidd0XStRyNztTSCX9YFH2rEZS4ZZ652ZYEjBVNTcOQCKcOQFPtA7VnX
-	a19Ubu5OzpL+cK4pf+sJ/hvRHdQhk2NBWThSGUx1DWeZSCDyi7obSueR2O2OrKgItITg+b8Q6zq
-	CenCnB4uurzg50fFxMw+agnjIMXn4r1APU8dTdXX0ecoEhcXSrcM5nnIrYltQEtOu/bzEUQUXCl
-	dtKPmFqSnNUsvtFwlLXr3J6n1C/yYOFs7N0zvSnNXf05XMF3GexH7QR32WYQOVT+ILOnJO3vXWJ
-	8dSv3xMtbUwxtNGtYKHXZ3a4TEy+uWpeAcaz45CC5flHO9RY9oIUPxxYKBHjqoqwGBh01s10Znx
-	2JgT4B+GopZ/4Rug4KK3iPX3hVS5PsID2Z/WUGM8TS+TjAJntHaLlm8o2HGiTe23EpsdTgjG5tm
-	jBQpYhgk9J5jo0wzIPPOpEYK6TIyIpHIBYKDcjLGoWBSYShIpk//4PaXnk6To9wBm6/DUCanpLk
-	5QeP0sISNeMPnAJFBGTetFlL5qwQlgZOV0z7ok06Ri4d/sVlVyX53HLlsR4ItlcoPs3UliQsvSA
-	Hc7piAnbgXxY7GCOZeipV4MGNo4=
-X-Received: by 2002:a17:906:c147:b0:c16:785:cfb6 with SMTP id a640c23a62f3a-c218d9ba609mr329965666b.3.1787061921093;
-        Tue, 18 Aug 2026 07:05:21 -0700 (PDT)
-Received: from localhost (nat-icclus-192-26-29-3.epfl.ch. [192.26.29.3])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c2187d269dbsm144722766b.7.2026.08.18.07.05.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Aug 2026 07:05:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HHYuHZuq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A28E1F00A3A;
+	Tue, 18 Aug 2026 17:25:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787073917;
+	bh=AShWrs852J7IkStssEoEst3JiywPYlSikQUVe7RTkRk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=HHYuHZuq5zMXG+8OeZcsNEd1kunHyn8X+QRRdpazCD+PrQnY2MD+Ve9C7MoKwru4x
+	 dbBzkW2cGWbBN3m3D8evXSCxOc8q2AyH3nSXNiWo+xrK2TdFxAIivDqioG1XAtwxtF
+	 aMCegUXmfY55bD/l0MdwxRF/+47ynTjAj26vHT4KSJZRH0qcQ7HSLgqNnkGJ4K3+/W
+	 crGr6GNfZ3DAGAYgRt1N7RBfRYxh3dfuxofB0XlSNCLCsppsmpUwmMlxXD5gurFGnn
+	 9/OAXbxSo02M2icN//fOoDQwicorrXfhbp04ZPJhViHl6uwc6nkSncuJyuWweMLpgg
+	 uyhaHGoSxMwtA==
+Message-ID: <55d92b3e-ad3f-464f-b2db-a2552353223e@kernel.org>
+Date: Tue, 18 Aug 2026 19:25:07 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC V3 1/8] mm: Make ptrval_to_str() generally available
+To: Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
+ akpm@linux-foundation.org
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker
+ <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, linux-alpha@vger.kernel.org,
+ linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-um@lists.infradead.org, linux-arch@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Lorenzo Stoakes <ljs@kernel.org>
+References: <20260818040041.1891769-1-anshuman.khandual@arm.com>
+ <20260818040041.1891769-2-anshuman.khandual@arm.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <20260818040041.1891769-2-anshuman.khandual@arm.com>
 Content-Type: text/plain; charset=UTF-8
-Date: Tue, 18 Aug 2026 16:05:20 +0200
-Message-Id: <DKS4KWIT8C5I.2THOLN7FKRRJT@gmail.com>
-Cc: <loongarch@lists.linux.dev>, <linux-kernel@vger.kernel.org>, "Vincent
- Li" <vincent.mc.li@gmail.com>, <bpf@vger.kernel.org>
-Subject: Re: [PATCH v1] LoongArch: Fix __smp_mb__{before,after}_atomic()
-From: "Kumar Kartikeya Dwivedi" <memxor@gmail.com>
-To: "Tiezhu Yang" <yangtiezhu@loongson.cn>, "Huacai Chen"
- <chenhuacai@kernel.org>
-X-Mailer: aerc 0.21.0
-References: <20260817035908.460-1-yangtiezhu@loongson.cn>
- <3103b3b4-5c0d-ed87-2e15-31a4d2289ec5@loongson.cn>
- <DKS3YCAMWONO.2NVVH8IPARH7Y@gmail.com>
- <48ade10d-dd1f-ac6f-e827-d76a81183486@loongson.cn>
-In-Reply-To: <48ade10d-dd1f-ac6f-e827-d76a81183486@loongson.cn>
+Content-Transfer-Encoding: 7bit
 
-On Tue Aug 18, 2026 at 3:50 PM CEST, Tiezhu Yang wrote:
-> On 2026/8/18 =E4=B8=8B=E5=8D=889:35, Kumar Kartikeya Dwivedi wrote:
->> On Tue Aug 18, 2026 at 3:28 PM CEST, Tiezhu Yang wrote:
->>> On 2026/8/17 =E4=B8=8A=E5=8D=8811:59, Tiezhu Yang wrote:
->>>> When testing the BPF selftest "sudo ./test_progs -t timer_lockup", the=
-re
->>>> is a kernel lockup and panic:
->>>
->>> ...
->>>
->>>> With this patch, the lockless "store-before-load" ordering is enforced=
- by
->>>> the DBAR instruction. The BPF timer_lockup selftest was stressed for 5=
-000
->>>> consecutive loops on a physical LoongArch machine without encountering=
- any
->>>> further lockups or warnings:
->>>>
->>>>     for i in {1..5000}; do sudo ./test_progs -t timer_lockup; done
->>>
->>> ...
->>>
->>>> diff --git a/arch/loongarch/include/asm/barrier.h b/arch/loongarch/inc=
-lude/asm/barrier.h
->>>> index 4b663f197706..adfe343dfa65 100644
->>>> --- a/arch/loongarch/include/asm/barrier.h
->>>> +++ b/arch/loongarch/include/asm/barrier.h
->>>> @@ -57,8 +57,8 @@
->>>>    #define __WEAK_LLSC_MB		"			\n"
->>>>    #endif
->>>>
->>>> -#define __smp_mb__before_atomic()	barrier()
->>>> -#define __smp_mb__after_atomic()	barrier()
->>>> +#define __smp_mb__before_atomic()	__smp_mb()
->>>> +#define __smp_mb__after_atomic()	__smp_mb()
->>>>
->>>>    /**
->>>>     * array_index_mask_nospec() - generate a ~0 mask when index < size=
-, 0 otherwise
->>>
->>> Hi all,
->>>
->>> To address the soft lockup while avoiding the performance overhead of
->>> executing two separate instructions, I think there is a more elegant
->>> way to fix this directly in the BPF core helper:
->>>
->>> We can replace atomic_inc() and smp_mb__after_atomic() with a single
->>> atomic_fetch_add() in bpf_timer_cancel(). This consolidates the logic
->>> into a single native atomic operation with full ordering, which not
->>> only guarantees the store-load order to eliminate the deadlock but
->>> also improves the performance for weak memory model architectures.
->>>
->>> Any thoughts on this approach?
->>>
->>> ```
->>> diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
->>> index c18f1e16edee..ee2b3a4dcc05 100644
->>> --- a/kernel/bpf/helpers.c
->>> +++ b/kernel/bpf/helpers.c
->>> @@ -1591,9 +1591,7 @@ BPF_CALL_1(bpf_timer_cancel, struct bpf_async_ker=
-n
->>> *, async)
->>>            */
->>>           if (!cur_t)
->>>                   goto drop;
->>> -       atomic_inc(&t->cancelling);
->>> -       /* Need full barrier after relaxed atomic_inc */
->>> -       smp_mb__after_atomic();
->>> +       atomic_fetch_add(1, &t->cancelling);
->>>           inc =3D true;
->>>           if (atomic_read(&cur_t->cancelling)) {
->>>                   /* We're cancelling timer t, while some other timer
->>> callback is
->>> ```
->>>
->>> I tested the above diff, the BPF timer_lockup selftest was stressed
->>> for 5000 consecutive loops on a physical LoongArch machine without
->>> encountering any further lockups or warnings.
->>
->> There is a full barrier in both cases. I don't know what performance imp=
-rovement
->> will be achieved by changing this.
->
-> We performed benchmarking using UnixBench on a physical LoongArch
-> machine, the UnixBench score is different (amadd.w + dbar < amadd_db.w).
->
+On 8/18/26 06:00, Anshuman Khandual wrote:
+> Move ptrval_to_str() inside a header thus making the helper more generally
+> available for new users which are being added later. While here, also move
+> another related string size macro PTVAL_STR_MAX inside the header as well.
+> 
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: David Hildenbrand <david@kernel.org>
+> Cc: Lorenzo Stoakes <ljs@kernel.org>
+> Cc: linux-mm@kvack.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
 
-I mean, this function is already quite heavy. We have multiple fully ordere=
-d
-atomics (refcount bumps/drops, xchg(), etc.) spread across the operation. D=
-o you
-observe any measurable speedup in the throughput of this function?  The sec=
-ond
-question is whether timer cancellation is really frequent. In practice, I d=
-on't
-think that is the case.  The actual hrtimer_cancel() in itself is heavy and
-waits synchronously for the callback to finish.
+I would have placed that into include/linux/pgtable.h. Any particular reason for
+mm_types?
 
-I'm not opposed to it or anything, I just don't think it's worth it in this
-case. If the latency of cancel is a problem there are other bigger opportun=
-ities
-to pursue than this.
+Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
->> Don't you need to fix the lowering for
->> smp_mb__after_atomic() anyway? It's used in several other places in the =
-kernel.
->
-> The LoongArch architecture-level fix for smp_mb__after_atomic() is
-> a fundamental bug fix that will be pushed separately to the LoongArch
-> tree. This BPF-layer change is intended as a generic, cross-architecture
-> performance optimization.
->
-> Thanks,
-> Tiezhu
+-- 
+Cheers,
 
+David
