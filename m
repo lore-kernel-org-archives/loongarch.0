@@ -1,182 +1,285 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E2EC236453
-	for <loongarch@lists.linux.dev>; Wed, 19 Aug 2026 04:32:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2183CBE74
+	for <loongarch@lists.linux.dev>; Wed, 19 Aug 2026 05:58:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787113981; cv=none; b=fYZiFhCH7wClT7RjXR3RINpepjdS56Xpwy7GtMSVLyNBaKExPPceJczd/eHWYgdB3qj82MLJr+//dlNBEY6s+KRT6y4WoksMI0ikd5Wdvszj6gVxUeDxog7n00sSnPDypDIU6cbIR6xZ1BO+/fRV5gqAvJEpZX/nN613266EdbQ=
+	t=1787119107; cv=none; b=t3JfmJPezMtQGaJMwFtYMsU5YJRda+APfht5UUKI1uCTMn7XJnIZ+B0t9a3OoD1z51mGqiizwNHoXmFxTdp8IhzLfW/kq/37v80PKvDOnSDM+C/FSJ50if3p6gMJpPzcA7T5uVY9Lz8CDILG5BmONqeVZm/w74jqHM3WYJnDkOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787113981; c=relaxed/simple;
-	bh=GODhuljw+vwCKR2nwV1KNUDB1Kqfo6DSPt49GbIzhl4=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=AewRkgyHuAC/FJJNDk9qScdSlXN+5LvWGbLB+0lH5LG1Kq1mPe41hRYbo7CU1JWqYZ9eY25J5M4fccT9IWXUTtrmnlJvPaPQ4XOW9/RsiQb3CRJ+LOmsQxn285VvE+rbVoIv9HK9wwQHtx5SMd7OwJ5gqzbHLZnIwBOEieRx3ts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [123.138.236.242])
-	by gateway (Coremail) with SMTP id _____8BxW_D4MYVquZICAA--.7783S3;
-	Wed, 19 Aug 2026 12:32:56 +0800 (CST)
-Received: from [10.130.40.83] (unknown [123.138.236.242])
-	by front1 (Coremail) with SMTP id qMiowJAx3c72MYVqTy0KAA--.63623S2;
-	Wed, 19 Aug 2026 12:32:55 +0800 (CST)
-Subject: Re: [PATCH v1] LoongArch: Fix __smp_mb__{before,after}_atomic()
-To: Kumar Kartikeya Dwivedi <memxor@gmail.com>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- Vincent Li <vincent.mc.li@gmail.com>, bpf@vger.kernel.org
-References: <20260817035908.460-1-yangtiezhu@loongson.cn>
- <3103b3b4-5c0d-ed87-2e15-31a4d2289ec5@loongson.cn>
- <DKS3YCAMWONO.2NVVH8IPARH7Y@gmail.com>
- <48ade10d-dd1f-ac6f-e827-d76a81183486@loongson.cn>
- <DKS4KWIT8C5I.2THOLN7FKRRJT@gmail.com>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <fe42c351-e6f9-8336-a5e0-895a4572fd3f@loongson.cn>
-Date: Wed, 19 Aug 2026 12:32:54 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1787119107; c=relaxed/simple;
+	bh=X7OAjoz45ruqsmKdUnSzuXYAV49gETzN7qtOUQui5+U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NTw9yBEwOMowxJFrWfQp0VYRgVhiUYlxDBsnO7Dr4rzb2pwFlggT7B4S5kq2oPjPSK1HyszK3VyZpHiWpc4FPFzKN8SKooVMMDLHcPIxzsaBv1Xeolak+/FM55AcRm5msT/jOWFZHGLv+Zs93NB6epX5GDMwtWfBqjlt7zAXSoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q/N35m2a; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q/N35m2a"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1787119104;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3wN405h1WvQQ42J9aP5itCeH3PDbeYvXDW/m8ee+hMM=;
+	b=Q/N35m2ajlLhA4c8nyU1FtuJF/QRGgUmfgGrfGnI6q/mmfvBQwJ5KvsLcqZV0guDZn5FXk
+	ZnGQzxz8YoMEfPlD/CCzUAXcFn5HrN+cINMJEFBbcXCuOHU2W49XFr0tNsz8MJFY8S1EnV
+	MZNcSifIGL37+IoI1gS5FX2Ukx0qCO0=
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
+ [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-287-MaeUuF3IMviw3kuP2bwEAA-1; Wed, 19 Aug 2026 01:58:23 -0400
+X-MC-Unique: MaeUuF3IMviw3kuP2bwEAA-1
+X-Mimecast-MFC-AGG-ID: MaeUuF3IMviw3kuP2bwEAA_1787119102
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2cd01a14e81so9460455ad.1
+        for <loongarch@lists.linux.dev>; Tue, 18 Aug 2026 22:58:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787119102; x=1787723902;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=3wN405h1WvQQ42J9aP5itCeH3PDbeYvXDW/m8ee+hMM=;
+        b=eUvQWGVYRuDnQY90fzv4BM6tnDRcrc+sY99FpdPu+O/7Pisto9DTsrb4JTB0kS/q8G
+         3p/J7hvqSjvQtE4k0RMDiDEINN8TCCJns6toR8y5dVMOfWGdWtMBmzNp9i0szDlZea6c
+         xLvNXeJKvrwA9hbKVV6ksrYkwZpRyfn4DkeKuxqw39Ok9RGbKczTAPTio/LSUVGmDpPQ
+         3fy8e8O8OwCxWWEdM3xf8CiV2h4n0MX5YYJ5tNFTAaPjGMHM7CjSP8P/NeLVMXuhArIP
+         FAS0rEJB3MqaB82jf6n+ZZJ11e8x/6NsRRg7Xa9IreiPpCQEoFdRBF3n+Ru1DPIzXkc+
+         KZfg==
+X-Forwarded-Encrypted: i=1; AHgh+Rrc9ucKjF1qkIxUGKqCYpwhtNOePBYRqDQxtSzzrnjQ25Il5vtEDo/17iKFrdK3bitdYEaMBjKYSw0=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yyef2C7wqdF/s1hMQlgU88nibqDoTcfLu5T/y5CaVNSM/rbEYuB
+	gVP5gpCRrvQJWfnZty+SVEPDhYGNhchPPjIbPqPUh8pu+XzvQC4oaHOe0nojX0PN0ryJw9qo6dS
+	9vsE6aJ+4/mfwqVILSCQYhJnWIm/ziSiVaNbb49DobNMgNTkP+f+gV99iEFSGGw==
+X-Gm-Gg: AR+sD138aAL4eINyt7+S1a//W20wQsrGdcA2/diqxkrYC0WKGqeM4U/YNDkMNht6oEW
+	VdRGjYoqYGI3Rv8aCI2meO6nwZXYk0JA28eWUaAA+x/9jpoD4HRR4Vn4ylQxVIrvnyarBbdUomb
+	9WGqBd/hroYI2cH0LM69eMD3KsIolOdQ+hpUzvmM39s5JJvCKFQSYH87T/EkZodvXsX+bZfcMIa
+	Nu/3nlsAQitLGWSz5nXNAPvYQOL9uK2ICZrYDdcawQsbXq5fAddZPLjGJXN37zmfNVJ9S+NT6Zw
+	RD3lti/HEMOFXFRS0ZJp2ssEK36lOuCsP5NRhfIyViIqGEDdIdXnLQIhfeko2KLcIfV+I6j0o+/
+	VnfqsoJ1d/On4U0YizzvW
+X-Received: by 2002:a17:902:fd87:b0:2cb:ea0b:9164 with SMTP id d9443c01a7336-2d5fd6b0aebmr41700125ad.6.1787119101996;
+        Tue, 18 Aug 2026 22:58:21 -0700 (PDT)
+X-Received: by 2002:a17:902:fd87:b0:2cb:ea0b:9164 with SMTP id d9443c01a7336-2d5fd6b0aebmr41699365ad.6.1787119101427;
+        Tue, 18 Aug 2026 22:58:21 -0700 (PDT)
+Received: from [10.76.99.122] ([115.110.236.142])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d5c1e5506asm20846515ad.43.2026.08.18.22.58.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Aug 2026 22:58:20 -0700 (PDT)
+Message-ID: <0d7acb43-2eb4-44ec-9bfb-b89440afc605@redhat.com>
+Date: Wed, 19 Aug 2026 11:28:10 +0530
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <DKS4KWIT8C5I.2THOLN7FKRRJT@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] kexec: return -ENOEXEC from image probe functions on
+ mismatch
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Andrew Morton <akpm@linux-foundation.org>,
+ Baoquan He <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>, Tao Liu <ltao@redhat.com>,
+ Philipp Rudo <prudo@redhat.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-riscv@lists.infradead.org, kexec@lists.infradead.org
+References: <20260813-mpilaniy-v1-1-777d4d0e30f7@redhat.com>
+ <2vxzv79c23j6.fsf@kernel.org>
+ <9cbe111c-ff63-4f24-b518-094ddd7cea30@redhat.com>
+ <2vxzbjaz2269.fsf@kernel.org>
+From: Mukesh Pilaniya <mpilaniy@redhat.com>
+In-Reply-To: <2vxzbjaz2269.fsf@kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: HeHzvIoYBD8snZLaVEanqW0wVfk6R1hBdH8EPlx4K6U_1787119102
+X-Mimecast-Originator: redhat.com
 Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAx3c72MYVqTy0KAA--.63623S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxZw1rCw4UtFyfZr48JFWxZrc_yoWrZr4fpF
-	4xGF9rKFZ5XF48Zw1kJw4ru34fCw40k3y3WrWFgryYv3s0gry2qF1Ivr4a9FyDWw4ktryI
-	vw4jgay2va4DJagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8czVUUU
-	UUU==
 
-On 2026/8/18 下午10:05, Kumar Kartikeya Dwivedi wrote:
-> On Tue Aug 18, 2026 at 3:50 PM CEST, Tiezhu Yang wrote:
->> On 2026/8/18 下午9:35, Kumar Kartikeya Dwivedi wrote:
->>> On Tue Aug 18, 2026 at 3:28 PM CEST, Tiezhu Yang wrote:
->>>> On 2026/8/17 上午11:59, Tiezhu Yang wrote:
->>>>> When testing the BPF selftest "sudo ./test_progs -t timer_lockup", there
->>>>> is a kernel lockup and panic:
+Hi Pratyush,
 
-...
-
->>> There is a full barrier in both cases. I don't know what performance improvement
->>> will be achieved by changing this.
->>
->> We performed benchmarking using UnixBench on a physical LoongArch
->> machine, the UnixBench score is different (amadd.w + dbar < amadd_db.w).
->>
+On 18/08/26 3:14 pm, Pratyush Yadav wrote:
+> On Fri, Aug 14 2026, Mukesh Pilaniya wrote:
 > 
-> I mean, this function is already quite heavy. We have multiple fully ordered
-> atomics (refcount bumps/drops, xchg(), etc.) spread across the operation. Do you
-> observe any measurable speedup in the throughput of this function?  The second
-> question is whether timer cancellation is really frequent. In practice, I don't
-> think that is the case.  The actual hrtimer_cancel() in itself is heavy and
-> waits synchronously for the callback to finish.
+>> Hi Pratyush,
+>> On 14/08/26 7:43 pm, Pratyush Yadav wrote:
+>>> On Thu, Aug 13 2026, Mukesh Pilaniya wrote:
+>>>
+>>>> Several kexec_file_load() image probe functions return -EINVAL when
+>>>> they do not recognize the image format.  A probe function that rejects
+>>>> an image should return -ENOEXEC to indicate that the image is not a
+>>>> recognized executable format.  -EINVAL implies a problem with the
+>>>> syscall parameters, not with image recognition.
+>>>>
+>>>> kexec_image_probe_default() iterates through registered loaders and
+>>>> returns the last probe's error code to the caller.  That error
+>>>> propagates as the kexec_file_load() return value to userspace.
+>>>> Returning -EINVAL from a probe when no loader matches is semantically
+>>>> incorrect and misleads userspace about the nature of the failure.
+>>>>
+>>>> Return -ENOEXEC from all probe functions and their helpers when the
+>>>> image format is not recognized.
+>>>
+>>> Sounds fine in principle but can you please also share what the real
+>>> problem you face is and how changing these return codes helps? These
+>>> error codes are uAPI and while we _can_ change them as long as we don't
+>>> break something, there should be a clear motivation for doing so.
+>>>
+>>> [...]
+>>>
+>> While debugging a misleading error on s390x where kexec -s reported
+>> "syscall kexec_file_load not available" instead of the actual EINVAL
+>> from a kernel command line that exceeded the architecture limit, we
+>> traced the problem to the kexec-tools userspace utility treating
+>> EINVAL the same as ENOSYS and ENOEXEC -- as a signal to silently fall
+>> back to kexec_load().
+>>
+>> kexec-tools supports two syscalls: kexec_file_load() and the older
+>> kexec_load(). With -a (the default), it tries kexec_file_load()
+>> first and falls back to kexec_load() when the syscall is not
+>> implemented (ENOSYS) or the kernel does not have a loader for the
+>> image format. With -s, it uses kexec_file_load() only with no
+>> fallback.
+>>
+>> When the kernel returns -EINVAL it means something went wrong while
+>> loading the image, not that the syscall is missing or the image
+>> format is unrecognized. kexec-tools should not fall back to the
+>> older syscall in that case. However, some kernel probe functions
+>> currently return -EINVAL when the image header does not match,
+>> instead of returning -ENOEXEC. Keeping EINVAL in the fallback set
+>> to accommodate these probes has the side effect of also hiding
+>> genuine loading errors like an oversized command line.
+>>
+>> kexec-tools should only fall back when kexec_file_load() is not
+>> implemented or does not have a matching loader -- not when something
+>> goes wrong during load.
+>>
+>> The fix on the kexec-tools side is to remove EINVAL from the fallback
+>> set, but that requires the kernel to be clean first -- probe functions
+>> must return -ENOEXEC when they do not recognize an image format, not -EINVAL.
 > 
-> I'm not opposed to it or anything, I just don't think it's worth it in this
-> case. If the latency of cancel is a problem there are other bigger opportunities
-> to pursue than this.
+> Okay, the idea makes sense. Though I am curious if in practice there are
+> images that kexec_file_load() can't load but kexec-tools can.
+> 
+> But then I went and looked at the code. The only caller of the probe
+> functions I can see is kexec_image_probe_default(). Looking at its code:
+> 
+>   int kexec_image_probe_default(struct kimage *image, void *buf,
+>   			      unsigned long buf_len)
+>   {
+>   	const struct kexec_file_ops * const *fops;
+>   	int ret = -ENOEXEC;
+>   
+>   	for (fops = &kexec_file_loaders[0]; *fops && (*fops)->probe; ++fops) {
+>   		ret = (*fops)->probe(buf, buf_len);
+>   		if (!ret) {
+>   			image->fops = *fops;
+>   			return ret;
+>   		}
+>   	}
+>   
+>   	return ret;
+>   }
+> 
+> It defaults ret to -ENOEXEC, which makes sense, but then lets it be
+> over-written by each loader. So in practice, it returns what the _last_
+> loader returned. _This_ makes no sense. Why should the last loader be
+> any special?
+Right, the last loader overwriting ret, the commit message describes
+this as well. It makes no sense for the return value to depend on
+whichever loader happens to be last in the array.
 
-Hi Kumar,
+> 
+> From reading the code, I think what the author of this wanted to do is
+> to try all loaders, and return -ENOEXEC if none succeeded. But the code
+> of course strays from that and ends up returning the last loader's
+> value.IMHO the function should only try the next loader when a probe returns
+-ENOEXEC, not for any other error like -ENOMEM, which is a real failure
+and should be propagated immediately, not silently discarded.
 
-Thanks for your analysis. I totally agree that bpf_timer_cancel() is
-heavy and cancellation is not a frequent fast path.
+> 
+> So how about the below diff instead? (** only compile tested **)
+> 
+> --- 8< ---
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index 2bfbb2d144e6..cfb2b8cd5679 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -67,17 +67,16 @@ int kexec_image_probe_default(struct kimage *image, void *buf,
+>  			      unsigned long buf_len)
+>  {
+>  	const struct kexec_file_ops * const *fops;
+> -	int ret = -ENOEXEC;
+>  
+>  	for (fops = &kexec_file_loaders[0]; *fops && (*fops)->probe; ++fops) {
+> -		ret = (*fops)->probe(buf, buf_len);
+> -		if (!ret) {
+> +		if (!(*fops)->probe(buf, buf_len)) {
+>  			image->fops = *fops;
+> -			return ret;
+> +			return 0;
+>  		}
+>  	}
+>  
+> -	return ret;
+> +	/* No loader found. */
+> +	return -ENOEXEC;
+>  }
+Nice catch, Pratyush but this discards all non-zero return values from
+probe functions, which means real errors get swallowed. For example,
+kexec_elf_probe() can return -ENOMEM when kzalloc() fails in
+elf_read_phdrs(). With this diff, that -ENOMEM becomes -ENOEXEC, which
+tells userspace "no loader found" when the actual problem was a memory
+allocation failure.
 
-However, there is an interesting compiler and architecture background
-here:
+>  
+>  static void *kexec_image_load_default(struct kimage *image)
+> 
+How about the following instead? It keeps the probe return value and
+distinguishes -ENOEXEC (format not recognized, try next loader) from any
+other error (real failure, propagate immediately):
+﻿
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 59fb9d71e9d8..ceb5c97cedac 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -68,17 +68,19 @@ int kexec_image_probe_default(struct kimage *image,
+void *buf,
+ 			      unsigned long buf_len)
+ {
+ 	const struct kexec_file_ops * const *fops;
+-	int ret = -ENOEXEC;
++	int ret;
 
-During our internal review, toolchain developers noted that executing
-two separate instructions (amadd.w + dbar) causes a noticeable pipeline
-bubble, and they are currently working on a compiler-level optimization
-to automatically fuse them into a single ordered instruction amadd_db.w.
+ 	for (fops = &kexec_file_loaders[0]; *fops && (*fops)->probe; ++fops) {
+ 		ret = (*fops)->probe(buf, buf_len);
+-		if (!ret) {
++		if (ret == 0) {
+ 			image->fops = *fops;
+-			return ret;
++			return 0;
+ 		}
++		if (ret != -ENOEXEC)
++			return ret;
+ 	}
 
-Since toolchain-level fusion into a single instruction is the clear
-goal, explicitly using atomic_fetch_add() in the BPF helper achieves
-this exact single-instruction benefit immediately, without waiting
-for compiler updates.
+-	return ret;
++	return -ENOEXEC;
+ }
 
-More importantly, it hardens defensive programming, making the BPF
-core logic immune to any architecture-level macro omissions.
+ static void *kexec_image_load_default(struct kimage *image)
 
-To provide a concrete micro-architectural perspective, here is the
-actual objdump comparison on a physical LoongArch machine between
-the two approaches:
 
-Approach 1 (Architecture fix: atomic_inc + smp_mb__after_atomic):
-     2610:  amadd.w     $zero, $t2, $t3  /* Relaxed atomic increment */
-     2614:  dbar        0x10             /* Explicit data memory barrier */
+This requires probe functions to return -ENOEXEC from fixes in patch 1.
+I will add this as a separate patch on top in v2.
 
-Approach 2 (Our BPF core change: atomic_fetch_add):
-     2610:  amadd_db.w  $t3, $t1, $t4    /* Consolidated ordered atomic */
+Does this looks good to you ?
 
-As the assembly shows, Approach 2 successfully eliminates a heavy
-standalone hardware fence instruction (dbar 0x10).
-
-What are your thoughts on this logic?
-
----
-Appendix: Code Diff & Objdump for Reference
-
-[1] Code Diff & Objdump for Approach 1:
-diff --git a/arch/loongarch/include/asm/barrier.h 
-b/arch/loongarch/include/asm/barrier.h
-index 4b663f197706..adfe343dfa65 100644
---- a/arch/loongarch/include/asm/barrier.h
-+++ b/arch/loongarch/include/asm/barrier.h
-@@ -57,8 +57,8 @@
-  #define __WEAK_LLSC_MB         "                       \n"
-  #endif
-
--#define __smp_mb__before_atomic()      barrier()
--#define __smp_mb__after_atomic()       barrier()
-+#define __smp_mb__before_atomic()      __smp_mb()
-+#define __smp_mb__after_atomic()       __smp_mb()
-
-$ objdump -d -S kernel/bpf/helpers.o
-ATOMIC_OPS(add, i, add, +)
-     2608:	0280040e 	li.w        	$t2, 1
-     260c:	02c2e2ef 	addi.d      	$t3, $s0, 184
-     2610:	386139e0 	amadd.w     	$zero, $t2, $t3
-	smp_mb__after_atomic();
-     2614:	38720010 	dbar        	0x10
-
-[2] Code Diff & Objdump for Approach 2:
-diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-index c18f1e16edee..ee2b3a4dcc05 100644
---- a/kernel/bpf/helpers.c
-+++ b/kernel/bpf/helpers.c
-@@ -1591,9 +1591,7 @@ BPF_CALL_1(bpf_timer_cancel, struct bpf_async_kern 
-*, async)
-          */
-         if (!cur_t)
-                 goto drop;
--       atomic_inc(&t->cancelling);
--       /* Need full barrier after relaxed atomic_inc */
--       smp_mb__after_atomic();
-+       atomic_fetch_add(1, &t->cancelling);
-         inc = true;
-         if (atomic_read(&cur_t->cancelling)) {
-
-$ objdump -d -S kernel/bpf/helpers.o
-ATOMIC_OPS(add, i, add, +)
-     2608:	0280040d 	li.w        	$t1, 1
-     260c:	02c2e2f0 	addi.d      	$t4, $s0, 184
-     2610:	386a360f 	amadd_db.w  	$t3, $t1, $t4
-
-Thanks,
-Tiezhu
+--
+Regards,
+Mukesh Pilaniya
 
