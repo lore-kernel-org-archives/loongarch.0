@@ -1,159 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E2F41DE15;
-	Wed, 19 Aug 2026 09:10:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90458471CFB
+	for <loongarch@lists.linux.dev>; Wed, 19 Aug 2026 11:48:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787130657; cv=none; b=dUVxpk4OeqwaQ/8QsG3O5m2Dn4V2rQGSkkcgMk9bk6ygqE32KavKfeUQ//cWFzqSLfwFq5psU/cKmOyhcaY7l3Bjg9AbIUG3z2o7kvQQGk7wRmhMjS7lETmG2ihr+URb3NlyyHGcWJ6iRXLuMAFrOSvppDUV8iJ3EofKG27T4dg=
+	t=1787140127; cv=none; b=GPQ0DFg4vnsS3KD0mb9VaE1t71XXOGjR9vO368tCn4Nx3rHyRIHXuXihn4rjR36TGaPMZpT1rRYJncun1XSQMfJ7AKfu8ARCFjrTqih/+IyI4PV87Vgtgutk4AatHJKnUTul+UE+KKGJi/caGP9q6c8X4FNXcWhPOOwKsUKzCKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787130657; c=relaxed/simple;
-	bh=SdqnMCDQJWY3OPZvpCz9aMJV/Mw2acfF6P0GHTlX4Is=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=F58xUeYC62K/0/RZNS8aKQGFwfNxfcqVHq+3p/nSQxjTl6OFeR89lPpXNjHezACPFycvWL50V5++IljYWSQYKtMRM/fhTmKsRAO2lWlB6Z11Aa+Mt7binQ0rtKRuXgmruG8P7b2NUcqwWybvT+RB4TPAalJEIczqAnW13AWinls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jm+Wv4aO; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787140127; c=relaxed/simple;
+	bh=hlqPu8zxYhXjAp0RnMZVNI6hpIt1GyNxw1ypjjho7mg=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CHTo5vs6W8i+XeZeZB1vNg2RG7tHk7zuqtcMePqROdR76mdo72uElF7MuPllGI0OSzQ9iApoAhCq2znsKhSgDZUBwT8Khjb1UPayeL/z7TdOkbA85siWTS1Eg3TpKrEj4q59dVjnGw5FTnx5ZNErx2Gjr52SOeOJdv7cIoHaRc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WBy+2WjD; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jm+Wv4aO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 515771F000E9;
-	Wed, 19 Aug 2026 09:10:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787130655;
-	bh=J7SSYr9IcCYlpEA9on/0aKPIvhje3Akfn6JxapVuH8c=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=jm+Wv4aOzeOFTNGkTPTh1XF0zLQEggF3fxwAzmzCyumgDLdn0f12E8o3GI6dpHpkx
-	 ETq719cOrx8P/ruQ1OJxqoaV19IPggFEEVmEBqif88yyb5XrXMNEfPHKjO7dmA0zCS
-	 XaFElWeGHWsTS30cQNtt/qevs6nQq/+keyts6TX3TXgRXhfvB1K4d3ql/t8lPKcszG
-	 IdyqmlqIkRCGbPEzYxe8te0Su4J+GenFyDoXocfpKndU9TV/tVXa/Ltjh18TONIhIP
-	 7RHGNtpbny9da2Ar64FJ4mMWrHdQLxuAtcmC0/40KEVCTsjb1sNCzLYzFb8a/cj9DV
-	 YxESBVfYEonbA==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Mukesh Pilaniya <mpilaniy@redhat.com>
-Cc: Pratyush Yadav <pratyush@kernel.org>,  Catalin Marinas
- <catalin.marinas@arm.com>,  Will Deacon <will@kernel.org>,  Mark Rutland
- <mark.rutland@arm.com>,  Huacai Chen <chenhuacai@kernel.org>,  WANG Xuerui
- <kernel@xen0n.name>,  Paul Walmsley <pjw@kernel.org>,  Palmer Dabbelt
- <palmer@dabbelt.com>,  Albert Ou <aou@eecs.berkeley.edu>,  Alexandre Ghiti
- <alex@ghiti.fr>,  Andrew Morton <akpm@linux-foundation.org>,  Baoquan He
- <baoquan.he@linux.dev>,  Mike Rapoport <rppt@kernel.org>,  Pasha Tatashin
- <pasha.tatashin@soleen.com>,  Tao Liu <ltao@redhat.com>,  Philipp Rudo
- <prudo@redhat.com>,  linux-arm-kernel@lists.infradead.org,
-  linux-kernel@vger.kernel.org,  loongarch@lists.linux.dev,
-  linux-riscv@lists.infradead.org,  kexec@lists.infradead.org
-Subject: Re: [PATCH] kexec: return -ENOEXEC from image probe functions on
- mismatch
-In-Reply-To: <0d7acb43-2eb4-44ec-9bfb-b89440afc605@redhat.com> (Mukesh
-	Pilaniya's message of "Wed, 19 Aug 2026 11:28:10 +0530")
-References: <20260813-mpilaniy-v1-1-777d4d0e30f7@redhat.com>
-	<2vxzv79c23j6.fsf@kernel.org>
-	<9cbe111c-ff63-4f24-b518-094ddd7cea30@redhat.com>
-	<2vxzbjaz2269.fsf@kernel.org>
-	<0d7acb43-2eb4-44ec-9bfb-b89440afc605@redhat.com>
-Date: Wed, 19 Aug 2026 11:10:50 +0200
-Message-ID: <2vxzqzjuzd9h.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WBy+2WjD"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5b0115b9e17so1105797e87.0
+        for <loongarch@lists.linux.dev>; Wed, 19 Aug 2026 04:48:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787140122; x=1787744922; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=1Neo+1K8ghUMGN3G9vUjB7A1LbHA9OhMwHPbvzVv5Wg=;
+        b=WBy+2WjDW34h6XuEvB0akmDIidiqXB7utoY09oskyuEveiit2++IDg8Dx+ghlw4jax
+         Ji5FdADHYd47rChmrDrez7pYSAu9x/4keDsG8opyP8Gp42qok1Te2pfZCgmtrjHdJxOc
+         XgQMQfpJ1Tqa9pbkihGscBxCLoXVz+fm/FPLb3shk+e6eGqtXjOB8LG+fpvU6mcx59Ny
+         qnJrLXB9zOGWYLbum96FraFf/XUqyKeG1KnAuaokKvup004rpEv5iBTH+JilxpVPbe3f
+         E57ImID3kUY2ieuwwP32KZSrziNNN//1oMJxWigG9u8STJP963gPcJ/rJvucINOhceRA
+         kyRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787140122; x=1787744922;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=1Neo+1K8ghUMGN3G9vUjB7A1LbHA9OhMwHPbvzVv5Wg=;
+        b=gCGocIjfxkoTGIEv8xQ1lHc1gMKfxm77RRIGZmbz7rn6CZ9mgiohuDRPcf67EZBrVm
+         BUhtvWX4NzF99zgSQ4k9/R3eI/Gg8legvTGLFYYm+nZrPZYu5BWgcDTPv+TRiSTKgeE1
+         2v6uZC5oaj5y4/84KEwkoQ8PHTChVS2tYmbT1LDXKMmLX5K0eUq0WuxL2+hVFxa2rVX6
+         Oq+z8rxYN26FTKhjZTbykNJ/BipLC+7Q5vL8zgmO5RMLM+nzHUAnQbtsNuIdsYXe2BWQ
+         Lwis9TyBUcgL8r4Ic5CV85THb5e6JRSIfrqM6vsGZA861eIRePWpRn42SFXrAjAY3Sm+
+         LMRQ==
+X-Forwarded-Encrypted: i=1; AHgh+Rpf3ASpYWHFelTo0KhprbvimQm2hwJi0IyXd3BTMUNHCIZmzs760EbqHvJiPRSmtgUWhDibEZIQK6U=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzDLFH8t3OOzs+YHwteTpac/1DPIL8qSpIfUXT0zF+Vnhe6TQ4u
+	P/Y82t+kfZdSaK9AA9ZRVY70l96WwdNSwRR2k+XaxZ0zFJf3jL8rNL4h
+X-Gm-Gg: AR+sD13bVGLi4tmjWGjGQs2RldLieCBoO/OxGIS4rWZMoh26KTBaxOW5/3HyjGnUGQ6
+	/Mt8+YFDbOezi+vynXGdJk5d4ftg4IchEstcp6TbB/BuKABbxRdVB18rYIc02XCiTEfGGc3V5qg
+	6PmIxJOPiAxOaDl2k2lE/AXX/fnnKVNpC4p/WsylWraaVJAMFvy2hLLIq08VADomMvWY5rlMqYv
+	R2RwN73QP67UqS/ctAoOHXFiyvpnfxkVVln0A5DK+0aWV3g91vEV6xzePk3xIZknE1PmUstDOwW
+	cU6odIXpk/p20evj165RLKRzoJU+tdZBrCHjzxYCkH4OX/IBpqWTzIe4hxsxmbFQdgMLCmf71zM
+	eS44kVFjtowLajtkxhT9xXekzXrTnu8OTehAggDsJ3or9YIErXU+ngbu2cvXEpi3CosMfuCrakv
+	+SI90iibswRCFr0HkdDPG4yD9hJ8MRoUbVzlIUhmBQBseI57kKSyGYbOcUnvKRhUDndl6ZUnE6o
+	3KYM7P2lD9+Wxao8JcfTslFGPhYKA==
+X-Received: by 2002:a05:6512:224d:b0:5b2:f453:1073 with SMTP id 2adb3069b0e04-5b478b9070dmr1376566e87.2.1787140121681;
+        Wed, 19 Aug 2026 04:48:41 -0700 (PDT)
+Received: from pc636 (host-95-193-137-165.mobileonline.telia.com. [95.193.137.165])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5b478853971sm482752e87.10.2026.08.19.04.48.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2026 04:48:41 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Wed, 19 Aug 2026 13:48:36 +0200
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Uladzislau Rezki <urezki@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Adrian =?utf-8?Q?Barna=C5=9B?= <abarnas@google.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Alexandre Ghiti <alex@ghiti.fr>, Andy Lutomirski <luto@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Brendan Jackman <brendan.jackman@linux.dev>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Hildenbrand <david@kernel.org>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Len Brown <lenb@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <pjw@kernel.org>, Pavel Machek <pavel@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Vasily Gorbik <gor@linux.ibm.com>, WANG Xuerui <kernel@xen0n.name>,
+	Will Deacon <will@kernel.org>, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-pm@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: Re: [PATCH 2/6] mm/vmalloc: set area's page_order after allocation
+ succeeds
+Message-ID: <aoWYFH_FJXlMK8fw@pc636>
+References: <20260816-execmem-set-vm-perms-v0-2-v1-0-90944a3ad43f@kernel.org>
+ <20260816-execmem-set-vm-perms-v0-2-v1-2-90944a3ad43f@kernel.org>
+ <aoNFZU_QzghDBgbZ@milan>
+ <aoVUF2pgl8JYNyIU@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aoVUF2pgl8JYNyIU@kernel.org>
 
-On Wed, Aug 19 2026, Mukesh Pilaniya wrote:
+On Wed, Aug 19, 2026 at 09:58:31AM +0300, Mike Rapoport wrote:
+> On Mon, Aug 17, 2026 at 07:31:17PM +0200, Uladzislau Rezki wrote:
+> > On Sun, Aug 16, 2026 at 01:59:25PM +0300, Mike Rapoport (Microsoft) wrote:
+> > > __vmalloc_area_node() calls set_vm_area_page_order() to set area's
+> > > page_order before actually allocating pages to populate the area.
+> > > 
+> > > If allocation of large pages in HUGE_VMAP case fails midway, this leaves
+> > > the area with elevated page_order throughout the cleanup path.
+> > > 
+> > > There is no actual issue with this because the only place that currently
+> > > relies on area->page_order on the cleanup path is the loop calculating
+> > > the direct map alias range in vm_reset_perms() and it anyway skips
+> > > unpopulated pages.
+> > > 
+> > > But having set_vm_area_page_order() in the middle of __vmalloc_area_node()
+> > > makes things very obscure, hard to reason about and error prone against
+> > > future changes of the cleanup path.
+> > > 
+> > > Move the call to set_vm_area_page_order() after __vmalloc_area_node()
+> > > succeeded where page order is guaranteed.
+> > > 
+> > > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> > > ---
+> > >  mm/vmalloc.c | 11 +++++++++--
+> > >  1 file changed, 9 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > > index 22566e0b6e38..6822f0fe9583 100644
+> > > --- a/mm/vmalloc.c
+> > > +++ b/mm/vmalloc.c
+> > > @@ -3901,8 +3901,7 @@ static void *__vmalloc_area_node(struct vm_struct *area, gfp_t gfp_mask,
+> > >  		goto fail;
+> > >  	}
+> > >  
+> > > -	set_vm_area_page_order(area, page_shift - PAGE_SHIFT);
+> > > -	page_order = vm_area_page_order(area);
+> > > +	page_order = page_shift - PAGE_SHIFT;
+> > >  
+> > >  	/*
+> > >  	 * High-order nofail allocations are really expensive and
+> > > @@ -4106,6 +4105,14 @@ void *__vmalloc_node_range_noprof(unsigned long size, unsigned long align,
+> > >  	if (!ret)
+> > >  		goto fail;
+> > >  
+> > > +	/*
+> > > +	 * Set area->page_order once it's known exactly that the order of the
+> > > +	 * pages the area contains.
+> > > +	 * Even if we succeeded to partially populate the area with large pages,
+> > > +	 * still treat the area as populated with order-0 pages.
+> > > +	 */
+> > > +	set_vm_area_page_order(area, shift - PAGE_SHIFT);
+> > > +
+> > >  	/*
+> > >  	 * Mark the pages as accessible, now that they are mapped.
+> > >  	 * The condition for setting KASAN_VMALLOC_INIT should complement the
+> > > 
+> > > -- 
+> > > 2.53.0
+> > > 
+> > OK, can we just set it right after the:
+> > 
+> > 	area->nr_pages = vm_area_alloc_pages(
+> > 			vmalloc_gfp_adjust(gfp_mask, page_order), node,
+> > 			page_order, nr_small_pages, area->pages);
+> > 
+> > 
+> > succeeds?
+> 
+> Here it's still not clear if vm_area_page_order() succeeded :)
+> 
+> I can move it just before
+> 
+>  	return area->addr;
+> 
+Even better :) For next version:
 
-> Hi Pratyush,
->
-> On 18/08/26 3:14 pm, Pratyush Yadav wrote:
->> On Fri, Aug 14 2026, Mukesh Pilaniya wrote:
-[...]
->>=20
->> So how about the below diff instead? (** only compile tested **)
->>=20
->> --- 8< ---
->> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
->> index 2bfbb2d144e6..cfb2b8cd5679 100644
->> --- a/kernel/kexec_file.c
->> +++ b/kernel/kexec_file.c
->> @@ -67,17 +67,16 @@ int kexec_image_probe_default(struct kimage *image, =
-void *buf,
->>  			      unsigned long buf_len)
->>  {
->>  	const struct kexec_file_ops * const *fops;
->> -	int ret =3D -ENOEXEC;
->>=20=20
->>  	for (fops =3D &kexec_file_loaders[0]; *fops && (*fops)->probe; ++fops)=
- {
->> -		ret =3D (*fops)->probe(buf, buf_len);
->> -		if (!ret) {
->> +		if (!(*fops)->probe(buf, buf_len)) {
->>  			image->fops =3D *fops;
->> -			return ret;
->> +			return 0;
->>  		}
->>  	}
->>=20=20
->> -	return ret;
->> +	/* No loader found. */
->> +	return -ENOEXEC;
->>  }
-> Nice catch, Pratyush but this discards all non-zero return values from
-> probe functions, which means real errors get swallowed. For example,
-> kexec_elf_probe() can return -ENOMEM when kzalloc() fails in
-> elf_read_phdrs(). With this diff, that -ENOMEM becomes -ENOEXEC, which
-> tells userspace "no loader found" when the actual problem was a memory
-> allocation failure.
+Reviewed-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 
-Right, good point.
-
->
->>=20=20
->>  static void *kexec_image_load_default(struct kimage *image)
->>=20
-> How about the following instead? It keeps the probe return value and
-> distinguishes -ENOEXEC (format not recognized, try next loader) from any
-> other error (real failure, propagate immediately):
-> =EF=BB=BF
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index 59fb9d71e9d8..ceb5c97cedac 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -68,17 +68,19 @@ int kexec_image_probe_default(struct kimage *image,
-> void *buf,
->  			      unsigned long buf_len)
->  {
->  	const struct kexec_file_ops * const *fops;
-> -	int ret =3D -ENOEXEC;
-> +	int ret;
->
->  	for (fops =3D &kexec_file_loaders[0]; *fops && (*fops)->probe; ++fops) {
->  		ret =3D (*fops)->probe(buf, buf_len);
-> -		if (!ret) {
-> +		if (ret =3D=3D 0) {
->  			image->fops =3D *fops;
-> -			return ret;
-> +			return 0;
->  		}
-> +		if (ret !=3D -ENOEXEC)
-> +			return ret;
->  	}
->
-> -	return ret;
-> +	return -ENOEXEC;
->  }
->
->  static void *kexec_image_load_default(struct kimage *image)
->
->
-> This requires probe functions to return -ENOEXEC from fixes in patch 1.
-> I will add this as a separate patch on top in v2.
->
-> Does this looks good to you ?
-
-LGTM. The only thing I'd change is to perhaps move the declaration of
-ret inside the loop so it can never be used outside it, since ret is
-only useful in the loop in this function.
-
---=20
-Regards,
-Pratyush Yadav
+--
+Uladzislau Rezki
