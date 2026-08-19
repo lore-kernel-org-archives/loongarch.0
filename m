@@ -1,85 +1,182 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E81135836E
-	for <loongarch@lists.linux.dev>; Wed, 19 Aug 2026 02:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E2EC236453
+	for <loongarch@lists.linux.dev>; Wed, 19 Aug 2026 04:32:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787107766; cv=none; b=TM1/WnlJzGmldI5h6v7jgUR+Si2Y1rqW13SaP+BvxNm7COPx9DiUbPhN5a4E+wvRytTnPFavIhgsctVBXyRdfyDK62yIWfwK5bIJxEheMs06uONvVljGzoWzKzsug1STXR4JwCQV64em+MyfbltOmb9Vf/YtpIowm2Qh6fZlvmg=
+	t=1787113981; cv=none; b=fYZiFhCH7wClT7RjXR3RINpepjdS56Xpwy7GtMSVLyNBaKExPPceJczd/eHWYgdB3qj82MLJr+//dlNBEY6s+KRT6y4WoksMI0ikd5Wdvszj6gVxUeDxog7n00sSnPDypDIU6cbIR6xZ1BO+/fRV5gqAvJEpZX/nN613266EdbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787107766; c=relaxed/simple;
-	bh=oAq7LZNVfuWLyY8F6bgNDhoqq4F1x7DlAd3a+zTStqs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f6IOvGoL2VQRlVWAA/y9T8xBMnD9XawYgM9Aw34xNX5PnCfpHlxM/sppW4cxsi8T7NeInj8jo5lrDvab+cI1L6PU0wCnRW6uZds6piBf2FNmhqTszs3MQmu036ak7hjeQGCKQ1p9b+7VQZkAgG+DO5zGTHtbNK2FMMpOYyRo3tU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=vJl0n3O7; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="vJl0n3O7"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B7DA416A3;
-	Tue, 18 Aug 2026 19:49:18 -0700 (PDT)
-Received: from localhost (a085714.arm.com [10.164.19.28])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E01DD3F66F;
-	Tue, 18 Aug 2026 19:49:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1787107762; bh=oAq7LZNVfuWLyY8F6bgNDhoqq4F1x7DlAd3a+zTStqs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vJl0n3O768ihB63yzY/C3psnBKMwgj31m+kzmZIZlkySfUrUB1m+qr/j5JU5c9Afe
-	 eXlqYLfwodRGlGGDBoPRCFbNWaxAndC9cqljsF8lDwcjTwNIut2KUoxp62ngsl8nn1
-	 zy9caih5g0LTIVBgKUQNdkShhYRX1qD1/PYrFpfg=
-Date: Wed, 19 Aug 2026 08:19:19 +0530
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, 
-	Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-um@lists.infradead.org, linux-arch@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Lorenzo Stoakes <ljs@kernel.org>
-Subject: Re: [RFC V3 1/8] mm: Make ptrval_to_str() generally available
-Message-ID: <mc5cbirsrv24mwu4bg35ksxjyzfoydlgewq4tt7uu3ij7f642o@m4w7dm37nmdh>
-References: <20260818040041.1891769-1-anshuman.khandual@arm.com>
- <20260818040041.1891769-2-anshuman.khandual@arm.com>
- <55d92b3e-ad3f-464f-b2db-a2552353223e@kernel.org>
+	s=arc-20240116; t=1787113981; c=relaxed/simple;
+	bh=GODhuljw+vwCKR2nwV1KNUDB1Kqfo6DSPt49GbIzhl4=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=AewRkgyHuAC/FJJNDk9qScdSlXN+5LvWGbLB+0lH5LG1Kq1mPe41hRYbo7CU1JWqYZ9eY25J5M4fccT9IWXUTtrmnlJvPaPQ4XOW9/RsiQb3CRJ+LOmsQxn285VvE+rbVoIv9HK9wwQHtx5SMd7OwJ5gqzbHLZnIwBOEieRx3ts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [123.138.236.242])
+	by gateway (Coremail) with SMTP id _____8BxW_D4MYVquZICAA--.7783S3;
+	Wed, 19 Aug 2026 12:32:56 +0800 (CST)
+Received: from [10.130.40.83] (unknown [123.138.236.242])
+	by front1 (Coremail) with SMTP id qMiowJAx3c72MYVqTy0KAA--.63623S2;
+	Wed, 19 Aug 2026 12:32:55 +0800 (CST)
+Subject: Re: [PATCH v1] LoongArch: Fix __smp_mb__{before,after}_atomic()
+To: Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Vincent Li <vincent.mc.li@gmail.com>, bpf@vger.kernel.org
+References: <20260817035908.460-1-yangtiezhu@loongson.cn>
+ <3103b3b4-5c0d-ed87-2e15-31a4d2289ec5@loongson.cn>
+ <DKS3YCAMWONO.2NVVH8IPARH7Y@gmail.com>
+ <48ade10d-dd1f-ac6f-e827-d76a81183486@loongson.cn>
+ <DKS4KWIT8C5I.2THOLN7FKRRJT@gmail.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <fe42c351-e6f9-8336-a5e0-895a4572fd3f@loongson.cn>
+Date: Wed, 19 Aug 2026 12:32:54 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <55d92b3e-ad3f-464f-b2db-a2552353223e@kernel.org>
+In-Reply-To: <DKS4KWIT8C5I.2THOLN7FKRRJT@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAx3c72MYVqTy0KAA--.63623S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxZw1rCw4UtFyfZr48JFWxZrc_yoWrZr4fpF
+	4xGF9rKFZ5XF48Zw1kJw4ru34fCw40k3y3WrWFgryYv3s0gry2qF1Ivr4a9FyDWw4ktryI
+	vw4jgay2va4DJagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8czVUUU
+	UUU==
 
-On Tue, Aug 18, 2026 at 07:25:07PM +0200, David Hildenbrand (Arm) wrote:
-> On 8/18/26 06:00, Anshuman Khandual wrote:
-> > Move ptrval_to_str() inside a header thus making the helper more generally
-> > available for new users which are being added later. While here, also move
-> > another related string size macro PTVAL_STR_MAX inside the header as well.
-> > 
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: David Hildenbrand <david@kernel.org>
-> > Cc: Lorenzo Stoakes <ljs@kernel.org>
-> > Cc: linux-mm@kvack.org
-> > Cc: linux-kernel@vger.kernel.org
-> > Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> > ---
-> 
-> I would have placed that into include/linux/pgtable.h. Any particular reason for
-> mm_types?
+On 2026/8/18 下午10:05, Kumar Kartikeya Dwivedi wrote:
+> On Tue Aug 18, 2026 at 3:50 PM CEST, Tiezhu Yang wrote:
+>> On 2026/8/18 下午9:35, Kumar Kartikeya Dwivedi wrote:
+>>> On Tue Aug 18, 2026 at 3:28 PM CEST, Tiezhu Yang wrote:
+>>>> On 2026/8/17 上午11:59, Tiezhu Yang wrote:
+>>>>> When testing the BPF selftest "sudo ./test_progs -t timer_lockup", there
+>>>>> is a kernel lockup and panic:
 
-Yes - that works as well. These declaration and macros need to be moved inside
-#ifndef __ASSEMBLY__ block in include/linux/pgtable.h file. Will do the change
-as suggested while dropping the RFC tag once v7.3-rc1 is released.
+...
 
+>>> There is a full barrier in both cases. I don't know what performance improvement
+>>> will be achieved by changing this.
+>>
+>> We performed benchmarking using UnixBench on a physical LoongArch
+>> machine, the UnixBench score is different (amadd.w + dbar < amadd_db.w).
+>>
 > 
-> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+> I mean, this function is already quite heavy. We have multiple fully ordered
+> atomics (refcount bumps/drops, xchg(), etc.) spread across the operation. Do you
+> observe any measurable speedup in the throughput of this function?  The second
+> question is whether timer cancellation is really frequent. In practice, I don't
+> think that is the case.  The actual hrtimer_cancel() in itself is heavy and
+> waits synchronously for the callback to finish.
 > 
-> -- 
-> Cheers,
-> 
-> David
+> I'm not opposed to it or anything, I just don't think it's worth it in this
+> case. If the latency of cancel is a problem there are other bigger opportunities
+> to pursue than this.
+
+Hi Kumar,
+
+Thanks for your analysis. I totally agree that bpf_timer_cancel() is
+heavy and cancellation is not a frequent fast path.
+
+However, there is an interesting compiler and architecture background
+here:
+
+During our internal review, toolchain developers noted that executing
+two separate instructions (amadd.w + dbar) causes a noticeable pipeline
+bubble, and they are currently working on a compiler-level optimization
+to automatically fuse them into a single ordered instruction amadd_db.w.
+
+Since toolchain-level fusion into a single instruction is the clear
+goal, explicitly using atomic_fetch_add() in the BPF helper achieves
+this exact single-instruction benefit immediately, without waiting
+for compiler updates.
+
+More importantly, it hardens defensive programming, making the BPF
+core logic immune to any architecture-level macro omissions.
+
+To provide a concrete micro-architectural perspective, here is the
+actual objdump comparison on a physical LoongArch machine between
+the two approaches:
+
+Approach 1 (Architecture fix: atomic_inc + smp_mb__after_atomic):
+     2610:  amadd.w     $zero, $t2, $t3  /* Relaxed atomic increment */
+     2614:  dbar        0x10             /* Explicit data memory barrier */
+
+Approach 2 (Our BPF core change: atomic_fetch_add):
+     2610:  amadd_db.w  $t3, $t1, $t4    /* Consolidated ordered atomic */
+
+As the assembly shows, Approach 2 successfully eliminates a heavy
+standalone hardware fence instruction (dbar 0x10).
+
+What are your thoughts on this logic?
+
+---
+Appendix: Code Diff & Objdump for Reference
+
+[1] Code Diff & Objdump for Approach 1:
+diff --git a/arch/loongarch/include/asm/barrier.h 
+b/arch/loongarch/include/asm/barrier.h
+index 4b663f197706..adfe343dfa65 100644
+--- a/arch/loongarch/include/asm/barrier.h
++++ b/arch/loongarch/include/asm/barrier.h
+@@ -57,8 +57,8 @@
+  #define __WEAK_LLSC_MB         "                       \n"
+  #endif
+
+-#define __smp_mb__before_atomic()      barrier()
+-#define __smp_mb__after_atomic()       barrier()
++#define __smp_mb__before_atomic()      __smp_mb()
++#define __smp_mb__after_atomic()       __smp_mb()
+
+$ objdump -d -S kernel/bpf/helpers.o
+ATOMIC_OPS(add, i, add, +)
+     2608:	0280040e 	li.w        	$t2, 1
+     260c:	02c2e2ef 	addi.d      	$t3, $s0, 184
+     2610:	386139e0 	amadd.w     	$zero, $t2, $t3
+	smp_mb__after_atomic();
+     2614:	38720010 	dbar        	0x10
+
+[2] Code Diff & Objdump for Approach 2:
+diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
+index c18f1e16edee..ee2b3a4dcc05 100644
+--- a/kernel/bpf/helpers.c
++++ b/kernel/bpf/helpers.c
+@@ -1591,9 +1591,7 @@ BPF_CALL_1(bpf_timer_cancel, struct bpf_async_kern 
+*, async)
+          */
+         if (!cur_t)
+                 goto drop;
+-       atomic_inc(&t->cancelling);
+-       /* Need full barrier after relaxed atomic_inc */
+-       smp_mb__after_atomic();
++       atomic_fetch_add(1, &t->cancelling);
+         inc = true;
+         if (atomic_read(&cur_t->cancelling)) {
+
+$ objdump -d -S kernel/bpf/helpers.o
+ATOMIC_OPS(add, i, add, +)
+     2608:	0280040d 	li.w        	$t1, 1
+     260c:	02c2e2f0 	addi.d      	$t4, $s0, 184
+     2610:	386a360f 	amadd_db.w  	$t3, $t1, $t4
+
+Thanks,
+Tiezhu
+
