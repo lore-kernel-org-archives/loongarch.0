@@ -1,356 +1,159 @@
-Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11023079.outbound.protection.outlook.com [52.101.127.79])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F044119EE;
-	Wed, 19 Aug 2026 08:12:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.79
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787127148; cv=fail; b=Q/jql/1pE71NXjaWL9nVjrDCnqHS2KDaDEBMaA1rdrGVs5sEwYrNnbMbv9/x1AYCQ8oiy6XScyKB0ytJjE4WnlgpKlHACjxiQUKflTpfmLeBxo4gM+kIg5fQT3DXkXoeo93JCXEjGNo8qLAulcx2BMcsVvcWuNhA4x7Ephw+soI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787127148; c=relaxed/simple;
-	bh=iDuqb8Qn6J5FOmN6tsgNqElx+l9UFvtH9RJcmjTuYeA=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=mpNGLpKGDPKEed2xAVRiYA6jrLEX7LSauez53PjMrod2WiKeNnSe8L7IDJ7ZpU65yfvV9hksX9UtKzyaIhr5rxZ+mtrKsXW0cDEQcbIjJ5iVvgiuKw0ZhpfEkZWLx+g9oVdZA8LBYbsi/paw0O/SxvB5FrxdmZA80yehhHgBf6c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=transsion.com; spf=pass smtp.mailfrom=transsion.com; dkim=pass (1024-bit key) header.d=transsion.com header.i=@transsion.com header.b=trS+M/3+; arc=fail smtp.client-ip=52.101.127.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=transsion.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=transsion.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E2F41DE15;
+	Wed, 19 Aug 2026 09:10:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787130657; cv=none; b=dUVxpk4OeqwaQ/8QsG3O5m2Dn4V2rQGSkkcgMk9bk6ygqE32KavKfeUQ//cWFzqSLfwFq5psU/cKmOyhcaY7l3Bjg9AbIUG3z2o7kvQQGk7wRmhMjS7lETmG2ihr+URb3NlyyHGcWJ6iRXLuMAFrOSvppDUV8iJ3EofKG27T4dg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787130657; c=relaxed/simple;
+	bh=SdqnMCDQJWY3OPZvpCz9aMJV/Mw2acfF6P0GHTlX4Is=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=F58xUeYC62K/0/RZNS8aKQGFwfNxfcqVHq+3p/nSQxjTl6OFeR89lPpXNjHezACPFycvWL50V5++IljYWSQYKtMRM/fhTmKsRAO2lWlB6Z11Aa+Mt7binQ0rtKRuXgmruG8P7b2NUcqwWybvT+RB4TPAalJEIczqAnW13AWinls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jm+Wv4aO; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=transsion.com header.i=@transsion.com header.b="trS+M/3+"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HfS+ewTrYSphbObGuzP/RgPvbx7O9b41zYlm6vkq/vPGksWVGJrnz+gVj1Qr2dyWXn4R70qEAY3gzQGHXAEWFO8IhDNO4uoOb5AOQxEGn857AjSz+0zlvmG/ZYUfMZiiDa6KIqOLbDZm9iB5S2sFfuP0a2uCx7L9ZzCx/NggjDA7/f2LhWBDIAaOEKk32ntKR+7rJqSWy0qEclTnVKemqQZqwGdlSuIIkTDnjgx2IvQuVGcNTffpr56J0sLHGPUNj7JnQkMcRY7TgYzLyNyqibxaXAMWOdqsgE1Rq0MCRWJIF6DHOf7vYNPkO94zGy/9Fn3Qae6mdnnKIPWTiBQeLw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=d84hCATNqnUCsUt/1WDjP8LtD1u8eNmXIKR7OiNQFo0=;
- b=BQDNrsbZqqJHSxYmmZv+K31QGGbQIOrz4WPrN3gxVhssdFluwtqCBd347CsL6beQCqTXXc7V08JbGZYrcm469Qk3c4086Yvwv7YdaFwkI7y5alaMPaMqwxRIlXDd+CmE0VH9yQn0vplV+RBzgMdbBfg22eDPG0SnPK3834pYMb9QQsWs787cIByGttOhhRNxm3ob5GTF9URWEbDEKQrt3k7N9z5gCqpxLkaRIDoyjWr8CqPWPse6IuhC7ovzPjhh3nQe1v0w9PjLoCY/XQvpSL4DevNUQjTKk1bewdDz743ipSh44ZtvAbbFMScBSHjCiuKZD51pb7xo7kPWsUiSgg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=transsion.com; dmarc=pass action=none
- header.from=transsion.com; dkim=pass header.d=transsion.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=transsion.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d84hCATNqnUCsUt/1WDjP8LtD1u8eNmXIKR7OiNQFo0=;
- b=trS+M/3+1UuFoHFDnAG5KK1O3hlYMw8+9RjteJDPP/QvYvDOH4JfgTBepxUxzt8/EJzzg3QCsYTkzF3wzBmukSuwLhHDDMIjghwD+KrVh3wpr0qcJOEN8z+0jSpuynJWuVk1I/xCwqp1Obe2Pej9Ob/EnyIr4ORvGC+b1qCG/Go=
-Received: from KL1PR0401MB6196.apcprd04.prod.outlook.com
- (2603:1096:820:c7::13) by SEZPR04MB6432.apcprd04.prod.outlook.com
- (2603:1096:101:a8::6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.339.8; Wed, 19 Aug
- 2026 08:12:09 +0000
-Received: from KL1PR0401MB6196.apcprd04.prod.outlook.com
- ([fe80::f2ee:1e28:9022:99f3]) by KL1PR0401MB6196.apcprd04.prod.outlook.com
- ([fe80::f2ee:1e28:9022:99f3%3]) with mapi id 15.21.0339.007; Wed, 19 Aug 2026
- 08:12:09 +0000
-From: Hongyan Xia <hongyan.xia@transsion.com>
-To: Juergen Gross <jgross@suse.com>, Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.makhalov@broadcom.com>, Broadcom internal kernel
- review list <bcm-kernel-feedback-list@broadcom.com>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Huacai Chen
-	<chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Madhavan Srinivasan
-	<maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
-	<npiggin@gmail.com>, "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Paul
- Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Thomas Gleixner
-	<tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
-	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "x86@kernel.org"
-	<x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Paolo Bonzini
-	<pbonzini@redhat.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, Stefano
- Stabellini <sstabellini@kernel.org>, Oleksandr Tyshchenko
-	<oleksandr_tyshchenko@epam.com>, Peter Zijlstra <peterz@infradead.org>, Juri
- Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
-	<rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman
-	<mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, K Prateek Nayak
-	<kprateek.nayak@amd.com>
-CC: Jiazi Li <jiazi.li@transsion.com>, "virtualization@lists.linux.dev"
-	<virtualization@lists.linux.dev>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "loongarch@lists.linux.dev"
-	<loongarch@lists.linux.dev>, "linuxppc-dev@lists.ozlabs.org"
-	<linuxppc-dev@lists.ozlabs.org>, "linux-riscv@lists.infradead.org"
-	<linux-riscv@lists.infradead.org>, "kvm@vger.kernel.org"
-	<kvm@vger.kernel.org>, "xen-devel@lists.xenproject.org"
-	<xen-devel@lists.xenproject.org>
-Subject: [PATCH RESEND] sched: Convert paravirt_steal to new static key APIs
-Thread-Topic: [PATCH RESEND] sched: Convert paravirt_steal to new static key
- APIs
-Thread-Index: AQHdL7JurDcnsknKnUOaLMvw1Db+YA==
-Date: Wed, 19 Aug 2026 08:12:09 +0000
-Message-ID: <20260819081207.12150-1-hongyan.xia@transsion.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=transsion.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: KL1PR0401MB6196:EE_|SEZPR04MB6432:EE_
-x-ms-office365-filtering-correlation-id: befa3bdb-2ae8-4060-d27d-08defdc990d6
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|7416014|376014|1800799024|23010399003|366016|921020|38070700021|6133799003|10067099003|56012099006|11063799006|18002099003;
-x-microsoft-antispam-message-info:
- d8clx7CxpRAa7wDJWB7i0klecT0DiSo22kLcX70H82L7a4gg0NdJrkEtcqUOdNIwosLMHYe0XUNDBVs/NhktiHHwHtj2QkCeGcdpxFPmMls2XC9RBCwVVgm2ajs5N8t3HtkgZnqReAMJZyywnq5d0jTTwIpfpYfFgXawESMmAmNkzzsr1SLWruQ7f4Hk2+gqcd5wZgkTLPFyoTVtNCCeE8rKsrwkPQ31BzI78TZkhXdSB+Qv2V6DOz0VdMRgHa17lQgcC5jTj9HL5zCBF5b+12FstdHYISJnh6p7CPkpw0PGXa7NiXmP1lhk0Cl2/zUOUc/ZeqGsSdNNPinZUEnqGgBuDL/GTGURucPA1mkxl77PohNaXuFesP70S6swapKFVd2aT+VoEQYdsXzIn5yxpnQ3LsSWO7Fc+xKO8LPExZdQnyJ9jem0WSG83F+B83Ie70hWFEGgyqRY6S5LiLULNsU0/NgrnvnHMgYJxhCC26g8jo3Ffv2CpChLMP9NIUSb8FGN4UoTH7QbmzSE6GcDTXLUTUv0qYJu+CzmFq23IlmJzl2eYM4AtOdXj7ysaQh//Mp0+fAhaX5/P+B/UnDJMc/DsuUHCniw6UZr9PnCGl91OYWZ4VOnmhBFmx7mOMf9a6nXAGId+79AyywjQM0dRQPZ9qPDNMbk1vCFkup7X8dmcCn2LhK0EQgWh3hT8/YLc/DSTF3IvXgZTxQ6QS9Hi7dRtqbmxG/nWOWxynlfK9nqP7LJ7uQl5q4OJkn8mwKz
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KL1PR0401MB6196.apcprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(23010399003)(366016)(921020)(38070700021)(6133799003)(10067099003)(56012099006)(11063799006)(18002099003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?Odxo+I8eXOuMeqm5vDHyLaZpOpKBP20/pEIg1Hlaiw95uP2SsGAv55wdQt?=
- =?iso-8859-1?Q?jlKFqPTVy5IDwLR2OYSi3i5HDYkolIrBk4IzV5padxa9xV7CmWgGu8URpP?=
- =?iso-8859-1?Q?t7052kutoeHqgA1aYkEDgSOr9KxClnZXitRKRR+QkprYVc4gIlrH1/ZNCk?=
- =?iso-8859-1?Q?PWgIhgJZrH6hxr3IP8KtAp6xqGQZa2kHkGp5YaobRA4BZAWweUmEYkfnps?=
- =?iso-8859-1?Q?e4G4RKGWuk0EpcOpebrPROUoK61gfIgZmnXEAOZn/Be+jA6ZFJlcmuB7YW?=
- =?iso-8859-1?Q?IHhAOyIlG9lDaGCEsjAzhbJo2okmJMaT/au92Emk9cZXd0TBntWM4nr9e/?=
- =?iso-8859-1?Q?sf9cY8FKxM5zzW473dLU5nEpYwVBsGo+tJ3JCZGdTuguYKFoVKx9oEU2A5?=
- =?iso-8859-1?Q?0QtCucd1NT3fgyKSuv9fu2+Pdx4mSjVdy31OGxiFA6UpL10WTM7j+dDp/b?=
- =?iso-8859-1?Q?9/ZXNREcScYt64xbi1xEjpuN47e7D82SiKnJtjhmFsfs3uRiUwvPBKbJF3?=
- =?iso-8859-1?Q?mrJv9+d3QcVv00QavF1CCPigmkmCgf9IYH11vuj5dUPCsrTXIND7+OlRhz?=
- =?iso-8859-1?Q?FfaS8JFp8x61NPINL+nUGHSwgFbufz8Jo3X8hDCHT1zaGAJYyrB0ExyNYi?=
- =?iso-8859-1?Q?XieQwJUVwVfiLk3lRnJ1qY/wJSxGAudDvy7SiUKbBbsqQQMZ4UKJDd9JSa?=
- =?iso-8859-1?Q?jRRcdwK+jcmnwrAIHSOrQilwj3BY3dshkpd8ZyAHNGG/7XFu70smJyiUQ0?=
- =?iso-8859-1?Q?wl6VgF0XPmtSI3PsxD4AyhWrZLjZ9y3Dx78c3sYI+/rdc2ReD6y8CZuDob?=
- =?iso-8859-1?Q?rIbA/ZNPmanTxBfjiYnXwGYg+4a1oUf7KizvVHz1EYrLcYX7qwBHVScYjT?=
- =?iso-8859-1?Q?xm71PHk7txJvONIV9gS4+3o7pVmN+E1XfBCpGgGtLoyYUF7nWMJyLQW3FA?=
- =?iso-8859-1?Q?79/iiIGV6/cy+J8cIvFL36LJxWN+7ohTFj1ZXLSxWuVi63fxGEDbR5Sx+O?=
- =?iso-8859-1?Q?CgRp8osfe3EIn9Rfp6OCs8lfIeoYykDcj/eJI6/F2Hks661vxFFxsHm9Jc?=
- =?iso-8859-1?Q?+F96FhqTOz2Mr7E9QRx/L2mSacCCzXmyhYRccypaYwrphTw6Ao12OGHnpG?=
- =?iso-8859-1?Q?k9leOs5rCL3+vknwnr25r1wmEhuTzZeWuAbZVhfIiAuoWc9VMOczjvLA5d?=
- =?iso-8859-1?Q?o9fL1xPyoS9YqdvmcYrLAhDF2EWkWXdzKt7MqeDDw5YsHHrlIigociDETA?=
- =?iso-8859-1?Q?VcxU2hKOvjHHzW+1qO5v0xXqOHdJZC8gZDmYK1s+YaZOSbPZiQDCCmemPT?=
- =?iso-8859-1?Q?YyPVgnGfnO4waCsIpSjtaJWAl5CIaI5T0rthGoLSQafPEU+Ett9d0YB9DL?=
- =?iso-8859-1?Q?IoNQtJUR1p5vHLr88Dno+vgnpvP/cMgVCiqBhveIsmVDPuolcMCI688H5I?=
- =?iso-8859-1?Q?anOB5/CIDLviX1uBhb3NKAAB9iCxjzSKFfggywHvZmJnhMBTX3UBtC4CDd?=
- =?iso-8859-1?Q?Da+6ipEMVhyemyHz3BMqdVt8CqGITjqM7APWVk3aaoDrQuYGn6l1p51MDS?=
- =?iso-8859-1?Q?Ydm1JUPePZn/y30L0hxz4JkoNuJtWGtUXqXlGWo/d/bc9qiK0dWPuVK9zW?=
- =?iso-8859-1?Q?vF1L9KW0r3hVibwZFfszwHNF/4GQ0HTZYWJK4quj6tiVgT7dih2DIuMtv2?=
- =?iso-8859-1?Q?G1gJSCEEQ3v+h99lggXlOS7nuTwplaUm2nWw7DExOEO9wGfl+WuCBitgRP?=
- =?iso-8859-1?Q?KIfUQxSNSigKdin9PzRYWMxH+/hM+j0Zr9ypkUpWbKuzrhoGTlDaf0uwAr?=
- =?iso-8859-1?Q?JYyUZT+kVg=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jm+Wv4aO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 515771F000E9;
+	Wed, 19 Aug 2026 09:10:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787130655;
+	bh=J7SSYr9IcCYlpEA9on/0aKPIvhje3Akfn6JxapVuH8c=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=jm+Wv4aOzeOFTNGkTPTh1XF0zLQEggF3fxwAzmzCyumgDLdn0f12E8o3GI6dpHpkx
+	 ETq719cOrx8P/ruQ1OJxqoaV19IPggFEEVmEBqif88yyb5XrXMNEfPHKjO7dmA0zCS
+	 XaFElWeGHWsTS30cQNtt/qevs6nQq/+keyts6TX3TXgRXhfvB1K4d3ql/t8lPKcszG
+	 IdyqmlqIkRCGbPEzYxe8te0Su4J+GenFyDoXocfpKndU9TV/tVXa/Ltjh18TONIhIP
+	 7RHGNtpbny9da2Ar64FJ4mMWrHdQLxuAtcmC0/40KEVCTsjb1sNCzLYzFb8a/cj9DV
+	 YxESBVfYEonbA==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Mukesh Pilaniya <mpilaniy@redhat.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>,  Catalin Marinas
+ <catalin.marinas@arm.com>,  Will Deacon <will@kernel.org>,  Mark Rutland
+ <mark.rutland@arm.com>,  Huacai Chen <chenhuacai@kernel.org>,  WANG Xuerui
+ <kernel@xen0n.name>,  Paul Walmsley <pjw@kernel.org>,  Palmer Dabbelt
+ <palmer@dabbelt.com>,  Albert Ou <aou@eecs.berkeley.edu>,  Alexandre Ghiti
+ <alex@ghiti.fr>,  Andrew Morton <akpm@linux-foundation.org>,  Baoquan He
+ <baoquan.he@linux.dev>,  Mike Rapoport <rppt@kernel.org>,  Pasha Tatashin
+ <pasha.tatashin@soleen.com>,  Tao Liu <ltao@redhat.com>,  Philipp Rudo
+ <prudo@redhat.com>,  linux-arm-kernel@lists.infradead.org,
+  linux-kernel@vger.kernel.org,  loongarch@lists.linux.dev,
+  linux-riscv@lists.infradead.org,  kexec@lists.infradead.org
+Subject: Re: [PATCH] kexec: return -ENOEXEC from image probe functions on
+ mismatch
+In-Reply-To: <0d7acb43-2eb4-44ec-9bfb-b89440afc605@redhat.com> (Mukesh
+	Pilaniya's message of "Wed, 19 Aug 2026 11:28:10 +0530")
+References: <20260813-mpilaniy-v1-1-777d4d0e30f7@redhat.com>
+	<2vxzv79c23j6.fsf@kernel.org>
+	<9cbe111c-ff63-4f24-b518-094ddd7cea30@redhat.com>
+	<2vxzbjaz2269.fsf@kernel.org>
+	<0d7acb43-2eb4-44ec-9bfb-b89440afc605@redhat.com>
+Date: Wed, 19 Aug 2026 11:10:50 +0200
+Message-ID: <2vxzqzjuzd9h.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-OriginatorOrg: transsion.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: KL1PR0401MB6196.apcprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: befa3bdb-2ae8-4060-d27d-08defdc990d6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Aug 2026 08:12:09.3185
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 2e8503a6-2d01-4333-8e36-6ab7c8cd7ae2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: hahIfAI68GG4NH7OftBS1CZP1PWA2JXjn6x51ud59dJAgdzNyPwXHPNEGP9iVwarDN/dWZFuGQaIOxQqZF0lS26mGmSBp4GhxB4Us/HB+tE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR04MB6432
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Hongyan Xia <hongyan.xia@transsion.com>=0A=
-=0A=
-paravirt_steal_rq_enabled and paravirt_steal_enabled use raw static_key=0A=
-APIs which are now deprecated. Use the new API instead.=0A=
-=0A=
-No functional change.=0A=
-=0A=
-Signed-off-by: Hongyan Xia <hongyan.xia@transsion.com>=0A=
-Acked-by: Juergen Gross <jgross@suse.com>=0A=
----=0A=
-Changed in RESEND:=0A=
-- Separate the original series into individual patches. They aren't easy=0A=
-  to review as a series.=0A=
-=0A=
- arch/arm64/kernel/paravirt.c           | 4 ++--=0A=
- arch/loongarch/kernel/paravirt.c       | 4 ++--=0A=
- arch/powerpc/platforms/pseries/setup.c | 4 ++--=0A=
- arch/riscv/kernel/paravirt.c           | 4 ++--=0A=
- arch/x86/kernel/cpu/vmware.c           | 4 ++--=0A=
- arch/x86/kernel/kvm.c                  | 4 ++--=0A=
- drivers/xen/time.c                     | 4 ++--=0A=
- include/linux/sched/cputime.h          | 6 +++---=0A=
- kernel/sched/core.c                    | 4 ++--=0A=
- kernel/sched/cputime.c                 | 4 ++--=0A=
- 10 files changed, 21 insertions(+), 21 deletions(-)=0A=
-=0A=
-diff --git a/arch/arm64/kernel/paravirt.c b/arch/arm64/kernel/paravirt.c=0A=
-index 572efb96b23f..30bf61d031eb 100644=0A=
---- a/arch/arm64/kernel/paravirt.c=0A=
-+++ b/arch/arm64/kernel/paravirt.c=0A=
-@@ -157,9 +157,9 @@ int __init pv_time_init(void)=0A=
- =0A=
- 	static_call_update(pv_steal_clock, para_steal_clock);=0A=
- =0A=
--	static_key_slow_inc(&paravirt_steal_enabled);=0A=
-+	static_branch_inc(&paravirt_steal_enabled);=0A=
- 	if (steal_acc)=0A=
--		static_key_slow_inc(&paravirt_steal_rq_enabled);=0A=
-+		static_branch_inc(&paravirt_steal_rq_enabled);=0A=
- =0A=
- 	pr_info("using stolen time PV\n");=0A=
- =0A=
-diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/parav=
-irt.c=0A=
-index 10821cce554c..e8965a3f8082 100644=0A=
---- a/arch/loongarch/kernel/paravirt.c=0A=
-+++ b/arch/loongarch/kernel/paravirt.c=0A=
-@@ -308,10 +308,10 @@ int __init pv_time_init(void)=0A=
- =0A=
- 	static_call_update(pv_steal_clock, paravt_steal_clock);=0A=
- =0A=
--	static_key_slow_inc(&paravirt_steal_enabled);=0A=
-+	static_branch_inc(&paravirt_steal_enabled);=0A=
- #ifdef CONFIG_PARAVIRT_TIME_ACCOUNTING=0A=
- 	if (steal_acc)=0A=
--		static_key_slow_inc(&paravirt_steal_rq_enabled);=0A=
-+		static_branch_inc(&paravirt_steal_rq_enabled);=0A=
- #endif=0A=
- =0A=
- 	if (static_key_enabled(&virt_preempt_key))=0A=
-diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platform=
-s/pseries/setup.c=0A=
-index 1223dc961242..8dcbc4bb7025 100644=0A=
---- a/arch/powerpc/platforms/pseries/setup.c=0A=
-+++ b/arch/powerpc/platforms/pseries/setup.c=0A=
-@@ -852,9 +852,9 @@ static void __init pSeries_setup_arch(void)=0A=
- 			static_branch_enable(&shared_processor);=0A=
- 			pv_spinlocks_init();=0A=
- #ifdef CONFIG_PARAVIRT_TIME_ACCOUNTING=0A=
--			static_key_slow_inc(&paravirt_steal_enabled);=0A=
-+			static_branch_inc(&paravirt_steal_enabled);=0A=
- 			if (steal_acc)=0A=
--				static_key_slow_inc(&paravirt_steal_rq_enabled);=0A=
-+				static_branch_inc(&paravirt_steal_rq_enabled);=0A=
- #endif=0A=
- 		}=0A=
- =0A=
-diff --git a/arch/riscv/kernel/paravirt.c b/arch/riscv/kernel/paravirt.c=0A=
-index 5f56be79cd06..9c13a6f1ea2a 100644=0A=
---- a/arch/riscv/kernel/paravirt.c=0A=
-+++ b/arch/riscv/kernel/paravirt.c=0A=
-@@ -116,9 +116,9 @@ int __init pv_time_init(void)=0A=
- =0A=
- 	static_call_update(pv_steal_clock, pv_time_steal_clock);=0A=
- =0A=
--	static_key_slow_inc(&paravirt_steal_enabled);=0A=
-+	static_branch_inc(&paravirt_steal_enabled);=0A=
- 	if (steal_acc)=0A=
--		static_key_slow_inc(&paravirt_steal_rq_enabled);=0A=
-+		static_branch_inc(&paravirt_steal_rq_enabled);=0A=
- =0A=
- 	pr_info("Computing paravirt steal-time\n");=0A=
- =0A=
-diff --git a/arch/x86/kernel/cpu/vmware.c b/arch/x86/kernel/cpu/vmware.c=0A=
-index 34b73573b108..f7ab9e7902cf 100644=0A=
---- a/arch/x86/kernel/cpu/vmware.c=0A=
-+++ b/arch/x86/kernel/cpu/vmware.c=0A=
-@@ -328,9 +328,9 @@ static int vmware_cpu_down_prepare(unsigned int cpu)=0A=
- static __init int activate_jump_labels(void)=0A=
- {=0A=
- 	if (has_steal_clock) {=0A=
--		static_key_slow_inc(&paravirt_steal_enabled);=0A=
-+		static_branch_inc(&paravirt_steal_enabled);=0A=
- 		if (steal_acc)=0A=
--			static_key_slow_inc(&paravirt_steal_rq_enabled);=0A=
-+			static_branch_inc(&paravirt_steal_rq_enabled);=0A=
- 	}=0A=
- =0A=
- 	return 0;=0A=
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c=0A=
-index dcef84da304b..d3dcd64f22c2 100644=0A=
---- a/arch/x86/kernel/kvm.c=0A=
-+++ b/arch/x86/kernel/kvm.c=0A=
-@@ -1052,9 +1052,9 @@ const __initconst struct hypervisor_x86 x86_hyper_kvm=
- =3D {=0A=
- static __init int activate_jump_labels(void)=0A=
- {=0A=
- 	if (has_steal_clock) {=0A=
--		static_key_slow_inc(&paravirt_steal_enabled);=0A=
-+		static_branch_inc(&paravirt_steal_enabled);=0A=
- 		if (steal_acc)=0A=
--			static_key_slow_inc(&paravirt_steal_rq_enabled);=0A=
-+			static_branch_inc(&paravirt_steal_rq_enabled);=0A=
- 	}=0A=
- =0A=
- 	return 0;=0A=
-diff --git a/drivers/xen/time.c b/drivers/xen/time.c=0A=
-index a2be0a4d45b0..a02d48a2aa68 100644=0A=
---- a/drivers/xen/time.c=0A=
-+++ b/drivers/xen/time.c=0A=
-@@ -169,7 +169,7 @@ void __init xen_time_setup_guest(void)=0A=
- =0A=
- 	static_call_update(pv_steal_clock, xen_steal_clock);=0A=
- =0A=
--	static_key_slow_inc(&paravirt_steal_enabled);=0A=
-+	static_branch_inc(&paravirt_steal_enabled);=0A=
- 	if (xen_runstate_remote)=0A=
--		static_key_slow_inc(&paravirt_steal_rq_enabled);=0A=
-+		static_branch_inc(&paravirt_steal_rq_enabled);=0A=
- }=0A=
-diff --git a/include/linux/sched/cputime.h b/include/linux/sched/cputime.h=
-=0A=
-index e90efaf6d26e..694126411dfe 100644=0A=
---- a/include/linux/sched/cputime.h=0A=
-+++ b/include/linux/sched/cputime.h=0A=
-@@ -182,9 +182,9 @@ extern unsigned long long=0A=
- task_sched_runtime(struct task_struct *task);=0A=
- =0A=
- #ifdef CONFIG_PARAVIRT=0A=
--struct static_key;=0A=
--extern struct static_key paravirt_steal_enabled;=0A=
--extern struct static_key paravirt_steal_rq_enabled;=0A=
-+#include <linux/jump_label.h>=0A=
-+DECLARE_STATIC_KEY_FALSE(paravirt_steal_enabled);=0A=
-+DECLARE_STATIC_KEY_FALSE(paravirt_steal_rq_enabled);=0A=
- =0A=
- #ifdef CONFIG_HAVE_PV_STEAL_CLOCK_GEN=0A=
- u64 dummy_steal_clock(int cpu);=0A=
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c=0A=
-index 5c07d53e43b5..84d090581a08 100644=0A=
---- a/kernel/sched/core.c=0A=
-+++ b/kernel/sched/core.c=0A=
-@@ -795,7 +795,7 @@ struct rq *_task_rq_lock(struct task_struct *p, struct =
-rq_flags *rf)=0A=
- =0A=
- /* Use CONFIG_PARAVIRT as this will avoid more #ifdef in arch code. */=0A=
- #ifdef CONFIG_PARAVIRT=0A=
--struct static_key paravirt_steal_rq_enabled;=0A=
-+DEFINE_STATIC_KEY_FALSE(paravirt_steal_rq_enabled);=0A=
- #endif=0A=
- =0A=
- static void update_rq_clock_task(struct rq *rq, s64 delta)=0A=
-@@ -834,7 +834,7 @@ static void update_rq_clock_task(struct rq *rq, s64 del=
-ta)=0A=
- 	}=0A=
- #endif=0A=
- #ifdef CONFIG_PARAVIRT_TIME_ACCOUNTING=0A=
--	if (static_key_false((&paravirt_steal_rq_enabled))) {=0A=
-+	if (static_branch_unlikely(&paravirt_steal_rq_enabled)) {=0A=
- 		u64 prev_steal;=0A=
- =0A=
- 		steal =3D prev_steal =3D paravirt_steal_clock(cpu_of(rq));=0A=
-diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c=0A=
-index 06bddaa738e5..f16970ca81d0 100644=0A=
---- a/kernel/sched/cputime.c=0A=
-+++ b/kernel/sched/cputime.c=0A=
-@@ -255,7 +255,7 @@ void __account_forceidle_time(struct task_struct *p, u6=
-4 delta)=0A=
-  * occasion account more time than the calling functions think elapsed.=0A=
-  */=0A=
- #ifdef CONFIG_PARAVIRT=0A=
--struct static_key paravirt_steal_enabled;=0A=
-+DEFINE_STATIC_KEY_FALSE(paravirt_steal_enabled);=0A=
- =0A=
- #ifdef CONFIG_HAVE_PV_STEAL_CLOCK_GEN=0A=
- static u64 native_steal_clock(int cpu)=0A=
-@@ -270,7 +270,7 @@ DEFINE_STATIC_CALL(pv_steal_clock, native_steal_clock);=
-=0A=
- static __always_inline u64 steal_account_process_time(u64 maxtime)=0A=
- {=0A=
- #ifdef CONFIG_PARAVIRT=0A=
--	if (static_key_false(&paravirt_steal_enabled)) {=0A=
-+	if (static_branch_unlikely(&paravirt_steal_enabled)) {=0A=
- 		u64 steal;=0A=
- =0A=
- 		steal =3D paravirt_steal_clock(smp_processor_id());=0A=
--- =0A=
-2.47.3=0A=
-=0A=
+On Wed, Aug 19 2026, Mukesh Pilaniya wrote:
+
+> Hi Pratyush,
+>
+> On 18/08/26 3:14 pm, Pratyush Yadav wrote:
+>> On Fri, Aug 14 2026, Mukesh Pilaniya wrote:
+[...]
+>>=20
+>> So how about the below diff instead? (** only compile tested **)
+>>=20
+>> --- 8< ---
+>> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+>> index 2bfbb2d144e6..cfb2b8cd5679 100644
+>> --- a/kernel/kexec_file.c
+>> +++ b/kernel/kexec_file.c
+>> @@ -67,17 +67,16 @@ int kexec_image_probe_default(struct kimage *image, =
+void *buf,
+>>  			      unsigned long buf_len)
+>>  {
+>>  	const struct kexec_file_ops * const *fops;
+>> -	int ret =3D -ENOEXEC;
+>>=20=20
+>>  	for (fops =3D &kexec_file_loaders[0]; *fops && (*fops)->probe; ++fops)=
+ {
+>> -		ret =3D (*fops)->probe(buf, buf_len);
+>> -		if (!ret) {
+>> +		if (!(*fops)->probe(buf, buf_len)) {
+>>  			image->fops =3D *fops;
+>> -			return ret;
+>> +			return 0;
+>>  		}
+>>  	}
+>>=20=20
+>> -	return ret;
+>> +	/* No loader found. */
+>> +	return -ENOEXEC;
+>>  }
+> Nice catch, Pratyush but this discards all non-zero return values from
+> probe functions, which means real errors get swallowed. For example,
+> kexec_elf_probe() can return -ENOMEM when kzalloc() fails in
+> elf_read_phdrs(). With this diff, that -ENOMEM becomes -ENOEXEC, which
+> tells userspace "no loader found" when the actual problem was a memory
+> allocation failure.
+
+Right, good point.
+
+>
+>>=20=20
+>>  static void *kexec_image_load_default(struct kimage *image)
+>>=20
+> How about the following instead? It keeps the probe return value and
+> distinguishes -ENOEXEC (format not recognized, try next loader) from any
+> other error (real failure, propagate immediately):
+> =EF=BB=BF
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index 59fb9d71e9d8..ceb5c97cedac 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -68,17 +68,19 @@ int kexec_image_probe_default(struct kimage *image,
+> void *buf,
+>  			      unsigned long buf_len)
+>  {
+>  	const struct kexec_file_ops * const *fops;
+> -	int ret =3D -ENOEXEC;
+> +	int ret;
+>
+>  	for (fops =3D &kexec_file_loaders[0]; *fops && (*fops)->probe; ++fops) {
+>  		ret =3D (*fops)->probe(buf, buf_len);
+> -		if (!ret) {
+> +		if (ret =3D=3D 0) {
+>  			image->fops =3D *fops;
+> -			return ret;
+> +			return 0;
+>  		}
+> +		if (ret !=3D -ENOEXEC)
+> +			return ret;
+>  	}
+>
+> -	return ret;
+> +	return -ENOEXEC;
+>  }
+>
+>  static void *kexec_image_load_default(struct kimage *image)
+>
+>
+> This requires probe functions to return -ENOEXEC from fixes in patch 1.
+> I will add this as a separate patch on top in v2.
+>
+> Does this looks good to you ?
+
+LGTM. The only thing I'd change is to perhaps move the declaration of
+ret inside the loop so it can never be used outside it, since ret is
+only useful in the loop in this function.
+
+--=20
+Regards,
+Pratyush Yadav
