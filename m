@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79CA1446055
-	for <loongarch@lists.linux.dev>; Thu, 20 Aug 2026 12:50:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EC3B446050
+	for <loongarch@lists.linux.dev>; Thu, 20 Aug 2026 12:50:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787230223; cv=none; b=WFIJB5qZMWFbw0oSGlUmVHnP0/rwo37ePQeBMj5gkyH6WtmSSwitNbqZYsGMiL9gvFcwlGoNRqjpvMHDeEwr07jcXvcaNjqnY9SBNRgBOTKoc6qUntyjOgXV16u0Bbko5xPmVHV7wm8KoEaZJ2cg2PuVOvfRPhdo7f53cN7rHQU=
+	t=1787230225; cv=none; b=bTVhyUizzXCZ2zAOuD77zPzZ+76upfL1iOGNcqASwpiHEusBEyhOG7Gk1JIiyJt4MvSCGKliomx2zfZ6w3Ugr8Hdf8pCB8NydCz4L5et64INnUnQ0t4bW3OdbHI3zyb7VZQP0+QZr1O9BkriCGuFznVsQz/JTq6kCtwydk5lCXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787230223; c=relaxed/simple;
-	bh=y49LuqZmJHftFq0bCPSvkqgoowolkttaDwtwWEG4BAk=;
+	s=arc-20240116; t=1787230225; c=relaxed/simple;
+	bh=IOabAEWjqaeY6j9kg3frtzHOhg7NAQAwhlq+4NmQc9Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pSTwu7mg4/UPa0jzJaK/qOdNy0Ve9SkYwKgm197HeypPSSx/SsvHzqBWy3eRJK0Sct3AYsppDhQCHPk8TAMIPoDcLrQHL3KT1o6EyAAozBQZmuAy5q4LW4iKw/M5rhcn1ZTzZ+ieFmYE9qtaKC5yw5s8PyblCFCUaJntQOzrnfA=
+	 MIME-Version; b=SMT9WVC+pMGlcR1uykjLJTtSjctzUxnQoanyPRpArLDt1SSuoM4bIIsCV7GG92NLHPc122vKI2IEwg+cXj9Fc9OnGVALzqXLsz0t4NnwgFkf1pdG41dZl6435nTvgPYIWApyTGy3SbVdOJH1tNIHji7X9LdAchL7pXM0cB/VU3g=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [123.138.236.242])
-	by gateway (Coremail) with SMTP id _____8DxUNEE+IZqXR0DAA--.9484S3;
+	by gateway (Coremail) with SMTP id _____8BxW_AE+IZqWh0DAA--.9438S3;
 	Thu, 20 Aug 2026 20:50:12 +0800 (CST)
 Received: from linux.localdomain (unknown [123.138.236.242])
-	by front1 (Coremail) with SMTP id qMiowJAx2c0A+IZqX_QLAA--.6716S4;
-	Thu, 20 Aug 2026 20:50:12 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJAx2c0A+IZqX_QLAA--.6716S3;
+	Thu, 20 Aug 2026 20:50:11 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Petr Pavlu <petr.pavlu@suse.com>
 Cc: linux-modules@vger.kernel.org,
@@ -25,9 +25,9 @@ Cc: linux-modules@vger.kernel.org,
 	Josh Poimboeuf <jpoimboe@kernel.org>,
 	Nathan Chancellor <nathan@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH v4 2/3] module/kallsyms: Refactor current symbol filtering into is_core_symbol()
-Date: Thu, 20 Aug 2026 20:50:06 +0800
-Message-ID: <20260820125007.22943-3-yangtiezhu@loongson.cn>
+Subject: [PATCH v4 1/3] module/kallsyms: Rename is_mapping_symbol() to is_ignored_kernel_symbol()
+Date: Thu, 20 Aug 2026 20:50:05 +0800
+Message-ID: <20260820125007.22943-2-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20260820125007.22943-1-yangtiezhu@loongson.cn>
 References: <20260820125007.22943-1-yangtiezhu@loongson.cn>
@@ -38,135 +38,117 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAx2c0A+IZqX_QLAA--.6716S4
+X-CM-TRANSID:qMiowJAx2c0A+IZqX_QLAA--.6716S3
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxXF17Wr1kGryDZryxJFWDtrc_yoW5KFyUpr
-	45C395GrW8JF48uws7ArWY9ay3G34kW3yYg3W7GFWfAr1DXa4rXw1ft3WF9FZ3Zr9Fga4x
-	tF929F9xt3W8JrbCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoWxXFWxuw43Jw45XF45CF4UGFX_yoW5Krykpw
+	s8Ca18XFWUAryjgas7Gw4v9ry5Ww4vqr4FkryayrykCFnIq3WvqrZ2kF15uw4UXr4UKF4I
+	vrsrZrWSka4fArcCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
 	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
 	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
 	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
 	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcCD7UUUUU
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1WlkUUUUU=
 
-Currently, the loops in layout_symtab() and add_kallsyms() duplicate the
-exact same checks (i == 0 || is_livepatch_module() || is_core_symbol())
-to determine whether a symbol should be preserved in the module's core
-symbol table.
+The helper function is_mapping_symbol() historically checks for both
+local labels prefixed with ".L" or "L0" and mapping symbols prefixed
+with "$".
 
-Move the entire checking logic inside is_core_symbol(), including the
-special handlers for the first symbol and livepatch modules.
+Rename it to is_ignored_kernel_symbol() to better reflect this actual
+behavior and scope, preventing conceptual confusion.
 
-No functional changes.
+While at it, update the related non-module files, no functional changes.
 
 Suggested-by: Petr Pavlu <petr.pavlu@suse.com>
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
 ---
- kernel/module/kallsyms.c | 54 ++++++++++++++++++++--------------------
- 1 file changed, 27 insertions(+), 27 deletions(-)
+ include/linux/module_symbol.h | 7 +++++--
+ kernel/module/kallsyms.c      | 2 +-
+ scripts/faddr2line            | 2 +-
+ scripts/mod/modpost.h         | 2 +-
+ tools/perf/util/symbol.h      | 4 +---
+ 5 files changed, 9 insertions(+), 8 deletions(-)
 
+diff --git a/include/linux/module_symbol.h b/include/linux/module_symbol.h
+index 574609aced99..698d3db2b37e 100644
+--- a/include/linux/module_symbol.h
++++ b/include/linux/module_symbol.h
+@@ -7,8 +7,11 @@ enum ksym_flags {
+ 	KSYM_FLAG_GPL_ONLY	= 1 << 0,
+ };
+ 
+-/* This ignores the intensely annoying "mapping symbols" found in ELF files. */
+-static inline bool is_mapping_symbol(const char *str)
++/*
++ * Ignore local labels (.L*, L0*) and mapping symbols ($*). These symbols are
++ * not useful for the kernel, for example, they should not appear in kallsyms.
++ */
++static inline bool is_ignored_kernel_symbol(const char *str)
+ {
+ 	if (str[0] == '.' && str[1] == 'L')
+ 		return true;
 diff --git a/kernel/module/kallsyms.c b/kernel/module/kallsyms.c
-index a52942fd0e07..d75c9f60d360 100644
+index f23126d804b2..a52942fd0e07 100644
 --- a/kernel/module/kallsyms.c
 +++ b/kernel/module/kallsyms.c
-@@ -75,23 +75,26 @@ static char elf_type(const Elf_Sym *sym, const struct load_info *info)
- 	return '?';
+@@ -294,7 +294,7 @@ static const char *find_kallsyms_symbol(struct module *mod,
+ 		 * and inserted at a whim.
+ 		 */
+ 		if (*kallsyms_symbol_name(kallsyms, i) == '\0' ||
+-		    is_mapping_symbol(kallsyms_symbol_name(kallsyms, i)))
++		    is_ignored_kernel_symbol(kallsyms_symbol_name(kallsyms, i)))
+ 			continue;
+ 
+ 		if (thisval <= addr && thisval > bestval) {
+diff --git a/scripts/faddr2line b/scripts/faddr2line
+index 622875396bcf..3aca197d513f 100755
+--- a/scripts/faddr2line
++++ b/scripts/faddr2line
+@@ -243,7 +243,7 @@ __faddr2line() {
+ 			local cur_sym_elf_size=${fields[2]}
+ 			local cur_sym_name=${fields[7]:-}
+ 
+-			# is_mapping_symbol(cur_sym_name)
++			# is_ignored_kernel_symbol(cur_sym_name)
+ 			if [[ ${cur_sym_name} =~ ^(\.L|L0|\$) ]]; then
+ 				continue
+ 			fi
+diff --git a/scripts/mod/modpost.h b/scripts/mod/modpost.h
+index 2aecb8f25c87..d9c21d479dd8 100644
+--- a/scripts/mod/modpost.h
++++ b/scripts/mod/modpost.h
+@@ -198,7 +198,7 @@ static inline bool is_valid_name(struct elf_info *elf, Elf_Sym *sym)
+ 
+ 	if (!name || !strlen(name))
+ 		return false;
+-	return !is_mapping_symbol(name);
++	return !is_ignored_kernel_symbol(name);
  }
  
--static bool is_core_symbol(const Elf_Sym *src, const Elf_Shdr *sechdrs,
--			   unsigned int shnum, unsigned int pcpundx)
-+static bool is_core_symbol(struct module *mod, const struct load_info *info,
-+			   unsigned int symnum, const Elf_Sym *src)
- {
- 	const Elf_Shdr *sec;
- 	enum mod_mem_type type;
+ /* symsearch.c */
+diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+index a71525335703..8b0780046938 100644
+--- a/tools/perf/util/symbol.h
++++ b/tools/perf/util/symbol.h
+@@ -31,9 +31,7 @@ struct build_id;
+ struct perf_env;
  
-+	if (symnum == 0 || is_livepatch_module(mod))
-+		return true;
-+
- 	if (src->st_shndx == SHN_UNDEF ||
--	    src->st_shndx >= shnum ||
-+	    src->st_shndx >= info->hdr->e_shnum ||
- 	    !src->st_name)
- 		return false;
- 
- #ifdef CONFIG_KALLSYMS_ALL
--	if (src->st_shndx == pcpundx)
-+	if (src->st_shndx == info->index.pcpu)
- 		return true;
- #endif
- 
--	sec = sechdrs + src->st_shndx;
-+	sec = info->sechdrs + src->st_shndx;
- 	type = sec->sh_entsize >> SH_ENTSIZE_TYPE_SHIFT;
- 	if (!(sec->sh_flags & SHF_ALLOC)
- #ifndef CONFIG_KALLSYMS_ALL
-@@ -130,12 +133,11 @@ void layout_symtab(struct module *mod, struct load_info *info)
- 
- 	/* Compute total space required for the core symbols' strtab. */
- 	for (ndst = i = 0; i < nsrc; i++) {
--		if (i == 0 || is_livepatch_module(mod) ||
--		    is_core_symbol(src + i, info->sechdrs, info->hdr->e_shnum,
--				   info->index.pcpu)) {
--			strtab_size += strlen(&info->strtab[src[i].st_name]) + 1;
--			ndst++;
--		}
-+		if (!is_core_symbol(mod, info, i, src + i))
-+			continue;
-+
-+		strtab_size += strlen(&info->strtab[src[i].st_name]) + 1;
-+		ndst++;
- 	}
- 
- 	/* Append room for core symbols at end of core part. */
-@@ -197,23 +199,21 @@ void add_kallsyms(struct module *mod, const struct load_info *info)
- 	strtab_size = info->core_typeoffs - info->stroffs;
- 	src = kallsyms->symtab;
- 	for (ndst = i = 0; i < kallsyms->num_symtab; i++) {
-+		ssize_t ret;
-+
- 		kallsyms->typetab[i] = elf_type(src + i, info);
--		if (i == 0 || is_livepatch_module(mod) ||
--		    is_core_symbol(src + i, info->sechdrs, info->hdr->e_shnum,
--				   info->index.pcpu)) {
--			ssize_t ret;
--
--			mod->core_kallsyms.typetab[ndst] =
--				kallsyms->typetab[i];
--			dst[ndst] = src[i];
--			dst[ndst++].st_name = s - mod->core_kallsyms.strtab;
--			ret = strscpy(s, &kallsyms->strtab[src[i].st_name],
--				      strtab_size);
--			if (ret < 0)
--				break;
--			s += ret + 1;
--			strtab_size -= ret + 1;
--		}
-+
-+		if (!is_core_symbol(mod, info, i, src + i))
-+			continue;
-+
-+		mod->core_kallsyms.typetab[ndst] = kallsyms->typetab[i];
-+		dst[ndst] = src[i];
-+		dst[ndst++].st_name = s - mod->core_kallsyms.strtab;
-+		ret = strscpy(s, &kallsyms->strtab[src[i].st_name], strtab_size);
-+		if (ret < 0)
-+			break;
-+		s += ret + 1;
-+		strtab_size -= ret + 1;
- 	}
- 
- 	/* Set up to point into init section. */
+ /*
+- * Ignore kernel mapping symbols, matching kernel is_mapping_symbol() logic.
+- * This checks for '$' prefix (used by ARM, AArch64, RISC-V) and
+- * x86 local symbol prefixes (.L* and L0*).
++ * Ignore local labels and mapping symbols, matching kernel is_ignored_kernel_symbol() logic.
+  * Only use this for kernel symbols (kallsyms, ksymbol events, kernel ELF DSOs).
+  */
+ static inline bool is_ignored_kernel_symbol(const char *str)
 -- 
 2.42.0
 
