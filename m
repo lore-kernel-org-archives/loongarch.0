@@ -1,60 +1,87 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FB5C415F3D;
-	Thu, 20 Aug 2026 10:47:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261644334D0
+	for <loongarch@lists.linux.dev>; Thu, 20 Aug 2026 11:35:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787222869; cv=none; b=kI1Uuy4TxqJ36D5wE7MidBSXx8+eQDGj70MiiGeJOMd/blIZyt0LaK0Al45GB+tp0Vi9T07HoGepUY3/+HjeDh+gQo6L64BhuXv+jQKy7pwqzUvokQ9XkweNvWW72JWlY7br4tYir2INM4YFOvSqAD5Gwunukct1sxJaqpsak1U=
+	t=1787225708; cv=none; b=HseXb0ceu5/ov3CIMbyRO8YwvRPbrQLhjpZIBEfdVDYjPE9yv69LdfszlWbJdfhtXp0R6UqB6Qt2X2mLBmoSBVcLJj6TvtkQPDsZpVENTl7QBvXtLSEEMw6jex+F2oztzaQKWTGYC6NW7WRK3rUGJFJj3J3ErG69+11W0kkQhV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787222869; c=relaxed/simple;
-	bh=z2yprvzaDHgPqC4f9hTuermNGPq+1dYqdq76qN+EooM=;
+	s=arc-20240116; t=1787225708; c=relaxed/simple;
+	bh=w/oe/n1XYNtDc0P/sdP49l4CFCqy7eqL6XVrY+vYFP0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ik7emMZ8pGw2WiMu8uctCdO3rBEsfwEBblTvAPfMCLs6xRpPCf19E+HnMY1wBc/8sQ7ZSKIoPOY6230SIyZUbBIhz1agJF3MXMqtZsLOLsoXESnYk5R1TKDzi6lNf0mddEcxcm/XvDPMdo0xQQPHOcHQ4wEJufl/V7xSUJ3Vb70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=VFp46JEp; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 In-Reply-To:Content-Type; b=RSzd9A03VM1l4d53i4r3T8w1Qf2asJuXTbbwt0FNVLf7ROwxMfyHCIKkjkjcNJKwEGImD5qgJdWmU+0g23oyMsfaa0pXOysz90oAoYVf0+/5/Wv0t9R1oKaYXMjNCJrAYkWrMZfjVF0uuu4fCmOs98nLfhvxGWgCxZtCSiT01TI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=INnkzwFD; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=jK2qrV3N; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="VFp46JEp"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67K8psXX503930;
-	Thu, 20 Aug 2026 10:46:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=czT1Im
-	PU/vWc2M0tWEKBT0LXpRCVrV75Wfn03rEOF2c=; b=VFp46JEphllpw7qtyJNBx1
-	CaVenj+Rdg6kMHAyun/leFK4fPjzBLdY43BTvCm0r20SF8NRJ17NDVEUINVxkX2f
-	dujD0NQz3qQ7m0zO3xs9P02S1kxeSEsGvFiTkyy71sDmPCa47W0q7/Nr0em6wVhf
-	Th7I4886yY9Ww8KFAZ/sulpfpgo8txaPaUjtuFOn/paI7hzL53leG67MGZ8+i0Am
-	LsOim3vbqCPgz/COWWYtl/xy5PayeZbfKOR8IGLm1tbqtfbmwIGP5JExMBBiTmKX
-	i7W3MfpeOJdrbuMa+UQRiYtW19e6zAq56CFWAMf3KMWfswNDkwVI+e5cosZ43Txw
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="INnkzwFD";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="jK2qrV3N"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67K6eX9h2161054
+	for <loongarch@lists.linux.dev>; Thu, 20 Aug 2026 11:35:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ozwCerwZWysjPLIz52++2YvvXko1OeccWoS1EoE+S/c=; b=INnkzwFDr3Mt1N52
+	g+XzLhNJuP+bvMZ1xMcVQcUw5aLDHKyA8EVsfD9vtdhiDG/VqOAKHKPfbYiL5Ky0
+	4UfyOzpOTJgAS+VXDxyt6nu+I9LNrqrIrNUdqg0dgy/0fdYHvsofX89QYMvG3o3A
+	WBJHYkd5w0pWXPGrq8ZZec33IxE6/yDkOTTs43JL0SAzWTRA4C9iRFe+i8JcV46n
+	hbJDHDyU1D/pB9kGyG2DSDUcAq6dF6hpAYfUjbjJJkTzBEwgFJXJrqVTBcipwv2q
+	9bbd5+x/7UOk9WrPY//PscDf+SUWRq6XThmZ1eDWmLHyggSsg0oRT3qyVrZc8+MB
+	GrA4aw==
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4g5vh7s319-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <loongarch@lists.linux.dev>; Thu, 20 Aug 2026 11:35:06 +0000 (GMT)
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-84e024d2129so3349962b3a.2
+        for <loongarch@lists.linux.dev>; Thu, 20 Aug 2026 04:35:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1787225705; x=1787830505; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ozwCerwZWysjPLIz52++2YvvXko1OeccWoS1EoE+S/c=;
+        b=jK2qrV3NTl5STTdVPWS7Gapz6tQmau8PH+58irH9Lr40f6beYHpgfCY5ZgXKspU1TM
+         p1xG42zsi9zE188pqPvogNDwZMMtc+Z9Tc+mOFB2RvUvn1JOVsHx3UdHSfzzqtrfDv6V
+         lv2117Jj1MELdCIkyfTqLXZLxvPhZ7kJIp7JorJMctLpi3+J03MAAgG6qLEF3lsXSJ7u
+         x0zEgha9K29zBT76GOrjP44/x/PdNvtv9m6T30VYIdKdW+WJabsG8EpGp9J8/iXb5ZF+
+         eksG/EvsQ8wzGbnmG+QVQZyyd9LCz8oNkY/krlAT58dJLPA6gcKsbjjlaTuOpoAj8qC9
+         +d0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787225705; x=1787830505;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=ozwCerwZWysjPLIz52++2YvvXko1OeccWoS1EoE+S/c=;
+        b=CSW9NCgYIj+MtnoarqU6l6OswiFMqutQbgFudwJr9DnUKCw1lAQu6e3l4lkVtESGoO
+         gq2Cu+61ioyLchVIVQj7CEjoL/EPce3hjfs3Bj7nHGRw0OZ0u7iUaAJARW9PqFmOISp6
+         Ehb2lWUZ+JK3xKUiF9FT5hojswCYoK/P1XKIvIwX1UlqHmGROy4V7F4wp51guWU80fT6
+         5iZ74k7vVni43tuChzxqN5OZ3emAewsRtnKB+hft2GZbAqxEKBfaEyXSiQWJ7jWDjv/Q
+         FNZ1Ze/RugQQTiZceYuugDBKPgq7QUqf+hhMY/axd93StGRsw80fsRlRBhgjLthBtHrx
+         tkBg==
+X-Gm-Message-State: AOJu0YzXZEVvEQhjsZFHUH+GTGLLXjylMXN302l1XqeFqVooCPbZPXBy
+	+rOT41umA2KivU7pFx6WUmRzc7v7h0nfWxd3lmUHSTUBYOpb53A+tO1r5A6wRXxQ3j+Bvy5/nmy
+	efjrKTOQkQNfu2rTeXDab4MfqacAMi+fyBtwiYBnqDDFALIPdE1hSildba4Rqecmxroc7bZ0c8w
 	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4g4yu49j7t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Aug 2026 10:46:58 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 67KAfGvU024130;
-	Thu, 20 Aug 2026 10:46:57 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4g354ynsek-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Aug 2026 10:46:57 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 67KAktPu46072234
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 20 Aug 2026 10:46:55 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7A9FA20043;
-	Thu, 20 Aug 2026 10:46:55 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D8EA120040;
-	Thu, 20 Aug 2026 10:46:41 +0000 (GMT)
-Received: from [9.39.17.85] (unknown [9.39.17.85])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 20 Aug 2026 10:46:41 +0000 (GMT)
-Message-ID: <99bdc3e0-0e0f-4cb1-8747-dd7667307492@linux.ibm.com>
-Date: Thu, 20 Aug 2026 16:16:40 +0530
+X-Gm-Gg: AR+sD10yy+DWJsu8NAB0+o9fn9tY5PjcT2lqhoL8mUzt9bqMF5tQXI0PHdQW5gJ+6be
+	XmUxj8NS0UbBVCOWTmP9nlMjwAU7mwZ753X6GVEwaefzsUNkWYuDykrEa73qDAAJ5M42/TQwN+9
+	2kfHKTdwxuJSuS+MJCJoTjmDsyiLEXTg+1ZObn9MRbRb/OHOvVNPoPnHoYWs9kxJmUcrXQHHb5M
+	7kO057CGvcNDHdJaJKM+Eq0qToT+rhSp7Qd94yzCZ5LVQX6Q9Dp9p3miV3IjBawiU6B2yEfIK9Z
+	/3mEcLZ96fZbX0IfT3Knec85Ny0MOUS7XUrHbF+ZmRiqRyuf0R8ZzZbeGRoPSHzoGrFghJmTe6J
+	+4iK9z151YRx4z9+e5zmUqwDeHNA1Mw==
+X-Received: by 2002:a05:6a00:808f:b0:848:56d4:3288 with SMTP id d2e1a72fcca58-851d383149amr20467235b3a.4.1787225705553;
+        Thu, 20 Aug 2026 04:35:05 -0700 (PDT)
+X-Received: by 2002:a05:6a00:808f:b0:848:56d4:3288 with SMTP id d2e1a72fcca58-851d383149amr20467124b3a.4.1787225704987;
+        Thu, 20 Aug 2026 04:35:04 -0700 (PDT)
+Received: from [10.239.133.197] ([114.94.8.21])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-851d3617efdsm1528743b3a.39.2026.08.20.04.35.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Aug 2026 04:35:04 -0700 (PDT)
+Message-ID: <3f352680-7090-456a-ab08-2d3367641783@oss.qualcomm.com>
+Date: Thu, 20 Aug 2026 19:34:57 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -62,295 +89,124 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND] sched: Convert paravirt_steal to new static key
- APIs
-To: Hongyan Xia <hongyan.xia@transsion.com>
-Cc: Jiazi Li <jiazi.li@transsion.com>,
-        "virtualization@lists.linux.dev" <virtualization@lists.linux.dev>,
-        "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        Juergen Gross <jgross@suse.com>, Ajay Kaher <ajay.kaher@broadcom.com>,
-        Alexey Makhalov <alexey.makhalov@broadcom.com>,
-        Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-        WANG Xuerui <kernel@xen0n.name>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-        Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-        Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
-        Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
-        K Prateek Nayak <kprateek.nayak@amd.com>
-References: <20260819081207.12150-1-hongyan.xia@transsion.com>
+Subject: Re: [PATCH 3/5] cpufreq: loongson3: Replace per-package mutex with
+ per-node
+To: Huacai Chen <chenhuacai@loongson.cn>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>, stable@vger.kernel.org,
+        Hongliang Wang <wanghongliang@loongson.cn>,
+        zhongqiu.han@oss.qualcomm.com
+References: <20260818123921.3600606-1-chenhuacai@loongson.cn>
+ <20260818123921.3600606-4-chenhuacai@loongson.cn>
 Content-Language: en-US
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-In-Reply-To: <20260819081207.12150-1-hongyan.xia@transsion.com>
+From: Zhongqiu Han <zhongqiu.han@oss.qualcomm.com>
+In-Reply-To: <20260818123921.3600606-4-chenhuacai@loongson.cn>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=CpuPtH4D c=1 sm=1 tr=0 ts=6a86db23 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=IkcTkHD0fZMA:10 a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22 a=3xJz9W2bAAAA:8
- a=VnNF1IyMAAAA:8 a=iox4zFpeAAAA:8 a=xzwhdZQ7njCJ2XY4-I0A:9 a=QEXdDO2ut3YA:10
- a=amiGZ1mxdzcEAW_x1qlF:22 a=WzC6qhA0u3u7Ye7llzcV:22
-X-Proofpoint-ORIG-GUID: 1wZ5c2qM7g5x0jx-qb5t7EiwBQISCVhp
-X-Proofpoint-GUID: itVss8-eLfuaCICc2HK-kMCuGgzSwFvE
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODIwMDA3NyBTYWx0ZWRfXy1Knef7euqva
- B2wMTxAUFMf0GbqrSemw+AgaY+wNIewR8/vNhiPmdrebwSaAtFgbUClfT7lyMMabKF1jdmhCukv
- nr1v7az3rtSi3DUGh3ib1xdiKCYVnZg=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODIwMDA3NyBTYWx0ZWRfX60/6Dl3nOmKx
- 1lgDs9d2yIy0QyPoRMAQMzaFP01pLEWEulDqKdCZ3F6qDr3NEiEADGM2eMQnstQbmSYnYcBwNjK
- hYFPSUus//RGGLcarRg+E6axxBj3cxk7gBG2T8OjN97OxqZ9rI5pI4vUVXhXILTmckLXOi9a4I3
- MoyHW222X4NoFlq4ynf22eXvKMiPfG/Xu4Q7UUfJRau6RKD4izhXUGu12jnr6O8gXDaA3aZRAOx
- MuuA52c8OIb1esLmNTU4vQce+tqTAWrEo6EbROCul8IF1KNHGDNf/cl8nGs/R4mOfrjSsH3UgUC
- QEfOV3KYChX2RlYM8p6C+EHa7k7heWKVeKCTp/8zCebWTMfdNHtOjUgI9gRkWPhGSC2OMKPO5sR
- VflLI0qnlEsop/LaVZCG8Y9aXymFW6vJu2Q1kpkLrY+WSbBzqGsJpBBazuvASI6CZb6TNG/I2Gs
- KijXc6TfURnVr9wKn/w==
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODIwMDA4NSBTYWx0ZWRfXzQ9kfOk3joB3
+ jmp37UJ1G/4MgV0zVdgAsxWhTeQMOIkWk6v+W6S9cyRK7NLebxqlBCAcYdXqbI6/BI6/0wUdpkG
+ ks+V4A7dQ6HxvJ6VzQJPu+6u7iZjRlLw5JiT6n+x+PCWGWTJp61oWM7cUE44HvMtocigVv8GBnk
+ 586yQUYGUTM2zxHnfqiEI3hyJHUoyJczs43zn0pIujWyGrLGtd+uXnJPBIap2ohummBlvJbAlFL
+ 3ixhC67DR17zXXnlgQBemk8bQSZ8xwQel/Zf88jQM4BEoVQcgzmDufRxjyoY2Ma1154x4cQdeks
+ RTf8ssSM2Lk8Ir1TkC6QvC41OzB61YbaK5tpB1QPt8k5K/DsdVRhpupqcysYGlOmt84wEoTDaEy
+ GphDwA5Bo8e0P3hp15CmZcpTjHX+eTZXjj6oWR+POhLczw3NhbFjPoo04GlMdmFkztB4qQZOhnL
+ VXaMMi+5+wzP+Dfh8ZA==
+X-Proofpoint-ORIG-GUID: 2KXXCzWOiQL7nYiZ395Jgxan9gpMYOao
+X-Authority-Analysis: v=2.4 cv=Y7fIdBeN c=1 sm=1 tr=0 ts=6a86e66a cx=c_pps
+ a=rEQLjTOiSrHUhVqRoksmgQ==:117 a=Uz3yg00KUFJ2y2WijEJ4bw==:17
+ a=IkcTkHD0fZMA:10 a=Sv0fKeRqtYgA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=YMgV9FUhrdKAYTUUvYB2:22
+ a=VwQbUJbxAAAA:8 a=aB35LMdZ1wvYvMI90LkA:9 a=QEXdDO2ut3YA:10
+ a=2VI0MkxyNR6bbpdq8BZq:22
+X-Proofpoint-Spam-Info: AW1haW4tMjYwODIwMDA4NSBTYWx0ZWRfX4k7G2f1GklIq
+ VQPgXQYCKkWu0znm8rCaZ8lzyC+tGWox2YQlSnoWHZ1pHHzMiE1/wwt4xVmtGtjqkgTbW7yv0wR
+ fd032ZSg9mPkGTEElw7d6WBMqlD03Eg=
+X-Proofpoint-GUID: 2KXXCzWOiQL7nYiZ395Jgxan9gpMYOao
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-08-19_06,2026-08-19_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 adultscore=0 bulkscore=0 malwarescore=0 phishscore=0
- lowpriorityscore=0 spamscore=0 clxscore=1011 priorityscore=1501
- suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
- definitions=main-2608200077
+ suspectscore=0 bulkscore=0 clxscore=1015 malwarescore=0 impostorscore=0
+ lowpriorityscore=0 spamscore=0 adultscore=0 phishscore=0 priorityscore=1501
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2608200085
 
-Hi Hongyan.
-
-On 8/19/26 1:42 PM, Hongyan Xia wrote:
-> From: Hongyan Xia <hongyan.xia@transsion.com>
+On 8/18/2026 8:39 PM, Huacai Chen wrote:
+> Our server productions (e.g. Loongson-3D6000/3E6000) can have multiple
+> nodes in one package and SMC mailboxes are also per-node. So replace the
+> per-package mutex with per-node one.
 > 
-> paravirt_steal_rq_enabled and paravirt_steal_enabled use raw static_key
-> APIs which are now deprecated. Use the new API instead.
-> 
-> No functional change.
-> 
-
-FWIW, looks good to me. One minor nit.
-
-Reviewed-by: Shrikanth Hegde <sshegde@linux.ibm.com>
-
-> Signed-off-by: Hongyan Xia <hongyan.xia@transsion.com>
-> Acked-by: Juergen Gross <jgross@suse.com>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Hongliang Wang <wanghongliang@loongson.cn>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 > ---
-> Changed in RESEND:
-> - Separate the original series into individual patches. They aren't easy
->    to review as a series.
+>   drivers/cpufreq/loongson3_cpufreq.c | 14 +++++++-------
+>   1 file changed, 7 insertions(+), 7 deletions(-)
 > 
->   arch/arm64/kernel/paravirt.c           | 4 ++--
->   arch/loongarch/kernel/paravirt.c       | 4 ++--
->   arch/powerpc/platforms/pseries/setup.c | 4 ++--
->   arch/riscv/kernel/paravirt.c           | 4 ++--
->   arch/x86/kernel/cpu/vmware.c           | 4 ++--
->   arch/x86/kernel/kvm.c                  | 4 ++--
->   drivers/xen/time.c                     | 4 ++--
->   include/linux/sched/cputime.h          | 6 +++---
->   kernel/sched/core.c                    | 4 ++--
->   kernel/sched/cputime.c                 | 4 ++--
->   10 files changed, 21 insertions(+), 21 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/paravirt.c b/arch/arm64/kernel/paravirt.c
-> index 572efb96b23f..30bf61d031eb 100644
-> --- a/arch/arm64/kernel/paravirt.c
-> +++ b/arch/arm64/kernel/paravirt.c
-> @@ -157,9 +157,9 @@ int __init pv_time_init(void)
+> diff --git a/drivers/cpufreq/loongson3_cpufreq.c b/drivers/cpufreq/loongson3_cpufreq.c
+> index 630f679aa739..e3cd78a5ab18 100644
+> --- a/drivers/cpufreq/loongson3_cpufreq.c
+> +++ b/drivers/cpufreq/loongson3_cpufreq.c
+> @@ -169,7 +169,7 @@ struct loongson3_freq_data {
+>   	struct cpufreq_frequency_table table[];
+>   };
 >   
->   	static_call_update(pv_steal_clock, para_steal_clock);
+> -static struct mutex cpufreq_mutex[MAX_PACKAGES];
+> +static struct mutex cpufreq_mutex[MAX_NUMNODES];
+>   static struct cpufreq_driver loongson3_cpufreq_driver;
+>   static DEFINE_PER_CPU(struct loongson3_freq_data *, freq_data);
 >   
-> -	static_key_slow_inc(&paravirt_steal_enabled);
-> +	static_branch_inc(&paravirt_steal_enabled);
->   	if (steal_acc)
-> -		static_key_slow_inc(&paravirt_steal_rq_enabled);
-> +		static_branch_inc(&paravirt_steal_rq_enabled);
->   
->   	pr_info("using stolen time PV\n");
->   
-> diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/paravirt.c
-> index 10821cce554c..e8965a3f8082 100644
-> --- a/arch/loongarch/kernel/paravirt.c
-> +++ b/arch/loongarch/kernel/paravirt.c
-> @@ -308,10 +308,10 @@ int __init pv_time_init(void)
->   
->   	static_call_update(pv_steal_clock, paravt_steal_clock);
->   
-> -	static_key_slow_inc(&paravirt_steal_enabled);
-> +	static_branch_inc(&paravirt_steal_enabled);
->   #ifdef CONFIG_PARAVIRT_TIME_ACCOUNTING
->   	if (steal_acc)
-> -		static_key_slow_inc(&paravirt_steal_rq_enabled);
-> +		static_branch_inc(&paravirt_steal_rq_enabled);
->   #endif
->   
->   	if (static_key_enabled(&virt_preempt_key))
-> diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
-> index 1223dc961242..8dcbc4bb7025 100644
-> --- a/arch/powerpc/platforms/pseries/setup.c
-> +++ b/arch/powerpc/platforms/pseries/setup.c
-> @@ -852,9 +852,9 @@ static void __init pSeries_setup_arch(void)
->   			static_branch_enable(&shared_processor);
->   			pv_spinlocks_init();
->   #ifdef CONFIG_PARAVIRT_TIME_ACCOUNTING
-> -			static_key_slow_inc(&paravirt_steal_enabled);
-> +			static_branch_inc(&paravirt_steal_enabled);
->   			if (steal_acc)
-> -				static_key_slow_inc(&paravirt_steal_rq_enabled);
-> +				static_branch_inc(&paravirt_steal_rq_enabled);
->   #endif
->   		}
->   
-> diff --git a/arch/riscv/kernel/paravirt.c b/arch/riscv/kernel/paravirt.c
-> index 5f56be79cd06..9c13a6f1ea2a 100644
-> --- a/arch/riscv/kernel/paravirt.c
-> +++ b/arch/riscv/kernel/paravirt.c
-> @@ -116,9 +116,9 @@ int __init pv_time_init(void)
->   
->   	static_call_update(pv_steal_clock, pv_time_steal_clock);
->   
-> -	static_key_slow_inc(&paravirt_steal_enabled);
-> +	static_branch_inc(&paravirt_steal_enabled);
->   	if (steal_acc)
-> -		static_key_slow_inc(&paravirt_steal_rq_enabled);
-> +		static_branch_inc(&paravirt_steal_rq_enabled);
->   
->   	pr_info("Computing paravirt steal-time\n");
->   
-> diff --git a/arch/x86/kernel/cpu/vmware.c b/arch/x86/kernel/cpu/vmware.c
-> index 34b73573b108..f7ab9e7902cf 100644
-> --- a/arch/x86/kernel/cpu/vmware.c
-> +++ b/arch/x86/kernel/cpu/vmware.c
-> @@ -328,9 +328,9 @@ static int vmware_cpu_down_prepare(unsigned int cpu)
->   static __init int activate_jump_labels(void)
+> @@ -177,14 +177,14 @@ static inline int do_service_request(u32 id, u32 info, u32 cmd, u32 val, u32 ext
 >   {
->   	if (has_steal_clock) {
-> -		static_key_slow_inc(&paravirt_steal_enabled);
-> +		static_branch_inc(&paravirt_steal_enabled);
->   		if (steal_acc)
-> -			static_key_slow_inc(&paravirt_steal_rq_enabled);
-> +			static_branch_inc(&paravirt_steal_rq_enabled);
+>   	int retries;
+>   	unsigned int cpu = raw_smp_processor_id();
+> -	unsigned int package = cpu_data[cpu].package;
+> +	unsigned int nid = cpu_to_node(cpu);
+>   	union smc_message msg, last;
+>   
+> -	mutex_lock(&cpufreq_mutex[package]);
+> +	mutex_lock(&cpufreq_mutex[nid]);
+>   
+>   	last.value = iocsr_read32(LOONGARCH_IOCSR_SMCMBX);
+>   	if (!last.complete) {
+> -		mutex_unlock(&cpufreq_mutex[package]);
+> +		mutex_unlock(&cpufreq_mutex[nid]);
+>   		return -EPERM;
 >   	}
 >   
->   	return 0;
-> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> index dcef84da304b..d3dcd64f22c2 100644
-> --- a/arch/x86/kernel/kvm.c
-> +++ b/arch/x86/kernel/kvm.c
-> @@ -1052,9 +1052,9 @@ const __initconst struct hypervisor_x86 x86_hyper_kvm = {
->   static __init int activate_jump_labels(void)
->   {
->   	if (has_steal_clock) {
-> -		static_key_slow_inc(&paravirt_steal_enabled);
-> +		static_branch_inc(&paravirt_steal_enabled);
->   		if (steal_acc)
-> -			static_key_slow_inc(&paravirt_steal_rq_enabled);
-> +			static_branch_inc(&paravirt_steal_rq_enabled);
+> @@ -208,11 +208,11 @@ static inline int do_service_request(u32 id, u32 info, u32 cmd, u32 val, u32 ext
 >   	}
 >   
->   	return 0;
-> diff --git a/drivers/xen/time.c b/drivers/xen/time.c
-> index a2be0a4d45b0..a02d48a2aa68 100644
-> --- a/drivers/xen/time.c
-> +++ b/drivers/xen/time.c
-> @@ -169,7 +169,7 @@ void __init xen_time_setup_guest(void)
+>   	if (!msg.complete || msg.cmd != CMD_OK) {
+> -		mutex_unlock(&cpufreq_mutex[package]);
+> +		mutex_unlock(&cpufreq_mutex[nid]);
+>   		return -EPERM;
+>   	}
 >   
->   	static_call_update(pv_steal_clock, xen_steal_clock);
+> -	mutex_unlock(&cpufreq_mutex[package]);
+> +	mutex_unlock(&cpufreq_mutex[nid]);
+
+An optimization independent of this patch: considering to use
+guard(mutex)(xxx.lock)
+
 >   
-> -	static_key_slow_inc(&paravirt_steal_enabled);
-> +	static_branch_inc(&paravirt_steal_enabled);
->   	if (xen_runstate_remote)
-> -		static_key_slow_inc(&paravirt_steal_rq_enabled);
-> +		static_branch_inc(&paravirt_steal_rq_enabled);
+>   	return msg.val;
 >   }
-> diff --git a/include/linux/sched/cputime.h b/include/linux/sched/cputime.h
-> index e90efaf6d26e..694126411dfe 100644
-> --- a/include/linux/sched/cputime.h
-> +++ b/include/linux/sched/cputime.h
-> @@ -182,9 +182,9 @@ extern unsigned long long
->   task_sched_runtime(struct task_struct *task);
->   
->   #ifdef CONFIG_PARAVIRT
-> -struct static_key;
-> -extern struct static_key paravirt_steal_enabled;
-> -extern struct static_key paravirt_steal_rq_enabled;
-> +#include <linux/jump_label.h>
-
-nit:
-
-This looks bit odd to see includes in the middle. I know it is including
-only if necessary.
-maybe worth an unconditional include in the beginning?
-
-> +DECLARE_STATIC_KEY_FALSE(paravirt_steal_enabled);
-> +DECLARE_STATIC_KEY_FALSE(paravirt_steal_rq_enabled);
->   
->   #ifdef CONFIG_HAVE_PV_STEAL_CLOCK_GEN
->   u64 dummy_steal_clock(int cpu);
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 5c07d53e43b5..84d090581a08 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -795,7 +795,7 @@ struct rq *_task_rq_lock(struct task_struct *p, struct rq_flags *rf)
->   
->   /* Use CONFIG_PARAVIRT as this will avoid more #ifdef in arch code. */
->   #ifdef CONFIG_PARAVIRT
-> -struct static_key paravirt_steal_rq_enabled;
-> +DEFINE_STATIC_KEY_FALSE(paravirt_steal_rq_enabled);
->   #endif
->   
->   static void update_rq_clock_task(struct rq *rq, s64 delta)
-> @@ -834,7 +834,7 @@ static void update_rq_clock_task(struct rq *rq, s64 delta)
->   	}
->   #endif
->   #ifdef CONFIG_PARAVIRT_TIME_ACCOUNTING
-> -	if (static_key_false((&paravirt_steal_rq_enabled))) {
-> +	if (static_branch_unlikely(&paravirt_steal_rq_enabled)) {
->   		u64 prev_steal;
->   
->   		steal = prev_steal = paravirt_steal_clock(cpu_of(rq));
-> diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
-> index 06bddaa738e5..f16970ca81d0 100644
-> --- a/kernel/sched/cputime.c
-> +++ b/kernel/sched/cputime.c
-> @@ -255,7 +255,7 @@ void __account_forceidle_time(struct task_struct *p, u64 delta)
->    * occasion account more time than the calling functions think elapsed.
->    */
->   #ifdef CONFIG_PARAVIRT
-> -struct static_key paravirt_steal_enabled;
-> +DEFINE_STATIC_KEY_FALSE(paravirt_steal_enabled);
->   
->   #ifdef CONFIG_HAVE_PV_STEAL_CLOCK_GEN
->   static u64 native_steal_clock(int cpu)
-> @@ -270,7 +270,7 @@ DEFINE_STATIC_CALL(pv_steal_clock, native_steal_clock);
->   static __always_inline u64 steal_account_process_time(u64 maxtime)
+> @@ -337,7 +337,7 @@ static int loongson3_cpufreq_probe(struct platform_device *pdev)
 >   {
->   #ifdef CONFIG_PARAVIRT
-> -	if (static_key_false(&paravirt_steal_enabled)) {
-> +	if (static_branch_unlikely(&paravirt_steal_enabled)) {
->   		u64 steal;
+>   	int i, ret;
 >   
->   		steal = paravirt_steal_clock(smp_processor_id());
+> -	for (i = 0; i < MAX_PACKAGES; i++) {
+> +	for (i = 0; i < MAX_NUMNODES; i++) {
+>   		ret = devm_mutex_init(&pdev->dev, &cpufreq_mutex[i]);
+>   		if (ret)
+>   			return ret;
 
+
+-- 
+Thx and BRs,
+Zhongqiu Han
