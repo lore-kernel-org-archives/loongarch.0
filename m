@@ -1,48 +1,33 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F4744212E
-	for <loongarch@lists.linux.dev>; Thu, 20 Aug 2026 12:49:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A2014457A4
+	for <loongarch@lists.linux.dev>; Thu, 20 Aug 2026 12:50:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787230192; cv=none; b=aMlAq5Rijj9Shkhq3mnT36Zf0OEr0/UITPzD/PY/srK3Yv2+xreQ9h86e1NwmnzFI9L+81KJ85U0m8mp75w+D1H67gw+k44gvxUQ8p7vjTCdy7Ki6X3d+mieuG8+4I1KrWeeH835B5kpcLicGzWRyk7r4e+nzMJZnwtzqOl4FwI=
+	t=1787230223; cv=none; b=dYtkQ2ZlxKRf60b7ZE6L1j/b+mgZavcpvUJZpoP6NKNFZIoqZPI1FZatLjXbW4C7CPkhsWWfSJMEuS6bkFBrLGnPDxfei+pVwE0lr2NtQ8GizXdgHAKb3Lg5JI2aE9RWcfNznckiOcYwykM7P0tCca8QqQPbp27IOLZsDA0OmZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787230192; c=relaxed/simple;
-	bh=KGnT4QFKPDO8M5NS2h9toBVamg6N1j8I2dq2/3m9SpU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EDgZ5Z4ar+YAZHfjKwhHkfJzy0Tv/XQPUrfszMotYd++e1AnqhHyxaJKc5OfXzPsYdRG+rGokSkhqRPGp/ApiBSzJk+l/YVQVkXJfFO0YAcGCoZ5aPxWIjOqBYF44CoZtcuJeFYQMjVePU11Fs9q6NrbNRr0CgA+KfW7196lV9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=BeleO76a; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=lKkwTSij; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="BeleO76a";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="lKkwTSij"
-Received: from kunlun.suse.cz (unknown [IPv6:2a07:de40:b306:2000::2])
-	by smtp-out1.suse.de (Postfix) with ESMTP id 00E1185041;
-	Thu, 20 Aug 2026 12:49:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1787230183; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=2E9RW/Br6W/RKw7ZkdLYYwbK+Tqb4KRJ+S80k3ypLNo=;
-	b=BeleO76arBFrXY2bnzF+66KHNfInyud++cir2HrBFE+LIuc3fLa9Tqv30N5uv/BhvcHwIG
-	H+XVHc9SEoNtEGD4iFy4zMvKQ9hrej4MOiqtUD2R5L+T9Rh5CFrCDzz96Rqwu/gJb1P2Sb
-	LuG3CWj9bNNK3Cj8TKXMA2y+CLJ7I0c=
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=lKkwTSij
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1787230179; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=2E9RW/Br6W/RKw7ZkdLYYwbK+Tqb4KRJ+S80k3ypLNo=;
-	b=lKkwTSijcbNGbJcJZth7892+xj5bADW8BZDiQnCJreRvyywc7m+WZ8r1sZfNYoWdcJ336a
-	3azESJve5L48ytYNxZVdBHo6DjfN0hS0hFDTMdDDB1zZVd7p+KCcfEvIw+JvrcduQkSzYE
-	H5iOd4Aqk5wWDaegz2Sxj45WjAOspCI=
-From: Anthony Iliopoulos <ailiop@suse.com>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: remove unused setup_profiling_timer function
-Date: Thu, 20 Aug 2026 14:49:31 +0200
-Message-ID: <20260820124933.144476-1-ailiop@suse.com>
-X-Mailer: git-send-email 2.55.0
+	s=arc-20240116; t=1787230223; c=relaxed/simple;
+	bh=t/wqrQG7mh/bLDGlXi3QvBm9+4nZZM3xHgnq1Ct3iO0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nwIgIF/O0X+RD+8OiedbzoJRK7q7sjXHd1pNtENvTk42ZV0p0pGQjw4uehtxuV/vEIEPxs6drHUq9SfyoP8gZuuPEac/T6Ew9vC/lbZemFdQpVndKECTJRO7mdZ5JfVrVaeNUQW5L5HzuWGe4qMNC2N5zBs0VstFG2RrMEtWyNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [123.138.236.242])
+	by gateway (Coremail) with SMTP id _____8BxW_AD+IZqVh0DAA--.9435S3;
+	Thu, 20 Aug 2026 20:50:11 +0800 (CST)
+Received: from linux.localdomain (unknown [123.138.236.242])
+	by front1 (Coremail) with SMTP id qMiowJAx2c0A+IZqX_QLAA--.6716S2;
+	Thu, 20 Aug 2026 20:50:08 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Petr Pavlu <petr.pavlu@suse.com>
+Cc: linux-modules@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Subject: [PATCH v4 0/3] Ignore local labels and mapping symbols during module load
+Date: Thu, 20 Aug 2026 20:50:04 +0800
+Message-ID: <20260820125007.22943-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -50,79 +35,62 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [16.69 / 50.00];
-	SPAM_FLAG(5.00)[];
-	NEURAL_SPAM_LONG(3.50)[1.000];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_SPAM_SHORT(3.00)[0.999];
-	HFILTER_HOSTNAME_UNKNOWN(2.50)[];
-	RDNS_NONE(2.00)[];
-	ONCE_RECEIVED(1.20)[];
-	MID_CONTAINS_FROM(1.00)[];
-	HFILTER_HELO_IP_A(1.00)[kunlun.suse.cz];
-	R_MISSING_CHARSET(0.50)[];
-	HFILTER_HELO_NORES_A_OR_MX(0.30)[kunlun.suse.cz];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DIRECT_TO_MX(0.00)[git-send-email 2.55.0];
-	FROM_HAS_DN(0.00)[];
-	ARC_NA(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid,suse.com:email,suse.com:dkim];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_ZERO(0.00)[0];
-	RCPT_COUNT_THREE(0.00)[3];
-	TO_DN_SOME(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b306:2000::2:from];
-	DKIM_TRACE(0.00)[suse.com:+]
-X-Spam-Score: 16.69
-X-Spam-Level: ****************
-X-Spamd-Bar: ++++++++++++++++
-X-Rspamd-Queue-Id: 00E1185041
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: YES
-X-Rspamd-Action: add header
-X-Spam: Yes
+X-CM-TRANSID:qMiowJAx2c0A+IZqX_QLAA--.6716S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Cr1DKFWDuFWrJryDGw48uFX_yoW8Xw13pF
+	43CF43Xr4UZr97Can7Gw4j9Fy5u3ykXr4FgF13Gw1xAF1qq3W8Zr92kr1F934UAryUKF40
+	vr17A3yqga48AwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j8yCJUUUUU=
 
-setup_profiling_timer() is not used by any code at this point. Since a
-default weak implementation exists, there is no need to keep this
-arch-specific definition around. Remove it along with the now-redundant
-profile header includes.
+This series prevents compiler generated local labels and mapping symbols
+from leaking into /proc/kallsyms for loaded modules. This ensures tracing
+tools like bpftrace can resolve accurate kernel stacks on architectures
+like LoongArch.
 
-Signed-off-by: Anthony Iliopoulos <ailiop@suse.com>
----
- arch/loongarch/kernel/smp.c | 8 --------
- 1 file changed, 8 deletions(-)
+Based on the latest modules-next tree:
+https://git.kernel.org/pub/scm/linux/kernel/git/modules/linux.git/log/?h=modules-next
 
-diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-index d4b5d1b6bb01..11f54837f56c 100644
---- a/arch/loongarch/kernel/smp.c
-+++ b/arch/loongarch/kernel/smp.c
-@@ -14,7 +14,6 @@
- #include <linux/init.h>
- #include <linux/interrupt.h>
- #include <linux/irq_work.h>
--#include <linux/profile.h>
- #include <linux/seq_file.h>
- #include <linux/smp.h>
- #include <linux/threads.h>
-@@ -716,13 +715,6 @@ void smp_send_stop(void)
- 	smp_call_function(stop_this_cpu, NULL, 0);
- }
- 
--#ifdef CONFIG_PROFILING
--int setup_profiling_timer(unsigned int multiplier)
--{
--	return 0;
--}
--#endif
--
- static void flush_tlb_all_ipi(void *info)
- {
- 	local_flush_tlb_all();
+There are many discussions in the previous version, here is the link:
+https://lore.kernel.org/loongarch/20260812032807.15034-1-yangtiezhu@loongson.cn/
+
+v4:
+  (1) Use is_ignored_kernel_symbol() and update
+      tools/perf/util/symbol.h in patch #1
+  (2) Keep using is_core_symbol() in patch #2
+  (3) Update commit messages of the three patches
+
+Cc the maintainers of the updated non-module files:
+  (1) Josh Poimboeuf <jpoimboe@kernel.org> -- scripts/faddr2line
+  (2) Nathan Chancellor <nathan@kernel.org> -- scripts/mod/modpost.h
+  (3) Namhyung Kim <namhyung@kernel.org> -- tools/perf/util/symbol.h
+
+Tiezhu Yang (3):
+  module/kallsyms: Rename is_mapping_symbol() to
+    is_ignored_kernel_symbol()
+  module/kallsyms: Refactor current symbol filtering into
+    is_core_symbol()
+  module/kallsyms: Ignore local labels and mapping symbols during module
+    load
+
+ include/linux/module_symbol.h |  7 +++--
+ kernel/module/kallsyms.c      | 59 ++++++++++++++++++-----------------
+ scripts/faddr2line            |  2 +-
+ scripts/mod/modpost.h         |  2 +-
+ tools/perf/util/symbol.h      |  4 +--
+ 5 files changed, 39 insertions(+), 35 deletions(-)
+
 -- 
-2.55.0
+2.42.0
 
