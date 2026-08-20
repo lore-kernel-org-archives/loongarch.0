@@ -1,154 +1,251 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EC3B446050
-	for <loongarch@lists.linux.dev>; Thu, 20 Aug 2026 12:50:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 177353FDBE8
+	for <loongarch@lists.linux.dev>; Thu, 20 Aug 2026 12:57:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787230225; cv=none; b=bTVhyUizzXCZ2zAOuD77zPzZ+76upfL1iOGNcqASwpiHEusBEyhOG7Gk1JIiyJt4MvSCGKliomx2zfZ6w3Ugr8Hdf8pCB8NydCz4L5et64INnUnQ0t4bW3OdbHI3zyb7VZQP0+QZr1O9BkriCGuFznVsQz/JTq6kCtwydk5lCXg=
+	t=1787230632; cv=none; b=gFUW47ue7a8XkR84Wp6mHnX+EAi8lQCTNV18C0EZWy6TQ/hyucIRt0KUhcbFl9YVv8m+KLYsx+j/5u+7/Q86r22OegFDxk3DdC3mri98u6aCAMLC6FJKHXzKCm/XdccdyArCDu8kuRq2JE6x13+jEyZ+E9BuL1AjpxZcF9pkPSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787230225; c=relaxed/simple;
-	bh=IOabAEWjqaeY6j9kg3frtzHOhg7NAQAwhlq+4NmQc9Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SMT9WVC+pMGlcR1uykjLJTtSjctzUxnQoanyPRpArLDt1SSuoM4bIIsCV7GG92NLHPc122vKI2IEwg+cXj9Fc9OnGVALzqXLsz0t4NnwgFkf1pdG41dZl6435nTvgPYIWApyTGy3SbVdOJH1tNIHji7X9LdAchL7pXM0cB/VU3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [123.138.236.242])
-	by gateway (Coremail) with SMTP id _____8BxW_AE+IZqWh0DAA--.9438S3;
-	Thu, 20 Aug 2026 20:50:12 +0800 (CST)
-Received: from linux.localdomain (unknown [123.138.236.242])
-	by front1 (Coremail) with SMTP id qMiowJAx2c0A+IZqX_QLAA--.6716S3;
-	Thu, 20 Aug 2026 20:50:11 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Petr Pavlu <petr.pavlu@suse.com>
-Cc: linux-modules@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH v4 1/3] module/kallsyms: Rename is_mapping_symbol() to is_ignored_kernel_symbol()
-Date: Thu, 20 Aug 2026 20:50:05 +0800
-Message-ID: <20260820125007.22943-2-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20260820125007.22943-1-yangtiezhu@loongson.cn>
-References: <20260820125007.22943-1-yangtiezhu@loongson.cn>
+	s=arc-20240116; t=1787230632; c=relaxed/simple;
+	bh=6zPicfPSfuHP5+V8DMnoMTiDbA7taLfFXsURXMarNus=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XADvNAQrZdT3zvlpBOk2TmBgdu9pWw6Cfnd+SIk7GsaBNeZZ/vY7r1cOvb1Oz1yXEiaUd4XTq/L4pxVkW187VCUi17ogQ5tuLiD6ghP0Y/WmWOJyQDhsMG3h/MTGPQYX6ZB9rQ43+fAiuCu4HGzRogKtSfhrDaTPbJYDtH3V6Og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Fzeij/KY; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=kVMxCr8R; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Fzeij/KY";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="kVMxCr8R"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67KA2mln2932707
+	for <loongarch@lists.linux.dev>; Thu, 20 Aug 2026 12:57:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	7fpQDiZh6Rcpd53mASakZgg950UiukvD0vCxtgS43C8=; b=Fzeij/KYYbYcT4iP
+	Qogo9oAMVShbd7qjrNoRYE0XcfkQH1/xw4cT/MiTXAyE8aOhRP3cJVPg1t1Tsh9k
+	wMLL2wuBpPixMO7qIsXN1jqgrG+oj+v1SnOM/+SfgzPxu6aYflpd54ogEAI0wNBM
+	113lpXUunt/DssYPbjcLjCzFqHNxJNRxiI+1M45AQJkE19sBz9RaCKFAT0n9OneH
+	+QbHlgYsbNHdsN1urEt4CTlF1RC3DPu7vu94FG6+WZFj6QSABfyk+SuWsUS0ts5l
+	vVgc6dh+IkjBycTHyhwIKxolnlZ267DHpzxQazd74b7kBBOonJoJH9PNsbvXm/T/
+	TQvarg==
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4g5yg0gktb-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <loongarch@lists.linux.dev>; Thu, 20 Aug 2026 12:57:09 +0000 (GMT)
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-38dd87656d3so2892225a91.2
+        for <loongarch@lists.linux.dev>; Thu, 20 Aug 2026 05:57:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1787230629; x=1787835429; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=7fpQDiZh6Rcpd53mASakZgg950UiukvD0vCxtgS43C8=;
+        b=kVMxCr8Ra2rIYraCyOAMKgqw5/r0zyGu9OtKaX2Xf12Thd432wRQTOlnjorPRhWGry
+         58tUdCJJZ/T31bSWBl9exmi31bWHZoX6SizrsFCT2y3Qly/K9JZrCA8RWo9WfnJXn6u6
+         gOSTOZE/1SV4O6ag5wlVzymNe43pN9nrm1V+ZRUEPjBYJpkjC4P40hUVb7fzW9YGUuKs
+         M6uigO7p5CysCKwJkgopQ5an90tS1pM8rTC6Ksk7OHYHqhNgSzAXO92lrskgZWg1i1P8
+         O51kUuTDwscnqdNu3JVujAVRU/xCJjXVHNNpi3fd4VodbuZt6F7tWo/X05Y1lLbTb2TZ
+         uqbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787230629; x=1787835429;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=7fpQDiZh6Rcpd53mASakZgg950UiukvD0vCxtgS43C8=;
+        b=GbceYzfbFAcQwxYlEhG9f4sZnTTh4UZOoYH85jmNl5jo5lDuk9L3R002g2QMiIWzMv
+         +hnmAPRnH7vz3bW/irCGmKCaBo4JYXMxTGzi1f98gaSl8YFQWP8zqAUVBW/IUYTfGVkg
+         J+bVxHMaqlOmO30O8Z/1WKBtEntUVAZij8nkCeVN1PdUt9tNe9jHaSZFnxRyxuxYHwqD
+         xiWBGVPUW22wY5ndwT8QPSK4ife0xSWO1BNlIpTLo7OFgGq5qTEOEawuoeB7qUsHZPTQ
+         VTE6tjEHcJYqULaxlFC1NSwQKgGFdZCyTq36QwnZB8Bljq6jIa4GKgHETYw5mylsVmj9
+         HmHA==
+X-Gm-Message-State: AFuF++kaX1Yo9wzbeLKGN7ZiW2yjrganUXCJMuWL53eYKAfa9ljK1U41
+	PGwGwcHdVILL2JJ32s8kEaveG04uXXpGu7GMIoOqGK9ZWrxV4AEEPeoCawUGiq4EmBdjjMgcy0w
+	jlhf0hON1Qej088HW+Xt8/DYkB+hn6hi+azR9Fyq4N7X6kFoxmulDijw6Q2FWU/8=
+X-Gm-Gg: AR+sD13wCUKC0OV6VDKWbM4IPdCh3k+c7uxM+DrE+Npt3MXMVA7MXsOXPUxp+02j6m1
+	fmDPUmPMxTpZQVzu6qTIa5br8Mk4W5lzVHJmidqMzvENgisVOkT3OektRe8oGg2uAgAYpssaO7T
+	Jb5iiV/JjMMrqekjSc09KgIAcui3ZkUB8KuMczq+GDlrrTnT9LmLzrBeUeURCbBPkkh2fR9E4GG
+	3UWdcyoUjaStKueBkSpDC4YU0Q9UFRjwM1+JzyZIIJ/FVbCP8s/YswfCStd5QoBnxYG1r8rEn7C
+	caCV3odcw2bl47m0FPHKMKa99ii7LFIx93aig2UU7JA9Qi5XIpG/elJw717zQYlqFgPvJnVPKeJ
+	c1mv9G4Wy9pGIc1SWgUcvyzmh0LG15jZZxrvh4wVPnWrWWUl28coV2KC/ihfp7pBJr2cvFXZu
+X-Received: by 2002:a17:90b:3c8f:b0:395:4de4:92c8 with SMTP id 98e67ed59e1d1-395810e9626mr25289914a91.15.1787230628772;
+        Thu, 20 Aug 2026 05:57:08 -0700 (PDT)
+X-Received: by 2002:a17:90b:3c8f:b0:395:4de4:92c8 with SMTP id 98e67ed59e1d1-395810e9626mr25289810a91.15.1787230628295;
+        Thu, 20 Aug 2026 05:57:08 -0700 (PDT)
+Received: from [10.133.33.112] (tpe-colo-wan-fw-bordernet.qualcomm.com. [103.229.16.4])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3957fb60a2bsm7019248a91.17.2026.08.20.05.57.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Aug 2026 05:57:07 -0700 (PDT)
+Message-ID: <a4b1ff9d-f71b-4cde-b225-70568ca8ba8b@oss.qualcomm.com>
+Date: Thu, 20 Aug 2026 20:57:03 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAx2c0A+IZqX_QLAA--.6716S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxXFWxuw43Jw45XF45CF4UGFX_yoW5Krykpw
-	s8Ca18XFWUAryjgas7Gw4v9ry5Ww4vqr4FkryayrykCFnIq3WvqrZ2kF15uw4UXr4UKF4I
-	vrsrZrWSka4fArcCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1WlkUUUUU=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/5] cpufreq: loongson3: Replace IOCSR read/write with
+ MMIO ones
+To: Huacai Chen <chenhuacai@loongson.cn>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>, stable@vger.kernel.org,
+        zhongqiu.han@oss.qualcomm.com
+References: <20260818123921.3600606-1-chenhuacai@loongson.cn>
+ <20260818123921.3600606-6-chenhuacai@loongson.cn>
+Content-Language: en-US
+From: Zhongqiu Han <zhongqiu.han@oss.qualcomm.com>
+In-Reply-To: <20260818123921.3600606-6-chenhuacai@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: cvirPlV4kpGG2jNipWgqriEes71sdOay
+X-Proofpoint-ORIG-GUID: cvirPlV4kpGG2jNipWgqriEes71sdOay
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODIwMDA5NyBTYWx0ZWRfXzOSnvD041YFH
+ nsEjnOLa6XN+UGYH8M0rbOAfjhy2eg0ybAI0caixOveWGGYhmZMzrLyUNs8K48zLjURVp44fcL4
+ JOOqz8nB4+GRzKR2FKM3fxcY8wf+9njhpptftXvPvZbRD6pYo8ir5ENkDis9itz2ZYEJabvDEzh
+ BekjWZMR6gzlDqXlPauZ6HuZuvOilALWb2kNWPHTTn9EnX76vg0eCtmUuzLNZu6fanigp7DfqBi
+ a8amd7qOILaLbAEsOD39kgVC8u3xQ+HpwrsG4OdG/kmT9DCvYmY4LjrHSZ/sCSt6nTmyIinoinX
+ uvqp0BsdBtG2NDJQjR/wVJxKqc5egifb1mTLQEWDCrojzqJPV+0lXHmg8CHLFfIeIe1C1kCfsPO
+ Zh6RZVg5Cmfug6vO2ukBIl8xBZqdylAM4oFkAN0za1JZZq+5UkMzGyR2PqqF21cia4qrgpkEsx9
+ fteinaljDz5U9d5A4CQ==
+X-Proofpoint-Spam-Info: AW1haW4tMjYwODIwMDA5NyBTYWx0ZWRfX68YcfTXjWmH1
+ 13eGn7q+GIEWSsEjvtmFS975mXjBdTG73peZ6UFBeFp3APoOEdf7DHJt7L5rzjEX93Y3QoLpfEn
+ Piyyojk6qIyEI0u9irRsGOy+0xw9sJk=
+X-Authority-Analysis: v=2.4 cv=JoXBas4C c=1 sm=1 tr=0 ts=6a86f9a5 cx=c_pps
+ a=vVfyC5vLCtgYJKYeQD43oA==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
+ a=IkcTkHD0fZMA:10 a=Sv0fKeRqtYgA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=ZpdpYltYx_vBUK5n70dp:22
+ a=VwQbUJbxAAAA:8 a=X8ooYf98hskApLny6-EA:9 a=QEXdDO2ut3YA:10
+ a=rl5im9kqc5Lf4LNbBjHf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-08-19_06,2026-08-19_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 bulkscore=0 spamscore=0 priorityscore=1501 lowpriorityscore=0
+ malwarescore=0 phishscore=0 adultscore=0 impostorscore=0 clxscore=1015
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2608200097
 
-The helper function is_mapping_symbol() historically checks for both
-local labels prefixed with ".L" or "L0" and mapping symbols prefixed
-with "$".
+On 8/18/2026 8:39 PM, Huacai Chen wrote:
+> Our server productions (e.g. Loongson-3D6000/3E6000) can have multiple
+> nodes in one package and SMC mailboxes are also per-node. However, IOCSR
+> read/write can only perform on the current node, while sometimes we want
+> to perform on other nodes (e.g. when switch governor, the get and target
+> callbacks are not run on target core). So replace IOCSR read/write with
+> MMIO ones.
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+>   drivers/cpufreq/loongson3_cpufreq.c | 31 ++++++++++++++++++++++-------
+>   1 file changed, 24 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/loongson3_cpufreq.c b/drivers/cpufreq/loongson3_cpufreq.c
+> index c75c0e30e881..e5062cd62390 100644
+> --- a/drivers/cpufreq/loongson3_cpufreq.c
+> +++ b/drivers/cpufreq/loongson3_cpufreq.c
+> @@ -164,6 +164,12 @@ union smc_message {
+>   
+>   #define FREQ_MAX_LEVEL			16
+>   
+> +#define MMIO_SMCMBX(node) \
+> +	((void __iomem *)(IO_BASE | (u64)(node) << NODE_ADDRSPACE_SHIFT | LOONGSON_REG_BASE | LOONGARCH_IOCSR_SMCMBX))
+> +
+> +#define MMIO_MISC_FUNC(node) \
+> +	((void __iomem *)(IO_BASE | (u64)(node) << NODE_ADDRSPACE_SHIFT | LOONGSON_REG_BASE | LOONGARCH_IOCSR_MISC_FUNC))
+> +
+>   struct loongson3_freq_data {
+>   	unsigned int def_freq_level;
+>   	struct cpufreq_frequency_table table[];
+> @@ -176,13 +182,25 @@ static DEFINE_PER_CPU(struct loongson3_freq_data *, freq_data);
+>   static inline int do_service_request(u32 id, u32 info, u32 cmd, u32 val, u32 extra)
+>   {
+>   	int retries;
+> -	unsigned int cpu = raw_smp_processor_id();
+> -	unsigned int nid = cpu_to_node(cpu);
+> +	unsigned int cpu, nid;
+>   	union smc_message msg, last;
+>   
+> +	switch (cmd) {
+> +	case CMD_GET_FREQ_INFO:
+> +	case CMD_SET_FREQ_INFO:
+> +	case CMD_GET_FREQ_LEVEL_NUM:
+> +	case CMD_GET_FREQ_LEVEL_INFO:
+> +	case CMD_GET_FREQ_BOOST_LEVEL:
+> +		cpu = cpu_number_map(id);
 
-Rename it to is_ignored_kernel_symbol() to better reflect this actual
-behavior and scope, preventing conceptual confusion.
+cpu_number_map() is undefined when CONFIG_SMP=n. Wouldn't that result in
+a build failure?
 
-While at it, update the related non-module files, no functional changes.
 
-Suggested-by: Petr Pavlu <petr.pavlu@suse.com>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
----
- include/linux/module_symbol.h | 7 +++++--
- kernel/module/kallsyms.c      | 2 +-
- scripts/faddr2line            | 2 +-
- scripts/mod/modpost.h         | 2 +-
- tools/perf/util/symbol.h      | 4 +---
- 5 files changed, 9 insertions(+), 8 deletions(-)
+> +		break;
+> +	default:
+> +		cpu = raw_smp_processor_id();
+> +	}
+> +	nid = cpu_to_node(cpu);
+> +
+>   	mutex_lock(&cpufreq_mutex[nid]);
+>   
+> -	last.value = iocsr_read32(LOONGARCH_IOCSR_SMCMBX);
+> +	last.value = readl(MMIO_SMCMBX(nid));
+>   	if (!last.complete) {
+>   		mutex_unlock(&cpufreq_mutex[nid]);
+>   		return -EPERM;
+> @@ -195,12 +213,11 @@ static inline int do_service_request(u32 id, u32 info, u32 cmd, u32 val, u32 ext
+>   	msg.extra	= extra;
+>   	msg.complete	= 0;
+>   
+> -	iocsr_write32(msg.value, LOONGARCH_IOCSR_SMCMBX);
+> -	iocsr_write32(iocsr_read32(LOONGARCH_IOCSR_MISC_FUNC) | IOCSR_MISC_FUNC_SOFT_INT,
+> -		      LOONGARCH_IOCSR_MISC_FUNC);
+> +	writel(msg.value, MMIO_SMCMBX(nid));
+> +	writel(readl(MMIO_MISC_FUNC(nid)) | IOCSR_MISC_FUNC_SOFT_INT, MMIO_MISC_FUNC(nid));
+>   
+>   	for (retries = 0; retries < 10000; retries++) {
+> -		msg.value = iocsr_read32(LOONGARCH_IOCSR_SMCMBX);
+> +		msg.value = readl(MMIO_SMCMBX(nid));
+>   		if (msg.complete)
+>   			break;
+>   
 
-diff --git a/include/linux/module_symbol.h b/include/linux/module_symbol.h
-index 574609aced99..698d3db2b37e 100644
---- a/include/linux/module_symbol.h
-+++ b/include/linux/module_symbol.h
-@@ -7,8 +7,11 @@ enum ksym_flags {
- 	KSYM_FLAG_GPL_ONLY	= 1 << 0,
- };
- 
--/* This ignores the intensely annoying "mapping symbols" found in ELF files. */
--static inline bool is_mapping_symbol(const char *str)
-+/*
-+ * Ignore local labels (.L*, L0*) and mapping symbols ($*). These symbols are
-+ * not useful for the kernel, for example, they should not appear in kallsyms.
-+ */
-+static inline bool is_ignored_kernel_symbol(const char *str)
- {
- 	if (str[0] == '.' && str[1] == 'L')
- 		return true;
-diff --git a/kernel/module/kallsyms.c b/kernel/module/kallsyms.c
-index f23126d804b2..a52942fd0e07 100644
---- a/kernel/module/kallsyms.c
-+++ b/kernel/module/kallsyms.c
-@@ -294,7 +294,7 @@ static const char *find_kallsyms_symbol(struct module *mod,
- 		 * and inserted at a whim.
- 		 */
- 		if (*kallsyms_symbol_name(kallsyms, i) == '\0' ||
--		    is_mapping_symbol(kallsyms_symbol_name(kallsyms, i)))
-+		    is_ignored_kernel_symbol(kallsyms_symbol_name(kallsyms, i)))
- 			continue;
- 
- 		if (thisval <= addr && thisval > bestval) {
-diff --git a/scripts/faddr2line b/scripts/faddr2line
-index 622875396bcf..3aca197d513f 100755
---- a/scripts/faddr2line
-+++ b/scripts/faddr2line
-@@ -243,7 +243,7 @@ __faddr2line() {
- 			local cur_sym_elf_size=${fields[2]}
- 			local cur_sym_name=${fields[7]:-}
- 
--			# is_mapping_symbol(cur_sym_name)
-+			# is_ignored_kernel_symbol(cur_sym_name)
- 			if [[ ${cur_sym_name} =~ ^(\.L|L0|\$) ]]; then
- 				continue
- 			fi
-diff --git a/scripts/mod/modpost.h b/scripts/mod/modpost.h
-index 2aecb8f25c87..d9c21d479dd8 100644
---- a/scripts/mod/modpost.h
-+++ b/scripts/mod/modpost.h
-@@ -198,7 +198,7 @@ static inline bool is_valid_name(struct elf_info *elf, Elf_Sym *sym)
- 
- 	if (!name || !strlen(name))
- 		return false;
--	return !is_mapping_symbol(name);
-+	return !is_ignored_kernel_symbol(name);
- }
- 
- /* symsearch.c */
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index a71525335703..8b0780046938 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -31,9 +31,7 @@ struct build_id;
- struct perf_env;
- 
- /*
-- * Ignore kernel mapping symbols, matching kernel is_mapping_symbol() logic.
-- * This checks for '$' prefix (used by ARM, AArch64, RISC-V) and
-- * x86 local symbol prefixes (.L* and L0*).
-+ * Ignore local labels and mapping symbols, matching kernel is_ignored_kernel_symbol() logic.
-  * Only use this for kernel symbols (kallsyms, ksymbol events, kernel ELF DSOs).
-  */
- static inline bool is_ignored_kernel_symbol(const char *str)
+
+Please ignore this comments if you do not think it is worth addressing:
+
+A separate issue, it seems that DVFS and Boost feature is set in
+loongson3_cpufreq_probe(), what if about on other nodes (non-boot cpu
+node) and what if cpu hotplug?
+
+static int loongson3_cpufreq_probe(struct platform_device *pdev)
+{
+	int i, ret;
+
+	for (i = 0; i < MAX_PACKAGES; i++) {
+		ret = devm_mutex_init(&pdev->dev, &cpufreq_mutex[i]);
+		if (ret)
+			return ret;
+	}
+
+	ret = do_service_request(0, 0, CMD_GET_VERSION, 0, 0);
+	if (ret <= 0)
+		return -EPERM;
+
+	ret = do_service_request(FEATURE_DVFS, 0, CMD_SET_FEATURE,
+				 FEATURE_DVFS_ENABLE | FEATURE_DVFS_BOOST, 0);
+	if (ret < 0)
+		return -EPERM;
+
+......
+
+}
+
+
 -- 
-2.42.0
-
+Thx and BRs,
+Zhongqiu Han
