@@ -1,110 +1,95 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1004E374E6D
-	for <loongarch@lists.linux.dev>; Fri, 21 Aug 2026 03:29:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308AB3F413F
+	for <loongarch@lists.linux.dev>; Fri, 21 Aug 2026 05:01:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787282952; cv=none; b=hElFWXidkSRCfbf7x6K3RJgCDL+zXDFSIiiYL7G1xtOtQ1l/RimnzmvyWdL1MSXpLrDw/G9nKrtf6+zj+uFpoUgwVULwbMf55OXyibZd/5U3KANury598TiIKjZHe8J0Vb6cjKCjsr7uZ/rp1zoP2dpuD1de4xSKIYgeHNYJiy4=
+	t=1787288509; cv=none; b=H4fnoV1sMawqsnkQgGCZkZESQz8gXBwOreeRUfQMf94+AWlx4UE3agdVvqWSVMiyDUwXsVT36ENegA26avtn200CHkDH1+7+UYTtwJoZjnFJ1BKQg7LAYwgJUv89Y82enXhP+roI8BfUFP2M7PgLuIkKGp/7q5XHGOE5EanD6JM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787282952; c=relaxed/simple;
-	bh=MVswPW0ImM4I38bFgy87d8WVzTdnYOUFvl7l/nkBZGs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VA5SImrE6B+BoDzhpkyglSN/doCR/5FDMJI3kvTDIAjUx7DEbyuPf3yPqaQh8XaRTUa1R0MkZm3xtiXl4no7bXUEPWiRZMOAQRMyr3REfUa1CXJ/c4lqSvi4qFGpb1K3NECYAQ3jA/pHCDySk9bku23H554sju4B/u5KeHZAYzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=smB013S6; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1787288509; c=relaxed/simple;
+	bh=al37GYkNzcfxG7FaDQkiKDYwvNmVdsNmgqz/IzqbceM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KCDaiEFJHpRSZORg7NBRHa9TFJ5nM5Jhpt58m85dvHuuoCPOqTVUD5nlAg9OrcBqhlUIs5llIEDxZIsHAnjB+C9m7nutwF9KVhQ4C8nNeiQo6qu6XMlubEfpuVuvkIhITLjwkcMSWhli4UTZ0AQhsZryMmJKYn8OzanE0bmfdRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=iBvClYjp; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="smB013S6"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-38deea72eebso479408a91.1
-        for <loongarch@lists.linux.dev>; Thu, 20 Aug 2026 20:29:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787282948; x=1787887748; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=yiTS9UrmoBrDPpC0trCnmUAqEmBXDf+UybIjZa54OgY=;
-        b=smB013S6Ba0yTxwDwoO6emEh+xxZ/kAyA5FcSEMRx/qUp5+SV3N3zJiXrvDnYTcsfE
-         nhD/tZFpVfeUEY9+tuHdp1bVRQ1qxwgO6CRtlfLSue7HSm2ukuXNhGRmN8LOymyqAVON
-         BQUi3BVtb5RooJdTg4vOqH0qlTSxLQ6xKS/t0aWrPH4K4bQPnBVipiD4R/8cA4Ys5IZF
-         v/W7CPC46dJKrcifk+rUmUAf/POm4CLyZ7fqb2GYAd4gzEzmiBbWO1WH+3Owz3RTfmnI
-         qUF6NhjOhVvencWrCB9p8f0R3aT8UyWbhD2YmrePKhYtfarncKhY017JAH9CR2ch6hP6
-         FjKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787282948; x=1787887748;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=yiTS9UrmoBrDPpC0trCnmUAqEmBXDf+UybIjZa54OgY=;
-        b=a6xG3YlstZo8o5t1Jp9zWjStHrBoXzTkFJoetzBw7YVZ389r1cNKos/rFOLuhPeiAv
-         QBzUnJoQYecSeUowN1OWJG+OQkBIeFmPK/su4mBOlkQdtJ+JF9vb2zO/dXbnvIwlxoo1
-         EQatIjn1KWZjPr787oHmkWMPHGlEh1FVVRwcE41q9c8JjYpAar/6tInSY7A8OX3eZMdP
-         aPDuyQTKuGHA5ID9pBqBKsy0Um3aGccNyNmrX9gGZdFyIASHvFrdAMqdQTBjgF5Q7xvX
-         KnqdQLNfcSU/tGStCtmuBmPe7W7t+OSqbBIeDkzKpj06hgedHMinAH+hYw2OctO8rsiJ
-         ZaAA==
-X-Forwarded-Encrypted: i=1; AHgh+RpAiVhN6K1/V43+SwiF/uLPY67aqy5pd0tif2Lw+/iqKMsJ7Bt9SEoNr/tBRG4H1HgUsaS1FUZgyjw=@lists.linux.dev
-X-Gm-Message-State: AFuF++kn41FAtlORvreF31qe+zaZ5CsUy7qhc8wB102lwZbyvaDh4gub
-	urhoT+KiIww9xcP1xwPylwrRxW6kGBFbMc4cEo0cXyHUP+knr96GNyyn
-X-Gm-Gg: AR+sD122Kq7z9qOi/Nkr98m7qbkFAl26sivhKWBinMP/iqxj4JNuPJ3MrYqYskjOuFG
-	iMHiEvt4NO4yEFXIEg+IxVGTnMJUIZjQvm2ijWLVrFDklxAzwqfAjqykC3ZR95YrlUe4mxAQdA3
-	SsyRdPrYApIS2P+OfBMBqks4AhwQzTIzWnbH1JDrphVYZVtclAa1A8CNRYbkQBe2aIvdJWd6gCt
-	IMs0KypBVWoRCXPmIUTPdHeKURiCUuwcWcOYzjg2eljwuLX+fmyzdzqi4f71sJfkP8WsLqdNw3Z
-	9Rr3vzn8kxm382wwu+fv3pbmVh2RD/RY3iNWJ1/VX38V3P7YZu+64nDW3xBa32FfJZ1shaZ3vmO
-	sGySwsEtpYQvVWQHzoXhSx/upR51rxlLy6P2L66hlZhECt2UgE3SBO8fowG03C31d/t5XicooZ/
-	XAQmQMPJlMOlotBamzijXhcWW7boUWbwG03wNKN7NIfnaSBHG6ZfggLDzbiVrZpFC952S0Ob13a
-	9q1OA==
-X-Received: by 2002:a17:90b:4c41:b0:380:7688:fbe9 with SMTP id 98e67ed59e1d1-395c354ec51mr5213544a91.8.1787282947629;
-        Thu, 20 Aug 2026 20:29:07 -0700 (PDT)
-Received: from localhost.localdomain ([2408:8406:1941:17d:accf:ab29:4a32:29f1])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-395c4570e63sm1319318a91.4.2026.08.20.20.28.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2026 20:29:06 -0700 (PDT)
-From: Li Fangxu <lifangxu22@gmail.com>
-To: acme@kernel.org,
-	namhyung@kernel.org,
-	chenhuacai@loongson.cn
-Cc: peterz@infradead.org,
-	mingo@redhat.com,
-	git@xen0n.name,
-	linux-perf-users@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	lifangxu <lifangxu@kylinos.cn>
-Subject: [PATCH] perf build: Add rust target flag for loongarch cross compile
-Date: Fri, 21 Aug 2026 11:27:02 +0800
-Message-ID: <20260821032702.4258-1-lifangxu22@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="iBvClYjp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1787288507;
+	bh=4tnMYh+oI21IpYUCuMyfeXfmy4KBHYlUuR2YrMcvJMM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=iBvClYjpqzt6x0Q/1JnDtQLtEV62/jDDgl4S+xJRYIvbGX/3P6vwFQHoHI6C6z5G2
+	 d0a4PgBDqKgH+sgRjpdq2msGk0rU7SjoO6IgH6fCX33gl2NYNpZNlCHf0MQW+Dlv+5
+	 s3j8g97+BIaH1+VbTgNU18kSUTnQXFl8nsxdfQiE=
+Received: from [0.0.0.0] (2607-8700-5500-e873-0000-0000-0000-1001.16clouds.com [IPv6:2607:8700:5500:e873::1001])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1))
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 5107865BE5;
+	Fri, 21 Aug 2026 01:01:44 -0400 (EDT)
+Message-ID: <285743d2-6b4b-44e5-a0e2-b43a5e3cda29@xry111.site>
+Date: Fri, 21 Aug 2026 13:01:42 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/5] cpufreq: loongson3: Replace IOCSR read/write with
+ MMIO ones
+To: Huacai Chen <chenhuacai@loongson.cn>,
+ "Rafael J . Wysocki" <rafael@kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>, Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, stable@vger.kernel.org,
+ jeffbai@aosc.io
+References: <20260818123921.3600606-1-chenhuacai@loongson.cn>
+ <20260818123921.3600606-6-chenhuacai@loongson.cn>
+Content-Language: en-US
+From: Xi Ruoyao <xry111@xry111.site>
+In-Reply-To: <20260818123921.3600606-6-chenhuacai@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: lifangxu <lifangxu@kylinos.cn>
 
-Based on commit 30f998c992c9 ("tools build: Fix rust cross
-compilation"), add rust target flags for loongarch cross tool to fix
-perf compilation error:
-*** Unknown rust cross compilation architecture loongarch. Stop.
 
-Signed-off-by: lifangxu <lifangxu@kylinos.cn>
----
- tools/perf/Makefile.config | 2 ++
- 1 file changed, 2 insertions(+)
+在 2026/8/18 20:39, Huacai Chen 写道:
+> Our server productions (e.g. Loongson-3D6000/3E6000) can have multiple
+> nodes in one package and SMC mailboxes are also per-node. However, IOCSR
+> read/write can only perform on the current node, while sometimes we want
+> to perform on other nodes (e.g. when switch governor, the get and target
+> callbacks are not run on target core). So replace IOCSR read/write with
+> MMIO ones.
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+>   drivers/cpufreq/loongson3_cpufreq.c | 31 ++++++++++++++++++++++-------
+>   1 file changed, 24 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/loongson3_cpufreq.c b/drivers/cpufreq/loongson3_cpufreq.c
+> index c75c0e30e881..e5062cd62390 100644
+> --- a/drivers/cpufreq/loongson3_cpufreq.c
+> +++ b/drivers/cpufreq/loongson3_cpufreq.c
+> @@ -164,6 +164,12 @@ union smc_message {
+>   
+>   #define FREQ_MAX_LEVEL			16
+>   
+> +#define MMIO_SMCMBX(node) \
+> +	((void __iomem *)(IO_BASE | (u64)(node) << NODE_ADDRSPACE_SHIFT | LOONGSON_REG_BASE | LOONGARCH_IOCSR_SMCMBX))
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 0ba307e78fe1..42c0ef213750 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -1149,6 +1149,8 @@ ifndef NO_RUST
-     RUST_TARGET_FLAGS_s390	:= s390x-unknown-linux-gnu
-     RUST_TARGET_FLAGS_x86	:= x86_64-unknown-linux-gnu
-     RUST_TARGET_FLAGS_x86_64	:= x86_64-unknown-linux-gnu
-+    RUST_TARGET_FLAGS_loongarch := loongarch64-unknown-linux-gnu
-+
- 
-     ifeq ($(RUST_TARGET_FLAGS_$(ARCH)),)
-       $(error Unknown rust cross compilation architecture $(ARCH))
--- 
-2.43.0
+NODE_ADDRSPACE_SHIFT is defined in numa.h so that file needs to be 
+included, to avoid a build failure when NUMA is disabled (if NUMA is 
+enabled, numa.h happens to be pulled in via some other headers).
 
+Also I'd suggest to use nid_to_addrbase(node) instead of hard coding the 
+shift for better readability.
+
+With the changes:
+
+Tested-by: Xi Ruoyao <xry111@xry111.site> # on XA61200
