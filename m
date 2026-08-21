@@ -1,82 +1,83 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF7C931B803
-	for <loongarch@lists.linux.dev>; Fri, 21 Aug 2026 13:50:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D1E8495500
+	for <loongarch@lists.linux.dev>; Fri, 21 Aug 2026 13:50:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787320220; cv=none; b=ZUlS582qqohawASrD3Kuo3656V2ExlNhtKiZqF9Kc7OST+ZSms8T4h/PTO9AdEk6/XzfJagM6j73pDa7x6OQ4sqDMLvD+lHifuxYbIoTWp5xrrdOX2zWa4a/Fl6obH+TiSTbpdJXhWLW9v3pXrhG5ZRJmAmjyUTCKRwLo15JbXI=
+	t=1787320226; cv=none; b=mUZN0Fme6nSW8LU+oMXwd0+mObNBuKtWwT5wYPcvJ8BhrjGOIeV6h3J+HGQ1teD9EDzEK6Ob4ox1ef7rS3jTWXkd6vP0UubFuj73/cSizl7pq05gdRjd4IlJV9zCJjB0N+2J6BL6uxFj8EQ09SqRdj4KkOuWHfU4m7LBF5MJVgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787320220; c=relaxed/simple;
-	bh=RYqkv53J5NrkqBLuRcgdRfcpAvdgLLB7SotsZ958SG4=;
-	h=From:Subject:Date:Message-Id:MIME-Version:To:Cc:Content-Type; b=t+zCnY6PwF9nnd3+9aWYx4aMBetg1h7ALhio05NZCFVI6Gi2ASuXtzw29cxJmiUtwsl3BIS/cUXIUiebwNpcnzondkC4E+q8RuRtG/O0o/d98O0yfdjtwecIUY3UHxKVo9ZO8F6isTtpkRr4gx9UwbXZEVUnduGIVdbo+S8+nqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xuu50gXO; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1787320226; c=relaxed/simple;
+	bh=AjWp1TjMRLUGqxdS72hdqYmC5bBQJLPPnhM97ee5Dh8=;
+	h=From:Date:Subject:MIME-Version:Message-Id:References:In-Reply-To:
+	 To:Cc:Content-Type; b=tiuvJloyJ/ti8UJ8AIOCUEOeoy68/ayZJ7daclI7nazeFCkqmF7E+DqnsFfxKppGGjnz8Fni5G+eMSj8huofJbsqYu5cw41wBNHcUpovtvUK1a8hXi4NWc7lyC/9wo4m90gcZDG3KqV83oTQh2GFVh31gV0gB2khi1m8L1y0YjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N4cT5YSi; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xuu50gXO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N4cT5YSi"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1787320217;
+	s=mimecast20190719; t=1787320224;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=FxYBqvqfSfMLOK6E3WTT29SXyr6Pc7OT1nYn+VS1dSk=;
-	b=Xuu50gXOOIn+pTbi08Q2z8+CBj+UQQAsKSQDDtra8kvFSItupBoqUd4pwMbFlwSoB6TPaB
-	cg0i6v8z1NplqT5vzu4ZU1/l8yvAx8IYKCjw2FZW9woao5ythyq7ZwoXET9u7b06+cw4Pt
-	pxfPzaa3IDgnvpLrGQei5CKaoFjB1mE=
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
- [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BpYJaQfkL/fXy91zs4mgPaYnWE9uvAuTxt0XGGUcMwU=;
+	b=N4cT5YSi54d0WaPOkOQ9bigNNc3SdHIDhXvYF+jRio2Q6CMvou/sYLIiOH2dcFD5OZ2CuZ
+	PioMTaoAUlawczLN1kQxZ8zIIERaG1kMg44JR1W3YsERoSLKAKw9ybK4EQj8kBt8oIkSON
+	jVPC5PVwziTUB3kGnPYgcCqKb4UH2xU=
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
+ [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-675--2I6bKc7Nu6mOma6HGRxDQ-1; Fri, 21 Aug 2026 09:50:15 -0400
-X-MC-Unique: -2I6bKc7Nu6mOma6HGRxDQ-1
-X-Mimecast-MFC-AGG-ID: -2I6bKc7Nu6mOma6HGRxDQ_1787320214
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-38dc085b0a7so1852466a91.2
-        for <loongarch@lists.linux.dev>; Fri, 21 Aug 2026 06:50:15 -0700 (PDT)
+ us-mta-632-7EwUUIvOOJaS3YWkMYLgNQ-1; Fri, 21 Aug 2026 09:50:23 -0400
+X-MC-Unique: 7EwUUIvOOJaS3YWkMYLgNQ-1
+X-Mimecast-MFC-AGG-ID: 7EwUUIvOOJaS3YWkMYLgNQ_1787320222
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-38e54b6556aso1168688a91.2
+        for <loongarch@lists.linux.dev>; Fri, 21 Aug 2026 06:50:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787320214; x=1787925014;
-        h=cc:to:content-transfer-encoding:content-type:mime-version
-         :message-id:date:subject:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=FxYBqvqfSfMLOK6E3WTT29SXyr6Pc7OT1nYn+VS1dSk=;
-        b=Rgxpa/4p+z+p21tJi7deu7/gDS+8s+JmqICxvShUiCaIOGcPhP5V2vNo54XMxn3R/y
-         e+1R9AdjWQZ1RBZ1BSr8MGpJ6r0wxUwceElNaqnpQ7/ZFpIiRunWyHe+G6s1tvTuhJvU
-         M2WVZjqzlGbgGLNG7URN0Tm894IQ/DivrHDvw0p+6h9QcOMP17mdyd6kPuW+HQ6qDfL8
-         c/f1GvG+6BnhabWiJAJQIoqD5BXEU5F+DgzWGODw651OeWmp9gbYcRBd5uq1T1mNuBwN
-         MCHNjF3PKBY3W7Si43yLeLlkHuZF3bybgpzKSrehyxrxPwaYvDb3MEByIY5t+QmmEP32
-         ghCA==
-X-Forwarded-Encrypted: i=1; AHgh+Rrz8AIz2bcOe9MHjC6KFGte8y52un17OJdCZy1P+t73DugraiPPmPAvJn/OjEWGTF4r9ViXKEnEIP4=@lists.linux.dev
-X-Gm-Message-State: AFuF++nC1YfTgp0N4xYs9NOMkz18H+7rfF3/nyWNMWNSgPZrG6aa8y5N
-	oeC+/QsX4+I2Vk/1yI4eiFsKQW/W0W0ZIpyYI8m0CPHk8HIshjDdK5lcoQmQFUCWEURRr33LJC9
-	I+WeshjTcCAco/gdBIGHr4O1uldZui4SLcC7iLQMBiemosOisFZY+vTJRZo7iNw==
-X-Gm-Gg: AR+sD11gFnqgNMIK3j+PHl8wWz1W10Rz9+288ijTtxM10b0NShFVpOpZWsYl/MvF+7h
-	mpUFhYYfHYxuwGf0QeI6Z6By0I1OHDDvUQub74HvfmQZgBviTRyWzxLopd+7HIp/mIcza52qRNG
-	uIgLIn/s1wEXy9KArDc2jtNBb/xm/4Q1HdVjMkcJni6B7/tT39YBD1RYanFx41LIH+E1wU4wOyD
-	K0ylTR7DiMvEKGYamQscS2XuIB/F1pgUJMDXkcYxVdhi5hDvgQtQ0iVkGyfoleUcqLLkOoc48vI
-	H43tNIpuoGdlqfElNQqKLFmfSnzeAEwN/T+xu2sO+3UJLaqF/jqsotLkmVDyw2iocaanwWLnaW6
-	yaFDMIeh70KMHtqZyGDh0BKNghYFsE6qU
-X-Received: by 2002:a17:90b:3ecc:b0:38e:ad9d:1161 with SMTP id 98e67ed59e1d1-395c2f9fa9bmr10834157a91.0.1787320213438;
-        Fri, 21 Aug 2026 06:50:13 -0700 (PDT)
-X-Received: by 2002:a17:90b:3ecc:b0:38e:ad9d:1161 with SMTP id 98e67ed59e1d1-395c2f9fa9bmr10834046a91.0.1787320212881;
-        Fri, 21 Aug 2026 06:50:12 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1787320222; x=1787925022;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :content-type:mime-version:subject:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=BpYJaQfkL/fXy91zs4mgPaYnWE9uvAuTxt0XGGUcMwU=;
+        b=jW+rZErl7mKzLzm9VBz2/nlblR0fr94Fdz+XNyQ948cWy2fTo63+hADXwsxiDSDJFy
+         4+n6ftEY3T1cM7ccdNMRMbiD1W+PFZ3dYOEmYaAm/Y2HqI6NU6yg7XJnDDT1jji+iifs
+         MFVCudvW3PA1EboiVK6f2M43ru8DX3qo8jAdjoNt4vUc1M+v1932Kf8WZmh4fenHL4on
+         j519mafzVgMBJl7POox4vR8f6MS1XZdVVUkFrIEZFTD9kipbZ0iZLiEkyFLAyU7N9kdn
+         QcNO6ThWUTtZz3X9u/viXgDMwdpXIf8tclVh/NPEwXr3Xm7NcIBrx4QOQmRYptkWrxCW
+         p2CQ==
+X-Forwarded-Encrypted: i=1; AHgh+RrHiVBhTdcRo7o/W2p9QXCl/0oF2KPznNTOcWjbUPYWK6G4Xsn9qq7dkDWeo9Y8CJo6DDB752qbUK0=@lists.linux.dev
+X-Gm-Message-State: AFuF++kNSHdQSEMGNvQRiP4X4s5TrodwQlpDQyyp6RChn3VXgs9r8b0B
+	wyaeNKgjtlzzlf0IAmt3jqg+y203wDE7aVd/h4nHC5uLhqDZWDLpblLHdBiJ0xKto0s22GMpUB6
+	k/gj9IzWzzZ+IlqugoaKMFadt+PbwNxP4C6j94Q0Mw3IhFloh0bZTGsvht2pr3w==
+X-Gm-Gg: AR+sD10v3X2EIr8k3+2j7L/YU5Ij4m+daNDegjPGve1QGJPLd9guC64Wepo2ZIR4+vf
+	+qJ2S9qfwgqivNz4PRx8/XCAbO6DYNmWt69gqnXg8iIpNc6bJYmnNLLU+5iqwf+W/HUKyUoutjf
+	Zg2gS+vcvr0GPf5C+GLoFA/T0hbx18ZR1BSR66saZPjnQe3iuSqG97xxycUIzrLkiqPJID/5P7F
+	/gyU1HaFbQqv1yne9jxonwVM3xF+xLTA3MLJQNVoARzJ62VfK0AqgVrdn6d1pmmDADmV3KbTvei
+	UpDGBS7P7SavHroEoSE5eYZxTesD+ZJfo9g5MpwovIDQvyYkwEqtrqt434gNVaeZcKa7a4LhxAz
+	XN081E20Wdj+tTCiiboBupNwwKGyGHahK
+X-Received: by 2002:a17:90b:384d:b0:393:19a3:4e5 with SMTP id 98e67ed59e1d1-395c386a056mr10527515a91.16.1787320221499;
+        Fri, 21 Aug 2026 06:50:21 -0700 (PDT)
+X-Received: by 2002:a17:90b:384d:b0:393:19a3:4e5 with SMTP id 98e67ed59e1d1-395c386a056mr10527444a91.16.1787320220942;
+        Fri, 21 Aug 2026 06:50:20 -0700 (PDT)
 Received: from mpilaniy-mac.redhat.corp ([122.171.22.116])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-395c4c194d2sm3300502a91.15.2026.08.21.06.50.05
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-395c4c194d2sm3300502a91.15.2026.08.21.06.50.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2026 06:50:12 -0700 (PDT)
+        Fri, 21 Aug 2026 06:50:20 -0700 (PDT)
 From: Mukesh Pilaniya <mpilaniy@redhat.com>
-Subject: [PATCH v3 0/2] kexec: fix probe error codes and error propagation
-Date: Fri, 21 Aug 2026 19:19:56 +0530
-Message-Id: <20260821-mpilaniy-v3-0-76b355399d2e@redhat.com>
+Date: Fri, 21 Aug 2026 19:19:57 +0530
+Subject: [PATCH v3 1/2] kexec: return -ENOEXEC from image probe functions
+ on mismatch
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/22Nyw6CMBQFf4V0bU0fYq0r/8O4gPZWrpFCWmwkh
- H+X4gYTl5OcmTORCAEhknMxkQAJI3Z+AbkriGkqfweKdmEimDiyE5e07fFZeRypczUzRgsjuST
- LvA/g8L2mrrcvx1f9ADNkPy8ajEMXxvUr8bz7k02ccqqUsgfLQDKnLgFsUw1707Ukd5PYmnpjC
- sqoLkELDRYYlD/mPM8fdp454+0AAAA=
-X-Change-ID: 20260813-mpilaniy-ffb0cc92c313
+Message-Id: <20260821-mpilaniy-v3-1-76b355399d2e@redhat.com>
+References: <20260821-mpilaniy-v3-0-76b355399d2e@redhat.com>
+In-Reply-To: <20260821-mpilaniy-v3-0-76b355399d2e@redhat.com>
 To: Catalin Marinas <catalin.marinas@arm.com>, 
  Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
  Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
@@ -93,79 +94,118 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
  Bradley Morgan <include@grrlz.net>
 X-Mailer: b4 0.15.2
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: jjzNE8JUUaKV-cj9YdpXBSNeQb6eQ4G-DloWnYHTaxg_1787320214
+X-Mimecast-MFC-PROC-ID: CC5UquJaDp4liPpvcHg288Fm0N65PtqkcWrZV7EjEWo_1787320222
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-While debugging a misleading error on s390x where kexec -s reported
-"syscall kexec_file_load not available" instead of the actual EINVAL
-from a kernel command line that exceeded the architecture limit, we
-found that some kexec image probe functions return -EINVAL instead of
--ENOEXEC for format mismatches, and kexec_image_probe_default() has a
-bug where it returns whatever the last loader returned rather than
-always returning -ENOEXEC when no loader matches.
+Several kexec_file_load() image probe functions return -EINVAL when
+they do not recognize the image format.  A probe function that rejects
+an image should return -ENOEXEC to indicate that the image is not a
+recognized executable format.  -EINVAL implies a problem with the
+syscall parameters, not with image recognition.
 
-Patch 1 fixes all probe functions to return -ENOEXEC when they do not
-recognize the image format.
+kexec_image_probe_default() iterates through registered loaders and
+returns the last probe's error code to the caller.  That error
+propagates as the kexec_file_load() return value to userspace.
+Returning -EINVAL from a probe when no loader matches is semantically
+incorrect and misleads userspace about the nature of the failure.
 
-Patch 2 fixes kexec_image_probe_default() to distinguish format
-mismatches (-ENOEXEC) from real errors (e.g. -ENOMEM), propagating
-real errors immediately and only continuing to the next loader on
--ENOEXEC.
-
-kexec-tools patch:
-https://lore.kernel.org/all/20260814075329.30203-1-mpilaniy@redhat.com/
+Return -ENOEXEC from all probe functions and their helpers when the
+image format is not recognized.
 
 Signed-off-by: Mukesh Pilaniya <mpilaniy@redhat.com>
+Reviewed-by: Philipp Rudo <prudo@redhat.com>
+Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
+Reviewed-by: Bradley Morgan <include@grrlz.net>
 ---
-Changes in v3:
-- Patch 2: rename ret to err and change ret == 0 to !err as suggested by Mike.
-- Link to v2: https://patch.msgid.link/20260819-mpilaniy-v2-0-95e929ede0e5@redhat.com
+ arch/arm64/kernel/kexec_image.c   | 4 ++--
+ arch/loongarch/kernel/kexec_efi.c | 4 ++--
+ arch/riscv/kernel/kexec_image.c   | 4 ++--
+ kernel/kexec_elf.c                | 4 ++--
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
-Changes in v2:
-- Added patch 2 to fix error propagation in kexec_image_probe_default(),
-  as suggested by Pratyush Yadav.
-- Link to v1: https://patch.msgid.link/20260813-mpilaniy-v1-1-777d4d0e30f7@redhat.com
+diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
+index b70f4df15a1a..101259874d44 100644
+--- a/arch/arm64/kernel/kexec_image.c
++++ b/arch/arm64/kernel/kexec_image.c
+@@ -25,10 +25,10 @@ static int image_probe(const char *kernel_buf, unsigned long kernel_len)
+ 		(const struct arm64_image_header *)(kernel_buf);
+ 
+ 	if (!h || (kernel_len < sizeof(*h)))
+-		return -EINVAL;
++		return -ENOEXEC;
+ 
+ 	if (memcmp(&h->magic, ARM64_IMAGE_MAGIC, sizeof(h->magic)))
+-		return -EINVAL;
++		return -ENOEXEC;
+ 
+ 	return 0;
+ }
+diff --git a/arch/loongarch/kernel/kexec_efi.c b/arch/loongarch/kernel/kexec_efi.c
+index 5ee78ebb1546..28a1d0420ba3 100644
+--- a/arch/loongarch/kernel/kexec_efi.c
++++ b/arch/loongarch/kernel/kexec_efi.c
+@@ -24,12 +24,12 @@ static int efi_kexec_probe(const char *kernel_buf, unsigned long kernel_len)
+ 
+ 	if (!h || (kernel_len < sizeof(*h))) {
+ 		kexec_dprintk("No LoongArch image header.\n");
+-		return -EINVAL;
++		return -ENOEXEC;
+ 	}
+ 
+ 	if (!loongarch_header_check_dos_sig(h)) {
+ 		kexec_dprintk("No LoongArch PE image header.\n");
+-		return -EINVAL;
++		return -ENOEXEC;
+ 	}
+ 
+ 	return 0;
+diff --git a/arch/riscv/kernel/kexec_image.c b/arch/riscv/kernel/kexec_image.c
+index 51dc89259f16..963a25f5b55b 100644
+--- a/arch/riscv/kernel/kexec_image.c
++++ b/arch/riscv/kernel/kexec_image.c
+@@ -20,7 +20,7 @@ static int image_probe(const char *kernel_buf, unsigned long kernel_len)
+ 	const struct riscv_image_header *h = (const struct riscv_image_header *)kernel_buf;
+ 
+ 	if (!h || kernel_len < sizeof(*h))
+-		return -EINVAL;
++		return -ENOEXEC;
+ 
+ 	/* According to Documentation/arch/riscv/boot-image-header.rst,
+ 	 * use "magic2" field to check when version >= 0.2.
+@@ -28,7 +28,7 @@ static int image_probe(const char *kernel_buf, unsigned long kernel_len)
+ 
+ 	if (h->version >= RISCV_HEADER_VERSION &&
+ 	    memcmp(&h->magic2, RISCV_IMAGE_MAGIC2, sizeof(h->magic2)))
+-		return -EINVAL;
++		return -ENOEXEC;
+ 
+ 	return 0;
+ }
+diff --git a/kernel/kexec_elf.c b/kernel/kexec_elf.c
+index 3a5c25b2adc9..89a444a00693 100644
+--- a/kernel/kexec_elf.c
++++ b/kernel/kexec_elf.c
+@@ -172,7 +172,7 @@ static int elf_read_ehdr(const char *buf, size_t len, struct elfhdr *ehdr)
+ 
+ 	default:
+ 		pr_debug("Unknown ELF class.\n");
+-		return -EINVAL;
++		return -ENOEXEC;
+ 	}
+ 
+ 	return elf_is_ehdr_sane(ehdr, len) ? 0 : -ENOEXEC;
+@@ -236,7 +236,7 @@ static int elf_read_phdr(const char *buf, size_t len,
+ 
+ 	default:
+ 		pr_debug("Unknown ELF class.\n");
+-		return -EINVAL;
++		return -ENOEXEC;
+ 	}
+ 
+ 	return elf_is_phdr_sane(phdr, len) ? 0 : -ENOEXEC;
 
-To: Catalin Marinas <catalin.marinas@arm.com>
-To: Will Deacon <will@kernel.org>
-To: Mark Rutland <mark.rutland@arm.com>
-To: Huacai Chen <chenhuacai@kernel.org>
-To: WANG Xuerui <kernel@xen0n.name>
-To: Paul Walmsley <pjw@kernel.org>
-To: Palmer Dabbelt <palmer@dabbelt.com>
-To: Albert Ou <aou@eecs.berkeley.edu>
-To: Alexandre Ghiti <alex@ghiti.fr>
-To: Andrew Morton <akpm@linux-foundation.org>
-To: Baoquan He <baoquan.he@linux.dev>
-To: Mike Rapoport <rppt@kernel.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-To: Pratyush Yadav <pratyush@kernel.org>
-To: Philipp Rudo <prudo@redhat.com>
-To: Tao Liu <ltao@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: loongarch@lists.linux.dev
-Cc: linux-riscv@lists.infradead.org
-Cc: kexec@lists.infradead.org
-
----
-Mukesh Pilaniya (2):
-      kexec: return -ENOEXEC from image probe functions on mismatch
-      kexec: fix error propagation in kexec_image_probe_default()
-
- arch/arm64/kernel/kexec_image.c   |  4 ++--
- arch/loongarch/kernel/kexec_efi.c |  4 ++--
- arch/riscv/kernel/kexec_image.c   |  4 ++--
- kernel/kexec_elf.c                |  4 ++--
- kernel/kexec_file.c               | 12 +++++++-----
- 5 files changed, 15 insertions(+), 13 deletions(-)
----
-base-commit: dd8c49a14f169d58e7a07a2c96fb588f3456efa0
-change-id: 20260813-mpilaniy-ffb0cc92c313
-
-Best regards,
---  
-Mukesh Pilaniya <mpilaniy@redhat.com>
+-- 
+Git-155)
 
