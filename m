@@ -1,173 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1602F385D7D
-	for <loongarch@lists.linux.dev>; Mon, 24 Aug 2026 08:44:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2526323D7C2
+	for <loongarch@lists.linux.dev>; Mon, 24 Aug 2026 09:34:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787561097; cv=none; b=TgysfC9xBVBP5FCGiLDN1Qkp3yU92eNbMKo4XSwD1JNMHYyllnu74Pl2rBXTCKWe/rWX3bSr/E9X8iqeRX71qwpiOYFVkVOpR6jcEd9dHvS9YL9KmaOB381mNHDUzqwJ3+YrMO+Qf+CMv3Gbu7teEiEFpa6A2+U/SRdQDQjGWTY=
+	t=1787564077; cv=none; b=HPUWz6KQzZmsi/soLZl9f3kseg1DtANkhfo8RtYW9M+c9MGAPwMtNen1VXpp+p5WL+/iTDa+7N3m4c6XRDwl/sdLWTShan873ui9uUDOUyrwYapScOMi1N93F0IBTmBcH2E8e91nBlR4AUjwrdkF9K6FaGU3q2GicCaPi0nMtmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787561097; c=relaxed/simple;
-	bh=5bELOV6KWz5KF3i9w3Hr+vCvrTivDxgDVqZTegju/wY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Xi31YF1e7FsHyLBU4xAb1W+wju7slvFzVSd4AYcj06T9SVZ4ZqRqLZqod++47FKRFVLqmtns8xJeIZbd9waAuyVxbih5pmWE6g+O3hlA4OIsN+4XzorWkS9cGsgzmCNFOyYU6iJFJsm38MnaRYF6TwqJL6LuTuKfyEZ72D2eHJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hTq7OY3v; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787564077; c=relaxed/simple;
+	bh=heOtZrexFpj02TBC1ZUGwrinYUrNBMsAkbuJXrM3mjI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uXCzIPtui4PGf0ysVwFliD2Xs/7bl9MIqH3iaZYZMgSPQeXNdbeFlJeddC0/31WfLAKweMNLKiHrbZQhTgZFWx82duFbiOl2jMfd6zXoH/dPBoJNlz7x057cjZ4pqz298ZyFBeSdM2pSEqz/ajiEV53BXZUftNH/r/kpLiAixDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=MeX3Ioam; arc=none smtp.client-ip=54.92.39.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hTq7OY3v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCD8B1F00AC4
-	for <loongarch@lists.linux.dev>; Mon, 24 Aug 2026 08:44:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787561095;
-	bh=wCL+QGPeEsmIxcpLLsbeW3zh//upcJ2W+JFxJg847N4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=hTq7OY3vYJizNam6BQgoyJIDYseZuFZglvbzfMiaSbxj7EVvAIGSVOHj2uM8+blJe
-	 hmRA0hxHKZ/2yc9qhxp8imc9qtlmdLZ2aWHMDftqDCp0yZaAG3zmR+rnD3vwpeM5UL
-	 MTGWbM+h36q3Mz5TkPjoiSuBSl0bR6a62Lq/OFBcByCsBTKFEJbekNH64m/BH1gTYO
-	 wIvxPgh1vQxY9S33DsLq19ij4RrJ3Ai05kIUBvXoJTBwu6agOXFmNFWz1Uz+kHN0D4
-	 MHxcd9drqSifLCYLd0dihVOcl3dm0uQ4DXCGoxehMjBU5qlKl2Kyo3G+2qzw+NNAds
-	 HuWHdw9axKkdw==
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-6a1a546a6bbso5621590a12.1
-        for <loongarch@lists.linux.dev>; Mon, 24 Aug 2026 01:44:55 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+Rppo5pJP3LuWNNxtGWM26JcIkv226wbN3UiARVz1EHZU22KQC42xhYsRKahPgoj+Ac7gC+XdgLStNU=@lists.linux.dev
-X-Gm-Message-State: AFuF++kd6Cce9Fl82oDFgiAFwctvQZxFZVB3HI0hHmb5CTRbu2uYl1oT
-	abfGNbtODcqTvV/b3epXMzwNb6s2i/DtbOcKdWhahie+TVYf64CE+Ydy/nZQfu6Z3hlc2SiGrrc
-	Rm4MQ+ihLVnfjXoS8GGnjlwgFS1VkTU4=
-X-Received: by 2002:a17:907:97d5:b0:c20:21be:ea75 with SMTP id
- a640c23a62f3a-c246a33ea8bmr2617673766b.8.1787561094467; Mon, 24 Aug 2026
- 01:44:54 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="MeX3Ioam"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1787564053;
+	bh=BlOmK0hxH8yg/xtlWZc52Y8E1iGkm06urj2m8MTL+as=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version;
+	b=MeX3Ioam6ULJzZVx4FaRyWLX5CFLambiYjfr+kaIRNzwl4gfJxM+PwxGp5IGBiV10
+	 qDJKyiBOxzqaqO/IXXVzyAqdhUOrt9NFgdK3fwUYSRGfelWUX1Hgg/2G9YIjIzf+Cz
+	 9RAjE8Ki501+6CbeNvOWCTPSEtpg2KfX0IvBZzm0=
+X-QQ-mid: esmtpsz18t1787564034t822d70d8
+X-QQ-Originating-IP: eYD2IK+oypIqXuEgbVqjdqP6o0qduYAs52P64cBWq4Y=
+Received: from localhost.localdomain ( [113.57.152.160])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 24 Aug 2026 17:33:52 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 2674811632270747063
+EX-QQ-RecipientCnt: 7
+From: Wentao Guan <guanwentao@uniontech.com>
+To: chenhuacai@kernel.org
+Cc: kernel@xen0n.name,
+	yangtiezhu@loongson.cn,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Wentao Guan <guanwentao@uniontech.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v2] LoongArch: rethook: Do not restore percpu base register in trampoline
+Date: Mon, 24 Aug 2026 17:33:48 +0800
+Message-Id: <20260824093348.3814991-1-guanwentao@uniontech.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260820125007.22943-1-yangtiezhu@loongson.cn> <20260820125007.22943-2-yangtiezhu@loongson.cn>
-In-Reply-To: <20260820125007.22943-2-yangtiezhu@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 24 Aug 2026 16:45:22 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5ihmy7REGKkid3jKqZ0_KJU5js37ZrNFp7HmWYtuHzpA@mail.gmail.com>
-X-Gm-Features: AcwNN1WUejfSU-euTVopVVkocrgajia3X00RbTefdMLH8MHKxNP3iUIEaIEhG-o
-Message-ID: <CAAhV-H5ihmy7REGKkid3jKqZ0_KJU5js37ZrNFp7HmWYtuHzpA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] module/kallsyms: Rename is_mapping_symbol() to is_ignored_kernel_symbol()
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Petr Pavlu <petr.pavlu@suse.com>, linux-modules@vger.kernel.org, 
-	loongarch@lists.linux.dev, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Namhyung Kim <namhyung@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz3a-0
+X-QQ-XMAILINFO: M+McIMNbTNElWw7kw3vNmRbKm/niiM3fGNLfs0K4rQ1GoUrh6AO7+cZ5
+	V7JFpUwg1i+s73HvPiqsOlCg8Kxpn2BV4OvDygv8gmRRzl0zR32NKBOJA4tm7++oe9JZyOa
+	BdIFXiuAaiLdnCA5+QxIWRnlvvubWS9sSPl/8Wx70aC3hEt460CCKq6DEdW2t0UKRdK62r1
+	I4jQpuDBOrlXsJh+oXYCG1oaR3W3WJLPcp4/o5JVAgvw0itl312ebodoJT3aUnvBQujBNry
+	ZrGtInDvP8cuIVVK9W/A0J1o3id9O3JBkrsEIVSiaskcnG6OqFyjCjfDDSrqRlTzAzxPfjc
+	lJBWHn3A8DxrPX2MBjKDbIIpiw/gucdHj5I9/sgttZrANSSPRi+5Ww4r6SAPzh1b7apJalm
+	G0v4uD7nDz7slwqOQcz8xjE2xFdl2LwZ2qiGuDeEsF4G/m7lGWM9BFbDWGu365wBraHRwyg
+	umEKzbvJPJbItYRHSQ3dzi/UEgGT4Q4C14WMTNgxSzSUdoe5cNPxQsIGmivjx0B3vkk9VS8
+	qM3lq6iQwBcvH7I3UJlPlJgvxXGiDr8zD4RAyms0uzvwnWYsWyZwzM1EcQqnUd06LFcqFV1
+	s8COhCxMs2xrmbC64K7YfC8tx2swk0T7rAS3kgc8Drpgbte4ObRBbbpuhEtVsMbZSPtA9OR
+	875LVddY+MNBsyDtN0GrdsHYx1cl4KjAJw34y0mZwqoUe7F1f4m9x0y7VIrqMBUgEq10sd1
+	avnJMqiIK1lM+9Fkn/SK/VjZFmv2wBZALgu5IMvHOuEN9Z5MpDpcFRAZfvlIxGdQluGy7JK
+	gMDyC8qhmsBvC/X0W6K6Ga91BStZzUVDEUbP5dOTMFo31wduE9gpZ+Y9SY5ifnINw1Vo9pF
+	kbj4ggX6yf09azbIwwwvD7J/ni62XCTjFG40dSGxX1n/2+7UJveyhEirWv2d9yzTs/hyYlR
+	QURjJwKMIjaK66ZRAZa3xE0iXOIrPOuN4rO7hguqW8WXBenz4j24SPaCS+YFa8mlqkb2srA
+	3Gpuj38cspPO8+RZcndMpRya6y9knhLqQZi/n/7jstAvHtb71XoNsLr4mYKXOszrTCbjT7J
+	aWIH8Z4lfCVx6epIIcnExPR5rB6xR/5no+wJQqVYGMkL68G7dMLHhwwOD4H2TOJaqt+jWu5
+	e9bjMfjv1eVK+Jw=
+X-QQ-XMRINFO: NI4Ajvh11aEjEMj13RCX7UuhPEoou2bs1g==
+X-QQ-RECHKSPAM: 0
 
-Hi, Tiezhu,
+The rethook trampoline saves $r21 ($u0), the percpu base, into its
+frame at entry and restores it at exit. In between,
+rethook_trampoline_handler() may schedule via preempt_enable_notrace();
+if the task migrates to another CPU, the frame's $r21 names the old
+CPU's percpu base, and restoring it poisons $r21 on the new CPU. Until
+the next user->kernel transition heals $r21, this_cpu_*() accesses
+(runqueues, RCU per-CPU data, timer tick programming, FPU ownership)
+hit the wrong CPU's percpu area.
 
-On Thu, Aug 20, 2026 at 8:50=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> The helper function is_mapping_symbol() historically checks for both
-> local labels prefixed with ".L" or "L0" and mapping symbols prefixed
-> with "$".
->
-> Rename it to is_ignored_kernel_symbol() to better reflect this actual
-> behavior and scope, preventing conceptual confusion.
-I think is_ignored_symbol() is enough, no "kernel" needed.
+Under kretprobe-heavy preemptible load this corrupts scheduler and
+timer state: scheduling-while-atomic splats, wrong-CPU RCU warnings,
+WARN_ON_ONCE(rq != this_rq()) in nohz_balance_exit_idle(), and CPUs
+parking in the idle loop with the constant timer never re-armed (hard
+lockup). Reproduces on a Loongson-3A6000 with kretprobes on VFS paths
+plus heavy file churn (OS install / unsquashfs).
 
-Huacai
+By convention $r21 always holds the current CPU's percpu base in kernel
+mode: exception entries reload it only when coming from user mode, and
+RESTORE_SOME() restores it only when returning to user mode; the
+context-switch path never writes it. The live $r21 at trampoline exit
+is therefore already correct, and nothing in between can legitimately
+change it (kernel C code cannot write a global register variable).
+Drop the restore; keep the save so that the pt_regs view handed to
+handlers stays fully initialized.
 
->
-> While at it, update the related non-module files, no functional changes.
->
-> Suggested-by: Petr Pavlu <petr.pavlu@suse.com>
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
->  include/linux/module_symbol.h | 7 +++++--
->  kernel/module/kallsyms.c      | 2 +-
->  scripts/faddr2line            | 2 +-
->  scripts/mod/modpost.h         | 2 +-
->  tools/perf/util/symbol.h      | 4 +---
->  5 files changed, 9 insertions(+), 8 deletions(-)
->
-> diff --git a/include/linux/module_symbol.h b/include/linux/module_symbol.=
-h
-> index 574609aced99..698d3db2b37e 100644
-> --- a/include/linux/module_symbol.h
-> +++ b/include/linux/module_symbol.h
-> @@ -7,8 +7,11 @@ enum ksym_flags {
->         KSYM_FLAG_GPL_ONLY      =3D 1 << 0,
->  };
->
-> -/* This ignores the intensely annoying "mapping symbols" found in ELF fi=
-les. */
-> -static inline bool is_mapping_symbol(const char *str)
-> +/*
-> + * Ignore local labels (.L*, L0*) and mapping symbols ($*). These symbol=
-s are
-> + * not useful for the kernel, for example, they should not appear in kal=
-lsyms.
-> + */
-> +static inline bool is_ignored_kernel_symbol(const char *str)
->  {
->         if (str[0] =3D=3D '.' && str[1] =3D=3D 'L')
->                 return true;
-> diff --git a/kernel/module/kallsyms.c b/kernel/module/kallsyms.c
-> index f23126d804b2..a52942fd0e07 100644
-> --- a/kernel/module/kallsyms.c
-> +++ b/kernel/module/kallsyms.c
-> @@ -294,7 +294,7 @@ static const char *find_kallsyms_symbol(struct module=
- *mod,
->                  * and inserted at a whim.
->                  */
->                 if (*kallsyms_symbol_name(kallsyms, i) =3D=3D '\0' ||
-> -                   is_mapping_symbol(kallsyms_symbol_name(kallsyms, i)))
-> +                   is_ignored_kernel_symbol(kallsyms_symbol_name(kallsym=
-s, i)))
->                         continue;
->
->                 if (thisval <=3D addr && thisval > bestval) {
-> diff --git a/scripts/faddr2line b/scripts/faddr2line
-> index 622875396bcf..3aca197d513f 100755
-> --- a/scripts/faddr2line
-> +++ b/scripts/faddr2line
-> @@ -243,7 +243,7 @@ __faddr2line() {
->                         local cur_sym_elf_size=3D${fields[2]}
->                         local cur_sym_name=3D${fields[7]:-}
->
-> -                       # is_mapping_symbol(cur_sym_name)
-> +                       # is_ignored_kernel_symbol(cur_sym_name)
->                         if [[ ${cur_sym_name} =3D~ ^(\.L|L0|\$) ]]; then
->                                 continue
->                         fi
-> diff --git a/scripts/mod/modpost.h b/scripts/mod/modpost.h
-> index 2aecb8f25c87..d9c21d479dd8 100644
-> --- a/scripts/mod/modpost.h
-> +++ b/scripts/mod/modpost.h
-> @@ -198,7 +198,7 @@ static inline bool is_valid_name(struct elf_info *elf=
-, Elf_Sym *sym)
->
->         if (!name || !strlen(name))
->                 return false;
-> -       return !is_mapping_symbol(name);
-> +       return !is_ignored_kernel_symbol(name);
->  }
->
->  /* symsearch.c */
-> diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-> index a71525335703..8b0780046938 100644
-> --- a/tools/perf/util/symbol.h
-> +++ b/tools/perf/util/symbol.h
-> @@ -31,9 +31,7 @@ struct build_id;
->  struct perf_env;
->
->  /*
-> - * Ignore kernel mapping symbols, matching kernel is_mapping_symbol() lo=
-gic.
-> - * This checks for '$' prefix (used by ARM, AArch64, RISC-V) and
-> - * x86 local symbol prefixes (.L* and L0*).
-> + * Ignore local labels and mapping symbols, matching kernel is_ignored_k=
-ernel_symbol() logic.
->   * Only use this for kernel symbols (kallsyms, ksymbol events, kernel EL=
-F DSOs).
->   */
->  static inline bool is_ignored_kernel_symbol(const char *str)
-> --
-> 2.42.0
->
->
+The same flaw existed in the pre-rethook kretprobe trampoline since
+v6.3; it was carried over when rethook replaced it.
+
+Fixes: 3f5536860086d ("LoongArch: Add kretprobes support")
+Cc: stable@vger.kernel.org # v6.5+
+Assisted-by: Kimi:Kimi-K3 # debug and root-cause analysis
+Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
+---
+changelog v2:
+according sashiko report, keep cfi_st u0, PT_R21
+Link: https://sashiko.dev/#/patchset/20260824082524.3801394-1-guanwentao%40uniontech.com
+
+v1 link:
+https://lore.kernel.org/loongarch/20260824082524.3801394-1-guanwentao@uniontech.com/T/#u
+---
+---
+ arch/loongarch/kernel/rethook_trampoline.S | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/arch/loongarch/kernel/rethook_trampoline.S b/arch/loongarch/kernel/rethook_trampoline.S
+index 2e009fbea53f2..94adead8faa5c 100644
+--- a/arch/loongarch/kernel/rethook_trampoline.S
++++ b/arch/loongarch/kernel/rethook_trampoline.S
+@@ -59,7 +59,14 @@
+ 	cfi_ld	t6, PT_R18
+ 	cfi_ld	t7, PT_R19
+ 	cfi_ld	t8, PT_R20
+-	cfi_ld	u0, PT_R21
++	/*
++	 * $r21 ($u0, percpu base) is deliberately not restored: in kernel
++	 * mode it must always hold the current CPU's percpu base, and
++	 * restoring it from the frame would poison it with the old CPU's
++	 * base if the handler scheduled and we migrated.  The save side
++	 * stays so that the pt_regs view handed to handlers remains fully
++	 * initialized.
++	 */
+ 	cfi_ld	fp, PT_R22
+ 	cfi_ld	s0, PT_R23
+ 	cfi_ld	s1, PT_R24
+-- 
+2.30.2
