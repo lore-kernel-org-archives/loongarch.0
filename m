@@ -1,86 +1,79 @@
-Received: from smtpbgbr2.qq.com (smtpbgbr2.qq.com [54.207.22.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21F312F8E95
-	for <loongarch@lists.linux.dev>; Mon, 24 Aug 2026 03:15:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.22.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B21D30EF77;
+	Mon, 24 Aug 2026 07:27:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787541313; cv=none; b=PijjE7SjnJf6/66XGUDdeyOTxlLNtZFUMn8sbXCsc0CY8G5RrCMZCpA2qU+o1BmmFxYc/mIoaoJKaxRfN6kyKw3rm1Ob/6uVz2DHM0YF56TMNjMxHK8HdqMKmGNeYAGqDt+dHN3THHjV/69dL0THAhPYmjXNs++Y4mmYcXfeuTw=
+	t=1787556466; cv=none; b=mqWOOeaDdExeDi2jMqhdnaLKma8ExNC/Ty6vwIBMvAxsMFyq953NxkVVXhwAZdYLodMg6TyV6S/v2czOPAHreFpU3yubf4dcN9dhTNhCT8h5jfJ0+1GvX/8cxZ5X7jO+ZMdupZLXCVs7RgpkRik9h3w+gtaYBfaghzfHwOez/+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787541313; c=relaxed/simple;
-	bh=bUBx9kep0c8rrFUZFSUhdpaCpY4MKOUpnISPnWGkdqo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=c2nJ/4g7oJUz2ve/fsVKXgVER6FHSIAk8K0SqOufiO+IAuPmiBYtHds0zFvOMk18cSY6vCW+560SvV46FEvr6+xIo0mYFtoMSoagqW/az93TzpuH03UuZfWdZIqcYbjQ8yK2zW6aN3j6XbB9OBXRrGzAq2egxOKhC31j2guiHpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=mlSImj7e; arc=none smtp.client-ip=54.207.22.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1787556466; c=relaxed/simple;
+	bh=KfXzxN/sCr/F7pK2AdyGUYO5OQQU04dyr7yb+QQZaKI=;
+	h=MIME-Version:Content-Type:Subject:From:To:Cc:In-Reply-To:
+	 References:Date:Message-Id; b=PYyMCQf/X63XR8h67xJHxoL3YSwIU1JoEI6gUpk9VjAKRiGb8rdUoQtgmjXziCQs29ea6m4hVRSoMOJj5EcThtAogunVaAeDF+qgCyQL887RXBLZEMbQW8lc+17O2tIm9dJNzWuzrs9mA3fYxpzT5s9KlD3BhMZG+2uMtBafQZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hghfi3F3; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="mlSImj7e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1787541283;
-	bh=ei39FOg6slhKhmlpXJOSXnadnaEJRs2+EIDQ/kn99vw=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=mlSImj7eANpAIl+PZPhXgl9jzDar9T+KTY+q1k0gM1ywAIgWVOxBNLGHES858+FHR
-	 tL2/SE9/X5ULD/QPS1biHqGtbjqi9TRECqxtAqMqlSO7uZJNpayff6M1kqS0am0Z81
-	 SDCJKjR4l2W4gmZfUxf6U2LhZQ1AKJLrhfCW8pxo=
-X-QQ-mid: esmtpgz14t1787541275t59947f3e
-X-QQ-Originating-IP: eNkY8xE37UYiU+/GzfAo2Sg0aAF8ViH9t1KHy0KUPGY=
-Received: from localhost.localdomain ( [113.57.152.160])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 24 Aug 2026 11:14:33 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 2083949217351599276
-From: Wentao Guan <guanwentao@uniontech.com>
-To: jeremy.jean@oss.cyber.gouv.fr
-Cc: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev
-Subject: Re: [PATCH] LoongArch: kprobes: Avoid preempt count underflow without probe
-Date: Mon, 24 Aug 2026 11:14:32 +0800
-Message-Id: <20260824031432.3735027-1-guanwentao@uniontech.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20260823211822.2181816-2-Jeremy.Jean@oss.cyber.gouv.fr>
-References: <20260823211822.2181816-2-Jeremy.Jean@oss.cyber.gouv.fr>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hghfi3F3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B017B1F000E9;
+	Mon, 24 Aug 2026 07:27:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787556464;
+	bh=hpXldSP37oQmlhckItfAzwUOG6JobW41WzP0kSdLesI=;
+	h=Subject:From:To:Cc:In-Reply-To:References:Date;
+	b=Hghfi3F3hhjgblfEVPUEEPHALjTTBAgKBK8MbewWtmMLpyrYB+8Jo29/224FAiShM
+	 0SLcU5txHHDDVRBQmZbs0Km1ZqbqYphsVzR3okw73rVZzhWFSwmbPshMJk+4ij8Gwk
+	 wBlW/tVqVoMXtxSb8VWH+7r37m/WC7KmAwdV5lxYZr50+jzu/iInwaVg4PoIgWPYV+
+	 C5co0jxq4J2+miGm/bYP5+zECjtlCOUz+jUuPUU4mw1mdcjIPjf5Qqh658+sfYqF50
+	 oCrhxE7AzAMSOiSyXc8TzEpXzk6qb68sZUnHfTQBzsRUMB6GzKuCnUN8V+wutnGyd3
+	 qgVllw8rmVK3Q==
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpgz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz3a-0
-X-QQ-XMAILINFO: McoPngcDBvM5YLWTAaMggZc2oD+QhEk5T7oRXhydRBJhZ66aHHwO7rEG
-	nf+HkRj9KDe6ZJ3cEpACeNi0mh45ofWqWoVRk4m20gCyKB3aGzGC9+wjFmCOkR0JiJrNX3P
-	wrf1EoR0mhuB1N8Ez4YKrUVYlxNNg7dV3IAFA12HbsQ6eWkLVVJJaC8eyYwxxD3TKbjwQsS
-	3neGsqUqrYVl+fkidWYyB5o5GviNGvadKiarm4h0u6bU+HlSX0bTIzO8GlMDrcIE3ii+jrS
-	MbD0J8345HqaS2UhMlkJQ2m7eDJ8ViFOnanQkWCHY62PIUKCNpeq2pKEXgW3J16rI2K9ABP
-	kBeckiP1flqK3iF5YiUdC6TtyNztFCOQ4/pY8aGxRaNllRTu6TC+wW3+Fu/87N2++1rC6Ed
-	1EB5Ka2cz6chKIKz9AnheP8PmRC33U8na6Ze3rjHsTTUde2iaVgYP4ZcmHUFpeHZVd1SCPt
-	ugOBti+AxtCV1CyoGO1ROEJppRbLQ+IbAPJ0JQzu5MWVRGMlgY3vj/HW3rXQJStaJKp9Gba
-	hWDvQxAiZNj8ZsI5IcckiGmTS4tYX5rLrhYae5cCsdbDdFI5pJbuMmN5a0NJM0IFtccl+iT
-	ZbrI+Kg2CgJb6ZPR3zAeLSUwRQOeIf4Mofwa/DQPXho82QK3UnK/9JNww0SbFGLqg6qikN8
-	RBm15j+b6/lVw+mS3fW/8u+UGep4WIbXsxcmvDV0nc85wEDglcIBpykQQAU1FnQTu8plsTD
-	YiCq22ra51DoDpcrQ1GufDhi/0Fk/vfmOHJNuAyKrPhbDv7/NEnniPZ4bu95TdKW2fwRu0u
-	ZUHeIxqjLVaKIRYu9hlV1eXpdLBXeK6PZaFDi/PVKNXCm9p8N6iU6XoPEdEiY3yAPi6XzwR
-	OAFkaYaxawAU2plUmOVAy3RaufZPSYDufSR5TQiPWQnoXc+Jkn6lNQdTHCrQ09bhTD5PAaa
-	GbsmDMt5T2wjAm7kh5u4iKNV1XR4+vSUBk7//uWGtL0FduKl3Ek9HJ+yCge5IF9yPmhxC1V
-	L+f8nYimGmKJzA4r2HGkAkiUoP3OoMI9Yzr0MLmQ==
-X-QQ-XMRINFO: M/715EihBoGS47X28/vv4NpnfpeBLnr4Qg==
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [RFC V3 0/8] mm: Drop pxd_ERROR()
+From: Mike Rapoport <rppt@kernel.org>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, david@kernel.org, 
+ Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
+ Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
+ WANG Xuerui <kernel@xen0n.name>, linux-alpha@vger.kernel.org, 
+ linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+ linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
+ loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
+ linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org, 
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, 
+ linux-um@lists.infradead.org, linux-arch@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20260818040041.1891769-1-anshuman.khandual@arm.com>
+References: <20260818040041.1891769-1-anshuman.khandual@arm.com>
+Date: Mon, 24 Aug 2026 10:27:34 +0300
+Message-Id: <178755645423.3606540.14531883744138096395.b4-review@b4>
+X-Mailer: b4 0.17-dev
 
-Hello,
+On Tue, 18 Aug 2026 09:30:33 +0530, Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+> mm: Drop pxd_ERROR()
+> 
+> pxd_ERROR() macros have been provided by all platforms, which are very much
+> identical and can be dropped off completely if these pgtable printing could
+> be moved to callers in generic MM aka all pxd_clear_bad().
+> 
+> But first cleanups and re-organizations are required in some platforms that
+> are using these macros internally. Afterwards [pte|pmd|pud|p4d|pgd]_ERROR()
+> macros have been completely dropped from the entire tree.
+> 
+> [...]
 
-> @@ -275,6 +275,9 @@ bool kprobe_singlestep_handler(struct pt_regs *regs)
->  	struct kprobe_ctlblk *kcb = get_kprobe_ctlblk();
->  	unsigned long addr = instruction_pointer(regs);
->  
-> +	if (!cur)
-> +		return false;
-> +
-This patch looks good to me.
+Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-BRs
-Wentao Guan
+-- 
+Sincerely yours,
+Mike.
+
