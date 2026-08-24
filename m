@@ -1,80 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from smtpbg150.qq.com (smtpbg150.qq.com [18.132.163.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AF7B387378;
-	Mon, 24 Aug 2026 07:27:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3610B372ED7
+	for <loongarch@lists.linux.dev>; Mon, 24 Aug 2026 08:26:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.132.163.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787556473; cv=none; b=dwAl40H5B2/ejpltOqQJBNbvAh8hB5catfRFV82cOrMoP5biT9Hwm48FkFfU3MreX7QDCXlWnNNwMq4D2FpHtIopeEf6Pt0wQ+04ZznXW0RFRk6mkXqVRa0wnaq45kTbC6XdjNopE6NrPNTRfujBqAkMJ0i6dnS0dt4ZvKt3cds=
+	t=1787559972; cv=none; b=Xnoq6rnslUnBb8kmXFxhSA1UoROHt+7Kgio0EBOL5gRjWcKsx7nsFyCDn8srB8DoOSCRrb+IwDzTZkFMsdsy8r/+HlwwMUMAdL2YFq2n2wRQ9j4JiY8upxZ1Zz2vn7OnBjgpxT9HNSvHRDh69k2OH7B42NasVy9UdcnOGA7aedo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787556473; c=relaxed/simple;
-	bh=vyhOknni/uREA5s020eIPcwYgvoPFbIV6bT5YWB1Ot0=;
-	h=MIME-Version:Content-Type:Subject:From:To:Cc:In-Reply-To:
-	 References:Date:Message-Id; b=XcKCRuiKmG7x1JdZp/yaVnTJ4i+YjMO9qbMgBtw11MmXjMNYg9d8GMJl+8HDye7ytbHijGNokmVzP8UiD/AVU2bzXoLpcsQb1a72AhJ+Q09hm7ZE0V8xvHbyy1emtxT/egaIuZhqwre60V4SudRFCDFtrDntJ7s6nqAkCoVNqzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LisqMsMw; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787559972; c=relaxed/simple;
+	bh=gnMZQhlcLdQZfBgNd8RKcF9khoOP6CQEisRAnDO6COs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dahoRxKsKeyXrktMEP8oK2BfmVfmnSANVZAb3P6cXDPLhfBqGpT4M3Ln27ILLCR+tizHbK7lXFBPZldS6iwSwSe1zSHu7yRuebWK0ixSmQWPmD8NgNbe6fPRAatHEH6QYpNCC1Cs/MYZB62nhfNdhs+VEezpZ0KQyOkSdNxBNDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=hNKnQ8XF; arc=none smtp.client-ip=18.132.163.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LisqMsMw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62AFC1F00A3A;
-	Mon, 24 Aug 2026 07:27:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787556471;
-	bh=TDmng5bNiE+YiLBp1dwqj9DRhmUVXQIS/lif+VRO/fE=;
-	h=Subject:From:To:Cc:In-Reply-To:References:Date;
-	b=LisqMsMwto/kBuZ7gdbcgEJrUKMCvB31iYajSaP8VSdLEt16BVkX4Oh7MmltHH6/x
-	 lgJMQ/bHIDKxJx2zSKHsCi53faclUGyXrEjtwgO9HglPDbBjmzSGM601uHETfiupKK
-	 k9L2jhdovk2XzuRexJe8lI2Ja3+L6F1zhgtZeR57y04iBM9ZTxAg8R4/0hzvBRU/1n
-	 j/yQ64IOrcqDTuW2xREKaopx2MCLiJJbnIajCPVW+gYaQ/oYq0qHnMHsDEPBeQlGIk
-	 UAUiHCdZACNNtFoUCqb60H6mqsfCFPiGb92umTHv0AOcuZ/mH0PdZQm1D5ksQY3O+D
-	 A0IEUUHfnBZfg==
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="hNKnQ8XF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1787559949;
+	bh=czL/yE0bCmAN4P1FOK/8SGR9DFbiHNsq7jBEhme2hcA=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version;
+	b=hNKnQ8XFwA0XiPmAAcEF9WXLk7EiszGcyT6Gqsle8CtfbdtYViLzL/PM2+uVkhXNY
+	 9LePFZ7eeP9opjmrd4mT4uDlejsei4h6cmyH73XChgfFozSeIETI951kjJyVCUTIsk
+	 VwhNP6DxUozsE52+FLbNJpFOu/6v0ozKtbBy3a9A=
+X-QQ-mid: esmtpgz14t1787559928t2a1ddcc8
+X-QQ-Originating-IP: 0ANnjSMeXacE1awNZUHCmy1QCe0M/7ANd9jEhMnZya4=
+Received: from localhost.localdomain ( [113.57.152.160])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 24 Aug 2026 16:25:26 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 9794084815403460053
+EX-QQ-RecipientCnt: 7
+From: Wentao Guan <guanwentao@uniontech.com>
+To: chenhuacai@kernel.org
+Cc: kernel@xen0n.name,
+	yangtiezhu@loongson.cn,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Wentao Guan <guanwentao@uniontech.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] LoongArch: rethook: Do not save/restore percpu base register in trampoline
+Date: Mon, 24 Aug 2026 16:25:24 +0800
+Message-Id: <20260824082524.3801394-1-guanwentao@uniontech.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [RFC V3 1/8] mm: Make ptrval_to_str() generally available
-From: Mike Rapoport <rppt@kernel.org>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, david@kernel.org, 
- Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
- Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
- WANG Xuerui <kernel@xen0n.name>, linux-alpha@vger.kernel.org, 
- linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
- linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
- loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
- linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org, 
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
- linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, 
- linux-um@lists.infradead.org, linux-arch@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Lorenzo Stoakes <ljs@kernel.org>
-In-Reply-To: <20260818040041.1891769-2-anshuman.khandual@arm.com>
-References: <20260818040041.1891769-1-anshuman.khandual@arm.com>
- <20260818040041.1891769-2-anshuman.khandual@arm.com>
-Date: Mon, 24 Aug 2026 10:27:34 +0300
-Message-Id: <178755645423.3606540.12945780031100652573.b4-review@b4>
-X-Mailer: b4 0.17-dev
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtpgz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz3a-0
+X-QQ-XMAILINFO: OD6FFkn240CDDTy1/XoaQcPqU+TV9vj/uxto0uaZ6Y/MTbbfbdIbSq6Z
+	rw+hBThI2pUcEIZp61vDeFNckV9gcYdMPMR0vFjmDNoKnpJggj2Ob+p3Xugf/98t5iO3x3P
+	/Lb2yW9+McmEmi7MeNaE7UYkI66V911Atzvck1U96CpeUd76tvivnqveapJ/4RvvfTsGRR3
+	MKt8v01dXFbQtwYuD8APb4oA7jKNhNRs8rnjObNFTnIk8uWbPkvs6pxho42dZXNEfU55D0B
+	pb1eq2fdQTIMJ0PbG8rM8vdBgsDGiZtLtcun+2ZzdFMXFLbXVzIB+hItI2kld+sLsQtMxpA
+	NO6LWjEk2BTlsGyBZ+Xebt+0g+GQH1EpctoqGXjnw2fC/b/h+IkgniTOsSIa0XHSkP9lShd
+	r+RrJFx2D4A0VgHwjizKJZpmSw0Y/PmpaGY6qy7iY4r5NNlWJT/nb0L8dlY5Sx/gJ9W3xwW
+	eUWOGcp1XWjhASJi6tvXClIPHZVOCVoe208hfyBv4mGNmnye+6pohz0/J07m7T/xhIjoesV
+	fcP6bU7y2tJpO4xdmoQkzVvfNPVVfZNxjr3XyDYQ7oNgKffOEH7cuCFJdNNNUA8Us3+Z5tD
+	cBgaGf5V506t67zZ2GkpvWagzeMs07JqAz8LYBdT+h8QTIs54egld1QNn9P3ltPFVndGGXe
+	KcoMxHDN0bcY18iFD0EgAUE4oNOlKz9T8pSQfxWHOgSFM45W2eM4fXUQa3vqaol1/QuZUUj
+	Sl4Yb1Hc1rkRxJcucV+MROFxC8A5c9FJaJqfh/IEMgiYxknFBaTkIMseFsC4nykPkUsOJUM
+	/lPYmuTCMN3pt774UxBENWYv2rsuQk/i+VtUrfrdPrNEcoFXFQh8wUu0h5az23YFCeBe5wP
+	PM/A3RtG37xptML24+aZtYp95IkMWg+ennB7plL7x/apJOe1xFIkDkIXwB2wx5jf2l3espf
+	xeYEH6xrkFf5iDbIE6qXGAsKYKIr4q/6rK4trvR5RWTtlvEy0XpQYnbVW9PFxgxDkER+Peb
+	xfiRZPDjblgbXIvRqZojJq10h1lQVLbGXUpln0GnLrg9r3JDl3UGMBf3pLmTO4wZFAo6I7Z
+	9kROb7gVcJP
+X-QQ-XMRINFO: MPJ6Tf5t3I/ylTmHUqvI8+Wpn+Gzalws3A==
+X-QQ-RECHKSPAM: 0
 
-> Move ptrval_to_str() inside a header thus making the helper more generally
-> available for new users which are being added later. While here, also move
-> another related string size macro PTVAL_STR_MAX inside the header as well.
-> 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: David Hildenbrand <david@kernel.org>
-> Cc: Lorenzo Stoakes <ljs@kernel.org>
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+The rethook trampoline saves $r21 ($u0), the percpu base, into its
+frame at entry and restores it at exit. In between,
+rethook_trampoline_handler() may schedule via preempt_enable_notrace();
+if the task migrates to another CPU, the frame's $r21 names the old
+CPU's percpu base, and restoring it poisons $r21 on the new CPU. Until
+the next user->kernel transition heals $r21, this_cpu_*() accesses
+(runqueues, RCU per-CPU data, timer tick programming, FPU ownership)
+hit the wrong CPU's percpu area.
 
-I agree with David, include/linux/pgtable.h is better.
+Under kretprobe-heavy preemptible load this corrupts scheduler and
+timer state: scheduling-while-atomic splats, wrong-CPU RCU warnings,
+WARN_ON_ONCE(rq != this_rq()) in nohz_balance_exit_idle(), and CPUs
+parking in the idle loop with the constant timer never re-armed (hard
+lockup). Reproduces on a Loongson-3A6000 with kretprobes on VFS paths
+plus heavy file churn (OS install / unsquashfs).
 
-Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+By convention $r21 always holds the current CPU's percpu base in kernel
+mode: exception entries reload it only when coming from user mode, and
+RESTORE_SOME() restores it only when returning to user mode; the
+context-switch path never writes it. The live $r21 at trampoline exit
+is therefore already correct, and nothing in between can legitimately
+change it (kernel C code cannot write a global register variable). The
+same flaw existed in the pre-rethook kretprobe trampoline since v6.3;
+it was carried over when rethook replaced it. Drop both the save and
+the restore.
 
+Fixes: 3f5536860086d ("LoongArch: Add kretprobes support")
+Cc: stable@vger.kernel.org # v6.5+
+Assisted-by: Kimi:Kimi-K3 # debug and root-cause analysis
+Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
+---
+ arch/loongarch/kernel/rethook_trampoline.S | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/arch/loongarch/kernel/rethook_trampoline.S b/arch/loongarch/kernel/rethook_trampoline.S
+index 2e009fbea53f2..5efe0268b3143 100644
+--- a/arch/loongarch/kernel/rethook_trampoline.S
++++ b/arch/loongarch/kernel/rethook_trampoline.S
+@@ -24,7 +24,12 @@
+ 	cfi_st	t6, PT_R18
+ 	cfi_st	t7, PT_R19
+ 	cfi_st	t8, PT_R20
+-	cfi_st	u0, PT_R21
++	/*
++	 * $r21 ($u0, percpu base) is deliberately not saved/restored: in
++	 * kernel mode it must always hold the current CPU's percpu base,
++	 * and restoring it from the frame would poison it with the old
++	 * CPU's base if the handler scheduled and we migrated.
++	 */
+ 	cfi_st	fp, PT_R22
+ 	cfi_st	s0, PT_R23
+ 	cfi_st	s1, PT_R24
+@@ -59,7 +64,7 @@
+ 	cfi_ld	t6, PT_R18
+ 	cfi_ld	t7, PT_R19
+ 	cfi_ld	t8, PT_R20
+-	cfi_ld	u0, PT_R21
++	/* $r21 not restored; see comment in save_all_base_regs. */
+ 	cfi_ld	fp, PT_R22
+ 	cfi_ld	s0, PT_R23
+ 	cfi_ld	s1, PT_R24
 -- 
-Sincerely yours,
-Mike.
-
+2.30.2
