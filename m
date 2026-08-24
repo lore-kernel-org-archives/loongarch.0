@@ -1,139 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF4B3F54A7
-	for <loongarch@lists.linux.dev>; Mon, 24 Aug 2026 09:44:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAF284014BB
+	for <loongarch@lists.linux.dev>; Mon, 24 Aug 2026 09:52:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787564680; cv=none; b=fxqtBYQE0qjgv4qEPjYC1wp0CzsqgYq3dyc0M8YsHbp7FvoC4yxf+Nr/rbRwdzaopZ6iPyGXTVnQeLHAt/49udfG5W4tSdEvCgjAoBLLrmu5+klRpXdmxtivyqSYfa9bXzm90x3gtseG+H43UNe1ZF6EtebsbrJjREQFTagYB9w=
+	t=1787565166; cv=none; b=eeOewKIRRliWV1nrioh6NstNS83EC4ArELDsXN1oPDEmRCM9UcGFRBe4wOb2s8iT5l6jRp3LK/fdIy+p/CyKqy2XI1kA0vi3WukHkqrIJx9+zvF7GlmkbXAHlxllcGekKiBoSHkxegabV5+HM/U/SXeTDSCBRyd/xH4z/yl6+0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787564680; c=relaxed/simple;
-	bh=LT3f8R4EhrNeK9o9qYtC2RxZDSoShR4tG/NsoTDCpq0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oWaFFrnMsFvtYnFDyOXiO6gfyhiqzf9Yu52RqkJA4VTu6JV3xsIAlw2puBAnmoHqKT/8BIJNf90AA/9StfWUNa9FKL+/e2jqHE8lRB65dEjQVPivpjw9rhBTiiSsvWpDHxid5YVNqDOwVCFbO4aY68/P/cH3e1EIuue5jD6/CIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FesdooMA; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787565166; c=relaxed/simple;
+	bh=4T2SeEcNM3Fvs5U2ae3/QSwrqKwMqIhFhY3byRuBJVo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=qn4P5lMJI2I23jOw9FutfbKjAjRxvb0R2rFlChgkbpmbvOzwjUe5L9LwTtIxduY4IFRyrSvWIijA2J3lpXGWSdV47oLEl6QBjJFVugpL1jNu2vRxOkJ+FnaPaxp3INiSRs8E2NPUSoXJt3eEaYkN0KFvWa9dhqCIJWHo7JydJlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=lTKcTwKX; arc=none smtp.client-ip=54.243.244.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FesdooMA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC0DF1F00AC4
-	for <loongarch@lists.linux.dev>; Mon, 24 Aug 2026 09:44:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787564676;
-	bh=WG5UuXNQ5Bw4+uoqYB0cYhO/66ndwt+J+PmLGUGsLkU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=FesdooMAINCdqFFP0VjP3ZGuxwWvkyyHwfZritUZT9/zJlp032waMfxa0+hp+ZbzE
-	 gUyfaHbTsL0WHZENFX9pALETOvX1x14z1pERlp3uJgdoN3O0F0hn6NXgq5FElolJVS
-	 k7y5BX2xLTuHyNZU6kEumqCVUbA9u4PIT1QPqh6Ar0XiftPOKDF/GA20F9ItPHOHG1
-	 /dT1plTsH91BEVNhkuWAL94wmYvPEYBdRIXW8eccqHna0/SwsMsdn5B1w7AXernQvH
-	 AVQLGY0LzZC24FQMkBkK/JpGxbbqdlYzYjerhQ8/9E9hZnGyJdWKa51M49jkUc40Q2
-	 9PXR1KFPWt4VA==
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-c15cf78d1a2so364815066b.1
-        for <loongarch@lists.linux.dev>; Mon, 24 Aug 2026 02:44:36 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RpuoIgc6ZStSGZpLQm4z6yX6OZkS15B30IOKsyYUujhyCxQQsb0FzU/60dpvjBzrcl9gFc9hGOR7Zc=@lists.linux.dev
-X-Gm-Message-State: AFuF++kWc4YyzWjrq8xrQYYPshBPwVAgVK1zYv7dcvVh3R/uKSuXlj4c
-	q40+pega5GY2tYp+FjbKsmugv8dEgjbpMyOuuj9vRsS4qxo2mNmvsv11qJV3GhiJ81JCAhN+a7X
-	WH1c/CjEZnkRrINIiSOT8mV5UavV2DT8=
-X-Received: by 2002:a17:906:9c8a:b0:c21:792:8257 with SMTP id
- a640c23a62f3a-c246a5f67e6mr2786311766b.15.1787564675379; Mon, 24 Aug 2026
- 02:44:35 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="lTKcTwKX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1787565139;
+	bh=4T2SeEcNM3Fvs5U2ae3/QSwrqKwMqIhFhY3byRuBJVo=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version;
+	b=lTKcTwKXvlSBvITQHH3PuBbz3Ub35ZVC8wWpr+knCmOazUwKpxRWXbcnhdm19T8a1
+	 7xiX076OEZV1ARLYJBpKaJA+Bo91GIkJ+PXejm+HlqlrKQiBCETILuBEqOZWLBvLKN
+	 XIRsljjtfLdwg5XQrZu5mp0dEttWUk7owyHarRx0=
+X-QQ-mid: zesmtpgz7t1787565122t09f55251
+X-QQ-Originating-IP: DbrU3YsBaS1OmWF6eJI78a5enNSNcwdR6bL+gG42KOs=
+Received: from localhost.localdomain ( [113.57.152.160])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 24 Aug 2026 17:52:00 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 2256383791830669490
+EX-QQ-RecipientCnt: 7
+From: Wentao Guan <guanwentao@uniontech.com>
+To: chenhuacai@kernel.org
+Cc: guanwentao@uniontech.com,
+	kernel@xen0n.name,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	stable@vger.kernel.org,
+	yangtiezhu@loongson.cn
+Subject: Re: [PATCH v2] LoongArch: rethook: Do not restore percpu base register in trampoline
+Date: Mon, 24 Aug 2026 17:51:59 +0800
+Message-Id: <20260824095159.3822966-1-guanwentao@uniontech.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <CAAhV-H7dO4V_McOvX-KyPXEwGHvu8n1inMcdVFyKLof7_Qfh3A@mail.gmail.com>
+References: <CAAhV-H7dO4V_McOvX-KyPXEwGHvu8n1inMcdVFyKLof7_Qfh3A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260824093348.3814991-1-guanwentao@uniontech.com>
-In-Reply-To: <20260824093348.3814991-1-guanwentao@uniontech.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 24 Aug 2026 17:45:02 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7dO4V_McOvX-KyPXEwGHvu8n1inMcdVFyKLof7_Qfh3A@mail.gmail.com>
-X-Gm-Features: AcwNN1WY4Y2F3GnJSwlJflZVyhCOGYQ2VT_50CElsxSA0lflAqKg3a1cmmaaNXM
-Message-ID: <CAAhV-H7dO4V_McOvX-KyPXEwGHvu8n1inMcdVFyKLof7_Qfh3A@mail.gmail.com>
-Subject: Re: [PATCH v2] LoongArch: rethook: Do not restore percpu base
- register in trampoline
-To: Wentao Guan <guanwentao@uniontech.com>
-Cc: kernel@xen0n.name, yangtiezhu@loongson.cn, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpgz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz3a-0
+X-QQ-XMAILINFO: M7cmwSx0OcrMNn2nhWqpS3yT8tpxb1jGTQK/3/rfmUkm4CPtyREpCK9a
+	wE3kcmoWb4w7FFHWYl9yV+BVo1nMgcWUNyeZXLjLRKgP9YMJuMy221bpbYzEedEix8Dexxw
+	3PqWvimEyAHwJdW0caPbx96QTpmO7Ei46O1B1GeV5wiuc7IqL8Dgfqe6iMByKUhn+Okjj5Y
+	nRWWAEnKE+UFlOFEzY8rznzfwFRTe3JQrca8xdePdAqU7YHZi4x8LIhohDEfPib/V4he2ra
+	jUtyIQV+hz7zPOSMjIqK85Kv4wMdYHoVAadbKD79h6dfuTmbENp5RNgmMTH/caR8x8lYFmK
+	7j4Uzusfj8O1KTMOM36h+6VFzoL43zLsy7ckKItOMK5seV+byYJxMV0hQrKNwLqvfTdMV2r
+	4sFI48lAbkghcaHs5UZrlxTJSYOTFtQ0/r18vioxGOqPnllpZpvEDPI5jLAD6BU5TrKIbOO
+	NzqQY02f01Ob/QLwqWwGbI82q695Lyf0Gat4hS82lXgTD4VZsqkgVUIeVJPESIQJEc6tEh4
+	hX7sHJO8cLpUDm+HCfSbJvfhAOYFl00o4U5GfymYl0YdKdJ/tOXr07m1mb7RLcJJFUi9jr4
+	XyMGSQinrgBLqyt/rLe4Em7yYFrIuBD2Vw6Tzhn01SuBgzLMrPGOmsnON9fi2r4KWlNHI/K
+	5TqfC4RJ5TqTj/etnxjDtJmd7Ym1ROHUSa/Dclz/uKzUlTzgwl2AT+QoSiEuPJMSF+6JXv/
+	VksWaJJyQfOHvRJeZ70VKNGGkRPytKUsFZv6NMzDv74Hc4XbfQsHFtq8CmVZC+fHS07KR3Q
+	q5XlgY/meVBWuA/+yu5zrSrDL5BwIhYmAlBtxCRFJ7MVebXmJ3t2c1n/4gWHmtZe8RF3siG
+	DGjLLHPtOFKuw9inkO/aV2XTQzl9u7FkOJVWKCf66OGdcdxFaBLAujGGlMZZsASj0bN0OuX
+	HYYYOS8I/PPBhPSnSLvBnPkUW+OWLfEiZbANBjuoeUY2xP4B+nSmFmvNJ8qswPFm2Y2i28a
+	WG+PYsl6+91Rqx21zYFlImyDLfCYEyJ7DcZfdQS4gvgvQdnfmMYDWpJqMxfzzbc9xyAo6Od
+	fWqC/7OdDIykX+G6NDf3Sxjob43lSWfTGtY3ROkkGRUH33iXE7ufO5N3mZ9zgntuA==
+X-QQ-XMRINFO: NS+P29fieYNwqS3WCnRCOn9D1NpZuCnCRA==
+X-QQ-RECHKSPAM: 0
 
-Hi, Wentao,
+> > ---
+> > changelog v2:
+> > according sashiko report, keep cfi_st u0, PT_R21
+> > Link: https://sashiko.dev/#/patchset/20260824082524.3801394-1-guanwentao%40uniontech.com
+> I don't think AI is correct here, if "leaking" a random stack value is
+> unacceptable, then "leaking" $r21 is better?
 
-On Mon, Aug 24, 2026 at 5:34=E2=80=AFPM Wentao Guan <guanwentao@uniontech.c=
-om> wrote:
->
-> The rethook trampoline saves $r21 ($u0), the percpu base, into its
-> frame at entry and restores it at exit. In between,
-> rethook_trampoline_handler() may schedule via preempt_enable_notrace();
-> if the task migrates to another CPU, the frame's $r21 names the old
-> CPU's percpu base, and restoring it poisons $r21 on the new CPU. Until
-> the next user->kernel transition heals $r21, this_cpu_*() accesses
-> (runqueues, RCU per-CPU data, timer tick programming, FPU ownership)
-> hit the wrong CPU's percpu area.
->
-> Under kretprobe-heavy preemptible load this corrupts scheduler and
-> timer state: scheduling-while-atomic splats, wrong-CPU RCU warnings,
-> WARN_ON_ONCE(rq !=3D this_rq()) in nohz_balance_exit_idle(), and CPUs
-> parking in the idle loop with the constant timer never re-armed (hard
-> lockup). Reproduces on a Loongson-3A6000 with kretprobes on VFS paths
-> plus heavy file churn (OS install / unsquashfs).
->
-> By convention $r21 always holds the current CPU's percpu base in kernel
-> mode: exception entries reload it only when coming from user mode, and
-> RESTORE_SOME() restores it only when returning to user mode; the
-> context-switch path never writes it. The live $r21 at trampoline exit
-> is therefore already correct, and nothing in between can legitimately
-> change it (kernel C code cannot write a global register variable).
-> Drop the restore; keep the save so that the pt_regs view handed to
-> handlers stays fully initialized.
->
-> The same flaw existed in the pre-rethook kretprobe trampoline since
-> v6.3; it was carried over when rethook replaced it.
->
-> Fixes: 3f5536860086d ("LoongArch: Add kretprobes support")
-> Cc: stable@vger.kernel.org # v6.5+
-> Assisted-by: Kimi:Kimi-K3 # debug and root-cause analysis
-> Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
-> ---
-> changelog v2:
-> according sashiko report, keep cfi_st u0, PT_R21
-> Link: https://sashiko.dev/#/patchset/20260824082524.3801394-1-guanwentao%=
-40uniontech.com
-I don't think AI is correct here, if "leaking" a random stack value is
-unacceptable, then "leaking" $r21 is better?
+Right, in the place are secret to unprivileged users, so delete the pair is tidy.
 
-Huacai
-
->
-> v1 link:
-> https://lore.kernel.org/loongarch/20260824082524.3801394-1-guanwentao@uni=
-ontech.com/T/#u
-> ---
-> ---
->  arch/loongarch/kernel/rethook_trampoline.S | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/loongarch/kernel/rethook_trampoline.S b/arch/loongarch/=
-kernel/rethook_trampoline.S
-> index 2e009fbea53f2..94adead8faa5c 100644
-> --- a/arch/loongarch/kernel/rethook_trampoline.S
-> +++ b/arch/loongarch/kernel/rethook_trampoline.S
-> @@ -59,7 +59,14 @@
->         cfi_ld  t6, PT_R18
->         cfi_ld  t7, PT_R19
->         cfi_ld  t8, PT_R20
-> -       cfi_ld  u0, PT_R21
-> +       /*
-> +        * $r21 ($u0, percpu base) is deliberately not restored: in kerne=
-l
-> +        * mode it must always hold the current CPU's percpu base, and
-> +        * restoring it from the frame would poison it with the old CPU's
-> +        * base if the handler scheduled and we migrated.  The save side
-> +        * stays so that the pt_regs view handed to handlers remains full=
-y
-> +        * initialized.
-> +        */
->         cfi_ld  fp, PT_R22
->         cfi_ld  s0, PT_R23
->         cfi_ld  s1, PT_R24
-> --
-> 2.30.2
+BRs
+Wentao Guan
