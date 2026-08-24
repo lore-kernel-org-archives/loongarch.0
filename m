@@ -1,91 +1,92 @@
-Received: from smtp-usa2.onexmail.com (smtp-usa2.onexmail.com [35.173.142.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8AB30E821
-	for <loongarch@lists.linux.dev>; Mon, 24 Aug 2026 10:16:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.173.142.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 008FC34B19F;
+	Mon, 24 Aug 2026 14:07:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787566598; cv=none; b=aBDDVh7z5ix2YK2n/W8U6JU6UjxFMAh+0BnVtRyB3A/+JHUQ7OVoKY+b2Ic19mA2IeY+c6VVwAvLzJYWyvtVJZ8GPoKObm4NK9hpG/u321ir0JTv1xiKIsMB3NcRce13/WmEzDSom0nN1BYonqDcqrrfkV+JqF5vwnAvWmLXiS8=
+	t=1787580448; cv=none; b=QbH1WHR/Vp9MH31xxnpYjWVt8pNK53K3P6MeD0XQ9Eb84tVV8lAlMF1T85WseIEzDr3w1D3BhC5W0kjNtJXhcrSAlhuIG8nzjFu7BM2vTEKvb4Jg6X87Pfa9VKsmYt5aLnuvPhhjXvEDZKR/mMgNAoopRhxJKgO5WORA5Skp8q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787566598; c=relaxed/simple;
-	bh=8TEDn0L9YJc81TjqcHlJYZbCeP9SnSOzlsd8ZIQVikU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=r+rYT54Rm4DBC7cVsuUT6vFCDNAhRHVraAa0hXMG5unV1DEK2jY70MXx02aN9q8K8xVq0utgzHyW5vKaXeStpsQAzJVJ1dcOrIqeG+xfFh5N0BWMJLFKuyxkpKSrFuMUTndspBk8CPlFhh2ujp66BErMbXI1RgxqBfCkFn10jp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=hMbjnnov; arc=none smtp.client-ip=35.173.142.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1787580448; c=relaxed/simple;
+	bh=tQbR+bEVCH1buLfGVABqjtYh181VbY5gEjSmEhFKiUA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cBQN0WwEF/bxRFJMr1HFzXsYDTagpxqyfwGGLQj75obrTEyuoM9bzmKLro/VemlIlkC77kxh42nyEGUguL54whptIfyJcFe9yoTOd89qX87dCF1FDEefHD2rh8BNfyi6nZVrbUWREqMGjysJ1jUfEl/FmvBYxh1orXHxENNvaww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TOv+PwCG; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="hMbjnnov"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1787566550;
-	bh=8TEDn0L9YJc81TjqcHlJYZbCeP9SnSOzlsd8ZIQVikU=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=hMbjnnovXuqUXIrPS+U0fmJb5QaVsqp8KpRNyRzNYOhBIo3DR61SJlaH7Uckj35gO
-	 vEuHh7OYMzDoep2OlHp3AB1ykEcb4TgyytgNEmxqMAvowNs9t8pwI+CFHj8b+ZN4oS
-	 4je03shnjFuTyxqifcSxBQSTBf1dxcq/e4/rkZj4=
-X-QQ-mid: zesmtpsz4t1787566533tf085f725
-X-QQ-Originating-IP: GsJl8b/moBOILElwvEn5lFB1pCOHyvYgMWRUTSbLMxU=
-Received: from localhost.localdomain ( [113.57.152.160])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 24 Aug 2026 18:15:31 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 1917715364105345114
-EX-QQ-RecipientCnt: 7
-From: Wentao Guan <guanwentao@uniontech.com>
-To: chenhuacai@kernel.org
-Cc: guanwentao@uniontech.com,
-	kernel@xen0n.name,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	stable@vger.kernel.org,
-	yangtiezhu@loongson.cn
-Subject: Re: [PATCH v2] LoongArch: rethook: Do not restore percpu base register in trampoline
-Date: Mon, 24 Aug 2026 18:15:30 +0800
-Message-Id: <20260824101530.3827834-1-guanwentao@uniontech.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <CAAhV-H7dO4V_McOvX-KyPXEwGHvu8n1inMcdVFyKLof7_Qfh3A@mail.gmail.com>
-References: <CAAhV-H7dO4V_McOvX-KyPXEwGHvu8n1inMcdVFyKLof7_Qfh3A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TOv+PwCG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3EE71F000E9;
+	Mon, 24 Aug 2026 14:07:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787580446;
+	bh=my9GYhoB5pagzF6M6ZagB0B0WZqIwM9tl/SdPaf+pZk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=TOv+PwCGfXFC332KGFB9T7dQXJCrhXdMJFRpEQ9/TE3Vx6NIAY2MKQP0Iznx7qRcz
+	 L2MrLS5j4meQvz+/oOSbDMYImL0w/a+KlTtqGfu3JwN/vioyhG8u2vZ1p45PJIb/Ga
+	 2njsOlOPXwa4SCTgrRl3GWIu3eDt+mXQ/BLl+ocbChhTFt363vDUHPRQpA9rHDkdG/
+	 8j3imGMbxGZ2S/VjpPB98mGjco2CXiZHRzysGH5l3+mQoZqDUN5dAfXyj51k8QHx8J
+	 IqGM0pZEDWjWBuH2ICNqxRnUPl1xf8qU0LuX04/D7Zj0qES6hFUgP2PlHWXXY84ZeU
+	 o+MyUMGi/9STA==
+Date: Mon, 24 Aug 2026 15:07:19 +0100
+From: Will Deacon <will@kernel.org>
+To: Mukesh Pilaniya <mpilaniy@redhat.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>, Tao Liu <ltao@redhat.com>,
+	Philipp Rudo <prudo@redhat.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+	kexec@lists.infradead.org, Bradley Morgan <include@grrlz.net>
+Subject: Re: [PATCH v3 1/2] kexec: return -ENOEXEC from image probe functions
+ on mismatch
+Message-ID: <aoxQFxuzZ1AHmM8d@willie-the-truck>
+References: <20260821-mpilaniy-v3-0-76b355399d2e@redhat.com>
+ <20260821-mpilaniy-v3-1-76b355399d2e@redhat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz3a-0
-X-QQ-XMAILINFO: OTnfJ5NUztydNjUc3qG8ywIbebaoyu/UtY+e9cX9QWm+C4PBoR0SEcSq
-	/HJXi+h1TvM8FwGMu/bxJERphCz+2+CkGpUrh0zmXVkhchRTN951MuPldx3sGzjPppxqnq+
-	p3qHUf0oL/5LzsLJHv44XpjBVtaVXCJNutj9GXBmr4Nx2JJYDOGXLSEuyu7TLs2A3/JjkhP
-	NiUJWN/bNdRR5rLXBegQbVqDblcnpER1lcamOkXQZVePL7jfyAdhllYO2GYcz9lRpb/yd1n
-	Kir9q77fQa0XvaupS5AtqPJJgaUGnK4UhoQmnDcKJZWSxZ5TnJGj/8dYEP47yDbfIKpTiZQ
-	8EHnMSfQeWksbKdKxRwuIIFErM7vCiBiFdq2+O9SXtjaaU4p4/LpKDwx7jx0G0xEIOUvela
-	aCSs9Xu+xplcHZHQdvmalWrQanTYSE9ibZkc3pGrJCKuasBGxGVUEtUHuHTz7aWEq8WbKg/
-	3nBjrL5IGNPSLLsDOFwWKxFmos3LjLj7441BLAiCN+V2s39xlYPylj1qZwvU3PrH10+h7CI
-	m2YV3sdQZ7jnzu+M5tVozvwoNwztsvGbz/3epYJaWTxGmISWjc/+LDt9MqdDHyUqDsRAtGm
-	S6xYZsoOWvhlJIXdmd+x41XKiwTZAbhPVWvdZS9EgEUE0E26ZCBqw79wNszNiTOPUq6EzEE
-	EBnqd2278wiLW3erDreemC2qcOKomnk/fOTw9VHmiuQaSR1DaipZJs7sSOIo2ZAYYCjhlTP
-	mPtBUzApDxyh6rx3SA8hhZdsPgeR3JiZFVBVfqMaQ7FQ9IEwtWyT4E5+5e1ctry9fpWxp7b
-	9FZXeNhz1SWR95UPUDj8eebqyGmIPvDS5KTZjnI6L73BljCyohc9EtCR9IVyHRwmLZfN0Ty
-	0JZr0yJWg5eHjRvJO64ATwA3Jl+yCMBINuo5PClGzmnEQy5TWdWQHrXjsgBN6ROSeIvgxDT
-	ohFvR0wBJ6YjOxhC3c1FgwV+4nYBwnflDCxnxbPDSOB9uP0V6qDlPGJ13BNv5iQpCIVs5b6
-	FGa7e6fm2A9yEA/o9vmoOTUs3t7ZtswdyIxuNSlpA5A8tcPqylz16LJtYDwDlwpw2AV/dsN
-	E8C2uqkcfXmTDfMpZ85p+kcMJopkZOLrqma496fAMWEwByVBI0yazFncMia9yKVhehUFgS3
-	nK6rGAnYhMLQUbweHGOOThbBH9a1Dh2yjK1d
-X-QQ-XMRINFO: M/715EihBoGS47X28/vv4NpnfpeBLnr4Qg==
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260821-mpilaniy-v3-1-76b355399d2e@redhat.com>
 
-> > ---
-> > changelog v2:
-> > according sashiko report, keep cfi_st u0, PT_R21
-> > Link: https://sashiko.dev/#/patchset/20260824082524.3801394-1-guanwentao%40uniontech.com
-> I don't think AI is correct here, if "leaking" a random stack value is
-> unacceptable, then "leaking" $r21 is better?
+On Fri, Aug 21, 2026 at 07:19:57PM +0530, Mukesh Pilaniya wrote:
+> Several kexec_file_load() image probe functions return -EINVAL when
+> they do not recognize the image format.  A probe function that rejects
+> an image should return -ENOEXEC to indicate that the image is not a
+> recognized executable format.  -EINVAL implies a problem with the
+> syscall parameters, not with image recognition.
+> 
+> kexec_image_probe_default() iterates through registered loaders and
+> returns the last probe's error code to the caller.  That error
+> propagates as the kexec_file_load() return value to userspace.
+> Returning -EINVAL from a probe when no loader matches is semantically
+> incorrect and misleads userspace about the nature of the failure.
+> 
+> Return -ENOEXEC from all probe functions and their helpers when the
+> image format is not recognized.
+> 
+> Signed-off-by: Mukesh Pilaniya <mpilaniy@redhat.com>
+> Reviewed-by: Philipp Rudo <prudo@redhat.com>
+> Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
+> Reviewed-by: Bradley Morgan <include@grrlz.net>
+> ---
+>  arch/arm64/kernel/kexec_image.c   | 4 ++--
+>  arch/loongarch/kernel/kexec_efi.c | 4 ++--
+>  arch/riscv/kernel/kexec_image.c   | 4 ++--
+>  kernel/kexec_elf.c                | 4 ++--
+>  4 files changed, 8 insertions(+), 8 deletions(-)
 
-So, 1. v3a back to dropping both or 2. v3b keeping the frame deterministic
-via st.d zero, sp, PT_R21 or 3. v3c keep store RT_R21 for just a completeness
-stack image?
+Hmm, so after this patch, are there actually any implementations of .probe()
+that return anything other than 0 or -ENOEXEC? I couldn't spot any after
+a quick look.
 
-BRs
-Wentao Guan
+Will
