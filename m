@@ -1,133 +1,86 @@
-Received: from confino.investici.org (confino.investici.org [93.190.126.19])
+Received: from smtpbgbr2.qq.com (smtpbgbr2.qq.com [54.207.22.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67675389105
-	for <loongarch@lists.linux.dev>; Sun, 23 Aug 2026 21:26:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.190.126.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21F312F8E95
+	for <loongarch@lists.linux.dev>; Mon, 24 Aug 2026 03:15:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.22.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787520370; cv=none; b=s/Wzdxq3uph5ubYGaIUFRXvDs03iVjhXi1gpRA+bbhv3ScnDq5rMfGVrRQlRd1u1iYhBMRGSmPqUCUskmx9+ReqP63R0wH34vWE6M8QUJb+AkWHfLfFigcoaOzjBmY+bIR+beL6UZk4CwI1bPd1i0dzpwrW5lNbpPhZ6ma9lKZE=
+	t=1787541313; cv=none; b=PijjE7SjnJf6/66XGUDdeyOTxlLNtZFUMn8sbXCsc0CY8G5RrCMZCpA2qU+o1BmmFxYc/mIoaoJKaxRfN6kyKw3rm1Ob/6uVz2DHM0YF56TMNjMxHK8HdqMKmGNeYAGqDt+dHN3THHjV/69dL0THAhPYmjXNs++Y4mmYcXfeuTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787520370; c=relaxed/simple;
-	bh=wKzJWn82fUMqa0HfybNnuPWnwaOuobZfx7MwhVm/d1Q=;
-	h=Date:From:To:CC:Subject:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=UW7CE3hckY/m7zZO41jix+jdivEksNm2xPUTXZ4qJAM2BecBb2xBgQkPrxEer/6od/Hj55tRrtNq7ApH49DF9pCHzxOco8V4LJ48CCy/wdVAdB4KC4De0UuPbsllu0IlxXmlz4MDJk0ac2RSSZjSAqyrmtqmnpHZ0QUtGlaF1/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grrlz.net; spf=pass smtp.mailfrom=grrlz.net; dkim=pass (1024-bit key) header.d=grrlz.net header.i=@grrlz.net header.b=YlBQNxV7; arc=none smtp.client-ip=93.190.126.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grrlz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=grrlz.net
+	s=arc-20240116; t=1787541313; c=relaxed/simple;
+	bh=bUBx9kep0c8rrFUZFSUhdpaCpY4MKOUpnISPnWGkdqo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=c2nJ/4g7oJUz2ve/fsVKXgVER6FHSIAk8K0SqOufiO+IAuPmiBYtHds0zFvOMk18cSY6vCW+560SvV46FEvr6+xIo0mYFtoMSoagqW/az93TzpuH03UuZfWdZIqcYbjQ8yK2zW6aN3j6XbB9OBXRrGzAq2egxOKhC31j2guiHpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=mlSImj7e; arc=none smtp.client-ip=54.207.22.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=grrlz.net header.i=@grrlz.net header.b="YlBQNxV7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=grrlz.net;
-	s=stigmate; t=1787520363;
-	bh=hrch7mC6LGFik4KCSe8XV/PJ0NT7/d+/jraNd/COJOk=;
-	h=Date:From:To:CC:Subject:In-Reply-To:From;
-	b=YlBQNxV7TjxH5YQv7QppvdgiV6twuWpp9GTuzPNjO+6T8Lorww6af+rtQfJ457g7o
-	 YrLv9RhKe3BdAaHjXKo/GSyaG7hegyI/oqgRQ0R0Ff2glnWYHtVfzprCJ9jCpqk4Qc
-	 X/tH9b51rx2KvIlUzT/6oYhWZ6yWdUs3gtSWe+yI=
-Received: from mx1.investici.org (unknown [127.0.0.1])
-	by confino.investici.org (Postfix) with ESMTP id 4hSnCb6D9xz10x1;
-	Sun, 23 Aug 2026 21:26:03 +0000 (UTC)
-Received: by mx1.investici.org (Postfix) id 4hSnCb1zssz10wc;
-	Sun, 23 Aug 2026 21:26:03 +0000 (UTC)
-Date: Sun, 23 Aug 2026 22:26:03 +0100
-From: Bradley Morgan <include@grrlz.net>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="mlSImj7e"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1787541283;
+	bh=ei39FOg6slhKhmlpXJOSXnadnaEJRs2+EIDQ/kn99vw=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version;
+	b=mlSImj7eANpAIl+PZPhXgl9jzDar9T+KTY+q1k0gM1ywAIgWVOxBNLGHES858+FHR
+	 tL2/SE9/X5ULD/QPS1biHqGtbjqi9TRECqxtAqMqlSO7uZJNpayff6M1kqS0am0Z81
+	 SDCJKjR4l2W4gmZfUxf6U2LhZQ1AKJLrhfCW8pxo=
+X-QQ-mid: esmtpgz14t1787541275t59947f3e
+X-QQ-Originating-IP: eNkY8xE37UYiU+/GzfAo2Sg0aAF8ViH9t1KHy0KUPGY=
+Received: from localhost.localdomain ( [113.57.152.160])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 24 Aug 2026 11:14:33 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 2083949217351599276
+From: Wentao Guan <guanwentao@uniontech.com>
 To: jeremy.jean@oss.cyber.gouv.fr
-CC: chenhuacai@kernel.org, kernel@xen0n.name, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_LoongArch=3A_kprobes=3A_Avoid?=
- =?US-ASCII?Q?_preempt_count_underflow_without_probe?=
+Cc: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: Re: [PATCH] LoongArch: kprobes: Avoid preempt count underflow without probe
+Date: Mon, 24 Aug 2026 11:14:32 +0800
+Message-Id: <20260824031432.3735027-1-guanwentao@uniontech.com>
+X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20260823211822.2181816-2-Jeremy.Jean@oss.cyber.gouv.fr>
-Message-ID: <C83E8B31-D9CB-4BB7-9DA6-34F789BDCE48@grrlz.net>
+References: <20260823211822.2181816-2-Jeremy.Jean@oss.cyber.gouv.fr>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
 Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtpgz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz3a-0
+X-QQ-XMAILINFO: McoPngcDBvM5YLWTAaMggZc2oD+QhEk5T7oRXhydRBJhZ66aHHwO7rEG
+	nf+HkRj9KDe6ZJ3cEpACeNi0mh45ofWqWoVRk4m20gCyKB3aGzGC9+wjFmCOkR0JiJrNX3P
+	wrf1EoR0mhuB1N8Ez4YKrUVYlxNNg7dV3IAFA12HbsQ6eWkLVVJJaC8eyYwxxD3TKbjwQsS
+	3neGsqUqrYVl+fkidWYyB5o5GviNGvadKiarm4h0u6bU+HlSX0bTIzO8GlMDrcIE3ii+jrS
+	MbD0J8345HqaS2UhMlkJQ2m7eDJ8ViFOnanQkWCHY62PIUKCNpeq2pKEXgW3J16rI2K9ABP
+	kBeckiP1flqK3iF5YiUdC6TtyNztFCOQ4/pY8aGxRaNllRTu6TC+wW3+Fu/87N2++1rC6Ed
+	1EB5Ka2cz6chKIKz9AnheP8PmRC33U8na6Ze3rjHsTTUde2iaVgYP4ZcmHUFpeHZVd1SCPt
+	ugOBti+AxtCV1CyoGO1ROEJppRbLQ+IbAPJ0JQzu5MWVRGMlgY3vj/HW3rXQJStaJKp9Gba
+	hWDvQxAiZNj8ZsI5IcckiGmTS4tYX5rLrhYae5cCsdbDdFI5pJbuMmN5a0NJM0IFtccl+iT
+	ZbrI+Kg2CgJb6ZPR3zAeLSUwRQOeIf4Mofwa/DQPXho82QK3UnK/9JNww0SbFGLqg6qikN8
+	RBm15j+b6/lVw+mS3fW/8u+UGep4WIbXsxcmvDV0nc85wEDglcIBpykQQAU1FnQTu8plsTD
+	YiCq22ra51DoDpcrQ1GufDhi/0Fk/vfmOHJNuAyKrPhbDv7/NEnniPZ4bu95TdKW2fwRu0u
+	ZUHeIxqjLVaKIRYu9hlV1eXpdLBXeK6PZaFDi/PVKNXCm9p8N6iU6XoPEdEiY3yAPi6XzwR
+	OAFkaYaxawAU2plUmOVAy3RaufZPSYDufSR5TQiPWQnoXc+Jkn6lNQdTHCrQ09bhTD5PAaa
+	GbsmDMt5T2wjAm7kh5u4iKNV1XR4+vSUBk7//uWGtL0FduKl3Ek9HJ+yCge5IF9yPmhxC1V
+	L+f8nYimGmKJzA4r2HGkAkiUoP3OoMI9Yzr0MLmQ==
+X-QQ-XMRINFO: M/715EihBoGS47X28/vv4NpnfpeBLnr4Qg==
+X-QQ-RECHKSPAM: 0
 
-On 23 August 2026 22:18:23 BST, "Jérémy Jean"
-<Jeremy.Jean@oss.cyber.gouv.fr> wrote:
->LoongArch uses break 11 for the breakpoint placed after an instruction
->that Kprobes executes out of line. Since userspace can issue the same
->break instruction, do_bp() can reach kprobe_singlestep_handler() when
->there is no current probe.
->
+Hello,
 
-Intresting
+> @@ -275,6 +275,9 @@ bool kprobe_singlestep_handler(struct pt_regs *regs)
+>  	struct kprobe_ctlblk *kcb = get_kprobe_ctlblk();
+>  	unsigned long addr = instruction_pointer(regs);
+>  
+> +	if (!cur)
+> +		return false;
+> +
+This patch looks good to me.
 
->The handler returns false in this case, but first calls
->preempt_enable_no_resched(). The corresponding preempt_disable() is done
->by kprobe_breakpoint_handler() on a real Kprobe hit, so it has not run
->here. As a result, an ordinary userspace breakpoint underflows the
->current task's preempt count.
->
-
-checked. Guess that's true
-
->This also makes in_interrupt() return true until the task schedules. One
->visible consequence is socket cgroup attribution: cgroup_sk_alloc()
->treats the allocation as interrupt context and assigns the socket to the
->root cgroup. A socket opened from the SIGTRAP handler can then avoid a
->BPF_CGROUP_INET_SOCK_CREATE policy attached to the task's own cgroup.
->
->Return as soon as kprobe_running() reports no active probe.
->
-
-Ideal.
-
->The same check appeared in [PATCH v10 2/4] of the original LoongArch
->Kprobes series, but was dropped before the feature reached mainline.
->
-
-wonder why.
-
->Link: https://patchew.org/linux/1670575981-14389-1-git-send-email-yangtiezhu%40loongson.cn/1670575981-14389-3-git-send-email-yangtiezhu%40loongson.cn/
-
-Lore please.
-
->Fixes: 6d4cc40fb5f5 ("LoongArch: Add kprobes support")
->Assisted-by: Codex:gpt-5
-
-5.6-sol? Or normal GPT 5?
-
->Signed-off-by: Jérémy Jean <Jeremy.Jean@oss.cyber.gouv.fr>
->---
-> arch/loongarch/kernel/kprobes.c | 3 +++
-> 1 file changed, 3 insertions(+)
->
->diff --git a/arch/loongarch/kernel/kprobes.c b/arch/loongarch/kernel/kprobes.c
->index 1985ed30dd16f..ddfefea174727 100644
->--- a/arch/loongarch/kernel/kprobes.c
->+++ b/arch/loongarch/kernel/kprobes.c
->@@ -275,6 +275,9 @@ bool kprobe_singlestep_handler(struct pt_regs *regs)
-> 	struct kprobe_ctlblk *kcb = get_kprobe_ctlblk();
-> 	unsigned long addr = instruction_pointer(regs);
-> 
->+	if (!cur)
->+		return false;
-
-
-comment?
-
-/* do_bp() can reach
- * kprobe_singlestep_handler() when
- * there is no current probe, which
- * may cause issues.
- */
-
-My one isn't perfect, but feel free to bikeshed
-
-
-Well, I'm not a loongarch expert, but I am good with kprobes, hence this
-review.
-
-
->+
-> 	if (cur && (kcb->kprobe_status & (KPROBE_HIT_SS | KPROBE_REENTER)) &&
-> 	    ((unsigned long)&cur->ainsn.insn[1] == addr)) {
-> 		restore_local_irqflag(kcb, regs);
->
-
-Thanks!
+BRs
+Wentao Guan
