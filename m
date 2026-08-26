@@ -1,38 +1,38 @@
-Received: from canpmsgout08.his.huawei.com (canpmsgout08.his.huawei.com [113.46.200.223])
+Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E89D3E1232
-	for <loongarch@lists.linux.dev>; Wed, 26 Aug 2026 09:25:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31EF3E49F2
+	for <loongarch@lists.linux.dev>; Wed, 26 Aug 2026 09:25:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787736338; cv=none; b=oontvuyIY8jDGznjFxW4PvWsFl5wZqFoOayuwlV2WWIHb15f5ewyTRSxBSfE2Nqys6o0mKGbbtBjkXeC3YIl/obE2ssRbeGYLT6CaMbEVkvmLfp1dvMY9Q/znYEoKB6ApgM+rVF47xYeEn7By0l5b3M2k+hZxnQoFbzU8oqDuQg=
+	t=1787736341; cv=none; b=inWDjVON68H+NhFVwXY3aoEI57qh06e8E61gH4QAnnSag5AgfUMv4XfVPM2CIUhOxtVU5qXh1C9BQjT+v7ZuVtUjcdaJD4wPhSkVN4ZLlEITCehb+M1zV5EsAjFRupvhTRrjPZxdifWyBvePc8UoAOerjVpczWHsN7mZr9n9IOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787736338; c=relaxed/simple;
-	bh=mzfFYRFfS9u5sI5K8D5V0nfIRv40HqZCJHBJb7ryyNg=;
+	s=arc-20240116; t=1787736341; c=relaxed/simple;
+	bh=KIduKjWG/Jw+fuabu45aCN9A79gkp85fMH3esbGjIv4=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ws9IBPVxD/e69t0FiN4j/ofd0t/05Qs7jAYUoui1seTgMm/F+28jU2PWOI0WibXD4nX+c0k6cDkxIYDxBrdYPEk7IlSaY/9AP9aAi9g0oQuXZpdVnyJMo/ljOgsojbi8UM9cs/7cCqSUm7UhCLMvvjGRYvglmyN/j6QThTFcpb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=3MdARlzQ; arc=none smtp.client-ip=113.46.200.223
+	 MIME-Version:Content-Type; b=oRULZ+1hGA4nnT7Ygh7BfQO5SoGO7aGhp9UM5BBtFRyOA6PO5Gv2LTjwvVaE6jcXfwbuZIwXOQVa4s40sQP938BcrD6S7Q39sA+CDVVeneV0jp4DLMJ1Bxm2mrnjwfjVy1aIgYVn6UenoPvRQoc6fp9iF3pFNooS/1zppUO93Uk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=GB6QEE65; arc=none smtp.client-ip=113.46.200.218
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="3MdARlzQ"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="GB6QEE65"
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=Cgw5ZyBI8tRtEDh7EDDRec6LYICayfmN/Ij1j/3X5fQ=;
-	b=3MdARlzQun+xzAHOJhU4sO7o1K3lj0gTWdnFc55tBXyFjPHnWZTqiO3DmfdrhM0KvbpYg+PLQ
-	Gm2jGZjDNIHD7qJ+XMi6WDQTtzAxhZwAd0rjnzFXn/r+AS2pkKxpOgdhXBJBi3/8JVnX+40fxH7
-	PhonXjGR1KQyVYU0TBpsG08=
-Received: from mail.maildlp.com (unknown [172.19.163.15])
-	by canpmsgout08.his.huawei.com (SkyGuard) with ESMTPS id 4hVJrN45zdzmVb6;
-	Wed, 26 Aug 2026 17:14:44 +0800 (CST)
+	bh=AjFAkRrhVUTBFTsQMyUNsvLp/GHcd37S7PEMXZOcAZ4=;
+	b=GB6QEE65ILKvCbQpXecQEb/ua/x3iezR7nE2mn7WyYvYlY4SUXxQ83iR38qyJiKIbAgDODNlH
+	MU8cWojiXPCrCQ5dhsBQrS1ENBNRxVIcl10fi/R92xWzffLm8zRiqYcpNm7ebeVpN3c6nk/FktV
+	hqwqWG9q2cn4HV8W9tiTxUc=
+Received: from mail.maildlp.com (unknown [172.19.162.144])
+	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4hVJr24p4czpTHV;
+	Wed, 26 Aug 2026 17:14:26 +0800 (CST)
 Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5C57740586;
-	Wed, 26 Aug 2026 17:25:30 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 0D1434056D;
+	Wed, 26 Aug 2026 17:25:35 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
  (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 26 Aug
- 2026 17:25:27 +0800
+ 2026 17:25:32 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
@@ -55,9 +55,9 @@ To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<kexec@lists.infradead.org>, <linux-fsdevel@vger.kernel.org>,
 	<linux-mm@kvack.org>
 CC: <ruanjinjie@huawei.com>
-Subject: [PATCH v3 09/17] crash: Fix TOCTOU race in crash memory range collection
-Date: Wed, 26 Aug 2026 17:25:33 +0800
-Message-ID: <20260826092541.3905933-10-ruanjinjie@huawei.com>
+Subject: [PATCH v3 11/17] crash: Introduce crash_extra_elfcorehdr_size() helper
+Date: Wed, 26 Aug 2026 17:25:35 +0800
+Message-ID: <20260826092541.3905933-12-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260826092541.3905933-1-ruanjinjie@huawei.com>
 References: <20260826092541.3905933-1-ruanjinjie@huawei.com>
@@ -72,150 +72,104 @@ Content-Type: text/plain
 X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
  dggpemf500011.china.huawei.com (7.185.36.131)
 
-The crash kernel ELF core header construction counts system memory
-ranges via `arch_get_system_nr_ranges()`, allocates the crash_mem
-buffer, and then populates it via `arch_crash_populate_cmem()`.
-This sequence has a time-of-check-to-time-of-use (TOCTOU) race with
-memory hotplug: a concurrent hotplug event between the count
-and populate steps can increase the number of ranges beyond the allocated
-capacity, causing an out-of-bounds write. If the event triggers
-memblock_double_array(), the memblock array can be freed and reallocated
-during iteration, leading to a use-after-free.
+Extract the elfcorehdr extra space calculation from powerpc into a
+generic helper crash_extra_elfcorehdr_size() for use by other
+architectures.
 
-Protect the entire range collection with device_hotplug_lock. Since
-the hotplug notification path already holds that lock, add a lockless
-helper, crash_get_memory_ranges_nolock(), for use there. The regular
-crash_get_memory_ranges() acquires the lock and calls the helper.
+The helper includes compile-time and runtime checks, it also checks
+whether the total number of program headers (including fixed headers for
+kernel_map, VMCOREINFO, and CPU notes) exceeds PN_XNUM, and provides a
+stub when crash/memory hotplug is disabled.
 
-Cc: stable@vger.kernel.org
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Baoquan He <baoquan.he@linux.dev>
 Cc: Mike Rapoport <rppt@kernel.org>
 Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
 Cc: Pratyush Yadav <pratyush@kernel.org>
 Cc: Dave Young <ruirui.yang@linux.dev>
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Will Deacon <will@kernel.org>
-Cc: James Morse <james.morse@arm.com>
-Cc: Palmer Dabbelt <palmer@rivosinc.com>
-Cc: Youling Tang <tangyouling@kylinos.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Fixes: 8d5f894a3108 ("x86: kexec_file: lift CRASH_MAX_RANGES limit on crash_mem buffer")
-Fixes: 3751e728cef2 ("arm64: kexec_file: add crash dump support")
-Fixes: 8acea455fafa ("RISC-V: Support for kexec_file on panic")
-Fixes: 1bcca8620a91 ("LoongArch: Add crash dump support for kexec_file")
-Link: https://sashiko.dev/#/patchset/20260729031235.2840255-1-ruanjinjie%40huawei.com
+Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
 Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 ---
- arch/x86/kernel/crash.c    |  9 ++++++++-
- include/linux/crash_core.h |  2 +-
- kernel/crash_core.c        | 28 +++++++++++++++++++++++++++-
- 3 files changed, 36 insertions(+), 3 deletions(-)
+ arch/powerpc/kexec/file_load_64.c | 19 +------------------
+ include/linux/crash_core.h        | 26 ++++++++++++++++++++++++++
+ 2 files changed, 27 insertions(+), 18 deletions(-)
 
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index e6f23933a6df..8f8c0e592849 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -448,6 +448,7 @@ unsigned int arch_crash_get_elfcorehdr_size(void)
- void arch_crash_handle_hotplug_event(struct kimage *image, void *arg)
- {
- 	void *elfbuf = NULL, *old_elfcorehdr;
-+	struct crash_mem *cmem = NULL;
- 	unsigned long mem, memsz;
- 	unsigned long elfsz = 0;
- 
-@@ -461,11 +462,16 @@ void arch_crash_handle_hotplug_event(struct kimage *image, void *arg)
- 		(image->hp_action == KEXEC_CRASH_HP_REMOVE_CPU)))
- 		return;
- 
-+	if (crash_get_memory_ranges_nolock(&cmem)) {
-+		pr_err("Failed to get crash mem range\n");
-+		goto out;
-+	}
-+
- 	/*
- 	 * Create the new elfcorehdr reflecting the changes to CPU and/or
- 	 * memory resources.
- 	 */
--	if (crash_prepare_headers(IS_ENABLED(CONFIG_X86_64), &elfbuf, &elfsz, NULL)) {
-+	if (crash_prepare_elf64_headers(cmem, IS_ENABLED(CONFIG_X86_64), &elfbuf, &elfsz)) {
- 		pr_err("unable to create new elfcorehdr");
- 		goto out;
- 	}
-@@ -502,6 +508,7 @@ void arch_crash_handle_hotplug_event(struct kimage *image, void *arg)
- 	pr_debug("updated elfcorehdr\n");
- 
- out:
-+	kvfree(cmem);
- 	vfree(elfbuf);
- }
- #endif
-diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-index 619af312bd9a..6789ff0af39e 100644
---- a/include/linux/crash_core.h
-+++ b/include/linux/crash_core.h
-@@ -62,7 +62,7 @@ extern int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_ma
- extern int crash_prepare_headers(int need_kernel_map, void **addr,
- 				 unsigned long *sz, unsigned long *nr_mem_ranges);
- extern int crash_exclude_core_ranges(struct crash_mem **cmem);
--extern int crash_get_memory_ranges(struct crash_mem **mem_ranges);
-+extern int crash_get_memory_ranges_nolock(struct crash_mem **mem_ranges);
- 
- struct kimage;
- struct kexec_segment;
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 991d1599cf9a..05a2a8be083d 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -7,6 +7,7 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <linux/buildid.h>
-+#include <linux/device.h>
- #include <linux/init.h>
- #include <linux/utsname.h>
- #include <linux/vmalloc.h>
-@@ -317,7 +318,21 @@ int crash_exclude_core_ranges(struct crash_mem **cmem)
+diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
+index 6075b1c88511..2b0325e4a628 100644
+--- a/arch/powerpc/kexec/file_load_64.c
++++ b/arch/powerpc/kexec/file_load_64.c
+@@ -374,23 +374,6 @@ static int load_backup_segment(struct kimage *image, struct kexec_buf *kbuf)
  	return 0;
  }
  
--int crash_get_memory_ranges(struct crash_mem **mem_ranges)
-+/**
-+ * crash_get_memory_ranges_nolock - Collect crash kernel memory ranges
-+ * @mem_ranges: Output parameter for the allocated crash_mem structure
-+ *
-+ * Gathers the system memory ranges to be included in the crash kernel's
-+ * ELF core header, excluding the crashkernel reserved region and other
-+ * architecture-specific areas.
-+ *
-+ * Context: Caller must hold device_hotplug_lock.
-+ *
-+ * Return: 0 on success, in which case *@mem_ranges points to a newly
-+ * allocated struct crash_mem that the caller must free with kvfree().
-+ * Returns a negative error code on failure.
-+ */
-+int crash_get_memory_ranges_nolock(struct crash_mem **mem_ranges)
- {
- 	unsigned int max_nr_ranges;
- 	struct crash_mem *cmem;
-@@ -351,6 +366,17 @@ int crash_get_memory_ranges(struct crash_mem **mem_ranges)
- 	return ret;
- }
+-static unsigned int kdump_extra_elfcorehdr_size(struct crash_mem *cmem)
+-{
+-#if defined(CONFIG_CRASH_HOTPLUG) && defined(CONFIG_MEMORY_HOTPLUG)
+-	unsigned int extra_sz = 0;
+-
+-	if (CONFIG_CRASH_MAX_MEMORY_RANGES > (unsigned int)PN_XNUM)
+-		pr_warn("Number of Phdrs %u exceeds max\n", CONFIG_CRASH_MAX_MEMORY_RANGES);
+-	else if (cmem->nr_ranges >= CONFIG_CRASH_MAX_MEMORY_RANGES)
+-		pr_warn("Configured crash mem ranges may not be enough\n");
+-	else
+-		extra_sz = (CONFIG_CRASH_MAX_MEMORY_RANGES - cmem->nr_ranges) * sizeof(Elf64_Phdr);
+-
+-	return extra_sz;
+-#endif
+-	return 0;
+-}
+-
+ /**
+  * load_elfcorehdr_segment - Setup crash memory ranges and initialize elfcorehdr
+  *                           segment needed to load kdump kernel.
+@@ -428,7 +411,7 @@ static int load_elfcorehdr_segment(struct kimage *image, struct kexec_buf *kbuf)
+ 	 * Account for extra space required to accommodate additional memory
+ 	 * ranges in elfcorehdr due to memory hotplug events.
+ 	 */
+-	kbuf->memsz = headers_sz + kdump_extra_elfcorehdr_size(cmem);
++	kbuf->memsz = headers_sz + crash_extra_elfcorehdr_size(cmem->nr_ranges);
+ 	kbuf->top_down = false;
  
-+static int crash_get_memory_ranges(struct crash_mem **mem_ranges)
+ 	ret = kexec_add_buffer(kbuf);
+diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+index 6789ff0af39e..d5981008a812 100644
+--- a/include/linux/crash_core.h
++++ b/include/linux/crash_core.h
+@@ -106,4 +106,30 @@ ssize_t dm_crypt_keys_read(char *buf, size_t count, u64 *ppos);
+ static inline int crash_load_dm_crypt_keys(struct kimage *image) {return 0; }
+ #endif
+ 
++#if defined(CONFIG_CRASH_HOTPLUG) && defined(CONFIG_MEMORY_HOTPLUG)
++static inline unsigned int crash_extra_elfcorehdr_size(unsigned int nr_mem_ranges)
 +{
-+	int ret;
++	unsigned int total_phdrs = 2 + num_possible_cpus() + CONFIG_CRASH_MAX_MEMORY_RANGES;
 +
-+	lock_device_hotplug();
-+	ret = crash_get_memory_ranges_nolock(mem_ranges);
-+	unlock_device_hotplug();
++	BUILD_BUG_ON(CONFIG_CRASH_MAX_MEMORY_RANGES > (unsigned int)PN_XNUM);
 +
-+	return ret;
++	if (nr_mem_ranges >= CONFIG_CRASH_MAX_MEMORY_RANGES) {
++		pr_warn_once("Configured crash mem ranges may not be enough\n");
++		return 0;
++	}
++
++	if (total_phdrs >= (unsigned int)PN_XNUM) {
++		pr_warn_once("number of Phdrs %u exceeds max\n", total_phdrs);
++		return 0;
++	}
++
++	return (CONFIG_CRASH_MAX_MEMORY_RANGES - nr_mem_ranges) * sizeof(Elf64_Phdr);
 +}
++#else
++static inline unsigned int crash_extra_elfcorehdr_size(unsigned int nr_mem_ranges)
++{
++	return 0;
++}
++#endif
 +
- int crash_prepare_headers(int need_kernel_map, void **addr, unsigned long *sz,
- 			  unsigned long *nr_mem_ranges)
- {
+ #endif /* LINUX_CRASH_CORE_H */
 -- 
 2.34.1
 
