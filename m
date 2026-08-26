@@ -1,38 +1,38 @@
-Received: from canpmsgout07.his.huawei.com (canpmsgout07.his.huawei.com [113.46.200.222])
+Received: from canpmsgout04.his.huawei.com (canpmsgout04.his.huawei.com [113.46.200.219])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC41B3EDE76
-	for <loongarch@lists.linux.dev>; Wed, 26 Aug 2026 09:25:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.222
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03283EFFDB
+	for <loongarch@lists.linux.dev>; Wed, 26 Aug 2026 09:25:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787736350; cv=none; b=qLreSQAQkR9FeCFa3UAj7SfClvvFlHH0xZLVtfmmd64pe1+taqYi6YvUoYR+wJ50swj3Epq9yz+RnIQWlKP5t2hsb3IfHYEXiXuaJ4iiDf+9mBZr0L91z78IkXMQP4ZaAkoqLT5NxnRqkqEh2EzWh+VdhbUUsCWZbi9pdeWK5pw=
+	t=1787736351; cv=none; b=MgwV91uWVH63vHEkSSOODFZJRiFjlg1DQ30ZNZOEboZvY3JJv7bHbu5AW44MfZ6If9SbZnqOEKghX8FjF0livXCnjF+Zqm9ouVDjz0Ypo0kAcQ/cW8wIrkPxId/pHO/pyIEfZW1DnhUoGGKl/OSA5k/uHPsLBcbZWMokH5Z256A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787736350; c=relaxed/simple;
-	bh=sFgvpqXBFjB0DXF/Xo6Q5XaYIo/m7UqgznW5dkzn1TQ=;
+	s=arc-20240116; t=1787736351; c=relaxed/simple;
+	bh=kp+6I708DzV79AoDBZFUXSGVAlkZ158GWQXxLRdCt18=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dx75GAECc2y0KGr3RtVSbca8aZ9BH2+CL1HDbB6gbCz2md8VBSgeR4HrFE4KyQND7Af2WrDnilajc+od4N9O1iXizk4d0KXkTfYwHdAs8pwZH2MNWgjtF+EaNIMf2tu00bPMnCf5iU97t8NTaVTl4/h2iEhBCx6Y+cevpoawFZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=sd/H+UNC; arc=none smtp.client-ip=113.46.200.222
+	 MIME-Version:Content-Type; b=aTJpQZsHGImTM/IcH+n5mYHs27V+/d/sbw1YVw0uQcSV2OyKQPKOSy25f7hYUJMJLIMyuQBLp41e0OxtOhMzILK+f8BwG3269MwYkeWaKbccBFCsIBpj2SfLG33UjdlCSgMwhDCPj2LCulE6HiKVl2QdHS9i/oPz/3+6Sp8ZBjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=PHmoGMGZ; arc=none smtp.client-ip=113.46.200.219
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="sd/H+UNC"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="PHmoGMGZ"
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=3yLl9In8Wv4o0ZdsQbHCo1Df/gDSHHkfLMajcmTmIOU=;
-	b=sd/H+UNCaNAatBnZBdwzX8iqrWgk9CvZKeHro8YXwCBizriBg8j/ic2nCnNuWmYjOd30NiN+s
-	o0gHA+GVWfBZxWfQc5kddUQtVkrxsFSTSz7Qz2UeV8XoAt1UtBiJcSp4/Oy1mZg78qh4xUuqL3O
-	bguC9nDFMKh9jB1NsetGV8w=
-Received: from mail.maildlp.com (unknown [172.19.163.214])
-	by canpmsgout07.his.huawei.com (SkyGuard) with ESMTPS id 4hVJrf3mV2zLlXB;
+	bh=9eBN1xy3LsTspM2cXc9iihQZgxEMtvQyI2J8OiqZLKg=;
+	b=PHmoGMGZCpSK83cFfL1l+GZjf/pY9I+6IoZqg3WJ4VLG4xW6NHlRLdZlpXZs7q+S1hU6FgzSG
+	rPNsboboV+FxPnNuPRJvY6Ww7D51z6C62ISbmu/FflpvRh5Xiy1KVbEeTFJW1U4tML5IiSjG8eN
+	PcED3zgeHCZOJt4Rn7qsZuQ=
+Received: from mail.maildlp.com (unknown [172.19.162.223])
+	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4hVJrf6YSLz1prN4;
 	Wed, 26 Aug 2026 17:14:58 +0800 (CST)
 Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 298AF4057C;
-	Wed, 26 Aug 2026 17:25:44 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 6A56D40561;
+	Wed, 26 Aug 2026 17:25:46 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
  (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 26 Aug
- 2026 17:25:41 +0800
+ 2026 17:25:44 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
@@ -55,9 +55,9 @@ To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<kexec@lists.infradead.org>, <linux-fsdevel@vger.kernel.org>,
 	<linux-mm@kvack.org>
 CC: <ruanjinjie@huawei.com>
-Subject: [PATCH v3 15/17] crash: Simplify CRASH_MAX_MEMORY_RANGES handling
-Date: Wed, 26 Aug 2026 17:25:39 +0800
-Message-ID: <20260826092541.3905933-16-ruanjinjie@huawei.com>
+Subject: [PATCH v3 16/17] arm64: kexec_file: Simplify load_other_segments()
+Date: Wed, 26 Aug 2026 17:25:40 +0800
+Message-ID: <20260826092541.3905933-17-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260826092541.3905933-1-ruanjinjie@huawei.com>
 References: <20260826092541.3905933-1-ruanjinjie@huawei.com>
@@ -72,63 +72,73 @@ Content-Type: text/plain
 X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
  dggpemf500011.china.huawei.com (7.185.36.131)
 
-Set CRASH_MAX_MEMORY_RANGES to 0 when MEMORY_HOTPLUG is disabled, then
-remove the now unnecessary IS_ENABLED(CONFIG_MEMORY_HOTPLUG) checks in
-powerpc and x86 arch_crash_get_elfcorehdr_size().
+Use `kbuf` fields directly in crash_prepare_headers() to eliminate
+the local variables "headers" and "headers_sz"..
 
-No functional change intended.
+Advance the assignment to image->elf_headers before
+calling kexec_add_buffer(). If kexec_add_buffer() fails, the explicit
+vfree() in the error path can be removed, as the global infrastructure
+in arch_kimage_file_post_load_cleanup() will handle the cleanup.
 
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Breno Leitao <leitao@debian.org>
 Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 ---
- arch/powerpc/kexec/crash.c | 4 +---
- arch/x86/kernel/crash.c    | 4 +---
- kernel/Kconfig.kexec       | 3 ++-
- 3 files changed, 4 insertions(+), 7 deletions(-)
+ arch/arm64/kernel/machine_kexec_file.c | 24 +++++++++---------------
+ 1 file changed, 9 insertions(+), 15 deletions(-)
 
-diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
-index fc0105c7af4c..c47e3f867ea1 100644
---- a/arch/powerpc/kexec/crash.c
-+++ b/arch/powerpc/kexec/crash.c
-@@ -474,9 +474,7 @@ unsigned int arch_crash_get_elfcorehdr_size(void)
- 	unsigned long phdr_cnt;
+diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+index 2f750e5f4fcc..3d907f8ee594 100644
+--- a/arch/arm64/kernel/machine_kexec_file.c
++++ b/arch/arm64/kernel/machine_kexec_file.c
+@@ -89,36 +89,30 @@ int load_other_segments(struct kimage *image,
+ 	kbuf.buf_min = kernel_load_addr + kernel_size;
  
- 	/* A program header for possible CPUs + vmcoreinfo */
--	phdr_cnt = num_possible_cpus() + 1;
--	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
--		phdr_cnt += CONFIG_CRASH_MAX_MEMORY_RANGES;
-+	phdr_cnt = num_possible_cpus() + 1 + CONFIG_CRASH_MAX_MEMORY_RANGES;
+ #ifdef CONFIG_CRASH_DUMP
+-	/* load elf core header */
+-	void *headers;
+-	unsigned long headers_sz;
+ 	if (image->type == KEXEC_TYPE_CRASH) {
+-		ret = crash_prepare_headers(true, &headers, &headers_sz, NULL);
++		ret = crash_prepare_headers(true, &kbuf.buffer, &kbuf.bufsz, NULL);
+ 		if (ret) {
+ 			pr_err("Preparing elf core header failed\n");
+ 			goto out_err;
+ 		}
  
- 	return elf64_phdr_size(phdr_cnt);
- }
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 99eb8583d932..116410ac90fb 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -407,9 +407,7 @@ unsigned int arch_crash_get_elfcorehdr_size(void)
- 	unsigned int sz;
+-		kbuf.buffer = headers;
+-		kbuf.bufsz = headers_sz;
++		if (unlikely(image->elf_headers))
++			vfree(image->elf_headers);
++
++		image->elf_headers = kbuf.buffer;
++		image->elf_headers_sz = kbuf.bufsz;
++
+ 		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+-		kbuf.memsz = headers_sz;
++		kbuf.memsz = kbuf.bufsz;
+ 		kbuf.buf_align = SZ_64K; /* largest supported page size */
+ 		kbuf.buf_max = ULONG_MAX;
+ 		kbuf.top_down = true;
  
- 	/* kernel_map, VMCOREINFO and maximum CPUs */
--	sz = 2 + num_possible_cpus();
--	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
--		sz += CONFIG_CRASH_MAX_MEMORY_RANGES;
-+	sz = 2 + num_possible_cpus() + CONFIG_CRASH_MAX_MEMORY_RANGES;
- 	sz *= sizeof(Elf64_Phdr);
- 	return sz;
- }
-diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
-index a97ed9605602..e6251dfe451a 100644
---- a/kernel/Kconfig.kexec
-+++ b/kernel/Kconfig.kexec
-@@ -160,7 +160,8 @@ config CRASH_HOTPLUG
+ 		ret = kexec_add_buffer(&kbuf);
+-		if (ret) {
+-			vfree(headers);
++		if (ret)
+ 			goto out_err;
+-		}
+-
+-		if (unlikely(image->elf_headers))
+-			vfree(image->elf_headers);
  
- config CRASH_MAX_MEMORY_RANGES
- 	int "Specify the maximum number of memory regions for the elfcorehdr"
--	default 8192
-+	default 8192 if MEMORY_HOTPLUG
-+	default 0 if !MEMORY_HOTPLUG
- 	depends on CRASH_HOTPLUG
- 	help
- 	  For the kexec_file_load() syscall path, specify the maximum number of
+-		image->elf_headers = headers;
+ 		image->elf_load_addr = kbuf.mem;
+-		image->elf_headers_sz = headers_sz;
+ 
+ 		kexec_dprintk("Loaded elf core header at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+ 			      image->elf_load_addr, kbuf.bufsz, kbuf.memsz);
 -- 
 2.34.1
 
