@@ -1,57 +1,57 @@
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C64D3B777D
-	for <loongarch@lists.linux.dev>; Wed, 26 Aug 2026 23:05:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D31933CD8A9
+	for <loongarch@lists.linux.dev>; Wed, 26 Aug 2026 23:05:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787785530; cv=none; b=k4+O2m5MQPhhgksmAMrK6b05iDRA1xNdi8LQTZ9EeCL0RJBJMxsRzaLUJJ6NVoyvO/DXWBZCdfj7yqlDZ7P1UFjdTldugUg2uwUmPcuxt+tb5wOaecvE0ROzd58qHphTAqMEoftwoYLEeJaWH3pjgQh+sfPney/wU3J5lMf12LI=
+	t=1787785533; cv=none; b=EKV/oMMdYq3Hm27TSEGqgkAJTySJJyoAqBHPluLowKBxa938EZJK21VKrKbGfT+l1qYHZR45Dp79jUqFDnE1NBAhG5o5WChN1ZgTYH2xEVQJ9cFpSrpkZu9YjZeWZ8NcBs/Mmf9e7JTay7JLB4SVMIztqiKvtcR+cvifGG+ijJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787785530; c=relaxed/simple;
-	bh=3W6Dy3uU+CoTj5YuDL9UpW6yQwbWSR/ky+isWorLm6M=;
+	s=arc-20240116; t=1787785533; c=relaxed/simple;
+	bh=2YaoAsq23eoCnu/IpgcXayUjh+EDns6Bt+cLNLec880=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=o5tE3Y4GE2RCl29OAsM4zC0Y0ND2Foptl3wQVJzbF4wIZ17vPlmal/rx49IZVARa9Kk2DLIhJuezPSmhY5H0gZwuAMwCpI5j3vQmUrTjSpAWYZLcqu0VVBaZYlVqe7EX2MuZmaWfkwYKIeCwDwzfH+OkbcCVvyk5mPr8G9m7bCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vbV1ACBT; arc=none smtp.client-ip=209.85.210.198
+	 To:Cc:Content-Type; b=YR2EjsCy8jMmUERVd/rJ1jNa+qOOxFbfw7lFBcfaWvrnjG+0vjkvJOL9H4LfO7MAYHs6c1EsoYAny/25ov5rE/ox/yenDDHAdwK4c1WjzyiXZ+6weijFmFXmVFwLl4lii42chzUCi0FWUdEst3NAFT23nt6wPLTeMopUiu40baM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CdABeQBN; arc=none smtp.client-ip=209.85.215.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vbV1ACBT"
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-8486c3411c8so2004030b3a.2
-        for <loongarch@lists.linux.dev>; Wed, 26 Aug 2026 16:05:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CdABeQBN"
+Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-cc1c18c775eso410649a12.0
+        for <loongarch@lists.linux.dev>; Wed, 26 Aug 2026 16:05:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1787785527; x=1788390327; darn=lists.linux.dev;
+        d=google.com; s=20251104; t=1787785530; x=1788390330; darn=lists.linux.dev;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:reply-to:from:to:cc:subject:date:message-id
          :reply-to:content-type;
-        bh=O8gpVGaSftwEDfNK3yhe7P+6kzj8cM/DRvM4h41+9U8=;
-        b=vbV1ACBTpIp74q1KUVxVKKsvANkmAEUqB5ZXJgdzw2OMQyraAWPAFSp9xXzOin+Uv2
-         DXse681z1D+1fIfrqWGygCqhZnuM+eOZ2x7Le1QcD62Yf1Khv4hudn9TLfVtdJa4QW5U
-         Z/OOmIxoNt9JfIMVqsKF1HcePagFJMReYR9qjT25DQHMUHDI8CLeASnUnpdyuqa3g5an
-         uZY7jsv/Al1TSI+4MW8iJO1AKItmTZ0JWnvBXNY+hIyd9kdrjIabhAj4S/VWgKoYc2PK
-         G956a5f46ss21PZ+tUNQsedXv0KWL+8bP0c/AFWt0kdY3GlwMS8plHoQknRJN8sYxqRj
-         IQQA==
+        bh=N89bCfABJreQrIt289fAG+G+a6K8qwfLKTGSVLeSHrg=;
+        b=CdABeQBNwNL35P9EOq32mWmk4gyOvzaWc5omhrLrkgvt7X9TrujtEmPXpaNbl0Cgjw
+         m9UED8qx1Gh3IDaEp4Lr4gDIuuYhWiM3txdYofT3tATQXpOzvtZSrzHB0xN+U46/G3a1
+         kiV1BMqSXQMa3hJDm1bj7R0pIuwtJ8wNp5c1Sz+j4kXSAaDrD8PLHECDb29XVl8iMBaq
+         H1M32Iw8fSmbA2Ty90t5SUNWrlDfYeBYFw5aQdtfS8XPsElAig2Xm13SUIGEc18/Kgbf
+         TfzXlmD5aAulpEUBeXvKIuouszQ7AfoAPzlwRtbwN8AZ0baZ3fae8GxTCbmZqjiGRDMP
+         MYRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787785527; x=1788390327;
+        d=1e100.net; s=20251104; t=1787785530; x=1788390330;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:reply-to:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=O8gpVGaSftwEDfNK3yhe7P+6kzj8cM/DRvM4h41+9U8=;
-        b=gYPLHDIEhvjKpZFzY9AFjy3b4g38AXWJArCeE3tELSH9B7c78Df9dd/99sjfDsF2lH
-         QJfw7gi7OQ1kP17sTiqz4EYkFiDME3D7WLbEVdm0F8jy5HueMK9IgybyYgRzAR01FZCc
-         P7eZ+czfr+MDRF6enpHjopqPj+ieRxkCKVQVSqbGtw8UhX5zhU70n0w4LSKsk9gnuYz9
-         9jmWN/kBLh7OOyxgtredgO6TCIr67IMy5gI9zoD/5+H87G2fFqH/RrBnTQpp6+lyRM/L
-         BQerkN0/MuXue9mUwxX9AiObh1Mjk2g5NBkH7TTSxjbhnyzs4sjl+MKDe3QHaBHmxd8Y
-         4NzA==
-X-Forwarded-Encrypted: i=1; AHgh+Rqvj4p/Lc837tNvxk+DeTRCOeUBW3kgHm6YSWYm+S7nsER9xbKWBQkajk0W+GJwE/c+FHf8MtaSk4E=@lists.linux.dev
-X-Gm-Message-State: AFuF++nEUhqFJuQM5ws6zYMfX6+/ql9qsPZx9Dt3rvllDvqrFFfJtrfD
-	pw+jGxF3A+wIt51LJQma3qaK0H5bqhK81GZNxAaOE9ffnjZ00Hd8oGTIb9ZmskmMXX+V8Ft4Ksv
-	cbZOR8g==
-X-Received: from pfpk15.prod.google.com ([2002:aa7:9d0f:0:b0:848:2e0e:62e])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:301e:b0:848:34ad:3d6c
- with SMTP id d2e1a72fcca58-853750ccf97mr20523023b3a.15.1787785527096; Wed, 26
- Aug 2026 16:05:27 -0700 (PDT)
+        bh=N89bCfABJreQrIt289fAG+G+a6K8qwfLKTGSVLeSHrg=;
+        b=SfqzCrnrqe5iyOHgbH+IIp486cOflfs7Aik/I10l/dNpTiYS4eyey1RPfq2NRP7wme
+         4fMuUZ+C4k4cXLTWLpPDQxk0I5diCMreXZ8K/DSHKK1a/ws5LKFExKzcm/sV08VKG7Va
+         Zk/8eUjRT9NipAKk542et1cB/9pQUO3A+X7umvtIgP3SjI/Hyl0KNvtseYwpPG9D6Qyf
+         tHVSVTFIQ3W8yBsZ8qhAv8eNhouz/7hkhlpAvcgYS72ebxOfBr0fYipPzxMgqB0iha31
+         Wcpz4bgW1gWdK6pmnQZCF3PhGWHIoAb25LWYktBxdSG2vmKnMEEU1Ow90aOt5WNuLmaq
+         35xA==
+X-Forwarded-Encrypted: i=1; AHgh+RpR0A4q6wCMBGlVfigoVfd7PCpKZaZA0CpFCcHcW5jQQR8LuHlwNrtj1vOZDJEntuba55M+6SnqmU4=@lists.linux.dev
+X-Gm-Message-State: AFuF++k/DJgxna9y32ZRfNg9huo+KtEKFZNJ9ZjVlDL3fyYY3Tk0L4dT
+	t9z+quYvKZQpInIGOMj5MsdlsorY2ACQpqK4WZH4ad/Oh8Mhfca0AMFcrJ+J863/3KPdUJki8LK
+	BNSlOWA==
+X-Received: from pgkj19.prod.google.com ([2002:a63:e753:0:b0:cc1:517a:d29])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:4388:b0:3b2:8674:9830
+ with SMTP id adf61e73a8af0-3d0f6d2abaemr2865141637.14.1787785529701; Wed, 26
+ Aug 2026 16:05:29 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed, 26 Aug 2026 16:05:00 -0700
+Date: Wed, 26 Aug 2026 16:05:02 -0700
 In-Reply-To: <20260826230511.972824-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -61,9 +61,9 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20260826230511.972824-1-seanjc@google.com>
 X-Mailer: git-send-email 2.55.0.887.g758fc8c411-goog
-Message-ID: <20260826230511.972824-10-seanjc@google.com>
-Subject: [PATCH 09/20] KVM: selftests: Use the innermost page allocator API in
- s390's IRQ routing test
+Message-ID: <20260826230511.972824-12-seanjc@google.com>
+Subject: [PATCH 11/20] KVM: selftests: Initialize vm->memslots[] with invalid
+ memslots during creation
 From: Sean Christopherson <seanjc@google.com>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
 	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
@@ -82,33 +82,78 @@ Cc: Fuad Tabba <fuad.tabba@linux.dev>, Joey Gouly <joey.gouly@arm.com>,
 	Ritesh Harjani <ritesh.list@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Use the quad-underscores page allocator in s390's IRQ routing test in
-anticipation of dropping the @min_gpa param from the primary APIs.
-
-Note, it's not entirely clear that the test *needs* to use a very magical
-@min_gpa, i.e. it's possible a more elegant solution exists.  But that's a
-problem for a different day.
-
-No functional change intended.
+Initialize vm->memslots[] with an invalid memslots value during very
+initial VM creation so that failure to configure the core memory regions
+generates an immediate assert instead of potential weirdness, e.g. if slot0
+is coincidentally valid.  This will also allow hardening the region APIs to
+guard overriding a region's memslot multiple times.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- tools/testing/selftests/kvm/s390/irq_routing.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/kvm/include/kvm_util.h  | 2 ++
+ tools/testing/selftests/kvm/lib/kvm_util.c      | 5 +++++
+ tools/testing/selftests/kvm/lib/x86/processor.c | 5 ++++-
+ 3 files changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/kvm/s390/irq_routing.c b/tools/testing/selftests/kvm/s390/irq_routing.c
-index f3839284ac08..cd26cc1aed80 100644
---- a/tools/testing/selftests/kvm/s390/irq_routing.c
-+++ b/tools/testing/selftests/kvm/s390/irq_routing.c
-@@ -36,7 +36,7 @@ static void test(void)
- 	};
+diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
+index 21354434de0a..70e77992dd2f 100644
+--- a/tools/testing/selftests/kvm/include/kvm_util.h
++++ b/tools/testing/selftests/kvm/include/kvm_util.h
+@@ -33,6 +33,8 @@
  
- 	vm = vm_create_with_one_vcpu(&vcpu, guest_code);
--	mem = vm_phy_pages_alloc(vm, 2, 4096 * 42, 0);
-+	mem = ____vm_phy_pages_alloc(vm, 2, 4096 * 42, 0, false, false);
+ #define NSEC_PER_SEC 1000000000L
  
- 	routing = kvm_gsi_routing_create();
- 	routing->nr = 1;
++#define KVM_INVALID_MEMSLOT UINT_MAX
++
+ struct userspace_mem_region {
+ 	struct kvm_userspace_memory_region2 region;
+ 	struct sparsebit *unused_phy_pages;
+diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
+index ce0d8fba4624..56df5b1d9c79 100644
+--- a/tools/testing/selftests/kvm/lib/kvm_util.c
++++ b/tools/testing/selftests/kvm/lib/kvm_util.c
+@@ -288,6 +288,7 @@ __weak void vm_populate_gva_bitmap(struct kvm_vm *vm)
+ struct kvm_vm *____vm_create(struct vm_shape shape)
+ {
+ 	struct kvm_vm *vm;
++	int i;
+ 
+ 	vm = calloc(1, sizeof(*vm));
+ 	TEST_ASSERT(vm != NULL, "Insufficient Memory");
+@@ -296,6 +297,8 @@ struct kvm_vm *____vm_create(struct vm_shape shape)
+ 	vm->regions.gpa_tree = RB_ROOT;
+ 	vm->regions.hva_tree = RB_ROOT;
+ 	hash_init(vm->regions.slot_hash);
++	for (i = 0; i < NR_MEM_REGIONS; i++)
++		vm->memslots[i] = KVM_INVALID_MEMSLOT;
+ 
+ 	vm->mode = shape.mode;
+ 	vm->type = shape.type;
+@@ -1190,6 +1193,8 @@ memslot2region(struct kvm_vm *vm, u32 memslot)
+ {
+ 	struct userspace_mem_region *region;
+ 
++	TEST_ASSERT(memslot != KVM_INVALID_MEMSLOT, "vm->memslots[] unpopulated?");
++
+ 	hash_for_each_possible(vm->regions.slot_hash, region, slot_node,
+ 			       memslot)
+ 		if (region->region.slot == memslot)
+diff --git a/tools/testing/selftests/kvm/lib/x86/processor.c b/tools/testing/selftests/kvm/lib/x86/processor.c
+index d31fa81ea075..ea5fa59888af 100644
+--- a/tools/testing/selftests/kvm/lib/x86/processor.c
++++ b/tools/testing/selftests/kvm/lib/x86/processor.c
+@@ -529,7 +529,10 @@ void tdp_identity_map_default_memslots(struct kvm_vm *vm)
+ 
+ 	/* Only memslot 0 is mapped here, ensure it's the only one being used */
+ 	for (s = 0; s < NR_MEM_REGIONS; s++)
+-		TEST_ASSERT_EQ(vm->memslots[s], 0);
++		TEST_ASSERT(!vm->memslots[s] ||
++			    vm->memslots[s] == KVM_INVALID_MEMSLOT,
++			    "Unhandled memslot '%u' for type '%u'",
++			    vm->memslots[s], s);
+ 
+ 	i = (region->region.guest_phys_addr >> vm->page_shift) - 1;
+ 	last = i + (region->region.memory_size >> vm->page_shift);
 -- 
 2.55.0.887.g758fc8c411-goog
 
