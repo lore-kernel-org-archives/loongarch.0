@@ -1,66 +1,33 @@
-Received: from canpmsgout05.his.huawei.com (canpmsgout05.his.huawei.com [113.46.200.220])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF2A3F44C0
-	for <loongarch@lists.linux.dev>; Wed, 26 Aug 2026 09:25:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.220
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A39053EE1D8
+	for <loongarch@lists.linux.dev>; Wed, 26 Aug 2026 11:05:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787736354; cv=none; b=UP11ajATkAquRuprTkofYyglq765ziP0PBc7xoNENjZ95Nrv8WRg3KcHlakdZztwOowdVN7enkFg7S9mg758o1LbG/KfFvmLBSqU9jkU+hcpKW4DcM6e16C7E+D6A78dCe1Y8nZsAoJoH4Q0YCWQzKDMD113dcHWRaU1axKPPRE=
+	t=1787742324; cv=none; b=gdaZ1gbo5i5Q2Elu3GDyGELxTJfpEb0Azf0yuScLVPT1k2Szc/OOKbprKB0ofO475yr2dfo3rmmXZC4Nx0hNsbgk/MuZat7J9Usm9dOdhzo4HSLBFbi2SLToOHtpaP4EJtNTqmLwSOW5Y9L7drl058G+GM7GQA89MyalG7kuDXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787736354; c=relaxed/simple;
-	bh=eQCXV3z3aNLdvq/SFmSdeAgeoDMbMX7gb2hYDjEVnZ8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oWBw5wGlcGyV63F8dmZStGN8JW5xY8j8CtME6tMeZ4URkzOMiS2oD0sHDX7AEQOZZCXCox4aBmI6c/7sYK5cWHVGmT0uRDFWIkR14TIwaRrCCKL7gEJZtcl1bIoRuHOWzdliVriGAeywCpqeg3/hHWxcsbTsUFj7FGXax911glw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=1LNL5mVC; arc=none smtp.client-ip=113.46.200.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="1LNL5mVC"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=fFAgomx6mCnvCLtDv+rkVQ5LTZ6jKJXYGpd9rmPNNE8=;
-	b=1LNL5mVCelb85PN9fuNceaoD72o8fCN0n9slnJpLPRXvNMoCM0ey58jciL1xalSTzmOGIlIZt
-	QzwhzeumxoPtPnpkWa53lh7mcQOpffypdPA7T9QpcG02Et76WZVHm8Ut1q5RAjOtW3UhqZEIj3d
-	sRmKY9R7dvYnIIPD8CQYKTI=
-Received: from mail.maildlp.com (unknown [172.19.163.0])
-	by canpmsgout05.his.huawei.com (SkyGuard) with ESMTPS id 4hVJsH4bLtz12LF9;
-	Wed, 26 Aug 2026 17:15:31 +0800 (CST)
-Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id B7F6640537;
-	Wed, 26 Aug 2026 17:25:48 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
- (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 26 Aug
- 2026 17:25:46 +0800
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
-	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
-	<mpe@ellerman.id.au>, <npiggin@gmail.com>, <chleroy@kernel.org>,
-	<tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <akpm@linux-foundation.org>,
-	<baoquan.he@linux.dev>, <rppt@kernel.org>, <pasha.tatashin@soleen.com>,
-	<pratyush@kernel.org>, <ruirui.yang@linux.dev>, <kees@kernel.org>,
-	<thuth@redhat.com>, <gshan@redhat.com>, <jic23@kernel.org>,
-	<james.morse@arm.com>, <ardb@kernel.org>, <leitao@debian.org>,
-	<yeoreum.yun@arm.com>, <sourabhjain@linux.ibm.com>, <coxu@redhat.com>,
-	<tangyouling@kylinos.cn>, <hbathini@linux.ibm.com>, <adityag@linux.ibm.com>,
-	<ionut.nechita@windriver.com>, <liaoyuanhong@vivo.com>, <seanjc@google.com>,
-	<fuqiang.wang@easystack.cn>, <makb@juniper.net>, <piliu@redhat.com>,
-	<ebiggers@kernel.org>, <jbouron@amazon.com>, <mclapinski@google.com>,
-	<me@linux.beauty>, <graf@amazon.com>, <bgwin@google.com>, <robh@kernel.org>,
-	<takahiro.akashi@linaro.org>, <palmer@rivosinc.com>, <x86@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
-	<kexec@lists.infradead.org>, <linux-fsdevel@vger.kernel.org>,
-	<linux-mm@kvack.org>
-CC: <ruanjinjie@huawei.com>
-Subject: [PATCH v3 17/17] arm64: crash: Add crash hotplug support
-Date: Wed, 26 Aug 2026 17:25:41 +0800
-Message-ID: <20260826092541.3905933-18-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260826092541.3905933-1-ruanjinjie@huawei.com>
-References: <20260826092541.3905933-1-ruanjinjie@huawei.com>
+	s=arc-20240116; t=1787742324; c=relaxed/simple;
+	bh=LoTeSF2Sp5RJBvRuP5z73LifGbx6GY6oYSFnURWYf3s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=O0OBmCoGiM+7c1cpjmJBkCIndkJvITO75F0fDjJnqEyCAmXej5Lm1JjuLdYZseKlLQwH1i4Y76mMv6OfZVyQj/y/WFEse91ruL50u60qtJL7qL8aL72Qqrt8j0z53QCJlGZDGYFxAv99TdxRCbpLUx2n6AvFZq5r8O1U33vUHI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [123.138.236.242])
+	by gateway (Coremail) with SMTP id _____8Cxf9Ptx45q5DsFAA--.14559S3;
+	Wed, 26 Aug 2026 19:03:09 +0800 (CST)
+Received: from linux.localdomain (unknown [123.138.236.242])
+	by front1 (Coremail) with SMTP id qMiowJDxg8zrx45qn+8SAA--.8826S4;
+	Wed, 26 Aug 2026 19:03:09 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1 2/6] LoongArch: Remove redundant call in update_bp_registers()
+Date: Wed, 26 Aug 2026 19:03:02 +0800
+Message-ID: <20260826110306.6847-3-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20260826110306.6847-1-yangtiezhu@loongson.cn>
+References: <20260826110306.6847-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -68,353 +35,53 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- dggpemf500011.china.huawei.com (7.185.36.131)
+X-CM-TRANSID:qMiowJDxg8zrx45qn+8SAA--.8826S4
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Kw4xKw1DKw1UXFWxAw4UWrX_yoW8JFWxpr
+	yY9FZ5Kr4DGF4kC3ZrKF93ZryUGF9ru392vw4Fkay3twnxWr1rJ34UW3s3XFWYvw4fK34I
+	grW5CFyYq3WUAacCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j83kZUUUUU=
 
-When CPU or memory hotplug events occur, the elfcorehdr in the kdump
-image becomes stale, potentially leading to incomplete crash dumps.
+In update_bp_registers(), there is a duplicate call to write_wb_reg()
+when enabling an execute breakpoint:
 
-Currently, userspace udev rules reload the entire kdump image upon such
-events, which is inefficient and leaves kdump inactive for a long time.
+    write_wb_reg(CSR_CFG_CTRL, i, 0, CTRL_PLV_ENABLE);
+    write_wb_reg(CSR_CFG_CTRL, i, 0, CTRL_PLV_ENABLE);
 
-Commit 247262756121 ("crash: add generic infrastructure for crash hotplug
-support") introduced a kernel mechanism to update only the elfcorehdr.
-This patch enables that support for arm64.
+The two lines are completely identical. Remove the redundant call to
+clean up the code and eliminate unnecessary register writes.
 
-On arm64, only memory hotplug events require elfcorehdr updates:
-- Physical CPU hotplug is not supported.
-
-- For ACPI based vCPU hotplug [1], the elfcorehdr is built using
-  for_each_possible_cpu(), so no update is needed.
-
-The patch:
-- Adds CONFIG_ARCH_SUPPORTS_CRASH_HOTPLUG (default y).
-
-- Implements following arch functions to handle memory hotplug:
-  1. arch_crash_hotplug_support()
-  2. arch_crash_get_elfcorehdr_size()
-  3. arch_crash_handle_hotplug_event()
-
-- Moves arch_get_system_nr_ranges() and arch_crash_populate_cmem()
-  from machine_kexec_file.c to crash.c for crash hotplug reuse.
-
-Follows the approach of x86 commit ea53ad9cf73b ("x86/crash: add x86 crash
-hotplug support") and powerpc commit b741092d5976 ("powerpc/crash: add
-crash CPU hotplug support").
-
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Breno Leitao <leitao@debian.org>
-Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: Thomas Huth <thuth@redhat.com>
-[1]: https://lore.kernel.org/all/20240529133446.28446-1-Jonathan.Cameron@huawei.com/
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+Fixes: edffa33c7bb5 ("LoongArch: Add hardware breakpoints/watchpoints support")
+Cc: stable@vger.kernel.org
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- arch/arm64/Kconfig                     |   3 +
- arch/arm64/include/asm/kexec.h         |  11 ++
- arch/arm64/kernel/Makefile             |   2 +-
- arch/arm64/kernel/crash.c              | 165 +++++++++++++++++++++++++
- arch/arm64/kernel/machine_kexec_file.c |  36 +-----
- 5 files changed, 184 insertions(+), 33 deletions(-)
- create mode 100644 arch/arm64/kernel/crash.c
+ arch/loongarch/kernel/hw_breakpoint.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index b5a51b0ef944..96de2660b1cb 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -1720,6 +1720,9 @@ config ARCH_DEFAULT_CRASH_DUMP
- config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
- 	def_bool CRASH_RESERVE
- 
-+config ARCH_SUPPORTS_CRASH_HOTPLUG
-+	def_bool y
-+
- config TRANS_TABLE
- 	def_bool y
- 	depends on HIBERNATION || KEXEC_CORE
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index 892e5bebda95..f165c094b32e 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -130,6 +130,17 @@ extern int load_other_segments(struct kimage *image,
- 		char *cmdline);
- #endif
- 
-+#ifdef CONFIG_CRASH_HOTPLUG
-+void arch_crash_handle_hotplug_event(struct kimage *image, void *arg);
-+#define arch_crash_handle_hotplug_event arch_crash_handle_hotplug_event
-+
-+int arch_crash_hotplug_support(struct kimage *image, unsigned long kexec_flags);
-+#define arch_crash_hotplug_support arch_crash_hotplug_support
-+
-+unsigned int arch_crash_get_elfcorehdr_size(void);
-+#define crash_get_elfcorehdr_size arch_crash_get_elfcorehdr_size
-+#endif
-+
- #endif /* __ASSEMBLER__ */
- 
- #endif
-diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-index d2690c3ec528..9bbac452994c 100644
---- a/arch/arm64/kernel/Makefile
-+++ b/arch/arm64/kernel/Makefile
-@@ -64,7 +64,7 @@ obj-$(CONFIG_KEXEC_CORE)		+= machine_kexec.o relocate_kernel.o	\
- obj-$(CONFIG_KEXEC_FILE)		+= machine_kexec_file.o kexec_image.o
- obj-$(CONFIG_ARM64_RELOC_TEST)		+= arm64-reloc-test.o
- arm64-reloc-test-y := reloc_test_core.o reloc_test_syms.o
--obj-$(CONFIG_CRASH_DUMP)		+= crash_dump.o
-+obj-$(CONFIG_CRASH_DUMP)		+= crash_dump.o crash.o
- obj-$(CONFIG_VMCORE_INFO)		+= vmcore_info.o
- obj-$(CONFIG_ARM_SDE_INTERFACE)		+= sdei.o
- obj-$(CONFIG_ARM64_PTR_AUTH)		+= pointer_auth.o
-diff --git a/arch/arm64/kernel/crash.c b/arch/arm64/kernel/crash.c
-new file mode 100644
-index 000000000000..d97e9cea2fc9
---- /dev/null
-+++ b/arch/arm64/kernel/crash.c
-@@ -0,0 +1,165 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Architecture specific functions for kexec based crash dumps.
-+ */
-+
-+#define pr_fmt(fmt)	"crash hp: " fmt
-+
-+#include <linux/cacheflush.h>
-+#include <linux/elf.h>
-+#include <linux/kexec.h>
-+#include <linux/memblock.h>
-+#include <linux/memory.h>
-+#include <linux/vmalloc.h>
-+
-+#include <asm/kexec.h>
-+
-+#if defined(CONFIG_KEXEC_FILE) || defined(CONFIG_CRASH_HOTPLUG)
-+unsigned int arch_get_system_nr_ranges(void)
-+{
-+	unsigned int nr_ranges = 2 + crashk_cma_cnt; /* for exclusion of crashkernel region */
-+	phys_addr_t start, end;
-+	u64 i;
-+
-+	for_each_mem_range(i, &start, &end)
-+		nr_ranges++;
-+
-+	return nr_ranges;
-+}
-+
-+int arch_crash_populate_cmem(struct crash_mem *cmem)
-+{
-+	phys_addr_t start, end;
-+	u64 i;
-+
-+	for_each_mem_range(i, &start, &end) {
-+		cmem->ranges[cmem->nr_ranges].start = start;
-+		cmem->ranges[cmem->nr_ranges].end = end - 1;
-+		cmem->nr_ranges++;
-+	}
-+
-+	return 0;
-+}
-+#endif
-+
-+#ifdef CONFIG_CRASH_HOTPLUG
-+int arch_crash_hotplug_support(struct kimage *image, unsigned long kexec_flags)
-+{
-+#ifdef CONFIG_KEXEC_FILE
-+	if (image->file_mode)
-+		return 1;
-+#endif
-+	/*
-+	 * For kexec_load syscall, crash hotplug support requires
-+	 * KEXEC_CRASH_HOTPLUG_SUPPORT flag to be passed by userspace.
-+	 */
-+	return kexec_flags & KEXEC_CRASH_HOTPLUG_SUPPORT;
-+}
-+
-+unsigned int arch_crash_get_elfcorehdr_size(void)
-+{
-+	unsigned long phdr_cnt;
-+
-+	/* A program header for possible CPUs, vmcoreinfo and kernel_map */
-+	phdr_cnt = 2 + num_possible_cpus() + CONFIG_CRASH_MAX_MEMORY_RANGES;
-+
-+	return elf64_phdr_size(phdr_cnt);
-+}
-+
-+/**
-+ * update_crash_elfcorehdr() - Recreate the elfcorehdr and replace it with old
-+ *			       elfcorehdr in the kexec segment array.
-+ * @image: the active struct kimage
-+ * @mn: struct memory_notify data handler
-+ */
-+static void update_crash_elfcorehdr(struct kimage *image, struct memory_notify *mn)
-+{
-+	void *elfbuf = NULL, *old_elfcorehdr;
-+	unsigned long mem, memsz, elfsz = 0;
-+	struct crash_mem *cmem = NULL;
-+	u64 start, end;
-+	int ret;
-+
-+	ret = crash_get_memory_ranges_nolock(&cmem);
-+	if (ret) {
-+		pr_err("Failed to get crash memory ranges.\n");
-+		goto out;
-+	}
-+
-+	/*
-+	 * The hot unplugged memory is part of crash memory ranges,
-+	 * remove it here.
-+	 */
-+	if (image->hp_action == KEXEC_CRASH_HP_REMOVE_MEMORY) {
-+		start = PFN_PHYS(mn->start_pfn);
-+		end = start + PFN_PHYS(mn->nr_pages) - 1;
-+
-+		ret = crash_exclude_mem_range(cmem, start, end);
-+		if (ret) {
-+			pr_err("Failed to remove hot-unplugged memory from crash memory ranges.\n");
-+			goto out;
-+		}
-+	}
-+
-+	/*
-+	 * Create the new elfcorehdr reflecting the changes to CPU and/or
-+	 * memory resources.
-+	 */
-+	ret = crash_prepare_elf64_headers(cmem, true, &elfbuf, &elfsz);
-+	if (ret) {
-+		pr_err("Failed to create new elfcorehdr");
-+		goto out;
-+	}
-+
-+	/*
-+	 * Obtain address and size of the elfcorehdr segment, and
-+	 * check it against the new elfcorehdr buffer.
-+	 */
-+	mem = image->segment[image->elfcorehdr_index].mem;
-+	memsz = image->segment[image->elfcorehdr_index].memsz;
-+	if (elfsz > memsz) {
-+		pr_err("update elfcorehdr elfsz %lu > memsz %lu",
-+			elfsz, memsz);
-+		goto out;
-+	}
-+
-+	/* Copy new elfcorehdr over the old elfcorehdr at destination. */
-+	old_elfcorehdr = phys_to_virt(mem);
-+
-+	/*
-+	 * Temporarily invalidate the crash image while the
-+	 * elfcorehdr is updated.
-+	 */
-+	xchg(&kexec_crash_image, NULL);
-+	memcpy(old_elfcorehdr, elfbuf, elfsz);
-+	dcache_clean_inval_poc((unsigned long)old_elfcorehdr,
-+			       (unsigned long)(old_elfcorehdr + elfsz));
-+	xchg(&kexec_crash_image, image);
-+	pr_debug("updated elfcorehdr\n");
-+
-+out:
-+	kvfree(cmem);
-+	vfree(elfbuf);
-+}
-+
-+/**
-+ * arch_crash_handle_hotplug_event() - Handle hotplug elfcorehdr changes
-+ * @image: a pointer to kexec_crash_image
-+ * @arg: struct memory_notify handler for memory hotplug case and
-+ *       NULL for CPU hotplug case.
-+ *
-+ * Update the kdump image based on the type of hotplug event:
-+ * - CPU add and remove: No action is needed.
-+ * - Memory add/remove: Update the elfcorehdr to reflect the current memory layout.
-+ *
-+ * Prepare the new elfcorehdr and replace the existing elfcorehdr.
-+ */
-+void arch_crash_handle_hotplug_event(struct kimage *image, void *arg)
-+{
-+	if (image->hp_action == KEXEC_CRASH_HP_ADD_CPU ||
-+	    image->hp_action == KEXEC_CRASH_HP_REMOVE_CPU)
-+		return;
-+
-+	update_crash_elfcorehdr(image, (struct memory_notify *)arg);
-+}
-+#endif /* CONFIG_CRASH_HOTPLUG */
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index 3d907f8ee594..acba49b04ae1 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -14,7 +14,6 @@
- #include <linux/kernel.h>
- #include <linux/kexec.h>
- #include <linux/libfdt.h>
--#include <linux/memblock.h>
- #include <linux/of.h>
- #include <linux/of_fdt.h>
- #include <linux/slab.h>
-@@ -39,34 +38,6 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
- 	return kexec_image_post_load_cleanup_default(image);
- }
- 
--#ifdef CONFIG_CRASH_DUMP
--unsigned int arch_get_system_nr_ranges(void)
--{
--	unsigned int nr_ranges = 2 + crashk_cma_cnt; /* for exclusion of crashkernel region */
--	phys_addr_t start, end;
--	u64 i;
--
--	for_each_mem_range(i, &start, &end)
--		nr_ranges++;
--
--	return nr_ranges;
--}
--
--int arch_crash_populate_cmem(struct crash_mem *cmem)
--{
--	phys_addr_t start, end;
--	u64 i;
--
--	for_each_mem_range(i, &start, &end) {
--		cmem->ranges[cmem->nr_ranges].start = start;
--		cmem->ranges[cmem->nr_ranges].end = end - 1;
--		cmem->nr_ranges++;
--	}
--
--	return 0;
--}
--#endif
--
- /*
-  * Tries to add the initrd and DTB to the image. If it is not possible to find
-  * valid locations, this function will undo changes to the image and return non
-@@ -89,8 +60,9 @@ int load_other_segments(struct kimage *image,
- 	kbuf.buf_min = kernel_load_addr + kernel_size;
- 
- #ifdef CONFIG_CRASH_DUMP
-+	unsigned long nr_ranges = 0;
- 	if (image->type == KEXEC_TYPE_CRASH) {
--		ret = crash_prepare_headers(true, &kbuf.buffer, &kbuf.bufsz, NULL);
-+		ret = crash_prepare_headers(true, &kbuf.buffer, &kbuf.bufsz, &nr_ranges);
- 		if (ret) {
- 			pr_err("Preparing elf core header failed\n");
- 			goto out_err;
-@@ -100,10 +72,10 @@ int load_other_segments(struct kimage *image,
- 			vfree(image->elf_headers);
- 
- 		image->elf_headers = kbuf.buffer;
--		image->elf_headers_sz = kbuf.bufsz;
- 
- 		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
--		kbuf.memsz = kbuf.bufsz;
-+		kbuf.memsz = kbuf.bufsz + crash_extra_elfcorehdr_size(nr_ranges);
-+		image->elf_headers_sz = kbuf.memsz;
- 		kbuf.buf_align = SZ_64K; /* largest supported page size */
- 		kbuf.buf_max = ULONG_MAX;
- 		kbuf.top_down = true;
+diff --git a/arch/loongarch/kernel/hw_breakpoint.c b/arch/loongarch/kernel/hw_breakpoint.c
+index 6ba7315852f3..bd891b3808a6 100644
+--- a/arch/loongarch/kernel/hw_breakpoint.c
++++ b/arch/loongarch/kernel/hw_breakpoint.c
+@@ -453,7 +453,6 @@ static void update_bp_registers(struct pt_regs *regs, int enable, int type)
+ 		if (enable) {
+ 			if ((info->ctrl.type == LOONGARCH_BREAKPOINT_EXECUTE) && (type == 0)) {
+ 				write_wb_reg(CSR_CFG_CTRL, i, 0, CTRL_PLV_ENABLE);
+-				write_wb_reg(CSR_CFG_CTRL, i, 0, CTRL_PLV_ENABLE);
+ 			} else {
+ 				ctrl = read_wb_reg(CSR_CFG_CTRL, i, 1);
+ 				if (info->ctrl.type == LOONGARCH_BREAKPOINT_LOAD)
 -- 
-2.34.1
+2.42.0
 
