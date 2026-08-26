@@ -1,189 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD3EB4252B1
-	for <loongarch@lists.linux.dev>; Wed, 26 Aug 2026 15:02:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD1A544684C
+	for <loongarch@lists.linux.dev>; Wed, 26 Aug 2026 15:51:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787756538; cv=none; b=YIhG5J7+5NsrdcKyi5txWzwdT/8ZtsVv/z6Q0JvikO4hhqA7FvRMmqATL+RDRGVTCh2n5APnR8WGxr2JGbdxEyKaW6WXTrIW1MI9yIScQ9lDIF2A6uGKy2evWhYMiPByG/VmN1TJvGIsFC89RUVB5DVyh/q/S8/aePa6HP4tjyY=
+	t=1787759484; cv=none; b=GZofNQhNxJiU3dZt08ALmNqVHbll7oibFU03bDI6etaxfXVSZcr6ZVCDRiifMG94Uz01Q3K3Rf2WblMUQM6Bne8YFajV3st4STnoPpHc8CVT3f6PbMcry6DQtNFstFeR948+e8Y1jz0oJ/56BF8JZ3kSQTOiOmdLXQqedPkSjAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787756538; c=relaxed/simple;
-	bh=KqurwhfkeWH92vR01UEowYKyYippJ5kwR9uR9c31nvE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i0PAvXDBp3rYVffJGIPNe4mccMVtTqEpviSp4FqbEoj7zJkX1dFzzZi7Ekav5Jl5Sc9OnVt/n6aJQWRgnrB6xEC5qpgI7ttVCmi3F7ARthXT+0dsbOdFNzyQepF3UWJz2JIrv0OsdDAtUUv2SV9kdEE+g5CpZ5uTnWISwcd8NrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MkHe2AHx; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787759484; c=relaxed/simple;
+	bh=KssTm3LFacwHpJdazg/gZ1oAwfHEd+OExs8ITeP7ULk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DRCJEI4PaLXwkg1KSgqjyn5uogxVJPdeg2YeHK7NPh3jJzyQ5ATTpD1Jp1MTppOrNh1fWOfiIXDuYKzoJRe2yqUFGjCiGy6KrBCfmq+c+H9G7js/SdBG5fvWZu28Ub5egsq2ofIQLZWiOeynpOulNYJRzoZvAoZKYLJ+k9C6qz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dkrcqIYW; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MkHe2AHx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94C1A1F00ACA
-	for <loongarch@lists.linux.dev>; Wed, 26 Aug 2026 15:02:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787756537;
-	bh=NVcCvLmnWBybIlOyguyyeisqqYoOCyTYR0wcFtpqJQ4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=MkHe2AHxO4V2zC4q0ERqf4eKxoo1q5sNINN8mE0EZmFSgEzq29D/VmAfRQxdS1JIl
-	 ZNpYNHojVJ/hTT8RCIHrC12yQgZXqKBYfbOGZDi2Xi8Y95d0Uj0a4ygnyMqobWpM/s
-	 uHw1jXQ7hbFqnv5jni1qHq1+Er64dddEYvBLiWEP35Zftpi7x0NUDZ/EPn1AFwa62j
-	 kDKxHiBOS5/+PMq2bIPPU7JIUJaaIeLt5w9W+l1rL2iHvHNdlREXQb73stom9t515S
-	 6e2HZfq73TjQ9z3qizuXWG2KN8METmoqJ7OCxlBZDyH1oqzUNhRmWxFk5hoZfC550n
-	 f5V52cNv43bDQ==
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-c169ae1cb26so441404366b.1
-        for <loongarch@lists.linux.dev>; Wed, 26 Aug 2026 08:02:17 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+Rr8yVtCcxmzE8TZWU03HjH4mRrFYb5d8VWw7zYwUAsLROzD5XxOFU068+IsjNpdWs6bMXwhSuf42CQ=@lists.linux.dev
-X-Gm-Message-State: AFuF++ktjYRXKLCzY49KtuPTneHKAtPrZ4Nlj8TW+oBLkCLKrA1D2UjT
-	Atvj0/xbclFeNmImkIC3ZlFA+eHHrDz3ejLzYB8r4226xrbnoBSR51sIjQATT/hKyDtO4IjkeHB
-	a+Tf476jK0+jfpGS4idFTHcF/3F7I2L0=
-X-Received: by 2002:a17:906:a352:20b0:c25:32b0:e56d with SMTP id
- a640c23a62f3a-c2532b0ef44mr124311666b.7.1787756536214; Wed, 26 Aug 2026
- 08:02:16 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dkrcqIYW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1787759473;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4W3DLTZd9rSFQPqEL+RVc7IFyecD07CUDj7e4Cb4R2Q=;
+	b=dkrcqIYWYJX5W/qfiLe9L5guY25x7yUxZLWC801CstOZEpfpZB/utr8v+yKxo6wksBmZKQ
+	hs977HBVp3ptBUVTryAQrhmzsX/ciIJdmRHNwtCwZTD31bZ8F1dLERwK4P7t3olvZ0lPu1
+	IKPKbHJ/hLh2/0+zMHCOJzcn3lKdH0I=
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
+ [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-308-TAxM70RsP3a67-cnUBWoXA-1; Wed, 26 Aug 2026 11:51:12 -0400
+X-MC-Unique: TAxM70RsP3a67-cnUBWoXA-1
+X-Mimecast-MFC-AGG-ID: TAxM70RsP3a67-cnUBWoXA_1787759471
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2d5d00fd19bso22553155ad.1
+        for <loongarch@lists.linux.dev>; Wed, 26 Aug 2026 08:51:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787759471; x=1788364271;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=4W3DLTZd9rSFQPqEL+RVc7IFyecD07CUDj7e4Cb4R2Q=;
+        b=TpAlCnSwBh41d2Hokq8igZW2WtaNCuznD7arMcgdC25j9jhY4BS8N6jy4R+QP+Xezz
+         2EY6LPnpUJDciM49zsKCyLKYtZzdK6i8yMje85mtEC7NUdEFv0VPy5oDP2BW7kj7W3Ld
+         v5gIqjC7j10ktsKS94RuXff2SRAiOCwBWNhlBoByeFeIom6sNbP8pkUpQND/tiTADYrs
+         Q65PdesLWxNF1crTcCuacdlGpWw0WRphrdnaqsxp6bhkRWCvmFfVjsxVeqljGHcQxLpL
+         HrcUtRYzHZNyCWr4I0YQbR9mhi+H6sQdurLh4ZzuObwDp01EQKV6iBDdjP9wOXS0AOOs
+         kXXA==
+X-Forwarded-Encrypted: i=1; AHgh+RokLrrbqJTmD+VNOGTsjtI1rgYsBTc2qxYH9y9M5rngMe75n1QN3KWSJ6fA0L7guUhr1Dp5DXvJqLY=@lists.linux.dev
+X-Gm-Message-State: AFuF++kPmO9qydjxFf4ox+eHMmwrdNZtxkPZtYMvdflBpXL7CtkXHlDq
+	h+AXyAf7eeql74USC/V24wgW8M3Xr20YIw0PA+P/tDeUI8nwuCFpoSo1Lnwglfw8JPLI48ZTQcl
+	Au6GxyQYpRTgTbxU7eP6H0cQRrmU822x13VBk5J496XLbI2geJAPcYLzOWGL+dg==
+X-Gm-Gg: AR+sD10Zpe0dRa/82JALd85ea3vKkxpi4lNcWGAaDhPUpwaYoRWCcW0VzltWYjKeG7a
+	gCkHsxFe/Mpw7MQgcU7VFJMa9gkmKVGKlAxmg6m6+HPI1Q/PnJ4M0Eia1aAK7mqkI3s2VI8s920
+	yhqo4aMhjNrb7z4k/Hf+hUZ+dpCdWbktBQXF2NIetBAXrJBu69L4Cg4vSysKCcUvKmydklhtE1G
+	EAqU4ATbddkLWVF66SkAh/SyUb8ifpVVBQ0kypy5B/xCYyLygirYia2cG+PTCE3sWsSdjwBF9nQ
+	fuunPVbK7KlVSe5HmX+IUttQYjVMSd6ZNBVXNJrIM3nhWWzdSF/5Sh40jk00G4+qlb01Qan6c+j
+	aQg0iR+7Cr0yxLNBl
+X-Received: by 2002:a17:902:fc4d:b0:2c6:9f66:d573 with SMTP id d9443c01a7336-2d7079ffd98mr155457505ad.2.1787759470995;
+        Wed, 26 Aug 2026 08:51:10 -0700 (PDT)
+X-Received: by 2002:a17:902:fc4d:b0:2c6:9f66:d573 with SMTP id d9443c01a7336-2d7079ffd98mr155456345ad.2.1787759470546;
+        Wed, 26 Aug 2026 08:51:10 -0700 (PDT)
+Received: from [192.168.1.2] ([122.171.16.35])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d704bf8978sm9118965ad.57.2026.08.26.08.51.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Aug 2026 08:51:09 -0700 (PDT)
+Message-ID: <ac453410-67c6-47b4-ae79-fa682780fe49@redhat.com>
+Date: Wed, 26 Aug 2026 21:21:00 +0530
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260818123921.3600606-1-chenhuacai@loongson.cn>
- <20260818123921.3600606-5-chenhuacai@loongson.cn> <fed97fbc-7d78-4509-86c2-cb302d3957db@oss.qualcomm.com>
-In-Reply-To: <fed97fbc-7d78-4509-86c2-cb302d3957db@oss.qualcomm.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 26 Aug 2026 23:02:13 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4BRGeZ48PMJcYNR_Nn2-=Emec=pXsD041ZwWzJ5vo8nQ@mail.gmail.com>
-X-Gm-Features: AcwNN1XnWCZ_j5s24EXBjPnXvoyo6XOOKag1dVhQo6JOF7SB5LvAgfDgqDzhSps
-Message-ID: <CAAhV-H4BRGeZ48PMJcYNR_Nn2-=Emec=pXsD041ZwWzJ5vo8nQ@mail.gmail.com>
-Subject: Re: [PATCH 4/5] cpufreq: loongson3: Use global physical CPU ID in
- get/target callbacks
-To: Zhongqiu Han <zhongqiu.han@oss.qualcomm.com>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, "Rafael J . Wysocki" <rafael@kernel.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, loongarch@lists.linux.dev, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, stable@vger.kernel.org, 
-	Hongliang Wang <wanghongliang@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] kexec: return -ENOEXEC from image probe functions
+ on mismatch
+To: Will Deacon <will@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+ Mark Rutland <mark.rutland@arm.com>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Andrew Morton <akpm@linux-foundation.org>,
+ Baoquan He <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>, Tao Liu <ltao@redhat.com>,
+ Philipp Rudo <prudo@redhat.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-riscv@lists.infradead.org, kexec@lists.infradead.org,
+ Bradley Morgan <include@grrlz.net>
+References: <20260821-mpilaniy-v3-0-76b355399d2e@redhat.com>
+ <20260821-mpilaniy-v3-1-76b355399d2e@redhat.com>
+ <aoxQFxuzZ1AHmM8d@willie-the-truck>
+ <06a45c67-2642-4efa-994a-ee50cd40a697@redhat.com>
+ <ao2xc027TNYTwBA1@willie-the-truck>
+From: Mukesh Pilaniya <mpilaniy@redhat.com>
+In-Reply-To: <ao2xc027TNYTwBA1@willie-the-truck>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 47Qs3yEAMtrY9bcoifNvidopWGTNAtYZKyzMbxWNJe8_1787759471
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi, Zhongqiu,
+Hi Will,
 
-On Thu, Aug 20, 2026 at 8:24=E2=80=AFPM Zhongqiu Han
-<zhongqiu.han@oss.qualcomm.com> wrote:
->
-> On 8/18/2026 8:39 PM, Huacai Chen wrote:
-> > Our server productions (e.g. Loongson-3D6000/3E6000) can have discrete
-> > global physical CPU IDs while the core ID inside the packages are alway=
-s
-> > continuous. In these cases we should use global physical CPU IDs to get
-> > and set frequencies.
-> >
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Hongliang Wang <wanghongliang@loongson.cn>
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > ---
-> >   drivers/cpufreq/loongson3_cpufreq.c | 20 +++++++++++---------
-> >   1 file changed, 11 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/drivers/cpufreq/loongson3_cpufreq.c b/drivers/cpufreq/loon=
-gson3_cpufreq.c
-> > index e3cd78a5ab18..c75c0e30e881 100644
-> > --- a/drivers/cpufreq/loongson3_cpufreq.c
-> > +++ b/drivers/cpufreq/loongson3_cpufreq.c
-> > @@ -219,38 +219,40 @@ static inline int do_service_request(u32 id, u32 =
-info, u32 cmd, u32 val, u32 ext
-> >
-> >   static unsigned int loongson3_cpufreq_get(unsigned int cpu)
-> >   {
-> > -     int ret;
-> > +     int ret, core =3D cpu_logical_map(cpu);
-> >
-> > -     ret =3D do_service_request(cpu, FREQ_INFO_TYPE_FREQ, CMD_GET_FREQ=
-_INFO, 0, 0);
-> > +     ret =3D do_service_request(core, FREQ_INFO_TYPE_FREQ, CMD_GET_FRE=
-Q_INFO, 0, 0);
->
-> As patch 5/5 changelog:
->
-> "However, IOCSR read/write can only perform on the current node, while
-> sometimes we want to perform on other nodes"
->
-> However, patch 4/5 starts passing the global CPU number without updating
-> do_service_request(), which is only changed in patch 5/5. Doesn't that
-> mean patch 4/5 is broken on its own?
-Cross-node accesses need the whole of this series. So:
+On 25/08/26 8:44 pm, Will Deacon wrote:
+> On Tue, Aug 25, 2026 at 10:43:48AM +0530, Mukesh Pilaniya wrote:
+>> On 24/08/26 7:37 pm, Will Deacon wrote:
+>>> On Fri, Aug 21, 2026 at 07:19:57PM +0530, Mukesh Pilaniya wrote:
+>>>> Several kexec_file_load() image probe functions return -EINVAL when
+>>>> they do not recognize the image format.  A probe function that rejects
+>>>> an image should return -ENOEXEC to indicate that the image is not a
+>>>> recognized executable format.  -EINVAL implies a problem with the
+>>>> syscall parameters, not with image recognition.
+>>>>
+>>>> kexec_image_probe_default() iterates through registered loaders and
+>>>> returns the last probe's error code to the caller.  That error
+>>>> propagates as the kexec_file_load() return value to userspace.
+>>>> Returning -EINVAL from a probe when no loader matches is semantically
+>>>> incorrect and misleads userspace about the nature of the failure.
+>>>>
+>>>> Return -ENOEXEC from all probe functions and their helpers when the
+>>>> image format is not recognized.
+>>>>
+>>>> Signed-off-by: Mukesh Pilaniya <mpilaniy@redhat.com>
+>>>> Reviewed-by: Philipp Rudo <prudo@redhat.com>
+>>>> Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
+>>>> Reviewed-by: Bradley Morgan <include@grrlz.net>
+>>>> ---
+>>>>  arch/arm64/kernel/kexec_image.c   | 4 ++--
+>>>>  arch/loongarch/kernel/kexec_efi.c | 4 ++--
+>>>>  arch/riscv/kernel/kexec_image.c   | 4 ++--
+>>>>  kernel/kexec_elf.c                | 4 ++--
+>>>>  4 files changed, 8 insertions(+), 8 deletions(-)
+>>>
+>>> Hmm, so after this patch, are there actually any implementations of .probe()
+>>> that return anything other than 0 or -ENOEXEC? I couldn't spot any after
+>>> a quick look.
+>>>
+>>> Willkexec_elf_probe() can return -ENOMEM if memory allocation (kzalloc())
+>> fails inside elf_read_phdrs(). This behavior was previously discussed in
+>> the first patch of this series [1].
+> 
+> Fair enough, but I'd have thought it would be easier to special-case the
+> one -ENOMEM path instead of changing all the backends to return
+> -ENOEXEC all over the place (and hoping people don't start returning
+> -EINVAL again in future).
+> 
+> Will
 
-For single node machines, with or without this patch are both correct.
+Returning -EINVAL from a probe on format mismatch is semantically wrong
+on its own — independent of how kexec_image_probe_default() handles
+the return value.  x86 bzImage64_probe() and s390 s390_elf_probe()
+already return -ENOEXEC correctly; this patch just brings the remaining
+backends in line.
 
-For multi-nodes machines, this patch cannot solve all problems, but
-doesn't make things worse.
+Also IMHO, checking for err != -ENOEXEC in kexec_image_probe_default()
+is more robust than special-casing err == -ENOMEM.
 
->
-> >
-> >       return ret * KILO;
-> >   }
-> >
->
-> A separate issue=EF=BC=8C do_service_request() can return errno such as -=
-EPERM,
-> it will cause .get() func return a large unsigned integer value.
-Yes, we need "return (ret < 0) ? 0 : ret * KILO" here.
+-- 
+Regards,
+Mukesh Pilaniya
 
-
-Huacai
-
->
->
-> >   static int loongson3_cpufreq_target(struct cpufreq_policy *policy, un=
-signed int index)
-> >   {
-> > -     int ret;
-> > +     int ret, core =3D cpu_logical_map(policy->cpu);
-> >
-> > -     ret =3D do_service_request(cpu_data[policy->cpu].core,
-> > -                              FREQ_INFO_TYPE_LEVEL, CMD_SET_FREQ_INFO,=
- index, 0);
-> > +     ret =3D do_service_request(core, FREQ_INFO_TYPE_LEVEL, CMD_SET_FR=
-EQ_INFO,
-> > +                              index, 0);
-> >
-> >       return (ret >=3D 0) ? 0 : ret;
-> >   }
-> >
-> >   static int configure_freq_table(int cpu)
-> >   {
-> > -     int i, ret, boost_level, max_level, freq_level;
-> > +     int i, ret, core, boost_level, max_level, freq_level;
-> >       struct platform_device *pdev =3D cpufreq_get_driver_data();
-> >       struct loongson3_freq_data *data;
-> >
-> >       if (per_cpu(freq_data, cpu))
-> >               return 0;
-> >
-> > -     ret =3D do_service_request(cpu, 0, CMD_GET_FREQ_LEVEL_NUM, 0, 0);
-> > +     core =3D cpu_logical_map(cpu);
-> > +
-> > +     ret =3D do_service_request(core, 0, CMD_GET_FREQ_LEVEL_NUM, 0, 0)=
-;
-> >       if (ret < 0)
-> >               return ret;
-> >       max_level =3D ret;
-> >
-> > -     ret =3D do_service_request(cpu, 0, CMD_GET_FREQ_BOOST_LEVEL, 0, 0=
-);
-> > +     ret =3D do_service_request(core, 0, CMD_GET_FREQ_BOOST_LEVEL, 0, =
-0);
-> >       if (ret < 0)
-> >               return ret;
-> >       boost_level =3D ret;
-> > @@ -263,7 +265,7 @@ static int configure_freq_table(int cpu)
-> >       data->def_freq_level =3D boost_level - 1;
-> >
-> >       for (i =3D 0; i < freq_level; i++) {
-> > -             ret =3D do_service_request(cpu, FREQ_INFO_TYPE_FREQ, CMD_=
-GET_FREQ_LEVEL_INFO, i, 0);
-> > +             ret =3D do_service_request(core, FREQ_INFO_TYPE_FREQ, CMD=
-_GET_FREQ_LEVEL_INFO, i, 0);
-> >               if (ret < 0) {
-> >                       devm_kfree(&pdev->dev, data);
-> >                       return ret;
->
->
-> --
-> Thx and BRs,
-> Zhongqiu Han
->
