@@ -1,64 +1,69 @@
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C9C30F526
-	for <loongarch@lists.linux.dev>; Wed, 26 Aug 2026 23:05:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F0423B058E
+	for <loongarch@lists.linux.dev>; Wed, 26 Aug 2026 23:05:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787785516; cv=none; b=jTCJxtIkoTlpAtGgnimXlVOH+J3hZNNfRNEXYCHNrdDXmZUiYgKDVy56YkFHg/14s5S65KoArbj9jTrokeaAuttuzJG/NUVMoGLfOOcySRQ9Tgos+ji8Kjc0wyjLYKfB2QLkqTlGEUn4r6t/u8d6w9KGXNZcCP7UfzKlhCXbKCI=
+	t=1787785517; cv=none; b=pEKNcEYFPCe0vEN8Qbu5x8DmNTS5x2mXgEenJ0V2Z7x3cLivbHtvhE44FdxXMt6KskeQqkP8FMY++FnLDcsl3XtA2puNh3g5Na54D7gbmEemk1hvUSjdV4luOPJckzEptSFZ5qRUW/B2zKIKeFmugtUOUuKOhUOvYM34B+sat/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787785516; c=relaxed/simple;
-	bh=09nufcNEnQr4iHnEimrLNPRNUWNVw6IP6eINZA721YY=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=pytU/jBYuYT+Kjpo5T2xdKGOn2hBHIftVPbmf4qMJDfWoy2vt0iCWu0dwekuVYzC04NJYa35Ju3/ub7uxk9htyv2LV0HOLXX/WGbMcgcwFOu4O+ZH04zSZbYAHqlMW0OFJubV9NaIt/WlYwpA6cWS5GUbQfBJtTbvPsjDWvkOBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GdwRWUHk; arc=none smtp.client-ip=209.85.214.198
+	s=arc-20240116; t=1787785517; c=relaxed/simple;
+	bh=bbwkNrWPELDGGOA1Zgqc6lm5Iyi+SZhGGDW/VfTBloA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=gYDF8nZElafgLnIeQ8EoMUI8uYo5W+1V6F0FObb5PuhKpnMKalk1C0r4qYxVtX3WbYzZOHNR0Hj06ar3er29GCquxLQ3ZZ2E3uzqp09pzxJHPNVSAHy3CikTK0wXuiKoG03AEp69wtxLtpPc9wLR/L454tBfr4oJ+XHgaRe2LeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oa0K2BrP; arc=none smtp.client-ip=209.85.210.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GdwRWUHk"
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2cec4226c70so1578725ad.1
-        for <loongarch@lists.linux.dev>; Wed, 26 Aug 2026 16:05:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oa0K2BrP"
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-84842381150so73318b3a.3
+        for <loongarch@lists.linux.dev>; Wed, 26 Aug 2026 16:05:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1787785514; x=1788390314; darn=lists.linux.dev;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date
-         :reply-to:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=gRDzIvJTa0HXgdmAJ1iBjSEqSYXJcGrZt7XM2C/1134=;
-        b=GdwRWUHkhdmWTzaPNdmE4nlC9Aec98+F9ndp6FYJ1lhUw9be08A4sGHXpwuRonpWbO
-         TT7Bt4X9cxWAYxlhQzvWZN9bc1iFRZzJpihbmOOnMBFepC46605KCaVPFv+o+fSSz3Jy
-         vt7SBH+MIhuacl/3By5LNmInCigmNuDXhG75KC7ymuxlK1Mi/QGcFK4orHY3iTu0AZP7
-         dXEQ1zn0vH0r0tthASoG2qd/nRmV82l1Y7cR2iyGAHaAkk7dEox/q4l1JinNiHMF7Apk
-         fvQjUrhGKw6SQ2OCvS2zzpNJ//yhQNEf//KY49rCg4sPICB23orL5o29wdmpTJ31EVmG
-         1UPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787785514; x=1788390314;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date
-         :reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=google.com; s=20251104; t=1787785515; x=1788390315; darn=lists.linux.dev;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:reply-to:from:to:cc:subject:date:message-id
          :reply-to:content-type;
-        bh=gRDzIvJTa0HXgdmAJ1iBjSEqSYXJcGrZt7XM2C/1134=;
-        b=soGn0BNWHPhtPcXmrSjFj/cUq0XXLtNgAyzQ3BC4datsT6siAsHURpmwTxkHszI4yS
-         2I/Jf+ex9Co9hFKQCUabB1ej/nU/t8IqKbxkkaryAbdBUbv2mqJeLyloH08ydqd1GVNZ
-         LWGpcYgVvbAA2S/jwc8ByCorQCvZGytKI2j+haeCUHos+CGfmavbE3md16JKXr7j84u2
-         qpq8E523D6Z8/uMlPh+/mYZZLj+xHQ7n877H4v9EJx+D3qO35ZUqjb1LL30RNrIgyYcy
-         M34w+MMEuTAzgFmFvhXCCedGd+dPhDQUXeGHWNMuC6QfYCKdbwNY6noeTiErbxPVoy22
-         2DBA==
-X-Forwarded-Encrypted: i=1; AHgh+RpYGICWYfsandmJb10GblqtcOoEGAZ11VRDUVusBMxpT/70DcjE14fPTxwexqKWCtb37B3bPk7lgwA=@lists.linux.dev
-X-Gm-Message-State: AFuF++ksPyAeUAmAcKhn3eAFU3YJR27TPVs2pwqaM3WOzeQeE2rhtUKd
-	cT1lCPnN3oj99q5NIzKeNMhexwQBlzZ2GWTqbHjxshimnM8OQ8rZuvmUaFcld5CRmvk+X5ndGPp
-	zpt8klw==
-X-Received: from plxl5.prod.google.com ([2002:a17:902:db45:b0:2d6:f794:4e76])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:4b24:b0:2c9:9a2e:dab0
- with SMTP id d9443c01a7336-2d707954e7amr191786295ad.3.1787785513509; Wed, 26
- Aug 2026 16:05:13 -0700 (PDT)
+        bh=Q4+F4DrSTt+i0FxJ84+DMWU3o/oO2URpTpZf4B4dXhQ=;
+        b=oa0K2BrPkhnPbTFzfZduHxlp6h2mpp0i1jzlPOFBHdaU7V+GebJxkQ7QREWARD5chc
+         tsAVzFPPynRKmBcVm+2RLppD7l+0xf9jwqb68tmIta0x3612UY8cXul3UbTP7Hv3pyfa
+         2UyUZDkQSFCQCQuJzKbt1ho+K1RF1tQv0b4tTfhGPaC7acvaEHD4BKrNwadavRzZ73G3
+         651PGy1jSbCsOuBfVmg42g7F3vtytymGMKkbAcqKde/qGOgrBAeqdGrvy0OP8ushf22a
+         /DdHepjNbq1/U1SD1XvboHXRiUHVu+AmNzTbQe0HTetLDnBAAVDYbx2FEqk4mJF9HjNr
+         ixOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787785515; x=1788390315;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:reply-to:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=Q4+F4DrSTt+i0FxJ84+DMWU3o/oO2URpTpZf4B4dXhQ=;
+        b=eYhsDN8oUdvMV92STxPEONKycjjeQN1dwSOjurXBT1E93sWTgIcG3pzOykp3bclA8y
+         afOnGwkHJUpE4KxnWN9JudGG0gk/TbRLpvepZ2P9/Iy2/LwmhhcZ22T+n31QpRJMLfka
+         nlPhSQUx7Xa+7i2dtbtctVJKLaR18T4TKy4oknQR7Dv2eZYx8Ac6VyNSUdPtnQgSr6NE
+         +rcjTIDRdzHC/CzhbksxdkNc4c6i2D5HG4xum0zniMNXR1zyFItj/K5wAj/Oa5jqZWro
+         wFs+uXyoXyfdaDuowNr5cV8zNAfk8M59cvzkfTS9eyYMsTUGHNjbIX7gFZum3DknDKLk
+         D4Hw==
+X-Forwarded-Encrypted: i=1; AHgh+RqSE8Xlj1rqChakpJd15vjJaFNPcX9GyyqItN73A7sgIK4g23Kk/oYiqiiIPST/6+Nwqy48I2sZewg=@lists.linux.dev
+X-Gm-Message-State: AFuF++mQ3n9VXtFHHA/Jz1XvIZxcPdh/nvL9YwME5mukOlT1hFAKUPFy
+	xtjwwdmQxeCg23iPEXgMHxp684vUyTwPmNrWGwpIqEJcZFrX3iB2p16fR+1mRUKdsxrLssZUPO3
+	oho5DXw==
+X-Received: from pfpk15.prod.google.com ([2002:aa7:9d0f:0:b0:848:2e0e:62e])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:c96:b0:845:ce5f:c926
+ with SMTP id d2e1a72fcca58-85372ea6666mr19057054b3a.1.1787785515178; Wed, 26
+ Aug 2026 16:05:15 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed, 26 Aug 2026 16:04:51 -0700
+Date: Wed, 26 Aug 2026 16:04:52 -0700
+In-Reply-To: <20260826230511.972824-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
+References: <20260826230511.972824-1-seanjc@google.com>
 X-Mailer: git-send-email 2.55.0.887.g758fc8c411-goog
-Message-ID: <20260826230511.972824-1-seanjc@google.com>
-Subject: [PATCH 00/20] KVM: selftests: PPC pre-enabling
+Message-ID: <20260826230511.972824-2-seanjc@google.com>
+Subject: [PATCH 01/20] KVM: selftests: Use MEM_REGION_PT memslot instead of
+ '0' for s390 regions/segments
 From: Sean Christopherson <seanjc@google.com>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
 	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
@@ -77,84 +82,35 @@ Cc: Fuad Tabba <fuad.tabba@linux.dev>, Joey Gouly <joey.gouly@arm.com>,
 	Ritesh Harjani <ritesh.list@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 
-This is a big pile of cleanups and refactoring to prepare for PPC support in
-KVM selftests.  PPC has paging modes that require multi-page page tables, and
-those page tables need to be naturally aligned.  The original proposal was to
-plumb in an @align param to the page allocators[*], but I didn't love the idea
-of adding another rarely used param to the allocators.
+Use MEM_REGION_PT to indirectly specify memslot '0' instead of hardcoding
+the memslot in s390's virtual memory allocator, as a first step towards
+taking the allocation type instead of the exact, raw memslot in the
+physical memory allocator.
 
-Reworking the APIs to take a region type requires a fair bit of churn, and was
-more painful than expected as I didn't realize just how many one-off tests did
-weird things, but overall I think it's worth it?  If only to keep cutting down
-on the use of magic memslot numbers in tests.
+Note, the only tests that set MEM_REGION_PT to a memslot other than '0' are
+arm64-only, i.e. s390 always uses memslot '0' for page tables.
 
-This needs explicit testing on s390.  I tested on arm64 and x86, and given the
-number of failures I had to wade through, I wouldn't be at all suprised if I
-broke something subtle on s390 as well.
+No functional change intended.
 
-I'm less concerned about RISC-V and LoongArch as they don't have any custom
-tests that are affected (which is where I got burned).
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ tools/testing/selftests/kvm/lib/s390/processor.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-[*] https://lore.kernel.org/all/df86b5ccdbdafc3509d9538bd5e6796737bab2db.1781093720.git.ritesh.list@gmail.com
-
-Nicholas Piggin (1):
-  KVM: selftests: Use goto instead of do-while to retry finding unused
-    physical pages
-
-Sean Christopherson (19):
-  KVM: selftests: Use MEM_REGION_PT memslot instead of '0' for s390
-    regions/segments
-  KVM: selftests: Bump the minimum GPA for page tables to 0x200000
-  KVM: selftests: Use vm_alloc_page_table() to allocate LoongArch page
-    tables
-  KVM: selftests: Rename "num" param to "nr_pages" for physical page
-    allocators
-  KVM: selftests: Extend page allocator to support naturally aligned
-    allocations
-  KVM: selftests: Make the single-page allocator APIs static inline
-  KVM: selftests: Use the innermost page allocator API in the memslot
-    perf test
-  KVM: selftests: Use the innermost page allocator API in s390's IRQ
-    routing test
-  KVM: selftests: Add a wrapper API to allocate multiple page table
-    pages
-  KVM: selftests: Initialize vm->memslots[] with invalid memslots during
-    creation
-  KVM: selftests: Add APIs to override memory region types with custom
-    memslots
-  KVM: selftests: Add TEST_EXTRA memory region type for "special"
-    memslots
-  KVM: selftests: Use TEST_EXTRA region in arm64's vGIC LPI stress test
-  KVM: selftests: Use TEST_EXTRA region in x86's smaller MAXPHYADDR test
-  KVM: selftests: Use TEST_EXTRA region in set memory region test
-  KVM: selftests: Take the memory region type, not memslot, in page
-    allocators
-  KVM: selftests: Use TEST_ASSERT(), not assert(), in
-    vm_get_mem_region()
-  KVM: selftests: Automatically pick min_gpa for allocations based on
-    region type
-  KVM: selftests: Add arch hook to force page tables to be naturally
-    aligned
-
- .../selftests/kvm/arm64/page_fault_test.c     |  18 ++-
- .../selftests/kvm/arm64/vgic_lpi_stress.c     |  19 ++-
- .../testing/selftests/kvm/include/kvm_util.h  | 106 +++++++++++++--
- tools/testing/selftests/kvm/include/x86/smm.h |   2 +-
- .../selftests/kvm/lib/arm64/processor.c       |   4 +-
- tools/testing/selftests/kvm/lib/kvm_util.c    | 127 +++++++++++-------
- .../selftests/kvm/lib/loongarch/processor.c   |   5 +-
- .../selftests/kvm/lib/riscv/processor.c       |   4 +-
- .../selftests/kvm/lib/s390/processor.c        |   7 +-
- .../testing/selftests/kvm/lib/x86/processor.c |  15 ++-
- .../testing/selftests/kvm/memslot_perf_test.c |   3 +-
- tools/testing/selftests/kvm/s390/cmma_test.c  |  19 +--
- .../testing/selftests/kvm/s390/irq_routing.c  |   2 +-
- .../selftests/kvm/set_memory_region_test.c    |   8 +-
- .../x86/smaller_maxphyaddr_emulation_test.c   |   9 +-
- 15 files changed, 219 insertions(+), 129 deletions(-)
-
-
-base-commit: 76671054f9a1ff6abb976583cd8da37650acdc97
+diff --git a/tools/testing/selftests/kvm/lib/s390/processor.c b/tools/testing/selftests/kvm/lib/s390/processor.c
+index a9adb3782b35..fb9dab92d4d1 100644
+--- a/tools/testing/selftests/kvm/lib/s390/processor.c
++++ b/tools/testing/selftests/kvm/lib/s390/processor.c
+@@ -39,7 +39,8 @@ static u64 virt_alloc_region(struct kvm_vm *vm, int ri)
+ 	u64 taddr;
+ 
+ 	taddr = vm_phy_pages_alloc(vm,  ri < 4 ? PAGES_PER_REGION : 1,
+-				   KVM_GUEST_PAGE_TABLE_MIN_PADDR, 0);
++				   KVM_GUEST_PAGE_TABLE_MIN_PADDR,
++				   vm->memslots[MEM_REGION_PT]);
+ 	memset(addr_gpa2hva(vm, taddr), 0xff, PAGES_PER_REGION * vm->page_size);
+ 
+ 	return (taddr & REGION_ENTRY_ORIGIN)
 -- 
 2.55.0.887.g758fc8c411-goog
 
