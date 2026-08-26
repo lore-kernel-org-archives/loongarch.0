@@ -1,38 +1,38 @@
-Received: from canpmsgout04.his.huawei.com (canpmsgout04.his.huawei.com [113.46.200.219])
+Received: from canpmsgout07.his.huawei.com (canpmsgout07.his.huawei.com [113.46.200.222])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A4993DAACD
-	for <loongarch@lists.linux.dev>; Wed, 26 Aug 2026 09:25:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB7C73D79E2
+	for <loongarch@lists.linux.dev>; Wed, 26 Aug 2026 09:25:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.222
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787736328; cv=none; b=o8fg4wE8BkpbGUmOzQZf0hc9+ROzZhY9YWNV1y7CZrOTd+FZNRBoupTnl31rLeXqn0F49t1//I6hU+134Gb+v6bZF6KkkYjY4yG/J+4z2r4Lri7e7sGbSEwODnU+3XnV4qOfx3tHQAc6KJzbWG5vVfGgJpsdCZ3fZ+Leqx6W8fs=
+	t=1787736331; cv=none; b=Jck3UVxJ5yr5s67s249WF5cYp+XEpccbHKW1Zs1UvZ4K1QFWZRmJ4TKJO40Pe5RMrvoZf7i0IMQ0v8t3yi0WvOiS8s66RwK/fr3OXamAn+9F6ClKPU0/uyrJ6S7Gh7F8mbFszvZvhO9fjk7zI3p6RhjIFv0uDqvAFkP85qIXd/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787736328; c=relaxed/simple;
-	bh=LUUN6hor9kB1vGW9ORLacT7hasUnGUVa0oXa/BtcYiM=;
+	s=arc-20240116; t=1787736331; c=relaxed/simple;
+	bh=Gux6e2rOWG5ce6XalVJRUELCND74gCjevVy+uRKnBfo=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=efGnqUiWvQASod5UsxLbPeb+6mOdurPUfF6rWZZ1qUvVcvH9S6lAYizvg8XRElk9SkLoI4TtVNAi+qPGMcKRjKu4qR02sBbMW4Ocv845meR+mwyFmzw7sqUJ6o9mypF+dpetRUnjNQHMrVfQnlMRqK8xrNloAzStFRoWbZhJxxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=WJsU5ZLP; arc=none smtp.client-ip=113.46.200.219
+	 MIME-Version:Content-Type; b=kuO/xAgWSnSCclYOjOPgaL2NiN1ucJNBhwMXJqL6XHvq/Ls4Slf8YntnSg5pM0GOB0ZbhVjsCzuKxVWlRe1FZzMT9mF27MNL9QOBwL1fiPNIEg2AgGsFGqdPtXOcfEijFnogZEA/SgZsiybO82Yrq/4i2DzQuxIQ/iqiN04eCpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=i/qQKHNz; arc=none smtp.client-ip=113.46.200.222
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="WJsU5ZLP"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="i/qQKHNz"
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=up4/oktyfAdON3km3wdZWwjp1/r+vQu8s3QiiQB06UU=;
-	b=WJsU5ZLPqqnObamEl+eDb1OQLn8fzTm2lS+jqZvsjkBOcZoPNvOCq137VskBlGKfkXIRHLxz0
-	r3TIwLJgnYKX+hhXcyhYsMrcfZw4l3uKg5x5sTenzOpFogQlp8Dx4ywI3SARgUR1LDQ5r9Wjz1F
-	GJzxQD5oYk6LTh2w3OIGcw8=
-Received: from mail.maildlp.com (unknown [172.19.162.223])
-	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4hVJrC6g9Pz1prNF;
-	Wed, 26 Aug 2026 17:14:35 +0800 (CST)
+	bh=y759v80hfcLGexoE6U+P0qCW895e0rqrtykfndhs3p4=;
+	b=i/qQKHNz8OxKmJLSE6ETOW3Vyzml5TlfhhQAVfoBCgLl3ppxbzz6ZfYvrUMLwW7wzTAHquxJ5
+	7xkkPqtSSJUuN3dgmG4MYGSJZEltvqtaf1bLmuJ2Nfz2lINRwFVWYySZIoIptnPTMwZvuSdXvB9
+	ZX7arRtCRna8ymHdQexhtqQ=
+Received: from mail.maildlp.com (unknown [172.19.162.92])
+	by canpmsgout07.his.huawei.com (SkyGuard) with ESMTPS id 4hVJrJ0mhvzLlXB;
+	Wed, 26 Aug 2026 17:14:40 +0800 (CST)
 Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6EC4740561;
-	Wed, 26 Aug 2026 17:25:23 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id B445D4058A;
+	Wed, 26 Aug 2026 17:25:25 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
  (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 26 Aug
- 2026 17:25:21 +0800
+ 2026 17:25:23 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
@@ -55,9 +55,9 @@ To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<kexec@lists.infradead.org>, <linux-fsdevel@vger.kernel.org>,
 	<linux-mm@kvack.org>
 CC: <ruanjinjie@huawei.com>
-Subject: [PATCH v3 06/17] LoongArch: kexec_file: Fix elf_headers memory leak in retry loop
-Date: Wed, 26 Aug 2026 17:25:30 +0800
-Message-ID: <20260826092541.3905933-7-ruanjinjie@huawei.com>
+Subject: [PATCH v3 07/17] crash_dump: Fix potential double-free of keys_header
+Date: Wed, 26 Aug 2026 17:25:31 +0800
+Message-ID: <20260826092541.3905933-8-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260826092541.3905933-1-ruanjinjie@huawei.com>
 References: <20260826092541.3905933-1-ruanjinjie@huawei.com>
@@ -72,47 +72,67 @@ Content-Type: text/plain
 X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
  dggpemf500011.china.huawei.com (7.185.36.131)
 
-If load_other_segments() fails after image->elf_headers is assigned,
-the memory lifecycle is safely managed by the global kimage object
-and will be freed in arch_kimage_file_post_load_cleanup().
+`keys_header` was freed in `build_keys_header()` without being reset
+to NULL, and the error path in `crash_load_dm_crypt_keys()` freed it
+unconditionally even when reused, leading to double-free or
+use-after-free.
 
-However, during a retry loop in efi_kexec_load(), a subsequent iteration
-will allocate a new buffer and overwrite image->elf_headers. This
-permanently leaks the stale memory from the previous iteration before
-the global cleanup can track it.
+Add `free_keys_header()` to centralize freeing and NULL-setting.
+Use it in `build_keys_header()` and only free in the error path when
+the header was newly built (`!is_dm_key_reused`).
 
-Fix this by explicitly freeing the stale `image->elf_headers` buffer
-before assigning the newly allocated headers.
-
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>
-Cc: Youling Tang <tangyouling@kylinos.cn>
-Cc: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
-Cc: Kees Cook <kees@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>
+Cc: Dave Young <ruirui.yang@linux.dev>
 Cc: stable@vger.kernel.org
-Link: https://sashiko.dev/#/patchset/20260729031235.2840255-1-ruanjinjie%40huawei.com
-Fixes: 55d990f0084c ("LoongArch: Add EFI binary support for kexec_file")
+Fixes: e3a84be1ec2f ("arm64,ppc64le/kdump: pass dm-crypt keys to kdump kernel")
 Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 ---
- arch/loongarch/kernel/machine_kexec_file.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ kernel/crash_dump_dm_crypt.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
-index 62a5be102065..3beb6977ecc6 100644
---- a/arch/loongarch/kernel/machine_kexec_file.c
-+++ b/arch/loongarch/kernel/machine_kexec_file.c
-@@ -166,6 +166,10 @@ int load_other_segments(struct kimage *image,
- 			vfree(headers);
- 			goto out_err;
- 		}
+diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
+index c685497cd470..ed0960ff0987 100644
+--- a/kernel/crash_dump_dm_crypt.c
++++ b/kernel/crash_dump_dm_crypt.c
+@@ -363,15 +363,21 @@ static struct configfs_subsystem config_keys_subsys = {
+ 	},
+ };
+ 
++static void free_keys_header(void)
++{
++	if (keys_header) {
++		kvfree(keys_header);
++		keys_header = NULL;
++	}
++}
 +
-+		if (unlikely(image->elf_headers))
-+			vfree(image->elf_headers);
-+
- 		image->elf_headers = headers;
- 		image->elf_load_addr = kbuf.mem;
- 		image->elf_headers_sz = headers_sz;
+ static int build_keys_header(void)
+ {
+ 	struct config_item *item = NULL;
+ 	struct config_key *key;
+ 	int i, r;
+ 
+-	if (keys_header != NULL)
+-		kvfree(keys_header);
+-
++	free_keys_header();
+ 	keys_header = kzalloc(get_keys_header_size(key_count), GFP_KERNEL);
+ 	if (!keys_header)
+ 		return -ENOMEM;
+@@ -441,7 +447,8 @@ int crash_load_dm_crypt_keys(struct kimage *image)
+ 	r = kexec_add_buffer(&kbuf);
+ 	if (r) {
+ 		pr_err("Failed to call kexec_add_buffer, ret=%d\n", r);
+-		kvfree((void *)kbuf.buffer);
++		if (!is_dm_key_reused)
++			free_keys_header();
+ 		return r;
+ 	}
+ 	image->dm_crypt_keys_addr = kbuf.mem;
 -- 
 2.34.1
 
