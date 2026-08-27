@@ -1,153 +1,223 @@
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa6.hc1455-7.c3s2.iphmx.com (esa6.hc1455-7.c3s2.iphmx.com [68.232.139.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E353B1EEE
-	for <loongarch@lists.linux.dev>; Wed, 26 Aug 2026 23:05:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44F4834EF1F;
+	Thu, 27 Aug 2026 04:37:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787785549; cv=none; b=XdBZzwcc9B2yeekljbw6QOnFyr/ypHxVNs2CU/fFxXQH3M76gg5HHY5kRSDh0EPuaXDsTR9WUOXTVmYJwHRVc5MTrdFjOPfYm/RvYWGwKnpSpKMx7w/VlPFs61D/x6jC2XxzXakRvMrfNICpmT5Zc/F1KhOisoVfBFotCY9ej8s=
+	t=1787805469; cv=none; b=AS+y7UubvGw5YJ5sWoleCM2K0ruHwj8+OhNxC5Uer7qiaLFtvjUMDGmFxfdIEuf7jJSnd4asb0wFUHOYUitawQaHkQK1hmXOnt6V2E03kwsfqE2I24dTK/9MIanMa6Ck+fpH2aoGUYANLDRpy9hMsnib1QXEpCEX/CsKLZ6NBd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787785549; c=relaxed/simple;
-	bh=X9xnhlePSqIAyLBCipdOU0BNauH8Bhdv8PSGmQMr+Ik=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=SszyzR+hYngaZaIVpoLDaFlsJg51Xvu0HHSJa3VTb8pO6PA8dFP9yQIvjBcVBIog5eHNl0pqQo23aye5/jTfZ26S9j1OdY+MpE7VPLlnBVfDpukD1NnwQCRlIHWvwd/FJKdXdxqgPckzK3krnoO/mJkxSmO9ck5Mq67mqUhKRkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TeJEb0eq; arc=none smtp.client-ip=209.85.210.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1787805469; c=relaxed/simple;
+	bh=NjWJ6dMRbw0kkXr/0njtHxbP59W1uKKAQPA07UgnXFc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=apMQ4yDCX6hlF67Tl+RCPrrl5B3r/DweXyrDManCnbWWkomS81FxB93LrnZJduWf5RzwY8U2RIX0c9xWDmDLtUoWAGVRmFheSq1op09cDLUJDbx9yut8SsXDOu6i+lTXhEvm/l/JDmPNtOTCvhbLinWxMqYHYS9rTfiHaXs3Kdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=KnDZ+++M; arc=none smtp.client-ip=68.232.139.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TeJEb0eq"
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-8485d853b08so109326b3a.1
-        for <loongarch@lists.linux.dev>; Wed, 26 Aug 2026 16:05:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1787785540; x=1788390340; darn=lists.linux.dev;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:reply-to:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=pHiSvQXl4tkWm+SikbwEM4QvcPfHzRPC0s7Gep7aVew=;
-        b=TeJEb0eqw0B8DuReJMFbd145IfTV1YAqkUZ2gjNdy/1lHS4l/4qtWkckMmoKyKDmQ0
-         6oMqicmHnk0z8TC0v+xpEYJ6t74KepUoRQRtPYWiHmX69NqP7kT0XYjnA+NUvZj5qpuj
-         lPwLxypeVvlj0Ca+1/UawA8fvAl4qkuKHS5H691YUi4IeoEwaoIVwI+YncSGs6kgmBOi
-         Nmi9AO4wIaCF5IMJAUEX5+Z1897hS9RgASfrS5IskbIDg4ayLY1z6ZKhvTosZMYb0RTl
-         v19YlUGct+qjieZ7AoJ1ttPRcNSqyy9BeKQXN19lbPa1M9EafBKIlpyftphxrTclgaze
-         qJNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787785540; x=1788390340;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:reply-to:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=pHiSvQXl4tkWm+SikbwEM4QvcPfHzRPC0s7Gep7aVew=;
-        b=hYLAS0N+DPOmZTUXfN2uat1BxdVEboho7rbE/baIW/RSlZD45YV21hRT7miwz6yMSa
-         nlcpnabDfMHUFwJj0Jq/8s2ajFCYQM67Mnmr67RzMzOcoHXJi0zPi46XVRjmCAzY8pGm
-         lk4suTkAQ8yisczCYakUuqMTQSzzlokCzfX8bBUlU4byusulzAgxRGdczuqY65lO2aXO
-         HDKm4OmrYPQMfz5OqXxjWr8bazv9WCnCC9qZclCE48C06wgmt6QzB8l+M13x/SNjTaWo
-         BFjr6oMh0eL/dHfPOFlN5f3wZWB12CzmVq6UhuC64KeRVvbMbEry46Ft32bX+B9DIyGH
-         eBDA==
-X-Forwarded-Encrypted: i=1; AHgh+RqrqJT0uq9bi02x8jyXmh9SkzqPdQpnV5JZYTN4RqPnUxXLOjhe2+zgINhfDFabZcmn7/HPbnBrvKg=@lists.linux.dev
-X-Gm-Message-State: AFuF++lMY16B1z08VIVbIvFyuhLed45EDwIHTzPJIvAlb0aa9qhK3FT4
-	fFwsGrdl3BsCtV3/LDnO9HHrgvmRpW+Pl+I0gyWv+tLGoRNi8m6eygMzrlwd7Zhnw9db0EqvnnZ
-	zSRBMUQ==
-X-Received: from pfbcb3.prod.google.com ([2002:a05:6a00:4303:b0:847:aa6c:47fc])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:b53:b0:851:8baf:5b26
- with SMTP id d2e1a72fcca58-853749a5e4emr17924734b3a.14.1787785540289; Wed, 26
- Aug 2026 16:05:40 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed, 26 Aug 2026 16:05:11 -0700
-In-Reply-To: <20260826230511.972824-1-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="KnDZ+++M"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1787805467; x=1819341467;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=NjWJ6dMRbw0kkXr/0njtHxbP59W1uKKAQPA07UgnXFc=;
+  b=KnDZ+++MkPRcut4SAFG7vQ6PTg4XPmUXxxuQ7OEn9L6as3g4WvF1BkXT
+   zA5e7x2iRycuJgy4uQ1oLrAykU4+01ptqg/0HiDdd3dnvp0yz6CBdXAD5
+   08iz6YK0vXRikdBBevVe142JynzR58vBpnitx4gcyNnDPfyWfO0lDQfXZ
+   oqmth4TfH2oqDY6dlgid/z66XjZbTBEajzmuaIWFS/zBZaLydHWBA6YmL
+   KGi4fheWpjoW8Fg6yqr5aQEAXbDr3SNrooppyEVGtU/hMbDebK1JH0Pjo
+   52PeU/ln7Esh6Ii2hbBQN7VUBSJT+1e+V1ATV187ufLdcrIPCnVRJDAJX
+   g==;
+X-CSE-ConnectionGUID: s2v0QaYbRAGYZcFEsd/acQ==
+X-CSE-MsgGUID: vg0sPBsHS8aLo7STeWntZw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11887"; a="256508511"
+X-IronPort-AV: E=Sophos;i="6.25,246,1779116400"; 
+   d="scan'208";a="256508511"
+Received: from gmgwnl01.global.fujitsu.com (HELO mgmgwnl01.global.fujitsu.com) ([52.143.17.124])
+  by esa6.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2026 13:37:40 +0900
+Received: from az2nlsmgm2.o.css.fujitsu.com (unknown [10.150.26.202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mgmgwnl01.global.fujitsu.com (Postfix) with ESMTPS id 353B85504;
+	Thu, 27 Aug 2026 04:37:40 +0000 (UTC)
+Received: from az2uksmom4.o.css.fujitsu.com (unknown [10.151.22.204])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by az2nlsmgm2.o.css.fujitsu.com (Postfix) with ESMTPS id D79A61C4B52A;
+	Thu, 27 Aug 2026 04:37:39 +0000 (UTC)
+Received: from sm-arm-grace07 (unknown [10.124.178.20])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by az2uksmom4.o.css.fujitsu.com (Postfix) with ESMTPS id 17B3F405EDE;
+	Thu, 27 Aug 2026 04:37:20 +0000 (UTC)
+Date: Thu, 27 Aug 2026 13:37:18 +0900
+From: Itaru Kitayama <itaru.kitayama@fujitsu.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+	Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Janosch Frank <frankja@linux.ibm.com>,
+	Claudio Imbrenda <imbrenda@linux.ibm.com>,
+	Fuad Tabba <fuad.tabba@linux.dev>, Joey Gouly <joey.gouly@arm.com>,
+	Steffen Eiden <seiden@linux.ibm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Atish Patra <atish.patra@linux.dev>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	David Hildenbrand <david@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	kvm@vger.kernel.org, loongarch@lists.linux.dev,
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
+	Ritesh Harjani <ritesh.list@gmail.com>
+Subject: Re: [PATCH 13/20] KVM: selftests: Add TEST_EXTRA memory region type
+ for "special" memslots
+Message-ID: <ao--_gaqpfWir9v4@sm-arm-grace07>
+References: <20260826230511.972824-1-seanjc@google.com>
+ <20260826230511.972824-14-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20260826230511.972824-1-seanjc@google.com>
-X-Mailer: git-send-email 2.55.0.887.g758fc8c411-goog
-Message-ID: <20260826230511.972824-21-seanjc@google.com>
-Subject: [PATCH 20/20] KVM: selftests: Add arch hook to force page tables to
- be naturally aligned
-From: Sean Christopherson <seanjc@google.com>
-To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
-	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>, 
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc: Fuad Tabba <fuad.tabba@linux.dev>, Joey Gouly <joey.gouly@arm.com>, 
-	Steffen Eiden <seiden@linux.ibm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Zenghui Yu <yuzenghui@huawei.com>, Atish Patra <atish.patra@linux.dev>, 
-	Alexandre Ghiti <alex@ghiti.fr>, David Hildenbrand <david@kernel.org>, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>, 
-	Ritesh Harjani <ritesh.list@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260826230511.972824-14-seanjc@google.com>
 
-Add an arch hook to communicate to the core physical page allocator that
-page table allocations need to be naturally aligned.  The hook will be used
-for upcoming PowerPC support, which has MMU tables that are larger than the
-guest base page size and need to be naturally aligned.
+On Wed, Aug 26, 2026 at 04:05:04PM -0700, Sean Christopherson wrote:
+> And another memory region type to deal with extra, one-off memory regions,
+> and use the new type to manage x86's SMRAM memslot, as another step towards
+> taking the region type instead of the raw memslot in the physical page
+> allocator APIs.
+> 
+> Alternatively, SMRAM setup could simply use the quad-underscore API to
+> continue passing in the memslot, but a surprising number of tests use an
+> "extra" memslot for a variety of reasons.  I.e. allocating memory from one
+> (and exactly one) extra memslot isn't all that rare, and so should be
+> treated as normal behavior, not as something extraordinary, as
+> quad-underscore functions typically suggest.
+> 
+> Opportunistically add comments to document the intended usage of the types,
+> as the difference between DATA, TEST_DATA, and TEST_EXTRA in particular
+> isn't exactly obvious.
+> 
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>  .../testing/selftests/kvm/include/kvm_util.h  | 37 ++++++++++++++++---
+>  tools/testing/selftests/kvm/include/x86/smm.h |  2 +-
+>  .../testing/selftests/kvm/lib/x86/processor.c |  7 ++--
+>  3 files changed, 37 insertions(+), 9 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
+> index 14f87c8a00ec..f4f4f360a10b 100644
+> --- a/tools/testing/selftests/kvm/include/kvm_util.h
+> +++ b/tools/testing/selftests/kvm/include/kvm_util.h
+> @@ -82,11 +82,43 @@ struct userspace_mem_regions {
+>  	DECLARE_HASHTABLE(slot_hash, 9);
+>  };
+>  
+> +/*
+> + * Memory region types are passed to various page allocators to communicate
+> + * various properties and metadata related to the allocation.  Note, the
+> + * descriptions below described the primary usage of each type.  Individual
+> + * tests may allocate memory for other purposes.
+> + *
+> + * By default, all regions are mapped to memslot '0'.  Tests can override the
+> + * memslot for any or all types, e.g. so that all test data is allocated from a
+> + * curated memslot.
+> + */
 
-Bury the hook in the physical page allocator to avoid having to plumb a
-rarely used param into the main APIs.
+This is helpful as it wasn't so obvious to me. Thanks for adding the comments 
+on the default behaviour.
 
-Cc: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- tools/testing/selftests/kvm/include/kvm_util.h | 2 ++
- tools/testing/selftests/kvm/lib/kvm_util.c     | 9 ++++++++-
- 2 files changed, 10 insertions(+), 1 deletion(-)
+Thanks,
+Itaru.
 
-diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
-index 1264cd1a343a..ffd4cf740d7f 100644
---- a/tools/testing/selftests/kvm/include/kvm_util.h
-+++ b/tools/testing/selftests/kvm/include/kvm_util.h
-@@ -1050,6 +1050,8 @@ void kvm_gsi_routing_write(struct kvm_vm *vm, struct kvm_irq_routing *routing);
- 
- const char *exit_reason_str(unsigned int exit_reason);
- 
-+bool kvm_arch_needs_naturally_aligned_page_tables(void);
-+
- gpa_t ____vm_phy_pages_alloc(struct kvm_vm *vm, size_t nr_pages, gpa_t min_gpa,
- 			     u32 memslot, bool protected, bool naturally_aligned);
- gpa_t __vm_phy_pages_alloc(struct kvm_vm *vm, size_t nr_pages,
-diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-index 8b5b330a5889..57b653fbd0b1 100644
---- a/tools/testing/selftests/kvm/lib/kvm_util.c
-+++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-@@ -2085,10 +2085,16 @@ gpa_t ____vm_phy_pages_alloc(struct kvm_vm *vm, size_t nr_pages, gpa_t min_gpa,
- 	__builtin_unreachable();
- }
- 
-+__weak bool kvm_arch_needs_naturally_aligned_page_tables(void)
-+{
-+	return false;
-+}
-+
- gpa_t __vm_phy_pages_alloc(struct kvm_vm *vm, size_t nr_pages,
- 			   enum kvm_mem_region_type type, bool protected)
- {
- 	struct userspace_mem_region *region = vm_get_mem_region(vm, type);
-+	bool naturally_aligned = false;
- 	gpa_t min_gpa;
- 
- 	TEST_ASSERT(region, "No region for type '%u', memslot '%u'",
-@@ -2110,6 +2116,7 @@ gpa_t __vm_phy_pages_alloc(struct kvm_vm *vm, size_t nr_pages,
- 		break;
- 	case MEM_REGION_PT:
- 		min_gpa = KVM_GUEST_PAGE_TABLE_MIN_PADDR;
-+		naturally_aligned = kvm_arch_needs_naturally_aligned_page_tables();
- 		break;
- 	case MEM_REGION_TEST_EXTRA:
- 		min_gpa = region->region.guest_phys_addr;
-@@ -2120,7 +2127,7 @@ gpa_t __vm_phy_pages_alloc(struct kvm_vm *vm, size_t nr_pages,
- 	}
- 
- 	return ____vm_phy_pages_alloc(vm, nr_pages, min_gpa, vm->memslots[type],
--				      protected, false);
-+				      protected, naturally_aligned);
- }
- 
- /*
--- 
-2.55.0.887.g758fc8c411-goog
-
+>  enum kvm_mem_region_type {
+> +	/*
+> +	 * The CODE region is used by lib/elf when loading the test's code into
+> +	 * guest memory.
+> +	 */
+>  	MEM_REGION_CODE,
+> +	/*
+> +	 * The DATA region is used to allocate core data structures, e.g. vCPU
+> +	 * stacks, VM exception tables, x86's TSS, etc.
+> +	 */
+>  	MEM_REGION_DATA,
+> +	/*
+> +	 * The PT region, a.k.a. Page Table region, is used to allocate page
+> +	 * table pages.
+> +	 */
+>  	MEM_REGION_PT,
+> +	/*
+> +	 * The TEST_DATA region is used for allocating test data that is either
+> +	 * test specific, and/or isn't considered a "core" data structure.
+> +	 */
+>  	MEM_REGION_TEST_DATA,
+> +	/*
+> +	 * The TEST_EXTRA region is for special snowflakes, where a test wants
+> +	 * to create and use a one-off memslot, without impacting "normal" test
+> +	 * data allocations.
+> +	 */
+> +	MEM_REGION_TEST_EXTRA,
+>  	NR_MEM_REGIONS,
+>  };
+>  
+> @@ -129,11 +161,6 @@ struct kvm_vm {
+>  
+>  	struct kvm_binary_stats stats;
+>  
+> -	/*
+> -	 * KVM region slots. These are the default memslots used by page
+> -	 * allocators, e.g., lib/elf uses the memslots[MEM_REGION_CODE]
+> -	 * memslot.
+> -	 */
+>  	u32 memslots[NR_MEM_REGIONS];
+>  };
+>  
+> diff --git a/tools/testing/selftests/kvm/include/x86/smm.h b/tools/testing/selftests/kvm/include/x86/smm.h
+> index 2d1afa09819b..15faaa060126 100644
+> --- a/tools/testing/selftests/kvm/include/x86/smm.h
+> +++ b/tools/testing/selftests/kvm/include/x86/smm.h
+> @@ -8,7 +8,7 @@
+>  #define SMRAM_MEMSLOT	((1 << 16) | 1)
+>  #define SMRAM_PAGES	(SMRAM_SIZE / PAGE_SIZE)
+>  
+> -void setup_smram(struct kvm_vm *vm, struct kvm_vcpu *vcpu, u64 smram_gpa,
+> +void setup_smram(struct kvm_vm *vm, struct kvm_vcpu *vcpu, gpa_t smram_gpa,
+>  		 const void *smi_handler, size_t handler_size);
+>  
+>  void inject_smi(struct kvm_vcpu *vcpu);
+> diff --git a/tools/testing/selftests/kvm/lib/x86/processor.c b/tools/testing/selftests/kvm/lib/x86/processor.c
+> index ea5fa59888af..b988eea373ad 100644
+> --- a/tools/testing/selftests/kvm/lib/x86/processor.c
+> +++ b/tools/testing/selftests/kvm/lib/x86/processor.c
+> @@ -1468,11 +1468,12 @@ bool kvm_arch_has_default_irqchip(void)
+>  	return true;
+>  }
+>  
+> -void setup_smram(struct kvm_vm *vm, struct kvm_vcpu *vcpu, u64 smram_gpa,
+> +void setup_smram(struct kvm_vm *vm, struct kvm_vcpu *vcpu, gpa_t smram_gpa,
+>  		 const void *smi_handler, size_t handler_size)
+>  {
+> -	vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS, smram_gpa,
+> -				    SMRAM_MEMSLOT, SMRAM_PAGES, 0);
+> +	vm_override_mem_region(vm, MEM_REGION_TEST_EXTRA, VM_MEM_SRC_ANONYMOUS,
+> +			       smram_gpa, SMRAM_MEMSLOT, SMRAM_PAGES);
+> +
+>  	TEST_ASSERT(vm_phy_pages_alloc(vm, SMRAM_PAGES, smram_gpa,
+>  				       SMRAM_MEMSLOT) == smram_gpa,
+>  		    "Could not allocate guest physical addresses for SMRAM");
+> -- 
+> 2.55.0.887.g758fc8c411-goog
+> 
