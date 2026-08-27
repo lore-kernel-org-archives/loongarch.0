@@ -1,39 +1,39 @@
 Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D9DD3CF200
-	for <loongarch@lists.linux.dev>; Thu, 27 Aug 2026 22:23:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 729502D5A01
+	for <loongarch@lists.linux.dev>; Thu, 27 Aug 2026 22:47:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787869444; cv=none; b=ODHKE9WQPkPl7dR1aBm9oPrN53Qm5fL4q7v6dORqzqRcV8xRidL/xYs5zBT+Ha8EZ9DBbimFZs6IWOkgThXaR4YIwlJQf4EYqIPTV4CemDtM4dFN34j+EiFucuJC1essxyVcAfpA+7s2UnQBILZuKRgZGLxeMSzxU9STiZr9ddk=
+	t=1787870881; cv=none; b=Kvno/HqukZKgsSqou2j+bSoYUeZ5XoBMkX0CsX1bee1fvqZtXOSm2m9pnhXV0bduOCkRoBXdocRQTjnKVwbgoNJPGneqyx99gR8knGB90EP3/fhiTCiNs3bQVONTfr7OnhLOV+SGey3LqkbTiuyj/Y60ogsBEDvFhQkWw5Q8Hy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787869444; c=relaxed/simple;
-	bh=buHnmQymPi87tWxLV9bJoqqjddf8IU7h0AJjfltUS1M=;
+	s=arc-20240116; t=1787870881; c=relaxed/simple;
+	bh=oVpn3Y3xe4yNSLPISH532HiWMGCaPXfViMVpomdHH3k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g6WiVC1BwhdZnsALlapyG4SXEIJT7JvojuIFnKkv5BXa1PdxSDIeCGMRUPafpaz95TbLTVpBsGFk1NVPulYT6wMFOGPFxbFA1VAiNVif+vXkNuAhVgthTL7HZMJs5ZHv83tqKuDi3TCK0e9rC/ZEwyGNZho8hdc/XTguO6FF3wU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=gNMC6j97; arc=none smtp.client-ip=198.137.202.136
+	 In-Reply-To:Content-Type; b=sfzq5myNEkIQ0/cxGLt7PUcFd2WNnVMViu3LL//36m6jpJ6va8Vd4ldcid84swiIl1c563bB4N+rAyuBmpVuJaVCvR1NMdU2L7SpTa8r3ZYTuiyWTqgNwqyepvaPz7NhR0yGkU6r7iiSOF/SBmTKStMt0hj9VzC8oM8iuS4ykpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=GymOd4Rk; arc=none smtp.client-ip=198.137.202.136
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="gNMC6j97"
-Received: from [IPV6:2601:646:8081:8d71:abf3:5091:f2d1:704c] ([IPv6:2601:646:8081:8d71:abf3:5091:f2d1:704c])
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="GymOd4Rk"
+Received: from [IPV6:2601:646:8081:8d71:8c93:dacb:e5fa:49aa] ([IPv6:2601:646:8081:8d71:8c93:dacb:e5fa:49aa])
 	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 67RMMfVr1791603
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 67RMl4Qn1836438
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Thu, 27 Aug 2026 15:22:41 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 67RMMfVr1791603
+	Thu, 27 Aug 2026 15:47:04 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 67RMl4Qn1836438
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2026072801; t=1787869372;
-	bh=LZKaCTEQCsGwD2GMVqaYbcSqk2BZFOtph9TUIqgES9Q=;
+	s=2026072801; t=1787870834;
+	bh=EXQuytFudEdgp91C+uFz8aeu/WW15G7DgPzpxtGKF4M=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gNMC6j97IhbcMMgbmy2ny/QcgirAYDsXNjEkUGVM1Znjxud9QCneQ+NaB5oSLG7gQ
-	 v5jvb30334qIMdinwHRV9Mkm1vAkB5dFCtDPrhTExA9+mhWKMhkyyY7pwNNDXV+nYa
-	 ZIUdNM5QoTekGZ7e8HvCcyeQNddaLDAOWN/Jvy8Uxxv9wNTihWITw7TCmVqP1EgGTN
-	 kCIbtTmc82Op/HsTj3eTn45BlM2A5KPVDP0EK2g3yw1TIdDnwOqpIsCW0Ta4Fd3LkB
-	 DEHUft1fSZPVoc0UzuPw3ALg0KFFm7VuvuV0p1CXapd4uXhsjXORgINVOEreyDf3f9
-	 wBqVK82EaU2Nw==
-Message-ID: <ed8b99e6-4d90-4622-9d43-451bf6a8db2c@zytor.com>
-Date: Thu, 27 Aug 2026 15:22:35 -0700
+	b=GymOd4RkxGi8njVCQCfisvKP39Bb44ZVOGqd2ZqhsM67DzFyYn8S/jMXCU8Rma33W
+	 PEelxL7L8kBY+qk5qAEjpsMwfkxEwjrDmJEsL+fSa6zkpR+h5d+MOwPtTLVMwwm0lZ
+	 bCPemLIjQYuVaQEQRjl132J4YP0xzX54ej4JFh90v2xhqZFikkHSFSnGkczichDoFv
+	 sZK/qGKEclFkhvxq+v2kMkmJ4o1BjYqiHVTd5aGLm7HyH0fkUCbFxhX7p3xCNzPfY0
+	 gzR1rveeuo2MbtEx3KqfD+thNsEFw5il2Dad3o6axDhdFmbVxxjrh2OwAc/diiyN8G
+	 nWKtXnX6xx8pw==
+Message-ID: <995a61ef-ce8c-4c8b-bea8-77f375076a39@zytor.com>
+Date: Thu, 27 Aug 2026 15:46:58 -0700
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -41,8 +41,8 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [patch 00/18] entry: Consolidate and rework syscall entry
- handling
+Subject: Re: [patch 03/18] entry: Provide
+ [syscall_]enter_from_user_mode_randomize_stack()
 To: Thomas Gleixner <tglx@kernel.org>, LKML <linux-kernel@vger.kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
@@ -78,142 +78,66 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
         =?UTF-8?Q?Michal_Such=C3=A1nek?= <msuchanek@suse.de>,
         Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
 References: <20260707181957.433213175@kernel.org>
+ <20260707190253.816918647@kernel.org>
 Content-Language: en-US, sv-SE
 From: "H. Peter Anvin" <hpa@zytor.com>
-In-Reply-To: <20260707181957.433213175@kernel.org>
+In-Reply-To: <20260707190253.816918647@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 2026-07-07 12:05, Thomas Gleixner wrote:
-> Sorry for the long CC list, but this is a treewide change.
+On 2026-07-07 12:06, Thomas Gleixner wrote:
+> Randomizing the syscall stack can only happen after state is established
+> via enter_from_user_mode() or syscall_enter_from_user_mode(). The earlier
+> it happens the better.
 > 
-> Michal recently posted a RFC patch to separate the potential syscall number
-> modifications in syscall_enter_user_mode_work() from the information
-> whether the syscall should be processed and the return value modified:
+> Provide two new macros to consolidate that:
 > 
->   https://lore.kernel.org/lkml/CE1qW@kunlun.suse.cz
+>   - enter_from_user_mode_randomize_stack()
+> 	enter_from_user_mode();
+> 	add_random_kstack_offset_irqsoff();
 > 
-> The existing logic is:
+>   - syscall_enter_from_user_mode_randomize_stack()
+> 	enter_from_user_mode_randomize_stack();
+> 	syscall_enter_from_user_mode_work();
+>     
+> to reduce boiler plate code.
 > 
-> arch_syscall()
-> 	regs->result = -ENOSYS;
+> Those are macros and not inline functions as the latter would limit the
+> stack randomization scope to the inline function itself.
 > 
-> 	syscallnr = syscall_enter_from_user_mode(regs, syscall);
-> 
-> 	if (syscallnr != -1L)
-> 		regs->result = invoke_syscall(regs, syscall;
-> 
-> syscall_enter_from_user_mode() invokes ptrace, seccomp and
-> tracing/BPF/Probes. All of them can modify the syscall number.
-> 
-> ptrace and seccomp explicitly set the syscall number to -1L to indicate
-> that the syscall invocation needs to be skipped and the result has not to
-> be modified as it might have been modified by ptrace or seccomp. The
-> tracer/BPF/Probes mechanism can modify the syscall number as well and
-> relies implicitly on the -1L logic.
-> 
-> This can obviously not be differentiated from a syscall invocation where
-> userspace provided -1 as syscall number.
-> 
-> The general agreement of the discussion was that the current mechanism,
-> while functionally correct is non-intuitive and something like Michals
-> proposal would make that code clearer and easier to handle on the
-> architecture side:
-> 
-> arch_syscall()
-> 	regs->result = -ENOSYS;
-> 
-> 	if (syscall_enter_from_user_mode(regs, &syscall)) 
-> 		regs->result = invoke_syscall(regs, syscall;
-> 
-> That discussion made me look deeper into the related code and as usual
-> there were a lot of other things to discover.
-> 
->   1) Stack randomization
-> 
->      add_random_kstack_offset() can only be invoked after
->      enter_from_user_mode() established proper state as it calls into
->      instrumentable code.
-> 
->      PowerPC got that wrong and the other architectures either invoke it
->      after enter_from_user_mode() or after syscall_enter_from_user_mode().
-> 
->      The latter is suboptimal as the randomization takes place after all
->      the user mode entry work. Aside of that add_random_kstack_offset()
->      uses get/put_cpu_var(), which makes it usable in preemptible code, but
->      when invoked in the interrupt disabled region that's pointless
->      overhead.
-> 
->   2) As discussed in the above thread just changing the function signature
->      of syscall_enter_from_user_mode[_work]() so they take a pointer
->      argument for the syscall and then return 0 on success is not really
->      intuitive either. Aside of that this breaks the implicit assumption of
->      the tracer when setting the syscall number to -1.
-> 
->   3) The x86 entry code has some historically accumulated oddities
-> 
-> The following series addresses this by:
-> 
->   1) Providing new [syscall_]enter_from_user_mode() variants, which include
->      stack randomization and utilize a new add_random_kstack_offset_irqsoff()
->      variant, which avoids the get/put_cpu_var() overhead and converting all
->      usage sites over
-> 
->   2) Picking up Jinjie's seccomp patch from:
-> 
->      https://lore.kernel.org/lkml/20260629130616.642022-2-ruanjinjie@huawei.com
-> 
->      and addressing the feedback (renaming the seccomp functions)
-> 
->   3) Making the ptrace and tracer related functions return a boolean value
->      to indicate syscall permission
-> 
->   4) Addressing the x86 oddities
-> 
->   5) Converting the tree over to the new scheme
-> 
-> With that all architectures using the generic syscall entry code follow the
-> same scheme, apply stack randomization at the correct and earliest possible
-> place and skip syscall processing depending on the boolean return value of
-> syscall_enter_from_user_mode[_work]().
-> 
-> There should be no functional changes, at least there are none intended.
-> 
-> The resulting text size for the syscall entry code on x8664 is slightly
-> smaller than before these changes.
-> 
-> Testing syscall heavy workloads and micro benchmarks shows a small
-> performance gain for the general rework, but the last patch, which changes
-> the logic to be more understandable has no measurable impact in either
-> direction.
-> 
-> The series applies on Linus tree and is also available from git:
-> 
->         git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git entry-rework-v1
-> 
-Hi,
+Not directly related to this patchset, but still:
 
-It looks like I didn't get a personal Cc: on this one and so I missed it (it
-happened just before I found out I would be departing Intel, so I can make the
-excuse that I was just a bit distracted.)
+Can anyone *please* find out what the actual security requirements are for the
+syscall randomization offset?
 
-This series is a great cleanup, but it did make me concerned on one count: it
-ends up making it universal that the syscall number is always stored and
-fetched from memory. I'm worried that this may have undesirable effects on
-future CPUs which incorporate data speculation, which is probably something
-that will happen at some point (this is a general statement, not in any way
-related to any former employers of mine.)
+The original checkin, 39218ff4c625 ("stack: Optionally randomize kernel stack
+offset each syscall") indicates that it is fundamental that the stack offset
+is applied *after* pt_regs pushing, but that isn't documented anywhere in the
+kernel sources as far as I can tell.
 
-As such, I was looking at changing that to *always* keep the system call
-number in a register, to allow the CPU to consistently maintain a "chain of
-custody" of this value.
+However, I have also come to understand that there are further, undocumented
+constraints; at least at one point I was told that "the offset should not be
+stored in memory while running in the kernel", which seems more than a bit odd.
 
-This isn't a hard thing to solve in any way: replacing the pointer argument
-with a two-element structure return would do the trick. As far as I know,
-*all* architectures that support Linux support returning structures with two
-register-sized values in registers.
+This matters, because it creates a data dependency on exit. The original
+checkin does call out that RDTSC timing is inappropriate if the user could
+control it, but using a hardware CSPRNG like RDRAND (or its equivalent for
+other architectures) would be feasible if it isn't in the critical path. If an
+RDRAND - store sequence can be executed on entry, *after* the stack
+adjustment, then the high latency of RDRAND can hopefully be very effectively
+hidden by an OO CPU.
 
-However, before digging into this I would like to hear people's opinions.
+Incidentally, in case you are wondering "why doesn't each core get a dedicated
+CSPRNG and hardware randomness generator, to avoid high latency", the answer
+is pretty simple: a hardware random number source, regardless of the specifics
+of the design, almost by definition violates the hardware design rules of any
+digital design; after all, the design rules are designed to *eliminate* noise
+(making the circuit behave as closely as physically possible to a realization
+of the abstract digital circuit), whereas the very goal of a HWRNG source is
+to *extract and amplify* quantum thermal noise. This means that considerable
+chip area is consumed by a "keep-out zone", a designated "no man's land"
+keeping the digital logic away from the noise source. This keep-out zone is
+typically much, much larger than the noise source itself.
 
 	-hpa
 
