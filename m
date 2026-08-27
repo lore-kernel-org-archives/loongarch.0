@@ -1,183 +1,219 @@
-Received: from esa6.hc1455-7.c3s2.iphmx.com (esa6.hc1455-7.c3s2.iphmx.com [68.232.139.139])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428743C1D67;
-	Thu, 27 Aug 2026 08:07:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D9DD3CF200
+	for <loongarch@lists.linux.dev>; Thu, 27 Aug 2026 22:23:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787818088; cv=none; b=hxs+NMOknUXnnDK3RE4j0fHZAGByMU+9j2YvXn3ReuLxPjr47+YibkarHKFvPGq1sAD6UwFniRIyFRcrDz1VnpU91JT+O0GNXHO1dRvpppIozUtNnePGzVkVqUiBb6jDWCCpJjL1qz08rWr0PTJJ1hDRNB7rcf+JDQIZDtXjlzg=
+	t=1787869444; cv=none; b=ODHKE9WQPkPl7dR1aBm9oPrN53Qm5fL4q7v6dORqzqRcV8xRidL/xYs5zBT+Ha8EZ9DBbimFZs6IWOkgThXaR4YIwlJQf4EYqIPTV4CemDtM4dFN34j+EiFucuJC1essxyVcAfpA+7s2UnQBILZuKRgZGLxeMSzxU9STiZr9ddk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787818088; c=relaxed/simple;
-	bh=HfubrEGF3eKsGUawx1MnfZr959FNLY03HrFmRB8niVo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T0OmB2rOg93riLlmpWMj6FRahCqcXGAeMHF404L9xmC+nxt04HhKdKsc3xoFQAiZlwEqzSP5kLpynCCfG3onSnTmR7Ev3w8EH+7/5HiGS4osEvHowNDE3Neh6+SUZT50P68GNYcKC9D/ZOf7zaVmGx7HR6K2rTCUFeUcJ+W/GLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=qiFkrJEI; arc=none smtp.client-ip=68.232.139.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	s=arc-20240116; t=1787869444; c=relaxed/simple;
+	bh=buHnmQymPi87tWxLV9bJoqqjddf8IU7h0AJjfltUS1M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g6WiVC1BwhdZnsALlapyG4SXEIJT7JvojuIFnKkv5BXa1PdxSDIeCGMRUPafpaz95TbLTVpBsGFk1NVPulYT6wMFOGPFxbFA1VAiNVif+vXkNuAhVgthTL7HZMJs5ZHv83tqKuDi3TCK0e9rC/ZEwyGNZho8hdc/XTguO6FF3wU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=gNMC6j97; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="qiFkrJEI"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1787818080; x=1819354080;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=HfubrEGF3eKsGUawx1MnfZr959FNLY03HrFmRB8niVo=;
-  b=qiFkrJEIxj9cPo/2sM6cn1l48JdlLOA38GV1oVMco53zTucuMFk1ZJK/
-   oheOxI2/45wuoZlFFrD297L8DZzuz+UBNVlQnPZVzvAsJWH+m2BEhZ9jX
-   mlxbftFMWCen/nf16XFar+lcv63lUfM03A1VEu9xhcK9NO4TO/te8fDMG
-   R8I5eqOdZ9QCTCCdRhk409CiSlhd+WU9xFHHU2OQCP9GKoWhChkIAPO/9
-   fpvmWKqpclGkoENGzW8LMyrrvlGXGiWCDkbIgZJcZjUisW+CToY/ryZKf
-   kqSN76HHMvlnGROuaasLF40zwCyqMG2+7pXmtnJvFRRRHzFFuX1t5axsg
-   g==;
-X-CSE-ConnectionGUID: ByX7NcZrTCGeL7bQj1dsIw==
-X-CSE-MsgGUID: mJmbNtALSrS3arWrpAVc0A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11887"; a="256543812"
-X-IronPort-AV: E=Sophos;i="6.25,246,1779116400"; 
-   d="scan'208";a="256543812"
-Received: from gmgwnl01.global.fujitsu.com ([52.143.17.124])
-  by esa6.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2026 17:07:56 +0900
-Received: from az2nlsmgm3.fujitsu.com (unknown [10.150.26.205])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by gmgwnl01.global.fujitsu.com (Postfix) with ESMTPS id 63EC1406107;
-	Thu, 27 Aug 2026 08:07:52 +0000 (UTC)
-Received: from az2uksmom3.o.css.fujitsu.com (unknown [10.151.22.205])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by az2nlsmgm3.fujitsu.com (Postfix) with ESMTPS id 19D8A180F57B;
-	Thu, 27 Aug 2026 08:07:52 +0000 (UTC)
-Received: from sm-arm-grace07 (unknown [10.124.178.20])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by az2uksmom3.o.css.fujitsu.com (Postfix) with ESMTPS id 670BD1004B16;
-	Thu, 27 Aug 2026 08:07:43 +0000 (UTC)
-Date: Thu, 27 Aug 2026 17:07:40 +0900
-From: Itaru Kitayama <itaru.kitayama@fujitsu.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Janosch Frank <frankja@linux.ibm.com>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>,
-	Fuad Tabba <fuad.tabba@linux.dev>, Joey Gouly <joey.gouly@arm.com>,
-	Steffen Eiden <seiden@linux.ibm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Atish Patra <atish.patra@linux.dev>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	David Hildenbrand <david@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	kvm@vger.kernel.org, loongarch@lists.linux.dev,
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
-	Ritesh Harjani <ritesh.list@gmail.com>
-Subject: Re: [PATCH 00/20] KVM: selftests: PPC pre-enabling
-Message-ID: <ao_wTAq6U2bvWzgu@sm-arm-grace07>
-References: <20260826230511.972824-1-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="gNMC6j97"
+Received: from [IPV6:2601:646:8081:8d71:abf3:5091:f2d1:704c] ([IPv6:2601:646:8081:8d71:abf3:5091:f2d1:704c])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 67RMMfVr1791603
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Thu, 27 Aug 2026 15:22:41 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 67RMMfVr1791603
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2026072801; t=1787869372;
+	bh=LZKaCTEQCsGwD2GMVqaYbcSqk2BZFOtph9TUIqgES9Q=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gNMC6j97IhbcMMgbmy2ny/QcgirAYDsXNjEkUGVM1Znjxud9QCneQ+NaB5oSLG7gQ
+	 v5jvb30334qIMdinwHRV9Mkm1vAkB5dFCtDPrhTExA9+mhWKMhkyyY7pwNNDXV+nYa
+	 ZIUdNM5QoTekGZ7e8HvCcyeQNddaLDAOWN/Jvy8Uxxv9wNTihWITw7TCmVqP1EgGTN
+	 kCIbtTmc82Op/HsTj3eTn45BlM2A5KPVDP0EK2g3yw1TIdDnwOqpIsCW0Ta4Fd3LkB
+	 DEHUft1fSZPVoc0UzuPw3ALg0KFFm7VuvuV0p1CXapd4uXhsjXORgINVOEreyDf3f9
+	 wBqVK82EaU2Nw==
+Message-ID: <ed8b99e6-4d90-4622-9d43-451bf6a8db2c@zytor.com>
+Date: Thu, 27 Aug 2026 15:22:35 -0700
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260826230511.972824-1-seanjc@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [patch 00/18] entry: Consolidate and rework syscall entry
+ handling
+To: Thomas Gleixner <tglx@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Shrikanth Hegde <sshegde@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
+        Kees Cook <kees@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+        loongarch@lists.linux.dev, Paul Walmsley <pjw@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org,
+        Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org,
+        x86@kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Jinjie Ruan <ruanjinjie@huawei.com>, Andy Lutomirski <luto@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>, Guo Ren <guoren@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Helge Deller
+ <deller@gmx.de>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Richard Weinberger <richard@nod.at>, Chris Zankel <chris@zankel.net>,
+        linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org,
+        linux-csky@vger.kernel.org, linux-m68k@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-um@lists.infradead.org,
+        Arnd Bergmann <arnd@arndb.de>, Vineet Gupta <vgupta@kernel.org>,
+        Will Deacon <will@kernel.org>, Brian Cain <bcain@kernel.org>,
+        Michal Simek <monstr@monstr.eu>, Dinh Nguyen <dinguyen@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Andreas Larsson <andreas@gaisler.com>,
+        linux-snps-arc@lists.infradead.org, linux-hexagon@vger.kernel.org,
+        linux-openrisc@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-arch@vger.kernel.org,
+        =?UTF-8?Q?Michal_Such=C3=A1nek?= <msuchanek@suse.de>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+References: <20260707181957.433213175@kernel.org>
+Content-Language: en-US, sv-SE
+From: "H. Peter Anvin" <hpa@zytor.com>
+In-Reply-To: <20260707181957.433213175@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Aug 26, 2026 at 04:04:51PM -0700, Sean Christopherson wrote:
-> This is a big pile of cleanups and refactoring to prepare for PPC support in
-> KVM selftests.  PPC has paging modes that require multi-page page tables, and
-> those page tables need to be naturally aligned.  The original proposal was to
-> plumb in an @align param to the page allocators[*], but I didn't love the idea
-> of adding another rarely used param to the allocators.
+On 2026-07-07 12:05, Thomas Gleixner wrote:
+> Sorry for the long CC list, but this is a treewide change.
 > 
-> Reworking the APIs to take a region type requires a fair bit of churn, and was
-> more painful than expected as I didn't realize just how many one-off tests did
-> weird things, but overall I think it's worth it?  If only to keep cutting down
-> on the use of magic memslot numbers in tests.
+> Michal recently posted a RFC patch to separate the potential syscall number
+> modifications in syscall_enter_user_mode_work() from the information
+> whether the syscall should be processed and the return value modified:
 > 
-> This needs explicit testing on s390.  I tested on arm64 and x86, and given the
-> number of failures I had to wade through, I wouldn't be at all suprised if I
-> broke something subtle on s390 as well.
+>   https://lore.kernel.org/lkml/CE1qW@kunlun.suse.cz
 > 
-> I'm less concerned about RISC-V and LoongArch as they don't have any custom
-> tests that are affected (which is where I got burned).
+> The existing logic is:
+> 
+> arch_syscall()
+> 	regs->result = -ENOSYS;
+> 
+> 	syscallnr = syscall_enter_from_user_mode(regs, syscall);
+> 
+> 	if (syscallnr != -1L)
+> 		regs->result = invoke_syscall(regs, syscall;
+> 
+> syscall_enter_from_user_mode() invokes ptrace, seccomp and
+> tracing/BPF/Probes. All of them can modify the syscall number.
+> 
+> ptrace and seccomp explicitly set the syscall number to -1L to indicate
+> that the syscall invocation needs to be skipped and the result has not to
+> be modified as it might have been modified by ptrace or seccomp. The
+> tracer/BPF/Probes mechanism can modify the syscall number as well and
+> relies implicitly on the -1L logic.
+> 
+> This can obviously not be differentiated from a syscall invocation where
+> userspace provided -1 as syscall number.
+> 
+> The general agreement of the discussion was that the current mechanism,
+> while functionally correct is non-intuitive and something like Michals
+> proposal would make that code clearer and easier to handle on the
+> architecture side:
+> 
+> arch_syscall()
+> 	regs->result = -ENOSYS;
+> 
+> 	if (syscall_enter_from_user_mode(regs, &syscall)) 
+> 		regs->result = invoke_syscall(regs, syscall;
+> 
+> That discussion made me look deeper into the related code and as usual
+> there were a lot of other things to discover.
+> 
+>   1) Stack randomization
+> 
+>      add_random_kstack_offset() can only be invoked after
+>      enter_from_user_mode() established proper state as it calls into
+>      instrumentable code.
+> 
+>      PowerPC got that wrong and the other architectures either invoke it
+>      after enter_from_user_mode() or after syscall_enter_from_user_mode().
+> 
+>      The latter is suboptimal as the randomization takes place after all
+>      the user mode entry work. Aside of that add_random_kstack_offset()
+>      uses get/put_cpu_var(), which makes it usable in preemptible code, but
+>      when invoked in the interrupt disabled region that's pointless
+>      overhead.
+> 
+>   2) As discussed in the above thread just changing the function signature
+>      of syscall_enter_from_user_mode[_work]() so they take a pointer
+>      argument for the syscall and then return 0 on success is not really
+>      intuitive either. Aside of that this breaks the implicit assumption of
+>      the tracer when setting the syscall number to -1.
+> 
+>   3) The x86 entry code has some historically accumulated oddities
+> 
+> The following series addresses this by:
+> 
+>   1) Providing new [syscall_]enter_from_user_mode() variants, which include
+>      stack randomization and utilize a new add_random_kstack_offset_irqsoff()
+>      variant, which avoids the get/put_cpu_var() overhead and converting all
+>      usage sites over
+> 
+>   2) Picking up Jinjie's seccomp patch from:
+> 
+>      https://lore.kernel.org/lkml/20260629130616.642022-2-ruanjinjie@huawei.com
+> 
+>      and addressing the feedback (renaming the seccomp functions)
+> 
+>   3) Making the ptrace and tracer related functions return a boolean value
+>      to indicate syscall permission
+> 
+>   4) Addressing the x86 oddities
+> 
+>   5) Converting the tree over to the new scheme
+> 
+> With that all architectures using the generic syscall entry code follow the
+> same scheme, apply stack randomization at the correct and earliest possible
+> place and skip syscall processing depending on the boolean return value of
+> syscall_enter_from_user_mode[_work]().
+> 
+> There should be no functional changes, at least there are none intended.
+> 
+> The resulting text size for the syscall entry code on x8664 is slightly
+> smaller than before these changes.
+> 
+> Testing syscall heavy workloads and micro benchmarks shows a small
+> performance gain for the general rework, but the last patch, which changes
+> the logic to be more understandable has no measurable impact in either
+> direction.
+> 
+> The series applies on Linus tree and is also available from git:
+> 
+>         git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git entry-rework-v1
+> 
+Hi,
 
-I ran kvm_page_table_test with this series applied on Grace CPUs.
+It looks like I didn't get a personal Cc: on this one and so I missed it (it
+happened just before I found out I would be departing Intel, so I can make the
+excuse that I was just a bit distracted.)
 
-Passes across all the arm64 guest modes supported.
+This series is a great cleanup, but it did make me concerned on one count: it
+ends up making it universal that the syscall number is always stored and
+fetched from memory. I'm worried that this may have undesirable effects on
+future CPUs which incorporate data speculation, which is probably something
+that will happen at some point (this is a general statement, not in any way
+related to any former employers of mine.)
 
-Tested-by: Itaru Kitayama <itaru.kitayama@fujitsu.com>
+As such, I was looking at changing that to *always* keep the system call
+number in a register, to allow the CPU to consistently maintain a "chain of
+custody" of this value.
 
-> 
-> [*] https://lore.kernel.org/all/df86b5ccdbdafc3509d9538bd5e6796737bab2db.1781093720.git.ritesh.list@gmail.com
-> 
-> Nicholas Piggin (1):
->   KVM: selftests: Use goto instead of do-while to retry finding unused
->     physical pages
-> 
-> Sean Christopherson (19):
->   KVM: selftests: Use MEM_REGION_PT memslot instead of '0' for s390
->     regions/segments
->   KVM: selftests: Bump the minimum GPA for page tables to 0x200000
->   KVM: selftests: Use vm_alloc_page_table() to allocate LoongArch page
->     tables
->   KVM: selftests: Rename "num" param to "nr_pages" for physical page
->     allocators
->   KVM: selftests: Extend page allocator to support naturally aligned
->     allocations
->   KVM: selftests: Make the single-page allocator APIs static inline
->   KVM: selftests: Use the innermost page allocator API in the memslot
->     perf test
->   KVM: selftests: Use the innermost page allocator API in s390's IRQ
->     routing test
->   KVM: selftests: Add a wrapper API to allocate multiple page table
->     pages
->   KVM: selftests: Initialize vm->memslots[] with invalid memslots during
->     creation
->   KVM: selftests: Add APIs to override memory region types with custom
->     memslots
->   KVM: selftests: Add TEST_EXTRA memory region type for "special"
->     memslots
->   KVM: selftests: Use TEST_EXTRA region in arm64's vGIC LPI stress test
->   KVM: selftests: Use TEST_EXTRA region in x86's smaller MAXPHYADDR test
->   KVM: selftests: Use TEST_EXTRA region in set memory region test
->   KVM: selftests: Take the memory region type, not memslot, in page
->     allocators
->   KVM: selftests: Use TEST_ASSERT(), not assert(), in
->     vm_get_mem_region()
->   KVM: selftests: Automatically pick min_gpa for allocations based on
->     region type
->   KVM: selftests: Add arch hook to force page tables to be naturally
->     aligned
-> 
->  .../selftests/kvm/arm64/page_fault_test.c     |  18 ++-
->  .../selftests/kvm/arm64/vgic_lpi_stress.c     |  19 ++-
->  .../testing/selftests/kvm/include/kvm_util.h  | 106 +++++++++++++--
->  tools/testing/selftests/kvm/include/x86/smm.h |   2 +-
->  .../selftests/kvm/lib/arm64/processor.c       |   4 +-
->  tools/testing/selftests/kvm/lib/kvm_util.c    | 127 +++++++++++-------
->  .../selftests/kvm/lib/loongarch/processor.c   |   5 +-
->  .../selftests/kvm/lib/riscv/processor.c       |   4 +-
->  .../selftests/kvm/lib/s390/processor.c        |   7 +-
->  .../testing/selftests/kvm/lib/x86/processor.c |  15 ++-
->  .../testing/selftests/kvm/memslot_perf_test.c |   3 +-
->  tools/testing/selftests/kvm/s390/cmma_test.c  |  19 +--
->  .../testing/selftests/kvm/s390/irq_routing.c  |   2 +-
->  .../selftests/kvm/set_memory_region_test.c    |   8 +-
->  .../x86/smaller_maxphyaddr_emulation_test.c   |   9 +-
->  15 files changed, 219 insertions(+), 129 deletions(-)
-> 
-> 
-> base-commit: 76671054f9a1ff6abb976583cd8da37650acdc97
-> -- 
-> 2.55.0.887.g758fc8c411-goog
-> 
+This isn't a hard thing to solve in any way: replacing the pointer argument
+with a two-element structure return would do the trick. As far as I know,
+*all* architectures that support Linux support returning structures with two
+register-sized values in registers.
+
+However, before digging into this I would like to hear people's opinions.
+
+	-hpa
+
