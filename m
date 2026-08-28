@@ -1,37 +1,41 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7A5B381EA3;
-	Fri, 28 Aug 2026 03:13:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A364F28C840
+	for <loongarch@lists.linux.dev>; Fri, 28 Aug 2026 04:27:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787886810; cv=none; b=mSgDgJfeBBj9RsL6aTj83BgXH4b95DpwwMIsuuMxoyIXC0wW46ngGTtINblzDF5rm42V6M4bw2/9aca6yuJB+ojsWOu436yqXrXglX7/eJev6uA/8Jv7NfjQVtTzl7f+oZS2EWldJkqHM8E240e1vFDfRWXF8pmTHwMfJI2TBgY=
+	t=1787891251; cv=none; b=EtP+CLEJFyTNjq4O/BHKJqJdQmGl9vuJVqFH6iWZdGnI4AuVZbSssTy72b0bkSlHDuehilohznRh2YEMWT/2+iVxnglgx80pvdMVbj6MUBvEyB5TgKitVpKo5vPaa5Oz+nU8lYun91abqFn2zD42hHCbfStPYDdtLBwWPL7vWZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787886810; c=relaxed/simple;
-	bh=ZsF9BHMV8HOeRUybQmeX5BLLV0crMaLcBiNlhT8/+zQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=O9wvyDMX5cpKW8ZlU/p0l4DehaZ+R2ZcAG5k1du5HBxI/dzIFboeaQKPY2d9H2dmgcDoPfoeK83S/oEubmTKtr2oMBC8XBY3oMpKyap1KpRtsy9MgVbE+rdO7AkEEDZeATsXvqAUtKBK4qO2AZMD8yXDsq84CIHXxll+UJv8XB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 410DA1F000E9;
-	Fri, 28 Aug 2026 03:13:24 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Huacai Chen <chenhuacai@kernel.org>
+	s=arc-20240116; t=1787891251; c=relaxed/simple;
+	bh=ack64tm/a65e5S9d7si+oM3iJIytD5JYoRJG2M1VUnE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O9VhssaWnZuxkiYfOJm4VhrHNCuPEmOlVZrNkQHmxfjQu9ukP7Hrn+13uPENVZVm9E7yYJfK2Qm6TPBKbGxJYXRPuPcVIwntt1dlKYMCVwnD3tOWI+VSLNLXskYFNSyzRSFeOnHEUf3xOa3v6qw1j0aGVIM/eyBAoQzDBi5Nc58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [123.138.236.242])
+	by gateway (Coremail) with SMTP id _____8DxztIoDpFqK_oFAA--.16756S3;
+	Fri, 28 Aug 2026 12:27:20 +0800 (CST)
+Received: from linux.localdomain (unknown [123.138.236.242])
+	by front1 (Coremail) with SMTP id qMiowJDxTs8kDpFq2hgVAA--.42199S2;
+	Fri, 28 Aug 2026 12:27:17 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Emil Tsalapatis <emil@etsalapatis.com>,
+	Ihor Solodrai <ihor.solodrai@linux.dev>
 Cc: loongarch@lists.linux.dev,
-	linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	stable@vger.kernel.org,
-	Xi Ruoyao <xry111@xry111.site>
-Subject: [PATCH V2 5/5] cpufreq: loongson3: Replace IOCSR read/write with MMIO ones
-Date: Fri, 28 Aug 2026 11:12:01 +0800
-Message-ID: <20260828031201.1500767-6-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260828031201.1500767-1-chenhuacai@loongson.cn>
-References: <20260828031201.1500767-1-chenhuacai@loongson.cn>
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH bpf-next v1] selftests/bpf: Add test for indirect struct_ops trampoline
+Date: Fri, 28 Aug 2026 12:27:15 +0800
+Message-ID: <20260828042715.16546-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -39,94 +43,198 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxTs8kDpFq2hgVAA--.42199S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Gw43Ww43XFy8uFW5tF4kKrX_yoWxWryfpa
+	y8Aw1YyF48JrWDWFyxXa1UZF4Sgws3Z3yUGFWDG3s5ua4fX34DJF18tFySyr95W39Yvr13
+	A3ZYkr98ua1xZ3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
+	AwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+	6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+	0xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4
+	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
+	xVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcTKZDUUUU
 
-Our server productions (e.g. Loongson-3D6000/3E6000) can have multiple
-nodes in one package and SMC mailboxes are also per-node. However, IOCSR
-read/write can only perform on the current node, while sometimes we want
-to perform on other nodes (e.g. when switch governor, the get and target
-callbacks are not run on target core). So replace IOCSR read/write with
-MMIO ones.
+Add a test case to verify that arguments passed on the stack are correctly
+read by indirect struct_ops trampoline. This test ensures the correctness
+of stack offsets on architectures like LoongArch and RISC-V.
 
-Cc: stable@vger.kernel.org
-Fixes: ccf51454145b ("cpufreq: Add Loongson-3 CPUFreq driver support")
-Tested-by: Xi Ruoyao <xry111@xry111.site>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- drivers/cpufreq/loongson3_cpufreq.c | 34 +++++++++++++++++++++++------
- 1 file changed, 27 insertions(+), 7 deletions(-)
+This is to test the following two patches:
 
-diff --git a/drivers/cpufreq/loongson3_cpufreq.c b/drivers/cpufreq/loongson3_cpufreq.c
-index 3a5bf970077a..dcb6c70c0def 100644
---- a/drivers/cpufreq/loongson3_cpufreq.c
-+++ b/drivers/cpufreq/loongson3_cpufreq.c
-@@ -16,6 +16,7 @@
- #include <asm/loongarch.h>
- #include <asm/loongson.h>
- #include <asm/smp.h>
-+#include <asm/numa.h>
- 
- /* Message */
- union smc_message {
-@@ -164,6 +165,12 @@ union smc_message {
- 
- #define FREQ_MAX_LEVEL			16
- 
-+#define MMIO_SMCMBX(node) \
-+	((void __iomem *)(nid_to_addrbase(node) | IO_BASE | LOONGSON_REG_BASE | LOONGARCH_IOCSR_SMCMBX))
+bpf, riscv: Fix stack-passed arguments for indirect trampolines
+https://lore.kernel.org/bpf/20260821233516.3426127-3-memxor@gmail.com/
+
+bpf, loongarch: Fix stack arguments for indirect trampolines
+https://lore.kernel.org/bpf/20260821233516.3426127-8-memxor@gmail.com/
+
+ .../prog_tests/test_struct_ops_trampoline.c   | 41 +++++++++++++++++++
+ .../bpf/progs/struct_ops_trampoline.c         | 24 +++++++++++
+ .../selftests/bpf/test_kmods/bpf_testmod.c    | 18 ++++++++
+ .../selftests/bpf/test_kmods/bpf_testmod.h    |  5 +++
+ 4 files changed, 88 insertions(+)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/test_struct_ops_trampoline.c
+ create mode 100644 tools/testing/selftests/bpf/progs/struct_ops_trampoline.c
+
+diff --git a/tools/testing/selftests/bpf/prog_tests/test_struct_ops_trampoline.c b/tools/testing/selftests/bpf/prog_tests/test_struct_ops_trampoline.c
+new file mode 100644
+index 000000000000..5a21aedd02fc
+--- /dev/null
++++ b/tools/testing/selftests/bpf/prog_tests/test_struct_ops_trampoline.c
+@@ -0,0 +1,41 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <test_progs.h>
++#include "struct_ops_trampoline.skel.h"
 +
-+#define MMIO_MISC_FUNC(node) \
-+	((void __iomem *)(nid_to_addrbase(node) | IO_BASE | LOONGSON_REG_BASE | LOONGARCH_IOCSR_MISC_FUNC))
++#if defined(__loongarch__) || defined(__riscv)
++static void run_struct_ops_trampoline(void)
++{
++	struct struct_ops_trampoline *skel;
++	struct bpf_link *link;
++	int err;
 +
- struct loongson3_freq_data {
- 	unsigned int def_freq_level;
- 	struct cpufreq_frequency_table table[];
-@@ -176,13 +183,27 @@ static DEFINE_PER_CPU(struct loongson3_freq_data *, freq_data);
- static inline int do_service_request(u32 id, u32 info, u32 cmd, u32 val, u32 extra)
- {
- 	int retries;
--	unsigned int cpu = raw_smp_processor_id();
--	unsigned int nid = cpu_to_node(cpu);
-+	unsigned int cpu = 0, nid;
- 	union smc_message msg, last;
- 
-+#ifdef CONFIG_SMP
-+	switch (cmd) {
-+	case CMD_GET_FREQ_INFO:
-+	case CMD_SET_FREQ_INFO:
-+	case CMD_GET_FREQ_LEVEL_NUM:
-+	case CMD_GET_FREQ_LEVEL_INFO:
-+	case CMD_GET_FREQ_BOOST_LEVEL:
-+		cpu = cpu_number_map(id);
-+		break;
-+	default:
-+		cpu = raw_smp_processor_id();
-+	}
++	skel = struct_ops_trampoline__open();
++	if (!ASSERT_OK_PTR(skel, "struct_ops_trampoline__open"))
++		return;
++
++	err = struct_ops_trampoline__load(skel);
++	if (!ASSERT_OK(err, "struct_ops_trampoline__load"))
++		goto cleanup;
++
++	link = bpf_map__attach_struct_ops(skel->maps.testmod_trampoline);
++	if (!ASSERT_OK_PTR(link, "attach_struct_ops"))
++		goto cleanup;
++
++	ASSERT_OK(trigger_module_test_read(256), "trigger_read");
++
++	ASSERT_EQ(skel->bss->got_arg9, 9999, "check_stack_passed_arg9");
++
++	bpf_link__destroy(link);
++cleanup:
++	struct_ops_trampoline__destroy(skel);
++}
 +#endif
-+	nid = cpu_to_node(cpu);
 +
- 	mutex_lock(&cpufreq_mutex[nid]);
++void test_struct_ops_trampoline(void)
++{
++#if defined(__loongarch__) || defined(__riscv)
++	run_struct_ops_trampoline();
++#else
++	test__skip();
++#endif
++}
+diff --git a/tools/testing/selftests/bpf/progs/struct_ops_trampoline.c b/tools/testing/selftests/bpf/progs/struct_ops_trampoline.c
+new file mode 100644
+index 000000000000..b0fc19a2a0c5
+--- /dev/null
++++ b/tools/testing/selftests/bpf/progs/struct_ops_trampoline.c
+@@ -0,0 +1,24 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <vmlinux.h>
++#include <bpf/bpf_tracing.h>
++#include "../test_kmods/bpf_testmod.h"
++#include "bpf_misc.h"
++
++char _license[] SEC("license") = "GPL";
++
++__u64 got_arg9 = 0;
++
++SEC("struct_ops/test_trampoline")
++int BPF_PROG(test_trampoline, int arg1, int arg2, int arg3,
++			      int arg4, int arg5, int arg6,
++			      int arg7, int arg8, int arg9)
++{
++	got_arg9 = arg9;
++
++	return 0;
++}
++
++SEC(".struct_ops.link")
++struct bpf_testmod_ops testmod_trampoline = {
++	.test_trampoline = (void *)test_trampoline,
++};
+diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
+index 850cf4f830c4..be96bbc1b7c0 100644
+--- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
++++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
+@@ -589,6 +589,9 @@ noinline int bpf_testmod_trampoline_count_test(void)
+ 	return 0;
+ }
  
--	last.value = iocsr_read32(LOONGARCH_IOCSR_SMCMBX);
-+	last.value = readl(MMIO_SMCMBX(nid));
- 	if (!last.complete) {
- 		mutex_unlock(&cpufreq_mutex[nid]);
- 		return -EPERM;
-@@ -195,12 +216,11 @@ static inline int do_service_request(u32 id, u32 info, u32 cmd, u32 val, u32 ext
- 	msg.extra	= extra;
- 	msg.complete	= 0;
++struct bpf_testmod_ops;
++static struct bpf_testmod_ops *st_ops_trampoline;
++
+ noinline ssize_t
+ bpf_testmod_test_read(struct file *file, struct kobject *kobj,
+ 		      const struct bin_attribute *bin_attr,
+@@ -637,6 +640,9 @@ bpf_testmod_test_read(struct file *file, struct kobject *kobj,
  
--	iocsr_write32(msg.value, LOONGARCH_IOCSR_SMCMBX);
--	iocsr_write32(iocsr_read32(LOONGARCH_IOCSR_MISC_FUNC) | IOCSR_MISC_FUNC_SOFT_INT,
--		      LOONGARCH_IOCSR_MISC_FUNC);
-+	writel(msg.value, MMIO_SMCMBX(nid));
-+	writel(readl(MMIO_MISC_FUNC(nid)) | IOCSR_MISC_FUNC_SOFT_INT, MMIO_MISC_FUNC(nid));
+ 	bpf_testmod_test_struct_ops3();
  
- 	for (retries = 0; retries < 10000; retries++) {
--		msg.value = iocsr_read32(LOONGARCH_IOCSR_SMCMBX);
-+		msg.value = readl(MMIO_SMCMBX(nid));
- 		if (msg.complete)
- 			break;
++	if (st_ops_trampoline && st_ops_trampoline->test_trampoline)
++		st_ops_trampoline->test_trampoline(1, 2, 3, 4, 5, 6, 7, 8, 9999);
++
+ 	struct_arg3 = kmalloc((sizeof(struct bpf_testmod_struct_arg_3) +
+ 				sizeof(int)), GFP_KERNEL);
+ 	if (struct_arg3 != NULL) {
+@@ -1619,6 +1625,10 @@ static int bpf_testmod_ops_init_member(const struct btf_type *t,
+ 		((struct bpf_testmod_ops *)kdata)->data = ((struct bpf_testmod_ops *)udata)->data;
+ 		return 1;
+ 	}
++
++	if (member->offset == offsetof(struct bpf_testmod_ops, test_trampoline) * 8)
++		st_ops_trampoline = (struct bpf_testmod_ops *)kdata;
++
+ 	return 0;
+ }
  
+@@ -1694,6 +1704,13 @@ bpf_testmod_ops__test_return_ref_kptr(int dummy, struct task_struct *task__ref,
+ 	return NULL;
+ }
+ 
++static int bpf_testmod_ops__test_trampoline(int arg1, int arg2, int arg3,
++					    int arg4, int arg5, int arg6,
++					    int arg7, int arg8, int arg9)
++{
++	return arg9;
++}
++
+ static struct bpf_testmod_ops __bpf_testmod_ops = {
+ 	.test_1 = bpf_testmod_test_1,
+ 	.test_2 = bpf_testmod_test_2,
+@@ -1701,6 +1718,7 @@ static struct bpf_testmod_ops __bpf_testmod_ops = {
+ 	.test_refcounted = bpf_testmod_ops__test_refcounted,
+ 	.test_refcounted_multi = bpf_testmod_ops__test_refcounted_multi,
+ 	.test_return_ref_kptr = bpf_testmod_ops__test_return_ref_kptr,
++	.test_trampoline = bpf_testmod_ops__test_trampoline,
+ };
+ 
+ struct bpf_struct_ops bpf_bpf_testmod_ops = {
+diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.h b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.h
+index 210b919290cc..a5349d09ce55 100644
+--- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.h
++++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.h
+@@ -46,6 +46,11 @@ struct bpf_testmod_ops {
+ 	struct task_struct *(*test_return_ref_kptr)(int dummy, struct task_struct *task,
+ 						    struct cgroup *cgrp);
+ 
++	/* Used to test indirect struct_ops trampolines stack-passed arguments (>8 args). */
++	int (*test_trampoline)(int arg1, int arg2, int arg3,
++			       int arg4, int arg5, int arg6,
++			       int arg7, int arg8, int arg9);
++
+ 	/* The following fields are used to test shadow copies. */
+ 	char onebyte;
+ 	struct {
 -- 
-2.52.0
+2.42.0
 
