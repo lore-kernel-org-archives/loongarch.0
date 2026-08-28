@@ -1,143 +1,67 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 729502D5A01
-	for <loongarch@lists.linux.dev>; Thu, 27 Aug 2026 22:47:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5994E18A6DB;
+	Fri, 28 Aug 2026 03:12:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787870881; cv=none; b=Kvno/HqukZKgsSqou2j+bSoYUeZ5XoBMkX0CsX1bee1fvqZtXOSm2m9pnhXV0bduOCkRoBXdocRQTjnKVwbgoNJPGneqyx99gR8knGB90EP3/fhiTCiNs3bQVONTfr7OnhLOV+SGey3LqkbTiuyj/Y60ogsBEDvFhQkWw5Q8Hy4=
+	t=1787886745; cv=none; b=h/jPQOi07Yr0WnK04BU2u5IP7sCrZJz4RrkVqy/IHUqrRhwa7c9ZsSQfrZUtKOyK2jsjtgcxIrKYZdISqZLJDH8rvuO0qfJfal+cGoxjQcx4lFy2kcVo2mNb/zP/fib2vbuxt5UZR1W90OrAkVPctfrx3JLyHoacrwmFsfebwNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787870881; c=relaxed/simple;
-	bh=oVpn3Y3xe4yNSLPISH532HiWMGCaPXfViMVpomdHH3k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sfzq5myNEkIQ0/cxGLt7PUcFd2WNnVMViu3LL//36m6jpJ6va8Vd4ldcid84swiIl1c563bB4N+rAyuBmpVuJaVCvR1NMdU2L7SpTa8r3ZYTuiyWTqgNwqyepvaPz7NhR0yGkU6r7iiSOF/SBmTKStMt0hj9VzC8oM8iuS4ykpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=GymOd4Rk; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="GymOd4Rk"
-Received: from [IPV6:2601:646:8081:8d71:8c93:dacb:e5fa:49aa] ([IPv6:2601:646:8081:8d71:8c93:dacb:e5fa:49aa])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 67RMl4Qn1836438
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Thu, 27 Aug 2026 15:47:04 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 67RMl4Qn1836438
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2026072801; t=1787870834;
-	bh=EXQuytFudEdgp91C+uFz8aeu/WW15G7DgPzpxtGKF4M=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GymOd4RkxGi8njVCQCfisvKP39Bb44ZVOGqd2ZqhsM67DzFyYn8S/jMXCU8Rma33W
-	 PEelxL7L8kBY+qk5qAEjpsMwfkxEwjrDmJEsL+fSa6zkpR+h5d+MOwPtTLVMwwm0lZ
-	 bCPemLIjQYuVaQEQRjl132J4YP0xzX54ej4JFh90v2xhqZFikkHSFSnGkczichDoFv
-	 sZK/qGKEclFkhvxq+v2kMkmJ4o1BjYqiHVTd5aGLm7HyH0fkUCbFxhX7p3xCNzPfY0
-	 gzR1rveeuo2MbtEx3KqfD+thNsEFw5il2Dad3o6axDhdFmbVxxjrh2OwAc/diiyN8G
-	 nWKtXnX6xx8pw==
-Message-ID: <995a61ef-ce8c-4c8b-bea8-77f375076a39@zytor.com>
-Date: Thu, 27 Aug 2026 15:46:58 -0700
+	s=arc-20240116; t=1787886745; c=relaxed/simple;
+	bh=4KOGFjsL+inYC/qd0pSucrj3B/G3auaLZEAf/ZnyyhM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TR8TIefeKWQrhiHU4ACgkZs4gViaezq42brcLO9sNz6Y/IdH7hJE/7xD8ukzsbsd+eGOkVbJctkfCgdQZo4I4prUdWfyZVo/uTpyWRhhNxN8uPwNEdaA7qOfnKyQidpsK2XIjeowKWG1Me8Zk5PheoDUrqGFZxN+ZRyJ8yyaARE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8393C1F000E9;
+	Fri, 28 Aug 2026 03:12:21 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Hongliang Wang <wanghongliang@loongson.cn>
+Subject: [PATCH V2 0/5] cpufreq: loongson3: Fix wrong behaviors on multi-node servers
+Date: Fri, 28 Aug 2026 11:11:56 +0800
+Message-ID: <20260828031201.1500767-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [patch 03/18] entry: Provide
- [syscall_]enter_from_user_mode_randomize_stack()
-To: Thomas Gleixner <tglx@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Shrikanth Hegde <sshegde@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
-        Kees Cook <kees@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-        loongarch@lists.linux.dev, Paul Walmsley <pjw@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org,
-        Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org,
-        x86@kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Jinjie Ruan <ruanjinjie@huawei.com>, Andy Lutomirski <luto@kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>, Guo Ren <guoren@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Helge Deller
- <deller@gmx.de>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Richard Weinberger <richard@nod.at>, Chris Zankel <chris@zankel.net>,
-        linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org,
-        linux-csky@vger.kernel.org, linux-m68k@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-sh@vger.kernel.org, linux-um@lists.infradead.org,
-        Arnd Bergmann <arnd@arndb.de>, Vineet Gupta <vgupta@kernel.org>,
-        Will Deacon <will@kernel.org>, Brian Cain <bcain@kernel.org>,
-        Michal Simek <monstr@monstr.eu>, Dinh Nguyen <dinguyen@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Andreas Larsson <andreas@gaisler.com>,
-        linux-snps-arc@lists.infradead.org, linux-hexagon@vger.kernel.org,
-        linux-openrisc@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-arch@vger.kernel.org,
-        =?UTF-8?Q?Michal_Such=C3=A1nek?= <msuchanek@suse.de>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-References: <20260707181957.433213175@kernel.org>
- <20260707190253.816918647@kernel.org>
-Content-Language: en-US, sv-SE
-From: "H. Peter Anvin" <hpa@zytor.com>
-In-Reply-To: <20260707190253.816918647@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2026-07-07 12:06, Thomas Gleixner wrote:
-> Randomizing the syscall stack can only happen after state is established
-> via enter_from_user_mode() or syscall_enter_from_user_mode(). The earlier
-> it happens the better.
-> 
-> Provide two new macros to consolidate that:
-> 
->   - enter_from_user_mode_randomize_stack()
-> 	enter_from_user_mode();
-> 	add_random_kstack_offset_irqsoff();
-> 
->   - syscall_enter_from_user_mode_randomize_stack()
-> 	enter_from_user_mode_randomize_stack();
-> 	syscall_enter_from_user_mode_work();
->     
-> to reduce boiler plate code.
-> 
-> Those are macros and not inline functions as the latter would limit the
-> stack randomization scope to the inline function itself.
-> 
-Not directly related to this patchset, but still:
+Our server productions (e.g. Loongson-3D6000/3E6000) can have multiple
+nodes in one package and SMC mailboxes are also per-node. However, the
+current driver has wrong behaviors on multi-node servers, including: id
+field in smc_message is too narrow, mutex is not per-node, IOCSR read/
+write can only perform on the current node, etc. This series fix all the
+above problems.
 
-Can anyone *please* find out what the actual security requirements are for the
-syscall randomization offset?
+V1 -> V2:
+1. Fix typos and add Fixes tags.
+2. Fix loongson3_cpufreq_get() return values.
+3. Use nid_to_addrbase() rather than hard code.
+4. Guard some code with CONFIG_SMP to avoid build errors.
 
-The original checkin, 39218ff4c625 ("stack: Optionally randomize kernel stack
-offset each syscall") indicates that it is fundamental that the stack offset
-is applied *after* pt_regs pushing, but that isn't documented anywhere in the
-kernel sources as far as I can tell.
+Hongliang Wang & Huacai Chen (5):
+  cpufreq: loongson3: Make this drvier depend on MACH_LOONGSON64
+  cpufreq: loongson3: Adjust the width of id and val in smc_message
+  cpufreq: loongson3: Replace per-package mutex with per-node
+  cpufreq: loongson3: Use global physical CPU ID in get/target callbacks
+  cpufreq: loongson3: Replace IOCSR read/write with MMIO ones
 
-However, I have also come to understand that there are further, undocumented
-constraints; at least at one point I was told that "the offset should not be
-stored in memory while running in the kernel", which seems more than a bit odd.
-
-This matters, because it creates a data dependency on exit. The original
-checkin does call out that RDTSC timing is inappropriate if the user could
-control it, but using a hardware CSPRNG like RDRAND (or its equivalent for
-other architectures) would be feasible if it isn't in the critical path. If an
-RDRAND - store sequence can be executed on entry, *after* the stack
-adjustment, then the high latency of RDRAND can hopefully be very effectively
-hidden by an OO CPU.
-
-Incidentally, in case you are wondering "why doesn't each core get a dedicated
-CSPRNG and hardware randomness generator, to avoid high latency", the answer
-is pretty simple: a hardware random number source, regardless of the specifics
-of the design, almost by definition violates the hardware design rules of any
-digital design; after all, the design rules are designed to *eliminate* noise
-(making the circuit behave as closely as physically possible to a realization
-of the abstract digital circuit), whereas the very goal of a HWRNG source is
-to *extract and amplify* quantum thermal noise. This means that considerable
-chip area is consumed by a "keep-out zone", a designated "no man's land"
-keeping the digital logic away from the noise source. This keep-out zone is
-typically much, much larger than the noise source itself.
-
-	-hpa
+Signed-off-by: Hongliang Wang <wanghongliang@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ drivers/cpufreq/Kconfig             |  1 +
+ drivers/cpufreq/loongson3_cpufreq.c | 72 ++++++++++++++++++++++++-------------
+ 2 files changed, 48 insertions(+), 25 deletions(-)
+---
+2.27.0
 
