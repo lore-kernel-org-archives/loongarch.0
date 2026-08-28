@@ -1,216 +1,126 @@
-Received: from mail-wm2-f10.google.com (mail-wm2-f10.google.com [74.125.225.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062B73C10A1
-	for <loongarch@lists.linux.dev>; Fri, 28 Aug 2026 04:55:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7347F3C109A;
+	Fri, 28 Aug 2026 05:29:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787892917; cv=none; b=LWGNrc2vybx6UYAfg5SqMrHN0fj/bsIuVizVJ04rBmEhFGujTI8Btxr2LMzRn0JnUxS8nyuHkQ4G6Ggp0F8kRTFfI3FtwpKSmsx7o7B2Zz9Kp1PEhb33TgTyOa/WDSVQlmG7asJD9xqndnh4Nt0EVV9djKlP1xBDJuEkmjSPkWk=
+	t=1787894945; cv=none; b=b8ghImaV1/sMdqsQrFXwPuE3r88y2BqrU0kV95HN7cfSzbf+aChIyx00jAtp/GgZllq9aNgvTAfvLTSLyD0Me9jaTAZg0gmv15wgOPt9jWJAv5eTiUWTyo+6OO78BIcue/m1qj1hfvXU2TwwdxDO4sKiGR+0nmenBwnHtM3Xc5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787892917; c=relaxed/simple;
-	bh=eF6OBhWfeTARX0S1RmtMMQxmH3vQMu2o3bia1PX5GKg=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=jUs9/+ONa6FbKgbxMPF46YbFh5eaBd2fZPKCVzDCgHLKTHsFPNEU8oxvXF7YEj2TsygXrOw5Vqyu/2fNW7YH1etjvkfxesaLai/xEH9XJfD2hNExVoMEjEPrNpoZV2DFLzFhTW7RGx7Oz5CeuPI0gBiZzVSHZX5fap05C3igysQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=sPdPupMT; arc=none smtp.client-ip=74.125.225.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1787894945; c=relaxed/simple;
+	bh=xmcWMiBAgnLLbgOm7IQia4m8RQ14Uvegkpco+TF2ur0=;
+	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
+	 Subject:From:To:Cc:Date; b=Oot+zhvpcvwQ6joM67XHcWXO3BU/5wECsN1KcTMbCkbjWUh7CnsbQrP61One8yaGQ4uytrCle8u4tozI7NClakpbMxOvFEZJMFY46xkzKpIOeSyKkWeoqC5lnm9984kKPvKPCoxsgaCxLn4REObi/KgCMO1vXPhPmMD2lQYYKYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b0BkD5al; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sPdPupMT"
-Received: by mail-wm2-f10.google.com with SMTP id 5b1f17b1804b1-49b90096ca2so665785e9.1
-        for <loongarch@lists.linux.dev>; Thu, 27 Aug 2026 21:55:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787892912; x=1788497712; darn=lists.linux.dev;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-type:content-transfer-encoding:mime-version:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=PeEIgJD4CxeENCByZsmKy3/SXVGxa2uUNLnL9vishj4=;
-        b=sPdPupMTMZT8D88S47jCOT1k/rb7da6kKVAU1wlzi+Lv27wrLrsJJ+d8BBDRi/enIy
-         aZjNYsjaCiTyImeoDtpoASC53zJi6FCfB7jZjY0i8ApQsFTxbSyt9WAONkEnsfTf6OnG
-         c56EM6f0uhHuDzcLnOIxeuE5Oi0pv0O9cDJ8j7YFXkNz0DQmdi/3pKQm0AN/2G1NMHyG
-         7rKv/C95Y+etX3aJvL/D7uIqqBkU3eVSPxELXNQp0LpYra1lNziuAFoiFGJxSRS5WP1Z
-         +oCuprjg0RG+7Y4gHR5tWWYqfFoOIGh7tIzkZd7U/auXFoWkQhalGpXaq/YUfulLUNmJ
-         pa2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787892912; x=1788497712;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-type:content-transfer-encoding:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=PeEIgJD4CxeENCByZsmKy3/SXVGxa2uUNLnL9vishj4=;
-        b=V7t53AHlCxOaZz6krnijIxE24JuiiZEwvJ+vzpMIj55lP7em872wx2fdNu12oXHILC
-         PG/375HxuuCYyh9GmELqqUJaVsyStiIZu9NkIKsxQ9dwRWHOJSsVJYhh3v+z2C7+KSDK
-         9uNX3Cq2z3SwP2WpEqEE//T1r59QvUgPfQ6R1LYA5Y49UGLppEq+2/TfaxdfTxH7l5KH
-         Jhr0ffDGrCVhT2eAXuO8SePRvfpZ7z3PjPOw9EQhIDV4fV+t4ajj2c0gQ7X2GlDbjrvi
-         1IGarReVTJDdwRhXFG6l9dlgoHoj7Kwkjb6vA+UxRLhXTQ+Leo6QYfWpDM72jGLkkLZa
-         ptQQ==
-X-Forwarded-Encrypted: i=1; AHgh+RprLnAKaz/kY0SwijIIKnEBXSAfyv9NnE7FEjtX/WNdq4bb72of6HIF/EWK9ewa7v9wzLbddmWLqQ0=@lists.linux.dev
-X-Gm-Message-State: AFuF++kWxdKlhM56JgXOks+DCPizCVWfvfPYMvwnf/bxMF+CGy3451px
-	KEe2aPoLJyqVgvMhNIjGFG8H/CWn7cRwb7GjuuJJAbDqwMOCWtulGAn7
-X-Gm-Gg: AR+sD12jMPp+u8zyF9h5vDCyK6yOC/u0bcVuCY/R7OguvqKSeTHwxfh0GVPUwnv87SI
-	BXfZbG78mSPoxh0gIpmvjj87KEpyXtkD/xCy5xPSxNQ39SSy3be8qOzvseJO3vPQPPWkRRJK1qi
-	AsvLMbu2bHY+CiLLrNJG05+7jhQi94hQT1n3XUqhuZXI2v0o7LPd2WmR35CE0zfuolBG8v96v8N
-	QrKUWQ3BXQFL6q+1hp4AYiYrdRZ8MWEDnhRGMVAKABK6FV5yrJVm+T1vfyJCjYVQFnuY4pBbY99
-	UypzhzPObS9C8hh0PpXuo2Gdj1Z1Yh479+Xm5P7oL5apbQZQmmTlz0mokd9Ewn5/4xGNxnX7tZc
-	3P0HOKxvVrVnnojjgBTMhqjGm9Nw4dnlGJSX+XEB8RE/UDiy47hecolZQYKcloY5t5Fuh4ezBys
-	nyav+6/AJj2GVgk7GcchlTkmnQsNaVvhG5AoJMHqW+QsiHXycKjDNqNPkE1eTtSW06b/XNThwTu
-	KCx1NKvsTeHCQ6P/RWHMsLVYyrTB4U29l/Y9dNiuS8V0PtbF5xr/MoLz6UhGNPgn/0SZgeBgMMc
-	NzRKAifBZn1dUKrg1rEKI9DW6z0=
-X-Received: by 2002:a05:600c:3b1a:b0:495:4d5c:903e with SMTP id 5b1f17b1804b1-49b91c2d8f3mr48930095e9.7.1787892911905;
-        Thu, 27 Aug 2026 21:55:11 -0700 (PDT)
-Received: from localhost (nat-icclus-192-26-29-3.epfl.ch. [192.26.29.3])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49b94dc0f57sm25202185e9.2.2026.08.27.21.55.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Aug 2026 21:55:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b0BkD5al"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E07D91F000E9;
+	Fri, 28 Aug 2026 05:29:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787894944;
+	bh=Y36S8vTNNdyC8fugOZaGZ2ZklylXgJ+nzT/f/UGLqoE=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date;
+	b=b0BkD5alYed4kNaDi1OFxkMbx/VmaTo6tyGqc3PakmVLUuPZWL8qYPEcoZmEkW7Jp
+	 6LewkU+uO/PRqrXDy6Qzjw24sC4dw3G/X/TZWq2BphBvdwRa7F/mC19xoxW/rrgvQq
+	 S8lH7hf9Z2ygOR+LOLPg0peCxIGformhrQ9p9wwcKoFRKwAkgcYn8b6d4XGWvAQgWm
+	 ejSyqs4GjKiTuHW9piu57la3DZpifuqd6wIHm/Lieb4zcBdweiPG24ibuEDvtIpJv5
+	 IZLXPNdq6mvF/T5Wr7zVBavc4K8JiPpYIfO3Fd0rsuP5xV03xiYpebw8yB7uTw/lqG
+	 ysI4wiFV01aVQ==
+Content-Type: multipart/mixed; boundary="===============0848727128224488949=="
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 28 Aug 2026 06:55:10 +0200
-Message-Id: <DL0B54EEQXAL.FL6Z0UXMR3SX@gmail.com>
-Cc: "Huacai Chen" <chenhuacai@kernel.org>, "Alexei Starovoitov"
- <ast@kernel.org>, "Andrii Nakryiko" <andrii@kernel.org>, "Daniel Borkmann"
- <daniel@iogearbox.net>, "Eduard Zingerman" <eddyz87@gmail.com>, "Emil
- Tsalapatis" <emil@etsalapatis.com>, "Ihor Solodrai"
- <ihor.solodrai@linux.dev>, <kkd@meta.com>, <kernel-team@meta.com>,
- <loongarch@lists.linux.dev>, "Hengqi Chen" <hengqi.chen@gmail.com>
-Subject: Re: [PATCH bpf-next v1 07/14] bpf, loongarch: Fix stack arguments
- for indirect trampolines
-From: "Kumar Kartikeya Dwivedi" <memxor@gmail.com>
-To: "Tiezhu Yang" <yangtiezhu@loongson.cn>, <bpf@vger.kernel.org>
-X-Mailer: aerc 0.21.0
-References: <20260821233516.3426127-1-memxor@gmail.com>
- <20260821233516.3426127-8-memxor@gmail.com>
- <a5d4c26c-6735-8af1-1d3f-fe7f1898b285@loongson.cn>
-In-Reply-To: <a5d4c26c-6735-8af1-1d3f-fe7f1898b285@loongson.cn>
+MIME-Version: 1.0
+Message-Id: <1a893cf993fc45d0da27fa066e413e8ca8afb226edb7d6aaed0a1ae4f4ec8642@mail.kernel.org>
+In-Reply-To: <20260828042715.16546-1-yangtiezhu@loongson.cn>
+References: <20260828042715.16546-1-yangtiezhu@loongson.cn>
+Subject: Re: [PATCH bpf-next v1] selftests/bpf: Add test for indirect struct_ops trampoline
+From: bot+bpf-ci@kernel.org
+To: yangtiezhu@loongson.cn,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org,eddyz87@gmail.com,memxor@gmail.com,martin.lau@linux.dev,song@kernel.org,yonghong.song@linux.dev,jolsa@kernel.org,emil@etsalapatis.com,ihor.solodrai@linux.dev
+Cc: loongarch@lists.linux.dev,bpf@vger.kernel.org,linux-kernel@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
+Date: Fri, 28 Aug 2026 05:29:03 +0000 (UTC)
 
-On Fri Aug 28, 2026 at 6:33 AM CEST, Tiezhu Yang wrote:
-> Cc: loongarch@lists.linux.dev
-> Cc: Hengqi Chen <hengqi.chen@gmail.com>
->
-> On 2026/8/22 =E4=B8=8A=E5=8D=887:35, Kumar Kartikeya Dwivedi wrote:
->> LoongArch passes arguments beyond a0-a7 at the caller stack pointer. The
->> trampoline store_args() helper always reads those arguments at FP + 16,
->> which is correct for an fentry trampoline: its prologue leaves FP 16 byt=
-es
->> below the stack pointer at trampoline entry after accounting for the sav=
-ed
->> parent and traced-function frames.
->>
->> A struct_ops indirect trampoline is entered through a function pointer a=
-nd
->> only saves its own RA and FP before setting FP to the entry stack pointe=
-r.
->> Its stack arguments therefore start at FP, not FP + 16. As a result, eve=
-ry
->> stack-passed struct_ops argument is currently read two slots late.
->>
->> Select the source offset based on whether the trampoline is indirect. Th=
-is
->> also prepares the stack-passed arena argument path to consume the actual
->> pointer slot.
->>
->> Fixes: c9ebe2016de9 ("LoongArch: BPF: Support up to 12 function argument=
-s for trampoline")
->> Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
->> Cc: Huacai Chen <chenhuacai@kernel.org>
->> Signed-off-by: Kumar Kartikeya Dwivedi <memxor@gmail.com>
->> ---
->>   arch/loongarch/net/bpf_jit.c | 9 +++++----
->>   1 file changed, 5 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
->> index 29c281bef28e..d193293a0fd2 100644
->> --- a/arch/loongarch/net/bpf_jit.c
->> +++ b/arch/loongarch/net/bpf_jit.c
->> @@ -1662,17 +1662,18 @@ int bpf_arch_text_invalidate(void *dst, size_t l=
-en)
->>   	return ret;
->>   }
->>
->> -static void store_args(struct jit_ctx *ctx, int nr_arg_slots, int args_=
-off)
->> +static void store_args(struct jit_ctx *ctx, int nr_arg_slots, int args_=
-off, bool is_struct_ops)
->>   {
->> +	int stack_args_off =3D is_struct_ops ? 0 : 16;
->>   	int i;
->>
->>   	for (i =3D 0; i < nr_arg_slots; i++) {
->>   		if (i < LOONGARCH_MAX_REG_ARGS)
->>   			emit_insn(ctx, std, LOONGARCH_GPR_A0 + i, LOONGARCH_GPR_FP, -args_o=
-ff);
->>   		else {
->> -			/* Skip slots for T0 and FP of traced function */
->> +			/* Skip the saved T0 and FP slots for a traced function. */
->>   			emit_insn(ctx, ldd, LOONGARCH_GPR_T1, LOONGARCH_GPR_FP,
->> -				  16 + (i - LOONGARCH_MAX_REG_ARGS) * 8);
->> +				  stack_args_off + (i - LOONGARCH_MAX_REG_ARGS) * 8);
->>   			emit_insn(ctx, std, LOONGARCH_GPR_T1, LOONGARCH_GPR_FP, -args_off);
->>   		}
->>   		args_off -=3D 8;
->> @@ -1995,7 +1996,7 @@ static int __arch_prepare_bpf_trampoline(struct ji=
-t_ctx *ctx, struct bpf_tramp_i
->>   	func_meta =3D nr_arg_slots;
->>   	emit_store_stack_imm64(ctx, LOONGARCH_GPR_T1, -func_meta_off, func_me=
-ta);
->>
->> -	store_args(ctx, nr_arg_slots, args_off);
->> +	store_args(ctx, nr_arg_slots, args_off, is_struct_ops);
->>
->>   	if (bpf_fsession_cnt(tnodes)) {
->>   		/* clear all session cookies' value */
->
-> According to the suggestion from bot+bpf-ci, adding the following
-> comment before "int stack_args_off =3D is_struct_ops ? 0 : 16;" and
-> removing the pre-existing comment inside the else branch would be
-> much better:
->
-> /*
->   * Regular fentry trampolines need to skip the 16-byte saved T0 and FP
->   * slots of the traced function. Indirect struct_ops trampolines place
->   * incoming stack arguments directly at FP.
->   */
->
-> This clarifies both frame layouts without causing any ambiguity
-> inside the loop.
->
-> Other than that, the code looks good to me:
->
-> Acked-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->
-> By the way, I wrote a selftest for this patch:
->
->    selftests/bpf: Add test for indirect struct_ops trampoline
->
-> https://lore.kernel.org/bpf/20260828042715.16546-1-yangtiezhu@loongson.cn=
-/
->
-> Without this patch:
->
->    $ sudo ./test_progs -t struct_ops_trampoline
->    ...
->    run_struct_ops_trampoline:FAIL:check_stack_passed_arg9 unexpected
-> check_stack_passed_arg9: actual 69570864 !=3D expected 9999
->    #471     struct_ops_trampoline:FAIL
->    Summary: 0/0 PASSED, 0 SKIPPED, 1 FAILED
->
-> With this patch:
->
->    $ sudo ./test_progs -t struct_ops_trampoline
->    #471     struct_ops_trampoline:OK
->    Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
->
-> Tested-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+--===============0848727128224488949==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-Thanks a lot for the test. Please also take a look at the argument rebase
-patches once you folks have more cycles. Will definitely need your help and
-reviews since they are mostly vibe coded.
+> diff --git a/tools/testing/selftests/bpf/prog_tests/test_struct_ops_trampoline.c b/tools/testing/selftests/bpf/prog_tests/test_struct_ops_trampoline.c
+> new file mode 100644
+> index 0000000000000..5a21aedd02fc5
+> --- /dev/null
+> +++ b/tools/testing/selftests/bpf/prog_tests/test_struct_ops_trampoline.c
+> @@ -0,0 +1,41 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <test_progs.h>
+> +#include "struct_ops_trampoline.skel.h"
 
+A subsystem pattern flags this as potentially concerning: the new
+standalone prog_tests file plus a new progs file are added to cover a
+9-argument struct_ops callback whose last argument is stack-passed.
+
+tools/testing/selftests/bpf/progs/struct_ops_arena.c already exercises
+this shape via bpf_testmod_ops3.test_arena_stack, whose declaration in
+bpf_testmod.h carries the comment "enough leading args to force @ptr onto
+the stack on x86 and arm64", and test_arena_stack_cb() already pins the
+slot layout with argument checks before using ctx[8]. That test is driven
+from prog_tests/test_struct_ops_arena.c in the same directory.
+
+The plausible reason for a separate file is that the arena test is gated
+to __x86_64__ || __aarch64__ and needs arena support, which LoongArch and
+RISC-V lack.
+
+Could a plain (non-arena) >8-argument member on bpf_testmod_ops3 plus a
+new case in test_struct_ops_arena.c or test_struct_ops_multi_args.c have
+avoided a new test binary?
+
+[ ... ]
+
+> diff --git a/tools/testing/selftests/bpf/progs/struct_ops_trampoline.c b/tools/testing/selftests/bpf/progs/struct_ops_trampoline.c
+> new file mode 100644
+> index 0000000000000..b0fc19a2a0c53
+> --- /dev/null
+> +++ b/tools/testing/selftests/bpf/progs/struct_ops_trampoline.c
+> @@ -0,0 +1,24 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <vmlinux.h>
+> +#include <bpf/bpf_tracing.h>
+> +#include "../test_kmods/bpf_testmod.h"
+> +#include "bpf_misc.h"
+
+This isn't a bug, but could the bpf_misc.h include be dropped? The
+program has no __failure/__success/__msg/__retval/__sink/__arch_*
+annotation, unlike progs/struct_ops_multi_args.c which includes the same
+header and does use __failure __msg(...).
+
+[ ... ]
+
+> diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
+> index 850cf4f830c48..be96bbc1b7c04 100644
+> --- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
+> +++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
+> @@ -589,6 +589,9 @@ noinline int bpf_testmod_trampoline_count_test(void)
+>  	return 0;
+>  }
 >
-> Thanks,
-> Tiezhu
+> +struct bpf_testmod_ops;
+> +static struct bpf_testmod_ops *st_ops_trampoline;
 
+This isn't a bug, but does the struct bpf_testmod_ops forward declaration
+add anything here? bpf_testmod.c already includes "bpf_testmod.h" at the
+top, which defines the struct completely, and the dereference below at
+st_ops_trampoline->test_trampoline requires the complete type. The
+neighbouring static struct bpf_testmod_ops3 *st_ops3 carries no such
+forward declaration.
+
+[ ... ]
+
+
+---
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
+
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/33142391368
+--===============0848727128224488949==--
