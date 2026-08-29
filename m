@@ -1,130 +1,134 @@
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC89A3B14D3
-	for <loongarch@lists.linux.dev>; Fri, 28 Aug 2026 18:07:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BDCB21CC5A;
+	Sat, 29 Aug 2026 10:48:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787940458; cv=none; b=YD8BxjJKCeRq/SFUVjMk8p6exlvOHz52ZYNHcZgyoQMf2giy4h18un0H5tEYw33GwOIArrSoPeFFzPRB/MrlnGK3KE7jRBDLi4lEN1I+AgqxkEd9W5c3qvWQM+HlrmFRVJwXaDIRskkJRZpTzhPx2DC033y1B5BqyeU1iagMzLc=
+	t=1788000522; cv=none; b=QSXiSR8m3HgA5mrNhnyLlHG5P54Vs4PD+b61mcKICOhQvT0LgT0AT10WyYtfxlxpJ/7n5B427quQ0gjIWuIb5zY5McFDYv2xdg4YPjkaln8Tn0pKjwy6Cp/eFbdsKUvUrT6xIcZrn26xRZ9dLMxbHb1v3zStp+DK1/x8zs8v6pI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787940458; c=relaxed/simple;
-	bh=c1tEVigf+FQrayaN3giFFn+kO+lE6WXq/YykkjI8cpQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=E/K6y5Tkskp2J6cf0oMl5H2l5P2601vYLvAEI5MwfCs3GiK55QlgNHgya2Zm/9MxrXOoraWNSKsxzOet9qtCV6ilsyP0qnJ41bR7+x8tcQuk/7GDGBUR4onwgafInO+mJNHXAFRj9Jcp1a1qcutjggXJiuRcCnMRTc3uUbIe0+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ak1hPfE+; arc=none smtp.client-ip=209.85.215.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1788000522; c=relaxed/simple;
+	bh=3F/+YtJTPXmp2oYrKToOY/XGOwgYSjO/cwvzuDz7TQg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZPnUQC2nFox9tkyLjFwOPRFxqv/ONsfFz4jm+u4bzzJtySEtOJVgzyhhJnL+MOULmKPsznu3JUVnvhTr8rQGQQzPgaAd/0Q45AWMLNMT+LFi/IgbJQgvvQ9ucsnHXHNnQWdcnFMTgUkPqlBND0w6T7+ROpt6596GiVB6/+ol6oc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LWRmvwZ5; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ak1hPfE+"
-Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-cbb20f82a0eso1192524a12.0
-        for <loongarch@lists.linux.dev>; Fri, 28 Aug 2026 11:07:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1787940456; x=1788545256; darn=lists.linux.dev;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=lD64MUyngIsCQv9tUBdkcgzvyMQxFZ53ZEBy5BtZu7g=;
-        b=Ak1hPfE+9lPTdb+MgY15WmLkFmproVNvwqX0K3Zic7p0jfu25TWTwU4OjeuhgfMp8X
-         5Vi1gMFycIij5p04vXvMOBtU8ekgbRPZceBy9x0N7WTliR/Zdm70UwLlDj5ACxi7y9Oj
-         a/M7oLzIJYAwgURpu6wpW1oLDNAUpjZYoJR0maYpsBTL/nxUwRC9l2NHkDt+1RTmCxJF
-         f64fTDfc269V2/B3fhAiZo/p3TeHC+dU9/ul8qz1YQtqj676BQuUdHuO9awUxhW+eOCk
-         wSy4/ZfwiIJgD8/YUkKeGmaPyW77iEyZDKh5Kh/kTH9bTxomJiK3S9zAYOzXUc8CfMnc
-         CMLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787940456; x=1788545256;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=lD64MUyngIsCQv9tUBdkcgzvyMQxFZ53ZEBy5BtZu7g=;
-        b=DzYwGJf97iyClcbux8wEU/2EAFjk/Ja62f6jI8/yPfq5nDtiol5iZx0kRc8BD57j+a
-         QljO3Tuvu8iwxRLA2VLJQd8ndB9CG4zDxYfryQxwvzbg7uGP0n4vDtOaFlwv0qwVOFcX
-         cQUvnL1GVQSNJy+YveJPz1sgj8JDtG7thNZpAzMjWEp8+lKyJ8u1XKqIT7bU/qiqiPDY
-         9g0lfZdYiunbwpYk8OjzO7SNP4Uf6axgjefjAsBNSfOkZ1rEkDPjgczhkcyTkXmG6sus
-         m4HooGplR0jE8tODHEpdAtjB0mgZyYbkfb2xX9bRiPnGZxDe+ucz4HdnMZ9YPNepwHqt
-         7xZg==
-X-Forwarded-Encrypted: i=1; AHgh+Ro0BYpu0ijSVZkmJzAKnk45m8icc6X5L4DcE1LJhGIUxyVE+B0rGwgipp2A8jzcSWUvpTNyDy4QyF8=@lists.linux.dev
-X-Gm-Message-State: AFuF++ld0dxP6Fy0q/L6LTvgJ7nntelxfxSADd0sTx4DS+rXq8FeZiv4
-	uF0bYuEclFBJ+ZSSmuuwh3jH7Hxo7gLzK9uZYj9Wc10cQlNCaJztgOZ/TdREKFWG0O7NOcGqAuy
-	FeqknHQ==
-X-Received: from pgtk26.prod.google.com ([2002:a65:68da:0:b0:cc1:4794:1471])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:160e:b0:3d0:e034:a26f
- with SMTP id adf61e73a8af0-3d2688bd551mr19120799637.17.1787940455451; Fri, 28
- Aug 2026 11:07:35 -0700 (PDT)
-Date: Fri, 28 Aug 2026 11:07:34 -0700
-In-Reply-To: <20260828195848.2d14e9aa@p-imbrenda>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LWRmvwZ5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4C6B1F000E9;
+	Sat, 29 Aug 2026 10:48:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788000520;
+	bh=KFZ1nhGEZbR6O/VCAicWb32eNrolFHOIlFtmV4ujfk4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=LWRmvwZ5mPls4Z+BaiG1qXwR10+CBxW+bUOShLfZyRmLMeWBsXFZbiPwmkePznqr5
+	 RDgCI5JSJI/PnwyJzmrjiTTIt4pQEyHh4ig4dGZIGujt3YWBOXTXM28p4gyqeJwbxf
+	 WsaqKftKKe5VsQ0VW/PEX8SxuQhw1GHVsePh+UKddYUexwRXUbdmDfNrJmoD2ZI1v6
+	 YA0GuLxzRK2viPxmPZf5a9S7TnaLyvMWbeiiVwoWcOVI5CYLFrXFWBc0Jr3YfAzGPD
+	 ENSQxCrpJykei+zA/nljjaxyFx/CEE02iM1psN14xjNoYwJ+aBxdLXjvTaTWkcJoke
+	 quOJdXXFQrxWg==
+Date: Sat, 29 Aug 2026 13:48:28 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Adrian =?utf-8?Q?Barna=C5=9B?= <abarnas@google.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Alexandre Ghiti <alex@ghiti.fr>, Andy Lutomirski <luto@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Brendan Jackman <brendan.jackman@linux.dev>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Hildenbrand <david@kernel.org>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Len Brown <lenb@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <pjw@kernel.org>, Pavel Machek <pavel@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Vasily Gorbik <gor@linux.ibm.com>, WANG Xuerui <kernel@xen0n.name>,
+	Will Deacon <will@kernel.org>, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-pm@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: Re: [PATCH v2 0/6] arch, mm/execmem: resolve confusion about
+ set_direct_map_valid_noflush()
+Message-ID: <apK4_MgCtPFlDwoc@kernel.org>
+References: <20260823-execmem-set-vm-perms-v0-2-v2-0-b013a37d84b3@kernel.org>
+ <20260827223947.c773e6a7324eaf3fe0d8362f@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20260826230511.972824-1-seanjc@google.com> <20260826230511.972824-3-seanjc@google.com>
- <20260828195848.2d14e9aa@p-imbrenda>
-Message-ID: <apHOZouaLKs5CgpI@google.com>
-Subject: Re: [PATCH 02/20] KVM: selftests: Bump the minimum GPA for page
- tables to 0x200000
-From: Sean Christopherson <seanjc@google.com>
-To: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
-	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Fuad Tabba <fuad.tabba@linux.dev>, Joey Gouly <joey.gouly@arm.com>, 
-	Steffen Eiden <seiden@linux.ibm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Zenghui Yu <yuzenghui@huawei.com>, Atish Patra <atish.patra@linux.dev>, 
-	Alexandre Ghiti <alex@ghiti.fr>, David Hildenbrand <david@kernel.org>, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>, 
-	Ritesh Harjani <ritesh.list@gmail.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260827223947.c773e6a7324eaf3fe0d8362f@linux-foundation.org>
 
-On Fri, Aug 28, 2026, Claudio Imbrenda wrote:
-> On Wed, 26 Aug 2026 16:04:53 -0700
-> Sean Christopherson <seanjc@google.com> wrote:
+On Thu, Aug 27, 2026 at 10:39:47PM -0700, Andrew Morton wrote:
+> On Sun, 23 Aug 2026 14:46:11 +0300 "Mike Rapoport (Microsoft)" <rppt@kernel.org> wrote:
 > 
-> > Bump selftests completely arbitrary minimum GPA for page tables from
-> > 0x180000 to 0x200000 (LoongArch's minimum), so that LoongArch can use
-> > vm_alloc_page_table() instead of open coding a rough equivalent.
+> > Recent discussion about implementation of execmem's ROX caches on arm64
+> 
+> I'm assuming a "[1]" reference was intended here.
+
+Yes :)
+ 
+> > revealed a confusion about how set_direct_map_valid_noflush()
+> > implemented on different architectures.
 > > 
-> > Signed-off-by: Sean Christopherson <seanjc@google.com>
-> > ---
-> >  tools/testing/selftests/kvm/include/kvm_util.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > On arm64 it sets or clears the PTE_VALID bit marking a PTE as present or
+> > not present.
 > > 
-> > diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
-> > index 5a7a455b5387..70906a0d1003 100644
-> > --- a/tools/testing/selftests/kvm/include/kvm_util.h
-> > +++ b/tools/testing/selftests/kvm/include/kvm_util.h
-> > @@ -175,7 +175,7 @@ static inline struct userspace_mem_region *vm_get_mem_region(struct kvm_vm *vm,
-> >  
-> >  /* Minimum allocated guest virtual and physical addresses */
-> >  #define KVM_UTIL_MIN_VADDR		0x2000
-> > -#define KVM_GUEST_PAGE_TABLE_MIN_PADDR	0x180000
-> > +#define KVM_GUEST_PAGE_TABLE_MIN_PADDR	0x200000
-> >  
-> >  #define DEFAULT_GUEST_STACK_VADDR_MIN	0xab6000
-> >  #define DEFAULT_STACK_PGS		5
+> > On other architectures it's a range version of
+> > set_direct_map_invalid_noflush() and set_direct_map_default_noflush()
+> > 
+> > Unlike arm64::set_direct_map_valid_noflush(),
+> > set_direct_map_default_noflush() not only marks PTE as present, but also
+> > sets its default protection mode.
+> > 
+> > Other than that, initial design of execmem ROX caches didn't rely on
+> > restoration of large mappings that's now available on x86, but
+> > completely removed the memory allocated for the ROX cache from the
+> > direct map to ensure that large mappings are not split. This precluded
+> > usage of VM_FLUSH_RESET_PERMS for the ROX cache allocations and required
+> > execmem to implement manipulation of the direct map alias.
+> > 
+> > Current implementation of ROX caches does not remove the direct map
+> > alias but simply calls set_memory_rox() that updates the permissions in
+> > both vmalloc address space and the direct map and relies on
+> > collapse_large_pages() in x86 CPA to keep large mappings.
+> > 
+> > This allow using VM_FLUSH_RESET_PERMS for execmem ROX cache allocations
+> > with small adjustments to set_direct_map APIs and vmalloc::reset_perms()
+> > behaviour: adding number of pages parameter to set_direct_map APIs and
+> > making resetting of the direct map permissions in vmalloc VMAP_HUGE
+> > friendly.
+> > 
+> > Implement these adjustments, make execmem always use
+> > VM_FLUSH_RESET_PERMS and revert set_direct_map_valid_noflush() changes.
+> > 
+> > [1] https://lore.kernel.org/all/20260611130144.1385343-4-abarnas@google.com
 > 
-> this breaks s390/cmma_test
+> The patchset is perhaps a little green but I tossed it in there, thanks.
 > 
-> I tried a quick fix, but nope... I will need to actually invest some
-> time (i.e. next week) to understand why the quick fix is not enough,
-> and come up with a proper fix
+> I hit a few rejects in arch/x86/mm/pat/set_memory.c, but minor stuff.
 > 
-> the good news is: it seems like cmma_test is the only test that is
-> negatively affected by this series.
+> I trust you've seen Sashiko's incidental oh-btw comments.
+> 
+> 	https://sashiko.dev/#/patchset/20260823-execmem-set-vm-perms-v0-2-v2-0-b013a37d84b3@kernel.org
 
-Is it this change specifically that's problematic?  Because if so, you can probably
-just do nothing, because Sashiko (argh, just remembered that Sashiko doesn't Cc
-everyone) pointed out that this will likely break some arm64 tests as well[*].
+Yeah, it did discover something fishy with the fallbacks handling.
+I'm looking into it.
+ 
 
-The LoongArch folks confirmed that using KVM_GUEST_PAGE_TABLE_MIN_PADDR as-is
-should be a-ok, so my plan is to drop this patch and instead have LoongArch use
-KVM_GUEST_PAGE_TABLE_MIN_PADDR.  I.e. make LoongArch match everyone else, instead
-of making everyone else match LoongArch.
-
-[*] https://lore.kernel.org/all/20260826232224.782021F000E9@smtp.kernel.org
-
+-- 
+Sincerely yours,
+Mike.
