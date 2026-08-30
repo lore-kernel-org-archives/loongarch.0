@@ -1,139 +1,202 @@
-Received: from mail-wm2-f6.google.com (mail-wm2-f6.google.com [74.125.225.134])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3613B2AA
-	for <loongarch@lists.linux.dev>; Sun, 30 Aug 2026 01:46:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F201E1A3D
+	for <loongarch@lists.linux.dev>; Sun, 30 Aug 2026 06:01:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788054411; cv=none; b=VE6LE+4G6qKDC7Cr7s0yFp3kibBB4yiR8yuiwK33rn1T7tSN2A6KTqt7PIMfuw9uPx5kOee7ehXM+olgNCSorGtIFpTwUy8qG+F5+9gLJlPNWSyAY2J2+wc+qPHoKSP2wayU3yY/DRVzT/n17em1CDOWEfZVHeA38LFNZCjb2hk=
+	t=1788069673; cv=none; b=gUeSlY7z2F1FDpdA8svX0f0HjLT3E9EGsgvuTrC2uqrla6vqlD6Sl6FZVRBV3JSojgiJsjfs05glPgA5YEuwVF3zTzFZwm5di/2y8QYNV9LGc8WpprQPzLZQ2B317+gPoGRR6ufmV3WwKEtmpOVcyCKPEMXV0m/vg+TQegu4kYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788054411; c=relaxed/simple;
-	bh=QM2jxYJvxilDMTefmjax2O9VyCgr0nOIsZolvMYW2C0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=imGYU6F1+qjGJTYe0LCqi7pkJrIY01xuu94BdktvjkDEC3WoKRvE27SicNJ9cEtjNL2zk//EhY1Kx62V9jd6jiDKHGx4J51jyROMJ78apeSboJq3mKxutpcLLmdxTde0wwDP1fkITic/kP5N+Ult3y8rbCl/EFpkdnJ1wP3YBq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eG54W5+R; arc=none smtp.client-ip=74.125.225.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1788069673; c=relaxed/simple;
+	bh=uiuHoBiI3dOR32RrWGas832qL6Ggqy0VHyUxE9ZCQVY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=IjglFLFLn6hrFQZ+MaEB2gQc3o4yQbbA6kBFyMPbA6/7co5JgLW7f0V8Yjih1vkWfAbx4tEVT59bwgY+S+8+jyuStsTvv6SWtgZ2wP4BFo5uptVRbxfiEzhgUneQRuZ0M1rHbgMoIJa45R1B9MtkSHkqMmxNQJELDy1lFoCBwSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cSkACYyB; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eG54W5+R"
-Received: by mail-wm2-f6.google.com with SMTP id 5b1f17b1804b1-499c930cb9cso4554335e9.0
-        for <loongarch@lists.linux.dev>; Sat, 29 Aug 2026 18:46:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788054408; x=1788659208; darn=lists.linux.dev;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-type:content-transfer-encoding:mime-version:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=CtUZUG5479myEUIwKmrKmHPQvtvtyLa9hp4A2ascPYs=;
-        b=eG54W5+Ret2X43YSvtdLvHehrRmPx9A0tunlPRwKflo4OAgRmP5sYBEqdJwSRC1IMC
-         OPJR5R6RL5F+PHq40EeUucZZO7Toj2TkK9/8VPUcKb4iCQ+y2i/1clPCqTHYdnrqwByF
-         fqf0kQiBepDS++y+j6pZ9U3npB+FGoAWA3h+cP2mdgqFDP3ZshS7kTk9Xp0Nd4g3+6Cy
-         O4N6HoZb1IU+yY3z8q0VQO8xTrIjMNsqa/iNPl74t2yFOVkkcVmGboNt5Xore51bQzsr
-         qlzQagi3ek+VDlL5TYzMmXgqkKN1DLcnT/23rzhyptmW+kPHHPFHzGPEe+OKUgfBMc61
-         NS2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788054408; x=1788659208;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-type:content-transfer-encoding:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=CtUZUG5479myEUIwKmrKmHPQvtvtyLa9hp4A2ascPYs=;
-        b=TvManbGpPkKEevUpZPEsUkmIbnT0yBh7Qge33XMUbPDJ1WzgQ1egZF+k7CChsty84b
-         BoDvPIXH3ms1biQc3JSnGdfhLl70dq4K2I+KFB9daCrJ8+bB+El1U2Nsfxz2SkyTALqk
-         BdNixlZFU3zW9aPlbp/uL51NjEyMT+iFlOX7clhJV0WoIBEGMc00gK/YrBbBLYSfxwoR
-         7fTICxHYL/+U2lljRK/Zz4gN5Zu8SrWSjvn/MLEe2nEISMx6Ho4It2FTd4ty2QHlq4LC
-         SXvV+2n78kJDCG32XeRgTKrPOUYpYrs0YPmjVjnIDSVo3pCv1N+L7GBlsVdA8ppoVRBz
-         GVqw==
-X-Forwarded-Encrypted: i=1; AKwUvBxpM7YaL0hd1/TJpDJWnJ5fADUApY41sKrul8zWo5fJvBbSCXvfDpgAQU62AKO0W3d36GNCC9sXFCg=@lists.linux.dev
-X-Gm-Message-State: AFuF++nyfS5JhynL0pjoE+hP3hZSrAtV8lIpsURP2WlrIZTwe8dife9i
-	zJ54LtvkO68RvmFFWqOxbeYvA9Jd7cfrFj81DjRA6gMklEWu/bBl/fV2
-X-Gm-Gg: AYBFou2HIHRwUcFWtdU5NLNy/UU+1WjatSjE3VkPEdmLFQYRiqMVPPbncjjMVlK24xr
-	Y5YCaYwTwY9FLdXLeadTOdRM1PLEywk073ezdUGdeiC+0kNtf2UXBxY7iUS2m2zgkJOqdZCYqPT
-	Y/a+d3hxvn1R8Y3eOgewUCl+xPlD236b/TcbODDeyFQ2AsRi8UEGXmBhl1WMwFcS9FASOS1ao7Y
-	uesgkxja5qrvWeLcvufQlKx1ff4kZZaFnxxNZ5FUJ/F4ZR2J+iaSIA/4JdTnx95L0T8NO2kIfHJ
-	0jVCSiDEGNVaPnBc9t+Fy0Xxcw2WzfwIYdHPCJ4T8VHDVmEERNleGYjzAODNagaZ1hKBuVdbDvX
-	XnWkD5tKWFyoTjZf+qqPFvjkJxFhWt48aTXFhnDucPyeJX2gEhjA0htIGIiJsmpC8qKkjKpWSH6
-	mAd09vkvonw2bWD2j/EBhzjRUTjBOdI82E/cCbvz1zZLurF5hWtVHqjyqCcvmTGxN7PGl82k4ti
-	pIwlBUopAZTFE9cFdLkfNAwEX1iagyHDP/kGtV6xSQ8lgPoGzCsjTimBy1GFjraDBwZC0JwX7aC
-	TBu/u3qWniVC6PtG8dXLGFud2HbJQBZ2E9oVvw==
-X-Received: by 2002:a05:6000:2287:b0:484:3310:f399 with SMTP id ffacd0b85a97d-4843310f41cmr6549348f8f.26.1788054407564;
-        Sat, 29 Aug 2026 18:46:47 -0700 (PDT)
-Received: from localhost (nat-icclus-192-26-29-3.epfl.ch. [192.26.29.3])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-482fbb2794dsm13697009f8f.25.2026.08.29.18.46.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 29 Aug 2026 18:46:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cSkACYyB"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67U2WDXN2400791;
+	Sun, 30 Aug 2026 06:00:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=cUId8m
+	VD0q8ArFhphi7F2d/4HgLaI29h9tmyckBAMNM=; b=cSkACYyBJLDRRx9opzknY4
+	y+yIFBl4Nutn5BApIR7IwEsytvC10dMjY8NV5y/ohqDUV6vHmeT+qDmM8kq5cVDQ
+	eaS8CiIyguiYz5y+NrqvStAVHykS0iHR4fg7m1iSTHhlif64lSPcRZVCFQGSaNJG
+	VPglpDjFY1/Y1/N4HKuHLw0HubPtnIyYDYkBNDp6tXJ6te62NnXIaTh8gbJ2qhTT
+	X2dsKTwQnuibJjWbek/LpedmeCY7IEb2oAkagEKbx6SPgppsqvcxPm8FqQTYbMKJ
+	ndy9jM34L7Vhnl8jR4KrtTMeNuoj4cRF4dCiNGMiQ2A9cW6RfNGYf9WjOErNZzRw
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4gbpx53ptv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 30 Aug 2026 06:00:15 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 67U5vr4O029036;
+	Sun, 30 Aug 2026 06:00:13 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4gca4vrmb6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 30 Aug 2026 06:00:13 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 67U609Hq45679074
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 30 Aug 2026 06:00:09 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7C18A20065;
+	Sun, 30 Aug 2026 06:00:09 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F1B972004F;
+	Sun, 30 Aug 2026 05:59:45 +0000 (GMT)
+Received: from [9.67.21.115] (unknown [9.67.21.115])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Sun, 30 Aug 2026 05:59:45 +0000 (GMT)
+Message-ID: <87186b8a-f68c-400b-97cf-8ea6129eba69@linux.ibm.com>
+Date: Sun, 30 Aug 2026 11:29:43 +0530
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 30 Aug 2026 03:46:46 +0200
-Message-Id: <DL1WDYI57AAF.Q8T6RDYE04J2@gmail.com>
-Cc: "Huacai Chen" <chenhuacai@kernel.org>, "Alexei Starovoitov"
- <ast@kernel.org>, "Andrii Nakryiko" <andrii@kernel.org>, "Daniel Borkmann"
- <daniel@iogearbox.net>, "Eduard Zingerman" <eddyz87@gmail.com>, "Emil
- Tsalapatis" <emil@etsalapatis.com>, "Ihor Solodrai"
- <ihor.solodrai@linux.dev>, <kkd@meta.com>, <kernel-team@meta.com>,
- <loongarch@lists.linux.dev>, "Hengqi Chen" <hengqi.chen@gmail.com>
-Subject: Re: [PATCH bpf-next v1 07/14] bpf, loongarch: Fix stack arguments
- for indirect trampolines
-From: "Kumar Kartikeya Dwivedi" <memxor@gmail.com>
-To: "Tiezhu Yang" <yangtiezhu@loongson.cn>, <bpf@vger.kernel.org>
-X-Mailer: aerc 0.21.0
-References: <20260821233516.3426127-1-memxor@gmail.com>
- <20260821233516.3426127-8-memxor@gmail.com>
- <a5d4c26c-6735-8af1-1d3f-fe7f1898b285@loongson.cn>
- <DL0B54EEQXAL.FL6Z0UXMR3SX@gmail.com>
- <2bc45d20-d08f-e5c1-9da3-699d22959f98@loongson.cn>
-In-Reply-To: <2bc45d20-d08f-e5c1-9da3-699d22959f98@loongson.cn>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 07/17] crash_dump: Fix potential double-free of
+ keys_header
+To: Jinjie Ruan <ruanjinjie@huawei.com>, catalin.marinas@arm.com,
+        will@kernel.org, mark.rutland@arm.com, chenhuacai@kernel.org,
+        kernel@xen0n.name, maddy@linux.ibm.com, mpe@ellerman.id.au,
+        npiggin@gmail.com, chleroy@kernel.org, tglx@kernel.org,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        hpa@zytor.com, akpm@linux-foundation.org, baoquan.he@linux.dev,
+        rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org,
+        ruirui.yang@linux.dev, kees@kernel.org, thuth@redhat.com,
+        gshan@redhat.com, jic23@kernel.org, james.morse@arm.com,
+        ardb@kernel.org, leitao@debian.org, yeoreum.yun@arm.com,
+        coxu@redhat.com, tangyouling@kylinos.cn, hbathini@linux.ibm.com,
+        adityag@linux.ibm.com, ionut.nechita@windriver.com,
+        liaoyuanhong@vivo.com, seanjc@google.com, fuqiang.wang@easystack.cn,
+        makb@juniper.net, piliu@redhat.com, ebiggers@kernel.org,
+        jbouron@amazon.com, mclapinski@google.com, me@linux.beauty,
+        graf@amazon.com, bgwin@google.com, robh@kernel.org,
+        takahiro.akashi@linaro.org, palmer@rivosinc.com, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, Coiby Xu <coiby.xu@gmail.com>
+References: <20260826092541.3905933-1-ruanjinjie@huawei.com>
+ <20260826092541.3905933-8-ruanjinjie@huawei.com>
+Content-Language: en-US
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+In-Reply-To: <20260826092541.3905933-8-ruanjinjie@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Authority-Analysis: v=2.4 cv=PPc/P/qC c=1 sm=1 tr=0 ts=6a93c6ef cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=IkcTkHD0fZMA:10 a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=VwQbUJbxAAAA:8
+ a=pGLkceISAAAA:8 a=Z4Rwk6OoAAAA:8 a=20KFwNOVAAAA:8 a=7ipKWUHlAAAA:8
+ a=i0EeH86SAAAA:8 a=701CVkoOzhNhLSDMr48A:9 a=QEXdDO2ut3YA:10
+ a=HkZW87K1Qel5hWWM3VKY:22 a=gpc5p9EgBqZVLdJeV_V1:22
+X-Proofpoint-GUID: VgyuYv1qmRcG1RUhv8Elbl7B939Neyl3
+X-Proofpoint-ORIG-GUID: Ipd0BTF3q-Kx16yAzRST5lJIyZJ6aY6-
+X-Proofpoint-Spam-Info: AW1haW4tMjYwODMwMDA0NCBTYWx0ZWRfX6WdQnaMjbzZO
+ +vsf9opR0Aw4vftuFjHoTgPv0tiqXKxTJoFqX/mna1HUV5/x/Hd8t1lraC+Wap35uQc7BqfgpfX
+ 79DNFHmQwQFUUnTnv04xySvmAwYH+eg=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODMwMDA0NCBTYWx0ZWRfXxCR2SgGnG2ln
+ 0DIs1D4pJzx1bLvPEbmQWlt9WYJ4EN6ORjTdDAtj9FVMwsbLY1mJAqY9wFeXbjVx0Guu/PXN8mH
+ r5aVchZXCCYmviAw1t05jDAPTP/BmPnt49C9bHbNS0HDcMl9KnEA8ASaD2Az6SBMeEczNVWMC7w
+ VMUbxScqll0iizrX6hQWyJEADnxG9t1HKC1P0aZeS8Q+SRn+bl1j66HjK4LbhQSOX8QBkpvsVy7
+ nLT4NuZf6YNHJ4LeU5DSfpIVmsyIMgiTuONGAp0ogscqfbBpgW7Nc1nOMsmz2e/joUHX3cgP0Ib
+ WCotoOpIk1dhEEOCBBkAUW3xYD1FgeX1VScKe47iEGlbTYzCRup4JQLSmtLuH/Vmxhi3LgNcpT+
+ EBIBgNUelP8Vody5Fi6uDVQjdHb8h5thhRxPTn/W13iQlsx4Ywi/yOwFmWTDjlCOsKYrwU6ZOye
+ JxbVCJGpMDVq3dGCsBQ==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-08-30_01,2026-08-27_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1011 phishscore=0 adultscore=0 suspectscore=0 bulkscore=0
+ spamscore=0 priorityscore=1501 impostorscore=0 malwarescore=0
+ lowpriorityscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2608300044
 
-On Fri Aug 28, 2026 at 10:19 AM CEST, Tiezhu Yang wrote:
-> On 2026/8/28 =E4=B8=8B=E5=8D=8812:55, Kumar Kartikeya Dwivedi wrote:
->> On Fri Aug 28, 2026 at 6:33 AM CEST, Tiezhu Yang wrote:
->
-> ...
->
->>> With this patch:
->>>
->>>     $ sudo ./test_progs -t struct_ops_trampoline
->>>     #471     struct_ops_trampoline:OK
->>>     Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
->>>
->>> Tested-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->>
->> Thanks a lot for the test. Please also take a look at the argument rebas=
-e
->> patches once you folks have more cycles. Will definitely need your help =
-and
->> reviews since they are mostly vibe coded.
->
-> Hi Kumar,
->
-> I have sent a standalone prerequisite fix for the pre-existing
-> issue:
->
-> LoongArch: BPF: Fix off-by-one error for insn_is_cast_user
-> https://lore.kernel.org/loongarch/20260828075100.24776-1-yangtiezhu@loong=
-son.cn/
->
-> IMO, when you respin, please rebase your patches 07, 08, and 09
-> on top of this fix for your v2 series.
->
-> Additionally, please send the v2 as a standalone series to the
-> loongarch mailing list loongarch@lists.linux.dev and the reviewer
-> Hengqi Chen <hengqi.chen@gmail.com> too, as the LoongArch BPF JIT
-> patches are typically routed through the loongarch-next tree.
->
-> https://lore.kernel.org/loongarch/CAAhV-H55YcyXRewC+0YzTHXb1jab0GkAV13EF9=
-nFbTx=3DUkX4ww@mail.gmail.com/
->
+Hello Jinjie,
 
-Ok, I will send v2 without loongarch changes and then split out and send th=
-em
-separately later on (or let me know if you'd like to commandeer them, I'm h=
-appy
-to do it either way).
+Coiby is handling this issue in the below patch series:
+https://lore.kernel.org/all/20260828084900.1496839-2-coiby.xu@gmail.com/
 
-Thanks
+Since the above patch series is all about crash_load_dm_crypt_keys, 
+could you
+please consider dropping this patch from your series and reviewing his patch
+instead?
+
+Thanks,
+Sourabh Jain
+
+On 26/08/26 14:55, Jinjie Ruan wrote:
+> `keys_header` was freed in `build_keys_header()` without being reset
+> to NULL, and the error path in `crash_load_dm_crypt_keys()` freed it
+> unconditionally even when reused, leading to double-free or
+> use-after-free.
+>
+> Add `free_keys_header()` to centralize freeing and NULL-setting.
+> Use it in `build_keys_header()` and only free in the error path when
+> the header was newly built (`!is_dm_key_reused`).
+>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Mike Rapoport <rppt@kernel.org>
+> Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
+> Cc: Pratyush Yadav <pratyush@kernel.org>
+> Cc: Dave Young <ruirui.yang@linux.dev>
+> Cc: stable@vger.kernel.org
+> Fixes: e3a84be1ec2f ("arm64,ppc64le/kdump: pass dm-crypt keys to kdump kernel")
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> ---
+>   kernel/crash_dump_dm_crypt.c | 15 +++++++++++----
+>   1 file changed, 11 insertions(+), 4 deletions(-)
+>
+> diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
+> index c685497cd470..ed0960ff0987 100644
+> --- a/kernel/crash_dump_dm_crypt.c
+> +++ b/kernel/crash_dump_dm_crypt.c
+> @@ -363,15 +363,21 @@ static struct configfs_subsystem config_keys_subsys = {
+>   	},
+>   };
+>   
+> +static void free_keys_header(void)
+> +{
+> +	if (keys_header) {
+> +		kvfree(keys_header);
+> +		keys_header = NULL;
+> +	}
+> +}
+> +
+>   static int build_keys_header(void)
+>   {
+>   	struct config_item *item = NULL;
+>   	struct config_key *key;
+>   	int i, r;
+>   
+> -	if (keys_header != NULL)
+> -		kvfree(keys_header);
+> -
+> +	free_keys_header();
+>   	keys_header = kzalloc(get_keys_header_size(key_count), GFP_KERNEL);
+>   	if (!keys_header)
+>   		return -ENOMEM;
+> @@ -441,7 +447,8 @@ int crash_load_dm_crypt_keys(struct kimage *image)
+>   	r = kexec_add_buffer(&kbuf);
+>   	if (r) {
+>   		pr_err("Failed to call kexec_add_buffer, ret=%d\n", r);
+> -		kvfree((void *)kbuf.buffer);
+> +		if (!is_dm_key_reused)
+> +			free_keys_header();
+>   		return r;
+>   	}
+>   	image->dm_crypt_keys_addr = kbuf.mem;
+
