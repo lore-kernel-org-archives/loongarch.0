@@ -1,36 +1,33 @@
-Received: from mta1.migadu.com (out-77.mta1.migadu.com [95.215.58.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79DC3347536
-	for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 06:30:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.77
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41B2D3C0637
+	for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 06:49:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788157861; cv=none; b=E+Ga04glb5R2AdQKx4jsGmUfS1RvdRttv+Ic6qxo7mPLfaRwivSg/hKU663m1o2r8TOPzyB2EVEibM189E4dPxEN9DJteOxgeionH3cx/pCXGxFmppuU8faQPJvK4Qq/o3VC8+6Yi7/xYPwWHcE5KMo6raq8RHQ6QNZNoyCSJ8g=
+	t=1788158960; cv=none; b=HDvXCwhJ8UQot4E73F+qxAkqYOCTdtQV61uzRUTqL99DVtcg2Cm5BOrxKJS1OSJQWVsWEEWVxlgZZ6WNmv2gSLyQxDHxK7KbTMGDXBU6GdLTi//jJv2qjyqK5GbOXBlvRchLSD0CtB1a0NfiCqyIACNktIjc2OmR1Yw7gGRhZGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788157861; c=relaxed/simple;
-	bh=8KAnISRXhR5+YkdYI9P7YjmvktPG6VGXMnSy1CkxcSE=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=gfHPy8R+Ppa1FGLEOuCINdt8L0Zh4Oa1bPu6A+TgXNvFBLMtG0+NboTM9ckDuDG4U7AOi+IObYSJXjwxfZoxEx6v1J9PZdudJ+c+5TQ8SKgd7Fl+LXrpkX8U2uV0ULEBpbK8Ua8HFde5W43gwyUI09nEtG/Xm5438p8Ch2ydru8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Bapk2w4H; arc=none smtp.client-ip=95.215.58.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1788158960; c=relaxed/simple;
+	bh=UzZgy0NWc63K+ko4Xr6TdOnwA9EjAL5aleqBNdt6jY4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CCpqVoxxwiPeGPuSjWQ5XF1QqNwR1HtM8t1ReswomFO1aTcJDXup0zmnR8S8uSQlHhUP7mi5fSv7Js4VFCWUf5ath88uT7EyIUBsFSmybIUyOD1RSBqWBe35dl4O7VAg9MWV1xEw9ybj7nLtg4Toh82HiYk15x+OfjMrCwjPYyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=U7FcIb97; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Bapk2w4H"
-X-Envelope-To: loongarch@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=8KAnISRXhR5+YkdYI9P7YjmvktPG6VGXMnSy1CkxcSE=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1788157857; v=1; x=1788762657;
- b=Bapk2w4HWE2kaQ/junVXJduYJtexc8oKKmeyE6phnadV5Dx60y1t8E5OuoJlBB5ZLjbOn2X1
- KuXOWzhwsDNsC7fK+uuiN/YH6waflArB7cCg/Z1EARfNK4VJxuc+0RsNT13pMAM3X5ZARuOnNgD
- OMbi85hxB2aimG/K3vQBeBbM=
-X-Envelope-To: loongarch@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 7136dd4160f950d1;
-	Mon, 31 Aug 2026 06:30:57 +0000
-X-Mizu-Trace-ID: 7136dd4160f950d1
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <354b192a-52f4-44fb-9034-5df51a92dd3e@linux.dev>
-Date: Mon, 31 Aug 2026 14:30:48 +0800
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="U7FcIb97"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B591414BF;
+	Sun, 30 Aug 2026 23:49:14 -0700 (PDT)
+Received: from [10.164.18.31] (J09HK2D2RT.blr.arm.com [10.164.18.31])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D75643F8C6;
+	Sun, 30 Aug 2026 23:49:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1788158958; bh=UzZgy0NWc63K+ko4Xr6TdOnwA9EjAL5aleqBNdt6jY4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=U7FcIb97JDEewur9Kf4radnvfeDHm6NiB7P5FNYX6eqEzgaSbcLTTz2427bXHEGdQ
+	 uo4OFurjcGsPFnWvC+QS8s3MrHKwugc62Aj4Qy9UerHzl+ldPYjUgyGMq+omakELHp
+	 zDbAViiLJS8zWjabH0UPjbR/p9ivvj9kKzLGGkiE=
+Message-ID: <8ad05b11-5cc3-4682-b921-a0c7820b1f97@arm.com>
+Date: Mon, 31 Aug 2026 12:19:08 +0530
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -38,77 +35,50 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Cc: cui.tao@linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, zengchi@kylinos.cn, stable@vger.kernel.org
-Subject: Re: [PATCH] LoongArch: KVM: Preserve memslot arch flags on
- KVM_MR_FLAGS_ONLY
-To: Zeng Chi <zeng_chi911@163.com>, zhaotianrui@loongson.cn,
- maobibo@loongson.cn, chenhuacai@kernel.org
-References: <20260828094825.357630-1-zeng_chi911@163.com>
-From: Tao Cui <cui.tao@linux.dev>
-In-Reply-To: <20260828094825.357630-1-zeng_chi911@163.com>
+Subject: Re: [PATCH 0/8] mm: Drop pxd_ERROR()
+To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ linux-mm@kvack.org
+Cc: samuel.holland@sifive.com, David Hildenbrand <david@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+ Lorenzo Stoakes <ljs@kernel.org>, Yoshinori Sato
+ <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, linux-alpha@vger.kernel.org,
+ linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-um@lists.infradead.org, linux-arch@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20260831054331.625505-1-anshuman.khandual@arm.com>
+ <d766413f91cd778912f6af372d3d5429bac7765f.camel@physik.fu-berlin.de>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <d766413f91cd778912f6af372d3d5429bac7765f.camel@physik.fu-berlin.de>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
 
-在 2026/8/28 17:48, Zeng Chi 写道:
-> From: Zeng Chi <zengchi@kylinos.cn>
+On 31/08/26 11:38 AM, John Paul Adrian Glaubitz wrote:
+> Hi Anshuman,
 > 
-> kvm_arch_prepare_memory_region() computes new->arch.flags, i.e. whether
-> a memslot is KVM_MEM_HUGEPAGE_CAPABLE or KVM_MEM_HUGEPAGE_INCAPABLE, only
-> for KVM_MR_CREATE and KVM_MR_MOVE, and returns early for every other
-> change.  But the generic code allocates a zeroed memslot for every
-> change and never copies old->arch, so after a KVM_MR_FLAGS_ONLY update,
-> e.g. toggling KVM_MEM_LOG_DIRTY_PAGES for live migration, the active
-> memslot has arch.flags == 0.
+> On Mon, 2026-08-31 at 11:13 +0530, Anshuman Khandual wrote:
+>> pxd_ERROR() macros have been provided by all platforms, which are very much
+>> identical and can be dropped off completely if these pgtable printing could
+>> be moved to callers in generic MM aka all pxd_clear_bad().
 > 
-> With both flags clear, fault_supports_huge_mapping() falls through to
-> the alignment check on the HVA range alone, which no longer verifies
-> that the GPA and HVA have the same offset within a PMD.  A memslot that
-> was marked KVM_MEM_HUGEPAGE_INCAPABLE because of a GPA/HVA offset
-> mismatch can then be mapped with PMD entries on read faults, and since
-> kvm_map_page() aligns the gfn and the pfn independently, the guest ends
-> up accessing the wrong host pages, exactly the "d -> f, e -> g" case
-> described in the comment above the check.
-> 
-> Carry the arch flags over from the old memslot for KVM_MR_FLAGS_ONLY,
-> as the GPA, HVA and size are guaranteed to be unchanged for that case.
-> 
-> Fixes: 7ab6fb505b2a ("LoongArch: KVM: Optimization for memslot hugepage checking")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Zeng Chi <zengchi@kylinos.cn>
-> ---
->  arch/loongarch/kvm/mmu.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
-> index e104897aa532..4ca7c6ea8f08 100644
-> --- a/arch/loongarch/kvm/mmu.c
-> +++ b/arch/loongarch/kvm/mmu.c
-> @@ -383,6 +383,16 @@ int kvm_arch_prepare_memory_region(struct kvm *kvm, const struct kvm_memory_slot
->  	hva_t hva_start;
->  	size_t size, gpa_offset, hva_offset;
->  
-> +	/*
-> +	 * The generic code allocates a fresh, zeroed memslot for every change,
-> +	 * so the arch flags computed below must be carried over when only the
-> +	 * userspace flags change, e.g. when dirty logging is toggled.
-> +	 */
-> +	if (change == KVM_MR_FLAGS_ONLY) {
-> +		new->arch = old->arch;
-> +		return 0;
-> +	}
-> +
->  	if ((change != KVM_MR_MOVE) && (change != KVM_MR_CREATE))
->  		return 0;
->  	/*
+> If pxd_ERROR() macros are really all identical, why not provide a common definiton
+> of that macro? I'm always a bit concerned about such changes as there is always
+> a risk to oversee arch-specific peculiarities.
 
-I verified this on a Loongson-3A6000 host with a KVM selftest that uses
-a GPA/HVA offset-mismatched memslot and toggles dirty logging: the
-unpatched kernel maps the wrong host pages into the guest after the
-toggle, and with this patch the mapping stays correct.
-
-Tested-by: Tao Cui <cuitao@kylinos.cn>
-Reviewed-by: Tao Cui <cuitao@kylinos.cn>
+We don't those platform macros any more after converting generic MM into using ptval_bytes_to_hex_str()
+which now handles different pgtable entry types.
+> 
+> Adrian
+> 
 
