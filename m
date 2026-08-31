@@ -1,143 +1,272 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B8F3C09EA
-	for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 08:51:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8F623D3D1E
+	for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 08:57:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788166309; cv=none; b=US5pEqJ9HeiDECpcV61lsMWkLfRtL1nMkWNLvvD6J8XRJVRKOwnNqiBRahTO5T8tv+ReVefdDrhgXBZ01PelibNTnRgb1Yp9pu0z2ra58WAGge1KCexIXls+9oMDAyhgZs5OPOxNFG9fQqDWx8sOyjXMMK6VJx4D7LWcxS2crLU=
+	t=1788166639; cv=none; b=Cjw7GfgzUgfqYF/krx4SxhUnD9/WNpJFxhR7X3/macXtJUgIAbgy7DkZ8dO8M4BkkUFCwb4VOpEhCY4Z97Gb6oJYqDL6Q1gIKjjtq52Bt/8oxPPTQgFPYS8zynHjLRNsZiD60utTUHuUH4GsVicquasTESGtQVZjsaSMnPzRq8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788166309; c=relaxed/simple;
-	bh=CVbYk0gj5KXQ67iRLFH6F++pXSWYVzV4bNLBCZkNVy8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fpb0c7iF27pUYif5x2kgHE61LmOmaOSrbHtYqP9YwipLJYmyI3taMec9fdnw1eFOwqBu65NYI/EZ0VucDv4AMnolfcMw+YPfujEtplMDgoxUhBcaFEKw/oqzqhovg9CE3kB3R10ygxEsf8sO7RVamzMniVw3g+cShXVajXMSQvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Ybb5RZzS; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Ybb5RZzS"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67V82Hp11697480;
-	Mon, 31 Aug 2026 08:51:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=CVbYk0gj5KXQ67iRLFH6F++pXSWYVz
-	V4bNLBCZkNVy8=; b=Ybb5RZzSRXxH50tJV/HBUhrjVmIBDpR4ZbNq1+HWNZhvB9
-	5HFz5fRUyA93c16kA0wp16C+QRBksBq4Z2KEuh8Av/VE+KpkeZ4uGIQUuFwYp8uU
-	xXuqtLg0wMfNjYZFaPxAZCnM2V/o7hGSST9533aNdTPRiEx1JiKTCYt27zmk25J7
-	Qw4/U6qUdjt1S5siGQniStMxnMLzif3hA7fIxhRdTsEHTdlIJlnFntrVxKha/qic
-	jfLVcJD6XvtrKnI0i+4S97wyvEoc8kTmGGZfn4idvJs95XCVMPcS/yo7mKOpHgTT
-	AC11isR2/K0RsQ0eMx0d3i4xR5MWVk3oiovvNb3w==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4gbq2t00t9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 31 Aug 2026 08:51:04 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 67V8fIDE023473;
-	Mon, 31 Aug 2026 08:51:03 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4gccexvpqk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 31 Aug 2026 08:51:03 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 67V8oxQj46334272
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 31 Aug 2026 08:50:59 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2A75F2004D;
-	Mon, 31 Aug 2026 08:50:59 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8CAB12004B;
-	Mon, 31 Aug 2026 08:50:57 +0000 (GMT)
-Received: from osiris (unknown [9.111.81.24])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 31 Aug 2026 08:50:57 +0000 (GMT)
-Date: Mon, 31 Aug 2026 10:50:56 +0200
-From: Heiko Carstens <hca@linux.ibm.com>
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Thomas Gleixner <tglx@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Shrikanth Hegde <sshegde@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
-        Kees Cook <kees@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-        loongarch@lists.linux.dev, Paul Walmsley <pjw@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org,
-        Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org,
-        x86@kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Jinjie Ruan <ruanjinjie@huawei.com>, Andy Lutomirski <luto@kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>, Guo Ren <guoren@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Helge Deller <deller@gmx.de>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Richard Weinberger <richard@nod.at>, Chris Zankel <chris@zankel.net>,
-        linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org,
-        linux-csky@vger.kernel.org, linux-m68k@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-sh@vger.kernel.org, linux-um@lists.infradead.org,
-        Arnd Bergmann <arnd@arndb.de>, Vineet Gupta <vgupta@kernel.org>,
-        Will Deacon <will@kernel.org>, Brian Cain <bcain@kernel.org>,
-        Michal Simek <monstr@monstr.eu>, Dinh Nguyen <dinguyen@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Andreas Larsson <andreas@gaisler.com>,
-        linux-snps-arc@lists.infradead.org, linux-hexagon@vger.kernel.org,
-        linux-openrisc@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-arch@vger.kernel.org,
-        Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Subject: Re: [patch 00/18] entry: Consolidate and rework syscall entry
- handling
-Message-ID: <20260831085056.34274A00-hca@linux.ibm.com>
-References: <20260707181957.433213175@kernel.org>
- <ed8b99e6-4d90-4622-9d43-451bf6a8db2c@zytor.com>
+	s=arc-20240116; t=1788166639; c=relaxed/simple;
+	bh=DSj3s4wELAzEUrJo4A5JdVkD8AM004a/Xh1kam1XWwQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bvSSBPKoESK+HvhDX80DooLP5PN4WPIlPUIcEvB80/pe8+OEZL2P0+fZ6xW/xh3M/ROwdao2NgNHi/uznt6i+mhomCqFaULWLpPEaQi2KLGKtofaSOj7c+r3OwpCY/6DiMBN9iki7bi8KuO2Hkr/6VfhKl52wwT7uEWYxjn5hU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [123.138.236.242])
+	by gateway (Coremail) with SMTP id _____8CxQNHpQZVqy9gGAA--.19386S3;
+	Mon, 31 Aug 2026 16:57:13 +0800 (CST)
+Received: from linux.localdomain (unknown [123.138.236.242])
+	by front1 (Coremail) with SMTP id qMiowJDxTs_iQZVq3SoYAA--.50979S2;
+	Mon, 31 Aug 2026 16:57:07 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Emil Tsalapatis <emil@etsalapatis.com>,
+	Ihor Solodrai <ihor.solodrai@linux.dev>
+Cc: loongarch@lists.linux.dev,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH bpf-next v2] selftests/bpf: Add test for indirect struct_ops trampoline
+Date: Mon, 31 Aug 2026 16:57:05 +0800
+Message-ID: <20260831085705.13747-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ed8b99e6-4d90-4622-9d43-451bf6a8db2c@zytor.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=bc1bluPB c=1 sm=1 tr=0 ts=6a954078 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=kj9zAlcOel0A:10 a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22 a=2rmWDWJpZfqxup52QhcA:9
- a=CjuIK1q_8ugA:10
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODMxMDA3MiBTYWx0ZWRfXw6StCSqGUaXh
- WvbpCQlGtz7BWihs+RH7DTv2WTOPxVyCWDhiSWtYE+xXgludqixVfK/gU8MUaWS0fxPWdxy86vH
- qJzG6nhsABnZyATt5K5eJawaXFm8xNE=
-X-Proofpoint-ORIG-GUID: bDXbK4NJXMMf6_5R5lg1wFJEO5GSpFz5
-X-Proofpoint-GUID: Fhr_wfi5ePHh4Bqv3MhKtt0iPRZ1Mvkg
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODMxMDA3MiBTYWx0ZWRfX/htDxJBtEHnv
- Z5NhKYazvuvBRJ72zC10F4fqCuZQvNxl5T1bxWCM9YyDyUuOyarWnRe1p0lqpKZl/OmyRFcmZLf
- ktLOOUR/RrJ6H/n8LU3DyRN14Rj88+RKLatjVJj6EvUm7yCYuy01GuzOqCiTMwCDp3qPyD8ygcz
- 8e7DrOBxrdld6/gHT5EMTdlMQoVKjlCd8tRGftrZtFR0eBrKEt+PFXrl5pqVW+wMvV30DgdS65s
- FO2OVicoQhWTWZLtRydH/w0eDM4R+aziyu8zv53VSgwZjxKL71DDEhdZB1VFr5JeZaTp0hNvCNd
- fL1C2mdKKTto6StljkY/Esj1kJ2CLVmDhxayGEQpB6INuQ8vyDvgd1hcoKr++IMzU8bbI32PX2p
- erwW4FtLz+3ZSzAofzRUQ2Kh1tXMYtSiayqZ9s635kOCihBZsW9PohTK3Pmd5E5U5z+A/YfXl7T
- OPEW+V8lEUn+zLxSJdQ==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-08-31_03,2026-08-27_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 suspectscore=0 adultscore=0 malwarescore=0 spamscore=0
- lowpriorityscore=0 phishscore=0 clxscore=1011 priorityscore=1501
- impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
- definitions=main-2608310072
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxTs_iQZVq3SoYAA--.50979S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Gw4kXr15JFWftw1fCFyxtFc_yoW3Ww4rpF
+	W8Jw1YyFnYvrWDXF18Xa1UZF4Sgrs3Z3yUCFWkG3s5uF93X34DJF18tFyIyr95GrZ5Zw13
+	A3ZY9r98uayUZ3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	XVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
+	6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
+	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xII
+	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
+	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
+	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8m9aDUUUUU==
 
-On Thu, Aug 27, 2026 at 03:22:35PM -0700, H. Peter Anvin wrote:
-> This isn't a hard thing to solve in any way: replacing the pointer argument
-> with a two-element structure return would do the trick. As far as I know,
-> *all* architectures that support Linux support returning structures with two
-> register-sized values in registers.
+Add a test case to verify that arguments passed on the stack are correctly
+read by an indirect struct_ops trampoline.
 
-That is unfortunately not true. The s390 ABI defines that structures,
-regardless of size, are returned in a return value buffer allocated by
-the caller.
+This test ensures the correctness of stack offsets on architectures like
+LoongArch and RISC-V where arguments beyond the first 8 slots are passed
+via the stack.
+
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+This is to test the following two patches:
+
+bpf, riscv: Fix stack-passed arguments for indirect trampolines
+https://lore.kernel.org/bpf/20260821233516.3426127-3-memxor@gmail.com/
+
+bpf, loongarch: Fix stack arguments for indirect trampolines
+https://lore.kernel.org/bpf/20260821233516.3426127-8-memxor@gmail.com/
+
+v2:
+  -- Fix use-after-free and race conditions
+  -- Modify current files to avoid new binary
+
+ .../prog_tests/test_struct_ops_multi_args.c   | 49 ++++++++++++++++++-
+ .../bpf/progs/struct_ops_multi_args.c         | 13 +++++
+ .../selftests/bpf/test_kmods/bpf_testmod.c    | 32 ++++++++++++
+ .../selftests/bpf/test_kmods/bpf_testmod.h    |  5 ++
+ 4 files changed, 98 insertions(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/bpf/prog_tests/test_struct_ops_multi_args.c b/tools/testing/selftests/bpf/prog_tests/test_struct_ops_multi_args.c
+index 0f321e889862..7f6f9d61c9e0 100644
+--- a/tools/testing/selftests/bpf/prog_tests/test_struct_ops_multi_args.c
++++ b/tools/testing/selftests/bpf/prog_tests/test_struct_ops_multi_args.c
+@@ -3,7 +3,54 @@
+ #include <test_progs.h>
+ #include "struct_ops_multi_args.skel.h"
+ 
++static void test_refcounted_multi(void)
++{
++	struct struct_ops_multi_args *skel;
++	int err;
++
++	skel = struct_ops_multi_args__open();
++	if (!ASSERT_OK_PTR(skel, "struct_ops_multi_args__open"))
++		return;
++
++	err = struct_ops_multi_args__load(skel);
++	ASSERT_EQ(err, -EINVAL, "struct_ops_multi_args__load");
++
++	struct_ops_multi_args__destroy(skel);
++}
++
++static void test_trampoline_stack_args(void)
++{
++	struct struct_ops_multi_args *skel;
++	struct bpf_link *link = NULL;
++	int err;
++
++	skel = struct_ops_multi_args__open();
++	if (!ASSERT_OK_PTR(skel, "struct_ops_multi_args__open"))
++		return;
++
++	bpf_program__set_autoload(skel->progs.test_refcounted_multi, false);
++	skel->struct_ops.testmod_ref_acquire->test_refcounted_multi = NULL;
++
++	err = struct_ops_multi_args__load(skel);
++	if (!ASSERT_OK(err, "struct_ops_multi_args__load"))
++		goto out;
++
++	link = bpf_map__attach_struct_ops(skel->maps.testmod_ref_acquire);
++	if (!ASSERT_OK_PTR(link, "bpf_map__attach_struct_ops"))
++		goto out;
++
++	ASSERT_EQ(skel->bss->got_arg9, 9999, "check_stack_passed_arg9");
++
++out:
++	bpf_link__destroy(link);
++	struct_ops_multi_args__destroy(skel);
++}
++
+ void test_struct_ops_multi_args(void)
+ {
+-	RUN_TESTS(struct_ops_multi_args);
++	if (test__start_subtest("test_refcounted_multi"))
++		test_refcounted_multi();
++
++	if (test__start_subtest("test_trampoline_stack_args"))
++		test_trampoline_stack_args();
+ }
+diff --git a/tools/testing/selftests/bpf/progs/struct_ops_multi_args.c b/tools/testing/selftests/bpf/progs/struct_ops_multi_args.c
+index c62be15757f0..f0f47676b099 100644
+--- a/tools/testing/selftests/bpf/progs/struct_ops_multi_args.c
++++ b/tools/testing/selftests/bpf/progs/struct_ops_multi_args.c
+@@ -29,7 +29,20 @@ int test_refcounted_multi(unsigned long long *ctx)
+ 	return 0;
+ }
+ 
++__u64 got_arg9 = 0;
++
++SEC("struct_ops/test_trampoline_stack_args")
++int BPF_PROG(test_trampoline_stack_args, int arg1, int arg2, int arg3,
++					 int arg4, int arg5, int arg6,
++					 int arg7, int arg8, int arg9)
++{
++	got_arg9 = arg9;
++
++	return 0;
++}
++
+ SEC(".struct_ops.link")
+ struct bpf_testmod_ops testmod_ref_acquire = {
+ 	.test_refcounted_multi = (void *)test_refcounted_multi,
++	.test_trampoline_stack_args = (void *)test_trampoline_stack_args,
+ };
+diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
+index 2380b6cbdead..8f0744e6075b 100644
+--- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
++++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
+@@ -1678,6 +1678,9 @@ static bool bpf_testmod_ops_is_valid_access(int off, int size,
+ 	return bpf_tracing_btf_ctx_access(off, size, type, prog, info);
+ }
+ 
++static DEFINE_MUTEX(st_ops_trampoline_mutex);
++static struct bpf_testmod_ops *st_ops_trampoline;
++
+ static int bpf_testmod_ops_init_member(const struct btf_type *t,
+ 				       const struct btf_member *member,
+ 				       void *kdata, const void *udata)
+@@ -1691,6 +1694,18 @@ static int bpf_testmod_ops_init_member(const struct btf_type *t,
+ 		((struct bpf_testmod_ops *)kdata)->data = ((struct bpf_testmod_ops *)udata)->data;
+ 		return 1;
+ 	}
++
++	if (member->offset == offsetof(struct bpf_testmod_ops, test_trampoline_stack_args) * 8) {
++		mutex_lock(&st_ops_trampoline_mutex);
++		if (st_ops_trampoline) {
++			pr_err("st_ops_trampoline has already been registered\n");
++			mutex_unlock(&st_ops_trampoline_mutex);
++			return -EEXIST;
++		}
++		st_ops_trampoline = (struct bpf_testmod_ops *)kdata;
++		mutex_unlock(&st_ops_trampoline_mutex);
++	}
++
+ 	return 0;
+ }
+ 
+@@ -1720,11 +1735,20 @@ static int bpf_dummy_reg(void *kdata, struct bpf_link *link)
+ 	if (ops->test_2)
+ 		ops->test_2(4, ops->data);
+ 
++	mutex_lock(&st_ops_trampoline_mutex);
++	if (st_ops_trampoline && st_ops_trampoline->test_trampoline_stack_args)
++		st_ops_trampoline->test_trampoline_stack_args(1, 2, 3, 4, 5, 6, 7, 8, 9999);
++	mutex_unlock(&st_ops_trampoline_mutex);
++
+ 	return 0;
+ }
+ 
+ static void bpf_dummy_unreg(void *kdata, struct bpf_link *link)
+ {
++	mutex_lock(&st_ops_trampoline_mutex);
++	if (st_ops_trampoline == (struct bpf_testmod_ops *)kdata)
++		st_ops_trampoline = NULL;
++	mutex_unlock(&st_ops_trampoline_mutex);
+ }
+ 
+ static int bpf_testmod_test_1(void)
+@@ -1766,6 +1790,13 @@ bpf_testmod_ops__test_return_ref_kptr(int dummy, struct task_struct *task__ref,
+ 	return NULL;
+ }
+ 
++static int bpf_testmod_ops__test_trampoline_stack_args(int arg1, int arg2, int arg3,
++						       int arg4, int arg5, int arg6,
++						       int arg7, int arg8, int arg9)
++{
++	return arg9;
++}
++
+ static struct bpf_testmod_ops __bpf_testmod_ops = {
+ 	.test_1 = bpf_testmod_test_1,
+ 	.test_2 = bpf_testmod_test_2,
+@@ -1773,6 +1804,7 @@ static struct bpf_testmod_ops __bpf_testmod_ops = {
+ 	.test_refcounted = bpf_testmod_ops__test_refcounted,
+ 	.test_refcounted_multi = bpf_testmod_ops__test_refcounted_multi,
+ 	.test_return_ref_kptr = bpf_testmod_ops__test_return_ref_kptr,
++	.test_trampoline_stack_args = bpf_testmod_ops__test_trampoline_stack_args,
+ };
+ 
+ struct bpf_struct_ops bpf_bpf_testmod_ops = {
+diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.h b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.h
+index 210b919290cc..42257ae89fd5 100644
+--- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.h
++++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.h
+@@ -46,6 +46,11 @@ struct bpf_testmod_ops {
+ 	struct task_struct *(*test_return_ref_kptr)(int dummy, struct task_struct *task,
+ 						    struct cgroup *cgrp);
+ 
++	/* Used to test indirect struct_ops trampolines stack-passed arguments (>8 args). */
++	int (*test_trampoline_stack_args)(int arg1, int arg2, int arg3,
++					  int arg4, int arg5, int arg6,
++					  int arg7, int arg8, int arg9);
++
+ 	/* The following fields are used to test shadow copies. */
+ 	char onebyte;
+ 	struct {
+-- 
+2.42.0
+
