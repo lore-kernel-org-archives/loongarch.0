@@ -1,57 +1,58 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0247B5AD599
-	for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 14:04:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD1648F84D
+	for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 14:07:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788185091; cv=none; b=tlPWXImZ4+x2rstLwL/jC/DNKSCya7rhKtqKAmf79uvIzEvub1CcevUsACY98VNT2qa1vEAMm9SmG4U5h33bFTGwsooOw+dPAeI+KvTU4uNZ6Abil8j7baKrJIKMUsf/BzJ5UOJEBrxW5I/ODnVktGDFzZjxfuExTlNIhmgNBMg=
+	t=1788185247; cv=none; b=Nzwr/wfITG9d1uXKbAvkhHvO5BHZlHUAPOYPT6CNpgLUNg3y18HWr6AkuZtozs2zcTvb6aCT/5UI55j01RrBDjg4e+DoM1KRVJYxO7q/CL8XZPgMYTVXZgPcGgyTXVbTtuyAGgB1JMkzlzJTgGxQ18ZAfsv3NtBvVwVA5kjt0Gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788185091; c=relaxed/simple;
-	bh=xLPhcn633UxUUaKC4vzFrP/xR7wwEy8KtFue6KjCb3U=;
+	s=arc-20240116; t=1788185247; c=relaxed/simple;
+	bh=S0BkvKg0kbO1HyxpAHYNGek++mUq5yaU97H4xYUkyT0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=C1Ic4pzjcW2LmgMrqL0rEI+ZcP3RUeV+CoyFfyRn8ANXNyw7cat9JpDlugMHChwPN5ZIfZGKJDSZGK4dQpu3kULXZTJWUJwxJL5yyjCzcPZTyOALCvgtc9NQtK7npyAz0/cl/yyoAsQmlinWT8dsIJxkYS/nt5e2bD5nLjm8x6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ihUF8/PM; arc=none smtp.client-ip=100.103.45.18
+	 To:Cc:Content-Type; b=Jes8eal9IPBwqwG9aFn1ncNUQL0BU0U4nwflcVsns+UWgwbUwqEAjww7hpTs9MPgUaAUbdLljL57c4f2yni6Bka4H/a+ZjtbQjwWmtNW3ndG3Ncr3/6G5QxNKJui/jK/roOLxsHrVTLolcqaVOOOu5EwW69m/IUcKJKfrKbKby8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TwRCZZMt; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ihUF8/PM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBC441F00A3E
-	for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 14:04:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TwRCZZMt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99EB21F00A3F
+	for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 14:07:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788185089;
-	bh=FzX+10cDhmW0hwDmYTE7152l7j2EZIR1C4UvMnU53IQ=;
+	s=k20260515; t=1788185244;
+	bh=yAH1kAcmOp1Oc4wvgDM8TgcSQVhCKVp+yeDHlgM1nS0=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=ihUF8/PMhzJeYrYbYKKZ3CfldjIAWfS3HvzsSf8nZ+5ZJjiOMfRXL7l1UL7Tm5iG9
-	 KAcGlkommNiNTV8j2LwC30aNS9gTJgxIws+2EkaRj2H4gEMQBYNccMi29R+7wOK6t/
-	 exg2oyr/uiQTLGz075cO8aOKcw94kMi6swAJtmwGNg71cZ+ANghZu+XRtG6rH7lQ8e
-	 Bl6v/U1GE7Kl5yfKB8qS/PB63f7piUoz+byXfI1H434K33nJn9t4ctIDLLKm2aSZ9A
-	 ltj0zDcAq6PKhVWrw7tBZOlA0hITVoVD7qRwU9vJgsBK8J7baN40sXmH7LecPvsAyk
-	 3nYsJgpwgka3A==
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-c207cb16cf5so576181566b.1
-        for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 07:04:49 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RoBPQPlK8nWhoxgFBq/CZRDLwqcy9nnYbmRs0rtf+j48oH2pRb0EPu+JbO4BLDpf8wp0Kzs/3Gubvs=@lists.linux.dev
-X-Gm-Message-State: AFuF++l+AXHC/SZTvOH13nqgANBHCbBjV6NmQu3eEwjCm9jgtY756uJ8
-	8N/LQ1iXdVfTxsSa1piEhXYW7p5xyO17b1C0ohXEXd0ePae+YKNp9Y9VA2vjN2+3GPyNZn1j4PI
-	50HFvI6id6DXnp/Pzxoa3p6m3qobkhT0=
-X-Received: by 2002:a17:906:fd84:b0:c25:9102:fa with SMTP id
- a640c23a62f3a-c25b3bcf4b6mr53883166b.8.1788185088429; Mon, 31 Aug 2026
- 07:04:48 -0700 (PDT)
+	b=TwRCZZMtjrYE1QJPqPvLx+GiFzdqJGcIy2+4oVio6hVc2QPn4a9Pqp8sT+Ux18jYe
+	 Uln0nIaZB8jTJ7R3YYf8yB9sbeQqJShena/eqMtBtgVOZ+251wrBkaRAx/r0ufU4so
+	 wF/utT4sjoBIcOMtBiq2F6PHCv9rWdd3gMBk1yYcGh4XJuyErwQ8YrNx59pXGeRa5t
+	 W3iDCd0xloNRHMFK3bGlKPR4/V8DucuPukTT+gX9Tmy7juy9EFS1d44/ve9gkX+OlH
+	 +6Df4F9c3Sd6NR2aj6yW7d/J+kJzf9W2iu+kPSoiqFv6gVjSTNveAa4XviKo1sRV3P
+	 JzNrvFo4fdLtQ==
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-c25b3c641fbso18055866b.1
+        for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 07:07:24 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RrXhQpvtTbSuGoeuC4CNfFVTyA6bc3gNrJx/NojPnBrc75jwrjorxC/GNmng3QvXqQN5nTqiuSqaFg=@lists.linux.dev
+X-Gm-Message-State: AFuF++mgjpbmgYU+RCPnWMjBaWXD1Ic+1A/UcdTLr3D2P24QC+3epZbD
+	/g3jriLb+s7K6OGopkQEmdwzNWp/vFrTlz36qh9ZtFli++hkHQ+KmxuJ6E8EmD6hHhv//2WQXlM
+	iN471n3Il04/pxrV5vDwNRjrsLNybJxw=
+X-Received: by 2002:a17:906:ba82:b0:c19:5572:d234 with SMTP id
+ a640c23a62f3a-c25b3bb9038mr73788266b.1.1788185243242; Mon, 31 Aug 2026
+ 07:07:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260817123918.2738447-1-nagachaithanya9911@gmail.com>
-In-Reply-To: <20260817123918.2738447-1-nagachaithanya9911@gmail.com>
+References: <20260814094738.2552440-1-cui.tao@linux.dev>
+In-Reply-To: <20260814094738.2552440-1-cui.tao@linux.dev>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 31 Aug 2026 22:04:35 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5eaFd9t5CikZA0Lhy6eVbnUBvvLV5cV7rvo42M47yeWQ@mail.gmail.com>
-X-Gm-Features: AcwNN1VDSGpC4QI19ueXEEvghR72mgVgMiabqgpi1oIqT6rLIE-ia0qxu3ODzvI
-Message-ID: <CAAhV-H5eaFd9t5CikZA0Lhy6eVbnUBvvLV5cV7rvo42M47yeWQ@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: KVM: Free init resources if kvm_init() fails
-To: Chaithanya Lagisetty <nagachaithanya9911@gmail.com>
-Cc: zhaotianrui@loongson.cn, maobibo@loongson.cn, kernel@xen0n.name, 
-	kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Date: Mon, 31 Aug 2026 22:07:11 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H73i_hH75rNL_eKQWrxu3HTWhMgJpbkYqueoc4qb97TXQ@mail.gmail.com>
+X-Gm-Features: AcwNN1WKhCQRqFpOy9hh68FYTR1pzxYaK_SVNxDleYQh6woMV8BDrJ8ZU1L6SKY
+Message-ID: <CAAhV-H73i_hH75rNL_eKQWrxu3HTWhMgJpbkYqueoc4qb97TXQ@mail.gmail.com>
+Subject: Re: [PATCH v3] LoongArch: KVM: Fix TOCTOU race on pv_features
+To: Tao Cui <cui.tao@linux.dev>
+Cc: maobibo@loongson.cn, zhaotianrui@loongson.cn, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Tao Cui <cuitao@kylinos.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -62,43 +63,83 @@ What do you think about this?
 
 Huacai
 
-On Mon, Aug 17, 2026 at 8:39=E2=80=AFPM Chaithanya Lagisetty
-<nagachaithanya9911@gmail.com> wrote:
+On Fri, Aug 14, 2026 at 5:47=E2=80=AFPM Tao Cui <cui.tao@linux.dev> wrote:
 >
-> kvm_loongarch_init() calls kvm_loongarch_env_init() to allocate the
-> per-CPU kvm_context (vmcs) and kvm_loongarch_ops and to register the
-> perf callbacks, and then calls kvm_init(). If kvm_init() fails its
-> result is returned directly, but since module_init() does not run
-> module_exit() on failure, kvm_loongarch_env_exit() is never called and
-> those resources are leaked.
+> From: Tao Cui <cuitao@kylinos.cn>
 >
-> Call kvm_loongarch_env_exit() when kvm_init() fails, matching the
-> teardown-on-failure pattern used by riscv_kvm_init().
+> The check-then-set on kvm->arch.pv_features in
+> kvm_loongarch_cpucfg_set_attr() is lockless, so two vCPUs can race
+> past the validation and set different values.  Add a spinlock to
+> serialize it.
 >
-> Fixes: 2bd6ac687261 ("LoongArch: KVM: Implement kvm module related interf=
-ace")
-> Signed-off-by: Chaithanya Lagisetty <nagachaithanya9911@gmail.com>
+> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
 > ---
->  arch/loongarch/kvm/main.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
 >
-> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
-> index 3e1005526f4b..b6ddf5827c03 100644
-> --- a/arch/loongarch/kvm/main.c
-> +++ b/arch/loongarch/kvm/main.c
-> @@ -428,7 +428,11 @@ static int kvm_loongarch_init(void)
->         if (r)
->                 return r;
+> Changes in v2: use a spinlock instead of a cmpxchg loop (Bibo Mao).
+> Changes in v3: rename the lock to pv_setting_lock and place it next to
+> phyid_map_lock (Huacai Chen).
 >
-> -       return kvm_init(sizeof(struct kvm_vcpu), 0, THIS_MODULE);
-> +       r =3D kvm_init(sizeof(struct kvm_vcpu), 0, THIS_MODULE);
-> +       if (r)
-> +               kvm_loongarch_env_exit();
-> +
-> +       return r;
->  }
+> v1: https://lore.kernel.org/all/20260810081321.157258-1-cui.tao@linux.dev=
+/
+> v2: https://lore.kernel.org/all/20260813232542.2098930-1-cui.tao@linux.de=
+v/
 >
->  static void kvm_loongarch_exit(void)
+>  arch/loongarch/include/asm/kvm_host.h | 1 +
+>  arch/loongarch/kvm/vcpu.c             | 6 +++++-
+>  arch/loongarch/kvm/vm.c               | 1 +
+>  3 files changed, 7 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/inclu=
+de/asm/kvm_host.h
+> index 23cfbecebbd7..3538a199aac6 100644
+> --- a/arch/loongarch/include/asm/kvm_host.h
+> +++ b/arch/loongarch/include/asm/kvm_host.h
+> @@ -125,6 +125,7 @@ struct kvm_arch {
+>         unsigned int  pte_shifts[MAX_PGTABLE_LEVELS];
+>         unsigned int  root_level;
+>         spinlock_t    phyid_map_lock;
+> +       spinlock_t    pv_setting_lock;
+>         struct kvm_phyid_map  *phyid_map;
+>         /* Enabled PV features */
+>         unsigned long pv_features;
+> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> index 20c207d80e31..e47fa463a8be 100644
+> --- a/arch/loongarch/kvm/vcpu.c
+> +++ b/arch/loongarch/kvm/vcpu.c
+> @@ -1165,10 +1165,14 @@ static int kvm_loongarch_cpucfg_set_attr(struct k=
+vm_vcpu *vcpu,
+>                         return -EINVAL;
+>
+>                 /* All vCPUs need set the same PV features */
+> +               spin_lock(&kvm->arch.pv_setting_lock);
+>                 if ((kvm->arch.pv_features & LOONGARCH_PV_FEAT_UPDATED)
+> -                               && ((kvm->arch.pv_features & valid) !=3D =
+val))
+> +                               && ((kvm->arch.pv_features & valid) !=3D =
+val)) {
+> +                       spin_unlock(&kvm->arch.pv_setting_lock);
+>                         return -EINVAL;
+> +               }
+>                 kvm->arch.pv_features =3D val | LOONGARCH_PV_FEAT_UPDATED=
+;
+> +               spin_unlock(&kvm->arch.pv_setting_lock);
+>                 return 0;
+>         default:
+>                 return -ENXIO;
+> diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
+> index 1317c718f896..86ba7d54e81f 100644
+> --- a/arch/loongarch/kvm/vm.c
+> +++ b/arch/loongarch/kvm/vm.c
+> @@ -76,6 +76,7 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long typ=
+e)
+>                 return -ENOMEM;
+>         }
+>         spin_lock_init(&kvm->arch.phyid_map_lock);
+> +       spin_lock_init(&kvm->arch.pv_setting_lock);
+>
+>         kvm_init_vmcs(kvm);
+>         kvm_vm_init_features(kvm);
 > --
 > 2.43.0
 >
