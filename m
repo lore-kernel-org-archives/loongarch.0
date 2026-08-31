@@ -1,36 +1,33 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C159352022
-	for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 01:59:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E43412941A
+	for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 02:10:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788141595; cv=none; b=TiCcLs6oiMxeg7L44C0TodnyTioIrujH/1yJtrIVQ3Vt1aJtQqpfv4cTnvYO2AP8ixY3PFHsO5EEu1Wv5edviAxBporzC7CF+C2aFX8ImfiXZLieoBqklqiHpzx2oCd2WtF+T0/f3IaJmOwaECEj3DFaTKLEvvSQ53qR8LsvdDE=
+	t=1788142213; cv=none; b=k/xLONO/mbEvhnudmulmlztvq0/M5XABIncPQcKlYEUhxoarM3VwttvZMuE5HZpl6caN2HwOz8pglrUIfX5P62KsPQj6g6Jh2SlZ+uAOJCZqdNRxpCB+fEh3ECvFhnSehxACOYor8I7K2KNZNLUz6SeYHGW0+1C11AbFvVhkp8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788141595; c=relaxed/simple;
-	bh=YLNn7HqkoTkR8knmgxG7cQXJk24I0ehYyrEzmLJegSk=;
-	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=KaZWbC3+ANWBH0yWQ1087k6jlo61PQxuBOLgJlkuIL4G5HEFgcnkHFTD60PPM6iJcDGkz2SkT52ElncdA/3Y6s4tJ4jlWUi16fGIja6cww8zEXeXZNYvHGi3FK8+g4OPtaLIHIk6u4rYvFPsZzOp/3lrGI8j9Qt7oxhzUj8/KiQ=
+	s=arc-20240116; t=1788142213; c=relaxed/simple;
+	bh=gOHdHbyFwmSt0pq+fYqTSruFCmYvjBlEASAyj09CZno=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=gSsSCfLcCgtEwa2nQJWwptF8MA5keibF1KshxnfoiabIJtHjeQSM+8vb1Pj0gSLbz73/JoHwZi0I/HKVacTgx1FF3lSlSVp0XHD16+fHwvqAe7AA2Z+cUPfE31b6ap/L/pQ6e7qHnUumVktLSRDsJ//Hx82taScaNZ0hzkiHGqk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.101])
-	by gateway (Coremail) with SMTP id _____8AxXdIW4JRqH7wGAA--.18813S3;
-	Mon, 31 Aug 2026 09:59:50 +0800 (CST)
-Received: from [10.20.42.101] (unknown [10.20.42.101])
-	by front1 (Coremail) with SMTP id qMiowJBx6c0S4JRq+PMXAA--.19637S3;
-	Mon, 31 Aug 2026 09:59:48 +0800 (CST)
-Subject: Re: [PATCH v10 0/2] i2c: ls2x: Add clock- related properties and
- parsing
-From: Hongliang Wang <wanghongliang@loongson.cn>
-To: Binbin Zhou <zhoubinbin@loongson.cn>, Andi Shyti <andi.shyti@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
- loongarch@lists.linux.dev
-References: <20260817090721.30582-1-wanghongliang@loongson.cn>
- <668c5145-da87-d318-2338-738b0035a671@loongson.cn>
-Message-ID: <1cdc2657-9924-336d-1f10-f01ca2183f1f@loongson.cn>
-Date: Mon, 31 Aug 2026 09:57:09 +0800
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8AxX9OB4pRqrrwGAA--.18793S3;
+	Mon, 31 Aug 2026 10:10:09 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJCxf8994pRqOfUXAA--.51660S2;
+	Mon, 31 Aug 2026 10:10:07 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: KVM: Preserve memslot arch flags on
+ KVM_MR_FLAGS_ONLY
+To: Zeng Chi <zeng_chi911@163.com>, zhaotianrui@loongson.cn,
+ chenhuacai@kernel.org
+Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, zengchi@kylinos.cn, stable@vger.kernel.org
+References: <20260828094825.357630-1-zeng_chi911@163.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <5cc77794-ffac-f0b3-2b04-c9c322631dc5@loongson.cn>
+Date: Mon, 31 Aug 2026 10:09:50 +0800
 User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 Precedence: bulk
@@ -39,174 +36,89 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <668c5145-da87-d318-2338-738b0035a671@loongson.cn>
+In-Reply-To: <20260828094825.357630-1-zeng_chi911@163.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-CM-TRANSID:qMiowJBx6c0S4JRq+PMXAA--.19637S3
-X-CM-SenderInfo: pzdqwxxrqjzxhdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxGrW3CFy8XF18XFWDZr1xtFc_yoWrKF15pF
-	Z8Cay5Gr1j9a48uw43t3yIvF9Yvwn8J3yDGr1xJa45ua12vr1vqF12gFn09FykZFs7Cayj
-	gr9rKFnF9F15CFcCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxf8994pRqOfUXAA--.51660S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxCFWrtw4kJrWxJF1rAw15ZFc_yoW5Gr45pF
+	WxCwn0krWfGrn2kFZ3J347Wa1rZ397KF4I9FyxK34UAr98t34Ikay0ka1DW3yrJ3yxCF42
+	qF1Yq3sxK3Wqv3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
 	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
 	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
 	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
 	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
 	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
 	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8czVUUU
-	UUU==
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j1WlkU
+	UUUU=
 
 
-On 2026/8/17 下午5:23, Hongliang Wang wrote:
-> Hi all,
->
-> Sorry for the duplicate 0/2 cover‑letter message in this thread.
-> Only the 09:07 UTC full V10 series (0/2, 1/2, 2/2) is the intended one,
-> please ignore the earlier 09:01 UTC standalone 0/2 cover‑letter.
->
-> The patches 1/2 and 2/2 are correct.
->
-> Thanks,
-> Hongliang Wang
->
->
-> On 2026/8/17 下午5:07, Hongliang Wang wrote:
->> Hi all:
->>
->> This patch set adds clock related properties and parsing in dts and 
->> acpi.
->>
->> ======
->> V10:
->> Patch (2/2):
->> - Replace '/' operator with div64_u64() to avoid __udivdi3 linker 
->> error on
->>    32‑bit architectures with CONFIG_COMPILE_TEST.
->>
->> Link to V9:
->> https://lore.kernel.org/all/20260810074927.25284-1-wanghongliang@loongson.cn/ 
->>
->>
->> V9:
->> Patch (2/2):
->> - Rewrite the commit description
->> - Use 64-bit arithmetic to avoid integer overflow during the clock 
->> calculation
->> - Add checks to reject zero clock rates and ensure valid clock inputs
->> - Modify the comment for clocks and clock-div properties
->> - Add Tested-by tag from Xi Ruoyao, thanks
->>
->> Link to V8:
->> https://lore.kernel.org/all/20260721122604.12717-1-wanghongliang@loongson.cn/ 
->>
->>
->> V8:
->> Patch (2/2):
->> Fix the potential issues from Sashiko AI review:
->>   - Add error checking for the pointer returned by 
->> devm_clk_get_optional_enabled();
->>   - Add zero-value checking for the match data to provide default div.
->>
->> Link to V7:
->> https://lore.kernel.org/all/20260707035104.3092-1-wanghongliang@loongson.cn/ 
->>
->>
->> V7:
->> Patch (2/2):
->> Fix the potential issues from Sashiko AI review:
->>   - Move the clock property parsing process to probe function to 
->> solve the issue
->>     of calling `devm_clk_get_optional_enabled()` dynamically causes 
->> unbounded memory
->>     leaks and unbalanced clock enable counts.
->>   - Add non-zero checking to priv->div.
->>
->> Link to V6:
->> https://lore.kernel.org/all/20260608024533.32419-1-wanghongliang@loongson.cn/ 
->>
->>
->> V6:
->> - Add Reviewed-by tag from Huacai, thanks.
->> Patch (1/2):
->>   - Remove CC stable.
->>
->> Link to V5:
->> https://lore.kernel.org/all/20260604015848.18643-1-wanghongliang@loongson.cn/ 
->>
->>
->> V5:
->> Patch (1/2):
->>   - Adjust the position of #include 
->> <dt-bindings/clock/loongson,ls2k-clk.h>;
->>   - Add CC stable;
->>   - Fix Signed-off-by.
->> Patch (2/2):
->>   - Replace 2K0500/2K1000/2K2000 with LS2K0500/2K1000/2K2000;
->>   - Replace 7A1000/7A2000 with LS7A1000/7A2000;
->>   - Replace if (clk && !IS_ERR(clk)) with if(!IS_ERR_OR_NULL(clk));
->>   - Add document that clocks and clock-div are only ACPI properties 
->> in ACPI;
->>   - Remove unsigned int cast in code (unsigned 
->> long)device_get_match_data(dev);
->>   - Add CC stable;
->>   - Fix Signed-off-by.
->>
->> Link to V4:
->> https://lore.kernel.org/all/20260526031021.32662-1-wanghongliang@loongson.cn/ 
->>
->>
->> V4:
->> - Add Acked-by tag from Conor Dooley, thanks.
->> Patch (2/2):
->>   - Adjust the position of #include <linux/clk.h>;
->>   - Remove struct ls2x_i2c_chip_data and use macro to describe div;
->>   - Use div instead of factor in ls2x_i2c_adjust_bus_speed;
->>   - Reverse the "if & else" code logic in ls2x_i2c_adjust_bus_speed;
->>
->> Link to V2:
->> The PATCH v3 is incomplete, v4 is the replacement of v3, so the 
->> previous patch link is v2.
->>
->> [PATCH v2] dt-bindings: i2c: ls2x-i2c: Add clocks and clock-frequency 
->> properties
->> https://lore.kernel.org/all/20260507081010.12810-1-wanghongliang@loongson.cn/ 
->>
->> [PATCH v2] i2c: ls2x: Add clocks property parsing and adjust bus speed
->> https://lore.kernel.org/all/20260507081010.12810-2-wanghongliang@loongson.cn/ 
->>
->>
->> V2:
->> [PATCH v2] dt-bindings: i2c: ls2x-i2c: Add clocks and clock-frequency 
->> properties
->> - Remove the custom properties clock-input and clock-div, use clock 
->> framework;
->> [PATCH v2] i2c: ls2x: Add clocks property parsing and adjust bus speed
->> - Use clock framework to obtain the i2c reference clock in dts.
->>
->> Link to V1:
->> https://lore.kernel.org/all/20260325011852.19079-1-wanghongliang@loongson.cn/ 
->>
->>
->> Hongliang Wang (2):
->>    dt-bindings: i2c: ls2x-i2c: Add clocks and clock-frequency properties
->>    i2c: ls2x: Add clocks property parsing and adjust bus speed
->>
->>   .../bindings/i2c/loongson,ls2x-i2c.yaml       |  3 ++
->>   drivers/i2c/busses/i2c-ls2x.c                 | 44 +++++++++++++++++--
->>   2 files changed, 44 insertions(+), 3 deletions(-)
->>
-Hi,
 
-Gentle ping on the v10 patch series. Please let me know if there are any 
-further changes needed.
+On 2026/8/28 下午5:48, Zeng Chi wrote:
+> From: Zeng Chi <zengchi@kylinos.cn>
+> 
+> kvm_arch_prepare_memory_region() computes new->arch.flags, i.e. whether
+> a memslot is KVM_MEM_HUGEPAGE_CAPABLE or KVM_MEM_HUGEPAGE_INCAPABLE, only
+> for KVM_MR_CREATE and KVM_MR_MOVE, and returns early for every other
+> change.  But the generic code allocates a zeroed memslot for every
+> change and never copies old->arch, so after a KVM_MR_FLAGS_ONLY update,
+> e.g. toggling KVM_MEM_LOG_DIRTY_PAGES for live migration, the active
+> memslot has arch.flags == 0.
+> 
+> With both flags clear, fault_supports_huge_mapping() falls through to
+> the alignment check on the HVA range alone, which no longer verifies
+> that the GPA and HVA have the same offset within a PMD.  A memslot that
+> was marked KVM_MEM_HUGEPAGE_INCAPABLE because of a GPA/HVA offset
+> mismatch can then be mapped with PMD entries on read faults, and since
+> kvm_map_page() aligns the gfn and the pfn independently, the guest ends
+> up accessing the wrong host pages, exactly the "d -> f, e -> g" case
+> described in the comment above the check.
+> 
+> Carry the arch flags over from the old memslot for KVM_MR_FLAGS_ONLY,
+> as the GPA, HVA and size are guaranteed to be unchanged for that case.
+> 
+> Fixes: 7ab6fb505b2a ("LoongArch: KVM: Optimization for memslot hugepage checking")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Zeng Chi <zengchi@kylinos.cn>
+> ---
+>   arch/loongarch/kvm/mmu.c | 10 ++++++++++
+>   1 file changed, 10 insertions(+)
+> 
+> diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+> index e104897aa532..4ca7c6ea8f08 100644
+> --- a/arch/loongarch/kvm/mmu.c
+> +++ b/arch/loongarch/kvm/mmu.c
+> @@ -383,6 +383,16 @@ int kvm_arch_prepare_memory_region(struct kvm *kvm, const struct kvm_memory_slot
+>   	hva_t hva_start;
+>   	size_t size, gpa_offset, hva_offset;
+>   
+> +	/*
+> +	 * The generic code allocates a fresh, zeroed memslot for every change,
+> +	 * so the arch flags computed below must be carried over when only the
+> +	 * userspace flags change, e.g. when dirty logging is toggled.
+> +	 */
+> +	if (change == KVM_MR_FLAGS_ONLY) {
+> +		new->arch = old->arch;
+> +		return 0;
+> +	}
+> +
+>   	if ((change != KVM_MR_MOVE) && (change != KVM_MR_CREATE))
+>   		return 0;
+>   	/*
+> 
+ >
+yes, when VM starts to migrate and set KVM_MEM_LOG_DIRTY_PAGES flag, or 
+cancel migration and clear KVM_MEM_LOG_DIRTY_PAGES flag. The arch 
+specified flag in new memslot should be kept the same. Thanks for the 
+contribution.
 
-Best regards,
-Hongliang Wang
+Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 
