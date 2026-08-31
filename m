@@ -1,145 +1,150 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD1648F84D
-	for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 14:07:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44F274BB5D7
+	for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 14:09:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788185247; cv=none; b=Nzwr/wfITG9d1uXKbAvkhHvO5BHZlHUAPOYPT6CNpgLUNg3y18HWr6AkuZtozs2zcTvb6aCT/5UI55j01RrBDjg4e+DoM1KRVJYxO7q/CL8XZPgMYTVXZgPcGgyTXVbTtuyAGgB1JMkzlzJTgGxQ18ZAfsv3NtBvVwVA5kjt0Gs=
+	t=1788185385; cv=none; b=A/1UgBQu4qBLE2aUDy1nzgtLxeXa7rm/uGyOb84BOjKYPt9TfNKRu5wMxYYkqTTvwiHKJ0+FLvooS1ErrHphVsq5UG6fVu/OS8hY1ELllVevT4nHjc2VIJBTql1zoEoexJl4AjuxY1ZUKFXs71UjQJ5U7L4v5AgeF004jnk3IG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788185247; c=relaxed/simple;
-	bh=S0BkvKg0kbO1HyxpAHYNGek++mUq5yaU97H4xYUkyT0=;
+	s=arc-20240116; t=1788185385; c=relaxed/simple;
+	bh=n2vDyzoqnYTdN7qvNSKvhhmz2eGNrLmm7KweZ182LXs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Jes8eal9IPBwqwG9aFn1ncNUQL0BU0U4nwflcVsns+UWgwbUwqEAjww7hpTs9MPgUaAUbdLljL57c4f2yni6Bka4H/a+ZjtbQjwWmtNW3ndG3Ncr3/6G5QxNKJui/jK/roOLxsHrVTLolcqaVOOOu5EwW69m/IUcKJKfrKbKby8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TwRCZZMt; arc=none smtp.client-ip=100.103.45.18
+	 To:Cc:Content-Type; b=qCnC9O4xWrIAuFkuUaP3ZDMGaq86K0qaDL6babwBYHnE3xWv2d36+rFoqLnmdzZEMTbF48oq+FdfOxFg4He9kmK9a+V32LC/HklHT2qYTO0MDOHG1pXEiYkO1DOYH2fFtyvbHAoZYQlcWVWZZeoCPJ9fyvAOr+IkeQPf8VzoU0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vxa9oF/s; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TwRCZZMt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99EB21F00A3F
-	for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 14:07:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vxa9oF/s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B8D11F00ADB
+	for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 14:09:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788185244;
-	bh=yAH1kAcmOp1Oc4wvgDM8TgcSQVhCKVp+yeDHlgM1nS0=;
+	s=k20260515; t=1788185384;
+	bh=L1mNt+t9t3Mp1gIJn7MX5n0Mz44VISN4VLwL6b799Bs=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=TwRCZZMtjrYE1QJPqPvLx+GiFzdqJGcIy2+4oVio6hVc2QPn4a9Pqp8sT+Ux18jYe
-	 Uln0nIaZB8jTJ7R3YYf8yB9sbeQqJShena/eqMtBtgVOZ+251wrBkaRAx/r0ufU4so
-	 wF/utT4sjoBIcOMtBiq2F6PHCv9rWdd3gMBk1yYcGh4XJuyErwQ8YrNx59pXGeRa5t
-	 W3iDCd0xloNRHMFK3bGlKPR4/V8DucuPukTT+gX9Tmy7juy9EFS1d44/ve9gkX+OlH
-	 +6Df4F9c3Sd6NR2aj6yW7d/J+kJzf9W2iu+kPSoiqFv6gVjSTNveAa4XviKo1sRV3P
-	 JzNrvFo4fdLtQ==
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-c25b3c641fbso18055866b.1
-        for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 07:07:24 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RrXhQpvtTbSuGoeuC4CNfFVTyA6bc3gNrJx/NojPnBrc75jwrjorxC/GNmng3QvXqQN5nTqiuSqaFg=@lists.linux.dev
-X-Gm-Message-State: AFuF++mgjpbmgYU+RCPnWMjBaWXD1Ic+1A/UcdTLr3D2P24QC+3epZbD
-	/g3jriLb+s7K6OGopkQEmdwzNWp/vFrTlz36qh9ZtFli++hkHQ+KmxuJ6E8EmD6hHhv//2WQXlM
-	iN471n3Il04/pxrV5vDwNRjrsLNybJxw=
-X-Received: by 2002:a17:906:ba82:b0:c19:5572:d234 with SMTP id
- a640c23a62f3a-c25b3bb9038mr73788266b.1.1788185243242; Mon, 31 Aug 2026
- 07:07:23 -0700 (PDT)
+	b=Vxa9oF/soWfIGx7X9eBymk6tUBTtSiGceTld0BHTg54XTE1uWopGPbiR5qAiDdjda
+	 iaJ3uvNfpOPmsRf222g18ht0Km7pm/98QZ3tlJNQjiOp3SaGMmyhyw9p/XFbPew558
+	 7tVYTzHuDm97oKg0HjVguFpsU2H9obvZ9W+/j6RGvcDs5jyZtgUqmkq8ESPWdMekxV
+	 d3j0zvnb5rRn9HJxwu8ZTDe6GNqARHZsq8wRDUFaq7Cjd+jP3t4AjfNlQD+ricbfQY
+	 t6b8GVYS/5XDQNQ+BqQfQROnn9n7hMkhuJImHAKQavStYE25THku2v1yfK8B7efNmp
+	 4dNZYg3inseBw==
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-c252c7270faso603506466b.3
+        for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 07:09:44 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+Rr6kDcunWhjKilXG9OgfJAT+6oSK5FsqyJQQQwa8UF+1EM0mSiRmB4RemrloPbKB0xadonwvkF6tho=@lists.linux.dev
+X-Gm-Message-State: AFuF++m76gPHtuT0wzl9AbRixLXZz70ZN2Mg1sghqpSiKareLtXVTDq4
+	JNRtRuEzSwrPzkYH+9QT4E4VeOVsxOAqvK/utJXkJZidkL7Z7LKCCW74clght8axPzgV4ywTgYW
+	kmqyXPfofkC5+qLO3xie7xnnGV5bL3oA=
+X-Received: by 2002:a17:906:4ed4:b0:c25:6c9a:88bc with SMTP id
+ a640c23a62f3a-c25b3d8a1d8mr44713366b.19.1788185382598; Mon, 31 Aug 2026
+ 07:09:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260814094738.2552440-1-cui.tao@linux.dev>
-In-Reply-To: <20260814094738.2552440-1-cui.tao@linux.dev>
+References: <20260826092541.3905933-1-ruanjinjie@huawei.com> <20260826092541.3905933-6-ruanjinjie@huawei.com>
+In-Reply-To: <20260826092541.3905933-6-ruanjinjie@huawei.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 31 Aug 2026 22:07:11 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H73i_hH75rNL_eKQWrxu3HTWhMgJpbkYqueoc4qb97TXQ@mail.gmail.com>
-X-Gm-Features: AcwNN1WKhCQRqFpOy9hh68FYTR1pzxYaK_SVNxDleYQh6woMV8BDrJ8ZU1L6SKY
-Message-ID: <CAAhV-H73i_hH75rNL_eKQWrxu3HTWhMgJpbkYqueoc4qb97TXQ@mail.gmail.com>
-Subject: Re: [PATCH v3] LoongArch: KVM: Fix TOCTOU race on pv_features
-To: Tao Cui <cui.tao@linux.dev>
-Cc: maobibo@loongson.cn, zhaotianrui@loongson.cn, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Tao Cui <cuitao@kylinos.cn>
+Date: Mon, 31 Aug 2026 22:09:30 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7+dO2rnb4KxRvVo1w_Mx8Vfsdq7LAbkzPfNYrwUhEtfg@mail.gmail.com>
+X-Gm-Features: AcwNN1UnFQ4mMXEBOHuSLr0Mu3pUPtp_q9Do6p0Tl3kncID1TuZivoGd1AqJPW4
+Message-ID: <CAAhV-H7+dO2rnb4KxRvVo1w_Mx8Vfsdq7LAbkzPfNYrwUhEtfg@mail.gmail.com>
+Subject: Re: [PATCH v3 05/17] LoongArch: kexec: Fix CMA page leaks in segment
+ placement retry loops
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, 
+	kernel@xen0n.name, maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com, 
+	chleroy@kernel.org, tglx@kernel.org, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, akpm@linux-foundation.org, 
+	baoquan.he@linux.dev, rppt@kernel.org, pasha.tatashin@soleen.com, 
+	pratyush@kernel.org, ruirui.yang@linux.dev, kees@kernel.org, thuth@redhat.com, 
+	gshan@redhat.com, jic23@kernel.org, james.morse@arm.com, ardb@kernel.org, 
+	leitao@debian.org, yeoreum.yun@arm.com, sourabhjain@linux.ibm.com, 
+	coxu@redhat.com, tangyouling@kylinos.cn, hbathini@linux.ibm.com, 
+	adityag@linux.ibm.com, ionut.nechita@windriver.com, liaoyuanhong@vivo.com, 
+	seanjc@google.com, fuqiang.wang@easystack.cn, makb@juniper.net, 
+	piliu@redhat.com, ebiggers@kernel.org, jbouron@amazon.com, 
+	mclapinski@google.com, me@linux.beauty, graf@amazon.com, bgwin@google.com, 
+	robh@kernel.org, takahiro.akashi@linaro.org, palmer@rivosinc.com, 
+	x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Bibo,
+Hi, Jinjie,
 
-What do you think about this?
-
+Why does the ARM64 version of this patch use "kexec_file" in the
+subject line but the LoongArch version uses "kexec"? It is better to
+keep consistency.
 
 Huacai
 
-On Fri, Aug 14, 2026 at 5:47=E2=80=AFPM Tao Cui <cui.tao@linux.dev> wrote:
+On Wed, Aug 26, 2026 at 5:25=E2=80=AFPM Jinjie Ruan <ruanjinjie@huawei.com>=
+ wrote:
 >
-> From: Tao Cui <cuitao@kylinos.cn>
+> During kexec image placement retry loops, any midway failure causes
+> the loader to truncate `image->nr_segments` back to its initial state
+> to purge the failed segments.
 >
-> The check-then-set on kvm->arch.pv_features in
-> kvm_loongarch_cpucfg_set_attr() is lockless, so two vCPUs can race
-> past the validation and set different values.  Add a spinlock to
-> serialize it.
+> However, this truncation introduces a memory leak. The CMA pages
+> allocated via kexec_add_buffer() during the failed attempt are tracked
+> in the `image->segment_cma` array. Because the subsequent cleanup paths
+> only iterate up to the truncated `nr_segments` boundary, these allocated
+> CMA pages outside the new boundary are permanently leaked.
 >
-> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
-> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
+> Fix this by explicitly releasing the associated CMA buffers in
+> the failure paths before `image->nr_segments` is reduced.
+>
+> Cc: Huacai Chen <chenhuacai@kernel.org>
+> Cc: WANG Xuerui <kernel@xen0n.name>
+> Cc: Youling Tang <tangyouling@kylinos.cn>
+> Cc: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
+> Cc: Kees Cook <kees@kernel.org>
+> Cc: stable@vger.kernel.org
+> Link: https://sashiko.dev/#/patchset/20260729031235.2840255-1-ruanjinjie%=
+40huawei.com
+> Fixes: 55d990f0084c ("LoongArch: Add EFI binary support for kexec_file")
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 > ---
+>  arch/loongarch/kernel/kexec_efi.c          | 1 +
+>  arch/loongarch/kernel/machine_kexec_file.c | 6 +++++-
+>  2 files changed, 6 insertions(+), 1 deletion(-)
 >
-> Changes in v2: use a spinlock instead of a cmpxchg loop (Bibo Mao).
-> Changes in v3: rename the lock to pv_setting_lock and place it next to
-> phyid_map_lock (Huacai Chen).
+> diff --git a/arch/loongarch/kernel/kexec_efi.c b/arch/loongarch/kernel/ke=
+xec_efi.c
+> index 5ee78ebb1546..15fd797ff3de 100644
+> --- a/arch/loongarch/kernel/kexec_efi.c
+> +++ b/arch/loongarch/kernel/kexec_efi.c
+> @@ -86,6 +86,7 @@ static void *efi_kexec_load(struct kimage *image,
+>                  * We couldn't find space for the other segments; erase t=
+he
+>                  * kernel segment and try the next available hole.
+>                  */
+> +               kexec_free_segment_cma(image, kernel_segment_number);
+>                 image->nr_segments -=3D 1;
+>                 kbuf.buf_min =3D kernel_segment->mem + kernel_segment->me=
+msz;
+>                 kbuf.mem =3D KEXEC_BUF_MEM_UNKNOWN;
+> diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/=
+kernel/machine_kexec_file.c
+> index 5412aa9f3568..62a5be102065 100644
+> --- a/arch/loongarch/kernel/machine_kexec_file.c
+> +++ b/arch/loongarch/kernel/machine_kexec_file.c
+> @@ -217,7 +217,11 @@ int load_other_segments(struct kimage *image,
+>         return 0;
 >
-> v1: https://lore.kernel.org/all/20260810081321.157258-1-cui.tao@linux.dev=
-/
-> v2: https://lore.kernel.org/all/20260813232542.2098930-1-cui.tao@linux.de=
-v/
->
->  arch/loongarch/include/asm/kvm_host.h | 1 +
->  arch/loongarch/kvm/vcpu.c             | 6 +++++-
->  arch/loongarch/kvm/vm.c               | 1 +
->  3 files changed, 7 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/inclu=
-de/asm/kvm_host.h
-> index 23cfbecebbd7..3538a199aac6 100644
-> --- a/arch/loongarch/include/asm/kvm_host.h
-> +++ b/arch/loongarch/include/asm/kvm_host.h
-> @@ -125,6 +125,7 @@ struct kvm_arch {
->         unsigned int  pte_shifts[MAX_PGTABLE_LEVELS];
->         unsigned int  root_level;
->         spinlock_t    phyid_map_lock;
-> +       spinlock_t    pv_setting_lock;
->         struct kvm_phyid_map  *phyid_map;
->         /* Enabled PV features */
->         unsigned long pv_features;
-> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-> index 20c207d80e31..e47fa463a8be 100644
-> --- a/arch/loongarch/kvm/vcpu.c
-> +++ b/arch/loongarch/kvm/vcpu.c
-> @@ -1165,10 +1165,14 @@ static int kvm_loongarch_cpucfg_set_attr(struct k=
-vm_vcpu *vcpu,
->                         return -EINVAL;
->
->                 /* All vCPUs need set the same PV features */
-> +               spin_lock(&kvm->arch.pv_setting_lock);
->                 if ((kvm->arch.pv_features & LOONGARCH_PV_FEAT_UPDATED)
-> -                               && ((kvm->arch.pv_features & valid) !=3D =
-val))
-> +                               && ((kvm->arch.pv_features & valid) !=3D =
-val)) {
-> +                       spin_unlock(&kvm->arch.pv_setting_lock);
->                         return -EINVAL;
-> +               }
->                 kvm->arch.pv_features =3D val | LOONGARCH_PV_FEAT_UPDATED=
-;
-> +               spin_unlock(&kvm->arch.pv_setting_lock);
->                 return 0;
->         default:
->                 return -ENXIO;
-> diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
-> index 1317c718f896..86ba7d54e81f 100644
-> --- a/arch/loongarch/kvm/vm.c
-> +++ b/arch/loongarch/kvm/vm.c
-> @@ -76,6 +76,7 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long typ=
-e)
->                 return -ENOMEM;
->         }
->         spin_lock_init(&kvm->arch.phyid_map_lock);
-> +       spin_lock_init(&kvm->arch.pv_setting_lock);
->
->         kvm_init_vmcs(kvm);
->         kvm_vm_init_features(kvm);
+>  out_err:
+> -       image->nr_segments =3D orig_segments;
+> +       while (image->nr_segments > orig_segments) {
+> +               kexec_free_segment_cma(image, image->nr_segments - 1);
+> +               image->nr_segments--;
+> +       }
+> +
+>         kfree(modified_cmdline);
+>         return ret;
+>  }
 > --
-> 2.43.0
+> 2.34.1
 >
