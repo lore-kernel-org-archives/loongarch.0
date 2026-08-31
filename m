@@ -1,59 +1,57 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D1CC49252E
-	for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 14:05:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0247B5AD599
+	for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 14:04:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788185138; cv=none; b=VZJRWJDsK7rV9rDh+jgjRxHs9Bs/M5C9vDrOgTURhnh0RtlJ+ppaLHZjURiStLeOPhKgrtKD/5MvTbKKWaCZ1LUywADov4Tvu9c/6hhjex5ID4q3F+rcwXBKF4E3tvYHch8YW4txSP4Sg0U3Lr8BZa9ZK2jdlVEKV404L3bLR5w=
+	t=1788185091; cv=none; b=tlPWXImZ4+x2rstLwL/jC/DNKSCya7rhKtqKAmf79uvIzEvub1CcevUsACY98VNT2qa1vEAMm9SmG4U5h33bFTGwsooOw+dPAeI+KvTU4uNZ6Abil8j7baKrJIKMUsf/BzJ5UOJEBrxW5I/ODnVktGDFzZjxfuExTlNIhmgNBMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788185138; c=relaxed/simple;
-	bh=Rm4xkM59PDrDGUHsP7vwBFOEmR0A3mttMti8rHko1rY=;
+	s=arc-20240116; t=1788185091; c=relaxed/simple;
+	bh=xLPhcn633UxUUaKC4vzFrP/xR7wwEy8KtFue6KjCb3U=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bgwRQk4MyFRmAn41EAcjrSz6M/clhLd0tX88lfqOu51Ol1G0zW/b9PIa9Evan+ttTU3F784jiyiZUfc0LcZ4lVjR3fKe779Y7c+xqUtjSwVxoZJMA6T1ulfoZHXLZRo4EbPrhO6a8p6guekDXIb59XYLYSCLyWKVGEFXTVfmKxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eG+D1oac; arc=none smtp.client-ip=100.103.45.18
+	 To:Cc:Content-Type; b=C1Ic4pzjcW2LmgMrqL0rEI+ZcP3RUeV+CoyFfyRn8ANXNyw7cat9JpDlugMHChwPN5ZIfZGKJDSZGK4dQpu3kULXZTJWUJwxJL5yyjCzcPZTyOALCvgtc9NQtK7npyAz0/cl/yyoAsQmlinWT8dsIJxkYS/nt5e2bD5nLjm8x6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ihUF8/PM; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eG+D1oac"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ED171F00ACF
-	for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 14:05:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ihUF8/PM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBC441F00A3E
+	for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 14:04:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788185137;
-	bh=6Icaf4X/kIyDc556ppK1wzC3lefymKH+ZzCaIE2uh4w=;
+	s=k20260515; t=1788185089;
+	bh=FzX+10cDhmW0hwDmYTE7152l7j2EZIR1C4UvMnU53IQ=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=eG+D1oacxYEoMEK6J9pEO6OoYDL1MSiq+q8EuN3n5U/YidRuSAk4I88LPQdMWJ2Q+
-	 QTu2+jwYCitDZhgMLXxal0ZDqmtNOYAK2CZ5a4J7QOF1YZVk//B8/mCn6nPVfoRDaf
-	 tUA+YPeNvmnsW/uwlI9MdFdo/c22l85iSNm608j5lW1y842ANtKJH+05E438ESHcFo
-	 BiaACHjvWJsTNzLThSoP5AfVaK32fjiyHBozpusADjfjzqbyLnXTyTp63ItGmNHmXV
-	 +ouzZafFaaT9du+veyHaYAsjlg/ozJiLt5ostNoHoaeV8VVorJO+W0t+TUlhymk0F2
-	 HmJHkZD4ZDf/w==
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-c1677c91969so335343566b.1
-        for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 07:05:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBwcpZy+1SX7Slwd6vl7obUTJuLf3p1jlH6jPJHMpMdFsUbsPyJyG+InJ9fUR6ZAjGtEDcZaYslJ3mM=@lists.linux.dev
-X-Gm-Message-State: AFuF++kDuwIfyzJd1HA3Z2Hz4DRTq534Xd8yClIVTlvLh8wqUOcd0DmV
-	8F3oa+Q/IhbchzA1YBPU0FQoc+SGkQtz3+LxA1KvW4JWxuIhdn9jOBdlOOUh0+CF8aBsQFCqcS3
-	gOtvPtpuvyvyiWYH8QxcrtPMziNAk4bk=
-X-Received: by 2002:a17:907:3e8d:b0:c21:601:6501 with SMTP id
- a640c23a62f3a-c25571d06f7mr1561606266b.20.1788185135715; Mon, 31 Aug 2026
- 07:05:35 -0700 (PDT)
+	b=ihUF8/PMhzJeYrYbYKKZ3CfldjIAWfS3HvzsSf8nZ+5ZJjiOMfRXL7l1UL7Tm5iG9
+	 KAcGlkommNiNTV8j2LwC30aNS9gTJgxIws+2EkaRj2H4gEMQBYNccMi29R+7wOK6t/
+	 exg2oyr/uiQTLGz075cO8aOKcw94kMi6swAJtmwGNg71cZ+ANghZu+XRtG6rH7lQ8e
+	 Bl6v/U1GE7Kl5yfKB8qS/PB63f7piUoz+byXfI1H434K33nJn9t4ctIDLLKm2aSZ9A
+	 ltj0zDcAq6PKhVWrw7tBZOlA0hITVoVD7qRwU9vJgsBK8J7baN40sXmH7LecPvsAyk
+	 3nYsJgpwgka3A==
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-c207cb16cf5so576181566b.1
+        for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 07:04:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RoBPQPlK8nWhoxgFBq/CZRDLwqcy9nnYbmRs0rtf+j48oH2pRb0EPu+JbO4BLDpf8wp0Kzs/3Gubvs=@lists.linux.dev
+X-Gm-Message-State: AFuF++l+AXHC/SZTvOH13nqgANBHCbBjV6NmQu3eEwjCm9jgtY756uJ8
+	8N/LQ1iXdVfTxsSa1piEhXYW7p5xyO17b1C0ohXEXd0ePae+YKNp9Y9VA2vjN2+3GPyNZn1j4PI
+	50HFvI6id6DXnp/Pzxoa3p6m3qobkhT0=
+X-Received: by 2002:a17:906:fd84:b0:c25:9102:fa with SMTP id
+ a640c23a62f3a-c25b3bcf4b6mr53883166b.8.1788185088429; Mon, 31 Aug 2026
+ 07:04:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260817115847.2705791-1-nagachaithanya9911@gmail.com>
-In-Reply-To: <20260817115847.2705791-1-nagachaithanya9911@gmail.com>
+References: <20260817123918.2738447-1-nagachaithanya9911@gmail.com>
+In-Reply-To: <20260817123918.2738447-1-nagachaithanya9911@gmail.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 31 Aug 2026 22:05:18 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6Rt4Tvb8LuVZ1_Yna0eYa3bfmzHLUyh8v9=v2BtKH92g@mail.gmail.com>
-X-Gm-Features: AcwNN1VuJY2FdGHf2YH0PvTrLOx4t1TxoEZpNPLnMKG5h3qPA3szQGgwiq-mgV4
-Message-ID: <CAAhV-H6Rt4Tvb8LuVZ1_Yna0eYa3bfmzHLUyh8v9=v2BtKH92g@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: KVM: Fix memory leak in kvm_loongarch_env_init()
- error path
+Date: Mon, 31 Aug 2026 22:04:35 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5eaFd9t5CikZA0Lhy6eVbnUBvvLV5cV7rvo42M47yeWQ@mail.gmail.com>
+X-Gm-Features: AcwNN1VDSGpC4QI19ueXEEvghR72mgVgMiabqgpi1oIqT6rLIE-ia0qxu3ODzvI
+Message-ID: <CAAhV-H5eaFd9t5CikZA0Lhy6eVbnUBvvLV5cV7rvo42M47yeWQ@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: KVM: Free init resources if kvm_init() fails
 To: Chaithanya Lagisetty <nagachaithanya9911@gmail.com>
 Cc: zhaotianrui@loongson.cn, maobibo@loongson.cn, kernel@xen0n.name, 
-	lixianglai@loongson.cn, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
+	kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -64,68 +62,43 @@ What do you think about this?
 
 Huacai
 
-On Mon, Aug 17, 2026 at 7:59=E2=80=AFPM Chaithanya Lagisetty
+On Mon, Aug 17, 2026 at 8:39=E2=80=AFPM Chaithanya Lagisetty
 <nagachaithanya9911@gmail.com> wrote:
 >
-> kvm_loongarch_env_init() allocates the per-CPU kvm_context (vmcs) and
-> kvm_loongarch_ops, and registers the perf callbacks, before registering
-> the IPI/EIOINTC/PCH-PIC/DMSINTC KVM devices. If any of those device
-> registrations fails, the function returned the error directly without
-> freeing vmcs and kvm_loongarch_ops or unregistering the perf callbacks.
-> kvm_loongarch_init() propagates the error without calling
-> kvm_loongarch_env_exit(), so these resources are leaked.
+> kvm_loongarch_init() calls kvm_loongarch_env_init() to allocate the
+> per-CPU kvm_context (vmcs) and kvm_loongarch_ops and to register the
+> perf callbacks, and then calls kvm_init(). If kvm_init() fails its
+> result is returned directly, but since module_init() does not run
+> module_exit() on failure, kvm_loongarch_env_exit() is never called and
+> those resources are leaked.
 >
-> Unwind the already-acquired resources on the error path, mirroring
-> kvm_loongarch_env_exit().
+> Call kvm_loongarch_env_exit() when kvm_init() fails, matching the
+> teardown-on-failure pattern used by riscv_kvm_init().
 >
-> Fixes: c532de5a67a7 ("LoongArch: KVM: Add IPI device support")
+> Fixes: 2bd6ac687261 ("LoongArch: KVM: Implement kvm module related interf=
+ace")
 > Signed-off-by: Chaithanya Lagisetty <nagachaithanya9911@gmail.com>
 > ---
->  arch/loongarch/kvm/main.c | 19 +++++++++++++++----
->  1 file changed, 15 insertions(+), 4 deletions(-)
+>  arch/loongarch/kvm/main.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 >
 > diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
-> index 3e1005526f4b..685d334cf957 100644
+> index 3e1005526f4b..b6ddf5827c03 100644
 > --- a/arch/loongarch/kvm/main.c
 > +++ b/arch/loongarch/kvm/main.c
-> @@ -385,22 +385,33 @@ static int kvm_loongarch_env_init(void)
->         /* Register LoongArch IPI interrupt controller interface. */
->         ret =3D kvm_loongarch_register_ipi_device();
->         if (ret)
-> -               return ret;
-> +               goto err;
+> @@ -428,7 +428,11 @@ static int kvm_loongarch_init(void)
+>         if (r)
+>                 return r;
 >
->         /* Register LoongArch EIOINTC interrupt controller interface. */
->         ret =3D kvm_loongarch_register_eiointc_device();
->         if (ret)
-> -               return ret;
-> +               goto err;
->
->         /* Register LoongArch PCH-PIC interrupt controller interface. */
->         ret =3D kvm_loongarch_register_pch_pic_device();
->         if (ret)
-> -               return ret;
-> +               goto err;
->
->         /* Register LoongArch DMSINTC interrupt contrroller interface */
-> -       if (cpu_has_msgint)
-> +       if (cpu_has_msgint) {
->                 ret =3D kvm_loongarch_register_dmsintc_device();
-> +               if (ret)
-> +                       goto err;
-> +       }
->
-> +       return 0;
+> -       return kvm_init(sizeof(struct kvm_vcpu), 0, THIS_MODULE);
+> +       r =3D kvm_init(sizeof(struct kvm_vcpu), 0, THIS_MODULE);
+> +       if (r)
+> +               kvm_loongarch_env_exit();
 > +
-> +err:
-> +       kvm_unregister_perf_callbacks();
-> +       kfree(kvm_loongarch_ops);
-> +       kvm_loongarch_ops =3D NULL;
-> +       free_percpu(vmcs);
-> +       vmcs =3D NULL;
->         return ret;
+> +       return r;
 >  }
 >
+>  static void kvm_loongarch_exit(void)
 > --
 > 2.43.0
 >
