@@ -1,162 +1,111 @@
-Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9833625783C
-	for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 01:24:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.218
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 108F629B200
+	for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 01:25:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788139469; cv=none; b=AC2cVuTwO/+YBMcXes0SquaJo1e08DDGUnSn5lDVz3RxsGILqgrKpZzboolSjPfobPYCqYNRowGYwrZVQkrCvhGTDpXA817WQoKc3f7R54TskKzLfDf+Lj+kNMtGaXoYyvHLEemOsPNIy0PXHtYk7RBS0m+ohyDfoPuVTuTIj8E=
+	t=1788139541; cv=none; b=N+XUj3EqpJLqAX0JSOW6oAWlRcCojzo50UBgu9o0ny3ek/djfOGLvELq+2mIXtihXzDqpY2xQzTMBVlNZvvCaVQBphCjlM9SNN8O6k/i+Hm+24D+NHh1QL58tSuXytTy1aevTgWQ4vkhRCDPNlAYFrt1UflkObDl+oOkSPwIsLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788139469; c=relaxed/simple;
-	bh=npiYEDGa5lXor52q7g2HcncLu6uo0RjGe5aaz1Cny1w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=GcnOIhNBDLyTtIjux3X8MzQaPRrQEWCDIMpb5Pg/tPbH4Nlnr7gT/63g69XEZKdIP9CSp0hDxGw8rbgc0OHLw3Wvspao0rGBm51FHNPSO6JvwuAbH4f6NO0aXCaNCzquEeTV4+AmTXmdZgq6CJ5nDIjclAfl2PtUCxduAgQYtTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=Fs/xB0Yg; arc=none smtp.client-ip=113.46.200.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="Fs/xB0Yg"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=XoeDNcLDw7hqig4W64iLCrlEHYGNT6SfF67o40azHuY=;
-	b=Fs/xB0Yg8kWOG2+vbJXCQn6KxCz4jWLUSzEAq/b1HKUjTI6Zn6a1TBwmvuGGuCcesE500xj3A
-	SHlJN9aRXKf3A7Fs3t9RDcaKDSzLORDLcS8OYgkK4sJKg+bVG/PW2a9vzhyuN23Kf3k818vtagI
-	kSNrNpmr3MK18T+muYRiL2Q=
-Received: from mail.maildlp.com (unknown [172.19.162.223])
-	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4hY9w638lvzpSvb;
-	Mon, 31 Aug 2026 09:12:54 +0800 (CST)
-Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0BA4140577;
-	Mon, 31 Aug 2026 09:24:11 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 31 Aug 2026 09:24:08 +0800
-Message-ID: <fecbe6ee-12e3-4f3d-94ac-eb7cd08eeb0d@huawei.com>
-Date: Mon, 31 Aug 2026 09:24:07 +0800
+	s=arc-20240116; t=1788139541; c=relaxed/simple;
+	bh=XaqnCwdhgDmYD/S2No8eMMChvlbE82HANc0N3Le4skM=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=uMyOOCBGxhnTryiq0MW9gnB4gWTie5cAKgDcps+YZohoXVvwWabhrEbcD44BBXGhPxBkEk6vQee1QKZKdrCJ0NjYeeFIt1ayuwWLciNm+yWk/BzaU9NxE0j/xHPipQawE6J7JAWBuUG367f8ayjfRpEFG+H79nzN5YP5GKE692k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8DxTNIM2JRqY7oGAA--.18732S3;
+	Mon, 31 Aug 2026 09:25:32 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJAxX88K2JRq8+4XAA--.50431S2;
+	Mon, 31 Aug 2026 09:25:30 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: KVM: Validate MSI data before routing it to
+ EIOINTC
+To: Zeng Chi <zeng_chi911@163.com>, zhaotianrui@loongson.cn,
+ chenhuacai@kernel.org
+Cc: yury.norov@gmail.com, kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, zengchi@kylinos.cn, stable@vger.kernel.org,
+ Sashiko <sashiko-bot@kernel.org>
+References: <20260828093604.56622-1-zeng_chi911@163.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <4acbeb32-ea18-19c6-5231-636604ab7e86@loongson.cn>
+Date: Mon, 31 Aug 2026 09:25:15 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 07/17] crash_dump: Fix potential double-free of
- keys_header
-To: Sourabh Jain <sourabhjain@linux.ibm.com>, <catalin.marinas@arm.com>,
-	<will@kernel.org>, <mark.rutland@arm.com>, <chenhuacai@kernel.org>,
-	<kernel@xen0n.name>, <maddy@linux.ibm.com>, <mpe@ellerman.id.au>,
-	<npiggin@gmail.com>, <chleroy@kernel.org>, <tglx@kernel.org>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<hpa@zytor.com>, <akpm@linux-foundation.org>, <baoquan.he@linux.dev>,
-	<rppt@kernel.org>, <pasha.tatashin@soleen.com>, <pratyush@kernel.org>,
-	<ruirui.yang@linux.dev>, <kees@kernel.org>, <thuth@redhat.com>,
-	<gshan@redhat.com>, <jic23@kernel.org>, <james.morse@arm.com>,
-	<ardb@kernel.org>, <leitao@debian.org>, <yeoreum.yun@arm.com>,
-	<coxu@redhat.com>, <tangyouling@kylinos.cn>, <hbathini@linux.ibm.com>,
-	<adityag@linux.ibm.com>, <ionut.nechita@windriver.com>,
-	<liaoyuanhong@vivo.com>, <seanjc@google.com>, <fuqiang.wang@easystack.cn>,
-	<makb@juniper.net>, <piliu@redhat.com>, <ebiggers@kernel.org>,
-	<jbouron@amazon.com>, <mclapinski@google.com>, <me@linux.beauty>,
-	<graf@amazon.com>, <bgwin@google.com>, <robh@kernel.org>,
-	<takahiro.akashi@linaro.org>, <palmer@rivosinc.com>, <x86@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
-	<kexec@lists.infradead.org>, <linux-fsdevel@vger.kernel.org>,
-	<linux-mm@kvack.org>, Coiby Xu <coiby.xu@gmail.com>
-References: <20260826092541.3905933-1-ruanjinjie@huawei.com>
- <20260826092541.3905933-8-ruanjinjie@huawei.com>
- <87186b8a-f68c-400b-97cf-8ea6129eba69@linux.ibm.com>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <87186b8a-f68c-400b-97cf-8ea6129eba69@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20260828093604.56622-1-zeng_chi911@163.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- dggpemf500011.china.huawei.com (7.185.36.131)
+X-CM-TRANSID:qMiowJAxX88K2JRq8+4XAA--.50431S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7tr1UJr1rGrWfGFW7Aw4rXrc_yoW8Zr1fpF
+	W5uw4DtF1rGr17JrWkW34Ut3y5Aa1fXFsagF1a9a45Crn0yF15CF18ZFsrW3Z0k3y5Kr40
+	qFnIga4Yva4UJacCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zwZ7UU
+	UUU==
 
 
 
-在 2026/8/30 13:59, Sourabh Jain 写道:
-> Hello Jinjie,
+On 2026/8/28 下午5:36, Zeng Chi wrote:
+> From: Zeng Chi <zengchi@kylinos.cn>
 > 
-> Coiby is handling this issue in the below patch series:
-> https://lore.kernel.org/all/20260828084900.1496839-2-coiby.xu@gmail.com/
+> pch_msi_set_irq() passes e->msi.data straight into eiointc_set_irq() as
+> the irq number.  The MSI data comes from userspace, either via a
+> KVM_IRQ_ROUTING_MSI entry set with KVM_SET_GSI_ROUTING (used by irqfd
+> and KVM_IRQ_LINE) or directly via KVM_SIGNAL_MSI, and is never checked
+> against EIOINTC_IRQS.
 > 
-> Since the above patch series is all about crash_load_dm_crypt_keys,
-> could you
-> please consider dropping this patch from your series and reviewing his
-> patch
-> instead?
-
-Absolutely, happy to do so — I'll drop this patch and review Coiby's
-series instead.
-
+> eiointc_set_irq() uses the value with __set_bit()/__clear_bit() on the
+> 256-bit isr bitmap, eiointc_update_irq() then indexes sw_coremap[] and
+> the per-cpu coreisr/sw_coreisr bitmaps with it.  A data value >= 256
+> therefore reads and writes memory past the end of those arrays, i.e.
+> any process holding a VM fd can corrupt kernel memory beyond the
+> loongarch_eiointc allocation.
 > 
-> Thanks,
-> Sourabh Jain
+> Reject MSI data that doesn't fit in the EIOINTC irq space.  The DMSINTC
+> path is unaffected as it decodes the vector from the address and masks
+> it.
 > 
-> On 26/08/26 14:55, Jinjie Ruan wrote:
->> `keys_header` was freed in `build_keys_header()` without being reset
->> to NULL, and the error path in `crash_load_dm_crypt_keys()` freed it
->> unconditionally even when reused, leading to double-free or
->> use-after-free.
->>
->> Add `free_keys_header()` to centralize freeing and NULL-setting.
->> Use it in `build_keys_header()` and only free in the error path when
->> the header was newly built (`!is_dm_key_reused`).
->>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Baoquan He <bhe@redhat.com>
->> Cc: Mike Rapoport <rppt@kernel.org>
->> Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
->> Cc: Pratyush Yadav <pratyush@kernel.org>
->> Cc: Dave Young <ruirui.yang@linux.dev>
->> Cc: stable@vger.kernel.org
->> Fixes: e3a84be1ec2f ("arm64,ppc64le/kdump: pass dm-crypt keys to kdump
->> kernel")
->> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
->> ---
->>   kernel/crash_dump_dm_crypt.c | 15 +++++++++++----
->>   1 file changed, 11 insertions(+), 4 deletions(-)
->>
->> diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
->> index c685497cd470..ed0960ff0987 100644
->> --- a/kernel/crash_dump_dm_crypt.c
->> +++ b/kernel/crash_dump_dm_crypt.c
->> @@ -363,15 +363,21 @@ static struct configfs_subsystem
->> config_keys_subsys = {
->>       },
->>   };
->>   +static void free_keys_header(void)
->> +{
->> +    if (keys_header) {
->> +        kvfree(keys_header);
->> +        keys_header = NULL;
->> +    }
->> +}
->> +
->>   static int build_keys_header(void)
->>   {
->>       struct config_item *item = NULL;
->>       struct config_key *key;
->>       int i, r;
->>   -    if (keys_header != NULL)
->> -        kvfree(keys_header);
->> -
->> +    free_keys_header();
->>       keys_header = kzalloc(get_keys_header_size(key_count), GFP_KERNEL);
->>       if (!keys_header)
->>           return -ENOMEM;
->> @@ -441,7 +447,8 @@ int crash_load_dm_crypt_keys(struct kimage *image)
->>       r = kexec_add_buffer(&kbuf);
->>       if (r) {
->>           pr_err("Failed to call kexec_add_buffer, ret=%d\n", r);
->> -        kvfree((void *)kbuf.buffer);
->> +        if (!is_dm_key_reused)
->> +            free_keys_header();
->>           return r;
->>       }
->>       image->dm_crypt_keys_addr = kbuf.mem;
+> Fixes: 1928254c5ccb ("LoongArch: KVM: Add irqfd support")
+> Cc: stable@vger.kernel.org
+> Reported-by: Sashiko <sashiko-bot@kernel.org>
+> Closes: https://lore.kernel.org/all/20260531140921.1B1181F00893@smtp.kernel.org/
+> Signed-off-by: Zeng Chi <zengchi@kylinos.cn>
+> ---
+>   arch/loongarch/kvm/intc/pch_pic.c | 3 +++
+>   1 file changed, 3 insertions(+)
 > 
+> diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/pch_pic.c
+> index e7b77705c516..81fb534ce8dd 100644
+> --- a/arch/loongarch/kvm/intc/pch_pic.c
+> +++ b/arch/loongarch/kvm/intc/pch_pic.c
+> @@ -78,6 +78,9 @@ int pch_msi_set_irq(struct kvm *kvm, struct kvm_kernel_irq_routing_entry *e, int
+>   		return dmsintc_set_irq(kvm, msg_addr, e->msi.data, level);
+>   	}
+>   
+> +	if (e->msi.data >= EIOINTC_IRQS)
+> +		return -EINVAL;
+> +
+>   	eiointc_set_irq(kvm->arch.eiointc, e->msi.data, level);
+>   
+>   	return 0;
+> 
+Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 
