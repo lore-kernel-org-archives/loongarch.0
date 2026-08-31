@@ -1,198 +1,194 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF34A3DCD95;
-	Mon, 31 Aug 2026 11:34:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE3DC4DBD8E
+	for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 13:40:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788176089; cv=none; b=XLBupDRM2rGLnOLKcimxMCNVuJ/gKUPWZTzRxXvNpwvz4+kAsjEUxOrGA7NKpGwRwiLAHkazfWgaSGOt2+b2cgiD3DA8bxNceOGncqjrJTfdOU2ddt7qgKWmvHZ1n4DNBvotXjOkUqL5UhYsr9qgeaTUfRNrdo0CjoOXpQ9uzCw=
+	t=1788183608; cv=none; b=mG6AMu7KafwNxgnIEXk56zqzt7J0P7rLS4uwQIaS+NH+sfTfq5JR9oWzOKtT4/G3+sIWcWpubcUYK3w8KYHIxuu2ARbzo28CSdID7MNdxzti/9kw5T5HrogIQH4/NZ9qQdHvzbfTjaUiGHfwngus7EZZKkbHtuCklVt1Nhcf/8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788176089; c=relaxed/simple;
-	bh=7PJSx1TPIkXUgfGs6YC28LZ0MeXxRVZHnnDxcel/S/U=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EUR8fu2Opk7zd782Zr8KEt04uwWR3EhW4G9TxfENV2wGjXc1l0ly5PPr3vTZequeatqKFBH0lbUo7n5O3acKNt5fQ5KXQmbkKcrTJL+dUZXSUFxQOg6MzlItkoPdujQX2FPBb2ulW6FgFUH4q1ebzbBxfTwU9OYzOFPJKJcnXPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=VPqd2baD; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1788183608; c=relaxed/simple;
+	bh=rE7h8zbq53OFhYYydlfuTPoMOMrAbYTIIR6UWRulbHQ=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RozrUCa3eEeXLM+T3RC6APlL7kGm+re4NMQWJ16UX+QbfMpj/ipHLHZQPa7ayY8Hio29idABeP9UwdNcJUpqqz6wMCYKUIMvsOx+GBcQiL4KvvDUgqvM3olZmjjUhkq1ZDoS3mA2mwbSf4/9xgXBlVBcn4CktKLVQCz71cmK7Zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vnxr27RY; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="VPqd2baD"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67VBVmid956691;
-	Mon, 31 Aug 2026 11:34:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=aRirk3
-	u9Lgkg4mvt96x9s0nI8fUpFoM850JLTd6I6yQ=; b=VPqd2baDC3My6bFwl4KZdC
-	++UEg06J2fUvexHWKNc+19olv88u44nM3x/ZaK7i393BK2OSKPkHO1oTjREGNBIa
-	Wlfn+GeaG2EsKRt1YEJRodpy2hvFNwIM5D57rZDo1wJqACky82LSvWsH7F7y6X5r
-	j6hGIRqAHNp3MPAadX5ETu3cQUoZ2pOSveHzzxmpRhzqu+y/FMUmWXDdJSLiX4L3
-	QGWOase4mrH1hwEExNfwGpxmcrQC5UCG0Eo6q8+bd1QdpXpofW8MF68HChP1/roy
-	c6yBb2kbVkB9HQOS1mWV4gOE4TkqTdPwRaVm4MHyeWj2faeh6Agr6k+HbpvCT8pQ
-	==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4gbnudgxcx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 31 Aug 2026 11:34:25 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 67VBQIqR024526;
-	Mon, 31 Aug 2026 11:34:25 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4gcb8h5gwy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 31 Aug 2026 11:34:24 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 67VBYKJ348234992
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 31 Aug 2026 11:34:20 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BEDAC2004E;
-	Mon, 31 Aug 2026 11:34:20 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 63DF92004D;
-	Mon, 31 Aug 2026 11:34:20 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.224.75.30])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with SMTP;
-	Mon, 31 Aug 2026 11:34:20 +0000 (GMT)
-Date: Mon, 31 Aug 2026 13:34:18 +0200
-From: Claudio Imbrenda <imbrenda@linux.ibm.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>,
-        Paolo
- Bonzini <pbonzini@redhat.com>,
-        Tianrui Zhao <zhaotianrui@loongson.cn>,
-        Bibo
- Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
-        Anup Patel
- <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>,
-        Palmer Dabbelt
- <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Christian
- Borntraeger <borntraeger@linux.ibm.com>,
-        Janosch Frank
- <frankja@linux.ibm.com>,
-        Fuad Tabba <fuad.tabba@linux.dev>, Joey Gouly
- <joey.gouly@arm.com>,
-        Steffen Eiden <seiden@linux.ibm.com>,
-        Suzuki K
- Poulose <suzuki.poulose@arm.com>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        Atish
- Patra <atish.patra@linux.dev>, Alexandre Ghiti <alex@ghiti.fr>,
-        David
- Hildenbrand <david@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-        kvm@vger.kernel.org, loongarch@lists.linux.dev,
-        kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
-        Ritesh
- Harjani <ritesh.list@gmail.com>
-Subject: Re: [PATCH 02/20] KVM: selftests: Bump the minimum GPA for page
- tables to 0x200000
-Message-ID: <20260831133418.1594b410@p-imbrenda>
-In-Reply-To: <apHOZouaLKs5CgpI@google.com>
-References: <20260826230511.972824-1-seanjc@google.com>
-	<20260826230511.972824-3-seanjc@google.com>
-	<20260828195848.2d14e9aa@p-imbrenda>
-	<apHOZouaLKs5CgpI@google.com>
-Organization: IBM
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vnxr27RY"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2cfbbdfa60bso38711995ad.3
+        for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 06:40:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788183605; x=1788788405; darn=lists.linux.dev;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:date
+         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=53920xzB8XLNSjeZIZbkJ3m9LVbpBiAgUUyw5Vt5WJg=;
+        b=Vnxr27RYDz0vIOFnWRMuInbfQi2tUdU1MmjNRbTBeF+PfsJDUMWZvGVajbK5czsPIE
+         omQLAgQEARc4di+gfzTkk1hLc2ne99cSLhMpU/bGFesmsiEt/EEPvWcKEF3c4lotYqdT
+         LYMUCEwGBsZkR4AcVevhfa+YcJuDBeD+OaXMM6S3+bGWZQ/hgu7M2j94jDAerhPcuQMv
+         mYHlKHwfKfa+kfqufDR+ORAkNhgBiJ5Jr4oSRNUP9KdafM+wIciSys/srM3jidlSdvZF
+         RVBRIFJuToJggByQtrpi+VQnMUWK55wzGuY/pUPX4Y+WE39Z2QgKGm3ArrkkLfm/agCR
+         NLjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788183605; x=1788788405;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:date
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=53920xzB8XLNSjeZIZbkJ3m9LVbpBiAgUUyw5Vt5WJg=;
+        b=HfS1hBVmHCjfSMXEXYJz3dcYfAyc+ET6KGIBlitvJqCiikJiVg0G2MKuMFHe7/Cs/1
+         51Dw4mWk1Yt5GRv+/SUDEBSzt0uaEdwAJ/i7fZHUbNhgnDEdxYMxtIT9My6RbdmpeRYh
+         BbXIgXzyhClgPVkbH1nNrncKilsvO6BR82S56oqCIMfskH6X+vLXdKEFQlY1J4qclZU0
+         ACk6tSH6n7sMFTfi60sXNC2RcTTqHfvr4GpwHOUfbwtBHLgx73igwUOQc/j9EW9wfwMP
+         JeDLRqgAX2pEY+0T+p4/RXiEy5lRvT9vS0egGCo3OpR4vueMJQTfdnRw9F6LZfkNK4+c
+         ntVA==
+X-Forwarded-Encrypted: i=1; AKwUvBxsNAB55NdwRo4tilGe9s8WZG/ggxGemGaGNx3sDXytq3miAYaF2Idkp9HdyyvX/eeiDFWtqbkhB6s=@lists.linux.dev
+X-Gm-Message-State: AFuF++mjWbk9+mW48494K6Gss6h+tuYL37xQ+ewsMu3FcTrOksqmYi5B
+	oNIqvTp9hhfNEGLag0XYfQB6/6Bgu2ikYz7/3Ij3HDAmDN+njIuZGc7N
+X-Gm-Gg: AYBFou3kfkthhNir7bV9sJX440qYmR+z52OvX12oOIvv5PJALZjYYVC4u76g/1TSR1q
+	SN05WUp+Ea3Zg8fmPO+7CBIkEwi+E5zIpBek0PBI5NqonGuZaVR6g/8sY3kOzjaxNUodBQexThm
+	PN4PxjLRAUtlBbvd2lJqp1/+k/k5VRzd1BD8V1lbFSz2zOjno8EzKDpgwNh8ZUm6/3f93c53JVZ
+	Yh3ZKw6f3zfis5x6iPLQbJTMuVsB4tVQtvlNFD0jHxM7vEV4eAX9eHIxjNF3J4kJlPHnRNODohn
+	4P/b60fjun5pWf/ZcuyTGgxLzxywERApZVF2yY8LT4EFXCT1Wbd7mkgMbtzdLy8oTTSuZNx7Rbx
+	k7ZWk4hGVj9Om04kn+x43E7fTahGjqLM6WrpDQUb8UXlL/dduuYONcIA07crkGZw9aSI45H9pLr
+	T65iO44SQ2pOYjmDNL5CEBaqpJH9WwYQpkIpcloVFGnk38FJC6g4DJpQ==
+X-Received: by 2002:a17:902:ce88:b0:2c9:c952:6e9 with SMTP id d9443c01a7336-2d74dca2281mr379634065ad.2.1788183605112;
+        Mon, 31 Aug 2026 06:40:05 -0700 (PDT)
+Received: from localhost ([45.112.44.97])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3286fa20e2fsm30550306eec.28.2026.08.31.06.40.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Aug 2026 06:40:04 -0700 (PDT)
+From: Coiby Xu <coiby.xu@gmail.com>
+X-Google-Original-From: Coiby Xu <Coiby.Xu@gmail.com>
+Date: Mon, 31 Aug 2026 21:36:33 +0800
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: Sourabh Jain <sourabhjain@linux.ibm.com>, catalin.marinas@arm.com, 
+	will@kernel.org, mark.rutland@arm.com, chenhuacai@kernel.org, kernel@xen0n.name, 
+	maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com, chleroy@kernel.org, 
+	tglx@kernel.org, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, 
+	hpa@zytor.com, akpm@linux-foundation.org, baoquan.he@linux.dev, rppt@kernel.org, 
+	pasha.tatashin@soleen.com, pratyush@kernel.org, ruirui.yang@linux.dev, kees@kernel.org, 
+	thuth@redhat.com, gshan@redhat.com, jic23@kernel.org, james.morse@arm.com, 
+	ardb@kernel.org, leitao@debian.org, yeoreum.yun@arm.com, tangyouling@kylinos.cn, 
+	hbathini@linux.ibm.com, adityag@linux.ibm.com, ionut.nechita@windriver.com, 
+	liaoyuanhong@vivo.com, seanjc@google.com, fuqiang.wang@easystack.cn, makb@juniper.net, 
+	piliu@redhat.com, ebiggers@kernel.org, jbouron@amazon.com, mclapinski@google.com, 
+	me@linux.beauty, graf@amazon.com, bgwin@google.com, robh@kernel.org, 
+	takahiro.akashi@linaro.org, palmer@rivosinc.com, x86@kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
+	linux-mm@kvack.org
+Subject: Re: [PATCH v3 07/17] crash_dump: Fix potential double-free of
+ keys_header
+Message-ID: <apWDDWhkVMIpKWS-@Rk>
+References: <20260826092541.3905933-1-ruanjinjie@huawei.com>
+ <20260826092541.3905933-8-ruanjinjie@huawei.com>
+ <87186b8a-f68c-400b-97cf-8ea6129eba69@linux.ibm.com>
+ <fecbe6ee-12e3-4f3d-94ac-eb7cd08eeb0d@huawei.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-GUID: G-OCitu2TpWXDgPjgttj0SGbLIz_ECdc
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODMxMDA5OSBTYWx0ZWRfX4UatEpGoCD6o
- Kv1eA+dS2uJdH+4ManK2w/X6QyFrWWh7jd8KL6kiafdW3x+2ac/P/Zkz8HOZl+1VKLL8mqEiYNp
- +j6gQ5DWRR9ZLjH5RZ9q+jm2WEEvYWuCu+8CFvX4cAC1C9Vs/g74amZ4Oppy73+AeuLdlF2Q5M9
- tsOfQHTNMriNhBvEVpsU79JtekpA4ZZ6QS6aV6eUeLxVIC30m7f33YbB95d+awd7xHIciMoLHKu
- CSHQepUcB+t8wD8vZDWSRFe7dTAa4ibWzxCQlCdtJnbEBPoIp4skROGaDvCDVWJTK1VW/S4arjJ
- LNyvfSyOK9IYT9nFtTGYiRP05LMz259raqhxkHPwODSX0OnkUkV8kq6+RGlekjiIyFSS/0aWF4f
- g7/DukwXB5uHQDPuBbnmCWOHQjU0TbuawaWKzIPhnNWsyqy/wR4Tby3iuPc1P7EkbCvYr/zac9K
- QSdnbH+KYg1/rfkAONQ==
-X-Proofpoint-ORIG-GUID: a8BXvl6k17QNNmEGXkIB4yyp26bklHpk
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODMxMDA5OSBTYWx0ZWRfXwtaTiMJOBjFH
- tOMl0H4KERIHO7WfLS9yiOyzMOPcW6L7zLb7QkLf3GIfOSQtGS4DR3ikwAodhcbi8c8V/J48Qkq
- EtaWT5nrB08ZegHOb7IHlDrWnRHtJLc=
-X-Authority-Analysis: v=2.4 cv=B92JFutM c=1 sm=1 tr=0 ts=6a9566c2 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=kj9zAlcOel0A:10 a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=V8glGbnc2Ofi9Qvn3v5h:22 a=VwQbUJbxAAAA:8
- a=1XWaLZrsAAAA:8 a=_FYIVZ8AZ4pq6tOtmQUA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-08-31_04,2026-08-27_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 spamscore=0 clxscore=1015 suspectscore=0 phishscore=0
- lowpriorityscore=0 bulkscore=0 priorityscore=1501 impostorscore=0
- malwarescore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
- definitions=main-2608310099
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fecbe6ee-12e3-4f3d-94ac-eb7cd08eeb0d@huawei.com>
 
-On Fri, 28 Aug 2026 11:07:34 -0700
-Sean Christopherson <seanjc@google.com> wrote:
+On Mon, Aug 31, 2026 at 09:24:07AM +0800, Jinjie Ruan wrote:
+>
+>
+>在 2026/8/30 13:59, Sourabh Jain 写道:
+>> Hello Jinjie,
+>>
+>> Coiby is handling this issue in the below patch series:
+>> https://lore.kernel.org/all/20260828084900.1496839-2-coiby.xu@gmail.com/
+>>
+>> Since the above patch series is all about crash_load_dm_crypt_keys,
+>> could you
+>> please consider dropping this patch from your series and reviewing his
+>> patch
+>> instead?
+>
+>Absolutely, happy to do so — I'll drop this patch and review Coiby's
+>series instead.
 
-> On Fri, Aug 28, 2026, Claudio Imbrenda wrote:
-> > On Wed, 26 Aug 2026 16:04:53 -0700
-> > Sean Christopherson <seanjc@google.com> wrote:
-> >   
-> > > Bump selftests completely arbitrary minimum GPA for page tables from
-> > > 0x180000 to 0x200000 (LoongArch's minimum), so that LoongArch can use
-> > > vm_alloc_page_table() instead of open coding a rough equivalent.
-> > > 
-> > > Signed-off-by: Sean Christopherson <seanjc@google.com>
-> > > ---
-> > >  tools/testing/selftests/kvm/include/kvm_util.h | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
-> > > index 5a7a455b5387..70906a0d1003 100644
-> > > --- a/tools/testing/selftests/kvm/include/kvm_util.h
-> > > +++ b/tools/testing/selftests/kvm/include/kvm_util.h
-> > > @@ -175,7 +175,7 @@ static inline struct userspace_mem_region *vm_get_mem_region(struct kvm_vm *vm,
-> > >  
-> > >  /* Minimum allocated guest virtual and physical addresses */
-> > >  #define KVM_UTIL_MIN_VADDR		0x2000
-> > > -#define KVM_GUEST_PAGE_TABLE_MIN_PADDR	0x180000
-> > > +#define KVM_GUEST_PAGE_TABLE_MIN_PADDR	0x200000
-> > >  
-> > >  #define DEFAULT_GUEST_STACK_VADDR_MIN	0xab6000
-> > >  #define DEFAULT_STACK_PGS		5  
-> > 
-> > this breaks s390/cmma_test
-> > 
-> > I tried a quick fix, but nope... I will need to actually invest some
-> > time (i.e. next week) to understand why the quick fix is not enough,
-> > and come up with a proper fix
-> > 
-> > the good news is: it seems like cmma_test is the only test that is
-> > negatively affected by this series.  
-> 
-> Is it this change specifically that's problematic?  Because if so, you can probably
+Hi Jinjie,
 
-yesn't
+Thank you for agreeing to drop your patch and review mine instead!
 
-wihtout this patch everything works for s390, but my quick fix should
-have worked...
+>
+>>
+>> Thanks,
+>> Sourabh Jain
+>>
+>> On 26/08/26 14:55, Jinjie Ruan wrote:
+>>> `keys_header` was freed in `build_keys_header()` without being reset
+>>> to NULL, and the error path in `crash_load_dm_crypt_keys()` freed it
+>>> unconditionally even when reused, leading to double-free or
+>>> use-after-free.
+>>>
+>>> Add `free_keys_header()` to centralize freeing and NULL-setting.
+>>> Use it in `build_keys_header()` and only free in the error path when
+>>> the header was newly built (`!is_dm_key_reused`).
+>>>
+>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>> Cc: Baoquan He <bhe@redhat.com>
+>>> Cc: Mike Rapoport <rppt@kernel.org>
+>>> Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
+>>> Cc: Pratyush Yadav <pratyush@kernel.org>
+>>> Cc: Dave Young <ruirui.yang@linux.dev>
+>>> Cc: stable@vger.kernel.org
+>>> Fixes: e3a84be1ec2f ("arm64,ppc64le/kdump: pass dm-crypt keys to kdump
+>>> kernel")
+>>> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+>>> ---
+>>>   kernel/crash_dump_dm_crypt.c | 15 +++++++++++----
+>>>   1 file changed, 11 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
+>>> index c685497cd470..ed0960ff0987 100644
+>>> --- a/kernel/crash_dump_dm_crypt.c
+>>> +++ b/kernel/crash_dump_dm_crypt.c
+>>> @@ -363,15 +363,21 @@ static struct configfs_subsystem
+>>> config_keys_subsys = {
+>>>       },
+>>>   };
+>>>   +static void free_keys_header(void)
+>>> +{
+>>> +    if (keys_header) {
+>>> +        kvfree(keys_header);
+>>> +        keys_header = NULL;
+>>> +    }
+>>> +}
+>>> +
+>>>   static int build_keys_header(void)
+>>>   {
+>>>       struct config_item *item = NULL;
+>>>       struct config_key *key;
+>>>       int i, r;
+>>>   -    if (keys_header != NULL)
+>>> -        kvfree(keys_header);
+>>> -
+>>> +    free_keys_header();
+>>>       keys_header = kzalloc(get_keys_header_size(key_count), GFP_KERNEL);
+>>>       if (!keys_header)
+>>>           return -ENOMEM;
+>>> @@ -441,7 +447,8 @@ int crash_load_dm_crypt_keys(struct kimage *image)
+>>>       r = kexec_add_buffer(&kbuf);
+>>>       if (r) {
+>>>           pr_err("Failed to call kexec_add_buffer, ret=%d\n", r);
+>>> -        kvfree((void *)kbuf.buffer);
+>>> +        if (!is_dm_key_reused)
+>>> +            free_keys_header();
+>>>           return r;
+>>>       }
+>>>       image->dm_crypt_keys_addr = kbuf.mem;
+>>
+>
 
-so I still need to debug why things don't work the way I expect, but at
-least now my bug chase is independent from this series :)
-
-> just do nothing, because Sashiko (argh, just remembered that Sashiko doesn't Cc
-> everyone) pointed out that this will likely break some arm64 tests as well[*].
-> 
-> The LoongArch folks confirmed that using KVM_GUEST_PAGE_TABLE_MIN_PADDR as-is
-> should be a-ok, so my plan is to drop this patch and instead have LoongArch use
-> KVM_GUEST_PAGE_TABLE_MIN_PADDR.  I.e. make LoongArch match everyone else, instead
-> of making everyone else match LoongArch.
-> 
-> [*] https://lore.kernel.org/all/20260826232224.782021F000E9@smtp.kernel.org
-> 
-
-if you respin without this patch I'll Ack
+-- 
+Best regards,
+Coiby
