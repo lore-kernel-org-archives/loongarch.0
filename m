@@ -1,96 +1,107 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 577623603E9
-	for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 02:31:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mta1.migadu.com (out-64.mta1.migadu.com [95.215.58.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E60A3AC0D9
+	for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 04:51:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788143500; cv=none; b=J6AkTbcRibLFAp6OnyZ5vfAceed6Ydnz4xn+KIjJQVAzB065+qhngdJkgJo56WYTGM5bGSictz/cku6bVZY2XrDZ4a19JCx3bTqJwlTfM4V8y58XEbGldIoARRIdYrVvjqolKy2aFrGMxGxb+QV2dUikk4iPb0unV7atEX1qjRA=
+	t=1788151872; cv=none; b=W3IH0XXmpmHeyFeyiYiQSG0oTqf8tfrCcIhPjl5552ZL3fGmi1ijc6zxJhTCfTeDMEKzztQH+XDIV2X0xqf6XNGlX+c5LhdNPaQn71sm85/QSs1UvqITor/kRA4KfOflo/6xEDwOFbfKb6mPHNcjiE7Luqvtr4dpuJeEe4hAzzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788143500; c=relaxed/simple;
-	bh=bjSZ1iWs4Dn/zALF7NO1b+tiRY0+8b5Uko7srttrhU8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=I20MzgLwGvIhUGJPJCxtCw3SyS5GP4q4Qvi4DrFWuSSpuwULenQ/5l99UKZi/cQEJVnFd/N1RCPGht1Pi0XdP1IV9qvrGx7U+gKYUF772JYzO+uBC4C2aexF5lVCjTk1haN9qmX0CALS2oHrzG24TumR6S+V4JZjHtjBZOG1IBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [123.138.236.242])
-	by gateway (Coremail) with SMTP id _____8DxTNJx55RqR74GAA--.18790S3;
-	Mon, 31 Aug 2026 10:31:13 +0800 (CST)
-Received: from linux.localdomain (unknown [123.138.236.242])
-	by front1 (Coremail) with SMTP id qMiowJCxtMxr55Rqh_gXAA--.23244S2;
-	Mon, 31 Aug 2026 10:31:08 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-	Hengqi Chen <hengqi.chen@gmail.com>
-Cc: loongarch@lists.linux.dev,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] LoongArch: BPF: Fix off-by-one error for insn_is_cast_user
-Date: Mon, 31 Aug 2026 10:31:06 +0800
-Message-ID: <20260831023106.3279-1-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
+	s=arc-20240116; t=1788151872; c=relaxed/simple;
+	bh=AcF1yxm9rT2KMssISiyjtOURrrincnoiFbuUpLLOO0A=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ZOmy2xF8zDdqVPKSYnagdUN8byDoIdc/rvOnfGJAp52cwr2WMSkeaOk0SYdh+zmQVWHoQyj1JfnfPwHwL/tkyWN+lg87O0U3LlxF7ZIpKeHIdL53C32/Vvu0xLAagNLVwvhY0wca6HytX/3iAykjDid/TCE6qjy6D66iCyR1lm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Lkv66w/r; arc=none smtp.client-ip=95.215.58.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Lkv66w/r"
+X-Envelope-To: loongarch@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=AcF1yxm9rT2KMssISiyjtOURrrincnoiFbuUpLLOO0A=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1788151867; v=1; x=1788756667;
+ b=Lkv66w/rZIDGCWWR4IfP827bsrYokzTfSmoNx61LJYLlVxeHst9/9swFTPsRj2C/+I3WCZZq
+ kO+zNseKHBYfrUT6U2ziGCzwKLniX6X8GHWD0RphBtOFd5olTky/NwvkEQOqGs7O7+ykV/hJpoM
+ 7HprNF7X7wwrXA9pdxsayqMI=
+X-Envelope-To: loongarch@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id 10f2ff9aafc7c54e;
+	Mon, 31 Aug 2026 04:50:57 +0000
+X-Mizu-Trace-ID: 10f2ff9aafc7c54e
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <fa3e1ee9-beb3-42f4-9034-8e065f343c05@linux.dev>
+Date: Mon, 31 Aug 2026 12:50:53 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Cc: cui.tao@linux.dev, yury.norov@gmail.com, kvm@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, zengchi@kylinos.cn,
+ stable@vger.kernel.org, Sashiko <sashiko-bot@kernel.org>
+Subject: Re: [PATCH] LoongArch: KVM: Validate MSI data before routing it to
+ EIOINTC
+To: Zeng Chi <zeng_chi911@163.com>, zhaotianrui@loongson.cn,
+ maobibo@loongson.cn, chenhuacai@kernel.org
+References: <20260828093604.56622-1-zeng_chi911@163.com>
+From: Tao Cui <cui.tao@linux.dev>
+In-Reply-To: <20260828093604.56622-1-zeng_chi911@163.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxtMxr55Rqh_gXAA--.23244S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7KrWkuF1kWF1fJw43Ar15KFX_yoW8Aryfpr
-	ZrAws8GFW8WrWru3WkJFWvvF1akFsxWr47GF42y3yFy3s0qr1FqFyfK390kFnYyw40vF1S
-	qr9Ykw17Za4DZ3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAF
-	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
-	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
-	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6x
-	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
-	0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU70PfDUUUU
 
-In the LoongArch BPF JIT code, the branch offset represents the number
-of instructions. An offset of 1 means the target of the "beq" is the
-current PC plus 1 instruction (PC + 4 bytes). This matches the exact
-same path as the sequential non-branch execution, the "or" instruction
-is always executed for the cast_user JIT arm in build_insn().
 
-If the pointer is not NULL, there is no side effect. But if the pointer
-is NULL, it is incorrectly combined with the base address and turns into
-a non-zero address, meaning a zero arena offset no longer casts to NULL.
 
-Fix this by changing the branch offset from 1 to 2, which properly skips
-the "or" instruction and jumps directly to the "move_reg" instruction if
-the pointer is NULL, ensuring the destination register is safely cleared
-to 0.
+在 2026/8/28 17:36, Zeng Chi 写道:
+> From: Zeng Chi <zengchi@kylinos.cn>
+> 
+> pch_msi_set_irq() passes e->msi.data straight into eiointc_set_irq() as
+> the irq number.  The MSI data comes from userspace, either via a
+> KVM_IRQ_ROUTING_MSI entry set with KVM_SET_GSI_ROUTING (used by irqfd
+> and KVM_IRQ_LINE) or directly via KVM_SIGNAL_MSI, and is never checked
+> against EIOINTC_IRQS.
+> 
+> eiointc_set_irq() uses the value with __set_bit()/__clear_bit() on the
+> 256-bit isr bitmap, eiointc_update_irq() then indexes sw_coremap[] and
+> the per-cpu coreisr/sw_coreisr bitmaps with it.  A data value >= 256
+> therefore reads and writes memory past the end of those arrays, i.e.
+> any process holding a VM fd can corrupt kernel memory beyond the
+> loongarch_eiointc allocation.
+> 
+> Reject MSI data that doesn't fit in the EIOINTC irq space.  The DMSINTC
+> path is unaffected as it decodes the vector from the address and masks
+> it.
+> 
+> Fixes: 1928254c5ccb ("LoongArch: KVM: Add irqfd support")
+> Cc: stable@vger.kernel.org
+> Reported-by: Sashiko <sashiko-bot@kernel.org>
+> Closes: https://lore.kernel.org/all/20260531140921.1B1181F00893@smtp.kernel.org/
+> Signed-off-by: Zeng Chi <zengchi@kylinos.cn>
+> ---
+>  arch/loongarch/kvm/intc/pch_pic.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/pch_pic.c
+> index e7b77705c516..81fb534ce8dd 100644
+> --- a/arch/loongarch/kvm/intc/pch_pic.c
+> +++ b/arch/loongarch/kvm/intc/pch_pic.c
+> @@ -78,6 +78,9 @@ int pch_msi_set_irq(struct kvm *kvm, struct kvm_kernel_irq_routing_entry *e, int
+>  		return dmsintc_set_irq(kvm, msg_addr, e->msi.data, level);
+>  	}
+>  
+> +	if (e->msi.data >= EIOINTC_IRQS)
+> +		return -EINVAL;
+> +
+>  	eiointc_set_irq(kvm->arch.eiointc, e->msi.data, level);
+>  
+>  	return 0;
+Nice fix, thanks!
 
-Fixes: 4fdb5dd8aeba ("LoongArch: BPF: Implement bpf_addr_space_cast instruction")
-Cc: stable@vger.kernel.org
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
-v2: Update the commit message, no code changes.
+Reviewed-by: Tao Cui <cuitao@kylinos.cn>
 
- arch/loongarch/net/bpf_jit.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index 1eb588e443c9..4da278900938 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -717,7 +717,7 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
- 			move_reg(ctx, t1, src);
- 			emit_zext_32(ctx, t1, true);
- 			move_imm(ctx, dst, (ctx->user_vm_start >> 32) << 32, false);
--			emit_insn(ctx, beq, t1, LOONGARCH_GPR_ZERO, 1);
-+			emit_insn(ctx, beq, t1, LOONGARCH_GPR_ZERO, 2);
- 			emit_insn(ctx, or, t1, dst, t1);
- 			move_reg(ctx, dst, t1);
- 			break;
--- 
-2.42.0
+BTW, the NULL deref in pch_pic_update_irq() that Sashiko mentioned is
+a pre-existing issue — it might be worth addressing in a separate
+patch:
+https://lore.kernel.org/all/20260828100204.CC38D1F000E9@smtp.kernel.org/
 
