@@ -1,124 +1,96 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E43412941A
-	for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 02:10:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 577623603E9
+	for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 02:31:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788142213; cv=none; b=k/xLONO/mbEvhnudmulmlztvq0/M5XABIncPQcKlYEUhxoarM3VwttvZMuE5HZpl6caN2HwOz8pglrUIfX5P62KsPQj6g6Jh2SlZ+uAOJCZqdNRxpCB+fEh3ECvFhnSehxACOYor8I7K2KNZNLUz6SeYHGW0+1C11AbFvVhkp8o=
+	t=1788143500; cv=none; b=J6AkTbcRibLFAp6OnyZ5vfAceed6Ydnz4xn+KIjJQVAzB065+qhngdJkgJo56WYTGM5bGSictz/cku6bVZY2XrDZ4a19JCx3bTqJwlTfM4V8y58XEbGldIoARRIdYrVvjqolKy2aFrGMxGxb+QV2dUikk4iPb0unV7atEX1qjRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788142213; c=relaxed/simple;
-	bh=gOHdHbyFwmSt0pq+fYqTSruFCmYvjBlEASAyj09CZno=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=gSsSCfLcCgtEwa2nQJWwptF8MA5keibF1KshxnfoiabIJtHjeQSM+8vb1Pj0gSLbz73/JoHwZi0I/HKVacTgx1FF3lSlSVp0XHD16+fHwvqAe7AA2Z+cUPfE31b6ap/L/pQ6e7qHnUumVktLSRDsJ//Hx82taScaNZ0hzkiHGqk=
+	s=arc-20240116; t=1788143500; c=relaxed/simple;
+	bh=bjSZ1iWs4Dn/zALF7NO1b+tiRY0+8b5Uko7srttrhU8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=I20MzgLwGvIhUGJPJCxtCw3SyS5GP4q4Qvi4DrFWuSSpuwULenQ/5l99UKZi/cQEJVnFd/N1RCPGht1Pi0XdP1IV9qvrGx7U+gKYUF772JYzO+uBC4C2aexF5lVCjTk1haN9qmX0CALS2oHrzG24TumR6S+V4JZjHtjBZOG1IBI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8AxX9OB4pRqrrwGAA--.18793S3;
-	Mon, 31 Aug 2026 10:10:09 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJCxf8994pRqOfUXAA--.51660S2;
-	Mon, 31 Aug 2026 10:10:07 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: KVM: Preserve memslot arch flags on
- KVM_MR_FLAGS_ONLY
-To: Zeng Chi <zeng_chi911@163.com>, zhaotianrui@loongson.cn,
- chenhuacai@kernel.org
-Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, zengchi@kylinos.cn, stable@vger.kernel.org
-References: <20260828094825.357630-1-zeng_chi911@163.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <5cc77794-ffac-f0b3-2b04-c9c322631dc5@loongson.cn>
-Date: Mon, 31 Aug 2026 10:09:50 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from loongson.cn (unknown [123.138.236.242])
+	by gateway (Coremail) with SMTP id _____8DxTNJx55RqR74GAA--.18790S3;
+	Mon, 31 Aug 2026 10:31:13 +0800 (CST)
+Received: from linux.localdomain (unknown [123.138.236.242])
+	by front1 (Coremail) with SMTP id qMiowJCxtMxr55Rqh_gXAA--.23244S2;
+	Mon, 31 Aug 2026 10:31:08 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Hengqi Chen <hengqi.chen@gmail.com>
+Cc: loongarch@lists.linux.dev,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] LoongArch: BPF: Fix off-by-one error for insn_is_cast_user
+Date: Mon, 31 Aug 2026 10:31:06 +0800
+Message-ID: <20260831023106.3279-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20260828094825.357630-1-zeng_chi911@163.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxf8994pRqOfUXAA--.51660S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxCFWrtw4kJrWxJF1rAw15ZFc_yoW5Gr45pF
-	WxCwn0krWfGrn2kFZ3J347Wa1rZ397KF4I9FyxK34UAr98t34Ikay0ka1DW3yrJ3yxCF42
-	qF1Yq3sxK3Wqv3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:qMiowJCxtMxr55Rqh_gXAA--.23244S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7KrWkuF1kWF1fJw43Ar15KFX_yoW8Aryfpr
+	ZrAws8GFW8WrWru3WkJFWvvF1akFsxWr47GF42y3yFy3s0qr1FqFyfK390kFnYyw40vF1S
+	qr9Ykw17Za4DZ3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j1WlkU
-	UUUU=
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+	0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU70PfDUUUU
 
+In the LoongArch BPF JIT code, the branch offset represents the number
+of instructions. An offset of 1 means the target of the "beq" is the
+current PC plus 1 instruction (PC + 4 bytes). This matches the exact
+same path as the sequential non-branch execution, the "or" instruction
+is always executed for the cast_user JIT arm in build_insn().
 
+If the pointer is not NULL, there is no side effect. But if the pointer
+is NULL, it is incorrectly combined with the base address and turns into
+a non-zero address, meaning a zero arena offset no longer casts to NULL.
 
-On 2026/8/28 下午5:48, Zeng Chi wrote:
-> From: Zeng Chi <zengchi@kylinos.cn>
-> 
-> kvm_arch_prepare_memory_region() computes new->arch.flags, i.e. whether
-> a memslot is KVM_MEM_HUGEPAGE_CAPABLE or KVM_MEM_HUGEPAGE_INCAPABLE, only
-> for KVM_MR_CREATE and KVM_MR_MOVE, and returns early for every other
-> change.  But the generic code allocates a zeroed memslot for every
-> change and never copies old->arch, so after a KVM_MR_FLAGS_ONLY update,
-> e.g. toggling KVM_MEM_LOG_DIRTY_PAGES for live migration, the active
-> memslot has arch.flags == 0.
-> 
-> With both flags clear, fault_supports_huge_mapping() falls through to
-> the alignment check on the HVA range alone, which no longer verifies
-> that the GPA and HVA have the same offset within a PMD.  A memslot that
-> was marked KVM_MEM_HUGEPAGE_INCAPABLE because of a GPA/HVA offset
-> mismatch can then be mapped with PMD entries on read faults, and since
-> kvm_map_page() aligns the gfn and the pfn independently, the guest ends
-> up accessing the wrong host pages, exactly the "d -> f, e -> g" case
-> described in the comment above the check.
-> 
-> Carry the arch flags over from the old memslot for KVM_MR_FLAGS_ONLY,
-> as the GPA, HVA and size are guaranteed to be unchanged for that case.
-> 
-> Fixes: 7ab6fb505b2a ("LoongArch: KVM: Optimization for memslot hugepage checking")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Zeng Chi <zengchi@kylinos.cn>
-> ---
->   arch/loongarch/kvm/mmu.c | 10 ++++++++++
->   1 file changed, 10 insertions(+)
-> 
-> diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
-> index e104897aa532..4ca7c6ea8f08 100644
-> --- a/arch/loongarch/kvm/mmu.c
-> +++ b/arch/loongarch/kvm/mmu.c
-> @@ -383,6 +383,16 @@ int kvm_arch_prepare_memory_region(struct kvm *kvm, const struct kvm_memory_slot
->   	hva_t hva_start;
->   	size_t size, gpa_offset, hva_offset;
->   
-> +	/*
-> +	 * The generic code allocates a fresh, zeroed memslot for every change,
-> +	 * so the arch flags computed below must be carried over when only the
-> +	 * userspace flags change, e.g. when dirty logging is toggled.
-> +	 */
-> +	if (change == KVM_MR_FLAGS_ONLY) {
-> +		new->arch = old->arch;
-> +		return 0;
-> +	}
-> +
->   	if ((change != KVM_MR_MOVE) && (change != KVM_MR_CREATE))
->   		return 0;
->   	/*
-> 
- >
-yes, when VM starts to migrate and set KVM_MEM_LOG_DIRTY_PAGES flag, or 
-cancel migration and clear KVM_MEM_LOG_DIRTY_PAGES flag. The arch 
-specified flag in new memslot should be kept the same. Thanks for the 
-contribution.
+Fix this by changing the branch offset from 1 to 2, which properly skips
+the "or" instruction and jumps directly to the "move_reg" instruction if
+the pointer is NULL, ensuring the destination register is safely cleared
+to 0.
 
-Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+Fixes: 4fdb5dd8aeba ("LoongArch: BPF: Implement bpf_addr_space_cast instruction")
+Cc: stable@vger.kernel.org
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+v2: Update the commit message, no code changes.
+
+ arch/loongarch/net/bpf_jit.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index 1eb588e443c9..4da278900938 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -717,7 +717,7 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 			move_reg(ctx, t1, src);
+ 			emit_zext_32(ctx, t1, true);
+ 			move_imm(ctx, dst, (ctx->user_vm_start >> 32) << 32, false);
+-			emit_insn(ctx, beq, t1, LOONGARCH_GPR_ZERO, 1);
++			emit_insn(ctx, beq, t1, LOONGARCH_GPR_ZERO, 2);
+ 			emit_insn(ctx, or, t1, dst, t1);
+ 			move_reg(ctx, dst, t1);
+ 			break;
+-- 
+2.42.0
 
