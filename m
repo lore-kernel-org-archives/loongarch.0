@@ -1,41 +1,37 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8F623D3D1E
-	for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 08:57:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97CE03CAA41
+	for <loongarch@lists.linux.dev>; Mon, 31 Aug 2026 09:54:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788166639; cv=none; b=Cjw7GfgzUgfqYF/krx4SxhUnD9/WNpJFxhR7X3/macXtJUgIAbgy7DkZ8dO8M4BkkUFCwb4VOpEhCY4Z97Gb6oJYqDL6Q1gIKjjtq52Bt/8oxPPTQgFPYS8zynHjLRNsZiD60utTUHuUH4GsVicquasTESGtQVZjsaSMnPzRq8k=
+	t=1788170084; cv=none; b=sxzb+hXobklP/bNEZZmehn0u5sdoIkHVYtx1MFKvDbHoPdVaFh+cRqIx9JGAmfMOh79opFJWdl70BHlO5mfrsJwBy36ymYYcchrGVHN6v9blumGMjy/QYTrSuko7dTbOHI17AjPMIRNjc/QdVBA7amaDYUAa6yDI7f6LvCQkzuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788166639; c=relaxed/simple;
-	bh=DSj3s4wELAzEUrJo4A5JdVkD8AM004a/Xh1kam1XWwQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bvSSBPKoESK+HvhDX80DooLP5PN4WPIlPUIcEvB80/pe8+OEZL2P0+fZ6xW/xh3M/ROwdao2NgNHi/uznt6i+mhomCqFaULWLpPEaQi2KLGKtofaSOj7c+r3OwpCY/6DiMBN9iki7bi8KuO2Hkr/6VfhKl52wwT7uEWYxjn5hU0=
+	s=arc-20240116; t=1788170084; c=relaxed/simple;
+	bh=NcaRNW8y7jjiWV9pcdQk/a8UC7sWrWckxCmIlEOilbI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=oVX0WodPQjyFnQDkBHFg5Gkyr2QD+7LyIhXcZrFiuo+FhFNE+P2OKevP//GuJD/GN9ovl8/FSoCywiCtYB4htVV9q03dafNh9l7FHjFRtB1D1Us8yHgoemJVk1oql42HSQUqM3wHNNHy/k6hG0oNp6zJJ4Uns17SixQn89aV0u8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [123.138.236.242])
-	by gateway (Coremail) with SMTP id _____8CxQNHpQZVqy9gGAA--.19386S3;
-	Mon, 31 Aug 2026 16:57:13 +0800 (CST)
-Received: from linux.localdomain (unknown [123.138.236.242])
-	by front1 (Coremail) with SMTP id qMiowJDxTs_iQZVq3SoYAA--.50979S2;
-	Mon, 31 Aug 2026 16:57:07 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Emil Tsalapatis <emil@etsalapatis.com>,
-	Ihor Solodrai <ihor.solodrai@linux.dev>
-Cc: loongarch@lists.linux.dev,
-	bpf@vger.kernel.org,
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8DxTtNgT5Vqxt0GAA--.19018S3;
+	Mon, 31 Aug 2026 17:54:40 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowJBxKs5eT5VqDTYYAA--.20453S5;
+	Mon, 31 Aug 2026 17:54:40 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Xi Ruoyao <xry111@xry111.site>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH bpf-next v2] selftests/bpf: Add test for indirect struct_ops trampoline
-Date: Mon, 31 Aug 2026 16:57:05 +0800
-Message-ID: <20260831085705.13747-1-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
+Subject: [PATCH v3 3/3] LoongArch: KVM: Enable separate vmid feature
+Date: Mon, 31 Aug 2026 17:47:16 +0800
+Message-Id: <20260831094716.4016652-4-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20260831094716.4016652-1-maobibo@loongson.cn>
+References: <20260831094716.4016652-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -43,230 +39,94 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxTs_iQZVq3SoYAA--.50979S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3Gw4kXr15JFWftw1fCFyxtFc_yoW3Ww4rpF
-	W8Jw1YyFnYvrWDXF18Xa1UZF4Sgrs3Z3yUCFWkG3s5uF93X34DJF18tFyIyr95GrZ5Zw13
-	A3ZY9r98uayUZ3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	XVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
-	AKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
-	6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
-	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xII
-	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
-	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
-	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8m9aDUUUUU==
+X-CM-TRANSID:qMiowJBxKs5eT5VqDTYYAA--.20453S5
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Add a test case to verify that arguments passed on the stack are correctly
-read by an indirect struct_ops trampoline.
+With CSR GTLBC shortname for Guest TLB Control Register, separate vmid
+feature will be enabled if bit 14 CSR_GTLBC_USES2TGID is set. Enable
+this if S2TGID feature is detected from cpucfg8.
 
-This test ensures the correctness of stack offsets on architectures like
-LoongArch and RISC-V where arguments beyond the first 8 slots are passed
-via the stack.
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
-This is to test the following two patches:
+ arch/loongarch/include/asm/loongarch.h | 5 +++++
+ arch/loongarch/kernel/cpu-probe.c      | 6 ++++++
+ arch/loongarch/kvm/main.c              | 6 ++++--
+ 3 files changed, 15 insertions(+), 2 deletions(-)
 
-bpf, riscv: Fix stack-passed arguments for indirect trampolines
-https://lore.kernel.org/bpf/20260821233516.3426127-3-memxor@gmail.com/
-
-bpf, loongarch: Fix stack arguments for indirect trampolines
-https://lore.kernel.org/bpf/20260821233516.3426127-8-memxor@gmail.com/
-
-v2:
-  -- Fix use-after-free and race conditions
-  -- Modify current files to avoid new binary
-
- .../prog_tests/test_struct_ops_multi_args.c   | 49 ++++++++++++++++++-
- .../bpf/progs/struct_ops_multi_args.c         | 13 +++++
- .../selftests/bpf/test_kmods/bpf_testmod.c    | 32 ++++++++++++
- .../selftests/bpf/test_kmods/bpf_testmod.h    |  5 ++
- 4 files changed, 98 insertions(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/bpf/prog_tests/test_struct_ops_multi_args.c b/tools/testing/selftests/bpf/prog_tests/test_struct_ops_multi_args.c
-index 0f321e889862..7f6f9d61c9e0 100644
---- a/tools/testing/selftests/bpf/prog_tests/test_struct_ops_multi_args.c
-+++ b/tools/testing/selftests/bpf/prog_tests/test_struct_ops_multi_args.c
-@@ -3,7 +3,54 @@
- #include <test_progs.h>
- #include "struct_ops_multi_args.skel.h"
+diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
+index 2a6bc99177d8..88e3bdfd4971 100644
+--- a/arch/loongarch/include/asm/loongarch.h
++++ b/arch/loongarch/include/asm/loongarch.h
+@@ -138,6 +138,9 @@
+ #define  CPUCFG6_PMBITS_SHIFT		8
+ #define  CPUCFG6_UPM			BIT(14)
  
-+static void test_refcounted_multi(void)
-+{
-+	struct struct_ops_multi_args *skel;
-+	int err;
++#define LOONGARCH_CPUCFG8		0x8
++#define  CPUCFG8_S2TGID			BIT(8)
 +
-+	skel = struct_ops_multi_args__open();
-+	if (!ASSERT_OK_PTR(skel, "struct_ops_multi_args__open"))
-+		return;
-+
-+	err = struct_ops_multi_args__load(skel);
-+	ASSERT_EQ(err, -EINVAL, "struct_ops_multi_args__load");
-+
-+	struct_ops_multi_args__destroy(skel);
-+}
-+
-+static void test_trampoline_stack_args(void)
-+{
-+	struct struct_ops_multi_args *skel;
-+	struct bpf_link *link = NULL;
-+	int err;
-+
-+	skel = struct_ops_multi_args__open();
-+	if (!ASSERT_OK_PTR(skel, "struct_ops_multi_args__open"))
-+		return;
-+
-+	bpf_program__set_autoload(skel->progs.test_refcounted_multi, false);
-+	skel->struct_ops.testmod_ref_acquire->test_refcounted_multi = NULL;
-+
-+	err = struct_ops_multi_args__load(skel);
-+	if (!ASSERT_OK(err, "struct_ops_multi_args__load"))
-+		goto out;
-+
-+	link = bpf_map__attach_struct_ops(skel->maps.testmod_ref_acquire);
-+	if (!ASSERT_OK_PTR(link, "bpf_map__attach_struct_ops"))
-+		goto out;
-+
-+	ASSERT_EQ(skel->bss->got_arg9, 9999, "check_stack_passed_arg9");
-+
-+out:
-+	bpf_link__destroy(link);
-+	struct_ops_multi_args__destroy(skel);
-+}
-+
- void test_struct_ops_multi_args(void)
- {
--	RUN_TESTS(struct_ops_multi_args);
-+	if (test__start_subtest("test_refcounted_multi"))
-+		test_refcounted_multi();
-+
-+	if (test__start_subtest("test_trampoline_stack_args"))
-+		test_trampoline_stack_args();
- }
-diff --git a/tools/testing/selftests/bpf/progs/struct_ops_multi_args.c b/tools/testing/selftests/bpf/progs/struct_ops_multi_args.c
-index c62be15757f0..f0f47676b099 100644
---- a/tools/testing/selftests/bpf/progs/struct_ops_multi_args.c
-+++ b/tools/testing/selftests/bpf/progs/struct_ops_multi_args.c
-@@ -29,7 +29,20 @@ int test_refcounted_multi(unsigned long long *ctx)
- 	return 0;
- }
+ #define LOONGARCH_CPUCFG16		0x10
+ #define  CPUCFG16_L1_IUPRE		BIT(0)
+ #define  CPUCFG16_L1_IUUNIFY		BIT(1)
+@@ -350,6 +353,8 @@
+ #define  CSR_GTLBC_TGID_WIDTH		8
+ #define  CSR_GTLBC_TGID_SHIFT_END	(CSR_GTLBC_TGID_SHIFT + CSR_GTLBC_TGID_WIDTH - 1)
+ #define  CSR_GTLBC_TGID			(_ULCAST_(0xff) << CSR_GTLBC_TGID_SHIFT)
++#define  CSR_GTLBC_USES2TGID_SHIFT	14
++#define  CSR_GTLBC_USES2TGID		(_ULCAST_(0x1) << CSR_GTLBC_USES2TGID_SHIFT)
+ #define  CSR_GTLBC_TOTI_SHIFT		13
+ #define  CSR_GTLBC_TOTI			(_ULCAST_(0x1) << CSR_GTLBC_TOTI_SHIFT)
+ #define  CSR_GTLBC_USETGID_SHIFT	12
+diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
+index 74d31f260dfd..e849ebacd268 100644
+--- a/arch/loongarch/kernel/cpu-probe.c
++++ b/arch/loongarch/kernel/cpu-probe.c
+@@ -241,6 +241,12 @@ static void cpu_probe_common(struct cpuinfo_loongarch *c)
+ 	if (config & CPUCFG6_PMP)
+ 		c->options |= LOONGARCH_CPU_PMP;
  
-+__u64 got_arg9 = 0;
-+
-+SEC("struct_ops/test_trampoline_stack_args")
-+int BPF_PROG(test_trampoline_stack_args, int arg1, int arg2, int arg3,
-+					 int arg4, int arg5, int arg6,
-+					 int arg7, int arg8, int arg9)
-+{
-+	got_arg9 = arg9;
-+
-+	return 0;
-+}
-+
- SEC(".struct_ops.link")
- struct bpf_testmod_ops testmod_ref_acquire = {
- 	.test_refcounted_multi = (void *)test_refcounted_multi,
-+	.test_trampoline_stack_args = (void *)test_trampoline_stack_args,
- };
-diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-index 2380b6cbdead..8f0744e6075b 100644
---- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-+++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-@@ -1678,6 +1678,9 @@ static bool bpf_testmod_ops_is_valid_access(int off, int size,
- 	return bpf_tracing_btf_ctx_access(off, size, type, prog, info);
- }
- 
-+static DEFINE_MUTEX(st_ops_trampoline_mutex);
-+static struct bpf_testmod_ops *st_ops_trampoline;
-+
- static int bpf_testmod_ops_init_member(const struct btf_type *t,
- 				       const struct btf_member *member,
- 				       void *kdata, const void *udata)
-@@ -1691,6 +1694,18 @@ static int bpf_testmod_ops_init_member(const struct btf_type *t,
- 		((struct bpf_testmod_ops *)kdata)->data = ((struct bpf_testmod_ops *)udata)->data;
- 		return 1;
- 	}
-+
-+	if (member->offset == offsetof(struct bpf_testmod_ops, test_trampoline_stack_args) * 8) {
-+		mutex_lock(&st_ops_trampoline_mutex);
-+		if (st_ops_trampoline) {
-+			pr_err("st_ops_trampoline has already been registered\n");
-+			mutex_unlock(&st_ops_trampoline_mutex);
-+			return -EEXIST;
-+		}
-+		st_ops_trampoline = (struct bpf_testmod_ops *)kdata;
-+		mutex_unlock(&st_ops_trampoline_mutex);
++	if (c->options & LOONGARCH_CPU_LVZ) {
++		config = read_cpucfg(LOONGARCH_CPUCFG8);
++		if (config & CPUCFG8_S2TGID)
++			c->options |= LOONGARCH_CPU_GUESTID;
 +	}
 +
- 	return 0;
- }
+ 	config = csr_read32(LOONGARCH_CSR_ASID);
+ 	config = (config & CSR_ASID_BIT) >> CSR_ASID_BIT_SHIFT;
+ 	asid_mask = GENMASK(config - 1, 0);
+diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+index 0099d0f0b803..e43ed4c11d31 100644
+--- a/arch/loongarch/kvm/main.c
++++ b/arch/loongarch/kvm/main.c
+@@ -358,7 +358,7 @@ int kvm_arch_enable_virtualization_cpu(void)
+ 	write_csr_gcfg(0);
+ 	write_csr_gstat(0);
+ 	write_csr_gintc(0);
+-	clear_csr_gtlbc(CSR_GTLBC_USETGID | CSR_GTLBC_TOTI);
++	clear_csr_gtlbc(CSR_GTLBC_USETGID | CSR_GTLBC_TOTI | CSR_GTLBC_USES2TGID);
  
-@@ -1720,11 +1735,20 @@ static int bpf_dummy_reg(void *kdata, struct bpf_link *link)
- 	if (ops->test_2)
- 		ops->test_2(4, ops->data);
+ 	/*
+ 	 * Enable virtualization features granting guest direct control of
+@@ -381,6 +381,8 @@ int kvm_arch_enable_virtualization_cpu(void)
  
-+	mutex_lock(&st_ops_trampoline_mutex);
-+	if (st_ops_trampoline && st_ops_trampoline->test_trampoline_stack_args)
-+		st_ops_trampoline->test_trampoline_stack_args(1, 2, 3, 4, 5, 6, 7, 8, 9999);
-+	mutex_unlock(&st_ops_trampoline_mutex);
-+
- 	return 0;
- }
+ 	/* Enable using TGID  */
+ 	set_csr_gtlbc(CSR_GTLBC_USETGID);
++	if (cpu_has_guestid)
++		set_csr_gtlbc(CSR_GTLBC_USES2TGID);
+ 	kvm_debug("GCFG:%lx GSTAT:%lx GINTC:%lx GTLBC:%lx",
+ 		  read_csr_gcfg(), read_csr_gstat(), read_csr_gintc(), read_csr_gtlbc());
  
- static void bpf_dummy_unreg(void *kdata, struct bpf_link *link)
- {
-+	mutex_lock(&st_ops_trampoline_mutex);
-+	if (st_ops_trampoline == (struct bpf_testmod_ops *)kdata)
-+		st_ops_trampoline = NULL;
-+	mutex_unlock(&st_ops_trampoline_mutex);
- }
+@@ -399,7 +401,7 @@ void kvm_arch_disable_virtualization_cpu(void)
+ 	write_csr_gcfg(0);
+ 	write_csr_gstat(0);
+ 	write_csr_gintc(0);
+-	clear_csr_gtlbc(CSR_GTLBC_USETGID | CSR_GTLBC_TOTI);
++	clear_csr_gtlbc(CSR_GTLBC_USETGID | CSR_GTLBC_TOTI | CSR_GTLBC_USES2TGID);
  
- static int bpf_testmod_test_1(void)
-@@ -1766,6 +1790,13 @@ bpf_testmod_ops__test_return_ref_kptr(int dummy, struct task_struct *task__ref,
- 	return NULL;
- }
- 
-+static int bpf_testmod_ops__test_trampoline_stack_args(int arg1, int arg2, int arg3,
-+						       int arg4, int arg5, int arg6,
-+						       int arg7, int arg8, int arg9)
-+{
-+	return arg9;
-+}
-+
- static struct bpf_testmod_ops __bpf_testmod_ops = {
- 	.test_1 = bpf_testmod_test_1,
- 	.test_2 = bpf_testmod_test_2,
-@@ -1773,6 +1804,7 @@ static struct bpf_testmod_ops __bpf_testmod_ops = {
- 	.test_refcounted = bpf_testmod_ops__test_refcounted,
- 	.test_refcounted_multi = bpf_testmod_ops__test_refcounted_multi,
- 	.test_return_ref_kptr = bpf_testmod_ops__test_return_ref_kptr,
-+	.test_trampoline_stack_args = bpf_testmod_ops__test_trampoline_stack_args,
- };
- 
- struct bpf_struct_ops bpf_bpf_testmod_ops = {
-diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.h b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.h
-index 210b919290cc..42257ae89fd5 100644
---- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.h
-+++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.h
-@@ -46,6 +46,11 @@ struct bpf_testmod_ops {
- 	struct task_struct *(*test_return_ref_kptr)(int dummy, struct task_struct *task,
- 						    struct cgroup *cgrp);
- 
-+	/* Used to test indirect struct_ops trampolines stack-passed arguments (>8 args). */
-+	int (*test_trampoline_stack_args)(int arg1, int arg2, int arg3,
-+					  int arg4, int arg5, int arg6,
-+					  int arg7, int arg8, int arg9);
-+
- 	/* The following fields are used to test shadow copies. */
- 	char onebyte;
- 	struct {
+ 	/* Flush any remaining guest TLB entries */
+ 	kvm_flush_tlb_all();
 -- 
-2.42.0
+2.39.3
 
