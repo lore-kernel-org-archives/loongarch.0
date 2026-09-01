@@ -1,148 +1,159 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F068A347BC6
-	for <loongarch@lists.linux.dev>; Tue,  1 Sep 2026 01:32:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from canpmsgout06.his.huawei.com (canpmsgout06.his.huawei.com [113.46.200.221])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D019359A89
+	for <loongarch@lists.linux.dev>; Tue,  1 Sep 2026 01:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788226324; cv=none; b=sDjOfqyD6zMaFC13YHdVNpCIXAOemSin4KeIa582WzNpW3lgdBltA1hQQyhGyDp6Hcf0USC7xwWQ+xfjjzkE0zh5Q06Aivn3EP9TDtVyhnPI9OEUiradLRWjgihrMQhMDQW71lhsSIRq4O7d/gZWClGg81aUkSYT+xjQUbz/IvU=
+	t=1788226883; cv=none; b=OyFcUcZTjyTmu8UpYEjYiWoOXMfRDiWl51bg7YW/DFE4dNPcqvSnt4Hi+DSWJ8LzmI0UlTMsJ1bbxTgBp5g2wpk5O/SIhhQWsYiQeZJXF05TSlPYd2oh3x6mlONpJFYmhAI5prAxXrQF/9aPTVAa6NHUrAXQTHtxo7u4vL2PDQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788226324; c=relaxed/simple;
-	bh=SReFs3wf1VhykduuIf4GG9P8IgQwlFLj17mCrBt8usc=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=pELM8SUhRTnWQyQWFOg5v33DNHFbAgdoXopfYGnhzMeNzzOvG9NgwBY2FJbSa83YBKiWIgWxHWLrPP3qwpz1FU+S5CfVQe+Zt7e0locNJaPE1edSpC+cwcpmcvne2agy2lWWtwJ8wIliELUYSWiS3FOgUZl/EeywDMwLYxQGwvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8AxYdEQK5ZqDzgHAA--.20505S3;
-	Tue, 01 Sep 2026 09:32:00 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJAx2c0OK5ZqwpUYAA--.51990S2;
-	Tue, 01 Sep 2026 09:31:58 +0800 (CST)
-Subject: Re: [PATCH v3] LoongArch: KVM: Fix TOCTOU race on pv_features
-To: Huacai Chen <chenhuacai@kernel.org>, Tao Cui <cui.tao@linux.dev>
-Cc: zhaotianrui@loongson.cn, kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, Tao Cui <cuitao@kylinos.cn>
-References: <20260814094738.2552440-1-cui.tao@linux.dev>
- <CAAhV-H73i_hH75rNL_eKQWrxu3HTWhMgJpbkYqueoc4qb97TXQ@mail.gmail.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <5a94c1f2-899a-f7b4-1757-615acfc40db0@loongson.cn>
-Date: Tue, 1 Sep 2026 09:31:43 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1788226883; c=relaxed/simple;
+	bh=8V/iJ1syJzk3Ej0PD6xyVpop3GjTd8FsA+LFSMddAWw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=hpRRj/4jJaRe4RjHncwbVOXjj/A+aZqMFPpQ70pYstu67CmXXdzzjuT54w43m1hOOT74V8Q0mOwcyww6OamjzAjdEN7CHKg9ZQI6nAf96cpR6ey1e4b0x91I5ThxSaLKrQkHHDHtbDxMUy8espnFfVUsjulPcnybEf/PKCAC7Js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=Jml/HTTQ; arc=none smtp.client-ip=113.46.200.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="Jml/HTTQ"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=zPvP1K9EnRd/mao8eJm5iib0cl/6wBDf4gm9yBOU/uA=;
+	b=Jml/HTTQck/emuqLeeU2tibQLYjU8fXxCCcdo3klXPgO8NzCaTkbd5ycSpoG64qAUTvikX/3F
+	607VcvF+fmYaem7r38R+LD9SNSgKkzUeX3TLkcP4y7zA0vceMDXkYNbj0KO3qWM1ZVKio3aaJuW
+	cW+wJefcVETqqA/xk+td/6E=
+Received: from mail.maildlp.com (unknown [172.19.163.0])
+	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4hYpFv2FTwzRhVN;
+	Tue,  1 Sep 2026 09:30:27 +0800 (CST)
+Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id 689A840561;
+	Tue,  1 Sep 2026 09:41:14 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 1 Sep 2026 09:41:10 +0800
+Message-ID: <fa771c74-c0b0-435d-9ebf-e52c00865c90@huawei.com>
+Date: Tue, 1 Sep 2026 09:41:09 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H73i_hH75rNL_eKQWrxu3HTWhMgJpbkYqueoc4qb97TXQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 05/17] LoongArch: kexec: Fix CMA page leaks in segment
+ placement retry loops
+To: Huacai Chen <chenhuacai@kernel.org>
+CC: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
+	<kernel@xen0n.name>, <maddy@linux.ibm.com>, <mpe@ellerman.id.au>,
+	<npiggin@gmail.com>, <chleroy@kernel.org>, <tglx@kernel.org>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<hpa@zytor.com>, <akpm@linux-foundation.org>, <baoquan.he@linux.dev>,
+	<rppt@kernel.org>, <pasha.tatashin@soleen.com>, <pratyush@kernel.org>,
+	<ruirui.yang@linux.dev>, <kees@kernel.org>, <thuth@redhat.com>,
+	<gshan@redhat.com>, <jic23@kernel.org>, <james.morse@arm.com>,
+	<ardb@kernel.org>, <leitao@debian.org>, <yeoreum.yun@arm.com>,
+	<sourabhjain@linux.ibm.com>, <coxu@redhat.com>, <tangyouling@kylinos.cn>,
+	<hbathini@linux.ibm.com>, <adityag@linux.ibm.com>,
+	<ionut.nechita@windriver.com>, <liaoyuanhong@vivo.com>, <seanjc@google.com>,
+	<fuqiang.wang@easystack.cn>, <makb@juniper.net>, <piliu@redhat.com>,
+	<ebiggers@kernel.org>, <jbouron@amazon.com>, <mclapinski@google.com>,
+	<me@linux.beauty>, <graf@amazon.com>, <bgwin@google.com>, <robh@kernel.org>,
+	<takahiro.akashi@linaro.org>, <palmer@rivosinc.com>, <x86@kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
+	<kexec@lists.infradead.org>, <linux-fsdevel@vger.kernel.org>,
+	<linux-mm@kvack.org>
+References: <20260826092541.3905933-1-ruanjinjie@huawei.com>
+ <20260826092541.3905933-6-ruanjinjie@huawei.com>
+ <CAAhV-H7+dO2rnb4KxRvVo1w_Mx8Vfsdq7LAbkzPfNYrwUhEtfg@mail.gmail.com>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <CAAhV-H7+dO2rnb4KxRvVo1w_Mx8Vfsdq7LAbkzPfNYrwUhEtfg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAx2c0OK5ZqwpUYAA--.51990S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxXw1kAFWxXFy5Aw1kWFWUZFc_yoW5CF45pr
-	9ruFn5Gr4rKr1IyFyqqwnF9rWjvw48Gr12vF9Iqa4UAF1Y9r9xXr10krZruFyqqw4rWa1v
-	qF1fJas0vF15tacCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
-	XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
-	k0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
-	Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-	cVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
-	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4AhLUUUUU
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ dggpemf500011.china.huawei.com (7.185.36.131)
 
 
 
-On 2026/8/31 下午10:07, Huacai Chen wrote:
-> Hi, Bibo,
+在 2026/8/31 22:09, Huacai Chen 写道:
+> Hi, Jinjie,
 > 
-> What do you think about this?
-Thanks for your reminder, I forget this in flooding mailing list :(
-It looks good to me.
+> Why does the ARM64 version of this patch use "kexec_file" in the
+> subject line but the LoongArch version uses "kexec"? It is better to
+> keep consistency.
 
-Reviewed-by: Bibo Mao <maobibo@loongson.cn>
-> 
+Hi Huacai,
+
+Thank you for the review. I will revise the subject in v4.
+
+Best regards,
+Jinjie
+
 > 
 > Huacai
 > 
-> On Fri, Aug 14, 2026 at 5:47 PM Tao Cui <cui.tao@linux.dev> wrote:
+> On Wed, Aug 26, 2026 at 5:25 PM Jinjie Ruan <ruanjinjie@huawei.com> wrote:
 >>
->> From: Tao Cui <cuitao@kylinos.cn>
+>> During kexec image placement retry loops, any midway failure causes
+>> the loader to truncate `image->nr_segments` back to its initial state
+>> to purge the failed segments.
 >>
->> The check-then-set on kvm->arch.pv_features in
->> kvm_loongarch_cpucfg_set_attr() is lockless, so two vCPUs can race
->> past the validation and set different values.  Add a spinlock to
->> serialize it.
+>> However, this truncation introduces a memory leak. The CMA pages
+>> allocated via kexec_add_buffer() during the failed attempt are tracked
+>> in the `image->segment_cma` array. Because the subsequent cleanup paths
+>> only iterate up to the truncated `nr_segments` boundary, these allocated
+>> CMA pages outside the new boundary are permanently leaked.
 >>
->> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
->> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
+>> Fix this by explicitly releasing the associated CMA buffers in
+>> the failure paths before `image->nr_segments` is reduced.
+>>
+>> Cc: Huacai Chen <chenhuacai@kernel.org>
+>> Cc: WANG Xuerui <kernel@xen0n.name>
+>> Cc: Youling Tang <tangyouling@kylinos.cn>
+>> Cc: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+>> Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
+>> Cc: Kees Cook <kees@kernel.org>
+>> Cc: stable@vger.kernel.org
+>> Link: https://sashiko.dev/#/patchset/20260729031235.2840255-1-ruanjinjie%40huawei.com
+>> Fixes: 55d990f0084c ("LoongArch: Add EFI binary support for kexec_file")
+>> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 >> ---
+>>  arch/loongarch/kernel/kexec_efi.c          | 1 +
+>>  arch/loongarch/kernel/machine_kexec_file.c | 6 +++++-
+>>  2 files changed, 6 insertions(+), 1 deletion(-)
 >>
->> Changes in v2: use a spinlock instead of a cmpxchg loop (Bibo Mao).
->> Changes in v3: rename the lock to pv_setting_lock and place it next to
->> phyid_map_lock (Huacai Chen).
+>> diff --git a/arch/loongarch/kernel/kexec_efi.c b/arch/loongarch/kernel/kexec_efi.c
+>> index 5ee78ebb1546..15fd797ff3de 100644
+>> --- a/arch/loongarch/kernel/kexec_efi.c
+>> +++ b/arch/loongarch/kernel/kexec_efi.c
+>> @@ -86,6 +86,7 @@ static void *efi_kexec_load(struct kimage *image,
+>>                  * We couldn't find space for the other segments; erase the
+>>                  * kernel segment and try the next available hole.
+>>                  */
+>> +               kexec_free_segment_cma(image, kernel_segment_number);
+>>                 image->nr_segments -= 1;
+>>                 kbuf.buf_min = kernel_segment->mem + kernel_segment->memsz;
+>>                 kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+>> diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
+>> index 5412aa9f3568..62a5be102065 100644
+>> --- a/arch/loongarch/kernel/machine_kexec_file.c
+>> +++ b/arch/loongarch/kernel/machine_kexec_file.c
+>> @@ -217,7 +217,11 @@ int load_other_segments(struct kimage *image,
+>>         return 0;
 >>
->> v1: https://lore.kernel.org/all/20260810081321.157258-1-cui.tao@linux.dev/
->> v2: https://lore.kernel.org/all/20260813232542.2098930-1-cui.tao@linux.dev/
->>
->>   arch/loongarch/include/asm/kvm_host.h | 1 +
->>   arch/loongarch/kvm/vcpu.c             | 6 +++++-
->>   arch/loongarch/kvm/vm.c               | 1 +
->>   3 files changed, 7 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
->> index 23cfbecebbd7..3538a199aac6 100644
->> --- a/arch/loongarch/include/asm/kvm_host.h
->> +++ b/arch/loongarch/include/asm/kvm_host.h
->> @@ -125,6 +125,7 @@ struct kvm_arch {
->>          unsigned int  pte_shifts[MAX_PGTABLE_LEVELS];
->>          unsigned int  root_level;
->>          spinlock_t    phyid_map_lock;
->> +       spinlock_t    pv_setting_lock;
->>          struct kvm_phyid_map  *phyid_map;
->>          /* Enabled PV features */
->>          unsigned long pv_features;
->> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
->> index 20c207d80e31..e47fa463a8be 100644
->> --- a/arch/loongarch/kvm/vcpu.c
->> +++ b/arch/loongarch/kvm/vcpu.c
->> @@ -1165,10 +1165,14 @@ static int kvm_loongarch_cpucfg_set_attr(struct kvm_vcpu *vcpu,
->>                          return -EINVAL;
->>
->>                  /* All vCPUs need set the same PV features */
->> +               spin_lock(&kvm->arch.pv_setting_lock);
->>                  if ((kvm->arch.pv_features & LOONGARCH_PV_FEAT_UPDATED)
->> -                               && ((kvm->arch.pv_features & valid) != val))
->> +                               && ((kvm->arch.pv_features & valid) != val)) {
->> +                       spin_unlock(&kvm->arch.pv_setting_lock);
->>                          return -EINVAL;
->> +               }
->>                  kvm->arch.pv_features = val | LOONGARCH_PV_FEAT_UPDATED;
->> +               spin_unlock(&kvm->arch.pv_setting_lock);
->>                  return 0;
->>          default:
->>                  return -ENXIO;
->> diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
->> index 1317c718f896..86ba7d54e81f 100644
->> --- a/arch/loongarch/kvm/vm.c
->> +++ b/arch/loongarch/kvm/vm.c
->> @@ -76,6 +76,7 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
->>                  return -ENOMEM;
->>          }
->>          spin_lock_init(&kvm->arch.phyid_map_lock);
->> +       spin_lock_init(&kvm->arch.pv_setting_lock);
->>
->>          kvm_init_vmcs(kvm);
->>          kvm_vm_init_features(kvm);
+>>  out_err:
+>> -       image->nr_segments = orig_segments;
+>> +       while (image->nr_segments > orig_segments) {
+>> +               kexec_free_segment_cma(image, image->nr_segments - 1);
+>> +               image->nr_segments--;
+>> +       }
+>> +
+>>         kfree(modified_cmdline);
+>>         return ret;
+>>  }
 >> --
->> 2.43.0
+>> 2.34.1
 >>
 
