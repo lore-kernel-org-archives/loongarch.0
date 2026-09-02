@@ -1,200 +1,103 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 777F947FAF3
-	for <loongarch@lists.linux.dev>; Wed,  2 Sep 2026 11:59:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mta0.migadu.com (out-113.mta0.migadu.com [91.218.175.113])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53693477E38
+	for <loongarch@lists.linux.dev>; Wed,  2 Sep 2026 12:21:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788350369; cv=none; b=IytIApU7Inym7sS0bg4RlC/PKejx1CaYWeCpO+VeW0iVDxJe7RQj6xvfgtu2irdXiZY/bwqgHr8ZZAT5x/fM6L76lSipnbF07it34U1Ixhymx8nPrA+6nDND8sZRlDZpjsyiiv++JhFPaOHmrp6Ar5cWAP8otaF+UwElwsNSrJg=
+	t=1788351708; cv=none; b=A3btBE3iqxY8up8sMRefM8i+5PCUE19+Nn7Le1YsR98ADzu18Nad6085ETRHkQSf/YBPwpLgmdS853ddLwj2E10w0LWz0zx0CBwjKESUw4+05Zujr8YU7xOqjjlwEZPgm+3QP1JZ0dO+hJdSlZoHc4rpo5Ne6cYQvXi/i0UV/u4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788350369; c=relaxed/simple;
-	bh=Br/cs+FpftnQOol6BErs3frU8GfYo1jZb/nBuxpBEq8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CFw6MuHp6cDFoEPv/gLLuG1IDViQbIKZ012FF+35pNHy+Ay/MHzSY3Xob+17s9unjUOS3yx+tyLt+IsF9dOk0BTHtrFJ9PahTmmcovui0JTE57QzxQ9oFfzkfPsH94scG8z2Tja9t6FM02mI9WyUCIS+EuL8cykCwOy9JGpLxgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=YNIufYY9; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1788351708; c=relaxed/simple;
+	bh=rlu5Rd80uDj5OZSktQzoh4LfD072PmuNHzuswlgtrcM=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=MNynAGUUylr+fARf8MXfoYQUCRW8ziPlLxAhpP+9aJmzIewI30BzALt98E4ecqW5+IOmV1NJN9r1xXQL4Fs42d/b2I2h4pX2bS9P28PTskx+7noeV1iB4f1wjGNbVzGyJRpjcGzdOMOvhPb/4fo7FXglkjd9NREFz4RpjOLsu2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=l5MR2AhI; arc=none smtp.client-ip=91.218.175.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="YNIufYY9"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4CC611E32;
-	Wed,  2 Sep 2026 04:59:10 -0700 (PDT)
-Received: from e129823.arm.com (e129823.arm.com [10.2.213.3])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E6C6E3F85F;
-	Wed,  2 Sep 2026 04:59:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1788350354; bh=Br/cs+FpftnQOol6BErs3frU8GfYo1jZb/nBuxpBEq8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=YNIufYY97B6qUu57kfR8nwRxcLtpS+O6ostRIi/nQOuKLD58rztHwSAiT1AAYOntl
-	 fxPaSMddAYwDW8STJc6MsE8WWxYq2NPYdK+F0yYS0HcTTtt1ra7YEAriOl0DmEf2lo
-	 zM0F0pNqICHzqI3Xh+hnQZNMeBEPTobb3bXedcbs=
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-Date: Wed, 02 Sep 2026 12:56:23 +0100
-Subject: [PATCH RFC v3 21/21] Documentation: mm: clarify behaviour of
- compile-time folded page tables
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="l5MR2AhI"
+X-Envelope-To: loongarch@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=rlu5Rd80uDj5OZSktQzoh4LfD072PmuNHzuswlgtrcM=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1788351704; v=1; x=1788956504;
+ b=l5MR2AhIu/xrRQxJ1F/RREmyMsc/YjmSvyZ585WH5UHM56DxgNFHinHjeivpL8r/wz1+Ou6z
+ nAwomGPRnvrsbnFD9vla52VdBJiSeMmRhVVQ6u9hXRTNdg5jndmC/Gh8X9O5Myujblf8ReZaj7U
+ q/FlszFu784wZr8TgQQd+Uxo=
+X-Envelope-To: loongarch@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id 672e099c2adfd448;
+	Wed, 02 Sep 2026 12:21:44 +0000
+X-Mizu-Trace-ID: 672e099c2adfd448
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <5e86d83a-425f-43d9-91d3-06821ec670ae@linux.dev>
+Date: Wed, 2 Sep 2026 20:21:35 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260902-dummy_ptxp3-v3-21-5d8f5b17c25c@arm.com>
-References: <20260902-dummy_ptxp3-v3-0-5d8f5b17c25c@arm.com>
-In-Reply-To: <20260902-dummy_ptxp3-v3-0-5d8f5b17c25c@arm.com>
-To: Russell King <linux@armlinux.org.uk>, 
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
- Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, 
- Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>, 
- Shakeel Butt <shakeel.butt@linux.dev>, Barry Song <baohua@kernel.org>, 
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
- Wei Xu <weixugc@google.com>, Johannes Weiner <hannes@cmpxchg.org>, 
- David Hildenbrand <david@kernel.org>, Michal Hocko <mhocko@kernel.org>, 
- Lorenzo Stoakes <ljs@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
- Bibo Mao <maobibo@loongson.cn>, Anup Patel <anup@brainfault.org>, 
- Atish Patra <atish.patra@linux.dev>, Paul Walmsley <pjw@kernel.org>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Alexandre Ghiti <alex@ghiti.fr>, Dave Hansen <dave.hansen@linux.intel.com>, 
- Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
- Borislav Petkov <bp@alien8.de>, x86@kernel.org, 
- "H. Peter Anvin" <hpa@zytor.com>, "Liam R. Howlett" <liam@infradead.org>, 
- Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
- Jonas Bonn <jonas@southpole.se>, 
- Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, 
- Stafford Horne <shorne@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
- linux-arch@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org, 
- kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
- linux-openrisc@vger.kernel.org
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5247; i=yeoreum.yun@arm.com;
- h=from:subject:message-id; bh=QkuS96DAgeRV++qcxLUFqnS2tbZYgjub9eHsvrXmSd4=;
- b=owEB7QES/pANAwAKAW3Vw9FaxTEzAcsmYgBqmA7r6ZZHyXCpThNLcIh389noXapBmN0QtJRA/
- 0G6xN7Ry3uJAbMEAAEKAB0WIQQtg+CS3QUzuFh1pJ1t1cPRWsUxMwUCapgO6wAKCRBt1cPRWsUx
- M58/C/9U9B6FfYQ/fupAFaXvIw1Mnt9yYqNpnlfNtC6NDeZsWkfEpD8g8rzw/ZmT9NJlS4YfPs1
- Qx6kcjhDR9PAeBJBPGh8BxQwaeLNn1ssBbAQxNDfX7yrRLWPxHK9wZ7XBK+0+Y5Lk3lgdRQJ6qI
- p4F+YbpHGfi22XGen2K3KAJo4nzOC2nru7i6LL5wr8wAlWshB+2+4MqDHojeNHwLITRml9jgLu1
- /5lqRtOqA/q+Qf0MpV0tPwdATl3vJk5GSkq2yFyzkMR4LYpE4C4fuh5kWjMReGy62Non6aPXFa8
- +6UdHtXQ4V3qp9smbO5LbcLD7qQUPFqBTFktH5C1HQXXAvjDBzouhN5N4kjlLCeCrRwIwAVEVZR
- TNUIXv8PMlOojSv+isqEwSGFr+0lJ0ySAkyPAXIRh55obtZ2bBmU/KQx8c+65rZmmgDb4nJ57+G
- Vajqff8eVIyX0IvBrlsknDMl32bDAWeQx3n/WwlNzdx1iu6CzzjQqt5l1s9+zYKYR23pU=
-X-Developer-Key: i=yeoreum.yun@arm.com; a=openpgp;
- fpr=2D83E092DD0533B85875A49D6DD5C3D15AC53133
+User-Agent: Mozilla Thunderbird
+Cc: cui.tao@linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, zengchi@kylinos.cn, stable@vger.kernel.org
+Subject: Re: [PATCH 1/2] LoongArch: KVM: Fix PC double advance in kernel MMIO
+ read fast path
+To: Kaiyang Wu <wukaiyang@loongfans.cn>, Zeng Chi <zeng_chi911@163.com>,
+ zhaotianrui@loongson.cn, maobibo@loongson.cn, chenhuacai@kernel.org,
+ kernel@xen0n.name
+References: <20260723111552.1623996-1-zeng_chi911@163.com>
+ <D7B309C007238053+3831de19-a2c3-4f17-9281-e4e355c6c464@loongfans.cn>
+From: Tao Cui <cui.tao@linux.dev>
+In-Reply-To: <D7B309C007238053+3831de19-a2c3-4f17-9281-e4e355c6c464@loongfans.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: "David Hildenbrand (Arm)" <david@kernel.org>
+Hi, Kaiyang
 
-Compile-time folded page tables are not necessarily easy to understand, and even
-people the were once familiar with the concept might need to refresh their memory.
+在 2026/9/2 18:12, Kaiyang Wu 写道:
+> On 2026-07-23 19:15, Zeng Chi wrote:
+> 
+>> In the in-kernel MMIO read fast path of kvm_emu_mmio_read(),
+>> kvm_complete_mmio_read() already advances the guest PC via update_pc().
+>> The explicit update_pc() call right after it advances the PC a second
+>> time, so PC moves forward by 8 instead of 4 and the instruction
+>> following the MMIO read is silently skipped.
+>>
+>> The user space MMIO read completion path in kvm_arch_vcpu_ioctl_run()
+>> calls kvm_complete_mmio_read() only once, and the MMIO write fast path
+>> advances the PC exactly once as well.
+>>
+>> Remove the redundant update_pc() so the kernel MMIO read fast path
+>> advances the PC by a single instruction.
+> 
+> Hi Zeng,
+> 
+> I have tested the patch on Proxmox VE with the environment below:
+> 
+> - CPU: Loongson 3C6000/D
+> - OS: Proxmox VE 9.2.11 (LoongArch port https://github.com/pve-loong64-port)
+> - Kernel: 7.0.14-15-pve
+> - Guest OS: Kylin Linux Advanced Server V10 (SP3 2403)
+> - Guest Kernel: 4.19.90-89.45.v2401.a.ky10.loongarch64
+> 
+> Without the patch, the guest system could not boot with the 4.19.90-89.45.v2401.a.ky10.loongarch64 kernel and there was no output in neither tty nor serial. I can confirm the system boots from the same kernel version with the patch applied to the host kernel.
+> 
 
-Add proper documentation, including a nice diagram, for the current design.
-Mention details about dummy functions, including the recently changed pXdp_get()
-helpers.
+Thank you for the testing, this is really helpful.
 
-Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
----
- Documentation/mm/page_tables.rst | 84 +++++++++++++++++++++++++++++++++++-----
- 1 file changed, 75 insertions(+), 9 deletions(-)
+Our test setup is a bit different: we were running a 7.x kernel on
+both the host and the guest, and we confirmed the issue by observing
+that the PC advanced by the wrong step after an MMIO read.
 
-diff --git a/Documentation/mm/page_tables.rst b/Documentation/mm/page_tables.rst
-index 126c87628250..84f2715c7de0 100644
---- a/Documentation/mm/page_tables.rst
-+++ b/Documentation/mm/page_tables.rst
-@@ -143,15 +143,81 @@ pointers on each level is architecture-defined.::
- Page Table Folding
- ==================
- 
--If the architecture does not use all the page table levels, they can be *folded*
--which means skipped, and all operations performed on page tables will be
--compile-time augmented to just skip a level when accessing the next lower
--level.
--
--Page table handling code that wishes to be architecture-neutral, such as the
--virtual memory manager, will need to be written so that it traverses all of the
--currently five levels. This style should also be preferred for
--architecture-specific code, so as to be robust to future changes.
-+Not all architectures support 5-level page tables; while for some of them
-+the exact number of supported page table levels is known at compile time,
-+others can determine the number of page table levels at runtime based on
-+hardware support and address space sizes.
-+
-+Generic page table walking code always assumes that 5 levels of page table
-+exist. To make page table walking code not have to worry about that,
-+`compile-time folding` and `runtime folding` of page tables are used.
-+Compile-time folding is mostly handled in common code, whereas runtime folding
-+is exclusively handled in architecture code.
-+
-+This description focuses on generic compile-time folded page tables; for
-+architecture-specific variants, some details can vary, however, without
-+affecting common page table walkers.
-+
-+When walking folded page tables, all upper page table levels up to the supported
-+level are skipped in page table walkers: this is achieved by (a) treating
-+entries in upper page table levels as present and pointing at a page table; and
-+(b) having page table walkers cast the entry pointer to the next-level entry
-+instead of dereferencing that table. From the perspective of a page table
-+walker, the entry points at itself.
-+
-+Assuming compile-time folded 4-level page tables, to achieve (a), pgd_present()
-+and pgd_leaf() are hard-coded to indicate a present page table entry that
-+points at a page table, and to achieve (b) p4d_offset() and
-+p4d_offset_lockless() simply cast the page table entry pointer to the next
-+lower level.
-+
-+In the current design, this is further modeled by having the P4D have a
-+single page table entry::
-+
-+        PGD
-+  --> +------+          NOP4D
-+      | ptr0 |-------> +------+           PUD
-+      | ptr1 |-        | ptr0 |-------> +-----+
-+      | ptr2 | \       +------+         | ptr |-------> ...
-+      | ptr3 |  \                       | ptr |
-+        ...      \                        ..
-+                  \        NOP4D
-+                   +----> +------+           PUD
-+                          | ptr1 |-------> +-----+
-+                          +------+         | ptr |-------> ...
-+                                           | ptr |
-+                                             ...
-+
-+Note that the arrows from PGD to NOP4D represent page-table-walker
-+transitions, not pointers stored in the pgd entries.
-+
-+Using p4d as an example, `nop4d`/`p4d folded` translates to the following:
-+
-+- p4d is considered folded into pgd; both are operating on the same page
-+ table.
-+
-+- Most pgd_* helpers are hard-coded dummy functions that ignore the passed
-+  pgd_t values entirely. Exceptions are pgd_val() and low-level helpers
-+  set_pgd() + pgd_page_vaddr(), which effectively translate to set_p4d()/
-+  p4d_pgtable() to keep existing arch code working.
-+
-+  Architectures must provide p4d_* helpers (unless further common
-+  compile-time folding applies).
-+
-+- PTRS_PER_P4D is hard-coded to 1. Architectures must define PTRS_PER_PGD.
-+
-+To avoid reading a value that will never be used but cannot be entirely
-+optimized out, compile-time folded page table code also makes pXdp_get()
-+return a constant dummy value.
-+
-+In common code, this only affects pXd_val() when used for printing page
-+table entries for debugging purposes. As we don't want architecture code
-+that uses set_pXd(), pgd_page_vaddr() or pXd_pgtable() to accidentally
-+operate on dummy values, the compiler will error out if it detects that the
-+helpers are used with dummy values. For a folded level, pXd_page() must not
-+be used and unconditionally triggers a compiler error. Architecture code must
-+instead call the helpers on the proper first page table level: e.g., set_p4d()
-+instead of set_pgd().
- 
- 
- MMU, TLB, and Page Faults
+Your result is a nice complement to ours — it suggests the same issue
+may also explain the boot failure of a 4.19 guest on a 7.x host. We
+had been debugging this boot failure for a while without finding the
+root cause, and had assumed it was some kind of version
+incompatibility. Your testing gives us a good lead to look into.
 
--- 
-2.43.0
+Thanks again for sharing your results.
+
+--
+Tao> Best,
+> Kaiyang
 
