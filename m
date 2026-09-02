@@ -1,35 +1,35 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0654947FAE3
-	for <loongarch@lists.linux.dev>; Wed,  2 Sep 2026 11:57:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A2BF47ECDB
+	for <loongarch@lists.linux.dev>; Wed,  2 Sep 2026 11:58:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788350285; cv=none; b=W4LmsyDC+ArNmAEujZhsr/sPh5ISTRMtygwB+vLxho5K4oEWAZHcAlixULSLijCKoZbZZbblbQZhWUVBOR7R+EGtpX/wMoKijPd0ABxsnLcMu1WqxMDIR9EdFDAtL589myIzJQ7u0Kskhftv4vXuRyCbZnh1SxaZZBNXUvb//Qg=
+	t=1788350301; cv=none; b=O39Qv0hTkNgwL4WJkmn6WJBx4RVnGxsLEPuQR+8X7x6n3HA2tg6L1ay5tFemUWrSNZQShRB+CwnsSMYsw57fM2InIkRymCk7Ia4JnHKJ/ygpf/4umxIofKhH4A2ZfpepU6crGk4ZRJ3/VFkzBSW2WXhNF33nBfMWdd4oXDDiOBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788350285; c=relaxed/simple;
-	bh=0PR5oXIOKKN44EvqTmmgCdRAk0g+3zRMhCuigLr45iw=;
+	s=arc-20240116; t=1788350301; c=relaxed/simple;
+	bh=JAI8HuvMrB06U9pngwcLmVHYlvLOsBAW7o0q3zLItzs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IyBmngM3GJMzu8APhBkBa5u8f0xEAhJbTwUBJXHq/lFDQsc8p/Axtc9bNffjdcVAtAmkgNk2HeAtGaXaBDwY75PeqERtgnNl2MBMQ1gf2AP19DRqfjkdSXy/cn1JHo19eX5REo5yXhRvgh/P3tiI3yhFBQRCJOAqexzz/PWDj6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Vq+BgO/b; arc=none smtp.client-ip=217.140.110.172
+	 In-Reply-To:To:Cc; b=UMhReVCTS8sjChErlquvVVML96NO6oTmWkNqgYI7ohqvzDssaZkccZwfG73mCqg7L8n3egarelo8MuavmdHCPniaX5gVxQWHhdfdUyEnwBfUoabz6mFKk2LOPAVHU+8d/Rlm0BmpSeOyVlTeyJkwpOchNEdpbL7hdBqcPJTjA40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Br0kvwiZ; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Vq+BgO/b"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Br0kvwiZ"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BA2151682;
-	Wed,  2 Sep 2026 04:57:39 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 831ED1684;
+	Wed,  2 Sep 2026 04:58:02 -0700 (PDT)
 Received: from e129823.arm.com (e129823.arm.com [10.2.213.3])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4280E3F85F;
-	Wed,  2 Sep 2026 04:57:36 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 09BE23F85F;
+	Wed,  2 Sep 2026 04:57:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1788350263; bh=0PR5oXIOKKN44EvqTmmgCdRAk0g+3zRMhCuigLr45iw=;
+	t=1788350286; bh=JAI8HuvMrB06U9pngwcLmVHYlvLOsBAW7o0q3zLItzs=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Vq+BgO/b9aFK8A71JXNvBNBhfYac165FZEWsOyfDio4LQR5ETa+QDbn0KiaPLujHS
-	 uLoEkmt86nlYEJy4d97XbCJa5a/RrJAqeUxW3ZxGdtC9wL7x8/PwJ1wvuq/GRns9N7
-	 Th6snsDoMGFDvih9v1FYFDzHDNdr4HPtcJY6+7u4=
+	b=Br0kvwiZKirBYwtP8GSbqaahPr9eXVJSF3G6/g+zhRfz9rudpPonCKSJx1zZiDP5I
+	 seMnZ0FIMrBMphvLYpfrg+MO5sigrisjQEeqGAmO+6ELBvPgtEKno0usZoDWmbAedz
+	 z1OTeZdg4q9ETpJggfEcDWTY/b5vPm9214of8Xyc=
 From: Yeoreum Yun <yeoreum.yun@arm.com>
-Date: Wed, 02 Sep 2026 12:56:11 +0100
-Subject: [PATCH RFC v3 09/21] loongarch: kvm: remove stack copy address of
- pXd in pXd_offset()
+Date: Wed, 02 Sep 2026 12:56:14 +0100
+Subject: [PATCH RFC v3 12/21] mm/pgtable: redefine PGTABLE_LEVEL enum with
+ ascend order from PGD
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -38,7 +38,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260902-dummy_ptxp3-v3-9-5d8f5b17c25c@arm.com>
+Message-Id: <20260902-dummy_ptxp3-v3-12-5d8f5b17c25c@arm.com>
 References: <20260902-dummy_ptxp3-v3-0-5d8f5b17c25c@arm.com>
 In-Reply-To: <20260902-dummy_ptxp3-v3-0-5d8f5b17c25c@arm.com>
 To: Russell King <linux@armlinux.org.uk>, 
@@ -71,81 +71,57 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
  kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
  linux-openrisc@vger.kernel.org, Yeoreum Yun <yeoreum.yun@arm.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2050; i=yeoreum.yun@arm.com;
- h=from:subject:message-id; bh=0PR5oXIOKKN44EvqTmmgCdRAk0g+3zRMhCuigLr45iw=;
- b=owEB7QES/pANAwAKAW3Vw9FaxTEzAcsmYgBqmA7mEvNM+bOE9I/iEnGFs4yU/Cp4f0fN/0Ksu
- pte4JObv3SJAbMEAAEKAB0WIQQtg+CS3QUzuFh1pJ1t1cPRWsUxMwUCapgO5gAKCRBt1cPRWsUx
- MyqUDACMb1+lsAjXkT07U7jCymAJfazCLi+GO5DlCm+D+flCqcZOXldliTBCwRmzRj4Jqg7Lg38
- AJyICWYXb6otlnlJHMXfPDwZu9oriA6Q74Im7EbN1oi2lrxIO9QuzLqZq9nopqL5fdnCkTBhLrY
- LFbHTE9MMndjLMFADqfDsab4Esti4VfIpOU4zi3bRjfsrOW/Jo38w74rDrf6jIb6m06O5nKgY26
- HUTG0A4hPkfkb16/8WvbC8Vx6of/7JJcOrFXcWSLZyFse+khfKtKwgfYvv0+thlQW4xRckUBLOQ
- pCH/6ZzZ187+fClXG1Fd5ju+Cgwx8GJCKMzTd6LZHMDPjzeYPM/QGHiTnBdi1v7i7Go1hTjtNtS
- 8xasNcaQ1mXrOPnuCYwf7yA4NDpzHk9ZqcO7oLb0fPGbHL+wRNcJglW9vAmoSFXEhlaV5BIFfOC
- gqUa2a8dnHBQjWCVTTuiYqmSxJ6hfeym+A4VgyETaZD+WU4xI6McKP5byVyCs1DTCNe6Y=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1223; i=yeoreum.yun@arm.com;
+ h=from:subject:message-id; bh=JAI8HuvMrB06U9pngwcLmVHYlvLOsBAW7o0q3zLItzs=;
+ b=owEB7QES/pANAwAKAW3Vw9FaxTEzAcsmYgBqmA7nq1z+UGkBh+k3plBTwHn84nfJGlTH4HLv6
+ PSsOOGZ/OqJAbMEAAEKAB0WIQQtg+CS3QUzuFh1pJ1t1cPRWsUxMwUCapgO5wAKCRBt1cPRWsUx
+ M4WQC/4j5E65SCGx3a5/ZzEhrT7FR7As2mIMS9VAlDcEK/fUO+neWKP+3tAec53rUxb4zzYZKQr
+ g3mrmjGqQfOQWFk0eMRy2UiUFM9sGnzM+aPCUjoMiPSlvR4ZloQz6B11DzS/1vcE9hCDnTfjvtK
+ qVQP7mnCLKp6tqIu24k7YyT7/1M5TwLF9MckxKXher2kNgQyHoOU0A++ZAo8AnP5mdlzo5T2a0H
+ yqfNYTL2jA0+vAPusTvh552PMoTvcNMpL10IwhehGblQh3b2mr3AWKiPaiII+C/tvF8CX1S0hYO
+ Lsv/z7b/+GbqLVyVEZPDMeZ76r21qIJjSuSzlY3XmUdMaIXYuG5Zh2EeZh0142nK7VIzSEQXJdl
+ 1WqI52sg40psqB++3zm3uJk2vkt3ViK3XEvLCey+cs9cs3THb4NBf8ha4nuPMmOFiw6Bt6yHWOk
+ PpTMxtIHG90CMyP8nQCuRgq1kKwGXaA+MSt7L4chgHdCIlEnjwejGwdNLXoe7Bqj4d0Sc=
 X-Developer-Key: i=yeoreum.yun@arm.com; a=openpgp;
  fpr=2D83E092DD0533B85875A49D6DD5C3D15AC53133
 
-The behaviour of pXdp_get() will change with generic compile-time folded
-page tables. To prepare for that,  rework host_pfn_mapping_level() to avoid
-use of a stack copy of a pXd and pass it as argument to pXd_offset() so that
-the folded entries value is ignored.
+The PGTABLE_LEVEL enum values appear to be ordered in the opposite direction
+from their intended usage.
 
-Replace direct uses of stack-based pXd values with pXd_offset_lockless().
-And there should be no functional change.
+Intuitively, higher page table levels should have smaller enum values,
+but PTE is currently assigned 0.
 
-Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
+For consistency and cleanup, reverse the enum value ordering.
+
+Since there is no current user relies on these numbers to be ascending from
+PTE->PGD, so it can be changed to be ascending from PGD->PTE, in the
+direction of the page table walk.
+
 Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
 ---
- arch/loongarch/kvm/mmu.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+ include/linux/pgtable.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
-index e104897aa532..837b40bb694f 100644
---- a/arch/loongarch/kvm/mmu.c
-+++ b/arch/loongarch/kvm/mmu.c
-@@ -669,10 +669,10 @@ static int host_pfn_mapping_level(struct kvm *kvm, gfn_t gfn,
- 	int level = 0;
- 	unsigned long hva;
- 	unsigned long flags;
--	pgd_t pgd;
--	p4d_t p4d;
--	pud_t pud;
--	pmd_t pmd;
-+	pgd_t *pgdp, pgd;
-+	p4d_t *p4dp, p4d;
-+	pud_t *pudp, pud;
-+	pmd_t *pmdp, pmd;
+diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+index e3c8ab96941c..3186096a6e13 100644
+--- a/include/linux/pgtable.h
++++ b/include/linux/pgtable.h
+@@ -2288,11 +2288,11 @@ static inline bool arch_has_pfn_modify_check(void)
+ typedef unsigned int pgtbl_mod_mask;
  
- 	/*
- 	 * Note, using the already-retrieved memslot and __gfn_to_hva_memslot()
-@@ -698,19 +698,23 @@ static int host_pfn_mapping_level(struct kvm *kvm, gfn_t gfn,
- 	 * value) and then p*d_offset() walks into the target huge page instead
- 	 * of the old page table (sees the new value).
- 	 */
--	pgd = pgdp_get(pgd_offset(kvm->mm, hva));
-+	pgdp = pgd_offset(kvm->mm, hva);
-+	pgd = pgdp_get(pgdp);
- 	if (pgd_none(pgd))
- 		goto out;
+ enum pgtable_level {
+-	PGTABLE_LEVEL_PTE = 0,
+-	PGTABLE_LEVEL_PMD,
+-	PGTABLE_LEVEL_PUD,
++	PGTABLE_LEVEL_PGD = 0,
+ 	PGTABLE_LEVEL_P4D,
+-	PGTABLE_LEVEL_PGD,
++	PGTABLE_LEVEL_PUD,
++	PGTABLE_LEVEL_PMD,
++	PGTABLE_LEVEL_PTE,
+ };
  
--	p4d = p4dp_get(p4d_offset(&pgd, hva));
-+	p4dp = p4d_offset_lockless(pgdp, pgd, hva);
-+	p4d = p4dp_get(p4dp);
- 	if (p4d_none(p4d) || !p4d_present(p4d))
- 		goto out;
- 
--	pud = pudp_get(pud_offset(&p4d, hva));
-+	pudp = pud_offset_lockless(p4dp, p4d, hva);
-+	pud = pudp_get(pudp);
- 	if (pud_none(pud) || !pud_present(pud))
- 		goto out;
- 
--	pmd = pmdp_get(pmd_offset(&pud, hva));
-+	pmdp = pmd_offset_lockless(pudp, pud, hva);
-+	pmd = pmdp_get(pmdp);
- 	if (pmd_none(pmd) || !pmd_present(pmd))
- 		goto out;
- 
+ static inline const char *pgtable_level_to_str(enum pgtable_level level)
 
 -- 
 2.43.0
