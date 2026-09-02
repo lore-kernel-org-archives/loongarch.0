@@ -1,86 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E64368D62;
-	Wed,  2 Sep 2026 05:34:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1979C38F24C
+	for <loongarch@lists.linux.dev>; Wed,  2 Sep 2026 06:15:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788327297; cv=none; b=hDA6wpUatpAXIQO27aIKyyD3FbwGA/QwLXYK4xGO6cYYk8Qa0qOi3tmRQ9wS8msU1vyxPRPLIT61/dnGxCQP089Ycmgn3f10zviBSci+plhxDQP2yDnqFG4TZwLGkktasIQyfq4W6RMovG13vBkqouyvryxEljk3JSb3uPJh0ok=
+	t=1788329733; cv=none; b=NFyiB0RZ2txOMYJoZVPE4EfmWqq0jV0ggh2xrm3wHmzqDTRCeUEVJeTzg08vCOYhpsXAggW/Fk6vzT/12Gf3glwDivxj2g1Lm0AnOCQoCyOWXqw4lquELZwUWZhW0qsVx+az2jpVOgppeh0krjx4KStLmUF89SvcswxlIlswmV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788327297; c=relaxed/simple;
-	bh=Omnbex0Tjgduu+oar2rNHU+lHUhTBsAOILG8aWQOw+w=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=iweGNKF/OeMj/Eol+YunhNlVCJnRTFh91W3Z/oJRBXM7qSLterbvGnOsUTxx/yzaO46ffkrFUxxBf6T8Bb44oc4YyMljoyc7uSqbh7dg4qcz7CPnDajw18ODr8fbD828+1cvDU+/1JUK2Niext49PVODIk5FcIPZ3rWdAIH4o0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SnEiX6ZV; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788329733; c=relaxed/simple;
+	bh=l6ErtK5n1RkoHlNKk2dyv8TZ6wSIaXf/OtWGVJsnctA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=CSAmeAqBQzLf/Gm/cKygfwDxyGjsrCgVaDuhVRzYVdrnRVLKd4C0h+GLCzSWzBkgjafwtP+D/T98fJxxWXx57tRU3yO3pkrlgxLcKLbteqh9V5mfMuHiS9U8maVu37mwIiDKbYdISohmUksHEyJ0hTf/Q5I5VzRx5ewY2Ht8bIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Mkz0Ej3I; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SnEiX6ZV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 983851F000E9;
-	Wed,  2 Sep 2026 05:34:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788327295;
-	bh=4+J2Jj2HRrACqcAaQEKzV2dhwA6iYSIh+wTxScdcYp8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=SnEiX6ZVRKNTlEzYhdNfLWvZ2V6gv7CAk4V6VlJVOjWftIIfZI4jZjIgP6Ekow5aH
-	 Dea+Vm53VDAB4oQGDi8tH78zhPRXDwvL02py7j6g3xDm2VOCAAViiylf+CiqP0SgJf
-	 fg/62uxQZenLhBbzQzQLNpYwzO+DW1dkgB1b9YH7qgSXa1VHHFfDtvzEZ2mdgJAZIg
-	 A7yaG0RTzthG0310R1CH4miU2uAMobA4Gbzu1/HdGgcYQ3bOdF6FRG2nWtYRqZ9kOt
-	 2o+4nKyq2up6v5DA1Ry9IbGDHHLpb5cYrXahXYlF34RaRqxIx8HPlN6k7BXBpDUBzS
-	 AhrKMXU+6FOog==
-From: Mike Rapoport <rppt@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
- Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- Baoquan He <baoquan.he@linux.dev>, 
- Pasha Tatashin <pasha.tatashin@soleen.com>, 
- Pratyush Yadav <pratyush@kernel.org>, Tao Liu <ltao@redhat.com>, 
- Philipp Rudo <prudo@redhat.com>, Mukesh Pilaniya <mpilaniy@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
- kexec@lists.infradead.org, Bradley Morgan <include@grrlz.net>
-In-Reply-To: <20260821-mpilaniy-v3-0-76b355399d2e@redhat.com>
-References: <20260821-mpilaniy-v3-0-76b355399d2e@redhat.com>
-Subject: Re: [PATCH v3 0/2] kexec: fix probe error codes and error
- propagation
-Message-Id: <178832723438.3691424.5459141264864633147.b4-ty@b4>
-Date: Wed, 02 Sep 2026 08:33:54 +0300
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Mkz0Ej3I"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 681KWTNe2236382;
+	Wed, 2 Sep 2026 06:14:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=Wy2nNr
+	PGbWGo3ADF6c0g7M/9wKsqbVRXkL3EdgLoY5E=; b=Mkz0Ej3IL42re55o5clvci
+	m5sLW34Bmyn8MkOM17lS4YlZZzN8N/55iwE64ZL3IOux92zveotmnDaQxRO6+0DY
+	ijfFYgKh8rMe5VTIAvWXEv6BYMr/SN6COHTtzk+MTy4phtui3rgzEQsFCrwUq4/F
+	4azaFeJFlgep6K/v37YIq/WK6XxbbzXXoBDW3CqdjOuRxkZdHjHKB3v7lYTHS37+
+	82VGEIGnwcACNBVxhVgj2o0XDRjF20WY7DxwlIHO1HKtBzfpf+y1zF776niZ7vKk
+	m8fNO6vjjOVR2u08YCnGV/nQMJ60FjplzTJThUv2JtflTDwVl7qFuhERwjLhov5Q
+	==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4gbpx5mp0x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Sep 2026 06:14:47 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 6826BQ5b003789;
+	Wed, 2 Sep 2026 06:14:46 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4gc9rqg949-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Sep 2026 06:14:46 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6826Egd451315162
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 2 Sep 2026 06:14:42 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 805CD2004E;
+	Wed,  2 Sep 2026 06:14:42 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8A4662004B;
+	Wed,  2 Sep 2026 06:14:31 +0000 (GMT)
+Received: from [9.123.14.142] (unknown [9.123.14.142])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  2 Sep 2026 06:14:31 +0000 (GMT)
+Message-ID: <99b1121d-4277-4764-8c3a-b3f6d9a47ab0@linux.ibm.com>
+Date: Wed, 2 Sep 2026 11:44:30 +0530
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 12/17] x86/crash: Use num_possible_cpus() for
+ elfcorehdr size
+To: Jinjie Ruan <ruanjinjie@huawei.com>, catalin.marinas@arm.com,
+        will@kernel.org, mark.rutland@arm.com, chenhuacai@kernel.org,
+        kernel@xen0n.name, maddy@linux.ibm.com, mpe@ellerman.id.au,
+        npiggin@gmail.com, chleroy@kernel.org, tglx@kernel.org,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        hpa@zytor.com, akpm@linux-foundation.org, baoquan.he@linux.dev,
+        rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org,
+        ruirui.yang@linux.dev, kees@kernel.org, thuth@redhat.com,
+        gshan@redhat.com, jic23@kernel.org, james.morse@arm.com,
+        ardb@kernel.org, leitao@debian.org, yeoreum.yun@arm.com,
+        coxu@redhat.com, tangyouling@kylinos.cn, hbathini@linux.ibm.com,
+        adityag@linux.ibm.com, ionut.nechita@windriver.com,
+        liaoyuanhong@vivo.com, seanjc@google.com, fuqiang.wang@easystack.cn,
+        makb@juniper.net, piliu@redhat.com, ebiggers@kernel.org,
+        jbouron@amazon.com, mclapinski@google.com, me@linux.beauty,
+        graf@amazon.com, bgwin@google.com, robh@kernel.org,
+        takahiro.akashi@linaro.org, palmer@rivosinc.com, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, ionut.nechita@windriver.com,
+        ionut.nechita@windriver.com
+References: <20260826092541.3905933-1-ruanjinjie@huawei.com>
+ <20260826092541.3905933-13-ruanjinjie@huawei.com>
+Content-Language: en-US
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+In-Reply-To: <20260826092541.3905933-13-ruanjinjie@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.17-dev
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Authority-Analysis: v=2.4 cv=PPc/P/qC c=1 sm=1 tr=0 ts=6a97bed8 cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=VwQbUJbxAAAA:8
+ a=t7CeM3EgAAAA:8 a=i0EeH86SAAAA:8 a=GuF16Tie-v_x1sUWD14A:9 a=QEXdDO2ut3YA:10
+ a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-GUID: -IqDSf4F0FmOcL5Q3XCke1kr2YbwNiU1
+X-Proofpoint-ORIG-GUID: KEmbHgCI7d9accZnEU6C4HI8egT2297V
+X-Proofpoint-Spam-Info: AW1haW4tMjYwOTAyMDA1MiBTYWx0ZWRfXz2AuISrj25WT
+ 313Gdb0AKNnpWXJG+VJ95H+6kugoqcFZFisjytZwvIlWZ4y/Fd0LECR39q8SwiorgwEdibQqAYI
+ wha1fu/nY7Cg/2E+X5ZeponvB/5ACF0=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTAyMDA1MiBTYWx0ZWRfXywQtEgYZYNk7
+ cAqCvDEwmxa2P2+rYvcX2LG0pVzZzBJixP7ujsGQlTI5b56QNy0fPGFIXZMj+cVXzQG7Txxj1tf
+ JPp8WOZ9w+FSiQrwdM7zf1VfRstGyWgKWYR2YfDKwM/n6HHjI8mlm47PH8DAH3oBtlnst4y4EgI
+ O2iserNtjKc0LQsu1b+WMjHcVjhP8zbdaOLjWjXP1WEClXE3IiAwoHGMsbCInx3NnX0P4B4fUVo
+ Wp/rseWaWYYL+GNuKgYWDo8mENynCYHP2WrKTu0jPKTzj8UWdhrBRrhv7J5H4lBnON9qmao1sD4
+ A9USHe9k2hKpbjFcfVBv39HELqFwUfZZCoI0tb/+RLn8KRh9ZcxWC7wNKAkmeDd5w2s50jq6y2k
+ bHRHLckUiG6jolF3WbzbH9sgRTtOC+kxTtJnqKEc8VkHs7KeRTij3Mfz+X9Os4dMFuci7HUb9A6
+ QIIMpPWSJS9r0ZIR48g==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-09-01_06,2026-09-01_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 phishscore=0 adultscore=0 suspectscore=0 bulkscore=0
+ spamscore=0 priorityscore=1501 impostorscore=0 malwarescore=0
+ lowpriorityscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2609020052
 
-On Fri, 21 Aug 2026 19:19:56 +0530, Mukesh Pilaniya wrote:
-> kexec: fix probe error codes and error propagation
-> 
-> While debugging a misleading error on s390x where kexec -s reported
-> "syscall kexec_file_load not available" instead of the actual EINVAL
-> from a kernel command line that exceeded the architecture limit, we
-> found that some kexec image probe functions return -EINVAL instead of
-> -ENOEXEC for format mismatches, and kexec_image_probe_default() has a
-> bug where it returns whatever the last loader returned rather than
-> always returning -ENOEXEC when no loader matches.
-> 
-> [...]
+Hello Jinjie,
 
-Applied to kexec-fixes branch of liveupdate/linux.git tree, thanks!
+This patch makes the below patch redundant..
+https://lore.kernel.org/all/20260826073527.21487-2-ionut.nechita@windriver.com/
 
-[1/2] kexec: return -ENOEXEC from image probe functions on mismatch
-      commit: 2792b4b15f148b142a4302706410e520c8049c00
-[2/2] kexec: fix error propagation in kexec_image_probe_default()
-      commit: b7c94f4d0961e3ea8ce0463b6eda1bb2cf9f2694
+I suggest dropping the first patch from the above series and including
+the second patch from that series in this patch series with the updated
+comment.
 
-tree: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux
-branch: kexec-fixes
+- Sourabh Jain
 
---
-Sincerely yours,
-Mike.
 
+On 26/08/26 14:55, Jinjie Ruan wrote:
+> Use num_possible_cpus() instead of CONFIG_NR_CPUS to calculate the
+> elfcorehdr buffer size, matching what crash_prepare_elf64_headers()
+> already uses for the actual header content.
+>
+> This avoids over-allocation when the system has fewer possible CPUs
+> than the compile-time limit, and aligns x86 with PowerPC.
+>
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> ---
+>   arch/x86/kernel/crash.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> index a3bf786286d4..afe2aea19f47 100644
+> --- a/arch/x86/kernel/crash.c
+> +++ b/arch/x86/kernel/crash.c
+> @@ -369,9 +369,9 @@ int crash_load_segments(struct kimage *image)
+>   	 * maximum CPUs and maximum memory ranges.
+>   	 */
+>   	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
+> -		pnum = 2 + CONFIG_NR_CPUS + CONFIG_CRASH_MAX_MEMORY_RANGES;
+> +		pnum = 2 + num_possible_cpus() + CONFIG_CRASH_MAX_MEMORY_RANGES;
+>   	else
+> -		pnum += 2 + CONFIG_NR_CPUS;
+> +		pnum += 2 + num_possible_cpus();
+>   
+>   	if (pnum < (unsigned long)PN_XNUM) {
+>   		kbuf.memsz = elf64_phdr_size(pnum);
+> @@ -429,7 +429,7 @@ unsigned int arch_crash_get_elfcorehdr_size(void)
+>   	unsigned int sz;
+>   
+>   	/* kernel_map, VMCOREINFO and maximum CPUs */
+> -	sz = 2 + CONFIG_NR_CPUS;
+> +	sz = 2 + num_possible_cpus();
+>   	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
+>   		sz += CONFIG_CRASH_MAX_MEMORY_RANGES;
+>   	sz *= sizeof(Elf64_Phdr);
 
