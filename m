@@ -1,40 +1,29 @@
-Received: from canpmsgout12.his.huawei.com (canpmsgout12.his.huawei.com [113.46.200.227])
+Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27C22430CE5
-	for <loongarch@lists.linux.dev>; Wed,  2 Sep 2026 10:01:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.227
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5554A43552B
+	for <loongarch@lists.linux.dev>; Wed,  2 Sep 2026 10:12:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788343286; cv=none; b=arnDCUTYTtpdd8bkkt9KokYjiw9JqKpfpucwcbJbhknYsqIYp6OD+izaTangKgSWPrbJw+yFsAlWevABK9DJb00CxfPd9k+D6/JyXrK/9kQpGjXCbChrOvSV5InOrQidS2RdUYF7XMvCQUAx5jQz9KDApH4LqjElEMUKE5lgyJA=
+	t=1788343982; cv=none; b=mp9FdfBILm3V6Z80jwRmRUIsBWFGNQylD0ez5YgTZzNoBw37vPM2jGV39bimPJGQziX51e/U382nJIceCMSEYrBDldpu6F8W4y+SQmBbqstH+XRLbd6nzQw6aZmcICR6tx6VlZakVy4oRDlnPSOUA3Tuf1NUd52nFxzMfPVJGLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788343286; c=relaxed/simple;
-	bh=n39eUgVDD5l2zyp5goXnb/ODSDiV8FhVFdZbdUdNpLY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=iOS7y8eptDhLhIkvMg3XI5i3Cpu/OUjcfBvHvVZG+RAYUBWFHzCZooOkS+KyJA90at94caS+fjqB+zuumHIrDKGCDLf1iCxEsQ/aeGnllzF4KhavVIoq3EhbEr2EyZi+siGHlqjtWtuhwar21p5x6/0m2fsgrO619+owXpqrTVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=1OKXC1Wl; arc=none smtp.client-ip=113.46.200.227
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="1OKXC1Wl"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=5muCGImxQEXCs9mgbU84wjK603R7oDB3KGXYhDYZoIc=;
-	b=1OKXC1WlAcuXvATuYy9843J+ts23aqDRPtEBmymokcm2wcDFN7n+VLXs5YlFtuuOI17YRGOle
-	AE1kaDyBL8Psb6qsvqP6GD+2KaR9IZFlJSaA9VKKZKh4vJ8pLjxN4lSw5BvQVM6ddEVaTK1WC49
-	5AuTsqZ1V1GNz92YBNN1IQA=
-Received: from mail.maildlp.com (unknown [172.19.163.163])
-	by canpmsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4hZdHw4T64znTwN;
-	Wed,  2 Sep 2026 17:50:04 +0800 (CST)
-Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id C74E54057A;
-	Wed,  2 Sep 2026 18:01:17 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 2 Sep 2026 18:01:15 +0800
-Message-ID: <d12302b0-f0b3-4df6-963c-bf25b6e720c7@huawei.com>
-Date: Wed, 2 Sep 2026 18:01:14 +0800
+	s=arc-20240116; t=1788343982; c=relaxed/simple;
+	bh=ZUoMNsOCoWo/VAeuw4DjeREE/aycd6GLB/a4qUZb4VU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KTcR9Lbe453QoQq/FlvdGP7cccrNthqxjtenQKz/xZB8nRAv2mPnreiYdkGNaMUxeJo6BI9+xEp5kdQXE/g85masySlQbnSsMdtWLPgGotDozm2uZ0w+gasPD3gUEq0HF26jrb3fi5k+LPt5iitLDILuxaCeWZ/d856/39Hkiv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongfans.cn; spf=pass smtp.mailfrom=loongfans.cn; arc=none smtp.client-ip=54.207.19.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongfans.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongfans.cn
+X-QQ-mid: zesmtpgz4t1788343956tfea4d5c6
+X-QQ-Originating-IP: nx7JF0Fpqcfom8ip4fdPrl+Ybn0XJOHnooR0QK7t2OQ=
+Received: from [198.18.0.1] ( [223.104.163.80])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 02 Sep 2026 18:12:34 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 14151464018762602530
+Message-ID: <D7B309C007238053+3831de19-a2c3-4f17-9281-e4e355c6c464@loongfans.cn>
+Date: Wed, 2 Sep 2026 18:12:33 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -42,95 +31,69 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 12/17] x86/crash: Use num_possible_cpus() for
- elfcorehdr size
-To: Sourabh Jain <sourabhjain@linux.ibm.com>, <catalin.marinas@arm.com>,
-	<will@kernel.org>, <mark.rutland@arm.com>, <chenhuacai@kernel.org>,
-	<kernel@xen0n.name>, <maddy@linux.ibm.com>, <mpe@ellerman.id.au>,
-	<npiggin@gmail.com>, <chleroy@kernel.org>, <tglx@kernel.org>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<hpa@zytor.com>, <akpm@linux-foundation.org>, <baoquan.he@linux.dev>,
-	<rppt@kernel.org>, <pasha.tatashin@soleen.com>, <pratyush@kernel.org>,
-	<ruirui.yang@linux.dev>, <kees@kernel.org>, <thuth@redhat.com>,
-	<gshan@redhat.com>, <jic23@kernel.org>, <james.morse@arm.com>,
-	<ardb@kernel.org>, <leitao@debian.org>, <yeoreum.yun@arm.com>,
-	<coxu@redhat.com>, <tangyouling@kylinos.cn>, <hbathini@linux.ibm.com>,
-	<adityag@linux.ibm.com>, <ionut.nechita@windriver.com>,
-	<liaoyuanhong@vivo.com>, <seanjc@google.com>, <fuqiang.wang@easystack.cn>,
-	<makb@juniper.net>, <piliu@redhat.com>, <ebiggers@kernel.org>,
-	<jbouron@amazon.com>, <mclapinski@google.com>, <me@linux.beauty>,
-	<graf@amazon.com>, <bgwin@google.com>, <robh@kernel.org>,
-	<takahiro.akashi@linaro.org>, <palmer@rivosinc.com>, <x86@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
-	<kexec@lists.infradead.org>, <linux-fsdevel@vger.kernel.org>,
-	<linux-mm@kvack.org>
-References: <20260826092541.3905933-1-ruanjinjie@huawei.com>
- <20260826092541.3905933-13-ruanjinjie@huawei.com>
- <99b1121d-4277-4764-8c3a-b3f6d9a47ab0@linux.ibm.com>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <99b1121d-4277-4764-8c3a-b3f6d9a47ab0@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
- dggpemf500011.china.huawei.com (7.185.36.131)
+Subject: Re: [PATCH 1/2] LoongArch: KVM: Fix PC double advance in kernel MMIO
+ read fast path
+To: Zeng Chi <zeng_chi911@163.com>, zhaotianrui@loongson.cn,
+ maobibo@loongson.cn, chenhuacai@kernel.org, kernel@xen0n.name
+Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, zengchi@kylinos.cn, stable@vger.kernel.org
+References: <20260723111552.1623996-1-zeng_chi911@163.com>
+Content-Language: en-US
+From: Kaiyang Wu <wukaiyang@loongfans.cn>
+In-Reply-To: <20260723111552.1623996-1-zeng_chi911@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpgz:loongfans.cn:qybglogicsvrsz:qybglogicsvrsz3b-0
+X-QQ-XMAILINFO: NbnE26TzD42gdhQUAYDIttMSR8YjVJp87rIeOE8+PsZ/VPsL/0doFYGg
+	ReTaPOF7MRc7n3BSJFw9uzrfU73CZQKFaDLK029sOx50+O5yp+MoKc8FugLmRak516QK2xc
+	Kz5APbSQp4lCdvXfDusgB7VCh+C58gsWWncpwvId40hE3WhDSZSXV3q2r48ygHaE2AA3gQE
+	Kbco2v049QzNYiUqniGv7v2cuOQOWw1PR7ZhJPmOk+jRyft776DvsBPjQVKSG9qY+l3imBF
+	E/rguPTE1oKHaKoJ0clOMpoMiKbiz4Rf1axeLTdcP54tvXDPHzho31FKjcN7JPmD4dAyC+V
+	RJJc8OhJWM//6IoaMi4Pi6rgMT4TfLMeH5hzXZKFzmE7HTyQhdyE6l3igGaEjDIdycxlhny
+	ohCdd2MxT88PSvmLW8SXrLXWjcymiHKdhNk6kBfxskng8uB93bw+HK+ObQNBdqvxHtA1nZ0
+	WzxwXgmyl2TqnxXQzpvm6RRQ4Wmexj04PAX3rX3fJ8129dqOAnmXdcRC3BoEzhKO4Cu8/D5
+	n425nenpoO9HLaKSYmhIdmGOWigfkECQgmVfPLnQUCSXrooKtsShHOtSQf2nicyRn5lG5gs
+	0j97OWR9nRlSN2OS73aixdg0YSR09Gns2P/ALIwhhlpZitYRxWJ3sQUcv3KlNnsfZmHD52R
+	FGetfIpIJFwD8O33HfkblgNsNk16QE6ybmJZbO6aZ6ajFjuNEj8TJajPbwfbpAg067TFGeN
+	LtCZctGvnXfQtt0Bx0ejgT2feu0pYy183k7biDdy8Mv5BcIbVmszYf/R+6UZa63sFtdaNSw
+	TDIkicn2mlrIN/LhZgiVeLQ5WyNcedzX1mEqyg5jDz30aPuKdaHXT34xNnckMwHziUgxq7V
+	E/Z3yZGOY4cArWJ70YAEMEej9lof0MG1e2Zw+57v6xR8Gc2hqS0U4U17b24rp+Xp846x8CD
+	7w42ddn5y7UHfl0aSFT4DUHd4bjzogoKDp2X55eamld47bRJNH+gBzcLwCVOpG8xGYz/7rz
+	rqTKZfr00LXwEjTwLF0KiO2+cxcJTo21nyRE77gxfnu73jb+/CjF8j6badzOxdoR9XcG+4h
+	Bki2XsnHBsoArlDNqOd2BLPKQEJ5CV1Gj/pszhOFMaw
+X-QQ-XMRINFO: M/715EihBoGS47X28/vv4NpnfpeBLnr4Qg==
+X-QQ-RECHKSPAM: 0
 
+On 2026-07-23 19:15, Zeng Chi wrote:
 
-
-在 2026/9/2 14:14, Sourabh Jain 写道:
-> Hello Jinjie,
+> In the in-kernel MMIO read fast path of kvm_emu_mmio_read(),
+> kvm_complete_mmio_read() already advances the guest PC via update_pc().
+> The explicit update_pc() call right after it advances the PC a second
+> time, so PC moves forward by 8 instead of 4 and the instruction
+> following the MMIO read is silently skipped.
 > 
-> This patch makes the below patch redundant..
-> https://lore.kernel.org/all/20260826073527.21487-2-
-> ionut.nechita@windriver.com/
+> The user space MMIO read completion path in kvm_arch_vcpu_ioctl_run()
+> calls kvm_complete_mmio_read() only once, and the MMIO write fast path
+> advances the PC exactly once as well.
 > 
-> I suggest dropping the first patch from the above series and including
-> the second patch from that series in this patch series with the updated
-> comment.
+> Remove the redundant update_pc() so the kernel MMIO read fast path
+> advances the PC by a single instruction.
 
-Agreed. This approach makes sense to me.
+Hi Zeng,
 
-I will update it in v4.
+I have tested the patch on Proxmox VE with the environment below:
 
-> 
-> - Sourabh Jain
-> 
-> 
-> On 26/08/26 14:55, Jinjie Ruan wrote:
->> Use num_possible_cpus() instead of CONFIG_NR_CPUS to calculate the
->> elfcorehdr buffer size, matching what crash_prepare_elf64_headers()
->> already uses for the actual header content.
->>
->> This avoids over-allocation when the system has fewer possible CPUs
->> than the compile-time limit, and aligns x86 with PowerPC.
->>
->> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
->> ---
->>   arch/x86/kernel/crash.c | 6 +++---
->>   1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
->> index a3bf786286d4..afe2aea19f47 100644
->> --- a/arch/x86/kernel/crash.c
->> +++ b/arch/x86/kernel/crash.c
->> @@ -369,9 +369,9 @@ int crash_load_segments(struct kimage *image)
->>        * maximum CPUs and maximum memory ranges.
->>        */
->>       if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
->> -        pnum = 2 + CONFIG_NR_CPUS + CONFIG_CRASH_MAX_MEMORY_RANGES;
->> +        pnum = 2 + num_possible_cpus() + CONFIG_CRASH_MAX_MEMORY_RANGES;
->>       else
->> -        pnum += 2 + CONFIG_NR_CPUS;
->> +        pnum += 2 + num_possible_cpus();
->>         if (pnum < (unsigned long)PN_XNUM) {
->>           kbuf.memsz = elf64_phdr_size(pnum);
->> @@ -429,7 +429,7 @@ unsigned int arch_crash_get_elfcorehdr_size(void)
->>       unsigned int sz;
->>         /* kernel_map, VMCOREINFO and maximum CPUs */
->> -    sz = 2 + CONFIG_NR_CPUS;
->> +    sz = 2 + num_possible_cpus();
->>       if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
->>           sz += CONFIG_CRASH_MAX_MEMORY_RANGES;
->>       sz *= sizeof(Elf64_Phdr);
-> 
+- CPU: Loongson 3C6000/D
+- OS: Proxmox VE 9.2.11 (LoongArch port https://github.com/pve-loong64-port)
+- Kernel: 7.0.14-15-pve
+- Guest OS: Kylin Linux Advanced Server V10 (SP3 2403)
+- Guest Kernel: 4.19.90-89.45.v2401.a.ky10.loongarch64
 
+Without the patch, the guest system could not boot with the 
+4.19.90-89.45.v2401.a.ky10.loongarch64 kernel and there was no output in 
+neither tty nor serial. I can confirm the system boots from the same 
+kernel version with the patch applied to the host kernel.
+
+Best,
+Kaiyang
