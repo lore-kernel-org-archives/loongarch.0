@@ -1,78 +1,82 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D37D37186A
-	for <loongarch@lists.linux.dev>; Wed,  2 Sep 2026 16:48:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C1243DDB1D;
+	Wed,  2 Sep 2026 17:47:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788367707; cv=none; b=auaLOrPY2M/Fk60f5C0EQo7VvS1tNFDcxstsH4M1/sE2LYwmHeQRHQ1nxf0ddilJ425b7PhnYRLZgBFhsYf6UmBPcB4qtb34MjDVgqlAroYdBUcC7jLzY9bJNLjWfzBWfrKTtlehXDH9kJ30PENfQJhZJkntNYsL4pSsqniDVrM=
+	t=1788371277; cv=none; b=lviyV+8iD0GaaarbrqlstNBPP3UZFoUjCruaqVqsZvZTxnKte63gdyMa7Aqxke+lqt86DBF3Cnwz2dHxk7lSIyBElIGtcxdhj/cInVIKoSUSjulf25FCmwngnBw4OY4Wf5oCLaClsVTNMIKF3rduAtULD2XKx12sheJwgmvTxzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788367707; c=relaxed/simple;
-	bh=U+OH94B40NoTGV5hu0mRvJHuyvI3dakCwtDknNYstOA=;
+	s=arc-20240116; t=1788371277; c=relaxed/simple;
+	bh=HGtwWmnQ6QwDDO+DyewXu4HaqP7hG4EurP/lr9Sz1eU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CMQkQUAUTqAvNptWv4AOHwG8eUvH3Sz/a7y1nGjQAfY0K/gs3D6kw0n6QRDa+Srz629m/oSyutaKoVKU+ZoRuN4XRUUPZvPR2CFvX78AsQZhBJV4leChcMKpzhciawK7OnV9pFmocvEijgjSpWQXybXViHMWDbgVuU4jbuE2kt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=GnvXWjox; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=frMjRwDLCbWbqmDBxVSTn1O2UbMoRGlfnt0kmgylLuL9cjJWvl4unBt9gOX5SI/bjDwl5QAkwghywO6WsFVhuFMxDPFz27bjwWREMDGbHlHhPB7KCj51T7qG9pu+RvxtGQiSX+eac75/IHfYNruJJnw0/NPgsMcy0tfE2qPs/7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=pXJ51bzM; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="GnvXWjox"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C75B5165C;
-	Wed,  2 Sep 2026 09:48:20 -0700 (PDT)
-Received: from e129823.arm.com (e129823.arm.com [10.2.213.3])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 07F7F3F882;
-	Wed,  2 Sep 2026 09:48:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1788367704; bh=U+OH94B40NoTGV5hu0mRvJHuyvI3dakCwtDknNYstOA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GnvXWjoxcxOtSQbkJLQQ3GnOKnrJ9nFr10cfwUtCgJWT/roaoVtAf1/mEvzgvikQ5
-	 RXVLekBW58kpBfbq00LwbRmlPLU/+FVDFDSMj4JxcQvr3vN8VaI7ommpT64lB9niJ6
-	 AjsG8nFfQXvSizHpPhebOyU19vy801Vi2MdIplc0=
-Date: Wed, 2 Sep 2026 17:48:14 +0100
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Yeoreum Yun <yeoreum.yun@arm.com>, Russell King <linux@armlinux.org.uk>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Barry Song <baohua@kernel.org>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	David Hildenbrand <david@kernel.org>,
-	Michal Hocko <mhocko@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>, Anup Patel <anup@brainfault.org>,
-	Atish Patra <atish.patra@linux.dev>, Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Jonas Bonn <jonas@southpole.se>,
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-	Stafford Horne <shorne@gmail.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
-	linux-openrisc@vger.kernel.org
-Subject: Re: [PATCH RFC v3 15/21] x86: mm: skip collapse_pud_page() when
- CONFIG_X86_DIRECT_GBPAGES disabled
-Message-ID: <aphTTqhf3yO74JoO@e129823.arm.com>
-References: <20260902-dummy_ptxp3-v3-0-5d8f5b17c25c@arm.com>
- <20260902-dummy_ptxp3-v3-15-5d8f5b17c25c@arm.com>
- <fa4acc56-9742-4a5e-abd4-7491ad426940@intel.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pXJ51bzM"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 682HVaOG661164;
+	Wed, 2 Sep 2026 17:47:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=HGtwWmnQ6QwDDO+DyewXu4HaqP7hG4
+	EurP/lr9Sz1eU=; b=pXJ51bzM+v6WL88TWOeaJMkj1nSVlEa101MtzmBfaTneIB
+	B8Ry3a6/fLkuV4E44I15E99NZ7Pa9tYuPex+ARWyywvZOqrWeSatuJck2sLldGDL
+	FLLdjhW/AuHBe0Ve2ovPjbT8LMAFqTWO4Le0cLKhTxShmhYzdqSqYtmt4pux+eFO
+	c9w4YtdIqP5+FQfeWr7Ajw8Zf+lvioZBKEyx9S1AOdCdn/hbL0UvdFyi+VFbQCjl
+	S5i7b/vmqjq1v/2/Nl7nA9W8gI2PxivpgFZabXZs5M0NRZjz2k2w7ONefhNdd1pe
+	6iRKd/ARLvVl4+eg8FLJpTOEzDZEktygdnW35Fxg==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4gbpx5rd98-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Sep 2026 17:47:35 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 682HQpjI023346;
+	Wed, 2 Sep 2026 17:47:34 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4gc9rqkj7y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Sep 2026 17:47:34 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 682HlV6S44368140
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 2 Sep 2026 17:47:31 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 07A752004E;
+	Wed,  2 Sep 2026 17:47:31 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 90FEC2004F;
+	Wed,  2 Sep 2026 17:47:23 +0000 (GMT)
+Received: from Gautams-MacBook-Pro.local (unknown [9.124.221.176])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed,  2 Sep 2026 17:47:23 +0000 (GMT)
+Date: Wed, 2 Sep 2026 23:17:20 +0530
+From: Gautam Menghani <gautam@linux.ibm.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+        Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>,
+        Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Fuad Tabba <fuad.tabba@linux.dev>, Joey Gouly <joey.gouly@arm.com>,
+        Steffen Eiden <seiden@linux.ibm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Zenghui Yu <yuzenghui@huawei.com>, Atish Patra <atish.patra@linux.dev>,
+        Alexandre Ghiti <alex@ghiti.fr>, David Hildenbrand <david@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+        kvm@vger.kernel.org, loongarch@lists.linux.dev,
+        kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
+        Ritesh Harjani <ritesh.list@gmail.com>, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 00/20] KVM: selftests: PPC pre-enabling
+Message-ID: <aphhKDm7Vx7G5ivr@Gautams-MacBook-Pro.local>
+References: <20260826230511.972824-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -81,163 +85,36 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <fa4acc56-9742-4a5e-abd4-7491ad426940@intel.com>
-
-Hi Dave,
-
-> On 9/2/26 04:56, Yeoreum Yun wrote:
-> > The behaviour of pXd_page() will change with generic compile-time folded
-> > page tables by disallowing its use and triggering a compile-time error
-> > when it's used improperly, ensuring that the actual pXd_page() is used
-> > instead.
-> > 
-> > To prepare fot that, skip collapse_pud_page() when
-> > CONFIG_X86_DIRECT_GBPAGES is disabled.
-> 
-> Nit: this doesn't explain how the change actually fixes anything or what
-> the specific problem being solved is.
-> 
-> I think you want to say something along the lines of:
-> 
-> 	collapse_pud_page() uses pud_page() in a way which will soon
-> 	trigger a compile-time error on configs that have a folded pud.
-> 
-> 	The code which will generate that error is actually unreachable
-> 	on those configs because 'direct_gbpages' is always 0 there.
-> 	However, the compiler does not know that because
-> 	'direct_gbpages' is a normal integer from a separate compilation
-> 	unit.
-> 
-> 	Make the compiler aware when most of collapse_pud_page() is
-> 	unreachable by adding a Kconfig check. This ensures it will not
-> 	trip the errors when they are introduced. It probably also trims
-> 	the kernel image down a wee bit too as a side benefit.
-
-Yes.. Sorry for my poor commit message.
-
-> 
-> Maybe I should just merge something like the attached patch. I think it
-> would solve your problem and make things generally cleaner too.
-> 
-> There is an existing variable (direct_gbpages) that says whether the
-> kernel can and should use 1G pages in the direct map. It is driven
-> by a bunch of other machinery. At least:
-> 
->  1. Hardware support for 1G pages
->  2. Kconfig support for 1G direct mappings
->  3. Kernel command line overrides
-> 
-> Most code just checks the 'direct_gbpages' variable itself. But this
-> prevents compiler optimization in cases where 1G mappings are
-> compile-time disabled (via X86_DIRECT_GBPAGES).
-> 
-> Add a helper to replace 'direct_gbpages' checks. Check the Kconfig
-> option and base CPU support before looking at the variable.
-> 
-> This lets the compiler optimize things better, especially
-> collapse_pud_page() where most of the function can now be optimized
-> away.
-
-Yeap. I've tested with your patch and it works for me!
-Thanks!
-
-Reviewed-by: Yeoreum Yun <yeoreum.yun@arm.com>
-Tested-by: Yeoreum Yun <yeoreum.yun@arm.com>
-
-> 
-> ---
-> 
->  b/arch/x86/include/asm/pgtable.h     |   14 ++++++++++++++
->  b/arch/x86/kernel/cpu/common.c       |    2 +-
->  b/arch/x86/kernel/machine_kexec_64.c |    2 +-
->  b/arch/x86/mm/init.c                 |    2 +-
->  b/arch/x86/mm/pat/set_memory.c       |    4 ++--
->  5 files changed, 19 insertions(+), 5 deletions(-)
-> 
-> diff -puN arch/x86/include/asm/pgtable.h~direct_gbpages-compiletime arch/x86/include/asm/pgtable.h
-> --- a/arch/x86/include/asm/pgtable.h~direct_gbpages-compiletime	2026-09-02 06:53:57.835733398 -0700
-> +++ b/arch/x86/include/asm/pgtable.h	2026-09-02 08:17:01.434727771 -0700
-> @@ -1163,6 +1163,20 @@ static inline int pgd_none(pgd_t pgd)
->  #ifndef __ASSEMBLER__
->  
->  extern int direct_gbpages;
-> +static inline bool direct_gbpages_enabled(void)
-> +{
-> +	/* Check the direct map config option: */
-> +	if (!IS_ENABLED(CONFIG_X86_DIRECT_GBPAGES))
-> +		return false;
-> +
-> +	/* Check the CPU feature: */
-> +	if (!cpu_feature_enabled(X86_FEATURE_GBPAGES))
-> +		return false;
-> +
-> +	/* Check the command-line and early setup variable: */
-> +	return direct_gbpages;
-> +}
-> +
->  void init_mem_mapping(void);
->  void early_alloc_pgt_buf(void);
->  void __init poking_init(void);
-> diff -puN arch/x86/mm/init.c~direct_gbpages-compiletime arch/x86/mm/init.c
-> --- a/arch/x86/mm/init.c~direct_gbpages-compiletime	2026-09-02 06:55:01.004094924 -0700
-> +++ b/arch/x86/mm/init.c	2026-09-02 08:20:36.759992562 -0700
-> @@ -251,7 +251,7 @@ static void __init probe_page_size_mask(
->  		__default_kernel_pte_mask &= ~_PAGE_GLOBAL;
->  
->  	/* Enable 1 GB linear kernel mappings if available: */
-> -	if (direct_gbpages && boot_cpu_has(X86_FEATURE_GBPAGES)) {
-> +	if (direct_gbpages_enabled()) {
->  		printk(KERN_INFO "Using GB pages for direct mapping\n");
->  		page_size_mask |= 1 << PG_LEVEL_1G;
->  	} else {
-> diff -puN arch/x86/kernel/cpu/common.c~direct_gbpages-compiletime arch/x86/kernel/cpu/common.c
-> --- a/arch/x86/kernel/cpu/common.c~direct_gbpages-compiletime	2026-09-02 06:57:47.935849397 -0700
-> +++ b/arch/x86/kernel/cpu/common.c	2026-09-02 06:57:57.299617535 -0700
-> @@ -2660,7 +2660,7 @@ void __init arch_cpu_finalize_init(void)
->  		 * Right now we don't do that with gbpages because there seems
->  		 * very little benefit for that case.
->  		 */
-> -		if (!direct_gbpages)
-> +		if (!direct_gbpages_enabled())
->  			set_memory_4k((unsigned long)__va(0), 1);
->  	} else {
->  		fpu__init_check_bugs();
-> diff -puN arch/x86/kernel/machine_kexec_64.c~direct_gbpages-compiletime arch/x86/kernel/machine_kexec_64.c
-> --- a/arch/x86/kernel/machine_kexec_64.c~direct_gbpages-compiletime	2026-09-02 06:57:58.462712975 -0700
-> +++ b/arch/x86/kernel/machine_kexec_64.c	2026-09-02 06:58:05.219267514 -0700
-> @@ -257,7 +257,7 @@ static int init_pgtable(struct kimage *i
->  		info.kernpg_flag |= _PAGE_ENC;
->  	}
->  
-> -	if (direct_gbpages)
-> +	if (direct_gbpages_enabled())
->  		info.direct_gbpages = true;
->  
->  	for (i = 0; i < nr_pfn_mapped; i++) {
-> diff -puN arch/x86/mm/pat/set_memory.c~direct_gbpages-compiletime arch/x86/mm/pat/set_memory.c
-> --- a/arch/x86/mm/pat/set_memory.c~direct_gbpages-compiletime	2026-09-02 06:58:43.518414555 -0700
-> +++ b/arch/x86/mm/pat/set_memory.c	2026-09-02 06:59:27.252015369 -0700
-> @@ -130,7 +130,7 @@ void arch_report_meminfo(struct seq_file
->  	seq_printf(m, "DirectMap4M:    %8lu kB\n",
->  			direct_pages_count[PG_LEVEL_2M] << 12);
->  #endif
-> -	if (direct_gbpages)
-> +	if (direct_gbpages_enabled())
->  		seq_printf(m, "DirectMap1G:    %8lu kB\n",
->  			direct_pages_count[PG_LEVEL_1G] << 20);
->  }
-> @@ -1340,7 +1340,7 @@ static int collapse_pud_page(pud_t *pud,
->  	pmd_t *pmd, first;
->  	int i;
->  
-> -	if (!direct_gbpages)
-> +	if (!direct_gbpages_enabled())
->  		return 0;
->  
->  	addr &= PUD_MASK;
-> _
+In-Reply-To: <20260826230511.972824-1-seanjc@google.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Authority-Analysis: v=2.4 cv=PPc/P/qC c=1 sm=1 tr=0 ts=6a986138 cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=kj9zAlcOel0A:10 a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=6YN9JvpFNRzmbg3FydkA:9
+ a=CjuIK1q_8ugA:10
+X-Proofpoint-GUID: tRZqKKrGtBjHG2Pu3xQZzuOyhRhv077A
+X-Proofpoint-ORIG-GUID: pdLNL2iG2soKTiUHunO9uJiDJ8oxj9S6
+X-Proofpoint-Spam-Info: AW1haW4tMjYwOTAyMDE1NCBTYWx0ZWRfX/3BQiO/4M77n
+ AvjpUycO+mKHAdP0qa39OrRauYjGL+ZXs6GMp+BhV9vuxqhuESJqGvGyxDS/TncOIoaaNebyj2M
+ Mh+XT8fPklmzmBP5n5N6hvz8btd17e0=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTAyMDE1NCBTYWx0ZWRfX7sO1s5aw3bu7
+ yGm8yQcHZ7WA2zwsrkIYdeZcloHnCw+pL5crxFHgEqUiWM+wUus/GNOQ/ZAwb6FjQLOncOp8A86
+ 94yCxLIuXJcEs1s8fHFlHIfo76aNyFoh4QlGJ0Mg/HjdkoTDg99uz3Cx41t/tSng59sXrFCxcMX
+ 9aSG+t+97OyBvbo2meC9X4F15bk3na1rQooBz40mnKd4Trt5E+kWB6Y4mk1lOazlBi5WcQ9xJda
+ SX3oEaIKkegrcRVjJg9T55qxEXJTwuO+3co5WfoC4YNCD6rzXlwpMc5j+JSeRlWHRDM9Un/5kf9
+ KZHm3YyKi0t11rguHeyczHDVWwZ1ehOeBVXz31LmkDWnFTcj2X+/2d5BWmQcgwNwjEJ/LAMcP6T
+ 1ZoI/atPvxfIYGWLuyusfsc18eNXNBHm5c/bJuaj5WtHgPMuR3aqb47eggYeMiaOlkvEFr8Yd4H
+ SzqNL31hLQRftxAg6jg==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-09-02_04,2026-09-02_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1011 phishscore=0 adultscore=0 suspectscore=0 bulkscore=0
+ spamscore=0 priorityscore=1501 impostorscore=0 malwarescore=0
+ lowpriorityscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2609020154
 
 
--- 
-Sincerely,
-Yeoreum Yun
++ linuxppc-dev
