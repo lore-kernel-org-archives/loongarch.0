@@ -1,57 +1,57 @@
-Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com [209.85.215.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 692894AD7E0
-	for <loongarch@lists.linux.dev>; Wed,  2 Sep 2026 16:41:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30DA14AD4BD
+	for <loongarch@lists.linux.dev>; Wed,  2 Sep 2026 16:41:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788367306; cv=none; b=EaTCNhTIDVn4hWwQMqLhcLztsVVecFCakRvldHIsVZgCEflopKSww87oElqsxpz6WPq57vxvhLZ/RQg9vQ+NIQgPiT1Fd1qCq86LPOvrKIWpxt61yUoa2AeyVBlbvBqFBNgvtI8SdX6PFfBCWloIKJOHhIS6KPIzJoplJwn1/wE=
+	t=1788367309; cv=none; b=nYZkCGVpFchLjLnMfZWhwMDJxfyyza0V7tMaAZVe+a/g3U4sSh7BWrmAifm1yAQn9Be7orEGNyAmubP5j24wtKuhml1IVpA7izEA1vHPniNYPJyBM39pq6tT/5sJ2fk4pbwCuKNZFxJQC2DtHRw1o19Vel7rbfNmKc8P6UJqQ6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788367306; c=relaxed/simple;
-	bh=IooTrDugbi730db2Qdv2j1/bfHJilOastYDRCxIfQLA=;
+	s=arc-20240116; t=1788367309; c=relaxed/simple;
+	bh=agqcQGpkoOi6P1jQwddX1AvqLJis+COWMzi0MFnoTIE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=PkQAYbjXBFjYWYFmdpzvBBncKVBNDtc5vtiMrnHumeuT+HpDh/30G7ACoXlIZ7DaB4q36UP0hFhCVbl0yFqiRIpZr0rRdpP2wXNxG6UNKAzFNLR7K0wjpb9gmF8Z1MnExS1Z4Eij+i/BxUQ+Ptvs35Sd8j5TU6Bpkj/JVKuHhyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vBpTxVYW; arc=none smtp.client-ip=209.85.210.197
+	 To:Cc:Content-Type; b=PZn+gR7WRIflYf9wKf29r5vjuXLHLenLkFfXVmrynDjIBRJ13S2bmBKf0ZyaVfwuLpVt9by5JSIvibfdGUFWkCtIauyQT6lkupOWel+9mgMyrcNIMx34D8FeLCNAw/H1yQQ+fpKWmbp9HHWTWG2Rb9GKe+bluIq29dFO9ZdCd6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pamMRsTR; arc=none smtp.client-ip=209.85.215.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vBpTxVYW"
-Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-8535cdc2433so37844b3a.0
-        for <loongarch@lists.linux.dev>; Wed, 02 Sep 2026 09:41:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pamMRsTR"
+Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-cb6cf425e86so1727016a12.1
+        for <loongarch@lists.linux.dev>; Wed, 02 Sep 2026 09:41:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1788367299; x=1788972099; darn=lists.linux.dev;
+        d=google.com; s=20251104; t=1788367300; x=1788972100; darn=lists.linux.dev;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:reply-to:from:to:cc:subject:date:message-id
          :reply-to:content-type;
-        bh=OWxwiZu3iI1BKMOXY9Ac60kPARcqOSTNs6vsc+7jhyU=;
-        b=vBpTxVYWSYiVIdGTptou7qoH6A0Kmm3cWrwqTpkD18Ipk+bjwEEex7eyh15w5PT6bj
-         W/00mlgOYi2/V1F2FMyYhq8YinYBbkC8iJ93UxbjzV+xCGBLLDwXPKOLQiP1Nbs1vuOE
-         eoAOcyo4oWQ9OX0kB3xjKO2FbQGHi8lgZAREvrzIYe9E2mF5vYyDnmR/psYyXI72iyfh
-         CE0bsHNtCQe/uxhG0sVKkhXIYfJxaV6SEVEoxJoj4UHhXWTIfDI0lAiDz6bmC1F9qwhJ
-         kthSqNUH2r03ao0u7lOyvf3Qho4eUbHpAI0h9lZe/wl7jehdCopjwZI6UuumuFZtkXaE
-         flZg==
+        bh=WnzaMKfYFzpdBR00mBxUkRbzuomQsYg60ItfNS+IF/Y=;
+        b=pamMRsTReK7OCfm2gTShLX5E8dx+dh6WQcRFJMxVpzIs/q5M54TfhgYez8vcDXMEpP
+         m+TISbLcFUqej3FITy+z0ok1G85Q9Cnoh3xIQI3FB3WC03JJ4QLdD+yPseXpKWd2n0mu
+         4lso4m5t4fu2yKGtK5TNKU7hFPE8BI46+F1GrNsGeGBh5CIs60gnAiB5CyuDdrtHwFOR
+         n5eZcDK4IkiHCwCAVGmx0OgNt/B+NEzIk+ukG2pp5vX0KdBGyY9pT4ju9vpB+ZICs24n
+         UpE1g+R1TuGDqbFGXSgWlb/sFqIBL4kexjGT4PN+rkqw3hww0gVwrATjO6JeRfSOFkoV
+         n9QQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788367299; x=1788972099;
+        d=1e100.net; s=20251104; t=1788367300; x=1788972100;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:reply-to:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=OWxwiZu3iI1BKMOXY9Ac60kPARcqOSTNs6vsc+7jhyU=;
-        b=g5MCzsz9im9I51TxdlI7gUrGbbOkYFkvCWL/uJKtS07QhlAunfGILq03LjQxFFWDkB
-         3TAq53QWgaTWl0sKC7Tyq68FeJ8TbSEedETq+nJRgfY0luSRvx5m6XTH1aCkXxYT2Rzi
-         DOp2FUY80vlZuJFr/fwirVw5pT5y0W1JsMmrPE9f93avNaohEb4df5a74debqxirGgcs
-         QN4GGOE+CcvAzusZqk2mqyaXsXu5XWlIaOEhgCfBJPjuK13hBSiv0XBIiErwhS6B9He6
-         VuuVZUCCJnYMIM15El7XrBQkFunELV3yoKdRv/D7TA3ikT8BR5O6NQwWtp1feehpsQa0
-         ng2A==
-X-Forwarded-Encrypted: i=1; AKwUvBzgIbd5zyXG8BldvwWBc7pV91uvUdarxuJR+JgzprS+xNTcFtarXskzA5Ln8+kVAhdlZRRPf9fDhYg=@lists.linux.dev
-X-Gm-Message-State: AFuF++lk51Q0ZxjWi8gmD1P/GMzLGV/51su3iLqD+3KAW1gSn9uP+pQi
-	xS2dV82BIrVq2XyfJZhPh791Tl2xUvYB3j2CZapIaAC6N1BfkiRD+PzIq6gCSpzSmQh36tjII0i
-	ELWu2PA==
-X-Received: from pfbbm14.prod.google.com ([2002:a05:6a00:320e:b0:84c:2e88:693d])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3d55:b0:84e:cd14:aeba
- with SMTP id d2e1a72fcca58-85ffbe960f2mr374778b3a.6.1788367298091; Wed, 02
- Sep 2026 09:41:38 -0700 (PDT)
+        bh=WnzaMKfYFzpdBR00mBxUkRbzuomQsYg60ItfNS+IF/Y=;
+        b=U9lOJK5clIpG+RPmrgR8Xdt68NB7e2ZLG7BNHZMRW/KbjimgfoTe4bGoMqPEzdC899
+         fjMzbSZ5GQHgLwEBRRFGUUPwp6h2lnDDpc/0J/pL0aWuAyrVzfDrS4a8uR85uXhTz0AQ
+         32m7lwK900vixcBebML3QQdgpxsbMmbcgx/p9MbS1haWst2LG1pAEhqTSMpRAeqwBWTj
+         V1Y2nYaek1OGqj9yZP8Tz9atUzc7ORsojJx+lVJsY4kKmQ217ZYAqH6zRuQE/DpgL0vt
+         VS8Rq4zhD6PSKu9P1cP9POTDfdNFkoA50sgti8epPA8E1R8pJcQCOuOd+0M3kUJhbW7g
+         O5iQ==
+X-Forwarded-Encrypted: i=1; AKwUvBzWKRPvdDLLndWJHKEOUyH0TxBrHjbveYVym1IfmilVMrLn11AEEQjJ0RDyVa4uZP4U/j05Gq9JTmA=@lists.linux.dev
+X-Gm-Message-State: AFuF++nbfH6m2Yc7XlA/ycMNQJ7fdQl61OaVecrSMtUcN60H8Uq/nEUG
+	FnG13pIEPHLWGb/wqdWWgGqiREE2tlCGmiNZ+U728V/9FNlI0ac7nQrVP1oM7LzCGlFfVe2zYZ/
+	CBZW7ww==
+X-Received: from pgwa1.prod.google.com ([2002:a65:6541:0:b0:cc1:c7d5:9661])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:134b:b0:3c4:4272:b400
+ with SMTP id adf61e73a8af0-3d9ae8e1ee9mr11072673637.18.1788367299354; Wed, 02
+ Sep 2026 09:41:39 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed,  2 Sep 2026 09:41:14 -0700
+Date: Wed,  2 Sep 2026 09:41:15 -0700
 In-Reply-To: <20260902164123.2546762-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -61,9 +61,9 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20260902164123.2546762-1-seanjc@google.com>
 X-Mailer: git-send-email 2.55.0.966.g6673acef38-goog
-Message-ID: <20260902164123.2546762-12-seanjc@google.com>
-Subject: [PATCH v2 11/20] KVM: selftests: Initialize vm->memslots[] with
- invalid memslots during creation
+Message-ID: <20260902164123.2546762-13-seanjc@google.com>
+Subject: [PATCH v2 12/20] KVM: selftests: Add APIs to override memory region
+ types with custom memslots
 From: Sean Christopherson <seanjc@google.com>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
 	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
@@ -82,79 +82,162 @@ Cc: Fuad Tabba <fuad.tabba@linux.dev>, Joey Gouly <joey.gouly@arm.com>,
 	Nicholas Piggin <npiggin@gmail.com>, Ritesh Harjani <ritesh.list@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Initialize vm->memslots[] with an invalid memslots value during very
-initial VM creation so that failure to configure the core memory regions
-generates an immediate assert instead of potential weirdness, e.g. if slot0
-is coincidentally valid.  This will also allow hardening the region APIs to
-guard overriding a region's memslot multiple times.
+Add and use APIs to override memory region types instead of open coding the
+logic in tests, partly to dedup test code, but mostly to add some amount of
+protection against conflicting overrides.  This will allow converting more
+tests to override memory regions without taking on too much risk of bugs in
+the long term, e.g. due to silently overriding a region multiple times.
+
+Deliberately "unroll" the loops in __vm_create() and the CMMA test's
+create_main_memslot() to avoid filling all memslots in anticipation of
+adding an "extra" memslot that is for test use and *only* test use, i.e.
+shouldn't be configured by core library code.
+
+Converting tests to overriding memory regions will allow taking the region
+type instead of the raw memslot in the physical page allocator APIs.
 
 Tested-by: Itaru Kitayama <itaru.kitayama@fujitsu.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- tools/testing/selftests/kvm/include/kvm_util.h  | 2 ++
- tools/testing/selftests/kvm/lib/kvm_util.c      | 5 +++++
- tools/testing/selftests/kvm/lib/x86/processor.c | 5 ++++-
- 3 files changed, 11 insertions(+), 1 deletion(-)
+ .../selftests/kvm/arm64/page_fault_test.c     | 18 +++++------
+ .../testing/selftests/kvm/include/kvm_util.h  | 30 +++++++++++++++++++
+ tools/testing/selftests/kvm/lib/kvm_util.c    |  8 +++--
+ tools/testing/selftests/kvm/s390/cmma_test.c  | 19 ++++--------
+ 4 files changed, 49 insertions(+), 26 deletions(-)
 
+diff --git a/tools/testing/selftests/kvm/arm64/page_fault_test.c b/tools/testing/selftests/kvm/arm64/page_fault_test.c
+index 6bb3d82906b2..b0e3fc8cd76a 100644
+--- a/tools/testing/selftests/kvm/arm64/page_fault_test.c
++++ b/tools/testing/selftests/kvm/arm64/page_fault_test.c
+@@ -597,18 +597,16 @@ static void setup_memslots(struct kvm_vm *vm, struct test_params *p)
+ 
+ 	vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS, 0,
+ 				    CODE_AND_DATA_MEMSLOT, code_npages, 0);
+-	vm->memslots[MEM_REGION_CODE] = CODE_AND_DATA_MEMSLOT;
+-	vm->memslots[MEM_REGION_DATA] = CODE_AND_DATA_MEMSLOT;
++	____vm_override_mem_region(vm, MEM_REGION_CODE, CODE_AND_DATA_MEMSLOT);
++	____vm_override_mem_region(vm, MEM_REGION_DATA, CODE_AND_DATA_MEMSLOT);
+ 
+-	vm_userspace_mem_region_add(vm, p->src_type, data_gpa - pt_size,
+-				    PAGE_TABLE_MEMSLOT, pt_size / guest_page_size,
+-				    p->test_desc->pt_memslot_flags);
+-	vm->memslots[MEM_REGION_PT] = PAGE_TABLE_MEMSLOT;
++	__vm_override_mem_region(vm, MEM_REGION_PT, p->src_type, data_gpa - pt_size,
++				 PAGE_TABLE_MEMSLOT, pt_size / guest_page_size,
++				 p->test_desc->pt_memslot_flags);
+ 
+-	vm_userspace_mem_region_add(vm, p->src_type, data_gpa, TEST_DATA_MEMSLOT,
+-				    data_size / guest_page_size,
+-				    p->test_desc->data_memslot_flags);
+-	vm->memslots[MEM_REGION_TEST_DATA] = TEST_DATA_MEMSLOT;
++	__vm_override_mem_region(vm, MEM_REGION_TEST_DATA, p->src_type, data_gpa,
++				 TEST_DATA_MEMSLOT, data_size / guest_page_size,
++				 p->test_desc->data_memslot_flags);
+ }
+ 
+ static void setup_ucall(struct kvm_vm *vm)
 diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
-index c56f342b16fd..304ef6af3268 100644
+index 304ef6af3268..c8faa8a02b93 100644
 --- a/tools/testing/selftests/kvm/include/kvm_util.h
 +++ b/tools/testing/selftests/kvm/include/kvm_util.h
-@@ -33,6 +33,8 @@
+@@ -704,6 +704,36 @@ void vm_mem_add(struct kvm_vm *vm, enum vm_mem_backing_src_type src_type,
+ 		gpa_t gpa, u32 slot, u64 npages, u32 flags,
+ 		int guest_memfd_fd, u64 guest_memfd_offset);
  
- #define NSEC_PER_SEC 1000000000L
- 
-+#define KVM_INVALID_MEMSLOT UINT_MAX
 +
- struct userspace_mem_region {
- 	struct kvm_userspace_memory_region2 region;
- 	struct sparsebit *unused_phy_pages;
++static inline void ____vm_override_mem_region(struct kvm_vm *vm,
++					      enum kvm_mem_region_type type,
++					      u32 slot)
++{
++	TEST_ASSERT(vm->memslots[type] == KVM_INVALID_MEMSLOT,
++		    "Memory region type '%u' was already overridden with slot=%u",
++		    type, vm->memslots[type]);
++
++	vm->memslots[type] = slot;
++}
++
++static inline void __vm_override_mem_region(struct kvm_vm *vm,
++					    enum kvm_mem_region_type type,
++					    enum vm_mem_backing_src_type src_type,
++					    gpa_t gpa, u32 slot, u64 npages,
++					    u32 flags)
++{
++	____vm_override_mem_region(vm, type, slot);
++	vm_userspace_mem_region_add(vm, src_type, gpa, slot, npages, flags);
++}
++
++static inline void vm_override_mem_region(struct kvm_vm *vm,
++					  enum kvm_mem_region_type type,
++					  enum vm_mem_backing_src_type src_type,
++					  gpa_t gpa, u32 slot, u64 npages)
++{
++	__vm_override_mem_region(vm, type, src_type, gpa, slot, npages, 0);
++}
++
+ #ifndef vm_arch_has_protected_memory
+ static inline bool vm_arch_has_protected_memory(struct kvm_vm *vm)
+ {
 diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-index ce0d8fba4624..56df5b1d9c79 100644
+index 56df5b1d9c79..781af2928d04 100644
 --- a/tools/testing/selftests/kvm/lib/kvm_util.c
 +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-@@ -288,6 +288,7 @@ __weak void vm_populate_gva_bitmap(struct kvm_vm *vm)
- struct kvm_vm *____vm_create(struct vm_shape shape)
- {
+@@ -495,7 +495,7 @@ struct kvm_vm *__vm_create(struct vm_shape shape, u32 nr_runnable_vcpus,
+ 						 nr_extra_pages);
+ 	struct userspace_mem_region *slot0;
  	struct kvm_vm *vm;
-+	int i;
+-	int i, flags;
++	int flags;
  
- 	vm = calloc(1, sizeof(*vm));
- 	TEST_ASSERT(vm != NULL, "Insufficient Memory");
-@@ -296,6 +297,8 @@ struct kvm_vm *____vm_create(struct vm_shape shape)
- 	vm->regions.gpa_tree = RB_ROOT;
- 	vm->regions.hva_tree = RB_ROOT;
- 	hash_init(vm->regions.slot_hash);
-+	for (i = 0; i < NR_MEM_REGIONS; i++)
-+		vm->memslots[i] = KVM_INVALID_MEMSLOT;
+ 	kvm_set_files_rlimit(nr_runnable_vcpus);
  
- 	vm->mode = shape.mode;
- 	vm->type = shape.type;
-@@ -1190,6 +1193,8 @@ memslot2region(struct kvm_vm *vm, u32 memslot)
+@@ -513,8 +513,10 @@ struct kvm_vm *__vm_create(struct vm_shape shape, u32 nr_runnable_vcpus,
+ 		flags |= KVM_MEM_GUEST_MEMFD;
+ 
+ 	vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS, 0, 0, nr_pages, flags);
+-	for (i = 0; i < NR_MEM_REGIONS; i++)
+-		vm->memslots[i] = 0;
++	____vm_override_mem_region(vm, MEM_REGION_CODE, 0);
++	____vm_override_mem_region(vm, MEM_REGION_PT, 0);
++	____vm_override_mem_region(vm, MEM_REGION_DATA, 0);
++	____vm_override_mem_region(vm, MEM_REGION_TEST_DATA, 0);
+ 
+ 	kvm_vm_elf_load(vm, program_invocation_name);
+ 
+diff --git a/tools/testing/selftests/kvm/s390/cmma_test.c b/tools/testing/selftests/kvm/s390/cmma_test.c
+index 15d81b2ed7ad..73387cc3bca7 100644
+--- a/tools/testing/selftests/kvm/s390/cmma_test.c
++++ b/tools/testing/selftests/kvm/s390/cmma_test.c
+@@ -102,24 +102,17 @@ static void guest_dirty_test_data(void)
+ 
+ static void create_main_memslot(struct kvm_vm *vm)
  {
- 	struct userspace_mem_region *region;
+-	int i;
+-
+ 	vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS, 0, 0, MAIN_PAGE_COUNT, 0);
+-	/* set the array of memslots to zero like __vm_create does */
+-	for (i = 0; i < NR_MEM_REGIONS; i++)
+-		vm->memslots[i] = 0;
++	____vm_override_mem_region(vm, MEM_REGION_CODE, 0);
++	____vm_override_mem_region(vm, MEM_REGION_PT, 0);
++	____vm_override_mem_region(vm, MEM_REGION_DATA, 0);
+ }
  
-+	TEST_ASSERT(memslot != KVM_INVALID_MEMSLOT, "vm->memslots[] unpopulated?");
-+
- 	hash_for_each_possible(vm->regions.slot_hash, region, slot_node,
- 			       memslot)
- 		if (region->region.slot == memslot)
-diff --git a/tools/testing/selftests/kvm/lib/x86/processor.c b/tools/testing/selftests/kvm/lib/x86/processor.c
-index d31fa81ea075..ea5fa59888af 100644
---- a/tools/testing/selftests/kvm/lib/x86/processor.c
-+++ b/tools/testing/selftests/kvm/lib/x86/processor.c
-@@ -529,7 +529,10 @@ void tdp_identity_map_default_memslots(struct kvm_vm *vm)
+ static void create_test_memslot(struct kvm_vm *vm)
+ {
+-	vm_userspace_mem_region_add(vm,
+-				    VM_MEM_SRC_ANONYMOUS,
+-				    TEST_DATA_START_GFN << vm->page_shift,
+-				    TEST_DATA_MEMSLOT,
+-				    TEST_DATA_PAGE_COUNT,
+-				    0
+-				   );
+-	vm->memslots[MEM_REGION_TEST_DATA] = TEST_DATA_MEMSLOT;
++	vm_override_mem_region(vm, MEM_REGION_TEST_DATA, VM_MEM_SRC_ANONYMOUS,
++			       TEST_DATA_START_GFN << vm->page_shift,
++			       TEST_DATA_MEMSLOT, TEST_DATA_PAGE_COUNT);
+ }
  
- 	/* Only memslot 0 is mapped here, ensure it's the only one being used */
- 	for (s = 0; s < NR_MEM_REGIONS; s++)
--		TEST_ASSERT_EQ(vm->memslots[s], 0);
-+		TEST_ASSERT(!vm->memslots[s] ||
-+			    vm->memslots[s] == KVM_INVALID_MEMSLOT,
-+			    "Unhandled memslot '%u' for type '%u'",
-+			    vm->memslots[s], s);
- 
- 	i = (region->region.guest_phys_addr >> vm->page_shift) - 1;
- 	last = i + (region->region.memory_size >> vm->page_shift);
+ static void create_memslots(struct kvm_vm *vm)
 -- 
 2.55.0.966.g6673acef38-goog
 
