@@ -1,162 +1,86 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0228A4A35
-	for <loongarch@lists.linux.dev>; Wed,  2 Sep 2026 03:13:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E64368D62;
+	Wed,  2 Sep 2026 05:34:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788318803; cv=none; b=CUavuTtX85YKovcov5NW9XWTeL+ZjbnyXNCVVdYZ8lLL1BHG+8dN6/pQbPCnSSvyBDtb/o+DRqOr0S8lX73QcBZpPRV1SATFif8d+9AtZ5iFTlXBpMK0fipqaOoTxm0ePGjdv6a+ICMQ95qxeq1mSF29AFzZLKE1lUpIhQ9K1WY=
+	t=1788327297; cv=none; b=hDA6wpUatpAXIQO27aIKyyD3FbwGA/QwLXYK4xGO6cYYk8Qa0qOi3tmRQ9wS8msU1vyxPRPLIT61/dnGxCQP089Ycmgn3f10zviBSci+plhxDQP2yDnqFG4TZwLGkktasIQyfq4W6RMovG13vBkqouyvryxEljk3JSb3uPJh0ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788318803; c=relaxed/simple;
-	bh=C+Uo2kt5ZOqlw8/33V+ZcOjMsJv6LTfRgew/gLDOF+s=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=jwOlzWFZKXHG8c2EQN9tCq6OK3PC44bDxRApuoRLwZZI9iFYVoQefkql9IMQF1BmtvDpYwcg1+o25rgSiLtlp81lg/85Ly8pM8nKtmvb/TONzwIdmQo4TTULUi05K8VGlobOnHd47MbgugXJJnI7Rnjftf/2Jaj1K1+y8r3rLQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [123.138.236.242])
-	by gateway (Coremail) with SMTP id _____8CxPNIMjZdqhJsHAA--.21374S3;
-	Wed, 02 Sep 2026 10:42:20 +0800 (CST)
-Received: from [10.130.40.83] (unknown [123.138.236.242])
-	by front1 (Coremail) with SMTP id qMiowJAx3c4JjZdq3EcZAA--.53851S2;
-	Wed, 02 Sep 2026 10:42:18 +0800 (CST)
-Subject: Re: [PATCH bpf v1 RESEND] bpf: Fix timer_lockup deadlock using
- atomic_fetch_inc()
-To: Kumar Kartikeya Dwivedi <memxor@gmail.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
- Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
- Emil Tsalapatis <emil@etsalapatis.com>,
- Ihor Solodrai <ihor.solodrai@linux.dev>
-Cc: loongarch@lists.linux.dev, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20260902005106.22187-1-yangtiezhu@loongson.cn>
- <DL4FK2P8LMEQ.216J5ZMX9B7VC@gmail.com>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <7d0bd14f-d13e-6735-92f3-68f474c66a73@loongson.cn>
-Date: Wed, 2 Sep 2026 10:42:17 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1788327297; c=relaxed/simple;
+	bh=Omnbex0Tjgduu+oar2rNHU+lHUhTBsAOILG8aWQOw+w=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=iweGNKF/OeMj/Eol+YunhNlVCJnRTFh91W3Z/oJRBXM7qSLterbvGnOsUTxx/yzaO46ffkrFUxxBf6T8Bb44oc4YyMljoyc7uSqbh7dg4qcz7CPnDajw18ODr8fbD828+1cvDU+/1JUK2Niext49PVODIk5FcIPZ3rWdAIH4o0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SnEiX6ZV; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SnEiX6ZV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 983851F000E9;
+	Wed,  2 Sep 2026 05:34:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788327295;
+	bh=4+J2Jj2HRrACqcAaQEKzV2dhwA6iYSIh+wTxScdcYp8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date;
+	b=SnEiX6ZVRKNTlEzYhdNfLWvZ2V6gv7CAk4V6VlJVOjWftIIfZI4jZjIgP6Ekow5aH
+	 Dea+Vm53VDAB4oQGDi8tH78zhPRXDwvL02py7j6g3xDm2VOCAAViiylf+CiqP0SgJf
+	 fg/62uxQZenLhBbzQzQLNpYwzO+DW1dkgB1b9YH7qgSXa1VHHFfDtvzEZ2mdgJAZIg
+	 A7yaG0RTzthG0310R1CH4miU2uAMobA4Gbzu1/HdGgcYQ3bOdF6FRG2nWtYRqZ9kOt
+	 2o+4nKyq2up6v5DA1Ry9IbGDHHLpb5cYrXahXYlF34RaRqxIx8HPlN6k7BXBpDUBzS
+	 AhrKMXU+6FOog==
+From: Mike Rapoport <rppt@kernel.org>
+To: Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+ Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+ Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Baoquan He <baoquan.he@linux.dev>, 
+ Pasha Tatashin <pasha.tatashin@soleen.com>, 
+ Pratyush Yadav <pratyush@kernel.org>, Tao Liu <ltao@redhat.com>, 
+ Philipp Rudo <prudo@redhat.com>, Mukesh Pilaniya <mpilaniy@redhat.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
+ kexec@lists.infradead.org, Bradley Morgan <include@grrlz.net>
+In-Reply-To: <20260821-mpilaniy-v3-0-76b355399d2e@redhat.com>
+References: <20260821-mpilaniy-v3-0-76b355399d2e@redhat.com>
+Subject: Re: [PATCH v3 0/2] kexec: fix probe error codes and error
+ propagation
+Message-Id: <178832723438.3691424.5459141264864633147.b4-ty@b4>
+Date: Wed, 02 Sep 2026 08:33:54 +0300
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <DL4FK2P8LMEQ.216J5ZMX9B7VC@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAx3c4JjZdq3EcZAA--.53851S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxAF4DZF18GrWkXw4kAw1xXrc_yoWrZr4kpr
-	WxCF47Kr4kXr48Xw1kJa1UuF1F939Yka43Jr4rGr1Uu3W5Kr1YyF409r43WFy5Cws8Jry2
-	yry0q3sagFn8JagCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
-	twAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
-	k0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l
-	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jw0_GFylx2IqxVAqx4xG67AKxV
-	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI
-	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
-	1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI
-	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4qg4DUUUU
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.17-dev
 
-On 2026/9/2 上午9:13, Kumar Kartikeya Dwivedi wrote:
-> On Wed Sep 2, 2026 at 2:51 AM CEST, Tiezhu Yang wrote:
->> When testing the BPF selftest "sudo ./test_progs -t timer_lockup", there
->> is a kernel lockup and panic on LoongArch:
->>
->>    watchdog: BUG: soft lockup - CPU#1 stuck for 8s! [test_progs:39601]
->>    Kernel panic - not syncing: softlockup: hung tasks
->>    ...
->>    Call Trace:
->>    ...
->>    [<9000000000c40e98>] panic+0x44/0x48
->>    [<9000000000e8b000>] watchdog_timer_fn+0x500/0x520
->>    [<9000000000dfd9a4>] __hrtimer_run_queues+0xc4/0x530
->>    [<9000000000dffe90>] hrtimer_interrupt+0x140/0x320
->>    ...
->>    [<9000000002ad9e4c>] _raw_spin_unlock_irqrestore+0x8c/0xc0
->>    [<9000000000dfe9e0>] hrtimer_try_to_cancel.part.0+0x70/0x350
->>    [<9000000000dfed58>] hrtimer_cancel+0x38/0x80
->>    [<9000000000f6d944>] bpf_timer_cancel+0x94/0x1e0
->>    [<ffff80000200fad0>] bpf_prog_108ab87b32f22e44_timer_cb1+0xb0/0xfc
->>    [<9000000000f6b838>] bpf_timer_cb+0x98/0x170
->>    [<9000000000dfdaac>] __hrtimer_run_queues+0x1cc/0x530
->>    [<9000000000dfde94>] hrtimer_run_softirq+0x84/0xd0
->>    ...
->>    [<900000000271d9e0>] bpf_test_run+0x1c0/0x5c0
->>    [<900000000271f548>] bpf_prog_test_run_skb+0x6e8/0xe20
->>    [<9000000000f39940>] __sys_bpf+0x1690/0x2c50
->>    [<9000000000f3af28>] sys_bpf+0x28/0x40
->>    [<9000000002ac2d68>] do_syscall+0x108/0x5e0
->>    [<9000000000c6a850>] handle_syscall+0xd0/0x170
->>
->> In bpf_timer_cancel() of kernel/bpf/helpers.c, it explicitly notes that
->> "Need full barrier after relaxed atomic_inc" to ensure global visibility
->> of the cancelling state before performing the lockless dependency checks.
->>
->> However, on weakly-ordered architectures such as LoongArch, the current
->> combination of a relaxed atomic_inc() followed by smp_mb__after_atomic()
->> fails to guarantee the physical store-load ordering because the latter
->> currently expands to an empty compiler barrier rather than a hardware
->> data barrier on LoongArch.
->>
->> This allows a subsequent read to bypass the prior write due to store-load
->> reordering, enabling concurrent CPUs to simultaneously bypass the software
->> deadlock detection, enter hrtimer_cancel(), and then trigger a severe ABBA
->> deadlock in the hrtimer core.
->>
->> Instead of relying on arch-specific macro implementations which may vary
->> in strictness, fix this issue directly in the BPF core helper by replacing
->> atomic_inc() and smp_mb__after_atomic() with a single atomic_fetch_inc()
->> to provide full ordering natively.
+On Fri, 21 Aug 2026 19:19:56 +0530, Mukesh Pilaniya wrote:
+> kexec: fix probe error codes and error propagation
 > 
-> This paragraph is completely bogus. LoongArch's smp_mb__after_atomic() had a
-> bug. The specification in LKMM for smp_mb__after_atomic() is that it should be a
-> full barrier, which can be relaxed if the prior atomic operation already
-> provides the necessary ordering.
+> While debugging a misleading error on s390x where kexec -s reported
+> "syscall kexec_file_load not available" instead of the actual EINVAL
+> from a kernel command line that exceeded the architecture limit, we
+> found that some kexec image probe functions return -EINVAL instead of
+> -ENOEXEC for format mismatches, and kexec_image_probe_default() has a
+> bug where it returns whatever the last loader returned rather than
+> always returning -ENOEXEC when no loader matches.
 > 
-> As I already said, there is no point in changing or "optimizing" this atomic
-> inc. Just let it be. You will see no measurable difference for this function.
-> 
-> Just accept that it was a bug, and fix the lowering for your arch. Plenty of
-> other logic in the kernel uses this primitive, so I think you folks were just
-> lucky this wasn't hit before by something else.
+> [...]
 
-Thanks for your feedback.
+Applied to kexec-fixes branch of liveupdate/linux.git tree, thanks!
 
-I looked into tools/memory-model/Documentation/ordering.txt,
-as it explicitly clarifies, atomic_inc() does not guarantee
-full ordering on weakly-ordered architectures, therefore
-smp_mb__after_atomic() must emit a hardware data barrier to
-comply with the LKMM specification, rather than expanding to
-a plain compiler barrier.
+[1/2] kexec: return -ENOEXEC from image probe functions on mismatch
+      commit: 2792b4b15f148b142a4302706410e520c8049c00
+[2/2] kexec: fix error propagation in kexec_image_probe_default()
+      commit: b7c94f4d0961e3ea8ce0463b6eda1bb2cf9f2694
 
-I also noticed there are hundreds of smp_mb__after_atomic()
-call sites across the core kernel (kernel/, drivers/, mm/,
-net/, fs/) that currently lack necessary hardware data barriers
-on LoongArch, which have potential risks.
+tree: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux
+branch: kexec-fixes
 
-So please disregard this bpf patch, I will send a v2 patch to
-remove the definition of __smp_mb__{before,after}_atomic() in
-arch/loongarch/include/asm/barrier.h, so that these two macros
-can automatically fall back to the generic definition in
-include/asm-generic/barrier.h:
+--
+Sincerely yours,
+Mike.
 
-#ifndef __smp_mb__before_atomic
-#define __smp_mb__before_atomic()	__smp_mb()
-#endif
-
-#ifndef __smp_mb__after_atomic
-#define __smp_mb__after_atomic()	__smp_mb()
-#endif
-
-Thanks,
-Tiezhu
 
