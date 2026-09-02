@@ -1,112 +1,139 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AEFD387375
-	for <loongarch@lists.linux.dev>; Wed,  2 Sep 2026 18:05:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E13233A71B
+	for <loongarch@lists.linux.dev>; Wed,  2 Sep 2026 20:46:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788372323; cv=none; b=KZwTxYEG5II0PGD/ghG2YgzQxdPS5wSQQEzG81Nz4mVEuuSC1sZBYFcdrHVslqvDLao69UUqostfm2IAXiC8ADMkYxJoly4fmgeLlGeiq+c4+KubvrF/xxQT5/BqcdebIss0NRsNM2e4BDbWY2vxBSE8PjC0GCv6f+kKl7ZFRf0=
+	t=1788381968; cv=none; b=nzm1Ta9wxsoNXY+cNYKsl8oGFT2N/l+iRqQ6C8HbCmWY+dsqFG01kWO5LJ/VuENqy6fCQ/6f8QIaRfir/s0Pqs+aVhlgF0CDCmXrw9GHa/DP+WDzzi0YXnWrDrcp7zXdeE2Dmm8xq1KI/1Y3A2s0F18PXcusupY8t9ANcoVUlR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788372323; c=relaxed/simple;
-	bh=YdqSsfXweYukjRzVRqCbG8U6cCS12JCA8Eln1yuWlpg=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
-	 MIME-Version:Content-Type; b=BEz7eN7EGYnvfsePdkOF41VM3QIeWFlyJ8ZZmjDmzO3ExLzYDDQ/F8GJcwUCywkPpDjUhdHH9ufsPCTj+hecPbzvHuAI0jVlMPduDXGNmCb/6sEuK6oDvrXfxlD9OxMK72tPR7nl6+i5+JuoUuWTm3p7Xdzde1kCExmHRI+hQHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rY+5mQ0j; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1788381968; c=relaxed/simple;
+	bh=/vtCuOsydTOxETyWwFyCM3riLJvYW2UNVDOQEkh91GY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KM002vbnCnc5dP89KyWJiWXpcCh6NCCYhHFgGuu6RDdwRLDXYNRNesU5C3bnD3HHSOn+zxUiARbKh+ydkkr4HzgiNPyDLx2aC+RK3qnbpc2HQS3Rd7z6bjCeOhshq6C3Lbn9mX3kivA6AetG5/z2D6e1obOZTf+HtIq+Vzsa6Vk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B2PF410O; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rY+5mQ0j"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-38ea87caafeso1373378a91.3
-        for <loongarch@lists.linux.dev>; Wed, 02 Sep 2026 11:05:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788372321; x=1788977121; darn=lists.linux.dev;
-        h=content-type:mime-version:references:message-id:date:in-reply-to
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=mIy9w1/7l+YPH2gFOr27PV6p4ska6UcSUlBoAUwTOLk=;
-        b=rY+5mQ0jlYK6f5WIBAwuYl6INY72Y39kJcofql/tmBsiiLpXtElagE5iPp5y6iLkpH
-         JDoCuuLg1wpI+ZCOpVlUjvKbIWyH3Hu5m1RRugaEPz2tdiLw4YOmLhf8RBq+6fM2u2N5
-         yUjnbH+o+X8QZP6KmnKkkBjc8JR4mSSJU7uepbuInUjJA3MNKSBRHZrJkiniXIb7EQc2
-         9p75b1phJnTGnX+xaMqb9q+bsyyiHJ/+oyhR+m7Ia/q4U2lVI+JwUqbahKEb5eeXJyUP
-         UaJHTDrZ0Gz2jA39cFWXH471e/qSfViCPsJgOk301rR/ML+Cgv2vMXR5lZFhejnYqX33
-         W2RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788372321; x=1788977121;
-        h=content-type:mime-version:references:message-id:date:in-reply-to
-         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=mIy9w1/7l+YPH2gFOr27PV6p4ska6UcSUlBoAUwTOLk=;
-        b=tMy6gtvKGY4R9RbG/EEGjOTN/6FFEZZwGPrEysEPY+h1yjaV0nlh9ZSFmZWImHYDT7
-         Nh9RcmfbcJ2gY9IStjZOg9hf11ZYKhZFIiC7u/pi6S1jFg5UJQozadBW6/JyVup5eD37
-         bFYcsogICq8rohIotPVCcz51qQ+2q3LNf3uf3fUFJ6sTGeYfoKgZtfnVTFItF35DcUAL
-         buYjtJh7mb/A8EeIzjsRx8x5N3JOaM0vzNW53dIccz9eUtGhbBPFJYWkejzeaU7J7N/W
-         5YS1zX86+vR0WXcn6YxTwyspj26EDpbGgT+PjOOvg1TlQLr7K4qTeevqRjmdpSEmClg3
-         88Zw==
-X-Forwarded-Encrypted: i=1; AKwUvBxtxc2EQXvTig7dRyNJwRop/5Zx0nbsnQTh36CwTfe0S9DLj4HMJ6zUcuWYG6/rBR0qyN2yyA0R3Nc=@lists.linux.dev
-X-Gm-Message-State: AFuF++mCi+yfAQvmlNnpmNmrn637DVo7BEIGrwKe+fgkzTEIFXJzzp8M
-	X5Yy+R2pPSGPNqyfE1z3MQUDk+IxmmX8Dnaj2zw5LmCObVuuSeQYy7fs
-X-Gm-Gg: AYBFou0K6exGBhQM7jTKTnCzmAjnMcm6C/WUsLRwUBSFiM69mvjUduKRb4LkjO3LXkb
-	quXaUfkDoFQrKVda2tvZ1zhRMApCnTvWFqzfznhPvSn8+XRKJOWNT2r9ywl3oJKLMZ0LCPWQhS8
-	lxI03WAQdd6R8ML07Lcw68GHkQyrXcgVEZux6LewADrijvwNII8DoswWxlQTlvWs9yRUT59A945
-	q22RzsS8n9dkI0NysJvyDgeHXb5+KmHx7ncAjmEGWE0MSq2loIVp2b/+OcC8Hzxs+ZBfPixo89s
-	0kN7kpnnkaNFWZRiqVWfOeJCEYp0RJMV7F9G94OQB7fFXTWtsp2Lv7OKk+rwxTGsVxKuSwGiXp6
-	ZD+tQu+Tp8Ygf80rNyPbDzZkQESNbsClfkBOPo1R7/khQi/+bO8fD4jMswvi5z9hgAkn/zDyNac
-	XiDRqeqAlXDfoNw/n2wNaiABpdDYi61+qRvbsI6L8oSWZENxYNL64H4v1TIiu46hSM//hCYau/q
-	iQ9y2DGFMkrl4yJWP3rByfQps9XS43WEwgA36r8/Gv7
-X-Received: by 2002:a17:90b:4b89:b0:398:c3ca:1ebc with SMTP id 98e67ed59e1d1-39aee105a46mr9138561a91.18.1788372321290;
-        Wed, 02 Sep 2026 11:05:21 -0700 (PDT)
-Received: from pve-server ([49.205.216.49])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-32f07b79cf9sm9808273eec.18.2026.09.02.11.05.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2026 11:05:20 -0700 (PDT)
-From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-To: Sean Christopherson <seanjc@google.com>, Gautam Menghani <gautam@linux.ibm.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
-	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Fuad Tabba <fuad.tabba@linux.dev>, 
-	Joey Gouly <joey.gouly@arm.com>, Steffen Eiden <seiden@linux.ibm.com>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
-	Atish Patra <atish.patra@linux.dev>, Alexandre Ghiti <alex@ghiti.fr>, 
-	David Hildenbrand <david@kernel.org>, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>, 
-	linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 00/20] KVM: selftests: PPC pre-enabling
-In-Reply-To: <aphioo_KTboUCtZd@google.com>
-Date: Wed, 02 Sep 2026 23:29:06 +0530
-Message-ID: <h5k7ttzp.ritesh.list@gmail.com>
-References: <20260826230511.972824-1-seanjc@google.com> <aphhKDm7Vx7G5ivr@Gautams-MacBook-Pro.local> <aphioo_KTboUCtZd@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B2PF410O"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1788381967; x=1819917967;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=/vtCuOsydTOxETyWwFyCM3riLJvYW2UNVDOQEkh91GY=;
+  b=B2PF410OJGKJLBmS/zHCPbPtF+4duCzDSyA6OrHq0iq2WmzovY3pPFlZ
+   c3JFVN7veugLOJFx8M4YI0qKvtHN4wJPKDYUK6GZ3wVzTuA/P5don9VE3
+   GQlxGQLGaejqrykPpyUp3u3Nk2MGjMl0v8nkFkpVJy7/Rz5QRn0crY3ps
+   ZDFbIcdIwbkxJddyi6Bjd23TOn+Nv/1sDOEUxp+UyCQg2m1AmCaLO3Q2k
+   NkC1CqbhxVWnBJOKHaqm+IDXLW2+VjrWg2UNQrTU4dmOqKMQKdCZBWBGp
+   OpgIuJ/W91a2khYTZjI4DlihPMgDw5+v6YRDOXt/GVW0wlmg5zcaY8yqG
+   w==;
+X-CSE-ConnectionGUID: ZJGx1zx3QSW+BwxyTjDXVg==
+X-CSE-MsgGUID: kcoiQnoZQNqr1KEoTlRm7g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11894"; a="88776964"
+X-IronPort-AV: E=Sophos;i="6.25,258,1779174000"; 
+   d="scan'208";a="88776964"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2026 13:46:06 -0700
+X-CSE-ConnectionGUID: 3r1FCCkLSvyVJEfxycNp/A==
+X-CSE-MsgGUID: 0K90+9HKRkOQqWOJaR/iiA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,258,1779174000"; 
+   d="scan'208";a="268191963"
+Received: from cjhill-mobl.amr.corp.intel.com (HELO [10.125.110.134]) ([10.125.110.134])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2026 13:46:05 -0700
+Message-ID: <09924551-558d-4c9b-afb7-1e592cb640a3@intel.com>
+Date: Wed, 2 Sep 2026 13:46:04 -0700
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v3 14/21] x86: mm: carve out the generic compile-time
+ folded pgtable case in effective_prot()
+To: Yeoreum Yun <yeoreum.yun@arm.com>, Russell King <linux@armlinux.org.uk>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>,
+ Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Barry Song <baohua@kernel.org>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ David Hildenbrand <david@kernel.org>, Michal Hocko <mhocko@kernel.org>,
+ Lorenzo Stoakes <ljs@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>,
+ Bibo Mao <maobibo@loongson.cn>, Anup Patel <anup@brainfault.org>,
+ Atish Patra <atish.patra@linux.dev>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, "Liam R. Howlett" <liam@infradead.org>,
+ Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Jonas Bonn <jonas@southpole.se>,
+ Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+ Stafford Horne <shorne@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org,
+ kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+ linux-openrisc@vger.kernel.org
+References: <20260902-dummy_ptxp3-v3-0-5d8f5b17c25c@arm.com>
+ <20260902-dummy_ptxp3-v3-14-5d8f5b17c25c@arm.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20260902-dummy_ptxp3-v3-14-5d8f5b17c25c@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Sean Christopherson <seanjc@google.com> writes:
+Thanks for making those changes and adding the helper to generic code.
 
-> On Wed, Sep 02, 2026, Gautam Menghani wrote:
->> 
->> + linuxppc-dev
->
-> Ah, shoot, I *just* posted v2.  I'll add linuxppc-dev to that cover letter.
->
-> https://lore.kernel.org/all/20260902164123.2546762-1-seanjc@google.com
-
-Thanks Sean for sharing these changes.
-
-Thought of sharing an interim update:
-I have rebased PPC KVM selftests support on top of this series and the
-initial tests ran fine. I am currently looking info few findings though
-- but will soon rebase those changes on top of your v2, review that &
-update the results.
-
-
--ritesh
-
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
