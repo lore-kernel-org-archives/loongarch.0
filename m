@@ -1,68 +1,66 @@
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD3013783C1
-	for <loongarch@lists.linux.dev>; Wed,  2 Sep 2026 17:53:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AEFD387375
+	for <loongarch@lists.linux.dev>; Wed,  2 Sep 2026 18:05:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788371621; cv=none; b=flT3PLHXSKJ5vesG2QOjrFmnB2wOuyjgVnjp0hd2WagJ/3B6zFmn+8RN+G4HFzbslOwkRAxsSy/lH9enPY6FDGtAwyVjhE/+toxA/+yLMLZyzMuN3o0CqdmvR5sz2umInsJHHQeZ+OoY7lJsR30O8TcXz9eM8mKYm319M9tl17Q=
+	t=1788372323; cv=none; b=KZwTxYEG5II0PGD/ghG2YgzQxdPS5wSQQEzG81Nz4mVEuuSC1sZBYFcdrHVslqvDLao69UUqostfm2IAXiC8ADMkYxJoly4fmgeLlGeiq+c4+KubvrF/xxQT5/BqcdebIss0NRsNM2e4BDbWY2vxBSE8PjC0GCv6f+kKl7ZFRf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788371621; c=relaxed/simple;
-	bh=b5kh2R8Hzwwj57HzVfabs/YOUfR+MDkcYfNrpEGQb5g=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Hhoq2+hAfk0pMQxJYchFNHzg7gmPJi/sv76N0jdRDKI6NXJp830c0rKJq0WKxtFlK8fne71zxyo42TpvfZ/iNY8rrkJH83UrMEbdf4XquG08gz2o95uswsLIViSlG1lSR7N85AdFjs2YVd/20nuoo0DYze77V1zZlHJBfvCcK10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KwKHqDXA; arc=none smtp.client-ip=209.85.210.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1788372323; c=relaxed/simple;
+	bh=YdqSsfXweYukjRzVRqCbG8U6cCS12JCA8Eln1yuWlpg=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
+	 MIME-Version:Content-Type; b=BEz7eN7EGYnvfsePdkOF41VM3QIeWFlyJ8ZZmjDmzO3ExLzYDDQ/F8GJcwUCywkPpDjUhdHH9ufsPCTj+hecPbzvHuAI0jVlMPduDXGNmCb/6sEuK6oDvrXfxlD9OxMK72tPR7nl6+i5+JuoUuWTm3p7Xdzde1kCExmHRI+hQHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rY+5mQ0j; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KwKHqDXA"
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-8538a72b430so1306428b3a.2
-        for <loongarch@lists.linux.dev>; Wed, 02 Sep 2026 10:53:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rY+5mQ0j"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-38ea87caafeso1373378a91.3
+        for <loongarch@lists.linux.dev>; Wed, 02 Sep 2026 11:05:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1788371619; x=1788976419; darn=lists.linux.dev;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+        d=gmail.com; s=20251104; t=1788372321; x=1788977121; darn=lists.linux.dev;
+        h=content-type:mime-version:references:message-id:date:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=SdKJUU1oimzE531v2SlLnET8xKOYeS+3soklD8mAhs4=;
-        b=KwKHqDXAhFQCJDtPYRuxqtzlwafa4jE8MHaSxtouqmlLdfP+o14ikfAupq0JrCTE0M
-         giarWoB7Z0Gv2GPZ0a1d0OxaJX8WpG9NxS8qSR2OprxYLcm2CYDBPnVW5BPMiQGkApoM
-         0OvxnuebuQI9LnXH6eTvLRVwt0/wdrvSBzcHF2F0/ibwKGbC/gJBBH/XhvTJdDmOEg+p
-         3mCm54+awPLEqnhxgXpTavTpibILN/M7Gth4JDE7OFUCNnRReIxQO3IVtOgMgQ+V3Blf
-         T4iKjJMpSYk49S1auLzSmdMrl6doWqhsHUlSbfZdoPBnxxI5HUtrnjSOQoyrBXo9KU4H
-         gfGA==
+        bh=mIy9w1/7l+YPH2gFOr27PV6p4ska6UcSUlBoAUwTOLk=;
+        b=rY+5mQ0jlYK6f5WIBAwuYl6INY72Y39kJcofql/tmBsiiLpXtElagE5iPp5y6iLkpH
+         JDoCuuLg1wpI+ZCOpVlUjvKbIWyH3Hu5m1RRugaEPz2tdiLw4YOmLhf8RBq+6fM2u2N5
+         yUjnbH+o+X8QZP6KmnKkkBjc8JR4mSSJU7uepbuInUjJA3MNKSBRHZrJkiniXIb7EQc2
+         9p75b1phJnTGnX+xaMqb9q+bsyyiHJ/+oyhR+m7Ia/q4U2lVI+JwUqbahKEb5eeXJyUP
+         UaJHTDrZ0Gz2jA39cFWXH471e/qSfViCPsJgOk301rR/ML+Cgv2vMXR5lZFhejnYqX33
+         W2RA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788371619; x=1788976419;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=SdKJUU1oimzE531v2SlLnET8xKOYeS+3soklD8mAhs4=;
-        b=KGBB3pLIzHeHUvCu8o89A9VTh0T7n9LvXp4naOTcNnOeNxuoDFCS8FOO3zX2j6WK/R
-         OE2xTnkvU0w6XXxEo6xbWsa8nb4RALNMyyu/GGU8EgJggEYyS6FRceBGQqY/ieF1zAOO
-         K2n6h3F3vWer2cIK3h7G0ytUpb02gAr/1NeUtgitPk5fxdCMJNYBZHbhbhuuSMC41JrW
-         ULGkkTut7AOyKGmj4p+5llzTSa6F8idTiukTexBXHA70qArJ9pNY4B4Q1HjVLOLw4KgT
-         9ePET+XyPqr7WJ+N3dlAeJKDvTGJHRBEUDfVRxebZFLsUoxRxrlo/dRPBFsqgN4q2c8w
-         n1jQ==
-X-Forwarded-Encrypted: i=1; AKwUvByybCyyR2LIIAXKQsBq66kR2C3MfmCpA1fha5eE56NUAR0Bi0hZJBRnAAwJCfFbFSr7yTnZOAF16ic=@lists.linux.dev
-X-Gm-Message-State: AFuF++lHFdY9vifF/7uV/Lmol7+65gUZEb8EtI6vdM0QfxtnbLupkTTC
-	SvFhRR2fDKWj553Oz98IOMeawCB+gODFjHFhvvfOJCke/OSKcfMLurB4J+7DqjDQOuzJh1fQiDG
-	9pbhrDQ==
-X-Received: from pfan9.prod.google.com ([2002:aa7:8a49:0:b0:842:83c0:8d73])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:440b:b0:847:9aa8:d3ce
- with SMTP id d2e1a72fcca58-85ed1b0e821mr10816352b3a.2.1788371618918; Wed, 02
- Sep 2026 10:53:38 -0700 (PDT)
-Date: Wed, 2 Sep 2026 10:53:38 -0700
-In-Reply-To: <aphhKDm7Vx7G5ivr@Gautams-MacBook-Pro.local>
-Precedence: bulk
-X-Mailing-List: loongarch@lists.linux.dev
-List-Id: <loongarch.lists.linux.dev>
-List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20260826230511.972824-1-seanjc@google.com> <aphhKDm7Vx7G5ivr@Gautams-MacBook-Pro.local>
-Message-ID: <aphioo_KTboUCtZd@google.com>
-Subject: Re: [PATCH 00/20] KVM: selftests: PPC pre-enabling
-From: Sean Christopherson <seanjc@google.com>
-To: Gautam Menghani <gautam@linux.ibm.com>
+        d=1e100.net; s=20251104; t=1788372321; x=1788977121;
+        h=content-type:mime-version:references:message-id:date:in-reply-to
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=mIy9w1/7l+YPH2gFOr27PV6p4ska6UcSUlBoAUwTOLk=;
+        b=tMy6gtvKGY4R9RbG/EEGjOTN/6FFEZZwGPrEysEPY+h1yjaV0nlh9ZSFmZWImHYDT7
+         Nh9RcmfbcJ2gY9IStjZOg9hf11ZYKhZFIiC7u/pi6S1jFg5UJQozadBW6/JyVup5eD37
+         bFYcsogICq8rohIotPVCcz51qQ+2q3LNf3uf3fUFJ6sTGeYfoKgZtfnVTFItF35DcUAL
+         buYjtJh7mb/A8EeIzjsRx8x5N3JOaM0vzNW53dIccz9eUtGhbBPFJYWkejzeaU7J7N/W
+         5YS1zX86+vR0WXcn6YxTwyspj26EDpbGgT+PjOOvg1TlQLr7K4qTeevqRjmdpSEmClg3
+         88Zw==
+X-Forwarded-Encrypted: i=1; AKwUvBxtxc2EQXvTig7dRyNJwRop/5Zx0nbsnQTh36CwTfe0S9DLj4HMJ6zUcuWYG6/rBR0qyN2yyA0R3Nc=@lists.linux.dev
+X-Gm-Message-State: AFuF++mCi+yfAQvmlNnpmNmrn637DVo7BEIGrwKe+fgkzTEIFXJzzp8M
+	X5Yy+R2pPSGPNqyfE1z3MQUDk+IxmmX8Dnaj2zw5LmCObVuuSeQYy7fs
+X-Gm-Gg: AYBFou0K6exGBhQM7jTKTnCzmAjnMcm6C/WUsLRwUBSFiM69mvjUduKRb4LkjO3LXkb
+	quXaUfkDoFQrKVda2tvZ1zhRMApCnTvWFqzfznhPvSn8+XRKJOWNT2r9ywl3oJKLMZ0LCPWQhS8
+	lxI03WAQdd6R8ML07Lcw68GHkQyrXcgVEZux6LewADrijvwNII8DoswWxlQTlvWs9yRUT59A945
+	q22RzsS8n9dkI0NysJvyDgeHXb5+KmHx7ncAjmEGWE0MSq2loIVp2b/+OcC8Hzxs+ZBfPixo89s
+	0kN7kpnnkaNFWZRiqVWfOeJCEYp0RJMV7F9G94OQB7fFXTWtsp2Lv7OKk+rwxTGsVxKuSwGiXp6
+	ZD+tQu+Tp8Ygf80rNyPbDzZkQESNbsClfkBOPo1R7/khQi/+bO8fD4jMswvi5z9hgAkn/zDyNac
+	XiDRqeqAlXDfoNw/n2wNaiABpdDYi61+qRvbsI6L8oSWZENxYNL64H4v1TIiu46hSM//hCYau/q
+	iQ9y2DGFMkrl4yJWP3rByfQps9XS43WEwgA36r8/Gv7
+X-Received: by 2002:a17:90b:4b89:b0:398:c3ca:1ebc with SMTP id 98e67ed59e1d1-39aee105a46mr9138561a91.18.1788372321290;
+        Wed, 02 Sep 2026 11:05:21 -0700 (PDT)
+Received: from pve-server ([49.205.216.49])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-32f07b79cf9sm9808273eec.18.2026.09.02.11.05.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Sep 2026 11:05:20 -0700 (PDT)
+From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+To: Sean Christopherson <seanjc@google.com>, Gautam Menghani <gautam@linux.ibm.com>
 Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
 	Paolo Bonzini <pbonzini@redhat.com>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
 	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
@@ -77,13 +75,38 @@ Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>,
 	kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
 	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
 	linux-kernel@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>, 
-	Ritesh Harjani <ritesh.list@gmail.com>, linuxppc-dev@lists.ozlabs.org
-Content-Type: text/plain; charset="us-ascii"
+	linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 00/20] KVM: selftests: PPC pre-enabling
+In-Reply-To: <aphioo_KTboUCtZd@google.com>
+Date: Wed, 02 Sep 2026 23:29:06 +0530
+Message-ID: <h5k7ttzp.ritesh.list@gmail.com>
+References: <20260826230511.972824-1-seanjc@google.com> <aphhKDm7Vx7G5ivr@Gautams-MacBook-Pro.local> <aphioo_KTboUCtZd@google.com>
+Precedence: bulk
+X-Mailing-List: loongarch@lists.linux.dev
+List-Id: <loongarch.lists.linux.dev>
+List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain
 
-On Wed, Sep 02, 2026, Gautam Menghani wrote:
-> 
-> + linuxppc-dev
+Sean Christopherson <seanjc@google.com> writes:
 
-Ah, shoot, I *just* posted v2.  I'll add linuxppc-dev to that cover letter.
+> On Wed, Sep 02, 2026, Gautam Menghani wrote:
+>> 
+>> + linuxppc-dev
+>
+> Ah, shoot, I *just* posted v2.  I'll add linuxppc-dev to that cover letter.
+>
+> https://lore.kernel.org/all/20260902164123.2546762-1-seanjc@google.com
 
-https://lore.kernel.org/all/20260902164123.2546762-1-seanjc@google.com
+Thanks Sean for sharing these changes.
+
+Thought of sharing an interim update:
+I have rebased PPC KVM selftests support on top of this series and the
+initial tests ran fine. I am currently looking info few findings though
+- but will soon rebase those changes on top of your v2, review that &
+update the results.
+
+
+-ritesh
+
