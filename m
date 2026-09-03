@@ -1,128 +1,103 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FEAE47CA8E
-	for <loongarch@lists.linux.dev>; Thu,  3 Sep 2026 10:45:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127B84CA77F;
+	Thu,  3 Sep 2026 16:07:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788432357; cv=none; b=NIfG44UuNDFPUA6ShhA2FM4jdVoyjTChWroCb8uUhrr/n+GRiJAyLoFc1nKGeN3PIsbxFPsbNYMhJhAKwjCXIco8uj9NhiH6K9BCCeIDGkkQ4O2rcLLmRDJePC+vuIFYAfIqU3JYp0aTJGVjfrmIm3BAqK2YtRLv9kb3ftmx+uk=
+	t=1788451636; cv=none; b=KvnissqG2JDvxpOKSql2QKLJ7fyHbUDMKKHG6Pwajz40s8nQpMMMBkcFQNkxISGAHNxoVzin6AsEmPu8RokgjNQfMojZ+ukU4Jgs8JPcc9hwxfItfVf4h8MtCx5KZ3AWbjiV+drneVy2z2EKTBkhS+PiwjQeoO+zVll6fXZd2XE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788432357; c=relaxed/simple;
-	bh=B2EGgiinFjR7PIuJDjwPP8zw52e7kf6hQY7DC+ox1r0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Oq3g8JWbpK306UAligVKarH+Kkf3OueQVEOqR/fsbGdvBbKA+zygjLbYS0Vnr+0c1YjqWePSdJmjaTcVEzslYKqm+QLieHQIWQO6q0XA1LrRkNqFY5TpxGGMQZ7axGmT/yituJJkv5Tf2kd/JmqoFm3e9hV5HAACk2JxEjiCnsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=mmq3evjb; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1788451636; c=relaxed/simple;
+	bh=NhSt2URDT+IepuxkSnn7wmrY/hgpQI5zr5eWhS5hcGA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dj9D8D5B6UaS+B9EXv6Yv+0PemsgiaLyN62GJnZuUh/H+b9XszGolmHgRY9T7VkaKUffjODG2zJRYXtLDKe/oA3gh2y9Opz8WPi87Rtau79PnUS0ioRJg2cUXJS1midYqxaCVbIJtaEECUmWxR2jgsYYJoViFlhw83db6kI5zr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xuZVTd+3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=T8kn4im/; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="mmq3evjb"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B2FD1596;
-	Thu,  3 Sep 2026 03:45:51 -0700 (PDT)
-Received: from [10.164.19.53] (unknown [10.164.19.53])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7B13C3F673;
-	Thu,  3 Sep 2026 03:45:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1788432354; bh=B2EGgiinFjR7PIuJDjwPP8zw52e7kf6hQY7DC+ox1r0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mmq3evjbS8hafbKWyN6WfvB9UfVySk+qoHqsF1QzrHYtoeRp/5znyDeIxQ0XWmzpM
-	 HmppJc+wsmOrkjn5ugj5vuGdbtya+eR9c57C4aB5SNws+Twq1UmKFOoPZzxS2fmElr
-	 iaXr3Hj7l3p0cwNUfXzOQlwUrYPQgaUrPZbbaJFc=
-Message-ID: <f4de678d-de34-482e-85c6-0d168af62563@arm.com>
-Date: Thu, 3 Sep 2026 16:15:42 +0530
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xuZVTd+3";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="T8kn4im/"
+Date: Thu, 3 Sep 2026 18:07:10 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1788451632;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/vbjCRdrjxVp6fckV1i3kt+QR+aoKiSt4PvLxtPMrkc=;
+	b=xuZVTd+3e+XOsFzlbevv8WgpKXG5gTsuBBMkBxlya3sozHHOlzgelbcrxTZ3dc2S2fKUZH
+	Eo2ofpB9QXz++1nNA+l2nW//I/NpSXT/vrPva2BUML6aRc3DqfHqlGlE1V2t3JJo/nIQwC
+	4hoXTVevZUC8QVTDO0/gyce7p2CXCRV/uUfesLEFjgZfm0uG4U8QpsjXpPq1tbDCSMX+mx
+	7gIEzaiL+A0P1bxr9Si/kf123/uOYqAAZha/i9aojgU1F18YicgLIuc7upSmZ7pQYX5oKR
+	1iFVmlocKFD2B1HAW245xFUSV6/LtXCqmDzblVKJLJ/iTvmhYNie9oQEQsHYVA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1788451632;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/vbjCRdrjxVp6fckV1i3kt+QR+aoKiSt4PvLxtPMrkc=;
+	b=T8kn4im/sQC5stFlPR2Bqz8b9qO4j+lZamw3HssQ6xL7wclpxMen7l/f/4CP0sh13GTOKy
+	vasVqJQNc7WAdJBA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev, linux-perf-users@vger.kernel.org,
+	loongarch@lists.linux.dev
+Cc: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
+	Waiman Long <longman@redhat.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ada Couprie Diaz <ada.coupriediaz@arm.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Russell King <linux@armlinux.org.uk>,
+	WANG Xuerui <kernel@xen0n.name>
+Subject: Re: [PATCH v2] ARM, ARM64, LONGARCH: Delay HW BP notification to
+ task_work()
+Message-ID: <20260903160710.vVf4gEL2@linutronix.de>
+References: <20260814085118.OPEA_Ssn@linutronix.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/6] mm/vmalloc: constify vm parameter of
- get_vm_area_page_order()
-To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: =?UTF-8?Q?Adrian_Barna=C5=9B?= <abarnas@google.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Alexander Gordeev
- <agordeev@linux.ibm.com>, Alexandre Ghiti <alex@ghiti.fr>,
- Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
- Brendan Jackman <brendan.jackman@linux.dev>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- David Hildenbrand <david@kernel.org>,
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>, Huacai Chen <chenhuacai@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Len Brown <lenb@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <pjw@kernel.org>,
- Pavel Machek <pavel@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- "H. Peter Anvin" <hpa@zytor.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Ryan Roberts <ryan.roberts@arm.com>, Sven Schnelle <svens@linux.ibm.com>,
- Thomas Gleixner <tglx@kernel.org>, Uladzislau Rezki <urezki@gmail.com>,
- Vasily Gorbik <gor@linux.ibm.com>, WANG Xuerui <kernel@xen0n.name>,
- Will Deacon <will@kernel.org>, x86@kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-pm@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- loongarch@lists.linux.dev
-References: <20260903-execmem-set-vm-perms-v0-2-v3-0-949b64a9f755@kernel.org>
- <20260903-execmem-set-vm-perms-v0-2-v3-3-949b64a9f755@kernel.org>
-Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <20260903-execmem-set-vm-perms-v0-2-v3-3-949b64a9f755@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260814085118.OPEA_Ssn@linutronix.de>
 
-
-
-On 03/09/26 2:58 pm, Mike Rapoport (Microsoft) wrote:
-> get_vm_area_page_order() and vm_area_page_order() do not need to modify
-> struct vm_struct passed to them.
+On 2026-08-14 10:51:18 [+0200], To linux-arm-kernel@lists.infradead.org wrote:
+> Waiman, Luis, Ada reported that HW breakpoints on ARM64 trigger
+> "sleeping while atomic" warnings on PREEMPT_RT. The hardware event is
+> delivered with disabled interrupts and perf intrastrucure expects
+> disabled interrupts while the overflow callback is invoked.
 > 
-> Constify the parameter.
+> The callback then sends a SIGTRAP signal for which it acquires
+> sighand_struct::siglock, a spinlock_t which becomes a sleeping lock and
+> must not be acquired in atomic context.
 > 
-> Reviewed-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> ---
-
-Reviewed-by: Dev Jain <dev.jain@arm.com>
-
-
->  mm/vmalloc.c | 4 ++--
->  mm/vmalloc.h | 2 +-
->  2 files changed, 3 insertions(+), 3 deletions(-)
+> Delay the event callback until the return to userland.
+> Add perf_arch_hwbp_notify(), a generic perf callback which delayes the
+> actual callback invocation to task_work_add() callback. This callback
+> invokes the architecture defines callback arch_hwbp_send_sig().
+> This requires struct callback_head and the functions require
+> ARCH_NEED_PERF_HW_NOTIF to be defined.
 > 
-> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> index 22aa554d123f5..5506b180f5c27 100644
-> --- a/mm/vmalloc.c
-> +++ b/mm/vmalloc.c
-> @@ -3130,7 +3130,7 @@ EXPORT_SYMBOL(vm_map_ram);
->  
->  static struct vm_struct *vmlist __initdata;
->  
-> -static inline unsigned int vm_area_page_order(struct vm_struct *vm)
-> +static inline unsigned int vm_area_page_order(const struct vm_struct *vm)
->  {
->  #ifdef CONFIG_HAVE_ARCH_HUGE_VMALLOC
->  	return vm->page_order;
-> @@ -3139,7 +3139,7 @@ static inline unsigned int vm_area_page_order(struct vm_struct *vm)
->  #endif
->  }
->  
-> -unsigned int get_vm_area_page_order(struct vm_struct *vm)
-> +unsigned int get_vm_area_page_order(const struct vm_struct *vm)
->  {
->  	return vm_area_page_order(vm);
->  }
-> diff --git a/mm/vmalloc.h b/mm/vmalloc.h
-> index 8866ddcff6681..211869f365095 100644
-> --- a/mm/vmalloc.h
-> +++ b/mm/vmalloc.h
-> @@ -12,7 +12,7 @@ void __init vmalloc_init(void);
->  int __must_check vmap_pages_range_noflush(unsigned long addr, unsigned long end,
->  		pgprot_t prot, struct page **pages,
->  		unsigned int page_shift, gfp_t gfp_mask);
-> -unsigned int get_vm_area_page_order(struct vm_struct *vm);
-> +unsigned int get_vm_area_page_order(const struct vm_struct *vm);
->  #else
->  static inline void vmalloc_init(void) {}
->  
+> This was reported against ARM64. ARM and LongARCH follow the same
+> pattern are also converted.
 > 
+> Reported-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
+> Reported-by: Waiman Long <longman@redhat.com>
+> Closes: https://lore.kernel.org/all/aho0eqjMESuHxECr@redhat.com/
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
+Did this get lost, should I repost it or is there something obviously
+wrong with it and nobody wanted to hurt my feelings by telling me?
+
+Sebastian
