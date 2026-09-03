@@ -1,82 +1,112 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 352244A498D;
-	Thu,  3 Sep 2026 17:30:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E834F4736;
+	Thu,  3 Sep 2026 20:12:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788456653; cv=none; b=GUFb/bAD2P8vQ6ZKRapfAlKc0HBtKx6vUVLlmHj/McOacqP+6t7vfjX+d6Jlt28wyAQjLIFFZuaIkmbBSG/ywQ/rnrw9gk43GAtnFBQuski0i5yNvYX6Y3/q+LmKeWjeMBI4TSAC7+GdFiRJMnjlb47UStTw6Eg530qUUGXEaoE=
+	t=1788466358; cv=none; b=mY8oIcLcyd1T20WOqY65GcLSmrvKcq6DuRpg7aDQPpHwOVdOCVx/3yC3wmutTz6cWIbOJvcvPHtFfY5iDVvhTnNyRYacWBFl5nDsVZqaAGgzgPiv0EKdvjzlS87GLnDKLNtRRcbAjXsg+PqdO8/35euHSrCVv8O3PazSwVr9Cwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788456653; c=relaxed/simple;
-	bh=MgMZfjHtJWGskJ7iDZWmY8Oed8R/GMs4VyOX/TuiH1U=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BXDWUTA0UWLlqLKNmt3sml6ulvLuqMwzJuQRRJIiDRk5akh/VpVBdrYHhrLpdG+1fvw8U5ojdBVJhnfmrzXfoF8Ykbva4jkGJ2gGGAmEC3qNGl0DbksEJ+UDLDnTX1XkNSGPAQPFknVncdfQh4ZmOiI1k3NppLoPwzr59OVBw/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=qqcyYnkg; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	s=arc-20240116; t=1788466358; c=relaxed/simple;
+	bh=i1peq7VbCVCF9eRkc2cvgC+qdC+Zx2KAzImcVFOceP8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=YpAp5UCD7/TSVQAjbiHP+gs3+E7Fb761Xs7VixcgjunpnYU2wIYkmC9gEOGry5EyM8s4zkkYt0ENTgtoGgn1AI54MIq5g6HyvIe/o0rGHt2hhtZufqYwXq5uF9TBdGZ7W7YZWdv747bKauqn7/RncuMXW6/jWJEl7xYkenANfJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SuO1Qu2D; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="qqcyYnkg"
-Received: from omf15.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id 3D481A4684;
-	Thu,  3 Sep 2026 17:30:48 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id 362BB1B;
-	Thu,  3 Sep 2026 17:30:43 +0000 (UTC)
-Date: Thu, 3 Sep 2026 13:31:46 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Russell King <linux@armlinux.org.uk>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-rt-devel@lists.linux.dev, linux-perf-users@vger.kernel.org,
- loongarch@lists.linux.dev, Mark Rutland <mark.rutland@arm.com>, Ian Rogers
- <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, "Luis Claudio
- R. Goncalves" <lgoncalv@redhat.com>, Catalin Marinas
- <catalin.marinas@arm.com>, James Clark <james.clark@linaro.org>, Huacai
- Chen <chenhuacai@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Oleg
- Nesterov <oleg@redhat.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Waiman Long <longman@redhat.com>, WANG
- Xuerui <kernel@xen0n.name>, Will Deacon <will@kernel.org>, Clark Williams
- <clrkwllms@kernel.org>
-Subject: Re: [PATCH v2] ARM, ARM64, LONGARCH: Delay HW BP notification to
- task_work()
-Message-ID: <20260903133146.07095885@gandalf.local.home>
-In-Reply-To: <apmknG55qFAn8EPf@shell.armlinux.org.uk>
-References: <20260814085118.OPEA_Ssn@linutronix.de>
-	<20260903160710.vVf4gEL2@linutronix.de>
-	<apmknG55qFAn8EPf@shell.armlinux.org.uk>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SuO1Qu2D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 704711F000E9;
+	Thu,  3 Sep 2026 20:12:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788466341;
+	bh=fUUEXbewzb/KDhdFKrSd3H3LK5U/uFqZ74akQCGrc60=;
+	h=From:Date:Subject:To:Cc;
+	b=SuO1Qu2D8wRq/Uk7lXYT8foIXzYRKXLFIkhgtnhNroYX7I2OJgf4QjRvjz7/q3j9i
+	 ndbag4m2+SXIprB+DxQ/57xO/hcrNTrW15svPSxw5gslrnkB4+b2gOqvr7PEUQUn7+
+	 RIrgexeq4D7RzzPElYl0db+AJkqGOVG3r3YnmluKLN+QNiGvcj5GEG1E2KDI7huAOv
+	 o7fu2banoiZWyCxzh6uAFEQJA8/sXjFBoTvloy59vTcM9EFQ1dcMw+nBTtG2kPY7WH
+	 NHlwI1lTuYYQ+RQ1gUGjFdgyXrTB9TIzeQdgptWMCyrFB2vMdOPFAactilUQk4BZT8
+	 pJhq271XYDyqg==
+From: Nathan Chancellor <nathan@kernel.org>
+Date: Thu, 03 Sep 2026 13:12:04 -0700
+Subject: [PATCH] loongarch: Do not select HAVE_RUST when KASAN is enabled
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: q5rtu1fiqy3jfjswxfikew81wiyencsm
-X-Rspamd-Server: rspamout06
-X-Rspamd-Queue-Id: 362BB1B
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19SQN1/iG251VKiSvCm90J/LH6Jif8jlZI=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=MgMZfjHtJWGskJ7iDZWmY8Oed8R/GMs4VyOX/TuiH1U=; b=qqcyYnkg3p5F+UTVr/cgexJ1tZY0fAWBiki/WGjHsZ4h16riO0oLZP/UfGe0xdxU3KW71p1uZSD7oYxxFDSgdWxLofSFJMJqQc/uaEYXNDRZWgh/UmAbFyYg8nP9CFLA5mBn8hJD5OJy3yIsgkoNMnzTnL7skByDfjwMvD2e0vM=
-X-HE-Tag: 1788456643-677296
-X-HE-Meta: U2FsdGVkX18UDoUfH7MFH18LwOE6g10qW7dTkby7HjdB9X7BAG5qm8DxHVQQTPdtxGKneSZa9RInj6HuOfgU1jrR8yX6yW3K7fnvEf1/MlRgMD8jOUBQx2YsgQNEjrBWUvVSNqdIiYbJjJkh1E2120a+kJoPNZZT/6uir5B8TTX2BRq8V1KcQNPBobM5W6B+YvVAD/4d87POi8pasBUVzpHtLQvIraki2FkTv9BVPzITzzujsbAHvurHpIl46Ow6Cp6gV9QxwlxCX/VatqdB+E3ir7R0pC9W2Vd/V6ov65gCFH6Ja9hHLtsOf44MNChOQq5BQmWAckwdYllkNqTRN9/3dNiQVT0GA4ajriVWf566cpaX5UWqBgeoslbvLntd
+Message-Id: <20260903-loongarch-disable-rust-with-kasan-v1-1-1813d3c4baad@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXNQQ6CMBBA0auQWTtJqYSoVzEupmWgo6Q1naImh
+ LtTdfk2/6+gnIUVLs0KmV+ikmJFe2jAB4oTowzVYI3tzdkccU4pTpR9wEGU3MyYFy34lhLwQUo
+ RmXtPtju5sfVQO8/Mo3x+j+vtb13cnX35hmHbdk+ugeaFAAAA
+X-Change-ID: 20260903-loongarch-disable-rust-with-kasan-ee6ca248bf1c
+To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+ Miguel Ojeda <ojeda@kernel.org>
+Cc: Boqun Feng <boqun@kernel.org>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+ Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+ Danilo Krummrich <dakr@kernel.org>, 
+ Daniel Almeida <daniel.almeida@collabora.com>, 
+ Tamir Duberstein <tamird@kernel.org>, 
+ Alexandre Courbot <acourbot@nvidia.com>, 
+ =?utf-8?q?Onur_=C3=96zkan?= <work@onurozkan.dev>, 
+ WANG Rui <wangrui@loongson.cn>, Mark Brown <broonie@kernel.org>, 
+ Kees Cook <kees@kernel.org>, loongarch@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+ Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.17-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1453; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=i1peq7VbCVCF9eRkc2cvgC+qdC+Zx2KAzImcVFOceP8=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDFkzr8xy5brQYGUS/FFuRVJh7xMuT4lfc/lO/dtSwOX59
+ h3H/urpHaUsDGJcDLJiiizVj1WPGxrOOct449QkmDmsTCBDGLg4BWAiO7gYGXZOenzJ5/eKakOm
+ Zq6EhII3M/2cXGzX7H4ZKL7E+uzB5kJGhmO3FU7ar6hyY+S731o6UW5nS8LpwOci8VVmZy0DX3L
+ u5AUA
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-On Thu, 3 Sep 2026 17:47:24 +0100
-Russell King <linux@armlinux.org.uk> wrote:
+After commit 2625480a1bf7 ("hardening: Default randstruct off with rust
+for better allmodconfig support"), which allows Rust to be enabled for
+allmodconfig, ARCH=loongarch allmodconfig starts failing with:
 
-> What do you expect to happen with this? Which arch maintainer should
-> apply this patch that affects three different independently maintained
-> architectures?
+  error: kernel-address sanitizer is not supported for this target
 
-Looks like the patch should be broken up into a 4 part series.
+  error: aborting due to 1 previous error
 
-One to add the ARCH_NEED_PERF_HW_NOTIF code to the generic code.
+  make[4]: *** [rust/Makefile:741: rust/core.o] Error 1
 
-Then one for each architecture to add the code needed to set that.
+For the same reason as commit 84a0f7caafc6 ("ARM: Do not select
+HAVE_RUST when KASAN is enabled"), do not select HAVE_RUST when KASAN is
+enabled until the loongarch64-unknown-none-softfloat target in rustc
+supports KASAN.
 
-Then the architecture maintainers could ack their patch and the perf
-maintainer can pull it all in.
+Fixes: 90868ff9cade ("LoongArch: Enable initial Rust support")
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+---
+ arch/loongarch/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
--- Steve
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index a21f51e5815e..2067d1f2ad7a 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -175,7 +175,7 @@ config LOONGARCH
+ 	select HAVE_RELIABLE_STACKTRACE if UNWINDER_ORC
+ 	select HAVE_RETHOOK
+ 	select HAVE_RSEQ
+-	select HAVE_RUST
++	select HAVE_RUST if !KASAN
+ 	select HAVE_SAMPLE_FTRACE_DIRECT
+ 	select HAVE_SAMPLE_FTRACE_DIRECT_MULTI
+ 	select HAVE_SETUP_PER_CPU_AREA if NUMA
+
+---
+base-commit: 940de590b839f71d6dc846160534bf202401b8b7
+change-id: 20260903-loongarch-disable-rust-with-kasan-ee6ca248bf1c
+
+Best regards,
+--  
+Cheers,
+Nathan
+
