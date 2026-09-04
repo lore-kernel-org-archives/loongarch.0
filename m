@@ -1,113 +1,99 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6BCB46F498;
-	Fri,  4 Sep 2026 15:54:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63E3F501F49;
+	Fri,  4 Sep 2026 16:31:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788537252; cv=none; b=c9mR511N0Va81FUr2QFn9e1M/ZLEOarZTp0YlaBTe8z9n+X647z7anoqurOWO7lbk2JCVRyV+xXBx+W+c7p81v0EkuDDgx+26yUrRVA4X+94cTszZwwe/d4GSR/YKckjwOuWlfHHsZfEJq8kst1nvH7ViX+lr71BSpFYr2qZzPQ=
+	t=1788539481; cv=none; b=dMhvo0l0tZlCGkkrpXrfgSOd412hyRh2Ic4tKz6aKW0By3jyRRqHBaeM5fVCoF8jClGUVrAD2/fF/malkNCAMxEZpj6ZnCU0NX9IzdHxGTPAyCP7av151ZlUgXc3iaxdgfsaFhVhQRWLGG5jJMa5C1YbiTOhbhjUnnWq29lRjl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788537252; c=relaxed/simple;
-	bh=fcE0qjmbQqnYiiwIMHIZXUGkLQxdfs+4zYEUQ4kPtYc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uPf3+Jljj7Ufkw2XWynM170GSr6sfPBEOcFfvUcf6WBQ1dNZI3M3/3Fc7wl3s1kH6rNtgO9sa9zrPBslVphwrkl43qGee6l9kJSLZJPK76jhuxGmrsgypHE3RIfblTlUAcaLAAqX8JwnxQB3WSvSF2Ba6YCUCSpRgxcVSwHsaKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NR7VB0Ss; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PRf96zVM; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1788539481; c=relaxed/simple;
+	bh=LCxqDWzx6b7SR6fAu1Va6niGlyfQOLIgAToWHVaDNPY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=XMHrKlRKfgLS6Vra/MirOpUtFsReCEq9UdywQ95PgJBSRBSgGY5IAQqDH0BV1fuPmX6SjR4iyAlBjuhYJQgG3eR25woHpS3uOme5EXsiYRzc5uUKgjpVxAfYaCIhaUVwmOYAK50CpbTJeNdT8CLS+xXiSSd2ZHWr6fdx7F+nowM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RSemKsnr; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NR7VB0Ss";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PRf96zVM"
-Date: Fri, 4 Sep 2026 17:54:04 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1788537246;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZPpOywhxUYpvbT8zIkFDQanZWuSbRMA9e7oK1b0gVM4=;
-	b=NR7VB0SshEkCn8ekHb2VuYQmahkOVmFj0T4HAtnof/y45LI4Ur9o8FVFNKcCHcBczLkVH4
-	5uW1CZ9m1/QixjwrJKM02hfNBizz/QbvR02e3Yg7l8uAhsegQw0p9vseu4uuah8MU3uIxB
-	btZemSlkgPWGzBNl8d94W0M13DPyXEekq7LG84YlkNTzD3Lb60j8oICOQJlYKi2AxFOCdA
-	QZH4JilKdFKek7TfoLvYfaY6gk0snmiDQAktXy/zZqnOuq/h6lSQJ6IT045UgRTEyKrqtd
-	r2xBzacRa3vQWnsizQlyKGwfZPXXnLklqoLoACulN5mb6Wrbv0pcmXMR3xhXRw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1788537246;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZPpOywhxUYpvbT8zIkFDQanZWuSbRMA9e7oK1b0gVM4=;
-	b=PRf96zVMAqAIN/FHuit61LZUjh9q3Y2QWtWZZfbGqwKuSYPGqdsu0syV75ICLNaKC1XXKf
-	KsR24XFsPNaLl5DQ==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Russell King <linux@armlinux.org.uk>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev, linux-perf-users@vger.kernel.org,
-	loongarch@lists.linux.dev, Mark Rutland <mark.rutland@arm.com>,
-	Ian Rogers <irogers@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	James Clark <james.clark@linaro.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Waiman Long <longman@redhat.com>, WANG Xuerui <kernel@xen0n.name>,
-	Will Deacon <will@kernel.org>,
-	Clark Williams <clrkwllms@kernel.org>
-Subject: Re: [PATCH v2] ARM, ARM64, LONGARCH: Delay HW BP notification to
- task_work()
-Message-ID: <20260904155404.ESPFg3zi@linutronix.de>
-References: <20260814085118.OPEA_Ssn@linutronix.de>
- <20260903160710.vVf4gEL2@linutronix.de>
- <apmknG55qFAn8EPf@shell.armlinux.org.uk>
- <20260903133146.07095885@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RSemKsnr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA9101F00A3D;
+	Fri,  4 Sep 2026 16:31:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788539479;
+	bh=j2r0KoKgq2hanpcV5bTU2teAuvBMeSQzSfhGhjq68n4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=RSemKsnrj3pHIuCVbsnDLx/wt1VFKGCe9P1UdS6sS6D04rgIzeYeog59OxZ2EqvG3
+	 4AoaR2OnVKDz1Co0MgXRuABNi4x2XQX+ZYdHLu3iM/VWdythmpqCdnMLx6+XYGm1BO
+	 JNO8PsqwfVAFpnfg/FhSD3yh990j6d+v+ucSzEtu7vyOBpUTIkni94ouoUaJMs6CVv
+	 a49FcY6Et2SNenPmkKiozk8+UywCqZhX49cOrgY6YA8Lg+7pgnuKd6A0jjpme3RJzw
+	 ZqIwYCT6BiFXcFWD/D7XByQ+oYxuP1mxJrw4CLvt9wIQONyOE2XdEcb6gcq0wPPzhF
+	 1hAhD7grQ0peA==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: George Guo <dongtai.guo@linux.dev>
+Cc: chenhuacai@kernel.org,  rppt@kernel.org,  pasha.tatashin@soleen.com,
+  pratyush@kernel.org,  shuah@kernel.org,  ardb@kernel.org,
+  guodongtai@kylinos.cn,  kernel@xen0n.name,  graf@amazon.com,
+  liukexin@kylinos.cn,  loongarch@lists.linux.dev,
+  linux-kernel@vger.kernel.org,  kexec@lists.infradead.org,
+  linux-mm@kvack.org,  linux-kselftest@vger.kernel.org,
+  linux-efi@vger.kernel.org, Sourabh Jain <sourabhjain@linux.ibm.com>
+Subject: Re: [PATCH v4 4/4] selftests/kho: add LoongArch vmtest support
+In-Reply-To: <20260904031108.11986-1-dongtai.guo@linux.dev> (George Guo's
+	message of "Fri, 4 Sep 2026 11:11:08 +0800")
+References: <20260807103714.33074-5-dongtai.guo@linux.dev>
+	<20260904031108.11986-1-dongtai.guo@linux.dev>
+Date: Fri, 04 Sep 2026 18:31:15 +0200
+Message-ID: <2vxzpkytvuzw.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260903133146.07095885@gandalf.local.home>
+Content-Type: text/plain
 
-On 2026-09-03 13:31:46 [-0400], Steven Rostedt wrote:
-> On Thu, 3 Sep 2026 17:47:24 +0100
-> Russell King <linux@armlinux.org.uk> wrote:
-> 
-> > What do you expect to happen with this? Which arch maintainer should
-> > apply this patch that affects three different independently maintained
-> > architectures?
+On Fri, Sep 04 2026, George Guo wrote:
 
-Well, if you as the ARM person are fine with ARM part, an ACK would be
-appreciated. If you have something to object, it would be nice to let me
-know so I can adjust accordingly.
+> Hi,
+>
+> While preparing v5, I retested the LoongArch vmtest without the explicit
+> `kho_scratch=16M,16M,16M` setting. That setting was masking a pre-existing
+> bug in the generic percentage-based KHO scratch sizing.
+>
+> The percentage heuristic itself is reasonable, but the old implementation
+> calculated each per-node baseline after allocating the lowmem and global
+> scratch areas. Since memblock allocations are marked MEMBLOCK_RSRV_KERN,
+> those scratch areas were counted as new kernel demand and scaled again.
+>
+> On the 1 GiB LoongArch guest, the 98.45 MiB reservation baseline and 32 MiB
+> alignment made the old ordering request 224 MiB of lowmem scratch followed
+> by 672 MiB for node 0. The node allocation failed and disabled KHO. I sent
+> a separate generic fix here:
+>
+>   https://lore.kernel.org/loongarch/20260904025101.9959-1-dongtai.guo@linux.dev
 
-> Looks like the patch should be broken up into a 4 part series.
-> 
-> One to add the ARCH_NEED_PERF_HW_NOTIF code to the generic code.
-> 
-> Then one for each architecture to add the code needed to set that.
-> 
-> Then the architecture maintainers could ack their patch and the perf
-> maintainer can pull it all in.
+Oh, cool! Nice find. I just wrote Sourabh (+Cc) an email [0] about this
+too.
 
-We could first agree if this is the right way of fixing it (from both,
-perf side and ARCH side).
-Then we could either route this via perf with ARCH's acks or split it
-and route via individual trees if needed. Having it routed separately 
-needs to be coordinated since the ARCH bits can't be applied without
-having the perf bits first.
-Then there is also the question if this should get fixes tag on commit
-d8fccd9ca5f90 ("arm64: Allow to enable PREEMPT_RT.") (which would also
-cover loongarch and arm).
+I think there is other wonky stuff going on with scratch sizing, like
+global scratch being inflated. See my email [0] about that.
 
-As of today I have just Luis responding that it works for him. 
+Let me go review that patch, since this seems to be causing a lot of
+pain.
 
-> -- Steve
+[0] https://lore.kernel.org/kexec/20260821105609.983622-1-sourabhjain@linux.ibm.com/T/#t
 
-Sebastian
+>
+> With that fix, the total aligned request is 448 MiB and the LoongArch
+> vmtest passes using the default percentage-based sizing. I also ran the x86
+> KHO vmtest with the fix; it passes as well.
+>
+> Therefore, I will remove `kho_scratch=16M,16M,16M` from loongarch.conf in
+> v5 so that it tests the default sizing path, matching the existing x86
+> selftest behavior.
+>
+> Thanks,
+> George
+
+-- 
+Regards,
+Pratyush Yadav
