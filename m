@@ -1,40 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D64E4229B0
-	for <loongarch@lists.linux.dev>; Fri,  4 Sep 2026 06:51:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788504716; cv=none; b=tW0p80kKjKsWDygxlIYd6zg9/12Na3XiyuI/kmQyGRrPS+Kk5uVebyTWd20quxLMcgexYmPWkw0dtwCRTya1rYRw5l2nN67rEamGtdtpb3cORpcYCse6bUxIt6v6o8Rpr2WXpR1HfBgDDidOh7CJCDy1XSzZDYD3gfyN8m3BUAo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788504716; c=relaxed/simple;
-	bh=nT63MBjGYKXTBb/NSuHd+oJTrFjNQs+xdTT7XV7D6U8=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868B83BCD04
+	for <loongarch@lists.linux.dev>; Fri,  4 Sep 2026 07:33:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788507209; cv=pass; b=XS1qeT7MvUCKWBkgKBOJWLf44+VYG4o/jllJGook02/uJq9WSrPT9bjVNeixBrWYQVHuzSgauLVhbqkpJxxutAgLcgkW/I5wWmEwfDK/jFNDNlOC+P1tpw0ahKdzd2UqRqI7ZFTDjqMykxg0mBTAuylWzZSvp94eG+Kd72E7pRE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788507209; c=relaxed/simple;
+	bh=afPt/0KFpvntFZhHSqjYB0IVvdjVfuzsHdAD7Cxurzc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GOC9g2YUZcCOEczATYXLLHjULi9tIn8Nqb5gddbXtU6cwmINUDenkGU9HKiEyt+jxPoh/nZyvkXewSXJd+5hkl3IFhAJqc8QO8dacSjC7aNz40+rWtmWGU+N+J64At1571DzUrFe70EDKxAy90eAce2OomyTgiHpjJft95uhP14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hoixS568; arc=none smtp.client-ip=100.103.45.18
+	 To:Cc:Content-Type; b=RFXMdwTTxo3oXpP5KXe7A5ILodiG7JBhj7zg52Qn1ILvhecIHw2S719hNIxEI+VzA7AD4YGBJpPYMivu6iIXpR4QEFzUDjnCkWhLBZaGQD8gFY9AGEtLwmpmrJUkLsBCU76szfyJDuhWr6qowvEWCBnPeGAZTaV1h4GtplfJr4w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CnioQMNx; arc=pass smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hoixS568"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0ECB51F00A3E
-	for <loongarch@lists.linux.dev>; Fri,  4 Sep 2026 06:51:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788504715;
-	bh=CrsDik+i/dqZ6n3D5e69L4gx5T8tSTpe8l3r/D5fJtk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=hoixS568WhHyYz0u5xdHJORIzc0XJOSda/Nt4wA1f51JJq2NoZr+T8MQ6cNjBSEq/
-	 a29dssHaIINvDBPXBcBPL1dMwUR/elqI7MGHyJlwML1Lq1d98fJO6MghEPk9WKwvs3
-	 V5rqria8mN8IJjc0xaeuuAzA1L+a+QF4kxa53zalhvoSAHk/uT0fBZf5+zGZuafSCy
-	 7oc2PtkNOvYWlbXX1GEJFcNshj+TUqC1UqKQS0Sr7Lx6itxcLjpEH514ImSYUY2YeU
-	 CL3q9DVw6fNKpRL4/ByelAbqiRguhcGveBu4g4fF5/2Db5zqhPUD6m0HSSDOBQNjnk
-	 JRTbNmEAA+3FQ==
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-6a38098734bso959806a12.1
-        for <loongarch@lists.linux.dev>; Thu, 03 Sep 2026 23:51:54 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBywiyE6PV1lbbUCFCf9XOtEOieBCS/c/VIy372OsTrskBFxBHz5sAk8ikhv54RuCbfQ3yhtmZqjtJY=@lists.linux.dev
-X-Gm-Message-State: AFuF++kGYClKRSKpSnAjkP4Un/7I9WfYjTijiTchFF2c7km9XfmQD78Q
-	9MmB1C2fyhjVJSy8NyvLnfRM1x0aRVF7wSwYBRadBS5g4uHKAPfP7zM8xNgBKQhwuSXsQOsriX7
-	Z/vrgN8TkaMlkmLnSc+w5MJVIAVRKNXA=
-X-Received: by 2002:a05:6402:3886:b0:6a7:ea53:f621 with SMTP id
- 4fb4d7f45d1cf-6a7ea540b62mr646655a12.32.1788504713638; Thu, 03 Sep 2026
- 23:51:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CnioQMNx"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-39b1c184ec7so87688a91.1
+        for <loongarch@lists.linux.dev>; Fri, 04 Sep 2026 00:33:27 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1788507207; cv=none;
+        d=google.com; s=arc-20260327;
+        b=h9zME9ZwkfUKzyrf8M9C+dM5eI52Gxl5nt824c3qUF1m+iVkxfxE8HKjAyoxxvLWYG
+         gRQHpnBC6wMkFAWlpRPjf9ySY023X9q6irpqpEUFK3pxYbTm1ieGpaAfxs+6OmGvtzJM
+         D0ZZ8q7kuyyDaiw5B1nPH7sgqXcEPdyveL78MofZRTCcHZLiyhsl4nk4d3YkH7HPlEPu
+         aOsy97LV8ewYHtTqdwRX2jduu6a7DpMwrbeEYhscCEIHx1b3f9utr+FKZE60532LQqdv
+         4OlsrX+UvWIv+J+Glk+TghWfGPpEEukArsPZHQARtJXrvXLgFHVTjbaK4ps2Nx73NXyx
+         zo3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=afPt/0KFpvntFZhHSqjYB0IVvdjVfuzsHdAD7Cxurzc=;
+        fh=HLJ9OvpbSrqaiu+boXvs6rIuZefhTR9Kh4gKq4iOiSk=;
+        b=rc/QvgIP4b6fVlY5oV5+PNjrizwrUFoAKHReEdOyjpsW9kRAmPLAa/ypGvibIKmJMa
+         fRpa9LwlHk5xBeSgxykdsaQOm6/tlTf3m1+EXOGgkazEEKtxqIotpN6k6TYxbP1nEKJi
+         +eb4CuRpe6A2FZvj5nfTHJNQ4YaFES81eahkxaT89AX3TTgwaMn9pi6y6R7oIihb9mRN
+         y8zYXvzrihPpdSAkkWVJWqyBVCKLbAVzgPFaupto7zOfOyuCSAGuOzDzI3EIviTZYIOv
+         ejSrCZBIyTpDKToFcJVegJZhXT3QQWHkT0VQKCVRSQHd/FicJ6FPvIwnGqc38oF9YNu+
+         DlFw==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788507207; x=1789112007; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=afPt/0KFpvntFZhHSqjYB0IVvdjVfuzsHdAD7Cxurzc=;
+        b=CnioQMNxepQCiZAuqjmhonNTG/ys3xvfqzLG7SAS8XLVJS14JbddUr9QZwrGqDZipb
+         IYc4zh5REE3fxSuxM0b4bRphkoxLMCncugNQv17nD9br5GPj0R6AXk4sDKa8dT9KfZ+6
+         t3y0r4uMi6zrIfcCcnpn5juz5PGXX5og4I9vjjfKEwQU2sgiYcHESgBhBRQPiNjtTb5M
+         wsCG6qeI0H0GxblAx5vRh3m0tuP7Wn6ZOiLQ2qVN/B4moFLlQnp9nGyxt+i8ONJkGaBP
+         ifPdTbDeNf5I89DEjzPijqjfs6m4yhcRfTrTk9pZ4C6FJ/kecxhCZdJusTUSFstxsuty
+         2BiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788507207; x=1789112007;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=afPt/0KFpvntFZhHSqjYB0IVvdjVfuzsHdAD7Cxurzc=;
+        b=pJLVKRwUW1P18NM7M71pB82Ns+nDHYU+mCtnsZlIdPEuxlccNyOAX9nx75d222o9V4
+         WwiL37/poer5zQMVhR9wMvT4p+Oyi+KgtDGech99G1B3B9wjOsVT898BHBfVCnJR1gE6
+         Z3aTSvqsLKC8nm6Mjx6pQvrpxStAZj3Ajm0WQkANbHqDP0jQ3kj8U75qMWouagAyexAx
+         Yi/+5yMSoKoNyWcSUCJaWHEmezuvt6VMGRjtA8YjuqgYGBJnSafvniQVkzam5U5vfv+T
+         VrvlgBI57AEOWIfA3S/JWmi9VlgVivxfJdGBVVOdZg+xCVvxCrytlMhJuasNasy+XK4H
+         +cmA==
+X-Forwarded-Encrypted: i=1; AKwUvBxku0XLqCQmNyNJKQ1piFBF8AvJjZZPuybHqcrPx5yP7H3HFjUcFagtoDKmZ+nQ5m9gPiSopQuuCRY=@lists.linux.dev
+X-Gm-Message-State: AFuF++l/nMTVcJB6e+ZoWnKF1P2T5LVwcLQt5DzwIh9aco/cNHBAnDJT
+	P3pD7q2udDZDJ5a+L3Yt1Wv/M6bU+MXaz314TapjGVtM0DSoYnsu4Yv/C8PeWPwEjDKS66qbEby
+	fS8rjommdy7Qlzs4Y+P0tK1qC54nUrxk=
+X-Gm-Gg: AYBFou0xEpF6f5VuZ4/9K7L9MBjWXNECfXfnEAP4+/x7mrqHmLEJDiByBjvh1kjRSv1
+	4HNP3Mt49kPcRKP5fzmP7h+f7zX/ZcNEmUVQawTHEkZMS1V+yAQA4uAXnc7TjSsHWRFGeWqCKpA
+	NpziDsbipbbCno3f3naMGsne9Ivn5dpdh2JMt9St1JV2FN/sYYa88wihY/UkPs6BwM+dlJ1a2Ez
+	KF4t5shVltaVwIzEzdZoINdN1iddifBOj9Wean9i8vupmPIZkofL/e+8c6Wb0ZCAHBV7w8nUyTd
+	djRp73oEmYGdceKj7B1IWoly2+nnVDHMQxLA5X7xA+2voWTbpU0AgBSBbkTzLZHtOH0HHnIXtr6
+	AwH6uhC2wd2sYFYfjFmTkHaXaKfhqpUoYzohaOdX2mpe7w8m2dsW1BJKklARV
+X-Received: by 2002:a17:90b:4b86:b0:38e:76f8:fcbb with SMTP id
+ 98e67ed59e1d1-39b26252efemr4118157a91.4.1788507206622; Fri, 04 Sep 2026
+ 00:33:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -42,15 +84,14 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 References: <20260903-loongarch-disable-rust-with-kasan-v1-1-1813d3c4baad@kernel.org>
- <CANiq72=-6CGi5d=sxd82mp347skPGxK_xH+UNt_dUUD_rKdFiw@mail.gmail.com>
-In-Reply-To: <CANiq72=-6CGi5d=sxd82mp347skPGxK_xH+UNt_dUUD_rKdFiw@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 4 Sep 2026 14:51:41 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6QzYUmoErGUFecF1jptYekkuy-+iZtDXvY82wbr7+V4Q@mail.gmail.com>
-X-Gm-Features: AcwNN1WVbV3UVJPY6vBHMoHJf_6Z9XFAkSpgPnoM44jiVUQuUMOn41ZyOzStCwQ
-Message-ID: <CAAhV-H6QzYUmoErGUFecF1jptYekkuy-+iZtDXvY82wbr7+V4Q@mail.gmail.com>
+ <CANiq72=-6CGi5d=sxd82mp347skPGxK_xH+UNt_dUUD_rKdFiw@mail.gmail.com> <CAAhV-H6QzYUmoErGUFecF1jptYekkuy-+iZtDXvY82wbr7+V4Q@mail.gmail.com>
+In-Reply-To: <CAAhV-H6QzYUmoErGUFecF1jptYekkuy-+iZtDXvY82wbr7+V4Q@mail.gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Fri, 4 Sep 2026 09:33:14 +0200
+X-Gm-Features: AcwNN1XWy7WQ5apZIMaAZwbTUURDXMelE7BtsLngCp1nI7dZlSv2a0vAJ741AE0
+Message-ID: <CANiq72nHb=bD9mtFTJk7cWgxpp0Uh2K7W4GB1ygtNEF4d3zKag@mail.gmail.com>
 Subject: Re: [PATCH] loongarch: Do not select HAVE_RUST when KASAN is enabled
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+To: Huacai Chen <chenhuacai@kernel.org>
 Cc: Nathan Chancellor <nathan@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
 	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>, Gary Guo <gary@garyguo.net>, 
 	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
@@ -65,41 +106,14 @@ Cc: Nathan Chancellor <nathan@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 4, 2026 at 7:04=E2=80=AFAM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
+On Fri, Sep 4, 2026 at 8:51=E2=80=AFAM Huacai Chen <chenhuacai@kernel.org> =
+wrote:
 >
-> On Thu, Sep 3, 2026 at 10:12=E2=80=AFPM Nathan Chancellor <nathan@kernel.=
-org> wrote:
-> >
-> > After commit 2625480a1bf7 ("hardening: Default randstruct off with rust
-> > for better allmodconfig support"), which allows Rust to be enabled for
-> > allmodconfig, ARCH=3Dloongarch allmodconfig starts failing with:
-> >
-> >   error: kernel-address sanitizer is not supported for this target
-> >
-> >   error: aborting due to 1 previous error
-> >
-> >   make[4]: *** [rust/Makefile:741: rust/core.o] Error 1
-> >
-> > For the same reason as commit 84a0f7caafc6 ("ARM: Do not select
-> > HAVE_RUST when KASAN is enabled"), do not select HAVE_RUST when KASAN i=
-s
-> > enabled until the loongarch64-unknown-none-softfloat target in rustc
-> > supports KASAN.
-> >
-> > Fixes: 90868ff9cade ("LoongArch: Enable initial Rust support")
-> > Signed-off-by: Nathan Chancellor <nathan@kernel.org>
->
-> Sounds good to me -- if LoongArch gives their Acked-by, then I can
-> take it in the rust-fixes PR I will send soon; otherwise, this can go
-> through their tree or Kbuild's I guess.
-I queued for loongarch-fixes, thanks.
+> I queued for loongarch-fixes, thanks.
 
-Huacai
+Great, thanks, please feel free to add my Acked-by:
 
->
-> Thanks!
->
-> Cheers,
-> Miguel
->
+Acked-by: Miguel Ojeda <ojeda@kernel.org>
+
+Cheers,
+Miguel
