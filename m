@@ -1,83 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16D993E7BA0;
-	Fri,  4 Sep 2026 10:19:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E304C4534B7
+	for <loongarch@lists.linux.dev>; Fri,  4 Sep 2026 11:08:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788517176; cv=none; b=deWbnssEFl2UbwEDFFBPz/du6j+MvCu/BPZxlYQfXhao/iTEQ7P3sBMm9SvxKQu4C1ymKEqXAF5Kmpp50ZioHevSxooBC1SuX+u0v+sVHnavpIuMGdQ7c9TGwebop62H8PVUlOeunX0Tpgc/1mIbVcokedxoU7xT8uzVPaiUTNY=
+	t=1788520095; cv=none; b=Qq08tNC1qOdUjbBVCREXbB/RuS0zVa58iiVIpAlR/6LB3QRCNoxyV0bkNanf2NreaXgXMfbJkAQrlYUgvBftE+C+2A8AMUunyxMts6aYCdyct22ytM3MmFmbB4hglipbMrc9P0COxsXVBvbnt9cJLJ04jeZH1OkeOlgR2aYoj84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788517176; c=relaxed/simple;
-	bh=e+2C/GXVQE723YGDM2YvxWMx6NVoWmgrtOxNKOFfzdE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eehlV5o6e4SkwS1CCTVfUUZWPbxpWljIp6sFUmmmFUxUJYBbZK0z0U3hWt1U2BXRaQAgg/H80OjMLR1u/57nGk//BruGVmIRR+/YTvK2TqPZtuzwUivqGsGL/BlneObjHykUOPa8Rf9oQiE2ZcE30dhVR1g+86/BmURZtGT8iJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DDJwGiQQ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788520095; c=relaxed/simple;
+	bh=DkzE9Zhj3AmmXoslombEp/LUwxK1tb+nQOXGv18vgVM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UVDu0qCPrAA8iVrcEhOcNWLNS44ctcLLf4NgmGFBfN22hLwhQCcJE5QDV9f6YLqc/BQ4Ntvw9J6UIFyCVCswvtLR5zZZbPutFkQug8bLLkwsiCQshoEeZlKvWhOq4LIerSmRwGg2p/RTk8MmWcsbGih+ccpaNy2QV68HkpsxGcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kd4aas+z; arc=none smtp.client-ip=209.85.161.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DDJwGiQQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89C2D1F00A3D;
-	Fri,  4 Sep 2026 10:19:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788517169;
-	bh=zHj7Jl4ER2+DUDGeXhri9eyZ/g0x3N0pfswy8RuEkQ0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=DDJwGiQQcGBuD0sr5QOJBi+FgIhBc6LUaQyqvxbdxT16FlQzs1rjs6WEKus4Lnn6A
-	 j60NR7rPgDsW/izsP6g8SwYmgeQcWtkQnzsA17fbOjIpNNwqwDIKSGawoO5zUcrd6P
-	 ROEwa06rDkQUmdUdxMhLSZU43vk2Qwv+Y6pEHSqySVc34BQFt+oam7yM7iIuC4h62s
-	 nlfQok5mVyqLOw4VBO9dCWVtya4Z27wHZi1BX3rnDSQd/dMW6ETJiOZdH5ae15CtD9
-	 55bF4NAMgiET9n38B/U1Z9dQGEFPES5opWTgNAAcPm5CYWSddF/U9QOWcd+tKSmTHF
-	 24urd22gLAZuA==
-From: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
-To: iommu@lists.linux.dev
-Cc: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Will Deacon <will@kernel.org>,
-	Marc Zyngier <maz@kernel.org>,
-	Steven Price <steven.price@arm.com>,
-	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Mostafa Saleh <smostafa@google.com>,
-	Petr Tesarik <ptesarik@suse.com>,
-	Alexey Kardashevskiy <aik@amd.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	x86@kernel.org
-Subject: [PATCH v3 4/4] dma: swiotlb: Remove SWIOTLB_ANY
-Date: Fri,  4 Sep 2026 15:48:10 +0530
-Message-ID: <20260904101810.1193505-5-aneesh.kumar@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260904101810.1193505-1-aneesh.kumar@kernel.org>
-References: <20260904101810.1193505-1-aneesh.kumar@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kd4aas+z"
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-6b1ab6d7239so699486eaf.1
+        for <loongarch@lists.linux.dev>; Fri, 04 Sep 2026 04:08:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788520093; x=1789124893; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=6tzK12s+ScbQKSnKvOMv3ENEdIPF4yikkwENb01BXx0=;
+        b=kd4aas+zSiP/TXSouFQKoeo+c4MXR1Wmi5HwVyL41TQK3sfDs/5pykD2eWUfB6PXQK
+         0xJosY0mSeV8jt+3E/aTjuhIqSTsx/iyaSpBbltVsMfdbZoprkgmPxTilc3xTVAE+rLp
+         gF7YnElzV/jcTBo0zeodMBdEmt7gORecbCNVCGPAp6K+mUd7YrW5taluNMPGNfEn+AHp
+         18fTBtbs/cFOyH0N2mvNzcxjzPGuaq/X7wbFFUD8xGW/T3bRG5aXjMiKeUKB5zRN+K+j
+         eYeBfIJONjKXJVqTrU6TPb3/6HbAh2EDPusuk5zUEjGBCq2lxwwjUXRhELSfMsp8Nw8q
+         eyaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788520093; x=1789124893;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=6tzK12s+ScbQKSnKvOMv3ENEdIPF4yikkwENb01BXx0=;
+        b=PepXJ5YC+NepamuPtGnsPrYE9ceFVhTqFWN905ckAqKXsxKGEw/17/Yhu1DuMDzsC0
+         6DkWMKCgwYZZwZc0rlc2XilgFsg9ZvMBcU0kply9m9ZlK0uNIlpLo1DdY3p4OF5V2D2K
+         43LI4gRHxcbN4KYPGFjiSUbmaCu9Y80fKoSQZsgG4m+7g4YB1q9f7XrtguRcUUBN58DL
+         gSX8ME2FVUjHE9EfAleP+IT9voJX8GJzVTmbv8jt/Y2eTan31RAOaXJG8CE4CqhsqLJI
+         kUvFyRDzixez7y9tjKwcK6w+wRd7e1+/ywOL/NqScssfcpK5+NhN+dN4Pd/ID6mFYsZo
+         rHVA==
+X-Forwarded-Encrypted: i=1; AKwUvBzIpplKwdBsXcAiOt5FeCwmvN+Gzymo+yLuWe3pBUfv9MlKgDyHtfbkrgWvIJ+bae8uLxtOnUnVNUw=@lists.linux.dev
+X-Gm-Message-State: AFuF++mn5NvQs3FE8kppKdT87/z0K8k/JzfUskTvA2rKEC3wEiICPYU9
+	7XuTfakYDRPI9xXHXvUrD8YlH98Yjna1NYMAk1Xs899P0WKGJ3/9UvAg
+X-Gm-Gg: AYBFou31YVgNksGxcwRyv1n01YjrSFXcOykwWpYwOpXGCaDr+7/7c9s4NYdF34+S3g3
+	3Q5MNkIl7/LP5SOu256nQTtbQ1Uml2emiU+cmouelb2OR/6LiAIEMt8CoTUZA+k7H2EXn4DUGxf
+	10F2LOgqoASwIdP6bKAns+ybWfNPuT7aAWTQ0aMZIXA3x0MjvI0W9og01tGX/eRVHP7nL81ID86
+	asDH1V3oZKL/Rn7bfCA+Xg5gqRIAsmk68n7bD5Sd3Ui9fxakNX0C3I4DTrxJXGQ/SPdJ8FOqsTP
+	KUhl49/iJ+FxtDhABl2mdlRYKsKt5/LFYQXTVDfI2oAyhrzN4dMK2ZMoeUboidgOGAp8sdb2J66
+	/io6bbYJdIZtmw7/jtPeGXttX9O+u6vsZKJQ08f32JLbsgriy74AqYG7Vs9opG/f+GuWndcp7mE
+	YkMKq4KwEAYD3QPBgT0xnMbF1nEZUzPa27+Svber72FbSQkckCoXWAHnWDB5hgjP+zyRO4sfcp/
+	osA0cNl2cKOYts=
+X-Received: by 2002:a4a:edce:0:b0:6b1:d123:f7d5 with SMTP id 006d021491bc7-6b6fcbe63bcmr3772432eaf.20.1788520092685;
+        Fri, 04 Sep 2026 04:08:12 -0700 (PDT)
+Received: from volcano9f6e-hostos.amd.com ([165.204.217.251])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3339befdefcsm5125566eec.29.2026.09.04.04.08.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2026 04:08:11 -0700 (PDT)
+From: Hemanth Selam <hemanth.selam@gmail.com>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: [PATCH] LoongArch: fix typo "avaliable" in comment
+Date: Fri,  4 Sep 2026 16:38:06 +0530
+Message-ID: <20260904110807.19508-1-hemanth.selam@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -86,143 +74,29 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-SWIOTLB_ANY permits the swiotlb pool to be allocated outside the
-architecture's low address limit. This is already implied when
-SWIOTLB_INIT_ADDRESSING_LIMIT is not set, making SWIOTLB_ANY redundant.
+Correct "avaliable" to "available", reported by scripts/checkpatch.pl using
+the misspelling list in scripts/spelling.txt.  Only touches comments, no
+code changes.
 
-Use SWIOTLB_INIT_ADDRESSING_LIMIT as the sole indication that the
-default pool and any dynamically allocated pools must reside below
-ARCH_LOW_ADDRESS_LIMIT. Otherwise, allow the pools to use any directly
-mapped memory.
-
-Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
+Assisted-by: Cursor:claude-opus-5
+Signed-off-by: Hemanth Selam <hemanth.selam@gmail.com>
 ---
- Documentation/core-api/swiotlb.rst |  8 ++++----
- arch/powerpc/mm/mem.c              |  6 ++++--
- arch/s390/mm/init.c                |  2 +-
- arch/x86/kernel/pci-dma.c          |  2 +-
- include/linux/swiotlb.h            |  5 ++---
- kernel/dma/swiotlb.c               | 17 ++++++-----------
- 6 files changed, 18 insertions(+), 22 deletions(-)
+ arch/loongarch/kernel/vmlinux.lds.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/core-api/swiotlb.rst b/Documentation/core-api/swiotlb.rst
-index 71b4e4c27eb5..06d9f88fdf7b 100644
---- a/Documentation/core-api/swiotlb.rst
-+++ b/Documentation/core-api/swiotlb.rst
-@@ -148,10 +148,10 @@ may also be adjusted
- due to other conditions, such as running in a CoCo VM, as described above. If
- CONFIG_SWIOTLB_DYNAMIC is enabled, additional pools may be allocated later in
- the life of the system. Each pool must be a contiguous range of physical
--memory. The default pool is allocated below the 4 GiB physical address line so
--it works for devices that can only address 32-bits of physical memory (unless
--architecture-specific code provides the SWIOTLB_ANY flag). In a CoCo VM, the
--pool memory must be decrypted before swiotlb is used.
-+memory. The default pool is allocated below the architecture's low address
-+limit when it is needed for devices with limited DMA addressing. Otherwise,
-+it may be allocated anywhere in directly mapped memory. In a CoCo VM, the pool
-+memory must be decrypted before swiotlb is used.
- 
- Each pool is divided into "slots" of size IO_TLB_SIZE, which is 2 KiB with
- current definitions. IO_TLB_SEGSIZE contiguous slots (128 slots) constitute
-diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-index 006ed41097e9..1bdea6c03848 100644
---- a/arch/powerpc/mm/mem.c
-+++ b/arch/powerpc/mm/mem.c
-@@ -295,9 +295,11 @@ void __init arch_mm_preinit(void)
- 		/*
- 		 * Since the guest memory is inaccessible to the host,
- 		 * devices always need to use the SWIOTLB buffer for DMA
--		 * even if dma_capable() says otherwise.
-+		 * even if dma_capable() says otherwise. The hypervisor has
-+		 * no addressing limitation, so the buffer may be allocated
-+		 * anywhere.
- 		 */
--		ppc_swiotlb_flags |= SWIOTLB_ANY;
-+		ppc_swiotlb_flags &= ~SWIOTLB_INIT_ADDRESSING_LIMIT;
- 	}
- 
- 	/*
-diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
-index 78f507e24ceb..ce10292447f1 100644
---- a/arch/s390/mm/init.c
-+++ b/arch/s390/mm/init.c
-@@ -166,7 +166,7 @@ static void __init pv_init(void)
- 	virtio_set_mem_acc_cb(virtio_require_restricted_mem_acc);
- 
- 	/* make sure bounce buffers are shared */
--	swiotlb_init(SWIOTLB_VERBOSE | SWIOTLB_ANY);
-+	swiotlb_init(SWIOTLB_VERBOSE);
- 	swiotlb_update_mem_attributes();
- }
- 
-diff --git a/arch/x86/kernel/pci-dma.c b/arch/x86/kernel/pci-dma.c
-index 3c82ebb5b6e0..e472631a5bd7 100644
---- a/arch/x86/kernel/pci-dma.c
-+++ b/arch/x86/kernel/pci-dma.c
-@@ -84,7 +84,7 @@ static void __init pci_xen_swiotlb_init(void)
- 	x86_swiotlb_enable = true;
- 	/* Xen can use a SWIOTLB pool anywhere in directly mapped memory. */
- 	x86_swiotlb_flags &= ~SWIOTLB_INIT_ADDRESSING_LIMIT;
--	x86_swiotlb_flags |= SWIOTLB_INIT_REMAP | SWIOTLB_ANY;
-+	x86_swiotlb_flags |= SWIOTLB_INIT_REMAP;
- 	swiotlb_init_remap(x86_swiotlb_flags, xen_swiotlb_fixup);
- 	dma_ops = &xen_swiotlb_dma_ops;
- 	if (IS_ENABLED(CONFIG_PCI))
-diff --git a/include/linux/swiotlb.h b/include/linux/swiotlb.h
-index be3962a33fc6..b3da751a81dd 100644
---- a/include/linux/swiotlb.h
-+++ b/include/linux/swiotlb.h
-@@ -15,11 +15,10 @@ struct page;
- struct scatterlist;
- 
- #define SWIOTLB_VERBOSE	(1 << 0) /* verbose initialization */
--#define SWIOTLB_ANY	(1 << 1) /* allow any memory for the buffer */
- /* Initialize a default-sized pool for devices with limited DMA addressing. */
--#define SWIOTLB_INIT_ADDRESSING_LIMIT	(1 << 2)
-+#define SWIOTLB_INIT_ADDRESSING_LIMIT	(1 << 1)
- /* Initialize a default-sized pool that requires architecture remapping. */
--#define SWIOTLB_INIT_REMAP		(1 << 3)
-+#define SWIOTLB_INIT_REMAP		(1 << 2)
+diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kernel/vmlinux.lds.S
+index 840d944c2f73..ce097e25881f 100644
+--- a/arch/loongarch/kernel/vmlinux.lds.S
++++ b/arch/loongarch/kernel/vmlinux.lds.S
+@@ -23,7 +23,7 @@
+ #include "image-vars.h"
  
  /*
-  * Maximum allowable number of contiguous slabs to map,
-diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-index c4611b2c4540..2715833a21f8 100644
---- a/kernel/dma/swiotlb.c
-+++ b/kernel/dma/swiotlb.c
-@@ -448,15 +448,10 @@ static void __init *swiotlb_memblock_alloc(unsigned long nslabs,
- 	size_t bytes = PAGE_ALIGN(nslabs << IO_TLB_SHIFT);
- 	void *tlb;
- 
--	/*
--	 * By default allocate the bounce buffer memory from low memory, but
--	 * allow to pick a location everywhere for hypervisors with guest
--	 * memory encryption.
--	 */
--	if (flags & SWIOTLB_ANY)
--		tlb = memblock_alloc(bytes, PAGE_SIZE);
--	else
-+	if (flags & SWIOTLB_INIT_ADDRESSING_LIMIT)
- 		tlb = memblock_alloc_low(bytes, PAGE_SIZE);
-+	else
-+		tlb = memblock_alloc(bytes, PAGE_SIZE);
- 
- 	if (!tlb) {
- 		pr_warn("%s: Failed to allocate %zu bytes tlb structure\n",
-@@ -598,10 +593,10 @@ void __init swiotlb_init_remap(unsigned int flags,
- #ifdef CONFIG_SWIOTLB_DYNAMIC
- 	if (!remap)
- 		io_tlb_default_mem.can_grow = true;
--	if (flags & SWIOTLB_ANY)
--		io_tlb_default_mem.phys_limit = virt_to_phys(high_memory - 1);
--	else
-+	if (flags & SWIOTLB_INIT_ADDRESSING_LIMIT)
- 		io_tlb_default_mem.phys_limit = ARCH_LOW_ADDRESS_LIMIT;
-+	else
-+		io_tlb_default_mem.phys_limit = virt_to_phys(high_memory - 1);
- #endif
- 
- 	/* if we have host or guest memory encryption */
+- * Max avaliable Page Size is 64K, so we set SectionAlignment
++ * Max available Page Size is 64K, so we set SectionAlignment
+  * field of EFI application to 64K.
+  */
+ PECOFF_FILE_ALIGN = 0x200;
 -- 
-2.43.0
+2.48.1
 
