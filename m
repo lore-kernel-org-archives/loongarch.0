@@ -1,119 +1,219 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mta0.migadu.com (out-91.mta0.migadu.com [91.218.175.91])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868B83BCD04
-	for <loongarch@lists.linux.dev>; Fri,  4 Sep 2026 07:33:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788507209; cv=pass; b=XS1qeT7MvUCKWBkgKBOJWLf44+VYG4o/jllJGook02/uJq9WSrPT9bjVNeixBrWYQVHuzSgauLVhbqkpJxxutAgLcgkW/I5wWmEwfDK/jFNDNlOC+P1tpw0ahKdzd2UqRqI7ZFTDjqMykxg0mBTAuylWzZSvp94eG+Kd72E7pRE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788507209; c=relaxed/simple;
-	bh=afPt/0KFpvntFZhHSqjYB0IVvdjVfuzsHdAD7Cxurzc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RFXMdwTTxo3oXpP5KXe7A5ILodiG7JBhj7zg52Qn1ILvhecIHw2S719hNIxEI+VzA7AD4YGBJpPYMivu6iIXpR4QEFzUDjnCkWhLBZaGQD8gFY9AGEtLwmpmrJUkLsBCU76szfyJDuhWr6qowvEWCBnPeGAZTaV1h4GtplfJr4w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CnioQMNx; arc=pass smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53E45455633
+	for <loongarch@lists.linux.dev>; Fri,  4 Sep 2026 10:10:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.91
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788516630; cv=none; b=fo1FStOunjUwxh0V3B6FCp8wAVfedd/svNSHM+Pb8Jmd/bU2xUcEfdC2jkfZGnrLe0r8EzljsJtVvSmQwOP68q+qmbmhCwMCUyx17tZ8Pe6JHELEI4X0NZ/P9DwmypTZGh9ddST2226HXsF7lvWNik/YedDKKhGeZVzsRQqEknU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788516630; c=relaxed/simple;
+	bh=3i8Bvzh7qkOslCU/FvOhfyi9i8JlWiGHdZetbC/2/1E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UG+aYgPiz0ooavU4avZGmU7p2f/+puEzRhsK6zl60lUPXCCCKIcp7TZb9NFOinl8gdGe99l6sgJZdU86Q9w4qJH7YxL5poiSuxIfPypLsjy0Q6l+lqyScbKY3bisZWzhs++d+L4DsCqI/v3a/kLfsF5TQMed1N1tgVbsMfAH+xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=k6rLQFg0; arc=none smtp.client-ip=91.218.175.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CnioQMNx"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-39b1c184ec7so87688a91.1
-        for <loongarch@lists.linux.dev>; Fri, 04 Sep 2026 00:33:27 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1788507207; cv=none;
-        d=google.com; s=arc-20260327;
-        b=h9zME9ZwkfUKzyrf8M9C+dM5eI52Gxl5nt824c3qUF1m+iVkxfxE8HKjAyoxxvLWYG
-         gRQHpnBC6wMkFAWlpRPjf9ySY023X9q6irpqpEUFK3pxYbTm1ieGpaAfxs+6OmGvtzJM
-         D0ZZ8q7kuyyDaiw5B1nPH7sgqXcEPdyveL78MofZRTCcHZLiyhsl4nk4d3YkH7HPlEPu
-         aOsy97LV8ewYHtTqdwRX2jduu6a7DpMwrbeEYhscCEIHx1b3f9utr+FKZE60532LQqdv
-         4OlsrX+UvWIv+J+Glk+TghWfGPpEEukArsPZHQARtJXrvXLgFHVTjbaK4ps2Nx73NXyx
-         zo3Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=afPt/0KFpvntFZhHSqjYB0IVvdjVfuzsHdAD7Cxurzc=;
-        fh=HLJ9OvpbSrqaiu+boXvs6rIuZefhTR9Kh4gKq4iOiSk=;
-        b=rc/QvgIP4b6fVlY5oV5+PNjrizwrUFoAKHReEdOyjpsW9kRAmPLAa/ypGvibIKmJMa
-         fRpa9LwlHk5xBeSgxykdsaQOm6/tlTf3m1+EXOGgkazEEKtxqIotpN6k6TYxbP1nEKJi
-         +eb4CuRpe6A2FZvj5nfTHJNQ4YaFES81eahkxaT89AX3TTgwaMn9pi6y6R7oIihb9mRN
-         y8zYXvzrihPpdSAkkWVJWqyBVCKLbAVzgPFaupto7zOfOyuCSAGuOzDzI3EIviTZYIOv
-         ejSrCZBIyTpDKToFcJVegJZhXT3QQWHkT0VQKCVRSQHd/FicJ6FPvIwnGqc38oF9YNu+
-         DlFw==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788507207; x=1789112007; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=afPt/0KFpvntFZhHSqjYB0IVvdjVfuzsHdAD7Cxurzc=;
-        b=CnioQMNxepQCiZAuqjmhonNTG/ys3xvfqzLG7SAS8XLVJS14JbddUr9QZwrGqDZipb
-         IYc4zh5REE3fxSuxM0b4bRphkoxLMCncugNQv17nD9br5GPj0R6AXk4sDKa8dT9KfZ+6
-         t3y0r4uMi6zrIfcCcnpn5juz5PGXX5og4I9vjjfKEwQU2sgiYcHESgBhBRQPiNjtTb5M
-         wsCG6qeI0H0GxblAx5vRh3m0tuP7Wn6ZOiLQ2qVN/B4moFLlQnp9nGyxt+i8ONJkGaBP
-         ifPdTbDeNf5I89DEjzPijqjfs6m4yhcRfTrTk9pZ4C6FJ/kecxhCZdJusTUSFstxsuty
-         2BiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788507207; x=1789112007;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=afPt/0KFpvntFZhHSqjYB0IVvdjVfuzsHdAD7Cxurzc=;
-        b=pJLVKRwUW1P18NM7M71pB82Ns+nDHYU+mCtnsZlIdPEuxlccNyOAX9nx75d222o9V4
-         WwiL37/poer5zQMVhR9wMvT4p+Oyi+KgtDGech99G1B3B9wjOsVT898BHBfVCnJR1gE6
-         Z3aTSvqsLKC8nm6Mjx6pQvrpxStAZj3Ajm0WQkANbHqDP0jQ3kj8U75qMWouagAyexAx
-         Yi/+5yMSoKoNyWcSUCJaWHEmezuvt6VMGRjtA8YjuqgYGBJnSafvniQVkzam5U5vfv+T
-         VrvlgBI57AEOWIfA3S/JWmi9VlgVivxfJdGBVVOdZg+xCVvxCrytlMhJuasNasy+XK4H
-         +cmA==
-X-Forwarded-Encrypted: i=1; AKwUvBxku0XLqCQmNyNJKQ1piFBF8AvJjZZPuybHqcrPx5yP7H3HFjUcFagtoDKmZ+nQ5m9gPiSopQuuCRY=@lists.linux.dev
-X-Gm-Message-State: AFuF++l/nMTVcJB6e+ZoWnKF1P2T5LVwcLQt5DzwIh9aco/cNHBAnDJT
-	P3pD7q2udDZDJ5a+L3Yt1Wv/M6bU+MXaz314TapjGVtM0DSoYnsu4Yv/C8PeWPwEjDKS66qbEby
-	fS8rjommdy7Qlzs4Y+P0tK1qC54nUrxk=
-X-Gm-Gg: AYBFou0xEpF6f5VuZ4/9K7L9MBjWXNECfXfnEAP4+/x7mrqHmLEJDiByBjvh1kjRSv1
-	4HNP3Mt49kPcRKP5fzmP7h+f7zX/ZcNEmUVQawTHEkZMS1V+yAQA4uAXnc7TjSsHWRFGeWqCKpA
-	NpziDsbipbbCno3f3naMGsne9Ivn5dpdh2JMt9St1JV2FN/sYYa88wihY/UkPs6BwM+dlJ1a2Ez
-	KF4t5shVltaVwIzEzdZoINdN1iddifBOj9Wean9i8vupmPIZkofL/e+8c6Wb0ZCAHBV7w8nUyTd
-	djRp73oEmYGdceKj7B1IWoly2+nnVDHMQxLA5X7xA+2voWTbpU0AgBSBbkTzLZHtOH0HHnIXtr6
-	AwH6uhC2wd2sYFYfjFmTkHaXaKfhqpUoYzohaOdX2mpe7w8m2dsW1BJKklARV
-X-Received: by 2002:a17:90b:4b86:b0:38e:76f8:fcbb with SMTP id
- 98e67ed59e1d1-39b26252efemr4118157a91.4.1788507206622; Fri, 04 Sep 2026
- 00:33:26 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="k6rLQFg0"
+X-Envelope-To: loongarch@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=3i8Bvzh7qkOslCU/FvOhfyi9i8JlWiGHdZetbC/2/1E=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1788516622; v=1; x=1789121422;
+ b=k6rLQFg03H3gxNayPRzUiJAJCl8vku87Q8zdZANynUuRnQWSb+SfyxvYAV9sbZefKgzpVc3C
+ RIW4IAHFon6c0+PVJCwvkM5Po57HMGvyenGNWG8qbNyUsz5HfgkdTE1cfFMo+u+kF2JAK5tAOtE
+ mTQyD2oE7uDP0+Jpky8GyZ4U=
+X-Envelope-To: loongarch@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id e95a607b71039ff5;
+	Fri, 04 Sep 2026 10:10:22 +0000
+X-Mizu-Trace-ID: e95a607b71039ff5
+X-Migadu-Flow: FLOW_OUT
+From: George Guo <dongtai.guo@linux.dev>
+To: rppt@kernel.org,
+	pasha.tatashin@soleen.com,
+	pratyush@kernel.org,
+	chenhuacai@kernel.org,
+	ardb@kernel.org,
+	shuah@kernel.org
+Cc: ilias.apalodimas@linaro.org,
+	akpm@linux-foundation.org,
+	baoquan.he@linux.dev,
+	ruirui.yang@linux.dev,
+	guodongtai@kylinos.cn,
+	kernel@xen0n.name,
+	graf@amazon.com,
+	liukexin@kylinos.cn,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	linux-efi@vger.kernel.org
+Subject: [PATCH v5 0/5] LoongArch: add KHO support and selftests
+Date: Fri,  4 Sep 2026 18:08:47 +0800
+Message-ID: <20260904100852.26006-1-dongtai.guo@linux.dev>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260903-loongarch-disable-rust-with-kasan-v1-1-1813d3c4baad@kernel.org>
- <CANiq72=-6CGi5d=sxd82mp347skPGxK_xH+UNt_dUUD_rKdFiw@mail.gmail.com> <CAAhV-H6QzYUmoErGUFecF1jptYekkuy-+iZtDXvY82wbr7+V4Q@mail.gmail.com>
-In-Reply-To: <CAAhV-H6QzYUmoErGUFecF1jptYekkuy-+iZtDXvY82wbr7+V4Q@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 4 Sep 2026 09:33:14 +0200
-X-Gm-Features: AcwNN1XWy7WQ5apZIMaAZwbTUURDXMelE7BtsLngCp1nI7dZlSv2a0vAJ741AE0
-Message-ID: <CANiq72nHb=bD9mtFTJk7cWgxpp0Uh2K7W4GB1ygtNEF4d3zKag@mail.gmail.com>
-Subject: Re: [PATCH] loongarch: Do not select HAVE_RUST when KASAN is enabled
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Daniel Almeida <daniel.almeida@collabora.com>, 
-	Tamir Duberstein <tamird@kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, 
-	=?UTF-8?Q?Onur_=C3=96zkan?= <work@onurozkan.dev>, 
-	WANG Rui <wangrui@loongson.cn>, Mark Brown <broonie@kernel.org>, Kees Cook <kees@kernel.org>, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Sep 4, 2026 at 8:51=E2=80=AFAM Huacai Chen <chenhuacai@kernel.org> =
-wrote:
->
-> I queued for loongarch-fixes, thanks.
+This series enables Kexec HandOver (KHO) on 64-bit LoongArch and adds
+LoongArch coverage to the KHO QEMU selftest.  KHO is the remaining
+architecture gate needed by Live Update (LUO) on LoongArch.
 
-Great, thanks, please feel free to add my Acked-by:
+The transport is the central problem.  Arm64 and riscv can pass the KHO
+state FDT and scratch area through properties under /chosen in a boot
+FDT.  LoongArch boots through EFI without a boot FDT, so that path is not
+available.
 
-Acked-by: Miguel Ojeda <ojeda@kernel.org>
+EFI KHO channel:
 
-Cheers,
-Miguel
+v5 reworks the EFI transport following Pratyush's and Huacai's reviews
+[1, 2].  Instead of rebuilding the EFI configuration table in
+LoongArch code and switching st->tables before kexec, the common EFI stub
+allocates and installs a persistent table under
+LINUX_EFI_KEXEC_HANDOVER_GUID.  This follows the model used by
+LINUX_EFI_MEMRESERVE_TABLE_GUID.
+
+The common EFI table parser reserves the stub-allocated table, reads it
+during early boot, and calls kho_populate().  An early initcall keeps the
+table persistently mapped so it can also be updated on the crash kexec
+path.  The implementation is architecture-independent; LoongArch only
+selects EFI_KHO when KEXEC_HANDOVER is enabled.
+
+The EFI table is global, but kexec can keep separate normal and crash
+images and can replace a loaded candidate.  Updating the table while a
+candidate image is being loaded could therefore leave it pointing at a
+failed candidate while the previously installed image remains the one
+that will be executed.  v5 records the KHO data in struct kimage and
+synchronizes the channel from the image selected for execution.  Images
+without KHO data, including legacy and crash images, clear the channel so
+the next kernel boots cold rather than reviving stale state.
+
+The GUID name is changed to LINUX_EFI_KEXEC_HANDOVER_GUID as suggested by
+Huacai and Pratyush [3].  Existing x86 KHO support continues to use its
+setup_data transport.  Besides supporting non-UEFI boot, that entry is
+consumed by the x86 decompressor before normal EFI table parsing, so KASLR
+only uses KHO scratch areas and does not overwrite preserved memory.  The
+new channel is installed by the generic EFI-stub entry path and relies on
+EFI_GENERIC_STUB, which x86 does not select.  Moving x86 would therefore
+require installing the table from the x86-specific EFI stub and scanning it
+in the decompressor, not just selecting EFI_KHO.
+
+LoongArch enablement and build fix:
+
+The architecture patch now only enables ARCH_SUPPORTS_KEXEC_HANDOVER and
+selects the generic EFI channel.  No LoongArch setup reader, kexec writer,
+or EFI system-table replacement remains.
+
+The linux/mm.h build fix is moved from luo_session.c to kho_block.c, where
+the virt_to_phys() and phys_to_virt() calls reside after the liveupdate
+refactoring.  This addresses Pratyush's review [4].  Adding linux/mm.h to
+asm/io.h was previously attempted, but creates an include cycle under
+CONFIG_KFENCE [5].  The fix precedes LoongArch enablement so every
+intermediate commit builds with CONFIG_KFENCE=y.
+
+Selftest:
+
+The LoongArch vmtest boots vmlinux.efi through EDK2 because the initial
+EFI stub invocation installs the channel being tested.  QEMU_EFI can
+override the firmware filename for distributions that install it under a
+different name or path.
+
+CONFIG_ACPI_SPCR_TABLE lets the bare earlycon parameter obtain the UART
+description from EDK2's SPCR table.  CONFIG_PCI_HOST_GENERIC keeps i8042
+enabled while ensuring that the QEMU virt machine's PCI I/O space is
+mapped before the legacy fallback probe, addressing Huacai's concern that
+the same kernel configuration should remain usable for hosts and guests.
+
+With EFI runtime reset services available, panic=-1 and QEMU's existing
+-no-reboot option terminate the test normally.  The generic QEMU runner
+therefore remains unchanged and does not mask failures by forcibly
+terminating QEMU after a timeout.
+
+The LoongArch vmtest uses the default KHO scratch-sizing path.  This
+series is based on the generic fix that calculates per-node scratch sizes
+before scratch allocation [6].
+
+The KHO vmtest passes on:
+
+  * LoongArch with KVM using QEMU_EFI.fd from edk2-loongarch64.
+  * x86_64 with KVM, as regression coverage for the generic kexec/KHO
+    changes.
+
+Patch layout:
+
+  1. Add the generic EFI KHO channel and its ABI.
+  2. Synchronize the channel from the selected image at execution.
+  3. Fix the kho_block.c header dependency exposed by LoongArch/KFENCE.
+  4. Enable KHO on 64-bit LoongArch through the generic EFI channel.
+  5. Add LoongArch to the KHO QEMU selftest.
+
+Changes since v4:
+
+  * Allocate and install the KHO table from the common EFI stub, following
+    the EFI memreserve-table model (Pratyush).
+  * Parse, reserve, map, and update the channel in generic EFI code; remove
+    the LoongArch-specific reader, writer, and st->tables replacement
+    (Pratyush, Huacai).
+  * Synchronize the global channel at execution rather than image load;
+    clear it for cold and crash images and use the scratch payload size.
+  * Rename the GUID to LINUX_EFI_KEXEC_HANDOVER_GUID (Huacai, Pratyush).
+  * Move the linux/mm.h include from luo_session.c to the actual caller,
+    kho_block.c, and place the fix before architecture enablement
+    (Pratyush, Huacai).
+  * Boot the vmtest through EDK2, allow QEMU_EFI to override the firmware,
+    and use vmlinux.efi to exercise the EFI stub and channel.
+  * Keep i8042 enabled and select PCI_HOST_GENERIC instead of disabling
+    the host configuration in the selftest (Huacai).
+  * Enable ACPI_SPCR_TABLE and use the SPCR-provided early console.
+  * Exercise the default KHO scratch-sizing path in the LoongArch vmtest;
+    depend on the separately posted generic sizing fix [6].
+  * Drop the generic QEMU timeout now that EFI runtime reset services make
+    the LoongArch guest terminate normally.
+  * Rebase onto Linux 7.3-rc1.
+
+[1] Pratyush Yadav:
+    https://lore.kernel.org/r/2vxzo6f96fmn.fsf@kernel.org/
+[2] Huacai Chen:
+    https://lore.kernel.org/r/CAAhV-H4PKRNCa4g=6TGepP+trtM82JiMoWgVr3O7PqbZYP9uGw@mail.gmail.com/
+[3] https://lore.kernel.org/r/2vxzse4m54nz.fsf@kernel.org/
+[4] https://lore.kernel.org/r/2vxzfr0l6fam.fsf@kernel.org/
+[5] https://lore.kernel.org/r/202605211925.DbDvQ6ii-lkp@intel.com/
+[6] https://lore.kernel.org/loongarch/20260904025101.9959-1-dongtai.guo@linux.dev/
+
+Previous version:
+
+v4: https://lore.kernel.org/loongarch/20260807103714.33074-1-dongtai.guo@linux.dev/
+
+George Guo (5):
+  efi: add a KHO configuration table channel
+  liveupdate: synchronize EFI KHO channel at execution
+  liveupdate: kho_block: include linux/mm.h for virt/phys translation
+  LoongArch: enable kexec handover (KHO)
+  selftests/kho: add LoongArch vmtest support
+
+ arch/loongarch/Kconfig                     |  4 ++
+ drivers/firmware/efi/Kconfig               | 12 ++++
+ drivers/firmware/efi/efi.c                 | 78 ++++++++++++++++++++++
+ drivers/firmware/efi/libstub/efi-stub.c    | 25 +++++++
+ include/linux/efi.h                        | 36 ++++++++++
+ kernel/crash_core.c                        |  7 ++
+ kernel/kexec_core.c                        |  5 ++
+ kernel/kexec_internal.h                    |  3 +
+ kernel/liveupdate/kexec_handover.c         | 33 +++++++++
+ kernel/liveupdate/kho_block.c              |  1 +
+ tools/testing/selftests/kho/loongarch.conf | 11 +++
+ tools/testing/selftests/kho/vmtest.sh      |  3 +-
+ 12 files changed, 217 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/kho/loongarch.conf
+
+
+base-commit: cee9395acd8043be0644b25c34bfa86623f2b935
+prerequisite-patch-id: a2f06addb17cc379b9f98674f087a1642588dc6e
+-- 
+2.53.0
