@@ -1,57 +1,57 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A873933D6F0
-	for <loongarch@lists.linux.dev>; Sat,  5 Sep 2026 15:05:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED8C49EC65
+	for <loongarch@lists.linux.dev>; Sat,  5 Sep 2026 15:06:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788620756; cv=none; b=eZ6LMb54aYvhO9VWE6wYKWmgdvepLRb1YIeSv29pCr271B1R/MBeIOky0NqpbSnDGGpRhZgLSWz4Y05GcMyfKBilT60ZleOh7zGAUa+/Qks4u2Coyct6v+KgnBIvZD8D8+EM2YrU1rPEXLRjE+rDe0l2CUsw+7aeaEMF/ibrJOM=
+	t=1788620782; cv=none; b=BUdynf0Z6Wjrv0h/mrfSoMAYA5NqLqpk2y4qseSS5B7C9if0Uv/dlzio1HCb0n+kz1W4GC9cVIDjisxi5to2gWmkMH84Ii8gMPRXRw+Lpth3rnf4L1sCkVhTQmzDD5PVGVKBLQtwiIs/9coHOMveSjNK1GMu6ZpetrQhJZl/bPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788620756; c=relaxed/simple;
-	bh=Lwr3u6/44Qkgh6Az4Hfak3Lh2DZGAR5vEe2BduwpAzY=;
+	s=arc-20240116; t=1788620782; c=relaxed/simple;
+	bh=T/BoCHcn+7UNKzHUeVaxUpVLcaN6ZzFjFQ0osHhrjKk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m4p6eVOII3r98KAxE6VH+pme7CnvhyoVF0vuAruxxjCLwsqO5S2zxa5Jnha8mIKcQZNeDXDfIenoWpSGmkJ3J340qOMKQsaPFjw2qLkxNHBjP6odLMYpRYpE1QZgMjw30Jinlukq8s9EUxEYLwld+uDgFVUYAbLrK+wQ9mqmpag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sl9s/G13; arc=none smtp.client-ip=100.103.45.18
+	 To:Cc:Content-Type; b=XoJS33RHZ0uY4aRsosNQsvuB9FPUtySSVO3ac3yEERcZzmv1LwJCipwAAAnKrXAwwR4aPCaQH2tDGJjT4BOH1QIMnOkGuNWHyR3Xofc9Jxfq8Rz1xWPvN8ohlNEjSb1Wby4VDV03MUXqk+eashbfU14SUcA8WMJ6TF+6hTJ0Wq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BFN847tF; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sl9s/G13"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 901A51F00A3A
-	for <loongarch@lists.linux.dev>; Sat,  5 Sep 2026 15:05:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BFN847tF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7E821F00AC4
+	for <loongarch@lists.linux.dev>; Sat,  5 Sep 2026 15:06:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788620755;
-	bh=NItOs9gzxBRZ3y2Cb1q01a8oz6LpLsi3W4WWAFVmokc=;
+	s=k20260515; t=1788620780;
+	bh=KHshG6nMPDVCmd80dZy5JGDXk83+eLNv22ru8gCVG+8=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=Sl9s/G13NrEGEZ8+y8RwpF7YWVQm1cqQNJSpeJZlLmQmCQyKYVJ0vtA3IEC1i65ge
-	 bylVjDEOxYaKduinV2qlSCJsJ0iAQhm9SWYiMZ0OhrrRz5Ui5Y8SqPjpTB5p0KCgfE
-	 LCoO+/4v1jgtXwrhiEly8Z3+yEPa/Gb5eEXOKiNe2xib5XSrFB1v/kQ12BAAc0mp4s
-	 AOAZ31uIDzOu6aBjQxTAyzG6Ks4wjAl2Uke+5vRSmehq8fyCHK0anJJ+xmds48cSm9
-	 Kd87njN8YLGjldTIwbLqWM1RUnnl709GmtzulLxVYqzRXauZ7aRM/ut7M3BpO4dGUt
-	 3z/fSUrZSqk5A==
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-6a7f5655823so1298765a12.2
-        for <loongarch@lists.linux.dev>; Sat, 05 Sep 2026 08:05:55 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBwGa0SEMpzk6Ls8SORF2/xyn1zqlRhqtWgCgNRi6xIlQolZfDPmIRsnD9qgziPvBYSHlioikaUASac=@lists.linux.dev
-X-Gm-Message-State: AFuF++kigM78+rRlFCjN5RBhekDbp6J00fzBaZ2C2IEgV7owkBVYt0qZ
-	nB2Pt9vWJxeW38sswLQpOl9lm3kiVaZJg9kDwCjienG9fsV176q+MgggHwD5XiNAwGj0aLerBDu
-	+H4r6dpfCzHrJm0PmmsqaPVYv+6uA3G0=
-X-Received: by 2002:a05:6402:4614:b0:6a7:f287:4d90 with SMTP id
- 4fb4d7f45d1cf-6a7f2874e12mr2630015a12.40.1788620754240; Sat, 05 Sep 2026
- 08:05:54 -0700 (PDT)
+	b=BFN847tFn0rW9Qc1HSoTHxaAQK4pQng2mb+hUMgPKGuEs9M4MYAUENxo8ATR4wM/H
+	 yWvXNhDew1s4jki+d3S7rr67ZKID/1kkVJLBUrDMNRpG5WF1KG5N2Rv3H4I6kXcaxA
+	 FuGIQ6hCoihrGOoT4ZjRw2uV4vp7tZUYjqmJyYFwj3lpI5DmxRAgiLlH2ApRwOzoeY
+	 VQ4RCA+PvZvEh1Ho/hFA7Kcz7U2GujGWr8mxC3uMbTXmeZZ4FZT2y+gq/k83dKwftU
+	 bJvZW/hU8WKZGSOYTPRdReTAXoNLN6izc8+wgY8wdbM+CDHtd2lGi+fye8VEoc5HVK
+	 tkyFxEaFvO13A==
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-c20ce3c118aso403653466b.0
+        for <loongarch@lists.linux.dev>; Sat, 05 Sep 2026 08:06:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvByxXA+bUEX1QdZZmjru6QXQGWyto9HrCiwUivJjhWo2+RIL5Bt6I483k58UirPwieK4k10+ga9g0Bw=@lists.linux.dev
+X-Gm-Message-State: AFuF++krdOy0OYoAaUqZlaHWVZxRNbUpjCGiYfRiG9VSdZhrcwq9mC3x
+	P3I8kqvH72PUEjr0Npm0TO+fwTYuQiGocPRpR7YNhyVUCgrhiJJW2QYg29dEJaSTbgGPl51w9g3
+	F4Km+y2DMUIBBS9HJLEJ+eq0tLkoikew=
+X-Received: by 2002:a17:907:a2cc:b0:c25:4ca3:dfda with SMTP id
+ a640c23a62f3a-c25f012737cmr780960866b.9.1788620779385; Sat, 05 Sep 2026
+ 08:06:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260823211822.2181816-2-Jeremy.Jean@oss.cyber.gouv.fr>
-In-Reply-To: <20260823211822.2181816-2-Jeremy.Jean@oss.cyber.gouv.fr>
+References: <20260831023106.3279-1-yangtiezhu@loongson.cn>
+In-Reply-To: <20260831023106.3279-1-yangtiezhu@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 5 Sep 2026 23:05:43 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H77WDZfkZZ700+phmiFxc5mApB4byQEfYFZ-2WKNvDZig@mail.gmail.com>
-X-Gm-Features: AcwNN1VzjQhBcon7mRij_BI9cPtTLQT7aVOJ02hRSQIXV4PmYHboj35wdriRapI
-Message-ID: <CAAhV-H77WDZfkZZ700+phmiFxc5mApB4byQEfYFZ-2WKNvDZig@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: kprobes: Avoid preempt count underflow without probe
-To: =?UTF-8?B?SsOpcsOpbXkgSmVhbg==?= <Jeremy.Jean@oss.cyber.gouv.fr>
-Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
+Date: Sat, 5 Sep 2026 23:06:08 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6gwzWdck95Sr8Ubz0eeKtor8d0Ojc+gULK-=nakq-hXA@mail.gmail.com>
+X-Gm-Features: AcwNN1VxHVvqIMEdQIiXWuew_GsDjwo6BKiiVq6lKP0VXx78dtGRx0MNL75g1vI
+Message-ID: <CAAhV-H6gwzWdck95Sr8Ubz0eeKtor8d0Ojc+gULK-=nakq-hXA@mail.gmail.com>
+Subject: Re: [PATCH v2] LoongArch: BPF: Fix off-by-one error for insn_is_cast_user
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Kumar Kartikeya Dwivedi <memxor@gmail.com>, Hengqi Chen <hengqi.chen@gmail.com>, loongarch@lists.linux.dev, 
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -60,57 +60,49 @@ Applied, thanks.
 
 Huacai
 
-On Mon, Aug 24, 2026 at 5:19=E2=80=AFAM J=C3=A9r=C3=A9my Jean
-<Jeremy.Jean@oss.cyber.gouv.fr> wrote:
+On Mon, Aug 31, 2026 at 10:31=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.c=
+n> wrote:
 >
-> LoongArch uses break 11 for the breakpoint placed after an instruction
-> that Kprobes executes out of line. Since userspace can issue the same
-> break instruction, do_bp() can reach kprobe_singlestep_handler() when
-> there is no current probe.
+> In the LoongArch BPF JIT code, the branch offset represents the number
+> of instructions. An offset of 1 means the target of the "beq" is the
+> current PC plus 1 instruction (PC + 4 bytes). This matches the exact
+> same path as the sequential non-branch execution, the "or" instruction
+> is always executed for the cast_user JIT arm in build_insn().
 >
-> The handler returns false in this case, but first calls
-> preempt_enable_no_resched(). The corresponding preempt_disable() is done
-> by kprobe_breakpoint_handler() on a real Kprobe hit, so it has not run
-> here. As a result, an ordinary userspace breakpoint underflows the
-> current task's preempt count.
+> If the pointer is not NULL, there is no side effect. But if the pointer
+> is NULL, it is incorrectly combined with the base address and turns into
+> a non-zero address, meaning a zero arena offset no longer casts to NULL.
 >
-> This also makes in_interrupt() return true until the task schedules. One
-> visible consequence is socket cgroup attribution: cgroup_sk_alloc()
-> treats the allocation as interrupt context and assigns the socket to the
-> root cgroup. A socket opened from the SIGTRAP handler can then avoid a
-> BPF_CGROUP_INET_SOCK_CREATE policy attached to the task's own cgroup.
+> Fix this by changing the branch offset from 1 to 2, which properly skips
+> the "or" instruction and jumps directly to the "move_reg" instruction if
+> the pointer is NULL, ensuring the destination register is safely cleared
+> to 0.
 >
-> Return as soon as kprobe_running() reports no active probe.
->
-> The same check appeared in [PATCH v10 2/4] of the original LoongArch
-> Kprobes series, but was dropped before the feature reached mainline.
->
-> Link: https://patchew.org/linux/1670575981-14389-1-git-send-email-yangtie=
-zhu%40loongson.cn/1670575981-14389-3-git-send-email-yangtiezhu%40loongson.c=
-n/
-> Fixes: 6d4cc40fb5f5 ("LoongArch: Add kprobes support")
-> Assisted-by: Codex:gpt-5
-> Signed-off-by: J=C3=A9r=C3=A9my Jean <Jeremy.Jean@oss.cyber.gouv.fr>
+> Fixes: 4fdb5dd8aeba ("LoongArch: BPF: Implement bpf_addr_space_cast instr=
+uction")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 > ---
->  arch/loongarch/kernel/kprobes.c | 3 +++
->  1 file changed, 3 insertions(+)
+> v2: Update the commit message, no code changes.
 >
-> diff --git a/arch/loongarch/kernel/kprobes.c b/arch/loongarch/kernel/kpro=
-bes.c
-> index 1985ed30dd16f..ddfefea174727 100644
-> --- a/arch/loongarch/kernel/kprobes.c
-> +++ b/arch/loongarch/kernel/kprobes.c
-> @@ -275,6 +275,9 @@ bool kprobe_singlestep_handler(struct pt_regs *regs)
->         struct kprobe_ctlblk *kcb =3D get_kprobe_ctlblk();
->         unsigned long addr =3D instruction_pointer(regs);
+>  arch/loongarch/net/bpf_jit.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> +       if (!cur)
-> +               return false;
-> +
->         if (cur && (kcb->kprobe_status & (KPROBE_HIT_SS | KPROBE_REENTER)=
-) &&
->             ((unsigned long)&cur->ainsn.insn[1] =3D=3D addr)) {
->                 restore_local_irqflag(kcb, regs);
+> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+> index 1eb588e443c9..4da278900938 100644
+> --- a/arch/loongarch/net/bpf_jit.c
+> +++ b/arch/loongarch/net/bpf_jit.c
+> @@ -717,7 +717,7 @@ static int build_insn(const struct bpf_insn *insn, st=
+ruct jit_ctx *ctx, bool ext
+>                         move_reg(ctx, t1, src);
+>                         emit_zext_32(ctx, t1, true);
+>                         move_imm(ctx, dst, (ctx->user_vm_start >> 32) << =
+32, false);
+> -                       emit_insn(ctx, beq, t1, LOONGARCH_GPR_ZERO, 1);
+> +                       emit_insn(ctx, beq, t1, LOONGARCH_GPR_ZERO, 2);
+>                         emit_insn(ctx, or, t1, dst, t1);
+>                         move_reg(ctx, dst, t1);
+>                         break;
 > --
-> 2.47.3
+> 2.42.0
 >
