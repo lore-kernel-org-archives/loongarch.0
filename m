@@ -1,55 +1,58 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8601F49EC65
-	for <loongarch@lists.linux.dev>; Sat,  5 Sep 2026 15:05:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F0A2351C02
+	for <loongarch@lists.linux.dev>; Sat,  5 Sep 2026 15:05:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788620706; cv=none; b=NPqOjkMlnX8Jozlf1t7/l/XLivbMKeRnmdNftdvAJio2cVupO9P/0GkJ2iyndxwYpUSo49u+IWYyG3z88/ZnKMQN3Z2Ob6IyUVE3ZdorLqNHbMIeQr7DTNhA1s9bRyGxd/kNeJ27SYLY90lrYDio4qPp3XnUFZe/NSf3mHYaG4o=
+	t=1788620743; cv=none; b=jmDvyWRoO47LpgkZUf3GO9aGp3kvDmyISWY0AWooW1FCO/8NUd4T7RUK64r0NloFHm4tuwG03lJX9SejHowdU6DWNMp6aprHDIFawnQ4jNn9WujEuuUm+h4XGAWGbFsyvSjmuxB0fFvJTeNmYj3RY1HZ3yHw59nbIYhmdos5Rj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788620706; c=relaxed/simple;
-	bh=w9DPXdW2XpPBZlLrO8cXtyah84iqZAvvL3xF8eE7a6w=;
+	s=arc-20240116; t=1788620743; c=relaxed/simple;
+	bh=yQX0pN/kRO1NwvgfUxNl+jugCOWG6zLB4VuV/c6J+bY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lXAJvK/ae2y0DshoAG53nXo8AcoJuHTdyECHwYjohrjjlxM28YLt2b8r1kNPFqtey48eX15OnSXoaLG63JSTXIQJ5nOgMNQxlLRy2z1BHzn8eTHqe3X86Tcus4ZnEPP5JJn+dKnFqU6CGDLNxQWjxCdmHZuDvOdJ8sLLn4ojWso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=coHrXujP; arc=none smtp.client-ip=100.103.45.18
+	 To:Cc:Content-Type; b=fEDFl3n51GbdUZZivv4PHGhZwQB2IKv6rGZn/Q6W/9SSftDlgdZbWxPEwBquhcZISQciqoQ9l/6TeI9UND6K6NGsO5Fe8ZTyl+46j+d0lU3oO7+KCeng6YMT3XuOt6DSIZPWPxu45owBNVZIyJzg/MKS17dZ03dCH+lJwA/scTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bn7qbPHl; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="coHrXujP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ADFD1F00A3E
-	for <loongarch@lists.linux.dev>; Sat,  5 Sep 2026 15:05:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bn7qbPHl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7FBB1F00AC4
+	for <loongarch@lists.linux.dev>; Sat,  5 Sep 2026 15:05:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788620702;
-	bh=h/JLEiMRZT9DUsW9Ku3CfAcZ3JAuJJ+hQEy8vaUF23E=;
+	s=k20260515; t=1788620740;
+	bh=/jZ9KGVQ5iKPjZkKaI8bnnI5o0Vm2Cvi//ZuID7cLv8=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=coHrXujPEzzKUHJb9KecZprixN+BEkCjoN4RAVOKInqGDgJJNPTpM+H3fVmrhZiPK
-	 i6koPuv3f7bsaugbSR8OSoSYQF7zSiBlxmFK/18PN8JHCNGZTkJnkJ99rwl04lX6Mo
-	 S6/sxY7oTDRsArEcnRD7x2yBZ2RUuvYaKJZ769XiReE+okKmb5mybPt+pcGUYxJmro
-	 33oo3jZHmpea1BoTrFdZ2elTXc5xBaM7InpLI5G1zlHlGrk/pn9I8ob6Me46gjEsxl
-	 xk+/1lqdZxS254QeeaE91ddB601/aV4JPqTd29Tm7fMN0mWCIcBM5gHJmybNDP+OL2
-	 2Y9rhYKVOM9qg==
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6a173ad7cf4so3240487a12.3
-        for <loongarch@lists.linux.dev>; Sat, 05 Sep 2026 08:05:02 -0700 (PDT)
-X-Gm-Message-State: AFuF++nNJfbHLMOC6MI9pP+msNp184Kgz5+yAcQMeuNx5aHkzlQTJY6D
-	+mSveJh9osd3I+y3Npm/p7YZYFQdzHklRCeDDylVXM/KHJ1U90I9V5Xwnv7U2UOs8mmdB1PcgKS
-	aDFXn6O8D9nLl08lbXpkL0A2QOsqV1dA=
-X-Received: by 2002:a05:6402:3607:b0:6a7:ea54:37d with SMTP id
- 4fb4d7f45d1cf-6a7ea541e23mr3520150a12.37.1788620700724; Sat, 05 Sep 2026
- 08:05:00 -0700 (PDT)
+	b=Bn7qbPHl/LyTiyne76i581lMejAG7Em4Cmjt07J/egiYOI3ajCBzj5KN3rQMCGtju
+	 cH8oa7s6dEN4JRlVtARQzLjC1fT1k9UbcpgdsS3P3yqOHYe0fJ5l56AgcXHC3qIfgm
+	 ecsejymKVUB9C5/QbFIGaN8HCnEn8ObM+AsrHxPoS3QZ+VixD3kp9mDFVJzwifUCmb
+	 Utk8pKStemd/3Cd/vJCQxtFmjGkiAHcRb9t4qylzZFjVb0S05QA7yjxL/jm3PQhoQT
+	 Yq1QcsmY+yKX0uG9yTf5vokKK+Z0beOHWrZkC1eIkVwc3uua1755goO1WaeROhDiS6
+	 1j584kdGnpIyA==
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-69c600f76ccso2488459a12.0
+        for <loongarch@lists.linux.dev>; Sat, 05 Sep 2026 08:05:40 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvBwD93CxiLKhs+baDdDiauerzPH+oS6ATHKIgXadfztnS1ZRcwugxvlHYBJBrC9jvBDqk4pp3uzAx14=@lists.linux.dev
+X-Gm-Message-State: AFuF++kA0i5MdpllGjTcaTIvbFQVkyKB6zzEn0SGJqrpMWgztGLhNmp4
+	ewsH48ZQvBFrJKpa82KRJ5c3SYFkhCY4kjfZy/uJSL4662eok16VE+YqnFMMW8G93YmX6oZcvxK
+	Ih3cRH9dpTxU4agCaMjnDnlLUjdz44lU=
+X-Received: by 2002:a05:6402:21cd:b0:6a3:87b7:b5a9 with SMTP id
+ 4fb4d7f45d1cf-6a7e90aacd1mr4325493a12.12.1788620739425; Sat, 05 Sep 2026
+ 08:05:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260820124933.144476-1-ailiop@suse.com>
-In-Reply-To: <20260820124933.144476-1-ailiop@suse.com>
+References: <20260825014806.3926864-1-guanwentao@uniontech.com>
+In-Reply-To: <20260825014806.3926864-1-guanwentao@uniontech.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 5 Sep 2026 23:04:49 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4GX3uYqd-EXT-0Go_r=ad5ZcP+QqG9xgL40HFLnsZZ0A@mail.gmail.com>
-X-Gm-Features: AcwNN1UmZKL8m6voCv7ytVUZzEEkby6_mawzHd3fWAOkmIJOaCA5YAMG0kA3hrY
-Message-ID: <CAAhV-H4GX3uYqd-EXT-0Go_r=ad5ZcP+QqG9xgL40HFLnsZZ0A@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: remove unused setup_profiling_timer function
-To: Anthony Iliopoulos <ailiop@suse.com>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Date: Sat, 5 Sep 2026 23:05:27 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4Bz3JWc=JkP99PVPe6iVNONMGEb557gyO-rKvJkjSksA@mail.gmail.com>
+X-Gm-Features: AcwNN1XPmEoTBWfKY8iGGv9aogL8vaUXzAChR0jViYazGj0pg3-Omt5_OV3fB00
+Message-ID: <CAAhV-H4Bz3JWc=JkP99PVPe6iVNONMGEb557gyO-rKvJkjSksA@mail.gmail.com>
+Subject: Re: [PATCH v3] LoongArch: rethook: Do not save/restore percpu base
+ register in trampoline
+To: Wentao Guan <guanwentao@uniontech.com>
+Cc: kernel@xen0n.name, yangtiezhu@loongson.cn, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -58,45 +61,82 @@ Applied, thanks.
 
 Huacai
 
-On Thu, Aug 20, 2026 at 8:49=E2=80=AFPM Anthony Iliopoulos <ailiop@suse.com=
-> wrote:
+On Tue, Aug 25, 2026 at 9:48=E2=80=AFAM Wentao Guan <guanwentao@uniontech.c=
+om> wrote:
 >
-> setup_profiling_timer() is not used by any code at this point. Since a
-> default weak implementation exists, there is no need to keep this
-> arch-specific definition around. Remove it along with the now-redundant
-> profile header includes.
+> The rethook trampoline saves $r21 ($u0), the percpu base, into its
+> frame at entry and restores it at exit. In between,
+> rethook_trampoline_handler() may schedule via preempt_enable_notrace();
+> if the task migrates to another CPU, the frame's $r21 names the old
+> CPU's percpu base, and restoring it poisons $r21 on the new CPU. Until
+> the next user->kernel transition heals $r21, this_cpu_*() accesses
+> (runqueues, RCU per-CPU data, timer tick programming, FPU ownership)
+> hit the wrong CPU's percpu area.
 >
-> Signed-off-by: Anthony Iliopoulos <ailiop@suse.com>
+> Under kretprobe-heavy preemptible load this corrupts scheduler and
+> timer state: scheduling-while-atomic splats, wrong-CPU RCU warnings,
+> WARN_ON_ONCE(rq !=3D this_rq()) in nohz_balance_exit_idle(), and CPUs
+> parking in the idle loop with the constant timer never re-armed (hard
+> lockup). Reproduces on a Loongson-3A6000 with kretprobes on VFS paths
+> plus heavy file churn (OS install / unsquashfs).
+>
+> By convention $r21 always holds the current CPU's percpu base in kernel
+> mode: exception entries reload it only when coming from user mode, and
+> RESTORE_SOME() restores it only when returning to user mode; the
+> context-switch path never writes it. The live $r21 at trampoline exit
+> is therefore already correct, and nothing in between can legitimately
+> change it (kernel C code cannot write a global register variable). The
+> same flaw existed in the pre-rethook kretprobe trampoline since v6.3;
+> it was carried over when rethook replaced it. Drop both the save and
+> the restore. Drop the restore to solve the issue, and drop the save
+> to keep the code tidy and for a privileged reader, neither matters much,
+> so no need to clear it.
+>
+> Fixes: 3f5536860086d ("LoongArch: Add kretprobes support")
+> Cc: stable@vger.kernel.org # v6.5+
+> Assisted-by: Kimi:Kimi-K3 # debug and root-cause analysis
+> Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
 > ---
->  arch/loongarch/kernel/smp.c | 8 --------
->  1 file changed, 8 deletions(-)
+> changelog v3:
+> return to v1 patch, remove the save/restore both.
+> Drop the restore to solve the issue, and drop the save
+> to keep the code tidy and for a privileged reader, neither matters much,
+> so no need to clear it.
 >
-> diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-> index d4b5d1b6bb01..11f54837f56c 100644
-> --- a/arch/loongarch/kernel/smp.c
-> +++ b/arch/loongarch/kernel/smp.c
-> @@ -14,7 +14,6 @@
->  #include <linux/init.h>
->  #include <linux/interrupt.h>
->  #include <linux/irq_work.h>
-> -#include <linux/profile.h>
->  #include <linux/seq_file.h>
->  #include <linux/smp.h>
->  #include <linux/threads.h>
-> @@ -716,13 +715,6 @@ void smp_send_stop(void)
->         smp_call_function(stop_this_cpu, NULL, 0);
->  }
+> changelog v2:
+> according sashiko report, keep cfi_st u0, PT_R21
+> Link: https://sashiko.dev/#/patchset/20260824082524.3801394-1-guanwentao%=
+40uniontech.com
 >
-> -#ifdef CONFIG_PROFILING
-> -int setup_profiling_timer(unsigned int multiplier)
-> -{
-> -       return 0;
-> -}
-> -#endif
-> -
->  static void flush_tlb_all_ipi(void *info)
->  {
->         local_flush_tlb_all();
+> v1 link:
+> https://lore.kernel.org/loongarch/20260824082524.3801394-1-guanwentao@uni=
+ontech.com/T/#u
+> ---
+> ---
+>  arch/loongarch/kernel/rethook_trampoline.S | 2 --
+>  1 file changed, 2 deletions(-)
+>
+> diff --git a/arch/loongarch/kernel/rethook_trampoline.S b/arch/loongarch/=
+kernel/rethook_trampoline.S
+> index 2e009fbea53f2..1601894446845 100644
+> --- a/arch/loongarch/kernel/rethook_trampoline.S
+> +++ b/arch/loongarch/kernel/rethook_trampoline.S
+> @@ -24,7 +24,6 @@
+>         cfi_st  t6, PT_R18
+>         cfi_st  t7, PT_R19
+>         cfi_st  t8, PT_R20
+> -       cfi_st  u0, PT_R21
+>         cfi_st  fp, PT_R22
+>         cfi_st  s0, PT_R23
+>         cfi_st  s1, PT_R24
+> @@ -59,7 +58,6 @@
+>         cfi_ld  t6, PT_R18
+>         cfi_ld  t7, PT_R19
+>         cfi_ld  t8, PT_R20
+> -       cfi_ld  u0, PT_R21
+>         cfi_ld  fp, PT_R22
+>         cfi_ld  s0, PT_R23
+>         cfi_ld  s1, PT_R24
 > --
-> 2.55.0
+> 2.30.2
 >
