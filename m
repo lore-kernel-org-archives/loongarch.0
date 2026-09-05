@@ -1,66 +1,66 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from mail.srv.csmantle.top (mail.srv.csmantle.top [77.93.157.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7432951990C;
-	Fri,  4 Sep 2026 17:56:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBAF3175A6B;
+	Sat,  5 Sep 2026 03:47:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.93.157.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788544589; cv=none; b=dqSW0V0RYPuXZpLS0uwAkAp2kLSgmFs3K5gxEDUFe1HDmtTZC5wR8AhoWRAfm+R+FHbd5jludX+9VZGkiD3S6vjYk+j5G8hjN/9Q+gLa7x85qUDzUYgBwXEXcSM6FmENEL8X/+PicwKTIdN4xpvHb0Zk8/GAz8sL3emL/+1lhOQ=
+	t=1788580069; cv=none; b=f+Oy/dRkx+YV/yZcd3s+IlbZlnY46dwpUOIJw1nX1WcnYDh+P6RAVLickBmk2d2ctskz9BDE34FN1Jp3OHwgr5hSSRb3dEcPoih17nOsfW7S/vpQyacIPuYvJiO4dfDeXgtwaArbfLckKJPHOrqeAEs9fFq4n3FnbopKE1r51cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788544589; c=relaxed/simple;
-	bh=iPojDadhs7jRZqSVeoQ7ARmCCB1xlJ7viqP4eGAcvOU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=K5WoANnXvGh6tnB4QZBuUpcNuFNwK+rVLNkBIZUVYZhge0Gw7deh40VtbrgMW0SDgZ5jhwBB3yggpDQJxFH0QW86PUk3Zbev+GPQpfqJSqE16xw9G/CCB3Y7ScCGq36/S3NQctY1FZphhK3TlB9KcQv/w5sLuWgxitbU487NDUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=aez0rP6g; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1788580069; c=relaxed/simple;
+	bh=lv9yVDePp6C20XWvEfa5Mghh+KKqIkoBMuO5eDjZVDs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TRHxaEZyN1JRsMco94Vh5+1+vpgfbZTFt5PfxJD3KYl/2kePEMK//xHxWbnDnd0YsOv4PDKZJaBwXN9cyIPQcgZD2KgRB1U94Bq0ycSHDExUR3fm9eqtu3cAg8ypEq9Q9a+irnhFvhSVWEYvsFFJRzk3NSG523FdLqveTdJnAH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csmantle.top; spf=pass smtp.mailfrom=csmantle.top; dkim=permerror (0-bit key) header.d=csmantle.top header.i=@csmantle.top header.b=nweJFBQ5; dkim=pass (3072-bit key) header.d=csmantle.top header.i=@csmantle.top header.b=g68Jwli7; arc=none smtp.client-ip=77.93.157.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csmantle.top
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csmantle.top
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aez0rP6g"
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 684GlMkj3750877;
-	Fri, 4 Sep 2026 17:55:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=corp-2025-04-25; bh=6iXgM
-	xHD3EX0uxPlPF+/kWo8h4vhjuK3982RDel46+Y=; b=aez0rP6guOp31/pF7piym
-	Ks0t/R8THgGLN/pzybHskW0NxTWkCQzX/m4RVhZbJfjMnFaa0fgu5ZA2QKHOATXj
-	dqusLuB9x5qN495za0nXylZxvpbNpbXNFJN8iB0UdAoCaUdJu65g9lfNgMLYvLSo
-	S6w3oOUnlar1OWuGo0udB/tu68vyJsNjPOsmBlPtjVKDuYgQNSvsofsaMk01qXvn
-	oCb5SgwKsVdFVvdQG+lJ9NHaK/2r7QyQVtUqD6JDwdODmn/0Nai0QjMjo2VG77l7
-	Heyup6hbWJ9P2hfp+ZlRcdcGJ9TrLrQxyJPdsdDR2ClwVbr6D5J1vWj7I/gJARAc
-	A==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4gbpbb3b45-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 04 Sep 2026 17:55:55 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.7/8.18.1.7) with ESMTP id 684HoXOG016069;
-	Fri, 4 Sep 2026 17:55:54 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4gbnvv367k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 04 Sep 2026 17:55:53 +0000 (GMT)
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.1.12) with ESMTP id 684HrwmH032217;
-	Fri, 4 Sep 2026 17:55:53 GMT
-Received: from donglzha-e6-vfio-setup.osdevelopmeniad.oraclevcn.com (donglzha-e6-vfio-setup.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.255.69])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 4gbnvv366p-2;
-	Fri, 04 Sep 2026 17:55:53 +0000 (GMT)
-From: Dongli Zhang <dongli.zhang@oracle.com>
-To: kvm@vger.kernel.org, kvmarm@lists.linux.dev, loongarch@lists.linux.dev,
-        kvm-riscv@lists.infradead.org, linux-kselftest@vger.kernel.org
-Cc: maz@kernel.org, oupton@kernel.org, fuad.tabba@linux.dev,
-        joey.gouly@arm.com, seiden@linux.ibm.com, suzuki.poulose@arm.com,
-        yuzenghui@huawei.com, zhaotianrui@loongson.cn, maobibo@loongson.cn,
-        chenhuacai@kernel.org, anup@brainfault.org, atish.patra@linux.dev,
-        seanjc@google.com, pbonzini@redhat.com, shuah@kernel.org,
-        dwmw2@infradead.org, joe.jin@oracle.com
-Subject: [PATCH v2 1/4] KVM: Move last_steal to common struct kvm_vcpu
-Date: Fri,  4 Sep 2026 17:55:23 +0000
-Message-ID: <20260904175550.430266-2-dongli.zhang@oracle.com>
-X-Mailer: git-send-email 2.43.7
-In-Reply-To: <20260904175550.430266-1-dongli.zhang@oracle.com>
-References: <20260904175550.430266-1-dongli.zhang@oracle.com>
+	dkim=permerror (0-bit key) header.d=csmantle.top header.i=@csmantle.top header.b="nweJFBQ5";
+	dkim=pass (3072-bit key) header.d=csmantle.top header.i=@csmantle.top header.b="g68Jwli7"
+DKIM-Signature: v=1; a=ed25519-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=csmantle.top; s=self-ed25519; h=BIMI-Selector:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:In-Reply-To:References:BIMI-Selector;
+	bh=WDYW7gXRlodz8zDFJ7HbVgThqGhyhpwVabc9ZOJDGMI=; t=1788580067; x=1789184867; 
+	b=nweJFBQ5h1IK17FtYFxVE7L105fc9X3cC52uLDxyX+e3+ArdS3Hopl6SzQgk2znEUWZbd81fJIo
+	1PevaBdT3DA==;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=csmantle.top; s=self-rsa3072; h=BIMI-Selector:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:In-Reply-To:References:BIMI-Selector;
+	bh=WDYW7gXRlodz8zDFJ7HbVgThqGhyhpwVabc9ZOJDGMI=; t=1788580067; x=1789184867; 
+	b=g68Jwli7+mUGK2fJzBq7FGLN5yby9kf4l/FFeHpGLt+L0BIQmskGkdHtXlzsg44NFoP8WAqaCId
+	QCd8RAVG37tRxWzZ90bBiGk1m8WVqfwQVZT9VNlCu/XfM4MP5qzvh4Eh5D0rAh9NQwbLBjui+tx5d
+	zzuAQoXzHOYokd8LfwXwSLoczofxgxn15p0Y+8xRDjkz91vfDyY/czov34iAMuu6rmtMH4q/KhDyn
+	/ays1h+Tse7GXP9OWjekM5QTO7RyIeQdRJM5gx/VoY4bNN+nUb4O4IzGw0OFxT9iCZSoADJxohFYV
+	6wAPbRCLJjV4EkMSuH55E7lGfTPHMGC3DlQW5vBxmAkYAG4Ww9cApMCCsFT53ht4gk6N/7GjY7guC
+	MsUbBhVAeToB0AL3Ha2rZmXj6SrEWuxn5mCbe6DUCFx0Bq4XKKRkvLXIva7pXmRVwKjw3NPtHiAss
+	T2kIQHZpDRF98oTo0ENOFdCyJ6XKG6OczcnY9z43BMvl7qqMvWhg;
+Received: from [47.76.78.191] (helo=loongcatbox)
+	by mail.srv.csmantle.top with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <rong.bao@csmantle.top>)
+	id 1x2gx8-00000000ETz-3lWm;
+	Sat, 05 Sep 2026 11:20:27 +0800
+From: Rong Bao <rong.bao@csmantle.top>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Hengqi Chen <hengqi.chen@gmail.com>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Rong Bao <rong.bao@csmantle.top>,
+	George Guo <dongtai.guo@linux.dev>,
+	Yangyang Lian <lianyangyang@kylinos.cn>
+Cc: Kexy Biscuit <kexybiscuit@aosc.io>,
+	Mingcong Bai <jeffbai@aosc.io>,
+	Rong Bao <baorong2005@126.com>,
+	Yawei Li <liyawei@loongson.cn>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] loongarch: expose LAMCAS existence via cpuinfo and hwcap
+Date: Sat,  5 Sep 2026 11:19:46 +0800
+Message-ID: <20260905032010.4962-1-rong.bao@csmantle.top>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -68,319 +68,210 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-09-04_05,2026-09-03_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0
- mlxscore=0 bulkscore=0 lowpriorityscore=0 phishscore=0 adultscore=0
- mlxlogscore=999 spamscore=0 suspectscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.19.0-2606160000 definitions=main-2609040163
-X-Proofpoint-Spam-Info: AW1haW4tMjYwOTA0MDE2MyBTYWx0ZWRfX9afD0e8BUuSL
- 8Pw9fO/WPp5iZGPyco+E2o+QoUqPdjsOC4Rqw8c/IHBvOZeK0hGonAOh4H+vajeWMMFzSPeVzG2
- AfQr3Url04Ucqhu3yvaJuuLSljmHVUFuHp7W9fuiy6/I+ES7zo4y
-X-Proofpoint-ORIG-GUID: bYRsaz571kuc6JEDqC_MsyCbC6FIMUMs
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTA0MDE2MyBTYWx0ZWRfX3BTJZPgvKLT2
- cZgqEKyOvbD2m0ree4dNDl/WAfE0MwySpUU7Y2diZQ38mBwFW8slILhUQDlUNLZi8AT/0FsjtjN
- cehTr/zeZjgTxzoBKT/+TPt3klI4N2ojKQsciOsbhwBjhhl8ivjWPYvKkxqm8vbtq6oGREDu4zn
- UttDG6XFVone6hER59bPyM3QpqeZbDC6xfXQnFlLUwB4ebPhhRVrot7yLeC6A/UKt82xQc1wVAw
- 0F+ZLUPTibgroqld6jE9AHjGzN6lI6tBwM0XJJ1Pqok89CEXZd7rU+x0w+KIcq4pycAOYdJXNwe
- mNYcgYj68bvarY2vxt+07UqZSAzu7PKyF1lHiOWc5fhvLO7NedzA7DZ3k+eLNVwzYPCRwypfYq0
- YG6Whj4QOaSY/1n2oGbA7Gxn7CJ+o+XZ8Sc8uV+rl54cu7w2uwYzcm6lFgYqgv893OLX89fz6H7
- mECL5+TQapBgjB9O27NXKj2xB+0YRIeqFh9Xrzrs=
-X-Authority-Analysis: v=2.4 cv=DMi/JSNb c=1 sm=1 tr=0 ts=6a9b062b b=1 cx=c_pps
- a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17
- a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22 a=jiCTI4zE5U7BLdzWsZGv:22
- a=x0eKOSpe3m1H3M0S9YoZ:22 a=VwQbUJbxAAAA:8 a=yPCof4ZbAAAA:8
- a=BuLvuczXJ8S_3_ykL7AA:9 a=ml6Odv02XoMIxi_K:21 a=5yU3S35YU4bGjq-dph-N:22
- a=Bho9c0fBagfJEIQBS7DQ:22 cc=ntf awl=host:12101
-X-Proofpoint-GUID: bYRsaz571kuc6JEDqC_MsyCbC6FIMUMs
+X-Rcpt-Check: Accepted by authentication
+X-42: Don't panic! 
+BIMI-Selector: v=BIMI1; s=me
 
-KVM caches per-vCPU host task's run_delay in per-architecture struct
-kvm_vcpu_arch at last_steal.
+Currently, neither /proc/cpuinfo nor hwcap exposes the existence of the
+LAMCAS extension, which is part of LA64v1.1. For example, on a Loongson
+3B6000, /proc/cpuinfo is as follows:
 
-Move the cache to struct kvm_vcpu and convert x86, arm64, riscv, and
-loongarch to use the common field.
+        processor               : 23
+        package                 : 0
+        core                    : 11
+        global_id               : 31
+        CPU Family              : Loongson-64bit
+        Model Name              : Loongson-3B6000
+        PRID                    : LA664 (0014d011)
+        CPU Revision            : 0x11
+        FPU Revision            : 0x01
+        CPU MHz                 : 2200.00
+        BogoMIPS                : 4400.00
+        TLB Entries             : 2112
+        Address Sizes           : 48 bits physical, 48 bits virtual
+        ISA                     : loongarch32r loongarch32s loongarch64
+        Features                : cpucfg lam lam_bh scq ual fpu lsx lasx
+        crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+        Hardware Watchpoint     : yes, iwatch count: 8, dwatch count: 4
 
-Add HAVE_KVM_PV_STEAL_TIME so last_steal is used only for architectures
-that implement KVM stealtime.
+... while the CPUCFG 2 instruction reads "0x7e7ccfcf", whose bit 28 is 1,
+indicating the actual presence of LAMCAS.
 
-Suggested-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+This hinders user-space inspection and detection of LAMCAS. For example,
+in SpiderMonkey, we need to switch to larchintrin.h and raw __cpucfg()
+to manually perform the bit extraction. Also, a curious user reading
+/proc/cpuinfo might be puzzled by the lack (of display) of LAMCAS.
+
+Expose the existence of LAMCAS via cpuinfo and hwcap. The definition
+point of the new LOONGARCH_CPU_LAMCAS flag is chosen to match the
+practices in commit 1dd3e8a8eeb4059fb34b07578362380cf35b7ed5 ("LoongArch:
+Define instruction formats for AM{SWAP/ADD}.{B/H} and DBAR").
+
+After this patch, /proc/cpuinfo looks like the following:
+
+        processor               : 23
+        package                 : 0
+        core                    : 11
+        global_id               : 31
+        CPU Family              : Loongson-64bit
+        Model Name              : Loongson-3B6000
+        PRID                    : LA664 (0014d011)
+        CPU Revision            : 0x11
+        FPU Revision            : 0x01
+        CPU MHz                 : 2200.00
+        BogoMIPS                : 4400.00
+        TLB Entries             : 2112
+        Address Sizes           : 48 bits physical, 48 bits virtual
+        ISA                     : loongarch32r loongarch32s loongarch64
+        Features                : cpucfg lam lam_bh lamcas scq ual fpu lsx
+        lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+        Hardware Watchpoint     : yes, iwatch count: 8, dwatch count: 4
+
+Note the addition of "lamcas" to the "Features" row.
+
+Link: https://bugzil.la/2069431 ("[loong64] Use LA64v1.1 LAMCAS
+ extension to simplify atomic cmpxchg operations")
+Signed-off-by: Rong Bao <rong.bao@csmantle.top>
 ---
-Marc suggested reusing CONFIG_HAVE_PV_STEAL_CLOCK_GEN, but I introduced
-HAVE_KVM_PV_STEAL_TIME instead.
+ arch/loongarch/include/asm/cpu-features.h |  1 +
+ arch/loongarch/include/asm/cpu.h          | 64 ++++++++++++-----------
+ arch/loongarch/include/uapi/asm/hwcap.h   |  1 +
+ arch/loongarch/kernel/cpu-probe.c         |  4 ++
+ arch/loongarch/kernel/proc.c              |  2 +
+ 5 files changed, 41 insertions(+), 31 deletions(-)
 
-As I have access to only x86 and arm64 KVM hosts, I created and validated
-the selftest on those two architectures only.
+diff --git a/arch/loongarch/include/asm/cpu-features.h b/arch/loongarch/include/asm/cpu-features.h
+index 62059c5551b9cdcc63c26033f8ccb44d63b18482..19cb0ccd0fb62bbbeb80a31bc447c101560bed32 100644
+--- a/arch/loongarch/include/asm/cpu-features.h
++++ b/arch/loongarch/include/asm/cpu-features.h
+@@ -36,6 +36,7 @@
+ #define cpu_has_cpucfg		cpu_opt(LOONGARCH_CPU_CPUCFG)
+ #define cpu_has_lam		cpu_opt(LOONGARCH_CPU_LAM)
+ #define cpu_has_lam_bh		cpu_opt(LOONGARCH_CPU_LAM_BH)
++#define cpu_has_lamcas		cpu_opt(LOONGARCH_CPU_LAMCAS)
+ #define cpu_has_scq		cpu_opt(LOONGARCH_CPU_SCQ)
+ #define cpu_has_ual		cpu_opt(LOONGARCH_CPU_UAL)
+ #define cpu_has_fpu		cpu_opt(LOONGARCH_CPU_FPU)
+diff --git a/arch/loongarch/include/asm/cpu.h b/arch/loongarch/include/asm/cpu.h
+index 91b96938861eb9f81882b128ab0bd0a925ce0dbb..334ca9d69ec4a649848133d0a81555bfc37fbf9d 100644
+--- a/arch/loongarch/include/asm/cpu.h
++++ b/arch/loongarch/include/asm/cpu.h
+@@ -96,41 +96,43 @@ static inline char *id_to_core_name(unsigned int id)
+ #define CPU_FEATURE_CPUCFG		0	/* CPU has CPUCFG */
+ #define CPU_FEATURE_LAM			1	/* CPU has Atomic instructions */
+ #define CPU_FEATURE_LAM_BH		2	/* CPU has AM{SWAP/ADD}[_DB].{B/H} instructions */
+-#define CPU_FEATURE_SCQ			3	/* CPU has SC.Q instruction */
+-#define CPU_FEATURE_UAL			4	/* CPU supports unaligned access */
+-#define CPU_FEATURE_FPU			5	/* CPU has FPU */
+-#define CPU_FEATURE_LSX			6	/* CPU has LSX (128-bit SIMD) */
+-#define CPU_FEATURE_LASX		7	/* CPU has LASX (256-bit SIMD) */
+-#define CPU_FEATURE_CRC32		8	/* CPU has CRC32 instructions */
+-#define CPU_FEATURE_COMPLEX		9	/* CPU has Complex instructions */
+-#define CPU_FEATURE_CRYPTO		10	/* CPU has Crypto instructions */
+-#define CPU_FEATURE_LVZ			11	/* CPU has Virtualization extension */
+-#define CPU_FEATURE_LBT_X86		12	/* CPU has X86 Binary Translation */
+-#define CPU_FEATURE_LBT_ARM		13	/* CPU has ARM Binary Translation */
+-#define CPU_FEATURE_LBT_MIPS		14	/* CPU has MIPS Binary Translation */
+-#define CPU_FEATURE_TLB			15	/* CPU has TLB */
+-#define CPU_FEATURE_CSR			16	/* CPU has CSR */
+-#define CPU_FEATURE_IOCSR		17	/* CPU has IOCSR */
+-#define CPU_FEATURE_WATCH		18	/* CPU has watchpoint registers */
+-#define CPU_FEATURE_VINT		19	/* CPU has vectored interrupts */
+-#define CPU_FEATURE_CSRIPI		20	/* CPU has CSR-IPI */
+-#define CPU_FEATURE_EXTIOI		21	/* CPU has EXT-IOI */
+-#define CPU_FEATURE_PREFETCH		22	/* CPU has prefetch instructions */
+-#define CPU_FEATURE_PMP			23	/* CPU has perfermance counter */
+-#define CPU_FEATURE_SCALEFREQ		24	/* CPU supports cpufreq scaling */
+-#define CPU_FEATURE_FLATMODE		25	/* CPU has flat mode */
+-#define CPU_FEATURE_EIODECODE		26	/* CPU has EXTIOI interrupt pin decode mode */
+-#define CPU_FEATURE_GUESTID		27	/* CPU has GuestID feature */
+-#define CPU_FEATURE_HYPERVISOR		28	/* CPU has hypervisor (running in VM) */
+-#define CPU_FEATURE_PTW			29	/* CPU has hardware page table walker */
+-#define CPU_FEATURE_LSPW		30	/* CPU has LSPW (lddir/ldpte instructions) */
+-#define CPU_FEATURE_MSGINT		31	/* CPU has MSG interrupt */
+-#define CPU_FEATURE_AVECINT		32	/* CPU has AVEC interrupt */
+-#define CPU_FEATURE_REDIRECTINT		33	/* CPU has interrupt remapping */
++#define CPU_FEATURE_LAMCAS		3	/* CPU has AMCAS[_DB].{B/H/W/D} instructions */
++#define CPU_FEATURE_SCQ			4	/* CPU has SC.Q instruction */
++#define CPU_FEATURE_UAL			5	/* CPU supports unaligned access */
++#define CPU_FEATURE_FPU			6	/* CPU has FPU */
++#define CPU_FEATURE_LSX			7	/* CPU has LSX (128-bit SIMD) */
++#define CPU_FEATURE_LASX		8	/* CPU has LASX (256-bit SIMD) */
++#define CPU_FEATURE_CRC32		9	/* CPU has CRC32 instructions */
++#define CPU_FEATURE_COMPLEX		10	/* CPU has Complex instructions */
++#define CPU_FEATURE_CRYPTO		11	/* CPU has Crypto instructions */
++#define CPU_FEATURE_LVZ			12	/* CPU has Virtualization extension */
++#define CPU_FEATURE_LBT_X86		13	/* CPU has X86 Binary Translation */
++#define CPU_FEATURE_LBT_ARM		14	/* CPU has ARM Binary Translation */
++#define CPU_FEATURE_LBT_MIPS		15	/* CPU has MIPS Binary Translation */
++#define CPU_FEATURE_TLB			16	/* CPU has TLB */
++#define CPU_FEATURE_CSR			17	/* CPU has CSR */
++#define CPU_FEATURE_IOCSR		18	/* CPU has IOCSR */
++#define CPU_FEATURE_WATCH		19	/* CPU has watchpoint registers */
++#define CPU_FEATURE_VINT		20	/* CPU has vectored interrupts */
++#define CPU_FEATURE_CSRIPI		21	/* CPU has CSR-IPI */
++#define CPU_FEATURE_EXTIOI		22	/* CPU has EXT-IOI */
++#define CPU_FEATURE_PREFETCH		23	/* CPU has prefetch instructions */
++#define CPU_FEATURE_PMP			24	/* CPU has perfermance counter */
++#define CPU_FEATURE_SCALEFREQ		25	/* CPU supports cpufreq scaling */
++#define CPU_FEATURE_FLATMODE		26	/* CPU has flat mode */
++#define CPU_FEATURE_EIODECODE		27	/* CPU has EXTIOI interrupt pin decode mode */
++#define CPU_FEATURE_GUESTID		28	/* CPU has GuestID feature */
++#define CPU_FEATURE_HYPERVISOR		29	/* CPU has hypervisor (running in VM) */
++#define CPU_FEATURE_PTW			30	/* CPU has hardware page table walker */
++#define CPU_FEATURE_LSPW		31	/* CPU has LSPW (lddir/ldpte instructions) */
++#define CPU_FEATURE_MSGINT		32	/* CPU has MSG interrupt */
++#define CPU_FEATURE_AVECINT		33	/* CPU has AVEC interrupt */
++#define CPU_FEATURE_REDIRECTINT		34	/* CPU has interrupt remapping */
+ 
+ #define LOONGARCH_CPU_CPUCFG		BIT_ULL(CPU_FEATURE_CPUCFG)
+ #define LOONGARCH_CPU_LAM		BIT_ULL(CPU_FEATURE_LAM)
+ #define LOONGARCH_CPU_LAM_BH		BIT_ULL(CPU_FEATURE_LAM_BH)
++#define LOONGARCH_CPU_LAMCAS		BIT_ULL(CPU_FEATURE_LAMCAS)
+ #define LOONGARCH_CPU_SCQ		BIT_ULL(CPU_FEATURE_SCQ)
+ #define LOONGARCH_CPU_UAL		BIT_ULL(CPU_FEATURE_UAL)
+ #define LOONGARCH_CPU_FPU		BIT_ULL(CPU_FEATURE_FPU)
+diff --git a/arch/loongarch/include/uapi/asm/hwcap.h b/arch/loongarch/include/uapi/asm/hwcap.h
+index 90e96113ba51003cd4dde5c7c79744f5e0755a03..d354787b937c3ae9eb8c3d58a4e7e96bd066f6fd 100644
+--- a/arch/loongarch/include/uapi/asm/hwcap.h
++++ b/arch/loongarch/include/uapi/asm/hwcap.h
+@@ -20,5 +20,6 @@
+ #define HWCAP_LOONGARCH_LSPW		(1 << 14)
+ #define HWCAP_LOONGARCH_SCQ		(1 << 15)
+ #define HWCAP_LOONGARCH_LAM_BH		(1 << 16)
++#define HWCAP_LOONGARCH_LAMCAS		(1 << 17)
+ 
+ #endif /* _UAPI_ASM_HWCAP_H */
+diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
+index 74d31f260dfd889e66a1f55c5bcc47a3657d101f..93176e4d017b4d8fc82c817a7064af0656133c15 100644
+--- a/arch/loongarch/kernel/cpu-probe.c
++++ b/arch/loongarch/kernel/cpu-probe.c
+@@ -182,6 +182,10 @@ static void cpu_probe_common(struct cpuinfo_loongarch *c)
+ 		c->options |= LOONGARCH_CPU_LAM_BH;
+ 		elf_hwcap |= HWCAP_LOONGARCH_LAM_BH;
+ 	}
++	if (config & CPUCFG2_LAMCAS) {
++		c->options |= LOONGARCH_CPU_LAMCAS;
++		elf_hwcap |= HWCAP_LOONGARCH_LAMCAS;
++	}
+ 	if (config & CPUCFG2_SCQ) {
+ 		c->options |= LOONGARCH_CPU_SCQ;
+ 		elf_hwcap |= HWCAP_LOONGARCH_SCQ;
+diff --git a/arch/loongarch/kernel/proc.c b/arch/loongarch/kernel/proc.c
+index d4ce5b585453700caf2187c3dcc8f4f3cc8a9226..f86be83ad6f134c5793667fa6dbe2bf82fd58a2e 100644
+--- a/arch/loongarch/kernel/proc.c
++++ b/arch/loongarch/kernel/proc.c
+@@ -66,6 +66,8 @@ static int show_cpuinfo(struct seq_file *m, void *v)
+ 		seq_puts(m, " lam");
+ 	if (cpu_has_lam_bh)
+ 		seq_puts(m, " lam_bh");
++	if (cpu_has_lamcas)
++		seq_puts(m, " lamcas");
+ 	if (cpu_has_scq)
+ 		seq_puts(m, " scq");
+ 	if (cpu_has_ual)
 
- arch/arm64/include/asm/kvm_host.h     |  1 -
- arch/arm64/kvm/Kconfig                |  1 +
- arch/arm64/kvm/pvtime.c               |  8 ++++----
- arch/loongarch/include/asm/kvm_host.h |  1 -
- arch/loongarch/kvm/Kconfig            |  1 +
- arch/loongarch/kvm/exit.c             |  2 +-
- arch/loongarch/kvm/vcpu.c             |  6 +++---
- arch/riscv/include/asm/kvm_host.h     |  1 -
- arch/riscv/kvm/Kconfig                |  1 +
- arch/riscv/kvm/vcpu_sbi_sta.c         | 10 +++++-----
- arch/x86/include/asm/kvm_host.h       |  1 -
- arch/x86/kvm/Kconfig                  |  1 +
- arch/x86/kvm/x86.c                    |  5 ++---
- include/linux/kvm_host.h              |  4 ++++
- virt/kvm/Kconfig                      |  3 +++
- 15 files changed, 26 insertions(+), 20 deletions(-)
-
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index 27fe0cd5b2d7..36cb7dee988c 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -937,7 +937,6 @@ struct kvm_vcpu_arch {
- 
- 	/* Guest PV state */
- 	struct {
--		u64 last_steal;
- 		gpa_t base;
- 	} steal;
- 
-diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
-index 449154f9a485..f5855bfc681c 100644
---- a/arch/arm64/kvm/Kconfig
-+++ b/arch/arm64/kvm/Kconfig
-@@ -34,6 +34,7 @@ menuconfig KVM
- 	select HAVE_KVM_IRQ_BYPASS
- 	select HAVE_KVM_READONLY_MEM
- 	select HAVE_KVM_VCPU_RUN_PID_CHANGE
-+	select HAVE_KVM_PV_STEAL_TIME
- 	select SCHED_INFO
- 	select GUEST_PERF_EVENTS if PERF_EVENTS
- 	select KVM_GUEST_MEMFD
-diff --git a/arch/arm64/kvm/pvtime.c b/arch/arm64/kvm/pvtime.c
-index 4ceabaa4c30b..a67d93845d79 100644
---- a/arch/arm64/kvm/pvtime.c
-+++ b/arch/arm64/kvm/pvtime.c
-@@ -14,7 +14,7 @@ void kvm_update_stolen_time(struct kvm_vcpu *vcpu)
- {
- 	struct kvm *kvm = vcpu->kvm;
- 	u64 base = vcpu->arch.steal.base;
--	u64 last_steal = vcpu->arch.steal.last_steal;
-+	u64 last_steal = vcpu->last_steal;
- 	u64 offset = offsetof(struct pvclock_vcpu_stolen_time, stolen_time);
- 	u64 steal = 0;
- 	int idx;
-@@ -25,8 +25,8 @@ void kvm_update_stolen_time(struct kvm_vcpu *vcpu)
- 	idx = srcu_read_lock(&kvm->srcu);
- 	if (!kvm_get_guest(kvm, base + offset, steal)) {
- 		steal = le64_to_cpu(steal);
--		vcpu->arch.steal.last_steal = READ_ONCE(current->sched_info.run_delay);
--		steal += vcpu->arch.steal.last_steal - last_steal;
-+		vcpu->last_steal = READ_ONCE(current->sched_info.run_delay);
-+		steal += vcpu->last_steal - last_steal;
- 		kvm_put_guest(kvm, base + offset, cpu_to_le64(steal));
- 	}
- 	srcu_read_unlock(&kvm->srcu, idx);
-@@ -61,7 +61,7 @@ gpa_t kvm_init_stolen_time(struct kvm_vcpu *vcpu)
- 	 * Start counting stolen time from the time the guest requests
- 	 * the feature enabled.
- 	 */
--	vcpu->arch.steal.last_steal = current->sched_info.run_delay;
-+	vcpu->last_steal = current->sched_info.run_delay;
- 	kvm_write_guest_lock(kvm, base, &init_values, sizeof(init_values));
- 
- 	return base;
-diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index 23cfbecebbd7..14514a25b261 100644
---- a/arch/loongarch/include/asm/kvm_host.h
-+++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -253,7 +253,6 @@ struct kvm_vcpu_arch {
- 	/* paravirt steal time */
- 	struct {
- 		u64 guest_addr;
--		u64 last_steal;
- 		struct gfn_to_hva_cache cache;
- 		u8  preempted;
- 	} st;
-diff --git a/arch/loongarch/kvm/Kconfig b/arch/loongarch/kvm/Kconfig
-index 15da2d88c0c1..4996ec9c07f9 100644
---- a/arch/loongarch/kvm/Kconfig
-+++ b/arch/loongarch/kvm/Kconfig
-@@ -26,6 +26,7 @@ config KVM
- 	select HAVE_KVM_MSI
- 	select HAVE_KVM_READONLY_MEM
- 	select KVM_COMMON
-+	select HAVE_KVM_PV_STEAL_TIME
- 	select KVM_GENERIC_DIRTYLOG_READ_PROTECT
- 	select KVM_GENERIC_HARDWARE_ENABLING
- 	select KVM_MMIO
-diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index 4f58e6e2cf86..56ae6b18f8c1 100644
---- a/arch/loongarch/kvm/exit.c
-+++ b/arch/loongarch/kvm/exit.c
-@@ -773,7 +773,7 @@ static long kvm_save_notify(struct kvm_vcpu *vcpu)
- 		if (!(data & KVM_STEAL_PHYS_VALID))
- 			return 0;
- 
--		vcpu->arch.st.last_steal = current->sched_info.run_delay;
-+		vcpu->last_steal = current->sched_info.run_delay;
- 		kvm_make_request(KVM_REQ_STEAL_UPDATE, vcpu);
- 		return 0;
- 	default:
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index ed9e092c97ba..728d29eba8e0 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -187,8 +187,8 @@ static void kvm_update_stolen_time(struct kvm_vcpu *vcpu)
- 	smp_wmb();
- 
- 	unsafe_get_user(steal, &st->steal, out);
--	steal += current->sched_info.run_delay - vcpu->arch.st.last_steal;
--	vcpu->arch.st.last_steal = current->sched_info.run_delay;
-+	steal += current->sched_info.run_delay - vcpu->last_steal;
-+	vcpu->last_steal = current->sched_info.run_delay;
- 	unsafe_put_user(steal, &st->steal, out);
- 
- 	smp_wmb();
-@@ -1205,7 +1205,7 @@ static int kvm_loongarch_pvtime_set_attr(struct kvm_vcpu *vcpu,
- 
- 	if (!ret) {
- 		vcpu->arch.st.guest_addr = gpa;
--		vcpu->arch.st.last_steal = current->sched_info.run_delay;
-+		vcpu->last_steal = current->sched_info.run_delay;
- 		kvm_make_request(KVM_REQ_STEAL_UPDATE, vcpu);
- 	}
- 
-diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
-index a30600579231..305875301c04 100644
---- a/arch/riscv/include/asm/kvm_host.h
-+++ b/arch/riscv/include/asm/kvm_host.h
-@@ -273,7 +273,6 @@ struct kvm_vcpu_arch {
- 	/* SBI steal-time accounting */
- 	struct {
- 		gpa_t shmem;
--		u64 last_steal;
- 	} sta;
- };
- 
-diff --git a/arch/riscv/kvm/Kconfig b/arch/riscv/kvm/Kconfig
-index ec2cee0a39e0..1ff07a904a02 100644
---- a/arch/riscv/kvm/Kconfig
-+++ b/arch/riscv/kvm/Kconfig
-@@ -26,6 +26,7 @@ config KVM
- 	select HAVE_KVM_READONLY_MEM
- 	select HAVE_KVM_DIRTY_RING_ACQ_REL
- 	select KVM_COMMON
-+	select HAVE_KVM_PV_STEAL_TIME
- 	select KVM_GENERIC_DIRTYLOG_READ_PROTECT
- 	select KVM_GENERIC_HARDWARE_ENABLING
- 	select KVM_MMIO
-diff --git a/arch/riscv/kvm/vcpu_sbi_sta.c b/arch/riscv/kvm/vcpu_sbi_sta.c
-index 60e50296a008..9a77d3bde7c7 100644
---- a/arch/riscv/kvm/vcpu_sbi_sta.c
-+++ b/arch/riscv/kvm/vcpu_sbi_sta.c
-@@ -19,13 +19,13 @@
- static void kvm_riscv_vcpu_sbi_sta_reset(struct kvm_vcpu *vcpu)
- {
- 	vcpu->arch.sta.shmem = INVALID_GPA;
--	vcpu->arch.sta.last_steal = 0;
-+	vcpu->last_steal = 0;
- }
- 
- void kvm_riscv_vcpu_record_steal_time(struct kvm_vcpu *vcpu)
- {
- 	gpa_t shmem = vcpu->arch.sta.shmem;
--	u64 last_steal = vcpu->arch.sta.last_steal;
-+	u64 last_steal = vcpu->last_steal;
- 	__le32 __user *sequence_ptr;
- 	__le64 __user *steal_ptr;
- 	__le32 sequence_le;
-@@ -67,8 +67,8 @@ void kvm_riscv_vcpu_record_steal_time(struct kvm_vcpu *vcpu)
- 
- 	if (!WARN_ON(get_user(steal_le, steal_ptr))) {
- 		steal = le64_to_cpu(steal_le);
--		vcpu->arch.sta.last_steal = READ_ONCE(current->sched_info.run_delay);
--		steal += vcpu->arch.sta.last_steal - last_steal;
-+		vcpu->last_steal = READ_ONCE(current->sched_info.run_delay);
-+		steal += vcpu->last_steal - last_steal;
- 		WARN_ON(put_user(cpu_to_le64(steal), steal_ptr));
- 	}
- 
-@@ -115,7 +115,7 @@ static int kvm_sbi_sta_steal_time_set_shmem(struct kvm_vcpu *vcpu)
- 		return SBI_ERR_INVALID_ADDRESS;
- 
- 	vcpu->arch.sta.shmem = shmem;
--	vcpu->arch.sta.last_steal = current->sched_info.run_delay;
-+	vcpu->last_steal = current->sched_info.run_delay;
- 
- 	return 0;
- }
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 683bb8bf43a9..ebdd8526ae12 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -872,7 +872,6 @@ struct kvm_vcpu_arch {
- 	struct {
- 		u8 preempted;
- 		u64 msr_val;
--		u64 last_steal;
- 		struct gfn_to_hva_cache cache;
- 	} st;
- 
-diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
-index 538ed1e80332..b2aea8058841 100644
---- a/arch/x86/kvm/Kconfig
-+++ b/arch/x86/kvm/Kconfig
-@@ -40,6 +40,7 @@ config KVM_X86
- 	select HAVE_KVM_MSI
- 	select HAVE_KVM_CPU_RELAX_INTERCEPT
- 	select HAVE_KVM_NO_POLL
-+	select HAVE_KVM_PV_STEAL_TIME
- 	select VIRT_XFER_TO_GUEST_WORK
- 	select KVM_GENERIC_DIRTYLOG_READ_PROTECT
- 	select KVM_VFIO
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 79468ddfe473..927c8b1ed83d 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -2129,9 +2129,8 @@ static void record_steal_time(struct kvm_vcpu *vcpu)
- 	smp_wmb();
- 
- 	unsafe_get_user(steal, &st->steal, out);
--	steal += current->sched_info.run_delay -
--		vcpu->arch.st.last_steal;
--	vcpu->arch.st.last_steal = current->sched_info.run_delay;
-+	steal += current->sched_info.run_delay - vcpu->last_steal;
-+	vcpu->last_steal = current->sched_info.run_delay;
- 	unsafe_put_user(steal, &st->steal, out);
- 
- 	version += 1;
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 03bfc92864b6..ff9d423b6a7c 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -398,6 +398,10 @@ struct kvm_vcpu {
- 	 */
- 	struct kvm_memory_slot *last_used_slot;
- 	u64 last_used_slot_gen;
-+
-+#ifdef CONFIG_HAVE_KVM_PV_STEAL_TIME
-+	u64 last_steal;
-+#endif
- };
- 
- /*
-diff --git a/virt/kvm/Kconfig b/virt/kvm/Kconfig
-index c3c0ee253fc7..f42a3a0fc5ba 100644
---- a/virt/kvm/Kconfig
-+++ b/virt/kvm/Kconfig
-@@ -82,6 +82,9 @@ config HAVE_KVM_IRQ_BYPASS
- config HAVE_KVM_VCPU_RUN_PID_CHANGE
-        bool
- 
-+config HAVE_KVM_PV_STEAL_TIME
-+       bool
-+
- config HAVE_KVM_NO_POLL
-        bool
- 
+base-commit: 654ae5d73c05bd2943d65636ce6cd0aa46e62f18
 -- 
-2.43.7
+2.55.0
 
