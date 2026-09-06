@@ -1,142 +1,127 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BD054AE8D2
-	for <loongarch@lists.linux.dev>; Sat,  5 Sep 2026 15:11:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B12B8165F1A;
+	Sun,  6 Sep 2026 02:00:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788621118; cv=none; b=ODOrUnbEtZ84G2aqLLvHa5ePSRif4jwDtW46X4bJsx2ZMXOhQayNDyQWX/cmPR36kK54Rv0VNikKXXKOxjwg8NLiZ3gBdoOrcGbqgPe/IJF3B6srd+pRmjiIh1et5ucJN3gBaVjGCpf5oARUTIehhlhXOrSNtI6XjcbTE3H4izs=
+	t=1788660033; cv=none; b=HjL7mxXnnuwyUkXAMu+eB2ycOJLDlqNFq7cBTNtaKK1fAMgG8zvIwNylHC3ZryLGVDrepkpFkNYk2MtSeY+yCZE8tcMUvCqeLfjf9MdmOh9b41ywDjlHqejyt2gnvN3EWoPFyAkhI/PWv2wwkZiBQlHvwnEMu+N0u4kVK9d3tuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788621118; c=relaxed/simple;
-	bh=cs3tMB5ZJP3WI9uIvt6r8CcZt7ukNuHK6xpdE6GGht4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bKiA0azplR+Kb5Y9kVuc6JEd/ZnBGgpzx+aMZdOAG1CG1DrI37AoCl4+E97FwenOY5rAVWS/LvyjcTeJxD2fjNhKF68BZR0wcHo0xOR4GsEUE25W0rHxP107jaTwmvAoUXbGAl+++rQQccqZfz99wvrrTNvp3UCVm9ejtGJKfuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YfpQ1vfe; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788660033; c=relaxed/simple;
+	bh=4OCA7cZQxsiy+4IQEWSullQEGcLugcqxv9G1On3+2dI=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=YlqYghYX1hsuR1cjTIkn+ey5Kfcn1v6Wv3i4kmwpeUTloo0WviWVVFLb/DXycmQh0ooWeWTeypmhkpx/CiISfRf0u2pKCaaPYFJorwMdVQmd2oVWtiKA4w2JykncZgo6vaDmFZYD6d2N+FcVybVdJ//9/Z+uRm/HjKbgfmjsaN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=onvqGLmc; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YfpQ1vfe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C3681F00AC4
-	for <loongarch@lists.linux.dev>; Sat,  5 Sep 2026 15:11:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788621111;
-	bh=bL3w34qUiq6PKrSstiPLOgFf9oEN1oR7xJDQLGR9iRs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=YfpQ1vfenfqwtIYla5E2kEDfvPou/1j2+HsFW0tF5CMddYYLw56AUx5gwFc/uqvq4
-	 t4L9lcAJOp+Mg7jAtuIpdqyk90+5iN6qH6GtkrSujdeh/VW8dbA/KSSAgQagMnxIqQ
-	 sL6B+OtfvjxyV3iEx7xCEO8xRkXpvTAT4zlNjfXdFyekC1fypo59uVDJz6KYMzIP/Y
-	 tynHBx+eMmAo2DS5YxloO55IE56hEP2X8X5ma1FqOXRYLdJm8GH18xnVOFv+BrcuNK
-	 0qzvG8UqXVVUehIYyPJ0MevxbUOwXcdswf7CorEj2ssKjt1P95LA3LvzUnS+psmFc5
-	 j1QCH9NBCAiRg==
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-6a668cacdadso3088921a12.2
-        for <loongarch@lists.linux.dev>; Sat, 05 Sep 2026 08:11:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBwW1L123RuudKjoHyt0NLU+VVFdHJghJhIasXJhfmlXURXpzcJKTvrL5H7FpetuVKzPkeQISfTCQJc=@lists.linux.dev
-X-Gm-Message-State: AFuF++krthfvBlAVHrOgRryQ81Rzjw2sliT3Gv34HoiHFAvQUMOeSD3U
-	OOUVL1TYXvB9G3Uj3gQaUpncz8e8prYO+T+9VoIhhmhuMjnFGkYl/996oWNOZeXSzkPgcPjp+97
-	DQP//t+qlrHkmqidAJdQqpY0re9C1C24=
-X-Received: by 2002:a05:6402:2752:b0:6a7:ea54:38c with SMTP id
- 4fb4d7f45d1cf-6a7ea54209dmr3447413a12.29.1788621110068; Sat, 05 Sep 2026
- 08:11:50 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="onvqGLmc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 131AD1F00A3A;
+	Sun,  6 Sep 2026 02:00:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux-foundation.org; s=korg; t=1788660032;
+	bh=ohXcpCjF3E8Su2iGbnUTFcKH4Q5PX6bz9vn2jqgCP+c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=onvqGLmcP1GLOxpEKfzU67JdQE7IDZGMsPO64h/0NSOK+RvFXdBCqD8+ofD1WBq2g
+	 i6cYyIHzjygejYh8PKFLzFY7Ac5zL8dW6mlFYoHExtDtLuDxudvpRUkwCZVnaHxKoG
+	 FWNotUDCuJBgzmpoHcxnORH4VODmerRMAERbMW3I=
+Date: Sat, 5 Sep 2026 19:00:30 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+Cc: Adrian =?UTF-8?Q?Barna=C5=9B?= <abarnas@google.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Alexander Gordeev <agordeev@linux.ibm.com>,
+ Alexandre Ghiti <alex@ghiti.fr>, Andy Lutomirski <luto@kernel.org>,
+ Borislav Petkov <bp@alien8.de>, Brendan Jackman
+ <brendan.jackman@linux.dev>, Catalin Marinas <catalin.marinas@arm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>, Dave Hansen
+ <dave.hansen@linux.intel.com>, David Hildenbrand <david@kernel.org>, Gerald
+ Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens
+ <hca@linux.ibm.com>, Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar
+ <mingo@redhat.com>, Len Brown <lenb@kernel.org>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Paul Walmsley <pjw@kernel.org>, Pavel Machek
+ <pavel@kernel.org>, Peter Zijlstra <peterz@infradead.org>, "H. Peter Anvin"
+ <hpa@zytor.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Ryan Roberts
+ <ryan.roberts@arm.com>, Sven Schnelle <svens@linux.ibm.com>, Thomas
+ Gleixner <tglx@kernel.org>, Uladzislau Rezki <urezki@gmail.com>, Vasily
+ Gorbik <gor@linux.ibm.com>, WANG Xuerui <kernel@xen0n.name>, Will Deacon
+ <will@kernel.org>, x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-pm@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ loongarch@lists.linux.dev
+Subject: Re: [PATCH v3 0/6] arch, mm/execmem: resolve confusion about
+ set_direct_map_valid_noflush()
+Message-Id: <20260905190030.adf2740822e211ddc028a24a@linux-foundation.org>
+In-Reply-To: <20260903-execmem-set-vm-perms-v0-2-v3-0-949b64a9f755@kernel.org>
+References: <20260903-execmem-set-vm-perms-v0-2-v3-0-949b64a9f755@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <20260814094738.2552440-1-cui.tao@linux.dev>
-In-Reply-To: <20260814094738.2552440-1-cui.tao@linux.dev>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 5 Sep 2026 23:11:38 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5SRTceJzKUMCH2MXJXf+h5g0e4iyFgwStStg5hJOhB-w@mail.gmail.com>
-X-Gm-Features: AcwNN1VggpiIfHX09jVpMuhzax1l2O50S0Jc_dd9AH9e-iil6TqAP2EDuwdtxyE
-Message-ID: <CAAhV-H5SRTceJzKUMCH2MXJXf+h5g0e4iyFgwStStg5hJOhB-w@mail.gmail.com>
-Subject: Re: [PATCH v3] LoongArch: KVM: Fix TOCTOU race on pv_features
-To: Tao Cui <cui.tao@linux.dev>
-Cc: maobibo@loongson.cn, zhaotianrui@loongson.cn, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Tao Cui <cuitao@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Applied, thanks.
+On Thu, 03 Sep 2026 12:28:26 +0300 "Mike Rapoport (Microsoft)" <rppt@kernel.org> wrote:
 
-Huacai
+> Recent discussion about implementation of execmem's ROX caches on arm64
+> revealed a confusion about how set_direct_map_valid_noflush()
+> implemented on different architectures.
+> 
+> ...
+> 
+> Implement these adjustments, make execmem always use VM_FLUSH_RESET_PERMS
+> and revert set_direct_map_valid_noflush() changes.
+> 
 
-On Fri, Aug 14, 2026 at 5:47=E2=80=AFPM Tao Cui <cui.tao@linux.dev> wrote:
->
-> From: Tao Cui <cuitao@kylinos.cn>
->
-> The check-then-set on kvm->arch.pv_features in
-> kvm_loongarch_cpucfg_set_attr() is lockless, so two vCPUs can race
-> past the validation and set different values.  Add a spinlock to
-> serialize it.
->
-> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
-> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
-> ---
->
-> Changes in v2: use a spinlock instead of a cmpxchg loop (Bibo Mao).
-> Changes in v3: rename the lock to pv_setting_lock and place it next to
-> phyid_map_lock (Huacai Chen).
->
-> v1: https://lore.kernel.org/all/20260810081321.157258-1-cui.tao@linux.dev=
-/
-> v2: https://lore.kernel.org/all/20260813232542.2098930-1-cui.tao@linux.de=
-v/
->
->  arch/loongarch/include/asm/kvm_host.h | 1 +
->  arch/loongarch/kvm/vcpu.c             | 6 +++++-
->  arch/loongarch/kvm/vm.c               | 1 +
->  3 files changed, 7 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/inclu=
-de/asm/kvm_host.h
-> index 23cfbecebbd7..3538a199aac6 100644
-> --- a/arch/loongarch/include/asm/kvm_host.h
-> +++ b/arch/loongarch/include/asm/kvm_host.h
-> @@ -125,6 +125,7 @@ struct kvm_arch {
->         unsigned int  pte_shifts[MAX_PGTABLE_LEVELS];
->         unsigned int  root_level;
->         spinlock_t    phyid_map_lock;
-> +       spinlock_t    pv_setting_lock;
->         struct kvm_phyid_map  *phyid_map;
->         /* Enabled PV features */
->         unsigned long pv_features;
-> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-> index 20c207d80e31..e47fa463a8be 100644
-> --- a/arch/loongarch/kvm/vcpu.c
-> +++ b/arch/loongarch/kvm/vcpu.c
-> @@ -1165,10 +1165,14 @@ static int kvm_loongarch_cpucfg_set_attr(struct k=
-vm_vcpu *vcpu,
->                         return -EINVAL;
->
->                 /* All vCPUs need set the same PV features */
-> +               spin_lock(&kvm->arch.pv_setting_lock);
->                 if ((kvm->arch.pv_features & LOONGARCH_PV_FEAT_UPDATED)
-> -                               && ((kvm->arch.pv_features & valid) !=3D =
-val))
-> +                               && ((kvm->arch.pv_features & valid) !=3D =
-val)) {
-> +                       spin_unlock(&kvm->arch.pv_setting_lock);
->                         return -EINVAL;
-> +               }
->                 kvm->arch.pv_features =3D val | LOONGARCH_PV_FEAT_UPDATED=
-;
-> +               spin_unlock(&kvm->arch.pv_setting_lock);
->                 return 0;
->         default:
->                 return -ENXIO;
-> diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
-> index 1317c718f896..86ba7d54e81f 100644
-> --- a/arch/loongarch/kvm/vm.c
-> +++ b/arch/loongarch/kvm/vm.c
-> @@ -76,6 +76,7 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long typ=
-e)
->                 return -ENOMEM;
->         }
->         spin_lock_init(&kvm->arch.phyid_map_lock);
-> +       spin_lock_init(&kvm->arch.pv_setting_lock);
->
->         kvm_init_vmcs(kvm);
->         kvm_vm_init_features(kvm);
-> --
-> 2.43.0
->
+Thanks, I updated mm-unstable to this version.
+
+> 
+> v3 changes:
+> * set VM_FLUSH_RESET_PERMS to allocated area just before flipping the
+>   permissions rather than at allocation time
+> 
+
+Here's how v3 altered mm.git:
+
+
+ mm/execmem.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+--- a/mm/execmem.c~b
++++ a/mm/execmem.c
+@@ -36,7 +36,6 @@ static void *execmem_vmalloc(struct exec
+ 	unsigned long end = range->end;
+ 	void *p;
+ 
+-	vm_flags |= VM_FLUSH_RESET_PERMS;
+ 	if (kasan)
+ 		vm_flags |= VM_DEFER_KMEMLEAK;
+ 
+@@ -277,6 +276,8 @@ static void *execmem_cache_populate_allo
+ 	/* fill memory with instructions that will trap */
+ 	execmem_fill_trapping_insns(p, alloc_size);
+ 
++	set_vm_flush_reset_perms(p);
++
+ 	err = set_memory_rox((unsigned long)p, vm->nr_pages);
+ 	if (err)
+ 		goto err_free_mem;
+@@ -439,6 +440,7 @@ void *execmem_alloc(enum execmem_type ty
+ {
+ 	struct execmem_range *range = &execmem_info->ranges[type];
+ 	bool use_cache = range->flags & EXECMEM_ROX_CACHE;
++	unsigned long vm_flags = VM_FLUSH_RESET_PERMS;
+ 	pgprot_t pgprot = range->pgprot;
+ 	void *p = NULL;
+ 
+@@ -447,7 +449,7 @@ void *execmem_alloc(enum execmem_type ty
+ 	if (use_cache)
+ 		p = execmem_cache_alloc(range, size);
+ 	else
+-		p = execmem_vmalloc(range, size, pgprot, 0);
++		p = execmem_vmalloc(range, size, pgprot, vm_flags);
+ 
+ 	return kasan_reset_tag(p);
+ }
+_
+
