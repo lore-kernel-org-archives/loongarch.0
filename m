@@ -1,44 +1,47 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta1.migadu.com (out-130.mta1.migadu.com [95.215.58.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9D024EA90;
-	Sun,  6 Sep 2026 20:17:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B0DC13776B
+	for <loongarch@lists.linux.dev>; Mon,  7 Sep 2026 01:48:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788725868; cv=none; b=YuseEC5s1v2sgX9cDcffBds+026CUpkxgG5twW/hGmpBAVkX6LCbnciSaTAp417H0YkKZwDVnN7JT7Ds4uIAi3pQKUqR/hyY4KWfSNUsOjXys0VhsEN8P/Tj8/oZFkweUz2XbcMMLVkXwO04aSGlnGVhDRcuwX3OOFi5wPCwUVM=
+	t=1788745692; cv=none; b=dQnnoGqwGGt6ZKlv0YtU3Dl+0FmUOWMkPA4LwBCGMDgO0rB6XaBUVHVezrMVgmKq4/mn+F2uATUOPGh2gMr7TSdf4F4UbP60ioj/YataMHl2vSIWxgd/uUOBIpgD5yNXqX0fKwcq+BUZ5YToQlL90r4B3FewPq9kyk/42O+dGPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788725868; c=relaxed/simple;
-	bh=Q7+murS2ziKyyzwTZar1AKZ/OOOumTdNoqpniRFLcfg=;
+	s=arc-20240116; t=1788745692; c=relaxed/simple;
+	bh=oRl2Ig0sqb2lbu8LjCTCNBnNy0/sezGLFVcQX5GWk8Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ow9E7OtUsaGGTGScB35zjPGkHTPCsLFjN+L/nLRdmWtZRlUNWXqlNBaJpevGRitXS3LoD6moFT8Q5RlRFYNhEnd64R7iJZqE0375hcc7UMsyivu2MjPzM25zBh4G9wa8PbnhUcZsEvIv92iXJs11ynd+z/K3CbV9emEhDDVl+K0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OqNJUzP0; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=WHervQ51ScadJZmmciTm+i5RjTmu3o4Oi7yF1gZgRW+lCnSMCCdJ7uanY2CVUqhXPScgpVjcvc0/Fc0/OlXYmiSvP5l1KdxFeq76DqELPKGJceYN2Cw2zb3n6EX/IT8R8D3KCqqpFYrEqpRDO6bJ9+tgBdr/z2Ms98JsQ+K5tCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=uQaIqU8I; arc=none smtp.client-ip=95.215.58.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OqNJUzP0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 323381F00A3A;
-	Sun,  6 Sep 2026 20:17:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788725867;
-	bh=3uA93cxqW2HvNr9qUovcFs04ocnOSCf6zitvtFhj/vc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=OqNJUzP0i6ZpwRKqxhufYQAH5I3kHVxdsoCT87l5waW4epTijN0y0zPeWiaXN5JUb
-	 23WBzGGChe/MsQNytXS9qXlB+G8Y+nG4g1RIIJSYzv5ZhnU3l6NEbSLgBr0qSJSg14
-	 hjWsMrBdN+py/LNBhl+18Vd2NK6kvVdAnYFLK0hTuukpq6uGC99HSh9hiIIwb2OobH
-	 MF/FqwTyPgkwa3/oUOIM5Gxt6TJQUqBgU5GtS5LW2mdR8Jduh3KBQ/v21tk1TecpeS
-	 mFvEkLidNfvT2xsGG/h7cTnvivMSUiQPEg6G6MRxOaDRL/6ZS0zowMbTWh6om2J3LK
-	 nhYJ+2tU29SAA==
-Date: Sun, 6 Sep 2026 23:17:37 +0300
-From: Mike Rapoport <rppt@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uQaIqU8I"
+X-Envelope-To: loongarch@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=oRl2Ig0sqb2lbu8LjCTCNBnNy0/sezGLFVcQX5GWk8Y=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1788745687; v=1; x=1789350487;
+ b=uQaIqU8IAu7/Pz8O6I7cWNsO6/NVaQ5777HdUUrnawCe8tOS5P6nQYOhcuBJaVN0SIbdm/1d
+ WhLdAouzjuqqLiVM5JW08qOu25OoyddWp603dzr2f52dQKh5dg6y4nIH0aPVG6Q822CDfDtQ99B
+ IGncpnO78havMpSsuR4qVZiE=
+X-Envelope-To: loongarch@lists.linux.dev
+Received: by mta12.migadu.com with ESMTPS id 2cb00b0d8266826f;
+	Mon, 07 Sep 2026 01:48:06 +0000
+X-Mizu-Trace-ID: 2cb00b0d8266826f
+X-Migadu-Flow: FLOW_OUT
+Date: Mon, 7 Sep 2026 09:47:58 +0800
+From: Baoquan He <baoquan.he@linux.dev>
 To: George Guo <dongtai.guo@linux.dev>
-Cc: pasha.tatashin@soleen.com, pratyush@kernel.org, chenhuacai@kernel.org,
-	ardb@kernel.org, shuah@kernel.org, ilias.apalodimas@linaro.org,
-	akpm@linux-foundation.org, baoquan.he@linux.dev,
+Cc: rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org,
+	chenhuacai@kernel.org, ardb@kernel.org, shuah@kernel.org,
+	ilias.apalodimas@linaro.org, akpm@linux-foundation.org,
 	ruirui.yang@linux.dev, guodongtai@kylinos.cn, kernel@xen0n.name,
 	graf@amazon.com, liukexin@kylinos.cn, loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
 	linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
 	linux-efi@vger.kernel.org
 Subject: Re: [PATCH v5 0/5] LoongArch: add KHO support and selftests
-Message-ID: <ap3KYSXQJfC0iysw@kernel.org>
+Message-ID: <ap4XzvnM3WUn5ard@fedora>
 References: <20260904100852.26006-1-dongtai.guo@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -50,9 +53,7 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20260904100852.26006-1-dongtai.guo@linux.dev>
 
-Hi George,
-
-On Fri, Sep 04, 2026 at 06:08:47PM +0800, George Guo wrote:
+On 09/04/26 at 06:08pm, George Guo wrote:
 > This series enables Kexec HandOver (KHO) on 64-bit LoongArch and adds
 > LoongArch coverage to the KHO QEMU selftest.  KHO is the remaining
 > architecture gate needed by Live Update (LUO) on LoongArch.
@@ -61,18 +62,25 @@ On Fri, Sep 04, 2026 at 06:08:47PM +0800, George Guo wrote:
 > state FDT and scratch area through properties under /chosen in a boot
 > FDT.  LoongArch boots through EFI without a boot FDT, so that path is not
 > available.
+
+I didn't look into your patchset very carefully, but I doubt you
+are reinventing the wheel. X86 didn't have FDT, seems it introduces FDT
+for KHO support. LoongArch doesn't have FDT, so you reworks the EFI
+transport. Is there a reason you don't want to follow the standard KHO
+way using FDT too?
+
+Please correct me if I am wrong.
+
 > 
 > EFI KHO channel:
-
-I can't say I like "transport" and "channel" terminology. We don't send
-anything anywhere.
- 
+> 
 > v5 reworks the EFI transport following Pratyush's and Huacai's reviews
 > [1, 2].  Instead of rebuilding the EFI configuration table in
 > LoongArch code and switching st->tables before kexec, the common EFI stub
 > allocates and installs a persistent table under
 > LINUX_EFI_KEXEC_HANDOVER_GUID.  This follows the model used by
 > LINUX_EFI_MEMRESERVE_TABLE_GUID.
+
 > 
 > The common EFI table parser reserves the stub-allocated table, reads it
 > during early boot, and calls kho_populate().  An early initcall keeps the
@@ -133,18 +141,7 @@ anything anywhere.
 > The LoongArch vmtest uses the default KHO scratch-sizing path.  This
 > series is based on the generic fix that calculates per-node scratch sizes
 > before scratch allocation [6].
-
-The text here and in the patches changelog reads reads as LLM-generated
-text. First, it's quite blind and unreadable with wall-to-wall text.
-Second, LLMs tend to describe what they did in the context of a session,
-but since we apply the cover letter to the liveupdate tree, the description
-here should *only* describe why the changes are required and how they are
-implemented. The history belongs to changes since vN-1 section.
-
-And last, but not least, please add LLM attribution as per 
-
-https://docs.kernel.org/process/coding-assistants.html#attribution
- 
+> 
 > The KHO vmtest passes on:
 > 
 >   * LoongArch with KVM using QEMU_EFI.fd from edk2-loongarch64.
@@ -223,7 +220,3 @@ https://docs.kernel.org/process/coding-assistants.html#attribution
 > prerequisite-patch-id: a2f06addb17cc379b9f98674f087a1642588dc6e
 > -- 
 > 2.53.0
-
--- 
-Sincerely yours,
-Mike.
