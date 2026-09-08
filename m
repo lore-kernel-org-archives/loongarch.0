@@ -1,130 +1,126 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ED30519913;
-	Tue,  8 Sep 2026 09:37:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12990415B6C;
+	Tue,  8 Sep 2026 09:38:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788860258; cv=none; b=Jr1l9nouC3dlUMYcwYP17JVn0Hn6rNppDNakIuPxXQiHZzIDzcIVkunSuLLBXKRgApOja1fMaCnyBUsVtFxdzzqGZ+ZEKS+RL3RggOYCEVFvKE9pSDaMXjQlci+Mnn7FuswWlKTvMeAMcKAVZefnpn2rgfknLsiLtYO1dYP/Qxw=
+	t=1788860311; cv=none; b=mNnQ5pj6XKU3H9FV+LSo4vHexnC17tBKg89lHJeUOctvh7tuAxc+awf1Xs1RGgHbsELl9EmZzOwNscE/pkWeeU26aN9nKgt1VmVHkZbzw3ADuB1d75++7c3lFT7iivIWfnS8kRcMbOjjVjCbgWmtaXPwjquAU/I+t5ispeG0bsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788860258; c=relaxed/simple;
-	bh=KIotsgpcpNeAEImofo+EB4gVuDR4X7SndYHR7x1/U7I=;
+	s=arc-20240116; t=1788860311; c=relaxed/simple;
+	bh=k2UArcySfeHpVp9ykOmNXM3lQrV4LeySR1aU7F9hDP0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gl7ariCGTz0lSbjNWDB40tK+OWs6DEEQnMiBdiWla1d98txf/cOFWRfVNC+WiSOyAStQzlmnR3ToASnmJ2AWj3LtLFoE6AxkBga4tFXMsx2FeIo5jh24CPZiMfj07cEfyFNoFmxp9dSo1C1xuz8D80A2PRC7HR0rexu1l4i9TjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=F99r3XWu; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Eal5NKMa; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mmp3Fj6Vl04d3hkMgJSe+5Lth8H1MVc2Bv4lxDIcz45/nVqDgfji/g1lJlrT6UEtPeTD9XYkHNiXzYCpK5TR2yVaWRa0zUw4WFPW7YTx8aQENdyy8DYLijUUrrcM5w31HTMm2iS2LBfyd8t2yL0G9Lj1lQWtmn/nL9mQPjqEGAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=b3hKLnkp; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FdytLzOH; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="F99r3XWu";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Eal5NKMa"
-Date: Tue, 8 Sep 2026 11:37:32 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="b3hKLnkp";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FdytLzOH"
+Date: Tue, 8 Sep 2026 11:38:26 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1788860254;
+	s=2020; t=1788860308;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=M4bnahwswymvE5nOIFxOjV/veHxRfM8mUS2vFlMphLI=;
-	b=F99r3XWuTQu1aQaZj3Rg35vrK+Vh4xoW6esYP08KsnkTB5yxRHFlAX+DCSQ9MmE/ytdjCY
-	bT6ZSwlbgz0Tp/9QlaRm9xj6k6x+gQowVBcql48kgWTi7EY8hoPzlCmCwOwmHC8SxOCa3J
-	0icgZeoQJU6KNJO4gOL3qhihZkDuWn/jnlOBCrvGJD7o4Fnl7C36ruhip68Y+2nMvnOAVX
-	9XoGZlIvgcOwA32mE4o6lEcMBu1d9f3urtNxvC6vBsxPGt/e/3MpqOApvFdmwEjj/Zakfp
-	dC6HHcg6MFdoR4Ez1Du4OVqzN/fIOPQmWkTrSXFlU1lEDS+2M+h55TuuwKLKTg==
+	bh=S7fZnrtBd3MzTcOpfIWwsZnM6g3Bkm0P4fYMYH0n4+Q=;
+	b=b3hKLnkpAyvy/BgVkCybg1woRIxg3mMEReV4irm3g+SWRIBY/HUN+jfcHA+o3n9G0TlfnD
+	+4s6YCIeXuBTyVwkSPAv3U3D7JkVvrR6yovUqCS0khx5OOzcJe8v1GEof20VR38KQ4oUTA
+	oTyrutQWkPR/hngX0h/NRQS+R5xWRlIAEc19xzXPIA2jsujxaUxym5GDcaKW6zSAL5CC6e
+	lDsk1XMSUk2CNMcxwjMUwYz7zOYSI1aNT+7Gr3IBYzlwLyPrQftKZP41GUCKBcHdvrYVip
+	gvCTlZjUpdow88Cjljtt2tYLi3/RzRW0NkG/zAFBnWdoVGh96Du3/CdlQ/c5Yg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1788860254;
+	s=2020e; t=1788860308;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=M4bnahwswymvE5nOIFxOjV/veHxRfM8mUS2vFlMphLI=;
-	b=Eal5NKMa9KoeM279byQBbEfyeEmUQxO7LFbQVe68UMo95PO7FvduzWF1IqJWwbafV544s9
-	HhGMsegsgfpaGqBA==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Andy Lutomirski <luto@kernel.org>, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, Kees Cook <kees@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Richard Weinberger <richard@nod.at>, 
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Thomas Gleixner <tglx@kernel.org>, Boqun Feng <boqun@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
-	linux-mm@kvack.org, linux-um@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
-	linux-s390@vger.kernel.org, linux-mips@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, Jan Stancek <jstancek@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>, Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: Re: [PATCH v5 11/24] tools headers UAPI: Sync ELF headers with the
- kernel sources
-Message-ID: <20260908113701-7b7e8e99-81cd-40b3-8a33-f316defe6f45@linutronix.de>
-References: <20260908-vdso-absolute-reloc-v5-0-3a93791af1cf@linutronix.de>
- <20260908-vdso-absolute-reloc-v5-11-3a93791af1cf@linutronix.de>
- <06996199-5255-41d0-ba6a-ebeca57f61da@kernel.org>
+	bh=S7fZnrtBd3MzTcOpfIWwsZnM6g3Bkm0P4fYMYH0n4+Q=;
+	b=FdytLzOH5qdsMjt74W6WRHV+nX7GW7p+ezl+S07BdlCbtDKIjIfC7jz/m6K25I/G20mubY
+	8FlSJv/XjNyfjCCQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Russell King <linux@armlinux.org.uk>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev, linux-perf-users@vger.kernel.org,
+	loongarch@lists.linux.dev, Mark Rutland <mark.rutland@arm.com>,
+	Ian Rogers <irogers@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	James Clark <james.clark@linaro.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Waiman Long <longman@redhat.com>, WANG Xuerui <kernel@xen0n.name>,
+	Will Deacon <will@kernel.org>,
+	Clark Williams <clrkwllms@kernel.org>
+Subject: Re: [PATCH v2] ARM, ARM64, LONGARCH: Delay HW BP notification to
+ task_work()
+Message-ID: <20260908093826.ofGxmRRK@linutronix.de>
+References: <20260814085118.OPEA_Ssn@linutronix.de>
+ <20260903160710.vVf4gEL2@linutronix.de>
+ <apmknG55qFAn8EPf@shell.armlinux.org.uk>
+ <20260903133146.07095885@gandalf.local.home>
+ <20260904155404.ESPFg3zi@linutronix.de>
+ <ap7OMYBVKUrQjX9O@shell.armlinux.org.uk>
+ <20260908075455.OffmMhrB@linutronix.de>
+ <ap_AhKXlAWecV3BI@shell.armlinux.org.uk>
+ <20260908083740.0qERUBOE@linutronix.de>
+ <ap_Kv73A8exPhK-j@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <06996199-5255-41d0-ba6a-ebeca57f61da@kernel.org>
+In-Reply-To: <ap_Kv73A8exPhK-j@shell.armlinux.org.uk>
 
-On Tue, Sep 08, 2026 at 10:56:58AM +0200, Christophe Leroy (CS GROUP) wrote:
-> Le 08/09/2026 ‡ 08:33, Thomas Weiﬂschuh a Ècrit†:
-> > Pick up changes from the UAPI ELF header files.
-> > This picks up general changes to elf.h, elf-em.h which was forgotten
-> > previously and the new elf-r.h.
+On 2026-09-08 09:43:43 [+0100], Russell King wrote:
+> > > > The linked report shows a backtrace by "BUG: sleeping function"
+> > > > originating from el0_breakpt() -> perf_bp_event() following by sending a
+> > > > signal force_sig_fault() followed by rt_spin_lock() and
+> > > > __might_resched(). It also contains a reproducer.
+> > > > 
+> > > > The first sentence has the part
+> > > > | The hardware event is
+> > > > | delivered with disabled interrupts and perf intrastrucure expects
+> > > > | disabled interrupts while the overflow callback is invoked.
+> > > 
+> > > *Where* are interrupts disabled?
 > > 
-> > Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
-> > 
-> > ---
-> > Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > ---
-> >   tools/include/uapi/linux/elf-em.h |  71 ++++
-> >   tools/include/uapi/linux/elf-r.h  | 696 ++++++++++++++++++++++++++++++++++++++
-> >   tools/include/uapi/linux/elf.h    | 112 +++++-
-> >   3 files changed, 868 insertions(+), 11 deletions(-)
-> > 
+> > On exception entry point, that would el0t_64_sync() for arm64 as in the
+> > report.
 > 
-> > diff --git a/tools/include/uapi/linux/elf.h b/tools/include/uapi/linux/elf.h
-> > index 5834b83d7f9a..88bdcbb526c1 100644
-> > --- a/tools/include/uapi/linux/elf.h
-> > +++ b/tools/include/uapi/linux/elf.h
-> 
-> > @@ -312,7 +323,7 @@ typedef struct elf64_phdr {
-> >   #define SHN_ABS		0xfff1
-> >   #define SHN_COMMON	0xfff2
-> >   #define SHN_HIRESERVE	0xffff
-> > -
-> > +
-> 
-> Getting the following warning when applying this series with 'b4 shazam'.
-> 
-> /home/chleroy/linux-powerpc/.git/rebase-apply/patch:846: trailing
-> whitespace.
-> 
-> Seems to come from here.
+> Oh FFS. So why does this need to be done on ARM? Explain it. This is
+> what I'm trying to get out of you, but you're being very resistant
+> to providing the technical details. I can only think you haven't
+> actually done the analysis.
 
-That's also present in include/uapi/linux/elf.h.
-I'll add a fix for that, too.
+I had the feeling that this is not what you were expecting but I wasn't
+sure what you were expecting either.
 
-> 
-> >   typedef struct elf32_shdr {
-> >     Elf32_Word	sh_name;
-> >     Elf32_Word	sh_type;
+The hardware breakpoint is delivered to the OS via an exception and on
+exception entry point the interrupts are disabled. This isn't unique to
+ARM but the same on other architectures, too.
+It is not limited to ARM but also Loongarch which is sending a signal in
+its handler (the one registered via register_user_hw_breakpoint()).
+It is not an issue on X86 because they don't send signal but just toggle
+the DR6 register.
+powerpc and sh have different logic where the perf event is disabled
+without sending a signal.
+xtensa is the only one untouched which does send a signal from the
+hw-breakpoint handler but xtensa does not support PREEMPT_RT and
+therefore doesn't enforce proper lock nesting (so this is likely not the
+only issue).
+
+> So, NAK.
+
+Would you reconsider, please? It does not seem justified.
+
+Sebastian
