@@ -1,132 +1,129 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8357B54281D
-	for <loongarch@lists.linux.dev>; Tue,  8 Sep 2026 12:47:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5E57556BA2;
+	Tue,  8 Sep 2026 13:56:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788871662; cv=none; b=itFhhEu52dL3engdzaniskWOsqLDgow5XF1tYdCNr8EhR//BIF8LthFhmAGJQG0KGUCVPu/6DojevxBhSSgHbeiyL75j0IwlAroVcrl8Y9izXqyqDXk8+mqvQXWiwozSIlku7DK6nda2+BgylHD+82ZNi9rFzVx6vVwMlHBFMA0=
+	t=1788875803; cv=none; b=BD8ticjYg7Hq4Zrij+hVVKhPvGz2LHo/nFZ0JgvBAXXe9Nk7GQwPCB6ETG2QkXehQGfbgRAS3ZkFF+I7HERLh4ej3kJDI4o7dJSXbT1h55jXqpwGEk5HcTc6xEaHqRHvJ3zInbNm7mfjo7PHkZiiVsmLgRTaD+oiLHh5g9v1xn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788871662; c=relaxed/simple;
-	bh=SjAm8KsiC1rp8zi8IOo56ZfLs21Jr9k5NzBwZwT5spk=;
+	s=arc-20240116; t=1788875803; c=relaxed/simple;
+	bh=3GhasZEbt8NBvKiXdHgvjM+VMuOEV7WWgVkvCeM6fog=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LkK31KVGuIH7Tg7OjZ+xGqaqDwscLSaXqo7SMojSsQtKceyS9XKTmGei75j1PW8ivrBvUDSpz4KAq8RQIWUqPmakZ/nN4ELOQ21zphs853yeRxLwHysOd7TMVtv0j2kA6yGeHnio5FIIfHtJkmzQmQiYCwyXHSmbBeFSfOw/I1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=Lg3hQczS; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=J3ZB1CuiKguQ4VjtO8UaHNAesKWVpdEiuNbgRPp8lNWTgbz3KndEg2qJhg1lua1Xw3Cf4ZQPDCPlxgk12yOwwjmbCSO2RFXXw62T5TN6K/TsYyYkAIJe/zZPJSqblOOXYMqEHWrxmiyo9dTXC1JUIx6wcBdHdnbh1ui1aNtH+Ok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=fail (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ckTRe3AP reason="signature verification failed"; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Lg3hQczS"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=3iwiiQmAlU8enifR6QY44I57i3gUB3NZPzvMn8cgozk=; b=Lg3hQczS+6CsrXLaGUJP8xOLSk
-	SS9xphKhDY8HntlM6yMVO0UjTkXpH+IBJoIhA3uQMwpDGAiCTkC7A0U7ZZgV9ArI5C/6mzjLQasye
-	n7qErS98uKbiwtY3cpepGG+ILCX072Yy3dzPCtj6v+sz8QEFpMTARgnwGnE4rlV2O59Hi2UQwk3bS
-	AiF+9L1IgyHRqNv7n9BDrtU2Hsf20e7Y4N0FAr8e28Jn5l7vqzRPf6Mh837G3EyS6M9atzuMNXkn+
-	idbZ6csgR2ehxgPWJfrwu6wGISWm1mOPdmw79XR6320D+QhTyE8EqUx6aQCc3fOrY5HwLqdlzNcyj
-	rZyGwhCw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:58402)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1x3vEY-000000008Uo-2eoX;
-	Tue, 08 Sep 2026 13:47:30 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.98.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1x3vEU-0000000043Q-0WTK;
-	Tue, 08 Sep 2026 13:47:26 +0100
-Date: Tue, 8 Sep 2026 13:47:25 +0100
-From: Russell King <linux@armlinux.org.uk>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev, linux-perf-users@vger.kernel.org,
-	loongarch@lists.linux.dev, Mark Rutland <mark.rutland@arm.com>,
-	Ian Rogers <irogers@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
+	dkim=fail reason="signature verification failed" (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ckTRe3AP"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 3C45940E020D;
+	Tue,  8 Sep 2026 13:56:29 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=fail (4096-bit key)
+	reason="fail (body has been altered)" header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 5qXKlXyyaJ1A; Tue,  8 Sep 2026 13:56:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1788875778; bh=kXNkLBcr+MG7BHJqeeHaLokvBdBeeMHnjUE3stY0luk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ckTRe3APsxV8zd3aHLDbRKowGC2zSniJAA24Kt5+oY7o0ve9PWKF5qzBPopM3MPzG
+	 nCHC8z+inSEFr65KsTY7v0y5Me+yxQN+yYGf0Kea05MstOcF30c+7CTOeWLs4WHaen
+	 saUDiKtXKzodmoUWrICUVq2iX5AeQy5l0ohpxjUzLl6c9IHXEVVo3SiU927VoT+/6x
+	 qAopQ5XI0Z3df6psiX43eUXujqenUV0SMfLOjXQ7iu+N/pdMO135Hu0uia3OiezG6F
+	 3BQXZyL9gEAYT0T8MlWNODVy867kXqXWDznQLaaS3hnYUtTHX7ZPkioJ+C661mIH9b
+	 ic/QzGZYvbQCTW7sP6SYp95dpERxWEEjf4GNtlzOSWbxOHiLn0RHmVPtvW4BYJoWvh
+	 c/tOCDFqYnvh5YFTyN9GfAK6l94m91l6GS5sSYV+wFiupKKyMLGl8CaK+9cb3cZoI4
+	 mlWKwNA2s4fKHKSubYMAlCtd8a2o6fUxhWShY9aLdMFEqUQwrJenLRWIpJ0ag8aYsb
+	 W3QKYQQmTp4Jjf5zXuVHiRwAluE432BXUeWt7qI0luGw7gKHWwuLMGnQL1MEHEyLdb
+	 ONqhiiI6fb2L7uOxLcZK3mU619FPi/FBNNiTWRBnrCXpLvKVraEnxfnW1PUmkkdke8
+	 34u7wSXUJmbuZU/MSeUYx8hM=
+Received: from stx.tnic (unknown [IPv6:2600:1700:38ca:c00::42])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 253D640E016C;
+	Tue,  8 Sep 2026 13:55:16 +0000 (UTC)
+Date: Tue, 8 Sep 2026 06:55:13 -0700
+From: Borislav Petkov <bp@alien8.de>
+To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Kees Cook <kees@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Russell King <linux@armlinux.org.uk>,
 	Catalin Marinas <catalin.marinas@arm.com>,
-	James Clark <james.clark@linaro.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Waiman Long <longman@redhat.com>, WANG Xuerui <kernel@xen0n.name>,
 	Will Deacon <will@kernel.org>,
-	Clark Williams <clrkwllms@kernel.org>
-Subject: Re: [PATCH v2] ARM, ARM64, LONGARCH: Delay HW BP notification to
- task_work()
-Message-ID: <aqAD3YubuHDy8Fva@shell.armlinux.org.uk>
-References: <20260903160710.vVf4gEL2@linutronix.de>
- <apmknG55qFAn8EPf@shell.armlinux.org.uk>
- <20260903133146.07095885@gandalf.local.home>
- <20260904155404.ESPFg3zi@linutronix.de>
- <ap7OMYBVKUrQjX9O@shell.armlinux.org.uk>
- <20260908075455.OffmMhrB@linutronix.de>
- <ap_AhKXlAWecV3BI@shell.armlinux.org.uk>
- <20260908083740.0qERUBOE@linutronix.de>
- <ap_Kv73A8exPhK-j@shell.armlinux.org.uk>
- <20260908093826.ofGxmRRK@linutronix.de>
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Christophe Leroy <chleroy@kernel.org>,
+	Boqun Feng <boqun@kernel.org>, Nicolas Schier <nsc@kernel.org>,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, linux-mm@kvack.org,
+	linux-um@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	linux-s390@vger.kernel.org, linux-mips@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	Jan Stancek <jstancek@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: Re: [PATCH v5 02/24] x86/elf, um/x86/elf: Move relocation constants
+ to UAPI
+Message-ID: <20260908135513.GAaqATwXHcQD7plnH-@fat_crate.local>
+References: <20260908-vdso-absolute-reloc-v5-0-3a93791af1cf@linutronix.de>
+ <20260908-vdso-absolute-reloc-v5-2-3a93791af1cf@linutronix.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260908093826.ofGxmRRK@linutronix.de>
-Sender: "Russell King,,," <linux@armlinux.org.uk>
+In-Reply-To: <20260908-vdso-absolute-reloc-v5-2-3a93791af1cf@linutronix.de>
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 08, 2026 at 11:38:26AM +0200, Sebastian Andrzej Siewior wrote:
-> On 2026-09-08 09:43:43 [+0100], Russell King wrote:
-> > > > > The linked report shows a backtrace by "BUG: sleeping function"
-> > > > > originating from el0_breakpt() -> perf_bp_event() following by sending a
-> > > > > signal force_sig_fault() followed by rt_spin_lock() and
-> > > > > __might_resched(). It also contains a reproducer.
-> > > > > 
-> > > > > The first sentence has the part
-> > > > > | The hardware event is
-> > > > > | delivered with disabled interrupts and perf intrastrucure expects
-> > > > > | disabled interrupts while the overflow callback is invoked.
-> > > > 
-> > > > *Where* are interrupts disabled?
-> > > 
-> > > On exception entry point, that would el0t_64_sync() for arm64 as in the
-> > > report.
-> > 
-> > Oh FFS. So why does this need to be done on ARM? Explain it. This is
-> > what I'm trying to get out of you, but you're being very resistant
-> > to providing the technical details. I can only think you haven't
-> > actually done the analysis.
-> 
-> I had the feeling that this is not what you were expecting but I wasn't
-> sure what you were expecting either.
-> 
-> The hardware breakpoint is delivered to the OS via an exception and on
-> exception entry point the interrupts are disabled. This isn't unique to
-> ARM but the same on other architectures, too.
+On Tue, Sep 08, 2026 at 08:33:36AM +0200, Thomas Wei=C3=9Fschuh wrote:
+> These constants are useful for cross-platform userspace, for example to
+> process ELF files during kernel cross-compilation.
+>=20
+> Move them from the kernel-private architecture-specific header to the U=
+API.
 
-Yes, architecturally, when the CPU enters an exception handler,
-interrupts are disabled by the CPU. However, that doesn't translate
-to "the kernel runs with interrupts disabled". In most cases, we
-re-enable interrupts if the exception comes from userspace.
+Why UAPI?
 
-However, I have no idea where in the call path is between the
-exception being entered and the code you have a problem with - and
-I've now forgotten where to find the call path, and I don't have
-time to find it again. You are making this incredibly difficult,
-and I don't have time for this. Sorry, this is my last reply for
-a while, because this is just too much stress at this time for me.
+Why not include/linux/ ?
 
-What was a simple request has turned into a major source of frustration.
+--=20
+Regards/Gruss,
+    Boris.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+https://people.kernel.org/tglx/notes-about-netiquette
