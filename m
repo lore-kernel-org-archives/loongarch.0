@@ -1,146 +1,144 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 263ED3AAF51
-	for <loongarch@lists.linux.dev>; Tue,  8 Sep 2026 07:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E989D3859C3;
+	Tue,  8 Sep 2026 07:54:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788853880; cv=none; b=Hkdg5kOpokgiirr4m001SsX3qybSooHrlI+v+6qIBD1/mTuFsA+MUAsgQOC6oNwl+HXpDw1PfjQjS6ExvBiXbHghochG/a3aiIn87m8EV3kxZFS8IIpTSD+CUim2URlTHGlqEpaE08KASOyxe31EdDPLFE1bH+jhM4QQGw9PLAE=
+	t=1788854101; cv=none; b=uO+Lh9GitDuElpPlhad+OS0XYAqXbnVcHTtAplYkW+Jx61IW/KVxfVrDTK61SMpiB3Swnl63OFrHIokPYsRTH/TryYKaajwuEb3QTPdrEUTTXcKb+guBsP1KUEyITP0ms/QCsrEZUkIPxo6Sg3cAU/jkrUP4xD0MNaRgXhQDrv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788853880; c=relaxed/simple;
-	bh=H+qJAKye2VwOk6NjMOsoAlqoEDHxgsJEC/6qIC9WV5M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=n61ovv9P5L+TNZkuoCl/0H41sI9OpfJ1hsv2fJJekwyriM5BfnyZCHzQxqzHn0TYGdSXEGNzflJiLEi6aiQXN/rzZtxSidwSvgKNjaQDUDS3DUD+8xtOh1ThPIydqwcjMy14PGqfwIXQ1pBEMQxhev805z0YKF/9Phh4AG+y9+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [123.138.236.242])
-	by gateway (Coremail) with SMTP id _____8AxYdFxvp9qB7kJAA--.28364S3;
-	Tue, 08 Sep 2026 15:51:13 +0800 (CST)
-Received: from linux.localdomain (unknown [123.138.236.242])
-	by front1 (Coremail) with SMTP id qMiowJBx5cxrvp9qVRAdAA--.35215S7;
-	Tue, 08 Sep 2026 15:51:10 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/6] LoongArch: Fix perf hardware breakpoint failure via installation
-Date: Tue,  8 Sep 2026 15:51:05 +0800
-Message-ID: <20260908075106.5039-6-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20260908075106.5039-1-yangtiezhu@loongson.cn>
-References: <20260908075106.5039-1-yangtiezhu@loongson.cn>
+	s=arc-20240116; t=1788854101; c=relaxed/simple;
+	bh=V74iGfBs4xj3cXo0HtXboe4bqdfUosm7GEnus1leJfE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Oz7gzGcrvow85ljNKZTorIpopS4QHdqBwp2uy2n+WM37OSlyksrFcTcgjM93RQa6UUBN6+5/G2YohHp2Cd/AGY+osq/zgO9gncCy7Q367er0ZK0Lm97F0FFDpYak/e2R0zka9jnfTxeB1lD1p047zSIhIkYRaDawK3XLuaXEouQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MTDe8PJK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ywr7ePjS; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MTDe8PJK";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ywr7ePjS"
+Date: Tue, 8 Sep 2026 09:54:55 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1788854097;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VRXRVay6xLDZY+t9lcPrWvUb1XaHgPwRKdlm/Zpxbzo=;
+	b=MTDe8PJKy74mVVCxKtrjvDjyETtY0k1cqzIZziqdC7jbt6wfLpZ8zhjCzYpJhCHwy6wuYK
+	6hrzjO7dmx3Al/CY1uADqQXo7Tu2Ofg067RiGi9q/GcFvIKwr5Xd3bi7+kJQlem0obsdiU
+	TaV/TbrSrslnYKCYD30aBmCsK9zFgBjkog6SvsQNGEFYh63ifrd4eXgA79Dosp7qiUtkr7
+	B5dgUPYhGyJwVGhgOq5lZ1lBg3PA5fbC9JcqYLwTW9ivMi/9zJkVIvCPQEtWJhCEvjsf1C
+	iDjhnl7Bg85zPff4JVLn4D2s9LJazauY0Qw/zlTNNegPjA+s0deMXaDvLCFVjg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1788854097;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VRXRVay6xLDZY+t9lcPrWvUb1XaHgPwRKdlm/Zpxbzo=;
+	b=Ywr7ePjS5TdqcKhAM5Xa5HO7Cqd6lr5qXZOzO2PgPrTykoYnGCTddGdthPyYuioQvx9hLm
+	xyfCWP7dsxUfByCg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Russell King <linux@armlinux.org.uk>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev, linux-perf-users@vger.kernel.org,
+	loongarch@lists.linux.dev, Mark Rutland <mark.rutland@arm.com>,
+	Ian Rogers <irogers@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	James Clark <james.clark@linaro.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Waiman Long <longman@redhat.com>, WANG Xuerui <kernel@xen0n.name>,
+	Will Deacon <will@kernel.org>,
+	Clark Williams <clrkwllms@kernel.org>
+Subject: Re: [PATCH v2] ARM, ARM64, LONGARCH: Delay HW BP notification to
+ task_work()
+Message-ID: <20260908075455.OffmMhrB@linutronix.de>
+References: <20260814085118.OPEA_Ssn@linutronix.de>
+ <20260903160710.vVf4gEL2@linutronix.de>
+ <apmknG55qFAn8EPf@shell.armlinux.org.uk>
+ <20260903133146.07095885@gandalf.local.home>
+ <20260904155404.ESPFg3zi@linutronix.de>
+ <ap7OMYBVKUrQjX9O@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBx5cxrvp9qVRAdAA--.35215S7
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxJw1xGw13ZF13Ar4UKrWfWFX_yoW5Gw1Upr
-	ZrAF1vqrW5J3y7G3Zrtan8Aw15JrZru3y7W34akrWYy3ZFvr13tFs29FnrXF18A39Yqa40
-	gr1kWr1SvF4UXabCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcHUqUUUUU
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ap7OMYBVKUrQjX9O@shell.armlinux.org.uk>
 
-In hw_breakpoint_control(), the logic to enable CSR_PRMD_PWE (global
-watchpoint enable) incorrectly relies on TIF_LOAD_WATCH. This thread
-flag is only set during ptrace operations, meaning that the standard
-hardware breakpoints created via perf_event_open() will never have
-this flag set.
+On 2026-09-07 15:46:09 [+0100], Russell King wrote:
+> On Fri, Sep 04, 2026 at 05:54:04PM +0200, Sebastian Andrzej Siewior wrote:
+> > On 2026-09-03 13:31:46 [-0400], Steven Rostedt wrote:
+> > > On Thu, 3 Sep 2026 17:47:24 +0100
+> > > Russell King <linux@armlinux.org.uk> wrote:
+> > > 
+> > > > What do you expect to happen with this? Which arch maintainer should
+> > > > apply this patch that affects three different independently maintained
+> > > > architectures?
+> > 
+> > Well, if you as the ARM person are fine with ARM part, an ACK would be
+> > appreciated. If you have something to object, it would be nice to let me
+> > know so I can adjust accordingly.
+> 
+> First, I only just looked at the email - you may have noticed I'm not
+> very active with the kernel anymore, as I'm a full-time carer at the
+> moment.
+> 
+> Second, I'm not fine with the patch as-is, because it's not clear how
+> it could be merged in its current form. It would be inappropriate to
+> give an Ack, because an Ack means I'm fine with it. I'm not.
+> 
+> Third, I haven't actually reviewed the patch itself (see first point).
+> 
+> Looking deeper now, I see nothing in the linked report, nor in your
+> write-up that identifies what is responsible for the context being
+> inappropriate to deliver the SIGTRAP. See the first point - I'm not
 
-As a result, the CSR_PRMD_PWE switch is skipped, leaving the hardware
-breakpoint completely inactive in perf usage.
+The linked report shows a backtrace by "BUG: sleeping function"
+originating from el0_breakpt() -> perf_bp_event() following by sending a
+signal force_sig_fault() followed by rt_spin_lock() and
+__might_resched(). It also contains a reproducer.
 
-Fix this by decoupling the CSR_PRMD_PWE from the ptrace specific flag
-TIF_LOAD_WATCH, which ensures that CSR_PRMD_PWE is enabled whenever a
-hardware breakpoint is installed.
+The first sentence has the part
+| The hardware event is
+| delivered with disabled interrupts and perf intrastrucure expects
+| disabled interrupts while the overflow callback is invoked.
 
-Here is a user-space reproducer to demonstrate the issue:
+This is what happens, followed by 
 
-(1) Test program (test_perf_install.c):
+| The callback then sends a SIGTRAP signal for which it acquires
+| sighand_struct::siglock, a spinlock_t which becomes a sleeping lock and
+| must not be acquired in atomic context.
 
-  #include <stdio.h>
-  #include <unistd.h>
-  #include <sys/syscall.h>
-  #include <sys/ioctl.h>
-  #include <linux/perf_event.h>
-  #include <linux/hw_breakpoint.h>
+This is not really specific to PREEMPT_RT as we enforce to not allow
+raw_spinlock_t -> spinlock_t on !PREEMPT_RT via lockdep, too.
 
-  static int var = 0;
+> able to read lots of code to work that out, and presumably you've
+> already done that ground work to come up with a fix. This is *vital*
+> information when someone looks back at why this change was made as
+> it helps to understand how the problem occurs. This is, after all,
+> the whole point of commit messages - to help people look back and
+> understand why a change was made. The "what the changes are" part
+> is already covered by the patch showing what the changes were. It's
+> the stuff that *isn't* in the patch that needs to be in the commit
+> message.
+> 
+> So... don't describe the code changes in a commit message.
 
-  int main(void)
-  {
-  	size_t count = 0;
-  	struct perf_event_attr attr = {
-  		.type = PERF_TYPE_BREAKPOINT,
-  		.size = sizeof(attr),
-  		.bp_type = HW_BREAKPOINT_W,
-  		.bp_addr = (unsigned long)&var,
-  		.bp_len = HW_BREAKPOINT_LEN_1,
-  		.exclude_kernel = 1,
-  	};
+I think both parts (describing the issue and the change) are part of the
+commit message.
 
-  	int fd = syscall(__NR_perf_event_open, &attr, 0, -1, -1, 0);
-  	ioctl(fd, PERF_EVENT_IOC_ENABLE, 0);
+> So no, an Ack is not appropriate.
 
-  	asm volatile("st.b %1, %0" : "=m"(var) : "r"(11) : "memory");
-
-  	ioctl(fd, PERF_EVENT_IOC_DISABLE, 0);
-  	read(fd, &count, sizeof(size_t));
-
-  	printf("Watchpoint counts: expected = 1, actual = %zu\n", count);
-
-  	close(fd);
-  	return 0;
-  }
-
-(2) Test steps:
-
-  $ gcc test_perf_install.c -o test_perf_install
-  $ ./test_perf_install
-
-(3) Test results:
-
-Without this patch:
-
-  Watchpoint counts: expected = 1, actual = 0
-
-With this patch:
-
-  Watchpoint counts: expected = 1, actual = 1
-
-Fixes: 3892b11eac5a ("LoongArch: Check TIF_LOAD_WATCH to enable user space watchpoint")
-Cc: stable@vger.kernel.org
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/kernel/hw_breakpoint.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/loongarch/kernel/hw_breakpoint.c b/arch/loongarch/kernel/hw_breakpoint.c
-index 3683a52b2368..9dcb122218c2 100644
---- a/arch/loongarch/kernel/hw_breakpoint.c
-+++ b/arch/loongarch/kernel/hw_breakpoint.c
-@@ -233,7 +233,7 @@ static int hw_breakpoint_control(struct perf_event *bp,
- 		}
- 		enable = csr_read64(LOONGARCH_CSR_CRMD);
- 		csr_write64(CSR_CRMD_WE | enable, LOONGARCH_CSR_CRMD);
--		if (bp->hw.target && test_tsk_thread_flag(bp->hw.target, TIF_LOAD_WATCH))
-+		if (bp->hw.target)
- 			regs->csr_prmd |= CSR_PRMD_PWE;
- 		break;
- 	case HW_BREAKPOINT_UNINSTALL:
--- 
-2.42.0
-
+Sebastian
