@@ -1,65 +1,129 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1623638239F
-	for <loongarch@lists.linux.dev>; Tue,  8 Sep 2026 06:47:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F328530E0E5;
+	Tue,  8 Sep 2026 07:19:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788850081; cv=none; b=ETxT05NeJILmIH2JAsZw52nzlts2nM+dnicAPdRqswBynkE7nhtkXcjkJQcA7QDTU9EEprgoKaGRTgCE/5gIluBUp4MEPtWu2DDOibPmyHc98mdeDW3gDCKg9/LTamBXt4akLjUO4dHlQxcI49moqbskQVPYlpVVveHDlyO/2Qk=
+	t=1788851999; cv=none; b=bg8021ZFQHLzKiYO6F7VA08EHfdg8tBGwtjEEmF+JW2yyoxgBR5979f4heE8P6Ti5KLBwT7Ky8Qj8JDZDGdubdwFcUZNdPTpAt3WYn0IyJWUGKdQa4rrcg1qWwjuwb9zyBo02ANTo1zbKot3vyb9Yip6sntwT1K4P/JjHFt18OI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788850081; c=relaxed/simple;
-	bh=4vCBStj0otTUtVTu0qj6MyOrMVUSPf9QFSW5L3m2yHw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k/kTmeBDtOO0jdmR2ibt3c6Pvw5Zhtz5CHNFX+Su5CJMkJ1cw5kthFk/ehUg5c3K7xKiqlmS/ZfpWlQ2ZYJktdkz5JDKmGpiNPWqToX/hNfgPG2scBKS/kMuHiJqWiT07k2DZ5y6h8iQLvUi32IZruRMJDMVedqyGzkSQ1ItDCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=SaAEMaGt; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1788851999; c=relaxed/simple;
+	bh=r4z9Rduphej7BE5ou7vFL3e/pitkInh5dUdcODt3n1M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UsR3kyH4nnInNPXpiHRAWBLZjTEaR/I/TN9IvPcjldcOnmAIPHT49nJlyjNCp9cKu7Rpb+J0FMC1sR6ETRaJZtvdSCSqBDZENsLyS/CB0cxzF+QnHjqf1ZYt1Zr04p0izXoucRRlkiuiY0DaqirUMzTh/sl4llDkZ4Jk5MHKcrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=UoZziDS/; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="SaAEMaGt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=UcLQ9MAJW5b7qdzE56lh0/qw2q5Zbh2qXeXHiBMDoj0=;
-	b=SaAEMaGtaLuG2bda4JHBuyKcmCGbEsj/HuOgmPUpVoBJWwCuhe62u+H3GgO9s7
-	bUPsLQRDyWbxQ2hGsnfvmy0OKDwv3ETXUv23ayJ0pT0K4MsulneHw7pkVyLjk9MI
-	rfmSTOc+QVTXFFvYqdO6NbSWJAz7P5Ld6sIj1dl4/h0ls=
-Message-ID: <cb505bd8-cd0e-4a01-a8ba-329e60f2c0a2@163.com>
-Date: Tue, 8 Sep 2026 14:47:34 +0800
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UoZziDS/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=cvxxmFP38glDv9aUVdeEkTg6ek/m9m390THhoWCfEM0=; b=UoZziDS/M2tkE9i/kd/fRWxjxG
+	xi+fyu0pTnULNJBoBTxWqssjFBpND46iwdm8/Xdasvn1rRlVO3YRTifGQHqQ7Djyr0qN+giJZ+fhm
+	VGFo7VQcUzTluQnwuFY/TINjSZwGg2wAu6h/I2aJQekwAQAHDfDRbs5c4653HmcsHzR3/MT7uYBiv
+	OHGOF2sDyRO8Ng0HJl/EAucBF+nX0HMCIeEV9AzqfniAsQubp91a/6o38RnF6m5eUvGRXcnh6SFwM
+	YSzWSLDv1463xBJzjZwzhVMGY0l1ix+hGiimn09WhCg0UeYSjjmBlFhgA8gLyLSTRRkm2555WQmqU
+	gUx+TBrQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.99.2 #2 (Red Hat Linux))
+	id 1x3q6s-0000000H2YA-0CKd;
+	Tue, 08 Sep 2026 07:19:14 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 5B0713005AF; Tue, 08 Sep 2026 09:19:11 +0200 (CEST)
+Date: Tue, 8 Sep 2026 09:19:11 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Kees Cook <kees@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Christophe Leroy <chleroy@kernel.org>,
+	Boqun Feng <boqun@kernel.org>, Nicolas Schier <nsc@kernel.org>,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, linux-mm@kvack.org,
+	linux-um@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	linux-s390@vger.kernel.org, linux-mips@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	Jan Stancek <jstancek@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: Re: [PATCH v5 12/24] vdso: Add the vdsocheck tool
+Message-ID: <20260908071911.GU4120091@noisy.programming.kicks-ass.net>
+References: <20260908-vdso-absolute-reloc-v5-0-3a93791af1cf@linutronix.de>
+ <20260908-vdso-absolute-reloc-v5-12-3a93791af1cf@linutronix.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] LoongArch: KVM: Validate MSI data before routing it to
- EIOINTC
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: zhaotianrui@loongson.cn, maobibo@loongson.cn, yury.norov@gmail.com,
- kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, zengchi@kylinos.cn, stable@vger.kernel.org,
- Sashiko <sashiko-bot@kernel.org>
-References: <20260828093604.56622-1-zeng_chi911@163.com>
- <CAAhV-H4Jc4txZ-cQO-h6yZmfk3YEgeEptKtRQcDO=US3sies0A@mail.gmail.com>
-Content-Language: en-US
-From: Zeng Chi <zeng_chi911@163.com>
-In-Reply-To: <CAAhV-H4Jc4txZ-cQO-h6yZmfk3YEgeEptKtRQcDO=US3sies0A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wCX496Gr59qQKzDBQ--.25065S2
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUO89MUUUUU
-X-CM-SenderInfo: 52hqws5fklmiqr6rljoofrz/xtbC5wiQTGqfr4jdOgAA3G
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260908-vdso-absolute-reloc-v5-12-3a93791af1cf@linutronix.de>
 
-On 2026/9/5 23:10, Huacai Chen wrote:
-> Applied, thanks.
+On Tue, Sep 08, 2026 at 08:33:46AM +0200, Thomas Weiﬂschuh wrote:
+> All vDSO code needs to be completely position independent. Symbol
+> references are marked as hidden so the compiler emits PC-relative
+> relocations. However there are cases where the compiler may still
+> emit absolute relocations, as they are valid in regular PIC DSO code.
+> These would be resolved by the linker and will break at runtime.
+> This has been observed on arm64, see commit 0c314cda9325 ("arm64: vdso:
+> Work around invalid absolute relocations from GCC")
 > 
+> Introduce a tool to check for absolute relocations during the build,
+> as the current inline-shell logic is not expressive enough.
+> The check is done on the object files as the relocations will not exist
+> anymore in the final DSO. As there is no extension point for the
+> compilation of each object file, perform the validation in vdso_check.
 > 
-> Huacai
-> 
-Thank you, Huacai, for applying the patch. I really appreciate your
-time and the LoongArch maintainers' support.
+> Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+> ---
+>  Makefile                    |  19 ++
+>  lib/vdso/Kconfig            |   5 +
+>  lib/vdso/Makefile           |   2 +
+>  lib/vdso/Makefile.include   |  14 ++
+>  lib/vdso/check/.gitignore   |   3 +
+>  lib/vdso/check/Makefile     |  34 +++
+>  lib/vdso/check/elf.rs       | 498 ++++++++++++++++++++++++++++++++++++++++++++
+>  lib/vdso/check/vdsocheck.rs | 154 ++++++++++++++
+>  8 files changed, 729 insertions(+)
 
-
-Best,
-Zeng Chi
-
+Urgh, does this mean I have to have rust installed just to build a
+kernel now?
