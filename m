@@ -1,141 +1,109 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3492C3911AD;
-	Tue,  8 Sep 2026 07:37:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA67536F8E9
+	for <loongarch@lists.linux.dev>; Tue,  8 Sep 2026 07:39:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788853068; cv=none; b=RJiXd1SoTNWDpVIg2E7o0q1+PYSEfkzIjaiklzvdesyIEEJQbEmz+W2lEmhCi5H2+SfsNPwcpmOYsvRk3oJnIRZiY+12Sak87IyPuCS9F4EkYzdt1Y7StbUiFppB2gzmAY279pXTxBpQMFEGE/d9UVZYWgVWwp0v8mQ00DVdha8=
+	t=1788853157; cv=none; b=H6ZdK49WHbThmgasRRqaSse6LKwYXxy0cSEEXR7R6ZJyhFhJXL5CYImLPpJ7IRNKDJ4t2XYA+e4B5Lx8hgsBn2OjF/AG45RiHfBMK0NCmukoUUBan8LuiCZexPTr4S8IYKV/AzcjvCOfVqs/YAt579hrs+wabb7HyQtU1cYM+68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788853068; c=relaxed/simple;
-	bh=ZwH/nHQww+E+pAX3LZn0JyEZ+Oi3mONaiQzNpCAvNT8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i1GFbE2JAAH/Qp7UWf3pdOoRO4yquZhE9xtiqR3WcCOaJvPgDgv4l8eNVVdqNEBtP56qKFOOp7PuFKVuotOBNmfNZmE87HmpEKZGrola2D5r49cV65t/95tb9Gz8UbLd87oN4rNatUg3r3o7Xzz4nQa2doCbQviMUR1sZtRVmgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=irAwsshP; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="irAwsshP"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=dMspgRwQUUIexqKss7dqowtOmwD0tLbRBkFb+1ouQnY=; b=irAwsshPXpU7Uf/rfFaj3uWs6G
-	difPdlK64/emyFJJjlL7wNOeoAd6Y+U30iaYxFlQNgUaXhJ5XP9GQvgT7SeejFL749VvbdmXzNQmr
-	ysoKC7HRo3DXe9AyxTg6XU4ih3jJvnovv2Ujltj+xakHIL0+9ST9dekY+kWUCq6mECTuqGA167fg+
-	YqFWds1pqUcKbMJUd2jIJjqcUYt3toc+D0q3aR2UwfeZbWbAc5JAxTcsD0VD8CvN28YZRwquKZu0g
-	pKwTeSbCwX4MUVnlh4QxgKngIIgLaxab029w2jsxL2wYaE+8OY428gXbHH21x+RnEEnFMu/t4r9jb
-	gZmtLwfw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.99.2 #2 (Red Hat Linux))
-	id 1x3qOD-0000000H407-3KtV;
-	Tue, 08 Sep 2026 07:37:10 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id E0348300400; Tue, 08 Sep 2026 09:37:07 +0200 (CEST)
-Date: Tue, 8 Sep 2026 09:37:07 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Kees Cook <kees@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Christophe Leroy <chleroy@kernel.org>,
-	Boqun Feng <boqun@kernel.org>, Nicolas Schier <nsc@kernel.org>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, linux-mm@kvack.org,
-	linux-um@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	linux-s390@vger.kernel.org, linux-mips@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-kbuild@vger.kernel.org,
-	Jan Stancek <jstancek@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: Re: [PATCH v5 12/24] vdso: Add the vdsocheck tool
-Message-ID: <20260908073707.GV4120091@noisy.programming.kicks-ass.net>
-References: <20260908-vdso-absolute-reloc-v5-0-3a93791af1cf@linutronix.de>
- <20260908-vdso-absolute-reloc-v5-12-3a93791af1cf@linutronix.de>
- <20260908071911.GU4120091@noisy.programming.kicks-ass.net>
- <20260908093302-1a1cf0c7-8103-48b1-9f6a-abd5c5c16523@linutronix.de>
+	s=arc-20240116; t=1788853157; c=relaxed/simple;
+	bh=dEb+aLy3u3BijpcnfQZEEQWczVw14PtEPSi7ZSnMsJc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=C2khTUWy2yQv6VCmd/JyGGkRhsrN0A4iYhtVUBlcX2xuN9jLiyWUkDwDwfUNaV2lQwC0EuolYR+I4ngLaK0k6Lrz3CKbC5lKaCBPVw3YOptEKvw0UuCRScAirTPP560zUJeIjjUHTlTnsCGlfoYUsJSLu2Wq/q4qPUss17SdB+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [123.138.236.242])
+	by gateway (Coremail) with SMTP id _____8CxQNGhu59qKLgJAA--.28166S3;
+	Tue, 08 Sep 2026 15:39:13 +0800 (CST)
+Received: from linux.localdomain (unknown [123.138.236.242])
+	by front1 (Coremail) with SMTP id qMiowJAx1cybu59qhQ4dAA--.34427S2;
+	Tue, 08 Sep 2026 15:39:07 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] LoongArch: Remove arch-specific __smp_mb__{before,after}_atomic()
+Date: Tue,  8 Sep 2026 15:39:06 +0800
+Message-ID: <20260908073906.31781-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260908093302-1a1cf0c7-8103-48b1-9f6a-abd5c5c16523@linutronix.de>
+X-CM-TRANSID:qMiowJAx1cybu59qhQ4dAA--.34427S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxXw47tr17Cr1UKF1xtF1kWFX_yoW5Gr15pF
+	WxCrn7KFWkWF48Jw1Dt3WUuw13J3yvkrW7XrWFgFykuw1qgryUJr4xWr43uFyUAan5WFyS
+	vrZYv34Ykas8JacCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j1LvtUUUUU=
 
-On Tue, Sep 08, 2026 at 09:35:46AM +0200, Thomas Weiﬂschuh wrote:
-> On Tue, Sep 08, 2026 at 09:19:11AM +0200, Peter Zijlstra wrote:
-> > On Tue, Sep 08, 2026 at 08:33:46AM +0200, Thomas Weiﬂschuh wrote:
-> > > All vDSO code needs to be completely position independent. Symbol
-> > > references are marked as hidden so the compiler emits PC-relative
-> > > relocations. However there are cases where the compiler may still
-> > > emit absolute relocations, as they are valid in regular PIC DSO code.
-> > > These would be resolved by the linker and will break at runtime.
-> > > This has been observed on arm64, see commit 0c314cda9325 ("arm64: vdso:
-> > > Work around invalid absolute relocations from GCC")
-> > > 
-> > > Introduce a tool to check for absolute relocations during the build,
-> > > as the current inline-shell logic is not expressive enough.
-> > > The check is done on the object files as the relocations will not exist
-> > > anymore in the final DSO. As there is no extension point for the
-> > > compilation of each object file, perform the validation in vdso_check.
-> > > 
-> > > Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
-> > > ---
-> > >  Makefile                    |  19 ++
-> > >  lib/vdso/Kconfig            |   5 +
-> > >  lib/vdso/Makefile           |   2 +
-> > >  lib/vdso/Makefile.include   |  14 ++
-> > >  lib/vdso/check/.gitignore   |   3 +
-> > >  lib/vdso/check/Makefile     |  34 +++
-> > >  lib/vdso/check/elf.rs       | 498 ++++++++++++++++++++++++++++++++++++++++++++
-> > >  lib/vdso/check/vdsocheck.rs | 154 ++++++++++++++
-> > >  8 files changed, 729 insertions(+)
-> > 
-> > Urgh, does this mean I have to have rust installed just to build a
-> > kernel now?
-> 
-> No.
-> 
-> If you don't have rust installed the build will instead use the existing shell
-> script for a less thorough check. We only need one build machine at some point
-> to have rust installed to report issues and this check to be useful.
+When running the BPF selftest "test_progs -t timer_lockup" on a LoongArch
+machine, the kernel intermittently experiences soft lockups and panics in
+hrtimer_cancel().
 
-Ah, *phew*. Thanks!
+The root cause is that bpf_timer_cancel() relies on smp_mb__after_atomic()
+to provide a full data barrier after a relaxed atomic_inc() to ensure the
+proper store-load ordering before performing lockless dependency checks on
+weakly-ordered architectures such as LoongArch, but the current definition
+of smp_mb__after_atomic() is a plain compiler barrier.
+
+This allows a subsequent read to bypass the prior write due to store-load
+reordering, enabling concurrent CPUs to simultaneously bypass the software
+deadlock detection, enter hrtimer_cancel(), and then trigger a severe ABBA
+deadlock in the hrtimer core.
+
+Moreover, there are hundreds of smp_mb__after_atomic() call sites across
+the core kernel (kernel/, drivers/, mm/, net/, fs/) that currently lack
+necessary full data barriers on LoongArch, which have potential risks.
+
+To comply with the LKMM specification, fix this by removing the incorrect
+arch-specific definition of __smp_mb__after_atomic(), so that this macro
+can automatically fall back to the generic definition in asm-generic that
+maps to __smp_mb() and emits the required hardware DBAR instruction. While
+at it, do the same thing for __smp_mb__before_atomic().
+
+With this patch, the BPF timer_lockup selftest was stressed for 1 million
+consecutive loops on a physical LoongArch machine without encountering any
+further lockups.
+
+Reported-by: Vincent Li <vincent.mc.li@gmail.com>
+Closes: https://lore.kernel.org/loongarch/CAK3+h2xOSEZUHhou7N2cRL-aGrZCNSm45g+P7thObMe+fpgYCA@mail.gmail.com/
+Fixes: 46859ac8af52 ("LoongArch: Add multi-processor (SMP) support")
+Cc: stable@vger.kernel.org
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/loongarch/include/asm/barrier.h | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/arch/loongarch/include/asm/barrier.h b/arch/loongarch/include/asm/barrier.h
+index 4b663f197706..84c6d739119d 100644
+--- a/arch/loongarch/include/asm/barrier.h
++++ b/arch/loongarch/include/asm/barrier.h
+@@ -57,9 +57,6 @@
+ #define __WEAK_LLSC_MB		"			\n"
+ #endif
+ 
+-#define __smp_mb__before_atomic()	barrier()
+-#define __smp_mb__after_atomic()	barrier()
+-
+ /**
+  * array_index_mask_nospec() - generate a ~0 mask when index < size, 0 otherwise
+  * @index: array element index
+-- 
+2.42.0
+
