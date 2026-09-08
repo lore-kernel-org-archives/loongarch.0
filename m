@@ -1,141 +1,125 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D29D1F4631
-	for <loongarch@lists.linux.dev>; Tue,  8 Sep 2026 08:43:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 665424B0CB4;
+	Tue,  8 Sep 2026 08:57:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788857037; cv=none; b=GShBRw0BpFPU5TKlF/UNvHvgDTbNPc2kMEZlxB5rxWa3tmoTT5dtUROItq6zRKc5mbez0nh9GorJP7L1R4jPZ1/iKySdF5DzFTS+0rt4CjcT2ioFqz7CZvapIEWt1pYXkkvDyzWk93Pomk/CB/nVNZxODZOVF2RSJNTQJwJb1Zo=
+	t=1788857852; cv=none; b=c3ydSHzKeomlRzuuRRnWlfK0lrJlhvvIcDMw4JURMraLK0BUuVXhDszxCxl+E6SpiR2kXYXhkvQQ2CIBnd8nQ7THhTATXCaLuYYurw5LgQo4no1DnIpNZZOxoScH84e+CUERa3eeKJ6NOI/KG8Fucerffp25ZZru47rep2v1RDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788857037; c=relaxed/simple;
-	bh=V3Y/tN8cv5zoIHeTOZMh11Bj4L3iOIFDlw1Nbeem3sg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IYYyLZbZ5oXTjqAxuSg2FYKi9jSp4VXxqmykJSRanKOROzqzS7skJW4d+QZ86q7RAmkOW+hgSp8JEDx/uiaDwKPa4FCvtA/AEMaY4ak13UsLPSEIZK2tAIHFlKMyTrbHeAJFWZULd3F4Uc9xk7u/8vtEa0uLh3Dh5qbZAaXs+/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=hR9qHFr3; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1788857852; c=relaxed/simple;
+	bh=AbUW8cML5zO57Sb8jF0d98D12k6Bi/vuzBggBha5Vx0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QwKIfP8FXjofDDlxxgz6KHBsmuJCnncoMgvjP9NN1b/SlC+bIYZ2TNIUIrqiciH+f7e0EEvRx+SDLagQCAehn3sl+jD82jWzOCAWdXONyvtJEUmAAgemydlk9EEgQJnT2BhLn/YQkGDolRSf2jUXLyBdKTJwAf3wN/PcU4cT+VY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RMlWBWtH; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="hR9qHFr3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=J92dX1oYM7IY0/1ZeLhTll1RV7mRC8e5gkuzB135nxY=; b=hR9qHFr3OSXErFC5iBesCBBeSk
-	bTfXHJaXG/zjBu1aLbz1evnNftw8yA7hRKdqggMvA9ZqlZoXdEPHmHAo+5C/EWPRODdAQ7xf3zekn
-	3i8AavI9NcH4Yfm6Bofi9lQG83RA6sloUe8nosSdGjIy2+2iVjirSgtmNScjUYe2x6Fm82XX8QYA+
-	HPutxONOfbTqouxx47VlSWVkG12y3XeRseH60frlsUB6wqf+8kOAOO7WnpCgK14XjECBH0xJ54hbm
-	QtjKh2IJeqt66MA3r6nbnc1hpr0AQj5ExsusZbNoeX+A9P2kMjdRj/OnUL8LAjfgxh1tHSLjfsQtV
-	EKKJLG0g==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:33722)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1x3rQh-0000000088V-3esd;
-	Tue, 08 Sep 2026 09:43:47 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.98.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1x3rQd-000000003ul-3w0J;
-	Tue, 08 Sep 2026 09:43:43 +0100
-Date: Tue, 8 Sep 2026 09:43:43 +0100
-From: Russell King <linux@armlinux.org.uk>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev, linux-perf-users@vger.kernel.org,
-	loongarch@lists.linux.dev, Mark Rutland <mark.rutland@arm.com>,
-	Ian Rogers <irogers@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	James Clark <james.clark@linaro.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Waiman Long <longman@redhat.com>, WANG Xuerui <kernel@xen0n.name>,
-	Will Deacon <will@kernel.org>,
-	Clark Williams <clrkwllms@kernel.org>
-Subject: Re: [PATCH v2] ARM, ARM64, LONGARCH: Delay HW BP notification to
- task_work()
-Message-ID: <ap_Kv73A8exPhK-j@shell.armlinux.org.uk>
-References: <20260814085118.OPEA_Ssn@linutronix.de>
- <20260903160710.vVf4gEL2@linutronix.de>
- <apmknG55qFAn8EPf@shell.armlinux.org.uk>
- <20260903133146.07095885@gandalf.local.home>
- <20260904155404.ESPFg3zi@linutronix.de>
- <ap7OMYBVKUrQjX9O@shell.armlinux.org.uk>
- <20260908075455.OffmMhrB@linutronix.de>
- <ap_AhKXlAWecV3BI@shell.armlinux.org.uk>
- <20260908083740.0qERUBOE@linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RMlWBWtH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20D6F1F00A3A;
+	Tue,  8 Sep 2026 08:57:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788857835;
+	bh=BOR2t3VtcjszZ4q3H4RF8INxqX7I/2OnFWmBk3yYh2U=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=RMlWBWtHsUr314SSes2RbgrXEdhowxsDExyywV6MWPiyRlQ2MiRcnzJrKxwP2Uq5y
+	 FxFi3d8oyrDb4Ns+a5YQol0nE9UlpMARb5Srs2FLa3c8UgJq9bIRFnwje3hSYKfvsy
+	 4lejU8BQqLNJPlkLkj5fUKy1asSopqBNr8Z/GdXh3YL25ZL/xotJOBdRT8X+1frbzz
+	 5wc8MC7jxG0TFbXkBqhY75SKcdrJ0GvpwyMgIKA6vQKX0ndFDZCBRqE2+uKYcWsIZK
+	 O423o/0XnOMDsJENmzRb5yAhovNWoPRl28a6i0Ifx5k/RVsnRdBM2JH4gLApjYzNXL
+	 e95ar8gZlvOGw==
+Message-ID: <06996199-5255-41d0-ba6a-ebeca57f61da@kernel.org>
+Date: Tue, 8 Sep 2026 10:56:58 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260908083740.0qERUBOE@linutronix.de>
-Sender: "Russell King,,," <linux@armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 11/24] tools headers UAPI: Sync ELF headers with the
+ kernel sources
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Andy Lutomirski <luto@kernel.org>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, Kees Cook <kees@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Richard Weinberger <richard@nod.at>,
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,
+ Thomas Gleixner <tglx@kernel.org>, Boqun Feng <boqun@kernel.org>,
+ Nicolas Schier <nsc@kernel.org>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev, linux-mm@kvack.org, linux-um@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+ loongarch@lists.linux.dev, linux-s390@vger.kernel.org,
+ linux-mips@vger.kernel.org, rust-for-linux@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, Jan Stancek <jstancek@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@redhat.com>,
+ Alexandre Ghiti <alexghiti@rivosinc.com>
+References: <20260908-vdso-absolute-reloc-v5-0-3a93791af1cf@linutronix.de>
+ <20260908-vdso-absolute-reloc-v5-11-3a93791af1cf@linutronix.de>
+Content-Language: fr-FR
+From: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
+In-Reply-To: <20260908-vdso-absolute-reloc-v5-11-3a93791af1cf@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Sep 08, 2026 at 10:37:40AM +0200, Sebastian Andrzej Siewior wrote:
-> On 2026-09-08 09:00:04 [+0100], Russell King wrote:
-> > On Tue, Sep 08, 2026 at 09:54:55AM +0200, Sebastian Andrzej Siewior wrote:
-> > > On 2026-09-07 15:46:09 [+0100], Russell King wrote:
-> > > > On Fri, Sep 04, 2026 at 05:54:04PM +0200, Sebastian Andrzej Siewior wrote:
-> > > > > On 2026-09-03 13:31:46 [-0400], Steven Rostedt wrote:
-> > > > > > On Thu, 3 Sep 2026 17:47:24 +0100
-> > > > > > Russell King <linux@armlinux.org.uk> wrote:
-> > > > > > 
-> > > > > > > What do you expect to happen with this? Which arch maintainer should
-> > > > > > > apply this patch that affects three different independently maintained
-> > > > > > > architectures?
-> > > > > 
-> > > > > Well, if you as the ARM person are fine with ARM part, an ACK would be
-> > > > > appreciated. If you have something to object, it would be nice to let me
-> > > > > know so I can adjust accordingly.
-> > > > 
-> > > > First, I only just looked at the email - you may have noticed I'm not
-> > > > very active with the kernel anymore, as I'm a full-time carer at the
-> > > > moment.
-> > > > 
-> > > > Second, I'm not fine with the patch as-is, because it's not clear how
-> > > > it could be merged in its current form. It would be inappropriate to
-> > > > give an Ack, because an Ack means I'm fine with it. I'm not.
-> > > > 
-> > > > Third, I haven't actually reviewed the patch itself (see first point).
-> > > > 
-> > > > Looking deeper now, I see nothing in the linked report, nor in your
-> > > > write-up that identifies what is responsible for the context being
-> > > > inappropriate to deliver the SIGTRAP. See the first point - I'm not
-> > > 
-> > > The linked report shows a backtrace by "BUG: sleeping function"
-> > > originating from el0_breakpt() -> perf_bp_event() following by sending a
-> > > signal force_sig_fault() followed by rt_spin_lock() and
-> > > __might_resched(). It also contains a reproducer.
-> > > 
-> > > The first sentence has the part
-> > > | The hardware event is
-> > > | delivered with disabled interrupts and perf intrastrucure expects
-> > > | disabled interrupts while the overflow callback is invoked.
-> > 
-> > *Where* are interrupts disabled?
+
+
+Le 08/09/2026 à 08:33, Thomas Weißschuh a écrit :
+> Pick up changes from the UAPI ELF header files.
+> This picks up general changes to elf.h, elf-em.h which was forgotten
+> previously and the new elf-r.h.
 > 
-> On exception entry point, that would el0t_64_sync() for arm64 as in the
-> report.
+> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+> 
+> ---
+> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+>   tools/include/uapi/linux/elf-em.h |  71 ++++
+>   tools/include/uapi/linux/elf-r.h  | 696 ++++++++++++++++++++++++++++++++++++++
+>   tools/include/uapi/linux/elf.h    | 112 +++++-
+>   3 files changed, 868 insertions(+), 11 deletions(-)
+> 
 
-Oh FFS. So why does this need to be done on ARM? Explain it. This is
-what I'm trying to get out of you, but you're being very resistant
-to providing the technical details. I can only think you haven't
-actually done the analysis.
+> diff --git a/tools/include/uapi/linux/elf.h b/tools/include/uapi/linux/elf.h
+> index 5834b83d7f9a..88bdcbb526c1 100644
+> --- a/tools/include/uapi/linux/elf.h
+> +++ b/tools/include/uapi/linux/elf.h
 
-So, NAK.
+> @@ -312,7 +323,7 @@ typedef struct elf64_phdr {
+>   #define SHN_ABS		0xfff1
+>   #define SHN_COMMON	0xfff2
+>   #define SHN_HIRESERVE	0xffff
+> -
+> +
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Getting the following warning when applying this series with 'b4 shazam'.
+
+/home/chleroy/linux-powerpc/.git/rebase-apply/patch:846: trailing 
+whitespace.
+
+Seems to come from here.
+
+>   typedef struct elf32_shdr {
+>     Elf32_Word	sh_name;
+>     Elf32_Word	sh_type;
