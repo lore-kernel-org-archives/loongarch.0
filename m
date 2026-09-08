@@ -1,160 +1,259 @@
-Received: from canpmsgout11.his.huawei.com (canpmsgout11.his.huawei.com [113.46.200.226])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47FFE399003
-	for <loongarch@lists.linux.dev>; Tue,  8 Sep 2026 07:23:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.226
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 463C0399003
+	for <loongarch@lists.linux.dev>; Tue,  8 Sep 2026 07:35:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788852202; cv=none; b=VfGvDJ+HDvQ+XGTD3Llgwz38fx56UThORFkLzQT6mY2Ly6ZxfkPecnCzJtz5eIuwi9C2w99NHVA+3PunljuE6CdovLqzwcZ8X8znOB8XL0CbyFAmQbjYlcUTlyvY4yTt9nnTduTW2N059yLeLlGvLXCXrX3evtCzBQJuQVZG5YE=
+	t=1788852926; cv=none; b=tO+iBVOb1luhyDHC9/Bz6I78VhQLOqd+8wIp6jyFXjOD69gf5OWflefzI9dW1wE0AhpY1ZLt/6OLH9/yKgc7Bk60EG1ts4BU+Eg5fl1xSSCkWeAumtuhkDRtOETZhl5/6kBb6TM2BGLx5x+RNJMtHzY9JlOuLHxvelpDr8xtICg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788852202; c=relaxed/simple;
-	bh=makrRhagJ7JUJ3k4RbYpqJ4BLFXsVTK341yRmsUQ0h0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Pbll43a9TGSrCiQbm/SHy9qmMOVz7enoz2miaHEI4jOocZTlXylrAHxuyax4cseLvRJuxLQrJBPuU07uFV9ZD/Q2kEiUF5c5pF7rlJa3gFaOtX/Fe3k9cVxeNsOj4qIpGxPPXz++peULilM9SjAFwqAin0FM+w8GKQTwvRabfIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=hyaS2dA6; arc=none smtp.client-ip=113.46.200.226
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="hyaS2dA6"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=G7nz+2I01rp2LskTbFRR2FK0vPBroOC8XutcipcnIsM=;
-	b=hyaS2dA64DcCg3GRIM7kcjDzC2hUqQBzbi0wYEmlK75paxqrzZ4Qk09vQIT+D6ItcGzT9PK7K
-	+Fa6fiPBtKYscFQTRzVIbY6yweWimJ2oM5lKsGuwlq23S1Lfx1H1u//nCgErq4AFzAXXYPebOeM
-	yjA4Etr6FTTSMfxdr1fEXw0=
-Received: from mail.maildlp.com (unknown [172.19.163.15])
-	by canpmsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4hfFVy3mfZzKmVp;
-	Tue,  8 Sep 2026 15:12:10 +0800 (CST)
-Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id D100C40586;
-	Tue,  8 Sep 2026 15:23:07 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- kwepemk200008.china.huawei.com (7.202.194.74) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.45; Tue, 8 Sep 2026 15:23:05 +0800
-Message-ID: <92050fca-96ff-46e6-aca8-3cecd7cfb778@huawei.com>
-Date: Tue, 8 Sep 2026 15:23:04 +0800
+	s=arc-20240116; t=1788852926; c=relaxed/simple;
+	bh=OukSDEUVKjZ7tLp5WM5ACCwFRh0Lpjk4JkKl/ZZoIOs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fMvCT54hDuus9c2hrmwIiVL5oBLok33y0WWQCQr0ryHhMW2AnUMMPfMTq+lkgmrlNRBnsRVfRYv2cy/JVCN84dNVd/DNaztK/Aeu2qN69xWqyycdg5J9pRMoW83ZB5rxviz73+p0dyQCWPsflmZEUR6M/eBeGtFF2FKGaqzkpRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [123.138.236.242])
+	by gateway (Coremail) with SMTP id _____8BxbdKvup9qxrcJAA--.28524S3;
+	Tue, 08 Sep 2026 15:35:11 +0800 (CST)
+Received: from linux.localdomain (unknown [123.138.236.242])
+	by front1 (Coremail) with SMTP id qMiowJAx1cyrup9qnQ0dAA--.34416S2;
+	Tue, 08 Sep 2026 15:35:09 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Emil Tsalapatis <emil@etsalapatis.com>,
+	Ihor Solodrai <ihor.solodrai@linux.dev>
+Cc: loongarch@lists.linux.dev,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH bpf-next v3] selftests/bpf: Add test for indirect struct_ops trampoline
+Date: Tue,  8 Sep 2026 15:35:06 +0800
+Message-ID: <20260908073506.29734-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 05/12] LoongArch: kexec_file: Fix CMA page leaks in
- segment placement retry loops
-To: Huacai Chen <chenhuacai@kernel.org>
-CC: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
-	<kernel@xen0n.name>, <maddy@linux.ibm.com>, <mpe@ellerman.id.au>,
-	<npiggin@gmail.com>, <chleroy@kernel.org>, <tglx@kernel.org>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<hpa@zytor.com>, <akpm@linux-foundation.org>, <baoquan.he@linux.dev>,
-	<rppt@kernel.org>, <pasha.tatashin@soleen.com>, <pratyush@kernel.org>,
-	<ruirui.yang@linux.dev>, <kees@kernel.org>, <thuth@redhat.com>,
-	<jic23@kernel.org>, <tan.shaopeng@jp.fujitsu.com>, <zengheng4@huawei.com>,
-	<james.morse@arm.com>, <ardb@kernel.org>, <leitao@debian.org>,
-	<yeoreum.yun@arm.com>, <sourabhjain@linux.ibm.com>, <robh@kernel.org>,
-	<coxu@redhat.com>, <tangyouling@kylinos.cn>, <hbathini@linux.ibm.com>,
-	<adityag@linux.ibm.com>, <djbw@kernel.org>, <seanjc@google.com>,
-	<liaoyuanhong@vivo.com>, <vishal.l.verma@intel.com>,
-	<fuqiang.wang@easystack.cn>, <makb@juniper.net>, <piliu@redhat.com>,
-	<ebiggers@kernel.org>, <jbouron@amazon.com>, <mclapinski@google.com>,
-	<me@linux.beauty>, <graf@amazon.com>, <bgwin@google.com>,
-	<takahiro.akashi@linaro.org>, <palmer@rivosinc.com>, <x86@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
-	<kexec@lists.infradead.org>, <linux-fsdevel@vger.kernel.org>,
-	<linux-mm@kvack.org>
-References: <20260907125404.922123-1-ruanjinjie@huawei.com>
- <20260907125404.922123-6-ruanjinjie@huawei.com>
- <CAAhV-H7qjJ7BPnJ2KoQZSyMUvX_6i9H=EfdadXnmXtNiiB4ROA@mail.gmail.com>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <CAAhV-H7qjJ7BPnJ2KoQZSyMUvX_6i9H=EfdadXnmXtNiiB4ROA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemk200008.china.huawei.com (7.202.194.74)
+X-CM-TRANSID:qMiowJAx1cyrup9qnQ0dAA--.34416S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Gw4kXr4UJFy3CFyfGFW3urX_yoW3GF4xpF
+	ykJw1YyFnYv39rWF18XF4UZF4Sgrs5Zw15CFWkJ3sayr93X347JF18tFyIyFn8JrZYvw43
+	A34q9rW5CayUXacCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
+	6r1DMcIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
+	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
+	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
+	14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUceOJUUUUU
 
+Add a test case to verify that arguments passed on the stack are
+correctly read by an indirect struct_ops trampoline.
 
+This test ensures the correctness of stack offsets across various
+architectures. It is particularly critical for architectures like
+LoongArch, RISC-V, ARM64, and PowerPC where arguments beyond the
+first 8 registers are passed on the stack, as well as x86_64 and
+s390x which have lower register argument limits.
 
-在 2026/9/7 22:05, Huacai Chen 写道:
-> Hi, Jinjie,
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+v3:
+  -- Use bpf_program__set_log_buf() to capture and verify the log
+  -- Drop global state and mutex, just use kdata in bpf_dummy_reg()
 
-Hi Huacai,
+Test results for reference:
 
-> 
-> On Mon, Sep 7, 2026 at 8:53 PM Jinjie Ruan <ruanjinjie@huawei.com> wrote:
->>
->> During kexec image placement retry loops, any midway failure causes
->> the loader to truncate `image->nr_segments` back to its initial state
->> to purge the failed segments.
->>
->> However, this truncation introduces a memory leak. The CMA pages
->> allocated via kexec_add_buffer() during the failed attempt are tracked
->> in the `image->segment_cma` array. Because the subsequent cleanup paths
->> only iterate up to the truncated `nr_segments` boundary, these allocated
->> CMA pages outside the new boundary are permanently leaked.
->>
->> Fix this by explicitly releasing the associated CMA buffers in
->> the failure paths before `image->nr_segments` is reduced.
-> I'm not sure but does the elf version have similar problems as the efi version?
+(1) Before JIT fixes:
+    $ sudo ./test_progs -t struct_ops_multi_args
+    #487/1   struct_ops_multi_args/test_refcounted_multi:OK
+    ...
+    test_trampoline_stack_args:FAIL:check_stack_passed_arg9 unexpected check_stack_passed_arg9: actual 1286686720 != expected 9999
+    #487/2   struct_ops_multi_args/test_trampoline_stack_args:FAIL
+    #487     struct_ops_multi_args:FAIL
+    Summary: 0/1 PASSED, 0 SKIPPED, 1/1 FAILED
 
-This issue does not exist in the ELF version, as the retry loop for
-load_other_segments() does not exit here.
+(2) After JIT fixes:
+    $ sudo ./test_progs -t struct_ops_multi_args
+    #487/1   struct_ops_multi_args/test_refcounted_multi:OK
+    #487/2   struct_ops_multi_args/test_trampoline_stack_args:OK
+    #487     struct_ops_multi_args:OK
+    Summary: 1/2 PASSED, 0 SKIPPED, 0/0 FAILED
 
-Best regards,
-Jinjie
+ .../prog_tests/test_struct_ops_multi_args.c   | 57 ++++++++++++++++++-
+ .../bpf/progs/struct_ops_multi_args.c         | 14 ++++-
+ .../selftests/bpf/test_kmods/bpf_testmod.c    | 10 ++++
+ .../selftests/bpf/test_kmods/bpf_testmod.h    |  5 ++
+ 4 files changed, 84 insertions(+), 2 deletions(-)
 
-> 
-> Huacai
-> 
->>
->> Cc: Huacai Chen <chenhuacai@kernel.org>
->> Cc: WANG Xuerui <kernel@xen0n.name>
->> Cc: Youling Tang <tangyouling@kylinos.cn>
->> Cc: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
->> Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
->> Cc: Kees Cook <kees@kernel.org>
->> Cc: stable@vger.kernel.org
->> Link: https://sashiko.dev/#/patchset/20260729031235.2840255-1-ruanjinjie%40huawei.com
->> Fixes: 55d990f0084c ("LoongArch: Add EFI binary support for kexec_file")
->> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
->> ---
->>  arch/loongarch/kernel/kexec_efi.c          | 1 +
->>  arch/loongarch/kernel/machine_kexec_file.c | 6 +++++-
->>  2 files changed, 6 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/loongarch/kernel/kexec_efi.c b/arch/loongarch/kernel/kexec_efi.c
->> index 5ee78ebb1546..15fd797ff3de 100644
->> --- a/arch/loongarch/kernel/kexec_efi.c
->> +++ b/arch/loongarch/kernel/kexec_efi.c
->> @@ -86,6 +86,7 @@ static void *efi_kexec_load(struct kimage *image,
->>                  * We couldn't find space for the other segments; erase the
->>                  * kernel segment and try the next available hole.
->>                  */
->> +               kexec_free_segment_cma(image, kernel_segment_number);
->>                 image->nr_segments -= 1;
->>                 kbuf.buf_min = kernel_segment->mem + kernel_segment->memsz;
->>                 kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
->> diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
->> index 5412aa9f3568..62a5be102065 100644
->> --- a/arch/loongarch/kernel/machine_kexec_file.c
->> +++ b/arch/loongarch/kernel/machine_kexec_file.c
->> @@ -217,7 +217,11 @@ int load_other_segments(struct kimage *image,
->>         return 0;
->>
->>  out_err:
->> -       image->nr_segments = orig_segments;
->> +       while (image->nr_segments > orig_segments) {
->> +               kexec_free_segment_cma(image, image->nr_segments - 1);
->> +               image->nr_segments--;
->> +       }
->> +
->>         kfree(modified_cmdline);
->>         return ret;
->>  }
->> --
->> 2.34.1
->>
+diff --git a/tools/testing/selftests/bpf/prog_tests/test_struct_ops_multi_args.c b/tools/testing/selftests/bpf/prog_tests/test_struct_ops_multi_args.c
+index 0f321e889862..8767e5f8bcc7 100644
+--- a/tools/testing/selftests/bpf/prog_tests/test_struct_ops_multi_args.c
++++ b/tools/testing/selftests/bpf/prog_tests/test_struct_ops_multi_args.c
+@@ -3,7 +3,62 @@
+ #include <test_progs.h>
+ #include "struct_ops_multi_args.skel.h"
+ 
++static void test_refcounted_multi(void)
++{
++	struct struct_ops_multi_args *skel;
++	char log_buf[4096] = {};
++	int err;
++
++	skel = struct_ops_multi_args__open();
++	if (!ASSERT_OK_PTR(skel, "struct_ops_multi_args__open"))
++		return;
++
++	bpf_program__set_log_buf(skel->progs.test_refcounted_multi, log_buf, sizeof(log_buf));
++
++	err = struct_ops_multi_args__load(skel);
++	if (!ASSERT_EQ(err, -EINVAL, "struct_ops_multi_args__load"))
++		goto out;
++
++	ASSERT_HAS_SUBSTR(log_buf, "program with __ref argument cannot tail call",
++			  "check_verifier_log_message");
++
++out:
++	struct_ops_multi_args__destroy(skel);
++}
++
++static void test_trampoline_stack_args(void)
++{
++	struct struct_ops_multi_args *skel;
++	struct bpf_link *link = NULL;
++	int err;
++
++	skel = struct_ops_multi_args__open();
++	if (!ASSERT_OK_PTR(skel, "struct_ops_multi_args__open"))
++		return;
++
++	bpf_program__set_autoload(skel->progs.test_refcounted_multi, false);
++	skel->struct_ops.testmod_ref_acquire->test_refcounted_multi = NULL;
++
++	err = struct_ops_multi_args__load(skel);
++	if (!ASSERT_OK(err, "struct_ops_multi_args__load"))
++		goto out;
++
++	link = bpf_map__attach_struct_ops(skel->maps.testmod_ref_acquire);
++	if (!ASSERT_OK_PTR(link, "bpf_map__attach_struct_ops"))
++		goto out;
++
++	ASSERT_EQ(skel->bss->trampoline_stack_arg9, 9999, "check_stack_passed_arg9");
++
++out:
++	bpf_link__destroy(link);
++	struct_ops_multi_args__destroy(skel);
++}
++
+ void test_struct_ops_multi_args(void)
+ {
+-	RUN_TESTS(struct_ops_multi_args);
++	if (test__start_subtest("test_refcounted_multi"))
++		test_refcounted_multi();
++
++	if (test__start_subtest("test_trampoline_stack_args"))
++		test_trampoline_stack_args();
+ }
+diff --git a/tools/testing/selftests/bpf/progs/struct_ops_multi_args.c b/tools/testing/selftests/bpf/progs/struct_ops_multi_args.c
+index c62be15757f0..9d290f22b492 100644
+--- a/tools/testing/selftests/bpf/progs/struct_ops_multi_args.c
++++ b/tools/testing/selftests/bpf/progs/struct_ops_multi_args.c
+@@ -17,7 +17,6 @@ struct {
+ } prog_array SEC(".maps");
+ 
+ SEC("struct_ops/test_refcounted_multi")
+-__failure __msg("program with __ref argument cannot tail call")
+ int test_refcounted_multi(unsigned long long *ctx)
+ {
+ 	/* ctx[2] is used because the refcounted variable is the third argument */
+@@ -29,7 +28,20 @@ int test_refcounted_multi(unsigned long long *ctx)
+ 	return 0;
+ }
+ 
++__u64 trampoline_stack_arg9 = 0;
++
++SEC("struct_ops/test_trampoline_stack_args")
++int BPF_PROG(test_trampoline_stack_args, int arg1, int arg2, int arg3,
++					 int arg4, int arg5, int arg6,
++					 int arg7, int arg8, int arg9)
++{
++	trampoline_stack_arg9 = arg9;
++
++	return 0;
++}
++
+ SEC(".struct_ops.link")
+ struct bpf_testmod_ops testmod_ref_acquire = {
+ 	.test_refcounted_multi = (void *)test_refcounted_multi,
++	.test_trampoline_stack_args = (void *)test_trampoline_stack_args,
+ };
+diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
+index f798bbbb4d13..df50b408972a 100644
+--- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
++++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
+@@ -1774,6 +1774,8 @@ static int bpf_dummy_reg(void *kdata, struct bpf_link *link)
+ 	 */
+ 	if (ops->test_2)
+ 		ops->test_2(4, ops->data);
++	if (ops->test_trampoline_stack_args)
++		ops->test_trampoline_stack_args(1, 2, 3, 4, 5, 6, 7, 8, 9999);
+ 
+ 	return 0;
+ }
+@@ -1821,6 +1823,13 @@ bpf_testmod_ops__test_return_ref_kptr(int dummy, struct task_struct *task__ref,
+ 	return NULL;
+ }
+ 
++static int bpf_testmod_ops__test_trampoline_stack_args(int arg1, int arg2, int arg3,
++						       int arg4, int arg5, int arg6,
++						       int arg7, int arg8, int arg9)
++{
++	return arg9;
++}
++
+ static struct bpf_testmod_ops __bpf_testmod_ops = {
+ 	.test_1 = bpf_testmod_test_1,
+ 	.test_2 = bpf_testmod_test_2,
+@@ -1828,6 +1837,7 @@ static struct bpf_testmod_ops __bpf_testmod_ops = {
+ 	.test_refcounted = bpf_testmod_ops__test_refcounted,
+ 	.test_refcounted_multi = bpf_testmod_ops__test_refcounted_multi,
+ 	.test_return_ref_kptr = bpf_testmod_ops__test_return_ref_kptr,
++	.test_trampoline_stack_args = bpf_testmod_ops__test_trampoline_stack_args,
+ };
+ 
+ struct bpf_struct_ops bpf_bpf_testmod_ops = {
+diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.h b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.h
+index 210b919290cc..505cd6779ff7 100644
+--- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.h
++++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.h
+@@ -46,6 +46,11 @@ struct bpf_testmod_ops {
+ 	struct task_struct *(*test_return_ref_kptr)(int dummy, struct task_struct *task,
+ 						    struct cgroup *cgrp);
+ 
++	/* Used to test indirect struct_ops trampoline with stack-passed arguments. */
++	int (*test_trampoline_stack_args)(int arg1, int arg2, int arg3,
++					  int arg4, int arg5, int arg6,
++					  int arg7, int arg8, int arg9);
++
+ 	/* The following fields are used to test shadow copies. */
+ 	char onebyte;
+ 	struct {
+-- 
+2.42.0
 
