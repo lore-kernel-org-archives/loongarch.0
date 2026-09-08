@@ -1,126 +1,134 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12990415B6C;
-	Tue,  8 Sep 2026 09:38:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DED084E1415
+	for <loongarch@lists.linux.dev>; Tue,  8 Sep 2026 09:59:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788860311; cv=none; b=mNnQ5pj6XKU3H9FV+LSo4vHexnC17tBKg89lHJeUOctvh7tuAxc+awf1Xs1RGgHbsELl9EmZzOwNscE/pkWeeU26aN9nKgt1VmVHkZbzw3ADuB1d75++7c3lFT7iivIWfnS8kRcMbOjjVjCbgWmtaXPwjquAU/I+t5ispeG0bsY=
+	t=1788861571; cv=none; b=H0TyKB2PbeC0hz0cugyggta0HFyNg5/8Z5XP6VM4ebrmkYtY5voff/Op+CmabqHFZXwP5MLQxWvtvWyZ2Mb0Iqbrp9MyhNXBkhDWt/+RlNMv+B4kwGn6wgSl1OKnBLr+qyjsX+mxjgJGReAH5IrX056y7AqgCdc3i8l/izLC03A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788860311; c=relaxed/simple;
-	bh=k2UArcySfeHpVp9ykOmNXM3lQrV4LeySR1aU7F9hDP0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mmp3Fj6Vl04d3hkMgJSe+5Lth8H1MVc2Bv4lxDIcz45/nVqDgfji/g1lJlrT6UEtPeTD9XYkHNiXzYCpK5TR2yVaWRa0zUw4WFPW7YTx8aQENdyy8DYLijUUrrcM5w31HTMm2iS2LBfyd8t2yL0G9Lj1lQWtmn/nL9mQPjqEGAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=b3hKLnkp; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FdytLzOH; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1788861571; c=relaxed/simple;
+	bh=a/a9VuH1Pbu7fuqb4EF439JhWu4OMvquSWkjlVGi4tM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rSYNFDhN5s6ngefNL94cDPWNNRGfE5dK8ixm6DNinPcMmQpxT/C2yGADQMPsAv5bC6yNjOn9Ad88HmTrizfOg77f3uw2f2Cs7pB8ET9qt/IDkkgSGnMZbO/fGEKp8GJD4SxIO1/5VSOy0gMEy84KVyZzGBRNEG2BsJzjWgBT6IQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=YR0UOmZK; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="b3hKLnkp";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FdytLzOH"
-Date: Tue, 8 Sep 2026 11:38:26 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1788860308;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=S7fZnrtBd3MzTcOpfIWwsZnM6g3Bkm0P4fYMYH0n4+Q=;
-	b=b3hKLnkpAyvy/BgVkCybg1woRIxg3mMEReV4irm3g+SWRIBY/HUN+jfcHA+o3n9G0TlfnD
-	+4s6YCIeXuBTyVwkSPAv3U3D7JkVvrR6yovUqCS0khx5OOzcJe8v1GEof20VR38KQ4oUTA
-	oTyrutQWkPR/hngX0h/NRQS+R5xWRlIAEc19xzXPIA2jsujxaUxym5GDcaKW6zSAL5CC6e
-	lDsk1XMSUk2CNMcxwjMUwYz7zOYSI1aNT+7Gr3IBYzlwLyPrQftKZP41GUCKBcHdvrYVip
-	gvCTlZjUpdow88Cjljtt2tYLi3/RzRW0NkG/zAFBnWdoVGh96Du3/CdlQ/c5Yg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1788860308;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=S7fZnrtBd3MzTcOpfIWwsZnM6g3Bkm0P4fYMYH0n4+Q=;
-	b=FdytLzOH5qdsMjt74W6WRHV+nX7GW7p+ezl+S07BdlCbtDKIjIfC7jz/m6K25I/G20mubY
-	8FlSJv/XjNyfjCCQ==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Russell King <linux@armlinux.org.uk>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev, linux-perf-users@vger.kernel.org,
-	loongarch@lists.linux.dev, Mark Rutland <mark.rutland@arm.com>,
-	Ian Rogers <irogers@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	James Clark <james.clark@linaro.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Waiman Long <longman@redhat.com>, WANG Xuerui <kernel@xen0n.name>,
-	Will Deacon <will@kernel.org>,
-	Clark Williams <clrkwllms@kernel.org>
-Subject: Re: [PATCH v2] ARM, ARM64, LONGARCH: Delay HW BP notification to
- task_work()
-Message-ID: <20260908093826.ofGxmRRK@linutronix.de>
-References: <20260814085118.OPEA_Ssn@linutronix.de>
- <20260903160710.vVf4gEL2@linutronix.de>
- <apmknG55qFAn8EPf@shell.armlinux.org.uk>
- <20260903133146.07095885@gandalf.local.home>
- <20260904155404.ESPFg3zi@linutronix.de>
- <ap7OMYBVKUrQjX9O@shell.armlinux.org.uk>
- <20260908075455.OffmMhrB@linutronix.de>
- <ap_AhKXlAWecV3BI@shell.armlinux.org.uk>
- <20260908083740.0qERUBOE@linutronix.de>
- <ap_Kv73A8exPhK-j@shell.armlinux.org.uk>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="YR0UOmZK"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7E6391476;
+	Tue,  8 Sep 2026 02:59:25 -0700 (PDT)
+Received: from [10.164.19.55] (unknown [10.164.19.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8CBC43F7B4;
+	Tue,  8 Sep 2026 02:59:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1788861569; bh=a/a9VuH1Pbu7fuqb4EF439JhWu4OMvquSWkjlVGi4tM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YR0UOmZKFbfAJ3SQSDswiFS+rXAWEo6USejgl07yJMtcUVzwUvoX92dfUQwwVpdX5
+	 EaS2HlcY5AR9bV7tQg2bFaeizuNwDp69wiztfvHe7QfBZ8M2HAbZx4+U2VfjisKvus
+	 ye1W5JquN+zfg/oiJuWT9J+cxec8MSXZ7ZVkbbDw=
+Message-ID: <88b48587-1f3e-479b-ae9b-67aa643e2acb@arm.com>
+Date: Tue, 8 Sep 2026 15:29:16 +0530
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ap_Kv73A8exPhK-j@shell.armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/6] mm/vmalloc: make set_area_direct_map HUGE_VMAP
+ friendly
+To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: =?UTF-8?Q?Adrian_Barna=C5=9B?= <abarnas@google.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Alexander Gordeev
+ <agordeev@linux.ibm.com>, Alexandre Ghiti <alex@ghiti.fr>,
+ Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
+ Brendan Jackman <brendan.jackman@linux.dev>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ David Hildenbrand <david@kernel.org>,
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Huacai Chen <chenhuacai@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Len Brown <lenb@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <pjw@kernel.org>,
+ Pavel Machek <pavel@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Ryan Roberts <ryan.roberts@arm.com>, Sven Schnelle <svens@linux.ibm.com>,
+ Thomas Gleixner <tglx@kernel.org>, Uladzislau Rezki <urezki@gmail.com>,
+ Vasily Gorbik <gor@linux.ibm.com>, WANG Xuerui <kernel@xen0n.name>,
+ Will Deacon <will@kernel.org>, x86@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-pm@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ loongarch@lists.linux.dev
+References: <20260903-execmem-set-vm-perms-v0-2-v3-0-949b64a9f755@kernel.org>
+ <20260903-execmem-set-vm-perms-v0-2-v3-4-949b64a9f755@kernel.org>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <20260903-execmem-set-vm-perms-v0-2-v3-4-949b64a9f755@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 2026-09-08 09:43:43 [+0100], Russell King wrote:
-> > > > The linked report shows a backtrace by "BUG: sleeping function"
-> > > > originating from el0_breakpt() -> perf_bp_event() following by sending a
-> > > > signal force_sig_fault() followed by rt_spin_lock() and
-> > > > __might_resched(). It also contains a reproducer.
-> > > > 
-> > > > The first sentence has the part
-> > > > | The hardware event is
-> > > > | delivered with disabled interrupts and perf intrastrucure expects
-> > > > | disabled interrupts while the overflow callback is invoked.
-> > > 
-> > > *Where* are interrupts disabled?
-> > 
-> > On exception entry point, that would el0t_64_sync() for arm64 as in the
-> > report.
+
+
+On 03/09/26 2:58 pm, Mike Rapoport (Microsoft) wrote:
+> set_area_direct_map() always updates direct map alias permissions in
+> single page increments.
 > 
-> Oh FFS. So why does this need to be done on ARM? Explain it. This is
-> what I'm trying to get out of you, but you're being very resistant
-> to providing the technical details. I can only think you haven't
-> actually done the analysis.
+> For HUGE_VMAP areas it's suboptimal. Not only the loop in
+> set_area_direct_map() needlessly has more iterations (e.g times 512 on
+> x86), but it also causes fragmentation of the direct map that could be
+> avoided for the HUGE_VMAP areas populated with large pages.
 
-I had the feeling that this is not what you were expecting but I wasn't
-sure what you were expecting either.
+Correct, this would also help us on arm64 once we have ROX caches.
 
-The hardware breakpoint is delivered to the OS via an exception and on
-exception entry point the interrupts are disabled. This isn't unique to
-ARM but the same on other architectures, too.
-It is not limited to ARM but also Loongarch which is sending a signal in
-its handler (the one registered via register_user_hw_breakpoint()).
-It is not an issue on X86 because they don't send signal but just toggle
-the DR6 register.
-powerpc and sh have different logic where the perf event is disabled
-without sending a signal.
-xtensa is the only one untouched which does send a signal from the
-hw-breakpoint handler but xtensa does not support PREEMPT_RT and
-therefore doesn't enforce proper lock nesting (so this is likely not the
-only issue).
 
-> So, NAK.
+> 
+> All pages in an area are always of the same order: either same-order
+> large pages when VM_ALLOW_HUGE_VMAP is set and all huge pages were
+> successfully allocated, or order-0 page when VM_ALLOW_HUGE_VMAP is
+> cleared or when huge pages allocation fails and fallback path is taken.
+> 
+> Instead of updating the direct map permissions for every order-0 page in
+> an area, use the area's page_order as the loop increment and update the
+> large pages in one call to set_direct_map_{invalid,default}_noflush().
+> 
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> ---
 
-Would you reconsider, please? It does not seem justified.
+LGTM:
 
-Sebastian
+Reviewed-by: Dev Jain <dev.jain@arm.com>
+
+
+>  mm/vmalloc.c | 13 ++++++++-----
+>  1 file changed, 8 insertions(+), 5 deletions(-)
+> 
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index 5506b180f5c27..6ed6c160abed7 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -3367,12 +3367,15 @@ static inline void set_area_direct_map(const struct vm_struct *area,
+>  				       int (*set_direct_map)(struct page *page,
+>  							     unsigned int nr))
+>  {
+> -	unsigned long i;
+> +	unsigned int nr = (1U << vm_area_page_order(area));
+> +
+> +	for (unsigned long i = 0; i < area->nr_pages; i += nr) {
+> +		if (page_address(area->pages[i])) {
+> +			int err = set_direct_map(area->pages[i], nr);
+>  
+> -	/* HUGE_VMALLOC passes small pages to set_direct_map */
+> -	for (i = 0; i < area->nr_pages; i++)
+> -		if (page_address(area->pages[i]))
+> -			set_direct_map(area->pages[i], 1);
+> +			WARN_ON_ONCE(err);
+> +		}
+> +	}
+>  }
+>  
+>  /*
+> 
+
