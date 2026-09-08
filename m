@@ -1,132 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFADC563FAB;
-	Tue,  8 Sep 2026 14:06:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2157D4A4989;
+	Tue,  8 Sep 2026 14:26:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788876397; cv=none; b=iLSQpzCq5+z8CAcuJlg9T7+cnST9Ic/GJN2/dkg9lXVjpKe9VdTOAE7ctolxWeSY2KlYP01XWLmklbKCs/j3Pg5oajJJkUaR82Hk2VWMzDUVnw9Q2hHJV6l4tOg42UUtdTCHLvs2hbFqxK6I9zc3SIhihVQooG9g2PeKgsWU7uA=
+	t=1788877578; cv=none; b=X4OYkyMbEUcXuRw022iMclAZ3G05mlrUL1X8zlNvnKdAEfxRlMz6+EAwblEdV05g04L5U53Nz5jNQF37KitePxqsAr25RVHd2yELr3Zhj0WVgcHhx72sTivZ8m39yVbUS4Jf7yK+e6fnt+K+AcBRFX9D3Kkl7HQ6Mp/XkPs43bE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788876397; c=relaxed/simple;
-	bh=lKE8pTQb3SU3IlL3dMd1xcdSlzS75G2aqEM8bP8RQjw=;
+	s=arc-20240116; t=1788877578; c=relaxed/simple;
+	bh=5Mv42E8KfV+o7sMkeP3depUAOidAkVxElMYKgS2D8nU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cJBrrGef/tr7U9tDFBJivB5XS6oWB+DwU9DwdZti8oUsP1Rs2dsnYlkx0FBaAqHFfsNUfEqP6KO+FeZ0UtyTT9df29Vlub6wuqdhO59vC7ZJ9gmnpTZWk33JHZOGolDPQ/SEmpq2b++OH6RKBDxEhzz0dqHAvMPbF+DbmndHDCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B66881F00A3A;
-	Tue,  8 Sep 2026 14:06:08 +0000 (UTC)
-Date: Tue, 8 Sep 2026 17:05:44 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Adrian =?utf-8?Q?Barna=C5=9B?= <abarnas@google.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Alexandre Ghiti <alex@ghiti.fr>, Andy Lutomirski <luto@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Brendan Jackman <brendan.jackman@linux.dev>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Len Brown <lenb@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <pjw@kernel.org>, Pavel Machek <pavel@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Vasily Gorbik <gor@linux.ibm.com>, WANG Xuerui <kernel@xen0n.name>,
-	Will Deacon <will@kernel.org>, x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-pm@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	loongarch@lists.linux.dev
-Subject: Re: [PATCH v3 4/6] mm/vmalloc: make set_area_direct_map HUGE_VMAP
- friendly
-Message-ID: <aqAWOKZDiHE9ksrM@kernel.org>
-References: <20260903-execmem-set-vm-perms-v0-2-v3-0-949b64a9f755@kernel.org>
- <20260903-execmem-set-vm-perms-v0-2-v3-4-949b64a9f755@kernel.org>
- <2b0f5877-e71a-4824-adeb-5af2dd8b0269@kernel.org>
- <ap_tjOTR48tja_8e@kernel.org>
- <d379aae2-4249-4c6a-a748-5419d4f74f34@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=lOTP2FDaCEeVm9wmDq6Ef5QMukTY43FCfDi+RwiMMnjs8nJHa1W1qusVF1Ivnh54JyvWquC2dTTuwIFbzRpk7xqYiujKO9dWS8oGl0qqkVlsYGVHJN9F8rNspzP+eq32ZXBfWXCX2/hGu7GDbY12BWtsi+uMA4CMI7x+okFSlzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ibCJ1vTa; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dujpHxA7; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ibCJ1vTa";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dujpHxA7"
+Date: Tue, 8 Sep 2026 16:26:00 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1788877566;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3bG7xzyOLgkq/hT1vQoL2+37rRIngeN99Zi6O3p/t1Q=;
+	b=ibCJ1vTaf2PfeTeGGS4CPdeCQlmt6p7aLY7mIyests6CYT2a6E4Mjbx9HP5VcqSFIGIDN5
+	lQzNq4LeidtkfT+EysNyxDj3JNRd+SkiSObbBLZntgveQTRfZuO3v/L3jsJBVUb2BH8YCM
+	7vKdLixe7hXeDeAfmTR73MLoheT6qddEqn0zSpdo08XfzCFSXasPoLv5PXY5oZ4uUtuuhQ
+	ue9dInv7mMssJZ5SEhI8zG40m/o1XMobx0JA0bqLkrd6i/I6QO8W9g5ozGh5HmdlKJSK+H
+	nBg3aR8ypjomfwqNmYevI/XWRU18YkOzSNQOVFvzM7BNe1wvopfv0uHl4KPu0w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1788877566;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3bG7xzyOLgkq/hT1vQoL2+37rRIngeN99Zi6O3p/t1Q=;
+	b=dujpHxA7PKpeJCyeZiOagFVHrYS6MiqrupOYGFJ0EP4mlmR+jdnMRKg1XsL53yLYA37pen
+	ASTs5tXfWZYBIDDw==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Andy Lutomirski <luto@kernel.org>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, Kees Cook <kees@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Richard Weinberger <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, Russell King <linux@armlinux.org.uk>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Thomas Gleixner <tglx@kernel.org>, Christophe Leroy <chleroy@kernel.org>, 
+	Boqun Feng <boqun@kernel.org>, Nicolas Schier <nsc@kernel.org>, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, linux-mm@kvack.org, 
+	linux-um@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, linux-s390@vger.kernel.org, 
+	linux-mips@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	Jan Stancek <jstancek@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, 
+	Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: Re: [PATCH v5 02/24] x86/elf, um/x86/elf: Move relocation constants
+ to UAPI
+Message-ID: <20260908161740-0d79e592-87a6-43c5-9174-84ce1904e639@linutronix.de>
+References: <20260908-vdso-absolute-reloc-v5-0-3a93791af1cf@linutronix.de>
+ <20260908-vdso-absolute-reloc-v5-2-3a93791af1cf@linutronix.de>
+ <20260908135513.GAaqATwXHcQD7plnH-@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <d379aae2-4249-4c6a-a748-5419d4f74f34@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260908135513.GAaqATwXHcQD7plnH-@fat_crate.local>
 
-On Tue, Sep 08, 2026 at 01:48:36PM +0200, David Hildenbrand (Arm) wrote:
-> On 9/8/26 13:12, Mike Rapoport wrote:
-> > On Tue, Sep 08, 2026 at 12:41:48PM +0200, David Hildenbrand (Arm) wrote:
-> >> On 9/3/26 11:28, Mike Rapoport (Microsoft) wrote:
-> >>> set_area_direct_map() always updates direct map alias permissions in
-> >>> single page increments.
-> >>>
-> >>> For HUGE_VMAP areas it's suboptimal. Not only the loop in
-> >>> set_area_direct_map() needlessly has more iterations (e.g times 512 on
-> >>> x86), but it also causes fragmentation of the direct map that could be
-> >>> avoided for the HUGE_VMAP areas populated with large pages.
-> >>>
-> >>> All pages in an area are always of the same order: either same-order
-> >>> large pages when VM_ALLOW_HUGE_VMAP is set and all huge pages were
-> >>> successfully allocated, or order-0 page when VM_ALLOW_HUGE_VMAP is
-> >>> cleared or when huge pages allocation fails and fallback path is taken.
-> >>>
-> >>> Instead of updating the direct map permissions for every order-0 page in
-> >>> an area, use the area's page_order as the loop increment and update the
-> >>> large pages in one call to set_direct_map_{invalid,default}_noflush().
-> >>>
-> >>> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> >>> ---
-> >>>  mm/vmalloc.c | 13 ++++++++-----
-> >>>  1 file changed, 8 insertions(+), 5 deletions(-)
-> >>>
-> >>> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> >>> index 5506b180f5c27..6ed6c160abed7 100644
-> >>> --- a/mm/vmalloc.c
-> >>> +++ b/mm/vmalloc.c
-> >>> @@ -3367,12 +3367,15 @@ static inline void set_area_direct_map(const struct vm_struct *area,
-> >>>  				       int (*set_direct_map)(struct page *page,
-> >>>  							     unsigned int nr))
-> >>>  {
-> >>> -	unsigned long i;
-> >>> +	unsigned int nr = (1U << vm_area_page_order(area));
-> >>> +
-> >>> +	for (unsigned long i = 0; i < area->nr_pages; i += nr) {
-> >>> +		if (page_address(area->pages[i])) {
-> >>> +			int err = set_direct_map(area->pages[i], nr);
-> >>
-> >> Do we really expect some pages to have a directmap and others not?
+On Tue, Sep 08, 2026 at 06:55:13AM -0700, Borislav Petkov wrote:
+> On Tue, Sep 08, 2026 at 08:33:36AM +0200, Thomas Weißschuh wrote:
+> > These constants are useful for cross-platform userspace, for example to
+> > process ELF files during kernel cross-compilation.
 > > 
-> > Every page in the area can be allocated separately and
-> > __vmalloc_area_node() has
-> > 
-> > 	if (!(gfp_mask & (GFP_DMA | GFP_DMA32)))
-> > 		gfp_mask |= __GFP_HIGHMEM;
-> > 
-> > so generally speaking yes :)
+> > Move them from the kernel-private architecture-specific header to the UAPI.
 > 
-> Ah, I was thinking in terms of HUGE_VMAP, because there we sure would expect
-> all-or-nothing, right?
-
-Even with VM_ALLOW_HUGE_VMAP an area may be backed by highmem pages. When
-huge allocations are disabled either because an architecture does not
-support them or nohugevmalloc=no, vmalloc(VM_ALLOW_HUGE_VMAP) silently
-falls back to order-0 allocations.
- 
-> -- 
-> Cheers,
+> Why UAPI?
 > 
-> David
+> Why not include/linux/ ?
 
--- 
-Sincerely yours,
-Mike.
+The existing, generic ELF definitions are there.
+The ELF stuff in include/linux/ is highly specific to Linux.
+
+Also later in the patchset I want to expose the definitions to the
+tools/ build. Exposing generic UAPI definitions to tools/ is a much
+easier sell than include/linux/.
+
+
+Thomas
