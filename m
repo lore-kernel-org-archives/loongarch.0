@@ -1,181 +1,193 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7901355F22
-	for <loongarch@lists.linux.dev>; Wed,  9 Sep 2026 09:01:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DBBC38228A;
+	Wed,  9 Sep 2026 09:15:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788944483; cv=none; b=PUJPkNOpdMa8MN1yQmtqifcMl9n1Q4AuwiglMYsoRMA1MW0Dok3dmPogzXRGKBtUrqJ4l6ESLiOLEhdFuFkO1kOyEnFQL5Eo3IVpPnY+Qm9fq06ZTQXE1s2FvOw2Lj87BeNAHyJl085f85X8XFAXMeLQIEQ8pmC259jHwpTPu8g=
+	t=1788945340; cv=none; b=QOub4cdZ8emYTcO9VthKLqF8U5dH1UPcm17eiudkqB2FJPpFNwAS+cdquBxq3/7TX0vQOsYbNZmObxIDTRkvwik3R9joKCL78cWJwpCZaijV4LUPRPhzYTS14ZXHVnkh94DuaMbUKN0fYTEhzRJ9kzFP9L30Zte1hG+nwn0qZw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788944483; c=relaxed/simple;
-	bh=CyYoOI2a3p8AL1Xo3Y6JDsu3Dhh9jRw9WWZiBJDlPTE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Df1CNBsenI0xZCnx3/kiB/ZezogbB3B2nYzD60mCYh+FC93+6i57eFAf5qSmjN0q+Hv1aDXFpUzHWxsBCJCMfNcWiSZQRY9Db24OeeX30KUjAl8DMN5U0FiUfD8OUVClk/BxHj8YWHAUWIQza4yfLEnhkBG/brhGCNRojhWPMDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8BxhvBcIKFqnh4KAA--.29154S3;
-	Wed, 09 Sep 2026 17:01:16 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJBxKs5XIKFqL9YdAA--.30784S2;
-	Wed, 09 Sep 2026 17:01:11 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: KVM: Add hypercall crash support
-Date: Wed,  9 Sep 2026 16:53:50 +0800
-Message-Id: <20260909085350.2046788-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	s=arc-20240116; t=1788945340; c=relaxed/simple;
+	bh=JTc8DHP/qtDcpzr4d7+FejFT4BPaNW9X2BggCDjy7mo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QdmC0yBR+bfGd5uVgD/g49zFm0VUChkXg5RXWYLBRZE0MxM0JPrENWge17ebijvVCtEajzyFkV5fwRuKzWX0b2cHmgyKfugK6sPQIM1pC0mnXhHFeVxaKmQLvWNGx6LjeLt0c67Ux39OC8x6DS96aJe0yvTGa8ne//wERFBVz0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZBusIWCN; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZBusIWCN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 663111F00A3A;
+	Wed,  9 Sep 2026 09:15:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788945338;
+	bh=WMLhSTvOXcO1Feh9yCp+cQisLkpmflOTkHs5UzK+oYo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=ZBusIWCN+P7dXWHhpmFPOV+S3a+1WBjFc8E4Dla9jSlpOPp0YbEw6Gx5JHAhXq1Ox
+	 TiXg3EpXaAP3k3Pqd9Bz6g1XDxpukb7hScIRCbuFYzAAE9ZeXJgPoRSVLVkd47S8yV
+	 cEgXNJ1BLsteLJG71EFtqgP+7iaieY3+NWjdNpOGfkkQUJzaIqlJ1vr6zii6vaegQU
+	 11zvE33JYF4jAV9m2u1wr+7He/fca+pF80kLQfVQ3aC0AhY7C8DBeR6W0KU4HxftdB
+	 CCPlCymrV0JBKBDoYpHbQGkRz8Nvr39d75+CK9q07cmkNuNrc20M//BPHgZMDCN7fz
+	 6sjd1+/lSbqjg==
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfauth.ams.internal (Postfix) with ESMTP id 8E752198003A;
+	Wed,  9 Sep 2026 05:15:16 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-02.internal (MEProxy); Wed, 09 Sep 2026 05:15:32 -0400
+X-ME-Sender: <xms:pCOhapxWpL0GHjdR-LbSmt6pcF7cQoj_8cQ33xSeM7XCtFENM-sJEw>
+    <xme:pCOharWahP24PRQXVvE8eeNQnV55db4J_vp16cj_Z8GibP0d05qa3LF6G7CXPobAn
+    HafKDVhWfjWxnJEZOfi_ZDCv10ZgG4I_C318m3ajUCuz5cvYfve_vGy>
+X-ME-Received: <xmr:pCOhat43rLqB-KpS4v-iRR2MbmJvziGj4K3533xcWcE-RHBMlP2xBju_wd0>
+X-ME-Proxy-Cause: dmFkZTFpC8WONluUuvc7dpKb99eg92DQ33MSjEt2sNv2fC237wiMixhMca33e2LldrnTRH
+    U75C+KLC/q/LoK5zKzpXIyjFwS1b+E/++uY5aiYodIxAbg9BZ6O3CC6cd1SXYaFEulw8KR
+    jAI6ffm11DtQZdknyCWUWVFfuLXw2xt2y4TrUuW5CEhhTR/K3eTVLpp8QK1B0crMmfDXeu
+    uwu487939XxAxC04N1S97FZttc+sKd0M0bqZu5+zU/yY2Z2X+w/t7eOM75eiUIDwrFyGW9
+    VO3+XGBW9eUcOQwzMaEf6se6jBI4E1kU1BTvjozT7XN+z/WzRNjCEoYCcDV/y4SRQAjlN1
+    UJij+//6ITDtj0vpJtsxh3nZgt0K5pHTh0hy5Hu48Cov+xYJKliDjhUO5TEvuCAqjsq3SO
+    OxyGdCaNbHBZZb7IXgcT+pITOfdPxsCPlJyBoTr8Le9pMNL/ZTHnXi+/DIJXF17DMcWZIh
+    YM5LVoGds+47feWKyzGfEzTv1rFYfFtyh3h/v0wuQgBr2xOdBApwONTAMblqFbOLbUS27j
+    NPYBYul31i/zyEEbO83Lgkbp30doOoaMXPcKhFs3Rw8N2hrubUNjgoPgAP5Spz0uSYcxe2
+    FDFitH4FhEvRxWxK0irW8E1NKmcImw4MXKQVOJjCI5K3tVhOemySCLVfbAmA
+X-ME-Proxy: <xmx:pCOhajUqd18ClRcyZhFPHIYrAAp0-S3k_bVdXd6KZXOebWFu8gPWvw>
+    <xmx:pCOhaj7UC-S4UPOWxzOF-A3gNv5YI2PWLCUOMVoriXtNaMxfx7RKrw>
+    <xmx:pCOhaqmC_kf4Hp2GOeEHEjH5DxULoNK2H7t84K4BezfXKcQz_belGg>
+    <xmx:pCOhalZ7HrNwAby95sPa7N21RVub9YHPEGD6aBYbpelxVLHh1XK2sw>
+    <xmx:pCOhauEse5Mk8Ax8FZCi-GcbyLxH-H4DbMf7YweCkQjDO4jCkVmia0fm>
+Feedback-ID: i10464835:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 9 Sep 2026 05:15:14 -0400 (EDT)
+Date: Wed, 9 Sep 2026 10:15:13 +0100
+From: Kiryl Shutsemau <kas@kernel.org>
+To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ 	David Hildenbrand <david@kernel.org>, Zi Yan <ziy@nvidia.com>,
+ 	Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Liam R. Howlett" <liam@infradead.org>,
+ 	Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, 	Barry Song <baohua@kernel.org>,
+ Lance Yang <lance.yang@linux.dev>, 	Usama Arif <usama.arif@linux.dev>,
+ Guo Ren <guoren@kernel.org>, Brian Cain <bcain@kernel.org>,
+ 	Geert Uytterhoeven <geert@linux-m68k.org>,
+ Dinh Nguyen <dinguyen@kernel.org>,
+ 	Simon Schuster <schuster.simon@siemens-energy.com>,
+ Jonas Bonn <jonas@southpole.se>,
+ 	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+ Stafford Horne <shorne@gmail.com>,
+ 	Yoshinori Sato <ysato@users.sourceforge.jp>,
+ Rich Felker <dalias@libc.org>,
+ 	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ Paul Walmsley <pjw@kernel.org>, 	Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, 	Alexandre Ghiti <alex@ghiti.fr>,
+ Russell King <linux@armlinux.org.uk>, 	Vineet Gupta <vgupta@kernel.org>,
+ Michal Simek <monstr@monstr.eu>, Chris Zankel <chris@zankel.net>,
+ 	Max Filippov <jcmvbkbc@gmail.com>, Will Deacon <will@kernel.org>,
+ 	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+ Nick Piggin <npiggin@gmail.com>, 	Peter Zijlstra <peterz@infradead.org>,
+ "David S. Miller" <davem@davemloft.net>,
+ 	Andreas Larsson <andreas@gaisler.com>,
+ Richard Henderson <richard.henderson@linaro.org>,
+ 	Matt Turner <mattst88@gmail.com>, Magnus Lindholm <linmag7@gmail.com>,
+ 	Catalin Marinas <catalin.marinas@arm.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ 	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ 	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+ 	Helge Deller <deller@gmx.de>, Madhavan Srinivasan <maddy@linux.ibm.com>,
+ 	Michael Ellerman <mpe@ellerman.id.au>,
+ "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+ 	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ 	Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ 	Sven Schnelle <svens@linux.ibm.com>,
+ Richard Weinberger <richard@nod.at>,
+ 	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ 	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>,
+ 	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, 	Arnd Bergmann <arnd@arndb.de>,
+ Vlastimil Babka <vbabka@kernel.org>, 	Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, 	Michal Hocko <mhocko@suse.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, 	John Hubbard <jhubbard@nvidia.com>,
+ Peter Xu <peterx@redhat.com>, linux-mm@kvack.org,
+ 	linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
+ linux-hexagon@vger.kernel.org, 	linux-m68k@lists.linux-m68k.org,
+ linux-openrisc@vger.kernel.org, linux-sh@vger.kernel.org,
+ 	linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ 	linux-snps-arc@lists.infradead.org, linux-arch@vger.kernel.org,
+ sparclinux@vger.kernel.org, 	linux-alpha@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ 	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-s390@vger.kernel.org, 	linux-um@lists.infradead.org,
+ Hugh Dickins <hughd@google.com>, Qi Zheng <qi.zheng@linux.dev>
+Subject: Re: [PATCH v2 11/12] mm: make userland page table freeing RCU-safe
+Message-ID: <aqEivRP0LmJZcgEx@thinkstation>
+References: <20260908-rcu-pagetable-freeing-v2-0-1f60b64e878e@kernel.org>
+ <20260908-rcu-pagetable-freeing-v2-11-1f60b64e878e@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxKs5XIKFqL9YdAA--.30784S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260908-rcu-pagetable-freeing-v2-11-1f60b64e878e@kernel.org>
 
-Now generic pvpanic is supported in Linux kernel which will notify VMM
-with VM crash event. There is some limitations with pvpanic, such as it
-requires good kernel stack or CPU hardware context and panic() C function
-is in health state.
+On Tue, Sep 08, 2026 at 01:32:20PM +0100, Lorenzo Stoakes (ARM) wrote:
+> Now every architecture has been converted to support
+> CONFIG_MMU_GATHER_RCU_TABLE_FREE, this configuration option no longer makes
+> any sense to keep around.
+> 
+> Therefore remove it, and remove all the dead code that existed for
+> !CONFIG_MMU_GATHER_RCU_TABLE_FREE architectures previously.
+> 
+> Additionally, CONFIG_MMU_GATHER_TABLE_FREE is no longer necessary, as all
+> architectures instead use CONFIG_HAVE_ARCH_TLB_REMOVE_TABLE when a custom
+> __tlb_remove_table() is required, so remove this too.
+> 
+> A number of architectures only enabled CONFIG_MMU_GATHER_RCU_TABLE_FREE if
+> CONFIG_MMU was set, however the mmu_gather logic only actually does
+> something meaningful if CONFIG_MMU is set (mmu_gather.c is only compiled in
+> this case, for instance).
+> 
+> As a result, there's no need to gate any of this logic on CONFIG_MMU
+> explicitly.
+> 
+> CONFIG_PT_RECLAIM however does have a strict dependency on CONFIG_MMU, so
+> make this dependency explicit.
+> 
+> Additionally, correct comments to remove references to non-RCU page table
+> gathering and make it clear that this is not 'semi-RCU', nor has it been
+> since commit 1fb3d8c20bfa ("mm/mmu_gather: replace IPI with
+> synchronize_rcu() when batch allocation fails").
+> 
+> With this change in place the kernel policy is now that all page tables are
 
-Sometimes CPU hardware context or kernel/irq stack is corrupted. Hypercall
-code is more direct and low-level crash method, which is useful in
-exception entry with assmble language, here add one hypercall code to
-support VM crash function, so that VMM can capture CPU crash context
-in time.
+You missed s/all/userspace/ from v1.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/include/asm/kvm_host.h      |  1 +
- arch/loongarch/include/asm/kvm_para.h      | 15 +++++++++++++++
- arch/loongarch/include/uapi/asm/kvm.h      |  1 +
- arch/loongarch/include/uapi/asm/kvm_para.h |  1 +
- arch/loongarch/kvm/exit.c                  | 11 +++++++++++
- arch/loongarch/kvm/vm.c                    |  3 ++-
- 6 files changed, 31 insertions(+), 1 deletion(-)
+> freed after an RCU grace period, and thus it is now safe to unconditionally
+> perform page table walks under RCU, safe in the knowledge that page tables
+> will not be freed underneath the walker.
 
-diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index 65d91c3ce313..96f9f1317cad 100644
---- a/arch/loongarch/include/asm/kvm_host.h
-+++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -168,6 +168,7 @@ enum emulation_result {
- #define LOONGARCH_PV_FEAT_MASK		(BIT(KVM_FEATURE_IPI) |		\
- 					 BIT(KVM_FEATURE_PREEMPT) |	\
- 					 BIT(KVM_FEATURE_STEAL_TIME) |	\
-+					 BIT(KVM_FEATURE_CRASH)	|	\
- 					 BIT(KVM_FEATURE_USER_HCALL) |	\
- 					 BIT(KVM_FEATURE_VIRT_EXTIOI))
- 
-diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/include/asm/kvm_para.h
-index fb17ba0fa101..3b183bb1aaa8 100644
---- a/arch/loongarch/include/asm/kvm_para.h
-+++ b/arch/loongarch/include/asm/kvm_para.h
-@@ -14,6 +14,7 @@
- #define KVM_HCALL_CODE_SERVICE		0
- #define KVM_HCALL_CODE_SWDBG		1
- #define KVM_HCALL_CODE_USER_SERVICE	2
-+#define KVM_HCALL_CODE_CRASH		3
- 
- #define KVM_HCALL_SERVICE		HYPERCALL_ENCODE(HYPERVISOR_KVM, KVM_HCALL_CODE_SERVICE)
- #define  KVM_HCALL_FUNC_IPI		1
-@@ -22,6 +23,7 @@
- #define KVM_HCALL_SWDBG			HYPERCALL_ENCODE(HYPERVISOR_KVM, KVM_HCALL_CODE_SWDBG)
- 
- #define KVM_HCALL_USER_SERVICE		HYPERCALL_ENCODE(HYPERVISOR_KVM, KVM_HCALL_CODE_USER_SERVICE)
-+#define KVM_HCALL_CRASH			HYPERCALL_ENCODE(HYPERVISOR_KVM, KVM_HCALL_CODE_CRASH)
- 
- /*
-  * LoongArch hypercall return code
-@@ -161,6 +163,19 @@ static __always_inline long kvm_hypercall5(u64 fid,
- 	return ret;
- }
- 
-+static __always_inline long kvm_hypercall_crash(void)
-+{
-+	register long ret asm("a0");
-+
-+	__asm__ __volatile__(
-+		"hvcl "__stringify(KVM_HCALL_CRASH)
-+		: "=r" (ret)
-+		: : "memory"
-+		);
-+
-+	return ret;
-+}
-+
- #ifdef CONFIG_PARAVIRT
- bool kvm_para_available(void);
- unsigned int kvm_arch_para_features(void);
-diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
-index cd0b5c11ca9c..b222bfc48042 100644
---- a/arch/loongarch/include/uapi/asm/kvm.h
-+++ b/arch/loongarch/include/uapi/asm/kvm.h
-@@ -106,6 +106,7 @@ struct kvm_fpu {
- #define  KVM_LOONGARCH_VM_FEAT_PTW		8
- #define  KVM_LOONGARCH_VM_FEAT_MSGINT		9
- #define  KVM_LOONGARCH_VM_FEAT_PV_PREEMPT	10
-+#define  KVM_LOONGARCH_VM_FEAT_CRASH		11
- 
- /* Device Control API on vcpu fd */
- #define KVM_LOONGARCH_VCPU_CPUCFG	0
-diff --git a/arch/loongarch/include/uapi/asm/kvm_para.h b/arch/loongarch/include/uapi/asm/kvm_para.h
-index d28cbcadd276..bf1a0c826ca6 100644
---- a/arch/loongarch/include/uapi/asm/kvm_para.h
-+++ b/arch/loongarch/include/uapi/asm/kvm_para.h
-@@ -16,6 +16,7 @@
- #define  KVM_FEATURE_IPI		1
- #define  KVM_FEATURE_STEAL_TIME		2
- #define  KVM_FEATURE_PREEMPT		3
-+#define  KVM_FEATURE_CRASH		4
- /* BIT 24 - 31 are features configurable by user space vmm */
- #define  KVM_FEATURE_VIRT_EXTIOI	24
- #define  KVM_FEATURE_USER_HCALL		25
-diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index 4f58e6e2cf86..3b6daa946c76 100644
---- a/arch/loongarch/kvm/exit.c
-+++ b/arch/loongarch/kvm/exit.c
-@@ -911,6 +911,17 @@ static int kvm_handle_hypercall(struct kvm_vcpu *vcpu, int ecode)
- 		vcpu->run->hypercall.ret = KVM_HCALL_INVALID_CODE;
- 		ret = RESUME_HOST;
- 		break;
-+	case KVM_HCALL_CRASH:
-+		if (!kvm_guest_has_pv_feature(vcpu, KVM_FEATURE_CRASH)) {
-+			kvm_write_reg(vcpu, LOONGARCH_GPR_A0, KVM_HCALL_INVALID_CODE);
-+			break;
-+		}
-+
-+		vcpu->run->exit_reason = KVM_EXIT_SYSTEM_EVENT;
-+		vcpu->run->system_event.type = KVM_SYSTEM_EVENT_CRASH;
-+		vcpu->run->system_event.ndata = 0;
-+		ret = RESUME_HOST;
-+		break;
- 	case KVM_HCALL_SWDBG:
- 		/* KVM_HCALL_SWDBG only in effective when SW_BP is enabled */
- 		if (vcpu->guest_debug & KVM_GUESTDBG_SW_BP_MASK) {
-diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
-index 6dabb227a732..e5d10ceb5e67 100644
---- a/arch/loongarch/kvm/vm.c
-+++ b/arch/loongarch/kvm/vm.c
-@@ -49,8 +49,9 @@ static void kvm_vm_init_features(struct kvm *kvm)
- 		kvm->arch.kvm_features |= BIT(KVM_LOONGARCH_VM_FEAT_PMU);
- 
- 	/* Enable all PV features by default */
--	kvm->arch.pv_features |= BIT(KVM_FEATURE_IPI);
-+	kvm->arch.pv_features |= BIT(KVM_FEATURE_IPI) | BIT(KVM_FEATURE_CRASH);
- 	kvm->arch.kvm_features |= BIT(KVM_LOONGARCH_VM_FEAT_PV_IPI);
-+	kvm->arch.kvm_features |= BIT(KVM_LOONGARCH_VM_FEAT_CRASH);
- 	if (kvm_pvtime_supported()) {
- 		kvm->arch.pv_features |= BIT(KVM_FEATURE_PREEMPT);
- 		kvm->arch.pv_features |= BIT(KVM_FEATURE_STEAL_TIME);
 
-base-commit: df2908090cda368b01ff43709f51890076c56157
+> @@ -151,24 +148,15 @@
+>   *  This might be useful if your architecture has size specific TLB
+>   *  invalidation instructions.
+>   *
+> - *  MMU_GATHER_TABLE_FREE
+> - *
+> - *  This provides tlb_remove_table(), to be used instead of tlb_remove_page()
+> - *  for page directores (__p*_free_tlb()).
+> - *
+> - *  Useful if your architecture has non-page page directories.
+> + *  Page directories (__p*_free_tlb()) are always freed via tlb_remove_table(),
+> + *  after an RCU grace period (see mm/mmu_gather.c).
+>   *
+> - *  When used, an architecture is expected to provide __tlb_remove_table() or
+> - *  use the generic __tlb_remove_table(), which does the actual freeing of these
+> - *  pages.
+> + * This serialises against software page-table walkers, including architectures
+> + * which do not use IPIs for remote TLB invalidates.
+
+Indentation is broken.
+
 -- 
-2.39.3
-
+  Kiryl Shutsemau / Kirill A. Shutemov
