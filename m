@@ -1,62 +1,123 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56BFD47A881
-	for <loongarch@lists.linux.dev>; Wed,  9 Sep 2026 08:40:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE80A46C4A9
+	for <loongarch@lists.linux.dev>; Wed,  9 Sep 2026 08:51:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788943231; cv=none; b=KrZxpB9DZaZ4any5eLON5nkluDOM+rMyVmpRy4TQC8BfLG5v1FVsMJWY8yLcwW5nbZOnfp+wp4RfQGTQGlKbmgRneNrLsnwU0fxKbE7UCWRIbr8SetgCmI7O12mzCPel3yJfei/qhhdOZinwNJPZWEPSNLHHm4+VRLySTSxSuaM=
+	t=1788943893; cv=none; b=AdOkxpiIeiH2qEphwDcBshGsH9srkD/UC3sB5+lKReIOJM5uSvrS5Ot0Ybe9Ki/g+LeWcjlowd+sjgU/Xle+shMiHmcy92DjxyURHb1loOlhaLTdiRASVmGhonGXkdPOS/DtiRcPWgiDyce6fdctHtIy09tgqAQwTGm5PTdhsKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788943231; c=relaxed/simple;
-	bh=2EEqqBaySonKRbNZhYOSFRx7U6u4g8OCjSV+MEHvFsk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IhEW3ixS1JFb5PxxRtcjHLUFz10fCp99Kvgj6eYWOdRxp9umPBthjW03n7kriNZ4/L7dSZYCfQrA5Db85n9clTBwfC9+FjYv2AMn5XzDJmiy9x5N6XYpLc2/mru2WOutb4DEts5dxfSvjs+zjnYgbxHpRJ3hYtufWSJLm5VYamw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8Axj9F0G6FqRhwKAA--.29359S3;
-	Wed, 09 Sep 2026 16:40:20 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJAxHs90G6FqXdIdAA--.30773S2;
-	Wed, 09 Sep 2026 16:40:20 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] LoongArch: KVM: Code cleanup with MSI intterupt injection
-Date: Wed,  9 Sep 2026 16:32:57 +0800
-Message-Id: <20260909083259.1910290-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	s=arc-20240116; t=1788943893; c=relaxed/simple;
+	bh=5Ojd0VZyBuWlT1Vlm9OCcvjNe/c3y4B8B7OiZI04IfU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=C7zREGRdV2Uud8HBwtEOyaWAUFzgDTt+sy3xfNWFWsqnk9pcmidnyIP2Vc/O6jx+DhS3fZgDA4MLXcXlFvzPQOB60LVC0KBQwN/Faq0/xqJsaBo5yex2vTv5Qu99fDEASdCjaRw/uMDeFS4ylMY/Pd7Tv0gA7b+f79c/V0a/4do=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=X09Yejo/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cYA/s1bW; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="X09Yejo/";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cYA/s1bW"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1788943882;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XzQOMxzxshTh4wmqEu29Gu2VPX+xEoLqk1yFbDrb8uM=;
+	b=X09Yejo/JqqKtXCBERrNnRAYA35ImQKVCAF+aSCtG2F6PKrzCaElWrLHCAxGtzr7vC7OOu
+	w0HUGAq/x4Pq3gNZtO6+iPsEvOwxvPbU1eDFXpf/ovbFERZB00bGkzZGvYmYJW9ldJ+TqS
+	QLNVMEHKXIz5pnTCub3fdLep8HnNx+Lwy8VwNv++2kJBMAasTB9ZIDMciuBfKiHjHkPOx5
+	tC3004wXfoTPdEjwfIlJE/qyREnrsnkGz8wj1Jtp35FtBZ281kpRX+N5IgSTM4LnIdUKJV
+	xZiars5kzubb+8wkquYE/jKHmF25JTco2ilJeYOEa4VaT6+D19ljJZA18zrpnQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1788943882;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XzQOMxzxshTh4wmqEu29Gu2VPX+xEoLqk1yFbDrb8uM=;
+	b=cYA/s1bWs/UKgyEP7Ti0e2vw1WhICfuqGpLaEZeMxwrx7+M/smOGJv8avR0BVCzMnxs/GQ
+	tXZzBptfzYAlvhDA==
+Date: Wed, 09 Sep 2026 10:51:15 +0200
+Subject: [PATCH 02/15] vdso/gettimeofday: Define fallback
+ __arch_get_vdso_u_time_data() in gettimeofday.c
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxHs90G6FqXdIdAA--.30773S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+Message-Id: <20260909-vdso-asm-generic-vsyscall-h-v1-2-63ae856cc659@linutronix.de>
+References: <20260909-vdso-asm-generic-vsyscall-h-v1-0-63ae856cc659@linutronix.de>
+In-Reply-To: <20260909-vdso-asm-generic-vsyscall-h-v1-0-63ae856cc659@linutronix.de>
+To: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
+ Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, 
+ linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+ sparclinux@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1788943875; l=1583;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=5Ojd0VZyBuWlT1Vlm9OCcvjNe/c3y4B8B7OiZI04IfU=;
+ b=VGAO2rm1dloGKPPn6fG5mfwo6sz2glPNKl5GoEyuD+WCr61o80au+loFA+6grZFSc94CCx300
+ 8Gh0V0u0lq7CxoWtxOpnah08gZTdMGr+JgfY05geFzjXERrVbBldpxr
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Here is to remove some unnecessary parameter checking when injecting
-MSI interrupt, include MSI level parameter and vcpu::arch::dmsintc_state
-NULL pointer etc.
+__arch_get_vdso_u_time_data() is only used in gettimeofday.c. vsyscall.h
+has become a dumping ground for different kinds of fallbacks.
 
-Bibo Mao (2):
-  LoongArch: KVM: Remove parameter line when inject MSI
-  LoongArch: KVM: Remove duplicated checking with DMSI irq injection
+Move the fallback function definition into gettimeofday.c,
+similar to other fallbacks.
 
- arch/loongarch/include/asm/kvm_dmsintc.h |  3 +--
- arch/loongarch/include/asm/kvm_pch_pic.h |  2 +-
- arch/loongarch/kvm/intc/dmsintc.c        | 19 +++----------------
- arch/loongarch/kvm/intc/pch_pic.c        |  6 +++---
- arch/loongarch/kvm/irqfd.c               |  6 +++---
- 5 files changed, 11 insertions(+), 25 deletions(-)
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+ include/asm-generic/vdso/vsyscall.h | 7 -------
+ lib/vdso/gettimeofday.c             | 7 +++++++
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
+diff --git a/include/asm-generic/vdso/vsyscall.h b/include/asm-generic/vdso/vsyscall.h
+index a6b03cfba0e2..fe12fb1fb442 100644
+--- a/include/asm-generic/vdso/vsyscall.h
++++ b/include/asm-generic/vdso/vsyscall.h
+@@ -4,13 +4,6 @@
+ 
+ #ifndef __ASSEMBLER__
+ 
+-#ifndef __arch_get_vdso_u_time_data
+-static __always_inline const struct vdso_time_data *__arch_get_vdso_u_time_data(void)
+-{
+-	return &vdso_u_time_data;
+-}
+-#endif
+-
+ #ifndef __arch_get_vdso_u_rng_data
+ static __always_inline const struct vdso_rng_data *__arch_get_vdso_u_rng_data(void)
+ {
+diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
+index f7a591aba59f..b867c2301d5c 100644
+--- a/lib/vdso/gettimeofday.c
++++ b/lib/vdso/gettimeofday.c
+@@ -93,6 +93,13 @@ static inline bool vdso_cycles_ok(u64 cycles)
+ }
+ #endif
+ 
++#ifndef __arch_get_vdso_u_time_data
++static __always_inline const struct vdso_time_data *__arch_get_vdso_u_time_data(void)
++{
++	return &vdso_u_time_data;
++}
++#endif
++
+ static __always_inline bool vdso_clockid_valid(clockid_t clock)
+ {
+ 	/* Check for negative values or invalid clocks */
 
-base-commit: df2908090cda368b01ff43709f51890076c56157
 -- 
-2.39.3
+2.55.0
 
