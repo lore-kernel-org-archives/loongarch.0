@@ -1,160 +1,156 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E090738AC61
-	for <loongarch@lists.linux.dev>; Thu, 10 Sep 2026 15:29:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D645B4C041B
+	for <loongarch@lists.linux.dev>; Thu, 10 Sep 2026 16:20:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789054187; cv=none; b=M1XJ9FVaeBcisLZFP+fm1cQU/NOHL8dlUxEEjss+Rl7Pa0Ow3u8/K/9bq17nR0zM6VnXFKYs91vou6aFsg7SFTZyjNQZKWiQHYsEWKFKtKjrVLz4vA0c4sKAaNpkT4ZdK5Gs2lf3Z4W+OUAolyoXmtXger5mwQHG9BSfStIO2Ck=
+	t=1789057217; cv=none; b=b62AAkQxhjBpN+w7GgI19NR9hjTfXt0OojrvUsFR/UhF4tTH3O7ThRfA0GelJHSaBqf9R7Ng4DG30trTDVkimFWe1pz/gTbGsou5Hf2vGzGnON74w3zzCv/js9IgcOMCOrfCkBKCnAHyJ+fiIdlHLu/exU/8cBdq4nwuHpzcPf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789054187; c=relaxed/simple;
-	bh=SFcUASuvlDRtE2C4hK5s4ZmzjFE6/W3nNqwA+OR44zY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rmc76RlFZylNI5PGtlGvOb/xLMVsrVC/cpk5zkqURqSTC6zZlrW5tN3nVY+6Q8fAbNJ+fbyoGO/crPSlRZE5OBYXpqlKiqjZ9sTss57BpGfrBg5evlRCQXUQh4GJYTFxtAXUfqK6QMKx8OqBKqVHyYALr17N+PjNPSNTYi/cXWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k2egxiLI; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k2egxiLI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789054186; x=1820590186;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=SFcUASuvlDRtE2C4hK5s4ZmzjFE6/W3nNqwA+OR44zY=;
-  b=k2egxiLIxOiBR9RNUCG9keDbzF7F1l5fuFxQ3z3Z02qJkD4/wOzYyzku
-   KCm/TqJ+AEiK6ScBJNIzBUv/BSh4UBUp2cS53bU7Z38CQ4Wz+cq+s5Qwc
-   w14kqgDTHecTdD1fq5KczfU2BOY8Zh7BHbJ0UEsZ9aU+EhGOWnZBgtG5Z
-   DvpzYCdr6LJ0QNkHSx+uApj7858h1a0mIsONcQ7g6GonCPKRH/CxjGYXd
-   Tzc6nKpZRar23SUeTAZ8tWwEMceS0nKPoNWSf3+UEglKhq6gAupw5ijm4
-   hZLDkkCz/vcOFftFKz3I1737Qq7JzPoZGJkzaQl7PlItzUG0lPEUKIRei
-   w==;
-X-CSE-ConnectionGUID: XhoUKXoSRveEA1qql2lm9w==
-X-CSE-MsgGUID: 8JUKxu50SWO8Tx8XPwG5XA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11901"; a="106875850"
-X-IronPort-AV: E=Sophos;i="6.27,95,1787036400"; 
-   d="scan'208";a="106875850"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2026 08:29:45 -0700
-X-CSE-ConnectionGUID: 8Dukv6vfSb2j1KuCmCzgkg==
-X-CSE-MsgGUID: XenJd8NISqWyB5sRR4Bqeg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,95,1787036400"; 
-   d="scan'208";a="270317323"
-Received: from ssimmeri-mobl2.amr.corp.intel.com (HELO [10.125.111.208]) ([10.125.111.208])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2026 08:29:43 -0700
-Message-ID: <c1ce8e10-e190-45b4-b279-18f92aa4029d@intel.com>
-Date: Thu, 10 Sep 2026 08:29:39 -0700
+	s=arc-20240116; t=1789057217; c=relaxed/simple;
+	bh=Eh2t79fGoNYzVTayHaBw7iqMWAqqtTzT2Efx0yoJY8c=;
+	h=Date:From:To:CC:Subject:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type; b=MoOJpvIH+gYmqoez3KpSTfv8t/FjFHloC1oTDa/xCqM48B7xRd8mOp1y89LH8NXEz4vrfiwr++GBA41Bxr/ZI1jCmD0XH9xuHqHFziSeLfD1CVqyZimZcA9gF+0Ar1eQ1p205IEKjq/b9lUKMv45RYZHQx8uv8gjC1Ca19e05b4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.helo=mail.mainlining.org; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.helo=mail.mainlining.org
+Date: Thu, 10 Sep 2026 17:19:56 +0100
+From: Bradley Morgan <brads@mainlining.org>
+To: kmehltretter@gmail.com
+CC: James.Bottomley@HansenPartnership.com, alex@ghiti.fr, aou@eecs.berkeley.edu,
+ ardb@kernel.org, atomlin@atomlin.com, catalin.marinas@arm.com,
+ chenhuacai@kernel.org, da.gomez@kernel.org, deller@gmx.de,
+ jiaxun.yang@flygoat.com, kernel@xen0n.name,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-modules@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux@armlinux.org.uk,
+ loongarch@lists.linux.dev, mark.rutland@arm.com, mcgrof@kernel.org,
+ nico@fluxnic.net, palmer@dabbelt.com, petr.pavlu@suse.com, pjw@kernel.org,
+ samitolvanen@google.com, will@kernel.org
+Subject: Re: [PATCH] module: reject out-of-range relocation target indices
+In-Reply-To: <20260908230815.78409-1-kmehltretter@gmail.com>
+Message-ID: <1C79D3C8-4B53-4B62-A14D-5DC1860F8099@mainlining.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v3 13/21] x86: mm: use pgtable_level enum in
- effective_prot_pXd()
-To: "David Hildenbrand (Arm)" <david@kernel.org>,
- Yeoreum Yun <yeoreum.yun@arm.com>, Russell King <linux@armlinux.org.uk>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>,
- Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Barry Song <baohua@kernel.org>,
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
- Michal Hocko <mhocko@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
- Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
- Anup Patel <anup@brainfault.org>, Atish Patra <atish.patra@linux.dev>,
- Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
- Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
- <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, "Liam R. Howlett" <liam@infradead.org>,
- Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Jonas Bonn <jonas@southpole.se>,
- Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
- Stafford Horne <shorne@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org,
- kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
- linux-openrisc@vger.kernel.org
-References: <20260902-dummy_ptxp3-v3-0-5d8f5b17c25c@arm.com>
- <20260902-dummy_ptxp3-v3-13-5d8f5b17c25c@arm.com>
- <8f3979a9-238a-4d7d-a040-6aa526fedec5@intel.com>
- <aed03085-1d9c-4a26-be9e-196c3ea941d1@kernel.org>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <aed03085-1d9c-4a26-be9e-196c3ea941d1@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: 8bit
 
-On 9/10/26 04:02, David Hildenbrand (Arm) wrote:
-> On 9/2/26 22:48, Dave Hansen wrote:
->> On 9/2/26 04:56, Yeoreum Yun wrote:
->>> Instead of using hard-coded integer in effective_prot_pXd(), use
->>> pgtable level enum.
->> Does this actually *do* anything? 😉
->>
->> I guess it's nice to have a wee bit of type safety from the enum and it
->> means that you don't have to *know* which level number a PUD is, for
->> example.
-> The next patch passes the value to mm_first_pgtable_level(). Not sure what x86's
-> preference is to spell something like that out in the patch description.
-> 
-> "Prepare for future code changes that will consume the generic enum
-> pgtable_level from inside effective_prot()."
+On 9 September 2026 00:08:15 BST, Karl Mehltretter <kmehltretter@gmail.com>
+wrote:
+>apply_relocations() skips relocation sections whose sh_info target index
+>is outside the section table. ARM, ARM64, LoongArch, PA-RISC and RISC-V
+>use sh_info earlier in module_frob_arch_sections(), before this check.
+>
+>ARM, ARM64, LoongArch and RISC-V use the unchecked index to read
+>sh_flags outside the section header table. PA-RISC uses it to index an
+>e_shnum-sized heap array for a read and an update. QEMU reproduced
+>page-fault Oopses on ARM, ARM64, LoongArch and RISC-V, and a Data TLB
+>miss on the PA-RISC array read.
+>
+>Validate sh_info for SHT_REL and SHT_RELA sections in
+>elf_validity_cache_sechdrs(). Reject the module with ENOEXEC before
+>architecture code can use the index.
+>
+>Fixes: c298be74492b ("parisc: fix module loading failure of large kernel modules")
+>Fixes: 7d485f647c1f ("ARM: 8220/1: allow modules outside of bl range")
+>Fixes: fd045f6cd98e ("arm64: add support for module PLTs")
+>Fixes: ab1ef68e5401 ("RISC-V: Add sections of PLT and GOT for kernel module")
+>Fixes: fcdfe9d22bed ("LoongArch: Add ELF and module support")
+>Cc: stable@vger.kernel.org
+>Assisted-by: LLM
+>Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>
 
-Yes, a little "prepare" blob would be great.
+I don't think so, sorry, see below.
 
-Maybe even explain that generic mm code uses symbolic names for the page
-table levels, not integers and this makes the helper usable in this x86
-code.
+>---
+>
+>A custom harness for upstream Frama-C 33.0 (Arsenic) Eva found the
+>ARM32 instance in a source-identical ARM module_frob_arch_sections()
+>slice. Eva reported the out-of-range section-table pointer and sh_flags
+>access.
+>
+>The analysis and ARM32 A/B test ran at Linux b9b3e33b70b7 ("Merge tag
+>'trace-v7.2-rc6' of
+>git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace"). The
+>PA-RISC, ARM64, RISC-V, LoongArch and x86_64 A/B tests ran at the
+>declared base commit, 28924df2a08f. arch/arm/kernel/module-plts.c and
+>the touched loop in kernel/module/main.c are identical between the two
+>commits.
+>
+>Each A/B test changed only a relocation section's sh_info to
+>0x10000000. The same configurations and modules were used before and
+>after the change. All controls loaded before and after the change. The
+>fixed kernels rejected the malformed modules with ENOEXEC.
+>
+>Original-kernel results with QEMU 10.2.1 TCG:
+>
+>- ARM32, virt/Cortex-A15, GCC 15.2.0, multi_v7_defconfig plus
+>  VMSPLIT_2G: page fault at module_frob_arch_sections()+0x160.
+>- ARM64, virt/Cortex-A57, GCC 15.2.0, defconfig: page fault at
+>  module_frob_arch_sections()+0x110.
+>- PA-RISC, B160L, hppa-linux-gcc 8.1.0, binutils 2.30,
+>  generic-32bit_defconfig: Data TLB miss at
+>  module_frob_arch_sections()+0x11c on the stub_entries read for a
+>  counted R_PARISC_PCREL17F relocation.
+>- RISC-V, virt, GCC 15.2.0, defconfig plus RELOCATABLE with
+>  MODULE_SECTIONS enabled: page fault at
+>  module_frob_arch_sections()+0xe4.
+>- LoongArch, virt/LA464, LLVM 21.1.8, loongson64_defconfig: page fault
+>  at module_frob_arch_sections()+0x1b8.
+>
+>On x86_64, which has no vulnerable early sh_info access, the original
+>kernel loaded both modules. The fixed kernel loaded the control and
+>rejected the malformed module with ENOEXEC. The test used pc/qemu64,
+>x86_64_defconfig and GCC 15.2.0.
+>---
+> kernel/module/main.c | 7 +++++++
+> 1 file changed, 7 insertions(+)
+>
+>diff --git a/kernel/module/main.c b/kernel/module/main.c
+>index d0e1e0bd2ad0..30c7a05488bc 100644
+>--- a/kernel/module/main.c
+>+++ b/kernel/module/main.c
+>@@ -1933,6 +1933,7 @@ static int elf_validity_ehdr(const struct load_info *info)
+>  * * Section array fits in the user provided data
+>  * * Section index 0 is NULL
+>  * * Section contents are inbounds
+>+ * * Relocation section target indices are inbounds
+>  *
+>  * Then updates @info with a &load_info->sechdrs pointer if valid.
+>  *
+>@@ -1983,6 +1984,12 @@ static int elf_validity_cache_sechdrs(struct load_info *info)
+> 	/* Validate contents are inbounds */
+> 	for (i = 1; i < info->hdr->e_shnum; i++) {
+> 		shdr = &sechdrs[i];
+>+		if ((shdr->sh_type == SHT_REL || shdr->sh_type == SHT_RELA) &&
+>+		    shdr->sh_info >= info->hdr->e_shnum) {
+>+			pr_err("Invalid ELF relocation section target index %u\n",
+>+			       shdr->sh_info);
+>+			return -ENOEXEC;
+>+		}
+> 		switch (shdr->sh_type) {
+> 		case SHT_NULL:
+> 		case SHT_NOBITS:
+
+If the module passes the signature check and the blacklist check, the
+kernel would assume that the module is fine and ^W^W^W^W won't blow the
+whole
+world up^W^W^W^W^W
+
+Since module_frob_arch_sections() loads AFTER said checks pass, adding
+checks is just useless bloat imho.
+
+NAK, sorry
+
+
+>
+>base-commit: 28924df2a08f440c73991b83028032c901de2ae4
+>
+
+--- Thanks!
+https://lore.kernel.org/all/EE579805-42F2-4C58-B752-F28779EEB717@grrlz.net/
