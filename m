@@ -1,132 +1,120 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2738F3C873B;
-	Wed,  9 Sep 2026 19:48:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 333CE29E0E5
+	for <loongarch@lists.linux.dev>; Thu, 10 Sep 2026 02:28:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788983321; cv=none; b=CY5eqxAJhQ8h5JvbMgfLrEsCamh/TC1JI0FPHap24GZ/KhOtkdut8NBgL8N/xax9Y5rl3hmSqoBtUTFlr4lY4E+NGQuXlpmsVh53odVPOuAGVDFtKbmJL/jJymv1UgUiQfB60kWSkLxU5fm3LmESJ9CnKASj+c7D7on+R9D2vwI=
+	t=1789007324; cv=none; b=gRC7QNoX0i1xuFuj2azG/Bxdug12BGDfrO3fy0MODBpGqqh3hnYQWa5cKVmYWtovm4B62hWRWnvfwnZQBSCQQ2CYMBfZMANW3jZz6bsd4+fYwD9WuKrzsFQzHgh7zJ/XtCUMwXTe2co5k0R4KEl9zxZPLo/6WPEytTfEtpqpoFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788983321; c=relaxed/simple;
-	bh=6oUQ+t2HfnNmMn8E7DOjKEm67dWjSNq8owP113wq1z8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CV/fKrkzlopCmZnVgCR0yHtMcu5N/8tU0NOrYnsfGEYhRwy/Qfe4mQ4u2Xy6ZKIuz0BtLAdnlWFQSh68sAqRkxoevm5G8t5rItcLNtN897ku5UtIy4gioI1AE800pZromPMNQTCxK2GDfsDrIRuh6bKgBT7PFfgf+K28xEBtDHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=dwPEQtMe; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="dwPEQtMe"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 3887A40E02C3;
-	Wed,  9 Sep 2026 19:48:36 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id bnu2s_xtow5o; Wed,  9 Sep 2026 19:48:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1788983306; bh=J47hfMemV3x17DwbT77P3iNi200v7sArNBFyj4FIEqg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dwPEQtMeNA/0X4YLMHgzSgsrJEReG+/8XquiXTEMnDnzYNtgPhOSI1ZuSGGmf+uhU
-	 V5oLCoI78r3zgomqpkBhYGGK+og2znQrV4khKuBGPQqxLpck4AnonixUBFFT+OQ9pO
-	 XoUFWUpeutEqUWw6qWZlF4MSezuaZDbfmEkEMesoxESuMOiVSVBIpvn/lv+oZivGlF
-	 NbJK5pOApwMB2U2u72e0KDAnjAnnVYBqW7hqQCjgkPVGWIyW67likuKOr8KL2iCigy
-	 wfxOcixBxel6j9y0nGeCklkkuo9SS7BzFZrMmfwjY0x8ZNHxCfzFe8nm3kMfbW2SkQ
-	 hVt6NGm6loU4cNhNTVlWkweLsqiDVWKEfmcR69gNzENXWQF+DAqzhl1dooy8yRdyQ8
-	 hzYMVbv7DEaFBzo345o2SdVnqq8Hbvr6zEs3Jz+soHKZ00hNuarCPD8kKht9ZWHhDX
-	 K6qLog8avAPiAmQEstoo2bUscQYMRoJj1G/FpwnavifIGACdSvVBx3KQXFGuPZFI6C
-	 LW+eR2FIosDuuKNbgs+V1Q5Aiz3ngAXwHI3OctVEHffGJL4rAUmbrTcA7D2mTokDP5
-	 cDqR90QAouoVLFeoaPRexpBIoBjUfItvei9H8egAwCVgnmg67MgfJgP2vnIu6Np7cO
-	 rVr0gT+x4+ZZPc8QFps0Hbqg=
-Received: from stx.tnic (unknown [IPv6:2600:1700:38ca:c00::42])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0329240E01ED;
-	Wed,  9 Sep 2026 19:47:23 +0000 (UTC)
-Date: Wed, 9 Sep 2026 12:47:20 -0700
-From: Borislav Petkov <bp@alien8.de>
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Kees Cook <kees@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Christophe Leroy <chleroy@kernel.org>,
-	Boqun Feng <boqun@kernel.org>, Nicolas Schier <nsc@kernel.org>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, linux-mm@kvack.org,
-	linux-um@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	linux-s390@vger.kernel.org, linux-mips@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-kbuild@vger.kernel.org,
-	Jan Stancek <jstancek@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: Re: [PATCH v5 02/24] x86/elf, um/x86/elf: Move relocation constants
- to UAPI
-Message-ID: <20260909194720.GCaqG3yPjDmwKikdIQ@fat_crate.local>
-References: <20260908-vdso-absolute-reloc-v5-0-3a93791af1cf@linutronix.de>
- <20260908-vdso-absolute-reloc-v5-2-3a93791af1cf@linutronix.de>
- <20260908135513.GAaqATwXHcQD7plnH-@fat_crate.local>
- <20260908161740-0d79e592-87a6-43c5-9174-84ce1904e639@linutronix.de>
- <20260908151238.GBaqAl5iKb64meuPJl@fat_crate.local>
- <20260909075156-06ff671c-ab7b-47d8-aaa3-588b570888bc@linutronix.de>
- <20260909144930.GAaqFx-mjH3-u6jLjw@fat_crate.local>
- <F9786718-8378-443D-A21E-77E057B62BB2@zytor.com>
+	s=arc-20240116; t=1789007324; c=relaxed/simple;
+	bh=UBSpuyJsPE0uoRnsrElhGkVCTU1HAJNQjUftLVPTZk8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OWjGx+SVc3wAKXNfXc1bB/lQHaS5Np76MGAiKGtUYLlFXuoD7zO+wSlJ/xNlfV2mRE8CZ55vBm9o7wvWAQej+Q0WU6pa36t+47Bz5klSKtGi4CSKod7RfSnrUT+zBRrNVb9cb6PKtqHq129Rt0VL0PqjwHVSNOYXkTupX0JODCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8CxQNHXFaJqo2gKAA--.30305S3;
+	Thu, 10 Sep 2026 10:28:39 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowJBxKs7WFaJqj0geAA--.31709S2;
+	Thu, 10 Sep 2026 10:28:38 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Tao Cui <cui.tao@linux.dev>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] LoongArch: KVM: Allow to set pv_feature until vCPU run
+Date: Thu, 10 Sep 2026 10:21:18 +0800
+Message-Id: <20260910022118.2339780-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <F9786718-8378-443D-A21E-77E057B62BB2@zytor.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBxKs7WFaJqj0geAA--.31709S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-On Wed, Sep 09, 2026 at 12:27:30PM -0700, H. Peter Anvin wrote:
-> I do believe there are *some* headers that would be reasonably to export to
-> tools/ beyond what it is in uapi; a major reason for that is that the tools
-> are suffering from a crazy level of internal inconsistency right now. 
+Now pv_feature can be set only once, there is problem with VM migration.
+Where it is set when vCPU is created and after migration, here it is
+allowed to set for many times, until vCPU starts to run.
 
-Well, as long as it stays "internal" I don't mind.
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+v1 ... v2:
+  1. Rename ran_atleast_once with has_run for simplity.
+  2. Rebase on the latest version where there is pv_setting_lock
+     protection when modify pv_features of VM.
+---
+ arch/loongarch/include/asm/kvm_host.h |  3 ++-
+ arch/loongarch/kvm/vcpu.c             | 15 ++++++++++++---
+ 2 files changed, 14 insertions(+), 4 deletions(-)
 
-What I do mind is this unnecessary and senseless exposure of headers.
+diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+index 65d91c3ce313..4ee1a29a5ea0 100644
+--- a/arch/loongarch/include/asm/kvm_host.h
++++ b/arch/loongarch/include/asm/kvm_host.h
+@@ -164,7 +164,6 @@ enum emulation_result {
+ #define KVM_LARCH_SWCSR_LATEST	(0x1 << 3)
+ #define KVM_LARCH_HWCSR_USABLE	(0x1 << 4)
+ 
+-#define LOONGARCH_PV_FEAT_UPDATED	BIT_ULL(63)
+ #define LOONGARCH_PV_FEAT_MASK		(BIT(KVM_FEATURE_IPI) |		\
+ 					 BIT(KVM_FEATURE_PREEMPT) |	\
+ 					 BIT(KVM_FEATURE_STEAL_TIME) |	\
+@@ -250,6 +249,8 @@ struct kvm_vcpu_arch {
+ 	struct dmsintc_state dmsintc_state;
+ 	/* cpucfg */
+ 	u32 cpucfg[KVM_MAX_CPUCFG_REGS];
++	/* VCPU ran at least once */
++	bool has_run;
+ 
+ 	/* paravirt steal time */
+ 	struct {
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index 8e028be3f0a9..dbf87ac5252b 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -1166,12 +1166,17 @@ static int kvm_loongarch_cpucfg_set_attr(struct kvm_vcpu *vcpu,
+ 
+ 		/* All vCPUs need set the same PV features */
+ 		spin_lock(&kvm->arch.pv_setting_lock);
+-		if ((kvm->arch.pv_features & LOONGARCH_PV_FEAT_UPDATED)
+-				&& ((kvm->arch.pv_features & valid) != val)) {
++		if ((kvm->arch.pv_features & valid) == val) {
++			spin_unlock(&kvm->arch.pv_setting_lock);
++			return 0;
++		}
++
++		if (vcpu->arch.has_run) {
+ 			spin_unlock(&kvm->arch.pv_setting_lock);
+ 			return -EINVAL;
+ 		}
+-		kvm->arch.pv_features = val | LOONGARCH_PV_FEAT_UPDATED;
++
++		kvm->arch.pv_features = val;
+ 		spin_unlock(&kvm->arch.pv_setting_lock);
+ 		return 0;
+ 	default:
+@@ -1858,6 +1863,10 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+ 	int r = -EINTR;
+ 	struct kvm_run *run = vcpu->run;
+ 
++	/* Mark this VCPU ran at least once */
++	if (!vcpu->arch.has_run)
++		vcpu->arch.has_run = true;
++
+ 	if (vcpu->mmio_needed) {
+ 		if (!vcpu->mmio_is_write)
+ 			kvm_complete_mmio_read(vcpu, run);
 
+base-commit: df2908090cda368b01ff43709f51890076c56157
 -- 
-Regards/Gruss,
-    Boris.
+2.39.3
 
-https://people.kernel.org/tglx/notes-about-netiquette
