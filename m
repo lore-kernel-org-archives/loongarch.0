@@ -1,365 +1,199 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442B12E738F;
-	Fri, 11 Sep 2026 09:03:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7059A4A8FEC;
+	Fri, 11 Sep 2026 17:54:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789117403; cv=none; b=UkLVThkal+axqBsfD7E2cOj5hyfZ2W9dxWVxda2kqWcywR/mR5j/+tqogXCicby4Sljzy0Ct8B+JN4HFX1cXxiv934gQy/jnoJB90/Npw20GslPB8uQn30/JQNsv9+MeY58NacXvRA7/M4nhhJ+9HG9bHyLO2FUjJKnfLgdwPPo=
+	t=1789149284; cv=none; b=aKtg2rgat9HzkwiE8jha72lJSaC6NVuFk80iGZUBJQxVP1GRdMaX6QQtR9m0Gy5UgrWzv/iVr0+79KgFDPNA7ZkHWNZeIAvRO5boYJkdDoBAV15pQQkHo7NnleJqSkNhVkYffFYcV3QDRpuc6d11FTQhOJaiT1+9LlAyqKYD0xE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789117403; c=relaxed/simple;
-	bh=TcKWNaNhN0+I5VPpUJNE+2tROXpzxpbBZkauphfRpnc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cvIKDb9tckF4nUONikmG++uM3uT0bjJY6+dQ1hPUwiVvu1J4Mzk50TnIAf/hKngRZGXufVvLNx+ZsQfosEsFqon+PWE4V5GVlpJ57lzSD0Pt5xMORVFCMA9To8pFbo9MrrIenQT/Xv3UVIyFLZ3doI7B6uS3wRQFaI8RMi11WI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=P5ptKNtq; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1789149284; c=relaxed/simple;
+	bh=oT2HAQRYlBxYWXZEJgDhIx6sNDjZsCE9IaHCPNajnNI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gMGV6YWZF2aFmna3PGzcIZN+DzjlO9t+JSuAex66A6+rQRicnrPQRFwtmwRBhLA8tMw78HbaZuoCmNA97Hmv9AJuuqH+D6jHHEA6aAjNwNUFGcaOqR+5YoTgmpgP+n6xQKDhkuJFP44fGgDojbUQWXZiMHBHAGMasQ+NbOt10x8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R/PEF628; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="P5ptKNtq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=1Y
-	4zU6kUUQR4F1ihZt2fHR04+NDuRyDO2tsD8y6dyVg=; b=P5ptKNtq5CH/kJyqZ7
-	85GKU2JsLgFAjq0i6stpslL1g5h96pV+MhHPEUA7kTTDOE5YbxV/Kruw7JePTMez
-	fNZRhj8ZyDPgTo6sVjPpSdDKcqHGpvoFkJjnNaezj3UOwBqwKhIR7/S+lTE9otm5
-	ICaJOZN234c9V4IS41BTwXx9E=
-Received: from localhost.localdomain (unknown [])
-	by gzsmtp5 (Coremail) with SMTP id QCgvCgDnjyvCw6Nq5PUqRA--.58051S4;
-	Fri, 11 Sep 2026 17:03:04 +0800 (CST)
-From: Qunqin Zhao <zhaoqunqin@163.com>
-To: lee@kernel.org,
-	zhaoqunqin@loongson.cn
-Cc: chenhuacai@kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-crypto@vger.kernel.org,
-	mfd@lists.linux.dev
-Subject: [PATCH v7 2/2] mfd: loongson-se: Fix miscellaneous issues
-Date: Fri, 11 Sep 2026 17:02:56 +0800
-Message-Id: <20260911090256.7834-3-zhaoqunqin@163.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20260911090256.7834-1-zhaoqunqin@163.com>
-References: <20260911090256.7834-1-zhaoqunqin@163.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R/PEF628"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45E7A1F000FF;
+	Fri, 11 Sep 2026 17:54:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789149283;
+	bh=4FwTYwpGmaK+5ispCEK7HH92jJqAfeRrVmWamTSNnqs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=R/PEF628C82R18CCBiTVgSxDDQxOmmbSQCnHAqmpckaTKvXRHHjbFndk35q0VJwbm
+	 kb2jEKyMa0SLgFgUCZjypSy8TU4f91YFYaL79LnYDkmD5YZ7AL7XoikZdUl97oCh3x
+	 QlUxYbS81ijVUF5fVhlk944TP7D2LmZtxTQuDrzP5dxAVnzOZPYc7bhPn+cxm0sUWh
+	 B4hxxUT5Cc5n6F5+/wjf5RtfTI0VG6FXcU6ZU4ZIB3MMKn1qFBNrVgDZdCZnR5hRoj
+	 ktqkGCSA0q7dC/KO31sDOWJ1h+hudAjLc0nPKfhMCyskclXeDI5VaQY7ZPVta2w4Q2
+	 g7mHI+jtqwWgA==
+Date: Fri, 11 Sep 2026 12:54:37 -0500
+From: Serge Hallyn <sergeh@kernel.org>
+To: =?iso-8859-1?Q?J=F6rg_R=F6del?= <joro@8bytes.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>, ashish.kalra@amd.com,
+	michael.roth@amd.com, nsaenz@amazon.com, anelkz@amazon.de,
+	James.Bottomley@hansenpartnership.com,
+	Melody Wang <huibo.wang@amd.com>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
+	x86@kernel.org, coconut-svsm@lists.linux.dev, joerg.roedel@amd.com
+Subject: Re: [PATCH 29/60] kvm: Implement KVM_CREATE_PLANE ioctl
+Message-ID: <aqRAXTdtUY_Yt8zJ@shallyn-amd>
+References: <20260608144252.351443-1-joro@8bytes.org>
+ <20260608144252.351443-30-joro@8bytes.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:QCgvCgDnjyvCw6Nq5PUqRA--.58051S4
-X-Coremail-Antispam: 1Uf129KBjvJXoW3tw1rur48Zw1DWrWrZr1DKFg_yoWDKF1fpF
-	4YkayYkr4qqr48CwsxJr98ZFy3ZrZ5tr9rCa93tw4xAF1kJ34rWFy5KFyUWayrurWDtF17
-	XFWkKFWru3WrC3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07b0KsbUUUUU=
-X-CM-SenderInfo: 52kd01pxqtx0i6rwjhhfrp/xtbC7gmm5Wqjw8mlfAAA3+
+In-Reply-To: <20260608144252.351443-30-joro@8bytes.org>
 
-From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+On Mon, Jun 08, 2026 at 04:42:21PM +0200, Jörg Rödel wrote:
+> From: Paolo Bonzini <pbonzini@redhat.com>
+> 
+> Add a new VM ioctl to create a new plane. It returns a new file
+> descriptor which supports per-plane ioctls.
+> 
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> Co-developed-by: Joerg Roedel <joerg.roedel@amd.com>
+> Signed-off-by: Joerg Roedel <joerg.roedel@amd.com>
+> ---
+>  include/uapi/linux/kvm.h |  2 ++
+>  virt/kvm/kvm_main.c      | 75 ++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 77 insertions(+)
+> 
+> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> index 813f964a6dc1..24e34b8e4819 100644
+> --- a/include/uapi/linux/kvm.h
+> +++ b/include/uapi/linux/kvm.h
+> @@ -1355,6 +1355,8 @@ struct kvm_s390_keyop {
+>  #define KVM_GET_DEVICE_ATTR	  _IOW(KVMIO,  0xe2, struct kvm_device_attr)
+>  #define KVM_HAS_DEVICE_ATTR	  _IOW(KVMIO,  0xe3, struct kvm_device_attr)
+>  
+> +#define KVM_CREATE_PLANE	  _IO(KVMIO, 0xe4)
+> +
+>  /*
+>   * ioctls for vcpu fds
+>   */
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index 5a0277e2ac7c..03a44ff62f0f 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -4843,6 +4843,34 @@ static long kvm_vcpu_compat_ioctl(struct file *filp,
+>  }
+>  #endif
+>  
+> +static long kvm_plane_ioctl(struct file *filp, unsigned int ioctl,
+> +			    unsigned long arg)
+> +{
+> +	struct kvm_plane *plane = filp->private_data;
+> +
+> +	if (plane->kvm->mm != current->mm || plane->kvm->vm_dead)
+> +		return -EIO;
+> +
+> +	switch (ioctl) {
+> +	default:
+> +		return -ENOTTY;
+> +	}
+> +}
+> +
+> +static int kvm_plane_release(struct inode *inode, struct file *filp)
+> +{
+> +	struct kvm_plane *plane = filp->private_data;
+> +
+> +	kvm_put_kvm(plane->kvm);
+> +	return 0;
+> +}
+> +
+> +static struct file_operations kvm_plane_fops = {
+> +	.unlocked_ioctl = kvm_plane_ioctl,
+> +	.release = kvm_plane_release,
+> +	KVM_COMPAT(kvm_plane_ioctl),
+> +};
+> +
+>  static int kvm_device_mmap(struct file *filp, struct vm_area_struct *vma)
+>  {
+>  	struct kvm_device *dev = filp->private_data;
+> @@ -5288,6 +5316,49 @@ static int kvm_vm_ioctl_get_stats_fd(struct kvm *kvm)
+>  	return fd;
+>  }
+>  
+> +static int kvm_vm_ioctl_create_plane(struct kvm *kvm, unsigned id)
+> +{
+> +	struct kvm_plane *plane;
+> +	struct file *file;
+> +	int r, fd;
+> +
+> +	if (id >= kvm_arch_max_planes(kvm) ||
+> +	    WARN_ON_ONCE(id >= KVM_MAX_PLANES))
+> +		return -EINVAL;
+> +
+> +	guard(mutex)(&kvm->lock);
+> +	if (kvm->planes[id])
+> +		return -EEXIST;
+> +
+> +	fd = get_unused_fd_flags(O_CLOEXEC);
+> +	if (fd < 0)
+> +		return fd;
+> +
+> +	plane = kvm_create_plane(kvm, id);
+> +	if (!plane) {
+> +		r = -ENOMEM;
+> +		goto put_fd;
+> +	}
+> +
+> +	kvm_get_kvm(kvm);
+> +	file = anon_inode_getfile("kvm-plane", &kvm_plane_fops, plane, O_RDWR);
+> +	if (IS_ERR(file)) {
+> +		r = PTR_ERR(file);
+> +		goto put_kvm;
+> +	}
+> +
+> +	fd_install(fd, file);
+> +	return fd;
+> +
+> +put_kvm:
+> +	kvm_put_kvm(kvm);
+> +	kvm_destroy_one_plane(plane);
 
-Address multiple historical driver issues discovered by the Sashiko
-Automation system within the loongson_se_probe() initialization flow
-and the driver's interrupt service routines [1].
+I believe shashiko is right here, and I don't see it changed in a later
+patch:  kvm->planes[id] will still point to the now-freed plane.
+Probably best if kvm_destroy_one_plane(plane) sets that to NULL itself
+after freeing the plane.
 
-- Add an explicit bounds check in se_irq_handler() before accessing
-  the engines array to prevent an out-of-bounds memory access.
-
-- Validate the id argument in loongson_se_init_engine() and reject
-  engine 0, whose data buffer is reused for the command buffers of all
-  other engines, to prevent out-of-bounds accesses and overlapping DMA
-  buffers.
-
-- Switch from devm_kmalloc() to devm_kzalloc() and initialize all
-  engine completion structures in probe(), dropping the redundant
-  init_completion() in loongson_se_init_engine().
-
-- Introduce loongson_se_reinit_completion() to mask the target
-  interrupt, clear any pending status, and reset the completion under
-  dev_lock before a command is issued, then re-enable the interrupt
-  under the same lock after the command has been triggered.  This
-  closes the race where a stale interrupt from a previously
-  interrupted command could complete the current command's completion.
-  A new poll_lock serializes the trigger and poll busy-wait so
-  interrupts are not disabled for up to 10 ms.
-
-- Wait for controller command completion with a bounded
-  non-interruptible wait so a pending signal cannot leave the
-  controller running while its DMA buffers are being torn down, and a
-  wedged controller cannot hang the kernel indefinitely.
-
-- Fix EPROBE_DEFER handling: propagate the error directly from
-  platform_irq_count() instead of overwriting it with ENODEV so that
-  probe deferral works when the interrupt provider is not yet ready.
-
-- Validate dmam_size from firmware against the minimum required size
-  to keep the command buffers of all engines within engine 0's data
-  region and prevent overlapping DMA buffers.
-
-- Return the error code from devm_request_irq() instead of silently
-  continuing to prevent an indefinite hang.
-
-- Add a loongson_se_stop() cleanup handler registered with
-  devm_add_action_or_reset() before loongson_se_init() so that a
-  failed init still stops the controller and masks all interrupts via
-  devres, preventing DMA access to freed memory.
-
-- Zero-initialize the local controller command structures in
-  loongson_se_init() and loongson_se_init_engine() to prevent
-  uninitialized stack data from being written to device registers.
-
-- Add the SE_CMD_STOP command definition.
-
-Link: https://lore.kernel.org/all/20260618095949.GB1672911@google.com/ [1]
-Fixes: e551fa3159e3 ("mfd: Add support for Loongson Security Engine chip controller")
-Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
----
- drivers/mfd/loongson-se.c       | 112 ++++++++++++++++++++++++++++----
- include/linux/mfd/loongson-se.h |   1 +
- 2 files changed, 102 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/mfd/loongson-se.c b/drivers/mfd/loongson-se.c
-index 7f552a8ee..18075d4fa 100644
---- a/drivers/mfd/loongson-se.c
-+++ b/drivers/mfd/loongson-se.c
-@@ -23,6 +23,8 @@
- struct loongson_se {
- 	void __iomem *base;
- 	spinlock_t dev_lock;
-+	/* Synchronizes command submission between users of different engines */
-+	spinlock_t poll_lock;
- 	struct completion cmd_completion;
- 
- 	void *dmam_base;
-@@ -42,7 +44,7 @@ static int loongson_se_poll(struct loongson_se *se, u32 int_bit)
- 	u32 status;
- 	int err;
- 
--	spin_lock_irq(&se->dev_lock);
-+	spin_lock(&se->poll_lock);
- 
- 	/* Notify the controller that the engine needs to be started */
- 	writel(int_bit, se->base + SE_L2SINT_SET);
-@@ -52,17 +54,51 @@ static int loongson_se_poll(struct loongson_se *se, u32 int_bit)
- 						!(status & int_bit),
- 						1, LOONGSON_ENGINE_CMD_TIMEOUT_US);
- 
-+	spin_unlock(&se->poll_lock);
-+
-+	spin_lock_irq(&se->dev_lock);
-+	/*
-+	 * Re-enable the interrupt that loongson_se_reinit_completion() masked.
-+	 * The hardware guarantees that once the interrupt is re-enabled, only
-+	 * interrupts for the command just issued can arrive, so a stale
-+	 * interrupt from a previously interrupted command can never complete
-+	 * this command's completion.
-+	 */
-+	writel(int_bit | readl(se->base + SE_S2LINT_EN), se->base + SE_S2LINT_EN);
-+
- 	spin_unlock_irq(&se->dev_lock);
- 
- 	return err;
- }
- 
-+/*
-+ * Prepare a completion for a new command: mask the corresponding interrupt,
-+ * clear any pending interrupt status, and reset the completion.  This runs
-+ * under dev_lock so that the IRQ handler cannot race with it.  The interrupt
-+ * is re-enabled in loongson_se_poll() after the command has been issued.
-+ */
-+static void loongson_se_reinit_completion(struct loongson_se *se,
-+					  struct completion *completion, u32 int_bit)
-+{
-+	spin_lock_irq(&se->dev_lock);
-+
-+	writel(readl(se->base + SE_S2LINT_EN) & ~int_bit, se->base + SE_S2LINT_EN);
-+
-+	writel(int_bit, se->base + SE_S2LINT_CL);
-+
-+	reinit_completion(completion);
-+
-+	spin_unlock_irq(&se->dev_lock);
-+}
-+
- static int loongson_se_send_controller_cmd(struct loongson_se *se,
- 					   struct loongson_se_controller_cmd *cmd)
- {
- 	u32 *send_cmd = (u32 *)cmd;
- 	int err, i;
- 
-+	loongson_se_reinit_completion(se, &se->cmd_completion, SE_INT_CONTROLLER);
-+
- 	for (i = 0; i < SE_SEND_CMD_REG_LEN; i++)
- 		writel(send_cmd[i], se->base + SE_SEND_CMD_REG + i * 4);
- 
-@@ -70,17 +106,31 @@ static int loongson_se_send_controller_cmd(struct loongson_se *se,
- 	if (err)
- 		return err;
- 
--	return wait_for_completion_interruptible(&se->cmd_completion);
-+	/*
-+	 * Wait for the controller to complete the command.  Use a bounded
-+	 * non-interruptible wait: a pending signal must not leave the
-+	 * controller running while its DMA buffers are being torn down.
-+	 * One second is far more than any controller command should take,
-+	 * while still bounding the wait if the hardware wedges.
-+	 */
-+	if (!wait_for_completion_timeout(&se->cmd_completion, HZ))
-+		return -ETIMEDOUT;
-+
-+	return 0;
- }
- 
- int loongson_se_send_engine_cmd(struct loongson_se_engine *engine)
- {
-+	int err;
-+
-+	loongson_se_reinit_completion(engine->se, &engine->completion, BIT(engine->id));
-+
- 	/*
- 	 * After engine initialization, the controller already knows
- 	 * where to obtain engine commands from. Now all we need to
- 	 * do is notify the controller that the engine needs to be started.
- 	 */
--	int err = loongson_se_poll(engine->se, BIT(engine->id));
-+	err = loongson_se_poll(engine->se, BIT(engine->id));
- 
- 	if (err)
- 		return err;
-@@ -92,12 +142,17 @@ EXPORT_SYMBOL_GPL(loongson_se_send_engine_cmd);
- struct loongson_se_engine *loongson_se_init_engine(struct device *dev, int id)
- {
- 	struct loongson_se *se = dev_get_drvdata(dev);
--	struct loongson_se_engine *engine = &se->engines[id];
--	struct loongson_se_controller_cmd cmd;
-+	struct loongson_se_engine *engine;
-+	struct loongson_se_controller_cmd cmd = {0};
-+
-+	/* Engine 0 does not exist and its data buffer is reused for commands */
-+	if (id <= 0 || id >= SE_ENGINE_MAX)
-+		return NULL;
-+
-+	engine = &se->engines[id];
- 
- 	engine->se = se;
- 	engine->id = id;
--	init_completion(&engine->completion);
- 
- 	/* Divide DMA memory equally among all engines */
- 	engine->buffer_size = se->dmam_size / SE_ENGINE_MAX;
-@@ -155,7 +210,8 @@ static irqreturn_t se_irq_handler(int irq, void *dev_id)
- 	/* For engines */
- 	while (int_status) {
- 		id = __ffs(int_status);
--		complete(&se->engines[id].completion);
-+		if (id < SE_ENGINE_MAX)
-+			complete(&se->engines[id].completion);
- 		int_status &= ~BIT(id);
- 		writel(BIT(id), se->base + SE_S2LINT_CL);
- 	}
-@@ -167,7 +223,7 @@ static irqreturn_t se_irq_handler(int irq, void *dev_id)
- 
- static int loongson_se_init(struct loongson_se *se, dma_addr_t addr, int size)
- {
--	struct loongson_se_controller_cmd cmd;
-+	struct loongson_se_controller_cmd cmd = {0};
- 	int err;
- 
- 	cmd.command_id = SE_CMD_START;
-@@ -188,6 +244,17 @@ static const struct mfd_cell engines[] = {
- 	{ .name = "tpm_loongson" },
- };
- 
-+static void loongson_se_stop(void *data)
-+{
-+	struct loongson_se *se = data;
-+	struct loongson_se_controller_cmd cmd = {0};
-+
-+	cmd.command_id = SE_CMD_STOP;
-+	loongson_se_send_controller_cmd(se, &cmd);
-+
-+	writel(0, se->base + SE_S2LINT_EN);
-+}
-+
- static int loongson_se_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -195,19 +262,34 @@ static int loongson_se_probe(struct platform_device *pdev)
- 	int nr_irq, irq, err, i;
- 	dma_addr_t paddr;
- 
--	se = devm_kmalloc(dev, sizeof(*se), GFP_KERNEL);
-+	se = devm_kzalloc(dev, sizeof(*se), GFP_KERNEL);
- 	if (!se)
- 		return -ENOMEM;
- 
- 	dev_set_drvdata(dev, se);
- 	init_completion(&se->cmd_completion);
- 	spin_lock_init(&se->dev_lock);
-+	spin_lock_init(&se->poll_lock);
- 	mutex_init(&se->engine_init_lock);
- 
-+	for (i = 0; i < SE_ENGINE_MAX; i++)
-+		init_completion(&se->engines[i].completion);
-+
- 	dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
- 	if (device_property_read_u32(dev, "dmam_size", &se->dmam_size))
- 		return -ENODEV;
- 
-+	/*
-+	 * Engine 0 does not exist and its data buffer is reused as the command
-+	 * buffer for the other engines.  The command buffers of all engines
-+	 * therefore must fit within engine 0's data region, i.e.
-+	 * dmam_size / SE_ENGINE_MAX >= SE_ENGINE_MAX * 2 * SE_ENGINE_CMD_SIZE.
-+	 * Enforce this to keep each engine's data and command buffers from
-+	 * overlapping.
-+	 */
-+	if ((se->dmam_size / SE_ENGINE_MAX) < (SE_ENGINE_MAX * 2 * SE_ENGINE_CMD_SIZE))
-+		return -EINVAL;
-+
- 	se->dmam_base = dmam_alloc_coherent(dev, se->dmam_size, &paddr, GFP_KERNEL);
- 	if (!se->dmam_base)
- 		return -ENOMEM;
-@@ -217,20 +299,28 @@ static int loongson_se_probe(struct platform_device *pdev)
- 		return PTR_ERR(se->base);
- 
- 	nr_irq = platform_irq_count(pdev);
--	if (nr_irq <= 0)
-+	if (nr_irq == 0)
- 		return -ENODEV;
-+	if (nr_irq < 0)
-+		return nr_irq;
- 
- 	writel(SE_INT_ALL, se->base + SE_S2LINT_CL);
- 
- 	for (i = 0; i < nr_irq; i++) {
- 		irq = platform_get_irq(pdev, i);
- 		err = devm_request_irq(dev, irq, se_irq_handler, IRQF_SHARED, "loongson-se", se);
--		if (err)
-+		if (err) {
- 			dev_err(dev, "failed to request IRQ: %d\n", irq);
-+			return err;
-+		}
- 	}
- 
- 	writel(SE_INT_ALL, se->base + SE_S2LINT_EN);
- 
-+	err = devm_add_action_or_reset(dev, loongson_se_stop, se);
-+	if (err)
-+		return err;
-+
- 	err = loongson_se_init(se, paddr, se->dmam_size);
- 	if (err)
- 		return err;
-diff --git a/include/linux/mfd/loongson-se.h b/include/linux/mfd/loongson-se.h
-index 07afa0c25..8237ccab7 100644
---- a/include/linux/mfd/loongson-se.h
-+++ b/include/linux/mfd/loongson-se.h
-@@ -9,6 +9,7 @@
- #define SE_SEND_CMD_REG_LEN		0x8
- /* Controller command ID */
- #define SE_CMD_START			0x0
-+#define SE_CMD_STOP			0x1
- #define SE_CMD_SET_DMA			0x3
- #define SE_CMD_SET_ENGINE_CMDBUF	0x4
- 
--- 
-2.47.2
-
+> +put_fd:
+> +	put_unused_fd(fd);
+> +	return r;
+> +}
+> +
+> +
+>  #define SANITY_CHECK_MEM_REGION_FIELD(field)					\
+>  do {										\
+>  	BUILD_BUG_ON(offsetof(struct kvm_userspace_memory_region, field) !=		\
+> @@ -5306,6 +5377,9 @@ static long kvm_vm_ioctl(struct file *filp,
+>  	if (kvm->mm != current->mm || kvm->vm_dead)
+>  		return -EIO;
+>  	switch (ioctl) {
+> +	case KVM_CREATE_PLANE:
+> +		r = kvm_vm_ioctl_create_plane(kvm, arg);
+> +		break;
+>  	case KVM_CREATE_VCPU:
+>  		r = kvm_vm_ioctl_create_vcpu(kvm, arg);
+>  		break;
+> @@ -6676,6 +6750,7 @@ int kvm_init(unsigned vcpu_size, unsigned vcpu_align, struct module *module)
+>  	kvm_chardev_ops.owner = module;
+>  	kvm_vm_fops.owner = module;
+>  	kvm_vcpu_fops.owner = module;
+> +	kvm_plane_fops.owner = module;
+>  	kvm_device_fops.owner = module;
+>  
+>  	kvm_preempt_ops.sched_in = kvm_sched_in;
+> -- 
+> 2.53.0
+> 
