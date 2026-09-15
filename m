@@ -1,57 +1,57 @@
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6D33EB0F0
-	for <loongarch@lists.linux.dev>; Tue, 15 Sep 2026 08:20:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F2846C4AE
+	for <loongarch@lists.linux.dev>; Tue, 15 Sep 2026 08:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789460472; cv=none; b=N4CDO70sajc9WmRB50yT/xJUxDld+w0JfbjI6FcSWufOVAUJbTpJsOAEem6q9BiRHpciQ5av6qDz31OEvPUudhIMMQUWCc2gBFGMAIIZM7qM+SHe0pJua0aT1sf2qxn1fNvBerh9W+zKNp+f3ON+/QmOo6R2mpR/n4PVdbwbez4=
+	t=1789460477; cv=none; b=L9Eh4wJ7pcPM/FGqHRu4Y9TdtpwhoZ0+EKombSg366xRsxxo6S5jL1TNz0jt6S5nJ7AJwDoZtGnRgIntTGnHq1H3Q0MeLiH2J6UlWFjsrh/9skVl52jSGouFWbv93Wxs6YnAlQCeBR4h4MFPSolNw1LNjVgwUCYPgSOP82dbl1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789460472; c=relaxed/simple;
-	bh=JbSID6fXeQe1AsKDTvJAsGmW8NhLrp6cj1GLFUVFC9I=;
+	s=arc-20240116; t=1789460477; c=relaxed/simple;
+	bh=OaAwr1sBjpntRvDMR8Yr1mj2+C2DlJcpETypf5U3EWo=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=sDoIZV43DCB7Qkl2DGKBOhqYMoDmNrYxNcoBv2GWpnSA/iHn3NEtcKr70ABG53yu2LWQzS1wiMZlCaw4h4j3cKooVN3uXmBXFkgyDYAgUNW/EpQzcqAxgVzUivavIyd/Pt2st1xBtebmNRdoOmNhHtMEBkKRV+IM5ib9BGZ8P3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OGbyIVG9; arc=none smtp.client-ip=209.85.214.199
+	 To:Cc:Content-Type; b=O26SSSJ3pumRdCs4KiWI1MNxCTma/0sG3dljzdGGpo2LDN7WXrH0SFp9t1ZJHnV0PvOrWnBRyRet6yY7u2MRkPz4MIY5yuiDY/P/jPMFiZ39Fcn6E6Q8eJnuNke667ddOLKOtl1de1dX2NnqC6vTLB1jOTat0VJXo6tX1fysqaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sO9jykEa; arc=none smtp.client-ip=209.85.216.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OGbyIVG9"
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2db3734d06dso80501035ad.0
-        for <loongarch@lists.linux.dev>; Tue, 15 Sep 2026 01:20:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sO9jykEa"
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-38dbf293831so9420541a91.3
+        for <loongarch@lists.linux.dev>; Tue, 15 Sep 2026 01:20:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789460414; x=1790065214; darn=lists.linux.dev;
+        d=google.com; s=20251104; t=1789460399; x=1790065199; darn=lists.linux.dev;
         h=content-transfer-encoding:content-type:cc:to:from:subject
          :message-id:references:mime-version:in-reply-to:date:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=6A34g5ncwO0UUCNmS7GYn32h6CG74u/Wx3k3q5PSbh8=;
-        b=OGbyIVG9ati5DLxgJVBhOxSHHMS/J93XaPMHF7TGVrDQclyNDj+I+2PlaNySiqMlgr
-         e/KSmHxkScXfqAtLNvIcyNQXLqEs1U60JAskw+ELsyA3DQJDEDiDZB+9cfoR5T58Zt1a
-         cfTihOgCDGvDYBf1ymnczGuYD9ky+xueVoD49mYb7X0Ymex5UUMErPaHjlVSnirFNDrc
-         Aornk2NthxXV+qFV8iLfr4rJr9tNDOYO71HpYxuekdMkorb1oGQ6X0uhZZslbXhzyUvU
-         U8rXZQYmq00MpOAseeXBfJklmKmX7JDpWrYw4rwizVH6UfHMC9b+zfRzvoCByCVBVb52
-         NiPw==
+        bh=ANECGYJQk2+Ya+FPrAm+IsCBeyM6Er0meffRIzFfkVU=;
+        b=sO9jykEaDb+3nNG78ZyxtEsps7iLY10x4V+iey+hfFjYWmhgI0w9ozgFuhfAPx8Rpa
+         43GhHcXtyprZgMVoB2ybJnIS25FU8WZwGve9R24alVRTyYKW+aWSxnnChb52q8Jd0A1Y
+         aALvCu0XupY9jSWWeiHehjRs8UJm0seBRmQ0hUSjy2SrXoCHDMM89oxS3knFlRGwOnjp
+         ekBbd7GI71VpKf7FCoOVFFKuZ13QTfEUe1tI0a6Jl2gTX7FQ4sQijmzOv6t6j0QSymWs
+         Pldj+SttyY6iEqraNglnvuRzt7BPgSMoHVXZ33gKgR11A1npIPjYbBAsUd2tEKW45h1I
+         7hng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789460414; x=1790065214;
+        d=1e100.net; s=20260707; t=1789460399; x=1790065199;
         h=content-transfer-encoding:content-type:cc:to:from:subject
          :message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=6A34g5ncwO0UUCNmS7GYn32h6CG74u/Wx3k3q5PSbh8=;
-        b=q68qqHhpnXjtIsPnsYfwswcBElT9ajbx8QmSHwPmE8PbW9bJdTeHHwI7VhtMW70OsX
-         3PQ5kknb0kQvm/+LjfYq2KjmZzr2A0udsuk0eApEIxsTY1Izis2VdUHw7fG+qmsK6BRP
-         8xU54+8MOMN2d9M/XhCuqbmn42okulE0nBKObhzh3fwP+IKhkHG/2Oe5xFQibwUQKSZH
-         Y0wMZtApIsmYEdfJFNBXdhGDUS3G3JSTMrukrp4t1ovNt4CbyPGSLKthoOOh+Mwv0RyK
-         KBfraXd8VaVWNMjuCoWSR/B+4BMGphCwO/mNpDk9e9oh141Sz9NppHOaFGuOmnBGq0Fq
-         tzmw==
-X-Forwarded-Encrypted: i=1; AKwUvBzA9mz004dFzDQokholyzf4ZFHnU7DVYTeLl9b7acOrKgARUZ/0kICa2P4V7UnMCIERHaxxS/2wiFQ=@lists.linux.dev
-X-Gm-Message-State: AFuF++m7Tigc7sWZkc5Q2trxnXk5WIJFjGF/bFUaIHqxYx1lW1cxWrnf
-	9I59iV+t2yP8bIu9hWJR2NVQ4y9zgnrOkfompk+6RbKINs1fbhdwT9sKw/TzXLU5IWL9Ng0kKz9
-	N
-X-Received: from plyw21.prod.google.com ([2002:a17:902:d715:b0:2db:8c06:4fa6])
- (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:f712:b0:2db:20fa:9443
- with SMTP id d9443c01a7336-2dd6c6db8c2mr126055895ad.13.1789460413607; Tue, 15
- Sep 2026 01:20:13 -0700 (PDT)
-Date: Tue, 15 Sep 2026 08:18:39 +0000
+        bh=ANECGYJQk2+Ya+FPrAm+IsCBeyM6Er0meffRIzFfkVU=;
+        b=Ga+g2NtDFXLuvTDHi+YpJLsrFEy9eTfo70fmE/oWFE9rD5Ylr9fF22dKIg4cU/tPFH
+         F3EhwIk7FCVxMfMe2ojF+3d5HFO4l1e1N2TYlZ5bTCZRv7yn+Y515D3eXxytIyZyP7ES
+         ezKT+1Xr9rRo3J81ZN3cQ0ieZxp2ftH46rbBp/EvZSNB0KkV/8I0ldZtcbY9OZpDPVuJ
+         ypMPzn8I324235ivlBCInGtdRLMoicleOTx8CS90n1I/MB//4xJsEGvTm6kFqnlIMgEU
+         GhEY5O9e2zAArKsZQMZoEHDvncetY/hwnFEO9nUlzIPI65cwZQRD7OAY7pI9S3FGcb1L
+         O2bg==
+X-Forwarded-Encrypted: i=1; AKwUvBzOXCPEQe2un5PsCP/XVZS5X0Cr0XwKy1KHJkkOF6Gk8lZAklogPghg+ZCvy0F+ER+08hvAHF1GAZg=@lists.linux.dev
+X-Gm-Message-State: AFuF++kJAxhUOsVFiy2mW30k3XB7lyxtyyTnb6Jl0k/isRaTMrI17jm0
+	ZSGCxHcJTbQO1keYRCxF5b/4PU4r3SL5zQHQnkV1EZ3pJlSE+ribYMApfZmLjJdWwWthYdZ3Th8
+	L
+X-Received: from pllj10.prod.google.com ([2002:a17:902:758a:b0:2dd:63c:daa3])
+ (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ccd1:b0:2dd:40cb:a04c
+ with SMTP id d9443c01a7336-2dd8386925cmr476775ad.19.1789460398847; Tue, 15
+ Sep 2026 01:19:58 -0700 (PDT)
+Date: Tue, 15 Sep 2026 08:18:29 +0000
 In-Reply-To: <20260915081910.4142719-1-morbo@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -61,8 +61,8 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20260915081910.4142719-1-morbo@google.com>
 X-Mailer: git-send-email 2.55.0.1032.g73a4cd73de-goog
-Message-ID: <20260915081910.4142719-23-morbo@google.com>
-Subject: [PATCH 22/28] media: si2165: Use snprintf() to format frontend name
+Message-ID: <20260915081910.4142719-13-morbo@google.com>
+Subject: [PATCH 12/28] fortify: Convert strlcat() to snprintf() in strcat()
 From: Bill Wendling <morbo@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: Bill Wendling <morbo@google.com>, codemender-patching+linux@google.com, 
@@ -123,17 +123,21 @@ Cc: Bill Wendling <morbo@google.com>, codemender-patching+linux@google.com,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-si2165_probe() constructs the frontend name by appending the chip name and
-supported delivery system suffixes (" DVB-T", " DVB-C") to
-state->fe.ops.info.name using multiple strlcat() calls.
+The fortified implementation of strcat() in include/linux/fortify-string.h
+currently relies on strlcat() to perform bounded concatenation and detect
+buffer overflows.
 
-In preparation for removing the deprecated strlcat() API[1], format the
-complete frontend name in a single snprintf() call.
+In preparation for removing the deprecated strlcat() API[1], replace the
+strlcat() call in strcat(). When the destination buffer size is unknown
+(SIZE_MAX), call __underlying_strcat() directly. Otherwise, determine the
+destination length with __fortify_strlen() and append the source string
+using __builtin_snprintf(), preserving the existing fortify_panic() check
+on overflow.
 
 Link: https://github.com/KSPP/linux/issues/370 [1]
 Cc: codemender-patching+linux@google.com
-Assisted-by: Developer:Gemini [editor_update_file, make_kernel_build_single=
-_file, shell_command_run]
+Assisted-by: SecurityEngineer:Gemini1.5Pro [editor_update_file, shell_comma=
+nd_run, test_runner_run_kunit_test]
 Signed-off-by: Bill Wendling <morbo@google.com>
 ---
 Cc: Russell King <linux@armlinux.org.uk>
@@ -247,42 +251,30 @@ Cc: devel@lists.orangefs.org
 Cc: linux-hardening@vger.kernel.org
 Cc: linux-sound@vger.kernel.org
 ---
- drivers/media/dvb-frontends/si2165.c | 17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
+ include/linux/fortify-string.h | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/dvb-frontends/si2165.c b/drivers/media/dvb-front=
-ends/si2165.c
-index f1241b63aa5c..bd15eb58fc84 100644
---- a/drivers/media/dvb-frontends/si2165.c
-+++ b/drivers/media/dvb-frontends/si2165.c
-@@ -1243,20 +1243,17 @@ static int si2165_probe(struct i2c_client *client)
- 		chip_name, rev_char, state->chip_type,
- 		state->chip_revcode);
+diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.=
+h
+index cf841dc71fef..0b489124bfcb 100644
+--- a/include/linux/fortify-string.h
++++ b/include/linux/fortify-string.h
+@@ -363,7 +363,12 @@ __FORTIFY_INLINE __diagnose_as(__builtin_strcat, 1, 2)
+ char *strcat(char * const POS p, const char *q)
+ {
+ 	const size_t p_size =3D __member_size(p);
+-	const size_t wanted =3D strlcat(p, q, p_size);
++
++	if (p_size =3D=3D SIZE_MAX)
++		return __underlying_strcat(p, q);
++
++	const size_t p_len =3D __fortify_strlen(p);
++	const size_t wanted =3D p_len + __builtin_snprintf(p + p_len, p_size - p_=
+len, "%s", q);
 =20
--	strlcat(state->fe.ops.info.name, chip_name,
--		sizeof(state->fe.ops.info.name));
-+	snprintf(state->fe.ops.info.name, sizeof(state->fe.ops.info.name),
-+		 "Silicon Labs %s%s%s",
-+		 chip_name,
-+		 state->has_dvbt ? " DVB-T" : "",
-+		 state->has_dvbc ? " DVB-C" : "");
-=20
- 	n =3D 0;
--	if (state->has_dvbt) {
-+	if (state->has_dvbt)
- 		state->fe.ops.delsys[n++] =3D SYS_DVBT;
--		strlcat(state->fe.ops.info.name, " DVB-T",
--			sizeof(state->fe.ops.info.name));
--	}
--	if (state->has_dvbc) {
-+	if (state->has_dvbc)
- 		state->fe.ops.delsys[n++] =3D SYS_DVBC_ANNEX_A;
--		strlcat(state->fe.ops.info.name, " DVB-C",
--			sizeof(state->fe.ops.info.name));
--	}
-=20
- 	/* return fe pointer */
- 	*pdata->fe =3D &state->fe;
+ 	if (p_size <=3D wanted)
+ 		fortify_panic(FORTIFY_FUNC_strcat, FORTIFY_WRITE, p_size, wanted + 1, p)=
+;
 --=20
 2.55.0.1032.g73a4cd73de-goog
 
