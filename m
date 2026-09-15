@@ -1,200 +1,121 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pj2-f5.google.com (mail-pj2-f5.google.com [74.125.227.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1FB448F843;
-	Tue, 15 Sep 2026 11:25:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CCA8442B0B
+	for <loongarch@lists.linux.dev>; Tue, 15 Sep 2026 12:49:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789471504; cv=none; b=IDrxHh+vbWrpNF/93BhRE2PhbyCXxmMcE4rNO4aim31AO3e+G6m2XVDwiMBF+NzEUGP9ivGYCBtD4HtS/w2vFuwdwtKKGmeN+JLA1BQmwZMWWSLSj/Vi09GKQz9phIhh2u13DWFLKZWdQ7okcey0tEhptapEiakc64gIlbYHBTI=
+	t=1789476589; cv=none; b=tb5f8CAaLBLwbEOjkI2OsNC0WA5nwkenSz58uT+oZYbYAB+lj6irLrhaDK/HOEpgNcQRp7H08JMUKnmbiNoezApgakwDm15eu2strScaPrAWVq4xH9VA3ILoG9uen8ckpkpdSnKv5/vpCUk8dU08YXOj22gfXcxfT75nr+Lj1uE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789471504; c=relaxed/simple;
-	bh=0ve7/DDdcigv05770gqszO21YREHojJv3JBfh9LpjKU=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tISN/hfHhCg3v3MWi4PlDWGqnB+oJ9mSEsnYKbwFImBSVsmnv973OqC1Hfz3gLTGUX5eZdBJgud+4QWHNz2h72nFvuNQpbVBd9Qbp3B/ZxGQmLs4n2USXnoqW9VhBEV2wdn6tYnZYoz2vkxj0aWFGit8iO+LvnR+CQdReDRSIAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=FSRxqY26; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=aSsl2yJ1; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fM3MazBW; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=mZlA7k8x; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1789476589; c=relaxed/simple;
+	bh=ui4ICGb/kqsSx5sis20c9sxB7gn9IT8brWRsdIH3KRA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eBY+VJzFnyyu43psQUSLME8R8fZGjlmoNdSwsVNLOzzI7hffYdeJiaKOrnh1727iiVyB/2bo1GZaqJrQVSlKRLzfGw0YX0yAecBA2mkWSQFHg0+97DSFrUMPtzQIwuTetuaHq/Oapr/Bosvwm/Q2PUdjP0YorSn1ugQ2OmTevLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VyFM3y+m; arc=none smtp.client-ip=74.125.227.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="FSRxqY26";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="aSsl2yJ1";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fM3MazBW";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="mZlA7k8x"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id D6D911FD70;
-	Tue, 15 Sep 2026 11:24:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1789471494; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=psqF+EOKBnDir7oSpdYk0cv/7bWaGxT8GNrr5rPj7yg=;
-	b=FSRxqY266D0vmKnF9nLIRDyWWQM9yhSRf7SWuTSbWdHKmTZfPMBWgLsJq7H8V56FVkky//
-	8MrE9PciUwBdoFcR4M6TLhf0Be1H7UyuT3X6eiMNzlMbbIthbvGQDSnAd0oqm56+IjjTWt
-	ZfmEPFx5zXWF3FpvnKWoZi5XGYuzP5E=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1789471494;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=psqF+EOKBnDir7oSpdYk0cv/7bWaGxT8GNrr5rPj7yg=;
-	b=aSsl2yJ1+boxtQdbyNVNOLHSB2zJu6wAGQi+9pbebbTp2ClXENyw6idF+ycsnZ57BL4LP5
-	ZfcRP6lnX00QOOBw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1789471489; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=psqF+EOKBnDir7oSpdYk0cv/7bWaGxT8GNrr5rPj7yg=;
-	b=fM3MazBW+hs/hKtvuJpOhLlGSwWwaQ2djpqh86ob84pD05SZM2CRj5VxxQICSBHMVzGpmM
-	q+b1hMqeOfBJ55X5lnPhdG5/NgEY6B1UbwH5ynoyuWcf7dFOEalvw2kJzBP8r3CSUcnebL
-	CgYXNAhYVAwFaBsCwZ7WQRZMQk8ez5c=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1789471489;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=psqF+EOKBnDir7oSpdYk0cv/7bWaGxT8GNrr5rPj7yg=;
-	b=mZlA7k8xRY7/6eU8iSFueII5CBhiyVG2bEJOGnMSAtyaRqGo3EYAuYa/xTgran4MSxXe1Y
-	Y2dwysvA+85ERcBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E1B7713693;
-	Tue, 15 Sep 2026 11:24:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 2riGLf4qqWqtagAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 15 Sep 2026 11:24:46 +0000
-Date: Tue, 15 Sep 2026 13:24:46 +0200
-Message-ID: <877bkmn4e9.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Bill Wendling <morbo@google.com>
-Cc: linux-kernel@vger.kernel.org,	Russell King <linux@armlinux.org.uk>,
-	Huacai Chen <chenhuacai@kernel.org>,	WANG Xuerui <kernel@xen0n.name>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,	"James E.J. Bottomley"
- <James.Bottomley@HansenPartnership.com>,	Helge Deller <deller@gmx.de>,
-	Thomas Gleixner <tglx@kernel.org>,	Ingo Molnar <mingo@redhat.com>,	Borislav
- Petkov <bp@alien8.de>,	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,	"H. Peter Anvin" <hpa@zytor.com>,	Ian Abbott
- <abbotti@mev.co.uk>,	H Hartley Sweeten <hsweeten@visionengravers.com>,	Tony
- Luck <tony.luck@intel.com>,	Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>,	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,	Matthew Brost <matthew.brost@intel.com>,
-	=?ISO-8859-1?Q?=22Thomas_Hellstr=F6m=22?=
- <thomas.hellstrom@linux.intel.com>,	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,	Matthias Schwarzott
- <zzam@gentoo.org>,	Mauro Carvalho Chehab <mchehab@kernel.org>,	Tony Nguyen
- <anthony.l.nguyen@intel.com>,	Przemek Kitszel
- <przemyslaw.kitszel@intel.com>,	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,	Eric Dumazet
- <edumazet@google.com>,	Jakub Kicinski <kuba@kernel.org>,	Paolo Abeni
- <pabeni@redhat.com>,	Arend van Spriel <arend.vanspriel@broadcom.com>,	Rob
- Herring <robh@kernel.org>,	Saravana Kannan <saravanak@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,	Sylwester Nawrocki
- <s.nawrocki@samsung.com>,	Peter Griffin <peter.griffin@linaro.org>,	Alim
- Akhtar <alim.akhtar@samsung.com>,	Linus Walleij <linusw@kernel.org>,	Anil
- Gurumurthy <anil.gurumurthy@qlogic.com>,	Sudarsana Kalluru
- <sudarsana.kalluru@qlogic.com>,	"Martin K. Petersen" <mkp@kernel.org>,
-	Trond Myklebust <trondmy@kernel.org>,	Anna Schumaker <anna@kernel.org>,
-	Mike Marshall <hubcap@omnibond.com>,	Martin Brandenburg
- <martin@omnibond.com>,	Kees Cook <kees@kernel.org>,	Jiri Pirko
- <jiri@resnulli.us>,	Simon Horman <horms@kernel.org>,	Chuck Lever
- <cel@kernel.org>,	Jeff Layton <jlayton@kernel.org>,	NeilBrown
- <neil@brown.name>,	Olga Kornievskaia <okorniev@redhat.com>,	Dai Ngo
- <Dai.Ngo@oracle.com>,	Tom Talpey <tom@talpey.com>,	Jaroslav Kysela
- <perex@perex.cz>,	Takashi Iwai <tiwai@suse.com>,	Andrew Morton
- <akpm@linux-foundation.org>,	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
-	Kanglong Wang <wangkanglong@loongson.cn>,	Tiezhu Yang
- <yangtiezhu@loongson.cn>,	Qiang Ma <maqianga@uniontech.com>,	Randy Dunlap
- <rdunlap@infradead.org>,	Pengpeng Hou <pengpeng@iscas.ac.cn>,	Ard
- Biesheuvel <ardb@kernel.org>,	Breno Leitao <leitao@debian.org>,	Thorsten
- Blum <blum@kernel.org>,	Harshit Mogalapalli
- <harshit.m.mogalapalli@oracle.com>,	Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>,	Lyude Paul <lyude@redhat.com>,	Ashutosh Desai
- <ashutoshdesai993@gmail.com>,	Imre Deak <imre.deak@intel.com>,	Dmitry
- Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,	Johan Hovold
- <johan@kernel.org>,	Johannes Berg <johannes.berg@intel.com>,	Miri Korenblit
- <miriam.rachel.korenblit@intel.com>,	Alexander Stein
- <alexander.stein@ew.tq-group.com>,	Cryolitia PukNgae
- <cryolitia@uniontech.com>,	Jiaming Zhang <r772577952@gmail.com>,	Will
- Porter <mrwillporter@gmail.com>,	Cen Zhang <zzzccc427@gmail.com>,
-	=?ISO-8859-1?Q?=22C=E1ssio_Gabriel=22?= <cassiogabrielcontato@gmail.com>,
-	Rong Zhang <i@rong.moe>,	Arun Raghavan <arunr@valvesoftware.com>,
-	linux-arm-kernel@lists.infradead.org,	loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org,	linux-parisc@vger.kernel.org,
-	linux-edac@vger.kernel.org,	dri-devel@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org,	linux-input@vger.kernel.org,
-	linux-media@vger.kernel.org,	intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org,	linux-wireless@vger.kernel.org,
-	brcm80211@lists.linux.dev,	brcm80211-dev-list.pdl@broadcom.com,
-	devicetree@vger.kernel.org,	linux-samsung-soc@vger.kernel.org,
-	linux-gpio@vger.kernel.org,	linux-scsi@vger.kernel.org,
-	linux-nfs@vger.kernel.org,	devel@lists.orangefs.org,
-	linux-hardening@vger.kernel.org,	linux-sound@vger.kernel.org
-Subject: Re: [PATCH 00/28] Replace remaining strlcat() call sites with snprintf()/seq_buf()
-In-Reply-To: <20260915081910.4142719-1-morbo@google.com>
-References: <20260915081910.4142719-1-morbo@google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VyFM3y+m"
+Received: by mail-pj2-f5.google.com with SMTP id d9443c01a7336-2d942de6574so28230415ad.0
+        for <loongarch@lists.linux.dev>; Tue, 15 Sep 2026 05:49:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789476587; x=1790081387; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=mP8qopDle1Sc4k8F6w5GND/XUp1RUEWcrZG95tdjUPs=;
+        b=VyFM3y+m5eNWMXZwTy15+YeTbFtPZ8Xfb25JdtENMO8I1OhunwXOUn/JCQzSrMCpCy
+         bdDUE6DM6fuJPDTUWEaNEerr0tgJXUFfypGwPVKscpb9+PWIhFv+nbHI7ubBFmk+MCJ7
+         bkqnPdgUWXU/McG3UdMiWgwEcM6m6aZzRssZh6To+Xc6YVHPbvK2rKqn5vLn1aTyzoxf
+         JlS7h33tQC70Tp5TLGhoE2SzTXvREEl2psz87ppViiTrxLXcaBGU6Zx/KwC8zESqREOa
+         YW/c4cn1QzzD8HdMOtdHvK9O0mHXn4sRH6VWVOGoAIZxz9hkFrv9P1GtayUnaLQN8dpU
+         TxWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789476587; x=1790081387;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=mP8qopDle1Sc4k8F6w5GND/XUp1RUEWcrZG95tdjUPs=;
+        b=H5hEHlE4QqbtBkBYLycXO9APQeoWZq2V3Q6SGLCZ3tzWflm2FIh2FGDBZyoiU2thOt
+         7Q4wsgVj4JipEWh4uM5fP1vUs+7vlWRQG5cRHvEL5ix228gF+HtQ01jY0asVIhFOVTFq
+         YneNdnlUFUNh+5r+bqvlqKGhcKRsHvKcD/aYznC1OQnlFKo36Igv02eFRraJNjfOvPYv
+         Q9UM8NkuCZYRWvFPZqU0Pu1eJN8h2MssmoVkL/DVbCt8vUPLuabQirn0+KVMC4bTymXD
+         xF9kaVfrmoNOMY0aHBGfkIV2JAtR8s2/mtNPfXzX0xerM+RBSBpnm0FdgaZWPuPgW4OE
+         fHJw==
+X-Forwarded-Encrypted: i=1; AKwUvBydy6sWzEYTUINaPo3/+YF1VzaI5RbaH0usYf+uxOBFzMxv3Ha+JZKffocxxh44ygF3e7XGWvHFNdk=@lists.linux.dev
+X-Gm-Message-State: AFuF++lCvMTUkTcot0Xqmw4HndN+MMhAnUgpTCPXG2MBtBDvqMBj/UtG
+	VXrd1JTthV1U9xeBGtXn5qNFxoCFqZa6Fzz3GDxN+tqxfMNYKgHCpMyY
+X-Gm-Gg: AYBFou1Ixea4JxOy0sJup7Je6Rjy0XUpMlNrE2GA3zsEzWstTKdRXoOvSwwIJQz3Awe
+	kCee7y+GdP9K4K/sa5PExEjwalVgqHZ5nr+SiH66h3qmKkzxlpWlxYyWx61ITqS+LyK4cYrwlhm
+	zvKQKEw1ASvkhH8g8SQ9zWhmpr6ePszTOf/FgC2CMJfEmC1Md2meT6NQcznGY8b8lfbS1TIWuQZ
+	MaKOj0EfCfuS01uedQwK9dvUdGc8JdxssvJHFVTO8sEm6X7g3A4bYFDguJO+OzByi0v5Vm4DKyL
+	SxLcDwZxswi/5O2s7xnH1DwP2iDDwoRuABn+cUNNrSYq6sMFh7DU2AYNB4vqd4MdUnGybC72N7q
+	aC3T22RcEHmTtwGz8tLSrF74S5D+e6SPViflwRfbidWqpBqrEBGs0Dn0cbn8fighfwJQB1dYbZ5
+	y59ybFB2oyHnGcQe5CBVfpDG5JM/WlgVspAg21DDN6ZR7mXH87gpcnvEvyH2gSgRClWFyIxH5db
+	/fAOrU=
+X-Received: by 2002:a17:903:1a0b:b0:2d8:d4cc:be64 with SMTP id d9443c01a7336-2dd6c7134b4mr167097285ad.17.1789476587316;
+        Tue, 15 Sep 2026 05:49:47 -0700 (PDT)
+Received: from [10.125.112.20] ([122.11.210.25])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2dd6f8ebbdfsm26424855ad.38.2026.09.15.05.49.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Sep 2026 05:49:46 -0700 (PDT)
+Message-ID: <86a09d26-2de8-4590-b135-31564e2c7049@gmail.com>
+Date: Tue, 15 Sep 2026 20:49:32 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Level: 
-X-Spam-Score: 0.20
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [0.20 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	FORGED_RECIPIENTS(2.00)[m:morbo@google.com,m:linux@armlinux.org.uk,m:kernel@xen0n.name,m:tsbogend@alpha.franken.de,m:James.Bottomley@HansenPartnership.com,m:deller@gmx.de,m:bp@alien8.de,m:hpa@zytor.com,m:hsweeten@visionengravers.com,m:tony.luck@intel.com,m:airlied@gmail.com,m:simona@ffwll.ch,m:matthew.brost@intel.com,m:rodrigo.vivi@intel.com,m:dmitry.torokhov@gmail.com,m:zzam@gentoo.org,m:anthony.l.nguyen@intel.com,m:przemyslaw.kitszel@intel.com,m:davem@davemloft.net,m:edumazet@google.com,m:arend.vanspriel@broadcom.com,m:neil@brown.name,m:rdunlap@infradead.org,m:pengpeng@iscas.ac.cn,m:leitao@debian.org,m:ashutoshdesai993@gmail.com,m:imre.deak@intel.com,m:johannes.berg@intel.com,m:miriam.rachel.korenblit@intel.com,m:alexander.stein@ew.tq-group.com,m:r772577952@gmail.com,m:mrwillporter@gmail.com,m:zzzccc427@gmail.com,m:cassiogabrielcontato@gmail.com,s:brcm80211@lists.linux.dev,s:devel@lists.orangefs.org];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.998];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	TAGGED_RCPT(0.00)[netdev];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,armlinux.org.uk,kernel.org,xen0n.name,alpha.franken.de,HansenPartnership.com,gmx.de,redhat.com,alien8.de,linux.intel.com,zytor.com,mev.co.uk,visionengravers.com,intel.com,suse.de,gmail.com,ffwll.ch,gentoo.org,lunn.ch,davemloft.net,google.com,broadcom.com,samsung.com,linaro.org,qlogic.com,omnibond.com,resnulli.us,brown.name,oracle.com,talpey.com,perex.cz,suse.com,linux-foundation.org,loongson.cn,uniontech.com,infradead.org,iscas.ac.cn,debian.org,linuxfoundation.org,oss.qualcomm.com,ew.tq-group.com,rong.moe,valvesoftware.com,lists.infradead.org,lists.linux.dev,lists.freedesktop.org,lists.osuosl.org,lists.orangefs.org];
-	R_RATELIMIT(0.00)[to_ip_from(RL638gsp8obb334m9k7xcnfris)];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[110];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid]
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 01/10] mm: memblock: add missing HugeTLB flag name
+To: Mike Rapoport <rppt@kernel.org>
+Cc: catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org,
+ pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, tglx@kernel.org,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+ robh@kernel.org, saravanak@kernel.org, akpm@linux-foundation.org,
+ baoquan.he@linux.dev, pasha.tatashin@soleen.com, pratyush@kernel.org,
+ m.szyprowski@samsung.com, mark.rutland@arm.com, kernel@xen0n.name,
+ alex@ghiti.fr, hpa@zytor.com, ruirui.yang@linux.dev, robin.murphy@arm.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ devicetree@vger.kernel.org, kexec@lists.infradead.org, linux-mm@kvack.org,
+ iommu@lists.linux.dev
+References: <20260902073116.802752-1-chenwandun1@gmail.com>
+ <20260902073116.802752-2-chenwandun1@gmail.com>
+ <178936321614.3691424.10386784926753862087.b4-review@b4>
+Content-Language: en-US
+From: Wandun <chenwandun1@gmail.com>
+In-Reply-To: <178936321614.3691424.10386784926753862087.b4-review@b4>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 15 Sep 2026 10:18:17 +0200,
-Bill Wendling wrote:
+
+
+On 9/14/26 13:20, Mike Rapoport wrote:
+> Hi,
 > 
-> strlcat() is deprecated: like strcat(), it requires re-scanning the
-> destination string from the beginning on every call, which is O(n^2)
-> when used to build up a string incrementally, and its truncation
-> behavior is easy to get wrong.
-
-... but what many of your patches do is to replace strlcat() with
-open-codes, which is more error-prone and easier to get wrong than
-a single strlcat() call.
-
-> See:
+>> Commit 7d163a75f821 ("memblock: make HugeTLB bootmem allocation work
+>> with KHO") added MEMBLOCK_RSRV_HUGETLB but did not add the corresponding
+>> entry to flagname[]. As a result, memblock debugfs cannot report the
+>> flag by name.
+>>
+>> Add the missing RSV_HUGETLB entry.
+>>
+>> Fixes: 7d163a75f821 ("memblock: make HugeTLB bootmem allocation work with KHO")
+>> Signed-off-by: Meijing Zhao <zhaomeijing@lixiang.com>
+>> Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
+>> Link: https://lore.kernel.org/lkml/20260821020910.3428585-2-zhaomeijing100@gmail.com/
 > 
->   https://github.com/KSPP/linux/issues/370
+> Can you please send this as a separate patch, I'll pick it to the
+> memblock tree.
 
-It's clear that strlcat() isn't perfect and sometimes inefficient.
-But blindly deprecating without providing a good alternative doesn't
-sound like a right approach to me.
+A separate patch has been sent.
+https://lore.kernel.org/lkml/20260915124641.2498280-1-chenwandun1@gmail.com/
 
+Best regards,
+Wandun
+> 
 
-thanks,
-
-Takashi
