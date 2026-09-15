@@ -1,57 +1,57 @@
-Received: from mail-oo1-f69.google.com (mail-oo1-f69.google.com [209.85.161.69])
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD444A260C
-	for <loongarch@lists.linux.dev>; Tue, 15 Sep 2026 08:28:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C32A477E39
+	for <loongarch@lists.linux.dev>; Tue, 15 Sep 2026 08:28:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789460882; cv=none; b=Gn5DDqeb2vcmeTPZgox3TaAtshL5hzReLXeurrZDk3yg3ZBPUvMwQIX1XYLeKOgtOlMyZ+7Xx0jb6aGjcSqSpCqI3o+dvWe5uPwPL9BZjrklZp2QxOF6nDxhcu4KngrpxUU52biMV7ts/4mLjtcwiQ1vOyAtTIw+wb05mx4eXLM=
+	t=1789460901; cv=none; b=DpqiYBFtSY/0aobs8LnZ4iTr4xch7fMdD9agb9nIfVBnNHpR1PooyIvVRQyvrWOgAH9enFwS47Av7N852pitQQIwMxsy03bQNKdvJFgM40N2mlAdONwyhqSTdISHmzk3KgR168f28vcPt03lGUd/Ei4go8u0tWYQzlqjNOj2UdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789460882; c=relaxed/simple;
-	bh=Te8HD9YkwxCOhstie9EUJ32KLA4oNHtDIGXeNIM9YkI=;
+	s=arc-20240116; t=1789460901; c=relaxed/simple;
+	bh=7ISDVBxGmgeCdxhmRRdB69cX7Bxvnv7xpoH47YwrzBI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=WQLUPfYAAIE3h05tmY9JnkKG3fKQai2B98v+cVmyvzYzD1xHlq89BYFGxwfoPFAEnrv6WE72dIRI8kGZc3zEkql/010SM52dYdRPzJ0+IcfYZHQPOIsZ9IYAfsxYLJCcUQL0ROHquuh2VB9R/zASUIar9JjNL/g4Gx+OGtDti3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JowU6jlX; arc=none smtp.client-ip=209.85.161.69
+	 To:Cc:Content-Type; b=u3aRe6Nut1uppJkwNuk5GCL80TnVvl+T5+2qpbjJjvYtoNYPfNvk/Ft5FjXpfxJYvUEszfIzEtTrgRYVPj5Tq6RiWKz8FP4bBpcvF+Kr4II8f0j1DPW74CkWYTy04dIt9M8HzCFzOC7bzCAnUN/82bDmYg75+Oo0pQ39Ttz/O78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OwieL7cS; arc=none smtp.client-ip=209.85.210.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JowU6jlX"
-Received: by mail-oo1-f69.google.com with SMTP id 006d021491bc7-6c324a0c0faso3229327eaf.1
-        for <loongarch@lists.linux.dev>; Tue, 15 Sep 2026 01:28:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OwieL7cS"
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-8627258ef12so9036641b3a.2
+        for <loongarch@lists.linux.dev>; Tue, 15 Sep 2026 01:28:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789460879; x=1790065679; darn=lists.linux.dev;
+        d=google.com; s=20251104; t=1789460898; x=1790065698; darn=lists.linux.dev;
         h=content-transfer-encoding:content-type:cc:to:from:subject
          :message-id:references:mime-version:in-reply-to:date:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=aUeRHnlHuLyd8Os/OfUYHyanuI/6gSGpcAdXKzgjG1A=;
-        b=JowU6jlXxwLZlS+3gu73ET5YuMnVJf8x/iEvrgwyr3AlJu1HCO4d9ujZ4BTBmTrs9J
-         gxABmWBU9GXltY195AdxTM9GkYO+Of0S3cBdaOJObzQGCxHmaVV+jx10R0jAVw0vfMQN
-         9MpPwMe5xotgvoF8VNAaMRiPekvoLn+TflyziKZ1wq+gQgWguUV1Evyi6Hl31VbTJzSF
-         /kXxFTUAyuJQEujWPmCK82BbisvmrwWpk4UnkXRNY+9UGlcoAcBtGmgXH9mYvmGCxkr8
-         KM7I7nOhL0Zn9+jbXab3xuNnNt2Uwftj0mm0ViV0jFOi7bIFe9fv9HmV7uFAOf0belY1
-         F2hQ==
+        bh=Yp7aMeBt5kbv9wDm9MP1w/VhRzf84I2dhiWVAxjsG5I=;
+        b=OwieL7cSTpUWU5IY95/ySBfe4m9NGiTPHWNJ9+4Kqn+MCJLy3K2UlxClg6W8SzBdsJ
+         DxJEmyLuklVbgXSHiENh5FD3/pQFkrz4hF2Wsek2M5EAfABrSuyQD8ZIhX1bGGT1Rgbp
+         8SYAsoyyffl3pK2LrfMXdxl1XmO4VmVQIO5b9CMRmg4VMUe/ANqABJNqk2mku66LvQ6I
+         868zB63two3/eeJ2U/ymKNZXlU+oqm+3Bzt8+AAPSaHxbDBblGZ4/OEta26/crfwNhfp
+         37LQ2B6fhYs3kRUFMsEvrtVxMTqhBUduC2boIkpWkLFI7/hoRYbsSwHh73ZozPksct27
+         wZhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789460879; x=1790065679;
+        d=1e100.net; s=20260707; t=1789460898; x=1790065698;
         h=content-transfer-encoding:content-type:cc:to:from:subject
          :message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=aUeRHnlHuLyd8Os/OfUYHyanuI/6gSGpcAdXKzgjG1A=;
-        b=uJYgmFInib8LdXvlNLjEF6XFB3IEonFEZsvE7KICqnmQynzU3wkbsrwT5C0q3pIMXW
-         OmEldGA+JVA4ybh3kYbVelfAo0kfbu6A5lNVg1phzLCtEuo4rlJ5OFGLg+nqyL9oScwh
-         Z6CnTNXOzoiTEcqRvGu3c70TxiwKdxNKFoZGuB0t5oJDtl5Otv3UiZf/Cv9hGiBjFMBt
-         86nEkmvcXczob/uyIA+OglspDo1UaKZp2oVon793+6OIebttpViyPCVKGk+uaonhW1yX
-         oefHxbtpR0GT3MK2pbcXlOqsYYoZhEH/hH+/tkW7J3xrAcQFOGVtsZiE+Ive9hQ5tCp/
-         3C+g==
-X-Forwarded-Encrypted: i=1; AKwUvBzYcQijTwUrfaS4aBsKy1uQYk8TJ97G4dLhoVCT4o3RFyYVWz9NTVVhWpeSCGM2AIlau7+tGayn8QE=@lists.linux.dev
-X-Gm-Message-State: AFuF++kCj1Qry1sqrsmwoCN8jtvCM0s5VXi+zfIymdGbGHP5uvu5Xcn4
-	S5gSwD43JSbgiew0V5jdc1zUA7JWnoVkBdg6UIWM11VD+dThV9GB9ZMTEoUf4RpQMxCxSjLQHf+
-	j
-X-Received: from plbmz16.prod.google.com ([2002:a17:903:3510:b0:2dd:2adc:aa80])
- (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:a8b:b0:2d9:26b3:547
- with SMTP id d9443c01a7336-2dd83882243mr420135ad.20.1789460414438; Tue, 15
- Sep 2026 01:20:14 -0700 (PDT)
-Date: Tue, 15 Sep 2026 08:18:40 +0000
+        bh=Yp7aMeBt5kbv9wDm9MP1w/VhRzf84I2dhiWVAxjsG5I=;
+        b=sEg9BZQm4RTK/ZNfwmCqKJBU9ZLPMRTktPQ3uQRc1dKddOexvbuD9NZxUaSkBDE/4X
+         ji/o+MSRl44vn+YyYwQuFj6D0RFvNTpZ1o90ZViHCTULIJIlRkYRXIk+QeRYNJXiGSZp
+         odP1KsWodr22JCADu4X+mh/mYh1UJm/yqa7RUXuijeFj7d6fAQ2srG2uhyemJHHfYsLy
+         q0WP7CIGAnii5FPo8K5W7LAahuSnlFpitsZlTxGdx4yGBF/4fzQU3ixVKQFGpz7jJgZZ
+         VHzOvJkXz0AmsmJL26PTlyp34gHyu6SlBos44+3chs8RAP2AMKUN/IbRfiHmZh40gQnQ
+         JRkA==
+X-Forwarded-Encrypted: i=1; AKwUvBxF5SBBx42CKFu2rgVsQ8jMilge30UHeuwJbSh6JxcATuREfVwuwn+l5YCGBcBaGTA1Llmus0FBHAY=@lists.linux.dev
+X-Gm-Message-State: AFuF++nvxUymOM9orX6ENOHkjJpmWCA9QMkRsNhHY6La3z/tAmV2V924
+	78F3Ts6rSvCuHRyl1MFR32P4N1AVZOguJRxbAknR9d5ogOVsZ/N5zFUf7jfQwCuZd6aTw9vqath
+	1
+X-Received: from pltt2.prod.google.com ([2002:a17:902:d142:b0:2dd:5303:f006])
+ (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:f64f:b0:2dd:278c:5eb
+ with SMTP id d9443c01a7336-2dd83851f4amr602125ad.14.1789460417430; Tue, 15
+ Sep 2026 01:20:17 -0700 (PDT)
+Date: Tue, 15 Sep 2026 08:18:43 +0000
 In-Reply-To: <20260915081910.4142719-1-morbo@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -61,9 +61,8 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20260915081910.4142719-1-morbo@google.com>
 X-Mailer: git-send-email 2.55.0.1032.g73a4cd73de-goog
-Message-ID: <20260915081910.4142719-24-morbo@google.com>
-Subject: [PATCH 23/28] Input: synaptics_usb - use seq_buf and snprintf() for
- name and phys
+Message-ID: <20260915081910.4142719-27-morbo@google.com>
+Subject: [PATCH 26/28] wifi: wil6210: Refactor resume_triggers2string() to use seq_buf
 From: Bill Wendling <morbo@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: Bill Wendling <morbo@google.com>, codemender-patching+linux@google.com, 
@@ -124,17 +123,16 @@ Cc: Bill Wendling <morbo@google.com>, codemender-patching+linux@google.com,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-synusb_probe() constructs the device name and physical path using a mix of
-strscpy(), strlcat(), and snprintf().
+resume_triggers2string() builds a space-separated string of active resume
+trigger names using a series of conditional strlcat() calls.
 
-In preparation for removing the deprecated strlcat() API[1], use struct
-seq_buf to incrementally build synusb->name, and format synusb->phys with
-snprintf() after generating the USB path.
+In preparation for removing the deprecated strlcat() API[1], replace the
+strlcat() calls with struct seq_buf and seq_buf_puts().
 
 Link: https://github.com/KSPP/linux/issues/370 [1]
 Cc: codemender-patching+linux@google.com
-Assisted-by: Gemini:1.5-Pro-002 [editor_update_file, make_kernel_build_sing=
-le_file, test_runner_run_kunit_test]
+Assisted-by: CoPilot:1.0 [editor_update_file, make_kernel_build_single_file=
+]
 Signed-off-by: Bill Wendling <morbo@google.com>
 ---
 Cc: Russell King <linux@armlinux.org.uk>
@@ -248,73 +246,71 @@ Cc: devel@lists.orangefs.org
 Cc: linux-hardening@vger.kernel.org
 Cc: linux-sound@vger.kernel.org
 ---
- drivers/input/mouse/synaptics_usb.c | 29 +++++++++++++++++------------
- 1 file changed, 17 insertions(+), 12 deletions(-)
+ drivers/net/wireless/ath/wil6210/wmi.c | 38 ++++++++++++++------------
+ 1 file changed, 21 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/input/mouse/synaptics_usb.c b/drivers/input/mouse/syna=
-ptics_usb.c
-index 880a0c79148c..d13d2d6202ee 100644
---- a/drivers/input/mouse/synaptics_usb.c
-+++ b/drivers/input/mouse/synaptics_usb.c
-@@ -41,6 +41,7 @@
- #include <linux/usb.h>
- #include <linux/input.h>
- #include <linux/usb/input.h>
+diff --git a/drivers/net/wireless/ath/wil6210/wmi.c b/drivers/net/wireless/=
+ath/wil6210/wmi.c
+index 479b2418ca34..fcc9e9eb5732 100644
+--- a/drivers/net/wireless/ath/wil6210/wmi.c
++++ b/drivers/net/wireless/ath/wil6210/wmi.c
+@@ -7,6 +7,7 @@
+ #include <linux/moduleparam.h>
+ #include <linux/etherdevice.h>
+ #include <linux/if_arp.h>
 +#include <linux/seq_buf.h>
 =20
- #define USB_VENDOR_ID_SYNAPTICS	0x06cb
- #define USB_DEVICE_ID_SYNAPTICS_TP	0x0001	/* Synaptics USB TouchPad */
-@@ -278,6 +279,8 @@ static int synusb_probe(struct usb_interface *intf,
- 	struct input_dev *input_dev;
- 	unsigned int intf_num =3D intf->cur_altsetting->desc.bInterfaceNumber;
- 	unsigned int altsetting =3D min(intf->num_altsetting, 1U);
+ #include "wil6210.h"
+ #include "txrx.h"
+@@ -3162,27 +3163,30 @@ int wmi_suspend(struct wil6210_priv *wil)
+=20
+ static void resume_triggers2string(u32 triggers, char *string, int str_siz=
+e)
+ {
+-	string[0] =3D '\0';
 +	struct seq_buf s;
-+	char path[64];
- 	int error;
-=20
- 	error =3D usb_set_interface(udev, intf_num, altsetting);
-@@ -334,27 +337,29 @@ static int synusb_probe(struct usb_interface *intf,
- 			 ep->bInterval);
- 	synusb->urb->transfer_flags |=3D URB_NO_TRANSFER_DMA_MAP;
-=20
-+	seq_buf_init(&s, synusb->name, sizeof(synusb->name));
 +
- 	if (udev->manufacturer)
--		strscpy(synusb->name, udev->manufacturer,
--			sizeof(synusb->name));
-+		seq_buf_puts(&s, udev->manufacturer);
++	seq_buf_init(&s, string, str_size);
 =20
- 	if (udev->product) {
- 		if (udev->manufacturer)
--			strlcat(synusb->name, " ", sizeof(synusb->name));
--		strlcat(synusb->name, udev->product, sizeof(synusb->name));
-+			seq_buf_puts(&s, " ");
-+		seq_buf_puts(&s, udev->product);
+ 	if (!triggers) {
+-		strlcat(string, " UNKNOWN", str_size);
+-		return;
++		seq_buf_puts(&s, " UNKNOWN");
++	} else {
++		if (triggers & WMI_RESUME_TRIGGER_HOST)
++			seq_buf_puts(&s, " HOST");
++
++		if (triggers & WMI_RESUME_TRIGGER_UCAST_RX)
++			seq_buf_puts(&s, " UCAST_RX");
++
++		if (triggers & WMI_RESUME_TRIGGER_BCAST_RX)
++			seq_buf_puts(&s, " BCAST_RX");
++
++		if (triggers & WMI_RESUME_TRIGGER_WMI_EVT)
++			seq_buf_puts(&s, " WMI_EVT");
++
++		if (triggers & WMI_RESUME_TRIGGER_DISCONNECT)
++			seq_buf_puts(&s, " DISCONNECT");
  	}
 =20
--	if (!strlen(synusb->name))
--		snprintf(synusb->name, sizeof(synusb->name),
--			 "USB Synaptics Device %04x:%04x",
--			 le16_to_cpu(udev->descriptor.idVendor),
--			 le16_to_cpu(udev->descriptor.idProduct));
-+	if (!seq_buf_used(&s))
-+		seq_buf_printf(&s, "USB Synaptics Device %04x:%04x",
-+			       le16_to_cpu(udev->descriptor.idVendor),
-+			       le16_to_cpu(udev->descriptor.idProduct));
-=20
- 	if (synusb->flags & SYNUSB_STICK)
--		strlcat(synusb->name, " (Stick)", sizeof(synusb->name));
-+		seq_buf_puts(&s, " (Stick)");
-=20
--	usb_make_path(udev, synusb->phys, sizeof(synusb->phys));
--	strlcat(synusb->phys, "/input0", sizeof(synusb->phys));
+-	if (triggers & WMI_RESUME_TRIGGER_HOST)
+-		strlcat(string, " HOST", str_size);
+-
+-	if (triggers & WMI_RESUME_TRIGGER_UCAST_RX)
+-		strlcat(string, " UCAST_RX", str_size);
+-
+-	if (triggers & WMI_RESUME_TRIGGER_BCAST_RX)
+-		strlcat(string, " BCAST_RX", str_size);
+-
+-	if (triggers & WMI_RESUME_TRIGGER_WMI_EVT)
+-		strlcat(string, " WMI_EVT", str_size);
+-
+-	if (triggers & WMI_RESUME_TRIGGER_DISCONNECT)
+-		strlcat(string, " DISCONNECT", str_size);
 +	seq_buf_str(&s);
-+
-+	usb_make_path(udev, path, sizeof(path));
-+	snprintf(synusb->phys, sizeof(synusb->phys), "%s/input0", path);
+ }
 =20
- 	input_dev->name =3D synusb->name;
- 	input_dev->phys =3D synusb->phys;
+ int wmi_resume(struct wil6210_priv *wil)
 --=20
 2.55.0.1032.g73a4cd73de-goog
 
