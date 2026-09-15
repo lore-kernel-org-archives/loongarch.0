@@ -1,57 +1,57 @@
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FCA549CF45
-	for <loongarch@lists.linux.dev>; Tue, 15 Sep 2026 08:27:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A164A0925
+	for <loongarch@lists.linux.dev>; Tue, 15 Sep 2026 08:27:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789460837; cv=none; b=oudExRV43fgYYAVIOnSYQhjzytn/qFwQ82sK64axZVJdmlevwQ5Fd7EiktRQPjfDEuUCJJFagIFCDAZsmNcIDVSgRqJGVbI+TO0lp3TMMJuf75UlDVLATvLkLxFFHRnVvUZRWk0MKHdG1l21EmbeMOkUsi9ncTAOwu60+5rU/r4=
+	t=1789460856; cv=none; b=FbVqwjWTCX8jAWjU2UUGMVx8gCE0gseRZ+zGWvu7gsfNo8llLYHJUf0o0rGNz6sFRl5xUG6bSPZcQVpCYjxdEo5JcDPCL8lziUF4xF0bGLw2521CjDA0PlqPJmSxKJ+Yeqm28pNB7NS8N7SqxgHbvcAed3y1zsGtpXiAtlyB1/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789460837; c=relaxed/simple;
-	bh=EqxPY8uDyH4sIF56bisQGVYV4UgUVWe6Fa26kaXaoOs=;
+	s=arc-20240116; t=1789460856; c=relaxed/simple;
+	bh=Hbrp06lq3B7opj8tzjJVqcfrxhhZTvzJ1WqUPePmYuc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=YKv841kxE2Gu821bpEp8F+bR9lPhKmbLKE19UoyXJJXk7HXA9Z6kmyRAwGHrxaJX2Al8EiVAWk+fV16vRGa0VVsoJtyXb4Nd154sSBtZoHnRlOSr1TaUByIwQaSLkQUjYQhsd9g7TXQs10njdT/1rIQfiUmBIFBefm8abp+eMyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gOZrNMj8; arc=none smtp.client-ip=209.85.222.198
+	 To:Cc:Content-Type; b=q6XR4mrBQwn8hNtGewEb41YApOm9nAIv5TGvwrfP6FywsUW1Xj6qrtyjniUAYtLyED5+zCVt+YRDvnIwwCuHHkpwDqM46x029POId46TDxhJhs6fjO9qWXndSWD0RjAtis2mWP667zZIjjI/3GRipaOpA/U6O9azOGImQnYMaKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uDNCbO4F; arc=none smtp.client-ip=209.85.216.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gOZrNMj8"
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-93a0b66ecd9so341750385a.2
-        for <loongarch@lists.linux.dev>; Tue, 15 Sep 2026 01:27:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uDNCbO4F"
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-39b6416441eso8122921a91.1
+        for <loongarch@lists.linux.dev>; Tue, 15 Sep 2026 01:27:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789460834; x=1790065634; darn=lists.linux.dev;
+        d=google.com; s=20251104; t=1789460854; x=1790065654; darn=lists.linux.dev;
         h=content-transfer-encoding:content-type:cc:to:from:subject
          :message-id:references:mime-version:in-reply-to:date:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=XkXp/XZtfYpYjiXJEDXdoQGA1NlHq2kVyqBGidLpG58=;
-        b=gOZrNMj8CzA31/6EaOut89ZE1XHP1u28BTRmR/Uz8GPpEwIDoSxc+/UvXNkT30aAee
-         2r9xOWWFXRS3aVLjcPlpC4KBstS1HLytuVRMFsjT00kNolGiCI2Bo4pBM6yJxEvAV3Qs
-         LKfZzVuc/PDYPq2eiN0J7Fvi0B1zPjwnmLkikXeHVn2D/V8p7xmu+goLMpaFFvQxovki
-         RIVPwOKNulm5EA6fj5oe6jvo+KEBVpcIrpM13ejPaUkbjAwotblWMoKSbI1L3pOlvDWr
-         eUWoFf6A0HVFEE/DNJ4KzvCo5BQqoWxWwFe86izaqWFJ7EWeqKA/70wMk1ni2a4mAC2m
-         H5Ig==
+        bh=tzVl62qjzRm92BALDDypl3TnCOJSNAaLaOJ/zmWRh10=;
+        b=uDNCbO4Fblkwf4ER1jmCfJosbL1YG9dqkKN5OCQ0THlG/BkX87eykGZI1SyyzYkj2o
+         RTdvDn/AzrmE8xr2dfYHapxcEhEeTI+ppNhbjJPUzbOG3gXSOJtgGPAF0Z8coMs4+JE6
+         4lcT2tfsKPOw4udW8g3fIhYFU08Pv31LFvmp69xeWBzcZqep22+bP8WkU9zIHIp1OwqD
+         a5JrHlDmwz8WCtqhPXsFILQFQjdVX2YxA7a3joydirFeWRGzUfbZQNud5XSzg31OidLG
+         UKumYY1YGH4knNrJhulvojVzy7S4eH/WsEbPFQErDxvM/mxvHi/uml9bHfVCpGCn+Qqo
+         74UQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789460834; x=1790065634;
+        d=1e100.net; s=20260707; t=1789460854; x=1790065654;
         h=content-transfer-encoding:content-type:cc:to:from:subject
          :message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=XkXp/XZtfYpYjiXJEDXdoQGA1NlHq2kVyqBGidLpG58=;
-        b=Mvaf9OzNsykqrsRA4+aYB4lgzDl1k4hRvWkbrtoEGVjgAD0F7C+99R4HwAlmanPgES
-         6pniNl2sHH+f07X21vKUDCHK96d/h0tOq7WntVEaknxFQ4WwJLgm30EU8jMBePnISEKg
-         zHto7iI+Y4myr/I/TTMWxqbt65kzFHqIrdZWSQnbjUVvH5PNLgSWV1r9AQv4VGdwB+op
-         OfYoy9tgMZO4xHpGmPhewkCvWwGJeQJR9Z6cvwgEUqjVntxg2HerTTivk9cnJLv3iQ9A
-         hYOb0ekXaTKou3Na0tbSsrsVfn5A4bp5sdTy2+4fB4ytLr4nFsaB2fu8DEW63UjunkDJ
-         hWqw==
-X-Forwarded-Encrypted: i=1; AKwUvByJEAVuw2Gf4belSx7cZGWDP5D2uShHGTpeEbZB3yeBqp8jl+YgitJo7dL9bJYb7XAeYxwIQBEKF3Q=@lists.linux.dev
-X-Gm-Message-State: AFuF++kH2HW876zI+XC82R+Y/9SmQxKRbR/607cvmOqdj29KPNNKSsc8
-	D/fKu0RwzoMWLSBbMax4P7+IC+sBkQwch7nMCbVMeEU5crPhMZx3vBataAN1wuvj9eouq1lnso0
-	j
-X-Received: from plbkc7.prod.google.com ([2002:a17:903:33c7:b0:2dd:630:cea4])
- (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1965:b0:2d3:716e:e2ae
- with SMTP id d9443c01a7336-2dd6c5ef019mr154580855ad.6.1789460411846; Tue, 15
+        bh=tzVl62qjzRm92BALDDypl3TnCOJSNAaLaOJ/zmWRh10=;
+        b=bYpKh/5qGnzzLoZaK04MWnH78HUovbgujOp067p1mjUZ2VCQjiu2iBvnrBvKqp62Rr
+         04o5mn9O/Rr8y7RSHWxVKnNDeWCZXCruowJICfFhap88ZJvlQy4OUa0ZU9sDm1ibz1v5
+         /NefjzVjhXsjmqTT2a8I1JIh7yT36svMwcaanzoKeBEGKgpI36i1cP2IpRj2NKbX25vU
+         daj0OGjRwjYoRQjBFjhZ6E42s/lGneoXP+HpZFqtgS7Q2O5CJiGiO5N5+fnzSLaO4/FX
+         Tj7eZZ5Qwe8qFtl53dqVEVrbXdGyGXx5He4MBfG4SgaDiEnnDeA6WvMLM9miVZTmykuy
+         5NWg==
+X-Forwarded-Encrypted: i=1; AKwUvByVzmdhqMK5UdIzfFWQGsBVrGgxm8Gu1W5dZBxhIZHqsFiysgY4g+6fInGfGFacySMszrq75aC7UmU=@lists.linux.dev
+X-Gm-Message-State: AFuF++lZ7f/dX4tIs0bWSTVHHmflmeWCGrBODjJUBl2txuhBGRm98UHX
+	ZRzufp74nnr8gf27rr9W6tGPZcnCXdUEHPf+mengX70mZ8EA5ggJ42oio84NelsLskQ3Gd+Tmax
+	g
+X-Received: from plbjx4.prod.google.com ([2002:a17:903:1384:b0:2dd:1457:fac8])
+ (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:190d:b0:2dd:4168:7bd3
+ with SMTP id d9443c01a7336-2dd6c6c0cb1mr140747065ad.12.1789460411041; Tue, 15
  Sep 2026 01:20:11 -0700 (PDT)
-Date: Tue, 15 Sep 2026 08:18:37 +0000
+Date: Tue, 15 Sep 2026 08:18:36 +0000
 In-Reply-To: <20260915081910.4142719-1-morbo@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -61,8 +61,9 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20260915081910.4142719-1-morbo@google.com>
 X-Mailer: git-send-email 2.55.0.1032.g73a4cd73de-goog
-Message-ID: <20260915081910.4142719-21-morbo@google.com>
-Subject: [PATCH 20/28] parisc: Refactor strlcat() to seq_buf in setup_cmdline()
+Message-ID: <20260915081910.4142719-20-morbo@google.com>
+Subject: [PATCH 19/28] x86/setup: Use snprintf() to concatenate builtin and
+ boot command lines
 From: Bill Wendling <morbo@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: Bill Wendling <morbo@google.com>, codemender-patching+linux@google.com, 
@@ -123,16 +124,20 @@ Cc: Bill Wendling <morbo@google.com>, codemender-patching+linux@google.com,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-setup_cmdline() uses multiple strlcat() calls to conditionally append
-default console and earlycon parameters to boot_command_line.
+When CONFIG_CMDLINE_BOOL is enabled without CONFIG_CMDLINE_OVERRIDE,
+setup_arch() appends boot_command_line to builtin_cmdline using two
+strlcat() calls before copying the result back to boot_command_line.
 
-In preparation for removing the deprecated strlcat() API[1], initialize a
-struct seq_buf with the existing boot_command_line contents and use
-seq_buf_printf() to append the console parameters.
+In preparation for removing the deprecated strlcat() API[1], format the
+combined command line into a temporary buffer using a single snprintf()
+call and copy the result to both builtin_cmdline and boot_command_line.
+Using a temporary buffer avoids undefined behavior from passing overlapping
+source and destination buffers to snprintf().
 
 Link: https://github.com/KSPP/linux/issues/370 [1]
 Cc: codemender-patching+linux@google.com
-Assisted-by: CoPilot:Gemini-1.5-Pro [editor_update_file, shell_command_run]
+Assisted-by: Developer:Gemini_2.5_Pro [editor_update_file, make_kernel_buil=
+d_single_file, checkpatch_run]
 Signed-off-by: Bill Wendling <morbo@google.com>
 ---
 Cc: Russell King <linux@armlinux.org.uk>
@@ -246,57 +251,29 @@ Cc: devel@lists.orangefs.org
 Cc: linux-hardening@vger.kernel.org
 Cc: linux-sound@vger.kernel.org
 ---
- arch/parisc/kernel/setup.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ arch/x86/kernel/setup.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/parisc/kernel/setup.c b/arch/parisc/kernel/setup.c
-index d3e17a7a8901..fa3efc82ad87 100644
---- a/arch/parisc/kernel/setup.c
-+++ b/arch/parisc/kernel/setup.c
-@@ -17,6 +17,7 @@
- #include <linux/init.h>
- #include <linux/console.h>
- #include <linux/seq_file.h>
-+#include <linux/seq_buf.h>
- #define PCI_DEBUG
- #include <linux/pci.h>
- #undef PCI_DEBUG
-@@ -42,6 +43,7 @@ static char __initdata command_line[COMMAND_LINE_SIZE];
- static void __init setup_cmdline(char **cmdline_p)
- {
- 	extern unsigned int boot_args[];
-+	struct seq_buf s;
- 	char *p;
-=20
- 	*cmdline_p =3D command_line;
-@@ -54,19 +56,21 @@ static void __init setup_cmdline(char **cmdline_p)
- 	strscpy(boot_command_line, (char *)__va(boot_args[1]),
- 		COMMAND_LINE_SIZE);
-=20
-+	s.buffer =3D boot_command_line;
-+	s.size =3D COMMAND_LINE_SIZE;
-+	s.len =3D strlen(boot_command_line);
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index cda6adb9f69c..c40e0edd7c13 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -916,9 +916,11 @@ void __init setup_arch(char **cmdline_p)
+ #else
+ 	if (builtin_cmdline[0]) {
+ 		/* append boot loader cmdline to builtin */
+-		strlcat(builtin_cmdline, " ", COMMAND_LINE_SIZE);
+-		strlcat(builtin_cmdline, boot_command_line, COMMAND_LINE_SIZE);
+-		strscpy(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
++		char tmp[COMMAND_LINE_SIZE];
 +
- 	/* autodetect console type (if not done by palo yet) */
- 	p =3D boot_command_line;
- 	if (!str_has_prefix(p, "console=3D") && !strstr(p, " console=3D")) {
--		strlcat(p, " console=3D", COMMAND_LINE_SIZE);
--		if (PAGE0->mem_cons.cl_class =3D=3D CL_DUPLEX)
--			strlcat(p, "ttyS0", COMMAND_LINE_SIZE);
--		else
--			strlcat(p, "tty0", COMMAND_LINE_SIZE);
-+		seq_buf_printf(&s, " console=3D%s",
-+			       PAGE0->mem_cons.cl_class =3D=3D CL_DUPLEX ?
-+			       "ttyS0" : "tty0");
++		snprintf(tmp, COMMAND_LINE_SIZE, "%s %s", builtin_cmdline, boot_command_=
+line);
++		strscpy(builtin_cmdline, tmp, COMMAND_LINE_SIZE);
++		strscpy(boot_command_line, tmp, COMMAND_LINE_SIZE);
  	}
-=20
- 	/* default to use early console */
- 	if (!strstr(p, "earlycon"))
--		strlcat(p, " earlycon=3Dpdc", COMMAND_LINE_SIZE);
-+		seq_buf_printf(&s, " earlycon=3Dpdc");
-=20
- #ifdef CONFIG_BLK_DEV_INITRD
- 	/* did palo pass us a ramdisk? */
+ #endif
+ 	builtin_cmdline_added =3D true;
 --=20
 2.55.0.1032.g73a4cd73de-goog
 
