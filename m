@@ -1,57 +1,57 @@
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E2A485CED
-	for <loongarch@lists.linux.dev>; Tue, 15 Sep 2026 08:26:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C718A485CCB
+	for <loongarch@lists.linux.dev>; Tue, 15 Sep 2026 08:26:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789460797; cv=none; b=PFn9FsCZWB4YBV2xFw9QuO+XQ3LXYlfitTs18y9YVF3W9SBmEiLd2GpyCjiiALbjM4EAkoUqjWYR4DTHCsdnb/4VXZYjytS2oMHVRuB5qWirJrmGmLWuJU++Y8nASHBwI38yY1Nozyr4MgR9hDS+76j5kJFLJ10iHAskTKakXaI=
+	t=1789460808; cv=none; b=mCplcQ/FO1MFQ3w4hBG9OHkbx8saVW3Iae5dB52o6kkClkrVl/qN5YU9JDn2Mm+DEfDrW4Bv8brCU05zlGvvgn/LUl6IrziZebbP9aH5NHEb592R38LXoS/0fAD5yMKODq5r3aAVL2grbYoimTuJ6PeFrFq5lgUX4NcKIh7ZKOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789460797; c=relaxed/simple;
-	bh=F9i32u7X67i3rjTFL62V2TeKyR+ixZjqL6I2EccGRRA=;
+	s=arc-20240116; t=1789460808; c=relaxed/simple;
+	bh=Uf7uxHQ/vmaAoZCZZPN2XUoRZ9miHwSqTeOUYXKdUpY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=R5Yg1O3EMfhvsfIy9rLn5/3ktJ+cgqM+LmGJuGsJ//Yn+UpiVv44Om+TvJav9dWMRLXn46d7gJ1Idpi8twpSy8zdRewfEO+jpgXf48pYOrFapWg5FUEudO/vW3rFXefdvJEhfYn93qX4TE0rNzupbQ/Z+/q/r7sWzEyDRmLfB8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PfucAM11; arc=none smtp.client-ip=209.85.160.197
+	 To:Cc:Content-Type; b=ataQ8bWiLi0lT4EdbSiI37aSrsqhJFwKAoSbxY88a97u7MJXx3If4A3viXvE3HRr1WbcAtcKPuD1CqzOhXpRLX004f0q4zgpUEyY3mzK4TO+jeKpyWjFw4zlACPD3ohI7PON/kRsb20rzbIvEfJVRoDG7v74cfihZE+bydfKXVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RBkSGBvD; arc=none smtp.client-ip=209.85.160.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PfucAM11"
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-53001b668a6so125781691cf.1
-        for <loongarch@lists.linux.dev>; Tue, 15 Sep 2026 01:26:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RBkSGBvD"
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-530f49fc5ffso79454191cf.2
+        for <loongarch@lists.linux.dev>; Tue, 15 Sep 2026 01:26:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789460793; x=1790065593; darn=lists.linux.dev;
+        d=google.com; s=20251104; t=1789460804; x=1790065604; darn=lists.linux.dev;
         h=content-transfer-encoding:content-type:cc:to:from:subject
          :message-id:references:mime-version:in-reply-to:date:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=CSHzy5Fr+v+g78gtgBhpLtU/5VBe17dtS9vTkuvViHg=;
-        b=PfucAM11Icdchy8WYhTFNN7mRZQhheJqN/zMIoRyZNJmYN6Qlh84VQF1HEeyYUx8Iu
-         3/2wC0qWlzjTTOPfEsiRlX3hav10nLJ8914y0JkTgYarth86uMk0Lv7fdVL0yvt+iGxV
-         MWwumkDfDKLFnFaITJSnNkPabMnQxFBQ7CFvvxZLidu1pqR3A1Tdreb2ETA1XpaZkYqV
-         krjQ7TysdaOvRAb2EQWDDjicm9+oYdQOWeTxdxticmbshWrF5Ge/+FYA2Z1VjxQ4u4Zp
-         5miUD0AHrYYxYfmtIMHdDlusW8N92WcluKQViu190ODiaeRrdKN/0yzuCnzozT8fwxy8
-         pVwg==
+        bh=LcsuffwFDxj4u6SThnIq1nFzZdsoWr9GB9tsbe2KVjo=;
+        b=RBkSGBvDeleC+dtFCYLjkRMolHtEFez8PXML9fjIbMfX4Gl6/Y+gpkGioiex2a9zTn
+         GnMpGZEFYXGLVa4YVs0hWmFz/M1xix8cCXL8t34M+X22BhimRlG8+bY2v0zJwkKazLr3
+         1txHVGpwO4ZXBOxqjE6Sw7atYXNi6YVzVXmO904KTlE413xJevSBXgAdpyvp455kbiqw
+         UEjpVD7ovhCcE01LgOrJFn5vLf0I/9AqoGH6zvXxTrKtwwduNeeD+2lHG+xn9qiGtLVs
+         mGex8l9n7YraieCbyG2ESnnLPdzKTxqXPSC8Ii0/ciCsagGKyBzd4H+9MWDHgJM2G57o
+         t6aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789460793; x=1790065593;
+        d=1e100.net; s=20260707; t=1789460804; x=1790065604;
         h=content-transfer-encoding:content-type:cc:to:from:subject
          :message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=CSHzy5Fr+v+g78gtgBhpLtU/5VBe17dtS9vTkuvViHg=;
-        b=i53EVmWtZ46KHtB1jnLc8U49c8RZb/H0nAtghC4Hl5x3JF+2kz1DQKFdE7U62DDMF1
-         RKmB/oCPKPnQjP7mIDIxrOoODyFtBJaf6r6cye8H/brq4G0TmTawMgZKYRmnU4Y7jfmN
-         wos13+J9MNznXxcj9C+hcP+loWaXboiPalP60FGEBRSA1BhpKElnkpGDETL8RLIaQgCu
-         Pbr7mIlPku3dAElR62SKbLw96evaxsO52I7AOHGDJchAlKv8MqJHJG7ieiYlaKZZwMT7
-         ECmrkiIPYZRgckx50VsXw4nIP4B9gu0T6kDhQjb22i37PyIhXKQFHNNNGaKZL1YunHWV
-         JlTw==
-X-Forwarded-Encrypted: i=1; AKwUvBzAB/l/6vIQvVhem4fe6Mx6sAnHeyZqMNkBWGB9Ta80nPRj4rRGsUUEkjVIskqEWrbHBZKxkuTo8pc=@lists.linux.dev
-X-Gm-Message-State: AFuF++ks1P/36aqntnX4PW97izwJKKVf8/nJ1L89a6HkdLErdqMQlczE
-	aqYSL5faUxLuwjzb5YN7pegSS0jdWpenDXvOuC3Ot2TfRIldaswJtWyTmcRCuUrbi/mMFxPP6kU
-	w
-X-Received: from plky9.prod.google.com ([2002:a17:902:7009:b0:2dd:3c92:b0a2])
- (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:8c5:b0:2c6:90ec:f601
- with SMTP id d9443c01a7336-2dd6c5f3422mr125997365ad.8.1789460416594; Tue, 15
- Sep 2026 01:20:16 -0700 (PDT)
-Date: Tue, 15 Sep 2026 08:18:42 +0000
+        bh=LcsuffwFDxj4u6SThnIq1nFzZdsoWr9GB9tsbe2KVjo=;
+        b=VV3rnNpQOhg7mKsMnxsVRsafCzGihhqufRxyU3zCK/FhzNbxG5JbjBbkRFedYoX7P7
+         dmmTaSDduQhqvpxe9Mk4BCEECCHozXFZWMVlslpH5VW3y6Z6ORDpd7nEBcC+KF6D9B4f
+         MNEIf+RIeXTqLd+0vZEXOhlxoTtdaWSGIbJlBjOD4aGi0mzXlLr2v94UKfOJdP7jPvlY
+         qPglLxX0exp/27DCa+HC3SRQrIblFqSIfR5UrZTuV0qejZy8ZvU32BHnt4g7jckg0Qh6
+         xZVN3z1jpDooCZ29hDaMhN5vEO8FGtosumlYDI9y4OKpccCMMYkZOm2e3GHKuyp4bFrz
+         BMxw==
+X-Forwarded-Encrypted: i=1; AKwUvBz3bJx3y2sD/GW93q2RpyVl5udmFhXg1pZeN9cypN6WO/4hRXIOVuHYKesOsY/2L4WcCiu9VeG0oVY=@lists.linux.dev
+X-Gm-Message-State: AFuF++kgNGQaCrOyM99o/Xj7DUbR5Jjv0RgdYofwNgI+pNQa7QTrE1Qb
+	zB9VfozpTRtfHaI88vUzRG+kNzRhOrvZ3GBJFBWYg4cPy4VJsCZZvK6ojh/b1y3l/lOhcHUMMTY
+	P
+X-Received: from plxm10.prod.google.com ([2002:a17:902:db0a:b0:2d9:7bf:6891])
+ (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1b50:b0:2db:8ae7:a5d2
+ with SMTP id d9443c01a7336-2dd6c5f39camr129000865ad.9.1789460415373; Tue, 15
+ Sep 2026 01:20:15 -0700 (PDT)
+Date: Tue, 15 Sep 2026 08:18:41 +0000
 In-Reply-To: <20260915081910.4142719-1-morbo@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -61,13 +61,13 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20260915081910.4142719-1-morbo@google.com>
 X-Mailer: git-send-email 2.55.0.1032.g73a4cd73de-goog
-Message-ID: <20260915081910.4142719-26-morbo@google.com>
-Subject: [PATCH 25/28] EDAC/thunderx: Replace strlcat() with seq_buf
+Message-ID: <20260915081910.4142719-25-morbo@google.com>
+Subject: [PATCH 24/28] EDAC/thunderx: Fix stale error context in thunderx_l2c_threaded_isr()
 From: Bill Wendling <morbo@google.com>
 To: linux-kernel@vger.kernel.org
-Cc: Bill Wendling <morbo@google.com>, codemender-patching+linux@google.com, 
-	Russell King <linux@armlinux.org.uk>, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+Cc: Bill Wendling <morbo@google.com>, Russell King <linux@armlinux.org.uk>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
 	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>, 
 	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
 	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
@@ -123,23 +123,17 @@ Cc: Bill Wendling <morbo@google.com>, codemender-patching+linux@google.com,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-The threaded ISR handlers (thunderx_ocx_com_threaded_isr(),
-thunderx_ocx_lnk_threaded_isr(), and thunderx_l2c_threaded_isr()) build
-multi-line error reports by formatting register details into a scratch
-buffer and appending them to "msg" with strlcat().
+thunderx_l2c_threaded_isr() computes "tail" and "ctx" once before entering
+the loop that drains the L2C error ring, and never updates them on
+subsequent iterations. When multiple errors are queued, every iteration
+reports the first ring entry rather than advancing through the ring,
+causing subsequent hardware errors in a batch to go unreported.
 
-In preparation for removing the deprecated strlcat() API[1], refactor the
-ISR handlers to construct error messages using struct seq_buf.
+Recompute "tail" and "ctx" at the start of each loop iteration, matching
+the sibling thunderx_ocx_com_threaded_isr() and
+thunderx_ocx_lnk_threaded_isr() handlers.
 
-Additionally, fix two bugs in decode_register(): initialize "str[0] =3D '\0=
-'"
-so callers do not append stale buffer contents when no error bits match,
-and stop iterating if snprintf() truncates the buffer to avoid
-underflowing the remaining "size" counter.
-
-Link: https://github.com/KSPP/linux/issues/370 [1]
-Cc: codemender-patching+linux@google.com
-Assisted-by: AI:Claude-3-5-Sonnet [editor_update_file, shell_command_run]
+Fixes: 41003396f932 ("EDAC, thunderx: Add Cavium ThunderX EDAC driver")
 Signed-off-by: Bill Wendling <morbo@google.com>
 ---
 Cc: Russell King <linux@armlinux.org.uk>
@@ -253,161 +247,24 @@ Cc: devel@lists.orangefs.org
 Cc: linux-hardening@vger.kernel.org
 Cc: linux-sound@vger.kernel.org
 ---
- drivers/edac/thunderx_edac.c | 64 ++++++++++++++++++++++--------------
- 1 file changed, 39 insertions(+), 25 deletions(-)
+ drivers/edac/thunderx_edac.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/drivers/edac/thunderx_edac.c b/drivers/edac/thunderx_edac.c
-index e7c335ca0c36..4e3781815b6d 100644
+index 9c0a1e48f96f..e7c335ca0c36 100644
 --- a/drivers/edac/thunderx_edac.c
 +++ b/drivers/edac/thunderx_edac.c
-@@ -20,6 +20,7 @@
- #include <linux/atomic.h>
- #include <linux/bitfield.h>
- #include <linux/circ_buf.h>
-+#include <linux/seq_buf.h>
-=20
- #include <asm/page.h>
-=20
-@@ -47,12 +48,17 @@ static void decode_register(char *str, size_t size,
- {
- 	int ret =3D 0;
-=20
-+	if (size > 0)
-+		str[0] =3D '\0';
-+
- 	while (descr->type && descr->mask && descr->descr) {
- 		if (reg & descr->mask) {
- 			ret =3D snprintf(str, size, "\n\t%s, %s",
- 				       descr->type =3D=3D ERR_CORRECTED ?
- 					 "Corrected" : "Uncorrected",
- 				       descr->descr);
-+			if (ret < 0 || ret >=3D size)
-+				break;
- 			str +=3D ret;
- 			size -=3D ret;
- 		}
-@@ -1115,35 +1121,37 @@ static irqreturn_t thunderx_ocx_com_threaded_isr(in=
-t irq, void *irq_id)
-=20
- 	while (CIRC_CNT(ocx->com_ring_head, ocx->com_ring_tail,
- 			ARRAY_SIZE(ocx->com_err_ctx))) {
-+		struct seq_buf s;
-+
- 		tail =3D ring_pos(ocx->com_ring_tail,
- 				ARRAY_SIZE(ocx->com_err_ctx));
- 		ctx =3D &ocx->com_err_ctx[tail];
-=20
--		snprintf(msg, OCX_MESSAGE_SIZE, "%s: OCX_COM_INT: %016llx",
--			ocx->edac_dev->ctl_name, ctx->reg_com_int);
-+		seq_buf_init(&s, msg, OCX_MESSAGE_SIZE);
-+
-+		seq_buf_printf(&s, "%s: OCX_COM_INT: %016llx",
-+			       ocx->edac_dev->ctl_name, ctx->reg_com_int);
-=20
- 		decode_register(other, OCX_OTHER_SIZE,
- 				ocx_com_errors, ctx->reg_com_int);
-=20
--		strlcat(msg, other, OCX_MESSAGE_SIZE);
-+		seq_buf_puts(&s, other);
-=20
- 		for (lane =3D 0; lane < OCX_RX_LANES; lane++)
- 			if (ctx->reg_com_int & BIT(lane)) {
--				snprintf(other, OCX_OTHER_SIZE,
--					 "\n\tOCX_LNE_INT[%02d]: %016llx OCX_LNE_STAT11[%02d]: %016llx",
--					 lane, ctx->reg_lane_int[lane],
--					 lane, ctx->reg_lane_stat11[lane]);
--
--				strlcat(msg, other, OCX_MESSAGE_SIZE);
-+				seq_buf_printf(&s,
-+					       "\n\tOCX_LNE_INT[%02d]: %016llx OCX_LNE_STAT11[%02d]: %016llx"=
-,
-+					       lane, ctx->reg_lane_int[lane],
-+					       lane, ctx->reg_lane_stat11[lane]);
-=20
- 				decode_register(other, OCX_OTHER_SIZE,
- 						ocx_lane_errors,
- 						ctx->reg_lane_int[lane]);
--				strlcat(msg, other, OCX_MESSAGE_SIZE);
-+				seq_buf_puts(&s, other);
- 			}
-=20
- 		if (ctx->reg_com_int & OCX_COM_INT_CE)
--			edac_device_handle_ce(ocx->edac_dev, 0, 0, msg);
-+			edac_device_handle_ce(ocx->edac_dev, 0, 0, seq_buf_str(&s));
-=20
- 		ocx->com_ring_tail++;
- 	}
-@@ -1196,25 +1204,28 @@ static irqreturn_t thunderx_ocx_lnk_threaded_isr(in=
-t irq, void *irq_id)
-=20
- 	while (CIRC_CNT(ocx->link_ring_head, ocx->link_ring_tail,
- 			ARRAY_SIZE(ocx->link_err_ctx))) {
-+		struct seq_buf s;
-+
- 		tail =3D ring_pos(ocx->link_ring_head,
- 				ARRAY_SIZE(ocx->link_err_ctx));
-=20
- 		ctx =3D &ocx->link_err_ctx[tail];
-=20
--		snprintf(msg, OCX_MESSAGE_SIZE,
--			 "%s: OCX_COM_LINK_INT[%d]: %016llx",
--			 ocx->edac_dev->ctl_name,
--			 ctx->link, ctx->reg_com_link_int);
-+		seq_buf_init(&s, msg, OCX_MESSAGE_SIZE);
-+
-+		seq_buf_printf(&s, "%s: OCX_COM_LINK_INT[%d]: %016llx",
-+			       ocx->edac_dev->ctl_name,
-+			       ctx->link, ctx->reg_com_link_int);
-=20
- 		decode_register(other, OCX_OTHER_SIZE,
- 				ocx_com_link_errors, ctx->reg_com_link_int);
-=20
--		strlcat(msg, other, OCX_MESSAGE_SIZE);
-+		seq_buf_puts(&s, other);
-=20
- 		if (ctx->reg_com_link_int & OCX_COM_LINK_INT_UE)
--			edac_device_handle_ue(ocx->edac_dev, 0, 0, msg);
-+			edac_device_handle_ue(ocx->edac_dev, 0, 0, seq_buf_str(&s));
- 		else if (ctx->reg_com_link_int & OCX_COM_LINK_INT_CE)
--			edac_device_handle_ce(ocx->edac_dev, 0, 0, msg);
-+			edac_device_handle_ce(ocx->edac_dev, 0, 0, seq_buf_str(&s));
-=20
- 		ocx->link_ring_tail++;
- 	}
-@@ -1880,22 +1891,25 @@ static irqreturn_t thunderx_l2c_threaded_isr(int ir=
-q, void *irq_id)
+@@ -1880,6 +1880,9 @@ static irqreturn_t thunderx_l2c_threaded_isr(int irq,=
+ void *irq_id)
 =20
  	while (CIRC_CNT(l2c->ring_head, l2c->ring_tail,
  			ARRAY_SIZE(l2c->err_ctx))) {
-+		struct seq_buf s;
++		tail =3D ring_pos(l2c->ring_tail, ARRAY_SIZE(l2c->err_ctx));
++		ctx =3D &l2c->err_ctx[tail];
 +
- 		tail =3D ring_pos(l2c->ring_tail, ARRAY_SIZE(l2c->err_ctx));
- 		ctx =3D &l2c->err_ctx[tail];
-=20
--		snprintf(msg, L2C_MESSAGE_SIZE,
--			 "%s: %s: %016llx, %s: %016llx",
--			 l2c->edac_dev->ctl_name, reg_int_name, ctx->reg_int,
--			 ctx->reg_ext_name, ctx->reg_ext);
-+		seq_buf_init(&s, msg, L2C_MESSAGE_SIZE);
-+
-+		seq_buf_printf(&s, "%s: %s: %016llx, %s: %016llx",
-+			       l2c->edac_dev->ctl_name, reg_int_name, ctx->reg_int,
-+			       ctx->reg_ext_name, ctx->reg_ext);
-=20
- 		decode_register(other, L2C_OTHER_SIZE, l2_errors, ctx->reg_int);
-=20
--		strlcat(msg, other, L2C_MESSAGE_SIZE);
-+		seq_buf_puts(&s, other);
-=20
- 		if (ctx->reg_int & mask_ue)
--			edac_device_handle_ue(l2c->edac_dev, 0, 0, msg);
-+			edac_device_handle_ue(l2c->edac_dev, 0, 0, seq_buf_str(&s));
- 		else if (ctx->reg_int & mask_ce)
--			edac_device_handle_ce(l2c->edac_dev, 0, 0, msg);
-+			edac_device_handle_ce(l2c->edac_dev, 0, 0, seq_buf_str(&s));
-=20
- 		l2c->ring_tail++;
- 	}
+ 		snprintf(msg, L2C_MESSAGE_SIZE,
+ 			 "%s: %s: %016llx, %s: %016llx",
+ 			 l2c->edac_dev->ctl_name, reg_int_name, ctx->reg_int,
 --=20
 2.55.0.1032.g73a4cd73de-goog
 
