@@ -1,57 +1,57 @@
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10EA3B42EF
-	for <loongarch@lists.linux.dev>; Tue, 15 Sep 2026 08:20:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F7E93E5EE7
+	for <loongarch@lists.linux.dev>; Tue, 15 Sep 2026 08:20:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789460464; cv=none; b=RfusRB5C6Ta2Ka7ezHGO49oyz/luaRz0oAMh5KUUCypx6e4rH4IHdkGVHxNvYsn88rxl3YvRDYhwtFKiQLO8O5ebrllVaoD/peA/XpDTz8tdX/zKWU8rDn3lkRfH/LB5f0ClU1akYzb1+GQtBiHdeesg8EASHt4ow1UzvrOUDkM=
+	t=1789460472; cv=none; b=FVBqqzUYeGJbejNyckzJuU6OMLveo/BU/lC7gRwPlo/rUKJBkAawkuAJl5gJzdy+Vmmg82HglM+xeG+q1MZiMJQT57dDiyzAmjvxBjGW+ohuW/+mGOBm/4+tlEv+9UROwndYI7SE2R1guXdypp1ZAph8Y8tm/nR8anL624sinvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789460464; c=relaxed/simple;
-	bh=zW9p0CztRSiZVUTiJTuEFyMkjkuMAZaOn1FMnzhmj88=;
+	s=arc-20240116; t=1789460472; c=relaxed/simple;
+	bh=fIMzPvcr9X2eD4+Ac+cNHBPnvQriFstqx8IX88uxT8g=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=NsYvmj/f/p3mLAqeK+mRRSqXR8Oh6/D+/2nzg97/ZgtHmKbITOrts9ugf9nQtIoLJdI0iTE6QKP62sSaVEJexOOtPPDAN2jM4GNtyfIWR9z4W0xEPR0Uhy7p6utLIaU9HRTDq6o/diKd69KpJTwinPhVKJ43f08ZmLMfvAzhMG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eMHLnOTb; arc=none smtp.client-ip=209.85.214.198
+	 To:Cc:Content-Type; b=maID477xn1TCp36bfXdrqcsNUAHE4VxzFi9wV0VD4n0RPZL1UKqjwrnQMXyHWOpABT9T72Uiow+Em4Wy6jHaRQfkEQiqN+M0eMxc2RxSrbpgmFjNxS+IhH6Ldk3Kx3Cwwhj9gPG2V6yjCES/Xe7e2Z79WQ1yx5xFz8ilXnonb/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AMqQVgWd; arc=none smtp.client-ip=209.85.216.69
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eMHLnOTb"
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2dd753a52bbso18791905ad.0
-        for <loongarch@lists.linux.dev>; Tue, 15 Sep 2026 01:20:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AMqQVgWd"
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-39aee9b4cf2so7284976a91.0
+        for <loongarch@lists.linux.dev>; Tue, 15 Sep 2026 01:20:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789460407; x=1790065207; darn=lists.linux.dev;
+        d=google.com; s=20251104; t=1789460414; x=1790065214; darn=lists.linux.dev;
         h=content-transfer-encoding:content-type:cc:to:from:subject
          :message-id:references:mime-version:in-reply-to:date:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=y5tFxAHb/e8uKrTICVzoygvHAjZ6k748iiDqUmGJfRE=;
-        b=eMHLnOTbtlDRF5GE5aCJgPgaAcWEzApngfYYoNmMga4YScfWDi9BXXHHJYBF+6bDDf
-         HNNvv0M7KqJcskasOp+KA5o4obw0YnJBrAGskA35ouO1wFf10pgS88rkTerQjZt//JrU
-         phfPMTF1+ajbopadTHAMArLArJRuqZeGS30HLIITju7zvBWk7lc1LLPaD3pgsYc8wdBq
-         u0/9vbEbYo8kyxgkD6WwyypH7+EGHnef6tao+ZvBeg30Cg33shAMQZvragAlRDn1rDH3
-         GawiAnknFZeLqpk9UlzK90rvrhMW0md0/9AYVSafbLsO5dinDekQkVv3uGmhUmbwE4ok
-         fXUg==
+        bh=uYw3XH3TVDlWH5yZkMBbor+NJ9bN2wpB4N7ncSus1u4=;
+        b=AMqQVgWdyrq1AumNF2BAavvEc1IdbNzx8nB62MGYlWr4aHGhkHpu8wktfOzQuRsD/K
+         at7FlmOoyYRHz3jOgIvmIKIeJDM6VR71oPTlRGXBbFC4z9CQf1kMBk3AGHP72iErqZ0b
+         uLRlE3k/yNsx16skBF2K5g2izKYFrjYuAXGmXxlkL8RhF6W/Kw0LWYQswa/aNoxBOn6N
+         JgszjWiNXOEtfPVSacP+ssnXfvUunWkQTNOrflFjCb1AjJ4/BkDGIGPSqcR7E8Zr+0vS
+         YQ5z24LHz3FFV2XxbcdTIzjRcRKrJOIfZlCk84MIkhW4yU3L4Izpz+y/NLo4bYpIRdW5
+         ynGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789460407; x=1790065207;
+        d=1e100.net; s=20260707; t=1789460414; x=1790065214;
         h=content-transfer-encoding:content-type:cc:to:from:subject
          :message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=y5tFxAHb/e8uKrTICVzoygvHAjZ6k748iiDqUmGJfRE=;
-        b=Vq92GB/Pk6Q0OeJm98VdgEUZiwUmvLoCp3RDti60YrKoFOlCQ4rcW/BwdhV7cJIcoF
-         HrLPPzaNas+Llct8qemPQE+cub2IjcCagYbVtaF+b3hevHl64eWI5pMIXp5ZrPxPkXcR
-         ErUp2QIX/W4wl4/tkRC+v1lp2aan7gnO9c4deG2MA1ob49pzfsaPi3pcxLrlBmKVtJ5x
-         EKj99TXm2m5FCKqXV4cNOoq2K7zwbaRb1S0ut7rTcyZLvHF5Z7gW9lOi3+svcw+Z1iLY
-         d+soO3KseRyPAVkh5ysZlLoJa9sfcy8/E59Wn6XGc7aYIeHsrJGiD3b4XIU/YVUr6+0W
-         p84A==
-X-Forwarded-Encrypted: i=1; AKwUvBw9KYNKaRau4o8MjQ91SAPTxJV7ipt/+p/fgF25EBtglRcaoLr0umpyKR/I7JaHKKIsVlhrh+QJIkE=@lists.linux.dev
-X-Gm-Message-State: AFuF++kBgPO8VRM9iONOmE0fvkrgkENrKE/y/O5DcoUeUAJMV2xnjHWo
-	XyXGsVBmpFkNuk3mgd2GA0bGXSfZKAUep8mAfF9nd3Oe3O8OFjmYpzIDQjqZoqdP9mKmTEAKvqh
-	6
-X-Received: from plav12.prod.google.com ([2002:a17:902:f0cc:b0:2dd:3949:eb03])
- (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:c40d:b0:2db:5c0a:f184
- with SMTP id d9443c01a7336-2dd6c6fc4f3mr121827545ad.17.1789460406752; Tue, 15
- Sep 2026 01:20:06 -0700 (PDT)
-Date: Tue, 15 Sep 2026 08:18:31 +0000
+        bh=uYw3XH3TVDlWH5yZkMBbor+NJ9bN2wpB4N7ncSus1u4=;
+        b=Fl2yvj6nAzvGIVZ4FXylXj52BhgK+eFXCatNI3bHDb/Vqk2eUwSMiAmq2ebXJNwU5U
+         LYpn6wduDmUgNykdvwQS8FeW67d112zSjCkQm0lqjN0vomEErsgt2XAwa7wA+tG5rQET
+         8IS2UQPSXQWH8hsBB/4KEaRPShbJ+1ZGwkJNhQ+CyHYaeNqKSg8nar2srYr/flp+nk4E
+         1dujnOX5YqyXxGrzc27VBmYSBdRXIOtKuOw+u+B2HrCx13Cv3penyYmS/EAvfoRWfTmD
+         oBrJnUvn7NZCq1nOpEBmQk6LxXZ6mXzjl9dVmaxtFC58Y5aRXp5RGp3m2Jgy2Fc1NoxL
+         lj6w==
+X-Forwarded-Encrypted: i=1; AKwUvBzVZr/fN1WeItnBXqC2D+wsY1BcxCV4mh+aY/C9S/mPZy/83iEAFE7ME63Dg5+gNFQMP3EuhZwv7bQ=@lists.linux.dev
+X-Gm-Message-State: AFuF++kwF1DzjO/N5qmv0zQ76DkC2Kl47U4tHUpcjcg4bH45l43hpKhU
+	/ckxtNQWOSGcceTRHfb+fmDJlOhisU+UXF0sVyivxExehyFgRm4xaErRII4qcf1oQRRso0ZP/NP
+	h
+X-Received: from pgap5.prod.google.com ([2002:a63:4205:0:b0:cc4:33fd:a4f7])
+ (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:6d8a:b0:3db:3e1c:8585
+ with SMTP id adf61e73a8af0-3db4063b18fmr14587917637.27.1789460412692; Tue, 15
+ Sep 2026 01:20:12 -0700 (PDT)
+Date: Tue, 15 Sep 2026 08:18:38 +0000
 In-Reply-To: <20260915081910.4142719-1-morbo@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -61,8 +61,8 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20260915081910.4142719-1-morbo@google.com>
 X-Mailer: git-send-email 2.55.0.1032.g73a4cd73de-goog
-Message-ID: <20260915081910.4142719-15-morbo@google.com>
-Subject: [PATCH 14/28] ALSA: usb-audio: Refactor append_ctl_name() to use snprintf()
+Message-ID: <20260915081910.4142719-22-morbo@google.com>
+Subject: [PATCH 21/28] NFS: nfsroot: Refactor root_nfs_cat() to use snprintf()
 From: Bill Wendling <morbo@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: Bill Wendling <morbo@google.com>, codemender-patching+linux@google.com, 
@@ -123,18 +123,18 @@ Cc: Bill Wendling <morbo@google.com>, codemender-patching+linux@google.com,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-In preparation for removing the deprecated strlcat() API[1], replace the
-strlcat() call in append_ctl_name() with strlen() and snprintf(),
-preserving its return value semantics (the total length of the string it
-attempted to create).
+root_nfs_cat() computes the length of "dest" with strlen(), but then uses
+up to two strlcat() calls to append a comma separator and "src",
+rescanning "dest" each time.
 
-Also replace an open-coded strlcat() call in build_connector_control()
-with append_ctl_name().
+In preparation for removing the deprecated strlcat() API[1], use the
+already-computed length and a single snprintf() call to append the
+optional comma and "src", returning -1 if the result is truncated.
 
 Link: https://github.com/KSPP/linux/issues/370 [1]
 Cc: codemender-patching+linux@google.com
-Assisted-by: CoPilot:Claude-3-5-Sonnet [editor_update_file, shell_command_r=
-un]
+Assisted-by: CoPilot:Claude-3.5-Sonnet [editor_update_file, make_kernel_bui=
+ld_single_file]
 Signed-off-by: Bill Wendling <morbo@google.com>
 ---
 Cc: Russell King <linux@armlinux.org.uk>
@@ -248,38 +248,34 @@ Cc: devel@lists.orangefs.org
 Cc: linux-hardening@vger.kernel.org
 Cc: linux-sound@vger.kernel.org
 ---
- sound/usb/mixer.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ fs/nfs/nfsroot.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
-index ecaa8bc08d7c..f64ecad4e77e 100644
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -1722,7 +1722,11 @@ const struct snd_kcontrol_new *snd_usb_feature_unit_=
-ctl =3D &usb_feature_unit_ctl;
-  */
- static size_t append_ctl_name(struct snd_kcontrol *kctl, const char *str)
+diff --git a/fs/nfs/nfsroot.c b/fs/nfs/nfsroot.c
+index 432612d22437..a28208414aec 100644
+--- a/fs/nfs/nfsroot.c
++++ b/fs/nfs/nfsroot.c
+@@ -173,12 +173,15 @@ static int __init root_nfs_cat(char *dest, const char=
+ *src,
+ 			       const size_t destlen)
  {
--	return strlcat(kctl->id.name, str, sizeof(kctl->id.name));
-+	size_t len =3D strlen(kctl->id.name);
+ 	size_t len =3D strlen(dest);
++	int ret;
+=20
+-	if (len && dest[len - 1] !=3D ',')
+-		if (strlcat(dest, ",", destlen) >=3D destlen)
+-			return -1;
++	if (len >=3D destlen)
++		return -1;
+=20
+-	if (strlcat(dest, src, destlen) >=3D destlen)
++	ret =3D snprintf(dest + len, destlen - len, "%s%s",
++		       (len && dest[len - 1] !=3D ',') ? "," : "", src);
 +
-+	if (len >=3D sizeof(kctl->id.name))
-+		return len + strlen(str);
-+	return len + snprintf(kctl->id.name + len, sizeof(kctl->id.name) - len, "=
-%s", str);
++	if (ret < 0 || ret >=3D destlen - len)
+ 		return -1;
+ 	return 0;
  }
-=20
- /*
-@@ -2090,7 +2094,7 @@ static void build_connector_control(struct usb_mixer_=
-interface *mixer,
- 	}
-=20
- 	if (check_mapped_name(map, kctl->id.name, sizeof(kctl->id.name)))
--		strlcat(kctl->id.name, " Jack", sizeof(kctl->id.name));
-+		append_ctl_name(kctl, " Jack");
- 	else
- 		get_connector_control_name(mixer, term, is_input, kctl->id.name,
- 					   sizeof(kctl->id.name));
 --=20
 2.55.0.1032.g73a4cd73de-goog
 
