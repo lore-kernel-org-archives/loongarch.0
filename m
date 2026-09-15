@@ -1,57 +1,57 @@
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BB8843DEC0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 946B045A2B4
 	for <loongarch@lists.linux.dev>; Tue, 15 Sep 2026 08:19:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.197
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789460428; cv=none; b=dAo7R5Z4cqJ+FLhYtDKn2SHEYU1aB2qpCLy/5HWY0pvZ3MdefCWaJUO7GGeceLw/pBXyDhyxpnZ93wfBpgK99fmVRbdOTF182YiMnrleLDL70HHCDpnqq6lGGoGs3FOD4fSYjqv5Fm/gjfjLGpi/Fp7JrjA+HFPAluFxM2PpQQw=
+	t=1789460435; cv=none; b=QY6IzBWE++ybnALrHb7cTqyalJkpeCTa1twu5fYaMoW2mBLPVkd7MKfxoksbYgQ7tWfzr8xNAA7yviDFHPE2saFw4IuF4R67VCRXWSdSXdzwz5Pb9t2mcXGF6IlJJ/HR5k0niumvpfJEnFNaAx9dNZI/sjquUhZbPENIMHBU7Ek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789460428; c=relaxed/simple;
-	bh=NfZ3UTUNDbDjVdxNaJ9EQv1Rzk566CEKZbIH1K+eaM8=;
+	s=arc-20240116; t=1789460435; c=relaxed/simple;
+	bh=r5g1LIk48i14U2vfSIgapr+8j4d1ay+VHM72YHjOSgk=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=YYMoglulXxJjzwVIy35Y3qrmPct7/Uzo6SOb9WkAaM9LreMJGwTb3xLw2Ke1LW9151LAHXFGK1/IJw2XPmNgs/yb2ZWyK/BDLmfLCdfhCBHXa3EAIQ5SgvB+5ytMyfksoPL6+k8zjQCcZ0C5hP1yMlH4uLkoyZeTI4P83guN21o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qCDtu2S+; arc=none smtp.client-ip=209.85.215.197
+	 To:Cc:Content-Type; b=FBWKkyfWJ5/QnHylwfp0xYjY6m6gI4bMAfkpLLf7vYcVJSY5eFc42j9IKW4e6eFqcPn1LIuRk86nqftlfycQj+cZugtiHOocqSaD+Co5McrIRGSTh9INEtCtttaelOpXrGxZxSe+k2S0VI/jhgtiwTxOHvxwYsVbBFrGK8jS9iM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IJO5B2Dl; arc=none smtp.client-ip=209.85.215.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qCDtu2S+"
-Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-cc4c1fc9ceaso3462541a12.3
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IJO5B2Dl"
+Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-cc1bbd7d6e6so3348265a12.3
         for <loongarch@lists.linux.dev>; Tue, 15 Sep 2026 01:19:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20251104; t=1789460394; x=1790065194; darn=lists.linux.dev;
         h=content-transfer-encoding:content-type:cc:to:from:subject
          :message-id:references:mime-version:in-reply-to:date:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=fp8wJxWuumatGVjI+YCt9Q6O6hUP8tXGtI5nMGsUbio=;
-        b=qCDtu2S+bjhWRkzYSmRuPcY7PUB8BMXC4ANnPUoEg1QZVsQlzQ/OKh8U1wK3sG7hVp
-         SXaokw9Fq+IjM3bCFxugfp4jXXrDZUoK7qsNIi1tKxraezot35F3a6yjoIELOlvOsP3c
-         koFERwOVZpnJcQ3ofzygX03K0Q7K7IuXfaydkpUh6SvBPIdirSfmBNN+Hc+mNwSpqlcB
-         G9SDC/9PddQQSHobGvuzR52/bVFfAMYNKwUEzt3E7k5umueYJikUWbULdPn9hCfd9wLE
-         yf4XxBiDzthjRYP4sr15A4C+uTv/zvJGRtNQCtMXEp2jlM85j4oUHPwGymiyOn4U5c5i
-         Zubw==
+        bh=eIty82Ymjj64Fl6mn4Z3/QHhmY1e0QRFUR4BQSE5AwY=;
+        b=IJO5B2DlAB3TwbsZ5+809apuTL65/B3/DSRW2eXhfurIzOdPb6P9bU5rj/6lfVbCil
+         kCLsnG49L8qpvAVuIiCZ30J/z4FweKrd5nYP2fyByPFTj6AdqGMyjfHA7S780t+PUHSw
+         QiuiH5gTH/K3QCtK+E5wgHlK55+lm+7D+H8beZJ5eqWEBoKk2eYlWTB1ntnGfBNsdLzK
+         7SK1muQNvl2408eNyZ9xWNm0zXxrdlLqioKWPr7H5Fqv5msg+8XZm+7AFb/6pif+KBmp
+         uY1Pe1AQinyyt+UsC2/xhwGpMpeBLusSiF8oK5IJNJDjdjU92I0dphBn042nW9pKz1uO
+         s8zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20260707; t=1789460394; x=1790065194;
         h=content-transfer-encoding:content-type:cc:to:from:subject
          :message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=fp8wJxWuumatGVjI+YCt9Q6O6hUP8tXGtI5nMGsUbio=;
-        b=WK3ikYsrfLhP0G2+jPq2w7aCwd7WYd7s+oz98kvL6BLzPWviB1+z3TMZaHcHo2Ld6d
-         UZ+h+BU8A7o4n2jtzpck+gkFRG7MB157usaIQpbO4m2morYQYoyJtK12MA1slxjx834r
-         +zf+s6FRu7e+YDcc7ISWBMApXL8bNLopO8GIxaFDsbfiFz7eb0tUyB/6LB1DgnPVvC09
-         0D3Xvv/7ohd/957PsdmuaxyJhVGql3H4zqIB+FN4z11ZJOLnlLY8/1TU3TkyX3liTEth
-         y2xFGElr5XX6FbaKXOG74L46p4zp5nBhaHJlCyaZ5gZmWTxDrEBq1xk4bsUd0hIPVlcl
-         cB9Q==
-X-Forwarded-Encrypted: i=1; AKwUvBx+S/yaAzF/jaYJ4WyHYQ+MUX6g9B7DwpQkJQYnOY7bSB8N+3gtqxwwufin7np2Gw3Fk2rINJPVFcM=@lists.linux.dev
-X-Gm-Message-State: AFuF++njHRYTrS0BKWLbkdR1twDCUCfm30+m81J8+V8iFPVZZ/xhU3XI
-	Bug1ex3W9eSf8y+SsXZVOrrNRPYIKkFf6TjlJSGJwr0uVfedEsUaBNgKDsrkcC78YgFmP5u1A2i
-	k
-X-Received: from plbkw15.prod.google.com ([2002:a17:902:f90f:b0:2db:5cac:a627])
- (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ffd0:b0:2bf:27b2:4b80
- with SMTP id d9443c01a7336-2dd8384ce53mr639785ad.14.1789460393875; Tue, 15
+        bh=eIty82Ymjj64Fl6mn4Z3/QHhmY1e0QRFUR4BQSE5AwY=;
+        b=v/9661UI1L0uR6PINS0Xifo4SMMhAkH5H4HjMmJRQDejeFOM4+8Y3pX3Ln2akjPX2m
+         je4TH/mK+t7+UE64hp4FJYOfF0ezszgQigzpcRP8NfrbfQbffpdz+M3FwX+FeCfBxOsb
+         21mptOdzyzDAMbwEco6yxXEvWow5uA+11AT2KZujPgp7fntBPUXQR482N3nA0aEhA3Tw
+         lA+r7D6mchfD0k8T0EaB9mkAR+mfa2CXJ+pKBkJJwsF8f3WVe5u1l/ksUc1WuaDb58oJ
+         LUmME3UFcylD28svSL9aJH2B+z5WSMaEhW2O1Xup8GFa1WOQI0rJPH+AK0VwdMjEC8bu
+         pzOg==
+X-Forwarded-Encrypted: i=1; AKwUvBwbdYnhwtuA0h4us43iwYtSbWzB7h4I49UcCbq/QQZ2jPy+PP1pSOhJVurkPBONTYyihR3ZYjPcfYI=@lists.linux.dev
+X-Gm-Message-State: AFuF++l4yKXBkw6doYTqefe+HizqFJWFJ3v+iBInXwtojNTNDo45zUpr
+	/TDK6s+N3Qy06LF2luOknal4sQBx4Vgb8WwfmBV0vH0b4/BKOI7NbkbZYo8fW72a7REG7gZd9jt
+	w
+X-Received: from pghd13.prod.google.com ([2002:a63:fd0d:0:b0:cc4:37f6:e897])
+ (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:12c7:b0:3d3:ae1f:d7f4
+ with SMTP id adf61e73a8af0-3dd528bd7dbmr272615637.20.1789460393063; Tue, 15
  Sep 2026 01:19:53 -0700 (PDT)
-Date: Tue, 15 Sep 2026 08:18:23 +0000
+Date: Tue, 15 Sep 2026 08:18:22 +0000
 In-Reply-To: <20260915081910.4142719-1-morbo@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -61,8 +61,9 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20260915081910.4142719-1-morbo@google.com>
 X-Mailer: git-send-email 2.55.0.1032.g73a4cd73de-goog
-Message-ID: <20260915081910.4142719-7-morbo@google.com>
-Subject: [PATCH 06/28] comedi: comedi_bond: Refactor strlcat() to seq_buf in do_dev_config()
+Message-ID: <20260915081910.4142719-6-morbo@google.com>
+Subject: [PATCH 05/28] ALSA: usb-audio: Refactor usb_audio_make_longname() to
+ use seq_buf
 From: Bill Wendling <morbo@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: Bill Wendling <morbo@google.com>, codemender-patching+linux@google.com, 
@@ -123,19 +124,18 @@ Cc: Bill Wendling <morbo@google.com>, codemender-patching+linux@google.com,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-do_dev_config() builds a space-separated list of bonded devices in
-devpriv->name by formatting each "minor:subdev " pair into a temporary
-stack buffer with snprintf() and appending it with strlcat() in a loop.
+usb_audio_make_longname() builds card->longname incrementally from the
+vendor/manufacturer name, shortname, USB device path, and USB speed using
+strscpy(), strlcat(), and manual buffer offset calculations for
+usb_make_path().
 
-In preparation for removing the deprecated strlcat() API[1], use struct
-seq_buf and seq_buf_printf() to format each entry directly into
-devpriv->name. This avoids repeated rescanning of devpriv->name and
-eliminates the temporary buffer.
+In preparation for removing the deprecated strlcat() API[1], refactor
+usb_audio_make_longname() to use struct seq_buf to track the buffer
+position and remaining space across these operations.
 
 Link: https://github.com/KSPP/linux/issues/370 [1]
 Cc: codemender-patching+linux@google.com
-Assisted-by: SecurityEngineerAgent:Gemini2.5 [editor_update_file, make_kern=
-el_build_single_file]
+Assisted-by: Gemini:3.5-pro [git, make, checkpatch]
 Signed-off-by: Bill Wendling <morbo@google.com>
 ---
 Cc: Russell King <linux@armlinux.org.uk>
@@ -249,65 +249,114 @@ Cc: devel@lists.orangefs.org
 Cc: linux-hardening@vger.kernel.org
 Cc: linux-sound@vger.kernel.org
 ---
- drivers/comedi/drivers/comedi_bond.c | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+ sound/usb/card.c | 58 ++++++++++++++++++++++++++++++++----------------
+ 1 file changed, 39 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/comedi/drivers/comedi_bond.c b/drivers/comedi/drivers/=
-comedi_bond.c
-index 8e10ecab4f0d..a10cfbd04c72 100644
---- a/drivers/comedi/drivers/comedi_bond.c
-+++ b/drivers/comedi/drivers/comedi_bond.c
-@@ -39,6 +39,7 @@
-=20
- #include <linux/module.h>
+diff --git a/sound/usb/card.c b/sound/usb/card.c
+index 9307da95efbe..bdca8085fca6 100644
+--- a/sound/usb/card.c
++++ b/sound/usb/card.c
+@@ -25,6 +25,7 @@
+ #include <linux/list.h>
+ #include <linux/slab.h>
  #include <linux/string.h>
 +#include <linux/seq_buf.h>
- #include <linux/slab.h>
- #include <linux/comedi.h>
- #include <linux/comedi/comedilib.h>
-@@ -170,10 +171,11 @@ static int do_dev_config(struct comedi_device *dev, s=
-truct comedi_devconfig *it)
- {
- 	struct comedi_bond_private *devpriv =3D dev->private;
- 	DECLARE_BITMAP(devs_opened, COMEDI_NUM_BOARD_MINORS);
-+	struct seq_buf s;
- 	int i;
+ #include <linux/ctype.h>
+ #include <linux/usb.h>
+ #include <linux/moduleparam.h>
+@@ -651,7 +652,9 @@ static void usb_audio_make_longname(struct usb_device *=
+dev,
+ 	struct snd_card *card =3D chip->card;
+ 	const struct usb_audio_device_name *preset;
+ 	const char *s =3D NULL;
+-	int len;
++	struct seq_buf sb;
++	char *buf;
++	size_t size;
 =20
- 	memset(&devs_opened, 0, sizeof(devs_opened));
--	devpriv->name[0] =3D 0;
-+	seq_buf_init(&s, devpriv->name, sizeof(devpriv->name));
- 	/*
- 	 * Loop through all comedi devices specified on the command-line,
- 	 * building our device list.
-@@ -250,15 +252,9 @@ static int do_dev_config(struct comedi_device *dev, st=
-ruct comedi_devconfig *it)
- 			}
- 			devpriv->devs =3D devs;
- 			devpriv->devs[devpriv->ndevs++] =3D bdev;
--			{
--				/* Append dev:subdev to devpriv->name */
--				char buf[20];
+ 	preset =3D lookup_device_name(chip->usb_id);
 =20
--				snprintf(buf, sizeof(buf), "%u:%u ",
--					 bdev->minor, bdev->subdev);
--				strlcat(devpriv->name, buf,
--					sizeof(devpriv->name));
--			}
-+			/* Append dev:subdev to devpriv->name */
-+			seq_buf_printf(&s, "%u:%u ", bdev->minor, bdev->subdev);
- 		}
- 	}
+@@ -667,44 +670,61 @@ static void usb_audio_make_longname(struct usb_device=
+ *dev,
+ 		s =3D preset->vendor_name;
+ 	else if (quirk && quirk->vendor_name)
+ 		s =3D quirk->vendor_name;
+-	*card->longname =3D 0;
+-	if (s && *s)
+-		strscpy(card->longname, s);
+-	else if (dev->manufacturer && *dev->manufacturer)
+-		strscpy(card->longname, dev->manufacturer);
 =20
-@@ -267,6 +263,8 @@ static int do_dev_config(struct comedi_device *dev, str=
-uct comedi_devconfig *it)
- 		return -EINVAL;
- 	}
-=20
-+	seq_buf_str(&s);
+-	if (*card->longname) {
+-		strim(card->longname);
+-		if (*card->longname)
+-			strlcat(card->longname, " ", sizeof(card->longname));
++	seq_buf_init(&sb, card->longname, sizeof(card->longname));
 +
- 	return 0;
++	if (s && *s)
++		seq_buf_puts(&sb, s);
++	else if (dev->manufacturer && *dev->manufacturer)
++		seq_buf_puts(&sb, dev->manufacturer);
++
++	if (seq_buf_used(&sb)) {
++		char *trimmed;
++
++		seq_buf_str(&sb);
++		trimmed =3D strim(card->longname);
++		if (trimmed !=3D card->longname)
++			memmove(card->longname, trimmed, strlen(trimmed) + 1);
++		sb.len =3D strlen(card->longname);
++		if (sb.len)
++			seq_buf_putc(&sb, ' ');
+ 	}
+=20
+-	strlcat(card->longname, card->shortname, sizeof(card->longname));
++	seq_buf_puts(&sb, card->shortname);
+=20
+-	len =3D strlcat(card->longname, " at ", sizeof(card->longname));
++	seq_buf_puts(&sb, " at ");
+=20
+-	if (len < sizeof(card->longname))
+-		usb_make_path(dev, card->longname + len, sizeof(card->longname) - len);
++	size =3D seq_buf_get_buf(&sb, &buf);
++	if (size > 0) {
++		int path_len =3D usb_make_path(dev, buf, size);
++
++		if (path_len >=3D 0)
++			seq_buf_commit(&sb, path_len);
++		else
++			seq_buf_set_overflow(&sb);
++	}
+=20
+ 	switch (snd_usb_get_speed(dev)) {
+ 	case USB_SPEED_LOW:
+-		strlcat(card->longname, ", low speed", sizeof(card->longname));
++		seq_buf_puts(&sb, ", low speed");
+ 		break;
+ 	case USB_SPEED_FULL:
+-		strlcat(card->longname, ", full speed", sizeof(card->longname));
++		seq_buf_puts(&sb, ", full speed");
+ 		break;
+ 	case USB_SPEED_HIGH:
+-		strlcat(card->longname, ", high speed", sizeof(card->longname));
++		seq_buf_puts(&sb, ", high speed");
+ 		break;
+ 	case USB_SPEED_SUPER:
+-		strlcat(card->longname, ", super speed", sizeof(card->longname));
++		seq_buf_puts(&sb, ", super speed");
+ 		break;
+ 	case USB_SPEED_SUPER_PLUS:
+-		strlcat(card->longname, ", super speed plus", sizeof(card->longname));
++		seq_buf_puts(&sb, ", super speed plus");
+ 		break;
+ 	default:
+ 		break;
+ 	}
++
++	seq_buf_str(&sb);
  }
 =20
+ static void snd_usb_init_quirk_flags(int idx, struct snd_usb_audio *chip)
 --=20
 2.55.0.1032.g73a4cd73de-goog
 
