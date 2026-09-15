@@ -1,169 +1,321 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14815441606
-	for <loongarch@lists.linux.dev>; Tue, 15 Sep 2026 07:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A08D3BBFC0
+	for <loongarch@lists.linux.dev>; Tue, 15 Sep 2026 08:19:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789456809; cv=none; b=Zq7DW6pJrsY/tVjjR9xxIOH6BMMa1uRrnFgclFtUOv+73aHFxlNUrPHidFA5FYfkaN0q+YUay4HMvt66hYpq186+P6F7T63n+WpktL1i1psE9L1Lm/D8EipDznJbdXnjnoaFwzf0Lvj1BulFe1B/xRl8ZDTA0jlYDGVDhmhSH0Q=
+	t=1789460394; cv=none; b=CRPK/6M2Wzce6oWQ5e4PhHas2JSlz8vyM8klQNcw1HKQh2khvTBzB3yWrUIZLNHnbSmj3zLfGUVfwRPA/i3ek/dYM7ilEzZKbtkz1yaBMl/l9peme7a5cGvOsajEEJ9o4GuYkgLIKD7YllRxOUJwYedHuwBjyJO4TSiM5oVRwvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789456809; c=relaxed/simple;
-	bh=01ysVpcOE6R2esRBaW2jUf1jKl/VdIRiVfhxn++neYE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=j8DXcdizOmCzXoOxABzwM34KLKbl6Rw+A1oQclOkiYML0ZKCEhEvMYvZSX1oUyynUek3s7vlKcyHhxxJlaO6NKo6qjhJ+b/WURX2PBseSp4B/sR9+hA1BbonZvzhHC7wmlpq/aSKxkb3fnBwQ1AAD6cZVEFxrW2abFFksBBwuFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=fNhLWy3I; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=NzYGmKPJ; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1789460394; c=relaxed/simple;
+	bh=hwfRqXyDJjrWnLmHCCnSyQ5c6I5VKxxwWvdwR4gczDI=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Nfb1YgGZcloS2Q7xRpMFmorjPgR6kDHski59R1ZaAna+N6IrrwzL1QNGV2pqL/LzMMV4pZcZtm+3IOh2DB9xXFlf7C+P/mq2+zB1cYo+hRLL9WrOnU5peCoOObxf6tjvHk0OlgSsuzFIkOYQATqlk19lH6ETEiJXX5Hz6ccJkdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kMVFtuly; arc=none smtp.client-ip=209.85.210.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="fNhLWy3I";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="NzYGmKPJ"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68F6Z7Xw2167822
-	for <loongarch@lists.linux.dev>; Tue, 15 Sep 2026 07:20:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=SehUk9k3CRKJXFemuL5gzZ7zkv1/5zSVASo
-	RxDQ27qI=; b=fNhLWy3IXQ6E4lIC3bSqx4X+J76FF6WF61ZA7ngB2xj1xapYeN5
-	BfRVHzDqpfQgf4oQ393ZXCI880pwUOmshrlouW9+aNb9qta+hcTjXaloBnLuxkZR
-	uebiuNr0IxuP2eNegTY1hPir9w7M9mKhdbF6b++sZP8aWWrR7xzTMtpw3yk9GobQ
-	tyFdrJcsmxa506Jrb+jneZvyVq4cYSwIeJ5m9DbjekShQ745+UNTBGIop65sdRCJ
-	Wz2uRhDMLHvZYyAJ77cquzv+UbNu+gXdYP30SQNxe7jlhKXmTIGMk5Gm+RFxOT1J
-	4Vf06pNo3oC+3h/aiB/JFfBFnJleCTklpgw==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4gpx4s8tv8-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <loongarch@lists.linux.dev>; Tue, 15 Sep 2026 07:20:07 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-9390a2c895bso977332185a.0
-        for <loongarch@lists.linux.dev>; Tue, 15 Sep 2026 00:20:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kMVFtuly"
+Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-86a880e91f0so7235937b3a.2
+        for <loongarch@lists.linux.dev>; Tue, 15 Sep 2026 01:19:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1789456806; x=1790061606; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=SehUk9k3CRKJXFemuL5gzZ7zkv1/5zSVASoRxDQ27qI=;
-        b=NzYGmKPJPLMgwg0kCRSnOyLpg21Fn8AHqQF3LEruSTaWz4cXaWPQsbtxmOx++b9lGX
-         daqXEqUnyvfZhxX6j+ob4flxQvYcMNAZ4oIX/R/nqWbAMbHhZXQHQoQDER/WU209YC+T
-         aUZALK0MWfOPkuIj5fzzOCUnWinHqC6KbbjNKfELtibrxCauLZVMrPwsUPeLMrW9b5qF
-         7mXOKZuWN8+ZtGBkoa/aeKT6Qa8H7PvXqKmzTOo4Z9o8BVPBhcIkpv8ok307Xiy/rX8n
-         GyOeu5lxc7ro5+60f0i1qRVZB1fFOLzC7mBitC58hU1bHYLipGGhAfo1bVSasLtAhMoz
-         JS7A==
+        d=google.com; s=20251104; t=1789460390; x=1790065190; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:from:subject
+         :message-id:mime-version:date:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=cTJ+iDaVRz+oQczzBBEu9x7Pp5Lm2h3B0iGAZglcmy4=;
+        b=kMVFtulyCyWNQZ7Qp/Kw6JvcPsE/bYzN7bhF81gH5qDmI51CRXIoUAo3pZb5RF6svi
+         UJiHwoXkQ/UXwXD1D5nEbn5hqzFT+2ysORI2u94Cp3PJyaWO22QpyKnG/GrnkkADAF1F
+         MnqbQMIEfIrv8L1iV/Y1LdpOzoslnc5PKsYXW2k/wic3CfCjPA++P2lruoCsGW9IkB9C
+         B88220gNnVglnd+FrVGGKYmnU2S5pC68vfkrWaZu+uPr4ukb0EyMxzT4HKU3hDRa9cjl
+         IVxzMML0zc/PIYqRLT725RJjIEhU7YLEESOHAH2RTXivXA1bz2x7tx/if4e3dHkAarUf
+         OVHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789456806; x=1790061606;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=SehUk9k3CRKJXFemuL5gzZ7zkv1/5zSVASoRxDQ27qI=;
-        b=VrmL8Ec7NhJKXZCs4hthREqFvOyrLALm6Y/h7O2C78QKiwb1591wh4HuvktDqD0VEs
-         ePUFIJ12FTz7f9YZ/bw5IBPG6C9Wo8/ZGU/qN+ggM2IwC4rqm+VboVGvTrvnS8ZKX1+4
-         mZu3c64owZx6wEIdAXAeZy/wH758ErnI85Gj6lWuxUm2ov1I/BZCA+FVSxAxU70ePmI1
-         4YECN2MkO4GAHcdyKb5klLJVHmyCTRgHFw0aoYGiN7sv+V7fpqLbtAPGkXdB02RnlVdB
-         IOTRgk1BnubVkjkGGu6KJdq9R9BBLkOXmgZEUmNJp/pQWKEJ/puEFP6vchgaKv5JQD/g
-         PDMg==
-X-Forwarded-Encrypted: i=1; AKwUvBwvXmRZ83Kxqo4HYz9HPfGvo2CSnr0/TOQPOTIHbYH7PCd4HYINQYxl9/M/nnz4vDB8S4gF/6hzUkg=@lists.linux.dev
-X-Gm-Message-State: AFuF++m1JsNloY0vdWHfyN06m8XlOuclAmW2YtVr6eMjluZKTfXhGSXK
-	tamTLBRXOTk2+KxlHdAx8hAwaCiPxtHzgDQ2rTvFBP5Oex8psCvAQcmUUK+inqPhyuCmKDGIN/3
-	cQa68cokWRwsNnvCiosalQk3eMzPU1yNPCKdiKA19xk8ObHEplunTmTPALyRp6gQ=
-X-Gm-Gg: AYBFou3u77Yee0tRJxA2w40eQy7e9epigWN4hTI9zTKDoAF7A//MlWHCtVPmlJ1AFeq
-	UMD4vrIT101q2C642ru9sEe4ONwBwZoq+C6SbujyeYN5x6cagMVrQglDrB+v3hez7Unm8jpMEBl
-	51XQaCBhhuApdlrcEyu50pMQ4bqv7Se4hXfO0SZB0MpHvn6qhjd60gTONAvCw2TfTeYUx+bt80n
-	ttEILkeAEDmIkEdPtpXuy5fN4eH5WCDHJQ8XniPlNicht1FqWZCQbtnWSquZk862l9ehYfgunjH
-	+mPDNlo/GI+3frJaj1G55UYRrCJycsFNUZUIGVcnwWlPeWl36s0P3wrFDgOB9pImEq6+HsGUc3k
-	XdvRWD4iPJHjbpVQ=
-X-Received: by 2002:a05:620a:458e:b0:936:ea0d:ffc3 with SMTP id af79cd13be357-93a29804733mr928465885a.22.1789456806177;
-        Tue, 15 Sep 2026 00:20:06 -0700 (PDT)
-X-Received: by 2002:a05:620a:458e:b0:936:ea0d:ffc3 with SMTP id af79cd13be357-93a29804733mr928463185a.22.1789456805831;
-        Tue, 15 Sep 2026 00:20:05 -0700 (PDT)
-Received: from quoll ([178.197.219.214])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49e7d6a9d1dsm52558805e9.10.2026.09.15.00.20.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Sep 2026 00:20:05 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
-        devicetree@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-Subject: [PATCH] LoongArch: dts: loongson-2k0500: Drop unsupported bus_id in DWMAC
-Date: Tue, 15 Sep 2026 09:20:01 +0200
-Message-ID: <20260915072000.47367-2-krzysztof.kozlowski@oss.qualcomm.com>
-X-Mailer: git-send-email 2.53.0
+        d=1e100.net; s=20260707; t=1789460390; x=1790065190;
+        h=content-transfer-encoding:content-type:cc:to:from:subject
+         :message-id:mime-version:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=cTJ+iDaVRz+oQczzBBEu9x7Pp5Lm2h3B0iGAZglcmy4=;
+        b=l38P3dEJnR6iOLZWUKHo9Sdy+H3vseM6qN7PcpLOWM4E638z+AGrZCnyL7iUbVxRWC
+         piIQwmLZDddCDzmlHSXD2S9EqqhlVgLvj/CeIWP8rhR0mzKyLLGQpTqJjKdnvThNK9Es
+         jEImC13CdXQu+HqWBAh5Xb/edatzkE2ZnndNPcyqetlYaO9FAAzL79lJKyw8HFSlsmo5
+         TkbRgap7zUkdZkTKbMkNEvOq6FPc5lcTuQdyIuBVMehM7lNNh7evbLAOMWoKIX5fvOX0
+         F9maiYl+VF/LdyHgd9bGqDHhsZqye1YjzyM4Myusd4gf+0CAJ7n/AMbK0+KJH74MPSgH
+         pWPw==
+X-Forwarded-Encrypted: i=1; AKwUvBxSRm4VV0KPXCmtfpl5YBiZ3KRHrbsWZxviIf8R0esGv2zdvncT8jw6LRxZPGT31evTmaGfJ0se3U0=@lists.linux.dev
+X-Gm-Message-State: AFuF++nS2gGRxoLdQnuXuEas02Ub/T6u6BaOkmnFIdpWlkgUoPkE5TEm
+	F/92NlgC9B5mXVaARRhdpKGfLIKYmK/qw5FQAJcVot6EVZ99vXNVmZDHhtKK84bj+LPFZUkt54Q
+	/
+X-Received: from pgbo14.prod.google.com ([2002:a63:5a0e:0:b0:cc4:337f:e10f])
+ (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:7d9f:b0:3b4:61f:1fec
+ with SMTP id adf61e73a8af0-3db4038ec7cmr15429477637.2.1789460388838; Tue, 15
+ Sep 2026 01:19:48 -0700 (PDT)
+Date: Tue, 15 Sep 2026 08:18:17 +0000
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=962; i=krzysztof.kozlowski@oss.qualcomm.com;
- h=from:subject; bh=01ysVpcOE6R2esRBaW2jUf1jKl/VdIRiVfhxn++neYE=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBqqPGg79k/3DTgj9mfp6dZvto3S7TYprOl7QaXG
- ycXfC0ly0+JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaqjxoAAKCRDBN2bmhouD
- 14BJEACIG5O4D6Y/82v5a81YQ+E5215/HHIm2xtpQ7zEcuv0wkf49rvEui48I+d6wIUHtbqWoME
- 1x/H1ujHXS+Bl/4g+PjOYTj7wMItPe2JEZC/RhVwVeBFE+nqzN8stsDG9ksJqoedmzguawQqlMp
- y64uLMz4pQniqsbusL/lGrDTGGB4493JCb4b/E4+5pHQwhq7zf38JQg9cSeHNDI+ewKNFR8Rtak
- oSgO5T0fYElXuJ5eTbx3wC1Y8kn+Vvygi1S48BHMPdeNB2299IEVATm4ylvMQluq7fjUvdO5bfd
- /0KcxLu5dJcC51w7QMNtNhaZNJxAWR+1Fxi9ist6h2+RHIJJK0NWFiHBdsuLrBtS9SH7yqv+KNU
- f1/rnLQvRFT+G8sz+egwubfHb31G71Jsli0OvjmdSzFaRWrr+LE7IAb8+1LgYkcmUHwTZG2GkiI
- 2YqTpfS4w4CM+FI7LzVIwpQCeYirKUurWvHKteGrOz5/5C/duLVuR5BucJuGJ2PsSr20zJg738z
- 9xT+UTclXxUQ/geoCdgyvY1B4N0tZugc4htwidwnI3zc1uG0+5JfQy3Dl4PaAiZ512TBu5Hylc1
- DU96VdffdLvZvIFUVe/GHxOj4YlpvO0j8nOAINitd0bg/unplgLS2llB6Ug8aEaCJ8pQFkJmkw8 UsbaXH3rExc4Jcg==
-X-Developer-Key: i=krzysztof.kozlowski@oss.qualcomm.com; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Info: AW1haW4tMjYwOTE1MDEwNCBTYWx0ZWRfXwaBJNosUn5FJ
- rZZMrnFFOk4xlbbA8cuk0BhmesM2/WTk6bfS2iE5FH1dyYsB9EAF4NGHyJLEoW9jdDv5zKFSHgg
- EHZijubq37vbhj58Mrvct4YmzxEimk8=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTE1MDEwNCBTYWx0ZWRfX6zHRHJJmqbzK
- xG3EbfEvaSZK69jpQumH1Ay4VtUrDCWWX+R8blZSvgGm/JpemeDf8CVzev2hGuTh47g8Y1Xk3Zt
- iCSTr+K3xQAfYqYYnOufuY/RSFJ1u8FGwPhSnzG4vCBJ2+kK3nlva29e/r/Zg8/h5JB0PdjKT2b
- uMf9o4ygwNrgR44lFDOJ1WyWp0w9GNZuJxe9j/6bS8gLNW4tQu8rd/ZAK+ogDe3+5w5+A7Dd65l
- QPzEcHxgR2ld5rEQ3nguxB0ifv09yU8QKf1f1rHm5MhNyq67LnT+Xd46Mm1L13HObPt0ZqJjDg1
- ++DrNaa+frkmZAAkoXpaqt8Q/QG3XqK0QfbJM9vbTE8gRHHnhPl5M+7P2g27R3NUFWwVW3+nJHN
- 4csnEx/Ns1MomXeh0PQoftQyC0EGAuvyvG3J1HObW51cgX6vCAAY6P1hUBIoLJ3Brg8fVcArams
- dhbko08L/FJENOLCt/w==
-X-Authority-Analysis: v=2.4 cv=HsDjiETS c=1 sm=1 tr=0 ts=6aa8f1a7 cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=+bKQE0WJfmhK2875HamI0Q==:17
- a=VdqzKS8jKosA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=YMgV9FUhrdKAYTUUvYB2:22 a=EUspDBNiAAAA:8
- a=RHNxK20dIsJZYvHncwQA:9 a=PEH46H7Ffwr30OY-TuGO:22
-X-Proofpoint-GUID: oJmBaAuKms9fOq97_9b08iIEePf7Jh8h
-X-Proofpoint-ORIG-GUID: oJmBaAuKms9fOq97_9b08iIEePf7Jh8h
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-09-15_02,2026-09-14_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 phishscore=0 lowpriorityscore=0 clxscore=1011 adultscore=0
- impostorscore=0 suspectscore=0 spamscore=0 malwarescore=0 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2609040000 definitions=main-2609150104
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.55.0.1032.g73a4cd73de-goog
+Message-ID: <20260915081910.4142719-1-morbo@google.com>
+Subject: [PATCH 00/28] Replace remaining strlcat() call sites with snprintf()/seq_buf()
+From: Bill Wendling <morbo@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: Bill Wendling <morbo@google.com>, Russell King <linux@armlinux.org.uk>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>, 
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Ian Abbott <abbotti@mev.co.uk>, 
+	H Hartley Sweeten <hsweeten@visionengravers.com>, Tony Luck <tony.luck@intel.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Matthew Brost <matthew.brost@intel.com>, 
+	"=?UTF-8?q?Thomas=20Hellstr=C3=B6m?=" <thomas.hellstrom@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Matthias Schwarzott <zzam@gentoo.org>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Tony Nguyen <anthony.l.nguyen@intel.com>, 
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Arend van Spriel <arend.vanspriel@broadcom.com>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
+	Sylwester Nawrocki <s.nawrocki@samsung.com>, Peter Griffin <peter.griffin@linaro.org>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, Linus Walleij <linusw@kernel.org>, 
+	Anil Gurumurthy <anil.gurumurthy@qlogic.com>, 
+	Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>, "Martin K. Petersen" <mkp@kernel.org>, 
+	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+	Mike Marshall <hubcap@omnibond.com>, Martin Brandenburg <martin@omnibond.com>, Kees Cook <kees@kernel.org>, 
+	Jiri Pirko <jiri@resnulli.us>, Simon Horman <horms@kernel.org>, Chuck Lever <cel@kernel.org>, 
+	Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, 
+	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>, 
+	Kanglong Wang <wangkanglong@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	Qiang Ma <maqianga@uniontech.com>, Randy Dunlap <rdunlap@infradead.org>, 
+	Pengpeng Hou <pengpeng@iscas.ac.cn>, Ard Biesheuvel <ardb@kernel.org>, Breno Leitao <leitao@debian.org>, 
+	Thorsten Blum <blum@kernel.org>, Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lyude Paul <lyude@redhat.com>, 
+	Ashutosh Desai <ashutoshdesai993@gmail.com>, Imre Deak <imre.deak@intel.com>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Johan Hovold <johan@kernel.org>, 
+	Johannes Berg <johannes.berg@intel.com>, 
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>, 
+	Alexander Stein <alexander.stein@ew.tq-group.com>, 
+	Cryolitia PukNgae <cryolitia@uniontech.com>, Jiaming Zhang <r772577952@gmail.com>, 
+	Will Porter <mrwillporter@gmail.com>, Cen Zhang <zzzccc427@gmail.com>, 
+	"=?UTF-8?q?C=C3=A1ssio=20Gabriel?=" <cassiogabrielcontato@gmail.com>, Rong Zhang <i@rong.moe>, 
+	Arun Raghavan <arunr@valvesoftware.com>, linux-arm-kernel@lists.infradead.org, 
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, linux-edac@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org, 
+	linux-input@vger.kernel.org, linux-media@vger.kernel.org, 
+	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev, 
+	brcm80211-dev-list.pdl@broadcom.com, devicetree@vger.kernel.org, 
+	linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-scsi@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	devel@lists.orangefs.org, linux-hardening@vger.kernel.org, 
+	linux-sound@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-There is no "bus_id" property at all defined in the bindings and new DTS
-is not allowed to bring undocumented properties.  Fix dtbs_check
-warning:
+strlcat() is deprecated: like strcat(), it requires re-scanning the
+destination string from the beginning on every call, which is O(n^2)
+when used to build up a string incrementally, and its truncation
+behavior is easy to get wrong. See:
 
-  loongson-2k0500-ref.dtb: ethernet@1f020000 (snps,dwmac-3.70a): bus_id: b'\x00\x00\x00\x00' is not of type 'object', 'integer', 'array', 'boolean', 'null'
+  https://github.com/KSPP/linux/issues/370
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+This series removes the remaining strlcat() call sites in the tree
+(plus the one inside fortify-string.h's strcat() implementation
+itself), replacing each with snprintf(), scnprintf(), or the seq_buf()
+API, whichever best fits the surrounding code.
+
+One unrelated fix is included. While auditing drivers/edac/thunderx_edac.c
+for its strlcat() conversion, "EDAC/thunderx: Fix stale error context in
+thunderx_l2c_threaded_isr()" addresses a pre-existing bug, present since
+the driver's original 2017 commit: thunderx_l2c_threaded_isr() computes
+its ring "tail"/"ctx" once before its drain loop and never recomputes
+them per iteration, unlike the analogous OCX handlers in the same file,
+so it re-reports the same ring entry for every queued error instead of
+draining the ring. It's split out as its own patch, ahead of the
+strlcat() conversion for that file, so it can be reviewed and
+backported independently of the rest of this series.
+
+Bill Wendling (28):
+  ALSA: ac97: Refactor snd_ac97_get_name() to use snprintf()
+  sunrpc: Refactor rpc_sockaddr2uaddr() to use snprintf() instead of
+    strlcat()
+  ARM: atags: Replace strlcat() with snprintf() for cmdline extend
+  scsi: bfa: Use snprintf() in bfa_fcs_fabric_nsymb_init()
+  ALSA: usb-audio: Refactor usb_audio_make_longname() to use seq_buf
+  comedi: comedi_bond: Refactor strlcat() to seq_buf in do_dev_config()
+  scsi: bfa: Use snprintf() in bfa_fcs_fabric_psymb_init()
+  devlink: Refactor strlcat() to seq_buf in
+    __devlink_compat_running_version()
+  drm/dp_mst: Refactor build_mst_prop_path() to use seq_buf
+  of/fdt: Replace strlcat() with snprintf() in
+    early_init_dt_scan_chosen()
+  wifi: brcmfmac: Replace strlcat() with snprintf() in
+    brcmf_fw_alloc_request()
+  fortify: Convert strlcat() to snprintf() in strcat()
+  i40e: Replace strlcat() with snprintf() in i40e_nvm_version_str()
+  ALSA: usb-audio: Refactor append_ctl_name() to use snprintf()
+  orangefs: Use seq_buf for debug help string generation
+  pinctrl: samsung: Use snprintf() to construct pin bank names
+  MIPS: cmdline: Refactor bootcmdline_append() to use snprintf()
+  LoongArch: Refactor bootcmdline_init() to use seq_buf instead of
+    strlcat()
+  x86/setup: Use snprintf() to concatenate builtin and boot command
+    lines
+  parisc: Refactor strlcat() to seq_buf in setup_cmdline()
+  NFS: nfsroot: Refactor root_nfs_cat() to use snprintf()
+  media: si2165: Use snprintf() to format frontend name
+  Input: synaptics_usb - use seq_buf and snprintf() for name and phys
+  EDAC/thunderx: Fix stale error context in thunderx_l2c_threaded_isr()
+  EDAC/thunderx: Replace strlcat() with seq_buf
+  wifi: wil6210: Refactor resume_triggers2string() to use seq_buf
+  drm/xe/pf: Convert strlcat() to seq_buf in control_read()
+  drm/xe/pf: Refactor strlcat() to seq_buf in sched_group_engines_read()
+
+ arch/arm/kernel/atags_parse.c                 |  7 +-
+ arch/loongarch/kernel/setup.c                 | 22 +++--
+ arch/mips/kernel/setup.c                      | 21 ++++-
+ arch/parisc/kernel/setup.c                    | 16 ++--
+ arch/x86/kernel/setup.c                       |  8 +-
+ drivers/comedi/drivers/comedi_bond.c          | 16 ++--
+ drivers/edac/thunderx_edac.c                  | 67 ++++++++++------
+ drivers/gpu/drm/display/drm_dp_mst_topology.c | 15 ++--
+ drivers/gpu/drm/xe/xe_gt_sriov_pf_debugfs.c   | 24 +++---
+ drivers/input/mouse/synaptics_usb.c           | 29 ++++---
+ drivers/media/dvb-frontends/si2165.c          | 17 ++--
+ drivers/net/ethernet/intel/i40e/i40e.h        | 15 +++-
+ drivers/net/wireless/ath/wil6210/wmi.c        | 38 +++++----
+ .../broadcom/brcm80211/brcmfmac/firmware.c    | 21 ++---
+ drivers/of/fdt.c                              | 11 ++-
+ drivers/pinctrl/samsung/pinctrl-samsung.c     |  3 +-
+ drivers/scsi/bfa/bfa_fcs.c                    | 80 +++++--------------
+ fs/nfs/nfsroot.c                              | 11 ++-
+ fs/orangefs/orangefs-debugfs.c                | 36 ++++-----
+ include/linux/fortify-string.h                |  7 +-
+ net/devlink/dev.c                             |  8 +-
+ net/sunrpc/addr.c                             | 16 ++--
+ sound/pci/ac97/ac97_codec.c                   |  9 ++-
+ sound/usb/card.c                              | 58 +++++++++-----
+ sound/usb/mixer.c                             |  8 +-
+ 25 files changed, 309 insertions(+), 254 deletions(-)
 ---
- arch/loongarch/boot/dts/loongson-2k0500-ref.dts | 2 --
- 1 file changed, 2 deletions(-)
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+Cc: Helge Deller <deller@gmx.de>
+Cc: Thomas Gleixner <tglx@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: x86@kernel.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ian Abbott <abbotti@mev.co.uk>
+Cc: H Hartley Sweeten <hsweeten@visionengravers.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: David Airlie <airlied@gmail.com>
+Cc: Simona Vetter <simona@ffwll.ch>
+Cc: Matthew Brost <matthew.brost@intel.com>
+Cc: "Thomas Hellstr=C3=B6m" <thomas.hellstrom@linux.intel.com>
+Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Matthias Schwarzott <zzam@gentoo.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Tony Nguyen <anthony.l.nguyen@intel.com>
+Cc: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: Arend van Spriel <arend.vanspriel@broadcom.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Saravana Kannan <saravanak@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Peter Griffin <peter.griffin@linaro.org>
+Cc: Alim Akhtar <alim.akhtar@samsung.com>
+Cc: Linus Walleij <linusw@kernel.org>
+Cc: Anil Gurumurthy <anil.gurumurthy@qlogic.com>
+Cc: Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>
+Cc: "Martin K. Petersen" <mkp@kernel.org>
+Cc: Trond Myklebust <trondmy@kernel.org>
+Cc: Anna Schumaker <anna@kernel.org>
+Cc: Mike Marshall <hubcap@omnibond.com>
+Cc: Martin Brandenburg <martin@omnibond.com>
+Cc: Kees Cook <kees@kernel.org>
+Cc: Jiri Pirko <jiri@resnulli.us>
+Cc: Simon Horman <horms@kernel.org>
+Cc: Chuck Lever <cel@kernel.org>
+Cc: Jeff Layton <jlayton@kernel.org>
+Cc: NeilBrown <neil@brown.name>
+Cc: Olga Kornievskaia <okorniev@redhat.com>
+Cc: Dai Ngo <Dai.Ngo@oracle.com>
+Cc: Tom Talpey <tom@talpey.com>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: Bill Wendling <morbo@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+Cc: Kanglong Wang <wangkanglong@loongson.cn>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Qiang Ma <maqianga@uniontech.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Pengpeng Hou <pengpeng@iscas.ac.cn>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Breno Leitao <leitao@debian.org>
+Cc: Thorsten Blum <blum@kernel.org>
+Cc: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Lyude Paul <lyude@redhat.com>
+Cc: Ashutosh Desai <ashutoshdesai993@gmail.com>
+Cc: Imre Deak <imre.deak@intel.com>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Johan Hovold <johan@kernel.org>
+Cc: Johannes Berg <johannes.berg@intel.com>
+Cc: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+Cc: Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: Cryolitia PukNgae <cryolitia@uniontech.com>
+Cc: Jiaming Zhang <r772577952@gmail.com>
+Cc: Will Porter <mrwillporter@gmail.com>
+Cc: Cen Zhang <zzzccc427@gmail.com>
+Cc: "C=C3=A1ssio Gabriel" <cassiogabrielcontato@gmail.com>
+Cc: Rong Zhang <i@rong.moe>
+Cc: Arun Raghavan <arunr@valvesoftware.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: loongarch@lists.linux.dev
+Cc: linux-mips@vger.kernel.org
+Cc: linux-parisc@vger.kernel.org
+Cc: linux-edac@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: intel-xe@lists.freedesktop.org
+Cc: linux-input@vger.kernel.org
+Cc: linux-media@vger.kernel.org
+Cc: intel-wired-lan@lists.osuosl.org
+Cc: netdev@vger.kernel.org
+Cc: linux-wireless@vger.kernel.org
+Cc: brcm80211@lists.linux.dev
+Cc: brcm80211-dev-list.pdl@broadcom.com
+Cc: devicetree@vger.kernel.org
+Cc: linux-samsung-soc@vger.kernel.org
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-scsi@vger.kernel.org
+Cc: linux-nfs@vger.kernel.org
+Cc: devel@lists.orangefs.org
+Cc: linux-hardening@vger.kernel.org
+Cc: linux-sound@vger.kernel.org
 
-diff --git a/arch/loongarch/boot/dts/loongson-2k0500-ref.dts b/arch/loongarch/boot/dts/loongson-2k0500-ref.dts
-index 7ace54c84244..d2a3ed9fa578 100644
---- a/arch/loongarch/boot/dts/loongson-2k0500-ref.dts
-+++ b/arch/loongarch/boot/dts/loongson-2k0500-ref.dts
-@@ -73,14 +73,12 @@ &gmac0 {
- 	status = "okay";
- 
- 	phy-mode = "rgmii-id";
--	bus_id = <0x0>;
- };
- 
- &gmac1 {
- 	status = "okay";
- 
- 	phy-mode = "rgmii-id";
--	bus_id = <0x1>;
- };
- 
- &i2c0 {
--- 
-2.53.0
+--=20
+2.47.3
 
