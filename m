@@ -1,243 +1,174 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua2-f12.google.com (mail-ua2-f12.google.com [74.125.226.204])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A7D4B8290;
-	Wed, 16 Sep 2026 17:00:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789578039; cv=none; b=JIA4zkSN3JvVgJ3jTlPT5shRN7CVG/ykDeLyX9ivN+6dDckbGJeXvCNoRK/fz1RE1G08PosQqv7PPmy+aqrJrg4xw4N68JruhKqkVc1DhAP3fH0BUw2HgEa4zvMLLWXxh/PMI7XpAQMwyyvT/WfAhDCj5mZgWrakir7EQrDoE6k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789578039; c=relaxed/simple;
-	bh=xTR83EDr3GJ1gs6LtXBNUd0wwxqijXMTgP0OcHKvJSc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RPFayXyJlIxEyePLjrvS4UqE9pYw6b7jYF1xLqMTb7BGvoPrHr0cTH7Tuv2RD23lIW3CbFTnIBFQ9fos3q7niWdvQR3pq0cCgamFtUjt6pMoOHQ+/2l+7v3puwZv5+UcP55Me45Ecu1THSHtYPcFOiO9Bg6GjpG1PxjmErCCmCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PmVw4wXS; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04F914DAFB8
+	for <loongarch@lists.linux.dev>; Wed, 16 Sep 2026 21:44:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.226.204
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789595075; cv=pass; b=QPl2fK7EfmK5S/i40aX6jeYHDcnDCf/gOw0a52EzTqy9QHzrb8lMWw2xxERm/+y5i1qnGngQLqd6uWeXGa7tqLFGtGp92ml/21g9yOx8HT+8/jjsIjgxNooDeyKMKb7r7MMdXDAJI+47HWwS+s01V81s4IRyegkaO5NxVxGo4Jw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789595075; c=relaxed/simple;
+	bh=+TMWi8xF1c/GpLGSJWBDMGttEHh102/5Ofx0+5TAWdU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EbbHeT+/J7J2nYnylXzJtFiEmr5dIs83SUndIvgZgcs1Vnsmwgv4/4tkGjMlkQT4UKwJyVsHyvi864wzEmbLOwBuX/diMmv5SQqUA43VMt6r07xegrPz+IHFIasxJF6WHqX72A2QWYQwt5mdxcGlIDGpcMLEnOqhksEBQCSUkZ8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iWpLMWup; arc=pass smtp.client-ip=74.125.226.204
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PmVw4wXS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4114D1F000FF;
-	Wed, 16 Sep 2026 16:59:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789578016;
-	bh=JNZtWdKCogaGrWtyvhM6z027Qg7RFwkG7Shw9zuVQhE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=PmVw4wXS/r9CpHfAOn2amzHMwnGPXSnlrGas83Xpi7dsydIKsArkblukiVIHwBAY6
-	 ubpGfFGa7kqrykL1Pa6q3MkO4GKMCQQXpCmITVG/PeoahA3HJxtDyVnKBlsOT5y6Mm
-	 wozpolIxCIhxuWjx0aQRah90ZewUiZ9k5Elj1dLiF8CCivxp3p7w6OaDY/5H9Oq45S
-	 O6mv0zYlNEHZcdRLCgzvK/ZrOJVz1jz48dKYZvJ7Oi+o5KCdWId8DKOgPiN8pVOlBz
-	 jm/9rlekEwQE9XCQ+GkKAffM26w81NuZfKTTB+nUUF3sGMC9I2pcmKHTHWSj4DPFxw
-	 A9hfwpouwGpWQ==
-Date: Wed, 16 Sep 2026 17:59:52 +0100
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Zi Yan <ziy@nvidia.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, "Liam R. Howlett" <liam@infradead.org>, 
-	Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
-	Barry Song <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>, 
-	Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, Guo Ren <guoren@kernel.org>, 
-	Brian Cain <bcain@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Dinh Nguyen <dinguyen@kernel.org>, Simon Schuster <schuster.simon@siemens-energy.com>, 
-	Jonas Bonn <jonas@southpole.se>, Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, 
-	Stafford Horne <shorne@gmail.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
-	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Russell King <linux@armlinux.org.uk>, Vineet Gupta <vgupta@kernel.org>, 
-	Michal Simek <monstr@monstr.eu>, Chris Zankel <chris@zankel.net>, 
-	Max Filippov <jcmvbkbc@gmail.com>, Will Deacon <will@kernel.org>, 
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, 
-	Peter Zijlstra <peterz@infradead.org>, "David S. Miller" <davem@davemloft.net>, 
-	Andreas Larsson <andreas@gaisler.com>, Richard Henderson <richard.henderson@linaro.org>, 
-	Matt Turner <mattst88@gmail.com>, Magnus Lindholm <linmag7@gmail.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	Helge Deller <deller@gmx.de>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Richard Weinberger <richard@nod.at>, 
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Vlastimil Babka <vbabka@kernel.org>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
-	linux-m68k@lists.linux-m68k.org, linux-openrisc@vger.kernel.org, linux-sh@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-snps-arc@lists.infradead.org, linux-arch@vger.kernel.org, sparclinux@vger.kernel.org, 
-	linux-alpha@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
-	linux-um@lists.infradead.org, Hugh Dickins <hughd@google.com>, Qi Zheng <qi.zheng@linux.dev>
-Subject: Re: [PATCH v3 01/12] mm/huge_memory: zap deposited page tables after
- an RCU grace period
-Message-ID: <aqrAflIQbwcNKlQL@gremlin>
-References: <20260911-rcu-pagetable-freeing-v3-0-7b8c86103821@kernel.org>
- <20260911-rcu-pagetable-freeing-v3-1-7b8c86103821@kernel.org>
- <467b6599-b73a-4f58-a29a-b6c6d1ffc3a5@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iWpLMWup"
+Received: by mail-ua2-f12.google.com with SMTP id a1e0cc1a2514c-97e9af41731so61824241.3
+        for <loongarch@lists.linux.dev>; Wed, 16 Sep 2026 14:44:17 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789595057; cv=none;
+        d=google.com; s=arc-20260327;
+        b=TTWUn82gGiHUQEcHgTk4XK//4QyUj+A9eGau9OR414ky3Z5mjMjND8xfIROaTCc2km
+         5+blEPd3C01L40NXKgM86wK8gBiwuG5JMcDb/uxyu20hN+qK/TNbaWWuRZPI0dyNsb+i
+         GHEzHnuw8mhErYgb8vIKhgrOlAnnEbCKJcm4swj+tlFttiy8eNa4NDGSIlEelF4eRWRr
+         Rv3OgwKn3ErE7dv1Q3FOM0ZumLv1AKGrVAh9hwWn+9ZyeY4OaV1ZlwmTUfQrY+fdp7bZ
+         0SQ6/S9RhPWwEvCcQ/sQY53H6ofuoQ44IY0DYnKG78dgq6uA7AtrlRb890Jfzlww8G9S
+         QItA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=+TMWi8xF1c/GpLGSJWBDMGttEHh102/5Ofx0+5TAWdU=;
+        fh=FvKMVdzTRu98/poETHIzsFarX/Tyebp8a2rsifukNtE=;
+        b=OdrZU0mNtyIfRahFnpNAL6LfiMfQS8FSG5y9+fkIe4DQ8VUHrh1L2mIu2nIRZUt+qv
+         YhZptaGlNOX+p71EEC6c00QYNjEz0uIeIjhLd6ohRNUfoyTmriSBg495dDjVMITIeALk
+         EOr2ZLWPDmThi6sKhK69HpFaF2OizwDCLbGmJFJBw5w6eR0puIGximo5dleoZX5mzo7I
+         GiMreGQKTvLruzkIQ6O7kJmsTeyzztgTFC6C/22ImQmaVyKC76vS+N3A5uBqwIWcvVV3
+         CjIXDFUfobak3pmCSvlBTPrd35i4KnYJiZaPIbuKDK1zWGW41mPt/VWVZGaoYe89sWTX
+         Lopg==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1789595057; x=1790199857; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=+TMWi8xF1c/GpLGSJWBDMGttEHh102/5Ofx0+5TAWdU=;
+        b=iWpLMWupYJ/DHhX0qDMyIzfKZssJ0dLfJRXwHGOEHVNqJJIQrVcOTFu3LC1Sfxh9t7
+         +bdU6XG6L2kpsvneGiQ9sSDXstNRr/7wz1MPT4wIPuBmz1Uc9Ct13ZutZSagRfc73OAa
+         EexuSKA3bvCbyGfXESfZ2SfYpYgM2ZCmxYPZMYbsb2gBTbibDF/YBfoQXjFeZe03d4uo
+         aUgiGV1divl1QZZl0BWBvuB+mUTQS6oNQCpmDIrx6rp1C7CjubsyH5kIUDYhetiyTEfM
+         gn9gFIvjNzVVgHF4sgbJWWqsgWCPwxJJVgchtOAgyaiTnt5jNpzPOEM8VPpeDVKer+ID
+         zOxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789595057; x=1790199857;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=+TMWi8xF1c/GpLGSJWBDMGttEHh102/5Ofx0+5TAWdU=;
+        b=Ui9glqbDfBpnNf/jsVW1g7r1hDIZHTOaYQVDYcvc0cbZXjEgYsLElGI9f2Ru4zzy5O
+         SDK1tUifrMcVY3NfX9FrSHM2mp0t9ku+3At2WSH94aqSjo61DwJ6g6FmYxbIvBmV4qHa
+         lkWEGoS7Q9P/9Rm/LVnN9fxZkrNquLxGSKtwwKF1szE2LKJik5wck5lnsOsTfOStO8qa
+         EcqsJP62+wVc6HuXo9i5LYldR9k9YKgkpiNot1b1LjYFt1zctM1wKTujkL6SD/6qztA7
+         d/LoMrS+eTZ7B2BZdfxPP5ueO+URddWrbOinmtncf3Aqaa8iut3lvabrxWG3Cw5Sn/Vk
+         rAWA==
+X-Forwarded-Encrypted: i=1; AKwUvBw2nWzyXCzOOCIk2LS85YIHeV0a+ZlgZzlwci9bUKgRIDnp0u5FrkR6gPWtIN181xxgw9QXLzcqzRY=@lists.linux.dev
+X-Gm-Message-State: AFuF++lJS+1zR6i8mJi7G1N57BIVCmNGSMwcM1UvNRpA3+dwi91gs/vl
+	5M2itPgpoFT+tQ7c55sO+h3ijyVYbSTWoZmN8Ke8M9h4kh9TKqpZkYUBCq609zwSZBuABC8hbfZ
+	/3isj82p6aOwy/LAcr2iwoZr+SPlkD/ZtK26wJ6M=
+X-Gm-Gg: AYBFou0PzuhanjJQ+IZAQTQ0+TjGh86oAINJ1vOhjGIhx4QHJTEvV/sVVgBt9xpT9as
+	gIgbTKPVQlO72n39Nue9xXD3Q/bO7416oPg7PnD8TVtshbvzjP+KiIpwPSDoo6jELA7bbGJzsve
+	7dNTq9ppNSVDzFqdaQnMK6DdkaMS21wcRuK70ImoJz0HjSlnhMmBElN+YwfUbDxLfkPRDpL/WAY
+	4MVQXUpfTEvY7ZBNwn32uSXVkUl4xnr2aXssMmMJYAZOVCOn4VXAmIMen/uC0ZMIuvevGur7SPq
+	0jkIgYvih/tuTUHVd69Di3Sj93XUTot0gaYIrY35w6SvTYU9CzpS7cc9JmOzbCkRWS4crwCTwgB
+	kXzBmt3WbYFz4yEWvsvJ2
+X-Received: by 2002:a05:6102:a85:b0:7a2:2a6b:e7b4 with SMTP id
+ ada2fe7eead31-7a22a6be8efmr62586137.2.1789595055938; Wed, 16 Sep 2026
+ 14:44:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <467b6599-b73a-4f58-a29a-b6c6d1ffc3a5@kernel.org>
+References: <20260915081910.4142719-1-morbo@google.com> <20260915081910.4142719-26-morbo@google.com>
+ <202609151258.5FC01072@keescook> <20260916010945.GEaqnsWSZ-DTMyTO25@fat_crate.local>
+In-Reply-To: <20260916010945.GEaqnsWSZ-DTMyTO25@fat_crate.local>
+From: Bill Wendling <morbo@google.com>
+Date: Wed, 16 Sep 2026 14:43:59 -0700
+X-Gm-Features: AcwNN1XbboPOY3deKY79Gty15vkSErYIT9HTgeQdVXaDzFhBvm8_kiOA449bIqU
+Message-ID: <CAGG=3QVZRCJ94+DOfSsSDhsrXVYf-ec01NZBy299nYiCAYfXKg@mail.gmail.com>
+Subject: Re: [PATCH 25/28] EDAC/thunderx: Replace strlcat() with seq_buf
+To: Borislav Petkov <bp@alien8.de>
+Cc: Kees Cook <kees@kernel.org>, linux-kernel@vger.kernel.org, 
+	codemender-patching+linux@google.com, Russell King <linux@armlinux.org.uk>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Ian Abbott <abbotti@mev.co.uk>, 
+	H Hartley Sweeten <hsweeten@visionengravers.com>, Tony Luck <tony.luck@intel.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Matthew Brost <matthew.brost@intel.com>, 
+	=?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
+	Rodrigo Vivi <rodrigo.vivi@intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Matthias Schwarzott <zzam@gentoo.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Tony Nguyen <anthony.l.nguyen@intel.com>, Przemek Kitszel <przemyslaw.kitszel@intel.com>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Arend van Spriel <arend.vanspriel@broadcom.com>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
+	Sylwester Nawrocki <s.nawrocki@samsung.com>, Peter Griffin <peter.griffin@linaro.org>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, Linus Walleij <linusw@kernel.org>, 
+	Anil Gurumurthy <anil.gurumurthy@qlogic.com>, 
+	Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>, "Martin K. Petersen" <mkp@kernel.org>, 
+	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+	Mike Marshall <hubcap@omnibond.com>, Martin Brandenburg <martin@omnibond.com>, Jiri Pirko <jiri@resnulli.us>, 
+	Simon Horman <horms@kernel.org>, Chuck Lever <cel@kernel.org>, Jeff Layton <jlayton@kernel.org>, 
+	NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+	Tom Talpey <tom@talpey.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>, 
+	Kanglong Wang <wangkanglong@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	Qiang Ma <maqianga@uniontech.com>, Randy Dunlap <rdunlap@infradead.org>, 
+	Pengpeng Hou <pengpeng@iscas.ac.cn>, Ard Biesheuvel <ardb@kernel.org>, Breno Leitao <leitao@debian.org>, 
+	Thorsten Blum <blum@kernel.org>, Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lyude Paul <lyude@redhat.com>, 
+	Ashutosh Desai <ashutoshdesai993@gmail.com>, Imre Deak <imre.deak@intel.com>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Johan Hovold <johan@kernel.org>, 
+	Johannes Berg <johannes.berg@intel.com>, 
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>, 
+	Alexander Stein <alexander.stein@ew.tq-group.com>, 
+	Cryolitia PukNgae <cryolitia@uniontech.com>, Jiaming Zhang <r772577952@gmail.com>, 
+	Will Porter <mrwillporter@gmail.com>, Cen Zhang <zzzccc427@gmail.com>, 
+	=?UTF-8?Q?C=C3=A1ssio_Gabriel?= <cassiogabrielcontato@gmail.com>, 
+	Rong Zhang <i@rong.moe>, Arun Raghavan <arunr@valvesoftware.com>, 
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, 
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	linux-edac@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	intel-xe@lists.freedesktop.org, linux-input@vger.kernel.org, 
+	linux-media@vger.kernel.org, intel-wired-lan@lists.osuosl.org, 
+	netdev@vger.kernel.org, linux-wireless@vger.kernel.org, 
+	brcm80211@lists.linux.dev, brcm80211-dev-list.pdl@broadcom.com, 
+	devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-scsi@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, devel@lists.orangefs.org, 
+	linux-hardening@vger.kernel.org, linux-sound@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 16, 2026 at 04:42:04PM +0200, David Hildenbrand (Arm) wrote:
-> On 9/11/26 21:36, Lorenzo Stoakes (ARM) wrote:
-> > When an anonymous mapping is collapsed for THP, a PTE page table is
-> > 'deposited' with the installed PMD entry.
+On Tue, Sep 15, 2026 at 6:11=E2=80=AFPM Borislav Petkov <bp@alien8.de> wrot=
+e:
 >
-> Right. Or when we allocate an anon THP.
-
-That case doesn't interact with page walking though, as they're
-just-allocated right?
-
-Am focusing on collapse case for that reason rather than listing all
-possible places deposit can happen.
-
->
+> On Tue, Sep 15, 2026 at 01:00:00PM -0700, Kees Cook wrote:
+> > Seems like seq_buf would be better her? But yes, at the very least, thi=
+s
+> > needs to be scnprintf, not snprintf (or add the checks as you have
+> > here).
 > >
-> > This is done in order that a split can be performed without needing to
-> > allocate additional memory.
-> >
-> > The freeing occurs in zap_deposited_table() and is done directly without
-> > any delay via pte_free().
-> >
-> > This is currently not a problem as existing page table walks are protected
-> > by the mmap or anon rmap lock.
+> > The rest of the seq_buf conversions look right.
 >
-> Or VMA lock?
-
-Yup indeed, can update on respin/ask Andrew to add VMA lock here.
-
+> This driver has been an orphan for a while now (we just made it official)=
+ so
+> I'd prefer it if we don't do anything here.
 >
-> >
-> > However this becomes problematic in a future where RCU-only page table
-> > walkers exist, as there is nothing to prevent a page table walker that
-> > started the walk prior to collapse having its PTE table freed underneath
-> > it.
+I'll remove those changes from future emails.
+
+> And yes, that mega CC list is just gross.
 >
->
-> Wait, but wouldn't it be really problematic to punch a page table that is still
+Apologies. :-(
 
-Punch? You mean deposit?
-
-> being walked into the deposited list where it can just be allocated from another
-> PMD->PTE split?
-
-In general, RCU-only page table walkers are _only_ guaranteed that the page
-tables are not freed from underneath them, as per the cover letter:
-
-	"As a result, page table walks can now be performed safely under RCU without
-	 any risk of page tables being freed underneath a walker.
-
-	However, this is the only guarantee that this work provides - page table
-	walkers must still ensure that page table entries are as expected
-	throughout."
-
-So this series doesn't actually have to answer that :)
-
-But a PTE PTL -> pmd_same() check will flag anything like that,
-a.k.a. pte_offset_map_lock().
-
-The RCU lock replaces stablisation on stuff other than VMA/mmap or rmap
-lock.
-
-If the walker needs to be sure the PTE is actually valid and belongs to the
-expected walk then further is required.
-
-Alternatively (like GUP-fast) if you wanted to avoid locking at all, IRQs
-off would be required paired with the tlb_remove_table_sync_one() in
-collapse_huge_page().
-
-Another strategy could be used I guess with looped checks but it gets a bit
-sketchy with timing etc.
-
-But actually maybe we can avoid all that...
-
->
-> Note that pgtable_trans_huge_withdraw() just dequeues *some* PTE page table in
-> the list attached to the PMD table.
->
-> Something is odd here.
-
-...Since this code path already allocates (the huge folio), so allocation
-here isn't an issue (as long as done outside of lcosk), why not have it
-also allocate a new PTE to deposit and RCU-free the existing PTE instead?
-
-That eliminates the one place in the kernel (afaik) where a
-page-table-walker-visible table can just get yoinked over somewhere else.
-
-Then a lockless PMD check works.
-
-E.g. something like the below?
-
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index f49a6710933b..d9cb6b406ebb 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -1293,7 +1293,7 @@ static enum scan_result collapse_huge_page(struct mm_struct *mm, unsigned long s
- 	LIST_HEAD(compound_pagelist);
- 	pmd_t *pmd, _pmd;
- 	pte_t *pte = NULL;
--	pgtable_t pgtable;
-+	pgtable_t pgtable = NULL;
- 	struct folio *folio;
- 	spinlock_t *pmd_ptl, *pte_ptl;
- 	enum scan_result result = SCAN_FAIL;
-@@ -1310,6 +1310,12 @@ static enum scan_result collapse_huge_page(struct mm_struct *mm, unsigned long s
- 		goto out_nolock;
- 	}
-
-+	if (is_pmd_order(order)) {
-+		pgtable = pte_alloc_one(mm);
-+		if (!pgtable)
-+			goto out_nolock;
-+	}
-+
- 	mmap_read_lock(mm);
- 	result = hugepage_vma_revalidate(mm, pmd_addr, /*expect_anon=*/ true,
- 					 &vma, cc, order);
-@@ -1433,8 +1439,8 @@ static enum scan_result collapse_huge_page(struct mm_struct *mm, unsigned long s
- 	spin_lock(pmd_ptl);
- 	VM_WARN_ON_ONCE(!pmd_none(*pmd));
- 	if (is_pmd_order(order)) {
--		pgtable = pmd_pgtable(_pmd);
- 		pgtable_trans_huge_deposit(mm, pmd, pgtable);
-+		pgtable = NULL;
- 		map_anon_folio_pmd_nopf(folio, pmd, vma, pmd_addr);
- 	} else {
- 		/*
-@@ -1453,6 +1459,9 @@ static enum scan_result collapse_huge_page(struct mm_struct *mm, unsigned long s
- 	}
- 	spin_unlock(pmd_ptl);
-
-+	if (is_pmd_order(order))
-+		pte_free_defer(mm, pmd_pgtable(_pmd));
-+
- 	folio = NULL;
-
- 	result = SCAN_SUCCEED;
-@@ -1463,6 +1472,8 @@ static enum scan_result collapse_huge_page(struct mm_struct *mm, unsigned long s
- 		anon_vma_unlock_write(vma->anon_vma);
- 	mmap_write_unlock(mm);
- out_nolock:
-+	if (pgtable)
-+		pte_free(mm, pgtable);
- 	if (folio)
- 		folio_put(folio);
- 	trace_mm_collapse_huge_page(mm, result == SCAN_SUCCEED, result, order);
-
-
->
-> --
-> Cheers,
->
-> David
-
---
-Cheers, Lorenzo
+-bw
