@@ -1,106 +1,88 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03B9649D5AB
-	for <loongarch@lists.linux.dev>; Thu, 17 Sep 2026 18:15:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4276544CF59;
+	Thu, 17 Sep 2026 21:56:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789668942; cv=none; b=h8RQcU3fH2zMB5Y6yqikHdx9V2pZU79ds7I2RsYxEGor8TWus3keSKnGvXE2fZGEpQkAGuWkYr2jTgDc+ezFxYjB5owTXa8d7giMtgatlMK44ewvMQhjZ/4gEXDnf44jGFtI1h+WtdwO6CAN4t/p6VCqj80ribDQW6NLbwdMcP0=
+	t=1789682181; cv=none; b=ZRf0sc6nKV0yRrg8XOa3QuMmpdBzBQX9ux052WA12uqiwRDjDzuentD9tBdnxiGPXKtMiBL7rzbOaRAEjTgh7H2wO/XmUk+u7LDABj8UMCD3EcebbI+B9uwu1k0L67LTdjRiWvVlASJVpMxw8TqsPAh3/auH9fcg0fC43d2+CxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789668942; c=relaxed/simple;
-	bh=H8Wh7N4cq/t88nKN8ZqZ4f+oRUbvezWnn3f++63qp34=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L7zskgHK7kXHiM4dDj8mOF6dAXX3NwzOKxHpUEetwWT49zpyoNwQ837htBAlG7DkTqgvXq02azISdS5bk1JgNFys0a+a534O1FnA5eSjYV8rSxAFentBidvLAy8MEZ67I/Uv4zpZxhYP8nat2lq1l3V9ekqbSWj6Z/ekN3S1EDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=roYFaSY2; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1789682181; c=relaxed/simple;
+	bh=kZUPYRTkbOTsPkrA61kDMuU4eYK1fWe8yBTv3Q95tKA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u0jGipxRLmR0ioG9nbxOuc3DKlW0HiSIGNFgJp76pOze2ML7Z1UYfgrHhyj6Fz15rpsRwIAEJbVJ5nnpg1Cmxsbs5aBN4GYUP1VwxtjArmLwKTV7Dvq6joysBLqPMWQlFpsfNDrW6aeXFBhqhpC/7N8tNU+Gzs39v7508JhpmOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L1Mdag9k; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="roYFaSY2"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B37601F91;
-	Thu, 17 Sep 2026 11:15:36 -0700 (PDT)
-Received: from [10.57.7.135] (unknown [10.57.7.135])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C76C3F86F;
-	Thu, 17 Sep 2026 11:15:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1789668940; bh=H8Wh7N4cq/t88nKN8ZqZ4f+oRUbvezWnn3f++63qp34=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=roYFaSY285gwN/8IzsFOtN0+e8Iltix2FpDfvQ3utTYL+K/fJKmz1KXzTmdsXwN+S
-	 WAMAddn6lBMF4PqxGiGTEo0pOprPlbr/cZxNj8ql3o575Mymat7lIXSIibWHw+fpmU
-	 bkqsEF4P/sS5BnYk4WQFSwVQavKpnE4kImkX3gsQ=
-Message-ID: <258a124e-bdc5-4c25-b649-b4ed0a1415ac@arm.com>
-Date: Thu, 17 Sep 2026 20:15:31 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L1Mdag9k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93FA41F000FF;
+	Thu, 17 Sep 2026 21:56:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789682179;
+	bh=5NhZ/y4a+dkUa7WaLlbHkeAQBTwZUNqbVt6sm8GoTkU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=L1Mdag9kmnPe+L2tPYHLcz67jASLAJHRTXbLRL6FwDWypq3Me5VmVOJNpahpirJUr
+	 gEsrTsb4nt+eg05Kke9kTilWmPAyVnbXAZ2QqEIckXNOxU8Nc03uHomC6TOH25W/2K
+	 z5l+kA7XR1hsKOVXM9nOrECRGVVSTOZ0fYqJJ4d/qsSPlA92WfCU5Jhz5VgBRKk640
+	 b+F2H3fiHFKhDUNxqU1GLBt2Ks6ayctuMUVHHspuUBp72wI7bAIxxIjtCNIMAhHGB1
+	 kVbr6OldOAOOfF9euNAChU/YRakT3Vou1QLZTXALxAI02xOX2wLGmDaBhTwt/LCZFD
+	 fiZ6QpTX8Oq4A==
+Date: Thu, 17 Sep 2026 16:56:18 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Wandun Chen <chenwandun1@gmail.com>
+Cc: chenhuacai@kernel.org, linux-kernel@vger.kernel.org, rppt@kernel.org,
+	m.szyprowski@samsung.com, x86@kernel.org, bp@alien8.de,
+	iommu@lists.linux.dev, saravanak@kernel.org, pratyush@kernel.org,
+	robin.murphy@arm.com, loongarch@lists.linux.dev,
+	aou@eecs.berkeley.edu, palmer@dabbelt.com, will@kernel.org,
+	akpm@linux-foundation.org, pasha.tatashin@soleen.com,
+	mingo@redhat.com, pjw@kernel.org, kexec@lists.infradead.org,
+	hpa@zytor.com, catalin.marinas@arm.com, devicetree@vger.kernel.org,
+	baoquan.he@linux.dev, ruirui.yang@linux.dev, mark.rutland@arm.com,
+	kernel@xen0n.name, linux-arm-kernel@lists.infradead.org,
+	alex@ghiti.fr, linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+	tglx@kernel.org, dave.hansen@linux.intel.com
+Subject: Re: [PATCH v6 07/10] of: reserved_mem: add dumpable flag to opt-in
+ vmcore
+Message-ID: <178968217748.3989713.7328577485527762154.robh@kernel.org>
+References: <20260902073116.802752-1-chenwandun1@gmail.com>
+ <20260902073116.802752-8-chenwandun1@gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 6/6] Revert "arch: introduce
- set_direct_map_valid_noflush()"
-To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: =?UTF-8?Q?Adrian_Barna=C5=9B?= <abarnas@google.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Alexander Gordeev
- <agordeev@linux.ibm.com>, Alexandre Ghiti <alex@ghiti.fr>,
- Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
- Brendan Jackman <brendan.jackman@linux.dev>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- David Hildenbrand <david@kernel.org>,
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>, Huacai Chen <chenhuacai@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Len Brown <lenb@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <pjw@kernel.org>,
- Pavel Machek <pavel@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- "H. Peter Anvin" <hpa@zytor.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Ryan Roberts <ryan.roberts@arm.com>, Sven Schnelle <svens@linux.ibm.com>,
- Thomas Gleixner <tglx@kernel.org>, Uladzislau Rezki <urezki@gmail.com>,
- Vasily Gorbik <gor@linux.ibm.com>, WANG Xuerui <kernel@xen0n.name>,
- Will Deacon <will@kernel.org>, x86@kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-pm@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- loongarch@lists.linux.dev
-References: <20260903-execmem-set-vm-perms-v0-2-v3-0-949b64a9f755@kernel.org>
- <20260903-execmem-set-vm-perms-v0-2-v3-6-949b64a9f755@kernel.org>
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20260903-execmem-set-vm-perms-v0-2-v3-6-949b64a9f755@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260902073116.802752-8-chenwandun1@gmail.com>
 
-On 03/09/2026 11:28, Mike Rapoport (Microsoft) wrote:
-> Commit 0c6378a71574 ("arch: introduce set_direct_map_valid_noflush()")
-> added set_direct_map_valid_noflush() to allow updating the direct map
-> for a physically contiguous range in execmem.
->
-> As Brendan recently pointed out [1], this API is confusing because on
-> arm64 it means that is sets VALID bit in ptes, while on other
-> architectures it is an analog of set_direct_map_default_noflush().
->
-> The only user of set_direct_map_valid_noflush() was execmem's ROX cache
-> freeing path and it was switched to utilize VM_FLUSH_RESET_PERMS for
-> resetting permissions of the direct map alias.
->
-> With the last user gone and with set_direct_map_{invalid,default}_noflush()
-> accepting number of pages as a parameter, set_direct_map_valid_noflush()
-> become a copy of set_memory_valid() on arm64 and a duplicate of
-> set_direct_map_{invalid,default}_noflush() on other architecture, it is
-> safe to remove set_direct_map_valid_noflush().
->
-> Also drop a stale comment in arm64::__kernel_map_pages() that Linus
-> bothered to add when merging changes containing set_direct_map_valid_noflush()
-> to his tree.
->
-> This reverts commit 0c6378a71574daa6cd1534ad42a956e3262756c7.
->
-> [1] https://lore.kernel.org/all/DJ69RCVRBO0Y.3JCYSW50IC4RC@linux.dev
->
-> Reviewed-by: Brendan Jackman <brendan.jackman@linux.dev>
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-It's a great feeling to see the set_direct_map API get a little
-streamlined :D
+On Wed, 02 Sep 2026 15:31:13 +0800, Wandun Chen wrote:
+> From: Wandun Chen <chenwandun@lixiang.com>
+> 
+> Add a 'dumpable' flag to struct reserved_mem to decide whether a
+> reserved area should be included in the kdump vmcore. Non-dumpable
+> regions are later marked MEMBLOCK_NODUMP;the filtering itself happens
+> in memblock, keeping the arch kdump code independent of the DT API.
+> 
+> Most reserved regions are owned by devices and do not contain data
+> useful for kernel crash analysis, so dumpable default to false.
+> Reusable CMA regions are different: their pages are handed back to the
+> buddy allocator and may contain key data for crash analysis, so set
+> dumpable to true in rmem_cma_setup().
+> 
+> The dumpable flag is also used to check /memreserve/ entries for overlap
+> with other dumpable regions.
+> 
+> Suggested-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
+> Tested-by: Meijing Zhao <zhaomeijing@lixiang.com>
+> Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>  include/linux/of_reserved_mem.h | 1 +
+>  kernel/dma/contiguous.c         | 1 +
+>  2 files changed, 2 insertions(+)
+> 
 
-Reviewed-by: Kevin Brodsky <kevin.brodsky@arm.com>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
+
