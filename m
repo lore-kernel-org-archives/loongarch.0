@@ -1,597 +1,302 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3DD4B829C
-	for <loongarch@lists.linux.dev>; Thu, 17 Sep 2026 10:11:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41EE33D0936
+	for <loongarch@lists.linux.dev>; Thu, 17 Sep 2026 10:30:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789639907; cv=none; b=JuTfj4aBxzP1+gncAHfi+1Uh370Yl1ohQehsg/7ZwPGu6oLVCxG5K2JKU2KaRwkFV/x0k6hAwVqSSCp+NQqLlODDa4bDumtfFqo/PnH4P6Sn5AnsFpEgzaH1iWDX45jtrfjymZI87WvLfxH+AYuNF3iGvxydOqUHL+5xYjep84o=
+	t=1789641053; cv=none; b=aUB0yc0RaruOPgs6ex8v48ANcUt9Yn/AfoHlAF19JyHn4BdwjQzAztsDzpYwHCVpS5DcRFaAgTmhJXDYiD3Vuj7UUfeN5vY3X+iU0ckRgjDnyIoNzSyjnxPXyAnVxTKLA0O6NYFsA4YlQJm0T6XcE/tOdkwPWzTwXqQcw62yWYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789639907; c=relaxed/simple;
-	bh=V2X7xD/GjLqVuvFr4bX+8ftBerhGdvxIaBxeRjHK7Zo=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=p3om6oDuDTC1/JLaTIRj9ssaFcUgf+KJCX88bxKpcIIa5e9OcBboPKGQYCg5CeBx8dp3ZvkwqkhrHIQAyPKB9OJBs6LthJvHeKyWntTNcq5yTL52CU9UsMg1PU6UHS0p/SDCr0q0zHiInzvOjNdJ7a7vdjl/5KgVercR2gwf5Ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 277793e8b28011f19a56ed5b684f684d-20260917
-X-CTIC-Tags:
-	HR_CTE_8B, HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE
-	HR_FROM_DIGIT_LEN, HR_FROM_NAME, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER
-	HR_SJ_NOR_SYM, HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT
-	HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED
-	SA_EXISTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
-	CIE_BAD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU
-	AMN_GOOD, ABX_MISS_RDNS
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.19,REQID:8467a3bc-6078-492a-9b5a-528ba9013925,IP:10,
-	URL:0,TC:0,Content:-5,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:30
-X-CID-INFO: VERSION:1.3.19,REQID:8467a3bc-6078-492a-9b5a-528ba9013925,IP:10,UR
-	L:0,TC:0,Content:-5,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:30
-X-CID-META: VersionHash:7db8b62,CLOUDID:6e75c9addc2cd7f871ac66d8e12f6b8b,BulkI
-	D:260917181136MJ3TVDTJ,BulkQuantity:0,SF:10|38|66|78|102|127|850|865|898,T
-	C:nil,Content:0|15|50|99,EDM:5,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil
-	,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 277793e8b28011f19a56ed5b684f684d-20260917
-X-User: lijun01@kylinos.cn
-Received: from localhost.localdomain [(39.156.73.11)] by mailgw.kylinos.cn
-	(envelope-from <lijun01@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1713455119; Thu, 17 Sep 2026 18:11:31 +0800
-From: Li Jun <lijun01@kylinos.cn>
-To: lijun01@kylinos.cn,
-	chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	yangtiezhu@loongson.cn,
-	loongarch@lists.linux.dev
-Subject: [PATCH] Loongarch: mm: add check W&X
-Date: Thu, 17 Sep 2026 18:10:50 +0800
-Message-Id: <20260917101050.1002944-1-lijun01@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1789641053; c=relaxed/simple;
+	bh=/tpJxB7myuQvr727nWqq6p0x6mQFEBPYam9XfxPXE0g=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=kgbNCyBjTV7pOILSK/RHYTzXgceAoEdzVajMA/28MyS324Cfgj08M/AGM+IILhbTKfT70AvGWIuLJMm+DpPUM91bTvP8olYlK6UawrQLRb5QzhBX5BTYwUHfpFQCMKdICPy6jJEeAyYBH9bme6eNL05lJwqAiYV4KYHx7rfZWLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=UB9Mez9w; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="UB9Mez9w"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68HA1WAt2205751;
+	Thu, 17 Sep 2026 10:30:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=XN7HVK
+	JtZSz9og9g+wQh8pvmMxNLYZqB67Fm0+hPgCU=; b=UB9Mez9wgVSbLLKt3nltTd
+	vtWJrzs/AuV45Uzot7sxzc1qmKE+lAdXWb6/26MjpQ2MzFMQYUFwNiCcrmnwFbQM
+	OdmTnlT97yhxQ3H++Hsy5tLzCAmoIZv9eAm88A8AeRT2SlletdMjMNXJ8yl52Xi1
+	HSxzQ4jqR0uguGl6A2Y4E5exPMKTv7DBrnIbJSR6/BWdD03fY7cvMYy/SSFD7QHp
+	avn1SZmOx7Wdn0OQoZT/uWrDUOsAw1ba3ZqzOmslUig7AOYS1tKLCTcOSTN0vxSK
+	rL1NPHU9r2fsc25hFWkn9mR0MxKoauyMW76MlrcEEOzPO1wYKmu8NO+8HocspmRw
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4gmxf59sxr-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Thu, 17 Sep 2026 10:30:06 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 68H9aHRR2962374;
+	Thu, 17 Sep 2026 10:30:05 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4gra3ys076-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Sep 2026 10:30:05 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 68HAU3uk27066644
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 17 Sep 2026 10:30:04 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CF06120043;
+	Thu, 17 Sep 2026 10:30:03 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7B06D20040;
+	Thu, 17 Sep 2026 10:30:01 +0000 (GMT)
+Received: from [9.123.14.142] (unknown [9.123.14.142])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 17 Sep 2026 10:30:01 +0000 (GMT)
+Message-ID: <0969ede4-f617-4e24-b32e-c5e30a96880e@linux.ibm.com>
+Date: Thu, 17 Sep 2026 16:00:00 +0530
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] liveupdate: kho: calculate per-node scratch sizes
+ before allocation
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+To: George Guo <dongtai.guo@linux.dev>, rppt@kernel.org,
+        pasha.tatashin@soleen.com, pratyush@kernel.org
+Cc: graf@amazon.com, changyuanl@google.com, akpm@linux-foundation.org,
+        chenhuacai@kernel.org, liukexin@kylinos.cn, guodongtai@kylinos.cn,
+        kexec@lists.infradead.org, linux-mm@kvack.org,
+        loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20260904025101.9959-1-dongtai.guo@linux.dev>
+ <616daf17-4598-4a30-8574-16480dfc23cb@linux.ibm.com>
+Content-Language: en-US
+In-Reply-To: <616daf17-4598-4a30-8574-16480dfc23cb@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-GUID: 9kBhWDxzKEIXlqR8yCNcou2mv5J-iLVE
+X-Proofpoint-Spam-Info: AW1haW4tMjYwOTE3MDEzOCBTYWx0ZWRfX4nKOPkxkEHZH
+ cbCPACV+Q8ZXOWnkBfLFBFAxfYGC1ICYywpk1xHZ/vR2wqH24j28Z0hv59KXNH1ertcNpZrOoAP
+ RkbmX9iLganfS9LSwe6XEBF1JghRDjU=
+X-Authority-Analysis: v=2.4 cv=cvgOAF4i c=1 sm=1 tr=0 ts=6aabc12f cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=cCf1g51oGTkv6yQ4Xg8A:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: 7mAPHVSLg7bMiEO_a2HtaZ1DTH2y0rqY
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTE3MDEzOCBTYWx0ZWRfX0dWwNtLff6Nh
+ om5qwwSOmvYF+uPvh6/PaymH9q1jXDuH+lhv2Nj53RPQD7rdRzsUyd1gPXc969endwNVdYP9MoH
+ qRk+kAIWZItfE4mkjTIP3rqbY0EP9jjimL5rCNIR2/FzURYQxPddaBMmTqi9wKwcpGgIfFxB/oa
+ 126tMjZeRxzYkQn92G4VtAzYneIuki5Bi8FSedBsVNrP+MMfgiL5oKK6WgP4qCLM+xz8yhpd/XT
+ ebOMfU0Q4szU/8gLUbBKFzdM/rKC6pFz/lADmhFUHRnRNQuWvEcQxK6wyyAoo/U8vQNsCovNUdg
+ iLK8mmYCK+1D+jqofmDho1GiWqbE00z8ZFaGjTxo73mEIG5BCSwD5un0/skSzzFdODU8/3q6+sG
+ K7gOvmqOZrXjZwZ8iPmr4/0pXwKjFFXLh1cmyyniGzfAXyheqUmqJx5/gzB0w2SJ26vcYHDBKKK
+ FzkHdK8lP3zsXbuwTLA==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-09-17_02,2026-09-16_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 lowpriorityscore=0 clxscore=1015 priorityscore=1501
+ suspectscore=0 bulkscore=0 impostorscore=0 phishscore=0 spamscore=0
+ adultscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2609040000
+ definitions=main-2609170138
 
-If there are both writable and executable permissions in the memory,
-it can be dangerous as attackers may exploit this vulnerability to execute
-illegal programs. Therefore, it is necessary to scan the memory space
-and list the memory addresses that have both writable and executable
-permissions.
-This patch will list the flag bits:
-0xffffff8000000000-0xffffff8000008000  32K PTE . . . . . G . . .   .   .    .   .   .    .
-0xffffff8000008000-0xffffff8000018000  64K PTE P V D A . G . W .   NX .    .   .   .    .
-0xffffff8000018000-0xffffff8002008000  32704K PTE . . . . . G . . .   .   .    .   .   .    .
-0xffffff8002008000-0xffffff8002208000  2M PTE P V . A . G . . .   .   .    .   CC .    .
-0xffffff8002208000-0xffffff800220c000  16K PTE . . . . . G . . .   .   .    .   .   .    .
-0xffffff800220c000-0xffffff8002214000  32K PTE P V D A . G . W .   .   .    .   CC .    .
+Hello George,
 
-the 'NX' is that '_PAGE_NO_EXEC' flag be set,
-the 'W'  is thet '_PAGE_WRITE' flag be set,
-the more flag, see the code.
+On 12/09/26 12:03, Sourabh Jain wrote:
+> Hello George,
+>
+> On 04/09/26 08:21, George Guo wrote:
+>> From: George Guo <guodongtai@kylinos.cn>
+>>
+>> The default percentage-based policy sizes scratch areas from the current
+>> kernel's MEMBLOCK_RSRV_KERN footprint. This is a reasonable heuristic 
+>> for
+>> predicting the early memory demand of the next kernel.
+>>
+>> scratch_size_update() calculates the lowmem and global sizes before 
+>> either
+>> area is allocated. However, kho_reserve_scratch() calculates each 
+>> per-node
+>> size only after allocating the lowmem and global areas. Since memblock
+>> allocations are marked MEMBLOCK_RSRV_KERN, the per-node calculation
+>> includes those newly allocated scratch areas and scales them again.
+>
+> I may be missing something here, but doesn't 
+> memblock_reserved_kern_size()
+> check the node ID of the region before checking the region flag 
+> (MEMBLOCK_RSRV_KERN)?
+>
+> Code snippet from memblock_reserved_kern_size()
+> ```
+> if (nid == memblock_get_region_node(r) || !numa_valid_node(nid))
+>     if (r->flags & MEMBLOCK_RSRV_KERN)
+>         total += size;
+> ```
+>
+> For a valid nid, my understanding is that the global and lowmem scratch
+> areas should not be counted because they are allocated with NUMA_NO_NODE
+> (-1). So, ideally, these regions should be excluded when calculating the
+> reserved memory for a specific node ID.
+>
+> Based on this, I am not sure that marking the lowmem and global areas as
+> MEMBLOCK_RSRV_KERN is what causes the per-node size calculation to be
+> inflated. I am looking into the code further to better understand the
+> actual cause of the issue that this patch is trying to address.
 
-Signed-off-by: Li Jun <lijun01@kylinos.cn>
----
-Changlogs:
--Add check the '_PAGE_NO_EXEC' and '_PAGE_WRITE' in mem, and list them.
----
- arch/loongarch/Kconfig     |   2 +
- arch/loongarch/mm/Makefile |   2 +
- arch/loongarch/mm/ptdump.c | 467 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 471 insertions(+)
- create mode 100644 arch/loongarch/mm/ptdump.c
+I added some prints in kho_reserve_scratch() and found that the per-node 
+size
+calculation is not impacted by the lowmem and global scratch memory 
+allocations.
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 0aad0004b010..c47575559bab 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -25,10 +25,12 @@ config LOONGARCH
- 	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
- 	select ARCH_HAS_PREEMPT_LAZY
- 	select ARCH_HAS_PTE_SPECIAL if 64BIT
-+	select ARCH_HAS_PTDUMP if 64BIT
- 	select ARCH_HAS_SET_MEMORY
- 	select ARCH_HAS_SET_DIRECT_MAP
- 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
- 	select ARCH_HAS_UBSAN
-+	select ARCH_HAS_DEBUG_WX if 64BIT
- 	select ARCH_HAS_VDSO_ARCH_DATA
- 	select ARCH_INLINE_READ_LOCK if !PREEMPTION
- 	select ARCH_INLINE_READ_LOCK_BH if !PREEMPTION
-diff --git a/arch/loongarch/mm/Makefile b/arch/loongarch/mm/Makefile
-index 2aae3773de77..8928c36ef5a8 100644
---- a/arch/loongarch/mm/Makefile
-+++ b/arch/loongarch/mm/Makefile
-@@ -7,6 +7,8 @@ obj-y				+= init.o cache.o tlb.o tlbex.o extable.o \
- 				   fault.o ioremap.o maccess.o mmap.o pgtable.o \
- 				   page.o pageattr.o
- 
-+obj-$(CONFIG_PTDUMP)		+= ptdump.o
-+
- obj-$(CONFIG_HIGHMEM)		+= highmem.o
- obj-$(CONFIG_HUGETLB_PAGE)	+= hugetlbpage.o
- obj-$(CONFIG_KASAN)		+= kasan_init.o
-diff --git a/arch/loongarch/mm/ptdump.c b/arch/loongarch/mm/ptdump.c
-new file mode 100644
-index 000000000000..e92ef21ac9ca
---- /dev/null
-+++ b/arch/loongarch/mm/ptdump.c
-@@ -0,0 +1,467 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Derived from RISC-V:
-+ * Copyright (C) 2019 SiFive
-+ */
-+
-+#include <linux/efi.h>
-+#include <linux/init.h>
-+#include <linux/debugfs.h>
-+#include <linux/seq_file.h>
-+#include <linux/string.h>
-+#include <linux/ptdump.h>
-+
-+#include <linux/pgtable.h>
-+#include <asm/kasan.h>
-+#include <asm/fixmap.h>
-+#include <asm/io.h>
-+#include <asm/pgtable-bits.h>
-+
-+#define pt_dump_seq_printf(m, fmt, args...)	\
-+({						\
-+	if (m)					\
-+		seq_printf(m, fmt, ##args);	\
-+})
-+
-+#define pt_dump_seq_puts(m, fmt)	\
-+({					\
-+	if (m)				\
-+		seq_puts(m, fmt);	\
-+})
-+
-+/*
-+ * The page dumper groups page table entries of the same type into a single
-+ * description. It uses pg_state to track the range information while
-+ * iterating over the pte entries. When the continuity is broken it then
-+ * dumps out a description of the range.
-+ */
-+struct pg_state {
-+	struct ptdump_state ptdump;
-+	struct seq_file *seq;
-+	const struct addr_marker *marker;
-+	unsigned long start_address;
-+	unsigned long start_pa;
-+	unsigned long last_pa;
-+	int level;
-+	u64 current_prot;
-+	bool check_wx;
-+	unsigned long wx_pages;
-+};
-+
-+/* Address marker */
-+struct addr_marker {
-+	unsigned long start_address;
-+	const char *name;
-+};
-+
-+/* Private information for debugfs */
-+struct ptd_mm_info {
-+	struct mm_struct		*mm;
-+	const struct addr_marker	*markers;
-+	unsigned long base_addr;
-+	unsigned long end;
-+};
-+
-+enum address_markers_idx {
-+	PCI_IO_START_NR,
-+	PCI_IO_END_NR,
-+#ifdef CONFIG_64BIT
-+	MODULES_VADDR_NR,
-+	MODULES_END_NR,
-+#endif
-+	VMALLOC_START_NR,
-+	VMALLOC_END_NR,
-+#ifdef CONFIG_SPARSEMEM_VMEMMAP
-+	VMEMMAP_START_NR,
-+	VMEMMAP_END_NR,
-+#endif
-+#ifdef CONFIG_KASAN
-+	KASAN_SHADOW_START_NR,
-+	KASAN_SHADOW_END_NR,
-+#endif
-+	FIXMAP_START_NR,
-+	FIXMAP_END_NR,
-+	END_OF_SPACE_NR
-+};
-+
-+static struct addr_marker address_markers[] = {
-+
-+	{0, "PCI I/O start"},
-+	{0, "PCI I/O end"},
-+#ifdef CONFIG_64BIT
-+	{0, "Modules start"},
-+	{0, "Modules end"},
-+#endif
-+	{0, "vmalloc() area"},
-+	{0, "vmalloc() end"},
-+#ifdef CONFIG_SPARSEMEM_VMEMMAP
-+	{0, "vmemmap start"},
-+	{0, "vmemmap end"},
-+#endif
-+#ifdef CONFIG_KASAN
-+	{0, "Kasan shadow start"},
-+	{0, "Kasan shadow end"},
-+#endif
-+	{0, "Fixmap start"},
-+	{0, "Fixmap end"},
-+	{-1, NULL},
-+};
-+
-+static struct ptd_mm_info kernel_ptd_info = {
-+	.mm		= &init_mm,
-+	.markers	= address_markers,
-+	.base_addr	= 0,
-+	.end		= ULONG_MAX,
-+};
-+
-+#ifdef CONFIG_EFI
-+static struct addr_marker efi_addr_markers[] = {
-+	{ 0,		"UEFI runtime start" },
-+	{ SZ_1G,	"UEFI runtime end" },
-+	{ -1,		NULL }
-+};
-+
-+static struct ptd_mm_info efi_ptd_info = {
-+	.mm		= &efi_mm,
-+	.markers	= efi_addr_markers,
-+	.base_addr	= 0,
-+	.end		= SZ_2G,
-+};
-+#endif
-+
-+/* Page Table Entry */
-+struct prot_bits {
-+	u64 mask;
-+	const char *set;
-+	const char *clear;
-+};
-+
-+static const struct prot_bits pte_bits[] = {
-+	{
-+		.mask = _PAGE_PRESENT,
-+		.set = "P",
-+		.clear = ".",
-+	}, {
-+		.mask = _PAGE_VALID,
-+		.set = "V",
-+		.clear = ".",
-+	}, {
-+		.mask = _PAGE_DIRTY,
-+		.set = "D",
-+		.clear = ".",
-+	}, {
-+		.mask = _PAGE_ACCESSED,
-+		.set = "A",
-+		.clear = ".",
-+	}, {
-+		.mask = _PAGE_MODIFIED,
-+		.set = "M",
-+		.clear = ".",
-+	}, {
-+		.mask = _PAGE_GLOBAL,
-+		.set = "G",
-+		.clear = ".",
-+	}, {
-+		.mask = _PAGE_USER,
-+		.set = "U",
-+		.clear = ".",
-+	}, {
-+		.mask = _PAGE_WRITE,
-+		.set = "W",
-+		.clear = ".",
-+	},
-+#ifdef CONFIG_64BIT
-+	{
-+		.mask = _PAGE_NO_READ,
-+		.set = "NR",
-+		.clear = ".  ",
-+	}, {
-+		.mask = _PAGE_NO_EXEC,
-+		.set = "NX",
-+		.clear = ".  ",
-+	}, {
-+		.mask = _PAGE_RPLV,
-+		.set = "RPLV",
-+		.clear = ".   ",
-+	}, {
-+		.mask = _PAGE_PROTNONE,
-+		.set = "PN",
-+		.clear = ".  ",
-+	},
-+#endif
-+	{
-+		.mask = _CACHE_CC,
-+		.set = "CC",
-+		.clear = ".  ",
-+	}, {
-+		.mask = _CACHE_SUC,
-+		.set = "SUC",
-+		.clear = ".   ",
-+	}, {
-+		.mask = _CACHE_WUC,
-+		.set = "WUC",
-+		.clear = ".   ",
-+	},
-+};
-+
-+/* Page Level */
-+struct pg_level {
-+	const char *name;
-+	u64 mask;
-+};
-+
-+static struct pg_level pg_level[] = {
-+	{ /* pgd */
-+		.name = "PGD",
-+	}, { /* p4d */
-+		.name = (CONFIG_PGTABLE_LEVELS > 4) ? "P4D" : "PGD",
-+	}, { /* pud */
-+		.name = (CONFIG_PGTABLE_LEVELS > 3) ? "PUD" : "PGD",
-+	}, { /* pmd */
-+		.name = (CONFIG_PGTABLE_LEVELS > 2) ? "PMD" : "PGD",
-+	}, { /* pte */
-+		.name = "PTE",
-+	},
-+};
-+
-+static void dump_prot(struct pg_state *st)
+KHO: Before low and global scratch allocations
+KHO: low size = 899 KB
+KHO: global size = 137 MB
+KHO: Per node 2 = 80 MB
+
+KHO: After low and global scratch allocations
+KHO: low size = 312195 KB
+KHO: global size = 441 MB
+KHO: Per node 2 = 80 MB
+
+KHO: After per node allocation
+KHO: low size = 394115 KB
+KHO: global size = 521 MB
+KHO: Per node 2 = 240 MB
+
+I only had one NUMA node (nid=2), and the per-NUMA
+allocation before and after the lowmem and global scratch
+memory allocations remained the same at 80 MB.
+
+The experiment was done on the PowerPC architecture.
+
+I am wondering how the per-NUMA allocation in your setup is
+getting inflated due to the lowmem and global scratch memory
+reservations.
+
+Feel free to use the change below to print the similar states
+in your setup.
+
+index 9260e601c..b5bd9617b 100644
+--- a/kernel/liveupdate/kexec_handover.c
++++ b/kernel/liveupdate/kexec_handover.c
+@@ -670,6 +670,24 @@ static phys_addr_t __init scratch_size_node(int nid)
+         return round_up(size, SCRATCH_ALIGNMENT_BYTES);
+  }
+
++static void __init scratch_size_print(char *s)
 +{
-+	unsigned int i;
++       int nid;
++       phys_addr_t size;
 +
-+	for (i = 0; i < ARRAY_SIZE(pte_bits); i++) {
-+		char s[8];
++       pr_info("%s\n", s);
++       size = memblock_reserved_kern_size(ARCH_LOW_ADDRESS_LIMIT, 
+NUMA_NO_NODE);
++       pr_info("low size = %llu KB\n", (unsigned long long)(size >> 10));
 +
-+		if (st->current_prot & pte_bits[i].mask)
-+			strscpy(s, pte_bits[i].set);
-+		else
-+			strscpy(s, pte_bits[i].clear);
++       size = memblock_reserved_kern_size(MEMBLOCK_ALLOC_ANYWHERE, 
+NUMA_NO_NODE);
++       pr_info("global size = %llu MB\n", (unsigned long long)(size >> 
+20));
 +
-+		pt_dump_seq_printf(st->seq, " %s", s);
-+	}
++       for_each_node_state(nid, N_MEMORY) {
++               size = scratch_size_node(nid);
++               pr_info("Per node %d = %llu MB\n", nid, (unsigned long 
+long)(size >> 20));
++       }
 +}
 +
-+static void dump_addr(struct pg_state *st, unsigned long addr)
-+{
-+	static const char units[] = "KMGTPE";
-+	const char *unit = units;
-+	unsigned long delta;
+  /**
+   * kho_reserve_scratch - Reserve a contiguous chunk of memory for kexec
+   *
+@@ -698,6 +716,7 @@ static void __init kho_reserve_scratch(void)
+                 goto err_disable_kho;
+         }
+
++       scratch_size_print("Before low and global scratch allocations");
+         /*
+          * reserve scratch area in low memory for lowmem allocations in the
+          * next kernel
+@@ -730,6 +749,8 @@ static void __init kho_reserve_scratch(void)
+          * Loop over nodes that have both memory and are online. Skip
+          * memoryless nodes, as we can not allocate scratch areas there.
+          */
 +
-+	pt_dump_seq_printf(st->seq, "0x%016lx-0x%016lx   ",
-+			   st->start_address, addr);
-+
-+	pt_dump_seq_printf(st->seq, "0x%016lx ", st->start_pa);
-+	delta = (addr - st->start_address) >> 10;
-+
-+	while (!(delta & 1023) && unit[1]) {
-+		delta >>= 10;
-+		unit++;
-+	}
-+
-+	pt_dump_seq_printf(st->seq, "%9lu%c %s", delta, *unit,
-+			   pg_level[st->level].name);
-+}
-+
-+static void note_prot_wx(struct pg_state *st, unsigned long addr)
-+{
-+	if (!st->check_wx)
-+		return;
-+
-+#ifdef CONFIG_64BIT
-+	if ((st->current_prot & _PAGE_WRITE) &&
-+	    !(st->current_prot & _PAGE_NO_EXEC))
-+		return;
-+#else
-+	/* 32-bit LoongArch has no NX bit, so W+X is always present */
-+	return;
-+#endif
-+
-+	WARN_ONCE(1, "loongarch/mm: Found insecure W+X mapping at address %p/%pS\n",
-+		  (void *)st->start_address, (void *)st->start_address);
-+
-+	st->wx_pages += (addr - st->start_address) / PAGE_SIZE;
-+}
-+
-+static void note_page(struct ptdump_state *pt_st, unsigned long addr,
-+		      int level, u64 val)
-+{
-+	struct pg_state *st = container_of(pt_st, struct pg_state, ptdump);
-+	u64 pa = PFN_PHYS(pte_pfn(__pte(val)));
-+	u64 prot = 0;
-+
-+	if (level >= 0)
-+		prot = val & pg_level[level].mask;
-+
-+	if (st->level == -1) {
-+		st->level = level;
-+		st->current_prot = prot;
-+		st->start_address = addr;
-+		st->start_pa = pa;
-+		st->last_pa = pa;
-+		pt_dump_seq_printf(st->seq, "---[ %s ]---\n", st->marker->name);
-+	} else if (prot != st->current_prot ||
-+		   level != st->level || addr >= st->marker[1].start_address) {
-+		if (st->current_prot) {
-+			note_prot_wx(st, addr);
-+			dump_addr(st, addr);
-+			dump_prot(st);
-+			pt_dump_seq_puts(st->seq, "\n");
-+		}
-+
-+		while (addr >= st->marker[1].start_address) {
-+			st->marker++;
-+			pt_dump_seq_printf(st->seq, "---[ %s ]---\n",
-+					   st->marker->name);
-+		}
-+
-+		st->start_address = addr;
-+		st->start_pa = pa;
-+		st->last_pa = pa;
-+		st->current_prot = prot;
-+		st->level = level;
-+	} else {
-+		st->last_pa = pa;
-+	}
-+}
-+
-+static void note_page_pte(struct ptdump_state *pt_st, unsigned long addr, pte_t pte)
-+{
-+	note_page(pt_st, addr, 4, pte_val(pte));
-+}
-+
-+static void note_page_pmd(struct ptdump_state *pt_st, unsigned long addr, pmd_t pmd)
-+{
-+	note_page(pt_st, addr, 3, pmd_val(pmd));
-+}
-+
-+static void note_page_pud(struct ptdump_state *pt_st, unsigned long addr, pud_t pud)
-+{
-+	note_page(pt_st, addr, 2, pud_val(pud));
-+}
-+
-+static void note_page_p4d(struct ptdump_state *pt_st, unsigned long addr, p4d_t p4d)
-+{
-+	note_page(pt_st, addr, 1, p4d_val(p4d));
-+}
-+
-+static void note_page_pgd(struct ptdump_state *pt_st, unsigned long addr, pgd_t pgd)
-+{
-+	note_page(pt_st, addr, 0, pgd_val(pgd));
-+}
-+
-+static void note_page_flush(struct ptdump_state *pt_st)
-+{
-+	pte_t pte_zero = {0};
-+
-+	note_page(pt_st, 0, -1, pte_val(pte_zero));
-+}
-+
-+static void ptdump_walk(struct seq_file *s, struct ptd_mm_info *pinfo)
-+{
-+	struct pg_state st = {
-+		.seq = s,
-+		.marker = pinfo->markers,
-+		.level = -1,
-+		.ptdump = {
-+			.note_page_pte = note_page_pte,
-+			.note_page_pmd = note_page_pmd,
-+			.note_page_pud = note_page_pud,
-+			.note_page_p4d = note_page_p4d,
-+			.note_page_pgd = note_page_pgd,
-+			.note_page_flush = note_page_flush,
-+			.range = (struct ptdump_range[]) {
-+				{pinfo->base_addr, pinfo->end},
-+				{0, 0}
-+			}
-+		}
-+	};
-+
-+	ptdump_walk_pgd(&st.ptdump, pinfo->mm, NULL);
-+}
-+
-+bool ptdump_check_wx(void)
-+{
-+	struct pg_state st = {
-+		.seq = NULL,
-+		.marker = (struct addr_marker[]) {
-+			{0, NULL},
-+			{-1, NULL},
-+		},
-+		.level = -1,
-+		.check_wx = true,
-+		.ptdump = {
-+			.note_page_pte = note_page_pte,
-+			.note_page_pmd = note_page_pmd,
-+			.note_page_pud = note_page_pud,
-+			.note_page_p4d = note_page_p4d,
-+			.note_page_pgd = note_page_pgd,
-+			.note_page_flush = note_page_flush,
-+			.range = (struct ptdump_range[]) {
-+				{vm_map_base, ULONG_MAX},
-+				{0, 0}
-+			}
-+		}
-+	};
-+
-+	ptdump_walk_pgd(&st.ptdump, &init_mm, NULL);
-+
-+	if (st.wx_pages) {
-+		pr_warn("loongarch/mm: Checked W+X mappings: FAILED, %lu W+X pages found\n",
-+			st.wx_pages);
-+
-+		return false;
-+	} else {
-+		pr_info("loongarch/mm: Checked W+X mappings: passed, no W+X pages found\n");
-+
-+		return true;
-+	}
-+}
-+
-+static int ptdump_show(struct seq_file *m, void *v)
-+{
-+	ptdump_walk(m, m->private);
-+
-+	return 0;
-+}
-+
-+DEFINE_SHOW_ATTRIBUTE(ptdump);
-+
-+static int __init ptdump_init(void)
-+{
-+	unsigned int i, j;
-+
-+
-+	address_markers[PCI_IO_START_NR].start_address = (unsigned long)PCI_IOBASE;
-+	address_markers[PCI_IO_END_NR].start_address = (unsigned long)PCI_IOBASE + PCI_IOSIZE;
-+
-+#ifdef CONFIG_64BIT
-+	address_markers[MODULES_VADDR_NR].start_address = MODULES_VADDR;
-+	address_markers[MODULES_END_NR].start_address = MODULES_END;
-+#endif
-+	address_markers[VMALLOC_START_NR].start_address = VMALLOC_START;
-+	address_markers[VMALLOC_END_NR].start_address = VMALLOC_END;
-+#ifdef CONFIG_SPARSEMEM_VMEMMAP
-+	address_markers[VMEMMAP_START_NR].start_address = (unsigned long)vmemmap;
-+	address_markers[VMEMMAP_END_NR].start_address = VMEMMAP_END;
-+#endif
-+#ifdef CONFIG_KASAN
-+	address_markers[KASAN_SHADOW_START_NR].start_address = KASAN_SHADOW_START;
-+	address_markers[KASAN_SHADOW_END_NR].start_address = KASAN_SHADOW_END;
-+#endif
-+	address_markers[FIXMAP_START_NR].start_address = FIXADDR_START;
-+	address_markers[FIXMAP_END_NR].start_address = FIXADDR_TOP;
-+	kernel_ptd_info.base_addr = vm_map_base;
-+
-+	pg_level[1].name = (CONFIG_PGTABLE_LEVELS > 4) ? "P4D" : "PGD";
-+	pg_level[2].name = (CONFIG_PGTABLE_LEVELS > 3) ? "PUD" : "PGD";
-+
-+	for (i = 0; i < ARRAY_SIZE(pg_level); i++)
-+		for (j = 0; j < ARRAY_SIZE(pte_bits); j++)
-+			pg_level[i].mask |= pte_bits[j].mask;
-+
-+	debugfs_create_file("kernel_page_tables", 0400, NULL, &kernel_ptd_info,
-+			    &ptdump_fops);
-+
-+	return 0;
-+}
-+
-+device_initcall(ptdump_init);
--- 
-2.25.1
++       scratch_size_print("After low and global scratch allocations");
+         for_each_node_state(nid, N_MEMORY) {
+                 size = scratch_size_node(nid);
+                 addr = memblock_alloc_range_nid(size, 
+SCRATCH_ALIGNMENT_BYTES,
+@@ -744,6 +765,7 @@ static void __init kho_reserve_scratch(void)
+                 kho_scratch[i].size = size;
+                 i++;
+         }
++       scratch_size_print("After per node allocation");
+
+         return;
+
+
+>
+> With that said, I wonder if this fix might be more of a stop-gap 
+> solution.
+> As mentioned above, since NUMA_NO_NODE (-1) is used for the lowmem and
+> global allocations, my understanding is that these areas ideally should
+> not be included when calculating the size for a specific node ID.
+>
+> I could be missing something in my understanding, so I would appreciate
+> your thoughts on these observations.
+>
+> - Sourabh Jain
+>
+>> Fixes: 3dc92c311498 ("kexec: add Kexec HandOver (KHO) generation 
+>> helpers")
+>> Reported-by: Kexin Liu <liukexin@kylinos.cn>
+>> Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
+>> Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
+>> Signed-off-by: George Guo <guodongtai@kylinos.cn>
+>> ---
+>>   kernel/liveupdate/kexec_handover.c | 13 ++++++++++++-
+>>   1 file changed, 12 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/kernel/liveupdate/kexec_handover.c 
+>> b/kernel/liveupdate/kexec_handover.c
+>> index 7c4d86daf86d..39f489a258d9 100644
+>> --- a/kernel/liveupdate/kexec_handover.c
+>> +++ b/kernel/liveupdate/kexec_handover.c
+>> @@ -847,6 +847,17 @@ static void __init kho_reserve_scratch(void)
+>>           goto err_disable_kho;
+>>       }
+>>   +    /*
+>> +     * Calculate the per-node sizes before reserving any scratch areas.
+>> +     * memblock allocations are marked MEMBLOCK_RSRV_KERN, so 
+>> calculating
+>> +     * them later would count the lowmem and global scratch areas as 
+>> kernel
+>> +     * allocations and scale them again.
+>> +     */
+>> +    i = 2;
+>> +    for_each_node_state(nid, N_MEMORY)
+>> +        kho_scratch[i++].size = scratch_size_node(nid);
+>> +    i = 0;
+>> +
+>>       /*
+>>        * reserve scratch area in low memory for lowmem allocations in 
+>> the
+>>        * next kernel
+>> @@ -880,7 +891,7 @@ static void __init kho_reserve_scratch(void)
+>>        * memoryless nodes, as we can not allocate scratch areas there.
+>>        */
+>>       for_each_node_state(nid, N_MEMORY) {
+>> -        size = scratch_size_node(nid);
+>> +        size = kho_scratch[i].size;
+>>           addr = memblock_alloc_range_nid(size, SCRATCH_ALIGNMENT_BYTES,
+>>                           0, MEMBLOCK_ALLOC_ACCESSIBLE,
+>>                           nid, true);
+>
 
