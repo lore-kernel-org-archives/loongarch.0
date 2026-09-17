@@ -1,80 +1,186 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05CD242C508;
-	Thu, 17 Sep 2026 21:56:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C924ABBD2;
+	Thu, 17 Sep 2026 22:53:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789682220; cv=none; b=eemZ9L06jO6sTQukKiMGeWo6U9SCAHv7va1W1fo4aINOgSYckC3LV8H5xNEILXZREgx0ksMppNQGCkKzcY/T1liDRMw6f10aGE1Nu+H9NcPtAOsERcoFPWzdV5lr1iFsB7NMtvrpYHnT3Z9qVzMxPYSy35Ovi/qTqyrRljS0OZY=
+	t=1789685613; cv=none; b=eS+IidKcj7pFajzG/7ZJqzXNdnA1LR25lM4JG/Ux/YC+l+C2Lf12fmKdGXBIQ6H/HO3FgM/IePj65jdqXIeaVB5mU84+YAvSiAvf/4f2g39KJoh+Whx2wV7o7shOqCRQUCJ5JRSYi6ZNl1x/uuZCBRg++7xpYkpxS4bR7/034Q4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789682220; c=relaxed/simple;
-	bh=vvN1do1b5vxeWmLcBK5HgVMxtBO1ML3wxGKsgO4thWM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cAmL7a0f/0zPC+atJPRMtWdb0Yvd84NajFNf/c72fGi0HCgZUAfYvK58bGXNnccIP/oyZmKXxagJ0k1laS1pE7MBUb680ji+t/q2MYswCthAG0z+PtjQ3/RWcf4sj3CJ3+BwGOMkwa9Ih9uhOjX5mYeQngoaTK6XXBs8HcXRDvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bE+Lz4Bp; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789685613; c=relaxed/simple;
+	bh=ExxYnWYn6C/No6i6oyBCisOAYxdrZZJINsyBxsN5ZLs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=fuPug7DikRC4Ud4OVzPnGXzxSRFT1iEQBhr1vM0ax6kSdXPsUwKjg3Urfy1gzYomej8R0WPjDJWZTTSNQoDNy5oKqIyNUW18jSduyA4osBCsMiW7znsHxu9QD4BTZNB3/Y9V4sef+FhmjFtBhwmpOb5Hp/59jmD/t2Z4jFmTlVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CWDH0coQ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bE+Lz4Bp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 681611F000FF;
-	Thu, 17 Sep 2026 21:56:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CWDH0coQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA1AC1F000FF;
+	Thu, 17 Sep 2026 22:53:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789682215;
-	bh=kuBtV4+7ALBPAyy2nomafqxqzWcbcsqKb3dSOrzTp7c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=bE+Lz4BpzH5TSV1jWou2OBtlqHsC//L3WyTj9bXi6va6c8nZfLJ4ol68JuU+o3r2M
-	 TAu2icEvroIVO5OuYcPgJYCAhNQXTzOAIclO3FED1OglGnXQvoVgXQi9NkcPaNCm7C
-	 NxCHhu8wntvOtj4LO509qvBQvss+eZM34/jEYGD2HXc7uGKovRY4ujMtUk30a4EgKF
-	 zPD0eqlpLObbbLfAP2BCbHPLwLZz0rgjBIedFlBVM78LXQPEzVbz5SKMMk3kZSKLLI
-	 Ww16aNzudepZDNF3jG6O0DxZCUHUXGJHhXcE+1AZc6MCWnHl/xvccdOs6+sET6/9Sd
-	 Dca8d8QUwinxQ==
-Date: Thu, 17 Sep 2026 16:56:53 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Wandun Chen <chenwandun1@gmail.com>
-Cc: m.szyprowski@samsung.com, hpa@zytor.com, chenhuacai@kernel.org,
-	pasha.tatashin@soleen.com, devicetree@vger.kernel.org,
-	linux-mm@kvack.org, tglx@kernel.org, robin.murphy@arm.com,
-	kernel@xen0n.name, mingo@redhat.com, saravanak@kernel.org,
-	loongarch@lists.linux.dev, dave.hansen@linux.intel.com,
-	will@kernel.org, akpm@linux-foundation.org, rppt@kernel.org,
-	iommu@lists.linux.dev, mark.rutland@arm.com, alex@ghiti.fr,
-	linux-riscv@lists.infradead.org, pjw@kernel.org,
-	linux-kernel@vger.kernel.org, baoquan.he@linux.dev,
-	aou@eecs.berkeley.edu, kexec@lists.infradead.org,
-	pratyush@kernel.org, linux-arm-kernel@lists.infradead.org,
-	ruirui.yang@linux.dev, catalin.marinas@arm.com, bp@alien8.de,
-	palmer@dabbelt.com, x86@kernel.org
-Subject: Re: [PATCH v6 08/10] of: reserved_mem: mark /reserved-memory entries
- with MEMBLOCK_NODUMP
-Message-ID: <178968221332.3991643.14928206071521736133.robh@kernel.org>
-References: <20260902073116.802752-1-chenwandun1@gmail.com>
- <20260902073116.802752-9-chenwandun1@gmail.com>
+	s=k20260515; t=1789685611;
+	bh=IXOjluZcFhH/flCEevB3M2TpvgfJxkLhPY+HcD+KzfE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=CWDH0coQlEF0AK9ifcMlkpSjaSisLZfGRekijJzsGseP8S+XXRhiiios8D2k0rtzp
+	 8/F2Bs5PXVT3Wm6PKbjY/N/xKFxDn+G2SJQYyFztHY2uSQssWBTWg2H1D2f3JkUvBG
+	 uBLJVuF2bF8/cLdT+UqQWjo4GhxvECq2Rw1+/GDaCG7mazusN32fcbR2i8pW0M1NTw
+	 lGoVq2TGGab8GVy2iaN81U1qpD5SGZutBlq8Ahx5AaJJrVcFie30Cl0ULk2P+VqvdH
+	 BcKFgdjLsHj0EKzKGY0l3hdaAVKhUxO1f+aF2+MND+job3dbmW3MtoNId3U8Fltliw
+	 SQDq8cROLWhYA==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Sourabh Jain <sourabhjain@linux.ibm.com>
+Cc: George Guo <dongtai.guo@linux.dev>,  rppt@kernel.org,
+  pasha.tatashin@soleen.com,  pratyush@kernel.org,  graf@amazon.com,
+  changyuanl@google.com,  akpm@linux-foundation.org,
+  chenhuacai@kernel.org,  liukexin@kylinos.cn,  guodongtai@kylinos.cn,
+  kexec@lists.infradead.org,  linux-mm@kvack.org,
+  loongarch@lists.linux.dev,  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] liveupdate: kho: calculate per-node scratch sizes
+ before allocation
+In-Reply-To: <0969ede4-f617-4e24-b32e-c5e30a96880e@linux.ibm.com> (Sourabh
+	Jain's message of "Thu, 17 Sep 2026 16:00:00 +0530")
+References: <20260904025101.9959-1-dongtai.guo@linux.dev>
+	<616daf17-4598-4a30-8574-16480dfc23cb@linux.ibm.com>
+	<0969ede4-f617-4e24-b32e-c5e30a96880e@linux.ibm.com>
+Date: Fri, 18 Sep 2026 00:53:27 +0200
+Message-ID: <2vxz1par7amw.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260902073116.802752-9-chenwandun1@gmail.com>
+Content-Type: text/plain
+
+On Thu, Sep 17 2026, Sourabh Jain wrote:
+
+> Hello George,
+>
+> On 12/09/26 12:03, Sourabh Jain wrote:
+>> Hello George,
+>>
+>> On 04/09/26 08:21, George Guo wrote:
+>>> From: George Guo <guodongtai@kylinos.cn>
+>>>
+>>> The default percentage-based policy sizes scratch areas from the current
+>>> kernel's MEMBLOCK_RSRV_KERN footprint. This is a reasonable heuristic for
+>>> predicting the early memory demand of the next kernel.
+>>>
+>>> scratch_size_update() calculates the lowmem and global sizes before either
+>>> area is allocated. However, kho_reserve_scratch() calculates each per-node
+>>> size only after allocating the lowmem and global areas. Since memblock
+>>> allocations are marked MEMBLOCK_RSRV_KERN, the per-node calculation
+>>> includes those newly allocated scratch areas and scales them again.
+>>
+>> I may be missing something here, but doesn't memblock_reserved_kern_size()
+>> check the node ID of the region before checking the region flag
+>> (MEMBLOCK_RSRV_KERN)?
+>>
+>> Code snippet from memblock_reserved_kern_size()
+>> ```
+>> if (nid == memblock_get_region_node(r) || !numa_valid_node(nid))
+>>     if (r->flags & MEMBLOCK_RSRV_KERN)
+>>         total += size;
+>> ```
+>>
+>> For a valid nid, my understanding is that the global and lowmem scratch
+>> areas should not be counted because they are allocated with NUMA_NO_NODE
+>> (-1). So, ideally, these regions should be excluded when calculating the
+>> reserved memory for a specific node ID.
+>>
+>> Based on this, I am not sure that marking the lowmem and global areas as
+>> MEMBLOCK_RSRV_KERN is what causes the per-node size calculation to be
+>> inflated. I am looking into the code further to better understand the
+>> actual cause of the issue that this patch is trying to address.
+>
+> I added some prints in kho_reserve_scratch() and found that the per-node size
+> calculation is not impacted by the lowmem and global scratch memory allocations.
+>
+> KHO: Before low and global scratch allocations
+> KHO: low size = 899 KB
+> KHO: global size = 137 MB
+> KHO: Per node 2 = 80 MB
+>
+> KHO: After low and global scratch allocations
+> KHO: low size = 312195 KB
+> KHO: global size = 441 MB
+> KHO: Per node 2 = 80 MB
+>
+> KHO: After per node allocation
+> KHO: low size = 394115 KB
+> KHO: global size = 521 MB
+> KHO: Per node 2 = 240 MB
+>
+> I only had one NUMA node (nid=2), and the per-NUMA
+> allocation before and after the lowmem and global scratch
+> memory allocations remained the same at 80 MB.
+>
+> The experiment was done on the PowerPC architecture.
+>
+> I am wondering how the per-NUMA allocation in your setup is
+> getting inflated due to the lowmem and global scratch memory
+> reservations.
+
+I had the same question, so I asked AI. Here's what it says:
+
+--- 8< ---
+
+The bug was reported and tested using the KHO self-test runner
+(tools/testing/selftests/kho/vmtest.sh), which builds a test kernel
+using make olddefconfig with only a minimal set of CONFIG_* options.
+Crucially, CONFIG_NUMA is not enabled.
+
+When CONFIG_NUMA is disabled:
+
+    #ifndef CONFIG_NUMA
+    static inline void memblock_set_region_node(struct memblock_region *r, int nid)
+    {
+    }
+    
+    static inline int memblock_get_region_node(const struct memblock_region *r)
+    {
+        return 0;
+    }
+    #endif
 
 
-On Wed, 02 Sep 2026 15:31:14 +0800, Wandun Chen wrote:
-> From: Wandun Chen <chenwandun@lixiang.com>
-> 
-> Mark non-dumpable reserved-memory regions with MEMBLOCK_NODUMP so
-> kdump can omit them from the vmcore.
-> 
-> The marking is guarded by CONFIG_CRASH_DUMP so non-kdump kernels do not
-> pay the cost of splitting memblock.memory entries at NODUMP boundaries.
-> 
-> Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
-> Tested-by: Meijing Zhao <zhaomeijing@lixiang.com>
-> ---
->  drivers/of/fdt.c             |  1 +
->  drivers/of/of_private.h      |  1 +
->  drivers/of/of_reserved_mem.c | 15 +++++++++++++++
->  3 files changed, 17 insertions(+)
-> 
+struct memblock_region does not even contain an nid member.
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+memblock_set_region_node() is a no-op (the NUMA_NO_NODE argument is
+simply discarded), and memblock_get_region_node() is hardcoded to always
+return 0.
 
+There is only one node (nid = 0), so for_each_node_state(nid, N_MEMORY)
+loops once for nid = 0.
+
+Both memblock_phys_alloc_range() and memblock_phys_alloc() mark their
+allocations with MEMBLOCK_RSRV_KERN. Therefore, when
+scratch_size_node(0) runs after allocating the lowmem scratch buffer,
+memblock_get_region_node(r) returns 0 for that lowmem scratch buffer,
+and r->flags & MEMBLOCK_RSRV_KERN is true. As a result,
+scratch_size_node(0) counts the lowmem scratch area as part of Node 0's
+kernel footprint and scales it by scratch_scale (200%) again.
+
+--- >8 ---
+
+I didn't look closer, but it does seem to make sense.
+
+But in practice, this problem is only on CONFIG_NUMA=n and I don't think
+in practice KHO or LUO is being used in non-NUMA systems. So while I
+think it is worth fixing, I think we should also have a test where we
+enable CONFIG_NUMA.
+
+Your system probably has CONFIG_NUMA=y and that's why you aren't able to
+reproduce this bug.
+
+I think on NUMA systems the problem is the other way round. The
+calculation for the global scratch also counts per-node allocations.
+
+So I think the proper fix for scratch sizing is what this patch does and
+then a fixup for the global scratch calculation as well.
+
+[...]
+
+-- 
+Regards,
+Pratyush Yadav
