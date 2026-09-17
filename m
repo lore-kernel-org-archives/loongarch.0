@@ -1,33 +1,33 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCD00501298
-	for <loongarch@lists.linux.dev>; Thu, 17 Sep 2026 18:11:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC7FE2ED154
+	for <loongarch@lists.linux.dev>; Thu, 17 Sep 2026 18:12:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789668711; cv=none; b=ZtB/QAWthMq44HGA0qZkeOVLHTn/qUVnUlfYaIZHFe4pcVAzqBYv49Jc4t2b5qpHofnBzcPjJVaMbnOqUEen/M4exp5upnN1wSvog1QlZh311CSdnIpSPr0Ua+JJdSCVGf1JmwrXk+nQ8zCfNuYcWvm7K3A1edIDONcPYzB7Fu0=
+	t=1789668739; cv=none; b=SZbNydEPrp531xUJkqHt1LLp2lVjj+H0xkxsTpV5baEXKkGt+G3VNNbPAuHFidN31ermLZG4NkAJ4GSC2WNv4C8ku6wqggmhFbZejVkA6n9JTHfRpE5bwlhSWcMToBuuG0kQASMgme6Vf/EhTV6pWKfWS1pJSUdFHx7LWZJZ2Kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789668711; c=relaxed/simple;
-	bh=H66u+La3BKMWWXlFlTrVsuKaNwpwzDBaFVCwWt2d404=;
+	s=arc-20240116; t=1789668739; c=relaxed/simple;
+	bh=JRotaeYUDA8OKw6fWgN1iioU01GNC1YxBAHOCuSkCcg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QgC5Q98gWSWGNz3Qo1kRlH7+x5wOGfT6o7gux6yrC5114M6LM8VIU420hgCZy1LnetA+VJNzfjCtqVZxwglJ42P3ybaXxkRxhoog0VjvnkM577mqzhcEHg5lhECXijcOHnaD/iTjHRGh7hk7tQe67ntUaC78paxQ4qHpqXAIbNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=iCgIs5dz; arc=none smtp.client-ip=217.140.110.172
+	 In-Reply-To:Content-Type; b=lbZsck+z14U660Ph21qLLwh8NjMBlwIcreEY8AmDtj6N/v2e4gFtSBo0yfY4GjNGNMrcz+RlniNC06j9LLGJtxUQtWmvHuXavXA71GuYyH7rn0PjHJ1jYbkABmx+ebmiml+K7eYlAvdNn8a+CluEf4sBuUExeASuRVYDAxeeBqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=mCMXQQCu; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="iCgIs5dz"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="mCMXQQCu"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 63D881F37;
-	Thu, 17 Sep 2026 11:11:45 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A6D8D1596;
+	Thu, 17 Sep 2026 11:12:13 -0700 (PDT)
 Received: from [10.57.7.135] (unknown [10.57.7.135])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0F8A43F86F;
-	Thu, 17 Sep 2026 11:11:41 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB6E23F86F;
+	Thu, 17 Sep 2026 11:12:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1789668709; bh=H66u+La3BKMWWXlFlTrVsuKaNwpwzDBaFVCwWt2d404=;
+	t=1789668737; bh=JRotaeYUDA8OKw6fWgN1iioU01GNC1YxBAHOCuSkCcg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iCgIs5dzYG7snhIRdFqpGaSsJVsl0ixJWXw9PoPyfIlhokN/8nNvOsj2UbtDvKCha
-	 Tp3HrxbmHWFO2gKUtSM+qK7ECcnPdfRqQfxj3IWzJmi4UrHCG0lAtw2aUeVU8zBH/z
-	 czy4xKGN1iHjasunQcaQVI2fOrM8IYWtnSzeyYgY=
-Message-ID: <a45bb08d-cfe3-4d65-bda5-421f14347d23@arm.com>
-Date: Thu, 17 Sep 2026 20:11:41 +0200
+	b=mCMXQQCuXWXGh8CqhS0W7cwhE2pXGdXIab/vrQATUL3/XaFJNt8Xf3XcEukOlMYCK
+	 ugh3zQSksUsKim10k1OD4vF/PrNn0SbUDLvpZ5GQyazWmyouKJGKG5+oDmjP89b8Rg
+	 7/ZY9aaQUsSH+CtdxVNQuZgcibuXfkywZeR0hrNM=
+Message-ID: <19b00695-9f99-4d21-9592-13fad31f85e7@arm.com>
+Date: Thu, 17 Sep 2026 20:12:07 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/6] mm/vmalloc: constify vm parameter of
- get_vm_area_page_order()
+Subject: Re: [PATCH v3 4/6] mm/vmalloc: make set_area_direct_map HUGE_VMAP
+ friendly
 To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
  Andrew Morton <akpm@linux-foundation.org>
 Cc: =?UTF-8?Q?Adrian_Barna=C5=9B?= <abarnas@google.com>,
@@ -63,20 +63,62 @@ Cc: =?UTF-8?Q?Adrian_Barna=C5=9B?= <abarnas@google.com>,
  linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
  loongarch@lists.linux.dev
 References: <20260903-execmem-set-vm-perms-v0-2-v3-0-949b64a9f755@kernel.org>
- <20260903-execmem-set-vm-perms-v0-2-v3-3-949b64a9f755@kernel.org>
+ <20260903-execmem-set-vm-perms-v0-2-v3-4-949b64a9f755@kernel.org>
 From: Kevin Brodsky <kevin.brodsky@arm.com>
 Content-Language: en-GB
-In-Reply-To: <20260903-execmem-set-vm-perms-v0-2-v3-3-949b64a9f755@kernel.org>
+In-Reply-To: <20260903-execmem-set-vm-perms-v0-2-v3-4-949b64a9f755@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 03/09/2026 11:28, Mike Rapoport (Microsoft) wrote:
-> get_vm_area_page_order() and vm_area_page_order() do not need to modify
-> struct vm_struct passed to them.
+> set_area_direct_map() always updates direct map alias permissions in
+> single page increments.
 >
-> Constify the parameter.
+> For HUGE_VMAP areas it's suboptimal. Not only the loop in
+> set_area_direct_map() needlessly has more iterations (e.g times 512 on
+> x86), but it also causes fragmentation of the direct map that could be
+> avoided for the HUGE_VMAP areas populated with large pages.
 >
-> Reviewed-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> All pages in an area are always of the same order: either same-order
+> large pages when VM_ALLOW_HUGE_VMAP is set and all huge pages were
+> successfully allocated, or order-0 page when VM_ALLOW_HUGE_VMAP is
+> cleared or when huge pages allocation fails and fallback path is taken.
+>
+> Instead of updating the direct map permissions for every order-0 page in
+> an area, use the area's page_order as the loop increment and update the
+> large pages in one call to set_direct_map_{invalid,default}_noflush().
+>
 > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
 Reviewed-by: Kevin Brodsky <kevin.brodsky@arm.com>
+
+> ---
+>  mm/vmalloc.c | 13 ++++++++-----
+>  1 file changed, 8 insertions(+), 5 deletions(-)
+>
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index 5506b180f5c27..6ed6c160abed7 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -3367,12 +3367,15 @@ static inline void set_area_direct_map(const struct vm_struct *area,
+>  				       int (*set_direct_map)(struct page *page,
+>  							     unsigned int nr))
+>  {
+> -	unsigned long i;
+> +	unsigned int nr = (1U << vm_area_page_order(area));
+> +
+> +	for (unsigned long i = 0; i < area->nr_pages; i += nr) {
+> +		if (page_address(area->pages[i])) {
+> +			int err = set_direct_map(area->pages[i], nr);
+>  
+> -	/* HUGE_VMALLOC passes small pages to set_direct_map */
+> -	for (i = 0; i < area->nr_pages; i++)
+> -		if (page_address(area->pages[i]))
+> -			set_direct_map(area->pages[i], 1);
+> +			WARN_ON_ONCE(err);
+> +		}
+> +	}
+>  }
+>  
+>  /*
+>
