@@ -1,99 +1,125 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50DAD4DDB2B;
-	Thu, 17 Sep 2026 16:08:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C36614FDA7D
+	for <loongarch@lists.linux.dev>; Thu, 17 Sep 2026 18:11:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789661335; cv=none; b=asmE5AyyMMjMAgTDD3M5EUA438Zjd8QGzgS46Ik4Z8WCchUwmT83EGs3J3dXDjHPaWufCLVOltwI/5aPgqKA45aDmaV+jp6rRs4ZlpRwcbarKqZyqVEa/EqwZLk81rSJhNlS7SSXLD/Nm/EkDCb9T222nnchuMWYclqxG5JGhZw=
+	t=1789668699; cv=none; b=KjtWrV9mBr4xHbafHx9D27PnGo4GSxIcRNwbjdlNxvr6Dy1zXab8D0SqJSLw5+j6B3HKVq+KcNuBj+4nH5RLQlZUbLgRg4UB0QALSqLavZkzAY2V7vBz8Oiy/cR2oVrrdaFIVx+hCmtFZxfGVh8b6O2hi6j/opfpsLx6DAkWnN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789661335; c=relaxed/simple;
-	bh=LTrp4k+I8MTH1TFb/n0jAUNy6sMkQLKvNVm0Ssk0Ik4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oqFtbGxGDCIfA0DMLWQY55R3rvlV7w+xgmQgHHzWVEmh1cgpLAlu88Ux+lW4MVoXhOCa456svKqFL6+1byyZ6CcJFh/QKIbnhmqPm/z2YlFmEYJJR2LC1w9pdM8G+SwrHi64Qi7q/XFFQ3I+raa3W0T8OB5UuHm0Xg0IuSeErK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=fg2BVR2h; arc=none smtp.client-ip=217.140.110.172
+	s=arc-20240116; t=1789668699; c=relaxed/simple;
+	bh=TMD2k65kuIFXRf0q/E0tlyDyciozaJKv/LfOROsWlhU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oUvexjaZ9OJ/uzqW7BEMJJT5C3GjdtQaHiShw4MYFVPARLZcYV4NI0HxvkkzVG853cQt/zG9TMYIVLujz2NjW7Hq+/bFoi8yGWMfliBzCQwpCz3qUtzVb9ctQ6X4X0Us0sUMYMkE79VKC1Ac2/vcOYiZqM7Xkur3WuPa1cbdI/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=oz67M4YS; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="fg2BVR2h"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="oz67M4YS"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D71DA1476;
-	Thu, 17 Sep 2026 09:08:48 -0700 (PDT)
-Received: from arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C2B23F86F;
-	Thu, 17 Sep 2026 09:08:46 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D27B1476;
+	Thu, 17 Sep 2026 11:11:32 -0700 (PDT)
+Received: from [10.57.7.135] (unknown [10.57.7.135])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 07D443F86F;
+	Thu, 17 Sep 2026 11:11:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1789661332; bh=LTrp4k+I8MTH1TFb/n0jAUNy6sMkQLKvNVm0Ssk0Ik4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fg2BVR2hsmdfzOw802jgLmkU4C8dYgDiVodN/BCQcJnNlXQvUZTot4764bZzdYHoP
-	 KpxaXu68DSJ+nTWkJw0nr52jlY0S/pY38k0WZGKhlRoxtkP4hWgPjgsWanps+qYf6p
-	 OWz0B8EVzI71pY/BTigybbpetQ2VZbhxL7LsQAdw=
-Date: Thu, 17 Sep 2026 17:08:43 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
-Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Robin Murphy <robin.murphy@arm.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Steven Price <steven.price@arm.com>,
-	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-	Jiri Pirko <jiri@resnulli.us>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Mostafa Saleh <smostafa@google.com>,
-	Petr Tesarik <ptesarik@suse.com>,
-	Alexey Kardashevskiy <aik@amd.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	x86@kernel.org
-Subject: Re: [PATCH v4 5/5] dma: swiotlb: Remove SWIOTLB_ANY
-Message-ID: <aqwQi0AGG6NvHKHG@arm.com>
-References: <20260914070135.313337-1-aneesh.kumar@kernel.org>
- <20260914070135.313337-6-aneesh.kumar@kernel.org>
+	t=1789668695; bh=TMD2k65kuIFXRf0q/E0tlyDyciozaJKv/LfOROsWlhU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=oz67M4YS9vKX95bPOvJjG/6IahhL31r2yGk7O81dt+sjjN414ZuuZ1xCMa2au/gHH
+	 rXUcqtwGrQvFQ85FYRDPTsgIv5sPS9YSZzFPZz/TWW1k7YQuQdJ0UPTrn4SrhDiV3s
+	 CGukra9E2ILOT0R0PDF2smG+O2IyEGDjkvUSbT20=
+Message-ID: <d299f7c5-6c71-499a-b8cd-aa69c4c81dd1@arm.com>
+Date: Thu, 17 Sep 2026 20:11:22 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260914070135.313337-6-aneesh.kumar@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/6] set_memory: add number of pages parameter to
+ set_direct_map APIs
+To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: =?UTF-8?Q?Adrian_Barna=C5=9B?= <abarnas@google.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Alexander Gordeev
+ <agordeev@linux.ibm.com>, Alexandre Ghiti <alex@ghiti.fr>,
+ Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
+ Brendan Jackman <brendan.jackman@linux.dev>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ David Hildenbrand <david@kernel.org>,
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Huacai Chen <chenhuacai@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Len Brown <lenb@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <pjw@kernel.org>,
+ Pavel Machek <pavel@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Ryan Roberts <ryan.roberts@arm.com>, Sven Schnelle <svens@linux.ibm.com>,
+ Thomas Gleixner <tglx@kernel.org>, Uladzislau Rezki <urezki@gmail.com>,
+ Vasily Gorbik <gor@linux.ibm.com>, WANG Xuerui <kernel@xen0n.name>,
+ Will Deacon <will@kernel.org>, x86@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-pm@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ loongarch@lists.linux.dev
+References: <20260903-execmem-set-vm-perms-v0-2-v3-0-949b64a9f755@kernel.org>
+ <20260903-execmem-set-vm-perms-v0-2-v3-1-949b64a9f755@kernel.org>
+From: Kevin Brodsky <kevin.brodsky@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20260903-execmem-set-vm-perms-v0-2-v3-1-949b64a9f755@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Sep 14, 2026 at 12:31:34PM +0530, Aneesh Kumar K.V (Arm) wrote:
-> swiotlb pools are currently allocated below the architecture's low
-> address limit by default. SWIOTLB_ANY overrides this and permits
-> allocation anywhere in directly mapped memory.
-> 
-> SWIOTLB_INIT_ADDRESSING_LIMIT now explicitly identifies callers which
-> need a pool that is reachable by devices with limited DMA addressing.
-> Use it as the placement constraint and remove SWIOTLB_ANY.
-> 
-> This changes the default behavior for callers which do not set either
-> flag. Previously, omitting SWIOTLB_ANY placed the default pool below the
-> architecture's low address limit and also constrained dynamically
-> allocated pools to the same range. After this change, omitting
-> SWIOTLB_INIT_ADDRESSING_LIMIT permits both static and dynamic pools to
-> use any directly mapped memory.
-> 
-> Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
+On 03/09/2026 11:28, Mike Rapoport (Microsoft) wrote:
+> When set_direct_map APIs were introduced by the commit d253ca0c3865
+> ("x86/mm/cpa: Add set_direct_map_*() functions") the single page
+> parameter made sense because the initial callers (vmalloc and
+> hibernation) had sets of unsorted struct pages that required changes of
+> their mappings in the direct map.
+>
+> Since there is an increasing demand for direct map manipulation and it
+> is also desirable to be able to update larger physically contiguous
+> mappings, for example an entire large folio, extend set_direct_map APIs
+> to receive number of pages parameter.
+>
+> As there is still only a handful of callers, change the existing
+> functions directly and update all the call sites rather than adding
+> wrappers for single page case.
+>
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> ---
+>  arch/arm64/include/asm/set_memory.h     | 4 ++--
+>  arch/arm64/mm/pageattr.c                | 8 ++++----
+>  arch/loongarch/include/asm/set_memory.h | 4 ++--
+>  arch/loongarch/mm/pageattr.c            | 8 ++++----
+>  arch/riscv/include/asm/set_memory.h     | 4 ++--
+>  arch/riscv/mm/pageattr.c                | 8 ++++----
+>  arch/s390/include/asm/set_memory.h      | 4 ++--
+>  arch/s390/mm/pageattr.c                 | 8 ++++----
+>  arch/x86/include/asm/set_memory.h       | 4 ++--
+>  arch/x86/mm/pat/set_memory.c            | 8 ++++----
+>  include/linux/set_memory.h              | 6 ++++--
+>  kernel/power/snapshot.c                 | 4 ++--
+>  mm/secretmem.c                          | 6 +++---
+>  mm/vmalloc.c                            | 5 +++--
+>  14 files changed, 42 insertions(+), 39 deletions(-)
+>
+> diff --git a/arch/arm64/include/asm/set_memory.h b/arch/arm64/include/asm/set_memory.h
+> index 90f61b17275e1..b07fd4e026eac 100644
+> --- a/arch/arm64/include/asm/set_memory.h
+> +++ b/arch/arm64/include/asm/set_memory.h
+> @@ -11,8 +11,8 @@ bool can_set_direct_map(void);
+>  
+>  int set_memory_valid(unsigned long addr, int numpages, int enable);
+>  
+> -int set_direct_map_invalid_noflush(struct page *page);
+> -int set_direct_map_default_noflush(struct page *page);
+> +int set_direct_map_invalid_noflush(struct page *page, unsigned int numpages);
+> +int set_direct_map_default_noflush(struct page *page, unsigned int numpages);
 
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+I don't have a strong opinion on whether to call the argument nr or
+numpages, but we might as well be consistent across archs :)
+
+Aside from that:
+
+Reviewed-by: Kevin Brodsky <kevin.brodsky@arm.com>
