@@ -1,302 +1,114 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41EE33D0936
-	for <loongarch@lists.linux.dev>; Thu, 17 Sep 2026 10:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5CF833F8B4;
+	Thu, 17 Sep 2026 14:47:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789641053; cv=none; b=aUB0yc0RaruOPgs6ex8v48ANcUt9Yn/AfoHlAF19JyHn4BdwjQzAztsDzpYwHCVpS5DcRFaAgTmhJXDYiD3Vuj7UUfeN5vY3X+iU0ckRgjDnyIoNzSyjnxPXyAnVxTKLA0O6NYFsA4YlQJm0T6XcE/tOdkwPWzTwXqQcw62yWYY=
+	t=1789656481; cv=none; b=l1UEtzyRsGvYFs7X3QahOib8dQRq7F040aq2ukyC2tuueDf4/ky7SHRiF2c6E1kSx/wBYCNdo1OGE+J7QyBNaVwE7xbZXZITHSJZyeGk9Juc80mOpPOpAyaaNQ3e2ArsuzU3+ofqAaWJg9UppET0bsN3n96k7h2eB85EhrQW1/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789641053; c=relaxed/simple;
-	bh=/tpJxB7myuQvr727nWqq6p0x6mQFEBPYam9XfxPXE0g=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=kgbNCyBjTV7pOILSK/RHYTzXgceAoEdzVajMA/28MyS324Cfgj08M/AGM+IILhbTKfT70AvGWIuLJMm+DpPUM91bTvP8olYlK6UawrQLRb5QzhBX5BTYwUHfpFQCMKdICPy6jJEeAyYBH9bme6eNL05lJwqAiYV4KYHx7rfZWLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=UB9Mez9w; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1789656481; c=relaxed/simple;
+	bh=M6L3gDgo7kZ+fxTWrN1ZIsrMlAv/aP6jh31bZohJ0Rs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qDj/zHG7vH2dJmHTN0/wWlErUZoSHlK8GwgAv/bvDQKom3NO7kxQOagQXUQ4LpSm/r829tPV/40m6njmvqWbXbPIH/y5dwE5PeLnZgxRE5nY08ZEIVnKXOz+cE1MxUAni7T5fuP690OqLAB6C07TNHqvPMP53w4Ve4b8VR5i15M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=FfOzLZ+3; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="UB9Mez9w"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68HA1WAt2205751;
-	Thu, 17 Sep 2026 10:30:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=XN7HVK
-	JtZSz9og9g+wQh8pvmMxNLYZqB67Fm0+hPgCU=; b=UB9Mez9wgVSbLLKt3nltTd
-	vtWJrzs/AuV45Uzot7sxzc1qmKE+lAdXWb6/26MjpQ2MzFMQYUFwNiCcrmnwFbQM
-	OdmTnlT97yhxQ3H++Hsy5tLzCAmoIZv9eAm88A8AeRT2SlletdMjMNXJ8yl52Xi1
-	HSxzQ4jqR0uguGl6A2Y4E5exPMKTv7DBrnIbJSR6/BWdD03fY7cvMYy/SSFD7QHp
-	avn1SZmOx7Wdn0OQoZT/uWrDUOsAw1ba3ZqzOmslUig7AOYS1tKLCTcOSTN0vxSK
-	rL1NPHU9r2fsc25hFWkn9mR0MxKoauyMW76MlrcEEOzPO1wYKmu8NO+8HocspmRw
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4gmxf59sxr-1
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Thu, 17 Sep 2026 10:30:06 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 68H9aHRR2962374;
-	Thu, 17 Sep 2026 10:30:05 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4gra3ys076-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Sep 2026 10:30:05 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 68HAU3uk27066644
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 17 Sep 2026 10:30:04 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CF06120043;
-	Thu, 17 Sep 2026 10:30:03 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7B06D20040;
-	Thu, 17 Sep 2026 10:30:01 +0000 (GMT)
-Received: from [9.123.14.142] (unknown [9.123.14.142])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 17 Sep 2026 10:30:01 +0000 (GMT)
-Message-ID: <0969ede4-f617-4e24-b32e-c5e30a96880e@linux.ibm.com>
-Date: Thu, 17 Sep 2026 16:00:00 +0530
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="FfOzLZ+3"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 52F5B1476;
+	Thu, 17 Sep 2026 07:47:42 -0700 (PDT)
+Received: from arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 011E03F86F;
+	Thu, 17 Sep 2026 07:47:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1789656465; bh=M6L3gDgo7kZ+fxTWrN1ZIsrMlAv/aP6jh31bZohJ0Rs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FfOzLZ+3Qia0W7RivVKaHNN7ieAHkjlQ0vn4TRTzuF7z8OiKjJ/k086OfMvanwLe4
+	 ELpOh1p5+42rsPtfbx27NAQlMXC2xMiCbIVs5xTJrXk64zRBISqHGguvSJA4aBz7vA
+	 RLAIQplJPf8iM7ccnFiG8UpvaheI8Ih5+YH3OgPE=
+Date: Thu, 17 Sep 2026 15:47:37 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
+Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Robin Murphy <robin.murphy@arm.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Steven Price <steven.price@arm.com>,
+	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
+	Jiri Pirko <jiri@resnulli.us>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Mostafa Saleh <smostafa@google.com>,
+	Petr Tesarik <ptesarik@suse.com>,
+	Alexey Kardashevskiy <aik@amd.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Xu Yilun <yilun.xu@linux.intel.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	x86@kernel.org
+Subject: Re: [PATCH v4 1/5] dma: swiotlb: Centralize default pool policy
+ selection
+Message-ID: <aqv9icxsfN3PLErN@arm.com>
+References: <20260914070135.313337-1-aneesh.kumar@kernel.org>
+ <20260914070135.313337-2-aneesh.kumar@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] liveupdate: kho: calculate per-node scratch sizes
- before allocation
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-To: George Guo <dongtai.guo@linux.dev>, rppt@kernel.org,
-        pasha.tatashin@soleen.com, pratyush@kernel.org
-Cc: graf@amazon.com, changyuanl@google.com, akpm@linux-foundation.org,
-        chenhuacai@kernel.org, liukexin@kylinos.cn, guodongtai@kylinos.cn,
-        kexec@lists.infradead.org, linux-mm@kvack.org,
-        loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20260904025101.9959-1-dongtai.guo@linux.dev>
- <616daf17-4598-4a30-8574-16480dfc23cb@linux.ibm.com>
-Content-Language: en-US
-In-Reply-To: <616daf17-4598-4a30-8574-16480dfc23cb@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-GUID: 9kBhWDxzKEIXlqR8yCNcou2mv5J-iLVE
-X-Proofpoint-Spam-Info: AW1haW4tMjYwOTE3MDEzOCBTYWx0ZWRfX4nKOPkxkEHZH
- cbCPACV+Q8ZXOWnkBfLFBFAxfYGC1ICYywpk1xHZ/vR2wqH24j28Z0hv59KXNH1ertcNpZrOoAP
- RkbmX9iLganfS9LSwe6XEBF1JghRDjU=
-X-Authority-Analysis: v=2.4 cv=cvgOAF4i c=1 sm=1 tr=0 ts=6aabc12f cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=cCf1g51oGTkv6yQ4Xg8A:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: 7mAPHVSLg7bMiEO_a2HtaZ1DTH2y0rqY
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTE3MDEzOCBTYWx0ZWRfX0dWwNtLff6Nh
- om5qwwSOmvYF+uPvh6/PaymH9q1jXDuH+lhv2Nj53RPQD7rdRzsUyd1gPXc969endwNVdYP9MoH
- qRk+kAIWZItfE4mkjTIP3rqbY0EP9jjimL5rCNIR2/FzURYQxPddaBMmTqi9wKwcpGgIfFxB/oa
- 126tMjZeRxzYkQn92G4VtAzYneIuki5Bi8FSedBsVNrP+MMfgiL5oKK6WgP4qCLM+xz8yhpd/XT
- ebOMfU0Q4szU/8gLUbBKFzdM/rKC6pFz/lADmhFUHRnRNQuWvEcQxK6wyyAoo/U8vQNsCovNUdg
- iLK8mmYCK+1D+jqofmDho1GiWqbE00z8ZFaGjTxo73mEIG5BCSwD5un0/skSzzFdODU8/3q6+sG
- K7gOvmqOZrXjZwZ8iPmr4/0pXwKjFFXLh1cmyyniGzfAXyheqUmqJx5/gzB0w2SJ26vcYHDBKKK
- FzkHdK8lP3zsXbuwTLA==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-09-17_02,2026-09-16_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 lowpriorityscore=0 clxscore=1015 priorityscore=1501
- suspectscore=0 bulkscore=0 impostorscore=0 phishscore=0 spamscore=0
- adultscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2609040000
- definitions=main-2609170138
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260914070135.313337-2-aneesh.kumar@kernel.org>
 
-Hello George,
+On Mon, Sep 14, 2026 at 12:31:30PM +0530, Aneesh Kumar K.V (Arm) wrote:
+> diff --git a/arch/x86/include/asm/iommu.h b/arch/x86/include/asm/iommu.h
+> index 3be2451e7bc8..22c8190fe34d 100644
+> --- a/arch/x86/include/asm/iommu.h
+> +++ b/arch/x86/include/asm/iommu.h
+> @@ -14,8 +14,10 @@ extern bool amd_iommu_snp_en;
+>  
+>  #ifdef CONFIG_SWIOTLB
+>  extern bool x86_swiotlb_enable;
+> +extern unsigned int x86_swiotlb_flags;
+>  #else
+>  #define x86_swiotlb_enable false
+> +#define x86_swiotlb_flags 0
+>  #endif
+>  
+>  /* 10 seconds */
+> diff --git a/arch/x86/kernel/amd_gart_64.c b/arch/x86/kernel/amd_gart_64.c
+> index b5f1f031d45b..d0fbc0271e43 100644
+> --- a/arch/x86/kernel/amd_gart_64.c
+> +++ b/arch/x86/kernel/amd_gart_64.c
+> @@ -814,6 +814,7 @@ int __init gart_iommu_init(void)
+>  	dma_ops = &gart_dma_ops;
+>  	x86_platform.iommu_shutdown = gart_iommu_shutdown;
+>  	x86_swiotlb_enable = false;
+> +	x86_swiotlb_flags = 0;
 
-On 12/09/26 12:03, Sourabh Jain wrote:
-> Hello George,
->
-> On 04/09/26 08:21, George Guo wrote:
->> From: George Guo <guodongtai@kylinos.cn>
->>
->> The default percentage-based policy sizes scratch areas from the current
->> kernel's MEMBLOCK_RSRV_KERN footprint. This is a reasonable heuristic 
->> for
->> predicting the early memory demand of the next kernel.
->>
->> scratch_size_update() calculates the lowmem and global sizes before 
->> either
->> area is allocated. However, kho_reserve_scratch() calculates each 
->> per-node
->> size only after allocating the lowmem and global areas. Since memblock
->> allocations are marked MEMBLOCK_RSRV_KERN, the per-node calculation
->> includes those newly allocated scratch areas and scales them again.
->
-> I may be missing something here, but doesn't 
-> memblock_reserved_kern_size()
-> check the node ID of the region before checking the region flag 
-> (MEMBLOCK_RSRV_KERN)?
->
-> Code snippet from memblock_reserved_kern_size()
-> ```
-> if (nid == memblock_get_region_node(r) || !numa_valid_node(nid))
->     if (r->flags & MEMBLOCK_RSRV_KERN)
->         total += size;
-> ```
->
-> For a valid nid, my understanding is that the global and lowmem scratch
-> areas should not be counted because they are allocated with NUMA_NO_NODE
-> (-1). So, ideally, these regions should be excluded when calculating the
-> reserved memory for a specific node ID.
->
-> Based on this, I am not sure that marking the lowmem and global areas as
-> MEMBLOCK_RSRV_KERN is what causes the per-node size calculation to be
-> inflated. I am looking into the code further to better understand the
-> actual cause of the issue that this patch is trying to address.
+I don't think the flags are still read anywhere after this function.
+gart_iommu_init() is called long after swiotlb_init(). So you can drop
+this and make x86_swiotlb_flags static in pci-dma.c.
 
-I added some prints in kho_reserve_scratch() and found that the per-node 
-size
-calculation is not impacted by the lowmem and global scratch memory 
-allocations.
+With this:
 
-KHO: Before low and global scratch allocations
-KHO: low size = 899 KB
-KHO: global size = 137 MB
-KHO: Per node 2 = 80 MB
-
-KHO: After low and global scratch allocations
-KHO: low size = 312195 KB
-KHO: global size = 441 MB
-KHO: Per node 2 = 80 MB
-
-KHO: After per node allocation
-KHO: low size = 394115 KB
-KHO: global size = 521 MB
-KHO: Per node 2 = 240 MB
-
-I only had one NUMA node (nid=2), and the per-NUMA
-allocation before and after the lowmem and global scratch
-memory allocations remained the same at 80 MB.
-
-The experiment was done on the PowerPC architecture.
-
-I am wondering how the per-NUMA allocation in your setup is
-getting inflated due to the lowmem and global scratch memory
-reservations.
-
-Feel free to use the change below to print the similar states
-in your setup.
-
-index 9260e601c..b5bd9617b 100644
---- a/kernel/liveupdate/kexec_handover.c
-+++ b/kernel/liveupdate/kexec_handover.c
-@@ -670,6 +670,24 @@ static phys_addr_t __init scratch_size_node(int nid)
-         return round_up(size, SCRATCH_ALIGNMENT_BYTES);
-  }
-
-+static void __init scratch_size_print(char *s)
-+{
-+       int nid;
-+       phys_addr_t size;
-+
-+       pr_info("%s\n", s);
-+       size = memblock_reserved_kern_size(ARCH_LOW_ADDRESS_LIMIT, 
-NUMA_NO_NODE);
-+       pr_info("low size = %llu KB\n", (unsigned long long)(size >> 10));
-+
-+       size = memblock_reserved_kern_size(MEMBLOCK_ALLOC_ANYWHERE, 
-NUMA_NO_NODE);
-+       pr_info("global size = %llu MB\n", (unsigned long long)(size >> 
-20));
-+
-+       for_each_node_state(nid, N_MEMORY) {
-+               size = scratch_size_node(nid);
-+               pr_info("Per node %d = %llu MB\n", nid, (unsigned long 
-long)(size >> 20));
-+       }
-+}
-+
-  /**
-   * kho_reserve_scratch - Reserve a contiguous chunk of memory for kexec
-   *
-@@ -698,6 +716,7 @@ static void __init kho_reserve_scratch(void)
-                 goto err_disable_kho;
-         }
-
-+       scratch_size_print("Before low and global scratch allocations");
-         /*
-          * reserve scratch area in low memory for lowmem allocations in the
-          * next kernel
-@@ -730,6 +749,8 @@ static void __init kho_reserve_scratch(void)
-          * Loop over nodes that have both memory and are online. Skip
-          * memoryless nodes, as we can not allocate scratch areas there.
-          */
-+
-+       scratch_size_print("After low and global scratch allocations");
-         for_each_node_state(nid, N_MEMORY) {
-                 size = scratch_size_node(nid);
-                 addr = memblock_alloc_range_nid(size, 
-SCRATCH_ALIGNMENT_BYTES,
-@@ -744,6 +765,7 @@ static void __init kho_reserve_scratch(void)
-                 kho_scratch[i].size = size;
-                 i++;
-         }
-+       scratch_size_print("After per node allocation");
-
-         return;
-
-
->
-> With that said, I wonder if this fix might be more of a stop-gap 
-> solution.
-> As mentioned above, since NUMA_NO_NODE (-1) is used for the lowmem and
-> global allocations, my understanding is that these areas ideally should
-> not be included when calculating the size for a specific node ID.
->
-> I could be missing something in my understanding, so I would appreciate
-> your thoughts on these observations.
->
-> - Sourabh Jain
->
->> Fixes: 3dc92c311498 ("kexec: add Kexec HandOver (KHO) generation 
->> helpers")
->> Reported-by: Kexin Liu <liukexin@kylinos.cn>
->> Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
->> Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
->> Signed-off-by: George Guo <guodongtai@kylinos.cn>
->> ---
->>   kernel/liveupdate/kexec_handover.c | 13 ++++++++++++-
->>   1 file changed, 12 insertions(+), 1 deletion(-)
->>
->> diff --git a/kernel/liveupdate/kexec_handover.c 
->> b/kernel/liveupdate/kexec_handover.c
->> index 7c4d86daf86d..39f489a258d9 100644
->> --- a/kernel/liveupdate/kexec_handover.c
->> +++ b/kernel/liveupdate/kexec_handover.c
->> @@ -847,6 +847,17 @@ static void __init kho_reserve_scratch(void)
->>           goto err_disable_kho;
->>       }
->>   +    /*
->> +     * Calculate the per-node sizes before reserving any scratch areas.
->> +     * memblock allocations are marked MEMBLOCK_RSRV_KERN, so 
->> calculating
->> +     * them later would count the lowmem and global scratch areas as 
->> kernel
->> +     * allocations and scale them again.
->> +     */
->> +    i = 2;
->> +    for_each_node_state(nid, N_MEMORY)
->> +        kho_scratch[i++].size = scratch_size_node(nid);
->> +    i = 0;
->> +
->>       /*
->>        * reserve scratch area in low memory for lowmem allocations in 
->> the
->>        * next kernel
->> @@ -880,7 +891,7 @@ static void __init kho_reserve_scratch(void)
->>        * memoryless nodes, as we can not allocate scratch areas there.
->>        */
->>       for_each_node_state(nid, N_MEMORY) {
->> -        size = scratch_size_node(nid);
->> +        size = kho_scratch[i].size;
->>           addr = memblock_alloc_range_nid(size, SCRATCH_ALIGNMENT_BYTES,
->>                           0, MEMBLOCK_ALLOC_ACCESSIBLE,
->>                           nid, true);
->
-
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
