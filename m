@@ -1,38 +1,38 @@
 Received: from canpmsgout08.his.huawei.com (canpmsgout08.his.huawei.com [113.46.200.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A4A4ABBB3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3A6048CD7C;
 	Fri, 18 Sep 2026 10:04:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789725875; cv=none; b=rLm274Mfb/iMcFWMnP69EfFPtc7e3e6dtug6HvBYdXMdXwZfKUJQIPL+31YQnPxOz1dKaZPEVvjyBnv52/TY6IvWuiuZIJ95tu2CGoRVeLOtsf8cbUoOzb6KebwlwDEeEorncyKw65kK9ryNqEbZ4Rz+DlkCLY/taAydWjC9zZs=
+	t=1789725874; cv=none; b=aoWDAyB4p9QUId9l9ZXeUSO4ReAY0i0js18khXI7hF/PqK/RtsDtcGpB+5fp8rEof6WpYUXeYSsznYkmVK8E9H2dMcFbouX6QLZCONr7yhZ25nlyvpdbhyl675DPY7phSZTGU8HtiGTVQsS/C5PoOQNwdpz+T8TpHF+poO4giLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789725875; c=relaxed/simple;
-	bh=Ygfamq+zVCgcwFeC3h6mtl26Diwqy0m0fQ1dYnRCot0=;
+	s=arc-20240116; t=1789725874; c=relaxed/simple;
+	bh=wjR21x1VZ0jBGYVQvbCGyafKMjtbiu05vUZUySil/VY=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ncz5a5KnG1jAwEklA7ueGgsZJhegyX+FGwZLf1xK2Zor57GTmFACQYZni2IRm6ETnymRBJxfBr7dSvziX3CrLgt4NrA5C3Pzmd+aULrUcSLf9Xfhv8SLD48CEuG5SEFq5L6slMHYYNQF9kBXLPSlhCqoL+2hqjfJ09zrcRUDQP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=h20MzYgr; arc=none smtp.client-ip=113.46.200.223
+	 MIME-Version:Content-Type; b=aeN0b0SBgPsKgLEhyYHlZ6CgK1eUcUu9tMDV2DBQQzgaksAhAeBADjzpYZYUlA20ved/H3uHsJ6re6UcjxoWtIB8d1hmAOjpEyOyo1hGnaAt3u2AXZPgBKvD59mIJRtlI7VPmF0i3fB7/vao5HOuc2L491PTM7xuThvUjZt/sXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=wVs/Hs9G; arc=none smtp.client-ip=113.46.200.223
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="h20MzYgr"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="wVs/Hs9G"
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=20ZJiQbk77XpGyt2zLlFzhTV8L6cgd0AT+Mg72ZNP+o=;
-	b=h20MzYgrtfLEEV4IsF22m8M0aeU+9fIDiLpJWraCVTgEvlTBvhYu0irkyY7dZ8KlR25j3eFDX
-	uDHiuEi34Vyc2FyCL6c39JSfjX+M3Cz00j/vkUz1PTc66H//7kIYPJQEJrTEE3IZKzXvZCqcFXg
-	laCNtc/NvKopW2lnm4CTtD4=
-Received: from mail.maildlp.com (unknown [172.19.162.92])
-	by canpmsgout08.his.huawei.com (SkyGuard) with ESMTPS id 4hmScJ5pDBzmVWf;
-	Fri, 18 Sep 2026 17:53:20 +0800 (CST)
+	bh=gl9dOVAVG56ScS9MwUOL4momh5UtqrFy6pN1ShFcuZM=;
+	b=wVs/Hs9Gq6VG/cWAMpWvzJmy/oIAMsdmFRrHLaMN8dhT/208NNm+Jy57C8JdLMxP37J0PUlpB
+	GvTnqbaNF3Y1buLGfFQc0tAbMgmC9XUKdLppSMLKPgLCRodGAQm9QZNfIEVZADGVfpSUfrMTgAo
+	355Yjh2Bx4bZrE0WgEv0YQ0=
+Received: from mail.maildlp.com (unknown [172.19.163.163])
+	by canpmsgout08.his.huawei.com (SkyGuard) with ESMTPS id 4hmScL1T4gzmVWY;
+	Fri, 18 Sep 2026 17:53:22 +0800 (CST)
 Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id DC0BB40586;
-	Fri, 18 Sep 2026 18:04:20 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 492124048B;
+	Fri, 18 Sep 2026 18:04:22 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by kwepemk200008.china.huawei.com
  (7.202.194.74) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Fri, 18 Sep
- 2026 18:04:19 +0800
+ 2026 18:04:20 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
@@ -58,9 +58,9 @@ To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
 	<driver-core@lists.linux.dev>, <kexec@lists.infradead.org>,
 	<linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>
-Subject: [PATCH v5 08/17] LoongArch: kexec_file: Fix a modified_cmdline leak
-Date: Fri, 18 Sep 2026 18:04:33 +0800
-Message-ID: <20260918100442.3841135-9-ruanjinjie@huawei.com>
+Subject: [PATCH v5 09/17] x86/crash: Fix massive out-of-bounds write on 32-bit Highmem
+Date: Fri, 18 Sep 2026 18:04:34 +0800
+Message-ID: <20260918100442.3841135-10-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260918100442.3841135-1-ruanjinjie@huawei.com>
 References: <20260918100442.3841135-1-ruanjinjie@huawei.com>
@@ -75,47 +75,87 @@ Content-Type: text/plain
 X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
  kwepemk200008.china.huawei.com (7.202.194.74)
 
-load_other_segments() allocates modified_cmdline and stores it in
-image->arch.cmdline_ptr.  machine_kexec_prepare() then copies it to
-KEXEC_CMDLINE_ADDR and overwrites the pointer, so the heap buffer is
-leaked on every successful kexec_file_load().
+On 32-bit x86 systems with HIGHMEM, kmap_local_page() only maps a single
+4KB page. However, the elfcorehdr segment can span several pages (up to
+hundreds of kilobytes).
 
-Free the buffer after the copy.
+The original code blindly copies 'elfsz' bytes at once via
+memcpy_flushcache(), overwriting adjacent fixmap entries or critical
+virtual addresses.
 
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>
-Cc: Kexin Liu <liukexin@kylinos.cn>
-Cc: Youling Tang <tangyouling@kylinos.cn>
-Cc: Qiang Ma <maqianga@uniontech.com>
-Cc: Tianyang Zhang <zhangtianyang@loongson.cn>
-Cc: George Guo <guodongtai@kylinos.cn>
+Fix this by copying the new elfcorehdr page by page.
+
+Cc: Thomas Gleixner <tglx@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Baoquan He <baoquan.he@linux.dev>
+Cc: Chao Gao <chao.gao@intel.com>
+Cc: Sean Christopherson <seanjc@google.com>
+Cc: Eric DeVolder <eric.devolder@oracle.com>
+Cc: Hari Bathini <hbathini@linux.ibm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
 Cc: stable@vger.kernel.org
-Fixes: d162feec6b6e ("LoongArch: Add preparatory infrastructure for kexec_file")
+Fixes: ea53ad9cf73b ("x86/crash: add x86 crash hotplug support")
+Link: https://sashiko.dev/#/patchset/20260907125404.922123-1-ruanjinjie%40huawei.com
 Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 ---
- arch/loongarch/kernel/machine_kexec.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/kernel/crash.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kernel/machine_kexec.c
-index 1883cae93bc3..19ccc91b6f2a 100644
---- a/arch/loongarch/kernel/machine_kexec.c
-+++ b/arch/loongarch/kernel/machine_kexec.c
-@@ -14,6 +14,7 @@
- #include <linux/mm.h>
- #include <linux/of_fdt.h>
- #include <linux/reboot.h>
-+#include <linux/slab.h>
- #include <linux/sched.h>
- #include <linux/sched/task_stack.h>
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index e681ec9cf1dc..3c9f4fbbe7ff 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -447,9 +447,10 @@ unsigned int arch_crash_get_elfcorehdr_size(void)
+  */
+ void arch_crash_handle_hotplug_event(struct kimage *image, void *arg)
+ {
+-	void *elfbuf = NULL, *old_elfcorehdr;
+ 	unsigned long mem, memsz;
+ 	unsigned long elfsz = 0;
++	void *elfbuf = NULL;
++	unsigned long done;
  
-@@ -56,6 +57,7 @@ int machine_kexec_prepare(struct kimage *kimage)
- 		 */
- 		memcpy((void *)KEXEC_CMDLINE_ADDR, (void *)kimage->arch.cmdline_ptr,
- 					strlen((char *)kimage->arch.cmdline_ptr) + 1);
-+		kfree((void *)kimage->arch.cmdline_ptr);
- 		kimage->arch.cmdline_ptr = (unsigned long)KEXEC_CMDLINE_ADDR;
- 	} else {
- 		/* Find the command line */
+ 	/*
+ 	 * As crash_prepare_elf64_headers() has already described all
+@@ -484,21 +485,20 @@ void arch_crash_handle_hotplug_event(struct kimage *image, void *arg)
+ 
+ 	/*
+ 	 * Copy new elfcorehdr over the old elfcorehdr at destination.
+-	 */
+-	old_elfcorehdr = kmap_local_page(pfn_to_page(mem >> PAGE_SHIFT));
+-	if (!old_elfcorehdr) {
+-		pr_err("mapping elfcorehdr segment failed\n");
+-		goto out;
+-	}
+-
+-	/*
+-	 * Temporarily invalidate the crash image while the
+-	 * elfcorehdr is updated.
++	 * The segment is physically contiguous but can span several pages.
++	 * On 32-bit Highmem architectures, kmap_local_page() maps only a
++	 * single page at a time, so copy page by page.
+ 	 */
+ 	xchg(&kexec_crash_image, NULL);
+-	memcpy_flushcache(old_elfcorehdr, elfbuf, elfsz);
++	for (done = 0; done < elfsz; ) {
++		size_t chunk = min_t(size_t, PAGE_SIZE, elfsz - done);
++		void *dst = kmap_local_page(pfn_to_page((mem + done) >> PAGE_SHIFT));
++
++		memcpy_flushcache(dst, elfbuf + done, chunk);
++		kunmap_local(dst);
++		done += chunk;
++	}
+ 	xchg(&kexec_crash_image, image);
+-	kunmap_local(old_elfcorehdr);
+ 	pr_debug("updated elfcorehdr\n");
+ 
+ out:
 -- 
 2.34.1
 
