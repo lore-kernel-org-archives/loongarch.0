@@ -1,83 +1,160 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4914F48550D;
-	Fri, 18 Sep 2026 10:42:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9141E9B37
+	for <loongarch@lists.linux.dev>; Fri, 18 Sep 2026 10:53:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789728167; cv=none; b=ph+HGsaHAfiarfmURfzRp02wJhWdiD9h0Q2wZfA6ge+W+CTDzPinZWwKrLTjDU25bdLX0IZXt2NuG8lMhVnI5kb04x0ZfJemuJ5xa2g4+RuUcdLvF2Exkk7bvFov0Tk5TjMeVKJlWhki4E/+EB+L7E6FOXVzE8o4GatlNJgmmd8=
+	t=1789728829; cv=none; b=CAqImwtMNR+2+nfBcNaDxxk1y4ihXNvHaWRCDYLl5wVXTP8ex23mfvL+bloC4UCRa+7Uj7ST/NXlMQm52d0FvBB/ttwIcbdYZsdWXpqYifEd3TzlGbRsy47nQARNK1G1S1Jl4VdvUBpUSt93SYsdy8IXJy1FPkA3pKScZZtejHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789728167; c=relaxed/simple;
-	bh=ak8nh2SAnHlrH5Gov+HSivc8cOu/u80U/J5TpC+xpEQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i8LbURkhFQvBIXfDDOd+2Sj4FnQZknAhyPHQSalxI7Rrjc7Y5xm4nt2zShDR8ZfjjrlkpkmnK9Vny5Zbe3bd3AzlAhXkgxu+JJ76SQXKSDZdIVc+F4BIKwvz5t1UhqrUv5EZ3M8igZLZvLw6CwUDnGPwgZMg5PjFBVNHdpXdZdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=nK+0EYK/; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
+	s=arc-20240116; t=1789728829; c=relaxed/simple;
+	bh=ZUwGpl30HDIT8l2z/Osc/Y3a2vr84b85yvTBFDvsGtA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SJgVdo9lgfIwSPe2nnEYIbDBnIhpsDGViU3wv6UfBViLoexrhKIdrr4ZaPLUoxAGAigAoqDJt/YsKAGDLW1g7bZwHLVPeIZ0+EhYe9jIw4uqfai4YkWAoYtr20D2BYbcD9F89fBBNyaWA9CO41lq2i42Tl0tG1ZG6GN/geBNWUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GoSSnE/b; arc=none smtp.client-ip=209.85.214.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="nK+0EYK/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=ak8nh2SAnHlrH5Gov+HSivc8cOu/u80U/J5TpC+xpEQ=; b=nK+0EYK/9BTfAlJwWP6AvOQJLF
-	c15I5JymFF9K2yedwWqzusksKy4eQ5viR8nw3qriMok9WWjsTGTBJqyX7vUZOYQXAgOrEVMbNrZuv
-	mjim6c7AEHBA7MnJy/903HNCuWnYczSfYXW5QC0F/OBJf0dY7ju2961gPIkDrOT5ExmqAFKwzqxcC
-	XiYLMxnLjQ39eErgrwFWiMno2NauveXgtxV+dkki815BfVZ5ZzLxKpclYHT585S62SVGSmWuPCJin
-	9MSZjVXwRNN1boS/jdHCenBQWO8ruAfwzANSV4/t21AyyOLxCm3iTBm1RVzeREYUe38b8ciyJaWu7
-	GijK2PpQ==;
-Received: from authenticated-user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1x7W1x-006f1D-2W;
-	Fri, 18 Sep 2026 10:41:22 +0000
-Date: Fri, 18 Sep 2026 03:41:09 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, 
-	chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com, mpe@ellerman.id.au, 
-	npiggin@gmail.com, chleroy@kernel.org, ritesh.list@gmail.com, sshegde@linux.ibm.com, 
-	tglx@kernel.org, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, 
-	hpa@zytor.com, gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org, 
-	akpm@linux-foundation.org, baoquan.he@linux.dev, rppt@kernel.org, pasha.tatashin@soleen.com, 
-	pratyush@kernel.org, ruirui.yang@linux.dev, kees@kernel.org, thuth@redhat.com, 
-	gshan@redhat.com, ardb@kernel.org, james.morse@arm.com, yeoreum.yun@arm.com, 
-	sourabhjain@linux.ibm.com, robh@kernel.org, coxu@redhat.com, tangyouling@kylinos.cn, 
-	liukexin@kylinos.cn, guodongtai@kylinos.cn, maqianga@uniontech.com, 
-	zhangtianyang@loongson.cn, blum@kernel.org, adityag@linux.ibm.com, chao.gao@intel.com, 
-	kas@kernel.org, vishal.l.verma@intel.com, seanjc@google.com, piliu@redhat.com, 
-	jbouron@amazon.com, me@linux.beauty, mclapinski@google.com, graf@amazon.com, 
-	bgwin@google.com, eric.devolder@oracle.com, hbathini@linux.ibm.com, 
-	takahiro.akashi@linaro.org, lizhengyu3@huawei.com, palmer@rivosinc.com, x86@kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linuxppc-dev@lists.ozlabs.org, driver-core@lists.linux.dev, kexec@lists.infradead.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v5 00/17] crash: Rework and add arm64 crash hotplug
- support
-Message-ID: <aq0UR62q6gGJUQ49@gmail.com>
-References: <20260918100442.3841135-1-ruanjinjie@huawei.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GoSSnE/b"
+Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-2caced6038eso4986755ad.0
+        for <loongarch@lists.linux.dev>; Fri, 18 Sep 2026 03:53:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789728825; x=1790333625; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=TAR8zhCOEVqWXPt6vBsjOMeeQmFuBz9UsZFbgyML5lo=;
+        b=GoSSnE/bQGOQZQkPu5rGRPLo6VEn83JoD6CiotL0+48UOkFJOUGdKxDMNh0RBly1Si
+         jVCkx5z4eCDtLSpWBmKM5tDO1ku00WrJiXQhBQ+mzCXbFSvnr1cXeNWgm33Epx0gx6vk
+         QPPfipsXyqf8wvEzD0lXkhhBsp4ZhDpScaOevQ12bwqHTs5PmikkhB0MUVlq1dQNNBXt
+         l3Gu1P8XbdqMrKriW7CcmPx3ZuJK2jWbTUZgGTnaCIDtxBFK5UV/skljxIVkToM/pWmA
+         efWlapsCNLiGwJWnXz8q1KKoxMSdZ0O2suBDIVZUd6ltRG+0aOfmv48q0jAg4gOlNnd7
+         AhPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789728825; x=1790333625;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=TAR8zhCOEVqWXPt6vBsjOMeeQmFuBz9UsZFbgyML5lo=;
+        b=PJWJcCwIc3e1RdeolyLw81iar5zRJLyX4al3gAUcyqwBU9jaKtYiYChxjSJBobkeas
+         dIdZ9B/8FHGLJG0weXzM83o5TVFJbNXZDr90fN9BDcNXLjqDgZ/45A9ahgZKJDFahvyD
+         FsdRqlWteMN5YRE4Q7D04Ot5ZW7um2Hz4USTpZGq38PTa3TU42gk56JYBsPPTLV0YXzF
+         eoXwrlZBzlWsHiiYd2dxpk6KnfPylnswKBjGonsnCVLpNBM/McaQpPB0KXMj2T8NocOV
+         aihTsDiTQqqnMu5qO1JOzjhbDGpseQLl8q2fQBCEGqlkERSbh+xTuDIQfgEfsevG4rQf
+         M3KA==
+X-Forwarded-Encrypted: i=1; AKwUvBx6pb6mrT6XEsnECZRiYun0m2eMWvclOuEuHcohxql3Z0yBHtvtYk4GS/ovL6nau/hIneb8NT2FnuU=@lists.linux.dev
+X-Gm-Message-State: AFuF++nes9d6Dyq8ClBFYwUVpeLCxW/NZGNEFZZuPepUm7Z7PtdbGCoM
+	+8SGHDTS+dhZfe7mAmFAXJqV7pgXwUvnRWVeQaMFCa8uv/XqcJWvFOis
+X-Gm-Gg: AYBFou0Z1fMdiubC4kPFMUoGhHY7Zum1xpfQsp/0BSfCxGb77sDioDfbelvcw43O33N
+	sfdNZlkHCo67nhwTKEey8QEFyppNB+ZqwJm3WriqAzOjOyB7VkPpUnDIWFu38DaLYtwQULpZl4s
+	vqMHgogAN4I3AaFYwhgGBoWtKpLUWBS3APJtQPHw+ZaNvTmc/AdLJp5IlcPDoZWUrU+/AEcIEwd
+	DIcpwDJP2X8lGL+Cp7ty6WeabanQvaMpWh9P1u7O2t9z1tKeud+ADdCswL2vseyB6Y58JiY1m4f
+	/8ejktyyZmDVj3jYhIP/NV65k3/dCWmdIjW0OwrahAHOuM2o6qtSO1yRszKT5r8KghTuBhkVewQ
+	0n8hqwZwlxrNSjDSannOot950pXeHjCIWJKIZjdJW1LXXbag+zJodVzlbBYjJ1gcuNCthNXw6HV
+	EhogoAL/UXQCgXp6emI/W5jqpuMDoZYvQzX52DKFOwj6VAqOKkSakMYJ8hEcta8ix+5CN7fuyI+
+	STPyg==
+X-Received: by 2002:a17:902:cecc:b0:2d8:d4d2:d139 with SMTP id d9443c01a7336-2dd9ca3f088mr93269015ad.21.1789728825328;
+        Fri, 18 Sep 2026 03:53:45 -0700 (PDT)
+Received: from [10.125.112.20] ([122.11.210.25])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ddb7525b2asm5835555ad.19.2026.09.18.03.53.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Sep 2026 03:53:44 -0700 (PDT)
+Message-ID: <1a47d5de-fb68-4c10-a199-f0d274689cdc@gmail.com>
+Date: Fri, 18 Sep 2026 18:53:32 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260918100442.3841135-1-ruanjinjie@huawei.com>
-X-Debian-User: leitao
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 00/10] kdump: reduce vmcore size and capture time
+To: Baoquan He <baoquan.he@linux.dev>
+Cc: catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org,
+ pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, tglx@kernel.org,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+ robh@kernel.org, saravanak@kernel.org, akpm@linux-foundation.org,
+ rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org,
+ m.szyprowski@samsung.com, mark.rutland@arm.com, kernel@xen0n.name,
+ alex@ghiti.fr, hpa@zytor.com, ruirui.yang@linux.dev, robin.murphy@arm.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ devicetree@vger.kernel.org, kexec@lists.infradead.org, linux-mm@kvack.org,
+ iommu@lists.linux.dev
+References: <20260902073116.802752-1-chenwandun1@gmail.com>
+ <aqzznOgILX2pZg7b@fedora>
+Content-Language: en-US
+From: Wandun <chenwandun1@gmail.com>
+In-Reply-To: <aqzznOgILX2pZg7b@fedora>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Sep 18, 2026 at 06:04:25PM +0800, Jinjie Ruan wrote:
-> When CPU or memory hotplug events occur, the elfcorehdr in the kdump
-> image becomes stale, potentially leading to incomplete crash dumps.
 
-Looking through the series, it seems to mix bug fixes with new
-feature work. Would it make sense to split out the fixes so they
-can land independently, and keep the new features as a separate
-patchset?
 
-I'm currently rolling out crashdump CMA across the Meta fleet, so
-right now I care mostly about picking up isolated bug fixes. As it
-stands, it's difficult to tell which patches are fixes and which
-are features.
+On 9/18/26 16:17, Baoquan He wrote:
+> On 09/02/26 at 03:31pm, Wandun Chen wrote:
+>> From: Wandun Chen <chenwandun@lixiang.com>
+>>
+> ...snip... 
+>> ACPI systems already filter reserved memory out of the vmcore through
+>> their existing path; only DT-based systems currently fail to filter these
+>> regions, which is what this series addresses. The flag lives in memblock
+>> itself rather than in a DT-only structure, so the mechanism is generic and
+>                                                                  ~~~
+> The patchset itself looks goot to me, while I am concerned if it's
+> really generic. I raised that in sub-thread talking with Wandun. Imagine
+> I tried to exclude many driver regions and split memblock regions into
+> hundreds, cma could yell out: cma_declare_contiguous_multi()?
+
+Are you concerned that setting the MEMBLOCK_NODUMP flag could split a memblock
+region into many smaller regions, which might then prevent
+cma_declare_contiguous_multi() from satisfying a multi-range allocation?
+If so, IICU I don’t think that applies here.
+
+MEMBLOCK_NODUMP is currently only set on memory that has already been reserved.
+These regions are excluded when iterating over free memory, so marking them NODUMP
+does not increase the number of free regions seen by CMA.
+
+
+Before marking NODUMP:
+
+  memblock.memory:    [ free ] [ reserved ] [ free ]
+  memblock.reserved:           [ reserved ]
+
+Now, for memblock.memory, it is one region that contains free and reserved memory.
+
+
+After marking the reserved region NODUMP:
+
+  memblock.memory:    [ free ] [  NODUMP  ] [ free ]
+  memblock.reserved:           [ reserved ]
+
+for memblock.memory, it splits into 3 regions, 2 free regions, 1 nodump region.
+
+Although the memblock.memory array may be split internally, it does not create additional
+free ranges for cma_declare_contiguous_multi() to process.
+
+
+> 
+> IMHO, withdrawing the claim can fix the nit concern. If I am wrong,
+> please help point it out to let me learn more.
+
+I will revise this description to avoid any misunderstanding.
+
+Best regards,
+Wandun
+
+
+> 
+> Thanks
+> Baoquan
+> 
+>> both ACPI and DT systems can benefit from it (suggested by Rob, thanks) [1].
+>>
+>> Since the reserved memory regions are filtered out, the vmcore is
+>> smaller in size and faster to produce. 
+>>
+> ...snip...
+
