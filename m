@@ -1,38 +1,38 @@
-Received: from canpmsgout04.his.huawei.com (canpmsgout04.his.huawei.com [113.46.200.219])
+Received: from canpmsgout11.his.huawei.com (canpmsgout11.his.huawei.com [113.46.200.226])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6CD4825B6;
-	Fri, 18 Sep 2026 10:04:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B40748FF79;
+	Fri, 18 Sep 2026 10:04:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789725863; cv=none; b=UnQfpp/m8qnZD9jsgQ343Dyej8A3ZiUx4cs/njeqqU4D/3xP5Dfhu5OscMZkknEH456FixJvTaVxhmLVmToak5w+EdVpktjF7kJMl9w3yr2qUhJ6OREiVxEl0lgdRVBYzTWRZ7uAXUXL1LrI+/Sg6GUzSDsObRE07/mPMlz1RMs=
+	t=1789725867; cv=none; b=SjEqF0GUPaKm7Qc2gIjqnN+SRw6D16EMXD4eXlXEl2RnvKBL+/+BIQD8FwWAuMYlwY4sATDqZJe4u0tX8oCmsGM9wryE+9wKjkcQQd9G0XbxsxQPgSDqmOEwT1cNbNAKPT/btHrRTEF+uv4ZG3NxF0Bz9hnDwc9NbuQTzbkrCRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789725863; c=relaxed/simple;
-	bh=yiGxQ7QIQdwQ3p4Fr0ygdVNI7N08QTdXriOuGM/62Gk=;
+	s=arc-20240116; t=1789725867; c=relaxed/simple;
+	bh=LUUN6hor9kB1vGW9ORLacT7hasUnGUVa0oXa/BtcYiM=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HacFOc2yEHjS9dzhFtGUVkKgCHsLErExpg+TsPBlSFKf/wnPNwR3FFOR0A6kM7OaEUmiKozfDoFUBKnDVt1gG2tkarEA/0gzAotQcYcRIyPSE6WEXNnZS1X4iSz4bO0yrTkZtL2T3icqdgYcdq6dJk9OK4Y1oYXXnVTHATdHRow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=cXqqzSbx; arc=none smtp.client-ip=113.46.200.219
+	 MIME-Version:Content-Type; b=f2GsdO8HL4tYhCr/YY/jgUOX1O8RsOya4bD88cpK47gQ/Ya5TqodWM4UKt8U/ACcvqXHanVGr+aCxiSegLtHDAxusj7vMu3EyZUDyukiclF2f1n9DLOd0Sfup+aKqp9y46rE3Z0uY0tfYMdizyAX8zN6ItDUtTBlrl68z6SPxU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=WJsU5ZLP; arc=none smtp.client-ip=113.46.200.226
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="cXqqzSbx"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="WJsU5ZLP"
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=RK4VHRefALxjC8rB7K7w3VAwG6W6KlTC58IWMIYwUgI=;
-	b=cXqqzSbxz3lvEuOS9efT6kFVnZWykzECj9tiFIF8xUH5zySw0l0wtrrPJavS5/6c0ugtHU44w
-	TQx608nHzqqoqjifoGQQm3bSkj4dVZdXvljaZRoir8tVoNs8JWQj9Dkf8ZWXUzNH3gtlFlTVTbj
-	f2PJ9QOpTcwTuI1J8MwWSoI=
-Received: from mail.maildlp.com (unknown [172.19.162.197])
-	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4hmScC2CS3z1prlD;
+	bh=up4/oktyfAdON3km3wdZWwjp1/r+vQu8s3QiiQB06UU=;
+	b=WJsU5ZLPqqnObamEl+eDb1OQLn8fzTm2lS+jqZvsjkBOcZoPNvOCq137VskBlGKfkXIRHLxz0
+	r3TIwLJgnYKX+hhXcyhYsMrcfZw4l3uKg5x5sTenzOpFogQlp8Dx4ywI3SARgUR1LDQ5r9Wjz1F
+	GJzxQD5oYk6LTh2w3OIGcw8=
+Received: from mail.maildlp.com (unknown [172.19.163.214])
+	by canpmsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4hmScC6HkLzKm9b;
 	Fri, 18 Sep 2026 17:53:15 +0800 (CST)
 Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8D05940591;
-	Fri, 18 Sep 2026 18:04:16 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 7569B4057C;
+	Fri, 18 Sep 2026 18:04:19 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by kwepemk200008.china.huawei.com
  (7.202.194.74) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Fri, 18 Sep
- 2026 18:04:14 +0800
+ 2026 18:04:17 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
@@ -58,9 +58,9 @@ To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
 	<driver-core@lists.linux.dev>, <kexec@lists.infradead.org>,
 	<linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>
-Subject: [PATCH v5 05/17] arm64: kexec_file: Fix elf_headers memory leak in retry loop
-Date: Fri, 18 Sep 2026 18:04:30 +0800
-Message-ID: <20260918100442.3841135-6-ruanjinjie@huawei.com>
+Subject: [PATCH v5 07/17] LoongArch: kexec_file: Fix elf_headers memory leak in retry loop
+Date: Fri, 18 Sep 2026 18:04:32 +0800
+Message-ID: <20260918100442.3841135-8-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260918100442.3841135-1-ruanjinjie@huawei.com>
 References: <20260918100442.3841135-1-ruanjinjie@huawei.com>
@@ -79,7 +79,7 @@ If load_other_segments() fails after image->elf_headers is assigned,
 the memory lifecycle is safely managed by the global kimage object
 and will be freed in arch_kimage_file_post_load_cleanup().
 
-However, during a retry loop in image_load(), a subsequent iteration
+However, during a retry loop in efi_kexec_load(), a subsequent iteration
 will allocate a new buffer and overwrite image->elf_headers. This
 permanently leaks the stale memory from the previous iteration before
 the global cleanup can track it.
@@ -87,25 +87,25 @@ the global cleanup can track it.
 Fix this by explicitly freeing the stale `image->elf_headers` buffer
 before assigning the newly allocated headers.
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Thomas Huth <thuth@redhat.com>
-Cc: Breno Leitao <leitao@debian.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Yeoreum Yun <yeoreum.yun@arm.com>
-Cc: Baoquan He <bhe@redhat.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: Youling Tang <tangyouling@kylinos.cn>
+Cc: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
+Cc: Kees Cook <kees@kernel.org>
 Cc: stable@vger.kernel.org
-Fixes: 108aa503657e ("arm64: kexec_file: try more regions if loading segments fails")
+Link: https://sashiko.dev/#/patchset/20260729031235.2840255-1-ruanjinjie%40huawei.com
+Fixes: 55d990f0084c ("LoongArch: Add EFI binary support for kexec_file")
 Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 ---
- arch/arm64/kernel/machine_kexec_file.c | 4 ++++
+ arch/loongarch/kernel/machine_kexec_file.c | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index e48f29167b38..2f750e5f4fcc 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -112,6 +112,10 @@ int load_other_segments(struct kimage *image,
+diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
+index 62a5be102065..3beb6977ecc6 100644
+--- a/arch/loongarch/kernel/machine_kexec_file.c
++++ b/arch/loongarch/kernel/machine_kexec_file.c
+@@ -166,6 +166,10 @@ int load_other_segments(struct kimage *image,
  			vfree(headers);
  			goto out_err;
  		}
