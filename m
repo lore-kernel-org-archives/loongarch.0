@@ -1,210 +1,222 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84DE2318EC5
-	for <loongarch@lists.linux.dev>; Sat, 19 Sep 2026 14:15:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78C5C78C9C
+	for <loongarch@lists.linux.dev>; Sat, 19 Sep 2026 14:16:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789827348; cv=none; b=Q/iQ9oBC5zAxeznK+GMwX0YM2xewYGkddH61rs6MtAsF2xHeXq8WDLPj4d1Ys0tFzU2ZyIV+73bwaRweJDBJ08E7GGxoqE/7xAvsGMARZQNjgLhDUH03uXCDLURkGD2fpYAplNRNawUxpTW/v0ESi2c2NBhx/Vy/kuElZ/2t/ic=
+	t=1789827389; cv=none; b=mKbMoTn+5gSTfl8w9bNJ7/CSq683LXlfu9fmnll2101prGEQyh6vQ24mXjMhiCdsqsQ3rfyOqy4oBKD+AeUhP8rBjxfFhs2dlF51jzqJ8BMI20V+9cI272I51kzWaz8JjcxX6vtFAXfGy9CueS5M6q4nhSmqM3DsPh8Ar2gezIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789827348; c=relaxed/simple;
-	bh=7Ywu9wHGDJY8V6jFJ2w6Ivi/pbw62GoKi2blMN5etwM=;
+	s=arc-20240116; t=1789827389; c=relaxed/simple;
+	bh=u0WYsRXHNIjxUbP7kdzC3rZVDeQ2w0U45FdhSkNfSCU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SjS5BQLhx3r3ZDknXBcI29eCLSWm5zEPbhJ6M+49/rmvpHFYRgB3XY9tOSUYiafitq52NsWvb1KYeTVSSQdl+bwMIN0ShKpl7WRldJYBBVR63gAKHVk2Jz4GMfkAcJPtdcZdrKdn5mSWW6db2KzRcmkQHhoQq8yIAsZkJFMdbPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G23z1QDz; arc=none smtp.client-ip=100.103.45.18
+	 To:Cc:Content-Type; b=eHnnB6uMU/nX+kwMiTYAQQUlptKCm+TQHViLWafAukGSsOL5SqHh2lHQ3ObFjn1rVi0+uminZrpuUvCoVN/24fNJg52/vClha9T5I4aroBvUF+nDxlvaeY9Alm6GfK4vtZtOobOA1sde+Iskb0C8DnjF2lhqr9Py3qid+pgDrFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HE3EB2yb; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G23z1QDz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 565581F0089C
-	for <loongarch@lists.linux.dev>; Sat, 19 Sep 2026 14:15:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HE3EB2yb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52C021F0089A
+	for <loongarch@lists.linux.dev>; Sat, 19 Sep 2026 14:16:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789827347;
-	bh=ZHQNt2F7ph//QKd/Dcx1X0C3z22bcWkHaUtkyigDYBI=;
+	s=k20260515; t=1789827388;
+	bh=wC0IgvticFlMQ9Kl5TlBgRX/UoFk4VfI9ix50lxCtoM=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=G23z1QDzc3fsSxuhTrLJIpBQgKbxieWQRWlzynMgFWSINgiqaTqh+lYvFgxMKLhJl
-	 P5g+IxmxBWkqE9KttwTeaIyQdPkFB5m29YiCCQOHIJtEETSDKv1uBvcpedPCfMOt9l
-	 IZYJlQnO4sDaZSCuqa5UxFM+hTJMX3cChIrtb8bGYu/VaXfyTKknqX5r6AlmwJep0x
-	 No90WJ3vojX8xw+Bn4YSUwzZV6oOuAkdi7JoEprJS2ZBTP28ByKCvHmTl1gD5olAjb
-	 CeRnCsNOqOPiucci/V+AnzxFD4ZDK3DhPntFhf84SooweR4VOloAZlq07NKzVY4eWf
-	 a8R9WHhLJ3ndA==
-Received: by mail-ed2-f12.google.com with SMTP id 4fb4d7f45d1cf-6a9a2b95b72so2641592a12.2
-        for <loongarch@lists.linux.dev>; Sat, 19 Sep 2026 07:15:47 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBwsg4YeTkVN3aXhsWBv8dwiiRXzgrXCtbP0odXY3VKZr1Vj/kLksiywNQYEQto56I9Xu9C3h/UOfrc=@lists.linux.dev
-X-Gm-Message-State: AFuF++l61ioyJGKCqKid21Gb522zjhav2eOoGoNUVUgwohcbuz9UksHc
-	5X9FH6tuHQ4zmrJB7wxVJPHGk6mCwYEqnA+mc0MGI1qAaTo0QQYGv221Mzi/gm34cKbvX5t42nF
-	KOYOo8WkZVnE1x4snYkCXkQAM/qlFbqc=
-X-Received: by 2002:a05:6402:21d3:b0:6a9:a5d6:622d with SMTP id
- 4fb4d7f45d1cf-6aa577f53cdmr3570046a12.3.1789827345998; Sat, 19 Sep 2026
- 07:15:45 -0700 (PDT)
+	b=HE3EB2yb8qtW6gupLLMdMCXOc9H+ol5a9Uqcshc+g5eWawcEGNc+/MJoEo5HNBDno
+	 R4jNtl+QVOkwjufNHLjdPxoZvBIb9qfku3aZ3I8bZAKar+txyM+SoUU1erLzEFwtLv
+	 l+B2z8gAUk11xhW7aBXEESSPp+l0Jgh9bzwdyQHi3HnhQWnyd+kHGbdDti307ak8Vi
+	 LPvPVxcYBK6iM28EPqIjrL/r+qhTUXpbSwvt4HtraJ+EYhVz7r5WpIdNJtos/llemJ
+	 +67MEkLA3L1au3ayBm/LSbjtquqaVeLDrbMxJ/naFp+noJYIrE3rzfr7gF7lELlRcj
+	 DaeVlS33kTnKg==
+Received: by mail-ed2-f34.google.com with SMTP id 4fb4d7f45d1cf-6a9dfe4dfc0so2397468a12.0
+        for <loongarch@lists.linux.dev>; Sat, 19 Sep 2026 07:16:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvByM7idVzJKQ1XC9pH4R12YY7/Wrt7rsRHaVK4m4N1lG/6YjGwczRv9IbooO+KmETb7HiCWpZdBe9hw=@lists.linux.dev
+X-Gm-Message-State: AFuF++l+gVtLBsnjUGY9TXHCplIMaEtlvVm7JAhcd/RAymD+F+5ViuaN
+	4mASYxoRC4eAri+yEmGplIJw9KObr9l4GdUO4hwQ8B3x+e+B1OvwbmPiGkWaCoFSWkIawdxaNBw
+	9KCrLMGfZ8cnkyqYL7nDLabU7xfFEMTM=
+X-Received: by 2002:a05:6402:2491:b0:6a7:ea54:383 with SMTP id
+ 4fb4d7f45d1cf-6aa53cf475fmr4340769a12.43.1789827386866; Sat, 19 Sep 2026
+ 07:16:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260904100852.26006-1-dongtai.guo@linux.dev> <20260904100852.26006-3-dongtai.guo@linux.dev>
-In-Reply-To: <20260904100852.26006-3-dongtai.guo@linux.dev>
+References: <20260909083259.1910290-1-maobibo@loongson.cn> <20260909083259.1910290-2-maobibo@loongson.cn>
+In-Reply-To: <20260909083259.1910290-2-maobibo@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 19 Sep 2026 22:15:37 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6uKKzXgrb8YK+VAdW55ODWtXp0bEju=dcmm7=MVxcc-A@mail.gmail.com>
-X-Gm-Features: AcwNN1UTKroSTs8ThQILzapvRn9O7BvQxeeOOihMqsFr5wFvKBxjbfZvuj-g5Cw
-Message-ID: <CAAhV-H6uKKzXgrb8YK+VAdW55ODWtXp0bEju=dcmm7=MVxcc-A@mail.gmail.com>
-Subject: Re: [PATCH v5 2/5] liveupdate: synchronize EFI KHO channel at execution
-To: George Guo <dongtai.guo@linux.dev>
-Cc: rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org, 
-	ardb@kernel.org, shuah@kernel.org, ilias.apalodimas@linaro.org, 
-	akpm@linux-foundation.org, baoquan.he@linux.dev, ruirui.yang@linux.dev, 
-	guodongtai@kylinos.cn, kernel@xen0n.name, graf@amazon.com, 
-	liukexin@kylinos.cn, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-mm@kvack.org, 
-	linux-kselftest@vger.kernel.org, linux-efi@vger.kernel.org
+Date: Sat, 19 Sep 2026 22:16:17 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H59b2PJjJ3rGGQj1hhyK0-ustqNSzk=iaFd28-xtM8FDw@mail.gmail.com>
+X-Gm-Features: AcwNN1UAURjFrjmT8YfxOIF2kRm69-YnqAUYwmK_ukFqbBRUWf37AYs_SLF3McQ
+Message-ID: <CAAhV-H59b2PJjJ3rGGQj1hhyK0-ustqNSzk=iaFd28-xtM8FDw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] LoongArch: KVM: Remove parameter line when inject MSI
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, George,
+Hi, Bibo,
 
-On Fri, Sep 4, 2026 at 6:10=E2=80=AFPM George Guo <dongtai.guo@linux.dev> w=
-rote:
+On Wed, Sep 9, 2026 at 4:40=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrote=
+:
 >
-> From: George Guo <guodongtai@kylinos.cn>
+> With MSI interrupt, there is intterupt set injection, no interrupt
+> clear action. DMSI interrupt controller is specially for MSI irqchip.
+> And there is checking with parameter level in most upper function
+> kvm_set_msi() and kvm_arch_set_irq_inatomic() already, here remove
+> duplicated line parameter checking in MSI injection leaf functions.
 >
-> The EFI KHO configuration table is a global channel. Updating it while
-> a candidate kexec image is still being loaded can leave the channel
-> pointing at the failed candidate even though the previous image remains
-> installed. Synchronize it instead from the image selected for execution.
->
-> Use the actual scratch payload size rather than its page-aligned segment
-> size, and propagate update failures before live-update serialization.
-> Keep clearing the channel for cold and crash images best-effort.
->
-> Signed-off-by: George Guo <guodongtai@kylinos.cn>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 > ---
->  kernel/crash_core.c                |  7 +++++++
->  kernel/kexec_core.c                |  5 +++++
->  kernel/kexec_internal.h            |  3 +++
->  kernel/liveupdate/kexec_handover.c | 33 ++++++++++++++++++++++++++++++
->  4 files changed, 48 insertions(+)
+>  arch/loongarch/include/asm/kvm_dmsintc.h | 3 +--
+>  arch/loongarch/include/asm/kvm_pch_pic.h | 2 +-
+>  arch/loongarch/kvm/intc/dmsintc.c        | 9 +++------
+>  arch/loongarch/kvm/intc/pch_pic.c        | 6 +++---
+>  arch/loongarch/kvm/irqfd.c               | 6 +++---
+>  5 files changed, 11 insertions(+), 15 deletions(-)
 >
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index 2b36aa9fade0..6166ce4203d3 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -138,6 +138,13 @@ void __noclone __crash_kexec(struct pt_regs *regs)
->                 if (kexec_crash_image) {
->                         struct pt_regs fixed_regs;
+> diff --git a/arch/loongarch/include/asm/kvm_dmsintc.h b/arch/loongarch/in=
+clude/asm/kvm_dmsintc.h
+> index 7c0158764d84..e19b3f5b3c52 100644
+> --- a/arch/loongarch/include/asm/kvm_dmsintc.h
+> +++ b/arch/loongarch/include/asm/kvm_dmsintc.h
+> @@ -22,7 +22,6 @@ struct dmsintc_state {
+>  int kvm_loongarch_register_dmsintc_device(void);
+>  void kvm_loongarch_unregister_dmsintc_device(void);
+>  void dmsintc_inject_irq(struct kvm_vcpu *vcpu);
+> -int dmsintc_set_irq(struct kvm *kvm, u64 addr, int data, int level);
+> -int dmsintc_deliver_msi_to_vcpu(struct kvm *kvm, struct kvm_vcpu *vcpu, =
+u32 vector, int level);
+> +int dmsintc_set_irq(struct kvm *kvm, u64 addr, int data);
 >
-> +                       /*
-> +                        * A crash image carries no KHO state: clear the
-> +                        * transport so the crash kernel boots cold inste=
-ad
-> +                        * of reviving from stale state.
-> +                        */
-> +                       (void)kho_sync_channel(kexec_crash_image);
-> +
->                         crash_setup_regs(&fixed_regs, regs);
->                         crash_save_vmcoreinfo();
->                         machine_crash_shutdown(&fixed_regs);
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index dc770b9a6d05..147f5b5b23d4 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -1146,6 +1146,11 @@ int kernel_kexec(void)
->                 goto Unlock;
+>  #endif
+> diff --git a/arch/loongarch/include/asm/kvm_pch_pic.h b/arch/loongarch/in=
+clude/asm/kvm_pch_pic.h
+> index 887b0431fd20..19ed1494c114 100644
+> --- a/arch/loongarch/include/asm/kvm_pch_pic.h
+> +++ b/arch/loongarch/include/asm/kvm_pch_pic.h
+> @@ -72,6 +72,6 @@ struct kvm_kernel_irq_routing_entry;
+>  int kvm_loongarch_register_pch_pic_device(void);
+>  void kvm_loongarch_unregister_pch_pic_device(void);
+>  void pch_pic_set_irq(struct loongarch_pch_pic *s, int irq, int level);
+> -int pch_msi_set_irq(struct kvm *kvm, struct kvm_kernel_irq_routing_entry=
+ *e, int level);
+> +int pch_msi_set_irq(struct kvm *kvm, struct kvm_kernel_irq_routing_entry=
+ *e);
+>
+>  #endif /* __ASM_KVM_PCH_PIC_H */
+> diff --git a/arch/loongarch/kvm/intc/dmsintc.c b/arch/loongarch/kvm/intc/=
+dmsintc.c
+> index 89f980d867be..79e56e330aeb 100644
+> --- a/arch/loongarch/kvm/intc/dmsintc.c
+> +++ b/arch/loongarch/kvm/intc/dmsintc.c
+> @@ -43,13 +43,10 @@ void dmsintc_inject_irq(struct kvm_vcpu *vcpu)
 >         }
->
-> +       /* Synchronize the handover transport with the image being execut=
-ed. */
-> +       error =3D kho_sync_channel(kexec_image);
-> +       if (error)
-> +               goto Unlock;
-> +
->         if (!kexec_image->preserve_context) {
->                 error =3D liveupdate_reboot();
->                 if (error)
-> diff --git a/kernel/kexec_internal.h b/kernel/kexec_internal.h
-> index 228bb88c018b..4d4c2290e85c 100644
-> --- a/kernel/kexec_internal.h
-> +++ b/kernel/kexec_internal.h
-> @@ -46,6 +46,7 @@ struct kexec_buf;
->  int kho_locate_mem_hole(struct kexec_buf *kbuf,
->                         int (*func)(struct resource *, void *));
->  int kho_fill_kimage(struct kimage *image);
-> +int kho_sync_channel(struct kimage *image);
->  #else
->  static inline int kho_locate_mem_hole(struct kexec_buf *kbuf,
->                                       int (*func)(struct resource *, void=
- *))
-> @@ -54,5 +55,7 @@ static inline int kho_locate_mem_hole(struct kexec_buf =
-*kbuf,
 >  }
 >
->  static inline int kho_fill_kimage(struct kimage *image) { return 0; }
-> +
-> +static inline int kho_sync_channel(struct kimage *image) { return 0; }
->  #endif /* CONFIG_KEXEC_HANDOVER */
->  #endif /* LINUX_KEXEC_INTERNAL_H */
-> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec=
-_handover.c
-> index 39f489a258d9..3aa5c66dfc6d 100644
-> --- a/kernel/liveupdate/kexec_handover.c
-> +++ b/kernel/liveupdate/kexec_handover.c
-> @@ -14,6 +14,7 @@
->  #include <linux/cma.h>
->  #include <linux/kmemleak.h>
->  #include <linux/count_zeros.h>
-> +#include <linux/efi.h>
->  #include <linux/kasan.h>
->  #include <linux/kexec.h>
->  #include <linux/kexec_handover.h>
-> @@ -2074,6 +2075,38 @@ int kho_fill_kimage(struct kimage *image)
+> -int dmsintc_deliver_msi_to_vcpu(struct kvm *kvm,
+> -                               struct kvm_vcpu *vcpu, u32 vector, int le=
+vel)
+> +static int dmsintc_deliver_msi_to_vcpu(struct kvm_vcpu *vcpu, u32 vector=
+)
+>  {
+>         struct dmsintc_state *ds =3D &vcpu->arch.dmsintc_state;
+>
+> -       if (!level)
+> -               return 0;
+>         if (!vcpu || vector >=3D 256)
+>                 return -EINVAL;
+>         if (!ds)
+> @@ -65,7 +62,7 @@ int dmsintc_deliver_msi_to_vcpu(struct kvm *kvm,
 >         return 0;
 >  }
 >
-> +/*
-> + * Synchronize the handover transport with the image that is about to be
-> + * executed.  The EFI config table channel is global, while kexec keeps
-> + * separate images for a normal reboot and for crash.  Write the state o=
-f the
-> + * selected image immediately before it is executed, rather than while a
-> + * candidate image is being loaded, so a failed replacement cannot leave=
- the
-> + * channel pointing at that failed image.
-> + *
-> + * An image loaded through the legacy kexec_load() syscall, a crash imag=
-e, or
-> + * an image loaded while KHO is disabled carries no handover state.  Cle=
-ar the
-> + * channel for those images so the next kernel boots cold instead of rev=
-iving
-> + * from stale state.  Clearing is best-effort because an absent channel =
-cannot
-> + * affect a cold boot.
-> + */
-> +int kho_sync_channel(struct kimage *image)
-> +{
-> +       int err;
-> +
-> +       if (!image->kho.fdt || !image->kho.scratch) {
-> +               efi_kho_update(0, 0, 0, 0);
-> +               return 0;
-> +       }
-> +
-> +       err =3D efi_kho_update(image->kho.fdt, PAGE_SIZE,
-> +                            image->kho.scratch->mem,
-> +                            image->kho.scratch->bufsz);
-You can combine the last two lines.
+> -int dmsintc_set_irq(struct kvm *kvm, u64 addr, int data, int level)
+> +int dmsintc_set_irq(struct kvm *kvm, u64 addr, int data)
+>  {
+>         unsigned int irq, cpu;
+>         struct kvm_vcpu *vcpu;
+> @@ -78,7 +75,7 @@ int dmsintc_set_irq(struct kvm *kvm, u64 addr, int data=
+, int level)
+>         if (!vcpu)
+>                 return -EINVAL;
+>
+> -       return dmsintc_deliver_msi_to_vcpu(kvm, vcpu, irq, level);
+> +       return dmsintc_deliver_msi_to_vcpu(vcpu, irq);
+>  }
+>
+>  static int kvm_dmsintc_ctrl_access(struct kvm_device *dev,
+> diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/=
+pch_pic.c
+> index 2b63b0c2c7ce..220fc23ffe8c 100644
+> --- a/arch/loongarch/kvm/intc/pch_pic.c
+> +++ b/arch/loongarch/kvm/intc/pch_pic.c
+> @@ -68,20 +68,20 @@ void pch_pic_set_irq(struct loongarch_pch_pic *s, int=
+ irq, int level)
+>  }
+>
+>  /* msi irq handler */
+> -int pch_msi_set_irq(struct kvm *kvm, struct kvm_kernel_irq_routing_entry=
+ *e, int level)
+> +int pch_msi_set_irq(struct kvm *kvm, struct kvm_kernel_irq_routing_entry=
+ *e)
+>  {
+>         u64 msg_addr =3D (((u64)e->msi.address_hi) << 32) | e->msi.addres=
+s_lo;
+>
+>         if (cpu_has_msgint && kvm->arch.dmsintc &&
+>                 msg_addr >=3D kvm->arch.dmsintc->msg_addr_base &&
+>                 msg_addr < (kvm->arch.dmsintc->msg_addr_base + kvm->arch.=
+dmsintc->msg_addr_size)) {
+> -               return dmsintc_set_irq(kvm, msg_addr, e->msi.data, level)=
+;
+> +               return dmsintc_set_irq(kvm, msg_addr, e->msi.data);
+>         }
+>
+>         if (e->msi.data >=3D EIOINTC_IRQS)
+>                 return -EINVAL;
+>
+> -       eiointc_set_irq(kvm->arch.eiointc, e->msi.data, level);
+> +       eiointc_set_irq(kvm->arch.eiointc, e->msi.data, 1);
+>
+>         return 0;
+>  }
+> diff --git a/arch/loongarch/kvm/irqfd.c b/arch/loongarch/kvm/irqfd.c
+> index 40ed1081c4b6..686097ca5906 100644
+> --- a/arch/loongarch/kvm/irqfd.c
+> +++ b/arch/loongarch/kvm/irqfd.c
+> @@ -27,9 +27,9 @@ int kvm_set_msi(struct kvm_kernel_irq_routing_entry *e,
+>                 struct kvm *kvm, int irq_source_id, int level, bool line_=
+status)
+>  {
+>         if (!level)
+> -               return -1;
+> +               return -EINVAL;
+>
+> -       return pch_msi_set_irq(kvm, e, level);
+> +       return pch_msi_set_irq(kvm, e);
+>  }
+>
+>  /*
+> @@ -78,7 +78,7 @@ int kvm_arch_set_irq_inatomic(struct kvm_kernel_irq_rou=
+ting_entry *e,
+>                 pch_pic_set_irq(kvm->arch.pch_pic, e->irqchip.pin, level)=
+;
+>                 return 0;
+>         case KVM_IRQ_ROUTING_MSI:
+> -               return pch_msi_set_irq(kvm, e, level);
+> +               return pch_msi_set_irq(kvm, e);
+Please also consider the KVM_IRQ_ROUTING_IRQCHIP case. If
+pch_pic_set_irq() also doesn't need level, please remove it; if
+pch_pic_set_irq() needs level, please move the checking from head to
+the KVM_IRQ_ROUTING_MSI case.
 
 
 Huacai
 
-> +       if (err)
-> +               pr_warn("failed to update EFI config table: %d\n", err);
-> +
-> +       return err;
-> +}
-> +
->  static int kho_walk_scratch(struct kexec_buf *kbuf,
->                             int (*func)(struct resource *, void *))
->  {
+>         default:
+>                 return -EWOULDBLOCK;
+>         }
 > --
-> 2.53.0
+> 2.39.3
 >
