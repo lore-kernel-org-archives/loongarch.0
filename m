@@ -1,229 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011059.outbound.protection.outlook.com [40.107.130.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD2452D1911
-	for <loongarch@lists.linux.dev>; Sun, 20 Sep 2026 01:55:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789869321; cv=none; b=tSTD/nO0vVWOF5lefLEcnhhqVZK0FCMSblDkNqrMJz+ZgU/2jMBWlvvTB4yD1nZD4P/jF1tHw1Zd8iQRUjqqHzjsHQy32+KoKMZ4YGbwgS+X0FCJI2NWxkHWOxDn6iGqQP827n9OE2IR3dahqAinN18EHBgDG0ccUIELW5MXTyE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789869321; c=relaxed/simple;
-	bh=poh4F5PXaukyjnPCZwS2DZS1b7KW7Q1Rye+o7VN3FUg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BEOjWGt14iM6bOhQivQm+FYelKI88W0skhLJe+Cdr2NYYVqmOyFoubT/v6u+rG/7CsnME4pbvQuQVmqHc+eHJgOQPweW29DcUtdbej8gz+RJA2cJ9NOKEMKleABvaXUgCSTg7Ux+mX/g4WMPN5MijGxlFonB58PCI+3gbsoHu68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AVtHZmix; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A07713B27CF
+	for <loongarch@lists.linux.dev>; Sun, 20 Sep 2026 02:29:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789871408; cv=fail; b=TO4BmYqG+PjViGkC+8ELmHWWQdGMUEw91mAC56IUJuV1r7PkiTRpoaumEm10REjRKNIk+2fygc4cLLcs64RHEjDlYw5mIt2bSleEkNCJ9pUJ6O3kHV9uyYQqpavUSZqtAZnB6HqN74pBaGt/Uc7uMJH8rKqBeWV2YM63/oQhtRs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789871408; c=relaxed/simple;
+	bh=2AkdzRnmL5T+RZcw3MmpOYilK3euYG9pegJEId0J5As=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=JZURHMD1Ya/nLKluxlTdcm0czgu0rHq5u5HRg8eFGTo1ARm45BfuZ/zmP1pfzsvhXg4tgR3XfUXSYymCMw+GyVSjO5FcC0LsEvPrHCqyH32y/Z0VzSuPlCFE62CL8Kvr7iIRkAzcqwPjwIXJWG4CFPUb62cLziArRQ72qqMwtVE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=lrLKDwfH; arc=fail smtp.client-ip=40.107.130.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AVtHZmix"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 728351F0089E
-	for <loongarch@lists.linux.dev>; Sun, 20 Sep 2026 01:55:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789869319;
-	bh=ZNm9/wfZV2nkjLVmx1aDomWnEvwBzNkqe3H+bh4IP4E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=AVtHZmix3W7A8DtuyBAfrawZn6OAce7ZJCk6VeBFfr3AqPMCDsyRHWL2V/q9wlXOe
-	 Y8pNzwSUiHVZJA1Eo1uS9BFHjshKjgfEr4h+W+egrwHnst4GU5jr1bZ6rOoNvPe2D6
-	 pudAr9uvyjKbuRWk/6Q7+BI9Wd8Qjfwh7N2wUnV5+mCYIOYT5OAiqfYwN0WAZrQPN8
-	 mYwiCYUtAYd6ApsNypnR213uAqlLISzRRse/WL/85nEmwpYQ+41QDTqD3VpZD4/blm
-	 md/9JEYU1FRtBEmX0nlaK4BGaCG6khAEAyaGxI53A09mzPysi6tWn+WtbzSgz0w4r+
-	 wpHImRriDEaOQ==
-Received: by mail-ed2-f27.google.com with SMTP id 4fb4d7f45d1cf-6aa135d6e97so2886722a12.2
-        for <loongarch@lists.linux.dev>; Sat, 19 Sep 2026 18:55:19 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBxMIV9gdMpfOMLEhcooyMjnPu7qmeUGI0UPUZb2339f72mK5gcfLu40begIreuexvACI0E01npvmiw=@lists.linux.dev
-X-Gm-Message-State: AFuF++lY+jLpdIVQenTYU/d8RaRKq/C1jgDcRzDVzwTwUgeGApBQXlh2
-	HxjdSshAUd3q0vOi+uuq/0pt3H4mR+AlqD4KtT9jCb2fFh/IgV23fZny4k9FobBO3dixpLelmy6
-	skNiTeA68hDsF0FwyhIZjpASLgQlhavg=
-X-Received: by 2002:a05:6402:46cb:b0:6aa:734a:a082 with SMTP id
- 4fb4d7f45d1cf-6aa734aa228mr1588205a12.25.1789869317961; Sat, 19 Sep 2026
- 18:55:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="lrLKDwfH"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=EubejKUi0WBIcrhxkYzA48o1GaLm9iHaEn5nvedaK7JAnSznXye0ikqof7DfrPKlxv90xebPxRiwIcmBiUtBKslQrFnZVfsh7hlJbx2Uqu5I5IQWdvc4TGdGVP6i9FpIKpmEwhZKkBx3aAvbN+ccmCK1JvuDW6zmDm8jsth7qu90msYCFTt14R/mqEx30U3/HuWrPweeserOIkPN6yAvKYadFWfKADkbzFOYG648813SmGwZDdy90eORlpVIV2GjmD8CTpc8sKKAm57nIuU2DkDMfZO7tWE9aIBLC3duxoJWEe9RCqMQbL+2iZl2/QCHQOdkcAujDotoZWQQiiBBjA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0E48bo74Y8Fz/U/5GWdCwoaBntEo0CDLYtxhhvHOqEM=;
+ b=wSq7GVrVxwDZ9ArhwKjt907MDsKDpS3whi/YgmqsBHFltrc0qr5WDguPStOGNPeq/7/Rovj4QngkHOovPuNywe88MZbP7dk93iVwBypvDejBC8N7HnveXuIOlC4sUus4T0RT7ZHVFxjZxpYpHdEN/un4bXvdTy1rWRtoyc1PFqp28Bd1wHNzcRsGYRxjiRzZxbMQTRYjjl0fAOdvLUgKtn1LWIunz+l8VqdiOKi4qhOXU9iGvR/ThrVq3G6vvkPUe6pWURh9XnSF5h/4+dunZ9uGfYsRefu4Em6PCEct5mG1NyIcybBCVDu12LLl64lzY4gJ5zNcoO1kghkcsvrEWQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0E48bo74Y8Fz/U/5GWdCwoaBntEo0CDLYtxhhvHOqEM=;
+ b=lrLKDwfHbsniHsnKYin4M2fhB8Pct79y+bKWGxkh82yOds1prjp02IAK9RE9SXER4BenAtJS41AiXoD0/tyNm27LdKlJRehjb0NdWNiiz1L5aMQAcBNOvAi4n47u/GwZo4cq2bZK3gkZ+G/OY22FG48HTW5618u5T/Eo49fZP/L+n8HQybvTZ3O+9lHpZPvaDmg9Nwbti1SacYHwz9Z8cLltQYsTqaHIdaky4NTQHqIhsqLbyMsaE2c+dWohycGrviZ9AQlZuh7U9ksSVWLZAacGoNcQAcT5+uCUgzn4jKBi2fV8H2e69ZlwCU44Qz6IpM85YF4MR3X2nmJ1c1rB+Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from AM8PR04MB7874.eurprd04.prod.outlook.com (2603:10a6:20b:24d::9)
+ by PAXPR04MB9596.eurprd04.prod.outlook.com (2603:10a6:102:23e::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.428.13; Sun, 20 Sep
+ 2026 02:29:37 +0000
+Received: from AM8PR04MB7874.eurprd04.prod.outlook.com
+ ([fe80::ac38:1699:6f18:c5d9]) by AM8PR04MB7874.eurprd04.prod.outlook.com
+ ([fe80::ac38:1699:6f18:c5d9%6]) with mapi id 15.21.0428.014; Sun, 20 Sep 2026
+ 02:29:37 +0000
+From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Peng Fan <peng.fan@nxp.com>,
+	Li Jun <lijun01@kylinos.cn>,
+	Arnd Bergmann <arnd@arndb.de>
+Cc: linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: [PATCH] LoongArch: use assign_bit() where applicable
+Date: Sun, 20 Sep 2026 10:26:55 +0800
+Message-ID: <20260920022659.3145724-1-peng.fan@oss.nxp.com>
+X-Mailer: git-send-email 2.51.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI1PR02CA0033.apcprd02.prod.outlook.com
+ (2603:1096:4:1f6::14) To AM8PR04MB7874.eurprd04.prod.outlook.com
+ (2603:10a6:20b:24d::9)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260915032627.2796747-1-maobibo@loongson.cn> <20260915032627.2796747-4-maobibo@loongson.cn>
- <CAAhV-H71irZnQ2hYmsewC6_fZEjnwBm6VJVcKqTsjJGW2xZDBA@mail.gmail.com> <f83f4c74-07c4-237e-de4f-337c39380377@loongson.cn>
-In-Reply-To: <f83f4c74-07c4-237e-de4f-337c39380377@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 20 Sep 2026 09:55:06 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4wY6OTmyUCbqfA=swfkj_oHANtMAO0Khh93-87y7CRTg@mail.gmail.com>
-X-Gm-Features: AcwNN1UgsVNhvhRTfCGWJunJf5O4e4WVTYZlG_uj9JyEjbekPvqve9xTg_UDqzM
-Message-ID: <CAAhV-H4wY6OTmyUCbqfA=swfkj_oHANtMAO0Khh93-87y7CRTg@mail.gmail.com>
-Subject: Re: [PATCH v3 3/4] ACPI: scan: Add support for LoongArch in acpi_iommu_configure_id()
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, 
-	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>, 
-	Pawel Chmielewski <pawel.chmielewski@intel.com>, Len Brown <lenb@kernel.org>, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev, 
-	lixianglai@loongson.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM8PR04MB7874:EE_|PAXPR04MB9596:EE_
+X-MS-Office365-Filtering-Correlation-Id: 118ae5f9-eee6-4dfe-8e70-08df16bf03f0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|23010399003|19092799006|366016|18002099003|56012099006|11063799006|10067099003;
+X-Microsoft-Antispam-Message-Info:
+	RShOrt/wk3xi4xTxIKXZ+Zfgo+Mj5i1d2U1pRTt3xDuvUUWL2I+M7REe8SAKRsAs3aQ7Sv+fq0gCxQbyWz+KSq8zNTxzX162PvGgiEpPvw4YGOovjvqBXE6dUkNiUIM8KI0aJMmY+JPSJxQsgfHMUihjL8ufu9N42dcpCnpnXOfFgKP6/D+JPYYBt+GnL+OoDNFFomt2ejdGJrBuoe/iGvwGAwjSTQwI2VtMhO1v9ZXhYxSfwApEf7eBWrDhaGAlahHTJzW8BqTHsyb08sUwXGiy6lR+etWe5ZgoaKjF8o5Tp7VL2RLsCo+RDtM7cJiIvHYdoPoFxBqc103GuC+zakRXfLQyoBPTZThnioOWkbATtmq17dNjuz8UfvGjA/M9lxJAKdlPYv0YdWpgDRKZGsrki0VKSIVGjNHi3PY8TqdqY8o1XxUQ1OH/um9zQhzwVu8m7h5kbV0+w0CJ5TwOWEeTdQHOUjrHquPUJqWTSbRgYf4ynqDg4gfj3aWI1kB0bIj/IvP+dw+wzFdcYMg8TtkRJ4q0kRLm/wKLutFFctlfn9LdgYimqH07upxSH3gGyQX0vwb6ihbnZVBuz2hfpAzKiBvLH3Floi0txn9BkVnG03rGGwzMbtPdSfib9XNKeDY2rdcuPBhqHXzihDLoqBlv7DrlPAa6GqV0Tdh7qoA=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR04MB7874.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(23010399003)(19092799006)(366016)(18002099003)(56012099006)(11063799006)(10067099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Tivpp8mKMc4tB0dPiQpY7wVHR+F8TIpHZaWoHhvzzrTC0BEzXDi0kS1GH9RM?=
+ =?us-ascii?Q?Edg+BABQtPmjJqnyrMlsnc7EXJRmMs5D3iCPRopkMshJklaB4xmJcgUVibsK?=
+ =?us-ascii?Q?6XVPpc3bbPXlHCp5cndwnc8vr9WPPo09XTvPL8fN3jcLvKHdkLN4o3o4zyMk?=
+ =?us-ascii?Q?fZindihjlPdmIwvTcLu6iU1kXjoWFo1VMd91CH18h/8nSswNKAmGeNpsivPJ?=
+ =?us-ascii?Q?R/+x92GBYkvsiKtggW7pWKgT3FZ3DvZzMprFYYEHdw7MWOpJkM2qAfAg3BUK?=
+ =?us-ascii?Q?euOO3jh8Z4hVnJf9+G+BwTny4UKivnTY12QpwQ/ZwVpIsbromAxIqsIWTaGp?=
+ =?us-ascii?Q?xkZrHn23fB4Uo5zN6mXA3+NsNA66JOLphbsGavKFuAlim7MrAzZ7ZFv0QhPA?=
+ =?us-ascii?Q?BxzslOL5uUo2A5rhuAZZzKKmc476TRGC9saJf2GDWUlGXqT0hd2xJoLR7hIr?=
+ =?us-ascii?Q?ijoplROvImxmottJu+Ksf+lssRG5F4EiCGONm9T0i0Myu+Qp5GGb+aGCgr7M?=
+ =?us-ascii?Q?7DAXyLTxHPsvcDHe4oSf1U28d+PekhDeE6BDj14V9LhE6uJeuNxSOtCjT63b?=
+ =?us-ascii?Q?8JYkT2CreL6qb/DNeeuYdsDfy7HOm/muq9eVYCkNxtYcgIGxsz13wIx5urJx?=
+ =?us-ascii?Q?bmDB7YeYtssEX6aX5fw0/QQ+x4uFVopiozw4x2iQ3s7PrlO7N5qX5C2f3bYR?=
+ =?us-ascii?Q?WLN6XhfVimAWFwKwKRGlYjAAoVzt6LxrJtODP3nUbSA7KvPXE3nqOQLBkypI?=
+ =?us-ascii?Q?RGKEAtgXPvbwoy1A5MZ8L6c4pTPK8eEk86h8Vf+sRo6I8r8VeRpDdcnd6t1j?=
+ =?us-ascii?Q?hlokBiKd7GgWkiTK1WOZwrvu1A++S0kkVGmjBmlZ/Vov4jWyn+DYbvqq4Fqd?=
+ =?us-ascii?Q?7fY+baIBO4TxAX5+Pkg09sKUeTqPNVCZrqHFVzYPinGA7IDIXvs10zXoS4ya?=
+ =?us-ascii?Q?oJaLPvPgMtoXYxP70Y6gIQamyp6XVoLRqbSFJpqM67ShvRAM0QwpNAPXyGUz?=
+ =?us-ascii?Q?D41aiE9vJj9W1UY84fZWTp4GZssR9QFAS1mYuyESYeEnfMSXpPr2sk1JjXtp?=
+ =?us-ascii?Q?RX1kahdBQOvEM+C9yRh9TQ8kEBvewsgNnOumBrOxYxI9GmU3jGIWfVjwyJSD?=
+ =?us-ascii?Q?7xGF58IQAVh6734RzehvSt4fCH+H3lp0+5TWY/NzaymvJgeCd3+Y4RJLE9nn?=
+ =?us-ascii?Q?IBXlPRKXwWv45d02aqfI5gXbDUQXcGrWU1bVWYyPvrkOFoliMJX+HfPMrkjk?=
+ =?us-ascii?Q?j29W0YbuX2kQSlfYMzGGC51bXZrepyBkfE77a31JXfwo/uLZbDgPbLCOgYF9?=
+ =?us-ascii?Q?T8lRcZpEG72vPxBPpgf+1Rd8uZR8nyCsgHnN33IReaF7z7SZPM40Gi8bFO/w?=
+ =?us-ascii?Q?dTCP4uoztORb5Xs1iV0DOxvakTpODIS1TjLa5UTEctzsrKop9XDc3LbLa1jd?=
+ =?us-ascii?Q?n613XdXWEqkLJCUQhL2Kwo/a664FjMcezYRiqRDT5GkW50fVdHGYZgoiHk2W?=
+ =?us-ascii?Q?82nQTs1iJIDGtqAgvRZks3u04dlMUutkVvTyHqd1MaYCn2BTvcQhYsBHpdVq?=
+ =?us-ascii?Q?AfkRV+JtBSgtDyuLghbQ6oVhorQWlVZiSEZ8x5qsQ/T0ObpnWv2FtOo3kwiM?=
+ =?us-ascii?Q?ztFlAtx9+uXiPbLCN9m1qnCFtvg/ukLymt/ZB0DKwIXrgfDyIrLCC06faCm+?=
+ =?us-ascii?Q?E1PcS4lFPERk2T/fpKzsNZmekFBWbZKpbwVfIser8CRwyzYH01M+rc29fw9M?=
+ =?us-ascii?Q?OelxxJk7idgaSruxdDSaWvdOIOfKaPCUXJauzFbOsBUxhFG8fbTY?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 118ae5f9-eee6-4dfe-8e70-08df16bf03f0
+X-MS-Exchange-CrossTenant-AuthSource: AM8PR04MB7874.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Sep 2026 02:29:37.1572
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4nDymRBA5e6n2+CLau5/M++UDEhj9O7eEM/L5FsQOGUsidty6OcydV+KxMiE54N/xe2eMy5pWMNMuoFyN9GuXTgC9ep/gmkJlD9ScTdeg75iKG9AyVMe7B8Lqo1IMP1/
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB9596
 
-On Sun, Sep 20, 2026 at 9:24=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrot=
-e:
->
->
->
-> On 2026/9/19 =E4=B8=8B=E5=8D=8810:18, Huacai Chen wrote:
-> > Hi, Bibo,
-> >
-> > On Tue, Sep 15, 2026 at 11:34=E2=80=AFAM Bibo Mao <maobibo@loongson.cn>=
- wrote:
-> >>
-> >> acpi_iommu_configure_id() currently supports only IORT and VIOT. Add
-> >> support for IOVT as well.
-> >>
-> >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> >> Acked-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
-> >> ---
-> >>   drivers/acpi/loongarch/iovt.c | 61 +++++++++++++++++++++++++++++++++=
-++
-> >>   drivers/acpi/scan.c           |  3 ++
-> >>   include/linux/acpi_iovt.h     | 13 ++++++++
-> >>   3 files changed, 77 insertions(+)
-> >>   create mode 100644 include/linux/acpi_iovt.h
-> >>
-> >> diff --git a/drivers/acpi/loongarch/iovt.c b/drivers/acpi/loongarch/io=
-vt.c
-> >> index 302ca6a75905..df14ce48eac6 100644
-> >> --- a/drivers/acpi/loongarch/iovt.c
-> >> +++ b/drivers/acpi/loongarch/iovt.c
-> >> @@ -1,6 +1,7 @@
-> >>   // SPDX-License-Identifier: GPL-2.0-only
-> >>
-> >>   #include <linux/acpi.h>
-> >> +#include <linux/acpi_iovt.h>
-> >>   #include <linux/pci.h>
-> >>   #include "init.h"
-> >>
-> >> @@ -217,3 +218,63 @@ void __init acpi_iovt_late_init(void)
-> >>          iovt_init_devices(hdr);
-> >>          acpi_put_table(hdr);
-> >>   }
-> >> +
-> >> +static int iovt_pci_dev_iommu_init(struct pci_dev *pdev, u16 dev_id, =
-void *data)
-> >> +{
-> >> +       u32 sbdf;
-> >> +       struct iovt_fwnode *np;
-> >> +       struct device *aliased_dev =3D data;
-> >> +       u32 domain =3D pci_domain_nr(pdev->bus);
-> >> +       struct iovt_device_entry *entry;
-> >> +       bool found =3D false;
-> >> +
-> >> +       list_for_each_entry(np, &iovt_fwnode_list, list) {
-> >> +               if (domain !=3D np->segment)
-> >> +                       continue;
-> >> +
-> >> +               /* We're not translating ourself */
-> >> +               if (dev_id =3D=3D np->devid)
-> >> +                       return -EINVAL;
-> >> +
-> >> +               if (np->flag & ACPI_IOVT_IOMMU_MAGAGE_BY_SEGMENT) {
-> >> +                       found =3D true;
-> >> +                       break;
-> >> +               }
-> >> +
-> >> +               list_for_each_entry(entry, &np->ep_list, list) {
-> >> +                       if (dev_id < entry->start_devid)
-> >> +                               continue;
-> >> +
-> >> +                       if (dev_id > entry->end_devid)
-> >> +                               continue;
-> >> +
-> >> +                       found =3D true;
-> >> +                       break;
-> >> +               }
-> >> +
-> >> +               if (found)
-> >> +                       break;
-> >> +       }
-> >> +
-> >> +       if (!found)
-> >> +               return -ENODEV;
-> >> +
-> >> +       sbdf =3D (domain << 16) + dev_id;
-> >> +       return acpi_iommu_fwspec_init(aliased_dev, sbdf, np->fwnode);
-> >> +}
-> >> +
-> >> +/*
-> >> + * iovt_iommu_configure_id - Set-up IOMMU configuration for a device.
-> >> + *
-> >> + * @dev: device to configure
-> >> + * @id_in: optional input id const value pointer
-> >> + *
-> >> + * Returns: 0 on success, <0 on failure
-> >> + */
-> >> +int iovt_iommu_configure_id(struct device *dev, const u32 *id_in)
-> >> +{
-> >> +       if (!dev_is_pci(dev))
-> >> +               return -ENODEV;
-> >> +
-> >> +       return pci_for_each_dma_alias(to_pci_dev(dev), iovt_pci_dev_io=
-mmu_init, dev);
-> >> +}
-> >> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> >> index 163a3cccf197..f2f155a65ea9 100644
-> >> --- a/drivers/acpi/scan.c
-> >> +++ b/drivers/acpi/scan.c
-> >> @@ -13,6 +13,7 @@
-> >>   #include <linux/kernel.h>
-> >>   #include <linux/acpi.h>
-> >>   #include <linux/acpi_iort.h>
-> >> +#include <linux/acpi_iovt.h>
-> >>   #include <linux/acpi_rimt.h>
-> >>   #include <linux/acpi_viot.h>
-> >>   #include <linux/iommu.h>
-> >> @@ -1628,6 +1629,8 @@ static int acpi_iommu_configure_id(struct device=
- *dev, const u32 *id_in)
-> >>                  err =3D rimt_iommu_configure_id(dev, id_in);
-> >>          if (err && err !=3D -EPROBE_DEFER)
-> >>                  err =3D viot_iommu_configure(dev);
-> >> +       if (err && err !=3D -EPROBE_DEFER)
-> >> +               err =3D iovt_iommu_configure_id(dev, id_in);
-> > We call our acpi_arch_late_init() before acpi_viot_init(), so I think
-> > it is better to also call iovt_iommu_configure_id() before
-> > viot_iommu_configure().
-> Yes, it should be the same order, good catch.
->
-> It is both OK for me to put acpi_arch_late_init() after
-> acpi_viot_init(), or put iovt_iommu_configure_id() before
-> viot_iommu_configure().
-I think it is better to put iovt_iommu_configure_id() before
-viot_iommu_configure().
+From: Peng Fan <peng.fan@nxp.com>
 
-Huacai
->
-> Regards
-> Bibo Mao
-> >
-> >
-> > Huacai
-> >>
-> >>          mutex_unlock(&iommu_probe_device_lock);
-> >>
-> >> diff --git a/include/linux/acpi_iovt.h b/include/linux/acpi_iovt.h
-> >> new file mode 100644
-> >> index 000000000000..25a846b96260
-> >> --- /dev/null
-> >> +++ b/include/linux/acpi_iovt.h
-> >> @@ -0,0 +1,13 @@
-> >> +/* SPDX-License-Identifier: GPL-2.0-only */
-> >> +
-> >> +#ifndef __ACPI_IOVT_H__
-> >> +#define __ACPI_IOVT_H__
-> >> +
-> >> +#if defined(CONFIG_IOMMU_API) && defined(CONFIG_ACPI_IOVT)
-> >> +int iovt_iommu_configure_id(struct device *dev, const u32 *id_in);
-> >> +#else
-> >> +static inline int iovt_iommu_configure_id(struct device *dev, const u=
-32 *id_in)
-> >> +{ return -ENODEV; }
-> >> +#endif
-> >> +
-> >> +#endif
-> >> --
-> >> 2.39.3
-> >>
->
+Convert open-coded if/else with set_bit/clear_bit to the assign_bit API.
+
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
+ arch/loongarch/kernel/env.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/arch/loongarch/kernel/env.c b/arch/loongarch/kernel/env.c
+index 652456768b55..c529a14deb18 100644
+--- a/arch/loongarch/kernel/env.c
++++ b/arch/loongarch/kernel/env.c
+@@ -25,10 +25,7 @@ void __init init_environ(void)
+ 	int efi_boot = fw_arg0;
+ 	char *cmdline = early_memremap_ro(fw_arg1, COMMAND_LINE_SIZE);
+ 
+-	if (efi_boot)
+-		set_bit(EFI_BOOT, &efi.flags);
+-	else
+-		clear_bit(EFI_BOOT, &efi.flags);
++	assign_bit(EFI_BOOT, &efi.flags, efi_boot);
+ 
+ 	strscpy(boot_command_line, cmdline, COMMAND_LINE_SIZE);
+ 	strscpy(init_command_line, cmdline, COMMAND_LINE_SIZE);
+-- 
+2.51.0
+
