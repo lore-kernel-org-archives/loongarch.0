@@ -1,33 +1,37 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 984FB3C140F;
-	Mon, 21 Sep 2026 15:45:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF684BF941;
+	Mon, 21 Sep 2026 16:21:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790005559; cv=none; b=s2qMaGuEuIYR6ouhO4sqoeNdXgq39J+DD8D9k70GZ4em9x/l/C+n4XNNuLHZduhlFeJbVrpb84+pKoW+OKXxqFFuY9kCLRLl9y9urT0NquFK9dvWoOhik9YP/psdk7XIJKCmRg0dwfqHUZYaBv1XAbOxx24zPqTnDFK4cp6YbqQ=
+	t=1790007681; cv=none; b=WtN7u9yR5/gmhwCaIIZghF15XiVyxGETZ3Pz0S2klyT0ydOJaBlbi81F0h5hmE9WERPSlfsFxIDae1YX+qI5WfE8b6g921cIgPEP76wCpoKlYpvAwF2t5DuujFpKVminVgS5qsGIdsuN+cys5yMz3PZ0Ywy6PC7uGaUmEBYLHhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790005559; c=relaxed/simple;
-	bh=cIKZrmFNDgxQa0qqmau+ZqQxkkl6FQkDRcq1dC9miXU=;
+	s=arc-20240116; t=1790007681; c=relaxed/simple;
+	bh=oGrCEH101JYJ0TwgVUxNMjImKrJahWj0BvTmscqgBZ8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l8T8Fz/gX5fRJOcJcBpwG3seaLwx5JDzjF/nJJbMaR+fHyl6ADt1R9mRXCQX7GRGayguZP+t20M35MHzQw5L7VWoHVZfjoERAr/uk6a9KJCLlTh8b7POIqzJaAoss2rDrqV9j67MP6SeT9HBA4gfzGLx2nZyH1aL1vX5+FVyGVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=EoC0cuIQ; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	 In-Reply-To:Content-Type; b=Tb0peq0Q/dwMLkrjlTv3DbfBIYdIyKKyoavgHH5JcG69s7baHNhxmxeHyFe+H+DZhf6J/odPIxyBn647gcjbBaHwtNjPHtW8hlT187KwSMJPNKHBVZOw3JxNp1SoPa59VoeO7OxKa+rwYfBURahz/Xs0fGSDEAI/Ms637ksKAXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=pUf8M6np; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="EoC0cuIQ"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2CE1C176C;
-	Mon, 21 Sep 2026 08:45:52 -0700 (PDT)
-Received: from [10.2.212.23] (e121345-lin.cambridge.arm.com [10.2.212.23])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B5CD83F632;
-	Mon, 21 Sep 2026 08:45:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1790005555; bh=cIKZrmFNDgxQa0qqmau+ZqQxkkl6FQkDRcq1dC9miXU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=EoC0cuIQz6hLQwqx0QF1eocGbFHcONiXNcdsw4wKNlOhOiOhVhiSZSeViIz1bFPb7
-	 muOHOKkL6n9D40Sc0M8nsRMGJOPM/9pqWCmEHDGay46C0wCozVnJkI6euIIJu4A7eT
-	 wCKvl5TAYjrxpCiY2Dw1a5LcGTlG38H10QNCNR8Y=
-Message-ID: <94630348-d295-4424-9f6c-0dc3b8704077@arm.com>
-Date: Mon, 21 Sep 2026 16:45:36 +0100
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pUf8M6np"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=/p/wcPtAYiIR16GkUrLsbGWfaNUG1APNWwlFrFY+MPk=; b=pUf8M6npYUllN36pF1Jjui7cUH
+	0cJnXOLLz8IMSoZFJYPgc5lro6QvvcAllD8kT8yvE2oXFQprRQN7QLqZcTyDV+/8rFVjXMhuvVI4c
+	mWHFSIlZyvQAbCSPpjRnrW7h03Dt13F+2Qa/Di9V411h9xwD421wQBb0B8hrQkPwEnoZSwLlA8b3c
+	Kfkv8In7DpmocmZwhpAHIvZc9azVaZuBZ7uGZh5Y7LrzlnECHlH4ORj71wjsVVkvIkxXQY7w3Ow7z
+	53Tv7T57hxQw+gODKEoIK9DtM5Pxbl1EDRuIQGHtUrD4gv23z7yDTkKGm1qzW6a6kZ4r/O3ZyUV15
+	Yc6W3yIg==;
+Received: from [50.53.43.113] (helo=[192.168.254.34])
+	by bombadil.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1x8gl0-00000002oNa-486R;
+	Mon, 21 Sep 2026 16:20:43 +0000
+Message-ID: <c0c67459-6b75-4bcd-b068-3752e23afbf6@infradead.org>
+Date: Mon, 21 Sep 2026 09:20:40 -0700
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -35,114 +39,168 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/6] dma: swiotlb: Track whether the pool size was
- explicitly set
-To: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
- iommu@lists.linux.dev, linux-kernel@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Will Deacon
- <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
- Steven Price <steven.price@arm.com>,
- Suzuki K Poulose <Suzuki.Poulose@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Jiri Pirko <jiri@resnulli.us>,
- Jason Gunthorpe <jgg@ziepe.ca>, Mostafa Saleh <smostafa@google.com>,
- Petr Tesarik <ptesarik@suse.com>, Alexey Kardashevskiy <aik@amd.com>,
- Dan Williams <dan.j.williams@intel.com>, Xu Yilun
- <yilun.xu@linux.intel.com>, Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, Russell King <linux@armlinux.org.uk>,
- Huacai Chen <chenhuacai@kernel.org>,
+Subject: Re: [PATCH 21/21] Documentation: mm: clarify behaviour of
+ compile-time folded page tables
+To: Yeoreum Yun <yeoreum.yun@arm.com>, Russell King <linux@armlinux.org.uk>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
  Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, Paul Walmsley <pjw@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>,
+ Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Barry Song <baohua@kernel.org>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ David Hildenbrand <david@kernel.org>, Michal Hocko <mhocko@kernel.org>,
+ Lorenzo Stoakes <ljs@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>,
+ Bibo Mao <maobibo@loongson.cn>, Anup Patel <anup@brainfault.org>,
+ Atish Patra <atish.patra@linux.dev>, Paul Walmsley <pjw@kernel.org>,
  Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
  Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, x86@kernel.org
-References: <20260921063628.362078-1-aneesh.kumar@kernel.org>
- <20260921063628.362078-3-aneesh.kumar@kernel.org>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20260921063628.362078-3-aneesh.kumar@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, "Liam R. Howlett" <liam@infradead.org>,
+ Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Jonas Bonn <jonas@southpole.se>,
+ Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+ Stafford Horne <shorne@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org,
+ kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+ linux-openrisc@vger.kernel.org
+References: <20260921-dummy_ptxp3-v1-0-cd40cf68242e@arm.com>
+ <20260921-dummy_ptxp3-v1-21-cd40cf68242e@arm.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20260921-dummy_ptxp3-v1-21-cd40cf68242e@arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 21/09/2026 7:36 am, Aneesh Kumar K.V (Arm) wrote:
-> swiotlb_adjust_size() must not override a pool size supplied through the
-> swiotlb= command-line parameter.
+
+
+On 9/21/26 3:55 AM, Yeoreum Yun wrote:
+> From: "David Hildenbrand (Arm)" <david@kernel.org>
 > 
-> Currently, it determines whether a size was supplied by comparing
-> default_nslabs with IO_TLB_DEFAULT_SIZE. This fails when the user
-> explicitly requests the compiled-in default size, allowing the request
-> to be overwritten by automatic pool sizing.
+> Compile-time folded page tables are not necessarily easy to understand, and even
+> people the were once familiar with the concept might need to refresh their memory.
 > 
-> Record whether swiotlb= supplied a numeric size and add
-> swiotlb_default_size_changed() to query that state.
+> Add proper documentation, including a nice diagram, for the current design.
+> Mention details about dummy functions, including the recently changed pXdp_get()
+> helpers.
 > 
-> Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
+> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+
+Documentation/mm/page_tables.rst:197: WARNING: Bullet list ends without a blank line; unexpected unindent. [docutils]
+
+See below for a fix.
+
 > ---
->   kernel/dma/swiotlb.c | 9 ++++++++-
->   1 file changed, 8 insertions(+), 1 deletion(-)
+>  Documentation/mm/page_tables.rst | 84 +++++++++++++++++++++++++++++++++++-----
+>  1 file changed, 75 insertions(+), 9 deletions(-)
 > 
-> diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-> index aa19e81ae544..8f86deb25be2 100644
-> --- a/kernel/dma/swiotlb.c
-> +++ b/kernel/dma/swiotlb.c
-> @@ -107,6 +107,7 @@ static struct io_tlb_mem io_tlb_default_mem;
->   
->   static unsigned long default_nslabs = IO_TLB_DEFAULT_SIZE >> IO_TLB_SHIFT;
->   static unsigned long default_nareas;
-> +static bool swiotlb_size_set __initdata;
-
-Nit: there are various ways and reasons that the size is set in general; 
-could this please be named something clearer, e.g. 
-"swiotlb_cmdline_size_set"?
-
->   /**
->    * struct io_tlb_area - IO TLB memory area descriptor
-> @@ -269,6 +270,7 @@ setup_io_tlb_npages(char *str)
->   		/* avoid tail segment of size < IO_TLB_SEGSIZE */
->   		default_nslabs =
->   			ALIGN(simple_strtoul(str, &str, 0), IO_TLB_SEGSIZE);
-> +		swiotlb_size_set = true;
->   	}
->   	if (*str == ',')
->   		++str;
-> @@ -304,6 +306,11 @@ unsigned long swiotlb_size_or_default(void)
->   	return default_nslabs << IO_TLB_SHIFT;
->   }
->   
-> +static bool __init swiotlb_default_size_changed(void)
-
-...and then do we really need a trivial wrapper function with the exact 
-same scope as the variable itself? (Plus the name is similarly confusing 
-as the places this is used are themselves potentially changing the 
-default size, if you consider "default" to mean "not explicitly 
-specified"...)
-
-With the naming improved,
-
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-
-> +{
-> +	return swiotlb_size_set;
-> +}
+> diff --git a/Documentation/mm/page_tables.rst b/Documentation/mm/page_tables.rst
+> index 126c876282509..84f2715c7de0a 100644
+> --- a/Documentation/mm/page_tables.rst
+> +++ b/Documentation/mm/page_tables.rst
+> @@ -143,15 +143,81 @@ pointers on each level is architecture-defined.::
+>  Page Table Folding
+>  ==================
+>  
+> -If the architecture does not use all the page table levels, they can be *folded*
+> -which means skipped, and all operations performed on page tables will be
+> -compile-time augmented to just skip a level when accessing the next lower
+> -level.
+> -
+> -Page table handling code that wishes to be architecture-neutral, such as the
+> -virtual memory manager, will need to be written so that it traverses all of the
+> -currently five levels. This style should also be preferred for
+> -architecture-specific code, so as to be robust to future changes.
+> +Not all architectures support 5-level page tables; while for some of them
+> +the exact number of supported page table levels is known at compile time,
+> +others can determine the number of page table levels at runtime based on
+> +hardware support and address space sizes.
 > +
->   void __init swiotlb_adjust_size(unsigned long size)
->   {
->   	/*
-> @@ -311,7 +318,7 @@ void __init swiotlb_adjust_size(unsigned long size)
->   	 * architectures such as those supporting memory encryption to
->   	 * adjust/expand SWIOTLB size for their use.
->   	 */
-> -	if (default_nslabs != IO_TLB_DEFAULT_SIZE >> IO_TLB_SHIFT)
-> +	if (swiotlb_default_size_changed())
->   		return;
->   
->   	default_nslabs = swiotlb_aligned_nslabs(size);
+> +Generic page table walking code always assumes that 5 levels of page table
+> +exist. To make page table walking code not have to worry about that,
+> +`compile-time folding` and `runtime folding` of page tables are used.
+> +Compile-time folding is mostly handled in common code, whereas runtime folding
+> +is exclusively handled in architecture code.
+> +
+> +This description focuses on generic compile-time folded page tables; for
+> +architecture-specific variants, some details can vary, however, without
+> +affecting common page table walkers.
+> +
+> +When walking folded page tables, all upper page table levels up to the supported
+> +level are skipped in page table walkers: this is achieved by (a) treating
+> +entries in upper page table levels as present and pointing at a page table; and
+> +(b) having page table walkers cast the entry pointer to the next-level entry
+> +instead of dereferencing that table. From the perspective of a page table
+> +walker, the entry points at itself.
+> +
+> +Assuming compile-time folded 4-level page tables, to achieve (a), pgd_present()
+> +and pgd_leaf() are hard-coded to indicate a present page table entry that
+> +points at a page table, and to achieve (b) p4d_offset() and
+> +p4d_offset_lockless() simply cast the page table entry pointer to the next
+> +lower level.
+> +
+> +In the current design, this is further modeled by having the P4D have a
+> +single page table entry::
+> +
+> +        PGD
+> +  --> +------+          NOP4D
+> +      | ptr0 |-------> +------+           PUD
+> +      | ptr1 |-        | ptr0 |-------> +-----+
+> +      | ptr2 | \       +------+         | ptr |-------> ...
+> +      | ptr3 |  \                       | ptr |
+> +        ...      \                        ..
+> +                  \        NOP4D
+> +                   +----> +------+           PUD
+> +                          | ptr1 |-------> +-----+
+> +                          +------+         | ptr |-------> ...
+> +                                           | ptr |
+> +                                             ...
+> +
+> +Note that the arrows from PGD to NOP4D represent page-table-walker
+> +transitions, not pointers stored in the pgd entries.
+> +
+> +Using p4d as an example, `nop4d`/`p4d folded` translates to the following:
+> +
+> +- p4d is considered folded into pgd; both are operating on the same page
+> + table.
+
+     table.
+(add one more prefix space to align the indentation)
+
+> +
+> +- Most pgd_* helpers are hard-coded dummy functions that ignore the passed
+> +  pgd_t values entirely. Exceptions are pgd_val() and low-level helpers
+> +  set_pgd() + pgd_page_vaddr(), which effectively translate to set_p4d()/
+> +  p4d_pgtable() to keep existing arch code working.
+> +
+> +  Architectures must provide p4d_* helpers (unless further common
+> +  compile-time folding applies).
+> +
+> +- PTRS_PER_P4D is hard-coded to 1. Architectures must define PTRS_PER_PGD.
+> +
+> +To avoid reading a value that will never be used but cannot be entirely
+> +optimized out, compile-time folded page table code also makes pXdp_get()
+> +return a constant dummy value.
+> +
+> +In common code, this only affects pXd_val() when used for printing page
+> +table entries for debugging purposes. As we don't want architecture code
+> +that uses set_pXd(), pgd_page_vaddr() or pXd_pgtable() to accidentally
+> +operate on dummy values, the compiler will error out if it detects that the
+> +helpers are used with dummy values. For a folded level, pXd_page() must not
+> +be used and unconditionally triggers a compiler error. Architecture code must
+> +instead call the helpers on the proper first page table level: e.g., set_p4d()
+> +instead of set_pgd().
+>  
+>  
+>  MMU, TLB, and Page Faults
+> 
+
+-- 
+~Randy
 
