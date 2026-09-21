@@ -1,38 +1,38 @@
-Received: from canpmsgout06.his.huawei.com (canpmsgout06.his.huawei.com [113.46.200.221])
+Received: from canpmsgout02.his.huawei.com (canpmsgout02.his.huawei.com [113.46.200.217])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC8D457E42;
-	Mon, 21 Sep 2026 09:04:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B8C9136351;
+	Mon, 21 Sep 2026 09:04:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.217
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789981451; cv=none; b=nOyHR1JB5TTdDkhHsb0L0u6W9O6TgWyWD2gWncnxRhjO1gzO9BDEIUgJwjKPHYcM4S046VVXrFculRzUG1xIYWrIznN82P22mzIErQdnCwcaZcr+SUtdikuGBPZ0Hgt5PDgnlJ9j6UwN1EbdHfhemWP29zCyhotl+CWjjFbnW+E=
+	t=1789981456; cv=none; b=s6kHjf2OjbppItEbj803EZ1aBvEdNFIHVRtq+0Q8Av23vG9x7Io3/v3YQsuXeFq3WXSi6dKMPH8Z2CFrgSoUMYNnhvlNPrNgYRXEra+DyGVAS2Z3fs5O9eLX8Z7Z0NzBqxTLrgZ05LdB54CmyTozbM+QCOIHJ5XlFy6OReGXXro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789981451; c=relaxed/simple;
-	bh=eCFAgTdJH4FSOyRPx5LpoMjibigglhXYQPk4p4gEHF4=;
+	s=arc-20240116; t=1789981456; c=relaxed/simple;
+	bh=dwgncQqVyzPFNessPOGKN2UeVG9vVedPe+OsTFQgmXU=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Jzhd6zRyF8s8JWmKYyrMJxqtLVUi83p0jTpiFEjO1VIPWL8MicKWcZfBAy93iMdrM+XvHh3CvYSNLwEsuw1O43eFfphPeylmtDggzq5PCLjpLo7C7aAjZ+LgINf+LtT7VC9YYsp36IWBv2SovkUEZdgUc5jblMo1O+EY0X9DlmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=5yDR7210; arc=none smtp.client-ip=113.46.200.221
+	 MIME-Version:Content-Type; b=XCy62A+FRwPRob7mpJZSuJvO+dS7waiOoMZN6ajWcLRubyK8EI8skjPZ3S4jtgpEFC4DZcjEjtFt91E/IywBtmwBbZ+5GtnpBPqobzHcVl1uzTq+j+5cfsmkod+VwAinXw9m09oD/iD1I1sawwTrwMtITjyPYgYGuV2xrDOvavM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=CtxVcq19; arc=none smtp.client-ip=113.46.200.217
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="5yDR7210"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="CtxVcq19"
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=gpQ4A2b+D+By6QZW9O9qxQ5TRwnsaRRG5wXvsN8j1G0=;
-	b=5yDR7210dJfFq/El83BSXaQy/Jd4qrijPdu6t1uJW27ICVE72mId1HUucilMR6cVQd3YNcu7c
-	xJ5//H/5qFgYAEzzu6wOukrEi962MoeeOLcvKCME4ofqLX6PhTa+0b5cozuDLTi8F4toCSxeO1s
-	JMdlwRJnBmcNHALe2SgT2/w=
-Received: from mail.maildlp.com (unknown [172.19.162.223])
-	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4hpH665BLqzRhQs;
-	Mon, 21 Sep 2026 16:51:58 +0800 (CST)
+	bh=igqtNYMEL8oKIpnu2DrMNvEYzwwJSEovzlP+FnYUOCA=;
+	b=CtxVcq19s4/+nlwp4cUNXfDx1nZiyIWFU4uWCub+//6KtP7pZWS9arcnPlF2LC/ogoKXyeVeP
+	TCuE1W141iovkLTXAPEBXvujBx6CaVYA0od9WENgqjGwUbcGu+QPm1w6sqo05U8KePvOSjI314O
+	40wUQWbWiVj05nmSEjphxXc=
+Received: from mail.maildlp.com (unknown [172.19.162.144])
+	by canpmsgout02.his.huawei.com (SkyGuard) with ESMTPS id 4hpH70064kzcb3H;
+	Mon, 21 Sep 2026 16:52:44 +0800 (CST)
 Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4738540561;
-	Mon, 21 Sep 2026 17:03:59 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 8D0254056D;
+	Mon, 21 Sep 2026 17:04:04 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by kwepemk200008.china.huawei.com
  (7.202.194.74) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Mon, 21 Sep
- 2026 17:03:57 +0800
+ 2026 17:04:02 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
@@ -57,9 +57,9 @@ To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<linuxppc-dev@lists.ozlabs.org>, <driver-core@lists.linux.dev>,
 	<kexec@lists.infradead.org>
 CC: <ruanjinjie@huawei.com>
-Subject: [PATCH v6 01/14] kexec: Fix CMA segment address translation with non-zero text_offset
-Date: Mon, 21 Sep 2026 17:04:37 +0800
-Message-ID: <20260921090450.807575-2-ruanjinjie@huawei.com>
+Subject: [PATCH v6 04/14] arm64: kexec_file: Fix CMA page leaks in segment placement retry loops
+Date: Mon, 21 Sep 2026 17:04:40 +0800
+Message-ID: <20260921090450.807575-5-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260921090450.807575-1-ruanjinjie@huawei.com>
 References: <20260921090450.807575-1-ruanjinjie@huawei.com>
@@ -74,81 +74,62 @@ Content-Type: text/plain
 X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
  kwepemk200008.china.huawei.com (7.202.194.74)
 
-kimage_load_cma_segment() and kimage_map_segment() both translate
-a CMA segment using page_address(cma), which returns the CMA base
-address. This ignores segment->mem.
+During kexec image placement retry loops, any midway failure causes
+the loader to truncate `image->nr_segments` back to its initial state
+to purge the failed segments.
 
-On arm64, image_load() adds text_offset to segment->mem before the
-segment is loaded:
+However, this truncation introduces a memory leak. The CMA pages
+allocated via kexec_add_buffer() during the failed attempt are tracked
+in the `image->segment_cma` array. Because the subsequent cleanup paths
+only iterate up to the truncated `nr_segments` boundary, these allocated
+CMA pages outside the new boundary are permanently leaked.
 
-	kernel_segment->mem += text_offset;
-	kernel_segment->memsz -= text_offset;
-	image->start = kernel_segment->mem;
+Fix this by explicitly releasing the associated CMA buffers in
+the failure paths before `image->nr_segments` is reduced.
 
-so segment->mem no longer matches the CMA base.  The kernel payload is
-therefore copied to the wrong offset, while image->start points past
-it, and kexec jumps into the middle of the kernel.
-
-kimage_map_segment() has the same problem for any CMA segment whose
-mem has been moved.
-
-Add kimage_cma_vaddr() to translate a boot physical address inside a
-CMA segment to its virtual address, and use it in both places.
-
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Baoquan He <baoquan.he@linux.dev>
-Cc: Mike Rapoport <rppt@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: Pratyush Yadav <pratyush@kernel.org>
-Cc: Pingfan Liu <piliu@redhat.com>
-Cc: Justinien Bouron <jbouron@amazon.com>
-Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
 Cc: Breno Leitao <leitao@debian.org>
+Cc: Pratyush Yadav <pratyush@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: Baoquan He <bhe@redhat.com>
 Cc: stable@vger.kernel.org
-Fixes: 07d24902977e ("kexec: enable CMA based contiguous allocation")
+Fixes: 07d24902977e4 ("kexec: enable CMA based contiguous allocation")
 Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 ---
- kernel/kexec_core.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ arch/arm64/kernel/kexec_image.c        | 1 +
+ arch/arm64/kernel/machine_kexec_file.c | 5 ++++-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index dc770b9a6d05..7f7cb77f0caa 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -738,11 +738,23 @@ static struct page *kimage_alloc_page(struct kimage *image,
- 	return page;
+diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
+index b70f4df15a1a..ffcb7f9075e6 100644
+--- a/arch/arm64/kernel/kexec_image.c
++++ b/arch/arm64/kernel/kexec_image.c
+@@ -107,6 +107,7 @@ static void *image_load(struct kimage *image,
+ 		 * We couldn't find space for the other segments; erase the
+ 		 * kernel segment and try the next available hole.
+ 		 */
++		kexec_free_segment_cma(image, kernel_segment_number);
+ 		image->nr_segments -= 1;
+ 		kbuf.buf_min = kernel_segment->mem + kernel_segment->memsz;
+ 		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+index 854d872dfd0f..e48f29167b38 100644
+--- a/arch/arm64/kernel/machine_kexec_file.c
++++ b/arch/arm64/kernel/machine_kexec_file.c
+@@ -179,7 +179,10 @@ int load_other_segments(struct kimage *image,
+ 	return 0;
+ 
+ out_err:
+-	image->nr_segments = orig_segments;
++	while (image->nr_segments > orig_segments) {
++		kexec_free_segment_cma(image, image->nr_segments - 1);
++		image->nr_segments--;
++	}
+ 	kvfree(dtb);
+ 	return ret;
  }
- 
-+/*
-+ * Translate a boot physical address inside a CMA segment to a kernel
-+ * virtual address.  Architecture loaders may move segment->mem away from
-+ * the CMA base (arm64 adds text_offset), so the offset must be preserved.
-+ */
-+static void *kimage_cma_vaddr(struct page *cma, unsigned long mem)
-+{
-+	unsigned long cma_base = page_to_boot_pfn(cma) << PAGE_SHIFT;
-+
-+	return page_address(cma) + (mem - cma_base);
-+}
-+
- static int kimage_load_cma_segment(struct kimage *image, int idx)
- {
- 	struct kexec_segment *segment = &image->segment[idx];
- 	struct page *cma = image->segment_cma[idx];
--	char *ptr = page_address(cma);
-+	char *ptr = kimage_cma_vaddr(cma, segment->mem);
- 	size_t ubytes, mbytes;
- 	int result = 0;
- 	unsigned char __user *buf = NULL;
-@@ -965,7 +977,7 @@ void *kimage_map_segment(struct kimage *image, int idx)
- 
- 	cma = image->segment_cma[idx];
- 	if (cma)
--		return page_address(cma);
-+		return kimage_cma_vaddr(cma, image->segment[idx].mem);
- 
- 	addr = image->segment[idx].mem;
- 	size = image->segment[idx].memsz;
 -- 
 2.34.1
 
