@@ -1,224 +1,253 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DCA713B5B3
-	for <loongarch@lists.linux.dev>; Mon, 21 Sep 2026 03:05:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CECF207DF7
+	for <loongarch@lists.linux.dev>; Mon, 21 Sep 2026 05:31:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789959945; cv=none; b=soP5D74Ek5LDKrso9MeZ8ena/tzQptroGr9SjJf95YTzk+alwCufdw131cpiVpC8uRZy+ow73+r5C/BVNTRAUGbM70i/BjTUqi0ORHi7616UhJXDR+VMuWuvr6v0lQxbyYZKJi0MRukF7TcSfPyuytkRXexAnXG5hUsOQWcv6b4=
+	t=1789968697; cv=none; b=bh36/PnBK4nhGnuuhICRxLMm+wnHE6CwJpZ8pZXXvTNnm8DrgAYVyUNqVPGl7yQRyymWqaMyx3zyBGyGy0DMi3KgBLlTp6KyE6dnIzzf+4gThQeQBmNnUjOGWXZNN/AblfNQp33+X4Qpb+mUbU1ngoU0dtaTShNFO9xBsr8npGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789959945; c=relaxed/simple;
-	bh=jdb+IxpMyFt+Y1qN2qE5gq6MvJtNj8u1ie9E/V+sCtM=;
-	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=X54LPZJgMcyL2tOa0EzVpE5tgo5J0ZVPFrESkr4NoMNpH48LVsC6lsem8WOC+SMqAdjRuWPtJhmyElonRLARJTwE0RyOofZJhw+Wmr92M7dlkBbLIXIIcLsln6Lmk5QhUhKEGjkrqZC1nSuEVeXF1pm7xjIjaLLd8rP+aL/LBxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.101])
-	by gateway (Coremail) with SMTP id _____8CxfdL9nrBqhQ4OAA--.40920S3;
-	Mon, 21 Sep 2026 11:05:33 +0800 (CST)
-Received: from [10.20.42.101] (unknown [10.20.42.101])
-	by front1 (Coremail) with SMTP id qMiowJAxV838nrBq5jAjAA--.41865S3;
-	Mon, 21 Sep 2026 11:05:32 +0800 (CST)
-Subject: Re: [PATCH v10 0/2] i2c: ls2x: Add clock- related properties and
- parsing
-From: Hongliang Wang <wanghongliang@loongson.cn>
-To: Binbin Zhou <zhoubinbin@loongson.cn>, Andi Shyti <andi.shyti@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
- loongarch@lists.linux.dev
-References: <20260817090721.30582-1-wanghongliang@loongson.cn>
- <668c5145-da87-d318-2338-738b0035a671@loongson.cn>
- <1cdc2657-9924-336d-1f10-f01ca2183f1f@loongson.cn>
-Message-ID: <db2fdd43-e5bf-3b41-8af5-600151cff899@loongson.cn>
-Date: Mon, 21 Sep 2026 11:04:34 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1789968697; c=relaxed/simple;
+	bh=1WWc1kr00V6hnDUKZVFCG4eQ+KmE/ZoL4moJEcx4BOU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ppSpQvrNzWGRGFne+5V5fNR7lK8ytM9TX2HWnJ2LNeYAcVxzBwgOLYNUqFrhSjGPOlPLPOYptzfJLO4tSlC0NvWNC/inS3NXOjupDcz32MOTXvbaduuvphjbdpu5SN7jBrvOvDid8XOUVvg/nLFVmh4i5qF2ycjE3Ftj2Fv9kBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ITST43vd; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ITST43vd"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68L3aniH122829;
+	Mon, 21 Sep 2026 05:31:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=9GfQGw
+	i/bINbQG0lJ4TrNy13j95JizRsDT1BfgiquJ8=; b=ITST43vdOtjfRXFtREB0mH
+	SwN7lMADtBCz5BoK5pNJ0SnlasjAC0yaI5C+vHARRRxkl5PBMxRkeiuHUPOEAHmB
+	sr3JvM9Febhh1JiJ9vQ/tzWyZ12xnuZoyKt/pkzuGJ46zfy07IXgWqwmLjY5K8Wh
+	FTsoKNV66rD+oeTFd7JfTowh+360JWlKVmbdmLZzBO9AL2EJEtNeVoxi2xl8UHbp
+	Mex913+DZvP/Sx8sm4lpJ4djzHbhP9QorE2rl+jPS5sidc3KSeHdYqIOVuv9/geF
+	O58d1qXHOJEv9mWkDjsEt+RLsf8lJpjhmMSUxCuQ/oR1y5jGm6WDv01ML0XDcaqA
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4gske16sam-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Mon, 21 Sep 2026 05:31:15 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 68L3XWf01596402;
+	Mon, 21 Sep 2026 05:31:14 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4gt7dy3p42-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Sep 2026 05:31:14 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 68L5VCHJ50397628
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 21 Sep 2026 05:31:12 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 78C272004D;
+	Mon, 21 Sep 2026 05:31:12 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 383C820040;
+	Mon, 21 Sep 2026 05:31:10 +0000 (GMT)
+Received: from [9.123.14.142] (unknown [9.123.14.142])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 21 Sep 2026 05:31:10 +0000 (GMT)
+Message-ID: <e0af4c02-039c-4afe-9349-cedc1bfd3cbf@linux.ibm.com>
+Date: Mon, 21 Sep 2026 11:01:09 +0530
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <1cdc2657-9924-336d-1f10-f01ca2183f1f@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] liveupdate: kho: calculate per-node scratch sizes
+ before allocation
+To: Pratyush Yadav <pratyush@kernel.org>, George Guo <dongtai.guo@linux.dev>
+Cc: rppt@kernel.org, pasha.tatashin@soleen.com, graf@amazon.com,
+        changyuanl@google.com, akpm@linux-foundation.org,
+        chenhuacai@kernel.org, liukexin@kylinos.cn, guodongtai@kylinos.cn,
+        kexec@lists.infradead.org, linux-mm@kvack.org,
+        loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20260904025101.9959-1-dongtai.guo@linux.dev>
+ <616daf17-4598-4a30-8574-16480dfc23cb@linux.ibm.com>
+ <0969ede4-f617-4e24-b32e-c5e30a96880e@linux.ibm.com>
+ <2vxz1par7amw.fsf@kernel.org>
 Content-Language: en-US
-X-CM-TRANSID:qMiowJAxV838nrBq5jAjAA--.41865S3
-X-CM-SenderInfo: pzdqwxxrqjzxhdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3GFWUXryUAF47ZF1fGryUArc_yoW7XF15pF
-	Z8GFWUGr1UCa48uw43t34SvFyYqwn8J3yUWr1xJa45uanFvr1qqr12gFn09FykZFZ7Cayj
-	9rnIg3ZF9Fy5AFcCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UU
-	UUU==
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+In-Reply-To: <2vxz1par7amw.fsf@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-ORIG-GUID: AqJVR50ALucX-AiAxwJ3x_T1MyrYMlkJ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTIxMDA3MSBTYWx0ZWRfX5z9Nn1aBIyH0
+ Y6FU2W/PVzqspg4B8hJHIsMSQVEWYZOQOY1cIyH3awA9iuDMuX34zyzSIKNu7ktkkqMC+KIEC92
+ EE3q6l4DhW01bHHzJbyZL+wEW2Of9yXrfO2I+wu/ovX5pGSPfsDf4vvU4XSG+FSi6F+JA6mEWOz
+ gHlNZQBfbRpw0vGzqV7iLvW+3x372ZLQjm6quYxfXnKEJ/L9U8q1PlxTYvF8nRzdRwLjWb9cdGY
+ OBemnmF3uY9N/SYRRzGWQkbGvf75osjzocP3LDl6ZXh4GmlorhhunOTysAoFW/y8GFZatIrGaf0
+ bGzS/Ty2kUJmqwMUeMdvd6BJjEP6JLMR0PQTWkYjG3WogMfWz6u5RYEalY2w/Rg/VyzcLls9WQF
+ H5j3rHXNBu+4dObdijJCpfG/Sa3dATZczzcCU5N044iZh0RCavrkG934/5Vej3c8RvyL+/acDgr
+ Uu96yC7qEjTuEpZ4Wqw==
+X-Authority-Analysis: v=2.4 cv=O/KsLx9W c=1 sm=1 tr=0 ts=6ab0c123 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=WwVblQKFIFXS0NQbftcA:9
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Info: AW1haW4tMjYwOTIxMDA3MSBTYWx0ZWRfXwgZgXeLr8xU9
+ FGKrxm4isb7FUHpouifOb6aBebTDrotgL9KWspbHCjq8ESbWuA9UgTuIPu3mbs6r85DhN0KIpjm
+ jfTlQ6i+L1DVknYoUSUkLWaA3umbN1w=
+X-Proofpoint-GUID: k_yw72S4r9Ehjcyfejr_IGUKpcpQljxG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-09-21_02,2026-09-16_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 malwarescore=0 phishscore=0 impostorscore=0 suspectscore=0
+ bulkscore=0 priorityscore=1501 lowpriorityscore=0 adultscore=0 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2609040000 definitions=main-2609210071
 
 
-On 2026/8/31 上午9:57, Hongliang Wang wrote:
+
+On 18/09/26 04:23, Pratyush Yadav wrote:
+> On Thu, Sep 17 2026, Sourabh Jain wrote:
 >
-> On 2026/8/17 下午5:23, Hongliang Wang wrote:
->> Hi all,
+>> Hello George,
 >>
->> Sorry for the duplicate 0/2 cover‑letter message in this thread.
->> Only the 09:07 UTC full V10 series (0/2, 1/2, 2/2) is the intended one,
->> please ignore the earlier 09:01 UTC standalone 0/2 cover‑letter.
+>> On 12/09/26 12:03, Sourabh Jain wrote:
+>>> Hello George,
+>>>
+>>> On 04/09/26 08:21, George Guo wrote:
+>>>> From: George Guo <guodongtai@kylinos.cn>
+>>>>
+>>>> The default percentage-based policy sizes scratch areas from the current
+>>>> kernel's MEMBLOCK_RSRV_KERN footprint. This is a reasonable heuristic for
+>>>> predicting the early memory demand of the next kernel.
+>>>>
+>>>> scratch_size_update() calculates the lowmem and global sizes before either
+>>>> area is allocated. However, kho_reserve_scratch() calculates each per-node
+>>>> size only after allocating the lowmem and global areas. Since memblock
+>>>> allocations are marked MEMBLOCK_RSRV_KERN, the per-node calculation
+>>>> includes those newly allocated scratch areas and scales them again.
+>>> I may be missing something here, but doesn't memblock_reserved_kern_size()
+>>> check the node ID of the region before checking the region flag
+>>> (MEMBLOCK_RSRV_KERN)?
+>>>
+>>> Code snippet from memblock_reserved_kern_size()
+>>> ```
+>>> if (nid == memblock_get_region_node(r) || !numa_valid_node(nid))
+>>>      if (r->flags & MEMBLOCK_RSRV_KERN)
+>>>          total += size;
+>>> ```
+>>>
+>>> For a valid nid, my understanding is that the global and lowmem scratch
+>>> areas should not be counted because they are allocated with NUMA_NO_NODE
+>>> (-1). So, ideally, these regions should be excluded when calculating the
+>>> reserved memory for a specific node ID.
+>>>
+>>> Based on this, I am not sure that marking the lowmem and global areas as
+>>> MEMBLOCK_RSRV_KERN is what causes the per-node size calculation to be
+>>> inflated. I am looking into the code further to better understand the
+>>> actual cause of the issue that this patch is trying to address.
+[...]
+>> I added some prints in kho_reserve_scratch() and found that the per-node size
+>> calculation is not impacted by the lowmem and global scratch memory allocations.
 >>
->> The patches 1/2 and 2/2 are correct.
+>> KHO: Before low and global scratch allocations
+>> KHO: low size = 899 KB
+>> KHO: global size = 137 MB
+>> KHO: Per node 2 = 80 MB
 >>
->> Thanks,
->> Hongliang Wang
+>> KHO: After low and global scratch allocations
+>> KHO: low size = 312195 KB
+>> KHO: global size = 441 MB
+>> KHO: Per node 2 = 80 MB
 >>
+>> KHO: After per node allocation
+>> KHO: low size = 394115 KB
+>> KHO: global size = 521 MB
+>> KHO: Per node 2 = 240 MB
 >>
->> On 2026/8/17 下午5:07, Hongliang Wang wrote:
->>> Hi all:
->>>
->>> This patch set adds clock related properties and parsing in dts and 
->>> acpi.
->>>
->>> ======
->>> V10:
->>> Patch (2/2):
->>> - Replace '/' operator with div64_u64() to avoid __udivdi3 linker 
->>> error on
->>>    32‑bit architectures with CONFIG_COMPILE_TEST.
->>>
->>> Link to V9:
->>> https://lore.kernel.org/all/20260810074927.25284-1-wanghongliang@loongson.cn/ 
->>>
->>>
->>> V9:
->>> Patch (2/2):
->>> - Rewrite the commit description
->>> - Use 64-bit arithmetic to avoid integer overflow during the clock 
->>> calculation
->>> - Add checks to reject zero clock rates and ensure valid clock inputs
->>> - Modify the comment for clocks and clock-div properties
->>> - Add Tested-by tag from Xi Ruoyao, thanks
->>>
->>> Link to V8:
->>> https://lore.kernel.org/all/20260721122604.12717-1-wanghongliang@loongson.cn/ 
->>>
->>>
->>> V8:
->>> Patch (2/2):
->>> Fix the potential issues from Sashiko AI review:
->>>   - Add error checking for the pointer returned by 
->>> devm_clk_get_optional_enabled();
->>>   - Add zero-value checking for the match data to provide default div.
->>>
->>> Link to V7:
->>> https://lore.kernel.org/all/20260707035104.3092-1-wanghongliang@loongson.cn/ 
->>>
->>>
->>> V7:
->>> Patch (2/2):
->>> Fix the potential issues from Sashiko AI review:
->>>   - Move the clock property parsing process to probe function to 
->>> solve the issue
->>>     of calling `devm_clk_get_optional_enabled()` dynamically causes 
->>> unbounded memory
->>>     leaks and unbalanced clock enable counts.
->>>   - Add non-zero checking to priv->div.
->>>
->>> Link to V6:
->>> https://lore.kernel.org/all/20260608024533.32419-1-wanghongliang@loongson.cn/ 
->>>
->>>
->>> V6:
->>> - Add Reviewed-by tag from Huacai, thanks.
->>> Patch (1/2):
->>>   - Remove CC stable.
->>>
->>> Link to V5:
->>> https://lore.kernel.org/all/20260604015848.18643-1-wanghongliang@loongson.cn/ 
->>>
->>>
->>> V5:
->>> Patch (1/2):
->>>   - Adjust the position of #include 
->>> <dt-bindings/clock/loongson,ls2k-clk.h>;
->>>   - Add CC stable;
->>>   - Fix Signed-off-by.
->>> Patch (2/2):
->>>   - Replace 2K0500/2K1000/2K2000 with LS2K0500/2K1000/2K2000;
->>>   - Replace 7A1000/7A2000 with LS7A1000/7A2000;
->>>   - Replace if (clk && !IS_ERR(clk)) with if(!IS_ERR_OR_NULL(clk));
->>>   - Add document that clocks and clock-div are only ACPI properties 
->>> in ACPI;
->>>   - Remove unsigned int cast in code (unsigned 
->>> long)device_get_match_data(dev);
->>>   - Add CC stable;
->>>   - Fix Signed-off-by.
->>>
->>> Link to V4:
->>> https://lore.kernel.org/all/20260526031021.32662-1-wanghongliang@loongson.cn/ 
->>>
->>>
->>> V4:
->>> - Add Acked-by tag from Conor Dooley, thanks.
->>> Patch (2/2):
->>>   - Adjust the position of #include <linux/clk.h>;
->>>   - Remove struct ls2x_i2c_chip_data and use macro to describe div;
->>>   - Use div instead of factor in ls2x_i2c_adjust_bus_speed;
->>>   - Reverse the "if & else" code logic in ls2x_i2c_adjust_bus_speed;
->>>
->>> Link to V2:
->>> The PATCH v3 is incomplete, v4 is the replacement of v3, so the 
->>> previous patch link is v2.
->>>
->>> [PATCH v2] dt-bindings: i2c: ls2x-i2c: Add clocks and 
->>> clock-frequency properties
->>> https://lore.kernel.org/all/20260507081010.12810-1-wanghongliang@loongson.cn/ 
->>>
->>> [PATCH v2] i2c: ls2x: Add clocks property parsing and adjust bus speed
->>> https://lore.kernel.org/all/20260507081010.12810-2-wanghongliang@loongson.cn/ 
->>>
->>>
->>> V2:
->>> [PATCH v2] dt-bindings: i2c: ls2x-i2c: Add clocks and 
->>> clock-frequency properties
->>> - Remove the custom properties clock-input and clock-div, use clock 
->>> framework;
->>> [PATCH v2] i2c: ls2x: Add clocks property parsing and adjust bus speed
->>> - Use clock framework to obtain the i2c reference clock in dts.
->>>
->>> Link to V1:
->>> https://lore.kernel.org/all/20260325011852.19079-1-wanghongliang@loongson.cn/ 
->>>
->>>
->>> Hongliang Wang (2):
->>>    dt-bindings: i2c: ls2x-i2c: Add clocks and clock-frequency 
->>> properties
->>>    i2c: ls2x: Add clocks property parsing and adjust bus speed
->>>
->>>   .../bindings/i2c/loongson,ls2x-i2c.yaml       |  3 ++
->>>   drivers/i2c/busses/i2c-ls2x.c                 | 44 
->>> +++++++++++++++++--
->>>   2 files changed, 44 insertions(+), 3 deletions(-)
->>>
-> Hi,
+>> I only had one NUMA node (nid=2), and the per-NUMA
+>> allocation before and after the lowmem and global scratch
+>> memory allocations remained the same at 80 MB.
+>>
+>> The experiment was done on the PowerPC architecture.
+>>
+>> I am wondering how the per-NUMA allocation in your setup is
+>> getting inflated due to the lowmem and global scratch memory
+>> reservations.
+> I had the same question, so I asked AI. Here's what it says:
 >
-> Gentle ping on the v10 patch series. Please let me know if there are 
-> any further changes needed.
+> --- 8< ---
 >
-> Best regards,
-> Hongliang Wang
-Hi,
+> The bug was reported and tested using the KHO self-test runner
+> (tools/testing/selftests/kho/vmtest.sh), which builds a test kernel
+> using make olddefconfig with only a minimal set of CONFIG_* options.
+> Crucially, CONFIG_NUMA is not enabled.
+>
+> When CONFIG_NUMA is disabled:
+>
+>      #ifndef CONFIG_NUMA
+>      static inline void memblock_set_region_node(struct memblock_region *r, int nid)
+>      {
+>      }
+>      
+>      static inline int memblock_get_region_node(const struct memblock_region *r)
+>      {
+>          return 0;
+>      }
+>      #endif
+>
+>
+> struct memblock_region does not even contain an nid member.
+>
+> memblock_set_region_node() is a no-op (the NUMA_NO_NODE argument is
+> simply discarded), and memblock_get_region_node() is hardcoded to always
+> return 0.
+>
+> There is only one node (nid = 0), so for_each_node_state(nid, N_MEMORY)
+> loops once for nid = 0.
+>
+> Both memblock_phys_alloc_range() and memblock_phys_alloc() mark their
+> allocations with MEMBLOCK_RSRV_KERN. Therefore, when
+> scratch_size_node(0) runs after allocating the lowmem scratch buffer,
+> memblock_get_region_node(r) returns 0 for that lowmem scratch buffer,
+> and r->flags & MEMBLOCK_RSRV_KERN is true. As a result,
+> scratch_size_node(0) counts the lowmem scratch area as part of Node 0's
+> kernel footprint and scales it by scratch_scale (200%) again.
 
-Gentle ping on the v10 patch series. Please let me know if there are any 
-further changes needed.
+Yes, CONFIG_NUMA is the reason I didn't observe this in my setup.
+With CONFIG_NUMA disabled, I can see the per-node allocation getting
+inflated due to the low and global allocations.
 
-Best regards,
-Hongliang Wang
+This raises the question: do we really need per-node allocation when
+CONFIG_NUMA is disabled?
 
+For example, if a VM boots with 4G RAM, the low, global, and per-node
+allocations are all the same. With KHO enabled, the kernel would then
+allocate 6 times the total memblock reserved memory: twice for each of
+the three components (low, global, and per-node).
+
+
+> --- >8 ---
+>
+> I didn't look closer, but it does seem to make sense.
+>
+> But in practice, this problem is only on CONFIG_NUMA=n and I don't think
+> in practice KHO or LUO is being used in non-NUMA systems. So while I
+> think it is worth fixing, I think we should also have a test where we
+> enable CONFIG_NUMA.
+>
+> Your system probably has CONFIG_NUMA=y and that's why you aren't able to
+> reproduce this bug.
+>
+> I think on NUMA systems the problem is the other way round. The
+> calculation for the global scratch also counts per-node allocations.
+>
+> So I think the proper fix for scratch sizing is what this patch does and
+> then a fixup for the global scratch calculation as well.
+Agree.
+
+- Sourabh Jain
