@@ -1,37 +1,33 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF684BF941;
-	Mon, 21 Sep 2026 16:21:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16CF84E01E0;
+	Mon, 21 Sep 2026 16:49:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790007681; cv=none; b=WtN7u9yR5/gmhwCaIIZghF15XiVyxGETZ3Pz0S2klyT0ydOJaBlbi81F0h5hmE9WERPSlfsFxIDae1YX+qI5WfE8b6g921cIgPEP76wCpoKlYpvAwF2t5DuujFpKVminVgS5qsGIdsuN+cys5yMz3PZ0Ywy6PC7uGaUmEBYLHhw=
+	t=1790009401; cv=none; b=AqcwYlMFIEWyX3Zy9oZUL/stR+1s72+lB0gKee7VyOaLKAISNpQ+hWgkTvM/Mquob/RVCSuz3TxNQmgSkzXGLVRHYEVDX8wawKMPN3PI0YP+nwa2mPrS10COqADKVgLd9uGNFKdg80R9h1te1wXWIXRaLIDLwDmXEUHHM7OVQEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790007681; c=relaxed/simple;
-	bh=oGrCEH101JYJ0TwgVUxNMjImKrJahWj0BvTmscqgBZ8=;
+	s=arc-20240116; t=1790009401; c=relaxed/simple;
+	bh=Wdg09chPpqQgC/K0e8SKRfjnjFGDVmMx8BswypSmTA0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Tb0peq0Q/dwMLkrjlTv3DbfBIYdIyKKyoavgHH5JcG69s7baHNhxmxeHyFe+H+DZhf6J/odPIxyBn647gcjbBaHwtNjPHtW8hlT187KwSMJPNKHBVZOw3JxNp1SoPa59VoeO7OxKa+rwYfBURahz/Xs0fGSDEAI/Ms637ksKAXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=pUf8M6np; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	 In-Reply-To:Content-Type; b=KejPMKfM5GyKtsWAOdEdIx/1KV1X6PIUwkcRWyVSnS495NuJpU087BDur+ED9DXqBMD6nmWUMqhLrSCv2CbreoeUdczYrZ9pbqBoQfuBysBGHnBpNc6J2te8kf5gX5EecqkMBy0J8wwQ7QN2VmDrE4sD+AJFt+UVLgqZLPfIdUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=XQmomevp; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pUf8M6np"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=/p/wcPtAYiIR16GkUrLsbGWfaNUG1APNWwlFrFY+MPk=; b=pUf8M6npYUllN36pF1Jjui7cUH
-	0cJnXOLLz8IMSoZFJYPgc5lro6QvvcAllD8kT8yvE2oXFQprRQN7QLqZcTyDV+/8rFVjXMhuvVI4c
-	mWHFSIlZyvQAbCSPpjRnrW7h03Dt13F+2Qa/Di9V411h9xwD421wQBb0B8hrQkPwEnoZSwLlA8b3c
-	Kfkv8In7DpmocmZwhpAHIvZc9azVaZuBZ7uGZh5Y7LrzlnECHlH4ORj71wjsVVkvIkxXQY7w3Ow7z
-	53Tv7T57hxQw+gODKEoIK9DtM5Pxbl1EDRuIQGHtUrD4gv23z7yDTkKGm1qzW6a6kZ4r/O3ZyUV15
-	Yc6W3yIg==;
-Received: from [50.53.43.113] (helo=[192.168.254.34])
-	by bombadil.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x8gl0-00000002oNa-486R;
-	Mon, 21 Sep 2026 16:20:43 +0000
-Message-ID: <c0c67459-6b75-4bcd-b068-3752e23afbf6@infradead.org>
-Date: Mon, 21 Sep 2026 09:20:40 -0700
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="XQmomevp"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9584919F0;
+	Mon, 21 Sep 2026 09:49:53 -0700 (PDT)
+Received: from [10.2.212.23] (e121345-lin.cambridge.arm.com [10.2.212.23])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C3E73F9A2;
+	Mon, 21 Sep 2026 09:49:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1790009397; bh=Wdg09chPpqQgC/K0e8SKRfjnjFGDVmMx8BswypSmTA0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=XQmomevpZT09cy6cgr1kTzu2so5J171U16ite1cLw6tf7wJFB4IdlH5QxKz6sSd/4
+	 qRHE98CmDqCVVIr1K3Cv1yP6IMXAdywdYQoc3xBrma/fZL4DL86RO08+Hgqua4e3tA
+	 tpLMTY+ABzQMH+5gDW1Tr/akzSw8iQXUsL5/7yfc=
+Message-ID: <21180ec6-b9ad-43fd-9e52-51df644e1b93@arm.com>
+Date: Mon, 21 Sep 2026 17:49:42 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -39,168 +35,144 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 21/21] Documentation: mm: clarify behaviour of
- compile-time folded page tables
-To: Yeoreum Yun <yeoreum.yun@arm.com>, Russell King <linux@armlinux.org.uk>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+Subject: Re: [PATCH v5 3/6] dma: swiotlb: Centralize minimal pool sizing
+To: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Will Deacon
+ <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+ Steven Price <steven.price@arm.com>,
+ Suzuki K Poulose <Suzuki.Poulose@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Jiri Pirko <jiri@resnulli.us>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Mostafa Saleh <smostafa@google.com>,
+ Petr Tesarik <ptesarik@suse.com>, Alexey Kardashevskiy <aik@amd.com>,
+ Dan Williams <dan.j.williams@intel.com>, Xu Yilun
+ <yilun.xu@linux.intel.com>, Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>, Russell King <linux@armlinux.org.uk>,
+ Huacai Chen <chenhuacai@kernel.org>,
  Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>,
- Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Barry Song <baohua@kernel.org>,
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
- David Hildenbrand <david@kernel.org>, Michal Hocko <mhocko@kernel.org>,
- Lorenzo Stoakes <ljs@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>,
- Bibo Mao <maobibo@loongson.cn>, Anup Patel <anup@brainfault.org>,
- Atish Patra <atish.patra@linux.dev>, Paul Walmsley <pjw@kernel.org>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, Paul Walmsley <pjw@kernel.org>,
  Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, Dave Hansen <dave.hansen@linux.intel.com>,
- Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
  Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, "Liam R. Howlett" <liam@infradead.org>,
- Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Jonas Bonn <jonas@southpole.se>,
- Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
- Stafford Horne <shorne@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org,
- kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
- linux-openrisc@vger.kernel.org
-References: <20260921-dummy_ptxp3-v1-0-cd40cf68242e@arm.com>
- <20260921-dummy_ptxp3-v1-21-cd40cf68242e@arm.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20260921-dummy_ptxp3-v1-21-cd40cf68242e@arm.com>
-Content-Type: text/plain; charset=UTF-8
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, x86@kernel.org
+References: <20260921063628.362078-1-aneesh.kumar@kernel.org>
+ <20260921063628.362078-4-aneesh.kumar@kernel.org>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20260921063628.362078-4-aneesh.kumar@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-
-
-On 9/21/26 3:55 AM, Yeoreum Yun wrote:
-> From: "David Hildenbrand (Arm)" <david@kernel.org>
+On 21/09/2026 7:36 am, Aneesh Kumar K.V (Arm) wrote:
+> A default SWIOTLB pool used only for unaligned kmalloc bouncing can be
+> smaller than one required for limited DMA addressing. Arm64 and RISC-V
+> currently implement this sizing independently, using 1 MiB of SWIOTLB
+> space per GiB of RAM.
 > 
-> Compile-time folded page tables are not necessarily easy to understand, and even
-> people the were once familiar with the concept might need to refresh their memory.
+> The SWIOTLB core now identifies this case with SWIOTLB_POOL_MINIMAL.
+> Size that policy in swiotlb_adjust_pool_size() and remove the
+> architecture-specific adjustments.
 > 
-> Add proper documentation, including a nice diagram, for the current design.
-> Mention details about dummy functions, including the recently changed pXdp_get()
-> helpers.
+> Explicit swiotlb= sizing remains unchanged because swiotlb_adjust_size()
+> preserves a user-configured size.
 > 
-> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
-
-Documentation/mm/page_tables.rst:197: WARNING: Bullet list ends without a blank line; unexpected unindent. [docutils]
-
-See below for a fix.
-
+> Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
 > ---
->  Documentation/mm/page_tables.rst | 84 +++++++++++++++++++++++++++++++++++-----
->  1 file changed, 75 insertions(+), 9 deletions(-)
+>   arch/arm64/mm/init.c | 11 -----------
+>   arch/riscv/mm/init.c |  4 ----
+>   kernel/dma/swiotlb.c | 11 ++++++++++-
+>   3 files changed, 10 insertions(+), 16 deletions(-)
 > 
-> diff --git a/Documentation/mm/page_tables.rst b/Documentation/mm/page_tables.rst
-> index 126c876282509..84f2715c7de0a 100644
-> --- a/Documentation/mm/page_tables.rst
-> +++ b/Documentation/mm/page_tables.rst
-> @@ -143,15 +143,81 @@ pointers on each level is architecture-defined.::
->  Page Table Folding
->  ==================
->  
-> -If the architecture does not use all the page table levels, they can be *folded*
-> -which means skipped, and all operations performed on page tables will be
-> -compile-time augmented to just skip a level when accessing the next lower
-> -level.
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index 7d51fb5f5a71..95075b5c8207 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -340,17 +340,6 @@ void __init arch_mm_preinit(void)
+>   {
+>   	unsigned int flags = SWIOTLB_VERBOSE;
+>   
+> -	if (max_pfn <= PFN_DOWN(arm64_dma_phys_limit)) {
+> -		/*
+> -		 * If no bouncing needed for ZONE_DMA, reduce the swiotlb
+> -		 * buffer for kmalloc() bouncing to 1MB per 1GB of RAM.
+> -		 */
+> -		unsigned long size =
+> -			DIV_ROUND_UP(memblock_phys_mem_size(), 1024);
 > -
-> -Page table handling code that wishes to be architecture-neutral, such as the
-> -virtual memory manager, will need to be written so that it traverses all of the
-> -currently five levels. This style should also be preferred for
-> -architecture-specific code, so as to be robust to future changes.
-> +Not all architectures support 5-level page tables; while for some of them
-> +the exact number of supported page table levels is known at compile time,
-> +others can determine the number of page table levels at runtime based on
-> +hardware support and address space sizes.
+> -		swiotlb_adjust_size(min(swiotlb_size_or_default(), size));
+> -	}
+> -
+>   	if (max_pfn > PFN_DOWN(arm64_dma_phys_limit))
+>   		flags |= SWIOTLB_INIT_ADDRESSING_LIMIT;
+>   
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index e0e4c103d603..96856114b387 100644
+> --- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -183,10 +183,6 @@ void __init arch_mm_preinit(void)
+>   		 * memory when DRAM starts above dma32_phys_limit.  Allocate
+>   		 * ~1 MB per 1 GB of RAM.
+>   		 */
+> -		unsigned long size =
+> -			DIV_ROUND_UP(memblock_phys_mem_size(), 1024);
+> -		swiotlb_adjust_size(min(swiotlb_size_or_default(), size));
+> -		swiotlb = true;
+>   		swiotlb_flags |= SWIOTLB_ANY;
+>   	}
+>   
+> diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+> index 8f86deb25be2..f368a73f4ed0 100644
+> --- a/kernel/dma/swiotlb.c
+> +++ b/kernel/dma/swiotlb.c
+> @@ -483,9 +483,18 @@ static bool __init swiotlb_kmalloc_needs_bounce(void)
+>   static void __init
+>   swiotlb_adjust_pool_size(enum swiotlb_pool_policy policy)
+>   {
+> +	if (swiotlb_default_size_changed())
+> +		return;
 > +
-> +Generic page table walking code always assumes that 5 levels of page table
-> +exist. To make page table walking code not have to worry about that,
-> +`compile-time folding` and `runtime folding` of page tables are used.
-> +Compile-time folding is mostly handled in common code, whereas runtime folding
-> +is exclusively handled in architecture code.
-> +
-> +This description focuses on generic compile-time folded page tables; for
-> +architecture-specific variants, some details can vary, however, without
-> +affecting common page table walkers.
-> +
-> +When walking folded page tables, all upper page table levels up to the supported
-> +level are skipped in page table walkers: this is achieved by (a) treating
-> +entries in upper page table levels as present and pointing at a page table; and
-> +(b) having page table walkers cast the entry pointer to the next-level entry
-> +instead of dereferencing that table. From the perspective of a page table
-> +walker, the entry points at itself.
-> +
-> +Assuming compile-time folded 4-level page tables, to achieve (a), pgd_present()
-> +and pgd_leaf() are hard-coded to indicate a present page table entry that
-> +points at a page table, and to achieve (b) p4d_offset() and
-> +p4d_offset_lockless() simply cast the page table entry pointer to the next
-> +lower level.
-> +
-> +In the current design, this is further modeled by having the P4D have a
-> +single page table entry::
-> +
-> +        PGD
-> +  --> +------+          NOP4D
-> +      | ptr0 |-------> +------+           PUD
-> +      | ptr1 |-        | ptr0 |-------> +-----+
-> +      | ptr2 | \       +------+         | ptr |-------> ...
-> +      | ptr3 |  \                       | ptr |
-> +        ...      \                        ..
-> +                  \        NOP4D
-> +                   +----> +------+           PUD
-> +                          | ptr1 |-------> +-----+
-> +                          +------+         | ptr |-------> ...
-> +                                           | ptr |
-> +                                             ...
-> +
-> +Note that the arrows from PGD to NOP4D represent page-table-walker
-> +transitions, not pointers stored in the pgd entries.
-> +
-> +Using p4d as an example, `nop4d`/`p4d folded` translates to the following:
-> +
-> +- p4d is considered folded into pgd; both are operating on the same page
-> + table.
 
-     table.
-(add one more prefix space to align the indentation)
+This appears to be entirely redundant, as ultimately the point of this 
+function is to call swiotlb_adjust_size() (if it does anything at all), 
+and the first thing that does is this same exact check. We hardly need 
+to micro-optimise short-circuiting a handful of arithmetic in a one-off 
+setup path, and it's convoluted enough as it is, so please try to avoid 
+redundancy that makes it even more confusing to follow.
 
+>   	switch (policy) {
+> -	case SWIOTLB_POOL_MINIMAL:
+> +	case SWIOTLB_POOL_MINIMAL: {
+> +		unsigned long size;
 > +
-> +- Most pgd_* helpers are hard-coded dummy functions that ignore the passed
-> +  pgd_t values entirely. Exceptions are pgd_val() and low-level helpers
-> +  set_pgd() + pgd_page_vaddr(), which effectively translate to set_p4d()/
-> +  p4d_pgtable() to keep existing arch code working.
-> +
-> +  Architectures must provide p4d_* helpers (unless further common
-> +  compile-time folding applies).
-> +
-> +- PTRS_PER_P4D is hard-coded to 1. Architectures must define PTRS_PER_PGD.
-> +
-> +To avoid reading a value that will never be used but cannot be entirely
-> +optimized out, compile-time folded page table code also makes pXdp_get()
-> +return a constant dummy value.
-> +
-> +In common code, this only affects pXd_val() when used for printing page
-> +table entries for debugging purposes. As we don't want architecture code
-> +that uses set_pXd(), pgd_page_vaddr() or pXd_pgtable() to accidentally
-> +operate on dummy values, the compiler will error out if it detects that the
-> +helpers are used with dummy values. For a folded level, pXd_page() must not
-> +be used and unconditionally triggers a compiler error. Architecture code must
-> +instead call the helpers on the proper first page table level: e.g., set_p4d()
-> +instead of set_pgd().
->  
->  
->  MMU, TLB, and Page Faults
-> 
+> +		/* Use 1MB per 1GB of RAM for kmalloc() bouncing. */
+> +		size = DIV_ROUND_UP(memblock_phys_mem_size(), 1024);
+> +		swiotlb_adjust_size(min(swiotlb_size_or_default(), size));
+>   		break;
 
--- 
-~Randy
+Similarly I think it would be clearer if we had a common 
+swiotlb_adjust_size() call at the end of the function, and then either 
+calculate a size or return early in each switch case as appropriate.
+
+Furthermore, swiotlb_size_or_default() is awful IMO - and in fact after 
+this series we could perhaps clean it up entirely by making the size 
+implicit in swiotlb_init_late() - not to mention misleadingly redundant. 
+I'd say just open-code "default_nslabs << IO_TLB_SHIFT" like elsewhere 
+in the file, but in fact it may as well just be IO_TLB_DEFAULT_SIZE 
+(think about it...)
+
+Thanks,
+Robin.
+
+> +	}
+>   	case SWIOTLB_POOL_CC_GUEST:
+>   		break;
+>   	case SWIOTLB_POOL_NONE:
 
