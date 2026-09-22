@@ -1,228 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E569153FD4F;
-	Tue, 22 Sep 2026 12:15:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E51D8541E42;
+	Tue, 22 Sep 2026 12:18:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790079318; cv=none; b=jRFsUMksaMXyWqcy+eQV3y9S6FTGR1+izeECBr6kpBTy11NegHXS5W/tCKzqFQBq9GwUNVK/LSFjLgSPkAWgVFyZ4Fki9JnlYMOtz/+rAJY/nv6dEjy1aZC/wHmH2NCig5Cchs3v1IhO9bmK8yUbC3tDg+chKhR1T71wMPnXXz0=
+	t=1790079506; cv=none; b=bURetWaEMUojm5I9/V77rlD/hYmeaRFevWgNLhL5XATuq1fBHrYKO3zQWGNpI4ElAnY9GcRpl5BzF+KLWs0pPlSglSWDhhxBhZ1AO4TNnzgrcF2/cvqGdh9PTP70d7UcmXu6wX3oTgZRqL9dlwR+L4jMYLSHsru/C/sRtIRSKSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790079318; c=relaxed/simple;
-	bh=mNKIEd9Mmq/3t8Td5s7hd4YWf9+CfeM6DmvIMcYTb9s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WXnP3Mkf/CKenxrSVLma8ecFAfErZ1jtgMhxXdiTMOFfL2k5eYCJPRiaMtMDxuTOJCWPRnz90U/BdSK6tDRSLlSnYeFxHeJ/W/4naabYZ1wkfPKPu/7QSbCVa7yP/S2VcrAyo0GqCRjEWaiqUMCvKPKSrnEWldLKUKRrncxfqvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h3gqLkdx; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h3gqLkdx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 117D71F000FF;
-	Tue, 22 Sep 2026 12:14:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790079316;
-	bh=gItcWC83jyqQewAzlLEIrIdpVAhf+FBobtBOU1cWYdE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=h3gqLkdxuBoehEGT/VKAAx5lOOZyw0R9ECju20pTUpkGq3CY4/SfkP5Oo8Atj/17P
-	 LheKowjELtZHtWEwX8eBKfgrKHJcRi0+O+d1XJm5SNFJeLnSFaLisjCbEBlxeLxjOn
-	 7b+NpgO+ZPXTsbOJUosoddrg+40PBvbsgsGmbY2VSvCJX0WLnI37yVWEjSxgbtaT89
-	 F/0sTPdrQN1xs1nAXdWed32VZcInT1tJCp8N+5WqvK/lF5EAI6+8MCsas5iRPln/rt
-	 CkKwC8hH7tDlCqpUlqLBsfISPWksuIen1RI49kVL18Y30A/o4HPBKzvey0Im1JOlMy
-	 V88LVj2NYFEMg==
-Date: Tue, 22 Sep 2026 13:14:52 +0100
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Zi Yan <ziy@nvidia.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, "Liam R. Howlett" <liam@infradead.org>, 
-	Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
-	Barry Song <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>, 
-	Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, Guo Ren <guoren@kernel.org>, 
-	Brian Cain <bcain@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Dinh Nguyen <dinguyen@kernel.org>, Simon Schuster <schuster.simon@siemens-energy.com>, 
-	Jonas Bonn <jonas@southpole.se>, Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, 
-	Stafford Horne <shorne@gmail.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
-	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Russell King <linux@armlinux.org.uk>, Vineet Gupta <vgupta@kernel.org>, 
-	Michal Simek <monstr@monstr.eu>, Chris Zankel <chris@zankel.net>, 
-	Max Filippov <jcmvbkbc@gmail.com>, Will Deacon <will@kernel.org>, 
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, 
-	Peter Zijlstra <peterz@infradead.org>, "David S. Miller" <davem@davemloft.net>, 
-	Andreas Larsson <andreas@gaisler.com>, Richard Henderson <richard.henderson@linaro.org>, 
-	Matt Turner <mattst88@gmail.com>, Magnus Lindholm <linmag7@gmail.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	Helge Deller <deller@gmx.de>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Richard Weinberger <richard@nod.at>, 
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Vlastimil Babka <vbabka@kernel.org>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
-	linux-m68k@lists.linux-m68k.org, linux-openrisc@vger.kernel.org, linux-sh@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-snps-arc@lists.infradead.org, linux-arch@vger.kernel.org, sparclinux@vger.kernel.org, 
-	linux-alpha@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
-	linux-um@lists.infradead.org, Hugh Dickins <hughd@google.com>, Qi Zheng <qi.zheng@linux.dev>
-Subject: Re: [PATCH v3 01/12] mm/huge_memory: zap deposited page tables after
- an RCU grace period
-Message-ID: <arJrv6FdUUgAbVp1@gremlin>
-References: <20260911-rcu-pagetable-freeing-v3-0-7b8c86103821@kernel.org>
- <20260911-rcu-pagetable-freeing-v3-1-7b8c86103821@kernel.org>
- <467b6599-b73a-4f58-a29a-b6c6d1ffc3a5@kernel.org>
- <aqrAflIQbwcNKlQL@gremlin>
- <bc2805a7-361e-4082-bf71-efc125b93c84@kernel.org>
+	s=arc-20240116; t=1790079506; c=relaxed/simple;
+	bh=hg8WJ1umGhHtMg7e2zKZXqIrOo/tFdLKj9L+KyJYFvs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aVtN8bJ/miYSkff9zuK8P7n1G2GrUw7EfLoc8tW8qrnlXSwh25kYo5mrRbogOrFOPz7NOdrzhqes5wTV77Txlu6kTCc99vrjU3S6TEBzUAEbq+SlmH5o2meId7gubntc5SvrCPqFphfT6JWD7Chr+MotC5uCfBeeM4AKbv0OTGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8CxQNEMcrJqQqAOAA--.43110S3;
+	Tue, 22 Sep 2026 20:18:20 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowJBx6c0LcrJqysAjAA--.44690S2;
+	Tue, 22 Sep 2026 20:18:19 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+	Pawel Chmielewski <pawel.chmielewski@intel.com>
+Cc: Len Brown <lenb@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-acpi@vger.kernel.org,
+	acpica-devel@lists.linux.dev,
+	lixianglai@loongson.cn
+Subject: [PATCH v4 0/4] ACPI: LoongArch: Add IOVT table support
+Date: Tue, 22 Sep 2026 20:10:54 +0800
+Message-Id: <20260922121058.972734-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bc2805a7-361e-4082-bf71-efc125b93c84@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBx6c0LcrJqysAjAA--.44690S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-On Mon, Sep 21, 2026 at 07:13:16PM +0200, David Hildenbrand (Arm) wrote:
-> On 9/16/26 18:59, Lorenzo Stoakes (ARM) wrote:
-> > On Wed, Sep 16, 2026 at 04:42:04PM +0200, David Hildenbrand (Arm) wrote:
-> >> On 9/11/26 21:36, Lorenzo Stoakes (ARM) wrote:
-> >>> When an anonymous mapping is collapsed for THP, a PTE page table is
-> >>> 'deposited' with the installed PMD entry.
-> >>
-> >> Right. Or when we allocate an anon THP.
-> >
-> > That case doesn't interact with page walking though, as they're
-> > just-allocated right?
->
-> I was surprised to read that page tables deposited during collapse should behave
-> differently than page tables deposited during allocation :)
+I/O Virtualization Table is ACPI table for LoongArch IOMMU devices, it
+is merged on ACPI Spec 6.6, and it can be located at
+  https://www.loongson.cn/uploads/images/2024110517404135188.LoongArch-IO-Virtualization-Table-Specification.pdf
 
-You'll be super surprised by how VMAs behave when detached vs. attached then ;)
+Here add IOVT table parsing on LoongArch system, it is for LoongArch
+IOMMU driver use in future.
+---
+v3 ... v4:
+  1. Move kernel option ACPI_IOVT from patch 4 to patch 2.
+  2. Move function call with iovt_iommu_configure_id() before function
+     viot_iommu_configure() in acpi_iommu_configure_id().
+  3. Rename LoongArch with LOONGARCH like other architecture in file
+     MAINTAINERS.
+  4. Set Huacai as one of Maintainers.
 
->
-> That's the semantic change you are adding (and that I didn't quite understand
-> from reading your description): a deposited page table could now get reused and
-> modified for another page table due to a PMD split, while there might still be
-> an RCU page table walker walking it. And PMD comparisons (+ proper memory
-> ordering) have to make sure that we didn't just walk  something that doesn't
-> belong to us.
->
-> [...]
->
-> >>
-> >> Wait, but wouldn't it be really problematic to punch a page table that is still
-> >
-> > Punch? You mean deposit?
->
-> Yes!
+v2 ... v3:
+  1. Add separate patch with header file include/linux/acpi_iovt.h,
+     after it is merged in acpica tree.
+  2. Modify patch set since macro name is changed in acpi_iovt.h
+  3. Merge patch 1 and patch 2 together.
 
-Ack.
+v1 ... v2:
+  1. Reorganize the patch, patch 1/4 are merged, patch 3/5/6 are merged,
+     add patch 2/8 are merged together.
+  2. Enrich error printk information in iovt_get_pci_iommu_fwnode().
+---
+Bibo Mao (4):
+  ACPICA: actbl2.h: Add bit constants of the Flags field in the IOVT
+    IOMMU structure
+  ACPI: LoongArch: Add acpi_arch_[late]_init()
+  ACPI: scan: Add support for LoongArch in acpi_iommu_configure_id()
+  MAINTAINERS: Add entry for drivers/acpi/loongarch
 
->
-> >
-> >> being walked into the deposited list where it can just be allocated from another
-> >> PMD->PTE split?
-> >
-> > In general, RCU-only page table walkers are _only_ guaranteed that the page
-> > tables are not freed from underneath them, as per the cover letter:
-> >
-> > 	"As a result, page table walks can now be performed safely under RCU without
-> > 	 any risk of page tables being freed underneath a walker.
-> >
-> > 	However, this is the only guarantee that this work provides - page table
-> > 	walkers must still ensure that page table entries are as expected
-> > 	throughout."
->
-> So far page table walkers never walk deposited page tables. Just like they never
-> walk freed page tables.
->
-> For *current* lockless page table walkers (IRQs disabled),
-> tlb_remove_table_sync_one() takes care of that. So there is no such thing as
-> "walking a page table that was reused in different context (as a page table) in
-> the meantime".
+ MAINTAINERS                     |   9 +
+ arch/loongarch/Kconfig          |   1 +
+ drivers/acpi/Kconfig            |   4 +
+ drivers/acpi/Makefile           |   2 +-
+ drivers/acpi/bus.c              |   2 +
+ drivers/acpi/loongarch/Kconfig  |   7 +
+ drivers/acpi/loongarch/Makefile |   3 +
+ drivers/acpi/loongarch/init.c   |  16 ++
+ drivers/acpi/loongarch/init.h   |   5 +
+ drivers/acpi/loongarch/iovt.c   | 280 ++++++++++++++++++++++++++++++++
+ drivers/acpi/scan.c             |   3 +
+ include/acpi/actbl2.h           |   7 +
+ include/linux/acpi.h            |   1 +
+ include/linux/acpi_iovt.h       |  13 ++
+ 14 files changed, 352 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/acpi/loongarch/Kconfig
+ create mode 100644 drivers/acpi/loongarch/Makefile
+ create mode 100644 drivers/acpi/loongarch/init.c
+ create mode 100644 drivers/acpi/loongarch/init.h
+ create mode 100644 drivers/acpi/loongarch/iovt.c
+ create mode 100644 include/linux/acpi_iovt.h
 
-Yup I know. That describes what happens for RCU page table walkers _after_ the
-changes of course.
 
->
-> >
-> > So this series doesn't actually have to answer that :)
-> >
-> > But a PTE PTL -> pmd_same() check will flag anything like that,
-> > a.k.a. pte_offset_map_lock().
-> >
-> > The RCU lock replaces stablisation on stuff other than VMA/mmap or rmap
-> > lock.
-> >
-> > If the walker needs to be sure the PTE is actually valid and belongs to the
-> > expected walk then further is required.
-> >
-> > Alternatively (like GUP-fast) if you wanted to avoid locking at all, IRQs
-> > off would be required paired with the tlb_remove_table_sync_one() in
-> > collapse_huge_page().
->
-> Doing an RCU sync in tlb_remove_table_sync_one() would be the big hammer (I
-> thought that was discussed with Lance recently). There is also this option: just
-> allocate a new page table and deposit it, and free the existing page table
-> through RCU.
+base-commit: 93f51579e7df248780214094418f205253383cc5
+-- 
+2.39.3
 
-Hmm yeah big old lump hammer :) I mean I don't see how that could really
-possibly fly as an option, we have tlb_remove_table_sync_rcu() for
-!CONFIG_PT_RECLAIM arches (i.e. err... the more 'specialist' ones :) but for
-those in actual use that sounds a wee bit nuclear.
-
->
-> Long story short: allowing empty page tables to be freed by RCU is simple.
-> Allowing empty page tables to be reused while they are still getting walked is
-> obviously more complicated conceptually. Likely it can be made working, but I'd
-> hope that we can keep it simpler.
-
-I'm not sure it can really safely be guaranteed or it'd involve more lock
-dependencies or something horrible anyway.
-
-But... we don't need to care about any of that....
-
->
-> >
-> > Another strategy could be used I guess with looped checks but it gets a bit
-> > sketchy with timing etc.
-> >
-> > But actually maybe we can avoid all that...
-> >
-> >>
-> >> Note that pgtable_trans_huge_withdraw() just dequeues *some* PTE page table in
-> >> the list attached to the PMD table.
-> >>
-> >> Something is odd here.
-> >
-> > ...Since this code path already allocates (the huge folio), so allocation
-> > here isn't an issue (as long as done outside of lcosk), why not have it
-> > also allocate a new PTE to deposit and RCU-free the existing PTE instead?
-> >
-> > That eliminates the one place in the kernel (afaik) where a
-> > page-table-walker-visible table can just get yoinked over somewhere else.
-> >
-> > Then a lockless PMD check works.
-> >
-> > E.g. something like the below?
->
-> Hah! Great minds think alike.
-
-...Because great minds indeed <3
-
-Will respin with that then, thanks! :)
-
->
-> --
-> Cheers,
->
-> David
-
---
-Cheers, Lorenzo
