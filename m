@@ -1,137 +1,228 @@
-Received: from mail-pz2-f42.google.com (mail-pz2-f42.google.com [74.125.228.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D95C64EFFAC
-	for <loongarch@lists.linux.dev>; Tue, 22 Sep 2026 10:39:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E569153FD4F;
+	Tue, 22 Sep 2026 12:15:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790073590; cv=none; b=Gbtp0TMjU1bmneDQiazyFqsWOJDCXA8axRhI4jGWUJ1m+/rKTVn1Ibx8KgXOFFvaVNvmviWvNa9nL8Q5SjpFGqmbtagnC7XVNsvxoup1VvUMKjlNemhIIMCubkO12b5raiB2c91XKnZBoTRiOfbFS8/ihxAY6TI3bFzkUHZ83X0=
+	t=1790079318; cv=none; b=jRFsUMksaMXyWqcy+eQV3y9S6FTGR1+izeECBr6kpBTy11NegHXS5W/tCKzqFQBq9GwUNVK/LSFjLgSPkAWgVFyZ4Fki9JnlYMOtz/+rAJY/nv6dEjy1aZC/wHmH2NCig5Cchs3v1IhO9bmK8yUbC3tDg+chKhR1T71wMPnXXz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790073590; c=relaxed/simple;
-	bh=rQa40uWPapC60ioHBAw/KM6gw3RzpNXJjEMK0MR9cNM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B6oQdaqZioFk6nPZD70lxb81G8DucF48YAZB3xDLBHUhV92q/PtcE9R5KiaOWKnG0Yd54FgsiA2lVDAGkbgW0qCASpErZHMI1pkZceYjkB8y6JokzgkwsApdH4Wyoun6I08Bdv85jLBm4JjlcRiHpy+L3kNExTlClnnGBShgvXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lou2fjtW; arc=none smtp.client-ip=74.125.228.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1790079318; c=relaxed/simple;
+	bh=mNKIEd9Mmq/3t8Td5s7hd4YWf9+CfeM6DmvIMcYTb9s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WXnP3Mkf/CKenxrSVLma8ecFAfErZ1jtgMhxXdiTMOFfL2k5eYCJPRiaMtMDxuTOJCWPRnz90U/BdSK6tDRSLlSnYeFxHeJ/W/4naabYZ1wkfPKPu/7QSbCVa7yP/S2VcrAyo0GqCRjEWaiqUMCvKPKSrnEWldLKUKRrncxfqvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h3gqLkdx; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lou2fjtW"
-Received: by mail-pz2-f42.google.com with SMTP id d2e1a72fcca58-86e6d007703so3301202b3a.0
-        for <loongarch@lists.linux.dev>; Tue, 22 Sep 2026 03:39:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790073588; x=1790678388; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=II0vtlBLX3teC8UAtU2N6RuSR3r58GGPZ14MkNA6Dmw=;
-        b=Lou2fjtWKmWw9KN6SVRaLpDzozvli/csEd9l6Zx3rceyMTxw9cuZM/SQ6jhtBZ7Uyq
-         yw+v0vbkIcWnGTAk5nZF3CcQHEIZndWAyJMS8Sz7ztf8ONRs5S1rb6hctjlx9Q9mTpnn
-         vUyaNiGJuW0GHOUu5Ov0mEG0N0d2aa+bx3VlbZtULR/bkUyUU44IS+x6Jk6jbydMHYUj
-         sxKl+cQOjt7XPsmrHcQSmNgVy5DnkCpJshO8Hjx3bntiZ7niC5r55JwothepFOkw85ib
-         AoaKfTn65jiAx2imJ+9rgHs/CE3leq+xAuJR66d1/QaBU8rVas/u7TBZ7+VTt4tEQUgP
-         PtiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790073588; x=1790678388;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=II0vtlBLX3teC8UAtU2N6RuSR3r58GGPZ14MkNA6Dmw=;
-        b=bYdtPPtveZU3cp3vQ46O6ogh2iLBXwKD3Ynbarkd5uNBwgBpCPpCZxjOaeByn16D0U
-         hoZmyTculs2NOlLUpNUFYalWtSX3Vmsa1uZOVbB34+xJDS6F5CKnmfUVB32dn7IvGZb+
-         vNLpzSW9mUFA2xx8q2O0K3fRX2PPA7KTrhx9bKAMQgF3cq6nhcrSaxePMwcfQLfmigqM
-         6AfS91jzqnQEDWni3Z3buVhLpTj8Y99linKb5WIuXKuj68Pash2dhxnXe1cfCvold5da
-         QCrUa1YU/HE2PV3LKr+/ozXF5a+1nD/hwNoK0w38sMEKgj3UKR/tic/lY/dhCRrsalJM
-         1Few==
-X-Forwarded-Encrypted: i=1; AKwUvByGBDg9JNw9uIdvfOh9GXvDslo5VMlVikfdptIGUikpOSbeWS5XoD54u1g7/XoGYXFiwCWBOSwc2Ps=@lists.linux.dev
-X-Gm-Message-State: AFuF++mH79EmO+7O9ZIfG/Vnm1zZv9a31+PPmXEMC/m8EDNK/aLL+D7H
-	djArHY6ZiFcYWx4pc9+4ab2u17Dng6CtoimV1Ahi+76i3JUYFfLHPmiA
-X-Gm-Gg: AYBFou1Oh2tyhpMKqvTQYADNqiZR7zbbjUSOtbqckfzKWcosTBa9rAh1+tG9Laq6/kh
-	1Q4wwW2zkgzQqRegA7OgW6z6rUZyccxOE/XnNXk4BpjOlK4u10ODrZ3rWD0lDLJDvnxmDxEb3B3
-	DCvgzpGP4/x18xSo5riJ8oTF5jPBfXuVoRksBrIDymkPcVRgjg5pbPmvhFHmqEJnml9rc0EtB3k
-	emr9Sw64pHM3cyALjfjxu7FJbL8t8P1bLoxyRyRNrcKgsQxMVO6ADRlTvgW91RXhONO2ZzvymDi
-	/944XPyrhAaAZPo8B6OGqcTK+FtnMRPaqV9wPBZKWE0HnRlsV9+F1uQfjt7jSGBwVqKvble4wok
-	Ad3ey54VA3RxPYttSYT4neXn7HPdCs2j0Eq7Jt8mStej9jl00n7fkBHOww0S5MGFD+FNaDaAUBB
-	Oqv7y8akvrzsizuisU8HO6lsIYN+NWf84Eulhv9np7LKa3v46TQ2yt0sm0/DC5o6BGDn0dKRTD0
-	Eul2HQO+5E=
-X-Received: by 2002:a05:6a20:e390:b0:3dd:a006:ed9b with SMTP id adf61e73a8af0-3ddec82345bmr811522637.49.1790073587913;
-        Tue, 22 Sep 2026 03:39:47 -0700 (PDT)
-Received: from amd.ban-spse ([165.204.217.251])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-33e61271695sm4397515eec.8.2026.09.22.03.39.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Sep 2026 03:39:47 -0700 (PDT)
-From: Chaithanya Lagisetty <nagachaithanya9911@gmail.com>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	Xianglai Li <lixianglai@loongson.cn>,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Chaithanya Lagisetty <nagachaithanya9911@gmail.com>
-Subject: [PATCH] LoongArch: KVM: Return the actual error code in kvm_ipi_create()
-Date: Tue, 22 Sep 2026 10:39:31 +0000
-Message-ID: <20260922103931.215091-1-nagachaithanya9911@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h3gqLkdx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 117D71F000FF;
+	Tue, 22 Sep 2026 12:14:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790079316;
+	bh=gItcWC83jyqQewAzlLEIrIdpVAhf+FBobtBOU1cWYdE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=h3gqLkdxuBoehEGT/VKAAx5lOOZyw0R9ECju20pTUpkGq3CY4/SfkP5Oo8Atj/17P
+	 LheKowjELtZHtWEwX8eBKfgrKHJcRi0+O+d1XJm5SNFJeLnSFaLisjCbEBlxeLxjOn
+	 7b+NpgO+ZPXTsbOJUosoddrg+40PBvbsgsGmbY2VSvCJX0WLnI37yVWEjSxgbtaT89
+	 F/0sTPdrQN1xs1nAXdWed32VZcInT1tJCp8N+5WqvK/lF5EAI6+8MCsas5iRPln/rt
+	 CkKwC8hH7tDlCqpUlqLBsfISPWksuIen1RI49kVL18Y30A/o4HPBKzvey0Im1JOlMy
+	 V88LVj2NYFEMg==
+Date: Tue, 22 Sep 2026 13:14:52 +0100
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Zi Yan <ziy@nvidia.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, "Liam R. Howlett" <liam@infradead.org>, 
+	Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
+	Barry Song <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>, 
+	Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, Guo Ren <guoren@kernel.org>, 
+	Brian Cain <bcain@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Dinh Nguyen <dinguyen@kernel.org>, Simon Schuster <schuster.simon@siemens-energy.com>, 
+	Jonas Bonn <jonas@southpole.se>, Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, 
+	Stafford Horne <shorne@gmail.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
+	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Russell King <linux@armlinux.org.uk>, Vineet Gupta <vgupta@kernel.org>, 
+	Michal Simek <monstr@monstr.eu>, Chris Zankel <chris@zankel.net>, 
+	Max Filippov <jcmvbkbc@gmail.com>, Will Deacon <will@kernel.org>, 
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, 
+	Peter Zijlstra <peterz@infradead.org>, "David S. Miller" <davem@davemloft.net>, 
+	Andreas Larsson <andreas@gaisler.com>, Richard Henderson <richard.henderson@linaro.org>, 
+	Matt Turner <mattst88@gmail.com>, Magnus Lindholm <linmag7@gmail.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	Helge Deller <deller@gmx.de>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Richard Weinberger <richard@nod.at>, 
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Vlastimil Babka <vbabka@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
+	linux-m68k@lists.linux-m68k.org, linux-openrisc@vger.kernel.org, linux-sh@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-snps-arc@lists.infradead.org, linux-arch@vger.kernel.org, sparclinux@vger.kernel.org, 
+	linux-alpha@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
+	linux-um@lists.infradead.org, Hugh Dickins <hughd@google.com>, Qi Zheng <qi.zheng@linux.dev>
+Subject: Re: [PATCH v3 01/12] mm/huge_memory: zap deposited page tables after
+ an RCU grace period
+Message-ID: <arJrv6FdUUgAbVp1@gremlin>
+References: <20260911-rcu-pagetable-freeing-v3-0-7b8c86103821@kernel.org>
+ <20260911-rcu-pagetable-freeing-v3-1-7b8c86103821@kernel.org>
+ <467b6599-b73a-4f58-a29a-b6c6d1ffc3a5@kernel.org>
+ <aqrAflIQbwcNKlQL@gremlin>
+ <bc2805a7-361e-4082-bf71-efc125b93c84@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bc2805a7-361e-4082-bf71-efc125b93c84@kernel.org>
 
-kvm_ipi_create() registers the IPI device on the IOCSR bus and jumps to
-the error label when that fails. The error path then discards the error
-code that kvm_io_bus_register_dev() reported and returns -EFAULT
-instead:
+On Mon, Sep 21, 2026 at 07:13:16PM +0200, David Hildenbrand (Arm) wrote:
+> On 9/16/26 18:59, Lorenzo Stoakes (ARM) wrote:
+> > On Wed, Sep 16, 2026 at 04:42:04PM +0200, David Hildenbrand (Arm) wrote:
+> >> On 9/11/26 21:36, Lorenzo Stoakes (ARM) wrote:
+> >>> When an anonymous mapping is collapsed for THP, a PTE page table is
+> >>> 'deposited' with the installed PMD entry.
+> >>
+> >> Right. Or when we allocate an anon THP.
+> >
+> > That case doesn't interact with page walking though, as they're
+> > just-allocated right?
+>
+> I was surprised to read that page tables deposited during collapse should behave
+> differently than page tables deposited during allocation :)
 
-	ret = kvm_io_bus_register_dev(kvm, KVM_IOCSR_BUS, IOCSR_IPI_BASE,
-				      IOCSR_IPI_SIZE, device);
-	mutex_unlock(&kvm->slots_lock);
-	if (ret < 0) {
-		kvm_pr_unimpl("%s: Initialize IOCSR dev failed, ret = %d\n",
-			      __func__, ret);
-		goto err;
-	}
-	...
-err:
-	kfree(s);
-	return -EFAULT;
+You'll be super surprised by how VMAs behave when detached vs. attached then ;)
 
-kvm_io_bus_register_dev() fails with -ENOMEM or -ENOSPC, so userspace
-creating a KVM_DEV_TYPE_LOONGARCH_IPI device is told that it passed a
-bad address when the real problem is that the host is out of memory or
-out of IOCSR bus slots. -EFAULT is reserved for faulting user addresses,
-and the remaining -EFAULT returns in this file are get_user() failures,
-where it is correct.
+>
+> That's the semantic change you are adding (and that I didn't quite understand
+> from reading your description): a deposited page table could now get reused and
+> modified for another page table due to a PMD split, while there might still be
+> an RCU page table walker walking it. And PMD comparisons (+ proper memory
+> ordering) have to make sure that we didn't just walk  something that doesn't
+> belong to us.
+>
+> [...]
+>
+> >>
+> >> Wait, but wouldn't it be really problematic to punch a page table that is still
+> >
+> > Punch? You mean deposit?
+>
+> Yes!
 
-Return ret instead. It is guaranteed to hold a valid negative errno
-because the ret < 0 branch above is the only path that reaches the error
-label. This also matches kvm_eiointc_create(), which already propagates
-the kvm_io_bus_register_dev() error code unchanged.
+Ack.
 
-Only compile-tested; the fix is a straight propagation of an error code
-that the adjacent kvm_pr_unimpl() already logs.
+>
+> >
+> >> being walked into the deposited list where it can just be allocated from another
+> >> PMD->PTE split?
+> >
+> > In general, RCU-only page table walkers are _only_ guaranteed that the page
+> > tables are not freed from underneath them, as per the cover letter:
+> >
+> > 	"As a result, page table walks can now be performed safely under RCU without
+> > 	 any risk of page tables being freed underneath a walker.
+> >
+> > 	However, this is the only guarantee that this work provides - page table
+> > 	walkers must still ensure that page table entries are as expected
+> > 	throughout."
+>
+> So far page table walkers never walk deposited page tables. Just like they never
+> walk freed page tables.
+>
+> For *current* lockless page table walkers (IRQs disabled),
+> tlb_remove_table_sync_one() takes care of that. So there is no such thing as
+> "walking a page table that was reused in different context (as a page table) in
+> the meantime".
 
-Fixes: c532de5a67a7 ("LoongArch: KVM: Add IPI device support")
-Assisted-by: Cursor:claude-opus-5
-Signed-off-by: Chaithanya Lagisetty <nagachaithanya9911@gmail.com>
----
- arch/loongarch/kvm/intc/ipi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yup I know. That describes what happens for RCU page table walkers _after_ the
+changes of course.
 
-diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.c
-index 7b333a4a0430..672ec053a997 100644
---- a/arch/loongarch/kvm/intc/ipi.c
-+++ b/arch/loongarch/kvm/intc/ipi.c
-@@ -431,7 +431,7 @@ static int kvm_ipi_create(struct kvm_device *dev, u32 type)
- 
- err:
- 	kfree(s);
--	return -EFAULT;
-+	return ret;
- }
- 
- static void kvm_ipi_destroy(struct kvm_device *dev)
--- 
-2.43.0
+>
+> >
+> > So this series doesn't actually have to answer that :)
+> >
+> > But a PTE PTL -> pmd_same() check will flag anything like that,
+> > a.k.a. pte_offset_map_lock().
+> >
+> > The RCU lock replaces stablisation on stuff other than VMA/mmap or rmap
+> > lock.
+> >
+> > If the walker needs to be sure the PTE is actually valid and belongs to the
+> > expected walk then further is required.
+> >
+> > Alternatively (like GUP-fast) if you wanted to avoid locking at all, IRQs
+> > off would be required paired with the tlb_remove_table_sync_one() in
+> > collapse_huge_page().
+>
+> Doing an RCU sync in tlb_remove_table_sync_one() would be the big hammer (I
+> thought that was discussed with Lance recently). There is also this option: just
+> allocate a new page table and deposit it, and free the existing page table
+> through RCU.
 
+Hmm yeah big old lump hammer :) I mean I don't see how that could really
+possibly fly as an option, we have tlb_remove_table_sync_rcu() for
+!CONFIG_PT_RECLAIM arches (i.e. err... the more 'specialist' ones :) but for
+those in actual use that sounds a wee bit nuclear.
+
+>
+> Long story short: allowing empty page tables to be freed by RCU is simple.
+> Allowing empty page tables to be reused while they are still getting walked is
+> obviously more complicated conceptually. Likely it can be made working, but I'd
+> hope that we can keep it simpler.
+
+I'm not sure it can really safely be guaranteed or it'd involve more lock
+dependencies or something horrible anyway.
+
+But... we don't need to care about any of that....
+
+>
+> >
+> > Another strategy could be used I guess with looped checks but it gets a bit
+> > sketchy with timing etc.
+> >
+> > But actually maybe we can avoid all that...
+> >
+> >>
+> >> Note that pgtable_trans_huge_withdraw() just dequeues *some* PTE page table in
+> >> the list attached to the PMD table.
+> >>
+> >> Something is odd here.
+> >
+> > ...Since this code path already allocates (the huge folio), so allocation
+> > here isn't an issue (as long as done outside of lcosk), why not have it
+> > also allocate a new PTE to deposit and RCU-free the existing PTE instead?
+> >
+> > That eliminates the one place in the kernel (afaik) where a
+> > page-table-walker-visible table can just get yoinked over somewhere else.
+> >
+> > Then a lockless PMD check works.
+> >
+> > E.g. something like the below?
+>
+> Hah! Great minds think alike.
+
+...Because great minds indeed <3
+
+Will respin with that then, thanks! :)
+
+>
+> --
+> Cheers,
+>
+> David
+
+--
+Cheers, Lorenzo
