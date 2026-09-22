@@ -1,106 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3895542803;
-	Tue, 22 Sep 2026 12:30:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01FA15372DE
+	for <loongarch@lists.linux.dev>; Tue, 22 Sep 2026 12:43:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790080249; cv=none; b=nIcm8BVFey/YDfast8VS5YQn7lymnGzc0BOq2CoMHDWzArWpATosetQgUa2+c6mEVMZNZZxoZgwB2h2da/nINUE4REykHFRpniqn7rGqNJ9w0jB5Eg6WjkknrZmmckiBy5aTtfIHh3FfzRQhkovFghC7e1LoMvq3wse0YR/PzoM=
+	t=1790081020; cv=none; b=XTgTy0lrCMihBS6sHCe2FO4a08xPF17BcAYELY3GRF76kCoN9SNeJ+wbZIcQe/uLIPzKWOQfBSvrt/NyVi4ZK1fHkA/qLTYTy8ubuGbO6G5kHkhrOG5pZXeM4JeZodOuCZ5qBmgWPMNjKRhE1rSh75GYJnMT2nw2fBzL8diSbVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790080249; c=relaxed/simple;
-	bh=Qs+hH9j5ECf7wu8c8yamJoQ9GRescqfKiHV5zZgWxxY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=TDN5KqwUn49McftdmCHT/9JOuM6rCXG0SP9LLal40xlB46nrtWxco8maYfVAj77bPNdrS6kq4WPQhskeswrY8YooBlO2jY/LaHNG6cdfhypdcmtDhzMh92P+XPA1jFhvcjJuMzplsLjkibQ0jcB99h4hw1WqlaBEK/mLMEWAYzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O4TcHUGv; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O4TcHUGv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68E541F000FF;
-	Tue, 22 Sep 2026 12:30:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790080247;
-	bh=Ic/h6nB8JUlBM8zaXvVjgvTf0SPmAf0fMbuRRf6h1OU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=O4TcHUGvDUaiZAcbWB6yDzYBqy/coJnW/7scfWIrPA9JZxubQUqIJf+7nKN83DAvz
-	 U3rD2gr4++NFyoHbWT7OGBHQAnistbtAfT9opp3pPyes8L3+xOT//5ld67ttl0foKz
-	 nXPLSXKR+pImSUOXClFkHmJBrLLIrFeQMPqtNcb9BryKjXCfhBjEnN9oi8UW7pkOYA
-	 Hq+AfNeeC/W59e3rt+G6pf9lVI8MhGhbKvOoZk761TLTZJ9xR5xBsZNMSg2dNWGc8+
-	 FIGiRNf6VjsnCN/LNVHx/rSj4nVE7vE+zwGwcigogdyg+GL6/GP2A9eRl5QX8kga0z
-	 ZSCN83j72ugfQ==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: George Guo <dongtai.guo@linux.dev>
-Cc: rppt@kernel.org,  pasha.tatashin@soleen.com,  pratyush@kernel.org,
-  chenhuacai@kernel.org,  ardb@kernel.org,  shuah@kernel.org,
-  ilias.apalodimas@linaro.org,  akpm@linux-foundation.org,
-  baoquan.he@linux.dev,  ruirui.yang@linux.dev,  guodongtai@kylinos.cn,
-  kernel@xen0n.name,  graf@amazon.com,  liukexin@kylinos.cn,
-  loongarch@lists.linux.dev,  linux-kernel@vger.kernel.org,
-  kexec@lists.infradead.org,  linux-mm@kvack.org,
-  linux-kselftest@vger.kernel.org,  linux-efi@vger.kernel.org
-Subject: Re: [PATCH v5 3/5] liveupdate: kho_block: include linux/mm.h for
- virt/phys translation
-In-Reply-To: <20260904100852.26006-4-dongtai.guo@linux.dev> (George Guo's
-	message of "Fri, 4 Sep 2026 18:08:50 +0800")
-References: <20260904100852.26006-1-dongtai.guo@linux.dev>
-	<20260904100852.26006-4-dongtai.guo@linux.dev>
-Date: Tue, 22 Sep 2026 14:30:43 +0200
-Message-ID: <2vxz5wzx5uz0.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1790081020; c=relaxed/simple;
+	bh=GtOrmSkQPj/MT55mET9mJ2+3to25SkUAyuPp0xdVmOg=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=t4a3eAfqoDpdLmQiDAxQ/GYL/ue5nGRhK7mOMYMB8m/YDxMigaS2RM9YneMNlV+GBpnheNGYIbCA6K+ciSlwKWgtXGNHXc67mkH+7FZQrZP991fujMjO04jMCq2Vw0tDHRoJkSCSgnQur58OvCenLg1A5/o0u941o0I8Mg2/nsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8AxntL4d7Jq0aEOAA--.42763S3;
+	Tue, 22 Sep 2026 20:43:36 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJBxpMz3d7Jq_8EjAA--.49446S2;
+	Tue, 22 Sep 2026 20:43:36 +0800 (CST)
+Subject: Re: [PATCH 0/2] LoongArch: KVM: Code cleanup with MSI intterupt
+ injection
+To: Tao Cui <cui.tao@linux.dev>, Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20260909083259.1910290-1-maobibo@loongson.cn>
+ <fb08279a-eb1b-44b1-b4af-f354fb81f112@linux.dev>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <b72618c1-f8b0-9f17-8a56-af42b0bf4aef@loongson.cn>
+Date: Tue, 22 Sep 2026 20:43:13 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <fb08279a-eb1b-44b1-b4af-f354fb81f112@linux.dev>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBxpMz3d7Jq_8EjAA--.49446S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWrKrW5ZFWUZw4DWrW5Ww47Jrc_yoW8JrWxpF
+	ZxCFnxurWkKFZ5GrnF93W5Xr1Dtw43Gr4Sqa42ya48Ar4YvF1Fqry8JrZavF98GayrJw4k
+	X3WfKws8ZF1UCabCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8cz
+	VUUUUUU==
 
-On Fri, Sep 04 2026, George Guo wrote:
 
-> From: George Guo <guodongtai@kylinos.cn>
->
-> kho_block.c calls virt_to_phys() and phys_to_virt(). On LoongArch with
-> CONFIG_KFENCE=y, these macros (in arch/loongarch/include/asm/io.h) expand
-> to offset_in_page() and page_address(), both declared in <linux/mm.h>.
->
-> Since kho_block.c does not include <linux/mm.h>, the translation unit
-> fails to build with CONFIG_KFENCE=y:
->
->   asm/io.h: error: implicit declaration of function 'offset_in_page'
->   asm/io.h: error: implicit declaration of function 'page_address'
->
-> Add the missing include to fix these build errors.
->
-> This is the same root cause as the luo_session.c build fix previously
-> acked by Mike Rapoport [1]; the virt_to_phys()/phys_to_virt() calls have
-> since been refactored from luo_session.c into kho_block.c, so the fix
-> moves with it.
->
-> [1] https://lore.kernel.org/r/ai5nYlbERQBXRHSp@kernel.org/
 
-Drop this paragraph please. History of previous patch postings doesn't
-belong in the commit message. You should write this kind of things below
-the "---".
+On 2026/9/10 上午11:06, Tao Cui wrote:
+> Hi, Bibo
+> 
+> 在 2026/9/9 16:32, Bibo Mao 写道:
+>> Here is to remove some unnecessary parameter checking when injecting
+>> MSI interrupt, include MSI level parameter and vcpu::arch::dmsintc_state
+>> NULL pointer etc.
+>>
+>> Bibo Mao (2):
+>>    LoongArch: KVM: Remove parameter line when inject MSI
+>>    LoongArch: KVM: Remove duplicated checking with DMSI irq injection
+>>
+>>   arch/loongarch/include/asm/kvm_dmsintc.h |  3 +--
+>>   arch/loongarch/include/asm/kvm_pch_pic.h |  2 +-
+>>   arch/loongarch/kvm/intc/dmsintc.c        | 19 +++----------------
+>>   arch/loongarch/kvm/intc/pch_pic.c        |  6 +++---
+>>   arch/loongarch/kvm/irqfd.c               |  6 +++---
+>>   5 files changed, 11 insertions(+), 25 deletions(-)
+>>
+>>
+>> base-commit: df2908090cda368b01ff43709f51890076c56157
+> 
+> The series looks good to me.
+> 
+> Reviewed-by: Tao Cui <cuitao@kylinos.cn>
+> 
+> Minor question: kvm_set_msi() now returns -EINVAL for !level instead
+> of -1. Since MSI is edge-triggered, returning 0 to ignore a deassert
+yes, it seems that returning 0 is better, since there is such usage with
+level == 0 when injecting MSI interrupt.
 
->
-> Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
-> Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
-> Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> ---
->  kernel/liveupdate/kho_block.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/kernel/liveupdate/kho_block.c b/kernel/liveupdate/kho_block.c
-> index 0d2a342ef422..0d56891b2f4c 100644
-> --- a/kernel/liveupdate/kho_block.c
-> +++ b/kernel/liveupdate/kho_block.c
-> @@ -25,6 +25,7 @@
->  #include <linux/kho/abi/block.h>
->  #include <linux/kho_block.h>
->  #include <linux/slab.h>
-> +#include <linux/mm.h>
->  
->  /*
->   * Safeguard limit for the number of serialization blocks. This is used to
+Regards
+Bibo Mao
+> would also work, though nothing looks at the return value today.
+> 
 
--- 
-Regards,
-Pratyush Yadav
