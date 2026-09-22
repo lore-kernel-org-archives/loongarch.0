@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2427B48EC96;
-	Tue, 22 Sep 2026 05:42:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0909E4DDB5D;
+	Tue, 22 Sep 2026 06:57:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790055740; cv=none; b=G8ZvMUQHKQsaOOXANJKB+rbbfRs8Wy/DtDE/SN5jLmdhUcFm6pEWK6me4pzrzEnX8NTai0iIuue3hL9RGRZ/Lv2QBYY7ZtYMSFDikItT6EWuU1aR+DVFACUggL6kH4jnsPzdv1O5bGqpfR1mcjHqMdhyhV+gLMMG46lVtzu/AZg=
+	t=1790060232; cv=none; b=nlkAgTvMt0ZA/wCgKtkASITULlUcYUt7MLinWgG87fMF48RJkY3WUb41lzgyspJebz+wNb07nvddZdYa6sP/ij+4RGD218MxEKcu/HnSxrAdpwTTLHSc/Cc1tU1P3SrOQE36Jd06Cisi0UUE/p+py1bpI4LAflQOgq+gEQeY19I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790055740; c=relaxed/simple;
-	bh=QLstHbecJM6J3c12qaE/eMNnS3uL33Y24ac3M5mHP9w=;
+	s=arc-20240116; t=1790060232; c=relaxed/simple;
+	bh=FcTCXKGeTtFpcrVBbNfvj7cPYW3qv1hqdB+74dNhimk=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=chmz48gbB7anrwoQZRtGc1VX24UAxVflMxAW9v9rIjIvAG93A8Px3Yz4Ywmklzu3MX8Jl5a59+7lO9WvsOSua9hYcURLTcA7w+wRZhO9kfyx8I5CinRtoW7qz5hzvH353n5YTbC1dFv3wSufEOlRfpgwKLZ6Eva4Cy+g6ZfLJK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n3cAyn/R; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=t4R3j0C9beNNBa7K2P3aVbc9p4Mgd8XQYXSib4fY8CJEKrml8aScp0do6EJQYFI5xP9vX5Y4ZDYwdBf5He1IBGniSl6zp7Ngj7HpgkD9VmmAWFg6iqQ6hBEtHN4dm35Co5D9aXDnYxMcyRO6k8gsk6863vDhmnqYl3ju5uPtL1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BNB44/zw; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n3cAyn/R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 943B51F000FF;
-	Tue, 22 Sep 2026 05:42:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BNB44/zw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 602FD1F000FF;
+	Tue, 22 Sep 2026 06:56:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790055737;
-	bh=3epzgFAGTIrwRdhpNfOPzvquVJOf1jbVVt83Gylxrw4=;
+	s=k20260515; t=1790060224;
+	bh=VVgL/uzz137uMRzSkpFduyYcDsPNmDrSlT5+2SBHXpU=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=n3cAyn/RCRCO8X+Uau1YjXbZxv8R3e4DCS+Xrx4rxCRgSj1hcmaLfTbRORYJw1hgq
-	 Cdw8d9qTesIZG96UD++KmUGKR0DtVp8Km9oejn5XjuarV7G50P0Egv95jNovWg5nHx
-	 9biemEsqA2QDkJEW6YxDns/Fcj6SeGFmgfINJQBFXMauH1rC7qKLOGGgJDa1ksYZVv
-	 F4bBFg9Uu6vXcF5kxVU5L5bwk4e2hX2UdCkTsGD76gFExoimfyeuDNQ9fxDXt/f2f3
-	 LrIkgC9XUMg3K6ZpKCyfWYLJRw6k5gX7a/F2+K9SqAsZpSXf2NYCDRauBSvMK89oLc
-	 6F8UvRtFunsPg==
+	b=BNB44/zwKoNMc0NnM2KjlJD0Vr/OZo7eRyriJNlJby7xV70V9sHGh4ZUo3N6FgJ5t
+	 AjPqJib9IFHuoqfPh8SyGVJoAHqxb/F0KmSrGipZ3+Sm+r/lDNT/XUTs7nFCcT2DhH
+	 g5WR1jq4muLh7CxgYUjUANWn3iQ3FgYkWa6NZWbaJ6BOFWumg9ZQKJ956iEpeA81PA
+	 hzTJ4cfSvz4m1vsEf2dZ4qKH6nXJpbMvl69nqyp+3sqrQFniFXCfQhmD8wTBwEdZc/
+	 /Yq6Bnpzrc3VVAujAQyozn9bvn0jHEZpnABRRKd4QSAfltWAjXL8kiHAK+SmBrRSWB
+	 c5nlXGg/IquUw==
 X-Mailer: emacs 31.1 (via feedmail 11-beta-1 I)
 From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
 To: Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux.dev,
@@ -67,14 +67,13 @@ Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
 	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
 	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
 	x86@kernel.org
-Subject: Re: [PATCH v5 2/6] dma: swiotlb: Track whether the pool size was
- explicitly set
-In-Reply-To: <94630348-d295-4424-9f6c-0dc3b8704077@arm.com>
+Subject: Re: [PATCH v5 3/6] dma: swiotlb: Centralize minimal pool sizing
+In-Reply-To: <21180ec6-b9ad-43fd-9e52-51df644e1b93@arm.com>
 References: <20260921063628.362078-1-aneesh.kumar@kernel.org>
- <20260921063628.362078-3-aneesh.kumar@kernel.org>
- <94630348-d295-4424-9f6c-0dc3b8704077@arm.com>
-Date: Tue, 22 Sep 2026 11:12:01 +0530
-Message-ID: <yq5ase313kra.fsf@kernel.org>
+ <20260921063628.362078-4-aneesh.kumar@kernel.org>
+ <21180ec6-b9ad-43fd-9e52-51df644e1b93@arm.com>
+Date: Tue, 22 Sep 2026 12:26:47 +0530
+Message-ID: <yq5apky53hao.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -86,66 +85,90 @@ Content-Type: text/plain
 Robin Murphy <robin.murphy@arm.com> writes:
 
 > On 21/09/2026 7:36 am, Aneesh Kumar K.V (Arm) wrote:
->> swiotlb_adjust_size() must not override a pool size supplied through the
->> swiotlb= command-line parameter.
->> 
->> Currently, it determines whether a size was supplied by comparing
->> default_nslabs with IO_TLB_DEFAULT_SIZE. This fails when the user
->> explicitly requests the compiled-in default size, allowing the request
->> to be overwritten by automatic pool sizing.
->> 
->> Record whether swiotlb= supplied a numeric size and add
->> swiotlb_default_size_changed() to query that state.
->> 
->> Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
->> ---
->>   kernel/dma/swiotlb.c | 9 ++++++++-
->>   1 file changed, 8 insertions(+), 1 deletion(-)
->> 
+>> A default SWIOTLB pool used only for unaligned kmalloc bouncing can be
+
+ [ ... 54 lines skipped ... ] 
+
+>>   
 >> diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
->> index aa19e81ae544..8f86deb25be2 100644
+>> index 8f86deb25be2..f368a73f4ed0 100644
 >> --- a/kernel/dma/swiotlb.c
 >> +++ b/kernel/dma/swiotlb.c
->> @@ -107,6 +107,7 @@ static struct io_tlb_mem io_tlb_default_mem;
->>   
->>   static unsigned long default_nslabs = IO_TLB_DEFAULT_SIZE >> IO_TLB_SHIFT;
->>   static unsigned long default_nareas;
->> +static bool swiotlb_size_set __initdata;
+>> @@ -483,9 +483,18 @@ static bool __init swiotlb_kmalloc_needs_bounce(void)
+>>   static void __init
+>>   swiotlb_adjust_pool_size(enum swiotlb_pool_policy policy)
+>>   {
+>> +	if (swiotlb_default_size_changed())
+>> +		return;
+>> +
 >
-> Nit: there are various ways and reasons that the size is set in general; 
-> could this please be named something clearer, e.g. 
-> "swiotlb_cmdline_size_set"?
->
->>   /**
->>    * struct io_tlb_area - IO TLB memory area descriptor
->> @@ -269,6 +270,7 @@ setup_io_tlb_npages(char *str)
->>   		/* avoid tail segment of size < IO_TLB_SEGSIZE */
->>   		default_nslabs =
->>   			ALIGN(simple_strtoul(str, &str, 0), IO_TLB_SEGSIZE);
->> +		swiotlb_size_set = true;
->>   	}
->>   	if (*str == ',')
->>   		++str;
->> @@ -304,6 +306,11 @@ unsigned long swiotlb_size_or_default(void)
->>   	return default_nslabs << IO_TLB_SHIFT;
->>   }
->>   
->> +static bool __init swiotlb_default_size_changed(void)
->
-> ...and then do we really need a trivial wrapper function with the exact 
-> same scope as the variable itself? (Plus the name is similarly confusing 
-> as the places this is used are themselves potentially changing the 
-> default size, if you consider "default" to mean "not explicitly 
-> specified"...)
->
-> With the naming improved,
+> This appears to be entirely redundant, as ultimately the point of this 
+> function is to call swiotlb_adjust_size() (if it does anything at all), 
+> and the first thing that does is this same exact check. We hardly need 
+> to micro-optimise short-circuiting a handful of arithmetic in a one-off 
+> setup path, and it's convoluted enough as it is, so please try to avoid 
+> redundancy that makes it even more confusing to follow.
 >
 
-Updated and dropped the helper.
+OK, I'll drop this.
 
 >
-> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+>>   	switch (policy) {
+>> -	case SWIOTLB_POOL_MINIMAL:
+>> +	case SWIOTLB_POOL_MINIMAL: {
+>> +		unsigned long size;
+>> +
+>> +		/* Use 1MB per 1GB of RAM for kmalloc() bouncing. */
+>> +		size = DIV_ROUND_UP(memblock_phys_mem_size(), 1024);
+>> +		swiotlb_adjust_size(min(swiotlb_size_or_default(), size));
+>>   		break;
 >
+> Similarly I think it would be clearer if we had a common 
+> swiotlb_adjust_size() call at the end of the function, and then either 
+> calculate a size or return early in each switch case as appropriate.
+>
+> Furthermore, swiotlb_size_or_default() is awful IMO - and in fact after 
+> this series we could perhaps clean it up entirely by making the size 
+> implicit in swiotlb_init_late() - not to mention misleadingly redundant. 
+> I'd say just open-code "default_nslabs << IO_TLB_SHIFT" like elsewhere 
+> in the file, but in fact it may as well just be IO_TLB_DEFAULT_SIZE 
+> (think about it...)
+>
+
+How about we rename swiotlb_size_or_default to
+
+unsigned long swiotlb_default_pool_size(void)
+{
+	return default_nslabs << IO_TLB_SHIFT;
+}
+
+We still need a helper because arch/arm/xen/mm.c also uses it. I also
+updated swiotlb_adjust_pool_size() as suggested.
+
+static void __init
+swiotlb_adjust_pool_size(enum swiotlb_pool_policy policy)
+{
+	unsigned long size;
+
+	switch (policy) {
+	case SWIOTLB_POOL_MINIMAL:
+		/* Use 1MB per 1GB of RAM for kmalloc() bouncing. */
+		size = DIV_ROUND_UP(memblock_phys_mem_size(), 1024);
+		size = min(swiotlb_size_or_default(), size);
+		break;
+	case SWIOTLB_POOL_CC_GUEST:
+		size = swiotlb_adjusted_size();
+		break;
+	case SWIOTLB_POOL_NONE:
+		WARN(true, "Cannot adjust SWIOTLB size without a pool\n");
+		return;
+	case SWIOTLB_POOL_DEFAULT:
+	default:
+		return;
+	}
+
+	swiotlb_adjust_size(size);
+}
 
 
 -aneesh
