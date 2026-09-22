@@ -1,114 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pz2-f42.google.com (mail-pz2-f42.google.com [74.125.228.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2BE2E0914;
-	Tue, 22 Sep 2026 09:05:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D95C64EFFAC
+	for <loongarch@lists.linux.dev>; Tue, 22 Sep 2026 10:39:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790067903; cv=none; b=b7SlO2izYAZBpCd/Y7913y53Lso3yNl3MFOyfJSJF3ZyYlnF16IiCmwx+a7qqldSuUOd+JyR0BGq0DJeUf6AW96p+gU2WT7Q2rG7nFwMRhSJSPro5jia57yYjPyXXaIp+vdKw2c47WaHZ3MP0PvuINsPJ0tgXdc6pM7L8/GtS4A=
+	t=1790073590; cv=none; b=Gbtp0TMjU1bmneDQiazyFqsWOJDCXA8axRhI4jGWUJ1m+/rKTVn1Ibx8KgXOFFvaVNvmviWvNa9nL8Q5SjpFGqmbtagnC7XVNsvxoup1VvUMKjlNemhIIMCubkO12b5raiB2c91XKnZBoTRiOfbFS8/ihxAY6TI3bFzkUHZ83X0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790067903; c=relaxed/simple;
-	bh=Iib6UzcABQ6xYqcy3qwfLHQr9tDa9Fk17JJoNSXf8h8=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=BAfdsqHa4QNccKNkrc+ETXa3x7VhaMXwNma4GtN1pYG+NwJy7bmd/VMEXiHZkE3rTfxr4KVqiTXCW4CQnKScJrj9ICFNI1+YWtqIYlxHUKUXz7NhDcJqDAWH427qdLsZvTrTzQwxBW6+8Oz7N0v/WE8mt9RxKNhM5yUOJXUzt9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k9LHr2Wd; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790073590; c=relaxed/simple;
+	bh=rQa40uWPapC60ioHBAw/KM6gw3RzpNXJjEMK0MR9cNM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B6oQdaqZioFk6nPZD70lxb81G8DucF48YAZB3xDLBHUhV92q/PtcE9R5KiaOWKnG0Yd54FgsiA2lVDAGkbgW0qCASpErZHMI1pkZceYjkB8y6JokzgkwsApdH4Wyoun6I08Bdv85jLBm4JjlcRiHpy+L3kNExTlClnnGBShgvXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lou2fjtW; arc=none smtp.client-ip=74.125.228.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k9LHr2Wd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B5581F000FF;
-	Tue, 22 Sep 2026 09:04:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790067901;
-	bh=gVJZTypgXfKJStNVi3R0a2JQB/tvx6NLIBfpEAfH+Ko=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=k9LHr2Wd4Rxx3+1boxWUT9I2oXWCmuvgxijo5nc6bPCgxtO998Rsh7NKemCZPMZ7q
-	 jCqEgkFPjzxPK4mReOTTd/elY+ciGLQH0sdAs9Gj6meNVO4LfN2kzV+4LXR0oVx6SK
-	 7ZH/T7Wv5A2AUNswlgh8q3cB2VzM3drCJ2lhSUow3TBR7t+5QqoSZi80Bp+U336otT
-	 6+pWL7hrOojomJ2u753Enniueu6LZnlrBvU6X6vwp9prGtDnyfBK/IXM5CJdbxbR9Z
-	 4Y6VvuOiSdy8+S0cHn5PGHelRvFyfDPZFS7siU3DaFG8DB1NQi0pi6gHzGpuQPP6oN
-	 01swkhQ7UyoBw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 8/9] of: reserved_mem: mark /memreserve/ entries as
- MEMBLOCK_NODUMP
-Reply-To: sashiko-reviews@lists.linux.dev
-To: robh@kernel.org, baoquan.he@linux.dev, "Wandun Chen" <chenwandun1@gmail.com>, rppt@kernel.org, m.szyprowski@samsung.com
-Cc: saravanak@kernel.org, pjw@kernel.org, conor+dt@kernel.org, iommu@lists.linux.dev, ruirui.yang@linux.dev, linux-kernel@vger.kernel.org, mark.rutland@arm.com, loongarch@lists.linux.dev, tglx@kernel.org, bp@alien8.de, x86@kernel.org, pratyush@kernel.org, kexec@lists.infradead.org, chenhuacai@kernel.org, hpa@zytor.com, pasha.tatashin@soleen.com, mingo@redhat.com, linux-mm@kvack.org, robin.murphy@arm.com, linux-riscv@lists.infradead.org, aou@eecs.berkeley.edu, linux-arm-kernel@lists.infradead.org, alex@ghiti.fr, catalin.marinas@arm.com, will@kernel.org, devicetree@vger.kernel.org, dave.hansen@linux.intel.com, akpm@linux-foundation.org, palmer@dabbelt.com, kernel@xen0n.name
-In-Reply-To: <20260922084256.1515554-9-chenwandun1@gmail.com>
-References: <20260922084256.1515554-1-chenwandun1@gmail.com>
- <20260922084256.1515554-9-chenwandun1@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 22 Sep 2026 09:04:58 +0000
-Message-Id: <20260922090459.2B5581F000FF@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lou2fjtW"
+Received: by mail-pz2-f42.google.com with SMTP id d2e1a72fcca58-86e6d007703so3301202b3a.0
+        for <loongarch@lists.linux.dev>; Tue, 22 Sep 2026 03:39:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790073588; x=1790678388; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=II0vtlBLX3teC8UAtU2N6RuSR3r58GGPZ14MkNA6Dmw=;
+        b=Lou2fjtWKmWw9KN6SVRaLpDzozvli/csEd9l6Zx3rceyMTxw9cuZM/SQ6jhtBZ7Uyq
+         yw+v0vbkIcWnGTAk5nZF3CcQHEIZndWAyJMS8Sz7ztf8ONRs5S1rb6hctjlx9Q9mTpnn
+         vUyaNiGJuW0GHOUu5Ov0mEG0N0d2aa+bx3VlbZtULR/bkUyUU44IS+x6Jk6jbydMHYUj
+         sxKl+cQOjt7XPsmrHcQSmNgVy5DnkCpJshO8Hjx3bntiZ7niC5r55JwothepFOkw85ib
+         AoaKfTn65jiAx2imJ+9rgHs/CE3leq+xAuJR66d1/QaBU8rVas/u7TBZ7+VTt4tEQUgP
+         PtiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790073588; x=1790678388;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=II0vtlBLX3teC8UAtU2N6RuSR3r58GGPZ14MkNA6Dmw=;
+        b=bYdtPPtveZU3cp3vQ46O6ogh2iLBXwKD3Ynbarkd5uNBwgBpCPpCZxjOaeByn16D0U
+         hoZmyTculs2NOlLUpNUFYalWtSX3Vmsa1uZOVbB34+xJDS6F5CKnmfUVB32dn7IvGZb+
+         vNLpzSW9mUFA2xx8q2O0K3fRX2PPA7KTrhx9bKAMQgF3cq6nhcrSaxePMwcfQLfmigqM
+         6AfS91jzqnQEDWni3Z3buVhLpTj8Y99linKb5WIuXKuj68Pash2dhxnXe1cfCvold5da
+         QCrUa1YU/HE2PV3LKr+/ozXF5a+1nD/hwNoK0w38sMEKgj3UKR/tic/lY/dhCRrsalJM
+         1Few==
+X-Forwarded-Encrypted: i=1; AKwUvByGBDg9JNw9uIdvfOh9GXvDslo5VMlVikfdptIGUikpOSbeWS5XoD54u1g7/XoGYXFiwCWBOSwc2Ps=@lists.linux.dev
+X-Gm-Message-State: AFuF++mH79EmO+7O9ZIfG/Vnm1zZv9a31+PPmXEMC/m8EDNK/aLL+D7H
+	djArHY6ZiFcYWx4pc9+4ab2u17Dng6CtoimV1Ahi+76i3JUYFfLHPmiA
+X-Gm-Gg: AYBFou1Oh2tyhpMKqvTQYADNqiZR7zbbjUSOtbqckfzKWcosTBa9rAh1+tG9Laq6/kh
+	1Q4wwW2zkgzQqRegA7OgW6z6rUZyccxOE/XnNXk4BpjOlK4u10ODrZ3rWD0lDLJDvnxmDxEb3B3
+	DCvgzpGP4/x18xSo5riJ8oTF5jPBfXuVoRksBrIDymkPcVRgjg5pbPmvhFHmqEJnml9rc0EtB3k
+	emr9Sw64pHM3cyALjfjxu7FJbL8t8P1bLoxyRyRNrcKgsQxMVO6ADRlTvgW91RXhONO2ZzvymDi
+	/944XPyrhAaAZPo8B6OGqcTK+FtnMRPaqV9wPBZKWE0HnRlsV9+F1uQfjt7jSGBwVqKvble4wok
+	Ad3ey54VA3RxPYttSYT4neXn7HPdCs2j0Eq7Jt8mStej9jl00n7fkBHOww0S5MGFD+FNaDaAUBB
+	Oqv7y8akvrzsizuisU8HO6lsIYN+NWf84Eulhv9np7LKa3v46TQ2yt0sm0/DC5o6BGDn0dKRTD0
+	Eul2HQO+5E=
+X-Received: by 2002:a05:6a20:e390:b0:3dd:a006:ed9b with SMTP id adf61e73a8af0-3ddec82345bmr811522637.49.1790073587913;
+        Tue, 22 Sep 2026 03:39:47 -0700 (PDT)
+Received: from amd.ban-spse ([165.204.217.251])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-33e61271695sm4397515eec.8.2026.09.22.03.39.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Sep 2026 03:39:47 -0700 (PDT)
+From: Chaithanya Lagisetty <nagachaithanya9911@gmail.com>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Xianglai Li <lixianglai@loongson.cn>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Chaithanya Lagisetty <nagachaithanya9911@gmail.com>
+Subject: [PATCH] LoongArch: KVM: Return the actual error code in kvm_ipi_create()
+Date: Tue, 22 Sep 2026 10:39:31 +0000
+Message-ID: <20260922103931.215091-1-nagachaithanya9911@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] of/fdt: silent u64 truncation in fdt_mark_memreserve_nodump caus=
-es nodump false positives
---
+kvm_ipi_create() registers the IPI device on the IOCSR bus and jumps to
+the error label when that fails. The error path then discards the error
+code that kvm_io_bus_register_dev() reported and returns -EFAULT
+instead:
 
-commit 070ed699ada4d456618a640c6ad541abbec98f95
-Author: Wandun Chen <chenwandun@lixiang.com>
+	ret = kvm_io_bus_register_dev(kvm, KVM_IOCSR_BUS, IOCSR_IPI_BASE,
+				      IOCSR_IPI_SIZE, device);
+	mutex_unlock(&kvm->slots_lock);
+	if (ret < 0) {
+		kvm_pr_unimpl("%s: Initialize IOCSR dev failed, ret = %d\n",
+			      __func__, ret);
+		goto err;
+	}
+	...
+err:
+	kfree(s);
+	return -EFAULT;
 
-of: reserved_mem: mark /memreserve/ entries as MEMBLOCK_NODUMP
+kvm_io_bus_register_dev() fails with -ENOMEM or -ENOSPC, so userspace
+creating a KVM_DEV_TYPE_LOONGARCH_IPI device is told that it passed a
+bad address when the real problem is that the host is out of memory or
+out of IOCSR bus slots. -EFAULT is reserved for faulting user addresses,
+and the remaining -EFAULT returns in this file are get_user() failures,
+where it is correct.
 
-The /memreserve/ entries are memory reservations made by the bootloader
-or firmware, their contents are not needed for kernel crash analysis. This
-commit marks them MEMBLOCK_NODUMP to omit them from the vmcore, while leavi=
-ng
-overlapping dumpable regions unmarked.
+Return ret instead. It is guaranteed to hold a valid negative errno
+because the ret < 0 branch above is the only path that reaches the error
+label. This also matches kvm_eiointc_create(), which already propagates
+the kvm_io_bus_register_dev() error code unchanged.
 
-> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-> index f29a07e8fb23e..a42cf6eac55b5 100644
-> --- a/drivers/of/of_reserved_mem.c
-> +++ b/drivers/of/of_reserved_mem.c
-[ ... ]
-> @@ -251,6 +251,39 @@ static void __init __rmem_check_for_overlap(void)
->  	}
->  }
-> =20
-> +void __init fdt_mark_memreserve_nodump(void)
-> +{
-> +	u64 base, size;
-> +	int n;
-> +	const void *fdt =3D initial_boot_params;
-[ ... ]
-> +		for (i =3D 0; i < reserved_mem_count; i++) {
-> +			struct reserved_mem *rmem =3D &reserved_mem[i];
-> +
-> +			if (rmem->dumpable &&
-> +			    base < (u64)rmem->base + (u64)rmem->size &&
-> +			    (u64)rmem->base < base + size)
-> +				break;
-> +		}
-> +		if (i =3D=3D reserved_mem_count)
-> +			memblock_mark_nodump(base, size);
+Only compile-tested; the fix is a straight propagation of an error code
+that the adjacent kvm_pr_unimpl() already logs.
 
-[Severity: Medium]
-Is there a risk of silent truncation here when passing u64 arguments to
-memblock_mark_nodump() on 32-bit architectures?
+Fixes: c532de5a67a7 ("LoongArch: KVM: Add IPI device support")
+Assisted-by: Cursor:claude-opus-5
+Signed-off-by: Chaithanya Lagisetty <nagachaithanya9911@gmail.com>
+---
+ arch/loongarch/kvm/intc/ipi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The u64 base and size variables are passed directly to memblock_mark_nodump=
-()
-which takes phys_addr_t arguments. On a 32-bit architecture where phys_addr=
-_t
-is 32-bit, if the device tree contains a /memreserve/ entry with an address
-greater than 4GB, fdt_mark_memreserve_nodump() reads it as a 64-bit value.
+diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.c
+index 7b333a4a0430..672ec053a997 100644
+--- a/arch/loongarch/kvm/intc/ipi.c
++++ b/arch/loongarch/kvm/intc/ipi.c
+@@ -431,7 +431,7 @@ static int kvm_ipi_create(struct kvm_device *dev, u32 type)
+ 
+ err:
+ 	kfree(s);
+-	return -EFAULT;
++	return ret;
+ }
+ 
+ static void kvm_ipi_destroy(struct kvm_device *dev)
+-- 
+2.43.0
 
-It performs a 64-bit overlap check against dumpable regions in reserved_mem.
-Because the upper 32 bits differ, it concludes there is no overlap. It then
-calls memblock_mark_nodump(), where the compiler silently truncates base to=
- 32
-bits.
-
-Could this incorrectly mark the lower 32-bit address as MEMBLOCK_NODUMP,
-mistakenly excluding any dumpable region located there that the overlap
-check was intended to protect?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260922084256.1515=
-554-1-chenwandun1@gmail.com?part=3D8
