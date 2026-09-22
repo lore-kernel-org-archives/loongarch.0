@@ -1,68 +1,108 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ED0043DEB8;
-	Tue, 22 Sep 2026 08:59:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 281B54D7D25;
+	Tue, 22 Sep 2026 09:01:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790067594; cv=none; b=QVW8tqOcZ2bCMbM0fNUFSQ7cDSEkZDwpF603s+Jv8O1IuGufeN/aVg8XmONINj1QNkj39DEf429Wyna5nOg20+cs4tQMWhwzPrryq0P9QkywvLFes1/BEcmoFk0+YUpFGBHk8ynT3Dy+/YT6vwG2hu9xl3FLmbQYXKVxfzIPtPQ=
+	t=1790067691; cv=none; b=bos5jTsiDwgaUf9Fz5oql0NFPJX/K/I6ZU8qkBEyERNvp2qqf2A/S8Jc5M2SsTHbYWgFZ9IJDqCSm/dxpe2p6isK1k7AXR7vp7VCm8/xlMz2Ob2N+K3aTv/iXvRdTT85Q3SmlUI9MGiLMEGjiw77Wy7kfUM4rc1E0rbEcQh8QxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790067594; c=relaxed/simple;
-	bh=+cpSLdx5G86GAiYEa1KiKUdyGr9Hwx+hUdwakbZPe5c=;
+	s=arc-20240116; t=1790067691; c=relaxed/simple;
+	bh=LFptJeZ/MOXnuUtOnXU11IKoEE1FtGg7p0aASVn4Go0=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=lYWBw0o5MZ88ejk5XOYXmJ1RKDgh35YHHgWbBvgsaKmLaEIWc00LmXv5z6ur+hO85k9mTI2MI3Osxz14DPmLGmIjFrzrD6nrZR4FFAwi/ZvHRH3ls0o8kc9zsUlFi/7Qz16xT9zdL6jjPnqEksS/SKVopc4mRYjkaiYvubxL3kk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=izvJYf3w; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=CRKbPntKMYRBwbKt/Dgn1Y2M9ujgD8+nyUt2FqfB6aLW39ZF4ILlIUvaFDk3EzRFXriaRFLrw/sKloMns0V5YQM28CING+iOzTTgiSIcnICgS6enEn/tdki52opNsF8GWahSRSoplcKxuWoIJ5vglE9x8jljDIGQBT9Cs+Dm/HE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RKTk+bn3; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="izvJYf3w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAB051F000FF;
-	Tue, 22 Sep 2026 08:59:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RKTk+bn3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03DD21F000FF;
+	Tue, 22 Sep 2026 09:01:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790067593;
-	bh=+cpSLdx5G86GAiYEa1KiKUdyGr9Hwx+hUdwakbZPe5c=;
+	s=k20260515; t=1790067689;
+	bh=mjGPVOew5ysCF3WUc2TZ8QW0kJr9lTS0DgEOW24GPw4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=izvJYf3wx7OMx8dtyK2bPgV4goHzPpSwGkfqbgOp88Z2f384iep3os6cqHBe6ioCo
-	 IipTl+Y06tX741Ho3LXMdE8qTZBy6i3kW/AG2fyAak47hFXgIbhMztEc/AjEfWJ3gO
-	 tR/TutUOUAWlWalvbKQpWlAlEN8YL3e5y5N7pjthg/ab5xsU3bbMXVoOIgsjkQruj1
-	 OyekninqCRr4y32dIPdT5Bd+44BDIJNM8eGAdEaSR4P5Xn3uC66ReBLFcE1ilJjyVa
-	 Vp4PDuJDDdxPnmrmh8vGIIpx5tDJkTvYEYN2OU5Kmw3iEXQ1oXLsmHDVUD/8g0E2hX
-	 zd2wbQtt6yspg==
+	b=RKTk+bn3+WrRh+uEPi4QsKpCQMBXdiVXaebzTyFMU52JIHYsRCsBMfXvtU7rub77Q
+	 c2fEr37xSa/FgKfpQbOmr0c9p9pK/zq6q4W/drmX1lPcv3vRb3icWMD4gg0qNqTTVp
+	 uy4jqLPrcnvvlNYaJ71axxVw70rxXcvMAz1o7bQwK2I4DFT70VIVpDD/fsuuwVCvnA
+	 gq5CeO6ZT33+PfALex/ZbfH0KlRpf3mb8fEQaBSo3yx6fPOHe5xxnwc1aQjElG4KjB
+	 rL3CjuBhz5Xe/jnj1pnhwqK3B7MWS+9TGPt1ZlARHlpTuVgUjv3joyNdav1qEFlRuN
+	 0jXrGWn1YgZuw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 1/9] riscv: build crash_mem ranges from memblock
- instead of resource tree
+Subject: Re: [PATCH v7 7/9] of: reserved_mem: mark /reserved-memory entries
+ with MEMBLOCK_NODUMP
 Reply-To: sashiko-reviews@lists.linux.dev
-To: robh@kernel.org, rppt@kernel.org, "Wandun Chen" <chenwandun1@gmail.com>, baoquan.he@linux.dev, m.szyprowski@samsung.com
-Cc: pasha.tatashin@soleen.com, aou@eecs.berkeley.edu, linux-mm@kvack.org, conor+dt@kernel.org, mark.rutland@arm.com, dave.hansen@linux.intel.com, devicetree@vger.kernel.org, bp@alien8.de, catalin.marinas@arm.com, mingo@redhat.com, ruirui.yang@linux.dev, iommu@lists.linux.dev, kexec@lists.infradead.org, saravanak@kernel.org, pjw@kernel.org, linux-kernel@vger.kernel.org, hpa@zytor.com, alex@ghiti.fr, chenhuacai@kernel.org, x86@kernel.org, akpm@linux-foundation.org, robin.murphy@arm.com, loongarch@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, kernel@xen0n.name, will@kernel.org, palmer@dabbelt.com, pratyush@kernel.org, tglx@kernel.org
-In-Reply-To: <20260922084256.1515554-2-chenwandun1@gmail.com>
+To: robh@kernel.org, "Wandun Chen" <chenwandun1@gmail.com>, m.szyprowski@samsung.com, baoquan.he@linux.dev, rppt@kernel.org
+Cc: aou@eecs.berkeley.edu, akpm@linux-foundation.org, pjw@kernel.org, chenhuacai@kernel.org, mingo@redhat.com, kexec@lists.infradead.org, palmer@dabbelt.com, pasha.tatashin@soleen.com, hpa@zytor.com, ruirui.yang@linux.dev, iommu@lists.linux.dev, pratyush@kernel.org, kernel@xen0n.name, linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, robin.murphy@arm.com, devicetree@vger.kernel.org, catalin.marinas@arm.com, alex@ghiti.fr, linux-kernel@vger.kernel.org, x86@kernel.org, will@kernel.org, loongarch@lists.linux.dev, saravanak@kernel.org, linux-riscv@lists.infradead.org, conor+dt@kernel.org, tglx@kernel.org, mark.rutland@arm.com, bp@alien8.de, dave.hansen@linux.intel.com
+In-Reply-To: <20260922084256.1515554-8-chenwandun1@gmail.com>
 References: <20260922084256.1515554-1-chenwandun1@gmail.com>
- <20260922084256.1515554-2-chenwandun1@gmail.com>
+ <20260922084256.1515554-8-chenwandun1@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 22 Sep 2026 08:59:51 +0000
-Message-Id: <20260922085951.DAB051F000FF@smtp.kernel.org>
+Date: Tue, 22 Sep 2026 09:01:25 +0000
+Message-Id: <20260922090126.03DD21F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 
-> From: Wandun Chen <chenwandun@lixiang.com>
->=20
-> Replace walk_system_ram_res() with for_each_mem_range(). A later patch
-> introduces MEMBLOCK_NODUMP in memblock, the reserved-memory regions
-> marked with MEMBLOCK_NODUMP can be excluded from the vmcore by walking
-> memblock.
->=20
-> for_each_mem_range() iterates memblock.memory, which is freed after
-> init unless ARCH_KEEP_MEMBLOCK is selected. riscv needs ARCH_KEEP_MEMBLOCK
-> to filter reserved memory from the vmcore, so extend its condition
-> (ACPI || KEXEC) with CRASH_DUMP. arm64 and loongarch already select
-> ARCH_KEEP_MEMBLOCK unconditionally.
->=20
-> Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] of: reserved_mem: unconditional MEMBLOCK_NODUMP breaks firmware de=
+bugging
+--
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+commit 70f4cbca539766519d8967f7e857d2db27db4c13
+Author: Wandun Chen <chenwandun@lixiang.com>
+
+of: reserved_mem: mark /reserved-memory entries with MEMBLOCK_NODUMP
+
+This commit marks non-dumpable reserved-memory regions with MEMBLOCK_NODUMP
+so kdump can omit them from the vmcore. The marking is guarded by
+CONFIG_CRASH_DUMP to avoid splitting memblock.memory entries unnecessarily
+on non-kdump kernels.
+
+> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+> --- a/drivers/of/of_reserved_mem.c
+> +++ b/drivers/of/of_reserved_mem.c
+
+[ ... ]
+
+> @@ -677,6 +677,21 @@ static void __init fdt_init_reserved_mem_node(...)
+>  	reserved_mem_count++;
+>  }
+> =20
+> +void __init fdt_mark_reserve_mem_nodump(void)
+> +{
+> +	struct reserved_mem *rmem;
+> +	int i;
+> +
+> +	if (!IS_ENABLED(CONFIG_CRASH_DUMP))
+> +		return;
+> +
+> +	for (i =3D 0; i < reserved_mem_count; i++) {
+> +		rmem =3D &reserved_mem[i];
+> +		if (rmem->size && !rmem->dumpable)
+> +			memblock_mark_nodump(rmem->base, rmem->size);
+
+[Severity: High]
+Does this unconditional masking prevent debugging of coprocessor memory and
+firmware state in vmcores?
+
+Since only the CMA driver sets dumpable to true, it appears all other
+generic /reserved-memory regions (such as DSP logs or ramoops) default
+to false.
+
+Because fdt_mark_reserve_mem_nodump() unconditionally applies
+MEMBLOCK_NODUMP to these regions, and there is no Device Tree property
+provided to opt them back in, is there a risk that system administrators
+will lose the ability to inspect these regions after a crash?
+
+> +	}
+> +}
+> +
+>  struct rmem_assigned_device {
+>  	struct device *dev;
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260922084256.1515=
-554-1-chenwandun1@gmail.com?part=3D1
-
+554-1-chenwandun1@gmail.com?part=3D7
