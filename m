@@ -1,100 +1,206 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01FA15372DE
-	for <loongarch@lists.linux.dev>; Tue, 22 Sep 2026 12:43:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7DE1545DB8;
+	Tue, 22 Sep 2026 12:48:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790081020; cv=none; b=XTgTy0lrCMihBS6sHCe2FO4a08xPF17BcAYELY3GRF76kCoN9SNeJ+wbZIcQe/uLIPzKWOQfBSvrt/NyVi4ZK1fHkA/qLTYTy8ubuGbO6G5kHkhrOG5pZXeM4JeZodOuCZ5qBmgWPMNjKRhE1rSh75GYJnMT2nw2fBzL8diSbVc=
+	t=1790081291; cv=none; b=DnBG3yXZTSjyF+8TE5TVFK1XlTy1ryk0U8F7er5A8zrRC4A4WwBMwT8qZJz0Xuk17OCK2I/796HeDcpvvfsWJYLDChdH9GUtLohKbKNPNs7pJ/2MTbFJ14JHqLazk7JBJt1jTYgJp3gC6kV32RmL5RGe4WD72IAKx1vf2MVvASk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790081020; c=relaxed/simple;
-	bh=GtOrmSkQPj/MT55mET9mJ2+3to25SkUAyuPp0xdVmOg=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=t4a3eAfqoDpdLmQiDAxQ/GYL/ue5nGRhK7mOMYMB8m/YDxMigaS2RM9YneMNlV+GBpnheNGYIbCA6K+ciSlwKWgtXGNHXc67mkH+7FZQrZP991fujMjO04jMCq2Vw0tDHRoJkSCSgnQur58OvCenLg1A5/o0u941o0I8Mg2/nsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8AxntL4d7Jq0aEOAA--.42763S3;
-	Tue, 22 Sep 2026 20:43:36 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJBxpMz3d7Jq_8EjAA--.49446S2;
-	Tue, 22 Sep 2026 20:43:36 +0800 (CST)
-Subject: Re: [PATCH 0/2] LoongArch: KVM: Code cleanup with MSI intterupt
- injection
-To: Tao Cui <cui.tao@linux.dev>, Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20260909083259.1910290-1-maobibo@loongson.cn>
- <fb08279a-eb1b-44b1-b4af-f354fb81f112@linux.dev>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <b72618c1-f8b0-9f17-8a56-af42b0bf4aef@loongson.cn>
-Date: Tue, 22 Sep 2026 20:43:13 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1790081291; c=relaxed/simple;
+	bh=Ki+wzMOd7XKBTD8hRP7BQu1HaNe7n80jfs5kZy6rBz4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=tvvt7HZSpqA3GsGoLRLgHO+wFZPYPqu+t0jTjsPpqe/PP7uU+uh6eoAE/SWpzbdfOiQK4Kl3zKq5iewIm2b4BCtJc25JnKC6TZnZbpDudv7zLku3EbvnA1Q95gncbW/BgD6tkwG07CwEXK/XS1fOjGuq+exzZkxu1Hz2meQiUUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AxRcrfCK; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AxRcrfCK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1CC61F000FF;
+	Tue, 22 Sep 2026 12:48:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790081288;
+	bh=r4eH9hr+yvfFnvbbCrIYejYZnIdTOc3jXJLWRBe+BYc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=AxRcrfCKj4TeX6ZLNGmys0EohkLSWdZA4WpCoVu2s2m54mvKPCy6liQKcGrQ8XbgI
+	 SQupz29e6y7f+7JP+FdhlC3s1z2X8i7JkPdbM3Y976b8njRgJrKLRElYxFR9JEM0BM
+	 8TCcoyrcCXV565sfkLcc6LcmZjQmjecePjY6QHJrrJkVK8K8VbGFL91PeILG+FoFl9
+	 1THEXtqQfFgXse9S65S+IyHqHuKjKQQgT8FUJXtwclVIR9dTtE3pMYo8uBe0eAvsYc
+	 VeRU/FuqXgJPqY0qchNGgBdyeHHurNFz2kQGrv3nsl9hWhSY6PVrVOyB3nSxSAKtfk
+	 9k3gXyOmIuBAg==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: George Guo <dongtai.guo@linux.dev>
+Cc: rppt@kernel.org,  pasha.tatashin@soleen.com,  pratyush@kernel.org,
+  chenhuacai@kernel.org,  ardb@kernel.org,  shuah@kernel.org,
+  ilias.apalodimas@linaro.org,  akpm@linux-foundation.org,
+  baoquan.he@linux.dev,  ruirui.yang@linux.dev,  guodongtai@kylinos.cn,
+  kernel@xen0n.name,  graf@amazon.com,  liukexin@kylinos.cn,
+  loongarch@lists.linux.dev,  linux-kernel@vger.kernel.org,
+  kexec@lists.infradead.org,  linux-mm@kvack.org,
+  linux-kselftest@vger.kernel.org,  linux-efi@vger.kernel.org
+Subject: Re: [PATCH v5 2/5] liveupdate: synchronize EFI KHO channel at
+ execution
+In-Reply-To: <20260904100852.26006-3-dongtai.guo@linux.dev> (George Guo's
+	message of "Fri, 4 Sep 2026 18:08:49 +0800")
+References: <20260904100852.26006-1-dongtai.guo@linux.dev>
+	<20260904100852.26006-3-dongtai.guo@linux.dev>
+Date: Tue, 22 Sep 2026 14:48:03 +0200
+Message-ID: <2vxz1pal5u64.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <fb08279a-eb1b-44b1-b4af-f354fb81f112@linux.dev>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxpMz3d7Jq_8EjAA--.49446S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWrKrW5ZFWUZw4DWrW5Ww47Jrc_yoW8JrWxpF
-	ZxCFnxurWkKFZ5GrnF93W5Xr1Dtw43Gr4Sqa42ya48Ar4YvF1Fqry8JrZavF98GayrJw4k
-	X3WfKws8ZF1UCabCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
-	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8cz
-	VUUUUUU==
+Content-Type: text/plain
 
+On Fri, Sep 04 2026, George Guo wrote:
 
+> From: George Guo <guodongtai@kylinos.cn>
+>
+> The EFI KHO configuration table is a global channel. Updating it while
+> a candidate kexec image is still being loaded can leave the channel
+> pointing at the failed candidate even though the previous image remains
+> installed. Synchronize it instead from the image selected for execution.
 
-On 2026/9/10 上午11:06, Tao Cui wrote:
-> Hi, Bibo
-> 
-> 在 2026/9/9 16:32, Bibo Mao 写道:
->> Here is to remove some unnecessary parameter checking when injecting
->> MSI interrupt, include MSI level parameter and vcpu::arch::dmsintc_state
->> NULL pointer etc.
->>
->> Bibo Mao (2):
->>    LoongArch: KVM: Remove parameter line when inject MSI
->>    LoongArch: KVM: Remove duplicated checking with DMSI irq injection
->>
->>   arch/loongarch/include/asm/kvm_dmsintc.h |  3 +--
->>   arch/loongarch/include/asm/kvm_pch_pic.h |  2 +-
->>   arch/loongarch/kvm/intc/dmsintc.c        | 19 +++----------------
->>   arch/loongarch/kvm/intc/pch_pic.c        |  6 +++---
->>   arch/loongarch/kvm/irqfd.c               |  6 +++---
->>   5 files changed, 11 insertions(+), 25 deletions(-)
->>
->>
->> base-commit: df2908090cda368b01ff43709f51890076c56157
-> 
-> The series looks good to me.
-> 
-> Reviewed-by: Tao Cui <cuitao@kylinos.cn>
-> 
-> Minor question: kvm_set_msi() now returns -EINVAL for !level instead
-> of -1. Since MSI is edge-triggered, returning 0 to ignore a deassert
-yes, it seems that returning 0 is better, since there is such usage with
-level == 0 when injecting MSI interrupt.
+Huh? Sorry, I don't understand this is supposed to mean at all. What
+failed candidate?
 
-Regards
-Bibo Mao
-> would also work, though nothing looks at the return value today.
-> 
+>
+> Use the actual scratch payload size rather than its page-aligned segment
+> size, and propagate update failures before live-update serialization.
+> Keep clearing the channel for cold and crash images best-effort.
 
+Huh? This is word soup and I don't understand what any of this is
+supposed to mean.
+
+If you are using a LLM to generate this, please _read_ what the output
+is and see if it even is readable to someone else.
+
+And if you are writing this by hand, then take a step back, and consider
+if patch reviews can even understand what you are saying.
+
+>
+> Signed-off-by: George Guo <guodongtai@kylinos.cn>
+> ---
+>  kernel/crash_core.c                |  7 +++++++
+>  kernel/kexec_core.c                |  5 +++++
+>  kernel/kexec_internal.h            |  3 +++
+>  kernel/liveupdate/kexec_handover.c | 33 ++++++++++++++++++++++++++++++
+>  4 files changed, 48 insertions(+)
+>
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index 2b36aa9fade0..6166ce4203d3 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -138,6 +138,13 @@ void __noclone __crash_kexec(struct pt_regs *regs)
+>  		if (kexec_crash_image) {
+>  			struct pt_regs fixed_regs;
+>  
+> +			/*
+> +			 * A crash image carries no KHO state: clear the
+> +			 * transport so the crash kernel boots cold instead
+> +			 * of reviving from stale state.
+> +			 */
+> +			(void)kho_sync_channel(kexec_crash_image);
+> +
+>  			crash_setup_regs(&fixed_regs, regs);
+>  			crash_save_vmcoreinfo();
+>  			machine_crash_shutdown(&fixed_regs);
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index dc770b9a6d05..147f5b5b23d4 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -1146,6 +1146,11 @@ int kernel_kexec(void)
+>  		goto Unlock;
+>  	}
+>  
+> +	/* Synchronize the handover transport with the image being executed. */
+> +	error = kho_sync_channel(kexec_image);
+> +	if (error)
+> +		goto Unlock;
+> +
+
+Why are you setting this at kexec time? Why not set it at load time like
+every other architecture?
+
+Also what's this "sync channel"? Use simpler words that _actually
+describe_ what they do.
+
+>  	if (!kexec_image->preserve_context) {
+>  		error = liveupdate_reboot();
+>  		if (error)
+> diff --git a/kernel/kexec_internal.h b/kernel/kexec_internal.h
+> index 228bb88c018b..4d4c2290e85c 100644
+> --- a/kernel/kexec_internal.h
+> +++ b/kernel/kexec_internal.h
+> @@ -46,6 +46,7 @@ struct kexec_buf;
+>  int kho_locate_mem_hole(struct kexec_buf *kbuf,
+>  			int (*func)(struct resource *, void *));
+>  int kho_fill_kimage(struct kimage *image);
+> +int kho_sync_channel(struct kimage *image);
+>  #else
+>  static inline int kho_locate_mem_hole(struct kexec_buf *kbuf,
+>  				      int (*func)(struct resource *, void *))
+> @@ -54,5 +55,7 @@ static inline int kho_locate_mem_hole(struct kexec_buf *kbuf,
+>  }
+>  
+>  static inline int kho_fill_kimage(struct kimage *image) { return 0; }
+> +
+> +static inline int kho_sync_channel(struct kimage *image) { return 0; }
+>  #endif /* CONFIG_KEXEC_HANDOVER */
+>  #endif /* LINUX_KEXEC_INTERNAL_H */
+> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+> index 39f489a258d9..3aa5c66dfc6d 100644
+> --- a/kernel/liveupdate/kexec_handover.c
+> +++ b/kernel/liveupdate/kexec_handover.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/cma.h>
+>  #include <linux/kmemleak.h>
+>  #include <linux/count_zeros.h>
+> +#include <linux/efi.h>
+>  #include <linux/kasan.h>
+>  #include <linux/kexec.h>
+>  #include <linux/kexec_handover.h>
+> @@ -2074,6 +2075,38 @@ int kho_fill_kimage(struct kimage *image)
+>  	return 0;
+>  }
+>  
+> +/*
+> + * Synchronize the handover transport with the image that is about to be
+> + * executed.  The EFI config table channel is global, while kexec keeps
+> + * separate images for a normal reboot and for crash.  Write the state of the
+> + * selected image immediately before it is executed, rather than while a
+> + * candidate image is being loaded, so a failed replacement cannot leave the
+> + * channel pointing at that failed image.
+> + *
+> + * An image loaded through the legacy kexec_load() syscall, a crash image, or
+> + * an image loaded while KHO is disabled carries no handover state.  Clear the
+> + * channel for those images so the next kernel boots cold instead of reviving
+> + * from stale state.  Clearing is best-effort because an absent channel cannot
+> + * affect a cold boot.
+> + */
+> +int kho_sync_channel(struct kimage *image)
+> +{
+> +	int err;
+> +
+> +	if (!image->kho.fdt || !image->kho.scratch) {
+> +		efi_kho_update(0, 0, 0, 0);
+> +		return 0;
+> +	}
+> +
+> +	err = efi_kho_update(image->kho.fdt, PAGE_SIZE,
+> +			     image->kho.scratch->mem,
+> +			     image->kho.scratch->bufsz);
+> +	if (err)
+> +		pr_warn("failed to update EFI config table: %d\n", err);
+> +
+> +	return err;
+> +}
+> +
+>  static int kho_walk_scratch(struct kexec_buf *kbuf,
+>  			    int (*func)(struct resource *, void *))
+>  {
+
+-- 
+Regards,
+Pratyush Yadav
