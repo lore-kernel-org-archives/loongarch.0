@@ -1,121 +1,127 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F9CF36A367
-	for <loongarch@lists.linux.dev>; Wed, 23 Sep 2026 03:35:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B023B83E8
+	for <loongarch@lists.linux.dev>; Wed, 23 Sep 2026 04:20:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790134561; cv=none; b=ONwXOeikkKiy8UuEW2ClxNqHJVvMwfzBETYDyvJhyfuVYV6J8kzkBWCAtdSDWcwVtn3esDMyEfsj0MU+ejyVnUaHKS8+S3BHRUFY1tITFM43VzEJ3Z5Du6PI0ubQUtv/mLqq6fcMqF5vKfSJKutTQp/obLt9zKMPzu6P4i12tKY=
+	t=1790137234; cv=none; b=cFDQeGqqVCR8XhfYKTdalajpwc7mRahnlzIhtB8J0QwqmXJUb2x3dxebZgjvHq76kvZcKx4fEPeAPZ1qGrYTG66KnSzsvLfBOOsDLFDqrs+PJlNJl5do2rik+sOyY22b5MC85QVJVfuNKPJA5Du5vo6CrMEElpF20kDhhS2roJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790134561; c=relaxed/simple;
-	bh=YZClwGub7OWQ5QcJYOffM2Nj8dPyoO6GR78mkRbFquY=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=YLOyk5Hex5PlASjUE4RUnv1hEsk7+JyDsKhDFfyGjYSsxGeQAgQOxvrMuqGAG4thH5de6hZQoBJQlHoqCW9rds1shPri41+tErpzLNY9w5rWeW6cXE39w3wfNvI/wHq0tGkTb2lqORhw6LZaggE/LUypceGpCytq3nIaLSBg4+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8DxC9IdSbNqkuUOAA--.43751S3;
-	Wed, 23 Sep 2026 11:35:57 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJAxFs0cSbNqogskAA--.19191S2;
-	Wed, 23 Sep 2026 11:35:56 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: KVM: Return the actual error code in
- kvm_ipi_create()
-To: Chaithanya Lagisetty <nagachaithanya9911@gmail.com>,
- Tianrui Zhao <zhaotianrui@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, Xianglai Li <lixianglai@loongson.cn>,
- kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20260922103931.215091-1-nagachaithanya9911@gmail.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <97b7d3f3-7929-9d4c-04e0-b5a4f7cfe2ac@loongson.cn>
-Date: Wed, 23 Sep 2026 11:37:22 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1790137234; c=relaxed/simple;
+	bh=kEXCmh5KjACa9jlo2r6L+uwToMUdSFNrNLsT/1Kvc9w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=q7jqqyaceaqZDAeJ4R0ZzGmk9q4+dmch/36LmgvALUWwiWsy822nJ8H+W+XjYkQeZhTvwmqD9TYoEG6KgVz4ZRem8a9DhcK6iiRRzNMjBaaHB1MaZR5Mg/Avm5dHtOK4qZe76WClI9oro3Bwu/LaDvB/NUt5IFixfjsFL2MQYwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DooG22bG; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DooG22bG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 485661F0089D
+	for <loongarch@lists.linux.dev>; Wed, 23 Sep 2026 04:20:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790137233;
+	bh=xRu4IFymWzU2DAq2/pstQkXppKLOwgDVdrPuqvOzeKg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=DooG22bGzqj86xMITRCYrjpoW0RFqwnABVByxGQ4CZVPtrr1cDx9NkNBBxF0JPD+M
+	 Hz+F510Hq+9ODp+qe5tuF6anjMWjWba7hM4kjWuyjI605r6piR319gmu6NBtQ598IK
+	 4KGwvAUnyJmoBMNXXk47eDermkyxmW02HOsd/xKwBZE5Hx1B/nKy/1336M4+8Bkf4I
+	 gnzoFVhFQiHvWAsSTDlGM87AKN5fPjgl8b8d9FcBMtqoJcQt/esafLBle2kznTaEDK
+	 FTw+H35H2zo5rnEvQrU9vqWIDWNJVayesSaOWMSqUQ8cIlQ7m+RmwbVZHuILU1OFaE
+	 fNCeb6HGA/stw==
+Received: by mail-ed2-f36.google.com with SMTP id 4fb4d7f45d1cf-6a6056be4d1so427954a12.0
+        for <loongarch@lists.linux.dev>; Tue, 22 Sep 2026 21:20:33 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvBx4z0NAzgFYaZjswuDzFfIk6IBZrO3C29DCg14dwdzbYa+DAlKom7KOPW7piYmFMIrQbp4wR6m6vn0=@lists.linux.dev
+X-Gm-Message-State: AFuF++nR68oQ+GO3QEtDW7xla+ZN4DDuTR2qKR/DbJxVD5xP9ptm5jXJ
+	6gUnK+NhbOSPQ9EADrj9EvekaFINDAEYiLK0UK4VWMipjs5fWYCn8qeJ/JCyP2QrupPhUphp5Vz
+	n3bnU5EpHlxG0wGlnJ2IONhxtNd3Tags=
+X-Received: by 2002:a05:6402:44d3:b0:6aa:aad5:9cef with SMTP id
+ 4fb4d7f45d1cf-6aab38337fdmr966870a12.6.1790137231703; Tue, 22 Sep 2026
+ 21:20:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <20260922103931.215091-1-nagachaithanya9911@gmail.com>
 In-Reply-To: <20260922103931.215091-1-nagachaithanya9911@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxFs0cSbNqogskAA--.19191S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7CryUCrWrKF45Kw1rXrWUAwc_yoW8uFyfpr
-	WfuayqyFW5Wwn7KrWq93WDGF4UZr4fKw1fuw10grWDCr45Kr1Syr18t345uF1UG3y8Ca40
-	qF15K3s8Z3WUAabCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8wNVDUU
-	UUU==
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 23 Sep 2026 12:20:18 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5toptaidoEvkuSeqg8ufSOcMxNqO4nXUOcs=7M7MwivQ@mail.gmail.com>
+X-Gm-Features: AcwNN1UCQ1_Q9X_oEYpqr3iAEWtLdmB9_bsmlaQaWqFXwc6YN0IFf1Wsyqbm3Yg
+Message-ID: <CAAhV-H5toptaidoEvkuSeqg8ufSOcMxNqO4nXUOcs=7M7MwivQ@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: KVM: Return the actual error code in kvm_ipi_create()
+To: Chaithanya Lagisetty <nagachaithanya9911@gmail.com>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	WANG Xuerui <kernel@xen0n.name>, Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi, Chaithanya
 
-
-On 2026/9/22 下午6:39, Chaithanya Lagisetty wrote:
+On Tue, Sep 22, 2026 at 6:39=E2=80=AFPM Chaithanya Lagisetty
+<nagachaithanya9911@gmail.com> wrote:
+>
 > kvm_ipi_create() registers the IPI device on the IOCSR bus and jumps to
 > the error label when that fails. The error path then discards the error
 > code that kvm_io_bus_register_dev() reported and returns -EFAULT
 > instead:
-> 
-> 	ret = kvm_io_bus_register_dev(kvm, KVM_IOCSR_BUS, IOCSR_IPI_BASE,
-> 				      IOCSR_IPI_SIZE, device);
-> 	mutex_unlock(&kvm->slots_lock);
-> 	if (ret < 0) {
-> 		kvm_pr_unimpl("%s: Initialize IOCSR dev failed, ret = %d\n",
-> 			      __func__, ret);
-> 		goto err;
-> 	}
-> 	...
+>
+>         ret =3D kvm_io_bus_register_dev(kvm, KVM_IOCSR_BUS, IOCSR_IPI_BAS=
+E,
+>                                       IOCSR_IPI_SIZE, device);
+>         mutex_unlock(&kvm->slots_lock);
+>         if (ret < 0) {
+>                 kvm_pr_unimpl("%s: Initialize IOCSR dev failed, ret =3D %=
+d\n",
+>                               __func__, ret);
+>                 goto err;
+>         }
+>         ...
 > err:
-> 	kfree(s);
-> 	return -EFAULT;
-> 
+>         kfree(s);
+>         return -EFAULT;
+>
 > kvm_io_bus_register_dev() fails with -ENOMEM or -ENOSPC, so userspace
 > creating a KVM_DEV_TYPE_LOONGARCH_IPI device is told that it passed a
 > bad address when the real problem is that the host is out of memory or
 > out of IOCSR bus slots. -EFAULT is reserved for faulting user addresses,
 > and the remaining -EFAULT returns in this file are get_user() failures,
 > where it is correct.
-> 
+>
 > Return ret instead. It is guaranteed to hold a valid negative errno
 > because the ret < 0 branch above is the only path that reaches the error
 > label. This also matches kvm_eiointc_create(), which already propagates
 > the kvm_io_bus_register_dev() error code unchanged.
-> 
+>
 > Only compile-tested; the fix is a straight propagation of an error code
 > that the adjacent kvm_pr_unimpl() already logs.
-> 
+>
 > Fixes: c532de5a67a7 ("LoongArch: KVM: Add IPI device support")
 > Assisted-by: Cursor:claude-opus-5
 > Signed-off-by: Chaithanya Lagisetty <nagachaithanya9911@gmail.com>
 > ---
->   arch/loongarch/kvm/intc/ipi.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.c
+>  arch/loongarch/kvm/intc/ipi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.=
+c
 > index 7b333a4a0430..672ec053a997 100644
 > --- a/arch/loongarch/kvm/intc/ipi.c
 > +++ b/arch/loongarch/kvm/intc/ipi.c
-> @@ -431,7 +431,7 @@ static int kvm_ipi_create(struct kvm_device *dev, u32 type)
->   
->   err:
->   	kfree(s);
-> -	return -EFAULT;
-> +	return ret;
->   }
->   
->   static void kvm_ipi_destroy(struct kvm_device *dev)
-> 
-Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+> @@ -431,7 +431,7 @@ static int kvm_ipi_create(struct kvm_device *dev, u32=
+ type)
+>
+>  err:
+>         kfree(s);
+> -       return -EFAULT;
+> +       return ret;
+Why not remove the "err" label and return at the "goto" statement?
 
+Huacai
+
+>  }
+>
+>  static void kvm_ipi_destroy(struct kvm_device *dev)
+> --
+> 2.43.0
+>
