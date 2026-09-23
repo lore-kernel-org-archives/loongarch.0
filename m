@@ -1,29 +1,30 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D2A408626;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B92340926E;
 	Wed, 23 Sep 2026 08:48:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790153308; cv=none; b=V0Kj839vTu6AymwJ1gRmzgGxkdbSSMr4GQfgQweQGEryUyC0W06ELrYY339SbMD9H6pjyPB1gX8f/wEyFaJ/p47VT2shLmbri4IqpgX/wQGXMYWIqCCqXsAPvMipqFIVv3ZYzlOn/gteIjw6LpWtHaZQmUqDJaP4oeuajxNuAFs=
+	t=1790153309; cv=none; b=sLjvgfRKmueBGfHWd7vFn29zliz9Wuf6oBwRHVwG3GpcXNLjeq3Uupv4s+1sC/wvIv6g+TuR73kLR/sGQDmVUHOB5RzBjtgdTxS9EG/l+qavluTFlA0B1C7wvIUXzxXMlcc3eVu6/Uy/OhyneuEh/Ti4BcULBXXK4d6zgX2TnoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790153308; c=relaxed/simple;
-	bh=WFYAHlViBCqfI0KK7+DKs31c889CWenAhlH3w6Q8o8A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gp9drDtk4RgpOSvz1vo7987KePFrdexiDZaoQrWF+3r1ripZDS8pKU2YryYz2PlHKk/jP7Cg1Vtt7tjw7MEETbnC33tlwOBiO7xvuDgO9rePlx0DHb4mQ0y+uHl1SYtFf+riFF4pIwPpvmj1UzXXf2Phdit/JhWDApEVXUvZFEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=K9fCWCIf; arc=none smtp.client-ip=117.135.210.4
+	s=arc-20240116; t=1790153309; c=relaxed/simple;
+	bh=JUQeAXAC/pf1NwAEgV2vOt7veD4II3XQYnqXn35JEMM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=iDtg1jutFsohJ4FFpV9eXu/06WQlx0B/lyu+Vldizdmhq9zzPXC1sw5vKZnnOaSuCh4et9fJufQPxum7Z3LXZBTC7lj+J1gAuhn6X+gdrFF5zmWEdw+vwNq5bMRId5DrC1/H6rf3P5mppWK+5VOhuzDDhsMMRAbAry8pU32cUxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ia0grihV; arc=none smtp.client-ip=117.135.210.2
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="K9fCWCIf"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ia0grihV"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=79
-	j2Q4MfSEaqDwOVOTqW37/tqjjDbYsDLiZ/iL+1x4U=; b=K9fCWCIfKb3p6SP5YG
-	S7jHW09OOs+btIBGnNr0lU9Sr0BmnDgoOpD62HcJ8aeefou2K3g6KJLSyP6XjcDn
-	se5K1XZ7QFJj9Kn44ZoGEx7Bkybo1kjTQFUTnSDukxgcnd/nWFnCM/oBx29uN4xf
-	PGIMAoO1mV9bMioffMHXagtxc=
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=Xz
+	KQqR9KbJqy9j/mmb6X8TPwQ2Kyu4YH9tYGiOuD1dY=; b=ia0grihVWNJ+4KbUEb
+	KehGsqLfGmT3KO01fTvuhWc/jNn8LOnxmPRwcUWS7pDf4qsQNhxOBEUfLR1ouqI2
+	WOE+l37RDT+EZIIR0KyLc+jjgiFVdiQpb0hNEaeZ5z0rPsIsRUCMXA7UCAEnK23E
+	2deVHcSoNT1pBn0fkDJOEZyFA=
 Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wDXHyRIkrNqfwQ4AQ--.22208S2;
-	Wed, 23 Sep 2026 16:48:09 +0800 (CST)
+	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wDXHyRIkrNqfwQ4AQ--.22208S3;
+	Wed, 23 Sep 2026 16:48:12 +0800 (CST)
 From: Qunqin Zhao <zhaoqunqin@163.com>
 To: lee@kernel.org,
 	zhaoqunqin@loongson.cn
@@ -32,10 +33,12 @@ Cc: chenhuacai@kernel.org,
 	loongarch@lists.linux.dev,
 	linux-crypto@vger.kernel.org,
 	mfd@lists.linux.dev
-Subject: [PATCH v8 0/2] mfd: loongson-se: Add multi-node support and fix miscellaneous issues
-Date: Wed, 23 Sep 2026 16:48:00 +0800
-Message-Id: <20260923084802.29508-1-zhaoqunqin@163.com>
+Subject: [PATCH v8 1/2] mfd: loongson-se: Add multi-node support
+Date: Wed, 23 Sep 2026 16:48:01 +0800
+Message-Id: <20260923084802.29508-2-zhaoqunqin@163.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20260923084802.29508-1-zhaoqunqin@163.com>
+References: <20260923084802.29508-1-zhaoqunqin@163.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -43,77 +46,74 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDXHyRIkrNqfwQ4AQ--.22208S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxGw48try7Zr17tw45Ww1UGFg_yoW5WrWkpF
-	W5W345Cr4DGF4SkwnxXr409r15ZrZ5Ca15Can7ta47A3srtryFqF43ta45uFZruFZ2q3W7
-	XFWDta1ku3W8C3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j_2-nUUUUU=
-X-CM-SenderInfo: 52kd01pxqtx0i6rwjhhfrp/xtbCxQk+fWqzkkn7+AAA3O
+X-CM-TRANSID:_____wDXHyRIkrNqfwQ4AQ--.22208S3
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Kr45Jr4DZFWUJFW5AF1xAFb_yoW8ZFW3pF
+	45GayYvr4j9a1Fkw1DZa4DCr15AFWSq39xCanrJF47Aas8Jwn3GrWfJFy2qFs3CFW8Xay8
+	XrZ5GFWrCFW8WF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jLjjgUUUUU=
+X-CM-SenderInfo: 52kd01pxqtx0i6rwjhhfrp/xtbCxQ0-fmqzkk38UAAA3j
 
 From: Qunqin Zhao <zhaoqunqin@loongson.cn>
 
-- Patch 1 introduces the multi-node platform support.
+On the Loongson platform, each node is equipped with a security engine
+device. However, due to a hardware flaw, only the device on node 0 can
+trigger interrupts. Therefore, interrupts from other nodes are forwarded
+by node 0. We need to check in the interrupt handler of node 0 whether
+this interrupt is intended for other nodes, this can be accomplished via
+shared interrupt handling.
 
-  v6-v8: no changes
-  v5: Clear pending interrupts with S2LINT_CL before requesting IRQs,
-       and move S2LINT_EN to after all interrupt handlers are registered.
-  v4: Safely handling shared interrupt handler returns.
-  v3: Using shared interrupts (IRQF_SHARED) instead of manually
-      iterating through all devices to check for interrupts.
+Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+---
+ drivers/mfd/loongson-se.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-- Patch 2 focuses on structural and error-path hardening for the
-  pre-existing baseline code. This includes resolving critical issues
-  discovered by the Sashiko Automation system such as: completion
-  race conditions, missing engine completion initialization, spinlock
-  held with interrupts disabled for up to 10 ms, EPROBE_DEFER
-  handling, DMA buffer overflow validation, interrupt cleanup on
-  probe failure, and device removal ordering.
-
-  v8:  
-       - Remove the poll_lock added in v7
-
-  v7:
-       - Re-enable the interrupt under dev_lock in loongson_se_poll()
-         instead of poll_lock, so both the mask and re-enable of
-         SE_S2LINT_EN are protected by the same lock and cannot race
-       - Wait for controller command completion with a bounded
-         non-interruptible wait so a pending signal cannot leave the
-         controller running while DMA buffers are torn down
-       - Validate the id argument in loongson_se_init_engine() to
-         reject engine 0 and out-of-bounds indices
-       - Drop the redundant init_completion() in
-         loongson_se_init_engine() now that probe() initializes all
-         engine completions
-  v6:
-       - Mask the target interrupt, clear pending status, and
-         reinitialize the completion under dev_lock before issuing a
-         command, re-enabling the interrupt after triggering
-       - Keep the original engine_init_lock scope instead of the
-         broader cmd_lock mutex
-       - Reuse loongson_se_send_controller_cmd() in the STOP path and
-         register the stop handler before loongson_se_init()
-       - Correct the dmam_size validation formula
-  v5: Fix all issues reported by Sashiko analysis:
-       - Initialize engine completions in probe to avoid NULL deref
-       - Use cmd_lock mutex for command serialization, drop spin_lock_irq
-       - Add reinit_completion to controller and engine command paths
-       - Fix EPROBE_DEFER handling in platform_irq_count()
-       - Validate dmam_size against minimum required size
-       - Disable IRQs in probe error path after init failure
-       - Add loongson_se_stop() devres cleanup with proper ordering
-       - Use non-interruptible wait for STOP command
-  v4: new patch
-
-Qunqin Zhao (2):
-  mfd: loongson-se: Add multi-node support
-  mfd: loongson-se: Fix miscellaneous issues
-
- drivers/mfd/loongson-se.c       | 119 ++++++++++++++++++++++++++++----
- include/linux/mfd/loongson-se.h |   1 +
- 2 files changed, 106 insertions(+), 14 deletions(-)
-
-
-base-commit: cee9395acd8043be0644b25c34bfa86623f2b935
+diff --git a/drivers/mfd/loongson-se.c b/drivers/mfd/loongson-se.c
+index 3902ba377..7f552a8ee 100644
+--- a/drivers/mfd/loongson-se.c
++++ b/drivers/mfd/loongson-se.c
+@@ -140,6 +140,11 @@ static irqreturn_t se_irq_handler(int irq, void *dev_id)
+ 
+ 	int_status = readl(se->base + SE_S2LINT_STAT);
+ 
++	if (int_status == 0) {
++		spin_unlock(&se->dev_lock);
++		return IRQ_NONE;
++	}
++
+ 	/* For controller */
+ 	if (int_status & SE_INT_CONTROLLER) {
+ 		complete(&se->cmd_completion);
+@@ -211,24 +216,26 @@ static int loongson_se_probe(struct platform_device *pdev)
+ 	if (IS_ERR(se->base))
+ 		return PTR_ERR(se->base);
+ 
+-	writel(SE_INT_ALL, se->base + SE_S2LINT_EN);
+-
+ 	nr_irq = platform_irq_count(pdev);
+ 	if (nr_irq <= 0)
+ 		return -ENODEV;
+ 
++	writel(SE_INT_ALL, se->base + SE_S2LINT_CL);
++
+ 	for (i = 0; i < nr_irq; i++) {
+ 		irq = platform_get_irq(pdev, i);
+-		err = devm_request_irq(dev, irq, se_irq_handler, 0, "loongson-se", se);
++		err = devm_request_irq(dev, irq, se_irq_handler, IRQF_SHARED, "loongson-se", se);
+ 		if (err)
+ 			dev_err(dev, "failed to request IRQ: %d\n", irq);
+ 	}
+ 
++	writel(SE_INT_ALL, se->base + SE_S2LINT_EN);
++
+ 	err = loongson_se_init(se, paddr, se->dmam_size);
+ 	if (err)
+ 		return err;
+ 
+-	return devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE, engines,
++	return devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, engines,
+ 				    ARRAY_SIZE(engines), NULL, 0, NULL);
+ }
+ 
 -- 
 2.47.2
 
