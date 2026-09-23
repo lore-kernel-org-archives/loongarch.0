@@ -1,174 +1,193 @@
-Received: from mta1.migadu.com (out-5.mta1.migadu.com [95.215.58.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 105433998AF
-	for <loongarch@lists.linux.dev>; Wed, 23 Sep 2026 04:39:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.5
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EF0043BDA7
+	for <loongarch@lists.linux.dev>; Wed, 23 Sep 2026 05:55:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790138382; cv=none; b=Mdmvy5Y1Cpd2jC75pMunYW6pq6e+UGO+w2i22NvkwwrfqMH7j/wRYSalZDmXLkfKSflSUhvfdlrbTSEz6i2oYlvsSeSr0fOw/WN7qo1MFuB/oWUBGOha3o7un+Jvnt+NYIMJWS6jp+ssz+Gw/7w+9FDiYuevqsM1njaY+DYKew0=
+	t=1790142914; cv=none; b=QA+P4Nuwi1Tw7WZhSkiMFTO8gUsdjSp/PV02LZrOjCIPiq//V971Afqv7ywmOH57Ja7PtJJzVtcdzZtvShdNNb5Sef4dnT59bPES0vDiF++sikDPJjuWbK+8wsnx9TEv8EqVDSZm1sBTpVIWwjKlK67PnKk7sn1vdHUzu8pzXwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790138382; c=relaxed/simple;
-	bh=iSNouMXA3RwlruRYR9UspqX4v90LzLOpRZaDkTpRMn8=;
+	s=arc-20240116; t=1790142914; c=relaxed/simple;
+	bh=gP1hbo0fXBOIR/xuHFNmPZCAZbNpdADMI1YaB4qZt5I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=diIKifRWXJbjMFJoR5g2owlGG2eeNKW7JLkBhhNEoliHynYevnsVSnBlylYGjoiY3lnW6Zp4ycIbxW7sKiRwPYPAI/r+c9tumbXoiLS5nHiAtAiKTeYoNUaPBzpkaZF3IC+SG1yOYyK1l4agTzspeBCo0qyeH6EYFoqCmH9BlXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hgoTWDT3; arc=none smtp.client-ip=95.215.58.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hgoTWDT3"
-X-Envelope-To: loongarch@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=iSNouMXA3RwlruRYR9UspqX4v90LzLOpRZaDkTpRMn8=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1790138378; v=1; x=1790743178;
- b=hgoTWDT3pScnSULYGQpx9ptjfcLNCAsGeIdJD0unN1quEcpuVr+vnfw97OQhcdnxfVo5EZMF
- UQsxat8umWyM4KwhN0Z7XPZVy4wOrNI5cwELE1/9iO5zr4VpxtZ+Qbs7Vh/VUfDR1FxNJfSKdhp
- TFa4FqeBaQNCueEL6QO3d5+M=
-X-Envelope-To: loongarch@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 8a4b30de2f7f9df3;
-	Wed, 23 Sep 2026 04:39:35 +0000
-X-Mizu-Trace-ID: 8a4b30de2f7f9df3
-X-Migadu-Flow: FLOW_OUT
-From: Lance Yang <lance.yang@linux.dev>
-To: ljs@kernel.org
-Cc: akpm@linux-foundation.org,
-	david@kernel.org,
-	ziy@nvidia.com,
-	baolin.wang@linux.alibaba.com,
-	liam@infradead.org,
-	nico.pache@linux.dev,
-	ryan.roberts@arm.com,
-	dev.jain@arm.com,
-	baohua@kernel.org,
-	lance.yang@linux.dev,
-	usama.arif@linux.dev,
-	kas@kernel.org,
-	guoren@kernel.org,
-	bcain@kernel.org,
-	geert@linux-m68k.org,
-	dinguyen@kernel.org,
-	schuster.simon@siemens-energy.com,
-	jonas@southpole.se,
-	stefan.kristiansson@saunalahti.fi,
-	shorne@gmail.com,
-	dalias@libc.org,
-	glaubitz@physik.fu-berlin.de,
-	pjw@kernel.org,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	alex@ghiti.fr,
-	linux@armlinux.org.uk,
-	vgupta@kernel.org,
-	monstr@monstr.eu,
-	chris@zankel.net,
-	jcmvbkbc@gmail.com,
-	will@kernel.org,
-	aneesh.kumar@kernel.org,
-	npiggin@gmail.com,
-	peterz@infradead.org,
-	davem@davemloft.net,
-	andreas@gaisler.com,
-	richard.henderson@linaro.org,
-	mattst88@gmail.com,
-	linmag7@gmail.com,
-	catalin.marinas@arm.com,
-	mark.rutland@arm.com,
-	chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	tsbogend@alpha.franken.de,
-	James.Bottomley@HansenPartnership.com,
-	deller@gmx.de,
-	maddy@linux.ibm.com,
-	mpe@ellerman.id.au,
-	chleroy@kernel.org,
-	hca@linux.ibm.com,
-	gor@linux.ibm.com,
-	agordeev@linux.ibm.com,
-	borntraeger@linux.ibm.com,
-	svens@linux.ibm.com,
-	richard@nod.at,
-	anton.ivanov@cambridgegreys.com,
-	johannes@sipsolutions.net,
-	tglx@kernel.org,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	arnd@arndb.de,
-	vbabka@kernel.org,
-	rppt@kernel.org,
-	surenb@google.com,
-	mhocko@suse.com,
-	jgg@ziepe.ca,
-	jhubbard@nvidia.com,
-	peterx@redhat.com,
-	ysato@users.sourceforge.jp,
-	shakeel.butt@linux.dev,
-	corbet@lwn.net,
-	rdunlap@infradead.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org,
-	linux-m68k@lists.linux-m68k.org,
-	linux-openrisc@vger.kernel.org,
-	linux-sh@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arch@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	linux-alpha@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	hughd@google.com,
-	qi.zheng@linux.dev,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v4 02/12] mm: enable MMU_GATHER_RCU_TABLE_FREE for most 2-level architectures
-Date: Wed, 23 Sep 2026 12:39:26 +0800
-Message-ID: <20260923043926.76397-1-lance.yang@linux.dev>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20260922-rcu-pagetable-freeing-v4-2-fe1ad1f1e303@kernel.org>
-References: <20260922-rcu-pagetable-freeing-v4-2-fe1ad1f1e303@kernel.org>
+	 MIME-Version; b=OblV+8/iHjzjVyIFFYHDVtVSyFfX5BT0g/rAUZ/6DWFPbRtS35q/N8K6qOTNGTonHd1kBaSZFUPrLSWV1APz3mnKVTkIljc8HfAwdTk9dXMYBLo85w6rrxUIncyFQC4CdHXKOB8/6BTJKNtT2jY7KswHcBIExgAsUALN9otuxHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [123.138.236.242])
+	by gateway (Coremail) with SMTP id _____8DxpvC+abNqmO0OAA--.43945S3;
+	Wed, 23 Sep 2026 13:55:10 +0800 (CST)
+Received: from linux.localdomain (unknown [123.138.236.242])
+	by front1 (Coremail) with SMTP id qMiowJCx9cy7abNqphMkAA--.48859S6;
+	Wed, 23 Sep 2026 13:55:10 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 4/7] LoongArch: Only send SIGTRAP signal if necessary in do_watch()
+Date: Wed, 23 Sep 2026 13:55:03 +0800
+Message-ID: <20260923055506.29221-5-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20260923055506.29221-1-yangtiezhu@loongson.cn>
+References: <20260923055506.29221-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCx9cy7abNqphMkAA--.48859S6
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxXw45AF4xKry3uFyfJr4DJrc_yoWrtw48pF
+	ZruFn3KrWDGr1ku3W3Gw4Dur43Grs5uw47u34Sy34F9rs0grWrJrn2yFnFqFW5W3s8Xa40
+	qF1Yq3WS9a1UXwbCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE
+	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07josjUUUUUU=
 
+In do_watch(), the kernel unconditionally forces a SIGTRAP signal at the
+end of the handler via force_sig(SIGTRAP). This is essential for ptrace
+operations, but it severely disrupts standard perf_event usage.
 
-On Tue, Sep 22, 2026 at 04:35:33PM +0100, Lorenzo Stoakes (ARM) wrote:
->Commit e3ecf7c7d082 ("mm: pgtable: convert some architectures to use
->tlb_remove_ptdesc()") updated a number of architectures from using
->pagetable_dtor() + tlb_remove_page_ptdesc() to using tlb_remove_ptdesc() in
->__pte_free_tlb().
->
->This is meaningful as tlb_remove_ptdesc() allows for RCU page table
->freeing if CONFIG_MMU_GATHER_RCU_TABLE_FREE is specified.
->
->The csky, hexagon, nios2, openrisc, sh (except X2) and m68k-sun3
->architectures all have 2 levels of page tables, so the only page tables
->ever freed by mmu_gather are PTEs, so this update suffices to ensure that
->every page table freed by the mmu_gather mechanism is freed under RCU.
->
->Therefore, update all of these architectures to select
->CONFIG_MMU_GATHER_RCU_TABLE_FREE.
->
->This forms part of an overall effort to switch every architecture to this
->mode.
->
->Acked-by: Kiryl Shutsemau (Meta) <kas@kernel.org>
->Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
->---
+Under normal perf usage, it is not necessary to force a SIGTRAP signal
+on every hit. Forcing it unnecessarily aborts the target process if no
+user-space signal handler is registered, which violates performance
+monitoring behaviors and injects context switch overheads.
 
-Nothing jumped out at me,
+However, a conditional check using only 'current->ptrace' would block
+legitimate user-requested signals when a perf_event is configured with
+'attr.sigtrap = 1' for asynchronous user-space tracking.
 
-Reviewed-by: Lance Yang <lance.yang@linux.dev>
+Fix this by refactoring breakpoint_handler() and watchpoint_handler()
+to return a boolean status indicating whether any triggered breakpoint
+explicitly requires a signal notification. Update do_watch() to enforce
+the SIGTRAP signal only when the process is actively being debugged via
+ptrace, or when the underlying perf_event infrastructure specifically
+demands it via 'attr.sigtrap'.
+
+Fixes: 424421a7f34c ("LoongArch: ptrace: Add hardware single step support")
+Cc: stable@vger.kernel.org
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/loongarch/include/asm/hw_breakpoint.h |  4 ++--
+ arch/loongarch/kernel/hw_breakpoint.c      | 18 ++++++++++++++++--
+ arch/loongarch/kernel/traps.c              |  8 +++++---
+ 3 files changed, 23 insertions(+), 7 deletions(-)
+
+diff --git a/arch/loongarch/include/asm/hw_breakpoint.h b/arch/loongarch/include/asm/hw_breakpoint.h
+index 5faa97a87a9e..d202052df8a1 100644
+--- a/arch/loongarch/include/asm/hw_breakpoint.h
++++ b/arch/loongarch/include/asm/hw_breakpoint.h
+@@ -116,8 +116,8 @@ extern void arch_uninstall_hw_breakpoint(struct perf_event *bp);
+ extern int hw_breakpoint_slots(int type);
+ extern void hw_breakpoint_pmu_read(struct perf_event *bp);
+ 
+-void breakpoint_handler(struct pt_regs *regs);
+-void watchpoint_handler(struct pt_regs *regs);
++bool breakpoint_handler(struct pt_regs *regs);
++bool watchpoint_handler(struct pt_regs *regs);
+ 
+ #ifdef CONFIG_HAVE_HW_BREAKPOINT
+ extern void ptrace_hw_copy_thread(struct task_struct *task);
+diff --git a/arch/loongarch/kernel/hw_breakpoint.c b/arch/loongarch/kernel/hw_breakpoint.c
+index 7f69cf361a5e..3683a52b2368 100644
+--- a/arch/loongarch/kernel/hw_breakpoint.c
++++ b/arch/loongarch/kernel/hw_breakpoint.c
+@@ -482,10 +482,11 @@ NOKPROBE_SYMBOL(update_bp_registers);
+ /*
+  * Debug exception handlers.
+  */
+-void breakpoint_handler(struct pt_regs *regs)
++bool breakpoint_handler(struct pt_regs *regs)
+ {
+ 	int i;
+ 	struct perf_event *bp, **slots;
++	bool need_sigtrap = false;
+ 
+ 	slots = this_cpu_ptr(bp_on_reg);
+ 
+@@ -494,18 +495,25 @@ void breakpoint_handler(struct pt_regs *regs)
+ 			bp = slots[i];
+ 			if (bp == NULL)
+ 				continue;
++
+ 			perf_bp_event(bp, regs);
++			if (bp->attr.sigtrap)
++				need_sigtrap = true;
++
+ 			csr_write32(0x1 << i, LOONGARCH_CSR_FWPS);
+ 			update_bp_registers(regs, 0, 0);
+ 		}
+ 	}
++
++	return need_sigtrap;
+ }
+ NOKPROBE_SYMBOL(breakpoint_handler);
+ 
+-void watchpoint_handler(struct pt_regs *regs)
++bool watchpoint_handler(struct pt_regs *regs)
+ {
+ 	int i;
+ 	struct perf_event *wp, **slots;
++	bool need_sigtrap = false;
+ 
+ 	slots = this_cpu_ptr(wp_on_reg);
+ 
+@@ -514,11 +522,17 @@ void watchpoint_handler(struct pt_regs *regs)
+ 			wp = slots[i];
+ 			if (wp == NULL)
+ 				continue;
++
+ 			perf_bp_event(wp, regs);
++			if (wp->attr.sigtrap)
++				need_sigtrap = true;
++
+ 			csr_write32(0x1 << i, LOONGARCH_CSR_MWPS);
+ 			update_bp_registers(regs, 0, 1);
+ 		}
+ 	}
++
++	return need_sigtrap;
+ }
+ NOKPROBE_SYMBOL(watchpoint_handler);
+ 
+diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
+index c4d7e55fb3ea..4cbf84b148cd 100644
+--- a/arch/loongarch/kernel/traps.c
++++ b/arch/loongarch/kernel/traps.c
+@@ -811,6 +811,7 @@ asmlinkage void noinstr do_bp(struct pt_regs *regs)
+ asmlinkage void noinstr do_watch(struct pt_regs *regs)
+ {
+ 	irqentry_state_t state = irqentry_enter(regs);
++	bool need_sigtrap = !!current->ptrace;
+ 
+ #ifndef CONFIG_HAVE_HW_BREAKPOINT
+ 	pr_warn("Hardware watch point handler not implemented!\n");
+@@ -851,11 +852,12 @@ asmlinkage void noinstr do_watch(struct pt_regs *regs)
+ 			}
+ 		}
+ 	} else {
+-		breakpoint_handler(regs);
+-		watchpoint_handler(regs);
++		need_sigtrap |= breakpoint_handler(regs);
++		need_sigtrap |= watchpoint_handler(regs);
+ 	}
+ 
+-	force_sig(SIGTRAP);
++	if (need_sigtrap)
++		force_sig(SIGTRAP);
+ out:
+ #endif
+ 	irqentry_exit(regs, state);
+-- 
+2.42.0
+
