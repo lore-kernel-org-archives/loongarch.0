@@ -1,36 +1,35 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5DF433FE33
-	for <loongarch@lists.linux.dev>; Wed, 23 Sep 2026 01:25:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3D6835E958
+	for <loongarch@lists.linux.dev>; Wed, 23 Sep 2026 01:31:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790126731; cv=none; b=BktxG92XoN4Br1qD3aKDcMhORCs/8ejTuRg71hFK7lxsR+sBHfGk2X/DAXcYzKUiYuWtlPMs4bU6hehJ0YuLODsQnxOBD170pXQYOSe4vEAR9t6dketz/vZIdacYomAafCRH3wz/hbZul7A+Y/iMMnsQWmyCJC162gzF7nqLBtI=
+	t=1790127084; cv=none; b=og6kN+0wT5zuKaTCaPFoCeh5lp7c6EsI/GwOHTBRSO5gd6Y8vJcNn7XR1sUDLAPDh28bgJaU/zHTYJa4gPoCsbrao2j50Q12NFo6fBS2r7tY/KYIx5NJf8Co3dNEXapOF8wDumZ8S5I7injwi3cYg7eIcmMRzyQcMBpI6d1E79U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790126731; c=relaxed/simple;
-	bh=nZrOVK9FPxlpstQa1JW3zYNU6W7mZPfqskLeSanf9bw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Y4mKUVceQ5sqE/n8U90PVtviHToW5Rxh2J+HkyD+ncwD7wYMW4tG6mpvU9kP5Sa1MFKjiehVnh2GlbFivGao6i/QJzPi/DzDaBLCngibK/oArxLGJv9U1NcHoxKNe3fpt8Y718kZEPoS5HY2pQJ0WicQaUN4O80XNIeA9fZ8DpE=
+	s=arc-20240116; t=1790127084; c=relaxed/simple;
+	bh=rAhP4ycQCC6kZ0Cn2Gr67i5s82Iz0iIBumYuC/rA9Bs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=b2qWDWKf9Gya4lOiN2pJAkX5tWqOGYl8urbfpdbUokfVfX3k62HDm08WKD4HSMxiPCSS8UjU5xcxzsVGcLJjJ7/pcLZszInyrXIF7KDLt06lgs1Z3xBhB56ZrTeh4BJ6eSNG3gxuvfZz8z7eFJoMjv5uOaWU0Pdy6GHB/qKOBpE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8CxKvCGKrNqUtwOAA--.43436S3;
-	Wed, 23 Sep 2026 09:25:26 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxTtPmK7Nq39wOAA--.43112S3;
+	Wed, 23 Sep 2026 09:31:18 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJBx6c2EKrNqyQIkAA--.45699S4;
-	Wed, 23 Sep 2026 09:25:26 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJDxE+TlK7NqTgMkAA--.46508S2;
+	Wed, 23 Sep 2026 09:31:17 +0800 (CST)
 From: Bibo Mao <maobibo@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
+Cc: Paolo Bonzini <pbonzini@redhat.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Shuah Khan <shuah@kernel.org>,
 	kvm@vger.kernel.org,
 	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Tao Cui <cuitao@kylinos.cn>
-Subject: [PATCH v2 2/2] LoongArch: KVM: Remove duplicated checking with DMSI irq injection
-Date: Wed, 23 Sep 2026 09:18:03 +0800
-Message-Id: <20260923011803.1057945-3-maobibo@loongson.cn>
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: LoongArch: selftests: Enable HW PTW by auto detection method
+Date: Wed, 23 Sep 2026 09:23:56 +0800
+Message-Id: <20260923012356.1058379-1-maobibo@loongson.cn>
 X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20260923011803.1057945-1-maobibo@loongson.cn>
-References: <20260923011803.1057945-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -38,84 +37,94 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBx6c2EKrNqyQIkAA--.45699S4
+X-CM-TRANSID:qMiowJDxE+TlK7NqTgMkAA--.46508S2
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-There are some duplicated error checking in DMSI interrupt injection
-function, also vcpu::arch::dmsintc_state is structure rather than pointer,
-NULL pointer checking with dmsintc_state is not necessary, here remove
-these unnecessary checking.
+Add HW PTW feature when VM is created. This feature is detected firstly,
+enable it if it is available on host machine. With HW PTW feature enabled,
+refill exception will not happen and it is not necessary to set refill
+exception entry.
 
 Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-Reviewed-by: Tao Cui <cuitao@kylinos.cn>
 ---
- arch/loongarch/kvm/intc/dmsintc.c | 32 +++++++------------------------
- 1 file changed, 7 insertions(+), 25 deletions(-)
+ .../selftests/kvm/include/loongarch/processor.h  |  3 +++
+ .../selftests/kvm/lib/loongarch/processor.c      | 16 ++++++++++++++--
+ 2 files changed, 17 insertions(+), 2 deletions(-)
 
-diff --git a/arch/loongarch/kvm/intc/dmsintc.c b/arch/loongarch/kvm/intc/dmsintc.c
-index 79e56e330aeb..6fe52471007c 100644
---- a/arch/loongarch/kvm/intc/dmsintc.c
-+++ b/arch/loongarch/kvm/intc/dmsintc.c
-@@ -14,9 +14,6 @@ void dmsintc_inject_irq(struct kvm_vcpu *vcpu)
- 	unsigned long vector[4], old;
- 	struct dmsintc_state *ds = &vcpu->arch.dmsintc_state;
+diff --git a/tools/testing/selftests/kvm/include/loongarch/processor.h b/tools/testing/selftests/kvm/include/loongarch/processor.h
+index 0e59daa8024e..8d9fabdc89e3 100644
+--- a/tools/testing/selftests/kvm/include/loongarch/processor.h
++++ b/tools/testing/selftests/kvm/include/loongarch/processor.h
+@@ -79,6 +79,7 @@
+ #define  CPUCFG2_LASX			BIT(7)
+ #define  CPUCFG2_LLFTP			BIT(14)
+ #define  CPUCFG2_LLFTPREV		GENMASK(17, 15)
++#define  CPUCFG2_PTW			BIT(24)
  
--	if (!ds)
--		return;
--
- 	for (i = 0; i < 4; i++) {
- 		old = atomic64_read(&(ds->vector_map[i]));
- 		vector[i] = old ? atomic64_xchg(&(ds->vector_map[i]), 0) : 0;
-@@ -43,25 +40,6 @@ void dmsintc_inject_irq(struct kvm_vcpu *vcpu)
- 	}
- }
+ /* LoongArch Basic CSR registers */
+ #define LOONGARCH_CSR_CRMD		0x0 /* Current mode info */
+@@ -128,6 +129,8 @@
+ #define LOONGARCH_CSR_PGD		0x1b
+ #define LOONGARCH_CSR_PWCTL0		0x1c
+ #define LOONGARCH_CSR_PWCTL1		0x1d
++#define  CSR_PWCTL1_PTW_SHIFT		24
++#define  CSR_PWCTL1_PTW			BIT_ULL(CSR_PWCTL1_PTW_SHIFT)
+ #define LOONGARCH_CSR_STLBPGSIZE	0x1e
+ #define LOONGARCH_CSR_CPUID		0x20
+ #define LOONGARCH_CSR_KS0		0x30
+diff --git a/tools/testing/selftests/kvm/lib/loongarch/processor.c b/tools/testing/selftests/kvm/lib/loongarch/processor.c
+index 47bbde3e205a..35e35c62759f 100644
+--- a/tools/testing/selftests/kvm/lib/loongarch/processor.c
++++ b/tools/testing/selftests/kvm/lib/loongarch/processor.c
+@@ -282,6 +282,7 @@ void loongarch_vcpu_setup(struct kvm_vcpu *vcpu)
+ 	unsigned int cfg;
+ 	unsigned long val;
+ 	struct kvm_vm *vm = vcpu->vm;
++	bool has_ptw = false;
  
--static int dmsintc_deliver_msi_to_vcpu(struct kvm_vcpu *vcpu, u32 vector)
--{
--	struct dmsintc_state *ds = &vcpu->arch.dmsintc_state;
--
--	if (!vcpu || vector >= 256)
--		return -EINVAL;
--	if (!ds)
--		return -ENODEV;
--
--	if (!kvm_guest_has_msgint(&vcpu->arch))
--		return -EINVAL;
--
--	set_bit(vector, (unsigned long *)&ds->vector_map);
--	kvm_queue_irq(vcpu, INT_AVEC);
--	kvm_vcpu_kick(vcpu);
--
--	return 0;
--}
--
- int dmsintc_set_irq(struct kvm *kvm, u64 addr, int data)
- {
- 	unsigned int irq, cpu;
-@@ -69,13 +47,17 @@ int dmsintc_set_irq(struct kvm *kvm, u64 addr, int data)
- 
- 	irq = (addr >> AVEC_IRQ_SHIFT) & AVEC_IRQ_MASK;
- 	cpu = (addr >> AVEC_CPU_SHIFT) & kvm->arch.dmsintc->cpu_mask;
--	if (cpu >= KVM_MAX_VCPUS)
--		return -EINVAL;
- 	vcpu = kvm_get_vcpu_by_cpuid(kvm, cpu);
- 	if (!vcpu)
- 		return -EINVAL;
- 
--	return dmsintc_deliver_msi_to_vcpu(vcpu, irq);
-+	if (!kvm_guest_has_msgint(&vcpu->arch))
-+		return -EINVAL;
+ 	switch (vm->mode) {
+ 	case VM_MODE_P36V47_16K:
+@@ -300,6 +301,12 @@ void loongarch_vcpu_setup(struct kvm_vcpu *vcpu)
+ 	ret = __kvm_has_device_attr(vm->fd, KVM_LOONGARCH_VM_FEAT_CTRL, KVM_LOONGARCH_VM_FEAT_LASX);
+ 	if (!ret)
+ 		cfg |= CPUCFG2_LASX;
++	ret = __kvm_has_device_attr(vm->fd, KVM_LOONGARCH_VM_FEAT_CTRL, KVM_LOONGARCH_VM_FEAT_PTW);
++	if (!ret) {
++		cfg |= CPUCFG2_PTW;
++		has_ptw = true;
++	}
 +
-+	set_bit(irq, (unsigned long *)&vcpu->arch.dmsintc_state.vector_map);
-+	kvm_queue_irq(vcpu, INT_AVEC);
-+	kvm_vcpu_kick(vcpu);
-+	return 0;
- }
+ 	loongarch_set_cpucfg(vcpu, LOONGARCH_CPUCFG2, cfg);
+ 	cfg = read_cpucfg(LOONGARCH_CPUCFG6);
+ 	loongarch_set_cpucfg(vcpu, LOONGARCH_CPUCFG6, cfg);
+@@ -338,6 +345,9 @@ void loongarch_vcpu_setup(struct kvm_vcpu *vcpu)
  
- static int kvm_dmsintc_ctrl_access(struct kvm_device *dev,
+ 	/* PGD page shift and width */
+ 	val = (vm->page_shift + width * (vm->mmu.pgtable_levels - 1)) | width << 6;
++	if (has_ptw)
++		val |= CSR_PWCTL1_PTW;
++
+ 	loongarch_set_csr(vcpu, LOONGARCH_CSR_PWCTL1, val);
+ 	loongarch_set_csr(vcpu, LOONGARCH_CSR_PGDL, vm->mmu.pgd);
+ 
+@@ -345,8 +355,10 @@ void loongarch_vcpu_setup(struct kvm_vcpu *vcpu)
+ 	 * Refill exception runs on real mode
+ 	 * Entry address should be physical address
+ 	 */
+-	val = addr_gva2gpa(vm, (unsigned long)handle_tlb_refill);
+-	loongarch_set_csr(vcpu, LOONGARCH_CSR_TLBRENTRY, val);
++	if (!has_ptw) {
++		val = addr_gva2gpa(vm, (unsigned long)handle_tlb_refill);
++		loongarch_set_csr(vcpu, LOONGARCH_CSR_TLBRENTRY, val);
++	}
+ 
+ 	/*
+ 	 * General exception runs on page-enabled mode
+
+base-commit: 93f51579e7df248780214094418f205253383cc5
 -- 
 2.39.3
 
