@@ -1,113 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0185B5349D5;
-	Tue, 22 Sep 2026 23:00:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D462731354F
+	for <loongarch@lists.linux.dev>; Wed, 23 Sep 2026 01:25:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790118026; cv=none; b=SMLjSW997VguBFajuJg9/ei81Chn7rwZZhzwe84W0q6V+Hxalh/3lsMSmyWq1jsmqiQi7jToDo+ld+xqz3N9YRpb970kTn0guXs8Ld9U2A1cXDFGM/fXPEay3RMl8EIThqSt5hu++fYSW4rHkQczJFR0tEXQzgpr3+8Lqtq5C5I=
+	t=1790126729; cv=none; b=jtAM7yeUFOU8jkwTSAQ8T6/hoS51XNGZA1F2USWyzO9BECYh5lSjvm1l9sy2GMECJL3dK96ffGtebiqJwX7wrcUBfBlE07kRnhJAYx8VECWRyNknmEL9cAgkYV/4g6ByTEO1eXrIn5bJr50z3yj9xo58BzapbvaHwYh40GXxTfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790118026; c=relaxed/simple;
-	bh=ci3RJD+6cjIcB//FMXtTCbAxugVqCax+YSAYM1WDFm4=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=EebnYuN403Ot5ObsR9W7X1FZSa5m3WstAeSaEY3+Tl5r3Iy2dLiuMXpriOfYzg+xz196TcUCCQsne4qZAuL0nxYmaiaM3vtv3uCfxoENP44FfINiXEygg6yayK8LqPY5LIXCgkYeBFuV7vGMVdN8/YeAHa5VEa3gFIGDZdHQoFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=f4enYMEQ; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="f4enYMEQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2DD81F000FF;
-	Tue, 22 Sep 2026 23:00:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux-foundation.org; s=korg; t=1790118024;
-	bh=67Wnb1WqUtfvvqvCH5gthEhN54uXfj3OJmtQ8451vqc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=f4enYMEQW7QizF7EO1g1cQ4u8gA82wou/SQ/2W3Thvjli+h6aobD5ZlJDs/jfh1FV
-	 zSB+Kfk4FuUqyw9bmcvk46t07MCBzK0NBIy1fjrGw3Rhfy7nWNjaUOxIcpoiKWtmMx
-	 CWvPp7SZoe+aH84d+5DNVA8gveOr1sRQo2MPtAwc=
-Date: Tue, 22 Sep 2026 16:00:21 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: David Hildenbrand <david@kernel.org>, Zi Yan <ziy@nvidia.com>, Baolin
- Wang <baolin.wang@linux.alibaba.com>, "Liam R. Howlett"
- <liam@infradead.org>, Nico Pache <nico.pache@linux.dev>, Ryan Roberts
- <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song
- <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>, Usama Arif
- <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, Guo Ren
- <guoren@kernel.org>, Brian Cain <bcain@kernel.org>, Geert Uytterhoeven
- <geert@linux-m68k.org>, Dinh Nguyen <dinguyen@kernel.org>, Simon Schuster
- <schuster.simon@siemens-energy.com>, Jonas Bonn <jonas@southpole.se>,
- Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Stafford Horne
- <shorne@gmail.com>, Rich Felker <dalias@libc.org>, John Paul Adrian
- Glaubitz <glaubitz@physik.fu-berlin.de>, Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, Russell King <linux@armlinux.org.uk>,
- Vineet Gupta <vgupta@kernel.org>, Michal Simek <monstr@monstr.eu>, Chris
- Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, Will Deacon
- <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick
- Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
- "David S. Miller" <davem@davemloft.net>, Andreas Larsson
- <andreas@gaisler.com>, Richard Henderson <richard.henderson@linaro.org>,
- Matt Turner <mattst88@gmail.com>, Magnus Lindholm <linmag7@gmail.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland
- <mark.rutland@arm.com>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
- <kernel@xen0n.name>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, Helge
- Deller <deller@gmx.de>, Madhavan Srinivasan <maddy@linux.ibm.com>, Michael
- Ellerman <mpe@ellerman.id.au>, "Christophe Leroy (CS GROUP)"
- <chleroy@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
- <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, Christian
- Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle
- <svens@linux.ibm.com>, Richard Weinberger <richard@nod.at>, Anton Ivanov
- <anton.ivanov@cambridgegreys.com>, Johannes Berg
- <johannes@sipsolutions.net>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar
- <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>, Vlastimil Babka
- <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan
- <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Jason Gunthorpe
- <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, Peter Xu
- <peterx@redhat.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Shakeel
- Butt <shakeel.butt@linux.dev>, Jonathan Corbet <corbet@lwn.net>, Randy
- Dunlap <rdunlap@infradead.org>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
- linux-hexagon@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
- linux-openrisc@vger.kernel.org, linux-sh@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-snps-arc@lists.infradead.org, linux-arch@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-alpha@vger.kernel.org,
- loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-s390@vger.kernel.org, linux-um@lists.infradead.org, Hugh Dickins
- <hughd@google.com>, Qi Zheng <qi.zheng@linux.dev>,
- linux-doc@vger.kernel.org
-Subject: Re: [PATCH v4 00/12] mm: make userland page table freeing RCU-safe
-Message-Id: <20260922160021.a2fc65d05d9b867a141e5457@linux-foundation.org>
-In-Reply-To: <20260922-rcu-pagetable-freeing-v4-0-fe1ad1f1e303@kernel.org>
-References: <20260922-rcu-pagetable-freeing-v4-0-fe1ad1f1e303@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1790126729; c=relaxed/simple;
+	bh=yC39ZVBmE6KWA4Bz6dca0X886Ye+9W/oGTKx3N9Tk0I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pEyEIoDGKsAYTbTXrs006c0Y+YGJpqtfnPbIVrVgzedGM5Aw3MRtPe3PqCcwGsBcB9iYXkXFhdiwc1foOU6QDYhgcHVttmrW3cTpXP+i4GaQMCg4ABOG47ryol+EHf/NDiES984xeqGcVxEFV5jVVTxDADyyYLWgSsgE3luZCqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8Cxf9OEKrNqStwOAA--.43460S3;
+	Wed, 23 Sep 2026 09:25:24 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowJBx6c2EKrNqyQIkAA--.45699S2;
+	Wed, 23 Sep 2026 09:25:24 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Tao Cui <cuitao@kylinos.cn>
+Subject: [PATCH v2 0/2] LoongArch: KVM: Code cleanup with MSI intterupt injection
+Date: Wed, 23 Sep 2026 09:18:01 +0800
+Message-Id: <20260923011803.1057945-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBx6c2EKrNqyQIkAA--.45699S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-On Tue, 22 Sep 2026 16:35:31 +0100 "Lorenzo Stoakes (ARM)" <ljs@kernel.org> wrote:
+Here is to remove some unnecessary parameter checking when injecting
+MSI interrupt, include MSI level parameter and vcpu::arch::dmsintc_state
+NULL pointer etc.
+---
+v1 ... v2:
+  1. Remove function dmsintc_deliver_msi_to_vcpu() and inline it in
+     dmsintc_set_irq().
 
-> The majority of architectures in the kernel defer page table freeing until
-> an RCU grace period has elapsed, this series converts all remaining
-> architectures to do so too and eliminates CONFIG_MMU_GATHER_RCU_TABLE_FREE
-> altogether.
-> 
-> This is important because it enables safe lockless page table walking under
-> RCU alone.
+  2. Keep return value with -1 rather than -EINVAL when level == 0
+     in kvm_set_msi(). Return value with 0 is one option also, now keep
+     similar with other architectures, will modify this in future when the
+     final solution is made.
+---
+Bibo Mao (2):
+  LoongArch: KVM: Remove parameter line when inject MSI
+  LoongArch: KVM: Remove duplicated checking with DMSI irq injection
 
-Do we have reason to believe that anyone is seeing any effects from
-their arch's failure to rcu-free the page tables?
+ arch/loongarch/include/asm/kvm_dmsintc.h |  3 +-
+ arch/loongarch/include/asm/kvm_pch_pic.h |  2 +-
+ arch/loongarch/kvm/intc/dmsintc.c        | 37 +++++-------------------
+ arch/loongarch/kvm/intc/pch_pic.c        |  6 ++--
+ arch/loongarch/kvm/irqfd.c               |  4 +--
+ 5 files changed, 15 insertions(+), 37 deletions(-)
 
-This sounds like a rather long-standing wart, yes?
 
-The patchset is thinly reviewed and mm.git is bursting at the seams
-again.  I'll play wait-and-see on this series.  Feel free to cluebat me
-if that's a bad call.
+base-commit: 93f51579e7df248780214094418f205253383cc5
+-- 
+2.39.3
+
