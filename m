@@ -1,180 +1,135 @@
-Received: from mta0.migadu.com (out-152.mta0.migadu.com [91.218.175.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E487453A42
-	for <loongarch@lists.linux.dev>; Wed, 23 Sep 2026 06:16:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0301E44102E;
+	Wed, 23 Sep 2026 06:16:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790144169; cv=none; b=O+nSkXt+LIUtNG1iheG3r/nVqfb7TVaeE3TmUa290mccG0/p6m+heiwp7Uhh7yKI0Oz3zrP0KcZc8P5vdDXdqE1HhY9Sgyta6yG5pm8gyQILaPa5/h0aQ9o4iXkO8sNfSt6ijub64kVe557nj5uri7bpN2RV0sGe0/OVfTdc8D8=
+	t=1790144198; cv=none; b=NQcw6QqDKR2GPGgFUMHV13huysBqYIBU8ElNW6l4ylYSwU+xZCoXydGrNjrYhKyRrIyNQ7sVtaXbMjXK9FT5Dsqrf4XyIZcRIiS0UFcNHKErGPQrSy/+bL59jutvx2Vp6wEVf7ccA9va8/RzvVLUo79VYeqtRVztIfe6o89Mluk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790144169; c=relaxed/simple;
-	bh=iNN52+OjGBWKHuNTOEPyALCLpNm9HUlYo8ccDdYusP4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A/A73rj+KoNSdAQ2jC+mm2xm6DYnz2QQGUjhgHdgvihZUc9W1El6GxzRkJx4Uqx9DNqQf99K9hrp3B0hMOUfi8fHhx6sDgRCl4lK269aahMseF8qsN0HfGp9PCkOEXDFraIC847m7a2by45QN+gzyvmQWfeSpo8g+QZ+6apPzRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=gag9wr/2; arc=none smtp.client-ip=91.218.175.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1790144198; c=relaxed/simple;
+	bh=cxPrCgnSnZx5lbBIBCrN1f05i0JT6ESXKVBfq3xOWDI=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=iPL9z1vywwquGtnT9sHvG4b+QbJr+9/LeiHOJk8UIxzrC3y0mOAxITe0wipF+i/13pz8RkwUWmSwAe0S/LSDoGyWArbjZVJdz92P+L65CgpD1PhodFz9lnwiunz1IENyL4MLKnXECl7UD2s2CuhXwmlypC89S4JiEhW/PBaORFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bkkWlJqN; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="gag9wr/2"
-X-Envelope-To: loongarch@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=iNN52+OjGBWKHuNTOEPyALCLpNm9HUlYo8ccDdYusP4=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1790144164; v=1; x=1790748964;
- b=gag9wr/2m9nlYMg94wqKX0sL+xHtX2PQLyIL0XDY/IEf6zvjcqM4ToozQDjaYNC0SbsW7uX0
- h9u+YxvHsPkhrZniHNejScthRlTvUpSuJw+p86CP75SstPEgn2FWeIj1kXX89now5P/OA7ZLzps
- fk4oVuIAdp5yGiKT1mU1fOEY=
-X-Envelope-To: loongarch@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 4b4ce70d101944f5;
-	Wed, 23 Sep 2026 06:16:01 +0000
-X-Mizu-Trace-ID: 4b4ce70d101944f5
-X-Migadu-Flow: FLOW_OUT
-From: Lance Yang <lance.yang@linux.dev>
-To: ljs@kernel.org
-Cc: akpm@linux-foundation.org,
-	david@kernel.org,
-	ziy@nvidia.com,
-	baolin.wang@linux.alibaba.com,
-	liam@infradead.org,
-	nico.pache@linux.dev,
-	ryan.roberts@arm.com,
-	dev.jain@arm.com,
-	baohua@kernel.org,
-	lance.yang@linux.dev,
-	usama.arif@linux.dev,
-	kas@kernel.org,
-	guoren@kernel.org,
-	bcain@kernel.org,
-	geert@linux-m68k.org,
-	dinguyen@kernel.org,
-	schuster.simon@siemens-energy.com,
-	jonas@southpole.se,
-	stefan.kristiansson@saunalahti.fi,
-	shorne@gmail.com,
-	dalias@libc.org,
-	glaubitz@physik.fu-berlin.de,
-	pjw@kernel.org,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	alex@ghiti.fr,
-	linux@armlinux.org.uk,
-	vgupta@kernel.org,
-	monstr@monstr.eu,
-	chris@zankel.net,
-	jcmvbkbc@gmail.com,
-	will@kernel.org,
-	aneesh.kumar@kernel.org,
-	npiggin@gmail.com,
-	peterz@infradead.org,
-	davem@davemloft.net,
-	andreas@gaisler.com,
-	richard.henderson@linaro.org,
-	mattst88@gmail.com,
-	linmag7@gmail.com,
-	catalin.marinas@arm.com,
-	mark.rutland@arm.com,
-	chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	tsbogend@alpha.franken.de,
-	James.Bottomley@HansenPartnership.com,
-	deller@gmx.de,
-	maddy@linux.ibm.com,
-	mpe@ellerman.id.au,
-	chleroy@kernel.org,
-	hca@linux.ibm.com,
-	gor@linux.ibm.com,
-	agordeev@linux.ibm.com,
-	borntraeger@linux.ibm.com,
-	svens@linux.ibm.com,
-	richard@nod.at,
-	anton.ivanov@cambridgegreys.com,
-	johannes@sipsolutions.net,
-	tglx@kernel.org,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	arnd@arndb.de,
-	vbabka@kernel.org,
-	rppt@kernel.org,
-	surenb@google.com,
-	mhocko@suse.com,
-	jgg@ziepe.ca,
-	jhubbard@nvidia.com,
-	peterx@redhat.com,
-	ysato@users.sourceforge.jp,
-	shakeel.butt@linux.dev,
-	corbet@lwn.net,
-	rdunlap@infradead.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org,
-	linux-m68k@lists.linux-m68k.org,
-	linux-openrisc@vger.kernel.org,
-	linux-sh@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arch@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	linux-alpha@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	hughd@google.com,
-	qi.zheng@linux.dev,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v4 03/12] mm: enable MMU_GATHER_RCU_TABLE_FREE for MMU riscv
-Date: Wed, 23 Sep 2026 14:15:51 +0800
-Message-ID: <20260923061551.84398-1-lance.yang@linux.dev>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20260922-rcu-pagetable-freeing-v4-3-fe1ad1f1e303@kernel.org>
-References: <20260922-rcu-pagetable-freeing-v4-3-fe1ad1f1e303@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bkkWlJqN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E3AF1F000FF;
+	Wed, 23 Sep 2026 06:16:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790144196;
+	bh=JNle6DdVpbG/BswqBxBR4WImK7gnKgjNKRAaR3X4LHs=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=bkkWlJqNt/TkISo3l26HvKwQ1jDjP94mE2t9ahqoZjDLnN8nLUDcuzlFS0z3rFs4w
+	 QJ0sUWd48WTlKN8i+ioSqilAeFcQkraeCxGLtUnQh12TA2Riz8KPdj4qC9vaDa1Aux
+	 OSd47QMlu2zLmX7Syn0tpPHfJ2/Hpu0dPZPR9UznbM6BK1EwJG/sbMsbC5qoy7D3dl
+	 mNeInmf6v9iLpdK/oYgpJ9if8TUI88Z3vi7tDwzB4n+p4YwgxvLblWUVTZXqSPfcwd
+	 5Wn4pSMg0Hrv7rYun/A9hE4x/qdj44YvLS6PsqYKBqp5deWaZ7IG8QIUD+1mT2MOsX
+	 3baRIEamqo1AA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] LoongArch: kdump: add arch_crash_save_vmcoreinfo()
+ support
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Mike Rapoport" <rppt@kernel.org>, "Pratyush Yadav" <pratyush@kernel.org>, "Huacai
+ Chen" <chenhuacai@kernel.org>, "Pasha Tatashin" <pasha.tatashin@soleen.com>, "Yangyang
+ Lian" <lianyangyang@kylinos.cn>, "Andrew Morton" <akpm@linux-foundation.org>, "Baoquan
+ He" <baoquan.he@linux.dev>
+Cc: "Haoran Jiang" <jianghaoran@kylinos.cn>, loongarch@lists.linux.dev, "WANG
+ Xuerui" <kernel@xen0n.name>, "George Guo" <guodongtai@kylinos.cn>, "Dave
+ Young" <ruirui.yang@linux.dev>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20260923060349.146780-1-lianyangyang@kylinos.cn>
+References: <20260923060349.146780-1-lianyangyang@kylinos.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 23 Sep 2026 06:16:35 +0000
+Message-Id: <20260923061635.8E3AF1F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] kdump: off-by-one in VMEMMAP_END export causes incorrect range i=
+n tools
+--
 
-On Tue, Sep 22, 2026 at 04:35:34PM +0100, Lorenzo Stoakes (ARM) wrote:
->Currently riscv gates MMU_GATHER_RCU_TABLE_FREE on CONFIG_SMP and
->CONFIG_MMU.
->
->Commit 69be3fb111e7 ("riscv: enable MMU_GATHER_RCU_TABLE_FREE for SMP &&
->MMU") enabled CONFIG_MMU_GATHER_RCU_TABLE_FREE for CONFIG_SMP, CONFIG_MMU
->riscv builds.
->
->This is expressly for the safety of GUP-fast walkers (CONFIG_HAVE_GUP_FAST
->is enabled if CONFIG_MMU is enabled).
->
->Naturally a single core system does not encounter issues with software page
->table walkers being correctly synchronised across cores, as there is only a
->single core.
->
->However, CONFIG_PREEMPT_RCU is still available on a riscv UP system, so for
->a future RCU-only page table walker, this guarantee is required to prevent
->concurrent page table teardown.
->
->All page table freeing is already done via tlb_remove_ptdesc() so the
->conditions of CONFIG_MMU_GATHER_RCU_TABLE_FREE are already met.
->
->This forms part of an overall effort to switch every architecture to this
->mode.
->
->Acked-by: Kiryl Shutsemau (Meta) <kas@kernel.org>
->Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
->---
+commit 39488158a1b2af61bc47f6be1cf24b8ef1c6d7cd
+Author: Yangyang Lian <lianyangyang@kylinos.cn>
 
-Yeah, for RISC-V, page-table freeing already goes through
-tlb_remove_ptdesc() :) Tested on QEMU, no issues seen :)
+LoongArch: kdump: add arch_crash_save_vmcoreinfo() support
+   =20
+This commit implements arch_crash_save_vmcoreinfo() for LoongArch to export
+architecture-specific values to the vmcoreinfo PT_NOTE. This allows userspa=
+ce
+crash analysis tools to reliably derive module ranges, vmemmap ranges, VA_B=
+ITS,
+and the KASLR offset.
 
-Tested-by: Lance Yang <lance.yang@linux.dev>
+> diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentati=
+on/admin-guide/kdump/vmcoreinfo.rst
+> index 404a15f6782c3..a714ce4cf2141 100644
+> --- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
+> +++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+
+[ ... ]
+
+> +MODULES_VADDR|MODULES_END|VMALLOC_START|VMALLOC_END|VMEMMAP_START|VMEMMA=
+P_END
+> +------------------------------------------------------------------------=
+-----
+> +
+> +Used to get the correct ranges:
+> +	MODULES_VADDR ~ MODULES_END-1 : Kernel module space.
+> +	VMALLOC_START ~ VMALLOC_END-1 : vmalloc() / ioremap() space.
+> +	VMEMMAP_START ~ VMEMMAP_END-1 : vmemmap region, used for struct page ar=
+ray.
+
+[ ... ]
+
+> diff --git a/arch/loongarch/kernel/vmcore_info.c b/arch/loongarch/kernel/=
+vmcore_info.c
+> new file mode 100644
+> index 0000000000000..1128f6cdfe0dd
+> --- /dev/null
+> +++ b/arch/loongarch/kernel/vmcore_info.c
+
+[ ... ]
+
+> +void arch_crash_save_vmcoreinfo(void)
+> +{
+> +	VMCOREINFO_NUMBER(VA_BITS);
+> +	/* NUMBER(VMALLOC_START) is exported by the generic code */
+> +	vmcoreinfo_append_str("NUMBER(VMALLOC_END)=3D0x%lx\n", VMALLOC_END);
+> +#ifdef CONFIG_64BIT
+> +	vmcoreinfo_append_str("NUMBER(MODULES_VADDR)=3D0x%lx\n", MODULES_VADDR);
+> +	vmcoreinfo_append_str("NUMBER(MODULES_END)=3D0x%lx\n", MODULES_END);
+> +	vmcoreinfo_append_str("NUMBER(VMEMMAP_START)=3D0x%lx\n", (unsigned long=
+)vmemmap);
+> +	vmcoreinfo_append_str("NUMBER(VMEMMAP_END)=3D0x%lx\n", VMEMMAP_END);
+
+[Severity: Medium]
+Is this exporting the correct boundary for VMEMMAP_END?
+
+As documented in the newly added admin-guide for vmcoreinfo (above), tools
+like crash or makedumpfile expect the exported VMEMMAP_END to act as an
+exclusive bound (VMEMMAP_START ~ VMEMMAP_END-1).
+
+However, on LoongArch, the VMEMMAP_END macro is defined as an inclusive bou=
+nd.
+Exporting it directly without adjusting it to an exclusive bound
+(e.g., VMEMMAP_END + 1) means the exported value is off by one byte.=20
+
+Could this cause tools calculating the size via VMEMMAP_END - VMEMMAP_START
+to get VMEMMAP_SIZE - 1, thereby truncating the last page when shifted and
+triggering errors when analyzing the vmcore?
+
+> +#endif
+> +	vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=3D0x%lx\n", PHYS_OFFSET);
+> +	vmcoreinfo_append_str("KERNELOFFSET=3D%lx\n", kaslr_offset());
+> +}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260923060349.1467=
+80-1-lianyangyang@kylinos.cn?part=3D1
