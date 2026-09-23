@@ -1,94 +1,121 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CEE23749E8
-	for <loongarch@lists.linux.dev>; Wed, 23 Sep 2026 03:27:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F9CF36A367
+	for <loongarch@lists.linux.dev>; Wed, 23 Sep 2026 03:35:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790134050; cv=none; b=fbqmgfY2YnmClWao1ZaEZnmQbdZ44Cv6HuMEkak32LQQSfNNc8842GxFKEthp5zXAIoD1j3wkKyp2sLnNDqEl4St6BGNVdJt/pUas9CFUzAwGcE5vA1oSkPPvH7aQCH9a/39pe+ETdwsd35GRDTZXeC/HVjU6HcTnVMKq+lZky0=
+	t=1790134561; cv=none; b=ONwXOeikkKiy8UuEW2ClxNqHJVvMwfzBETYDyvJhyfuVYV6J8kzkBWCAtdSDWcwVtn3esDMyEfsj0MU+ejyVnUaHKS8+S3BHRUFY1tITFM43VzEJ3Z5Du6PI0ubQUtv/mLqq6fcMqF5vKfSJKutTQp/obLt9zKMPzu6P4i12tKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790134050; c=relaxed/simple;
-	bh=2LhZwei9uVYV+fWtaQ+UuqK3676UgkdxnXCOys3UUUs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jbTIZNVtlPT+WsE/21relAlgQc0CEfmy4K2Q6dDUQYfn/Wq5fEB7aMi311X3AtI2QGzNlHypL2AyraAEC8Ffm/47Q/uRxMtCBrwX5Ju129swPvj+0ybLR+XblKVDkSaGE5OwMbGs7NjpnGI1CoWHhJ7PEPV7kRJ7TA0frDtKP+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=UXE8XzkV; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="UXE8XzkV"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 639A81576;
-	Tue, 22 Sep 2026 20:27:24 -0700 (PDT)
-Received: from localhost (a085714.arm.com [10.164.19.28])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 24DE53F632;
-	Tue, 22 Sep 2026 20:27:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1790134047; bh=2LhZwei9uVYV+fWtaQ+UuqK3676UgkdxnXCOys3UUUs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UXE8XzkVvf3yIoiTHdAzHwgTw5QqdgILMiymmPuOEu4DA3OYvUXPgW6uQebZscGw6
-	 w3wX7S5jWKD49txEUMuw6ny8fgbDt32gUaW2yySzymxAlLdnk2qLuam7IkiIyqpQpP
-	 G/0Ai7X2QccdfHonMs1/BPLBqUejjFwNssIR2L5U=
-Date: Wed, 23 Sep 2026 08:57:24 +0530
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-To: linux-mm@kvack.org
-Cc: David Hildenbrand <david@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Helge Deller <deller@gmx.de>, loongarch@lists.linux.dev, 
-	linux-s390@vger.kernel.org, linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] arch/mm: Drop similar platform overrides for
- pxdp_get()
-Message-ID: <qg52wppwfjfv6s7dxmeefuadraz2hxp3wp3nqs6nxf7pflrtrv@5embd4fiz2k6>
-References: <20260919101343.1959572-1-anshuman.khandual@arm.com>
+	s=arc-20240116; t=1790134561; c=relaxed/simple;
+	bh=YZClwGub7OWQ5QcJYOffM2Nj8dPyoO6GR78mkRbFquY=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=YLOyk5Hex5PlASjUE4RUnv1hEsk7+JyDsKhDFfyGjYSsxGeQAgQOxvrMuqGAG4thH5de6hZQoBJQlHoqCW9rds1shPri41+tErpzLNY9w5rWeW6cXE39w3wfNvI/wHq0tGkTb2lqORhw6LZaggE/LUypceGpCytq3nIaLSBg4+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8DxC9IdSbNqkuUOAA--.43751S3;
+	Wed, 23 Sep 2026 11:35:57 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJAxFs0cSbNqogskAA--.19191S2;
+	Wed, 23 Sep 2026 11:35:56 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: KVM: Return the actual error code in
+ kvm_ipi_create()
+To: Chaithanya Lagisetty <nagachaithanya9911@gmail.com>,
+ Tianrui Zhao <zhaotianrui@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, Xianglai Li <lixianglai@loongson.cn>,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20260922103931.215091-1-nagachaithanya9911@gmail.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <97b7d3f3-7929-9d4c-04e0-b5a4f7cfe2ac@loongson.cn>
+Date: Wed, 23 Sep 2026 11:37:22 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <20260922103931.215091-1-nagachaithanya9911@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260919101343.1959572-1-anshuman.khandual@arm.com>
+X-CM-TRANSID:qMiowJAxFs0cSbNqogskAA--.19191S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7CryUCrWrKF45Kw1rXrWUAwc_yoW8uFyfpr
+	WfuayqyFW5Wwn7KrWq93WDGF4UZr4fKw1fuw10grWDCr45Kr1Syr18t345uF1UG3y8Ca40
+	qF15K3s8Z3WUAabCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8wNVDUU
+	UUU==
 
-On Sat, Sep 19, 2026 at 03:43:38PM +0530, Anshuman Khandual wrote:
-> There are many platforms with similar pxpd_get() overrides like the generic
-> memory default helpers which use READ_ONCE() for reading page table entries
-> These overrides could be dropped safely letting their platforms fallback on
-> the defaults instead. Although it requires some code movement from platform
-> headers to avoid build failures.
-> 
-> This series based on v7.2-rc3 after the following patch.
 
-This has been based on wrong tag, will resend. Please ignore this series.
 
+On 2026/9/22 下午6:39, Chaithanya Lagisetty wrote:
+> kvm_ipi_create() registers the IPI device on the IOCSR bus and jumps to
+> the error label when that fails. The error path then discards the error
+> code that kvm_io_bus_register_dev() reported and returns -EFAULT
+> instead:
 > 
-> https://lore.kernel.org/linux-mm/20260918064928.793742-1-anshuman.khandual@arm.com/
+> 	ret = kvm_io_bus_register_dev(kvm, KVM_IOCSR_BUS, IOCSR_IPI_BASE,
+> 				      IOCSR_IPI_SIZE, device);
+> 	mutex_unlock(&kvm->slots_lock);
+> 	if (ret < 0) {
+> 		kvm_pr_unimpl("%s: Initialize IOCSR dev failed, ret = %d\n",
+> 			      __func__, ret);
+> 		goto err;
+> 	}
+> 	...
+> err:
+> 	kfree(s);
+> 	return -EFAULT;
 > 
-> Cc: David Hildenbrand <david@kernel.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Alexander Gordeev <agordeev@linux.ibm.com>
-> Cc: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-> Cc: Huacai Chen <chenhuacai@kernel.org>
-> Cc: WANG Xuerui <kernel@xen0n.name>
-> Cc: “James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-> Cc: Helge Deller <deller@gmx.de>
-> Cc: linux-mm@kvack.org
-> Cc: loongarch@lists.linux.dev
-> Cc: linux-s390@vger.kernel.org
-> Cc: linux-parisc@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
+> kvm_io_bus_register_dev() fails with -ENOMEM or -ENOSPC, so userspace
+> creating a KVM_DEV_TYPE_LOONGARCH_IPI device is told that it passed a
+> bad address when the real problem is that the host is out of memory or
+> out of IOCSR bus slots. -EFAULT is reserved for faulting user addresses,
+> and the remaining -EFAULT returns in this file are get_user() failures,
+> where it is correct.
 > 
-> Anshuman Khandual (3):
->   s390/mm: Drop all pxdp_get()
->   loongarch/mm: Drop all pxdp_get()
->   parisc/mm: Drop all pxdp_get()
+> Return ret instead. It is guaranteed to hold a valid negative errno
+> because the ret < 0 branch above is the only path that reaches the error
+> label. This also matches kvm_eiointc_create(), which already propagates
+> the kvm_io_bus_register_dev() error code unchanged.
 > 
->  arch/loongarch/include/asm/pgtable.h | 20 ++--------------
->  arch/loongarch/mm/init.c             | 19 +++++++++++++++
->  arch/parisc/include/asm/pgtable.h    | 20 +---------------
->  arch/parisc/mm/init.c                | 13 +++++++++++
->  arch/s390/include/asm/pgtable.h      | 35 ++++------------------------
->  5 files changed, 40 insertions(+), 67 deletions(-)
+> Only compile-tested; the fix is a straight propagation of an error code
+> that the adjacent kvm_pr_unimpl() already logs.
 > 
-> -- 
-> 2.43.0
+> Fixes: c532de5a67a7 ("LoongArch: KVM: Add IPI device support")
+> Assisted-by: Cursor:claude-opus-5
+> Signed-off-by: Chaithanya Lagisetty <nagachaithanya9911@gmail.com>
+> ---
+>   arch/loongarch/kvm/intc/ipi.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
+> diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.c
+> index 7b333a4a0430..672ec053a997 100644
+> --- a/arch/loongarch/kvm/intc/ipi.c
+> +++ b/arch/loongarch/kvm/intc/ipi.c
+> @@ -431,7 +431,7 @@ static int kvm_ipi_create(struct kvm_device *dev, u32 type)
+>   
+>   err:
+>   	kfree(s);
+> -	return -EFAULT;
+> +	return ret;
+>   }
+>   
+>   static void kvm_ipi_destroy(struct kvm_device *dev)
+> 
+Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+
