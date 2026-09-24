@@ -1,93 +1,79 @@
-Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 071F23515F1;
-	Thu, 24 Sep 2026 14:10:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D2B03B83F9
+	for <loongarch@lists.linux.dev>; Thu, 24 Sep 2026 14:27:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790259051; cv=none; b=HTgDyCFkXZ0xXTCI5NaSyMOqpLgbyvT1XqOqpk6e/407PSyqI8Xv9rs+rn9OJKHIsB1arOkxS49J+AEYh9vdDKAOMem2ZuJcCmcSIquGDvO0dPUpn1/LGjf+EBuRq8xKfJxwTJXT3ilD4KN2d264+bP8O32XnTytIpZf6XSLvjM=
+	t=1790260035; cv=none; b=glucGV5uMg/P6Z8hOy0H+owJgN89m3L1P8CA0MwCDsQ8/u72/4B4GDDCd/UmU8piP1tOxuJXAe6Wb3g1GKxXyMei/UrXhlO5+djamx61Y3DvClP2ossY2M1f/+aVjDXh5FNBJwvYj2bM0xNldSnRtOnOFX2Hl19cxH5pgFMUIss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790259051; c=relaxed/simple;
-	bh=9TgDyFwJ+7DDH6AX96a9gn3Z9AGTUD/r7aNoQfYxkzw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kmXMF/VkL5ic2k8xY/pvP9AztbgccvS35Y0i7Ovdxg4WlwZeikri8kW/fayXtqfYLG3PKoMzGGaT8LQLiHzsGISLy7hI4Qt1OHiT0n0/+le2wHKoRV2WDHliasS82S9QjUrtVy/WQwR4Qo9+m9fucW0XiH3HoDWDao9kb4c/+Qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; arc=none smtp.client-ip=85.214.250.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
-Received: from 8bytes.org (p200300f6af404a00e4ccc4fdbbd66590.dip0.t-ipconnect.de [IPv6:2003:f6:af40:4a00:e4cc:c4fd:bbd6:6590])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.8bytes.org (Postfix) with ESMTPSA id 561341C7465;
-	Thu, 24 Sep 2026 16:10:47 +0200 (CEST)
-Date: Thu, 24 Sep 2026 16:10:46 +0200
-From: =?utf-8?B?SsO2cmcgUsO2ZGVs?= <joro@8bytes.org>
-To: James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, 
-	Sean Christopherson <seanjc@google.com>, Tom Lendacky <thomas.lendacky@amd.com>, ashish.kalra@amd.com, 
-	michael.roth@amd.com, nsaenz@amazon.com, anelkz@amazon.de, 
-	Melody Wang <huibo.wang@amd.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kvmarm@lists.linux.dev, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, x86@kernel.org, 
-	coconut-svsm@lists.linux.dev, joerg.roedel@amd.com
-Subject: Re: [PATCH 35/60] kvm: Add VCPU plane-scheduling state and helpers
-Message-ID: <arUtYyK25eKQYY7j@8bytes.org>
-References: <20260608144252.351443-1-joro@8bytes.org>
- <20260608144252.351443-36-joro@8bytes.org>
- <e7eb0dba-790a-4644-9895-5c9a7420d7fe@redhat.com>
- <aib8n5lO6HKbLC4Y@8bytes.org>
- <CABgObfbUsDeStnZF-7oyR-W-Bvd4qTMoeUwGizgn10UTdKtZ2A@mail.gmail.com>
- <aigE2EvJyZlYDz0V@8bytes.org>
- <570f82e8b8bc968a31a4ba859145f6c324e41247.camel@HansenPartnership.com>
+	s=arc-20240116; t=1790260035; c=relaxed/simple;
+	bh=Bf2KgCt0aSna/n7TRR1mlzogkYFVIzIKlJfF/d+Slac=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dZ6D1ENbkI5akEDF7p3kLDVBqwqUIGzKSa7cyt85hziZQ+8k8rXS3fbWqGrgSntKz/4jJXdne1yFHKaUEeDM0fKORfVRAKIR+n7Z7o/1wDp0lU8MOz7Bx4DxertEMIYq2Q8QK72z8DXxbGoCTnj9ifeR5XmYbMASb2tcdH3C2wY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [123.138.236.242])
+	by gateway (Coremail) with SMTP id _____8DxytE_M7Vq2HAPAA--.45115S3;
+	Thu, 24 Sep 2026 22:27:11 +0800 (CST)
+Received: from linux.localdomain (unknown [123.138.236.242])
+	by front1 (Coremail) with SMTP id qMiowJDxBc09M7Vqha8kAA--.50018S2;
+	Thu, 24 Sep 2026 22:27:10 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/6] LoongArch: Fix perf hardware breakpoints
+Date: Thu, 24 Sep 2026 22:27:02 +0800
+Message-ID: <20260924142708.2459-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <570f82e8b8bc968a31a4ba859145f6c324e41247.camel@HansenPartnership.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxBc09M7Vqha8kAA--.50018S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWruw48GrWDXr48Ar4DAFyDtwc_yoWDZFc_Wa
+	4fA3yUur4kuFW3tFyqkF4fA34vkF4fWFn8AFyqqFsFk3Z5Gry5Jan5X3WUZryag348trs8
+	JrWFywn5Aw129osvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UUUUU==
 
-Hi James,
+v4:
+  -- Do not modify thread_struct layout for hardware breakpoints
 
-On Fri, Jul 17, 2026 at 10:35:10AM -0400, James Bottomley wrote:
-> So this all depends how the planes are started.  If you're starting
-> them from an IGVM file that loads the most privileged code and then
-> runs the guest in a different plane, absolutely, it can work as you
-> describe.  However, the common use case for serviceable security
-> enclaves is you start the kernel first (necessarily in plane 0) and
-> then bring up the enclaves later which means the planes > 0 are
-> technically higher privilege since they're running hidden security
-> code.  HOWEVER, there's no reason at all to trust a security enclave
-> that's doing something like guarding private keys to be able to poke
-> anywhere it wants in the guest ... that's a security breach waiting to
-> happen, so it would really be better if the model were not
-> hierarchical, but more akin to the ability to seal planes off from each
-> other, so the kernel can start the enclave, which would then set itself
-> and the communication area up, but then the plane 0 kernel would remove
-> access to most memory from the enclave.
-> 
-> In this sealing model, there's no absolute privilege levels; each plane
-> would decide what the other planes can see of its memory space and, on
-> security grounds, we'd likely configure the enclaves to have the least
-> possible privilege.
-> 
-> Now, Windows applications expect VSM to be strictly hierarchical in
-> terms of privilege, but if we create a sealing primitive as described
-> above, we can get it to build the strict VSM privilege hierarchy in the
-> hyper-v driver.
+This series addresses severe functional degradations in standard
+perf_event usage, including initialization failures and one-shot
+triggering limitations.
 
-I mostly agree with this and have to say that my statement in the cover letter
-about plane hierarchies was a bit broad.
+Tiezhu Yang (6):
+  LoongArch: Fix bitmask corruption in update_bp_registers()
+  LoongArch: Remove redundant call in update_bp_registers()
+  LoongArch: Fix architectural naming typo for CSR_FWPS_SKIP
+  LoongArch: Only send SIGTRAP signal if necessary in do_watch()
+  LoongArch: Fix perf hardware breakpoint failure via installation
+  LoongArch: Fix one-shot limitation for perf hardware breakpoints
 
-The main assumption this patch-set makes about plane 0 is that it is the plane
-which does the IRQ scheduling. Say a VM has Plane 0,1, and 2. A VCPU runs plane
-2 and KVM wants to inject an IRQ into plane 1 of that VCPU. Now KVM needs the
-VCPU to decide whether it wants to run plane 1 to handle the IRQ or continue
-with plane 2 because it currently has higher-priority work to do.
+ arch/loongarch/include/asm/hw_breakpoint.h |  8 +--
+ arch/loongarch/include/asm/loongarch.h     |  7 ++-
+ arch/loongarch/include/asm/processor.h     |  3 +
+ arch/loongarch/include/asm/switch_to.h     |  2 +-
+ arch/loongarch/kernel/hw_breakpoint.c      | 66 ++++++++++++++++++----
+ arch/loongarch/kernel/traps.c              | 12 ++--
+ 6 files changed, 74 insertions(+), 24 deletions(-)
 
-This decision is made on plane 0 in this patch-set, which it needs to be for
-VMPLs. Does VSM have a similar concept for IRQ scheduling between VTLs or will
-the hypervisor take care to run a VTL when it has IRQs?
+-- 
+2.42.0
 
-
--Joerg
