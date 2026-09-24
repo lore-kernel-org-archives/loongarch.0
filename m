@@ -1,33 +1,33 @@
-Received: from mta0.migadu.com (out-232.mta0.migadu.com [91.218.175.232])
+Received: from mta0.migadu.com (out-129.mta0.migadu.com [91.218.175.129])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 136EE3D1CB4
-	for <loongarch@lists.linux.dev>; Thu, 24 Sep 2026 02:41:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A283B71C8
+	for <loongarch@lists.linux.dev>; Thu, 24 Sep 2026 02:56:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790217695; cv=none; b=ab7/wEIBLilsgt84LITBObKS88XbV9KDLTk+tgi3f6JppZptY0fUmkBNSxHC2XL98gNjn84H+cpC2FKPFy+aXZNxjGlz5n4+kBSVa3tftj52ZIG6GRm97Kx3de/buAqG5CgSAsbiP/vGaAX76c8W5ON2YohTxwN3S+e5+SbvDCs=
+	t=1790218569; cv=none; b=Rrhdw23KlfUajxX4SHWiyibUkYg3gCcluKRY7egMx4X2V2Iuw3cLJfkZpUSfnY6J8tw9EuQjNcryXEvLXKb8YrIwNpRtEk5mjvO8kYIOZ0dGuuXO/Oo3qh3aElR5uIYD1ncCOLCkaaJQP+QqptFNuliZbNS3UjRCVJboqkOH0eQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790217695; c=relaxed/simple;
-	bh=4JyEcF/oNMZQFBpW+pWfHZaiat0WqM84Tbff9DsrqFA=;
+	s=arc-20240116; t=1790218569; c=relaxed/simple;
+	bh=i3rUJrOssAsIlzaIbpG4p7ewG7Kkt+KPljgikjsMoRc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eiNgclxSz9iPnzZvyUvB0iLbizZy2UqonVlGCH1svbEylwijrJ/5wXsXArmY4xMU83ARUn0/iVzP4YCHt6jdR8rdeJm4/HFefYSCtoiOkdArtUGf60lHA3bzLMZN4u7ni95hteoQePAz/p8IqifyiN+kOKMAX/+6gqeT4D26sGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VPiRC6gZ; arc=none smtp.client-ip=91.218.175.232
+	 MIME-Version:Content-Type; b=EqB86JYDdExoUnBp0kK87ghchKbUudRhZCWbfCadrEZpL56zZ8509+rOXw06qzfkv66Qq/KIkr9/xY5mbG+tF7pwEqKK1H0OB2weTl+OUgSFtGu7l4K2oGnO1xroaKNj9gmkfxF/7VyZ/XBYgPkZdaHPo12HC7osxpGmha3KQzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FJ7/xF8o; arc=none smtp.client-ip=91.218.175.129
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VPiRC6gZ"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FJ7/xF8o"
 X-Envelope-To: loongarch@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=4JyEcF/oNMZQFBpW+pWfHZaiat0WqM84Tbff9DsrqFA=;
+DKIM-Signature: a=rsa-sha256; bh=i3rUJrOssAsIlzaIbpG4p7ewG7Kkt+KPljgikjsMoRc=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1790217691; v=1; x=1790822491;
- b=VPiRC6gZba8yFYNQpqTSni09Egij5edXFDUUnAj7i3M5zkd80EAj4aqT/N7XfWc5F2OixOop
- 0Q8er/e7zgITLXB2+juST/5TNsyW+iFj5/5dlwLxHT1bp2FoRxxnk5B5dayr/3EMAq3bR/sEbdT
- lo3p2/Fk0ljGasHRnRbYD/Zo=
+ t=1790218565; v=1; x=1790823365;
+ b=FJ7/xF8oprsisbwcodDJLWAHP7xU6j8AVwzm+rHeNENGuQgZQfzLB248rjSRMet32gjO3bH4
+ zNIpSHuNGIwiwTY6eWVZZZBJaea/kA8QAGJicBdT52+8hp9Q97WWSAToBoK7MTW9xJn7KF7hBH4
+ cJk4yUvxnIRZ3vhwrVwt5+iE=
 X-Envelope-To: loongarch@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 1489725b085043fe;
-	Thu, 24 Sep 2026 02:41:26 +0000
-X-Mizu-Trace-ID: 1489725b085043fe
+Received: by smtp.migadu.com with ESMTPS id 9cade30b803883cf;
+	Thu, 24 Sep 2026 02:56:02 +0000
+X-Mizu-Trace-ID: 9cade30b803883cf
 X-Migadu-Flow: FLOW_OUT
 From: Lance Yang <lance.yang@linux.dev>
 To: ljs@kernel.org
@@ -129,12 +129,12 @@ Cc: akpm@linux-foundation.org,
 	hughd@google.com,
 	qi.zheng@linux.dev,
 	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v4 10/12] mm: enable MMU_GATHER_RCU_TABLE_FREE for sparc32
-Date: Thu, 24 Sep 2026 10:41:20 +0800
-Message-ID: <20260924024120.14225-1-lance.yang@linux.dev>
+Subject: Re: [PATCH v4 11/12] mm: make userland page table freeing RCU-safe
+Date: Thu, 24 Sep 2026 10:55:56 +0800
+Message-ID: <20260924025556.18719-1-lance.yang@linux.dev>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20260922-rcu-pagetable-freeing-v4-10-fe1ad1f1e303@kernel.org>
-References: <20260922-rcu-pagetable-freeing-v4-10-fe1ad1f1e303@kernel.org>
+In-Reply-To: <20260922-rcu-pagetable-freeing-v4-11-fe1ad1f1e303@kernel.org>
+References: <20260922-rcu-pagetable-freeing-v4-11-fe1ad1f1e303@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -145,46 +145,47 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 
-On Tue, Sep 22, 2026 at 04:35:41PM +0100, Lorenzo Stoakes (ARM) wrote:
->Careful handling is required for sparc32 which implements page tables as
->part of a shared backing page.
+On Tue, Sep 22, 2026 at 04:35:42PM +0100, Lorenzo Stoakes (ARM) wrote:
+>Now every architecture has been converted to support
+>CONFIG_MMU_GATHER_RCU_TABLE_FREE, this configuration option no longer makes
+>any sense to keep around.
 >
->To support this, a custom __tlb_remove_table() function is required, as
->specified by CONFIG_HAVE_ARCH_TLB_REMOVE_TABLE.
+>Therefore remove it, and remove all the dead code that existed for
+>!CONFIG_MMU_GATHER_RCU_TABLE_FREE architectures previously.
 >
->This allows __pte_free_tlb() and __pmd_free_tlb() to specify which page
->table level is being freed, which is transmitted to __tlb_remove_table()
->through setting the lowest bit of the page table to 1 for a PMD and 0 for a
->PTE (the page tables are 256-byte aligned so this is safe to do).
+>Additionally, CONFIG_MMU_GATHER_TABLE_FREE is no longer necessary, as all
+>architectures instead use CONFIG_HAVE_ARCH_TLB_REMOVE_TABLE when a custom
+>__tlb_remove_table() is required, so remove this too.
 >
->Next, since the page table freeing is done via RCU callback, and thus might
->be executed in softirq context, update the spin locks to IRQ save/restore.
+>A number of architectures only enabled CONFIG_MMU_GATHER_RCU_TABLE_FREE if
+>CONFIG_MMU was set, however the mmu_gather logic only actually does
+>something meaningful if CONFIG_MMU is set (mmu_gather.c is only compiled in
+>this case, for instance).
 >
->Then, in __tlb_remove_table(), figure out whether to free a PMD page table
->via free_pmd_fast() or a PTE via the newly introduced __pte_free()
->function, using the lower bit encoded in __pte_free_tlb() or
->__pmd_free_tlb() to determine which to call.
+>As a result, there's no need to gate any of this logic on CONFIG_MMU
+>explicitly.
 >
->As part of this change use this spin lock rather than mm->page_table_lock
->for all shared page table exclusion, as RCU freeing means that page tables
->can be freed from soft IRQ context so both don't have an mm and also
->mm->page_table_lock is not IRQ-safe.
+>CONFIG_PT_RECLAIM however does have a strict dependency on CONFIG_MMU, so
+>make this dependency explicit.
 >
->Note that the specification of CONFIG_HAVE_ARCH_TLB_REMOVE_TABLE disables
->CONFIG_PT_RECLAIM for sparc32, which mirrors sparc64.
+>Additionally, correct comments to remove references to non-RCU page table
+>gathering and make it clear that this is not 'semi-RCU', nor has it been
+>since commit 1fb3d8c20bfa ("mm/mmu_gather: replace IPI with
+>synchronize_rcu() when batch allocation fails").
 >
->This forms part of an overall effort to switch every architecture to this
->mode, and with it complete, means every architecture now supports
->CONFIG_MMU_GATHER_RCU_TABLE_FREE.
+>With this change in place the kernel policy is now that userspace page
+>tables are freed after an RCU grace period, and thus it is now safe to
+>unconditionally perform page table walks under RCU, safe in the knowledge
+>that page tables will not be freed underneath the walker.
+>
+>This is all that is guaranteed, however, so naturally it is still incumbent
+>upon page table walkers to ensure that the page table entries are as
+>expected.
 >
 >Acked-by: Kiryl Shutsemau (Meta) <kas@kernel.org>
 >Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 >---
 
-Also ran page-table teardown stress on qemu-system-sparc (SS-20, sun4m,
-CONFIG_SPARC32=y). All 24 rounds ran cleanly :)
+with David's feedback folded in, LGTM!
 
-Feel free to add:
-
-Tested-by: Lance Yang <lance.yang@linux.dev>
-Acked-by: Lance Yang <lance.yang@linux.dev>
+Reviewed-by: Lance Yang <lance.yang@linux.dev>
