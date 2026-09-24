@@ -1,155 +1,193 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24BEA43A7F7;
-	Thu, 24 Sep 2026 07:55:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C20F43BDD8
+	for <loongarch@lists.linux.dev>; Thu, 24 Sep 2026 07:58:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790236519; cv=none; b=DXy53Rr6WxmDBuU+X0LKaj7FkO5E2C5NXnNp7ZfWIJjxfON+n4SWqxt+ACotPwzycWEN9xHMdeYXNcmIE/IhNJdY2PwOeiT0o+xZ/fRhGLro/LpL7/kauFfBdgr2kMqaPphJxxh++xYPAxLUOfV90j2hgU9330++97DshvqdYFw=
+	t=1790236717; cv=none; b=OT3XxyQwhQga1wQZKMbwjOCoDBYDSM2wupLaeyEw/0K0OUf051f3k5fkAr2SR2J2ucHy2YxTOVzTa4SHDRj2yiDj1taAD3ECIhoezhyMwmn2LmzSrmorNwF20VjY3Z3i7Sm0wU5eHrprzS6KcoPQxyX8GYRZuJTGtKH1qPorTh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790236519; c=relaxed/simple;
-	bh=VYxls7FiBvVcRqIBhB8fGUpeL9h0feLHxmI2IcdgvgU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EYegqZhZ3c297DEhmKlX1kNPp8L1jcQ00T4whKsvBN1EKYwlMcFMXChu/sxJiw7qREEn4BsvZEjml3Utt3KUNf1CStlTWldJXrxZf97xsqbYSxQDN0j38aBlMZCs8UMZbJ2G9VPfL0nf8GGlajXCQVw3wJmGNbRKpf7wHRstnKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lvFYpHpV; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lvFYpHpV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E7BC1F000FF;
-	Thu, 24 Sep 2026 07:54:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790236512;
-	bh=8XF4GERg8wBeW3ubUb+zC5tRVKKAYGhsksCUCrCMyIE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=lvFYpHpVMwPBfEiIuvmYeJUUzULg6cdEWSx4iWYVWk727A5rZV5bpt/5Sjkl2pSTJ
-	 +koGcSegVzDsG20kO8t41OXmh6KWyi8RNfZl2ErJwNIuTh23tjzoeT8Dv37tsGeg79
-	 61gp8tpMx2xIK3zP8kYJIEm2UGPz0MsuiqmNKxY9v5C+ubE70585sEQgHP0rrKt73G
-	 695MVjPFlFxGNvVaOlYp2A83auWFA74egHtR5nruPWwDU0nzqWrYwTTl+K4hgYPEPV
-	 DQ3pwEy3zgSLOIKKJ8W+2SiDFy6P5qvxi1PY+qb9cXOQdaC3iHQ+VtthIr/FlkyQ/I
-	 POZQV/h73LJFA==
-Date: Thu, 24 Sep 2026 08:54:49 +0100
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: Lance Yang <lance.yang@linux.dev>
-Cc: akpm@linux-foundation.org, david@kernel.org, ziy@nvidia.com, 
-	baolin.wang@linux.alibaba.com, liam@infradead.org, nico.pache@linux.dev, ryan.roberts@arm.com, 
-	dev.jain@arm.com, baohua@kernel.org, usama.arif@linux.dev, kas@kernel.org, 
-	guoren@kernel.org, bcain@kernel.org, geert@linux-m68k.org, dinguyen@kernel.org, 
-	schuster.simon@siemens-energy.com, jonas@southpole.se, stefan.kristiansson@saunalahti.fi, 
-	shorne@gmail.com, dalias@libc.org, glaubitz@physik.fu-berlin.de, pjw@kernel.org, 
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, linux@armlinux.org.uk, 
-	vgupta@kernel.org, monstr@monstr.eu, chris@zankel.net, jcmvbkbc@gmail.com, 
-	will@kernel.org, aneesh.kumar@kernel.org, npiggin@gmail.com, peterz@infradead.org, 
-	davem@davemloft.net, andreas@gaisler.com, richard.henderson@linaro.org, 
-	mattst88@gmail.com, linmag7@gmail.com, catalin.marinas@arm.com, mark.rutland@arm.com, 
-	chenhuacai@kernel.org, kernel@xen0n.name, tsbogend@alpha.franken.de, 
-	James.Bottomley@hansenpartnership.com, deller@gmx.de, maddy@linux.ibm.com, mpe@ellerman.id.au, 
-	chleroy@kernel.org, hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com, 
-	borntraeger@linux.ibm.com, svens@linux.ibm.com, richard@nod.at, 
-	anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net, tglx@kernel.org, mingo@redhat.com, 
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-	arnd@arndb.de, vbabka@kernel.org, rppt@kernel.org, surenb@google.com, 
-	mhocko@suse.com, jgg@ziepe.ca, jhubbard@nvidia.com, peterx@redhat.com, 
-	ysato@users.sourceforge.jp, shakeel.butt@linux.dev, corbet@lwn.net, rdunlap@infradead.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org, 
-	linux-hexagon@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-openrisc@vger.kernel.org, 
-	linux-sh@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-snps-arc@lists.infradead.org, linux-arch@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-alpha@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-s390@vger.kernel.org, linux-um@lists.infradead.org, hughd@google.com, 
-	qi.zheng@linux.dev, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v4 12/12] mm: change the contract for free_pgtables(),
- update docs
-Message-ID: <arTXJXUhjNTWz9Ga@gremlin>
-References: <20260922-rcu-pagetable-freeing-v4-12-fe1ad1f1e303@kernel.org>
- <20260924032625.28555-1-lance.yang@linux.dev>
+	s=arc-20240116; t=1790236717; c=relaxed/simple;
+	bh=2i+pUx8Jx0VbFvLQtBDLV1pztcH4yhr2KxIwlmbPzUw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=srKvz+6mZgbzMzbZMlJdni9h/9C1lKaL/bfP1nyFpWHNyFvq3BbTw+hahodEgp1woIyu9JYmfe1N9DhSD+gMc/KzZGkaPcmRwxM+HX2JJ4ogf5t+iYsbErm/PfLn5npudBxIQX/6RPlEfFiv4qc8oULz68odeJ4dQHX4QozXjJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: b6d53262b7ed11f19a56ed5b684f684d-20260924
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
+	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NAME, IP_TRUSTED, SRC_TRUSTED, SA_UNTRUSTED, SA_UNFAMILIAR
+	SN_UNTRUSTED, SN_UNFAMILIAR, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
+	CIE_BAD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU
+	AMN_GOOD, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.19,REQID:cb111aff-4125-417d-a602-48041cbe1fbe,IP:20,
+	URL:0,TC:0,Content:-5,EDM:-20,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACT
+	ION:release,TS:-5
+X-CID-INFO: VERSION:1.3.19,REQID:cb111aff-4125-417d-a602-48041cbe1fbe,IP:20,UR
+	L:0,TC:0,Content:-5,EDM:-20,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:-5
+X-CID-META: VersionHash:7db8b62,CLOUDID:feb0b3b7ee6932ed16d02d9d7988ff3e,BulkI
+	D:260924155827EAH3VYUG,BulkQuantity:0,SF:19|38|66|72|78|81|82|102|127|136|
+	850|865|898,TC:nil,Content:0|15|50|99,EDM:-19|2|-100,IP:-2,URL:0,File:nil,
+	RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,D
+	KP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FSD
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: b6d53262b7ed11f19a56ed5b684f684d-20260924
+X-User: lianyangyang@kylinos.cn
+Received: from localhost.localdomain [(39.156.73.11)] by mailgw.kylinos.cn
+	(envelope-from <lianyangyang@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1967902563; Thu, 24 Sep 2026 15:58:22 +0800
+From: Yangyang Lian <lianyangyang@kylinos.cn>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <baoquan.he@linux.dev>,
+	Mike Rapoport <rppt@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: Dave Young <ruirui.yang@linux.dev>,
+	WANG Xuerui <kernel@xen0n.name>,
+	kexec@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Yangyang Lian <lianyangyang@kylinos.cn>,
+	Haoran Jiang <jianghaoran@kylinos.cn>,
+	Tao Cui <cuitao@kylinos.cn>,
+	George Guo <guodongtai@kylinos.cn>
+Subject: [PATCH v2] LoongArch: kdump: add arch_crash_save_vmcoreinfo() support
+Date: Thu, 24 Sep 2026 15:56:55 +0800
+Message-Id: <20260924075655.375632-1-lianyangyang@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20260923060349.146780-1-lianyangyang@kylinos.cn>
+References: <20260923060349.146780-1-lianyangyang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260924032625.28555-1-lance.yang@linux.dev>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Sep 24, 2026 at 11:26:25AM +0800, Lance Yang wrote:
->
-> On Tue, Sep 22, 2026 at 04:35:43PM +0100, Lorenzo Stoakes (ARM) wrote:
-> >Now that page tables are freed after an RCU grace period, it is safe for
-> >read-only page table walkers to walk page table ranges that are being
-> >concurrently torn down, provided the mm is kept alive via mmgrab().
-> >
-> >It is however unsafe for writers to do so, as they must obtain an
-> >appropriate lock to do so safely.
-> >
-> >Update the pte_offset_map_lock()'s comment block to reflect this.
-> >
-> >Similarly update the process addresses documentation.
-> >
-> >Acked-by: Kiryl Shutsemau (Meta) <kas@kernel.org>
-> >Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> >---
-> > Documentation/mm/process_addrs.rst |  6 ++++++
-> > mm/pgtable-generic.c               | 15 +++++++++++----
-> > 2 files changed, 17 insertions(+), 4 deletions(-)
-> >
-> >diff --git a/Documentation/mm/process_addrs.rst b/Documentation/mm/process_addrs.rst
-> >index a7296f251799..b1f4f44d75eb 100644
-> >--- a/Documentation/mm/process_addrs.rst
-> >+++ b/Documentation/mm/process_addrs.rst
-> >@@ -537,6 +537,12 @@ We establish basic locking rules when interacting with page tables:
-> > * When changing a page table entry the page table lock for that page table
-> >   **must** be held, except if you can safely assume nobody can access the page
-> >   tables concurrently (such as on invocation of :c:func:`!free_pgtables`).
-> >+* Page tables may be *walked* under RCU alone, as page tables are freed only
-> >+  after an RCU grace period has elapsed. However, any entry found must be
-> >+  revalidated after the page table lock is taken (such as the
-> >+  :c:func:`!pmd_same` recheck performed by :c:func:`!pte_offset_map_lock`)
-> >+  before it is acted upon. Changing an entry requires the page table
-> >+  lock and one of the locks that excludes teardown (mmap or VMA lock).
->
-> What about rmap walkers? try_to_unmap() clears PTEs under the rmap lock
-> and PTL, without an mmap or VMA lock.
+Since commit 23c85094fe18 ("proc/kcore: add vmcoreinfo note to
+/proc/kcore") the kernel has exported the vmcoreinfo PT_NOTE on
+/proc/kcore as wellas /proc/vmcore.
 
-That's an abomination but yep will update.
+LoongArch does not provide arch_crash_save_vmcoreinfo(), so the
+arch-specific values are missing from the vmcoreinfo PT_NOTE. The
+generic exporter in kernel/vmcore_info.c already provides
+NUMBER(VMALLOC_START), but tools like crash cannot derive the module
+and vmemmap ranges, VA_BITS, or the KASLR offset of a LoongArch dump.
 
->
-> Cheers, Lance
->
-> > * Reads from and writes to page table entries must be *appropriately*
-> >   atomic. See the section on atomicity below for details.
-> > * Populating previously empty entries requires that the mmap or VMA locks are
-> >diff --git a/mm/pgtable-generic.c b/mm/pgtable-generic.c
-> >index b91b1a98029c..a127e3e8f9b9 100644
-> >--- a/mm/pgtable-generic.c
-> >+++ b/mm/pgtable-generic.c
-> >@@ -385,10 +385,17 @@ pte_t *pte_offset_map_rw_nolock(struct mm_struct *mm, pmd_t *pmd,
-> >  * Note: "RO" / "RW" expresses the intended semantics, not that the *kmap* will
-> >  * be read-only/read-write protected.
-> >  *
-> >- * Note that free_pgtables(), used after unmapping detached vmas, or when
-> >- * exiting the whole mm, does not take page table lock before freeing a page
-> >- * table, and may not use RCU at all: "outsiders" like khugepaged should avoid
-> >- * pte_offset_map() and co once the vma is detached from mm or mm_users is zero.
-> >+ * Note that free_pgtables(), used after unmapping detached vmas or when exiting
-> >+ * the whole mm, does not take a page table lock before freeing a page table.
-> >+ *
-> >+ * As page table freeing itself is RCU-safe, page table readers can safely run
-> >+ * concurrently with page table teardown.
-> >+ *
-> >+ * However, writers CANNOT as, without a lock being held, nothing prevents
-> >+ * concurrent teardown.
-> >+ *
-> >+ * Also note that the PGD itself is freed at mmdrop() time, not under RCU - so
-> >+ * the walker must keep the mm alive either by pinning the mm or the VMA.
-> >  */
-> > pte_t *pte_offset_map_lock(struct mm_struct *mm, pmd_t *pmd,
-> > 			   unsigned long addr, spinlock_t **ptlp)
-> >
-> >--
-> >2.55.0
-> >
-> >
+Since commit 18210a104bb9 ("LoongArch: Expand module virtual address
+space to 2GB") the vmalloc and module boundaries are no longer stable
+across kernel versions either, so vmcoreinfo is the only reliable
+source for them.
 
---
-Cheers, Lorenzo
+Provide this function in a separate file that is built at the same time
+as its caller in kernel/vmcore_info.c, and add a LOONGARCH64 section to
+Documentation/admin-guide/kdump/vmcoreinfo.rst.
+
+Reported-by: Haoran Jiang <jianghaoran@kylinos.cn>
+Suggested-by: Haoran Jiang <jianghaoran@kylinos.cn>
+Tested-by: Tao Cui <cuitao@kylinos.cn>
+Co-developed-by: George Guo <guodongtai@kylinos.cn>
+Signed-off-by: George Guo <guodongtai@kylinos.cn>
+Signed-off-by: Yangyang Lian <lianyangyang@kylinos.cn>
+---
+V2 -> V1: Export VMEMMAP_END + 1 to make it an exclusive bound, matching
+          what tools like makedumpfile expect.
+          Add Tested-by tag from Tao Cui.
+
+ .../admin-guide/kdump/vmcoreinfo.rst          | 29 +++++++++++++++++++
+ arch/loongarch/kernel/Makefile                |  1 +
+ arch/loongarch/kernel/vmcore_info.c           | 21 ++++++++++++++
+ 3 files changed, 51 insertions(+)
+ create mode 100644 arch/loongarch/kernel/vmcore_info.c
+
+diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+index 7663c610fe90..2ff921232616 100644
+--- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
++++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+@@ -594,3 +594,32 @@ va_kernel_pa_offset
+ 
+ Indicates the offset between the kernel virtual and physical mappings.
+ Used to translate virtual to physical addresses.
++
++LOONGARCH64
++===========
++
++VA_BITS
++-------
++
++The maximum number of bits for virtual addresses. Used to compute the
++virtual memory ranges.
++
++PHYS_OFFSET
++-----------
++
++Indicates the physical address of the start of memory. Used to translate
++virtual to physical addresses.
++
++KERNELOFFSET
++------------
++
++The kernel randomization offset. Used to locate the kernel text in
++virtual memory. If KASLR is disabled, this value is zero.
++
++MODULES_VADDR|MODULES_END|VMALLOC_START|VMALLOC_END|VMEMMAP_START|VMEMMAP_END
++-----------------------------------------------------------------------------
++
++Used to get the correct ranges:
++	MODULES_VADDR ~ MODULES_END-1 : Kernel module space.
++	VMALLOC_START ~ VMALLOC_END-1 : vmalloc() / ioremap() space.
++	VMEMMAP_START ~ VMEMMAP_END-1 : vmemmap region, used for struct page array.
+diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
+index 001924877772..6260c15adaba 100644
+--- a/arch/loongarch/kernel/Makefile
++++ b/arch/loongarch/kernel/Makefile
+@@ -64,6 +64,7 @@ obj-$(CONFIG_RELOCATABLE)	+= relocate.o
+ obj-$(CONFIG_KEXEC_CORE)	+= machine_kexec.o relocate_kernel.o
+ obj-$(CONFIG_KEXEC_FILE)	+= machine_kexec_file.o kexec_efi.o kexec_elf.o
+ obj-$(CONFIG_CRASH_DUMP)	+= crash_dump.o
++obj-$(CONFIG_VMCORE_INFO)	+= vmcore_info.o
+ 
+ obj-$(CONFIG_UNWINDER_GUESS)	+= unwind_guess.o
+ obj-$(CONFIG_UNWINDER_PROLOGUE) += unwind_prologue.o
+diff --git a/arch/loongarch/kernel/vmcore_info.c b/arch/loongarch/kernel/vmcore_info.c
+new file mode 100644
+index 000000000000..fb703b716253
+--- /dev/null
++++ b/arch/loongarch/kernel/vmcore_info.c
+@@ -0,0 +1,21 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/vmcore_info.h>
++#include <asm/addrspace.h>
++#include <asm/pgtable.h>
++#include <asm/setup.h>
++
++void arch_crash_save_vmcoreinfo(void)
++{
++	VMCOREINFO_NUMBER(VA_BITS);
++	/* NUMBER(VMALLOC_START) is exported by the generic code */
++	vmcoreinfo_append_str("NUMBER(VMALLOC_END)=0x%lx\n", VMALLOC_END);
++#ifdef CONFIG_64BIT
++	vmcoreinfo_append_str("NUMBER(MODULES_VADDR)=0x%lx\n", MODULES_VADDR);
++	vmcoreinfo_append_str("NUMBER(MODULES_END)=0x%lx\n", MODULES_END);
++	vmcoreinfo_append_str("NUMBER(VMEMMAP_START)=0x%lx\n", (unsigned long)vmemmap);
++	vmcoreinfo_append_str("NUMBER(VMEMMAP_END)=0x%lx\n", VMEMMAP_END + 1);
++#endif
++	vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=0x%lx\n", PHYS_OFFSET);
++	vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
++}
+-- 
+2.25.1
+
