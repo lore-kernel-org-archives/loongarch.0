@@ -1,99 +1,200 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3267B316199
-	for <loongarch@lists.linux.dev>; Thu, 24 Sep 2026 02:18:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mta1.migadu.com (out-47.mta1.migadu.com [95.215.58.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 662E726F288
+	for <loongarch@lists.linux.dev>; Thu, 24 Sep 2026 02:23:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790216290; cv=none; b=oMVii1PIHzs9Um+2s0xaORungWGcdl2lKU2FS00aEsm4E2TA+n+I53ErFhnoDR8OUWViaNe8HMvyAuA4lW3iEyYSr1w4+S2Ue+2IE92SmMar3Sk+aAmkD/pVP+nP6NIHLKKQFisI09vrd7VwKLTrnXgcL3PLRrkhoAuTGyIbm54=
+	t=1790216607; cv=none; b=SRbk33yzs+QQnUBf2QB4zHYAOWtvlDYtY0yOycrPZI70LpllgoMnBXQL6e2JBTa7YUZ0zttTtPhUVKKpkxrYHx3DQOLreXwNisfQrRKTkncWYgbVLiEGQfO6I3ydJ71OYEt3/omhefBERmXBAtDh9RnoXM7YkvlCpzygqkp/ntw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790216290; c=relaxed/simple;
-	bh=LR0Lznm2V+DejXrByG4ku78oGOi+EM4DXA1XZt0mE2o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ADYxUl6Bcp881mogIwHRbfySzgd+ar8Mu+8M+qpJj3fsaGbrup4R3hCaAn6sdDEvUJ28criAjO+c9DHaf8dT/1ry2v32yPN+PUlF2Lit5PPvIaHm3oCsVyfEzSGNv6L6o+qgfry0VLtFhSTzS7KUHB/Tv8Kcb1jmmo+6Iedl+q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [123.138.236.242])
-	by gateway (Coremail) with SMTP id _____8BxLNJWiLRqjksPAA--.44823S3;
-	Thu, 24 Sep 2026 10:17:59 +0800 (CST)
-Received: from linux.localdomain (unknown [123.138.236.242])
-	by front1 (Coremail) with SMTP id qMiowJDxTs9ViLRqY4AkAA--.12023S2;
-	Thu, 24 Sep 2026 10:17:57 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] perf loongarch: Fix discarded const qualifier in _get_field()
-Date: Thu, 24 Sep 2026 10:17:56 +0800
-Message-ID: <20260924021756.22433-1-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
+	s=arc-20240116; t=1790216607; c=relaxed/simple;
+	bh=dVSnRPKzueHKvn3hxd2iOxG1Y/XRDHty4kMGTAfCYuE=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=tF5coHeVaUf00xMQrLy7Ndk1iK2QLDOU1wvVybFS16hhPi0M9QRvnHyQiDHm0aan4eHvx/yilAnQQkDWBpuC7MuzcUh+cMGApZTqxQ/Zl2zxWrJ806mLskpP60gsDsZIxyeM2fMEZ8ONyXPyGlvfgJJxNr+LMh7tkLpLw0yKS1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=XLShDzn2; arc=none smtp.client-ip=95.215.58.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XLShDzn2"
+X-Envelope-To: loongarch@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=dVSnRPKzueHKvn3hxd2iOxG1Y/XRDHty4kMGTAfCYuE=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1790216599; v=1; x=1790821399;
+ b=XLShDzn2pdcXb0v6NyAbyvuWRk+6a/lcuW63QDGEr7OVoiHQRj9/5Q7gTFpaJMBqg69TUCac
+ /Zk+l5lXW4yiIe79qZXndTlvSDXtapIydcVr2WNjKoOyqiDv/ExO3ny0UPTOBtABSo7NNJPv3L1
+ tmPNEtHGgbHcLSGiHHFyMdX4=
+X-Envelope-To: loongarch@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id b8187a07f47f8b8e;
+	Thu, 24 Sep 2026 02:23:19 +0000
+X-Mizu-Trace-ID: b8187a07f47f8b8e
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <5151137f-da51-4428-83a5-0ea355e511ca@linux.dev>
+Date: Thu, 24 Sep 2026 10:23:14 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Cc: cui.tao@linux.dev, Dave Young <ruirui.yang@linux.dev>,
+ WANG Xuerui <kernel@xen0n.name>, kexec@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Haoran Jiang <jianghaoran@kylinos.cn>, George Guo <guodongtai@kylinos.cn>
+Subject: Re: [PATCH] LoongArch: kdump: add arch_crash_save_vmcoreinfo()
+ support
+To: Yangyang Lian <lianyangyang@kylinos.cn>,
+ Andrew Morton <akpm@linux-foundation.org>, Baoquan He
+ <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>, Huacai Chen <chenhuacai@kernel.org>
+References: <20260923060349.146780-1-lianyangyang@kylinos.cn>
+From: Tao Cui <cui.tao@linux.dev>
+In-Reply-To: <20260923060349.146780-1-lianyangyang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxTs9ViLRqY4AkAA--.12023S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7ZFWxCry8XF1UKryfAw1kJFc_yoW8XFWUpa
-	9xCwsrt3y8Wr1fGw1UZryIgFW5WrWxGa4Sva12yFWjyan8W343XFWFq3sxKFy2gw1UJrsY
-	vr15Ww1vqF48AwcCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI
-	0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
-	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMI
-	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
-	14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
-	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07URKZXU
-	UUUU=
 
-When building perf on LoongArch, the following compilation errors occur:
+Hi Yangyang,
 
-  CC      arch/loongarch/util/header.o
-arch/loongarch/util/header.c: In function '_get_field':
-arch/loongarch/util/header.c:31:15: error: assignment discards 'const' qualifier from pointer target type [-Werror=discarded-qualifiers]
-   31 |         line2 = strrchr(line, ' ');
-      |               ^
-arch/loongarch/util/header.c:36:12: error: assignment discards 'const' qualifier from pointer target type [-Werror=discarded-qualifiers]
-   36 |         nl = strrchr(line, '\n');
-      |            ^
-cc1: all warnings being treated as errors
+在 2026/9/23 14:03, Yangyang Lian 写道:
+> Since commit 23c85094fe18 ("proc/kcore: add vmcoreinfo note to
+> /proc/kcore") the kernel has exported the vmcoreinfo PT_NOTE on
+> /proc/kcore as wellas /proc/vmcore.
+> 
+> LoongArch does not provide arch_crash_save_vmcoreinfo(), so the
+> arch-specific values are missing from the vmcoreinfo PT_NOTE. The
+> generic exporter in kernel/vmcore_info.c already provides
+> NUMBER(VMALLOC_START), but tools like crash cannot derive the module
+> and vmemmap ranges, VA_BITS, or the KASLR offset of a LoongArch dump.
+> 
+> Since commit 18210a104bb9 ("LoongArch: Expand module virtual address
+> space to 2GB") the vmalloc and module boundaries are no longer stable
+> across kernel versions either, so vmcoreinfo is the only reliable
+> source for them.
+> 
 
-Declare 'line2' and 'nl' as const char * to ensure type safety. In modern
-glibc versions, strrchr() returns a 'const char *' if the input string is
-const.
+I gave this patch a run on a Loongson-3A6000 box: built next-20260922
+with it applied and booted the kernel as a KVM guest. Without the
+patch /proc/kcore only has the generic fields (OSRELEASE, PAGESIZE,
+NUMBER(VMALLOC_START) and the usual symbols/offsets). With it, the
+note now looks like:
 
-This is similar to commit 7378b6656aa4 ("perf riscv: Fix discarded const
-qualifier in _get_field()").
+  OSRELEASE=7.3.0-rc4-next-20260922-eagersplit+
+  PAGESIZE=16384
+  NUMBER(VMALLOC_START)=0xffff800082008000
+  NUMBER(VA_BITS)=47
+  NUMBER(VMALLOC_END)=0xfffffebffd7f8000
+  NUMBER(MODULES_VADDR)=0xffff800002008000
+  NUMBER(MODULES_END)=0xffff800082008000
+  NUMBER(VMEMMAP_START)=0xfffffebffe000000
+  NUMBER(VMEMMAP_END)=0xfffffffffdffffff
+  NUMBER(PHYS_OFFSET)=0x0
+  KERNELOFFSET=0
 
-Fixes: 492ac37fa38f ("perf kvm: Add kvm-stat for loongarch64")
-Cc: stable@vger.kernel.org
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- tools/perf/arch/loongarch/util/header.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+(KASLR is off in my guest cmdline, hence KERNELOFFSET=0.)
 
-diff --git a/tools/perf/arch/loongarch/util/header.c b/tools/perf/arch/loongarch/util/header.c
-index 0c6d823334a2..46f53a74f71e 100644
---- a/tools/perf/arch/loongarch/util/header.c
-+++ b/tools/perf/arch/loongarch/util/header.c
-@@ -26,7 +26,7 @@
- 
- static char *_get_field(const char *line)
- {
--	char *line2, *nl;
-+	const char *line2, *nl;
- 
- 	line2 = strrchr(line, ' ');
- 	if (!line2)
--- 
-2.42.0
+One thing worth a look: as also pointed out in the sashiko review,
+VMEMMAP_END on LoongArch is an inclusive bound (note the ...fdffffff
+above), while the doc added in this patch says
+VMEMMAP_START ~ VMEMMAP_END-1, and tools like makedumpfile compute
+the size as VMEMMAP_END - VMEMMAP_START. So exporting VMEMMAP_END + 1
+would probably match what consumers expect.
+
+Works fine otherwise.
+
+Tested-by: Tao Cui <cuitao@kylinos.cn>
+
+> Provide this function in a separate file that is built at the same time
+> as its caller in kernel/vmcore_info.c, and add a LOONGARCH64 section to
+> Documentation/admin-guide/kdump/vmcoreinfo.rst.
+> 
+> Reported-by: Haoran Jiang <jianghaoran@kylinos.cn>
+> Suggested-by: Haoran Jiang <jianghaoran@kylinos.cn>
+> Co-developed-by: George Guo <guodongtai@kylinos.cn>
+> Signed-off-by: George Guo <guodongtai@kylinos.cn>
+> Signed-off-by: Yangyang Lian <lianyangyang@kylinos.cn>
+> ---
+>  .../admin-guide/kdump/vmcoreinfo.rst          | 29 +++++++++++++++++++
+>  arch/loongarch/kernel/Makefile                |  1 +
+>  arch/loongarch/kernel/vmcore_info.c           | 21 ++++++++++++++
+>  3 files changed, 51 insertions(+)
+>  create mode 100644 arch/loongarch/kernel/vmcore_info.c
+> 
+> diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+> index 7663c610fe90..2ff921232616 100644
+> --- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
+> +++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+> @@ -594,3 +594,32 @@ va_kernel_pa_offset
+>  
+>  Indicates the offset between the kernel virtual and physical mappings.
+>  Used to translate virtual to physical addresses.
+> +
+> +LOONGARCH64
+> +===========
+> +
+> +VA_BITS
+> +-------
+> +
+> +The maximum number of bits for virtual addresses. Used to compute the
+> +virtual memory ranges.
+> +
+> +PHYS_OFFSET
+> +-----------
+> +
+> +Indicates the physical address of the start of memory. Used to translate
+> +virtual to physical addresses.
+> +
+> +KERNELOFFSET
+> +------------
+> +
+> +The kernel randomization offset. Used to locate the kernel text in
+> +virtual memory. If KASLR is disabled, this value is zero.
+> +
+> +MODULES_VADDR|MODULES_END|VMALLOC_START|VMALLOC_END|VMEMMAP_START|VMEMMAP_END
+> +-----------------------------------------------------------------------------
+> +
+> +Used to get the correct ranges:
+> +	MODULES_VADDR ~ MODULES_END-1 : Kernel module space.
+> +	VMALLOC_START ~ VMALLOC_END-1 : vmalloc() / ioremap() space.
+> +	VMEMMAP_START ~ VMEMMAP_END-1 : vmemmap region, used for struct page array.
+> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
+> index 001924877772..6260c15adaba 100644
+> --- a/arch/loongarch/kernel/Makefile
+> +++ b/arch/loongarch/kernel/Makefile
+> @@ -64,6 +64,7 @@ obj-$(CONFIG_RELOCATABLE)	+= relocate.o
+>  obj-$(CONFIG_KEXEC_CORE)	+= machine_kexec.o relocate_kernel.o
+>  obj-$(CONFIG_KEXEC_FILE)	+= machine_kexec_file.o kexec_efi.o kexec_elf.o
+>  obj-$(CONFIG_CRASH_DUMP)	+= crash_dump.o
+> +obj-$(CONFIG_VMCORE_INFO)	+= vmcore_info.o
+>  
+>  obj-$(CONFIG_UNWINDER_GUESS)	+= unwind_guess.o
+>  obj-$(CONFIG_UNWINDER_PROLOGUE) += unwind_prologue.o
+> diff --git a/arch/loongarch/kernel/vmcore_info.c b/arch/loongarch/kernel/vmcore_info.c
+> new file mode 100644
+> index 000000000000..1128f6cdfe0d
+> --- /dev/null
+> +++ b/arch/loongarch/kernel/vmcore_info.c
+> @@ -0,0 +1,21 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/vmcore_info.h>
+> +#include <asm/addrspace.h>
+> +#include <asm/pgtable.h>
+> +#include <asm/setup.h>
+> +
+> +void arch_crash_save_vmcoreinfo(void)
+> +{
+> +	VMCOREINFO_NUMBER(VA_BITS);
+> +	/* NUMBER(VMALLOC_START) is exported by the generic code */
+> +	vmcoreinfo_append_str("NUMBER(VMALLOC_END)=0x%lx\n", VMALLOC_END);
+> +#ifdef CONFIG_64BIT
+> +	vmcoreinfo_append_str("NUMBER(MODULES_VADDR)=0x%lx\n", MODULES_VADDR);
+> +	vmcoreinfo_append_str("NUMBER(MODULES_END)=0x%lx\n", MODULES_END);
+> +	vmcoreinfo_append_str("NUMBER(VMEMMAP_START)=0x%lx\n", (unsigned long)vmemmap);
+> +	vmcoreinfo_append_str("NUMBER(VMEMMAP_END)=0x%lx\n", VMEMMAP_END);
+> +#endif
+> +	vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=0x%lx\n", PHYS_OFFSET);
+> +	vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
+> +}
 
