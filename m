@@ -1,222 +1,98 @@
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD36A3D3301
-	for <loongarch@lists.linux.dev>; Thu, 24 Sep 2026 03:28:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F38213A5E88;
+	Thu, 24 Sep 2026 05:23:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790220518; cv=none; b=e5YyzYYEZ3oTZnIvlyPVxsIl0cqJJeTucOfNjVFvF0wyzgfTudg3ar3c3ee5gjkbzNflG3me6pGbnK27s0B/FgqAS1DoWru/o3NJ+GRtUCEZWF56wJsJAtZetN2Ti2XuhP6BoUsXbl3B3T1p9zFZvp7XQtUHJDA5QVCFYFFsLcE=
+	t=1790227411; cv=none; b=mS8iSqP7js9Js+HUzZky4wv5/6L55TaSSiTXuqN0y7XiwG02nizXO4Se+/BMFiGX85tYd2T3cWzxrxPHsLBdTs06qMzIlzvzw2/W7fJXnWcIh5IBMJZTj4jjSHzJIEUFzw8rb1SQL3Oz1JyyopcmLzWftBdc8H2+qHypO7VMm5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790220518; c=relaxed/simple;
-	bh=ApGqBebKLjgFzhSNUM7xIQ3yP5/hw3k2FpOoK1sAf5c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tctsPK+C/Uer8K4V6+pDEnLk09r1n6KPqgq2Jy3U8eUE/3RJaF8hochRY9E/o1GOSbJY7YCerSzZ0o2mgzDyPYhlvoBie9En+DS6dYb6MTzq1WqZEDdh6iIJHvSYnsFlARNMyhJoLjzkoLHeB5xW/bfDw8jn2J/9ySlih90WVDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=IjlcBMF/; arc=none smtp.client-ip=115.124.30.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1790227411; c=relaxed/simple;
+	bh=qWUi9QiTNiio3fpXFMjBWsz3Macp6r0q+NNeFlS2eVw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f+AldS+J3fskQESX+IhaS3WJJfljv6caTuhsjXl1DMtn+EdgYwH/Z98SjRS1+YgCr5enLtWmarA50SqGBoPOjKA0mBst3E8F+0pXXMXCOgKjVN6ObAEJZy8LaMWFEJNAibYUf8Crewz0qin1oHAJlAxv2tAIDEwpWjfucdORQuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F8q+sYa1; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="IjlcBMF/"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1790220506; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=CU0OqDp6nwpS3D+8EJdb+ofEYYwhoXq3LClu7tPE0EE=;
-	b=IjlcBMF/mYNZOuy1ZTBncIPU11lW65eTMLwkiH6ofPyTuQWSxnyCUuSBxyYylV4yEF5LZpttHbBLKsMUS3nwH38bwtlYz9mqMO5BbLfRSYcX4cIPmMEBhOzVLOjhMaKjqeOj4kI/zgX5ZeQ4Q9gah1sa9o40dGPdT0XIYJ24HUQ=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R591e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=98;SR=0;TI=SMTPD_---0XBYP0rj_1790220500;
-Received: from 30.74.144.118(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0XBYP0rj_1790220500 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 24 Sep 2026 11:28:21 +0800
-Message-ID: <bd6c18af-68dc-4565-a2e3-04dd21e7ea3a@linux.alibaba.com>
-Date: Thu, 24 Sep 2026 11:28:19 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F8q+sYa1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BE5E1F000FF;
+	Thu, 24 Sep 2026 05:23:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790227409;
+	bh=m2KsrtT4VFSuanRFo0eUCalCr/XNe9kNgFSsyPxSnMo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=F8q+sYa1/SU3746VQEFRXLc9SkV3tVCdAJ4bStN6tGBx9QqaXhaQArSddiDy8abFr
+	 BMbFZ1UlvZ1SGbLd0FXxPIh+qyhSaX6x4FFGPT7ErsVLkc9UH0FAlq6DLbBmjJwRTq
+	 xsSPJ9YtPPke6AxV5ZOl+RTnhBdQf/AFk6GJzuKIs/bdBReyw5ZNsaL5n2IhNHg+6e
+	 7M72VSe9tY7rELvskPeSGOtuf6+s1rAP+hAIHDYXZLB2Z3IfPsI0QrxQxjrVUeQjny
+	 RWBq5mH4sHhUhUBXGhtuZuxZP0pIMvjq2xBxc6ot0PX+6540JsqedPFsUJQ+aLRsnl
+	 6QG7JeC0LBRHw==
+Date: Wed, 23 Sep 2026 22:23:27 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	loongarch@lists.linux.dev, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf loongarch: Fix discarded const qualifier in
+ _get_field()
+Message-ID: <arSzzwtLnew2t7VY@z2>
+References: <20260924021756.22433-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 01/12] mm/khugepaged: deposit a newly allocated page
- table on collapse
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@kernel.org>, Zi Yan <ziy@nvidia.com>,
- "Liam R. Howlett" <liam@infradead.org>, Nico Pache <nico.pache@linux.dev>,
- Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
- Barry Song <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>,
- Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
- Guo Ren <guoren@kernel.org>, Brian Cain <bcain@kernel.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>, Dinh Nguyen
- <dinguyen@kernel.org>, Simon Schuster <schuster.simon@siemens-energy.com>,
- Jonas Bonn <jonas@southpole.se>,
- Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
- Stafford Horne <shorne@gmail.com>, Rich Felker <dalias@libc.org>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
- Russell King <linux@armlinux.org.uk>, Vineet Gupta <vgupta@kernel.org>,
- Michal Simek <monstr@monstr.eu>, Chris Zankel <chris@zankel.net>,
- Max Filippov <jcmvbkbc@gmail.com>, Will Deacon <will@kernel.org>,
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin
- <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
- "David S. Miller" <davem@davemloft.net>,
- Andreas Larsson <andreas@gaisler.com>,
- Richard Henderson <richard.henderson@linaro.org>,
- Matt Turner <mattst88@gmail.com>, Magnus Lindholm <linmag7@gmail.com>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Mark Rutland <mark.rutland@arm.com>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- Helge Deller <deller@gmx.de>, Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>,
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, Richard Weinberger <richard@nod.at>,
- Anton Ivanov <anton.ivanov@cambridgegreys.com>,
- Johannes Berg <johannes@sipsolutions.net>, Thomas Gleixner
- <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- Arnd Bergmann <arnd@arndb.de>, Vlastimil Babka <vbabka@kernel.org>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>,
- Yoshinori Sato <ysato@users.sourceforge.jp>,
- Shakeel Butt <shakeel.butt@linux.dev>, Jonathan Corbet <corbet@lwn.net>,
- Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
- linux-m68k@lists.linux-m68k.org, linux-openrisc@vger.kernel.org,
- linux-sh@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-snps-arc@lists.infradead.org,
- linux-arch@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-alpha@vger.kernel.org, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
- linux-um@lists.infradead.org, Hugh Dickins <hughd@google.com>,
- Qi Zheng <qi.zheng@linux.dev>, linux-doc@vger.kernel.org
-References: <20260922-rcu-pagetable-freeing-v4-0-fe1ad1f1e303@kernel.org>
- <20260922-rcu-pagetable-freeing-v4-1-fe1ad1f1e303@kernel.org>
- <arN7q5nHz7iebA_e@gremlin>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <arN7q5nHz7iebA_e@gremlin>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260924021756.22433-1-yangtiezhu@loongson.cn>
 
-
-
-On 9/23/26 3:14 PM, Lorenzo Stoakes (ARM) wrote:
-> Andrew - would it be possible to make one quick fix up below?
+On Thu, Sep 24, 2026 at 10:17:56AM +0800, Tiezhu Yang wrote:
+> When building perf on LoongArch, the following compilation errors occur:
 > 
-> On Tue, Sep 22, 2026 at 04:35:32PM +0100, Lorenzo Stoakes (ARM) wrote:
->> collapse_huge_page() deposits a PTE page table on PMD collapse in order
->> that it can be utilised for subsequent split operations, meaning that those
->> operations do not need to perform an allocation (as they are in a context
->> where it might be unwise).
->>
->> However the PTE page table which is deposited is the one which is currently
->> mapped by the PMD entry that is in the process of being collapsed.
->>
->> Once deposited, the PTE page table may be used in a split of any other
->> unrelated PMD entry.
->>
->> This is currently not an issue as this operation is performed with VMA/mmap
->> write lock + anon rmap locks held, so ordinary page table walkers will
->> never accidentally end up walking the wrong thing, and GUP-fast is
->> protected by an IPI via tlb_remove_table_sync_one().
->>
->> However, the series to which this commit belongs implements RCU-safe page
->> table traversal, at which point this becomes problematic.
->>
->> This can be resolved by using pte_offset_map_lock() which gates on a PTE
->> PTL and a pmd_same() check, but lockless walks are unsafe as things stand.
->>
->> Resolve this by simply allocating a new, zeroed, PTE page table to deposit
->> at the point of collapse.
->>
->> This path is already costly and an allocation has already been performed
->> for the huge folio, so this allocation is statistical noise in terms of
->> performance and memory usage at this point.
->>
->> With this PTE page table deposited, RCU-free the existing PTE page table
->> so it is safe for page table walkers to traverse within a grace period.
->>
->> This also brings this deposit case in line with all other page table
->> deposit logic which deposit a fresh page table.
->>
->> Additionally, this was the only place in the kernel that displaced a page
->> table like this, so eliminating it also helps consistency.
->>
->> An edge case for deposit exists for powerpc and its hash-based MMU - it
->> stores hash slot data in deposited page tables and zeroes them on withdraw,
->> so a zeroed deposited page table works correctly for it.
->>
->> Since khugepaged runs as a kernel thread, do a little dance in
->> alloc_deposit_pte() to correctly charge the allocation.
->>
->> This is already done for the folio allocation via alloc_charge_folio() but
->> no such wrapper exists for a page table allocation.
->>
->> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
->> ---
->>   mm/khugepaged.c | 32 ++++++++++++++++++++++++++++++--
->>   1 file changed, 30 insertions(+), 2 deletions(-)
->>
->> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
->> index f49a6710933b..dab421f8233e 100644
->> --- a/mm/khugepaged.c
->> +++ b/mm/khugepaged.c
->> @@ -1278,6 +1278,23 @@ static enum scan_result alloc_charge_folio(struct folio **foliop, struct mm_stru
->>   	return SCAN_SUCCEED;
->>   }
->>
->> +static pgtable_t alloc_deposit_pte(struct mm_struct *mm)
->> +{
->> +	/*
->> +	 * khugepaged is run from a kernel thread, so need to manually set the
->> +	 * correct memcg so the allocation gets charged correctly.
->> +	 */
->> +	struct mem_cgroup *memcg = get_mem_cgroup_from_mm(mm);
->> +	struct mem_cgroup *old_memcg = set_active_memcg(memcg);
->> +	pgtable_t pgtable;
->> +
->> +	pgtable = pte_alloc_one(mm);
->> +
->> +	set_active_memcg(old_memcg);
->> +	mem_cgroup_put(memcg);
->> +	return pgtable;
->> +}
->> +
->>   /*
->>    * collapse_huge_page() expects the mmap_lock to be unlocked before entering and
->>    * will always return with the lock unlocked, to avoid holding the mmap_lock
->> @@ -1293,7 +1310,7 @@ static enum scan_result collapse_huge_page(struct mm_struct *mm, unsigned long s
->>   	LIST_HEAD(compound_pagelist);
->>   	pmd_t *pmd, _pmd;
->>   	pte_t *pte = NULL;
->> -	pgtable_t pgtable;
->> +	pgtable_t pgtable = NULL;
->>   	struct folio *folio;
->>   	spinlock_t *pmd_ptl, *pte_ptl;
->>   	enum scan_result result = SCAN_FAIL;
->> @@ -1310,6 +1327,12 @@ static enum scan_result collapse_huge_page(struct mm_struct *mm, unsigned long s
->>   		goto out_nolock;
->>   	}
->>
->> +	if (is_pmd_order(order)) {
->> +		pgtable = alloc_deposit_pte(mm);
->> +		if (!pgtable)
->> +			goto out_nolock;
+>   CC      arch/loongarch/util/header.o
+> arch/loongarch/util/header.c: In function '_get_field':
+> arch/loongarch/util/header.c:31:15: error: assignment discards 'const' qualifier from pointer target type [-Werror=discarded-qualifiers]
+>    31 |         line2 = strrchr(line, ' ');
+>       |               ^
+> arch/loongarch/util/header.c:36:12: error: assignment discards 'const' qualifier from pointer target type [-Werror=discarded-qualifiers]
+>    36 |         nl = strrchr(line, '\n');
+>       |            ^
+> cc1: all warnings being treated as errors
 > 
-> Fixup is here:
+> Declare 'line2' and 'nl' as const char * to ensure type safety. In modern
+> glibc versions, strrchr() returns a 'const char *' if the input string is
+> const.
 > 
-> -		if (!pgtable)
-> -			goto out_nolock;
-> +		if (!pgtable) {
-> +			result = SCAN_ALLOC_HUGE_PAGE_FAIL;
-> +			goto out_nolock;
-> +		}
+> This is similar to commit 7378b6656aa4 ("perf riscv: Fix discarded const
+> qualifier in _get_field()").
+> 
+> Fixes: 492ac37fa38f ("perf kvm: Add kvm-stat for loongarch64")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-With the fix applied, LGTM.
-Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+
+Thanks,
+Namhyung
+
+> ---
+>  tools/perf/arch/loongarch/util/header.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/arch/loongarch/util/header.c b/tools/perf/arch/loongarch/util/header.c
+> index 0c6d823334a2..46f53a74f71e 100644
+> --- a/tools/perf/arch/loongarch/util/header.c
+> +++ b/tools/perf/arch/loongarch/util/header.c
+> @@ -26,7 +26,7 @@
+>  
+>  static char *_get_field(const char *line)
+>  {
+> -	char *line2, *nl;
+> +	const char *line2, *nl;
+>  
+>  	line2 = strrchr(line, ' ');
+>  	if (!line2)
+> -- 
+> 2.42.0
+> 
