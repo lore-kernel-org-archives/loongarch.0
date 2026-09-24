@@ -1,30 +1,33 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D2B03B83F9
-	for <loongarch@lists.linux.dev>; Thu, 24 Sep 2026 14:27:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B67E630F535
+	for <loongarch@lists.linux.dev>; Thu, 24 Sep 2026 14:27:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790260035; cv=none; b=glucGV5uMg/P6Z8hOy0H+owJgN89m3L1P8CA0MwCDsQ8/u72/4B4GDDCd/UmU8piP1tOxuJXAe6Wb3g1GKxXyMei/UrXhlO5+djamx61Y3DvClP2ossY2M1f/+aVjDXh5FNBJwvYj2bM0xNldSnRtOnOFX2Hl19cxH5pgFMUIss=
+	t=1790260036; cv=none; b=rqwXfscvLmVHOmw1YjawGK2npjN3W+JBja3ByWnLd0QxBoaKtit/FvbFZE/a605Vof+0tv0/zRoKwmBXGvfYhdkvkXBt4u6p2mAqdsMhA4c6/DRkXM+yhEmYaWeVemO54ZBGPUl90cWcKSTgby+yWwl8DMpC9T3GHa74Lf8Aj5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790260035; c=relaxed/simple;
-	bh=Bf2KgCt0aSna/n7TRR1mlzogkYFVIzIKlJfF/d+Slac=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dZ6D1ENbkI5akEDF7p3kLDVBqwqUIGzKSa7cyt85hziZQ+8k8rXS3fbWqGrgSntKz/4jJXdne1yFHKaUEeDM0fKORfVRAKIR+n7Z7o/1wDp0lU8MOz7Bx4DxertEMIYq2Q8QK72z8DXxbGoCTnj9ifeR5XmYbMASb2tcdH3C2wY=
+	s=arc-20240116; t=1790260036; c=relaxed/simple;
+	bh=7udMkiSJsNGfAumk7yLV2lOLODDFfYghRIte5/70ZI4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=n0S3iWk1FnNR8XBBSv5LUbI/LEWnOBbyhTH5AigWAl82paki7BTFk9y1vQI1adRCzVOQqYg70CdAGGLEffNxhWSFshzNoRV7K1TRu8WQbbgCG++16WyAAxNooe2uPTpppy2Lcyrm5AX6tkCS1RcgGXNrvk7kMosgwngrwud4mdo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [123.138.236.242])
-	by gateway (Coremail) with SMTP id _____8DxytE_M7Vq2HAPAA--.45115S3;
-	Thu, 24 Sep 2026 22:27:11 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxOvBAM7Vq4nAPAA--.45370S3;
+	Thu, 24 Sep 2026 22:27:12 +0800 (CST)
 Received: from linux.localdomain (unknown [123.138.236.242])
-	by front1 (Coremail) with SMTP id qMiowJDxBc09M7Vqha8kAA--.50018S2;
-	Thu, 24 Sep 2026 22:27:10 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJDxBc09M7Vqha8kAA--.50018S5;
+	Thu, 24 Sep 2026 22:27:12 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 0/6] LoongArch: Fix perf hardware breakpoints
-Date: Thu, 24 Sep 2026 22:27:02 +0800
-Message-ID: <20260924142708.2459-1-yangtiezhu@loongson.cn>
+Subject: [PATCH v4 3/6] LoongArch: Fix architectural naming typo for CSR_FWPS_SKIP
+Date: Thu, 24 Sep 2026 22:27:05 +0800
+Message-ID: <20260924142708.2459-4-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20260924142708.2459-1-yangtiezhu@loongson.cn>
+References: <20260924142708.2459-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -32,48 +35,97 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxBc09M7Vqha8kAA--.50018S2
+X-CM-TRANSID:qMiowJDxBc09M7Vqha8kAA--.50018S5
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoWruw48GrWDXr48Ar4DAFyDtwc_yoWDZFc_Wa
-	4fA3yUur4kuFW3tFyqkF4fA34vkF4fWFn8AFyqqFsFk3Z5Gry5Jan5X3WUZryag348trs8
-	JrWFywn5Aw129osvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UUUUU==
+X-Coremail-Antispam: 1Uk129KBj93XoWxArWxJry5KF15AryxKw1fZrc_yoW5Zryrpr
+	nrZF95GrW8WFs7Gan8ta1rur47tFZ7Gw429anYk3yS9F47X34rJF109rnrXF15Xw4rX34F
+	qFnYkw1jgFyUA3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
+	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
+	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcCD7UUUUU
 
-v4:
-  -- Do not modify thread_struct layout for hardware breakpoints
+According to the LoongArch Reference Manual, the single-step 'Skip'
+bit resides in the instruction breakpoint status register CSR.FWPS,
+rather than the configuration register CSR.FWPC.
 
-This series addresses severe functional degradations in standard
-perf_event usage, including initialization failures and one-shot
-triggering limitations.
+Furthermore, the kernel code comments also explicitly document it
+as "CSR.FWPS.Skip", yet the actual macro was erroneously defined
+as CSR_FWPC_SKIP and used as such in traps.c and hw_breakpoint.c.
+This mismatch creates architectural naming confusion.
 
-Tiezhu Yang (6):
-  LoongArch: Fix bitmask corruption in update_bp_registers()
-  LoongArch: Remove redundant call in update_bp_registers()
-  LoongArch: Fix architectural naming typo for CSR_FWPS_SKIP
-  LoongArch: Only send SIGTRAP signal if necessary in do_watch()
-  LoongArch: Fix perf hardware breakpoint failure via installation
-  LoongArch: Fix one-shot limitation for perf hardware breakpoints
+Fix this by renaming the macro from CSR_FWPC_SKIP to CSR_FWPS_SKIP
+to precisely match the manual and comments. Also, update all call
+sites to align with the rectified definition.
 
- arch/loongarch/include/asm/hw_breakpoint.h |  8 +--
- arch/loongarch/include/asm/loongarch.h     |  7 ++-
- arch/loongarch/include/asm/processor.h     |  3 +
- arch/loongarch/include/asm/switch_to.h     |  2 +-
- arch/loongarch/kernel/hw_breakpoint.c      | 66 ++++++++++++++++++----
- arch/loongarch/kernel/traps.c              | 12 ++--
- 6 files changed, 74 insertions(+), 24 deletions(-)
+Fixes: 424421a7f34c ("LoongArch: ptrace: Add hardware single step support")
+Cc: stable@vger.kernel.org
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/loongarch/include/asm/loongarch.h | 4 ++--
+ arch/loongarch/kernel/hw_breakpoint.c  | 2 +-
+ arch/loongarch/kernel/traps.c          | 4 ++--
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
+diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
+index 2a6bc99177d8..32bbff337c5c 100644
+--- a/arch/loongarch/include/asm/loongarch.h
++++ b/arch/loongarch/include/asm/loongarch.h
+@@ -1130,8 +1130,8 @@
+ #define LOONGARCH_CSR_DERA		0x501	/* debug era */
+ #define LOONGARCH_CSR_DESAVE		0x502	/* debug save */
+ 
+-#define CSR_FWPC_SKIP_SHIFT		16
+-#define CSR_FWPC_SKIP			(_ULCAST_(1) << CSR_FWPC_SKIP_SHIFT)
++#define CSR_FWPS_SKIP_SHIFT		16
++#define CSR_FWPS_SKIP			(_ULCAST_(1) << CSR_FWPS_SKIP_SHIFT)
+ 
+ /*
+  * CSR_ECFG IM
+diff --git a/arch/loongarch/kernel/hw_breakpoint.c b/arch/loongarch/kernel/hw_breakpoint.c
+index bd891b3808a6..7f69cf361a5e 100644
+--- a/arch/loongarch/kernel/hw_breakpoint.c
++++ b/arch/loongarch/kernel/hw_breakpoint.c
+@@ -550,7 +550,7 @@ void hw_breakpoint_thread_switch(struct task_struct *next)
+ 		addr = read_wb_reg(CSR_CFG_ADDR, 0, 0);
+ 		mask = read_wb_reg(CSR_CFG_MASK, 0, 0);
+ 		if (!((regs->csr_era ^ addr) & ~mask))
+-			csr_write32(CSR_FWPC_SKIP, LOONGARCH_CSR_FWPS);
++			csr_write32(CSR_FWPS_SKIP, LOONGARCH_CSR_FWPS);
+ 		regs->csr_prmd |= CSR_PRMD_PWE;
+ 	} else {
+ 		/* Update breakpoints */
+diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
+index 776523747ea3..c4d7e55fb3ea 100644
+--- a/arch/loongarch/kernel/traps.c
++++ b/arch/loongarch/kernel/traps.c
+@@ -829,7 +829,7 @@ asmlinkage void noinstr do_watch(struct pt_regs *regs)
+ 			 * instruction. So don't clear llbit and reset CSR.FWPS.Skip until
+ 			 * the llsc execution is completed.
+ 			 */
+-			csr_write32(CSR_FWPC_SKIP, LOONGARCH_CSR_FWPS);
++			csr_write32(CSR_FWPS_SKIP, LOONGARCH_CSR_FWPS);
+ 			csr_write32(CSR_LLBCTL_KLO, LOONGARCH_CSR_LLBCTL);
+ 			goto out;
+ 		}
+@@ -846,7 +846,7 @@ asmlinkage void noinstr do_watch(struct pt_regs *regs)
+ 				 * current pc, If yes, then we should not set the CSR.FWPS.SKIP
+ 				 * bit to break the original instruction stream.
+ 				 */
+-				csr_write32(CSR_FWPC_SKIP, LOONGARCH_CSR_FWPS);
++				csr_write32(CSR_FWPS_SKIP, LOONGARCH_CSR_FWPS);
+ 				goto out;
+ 			}
+ 		}
 -- 
 2.42.0
 
