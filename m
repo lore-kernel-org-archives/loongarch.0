@@ -1,517 +1,152 @@
-Received: from mta0.migadu.com (out-67.mta0.migadu.com [91.218.175.67])
+Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E11B43F4A6
-	for <loongarch@lists.linux.dev>; Sat, 26 Sep 2026 13:56:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C91D346E70
+	for <loongarch@lists.linux.dev>; Sun, 27 Sep 2026 07:02:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790431015; cv=none; b=LBp09GMoSgFo8DaztGdBGO40PQ2Y/POkvoIA5Ot81+2n6YNxZbC3zNQNYxHzSXrFNsx9jxob9Is7Zt2WWuMRnekvL6Rkdn+xeZ5P5J3ZF30wz7Nxz5FqZS1+Wg7Zl/fWb7TeR0uhThacexyrBAJABQmo2BAb9s/DRfkaWR8V7DY=
+	t=1790492551; cv=none; b=s/78pTRQCpKDnfK9ND+SirJ71brMvDz2k74KGn2It8l5qu9VfCJ0qoT1qxQZfX2JC527n/yMEpC0NPcVwqwsTSguerF3OaHHp6Zqb4UmbYKOZMxvfABsv8Ia9GnIbKej0q2SrQDLBcmnPKz1ZaamR7/MSRKL3V5YDyeg0XtDLSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790431015; c=relaxed/simple;
-	bh=71AplhEfg8Kb6ywCW/rLjYtlQ9W7O82jHDKQEeD9aeI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=h8hakXRa8M0JXTnxyWTv3nYp2R/LN09luEQKfnsn7nP13kgKcR2O23Gn1WvLTDGUFaamtQ7DYrgBBEpACMAxDbEdQJKRH1WCL27VgKOFHIQNV6+pz8bKG+Ad6vyxYvw77elM5feNOBmxENYoNZhcYwZHvSVFM5A6+8liETOia0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dNcDiBR7; arc=none smtp.client-ip=91.218.175.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1790492551; c=relaxed/simple;
+	bh=EZBGaGu7g268yBeLa/NPbPJzutiCHGfKPegWoTP0nS0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BFppAxpwezyQdSjLSv5vbSN9C+Pll1dLcDNwAi1tmLljzgMwFgn+Rrhr0Na00kyteTRX7r76vaZxfjDhk0rqGyPv4AWzHNQHvkthY8tzn5dI6GhhWWBneL+PHfz0YKBvyrNuPmBdf/LdEXSDhk2CxjLcPKMOCK3LyerPyO5EjcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WWa0p1IB; arc=none smtp.client-ip=74.125.225.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dNcDiBR7"
-X-Envelope-To: loongarch@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=71AplhEfg8Kb6ywCW/rLjYtlQ9W7O82jHDKQEeD9aeI=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1790431008; v=1; x=1791035808;
- b=dNcDiBR7J9LCXjTTOxeWJQNSWG8zukxTqS8f2Gp6FCoMRl7LVbk7MYRBgpXVRn05MbYvFS2/
- eumpFK1SHRjOzTgiZUTCVZ6IPG+kdn1f3gZHmbf6djTdB/F23IAa32uJFf0Llz+1bOdxU2nhk/e
- cP2/czGX2YxkEDJd/vt4RtHQ=
-X-Envelope-To: loongarch@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id d708e1a7eb266324;
-	Sat, 26 Sep 2026 13:56:44 +0000
-X-Mizu-Trace-ID: d708e1a7eb266324
-X-Migadu-Flow: FLOW_OUT
-From: "Florent Revest (Anthropic)" <florent.revest@linux.dev>
-To: bpf@vger.kernel.org,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: "Florent Revest (Anthropic)" <florent.revest@linux.dev>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Jiri Olsa <jolsa@kernel.org>,
-	KP Singh <kpsingh@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Leon Hwang <leon.hwang@linux.dev>,
-	Junseo Lim <zirajs7@gmail.com>,
-	Sechang Lim <rhkrqnwk98@gmail.com>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Xu Kuohai <xukuohai@huaweicloud.com>,
-	Ilya Leoshkevich <iii@linux.ibm.com>,
-	Hari Bathini <hbathini@linux.ibm.com>,
-	Christophe Leroy <chleroy@kernel.org>,
-	Naveen N Rao <naveen@kernel.org>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
-	Pu Lehui <pulehui@huawei.com>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Hengqi Chen <hengqi.chen@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Borislav Petkov <bp@alien8.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Emil Tsalapatis <emil@etsalapatis.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Ihor Solodrai <ihor.solodrai@linux.dev>,
-	Ingo Molnar <mingo@redhat.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kselftest@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Paul Walmsley <pjw@kernel.org>,
-	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Will Deacon <will@kernel.org>,
-	x86@kernel.org
-Subject: [PATCH bpf v5 3/3] selftests/bpf: Detach a trampoline prog while a task sleeps before it
-Date: Sat, 26 Sep 2026 13:56:00 +0000
-Message-ID: <20260926135605.1217928-4-florent.revest@linux.dev>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260926135605.1217928-1-florent.revest@linux.dev>
-References: <20260926135605.1217928-1-florent.revest@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WWa0p1IB"
+Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49ffed768deso2810345e9.1
+        for <loongarch@lists.linux.dev>; Sun, 27 Sep 2026 00:02:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790492548; x=1791097348; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=RJKp/brBpZ8U6kwJIcmM4FiZnVhsdc/GYabd2hj9ep0=;
+        b=WWa0p1IBpsYvMUp2t3MJWkxTMRY502jafJNs7MeoO6lvUTQ2h3OSQT1RNB/4IoDPXP
+         jFReuKsDhmeF0Be9ugbVPMTWG0Ap0uNaoJFlOGSeqYNMR9Z/f9CGYHWXGPHYpDBhIUcs
+         62DoglyvjvgSr6x4vSC6A//r9KxquVVJAdFPy4RlUKhZ4JFeSvEV5odvk/RL0gRN92J1
+         BLNtEYNQlSP2nK4ISdLEKQnVbaoCdKxgRSc+dP7lCqail0fvO2yNHuaV3xivEFaDeUFo
+         cxhli/5otNr92pK5XNnM2ELzwo6/DhmHC0xSYydT6uYd4LBMLpROqSwrVcA4C9mJTA9e
+         bDdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790492548; x=1791097348;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=RJKp/brBpZ8U6kwJIcmM4FiZnVhsdc/GYabd2hj9ep0=;
+        b=aiYySyEjNsgbdXQp82g4alel1kyUuLkugvYS5knf2VJ0k9Fx6qbE5Rp4oKih6q+5y9
+         zYWOSkvXI1V1FnvHASRrR14x2J7nM7yqvqFSbrjC6BJCu7XdnclEv85QuIVba47SZj8D
+         2y5/kC05CLcKKEeSK/lH7RA97DrKoD1pBZtZATV3QQ9ZVQdPXAXyDFBYJUAw+XZKSpxR
+         pHJAzIbZLWLLqEgGlmNmdiBxZwzniRkU7JotAh6vprgzsfxYi0wumwCe0a4oebENVC90
+         uJWuPLluWMAksHumocwa+pPpdKM0AVo3BcjAGUUWwDFB53fS2YbhWzxM8EO3rwHzu+R6
+         25FQ==
+X-Forwarded-Encrypted: i=1; AKwUvByEeQz4sg5JmUb8cnwLkbOh/lc3U64ZqAW4B8woveJRHeSiitRcy0ywgqBKsm1TICh4Ru93V2e6AK8=@lists.linux.dev
+X-Gm-Message-State: AFuF++ke0+L7+OCCmRiyUvHeHrN+uwDi7RE5rB/sPsw9rv7bfLQUsJD5
+	C89bAyiWD5F8RA/LhtgeNo/h4NhDXVq5mQBm7YkdBLy7eUwhI6QMSaU7
+X-Gm-Gg: AYBFou27rG/beCtPqgx4ZMXPr4vK+4raKRc+Js7t9nY3idCx+THKmBudhk6CBd9XQnw
+	+lY+TXdcMJMESntMxNUkeGC+7PJQsojIZ4LoQo6iJENdL6zYRn43EjiogIaUXZteB5UKp2v99tU
+	wx2T0ivPG+m2IWEo9+xrB62lpM3NE6xiwHTc8/sAeaQpYKepZJArsp3lCw434zcWMLmkjy4QhK7
+	GMuSH94wEBdnncu+mRNnN86jhRW/0RqYfKFWCJJL/sPK4RYL2JAa2CRShGOmH7p9TvuO2/I5b9p
+	Fe2Nfwt7P0NQCCpP6nR+S+Pbj4NC+PPNHP/fZ6eziiYaZR+TaXPZ21I8UWCxCLJsD8jqEPD4iuD
+	3ugmauXlvSNzFSlrYZDKL26mGy3USMYzmbLO2EbTtePddt1RMo05w7n/8rwdy5v/uGDiZSEnvRg
+	Tip5G2bUia/flC4xjkT325X3ZqH2pBXRxjkxbByWPLUebdhfK4KfRDr4SsVmuv4FAw4MoV0Ei2A
+	AraoABGRW+WpZhx2hijMWOHMUSKVXK4TWkX
+X-Received: by 2002:a05:600c:1f83:b0:49b:8f5e:51fb with SMTP id 5b1f17b1804b1-49fe66c8087mr175447355e9.3.1790492548064;
+        Sun, 27 Sep 2026 00:02:28 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a0018f0e79sm57015315e9.7.2026.09.27.00.02.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Sep 2026 00:02:27 -0700 (PDT)
+Date: Sun, 27 Sep 2026 08:02:25 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Nathan Chancellor <nathan@kernel.org>, Andreas Schwab
+ <schwab@linux-m68k.org>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner
+ <tglx@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Vincenzo Frascino
+ <vincenzo.frascino@arm.com>, Nick Desaulniers <ndesaulniers@google.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Paul Walmsley
+ <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Heiko Carstens
+ <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
+ <agordeev@linux.ibm.com>, Christian Borntraeger
+ <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v2] random: vDSO: Avoid call to memset() when zeroing
+ reserved in __cvdso_getrandom_data()
+Message-ID: <20260927080225.37534e7c@pumpkin>
+In-Reply-To: <are7cfMIHZZn6jLz@zx2c4.com>
+References: <20260925-vdso-getrandom-avoid-memset-llvm-24-v2-1-ce640f872393@kernel.org>
+	<87zex4ic68.fsf@linux-m68k.org>
+	<20260926121927.GA1486962@ax162>
+	<are7cfMIHZZn6jLz@zx2c4.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Add a test for the use-after-free fixed by the previous commit. A
-sleepable prog on bpf_fentry_test1() blocks a task on a userfaultfd
-page, like bpf_mod_race does, while the two progs that run after it in
-the same trampoline are detached and freed one after the other, which
-the test knows from their .bss maps going away. After the first detach
-the task is in an image that isn't the trampoline's current one
-anymore. The task is then released and must not call into the freed
-progs. This is done with fentry progs, with fexit progs, where the task
-is already past the original function, and with a task sleeping in a
-fentry prog while fexit progs are detached, where the original function
-must still be called. bpf_mod_race's userfaultfd helper moves to
-testing_helpers.c so that both tests can use it.
+On Sat, 26 Sep 2026 14:32:49 +0200
+"Jason A. Donenfeld" <Jason@zx2c4.com> wrote:
 
-Without the fix, on a kernel with KASAN:
+> On Sat, Sep 26, 2026 at 01:19:27PM +0100, Nathan Chancellor wrote:
+> > On Sat, Sep 26, 2026 at 11:39:43AM +0200, Andreas Schwab wrote:  
+> > > On Sep 25 2026, Nathan Chancellor wrote:
+> > >   
+> > > > +#if __has_builtin(__builtin_memset_inline)
+> > > > +#define memset_inline(dst, value, size) __builtin_memset_inline(dst, value, size)
+> > > > +#elif IS_ENABLED(CONFIG_CC_HAS_OPT_INLINE_MEMSET)
+> > > > +#define memset_inline(dst, value, size) __builtin_memset(dst, value, size)
+> > > > +#else
+> > > > +static inline void *memset_inline(void *dst, int value, size_t size)
+> > > > +{
+> > > > +	char *d = dst;
+> > > > +
+> > > > +	while (size--)
+> > > > +		*d++ = value;
+> > > > +
+> > > > +	return d;
+> > > > +}
+> > > > +#endif
+> > > > +  
+> > > 
+> > > memset actually returns the original pointer, not the incremented one.
+> > > Nothing uses the return value of memset_inline here, but it is
+> > > confusing.  
+> > 
+> > Whoops, good catch, I guess my fingers gave up on those last two
+> > characters :) I will fix this for v3 once there has been some time for
+> > further review.  
+> 
+> Do we even need to return a value at all? Might as well just make the
+> function two lines:
+> 
+> +       for (char *d = dst; size--;)
+> +               *d++ = value;
 
-  BUG: KASAN: vmalloc-out-of-bounds in __bpf_prog_enter_recur+0xed/0x1e0
-  Read of size 8 at addr ffa0000000144040 by task test_progs/171
-  CPU: 6 UID: 0 PID: 171 Comm: test_progs Tainted: G           OE       7.2.0+ #1 PREEMPT(full)
-  Call Trace:
-   <TASK>
-   __bpf_prog_enter_recur+0xed/0x1e0
-   bpf_trampoline_6442545468+0x72/0xe3
-   bpf_fentry_test1+0x9/0x20
-   bpf_prog_test_run_tracing+0x183/0x3e0
-   __sys_bpf+0xd3f/0x38f0
-   ...
+Wouldn't it be better to add a barrier() or similar in there to
+stop the compiler playing unwanted games>
 
-Assisted-by: Claude:unspecified
-Signed-off-by: Florent Revest (Anthropic) <florent.revest@linux.dev>
----
- .../selftests/bpf/prog_tests/bpf_mod_race.c   |  34 +---
- .../bpf/prog_tests/tramp_prog_detach.c        | 188 ++++++++++++++++++
- .../selftests/bpf/progs/tramp_prog_detach.c   |  56 ++++++
- tools/testing/selftests/bpf/testing_helpers.c |  28 +++
- tools/testing/selftests/bpf/testing_helpers.h |   2 +
- 5 files changed, 275 insertions(+), 33 deletions(-)
- create mode 100644 tools/testing/selftests/bpf/prog_tests/tramp_prog_detach.c
- create mode 100644 tools/testing/selftests/bpf/progs/tramp_prog_detach.c
+David
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/bpf_mod_race.c b/tools/testing/selftests/bpf/prog_tests/bpf_mod_race.c
-index ecc3d47919ad..f8497e764beb 100644
---- a/tools/testing/selftests/bpf/prog_tests/bpf_mod_race.c
-+++ b/tools/testing/selftests/bpf/prog_tests/bpf_mod_race.c
-@@ -55,38 +55,6 @@ static void *load_module_thread(void *p)
- 	return p;
- }
- 
--static int sys_userfaultfd(int flags)
--{
--	return syscall(__NR_userfaultfd, flags);
--}
--
--static int test_setup_uffd(void *fault_addr)
--{
--	struct uffdio_register uffd_register = {};
--	struct uffdio_api uffd_api = {};
--	int uffd;
--
--	uffd = sys_userfaultfd(O_CLOEXEC);
--	if (uffd < 0)
--		return -errno;
--
--	uffd_api.api = UFFD_API;
--	uffd_api.features = 0;
--	if (ioctl(uffd, UFFDIO_API, &uffd_api)) {
--		close(uffd);
--		return -1;
--	}
--
--	uffd_register.range.start = (unsigned long)fault_addr;
--	uffd_register.range.len = getpagesize();
--	uffd_register.mode = UFFDIO_REGISTER_MODE_MISSING;
--	if (ioctl(uffd, UFFDIO_REGISTER, &uffd_register)) {
--		close(uffd);
--		return -1;
--	}
--	return uffd;
--}
--
- static void test_bpf_mod_race_config(const struct test_config *config)
- {
- 	void *fault_addr, *skel_fail;
-@@ -117,7 +85,7 @@ static void test_bpf_mod_race_config(const struct test_config *config)
- 	if (!ASSERT_OK(bpf_mod_race__attach(skel), "bpf_mod_kfunc_race__attach"))
- 		goto end_destroy;
- 
--	uffd = test_setup_uffd(fault_addr);
-+	uffd = uffd_block_page(fault_addr);
- 	if (!ASSERT_GE(uffd, 0, "userfaultfd open + register address"))
- 		goto end_destroy;
- 
-diff --git a/tools/testing/selftests/bpf/prog_tests/tramp_prog_detach.c b/tools/testing/selftests/bpf/prog_tests/tramp_prog_detach.c
-new file mode 100644
-index 000000000000..1eb0d7237605
---- /dev/null
-+++ b/tools/testing/selftests/bpf/prog_tests/tramp_prog_detach.c
-@@ -0,0 +1,188 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <test_progs.h>
-+#include <pthread.h>
-+#include <poll.h>
-+#include <sys/mman.h>
-+#include <linux/userfaultfd.h>
-+#include "tramp_prog_detach.skel.h"
-+#include "testing_helpers.h"
-+
-+/*
-+ * Detach and free progs while a task sleeps in the prog that runs before them
-+ * in the same trampoline image, then let that task continue through the
-+ * image. It must not call into the freed progs.
-+ *
-+ * The task is held in a sleepable prog with userfaultfd, like bpf_mod_race
-+ * does.
-+ */
-+
-+static struct bpf_program *pick_prog(struct tramp_prog_detach *skel,
-+				     bool fexit, bool sleepable)
-+{
-+	if (fexit)
-+		return sleepable ? skel->progs.fexit_sleepable :
-+				   skel->progs.fexit_victim;
-+	return sleepable ? skel->progs.fentry_sleepable :
-+			   skel->progs.fentry_victim;
-+}
-+
-+static struct bpf_program *sleepable_prog;
-+
-+static void *run_sleepable(void *arg)
-+{
-+	LIBBPF_OPTS(bpf_test_run_opts, topts);
-+
-+	/* calls bpf_fentry_test1() */
-+	return (void *)(long)bpf_prog_test_run_opts(bpf_program__fd(sleepable_prog),
-+						    &topts);
-+}
-+
-+static struct tramp_prog_detach *load_one(bool fexit, bool sleepable)
-+{
-+	struct tramp_prog_detach *skel;
-+	int err;
-+
-+	skel = tramp_prog_detach__open();
-+	if (!ASSERT_OK_PTR(skel, "open"))
-+		return NULL;
-+
-+	bpf_program__set_autoload(pick_prog(skel, fexit, sleepable), true);
-+	err = tramp_prog_detach__load(skel);
-+	if (!ASSERT_OK(err, "load"))
-+		goto err;
-+	skel->bss->pid = getpid();
-+	err = tramp_prog_detach__attach(skel);
-+	if (!ASSERT_OK(err, "attach"))
-+		goto err;
-+	return skel;
-+err:
-+	tramp_prog_detach__destroy(skel);
-+	return NULL;
-+}
-+
-+/* The .bss map of a destroyed skeleton goes away when its prog is freed */
-+static bool wait_for_map_free(__u32 map_id)
-+{
-+	int i, fd;
-+
-+	for (i = 0; i < 100; i++) {
-+		fd = bpf_map_get_fd_by_id(map_id);
-+		if (fd < 0)
-+			return true;
-+		close(fd);
-+		usleep(100 * 1000);
-+	}
-+	return false;
-+}
-+
-+static void test_detach(bool sleepable_fexit, bool victim_fexit)
-+{
-+	struct tramp_prog_detach *sleepable = NULL, *victims[2] = {};
-+	struct pollfd pfd = { .events = POLLIN };
-+	struct uffdio_copy uffd_copy = {};
-+	struct bpf_map_info map_info = {};
-+	__u32 map_info_len = sizeof(map_info);
-+	struct uffd_msg uffd_msg;
-+	void *fault_page, *src_page = MAP_FAILED;
-+	long page_size = getpagesize();
-+	bool started = false;
-+	void *thread_ret;
-+	pthread_t thread;
-+	int i, uffd = -1;
-+
-+	fault_page = mmap(NULL, page_size, PROT_READ | PROT_WRITE,
-+			  MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-+	if (!ASSERT_NEQ(fault_page, MAP_FAILED, "mmap fault_page"))
-+		return;
-+	src_page = mmap(NULL, page_size, PROT_READ | PROT_WRITE,
-+			MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-+	if (!ASSERT_NEQ(src_page, MAP_FAILED, "mmap src_page"))
-+		goto out;
-+
-+	/* The most recently attached prog runs first */
-+	for (i = 0; i < ARRAY_SIZE(victims); i++) {
-+		victims[i] = load_one(victim_fexit, false);
-+		if (!victims[i])
-+			goto out;
-+	}
-+	sleepable = load_one(sleepable_fexit, true);
-+	if (!sleepable)
-+		goto out;
-+	sleepable_prog = pick_prog(sleepable, sleepable_fexit, true);
-+
-+	/* Not armed yet so this doesn't block, make sure sleepable runs first */
-+	if (!ASSERT_OK((long)run_sleepable(NULL), "dry run"))
-+		goto out;
-+	for (i = 0; i < ARRAY_SIZE(victims); i++)
-+		if (!ASSERT_LT(sleepable->bss->ts, victims[i]->bss->ts, "prog order"))
-+			goto out;
-+
-+	uffd = uffd_block_page(fault_page);
-+	if (!ASSERT_GE(uffd, 0, "userfaultfd open + register address"))
-+		goto out;
-+	sleepable->bss->fault_addr = fault_page;
-+
-+	if (!ASSERT_OK(pthread_create(&thread, NULL, run_sleepable, NULL),
-+		       "pthread_create"))
-+		goto out;
-+	started = true;
-+
-+	/* Wait for the thread to sleep in bpf_copy_from_user() */
-+	pfd.fd = uffd;
-+	if (!ASSERT_EQ(poll(&pfd, 1, 10000), 1, "poll uffd"))
-+		goto out;
-+	if (!ASSERT_EQ(read(uffd, &uffd_msg, sizeof(uffd_msg)), sizeof(uffd_msg),
-+		       "read uffd"))
-+		goto out;
-+	if (!ASSERT_EQ(uffd_msg.event, UFFD_EVENT_PAGEFAULT, "uffd pagefault"))
-+		goto out;
-+
-+	/*
-+	 * Detach and unload the victim progs and wait for them to be freed.
-+	 * After the first one, the task is in an image that isn't the
-+	 * trampoline's current one anymore.
-+	 */
-+	for (i = 0; i < ARRAY_SIZE(victims); i++) {
-+		if (!ASSERT_OK(bpf_map_get_info_by_fd(bpf_map__fd(victims[i]->maps.bss),
-+						      &map_info, &map_info_len),
-+			       "victim bss info"))
-+			goto out;
-+		tramp_prog_detach__destroy(victims[i]);
-+		victims[i] = NULL;
-+		if (!ASSERT_TRUE(wait_for_map_free(map_info.id), "victim freed"))
-+			goto out;
-+	}
-+
-+out:
-+	/* Let the thread proceed with the rest of the trampoline */
-+	if (uffd >= 0) {
-+		uffd_copy.dst = (unsigned long)fault_page;
-+		uffd_copy.src = (unsigned long)src_page;
-+		uffd_copy.len = page_size;
-+		ASSERT_OK(ioctl(uffd, UFFDIO_COPY, &uffd_copy), "uffd copy");
-+		close(uffd);
-+	}
-+	if (started &&
-+	    ASSERT_OK(pthread_join(thread, &thread_ret), "pthread_join"))
-+		ASSERT_NULL(thread_ret, "blocking run");
-+
-+	for (i = 0; i < ARRAY_SIZE(victims); i++)
-+		tramp_prog_detach__destroy(victims[i]);
-+	tramp_prog_detach__destroy(sleepable);
-+	if (src_page != MAP_FAILED)
-+		munmap(src_page, page_size);
-+	munmap(fault_page, page_size);
-+}
-+
-+void serial_test_tramp_prog_detach(void)
-+{
-+	/* a task sleeping before the original function is called */
-+	if (test__start_subtest("fentry"))
-+		test_detach(false, false);
-+	/* a task sleeping after the original function returned */
-+	if (test__start_subtest("fexit"))
-+		test_detach(true, true);
-+	/* the original function runs in between and must still be called */
-+	if (test__start_subtest("fentry_fexit"))
-+		test_detach(false, true);
-+}
-diff --git a/tools/testing/selftests/bpf/progs/tramp_prog_detach.c b/tools/testing/selftests/bpf/progs/tramp_prog_detach.c
-new file mode 100644
-index 000000000000..507d372167ec
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/tramp_prog_detach.c
-@@ -0,0 +1,56 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "vmlinux.h"
-+#include <bpf/bpf_helpers.h>
-+#include <bpf/bpf_tracing.h>
-+
-+char _license[] SEC("license") = "GPL";
-+
-+int pid;
-+void *fault_addr;
-+__u64 ts;
-+
-+static int do_sleepable(void)
-+{
-+	char dst;
-+
-+	if (bpf_get_current_pid_tgid() >> 32 != pid)
-+		return 0;
-+
-+	ts = bpf_ktime_get_ns();
-+	/* blocks for as long as user space wants when fault_addr is armed */
-+	bpf_copy_from_user(&dst, sizeof(dst), fault_addr);
-+	return 0;
-+}
-+
-+static int do_victim(void)
-+{
-+	if (bpf_get_current_pid_tgid() >> 32 != pid)
-+		return 0;
-+
-+	ts = bpf_ktime_get_ns();
-+	return 0;
-+}
-+
-+SEC("?fentry.s/bpf_fentry_test1")
-+int BPF_PROG(fentry_sleepable, int a)
-+{
-+	return do_sleepable();
-+}
-+
-+SEC("?fentry/bpf_fentry_test1")
-+int BPF_PROG(fentry_victim, int a)
-+{
-+	return do_victim();
-+}
-+
-+SEC("?fexit.s/bpf_fentry_test1")
-+int BPF_PROG(fexit_sleepable, int a, int ret)
-+{
-+	return do_sleepable();
-+}
-+
-+SEC("?fexit/bpf_fentry_test1")
-+int BPF_PROG(fexit_victim, int a, int ret)
-+{
-+	return do_victim();
-+}
-diff --git a/tools/testing/selftests/bpf/testing_helpers.c b/tools/testing/selftests/bpf/testing_helpers.c
-index c970e7793dfc..9f672d0c9dda 100644
---- a/tools/testing/selftests/bpf/testing_helpers.c
-+++ b/tools/testing/selftests/bpf/testing_helpers.c
-@@ -13,6 +13,7 @@
- #include "test_progs.h"
- #include "testing_helpers.h"
- #include <linux/membarrier.h>
-+#include <linux/userfaultfd.h>
- 
- int parse_num_list(const char *s, bool **num_set, int *num_set_len)
- {
-@@ -459,6 +460,33 @@ int kern_sync_rcu(void)
- 	return syscall(__NR_membarrier, MEMBARRIER_CMD_SHARED, 0, 0);
- }
- 
-+int uffd_block_page(void *fault_addr)
-+{
-+	struct uffdio_register uffd_register = {};
-+	struct uffdio_api uffd_api = {};
-+	int uffd;
-+
-+	uffd = syscall(__NR_userfaultfd, O_CLOEXEC);
-+	if (uffd < 0)
-+		return -errno;
-+
-+	uffd_api.api = UFFD_API;
-+	uffd_api.features = 0;
-+	if (ioctl(uffd, UFFDIO_API, &uffd_api)) {
-+		close(uffd);
-+		return -1;
-+	}
-+
-+	uffd_register.range.start = (unsigned long)fault_addr;
-+	uffd_register.range.len = getpagesize();
-+	uffd_register.mode = UFFDIO_REGISTER_MODE_MISSING;
-+	if (ioctl(uffd, UFFDIO_REGISTER, &uffd_register)) {
-+		close(uffd);
-+		return -1;
-+	}
-+	return uffd;
-+}
-+
- int get_xlated_program(int fd_prog, struct bpf_insn **buf, __u32 *cnt)
- {
- 	__u32 buf_element_size = sizeof(struct bpf_insn);
-diff --git a/tools/testing/selftests/bpf/testing_helpers.h b/tools/testing/selftests/bpf/testing_helpers.h
-index 2edc6fb7fc52..1f83b6080716 100644
---- a/tools/testing/selftests/bpf/testing_helpers.h
-+++ b/tools/testing/selftests/bpf/testing_helpers.h
-@@ -36,6 +36,8 @@ __u64 read_perf_max_sample_freq(void);
- int load_bpf_testmod(bool verbose);
- int unload_bpf_testmod(bool verbose);
- int kern_sync_rcu(void);
-+/* returns a userfaultfd that makes accesses to fault_addr's page block */
-+int uffd_block_page(void *fault_addr);
- int finit_module(int fd, const char *param_values, int flags);
- int delete_module(const char *name, int flags);
- int load_module(const char *path, bool verbose);
--- 
-2.55.0
+> 
+> (Technically that could even be one, but maybe that sort of golf loses
+> clarity. Your choice.)
+> 
 
