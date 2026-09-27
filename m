@@ -1,292 +1,112 @@
-Received: from bkemail.birger-koblitz.de (bkemail.birger-koblitz.de [23.88.97.239])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CA483E44E4
-	for <loongarch@lists.linux.dev>; Sun, 27 Sep 2026 09:44:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.88.97.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8349218E025;
+	Sun, 27 Sep 2026 20:41:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790502247; cv=none; b=K6xVIOGyAvtZTTlvWjFNtEtaxTIslzac3W1YzX/l1kayDtVLMQUy0G1KA960bnA2wthdM/njIDEgvibH3CR7a+H6kh/1RvmA3YBk+UxaL/CVa8xxvIQi66GyQH7JD8cAStirYvMii/s7mswwsdMK2fADHgd26KE+pln7eeXXpbY=
+	t=1790541676; cv=none; b=mXeGiWUXp31Tg7Yp0QYZTFvS0an3PlYtXP64L5HfLOLTfi59iFIsToX8FyVL7enr/kGOzPcM4n1NTC2PxHeCBOqsfLXhnnoVDD8d1uPrtqc001dq/KstVUxjN2s9QJacHdU2gFhnnpIP+vjr+QzbHTIW0p95csoLr/2TvONOckY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790502247; c=relaxed/simple;
-	bh=dVNH8RvZnzc2jMzf7FrztAoqHjVZddddl6WmvLgB28Q=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qgBLyILbvbwJ8QbgaOmY2MhfgP7PCiFQ5c+83k2o9xTLzLdj68iSRecz7EDXwOP4fhPUPVp3VqQ+X4mpcleAZcvjn2pSeVFI33jHezKEviMX7ltY18ORcIR6vHkoTbNYBwqU7EY7gZItNTPnHXL//wLkAAyi+0iUn02Jx4jghZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=birger-koblitz.de; spf=pass smtp.mailfrom=birger-koblitz.de; dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b=n/ATchXD; dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b=3RAg42Oe; arc=none smtp.client-ip=23.88.97.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=birger-koblitz.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=birger-koblitz.de
+	s=arc-20240116; t=1790541676; c=relaxed/simple;
+	bh=IZx0c5YL4BHjcA0kGkmqaKl9y+gkwGc5SNdMF/976Po=;
+	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
+	 Subject:From:To:Cc:Date; b=NC2wWxcxtL8m8H9vqWQfj6RL714A4Bb9aL5VMrpvwrWp87G/SM9KG5agzdHNBvf2Ufm63MxjLRAreUZksZwt6HeClkuUALkx5uSqTnmnSQCGAaknLtDjXWK/oyhjSEdgkmDxRplK6gtlOxcm3uJ6zxDHjpE7PqrLeBEn90WsSQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=fail (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TuTmdGnt reason="signature verification failed"; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b="n/ATchXD";
-	dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b="3RAg42Oe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=birger-koblitz.de;
-	s=default; t=1790502244;
-	bh=dVNH8RvZnzc2jMzf7FrztAoqHjVZddddl6WmvLgB28Q=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=n/ATchXDO6JXbiPGN7wm1jU6hE1zyQI46ze6teIqd01MLm2SA+kGuBEK8SLix3QF+
-	 o5e0THOo5sGIkQTA69CXbRu+0L5PVUTZ0IXm7dVS7yWGizcKF4SgX7+/6tC89YszCB
-	 nh7YKqOF7kKrCaCYosecOURKqe3j9742+XOJTZQ+6j1FkQDy2QEkEj2KziKgBWDO0c
-	 C6FKDQBoQrKRoxxuhGYSp7cYkeeAefRnritaqphNlvjhz5y/MGsaMCGYcsbc1iMqUu
-	 4azJC/PzZ4Qy+3pf2rsDBNFkIANKZqjthiQn//DxJm7s9oD7ApAoVAlgelTuQSG9eD
-	 JkMOFai5BKtLw==
-Received: by bkemail.birger-koblitz.de (Postfix, from userid 109)
-	id 1D3BC42087; Sun, 27 Sep 2026 09:44:04 +0000 (UTC)
-X-Spam-Level: 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=birger-koblitz.de;
-	s=default; t=1790502223;
-	bh=dVNH8RvZnzc2jMzf7FrztAoqHjVZddddl6WmvLgB28Q=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=3RAg42Oe9J6pZoddtBvU9rdiRZk1VqQ3GKmU8PTSHpZ4qWh+R8Ap4EUY9kY9LtF3u
-	 P+qBohwFQ8p0xERkE075403w5uTFVRPih8QlQph4mhbyzXggHUyRYxVIBQmByO4CS7
-	 p9adm+vNj/aQqkxIEgMBXIZ5zaDtOCraEiDjOSJ7raD0bprW4bfQHsTI/jTIkfy7AI
-	 /G32n7tV/RQJg9iEfFiLK8T6Xtl7E6pCRLs1oq8kJ7sjsC92fwHFzKFSbtSqvyLXO8
-	 YqN2ZrtmwKpKJTh7GmIOfh6l04VNi8lGaLrRBML02dXKmGgptblMEDgIW2uZmwBb5z
-	 IlzPoKrS34xUA==
-Received: from AMDDesktop.lan (p5798b961.dip0.t-ipconnect.de [87.152.185.97])
-	by bkemail.birger-koblitz.de (Postfix) with ESMTPSA id 94D00421AF;
-	Sun, 27 Sep 2026 09:43:43 +0000 (UTC)
-From: Birger Koblitz <mail@birger-koblitz.de>
-Date: Sun, 27 Sep 2026 11:43:52 +0200
-Subject: [PATCH net-next v13 14/14] ax88796b: Add support for AX88772D,
- AX88179A and AX88279
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TuTmdGnt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58C091F000FF;
+	Sun, 27 Sep 2026 20:41:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790541675;
+	bh=vLO37l59WyVXOc1GaSGyfri+C0pwbOWgxmIfm+nlpBs=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date;
+	b=TuTmdGnt2aTd7EYBIGzQPK6hgv2mwZj/e+iMLaZQhl+kbqjNk+Gn0JGXGu+zgmfyt
+	 x+Jeaumu4xurUfC51qiVkNk0aZqWfE6CifBVSz0/DVzlYQAmvmm3NBDuVE8n/xtFeN
+	 /T62KvCuyw7jcMax/bVpfRf7QBJnNqHjfoKjCz1UuB6bWyLjvMjJmDUFCT9aw1ttAd
+	 nReKDQGOh6/xSa+g0Xh/CaBwmnUWNv9LiHwGPUx39dhZZG3dK6Yzs4TcoD96N7bqud
+	 7Ar3WdLf7zr4A7TmUGMUZPzNmmmQZiAt4yLw5kf/7+H14P9PFbPxJ9MmSslmJB0L8d
+	 STXnJylkLfaIQ==
+Content-Type: multipart/mixed; boundary="===============7476743973010168723=="
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Message-Id: <9d932a22ca908da9378ea281633ddb749453911ac6ae7a27a09e376f9ad02ff7@mail.kernel.org>
+In-Reply-To: <20260926135605.1217928-2-florent.revest@linux.dev>
+References: <20260926135605.1217928-2-florent.revest@linux.dev>
+Subject: Re: [PATCH bpf v5 1/3] bpf: Wait for an RCU tasks grace period before freeing trampoline progs
+From: bot+bpf-ci@kernel.org
+To: florent.revest@linux.dev,bpf@vger.kernel.org,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org
+Cc: florent.revest@linux.dev,martin.lau@linux.dev,eddyz87@gmail.com,memxor@gmail.com,song@kernel.org,yonghong.song@linux.dev,jolsa@kernel.org,kpsingh@kernel.org,john.fastabend@gmail.com,leon.hwang@linux.dev,zirajs7@gmail.com,rhkrqnwk98@gmail.com,puranjay@kernel.org,xukuohai@huaweicloud.com,iii@linux.ibm.com,hbathini@linux.ibm.com,chleroy@kernel.org,naveen@kernel.org,bjorn@kernel.org,pulehui@huawei.com,yangtiezhu@loongson.cn,hengqi.chen@gmail.com,linux-kernel@vger.kernel.org,aou@eecs.berkeley.edu,agordeev@linux.ibm.com,alex@ghiti.fr,bp@alien8.de,catalin.marinas@arm.com,borntraeger@linux.ibm.com,dave.hansen@linux.intel.com,emil@etsalapatis.com,hca@linux.ibm.com,hpa@zytor.com,chenhuacai@kernel.org,ihor.solodrai@linux.dev,mingo@redhat.com,linux-arm-kernel@lists.infradead.org,linux-kselftest@vger.kernel.org,linuxppc-dev@lists.ozlabs.org,linux-riscv@lists.infradead.org,linux-s390@vger.kernel.org,loongarch@lists.linux.dev,maddy@linux.ibm.com,mark.rutland@arm.com,mpe@ellerman.id.au,npiggin@g
+ mail.com,palmer@dabbelt.com,paulmck@kernel.org,pjw@kernel.org,ritesh.list@gmail.com,sshegde@linux.ibm.com,shuah@kernel.org,svens@linux.ibm.com,tglx@kernel.org,gor@linux.ibm.com,kernel@xen0n.name,will@kernel.org,x86@kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,mason@kernel.org,ihor.solodrai@linux.dev
+Date: Sun, 27 Sep 2026 20:41:12 +0000 (UTC)
+
+--===============7476743973010168723==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260927-ax88179a-v13-14-4fac6b3e032e@birger-koblitz.de>
-References: <20260927-ax88179a-v13-0-4fac6b3e032e@birger-koblitz.de>
-In-Reply-To: <20260927-ax88179a-v13-0-4fac6b3e032e@birger-koblitz.de>
-To: Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Russell King <linux@armlinux.org.uk>, Andrew Lunn <andrew@lunn.ch>, 
- Heiner Kallweit <hkallweit1@gmail.com>, Huacai Chen <chenhuacai@kernel.org>, 
- WANG Xuerui <kernel@xen0n.name>
-Cc: linux-usb@vger.kernel.org, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
- Jianhui Xu <neuromoments@gmail.com>, 
- Birger Koblitz <mail@birger-koblitz.de>
-X-Mailer: b4 0.14.2
 
-The AX88772D, AX88179A and AX88279 are 100MBit, 1GBit and respectively
-2.5 GBit PHYs that are found in ASIX USB-Ethernet controllers of the
-same name.
+> bpf: Wait for an RCU tasks grace period before freeing trampoline progs
+>
+> When a prog is detached from a trampoline, it is freed after an RCU
+> grace period, or an RCU tasks trace one if it is sleepable. This covers
+> the tasks that are running the prog, since the prog's enter helper takes
+> the matching read lock before the prog is called. On a preemptible
+> kernel, it doesn't cover a task that was preempted in the trampoline
+> just before the enter helper. That task holds no lock yet, and it calls
+> the prog after it was freed:
+>
+>   BUG: KASAN: vmalloc-out-of-bounds in __bpf_prog_enter_recur+0x3a5/0x3f0
+>   Read of size 8 at addr ffffc90000055040 by task candidate/110
+>   CPU: 1 UID: 0 PID: 110 Comm: candidate Not tainted 7.3.0-rc2-00014-g15071f2a1263-dirty #2 PREEMPT(full)
+>   Call Trace:
+>    <TASK>
+>    __bpf_prog_enter_recur+0x3a5/0x3f0
+>    bpf_trampoline_6442509193+0x37/0xf1
+>    __x64_sys_futex+0x9/0x410
+>    do_syscall_64+0xb0/0x530
+>    ...
+>
+> Wait for an RCU tasks grace period before the existing one when freeing
+> a prog that was linked to a trampoline. An RCU tasks grace period only
+> ends once the tasks that were preempted have run again, and
+> bpf_tramp_image_put() already relies on it to free the image. It doesn't
+> wait for tasks that sleep in the trampoline, the next commit takes care
+> of those.
+>
+> Only progs that were linked to a trampoline can be called this way, so
+> bpf_trampoline_add_prog() marks them and other progs are still freed as
+> before.
+>
+> Fixes: e21aa341785c ("bpf: Fix fexit trampoline.")
 
-Signed-off-by: Birger Koblitz <mail@birger-koblitz.de>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Is this the right Fixes: target?
+
+The race being closed here (a task preempted inside the trampoline image
+before __bpf_prog_enter*() takes its RCU read lock, while the prog is freed
+after only a regular RCU or RCU tasks trace grace period) appears to predate
+e21aa341785c.
+
+In fec56f5890d9 ("bpf: Introduce BPF trampoline") bpf_trampoline_update()
+switched images with no tasks RCU wait, and __bpf_prog_put_noref() freed the
+prog with a plain call_rcu(&prog->aux->rcu, __bpf_prog_put_rcu).
+
+Just before e21aa341785c, the synchronize_rcu_mult(call_rcu_tasks,
+call_rcu_tasks_trace) in bpf_trampoline_update() ran before
+arch_prepare_bpf_trampoline() rather than after the new image was installed,
+and the total == 0 unregister_fentry() path had no wait at all, so a task
+preempted in the old image could already reach a freed prog.
+
+Would Fixes: fec56f5890d9 ("bpf: Introduce BPF trampoline") be more
+accurate, so that stable trees without e21aa341785c also pick this up? The
+follow-up 49ca60187380 in this series uses the same tag.
+
+
 ---
- drivers/net/phy/ax88796b.c | 167 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 167 insertions(+)
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
 
-diff --git a/drivers/net/phy/ax88796b.c b/drivers/net/phy/ax88796b.c
-index f20ddf64914993f7097070d1f56c1103ec1e40e8..0f1437d1e3e9b4004bdd240df43c929caf31819c 100644
---- a/drivers/net/phy/ax88796b.c
-+++ b/drivers/net/phy/ax88796b.c
-@@ -13,6 +13,19 @@
- #define PHY_ID_ASIX_AX88772A		0x003b1861
- #define PHY_ID_ASIX_AX88772C		0x003b1881
- #define PHY_ID_ASIX_AX88796B		0x003b1841
-+#define PHY_ID_ASIX_AX88772D		0x003b772d
-+#define PHY_ID_ASIX_AX88179A		0x003b179a
-+#define PHY_ID_ASIX_AX88279		0x003b2790
-+
-+#define AX_ADVERTISE_2500		0x1000
-+
-+/* MII Vendor registers */
-+#define AX_CTRL_STATUS			0x1d
-+#define AX_CTRL_STATUS_SPEED_MASK	0x0c
-+#define   AX_CTRL_STATUS_SPEED_10	0x0
-+#define   AX_CTRL_STATUS_SPEED_100	0x4
-+#define   AX_CTRL_STATUS_SPEED_1000	0x8
-+#define   AX_CTRL_STATUS_SPEED_2500	0xc
- 
- MODULE_DESCRIPTION("Asix PHY driver");
- MODULE_AUTHOR("Michael Schmitz <schmitzmic@gmail.com>");
-@@ -83,6 +96,110 @@ static int asix_ax88772a_read_status(struct phy_device *phydev)
- 	return 0;
- }
- 
-+static int asix_ax88279_read_status(struct phy_device *phydev)
-+{
-+	int ret, val;
-+
-+	ret = genphy_read_status(phydev);
-+	if (ret)
-+		return ret;
-+
-+	if (!phydev->link)
-+		return 0;
-+
-+	/* Read actual speed from vendor register */
-+	val = phy_read(phydev, AX_CTRL_STATUS);
-+	if (val < 0)
-+		return val;
-+
-+	switch (val & AX_CTRL_STATUS_SPEED_MASK) {
-+	case AX_CTRL_STATUS_SPEED_2500:
-+		phydev->speed = SPEED_2500;
-+		break;
-+	case AX_CTRL_STATUS_SPEED_1000:
-+		phydev->speed = SPEED_1000;
-+		break;
-+	case AX_CTRL_STATUS_SPEED_100:
-+		phydev->speed = SPEED_100;
-+		break;
-+	case AX_CTRL_STATUS_SPEED_10:
-+		phydev->speed = SPEED_10;
-+	}
-+
-+	/* MDIO_AN_10GBT_STAT_LP2_5G is broken, but we can deduce that
-+	 * the link-partner advertised 2500M if remotely AN succceded
-+	 * for link speed > 1000M and we locally have a link speed of
-+	 * 2500M
-+	 */
-+	linkmode_clear_bit(ETHTOOL_LINK_MODE_2500baseT_Full_BIT, phydev->lp_advertising);
-+	val = phy_read_mmd(phydev, MDIO_MMD_AN, MDIO_AN_10GBT_STAT);
-+	if (val >= 0 && val & MDIO_AN_10GBT_STAT_REMOK) {
-+		linkmode_mod_bit(ETHTOOL_LINK_MODE_2500baseT_Full_BIT,
-+				 phydev->lp_advertising,
-+				 phydev->speed == SPEED_2500);
-+	}
-+	/* Only supports full duplex */
-+	phydev->duplex = DUPLEX_FULL;
-+
-+	/* PHY switches interface between 2.5GBit and slower modes */
-+	if (phydev->speed == SPEED_2500)
-+		phydev->interface = PHY_INTERFACE_MODE_2500BASEX;
-+	else
-+		phydev->interface = PHY_INTERFACE_MODE_SGMII;
-+
-+	return 0;
-+}
-+
-+static int asix_ax88279_config_aneg(struct phy_device *phydev)
-+{
-+	bool adv_2500;
-+	int ret;
-+
-+	if (phydev->autoneg == AUTONEG_DISABLE) {
-+		phydev_warn(phydev, "Disabling autoneg is not supported\n");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	ret = genphy_config_aneg(phydev);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	adv_2500 = linkmode_test_bit(ETHTOOL_LINK_MODE_2500baseT_Full_BIT, phydev->advertising);
-+	ret = phy_modify(phydev, MII_ADVERTISE, AX_ADVERTISE_2500,
-+			 adv_2500 ? AX_ADVERTISE_2500 : 0);
-+
-+	return ret;
-+}
-+
-+static int asix_ax88279_get_features(struct phy_device *phydev)
-+{
-+	int ret;
-+
-+	/* MDIO_DEVS1/2 empty, so set mmds_present bits to allow reading abilities */
-+	phydev->c45_ids.mmds_present |= MDIO_DEVS_PMAPMD | MDIO_DEVS_AN;
-+
-+	linkmode_set_bit_array(phy_basic_ports_array, ARRAY_SIZE(phy_basic_ports_array),
-+			       phydev->supported);
-+
-+	ret = genphy_c45_pma_read_abilities(phydev);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* AX88279 does not support reported 100baseT-half duplex mode */
-+	linkmode_clear_bit(ETHTOOL_LINK_MODE_100baseT_Half_BIT, phydev->supported);
-+
-+	return 0;
-+}
-+
-+static int asix_ax88279_config_init(struct phy_device *phydev)
-+{
-+	__set_bit(PHY_INTERFACE_MODE_2500BASEX, phydev->possible_interfaces);
-+	__set_bit(PHY_INTERFACE_MODE_SGMII, phydev->possible_interfaces);
-+
-+	return 0;
-+}
-+
- static void asix_ax88772a_link_change_notify(struct phy_device *phydev)
- {
- 	/* Reset PHY, otherwise MII_LPA will provide outdated information.
-@@ -94,6 +211,24 @@ static void asix_ax88772a_link_change_notify(struct phy_device *phydev)
- 	}
- }
- 
-+static int asix_ax88772D_get_features(struct phy_device *phydev)
-+{
-+	int ret;
-+	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = {};
-+
-+	/* MDIO_DEVS1/2 empty, so set mmds_present bits to allow reading abilities */
-+	phydev->c45_ids.mmds_present |= MDIO_DEVS_PMAPMD | MDIO_DEVS_AN;
-+
-+	ret = genphy_read_abilities(phydev);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* AX88772D does not support reported 1000baseT mode */
-+	linkmode_clear_bit(ETHTOOL_LINK_MODE_1000baseT_Full_BIT, phydev->supported);
-+
-+	return 0;
-+}
-+
- static struct phy_driver asix_driver[] = {
- {
- 	PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88772A),
-@@ -111,6 +246,35 @@ static struct phy_driver asix_driver[] = {
- 	.suspend	= genphy_suspend,
- 	.resume		= genphy_resume,
- 	.soft_reset	= asix_soft_reset,
-+}, {
-+	PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88772D),
-+	.name		= "Asix Electronics AX88772D",
-+	.flags		= PHY_IS_INTERNAL,
-+	.get_features	= asix_ax88772D_get_features,
-+	.read_mmd	= genphy_read_mmd_c45,
-+	.write_mmd	= genphy_write_mmd_c45,
-+	.suspend	= genphy_suspend,
-+	.resume		= genphy_resume,
-+}, {
-+	PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88179A),
-+	.name		= "Asix Electronics AX88179A",
-+	.flags		= PHY_IS_INTERNAL,
-+	.suspend	= genphy_suspend,
-+	.resume		= genphy_resume,
-+	.read_mmd	= genphy_read_mmd_c45,
-+	.write_mmd	= genphy_write_mmd_c45,
-+}, {
-+	PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88279),
-+	.name		= "Asix Electronics AX88279",
-+	.flags		= PHY_IS_INTERNAL | PHY_BROKEN_FORCED,
-+	.get_features	= asix_ax88279_get_features,
-+	.read_status	= asix_ax88279_read_status,
-+	.config_aneg	= asix_ax88279_config_aneg,
-+	.config_init	= asix_ax88279_config_init,
-+	.read_mmd	= genphy_read_mmd_c45,
-+	.write_mmd	= genphy_write_mmd_c45,
-+	.suspend	= genphy_suspend,
-+	.resume		= genphy_resume,
- }, {
- 	PHY_ID_MATCH_MODEL(PHY_ID_ASIX_AX88796B),
- 	.name		= "Asix Electronics AX88796B",
-@@ -124,6 +288,9 @@ static const struct mdio_device_id __maybe_unused asix_tbl[] = {
- 	{ PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88772A) },
- 	{ PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88772C) },
- 	{ PHY_ID_MATCH_MODEL(PHY_ID_ASIX_AX88796B) },
-+	{ PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88772D) },
-+	{ PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88179A) },
-+	{ PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88279) },
- 	{ }
- };
- 
-
--- 
-2.47.3
-
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/36346518503
+--===============7476743973010168723==--
