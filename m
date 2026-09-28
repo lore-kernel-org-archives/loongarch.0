@@ -1,146 +1,187 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2BCE30566D
-	for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 04:13:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EED8D345EB1
+	for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 04:44:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790568810; cv=none; b=flaa+HjwvLihqyI4p2O1pK1/y5ncU7/axReBekOyV7g2P0na28DVilQ6g7RFrqFcjHdAxpdsJawZaaqlSCpC9KgYnGDSwR3+wWPfTQivmfXkg6zvDSJ5/CcdqpRoST0XMRvk/xLqwZE3FGxWv+zWZLSpg1UUOkFWUqcFZk0m3ks=
+	t=1790570676; cv=none; b=Y3bevAiuE/Q4EVQkhKr+9i9VLA/PThyLhqUONWvd89xBKzbqayM2V1Mr1xLW5HXZLuRB+76vSkbzdZ1xsJPTa7SYBr1GWBiY73CL/k+nZKtaIdsSrQwFRJp+iHSWIqGhafuqtaMFCDkhXh2vidEnEU9gWvvylgwlEPs+JLushJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790568810; c=relaxed/simple;
-	bh=93DNEAwvSiql5tVYyRBz+VAReMoXOj1afxbwYmmDDR4=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=b8Or97Nd4oDS4xRPCE9lZhYmdX79zjiWtsgQfaGMbU3xdi5nj9tDEsHoOlf/gHDq4YliGww542K5mxXJJp3bvhLdxDGG0SgY/pXCvlrE7VzbRbr2Yppkm285twTWuz4I0xsfDCQhwQheYjj6/l9K2Tx3fYIu0Ck2/nODIU53238=
+	s=arc-20240116; t=1790570676; c=relaxed/simple;
+	bh=gYYyP0IHWIg7sydv6pjKknPCiaOdKcshjd211VS5lMw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UV9vrAXmU0k063wkFWfFOlw5vAu6xLu4rebtOONO2NoxsEEBk3/6QK14qW55Cel9NUL3XIVcODpmOsQq0Hzu8hjTl8lphfUMig57bSHgLiXikzBfgUVrd4wsdO9QrpywWS/y++5OweE9IKHjeWlok93SH4pUHb7TCdUH58+wW1k=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8Axj9Fm6blqGmAQAA--.48070S3;
-	Mon, 28 Sep 2026 12:13:26 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJAxX89l6blqB_AlAA--.15177S2;
-	Mon, 28 Sep 2026 12:13:25 +0800 (CST)
-Subject: Re: [PATCH 2/6] LoongArch: KVM: Guard against NULL irqchip in irq
- injection
-To: Tao Cui <cui.tao@linux.dev>, gaosong@loongson.cn, zhaotianrui@loongson.cn
-Cc: loongarch@lists.linux.dev, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
- nagachaithanya9911@gmail.com, Tao Cui <cuitao@kylinos.cn>
-References: <20260927075240.3007947-1-cui.tao@linux.dev>
- <20260927075240.3007947-3-cui.tao@linux.dev>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <4b4aba4a-c609-93f5-51e8-3b70a8baf6ad@loongson.cn>
-Date: Mon, 28 Sep 2026 12:14:50 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from loongson.cn (unknown [223.64.68.159])
+	by gateway (Coremail) with SMTP id _____8AxS_Cw8LlqWWEQAA--.48108S3;
+	Mon, 28 Sep 2026 12:44:32 +0800 (CST)
+Received: from kernelserver (unknown [223.64.68.159])
+	by front1 (Coremail) with SMTP id qMiowJDxg8ys8LlqvfElAA--.52750S2;
+	Mon, 28 Sep 2026 12:44:29 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Yinbo Zhu <zhuyinbo@loongson.cn>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v6 0/7] thermal: loongson2: Add support for Loongson-2K0300 SoC
+Date: Mon, 28 Sep 2026 12:44:09 +0800
+Message-ID: <cover.1790561983.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20260927075240.3007947-3-cui.tao@linux.dev>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxX89l6blqB_AlAA--.15177S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxWry5WFW7Jry7urW7ZFW5Arc_yoW5CFy8pF
-	W3C390kr4rXryUJr92ga1DWw47Z3s3Xr1SgFy29FyxCFn0qF1rJF18Ar9rZFyUKw48GrWI
-	9F4fW3s0v3WDAacCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:qMiowJDxg8ys8LlqvfElAA--.52750S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAgEECGq52vkBHAAAsi
+X-Coremail-Antispam: 1Uk129KBj93XoWxJF4xAw1xCrWUJrWxXrWkAFc_yoWrWrW8pa
+	y3uwnFkr4DGr4UAwsxJw4rZF4Yvwn5ta9rZF4fK345uwn8Kryay3y8tan8ZryxCrs8XFy2
+	vr1kKr4kCF4DCFXCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_
-	WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
-	CYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AK
-	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8EeHDUUUUU==
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7
+	AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_Wr
+	ylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8aZ
+	X5UUUUU==
+
+Hi all:
+
+This patch series adds thermal zone support for the Loongson-2K0300 SoC.
+
+The Loongson-2K0300's thermal sensor is generally compatible with the
+existing Loongson-2K series, but it features several key differences:
+1. It has an independent CPU ID register for reading chip version
+information.
+2. The raw temperature output field has been extended from 8 bits to 11
+bits.
+3. The temperature calculation formula has been updated to incorporate a
+correction factor based on the version information.
+
+To ensure robustness on older hardware revisions, a fallback mechanism
+is included: if the calculated temperature falls outside the valid range
+(-55 TO 125),  the driver falls back to a simpler calculation and prints
+a warning.
+
+The series also includes fixes and cleanups for the existing Loongson-2
+thermal driver, which are necessary to support the new SoC cleanly.
+
+The patchset have been validated on the Loongson-2K series development boards.
+
+Thanks.
+Binbin
+
+=========
+V6:
+ - Rebase on linux-pm/thermal;
+Patch (2/7):
+ - New patch;
+ - Fix incorrect clamp() argument order for thermal trip points;
+Patch (3/7):
+ - New patch;
+ - Fix Loongson-2K2000 trip point programming by adding a per-SoC
+   set_trips_regs callback and handling the split HI_GATE registers;
+Patch (4/7):
+ - New patch;
+ - cleanup: use GENMASK/FIELD_* helpers, add named constants, and factor
+   common trip point setup;
+Patch (5/7):
+ - New patch;
+ - refactor: move thermal_zone_device_ops into chip_data and replace the
+   Loongson-2K2000 flag special case with an optional init_extend_resource
+   callback;
+Patch (7/7):
+ - Updated the 10-bit output to 11-bit in commit message;
+ - Temporarily remove the implementation of `set_trips`;
+ - Remove unnecessary header files;
+ - Rewrite `get_temp`, separating `read_calib` and `detect_old_fuse` into
+   new functions to be called during the probe;
+ - Use macros to define the relevant numbers.
+
+Link to V5:
+https://lore.kernel.org/all/cover.1789546118.git.zhoubinbin@loongson.cn/#t
+
+V5:
+ - Rebase on linux-pm/thermal;
+ - Drop patch-3 for it was applied.
+
+Link to V4:
+https://lore.kernel.org/all/cover.1785829933.git.zhoubinbin@loongson.cn/
+
+V4:
+ - Rebase on linux-mfd/for-mfd-next;
+Patch (3/5):
+ - Remove the operation that adds `compatible` to the `select` node.
+
+Link to V3:
+https://lore.kernel.org/all/cover.1785480242.git.zhoubinbin@loongson.cn/
+
+V3:
+Patch (2/5):
+ - New patch for moving thermal_ops to chip_data;
+Patch (3/5):
+ - Correct spelling errors;
+Patch (4/5):
+ - Add Acked-by from Conor, thanks;
+Patch (5/5):
+ - Keep loongson2_thermal_data->chip_data as const, and use
+   data->flags as the private data.
+ - Renmae LOONGSON2_THSENS_OUT_10B_MASK ->
+   LOONGSON2_THSENS_OUT_11B_MASK;
+
+Link to V2:
+https://lore.kernel.org/all/cover.1784619512.git.zhoubinbin@loongson.cn/
+
+V2:
+Patch (1/4):
+ - New patch form Sashiko;
+Patch (2/4):
+ - New patch for adding chipid syscon compatible;
+Patch (3/4):
+ - Use `loongson,chipid` phandle replace reg property;
+Patch (3/4):
+ - Refact `calib_offset` calculate routing;
+ - Add LS2K0300_OLD_FUSE_FLAG flag.
+
+Link to V1:
+https://lore.kernel.org/all/cover.1783670011.git.zhoubinbin@loongson.cn/
+
+Binbin Zhou (7):
+  thermal/drivers/loongson2: Correct thermal sensor registration loop
+  thermal/drivers/loongson2: Fix clamp() usage for thermal trip points
+  thermal/drivers/loongson2: Fix Loongson-2K2000 trip point programming
+  thermal/drivers/loongson2: Use bitfields and per-SoC thermal ops
+  thermal/drivers/loongson2: Move per-SoC ops into chip data
+  dt-bindings: thermal: loongson,ls2k-thermal: Add compatible for
+    Loongson-2K0300
+  thermal/drivers/loongson2: Add Loongson-2K0300 support
+
+ .../thermal/loongson,ls2k-thermal.yaml        |  73 +++-
+ drivers/thermal/loongson2_thermal.c           | 336 ++++++++++++++----
+ 2 files changed, 321 insertions(+), 88 deletions(-)
 
 
-
-On 2026/9/27 下午3:52, Tao Cui wrote:
-> From: Tao Cui <cuitao@kylinos.cn>
-> 
-> The irqfd injection path dispatches through the irq routing table
-> without the kvm_arch_irqchip_in_kernel() gate that protects
-> KVM_IRQ_LINE: kvm_set_pic_irq() and kvm_arch_set_irq_inatomic() call
-> pch_pic_set_irq(kvm->arch.pch_pic, ...) and pch_msi_set_irq() calls
-> eiointc_set_irq(kvm->arch.eiointc, ...) directly, so a routing entry
-> that outlives the corresponding in-kernel irqchip dereferences a NULL
-> (or, before the previous patch, a freed) device.
-> 
-> Make pch_pic_set_irq(), eiointc_set_irq() and dmsintc_set_irq()
-> tolerate a NULL device.
-> 
-> Fixes: 1928254c5ccb ("LoongArch: KVM: Add irqfd support")
-> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
-> ---
->   arch/loongarch/kvm/intc/dmsintc.c | 3 +++
->   arch/loongarch/kvm/intc/eiointc.c | 5 ++++-
->   arch/loongarch/kvm/intc/pch_pic.c | 3 +++
->   3 files changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/loongarch/kvm/intc/dmsintc.c b/arch/loongarch/kvm/intc/dmsintc.c
-> index 63072595c01b..e27f448bb54f 100644
-> --- a/arch/loongarch/kvm/intc/dmsintc.c
-> +++ b/arch/loongarch/kvm/intc/dmsintc.c
-> @@ -70,6 +70,9 @@ int dmsintc_set_irq(struct kvm *kvm, u64 addr, int data, int level)
->   	unsigned int irq, cpu;
->   	struct kvm_vcpu *vcpu;
->   
-> +	if (!kvm->arch.dmsintc)
-> +		return -EINVAL;
-> +
-There is kvm->arch.dmsintc checking in its caller function 
-pch_msi_set_irq().
-
->   	irq = (addr >> AVEC_IRQ_SHIFT) & AVEC_IRQ_MASK;
->   	cpu = (addr >> AVEC_CPU_SHIFT) & kvm->arch.dmsintc->cpu_mask;
->   	if (cpu >= KVM_MAX_VCPUS)
-> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
-> index fe0a1918f26f..c68f9033638a 100644
-> --- a/arch/loongarch/kvm/intc/eiointc.c
-> +++ b/arch/loongarch/kvm/intc/eiointc.c
-> @@ -112,8 +112,11 @@ static inline void eiointc_update_sw_coremap(struct loongarch_eiointc *s,
->   void eiointc_set_irq(struct loongarch_eiointc *s, int irq, int level)
->   {
->   	unsigned long flags;
-> -	unsigned long *isr = (unsigned long *)s->isr;
-> +	unsigned long *isr;
->   
-> +	if (!s)
-> +		return;
-When is it possible that parameter s is NULL? There is 
-kvm_arch_irqchip_in_kernel() checking in kvm_send_userspace_msi().
-
-> +	isr = (unsigned long *)s->isr;
->   	spin_lock_irqsave(&s->lock, flags);
->   	level ? __set_bit(irq, isr) : __clear_bit(irq, isr);
->   	eiointc_update_irq(s, irq, level);
-> diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/pch_pic.c
-> index 62c09b5f3937..88666425d800 100644
-> --- a/arch/loongarch/kvm/intc/pch_pic.c
-> +++ b/arch/loongarch/kvm/intc/pch_pic.c
-> @@ -48,6 +48,9 @@ void pch_pic_set_irq(struct loongarch_pch_pic *s, int irq, int level)
->   {
->   	u64 mask = BIT(irq);
->   
-> +	if (!s)
-> +		return;
-> +
-When is it possible that parameter s is NULL? I think that when in 
-kernel irqchip is removed, there is no way to inject line IRQ in kernel 
-side.
-
-Regards
-Bibo Mao
->   	spin_lock(&s->lock);
->   	if (level)
->   		s->irr |= mask; /* set irr */
-> 
+base-commit: ec0d89150a9381d591344a9f6f5428655c227a7f
+-- 
+2.52.0
 
