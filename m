@@ -1,36 +1,36 @@
-Received: from mta0.migadu.com (out-4.mta0.migadu.com [91.218.175.4])
+Received: from mta0.migadu.com (out-71.mta0.migadu.com [91.218.175.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2FA04746A5
-	for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 09:29:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66CE4848B4
+	for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 09:32:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790587751; cv=none; b=Qym1UTnVcY23Q8GCC6b7KtjHZboF98fgZ4zj3tD3OIfYtf1mSRdgJhFdeT5Klr39BVjf1Ge7ymsHV/9d00gR2kcfLeNYUonlurU5MmOBUEjTFO9mOVP8ttjBo1QjPwYDL+ErFY7tEswqrqI+WihI/aJLtlftmWDG4ikUi46vF7A=
+	t=1790587935; cv=none; b=EquYJdvOK18oX4lufZ/qEzJcbpOlz61JQangTuM6dkpNSLMqkITm/IiBJElNdF+Yh82KorWBK+1HVVxn/2mF1Vfy9kQ9mUG8J8y+oiXbqdc2QeCpwhOUQ32/nTF5iyLJRJTzj+PWUaPYCZgOopUOLnqJXmJjwDMwOtW0aJ9+kB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790587751; c=relaxed/simple;
-	bh=61K6+vmzqsUZVtZu4pTLUg1VKRDC6b+cTmykUL3l5d8=;
+	s=arc-20240116; t=1790587935; c=relaxed/simple;
+	bh=/bSK2lubDnXPJRJMBandZLUxr2bVf/nnBoaIn65kMWE=;
 	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=CVOzb2JNARyOai3B9aeUeG0KZ3o6CannQNKlK1UXFfiqmAxOnSfBUgp7C+HtLs5WoU6QOvA315GQJbDCYqFhR8CYaekvGtB0g+a0X9n9iJY2rJd9BiljIvDGXFJIRuP26iFYGyG89lApjqVbmf5dWWzqVm1zkyX/YActRkNe3+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xwVqgK8U; arc=none smtp.client-ip=91.218.175.4
+	 In-Reply-To:Content-Type; b=gL2u0pr0hqpLF+6KuU7lU2D6UJ/f6JZVvMz+PlfjkTtpUMUFsn6cBOovbhfYDfCyItHLiZ8A5OeO4GpzNnivCcuutS8Bl18sTjW4JJ9nc8P1pXR5cFi+G6UNEB77IGg0DI5/YvgA5ZaNnjmxAb4wixxG33QRe5/TVqMy5SmzLbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=D9EE97Ud; arc=none smtp.client-ip=91.218.175.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xwVqgK8U"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="D9EE97Ud"
 X-Envelope-To: loongarch@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=61K6+vmzqsUZVtZu4pTLUg1VKRDC6b+cTmykUL3l5d8=;
+DKIM-Signature: a=rsa-sha256; bh=/bSK2lubDnXPJRJMBandZLUxr2bVf/nnBoaIn65kMWE=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1790587747; v=1; x=1791192547;
- b=xwVqgK8U91ZzHgZWU/Q7l1FVAdEKFpwCy9YG0fr6tiXatYGIcL8aiIHLFJUYsdXdDh+Hekwu
- mmsQaLcG9/ZPczALPMntsM0ivUIEeUAzmkaj9utKzn5L9hV2NfqnC58PaQldU8+B6Ymqtyuy4ru
- mfOQ12G5OwRub5JVMNwsbrr0=
+ t=1790587929; v=1; x=1791192729;
+ b=D9EE97UdixMUET/nixv4jdFGpn4lsz2vp6DJHF7I9olzEJvLDeX0XhZ1rTflBKupJ68p+2ay
+ j/Ux1HrX8vhlZ9pXvMhqEMQd/x35HBYHzbJYuZbgUbJMZuXZReKliRoUqwKkDwy8DCO1nr3JFRF
+ b2LpAzYyJ3nmxJqpjdKQw320=
 X-Envelope-To: loongarch@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 6b386df4d52f3baf;
-	Mon, 28 Sep 2026 09:29:07 +0000
-X-Mizu-Trace-ID: 6b386df4d52f3baf
+Received: by smtp.migadu.com with ESMTPS id a440adeeebd7c28e;
+	Mon, 28 Sep 2026 09:32:09 +0000
+X-Mizu-Trace-ID: a440adeeebd7c28e
 X-Migadu-Flow: FLOW_OUT
-Message-ID: <272a796e-3d2b-4766-9e68-28d9092073a1@linux.dev>
-Date: Mon, 28 Sep 2026 17:28:58 +0800
+Message-ID: <feee55e3-6425-4a00-9622-b809ec4f5021@linux.dev>
+Date: Mon, 28 Sep 2026 17:31:59 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -41,124 +41,84 @@ User-Agent: Mozilla Thunderbird
 Cc: cui.tao@linux.dev, loongarch@lists.linux.dev, kvm@vger.kernel.org,
  linux-kernel@vger.kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
  nagachaithanya9911@gmail.com, Tao Cui <cuitao@kylinos.cn>
-Subject: Re: [PATCH 4/6] LoongArch: KVM: Rebase steal time counter in vcpu
- context
+Subject: Re: [PATCH 6/6] LoongArch: KVM: Reject repeated PCH-PIC CTRL_INIT
 To: Bibo Mao <maobibo@loongson.cn>, gaosong@loongson.cn,
  zhaotianrui@loongson.cn
 References: <20260927075240.3007947-1-cui.tao@linux.dev>
- <20260927075240.3007947-5-cui.tao@linux.dev>
- <789eaa76-50a1-61bf-0419-0f45beb45a92@loongson.cn>
+ <20260927075240.3007947-7-cui.tao@linux.dev>
+ <d3a560db-f4f2-6cfe-6742-ca5de9f5719c@loongson.cn>
 From: Tao Cui <cui.tao@linux.dev>
-In-Reply-To: <789eaa76-50a1-61bf-0419-0f45beb45a92@loongson.cn>
+In-Reply-To: <d3a560db-f4f2-6cfe-6742-ca5de9f5719c@loongson.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 
 
-在 2026/9/28 15:23, Bibo Mao 写道:
+在 2026/9/28 16:01, Bibo Mao 写道:
 > 
 > 
 > On 2026/9/27 下午3:52, Tao Cui wrote:
 >> From: Tao Cui <cuitao@kylinos.cn>
 >>
->> KVM_SET_DEVICE_ATTR(PVTIME GPA) initializes st.last_steal from the
->> ioctl thread's run_delay, but kvm_update_stolen_time() accumulates the
->> vcpu thread's run_delay; the first delta can be negative and wraps in
-> I think that ioctl thread is the vCPU thread itself in KVM mode, there will be many potential problems when one thread set registers of vCPU while vCPU is running.
+>> KVM_DEV_LOONGARCH_PCH_PIC_CTRL_INIT has no guard against repeated
+>> invocation: every call overwrites pch_pic_base and registers the same
+>> kvm_io_device on the MMIO bus at the new address, while
+>> kvm_pch_pic_destroy() unregisters only one bus range.  After a repeated
+>> init, MMIO to the stale ranges computes its register offset against the
+>> new base and silently reads 0 / drops writes, and the leftover bus
+>> entries persist until the VM is destroyed.
+>>
+>> Reject a repeated init with -EBUSY, a null address with -EINVAL, and
+>> only set pch_pic_base after the bus registration succeeds so a failed
+>> init does not leave the device half-initialized.  The registration
+>> error is propagated instead of being replaced with -EFAULT.
+>>
+>> Fixes: d206d9514873 ("LoongArch: KVM: Add PCHPIC user mode read and write functions")
+>> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
+>> ---
+>>   arch/loongarch/kvm/intc/pch_pic.c | 10 ++++++++--
+>>   1 file changed, 8 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/pch_pic.c
+>> index 136211f154d4..2baf9ecf0c8a 100644
+>> --- a/arch/loongarch/kvm/intc/pch_pic.c
+>> +++ b/arch/loongarch/kvm/intc/pch_pic.c
+>> @@ -285,7 +285,10 @@ static int kvm_pch_pic_init(struct kvm_device *dev, u64 addr)
+>>       struct kvm_io_device *device;
+>>       struct loongarch_pch_pic *s = dev->kvm->arch.pch_pic;
+>>   -    s->pch_pic_base = addr;
+>> +    if (!addr)
+>> +        return -EINVAL;
+> To detect repeated init, I think it will be better add a BOOL type variable such ready/has_init for this. In theory device with physical address 0 is possible.
+> 
+Thanks for the review.
+
+Good point. Using `pch_pic_base == 0` as the initialization state mixes the device state with the configured address, a separate boolean is clearer.
+
+>> +    if (s->pch_pic_base)
+>> +        return -EBUSY;
+> -EEXIST or 0 if it is created already?
 > 
 
-You're right. I assumed KVM_SET_DEVICE_ATTR() could be issued
-from a thread different from the vCPU thread. Looking at the expected
-userspace flow again, the pvtime GPA is registered by the guest kernel
-via hypercall (which runs in vCPU context), or set by the vCPU thread
-itself before entering KVM_RUN. In both cases `last_steal` and the
-subsequent steal updates use the same task's `run_delay`, so the
-negative delta I described cannot occur.
-
-I'll drop this patch as well.
+I also agree that `-EEXIST` is a better fit than `-EBUSY` for repeated initialization. I'll update the patch accordingly.
 
 Thanks,
 Tao> Regards
 > Bibo Mao
->> u64, so the guest reads a steal time close to 2^64.
+>>       device = &s->device;
+>>       /* init device by pch pic writing and reading ops */
+>>       kvm_iodevice_init(device, &kvm_pch_pic_ops);
+>> @@ -293,8 +296,11 @@ static int kvm_pch_pic_init(struct kvm_device *dev, u64 addr)
+>>       /* register pch pic device */
+>>       ret = kvm_io_bus_register_dev(kvm, KVM_MMIO_BUS, addr, PCH_PIC_SIZE, device);
+>>       mutex_unlock(&kvm->slots_lock);
+>> +    if (ret < 0)
+>> +        return ret;
+>>   -    return (ret < 0) ? -EFAULT : 0;
+>> +    s->pch_pic_base = addr;
+>> +    return 0;
+>>   }
+>>     /* used by user space to get or set pch pic registers */
 >>
->> Drop the initialization from the attr path and lazily rebase the
->> counter on the first steal update, which runs in vcpu context like the
->> hypercall path.  Re-registering a GPA clears the rebase sentinel first
->> and publishes the address with a write barrier; the reader side loads
->> the address and sentinel with READ_ONCE and a read barrier so a
->> concurrent re-registration is not observed half-applied.
->>
->> Fixes: b4ba157044ea ("LoongArch: KVM: Add PV steal time support in host side")
->> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
->> ---
->>   arch/loongarch/kvm/vcpu.c | 25 +++++++++++++++++--------
->>   1 file changed, 17 insertions(+), 8 deletions(-)
->>
->> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
->> index 8e028be3f0a9..d931a5a802f6 100644
->> --- a/arch/loongarch/kvm/vcpu.c
->> +++ b/arch/loongarch/kvm/vcpu.c
->> @@ -154,12 +154,13 @@ static void kvm_update_stolen_time(struct kvm_vcpu *vcpu)
->>       u32 version;
->>       u64 steal;
->>       gpa_t gpa;
->> +    u64 last_steal;
->>       struct kvm_memslots *slots;
->>       struct kvm_steal_time __user *st;
->>       struct gfn_to_hva_cache *ghc;
->>         ghc = &vcpu->arch.st.cache;
->> -    gpa = vcpu->arch.st.guest_addr;
->> +    gpa = READ_ONCE(vcpu->arch.st.guest_addr);
->>       if (!(gpa & KVM_STEAL_PHYS_VALID))
->>           return;
->>   @@ -187,8 +188,14 @@ static void kvm_update_stolen_time(struct kvm_vcpu *vcpu)
->>       smp_wmb();
->>         unsafe_get_user(steal, &st->steal, out);
->> -    steal += current->sched_info.run_delay - vcpu->arch.st.last_steal;
->> -    vcpu->arch.st.last_steal = current->sched_info.run_delay;
->> +    /* acquire pairs with the smp_wmb in the attr path */
->> +    smp_rmb();
->> +    last_steal = READ_ONCE(vcpu->arch.st.last_steal);
->> +    if (!last_steal)
->> +        /* first update in vcpu context: rebase the counter */
->> +        last_steal = current->sched_info.run_delay;
->> +    steal += current->sched_info.run_delay - last_steal;
->> +    WRITE_ONCE(vcpu->arch.st.last_steal, current->sched_info.run_delay);
->>       unsafe_put_user(steal, &st->steal, out);
->>         smp_wmb();
->> @@ -1122,7 +1129,7 @@ static int kvm_loongarch_pvtime_get_attr(struct kvm_vcpu *vcpu,
->>               || attr->attr != KVM_LOONGARCH_VCPU_PVTIME_GPA)
->>           return -ENXIO;
->>   -    gpa = vcpu->arch.st.guest_addr;
->> +    gpa = READ_ONCE(vcpu->arch.st.guest_addr);
->>       if (put_user(gpa, user))
->>           return -EFAULT;
->>   @@ -1197,7 +1204,7 @@ static int kvm_loongarch_pvtime_set_attr(struct kvm_vcpu *vcpu,
->>           return -EINVAL;
->>         if (!(gpa & KVM_STEAL_PHYS_VALID)) {
->> -        vcpu->arch.st.guest_addr = gpa;
->> +        WRITE_ONCE(vcpu->arch.st.guest_addr, gpa);
->>           return 0;
->>       }
->>   @@ -1208,8 +1215,10 @@ static int kvm_loongarch_pvtime_set_attr(struct kvm_vcpu *vcpu,
->>       srcu_read_unlock(&kvm->srcu, idx);
->>         if (!ret) {
->> -        vcpu->arch.st.guest_addr = gpa;
->> -        vcpu->arch.st.last_steal = current->sched_info.run_delay;
->> +        WRITE_ONCE(vcpu->arch.st.last_steal, 0);
->> +        /* publish the new address only after clearing the rebase sentinel */
->> +        smp_wmb();
->> +        WRITE_ONCE(vcpu->arch.st.guest_addr, gpa);
->>           kvm_make_request(KVM_REQ_STEAL_UPDATE, vcpu);
->>       }
->>   @@ -1800,7 +1809,7 @@ static void kvm_vcpu_set_pv_preempted(struct kvm_vcpu *vcpu)
->>       struct kvm_memslots *slots;
->>       struct kvm_steal_time __user *st;
->>   -    gpa = vcpu->arch.st.guest_addr;
->> +    gpa = READ_ONCE(vcpu->arch.st.guest_addr);
->>       if (!(gpa & KVM_STEAL_PHYS_VALID))
->>           return;
->>  
 > 
 
