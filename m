@@ -1,138 +1,154 @@
-Received: from mta0.migadu.com (out-225.mta0.migadu.com [91.218.175.225])
+Received: from mta1.migadu.com (out-123.mta1.migadu.com [95.215.58.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5120C48F85A
-	for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 08:51:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.225
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E79484891
+	for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 09:24:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790585463; cv=none; b=Iyhft5ffWiTPTQyWG/0oFXvmHDFTRXczCxADECl0rBeHbDNEyxMsq699+LUr+6CbVJYBRUL4Bm+g9cB6bKEmPoeparjbzSoVn27piEKApQCil2DJXXTKTBVv0UaH+/IblKc9kqafUCUC/ADQpt8dGgWz1pL07iFHf2Q22DbF+JA=
+	t=1790587491; cv=none; b=kGZAHp286aa6Oa4CzF5cvMzOJ046trDpM1GMgqZfkEU/G4u+McZvbDMIMvVnpcL/wMPsLyWMtlOsPr6eJ+C/fUUpFVtrJa5Sw4neiRQqgYa+mvJmXk7rWnU5gYe6xtuljKG5X98aSdiQpxQAEsdAeLpRfQgiTm2f0iKXZ/A1CNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790585463; c=relaxed/simple;
-	bh=09WBzyqcOHBSt5hLHqAwbTciP1G0S+c8iry/IFi/HlI=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=TzLu/WeBfOb3+N8JCgIgz4BlFIPZ5jY2R/kWFpq1YsPDih9Z2vKlopxjqNGLRO7k0ACmjML3qRi62wbyHEPx1KzBQ0zfBDes/42VcsSBmtQtwriYIKvxNdduuQQuf1VnuuKWdskzhE22Xg8i9tgPSJJAHnrDNLQ+5HQ11sEtTwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hlJSyJb4; arc=none smtp.client-ip=91.218.175.225
+	s=arc-20240116; t=1790587491; c=relaxed/simple;
+	bh=HxNwpHe0nHsH16nYk3/3aMin7+3c9bVF1RTMSXmtCuE=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=hZhffIalhy1RXvEz2ELK8zALZK5kJ02H3SyjrnPVE+cnjIluXiVJP3np/c0pIgkn39T90SZyD1jz63eq80wi+1RFMmCYeJJBUNIKLyYw6MYex4MbcKd2pcrafBlEllPs9ouuPYeo3083sJoiISWxCRTTMIi91QGAFQC/Pv5XoQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=QPhpoxYS; arc=none smtp.client-ip=95.215.58.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hlJSyJb4"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="QPhpoxYS"
 X-Envelope-To: loongarch@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=09WBzyqcOHBSt5hLHqAwbTciP1G0S+c8iry/IFi/HlI=;
+DKIM-Signature: a=rsa-sha256; bh=HxNwpHe0nHsH16nYk3/3aMin7+3c9bVF1RTMSXmtCuE=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1790585459; v=1; x=1791190259;
- b=hlJSyJb4zyvL5tTc5B+UKJvJCZdxkTMJPLEWB4nUbp/tleH04SocnIPGb4w8yi3m5ovXyx/z
- NSXt9VR0s+2Xg/Os5fYU54qClXCgayhYrJKbIYjmLqn2jdYk36jdndIr87ji4R0cYdAR0U+78QB
- B7kA8WSWg0tewIstOzALdJoI=
+ t=1790587486; v=1; x=1791192286;
+ b=QPhpoxYSjKH3PdIbQuHd94yXAuuXcYNXhuJTievVvLsgidgeUB6Yx2iezKBuTOKxyeDE6X8C
+ tE3Db+9hGuHrexhPl0s3XjqckRVyyc9zhe5J0gcQGS9mT2llMs9HHZEkI8EH13kzls2BARAOelb
+ FAq1eZnqnLccQzLfhNa3pDFY=
 X-Envelope-To: loongarch@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id dcca5a333ecbdbdc;
-	Mon, 28 Sep 2026 08:50:58 +0000
-X-Mizu-Trace-ID: dcca5a333ecbdbdc
+Received: by smtp.migadu.com with ESMTPS id 9c7b60c04c93c979;
+	Mon, 28 Sep 2026 09:24:46 +0000
+X-Mizu-Trace-ID: 9c7b60c04c93c979
 X-Migadu-Flow: FLOW_OUT
+Message-ID: <8531bc11-b191-42c0-829d-36f831f6288e@linux.dev>
+Date: Mon, 28 Sep 2026 17:24:38 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Cc: cui.tao@linux.dev, loongarch@lists.linux.dev, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
+ nagachaithanya9911@gmail.com, Tao Cui <cuitao@kylinos.cn>
+Subject: Re: [PATCH 2/6] LoongArch: KVM: Guard against NULL irqchip in irq
+ injection
+To: Bibo Mao <maobibo@loongson.cn>, gaosong@loongson.cn,
+ zhaotianrui@loongson.cn
+References: <20260927075240.3007947-1-cui.tao@linux.dev>
+ <20260927075240.3007947-3-cui.tao@linux.dev>
+ <4b4aba4a-c609-93f5-51e8-3b70a8baf6ad@loongson.cn>
+From: Tao Cui <cui.tao@linux.dev>
+In-Reply-To: <4b4aba4a-c609-93f5-51e8-3b70a8baf6ad@loongson.cn>
 Content-Type: text/plain; charset=UTF-8
-Date: Mon, 28 Sep 2026 08:50:55 +0000
-Message-Id: <DLQTKIGNXKLS.1E0Y9RS93S82N@linux.dev>
-From: "Florent Revest" <florent.revest@linux.dev>
-To: <bot+bpf-ci@kernel.org>, <bpf@vger.kernel.org>, <ast@kernel.org>,
- <daniel@iogearbox.net>, <andrii@kernel.org>
-Cc: <martin.lau@linux.dev>, <eddyz87@gmail.com>, <memxor@gmail.com>,
- <song@kernel.org>, <yonghong.song@linux.dev>, <jolsa@kernel.org>,
- <kpsingh@kernel.org>, <john.fastabend@gmail.com>, <leon.hwang@linux.dev>,
- <zirajs7@gmail.com>, <rhkrqnwk98@gmail.com>, <puranjay@kernel.org>,
- <xukuohai@huaweicloud.com>, <iii@linux.ibm.com>, <hbathini@linux.ibm.com>,
- <chleroy@kernel.org>, <naveen@kernel.org>, <bjorn@kernel.org>,
- <pulehui@huawei.com>, <yangtiezhu@loongson.cn>, <hengqi.chen@gmail.com>,
- <linux-kernel@vger.kernel.org>, <aou@eecs.berkeley.edu>,
- <agordeev@linux.ibm.com>, <alex@ghiti.fr>, <bp@alien8.de>,
- <catalin.marinas@arm.com>, <borntraeger@linux.ibm.com>,
- <dave.hansen@linux.intel.com>, <emil@etsalapatis.com>, <hca@linux.ibm.com>,
- <hpa@zytor.com>, <chenhuacai@kernel.org>, <ihor.solodrai@linux.dev>,
- <mingo@redhat.com>, <linux-arm-kernel@lists.infradead.org>,
- <linux-kselftest@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
- <linux-riscv@lists.infradead.org>, <linux-s390@vger.kernel.org>,
- <loongarch@lists.linux.dev>, <maddy@linux.ibm.com>, <mark.rutland@arm.com>,
- <mpe@ellerman.id.au>, <npiggin@g>
-Subject: Re: [PATCH bpf v5 1/3] bpf: Wait for an RCU tasks grace period
- before freeing trampoline progs
-X-Mailer: aerc 0.17.0
-References: <20260926135605.1217928-2-florent.revest@linux.dev>
- <9d932a22ca908da9378ea281633ddb749453911ac6ae7a27a09e376f9ad02ff7@mail.kernel.org>
-In-Reply-To: <9d932a22ca908da9378ea281633ddb749453911ac6ae7a27a09e376f9ad02ff7@mail.kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Sun Sep 27, 2026 at 8:41 PM UTC,  wrote:
-> > bpf: Wait for an RCU tasks grace period before freeing trampoline progs
-> >
-> > When a prog is detached from a trampoline, it is freed after an RCU
-> > grace period, or an RCU tasks trace one if it is sleepable. This covers
-> > the tasks that are running the prog, since the prog's enter helper take=
-s
-> > the matching read lock before the prog is called. On a preemptible
-> > kernel, it doesn't cover a task that was preempted in the trampoline
-> > just before the enter helper. That task holds no lock yet, and it calls
-> > the prog after it was freed:
-> >
-> >   BUG: KASAN: vmalloc-out-of-bounds in __bpf_prog_enter_recur+0x3a5/0x3=
-f0
-> >   Read of size 8 at addr ffffc90000055040 by task candidate/110
-> >   CPU: 1 UID: 0 PID: 110 Comm: candidate Not tainted 7.3.0-rc2-00014-g1=
-5071f2a1263-dirty #2 PREEMPT(full)
-> >   Call Trace:
-> >    <TASK>
-> >    __bpf_prog_enter_recur+0x3a5/0x3f0
-> >    bpf_trampoline_6442509193+0x37/0xf1
-> >    __x64_sys_futex+0x9/0x410
-> >    do_syscall_64+0xb0/0x530
-> >    ...
-> >
-> > Wait for an RCU tasks grace period before the existing one when freeing
-> > a prog that was linked to a trampoline. An RCU tasks grace period only
-> > ends once the tasks that were preempted have run again, and
-> > bpf_tramp_image_put() already relies on it to free the image. It doesn'=
-t
-> > wait for tasks that sleep in the trampoline, the next commit takes care
-> > of those.
-> >
-> > Only progs that were linked to a trampoline can be called this way, so
-> > bpf_trampoline_add_prog() marks them and other progs are still freed as
-> > before.
-> >
-> > Fixes: e21aa341785c ("bpf: Fix fexit trampoline.")
->
-> Is this the right Fixes: target?
->
-> The race being closed here (a task preempted inside the trampoline image
-> before __bpf_prog_enter*() takes its RCU read lock, while the prog is fre=
-ed
-> after only a regular RCU or RCU tasks trace grace period) appears to pred=
-ate
-> e21aa341785c.
->
-> In fec56f5890d9 ("bpf: Introduce BPF trampoline") bpf_trampoline_update()
-> switched images with no tasks RCU wait, and __bpf_prog_put_noref() freed =
-the
-> prog with a plain call_rcu(&prog->aux->rcu, __bpf_prog_put_rcu).
->
-> Just before e21aa341785c, the synchronize_rcu_mult(call_rcu_tasks,
-> call_rcu_tasks_trace) in bpf_trampoline_update() ran before
-> arch_prepare_bpf_trampoline() rather than after the new image was install=
-ed,
-> and the total =3D=3D 0 unregister_fentry() path had no wait at all, so a =
-task
-> preempted in the old image could already reach a freed prog.
->
-> Would Fixes: fec56f5890d9 ("bpf: Introduce BPF trampoline") be more
-> accurate, so that stable trees without e21aa341785c also pick this up? Th=
-e
-> follow-up 49ca60187380 in this series uses the same tag.
 
-Yeah, that seems right. It shouldn't make much of a difference for stable
-because both have been introduced in the same 5.10.y. I can either switch t=
-his
-if there's a v6 or a maintainer can change when applying.
+
+在 2026/9/28 12:14, Bibo Mao 写道:
+> 
+> 
+> On 2026/9/27 下午3:52, Tao Cui wrote:
+>> From: Tao Cui <cuitao@kylinos.cn>
+>>
+>> The irqfd injection path dispatches through the irq routing table
+>> without the kvm_arch_irqchip_in_kernel() gate that protects
+>> KVM_IRQ_LINE: kvm_set_pic_irq() and kvm_arch_set_irq_inatomic() call
+>> pch_pic_set_irq(kvm->arch.pch_pic, ...) and pch_msi_set_irq() calls
+>> eiointc_set_irq(kvm->arch.eiointc, ...) directly, so a routing entry
+>> that outlives the corresponding in-kernel irqchip dereferences a NULL
+>> (or, before the previous patch, a freed) device.
+>>
+>> Make pch_pic_set_irq(), eiointc_set_irq() and dmsintc_set_irq()
+>> tolerate a NULL device.
+>>
+>> Fixes: 1928254c5ccb ("LoongArch: KVM: Add irqfd support")
+>> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
+>> ---
+>>   arch/loongarch/kvm/intc/dmsintc.c | 3 +++
+>>   arch/loongarch/kvm/intc/eiointc.c | 5 ++++-
+>>   arch/loongarch/kvm/intc/pch_pic.c | 3 +++
+>>   3 files changed, 10 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/loongarch/kvm/intc/dmsintc.c b/arch/loongarch/kvm/intc/dmsintc.c
+>> index 63072595c01b..e27f448bb54f 100644
+>> --- a/arch/loongarch/kvm/intc/dmsintc.c
+>> +++ b/arch/loongarch/kvm/intc/dmsintc.c
+>> @@ -70,6 +70,9 @@ int dmsintc_set_irq(struct kvm *kvm, u64 addr, int data, int level)
+>>       unsigned int irq, cpu;
+>>       struct kvm_vcpu *vcpu;
+>>   +    if (!kvm->arch.dmsintc)
+>> +        return -EINVAL;
+>> +
+> There is kvm->arch.dmsintc checking in its caller function pch_msi_set_irq().
+> 
+>>       irq = (addr >> AVEC_IRQ_SHIFT) & AVEC_IRQ_MASK;
+>>       cpu = (addr >> AVEC_CPU_SHIFT) & kvm->arch.dmsintc->cpu_mask;
+>>       if (cpu >= KVM_MAX_VCPUS)
+>> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
+>> index fe0a1918f26f..c68f9033638a 100644
+>> --- a/arch/loongarch/kvm/intc/eiointc.c
+>> +++ b/arch/loongarch/kvm/intc/eiointc.c
+>> @@ -112,8 +112,11 @@ static inline void eiointc_update_sw_coremap(struct loongarch_eiointc *s,
+>>   void eiointc_set_irq(struct loongarch_eiointc *s, int irq, int level)
+>>   {
+>>       unsigned long flags;
+>> -    unsigned long *isr = (unsigned long *)s->isr;
+>> +    unsigned long *isr;
+>>   +    if (!s)
+>> +        return;
+> When is it possible that parameter s is NULL? There is kvm_arch_irqchip_in_kernel() checking in kvm_send_userspace_msi().
+> 
+>> +    isr = (unsigned long *)s->isr;
+>>       spin_lock_irqsave(&s->lock, flags);
+>>       level ? __set_bit(irq, isr) : __clear_bit(irq, isr);
+>>       eiointc_update_irq(s, irq, level);
+>> diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/pch_pic.c
+>> index 62c09b5f3937..88666425d800 100644
+>> --- a/arch/loongarch/kvm/intc/pch_pic.c
+>> +++ b/arch/loongarch/kvm/intc/pch_pic.c
+>> @@ -48,6 +48,9 @@ void pch_pic_set_irq(struct loongarch_pch_pic *s, int irq, int level)
+>>   {
+>>       u64 mask = BIT(irq);
+>>   +    if (!s)
+>> +        return;
+>> +
+> When is it possible that parameter s is NULL? I think that when in kernel irqchip is removed, there is no way to inject line IRQ in kernel side.
+> 
+
+Thanks for looking into this.
+
+You're right. I rechecked the lifetime rules after your comments, and
+my reasoning for this patch was flawed.
+
+I had assumed an irqfd could remain active after the corresponding
+in-kernel irqchip had been removed. In fact, that state is not
+reachable. The irqchip devices are not destroyed during the lifetime
+of a running VM, and during VM teardown irqfds are released before
+the irqchip devices are destroyed. For DMSINTC, the rollback path is
+already guarded by `pch_msi_set_irq()`.
+
+So these NULL checks are not protecting a real execution path. I'll
+drop this patch in the next revision.
+
+Thanks,
+Tao
+
+> Regards
+> Bibo Mao
+>>       spin_lock(&s->lock);
+>>       if (level)
+>>           s->irr |= mask; /* set irr */
+>>
+> 
+
