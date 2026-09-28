@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B21035F619
-	for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 04:44:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9C1C284880
+	for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 04:44:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790570679; cv=none; b=uLBWL3oSoIWTY5XnFHNDWE8mwZXAsLLGusfUPuIHygBHERhesXbL1E7V7uK2iDSsb3LY7Wckw/uSZ6kWIyo3zd9t3BT6Hjfp5HS28+DrBWa21xcSD/YMkczaG33wLa0lwID4jmi3cH/Gu60XjcDLAd7DWUqS/cy1ZUwh7HLg7Cg=
+	t=1790570701; cv=none; b=TY8IPpXXCx3bHWw+xD7G9Uk/ES8qEGO9h1vqswAqo2K0jf4xce+a/NWAxumMdsHDr8vrfDXVTPE/PAvFCJrN7sB/YR8ha4poUnoY08jKj/FSb3WHQar3mRCpsQzq5OwSvL2UClGgU+ogZZPScWpJmGwJ0XLxFx9AdEt4o0vXP/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790570679; c=relaxed/simple;
-	bh=cxISZUEfztP3S/Z3MHKb5wSSMFmdRBTDTRTsOG5yX2E=;
+	s=arc-20240116; t=1790570701; c=relaxed/simple;
+	bh=q3zfU4q6PTqIJYlQYb+mNBG7j+aonJhq+z0g2TS9A1E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hDm69UyL7xKXj9Gs7dlx+EwVbdpRhfUy4QvR7GP8Au8fkAveW5+rkNOio7GZ8nVhvTtdzpKTHh2HMZbdxS6iQbFfnnJ2Bp0PlbPXWics/4KnMyS0LrZjEp1CuLNEb5m8OnfL7Sb96L1ZXwrE113UuG5OIlz9/8sdOJUkAuUWgUM=
+	 MIME-Version; b=iX0JoCJoVLBTBtydYwAUsUFYI0l8vh1lnbaO1eldFDU7iSdESReojQUIwnYPmbEha1jMkcrlukjHrEnQvrkANklo1EjS4wE80kEIQNHVShR12hrYxz5f3TB5gkiJb9bDsV7e8hgY2Yt0DZ6HSWcA98h+MoAgYqdyBC80vhUElh4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [223.64.68.159])
-	by gateway (Coremail) with SMTP id _____8DxD9Oz8LlqbmEQAA--.48090S3;
-	Mon, 28 Sep 2026 12:44:35 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Cx_9LK8LlqlWEQAA--.48102S3;
+	Mon, 28 Sep 2026 12:44:58 +0800 (CST)
 Received: from kernelserver (unknown [223.64.68.159])
-	by front1 (Coremail) with SMTP id qMiowJDxg8ys8LlqvfElAA--.52750S5;
-	Mon, 28 Sep 2026 12:44:35 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJDxBc3I8Llq3fElAA--.52784S2;
+	Mon, 28 Sep 2026 12:44:57 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
@@ -34,11 +34,10 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	loongarch@lists.linux.dev,
 	devicetree@vger.kernel.org,
 	linux-pm@vger.kernel.org,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH v6 3/7] thermal/drivers/loongson2: Fix Loongson-2K2000 trip point programming
-Date: Mon, 28 Sep 2026 12:44:12 +0800
-Message-ID: <da9af5d5cf5f3635556729ae0b853f4502173bd8.1790561983.git.zhoubinbin@loongson.cn>
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v6 4/7] thermal/drivers/loongson2: Use bitfields and per-SoC thermal ops
+Date: Mon, 28 Sep 2026 12:44:37 +0800
+Message-ID: <16875dca6130410dbd885c7af347c161c9417511.1790561983.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <cover.1790561983.git.zhoubinbin@loongson.cn>
 References: <cover.1790561983.git.zhoubinbin@loongson.cn>
@@ -49,11 +48,11 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxg8ys8LlqvfElAA--.52750S5
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQEECGq5yvUCWwAAs5
-X-Coremail-Antispam: 1Uk129KBj93XoW3Xr43JFWfurW7tr1Dtr1fAFc_yoWxGrWUp3
-	43Awn8KF4DXr48uws8Aw18XrWYyry3tr9xZFs7G34fW395C34agFy8tFy0qFWIkFyDJFy2
-	vrWkKFWUua1DW3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:qMiowJDxBc3I8Llq3fElAA--.52784S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQEECGq5yvUCZgAAsE
+X-Coremail-Antispam: 1Uk129KBj93XoW3WrWkKFW8Wr13Xr4DAr4UJrc_yoWfJF15p3
+	47A3y5KF4DGr48uw1UAw1kXr4Yvry7tF9xZFs7Kw13Wws5t34agF97tF1FvryIkF9rJFy2
+	vrWv9FZrua1DX3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
 	0xBIdaVrnRJUUUBab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
@@ -69,170 +68,243 @@ X-Coremail-Antispam: 1Uk129KBj93XoW3Xr43JFWfurW7tr1Dtr1fAFc_yoWxGrWUp3
 	k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7Cj
 	xVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j2MKZUUUUU=
 
-Loongson-2K2000 uses a different trip point layout than Loongson-2K1000:
-the low 8 bits of the gate value are written to the control register,
-while the high 8 bits are written to separate HI_GATE_HI/LOW registers.
-The gate value is calculated as (temp + 311) * 0x4000 / 820.
+Replace open-coded masks and shifts with GENMASK()/FIELD_* helpers, and
+define named constants for the Loongson-2K2000 temperature conversion
+and trip gate calculations.
 
-Introduce a per-SoC set_trips_regs() callback. Keep the existing
-Loongson-2K1000 logic and add the Loongson-2K2000 implementation.
-Move the common clamping into loongson2_thermal_set_trips() and pass
-Celsius values to the callback.
+Split the temperature read and thermal zone ops into Loongson-2K1000 and
+Loongson-2K2000 variants, and keep the chip-specific trip register
+callback in the chip data. This prepares the driver for further SoC
+support.
 
-Cc: stable@vger.kernel.org
-Fixes: 734b5def91b5 ("thermal/drivers/loongson2: Add Loongson-2K2000 support")
+No functional change intended.
+
 Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 ---
- drivers/thermal/loongson2_thermal.c | 77 ++++++++++++++++++++---------
- 1 file changed, 55 insertions(+), 22 deletions(-)
+ drivers/thermal/loongson2_thermal.c | 123 ++++++++++++++++------------
+ 1 file changed, 72 insertions(+), 51 deletions(-)
 
 diff --git a/drivers/thermal/loongson2_thermal.c b/drivers/thermal/loongson2_thermal.c
-index bcabca360157..45fe6100134e 100644
+index 45fe6100134e..0660a74fd922 100644
 --- a/drivers/thermal/loongson2_thermal.c
 +++ b/drivers/thermal/loongson2_thermal.c
-@@ -29,15 +29,23 @@
- 					 LOONGSON2_THSENS_INT_HIGH)
- #define LOONGSON2_THSENS_OUT_MASK	0xFF
+@@ -5,6 +5,7 @@
+  * Copyright (C) 2022-2023 Loongson Technology Corporation Limited
+  */
  
-+/* Loongson-2K2000-Specific Registers */
-+#define LS2K2000_THSENS_HI_GATE_HI_REG	0x18
-+#define LS2K2000_THSENS_HI_GATE_LOW_REG	0x1c
++#include <linux/bitfield.h>
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
+ #include <linux/minmax.h>
+@@ -27,11 +28,23 @@
+ #define LOONGSON2_THSENS_INT_HIGH	BIT(1)
+ #define LOONGSON2_THSENS_INT_EN		(LOONGSON2_THSENS_INT_LO | \
+ 					 LOONGSON2_THSENS_INT_HIGH)
+-#define LOONGSON2_THSENS_OUT_MASK	0xFF
++#define LOONGSON2_THSENS_CTRL_INTEN	BIT(8)
 +
++#define LOONGSON2_THSENS_OUT_8B_MASK	GENMASK(7, 0)
++#define LOONGSON2_THSENS_OUT_16B_MASK	GENMASK(15, 0)
++
++#define LOONGSON2_LOWEST_VALID_TEMP     (-40000)
++#define LOONGSON2_HIGHEST_VALID_TEMP    (125000)
+ 
+ /* Loongson-2K2000-Specific Registers */
+ #define LS2K2000_THSENS_HI_GATE_HI_REG	0x18
+ #define LS2K2000_THSENS_HI_GATE_LOW_REG	0x1c
++#define LS2K2000_GATE0_VAL_MASK		GENMASK(7, 0)
++#define LS2K2000_THSENS_SEL_MASK	GENMASK(11, 10)
++
++#define LS2K2000_TEMP_MUL		(820)
++#define LS2K2000_TEMP_DIV		(0x4000)
++#define LS2K2000_TEMP_OFFSET		(311)
+ 
  /*
   * This flag is used to indicate the temperature reading
-  * method of the Loongson-2K2000
-  */
- #define LS2K2000_THSENS_OUT_FLAG	BIT(0)
- 
-+struct loongson2_thermal_data;
-+
- struct loongson2_thermal_chip_data {
- 	unsigned int thermal_sensor_sel;
- 	unsigned int flags;
-+	void (*set_trips_regs)(struct loongson2_thermal_data *data,
-+			       int temp, bool low, bool enable);
- };
- 
- struct loongson2_thermal_data {
-@@ -46,30 +54,40 @@ struct loongson2_thermal_data {
- 	const struct loongson2_thermal_chip_data *chip_data;
- };
- 
--static void loongson2_set_ctrl_regs(struct loongson2_thermal_data *data,
--				    int ctrl_data, bool low, bool enable)
-+static void loongson2_thermal_set_trip_temp(struct loongson2_thermal_data *data,
-+					    int low, int high, bool enable)
- {
--	int reg_ctrl = 0;
--	int reg_off  = data->chip_data->thermal_sensor_sel * 2;
--	int ctrl_reg = low ? LOONGSON2_THSENS_CTRL_LOW_REG : LOONGSON2_THSENS_CTRL_HI_REG;
-+	/* Set low temperature threshold */
-+	data->chip_data->set_trips_regs(data, low, true, enable);
- 
--	reg_ctrl = ctrl_data + HECTO;
--	reg_ctrl |= enable ? 0x100 : 0;
--	writew(reg_ctrl, data->ctrl_reg + ctrl_reg + reg_off);
-+	/* Set high temperature threshold */
-+	data->chip_data->set_trips_regs(data, high, false, enable);
- }
- 
--static int loongson2_thermal_set(struct loongson2_thermal_data *data,
--				 int low, int high, bool enable)
-+static int loongson2_thermal_set_trips(struct thermal_zone_device *tz, int low, int high)
- {
--	/* Set low temperature threshold */
--	loongson2_set_ctrl_regs(data, clamp(low, -40, 125), true, enable);
-+	struct loongson2_thermal_data *data = thermal_zone_device_priv(tz);
- 
--	/* Set high temperature threshold */
--	loongson2_set_ctrl_regs(data, clamp(high, -40, 125), false, enable);
-+	low = clamp(low, -40000, 125000);
-+	high = clamp(high, -40000, 125000);
-+
-+	loongson2_thermal_set_trip_temp(data, low / MILLI, high / MILLI, true);
- 
- 	return 0;
- }
- 
-+static void loongson2_2k1000_set_trips_regs(struct loongson2_thermal_data *data,
-+					    int temp, bool low, bool enable)
-+{
-+	int reg_ctrl = 0;
-+	int reg_off  = data->chip_data->thermal_sensor_sel * 2;
-+	int ctrl_reg = low ? LOONGSON2_THSENS_CTRL_LOW_REG : LOONGSON2_THSENS_CTRL_HI_REG;
-+
-+	reg_ctrl = temp + HECTO;
-+	reg_ctrl |= enable ? 0x100 : 0;
-+	writew(reg_ctrl, data->ctrl_reg + ctrl_reg + reg_off);
-+}
-+
- static int loongson2_2k1000_get_temp(struct thermal_zone_device *tz, int *temp)
- {
- 	int val;
-@@ -81,6 +99,26 @@ static int loongson2_2k1000_get_temp(struct thermal_zone_device *tz, int *temp)
- 	return 0;
- }
- 
-+static void loongson2_2k2000_set_trips_regs(struct loongson2_thermal_data *data,
-+					    int temp, bool low, bool enable)
-+{
-+	int hi_reg, ctrl_reg;
-+	int val = 0, gate;
-+
-+	ctrl_reg = low ? LOONGSON2_THSENS_CTRL_LOW_REG : LOONGSON2_THSENS_CTRL_HI_REG;
-+	gate = (temp + 311) * 0x4000 / 820;
-+
-+	val = gate & 0xff;
-+	val |= enable ? 0x100 : 0;
-+	writel(val, data->ctrl_reg + ctrl_reg);
-+
-+	hi_reg = low ? LS2K2000_THSENS_HI_GATE_LOW_REG : LS2K2000_THSENS_HI_GATE_HI_REG;
-+
-+	val = readl(data->ctrl_reg + hi_reg);
-+	val = (val & ~0xff) | ((gate >> 8) & 0xff);
-+	writel(val, data->ctrl_reg + hi_reg);
-+}
-+
- static int loongson2_2k2000_get_temp(struct thermal_zone_device *tz, int *temp)
- {
- 	int val;
-@@ -104,13 +142,6 @@ static irqreturn_t loongson2_thermal_irq_thread(int irq, void *dev)
- 	return IRQ_HANDLED;
+@@ -64,71 +77,101 @@ static void loongson2_thermal_set_trip_temp(struct loongson2_thermal_data *data,
+ 	data->chip_data->set_trips_regs(data, high, false, enable);
  }
  
 -static int loongson2_thermal_set_trips(struct thermal_zone_device *tz, int low, int high)
++static int loognson2_thermal_set_trips(struct thermal_zone_device *tz, int low, int high)
+ {
+ 	struct loongson2_thermal_data *data = thermal_zone_device_priv(tz);
+ 
+-	low = clamp(low, -40000, 125000);
+-	high = clamp(high, -40000, 125000);
++	low = clamp(low, LOONGSON2_LOWEST_VALID_TEMP, LOONGSON2_HIGHEST_VALID_TEMP);
++	high = clamp(high, LOONGSON2_LOWEST_VALID_TEMP, LOONGSON2_HIGHEST_VALID_TEMP);
+ 
+ 	loongson2_thermal_set_trip_temp(data, low / MILLI, high / MILLI, true);
+ 
+ 	return 0;
+ }
+ 
+-static void loongson2_2k1000_set_trips_regs(struct loongson2_thermal_data *data,
++static int ls2k1000_thermal_get_temp(struct thermal_zone_device *tz, int *temp)
++{
++	struct loongson2_thermal_data *data = thermal_zone_device_priv(tz);
++	int val;
++
++	val = FIELD_GET(LOONGSON2_THSENS_OUT_8B_MASK,
++			readl(data->ctrl_reg + LOONGSON2_THSENS_OUT_REG));
++	*temp = (val - HECTO) * KILO;
++
++	return 0;
++}
++
++static void ls2k1000_thermal_set_trips_regs(struct loongson2_thermal_data *data,
+ 					    int temp, bool low, bool enable)
+ {
+-	int reg_ctrl = 0;
+-	int reg_off  = data->chip_data->thermal_sensor_sel * 2;
+ 	int ctrl_reg = low ? LOONGSON2_THSENS_CTRL_LOW_REG : LOONGSON2_THSENS_CTRL_HI_REG;
++	int reg_off  = data->chip_data->thermal_sensor_sel * 2;
++	int reg_ctrl = 0;
+ 
+ 	reg_ctrl = temp + HECTO;
+-	reg_ctrl |= enable ? 0x100 : 0;
++	if (enable)
++		reg_ctrl |= LOONGSON2_THSENS_CTRL_INTEN;
++
+ 	writew(reg_ctrl, data->ctrl_reg + ctrl_reg + reg_off);
+ }
+ 
+-static int loongson2_2k1000_get_temp(struct thermal_zone_device *tz, int *temp)
++static int ls2k2000_thermal_get_temp(struct thermal_zone_device *tz, int *temp)
+ {
+-	int val;
+ 	struct loongson2_thermal_data *data = thermal_zone_device_priv(tz);
++	int val;
+ 
+-	val = readl(data->ctrl_reg + LOONGSON2_THSENS_OUT_REG);
+-	*temp = ((val & LOONGSON2_THSENS_OUT_MASK) - HECTO) * KILO;
++	val = FIELD_GET(LOONGSON2_THSENS_OUT_16B_MASK, readl(data->temp_reg));
++	*temp = (val * LS2K2000_TEMP_MUL / LS2K2000_TEMP_DIV - LS2K2000_TEMP_OFFSET) * KILO;
+ 
+ 	return 0;
+ }
+ 
+-static void loongson2_2k2000_set_trips_regs(struct loongson2_thermal_data *data,
++static void ls2k2000_thermal_set_trips_regs(struct loongson2_thermal_data *data,
+ 					    int temp, bool low, bool enable)
+ {
+ 	int hi_reg, ctrl_reg;
+ 	int val = 0, gate;
+ 
+ 	ctrl_reg = low ? LOONGSON2_THSENS_CTRL_LOW_REG : LOONGSON2_THSENS_CTRL_HI_REG;
+-	gate = (temp + 311) * 0x4000 / 820;
++	gate = (temp + LS2K2000_TEMP_OFFSET) * LS2K2000_TEMP_DIV / LS2K2000_TEMP_MUL;
++
++	val = FIELD_PREP(LS2K2000_GATE0_VAL_MASK, FIELD_GET(GENMASK(7, 0), gate)) |
++	      FIELD_PREP(LS2K2000_THSENS_SEL_MASK, 0);
++	if (enable)
++		val |= LOONGSON2_THSENS_CTRL_INTEN;
+ 
+-	val = gate & 0xff;
+-	val |= enable ? 0x100 : 0;
+ 	writel(val, data->ctrl_reg + ctrl_reg);
+ 
+ 	hi_reg = low ? LS2K2000_THSENS_HI_GATE_LOW_REG : LS2K2000_THSENS_HI_GATE_HI_REG;
+ 
+ 	val = readl(data->ctrl_reg + hi_reg);
+-	val = (val & ~0xff) | ((gate >> 8) & 0xff);
++	val &= ~LS2K2000_GATE0_VAL_MASK;
++	val |= FIELD_PREP(LS2K2000_GATE0_VAL_MASK, FIELD_GET(GENMASK(15, 8), gate));
++
+ 	writel(val, data->ctrl_reg + hi_reg);
+ }
+ 
+-static int loongson2_2k2000_get_temp(struct thermal_zone_device *tz, int *temp)
 -{
+-	int val;
 -	struct loongson2_thermal_data *data = thermal_zone_device_priv(tz);
--
--	return loongson2_thermal_set(data, low/MILLI, high/MILLI, true);
++static const struct thermal_zone_device_ops ls2k1000_thermal_zone_ops = {
++	.get_temp = ls2k1000_thermal_get_temp,
++	.set_trips = loognson2_thermal_set_trips,
++};
+ 
+-	val = readl(data->temp_reg);
+-	*temp = ((val & 0xffff) * 820 / 0x4000 - 311) * KILO;
++static const struct thermal_zone_device_ops ls2k2000_thermal_zone_ops = {
++	.get_temp = ls2k2000_thermal_get_temp,
++	.set_trips = loognson2_thermal_set_trips,
++};
+ 
+-	return 0;
 -}
++static const struct loongson2_thermal_chip_data ls2k1000_thermal_chip_data = {
++	.thermal_sensor_sel = 0,
++	.flags = 0,
++	.set_trips_regs = ls2k1000_thermal_set_trips_regs,
++};
++
++static const struct loongson2_thermal_chip_data ls2k2000_thermal_chip_data = {
++	.thermal_sensor_sel = 0,
++	.flags = LS2K2000_THSENS_OUT_FLAG,
++	.set_trips_regs = ls2k2000_thermal_set_trips_regs,
++};
+ 
+ static irqreturn_t loongson2_thermal_irq_thread(int irq, void *dev)
+ {
+@@ -142,16 +185,6 @@ static irqreturn_t loongson2_thermal_irq_thread(int irq, void *dev)
+ 	return IRQ_HANDLED;
+ }
+ 
+-static const struct thermal_zone_device_ops loongson2_2k1000_of_thermal_ops = {
+-	.get_temp = loongson2_2k1000_get_temp,
+-	.set_trips = loongson2_thermal_set_trips,
+-};
 -
- static const struct thermal_zone_device_ops loongson2_2k1000_of_thermal_ops = {
- 	.get_temp = loongson2_2k1000_get_temp,
- 	.set_trips = loongson2_thermal_set_trips,
-@@ -156,7 +187,7 @@ static int loongson2_thermal_probe(struct platform_device *pdev)
+-static const struct thermal_zone_device_ops loongson2_2k2000_of_thermal_ops = {
+-	.get_temp = loongson2_2k2000_get_temp,
+-	.set_trips = loongson2_thermal_set_trips,
+-};
+-
+ static int loongson2_thermal_probe(struct platform_device *pdev)
+ {
+ 	const struct thermal_zone_device_ops *thermal_ops;
+@@ -176,9 +209,9 @@ static int loongson2_thermal_probe(struct platform_device *pdev)
+ 		if (IS_ERR(data->temp_reg))
+ 			return PTR_ERR(data->temp_reg);
  
- 	writeb(LOONGSON2_THSENS_INT_EN, data->ctrl_reg + LOONGSON2_THSENS_STATUS_REG);
+-		thermal_ops = &loongson2_2k2000_of_thermal_ops;
++		thermal_ops = &ls2k2000_thermal_zone_ops;
+ 	} else {
+-		thermal_ops = &loongson2_2k1000_of_thermal_ops;
++		thermal_ops = &ls2k1000_thermal_zone_ops;
+ 	}
  
--	loongson2_thermal_set(data, 0, 0, false);
-+	loongson2_thermal_set_trip_temp(data, 0, 0, false);
+ 	irq = platform_get_irq(pdev, 0);
+@@ -213,26 +246,14 @@ static int loongson2_thermal_probe(struct platform_device *pdev)
+ 	return 0;
+ }
  
- 	for (i = 0; i <= LOONGSON2_MAX_SENSOR_SEL_NUM; i++) {
- 		tzd = devm_thermal_of_zone_register(dev, i, data, thermal_ops);
-@@ -185,11 +216,13 @@ static int loongson2_thermal_probe(struct platform_device *pdev)
- static const struct loongson2_thermal_chip_data loongson2_thermal_ls2k1000_data = {
- 	.thermal_sensor_sel = 0,
- 	.flags = 0,
-+	.set_trips_regs = loongson2_2k1000_set_trips_regs,
- };
- 
- static const struct loongson2_thermal_chip_data loongson2_thermal_ls2k2000_data = {
- 	.thermal_sensor_sel = 0,
- 	.flags = LS2K2000_THSENS_OUT_FLAG,
-+	.set_trips_regs = loongson2_2k2000_set_trips_regs,
- };
- 
+-static const struct loongson2_thermal_chip_data loongson2_thermal_ls2k1000_data = {
+-	.thermal_sensor_sel = 0,
+-	.flags = 0,
+-	.set_trips_regs = loongson2_2k1000_set_trips_regs,
+-};
+-
+-static const struct loongson2_thermal_chip_data loongson2_thermal_ls2k2000_data = {
+-	.thermal_sensor_sel = 0,
+-	.flags = LS2K2000_THSENS_OUT_FLAG,
+-	.set_trips_regs = loongson2_2k2000_set_trips_regs,
+-};
+-
  static const struct of_device_id of_loongson2_thermal_match[] = {
+ 	{
+ 		.compatible = "loongson,ls2k1000-thermal",
+-		.data = &loongson2_thermal_ls2k1000_data,
++		.data = &ls2k1000_thermal_chip_data,
+ 	},
+ 	{
+ 		.compatible = "loongson,ls2k2000-thermal",
+-		.data = &loongson2_thermal_ls2k2000_data,
++		.data = &ls2k2000_thermal_chip_data,
+ 	},
+ 	{ /* end */ }
+ };
 -- 
 2.52.0
 
