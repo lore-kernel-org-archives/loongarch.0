@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4B4435F619
-	for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 04:45:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0693F362138
+	for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 04:45:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790570702; cv=none; b=Ap67z1rpFi3CwIPwCNGKqPha2WHHa6WZRrlISVm4mtW8YbqWwpWz3C/s+24UhThabCI3kqbBHD5HtvSW5u/87MOoORKWBFvinQBpXkMxwHfAC00d6nZ6Pn0qn28avaHG6Xp0EQNv/K2W0QV2rjh7LRQPnDtBs1fJjKzeZi6lOnA=
+	t=1790570705; cv=none; b=NxWZBAECIgWy9wWyQL56zdlcV0fI6E1tHE+gBE0dtWuBU2CPkOnDqOn7PQO5gTJJdQInS5+TWTRri43RwEoaYNmN3T54RPrepg046Va57aUkINCH4pzMqx0s5glZEESrD0KLl9emz7E7lZoJZBASJsL2aIXNoBkWZfnGsaSRcEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790570702; c=relaxed/simple;
-	bh=W3GsE6QEZVkcbAMZdJNi1RQSdLlHDeBuQT/teQf5N9s=;
+	s=arc-20240116; t=1790570705; c=relaxed/simple;
+	bh=UiLqD3bQ54q3Kp5KqDITW+bog8jer8Qudy0qwgKrUPg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PlmInnigU8nvI+R7fJ4txJ5vqe9Dlrifc+pWkHVDRYX2X+qyeohMoHaH2tcZoL+Rn5wRh2rjEcf1iqFbUp9SmDQ0CNdAG6y8mzgtFjg386N+Gcpprt7n0upqtUndJWdYEUOGDQokWWvFNP/G80ExcYuSp0eSOI6uUIaNss4jEjY=
+	 MIME-Version:Content-Type; b=PRnVfhAmP6pr/ILWmVlFpmBuAOFvux7BOEfQDoXZC9+jYbyiL0Fb1gKChwbyrRES96WZAtk07S4mpDmm8O+dAbxSMSemEBozIcAFv+wNNajOzCy7OuTPN/7eZ1tzhjZQFJpufDNMFD59wfIIGj8dn5o2YBr9GSJcs8QJ5RIIggk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [223.64.68.159])
-	by gateway (Coremail) with SMTP id _____8DxytHL8LlqnGEQAA--.47862S3;
-	Mon, 28 Sep 2026 12:44:59 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxS_DN8LlqrGEQAA--.48113S3;
+	Mon, 28 Sep 2026 12:45:01 +0800 (CST)
 Received: from kernelserver (unknown [223.64.68.159])
-	by front1 (Coremail) with SMTP id qMiowJDxBc3I8Llq3fElAA--.52784S3;
-	Mon, 28 Sep 2026 12:44:58 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJDxBc3I8Llq3fElAA--.52784S5;
+	Mon, 28 Sep 2026 12:45:01 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
@@ -35,9 +35,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	devicetree@vger.kernel.org,
 	linux-pm@vger.kernel.org,
 	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH v6 5/7] thermal/drivers/loongson2: Move per-SoC ops into chip data
-Date: Mon, 28 Sep 2026 12:44:38 +0800
-Message-ID: <4868a63c96793c45f48d921e7b7890bfdf628789.1790561983.git.zhoubinbin@loongson.cn>
+Subject: [PATCH v6 7/7] thermal/drivers/loongson2: Add Loongson-2K0300 support
+Date: Mon, 28 Sep 2026 12:44:40 +0800
+Message-ID: <549b204c1621341edc5b4aa4f81e164ec5ce7fed.1790561983.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <cover.1790561983.git.zhoubinbin@loongson.cn>
 References: <cover.1790561983.git.zhoubinbin@loongson.cn>
@@ -47,166 +47,250 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxBc3I8Llq3fElAA--.52784S3
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQEECGq5yvUCZwAAsF
-X-Coremail-Antispam: 1Uk129KBj93XoW3WFWUKry3XF45Xr18tw4UWrX_yoW7WFyfp3
-	y7Cw45Kr4kGr4Du34UAw4kZr4Yyry7tayfXr4xGw1fX395G34agFyUtr1FvFWSkFy8JFyU
-	Ars8tFWDuayDJ3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:qMiowJDxBc3I8Llq3fElAA--.52784S5
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQEECGq5yvUCagAAsI
+X-Coremail-Antispam: 1Uk129KBj93XoW3JFW7Wr4fGF15GF1fKF1rAFc_yoW3WrWUpa
+	yUAFy5trWkGr48Ww4Iyw4DZr4YgrnFyFyavFZ7Kw1rZws3t34aqFyktFyYvryrGFWUJFyU
+	Zr4qqrW7CayDX3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWr
-	XVW3AwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
-	AKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
-	6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
-	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xII
-	jxv20xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF04
-	k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7Cj
-	xVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jqsjbUUUUU=
+	0xBIdaVrnRJUUUBGb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E
+	14v26r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6x
+	kI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
+	6rWY6Fy7McIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48Icx
+	kI7VAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCj
+	c4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
+	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY
+	6xIIjxv20xvE14v26F1j6w1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0x
+	vE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2z280
+	aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07jVeHDUUUUU=
 
-Store the thermal_zone_device_ops pointer and the optional extended
-resource initializer in struct loongson2_thermal_chip_data instead of
-selecting them through flags in probe.
+The Loongson-2K0300 sensor provides an 11-bit output and requires
+calibration data from the CHIP ID registers. Read the calibration offset
+throughthe `loongson,chipid` syscon phandle, initialize the sensor
+configuration register, and calculate the temperature with the
+calibrated slope and offset.
 
-Rename the second mapped resource from temp_reg to extend_reg, and let
-Loongson-2K2000 initialize it from its own init_extend_resource()
-callback. This makes adding new SoCs with different register layouts
-easier.
+Early Loongson-2K0300 fuse revisions may provide unusable calibration
+data. If the calibrated formula reports a temperature outside the valid
+sensor range, fall back to the old-fuse slope with a zero calibration
+offset.
+
+The set_trips callback of Loongson-2K0300 will be added in the future.
 
 Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 ---
- drivers/thermal/loongson2_thermal.c | 50 ++++++++++++++++-------------
- 1 file changed, 27 insertions(+), 23 deletions(-)
+ drivers/thermal/loongson2_thermal.c | 136 ++++++++++++++++++++++++++++
+ 1 file changed, 136 insertions(+)
 
 diff --git a/drivers/thermal/loongson2_thermal.c b/drivers/thermal/loongson2_thermal.c
-index 0660a74fd922..17aa1d80a2e6 100644
+index 17aa1d80a2e6..a53d70b824f3 100644
 --- a/drivers/thermal/loongson2_thermal.c
 +++ b/drivers/thermal/loongson2_thermal.c
-@@ -46,24 +46,20 @@
- #define LS2K2000_TEMP_DIV		(0x4000)
- #define LS2K2000_TEMP_OFFSET		(311)
+@@ -8,10 +8,12 @@
+ #include <linux/bitfield.h>
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
++#include <linux/mfd/syscon.h>
+ #include <linux/minmax.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/property.h>
++#include <linux/regmap.h>
+ #include <linux/thermal.h>
+ #include <linux/units.h>
  
--/*
-- * This flag is used to indicate the temperature reading
-- * method of the Loongson-2K2000
-- */
--#define LS2K2000_THSENS_OUT_FLAG	BIT(0)
--
- struct loongson2_thermal_data;
+@@ -31,11 +33,37 @@
+ #define LOONGSON2_THSENS_CTRL_INTEN	BIT(8)
  
- struct loongson2_thermal_chip_data {
- 	unsigned int thermal_sensor_sel;
--	unsigned int flags;
-+	const struct thermal_zone_device_ops *thermal_ops;
- 	void (*set_trips_regs)(struct loongson2_thermal_data *data,
- 			       int temp, bool low, bool enable);
-+	int (*init_extend_resource)(struct platform_device *pdev,
-+				    struct loongson2_thermal_data *data);
- };
+ #define LOONGSON2_THSENS_OUT_8B_MASK	GENMASK(7, 0)
++#define LOONGSON2_THSENS_OUT_11B_MASK	GENMASK(10, 0)
+ #define LOONGSON2_THSENS_OUT_16B_MASK	GENMASK(15, 0)
  
+ #define LOONGSON2_LOWEST_VALID_TEMP     (-40000)
+ #define LOONGSON2_HIGHEST_VALID_TEMP    (125000)
+ 
++/* Loongson-2K0300-Specific Registers */
++#define LS2K0300_CHIP_ID0		0x10
++#define LS2K0300_CHIP_ID1		0x14
++
++#define LS2K0300_THSENS_CFG_REG		0x18
++#define LS2K0300_THSENS_INIT_MASK	0xff03
++
++#define LS2K0300_EXTERN_ID		BIT(4)
++#define LS2K0300_ID0_VAL_MASK		GENMASK(31, 20)
++#define LS2K0300_ID1_VAL_MASK		GENMASK(15, 0)
++
++#define LS2K0300_COMP_VAL_MASK		GENMASK(14, 0)
++#define LS2K0300_COMP_SIGN_BIT		BIT(15)
++
++#define LS2K0300_TEMP_SLOPE		(570)	/* m°C/LSB, calibrated */
++#define LS2K0300_TEMP_SLOPE_OLD		(569)	/* m°C/LSB, old fuse */
++#define LS2K0300_TEMP_OFFSET		(394700) /* m°C */
++
++/*
++ * Set when the on-chip calibration data is unusable (early 2K0300
++ * fuse revision). The driver then uses LS2K0300_TEMP_SLOPE_OLD with
++ * calib_offset = 0 instead of the calibrated formula.
++ */
++#define LS2K0300_OLD_FUSE_FLAG		BIT(0)
++
+ /* Loongson-2K2000-Specific Registers */
+ #define LS2K2000_THSENS_HI_GATE_HI_REG	0x18
+ #define LS2K2000_THSENS_HI_GATE_LOW_REG	0x1c
+@@ -60,12 +88,18 @@ struct loongson2_thermal_chip_data {
  struct loongson2_thermal_data {
  	void __iomem *ctrl_reg;
--	void __iomem *temp_reg;
-+	void __iomem *extend_reg;
+ 	void __iomem *extend_reg;
++	struct regmap *regmap_cfg;
++	unsigned int flags;
++	int calib_offset;
  	const struct loongson2_thermal_chip_data *chip_data;
  };
  
-@@ -120,7 +116,7 @@ static int ls2k2000_thermal_get_temp(struct thermal_zone_device *tz, int *temp)
- 	struct loongson2_thermal_data *data = thermal_zone_device_priv(tz);
- 	int val;
+ static void loongson2_thermal_set_trip_temp(struct loongson2_thermal_data *data,
+ 					    int low, int high, bool enable)
+ {
++	if (!data->chip_data->set_trips_regs)
++		return;
++
+ 	/* Set low temperature threshold */
+ 	data->chip_data->set_trips_regs(data, low, true, enable);
  
--	val = FIELD_GET(LOONGSON2_THSENS_OUT_16B_MASK, readl(data->temp_reg));
-+	val = FIELD_GET(LOONGSON2_THSENS_OUT_16B_MASK, readl(data->extend_reg));
- 	*temp = (val * LS2K2000_TEMP_MUL / LS2K2000_TEMP_DIV - LS2K2000_TEMP_OFFSET) * KILO;
- 
+@@ -85,6 +119,94 @@ static int loognson2_thermal_set_trips(struct thermal_zone_device *tz, int low,
  	return 0;
-@@ -151,6 +147,17 @@ static void ls2k2000_thermal_set_trips_regs(struct loongson2_thermal_data *data,
- 	writel(val, data->ctrl_reg + hi_reg);
  }
  
-+static int ls2k2000_thermal_init_extend_resource(struct platform_device *pdev,
-+						 struct loongson2_thermal_data *data)
++static int ls2k0300_adc_to_temp_mc(struct loongson2_thermal_data *data, int slope)
 +{
-+	/* The temperature output register is separate for Loongson-2K2000 */
-+	data->extend_reg = devm_platform_ioremap_resource(pdev, 1);
-+	if (IS_ERR(data->extend_reg))
-+		return PTR_ERR(data->extend_reg);
++	int raw_adc;
++
++	raw_adc = FIELD_GET(LOONGSON2_THSENS_OUT_11B_MASK,
++			    readl(data->ctrl_reg + LOONGSON2_THSENS_OUT_REG));
++
++	return (raw_adc + data->calib_offset) * slope - LS2K0300_TEMP_OFFSET;
++}
++
++static int ls2k0300_thermal_get_temp(struct thermal_zone_device *tz, int *temp)
++{
++	struct loongson2_thermal_data *data = thermal_zone_device_priv(tz);
++	int slope = LS2K0300_TEMP_SLOPE;
++
++	if (data->flags & LS2K0300_OLD_FUSE_FLAG)
++		slope = LS2K0300_TEMP_SLOPE_OLD;
++
++	*temp = ls2k0300_adc_to_temp_mc(data, slope);
 +
 +	return 0;
 +}
 +
++static void ls2k0300_thermal_detect_old_fuse(struct device *dev,
++					     struct loongson2_thermal_data *data)
++{
++	int temp;
++
++	temp = ls2k0300_adc_to_temp_mc(data, LS2K0300_TEMP_SLOPE);
++
++	if (temp < LOONGSON2_LOWEST_VALID_TEMP ||
++	    temp > LOONGSON2_HIGHEST_VALID_TEMP) {
++		dev_warn(dev, "calibrated temperature %d m°C out of range [%d, %d], using old fuse formula\n",
++			 temp, LOONGSON2_LOWEST_VALID_TEMP, LOONGSON2_HIGHEST_VALID_TEMP);
++		data->flags = LS2K0300_OLD_FUSE_FLAG;
++		data->calib_offset = 0;
++	}
++}
++
++static int ls2k0300_thermal_read_calib(struct loongson2_thermal_data *data)
++{
++	u32 chip_id0, chip_id1;
++	int calib_data, calib_offset, ret;
++
++	ret = regmap_read(data->regmap_cfg, LS2K0300_CHIP_ID0, &chip_id0);
++	if (ret)
++		return ret;
++
++	ret = regmap_read(data->regmap_cfg, LS2K0300_CHIP_ID1, &chip_id1);
++	if (ret)
++		return ret;
++
++	if (chip_id0 & LS2K0300_EXTERN_ID) {
++		calib_data = FIELD_GET(LS2K0300_ID1_VAL_MASK, chip_id1);
++		calib_offset = FIELD_GET(LS2K0300_COMP_VAL_MASK, calib_data);
++		if (calib_data & LS2K0300_COMP_SIGN_BIT)
++			calib_offset = -calib_offset;
++	} else {
++		calib_data = FIELD_GET(LS2K0300_ID0_VAL_MASK, chip_id0);
++		calib_offset = FIELD_GET(LS2K0300_COMP_VAL_MASK, calib_data);
++	}
++
++	data->calib_offset = calib_offset;
++	return 0;
++}
++
++static int ls2k0300_thermal_init_extend_resource(struct platform_device *pdev,
++						 struct loongson2_thermal_data *data)
++{
++	struct device *dev = &pdev->dev;
++	int ret;
++
++	data->regmap_cfg =
++		syscon_regmap_lookup_by_phandle(dev->of_node, "loongson,chipid");
++	if (IS_ERR(data->regmap_cfg))
++		return PTR_ERR(data->regmap_cfg);
++
++	ret = ls2k0300_thermal_read_calib(data);
++	if (ret)
++		return dev_err_probe(dev, ret, "failed to read calibration data\n");
++
++	writel(LS2K0300_THSENS_INIT_MASK, data->ctrl_reg + LS2K0300_THSENS_CFG_REG);
++
++	ls2k0300_thermal_detect_old_fuse(dev, data);
++
++	return 0;
++}
++
+ static int ls2k1000_thermal_get_temp(struct thermal_zone_device *tz, int *temp)
+ {
+ 	struct loongson2_thermal_data *data = thermal_zone_device_priv(tz);
+@@ -158,6 +280,10 @@ static int ls2k2000_thermal_init_extend_resource(struct platform_device *pdev,
+ 	return 0;
+ }
+ 
++static const struct thermal_zone_device_ops ls2k0300_thermal_zone_ops = {
++	.get_temp = ls2k0300_thermal_get_temp,
++};
++
  static const struct thermal_zone_device_ops ls2k1000_thermal_zone_ops = {
  	.get_temp = ls2k1000_thermal_get_temp,
  	.set_trips = loognson2_thermal_set_trips,
-@@ -163,14 +170,15 @@ static const struct thermal_zone_device_ops ls2k2000_thermal_zone_ops = {
+@@ -168,6 +294,12 @@ static const struct thermal_zone_device_ops ls2k2000_thermal_zone_ops = {
+ 	.set_trips = loognson2_thermal_set_trips,
+ };
  
++static const struct loongson2_thermal_chip_data ls2k0300_thermal_chip_data = {
++	.thermal_sensor_sel = 0,
++	.thermal_ops = &ls2k0300_thermal_zone_ops,
++	.init_extend_resource = ls2k0300_thermal_init_extend_resource,
++};
++
  static const struct loongson2_thermal_chip_data ls2k1000_thermal_chip_data = {
  	.thermal_sensor_sel = 0,
--	.flags = 0,
-+	.thermal_ops = &ls2k1000_thermal_zone_ops,
- 	.set_trips_regs = ls2k1000_thermal_set_trips_regs,
- };
+ 	.thermal_ops = &ls2k1000_thermal_zone_ops,
+@@ -251,6 +383,10 @@ static int loongson2_thermal_probe(struct platform_device *pdev)
+ }
  
- static const struct loongson2_thermal_chip_data ls2k2000_thermal_chip_data = {
- 	.thermal_sensor_sel = 0,
--	.flags = LS2K2000_THSENS_OUT_FLAG,
-+	.thermal_ops = &ls2k2000_thermal_zone_ops,
- 	.set_trips_regs = ls2k2000_thermal_set_trips_regs,
-+	.init_extend_resource = ls2k2000_thermal_init_extend_resource,
- };
- 
- static irqreturn_t loongson2_thermal_irq_thread(int irq, void *dev)
-@@ -187,9 +195,8 @@ static irqreturn_t loongson2_thermal_irq_thread(int irq, void *dev)
- 
- static int loongson2_thermal_probe(struct platform_device *pdev)
- {
--	const struct thermal_zone_device_ops *thermal_ops;
--	struct device *dev = &pdev->dev;
- 	struct loongson2_thermal_data *data;
-+	struct device *dev = &pdev->dev;
- 	struct thermal_zone_device *tzd;
- 	int ret, irq, i;
- 
-@@ -198,20 +205,17 @@ static int loongson2_thermal_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	data->chip_data = device_get_match_data(dev);
-+	if (!data->chip_data)
-+		return -EINVAL;
- 
- 	data->ctrl_reg = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(data->ctrl_reg))
- 		return PTR_ERR(data->ctrl_reg);
- 
--	/* The temperature output register is separate for Loongson-2K2000 */
--	if (data->chip_data->flags & LS2K2000_THSENS_OUT_FLAG) {
--		data->temp_reg = devm_platform_ioremap_resource(pdev, 1);
--		if (IS_ERR(data->temp_reg))
--			return PTR_ERR(data->temp_reg);
--
--		thermal_ops = &ls2k2000_thermal_zone_ops;
--	} else {
--		thermal_ops = &ls2k1000_thermal_zone_ops;
-+	if (data->chip_data->init_extend_resource) {
-+		ret = data->chip_data->init_extend_resource(pdev, data);
-+		if (ret)
-+			return ret;
- 	}
- 
- 	irq = platform_get_irq(pdev, 0);
-@@ -223,7 +227,7 @@ static int loongson2_thermal_probe(struct platform_device *pdev)
- 	loongson2_thermal_set_trip_temp(data, 0, 0, false);
- 
- 	for (i = 0; i <= LOONGSON2_MAX_SENSOR_SEL_NUM; i++) {
--		tzd = devm_thermal_of_zone_register(dev, i, data, thermal_ops);
-+		tzd = devm_thermal_of_zone_register(dev, i, data, data->chip_data->thermal_ops);
- 		if (!IS_ERR(tzd))
- 			break;
- 
+ static const struct of_device_id of_loongson2_thermal_match[] = {
++	{
++		.compatible = "loongson,ls2k0300-thermal",
++		.data = &ls2k0300_thermal_chip_data,
++	},
+ 	{
+ 		.compatible = "loongson,ls2k1000-thermal",
+ 		.data = &ls2k1000_thermal_chip_data,
 -- 
 2.52.0
 
