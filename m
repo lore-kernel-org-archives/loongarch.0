@@ -1,125 +1,211 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26D61469833
-	for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 07:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790582383; cv=none; b=fnQsbjLk8hk8TzsOVHAmo5+ICo5SlRBt+Ql6eza16kAho5w6Vt9RYa3zWH5yT4vLogsYKZhM8+ObTczJx44rgaxiPTYJBWRxmjhXslK68pMca2RcmiGKnslEvJkzAPNhHbKEiCMjh1Zc0sp9+BEc4Jm4kal5NcRbPvYZ94oQINQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790582383; c=relaxed/simple;
-	bh=4kl2el4FpHcVHqxsS4pGEvHLvJHgWdZsn2aHeqzIC4Q=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=ElUFkjgKTR1E1jTL3K0sogo+ECXAW/2a1d2KwN2WFoOJ0X8JJIlCBMA4nmtrKrDuP2gBeFd9HOtf3FIauZGldly9YO51MHctzEGwwqSWkOJ9bLq0pQKuvgmVX9PI/77+xOB/SQRQWfBxMDL43RuElRv7O7jpLTYAtyMj7IzORqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8AxHNJqHrpqUnEQAA--.48151S3;
-	Mon, 28 Sep 2026 15:59:38 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJCx9cxpHrpqVP8lAA--.52959S2;
-	Mon, 28 Sep 2026 15:59:37 +0800 (CST)
-Subject: Re: [PATCH 6/6] LoongArch: KVM: Reject repeated PCH-PIC CTRL_INIT
-To: Tao Cui <cui.tao@linux.dev>, gaosong@loongson.cn, zhaotianrui@loongson.cn
-Cc: loongarch@lists.linux.dev, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
- nagachaithanya9911@gmail.com, Tao Cui <cuitao@kylinos.cn>
-References: <20260927075240.3007947-1-cui.tao@linux.dev>
- <20260927075240.3007947-7-cui.tao@linux.dev>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <d3a560db-f4f2-6cfe-6742-ca5de9f5719c@loongson.cn>
-Date: Mon, 28 Sep 2026 16:01:02 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from mail-ed2-f16.google.com (mail-ed2-f16.google.com [74.125.228.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D706B3B95EC
+	for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 08:17:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.228.80
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790583438; cv=pass; b=SGQpLBnp3y+XNjwDqtYubAe2vOW1mbZoYMwJh/NiN5jHUW6lREhPo6XXFsiCP0VpspxWrDzPcuAiYBHlTSQVscKMoMKOZjXiYo3Oj00w5p7kJyicNcTI0ax5XBJateGl6vA7fxfcM+y4a4lsjowxb+YluihYQTIVFM3mWhscqSQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790583438; c=relaxed/simple;
+	bh=aYwJC4BScg6xo8RaWoJ6AsT9nwuM3VqyxukWf+p+5lw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=X7fFTYQmvhSmhMqZoTD49/xtjj5kPZL023aSmZicWJPzG8NcBDwdYfGuzlNyeHEGM2Ah21+7uzpycCPf2UHTx4eM0TnQYpbxQZ3q2QMqLh54yhUGUx0wM3lMoaHY5Vh5CN4kG10MV4Q5ggYW1ATkf2/UwjCAqdKB+psBsNg53R0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bdd3fM9z; arc=pass smtp.client-ip=74.125.228.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bdd3fM9z"
+Received: by mail-ed2-f16.google.com with SMTP id 4fb4d7f45d1cf-6a9984f9adcso4475583a12.0
+        for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 01:17:16 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790583435; cv=none;
+        d=google.com; s=arc-20260327;
+        b=Vk/2XI9yX2RNt6oW7nN03cRH79evTYsnnHVjVmAEfWkCAWIFWmf8lQmGhG1Mg219Ns
+         rXYUylwK1RfDJ+rDEcDBUuE3Qc0VY+4wyul7rjy5jxUX6MSWzNPWMmZX1uYUWN/nU7zF
+         QjsbgiWf6AZVNcMivrp7e1HD1qHIQikr3dDx3WXUqb2AwvmVWtSjoYO2zAf/fmFJtcDw
+         PJGZnW2Yv40lcnc3bpzJVJxwNVupGNIFVdRsLbJVskuhkiUQ4Q8dTVulpZOd4z8VHKCr
+         3ZPnSK882qFhqXkIQfhP+gV6DelB6tIhB5dWVbn/T988Ok3JWBB6CQmzobH6NP/lJJfX
+         VypA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=x52vdN3RGFH8b7Z3g2Hq5cceezp96zx3/fKU5lU+Vhs=;
+        fh=z1o2PFAVKbaBzOd1GVVi4az0uaF7+tYUGG+iiYwMVcY=;
+        b=DGrWXAc9YOQRrfUFzTnSuo7zM92hWxTyM4JGtfXNi5PoBq20FRWT8Mnq7mkAI3XJOb
+         Z1InxX4fjUVYEjTcSvL9XLO3mUMRWzj1U7wJ8Lax17g3K6huaCzaX3fCW5UblZxvOni9
+         khptKBqw8O3mdzbWhCdi3EZz4NcvW/bHzgUAeb/Rzjkq63cx15vmoXa6dAt/GU9HvCFC
+         VzLDDwH+4DyVmpbccv5soAHwfhkttlViQNDFXKh/rC+6IZzbMiXaxyCS4IAMeQBq2f1l
+         NxdttuX8SFPgxqGcE5hbRGtKx/Er536WtObKdMcJXzSX2KOWs8uZSGXVtIftg6jb0355
+         vvNQ==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790583435; x=1791188235; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=x52vdN3RGFH8b7Z3g2Hq5cceezp96zx3/fKU5lU+Vhs=;
+        b=Bdd3fM9zbHkvLHvnK4MhmTzYDYWV4Nssp4K39rdyf/PEIFmZHH2fdzOsxQFu7HmqkO
+         OKlUCROYhGB5KdshCAHrYl90GmBsyWS/TQB467Rf2NTjkvyypM07C5LYAvhf1bHxtU69
+         NM6dzIi3CM+/PlIbr/qzYWILU4Xxea+PifI4g850taDb3QjjkI2c4JV8gzQqNU7BIQyz
+         /G4B9u/rYeewqF2M6GJmxliX/hoOWLmVrF9xs5zCP6s+/QbjWddsx2tIRp0egUrLt/vP
+         E1/wvR3V3YyFy7D8VjzlDztyGHpL+kySUQHD3XzS2E2wOLZagplu0Q+VKRhasIN0ZlD8
+         8NAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790583435; x=1791188235;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=x52vdN3RGFH8b7Z3g2Hq5cceezp96zx3/fKU5lU+Vhs=;
+        b=MGYR+t/3kkgJU0rfeE73swtBp/gaFS+/qOSuQ/0qPe6ge+3fs54YhweAlPDBMXdhJV
+         7Gf3020laV5a388PyFJ1ffIsIz8AEimkFQhtKRO9NEM6biOCmVSK04C4mB8mMKrQO39l
+         Lc2XOyw9W5eti4BlzzdY9w8SGP8dijbVlRcFtlhWYwrPEGm+l7jIMrk2CVmKfeMpxDUY
+         NYQrJfvkgklxyFzJjSBihTeq8zWcZMmmqIVYjzG97aL5LqW60ojdRB5nEtnTkK1uvffm
+         0NdqvxvyTGmh1XURqlBIXphz4TySTZQ5pZ8vU4FQcELqbM3kDcZAxWaQxouT4x9zwwVm
+         dsKA==
+X-Forwarded-Encrypted: i=1; AKwUvBy5d16o6vw67iuL5+vYjrllAxpBfHVbONzs2RYdC2pjWmLEOBTArm/M2bBAIA130/96sfmnlGOhW8M=@lists.linux.dev
+X-Gm-Message-State: AFuF++nyeSiqgfv5WD0f4hjKG8NRi3qqvoSF00f7Sd3iFd/op5mc158N
+	a7YUvvrp/CZOFTaJybVyOSeUo+22DRl+lRpPP3mDt2TWfuJb2k1EhNWiWLmS8BegO4t1SkbOFRb
+	TtZWBzfVBSpHJKuAvXQgJRkhgeTMVwxU=
+X-Gm-Gg: AYBFou0tUFgwh6jdEN+sYzMK4Clb4S+5oeIw29FVOB282QxUcLSjwwI5DaZNdA0dX5b
+	y3rwoCcsRJQ7Q7vrkJEsX5QywWeWVhVquWf+x2Uwg8XHBmL7Sn5mDfmvQUIiqYicLzRGIxVMeBr
+	Uxu3JMY4/qZRdzj3LQowHGmCkyfo+FPxhWzksJB2jfv7sS/NqZl7VU+IvFvApK2H2Uf1nEPN/YD
+	qQh55mdTSMU+bSINvKPN0txDACAns61QJVSBgI02/JV+yRGUVGmj2AsyhjbDpWtDcbA+eJ1OCPB
+	GDEmrhvQFZ9G1zB7XuUz5bCo/YGrhI1f6cBiw9HWtuUd7eKx+u4CooqJ6g==
+X-Received: by 2002:a17:907:c491:b0:c26:1648:a06f with SMTP id
+ a640c23a62f3a-c2ac253fd57mr1046162166b.42.1790583434617; Mon, 28 Sep 2026
+ 01:17:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20260927075240.3007947-7-cui.tao@linux.dev>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCx9cxpHrpqVP8lAA--.52959S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7tFW3Cry8JryDKr47XF48Xwc_yoW8KF48pr
-	WrCa9xCFW8Kr129Fs7Zwn3XF1I9Fs7uw4S9a45AFyYkwn0gryrKFy8A3yDX3WDJ395AF1I
-	qr4fGa90va1UAabCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GF
-	ylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jY
-	SoJUUUUU=
+References: <cover.1790561983.git.zhoubinbin@loongson.cn> <502911659e15a51c4e98c11f3cf476dd5f92e75b.1790561983.git.zhoubinbin@loongson.cn>
+ <0aaf7166-378c-47d7-98d4-1004fdaeae7b@oss.qualcomm.com>
+In-Reply-To: <0aaf7166-378c-47d7-98d4-1004fdaeae7b@oss.qualcomm.com>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Mon, 28 Sep 2026 16:17:02 +0800
+X-Gm-Features: AclHuK9Vua98KWEJM57MhTJw4SsJBaEsxZP1W-rR6PIaRSRBPFPETsYhRw_q6Fo
+Message-ID: <CAMpQs4+uWMfFib7MhRcc7o-QMXkFrFCtdcGj04y56u44JL4iOg@mail.gmail.com>
+Subject: Re: [PATCH v6 1/7] thermal/drivers/loongson2: Correct thermal sensor
+ registration loop
+To: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Yinbo Zhu <zhuyinbo@loongson.cn>, "Rafael J . Wysocki" <rafael@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
+	linux-pm@vger.kernel.org, stable@vger.kernel.org, 
+	Sashiko <sashiko-bot@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi Daniel:
+
+Thanks for your review.
+
+On Mon, Sep 28, 2026 at 3:15=E2=80=AFPM Daniel Lezcano
+<daniel.lezcano@oss.qualcomm.com> wrote:
+>
+> On 9/28/26 06:44, Binbin Zhou wrote:
+> > The registration loop in loongson2_thermal_probe() incorrectly uses
+> > dev_err_probe() when the sensor is not present (-ENODEV). In that case,
+> > the driver should continue to the next sensor index rather than treatin=
+g
+> > it as a fatal error.
+> >
+> > Fix this by correctly handling -ENODEV and only returning on other
+> > errors. Also add a final check to ensure at least one thermal zone was
+> > registered.
+> >
+> > Cc: stable@vger.kernel.org
+> > Reported-by: Sashiko <sashiko-bot@kernel.org>
+> > Closes: https://sashiko.dev/#/patchset/cover.1783670011.git.zhoubinbin@=
+loongson.cn?part=3D2
+> > Fixes: e7e3a7c35791 ("thermal/drivers/loongson-2: Add thermal managemen=
+t support")
+> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > ---
+> >   drivers/thermal/loongson2_thermal.c | 8 +++++---
+> >   1 file changed, 5 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/thermal/loongson2_thermal.c b/drivers/thermal/loon=
+gson2_thermal.c
+> > index 4d40fc706a53..99b7392fc68f 100644
+> > --- a/drivers/thermal/loongson2_thermal.c
+> > +++ b/drivers/thermal/loongson2_thermal.c
+> > @@ -160,16 +160,18 @@ static int loongson2_thermal_probe(struct platfor=
+m_device *pdev)
+> >
+> >       for (i =3D 0; i <=3D LOONGSON2_MAX_SENSOR_SEL_NUM; i++) {
+> >               tzd =3D devm_thermal_of_zone_register(dev, i, data, therm=
+al_ops);
+> > -
+> >               if (!IS_ERR(tzd))
+> >                       break;
+> >
+> > -             if (PTR_ERR(tzd) !=3D -ENODEV)
+> > +             if (PTR_ERR(tzd) =3D=3D -ENODEV)
+> >                       continue;
+> >
+> > -             return dev_err_probe(dev, PTR_ERR(tzd), "failed to regist=
+er");
+> > +             return dev_err_probe(dev, PTR_ERR(tzd), "failed to regist=
+er sensor %d\n", i);
+>
+>
+> >       }
+> >
+> > +     if (IS_ERR(tzd))
+> > +             return dev_err_probe(dev, -ENODEV, "No thermal sensor reg=
+istered\n");
+> > +
+> >       ret =3D devm_request_threaded_irq(dev, irq, NULL, loongson2_therm=
+al_irq_thread,
+> >                                       IRQF_ONESHOT, "loongson2_thermal"=
+, tzd);
+> >       if (ret < 0)
+>
+>
+> The [no]error paths are confusing and prone to error, eg: 'if there is
+> no error then check if there is an error', 'when exiting the loop
+> without registering any sensor, then we assume tzd is -ENODEV'.
+>
+> Please make a less cumbersome and implicit checks here. For example
+> count the number of sensors and then do the check against.
+
+I thought about it, and you're right=E2=80=94I made the logic here too comp=
+licated.
+Let's use `sensor_count` as the counter. Is the following check logic clear=
+er?
+
+        u32 sensor_count =3D 0;
+
+        for (unsigned int i =3D 0; i <=3D LOONGSON2_MAX_SENSOR_SEL_NUM; i++=
+) {
+                tzd =3D devm_thermal_of_zone_register(dev, i, data,
+data->chip_data->thermal_ops);
+                if (IS_ERR(tzd)) {
+                        if (PTR_ERR(tzd) =3D=3D -ENODEV)
+                                continue;
+
+                        return dev_err_probe(dev, PTR_ERR(tzd),
+                                             "failed to register sensor %d"=
+, i);
+                }
+
+                sensor_count++;
+                break;
+        }
+
+        if (!sensor_count)
+                return dev_err_probe(dev, -ENODEV, "no thermal sensor
+registered");
 
 
-
-On 2026/9/27 下午3:52, Tao Cui wrote:
-> From: Tao Cui <cuitao@kylinos.cn>
-> 
-> KVM_DEV_LOONGARCH_PCH_PIC_CTRL_INIT has no guard against repeated
-> invocation: every call overwrites pch_pic_base and registers the same
-> kvm_io_device on the MMIO bus at the new address, while
-> kvm_pch_pic_destroy() unregisters only one bus range.  After a repeated
-> init, MMIO to the stale ranges computes its register offset against the
-> new base and silently reads 0 / drops writes, and the leftover bus
-> entries persist until the VM is destroyed.
-> 
-> Reject a repeated init with -EBUSY, a null address with -EINVAL, and
-> only set pch_pic_base after the bus registration succeeds so a failed
-> init does not leave the device half-initialized.  The registration
-> error is propagated instead of being replaced with -EFAULT.
-> 
-> Fixes: d206d9514873 ("LoongArch: KVM: Add PCHPIC user mode read and write functions")
-> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
-> ---
->   arch/loongarch/kvm/intc/pch_pic.c | 10 ++++++++--
->   1 file changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/pch_pic.c
-> index 136211f154d4..2baf9ecf0c8a 100644
-> --- a/arch/loongarch/kvm/intc/pch_pic.c
-> +++ b/arch/loongarch/kvm/intc/pch_pic.c
-> @@ -285,7 +285,10 @@ static int kvm_pch_pic_init(struct kvm_device *dev, u64 addr)
->   	struct kvm_io_device *device;
->   	struct loongarch_pch_pic *s = dev->kvm->arch.pch_pic;
->   
-> -	s->pch_pic_base = addr;
-> +	if (!addr)
-> +		return -EINVAL;
-To detect repeated init, I think it will be better add a BOOL type 
-variable such ready/has_init for this. In theory device with physical 
-address 0 is possible.
-
-> +	if (s->pch_pic_base)
-> +		return -EBUSY;
--EEXIST or 0 if it is created already?
-
-Regards
-Bibo Mao
->   	device = &s->device;
->   	/* init device by pch pic writing and reading ops */
->   	kvm_iodevice_init(device, &kvm_pch_pic_ops);
-> @@ -293,8 +296,11 @@ static int kvm_pch_pic_init(struct kvm_device *dev, u64 addr)
->   	/* register pch pic device */
->   	ret = kvm_io_bus_register_dev(kvm, KVM_MMIO_BUS, addr, PCH_PIC_SIZE, device);
->   	mutex_unlock(&kvm->slots_lock);
-> +	if (ret < 0)
-> +		return ret;
->   
-> -	return (ret < 0) ? -EFAULT : 0;
-> +	s->pch_pic_base = addr;
-> +	return 0;
->   }
->   
->   /* used by user space to get or set pch pic registers */
-> 
-
+--=20
+Thanks.
+Binbin
