@@ -1,131 +1,198 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 414DD4D178A
-	for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 13:43:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DDDC4D9577
+	for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 14:28:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790602992; cv=none; b=KQDAiGmJVbvwnv8WnMbugbj15FKetgBZkxl5BIy879b65ATeRVGxwQUWRMArMku33OcvmV5XSX+y+OzMe9uSpZxgU/8/BtLNrboZEuHQ4nunYbJisBrnpo51o8GA0fA9yAHEH0oppEpfx/F5fwIJTiRcIwn/RLDytEce1Px/TUo=
+	t=1790605716; cv=none; b=KDJs59MkgiqTgaGtErHzKornLJ1akDFkK5c642eCXYztyiNsZ9H+KyZdmHM6/AJpG4QilsHMrM3nTciTgv8Dr4pl0ws7zeVELOSM+Z1oSt6AgqIwTvE6VJAuG3S4X84fbz0VcSn/NI+bd4MAo055vS/cWZaR/w1MNTi68ULhvfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790602992; c=relaxed/simple;
-	bh=LAfG9aZjGdrhKCf/58E+Lupe9Ivg/F16AB6VzU/JCk0=;
+	s=arc-20240116; t=1790605716; c=relaxed/simple;
+	bh=9uWhnOZitfKn/aBGgT8rT/13BQ31t5CQPD0tYRaO6/8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FZ3Uo4pHOpfIVzQ6FukIlr6a8OU6AjqX2cuVfETkiKUHemPh9wt4eAzRe9vQx/d1BigysKpEeP37Q4VspsDpdQCV05qFSpuL+w3kGukwnVM9RgMK9YO+xqmvu0FjMAxgngX2n7g4vj2xtwJAaZIs+CRL+Pe/FjAsdYDF9yL/BBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XqgwPDhN; arc=none smtp.client-ip=100.103.45.18
+	 To:Cc:Content-Type; b=FKez1UAubYlCsW0ePr60qBfOCV5VHvC8ULS0tsrgvfmBujaRMzTuspDL9jacbIOsXoBhIP0gsI/ZUZffV2mGl3HlEciJWVUXaMRtMZ27FM83a+VkrYoAea/jVPXyRJujmvrVqEU1/UTmGXt7mOtDGB28ZJ7o9XomYPHKbCqjR/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YSfs5RMk; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XqgwPDhN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D43AD1F00899
-	for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 13:43:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YSfs5RMk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48BD71F008A3
+	for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 14:28:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790602988;
-	bh=KhMGxUvRlRgkjraFBvxRRPukh6cwxdgVureX0v0+n4g=;
+	s=k20260515; t=1790605715;
+	bh=YPzStzDokfiX/VDV5QtJf5+kUVF9DbxDMP+IisfKyT8=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=XqgwPDhN/UCUkPF09xSf+JZzOnf+JLMeW+aF1DWSWGeSSdZjF0vTWKEoP/AZNss0x
-	 h2sggBfT0YCdHVdVc5t7BYeqx6OLpqdhTjx3xECXnFs9ofzNp+LzrHGSGNUVKzjgxy
-	 258QZwNIGi8BmRKb/Mt6XU4QHgD4uefN1BBXMmLtPMQenLPh2fc28zI5nOKnBDP6XJ
-	 GMDWgbwE2Iq+42tslszYitegdOoW4H0bHHZzz1gCYD5U5xMlXELp0Z2mH/As4gfK+5
-	 yroTVB5B+ukJzW/NA2d9lfFaXMoZLUD9J83TkGD8V/rG61Yhi7HuvX5tuI2G6rbVSO
-	 SVNptfreJTUEA==
-Received: by mail-ed2-f34.google.com with SMTP id 4fb4d7f45d1cf-6aae359e2c0so4467714a12.3
-        for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 06:43:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBwWhy77Uvq/ovIMxViBZQlmjDuNv7yFhsXz6APbS8MfLXbIdPMNRjkmJm6UlwoDgl9twP6fW8Eaxfo=@lists.linux.dev
-X-Gm-Message-State: AFq9FYL6km6k/KktN2t9i7ujhDIG2AJTgPGxzdNpJmuLgyDCoZvn6AnR
-	MWOUGAD73E2zKyVBamG4C+p0CCTsPLkiaq1baytqYo3hI8eUMJo3LeT/ZeK8yqpURcvaFSJpCu7
-	4cB4AyLweYEmTIXL7mbgQXcGME9FSm0U=
-X-Received: by 2002:a05:6402:52d6:b0:6ac:9a44:d412 with SMTP id
- 4fb4d7f45d1cf-6ac9a451421mr453774a12.7.1790602987498; Mon, 28 Sep 2026
- 06:43:07 -0700 (PDT)
+	b=YSfs5RMkDkKbpdzc32rdg+UCY/r9+hJ4gXPA0BaxZjWobloLH0meA7L2Ndcg0MVMQ
+	 voaDBj0dh4OTL3lIsFGVGWx7do1U1dPHpnaUxjioi49KxFmH9IopR+IJI8U6Ii8YDh
+	 52dleR4BVfIhNROssUvwdUsnLXo8FPOsTuIhnGKdhBJu918fDO88XDdjlxZQLIN2Tj
+	 SRRLN2HiCbJzv2aauias77hq4rOI86GltxBrmlKWMhETrsZQpGXC8Sgn1+6iwZ8awn
+	 UOIG2a6m+KM3jzZEUwIQ5ifhB00RG15phzB/filJQ+cs8ad8Tz19galLNSZqlbqFOm
+	 qpDinbQwKJhUg==
+Received: by mail-ed2-f35.google.com with SMTP id 4fb4d7f45d1cf-6a6056ac81fso4384571a12.2
+        for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 07:28:35 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvBxlvLK0TzljGv8kQLbhcbO3yRyO7qkVYJVTZ9hmqtd5W9xGm7Gs4oIHmL8Xcg1mOIYpxe5w//8NjJI=@lists.linux.dev
+X-Gm-Message-State: AFq9FYLtiaIZCNn6UKHbc+XrmPi8NFV7m+hFTrYNR1IB9k5zjfNc+nTJ
+	38hK2FY6l+EkB7Cp9NU40nMES5KXU3KEwvhgbd8xBSiCJ2sXj786bKBMkLBqY+xT/CVb/SfwVKx
+	VyI0zNpuqBo1/Dpz6LLePRWESrlNWaCM=
+X-Received: by 2002:a05:6402:4011:b0:6ac:62aa:e3dc with SMTP id
+ 4fb4d7f45d1cf-6ac62aaea73mr3602685a12.26.1790605713775; Mon, 28 Sep 2026
+ 07:28:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260923084802.29508-1-zhaoqunqin@163.com>
-In-Reply-To: <20260923084802.29508-1-zhaoqunqin@163.com>
+References: <20260923060349.146780-1-lianyangyang@kylinos.cn> <20260924075655.375632-1-lianyangyang@kylinos.cn>
+In-Reply-To: <20260924075655.375632-1-lianyangyang@kylinos.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 28 Sep 2026 21:42:56 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7+oXvoFbY1TDyRhYCgLXncRWNzpWrEBxpm6rwb_u8g5Q@mail.gmail.com>
-X-Gm-Features: AclHuK9T9s7VHBe8CzWdrIsP39KtE45HD6piVqFEHQ4lotnnM54AAYzrWUKy_1w
-Message-ID: <CAAhV-H7+oXvoFbY1TDyRhYCgLXncRWNzpWrEBxpm6rwb_u8g5Q@mail.gmail.com>
-Subject: Re: [PATCH v8 0/2] mfd: loongson-se: Add multi-node support and fix
- miscellaneous issues
-To: Qunqin Zhao <zhaoqunqin@163.com>
-Cc: lee@kernel.org, zhaoqunqin@loongson.cn, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-crypto@vger.kernel.org, mfd@lists.linux.dev
+Date: Mon, 28 Sep 2026 22:28:23 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6C=AyS=1AejxxaG-Zri=2=AfMtPzXFxEvzpFdD1_AaAw@mail.gmail.com>
+X-Gm-Features: AclHuK_Cw3Fa7E90RJ5ekvaNPqdQ2_xMfC9MdHhXGybH75CyqmNPIL39bdqS-mU
+Message-ID: <CAAhV-H6C=AyS=1AejxxaG-Zri=2=AfMtPzXFxEvzpFdD1_AaAw@mail.gmail.com>
+Subject: Re: [PATCH v2] LoongArch: kdump: add arch_crash_save_vmcoreinfo() support
+To: Yangyang Lian <lianyangyang@kylinos.cn>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Baoquan He <baoquan.he@linux.dev>, 
+	Mike Rapoport <rppt@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, Dave Young <ruirui.yang@linux.dev>, 
+	WANG Xuerui <kernel@xen0n.name>, kexec@lists.infradead.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Haoran Jiang <jianghaoran@kylinos.cn>, 
+	Tao Cui <cuitao@kylinos.cn>, George Guo <guodongtai@kylinos.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-For the whole series,
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+Hi, Yangyang,
 
-On Wed, Sep 23, 2026 at 4:48=E2=80=AFPM Qunqin Zhao <zhaoqunqin@163.com> wr=
-ote:
+On Thu, Sep 24, 2026 at 3:58=E2=80=AFPM Yangyang Lian <lianyangyang@kylinos=
+.cn> wrote:
 >
-> From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+> Since commit 23c85094fe18 ("proc/kcore: add vmcoreinfo note to
+> /proc/kcore") the kernel has exported the vmcoreinfo PT_NOTE on
+> /proc/kcore as wellas /proc/vmcore.
 >
-> - Patch 1 introduces the multi-node platform support.
+> LoongArch does not provide arch_crash_save_vmcoreinfo(), so the
+> arch-specific values are missing from the vmcoreinfo PT_NOTE. The
+> generic exporter in kernel/vmcore_info.c already provides
+> NUMBER(VMALLOC_START), but tools like crash cannot derive the module
+> and vmemmap ranges, VA_BITS, or the KASLR offset of a LoongArch dump.
 >
->   v6-v8: no changes
->   v5: Clear pending interrupts with S2LINT_CL before requesting IRQs,
->        and move S2LINT_EN to after all interrupt handlers are registered.
->   v4: Safely handling shared interrupt handler returns.
->   v3: Using shared interrupts (IRQF_SHARED) instead of manually
->       iterating through all devices to check for interrupts.
+> Since commit 18210a104bb9 ("LoongArch: Expand module virtual address
+> space to 2GB") the vmalloc and module boundaries are no longer stable
+> across kernel versions either, so vmcoreinfo is the only reliable
+> source for them.
 >
-> - Patch 2 focuses on structural and error-path hardening for the
->   pre-existing baseline code. This includes resolving critical issues
->   discovered by the Sashiko Automation system such as: completion
->   race conditions, missing engine completion initialization, spinlock
->   held with interrupts disabled for up to 10 ms, EPROBE_DEFER
->   handling, DMA buffer overflow validation, interrupt cleanup on
->   probe failure, and device removal ordering.
+> Provide this function in a separate file that is built at the same time
+> as its caller in kernel/vmcore_info.c, and add a LOONGARCH64 section to
+> Documentation/admin-guide/kdump/vmcoreinfo.rst.
 >
->   v8:
->        - Remove the poll_lock added in v7
+> Reported-by: Haoran Jiang <jianghaoran@kylinos.cn>
+> Suggested-by: Haoran Jiang <jianghaoran@kylinos.cn>
+> Tested-by: Tao Cui <cuitao@kylinos.cn>
+> Co-developed-by: George Guo <guodongtai@kylinos.cn>
+> Signed-off-by: George Guo <guodongtai@kylinos.cn>
+> Signed-off-by: Yangyang Lian <lianyangyang@kylinos.cn>
+> ---
+> V2 -> V1: Export VMEMMAP_END + 1 to make it an exclusive bound, matching
+>           what tools like makedumpfile expect.
+>           Add Tested-by tag from Tao Cui.
 >
->   v7:
->        - Re-enable the interrupt under dev_lock in loongson_se_poll()
->          instead of poll_lock, so both the mask and re-enable of
->          SE_S2LINT_EN are protected by the same lock and cannot race
->        - Wait for controller command completion with a bounded
->          non-interruptible wait so a pending signal cannot leave the
->          controller running while DMA buffers are torn down
->        - Validate the id argument in loongson_se_init_engine() to
->          reject engine 0 and out-of-bounds indices
->        - Drop the redundant init_completion() in
->          loongson_se_init_engine() now that probe() initializes all
->          engine completions
->   v6:
->        - Mask the target interrupt, clear pending status, and
->          reinitialize the completion under dev_lock before issuing a
->          command, re-enabling the interrupt after triggering
->        - Keep the original engine_init_lock scope instead of the
->          broader cmd_lock mutex
->        - Reuse loongson_se_send_controller_cmd() in the STOP path and
->          register the stop handler before loongson_se_init()
->        - Correct the dmam_size validation formula
->   v5: Fix all issues reported by Sashiko analysis:
->        - Initialize engine completions in probe to avoid NULL deref
->        - Use cmd_lock mutex for command serialization, drop spin_lock_irq
->        - Add reinit_completion to controller and engine command paths
->        - Fix EPROBE_DEFER handling in platform_irq_count()
->        - Validate dmam_size against minimum required size
->        - Disable IRQs in probe error path after init failure
->        - Add loongson_se_stop() devres cleanup with proper ordering
->        - Use non-interruptible wait for STOP command
->   v4: new patch
+>  .../admin-guide/kdump/vmcoreinfo.rst          | 29 +++++++++++++++++++
+>  arch/loongarch/kernel/Makefile                |  1 +
+>  arch/loongarch/kernel/vmcore_info.c           | 21 ++++++++++++++
+>  3 files changed, 51 insertions(+)
+>  create mode 100644 arch/loongarch/kernel/vmcore_info.c
 >
-> Qunqin Zhao (2):
->   mfd: loongson-se: Add multi-node support
->   mfd: loongson-se: Fix miscellaneous issues
+> diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentati=
+on/admin-guide/kdump/vmcoreinfo.rst
+> index 7663c610fe90..2ff921232616 100644
+> --- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
+> +++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+> @@ -594,3 +594,32 @@ va_kernel_pa_offset
 >
->  drivers/mfd/loongson-se.c       | 119 ++++++++++++++++++++++++++++----
->  include/linux/mfd/loongson-se.h |   1 +
->  2 files changed, 106 insertions(+), 14 deletions(-)
+>  Indicates the offset between the kernel virtual and physical mappings.
+>  Used to translate virtual to physical addresses.
+> +
+> +LOONGARCH64
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +VA_BITS
+> +-------
+> +
+> +The maximum number of bits for virtual addresses. Used to compute the
+> +virtual memory ranges.
+> +
+> +PHYS_OFFSET
+> +-----------
+> +
+> +Indicates the physical address of the start of memory. Used to translate
+> +virtual to physical addresses.
+> +
+> +KERNELOFFSET
+> +------------
+> +
+> +The kernel randomization offset. Used to locate the kernel text in
+> +virtual memory. If KASLR is disabled, this value is zero.
+> +
+> +MODULES_VADDR|MODULES_END|VMALLOC_START|VMALLOC_END|VMEMMAP_START|VMEMMA=
+P_END
+> +------------------------------------------------------------------------=
+-----
+> +
+> +Used to get the correct ranges:
+> +       MODULES_VADDR ~ MODULES_END-1 : Kernel module space.
+> +       VMALLOC_START ~ VMALLOC_END-1 : vmalloc() / ioremap() space.
+> +       VMEMMAP_START ~ VMEMMAP_END-1 : vmemmap region, used for struct p=
+age array.
+> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makef=
+ile
+> index 001924877772..6260c15adaba 100644
+> --- a/arch/loongarch/kernel/Makefile
+> +++ b/arch/loongarch/kernel/Makefile
+> @@ -64,6 +64,7 @@ obj-$(CONFIG_RELOCATABLE)     +=3D relocate.o
+>  obj-$(CONFIG_KEXEC_CORE)       +=3D machine_kexec.o relocate_kernel.o
+>  obj-$(CONFIG_KEXEC_FILE)       +=3D machine_kexec_file.o kexec_efi.o kex=
+ec_elf.o
+>  obj-$(CONFIG_CRASH_DUMP)       +=3D crash_dump.o
+> +obj-$(CONFIG_VMCORE_INFO)      +=3D vmcore_info.o
 >
->
-> base-commit: cee9395acd8043be0644b25c34bfa86623f2b935
+>  obj-$(CONFIG_UNWINDER_GUESS)   +=3D unwind_guess.o
+>  obj-$(CONFIG_UNWINDER_PROLOGUE) +=3D unwind_prologue.o
+> diff --git a/arch/loongarch/kernel/vmcore_info.c b/arch/loongarch/kernel/=
+vmcore_info.c
+> new file mode 100644
+> index 000000000000..fb703b716253
+> --- /dev/null
+> +++ b/arch/loongarch/kernel/vmcore_info.c
+> @@ -0,0 +1,21 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/vmcore_info.h>
+> +#include <asm/addrspace.h>
+> +#include <asm/pgtable.h>
+> +#include <asm/setup.h>
+> +
+> +void arch_crash_save_vmcoreinfo(void)
+> +{
+> +       VMCOREINFO_NUMBER(VA_BITS);
+> +       /* NUMBER(VMALLOC_START) is exported by the generic code */
+> +       vmcoreinfo_append_str("NUMBER(VMALLOC_END)=3D0x%lx\n", VMALLOC_EN=
+D);
+> +#ifdef CONFIG_64BIT
+> +       vmcoreinfo_append_str("NUMBER(MODULES_VADDR)=3D0x%lx\n", MODULES_=
+VADDR);
+> +       vmcoreinfo_append_str("NUMBER(MODULES_END)=3D0x%lx\n", MODULES_EN=
+D);
+> +       vmcoreinfo_append_str("NUMBER(VMEMMAP_START)=3D0x%lx\n", (unsigne=
+d long)vmemmap);
+> +       vmcoreinfo_append_str("NUMBER(VMEMMAP_END)=3D0x%lx\n", VMEMMAP_EN=
+D + 1);
+> +#endif
+> +       vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=3D0x%lx\n", PHYS_OFFSE=
+T);
+I think it is also useful to export PAGE_OFFSET here.
+
+Huacai
+> +       vmcoreinfo_append_str("KERNELOFFSET=3D%lx\n", kaslr_offset());
+> +}
 > --
-> 2.47.2
+> 2.25.1
+>
 >
