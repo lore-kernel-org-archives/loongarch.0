@@ -1,211 +1,138 @@
-Received: from mail-ed2-f16.google.com (mail-ed2-f16.google.com [74.125.228.80])
+Received: from mta0.migadu.com (out-225.mta0.migadu.com [91.218.175.225])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D706B3B95EC
-	for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 08:17:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.228.80
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790583438; cv=pass; b=SGQpLBnp3y+XNjwDqtYubAe2vOW1mbZoYMwJh/NiN5jHUW6lREhPo6XXFsiCP0VpspxWrDzPcuAiYBHlTSQVscKMoMKOZjXiYo3Oj00w5p7kJyicNcTI0ax5XBJateGl6vA7fxfcM+y4a4lsjowxb+YluihYQTIVFM3mWhscqSQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790583438; c=relaxed/simple;
-	bh=aYwJC4BScg6xo8RaWoJ6AsT9nwuM3VqyxukWf+p+5lw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X7fFTYQmvhSmhMqZoTD49/xtjj5kPZL023aSmZicWJPzG8NcBDwdYfGuzlNyeHEGM2Ah21+7uzpycCPf2UHTx4eM0TnQYpbxQZ3q2QMqLh54yhUGUx0wM3lMoaHY5Vh5CN4kG10MV4Q5ggYW1ATkf2/UwjCAqdKB+psBsNg53R0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bdd3fM9z; arc=pass smtp.client-ip=74.125.228.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5120C48F85A
+	for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 08:51:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.225
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790585463; cv=none; b=Iyhft5ffWiTPTQyWG/0oFXvmHDFTRXczCxADECl0rBeHbDNEyxMsq699+LUr+6CbVJYBRUL4Bm+g9cB6bKEmPoeparjbzSoVn27piEKApQCil2DJXXTKTBVv0UaH+/IblKc9kqafUCUC/ADQpt8dGgWz1pL07iFHf2Q22DbF+JA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790585463; c=relaxed/simple;
+	bh=09WBzyqcOHBSt5hLHqAwbTciP1G0S+c8iry/IFi/HlI=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=TzLu/WeBfOb3+N8JCgIgz4BlFIPZ5jY2R/kWFpq1YsPDih9Z2vKlopxjqNGLRO7k0ACmjML3qRi62wbyHEPx1KzBQ0zfBDes/42VcsSBmtQtwriYIKvxNdduuQQuf1VnuuKWdskzhE22Xg8i9tgPSJJAHnrDNLQ+5HQ11sEtTwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hlJSyJb4; arc=none smtp.client-ip=91.218.175.225
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bdd3fM9z"
-Received: by mail-ed2-f16.google.com with SMTP id 4fb4d7f45d1cf-6a9984f9adcso4475583a12.0
-        for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 01:17:16 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790583435; cv=none;
-        d=google.com; s=arc-20260327;
-        b=Vk/2XI9yX2RNt6oW7nN03cRH79evTYsnnHVjVmAEfWkCAWIFWmf8lQmGhG1Mg219Ns
-         rXYUylwK1RfDJ+rDEcDBUuE3Qc0VY+4wyul7rjy5jxUX6MSWzNPWMmZX1uYUWN/nU7zF
-         QjsbgiWf6AZVNcMivrp7e1HD1qHIQikr3dDx3WXUqb2AwvmVWtSjoYO2zAf/fmFJtcDw
-         PJGZnW2Yv40lcnc3bpzJVJxwNVupGNIFVdRsLbJVskuhkiUQ4Q8dTVulpZOd4z8VHKCr
-         3ZPnSK882qFhqXkIQfhP+gV6DelB6tIhB5dWVbn/T988Ok3JWBB6CQmzobH6NP/lJJfX
-         VypA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=x52vdN3RGFH8b7Z3g2Hq5cceezp96zx3/fKU5lU+Vhs=;
-        fh=z1o2PFAVKbaBzOd1GVVi4az0uaF7+tYUGG+iiYwMVcY=;
-        b=DGrWXAc9YOQRrfUFzTnSuo7zM92hWxTyM4JGtfXNi5PoBq20FRWT8Mnq7mkAI3XJOb
-         Z1InxX4fjUVYEjTcSvL9XLO3mUMRWzj1U7wJ8Lax17g3K6huaCzaX3fCW5UblZxvOni9
-         khptKBqw8O3mdzbWhCdi3EZz4NcvW/bHzgUAeb/Rzjkq63cx15vmoXa6dAt/GU9HvCFC
-         VzLDDwH+4DyVmpbccv5soAHwfhkttlViQNDFXKh/rC+6IZzbMiXaxyCS4IAMeQBq2f1l
-         NxdttuX8SFPgxqGcE5hbRGtKx/Er536WtObKdMcJXzSX2KOWs8uZSGXVtIftg6jb0355
-         vvNQ==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790583435; x=1791188235; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=x52vdN3RGFH8b7Z3g2Hq5cceezp96zx3/fKU5lU+Vhs=;
-        b=Bdd3fM9zbHkvLHvnK4MhmTzYDYWV4Nssp4K39rdyf/PEIFmZHH2fdzOsxQFu7HmqkO
-         OKlUCROYhGB5KdshCAHrYl90GmBsyWS/TQB467Rf2NTjkvyypM07C5LYAvhf1bHxtU69
-         NM6dzIi3CM+/PlIbr/qzYWILU4Xxea+PifI4g850taDb3QjjkI2c4JV8gzQqNU7BIQyz
-         /G4B9u/rYeewqF2M6GJmxliX/hoOWLmVrF9xs5zCP6s+/QbjWddsx2tIRp0egUrLt/vP
-         E1/wvR3V3YyFy7D8VjzlDztyGHpL+kySUQHD3XzS2E2wOLZagplu0Q+VKRhasIN0ZlD8
-         8NAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790583435; x=1791188235;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=x52vdN3RGFH8b7Z3g2Hq5cceezp96zx3/fKU5lU+Vhs=;
-        b=MGYR+t/3kkgJU0rfeE73swtBp/gaFS+/qOSuQ/0qPe6ge+3fs54YhweAlPDBMXdhJV
-         7Gf3020laV5a388PyFJ1ffIsIz8AEimkFQhtKRO9NEM6biOCmVSK04C4mB8mMKrQO39l
-         Lc2XOyw9W5eti4BlzzdY9w8SGP8dijbVlRcFtlhWYwrPEGm+l7jIMrk2CVmKfeMpxDUY
-         NYQrJfvkgklxyFzJjSBihTeq8zWcZMmmqIVYjzG97aL5LqW60ojdRB5nEtnTkK1uvffm
-         0NdqvxvyTGmh1XURqlBIXphz4TySTZQ5pZ8vU4FQcELqbM3kDcZAxWaQxouT4x9zwwVm
-         dsKA==
-X-Forwarded-Encrypted: i=1; AKwUvBy5d16o6vw67iuL5+vYjrllAxpBfHVbONzs2RYdC2pjWmLEOBTArm/M2bBAIA130/96sfmnlGOhW8M=@lists.linux.dev
-X-Gm-Message-State: AFuF++nyeSiqgfv5WD0f4hjKG8NRi3qqvoSF00f7Sd3iFd/op5mc158N
-	a7YUvvrp/CZOFTaJybVyOSeUo+22DRl+lRpPP3mDt2TWfuJb2k1EhNWiWLmS8BegO4t1SkbOFRb
-	TtZWBzfVBSpHJKuAvXQgJRkhgeTMVwxU=
-X-Gm-Gg: AYBFou0tUFgwh6jdEN+sYzMK4Clb4S+5oeIw29FVOB282QxUcLSjwwI5DaZNdA0dX5b
-	y3rwoCcsRJQ7Q7vrkJEsX5QywWeWVhVquWf+x2Uwg8XHBmL7Sn5mDfmvQUIiqYicLzRGIxVMeBr
-	Uxu3JMY4/qZRdzj3LQowHGmCkyfo+FPxhWzksJB2jfv7sS/NqZl7VU+IvFvApK2H2Uf1nEPN/YD
-	qQh55mdTSMU+bSINvKPN0txDACAns61QJVSBgI02/JV+yRGUVGmj2AsyhjbDpWtDcbA+eJ1OCPB
-	GDEmrhvQFZ9G1zB7XuUz5bCo/YGrhI1f6cBiw9HWtuUd7eKx+u4CooqJ6g==
-X-Received: by 2002:a17:907:c491:b0:c26:1648:a06f with SMTP id
- a640c23a62f3a-c2ac253fd57mr1046162166b.42.1790583434617; Mon, 28 Sep 2026
- 01:17:14 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hlJSyJb4"
+X-Envelope-To: loongarch@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=09WBzyqcOHBSt5hLHqAwbTciP1G0S+c8iry/IFi/HlI=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1790585459; v=1; x=1791190259;
+ b=hlJSyJb4zyvL5tTc5B+UKJvJCZdxkTMJPLEWB4nUbp/tleH04SocnIPGb4w8yi3m5ovXyx/z
+ NSXt9VR0s+2Xg/Os5fYU54qClXCgayhYrJKbIYjmLqn2jdYk36jdndIr87ji4R0cYdAR0U+78QB
+ B7kA8WSWg0tewIstOzALdJoI=
+X-Envelope-To: loongarch@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id dcca5a333ecbdbdc;
+	Mon, 28 Sep 2026 08:50:58 +0000
+X-Mizu-Trace-ID: dcca5a333ecbdbdc
+X-Migadu-Flow: FLOW_OUT
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <cover.1790561983.git.zhoubinbin@loongson.cn> <502911659e15a51c4e98c11f3cf476dd5f92e75b.1790561983.git.zhoubinbin@loongson.cn>
- <0aaf7166-378c-47d7-98d4-1004fdaeae7b@oss.qualcomm.com>
-In-Reply-To: <0aaf7166-378c-47d7-98d4-1004fdaeae7b@oss.qualcomm.com>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Mon, 28 Sep 2026 16:17:02 +0800
-X-Gm-Features: AclHuK9Vua98KWEJM57MhTJw4SsJBaEsxZP1W-rR6PIaRSRBPFPETsYhRw_q6Fo
-Message-ID: <CAMpQs4+uWMfFib7MhRcc7o-QMXkFrFCtdcGj04y56u44JL4iOg@mail.gmail.com>
-Subject: Re: [PATCH v6 1/7] thermal/drivers/loongson2: Correct thermal sensor
- registration loop
-To: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Yinbo Zhu <zhuyinbo@loongson.cn>, "Rafael J . Wysocki" <rafael@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
-	Lukasz Luba <lukasz.luba@arm.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
-	linux-pm@vger.kernel.org, stable@vger.kernel.org, 
-	Sashiko <sashiko-bot@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 28 Sep 2026 08:50:55 +0000
+Message-Id: <DLQTKIGNXKLS.1E0Y9RS93S82N@linux.dev>
+From: "Florent Revest" <florent.revest@linux.dev>
+To: <bot+bpf-ci@kernel.org>, <bpf@vger.kernel.org>, <ast@kernel.org>,
+ <daniel@iogearbox.net>, <andrii@kernel.org>
+Cc: <martin.lau@linux.dev>, <eddyz87@gmail.com>, <memxor@gmail.com>,
+ <song@kernel.org>, <yonghong.song@linux.dev>, <jolsa@kernel.org>,
+ <kpsingh@kernel.org>, <john.fastabend@gmail.com>, <leon.hwang@linux.dev>,
+ <zirajs7@gmail.com>, <rhkrqnwk98@gmail.com>, <puranjay@kernel.org>,
+ <xukuohai@huaweicloud.com>, <iii@linux.ibm.com>, <hbathini@linux.ibm.com>,
+ <chleroy@kernel.org>, <naveen@kernel.org>, <bjorn@kernel.org>,
+ <pulehui@huawei.com>, <yangtiezhu@loongson.cn>, <hengqi.chen@gmail.com>,
+ <linux-kernel@vger.kernel.org>, <aou@eecs.berkeley.edu>,
+ <agordeev@linux.ibm.com>, <alex@ghiti.fr>, <bp@alien8.de>,
+ <catalin.marinas@arm.com>, <borntraeger@linux.ibm.com>,
+ <dave.hansen@linux.intel.com>, <emil@etsalapatis.com>, <hca@linux.ibm.com>,
+ <hpa@zytor.com>, <chenhuacai@kernel.org>, <ihor.solodrai@linux.dev>,
+ <mingo@redhat.com>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-kselftest@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+ <linux-riscv@lists.infradead.org>, <linux-s390@vger.kernel.org>,
+ <loongarch@lists.linux.dev>, <maddy@linux.ibm.com>, <mark.rutland@arm.com>,
+ <mpe@ellerman.id.au>, <npiggin@g>
+Subject: Re: [PATCH bpf v5 1/3] bpf: Wait for an RCU tasks grace period
+ before freeing trampoline progs
+X-Mailer: aerc 0.17.0
+References: <20260926135605.1217928-2-florent.revest@linux.dev>
+ <9d932a22ca908da9378ea281633ddb749453911ac6ae7a27a09e376f9ad02ff7@mail.kernel.org>
+In-Reply-To: <9d932a22ca908da9378ea281633ddb749453911ac6ae7a27a09e376f9ad02ff7@mail.kernel.org>
 
-Hi Daniel:
-
-Thanks for your review.
-
-On Mon, Sep 28, 2026 at 3:15=E2=80=AFPM Daniel Lezcano
-<daniel.lezcano@oss.qualcomm.com> wrote:
+On Sun Sep 27, 2026 at 8:41 PM UTC,  wrote:
+> > bpf: Wait for an RCU tasks grace period before freeing trampoline progs
+> >
+> > When a prog is detached from a trampoline, it is freed after an RCU
+> > grace period, or an RCU tasks trace one if it is sleepable. This covers
+> > the tasks that are running the prog, since the prog's enter helper take=
+s
+> > the matching read lock before the prog is called. On a preemptible
+> > kernel, it doesn't cover a task that was preempted in the trampoline
+> > just before the enter helper. That task holds no lock yet, and it calls
+> > the prog after it was freed:
+> >
+> >   BUG: KASAN: vmalloc-out-of-bounds in __bpf_prog_enter_recur+0x3a5/0x3=
+f0
+> >   Read of size 8 at addr ffffc90000055040 by task candidate/110
+> >   CPU: 1 UID: 0 PID: 110 Comm: candidate Not tainted 7.3.0-rc2-00014-g1=
+5071f2a1263-dirty #2 PREEMPT(full)
+> >   Call Trace:
+> >    <TASK>
+> >    __bpf_prog_enter_recur+0x3a5/0x3f0
+> >    bpf_trampoline_6442509193+0x37/0xf1
+> >    __x64_sys_futex+0x9/0x410
+> >    do_syscall_64+0xb0/0x530
+> >    ...
+> >
+> > Wait for an RCU tasks grace period before the existing one when freeing
+> > a prog that was linked to a trampoline. An RCU tasks grace period only
+> > ends once the tasks that were preempted have run again, and
+> > bpf_tramp_image_put() already relies on it to free the image. It doesn'=
+t
+> > wait for tasks that sleep in the trampoline, the next commit takes care
+> > of those.
+> >
+> > Only progs that were linked to a trampoline can be called this way, so
+> > bpf_trampoline_add_prog() marks them and other progs are still freed as
+> > before.
+> >
+> > Fixes: e21aa341785c ("bpf: Fix fexit trampoline.")
 >
-> On 9/28/26 06:44, Binbin Zhou wrote:
-> > The registration loop in loongson2_thermal_probe() incorrectly uses
-> > dev_err_probe() when the sensor is not present (-ENODEV). In that case,
-> > the driver should continue to the next sensor index rather than treatin=
-g
-> > it as a fatal error.
-> >
-> > Fix this by correctly handling -ENODEV and only returning on other
-> > errors. Also add a final check to ensure at least one thermal zone was
-> > registered.
-> >
-> > Cc: stable@vger.kernel.org
-> > Reported-by: Sashiko <sashiko-bot@kernel.org>
-> > Closes: https://sashiko.dev/#/patchset/cover.1783670011.git.zhoubinbin@=
-loongson.cn?part=3D2
-> > Fixes: e7e3a7c35791 ("thermal/drivers/loongson-2: Add thermal managemen=
-t support")
-> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > ---
-> >   drivers/thermal/loongson2_thermal.c | 8 +++++---
-> >   1 file changed, 5 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/thermal/loongson2_thermal.c b/drivers/thermal/loon=
-gson2_thermal.c
-> > index 4d40fc706a53..99b7392fc68f 100644
-> > --- a/drivers/thermal/loongson2_thermal.c
-> > +++ b/drivers/thermal/loongson2_thermal.c
-> > @@ -160,16 +160,18 @@ static int loongson2_thermal_probe(struct platfor=
-m_device *pdev)
-> >
-> >       for (i =3D 0; i <=3D LOONGSON2_MAX_SENSOR_SEL_NUM; i++) {
-> >               tzd =3D devm_thermal_of_zone_register(dev, i, data, therm=
-al_ops);
-> > -
-> >               if (!IS_ERR(tzd))
-> >                       break;
-> >
-> > -             if (PTR_ERR(tzd) !=3D -ENODEV)
-> > +             if (PTR_ERR(tzd) =3D=3D -ENODEV)
-> >                       continue;
-> >
-> > -             return dev_err_probe(dev, PTR_ERR(tzd), "failed to regist=
-er");
-> > +             return dev_err_probe(dev, PTR_ERR(tzd), "failed to regist=
-er sensor %d\n", i);
+> Is this the right Fixes: target?
 >
+> The race being closed here (a task preempted inside the trampoline image
+> before __bpf_prog_enter*() takes its RCU read lock, while the prog is fre=
+ed
+> after only a regular RCU or RCU tasks trace grace period) appears to pred=
+ate
+> e21aa341785c.
 >
-> >       }
-> >
-> > +     if (IS_ERR(tzd))
-> > +             return dev_err_probe(dev, -ENODEV, "No thermal sensor reg=
-istered\n");
-> > +
-> >       ret =3D devm_request_threaded_irq(dev, irq, NULL, loongson2_therm=
-al_irq_thread,
-> >                                       IRQF_ONESHOT, "loongson2_thermal"=
-, tzd);
-> >       if (ret < 0)
+> In fec56f5890d9 ("bpf: Introduce BPF trampoline") bpf_trampoline_update()
+> switched images with no tasks RCU wait, and __bpf_prog_put_noref() freed =
+the
+> prog with a plain call_rcu(&prog->aux->rcu, __bpf_prog_put_rcu).
 >
+> Just before e21aa341785c, the synchronize_rcu_mult(call_rcu_tasks,
+> call_rcu_tasks_trace) in bpf_trampoline_update() ran before
+> arch_prepare_bpf_trampoline() rather than after the new image was install=
+ed,
+> and the total =3D=3D 0 unregister_fentry() path had no wait at all, so a =
+task
+> preempted in the old image could already reach a freed prog.
 >
-> The [no]error paths are confusing and prone to error, eg: 'if there is
-> no error then check if there is an error', 'when exiting the loop
-> without registering any sensor, then we assume tzd is -ENODEV'.
->
-> Please make a less cumbersome and implicit checks here. For example
-> count the number of sensors and then do the check against.
+> Would Fixes: fec56f5890d9 ("bpf: Introduce BPF trampoline") be more
+> accurate, so that stable trees without e21aa341785c also pick this up? Th=
+e
+> follow-up 49ca60187380 in this series uses the same tag.
 
-I thought about it, and you're right=E2=80=94I made the logic here too comp=
-licated.
-Let's use `sensor_count` as the counter. Is the following check logic clear=
-er?
-
-        u32 sensor_count =3D 0;
-
-        for (unsigned int i =3D 0; i <=3D LOONGSON2_MAX_SENSOR_SEL_NUM; i++=
-) {
-                tzd =3D devm_thermal_of_zone_register(dev, i, data,
-data->chip_data->thermal_ops);
-                if (IS_ERR(tzd)) {
-                        if (PTR_ERR(tzd) =3D=3D -ENODEV)
-                                continue;
-
-                        return dev_err_probe(dev, PTR_ERR(tzd),
-                                             "failed to register sensor %d"=
-, i);
-                }
-
-                sensor_count++;
-                break;
-        }
-
-        if (!sensor_count)
-                return dev_err_probe(dev, -ENODEV, "no thermal sensor
-registered");
-
-
---=20
-Thanks.
-Binbin
+Yeah, that seems right. It shouldn't make much of a difference for stable
+because both have been introduced in the same 5.10.y. I can either switch t=
+his
+if there's a v6 or a maintainer can change when applying.
