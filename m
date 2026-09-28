@@ -1,105 +1,141 @@
-Received: from mta1.migadu.com (out-184.mta1.migadu.com [95.215.58.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D5832C234E
-	for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 02:30:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1F2A34B43F
+	for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 02:48:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790562647; cv=none; b=Ljg7VvIt5QTcRkhdQ8thibHHVPm8go2nsFp3aNKwb7J+otkMDZhHLTb8WIepVfgZ7ZQ38q+leKIs+Q77uB0N+XEOFXZcpaUDCPypUDoCTmerRhel2jxfGXQqWP5pUg57/3r0uJSSll4Xpx6PuMLwY90spzf/abVCYsN5FaHNht0=
+	t=1790563735; cv=none; b=OVSKUgAenaLKsiXkfhafRu4txz+0dAuonkSmOXhfZ+rKwtJx21w1OVoLrz5qhiTwAZwxu3XKQ7lig3hi+lV6AHHD5AZ3FGqYICJ/db+q5BHBQl/fBsGoRBGIv6bfFOIW6ktgInbD36Awk3G6+9kB6D0lQHpjHOJdHJ2DxAUDm6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790562647; c=relaxed/simple;
-	bh=4+s99KWizSzbFmjJiglWm5XJ4fIhkEZlwghACv5Q8bE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rnlR44lS5FM9edbtvuYyfphL/ucWH+nZHwLwKCjlOQFWLg9XMY/s7ugTOD1pNuc5I5LD9iO5QsJ0aL70vJHE8GpDAlKA/5Q5wuiwvEE7TBicGmBIVqeaJGnlkVehl1KNBCcBbIuTt0ZsbTg6GU51tliWwYKhn4cBwGfbcK7Zatw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=AWIz2X3A; arc=none smtp.client-ip=95.215.58.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1790563735; c=relaxed/simple;
+	bh=fZymGAtyT/CVHxW+bEdWYxIaJ4Y3UhD98yXsd45bzqM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tsreNbNgxXZd092QK66HUBH8iAYAQ5jNqyKMNusVe8CRGUQa9+dyGS8f/DdXLNJibA5JY0hZO/SyErw3AwubUWMQwWwwmBtByZlSVhdgBSVTtKXYeEigcAwoTbGHl+qJpWcJ2c50rqheCWQG2LqarhhH5MGStKyfkuGCC47JcRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O25pkvFH; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="AWIz2X3A"
-X-Envelope-To: loongarch@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=4+s99KWizSzbFmjJiglWm5XJ4fIhkEZlwghACv5Q8bE=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1790562643; v=1; x=1791167443;
- b=AWIz2X3AD/9gHxc0RebVCQOjyzIJg4Tu8t3j+fGfm1JDcLbi7gHHdmjzuMU7GtXyRyTtWh36
- lyQ0jMaAqm0OSUSiwoRibh1ovQQ8Zeli+9WGADjuzIICsdS40yAmTcrBtLslPbM7hZqQrvFlnhf
- ZbC8fqobqFAXKp1cRqjlobrM=
-X-Envelope-To: loongarch@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 4c0fd7c181865d0e;
-	Mon, 28 Sep 2026 02:30:29 +0000
-X-Mizu-Trace-ID: 4c0fd7c181865d0e
-X-Migadu-Flow: FLOW_OUT
-From: George Guo <dongtai.guo@linux.dev>
-To: rppt@kernel.org
-Cc: chenhuacai@kernel.org,
-	pasha.tatashin@soleen.com,
-	pratyush@kernel.org,
-	ardb@kernel.org,
-	shuah@kernel.org,
-	ilias.apalodimas@linaro.org,
-	akpm@linux-foundation.org,
-	baoquan.he@linux.dev,
-	ruirui.yang@linux.dev,
-	guodongtai@kylinos.cn,
-	liukexin@kylinos.cn,
-	kernel@xen0n.name,
-	graf@amazon.com,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	linux-efi@vger.kernel.org
-Subject: Re: [PATCH v5 0/5] LoongArch: add KHO support and selftests
-Date: Mon, 28 Sep 2026 10:30:10 +0800
-Message-ID: <20260928023010.3018-1-dongtai.guo@linux.dev>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <ap3KYSXQJfC0iysw@kernel.org>
-References: <ap3KYSXQJfC0iysw@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O25pkvFH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4A7E1F0089D
+	for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 02:48:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790563733;
+	bh=YZXmNamni8YTdkgj3WsVi9gU+V406f6mQymnA8E88y0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=O25pkvFHPnrIrFqD4jTGb58pzeF/yYdz+xqlud6LvYLra40cEEfQW5YVOGDAi1+yq
+	 WtTq52ls8MYgjOKyFspGXIbInelB+hKEBDO5TT0OWe6OZGinzQp6HhGD4F67v+hvqY
+	 ppriEstVjVqnmzJeKR0y48f9O0JuR6ACyGsS0llxzK9xjAUnxKguffRUk1P4tc/dp/
+	 wCimEJYqg5qIHscksIE7jZ3a1BOFofxmNWSzDrcFKKWrM7NJWA6eTM089/fvoaCIEX
+	 Qp6vJhZJ97UA9xb1WCxQ+x8+nm2t4+LeXDylaENFl4AjkT438bc5izWWWaXpPHyYoQ
+	 1/ewTcsMuEi6A==
+Received: by mail-qk2-f40.google.com with SMTP id d75a77b69052e-533264052d0so12822431cf.1
+        for <loongarch@lists.linux.dev>; Sun, 27 Sep 2026 19:48:53 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvByauOD+FIIWzHEp2SM46KUR1sE+G/aywQwGwE1CRhz3YNHKcHyoMNzlQl506GYubwOiIYNkOmAkku0=@lists.linux.dev
+X-Gm-Message-State: AFuF++my5NR8lLOFOej69YMYV8FMWQFIxmLAIAWMuoz057gXih1oJmbf
+	vcDxi1O4sgJ6vmA2YZaELb2iV1QCFNO7XU2WK2Ce4tcajbC/u6tl2m2cy/wO9G4nS68pbyQ/kR1
+	aenzTCcOWsYLUkiPM8tOT9P1FDkvQbIs=
+X-Received: by 2002:a05:620a:2614:b0:93a:2bdc:cd57 with SMTP id
+ af79cd13be357-93c43b7f72amr1824335585a.2.1790563732750; Sun, 27 Sep 2026
+ 19:48:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260911025613.1220845-1-zhanghongru@xiaomi.com>
+ <arFYRAa-i7CIwmHL@gremlin> <arF-E3Nsw9ZliH0t@casper.infradead.org>
+ <arI_w2wTfA00Mgy9@gremlin> <armexcXDiG8ryZd6@casper.infradead.org>
+In-Reply-To: <armexcXDiG8ryZd6@casper.infradead.org>
+From: Barry Song <baohua@kernel.org>
+Date: Mon, 28 Sep 2026 10:48:41 +0800
+X-Gmail-Original-Message-ID: <CAGsJ_4xuFi7K+crAcFQ998SxXS0xPM6QeA34JV+6+Sy005rXLg@mail.gmail.com>
+X-Gm-Features: AclHuK-KBiQtm0KE630BoXAk92dmhRT-WqzJYFoYV9V1f9Qw5fyAD0u8MfblD04
+Message-ID: <CAGsJ_4xuFi7K+crAcFQ998SxXS0xPM6QeA34JV+6+Sy005rXLg@mail.gmail.com>
+Subject: Re: [PATCH v6] mm: retry page faults once under the per-VMA lock
+To: Matthew Wilcox <willy@infradead.org>
+Cc: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>, Hongru Zhang <zhanghongru06@gmail.com>, akpm@linux-foundation.org, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, surenb@google.com, 
+	david@kernel.org, liam@infradead.org, mhocko@suse.com, rppt@kernel.org, 
+	shakeel.butt@linux.dev, vbabka@kernel.org, zhaonanzhe@xiaomi.com, 
+	linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, 
+	mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, 
+	chenhuacai@kernel.org, kernel@xen0n.name, loongarch@lists.linux.dev, 
+	maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com, 
+	chleroy@kernel.org, linuxppc-dev@lists.ozlabs.org, pjw@kernel.org, 
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, 
+	linux-riscv@lists.infradead.org, agordeev@linux.ibm.com, 
+	gerald.schaefer@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com, 
+	borntraeger@linux.ibm.com, svens@linux.ibm.com, linux-s390@vger.kernel.org, 
+	dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org, 
+	tglx@kernel.org, mingo@redhat.com, bp@alien8.de, x86@kernel.org, 
+	hpa@zytor.com, Hongru Zhang <zhanghongru@xiaomi.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Mike,
-
-On Sun, Sep 06, 2026 at 11:17:37PM +0300, Mike Rapoport wrote:
-> > EFI KHO channel:
+On Mon, Sep 28, 2026 at 6:55=E2=80=AFAM Matthew Wilcox <willy@infradead.org=
+> wrote:
 >
-> I can't say I like "transport" and "channel" terminology. We don't send
-> anything anywhere.
-
-Agreed. It is just a table that the next kernel reads. v6 calls it the
-KHO EFI configuration table everywhere, and "transport" and "channel"
-are gone from the code, the commit messages and the cover letter.
-
-[...]
-
-> The text here and in the patches changelog reads reads as LLM-generated
-> text. First, it's quite blind and unreadable with wall-to-wall text.
-> Second, LLMs tend to describe what they did in the context of a session,
-> but since we apply the cover letter to the liveupdate tree, the description
-> here should *only* describe why the changes are required and how they are
-> implemented. The history belongs to changes since vN-1 section.
+> On Tue, Sep 22, 2026 at 09:55:23AM +0100, Lorenzo Stoakes (ARM) wrote:
+> > On Mon, Sep 21, 2026 at 07:57:23PM +0100, Matthew Wilcox wrote:
+> > > more to say on this in two weeks at Plumbers.
+> >
+> > I look forward to it :)
 >
-> And last, but not least, please add LLM attribution as per
+> So while doing my slides, I realised that what we need to avoid doing
+> is (a) sleeping while holding the mmap_lock (b) returning RETRY while
+> holding the VMA lock
 >
-> https://docs.kernel.org/process/coding-assistants.html#attribution
+> And that turns out to be as simple as this patch:
+>
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index dd09c438fa23..94ed2333f8d8 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -723,6 +723,8 @@ enum {
+>   */
+>  static inline bool fault_flag_allow_retry_first(enum fault_flag flags)
+>  {
+> +       if (flags & FAULT_FLAG_VMA_LOCK)
+> +               return false;
+>         return (flags & FAULT_FLAG_ALLOW_RETRY) &&
+>             (!(flags & FAULT_FLAG_TRIED));
+>  }
+>
+> OK, this is a hack.  The function is spectacularly badly named, and
+> needs to be renamed before a patch can go upstream.  But this should
+> fix the contention on mmap_lock.
 
-You are right, and I am sorry. I used an LLM to help write this series.
-I meant to check every line word by word myself before sending, but I
-made a mistake and sent v5 to the list before doing that check.
+Thanks for your suggestion.
+This is exactly what we did in Android Common Kernel before we had
+Lorenzo's proposal (bypassing `fault_flag_allow_retry_first()`):
 
-For v6:
+https://android.googlesource.com/kernel/common/+/1b9b045a586245cc1c29b2747c=
+6586234c7f5bad%5E%21/#F2
 
-  - The cover letter only explains why LoongArch needs this and how it
-    works. Everything about earlier versions moves to "Changes since v5".
-  - I am rewriting the cover letter and commit messages by hand, in
-    short paragraphs, and checking every line myself before sending.
-  - Every patch carries the Assisted-by tag if we used LLM.
+At that time, we couldn't modify ACK with a GKI hook that introduced
+a new flag. All previous versions of this patchset introduced new
+flags, which would have broken the KMI.
+So we had to choose between two evils:
+1. mmap_lock contention
+2. VMA lock contention
+We chose the lesser evil =E2=80=94 no. 2 =E2=80=94 and sent the Android hoo=
+k for
+merging into ACK.
 
-Thanks,
-George
+Now that we have Lorenzo's proposal, which doesn't require any new
+flag, we are adding a new Android hook just to mimic what Lorenzo's
+proposal already does:
+https://android-review.googlesource.com/c/kernel/common/+/4307957/3/arch/ar=
+m64/mm/fault.c
+
+Note that Lorenzo's proposal avoids mmap_lock contention without
+introducing any new VMA lock contention. It also doesn't require a new
+flag that would break KMI. So this is clearly the preferred approach.
+
+>
+> Could somebody try it?  I've verified it boots and runs some userspace
+> fine, but I don't have the workload to test the contention.
+
+Both Nanzhe and Hongru tested it before and reported the fork issue.
+
+Best Regards
+Barry
