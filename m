@@ -1,198 +1,147 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DDDC4D9577
-	for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 14:28:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F43A3A9605;
+	Mon, 28 Sep 2026 19:08:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790605716; cv=none; b=KDJs59MkgiqTgaGtErHzKornLJ1akDFkK5c642eCXYztyiNsZ9H+KyZdmHM6/AJpG4QilsHMrM3nTciTgv8Dr4pl0ws7zeVELOSM+Z1oSt6AgqIwTvE6VJAuG3S4X84fbz0VcSn/NI+bd4MAo055vS/cWZaR/w1MNTi68ULhvfA=
+	t=1790622488; cv=none; b=XuIPRIQ/3eJwZQhAiyw4se2rh4ten8PmkkAK6XLgqtH62qiWOiLJDJRA+MSr8W6dACP04X5vAyhbvwAfeAjLbMHRg54YdVvP1lLJylEwG0yve8buHTTsuGHDjFIbWDaOLhpT+yrg7G0/i2pLfc8l/vcvHGsKYyDCx8cm2Uf/DrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790605716; c=relaxed/simple;
-	bh=9uWhnOZitfKn/aBGgT8rT/13BQ31t5CQPD0tYRaO6/8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FKez1UAubYlCsW0ePr60qBfOCV5VHvC8ULS0tsrgvfmBujaRMzTuspDL9jacbIOsXoBhIP0gsI/ZUZffV2mGl3HlEciJWVUXaMRtMZ27FM83a+VkrYoAea/jVPXyRJujmvrVqEU1/UTmGXt7mOtDGB28ZJ7o9XomYPHKbCqjR/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YSfs5RMk; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790622488; c=relaxed/simple;
+	bh=n1L0t9YaNbEb3fLZ5EzYnIZaqNJEtxNOE+CQtQx/3Fs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iPM/+4m/kXC5fBqXQwMUNFyYAFTA8XqVFUVhlsJqWKnGOxn1A/Eanm4mRR931Al5v3xsTpnmV9DfCCXh3+zkvTVqUNjkGgcM3YLMG+CffhG9Ew5HA2MWVBvbOYsrd2Oat0Ms4sGQPjhFLZmObjbuLPXIZY9wYG3Uape3zPIzsVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mwu5S6WW; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YSfs5RMk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48BD71F008A3
-	for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 14:28:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mwu5S6WW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B69401F000FF;
+	Mon, 28 Sep 2026 19:08:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790605715;
-	bh=YPzStzDokfiX/VDV5QtJf5+kUVF9DbxDMP+IisfKyT8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=YSfs5RMkDkKbpdzc32rdg+UCY/r9+hJ4gXPA0BaxZjWobloLH0meA7L2Ndcg0MVMQ
-	 voaDBj0dh4OTL3lIsFGVGWx7do1U1dPHpnaUxjioi49KxFmH9IopR+IJI8U6Ii8YDh
-	 52dleR4BVfIhNROssUvwdUsnLXo8FPOsTuIhnGKdhBJu918fDO88XDdjlxZQLIN2Tj
-	 SRRLN2HiCbJzv2aauias77hq4rOI86GltxBrmlKWMhETrsZQpGXC8Sgn1+6iwZ8awn
-	 UOIG2a6m+KM3jzZEUwIQ5ifhB00RG15phzB/filJQ+cs8ad8Tz19galLNSZqlbqFOm
-	 qpDinbQwKJhUg==
-Received: by mail-ed2-f35.google.com with SMTP id 4fb4d7f45d1cf-6a6056ac81fso4384571a12.2
-        for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 07:28:35 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBxlvLK0TzljGv8kQLbhcbO3yRyO7qkVYJVTZ9hmqtd5W9xGm7Gs4oIHmL8Xcg1mOIYpxe5w//8NjJI=@lists.linux.dev
-X-Gm-Message-State: AFq9FYLtiaIZCNn6UKHbc+XrmPi8NFV7m+hFTrYNR1IB9k5zjfNc+nTJ
-	38hK2FY6l+EkB7Cp9NU40nMES5KXU3KEwvhgbd8xBSiCJ2sXj786bKBMkLBqY+xT/CVb/SfwVKx
-	VyI0zNpuqBo1/Dpz6LLePRWESrlNWaCM=
-X-Received: by 2002:a05:6402:4011:b0:6ac:62aa:e3dc with SMTP id
- 4fb4d7f45d1cf-6ac62aaea73mr3602685a12.26.1790605713775; Mon, 28 Sep 2026
- 07:28:33 -0700 (PDT)
+	s=k20260515; t=1790622487;
+	bh=B+Gr6o68jYNXKTjU7HFcPEY3iLy6xBGj6TmsxZtZTlM=;
+	h=From:To:Cc:Subject:Date;
+	b=Mwu5S6WWtg+g6OrlwFK/D8KGxXM3w+wC/o5WrrhMWxS2gCepIaFbcilvZPmxc5/96
+	 5BvGfnSDfZZl865KTDCX23vB/sH7Z1cgDjl05Vpw0pikWx5bq73oeZFTWFRrfPQtRY
+	 xjjDGOU0N9zfOhnywgb2xXEvEVHarKuwni9Nsoa0U2m2xA4UgXDmVzPJwIQe9W3Q87
+	 bKrkQe4Rv0eQY0Qaixajj8Tr2qNeV0XAR9ETCPWLYcFqjG04HKPdlqYFaQM99T4XqW
+	 wqdPsPqNPBemhYfQ9UJci1vY5U+TumPOWNSjcEANjwmjdbyO7PGiSqQxh6EpjOokEx
+	 mkuHaxwv/OILg==
+From: Jakub Kicinski <kuba@kernel.org>
+To: davem@davemloft.net
+Cc: netdev@vger.kernel.org,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	andrew+netdev@lunn.ch,
+	horms@kernel.org,
+	kernel@xen0n.name,
+	chenhuacai@kernel.org,
+	tsbogend@alpha.franken.de,
+	deller@gmx.de,
+	razor@blackwall.org,
+	idosch@nvidia.com,
+	aconole@redhat.com,
+	ardb@kernel.org,
+	tim.bird@sony.com,
+	loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org,
+	Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH net-next 0/3] net: move the type 2 sockets out of tree
+Date: Mon, 28 Sep 2026 12:07:57 -0700
+Message-ID: <20260928190800.2521749-1-kuba@kernel.org>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260923060349.146780-1-lianyangyang@kylinos.cn> <20260924075655.375632-1-lianyangyang@kylinos.cn>
-In-Reply-To: <20260924075655.375632-1-lianyangyang@kylinos.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 28 Sep 2026 22:28:23 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6C=AyS=1AejxxaG-Zri=2=AfMtPzXFxEvzpFdD1_AaAw@mail.gmail.com>
-X-Gm-Features: AclHuK_Cw3Fa7E90RJ5ekvaNPqdQ2_xMfC9MdHhXGybH75CyqmNPIL39bdqS-mU
-Message-ID: <CAAhV-H6C=AyS=1AejxxaG-Zri=2=AfMtPzXFxEvzpFdD1_AaAw@mail.gmail.com>
-Subject: Re: [PATCH v2] LoongArch: kdump: add arch_crash_save_vmcoreinfo() support
-To: Yangyang Lian <lianyangyang@kylinos.cn>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Baoquan He <baoquan.he@linux.dev>, 
-	Mike Rapoport <rppt@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Pratyush Yadav <pratyush@kernel.org>, Dave Young <ruirui.yang@linux.dev>, 
-	WANG Xuerui <kernel@xen0n.name>, kexec@lists.infradead.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Haoran Jiang <jianghaoran@kylinos.cn>, 
-	Tao Cui <cuitao@kylinos.cn>, George Guo <guodongtai@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi, Yangyang,
+LLC2 sockets are admin-only already. We have been getting a trickle
+of LLM-driven fixes for these, even tho we don't know of any active
+user. The code is so bad the LLM fixes just turn into a never ending
+stream of revisions and follow ups as fixing one condition reveals
+5 more bugs. Let's move this code out of tree.
 
-On Thu, Sep 24, 2026 at 3:58=E2=80=AFPM Yangyang Lian <lianyangyang@kylinos=
-.cn> wrote:
->
-> Since commit 23c85094fe18 ("proc/kcore: add vmcoreinfo note to
-> /proc/kcore") the kernel has exported the vmcoreinfo PT_NOTE on
-> /proc/kcore as wellas /proc/vmcore.
->
-> LoongArch does not provide arch_crash_save_vmcoreinfo(), so the
-> arch-specific values are missing from the vmcoreinfo PT_NOTE. The
-> generic exporter in kernel/vmcore_info.c already provides
-> NUMBER(VMALLOC_START), but tools like crash cannot derive the module
-> and vmemmap ranges, VA_BITS, or the KASLR offset of a LoongArch dump.
->
-> Since commit 18210a104bb9 ("LoongArch: Expand module virtual address
-> space to 2GB") the vmalloc and module boundaries are no longer stable
-> across kernel versions either, so vmcoreinfo is the only reliable
-> source for them.
->
-> Provide this function in a separate file that is built at the same time
-> as its caller in kernel/vmcore_info.c, and add a LOONGARCH64 section to
-> Documentation/admin-guide/kdump/vmcoreinfo.rst.
->
-> Reported-by: Haoran Jiang <jianghaoran@kylinos.cn>
-> Suggested-by: Haoran Jiang <jianghaoran@kylinos.cn>
-> Tested-by: Tao Cui <cuitao@kylinos.cn>
-> Co-developed-by: George Guo <guodongtai@kylinos.cn>
-> Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> Signed-off-by: Yangyang Lian <lianyangyang@kylinos.cn>
-> ---
-> V2 -> V1: Export VMEMMAP_END + 1 to make it an exclusive bound, matching
->           what tools like makedumpfile expect.
->           Add Tested-by tag from Tao Cui.
->
->  .../admin-guide/kdump/vmcoreinfo.rst          | 29 +++++++++++++++++++
->  arch/loongarch/kernel/Makefile                |  1 +
->  arch/loongarch/kernel/vmcore_info.c           | 21 ++++++++++++++
->  3 files changed, 51 insertions(+)
->  create mode 100644 arch/loongarch/kernel/vmcore_info.c
->
-> diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentati=
-on/admin-guide/kdump/vmcoreinfo.rst
-> index 7663c610fe90..2ff921232616 100644
-> --- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
-> +++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-> @@ -594,3 +594,32 @@ va_kernel_pa_offset
->
->  Indicates the offset between the kernel virtual and physical mappings.
->  Used to translate virtual to physical addresses.
-> +
-> +LOONGARCH64
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +VA_BITS
-> +-------
-> +
-> +The maximum number of bits for virtual addresses. Used to compute the
-> +virtual memory ranges.
-> +
-> +PHYS_OFFSET
-> +-----------
-> +
-> +Indicates the physical address of the start of memory. Used to translate
-> +virtual to physical addresses.
-> +
-> +KERNELOFFSET
-> +------------
-> +
-> +The kernel randomization offset. Used to locate the kernel text in
-> +virtual memory. If KASLR is disabled, this value is zero.
-> +
-> +MODULES_VADDR|MODULES_END|VMALLOC_START|VMALLOC_END|VMEMMAP_START|VMEMMA=
-P_END
-> +------------------------------------------------------------------------=
------
-> +
-> +Used to get the correct ranges:
-> +       MODULES_VADDR ~ MODULES_END-1 : Kernel module space.
-> +       VMALLOC_START ~ VMALLOC_END-1 : vmalloc() / ioremap() space.
-> +       VMEMMAP_START ~ VMEMMAP_END-1 : vmemmap region, used for struct p=
-age array.
-> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makef=
-ile
-> index 001924877772..6260c15adaba 100644
-> --- a/arch/loongarch/kernel/Makefile
-> +++ b/arch/loongarch/kernel/Makefile
-> @@ -64,6 +64,7 @@ obj-$(CONFIG_RELOCATABLE)     +=3D relocate.o
->  obj-$(CONFIG_KEXEC_CORE)       +=3D machine_kexec.o relocate_kernel.o
->  obj-$(CONFIG_KEXEC_FILE)       +=3D machine_kexec_file.o kexec_efi.o kex=
-ec_elf.o
->  obj-$(CONFIG_CRASH_DUMP)       +=3D crash_dump.o
-> +obj-$(CONFIG_VMCORE_INFO)      +=3D vmcore_info.o
->
->  obj-$(CONFIG_UNWINDER_GUESS)   +=3D unwind_guess.o
->  obj-$(CONFIG_UNWINDER_PROLOGUE) +=3D unwind_prologue.o
-> diff --git a/arch/loongarch/kernel/vmcore_info.c b/arch/loongarch/kernel/=
-vmcore_info.c
-> new file mode 100644
-> index 000000000000..fb703b716253
-> --- /dev/null
-> +++ b/arch/loongarch/kernel/vmcore_info.c
-> @@ -0,0 +1,21 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <linux/vmcore_info.h>
-> +#include <asm/addrspace.h>
-> +#include <asm/pgtable.h>
-> +#include <asm/setup.h>
-> +
-> +void arch_crash_save_vmcoreinfo(void)
-> +{
-> +       VMCOREINFO_NUMBER(VA_BITS);
-> +       /* NUMBER(VMALLOC_START) is exported by the generic code */
-> +       vmcoreinfo_append_str("NUMBER(VMALLOC_END)=3D0x%lx\n", VMALLOC_EN=
-D);
-> +#ifdef CONFIG_64BIT
-> +       vmcoreinfo_append_str("NUMBER(MODULES_VADDR)=3D0x%lx\n", MODULES_=
-VADDR);
-> +       vmcoreinfo_append_str("NUMBER(MODULES_END)=3D0x%lx\n", MODULES_EN=
-D);
-> +       vmcoreinfo_append_str("NUMBER(VMEMMAP_START)=3D0x%lx\n", (unsigne=
-d long)vmemmap);
-> +       vmcoreinfo_append_str("NUMBER(VMEMMAP_END)=3D0x%lx\n", VMEMMAP_EN=
-D + 1);
-> +#endif
-> +       vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=3D0x%lx\n", PHYS_OFFSE=
-T);
-I think it is also useful to export PAGE_OFFSET here.
+The series itself is LLM generated, the LLM was also nice enough
+to generates some tests and validate that the OOT module actually
+works.
 
-Huacai
-> +       vmcoreinfo_append_str("KERNELOFFSET=3D%lx\n", kaslr_offset());
-> +}
-> --
-> 2.25.1
->
->
+Jakub Kicinski (3):
+  llc: move the type 2 sockets out of tree
+  llc: strip the leftovers of the llc2 removal
+  net: drop unused LLC-related includes
+
+ net/llc/Kconfig                             |    7 -
+ net/llc/Makefile                            |   10 +-
+ include/linux/llc.h                         |    5 -
+ include/net/llc.h                           |  108 +-
+ include/net/llc_c_ac.h                      |  180 -
+ include/net/llc_c_ev.h                      |  217 -
+ include/net/llc_c_st.h                      |   46 -
+ include/net/llc_conn.h                      |  114 -
+ include/net/llc_if.h                        |   63 -
+ include/net/llc_pdu.h                       |  379 +-
+ include/net/llc_s_ac.h                      |   35 -
+ include/net/llc_s_ev.h                      |   61 -
+ include/net/llc_s_st.h                      |   32 -
+ include/net/llc_sap.h                       |   26 -
+ net/802/garp.c                              |    4 +-
+ net/802/psnap.c                             |    2 +-
+ net/bridge/br.c                             |    2 -
+ net/bridge/br_stp_bpdu.c                    |    3 +-
+ net/llc/af_llc.c                            | 1304 -----
+ net/llc/llc_c_ac.c                          | 1448 ------
+ net/llc/llc_c_ev.c                          |  742 ---
+ net/llc/llc_c_st.c                          | 4940 -------------------
+ net/llc/llc_conn.c                          | 1025 ----
+ net/llc/llc_core.c                          |   28 +-
+ net/llc/llc_if.c                            |  151 -
+ net/llc/llc_input.c                         |  128 +-
+ net/llc/llc_output.c                        |    3 +-
+ net/llc/llc_pdu.c                           |  366 --
+ net/llc/llc_proc.c                          |  245 -
+ net/llc/llc_s_ac.c                          |  220 -
+ net/llc/llc_s_ev.c                          |  109 -
+ net/llc/llc_s_st.c                          |  177 -
+ net/llc/llc_sap.c                           |  437 --
+ net/llc/llc_station.c                       |  120 -
+ net/llc/sysctl_net_llc.c                    |   71 -
+ net/openvswitch/flow.c                      |    1 -
+ net/openvswitch/flow_netlink.c              |    2 -
+ net/openvswitch/flow_table.c                |    2 -
+ net/openvswitch/vport-netdev.c              |    1 -
+ arch/loongarch/configs/loongson32_defconfig |    1 -
+ arch/loongarch/configs/loongson64_defconfig |    1 -
+ arch/mips/configs/gpr_defconfig             |    1 -
+ arch/mips/configs/mtx1_defconfig            |    1 -
+ arch/mips/configs/rb532_defconfig           |    1 -
+ arch/parisc/configs/generic-32bit_defconfig |    1 -
+ 45 files changed, 33 insertions(+), 12787 deletions(-)
+ delete mode 100644 include/net/llc_c_ac.h
+ delete mode 100644 include/net/llc_c_ev.h
+ delete mode 100644 include/net/llc_c_st.h
+ delete mode 100644 include/net/llc_conn.h
+ delete mode 100644 include/net/llc_if.h
+ delete mode 100644 include/net/llc_s_ac.h
+ delete mode 100644 include/net/llc_s_ev.h
+ delete mode 100644 include/net/llc_s_st.h
+ delete mode 100644 include/net/llc_sap.h
+ delete mode 100644 net/llc/af_llc.c
+ delete mode 100644 net/llc/llc_c_ac.c
+ delete mode 100644 net/llc/llc_c_ev.c
+ delete mode 100644 net/llc/llc_c_st.c
+ delete mode 100644 net/llc/llc_conn.c
+ delete mode 100644 net/llc/llc_if.c
+ delete mode 100644 net/llc/llc_pdu.c
+ delete mode 100644 net/llc/llc_proc.c
+ delete mode 100644 net/llc/llc_s_ac.c
+ delete mode 100644 net/llc/llc_s_ev.c
+ delete mode 100644 net/llc/llc_s_st.c
+ delete mode 100644 net/llc/llc_sap.c
+ delete mode 100644 net/llc/llc_station.c
+ delete mode 100644 net/llc/sysctl_net_llc.c
+
+-- 
+2.55.0
+
