@@ -1,36 +1,36 @@
-Received: from mta1.migadu.com (out-123.mta1.migadu.com [95.215.58.123])
+Received: from mta0.migadu.com (out-4.mta0.migadu.com [91.218.175.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E79484891
-	for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 09:24:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2FA04746A5
+	for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 09:29:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790587491; cv=none; b=kGZAHp286aa6Oa4CzF5cvMzOJ046trDpM1GMgqZfkEU/G4u+McZvbDMIMvVnpcL/wMPsLyWMtlOsPr6eJ+C/fUUpFVtrJa5Sw4neiRQqgYa+mvJmXk7rWnU5gYe6xtuljKG5X98aSdiQpxQAEsdAeLpRfQgiTm2f0iKXZ/A1CNk=
+	t=1790587751; cv=none; b=Qym1UTnVcY23Q8GCC6b7KtjHZboF98fgZ4zj3tD3OIfYtf1mSRdgJhFdeT5Klr39BVjf1Ge7ymsHV/9d00gR2kcfLeNYUonlurU5MmOBUEjTFO9mOVP8ttjBo1QjPwYDL+ErFY7tEswqrqI+WihI/aJLtlftmWDG4ikUi46vF7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790587491; c=relaxed/simple;
-	bh=HxNwpHe0nHsH16nYk3/3aMin7+3c9bVF1RTMSXmtCuE=;
+	s=arc-20240116; t=1790587751; c=relaxed/simple;
+	bh=61K6+vmzqsUZVtZu4pTLUg1VKRDC6b+cTmykUL3l5d8=;
 	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=hZhffIalhy1RXvEz2ELK8zALZK5kJ02H3SyjrnPVE+cnjIluXiVJP3np/c0pIgkn39T90SZyD1jz63eq80wi+1RFMmCYeJJBUNIKLyYw6MYex4MbcKd2pcrafBlEllPs9ouuPYeo3083sJoiISWxCRTTMIi91QGAFQC/Pv5XoQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=QPhpoxYS; arc=none smtp.client-ip=95.215.58.123
+	 In-Reply-To:Content-Type; b=CVOzb2JNARyOai3B9aeUeG0KZ3o6CannQNKlK1UXFfiqmAxOnSfBUgp7C+HtLs5WoU6QOvA315GQJbDCYqFhR8CYaekvGtB0g+a0X9n9iJY2rJd9BiljIvDGXFJIRuP26iFYGyG89lApjqVbmf5dWWzqVm1zkyX/YActRkNe3+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xwVqgK8U; arc=none smtp.client-ip=91.218.175.4
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="QPhpoxYS"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xwVqgK8U"
 X-Envelope-To: loongarch@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=HxNwpHe0nHsH16nYk3/3aMin7+3c9bVF1RTMSXmtCuE=;
+DKIM-Signature: a=rsa-sha256; bh=61K6+vmzqsUZVtZu4pTLUg1VKRDC6b+cTmykUL3l5d8=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1790587486; v=1; x=1791192286;
- b=QPhpoxYSjKH3PdIbQuHd94yXAuuXcYNXhuJTievVvLsgidgeUB6Yx2iezKBuTOKxyeDE6X8C
- tE3Db+9hGuHrexhPl0s3XjqckRVyyc9zhe5J0gcQGS9mT2llMs9HHZEkI8EH13kzls2BARAOelb
- FAq1eZnqnLccQzLfhNa3pDFY=
+ t=1790587747; v=1; x=1791192547;
+ b=xwVqgK8U91ZzHgZWU/Q7l1FVAdEKFpwCy9YG0fr6tiXatYGIcL8aiIHLFJUYsdXdDh+Hekwu
+ mmsQaLcG9/ZPczALPMntsM0ivUIEeUAzmkaj9utKzn5L9hV2NfqnC58PaQldU8+B6Ymqtyuy4ru
+ mfOQ12G5OwRub5JVMNwsbrr0=
 X-Envelope-To: loongarch@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 9c7b60c04c93c979;
-	Mon, 28 Sep 2026 09:24:46 +0000
-X-Mizu-Trace-ID: 9c7b60c04c93c979
+Received: by smtp.migadu.com with ESMTPS id 6b386df4d52f3baf;
+	Mon, 28 Sep 2026 09:29:07 +0000
+X-Mizu-Trace-ID: 6b386df4d52f3baf
 X-Migadu-Flow: FLOW_OUT
-Message-ID: <8531bc11-b191-42c0-829d-36f831f6288e@linux.dev>
-Date: Mon, 28 Sep 2026 17:24:38 +0800
+Message-ID: <272a796e-3d2b-4766-9e68-28d9092073a1@linux.dev>
+Date: Mon, 28 Sep 2026 17:28:58 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -41,114 +41,124 @@ User-Agent: Mozilla Thunderbird
 Cc: cui.tao@linux.dev, loongarch@lists.linux.dev, kvm@vger.kernel.org,
  linux-kernel@vger.kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
  nagachaithanya9911@gmail.com, Tao Cui <cuitao@kylinos.cn>
-Subject: Re: [PATCH 2/6] LoongArch: KVM: Guard against NULL irqchip in irq
- injection
+Subject: Re: [PATCH 4/6] LoongArch: KVM: Rebase steal time counter in vcpu
+ context
 To: Bibo Mao <maobibo@loongson.cn>, gaosong@loongson.cn,
  zhaotianrui@loongson.cn
 References: <20260927075240.3007947-1-cui.tao@linux.dev>
- <20260927075240.3007947-3-cui.tao@linux.dev>
- <4b4aba4a-c609-93f5-51e8-3b70a8baf6ad@loongson.cn>
+ <20260927075240.3007947-5-cui.tao@linux.dev>
+ <789eaa76-50a1-61bf-0419-0f45beb45a92@loongson.cn>
 From: Tao Cui <cui.tao@linux.dev>
-In-Reply-To: <4b4aba4a-c609-93f5-51e8-3b70a8baf6ad@loongson.cn>
+In-Reply-To: <789eaa76-50a1-61bf-0419-0f45beb45a92@loongson.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 
 
-在 2026/9/28 12:14, Bibo Mao 写道:
+在 2026/9/28 15:23, Bibo Mao 写道:
 > 
 > 
 > On 2026/9/27 下午3:52, Tao Cui wrote:
 >> From: Tao Cui <cuitao@kylinos.cn>
 >>
->> The irqfd injection path dispatches through the irq routing table
->> without the kvm_arch_irqchip_in_kernel() gate that protects
->> KVM_IRQ_LINE: kvm_set_pic_irq() and kvm_arch_set_irq_inatomic() call
->> pch_pic_set_irq(kvm->arch.pch_pic, ...) and pch_msi_set_irq() calls
->> eiointc_set_irq(kvm->arch.eiointc, ...) directly, so a routing entry
->> that outlives the corresponding in-kernel irqchip dereferences a NULL
->> (or, before the previous patch, a freed) device.
->>
->> Make pch_pic_set_irq(), eiointc_set_irq() and dmsintc_set_irq()
->> tolerate a NULL device.
->>
->> Fixes: 1928254c5ccb ("LoongArch: KVM: Add irqfd support")
->> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
->> ---
->>   arch/loongarch/kvm/intc/dmsintc.c | 3 +++
->>   arch/loongarch/kvm/intc/eiointc.c | 5 ++++-
->>   arch/loongarch/kvm/intc/pch_pic.c | 3 +++
->>   3 files changed, 10 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/loongarch/kvm/intc/dmsintc.c b/arch/loongarch/kvm/intc/dmsintc.c
->> index 63072595c01b..e27f448bb54f 100644
->> --- a/arch/loongarch/kvm/intc/dmsintc.c
->> +++ b/arch/loongarch/kvm/intc/dmsintc.c
->> @@ -70,6 +70,9 @@ int dmsintc_set_irq(struct kvm *kvm, u64 addr, int data, int level)
->>       unsigned int irq, cpu;
->>       struct kvm_vcpu *vcpu;
->>   +    if (!kvm->arch.dmsintc)
->> +        return -EINVAL;
->> +
-> There is kvm->arch.dmsintc checking in its caller function pch_msi_set_irq().
-> 
->>       irq = (addr >> AVEC_IRQ_SHIFT) & AVEC_IRQ_MASK;
->>       cpu = (addr >> AVEC_CPU_SHIFT) & kvm->arch.dmsintc->cpu_mask;
->>       if (cpu >= KVM_MAX_VCPUS)
->> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
->> index fe0a1918f26f..c68f9033638a 100644
->> --- a/arch/loongarch/kvm/intc/eiointc.c
->> +++ b/arch/loongarch/kvm/intc/eiointc.c
->> @@ -112,8 +112,11 @@ static inline void eiointc_update_sw_coremap(struct loongarch_eiointc *s,
->>   void eiointc_set_irq(struct loongarch_eiointc *s, int irq, int level)
->>   {
->>       unsigned long flags;
->> -    unsigned long *isr = (unsigned long *)s->isr;
->> +    unsigned long *isr;
->>   +    if (!s)
->> +        return;
-> When is it possible that parameter s is NULL? There is kvm_arch_irqchip_in_kernel() checking in kvm_send_userspace_msi().
-> 
->> +    isr = (unsigned long *)s->isr;
->>       spin_lock_irqsave(&s->lock, flags);
->>       level ? __set_bit(irq, isr) : __clear_bit(irq, isr);
->>       eiointc_update_irq(s, irq, level);
->> diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/pch_pic.c
->> index 62c09b5f3937..88666425d800 100644
->> --- a/arch/loongarch/kvm/intc/pch_pic.c
->> +++ b/arch/loongarch/kvm/intc/pch_pic.c
->> @@ -48,6 +48,9 @@ void pch_pic_set_irq(struct loongarch_pch_pic *s, int irq, int level)
->>   {
->>       u64 mask = BIT(irq);
->>   +    if (!s)
->> +        return;
->> +
-> When is it possible that parameter s is NULL? I think that when in kernel irqchip is removed, there is no way to inject line IRQ in kernel side.
+>> KVM_SET_DEVICE_ATTR(PVTIME GPA) initializes st.last_steal from the
+>> ioctl thread's run_delay, but kvm_update_stolen_time() accumulates the
+>> vcpu thread's run_delay; the first delta can be negative and wraps in
+> I think that ioctl thread is the vCPU thread itself in KVM mode, there will be many potential problems when one thread set registers of vCPU while vCPU is running.
 > 
 
-Thanks for looking into this.
+You're right. I assumed KVM_SET_DEVICE_ATTR() could be issued
+from a thread different from the vCPU thread. Looking at the expected
+userspace flow again, the pvtime GPA is registered by the guest kernel
+via hypercall (which runs in vCPU context), or set by the vCPU thread
+itself before entering KVM_RUN. In both cases `last_steal` and the
+subsequent steal updates use the same task's `run_delay`, so the
+negative delta I described cannot occur.
 
-You're right. I rechecked the lifetime rules after your comments, and
-my reasoning for this patch was flawed.
-
-I had assumed an irqfd could remain active after the corresponding
-in-kernel irqchip had been removed. In fact, that state is not
-reachable. The irqchip devices are not destroyed during the lifetime
-of a running VM, and during VM teardown irqfds are released before
-the irqchip devices are destroyed. For DMSINTC, the rollback path is
-already guarded by `pch_msi_set_irq()`.
-
-So these NULL checks are not protecting a real execution path. I'll
-drop this patch in the next revision.
+I'll drop this patch as well.
 
 Thanks,
-Tao
-
-> Regards
+Tao> Regards
 > Bibo Mao
->>       spin_lock(&s->lock);
->>       if (level)
->>           s->irr |= mask; /* set irr */
+>> u64, so the guest reads a steal time close to 2^64.
 >>
+>> Drop the initialization from the attr path and lazily rebase the
+>> counter on the first steal update, which runs in vcpu context like the
+>> hypercall path.  Re-registering a GPA clears the rebase sentinel first
+>> and publishes the address with a write barrier; the reader side loads
+>> the address and sentinel with READ_ONCE and a read barrier so a
+>> concurrent re-registration is not observed half-applied.
+>>
+>> Fixes: b4ba157044ea ("LoongArch: KVM: Add PV steal time support in host side")
+>> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
+>> ---
+>>   arch/loongarch/kvm/vcpu.c | 25 +++++++++++++++++--------
+>>   1 file changed, 17 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+>> index 8e028be3f0a9..d931a5a802f6 100644
+>> --- a/arch/loongarch/kvm/vcpu.c
+>> +++ b/arch/loongarch/kvm/vcpu.c
+>> @@ -154,12 +154,13 @@ static void kvm_update_stolen_time(struct kvm_vcpu *vcpu)
+>>       u32 version;
+>>       u64 steal;
+>>       gpa_t gpa;
+>> +    u64 last_steal;
+>>       struct kvm_memslots *slots;
+>>       struct kvm_steal_time __user *st;
+>>       struct gfn_to_hva_cache *ghc;
+>>         ghc = &vcpu->arch.st.cache;
+>> -    gpa = vcpu->arch.st.guest_addr;
+>> +    gpa = READ_ONCE(vcpu->arch.st.guest_addr);
+>>       if (!(gpa & KVM_STEAL_PHYS_VALID))
+>>           return;
+>>   @@ -187,8 +188,14 @@ static void kvm_update_stolen_time(struct kvm_vcpu *vcpu)
+>>       smp_wmb();
+>>         unsafe_get_user(steal, &st->steal, out);
+>> -    steal += current->sched_info.run_delay - vcpu->arch.st.last_steal;
+>> -    vcpu->arch.st.last_steal = current->sched_info.run_delay;
+>> +    /* acquire pairs with the smp_wmb in the attr path */
+>> +    smp_rmb();
+>> +    last_steal = READ_ONCE(vcpu->arch.st.last_steal);
+>> +    if (!last_steal)
+>> +        /* first update in vcpu context: rebase the counter */
+>> +        last_steal = current->sched_info.run_delay;
+>> +    steal += current->sched_info.run_delay - last_steal;
+>> +    WRITE_ONCE(vcpu->arch.st.last_steal, current->sched_info.run_delay);
+>>       unsafe_put_user(steal, &st->steal, out);
+>>         smp_wmb();
+>> @@ -1122,7 +1129,7 @@ static int kvm_loongarch_pvtime_get_attr(struct kvm_vcpu *vcpu,
+>>               || attr->attr != KVM_LOONGARCH_VCPU_PVTIME_GPA)
+>>           return -ENXIO;
+>>   -    gpa = vcpu->arch.st.guest_addr;
+>> +    gpa = READ_ONCE(vcpu->arch.st.guest_addr);
+>>       if (put_user(gpa, user))
+>>           return -EFAULT;
+>>   @@ -1197,7 +1204,7 @@ static int kvm_loongarch_pvtime_set_attr(struct kvm_vcpu *vcpu,
+>>           return -EINVAL;
+>>         if (!(gpa & KVM_STEAL_PHYS_VALID)) {
+>> -        vcpu->arch.st.guest_addr = gpa;
+>> +        WRITE_ONCE(vcpu->arch.st.guest_addr, gpa);
+>>           return 0;
+>>       }
+>>   @@ -1208,8 +1215,10 @@ static int kvm_loongarch_pvtime_set_attr(struct kvm_vcpu *vcpu,
+>>       srcu_read_unlock(&kvm->srcu, idx);
+>>         if (!ret) {
+>> -        vcpu->arch.st.guest_addr = gpa;
+>> -        vcpu->arch.st.last_steal = current->sched_info.run_delay;
+>> +        WRITE_ONCE(vcpu->arch.st.last_steal, 0);
+>> +        /* publish the new address only after clearing the rebase sentinel */
+>> +        smp_wmb();
+>> +        WRITE_ONCE(vcpu->arch.st.guest_addr, gpa);
+>>           kvm_make_request(KVM_REQ_STEAL_UPDATE, vcpu);
+>>       }
+>>   @@ -1800,7 +1809,7 @@ static void kvm_vcpu_set_pv_preempted(struct kvm_vcpu *vcpu)
+>>       struct kvm_memslots *slots;
+>>       struct kvm_steal_time __user *st;
+>>   -    gpa = vcpu->arch.st.guest_addr;
+>> +    gpa = READ_ONCE(vcpu->arch.st.guest_addr);
+>>       if (!(gpa & KVM_STEAL_PHYS_VALID))
+>>           return;
+>>  
 > 
 
