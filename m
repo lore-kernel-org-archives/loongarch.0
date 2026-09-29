@@ -1,155 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A9C37CD33
-	for <loongarch@lists.linux.dev>; Tue, 29 Sep 2026 12:43:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E7035275BC
+	for <loongarch@lists.linux.dev>; Tue, 29 Sep 2026 14:12:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790685809; cv=none; b=cDTHOiiEhxOlRgalZrljZCD19sXs0GinEV48YONI4Zz55p24CiJjNeM5rMo0E/3UmV0zj0A3VBDK6urA/+83SbSrsRDOKKcLrIj68wR3OyU4PI6Xpc231wf10+nCVE0UTpSOe5KI4YUPUoGbK+8DFEnO/5yVgbWPcB2O6uHrdUY=
+	t=1790691131; cv=none; b=me+/LGZNfGFGXTivAA8wyv3nkno0Twz8LUfEVCRwrVe+cTjjDA0XQDx1KKglf9qOzYQBSqkW/1Ci2plRoJDczKIEwWvvH8uiIT2u8qq3Oh4b7JO5p85KzpQ3jtQyw4tFCJFTnzicR8gaIJDDWwOWhmSsi81xnxwwuGuWlvn42F4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790685809; c=relaxed/simple;
-	bh=dsmtcH1KUa8/Fv5TCQXae98WQoKQjz4Gj8d6RLEUcmk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fijxb16hOU7h9co+IqRcBjxcnKaAZgUsGKeL7VEumUXMRbwnC1Zoe+neB6V/5hG3d/wgXP8TGfwTVmkVc59I1YfN3MwfXPJ+WKQfCxUr9hP4I0hoTMVYjNwR9JtHfhoNHRtrtUaZR/TQV8ZJbi8v469x8Kn/osWPI1mVYg3ALE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aUyb3eI6; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790691131; c=relaxed/simple;
+	bh=GeatX/mSgt8EYGKrJweaQ6M1vHW/l+J78fDDVRnanZo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=A1JsDsW7+caGgUvfWpcDz4BwVmYmNT530vcQT/fnJ4AzgbBf1OBz0+SuxzmEiI3IYjBnJR4j2j0S82J4aX4mscmK9mP1JNM9inu+TD3b6WaAZkUlaJM62qjTm6d/je2vtC8BcwcWqTmxd1sVxKmuUrSeRwZA4HUdoVw+1KJwkRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Fw+Bf7gu; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aUyb3eI6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BE561F000FF
-	for <loongarch@lists.linux.dev>; Tue, 29 Sep 2026 12:43:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790685807;
-	bh=01YLInGl/50+krWWqQhGHR/yvk2It1cDSicZVJPaDHQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=aUyb3eI6ziwjWdZZTNIsAfRshpUXxY/uvx/feq9CcbjMe6cAos40JfNtz5kiqOTeF
-	 0+rXSjwTDt2+xNsp5NMAPbthqLYYwKY+Th+wNez2nnUpxFq8x3+VqEVI6s5CDy/RW7
-	 GOQRSkfZTi6QHGmsfXwyNARrYZGRvQioMFUwCF2GAUOFHEd5G7oTsL3NvySGLu4lTW
-	 7S5U7Dr9eZn5g/9LphWOWlLwJhVg9bFEMIW9CAIclwrkjfJyhqkpwNneo6ueNkNw5+
-	 gzg7IRR1oka/7/C86y8KFPwMcvreXcU/G/ks469MxIqT5ws0NSPzWUWmyJW9UgKGkW
-	 PwpaAFd4eZt6w==
-Received: by mail-ed2-f35.google.com with SMTP id 4fb4d7f45d1cf-6aaf10bf094so5571552a12.2
-        for <loongarch@lists.linux.dev>; Tue, 29 Sep 2026 05:43:27 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBwdhz/TWRJU1Q27cwcGOZXedheWfWvLlW8p9Sl59CFz7nOyzm9GMUsBb9OZY9tYxg5Q4WtO2KeV6ow=@lists.linux.dev
-X-Gm-Message-State: AFq9FYIXxuHsTgM1ARwp3FzupZVPU2nZd0mW8B3LuNaGMQZHKQNZnfvi
-	Z9xAI3Pv8ldVoEvLZbBxPu6HginqbizdMGgpvFgdrwtiu4hjMVtArAB80IwEHVHlrI7H27PnYbq
-	ag97kFkJxNe+uh6gmUjSNJ3XA4cDqbvw=
-X-Received: by 2002:a05:6402:454c:b0:6aa:734b:1a28 with SMTP id
- 4fb4d7f45d1cf-6aac8f828cdmr9987825a12.34.1790685806078; Tue, 29 Sep 2026
- 05:43:26 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fw+Bf7gu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1790691128;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2p0mpabVoWXtlpkN0tOfNpGONGhlkPF/zvbxue/ki/k=;
+	b=Fw+Bf7guA/8CkttiPD1yr463Ph+4tyrM+ge0Bhwj2/c9Q7xhqgCveHlheM6CxKOGSJ/Fd0
+	cDjnK3M3TwzFZfRcxE+4vr0XYOIiNfcmYBPkwfh23vBCuEZhbAtnGxa9hfuP/2rr4nKLEK
+	iBMK8xtW5/G3zlyHPthQKg64FcKaG6Y=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-568-1vP5_aG7OimbTyoAwkZOBQ-1; Tue, 29 Sep 2026 10:12:05 -0400
+X-MC-Unique: 1vP5_aG7OimbTyoAwkZOBQ-1
+X-Mimecast-MFC-AGG-ID: 1vP5_aG7OimbTyoAwkZOBQ_1790691124
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-49fcc575709so43177015e9.3
+        for <loongarch@lists.linux.dev>; Tue, 29 Sep 2026 07:12:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790691124; x=1791295924;
+        h=content-type:mime-version:user-agent:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=2p0mpabVoWXtlpkN0tOfNpGONGhlkPF/zvbxue/ki/k=;
+        b=fdBPq1ODaAO/5dKWlGziMUyfNmL7/asBsvd/Uyq6h611fVAaQ6C3+iSdRojWV2ifPF
+         wZcRiJaBiwkHIvpr4AqNjJP3N4Z11YOAiQSLKQ+Xu/FtenZIxvICOJuISIOV8eF2UQ9F
+         qQEoEsueCPoT128Ojz8aMYU04mnBBXEY09BVNEynEO9guIE9cQiRZvfFbgi0mRhz8Xm+
+         wEbiNIziJUReSmHZdbc3WwlSE065AtVwW2VRlLFOkImFgLtwdIaekGZOUzPSGq9LONRc
+         ekRwr4sSgMvXJrm9BFBe1hmp9y/jcbV+QjusiSnlL6Un1PblxghjkyiplP8qzb0mDPuR
+         MfeA==
+X-Forwarded-Encrypted: i=1; AKwUvBxIBTMVZGZslWwY5NQm18Ju9UbtqRe2CkgJKsYxqzeEQ79Exrwttm4fi9OgB9UtwLu/vJBgkfKkEck=@lists.linux.dev
+X-Gm-Message-State: AFuF++mpMJTUnNnNwsyUtv6ANPnuDCuSwdiyYJNL24oausqgCnrmdytc
+	2mtNUnVJsNovFaQ1eY+g59g4xEsBWZrrJiVI8xkx28RcFDbw8gaavOvI4fqtaTlbvSINmwC7v+/
+	60YfJNWsTjVrLjmN4sQDJ78a6eMWvWt18vEHBgRdxTg/ygbu3rpZJ1m6S8BN9qMCBcwJ14hv2
+X-Gm-Gg: AYBFou08EQjAaRE1LvpHvTk9adTPY3JblZrcv0OROXY/mGtCv/k2HuucFBBq44OXaZl
+	HdUUPl4lq3kXad9aIiGXJ8NuXRvQ/I+Yw5Q6JFDBieIW14PMjs91YopCDiAYp1Krv3/kpzAEaJm
+	n6CNIl7UWmUG8SH641GIgiiNjHTAynNKWKYVqQWOHprPJA7VhKR4ya6p4eP9sIGahv4H5d84yKy
+	Y2HhnvG7/FFcWN+nkHZC541WzQV4cgvGiLXve9M5iYxEgWNqdE5PcAyU+dQ6PCRrwfBDHz1qsnM
+	K+tj/8E7DSRuULTTm7DQ1tFJSmA5jeBCD5/tx73LCtGLYMVpiRN6KuhiubcXr2gCyCZgEKDjOi7
+	ghTbmuYLfe6A+2VZDuxmbjqEjxkByj0M=
+X-Received: by 2002:a05:600c:46cc:b0:4a0:857:a3a5 with SMTP id 5b1f17b1804b1-4a00857a46amr82578635e9.16.1790691123704;
+        Tue, 29 Sep 2026 07:12:03 -0700 (PDT)
+X-Received: by 2002:a05:600c:46cc:b0:4a0:857:a3a5 with SMTP id 5b1f17b1804b1-4a00857a46amr82578175e9.16.1790691123350;
+        Tue, 29 Sep 2026 07:12:03 -0700 (PDT)
+Received: from aconole-thinkpadt14gen4.rmtusnh.csb ([24.151.142.216])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a013c64fecsm6760665e9.0.2026.09.29.07.11.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Sep 2026 07:12:01 -0700 (PDT)
+From: Aaron Conole <aconole@redhat.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: davem@davemloft.net,  netdev@vger.kernel.org,  edumazet@google.com,
+  pabeni@redhat.com,  andrew+netdev@lunn.ch,  horms@kernel.org,
+  kernel@xen0n.name,  chenhuacai@kernel.org,  tsbogend@alpha.franken.de,
+  deller@gmx.de,  razor@blackwall.org,  idosch@nvidia.com,
+  ardb@kernel.org,  tim.bird@sony.com,  loongarch@lists.linux.dev,
+  linux-mips@vger.kernel.org,  linux-parisc@vger.kernel.org
+Subject: Re: [PATCH net-next 3/3] net: drop unused LLC-related includes
+In-Reply-To: <20260928190800.2521749-4-kuba@kernel.org> (Jakub Kicinski's
+	message of "Mon, 28 Sep 2026 12:08:00 -0700")
+References: <20260928190800.2521749-1-kuba@kernel.org>
+	<20260928190800.2521749-4-kuba@kernel.org>
+Date: Tue, 29 Sep 2026 10:11:53 -0400
+Message-ID: <f7tpkxw405y.fsf@aconole-thinkpadt14gen4.rmtusnh.csb>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260929102821.36112-1-cui.tao@linux.dev> <20260929102821.36112-5-cui.tao@linux.dev>
-In-Reply-To: <20260929102821.36112-5-cui.tao@linux.dev>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 29 Sep 2026 20:43:13 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5GNKZSjB_MN2Vi7uhbf1q9nqqvsfwqF+THpkwk3dEhGQ@mail.gmail.com>
-X-Gm-Features: AclHuK8JCKLgJD0QHBNnHihyqU8NcdH-N30jZAFiC48CChMGSvffDsMY5HNhzHo
-Message-ID: <CAAhV-H5GNKZSjB_MN2Vi7uhbf1q9nqqvsfwqF+THpkwk3dEhGQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] LoongArch: KVM: Reject repeated PCH-PIC CTRL_INIT
-To: Tao Cui <cui.tao@linux.dev>
-Cc: maobibo@loongson.cn, gaosong@loongson.cn, zhaotianrui@loongson.cn, 
-	loongarch@lists.linux.dev, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kernel@xen0n.name, nagachaithanya9911@gmail.com, Tao Cui <cuitao@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: gtISIClnMQQ3j5rahh5aMbQX2kiHJ1QB3nmIlJGTps8_1790691124
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 
-Hi, Tao,
+Jakub Kicinski <kuba@kernel.org> writes:
 
-On Tue, Sep 29, 2026 at 6:29=E2=80=AFPM Tao Cui <cui.tao@linux.dev> wrote:
+> The bridge and the openvswitch code include <net/llc.h>,
+> <net/llc_pdu.h> and <linux/llc.h> without using anything out of them.
+> parse_ethertype() is the one exception: it wants LLC_SAP_SNAP, which
+> comes from the uAPI header <linux/llc.h> pulls in, so flow.c keeps
+> that one. The LLC core has leftovers of its own - slab, string,
+> interrupt and net_namespace - which it has not used in a long time.
 >
-> From: Tao Cui <cuitao@kylinos.cn>
+> None of this is new, the type 2 removal has just shrunk the LLC
+> headers enough to make it easy to see.
 >
-> KVM_DEV_LOONGARCH_PCH_PIC_CTRL_INIT has no guard against repeated
-> invocation: every call overwrites pch_pic_base and registers the same
-> kvm_io_device on the MMIO bus at the new address, while
-> kvm_pch_pic_destroy() unregisters only one bus range.  After a repeated
-> init, MMIO to the stale ranges computes its register offset against the
-> new base and silently reads 0 / drops writes, and the leftover bus
-> entries persist until the VM is destroyed.
->
-> Reject repeated initialization with -EEXIST, tracking the state with
-> a has_init flag so the check and the MMIO base update are atomic
-> under slots_lock.  The base is only committed after a successful bus
-> registration, and the real registration error is propagated instead
-> of being replaced with -EFAULT.
->
-> Fixes: d206d9514873 ("LoongArch: KVM: Add PCHPIC user mode read and write=
- functions")
-> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
+> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 > ---
->  arch/loongarch/include/asm/kvm_pch_pic.h |  1 +
->  arch/loongarch/kvm/intc/pch_pic.c        | 12 ++++++++++--
->  2 files changed, 11 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/loongarch/include/asm/kvm_pch_pic.h b/arch/loongarch/in=
-clude/asm/kvm_pch_pic.h
-> index 887b0431fd20..679132d840e6 100644
-> --- a/arch/loongarch/include/asm/kvm_pch_pic.h
-> +++ b/arch/loongarch/include/asm/kvm_pch_pic.h
-> @@ -53,6 +53,7 @@ struct loongarch_pch_pic {
->         spinlock_t lock;
->         struct kvm *kvm;
->         struct kvm_io_device device;
-> +       bool has_init;
->         union pch_pic_id id;
->         uint64_t mask; /* 1:disable irq, 0:enable irq */
->         uint64_t htmsi_en; /* 1:msi */
-> diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/=
-pch_pic.c
-> index 7a704f18880d..a884a043feef 100644
-> --- a/arch/loongarch/kvm/intc/pch_pic.c
-> +++ b/arch/loongarch/kvm/intc/pch_pic.c
-> @@ -282,16 +282,24 @@ static int kvm_pch_pic_init(struct kvm_device *dev,=
- u64 addr)
->         struct kvm_io_device *device;
->         struct loongarch_pch_pic *s =3D dev->kvm->arch.pch_pic;
-Why so complicated? The below is enough, no?
 
-diff --git a/arch/loongarch/kvm/intc/pch_pic.c
-b/arch/loongarch/kvm/intc/pch_pic.c
-index 2b63b0c2c7ce..7855d78304b7 100644
---- a/arch/loongarch/kvm/intc/pch_pic.c
-+++ b/arch/loongarch/kvm/intc/pch_pic.c
-@@ -281,6 +281,9 @@ static int kvm_pch_pic_init(struct kvm_device
-*dev, u64 addr)
-        struct kvm_io_device *device;
-        struct loongarch_pch_pic *s =3D dev->kvm->arch.pch_pic;
+The openvswitch changes look fine to me.  I guess it's just a minimal
+header adjustment so:
 
-+       if (s->device->ops)
-+               return -EEXIST;
-+
-        s->pch_pic_base =3D addr;
-        device =3D &s->device;
-        /* init device by pch pic writing and reading ops */
+Acked-by: Aaron Conole <aconole@redhat.com>
 
->
-> -       s->pch_pic_base =3D addr;
->         device =3D &s->device;
->         /* init device by pch pic writing and reading ops */
->         kvm_iodevice_init(device, &kvm_pch_pic_ops);
->         mutex_lock(&kvm->slots_lock);
-> +       if (s->has_init) {
-> +               ret =3D -EEXIST;
-> +               goto out;
-> +       }
->         /* register pch pic device */
->         ret =3D kvm_io_bus_register_dev(kvm, KVM_MMIO_BUS, addr, PCH_PIC_=
-SIZE, device);
-> +       if (!ret) {
-> +               s->pch_pic_base =3D addr;
-> +               s->has_init =3D true;
-> +       }
-> +out:
->         mutex_unlock(&kvm->slots_lock);
->
-> -       return (ret < 0) ? -EFAULT : 0;
-> +       return ret;
->  }
->
->  /* used by user space to get or set pch pic registers */
-> --
-> 2.43.0
->
+NOTE: I didn't review anything else in the series.
+
