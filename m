@@ -1,123 +1,190 @@
-Received: from mail-dy2-f31.google.com (mail-dy2-f31.google.com [74.125.229.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E30142D7386
-	for <loongarch@lists.linux.dev>; Tue, 29 Sep 2026 05:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.229.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69F36261B8A
+	for <loongarch@lists.linux.dev>; Tue, 29 Sep 2026 05:46:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790659652; cv=none; b=B6QzJHofs7g5ZBtelUJn4+fex7EPegZpLXe7P3wMvOvg4Zif23OloZ0+Bh0Wf3lf5rmAe/ASqkuC9Cwf0B73maMDijnblmtxxuC0QnnyowAQcR7t+PNV2mUo5bMORdUHpizVV48TrLHkWNQdzuW4BmyqrtxOl4mZzjQQ+sdF78o=
+	t=1790660768; cv=none; b=G45qhHvIrDTvwGv+Zz2PA+mWFBgonNpw//s35cFd2UGl4OlrWg1gHnmzpKJ2ijbKDu+iyB+UGo+cdEtFxcNejTsDJ4mWPmyMVHQCw37h4uybtq8l6GG/JAM8I+KQWv6aztnLq2gqHQyJqPnV1uZnncSAwdgxwX/zGANbAEnzYkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790659652; c=relaxed/simple;
-	bh=qEEI8aktSwTOLRHps3xZRdfVtwrSTMCF4gmb4m+bhVM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hOdLnZuyAs07X6qtwGucsHqXx3ezKMzCWCpRgUlE6SLTIatO4bPsifGPw0HqIfW/f0L+H5cqnJ/ViYkJjTU8hS2aquQhiFg/Z8qxc25/t7NTV3sqJxPOOzwxwVUgTIrm8UlJ0NqRb/qZvu6/zNSXOUfgjEwj936mSW+2J5/iBEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A/h8+hCB; arc=none smtp.client-ip=74.125.229.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1790660768; c=relaxed/simple;
+	bh=WBrK6P1J5Sn8UyafewpSzbEBsFKxbWX5+iAjHib2raI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=A4oFQcNl8KRGssTdPm/XuQl2yX/n3oKiF+/lVv2qBq53H2ahHey/QVKT1RqJf1aW7sw09Fsi/QiPmRSAJXnTTOz1X2KXBI6A/sfG2mbJ7mOhJqkHhHj250qLsEVQgYmJToD0QvXqmoy/o8pzL1WZW1yUFFFcJdZ8QIawGiciWyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=WbHSujlG; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=hCqrut5Z; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A/h8+hCB"
-Received: by mail-dy2-f31.google.com with SMTP id 5a478bee46e88-33c11ef641aso4184251eec.1
-        for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 22:27:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="WbHSujlG";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="hCqrut5Z"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68T47XWW3654789
+	for <loongarch@lists.linux.dev>; Tue, 29 Sep 2026 05:46:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Q+frg3gm10voRSH4KNBjLaqR7f6wGIX42XHmruDIkxw=; b=WbHSujlGrgDr8OaY
+	WMmlKN6Jo9lkdsIy5AwBBFCxU9rhpxCN5ZEjn3/UGeC4RWJ30NVrxqLlmJsjDeaR
+	XlG6wSbZExGK8jqW7aPv+33FL8X00noxrUd52MWHaBlq49eArmAXLTWLceySBuHg
+	KTSK0i6qhSdiHbOJCZKQ359lZAtGNYXf5iCYO3JmVXRosY5XPzYv4yrr8juoBrgd
+	xvQqdUM1eZP2achlYfNlAZ/9v8VWDZGg0SyYWYCyObiZMyB2Vz5aE2f/A4uDuq6+
+	rZCi6YSE3psWytZ6wv1Bo6eU8MbZzB5Ha2CZo2qG58cQYs3FydzxGQQhXDzKdFMM
+	H4ISCg==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4h03ew0u9v-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <loongarch@lists.linux.dev>; Tue, 29 Sep 2026 05:46:06 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-93a082c014aso125965085a.0
+        for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 22:46:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790659650; x=1791264450; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=O8QN8snA6KWfiFUHUmB9j8vT4kxR/u7KkTNc9IaHvVk=;
-        b=A/h8+hCBNy4B1nf834cl0TVqvRzbWPtLp5qsNlPOjCqhcsZgc8ELgut1iNm6ifNiu2
-         63y5sKxHc9TfciRTgjTx53cScuB0Q02NJIkj0Ozl3FaX3Uvcatz6h3WBdLM0bqk7zSaj
-         c/0wT0OXGUBVH8Z6rG9KB4YvIb3pvW7psThGlLNTWCLrF4SrdVnLtD2aLybmr9rvXEQA
-         mqSzjigoTx1lniTUKOXmC7LsriR3sQZU/BF7Oav7mj3sB9wual0QeAw/Yk9uDRGx5Zg3
-         CFPP4hGiSOUDjb4gSMO/vgCIVuDPRb944/elPx1itj36J7BdX2TQAWxS+OPIsCF/rCjj
-         LOXw==
+        d=oss.qualcomm.com; s=google; t=1790660765; x=1791265565; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Q+frg3gm10voRSH4KNBjLaqR7f6wGIX42XHmruDIkxw=;
+        b=hCqrut5ZbeKyWDrjlibxrw5GlcUHAdOL/quZB0fKs9vmEaXWuOyUfAJ68/NOc2p514
+         Un2YsbUJ1RydqnR3jJYHWPX9oQgIxwpZpJ93KzYx0O7bRBu0Zl96DWeKmH79bBFVXJgU
+         hLjgdEWGzv8yfikRjy6INvyr8WjT6zJXi6pZD7AHRREEa2DlpGUAW+UCC/NOmPaQWz25
+         OdhAsOcff1UctSt60CIYPmwEt7z8NwLHYSfpFXKZwb0lAXG08aC/KDSEpgqWA1Ehun6q
+         55tsAzUvEbeWc+VkEAObzsTzNQgHZ2r6sAK1DOT8RnoYFwIm1QMm7LGqRTgguIU4BIzr
+         50xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790659650; x=1791264450;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20260707; t=1790660765; x=1791265565;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=O8QN8snA6KWfiFUHUmB9j8vT4kxR/u7KkTNc9IaHvVk=;
-        b=MWUFj3bY8rujlD7x0aWlftzjumgV4HhqKW/3ZL1JV4z90qIxwF064IErXyqjTeo6Qu
-         xNkAkECEcruWqy3bizvQBTKNdXrKTVHcvJ46awg+6SFYxgbw7+dLwQy+wg3s44dxrbVV
-         5dHfW3c4uEl9N+yx9FYFnj18UTQvwrjjdQSXr+HzhIozh1sQFdBM52MsrlKCw3F6Dln9
-         O6Y0FIVYYGAKaeYTuf9zdWn2lLFSNm/CF7uXpHvYgi08d8SqpNPCUMOGrhga1W0YxMt5
-         QPccl71/NE+voGEWxpL0F+jljDVFOpLZGSG6041egeZi1xNu5BtL40hfpbgqZh5WnaNo
-         U2Pg==
-X-Forwarded-Encrypted: i=1; AKwUvBwZW1cUzDyvogWWN5yhafuFvfLWJnBR01Tg4y5wN4VqpJ3dufsIgl5JXfPPc8BCsS+SnI9ZStnQauo=@lists.linux.dev
-X-Gm-Message-State: AFq9FYIhZApWHOl4j0clAhYG6F6NfxNtggwh0vRqAUoPhbf2WpDnaZpW
-	p/E5/YH5Z7v0o6Z301behkQZr5H5VswawuSRu+RjExT78r3K/D+6q+8d
-X-Gm-Gg: AYBFou0piVdspnGpjXiz17J9yPjP9zL86mFgvEwoqR0TYjL94QvKJ3zzzjhRReRWf4u
-	3VIoZSCrnw1MQaQlxO6lrSp7f66uLJmVme+6Xkz4Z9y3H0OE1SyOKwFlMY08CUtHVciLZi/SVZT
-	yHbyOHJ3tdOuzMbqofUX8aUocluYRFGZa8focL08xIErdTkRJPeOT3liiQLX9szEIuEjNqVOY7e
-	8j1K8oca5EWMk7BfgxdUI4eZ7V/QG21CGM/b5qHaPXj6S0ukG3rUKDyCV6cySbWIY+B1ravxIe8
-	bzgRQerCvzHlJiVT5UinclFHMpzjeo6y5z1G5cKDR3imezLB/ALejFOyA0PEW2pz1nuN5u/jD6H
-	cfsuw0Oo+o7Wp+oEnfn7zs4HT/BG/1UCgcBrPd4h1Or3lIs67FvRHjDtK1s0sZ2h6nVXbZT8lDn
-	I4l4G6Fkj+RRBFDEW9GmT1w4sPkq5wos07MEPV60oarFb12gUC5NaZ7mAIp1QGfyr/zzZPq3HuQ
-	ZkRgJmSO3mCF3Z68LtzMQ==
-X-Received: by 2002:a05:7301:4204:b0:342:810b:9554 with SMTP id 5a478bee46e88-342810b964dmr11955549eec.32.1790659649933;
-        Mon, 28 Sep 2026 22:27:29 -0700 (PDT)
-Received: from amd.ban-spse ([165.204.217.251])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-34b580fc50asm2092057eec.14.2026.09.28.22.27.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Sep 2026 22:27:29 -0700 (PDT)
-From: Chaithanya Lagisetty <nagachaithanya9911@gmail.com>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Bibo Mao <maobibo@loongson.cn>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	Xianglai Li <lixianglai@loongson.cn>,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Chaithanya Lagisetty <nagachaithanya9911@gmail.com>
-Subject: [PATCH] LoongArch: KVM: Return the actual error code in kvm_pch_pic_create()
-Date: Tue, 29 Sep 2026 05:27:12 +0000
-Message-ID: <20260929052712.470413-1-nagachaithanya9911@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        bh=Q+frg3gm10voRSH4KNBjLaqR7f6wGIX42XHmruDIkxw=;
+        b=QegJrDaYs9BrA7Lc4IBN6lrz6DahHR5zwmk0pbbQvZw/wzVzHd0eoLDUmR4yPNevtb
+         y8K2sFsZq1iaXHlWyebM+uRQxqTAkggJR1TIk2XITC5Ki33GJEOJRHyNi9YKSZt7zf+C
+         iWMY3mz9oWiVmU8nF1sCgtCC7O6rADFV0UTrr+/l0YJJX1yT7P4uxomPbYoucPxlCLz/
+         UXWI6vHQxUAB6VpStgmk0Z61ctRwq3To0ByrBv9ozT+L6W5LQpJAlBhJLwbUWOanUYtp
+         PYSxTk6limRxucXd3Hd50APIoCrV1hcYMcU/uVo3FdMXSiHYxzht5OstO/ZKyupFTWDE
+         tbEw==
+X-Forwarded-Encrypted: i=1; AKwUvBxfS18FVgg9fUiymlr6iuU5cOBIWne5iQvIlgNx2vlfA0Ek0G+SXAURVHyzbXwzci0gxSmB25wRTD8=@lists.linux.dev
+X-Gm-Message-State: AFuF++mFoej5Qdk7zSO34a/AZF6qnOICH1dh2h52REWWtj83ljMRgR/I
+	6h3dlvSIw1N4T2/AhbJ+Vo0U4j1PKn7FM8W/QL4c+1pe6VnWhsNOgjs4u/QNBvA+ZW6jmHJiSRr
+	c1mNjX6QjbICgqLqHmlGfmYnMH2ivOQtozxpCIdio2xOIYiWxD0Z+ywxOtPGUHUQ=
+X-Gm-Gg: AYBFou3uEL/MLEdQLFd31Q+yvdPEYDWVfhqPMOxXne8dhMMmEa5dmWiOM13Knz0ATGZ
+	MV/keYTJvj0jRp6GsEYON3BZT2K1P2c+mics6/GrnuIwdLoljll86cuE7sjedpHUgmcYFndbpcA
+	oQ+Pr6ryBGRPN5BA2yd3X95LJDECq7l56U+uaJ88Fa+/A6y9AwSf2IG6WatYD7EaP6gbaakkX7i
+	pFljASHU/PKkp2yu3ZLPSvD7SpOGdIk3qncmfxIa/oA5+n3d2AxYtfEUsDzmUJN9awUJCBq+6Ye
+	5PKs7a2tOD4oQs4PhiG7S6UaWufwS0Ud4kkQul6ibIJN0cpI7vL08HYXwJL8ZZ8sbPXS3Tnswyu
+	Ttnd5uIApbKLHgUwUZCkyZPy0EAADHKPamU+TemWojVjkB0nlz05M8+rnCRT+bw==
+X-Received: by 2002:a05:620a:2b9b:b0:93b:c6fc:71e9 with SMTP id af79cd13be357-93c8bf447famr274500685a.25.1790660765546;
+        Mon, 28 Sep 2026 22:46:05 -0700 (PDT)
+X-Received: by 2002:a05:620a:2b9b:b0:93b:c6fc:71e9 with SMTP id af79cd13be357-93c8bf447famr274497985a.25.1790660765060;
+        Mon, 28 Sep 2026 22:46:05 -0700 (PDT)
+Received: from ?IPV6:2a05:6e02:1041:c10:7d20:e20f:a77f:4ef7? ([2a05:6e02:1041:c10:7d20:e20f:a77f:4ef7])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a00ed06ea7sm31492735e9.4.2026.09.28.22.46.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Sep 2026 22:46:04 -0700 (PDT)
+Message-ID: <8eba263a-c233-42c5-842e-7487ea36d5aa@oss.qualcomm.com>
+Date: Tue, 29 Sep 2026 07:46:01 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 1/7] thermal/drivers/loongson2: Correct thermal sensor
+ registration loop
+To: Binbin Zhou <zhoubb.aaron@gmail.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
+        Huacai Chen
+ <chenhuacai@loongson.cn>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>, Yinbo Zhu <zhuyinbo@loongson.cn>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+        Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
+        loongarch@lists.linux.dev, devicetree@vger.kernel.org,
+        linux-pm@vger.kernel.org, stable@vger.kernel.org,
+        Sashiko <sashiko-bot@kernel.org>
+References: <cover.1790561983.git.zhoubinbin@loongson.cn>
+ <502911659e15a51c4e98c11f3cf476dd5f92e75b.1790561983.git.zhoubinbin@loongson.cn>
+ <0aaf7166-378c-47d7-98d4-1004fdaeae7b@oss.qualcomm.com>
+ <CAMpQs4+uWMfFib7MhRcc7o-QMXkFrFCtdcGj04y56u44JL4iOg@mail.gmail.com>
+ <ed99f62d-cf90-4ba9-89b3-08dbe7f7227e@oss.qualcomm.com>
+ <CAMpQs4+hATFf+0w6Wq09RoZB1JJ5L_GP0aWxcGAeraTW7Gfy0w@mail.gmail.com>
+Content-Language: en-US
+From: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
+In-Reply-To: <CAMpQs4+hATFf+0w6Wq09RoZB1JJ5L_GP0aWxcGAeraTW7Gfy0w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Info: AW1haW4tMjYwOTI5MDAyMiBTYWx0ZWRfX3pJx3mPujPqI
+ YgrwibxHEF9mPKvZ+7bReP8TqJnz6gX8rTHsCbrA//xkyxLj2oWvfxUr9FzYkokboO0qZIPrJPy
+ 53NuzW/bIiTz4DXy3CZV6OZ9UNmi13M=
+X-Authority-Analysis: v=2.4 cv=IIOXmQvG c=1 sm=1 tr=0 ts=6abb509e cx=c_pps
+ a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=VdqzKS8jKosA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=gowsoOTTUOVcmtlkKump:22 a=Ewyx0iL5S_KfCDCwH-MA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=IoWCM6iH3mJn3m4BftBB:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTI5MDAyMiBTYWx0ZWRfX8EeTginFmhcs
+ 7i6xUXwB6jhuy9pK892d6zxbrAZ4El8B/WgcT9q5JRdEqy/v9owB3rXLqAxSwn0F0ZBiorH4bnc
+ 8/GbW4+zM2eFvEo59fJ5yktTV9/NMGRIbjQqUcb97be/LQ19tnkYwmY0wXwEJlLbPmkU9OwJPoW
+ Dip+VHC89hGC6xrtzxNrw3RGvUKIAU5H4YARiodwWXdBzh421QacwqUFTKkg3velGrdNNEhFrVE
+ xSA4pQYuW72bkazkx9f1DBFNwXKL1IU9UA5vFM/N5ShjAZlbfnFaAkoTfqH7c42o45uOlXwhAKc
+ CECCoZi5BrbKgEywxUFBXRbvgLbA2HEwOiBd+vP2PEbnzYxBV54IEdYae5EOfKWBy7voHJRg2PG
+ 7psKWsub5f8INikdTBF2fPRwuqxZKTploLKZIfh3GLBmY4QKRgcW9waoCaRbIGnEh1WeOBNqSTG
+ VtXnxSOOLNrXLfH2gWQ==
+X-Proofpoint-GUID: V7DL8ujCsqtAEriK_R4jVicfNEgyUgrb
+X-Proofpoint-ORIG-GUID: V7DL8ujCsqtAEriK_R4jVicfNEgyUgrb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-09-29_02,2026-09-21_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 phishscore=0 lowpriorityscore=0 clxscore=1015
+ impostorscore=0 adultscore=0 bulkscore=0 malwarescore=0 spamscore=0
+ suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2609040000
+ definitions=main-2609290022
 
-kvm_pch_pic_create() sets up the default IRQ routing and reports every
-failure as -ENOMEM, discarding the error code it was given:
+On 9/29/26 05:06, Binbin Zhou wrote:
+> Hi Daniel:
 
-	ret = kvm_setup_default_irq_routing(kvm);
-	if (ret)
-		return -ENOMEM;
+[ ... ]
 
-kvm_setup_default_irq_routing() returns -ENOMEM only when its routing
-entry array cannot be allocated. Otherwise it forwards the result of
-kvm_set_irq_routing(), which also fails with -EINVAL when an entry is
-rejected by setup_routing_entry(). Userspace creating a
-KVM_DEV_TYPE_LOONGARCH_PCHPIC device can therefore receive -ENOMEM even
-when IRQ routing setup actually failed with -EINVAL.
+>>>> Please make a less cumbersome and implicit checks here. For example
+>>>> count the number of sensors and then do the check against.
+>>>
+>>> I thought about it, and you're right—I made the logic here too complicated.
+>>> Let's use `sensor_count` as the counter. Is the following check logic clearer?
+>>>
+>>>           u32 sensor_count = 0;
+>>>
+>>>           for (unsigned int i = 0; i <= LOONGSON2_MAX_SENSOR_SEL_NUM; i++) {
+>>>                   tzd = devm_thermal_of_zone_register(dev, i, data,
+>>> data->chip_data->thermal_ops);
+>>>                   if (IS_ERR(tzd)) {
+>>>                           if (PTR_ERR(tzd) == -ENODEV)
+>>>                                   continue;
+>>>
+>>>                           return dev_err_probe(dev, PTR_ERR(tzd),
+>>>                                                "failed to register sensor %d", i);
+>>>                   }
+>>>
+>>>                   sensor_count++;
+>>
+>> If I'm not mistaken in the previous version, the loop exits at the first
+>> registered sensor
+>>
+>>          if (!IS_ERR(tzd))
+>>                  break;
+>>
+>> Here all the available sensors are registered
+> 
+> The name `sensor_count` might be a bit misleading, but here the loop
+> exits after the first success:
+> 
+>                  sensor_count++;
+>                  break;
+> 
+> Let’s rename it:
 
-Return ret so the original error code reaches userspace. This matches
-kvm_eiointc_create(), which already propagates the error code from the
-helpers it calls.
-
-Only compile-tested.
-
-Fixes: 1928254c5ccb ("LoongArch: KVM: Add irqfd support")
-Signed-off-by: Chaithanya Lagisetty <nagachaithanya9911@gmail.com>
----
- arch/loongarch/kvm/intc/pch_pic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/pch_pic.c
-index 2b63b0c2c7ce..7fee60ae01a5 100644
---- a/arch/loongarch/kvm/intc/pch_pic.c
-+++ b/arch/loongarch/kvm/intc/pch_pic.c
-@@ -444,7 +444,7 @@ static int kvm_pch_pic_create(struct kvm_device *dev, u32 type)
- 
- 	ret = kvm_setup_default_irq_routing(kvm);
- 	if (ret)
--		return -ENOMEM;
-+		return ret;
- 
- 	s = kzalloc_obj(struct loongarch_pch_pic);
- 	if (!s)
--- 
-2.43.0
-
+Can you clarify why only the first sensor found stops the thermal zones 
+registration ?
