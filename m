@@ -1,258 +1,276 @@
-Received: from mail-ed2-f33.google.com (mail-ed2-f33.google.com [74.125.228.97])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bkemail.birger-koblitz.de (bkemail.birger-koblitz.de [23.88.97.239])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD8C3002DD
-	for <loongarch@lists.linux.dev>; Tue, 29 Sep 2026 03:06:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.228.97
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790651214; cv=pass; b=JEOoQO9cYA0nQF6zJE+K2STfTjdpQ365f0bWMn+tuATnYky1HTpftS0ghvFhjxNyAscDuSBF/dgZUGLEPcr/scyS3Cccdos8AUQA8l5k7mdnmKlZ/zNxfXgHJrjJrNPPXccSbt6ZJIONj+jL4tuKwpdXyhL8/NOj32ys9J/VUbE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790651214; c=relaxed/simple;
-	bh=drFBxzfc6W2PaLGZNBuSoVjThY1JgVwWxNvEN6zvNfc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j9/gH3F90BaadHZ8j3FG0TWeUUlHiPN57HyECA7aizPjcpgPFt3pDqQJcpblQ7RruO/hlnlN+okMMeWOtpiQf4VNE0uF0GIQ1iTFApuxqsY1VUja+5FKLhpUWH5SaZWYaYrLP6roL91y5sczd7m3qoBKvqHIjK518qWll7OJMPI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IXkJTqj7; arc=pass smtp.client-ip=74.125.228.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2926E3E7BB2
+	for <loongarch@lists.linux.dev>; Tue, 29 Sep 2026 03:19:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.88.97.239
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790651957; cv=none; b=NE7yLHYAGmppkLPOC+Sb1cEeFVC7SdcCAXfz37gM6fY0K1gpg17YGFIv0qxjasWz8+I7b86APUVag1HkFQw6TxTomEUDN/l8oQ0nV4ifpUc/YeH5gRkHPOfyu0u1DixZ5dufgkVkQJpQw69qkrG4cfD5vSU6Gc2DFIeRKvznv3U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790651957; c=relaxed/simple;
+	bh=1TaoxoaKIr+XKvEfbqU46Kdw93DxMwV3OcOPhmb6yrw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=H92WLWLcYd07//ywT2ToOxRFNbCOKJnBuCSoMM7pOtagp0UquDG+3cT/HwXCQcxttZNyMAouLzuhLAJEfC4ILPAcC2of3RSeRY8uzME7r4MjDC4fklW0g24B36XAS/FmiiM+Lx+aDtKi8yRM2ShQpqoxJWu7seY55bIJOMv7a1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=birger-koblitz.de; spf=pass smtp.mailfrom=birger-koblitz.de; dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b=EZNQDo9n; dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b=Cdua/db5; arc=none smtp.client-ip=23.88.97.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=birger-koblitz.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=birger-koblitz.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IXkJTqj7"
-Received: by mail-ed2-f33.google.com with SMTP id 4fb4d7f45d1cf-6ac62c88c7cso3989230a12.0
-        for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 20:06:42 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790651198; cv=none;
-        d=google.com; s=arc-20260327;
-        b=XbumGFLIUbuHBTl/T8LQvUFyHieg4xAfHpmXe4MBc/bv/ItPm5HanKlZ6fwccJBJq8
-         UHzcSc0676BQCQ73p+KHqH59DPVwuyD0gOzFW3ixIElGFSfVi6MbakBoNHy34iHN9WVv
-         F3laGpv7ELDp2QY2KCjVeYmFBowW54LY6YhDsglfLCx2RfTS5IrEIFQLMNYljM2HGDO5
-         z0bHsYgPsQmA2dXxuq59QYTPgwuRAbBHRGb3XywHKpADZsyifkZ8jd2w3SRsf/XS7X9i
-         dag78uEaofx7U5TT1PeFodcxn673XkMooUYVYmV2fdsJHxjP616SGn1RD3DV1U48WWoe
-         0Ldw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=GsgcGMq63dxBO6lpCOoish/kEuxevaMsXSsx8TcWvog=;
-        fh=hIHtt4t/Pqnz+oQ+YWihnyNKzgAe4F/WTJMu44HnN0o=;
-        b=IT/6hqbhObq6Irc9hN84cNiZLhGZt9Jjxn2lbwI9cqQsd6MZpynvhyXj53mXJiJwSe
-         SBKH05R4WeRBRYzgi42rhVGx3NxDjektgto//cYy11Ub1Oj48hNBC81wgJz8l3jTIJkz
-         YuzxHFQZNJvT6uPKgmbo6OAqce3k49EmfWl5trbx7Ean2zVtDTeIBPCHCMli8a3u8GwB
-         v4sqdP2yHg7a3HzN8znGSL47Ou5w/bUgO5QBoY156fb4nM9Tawx92x8dlvArNO4FXb0k
-         L5bsCjM38RD04kysQkMG0zFLalEO5BGdW2a5DzRnTDw+dve5W+vvrO+E0Uh3ZgV6uxzV
-         xk4Q==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790651198; x=1791255998; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=GsgcGMq63dxBO6lpCOoish/kEuxevaMsXSsx8TcWvog=;
-        b=IXkJTqj7KKX6yd7tMAyPZ4o+vfF9pOOsKaBls63QReOVhI8YTYPMmP2MMLnrD/VdHl
-         By1ZUWbWol54y75Uv8iCFeWwE7YTcXFB4a1Org3XC/SE5WI3nQlpQO3K2z69LWU51tbz
-         oCYsCBhDItcVvaxVb4bUj+IsL2WFu6kkFIZEJNVGlYy6IHcsPEN97+GraCXd0qgdgVvX
-         oIUpskFYA4310FX6lkpYtzTw7o27Ud//O/u4HqGyvuEcyyE3OkqpN0EKvf62XNCtH3n8
-         rwXmpKooShLue2N6VmmZt6ZBLU0ZBPQkvSpAVJ3l6AzjRfl0Nrybsc+copmdJlnUHqsw
-         RYQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790651198; x=1791255998;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=GsgcGMq63dxBO6lpCOoish/kEuxevaMsXSsx8TcWvog=;
-        b=pcyttFFsr4LNEqLYHc2viQsboGZuk3ulgo8o+hOPaytbJLZe8WYZsPIJOc4mEhQMgJ
-         9yfE/iJoIJ2lOuG2cx5iQAFgb0qh1Mg2YOfpIa8IBDOoHkq+25artWhhxcrlcqKc8n9D
-         zDlLoOrZYYUdOOKTtx9TfeIW50LDXWKTsbfbUTinDh8BSkBg9P5nrsYEhUrgXrRvK7Q1
-         3UTCB7jYoVjrXZyg55jPUPZOae6z+EYp5P/0NoUJw+qbQuAc5Y3REPGEfx+Q621qFOhT
-         ZL44+ELRimJ4EPmLY+HEPcrezWdJse4eogjUZ/U8mrKe3beSEYEaVxPyfwTX5dPytbOA
-         IDjg==
-X-Forwarded-Encrypted: i=1; AKwUvBzNV0W2kvAX5N5VdMZ2jVUGDTKmsFPXL2Z048/UJ7KS0X+m0Y/pFocq00PrIkaan4yz2dSzKM/wkHg=@lists.linux.dev
-X-Gm-Message-State: AFq9FYLwEZo0qtxXZu8hk40rSG0qczq2sRzohloFcVts24nxP+ZQ1F4G
-	MqRwYkIDiL8bsZHPHKud7KP2WfMuTN91UF802HKW/mBwxF3/V9i8hRAgVjEJOSpcYrmYmI3+og9
-	Asj//DDnZg/az0OPxMB7RBdQaL0kn3OY=
-X-Gm-Gg: AYBFou2c2ZGu1wSAGc7X5AHbrRT5A1rj+yTZ1lHLNrBYQBZA7obKpFZggnWcyKeFdB+
-	mw/+9mrxsm76QsmD8jdg17jHX4h4sVzTRO3v7hhAocmHFC4FY/RFBhHtk0m9Dgw4LjrCh8WwK0g
-	SGV8SB0Ntkmh0deVvS0fU/PDmhkmQcaaUdRf8DUTkUdUQ9Tb54HQXlEYxZFmHlpWISTNerhbJBk
-	cN0E0p8eNb8g2RKpjezsGmt2DjVmUD1Ddx+ONNwDq0tO4qEANBjkjlTavdjV9Z6tlpDAXWAT7Ok
-	92DcxxtijRASGRJroDeH7AI18ULkCbFwiiDQ2jaOm36L4hRwFxkzsNwZT13Uhb8GAUyS
-X-Received: by 2002:a05:6402:1d55:b0:6aa:7fb:7678 with SMTP id
- 4fb4d7f45d1cf-6aae8a518b4mr7987012a12.6.1790651197346; Mon, 28 Sep 2026
- 20:06:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b="EZNQDo9n";
+	dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b="Cdua/db5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=birger-koblitz.de;
+	s=default; t=1790651940;
+	bh=1TaoxoaKIr+XKvEfbqU46Kdw93DxMwV3OcOPhmb6yrw=;
+	h=From:Subject:Date:To:Cc:From;
+	b=EZNQDo9nLUyj1Gi8esHCU/hUtNHGshmaeuiRHXHpM8+GOcCciwYv0LNqB8s7D40H4
+	 COU/T2ZLRvceVcthHcR3VsT3bm2nJJnA76L84AEDhP7srpDWMeMDpSvCUPeQFu7r77
+	 qmELLxo/8tY8MVTkC+gtyy0oiQBD+bmGa96mVefhJfNO8fdHx+B46sayfsCoYtus66
+	 9Qjm9NiRHzDBVAIyeCsrRKbsNiwBFu6rnJBHhQPibu2Ood8a/ZPLw9EB4zTpQu0gBr
+	 DvERW+DNjJ+5U2FKiTT7u6dznZWTt+dqAAXrh2jZ628xHvbEbHOZNC+Pt1RD8d4URo
+	 NfYgvZ3Dp/Ygw==
+Received: by bkemail.birger-koblitz.de (Postfix, from userid 109)
+	id 99B654226B; Tue, 29 Sep 2026 03:19:00 +0000 (UTC)
+X-Spam-Level: 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=birger-koblitz.de;
+	s=default; t=1790651938;
+	bh=1TaoxoaKIr+XKvEfbqU46Kdw93DxMwV3OcOPhmb6yrw=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Cdua/db5NDDc2aIGzcuuMtoqjxQUSHicL9RELtBbMr/7QQe1KsDJaEhCWTv2JVGRz
+	 ez3Jc81WpN4pPe7RYgHZTLcg5sH9roOVT31OilykESc/9gAI16rtUiCe+EPmmSYZBV
+	 XkwmXX+DN7xPtCKuoBXqsurEUvohcc6cwGrwfmeRk1GkHzYTwW2/iUp4fZjrRJFZEq
+	 mkF6Y/CDwPv8/2G30cdu63AuBx/XrQ27hmXJqIaWq0fZthzvgD4umk9K2v216GHK53
+	 XH/R8zatL1oRpm6Lf0w0XE+q5BW874iXuKKwJt+OjLVyz2Fq1OfG/xYs00W5DHiWPF
+	 i+izHWfcq0UoQ==
+Received: from AMDDesktop.lan (p5dd1eaf2.dip0.t-ipconnect.de [93.209.234.242])
+	by bkemail.birger-koblitz.de (Postfix) with ESMTPSA id BD91942254;
+	Tue, 29 Sep 2026 03:18:57 +0000 (UTC)
+From: Birger Koblitz <mail@birger-koblitz.de>
+Subject: [PATCH net-next v14 00/14] ax88179_178a: Add support for
+ AX88179A-based chips
+Date: Tue, 29 Sep 2026 05:18:48 +0200
+Message-Id: <20260929-ax88179a-v14-0-a1f2249e42ea@birger-koblitz.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1790561983.git.zhoubinbin@loongson.cn> <502911659e15a51c4e98c11f3cf476dd5f92e75b.1790561983.git.zhoubinbin@loongson.cn>
- <0aaf7166-378c-47d7-98d4-1004fdaeae7b@oss.qualcomm.com> <CAMpQs4+uWMfFib7MhRcc7o-QMXkFrFCtdcGj04y56u44JL4iOg@mail.gmail.com>
- <ed99f62d-cf90-4ba9-89b3-08dbe7f7227e@oss.qualcomm.com>
-In-Reply-To: <ed99f62d-cf90-4ba9-89b3-08dbe7f7227e@oss.qualcomm.com>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Tue, 29 Sep 2026 11:06:25 +0800
-X-Gm-Features: AclHuK-pCkswqNWZEVmRnm0h2nAuqgvV_q4b0kCJUY7w_QKyo1tWrrar9EH7iE8
-Message-ID: <CAMpQs4+hATFf+0w6Wq09RoZB1JJ5L_GP0aWxcGAeraTW7Gfy0w@mail.gmail.com>
-Subject: Re: [PATCH v6 1/7] thermal/drivers/loongson2: Correct thermal sensor
- registration loop
-To: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Yinbo Zhu <zhuyinbo@loongson.cn>, "Rafael J . Wysocki" <rafael@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
-	Lukasz Luba <lukasz.luba@arm.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
-	linux-pm@vger.kernel.org, stable@vger.kernel.org, 
-	Sashiko <sashiko-bot@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABguu2oC/3XSTU7DMBAF4KugrAmaGf+z4h6IhWOP2wjUoiSKC
+ lXvjpNNpxJeOo4+22/etZt5GnnuXp+u3cTrOI/nU12gfn7q0jGeDtyPuX7oCMiCVdDHi/foQuw
+ jZh8KEzoFXf39e+IyXnbrvTvx0p/4snQfdec4zst5+tkPWXHf3zkHeOdW7KFHZb3JxTqD5m0Yp
+ wNP/ed5+BqX35fMO7aSBLwAqALgAQrngRhtC1ACIC0AVYEhZ9YlgPFetQAtACWfoCtAqWBxOGD
+ O1ALMHfBAAjAVyGmosUYdU9YtwErACsBWoGR2GrXFwM0MnABQDHV12w2iVQoDJqTQArwAHjLwG
+ 8A1wELMmpo3CHcgPGQQKuDZZucQIkVuAQhSkHOsD6qDNGyBU3Q2QJMQZQz4QGxtNBxdDGSGaHO
+ TIEnIUeDWRwsJdAqBdGy2AUUhAzlJbI3UJSY7KAZF/2Zxu93+AA9UFXfHAwAA
+X-Change-ID: 20260630-ax88179a-a1d89fe21730
+To: Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Russell King <linux@armlinux.org.uk>, Andrew Lunn <andrew@lunn.ch>, 
+ Heiner Kallweit <hkallweit1@gmail.com>, Huacai Chen <chenhuacai@kernel.org>, 
+ WANG Xuerui <kernel@xen0n.name>
+Cc: linux-usb@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+ Jianhui Xu <neuromoments@gmail.com>, 
+ Birger Koblitz <mail@birger-koblitz.de>, Nicolai Buchwitz <nb@tipi-net.de>
+X-Mailer: b4 0.14.2
 
-Hi Daniel:
+This adds support for the current generation of ASIX network adapter chips,
+which are based on the AX88179A. This includes the AX88179A/B (1GBit-PHY),
+AX88772D/E (100MBit) and AX88279 (2.5GBit).
 
-On Mon, Sep 28, 2026 at 9:23=E2=80=AFPM Daniel Lezcano
-<daniel.lezcano@oss.qualcomm.com> wrote:
->
-> On 9/28/26 10:17, Binbin Zhou wrote:
-> > Hi Daniel:
-> >
-> > Thanks for your review.
-> >
-> > On Mon, Sep 28, 2026 at 3:15=E2=80=AFPM Daniel Lezcano
-> > <daniel.lezcano@oss.qualcomm.com> wrote:
-> >>
-> >> On 9/28/26 06:44, Binbin Zhou wrote:
-> >>> The registration loop in loongson2_thermal_probe() incorrectly uses
-> >>> dev_err_probe() when the sensor is not present (-ENODEV). In that cas=
-e,
-> >>> the driver should continue to the next sensor index rather than treat=
-ing
-> >>> it as a fatal error.
-> >>>
-> >>> Fix this by correctly handling -ENODEV and only returning on other
-> >>> errors. Also add a final check to ensure at least one thermal zone wa=
-s
-> >>> registered.
-> >>>
-> >>> Cc: stable@vger.kernel.org
-> >>> Reported-by: Sashiko <sashiko-bot@kernel.org>
-> >>> Closes: https://sashiko.dev/#/patchset/cover.1783670011.git.zhoubinbi=
-n@loongson.cn?part=3D2
-> >>> Fixes: e7e3a7c35791 ("thermal/drivers/loongson-2: Add thermal managem=
-ent support")
-> >>> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> >>> ---
-> >>>    drivers/thermal/loongson2_thermal.c | 8 +++++---
-> >>>    1 file changed, 5 insertions(+), 3 deletions(-)
-> >>>
-> >>> diff --git a/drivers/thermal/loongson2_thermal.c b/drivers/thermal/lo=
-ongson2_thermal.c
-> >>> index 4d40fc706a53..99b7392fc68f 100644
-> >>> --- a/drivers/thermal/loongson2_thermal.c
-> >>> +++ b/drivers/thermal/loongson2_thermal.c
-> >>> @@ -160,16 +160,18 @@ static int loongson2_thermal_probe(struct platf=
-orm_device *pdev)
-> >>>
-> >>>        for (i =3D 0; i <=3D LOONGSON2_MAX_SENSOR_SEL_NUM; i++) {
-> >>>                tzd =3D devm_thermal_of_zone_register(dev, i, data, th=
-ermal_ops);
-> >>> -
-> >>>                if (!IS_ERR(tzd))
-> >>>                        break;
-> >>>
-> >>> -             if (PTR_ERR(tzd) !=3D -ENODEV)
-> >>> +             if (PTR_ERR(tzd) =3D=3D -ENODEV)
-> >>>                        continue;
-> >>>
-> >>> -             return dev_err_probe(dev, PTR_ERR(tzd), "failed to regi=
-ster");
-> >>> +             return dev_err_probe(dev, PTR_ERR(tzd), "failed to regi=
-ster sensor %d\n", i);
-> >>
-> >>
-> >>>        }
-> >>>
-> >>> +     if (IS_ERR(tzd))
-> >>> +             return dev_err_probe(dev, -ENODEV, "No thermal sensor r=
-egistered\n");
-> >>> +
-> >>>        ret =3D devm_request_threaded_irq(dev, irq, NULL, loongson2_th=
-ermal_irq_thread,
-> >>>                                        IRQF_ONESHOT, "loongson2_therm=
-al", tzd);
-> >>>        if (ret < 0)
-> >>
-> >>
-> >> The [no]error paths are confusing and prone to error, eg: 'if there is
-> >> no error then check if there is an error', 'when exiting the loop
-> >> without registering any sensor, then we assume tzd is -ENODEV'.
-> >>
-> >> Please make a less cumbersome and implicit checks here. For example
-> >> count the number of sensors and then do the check against.
-> >
-> > I thought about it, and you're right=E2=80=94I made the logic here too =
-complicated.
-> > Let's use `sensor_count` as the counter. Is the following check logic c=
-learer?
-> >
-> >          u32 sensor_count =3D 0;
-> >
-> >          for (unsigned int i =3D 0; i <=3D LOONGSON2_MAX_SENSOR_SEL_NUM=
-; i++) {
-> >                  tzd =3D devm_thermal_of_zone_register(dev, i, data,
-> > data->chip_data->thermal_ops);
-> >                  if (IS_ERR(tzd)) {
-> >                          if (PTR_ERR(tzd) =3D=3D -ENODEV)
-> >                                  continue;
-> >
-> >                          return dev_err_probe(dev, PTR_ERR(tzd),
-> >                                               "failed to register senso=
-r %d", i);
-> >                  }
-> >
-> >                  sensor_count++;
->
-> If I'm not mistaken in the previous version, the loop exits at the first
-> registered sensor
->
->         if (!IS_ERR(tzd))
->                 break;
->
-> Here all the available sensors are registered
+The AX179A-based chips all provide both a CDC-NCM compatible USB interface,
+and a proprietary vendor interface with more features. By default, the
+proprietary vendor interface is not active and Linux will load the CDC-NCM
+driver to support the devices. If the ax88179_178a module is configured by
+the OS to have precedence over CDC-NCM, then this driver will switch the
+device to use the vendor interface, and the device will be controlled by
+the ax88179_178a driver when the device is probed again after an automatic
+reset of the device bringing up the vendor interface.
 
-The name `sensor_count` might be a bit misleading, but here the loop
-exits after the first success:
+The following hardware was tested:
+Delock 66046 2.5GBit adapter (AX88279, FW: 1.2.0.0)
+TP-Link UE306 1GBit adapter (AX88179B, FW: 1.3.0.0)
+Renkforce RF-4708614 1GBit adapter (AX88179A, FW: 1.0.4.0)
+UGREEN CR110 100MBit adapter (AX88722E, FW: 1.3.0.0)
 
-                sensor_count++;
-                break;
+The driver supports the following features
+- EEE
+- TCP segmentation offload
+- VLAN filtering/tagging offload 
+  (NETIF_F_HW_VLAN_CTAG_FILTER, NETIF_F_HW_VLAN_CTAG_RX/TX)
+- RX/TX checksum offload
+- FC/Pause configuration
+- EEPROM read access
 
-Let=E2=80=99s rename it:
+The code is based on the ASIX 4.1.0 out-of-tree driver published under
+the GPL,, the aqc111 driver which provides support for the AX88279A,
+and some tracing of USB-transfers of the Windows-driver.
 
-bool registered =3D false;
-...
-for (...) {
-    tzd =3D devm_thermal_of_zone_register(...);
-    if (IS_ERR(tzd)) {
-        if (PTR_ERR(tzd) =3D=3D -ENODEV)
-            continue;
+Tested-by: Jianhui Xu <neuromoments@gmail.com>
+Signed-off-by: Birger Koblitz <mail@birger-koblitz.de>
+---
+Changes in v14:
+- Fix return value handling in VLAN offload functions
+- Add explanatory comment for phylink_mac_interrupt()
+- Link to v13: https://lore.kernel.org/r/20260927-ax88179a-v13-0-4fac6b3e032e@birger-koblitz.de
 
-        return dev_err_probe(dev, PTR_ERR(tzd),
-                             "failed to register sensor %d", i);
-    }
+Changes in v13:
+- Add MODULE_ALIAS to ax88179_178a
+- Squashed commit adding netdev2data() into the first one needing it
+- Add wrappers ax88179_write_u8/ax88179_write_u16
+- Use FIELD_GET() FIELD_PREP() in fixups.
+- Add guard for phydev->drv NULL in phy_ethtool_ksettings_set()
+- Various endianess fixes in fixups
+- Add error checking for too small packets in ax88179a_rx_fixup
+- Typo fixed:  ax88179_read_cmd -> ax88179_write_cmd setting PHY power
+- Changed call to usbnet_nway_reset by phy_ethtool_nway_reset
+- ax88179a_bulkin_config() handles FS USB now for all chip versions
+- Use phylink versions of calls for get/set_link_ksettings
+- Add handling of return values of ax88179_read_cmd() in various places
+- Removed usbnet_link_change(dev, 0, 0); at the end of ax88179a_reset().
+- Add RTLN-lock to protect AX_MEDIUM_STATUS_MODE register,
+  WRITE_ONCE/READONCE for rxctl.
+- Changed to clearing AX_XGMII_EN for all speeds != SPEED_2500 independent
+  of chip-id.
+- Fix access to AX88179A_MAC_RX_DATA_CDC_CNT by using 2 1-byte writes.
+- In ax88179a_mac_link_up initialize link_status.
+- Added setting of AX_GPHY_EEE_CTRL to disabled in ax88179a_reset(),
+  consistent with phylink default.
+- Various commit messages fixed
+- Conditionally set AX_VLAN_CONTROL_VFE after loop over the VLAN-entries
+- Moved code in wrong commits to the right ones (2x).
+- Fix races around rx_checksum flag setting.
+- Suspend/resume fixes: correct sequence of WoL settings and usbnet/phylink
+  suspend calls.
+- Read revision number into the 4th field of software version
+- Kconfig descriptiona and module description mention 2.5GBit
+- Fix orphaned defconfigs
+- Fix EEPROM access settings derived from chip versions
+- Fix EEPROM read error checking
+- Return value checking in asix_ax88279_read_status()
+- Added clearing of ETHTOOL_LINK_MODE_2500baseT_Full_BIT in lp_advertising
+  before modifying the bit.
+- In asix_ax88279_read_status() add if (!phydev->link) guard
+- Linkmode cleaning code shortened.
+- Link to v12: https://lore.kernel.org/r/20260916-ax88179a-v12-0-60c04c9924a2@birger-koblitz.de
 
-    registered =3D true;
-    break;
-}
+Changes in v12:
+- Fix BCD ranges for USB device detection
+- Free SKB in ax88179a_tx_fixup() when skb_linearize() fails
+- Use phylink_mii_ioctl instead of usbnet_mii_ioctl
+- Link to v11: https://lore.kernel.org/r/20260914-ax88179a-v11-0-5ea7a925ba6d@birger-koblitz.de
 
-if (!registered)
-    return dev_err_probe(dev, -ENODEV, "no thermal sensor registered");
->
-> >                  break;
-> >          }
-> >
-> >          if (!sensor_count)
-> >                  return dev_err_probe(dev, -ENODEV, "no thermal sensor
-> > registered");
-> >
-> >
->
+Changes in v11:
+- Fix sparse warnings
+- Link to v10: https://lore.kernel.org/r/20260904-ax88179a-v10-0-b5e60eca7690@birger-koblitz.de
 
---=20
-Thanks.
-Binbin
+Changes in v10:
+- Fix missing variable declaration in ax88179a_status()
+- Add reviewed-bys
+- Link to v9: https://lore.kernel.org/r/20260902-ax88179a-v9-0-8e6d7710a2ae@birger-koblitz.de
+
+Changes in v9:
+- Fix ax88179a_status() to not call carrier-related netif or usbnet methods
+- Use genphy_read_mmd_c45() and genphy_write_mmd_c45()
+- Link to v8: https://lore.kernel.org/r/20260831-ax88179a-v8-0-de905f2ee426@birger-koblitz.de
+
+Changes in v8:
+- Fix resume sequence as Suggested-by: Jianhui Xu <neuromoments@gmail.com>
+- Add handling of PHYs with broken forced mode in phylib to handle AX88279 PHY
+- Multple formatting fixes
+- Fix transiently unused functions ax88179a_mac_disable_tx_lpi() and
+  ax88179a_mac_enable_tx_lpi()
+- Removed unnecessary checks for dev initialized
+- Link to v7: https://lore.kernel.org/r/20260810-ax88179a-v7-0-da633191c129@birger-koblitz.de
+
+Changes in v7:
+- Add phylink_mac_interrupt() function to phylink and stop
+  polling the PHY to prevent a race condition between the controller
+  and phylink when configuring a new link.
+- Fix typo in ax88179_read_cmd Reported-by: Jianhui Xu <neuromoments@gmail.com>
+- Return -EOPNOTSUPP in asix_ax88279_config_aneg when autoneg is being disabled
+- Link to v6: https://lore.kernel.org/r/20260806-ax88179a-v6-0-fde7414619e6@birger-koblitz.de
+
+Changes in v6:
+- Use genphy_read_status() in asix_ax88279_read_status()
+- Use SGMII and 2500BaseX interfaces for PHY
+- Fix speed determination of MAC/PHY link
+- Fix bulk transfer configuration to use enums for bulk configuration types
+- Link to v5: https://lore.kernel.org/r/20260802-ax88179a-v5-0-dcb9fea4acd4@birger-koblitz.de
+
+Changes in v5:
+- Fixed read_status() and config_aneg() in PHY driver
+- Introduced netdev2data() as convenience function
+- netdev_info instances and debugging relicts removed
+- Several instances of badly written/formatted code that was copy and pasted from
+  the original driver corrected
+- select PHYLINK added to Kconfig when phylib dependency added
+- PHYLINK selects PHYLIB, so not needed to specify separately
+- Link to v4: https://lore.kernel.org/r/20260731-ax88179a-v4-0-2cf1f71b1dd2@birger-koblitz.de
+
+Changes in v4:
+- Split driver into library part and part2 for AX88179 and AX88179A-based
+  controllers
+- Driver renamed ax88179
+- Improved phylink use: use phylink standard functions for speed and EEE-settings,
+  correct MAC capabilities, removed ax88179_status() irq-urb callback
+- Fixes in PHY driver for AX88179A integrated PHYs
+- Link to v3: https://lore.kernel.org/r/20260724-ax88179a-v3-0-bdde4f905883@birger-koblitz.de
+
+Changes in v3:
+- Add PHY drivers for the PHYs of the AX88179A-based controllers
+- Use phylink for the AX88179A-based chips
+- Link to v2: https://lore.kernel.org/r/20260708-ax88179a-v2-0-0800fedb2e16@birger-koblitz.de
+
+Changes in v2:
+- Correctly use net-next prefix
+- Fix compilation issue in HW support patch
+- Split MMD support patch into patches for EEE/new chip support
+- Do not use ADVERTISE_RESV but private flag definition
+- Fix pause configuration to keep track of settings when autoneg disabled
+- Fix issue with unitialized variable reported by kernel test robot <lkp@intel.com>
+- Avoid white-space changes
+
+- Link to v1: https://lore.kernel.org/r/20260701-ax88179a-v1-0-13685df67515@birger-koblitz.de
+
+---
+Birger Koblitz (14):
+      phylink: Add phylink_mac_interrupt
+      phylib: Add support for PHYs with broken forced mode
+      ax88179_178a: Fix endianness of pause watermark register
+      ax88179_178a: Split driver into library and device specific code
+      ax88179_178a: Add HW support for AX179A-based chips
+      ax88179_178a: Add EEE configuration support for AX88179A MACs
+      ax88179_178a: Add EEE configuration support for AX88179A PHYs
+      ax88179_178a: Add VLAN offload support for AX88179A
+      ax88179_178a: Add AX179A/AX279 multicast configuration
+      ax88179_178a: Add Suspend/resume support for AX88179A/772D/279
+      ax88179_178a: Add ethtool get_drvinfo
+      ax88179_178a: Update driver name and information
+      ax88179_178a: Add support for AX88179A/772D/279 EEPROM access
+      ax88796b: Add support for AX88772D, AX88179A and AX88279
+
+ MAINTAINERS                                 |    6 +
+ arch/loongarch/configs/loongson32_defconfig |    2 +-
+ arch/loongarch/configs/loongson64_defconfig |    2 +-
+ drivers/net/phy/ax88796b.c                  |  167 ++++
+ drivers/net/phy/phy.c                       |    4 +
+ drivers/net/phy/phylink.c                   |   20 +
+ drivers/net/usb/Kconfig                     |   10 +-
+ drivers/net/usb/Makefile                    |    3 +-
+ drivers/net/usb/ax88179_178a.c              |  665 +-------------
+ drivers/net/usb/ax88179_lib.c               |  530 +++++++++++
+ drivers/net/usb/ax88179_lib.h               |  359 ++++++++
+ drivers/net/usb/ax88179a_devices.c          | 1285 +++++++++++++++++++++++++++
+ include/linux/phy.h                         |    1 +
+ include/linux/phylink.h                     |    1 +
+ 14 files changed, 2429 insertions(+), 626 deletions(-)
+---
+base-commit: f7f619ecda5761bd48578764ef5ff9e8fd97b916
+change-id: 20260630-ax88179a-a1d89fe21730
+
+Best regards,
+-- 
+Birger Koblitz <mail@birger-koblitz.de>
+
