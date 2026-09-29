@@ -1,88 +1,155 @@
-Received: from mta1.migadu.com (out-1.mta1.migadu.com [95.215.58.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518E150EBF9
-	for <loongarch@lists.linux.dev>; Tue, 29 Sep 2026 10:28:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A9C37CD33
+	for <loongarch@lists.linux.dev>; Tue, 29 Sep 2026 12:43:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790677765; cv=none; b=ZfnYM/PLF81VIolx2wwulINzgL5y96/oyx0tijloDEiTye1RsKISBMz6ScFB5prZdluSJFQv/G6TI19L74rgs0u4aVVpDAhPR+lUXdIrpR7WMyWfOjm74HWT9FwL8YPM9xALL+08oC92cTobgX0X7dZ8W3jOHP8PCy7+dPK30lc=
+	t=1790685809; cv=none; b=cDTHOiiEhxOlRgalZrljZCD19sXs0GinEV48YONI4Zz55p24CiJjNeM5rMo0E/3UmV0zj0A3VBDK6urA/+83SbSrsRDOKKcLrIj68wR3OyU4PI6Xpc231wf10+nCVE0UTpSOe5KI4YUPUoGbK+8DFEnO/5yVgbWPcB2O6uHrdUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790677765; c=relaxed/simple;
-	bh=8NLvOLnj3DbAAT+HBXadUZCHdDaLMqxODYIHGQTXStA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tESjZ2WcqiMvJmSbtrVmiSeHQsX0kEuRMtYmlAPq4dz+IZbqeAtVLOji6VQDeSnrX+LifRXkbfBDmdHIXW0VC88oygFgACWYZYkdW0m3Fu5cGZRmSzHc+Sfkv+7lL6PnlYeste3yUHwT8PsN8MvhrqwHAphMcIbW/Q0R2k71syk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=I6DEcExZ; arc=none smtp.client-ip=95.215.58.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1790685809; c=relaxed/simple;
+	bh=dsmtcH1KUa8/Fv5TCQXae98WQoKQjz4Gj8d6RLEUcmk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fijxb16hOU7h9co+IqRcBjxcnKaAZgUsGKeL7VEumUXMRbwnC1Zoe+neB6V/5hG3d/wgXP8TGfwTVmkVc59I1YfN3MwfXPJ+WKQfCxUr9hP4I0hoTMVYjNwR9JtHfhoNHRtrtUaZR/TQV8ZJbi8v469x8Kn/osWPI1mVYg3ALE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aUyb3eI6; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="I6DEcExZ"
-X-Envelope-To: loongarch@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=8NLvOLnj3DbAAT+HBXadUZCHdDaLMqxODYIHGQTXStA=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1790677735; v=1; x=1791282535;
- b=I6DEcExZ4PszoHBe9A3n17luQIZ8u/p7vg1ET5qgK+ySRsE4eMpqKxsqNpfG4mUo4KznPJwi
- 1lWzaVTKMBiNft1UCTzk4KB6SS+ePJMC2dP8fVxqKv48Khw6UQCORll3j7sZ5OtCFDFxZMg8k2H
- k2jJ3ICDfTgkqp+2dYiBQhU4=
-X-Envelope-To: loongarch@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 863aecb5a1889c6f;
-	Tue, 29 Sep 2026 10:28:55 +0000
-X-Mizu-Trace-ID: 863aecb5a1889c6f
-X-Migadu-Flow: FLOW_OUT
-From: Tao Cui <cui.tao@linux.dev>
-To: maobibo@loongson.cn,
-	gaosong@loongson.cn,
-	zhaotianrui@loongson.cn
-Cc: loongarch@lists.linux.dev,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	nagachaithanya9911@gmail.com,
-	cui.tao@linux.dev,
-	Tao Cui <cuitao@kylinos.cn>
-Subject: [PATCH v2 3/4] LoongArch: KVM: Propagate real error code in kvm_pch_pic_create
-Date: Tue, 29 Sep 2026 18:28:20 +0800
-Message-ID: <20260929102821.36112-4-cui.tao@linux.dev>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260929102821.36112-1-cui.tao@linux.dev>
-References: <20260929102821.36112-1-cui.tao@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aUyb3eI6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BE561F000FF
+	for <loongarch@lists.linux.dev>; Tue, 29 Sep 2026 12:43:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790685807;
+	bh=01YLInGl/50+krWWqQhGHR/yvk2It1cDSicZVJPaDHQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=aUyb3eI6ziwjWdZZTNIsAfRshpUXxY/uvx/feq9CcbjMe6cAos40JfNtz5kiqOTeF
+	 0+rXSjwTDt2+xNsp5NMAPbthqLYYwKY+Th+wNez2nnUpxFq8x3+VqEVI6s5CDy/RW7
+	 GOQRSkfZTi6QHGmsfXwyNARrYZGRvQioMFUwCF2GAUOFHEd5G7oTsL3NvySGLu4lTW
+	 7S5U7Dr9eZn5g/9LphWOWlLwJhVg9bFEMIW9CAIclwrkjfJyhqkpwNneo6ueNkNw5+
+	 gzg7IRR1oka/7/C86y8KFPwMcvreXcU/G/ks469MxIqT5ws0NSPzWUWmyJW9UgKGkW
+	 PwpaAFd4eZt6w==
+Received: by mail-ed2-f35.google.com with SMTP id 4fb4d7f45d1cf-6aaf10bf094so5571552a12.2
+        for <loongarch@lists.linux.dev>; Tue, 29 Sep 2026 05:43:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvBwdhz/TWRJU1Q27cwcGOZXedheWfWvLlW8p9Sl59CFz7nOyzm9GMUsBb9OZY9tYxg5Q4WtO2KeV6ow=@lists.linux.dev
+X-Gm-Message-State: AFq9FYIXxuHsTgM1ARwp3FzupZVPU2nZd0mW8B3LuNaGMQZHKQNZnfvi
+	Z9xAI3Pv8ldVoEvLZbBxPu6HginqbizdMGgpvFgdrwtiu4hjMVtArAB80IwEHVHlrI7H27PnYbq
+	ag97kFkJxNe+uh6gmUjSNJ3XA4cDqbvw=
+X-Received: by 2002:a05:6402:454c:b0:6aa:734b:1a28 with SMTP id
+ 4fb4d7f45d1cf-6aac8f828cdmr9987825a12.34.1790685806078; Tue, 29 Sep 2026
+ 05:43:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260929102821.36112-1-cui.tao@linux.dev> <20260929102821.36112-5-cui.tao@linux.dev>
+In-Reply-To: <20260929102821.36112-5-cui.tao@linux.dev>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 29 Sep 2026 20:43:13 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5GNKZSjB_MN2Vi7uhbf1q9nqqvsfwqF+THpkwk3dEhGQ@mail.gmail.com>
+X-Gm-Features: AclHuK8JCKLgJD0QHBNnHihyqU8NcdH-N30jZAFiC48CChMGSvffDsMY5HNhzHo
+Message-ID: <CAAhV-H5GNKZSjB_MN2Vi7uhbf1q9nqqvsfwqF+THpkwk3dEhGQ@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] LoongArch: KVM: Reject repeated PCH-PIC CTRL_INIT
+To: Tao Cui <cui.tao@linux.dev>
+Cc: maobibo@loongson.cn, gaosong@loongson.cn, zhaotianrui@loongson.cn, 
+	loongarch@lists.linux.dev, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel@xen0n.name, nagachaithanya9911@gmail.com, Tao Cui <cuitao@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Tao Cui <cuitao@kylinos.cn>
+Hi, Tao,
 
-kvm_pch_pic_create() replaces the real error of
-kvm_setup_default_irq_routing() with a fixed -ENOMEM.  Return the
-actual code, as kvm_eiointc_create() already does; the kvm_ipi_create()
-case is fixed separately by "Return the actual error code in
-kvm_ipi_create()" (Chaithanya Lagisetty).
+On Tue, Sep 29, 2026 at 6:29=E2=80=AFPM Tao Cui <cui.tao@linux.dev> wrote:
+>
+> From: Tao Cui <cuitao@kylinos.cn>
+>
+> KVM_DEV_LOONGARCH_PCH_PIC_CTRL_INIT has no guard against repeated
+> invocation: every call overwrites pch_pic_base and registers the same
+> kvm_io_device on the MMIO bus at the new address, while
+> kvm_pch_pic_destroy() unregisters only one bus range.  After a repeated
+> init, MMIO to the stale ranges computes its register offset against the
+> new base and silently reads 0 / drops writes, and the leftover bus
+> entries persist until the VM is destroyed.
+>
+> Reject repeated initialization with -EEXIST, tracking the state with
+> a has_init flag so the check and the MMIO base update are atomic
+> under slots_lock.  The base is only committed after a successful bus
+> registration, and the real registration error is propagated instead
+> of being replaced with -EFAULT.
+>
+> Fixes: d206d9514873 ("LoongArch: KVM: Add PCHPIC user mode read and write=
+ functions")
+> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
+> ---
+>  arch/loongarch/include/asm/kvm_pch_pic.h |  1 +
+>  arch/loongarch/kvm/intc/pch_pic.c        | 12 ++++++++++--
+>  2 files changed, 11 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/kvm_pch_pic.h b/arch/loongarch/in=
+clude/asm/kvm_pch_pic.h
+> index 887b0431fd20..679132d840e6 100644
+> --- a/arch/loongarch/include/asm/kvm_pch_pic.h
+> +++ b/arch/loongarch/include/asm/kvm_pch_pic.h
+> @@ -53,6 +53,7 @@ struct loongarch_pch_pic {
+>         spinlock_t lock;
+>         struct kvm *kvm;
+>         struct kvm_io_device device;
+> +       bool has_init;
+>         union pch_pic_id id;
+>         uint64_t mask; /* 1:disable irq, 0:enable irq */
+>         uint64_t htmsi_en; /* 1:msi */
+> diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/=
+pch_pic.c
+> index 7a704f18880d..a884a043feef 100644
+> --- a/arch/loongarch/kvm/intc/pch_pic.c
+> +++ b/arch/loongarch/kvm/intc/pch_pic.c
+> @@ -282,16 +282,24 @@ static int kvm_pch_pic_init(struct kvm_device *dev,=
+ u64 addr)
+>         struct kvm_io_device *device;
+>         struct loongarch_pch_pic *s =3D dev->kvm->arch.pch_pic;
+Why so complicated? The below is enough, no?
 
-Fixes: e785dfacf7e7 ("LoongArch: KVM: Add PCHPIC device support")
-Signed-off-by: Tao Cui <cuitao@kylinos.cn>
-Reviewed-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/kvm/intc/pch_pic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/pch_pic.c
-index 30a8c65c7609..7a704f18880d 100644
+diff --git a/arch/loongarch/kvm/intc/pch_pic.c
+b/arch/loongarch/kvm/intc/pch_pic.c
+index 2b63b0c2c7ce..7855d78304b7 100644
 --- a/arch/loongarch/kvm/intc/pch_pic.c
 +++ b/arch/loongarch/kvm/intc/pch_pic.c
-@@ -445,7 +445,7 @@ static int kvm_pch_pic_create(struct kvm_device *dev, u32 type)
- 
- 	ret = kvm_setup_default_irq_routing(kvm);
- 	if (ret)
--		return -ENOMEM;
-+		return ret;
- 
- 	s = kzalloc_obj(struct loongarch_pch_pic);
- 	if (!s)
--- 
-2.43.0
+@@ -281,6 +281,9 @@ static int kvm_pch_pic_init(struct kvm_device
+*dev, u64 addr)
+        struct kvm_io_device *device;
+        struct loongarch_pch_pic *s =3D dev->kvm->arch.pch_pic;
 
++       if (s->device->ops)
++               return -EEXIST;
++
+        s->pch_pic_base =3D addr;
+        device =3D &s->device;
+        /* init device by pch pic writing and reading ops */
+
+>
+> -       s->pch_pic_base =3D addr;
+>         device =3D &s->device;
+>         /* init device by pch pic writing and reading ops */
+>         kvm_iodevice_init(device, &kvm_pch_pic_ops);
+>         mutex_lock(&kvm->slots_lock);
+> +       if (s->has_init) {
+> +               ret =3D -EEXIST;
+> +               goto out;
+> +       }
+>         /* register pch pic device */
+>         ret =3D kvm_io_bus_register_dev(kvm, KVM_MMIO_BUS, addr, PCH_PIC_=
+SIZE, device);
+> +       if (!ret) {
+> +               s->pch_pic_base =3D addr;
+> +               s->has_init =3D true;
+> +       }
+> +out:
+>         mutex_unlock(&kvm->slots_lock);
+>
+> -       return (ret < 0) ? -EFAULT : 0;
+> +       return ret;
+>  }
+>
+>  /* used by user space to get or set pch pic registers */
+> --
+> 2.43.0
+>
