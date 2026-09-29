@@ -1,192 +1,123 @@
-Received: from bkemail.birger-koblitz.de (bkemail.birger-koblitz.de [23.88.97.239])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy2-f31.google.com (mail-dy2-f31.google.com [74.125.229.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C25B4D4878
-	for <loongarch@lists.linux.dev>; Tue, 29 Sep 2026 03:19:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.88.97.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E30142D7386
+	for <loongarch@lists.linux.dev>; Tue, 29 Sep 2026 05:27:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.229.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790651975; cv=none; b=fmTqPkqoNd5UH4wtH87GWtjbTRU2JKG/YRTGwVq/TAjCuR8DNELc3QPtSnH6FCo7hGgSH7aCMgRLwTzsALj3TkSxYjF3Tm1msfbqEcad9O4LyoiA7Zxw7ejEsoWktQcTaKe2sbKIGdIH17GRumT0PlJEsLA89q/1g9DCHAQ3Qfg=
+	t=1790659652; cv=none; b=B6QzJHofs7g5ZBtelUJn4+fex7EPegZpLXe7P3wMvOvg4Zif23OloZ0+Bh0Wf3lf5rmAe/ASqkuC9Cwf0B73maMDijnblmtxxuC0QnnyowAQcR7t+PNV2mUo5bMORdUHpizVV48TrLHkWNQdzuW4BmyqrtxOl4mZzjQQ+sdF78o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790651975; c=relaxed/simple;
-	bh=/A0k3jiBFp19ADWTQBTkvBSWwOOpjiQM/X0B7jSqluA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HLyP8Dp6OtmAgfhjHOEXLNiHg+8oIoz7qGmOvg8MDIhG7B1hjsDf5EbV6fR2Oapo920765NC1BPMQLN3suZMJGWTaFjEquaSlCZZh/EU37JBWQunIbwnJkRPlSl1SMIKr67K+4K8Yb2BG4A08SgN350iQX+onHvRRt9Hl8nbIJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=birger-koblitz.de; spf=pass smtp.mailfrom=birger-koblitz.de; dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b=d4tDwJ0J; dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b=nT8xXVrD; arc=none smtp.client-ip=23.88.97.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=birger-koblitz.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=birger-koblitz.de
+	s=arc-20240116; t=1790659652; c=relaxed/simple;
+	bh=qEEI8aktSwTOLRHps3xZRdfVtwrSTMCF4gmb4m+bhVM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hOdLnZuyAs07X6qtwGucsHqXx3ezKMzCWCpRgUlE6SLTIatO4bPsifGPw0HqIfW/f0L+H5cqnJ/ViYkJjTU8hS2aquQhiFg/Z8qxc25/t7NTV3sqJxPOOzwxwVUgTIrm8UlJ0NqRb/qZvu6/zNSXOUfgjEwj936mSW+2J5/iBEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A/h8+hCB; arc=none smtp.client-ip=74.125.229.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b="d4tDwJ0J";
-	dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b="nT8xXVrD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=birger-koblitz.de;
-	s=default; t=1790651961;
-	bh=/A0k3jiBFp19ADWTQBTkvBSWwOOpjiQM/X0B7jSqluA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=d4tDwJ0J6NqCLoUFzY4UU0iEiAWKODMq9b4ZZU8o0DgJlbvJ7so8YL1zQnYgd6lJv
-	 8NqXgGlrDlxFjgMuDDFVL50xwdEUEAiX/Mf4hjS84sQfCGcyPGxACtfqLIjv8VPk/E
-	 /aW9yTBMpPWmKHlOpwbsVi8GVqWAxRjlo3bmWY4vuQPWOTqPrI8CEyXHUpDpZ2bQEb
-	 dwAIx0yj8l8zbph8LTtlSaQfSXS1/vmugh3b/RNVSIVXUDEKeVjEAICzN2pOpxO2eF
-	 uvia2arYfzfbJKRL3g93+Q/q39T0QzTG+oCKoV7Y1YTkV/h+TSr7B3qNoEKH3w0KcI
-	 +syj5C4gVr9Yg==
-Received: by bkemail.birger-koblitz.de (Postfix, from userid 109)
-	id DB984422C4; Tue, 29 Sep 2026 03:19:21 +0000 (UTC)
-X-Spam-Level: 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=birger-koblitz.de;
-	s=default; t=1790651941;
-	bh=/A0k3jiBFp19ADWTQBTkvBSWwOOpjiQM/X0B7jSqluA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=nT8xXVrDbclYc0uAS7Dtphj8UOr2KLlHSNu15zu4S/jm70Y0/Rl+9tPHjNvdyiTxE
-	 21IQQK1TcKBQHsF/N/c+nN0DfBuFewI7n1VYNC44YIMgMSS7DNvsn50J3DvG/4DPBZ
-	 pZeisaiYugGk7s90tFwqZh+I7dG5GHxy7FDxfRTvUmMx2haE24fVwY5JzvGG21MOXd
-	 T2egzMYOkVBxqFNOpgw19PhW3aVJ5tTTVvIp91Wx5vNzRXxnobaHG+XuprPHjt9Sg0
-	 RYz6Glu3/8tCteETqibcxWRgoNZOXR+Ep+zfZAHyAE3pmc3XdrS8DCoRELeTRXJSwl
-	 dDsnp6GGFKm+Q==
-Received: from AMDDesktop.lan (p5dd1eaf2.dip0.t-ipconnect.de [93.209.234.242])
-	by bkemail.birger-koblitz.de (Postfix) with ESMTPSA id F0F104226C;
-	Tue, 29 Sep 2026 03:19:00 +0000 (UTC)
-From: Birger Koblitz <mail@birger-koblitz.de>
-Date: Tue, 29 Sep 2026 05:19:00 +0200
-Subject: [PATCH net-next v14 12/14] ax88179_178a: Update driver name and
- information
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A/h8+hCB"
+Received: by mail-dy2-f31.google.com with SMTP id 5a478bee46e88-33c11ef641aso4184251eec.1
+        for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 22:27:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790659650; x=1791264450; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=O8QN8snA6KWfiFUHUmB9j8vT4kxR/u7KkTNc9IaHvVk=;
+        b=A/h8+hCBNy4B1nf834cl0TVqvRzbWPtLp5qsNlPOjCqhcsZgc8ELgut1iNm6ifNiu2
+         63y5sKxHc9TfciRTgjTx53cScuB0Q02NJIkj0Ozl3FaX3Uvcatz6h3WBdLM0bqk7zSaj
+         c/0wT0OXGUBVH8Z6rG9KB4YvIb3pvW7psThGlLNTWCLrF4SrdVnLtD2aLybmr9rvXEQA
+         mqSzjigoTx1lniTUKOXmC7LsriR3sQZU/BF7Oav7mj3sB9wual0QeAw/Yk9uDRGx5Zg3
+         CFPP4hGiSOUDjb4gSMO/vgCIVuDPRb944/elPx1itj36J7BdX2TQAWxS+OPIsCF/rCjj
+         LOXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790659650; x=1791264450;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=O8QN8snA6KWfiFUHUmB9j8vT4kxR/u7KkTNc9IaHvVk=;
+        b=MWUFj3bY8rujlD7x0aWlftzjumgV4HhqKW/3ZL1JV4z90qIxwF064IErXyqjTeo6Qu
+         xNkAkECEcruWqy3bizvQBTKNdXrKTVHcvJ46awg+6SFYxgbw7+dLwQy+wg3s44dxrbVV
+         5dHfW3c4uEl9N+yx9FYFnj18UTQvwrjjdQSXr+HzhIozh1sQFdBM52MsrlKCw3F6Dln9
+         O6Y0FIVYYGAKaeYTuf9zdWn2lLFSNm/CF7uXpHvYgi08d8SqpNPCUMOGrhga1W0YxMt5
+         QPccl71/NE+voGEWxpL0F+jljDVFOpLZGSG6041egeZi1xNu5BtL40hfpbgqZh5WnaNo
+         U2Pg==
+X-Forwarded-Encrypted: i=1; AKwUvBwZW1cUzDyvogWWN5yhafuFvfLWJnBR01Tg4y5wN4VqpJ3dufsIgl5JXfPPc8BCsS+SnI9ZStnQauo=@lists.linux.dev
+X-Gm-Message-State: AFq9FYIhZApWHOl4j0clAhYG6F6NfxNtggwh0vRqAUoPhbf2WpDnaZpW
+	p/E5/YH5Z7v0o6Z301behkQZr5H5VswawuSRu+RjExT78r3K/D+6q+8d
+X-Gm-Gg: AYBFou0piVdspnGpjXiz17J9yPjP9zL86mFgvEwoqR0TYjL94QvKJ3zzzjhRReRWf4u
+	3VIoZSCrnw1MQaQlxO6lrSp7f66uLJmVme+6Xkz4Z9y3H0OE1SyOKwFlMY08CUtHVciLZi/SVZT
+	yHbyOHJ3tdOuzMbqofUX8aUocluYRFGZa8focL08xIErdTkRJPeOT3liiQLX9szEIuEjNqVOY7e
+	8j1K8oca5EWMk7BfgxdUI4eZ7V/QG21CGM/b5qHaPXj6S0ukG3rUKDyCV6cySbWIY+B1ravxIe8
+	bzgRQerCvzHlJiVT5UinclFHMpzjeo6y5z1G5cKDR3imezLB/ALejFOyA0PEW2pz1nuN5u/jD6H
+	cfsuw0Oo+o7Wp+oEnfn7zs4HT/BG/1UCgcBrPd4h1Or3lIs67FvRHjDtK1s0sZ2h6nVXbZT8lDn
+	I4l4G6Fkj+RRBFDEW9GmT1w4sPkq5wos07MEPV60oarFb12gUC5NaZ7mAIp1QGfyr/zzZPq3HuQ
+	ZkRgJmSO3mCF3Z68LtzMQ==
+X-Received: by 2002:a05:7301:4204:b0:342:810b:9554 with SMTP id 5a478bee46e88-342810b964dmr11955549eec.32.1790659649933;
+        Mon, 28 Sep 2026 22:27:29 -0700 (PDT)
+Received: from amd.ban-spse ([165.204.217.251])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-34b580fc50asm2092057eec.14.2026.09.28.22.27.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Sep 2026 22:27:29 -0700 (PDT)
+From: Chaithanya Lagisetty <nagachaithanya9911@gmail.com>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Bibo Mao <maobibo@loongson.cn>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Xianglai Li <lixianglai@loongson.cn>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Chaithanya Lagisetty <nagachaithanya9911@gmail.com>
+Subject: [PATCH] LoongArch: KVM: Return the actual error code in kvm_pch_pic_create()
+Date: Tue, 29 Sep 2026 05:27:12 +0000
+Message-ID: <20260929052712.470413-1-nagachaithanya9911@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260929-ax88179a-v14-12-a1f2249e42ea@birger-koblitz.de>
-References: <20260929-ax88179a-v14-0-a1f2249e42ea@birger-koblitz.de>
-In-Reply-To: <20260929-ax88179a-v14-0-a1f2249e42ea@birger-koblitz.de>
-To: Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Russell King <linux@armlinux.org.uk>, Andrew Lunn <andrew@lunn.ch>, 
- Heiner Kallweit <hkallweit1@gmail.com>, Huacai Chen <chenhuacai@kernel.org>, 
- WANG Xuerui <kernel@xen0n.name>
-Cc: linux-usb@vger.kernel.org, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
- Jianhui Xu <neuromoments@gmail.com>, 
- Birger Koblitz <mail@birger-koblitz.de>, Nicolai Buchwitz <nb@tipi-net.de>
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
 
-Add additionally supported devices to Kconfig description, add
-further requirements such as PHYLINK.
+kvm_pch_pic_create() sets up the default IRQ routing and reports every
+failure as -ENOMEM, discarding the error code it was given:
 
-Update driver name in usb_driver and update MODULE_DESCRIPTION
-to include the additionally supported chips.
+	ret = kvm_setup_default_irq_routing(kvm);
+	if (ret)
+		return -ENOMEM;
 
-Change Kconfig symbol name from USB_NET_AX88179_178A to USB_NET_AX88179
-and update loongson32_defconfig/loongson64_defconfig to use that
-symbol.
+kvm_setup_default_irq_routing() returns -ENOMEM only when its routing
+entry array cannot be allocated. Otherwise it forwards the result of
+kvm_set_irq_routing(), which also fails with -EINVAL when an entry is
+rejected by setup_routing_entry(). Userspace creating a
+KVM_DEV_TYPE_LOONGARCH_PCHPIC device can therefore receive -ENOMEM even
+when IRQ routing setup actually failed with -EINVAL.
 
-Signed-off-by: Birger Koblitz <mail@birger-koblitz.de>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Nicolai Buchwitz <nb@tipi-net.de>
+Return ret so the original error code reaches userspace. This matches
+kvm_eiointc_create(), which already propagates the error code from the
+helpers it calls.
+
+Only compile-tested.
+
+Fixes: 1928254c5ccb ("LoongArch: KVM: Add irqfd support")
+Signed-off-by: Chaithanya Lagisetty <nagachaithanya9911@gmail.com>
 ---
- arch/loongarch/configs/loongson32_defconfig |  2 +-
- arch/loongarch/configs/loongson64_defconfig |  2 +-
- drivers/net/usb/Kconfig                     | 10 +++++++---
- drivers/net/usb/Makefile                    |  2 +-
- drivers/net/usb/ax88179_178a.c              |  8 ++++----
- 5 files changed, 14 insertions(+), 10 deletions(-)
+ arch/loongarch/kvm/intc/pch_pic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/loongarch/configs/loongson32_defconfig b/arch/loongarch/configs/loongson32_defconfig
-index e76ea9b629747a8d721d248be3ac1e8d504178fc..9ac643b1a68ec35f944bfec1821437c7e61e2d71 100644
---- a/arch/loongarch/configs/loongson32_defconfig
-+++ b/arch/loongarch/configs/loongson32_defconfig
-@@ -642,7 +642,7 @@ CONFIG_USB_RTL8150=m
- CONFIG_USB_RTL8152=m
- CONFIG_USB_USBNET=m
- # CONFIG_USB_NET_AX8817X is not set
--# CONFIG_USB_NET_AX88179_178A is not set
-+# CONFIG_USB_NET_AX88179 is not set
- CONFIG_USB_NET_CDC_EEM=m
- CONFIG_USB_NET_HUAWEI_CDC_NCM=m
- CONFIG_USB_NET_CDC_MBIM=m
-diff --git a/arch/loongarch/configs/loongson64_defconfig b/arch/loongarch/configs/loongson64_defconfig
-index 976340d4d51445871274bfd558d217e1640a7756..882b6dadeeb7c998e15f6ba06ac48ada1b994dff 100644
---- a/arch/loongarch/configs/loongson64_defconfig
-+++ b/arch/loongarch/configs/loongson64_defconfig
-@@ -658,7 +658,7 @@ CONFIG_USB_RTL8150=m
- CONFIG_USB_RTL8152=m
- CONFIG_USB_USBNET=m
- # CONFIG_USB_NET_AX8817X is not set
--# CONFIG_USB_NET_AX88179_178A is not set
-+# CONFIG_USB_NET_AX88179 is not set
- CONFIG_USB_NET_CDC_EEM=m
- CONFIG_USB_NET_HUAWEI_CDC_NCM=m
- CONFIG_USB_NET_CDC_MBIM=m
-diff --git a/drivers/net/usb/Kconfig b/drivers/net/usb/Kconfig
-index 115990b0d9537aea2776544c9768b034f32aa7a4..27862e380bdb4a54d184fa8618e4c9b348354e84 100644
---- a/drivers/net/usb/Kconfig
-+++ b/drivers/net/usb/Kconfig
-@@ -195,11 +195,12 @@ config USB_NET_AX8817X
- 	  This driver creates an interface named "ethX", where X depends on
- 	  what other networking devices you have in use.
+diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/pch_pic.c
+index 2b63b0c2c7ce..7fee60ae01a5 100644
+--- a/arch/loongarch/kvm/intc/pch_pic.c
++++ b/arch/loongarch/kvm/intc/pch_pic.c
+@@ -444,7 +444,7 @@ static int kvm_pch_pic_create(struct kvm_device *dev, u32 type)
  
--config USB_NET_AX88179_178A
--	tristate "ASIX AX88179/178A USB 3.0/2.0 to Gigabit Ethernet"
-+config USB_NET_AX88179
-+	tristate "ASIX AX88179/179A/178A USB 2.0/3.0 to 100M/1G/2.5GbE Adapters"
- 	depends on USB_USBNET
--	select CRC32
- 	select PHYLINK
-+	select AX88796B_PHY
-+	select CRC32
- 	default y
- 	help
- 	  This option adds support for ASIX AX88179 based USB 3.0/2.0
-@@ -207,6 +208,9 @@ config USB_NET_AX88179_178A
+ 	ret = kvm_setup_default_irq_routing(kvm);
+ 	if (ret)
+-		return -ENOMEM;
++		return ret;
  
- 	  This driver should work with at least the following devices:
- 	    * ASIX AX88179
-+	    * ASIX AX88179A/B
-+	    * ASIX AX88279
-+	    * ASIX AX88772D/E
- 	    * ASIX AX88178A
- 	    * Sitcomm LN-032
- 
-diff --git a/drivers/net/usb/Makefile b/drivers/net/usb/Makefile
-index 2ecead0181eaf8d66fb6f5dbd6f2905b22b6eb57..4026f19ecb826a6465de38f1d9bb0e4c0af80421 100644
---- a/drivers/net/usb/Makefile
-+++ b/drivers/net/usb/Makefile
-@@ -12,7 +12,7 @@ obj-$(CONFIG_USB_HSO)		+= hso.o
- obj-$(CONFIG_USB_LAN78XX)	+= lan78xx.o
- obj-$(CONFIG_USB_NET_AX8817X)	+= asix.o
- asix-y := asix_devices.o asix_common.o ax88172a.o
--obj-$(CONFIG_USB_NET_AX88179_178A)      += ax88179.o
-+obj-$(CONFIG_USB_NET_AX88179)      += ax88179.o
- ax88179-y := ax88179_178a.o ax88179a_devices.o ax88179_lib.o
- obj-$(CONFIG_USB_NET_CDCETHER)	+= cdc_ether.o
- obj-$(CONFIG_USB_NET_CDC_EEM)	+= cdc_eem.o
-diff --git a/drivers/net/usb/ax88179_178a.c b/drivers/net/usb/ax88179_178a.c
-index 245ccf6896033922adcef79bd395b347918f57e3..8b52994e2a604101b61ec9cc0d698a0ecb520a14 100644
---- a/drivers/net/usb/ax88179_178a.c
-+++ b/drivers/net/usb/ax88179_178a.c
-@@ -1354,8 +1354,8 @@ static const struct usb_device_id products[] = {
- };
- MODULE_DEVICE_TABLE(usb, products);
- 
--static struct usb_driver ax88179_178a_driver = {
--	.name =		"ax88179_178a",
-+static struct usb_driver ax88179_driver = {
-+	.name =		"ax88179",
- 	.id_table =	products,
- 	.probe =	usbnet_probe,
- 	.suspend =	ax88179_suspend_wrapper,
-@@ -1366,8 +1366,8 @@ static struct usb_driver ax88179_178a_driver = {
- 	.disable_hub_initiated_lpm = 1,
- };
- 
--module_usb_driver(ax88179_178a_driver);
-+module_usb_driver(ax88179_driver);
- 
--MODULE_DESCRIPTION("ASIX AX88179/178A based USB 3.0/2.0 Gigabit Ethernet Devices");
-+MODULE_DESCRIPTION("ASIX AX88179/179A/178A/279 based USB 3.0/2.0 100M/1G/2.5GbE Controllers");
- MODULE_LICENSE("GPL");
- MODULE_ALIAS("ax88179_178a");
-
+ 	s = kzalloc_obj(struct loongarch_pch_pic);
+ 	if (!s)
 -- 
-2.47.3
+2.43.0
 
