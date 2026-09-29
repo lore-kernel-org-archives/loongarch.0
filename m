@@ -1,190 +1,100 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69F36261B8A
-	for <loongarch@lists.linux.dev>; Tue, 29 Sep 2026 05:46:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A21C5296BCF;
+	Tue, 29 Sep 2026 06:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790660768; cv=none; b=G45qhHvIrDTvwGv+Zz2PA+mWFBgonNpw//s35cFd2UGl4OlrWg1gHnmzpKJ2ijbKDu+iyB+UGo+cdEtFxcNejTsDJ4mWPmyMVHQCw37h4uybtq8l6GG/JAM8I+KQWv6aztnLq2gqHQyJqPnV1uZnncSAwdgxwX/zGANbAEnzYkM=
+	t=1790662830; cv=none; b=g0dR+5MNE+Sbp9Em6pl2gAmthOkftZsl8pvTaU3Pwb7W/3ViBfwZIWTuYfociCRKU6UEx6DkBzP+vtHGdCj2Edxzf7M/O+djrf4yH7Migv2BIoWZXSw/3Q9+ZpQCaob3iA993cXBIZAGutXfFrl8ca0Wabj3XlpCxWiVme4VYQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790660768; c=relaxed/simple;
-	bh=WBrK6P1J5Sn8UyafewpSzbEBsFKxbWX5+iAjHib2raI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A4oFQcNl8KRGssTdPm/XuQl2yX/n3oKiF+/lVv2qBq53H2ahHey/QVKT1RqJf1aW7sw09Fsi/QiPmRSAJXnTTOz1X2KXBI6A/sfG2mbJ7mOhJqkHhHj250qLsEVQgYmJToD0QvXqmoy/o8pzL1WZW1yUFFFcJdZ8QIawGiciWyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=WbHSujlG; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=hCqrut5Z; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1790662830; c=relaxed/simple;
+	bh=nBq0ce4U8pjNwOIB6srOmZAAPAVFm/4GWAgw9e8Y3ds=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=YQqt3FU44wfZsLETUCNUSlsk0u9t8sAkkZyz9Qaqr36kqb2KsWX5Ow0dlUWtsOugDyb24xrPJ5z+xGNQ//UbY+wk8ESLO+lYTU/Jhr1/eQcIwPWFXcHWqbOtw1z3/PzaAHS/gahp701tc1rnVIDYaMD/vJoJUyiGYAXqPch15mA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FEu8IKuJ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="WbHSujlG";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="hCqrut5Z"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68T47XWW3654789
-	for <loongarch@lists.linux.dev>; Tue, 29 Sep 2026 05:46:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Q+frg3gm10voRSH4KNBjLaqR7f6wGIX42XHmruDIkxw=; b=WbHSujlGrgDr8OaY
-	WMmlKN6Jo9lkdsIy5AwBBFCxU9rhpxCN5ZEjn3/UGeC4RWJ30NVrxqLlmJsjDeaR
-	XlG6wSbZExGK8jqW7aPv+33FL8X00noxrUd52MWHaBlq49eArmAXLTWLceySBuHg
-	KTSK0i6qhSdiHbOJCZKQ359lZAtGNYXf5iCYO3JmVXRosY5XPzYv4yrr8juoBrgd
-	xvQqdUM1eZP2achlYfNlAZ/9v8VWDZGg0SyYWYCyObiZMyB2Vz5aE2f/A4uDuq6+
-	rZCi6YSE3psWytZ6wv1Bo6eU8MbZzB5Ha2CZo2qG58cQYs3FydzxGQQhXDzKdFMM
-	H4ISCg==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4h03ew0u9v-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <loongarch@lists.linux.dev>; Tue, 29 Sep 2026 05:46:06 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-93a082c014aso125965085a.0
-        for <loongarch@lists.linux.dev>; Mon, 28 Sep 2026 22:46:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1790660765; x=1791265565; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Q+frg3gm10voRSH4KNBjLaqR7f6wGIX42XHmruDIkxw=;
-        b=hCqrut5ZbeKyWDrjlibxrw5GlcUHAdOL/quZB0fKs9vmEaXWuOyUfAJ68/NOc2p514
-         Un2YsbUJ1RydqnR3jJYHWPX9oQgIxwpZpJ93KzYx0O7bRBu0Zl96DWeKmH79bBFVXJgU
-         hLjgdEWGzv8yfikRjy6INvyr8WjT6zJXi6pZD7AHRREEa2DlpGUAW+UCC/NOmPaQWz25
-         OdhAsOcff1UctSt60CIYPmwEt7z8NwLHYSfpFXKZwb0lAXG08aC/KDSEpgqWA1Ehun6q
-         55tsAzUvEbeWc+VkEAObzsTzNQgHZ2r6sAK1DOT8RnoYFwIm1QMm7LGqRTgguIU4BIzr
-         50xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790660765; x=1791265565;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=Q+frg3gm10voRSH4KNBjLaqR7f6wGIX42XHmruDIkxw=;
-        b=QegJrDaYs9BrA7Lc4IBN6lrz6DahHR5zwmk0pbbQvZw/wzVzHd0eoLDUmR4yPNevtb
-         y8K2sFsZq1iaXHlWyebM+uRQxqTAkggJR1TIk2XITC5Ki33GJEOJRHyNi9YKSZt7zf+C
-         iWMY3mz9oWiVmU8nF1sCgtCC7O6rADFV0UTrr+/l0YJJX1yT7P4uxomPbYoucPxlCLz/
-         UXWI6vHQxUAB6VpStgmk0Z61ctRwq3To0ByrBv9ozT+L6W5LQpJAlBhJLwbUWOanUYtp
-         PYSxTk6limRxucXd3Hd50APIoCrV1hcYMcU/uVo3FdMXSiHYxzht5OstO/ZKyupFTWDE
-         tbEw==
-X-Forwarded-Encrypted: i=1; AKwUvBxfS18FVgg9fUiymlr6iuU5cOBIWne5iQvIlgNx2vlfA0Ek0G+SXAURVHyzbXwzci0gxSmB25wRTD8=@lists.linux.dev
-X-Gm-Message-State: AFuF++mFoej5Qdk7zSO34a/AZF6qnOICH1dh2h52REWWtj83ljMRgR/I
-	6h3dlvSIw1N4T2/AhbJ+Vo0U4j1PKn7FM8W/QL4c+1pe6VnWhsNOgjs4u/QNBvA+ZW6jmHJiSRr
-	c1mNjX6QjbICgqLqHmlGfmYnMH2ivOQtozxpCIdio2xOIYiWxD0Z+ywxOtPGUHUQ=
-X-Gm-Gg: AYBFou3uEL/MLEdQLFd31Q+yvdPEYDWVfhqPMOxXne8dhMMmEa5dmWiOM13Knz0ATGZ
-	MV/keYTJvj0jRp6GsEYON3BZT2K1P2c+mics6/GrnuIwdLoljll86cuE7sjedpHUgmcYFndbpcA
-	oQ+Pr6ryBGRPN5BA2yd3X95LJDECq7l56U+uaJ88Fa+/A6y9AwSf2IG6WatYD7EaP6gbaakkX7i
-	pFljASHU/PKkp2yu3ZLPSvD7SpOGdIk3qncmfxIa/oA5+n3d2AxYtfEUsDzmUJN9awUJCBq+6Ye
-	5PKs7a2tOD4oQs4PhiG7S6UaWufwS0Ud4kkQul6ibIJN0cpI7vL08HYXwJL8ZZ8sbPXS3Tnswyu
-	Ttnd5uIApbKLHgUwUZCkyZPy0EAADHKPamU+TemWojVjkB0nlz05M8+rnCRT+bw==
-X-Received: by 2002:a05:620a:2b9b:b0:93b:c6fc:71e9 with SMTP id af79cd13be357-93c8bf447famr274500685a.25.1790660765546;
-        Mon, 28 Sep 2026 22:46:05 -0700 (PDT)
-X-Received: by 2002:a05:620a:2b9b:b0:93b:c6fc:71e9 with SMTP id af79cd13be357-93c8bf447famr274497985a.25.1790660765060;
-        Mon, 28 Sep 2026 22:46:05 -0700 (PDT)
-Received: from ?IPV6:2a05:6e02:1041:c10:7d20:e20f:a77f:4ef7? ([2a05:6e02:1041:c10:7d20:e20f:a77f:4ef7])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a00ed06ea7sm31492735e9.4.2026.09.28.22.46.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Sep 2026 22:46:04 -0700 (PDT)
-Message-ID: <8eba263a-c233-42c5-842e-7487ea36d5aa@oss.qualcomm.com>
-Date: Tue, 29 Sep 2026 07:46:01 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FEu8IKuJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DE9C1F00893;
+	Tue, 29 Sep 2026 06:20:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790662829;
+	bh=lTp0iuvGgJlzLvCthN8H5DikguIjM02dg6D/PwjsUlQ=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc;
+	b=FEu8IKuJTM9UMyqWZRahuIUiQ6ZhkU4IDa2UZdQ+AHlfxY177GM88K5j47ZpxQMhi
+	 9FiOENuKjoLTRooDK6SGMn2gMDlmCoehRnP5Cw/6TyFOVTgHclMnxY1UKAjDkiTEI6
+	 K/Sd5XrAq9hpy03DSh95TZmK/hIC7jyt/XZ/GJsm1/KicRH8pbBdQeoXB2Cik/5FrY
+	 LhMT7P074WF9asToy5KM2I1lRfV//rJ6lF3tB8DG7vCsCS3rFqo0lGgSOlqUmWzNHX
+	 s6HPW0a40ZjDMKNQPLiD/ZEq0vCO79vhQpa0nH73XgM4QaTO4I76tb4UQji83RPvZR
+	 pHebvU6K9zPcg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3A59239253E9;
+	Tue, 29 Sep 2026 06:20:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/7] thermal/drivers/loongson2: Correct thermal sensor
- registration loop
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
-        Huacai Chen
- <chenhuacai@loongson.cn>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, Yinbo Zhu <zhuyinbo@loongson.cn>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-        Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
-        loongarch@lists.linux.dev, devicetree@vger.kernel.org,
-        linux-pm@vger.kernel.org, stable@vger.kernel.org,
-        Sashiko <sashiko-bot@kernel.org>
-References: <cover.1790561983.git.zhoubinbin@loongson.cn>
- <502911659e15a51c4e98c11f3cf476dd5f92e75b.1790561983.git.zhoubinbin@loongson.cn>
- <0aaf7166-378c-47d7-98d4-1004fdaeae7b@oss.qualcomm.com>
- <CAMpQs4+uWMfFib7MhRcc7o-QMXkFrFCtdcGj04y56u44JL4iOg@mail.gmail.com>
- <ed99f62d-cf90-4ba9-89b3-08dbe7f7227e@oss.qualcomm.com>
- <CAMpQs4+hATFf+0w6Wq09RoZB1JJ5L_GP0aWxcGAeraTW7Gfy0w@mail.gmail.com>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
-In-Reply-To: <CAMpQs4+hATFf+0w6Wq09RoZB1JJ5L_GP0aWxcGAeraTW7Gfy0w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Info: AW1haW4tMjYwOTI5MDAyMiBTYWx0ZWRfX3pJx3mPujPqI
- YgrwibxHEF9mPKvZ+7bReP8TqJnz6gX8rTHsCbrA//xkyxLj2oWvfxUr9FzYkokboO0qZIPrJPy
- 53NuzW/bIiTz4DXy3CZV6OZ9UNmi13M=
-X-Authority-Analysis: v=2.4 cv=IIOXmQvG c=1 sm=1 tr=0 ts=6abb509e cx=c_pps
- a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=VdqzKS8jKosA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=gowsoOTTUOVcmtlkKump:22 a=Ewyx0iL5S_KfCDCwH-MA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=IoWCM6iH3mJn3m4BftBB:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTI5MDAyMiBTYWx0ZWRfX8EeTginFmhcs
- 7i6xUXwB6jhuy9pK892d6zxbrAZ4El8B/WgcT9q5JRdEqy/v9owB3rXLqAxSwn0F0ZBiorH4bnc
- 8/GbW4+zM2eFvEo59fJ5yktTV9/NMGRIbjQqUcb97be/LQ19tnkYwmY0wXwEJlLbPmkU9OwJPoW
- Dip+VHC89hGC6xrtzxNrw3RGvUKIAU5H4YARiodwWXdBzh421QacwqUFTKkg3velGrdNNEhFrVE
- xSA4pQYuW72bkazkx9f1DBFNwXKL1IU9UA5vFM/N5ShjAZlbfnFaAkoTfqH7c42o45uOlXwhAKc
- CECCoZi5BrbKgEywxUFBXRbvgLbA2HEwOiBd+vP2PEbnzYxBV54IEdYae5EOfKWBy7voHJRg2PG
- 7psKWsub5f8INikdTBF2fPRwuqxZKTploLKZIfh3GLBmY4QKRgcW9waoCaRbIGnEh1WeOBNqSTG
- VtXnxSOOLNrXLfH2gWQ==
-X-Proofpoint-GUID: V7DL8ujCsqtAEriK_R4jVicfNEgyUgrb
-X-Proofpoint-ORIG-GUID: V7DL8ujCsqtAEriK_R4jVicfNEgyUgrb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-09-29_02,2026-09-21_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 phishscore=0 lowpriorityscore=0 clxscore=1015
- impostorscore=0 adultscore=0 bulkscore=0 malwarescore=0 spamscore=0
- suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2609040000
- definitions=main-2609290022
+Subject: Re: [PATCH bpf v5 0/3] bpf: Fix use-after-free of progs detached from
+ busy trampolines
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <179066282803.293113.8557815551946775052.git-patchwork-notify@kernel.org>
+Date: Tue, 29 Sep 2026 06:20:28 +0000
+References: <20260926135605.1217928-1-florent.revest@linux.dev>
+In-Reply-To: <20260926135605.1217928-1-florent.revest@linux.dev>
+To: Florent Revest <florent.revest@linux.dev>
+Cc: bpf@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
+ andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com, memxor@gmail.com,
+ song@kernel.org, yonghong.song@linux.dev, jolsa@kernel.org,
+ kpsingh@kernel.org, john.fastabend@gmail.com, leon.hwang@linux.dev,
+ zirajs7@gmail.com, rhkrqnwk98@gmail.com, puranjay@kernel.org,
+ xukuohai@huaweicloud.com, iii@linux.ibm.com, hbathini@linux.ibm.com,
+ chleroy@kernel.org, naveen@kernel.org, bjorn@kernel.org, pulehui@huawei.com,
+ yangtiezhu@loongson.cn, hengqi.chen@gmail.com, linux-kernel@vger.kernel.org,
+ aou@eecs.berkeley.edu, agordeev@linux.ibm.com, alex@ghiti.fr, bp@alien8.de,
+ catalin.marinas@arm.com, borntraeger@linux.ibm.com,
+ dave.hansen@linux.intel.com, emil@etsalapatis.com, hca@linux.ibm.com,
+ hpa@zytor.com, chenhuacai@kernel.org, ihor.solodrai@linux.dev,
+ mingo@redhat.com, linux-arm-kernel@lists.infradead.org,
+ linux-kselftest@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ loongarch@lists.linux.dev, maddy@linux.ibm.com, mark.rutland@arm.com,
+ mpe@ellerman.id.au, npiggin@gmail.com, palmer@dabbelt.com,
+ paulmck@kernel.org, pjw@kernel.org, ritesh.list@gmail.com,
+ sshegde@linux.ibm.com, shuah@kernel.org, svens@linux.ibm.com,
+ tglx@kernel.org, gor@linux.ibm.com, kernel@xen0n.name, will@kernel.org,
+ x86@kernel.org
 
-On 9/29/26 05:06, Binbin Zhou wrote:
-> Hi Daniel:
+Hello:
 
-[ ... ]
+This series was applied to bpf/bpf.git (master)
+by Alexei Starovoitov <ast@kernel.org>:
 
->>>> Please make a less cumbersome and implicit checks here. For example
->>>> count the number of sensors and then do the check against.
->>>
->>> I thought about it, and you're right—I made the logic here too complicated.
->>> Let's use `sensor_count` as the counter. Is the following check logic clearer?
->>>
->>>           u32 sensor_count = 0;
->>>
->>>           for (unsigned int i = 0; i <= LOONGSON2_MAX_SENSOR_SEL_NUM; i++) {
->>>                   tzd = devm_thermal_of_zone_register(dev, i, data,
->>> data->chip_data->thermal_ops);
->>>                   if (IS_ERR(tzd)) {
->>>                           if (PTR_ERR(tzd) == -ENODEV)
->>>                                   continue;
->>>
->>>                           return dev_err_probe(dev, PTR_ERR(tzd),
->>>                                                "failed to register sensor %d", i);
->>>                   }
->>>
->>>                   sensor_count++;
->>
->> If I'm not mistaken in the previous version, the loop exits at the first
->> registered sensor
->>
->>          if (!IS_ERR(tzd))
->>                  break;
->>
->> Here all the available sensors are registered
+On Sat, 26 Sep 2026 13:55:57 +0000 you wrote:
+> A task running in a trampoline image can call a prog that was detached
+> and freed in the meantime, when it slept in a sleepable prog before
+> reaching the detached one or was preempted right before calling it.
+> Patch 1 handles the preempted case with an RCU tasks grace period,
+> patch 2 handles the sleeping case by patching detached progs out of the
+> images that still call them and patch 3 adds a selftest for the sleeping
+> case.
 > 
-> The name `sensor_count` might be a bit misleading, but here the loop
-> exits after the first success:
-> 
->                  sensor_count++;
->                  break;
-> 
-> Let’s rename it:
+> [...]
 
-Can you clarify why only the first sensor found stops the thermal zones 
-registration ?
+Here is the summary with links:
+  - [bpf,v5,1/3] bpf: Wait for an RCU tasks grace period before freeing trampoline progs
+    https://git.kernel.org/bpf/bpf/c/0fb5751a6e41
+  - [bpf,v5,2/3] bpf: Skip detached progs in trampoline images that are still in use
+    https://git.kernel.org/bpf/bpf/c/17637e1a581a
+  - [bpf,v5,3/3] selftests/bpf: Detach a trampoline prog while a task sleeps before it
+    https://git.kernel.org/bpf/bpf/c/d5288c519bbd
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
