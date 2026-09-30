@@ -1,170 +1,149 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 403623385A5
-	for <loongarch@lists.linux.dev>; Wed, 30 Sep 2026 01:53:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E39361DAD
+	for <loongarch@lists.linux.dev>; Wed, 30 Sep 2026 02:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790733209; cv=none; b=Vwgmno4SoISnjC1P3oDFDDPOG6+ouV44oKCnyhlc2u0DNP5VVXs9fI4t5y94FfR95fYvkFvuWwv9PLPBi/sZlpdXBZIOYXN2kHAf5YNs5ckWm41gIlaNACq/7BB0rKx7z1lSy/iRdVApOPkawFYKTh5vo1xJ2orRyHghw08oIYM=
+	t=1790734105; cv=none; b=P/F4HSMG2xdJbzR8AOCqyObPUTO8wcDLhMFAvV7eJDFJUU7OY37yMTDtGBuiC6j+0He+Nu1LQNQ1wKITlI8m585IkY+c1BajqsytaddW2s5TEM2UAcdVD5iSTF/MJj6MfbLR9npRU4hoYTbphkqKGk6DmbYPeIMqBVw6gOJJ4Eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790733209; c=relaxed/simple;
-	bh=koW4b9jDjIZuMUVrLX0YUFeqVCFYzvJwCX+kO8a92Ho=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=CzEQC4LR+NdxlPL3Jvudncs6JihHkb0qFFr2PMww4G83l5YtjUtgQQY6TIUxPr4OiT2aSgSvf73xY+16L0hqL1N0vKkugFcx6xyQlE05pXVAiZONfjGzjT9rOdLNnzPHgjwo5TuR+xW1mWqCCShPbbg4eFT6ibKAsSqYReiE1NY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8CxQNGUa7xq0zERAA--.50933S3;
-	Wed, 30 Sep 2026 09:53:24 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJCxPs+Ra7xqg84mAA--.16151S2;
-	Wed, 30 Sep 2026 09:53:23 +0800 (CST)
-Subject: Re: [PATCH v2 4/4] LoongArch: KVM: Reject repeated PCH-PIC CTRL_INIT
-To: Huacai Chen <chenhuacai@kernel.org>, Tao Cui <cui.tao@linux.dev>
-Cc: gaosong@loongson.cn, zhaotianrui@loongson.cn, loongarch@lists.linux.dev,
- kvm@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@xen0n.name,
- nagachaithanya9911@gmail.com, Tao Cui <cuitao@kylinos.cn>
-References: <20260929102821.36112-1-cui.tao@linux.dev>
- <20260929102821.36112-5-cui.tao@linux.dev>
- <CAAhV-H5GNKZSjB_MN2Vi7uhbf1q9nqqvsfwqF+THpkwk3dEhGQ@mail.gmail.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <9a59af62-3e8a-12f5-4e6c-38c1953adb37@loongson.cn>
-Date: Wed, 30 Sep 2026 09:54:45 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1790734105; c=relaxed/simple;
+	bh=JhqpdjlUegF5d5RsooTiJX+4AVfcqBJhytFsIcxcvpw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KNl/FVVPAbLUpYNyxto+LVFxiOyaxbfK4PlIYQdaBZy2O6cG8qThBUpNajcGw8wVrtavBMRW+T0kkFMVMWNnhx/uwxn34LYJU8aj+dAzwwt0/8vGwRyk0bQ3mfWy4Cal6n7BGmrj3S56aPMvdcjYVGZ1CPWviFs0hAm/ywFZWVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hkofnZYI; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hkofnZYI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52D671F0089A
+	for <loongarch@lists.linux.dev>; Wed, 30 Sep 2026 02:08:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790734104;
+	bh=jsB8glCeMIfvLX9QeTCq0ti5cNN5IV0Cvi9+vtjV9v8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=hkofnZYICg5YPhSYs1I+bu32Wfn8P/9ul493hDKH72iXRX8R+8JgjJiqVXcx5hb4G
+	 pntA5ZcT8oMLuqaVDnnlAx7UByhF/4qunE9KG4yO8B8CYlXV+usXEUOq4FvBcR5t8s
+	 5Q6bLIF55QTCdrKmGaQEb7qzk09Dbf5932JuBbCu0cBd+/7Ba2l+hOUUy0JIc3lk9M
+	 FOY7pWhSqsN2Ix9XKo97lZDhuubynR7Kk8jQXCxTncnQbE3gKH3YyNh6tLIiRpCjYX
+	 WXDyl7fITrHHOKEASWWQuDLWwGB9JCEvfD1076TpEV0Gqxf6YyzNP+PvgknCpX8xd5
+	 7uIYyAyQuD2qQ==
+Received: by mail-ed2-f35.google.com with SMTP id 4fb4d7f45d1cf-6aaf10bf094so6688701a12.2
+        for <loongarch@lists.linux.dev>; Tue, 29 Sep 2026 19:08:24 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvBwZUVmX80ChO4NZGVkaalZ0zCikscn4L/XyVaQ1X+H/wQiJS1ZvGY9yHTB4rJggwt7hFsGwjNQCbcs=@lists.linux.dev
+X-Gm-Message-State: AFq9FYIoyrCOzSTQb3bJ24DVoI06mPK+uC19ZUaC3OIVNVjegvlzaASp
+	qMOV+ERqzzvApFrZngZiwZb6jM1sBh66YqGgQ/Ejmjz7pTWsa9cF9zbYCH11+d4DRyHzdZab6YR
+	EG5DHfWnb7S0vj1oLndJO7Y5pQ1HxUzs=
+X-Received: by 2002:a05:6402:4513:b0:6ab:1c2:967e with SMTP id
+ 4fb4d7f45d1cf-6ad4fd5c29cmr500039a12.32.1790734102933; Tue, 29 Sep 2026
+ 19:08:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H5GNKZSjB_MN2Vi7uhbf1q9nqqvsfwqF+THpkwk3dEhGQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxPs+Ra7xqg84mAA--.16151S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxWF1DXry8tFyDJF1xtw48Zrc_yoWrWr15pF
-	W8Aas8CFW8Wr1xWFs2vw1kXr1xZr4I9w1SgF1UAFWjkwn0vryYqFy8Jrs8ZF98J3yrCF1I
-	qF43G34Yv3WjyabCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU92b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AK
-	xVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AK
-	xVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
-	AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI
-	42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
-	IF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVF
-	xhVjvjDU0xZFpf9x07josjUUUUUU=
+References: <20260929102821.36112-1-cui.tao@linux.dev> <20260929102821.36112-3-cui.tao@linux.dev>
+ <6bc45b7c-88d8-f134-426a-b556fb867b41@loongson.cn>
+In-Reply-To: <6bc45b7c-88d8-f134-426a-b556fb867b41@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 30 Sep 2026 10:08:09 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5cBHvpJa0vgGqapQfeoUyVz2N6zW_DgTcCqwuuG7Utkw@mail.gmail.com>
+X-Gm-Features: AclHuK_b3TBwqVF2DXaM6BHodzV78IRxJaZUqGoSgu3d2bLEt92synhb1Wt8tBA
+Message-ID: <CAAhV-H5cBHvpJa0vgGqapQfeoUyVz2N6zW_DgTcCqwuuG7Utkw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] LoongArch: KVM: Load dmsintc pointer once in pch_msi_set_irq
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Tao Cui <cui.tao@linux.dev>, gaosong@loongson.cn, zhaotianrui@loongson.cn, 
+	loongarch@lists.linux.dev, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel@xen0n.name, nagachaithanya9911@gmail.com, Tao Cui <cuitao@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Sep 30, 2026 at 9:41=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
+>
+>
+>
+> On 2026/9/29 =E4=B8=8B=E5=8D=886:28, Tao Cui wrote:
+> > From: Tao Cui <cuitao@kylinos.cn>
+> >
+> > pch_msi_set_irq() reads kvm->arch.dmsintc several times: the non-NULL
+> > check and the address-window comparison each reload the pointer, so a
+> > concurrent device removal can be observed between them and the
+> > following dereference hits a freed object.
+> >
+> > Load the pointer once at the top of pch_msi_set_irq() and add a NULL
+> > check with a local snapshot in dmsintc_set_irq().  Both loads use
+> > READ_ONCE() so the compiler keeps them single.  This closes the
+> > reload race; a narrower window where removal happens right after the
+> > load remains, as the injection path takes no lock against destroy.
+> >
+> > Fixes: 03de5eecb0f0 ("LoongArch: KVM: Add DMSINTC inject msi to vCPU")
+> > Signed-off-by: Tao Cui <cuitao@kylinos.cn>
+> > ---
+> >   arch/loongarch/kvm/intc/dmsintc.c | 6 +++++-
+> >   arch/loongarch/kvm/intc/pch_pic.c | 7 ++++---
+> >   2 files changed, 9 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/arch/loongarch/kvm/intc/dmsintc.c b/arch/loongarch/kvm/int=
+c/dmsintc.c
+> > index 41c8b597b5bd..91a163698c3c 100644
+> > --- a/arch/loongarch/kvm/intc/dmsintc.c
+> > +++ b/arch/loongarch/kvm/intc/dmsintc.c
+> > @@ -69,9 +69,13 @@ int dmsintc_set_irq(struct kvm *kvm, u64 addr, int d=
+ata, int level)
+> >   {
+> >       unsigned int irq, cpu;
+> >       struct kvm_vcpu *vcpu;
+> > +     struct loongarch_dmsintc *s =3D READ_ONCE(kvm->arch.dmsintc);
+> > +
+> > +     if (!s)
+> > +             return -EINVAL;
+> NULL check with kvm->arch.dmsintc is already done in its caller function
+> pch_msi_set_irq(). It is not necessary here.
+> >
+> >       irq =3D (addr >> AVEC_IRQ_SHIFT) & AVEC_IRQ_MASK;
+> > -     cpu =3D (addr >> AVEC_CPU_SHIFT) & kvm->arch.dmsintc->cpu_mask;
+> > +     cpu =3D (addr >> AVEC_CPU_SHIFT) & s->cpu_mask;
+> >       if (cpu >=3D KVM_MAX_VCPUS)
+> >               return -EINVAL;
+> >       vcpu =3D kvm_get_vcpu_by_cpuid(kvm, cpu);
+> > diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/int=
+c/pch_pic.c
+> > index 62c09b5f3937..30a8c65c7609 100644
+> > --- a/arch/loongarch/kvm/intc/pch_pic.c
+> > +++ b/arch/loongarch/kvm/intc/pch_pic.c
+> > @@ -71,10 +71,11 @@ void pch_pic_set_irq(struct loongarch_pch_pic *s, i=
+nt irq, int level)
+> >   int pch_msi_set_irq(struct kvm *kvm, struct kvm_kernel_irq_routing_en=
+try *e, int level)
+> >   {
+> >       u64 msg_addr =3D (((u64)e->msi.address_hi) << 32) | e->msi.addres=
+s_lo;
+> > +     struct loongarch_dmsintc *dmsintc =3D READ_ONCE(kvm->arch.dmsintc=
+);
+> what is usage of READ_ONCE() here?
+>
+> If you want to simple the usage of kvm->arch.dmsintc in multiple places,
+> just *struct loongarch_dmsintc *dmsintc =3D kvm->arch.dmsintc* is enough.
+> And it is not fixup patch, it is code cleanup.
+I completely don't think this patch is necessary.
 
+Huacai
 
-On 2026/9/29 下午8:43, Huacai Chen wrote:
-> Hi, Tao,
-> 
-> On Tue, Sep 29, 2026 at 6:29 PM Tao Cui <cui.tao@linux.dev> wrote:
->>
->> From: Tao Cui <cuitao@kylinos.cn>
->>
->> KVM_DEV_LOONGARCH_PCH_PIC_CTRL_INIT has no guard against repeated
->> invocation: every call overwrites pch_pic_base and registers the same
->> kvm_io_device on the MMIO bus at the new address, while
->> kvm_pch_pic_destroy() unregisters only one bus range.  After a repeated
->> init, MMIO to the stale ranges computes its register offset against the
->> new base and silently reads 0 / drops writes, and the leftover bus
->> entries persist until the VM is destroyed.
->>
->> Reject repeated initialization with -EEXIST, tracking the state with
->> a has_init flag so the check and the MMIO base update are atomic
->> under slots_lock.  The base is only committed after a successful bus
->> registration, and the real registration error is propagated instead
->> of being replaced with -EFAULT.
->>
->> Fixes: d206d9514873 ("LoongArch: KVM: Add PCHPIC user mode read and write functions")
->> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
->> ---
->>   arch/loongarch/include/asm/kvm_pch_pic.h |  1 +
->>   arch/loongarch/kvm/intc/pch_pic.c        | 12 ++++++++++--
->>   2 files changed, 11 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/loongarch/include/asm/kvm_pch_pic.h b/arch/loongarch/include/asm/kvm_pch_pic.h
->> index 887b0431fd20..679132d840e6 100644
->> --- a/arch/loongarch/include/asm/kvm_pch_pic.h
->> +++ b/arch/loongarch/include/asm/kvm_pch_pic.h
->> @@ -53,6 +53,7 @@ struct loongarch_pch_pic {
->>          spinlock_t lock;
->>          struct kvm *kvm;
->>          struct kvm_io_device device;
->> +       bool has_init;
->>          union pch_pic_id id;
->>          uint64_t mask; /* 1:disable irq, 0:enable irq */
->>          uint64_t htmsi_en; /* 1:msi */
->> diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/pch_pic.c
->> index 7a704f18880d..a884a043feef 100644
->> --- a/arch/loongarch/kvm/intc/pch_pic.c
->> +++ b/arch/loongarch/kvm/intc/pch_pic.c
->> @@ -282,16 +282,24 @@ static int kvm_pch_pic_init(struct kvm_device *dev, u64 addr)
->>          struct kvm_io_device *device;
->>          struct loongarch_pch_pic *s = dev->kvm->arch.pch_pic;
-> Why so complicated? The below is enough, no?
-> 
-> diff --git a/arch/loongarch/kvm/intc/pch_pic.c
-> b/arch/loongarch/kvm/intc/pch_pic.c
-> index 2b63b0c2c7ce..7855d78304b7 100644
-> --- a/arch/loongarch/kvm/intc/pch_pic.c
-> +++ b/arch/loongarch/kvm/intc/pch_pic.c
-> @@ -281,6 +281,9 @@ static int kvm_pch_pic_init(struct kvm_device
-> *dev, u64 addr)
->          struct kvm_io_device *device;
->          struct loongarch_pch_pic *s = dev->kvm->arch.pch_pic;
-> 
-> +       if (s->device->ops)
-> +               return -EEXIST;
-This can work, however I think that it is not a good idea to access 
-internal structure field about kvm_io_device. If so, there is no use 
-about API kvm_iodevice_init(), just s->device->ops = &kvm_pch_pic_ops is ok.
-
-If adding has_init is redundant, maybe we can set s->pch_pic_base with 
-INVALID_GPA in kvm_pch_pic_create() or some other methods. However I 
-think directly accessing kvm_io_device::ops is not a good method, no 
-other architectures do in such way.
-
-Regards
-Bibo Mao
-> +
->          s->pch_pic_base = addr;
->          device = &s->device;
->          /* init device by pch pic writing and reading ops */
-> 
->>
->> -       s->pch_pic_base = addr;
->>          device = &s->device;
->>          /* init device by pch pic writing and reading ops */
->>          kvm_iodevice_init(device, &kvm_pch_pic_ops);
->>          mutex_lock(&kvm->slots_lock);
->> +       if (s->has_init) {
->> +               ret = -EEXIST;
->> +               goto out;
->> +       }
->>          /* register pch pic device */
->>          ret = kvm_io_bus_register_dev(kvm, KVM_MMIO_BUS, addr, PCH_PIC_SIZE, device);
->> +       if (!ret) {
->> +               s->pch_pic_base = addr;
->> +               s->has_init = true;
->> +       }
->> +out:
->>          mutex_unlock(&kvm->slots_lock);
->>
->> -       return (ret < 0) ? -EFAULT : 0;
->> +       return ret;
->>   }
->>
->>   /* used by user space to get or set pch pic registers */
->> --
->> 2.43.0
->>
-
+>
+> Regards
+> Bibo Mao
+> >
+> > -     if (cpu_has_msgint && kvm->arch.dmsintc &&
+> > -             msg_addr >=3D kvm->arch.dmsintc->msg_addr_base &&
+> > -             msg_addr < (kvm->arch.dmsintc->msg_addr_base + kvm->arch.=
+dmsintc->msg_addr_size)) {
+> > +     if (cpu_has_msgint && dmsintc &&
+> > +             msg_addr >=3D dmsintc->msg_addr_base &&
+> > +             msg_addr < (dmsintc->msg_addr_base + dmsintc->msg_addr_si=
+ze)) {
+> >               return dmsintc_set_irq(kvm, msg_addr, e->msi.data, level)=
+;
+> >       }
+> >
+> >
+>
