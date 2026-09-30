@@ -1,197 +1,178 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3FEE353A83
-	for <loongarch@lists.linux.dev>; Wed, 30 Sep 2026 02:33:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-wr2-f34.google.com (mail-wr2-f34.google.com [74.125.225.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 834D5466B72
+	for <loongarch@lists.linux.dev>; Wed, 30 Sep 2026 08:15:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790735596; cv=none; b=byhFgDoVww2Dph0OWUlblE7dLX7WRJQIppRYR50cahQXsLWM1t+06N9PZFFZwREkw6U+I4ywyY6Vt2LQgfUGRu/nkzWB7MI/ptEFHpsskwnqlOkrlNeiV1XAJbgySXQnd+nKHYr7QaUqUxsb0b+7pNpJ7KnJm3o26Nma2HJAtYI=
+	t=1790756151; cv=none; b=Fuxf/LUJKymnXgnm80IRrBMlt83T7mdr9T8uF7Ty2sua1WmPb9yt6LaM2uNirWDNaLAeWRKbKNQIiK3fIMQMrGDRsIPzpav4HnyvvxlG06cvIR/5Qo9EIxsik8194xqxJmvnnazgMYY2YnSeWLsv2NG3fq9T1m6Z7WcHla5gzUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790735596; c=relaxed/simple;
-	bh=Wei39sd+fhRwm54SeZjfaQaaG4NdrVJfW+9LEJ/KkUc=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=UBsIta66p4338oXZfWSCE9ou84S5mV/pVoldoelbunaDm2Z3+n5WwNb0qOc0hr0nKt4OK5w+hYVDgHFTloJuSOAEFAPsyMc4VZW9zaSNMp9TmoYl6l5ERteRejBayDSb+tb3sLB0iUBQUDwIZr3bC9Qp04aBIMdzZ1XVD55WBpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8AxHNLndLxqwzQRAA--.50355S3;
-	Wed, 30 Sep 2026 10:33:11 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJCxNs3mdLxqfNEmAA--.2965S2;
-	Wed, 30 Sep 2026 10:33:11 +0800 (CST)
-Subject: Re: [PATCH v2 4/4] LoongArch: KVM: Reject repeated PCH-PIC CTRL_INIT
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tao Cui <cui.tao@linux.dev>, gaosong@loongson.cn,
- zhaotianrui@loongson.cn, loongarch@lists.linux.dev, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org, kernel@xen0n.name,
- nagachaithanya9911@gmail.com, Tao Cui <cuitao@kylinos.cn>
-References: <20260929102821.36112-1-cui.tao@linux.dev>
- <20260929102821.36112-5-cui.tao@linux.dev>
- <CAAhV-H5GNKZSjB_MN2Vi7uhbf1q9nqqvsfwqF+THpkwk3dEhGQ@mail.gmail.com>
- <9a59af62-3e8a-12f5-4e6c-38c1953adb37@loongson.cn>
- <CAAhV-H6cgiMQn=1oct6KHaLADwWQJ7Ow3iT14_Gj5BQxMW22Sg@mail.gmail.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <be33489e-fec4-ba52-45d9-6323b14da593@loongson.cn>
-Date: Wed, 30 Sep 2026 10:34:35 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1790756151; c=relaxed/simple;
+	bh=hGf5SHT45QhXMybO439QDD/6j27QAPiOqO8zt+9Fe7E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RfWsYZ+62qUZE86crdGWqvilJdkJgf4dKTBoA4QQnerk9boQDeImJbrdrP2HqCClbIY+KQnrb0sOzSb9pkkrIAcv9d/Ey3lpbGvALB9cwPdeR7DYP6lSXOA7jvIPKgetAcVCiydwKcd0qEbAS3BNbIWwxFtOb86QGtATjaCdeoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall.org header.i=@blackwall.org header.b=LVKjeULh; arc=none smtp.client-ip=74.125.225.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=blackwall.org header.i=@blackwall.org header.b="LVKjeULh"
+Received: by mail-wr2-f34.google.com with SMTP id ffacd0b85a97d-48afd5b1678so339192f8f.2
+        for <loongarch@lists.linux.dev>; Wed, 30 Sep 2026 01:15:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=blackwall.org; s=google; t=1790756147; x=1791360947; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:in-reply-to:from:references
+         :cc:to:content-language:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=wA9u/pcTwn6WeT/1p6tUVMcz40b3lP8bbas9LYvDmjg=;
+        b=LVKjeULhn4caoaqPBBynwwul6qpW1iiPIbeGzpLVT4j2TGrJ6Q4LcPVB1sQTk01hYe
+         lfze+VoUWdGi4/PmmZQJnQ/L8PuEH5aXBGsSlb5cj+9qkyM8x7JMqllBz8HuBKYjRefo
+         5e3wS4jaK13tPYRYkDZDt2qHOYU36DocTkiZaVTKgp5hVHVoBtpgD7jVy67QABKHqMNT
+         NvLYfyZLV+PuDsG/Gj9uXQ4MlLqtwbeyYw2vHiQCFRKdmijaoBM8GqtyGpkcBjp1qE4c
+         gYre1t+gr+STWLajRYqyptSLMiMaZpyIttFSo81Qqc/f/NHnyFC6JjrQjfl4PbCo6xC3
+         ertg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790756147; x=1791360947;
+        h=content-transfer-encoding:content-type:in-reply-to:from:references
+         :cc:to:content-language:subject:user-agent:mime-version:date
+         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=wA9u/pcTwn6WeT/1p6tUVMcz40b3lP8bbas9LYvDmjg=;
+        b=e6OmBS+05Dzi45DzTXKub5PXdHNhwJRNaJxJXVfHtcY5cfCzCIrXRORyFpkUY1e3zN
+         7E+vthepC+zHWP1AXvGKYk9NjlF05KOkI9KeHmpTJAAg90BbuSssLhs7WRi8lx6rQpgQ
+         39Jb8Fwu2pOHEoeUgg6PtW1fNeDjBvBjVZfKoKZXIsQxr0tO2geetCPYi16wSrnPZM8R
+         GZTEqzQnCR3AJkktAQa8VmzJR/IeAsJp82Z0CWXCdbN0sYGpPonUgsWhJ8V7VbCnO1a+
+         OsXwj+vBm6GeUtlFqXbv7/dSvX/EYgrtxv5K42dcLI47GefHetd98FWctQzCVEIuD1OT
+         a1kA==
+X-Forwarded-Encrypted: i=1; AKwUvBzbdKvPGJZtzHIsn1Dbs0R/U+Ld66KuArcTxrlJnn1qFebUCjXL2Bs+MZmt20tHU/8InRJFh3bdg/Y=@lists.linux.dev
+X-Gm-Message-State: AFq9FYJAA5gGUZRwpXGoxuYj/WFzhqhmZmoUuW+W4A9YOLuVPDL9LKLT
+	Ut4KMwCaqM2ZAr9q5DthDYi+9Em6zmqbRgm/gvM/SThr5zacLEqktH1c+GqbsoctRAA=
+X-Gm-Gg: AYBFou08b6A97h51k1xyaslkvD4bwWMkGJ/Jct8ITwVQi1zLAFVMXp3XbGXkc23iNzE
+	BBkniRVb7YwZZtKul6G5oYKG3rv37yX5NIujHsNRuJC73afKi2Qq8WH0SyKjXWcbLnnDWKsBEjq
+	gUZpnD65XbifZkqVwYmObAWYtzJNMdULVpIVWSuRVmUYd8YH4Lgi7OXMdigX+EGgCfcf3x4zt/1
+	zk9Pk02JMLnSKS7rX7gxuDr6QEm3Yq1/K2c2ERNgCBxpVE6vFd59I2SGvRjteSkS+n7hoooyfAa
+	ZUbFku7uexejrd9lahTW8Qa6o+b8aGURnh+YpeBWmeKkiBHZ0ce9ur5OD0wlutWuhauim2gbjKx
+	Xfp9KY9lwtXIJxTfXZrLRvHp03Rj8vGhss19V9WvB/kbKlxYOd/ifxg0Q8zklGWNcovqcVJcvKj
+	KfwDvXI7bdMlfzGjPYHD53fhMfyKCm8nEWY8fhdWiC0h2fs5v95rv6X8UxbR7E1PEz/1zaRAFQ8
+	wbtikaozrLqHoVl+HQqAn4xZaq8EhWTDsbmlOQ=
+X-Received: by 2002:a5d:5f92:0:b0:488:89a6:b37b with SMTP id ffacd0b85a97d-48b02525e7fmr1290363f8f.43.1790756147193;
+        Wed, 30 Sep 2026 01:15:47 -0700 (PDT)
+Received: from [192.168.0.161] (78-154-14-127.ip.btc-net.bg. [78.154.14.127])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48b029e0e16sm1679272f8f.17.2026.09.30.01.15.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Sep 2026 01:15:46 -0700 (PDT)
+Message-ID: <4e71fcfa-f733-4c4e-ab98-da8cd0531a02@blackwall.org>
+Date: Wed, 30 Sep 2026 11:15:45 +0300
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H6cgiMQn=1oct6KHaLADwWQJ7Ow3iT14_Gj5BQxMW22Sg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxNs3mdLxqfNEmAA--.2965S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxCFW7Ww45ZF4xWw13Kw4rZwc_yoW7Jr4xpr
-	W8Aa98CF4DWr1xWr1Ivwn8Xr1xtr4xKw1Sgr1UAFyUCwn0vry5XFy8Jrs8u3Z5J3ykGF1I
-	qF45G34Sv3WUAabCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Ib4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAF
-	wI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
-	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAF
-	wI0_GFv_Wrylx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zV
-	AF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4l
-	IxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCw
-	CI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnI
-	WIevJa73UjIFyTuYvjxUcVc_UUUUU
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 0/3] net: move the type 2 sockets out of tree
+Content-Language: en-US, bg
+To: Jakub Kicinski <kuba@kernel.org>, davem@davemloft.net
+Cc: netdev@vger.kernel.org, edumazet@google.com, pabeni@redhat.com,
+ andrew+netdev@lunn.ch, horms@kernel.org, kernel@xen0n.name,
+ chenhuacai@kernel.org, tsbogend@alpha.franken.de, deller@gmx.de,
+ idosch@nvidia.com, aconole@redhat.com, ardb@kernel.org, tim.bird@sony.com,
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ linux-parisc@vger.kernel.org
+References: <20260928190800.2521749-1-kuba@kernel.org>
+From: Nikolay Aleksandrov <razor@blackwall.org>
+In-Reply-To: <20260928190800.2521749-1-kuba@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 28/09/2026 22:07, Jakub Kicinski wrote:
+> LLC2 sockets are admin-only already. We have been getting a trickle
+> of LLM-driven fixes for these, even tho we don't know of any active
+> user. The code is so bad the LLM fixes just turn into a never ending
+> stream of revisions and follow ups as fixing one condition reveals
+> 5 more bugs. Let's move this code out of tree.
+> 
+> The series itself is LLM generated, the LLM was also nice enough
+> to generates some tests and validate that the OOT module actually
+> works.
+> 
+> Jakub Kicinski (3):
+>    llc: move the type 2 sockets out of tree
+>    llc: strip the leftovers of the llc2 removal
+>    net: drop unused LLC-related includes
+> 
+>   net/llc/Kconfig                             |    7 -
+>   net/llc/Makefile                            |   10 +-
+>   include/linux/llc.h                         |    5 -
+>   include/net/llc.h                           |  108 +-
+>   include/net/llc_c_ac.h                      |  180 -
+>   include/net/llc_c_ev.h                      |  217 -
+>   include/net/llc_c_st.h                      |   46 -
+>   include/net/llc_conn.h                      |  114 -
+>   include/net/llc_if.h                        |   63 -
+>   include/net/llc_pdu.h                       |  379 +-
+>   include/net/llc_s_ac.h                      |   35 -
+>   include/net/llc_s_ev.h                      |   61 -
+>   include/net/llc_s_st.h                      |   32 -
+>   include/net/llc_sap.h                       |   26 -
+>   net/802/garp.c                              |    4 +-
+>   net/802/psnap.c                             |    2 +-
+>   net/bridge/br.c                             |    2 -
+>   net/bridge/br_stp_bpdu.c                    |    3 +-
+>   net/llc/af_llc.c                            | 1304 -----
+>   net/llc/llc_c_ac.c                          | 1448 ------
+>   net/llc/llc_c_ev.c                          |  742 ---
+>   net/llc/llc_c_st.c                          | 4940 -------------------
+>   net/llc/llc_conn.c                          | 1025 ----
+>   net/llc/llc_core.c                          |   28 +-
+>   net/llc/llc_if.c                            |  151 -
+>   net/llc/llc_input.c                         |  128 +-
+>   net/llc/llc_output.c                        |    3 +-
+>   net/llc/llc_pdu.c                           |  366 --
+>   net/llc/llc_proc.c                          |  245 -
+>   net/llc/llc_s_ac.c                          |  220 -
+>   net/llc/llc_s_ev.c                          |  109 -
+>   net/llc/llc_s_st.c                          |  177 -
+>   net/llc/llc_sap.c                           |  437 --
+>   net/llc/llc_station.c                       |  120 -
+>   net/llc/sysctl_net_llc.c                    |   71 -
+>   net/openvswitch/flow.c                      |    1 -
+>   net/openvswitch/flow_netlink.c              |    2 -
+>   net/openvswitch/flow_table.c                |    2 -
+>   net/openvswitch/vport-netdev.c              |    1 -
+>   arch/loongarch/configs/loongson32_defconfig |    1 -
+>   arch/loongarch/configs/loongson64_defconfig |    1 -
+>   arch/mips/configs/gpr_defconfig             |    1 -
+>   arch/mips/configs/mtx1_defconfig            |    1 -
+>   arch/mips/configs/rb532_defconfig           |    1 -
+>   arch/parisc/configs/generic-32bit_defconfig |    1 -
+>   45 files changed, 33 insertions(+), 12787 deletions(-)
+>   delete mode 100644 include/net/llc_c_ac.h
+>   delete mode 100644 include/net/llc_c_ev.h
+>   delete mode 100644 include/net/llc_c_st.h
+>   delete mode 100644 include/net/llc_conn.h
+>   delete mode 100644 include/net/llc_if.h
+>   delete mode 100644 include/net/llc_s_ac.h
+>   delete mode 100644 include/net/llc_s_ev.h
+>   delete mode 100644 include/net/llc_s_st.h
+>   delete mode 100644 include/net/llc_sap.h
+>   delete mode 100644 net/llc/af_llc.c
+>   delete mode 100644 net/llc/llc_c_ac.c
+>   delete mode 100644 net/llc/llc_c_ev.c
+>   delete mode 100644 net/llc/llc_c_st.c
+>   delete mode 100644 net/llc/llc_conn.c
+>   delete mode 100644 net/llc/llc_if.c
+>   delete mode 100644 net/llc/llc_pdu.c
+>   delete mode 100644 net/llc/llc_proc.c
+>   delete mode 100644 net/llc/llc_s_ac.c
+>   delete mode 100644 net/llc/llc_s_ev.c
+>   delete mode 100644 net/llc/llc_s_st.c
+>   delete mode 100644 net/llc/llc_sap.c
+>   delete mode 100644 net/llc/llc_station.c
+>   delete mode 100644 net/llc/sysctl_net_llc.c
+> 
 
+Reviewed what I could, generally sounds good as well.
 
-On 2026/9/30 上午10:24, Huacai Chen wrote:
-> On Wed, Sep 30, 2026 at 9:53 AM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->>
->>
->> On 2026/9/29 下午8:43, Huacai Chen wrote:
->>> Hi, Tao,
->>>
->>> On Tue, Sep 29, 2026 at 6:29 PM Tao Cui <cui.tao@linux.dev> wrote:
->>>>
->>>> From: Tao Cui <cuitao@kylinos.cn>
->>>>
->>>> KVM_DEV_LOONGARCH_PCH_PIC_CTRL_INIT has no guard against repeated
->>>> invocation: every call overwrites pch_pic_base and registers the same
->>>> kvm_io_device on the MMIO bus at the new address, while
->>>> kvm_pch_pic_destroy() unregisters only one bus range.  After a repeated
->>>> init, MMIO to the stale ranges computes its register offset against the
->>>> new base and silently reads 0 / drops writes, and the leftover bus
->>>> entries persist until the VM is destroyed.
->>>>
->>>> Reject repeated initialization with -EEXIST, tracking the state with
->>>> a has_init flag so the check and the MMIO base update are atomic
->>>> under slots_lock.  The base is only committed after a successful bus
->>>> registration, and the real registration error is propagated instead
->>>> of being replaced with -EFAULT.
->>>>
->>>> Fixes: d206d9514873 ("LoongArch: KVM: Add PCHPIC user mode read and write functions")
->>>> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
->>>> ---
->>>>    arch/loongarch/include/asm/kvm_pch_pic.h |  1 +
->>>>    arch/loongarch/kvm/intc/pch_pic.c        | 12 ++++++++++--
->>>>    2 files changed, 11 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/arch/loongarch/include/asm/kvm_pch_pic.h b/arch/loongarch/include/asm/kvm_pch_pic.h
->>>> index 887b0431fd20..679132d840e6 100644
->>>> --- a/arch/loongarch/include/asm/kvm_pch_pic.h
->>>> +++ b/arch/loongarch/include/asm/kvm_pch_pic.h
->>>> @@ -53,6 +53,7 @@ struct loongarch_pch_pic {
->>>>           spinlock_t lock;
->>>>           struct kvm *kvm;
->>>>           struct kvm_io_device device;
->>>> +       bool has_init;
->>>>           union pch_pic_id id;
->>>>           uint64_t mask; /* 1:disable irq, 0:enable irq */
->>>>           uint64_t htmsi_en; /* 1:msi */
->>>> diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/pch_pic.c
->>>> index 7a704f18880d..a884a043feef 100644
->>>> --- a/arch/loongarch/kvm/intc/pch_pic.c
->>>> +++ b/arch/loongarch/kvm/intc/pch_pic.c
->>>> @@ -282,16 +282,24 @@ static int kvm_pch_pic_init(struct kvm_device *dev, u64 addr)
->>>>           struct kvm_io_device *device;
->>>>           struct loongarch_pch_pic *s = dev->kvm->arch.pch_pic;
->>> Why so complicated? The below is enough, no?
->>>
->>> diff --git a/arch/loongarch/kvm/intc/pch_pic.c
->>> b/arch/loongarch/kvm/intc/pch_pic.c
->>> index 2b63b0c2c7ce..7855d78304b7 100644
->>> --- a/arch/loongarch/kvm/intc/pch_pic.c
->>> +++ b/arch/loongarch/kvm/intc/pch_pic.c
->>> @@ -281,6 +281,9 @@ static int kvm_pch_pic_init(struct kvm_device
->>> *dev, u64 addr)
->>>           struct kvm_io_device *device;
->>>           struct loongarch_pch_pic *s = dev->kvm->arch.pch_pic;
->>>
->>> +       if (s->device->ops)
->>> +               return -EEXIST;
->> This can work, however I think that it is not a good idea to access
->> internal structure field about kvm_io_device. If so, there is no use
->> about API kvm_iodevice_init(), just s->device->ops = &kvm_pch_pic_ops is ok.
-> I'm a little not agree. :)
-> 
-> I think kvm_iodevice_init() is designed to do more work rather than
-> just set the ops (though it just set the ops now), otherwise its name
-> should be kvm_iodevice_set_ops().
-> 
-> In addition, even if kvm_iodevice_init() is really a setter, there is
-> no getter for the ops, so when we need to access ops, we can only
-> open-code it.
-if so, you can try to add kvm_iodevice_get_ops API and check the 
-response of KVM community.
-
-Regards
-Bibo Mao
-> 
-> 
-> Huacai
-> 
->>
->> If adding has_init is redundant, maybe we can set s->pch_pic_base with
->> INVALID_GPA in kvm_pch_pic_create() or some other methods. However I
->> think directly accessing kvm_io_device::ops is not a good method, no
->> other architectures do in such way.
->>
->> Regards
->> Bibo Mao
->>> +
->>>           s->pch_pic_base = addr;
->>>           device = &s->device;
->>>           /* init device by pch pic writing and reading ops */
->>>
->>>>
->>>> -       s->pch_pic_base = addr;
->>>>           device = &s->device;
->>>>           /* init device by pch pic writing and reading ops */
->>>>           kvm_iodevice_init(device, &kvm_pch_pic_ops);
->>>>           mutex_lock(&kvm->slots_lock);
->>>> +       if (s->has_init) {
->>>> +               ret = -EEXIST;
->>>> +               goto out;
->>>> +       }
->>>>           /* register pch pic device */
->>>>           ret = kvm_io_bus_register_dev(kvm, KVM_MMIO_BUS, addr, PCH_PIC_SIZE, device);
->>>> +       if (!ret) {
->>>> +               s->pch_pic_base = addr;
->>>> +               s->has_init = true;
->>>> +       }
->>>> +out:
->>>>           mutex_unlock(&kvm->slots_lock);
->>>>
->>>> -       return (ret < 0) ? -EFAULT : 0;
->>>> +       return ret;
->>>>    }
->>>>
->>>>    /* used by user space to get or set pch pic registers */
->>>> --
->>>> 2.43.0
->>>>
->>
+For the series:
+Reviewed-by: Nikolay Aleksandrov <razor@blackwall.org>
 
