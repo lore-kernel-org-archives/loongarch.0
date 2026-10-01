@@ -1,378 +1,349 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11010006.outbound.protection.outlook.com [52.101.85.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC48A3A0E99;
-	Thu,  1 Oct 2026 14:35:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790865326; cv=none; b=XmHvL3Szv4ARxb6Z3PP7Yil1Lf8GJUiSJGytl0Ct64KcLT00fNU2JDnWKxgGWZLsJ3FetPM7MgIf5L+aDHHgaB1AEE2Jeg7foRqmPtLxLlfY6/TFBWL2y2MfxKFSlyCpEw0vMVDoYsWZqCTjQzGK0mSSiSWO/kznQ0dLlEUHsRg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790865326; c=relaxed/simple;
-	bh=ZiWoeMKY1Jphngt/Z/y3ntnoCVq0sjhGH6ELYj3GYzU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=uMPrNf9TSUtkWQAAhDw1vKvTCbl9xK0r4UNtFCzQSFk+9oN7v2Onf4q75eX3PR1mYeDLmKqbt9UbTkFIVuMV6dgTj/v7m2BPVGWZDv5wgbo0Zg/8wJc2fWYGclvlCKwqL3oHi0L+xFQc+ocWkcK/PQ8NOf/9Iau/tErgIy9ikFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EGaf6LV7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qxQIiIii; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AEF7374A05;
+	Thu,  1 Oct 2026 19:29:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.6
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790882981; cv=fail; b=Rk9gJ/E/P9CUVdwDkeotcPsOuQYkaOJtinDvpLe7QUpJu5U8H9u+Yy+/NG/XWcGllGGqyeXl+TORAIDc8aEdtkK7TfUNGwJRCHm9V6zlUZvcHU/mGyHdl/8aVdYUCENiIhiv+/HAQlP7zTac1DFCbCkTW3OqRtug0UcQrw0K1n8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790882981; c=relaxed/simple;
+	bh=GTNzEQytVwRxwx4NqUwoXmoXV2kEkmlLOm4mXDtIjwY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=P14thMRo8FeHhtU3M+hat3lARei55G63tTyNmZLXnCfp6f28vfOszvjV24TlhiS9Wz896MO8RE998i78MVbtKPVM4nVqXEOTwlj1PV+GXxmGeYoZEm9W3MeeZ/7zD4iJwWWbS0MY/1EkT3EwO98yrDMHyl4n5lTfkE3UoC0P1As=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=A7Qx0WCe; arc=fail smtp.client-ip=52.101.85.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EGaf6LV7";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qxQIiIii"
-Date: Thu, 1 Oct 2026 16:35:16 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1790865318;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=k/IwPDM4uQwinZ6vpUMMDSfiapx1SuzFEtGXvxkRX1Q=;
-	b=EGaf6LV77GVDh2qDtBS0L0ovit6VuVSVy4N/Xwz7i0Ta16G5odiDggo/sSO6mXvnmlheX+
-	fdi4vJcobMcItHJvKKfvUecvUL5egi4PtQ9NzOut7kuwONuZL1H3xZCxn42ItqZwIhemAQ
-	036pj9i9DY8MsJPcwVaVtF3S0cT1F+L66zUzqkS+rOWsocEQfgfO4nD7YvB3T2u5LZvuN6
-	pX6kAvgGpylcZCwkFof3ht4Rz1fbtlj4+FudktvQRK2B547T0cNa7G5Fk2F9OznyXftmfe
-	w4hda6syyKrnXfykILWlypx5R1ReV+QsVJZq/xGMnuPy9/fKfVMBTiWkjtDiOQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1790865318;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=k/IwPDM4uQwinZ6vpUMMDSfiapx1SuzFEtGXvxkRX1Q=;
-	b=qxQIiIiiGy8O4AGTLiYYaXjCtKmrOjVtRNmEImHWYW8A4ahFZYqlL1hApBmfn0uhfLJkDd
-	gnkP2aSO54TzUXBA==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev, linux-perf-users@vger.kernel.org,
-	loongarch@lists.linux.dev
-Cc: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
-	Waiman Long <longman@redhat.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Clark Williams <clrkwllms@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ada Couprie Diaz <ada.coupriediaz@arm.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Russell King <linux@armlinux.org.uk>,
-	WANG Xuerui <kernel@xen0n.name>, Chris Zankel <chris@zankel.net>,
-	Max Filippov <jcmvbkbc@gmail.com>
-Subject: [PATCH v3] ARM, ARM64, LONGARCH, XTENSA: Delay HW BP notification to
- task_work()
-Message-ID: <20261001143516.Ew8C97WS@linutronix.de>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="A7Qx0WCe"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=co1wPtBL4+2xhbqPTutiHyPGVdjUEtGCFFYIm9JFTVTlO5sg20z9hYe3VTg90oBW2lbM1pvS8+dUqcOt+rnj2l2dcqxFC6Q+SVCVwBfHeixQC1BdwYKOKcPdfwBk092cK20Hy/IqcKn8t6fEgi0YMrjxXzFS1NMQak/0u51w4p629kdGrh9cWSnBMOogcFud6O2rutN5gJ0cArOcXSBnjdgtiTplTi+5HepcqUJmihedeJQlAtjkHi44Ddupb4nzh8aeTVCdHWe2pOQN8hGVe9IW8XZdWMTqBj5QgmsUZFGJD/qh1rDpD4XoEdtE11qUSMkVyPSiyNULNDwM0/iXsA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VGJ3jwvGFblM0+CVKsSoN6D8K0bRS0IM/9iPLUFC9Zs=;
+ b=o71wNY1vG3IfI6iFVMWyNS3JkP/dBSXhqrqodmqvZy5HWPL5STKGGuN8TrwauVynTSHQv/R+4qNyKMyP0qgQG52xZwknajlSthWgBBsa5AO2+NYujIqO2EojwsHKN5xOa9YGVCDTgztLUCZQsIPVAcPd56m0lNApwJiyXspYBYjWc7XQlnwnuxgOfiPRSEsx3dWGCLS0z+L6nNUIV71PUas6zUzx83TkteN+/cZB/SE9UxDfqrYc9CaCd5vXzhtTKzm7GJDPDTcL3kVc3cPsZRwOcQfAfuOhk8mbBuq6TGiyzTXgk+qHvdYKdmhv4G+FRLlB87ybMsPGJpic80/Fug==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VGJ3jwvGFblM0+CVKsSoN6D8K0bRS0IM/9iPLUFC9Zs=;
+ b=A7Qx0WCeWu5uvGCVKsKH/pr7FWSpvIcoDdVCgQJSCStgZYqBlo/sKmxWBWBDeLvOP0g6pU2whe6B1VW3igLNVAZjKmsTU+iLj079td0fuaTOeuTZmkZqvE0xxRfXdkOscrwwI36YkVdt9oJuzbQxg0aFk/F/rSrZg1plcUiWzbA=
+Received: from BN9PR03CA0844.namprd03.prod.outlook.com (2603:10b6:408:13d::9)
+ by SA0PR12MB7002.namprd12.prod.outlook.com (2603:10b6:806:2c0::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.472.18; Thu, 1 Oct
+ 2026 19:29:30 +0000
+Received: from BL6PEPF00020E60.namprd04.prod.outlook.com
+ (2603:10b6:408:13d:cafe::87) by BN9PR03CA0844.outlook.office365.com
+ (2603:10b6:408:13d::9) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.472.16 via Frontend Transport; Thu, 1
+ Oct 2026 19:29:28 +0000
+X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
+ is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ BL6PEPF00020E60.mail.protection.outlook.com (10.167.249.21) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.472.14 via Frontend Transport; Thu, 1 Oct 2026 19:29:28 +0000
+Received: from BLRKPRNAYAK.amd.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.49; Thu, 1 Oct
+ 2026 14:29:15 -0500
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+To: Peter Zijlstra <peterz@infradead.org>, Chen Yu <yu.c.chen@intel.com>, "Tim
+ Chen" <tim.c.chen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, Juri
+ Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>,
+	"Andrew Morton" <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>,
+	<linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+	<linux-s390@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+	<linux-mips@vger.kernel.org>, <loongarch@lists.linux.dev>,
+	<driver-core@lists.linux.dev>, Sudeep Holla <sudeep.holla@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+	<rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Huacai Chen
+	<chenhuacai@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Madhavan Srinivasan
+	<maddy@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
+	<gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, "David S.
+ Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, "Thomas
+ Gleixner" <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>
+CC: Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
+	<rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman
+	<mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, Shrikanth Hegde
+	<sshegde@linux.ibm.com>, K Prateek Nayak <kprateek.nayak@amd.com>, "WANG
+ Xuerui" <kernel@xen0n.name>, Michael Ellerman <mpe@ellerman.id.au>, "Nicholas
+ Piggin" <npiggin@gmail.com>, Christophe Leroy <chleroy@kernel.org>,
+	"Christian Borntraeger" <borntraeger@linux.ibm.com>, Sven Schnelle
+	<svens@linux.ibm.com>, "H. Peter Anvin" <hpa@zytor.com>
+Subject: [RFC PATCH v3 00/13] lib, sched: Introduce sparsebitmap (sbm)
+Date: Thu, 1 Oct 2026 19:28:36 +0000
+Message-ID: <20261001192849.74788-1-kprateek.nayak@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF00020E60:EE_|SA0PR12MB7002:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0c85b217-0365-4d88-8fb9-08df1ff24f2f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|30052699003|7416014|82310400026|376014|23010399003|1800799024|36860700016|6133799003|56012099006|11063799006|3023799007|10067099003|18002099003|13003099007|921020|260925021311599003|260925021911599003|260925022911599003;
+X-Microsoft-Antispam-Message-Info:
+	SlK14QKlzJxq1JYQBOI6eH5mtxUm5frjLDB7sKeiahBvjgxNYdb1O6p53zm111N2m47qwerXrMQclnGnpj/iFLjVGt2KC35EWTzqtJmvv+JmmbGmwbKI4u1eRdqJ2w05wIpw+n2dWVfW43fDMyn+qlup+QHBzKFC9SG8jLCfWmLgtIUINDIkFu2HaiLSb7qJJO4A+UVoHHbGhjHPKGs9NH7ydIjMaG6a3pLIVVU3LNkG9W/OCpjAHDU34/UYnRNuRm9DiwHdLXzGTl2jDBljiL5Vyk3jGQQDlvw56y8yh70lQu2Y0xe82LHn0DaOZKZJ2IP9migHldz4w/j1rt6LBThydhWIE1NO0r88iMqkRaT9E3d47Y3p7WcF9nABikPRq2pGdp10h9Jb6dYaE0WQpTZwIIBu5YsHKyCpI6pbaKSLe5Zev3oewJF9A06R8snwGV747ZfToBfOFafZqi240OZgPwVGepUXY+4YKA7FMV9HCiNAbHMHX2PsvygHBg4m3Q1stsuEo6roAABcXj+bfE72MynO58ZqbHDQErJ6s2CbZ5MY9BOIqrDrLm4IhHLyFJpXhwphfbRBnysTAvLZ6nz2WU8tvI5euDl3/cr0gJ9/TfAzL+EXrJuaiik/BrwwvrO/tOAw7Bpk/iuij9nlyf9aAml/zUzM15tAlaUG+nc/6saG+SJB+1vaNm/V2zM76yZLgdjBW0A5Sx2aKf+DC5QssLToQGyV0Cb7v6uyoAnpp/FU6HhZg0nR0cmx/G+y
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(30052699003)(7416014)(82310400026)(376014)(23010399003)(1800799024)(36860700016)(6133799003)(56012099006)(11063799006)(3023799007)(10067099003)(18002099003)(13003099007)(921020)(260925021311599003)(260925021911599003)(260925022911599003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	9h4kRKi+qwZkoZ7QvIiL+6NT+w73k9s9Zy+yuXRrRDmLI/oYustrT4xjiMXihqcwwl872UKoVR4wl4x6zh20rYjKEYciRd8iTrOZiphN58nj2JxiS7DsJOUUQye3ZN0ZtKW6rIVeXRPAJmR1C/5K0tSHvu4oygwifhAU2+ouX4MZkxL/Wd879gqJS/lzKa6VwozB89j/M5btC40BUysEnpwe+RCRrYoqTXDbHTxXhv1+TlhqtwPMjbM5EQOKo5c59svt+4N0f/kkwRsfdQGJhkQbveM5nz2l3QihQAojDg2aFF7nRrYjz14YZrkAHiPpxQvIBhd6MS4HJJIORCbuzq0D7/vyi+9YuRdn+ZsaKByDNg8XPQ9JS7PUlEdvfzpKv/mowy08NVCuWtJ15CEM+V/116xKdI0GrTi7kgr1YbqlJ0GpOp4GNOmmLkyJPm7p
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Oct 2026 19:29:28.0507
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0c85b217-0365-4d88-8fb9-08df1ff24f2f
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF00020E60.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB7002
 
-Waiman, Luis, Ada reported that HW breakpoints on ARM64 trigger
-"sleeping while atomic" warnings on PREEMPT_RT. The hardware event is
-delivered with disabled interrupts and perf intrastrucure expects
-disabled interrupts while the overflow callback is invoked.
+Problem
+=======
 
-The callback then sends a SIGTRAP signal for which it acquires
-sighand_struct::siglock, a spinlock_t which becomes a sleeping lock and
-must not be acquired in atomic context.
+Global cpumasks on a large multi-node systems experience an abundance of
+C2C ping ponging, especially the ones that are updated very frequently
+like the ones that track scheduler and timer states.
 
-Delay the event callback until the return to userland.
-Add perf_arch_hwbp_notify(), a generic perf callback which delayes the
-actual callback invocation to task_work_add() callback. This callback
-invokes the architecture defines callback arch_hwbp_send_sig().
-This requires struct callback_head and the functions require
-ARCH_NEED_PERF_HW_NOTIF to be defined.
 
-This was reported against ARM64. ARM, LongARCH and Xtensa follow the
-same pattern are also converted. Xtensa is the only not supporting
-PREEMPT_RT but now we have all architectures using the same pattern.
+Solution
+========
 
-Reported-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
-Reported-by: Waiman Long <longman@redhat.com>
-Closes: https://lore.kernel.org/all/aho0eqjMESuHxECr@redhat.com/
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+One great solution to this problem is to have a separate cpumask
+instance per node to avoid C2C ping poinging for updates.
+
+Replicating cpumasks in its entirity solves the challenges of updates by
+keeping the writes local to the LLC domain but introduces burden on
+traversal.
+
+Steve Sistare had (almost a decade back) introduced a concept called
+sparsemask [1] where each cacheline-aligned bitmap word can only
+represent a small number of CPUs with 8 CPUs per bitmap word being
+chosen during that time.
+
+Although it worked, the initial sparsemask implementation had no
+knowledge of topology. That changed early this year when Peter provided
+a minimal implementation of sparsebitmap (sparsebitmask?) aka sbm in
+[2].
+
+This builds on Peter's idea to make the sbm implementation generic and
+available to all architectures.
+
+
+Aren't sbitmap built for that purpose?
+======================================
+
+It is true sbitmap (scalable bitmap) in lib/sbitmap.c was build for a
+similar problem in the block layer but sbitmap is heavy handed with each
+sbitmap leaf occupying two cachelines with added semantics of "cleared"
+range that don't contend with a set operation on the adjacent cacheline.
+
+sbm is to sbitmap what cpumask is to plain bitmap - they are essentially
+the same concept albeit executed slightly differently.
+
+If there is enough interest, I don't mind adapting my implementation to
+fit with the sbitmap scheme with perhaps a sbitmap-lite variant :-)
+
+
+Implementation
+==============
+
+Similar to how cpumaks allows architectures to define nr_cpumask_bit and
+later adapt a simple bitmap to cover that range, sbm allows
+architectures to define "num_instances" (leaves) and
+"max_threads_per_instance" (max CPUs that can be represented in one
+instance) and uses them to compute the worst-case size for a sparse
+mapping of CPUs.
+
+sbm_alloc() essentially hands a large array based on the set topology
+that cba cover any CPU mapping as long as they fall within the
+architecture imposed constraints.
+
+When CPUs are brought active, a sbm index is assigned to them. An sbm
+index essentailly encodes two parts:
+
+    +----------------+---------------------------+
+    | index in array | bit in that array element |
+    +----------------+---------------------------+
+
+The size of each encoding is determined during sbm initialization based
+on the topology provided. If arch/ did not provide a topology, a backup
+topology is used that divdes entire system in BITS_PER_LONG chunks.
+
+Using the topology two attributes are derived:
+
+  __sbm_shift: Bits to shift right to obtain just index in array
+  __sbm_mask:  Lower bits to mask to get the position in the bitfield
+
+Metadata is tracked separately by core and idx <-> cpu mappings are
+cached in separate arrays.
+
+This builds on Peter's ideas in [2] which used the x86 topology parsing
+nuances to derive the mask and shift during early boot.
+
+
+Topology parsing nuances
+========================
+
+Each architecture has a unique approach to describing system topology
+but most offer a way to get the entire system topology during
+smp_prepare() with one exception of PowerPC.
+
+PowerPC and specifically pSeries hotplug seems to indicate a CPU can be
+removed and re-added with the logical CPU <-> node relation completely
+changing.
+
+This creates a unique challenge since estimating the number of sbm
+leaves and bits per leaf is hard and the worst case scenario is taken to
+construct them.
+
+
+Shameless plug
+==============
+
+If you find yourself at LPC'26, I have a small talk at Scheduling and
+Real-Time Microconference.
+
+If I have got some topology nuances for your architecture horribly
+wrong, you have a chance to punch me in the face directly :-) (and maybe
+help direct me in the right direction after).
+
+
+Performance
+===========
+
+To measure any performance impact, the global nohz.idle_cpus_mask which
+tracks the set of CPUs in NOHZ idle state have been converted to sbm
+based distributed mask.
+
+Performance is comparable to base with sbm variant performing slightly
+better (~ 1-2%) on average. On worst case scenario (one event per
+context switch), the distributed masks take 1/100th the cost of update
+when compared to global cpumask. Quoting data from [3]:
+
+                                            %cycles vs global mask operation
+
+global mask                                     : 100.0000%  (var: 3.28%)
+per-NUMA mask                                   :  32.9209%  (var: 7.77%)
+per-LLC mask                                    :   1.2977%  (var: 4.85%)
+per-LLC mask (u8 operation; no LOCK prefix)     :   0.4930%  (var: 0.83%)
+
+
+Future work
+===========
+
+o Interoperability with cpumaks since sbm lose the crucial optimizations
+  that come naturally from for_each_cpu_and() iterations.
+
+o Different data representation - using the u8 variant for updates and
+  then perform a "gather" operation to build a dense mask.
+
+o Extending sbm work to help in wakeup (and possibly resurrect Mel's
+  optimization from [4] in some form). The current sbm is still far away
+  from being used for wakeups since  updates  to sbm leaf, even on a
+  16CPUs per LLC system is visible in benchmark performance (~8-10%).
+
+
+References
+==========
+
+[1] https://lore.kernel.org/lkml/1541767840-93588-2-git-send-email-steven.sistare@oracle.com/
+[2] https://lore.kernel.org/lkml/20260324120008.GB3738010@noisy.programming.kicks-ass.net/
+[3] https://lore.kernel.org/lkml/e093d930-79df-4285-a492-cc6d40b3cd51@amd.com/
+[4] https://lore.kernel.org/lkml/20210726102247.21437-1-mgorman@techsingularity.net/
+
+Patches are based on:
+
+  git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched/core
+
+at commit 1fb28c664a19 ("virt/steal_governor: Enable the driver").
+
+Respective arch/ maintainers have been Cc'd on the arch sepcific
+changes, everyone is Cc'd on cover letter and sbm bits. Scheduler
+and lib folks along with the lists will get the entire series.
+
+
+Changelog
+=========
+
+v2..v3:
+
+o Added enablement for other architectures apart from x86.
+o Dynamically establish CPU <-> sbm index relations.
+
+This is a spiritual successor to Chenyu's v2 at
+https://lore.kernel.org/lkml/20260510155920.2587431-1-yu.c.chen@intel.com/
+
 ---
+K Prateek Nayak (10):
+  lib/sbm: Introduce helpers for architectures to configure LLC
+    properties
+  drivers/base/arch_topology: Add support for initializing sbm topology
+  LoongArch: Initialize CPU _PXM relation for disabled CPUs from SRAT
+  LoongArch: Configure sbm topology during SMP preparation
+  MIPS: Initialize sbm topology on multi-node systems
+  powerpc/setup: Initialize sbm topology based on coregroup / NUMA
+    topology
+  s390/topology: Initialize sbm topology during topology_init_early()
+  sparc64: Initialize sbm topology on multi-LLC system
+  lib/sbm: Dynamically allocate sbm index when CPU is activated
+  sched/fair: Allocate nohz.idle_cpus_mask during sched_init_smp()
 
-v2=E2=80=A6v3: https://lore.kernel.org/all/20260814085118.OPEA_Ssn@linutron=
-ix.de/
- - Add Xtensa for completion
- - sashiko complains and wants TWA_SIGNAL instead TWA_RESUME. His
-   argument is that a syscall will trap via get_user() and loop forever
-   instead making progress. This is wrong IMHO. ARM64 will single step
-   over the watchpoint and continue execution. The only downside is that
-   userland will get notified after the syscall completed. So my theory.
-   Using TWA_SIGNAL is worse: Assume we have a watchpoint on UADDR and
-   are in a futex() syscall. The get_user() invocation will trigger the
-   exception, the debug handler will step over and queue a signal. The
-   futex code will notice this and return ERESTARTNOINTR. A signal will
-   be sent, the syscall restarts, traps onto UADDR again, the loop
-   continues. But this should be case now, too=E2=80=A6
-   Now that I look into arch_build_bp_info() and do actual testing I must
-   say arm64 does not support mixed breakpoints. This means there is no
-   breakpoint in kernel on a userland address. \o/
+Peter Zijlstra (3):
+  x86/cpu/topology: Initialize sbm topology after topology parsing
+  lib/sbm: Add helpers to allocate, set, clear, and traverse the bits on
+    sbm
+  sched/fair: Switch nohz.idle_cpus to use sbm
 
-v1=E2=80=A6v2: https://lore.kernel.org/all/20260713144939.FuCj9yvZ@linutron=
-ix.de/
- - sashiko complained that a memory breakpoint might trigger several
-   times before a signal is sent if the syscall touches the memory (via
-   get_user()) more than once before returning back. This would lead to
-   list corruption in task_work_add(). To handle this, there is now a
-   variable which is set via xchg before task_work_add() and cleared
-   after the signal has been sent.
+ arch/loongarch/kernel/acpi.c                 |  20 +-
+ arch/loongarch/kernel/smp.c                  |  36 +++
+ arch/mips/include/asm/topology.h             |   6 +
+ arch/mips/kernel/topology.c                  |  43 ++++
+ arch/mips/loongson64/smp.c                   |   3 +
+ arch/mips/sgi-ip27/ip27-smp.c                |   3 +
+ arch/powerpc/kernel/setup-common.c           |  88 +++++++
+ arch/powerpc/platforms/pseries/hotplug-cpu.c |  10 +
+ arch/s390/kernel/topology.c                  |  52 ++++
+ arch/sparc/kernel/setup_64.c                 |  45 ++++
+ arch/x86/kernel/cpu/topology.c               |  40 ++-
+ drivers/base/arch_topology.c                 | 122 ++++++++-
+ include/asm-generic/vmlinux.lds.h            |   6 +-
+ include/linux/sbm.h                          | 107 ++++++++
+ init/main.c                                  |   6 +
+ kernel/sched/core.c                          |  19 ++
+ kernel/sched/fair.c                          |  72 +++---
+ kernel/sched/sched.h                         |   1 +
+ lib/Makefile                                 |   2 +-
+ lib/sbm.c                                    | 253 +++++++++++++++++++
+ 20 files changed, 883 insertions(+), 51 deletions(-)
+ create mode 100644 include/linux/sbm.h
+ create mode 100644 lib/sbm.c
 
- arch/arm/include/asm/hw_breakpoint.h       |  1 +
- arch/arm/kernel/ptrace.c                   |  6 ++---
- arch/arm64/include/asm/hw_breakpoint.h     |  1 +
- arch/arm64/kernel/ptrace.c                 |  6 ++---
- arch/loongarch/include/asm/hw_breakpoint.h |  1 +
- arch/loongarch/kernel/ptrace.c             |  6 ++---
- arch/xtensa/include/asm/hw_breakpoint.h    |  1 +
- arch/xtensa/kernel/ptrace.c                |  6 ++---
- include/linux/hw_breakpoint.h              |  3 +++
- include/linux/perf_event.h                 |  4 ++++
- kernel/events/core.c                       | 26 ++++++++++++++++++++++
- 11 files changed, 45 insertions(+), 16 deletions(-)
 
-diff --git a/arch/arm/include/asm/hw_breakpoint.h b/arch/arm/include/asm/hw=
-_breakpoint.h
-index e7f9961c53b2d..5b3a373348ff5 100644
---- a/arch/arm/include/asm/hw_breakpoint.h
-+++ b/arch/arm/include/asm/hw_breakpoint.h
-@@ -7,6 +7,7 @@
- struct task_struct;
-=20
- #ifdef CONFIG_HAVE_HW_BREAKPOINT
-+#define ARCH_NEED_PERF_HW_NOTIF
-=20
- struct arch_hw_breakpoint_ctrl {
- 		u32 __reserved	: 9,
-diff --git a/arch/arm/kernel/ptrace.c b/arch/arm/kernel/ptrace.c
-index ed7a2a87a6707..ab6ac7b88bd4e 100644
---- a/arch/arm/kernel/ptrace.c
-+++ b/arch/arm/kernel/ptrace.c
-@@ -347,9 +347,7 @@ static long ptrace_hbp_idx_to_num(int idx)
- /*
-  * Handle hitting a HW-breakpoint.
-  */
--static void ptrace_hbptriggered(struct perf_event *bp,
--				     struct perf_sample_data *data,
--				     struct pt_regs *regs)
-+void arch_hwbp_send_sig(struct perf_event *bp)
- {
- 	struct arch_hw_breakpoint *bkpt =3D counter_arch_bp(bp);
- 	long num;
-@@ -424,7 +422,7 @@ static struct perf_event *ptrace_hbp_create(struct task=
-_struct *tsk, int type)
- 	attr.bp_type	=3D type;
- 	attr.disabled	=3D 1;
-=20
--	return register_user_hw_breakpoint(&attr, ptrace_hbptriggered, NULL,
-+	return register_user_hw_breakpoint(&attr, perf_arch_hwbp_notify, NULL,
- 					   tsk);
- }
-=20
-diff --git a/arch/arm64/include/asm/hw_breakpoint.h b/arch/arm64/include/as=
-m/hw_breakpoint.h
-index bd81cf17744af..58befb79c885c 100644
---- a/arch/arm64/include/asm/hw_breakpoint.h
-+++ b/arch/arm64/include/asm/hw_breakpoint.h
-@@ -124,6 +124,7 @@ extern void hw_breakpoint_pmu_read(struct perf_event *b=
-p);
- extern int hw_breakpoint_slots(int type);
-=20
- #ifdef CONFIG_HAVE_HW_BREAKPOINT
-+#define ARCH_NEED_PERF_HW_NOTIF
- extern void hw_breakpoint_thread_switch(struct task_struct *next);
- extern void ptrace_hw_copy_thread(struct task_struct *task);
- #else
-diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
-index f743cbec1c3ad..2a9d8bad98090 100644
---- a/arch/arm64/kernel/ptrace.c
-+++ b/arch/arm64/kernel/ptrace.c
-@@ -168,9 +168,7 @@ void ptrace_disable(struct task_struct *child)
- /*
-  * Handle hitting a HW-breakpoint.
-  */
--static void ptrace_hbptriggered(struct perf_event *bp,
--				struct perf_sample_data *data,
--				struct pt_regs *regs)
-+void arch_hwbp_send_sig(struct perf_event *bp)
- {
- 	struct arch_hw_breakpoint *bkpt =3D counter_arch_bp(bp);
- 	const char *desc =3D "Hardware breakpoint trap (ptrace)";
-@@ -312,7 +310,7 @@ static struct perf_event *ptrace_hbp_create(unsigned in=
-t note_type,
- 	attr.bp_type	=3D type;
- 	attr.disabled	=3D 1;
-=20
--	bp =3D register_user_hw_breakpoint(&attr, ptrace_hbptriggered, NULL, tsk);
-+	bp =3D register_user_hw_breakpoint(&attr, perf_arch_hwbp_notify, NULL, ts=
-k);
- 	if (IS_ERR(bp))
- 		return bp;
-=20
-diff --git a/arch/loongarch/include/asm/hw_breakpoint.h b/arch/loongarch/in=
-clude/asm/hw_breakpoint.h
-index 5faa97a87a9e2..2b51922eb5492 100644
---- a/arch/loongarch/include/asm/hw_breakpoint.h
-+++ b/arch/loongarch/include/asm/hw_breakpoint.h
-@@ -120,6 +120,7 @@ void breakpoint_handler(struct pt_regs *regs);
- void watchpoint_handler(struct pt_regs *regs);
-=20
- #ifdef CONFIG_HAVE_HW_BREAKPOINT
-+#define ARCH_NEED_PERF_HW_NOTIF
- extern void ptrace_hw_copy_thread(struct task_struct *task);
- extern void hw_breakpoint_thread_switch(struct task_struct *next);
- #else
-diff --git a/arch/loongarch/kernel/ptrace.c b/arch/loongarch/kernel/ptrace.c
-index be38430f7e280..1d5e05a70b8d3 100644
---- a/arch/loongarch/kernel/ptrace.c
-+++ b/arch/loongarch/kernel/ptrace.c
-@@ -384,9 +384,7 @@ static int lbt_set(struct task_struct *target,
- /*
-  * Handle hitting a HW-breakpoint.
-  */
--static void ptrace_hbptriggered(struct perf_event *bp,
--				struct perf_sample_data *data,
--				struct pt_regs *regs)
-+void arch_hwbp_send_sig(struct perf_event *bp)
- {
- 	int i;
- 	struct arch_hw_breakpoint *bkpt =3D counter_arch_bp(bp);
-@@ -479,7 +477,7 @@ static struct perf_event *ptrace_hbp_create(unsigned in=
-t note_type,
- 	attr.bp_type	=3D type;
- 	attr.disabled	=3D 1;
-=20
--	bp =3D register_user_hw_breakpoint(&attr, ptrace_hbptriggered, NULL, tsk);
-+	bp =3D register_user_hw_breakpoint(&attr, perf_arch_hwbp_notify, NULL, ts=
-k);
- 	if (IS_ERR(bp))
- 		return bp;
-=20
-diff --git a/arch/xtensa/include/asm/hw_breakpoint.h b/arch/xtensa/include/=
-asm/hw_breakpoint.h
-index 9ec86f440a48e..4a627a5ed9893 100644
---- a/arch/xtensa/include/asm/hw_breakpoint.h
-+++ b/arch/xtensa/include/asm/hw_breakpoint.h
-@@ -12,6 +12,7 @@
- #define __ASM_XTENSA_HW_BREAKPOINT_H
-=20
- #ifdef CONFIG_HAVE_HW_BREAKPOINT
-+#define ARCH_NEED_PERF_HW_NOTIF
-=20
- #include <linux/kdebug.h>
- #include <linux/types.h>
-diff --git a/arch/xtensa/kernel/ptrace.c b/arch/xtensa/kernel/ptrace.c
-index 364e4fdabb00d..9e3b5aff1b8f8 100644
---- a/arch/xtensa/kernel/ptrace.c
-+++ b/arch/xtensa/kernel/ptrace.c
-@@ -361,9 +361,7 @@ static int ptrace_pokeusr(struct task_struct *child, lo=
-ng regno, long val)
- }
-=20
- #ifdef CONFIG_HAVE_HW_BREAKPOINT
--static void ptrace_hbptriggered(struct perf_event *bp,
--				struct perf_sample_data *data,
--				struct pt_regs *regs)
-+void arch_hwbp_send_sig(struct perf_event *bp)
- {
- 	int i;
- 	struct arch_hw_breakpoint *bkpt =3D counter_arch_bp(bp);
-@@ -395,7 +393,7 @@ static struct perf_event *ptrace_hbp_create(struct task=
-_struct *tsk, int type)
- 	attr.bp_type	=3D type;
- 	attr.disabled	=3D 1;
-=20
--	return register_user_hw_breakpoint(&attr, ptrace_hbptriggered, NULL,
-+	return register_user_hw_breakpoint(&attr, perf_arch_hwbp_notify, NULL,
- 					   tsk);
- }
-=20
-diff --git a/include/linux/hw_breakpoint.h b/include/linux/hw_breakpoint.h
-index db199d653dd1a..bb4c1064a103d 100644
---- a/include/linux/hw_breakpoint.h
-+++ b/include/linux/hw_breakpoint.h
-@@ -85,6 +85,9 @@ extern int register_perf_hw_breakpoint(struct perf_event =
-*bp);
- extern void unregister_hw_breakpoint(struct perf_event *bp);
- extern void unregister_wide_hw_breakpoint(struct perf_event * __percpu *cp=
-u_events);
- extern bool hw_breakpoint_is_used(void);
-+extern void arch_hwbp_send_sig(struct perf_event *bp);
-+extern void perf_arch_hwbp_notify(struct perf_event *bp, struct perf_sampl=
-e_data *data,
-+				  struct pt_regs *regs);
-=20
- extern int dbg_reserve_bp_slot(struct perf_event *bp);
- extern int dbg_release_bp_slot(struct perf_event *bp);
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 915c6fd3f0845..4e0cea7f59e4c 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -215,6 +215,10 @@ struct hw_perf_event {
-=20
- 	/* Last sync'ed generation of filters */
- 	unsigned long			addr_filters_gen;
-+#ifdef ARCH_NEED_PERF_HW_NOTIF
-+	struct callback_head		arch_hw_notif;
-+	int				arch_hw_notif_busy;
-+#endif
-=20
- /*
-  * hw_perf_event::state flags; used to track the PERF_EF_* state.
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 634d2ccbab82d..9b38a14880361 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -13381,6 +13381,28 @@ static void account_event(struct perf_event *event)
- 	account_pmu_sb_event(event);
- }
-=20
-+#ifdef ARCH_NEED_PERF_HW_NOTIF
-+static void perf_arch_hwbp_send_sig(struct callback_head *head)
-+{
-+	struct perf_event *bp;
-+
-+	bp =3D container_of(head, struct perf_event, hw.arch_hw_notif);
-+	arch_hwbp_send_sig(bp);
-+	xchg_relaxed(&bp->hw.arch_hw_notif_busy, 0);
-+	put_event(bp);
-+}
-+
-+void perf_arch_hwbp_notify(struct perf_event *bp, struct perf_sample_data =
-*data,
-+			   struct pt_regs *regs)
-+{
-+	if (WARN_ON_ONCE(!atomic_long_inc_not_zero(&bp->refcount)))
-+		return;
-+	if (xchg_relaxed(&bp->hw.arch_hw_notif_busy, 1) ||
-+	    WARN_ON_ONCE(task_work_add(current, &bp->hw.arch_hw_notif, TWA_RESUME=
-)))
-+		put_event(bp);
-+}
-+#endif
-+
- /*
-  * Allocate and initialize an event structure
-  */
-@@ -13486,6 +13508,10 @@ perf_event_alloc(struct perf_event_attr *attr, int=
- cpu,
- 	}
-=20
- 	if (overflow_handler) {
-+#ifdef ARCH_NEED_PERF_HW_NOTIF
-+		if (overflow_handler =3D=3D perf_arch_hwbp_notify)
-+			init_task_work(&event->hw.arch_hw_notif, perf_arch_hwbp_send_sig);
-+#endif
- 		event->overflow_handler	=3D overflow_handler;
- 		event->overflow_handler_context =3D context;
- 	} else if (is_write_backward(event)){
---=20
-2.55.0
+base-commit: 1fb28c664a19df8d45a6afa04d28d102b04ea680
+-- 
+2.34.1
 
