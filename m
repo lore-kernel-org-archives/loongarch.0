@@ -1,38 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E113EB10C;
-	Thu,  1 Oct 2026 10:48:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5733515DC;
+	Thu,  1 Oct 2026 11:03:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790851702; cv=none; b=I/IoqP40qbUTKFu1sD6Zguce3tf5t16+9pdUZq0u6TkCgYW4StkIBQ+m/utLpqZMXmkK8HaCvZ601kaQfW13kOzPaooQUTDyxo7zaDwULlSsbDcum5CcsviGmc1Fn8HlP91TTrCIZD/r/R7vHoumhcUv4JDE8O9bWlWsOziRFuc=
+	t=1790852606; cv=none; b=M44MAABGO3AWgEO9OpEiBzWKltKATxChcNaCkByLfYYrDMfbUbguLkDSlGbwB259/bTY3ZWv5tWPIgCCcUhYlqgX8s4ZsJIrIqpu9wFNc4jiPr8W8NJF21Zpns/JLuRYuXOl7UvdE2FpDZnZdJwXZIWGs+dRlViRPlJ7+MR7nTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790851702; c=relaxed/simple;
-	bh=Nk60LiUU20mXr1zbUVNQcc4+c0dxMgDULcPnYRde7Y0=;
+	s=arc-20240116; t=1790852606; c=relaxed/simple;
+	bh=O0/QxFdl2ndjhanTRY3quUScKMNB9fvz4AQnihf9wkQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tu/jHhEuBJrwjFEMZ9VGDqX1v7L14TVy0ODrwgOQU7aWJujiIMrPJDefNR1ILuJygHK6x0c68OYf4gqlCHcuL7ETWT8GeFS879VYIhpkHCXiU4sMuA6fKlsFUdPrY/TpMr/YeyML3qy0D83Z9ACdOaQth1VQmhfjlpjrMvZSiFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=B57mDsY4; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=dqXs/ZtKDFEpWdpdq23lxBLMZHuCCtu4LP3lxqRZiAf0ZKf675BXAqM7E+d/EkxT8Uj/r0kQEkpgAOX6Uj6h3D8s1rksYSnX1kZ9hnCvKe8tmAhRQiJVZZ7+F9vprf3McHT1i0lLGDTjtcHMgCrnUoGvcJvWynjGWWnM0DfoAgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ilyZfZwc; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="B57mDsY4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D6031F000FF;
-	Thu,  1 Oct 2026 10:48:17 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=zx2c4.com header.i=@zx2c4.com header.a=rsa-sha256 header.s=20210105 header.b=B57mDsY4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1790851695;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/oOpPY/gsh1NivZHQbt/4ewXmUw4hi2f8c5A+91XjAQ=;
-	b=B57mDsY4+jopKLImXZNVOWxdVpQrgNONXSBu75IrKyl7123Al4mEDaeWWuv661fwT5QFtp
-	DyBe8f04ARHZI529RupFjeyvDFHWlpXWFuVEmNR4jf9UiXLsJ+Xu0/uwQUzKXb1sdqw5Bu
-	rwXQT6Por1A+lDJO9XzMggVf/BrbZ0A=
-Received: 
-	by mail.zx2c4.com (OpenSMTPD) with ESMTPSA id 03abc62d (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Thu, 1 Oct 2026 10:48:15 +0000 (UTC)
-Date: Thu, 1 Oct 2026 12:48:10 +0200
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: Nathan Chancellor <nathan@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ilyZfZwc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E9AB1F00899;
+	Thu,  1 Oct 2026 11:03:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790852600;
+	bh=6Fz/XiVPQbxeCrS6Ooyx7iK8DZuaZzJa+GXwQ5Vs63Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=ilyZfZwcyiaalOxi9FuCnkRKhUhFz2Rp84s1uKKcWMtsnqyjRTK4chwYRwfKNBpcG
+	 xSWBcawjlZQB5N6YjSTxTcpFx29bHpXUFY+OWY1TkZB40Znnbzavrt+0sofMnIlCUg
+	 Od59qfNTDltB+xCARwtpINaIAgDE6VSmDVPbipxbZz19xRjIq2SM0ui5Q0u18s0Gtl
+	 NeQeaadbEMr4KuuuBha6lwUTBYKyOGuVxY1TXFcDAM/cJYztQkrdJjzWvC7M2HCZFM
+	 aTGy5tCkS+EUw48u7uFYxLL2NBl9H+HwOLOBoQLTpCYdKAAi0YFeiPNJ2tJBVrTE2s
+	 KBIVWg2Z/PAVA==
+Date: Thu, 1 Oct 2026 13:03:10 +0200
+From: Nathan Chancellor <nathan@kernel.org>
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>
 Cc: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
 	Nick Desaulniers <ndesaulniers@google.com>,
 	Andy Lutomirski <luto@kernel.org>,
@@ -63,9 +59,8 @@ Cc: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
 	llvm@lists.linux.dev
 Subject: Re: [PATCH v2] random: vDSO: Avoid call to memset() when zeroing
  reserved in __cvdso_getrandom_data()
-Message-ID: <ar46ap4jzLWyP92C@zx2c4.com>
-References: <are6s5e6On3hpD3M@zx2c4.com>
- <CAKwvOd=BrMfFT88jsvBPhh383qqk5G+J07CsofNu0MVkziyhCg@mail.gmail.com>
+Message-ID: <20261001110310.GA138012@ax162>
+References: <CAKwvOd=BrMfFT88jsvBPhh383qqk5G+J07CsofNu0MVkziyhCg@mail.gmail.com>
  <20260930133813.GA3142230@ax162>
  <ar0a4b9CjL2YHCkY@zx2c4.com>
  <ar0gTS71qxnx9AkW@zx2c4.com>
@@ -74,39 +69,53 @@ References: <are6s5e6On3hpD3M@zx2c4.com>
  <ede392d7-3104-4a0f-9fa1-99b22552dcd6@kernel.org>
  <ar4nD8aRH7wEvTMt@zx2c4.com>
  <20261001102059.GA4176271@ax162>
+ <ar46ap4jzLWyP92C@zx2c4.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261001102059.GA4176271@ax162>
+In-Reply-To: <ar46ap4jzLWyP92C@zx2c4.com>
 
-On Thu, Oct 01, 2026 at 12:20:59PM +0200, Nathan Chancellor wrote:
-> control. The change that introduced -max-store-memset only did it to
-> "allow fine-tuning of the inlining threshold for performance analysis
-> and optimization". If they decide to remove it for whatever reason,
-> we're back to square one.
+On Thu, Oct 01, 2026 at 12:48:10PM +0200, Jason A. Donenfeld wrote:
+> On Thu, Oct 01, 2026 at 12:20:59PM +0200, Nathan Chancellor wrote:
+> > control. The change that introduced -max-store-memset only did it to
+> > "allow fine-tuning of the inlining threshold for performance analysis
+> > and optimization". If they decide to remove it for whatever reason,
+> > we're back to square one.
+> 
+> I suppose all the more reason to get -finline-stringops=memset added to
+> clang. Then the dual-default thing you came up with below will naturally
+> start choosing the first option when it becomes available.
 
-I suppose all the more reason to get -finline-stringops=memset added to
-clang. Then the dual-default thing you came up with below will naturally
-start choosing the first option when it becomes available.
+Fair point, I can file an issue with LLVM upstream.
 
-> I know something like below would be uglier due to the ifdef but it
-> would avoid changing anything for GCC while clearing up the issue at
-> hand for clang in a guaranteed stable and succinct manner.
+> > I know something like below would be uglier due to the ifdef but it
+> > would avoid changing anything for GCC while clearing up the issue at
+> > hand for clang in a guaranteed stable and succinct manner.
+> 
+> But then we're back to the byte-by-byte codegen that Christophe pointed
+> out.
 
-But then we're back to the byte-by-byte codegen that Christophe pointed
-out.
- 
-> If that is not acceptable, something like the following does appear to
-> work for me.
+I thought that was only because the fallback memset_inline() from v2 was
+doing a byte-by-byte initialization? With my suggested diff, nothing
+should change for GCC, as it does not have __builtin_memset_inline(), so
+the "Before the patch" code generation that Christophe showed should
+still be present.
 
-Okay, great, let's do that.
+> > If that is not acceptable, something like the following does appear to
+> > work for me.
+> 
+> Okay, great, let's do that.
+> 
+> Does this commit seem okay with you? I used the diff you sent below and
+> adjusted the commit message: https://git.zx2c4.com/linux-rng/commit/?id=56ff95ee85715047eb5b5220243778af657778c8
 
-Does this commit seem okay with you? I used the diff you sent below and
-adjusted the commit message: https://git.zx2c4.com/linux-rng/commit/?id=56ff95ee85715047eb5b5220243778af657778c8
+Yeah, that seems fine to me, thanks for taking care of it!
 
-Jason
+-- 
+Cheers,
+Nathan
