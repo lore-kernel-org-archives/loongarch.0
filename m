@@ -1,86 +1,161 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E80B847ACE8;
-	Thu,  1 Oct 2026 08:20:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A5A41A4EF;
+	Thu,  1 Oct 2026 09:25:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790842809; cv=none; b=VHqC83DxNJ8XuPV54yIoUOlqKPC5dSOx34nehwF8L3+h0QXnxCfurU183sWBfMngQqiT20jtdEjUaKA3XSAWZqFFezCfoKn1Qf0O9QP5YPqrs1j+uTlrQyJzjecWz5WWXQ60yZ+hSrDGGACGIiSx82wLNwCZ5ZrjhYJQfFeIaFo=
+	t=1790846747; cv=none; b=YOeOlpF5ebj3R6O8CJnachJ1eaa1rJi28ANNaoa4wAVjrpN7F4efRUFoVA6gEFDijxLWaIXQEsS8XsW27TQbltSjaaEBhAIaqtUqmWlHPD/YWr3cHLcdJrcn4saCb2+7hq2MWFUUJkdfW8IXmWkp/VjmNt4OBq13+jKF+iEskH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790842809; c=relaxed/simple;
-	bh=jKJ929piK79nIx5hZ5XE8MWpLA7cfM9ky+fPfR7foR8=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=CiIPkMX0IaEEz9Xybt0oeyAnOOxkLiPfsItjuqe5iDzpusyA4qTMfdx2JmmxUnM5o+r6MtMV8VrQ3+YCaDC8zXEP9XDP7jpSXIWBf9Al1Soi01RkSZdpoUvDaGazmu95FWjJBd4lLwMQUD2gvfPViyVufa8CyyyGE4M9ICHvRZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sx4aXXuH; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790846747; c=relaxed/simple;
+	bh=HUYkGqcZQJs3k4zIDyWA4OZP7ikrl14JcASJcrAM4ZA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p0MOPm0Vajpjls8sBN09shnGXPDz/YWylOpIXIaiZ7rq0h7MPJNXzSTUrj2Z2w3pg+J9tSNHVj28OoBNaC0XYEh1SYAgzuRUg8k75JIYi8Nqm7yYk1m0P/CcDRwrMrWAt9JHLxtqfT/W5awCgWHtueL8OnoLCG4D+KIWn9bc5Mg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=WWTEvHs+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sx4aXXuH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 453101F000FF;
-	Thu,  1 Oct 2026 08:20:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790842807;
-	bh=NCK/vtMOrbcVDdBrjZGfheC/3nQmLE7ZcgKVbsaagwQ=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc;
-	b=Sx4aXXuH/WX2CXGTNwzCUz1k8RBAAoNyAjmxPyzAQGQ6kOefXj0TZjOVIuMHf8SqB
-	 Te2qarYcRLzyRdOgDxbGu6nX70XSKlMHHChJyiqqieEX1wbHxWyvZMag2THC+6w23L
-	 OSMoYcYc+S/KgvSSPyFREotnfCpPuzHlgrVNpa7t2+nFOvXouEcPM5k6BX9eM5ST0k
-	 /RWFdhchXCd/iLUJyNJpF9nWA88C7Cx6LX2Ym0ouGB7oAQAklixGbJhpC2BWGV9iFh
-	 3BxS005fRWRstnx/B7YsOmKHjTs+l48dD8+0eODmq664qARPSJCPM7oD1kZT1lVrfz
-	 Mijedxz0cb3iA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3A42A380CFE4;
-	Thu,  1 Oct 2026 08:20:07 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="WWTEvHs+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDC6E1F000FF;
+	Thu,  1 Oct 2026 09:25:41 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key, unprotected) header.d=zx2c4.com header.i=@zx2c4.com header.a=rsa-sha256 header.s=20210105 header.b=WWTEvHs+
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1790846740;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dRiq/gc/1/v3q1z4vqQ1Z479kjp0uI+oeZqHFxoYK3k=;
+	b=WWTEvHs+Glx9cwBY3B1J4eFsMVayAa8DZTePcEN0LwV8619xjbZb+A3Te+DbQ8bzZJ95Rl
+	nakLPPxk3P6NpEgkw8BAvLRde47zWZGiGtwlUURKwXZEieW6g5dYOrgW3q1U+6OPmcgwQQ
+	/6QP7vXzfWvWvdrBScZiV3GjkkHM4XE=
+Received: 
+	by mail.zx2c4.com (OpenSMTPD) with ESMTPSA id d847d3a4 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Thu, 1 Oct 2026 09:25:39 +0000 (UTC)
+Date: Thu, 1 Oct 2026 11:25:35 +0200
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>, Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH v2] random: vDSO: Avoid call to memset() when zeroing
+ reserved in __cvdso_getrandom_data()
+Message-ID: <ar4nD8aRH7wEvTMt@zx2c4.com>
+References: <areYMjNcaqe86ds4@zx2c4.com>
+ <9d1c338b-368f-4ea2-a12e-c28d49adff5e@kernel.org>
+ <are6s5e6On3hpD3M@zx2c4.com>
+ <CAKwvOd=BrMfFT88jsvBPhh383qqk5G+J07CsofNu0MVkziyhCg@mail.gmail.com>
+ <20260930133813.GA3142230@ax162>
+ <ar0a4b9CjL2YHCkY@zx2c4.com>
+ <ar0gTS71qxnx9AkW@zx2c4.com>
+ <20260930151337.GD3142230@ax162>
+ <CAHmME9pA+AntJ6hWoFYpTVjh-NUSd0ZGXp5XiUuhQcq3HjQT3g@mail.gmail.com>
+ <ede392d7-3104-4a0f-9fa1-99b22552dcd6@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/3] net: move the type 2 sockets out of tree
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <179084280603.2317625.14903596427850220915.git-patchwork-notify@kernel.org>
-Date: Thu, 01 Oct 2026 08:20:06 +0000
-References: <20260928190800.2521749-1-kuba@kernel.org>
-In-Reply-To: <20260928190800.2521749-1-kuba@kernel.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: davem@davemloft.net, netdev@vger.kernel.org, edumazet@google.com,
- pabeni@redhat.com, andrew+netdev@lunn.ch, horms@kernel.org,
- kernel@xen0n.name, chenhuacai@kernel.org, tsbogend@alpha.franken.de,
- deller@gmx.de, razor@blackwall.org, idosch@nvidia.com, aconole@redhat.com,
- ardb@kernel.org, tim.bird@sony.com, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org
+In-Reply-To: <ede392d7-3104-4a0f-9fa1-99b22552dcd6@kernel.org>
 
-Hello:
-
-This series was applied to netdev/net-next.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
-
-On Mon, 28 Sep 2026 12:07:57 -0700 you wrote:
-> LLC2 sockets are admin-only already. We have been getting a trickle
-> of LLM-driven fixes for these, even tho we don't know of any active
-> user. The code is so bad the LLM fixes just turn into a never ending
-> stream of revisions and follow ups as fixing one condition reveals
-> 5 more bugs. Let's move this code out of tree.
+On Thu, Oct 01, 2026 at 06:41:20AM +0200, Christophe Leroy (CS GROUP) wrote:
+> Hi,
 > 
-> The series itself is LLM generated, the LLM was also nice enough
-> to generates some tests and validate that the OOT module actually
-> works.
+> Le 30/09/2026 à 17:16, Jason A. Donenfeld a écrit :
+> > On Wed, Sep 30, 2026 at 5:13 PM Nathan Chancellor <nathan@kernel.org> wrote:
+> >>
+> >> On Wed, Sep 30, 2026 at 04:44:29PM +0200, Jason A. Donenfeld wrote:
+> >>> Nathan, would this be okay with you?
+> >>> https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.zx2c4.com%2Flinux-rng%2Fcommit%2F%3Fid%3Dd216701724b7d8209ff42150658ad5c712bdb503&data=05%7C02%7Cchristophe.leroy2%40cs-soprasteria.com%7C8f69935bffb344bf0ddc08df1f05e358%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C639263782324080837%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=BA7Fyr0%2FynggvBnR%2FpiCvNCQHtNBagqvSb0i11AvoLU%3D&reserved=0
+> >>
+> >> Can you stick
+> >>
+> >>    Cc: stable@vger.kernel.org # v6.12+
+> >>    Closes: https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgithub.com%2FClangBuiltLinux%2Flinux%2Fissues%2F2183&data=05%7C02%7Cchristophe.leroy2%40cs-soprasteria.com%7C8f69935bffb344bf0ddc08df1f05e358%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C639263782324110679%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=6C8%2FAEQoh%2B8pfgfYQkL7qf5Ue%2F5sAGtfqRptzsSG0CM%3D&reserved=0
+> >>
+> >> on that? Otherwise, looks good to me, that's basically what I had for my
+> >> v3 locally.
+> > 
+> > Sure, done. Also removed the now-unused array_size.h include.
 > 
-> [...]
+> I'm still very sceptic with this patch. You are degrading the behaviour 
+> with GCC for a problem with CLANG. Why ?
+> 
+> Before the patch, with both GCC 13 and GCC 16 on powerpc32 I get a 
+> pretty standard optimised loop that clears words 4 by 4 (with auto 
+> increment of pointer) which is the most optimal on powerpc:
+> 
+>   3f0:	39 00 00 0c 	li      r8,12
+>   3f4:	35 08 ff fc 	addic.  r8,r8,-4
+>   3f8:	91 49 00 04 	stw     r10,4(r9)
+>   3fc:	91 49 00 08 	stw     r10,8(r9)
+>   400:	91 49 00 0c 	stw     r10,12(r9)
+>   404:	95 49 00 10 	stwu    r10,16(r9)
+>   408:	40 82 ff ec 	bne     3f4 <__c_kernel_getrandom+0x3f4>
+> 
+> With the patch,
+> 
+> With GCC 13 I get a very suboptimal loop copying bytes one by one
+> 
+>   3d8:	39 40 00 34 	li      r10,52
+> ...
+>   3e4:	39 20 00 00 	li      r9,0
+>   3e8:	7d 49 03 a6 	mtctr   r10
+>   3ec:	9d 3e 00 01 	stbu    r9,1(r30)
+>   3f0:	42 00 ff fc 	bdnz    3ec <__c_kernel_getrandom+0x3ec>
+> 
+> With GCC 16 I get something a bit better but not as good as before, it 
+> is a loop clearing words only one by one and incrementing pointer with 
+> an additional insn instead of using auto-increment instruction stwu.
+> 
+>   3e0:	39 40 00 0d 	li      r10,13
+> ...
+>   3f0:	7d 49 03 a6 	mtctr   r10
+>   3f4:	91 3f 00 00 	stw     r9,0(r31)
+>   3f8:	3b ff 00 04 	addi    r31,r31,4
+>   3fc:	42 00 ff f8 	bdnz    3f4 <__c_kernel_getrandom+0x3f4>
+> 
+> Please restrict the patch to clang builds.
 
-Here is the summary with links:
-  - [net-next,1/3] llc: move the type 2 sockets out of tree
-    https://git.kernel.org/netdev/net-next/c/003f21868b2b
-  - [net-next,2/3] llc: strip the leftovers of the llc2 removal
-    https://git.kernel.org/netdev/net-next/c/6c1f58d7d5df
-  - [net-next,3/3] net: drop unused LLC-related includes
-    https://git.kernel.org/netdev/net-next/c/0b934eb6b142
+Darn. Yea. The naive memset kills optimizations.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Okay, new strategy:
 
+- on clang, pass `-mllvm -max-store-memset=4294967295`
+- on gcc, pass `-finline-stringops=memset`
 
+And keep the same code. (Or, better, see if those options generate good
+code with b7bad082e113640fc81200ff869e5c2d7a9c29a2 reverted; I would
+prefer that simpler initializer.)
+
+Nathan, do these work?
+
+Jason
