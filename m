@@ -1,46 +1,46 @@
-Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11010058.outbound.protection.outlook.com [52.101.56.58])
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012012.outbound.protection.outlook.com [40.93.195.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C476F2C21FD;
-	Thu,  1 Oct 2026 19:32:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF1394582F6;
+	Thu,  1 Oct 2026 19:32:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.12
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790883125; cv=fail; b=WF5/aOqUjxLk3o02BJU+mRFoFJLc/GPbha/LxoNRfsLUDkLZbN0ZrjJbB1uJbCsfJrWCE4b5NDc5LVkIkzaf50kD0msAzNPAETjnO6zuGIwnoLHZkMsmc83/anVUp45Xk0hX9+uG5xuqMMc6J1IWhSdEpGroryRSA5Mft+NrByw=
+	t=1790883140; cv=fail; b=YhQDCcn1KRHl4+GVWhZkqWyeaNmv0Vb9e526vLrYNhUQNAT7wB3bZly9vD3jatbEDwNbKnkEDOpdGKeekdE9evJPuFxAXLVANVMgpFrJdkpI11cuyUdRXzU4cULgwrmfzhhP/PRQTRNly8W/aUFALBqmSUz8UBZsqqIkkEqsWL8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790883125; c=relaxed/simple;
-	bh=PxARIVIQ5pL0guuPK4YGE9SIV1rsANZ8D3GfDSHkPpY=;
+	s=arc-20240116; t=1790883140; c=relaxed/simple;
+	bh=3sYtMebziXW6djESRNA/ELatjgX3s9m68p18Pt/zSWQ=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gyUwpvOpMSgJOGpz07yOlsQyOa82/K+qCrc1+QwCpwMA/kKZkCYNk+J8WMnWuQsVX8cLPjV767hJE/BBCKeJyymCh1TngY2RdXGIgIB/X5G1SZrkmwabhWGqF5FI4+fXOLD8QF6Mcw+CzDX7L6r6htg52arUhVVxtHUerLFOk+o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=D0Y+6iqS; arc=fail smtp.client-ip=52.101.56.58
+	 MIME-Version:Content-Type; b=dmeap+NCgIc40PXM7kjEuCunaO7fzuWzgzLA77iUNM7N8y/ub+iHCPYy17YBi8jzIxYAvz0DXTiJKV7FvHAMJWxND/mA8rnYAi4OGyf2PjZb/OE71quXYodMvtLys9hv1S37gSejfGVdWD4XGhnI55AYRhHMXSABmOLBr1WGekc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ov2do7oy; arc=fail smtp.client-ip=40.93.195.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="D0Y+6iqS"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ov2do7oy"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=oPG67yPzcgUa3Hb9RxcwqkNyLzVGIW1Kp/8jApcriBQTVMnzgI0MTG4cdzY/mLdal2BOcinQsDrBXezcncDQ2xmRse5q9BHAxhg3llTxmvPrX71VxOKBlm+vZl6tKSqUmUf6m6qsgB/yLVnNn+jP/4spv8FMb/PK8wdBZGbuigWr1k8dg0ROCt/INWG3Ju1zpcXkzNe5/FlHabbeI4ursUi3zD1wRHzJcB4vO6L17dXsNSksPz9YuQFtoqEtLBGWIxuCo+dTl/BUR9D2splpf2YLdCyzRikemKO7w8FE0jdrs9MKyWwzySbx4sKdxoqgPQkqydxJWHRLjbLNnbl57g==
+ b=s9noaVKuhLRuXRIlOoq96F7hyiAdAINmp6QJJnMOVqc7YXA8EIcAS6FCm34ce8XZh2xFyUodlxwizjWq6B0eAraadkb1W2T2jSvVWpZorJPa6MIyx9brfjGbDnBK17mMT1uojPLxpGvlMdkcKgfM8i0VzHbr042u8FMSTiP7bgeq934Ev4T5M13hUAWBQFBqBuoFcickot3k6nGDqp86HZ1VaAgskRdP5daGbue9spyxCYwEFmXAXyIlo3uzIahALe3bvSFi2c+XXHjg77HKv5CsyqMitvJZmqIw6FeDf0wV1JqmuExDLFSE/PrfFkw3Za/3r3BO/W6iG8g13ufx4w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zQeaHS93ITPdC0zKWkCLZMYz9jW9g27rfTidaODgJeg=;
- b=DIlsXdMiow5G7GK5zDPCjN1oete+bX2dXoiUp/CvWwhaRn2rRt5pcOrjEqYTRsfKA7xjYUf8PRB+LogoQx2bOkpzo3X8rbRExrLQBJ76x3ZJPZqqeTrDRY2Klq+iYqxu/nhaQGdWySj7Bf7WudsUG3sgpOVfvFmO//jdPSSQe8353yoPmioGRAR8tliNsSij05reyRo+PUpphxoRPMMSQS7rttyB7WIpXRAS2VWx0BnlzVNl356VkaJkZnH35ts9ohWX0StX9g2LB9ZBkEpwtk6ugqon92Gd5OW0ZXA1ib+6GXhZwss9iZTdlWyZOgaXpKg4TZm/T/3I8QvlgZZFyg==
+ bh=lIPcpQKwhl8fx64/pMDj58lNQFYsHNmZKx5FpswGTbQ=;
+ b=MfiGh/Sm5j4pX0GqtPAQbhpBJda/qPVyOgAl83htGL1Nc+1AL5/feLINSckHY93GuI7i+AhIt9D8jFivowxGJUpnybZBHClkRH4ap77sSY3lrFEIlcwixCWFwR1rSXfEqEWYBXhayLf9bdFzBflyDjBneezMNk0TzjrmZRrHNg2lhE7s1d5svLCGYnzyaeLkYXHU7gg+fuGNBFME0bDH4RFpx6SGlu5qM6/NURYM+iDbf/DmEwLzWjd8r5INP5UB+P+8OFkgiUFNcGaL2K9mllBGg2ClhHRPgWva98Mj3NY4ByaXzvMJPmWQbzF/AhDbe6Jf46E+8l7pWkXsoiXuDg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zQeaHS93ITPdC0zKWkCLZMYz9jW9g27rfTidaODgJeg=;
- b=D0Y+6iqSvi61f/9oBAf9W7R4mKdyuYkRKiOXf07lcLYvXR/3QnZowaN4IfU/Rzm803AochL0HmIg2eZo5JfiqYuo2fXlZtWCZjtLX312hevMOSH3aahhH5WmhiFR48Slj2GcEVUoKe2n7BP3gt4kkbBTJSVM1/5CvB9DwbIu/E0=
-Received: from MN0PR02CA0001.namprd02.prod.outlook.com (2603:10b6:208:530::21)
- by MN0PR12MB6197.namprd12.prod.outlook.com (2603:10b6:208:3c6::22) with
+ bh=lIPcpQKwhl8fx64/pMDj58lNQFYsHNmZKx5FpswGTbQ=;
+ b=ov2do7oyhpgLa5A9uswphvi8wUfARbE0nIgRKUSKPjVmkmLKpgUBDW42/T7YPKP4iaPhpQdUxAAYsRQwYaH1m5FReUCUodERR09h/436PTXAAmZzaFJFVRB7LWrH1w/+bUIZsX/g2KJ6AiO9kUvTsVDRxau/JbZH1zYSNVkhcCw=
+Received: from BL1PR13CA0145.namprd13.prod.outlook.com (2603:10b6:208:2bb::30)
+ by CH3PR12MB647349.namprd12.prod.outlook.com (2603:10b6:610:365::24) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.428.22; Thu, 1 Oct
- 2026 19:31:57 +0000
-Received: from BL6PEPF00020E66.namprd04.prod.outlook.com
- (2603:10b6:208:530:cafe::75) by MN0PR02CA0001.outlook.office365.com
- (2603:10b6:208:530::21) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.472.18 via Frontend Transport; Thu, 1
- Oct 2026 19:31:57 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.451.26; Thu, 1 Oct
+ 2026 19:30:34 +0000
+Received: from BL6PEPF00020E5F.namprd04.prod.outlook.com
+ (2603:10b6:208:2bb:cafe::57) by BL1PR13CA0145.outlook.office365.com
+ (2603:10b6:208:2bb::30) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.472.16 via Frontend Transport; Thu, 1
+ Oct 2026 19:30:34 +0000
 X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
  is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,13 +48,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
 Received: from satlexmb07.amd.com (165.204.84.17) by
- BL6PEPF00020E66.mail.protection.outlook.com (10.167.249.27) with Microsoft
+ BL6PEPF00020E5F.mail.protection.outlook.com (10.167.249.20) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.472.14 via Frontend Transport; Thu, 1 Oct 2026 19:31:57 +0000
+ 15.21.472.14 via Frontend Transport; Thu, 1 Oct 2026 19:30:34 +0000
 Received: from BLRKPRNAYAK.amd.com (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.49; Thu, 1 Oct
- 2026 14:31:49 -0500
+ 2026 14:30:27 -0500
 From: K Prateek Nayak <kprateek.nayak@amd.com>
 To: Peter Zijlstra <peterz@infradead.org>, Chen Yu <yu.c.chen@intel.com>, "Tim
  Chen" <tim.c.chen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, Juri
@@ -63,16 +63,15 @@ To: Peter Zijlstra <peterz@infradead.org>, Chen Yu <yu.c.chen@intel.com>, "Tim
 	<linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
 	<linux-s390@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
 	<linux-mips@vger.kernel.org>, <loongarch@lists.linux.dev>,
-	<driver-core@lists.linux.dev>, Heiko Carstens <hca@linux.ibm.com>, "Vasily
- Gorbik" <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>
+	<driver-core@lists.linux.dev>, Huacai Chen <chenhuacai@kernel.org>
 CC: Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
 	<rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman
 	<mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, Shrikanth Hegde
-	<sshegde@linux.ibm.com>, K Prateek Nayak <kprateek.nayak@amd.com>, "Christian
- Borntraeger" <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>
-Subject: [RFC PATCH v3 07/13] s390/topology: Initialize sbm topology during topology_init_early()
-Date: Thu, 1 Oct 2026 19:28:43 +0000
-Message-ID: <20261001192849.74788-8-kprateek.nayak@amd.com>
+	<sshegde@linux.ibm.com>, K Prateek Nayak <kprateek.nayak@amd.com>, "WANG
+ Xuerui" <kernel@xen0n.name>
+Subject: [RFC PATCH v3 03/13] LoongArch: Initialize CPU _PXM relation for disabled CPUs from SRAT
+Date: Thu, 1 Oct 2026 19:28:39 +0000
+Message-ID: <20261001192849.74788-4-kprateek.nayak@amd.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20261001192849.74788-1-kprateek.nayak@amd.com>
 References: <20261001192849.74788-1-kprateek.nayak@amd.com>
@@ -88,140 +87,99 @@ X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF00020E66:EE_|MN0PR12MB6197:EE_
-X-MS-Office365-Filtering-Correlation-Id: b2e6f1c3-b4bd-4821-06f2-08df1ff2a83c
+X-MS-TrafficTypeDiagnostic: BL6PEPF00020E5F:EE_|CH3PR12MB647349:EE_
+X-MS-Office365-Filtering-Correlation-Id: 34bacea0-7912-4458-fbfa-08df1ff276db
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|36860700016|82310400026|23010399003|1800799024|7416014|56012099006|921020|11063799006|10067099003|6133799003|22082099003|18002099003;
+	BCL:0;ARA:13230040|7416014|1800799024|23010399003|376014|36860700016|82310400026|921020|11063799006|56012099006|10067099003|18002099003|22082099003;
 X-Microsoft-Antispam-Message-Info:
-	AgXPlTBYPAuMxeJXSr4jlN336eO0seCWWAleET9Eai7I5nmU+72o6q6miKNDEjOaCcsRSEgvLJKcq9WQwgBqfk5GqngfOt8mQd9Ob/YS1B73NJnkjk8NZPMwzKHtf76pSVw7DmWLkyygEmXj4S8xmPBso979j8CA73ToFNZLp6y42K7H6IYZhz6dcuCJT73Id0uDvROU7XPbVEb6vzEZoj4AqEugi00oTEjR/5oO6m6w8/sNHFVVwIY5mVmFsgRH0LFKfiv7dfhzD4dB7DY5E2I2RUaBr0jjNgzZIm7J92+2jJ65+2a456dABh39eTBHwt8dZc4HbJI7JCnMHAjGH5n1YSpo/m2QM9Eu7ljoeDpL/YxYciBdu8iBdf7IAdIz2InXD+s2o/wX3y4ftXv9Ek3yVvxjrgR3PG+Tm5Mpz6l5zH1CQ7AYZRhDV4uecWvwCIOYiCyA/y3W4ztXMl4A4qC89MKxP6o7nQucycRW4F9Kq95LLYMy/1WVm3KwAb+7oF0vzR2oaZhVGTofxqBwN1uFDD7jX8ehz9B9LGmm3tVtvXPTxZ5LBDhURgagbyd+iBUiiTBN7XfTC/PLjHeGiSkaGURSHTWBxKxa4lVtzvAQFEj+f8MlIq9gAjAhhF4I8lpShZ58Ah7eRFCI6DQ3C8sZXJ0hnip3OK0PUE8Bhdnkq2b0TNOObisz8di9PABxzM4sCAVsncZd+w9TQOK/yTGd5oPmwg/tjxf1kanK8/1hs3LuF0YiH9UFGAfh7c3J
+	htltVPk+r/TGya7jlTaCt1AUKsQicPDQHa5jEEvg6LBGnN3RMUMgBqnRwcenRaqhJTjU6pkzkFt06maXXYfoT2KPc1zgMvav2B4irO/IYFILRaP9D8gkry5G3B1kzIPkTpesFRK+yZIOP5z909qPrs4PIGzGSccdP9TwxahY7jUSG/owRtyxIrpBF7wnSMU/0eBPMYlIM87LGbOqrgDIKaGIlIQ97mq0RIUwZb2xnNaNvbMrTAyi2nA2CoRp0oD8zotJa1UwTjo2C9ptxfTlesiFvg7be/Sckcxeidd5Cj1yKHOgNIn/9XmRIcnEugMDJV/SHRsmsb/HrgpuSTFFBnism9ngQT3tYnTCJfJgbLe6dvWYTy36UTXZHZkLTWxx3kdFofR/uN6pMZ4d0RAKtTfUDD7R7ao3GluXLjf9TV0at1njA2DgoFdI1dm2xNytDVDCWVVZNFcX7YRGDKWyS+XDiwXc6vNRVtp6MaHapUgqQ3AWLKpSAcrvHMPb+07aOKLo1AIh9vmA/VrYtUQtjbRx5PJRNd9BpYkqOL2xMPYToDMypxtst0D2JRfPJ7PzJXeDAq4wjAwszQ4DkmEpJdX8M1Ijt3jBNpFCJNuAV73U9WRBivQkRX8X/DFR39p/GZpNdq19PslHRpbqD61P9cn2dReHDipolPRyIxD/Vyji4aC4JsGhF8Uh6Vmfy4yZ3WsQbLIPc7KJ9e9YBNXmLo9N4QMHUtYwiFXSNcKRcZBLZaHfwwqALZdqT26rziz7
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700016)(82310400026)(23010399003)(1800799024)(7416014)(56012099006)(921020)(11063799006)(10067099003)(6133799003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(23010399003)(376014)(36860700016)(82310400026)(921020)(11063799006)(56012099006)(10067099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	6i3VovFEO5FKQiVZrcfh4wClpVS9rCrcGPR2Cad+sGr7CorjW+3N/dnzlsbC8JqMDWPLFdXLi/3tOexoRWOH1Hsr7USBkS7xdJRrsUm0FePvZDKxKPAxEnREXY9Yjsh4WoYl8PlkTPuU7z7e5on1xocgqXvtb1fpc+NvhXn1fc7CpFLbJm+13mtxc3aweaVWNpDBCfM3ghCVTdYIHAy/0sqVVhW2GxkyeA2q4y18MX+iFNya4BgpcU/ikl4+TEe62smAZh1Okqu+gcsjfJn0HrslDWP1Xu1Ps9AHfGmbNSu8Kp+ceCTcZosfmZxGV4bMvLtnL84vC+M3hkGoAbozAE/pmD5MtMQcaCPzpeUwPoh3vj49OeqND1/DEphxgGgN1AUfiizSlzX10wturQ73aVSCz22yO5Qrgfqwg5PqSI65QqMSz4n2wRNBVrt4kXVV
+	OdV7YonkJpNUD8JYwKzow/IvSUPawXLC5DuLz6s9HlnUyMfxuO/Ka3i3lhSMW1Z5jWT2qyZwVA0g0LYyg2htYDRzvB/loUpIfSu+O759pcg+3Zn/NRtcELJMAnPIngaPuAq+zXH5vcPGY14YsTfJk9U/LAkBZu+bqhlrhNzth8miej3tHmwK5De2IE02C4H5ghMKW9lpIsa2/rpNaNDVOMyk3HbYcJdFa4XPBvWHDWEdLQ7YLpQ2yiy4+RqfnlnUdKvnCzifUWjXp6oo8tCarxLOX44OX+ssmNE9wCPW+qeBXdMeR4ZI4VdJ/CDDQFlPOQUFSVfv6/XXmNjPi/jF0ylcC4IWEju+bCjjXppsgHaB9Cka8cLAJSeCEjwlmfO8pE5xZy3Lh2bpLJ5piRRp4zPmYTLak04+kd1NHHEZKScSKyR7i2M7mOR/bmB/VzlI
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Oct 2026 19:31:57.4668
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Oct 2026 19:30:34.6080
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b2e6f1c3-b4bd-4821-06f2-08df1ff2a83c
+X-MS-Exchange-CrossTenant-Network-Message-Id: 34bacea0-7912-4458-fbfa-08df1ff276db
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF00020E66.namprd04.prod.outlook.com
+	BL6PEPF00020E5F.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6197
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB647349
 
-When the topology mode is TOPOLOGY_MODE_HW, topology_init_early()
-already parses the set of socket present on the system.
+Use the CPU _PXM (Node) relation for disabled CPUs too when parsing SRAT
+table. This detail will be used for early topology parsing to count the
+LLC domains and set sparsebitmask (sbm) properties correctly.
 
-Use the socket_info to configure the sparsebitmask (sbm) properties for
-the system - namely the number of sockets and maximum threads in a
-socket instance.
-
-arch_sbm_cpu_instance_id() traverses all socket instances to find
-a matching CPU which is not optimal but instance ID is only checked
-when the CPU is coming online. Since this is a rare event, the
-inefficiency is tolerable.
+In addition to sbm enablement, this also helps mapping per-CPU areas
+correctly for disabled CPUs by initializing the node relations via
+set_cpuid_to_node() correctly and avoiding the "rr_node" based fallback
+in smp_prepare_boot_cpu().
 
 Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
 ---
-Build tested with LKP's s390 randconfig with QEMU cmdline:
+ arch/loongarch/kernel/acpi.c | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-  qemu-system-s390x \
-  -cpu max \
-  -smp 2 \
-  -m 2048 \
-  -kernel ./arch/s390/boot/vmlinux  \
-  -append "console=ttyAMA0 earlycon ignore_loglevel log_buf_len=10M print_fatal_signals=1 LOGLEVEL=8 sched_debug" \
-  -nographic
-
-Note: Since ctop needs KVM acceleration to emulate TOPOLOGY_MODE_HW, the
-actual spasemask setting is only build tested at the moment.
-
-XXX: Any way around this using cross-compile and QEMU?
----
- arch/s390/kernel/topology.c | 52 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
-
-diff --git a/arch/s390/kernel/topology.c b/arch/s390/kernel/topology.c
-index 1377c6f3f670..80dc51f5ce6f 100644
---- a/arch/s390/kernel/topology.c
-+++ b/arch/s390/kernel/topology.c
-@@ -20,6 +20,7 @@
- #include <linux/init.h>
- #include <linux/slab.h>
- #include <linux/cpu.h>
-+#include <linux/sbm.h>
- #include <linux/smp.h>
- #include <linux/mm.h>
- #include <linux/nodemask.h>
-@@ -561,6 +562,55 @@ static int __init detect_polarization(union topology_entry *tle)
- 	return tl_core->pp != POLARIZATION_HRZ;
- }
+diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
+index cb454ee92b20..1f15f78713b7 100644
+--- a/arch/loongarch/kernel/acpi.c
++++ b/arch/loongarch/kernel/acpi.c
+@@ -311,8 +311,7 @@ acpi_numa_processor_affinity_init(struct acpi_srat_cpu_affinity *pa)
+ 		bad_srat();
+ 		return;
+ 	}
+-	if ((pa->flags & ACPI_SRAT_CPU_ENABLED) == 0)
+-		return;
++
+ 	pxm = pa->proximity_domain_lo;
+ 	if (acpi_srat_revision >= 2) {
+ 		pxm |= (pa->proximity_domain_hi[0] << 8);
+@@ -332,9 +331,12 @@ acpi_numa_processor_affinity_init(struct acpi_srat_cpu_affinity *pa)
+ 		return;
+ 	}
  
-+int arch_sbm_cpu_instance_id(int cpu)
-+{
-+	struct mask_info *info = &socket_info;
+-	early_numa_add_cpu(pa->apic_id, node);
+-
+ 	set_cpuid_to_node(pa->apic_id, node);
 +
-+	/*
-+	 * sbm core should not call this if sbm_set_topology() was
-+	 * skipped below due to lack of topology information.
-+	 */
-+	if (WARN_ON_ONCE(topology_mode != TOPOLOGY_MODE_HW))
-+		return -1;
-+
-+	while (info) {
-+		if (cpumask_test_cpu(cpu, &info->mask))
-+			return info->id;
-+		info = info->next;
-+	}
-+
-+	pr_warn_once("socket mapping for CPU%d not found! Mapping to ID 0", cpu);
-+	return 0;
-+}
-+
-+static void __configure_sbm_topology(void)
-+{
-+	int num_sbm_instances = 0, max_threads_per_instance = -1;
-+	struct mask_info *info = &socket_info;
-+
-+	/*
-+	 * Consider single package if topology
-+	 * information is unavailable.
-+	 *
-+	 * sbm core will handle the initialization.
-+	 */
-+	if (topology_mode != TOPOLOGY_MODE_HW)
++	if ((pa->flags & ACPI_SRAT_CPU_ENABLED) == 0)
 +		return;
 +
-+	while (info) {
-+		num_sbm_instances += 1;
-+		max_threads_per_instance = max_t(int,
-+						 cpumask_weight(&info->mask),
-+						 max_threads_per_instance);
-+		info = info->next;
-+	}
++	early_numa_add_cpu(pa->apic_id, node);
+ 	node_set(node, numa_nodes_parsed);
+ 	pr_info("SRAT: PXM %u -> CPU 0x%02x -> Node %u\n", pxm, pa->apic_id, node);
+ }
+@@ -350,8 +352,7 @@ acpi_numa_x2apic_affinity_init(struct acpi_srat_x2apic_cpu_affinity *pa)
+ 		bad_srat();
+ 		return;
+ 	}
+-	if ((pa->flags & ACPI_SRAT_CPU_ENABLED) == 0)
+-		return;
 +
-+	if (WARN_ON_ONCE(!num_sbm_instances || max_threads_per_instance < 1))
+ 	pxm = pa->proximity_domain;
+ 	node = acpi_map_pxm_to_node(pxm);
+ 	if (node < 0) {
+@@ -366,9 +367,12 @@ acpi_numa_x2apic_affinity_init(struct acpi_srat_x2apic_cpu_affinity *pa)
+ 		return;
+ 	}
+ 
+-	early_numa_add_cpu(pa->apic_id, node);
+-
+ 	set_cpuid_to_node(pa->apic_id, node);
++
++	if ((pa->flags & ACPI_SRAT_CPU_ENABLED) == 0)
 +		return;
 +
-+	sbm_set_topology(num_sbm_instances, max_threads_per_instance);
-+}
-+
- void __init topology_init_early(void)
- {
- 	struct sysinfo_15_1_x *info;
-@@ -588,6 +638,8 @@ void __init topology_init_early(void)
- 	cpumask_set_cpu(0, &cpu_setup_mask);
- 	__arch_update_cpu_topology();
- 	__arch_update_dedicated_flag(NULL);
-+
-+	__configure_sbm_topology();
++	early_numa_add_cpu(pa->apic_id, node);
+ 	node_set(node, numa_nodes_parsed);
+ 	pr_info("SRAT: PXM %u -> CPU 0x%02x -> Node %u\n", pxm, pa->apic_id, node);
  }
- 
- static inline int topology_get_mode(int enabled)
 -- 
 2.34.1
 
