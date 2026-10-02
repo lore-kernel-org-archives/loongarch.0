@@ -1,52 +1,52 @@
 Received: from bkemail.birger-koblitz.de (bkemail.birger-koblitz.de [23.88.97.239])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B77B03630B3
-	for <loongarch@lists.linux.dev>; Fri,  2 Oct 2026 04:48:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5610836655D
+	for <loongarch@lists.linux.dev>; Fri,  2 Oct 2026 04:48:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.88.97.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790916493; cv=none; b=Oc6ReKVrvGqsDvp20RCjpFcp0bBgXF97NMRaD/8qMMRc2TU6/RkdHG8mbjDMR4KLiVHKrE/MxkLvF0hK9qEJxPvpu4doHebTpV/HTEp23+krJLNadSOloTJIrWpMHA+Qx7YVOhBpOERyV6xBKA9TOkWeEKMbaxkQreAlFe/5amY=
+	t=1790916494; cv=none; b=dygBwAVjv2VXqefIGgfBt1WAetLezuX9jB0GFAA+2krE/NN6JSqHOEoHdK0lnM8d/GmSpO+XSYUCs8nafytoQ9LK7EdrRwhsTaloK6SsHo+IlZ8i+v5CCg9sGycPYdKy3h+Gf/cl3jiVFPESUJXK4THhNTZzJVV3rz33h6y54dQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790916493; c=relaxed/simple;
-	bh=kO/E0+66Aeswq0UC8BtggpSkLfEi2Vb5MPs3YzxqsDo=;
+	s=arc-20240116; t=1790916494; c=relaxed/simple;
+	bh=jBZVvx+tFxcAcqhGb5gfAVEGyHbhwI7uGLasNYH0V/M=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=XwR65vLzC0YRWlEaMhxvyoWQE+GtILUbltDbBoo6fiRseE9L40KG4eg6o9Bl5YuWiBwPDGKFUKe3AqTinI2dRMd0j2y4pMFHfzU5yWYN7t46taOI1fBsyp62KZsJjuSN9scVryE38T4MMPZc1/rGW64baY5CQ9+80TG+3q0jMsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=birger-koblitz.de; spf=pass smtp.mailfrom=birger-koblitz.de; dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b=sTDFvp0s; dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b=vQYJyYsX; arc=none smtp.client-ip=23.88.97.239
+	 In-Reply-To:To:Cc; b=CFWfqYNDCQokc+/ioeX5JScGUf2N+Al+P9Gj2kYRgL7sqEt6LhWM8ddEWyN2yY2UN6JkyuDJyC45YQmWnbhY9gNVbr81EGJzEY/LaQZUAnYrRpdsNJtYtZg5DoZvRPBT8c5NnLoIHU2wPDQxhP04YSCbL4baAXnmGT37oHsnMWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=birger-koblitz.de; spf=pass smtp.mailfrom=birger-koblitz.de; dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b=jTSXXdsu; dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b=iRYaPkyD; arc=none smtp.client-ip=23.88.97.239
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=birger-koblitz.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=birger-koblitz.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b="sTDFvp0s";
-	dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b="vQYJyYsX"
+	dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b="jTSXXdsu";
+	dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b="iRYaPkyD"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=birger-koblitz.de;
 	s=default; t=1790916490;
-	bh=kO/E0+66Aeswq0UC8BtggpSkLfEi2Vb5MPs3YzxqsDo=;
+	bh=jBZVvx+tFxcAcqhGb5gfAVEGyHbhwI7uGLasNYH0V/M=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=sTDFvp0sPKGgLqCVQ3UTTPcbw36WV/Im6k9fajN9g/IJOArktIBpgBHZ2chzwYeGd
-	 1bNZW8WmyDA13b9RG1zH0SL5iTGDr0/g0fJ5OAV+7EerEXLb0aWGmzVDdJCVh7c351
-	 4xXXTkdV6Je9pU6Pvv+nUHURSDMC4yCpfZeQh2hhazAFO5bm71s3n2sg5I+iFToYn2
-	 CSUcWROjZa09g8pwlMDW/JPjs5XGgBURJHqC717RxdUx7zxoqs0NcF/DtXldJcfTPt
-	 orpcafA1xVTICsITTh07JH3ur/ZRHOu8yKpMrLV0azGV2MY1/Eh+8BUyMJT9sOQ92b
-	 uX9vyxVLYLGBg==
+	b=jTSXXdsunhKm+AOgqRwVICOXkhqSISZg5ofjUWoa1QeOSuER294VSmXYdxB6DFwnN
+	 0pdF4JLDNWXbENeskzEmftVk5Pfdz7PgEYUdsNXvblUdIUI8EOWkBP+2Q9Z44YdU1m
+	 ikrklEFUh7TwQ5FB6MdgI2XxF5bLqKbQ58kmVqUvBNWCVJgl2GJEuwC9krsDMhQYQl
+	 GwTqEM1bAUFE3b1Bya8heX1qXSgA4dxPV1nuk5IynD5RVaIpch/6G+N4NWkmz2av+Q
+	 Xv8Yc/Jp54aBWec+pjZEzpB21COOVMIcVtRfPI+cN3T9Qx2du5SnIX87nwGVMRc62t
+	 Dfv6T/Gi1muyg==
 Received: by bkemail.birger-koblitz.de (Postfix, from userid 109)
-	id 2925C48187; Fri,  2 Oct 2026 04:48:10 +0000 (UTC)
+	id D900F48197; Fri,  2 Oct 2026 04:48:10 +0000 (UTC)
 X-Spam-Level: 
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=birger-koblitz.de;
-	s=default; t=1790916478;
-	bh=kO/E0+66Aeswq0UC8BtggpSkLfEi2Vb5MPs3YzxqsDo=;
+	s=default; t=1790916479;
+	bh=jBZVvx+tFxcAcqhGb5gfAVEGyHbhwI7uGLasNYH0V/M=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=vQYJyYsX877CAVo/3d21Ca1ZFVVITTON3pNO1GxeJM5cZ3JU60heovNAB8vj0mTSH
-	 VcMnA9EztJNeYetWjOlYr/mJ9WO+479A/4Q1AagW3oCVmK7JdOYVQKUZQUKYF6Ksvg
-	 GFyW07wGGh+qaCMRpwJ9CnOfLESo/76Dk5TXNeKngrZCJK6SItOlw1drYJRr2o17v0
-	 qrIam8WRz8rkMevs7UrqhGVZuBuC379cfHnBUqMbqbPruHbHaGUZshu0nBoLe+2elT
-	 CmruorgpIJyBOkuLuswRGPhTKsohnnSUXzeMxGbQ6UUq/nfUOzCkYnZSON2RhALyem
-	 c9I/QvCL3lXww==
+	b=iRYaPkyDj/BZDC7732uu/cEp0deUscFjK/pWqLCWEZlJkcAGL3dK/XpwlQet3U1LF
+	 0Ckov+3Ev+aLRazP7/fruXdKFlSX4MsctN+ad1liyLZ2M+Vo+eTJTmZBz6ts5BlFIh
+	 fVQGtGQW98s7+FvuviQknIhAQtR+QzLKqV0K5dRUaxsM+uCDnstxM3T+z0Bsqmmvj8
+	 Cah9v/nWP4+PUCh6+OGAjgc4VkvkTUiE3iW9o43rLmNIE+o/R3PHw5qQslAyOidt17
+	 WdgegdvohLwvaUsBCC8zvPaJCT08Aw/s9ZMECSGQaarGvxVS0TsBOb4mPM6kKuqJbV
+	 FaVIkZgYzlYDg==
 Received: from AMDDesktop.lan (p5798b2cf.dip0.t-ipconnect.de [87.152.178.207])
-	by bkemail.birger-koblitz.de (Postfix) with ESMTPSA id B9FB647E2F;
+	by bkemail.birger-koblitz.de (Postfix) with ESMTPSA id F329C47E1E;
 	Fri,  2 Oct 2026 04:47:58 +0000 (UTC)
 From: Birger Koblitz <mail@birger-koblitz.de>
-Date: Fri, 02 Oct 2026 06:47:49 +0200
-Subject: [PATCH net-next v15 05/13] ax88179_178a: Add EEE configuration
- support for AX88179A MACs
+Date: Fri, 02 Oct 2026 06:47:50 +0200
+Subject: [PATCH net-next v15 06/13] ax88179_178a: Add EEE configuration
+ support for AX88179A PHYs
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261002-ax88179a-v15-5-131d9286fcd7@birger-koblitz.de>
+Message-Id: <20261002-ax88179a-v15-6-131d9286fcd7@birger-koblitz.de>
 References: <20261002-ax88179a-v15-0-131d9286fcd7@birger-koblitz.de>
 In-Reply-To: <20261002-ax88179a-v15-0-131d9286fcd7@birger-koblitz.de>
 To: Andrew Lunn <andrew+netdev@lunn.ch>, 
@@ -67,52 +67,64 @@ To: Andrew Lunn <andrew+netdev@lunn.ch>,
 Cc: linux-usb@vger.kernel.org, netdev@vger.kernel.org, 
  linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
  Jianhui Xu <neuromoments@gmail.com>, 
- Birger Koblitz <mail@birger-koblitz.de>
+ Birger Koblitz <mail@birger-koblitz.de>, Nicolai Buchwitz <nb@tipi-net.de>
 X-Mailer: b4 0.14.2
 
-The AX88179A uses a simple HW configuration for EEE
-via a single EEE configuration register without LPI timer support
-Add support for setting this EEE enable/disable register in implementations
-of mac_enable_tx_lpi/mac_disable_tx_lpi.
+Configure phylink to work with the PHYs in the AX88179A controllers
+and provide ethtool get/set eee operations calling into phylink.
 
 Signed-off-by: Birger Koblitz <mail@birger-koblitz.de>
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Nicolai Buchwitz <nb@tipi-net.de>
 ---
- drivers/net/usb/ax88179a_devices.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ drivers/net/usb/ax88179a_devices.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
 diff --git a/drivers/net/usb/ax88179a_devices.c b/drivers/net/usb/ax88179a_devices.c
-index b15eddb0ebe290fcd6da7653afec19918a47717a..96748ca49743dcaef71bbf649a543508be01b8e6 100644
+index 96748ca49743dcaef71bbf649a543508be01b8e6..e2ea9724433929d4cbfba0597787ddcb84dacf98 100644
 --- a/drivers/net/usb/ax88179a_devices.c
 +++ b/drivers/net/usb/ax88179a_devices.c
-@@ -395,10 +395,27 @@ static void ax88179a_mac_link_up(struct phylink_config *config,
- 			 AX_MAC_RX_PATH_READY | AX_MAC_TX_PATH_READY);
+@@ -225,6 +225,20 @@ static int ax88179a_get_eeprom_len(struct net_device *net)
+ 		return AX88179A_EEPROM_LEN;
  }
  
-+static void ax88179a_mac_disable_tx_lpi(struct phylink_config *config)
++static int ax88179a_get_eee(struct net_device *net, struct ethtool_keee *edata)
 +{
-+	struct usbnet *dev = netdev_priv(to_net_dev(config->dev));
++	struct ax88179_data *ax179_data = netdev2data(net);
 +
-+	ax88179_write_cmd(dev, AX_GPHY_CTL, AX_GPHY_EEE_CTRL, false, 0, NULL);
++	return phylink_ethtool_get_eee(ax179_data->phylink, edata);
 +}
 +
-+static int ax88179a_mac_enable_tx_lpi(struct phylink_config *config, u32 timer, bool tx_clk_stop)
++static int ax88179a_set_eee(struct net_device *net, struct ethtool_keee *edata)
 +{
-+	struct usbnet *dev = netdev_priv(to_net_dev(config->dev));
++	struct ax88179_data *ax179_data = netdev2data(net);
 +
-+	/* AX88179A does not provide LPI timer registers */
-+	return ax88179_write_cmd(dev, AX_GPHY_CTL, AX_GPHY_EEE_CTRL, true, 0, NULL);
++	return phylink_ethtool_set_eee(ax179_data->phylink, edata);
 +}
 +
- static const struct phylink_mac_ops ax88179a_phylink_mac_ops = {
- 	.mac_config = ax88179a_mac_config,
- 	.mac_link_down = ax88179a_mac_link_down,
- 	.mac_link_up = ax88179a_mac_link_up,
-+	.mac_disable_tx_lpi = ax88179a_mac_disable_tx_lpi,
-+	.mac_enable_tx_lpi = ax88179a_mac_enable_tx_lpi,
- };
+ static const struct ethtool_ops ax88179a_ethtool_ops = {
+ 	.get_link		= ethtool_op_get_link,
+ 	.get_msglevel		= usbnet_get_msglevel,
+@@ -234,6 +248,8 @@ static const struct ethtool_ops ax88179a_ethtool_ops = {
+ 	.get_eeprom_len		= ax88179a_get_eeprom_len,
+ 	.get_eeprom		= ax88179_get_eeprom,
+ 	.set_eeprom		= ax88179_set_eeprom,
++	.get_eee		= ax88179a_get_eee,
++	.set_eee		= ax88179a_set_eee,
+ 	.nway_reset		= phy_ethtool_nway_reset,
+ 	.get_link_ksettings	= ax88179a_get_link_ksettings,
+ 	.set_link_ksettings	= ax88179a_set_link_ksettings,
+@@ -451,6 +467,10 @@ static int ax88179a_phylink_setup(struct usbnet *dev)
+ 		phy_if_mode = PHY_INTERFACE_MODE_SGMII;
+ 	}
  
- static int ax88179a_phylink_setup(struct usbnet *dev)
++	memcpy(data->phylink_config.lpi_interfaces,
++	       data->phylink_config.supported_interfaces,
++	       sizeof(data->phylink_config.lpi_interfaces));
++
+ 	phylink = phylink_create(&data->phylink_config, dev->net->dev.fwnode,
+ 				 phy_if_mode, &ax88179a_phylink_mac_ops);
+ 	if (IS_ERR(phylink))
 
 -- 
 2.47.3
