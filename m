@@ -1,199 +1,137 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6545B352020;
-	Fri,  2 Oct 2026 08:17:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 725DF470456;
+	Fri,  2 Oct 2026 09:18:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790929037; cv=none; b=cuKwxUdJZIlErZT8j/uV6GDlYaMSYCTEyzXlZlv057i/ccgIG0FPR/axzFS75AJDHs7uNi/XgBnknAa0BpwQvraZPam2UwHSqSHyMgbrp9YuQYVTPZ3Ezx89p2CYWOTXWtl/xOmoW9GGMBXW10MA40sXKhc5/UO4xhS62mmn5/o=
+	t=1790932739; cv=none; b=XyeOzRTZSe2inKlrdAJF1DdsjW6RDfIOsBbnWaSb4rZYhovW/akuXwa6Ll5I6ZQtHBQQm0oW5kIiPbMPqP9jt6GcN82yNFQtl+Rj53U4zxRNAIr3grvcOJZUBp2JNlRUjvCBhPls+D6Rmj7FPei57GH/nXq4XTmwTw1A8Tov65A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790929037; c=relaxed/simple;
-	bh=2Zp7yJ1dUnyWFb+yLrS2OcemuTfJSfuHlJx1my886eA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ltXtiJtjKdDaInXfPo+XOl05zurqUxPvmplyxVSf5X4EU6Dzpk3kXoCYL/3QVISw8lQ9cfVs3F0nzKTDGPVO6NH6LBigjKVYen2dR6oQ8bV9u5PIiKM5xaJRVpAP6/ZYLp0eM4Vumd4hVu43MWuOKGvKmQzH0Fau6iniRlF7voY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nQXXNjLk; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790932739; c=relaxed/simple;
+	bh=suekEUMK13TAHHU4Cf2etsAqCGbQmsK5+r24aKbCtI4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gyByd98LZHdwDb6yM2MrFJwcm9PJUiDVZsrU908X7ViUQWMyxZfdRr5PIEjjk7rMgJerBhNFbKJc5wIeqjHMlCE3OSaiuMgXSvQXk1KgjfDXNJCF76xSPbVMHYYE6CtO/dcD6sgK+ZCiQtRRsk/K8RkjfpFWvfNGI8agl+ESMxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bib7a0PM; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nQXXNjLk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50E981F000FF;
-	Fri,  2 Oct 2026 08:17:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bib7a0PM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 854CD1F000FF;
+	Fri,  2 Oct 2026 09:18:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790929036;
-	bh=9yx8ebg2bvWYOV3tWECQ37hO2lwB9L2e0febzTmH5JU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=nQXXNjLkwYz58zsrBOiKsev3kSoSv0Qn6uiQT1NeTnbVNcw1p5XvMUficJ1jAi+Ak
-	 IrQUl6apYNM0BZb+MwY+skimjk4Gaz+DKfu2Z7rrlWqcHeKazOZ/231skNjWs+VoHH
-	 hvldwUO3pE+zFitrOfFP0Nw36i/xpINvewLoPaNmIPApssJKO+twQoB8Do6cTfiqc5
-	 iB8xlM34AUVUaxFI7uiDOgQFd78kW0wtR2JuI/FknTclevK64ODgJXoQ+NBv/ZOiVh
-	 paTytyIjv85kIpY8OrS5F04vP35/hXTrzck/QL84DN+aQFgoAt0oSjO6j+qJxAzJrr
-	 gQoYq19TSfH3Q==
-Date: Fri, 2 Oct 2026 10:17:05 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Wandun Chen <chenwandun1@gmail.com>
-Cc: robh@kernel.org, baoquan.he@linux.dev, m.szyprowski@samsung.com,
-	catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
-	chenhuacai@kernel.org, kernel@xen0n.name, pjw@kernel.org,
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
-	tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	saravanak@kernel.org, akpm@linux-foundation.org,
-	pasha.tatashin@soleen.com, pratyush@kernel.org,
-	ruirui.yang@linux.dev, robin.murphy@arm.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, kexec@lists.infradead.org,
-	linux-mm@kvack.org, iommu@lists.linux.dev
-Subject: Re: [PATCH v7 0/9] kdump: reduce vmcore size and capture time
-Message-ID: <ar9ogXc12cLjziHS@kernel.org>
-References: <20260922084256.1515554-1-chenwandun1@gmail.com>
+	s=k20260515; t=1790932738;
+	bh=kUPal21B/mSeq/i2I0fVbafYDiAiPgFaWqso5GBNYgw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=Bib7a0PM9uB/Juf5Fvu+oSR5+RsFmNc22FbQ3W8GIqtnemb+ACt71CTBw2sib4s92
+	 fFnF4433pDjiEGcg7x5zAEvURZ47Q+qrMo2IYrA95mk7vxbQjDv/9+rywF+rGaZ2P7
+	 MWKHtnnqTQ8pjgpyCRbNP4t/CulAsggec5uV/Q4dsuX2d3LyZTJU72PUMvHEvpTwms
+	 bQHF6mNjpQkROI+pb8cwG0OWRm4RbVW2IZfgTwGPNyr7ZCIRlyeoMH50oI1zzLRcfH
+	 fUDv5QFMQ3ZAiDD1vUKWIdfRDKrY3rzo4o2Sj1ojPFTeN/KT1OBRSYQl++2ya2NmOw
+	 blTAYWLPs3B3Q==
+Message-ID: <83a874fb-db66-4dc2-8e14-68c7e28ae27c@kernel.org>
+Date: Fri, 2 Oct 2026 11:18:51 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260922084256.1515554-1-chenwandun1@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] random: vDSO: Avoid call to memset() when zeroing
+ reserved in __cvdso_getrandom_data()
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>,
+ Nathan Chancellor <nathan@kernel.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>,
+ Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+ Theodore Ts'o <tytso@mit.edu>, Vincenzo Frascino
+ <vincenzo.frascino@arm.com>, Bill Wendling <morbo@google.com>,
+ Justin Stitt <justinstitt@google.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ llvm@lists.linux.dev
+References: <are6s5e6On3hpD3M@zx2c4.com>
+ <CAKwvOd=BrMfFT88jsvBPhh383qqk5G+J07CsofNu0MVkziyhCg@mail.gmail.com>
+ <20260930133813.GA3142230@ax162> <ar0a4b9CjL2YHCkY@zx2c4.com>
+ <ar0gTS71qxnx9AkW@zx2c4.com> <20260930151337.GD3142230@ax162>
+ <CAHmME9pA+AntJ6hWoFYpTVjh-NUSd0ZGXp5XiUuhQcq3HjQT3g@mail.gmail.com>
+ <ede392d7-3104-4a0f-9fa1-99b22552dcd6@kernel.org>
+ <ar4nD8aRH7wEvTMt@zx2c4.com> <20261001102059.GA4176271@ax162>
+ <ar46ap4jzLWyP92C@zx2c4.com>
+Content-Language: fr-FR
+From: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
+In-Reply-To: <ar46ap4jzLWyP92C@zx2c4.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Wandun,
 
-On Tue, Sep 22, 2026 at 04:42:47PM +0800, Wandun Chen wrote:
-> From: Wandun Chen <chenwandun@lixiang.com>
-> 
-> On SoCs that carve out large firmware-owned reserved memory (GPU,
-> camera ISP, ...), kdump currently dumps those carveouts as part of
-> system RAM even though their contents are firmware state that is not
-> useful for kernel crash analysis.
-> 
-> This series introduces a MEMBLOCK_NODUMP flag in memblock to filter
-> reserved memory on DT-based architectures (arm64, riscv, loongarch).
-> Reserved regions are marked MEMBLOCK_NODUMP by default so kdump omits
-> them; reusable CMA regions are different because their pages are handed
-> back to the buddy allocator and may carry crash-relevant data.
-> 
-> ACPI systems already filter reserved memory out of the vmcore through
-> their existing path; only DT-based systems currently fail to filter these
-> regions, which is what this series addresses. The flag lives in memblock
-> itself rather than in a DT-only structure, so both ACPI and DT systems
-> can benefit from it (suggested by Rob, thanks).
 
-Can you elaborate how ACPI systems filter their reserved memory?
-With your patches, the memblock flag becomes a part of DT-only
-infrastructure, so that claim that both ACPI and DT benefit from it does
-not hold, doesn't it?
- 
-> Since the reserved memory regions are filtered out, the vmcore is
-> smaller in size and faster to produce.
+Le 01/10/2026 à 12:48, Jason A. Donenfeld a écrit :
+> On Thu, Oct 01, 2026 at 12:20:59PM +0200, Nathan Chancellor wrote:
+>> control. The change that introduced -max-store-memset only did it to
+>> "allow fine-tuning of the inlining threshold for performance analysis
+>> and optimization". If they decide to remove it for whatever reason,
+>> we're back to square one.
 > 
-> The series is based on linux-next and is organized as follows:
+> I suppose all the more reason to get -finline-stringops=memset added to
+> clang. Then the dual-default thing you came up with below will naturally
+> start choosing the first option when it becomes available.
 > 
-> Patches 1-3: Preparation and bugfixes: switch riscv crash_mem to memblock,
-> 	     fold the duplicated per-arch memblock walks into the weak
->              defaults, and serialize crash header preparation against
->              memory hotplug.
-> Patches 4-8: NODUMP infrastructure: switch crash_core to
->              for_each_mem_region(), introduce the MEMBLOCK_NODUMP flag,
-> 	     add a dumpable flag to struct reserved_mem, and mark
-> 	     /reserved-memory and /memreserve/ entries with MEMBLOCK_NODUMP
-> 	     flag.
-> Patch 9:     Exclude MEMBLOCK_NODUMP regions from the vmcore ELF
->              header.
+>> I know something like below would be uglier due to the ifdef but it
+>> would avoid changing anything for GCC while clearing up the issue at
+>> hand for clang in a guaranteed stable and succinct manner.
 > 
-> v6 --> v7:
-> 1. Fix a stale MEMBLOCK_NODUMP flag issue [1]. Memory reserved and
->    marked as NODUMP may later be freed (the initrd, for example),
->    so the NODUMP flag must be cleared accordingly. Since the fix is
->    part of the NODUMP infrastructure introduced by patch 5, it has
->    been folded into that patch.
+> But then we're back to the byte-by-byte codegen that Christophe pointed
+> out.
+>   
+>> If that is not acceptable, something like the following does appear to
+>> work for me.
 > 
-> 2. Drop the "generic" related description in the cover letter.
+> Okay, great, let's do that.
 > 
-> 3. Collect the Acked-by and Reviewed-by tags received during the v6
->    review (thanks to Baoquan, Mike, Rob and Marek). Patch 5 is the
->    only one without a tag, as its Reviewed-by was dropped when the
->    fix was folded in.
-> 
-> 4. Drop patch 1 of v6, which has been merged separately.
-> 
-> 
-> v5 --> v6:
-> 1. Serialize crash header preparation against memory hotplug to avoid
->    out-of-bounds or use-after-free issues.
-> 2. MEMBLOCK_NODUMP marking is now done after memblock allows resizing,
->    avoiding a panic from too few regions before resize is permitted.
-> 3. Reordered the patches, put pre-existing bugfixes earlier in the series.
-> 
-> 
-> v4 --> v5:
-> 1. Rework the mechanism around a memblock-level MEMBLOCK_NODUMP flag
->    (suggested by Rob) instead of the v4 opt-in 'dumpable' flag on
->    DT-only struct reserved_mem [2].
-> 2. Switch the riscv vmcore elf header preparation to use memblock
->    instead of the resource tree, aligning it with arm64 and loongarch,
->    so riscv also can exclude reserved memory from vmcore.
-> 3. Deduplicate the vmcore elf header preparation: arm64, riscv and
->    loongarch open-coded the same logic, so fold it into shared
->     __weak defaults in crash_core.
-> 4.  Drop the v4 patch that saved /memreserve/ entries into the
->     reserved_mem array; /memreserve/ is now marked MEMBLOCK_NODUMP
->     directly.
-> 
-> v3 --> v4:
-> 1. Rebase this series on v7.2-rc1.
-> 2. Add two cleanup patches (patch 02/03).
-> 3. Simplify patch 03 to avoid checking whether initial_boot_params is
->    NULL multiple times, suggested by Rob.
-> 
-> v2 --> v3:
-> 1. Fix out-of-bounds issue if device tree lacks /reserved-memory node.
-> 2. Fix UAF issue when alloc_reserved_mem_array() fails.
-> 3. Add some prepare patches.
-> 
-> v1 --> v2:
-> 1. v1 added an opt-out DT property ('linux,no-dump'). Per Rob's
->    feedback [3], v2 drop that property and exclude reserve memory
->    by default.
-> 2. Split some prepared patches from the original patches.
-> 3. Address coding-style comments on patch 5 from Rob.
-> 
-> [1] https://sashiko.dev/#/message/20260917220750.GA4013814-robh%40kernel.org
-> [2] https://lore.kernel.org/lkml/20260723234126.GA3253409-robh@kernel.org/
-> [3] https://lore.kernel.org/lkml/20260506144542.GA2072596-robh@kernel.org/
-> 
-> 
-> 
-> Wandun Chen (9):
->   riscv: build crash_mem ranges from memblock instead of resource tree
->   crash_core: fold duplicated memblock arch hooks into the weak default
->   crash_core: serialize crash header preparation against hotplug
->   crash_core: replace for_each_mem_range() with for_each_mem_region()
->   memblock: introduce MEMBLOCK_NODUMP flag
->   of: reserved_mem: add dumpable flag to opt-in vmcore
->   of: reserved_mem: mark /reserved-memory entries with MEMBLOCK_NODUMP
->   of: reserved_mem: mark /memreserve/ entries as MEMBLOCK_NODUMP
->   crash_core: skip MEMBLOCK_NODUMP regions when building vmcore ELF
->     header
-> 
->  arch/arm64/kernel/machine_kexec_file.c     | 29 ------------
->  arch/loongarch/kernel/machine_kexec_file.c | 27 ------------
->  arch/riscv/Kconfig                         |  2 +-
->  arch/riscv/kernel/machine_kexec_file.c     | 33 --------------
->  arch/x86/kernel/crash.c                    |  2 +-
->  drivers/of/fdt.c                           |  2 +
->  drivers/of/of_private.h                    |  2 +
->  drivers/of/of_reserved_mem.c               | 48 ++++++++++++++++++++
->  include/linux/crash_core.h                 |  2 +
->  include/linux/memblock.h                   |  9 ++++
->  include/linux/of_reserved_mem.h            |  1 +
->  kernel/crash_core.c                        | 51 ++++++++++++++++++++--
->  kernel/dma/contiguous.c                    |  1 +
->  mm/memblock.c                              | 43 +++++++++++++++++-
->  14 files changed, 155 insertions(+), 97 deletions(-)
-> 
-> -- 
-> 2.43.0
+> Does this commit seem okay with you? I used the diff you sent below and
+> adjusted the commit message: https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.zx2c4.com%2Flinux-rng%2Fcommit%2F%3Fid%3D56ff95ee85715047eb5b5220243778af657778c8&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7Cd89b4de22ff94b6be71208df1fa9839a%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C639264485055490029%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=Vxf8xRCdLavtw4Dmi%2B49FY1lJDWtm%2BjKv7f8BxKTGq4%3D&reserved=0
 > 
 
--- 
-Sincerely yours,
-Mike.
+The commit message says: Similarly, GCC has -finline-stringops=memset to 
+do the same [4], should this issue ever hit future version of GCC.
+
+Why default "-finline-stringops=memset" if 
+$(cc-option,-finline-stringops=memset), have we identified cases where 
+build fail without that or is it just for future provision ?
+
+As shown in my previous email, with GCC 16 on powerpc32 we get a 
+slightly better code without this option.
+
+---
+diff --git a/init/Kconfig b/init/Kconfig
+index 8583d9f06c52..98d8d7fa64c5 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -173,6 +173,11 @@ config CC_HAS_ALLOC_TOKEN
+  config CC_HAS_MULTIDIMENSIONAL_NONSTRING
+  	def_bool $(success,echo 'char tag[][4] __attribute__((__nonstring__)) 
+= { };' | $(CC) $(CLANG_FLAGS) -x c - -c -o /dev/null -Werror)
+
++config CC_OPT_INLINE_MEMSET
++	string
++	default "-finline-stringops=memset" if 
+$(cc-option,-finline-stringops=memset)
++	default "-mllvm -max-store-memset=4294967295" if $(cc-option,-mllvm 
+-max-store-memset=4294967295)
++
+  config LD_CAN_USE_KEEP_IN_OVERLAY
+  	# ld.lld prior to 21.0.0 did not support KEEP within an overlay 
+description
+  	# https://github.com/llvm/llvm-project/pull/130661
+
