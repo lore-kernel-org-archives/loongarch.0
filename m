@@ -1,103 +1,190 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 781D3480DD8;
-	Fri,  2 Oct 2026 11:02:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B43C3EFFC0;
+	Fri,  2 Oct 2026 13:12:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790938960; cv=none; b=XSImznvPJKhYp3u2arjN0zpWR672MOtdVT4A+NONNr3p2igtOey3d6CJ+wcHNDhWYO6AsHOaRFnrqtP22Icl+HwJw4ADyWdc8ww58NUjjpwBpzWlGfRiNiM7Q7GmaQBJpQzL6znRbcaISGhCyqYZhGftBc8SAyVMrlMOMsF4T7M=
+	t=1790946770; cv=none; b=TNshvZtNqJwEylEIg/7RrB2AO72go2r9cRzJBxXwBMQJEhlTaPQ6pNSl5C+eJCbM1pgZc2B+tgCbZwtUTO0Q01VCl+OWjlt7kKguKUnoIKibIJwrHIB3OV0obNIhB8Dja0xf+K+PSdsDPsSUmwpjEcTT+sfaWO+p06rRLwxLZfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790938960; c=relaxed/simple;
-	bh=k5q4/fAvZf1yqdlBhCsRb4tEDXSewhSKZjGR4g4Quuc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DpG7VmdzaC/o7reSXMCeZ80Pt+Ewa6mVc94V5s7cUfpA8AXu94lPAYqpfYpRf9YKqy+yeEl1mQh/iUs0jofPiBrlrj/ThiVwqmEzVGUP4fPzDgclhGmxzWBXEwv4iHgVnPbNWNdThOyXzzmQuG6GhgX0dvtbmnafc1/CFF3tDZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fSA8KOPc; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790946770; c=relaxed/simple;
+	bh=xbfuGWEQ2ecShQl3GRMI7hfUjzSv8ye+WE+hKftm/08=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=awJk6U9NkR/hqVeNGdCToF2hZ8wS1ORjdzFn/8hVXb7+E82+xelR48/xuj64TggiE3P4nrNkAsCoqLdISXSM3QuxJka4N7n+2szLETduHaXoMlEShUsufGLrxZbvsaC+/1PJJEZ6nW6T4mhbw4qxOWLJWGjsHi0NrxMQQuiQr7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ieMGCLHo; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fSA8KOPc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A0031F000FF;
-	Fri,  2 Oct 2026 11:02:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ieMGCLHo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 146F21F000FF;
+	Fri,  2 Oct 2026 13:12:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790938955;
-	bh=hKu1k8kGP5SDfYzTUe6BEg1Rh9OEx1S7cLJzvwkIo8E=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=fSA8KOPcMfD4nTuoQwZ65dnTEvIIcs8MuGlPn8Fs/+3fC7NLGpsaO+RpN1IgsIBZu
-	 AUxBtepWGjjVI3M99anax4EK04p2VnA9VIFZGzrlLQlbKdH3xKIuLyNNV+nBS2gK+K
-	 5MooxFs6WNfBX0ph/LCjwbFGsD5J8aN8q3nq6gL6dt66NTeVQTiBN3PJLVIx5KOpvx
-	 kE87mNLRWpd4R0tmXsVbWwfvfFM0lYN5bAuwZWdHMhEK58ZB7SZ2YSx28z9+Nwg3HW
-	 ESud0bA/Itaq1CPRhVc11wMDE18rRr2PF7dQo3epBifa0/5Uf6eMwX7MZUn8/gFQ9j
-	 MDkdSwxtvaqxw==
-Message-ID: <c39d7d50-e527-4a72-a89f-da4a9ac3cc97@kernel.org>
-Date: Fri, 2 Oct 2026 13:02:26 +0200
+	s=k20260515; t=1790946769;
+	bh=aVf/lW0mxR5mXdPtanEkjzxn8Fb60gYR+l6Vjdu9n/c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=ieMGCLHoWcdWZqqVFKPKXIS0eM9hbG1CO7Dc+7PdoebGcn+t/bHl9TBQM31iVvvKH
+	 sr6l9ON1qqrsQ4QD+q2zh6ZpqbK87lcUGEFjUxQpx8SShovUWaE4a8z7ueb6+gmknD
+	 NPlt8vSsqGncCUfFU0sJanXwSEXDF4kuuKDFCNUgsJVblssmLNEtYVCPgKZYvhvaQF
+	 E10xzk2JFaujiQhB9qemiQ70mRCz6twd561Pw5dPervZAYe73/tha+Z07Ie07NlG/n
+	 XYTcGsdeCSMiqcmGA4xMLtT6e6E0QRnGha7Rvbwp9K2B3v4WIWn3B57UNJOeuf8r7I
+	 Yvn+lZ6wx0gaQ==
+Date: Fri, 2 Oct 2026 14:12:35 +0100
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Barry Song <baohua@kernel.org>, Hongru Zhang <zhanghongru06@gmail.com>, 
+	akpm@linux-foundation.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	surenb@google.com, david@kernel.org, liam@infradead.org, mhocko@suse.com, 
+	rppt@kernel.org, shakeel.butt@linux.dev, vbabka@kernel.org, zhaonanzhe@xiaomi.com, 
+	linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, 
+	linux-arm-kernel@lists.infradead.org, chenhuacai@kernel.org, kernel@xen0n.name, 
+	loongarch@lists.linux.dev, maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com, 
+	chleroy@kernel.org, linuxppc-dev@lists.ozlabs.org, pjw@kernel.org, 
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, 
+	linux-riscv@lists.infradead.org, agordeev@linux.ibm.com, gerald.schaefer@linux.ibm.com, 
+	hca@linux.ibm.com, gor@linux.ibm.com, borntraeger@linux.ibm.com, 
+	svens@linux.ibm.com, linux-s390@vger.kernel.org, dave.hansen@linux.intel.com, 
+	luto@kernel.org, peterz@infradead.org, tglx@kernel.org, mingo@redhat.com, 
+	bp@alien8.de, x86@kernel.org, hpa@zytor.com, 
+	Hongru Zhang <zhanghongru@xiaomi.com>
+Subject: Re: [PATCH v6] mm: retry page faults once under the per-VMA lock
+Message-ID: <ar-o1TrOMGrrcxLX@gremlin>
+References: <20260911025613.1220845-1-zhanghongru@xiaomi.com>
+ <arFYRAa-i7CIwmHL@gremlin>
+ <arF-E3Nsw9ZliH0t@casper.infradead.org>
+ <arI_w2wTfA00Mgy9@gremlin>
+ <armexcXDiG8ryZd6@casper.infradead.org>
+ <CAGsJ_4xuFi7K+crAcFQ998SxXS0xPM6QeA34JV+6+Sy005rXLg@mail.gmail.com>
+ <ar7MsOb6IJLt4eLo@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] random: vDSO: Avoid call to memset() when zeroing
- reserved in __cvdso_getrandom_data()
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
- Theodore Ts'o <tytso@mit.edu>, Nathan Chancellor <nathan@kernel.org>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- llvm@lists.linux.dev
-References: <20260925-vdso-getrandom-avoid-memset-llvm-24-v2-1-ce640f872393@kernel.org>
- <179093852073.149722.832232613857480812.b4-ty@kernel.org>
- <CAHmME9pDcYh5OVSqnju8VfgEXt3YBToDBbFNz_OguKA23r6stg@mail.gmail.com>
-Content-Language: fr-FR
-From: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
-In-Reply-To: <CAHmME9pDcYh5OVSqnju8VfgEXt3YBToDBbFNz_OguKA23r6stg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ar7MsOb6IJLt4eLo@casper.infradead.org>
 
+On Thu, Oct 01, 2026 at 10:12:16PM +0100, Matthew Wilcox wrote:
+> So what I didn't realise is that fork() waits for page faults to finish.
+> I don't think that's necessary, so we can just stop doing that (whitespace
+> damaged):
+>
+> diff --git a/mm/mmap.c b/mm/mmap.c
+> index 4bf26b0f1e6e..e79555247d3a 100644
+> --- a/mm/mmap.c
+> +++ b/mm/mmap.c
+> @@ -1739,9 +1739,6 @@ __latent_entropy int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
+>         for_each_vma(vmi, mpnt) {
+>                 struct file *file;
+>
+> -               retval = vma_start_write_killable(mpnt);
+> -               if (retval < 0)
+> -                       goto loop_out;
+>                 if (vma_test(mpnt, VMA_DONTCOPY_BIT)) {
+>                         retval = vma_iter_clear_gfp(&vmi, mpnt->vm_start,
+>                                                     mpnt->vm_end, GFP_KERNEL);
+>
+> I think this is safe.  I've booted a kernel with this change, and
 
+I'm afraid it's not safe :)
 
-Le 02/10/2026 à 12:58, Jason A. Donenfeld a écrit :
-> On Fri, Oct 2, 2026 at 12:57 PM Christophe Leroy (CS GROUP)
-> <chleroy@kernel.org> wrote:
->>
->>
->> On Fri, 25 Sep 2026 22:46:32 +0100, Nathan Chancellor wrote:
->>> After a recent change in LLVM [1], builds with the random vDSO
->>> implementation, such as PowerPC and RISC-V, fail when checking the vDSO:
->>>
->>>    arch/powerpc/kernel/vdso/vdso32.so.dbg: dynamic relocations are not supported
->>>    arch/riscv/kernel/vdso/vdso.so.dbg: dynamic relocations are not supported
->>>
->>> memset() is now generated when zeroing params->reserved for some builds
->>> because LLVM has an optimization (now run in more instances) that can
->>> recognize at compile time when it is assigning a static value to a
->>> contiguous area of memory and turn that into a call to memset(). Both
->>> clang and GCC assume memset() is always available [2].
->>>
->>> [...]
->>
->> Applied, thanks!
->>
->> [1/1] random: vDSO: Avoid call to memset() when zeroing reserved in __cvdso_getrandom_data()
->>        (no commit info)
-> 
-> That's not for you to apply. I'm sending this through my random tree,
-> along with a handful of other things I need to fix. But I wanted to
-> let this cook a bit more. I can add your reviewed-by line, though.
+We already actually did this (by mistake I think?) before. See commit
+fb49c455323f ("fork: lock VMAs of the parent process when forking") - we shipped
+that in 6.4.0 -> 6.4.2 and it corrupted memory all over the place.
 
-Sorry I messed up with 'b4 ty', I do not intent to take this patch in my 
-tree.
+Reports + a consistent reproducer:
+
+https://bugzilla.kernel.org/show_bug.cgi?id=217624
+https://lore.kernel.org/all/dbdef34c-3a07-5951-e1ae-e9c6e3cdf51b@kernel.org/
+https://lore.kernel.org/all/b198d649-f4bf-b971-31d0-e8433ec2a34c@applied-asynchrony.com/
+
+Also we have asserts for this lock in copy_page_range() and
+copy_hugetlb_page_range() which will now fail (and possibly more further down
+the stack?)
+
+> My argument for why it's safe is that a thread which takes a page
+> fault during fork() might have taken the page fault either before or
+> after fork().  The faults will definitely happen in the parent process.
+> They may or may not have happened in the child process, which can't
+> possibly care whether or not they've happened.
+
+The problem isn't the child it's the parent - copy_page_range() _modifies_ the
+_parent_'s page tables in-place, on assumption that nothing else can access
+them (for CoW).
+
+And actually nowadays things are _even_ worse, you could also have concurrent
+page faults, MADV_DONTNEED, MADV_FREE, MADV_GUARD_INSTALL/REMOVE, UFFDIO_COPY +
+UFFDIO_MOVE (yikes) all of which might introduce new issues + would have to be
+audited too.
+
+So - it turns out a lot of stuff implicitly assumes VMA write lock now:
+
+1. CoW - deferred TLB flush race
+
+(The issue above)
+
+https://lore.kernel.org/all/20230705171213.2843068-2-surenb@google.com/
+
+This happens because __copy_present_ptes() does wrprotect_ptes() on the parent
+without a TLB flush (that's deferred until the end of the fork).
+
+But unfortunately without a VMA write lock something can then replace the page
+table entry in the meantime and you can end up with data loss as a result.
+
+Same issue exists with hugetlb wp too. And god only knows with uffd wp :)
+
+2. THP - can destroy parent THP mappings
+
+copy_pmd_range() does:
+
+	if (pmd_is_huge(*src_pmd)) { copy_huge_pmd(); ... }
+	if (pmd_none_or_clear_bad(src_pmd))
+		continue;
+
+Without the write lock, a concurrent fault can install a huge PMD via
+do_huge_pmd_anonymous_page() or filemap_map_pmd()/do_set_pmd().
+
+The issue is that pmd_bad() fires for leaf PMD (ugh) on at least x86 and arm64,
+meaning that'll clear the page table entry.
+
+I think Hugh left a comment alluding to this before:
+
+	 * copy_pmd_range()'s prior pmd_none_or_clear_bad(src_pmd), and the
+	 * error handling here, assume that exclusive mmap_lock on dst and src
+	 * protects anon from unexpected THP transitions; ...
+
+It's like the mess around pmd_trans_unstable() :(
+
+3. copy_pte_range() skips the required pmd_same() recheck assuming write lock
+
+It uses pte_offset_map_rw_nolock() with a dummy pmdval and:
+
+	 * We already hold the exclusive mmap_lock, the copy_pte_range() and
+	 * retract_page_tables() are using vma->anon_vma to be exclusive, so
+	 * the PTE page is stable, and there is no need to get pmdval and do
+	 * pmd_same() check.
+
+(Probably needs updating for VMA write lock...)
+
+4. The asserts
+
+Mentioned above!
+
+I suspect there's more as well.
+
+Some of it could be changed, but it'd all be at the cost of behaving very
+strangely (no VMA lock but mmap write lock) while manipulating things.
+
+And I am not really happy with changing page table entries in the parent VMA
+(for CoW) without a VMA write lock held.
+
+I also wonder whether it would achieve all that much really - the issue is with
+holding the VMA lock across I/O, anything else that tries to grab a write lock
+is going to end up being the new thing that's blocked (mprotect, munmap, mremap,
+mlock etc.)
+
+I think doing something like this would need a very significant redesign and I'm
+not convinced it's one that really achieves what we want given all the other
+cases that'd get blocked by the VMA lock being held still.
+
+--
+Cheers, Lorenzo
