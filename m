@@ -1,225 +1,159 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DEC425A2C6
-	for <loongarch@lists.linux.dev>; Fri,  2 Oct 2026 15:19:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE683431E6;
+	Fri,  2 Oct 2026 18:22:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790954382; cv=none; b=fyZbFbJFRYhXkHuTbB37kCJoIE25lnoaRM51N/biD+VqlyMt1/dUI4Ga+VZyHcpz55wjjQjnztE0Qs/Z1MuiuruBGoDRv10YWGk5DSjRT87IdTvA2tHKZ0Vg/kV8T+zB8r0jEhIJWJiV2NjD9viu8QHedRfpZAaX/88WSbCDD2A=
+	t=1790965323; cv=none; b=MMt0AeyjnkLSL6OLpsOA5EdFTjwgvSiwZGC6LZwxi8MhTy+zjWfCijn8C/zlRtIaXl4rPHNoRX2xhxD7heZX1IHVvwG2fXg7Hb8TdTwHVdzCiGCt685YLGJ2ZJgA0M7Ob3Y/KyjUAITNJCiwXvBsfWMfSTdfBfyaPXw8P5gzHIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790954382; c=relaxed/simple;
-	bh=SSl2JQPa1sjMP27v12qlQtHRT4X5Eb5ZVPfcjcc+ylY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A+VzQ2eo5/Jb/PH+xuFks5AcCVlsinj3PAxQZ0fiNTOcOp1qZw27BZ+oliY0x4CQ5z6ZxDIKa2u/3L6X3dyUriMOkJXmnIZLePbmR70EhrCNkGvQwZ1EWS5wlrWzUrDQIqcPETAWIypMwseos/1NbgDfgUO/rFZtyupNxnCjeSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=IlyejI7q; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1790965323; c=relaxed/simple;
+	bh=uMBQhmDVpYAchsflbsSrypZqCGz7fzSiXPVqr4wXquc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gumKmMqR9wc6AU89w/HIzL/l27uFKv3ovfDeUtimF/wp+av9UxbajoniO/fLtA1WCB+iC7S2iP2uOogDHQrMUKTmZaK/8hoNcP/pzJAMeILhZ9GuPLj9Mn/t5gENJ3SUpMuj8Pz+jsYHFMIUTxcs0cZTf/Xt47WwYNs/U4UcpTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QXsaGbmn; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="IlyejI7q"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 01F1B143D;
-	Fri,  2 Oct 2026 08:19:37 -0700 (PDT)
-Received: from e129823.arm.com (e129823.arm.com [10.2.213.3])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 641853F85F;
-	Fri,  2 Oct 2026 08:19:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1790954380; bh=SSl2JQPa1sjMP27v12qlQtHRT4X5Eb5ZVPfcjcc+ylY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IlyejI7qb0gs7j139i/OXFX7YSa7K8RDIzOWTpRuOE9JAmghBbLW79oG+rU9uR0nM
-	 /TUyql12KMCKrjEBq3NTEwvaca43sTKTauxz9jPkFBtfHxO2tjJ+5SNvDYkgZd4Cbt
-	 yJb4XX+muSik5WMBpZk3TvG/LO7AvQ/V672lsWiA=
-Date: Fri, 2 Oct 2026 16:19:32 +0100
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-To: Muhammad Usama Anjum <usama.anjum@arm.com>
-Cc: Yeoreum Yun <yeoreum.yun@arm.com>, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-mm@kvack.org, kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
-	linux-openrisc@vger.kernel.org, Sohil Mehta <sohil.mehta@intel.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Barry Song <baohua@kernel.org>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	David Hildenbrand <david@kernel.org>,
-	Michal Hocko <mhocko@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>, Anup Patel <anup@brainfault.org>,
-	Atish Patra <atish.patra@linux.dev>, Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Jonas Bonn <jonas@southpole.se>,
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-	Stafford Horne <shorne@gmail.com>
-Subject: Re: [PATCH 00/21] mm: change behavior of pXdp_get()/pXd_page() in
- compile-time folded pgtable
-Message-ID: <ar_LhBOaywb-n_H2@e129823.arm.com>
-References: <20260921-dummy_ptxp3-v1-0-cd40cf68242e@arm.com>
- <81b1fec1-3b5e-43ed-a5b3-1a73c80201d8@arm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QXsaGbmn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3496D1F000FF;
+	Fri,  2 Oct 2026 18:21:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790965321;
+	bh=DRNHZG+0rjn+MS3ZH0CrvoAZYe+hwRcWZ5W/r+K9L0c=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=QXsaGbmntNXtf8qGXbZm0VEFHH+Ktxq2NycVl9EA2UFJL5xoZ/7d0KfIdhvM22cGE
+	 5Br3otgO+SIMvA5iH1BDByi0k1+DbOmVY77NPu8uIBzzMghHQETQUbBZPcYRFv0a8z
+	 DRT4z9LSccwooBqwo4wg0YXKYC/2UL07N1MZQ4w/MUtqRI2DC5QYE+9qvmyD6dutEL
+	 pmpMLRcOBj6u8ddAC/t2x5aZ1IapKtAA4XNzeDWqBXI76qzsqx+oc5+bkxEYoavYYe
+	 /Q3H+GcrB9mDK4EhLPYavMssqFQA/PeSVeY0TOuLGECUEB+VovTtunZjz65tDBhUi5
+	 0EAsTq4zf3ulw==
+Message-ID: <2618625a-864d-43a4-b151-100e0d76ff87@kernel.org>
+Date: Fri, 2 Oct 2026 20:21:47 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <81b1fec1-3b5e-43ed-a5b3-1a73c80201d8@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] random: vDSO: Avoid call to memset() when zeroing
+ reserved in __cvdso_getrandom_data()
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>,
+ Nathan Chancellor <nathan@kernel.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>,
+ Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+ Theodore Ts'o <tytso@mit.edu>, Vincenzo Frascino
+ <vincenzo.frascino@arm.com>, Bill Wendling <morbo@google.com>,
+ Justin Stitt <justinstitt@google.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ llvm@lists.linux.dev
+References: <ar0a4b9CjL2YHCkY@zx2c4.com> <ar0gTS71qxnx9AkW@zx2c4.com>
+ <20260930151337.GD3142230@ax162>
+ <CAHmME9pA+AntJ6hWoFYpTVjh-NUSd0ZGXp5XiUuhQcq3HjQT3g@mail.gmail.com>
+ <ede392d7-3104-4a0f-9fa1-99b22552dcd6@kernel.org>
+ <ar4nD8aRH7wEvTMt@zx2c4.com> <20261001102059.GA4176271@ax162>
+ <ar46ap4jzLWyP92C@zx2c4.com> <20261001110310.GA138012@ax162>
+ <20261002094932.GA3435055@ax162> <ar-Dx-deXN93M24v@zx2c4.com>
+Content-Language: fr-FR
+From: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
+In-Reply-To: <ar-Dx-deXN93M24v@zx2c4.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Sep 21, 2026 at 10:11:04PM +0100, Muhammad Usama Anjum wrote:
-> On 21/09/2026 11:55 am, Yeoreum Yun wrote:
-> > Using ptep_get() and its counterparts in common code is suboptimal on
-> > kernel configurations with generic compile-time folded page tables.
-> > By default, ptep_get() and its friends expands to READ_ONCE(),
-> > forcing the compiler to emit a load even when the value is not used afterwards.
-> > 
-> > This issue was recently reported by Christophe Leroy [1] for ppc32
-> > preventing futher code conversion to ptep_get()/pmdp_get()/... helper
-> > and the same behavior can also be observed on arm64 when built with
-> > 2- or 3-level page tables
-> > 
-> > e.g) perf_get_page_size() in arm64 with CONFIG_PGTABLE_LEVEL=3:
-> > 
-> > 00000000000052a0 <perf_get_page_size>:
-> >     ...
-> >     52dc: d53b4234     	mrs	x20, DAIF
-> >     52e0: d50343df     	msr	DAIFSet, #0x3
-> >     ...
-> >     52fc: d35e9a69     	ubfx	x9, x19, #30, #9        /* pud_offset_lockless() */
-> >     5300: f9403508     	ldr	x8, [x8, #0x68]
-> >     5304: f869790a     	ldr	x10, [x8, x9, lsl #3]   /* pudp_get() */
-> >     5308: f90007ea     	str	x10, [sp, #0x8]
-> >     530c: f8697908     	ldr	x8, [x8, x9, lsl #3]    /* pudp_get() */
-> >     ...
-> >     5360: 90000009     	adrp	x9, 0x5000 <perf_prepare_sample+0x548>
-> >     5364: 92746908     	and	x8, x8, #0x7ffffff000
-> >     5368: d3557675     	ubfx	x21, x19, #21, #9       /* pmd_offset_lockless() */
-> >     ...
-> >     5394: f8757ac8     	ldr	x8, [x22, x21, lsl #3]  /* pmdp_get() */
-> > 
-> > Though PGTABLE_LEVEL=3, since the pudp_get() still remain with
-> > READ_ONCE(), there's redundant load for the pud which is folded.
-> > 
-> > To prevent generating suboptimal code, make pXdp_get() return a dummy
-> > entry for compile-time folded page tables, make the helpers such as
-> > pXd_offset()/pXd_offset_lockless(), set_pXd() validate dummy entries
-> > at compile time to catch the wrong usage and prohibit calls to
-> > pXd_page() in pgtable-nopXd.h.
-> > 
-> > This series does not change the behaviour of existing code that directly
-> > manipulates folded page-table levels using set_pgd(), pgd_page_vaddr(), and
-> > related helpers. Those helpers continue to behave as before.
-> > 
-> > The new restrictions only apply to code that adopts the pXdp_get()-based
-> > access model for compile-time folded page tables.
-> > 
-> > As the pXdp_get() can return *dummy* entry, some of code using
-> > the stack value where saves the pXdp_get() could be a problematic:
-> > 
-> >   1. Passing address of stack value where saves the pXdp_get() result
-> >      to pXd_offset() for example:
-> > 
-> >        pud_t *pudp, pud;
-> >        pmd_t *pmdp;
-> > 
-> >        pud = pudp_get(pudp, address);
-> >        pmdp = pmd_offset(&pud, pud, address);
-> > 
-> >      (e.g. host_pfn_mapping_level() in loongarch).
-> > 
-> >   2. Using the pXdp_get() result to use as argument of pXd_val() and
-> >      to check prot without checking pgtable is folded.
-> >      for example, x86's effective_prot().
-> > 
-> >   3. Using set_pXd() with pXdp_get() will set problematic dummy entry
-> >      in folded page table like:
-> > 
-> >        set_pXd(pxdp, pXdp_get(pxdp_k));
-> > 
-> >   4. Using pgd_page_vaddr() to get the first-level pgtable.
-> >      passing dummy pxdp_get() for pgd_page_vaddr() will return wrong
-> >      address. Therefore, make pgd_page_vaddr() and pXd_pgtable() to
-> >      trigger the error for improper usage with folded dummy entry in the
-> >      generic compile-time folded pgtable.
-> > 
-> > Thanksfully, above cases are rare since (1) most of usage using
-> > pXd_offset() with result of upper pXd_offset(), (2) it's extreamely
-> > rare to use pXd_val() for non-leaf entry in the kernel,
-> > (3) is to handle the vmalloc_fault or set the first level of page table
-> > and (4) to setup early page table and etc.
-> > 
-> > Therefore, properly handle this uncommon and problematic pattern, and
-> > document the current design of compile-time folded page tables.
-> > 
-> > This patch is based on mm-unstable.
-> > 
-> > Future work
-> > ===========
-> >  - print_bad_page_map() and show_pte() still prints dummy values
-> >    instead of printing the same content for all generic compile-time
-> >    folded page tables. We might want to skip printing dummy values later.
-> > 
-> >  - We currently catch abuse of dummy values on the stack at compile-time by
-> >    relying on constant propagation by the compiler. Usama's work [3] on using
-> >    distinct types for sw vs. hw PTEs could help here as well."
-> > 
-> >  - Clean up vmalloc fault handling by synchronizing the vmalloc entry on
-> >    32-bit architectures. This code is almost identical across architectures.
-> > 
-> >  - Unfortunately, the current design of compile-time folded page tables appears
-> >    to be internally consistent but confusing. For example,
-> >    when CONFIG_PGTABLE_LEVELS is 2, p4d, pud, and pmd are expected to
-> >    be folded into pgd. However, the architecture code uses set_pmd()
-> >    to update the top-level page-table entry, even though it includes pgtable-nopmd.h.
-> > 
-> >    In the future, it would be good to eliminate this source of confusion,
-> >    possibly by treating all folded upper levels consistently as dummy wrappers
-> >    around the highest real page-table level:
-> > 
-> >          NOPGD
-> >    --> +------+           P4D
-> >        | ptr0 |-------> +------+           PUD
-> >        +------+         | ptr0 |-------> +-----+
-> >                         | ptr1 |-        | ptr | -------> ...
-> >                         | ptr2 | \       | ptr |
-> >                         | ptr3 |  \        ...
-> >                           ...      \
-> >                                     \        PUD
-> >                                      +----> +-----+
-> >                                             | ptr | -------> ...
-> >                                             | ptr |
-> >                                               ...
-> > 
-> > Link: [1] https://lore.kernel.org/all/0019d675-ce3d-4a5c-89ed-f126c45145c9@kernel.org/
-> > Link: [2] https://lore.kernel.org/all/20251113014656.2605447-1-samuel.holland@sifive.com/
-> > Link: [3] https://lore.kernel.org/r/74182e50-b54f-4d2d-a27f-3a59a538d6bc@arm.com
+
+
+Le 02/10/2026 à 12:13, Jason A. Donenfeld a écrit :
+> On Fri, Oct 02, 2026 at 11:49:32AM +0200, Nathan Chancellor wrote:
+>> On Thu, Oct 01, 2026 at 01:03:10PM +0200, Nathan Chancellor wrote:
+>>> On Thu, Oct 01, 2026 at 12:48:10PM +0200, Jason A. Donenfeld wrote:
+>>>> Does this commit seem okay with you? I used the diff you sent below and
+>>>> adjusted the commit message: https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.zx2c4.com%2Flinux-rng%2Fcommit%2F%3Fid%3D56ff95ee85715047eb5b5220243778af657778c8&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C4caf8956c2d94439c19a08df206dd40b%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C639265328227648970%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=H27VGYLdNkvQiA6l%2BJNnEModMbEySwTMXpLAt8iAFiI%3D&reserved=0
+>>>
+>>> Yeah, that seems fine to me, thanks for taking care of it!
+>>
+>> Can you adjust the LLVM value by one from 4294967295 to 4294967294? ~0U
+>> is actually a special value, so we hit an assertion in the SystemZ
+>> backend.
+>>
+>>    https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgithub.com%2Fllvm%2Fllvm-project%2Fblob%2F3f48e22a1f321d5d3341bd812803694cea588785%2Fllvm%2Flib%2FCodeGen%2FSelectionDAG%2FSelectionDAG.cpp%23L9547&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C4caf8956c2d94439c19a08df206dd40b%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C639265328227670583%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=u8petgY9wU9ur%2By4kaOrb6VFKL%2FNf4tcCIUL%2BcUcDfs%3D&reserved=0
+>>    https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgithub.com%2Fllvm%2Fllvm-project%2Fblob%2F3f48e22a1f321d5d3341bd812803694cea588785%2Fllvm%2Flib%2FTarget%2FSystemZ%2FSystemZISelLowering.cpp%23L1470-L1471&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C4caf8956c2d94439c19a08df206dd40b%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C639265328227686571%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=cSwt%2BTJdYa%2Bbwe8HyO6FsIq6oU6YNplRlwCa0upif9Q%3D&reserved=0
+>>
+>> clang: llvm/lib/Target/SystemZ/SystemZISelLowering.cpp:1471: virtual bool llvm::SystemZTargetLowering::findOptimalMemOpLowering(LLVMContext &, std::vector<EVT> &, unsigned int, const MemOp &, unsigned int, unsigned int, const AttributeList &, EVT *) const: Assertion `Limit != ~0U && "Expected EmitTargetCodeForMemXXX() to handle AlwaysInline cases."' failed.
+>> PLEASE submit a bug report to https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgithub.com%2Fllvm%2Fllvm-project%2Fissues%2F&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C4caf8956c2d94439c19a08df206dd40b%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C639265328227701575%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=%2F3q8laZb%2FDhCWp117N9EtyxLIc5lq%2FzEN2l0z%2BXwDHY%3D&reserved=0 and include the crash backtrace and dumped files.
+>> Stack dump:
+>> 0.      Program arguments: ...
+>> 1.      <eof> parser at end of file
+>> 2.      Code generation
+>> 3.      Running pass 'Function Pass Manager' on module 'arch/s390/kernel/vdso/vgetrandom.c'.
+>> 4.      Running pass 'SystemZ DAG->DAG Pattern Instruction Selection' on function '@__kernel_getrandom'
+>> ...
 > 
-> I applied all 21 patches to the declared base and built and booted the
-> kernels before and after on x86_64 and arm64 using virtme-ng.
+> Holy smokes. Sure, fixed:  https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.zx2c4.com%2Flinux-rng%2Fcommit%2F%3Fid%3Deb13a1ff271b0d180687eebb30611b0b276d5193&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C4caf8956c2d94439c19a08df206dd40b%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C639265328227716550%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=WcnFE6S72OrDTNNvU1T06BtUTyI1sDx%2F%2Btz%2FkpGslMA%3D&reserved=0
 > 
-> Tested-by: Muhammad Usama Anjum <usama.anjum@arm.com>
+> 
+>  From eb13a1ff271b0d180687eebb30611b0b276d5193 Mon Sep 17 00:00:00 2001
+> From: Nathan Chancellor <nathan@kernel.org>
+> Date: Fri, 25 Sep 2026 22:46:32 +0100
+> Subject: [PATCH] random: vDSO: avoid call to memset() when zeroing reserved
+>   parameter
+> 
+> After a recent change in LLVM [1], builds with the random vDSO
+> implementation, such as PowerPC and RISC-V, fail when checking the vDSO:
+> 
+>    arch/powerpc/kernel/vdso/vdso32.so.dbg: dynamic relocations are not supported
+>    arch/riscv/kernel/vdso/vdso.so.dbg: dynamic relocations are not supported
+> 
+> memset() is now generated when zeroing params->reserved for some builds
+> because LLVM has an optimization (now run in more instances) that can
+> recognize at compile time when it is assigning a static value to a
+> contiguous area of memory and turn that into a call to memset(). Both
+> clang and GCC assume memset() is always available [2].
+> 
+> Clang has an internal fiddly hook, -max-store-memset, which we can set
+> to a high number, to disable generating out of line memset calls [3].
+> Similarly, GCC has -finline-stringops=memset to do the same [4], should
+> this issue ever hit future version of GCC. While these options wouldn't
+> make sense for normal kernel code, it is fine for the extremely limited
+> and intentionally compact vDSO code.
+> 
+> Link: https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgithub.com%2Fllvm%2Fllvm-project%2Fcommit%2F90cebef1411617fc3eedd359bdf00cb44b1c2439&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C4caf8956c2d94439c19a08df206dd40b%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C639265328227732238%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=cYZ2nUalY%2F6yarydfMIlcGpDVlztXRBeg7UG7tpCO9g%3D&reserved=0 [1]
+> Link: https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgcc.gnu.org%2Fonlinedocs%2Fgcc-16.2.0%2Fgcc%2FStandards.html%23index-ffreestanding&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C4caf8956c2d94439c19a08df206dd40b%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C639265328227748542%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=vRl%2BQgL5GJ0wowXAIlRIczC5XqUXyOFUvFVe5C8XWAc%3D&reserved=0 [2]
+> Link: https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgithub.com%2Fllvm%2Fllvm-project%2Fcommit%2Fb28eeb28bea39148738dc375e8a97072a1907e64&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C4caf8956c2d94439c19a08df206dd40b%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C639265328227762721%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=nt59J3%2BOoiEKYGzfFfAq7WoAnEMAimt6vKDaJjhvHtg%3D&reserved=0 [3]
+> Link: https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgcc.gnu.org%2Fonlinedocs%2Fgcc%2FOptimize-Options.html%23index-finline-stringops&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C4caf8956c2d94439c19a08df206dd40b%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C639265328227777215%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=fyZA9XC%2FwSAUc346VWT%2FmyeqddqeTo62dBKtiJilR9U%3D&reserved=0 [4]
+> Closes: https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgithub.com%2FClangBuiltLinux%2Flinux%2Fissues%2F2183&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C4caf8956c2d94439c19a08df206dd40b%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C639265328227792263%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=49HfUDlzn%2FLUeISQ7%2BFR5jE7lZkqfORaqjauLn8cdm0%3D&reserved=0
+> Cc: stable@vger.kernel.org # v6.12+
+> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
 
-Thanks for your testing ;)
+Ok, I checked the version that is in the rng tree, namely commit 
+eb13a1ff271b ("random: vDSO: avoid call to memset() when zeroing 
+reserved parameter"). Looks similar to this mail.
 
-[...]
+It looks ok, no change to generated loop on powerpc32 neither with gcc 
+13 nor gcc 16.
 
--- 
-Sincerely,
-Yeoreum Yun
+Reviewed-by: Christophe Leroy (CS GROUP) <chleroy@kernel.org>
+
+> ---
+>   arch/arm64/kernel/vdso/Makefile     | 2 +-
+>   arch/loongarch/vdso/Makefile        | 1 +
+>   arch/powerpc/kernel/vdso/Makefile   | 1 +
+>   arch/riscv/kernel/vdso/Makefile     | 1 +
+>   arch/s390/kernel/vdso/Makefile      | 1 +
+>   arch/x86/entry/vdso/vdso64/Makefile | 2 +-
+>   init/Kconfig                        | 5 +++++
+>   7 files changed, 11 insertions(+), 2 deletions(-)
+> 
