@@ -1,191 +1,95 @@
-Received: from mail-m49198.qiye.163.com (mail-m49198.qiye.163.com [45.254.49.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta0.migadu.com (out-41.mta0.migadu.com [91.218.175.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36CD739182A
-	for <loongarch@lists.linux.dev>; Sat,  3 Oct 2026 08:25:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA643815E6
+	for <loongarch@lists.linux.dev>; Sat,  3 Oct 2026 08:27:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791015906; cv=none; b=YzRYiEyj7FPH/Ahrm+QINeP1rgcpoTVNh0TgHKsQryfcGryun+7Rdtq/VBshO7hDrRR82tjl2vAvx3gYjaLnyLKcTebYe/Hc73q4Rjrc7Y0Z7ru+GHrCbjEOfh/CTPVWm04HTnh1YnKSOLvbwnR97XTrKBDVo9NRIMqtW9XbfKA=
+	t=1791016030; cv=none; b=uvt/v/xbav54rW3o8L8NmuCTSJ7CyNUFXD1/qoDs6d/5XHZvvpc9l/PB52E3T97urAoSMVTH1SpejdRUe3K/rT3rt4KAOD4mNftCgOoViz2uxu9BSqLXKqBKzgHIp1cpfVaZ/BlC5kXzoDDP4Nu9STAjC0vHuIhHdQMKB1Qwzgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791015906; c=relaxed/simple;
-	bh=SeX+jp8PpeBcvPdqlw3m5PEeh1Ap7+r3p5V78ansgZc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=keoE073g0a0kDMo3zmohfek7BhZ0YJNPmpEzuhpogHEk7wa4yuwDKTGORUuiXo5BjbJTkzVyEk/ek/NGWRKOtklaLLCCHWeddTNDtBjQYkYew739E7N59VIQvOeApOv0n/z+NImv+ZrEdhaBUBu9pH+TTjBu/EvCVyIIlkX3djw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tsinghua.org.cn; spf=pass smtp.mailfrom=tsinghua.org.cn; arc=none smtp.client-ip=45.254.49.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tsinghua.org.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tsinghua.org.cn
-Received: from [192.168.5.82] (unknown [125.82.165.238])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 4fe102675;
-	Sat, 3 Oct 2026 16:24:51 +0800 (GMT+08:00)
-Message-ID: <1b9d2426-fe5c-4227-976d-65ceb812c93c@tsinghua.org.cn>
-Date: Sat, 3 Oct 2026 16:23:13 +0800
+	s=arc-20240116; t=1791016030; c=relaxed/simple;
+	bh=qTDcL7ZGZXpqyBImCymnV5HwYb1medCgU94t18ZKIYQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H0NvhhFFiYWxrcExlZ+81E+9iZmoy/RAzzaxYuhCkO8B3cIopFXhzcDJfusjKMXABFzgH2JIJvd8L5KOFhQPKbXgoxTYCk0m3ff3XbklNJ6Jp/zxIqQb8gw5IQ3QZjt07eMstYteO3zt4lWWTyKp+s9GA+E2sHs4CvHQsCYhSgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Ro55FjU9; arc=none smtp.client-ip=91.218.175.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ro55FjU9"
+X-Envelope-To: loongarch@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=qTDcL7ZGZXpqyBImCymnV5HwYb1medCgU94t18ZKIYQ=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1791016026; v=1; x=1791620826;
+ b=Ro55FjU9eeo2D0bxe928BZCuk86eYPwp0remRwVEfjL0NlyNiE4s4ulIYkAixtuXqZL2bHsa
+ C5WpIBwuwX8NKmOvjiYIHOkaDBbncws84vHuePqLEFtzNJC08iR9CWU9nWbs0aAF9mUsoDfmCB7
+ RO2dMmIBMa9CdeufPMzClmK4=
+X-Envelope-To: loongarch@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id 2a8746d844f124a8;
+	Sat, 03 Oct 2026 08:27:05 +0000
+X-Mizu-Trace-ID: 2a8746d844f124a8
+X-Migadu-Flow: FLOW_OUT
+Date: Sat, 3 Oct 2026 16:27:26 +0800
+From: Chen Yu <chen.yu@linux.dev>
+To: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Chen Yu <yu.c.chen@intel.com>,
+	Tim Chen <tim.c.chen@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-mips@vger.kernel.org,
+	loongarch@lists.linux.dev, driver-core@lists.linux.dev,
+	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [RFC PATCH v3 09/13] x86/cpu/topology: Initialize sbm topology
+ after topology parsing
+Message-ID: <asC8bgvYsVkkcVlO@three-body>
+References: <20261001192849.74788-1-kprateek.nayak@amd.com>
+ <20261001192849.74788-10-kprateek.nayak@amd.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] LoongArch: kdump: add arch_crash_save_vmcoreinfo()
- support
-To: Huacai Chen <chenhuacai@kernel.org>,
- Yangyang Lian <lianyangyang@kylinos.cn>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Baoquan He <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pratyush Yadav <pratyush@kernel.org>, Dave Young <ruirui.yang@linux.dev>,
- WANG Xuerui <kernel@xen0n.name>, kexec@lists.infradead.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- Haoran Jiang <jianghaoran@kylinos.cn>, Tao Cui <cuitao@kylinos.cn>,
- George Guo <guodongtai@kylinos.cn>
-References: <20260923060349.146780-1-lianyangyang@kylinos.cn>
- <20260924075655.375632-1-lianyangyang@kylinos.cn>
- <CAAhV-H6C=AyS=1AejxxaG-Zri=2=AfMtPzXFxEvzpFdD1_AaAw@mail.gmail.com>
-Content-Language: en-US, en-GB
-From: Dave Young <yangrr.2009@tsinghua.org.cn>
-In-Reply-To: <CAAhV-H6C=AyS=1AejxxaG-Zri=2=AfMtPzXFxEvzpFdD1_AaAw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0aa100ddb36603a2kunm96589f122a1e56
-X-HM-MType: 10
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFKTEtLSjdXWRgWCB1ZQUpXWS1ZQUlXWQ8JGhUIEh9ZQVkZQ0NLVk9CH0sYSB4YGRkfH1
-	YeHw5VEwETFhoSFyQUDg9ZV1kYEgtZQVlKSU5VQ0lVSk1OVUlIQ1lXWRYaDxIVHRRZQVlPS0hVSk
-	tJT09PSFVKS0tVSkJLS1kG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261001192849.74788-10-kprateek.nayak@amd.com>
 
+Hello Prateek,
 
+On Thu, Oct 01, 2026 at 07:28:45PM +0000, K Prateek Nayak wrote:
 
-On 9/28/26 10:28 PM, Huacai Chen wrote:
-> Hi, Yangyang,
-> 
-> On Thu, Sep 24, 2026 at 3:58 PM Yangyang Lian <lianyangyang@kylinos.cn> wrote:
->>
->> Since commit 23c85094fe18 ("proc/kcore: add vmcoreinfo note to
->> /proc/kcore") the kernel has exported the vmcoreinfo PT_NOTE on
->> /proc/kcore as wellas /proc/vmcore.
->>
->> LoongArch does not provide arch_crash_save_vmcoreinfo(), so the
->> arch-specific values are missing from the vmcoreinfo PT_NOTE. The
->> generic exporter in kernel/vmcore_info.c already provides
->> NUMBER(VMALLOC_START), but tools like crash cannot derive the module
->> and vmemmap ranges, VA_BITS, or the KASLR offset of a LoongArch dump.
+[ snip ]
 
-current crash can get the kaslr offset from the _stext differ, so it just works, but maybe makedumpfile still need the vmcoreinfo export.
+> +static __init void init_sbm_topology(u32 max_apicid)
+> +{
+> +	u32 sbm_shift = x86_topo_system.dom_shifts[TOPO_DIE_DOMAIN] - 1;
 
->>
->> Since commit 18210a104bb9 ("LoongArch: Expand module virtual address
->> space to 2GB") the vmalloc and module boundaries are no longer stable
->> across kernel versions either, so vmcoreinfo is the only reliable
->> source for them.
->>
->> Provide this function in a separate file that is built at the same time
->> as its caller in kernel/vmcore_info.c, and add a LOONGARCH64 section to
->> Documentation/admin-guide/kdump/vmcoreinfo.rst.
->>
->> Reported-by: Haoran Jiang <jianghaoran@kylinos.cn>
->> Suggested-by: Haoran Jiang <jianghaoran@kylinos.cn>
->> Tested-by: Tao Cui <cuitao@kylinos.cn>
->> Co-developed-by: George Guo <guodongtai@kylinos.cn>
->> Signed-off-by: George Guo <guodongtai@kylinos.cn>
->> Signed-off-by: Yangyang Lian <lianyangyang@kylinos.cn>
->> ---
->> V2 -> V1: Export VMEMMAP_END + 1 to make it an exclusive bound, matching
->>           what tools like makedumpfile expect.
->>           Add Tested-by tag from Tao Cui.
->>
->>  .../admin-guide/kdump/vmcoreinfo.rst          | 29 +++++++++++++++++++
->>  arch/loongarch/kernel/Makefile                |  1 +
->>  arch/loongarch/kernel/vmcore_info.c           | 21 ++++++++++++++
->>  3 files changed, 51 insertions(+)
->>  create mode 100644 arch/loongarch/kernel/vmcore_info.c
->>
->> diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
->> index 7663c610fe90..2ff921232616 100644
->> --- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
->> +++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
->> @@ -594,3 +594,32 @@ va_kernel_pa_offset
->>
->>  Indicates the offset between the kernel virtual and physical mappings.
->>  Used to translate virtual to physical addresses.
->> +
->> +LOONGARCH64
->> +===========
->> +
->> +VA_BITS
->> +-------
->> +
->> +The maximum number of bits for virtual addresses. Used to compute the
->> +virtual memory ranges.
->> +
->> +PHYS_OFFSET
->> +-----------
->> +
->> +Indicates the physical address of the start of memory. Used to translate
->> +virtual to physical addresses.
->> +
->> +KERNELOFFSET
->> +------------
->> +
->> +The kernel randomization offset. Used to locate the kernel text in
->> +virtual memory. If KASLR is disabled, this value is zero.
->> +
->> +MODULES_VADDR|MODULES_END|VMALLOC_START|VMALLOC_END|VMEMMAP_START|VMEMMAP_END
->> +-----------------------------------------------------------------------------
->> +
->> +Used to get the correct ranges:
->> +       MODULES_VADDR ~ MODULES_END-1 : Kernel module space.
->> +       VMALLOC_START ~ VMALLOC_END-1 : vmalloc() / ioremap() space.
->> +       VMEMMAP_START ~ VMEMMAP_END-1 : vmemmap region, used for struct page array.
->> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
->> index 001924877772..6260c15adaba 100644
->> --- a/arch/loongarch/kernel/Makefile
->> +++ b/arch/loongarch/kernel/Makefile
->> @@ -64,6 +64,7 @@ obj-$(CONFIG_RELOCATABLE)     += relocate.o
->>  obj-$(CONFIG_KEXEC_CORE)       += machine_kexec.o relocate_kernel.o
->>  obj-$(CONFIG_KEXEC_FILE)       += machine_kexec_file.o kexec_efi.o kexec_elf.o
->>  obj-$(CONFIG_CRASH_DUMP)       += crash_dump.o
->> +obj-$(CONFIG_VMCORE_INFO)      += vmcore_info.o
->>
->>  obj-$(CONFIG_UNWINDER_GUESS)   += unwind_guess.o
->>  obj-$(CONFIG_UNWINDER_PROLOGUE) += unwind_prologue.o
->> diff --git a/arch/loongarch/kernel/vmcore_info.c b/arch/loongarch/kernel/vmcore_info.c
->> new file mode 100644
->> index 000000000000..fb703b716253
->> --- /dev/null
->> +++ b/arch/loongarch/kernel/vmcore_info.c
->> @@ -0,0 +1,21 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +
->> +#include <linux/vmcore_info.h>
->> +#include <asm/addrspace.h>
->> +#include <asm/pgtable.h>
->> +#include <asm/setup.h>
->> +
->> +void arch_crash_save_vmcoreinfo(void)
->> +{
->> +       VMCOREINFO_NUMBER(VA_BITS);
->> +       /* NUMBER(VMALLOC_START) is exported by the generic code */
->> +       vmcoreinfo_append_str("NUMBER(VMALLOC_END)=0x%lx\n", VMALLOC_END);
->> +#ifdef CONFIG_64BIT
->> +       vmcoreinfo_append_str("NUMBER(MODULES_VADDR)=0x%lx\n", MODULES_VADDR);
->> +       vmcoreinfo_append_str("NUMBER(MODULES_END)=0x%lx\n", MODULES_END);
->> +       vmcoreinfo_append_str("NUMBER(VMEMMAP_START)=0x%lx\n", (unsigned long)vmemmap);
->> +       vmcoreinfo_append_str("NUMBER(VMEMMAP_END)=0x%lx\n", VMEMMAP_END + 1);
->> +#endif
->> +       vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=0x%lx\n", PHYS_OFFSET);
-> I think it is also useful to export PAGE_OFFSET here.
+As sashiko reported, and also mentioned here:
+https://lore.kernel.org/lkml/20260510155920.2587431-2-yu.c.chen@intel.com/
+Maybe x86_topo_system.dom_shifts[TOPO_DIE_DOMAIN - 1] ?
 
-Hi Huacai,  if it is a fixed value or it can be derived from other known values I'd suggest not to export.
+> +	int num_sbm_instances, max_threads_per_instance;
+> +
+> +	/*
+> +	 * On Intel systems, memory controllers are present at TOPO_DIE_DOMAIN.
+> +	 * On newer AMD and Hygon systems, LLC is at TOPO_TILE_DOMAIN so use
+> +	 * that instead.
+> +	 */
+> +	if (boot_cpu_data.x86_vendor == X86_VENDOR_AMD ||
+> +	    boot_cpu_data.x86_vendor == X86_VENDOR_HYGON)
+> +		sbm_shift = x86_topo_system.dom_shifts[TOPO_TILE_DOMAIN] - 1;
 
-> 
-> Huacai
->> +       vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
->> +}
->> --
->> 2.25.1
->>
->>
-> 
-> 
-> 
+Ditto.
 
+thanks,
+Chenyu
