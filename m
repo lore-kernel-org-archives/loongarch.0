@@ -1,57 +1,58 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A24F31D72E
-	for <loongarch@lists.linux.dev>; Sat,  3 Oct 2026 04:02:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E4083812EF
+	for <loongarch@lists.linux.dev>; Sat,  3 Oct 2026 04:02:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791000126; cv=none; b=HZxzEcI0HOqXup4nDZ+qlVXgTVjQbEy22JH1H47BmcMUkXL+5nTv15FSxDjrEYHaMWVYqoCGjaF+nltzzHlKhHwh5OBHrtWbWJpVJaK2GRlM9Tj82Njq21o8e+JOC5Ol9urmlX268eeHsfGZBtn123+BIEjC/oPltwOFpZPFzUg=
+	t=1791000131; cv=none; b=dXBdok5qomwNhH6KbL2R9xvXG4CkiaNa1v1ksY3IionAltddCMjHYk8kByJuqqn5eiyVWgIuQ5lPqcoQjyIE/USpFaV/+R3BXz79KgkLsNyIM8jD5zK4g2jJPo8qgH3qSTWa/wLxl1Bw/L3dP+XnmrMbZXqoWDcasry7RvKLOkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791000126; c=relaxed/simple;
-	bh=N9KRosXR8ymgtmmBzokfwvipVO0/UlM152jsumDQJHM=;
+	s=arc-20240116; t=1791000131; c=relaxed/simple;
+	bh=fDZYLLwunnBogRuB/2Sm1f453rezEII4cyx1T0Gz/tw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o3+bmrMy7ywjNZ/7jKOJ8Ckve93xlyAC4ifGC79R9gGQBcqQFGo33LCrr1L0dlAwAELwKkpp/b67jeREtW6Uqs3TRz7ZWvrGhvqM+nUXXc1xDo2EXPR97GHF0v1bj9pbAbkaeyPm52/s+vZSxslsSxedvmKCFtUwh4TKhEFtfDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MFFK52r+; arc=none smtp.client-ip=100.103.45.18
+	 To:Cc:Content-Type; b=Dm2kI0RSVMUGHbA3ijDnN1PNSq2TBeCWvNAICD+Ue61Z3R0n8Pc7+MvcsesxzUyBc5c0IiEfh/1a+J67aFCqYowtzI6L897J9IuIrvb2M9l30sx1mwmwdeK/ATQ03uKTQ3ZzcDt99Dm1qxBzOYES+cCvqTfKYZ0n8pluij0VBJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W6AHu44r; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MFFK52r+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 107FD1F00898
-	for <loongarch@lists.linux.dev>; Sat,  3 Oct 2026 04:02:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W6AHu44r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB9871F0089B
+	for <loongarch@lists.linux.dev>; Sat,  3 Oct 2026 04:02:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791000125;
-	bh=GwjWGLhha1nNzvOsdUz4LVg1JPaiqv599pxKsS12uEM=;
+	s=k20260515; t=1791000129;
+	bh=KdLjPKzIHUquzdcPG1hqzFLZJYNlVwFFeyfwPJ84akY=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=MFFK52r+76abohkSgW0z98Dh+QBj3odOw2qElqPXCqPsysbC4gvPEkxOCadquj+Di
-	 4BHMDQQtfzdTvIZ5/+jS1r6bC3Hq6ti4jaG7lzapNKURojI/faLS2WHxmV27OOUP1b
-	 t61X/CMunp/+osxRMgAJwqtxWPuyf3qEEdo4jhLerboBDdxKCPFKZV3vYEFutLJLSq
-	 HAHh4s63WaUIy42EqdmTWbHXXXJpaYNM2xmfX9RVpRcchrOkRKhfqk2qcyhA8ETy/N
-	 9N91MdvLOObQfYo8ERL6CnHTrZTmg3q3u6fWm78rE2rv+hdc04Kfzjhl5qxLmY6duI
-	 xMifC452mOiyA==
-Received: by mail-ed2-f12.google.com with SMTP id 4fb4d7f45d1cf-6a9984f9adcso218830a12.0
-        for <loongarch@lists.linux.dev>; Fri, 02 Oct 2026 21:02:04 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvByw2b5d0rhOP/Nk+vcqvtM6HKZaZEXzKz6L1fn2/LjO2Nk1Gy2ay8waDkDppl2hJ5eu8f2Uc/Lg0g4=@lists.linux.dev
-X-Gm-Message-State: AFq9FYLrLmjGwxwYIqn15/W1E6m7pq6n6QSypME4Ksfk5yfCPyMVIeb2
-	0IynYukpuVLzBWDu4i6BWa+alIWcHBSRwVUcUZ/3RH+8wXNwxTrMLJtEwCxoHYki04bfPw1aLFM
-	UYKNWUJbHO5xj7m3fi8Z+Xt9Xl1IptXw=
-X-Received: by 2002:a05:6402:5112:b0:6ac:a5a0:a1c6 with SMTP id
- 4fb4d7f45d1cf-6af9e2f9d4cmr3323624a12.8.1791000123721; Fri, 02 Oct 2026
- 21:02:03 -0700 (PDT)
+	b=W6AHu44rkBG+xTh5I9A4rgOEJ1tRC5r/7s4t1m5tV3j5HZDLR5vwBkFtdi6GftewS
+	 p2bvOP2hVP0odUEa1tS2Si1LLeURnGSqWZA77a0SHKjf1DVfVq00ro/hMdPp8T/eEK
+	 NSEbogFv1hSQUGKLSKFZX9OuWlr1RJ0XzXXy0LgOqak5Xop8UfmltplEdDK7GX7DYQ
+	 YvuVpOrHOeuJuitG7fnG4QbHg0TiZkrA1X57idIXgjGNYowy19KtHIUODTRou+VZHc
+	 YXgKJsWHAiXeDOPNiJ4IdJVEmOaaikxaPngGKY0t3+KSKXrABTl8x6u7KmCs8PHwOU
+	 vR0Oy5Eg/8spw==
+Received: by mail-ed2-f35.google.com with SMTP id 4fb4d7f45d1cf-6aaf10bf094so165881a12.2
+        for <loongarch@lists.linux.dev>; Fri, 02 Oct 2026 21:02:09 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvBzOHt/PS8XfS+jR5KDbE1rYBaP6TZsTJxzdEg/PvGmbN5IifTfel8L6nxLdXPsLY4lESS3FcWqZogw=@lists.linux.dev
+X-Gm-Message-State: AFq9FYIB7fTVp/cQnTZokZWs62PQ2s8SP26j7zMpzGdynqvIwndmHFd/
+	gQPafPDyuL6Rm1cXZgEbr2fjQfNn4awuDSmFFzQQTuGBnJSABUj1lM7RTEjuyiGlO1jlPALe5xI
+	opXwYycRpX9j7r7dErc95AeA2uqSoT9M=
+X-Received: by 2002:a05:6402:a0dc:b0:6ae:550e:5a04 with SMTP id
+ 4fb4d7f45d1cf-6af9e2de1c3mr2645207a12.30.1791000128367; Fri, 02 Oct 2026
+ 21:02:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260908073906.31781-1-yangtiezhu@loongson.cn>
-In-Reply-To: <20260908073906.31781-1-yangtiezhu@loongson.cn>
+References: <20260922103931.215091-1-nagachaithanya9911@gmail.com> <20260924065033.374786-1-nagachaithanya9911@gmail.com>
+In-Reply-To: <20260924065033.374786-1-nagachaithanya9911@gmail.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 3 Oct 2026 12:01:52 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7aEiDuNutHpyjW8qm9t9UQgiwTy8DOeWtaV4moRWVs2w@mail.gmail.com>
-X-Gm-Features: AclHuK9jI5fPSJhQQayJegCXi0IsuTZcKF-XsaAeva7ZW9gZKGDVrgeT04xg-2w
-Message-ID: <CAAhV-H7aEiDuNutHpyjW8qm9t9UQgiwTy8DOeWtaV4moRWVs2w@mail.gmail.com>
-Subject: Re: [PATCH v2] LoongArch: Remove arch-specific __smp_mb__{before,after}_atomic()
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Kumar Kartikeya Dwivedi <memxor@gmail.com>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
+Date: Sat, 3 Oct 2026 12:01:56 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6RRtdA0esVcJvRt6JxOvUJtQEWfE5rgC9Kn8trS_tZpw@mail.gmail.com>
+X-Gm-Features: AclHuK-MPAuyMvsZ6cjNfizR-jWqAmbMpoiGUDuR9psdxzEyhwYky3ezJ5lfkSo
+Message-ID: <CAAhV-H6RRtdA0esVcJvRt6JxOvUJtQEWfE5rgC9Kn8trS_tZpw@mail.gmail.com>
+Subject: Re: [PATCH v2] LoongArch: KVM: Return the actual error code in kvm_ipi_create()
+To: Chaithanya Lagisetty <nagachaithanya9911@gmail.com>
+Cc: Bibo Mao <maobibo@loongson.cn>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
+	WANG Xuerui <kernel@xen0n.name>, Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -60,71 +61,87 @@ Applied, thanks.
 
 Huacai
 
-On Tue, Sep 8, 2026 at 3:39=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn>=
- wrote:
+On Thu, Sep 24, 2026 at 2:51=E2=80=AFPM Chaithanya Lagisetty
+<nagachaithanya9911@gmail.com> wrote:
 >
-> When running the BPF selftest "test_progs -t timer_lockup" on a LoongArch
-> machine, the kernel intermittently experiences soft lockups and panics in
-> hrtimer_cancel().
+> kvm_ipi_create() registers the IPI device on the IOCSR bus. The error
+> path currently discards the error code returned by
+> kvm_io_bus_register_dev() and returns -EFAULT instead:
 >
-> The root cause is that bpf_timer_cancel() relies on smp_mb__after_atomic(=
-)
-> to provide a full data barrier after a relaxed atomic_inc() to ensure the
-> proper store-load ordering before performing lockless dependency checks o=
-n
-> weakly-ordered architectures such as LoongArch, but the current definitio=
-n
-> of smp_mb__after_atomic() is a plain compiler barrier.
+>         ret =3D kvm_io_bus_register_dev(kvm, KVM_IOCSR_BUS, IOCSR_IPI_BAS=
+E,
+>                                       IOCSR_IPI_SIZE, device);
+>         mutex_unlock(&kvm->slots_lock);
+>         if (ret < 0) {
+>                 kvm_pr_unimpl("%s: Initialize IOCSR dev failed, ret =3D %=
+d\n",
+>                               __func__, ret);
+>                 goto err;
+>         }
+>         ...
+> err:
+>         kfree(s);
+>         return -EFAULT;
 >
-> This allows a subsequent read to bypass the prior write due to store-load
-> reordering, enabling concurrent CPUs to simultaneously bypass the softwar=
-e
-> deadlock detection, enter hrtimer_cancel(), and then trigger a severe ABB=
-A
-> deadlock in the hrtimer core.
+> kvm_io_bus_register_dev() fails with -ENOMEM or -ENOSPC, so userspace
+> creating a KVM_DEV_TYPE_LOONGARCH_IPI device is told that it passed a
+> bad address when the real problem is that the host is out of memory or
+> out of IOCSR bus slots. -EFAULT is reserved for faulting user addresses,
+> and the remaining -EFAULT returns in this file are get_user() failures,
+> where it is correct.
 >
-> Moreover, there are hundreds of smp_mb__after_atomic() call sites across
-> the core kernel (kernel/, drivers/, mm/, net/, fs/) that currently lack
-> necessary full data barriers on LoongArch, which have potential risks.
+> Free the IPI state and propagate the error directly after cleanup. The
+> error label had a single user, so handling the failure in place removes
+> the label as well. This matches kvm_eiointc_create(), which already frees
+> its state and propagates the kvm_io_bus_register_dev() error code
+> unchanged.
 >
-> To comply with the LKMM specification, fix this by removing the incorrect
-> arch-specific definition of __smp_mb__after_atomic(), so that this macro
-> can automatically fall back to the generic definition in asm-generic that
-> maps to __smp_mb() and emits the required hardware DBAR instruction. Whil=
-e
-> at it, do the same thing for __smp_mb__before_atomic().
+> Only compile-tested.
 >
-> With this patch, the BPF timer_lockup selftest was stressed for 1 million
-> consecutive loops on a physical LoongArch machine without encountering an=
-y
-> further lockups.
->
-> Reported-by: Vincent Li <vincent.mc.li@gmail.com>
-> Closes: https://lore.kernel.org/loongarch/CAK3+h2xOSEZUHhou7N2cRL-aGrZCNS=
-m45g+P7thObMe+fpgYCA@mail.gmail.com/
-> Fixes: 46859ac8af52 ("LoongArch: Add multi-processor (SMP) support")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> Fixes: c532de5a67a7 ("LoongArch: KVM: Add IPI device support")
+> Suggested-by: Huacai Chen <chenhuacai@kernel.org>
+> Assisted-by: Cursor:claude-opus-5
+> Signed-off-by: Chaithanya Lagisetty <nagachaithanya9911@gmail.com>
 > ---
->  arch/loongarch/include/asm/barrier.h | 3 ---
->  1 file changed, 3 deletions(-)
+> v2:
+>  - Handle the failure in place and drop the now unused err label instead
+>    of only correcting the returned value (Huacai Chen).
+>  - Reworded the commit message accordingly.
+>  - Dropped Bibo Mao's Reviewed-by from v1, as the error path is
+>    restructured in this version rather than only returning ret.
 >
-> diff --git a/arch/loongarch/include/asm/barrier.h b/arch/loongarch/includ=
-e/asm/barrier.h
-> index 4b663f197706..84c6d739119d 100644
-> --- a/arch/loongarch/include/asm/barrier.h
-> +++ b/arch/loongarch/include/asm/barrier.h
-> @@ -57,9 +57,6 @@
->  #define __WEAK_LLSC_MB         "                       \n"
->  #endif
+> Link to v1:
+> https://lore.kernel.org/all/20260922103931.215091-1-nagachaithanya9911@gm=
+ail.com/
 >
-> -#define __smp_mb__before_atomic()      barrier()
-> -#define __smp_mb__after_atomic()       barrier()
+>  arch/loongarch/kvm/intc/ipi.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
+>
+> diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.=
+c
+> index 7b333a4a0430..80faa770c0cd 100644
+> --- a/arch/loongarch/kvm/intc/ipi.c
+> +++ b/arch/loongarch/kvm/intc/ipi.c
+> @@ -423,15 +423,12 @@ static int kvm_ipi_create(struct kvm_device *dev, u=
+32 type)
+>         mutex_unlock(&kvm->slots_lock);
+>         if (ret < 0) {
+>                 kvm_pr_unimpl("%s: Initialize IOCSR dev failed, ret =3D %=
+d\n", __func__, ret);
+> -               goto err;
+> +               kfree(s);
+> +               return ret;
+>         }
+>
+>         kvm->arch.ipi =3D s;
+>         return 0;
 > -
->  /**
->   * array_index_mask_nospec() - generate a ~0 mask when index < size, 0 o=
-therwise
->   * @index: array element index
+> -err:
+> -       kfree(s);
+> -       return -EFAULT;
+>  }
+>
+>  static void kvm_ipi_destroy(struct kvm_device *dev)
 > --
-> 2.42.0
+> 2.43.0
 >
