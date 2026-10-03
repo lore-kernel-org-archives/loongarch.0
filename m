@@ -1,35 +1,35 @@
-Received: from mta0.migadu.com (out-41.mta0.migadu.com [91.218.175.41])
+Received: from mta0.migadu.com (out-97.mta0.migadu.com [91.218.175.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA643815E6
-	for <loongarch@lists.linux.dev>; Sat,  3 Oct 2026 08:27:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A53F3438B2
+	for <loongarch@lists.linux.dev>; Sat,  3 Oct 2026 09:09:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791016030; cv=none; b=uvt/v/xbav54rW3o8L8NmuCTSJ7CyNUFXD1/qoDs6d/5XHZvvpc9l/PB52E3T97urAoSMVTH1SpejdRUe3K/rT3rt4KAOD4mNftCgOoViz2uxu9BSqLXKqBKzgHIp1cpfVaZ/BlC5kXzoDDP4Nu9STAjC0vHuIhHdQMKB1Qwzgg=
+	t=1791018588; cv=none; b=bdmGli9RaPZG8jr/8wIGSLwJLzx/i+zKehQbqPG3EC61G5eMNf+mGzZnF7F/mCIyuFV7xI32QM/AuAmEnctgP3hIx3KVXB7Qsidh+3x8qeemZTl1qAr8bp0YLXgIgHJCs+0PJJ65cPKL6nLBCnxsHyQXC/RvU8wE0tyn27CHK+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791016030; c=relaxed/simple;
-	bh=qTDcL7ZGZXpqyBImCymnV5HwYb1medCgU94t18ZKIYQ=;
+	s=arc-20240116; t=1791018588; c=relaxed/simple;
+	bh=FSHH2lxVQ7W/7ZcDn6MGkBGZpq4xldC6pMHimCeppLE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H0NvhhFFiYWxrcExlZ+81E+9iZmoy/RAzzaxYuhCkO8B3cIopFXhzcDJfusjKMXABFzgH2JIJvd8L5KOFhQPKbXgoxTYCk0m3ff3XbklNJ6Jp/zxIqQb8gw5IQ3QZjt07eMstYteO3zt4lWWTyKp+s9GA+E2sHs4CvHQsCYhSgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Ro55FjU9; arc=none smtp.client-ip=91.218.175.41
+	 Content-Type:Content-Disposition:In-Reply-To; b=MkUcaJXL//wTfR+2xHcva6isj4HzM7Z8n/ZeH/eLMzdUZOo1ATqj0wUjbYtsQ8J5BYISpSb0rMDbF5sIZbbJBsYp/dsUoCx+kvl/oxE4xafSUL8g9Q2ltE1NTXsUuZLwrdjfpZNMRO/kw+CW2hlyFijXIB4Y95vOI1pn5bYm97o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=NfrGPrpy; arc=none smtp.client-ip=91.218.175.97
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ro55FjU9"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="NfrGPrpy"
 X-Envelope-To: loongarch@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=qTDcL7ZGZXpqyBImCymnV5HwYb1medCgU94t18ZKIYQ=;
+DKIM-Signature: a=rsa-sha256; bh=FSHH2lxVQ7W/7ZcDn6MGkBGZpq4xldC6pMHimCeppLE=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1791016026; v=1; x=1791620826;
- b=Ro55FjU9eeo2D0bxe928BZCuk86eYPwp0remRwVEfjL0NlyNiE4s4ulIYkAixtuXqZL2bHsa
- C5WpIBwuwX8NKmOvjiYIHOkaDBbncws84vHuePqLEFtzNJC08iR9CWU9nWbs0aAF9mUsoDfmCB7
- RO2dMmIBMa9CdeufPMzClmK4=
+ t=1791018584; v=1; x=1791623384;
+ b=NfrGPrpynlfLGKKORwxbqUJ9jWekm+WhjRX1N2s2hao7SjcpaAeK2noOCaX0NLjgWfPunq2h
+ RWP6+EQsQnVKK5BQXIA3e1fyZBYiGMq23N2ycS6ztlgwzYu0jAevs/xitss7nAXiVcmGE6qQkXG
+ c+T/RSTvjEIus7/mxlYtNBfI=
 X-Envelope-To: loongarch@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 2a8746d844f124a8;
-	Sat, 03 Oct 2026 08:27:05 +0000
-X-Mizu-Trace-ID: 2a8746d844f124a8
+Received: by smtp.migadu.com with ESMTPS id 2747b1746997b9b8;
+	Sat, 03 Oct 2026 09:09:43 +0000
+X-Mizu-Trace-ID: 2747b1746997b9b8
 X-Migadu-Flow: FLOW_OUT
-Date: Sat, 3 Oct 2026 16:27:26 +0800
+Date: Sat, 3 Oct 2026 17:10:04 +0800
 From: Chen Yu <chen.yu@linux.dev>
 To: K Prateek Nayak <kprateek.nayak@amd.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Chen Yu <yu.c.chen@intel.com>,
@@ -41,6 +41,19 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Chen Yu <yu.c.chen@intel.com>,
 	linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
 	linuxppc-dev@lists.ozlabs.org, linux-mips@vger.kernel.org,
 	loongarch@lists.linux.dev, driver-core@lists.linux.dev,
+	Sudeep Holla <sudeep.holla@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
 	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
 	Dietmar Eggemann <dietmar.eggemann@arm.com>,
@@ -48,12 +61,16 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Chen Yu <yu.c.chen@intel.com>,
 	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
 	Valentin Schneider <vschneid@redhat.com>,
 	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <chleroy@kernel.org>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
 	"H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [RFC PATCH v3 09/13] x86/cpu/topology: Initialize sbm topology
- after topology parsing
-Message-ID: <asC8bgvYsVkkcVlO@three-body>
+Subject: Re: [RFC PATCH v3 00/13] lib, sched: Introduce sparsebitmap (sbm)
+Message-ID: <asDGbBEHkDouWOwC@three-body>
 References: <20261001192849.74788-1-kprateek.nayak@amd.com>
- <20261001192849.74788-10-kprateek.nayak@amd.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -62,34 +79,70 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261001192849.74788-10-kprateek.nayak@amd.com>
+In-Reply-To: <20261001192849.74788-1-kprateek.nayak@amd.com>
 
-Hello Prateek,
+Hello Prateek!
 
-On Thu, Oct 01, 2026 at 07:28:45PM +0000, K Prateek Nayak wrote:
+Thanks for bringing this interesting topic,
 
-[ snip ]
+On Thu, Oct 01, 2026 at 07:28:36PM +0000, K Prateek Nayak wrote:
+> 
+> Problem
+> =======
+> 
+>                                             %cycles vs global mask operation
+> 
+> global mask                                     : 100.0000%  (var: 3.28%)
+> per-NUMA mask                                   :  32.9209%  (var: 7.77%)
+> per-LLC mask                                    :   1.2977%  (var: 4.85%)
+> per-LLC mask (u8 operation; no LOCK prefix)     :   0.4930%  (var: 0.83%)
+> 
 
-> +static __init void init_sbm_topology(u32 max_apicid)
-> +{
-> +	u32 sbm_shift = x86_topo_system.dom_shifts[TOPO_DIE_DOMAIN] - 1;
+This shows a significant latency improvement, especially in the per-LLC (u64, u8) case.
+May I know if schbench / sched-messaging were used?
 
-As sashiko reported, and also mentioned here:
-https://lore.kernel.org/lkml/20260510155920.2587431-2-yu.c.chen@intel.com/
-Maybe x86_topo_system.dom_shifts[TOPO_DIE_DOMAIN - 1] ?
+> 
+> Future work
+> ===========
+> 
+> o Interoperability with cpumaks since sbm lose the crucial optimizations
+>   that come naturally from for_each_cpu_and() iterations.
+>
+> o Different data representation - using the u8 variant for updates and
+>   then perform a "gather" operation to build a dense mask.
+> 
+> o Extending sbm work to help in wakeup (and possibly resurrect Mel's
+>   optimization from [4] in some form). The current sbm is still far away
+>   from being used for wakeups since  updates  to sbm leaf, even on a
+>   16CPUs per LLC system is visible in benchmark performance (~8-10%).
+> 
 
-> +	int num_sbm_instances, max_threads_per_instance;
-> +
-> +	/*
-> +	 * On Intel systems, memory controllers are present at TOPO_DIE_DOMAIN.
-> +	 * On newer AMD and Hygon systems, LLC is at TOPO_TILE_DOMAIN so use
-> +	 * that instead.
-> +	 */
-> +	if (boot_cpu_data.x86_vendor == X86_VENDOR_AMD ||
-> +	    boot_cpu_data.x86_vendor == X86_VENDOR_HYGON)
-> +		sbm_shift = x86_topo_system.dom_shifts[TOPO_TILE_DOMAIN] - 1;
+If we leverage sbm for the wakeup path, it is a per-LLC mask, there seems to be
+no much difference from Mel Gorman's proposal of allocating per sd_share
+unsigned long idle_cpus_span[]? The frequent update to this mask might still cause
+c2c latency within 1 LLC. A wild guess is that maybe the u8 version is more suitable,
+because it has only max-to-8 CPUs touching the mask at the same time?
 
-Ditto.
+My understanding is that the major case that sbm could fit is turning the global bitmask
+into a per-LLC bitmask, because it mainly avoids CPUs on different LLC/node writing the
+same cache line frequently (nohz.idle_cpus_mask set via nohz_balance_enter_idle() on
+many CPUs, etc), which might cause a costly cache RFO event storm. Meanwhile, with sbm,
+at the reader side, _nohz_idle_balance() could start scanning from the current CPU to find
+an idle CPU, so as to avoid the costly HITM event - the reader is on LLC1, while the writer
+is on LLC0 - so maybe:
+
+for_each_cpu_wrap(balance_cpu, nohz.idle_cpus_mask, this_cpu+1)
+
+could start from this_cpu's LLC sibling first, rather than this_cpu + 1, because this_cpu+1
+might not always be the LLC sibling of this_cpu.
+
+I found that in the current code, there are also other global mask:
+rd->rto_mask(mentioned by Pan Deng when running ffmpeg[1])
+rd->dlo_mask
+tick_broadcast_**mask
+maybe they can also be converted into sbm.
+
+[1] https://lore.kernel.org/lkml/a3207ebf537bbe5605ff5454f63b5604d83a04a0.1753076363.git.pan.deng@intel.com/
 
 thanks,
-Chenyu
+Chenyu 
