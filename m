@@ -1,171 +1,142 @@
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012013.outbound.protection.outlook.com [40.93.195.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1072F3B19B4;
-	Sun,  4 Oct 2026 06:17:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791094634; cv=fail; b=M1Cob5RLYIFsbxO2hyuduY6L+f36CEABpU2o3L5sOyGLzbptC4Zj99BER2o1lTw4G3GdVHC3Rin2+aLUoPLrNx14qEeHXkiGHh27TpzbNoPEXKac28ZLNxPpPXazrldIw5GzYZwvsTqhbnfEjAX/Ft68N6saQ07011WaDXD8b7o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791094634; c=relaxed/simple;
-	bh=vnYrxwZegkDAHKKXxWdFHxNd34svS8aPUUHzPaSgDG4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=LEvlD+haOPXo3TwyR5beDd20DuKvQUC/is+ZmYGQSj6QOnV/kwdw9eOUessux4ZNyjNOLgAKqxHSICHLxnfqhbcxmO7hjcgFh61pEoQRhDYSSZuBKLXLEtu4cO5NmEELvVqC/0qIfHJUrxfwOyqPPfzzLAKeKX2QM+rB2nCDE7A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=0+QJ61+u; arc=fail smtp.client-ip=40.93.195.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F07DA3C198A;
+	Sun,  4 Oct 2026 15:53:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791129207; cv=none; b=dW0v8Xq4xrmI5gsCeUeIdZO7OHE8Gvl1sRfISnbgOEqYNz/Wo8TG/epWJWcLy1OxVHV2YC547C6W92QzoVKEJxEyLeGynF00Alu3t1w7vxA5KuUz0KwHTTEhst05tnaxmNTfe0PCJgcGMYovaOQESzS3m9ghbvedvAvUNOLt/oU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791129207; c=relaxed/simple;
+	bh=lv1tuIGYGldphto25KVS1nVNoKz+O4guecPc91FwUq8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M+1aYO1uRXjH1M80oMKuK3OSDGEAMwFLZQf/nb2XpGM7cvM3Cwc49zbIKK5zfM7rfP939mmLzu4+JNTjFM5Fn5w0cbybhBC9KbX4sLyKDbEiF38Ki9oyms7iJ2R3uENB2KGGU7pewpJcScRkIJE2AG7sGB8BzQt/f/uBZwnE+Ow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a/rhd/M+; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="0+QJ61+u"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mYuY6iYmiS/NQLJxKOWQa7rQLGfSR+8x463KKc/zBP69fbPSQs+obqeO5cmoEO0vlWleawjwgW8cVVgYTgp9T11csjxsF3DZpLpxS7PFkzEfVY7OyiThX8Zgf9NeGQBx/Ug1I0peMjQ9cLXxCCB3eNlCwS0XQ4t2mJr1oc8PGuZn8J81p7Ke9QUMZOijVjNgOZ5zuMsSmkXX/ZWN3laFNgg1zeBrUxSX44diMV2v7fMVEOGW72Cxhw7SUYlraT+KA3wL/gVWkRPYX4KiTKG0pF18CUfk6naG8Ae3UueUDAKJJG10epvn2W2aNGuWH+gx3/pZ4kIHkjjnYtePvG3x4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ku8CI7n4fain/wPasM8PBLT2hTEvR9BKwe1pCJJTKL8=;
- b=h75BBEaIxV7ML2F0T44sVycDVXJ+tkJFC9qUbhQQWUgx3hg5OWM8dzyeYgJCy9oVER//nAzumrh4FNOceFHt0+GBR1q0lqsp3ME1/O1cvbdS+7xXAtRm84Aa6H3RcQYRRZFPL+sB3thLHGQBim9AuZOka3/JUNjfIphIEY6K0ToAfpFliGM5hSxW53twrPve+rYWW0hOIfbmu0nhr4dBpdovByr6pQdJByNRVhPA02+rJSU25Plf+eXu3vFlWBdq0AJs1aKZ5/GM+bCApmW1bUQLSRsFU1rJ5uuNjIHZZPsWjEj00cQK4/SWNPaQ7bEwe6ZtXyKJJ4/8Me09Akt9xQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux.dev smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ku8CI7n4fain/wPasM8PBLT2hTEvR9BKwe1pCJJTKL8=;
- b=0+QJ61+upzSwSWep/+tRpPqO/jCB5HN1HYNcl3Zs2ZOV+dCAt/161fQAJt36OTV9GFsrY8QNVgDeNVsbT/XdUwW+HuSPA/sFIATCnglwg67eE0pJPgyeR3MePVRhZHsCvmeFqMHGpFZtV9vPmA0ROII9H1ns84FHqJ+RMey02TY=
-Received: from CH0PR04CA0116.namprd04.prod.outlook.com (2603:10b6:610:75::31)
- by CH4PR12MB026689.namprd12.prod.outlook.com (2603:10b6:610:506::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.472.20; Sun, 4 Oct
- 2026 06:17:07 +0000
-Received: from CH1PEPF0000A349.namprd04.prod.outlook.com
- (2603:10b6:610:75:cafe::23) by CH0PR04CA0116.outlook.office365.com
- (2603:10b6:610:75::31) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.472.20 via Frontend Transport; Sun, 4
- Oct 2026 06:17:07 +0000
-X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
- is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
-Received: from satlexmb08.amd.com (165.204.84.17) by
- CH1PEPF0000A349.mail.protection.outlook.com (10.167.244.9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.472.14 via Frontend Transport; Sun, 4 Oct 2026 06:17:07 +0000
-Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb08.amd.com
- (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.49; Sun, 4 Oct
- 2026 01:17:07 -0500
-Received: from [172.30.0.12] (10.180.168.240) by satlexmb08.amd.com
- (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.49 via Frontend
- Transport; Sun, 4 Oct 2026 01:17:04 -0500
-Message-ID: <aec728b2-b8f6-40e9-900a-0e16fc3524ce@amd.com>
-Date: Sun, 4 Oct 2026 11:47:02 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a/rhd/M+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1791129205; x=1822665205;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lv1tuIGYGldphto25KVS1nVNoKz+O4guecPc91FwUq8=;
+  b=a/rhd/M+HNhyj7UGj4+jyBY4CpPsxLeTN/XKLSYpdSLMpdr4d5kugj1l
+   fAf1zNW7MuI6RXVHwyAgcg0b/f94pzOw/SJkytwwlHiPFJZGw9HeA2QS7
+   bPS1jf14N+9K3nyDWUiai0W53NeiWNJ1VegNe0CBBtFa2MZhTV2onlM9X
+   88MA1CdmjbOX2D9VSEW9/RG4PoVCtP81+ypn3CV8yCfuG7akvcA9QSqKv
+   4maMcLKifI1kDfWEorJxl7JzA3N4hPTQACblGq9rofCKi7nOGTzW/zAne
+   F1hhrg3vXH9iXspA3JydVGtZ0OHTa0A0YMgtw6WH2LpPozWq2LixruGPK
+   Q==;
+X-CSE-ConnectionGUID: ya/AVUrMTfOt+j54CmKA1A==
+X-CSE-MsgGUID: N/ChAPzFQma8yLLwtI2NDA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11925"; a="95627950"
+X-IronPort-AV: E=Sophos;i="6.27,139,1787036400"; 
+   d="scan'208";a="95627950"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2026 08:53:23 -0700
+X-CSE-ConnectionGUID: oEBoJPlCQ2G9hBPfsJYkmw==
+X-CSE-MsgGUID: tlqqacLyQbeHvEGJeU3+Tw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,139,1787036400"; 
+   d="scan'208";a="314637099"
+Received: from lkp-server01.sh.intel.com (HELO 462990a40a85) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 04 Oct 2026 08:53:19 -0700
+Received: from kbuild by 462990a40a85 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1xDOWa-00000000UqT-0uUY;
+	Sun, 04 Oct 2026 15:53:16 +0000
+Date: Sun, 4 Oct 2026 23:52:18 +0800
+From: kernel test robot <lkp@intel.com>
+To: Birger Koblitz <mail@birger-koblitz.de>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, Eric Dumazet <edumazet@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, Jianhui Xu <neuromoments@gmail.com>,
+	Birger Koblitz <mail@birger-koblitz.de>
+Subject: Re: [PATCH net-next v16 13/13] ax88796b: Add support for AX88772D,
+ AX88179A and AX88279
+Message-ID: <202610042301.MlmvbRpS-lkp@intel.com>
+References: <20261004-ax88179a-v16-13-2a9ae4e68f7b@birger-koblitz.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3 09/13] x86/cpu/topology: Initialize sbm topology
- after topology parsing
-To: Chen Yu <chen.yu@linux.dev>
-CC: Peter Zijlstra <peterz@infradead.org>, Chen Yu <yu.c.chen@intel.com>, Tim
- Chen <tim.c.chen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, Juri Lelli
-	<juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, Andrew
- Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>,
-	<linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-	<linux-s390@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-	<linux-mips@vger.kernel.org>, <loongarch@lists.linux.dev>,
-	<driver-core@lists.linux.dev>, Thomas Gleixner <tglx@kernel.org>, Borislav
- Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
-	<rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman
-	<mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, Shrikanth Hegde
-	<sshegde@linux.ibm.com>, "H. Peter Anvin" <hpa@zytor.com>
-References: <20261001192849.74788-1-kprateek.nayak@amd.com>
- <20261001192849.74788-10-kprateek.nayak@amd.com>
- <asC8bgvYsVkkcVlO@three-body>
-Content-Language: en-US
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-In-Reply-To: <asC8bgvYsVkkcVlO@three-body>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH1PEPF0000A349:EE_|CH4PR12MB026689:EE_
-X-MS-Office365-Filtering-Correlation-Id: d707e28a-ea2c-43d5-b4bb-08df21df1e24
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|82310400026|376014|7416014|1800799024|36860700016|22082099003|18002099003|10067099003|13003099007|4143699003|56012099006|11063799006;
-X-Microsoft-Antispam-Message-Info:
-	FctTICb4hkLVQL8lNHUMe8SYsHrgUgn/85QYDHI6/UOs0CslYog24vcBxQRMMGt69Hwr856XIhheiWTtzHYfuMXpNNLpTTcmGVQr/pfIKzisu7iefj7dKXgAwqYhlql7vcpwMdPqCuieA1QxmhRbKl72BMSTSfeeVV63ub9kyWbgnDBbvngT1WahYvD7sF9oIabALvf71ipVeQtqgYBXlCrL84ZdISeB7dqym1LlTbXiwls68frEEJMlqO1kd12DQyZlcDOyzrBNhRpOB0XJps+v2kf0OGMiFDnfOaUFapBn55XIB6hypAgUAy27+PiGA1tODILHbkJvrHVitO/YlYuW8Aq1/vqmDPB6D4eYIYr0+ODIu1C2KhQkRrs9ZT+AX5WQNfvpuBabKRLA9hMIQIQ8dsdM0XzGJ2LoceOB2kjj2Ty4O52Usw5SZhyPMyI89DgDjSUzjXM4bIxz3npuxfJGpWXp74selmb+d03wyw7RVGtfvR5HnIAPUFvSrAeLmhYfXl6Zv1Nn5awbAbruLc5Ta9NoVdGH9ia9Vwuk784PSJ07snryiCtgPtB/F0wA40Dx+c9L2agithIp0hlHkaCPBNWo//VcSm4lSkQP4ajgelUmjkrFX1DKn2hLFm7KeHfzx3TSP5Oy6AmGuy3dftOJ8WnzNSXkNWjLbXB1jGU2F5I1M2OBCGbBYVQks6MBauhFzwEVaphn5yksKk/CQg==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(23010399003)(82310400026)(376014)(7416014)(1800799024)(36860700016)(22082099003)(18002099003)(10067099003)(13003099007)(4143699003)(56012099006)(11063799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	FdAZv9hSsL4UJyE9LfkOJebz6PdP5XcXzBl/DkMMjvhgMLedr1DXM7TPdgS6ySgaVOAN/Xr9ufVRrlgkuUaJSDHYCdAIZHBcK/W/N5ioSoVNE3xDyCdV6fYHLNtE+Em1UeZcLHfnwUvMPVv9NC27dTLi0UoAK5/XCOLTG7XpvBufZn/dkvt6ibnB1/oe1JLg3OBBBg8UdH3Kgirg+Jb0gcfIFbf0FCJ0MSHvpe0S5TwoHOdggRsgI8Kdoxjl720JpSGYdgZdanjSOUtIVMCzCykRB3L4VSrw2S/bxxInliTtpjHYJsgPWQLaeN/xTnzeGLvYWZMmP+ZLNvAyogf5YRv4ZpZyzouAHLeG+Yd8NXWKYtj8gnDFXNlKfcp0FsffEwFpfcJbEngiIA7LDIK+zSH/9qZPxGxdFqVzP+1mZaz/qW0VItH4rjJyLxMsYe0t
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Oct 2026 06:17:07.6415
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d707e28a-ea2c-43d5-b4bb-08df21df1e24
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH1PEPF0000A349.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH4PR12MB026689
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261004-ax88179a-v16-13-2a9ae4e68f7b@birger-koblitz.de>
 
-Hello Chenyu,
+Hi Birger,
 
-On 10/3/2026 1:57 PM, Chen Yu wrote:
-> Hello Prateek,
-> 
-> On Thu, Oct 01, 2026 at 07:28:45PM +0000, K Prateek Nayak wrote:
-> 
-> [ snip ]
-> 
->> +static __init void init_sbm_topology(u32 max_apicid)
->> +{
->> +	u32 sbm_shift = x86_topo_system.dom_shifts[TOPO_DIE_DOMAIN] - 1;
-> 
-> As sashiko reported, and also mentioned here:
-> https://lore.kernel.org/lkml/20260510155920.2587431-2-yu.c.chen@intel.com/
-> Maybe x86_topo_system.dom_shifts[TOPO_DIE_DOMAIN - 1] ?
+kernel test robot noticed the following build warnings:
 
-Ack!
+[auto build test WARNING on 071876fd50482a68603a9460d80dd6dd58827ee1]
 
-I was testing this on a 2CCX (TILE) = 1 CCD (DIE) machine and I
-failed to notice my mistake since:
+url:    https://github.com/intel-lab-lkp/linux/commits/Birger-Koblitz/phylink-Add-phylink_mac_interrupt/20261004-073905
+base:   071876fd50482a68603a9460d80dd6dd58827ee1
+patch link:    https://lore.kernel.org/r/20261004-ax88179a-v16-13-2a9ae4e68f7b%40birger-koblitz.de
+patch subject: [PATCH net-next v16 13/13] ax88796b: Add support for AX88772D, AX88179A and AX88279
+config: m68k-defconfig (https://download.01.org/0day-ci/archive/20261004/202610042301.MlmvbRpS-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 16.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20261004/202610042301.MlmvbRpS-lkp@intel.com/reproduce)
 
-  x86_topo_system.dom_shifts[TOPO_DIE_DOMAIN] - 1
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202610042301.MlmvbRpS-lkp@intel.com/
 
-and
+All warnings (new ones prefixed by >>):
 
-  x86_topo_system.dom_shifts[TOPO_DIE_DOMAIN] - 1
+   In file included from include/linux/kasan-checks.h:5,
+                    from include/asm-generic/rwonce.h:26,
+                    from ./arch/m68k/include/generated/asm/rwonce.h:1,
+                    from include/linux/compiler.h:369,
+                    from include/linux/array_size.h:5,
+                    from include/linux/kernel.h:16,
+                    from drivers/net/phy/ax88796b.c:6:
+   drivers/net/phy/ax88796b.c: In function 'asix_ax88772D_get_features':
+>> drivers/net/phy/ax88796b.c:217:42: warning: unused variable 'mask' [-Wunused-variable]
+     217 |         __ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = {};
+         |                                          ^~~~
+   include/linux/types.h:10:23: note: in definition of macro 'DECLARE_BITMAP'
+      10 |         unsigned long name[BITS_TO_LONGS(bits)]
+         |                       ^~~~
+   drivers/net/phy/ax88796b.c:217:9: note: in expansion of macro '__ETHTOOL_DECLARE_LINK_MODE_MASK'
+     217 |         __ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = {};
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-were the same.
 
-> 
->> +	int num_sbm_instances, max_threads_per_instance;
->> +
->> +	/*
->> +	 * On Intel systems, memory controllers are present at TOPO_DIE_DOMAIN.
->> +	 * On newer AMD and Hygon systems, LLC is at TOPO_TILE_DOMAIN so use
->> +	 * that instead.
->> +	 */
->> +	if (boot_cpu_data.x86_vendor == X86_VENDOR_AMD ||
->> +	    boot_cpu_data.x86_vendor == X86_VENDOR_HYGON)
->> +		sbm_shift = x86_topo_system.dom_shifts[TOPO_TILE_DOMAIN] - 1;
-> 
-> Ditto.
+vim +/mask +217 drivers/net/phy/ax88796b.c
 
-Thank you! Will make sure I pull a VM with weird topology next time
-during my testing to see if everything is correct.
+   213	
+   214	static int asix_ax88772D_get_features(struct phy_device *phydev)
+   215	{
+   216		int ret;
+ > 217		__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = {};
+   218	
+   219		/* MDIO_DEVS1/2 empty, so set mmds_present bits to allow reading abilities */
+   220		phydev->c45_ids.mmds_present |= MDIO_DEVS_PMAPMD | MDIO_DEVS_AN;
+   221	
+   222		ret = genphy_read_abilities(phydev);
+   223		if (ret < 0)
+   224			return ret;
+   225	
+   226		/* AX88772D does not support reported 1000baseT mode */
+   227		linkmode_clear_bit(ETHTOOL_LINK_MODE_1000baseT_Full_BIT, phydev->supported);
+   228	
+   229		return 0;
+   230	}
+   231	
 
--- 
-Thanks and Regards,
-Prateek
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
