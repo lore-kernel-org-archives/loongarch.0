@@ -1,236 +1,159 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F51480DE3;
-	Sun,  4 Oct 2026 20:12:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A29C47ECFB;
+	Mon,  5 Oct 2026 15:23:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791144757; cv=none; b=bKfsSZWsvggdRyNFdauGQMGBdSDlg5JZ9RmsHhy3eEHwWbLByi9V0z3lTDpguFxGk3f9VckC5gThh45phtBu4GwrFZ6UPyiVJfNF8+2UeQy5fz3wlDf+nuxkVFdG/6R2WK+js2plGNnv+Ofd1W09+9C5MyN7VIA5MlenILuDLf4=
+	t=1791213810; cv=none; b=qd+B0XkQPCMpfwakqP/r0XgMUheriZrtI3ukP6Wlt4zbbfeRgMFPXhenME925WW64AQpd/WPE+BqDwiyzEIOXT3NJhoAD9NebBPkVUb0k8Lb8QiMmXTKZ78UNEcoVQnwGzxlSsyD2QBO4miQ3FHDQS5YzkKs+dYJEzY0O+1gXPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791144757; c=relaxed/simple;
-	bh=6i3i7WsSNX6ARj4QoJw0wpV9iavfas580CAV2v7AKKY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZmlyVL3PmcohwljyX6OvJjGy5dcbZR49+6gOJt4NfqUCFB6N1KqonhoASFNgGL13EZFu6d8sEWRROmTf3+NdZ+Ad73uSRg3g3RT0V03rwl4pP8U2/cJqP6OeU8HZ3dPA6uDb+KlNp3+7GZA6PY6RGmnGz7JSGlOPILUJbSBweck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ep8BLexM; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1791213810; c=relaxed/simple;
+	bh=dbxko1Tskh0UHfn8lMh+ZDyKxaEwpceAQxIp+yv4VEc=;
+	h=MIME-Version:Content-Type:Subject:From:To:Cc:In-Reply-To:
+	 References:Date:Message-Id; b=Q3v03owkCbm2gK2tsfkwaLJ/FbMX7ZsBZS7S3ivVBC2TcPkc6MCJZKiInmVQhHQQnbwb8B8hE006NQJDfiUp/jrBYoHxVoMHyXJCy7GkeOpvn5OD3u2dkmoOeliNSImUfklOk8QTbYay8mXhV2f3KrQBNCAyoa6zla4eXSJ7r5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IEn/2TGV; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ep8BLexM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791144756; x=1822680756;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6i3i7WsSNX6ARj4QoJw0wpV9iavfas580CAV2v7AKKY=;
-  b=Ep8BLexMG0MLTFZAikPnrJYuErrJXXAKB0M85z7kyLGGz5wdoor2njc7
-   QxCCxRb/qTVMImuIpZ5YYBvLmmww2AmMTQrsShZUuEBNtbuveZXAUFwnY
-   XT5+w4lD9Smys48ZeLYY/pjYtJO1H0cJnF/B16XjVmR1hpqGdOb6IwEbe
-   4D+vV1LOPyXXl6VQf20K0aQHg3bGy0z3mc5FCofdS4X6oJe0Wh2AiUyCj
-   sMgrjy2ud0lObiTb8F7E3KTi1CZXNp6gkI9BIdP21VDqoBN4H/IeLOCaO
-   /8QAK8ODl7SYDEa2vXWjerVKVLyPyia1Wv773dMx3alAf9HB+ezCOMadI
-   g==;
-X-CSE-ConnectionGUID: QR16WJnjSey7aKZkP3WFWw==
-X-CSE-MsgGUID: 8pNkiOB1S2e/gfxXBj5Esg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11925"; a="94697106"
-X-IronPort-AV: E=Sophos;i="6.27,141,1787036400"; 
-   d="scan'208";a="94697106"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2026 13:12:36 -0700
-X-CSE-ConnectionGUID: DRFD465VTQu+1j2b7Swpcg==
-X-CSE-MsgGUID: 5q0Xphp/S2ionY8l3AbMXg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,141,1787036400"; 
-   d="scan'208";a="304614437"
-Received: from lkp-server01.sh.intel.com (HELO 462990a40a85) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 04 Oct 2026 13:12:31 -0700
-Received: from kbuild by 462990a40a85 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1xDSZQ-00000000V2X-2RJA;
-	Sun, 04 Oct 2026 20:12:28 +0000
-Date: Mon, 5 Oct 2026 04:12:13 +0800
-From: kernel test robot <lkp@intel.com>
-To: Birger Koblitz <mail@birger-koblitz.de>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, Eric Dumazet <edumazet@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	netdev@vger.kernel.org, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	Jianhui Xu <neuromoments@gmail.com>,
-	Birger Koblitz <mail@birger-koblitz.de>
-Subject: Re: [PATCH net-next v16 04/13] ax88179_178a: Add HW support for
- AX179A-based chips
-Message-ID: <202610050430.ZlYvvYse-lkp@intel.com>
-References: <20261004-ax88179a-v16-4-2a9ae4e68f7b@birger-koblitz.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IEn/2TGV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 563EF1F000FF;
+	Mon,  5 Oct 2026 15:23:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791213808;
+	bh=g/JAGXLuoKcmjyycPO+efDbYZ+A0Nw5jhE4IlEY1e9Q=;
+	h=Subject:From:To:Cc:In-Reply-To:References:Date;
+	b=IEn/2TGVQmVfWJzysBgUUpj6pW/dkCAaE4Dw4bTbGlygIokmqLODmT61CAWHv6ov6
+	 GB3o6iaQDWEtEYnu1SBEAOiyaAMy/H6OGCiiiQV+Ac/dT82KhltC2PVpFKCO22PlNt
+	 fTP11ImSAeHJKKnC0BaKx8mpcJYl4ih7Zgh+acyWBjzek5HUZGNTVYjFx8GUVkKnTW
+	 xm1f38L58kAbjFnXcyr6DQEuVJI2qzdSku3qvijr7z9PlWowrjR67rJ/aWmsUM1qGm
+	 e3FYPKVO/70GF5AjlrD0LuAPQJY6loLKBsKPgCe9wa9mHOfjNY4MpjwqbQ11Oixkdn
+	 AWJ9mpIcaX52A==
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261004-ax88179a-v16-4-2a9ae4e68f7b@birger-koblitz.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v1 0/3] <linux/mod_devicetable.h> deprecation continues
+From: Nathan Chancellor <nathan@kernel.org>
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig_=28The_Capable_Hub=29?= <u.kleine-koenig@baylibre.com>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+ Huacai Chen <chenhuacai@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+ Nicolas Schier <nsc@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+ Takashi Sakamoto <o-takashi@sakamocchi.jp>, 
+ Raag Jadav <raag.jadav@intel.com>, "Martin K. Petersen" <mkp@kernel.org>, 
+ Heiner Kallweit <hkallweit1@gmail.com>, 
+ Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@kernel.org>, 
+ Josh Poimboeuf <jpoimboe@kernel.org>, 
+ Jorge Sanjuan Garcia <dev-jorge.sanjuangarcia@duagon.com>, 
+ Jose Javier Rodriguez Barbarin <dev-josejavier.rodriguez@duagon.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Alexey Gladkov <legion@kernel.org>, 
+ Hasan Basbunar <basbunarhasan@gmail.com>, Hugh Dickins <hughd@google.com>, 
+ Armin Wolf <W_Armin@gmx.de>, WANG Xuerui <kernel@xen0n.name>, 
+ kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+ Sudeep Holla <sudeep.holla@kernel.org>
+In-Reply-To: <cover.1789988540.git.u.kleine-koenig@baylibre.com>
+References: <cover.1789988540.git.u.kleine-koenig@baylibre.com>
+Date: Mon, 05 Oct 2026 17:23:16 +0200
+Message-Id: <179121379654.1159753.4410832336442519712.b4-review@b4>
+X-Mailer: b4 0.17-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4378; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=dbxko1Tskh0UHfn8lMh+ZDyKxaEwpceAQxIp+yv4VEc=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDFmHD7z4FrFFbNlr2zsC/unFV0/IM9hq/Fjw/K/npB0v5
+ /b6mHT4d5SyMIhxMciKKbJUP1Y9bmg45yzjjVOTYOawMoEMYeDiFICJVOoz/GZ7eeNY9Oc7IUff
+ aWwuYt1yJ4atdiKDqf/pwBD9Y1HmIryMDIsLG954XN9v8ocx4N1d55IXuYuYK/1TZgoYd7zy1wr
+ +zAoA
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-Hi Birger,
+Hi Uwe,
 
-kernel test robot noticed the following build errors:
+> this is a next step in the deprecation of <linux/mod_devicetable.h>.
+> scripts/mod/devicetable-offsets.c and scripts/mod/file2alias.c are the
+> only users of that header that use more than a few device-id structs. So
+> their number of lines actually grows when unfolding the needed includes
+> into them. Still it is a reduction in build dependencies.
+> 
+> I suggest to take this via kbuild during the merge window. Would be great to
+> cook in next for a while before.
+> 
+> Best regards
+> Uwe
+> 
+> Uwe Kleine-König (The Capable Hub) (3):
+>   Move struct cpu_feature to <linux/cpufeature.h>
+>   devicetable-offsets: Include the needed device-id headers instead of
+>     the catch-all
+>   file2alias: Include the needed device-id headers instead of the
+>     catch-all
+> 
+>  arch/loongarch/kvm/main.c         |  2 +-
+>  include/linux/cpufeature.h        | 12 ++++++-
+>  include/linux/mod_devicetable.h   | 13 -------
+>  scripts/mod/devicetable-offsets.c | 57 ++++++++++++++++++++++++++++++-
+>  scripts/mod/file2alias.c          | 56 +++++++++++++++++++++++++++++-
+>  5 files changed, 123 insertions(+), 17 deletions(-)
 
-[auto build test ERROR on 071876fd50482a68603a9460d80dd6dd58827ee1]
+My apologies for taking some time to get to this. I was planning on
+building it using my personal test matrix on a local machine at home
+while travelling for Plumbers to avoid tying up my main workstation but
+my home's internet connection has been down for two weeks with very
+little hope of getting it online before I am back...
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Birger-Koblitz/phylink-Add-phylink_mac_interrupt/20261004-073905
-base:   071876fd50482a68603a9460d80dd6dd58827ee1
-patch link:    https://lore.kernel.org/r/20261004-ax88179a-v16-4-2a9ae4e68f7b%40birger-koblitz.de
-patch subject: [PATCH net-next v16 04/13] ax88179_178a: Add HW support for AX179A-based chips
-config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20261005/202610050430.ZlYvvYse-lkp@intel.com/config)
-compiler: clang version 24.0.0git (https://github.com/llvm/llvm-project 5f609f950d2e80addf5566623013db68394334db)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20261005/202610050430.ZlYvvYse-lkp@intel.com/reproduce)
+Sashiko has a few comments that seem relevant (most of them are the same
+issue):
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202610050430.ZlYvvYse-lkp@intel.com/
+  https://sashiko.dev/#/patchset/cover.1789988540.git.u.kleine-koenig@baylibre.com
 
-All errors (new ones prefixed by >>):
+I have applied it on top of next-20261005 to see what conflicts are
+looking like. I see a merge conflict with this series from
 
->> drivers/net/usb/ax88179a_devices.c:694:2: error: incompatible integer to pointer conversion passing 'u64' (aka 'unsigned long long') to parameter of type '__u64 *' (aka 'unsigned long long *'); take the address with & [-Wint-conversion]
-     694 |         le64_to_cpus(rx_hdr);
-         |         ^~~~~~~~~~~~~~~~~~~~
-   include/linux/byteorder/generic.h:111:22: note: expanded from macro 'le64_to_cpus'
-     111 | #define le64_to_cpus __le64_to_cpus
-         |                      ^
-   include/uapi/linux/byteorder/big_endian.h:94:37: note: expanded from macro '__le64_to_cpus'
-      94 | #define __le64_to_cpus(x) __swab64s((x))
-         |                                     ^~~
-   include/uapi/linux/swab.h:265:46: note: passing argument to parameter 'p' here
-     265 | static __always_inline void __swab64s(__u64 *p)
-         |                                              ^
-   1 error generated.
+  d59717cfbe1e ("firmware: arm_scmi: Add SCMI device table alias support")
 
+in the soc tree, which is fairly trivial. There is a semantic conflict
+that results in a build error from
 
-vim +694 drivers/net/usb/ax88179a_devices.c
+  fe7f2a805443 ("firmware: smccc: Add an Arm SMCCC bus")
 
-   655	
-   656	static int ax88179a_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
-   657	{
-   658		struct ax88179_data *ax179_data = dev->driver_priv;
-   659		struct sk_buff *ax_skb;
-   660		u32 hdr_off, pkt_end;
-   661		u64 *pkt_desc_ptr;
-   662		u16 vlan_tag;
-   663		u16 pkt_cnt;
-   664		u64 rx_hdr;
-   665	
-   666		/* SKB contents for AX179A-based chips:
-   667		 *   <packet 1>
-   668		 *   ...
-   669		 *   <packet N>
-   670		 *   <per-packet metadata entry 1>
-   671		 *   ...
-   672		 *   <per-packet metadata entry N>
-   673		 *   <rx_hdr>
-   674		 *
-   675		 * where:
-   676		 *   <packet N> contains pkt_len data bytes and padding:
-   677		 *		2 bytes of IP alignment (optional, depends on AX_RX_CTL_IPE flag)
-   678		 *		packet data received
-   679		 *		optional padding to 8-bytes boundary
-   680		 *   <per-packet metadata entry N> contains 8 bytes:
-   681		 *		pkt_len and fields AX_RXHDR_*
-   682		 *   <rx-hdr>	contains 8 bytes:
-   683		 *		pkt_cnt and hdr_off (offset of <per-packet metadata entry 1>)
-   684		 *
-   685		 * pkt_cnt is number of entries in the per-packet metadata array.
-   686		 */
-   687	
-   688		if (!skb || skb->len < sizeof(rx_hdr))
-   689			goto err;
-   690	
-   691		/* RX Descriptor Header */
-   692		skb_trim(skb, skb->len - sizeof(rx_hdr));
-   693		rx_hdr = *(u64 *)skb_tail_pointer(skb);
- > 694		le64_to_cpus(rx_hdr);
-   695	
-   696		/* Check these packets */
-   697		hdr_off = FIELD_GET(AX179A_RX_DH_DESC_OFFSET, rx_hdr);
-   698		pkt_cnt = rx_hdr & AX179A_RX_DH_PKT_CNT_MASK;
-   699	
-   700		/* Consistency check header position */
-   701		if (hdr_off != skb->len - (pkt_cnt * sizeof(rx_hdr)))
-   702			goto err;
-   703	
-   704		/* Make sure that the bounds of the metadata array are inside the SKB
-   705		 * (and in front of the counter at the end).
-   706		 */
-   707		if (pkt_cnt * 8 + hdr_off > skb->len)
-   708			goto err;
-   709	
-   710		/* Packets must not overlap the metadata array */
-   711		skb_trim(skb, hdr_off);
-   712	
-   713		if (!pkt_cnt)
-   714			goto err;
-   715	
-   716		/* Get the first RX packet descriptor */
-   717		pkt_desc_ptr = (u64 *)(skb->data + hdr_off);
-   718	
-   719		pkt_end = 0;
-   720		while (pkt_cnt--) {
-   721			u64 pkt_desc = le64_to_cpu(*pkt_desc_ptr);
-   722			u32 pkt_len_plus_padd;
-   723			u32 pkt_len;
-   724	
-   725			pkt_len = FIELD_GET(AX179A_RX_PD_LEN, pkt_desc);
-   726			pkt_len -= (ax179_data->ip_align ? 2 : 0);
-   727			pkt_len_plus_padd = ((pkt_len + 7 + (ax179_data->ip_align ? 2 : 0)) & 0x7FFF8);
-   728	
-   729			pkt_end += pkt_len_plus_padd;
-   730			if (pkt_end > hdr_off || (pkt_cnt == 0 && pkt_end != hdr_off))
-   731				goto err;
-   732	
-   733			if (pkt_desc & AX179A_RX_PD_DROP || !(pkt_desc & AX179A_RX_PD_RX_OK) ||
-   734			    pkt_len > (dev->hard_mtu + AX179A_RX_HW_PAD) || pkt_len < 2 + ETH_HLEN) {
-   735				skb_pull(skb, pkt_len_plus_padd);
-   736	
-   737				/* Next RX Packet Descriptor */
-   738				pkt_desc_ptr++;
-   739				continue;
-   740			}
-   741	
-   742			ax_skb = netdev_alloc_skb_ip_align(dev->net, pkt_len);
-   743			if (!ax_skb)
-   744				goto err;
-   745	
-   746			skb_put(ax_skb, pkt_len);
-   747			memcpy(ax_skb->data, skb->data + (ax179_data->ip_align ? AX179A_RX_HW_PAD : 0),
-   748			       pkt_len);
-   749	
-   750			if (ax179_data->rx_checksum)
-   751				ax88179a_rx_checksum(ax_skb, pkt_desc);
-   752	
-   753			if (pkt_desc & AX179A_RX_PD_VLAN) {
-   754				vlan_tag = pkt_desc >> AX179A_RX_PD_VLAN_SHIFT;
-   755				__vlan_hwaccel_put_tag(ax_skb, htons(ETH_P_8021Q), vlan_tag);
-   756			}
-   757	
-   758			usbnet_skb_return(dev, ax_skb);
-   759			skb_pull(skb, pkt_len_plus_padd);
-   760	
-   761			/* Next RX Packet Header */
-   762			pkt_desc_ptr++;
-   763		}
-   764	
-   765		return 1;
-   766	
-   767	err:
-   768		return 0;
-   769	}
-   770	
+in the arm64 tree, which is also trivial but subtle.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+  scripts/mod/devicetable-offsets.c:317:2: error: invalid application of 'sizeof' to an incomplete type 'struct arm_smccc_device_id'
+    317 |         DEVID(arm_smccc_device_id);
+        |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+  scripts/mod/devicetable-offsets.c:62:43: note: expanded from macro 'DEVID'
+     62 | #define DEVID(devid) DEFINE(SIZE_##devid, sizeof(struct devid))
+        |                      ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
+  include/linux/kbuild.h:6:62: note: expanded from macro 'DEFINE'
+      6 |         asm volatile("\n.ascii \"->" #sym " %0 " #val "\"" : : "i" (val))
+        |                                                                     ^~~
+  scripts/mod/devicetable-offsets.c:317:8: note: forward declaration of 'struct arm_smccc_device_id'
+    317 |         DEVID(arm_smccc_device_id);
+        |               ^
+  scripts/mod/devicetable-offsets.c:318:2: error: offsetof of incomplete type 'struct arm_smccc_device_id'
+    318 |         DEVID_FIELD(arm_smccc_device_id, func_id);
+        |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  scripts/mod/devicetable-offsets.c:64:32: note: expanded from macro 'DEVID_FIELD'
+     64 |         DEFINE(OFF_##devid##_##field, offsetof(struct devid, field))
+        |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  include/linux/stddef.h:16:32: note: expanded from macro 'offsetof'
+     16 | #define offsetof(TYPE, MEMBER)  __builtin_offsetof(TYPE, MEMBER)
+        |                                 ^
+  include/linux/kbuild.h:6:62: note: expanded from macro 'DEFINE'
+      6 |         asm volatile("\n.ascii \"->" #sym " %0 " #val "\"" : : "i" (val))
+        |                                                                     ^~~
+  scripts/mod/devicetable-offsets.c:317:8: note: forward declaration of 'struct arm_smccc_device_id'
+    317 |         DEVID(arm_smccc_device_id);
+        |               ^
+  2 errors generated.
+
+If you would like this in 7.4-rc1, I am not opposed to sticking your v2
+into -next now but I plan to finalize the Kbuild tree for 7.4 around
+October 15, so we'd only get a week or so of build coverage. If that
+feels like too little, we should defer this until after 7.4-rc1 is out.
+
+-- 
+Cheers,
+Nathan
+
