@@ -1,291 +1,186 @@
-Received: from bkemail.birger-koblitz.de (bkemail.birger-koblitz.de [23.88.97.239])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78CB73603C7
-	for <loongarch@lists.linux.dev>; Tue,  6 Oct 2026 03:05:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.88.97.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66DA52931CB;
+	Tue,  6 Oct 2026 08:54:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791255939; cv=none; b=N57a774scTlBbHM9i0KYDEDwz3ggW/fp1WTpXtT96+DBJoode+335Zg79rWHizlV3NCbWmKbUo88shuVs3cEWryXDM3a+0kFghnPufyUVq7EOdi6/pHFWaCFjiyW9nCsUeZQh8vCMBNF6elY/NT46JBoaUO1prwQeugdq4u/VhI=
+	t=1791276866; cv=none; b=BS+cH+y6bfAI9fNRCcn1EDo/KN5BfF1zMmAP2fwH4310kfWJb9ezIy15DLjVQrlyP58xsEcmn3GiDM6T65G+ubJSRWWrvDZKw3URLInJMrGEVh/ZNKN5imypGJ0pc+D9mYyEiSVo3r0OoGMmNxyKlqdY3+Vbl3cQoJGDHyCElik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791255939; c=relaxed/simple;
-	bh=ZWbVkBBHOikO8prQ7j8EVAvd2Arugi8HsU4qDe8jl3M=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=XRFVs9qQToodgvp1Az9iGB7i+mQ3jZHFJMGil6wcfuIzesKFP0UwAZpT1C7lUQm+59tV7/28uFZBtFkOr2sLumBNXQA57ai7Hl/GllmVG0x4pz9LalsB0oUk4ABzAkZajlBsvuCHNvPANGvn2U5hXkedo4DYdIK8Utw9pSb269I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=birger-koblitz.de; spf=pass smtp.mailfrom=birger-koblitz.de; dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b=MQUkWei8; dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b=tIrHUZyb; arc=none smtp.client-ip=23.88.97.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=birger-koblitz.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=birger-koblitz.de
+	s=arc-20240116; t=1791276866; c=relaxed/simple;
+	bh=urxC8lW8Cd6yGjZ29oZvHyXOLt5KM7BDBnHHCG8V+9A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ozePoJicSEtldj0+M+Ovc72o0G1+LRImOxCUjthh0Hp3waEKEtXm8TPJgaf4ob87FEpX7Mc4IbaTwN2eBKBfehPk12+dJaOhe/DeToWSXTsqPmPJYFEy8hluHjIiCNZm2Q5z4sjusKQsdXdxp/b3hOhi2tW7vnNAd3w6JJEj3mg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E246Uhk4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b="MQUkWei8";
-	dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b="tIrHUZyb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=birger-koblitz.de;
-	s=default; t=1791255933;
-	bh=ZWbVkBBHOikO8prQ7j8EVAvd2Arugi8HsU4qDe8jl3M=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=MQUkWei8P3irH2bFEaQehzrt8KskTmAZNshcQlOqiDzq2/qokx+EA7Q/qJ4TDR5GK
-	 5+Bey1/0RDkkALkh4K3PB1QB95PAucaSn3ltSOSGCskRrEFFGctMEouJmvVO5ZUa8a
-	 k1Pg4wFh4mMnA82stvynmam36xtlwxmdi1Asqq4Poh4w3wlXWb4shep70Exc6WGZpY
-	 5OeSF9KL61OK+xWcx7o/HleZQpPQnTJ2YoFBdLN6ixTFJS9UhG1H2kk2ZepkyCZy4z
-	 +HffODP9EppzNNDCw5wHj2wm6r+40fLd2jfpGV2GfjbK15C98WXu33u/oVf+I25ZpM
-	 5PdHqvfsxuG2g==
-Received: by bkemail.birger-koblitz.de (Postfix, from userid 109)
-	id 0B7D0485AA; Tue,  6 Oct 2026 03:05:33 +0000 (UTC)
-X-Spam-Level: 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=birger-koblitz.de;
-	s=default; t=1791255916;
-	bh=ZWbVkBBHOikO8prQ7j8EVAvd2Arugi8HsU4qDe8jl3M=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=tIrHUZyb7qCK1FW8A9EqFdVpKhAucq8363LiVvgG9zjSgVmnKH17DlQQc9TCUK6+q
-	 MYfWuOpVV/VGXEl3duveqUhxs1wrIwPWop+smx1e5Og84Iks4n9XjpkXo/ejno0KUx
-	 ZtO+kwyTGguVM+Ym4EJMEuQT2ds3FWfwvg9eQIUD6EbuvnqaByAun7twIJDjZI4w0s
-	 xbkJ5m/qOzYpKelOXpdvJ2Y2/hYW4jnC/Re1uxNyjW6g45muslT45/n04InejwkXAC
-	 ojO7I2hfORR2cjE16CS3g7/9N2gZ7n1X8oQRYF9OTFccU9VOQmLjp5oTGmzpUC29E+
-	 SXVwuAV66fVNA==
-Received: from AMDDesktop.lan (p4fd5971b.dip0.t-ipconnect.de [79.213.151.27])
-	by bkemail.birger-koblitz.de (Postfix) with ESMTPSA id 00247485BC;
-	Tue,  6 Oct 2026 03:05:15 +0000 (UTC)
-From: Birger Koblitz <mail@birger-koblitz.de>
-Date: Tue, 06 Oct 2026 05:05:19 +0200
-Subject: [PATCH net-next v17 13/13] ax88796b: Add support for AX88772D,
- AX88179A and AX88279
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E246Uhk4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E17C1F000FF;
+	Tue,  6 Oct 2026 08:54:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791276865;
+	bh=b4F2pC6sE9BMPqLGvCFDalXCw5BiwXL6xVzHA76PUiI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=E246Uhk4TQ7dg5nPgDZCqmR1+sSNxccMXVLMJJmwt5RLD+Op+hWeoLiTmcg7eG8/K
+	 MQCtR1kWqcs7kjZj/E7rAj6RvcQN5CBkDLovDMkCxuRlpI5roiqRATgB2w+W+zcFRd
+	 2aEPZUiqiUZY1zmA+FpEF5PdfC7COE/IdwNXYkSVXUbeuk3rhlmTcPRBKsnSlBspFx
+	 PP+MOo4GzufATo8XHDTRC4CA8umt72UttuNFnLDvr1Q/8OETtVIYDb3KeCRPqrJEFQ
+	 KykzJlJtJV95cRP7BgFLHjvEUSFFCV+vq2F2lyB/WkKtAatCpwBoxxuP56XG3f7CW1
+	 e3RG9K9b5cVTA==
+Date: Tue, 6 Oct 2026 10:54:17 +0200
+From: Nathan Chancellor <nathan@kernel.org>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig_=28The_Capable_Hub=29?= <u.kleine-koenig@baylibre.com>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Nicolas Schier <nsc@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+	Raag Jadav <raag.jadav@intel.com>,
+	"Martin K. Petersen" <mkp@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Jorge Sanjuan Garcia <dev-jorge.sanjuangarcia@duagon.com>,
+	Jose Javier Rodriguez Barbarin <dev-josejavier.rodriguez@duagon.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Alexey Gladkov <legion@kernel.org>,
+	Hasan Basbunar <basbunarhasan@gmail.com>,
+	Hugh Dickins <hughd@google.com>, Armin Wolf <W_Armin@gmx.de>,
+	WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	Sudeep Holla <sudeep.holla@kernel.org>
+Subject: Re: [PATCH v1 0/3] <linux/mod_devicetable.h> deprecation continues
+Message-ID: <20261006085417.GA1522@ax162>
+References: <cover.1789988540.git.u.kleine-koenig@baylibre.com>
+ <179121379654.1159753.4410832336442519712.b4-review@b4>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20261006-ax88179a-v17-13-252814fe35ea@birger-koblitz.de>
-References: <20261006-ax88179a-v17-0-252814fe35ea@birger-koblitz.de>
-In-Reply-To: <20261006-ax88179a-v17-0-252814fe35ea@birger-koblitz.de>
-To: Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>, 
- Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
- Eric Dumazet <edumazet@kernel.org>, Eric Dumazet <edumazet@kernel.org>
-Cc: linux-usb@vger.kernel.org, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
- Jianhui Xu <neuromoments@gmail.com>, 
- Birger Koblitz <mail@birger-koblitz.de>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <179121379654.1159753.4410832336442519712.b4-review@b4>
 
-The AX88772D, AX88179A and AX88279 are 100MBit, 1GBit and respectively
-2.5 GBit PHYs that are found in ASIX USB-Ethernet controllers of the
-same name.
+On Mon, Oct 05, 2026 at 05:23:16PM +0200, Nathan Chancellor wrote:
+> > this is a next step in the deprecation of <linux/mod_devicetable.h>.
+> > scripts/mod/devicetable-offsets.c and scripts/mod/file2alias.c are the
+> > only users of that header that use more than a few device-id structs. So
+> > their number of lines actually grows when unfolding the needed includes
+> > into them. Still it is a reduction in build dependencies.
+> > 
+> > I suggest to take this via kbuild during the merge window. Would be great to
+> > cook in next for a while before.
+> > 
+> > Best regards
+> > Uwe
+> > 
+> > Uwe Kleine-König (The Capable Hub) (3):
+> >   Move struct cpu_feature to <linux/cpufeature.h>
+> >   devicetable-offsets: Include the needed device-id headers instead of
+> >     the catch-all
+> >   file2alias: Include the needed device-id headers instead of the
+> >     catch-all
+> > 
+> >  arch/loongarch/kvm/main.c         |  2 +-
+> >  include/linux/cpufeature.h        | 12 ++++++-
+> >  include/linux/mod_devicetable.h   | 13 -------
+> >  scripts/mod/devicetable-offsets.c | 57 ++++++++++++++++++++++++++++++-
+> >  scripts/mod/file2alias.c          | 56 +++++++++++++++++++++++++++++-
+> >  5 files changed, 123 insertions(+), 17 deletions(-)
+> 
+> My apologies for taking some time to get to this. I was planning on
+> building it using my personal test matrix on a local machine at home
+> while travelling for Plumbers to avoid tying up my main workstation but
+> my home's internet connection has been down for two weeks with very
+> little hope of getting it online before I am back...
+> 
+> Sashiko has a few comments that seem relevant (most of them are the same
+> issue):
+> 
+>   https://sashiko.dev/#/patchset/cover.1789988540.git.u.kleine-koenig@baylibre.com
+> 
+> I have applied it on top of next-20261005 to see what conflicts are
+> looking like. I see a merge conflict with this series from
+> 
+>   d59717cfbe1e ("firmware: arm_scmi: Add SCMI device table alias support")
+> 
+> in the soc tree, which is fairly trivial. There is a semantic conflict
+> that results in a build error from
+> 
+>   fe7f2a805443 ("firmware: smccc: Add an Arm SMCCC bus")
+> 
+> in the arm64 tree, which is also trivial but subtle.
+> 
+>   scripts/mod/devicetable-offsets.c:317:2: error: invalid application of 'sizeof' to an incomplete type 'struct arm_smccc_device_id'
+>     317 |         DEVID(arm_smccc_device_id);
+>         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+>   scripts/mod/devicetable-offsets.c:62:43: note: expanded from macro 'DEVID'
+>      62 | #define DEVID(devid) DEFINE(SIZE_##devid, sizeof(struct devid))
+>         |                      ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
+>   include/linux/kbuild.h:6:62: note: expanded from macro 'DEFINE'
+>       6 |         asm volatile("\n.ascii \"->" #sym " %0 " #val "\"" : : "i" (val))
+>         |                                                                     ^~~
+>   scripts/mod/devicetable-offsets.c:317:8: note: forward declaration of 'struct arm_smccc_device_id'
+>     317 |         DEVID(arm_smccc_device_id);
+>         |               ^
+>   scripts/mod/devicetable-offsets.c:318:2: error: offsetof of incomplete type 'struct arm_smccc_device_id'
+>     318 |         DEVID_FIELD(arm_smccc_device_id, func_id);
+>         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>   scripts/mod/devicetable-offsets.c:64:32: note: expanded from macro 'DEVID_FIELD'
+>      64 |         DEFINE(OFF_##devid##_##field, offsetof(struct devid, field))
+>         |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>   include/linux/stddef.h:16:32: note: expanded from macro 'offsetof'
+>      16 | #define offsetof(TYPE, MEMBER)  __builtin_offsetof(TYPE, MEMBER)
+>         |                                 ^
+>   include/linux/kbuild.h:6:62: note: expanded from macro 'DEFINE'
+>       6 |         asm volatile("\n.ascii \"->" #sym " %0 " #val "\"" : : "i" (val))
+>         |                                                                     ^~~
+>   scripts/mod/devicetable-offsets.c:317:8: note: forward declaration of 'struct arm_smccc_device_id'
+>     317 |         DEVID(arm_smccc_device_id);
+>         |               ^
+>   2 errors generated.
+> 
+> If you would like this in 7.4-rc1, I am not opposed to sticking your v2
+> into -next now but I plan to finalize the Kbuild tree for 7.4 around
+> October 15, so we'd only get a week or so of build coverage. If that
+> feels like too little, we should defer this until after 7.4-rc1 is out.
 
-Signed-off-by: Birger Koblitz <mail@birger-koblitz.de>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
----
- drivers/net/phy/ax88796b.c | 166 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 166 insertions(+)
+Two more issues came up in my testing.
 
-diff --git a/drivers/net/phy/ax88796b.c b/drivers/net/phy/ax88796b.c
-index f20ddf64914993f7097070d1f56c1103ec1e40e8..a427292759a245633a28410c5ba7d6f312f1a056 100644
---- a/drivers/net/phy/ax88796b.c
-+++ b/drivers/net/phy/ax88796b.c
-@@ -13,6 +13,19 @@
- #define PHY_ID_ASIX_AX88772A		0x003b1861
- #define PHY_ID_ASIX_AX88772C		0x003b1881
- #define PHY_ID_ASIX_AX88796B		0x003b1841
-+#define PHY_ID_ASIX_AX88772D		0x003b772d
-+#define PHY_ID_ASIX_AX88179A		0x003b179a
-+#define PHY_ID_ASIX_AX88279		0x003b2790
-+
-+#define AX_ADVERTISE_2500		0x1000
-+
-+/* MII Vendor registers */
-+#define AX_CTRL_STATUS			0x1d
-+#define AX_CTRL_STATUS_SPEED_MASK	0x0c
-+#define   AX_CTRL_STATUS_SPEED_10	0x0
-+#define   AX_CTRL_STATUS_SPEED_100	0x4
-+#define   AX_CTRL_STATUS_SPEED_1000	0x8
-+#define   AX_CTRL_STATUS_SPEED_2500	0xc
- 
- MODULE_DESCRIPTION("Asix PHY driver");
- MODULE_AUTHOR("Michael Schmitz <schmitzmic@gmail.com>");
-@@ -83,6 +96,110 @@ static int asix_ax88772a_read_status(struct phy_device *phydev)
- 	return 0;
- }
- 
-+static int asix_ax88279_read_status(struct phy_device *phydev)
-+{
-+	int ret, val;
-+
-+	ret = genphy_read_status(phydev);
-+	if (ret)
-+		return ret;
-+
-+	if (!phydev->link)
-+		return 0;
-+
-+	/* Read actual speed from vendor register */
-+	val = phy_read(phydev, AX_CTRL_STATUS);
-+	if (val < 0)
-+		return val;
-+
-+	switch (val & AX_CTRL_STATUS_SPEED_MASK) {
-+	case AX_CTRL_STATUS_SPEED_2500:
-+		phydev->speed = SPEED_2500;
-+		break;
-+	case AX_CTRL_STATUS_SPEED_1000:
-+		phydev->speed = SPEED_1000;
-+		break;
-+	case AX_CTRL_STATUS_SPEED_100:
-+		phydev->speed = SPEED_100;
-+		break;
-+	case AX_CTRL_STATUS_SPEED_10:
-+		phydev->speed = SPEED_10;
-+	}
-+
-+	/* MDIO_AN_10GBT_STAT_LP2_5G is broken, but we can deduce that
-+	 * the link-partner advertised 2500M if remotely AN succceded
-+	 * for link speed > 1000M and we locally have a link speed of
-+	 * 2500M
-+	 */
-+	linkmode_clear_bit(ETHTOOL_LINK_MODE_2500baseT_Full_BIT, phydev->lp_advertising);
-+	val = phy_read_mmd(phydev, MDIO_MMD_AN, MDIO_AN_10GBT_STAT);
-+	if (val >= 0 && val & MDIO_AN_10GBT_STAT_REMOK) {
-+		linkmode_mod_bit(ETHTOOL_LINK_MODE_2500baseT_Full_BIT,
-+				 phydev->lp_advertising,
-+				 phydev->speed == SPEED_2500);
-+	}
-+	/* Only supports full duplex */
-+	phydev->duplex = DUPLEX_FULL;
-+
-+	/* PHY switches interface between 2.5GBit and slower modes */
-+	if (phydev->speed == SPEED_2500)
-+		phydev->interface = PHY_INTERFACE_MODE_2500BASEX;
-+	else
-+		phydev->interface = PHY_INTERFACE_MODE_SGMII;
-+
-+	return 0;
-+}
-+
-+static int asix_ax88279_config_aneg(struct phy_device *phydev)
-+{
-+	bool adv_2500;
-+	int ret;
-+
-+	if (phydev->autoneg == AUTONEG_DISABLE) {
-+		phydev_warn(phydev, "Disabling autoneg is not supported\n");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	ret = genphy_config_aneg(phydev);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	adv_2500 = linkmode_test_bit(ETHTOOL_LINK_MODE_2500baseT_Full_BIT, phydev->advertising);
-+	ret = phy_modify(phydev, MII_ADVERTISE, AX_ADVERTISE_2500,
-+			 adv_2500 ? AX_ADVERTISE_2500 : 0);
-+
-+	return ret;
-+}
-+
-+static int asix_ax88279_get_features(struct phy_device *phydev)
-+{
-+	int ret;
-+
-+	/* MDIO_DEVS1/2 empty, so set mmds_present bits to allow reading abilities */
-+	phydev->c45_ids.mmds_present |= MDIO_DEVS_PMAPMD | MDIO_DEVS_AN;
-+
-+	linkmode_set_bit_array(phy_basic_ports_array, ARRAY_SIZE(phy_basic_ports_array),
-+			       phydev->supported);
-+
-+	ret = genphy_c45_pma_read_abilities(phydev);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* AX88279 does not support reported 100baseT-half duplex mode */
-+	linkmode_clear_bit(ETHTOOL_LINK_MODE_100baseT_Half_BIT, phydev->supported);
-+
-+	return 0;
-+}
-+
-+static int asix_ax88279_config_init(struct phy_device *phydev)
-+{
-+	__set_bit(PHY_INTERFACE_MODE_2500BASEX, phydev->possible_interfaces);
-+	__set_bit(PHY_INTERFACE_MODE_SGMII, phydev->possible_interfaces);
-+
-+	return 0;
-+}
-+
- static void asix_ax88772a_link_change_notify(struct phy_device *phydev)
- {
- 	/* Reset PHY, otherwise MII_LPA will provide outdated information.
-@@ -94,6 +211,23 @@ static void asix_ax88772a_link_change_notify(struct phy_device *phydev)
- 	}
- }
- 
-+static int asix_ax88772D_get_features(struct phy_device *phydev)
-+{
-+	int ret;
-+
-+	/* MDIO_DEVS1/2 empty, so set mmds_present bits to allow reading abilities */
-+	phydev->c45_ids.mmds_present |= MDIO_DEVS_PMAPMD | MDIO_DEVS_AN;
-+
-+	ret = genphy_read_abilities(phydev);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* AX88772D does not support reported 1000baseT mode */
-+	linkmode_clear_bit(ETHTOOL_LINK_MODE_1000baseT_Full_BIT, phydev->supported);
-+
-+	return 0;
-+}
-+
- static struct phy_driver asix_driver[] = {
- {
- 	PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88772A),
-@@ -111,6 +245,35 @@ static struct phy_driver asix_driver[] = {
- 	.suspend	= genphy_suspend,
- 	.resume		= genphy_resume,
- 	.soft_reset	= asix_soft_reset,
-+}, {
-+	PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88772D),
-+	.name		= "Asix Electronics AX88772D",
-+	.flags		= PHY_IS_INTERNAL,
-+	.get_features	= asix_ax88772D_get_features,
-+	.read_mmd	= genphy_read_mmd_c45,
-+	.write_mmd	= genphy_write_mmd_c45,
-+	.suspend	= genphy_suspend,
-+	.resume		= genphy_resume,
-+}, {
-+	PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88179A),
-+	.name		= "Asix Electronics AX88179A",
-+	.flags		= PHY_IS_INTERNAL,
-+	.suspend	= genphy_suspend,
-+	.resume		= genphy_resume,
-+	.read_mmd	= genphy_read_mmd_c45,
-+	.write_mmd	= genphy_write_mmd_c45,
-+}, {
-+	PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88279),
-+	.name		= "Asix Electronics AX88279",
-+	.flags		= PHY_IS_INTERNAL | PHY_BROKEN_FORCED,
-+	.get_features	= asix_ax88279_get_features,
-+	.read_status	= asix_ax88279_read_status,
-+	.config_aneg	= asix_ax88279_config_aneg,
-+	.config_init	= asix_ax88279_config_init,
-+	.read_mmd	= genphy_read_mmd_c45,
-+	.write_mmd	= genphy_write_mmd_c45,
-+	.suspend	= genphy_suspend,
-+	.resume		= genphy_resume,
- }, {
- 	PHY_ID_MATCH_MODEL(PHY_ID_ASIX_AX88796B),
- 	.name		= "Asix Electronics AX88796B",
-@@ -124,6 +287,9 @@ static const struct mdio_device_id __maybe_unused asix_tbl[] = {
- 	{ PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88772A) },
- 	{ PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88772C) },
- 	{ PHY_ID_MATCH_MODEL(PHY_ID_ASIX_AX88796B) },
-+	{ PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88772D) },
-+	{ PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88179A) },
-+	{ PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88279) },
- 	{ }
- };
- 
+ARCH=loongarch defconfig:
+
+  In file included from include/linux/mmzone.h:20,
+                   from include/linux/gfp.h:7,
+                   from include/linux/xarray.h:16,
+                   from include/linux/list_lru.h:14,
+                   from include/linux/fs/super_types.h:7,
+                   from include/linux/fs/super.h:5,
+                   from include/linux/fs.h:5,
+                   from arch/loongarch/include/asm/elf.h:9,
+                   from arch/loongarch/include/asm/cpufeature.h:13,
+                   from include/linux/cpufeature.h:23,
+                   from scripts/mod/devicetable-offsets.c:3:
+  include/linux/page-flags-layout.h:6:10: fatal error: generated/bounds.h: No such file or directory
+      6 | #include <generated/bounds.h>
+        |          ^~~~~~~~~~~~~~~~~~~~
+  compilation terminated.
+  make[4]: *** [scripts/Makefile.build:185: scripts/mod/devicetable-offsets.s] Error 1
+
+ARCH=s390 defconfig:
+
+  drivers/s390/crypto/pkey_ep11.c:23:28: error: array type has incomplete element type 'struct ap_device_id'
+     23 | static struct ap_device_id pkey_ep11_card_ids[] = {
+        |                            ^~~~~~~~~~~~~~~~~~
+  make[7]: *** [scripts/Makefile.build:290: drivers/s390/crypto/pkey_ep11.o] Error 1
+  drivers/s390/crypto/pkey_cca.c:22:28: error: array type has incomplete element type 'struct ap_device_id'
+     22 | static struct ap_device_id pkey_cca_card_ids[] = {
+        |                            ^~~~~~~~~~~~~~~~~
+  make[7]: *** [scripts/Makefile.build:290: drivers/s390/crypto/pkey_cca.o] Error 1
 
 -- 
-2.47.3
-
+Cheers,
+Nathan
