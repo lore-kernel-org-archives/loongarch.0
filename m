@@ -1,290 +1,231 @@
-Received: from bkemail.birger-koblitz.de (bkemail.birger-koblitz.de [23.88.97.239])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77DE93CB572
-	for <loongarch@lists.linux.dev>; Thu,  8 Oct 2026 03:51:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.88.97.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7B52BEC34;
+	Thu,  8 Oct 2026 05:33:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791431498; cv=none; b=i2ylCSLsfWcUs/9BeJ9lO0ng3iWyDKZClx6fMUPzXzDlLkSKu/d2tA7jXBKBoLsABKlMApqxisRxkkurckg48R6pTgttG0sprmLVqJtNd76TBDE2eD4MzyizdUq69np8RTx6kH+yyk3C6Gu8LvgTg4hx2sbhsehuwFsfnqCD5uk=
+	t=1791437626; cv=none; b=D+XF+1rDsbDJNGDyCHVQvMhRJmbevT3vjTZ1vVXdoOpyW0OWhpxEQ/OJEm/EI5J9ZvezL1MUvLx9ULCdI8wgbYz8jLPRybooaPz/xGZo50i+OnK4HFTjk+/hhpBQok5Z6pmPG8+OsgziL1lJK8oAaOnBKA8Zf0brazggA7wyLxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791431498; c=relaxed/simple;
-	bh=oPc6ENYy9EGIFNBkcJaQA+vbfpBKlQREOnaqEnKTJas=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bOxbCNeM4A+4yXVNIBAUPcZRtVhnzIUflvNWBJnxgUYtHrSfyS1fsc7iApODu8fdyPRcCJ/CYB4xzH+mzp5G8I5RsXliMRduQlP+coEnQEKCDz40VbjOh48UGOF134srh2pEM4s8aQlMHT5OdGiFIAwy74oc5E+3o6kkZ4IszZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=birger-koblitz.de; spf=pass smtp.mailfrom=birger-koblitz.de; dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b=ae+RmqVV; dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b=Y3J3f1NL; arc=none smtp.client-ip=23.88.97.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=birger-koblitz.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=birger-koblitz.de
+	s=arc-20240116; t=1791437626; c=relaxed/simple;
+	bh=Xr/3FGMXw2SythNdPq6WqsopLIGssI8wJikwFk2nM/U=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=DgTsaKNzcJzwUvbeuHBGLrl9Cpm9weWBOEf8zcRUe24kZtQnPhBC1AUP6lgApF5FSS2OJt3iDAN9845FhNY1JX1rYV5Qv/6z9aktF2+3NpwUFQu5NcLCusMDaNX5F8KBVLp0Yl0x7MZiOfrwdokt3WGQwhNdn3gsRVeTU05Azqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MlFvX1x1; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b="ae+RmqVV";
-	dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b="Y3J3f1NL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=birger-koblitz.de;
-	s=default; t=1791431494;
-	bh=oPc6ENYy9EGIFNBkcJaQA+vbfpBKlQREOnaqEnKTJas=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=ae+RmqVVKh865BNmlDcXlY49THCISIpMO17Wo5CUyDUs4sQGvFoIkgNB++PbObYaf
-	 8OiKKe2xLy9AgBXYFzsshKa0Fai+kRq1t8Dq9kh62dvRODs9mdytdwTS5rKfqruIId
-	 6LrVIxg6sgoWBOsLPt2Id5XoYRrhE3ZOTGeByfzSpolQCxfm9OsA1sDy9BKa/bbOFr
-	 LEdci4x4XmNet60Djysyx2aBM/a/9LHJZl2+8XTcPuY+kqg7g3lQ0VucHdp4KwNnVL
-	 x0TMZZLWJOccPhe2IowbD6pbWQ3kyIkqpD8nXB/GJfFqZlMNxvqmDz8Kd3F68bxd/y
-	 8N81uSYL5Mxfw==
-Received: by bkemail.birger-koblitz.de (Postfix, from userid 109)
-	id D9F1047220; Thu,  8 Oct 2026 03:51:34 +0000 (UTC)
-X-Spam-Level: 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=birger-koblitz.de;
-	s=default; t=1791431481;
-	bh=oPc6ENYy9EGIFNBkcJaQA+vbfpBKlQREOnaqEnKTJas=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Y3J3f1NLruWIG4UgASgVLYa9Fq5sb08o4YEIsvTmcJ7vKbfQV3GpcZnQDBBYAfEbz
-	 PiQq+zvK+72jaBYVL+nInRSFfMUvC8fLM8pYjnF4gdrzTSmz69d6MX4lHGAukalWqw
-	 3DZIYXLS/JiA2tspqgXtWU56kgpjugTYNgcO0GpMD2OZK+phFgzBXWQlCZp4wlKpro
-	 VMfTHUIVl91Rfw3A//hg2HpxbBilOYM4g4IR00xS2Kna/2Cvk8hyhYMavgXh8QuIC9
-	 ONrBCydR+nb138A3AED/j3Lbut2PBsKEC0oXVXiJOtFFdttnzOF3NsEl/PhaNjs90w
-	 1u3QQrtkBsZbw==
-Received: from AMDDesktop.lan (unknown [IPv6:2a00:6020:47a3:e800:271c:c6c5:9fde:77cb])
-	by bkemail.birger-koblitz.de (Postfix) with ESMTPSA id 195C647112;
-	Thu,  8 Oct 2026 03:51:21 +0000 (UTC)
-From: Birger Koblitz <mail@birger-koblitz.de>
-Date: Thu, 08 Oct 2026 05:51:19 +0200
-Subject: [PATCH net-next v18 13/13] ax88796b: Add support for AX88772D,
- AX88179A and AX88279
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MlFvX1x1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADBD61F000FF;
+	Thu,  8 Oct 2026 05:33:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791437624;
+	bh=DiCB3zTU35Q/So7+8YpTI1O1VNazQCwPsoCqXsbVCxA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=MlFvX1x1UhWZRY1blp5vdgZEPOMCBXQinqSZI84kOfHvYoEphDSM4c94C8k0YCneZ
+	 +CvWpN13IHO40ySHjg36SGLM6p3x45bPMR627QwPtHEOxGz1S8+sT5TicHHAqfnwbg
+	 bqFKdwKME2OoCRwQAo2p4meLpit9e42WrSXDC9nPxddpD1ycCgJPlJjEd5pDoDOqWs
+	 ennUOXzrVpLk3Kqhf1z0mNeMc81DduJcnqdwFkPFglVDZ80bS0a6JisTfrcpB+qHEQ
+	 B2B7dFO8dNiI2LLj/G2xvndmsNBdA4U85+1Ksxk77R/C0BzNaKttWJhMVtqisJgUfF
+	 7H/HlTSl2Xjzw==
+X-Mailer: emacs 31.1 (via feedmail 11-beta-1 I)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: Will Deacon <will@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>
+Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Robin Murphy <robin.murphy@arm.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Steven Price <steven.price@arm.com>,
+	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Mostafa Saleh <smostafa@google.com>,
+	Petr Tesarik <ptesarik@suse.com>,
+	Alexey Kardashevskiy <aik@amd.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Xu Yilun <yilun.xu@linux.intel.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	x86@kernel.org
+Subject: Re: [PATCH v6 6/8] dma: swiotlb: Centralize memory-encryption pool
+ sizing
+In-Reply-To: <yq5awlrt3dwo.fsf@kernel.org>
+References: <20260924060756.1325156-1-aneesh.kumar@kernel.org>
+ <20260924060756.1325156-7-aneesh.kumar@kernel.org>
+ <asVs3doaJ4WrT3M2@willie-the-truck> <asYZFXGyafRjjBS0@arm.com>
+ <asYiOgskwi8JYLe_@willie-the-truck> <yq5awlrt3dwo.fsf@kernel.org>
+Date: Thu, 08 Oct 2026 11:03:27 +0530
+Message-ID: <yq5av77c92oo.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20261008-ax88179a-v18-13-6fa1d4c40422@birger-koblitz.de>
-References: <20261008-ax88179a-v18-0-6fa1d4c40422@birger-koblitz.de>
-In-Reply-To: <20261008-ax88179a-v18-0-6fa1d4c40422@birger-koblitz.de>
-To: Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>, 
- Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
- Eric Dumazet <edumazet@kernel.org>, Eric Dumazet <edumazet@kernel.org>
-Cc: linux-usb@vger.kernel.org, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
- Jianhui Xu <neuromoments@gmail.com>, 
- Birger Koblitz <mail@birger-koblitz.de>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain
 
-The AX88772D, AX88179A and AX88279 are 100MBit, 1GBit and respectively
-2.5 GBit PHYs that are found in ASIX USB-Ethernet controllers of the
-same name.
+Aneesh Kumar K.V <aneesh.kumar@kernel.org> writes:
 
-Signed-off-by: Birger Koblitz <mail@birger-koblitz.de>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
----
- drivers/net/phy/ax88796b.c | 165 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 165 insertions(+)
+> Will Deacon <will@kernel.org> writes:
+>
+>> On Wed, Oct 07, 2026 at 11:04:05AM +0100, Catalin Marinas wrote:
+>>> On Tue, Oct 06, 2026 at 10:49:17PM +0100, Will Deacon wrote:
+>>> > On Thu, Sep 24, 2026 at 11:37:54AM +0530, Aneesh Kumar K.V (Arm) wrote:
+>>> > > @@ -496,7 +516,8 @@ swiotlb_select_pool_policy(unsigned int flags)
+>>> > >  	if (swiotlb_force_disable)
+>>> > >  		return SWIOTLB_POOL_NONE;
+>>> > >  
+>>> > > -	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
+>>> > > +	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT) &&
+>>> > > +	    !restricted_dma_pool_present)
+>>> > >  		return SWIOTLB_POOL_CC_GUEST;
+>>> > 
+>>> > I think this check on the restricted DMA pool is too general -- the pool
+>>> > could be tied to a specific DMA-capable peripheral and so treating its
+>>> > presence as a global property isn't right.
+>>> 
+>>> I agree it's a hack but that was the simplest way to avoid the pVMs
+>>> getting a bounce buffer after this patch. More than happy to leave it
+>>> out and reduce the buffer on cmdline or we come up with some better
+>>> heuristics.
+>>
+>> Hrm, that does mean that reverting just this part will regress pVMs
+>> because they'll suddenly be allocating a tonne more memory for an
+>> entirely unused swiotlb buffer. So I think I'd prefer to drop the entire
+>> series until this has been worked out properly.
+>>
+>>> Another option could be the arch code passing another flag that it
+>>> doesn't want an encrypted pool (e.g. when running in a pKVM guest) but I
+>>> don't particularly this either. The arch code doesn't know whether
+>>> there's an alternative pool.
+>>
+>> At that point, the default size may as well be driven by the
+>> drivers/virt/coco driver.
+>>
+>>> That said, such heuristics should have been a separate patch to make it
+>>> easier to review/drop.
+>>
+>> I think the only right way to get a semi-accurate heuristic is to take
+>> into account the set of dma-capable devices that will use the swiotlb
+>> pool, but that's fiddly and should probably be tackled as a separate
+>> series. Maybe a simpler hack in that direction would be to take the
+>> SWIOTLB_POOL_CC_GUEST if _any_ device is going to use swiotlb? You'll
+>> run into the usual problem of not being able to tell if a device is
+>> DMA-capable or not, but you could probably look for a global restricted
+>> DMA pool and, if that doesn't exist, check for per-device restricted pools
+>> on dma-coherent devices (since restricted DMA isn't supported by ACPI) as
+>> a reasonable approximation.
+>
+> So, something like this?
+>
+> 	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT) &&
+> 	    swiotlb_cc_guest_needs_default_pool())
+> 		return SWIOTLB_POOL_CC_GUEST;
+>
 
-diff --git a/drivers/net/phy/ax88796b.c b/drivers/net/phy/ax88796b.c
-index f20ddf64914993f7097070d1f56c1103ec1e40e8..99abb0af3296dc05b86f38d211e1bf96b5dc468a 100644
---- a/drivers/net/phy/ax88796b.c
-+++ b/drivers/net/phy/ax88796b.c
-@@ -13,6 +13,19 @@
- #define PHY_ID_ASIX_AX88772A		0x003b1861
- #define PHY_ID_ASIX_AX88772C		0x003b1881
- #define PHY_ID_ASIX_AX88796B		0x003b1841
-+#define PHY_ID_ASIX_AX88772D		0x003b772d
-+#define PHY_ID_ASIX_AX88179A		0x003b179a
-+#define PHY_ID_ASIX_AX88279		0x003b2790
-+
-+#define AX_ADVERTISE_2500		0x1000
-+
-+/* MII Vendor registers */
-+#define AX_CTRL_STATUS			0x1d
-+#define AX_CTRL_STATUS_SPEED_MASK	0x0c
-+#define   AX_CTRL_STATUS_SPEED_10	0x0
-+#define   AX_CTRL_STATUS_SPEED_100	0x4
-+#define   AX_CTRL_STATUS_SPEED_1000	0x8
-+#define   AX_CTRL_STATUS_SPEED_2500	0xc
- 
- MODULE_DESCRIPTION("Asix PHY driver");
- MODULE_AUTHOR("Michael Schmitz <schmitzmic@gmail.com>");
-@@ -83,6 +96,107 @@ static int asix_ax88772a_read_status(struct phy_device *phydev)
- 	return 0;
- }
- 
-+static int asix_ax88279_read_status(struct phy_device *phydev)
-+{
-+	int ret, val;
-+
-+	ret = genphy_read_status(phydev);
-+	if (ret)
-+		return ret;
-+
-+	if (!phydev->link)
-+		return 0;
-+
-+	/* Read actual speed from vendor register */
-+	val = phy_read(phydev, AX_CTRL_STATUS);
-+	if (val < 0)
-+		return val;
-+
-+	switch (val & AX_CTRL_STATUS_SPEED_MASK) {
-+	case AX_CTRL_STATUS_SPEED_2500:
-+		phydev->speed = SPEED_2500;
-+		break;
-+	case AX_CTRL_STATUS_SPEED_1000:
-+		phydev->speed = SPEED_1000;
-+		break;
-+	case AX_CTRL_STATUS_SPEED_100:
-+		phydev->speed = SPEED_100;
-+		break;
-+	case AX_CTRL_STATUS_SPEED_10:
-+		phydev->speed = SPEED_10;
-+	}
-+
-+	/* MDIO_AN_10GBT_STAT_LP2_5G is broken, but we can deduce that
-+	 * the link-partner advertised 2500M if remotely AN succceded
-+	 * for link speed > 1000M and we locally have a link speed of
-+	 * 2500M
-+	 */
-+	linkmode_clear_bit(ETHTOOL_LINK_MODE_2500baseT_Full_BIT, phydev->lp_advertising);
-+	val = phy_read_mmd(phydev, MDIO_MMD_AN, MDIO_AN_10GBT_STAT);
-+	if (val >= 0 && val & MDIO_AN_10GBT_STAT_REMOK) {
-+		linkmode_mod_bit(ETHTOOL_LINK_MODE_2500baseT_Full_BIT,
-+				 phydev->lp_advertising,
-+				 phydev->speed == SPEED_2500);
-+	}
-+	/* Only supports full duplex */
-+	phydev->duplex = DUPLEX_FULL;
-+
-+	/* PHY switches interface between 2.5GBit and slower modes */
-+	if (phydev->speed == SPEED_2500)
-+		phydev->interface = PHY_INTERFACE_MODE_2500BASEX;
-+	else
-+		phydev->interface = PHY_INTERFACE_MODE_SGMII;
-+
-+	return 0;
-+}
-+
-+static int asix_ax88279_config_aneg(struct phy_device *phydev)
-+{
-+	bool adv_2500;
-+	int ret;
-+
-+	if (phydev->autoneg == AUTONEG_DISABLE) {
-+		phydev_warn(phydev, "Disabling autoneg is not supported\n");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	adv_2500 = linkmode_test_bit(ETHTOOL_LINK_MODE_2500baseT_Full_BIT, phydev->advertising);
-+	ret = phy_modify(phydev, MII_ADVERTISE, AX_ADVERTISE_2500,
-+			 adv_2500 ? AX_ADVERTISE_2500 : 0);
-+	if (ret < 0)
-+		return ret;
-+
-+	return genphy_config_aneg(phydev);
-+}
-+
-+static int asix_ax88279_get_features(struct phy_device *phydev)
-+{
-+	int ret;
-+
-+	/* MDIO_DEVS1/2 empty, so set mmds_present bits to allow reading abilities */
-+	phydev->c45_ids.mmds_present |= MDIO_DEVS_PMAPMD | MDIO_DEVS_AN;
-+
-+	linkmode_set_bit_array(phy_basic_ports_array, ARRAY_SIZE(phy_basic_ports_array),
-+			       phydev->supported);
-+
-+	ret = genphy_c45_pma_read_abilities(phydev);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* AX88279 does not support reported 100baseT-half duplex mode */
-+	linkmode_clear_bit(ETHTOOL_LINK_MODE_100baseT_Half_BIT, phydev->supported);
-+
-+	return 0;
-+}
-+
-+static int asix_ax88279_config_init(struct phy_device *phydev)
-+{
-+	__set_bit(PHY_INTERFACE_MODE_2500BASEX, phydev->possible_interfaces);
-+	__set_bit(PHY_INTERFACE_MODE_SGMII, phydev->possible_interfaces);
-+
-+	return 0;
-+}
-+
- static void asix_ax88772a_link_change_notify(struct phy_device *phydev)
- {
- 	/* Reset PHY, otherwise MII_LPA will provide outdated information.
-@@ -94,6 +208,25 @@ static void asix_ax88772a_link_change_notify(struct phy_device *phydev)
- 	}
- }
- 
-+static int asix_ax88772D_get_features(struct phy_device *phydev)
-+{
-+	int ret;
-+
-+	/* MDIO_DEVS1/2 empty, so set mmds_present bits to allow reading abilities */
-+	phydev->c45_ids.mmds_present |= MDIO_DEVS_PMAPMD | MDIO_DEVS_AN;
-+
-+	ret = genphy_read_abilities(phydev);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* AX88772D does not support (possibly) reported 1000baseT modes */
-+	linkmode_clear_bit(ETHTOOL_LINK_MODE_1000baseT_Full_BIT, phydev->supported);
-+	linkmode_clear_bit(ETHTOOL_LINK_MODE_1000baseT_Half_BIT, phydev->supported);
-+	linkmode_clear_bit(ETHTOOL_LINK_MODE_1000baseX_Full_BIT, phydev->supported);
-+
-+	return 0;
-+}
-+
- static struct phy_driver asix_driver[] = {
- {
- 	PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88772A),
-@@ -111,6 +244,35 @@ static struct phy_driver asix_driver[] = {
- 	.suspend	= genphy_suspend,
- 	.resume		= genphy_resume,
- 	.soft_reset	= asix_soft_reset,
-+}, {
-+	PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88772D),
-+	.name		= "Asix Electronics AX88772D",
-+	.flags		= PHY_IS_INTERNAL,
-+	.get_features	= asix_ax88772D_get_features,
-+	.read_mmd	= genphy_read_mmd_c45,
-+	.write_mmd	= genphy_write_mmd_c45,
-+	.suspend	= genphy_suspend,
-+	.resume		= genphy_resume,
-+}, {
-+	PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88179A),
-+	.name		= "Asix Electronics AX88179A",
-+	.flags		= PHY_IS_INTERNAL,
-+	.suspend	= genphy_suspend,
-+	.resume		= genphy_resume,
-+	.read_mmd	= genphy_read_mmd_c45,
-+	.write_mmd	= genphy_write_mmd_c45,
-+}, {
-+	PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88279),
-+	.name		= "Asix Electronics AX88279",
-+	.flags		= PHY_IS_INTERNAL | PHY_BROKEN_FORCED,
-+	.get_features	= asix_ax88279_get_features,
-+	.read_status	= asix_ax88279_read_status,
-+	.config_aneg	= asix_ax88279_config_aneg,
-+	.config_init	= asix_ax88279_config_init,
-+	.read_mmd	= genphy_read_mmd_c45,
-+	.write_mmd	= genphy_write_mmd_c45,
-+	.suspend	= genphy_suspend,
-+	.resume		= genphy_resume,
- }, {
- 	PHY_ID_MATCH_MODEL(PHY_ID_ASIX_AX88796B),
- 	.name		= "Asix Electronics AX88796B",
-@@ -124,6 +286,9 @@ static const struct mdio_device_id __maybe_unused asix_tbl[] = {
- 	{ PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88772A) },
- 	{ PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88772C) },
- 	{ PHY_ID_MATCH_MODEL(PHY_ID_ASIX_AX88796B) },
-+	{ PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88772D) },
-+	{ PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88179A) },
-+	{ PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88279) },
- 	{ }
- };
- 
+Detecting a DMA-capable device is not straightforward, and if we get it
+wrong, we will enable SWIOTLB_POOL_CC_GUEST unnecessarily. Would the
+code below be a reasonable approximation of what you suggested?
 
--- 
-2.47.3
+Another option would be to make swiotlb_cc_guest_needs_default_pool() a
+weak function that architectures can override. arm64 pKVM could then use
+a different scheme (for this patch series default to false). Would that
+be preferable?
 
+#ifdef CONFIG_DMA_RESTRICTED_POOL
+static bool __init swiotlb_of_dma_candidate(struct device_node *np)
+{
+	struct device_node *node __free(device_node) = of_node_get(np);
+
+	/*
+	 * Ignore nodes that don't have compatible and reg property
+	 * So we don't wrongly consider a node as device node.
+	 */
+	if (!of_property_present(np, "compatible") ||
+	    !of_property_present(np, "reg"))
+		return false;
+
+	while (node) {
+		if (!of_device_is_available(node))
+			return false;
+		/*
+		 * Ignore reserved-memory nodes because that have compatible
+		 * and reg property
+		 */
+		if (node->parent == of_root &&
+		    of_node_name_eq(node, "reserved-memory"))
+			return false;
+		node = of_get_next_parent(node);
+	}
+	return of_dma_is_coherent(np);
+}
+
+static bool __init swiotlb_of_dma_needs_default_pool(struct device_node *np)
+{
+	if (!of_dma_get_restricted_pool(np))
+		return true;
+
+	return false;
+}
+#endif
+
+static bool __init swiotlb_cc_guest_needs_default_pool(void)
+{
+#ifdef CONFIG_DMA_RESTRICTED_POOL
+	struct device_node *np;
+	bool found = false;
+
+	if (!of_root)
+		return true;
+	/*
+	 * DMA capability is not explicitly described for every DT device.
+	 * Use coherent, addressed device nodes as an approximation, and keep
+	 * guest sizing unless every candidate has an initialized restricted
+	 * pool.
+	 */
+	for_each_of_allnodes(np) {
+		if (!swiotlb_of_dma_candidate(np))
+			continue;
+		found = true;
+		if (swiotlb_of_dma_needs_default_pool(np))
+			return true;
+	}
+
+	return !found;
+#else
+	return true;
+#endif
+}
