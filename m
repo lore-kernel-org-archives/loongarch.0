@@ -1,47 +1,44 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7403643D515;
-	Thu,  8 Oct 2026 11:42:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 207B349E5ED;
+	Thu,  8 Oct 2026 12:51:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791459773; cv=none; b=XPg3L4u12zmNsjT4dfVp128q2WTZ9wfZQxQFDBIgBjm9+0H/WQiYGcKQHy7UyBdQ0NKdwcMk47QCi04nbFh9cVqHYW0R8NcwFgBP8vI71sS1adBtXszpG9OI4KLj8cq8ZHFP3TIWoHsuygkSDNPc2ljdp+vyumUlHnOJDuF9rKs=
+	t=1791463910; cv=none; b=BPkWjwH62R6szLKXRLRhjGfBhMC3c1aG9VQpVtOQsb0AfwiIUVFZz2b0ooAL9wi2AfCvAdeKrMYEF4EGVo8Bf4QfeT4iNiITPO9BbLmtwb5fLt8wAv5SUxwb7zGUZUgXkLQ/COM147d50ckm2C8reSKQibaXfgwL/3KJctd6H74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791459773; c=relaxed/simple;
-	bh=3r/0Tsoa/eArH3KAveHgL61sNbj+NCEWCLZ1vCW0CKA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=KxrgKozgks7BvVsJi4N9B6WA5kFB7g0614uYyXio0DeMIH20Bpax4OlESatY1+0v53g92wvXVWdrFPUyp1LPP11s8udQDJSPEX9Jjn99XIeCE8ONbOGaaXVaggWM3T5Lt60cyTQSuF+3UWziF783+4Fv4znXx4gyfVssIue8t7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YiFIMNPQ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791463910; c=relaxed/simple;
+	bh=yybsjxVTbzd8fZs72yNrXHsa7ZAel783Veu0/ZplOjs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LP38kZRqZmdDBwF1hKfhCD0nOPFb0SUtpejUOnb/ESPWbYQwcqAr4KTZjnUDRiP7k/A5ShQy4DXuT1WS8JpczNaHWjDVXIPovJePB9mdPJNdusIXs/Z8s+DAZag7AAly7C6ko+gZfsOA2fHPKuzsufkh6YE2/gsYEnJl8UNNIws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=jHcYeO7P; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YiFIMNPQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 866B91F000FF;
-	Thu,  8 Oct 2026 11:42:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791459772;
-	bh=4xI6sjx5O7jgHs+vd9dc55iUHxFgkYDVUp/hXBLdiUU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=YiFIMNPQLdCE2zbWLTULNFqt7kb5t3ajFyu/BuSQuH9LkL3xA+iVywarHowzdzA+7
-	 1sou/7jke+Vj+nbmlqBC7VTbQKzq6IDlT13spt+uePeZIZSDvImU4X8lzs7M9MWkgQ
-	 ufVjTQQcUB+9Uhuptv8x1rTJ2ng7aURxLQAwDcN+KUP9pnq+WBBmHpWri6CQgA1FJo
-	 gjdV83W7dro0R18RTq0UUSD0nA6cozVVgRHk/IvB8xAFneymfmMfAbHLzncbeqt7T5
-	 QuvxlpKgQFLXt52Ywqwn3oQGPELoMic1DSF4KHV61Y6N7B50K7oD5nmWN42IdAkaMz
-	 Pd2ocvIJj9mQw==
-X-Mailer: emacs 31.1 (via feedmail 11-beta-1 I)
-From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-To: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Will Deacon <will@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>
-Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Robin Murphy <robin.murphy@arm.com>,
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="jHcYeO7P"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF9301477;
+	Thu,  8 Oct 2026 05:51:43 -0700 (PDT)
+Received: from arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 385483F66F;
+	Thu,  8 Oct 2026 05:51:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1791463907; bh=yybsjxVTbzd8fZs72yNrXHsa7ZAel783Veu0/ZplOjs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jHcYeO7PQ4uywop/cdz4Sp+A+aFbl0MgQD1Ls+p5EdipEXi6WD0t37Ph73w/vv0DU
+	 zaE58iHLndSo+/C52KBqYxok8UD7CtjGoRjaBmsWgfa74P8A2xQIUgYTR13WaYMyPN
+	 MJYzbhW+p/gSjdnlF9y+DSqgMqvawjjqEWGiXB4w=
+Date: Thu, 8 Oct 2026 13:51:24 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
+Cc: Will Deacon <will@kernel.org>, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
 	Jonathan Corbet <corbet@lwn.net>,
 	Shuah Khan <skhan@linuxfoundation.org>,
 	Randy Dunlap <rdunlap@infradead.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Marc Zyngier <maz@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <maz@kernel.org>,
 	Steven Price <steven.price@arm.com>,
 	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
+	Jiri Pirko <jiri@resnulli.us>, Jason Gunthorpe <jgg@ziepe.ca>,
 	Mostafa Saleh <smostafa@google.com>,
 	Petr Tesarik <ptesarik@suse.com>,
 	Alexey Kardashevskiy <aik@amd.com>,
@@ -65,14 +62,11 @@ Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
 	WANG Xuerui <kernel@xen0n.name>,
 	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
 	Andy Lutomirski <luto@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>,
 	"H. Peter Anvin" <hpa@zytor.com>,
@@ -82,54 +76,106 @@ Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
 	x86@kernel.org
 Subject: Re: [PATCH v6 6/8] dma: swiotlb: Centralize memory-encryption pool
  sizing
-In-Reply-To: <bc0fdf46-eaf6-49b9-a015-1742c66829a6@samsung.com>
+Message-ID: <aseRzPshcoys7AJS@arm.com>
 References: <20260924060756.1325156-1-aneesh.kumar@kernel.org>
  <20260924060756.1325156-7-aneesh.kumar@kernel.org>
- <asVs3doaJ4WrT3M2@willie-the-truck> <asYZFXGyafRjjBS0@arm.com>
- <CGME20261007104325eucas1p2277d74db794e285f33038204d52dc843@eucas1p2.samsung.com>
+ <asVs3doaJ4WrT3M2@willie-the-truck>
+ <asYZFXGyafRjjBS0@arm.com>
  <asYiOgskwi8JYLe_@willie-the-truck>
- <bc0fdf46-eaf6-49b9-a015-1742c66829a6@samsung.com>
-Date: Thu, 08 Oct 2026 17:12:28 +0530
-Message-ID: <yq5ase2g8lln.fsf@kernel.org>
+ <yq5awlrt3dwo.fsf@kernel.org>
+ <yq5av77c92oo.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <yq5av77c92oo.fsf@kernel.org>
 
-Marek Szyprowski <m.szyprowski@samsung.com> writes:
+On Thu, Oct 08, 2026 at 11:03:27AM +0530, Aneesh Kumar K.V wrote:
+> Aneesh Kumar K.V <aneesh.kumar@kernel.org> writes:
+> > Will Deacon <will@kernel.org> writes:
+> >> On Wed, Oct 07, 2026 at 11:04:05AM +0100, Catalin Marinas wrote:
+> >>> On Tue, Oct 06, 2026 at 10:49:17PM +0100, Will Deacon wrote:
+> >>> > On Thu, Sep 24, 2026 at 11:37:54AM +0530, Aneesh Kumar K.V (Arm) wrote:
+> >>> > > @@ -496,7 +516,8 @@ swiotlb_select_pool_policy(unsigned int flags)
+> >>> > >  	if (swiotlb_force_disable)
+> >>> > >  		return SWIOTLB_POOL_NONE;
+> >>> > >  
+> >>> > > -	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
+> >>> > > +	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT) &&
+> >>> > > +	    !restricted_dma_pool_present)
+> >>> > >  		return SWIOTLB_POOL_CC_GUEST;
+> >>> > 
+> >>> > I think this check on the restricted DMA pool is too general -- the pool
+> >>> > could be tied to a specific DMA-capable peripheral and so treating its
+> >>> > presence as a global property isn't right.
+> >>> 
+> >>> I agree it's a hack but that was the simplest way to avoid the pVMs
+> >>> getting a bounce buffer after this patch. More than happy to leave it
+> >>> out and reduce the buffer on cmdline or we come up with some better
+> >>> heuristics.
+> >>
+> >> Hrm, that does mean that reverting just this part will regress pVMs
+> >> because they'll suddenly be allocating a tonne more memory for an
+> >> entirely unused swiotlb buffer. So I think I'd prefer to drop the entire
+> >> series until this has been worked out properly.
+> >>
+> >>> Another option could be the arch code passing another flag that it
+> >>> doesn't want an encrypted pool (e.g. when running in a pKVM guest) but I
+> >>> don't particularly this either. The arch code doesn't know whether
+> >>> there's an alternative pool.
+> >>
+> >> At that point, the default size may as well be driven by the
+> >> drivers/virt/coco driver.
+> >>
+> >>> That said, such heuristics should have been a separate patch to make it
+> >>> easier to review/drop.
+> >>
+> >> I think the only right way to get a semi-accurate heuristic is to take
+> >> into account the set of dma-capable devices that will use the swiotlb
+> >> pool, but that's fiddly and should probably be tackled as a separate
+> >> series. Maybe a simpler hack in that direction would be to take the
+> >> SWIOTLB_POOL_CC_GUEST if _any_ device is going to use swiotlb? You'll
+> >> run into the usual problem of not being able to tell if a device is
+> >> DMA-capable or not, but you could probably look for a global restricted
+> >> DMA pool and, if that doesn't exist, check for per-device restricted pools
+> >> on dma-coherent devices (since restricted DMA isn't supported by ACPI) as
+> >> a reasonable approximation.
+> >
+> > So, something like this?
+> >
+> > 	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT) &&
+> > 	    swiotlb_cc_guest_needs_default_pool())
+> > 		return SWIOTLB_POOL_CC_GUEST;
+> >
+> 
+> Detecting a DMA-capable device is not straightforward, and if we get it
+> wrong, we will enable SWIOTLB_POOL_CC_GUEST unnecessarily. Would the
+> code below be a reasonable approximation of what you suggested?
+> 
+> Another option would be to make swiotlb_cc_guest_needs_default_pool() a
+> weak function that architectures can override. arm64 pKVM could then use
+> a different scheme (for this patch series default to false). Would that
+> be preferable?
 
-> On 07.10.2026 12:43, Will Deacon wrote:
->> On Wed, Oct 07, 2026 at 11:04:05AM +0100, Catalin Marinas wrote:
->>> On Tue, Oct 06, 2026 at 10:49:17PM +0100, Will Deacon wrote:
->>>> On Thu, Sep 24, 2026 at 11:37:54AM +0530, Aneesh Kumar K.V (Arm) wrote:
->>>>> @@ -496,7 +516,8 @@ swiotlb_select_pool_policy(unsigned int flags)
->>>>>  	if (swiotlb_force_disable)
->>>>>  		return SWIOTLB_POOL_NONE;
->>>>>  
->>>>> -	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
->>>>> +	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT) &&
->>>>> +	    !restricted_dma_pool_present)
->>>>>  		return SWIOTLB_POOL_CC_GUEST;
->>>> I think this check on the restricted DMA pool is too general -- the pool
->>>> could be tied to a specific DMA-capable peripheral and so treating its
->>>> presence as a global property isn't right.
->>> I agree it's a hack but that was the simplest way to avoid the pVMs
->>> getting a bounce buffer after this patch. More than happy to leave it
->>> out and reduce the buffer on cmdline or we come up with some better
->>> heuristics.
->> Hrm, that does mean that reverting just this part will regress pVMs
->> because they'll suddenly be allocating a tonne more memory for an
->> entirely unused swiotlb buffer. So I think I'd prefer to drop the entire
->> series until this has been worked out properly.
-> I've dropped the entire series from dma-mapping-for-next. Aneesh, please respin
-> it again and move the pKVM/restricted_dma_pool related code into the separate
-> patch.
->
+Even the rmem check for each device is still a hack that may bite us in
+the future (private devices for example would not need swiotlb). I'm
+thinking more and more of leaving the sizing an arch-specific decision,
+don't bother generalising it at all.
 
-Once we agree on the correct way to detect the pKVM use case, I will
-resend the series.
+On pKVM vs CCA guests, there's really nothing specific here to pKVM
+guests. The only difference is that confidential guests that so far have
+run without a swiotlb buffer will regress if their memory is tight. For
+confidential guests without dedicated rmem (either CCA or pKVM), I think
+our options are either command line swiotlb sizing or dynamic swiotlb.
 
--aneesh
+Could you respin your series while leaving out the generic sizing? IOW,
+no x86 code generalisation. We can discuss the best strategy on sizing
+later (I haven't checked how much of this series still makes sense
+without the generic sizing).
+
+-- 
+Catalin
