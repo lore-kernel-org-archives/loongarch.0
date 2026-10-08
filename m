@@ -1,222 +1,202 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73B6F27466A
-	for <loongarch@lists.linux.dev>; Thu,  8 Oct 2026 01:50:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from canpmsgout10.his.huawei.com (canpmsgout10.his.huawei.com [113.46.200.225])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C163655FF;
+	Thu,  8 Oct 2026 01:57:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791424246; cv=none; b=dojkPn8mpEmA6a3Gav3VOqzyzYu1EGsMAI/foBjINPnHa7YJ/tM/8kkgcvprp+Wn8hKB2/UesAf9Vp0b+sfksCP9yMixHhzhL+hCNQ94/6OOPL+AEt5iVAOt3wrMFlN7FGVk02uqjHikC3FKK7QBH46x4vX7UEulo3B/qbDTL3I=
+	t=1791424678; cv=none; b=sGPGw7lioKuz46Fy8q14KFO3/78WcwWRK2lL8X863Ps5/jyDQuSczdCeoGVDjP3YZcRvnei9d9BYtUGE5vtmos41VFM0y0udCC6nXaAPU1UcsxKetEIZDFGK6K/jIu+x2UkYcdYm+VAgRiVvfJTXeNZ9Va4NyUdQSHkHMvK3boA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791424246; c=relaxed/simple;
-	bh=6H1sphCec9/JfHpvbPLJGtz2WgB9Ply+2cWrGuPViH8=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=d9p+XwuRUWpP2GSiABlJCJ9W+DoQWoQ/AxgoF7Z3jkb2ASYQf2lG2Gl21CiXAXwkJgnGzBzWhmptFnAr0dzhZMST2XRyN+yuuzueqNjctNCpee58m+vRyceKFXYk+Ksk20OL0av95rDlrbLvP8Y0B6CV9CDR19arZK30hzBbbV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8CxvtLo9sZqwY4TAA--.57129S3;
-	Thu, 08 Oct 2026 09:50:32 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJBxpMze9sZqTc0pAA--.61679S2;
-	Thu, 08 Oct 2026 09:50:22 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: KVM: Add hypercall crash support
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20260909085350.2046788-1-maobibo@loongson.cn>
- <CAAhV-H5uz3SM=tYG02Lz3WiN9stJocY7MQJFSKmVbNrNnz+9Gw@mail.gmail.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <82f2c59a-59f5-8e49-f0c5-dc6feb4070df@loongson.cn>
-Date: Thu, 8 Oct 2026 09:51:46 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1791424678; c=relaxed/simple;
+	bh=15i2gmVY9nI4XI8bma8xTDmPia+selMcAHnL0xFJeZI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=JnyghnppZLAZ2WtFfGekjUSQrUU3qnPmccy58ikILGJHFeQjqoeL8sOhuU/VJsegPBzy0yGirzIs27Lz2OBsiLi5Nr6yunTxeLaEY70kNz6iYm5+7mpAdRFJbD4zhbM64guUT0KLucfFDnHAwt+ZMefZKl70MsAzqz/wH6A7iNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=g78aXu5F; arc=none smtp.client-ip=113.46.200.225
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="g78aXu5F"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=bXamncWaqlfk8qQgL1B8Mu0pQVkhOxTSHqjddGG4KBw=;
+	b=g78aXu5F+eX1vFGrdr7ODw3mfWRzJ2xHcdspBUNlAxc5IhvP2m+84BEowtEnJ7toedzRiDPqJ
+	c5RrHPIU8ToMw1OQpK0Wh1ee8RrekPA+Bcg43S7Q5Mtdi8Sp9wD1KAgm7iJsyXAjU3PESGUAKbY
+	aQDiKZOBs1rzK16wrPIzn0k=
+Received: from mail.maildlp.com (unknown [172.19.163.200])
+	by canpmsgout10.his.huawei.com (SkyGuard) with ESMTPS id 4j0Xr464hkz1K97G;
+	Thu,  8 Oct 2026 09:45:24 +0800 (CST)
+Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6AC8D4055B;
+	Thu,  8 Oct 2026 09:57:39 +0800 (CST)
+Received: from [10.67.110.68] (10.67.110.68) by kwepemk200008.china.huawei.com
+ (7.202.194.74) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Thu, 8 Oct
+ 2026 09:57:32 +0800
+Message-ID: <f4ba3a6b-537d-4328-b0c1-c0e5aa61924f@huawei.com>
+Date: Thu, 8 Oct 2026 09:57:30 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H5uz3SM=tYG02Lz3WiN9stJocY7MQJFSKmVbNrNnz+9Gw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 00/14] crash: Fix several bugs
+To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
+	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
+	<mpe@ellerman.id.au>, <npiggin@gmail.com>, <chleroy@kernel.org>,
+	<ritesh.list@gmail.com>, <sshegde@linux.ibm.com>, <tglx@kernel.org>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<hpa@zytor.com>, <gregkh@linuxfoundation.org>, <rafael@kernel.org>,
+	<dakr@kernel.org>, <akpm@linux-foundation.org>, <baoquan.he@linux.dev>,
+	<rppt@kernel.org>, <pasha.tatashin@soleen.com>, <pratyush@kernel.org>,
+	<ruirui.yang@linux.dev>, <leitao@debian.org>, <yeoreum.yun@arm.com>,
+	<sourabhjain@linux.ibm.com>, <robh@kernel.org>, <coxu@redhat.com>,
+	<kees@kernel.org>, <tangyouling@kylinos.cn>, <liukexin@kylinos.cn>,
+	<zhangtianyang@loongson.cn>, <guodongtai@kylinos.cn>,
+	<maqianga@uniontech.com>, <chao.gao@intel.com>, <kai.huang@intel.com>,
+	<vishal.l.verma@intel.com>, <seanjc@google.com>, <piliu@redhat.com>,
+	<thuth@redhat.com>, <jbouron@amazon.com>, <me@linux.beauty>,
+	<mclapinski@google.com>, <graf@amazon.com>, <bgwin@google.com>,
+	<hbathini@linux.ibm.com>, <eric.devolder@oracle.com>,
+	<takahiro.akashi@linaro.org>, <james.morse@arm.com>, <palmer@rivosinc.com>,
+	<x86@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <loongarch@lists.linux.dev>,
+	<linuxppc-dev@lists.ozlabs.org>, <driver-core@lists.linux.dev>,
+	<kexec@lists.infradead.org>
+References: <20260921090450.807575-1-ruanjinjie@huawei.com>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <20260921090450.807575-1-ruanjinjie@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxpMze9sZqTc0pAA--.61679S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3GFyUAryxKr4UurWkJrWkuFX_yoWxWrW7pF
-	92yFs5GrW8Kr1fCws3twnI9ry3Grs7Gr1Iga429rWrAF4Y9wn5ur18KryDCFyDJ3y8Wa40
-	vF9Yq3s8ZFsrt3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8czVUUU
-	UUU==
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ kwepemk200008.china.huawei.com (7.202.194.74)
 
 
 
-On 2026/10/3 下午12:02, Huacai Chen wrote:
-> Hi, Bibo,
+在 2026/9/21 17:04, Jinjie Ruan 写道:
+> As Baoquan and Catalin suggested, this patch set fixes
+> several pre-existing code issues found by Sashiko AI [1][2][3].
 > 
-> On Wed, Sep 9, 2026 at 5:01 PM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->> Now generic pvpanic is supported in Linux kernel which will notify VMM
->> with VM crash event. There is some limitations with pvpanic, such as it
->> requires good kernel stack or CPU hardware context and panic() C function
->> is in health state.
->>
->> Sometimes CPU hardware context or kernel/irq stack is corrupted. Hypercall
->> code is more direct and low-level crash method, which is useful in
->> exception entry with assmble language, here add one hypercall code to
->> support VM crash function, so that VMM can capture CPU crash context
->> in time.
->>
->> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->> ---
->>   arch/loongarch/include/asm/kvm_host.h      |  1 +
->>   arch/loongarch/include/asm/kvm_para.h      | 15 +++++++++++++++
->>   arch/loongarch/include/uapi/asm/kvm.h      |  1 +
->>   arch/loongarch/include/uapi/asm/kvm_para.h |  1 +
->>   arch/loongarch/kvm/exit.c                  | 11 +++++++++++
->>   arch/loongarch/kvm/vm.c                    |  3 ++-
->>   6 files changed, 31 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
->> index 65d91c3ce313..96f9f1317cad 100644
->> --- a/arch/loongarch/include/asm/kvm_host.h
->> +++ b/arch/loongarch/include/asm/kvm_host.h
->> @@ -168,6 +168,7 @@ enum emulation_result {
->>   #define LOONGARCH_PV_FEAT_MASK         (BIT(KVM_FEATURE_IPI) |         \
->>                                           BIT(KVM_FEATURE_PREEMPT) |     \
->>                                           BIT(KVM_FEATURE_STEAL_TIME) |  \
->> +                                        BIT(KVM_FEATURE_CRASH) |       \
->>                                           BIT(KVM_FEATURE_USER_HCALL) |  \
->>                                           BIT(KVM_FEATURE_VIRT_EXTIOI))
->>
->> diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/include/asm/kvm_para.h
->> index fb17ba0fa101..3b183bb1aaa8 100644
->> --- a/arch/loongarch/include/asm/kvm_para.h
->> +++ b/arch/loongarch/include/asm/kvm_para.h
->> @@ -14,6 +14,7 @@
->>   #define KVM_HCALL_CODE_SERVICE         0
->>   #define KVM_HCALL_CODE_SWDBG           1
->>   #define KVM_HCALL_CODE_USER_SERVICE    2
->> +#define KVM_HCALL_CODE_CRASH           3
->>
->>   #define KVM_HCALL_SERVICE              HYPERCALL_ENCODE(HYPERVISOR_KVM, KVM_HCALL_CODE_SERVICE)
->>   #define  KVM_HCALL_FUNC_IPI            1
->> @@ -22,6 +23,7 @@
->>   #define KVM_HCALL_SWDBG                        HYPERCALL_ENCODE(HYPERVISOR_KVM, KVM_HCALL_CODE_SWDBG)
->>
->>   #define KVM_HCALL_USER_SERVICE         HYPERCALL_ENCODE(HYPERVISOR_KVM, KVM_HCALL_CODE_USER_SERVICE)
->> +#define KVM_HCALL_CRASH                        HYPERCALL_ENCODE(HYPERVISOR_KVM, KVM_HCALL_CODE_CRASH)
->>
->>   /*
->>    * LoongArch hypercall return code
->> @@ -161,6 +163,19 @@ static __always_inline long kvm_hypercall5(u64 fid,
->>          return ret;
->>   }
->>
->> +static __always_inline long kvm_hypercall_crash(void)
->> +{
->> +       register long ret asm("a0");
->> +
->> +       __asm__ __volatile__(
->> +               "hvcl "__stringify(KVM_HCALL_CRASH)
->> +               : "=r" (ret)
->> +               : : "memory"
->> +               );
->> +
->> +       return ret;
->> +}
-> Why this function has no caller?
-Currently we directly modify guest kernel and hard-code the hypercall 
-instruction to debug. This inline function is only example for howto 
-usage, the normal usage such as checking KVM_FEATURE_USER_HCALL feature 
-+ kvm_hypercall_crash() is too complicated in exception entry assemble 
-language.
+> The major improvements and fixes included in this series are:
+> - Fix several memory leaks for arm64, and similar issues on LoongArch.
+> - Fix out-of-bounds write on 32-bit Highmem for x86.
+> - Fix TOCTOU race in crash memory range collection.
 
-Regards
-Bibo Mao
+Hi all,
+
+Gentle ping.
+
+Could anyone take a look or let me know if there's anything
+else needed? I can rebase/resend if required.
+
 > 
+> This patch set is rebased on v7.3-rc3. Compared to the previous version,
+> split out arm64 crash hotplug patches as Breno suggested, which are based
+> on these bugfix patches and will be resubmitted after this patch series
+> is merged.
 > 
-> Huacai
+> Slightly tested on x86_64 and arm64 qemu with:
+> - kexec_load (--kexec-syscall --hotplug)
+> - kexec_load (--kexec-file-syscall)
 > 
->> +
->>   #ifdef CONFIG_PARAVIRT
->>   bool kvm_para_available(void);
->>   unsigned int kvm_arch_para_features(void);
->> diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
->> index cd0b5c11ca9c..b222bfc48042 100644
->> --- a/arch/loongarch/include/uapi/asm/kvm.h
->> +++ b/arch/loongarch/include/uapi/asm/kvm.h
->> @@ -106,6 +106,7 @@ struct kvm_fpu {
->>   #define  KVM_LOONGARCH_VM_FEAT_PTW             8
->>   #define  KVM_LOONGARCH_VM_FEAT_MSGINT          9
->>   #define  KVM_LOONGARCH_VM_FEAT_PV_PREEMPT      10
->> +#define  KVM_LOONGARCH_VM_FEAT_CRASH           11
->>
->>   /* Device Control API on vcpu fd */
->>   #define KVM_LOONGARCH_VCPU_CPUCFG      0
->> diff --git a/arch/loongarch/include/uapi/asm/kvm_para.h b/arch/loongarch/include/uapi/asm/kvm_para.h
->> index d28cbcadd276..bf1a0c826ca6 100644
->> --- a/arch/loongarch/include/uapi/asm/kvm_para.h
->> +++ b/arch/loongarch/include/uapi/asm/kvm_para.h
->> @@ -16,6 +16,7 @@
->>   #define  KVM_FEATURE_IPI               1
->>   #define  KVM_FEATURE_STEAL_TIME                2
->>   #define  KVM_FEATURE_PREEMPT           3
->> +#define  KVM_FEATURE_CRASH             4
->>   /* BIT 24 - 31 are features configurable by user space vmm */
->>   #define  KVM_FEATURE_VIRT_EXTIOI       24
->>   #define  KVM_FEATURE_USER_HCALL                25
->> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
->> index 4f58e6e2cf86..3b6daa946c76 100644
->> --- a/arch/loongarch/kvm/exit.c
->> +++ b/arch/loongarch/kvm/exit.c
->> @@ -911,6 +911,17 @@ static int kvm_handle_hypercall(struct kvm_vcpu *vcpu, int ecode)
->>                  vcpu->run->hypercall.ret = KVM_HCALL_INVALID_CODE;
->>                  ret = RESUME_HOST;
->>                  break;
->> +       case KVM_HCALL_CRASH:
->> +               if (!kvm_guest_has_pv_feature(vcpu, KVM_FEATURE_CRASH)) {
->> +                       kvm_write_reg(vcpu, LOONGARCH_GPR_A0, KVM_HCALL_INVALID_CODE);
->> +                       break;
->> +               }
->> +
->> +               vcpu->run->exit_reason = KVM_EXIT_SYSTEM_EVENT;
->> +               vcpu->run->system_event.type = KVM_SYSTEM_EVENT_CRASH;
->> +               vcpu->run->system_event.ndata = 0;
->> +               ret = RESUME_HOST;
->> +               break;
->>          case KVM_HCALL_SWDBG:
->>                  /* KVM_HCALL_SWDBG only in effective when SW_BP is enabled */
->>                  if (vcpu->guest_debug & KVM_GUESTDBG_SW_BP_MASK) {
->> diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
->> index 6dabb227a732..e5d10ceb5e67 100644
->> --- a/arch/loongarch/kvm/vm.c
->> +++ b/arch/loongarch/kvm/vm.c
->> @@ -49,8 +49,9 @@ static void kvm_vm_init_features(struct kvm *kvm)
->>                  kvm->arch.kvm_features |= BIT(KVM_LOONGARCH_VM_FEAT_PMU);
->>
->>          /* Enable all PV features by default */
->> -       kvm->arch.pv_features |= BIT(KVM_FEATURE_IPI);
->> +       kvm->arch.pv_features |= BIT(KVM_FEATURE_IPI) | BIT(KVM_FEATURE_CRASH);
->>          kvm->arch.kvm_features |= BIT(KVM_LOONGARCH_VM_FEAT_PV_IPI);
->> +       kvm->arch.kvm_features |= BIT(KVM_LOONGARCH_VM_FEAT_CRASH);
->>          if (kvm_pvtime_supported()) {
->>                  kvm->arch.pv_features |= BIT(KVM_FEATURE_PREEMPT);
->>                  kvm->arch.pv_features |= BIT(KVM_FEATURE_STEAL_TIME);
->>
->> base-commit: df2908090cda368b01ff43709f51890076c56157
->> --
->> 2.39.3
->>
->>
+> All boot successfully into the second kernel.
+> 
+> [1]: https://lore.kernel.org/all/20260601094805.2928614-1-ruanjinjie@huawei.com/
+> [2]: https://sashiko.dev/#/patchset/20260729031235.2840255-1-ruanjinjie%40huawei.com
+> [3]: https://sashiko.dev/#/patchset/20260907125404.922123-1-ruanjinjie%40huawei.com
+> 
+> Changes in v6:
+> - Split out arm64 crash hotplug patches as Breno suggested.
+> - Remove unused elfcorehdr_updated [4].
+> - Make the patch split more clear.
+> - Link to v5: https://lore.kernel.org/all/20260918100442.3841135-1-ruanjinjie@huawei.com/
+> 
+> [4]: https://sashiko.dev/#/patchset/20260907125404.922123-1-ruanjinjie%40huawei.com
+> 
+> Changs in v5:
+> - Rebased on v7.3-rc3.
+> - Fix several pre-existing code issues reported by Sashiko AI review. [3]
+> - Add an extra slot for memory hot-unplug.
+> - Add device_hotplug_lock_assert_held() helper.
+> - Rework to let the hotplug paths to skip CPU events entirely, which avoid
+>   the TOCTOU race of memory hotplug events and internal CPU offline path
+>   without holding device_hotplug_lock.
+> - Link to v4: https://lore.kernel.org/all/20260907125404.922123-1-ruanjinjie@huawei.com/
+> 
+> Changes in v4:
+> - Rebased on v7.3-rc1.
+> - Update the kexec_core code as Mike suggested.
+> - Update the LoongArch subject as Huacai suggested.
+> - Drop crash_dump_dm_crypt patch which will be fixed by Coiby in [4] as
+>   Sourabh suggested.
+> - Drop x86 related patches because of branch conflict, which will
+>   be done later.
+> - Drop the incorrect CRASH_MAX_MEMORY_RANGES patch.
+> - Handle elfcorehdr_index in arm64 arch code.
+> - Link to v3: https://lore.kernel.org/all/20260826092541.3905933-1-ruanjinjie@huawei.com/
+> 
+> [4] https://lore.kernel.org/all/20260828084900.1496839-2-coiby.xu@gmail.com/
+> 
+> Changes in v3:
+> - Handle "KEXEC_CRASH_HP_REMOVE_MEMORY" action.
+> - Fix several pre-existing code issues reported by Sashiko AI review [3].
+> - Introduce crash_extra_elfcorehdr_size() and elf64_phdr_size() helper.
+> - Rework related crash and arch code.
+> - Add test method.
+> - v2: https://lore.kernel.org/all/20260729031235.2840255-1-ruanjinjie@huawei.com/
+> 
+> Changes in v2:
+> - Split out Powerpc bugfix patch as Mike suggested.
+> - Use phys_to_virt() instead of __va() in update_crash_elfcorehdr().
+> - Convert pnum_hdr_sz() to a function.
+> - Only assign elfcorehdr_index after kexec_add_buffer succeeds, considering
+>   crash_handle_hotplug_event() already performs validity check on
+>   elfcorehdr_index:
+>   - We can safely remove the check for CPU hotplug
+>     in arch_crash_handle_hotplug_event().
+>   - The elfcorehdr_index's segment mem will be valid in
+>     update_crash_elfcorehdr(), so we can safely remove the NULL check.
+> - Simplify the commit message.
+> - v1: https://lore.kernel.org/all/20260723131242.1537633-1-ruanjinjie@huawei.com/#t
+> 
+> Jinjie Ruan (14):
+>   kexec: Fix CMA segment address translation with non-zero text_offset
+>   kexec: Record allocated CMA pages to fix release size mismatch
+>   kexec: Extract kexec_free_segment_cma() from kimage_free_cma()
+>   arm64: kexec_file: Fix CMA page leaks in segment placement retry loops
+>   arm64: kexec_file: Fix elf_headers memory leak in retry loop
+>   LoongArch: kexec_file: Fix CMA page leaks in segment placement retry
+>     loops
+>   LoongArch: kexec_file: Fix elf_headers memory leak in retry loop
+>   LoongArch: kexec_file: Fix a modified_cmdline leak
+>   x86/crash: Fix massive out-of-bounds write on 32-bit Highmem
+>   crash: Extract crash_get_memory_ranges() helper
+>   crash: Factor out crash_find_elfcorehdr() helper
+>   crash: Normalize the kexec_load elfcorehdr at load time
+>   driver core: Add device_hotplug_lock_assert_held() helper
+>   crash: Fix TOCTOU race in crash memory range collection
+> 
+>  arch/arm64/kernel/kexec_image.c            |   1 +
+>  arch/arm64/kernel/machine_kexec_file.c     |   9 +-
+>  arch/loongarch/kernel/kexec_efi.c          |   1 +
+>  arch/loongarch/kernel/machine_kexec.c      |   2 +
+>  arch/loongarch/kernel/machine_kexec_file.c |  10 +-
+>  arch/powerpc/kexec/crash.c                 |   1 +
+>  arch/x86/kernel/crash.c                    |  40 +++++---
+>  drivers/base/core.c                        |   5 +
+>  include/linux/crash_core.h                 |   2 +
+>  include/linux/device.h                     |   1 +
+>  include/linux/kexec.h                      |   4 +-
+>  kernel/crash_core.c                        | 114 +++++++++++++++++----
+>  kernel/kexec.c                             |   4 +
+>  kernel/kexec_core.c                        |  43 +++++---
+>  kernel/kexec_file.c                        |  13 ++-
+>  15 files changed, 192 insertions(+), 58 deletions(-)
+> 
+
+-- 
+Best regards,
+Jinjie
 
