@@ -1,343 +1,221 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+Received: from GVZP280CU018.outbound.protection.outlook.com (mail-swedencentralazon11022136.outbound.protection.outlook.com [52.101.82.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F96F424679;
-	Thu,  8 Oct 2026 07:32:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791444758; cv=none; b=YJ46KONaPjh38eObzeCMfDHyWwzltjg/+ZcS0ngrPAwn8/ELAT4bjuoxv233F54vghXMBV9j8z+xDi5cm3TeZVP8kgLKjewsztIJ3z5CKm9xH5zzuu0JSk7uTv72GnV6HzgfakJOwakBHpreI3DsAT3Y3x66MlJPTvooRijSSmo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791444758; c=relaxed/simple;
-	bh=m0vtgVQMJDqWwBFFJ3teewOuydjipuEfH3+0jVNF4eY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=acjEwD4Y6Q5re6RKOPq33BzoqLc6CTvXCnqcmWTcEx+ehswDB6NOliw5uD0iL7GfIoFDDDbuahan+kV8OjXFE5pTepfsVqRYPSXYdmJo4Wns7BAFbK5BzryVu7L2WdWb6WqdC3/6lHicNa5woR3+mi9iWLhKwOzzqZZzCYr8ciA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=SeLlkhmJ; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6FD846E019
+	for <loongarch@lists.linux.dev>; Thu,  8 Oct 2026 09:20:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.82.136
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791451235; cv=fail; b=rhueIvYrAuk4NlKXmxEqR4iXEaa2Nvo08AZvaPIMd8g8+YuYilbFeySL/y2JBI/NjY76Dx2Vngu2kIjjs3M4Mm6cQRvEsqLLMsMySMUf3N5W5N1mHEpBRCeaORFg9bXxJVM1VGJEsRxP9n2wASW0eaF2pdfGXJOlQiLCuRQljWc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791451235; c=relaxed/simple;
+	bh=wtvnzL/Kn0HI0k7QQxqspt8rc8xVg1usSxpWUAewq9U=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=BxrOvmpUKuPKSYvdndaqSoAXhjC08ANVqIg/6bFX6sjYT+Qmjhjhh5mJ/b9ZOyzkBuppKrO/iUxxQdOKxIvn66+kwAYA9io7xU749Visuil+D6gUWuh5pLDUcp1Jb9/KNrgQhVceQSichia969DesJcgDb/tGl6nOagP1BkcLdU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=permerror header.from=gaisler.com; spf=pass smtp.mailfrom=gaisler.com; dkim=pass (2048-bit key) header.d=gaisler.com header.i=@gaisler.com header.b=INuFnRN8; arc=fail smtp.client-ip=52.101.82.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=gaisler.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gaisler.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="SeLlkhmJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=xj
-	CQJ6zw60AJvAYBz016rNs4Ilh9koiA4J0p+PZWDdg=; b=SeLlkhmJ9jNVGDEJky
-	7jkwa/1rW4CFkR9RWSIy9eqF00W3NKl8V14fKTZYdeJGs4HqFMSF13fKNxfGhYWF
-	FmJsGXVIWEzU1j+tg905+Ph0V5QU9OKUqOZUVksPoeuj5/A4jhQTCBOkW5a9ZgQn
-	C7gQe0mta0IZAhKCEj08d428I=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wD3v07tRsdqtq9hDA--.12178S4;
-	Thu, 08 Oct 2026 15:32:06 +0800 (CST)
-From: Qunqin Zhao <zhaoqunqin@163.com>
-To: lee@kernel.org,
-	zhaoqunqin@loongson.cn
-Cc: chenhuacai@kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-crypto@vger.kernel.org,
-	mfd@lists.linux.dev,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH v9 2/2] mfd: loongson-se: Fix miscellaneous issues
-Date: Thu,  8 Oct 2026 15:31:51 +0800
-Message-Id: <20261008073151.15808-3-zhaoqunqin@163.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20261008073151.15808-1-zhaoqunqin@163.com>
-References: <20261008073151.15808-1-zhaoqunqin@163.com>
+	dkim=pass (2048-bit key) header.d=gaisler.com header.i=@gaisler.com header.b="INuFnRN8"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wWYCaXyqJi4ZWPF6qGx6PPahhWGHET64lXKc47FBjG7p2ybmlaSw3rSqwcUE/w6495DBBi00Msx1Pad4CqMHlQlVM/qJIb43Q5vas6TnhUz2FdJfY3o6B2lwCryb05C+irQEX9CK9zOP4PCPwtgggpydvj9tiGz5gFS6IjMBwPI6bAh3/u5LsJOt+jF5jWza6nAnQNwx7cGLV5HlOz3lAZgm2cs+gOYRAbkzrFUX7971nLmSWo/Vtm1aZx2dKuksQVEeWsAvwcOHAAlC2BAH2vckuGtUVDeqtRen6KsZsXENvEjTjnymAkIWFVRdV6NxSVMk43cdlaX24bz4xvnycw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nChlZmlrvLWslmoho1/5aTc9r9JcLlsuI9ltEi1anog=;
+ b=EWlQpJR1KYsOvtPjPBUbxCi4oXSmjhItlg/0F5aiUdQvXqIqDoCkmDk8i9oy4P1UZrVAO50NbeQ2qOyuzNSviNYashd2A8Iio0MztmgBkxQtH8DrkGsak+6QUS5bTPwAObwhg6jYu7nAYFdphTRQNywuypUTYJT/jkCyrJ9wD715p9Nijg4YPW7QZCwJmjdD5lPzVTSrr5yeqR3JkVu02DcEbyuv9s+t7ECmIaAbzjrAq85WOSi50rlHBNq4tuWFkqH6xfbV3WD7KshbsfI9ufAaE4aHcWpvGYL5/aaP+AGRDHan8ZnF+AtHymELnX+JmRaqAwL9nnBZoN4FVLBWTA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=gaisler.com; dmarc=pass action=none header.from=gaisler.com;
+ dkim=pass header.d=gaisler.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gaisler.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nChlZmlrvLWslmoho1/5aTc9r9JcLlsuI9ltEi1anog=;
+ b=INuFnRN8HZTZOmhztmeE+FWSg1C4ii9V9BgUPQhgDJ8RNd+LGyBWi29rZlGXHvH4Z0GZukAbrrEUd0nzmbqjHKg79DgHWjVgSQ0gc4YaqpMmpuSQB1UaoPfWU4gZjqGOATUuLN7KeBByoJkt4/4D6lM0ztbm/o5DPbwPmtuEgBaTMP0iptchQ/0h5NNjuKKvSwcf3Zc7zJKLoWCgKKhqaM0rYpC5qZi9c5buiMvfMK5GC5lkxReIkyvtUoaD2PFCY5fggNJ/0O0fl7QtbwSDi8zqAFCsedpUclVBHil2D/RLwqNrbjWzjN+WTGlLd8zLfiUjSYM5paTFCQs0O7ZJJA==
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=gaisler.com;
+Received: from MM0P280MB495062.SWEP280.PROD.OUTLOOK.COM (2603:10a6:190:2f::5)
+ by GVZP280MB1086.SWEP280.PROD.OUTLOOK.COM (2603:10a6:150:f5::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.496.17; Thu, 8 Oct
+ 2026 09:20:17 +0000
+Received: from MM0P280MB495062.SWEP280.PROD.OUTLOOK.COM
+ ([fe80::1f13:f10:e16b:7939]) by MM0P280MB495062.SWEP280.PROD.OUTLOOK.COM
+ ([fe80::1f13:f10:e16b:7939%4]) with mapi id 15.21.0472.016; Thu, 8 Oct 2026
+ 09:20:17 +0000
+Message-ID: <c24fc419-7bee-4fe4-be12-9aa378d49af1@gaisler.com>
+Date: Thu, 8 Oct 2026 11:20:14 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 8/8] mm: Drop pxd_ERROR()
+To: Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
+Cc: samuel.holland@sifive.com, David Hildenbrand <david@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+ Lorenzo Stoakes <ljs@kernel.org>, Yoshinori Sato
+ <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, linux-alpha@vger.kernel.org,
+ linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-um@lists.infradead.org, linux-arch@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>
+References: <20260831054331.625505-1-anshuman.khandual@arm.com>
+ <20260831054331.625505-9-anshuman.khandual@arm.com>
+Content-Language: en-US
+From: Andreas Larsson <andreas@gaisler.com>
+In-Reply-To: <20260831054331.625505-9-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BE1P281CA0084.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:b10:78::11) To MM0P280MB495062.SWEP280.PROD.OUTLOOK.COM
+ (2603:10a6:190:2f::5)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3v07tRsdqtq9hDA--.12178S4
-X-Coremail-Antispam: 1Uf129KBjvJXoW3tw1rur17tw1xKw47JFWrZrb_yoWDWw1fpF
-	45CayYkr4jqr48CwsxJr98ZFy3ZrZ5tF9rCa93tw4xAFykJ34rWFW5KFy8WayfurWDtF17
-	XFWkKFWru3WrC3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jezuAUUUUU=
-X-CM-SenderInfo: 52kd01pxqtx0i6rwjhhfrp/xtbC7hdbmmrHRveiLAAA3q
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MM0P280MB495062:EE_|GVZP280MB1086:EE_
+X-MS-Office365-Filtering-Correlation-Id: 83646bf6-eeda-498e-e234-08df251d5e2c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|23010399003|376014|7416014|56012099006|4143699003|11063799006|10067099003|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	NC/qpKPoxiyUAIaFboaEX4yQJbeZ+vmHWvsqeQ5kGT8l7X9fcYqp9eBx5WDlxiVvR0L+48Kj8haTuGmN+ee23fz3oSbjQL0jDYSXa+8gvblI86UZZh4H3rc1iI63OnAtUl/Bc29s8THJfx5bFeLN0emAE2uZAHoMFHy90APywhP9Z8AjykGKVGL0t0c2nvMe3PsGovHxRyjauii+CaAg7FIwI2CS/HOCQfII4YJSPtE4I0SRp+V6w4RmvmGuzeCsqZSrWw82tVXGVw0nRXYEEjprr2bBi/k2erOTWX+ty2uFPb9NPtUYLqYJ9PHu+KDHk4Q/vhMUK3yGm+xZ+4lHwTIkrPlcoR9I3RrI4QZlUmJ2jnb0OByBCKTN6WeW3SPL7RUqYcLSHKhK7REebKrFE0KT0iexUictJu2Fnotxo5BB3aWPdM5djXsume4Uu/+LrZgrVePGx8jVXrq7s0fx3tDDa8Its7qN4Q+p0W/zrq+NcYe8ULVC7XRuOjK0vRn8IJYPzelV1nlbTqr5dOdn1l7Ngd1FRLzsM1A/gAKUICvJl7+yqtc729F6ZYuOPgHw3w2EZKjndGEXmpox7kfKl6X1HCrim3tkhks2tAZ3SktjZtPITkfZDdVBJ/FfT8XA3Aw4kbnTbKOULc4nRgbN9ElLoKLj3Wvavjhkq2aZS/c=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MM0P280MB495062.SWEP280.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(23010399003)(376014)(7416014)(56012099006)(4143699003)(11063799006)(10067099003)(22082099003)(18002099003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Qnc4WTMwaVBFYzJqcExMa05CL2Z6N2lPTHJIWHJ6RkNtSjQ4YTA2YWhOWHNP?=
+ =?utf-8?B?c3h4MGNyVWpGRXAxYkV5a0VycHRMZmJ4cENISm5EeHF6NFR4U0grNHpzVFNw?=
+ =?utf-8?B?SitEcWRXSExhV2gvMW5hZUQweld3N2JSdVEyZGRDckVZMXZ5SlNzSklhcmk5?=
+ =?utf-8?B?VEt1RHBCbXFKb0lDcVBwRXdFOHRDUTNqemh4TFExRnJhM0ZzTTR2N0JVYlZ1?=
+ =?utf-8?B?VlA1YXo4RHIrbFRpa2QxeFM0VWJwVzQ1WGlaQmdBTFhnK1VLaHllLzdqSFNL?=
+ =?utf-8?B?WE9BWUlhaHJKZkNPd0kvZ2U5TEZTUWZHOHVtMTduYW1wdUlaTTIxeFFmU3Qw?=
+ =?utf-8?B?QWxmQ1NNSHgraGRsb1pkbmVORHF2eDF0bUFWTjBiNXFzZDczRDZ5R2xqdFRR?=
+ =?utf-8?B?Kzhmc3ArU25pcDQyUEpkekh5RmxrVnV0TFVCajVUN2czMGc4UGFqZEx2SEpl?=
+ =?utf-8?B?NVVVcjBRaFoxb24wVmZrTVBOR2FoYnRaUFpZSmxXcnVvV2w5TzEzaVgzODNh?=
+ =?utf-8?B?eWdPV0J4ekp4bkVpdGUxY2RLYTRSWGZqSUlwVHNRdlFyMVEwNTZLcVQ3dlh4?=
+ =?utf-8?B?UGdtOGNwb2g0d2MwQ0Y3ajRUVWRMc1dIbnRsVTFpSTJtclZzNFFPc255cnhQ?=
+ =?utf-8?B?TU5abWFjbjBrS25UU01WMzhjdU9VZTZuVUpaQ2xBSHBSOWlGejFWK3RLaldG?=
+ =?utf-8?B?RkJERVNnbHJnWFZTUkxTVjBlVTJ1d1JNdmkwUWhROHZtMUM2dlJJeHQyRmdl?=
+ =?utf-8?B?UW5MU0cySjFHWUpkZ1RQSTA3SE82Rlczb1hqakhiVi80U3cxT2swK0t5OVcw?=
+ =?utf-8?B?UjkyekRsR0JuZTk3QWZuR0RwYjV1SUNUbnNwaFBOQjA1TEdKWFRRRTNNNyt0?=
+ =?utf-8?B?Y2YrTmZralIvNllYNG1aKzRONTJrZWYvTFFBbjg1S0lEcmZ3amo4UVMwWTZ6?=
+ =?utf-8?B?Sm1VZXc4aStLMWx4dE9PWElQZlg4eXhaRGMwcHlVWFlJNE53NXh2ejl3NVZH?=
+ =?utf-8?B?Y0dyaVc0bm9xVXpDV00ySWtnT1AzSElIQTJieHlKTys2a1ZpRDdUVElIKzBw?=
+ =?utf-8?B?Yk9sRWlTQTlKeUZpQUYydnIvazY3ZjVBYXkzZXdZWjAxRlYrYXAxKy9PU2gr?=
+ =?utf-8?B?UFo1U0hFSGRzUUZwYmFmalNmVTBrNHVmTmVSVVEwUGFxL0VlWHVCL3dIMFhN?=
+ =?utf-8?B?ajNyNDJwblBVbjRDR1dvVHpuNEx6VUk5MldTY0ptMEgrNUZVUlRCd3kzMlB6?=
+ =?utf-8?B?bnNBb1lya3pVd2g1YzJwVFpHNzUrRlJEVHdyMGg0dDBQck9zL0w0SGRjcC9S?=
+ =?utf-8?B?NHM3L0RyU3hIaWl6QnFzbEcwZ3NwWG1uc0FsOGg4citQTTFRTWdKdEdORi9R?=
+ =?utf-8?B?WEwySCtxUDBxYkRmMzhmNHVSVWR5SjgzeEt1WFN3U3lVKzdZY2k2UzBURmda?=
+ =?utf-8?B?YXUvTFo3c0EvTVNnR0dieTh2VzRrWGJCY0prTWc0Z04vWXpJbFFVcjZLc3hF?=
+ =?utf-8?B?WDRBbUFkbzBTMzMzcnIxTGlJTW9QOW1zVU5HSkc4NFNkLzczV3hYTUtzcjRY?=
+ =?utf-8?B?WitCZ1g3SzNjbXFONGNDWEcxWlUyR0piM2p6dThwQlREaXFzWDhoYlc5Unlk?=
+ =?utf-8?B?dWpjRk00c25DQW9ITEVTU0ZITDRJSm50MWZoeGNFRjlVZzlqZXBxVmIwbnFL?=
+ =?utf-8?B?bnRRakpsRC82V3R4ZzBRbGl0aEtBM1A0UlduY2xCUUp5Q05VVXNpNFgxM0tS?=
+ =?utf-8?B?U0loRGpFckpUUElXTkRSV01VV3hXN3F0QXBOMjRxWUJYY0V6QTdEZThMZDEv?=
+ =?utf-8?B?SU04Y0VqU21ydmNCS3VMOXNQK2psemZXRHk4UDZPOFpvcmV6eFlndi9ocm9v?=
+ =?utf-8?B?eXRVampFMmZvNVBQSCsxVGxkbXVCcENac0RGOXhnMldaVmhaelhlcXB0dnB3?=
+ =?utf-8?B?RFdack1RQVdGVU94RWxQQXBsdlNrd0pTRkVneVFVRXZybnM0ZUVLMHYyRDVC?=
+ =?utf-8?B?UkVKb0h2Qk13VVNiOXNkUWs1RHpKd2UvU2lRVlgvRnU5VlJ3ell6czZPN1Bk?=
+ =?utf-8?B?d2VHdDZVUTdaYWIrYkdmYXFmNktSQjhyNWVlRHNOZ2c3RTJyL3puSm40V2lQ?=
+ =?utf-8?B?RnJwQjhzRnp0bUZVeWx0bUxVN0E3NlJadU9oOGFDOGNRbFVjdzRxNjl4ek8v?=
+ =?utf-8?B?UzFka04xY01xUEV4TmRoc29xUEcydDM1Z05kNWhmMjl3OVhHTnJDUVJ5WGth?=
+ =?utf-8?B?cFFId1A1RHJEbitNS012U2x6NTcwM0gvbk9rekpFYVZZbG4zYS84elM5b2lY?=
+ =?utf-8?B?d3N0d0dNS3h1RWRYR0NLUmFaeVVVWlByVURvc3JuTFh1SHp2SkxtSVpGZUE5?=
+ =?utf-8?Q?yjjhfEohdeTOoAqE=3D?=
+X-OriginatorOrg: gaisler.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 83646bf6-eeda-498e-e234-08df251d5e2c
+X-MS-Exchange-CrossTenant-AuthSource: MM0P280MB495062.SWEP280.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Oct 2026 09:20:17.5038
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 91fa4a59-2167-458a-8318-e45d80469d7e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5BZfB4EAaSFJ84qYftmRVMohK/eymk8QLHXJzzFm4elUHya77EOOlIY25xck2qu/+rvHfHMgpADg5257wP54q4lxf3y+8uFBxp0svqv6SU8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVZP280MB1086
 
-From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+On 2026-08-31 07:43, Anshuman Khandual wrote:
+> There are no more users left for any pxd_ERROR() either in generic MM or in
+> the platform MM. Hence all these platform macros along with their generic
+> fallback could be dropped across the tree.
+> 
+> Cc: linux-alpha@vger.kernel.org
+> Cc: linux-snps-arc@lists.infradead.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-csky@vger.kernel.org
+> Cc: linux-hexagon@vger.kernel.org
+> Cc: loongarch@lists.linux.dev
+> Cc: linux-m68k@lists.linux-m68k.org
+> Cc: linux-mips@vger.kernel.org
+> Cc: linux-openrisc@vger.kernel.org
+> Cc: linux-parisc@vger.kernel.org
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: linux-riscv@lists.infradead.org
+> Cc: linux-s390@vger.kernel.org
+> Cc: linux-sh@vger.kernel.org
+> Cc: sparclinux@vger.kernel.org
+> Cc: linux-um@lists.infradead.org
+> Cc: linux-arch@vger.kernel.org
+> Cc: linux-mm@kvack.org
+> Cc: linux-kernel@vger.kernel.org
+> Acked-by: Geert Uytterhoeven <geert@linux-m68k.org> # m68k
+> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+...>  /*
+>   * Encode/decode swap entries and swap PTEs. Swap PTEs are all PTEs that
+>   * are !pte_none() && !pte_present().
+> diff --git a/arch/sparc/include/asm/pgtable_32.h b/arch/sparc/include/asm/pgtable_32.h
+> index f89b1250661d..5a5f54a090f5 100644
+> --- a/arch/sparc/include/asm/pgtable_32.h
+> +++ b/arch/sparc/include/asm/pgtable_32.h
+> @@ -40,9 +40,6 @@ void load_mmu(void);
+>  unsigned long calc_highpages(void);
+>  unsigned long __init bootmem_init(unsigned long *pages_avail);
+>  
+> -#define pte_ERROR(e)   __builtin_trap()
+> -#define pmd_ERROR(e)   __builtin_trap()
+> -#define pgd_ERROR(e)   __builtin_trap()
+>  
+>  #define PTRS_PER_PTE    	64
+>  #define PTRS_PER_PMD    	64
+> diff --git a/arch/sparc/include/asm/pgtable_64.h b/arch/sparc/include/asm/pgtable_64.h
+> index 0837ebbc5dce..44d1333065a6 100644
+> --- a/arch/sparc/include/asm/pgtable_64.h
+> +++ b/arch/sparc/include/asm/pgtable_64.h
+> @@ -96,16 +96,6 @@ bool kern_addr_valid(unsigned long addr);
+>  #define PTRS_PER_PUD	(1UL << PUD_BITS)
+>  #define PTRS_PER_PGD	(1UL << PGDIR_BITS)
+>  
+> -#define pmd_ERROR(e)							\
+> -	pr_err("%s:%d: bad pmd %p(%016lx) seen at (%pS)\n",		\
+> -	       __FILE__, __LINE__, &(e), pmd_val(e), __builtin_return_address(0))
+> -#define pud_ERROR(e)							\
+> -	pr_err("%s:%d: bad pud %p(%016lx) seen at (%pS)\n",		\
+> -	       __FILE__, __LINE__, &(e), pud_val(e), __builtin_return_address(0))
+> -#define pgd_ERROR(e)							\
+> -	pr_err("%s:%d: bad pgd %p(%016lx) seen at (%pS)\n",		\
+> -	       __FILE__, __LINE__, &(e), pgd_val(e), __builtin_return_address(0))
+> -
+>  #endif /* !(__ASSEMBLER__) */
 
-Address multiple historical driver issues discovered by the Sashiko
-Automation system within the loongson_se_probe() initialization flow
-and the driver's interrupt service routines [1].
+Perhaps a bit of a pity to lose the printing of the address of the pxd
+that a number of architectures did before this series, but i have no
+strong opinion.
 
-- Add an explicit bounds check in se_irq_handler() before accessing
-  the engines array to prevent an out-of-bounds memory access.
+Acked-by: Andreas Larsson <andreas@gaisler.com> # sparc
 
-- Validate the id argument in loongson_se_init_engine() and reject
-  engine 0, whose data buffer is reused for the command buffers of all
-  other engines, to prevent out-of-bounds accesses and overlapping DMA
-  buffers.
-
-- Switch from devm_kmalloc() to devm_kzalloc() and initialize all
-  engine completion structures in probe(), dropping the redundant
-  init_completion() in loongson_se_init_engine().
-
-- Introduce loongson_se_reinit_completion() to mask the target
-  interrupt, clear any pending status, and reset the completion under
-  dev_lock before a command is issued, then re-enable the interrupt
-  under the same lock after the command has been triggered.  This
-  closes the race where a stale interrupt from a previously
-  interrupted command could complete the current command's completion.
-
-- Wait for controller command completion with a bounded
-  non-interruptible wait so a pending signal cannot leave the
-  controller running while its DMA buffers are being torn down, and a
-  wedged controller cannot hang the kernel indefinitely.
-
-- Fix EPROBE_DEFER handling: propagate the error directly from
-  platform_irq_count() instead of overwriting it with ENODEV so that
-  probe deferral works when the interrupt provider is not yet ready.
-
-- Validate dmam_size from firmware against the minimum required size
-  to keep the command buffers of all engines within engine 0's data
-  region and prevent overlapping DMA buffers.
-
-- Return the error code from devm_request_irq() instead of silently
-  continuing to prevent an indefinite hang.
-
-- Add a loongson_se_stop() cleanup handler registered with
-  devm_add_action_or_reset() before loongson_se_init() so that a
-  failed init still stops the controller and masks all interrupts via
-  devres, preventing DMA access to freed memory.
-
-- Zero-initialize the local controller command structures in
-  loongson_se_init() and loongson_se_init_engine() to prevent
-  uninitialized stack data from being written to device registers.
-
-- Add the SE_CMD_STOP command definition.
-
-Link: https://lore.kernel.org/all/20260618095949.GB1672911@google.com/ [1]
-Fixes: e551fa3159e3 ("mfd: Add support for Loongson Security Engine chip controller")
-Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
----
- drivers/mfd/loongson-se.c       | 105 ++++++++++++++++++++++++++++----
- include/linux/mfd/loongson-se.h |   1 +
- 2 files changed, 95 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/mfd/loongson-se.c b/drivers/mfd/loongson-se.c
-index 969378518..2fb5da85b 100644
---- a/drivers/mfd/loongson-se.c
-+++ b/drivers/mfd/loongson-se.c
-@@ -52,17 +52,48 @@ static int loongson_se_poll(struct loongson_se *se, u32 int_bit)
- 						!(status & int_bit),
- 						1, LOONGSON_ENGINE_CMD_TIMEOUT_US);
- 
-+	/*
-+	 * Re-enable the interrupt that loongson_se_reinit_completion() masked.
-+	 * The hardware guarantees that once the interrupt is re-enabled, only
-+	 * interrupts for the command just issued can arrive, so a stale
-+	 * interrupt from a previously interrupted command can never complete
-+	 * this command's completion.
-+	 */
-+	writel(int_bit | readl(se->base + SE_S2LINT_EN), se->base + SE_S2LINT_EN);
-+
- 	spin_unlock_irq(&se->dev_lock);
- 
- 	return err;
- }
- 
-+/*
-+ * Prepare a completion for a new command: mask the corresponding interrupt,
-+ * clear any pending interrupt status, and reset the completion.  This runs
-+ * under dev_lock so that the IRQ handler cannot race with it.  The interrupt
-+ * is re-enabled in loongson_se_poll() after the command has been issued.
-+ */
-+static void loongson_se_reinit_completion(struct loongson_se *se,
-+					  struct completion *completion, u32 int_bit)
-+{
-+	spin_lock_irq(&se->dev_lock);
-+
-+	writel(readl(se->base + SE_S2LINT_EN) & ~int_bit, se->base + SE_S2LINT_EN);
-+
-+	writel(int_bit, se->base + SE_S2LINT_CL);
-+
-+	reinit_completion(completion);
-+
-+	spin_unlock_irq(&se->dev_lock);
-+}
-+
- static int loongson_se_send_controller_cmd(struct loongson_se *se,
- 					   struct loongson_se_controller_cmd *cmd)
- {
- 	u32 *send_cmd = (u32 *)cmd;
- 	int err, i;
- 
-+	loongson_se_reinit_completion(se, &se->cmd_completion, SE_INT_CONTROLLER);
-+
- 	for (i = 0; i < SE_SEND_CMD_REG_LEN; i++)
- 		writel(send_cmd[i], se->base + SE_SEND_CMD_REG + i * 4);
- 
-@@ -70,18 +101,31 @@ static int loongson_se_send_controller_cmd(struct loongson_se *se,
- 	if (err)
- 		return err;
- 
--	return wait_for_completion_interruptible(&se->cmd_completion);
-+	/*
-+	 * Wait for the controller to complete the command.  Use a bounded
-+	 * non-interruptible wait: a pending signal must not leave the
-+	 * controller running while its DMA buffers are being torn down.
-+	 * One second is far more than any controller command should take,
-+	 * while still bounding the wait if the hardware wedges.
-+	 */
-+	if (!wait_for_completion_timeout(&se->cmd_completion, HZ))
-+		return -ETIMEDOUT;
-+
-+	return 0;
- }
- 
- int loongson_se_send_engine_cmd(struct loongson_se_engine *engine)
- {
-+	int err;
-+
-+	loongson_se_reinit_completion(engine->se, &engine->completion, BIT(engine->id));
-+
- 	/*
- 	 * After engine initialization, the controller already knows
- 	 * where to obtain engine commands from. Now all we need to
- 	 * do is notify the controller that the engine needs to be started.
- 	 */
--	int err = loongson_se_poll(engine->se, BIT(engine->id));
--
-+	err = loongson_se_poll(engine->se, BIT(engine->id));
- 	if (err)
- 		return err;
- 
-@@ -92,12 +136,17 @@ EXPORT_SYMBOL_GPL(loongson_se_send_engine_cmd);
- struct loongson_se_engine *loongson_se_init_engine(struct device *dev, int id)
- {
- 	struct loongson_se *se = dev_get_drvdata(dev);
--	struct loongson_se_engine *engine = &se->engines[id];
--	struct loongson_se_controller_cmd cmd;
-+	struct loongson_se_engine *engine;
-+	struct loongson_se_controller_cmd cmd = {0};
-+
-+	/* Engine 0 does not exist and its data buffer is reused for commands */
-+	if (id <= 0 || id >= SE_ENGINE_MAX)
-+		return NULL;
-+
-+	engine = &se->engines[id];
- 
- 	engine->se = se;
- 	engine->id = id;
--	init_completion(&engine->completion);
- 
- 	/* Divide DMA memory equally among all engines */
- 	engine->buffer_size = se->dmam_size / SE_ENGINE_MAX;
-@@ -154,7 +203,8 @@ static irqreturn_t se_irq_handler(int irq, void *dev_id)
- 	/* For engines */
- 	while (int_status) {
- 		id = __ffs(int_status);
--		complete(&se->engines[id].completion);
-+		if (id < SE_ENGINE_MAX)
-+			complete(&se->engines[id].completion);
- 		int_status &= ~BIT(id);
- 		writel(BIT(id), se->base + SE_S2LINT_CL);
- 	}
-@@ -166,7 +216,7 @@ static irqreturn_t se_irq_handler(int irq, void *dev_id)
- 
- static int loongson_se_init(struct loongson_se *se, dma_addr_t addr, int size)
- {
--	struct loongson_se_controller_cmd cmd;
-+	struct loongson_se_controller_cmd cmd = {0};
- 	int err;
- 
- 	cmd.command_id = SE_CMD_START;
-@@ -187,6 +237,17 @@ static const struct mfd_cell engines[] = {
- 	{ .name = "tpm_loongson" },
- };
- 
-+static void loongson_se_stop(void *data)
-+{
-+	struct loongson_se *se = data;
-+	struct loongson_se_controller_cmd cmd = {0};
-+
-+	cmd.command_id = SE_CMD_STOP;
-+	loongson_se_send_controller_cmd(se, &cmd);
-+
-+	writel(0, se->base + SE_S2LINT_EN);
-+}
-+
- static int loongson_se_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -194,7 +255,7 @@ static int loongson_se_probe(struct platform_device *pdev)
- 	int nr_irq, irq, err, i;
- 	dma_addr_t paddr;
- 
--	se = devm_kmalloc(dev, sizeof(*se), GFP_KERNEL);
-+	se = devm_kzalloc(dev, sizeof(*se), GFP_KERNEL);
- 	if (!se)
- 		return -ENOMEM;
- 
-@@ -203,10 +264,24 @@ static int loongson_se_probe(struct platform_device *pdev)
- 	spin_lock_init(&se->dev_lock);
- 	mutex_init(&se->engine_init_lock);
- 
-+	for (i = 0; i < SE_ENGINE_MAX; i++)
-+		init_completion(&se->engines[i].completion);
-+
- 	dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
- 	if (device_property_read_u32(dev, "dmam_size", &se->dmam_size))
- 		return -ENODEV;
- 
-+	/*
-+	 * Engine 0 does not exist and its data buffer is reused as the command
-+	 * buffer for the other engines.  The command buffers of all engines
-+	 * therefore must fit within engine 0's data region, i.e.
-+	 * dmam_size / SE_ENGINE_MAX >= SE_ENGINE_MAX * 2 * SE_ENGINE_CMD_SIZE.
-+	 * Enforce this to keep each engine's data and command buffers from
-+	 * overlapping.
-+	 */
-+	if ((se->dmam_size / SE_ENGINE_MAX) < (SE_ENGINE_MAX * 2 * SE_ENGINE_CMD_SIZE))
-+		return -EINVAL;
-+
- 	se->dmam_base = dmam_alloc_coherent(dev, se->dmam_size, &paddr, GFP_KERNEL);
- 	if (!se->dmam_base)
- 		return -ENOMEM;
-@@ -216,20 +291,28 @@ static int loongson_se_probe(struct platform_device *pdev)
- 		return PTR_ERR(se->base);
- 
- 	nr_irq = platform_irq_count(pdev);
--	if (nr_irq <= 0)
-+	if (nr_irq == 0)
- 		return -ENODEV;
-+	if (nr_irq < 0)
-+		return nr_irq;
- 
- 	writel(SE_INT_ALL, se->base + SE_S2LINT_CL);
- 
- 	for (i = 0; i < nr_irq; i++) {
- 		irq = platform_get_irq(pdev, i);
- 		err = devm_request_irq(dev, irq, se_irq_handler, IRQF_SHARED, "loongson-se", se);
--		if (err)
-+		if (err) {
- 			dev_err(dev, "failed to request IRQ: %d\n", irq);
-+			return err;
-+		}
- 	}
- 
- 	writel(SE_INT_ALL, se->base + SE_S2LINT_EN);
- 
-+	err = devm_add_action_or_reset(dev, loongson_se_stop, se);
-+	if (err)
-+		return err;
-+
- 	err = loongson_se_init(se, paddr, se->dmam_size);
- 	if (err)
- 		return err;
-diff --git a/include/linux/mfd/loongson-se.h b/include/linux/mfd/loongson-se.h
-index 07afa0c25..8237ccab7 100644
---- a/include/linux/mfd/loongson-se.h
-+++ b/include/linux/mfd/loongson-se.h
-@@ -9,6 +9,7 @@
- #define SE_SEND_CMD_REG_LEN		0x8
- /* Controller command ID */
- #define SE_CMD_START			0x0
-+#define SE_CMD_STOP			0x1
- #define SE_CMD_SET_DMA			0x3
- #define SE_CMD_SET_ENGINE_CMDBUF	0x4
- 
--- 
-2.47.2
+Cheers,
+Andreas
 
