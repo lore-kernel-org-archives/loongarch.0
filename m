@@ -1,114 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A388C1B4F0A;
-	Thu,  8 Oct 2026 06:42:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAE4B4119F2;
+	Thu,  8 Oct 2026 07:32:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791441766; cv=none; b=HuNzVj+XrFZGvUqd/OXsc38MjVT+VQ+smjEtU2gjG7uI9J1mbK27Z3bsiBsmfJuWxwcjlpaZbZ6+6J/q6Jlhfo0b4OK0Faf8RAAtJI2v/BDJHLSwHRuCddlKdLodnIn94xay4IBFqx31KObOczAewL6ges856GzLaneivhxPbAc=
+	t=1791444746; cv=none; b=dGXmPpasTtFVjFBukYV3V/OSp1sPEuYyX/oIKqBsHPO0GFOdItunAK81kC/K8eqk6Y7+7Tpzh/GCTufyv2dcG4+Vtlu5LWTSRV5eGFLutpXERG20qhsZXZTy/3YNNsoDMdK+mbavtXatzre40hcXaLsjbzr+th5jwA8+VK61nzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791441766; c=relaxed/simple;
-	bh=gMtBmjb8PEyCjTU9lBWISEAPQcRPvGaHz8QkfLqMP/g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=so27Mhxf7/DW3oShwOT9jXYiIcEbTFF/8rnqDzZOnYwjv+4W7CdgqzGgGlfhziR+xj+9HFjhIN2YpNJ6jRg7ZkCSQ/F6SG5h/VHQeYIitSw00mZ7rxbAh6KmfwlUSd5m5BPW90ccWB/daLX+HbGcC3mmiv5bY/4Hii64DBaXfNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LzwrJChR; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791444746; c=relaxed/simple;
+	bh=/zdqDkp+MR4muNmPlebN8/G/pEFyOL6VDyJAsQ+89jk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=IA/ODiGjt7jSI3atyXi/xnNvMZXw0XZTM2suqzxPTP1vB805hZb5jFGVtkN3bSsHbF9LAQ84kw1V9MInEbxhIu/OLBnkkG4sGp9tnxPtqW/VLjyrwYV5oXLDlJDA97xkRjNz7yHAePRbP66ZTXKsVJKtKuu0P4vRXzNiTsU5CBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=RIPiK8mW; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LzwrJChR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF9461F000FF;
-	Thu,  8 Oct 2026 06:42:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791441765;
-	bh=QYjlbETRxQW9RMjfplUAnmTLI8vDWVyFt6dBT1ysNAc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=LzwrJChRSmVjEsRakCz7KZMyALTXRiMMTQqt+Pq1DfhvTRhANdPa2qsjY85CoeKmU
-	 +smyn7Lotjz8Z+6My1XtXdRcAWv0Bk3+so9601+yHD0hXOPoxrMliq4uNlyMYvPyEN
-	 /KxKGNEGsRLbC5gh5Fpx/irufkYMSkObZy2nAEfpl7+01CgTBFC4KUpi+Rt44aL8Zf
-	 NTIbo4/T2UBb6sZftaMcHpGWW78wNUfUZX3n+aegjkdkvaCrfhtnmdLmCzyRFXWi5O
-	 KzhbRY6JsNtjGiT0SU3GKlmfmu9GhVSnGRLyWq6PEohhumSDv1uECF+lTxE7sLA503
-	 DyPwUh9lm6nsw==
-Date: Thu, 8 Oct 2026 08:42:25 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
-	chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com,
-	mpe@ellerman.id.au, npiggin@gmail.com, chleroy@kernel.org,
-	ritesh.list@gmail.com, sshegde@linux.ibm.com, tglx@kernel.org,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	hpa@zytor.com, gregkh@linuxfoundation.org, rafael@kernel.org,
-	dakr@kernel.org, akpm@linux-foundation.org, baoquan.he@linux.dev,
-	pasha.tatashin@soleen.com, pratyush@kernel.org,
-	ruirui.yang@linux.dev, leitao@debian.org, yeoreum.yun@arm.com,
-	sourabhjain@linux.ibm.com, robh@kernel.org, coxu@redhat.com,
-	kees@kernel.org, tangyouling@kylinos.cn, liukexin@kylinos.cn,
-	zhangtianyang@loongson.cn, guodongtai@kylinos.cn,
-	maqianga@uniontech.com, chao.gao@intel.com, kai.huang@intel.com,
-	vishal.l.verma@intel.com, seanjc@google.com, piliu@redhat.com,
-	thuth@redhat.com, jbouron@amazon.com, me@linux.beauty,
-	mclapinski@google.com, graf@amazon.com, bgwin@google.com,
-	hbathini@linux.ibm.com, eric.devolder@oracle.com,
-	takahiro.akashi@linaro.org, james.morse@arm.com,
-	palmer@rivosinc.com, x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-	driver-core@lists.linux.dev, kexec@lists.infradead.org
-Subject: Re: [PATCH v6 00/14] crash: Fix several bugs
-Message-ID: <asc7UdlRsy7502j8@kernel.org>
-References: <20260921090450.807575-1-ruanjinjie@huawei.com>
- <f4ba3a6b-537d-4328-b0c1-c0e5aa61924f@huawei.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="RIPiK8mW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=2W
+	mrGmbVz8iXt7vLLO/9uShFkQKub27VoiEbcOyNMm4=; b=RIPiK8mW5gZWNcYdrG
+	NEYWtCcXD/q5a1ZQpKz48xcYzpIV5hnQwgkuzzZFiyLA1zh3NFh2N9r4s3G9UFhe
+	HXnL5U/iJzYRWJ5NT666jusWC1m31/E3oTv8jVc7nDG0N7TG8AB2nKzbPU/ngTdJ
+	kz4v9PJQjwtqxlKZp2F1ugZ9U=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wD3v07tRsdqtq9hDA--.12178S3;
+	Thu, 08 Oct 2026 15:32:02 +0800 (CST)
+From: Qunqin Zhao <zhaoqunqin@163.com>
+To: lee@kernel.org,
+	zhaoqunqin@loongson.cn
+Cc: chenhuacai@kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-crypto@vger.kernel.org,
+	mfd@lists.linux.dev,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH v9 1/2] mfd: loongson-se: Add multi-node support
+Date: Thu,  8 Oct 2026 15:31:50 +0800
+Message-Id: <20261008073151.15808-2-zhaoqunqin@163.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20261008073151.15808-1-zhaoqunqin@163.com>
+References: <20261008073151.15808-1-zhaoqunqin@163.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <f4ba3a6b-537d-4328-b0c1-c0e5aa61924f@huawei.com>
+X-CM-TRANSID:_____wD3v07tRsdqtq9hDA--.12178S3
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Kr45Jr4DZFWUJFW5AF1xAFb_yoW8ur4xpF
+	45CayYvr4UWw48uw1DZa4DCr15AFWFq39xCanrJw47Aas8Jwn3WrWfJFy2qFs8CFW8Xay8
+	ZrZ5CFW8CFy8uF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jnID7UUUUU=
+X-CM-SenderInfo: 52kd01pxqtx0i6rwjhhfrp/xtbC7hJamWrHRvKhqwAA3s
 
-Hi Jinjie,
+From: Qunqin Zhao <zhaoqunqin@loongson.cn>
 
-On Thu, Oct 08, 2026 at 09:57:30AM +0800, Jinjie Ruan wrote:
-> 
-> 在 2026/9/21 17:04, Jinjie Ruan 写道:
-> > As Baoquan and Catalin suggested, this patch set fixes
-> > several pre-existing code issues found by Sashiko AI [1][2][3].
-> > 
-> > The major improvements and fixes included in this series are:
-> > - Fix several memory leaks for arm64, and similar issues on LoongArch.
-> > - Fix out-of-bounds write on 32-bit Highmem for x86.
-> > - Fix TOCTOU race in crash memory range collection.
-> 
-> Hi all,
-> 
-> Gentle ping.
-> 
-> Could anyone take a look or let me know if there's anything
-> else needed? I can rebase/resend if required.
+On the Loongson platform, each node is equipped with a security engine
+device. However, due to a hardware flaw, only the device on node 0 can
+trigger interrupts. Therefore, interrupts from other nodes are forwarded
+by node 0. We need to check in the interrupt handler of node 0 whether
+this interrupt is intended for other nodes, this can be accomplished via
+shared interrupt handling.
 
-Sorry for the delay, I was travelling for the past few weeks.
-I'm planning to review this next week. 
+Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ drivers/mfd/loongson-se.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-And we do need acks from arch maintainers for most of the patches in this
-series.
-
-> > Jinjie Ruan (14):
-> >   kexec: Fix CMA segment address translation with non-zero text_offset
-> >   kexec: Record allocated CMA pages to fix release size mismatch
-> >   kexec: Extract kexec_free_segment_cma() from kimage_free_cma()
-> >   arm64: kexec_file: Fix CMA page leaks in segment placement retry loops
-> >   arm64: kexec_file: Fix elf_headers memory leak in retry loop
-> >   LoongArch: kexec_file: Fix CMA page leaks in segment placement retry
-> >     loops
-> >   LoongArch: kexec_file: Fix elf_headers memory leak in retry loop
-> >   LoongArch: kexec_file: Fix a modified_cmdline leak
-> >   x86/crash: Fix massive out-of-bounds write on 32-bit Highmem
-> >   crash: Extract crash_get_memory_ranges() helper
-> >   crash: Factor out crash_find_elfcorehdr() helper
-> >   crash: Normalize the kexec_load elfcorehdr at load time
-> >   driver core: Add device_hotplug_lock_assert_held() helper
-> >   crash: Fix TOCTOU race in crash memory range collection
-
+diff --git a/drivers/mfd/loongson-se.c b/drivers/mfd/loongson-se.c
+index 3902ba377..969378518 100644
+--- a/drivers/mfd/loongson-se.c
++++ b/drivers/mfd/loongson-se.c
+@@ -139,6 +139,10 @@ static irqreturn_t se_irq_handler(int irq, void *dev_id)
+ 	spin_lock(&se->dev_lock);
+ 
+ 	int_status = readl(se->base + SE_S2LINT_STAT);
++	if (int_status == 0) {
++		spin_unlock(&se->dev_lock);
++		return IRQ_NONE;
++	}
+ 
+ 	/* For controller */
+ 	if (int_status & SE_INT_CONTROLLER) {
+@@ -211,24 +215,26 @@ static int loongson_se_probe(struct platform_device *pdev)
+ 	if (IS_ERR(se->base))
+ 		return PTR_ERR(se->base);
+ 
+-	writel(SE_INT_ALL, se->base + SE_S2LINT_EN);
+-
+ 	nr_irq = platform_irq_count(pdev);
+ 	if (nr_irq <= 0)
+ 		return -ENODEV;
+ 
++	writel(SE_INT_ALL, se->base + SE_S2LINT_CL);
++
+ 	for (i = 0; i < nr_irq; i++) {
+ 		irq = platform_get_irq(pdev, i);
+-		err = devm_request_irq(dev, irq, se_irq_handler, 0, "loongson-se", se);
++		err = devm_request_irq(dev, irq, se_irq_handler, IRQF_SHARED, "loongson-se", se);
+ 		if (err)
+ 			dev_err(dev, "failed to request IRQ: %d\n", irq);
+ 	}
+ 
++	writel(SE_INT_ALL, se->base + SE_S2LINT_EN);
++
+ 	err = loongson_se_init(se, paddr, se->dmam_size);
+ 	if (err)
+ 		return err;
+ 
+-	return devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE, engines,
++	return devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, engines,
+ 				    ARRAY_SIZE(engines), NULL, 0, NULL);
+ }
+ 
 -- 
-Sincerely yours,
-Mike.
+2.47.2
+
