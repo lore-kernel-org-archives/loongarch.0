@@ -1,95 +1,173 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DE3E457E45;
-	Fri,  9 Oct 2026 13:21:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C913D8912;
+	Fri,  9 Oct 2026 14:38:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791552089; cv=none; b=fAz31TPW1/bpLGa0SjFpX+PgLAz3lYj4yrNFhKdA9EZ1DiesnxZdTxmdOxTiIQ3CEwlTWKAts6FLrdW7w1FHkniQ7r1J5b3hlbv2NjETz7cxaq3z1TLoWJI4u92iYA6qaqBGppTR9Bgs/81pED4s5FFl6YAyfXMEGVog0Kj4G3o=
+	t=1791556695; cv=none; b=loss0ksKU7qSSWEpfqPsHk3sDMX4UabiXDFcS0/jBi2Z4Gh+kGdGgi5m6iVgzYiz3b7bE72vl7LcNHIuUqaH0NreYxwjQSlVKEN+so/8Qlj3fsHt9zaH+LkAaAUPfP9OC8RF8rtnmkYqOchBCyc7N9LbowWQZfbnGi5P9uhzFJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791552089; c=relaxed/simple;
-	bh=hRhxlDr3ghluH/n3MjQIcZt8qG0YcCtn6rX1pd593sQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IEnOtojZ00UQQPvsjONZ+9ZeYzmlfi//vQPQaQ7wo2OeZQp7RHOCt6Qz/wlQ5Z55XjdjR1m39R/tPiD6pxM154CIPTVwGjZboTUOLdFQUgzGGwY6zfGijwg50jND7wa5l91TsTOPjyRCpYkqYgGhbT/C7+jBp3uQQGtvyKscsJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Adl6jA6J; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1791556695; c=relaxed/simple;
+	bh=eqM0PlWr9ch6DbXUrK6cEvNGXKpkn6AF+myqT2bnA88=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JBN7laBHylTB2877VVME8AU1zmhKdcm5nqlCvgAiSzMaM0Ggzy9NfqJ4VdBn5oy1RZkRSzzs+xAdXyya3AmMPbJ/1Pp4HrxzCMCUjyL/XtTtT/i7rAtuvG+ZY6rleR+Ysrt5bBZFYC3A6YTWnIQJBoD70ofVVMrVx8cOhGI4fvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LRTqMRX7; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Adl6jA6J"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 46DCC1BB2;
-	Fri,  9 Oct 2026 06:21:24 -0700 (PDT)
-Received: from [10.2.213.24] (e137867.arm.com [10.2.213.24])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 257993F763;
-	Fri,  9 Oct 2026 06:21:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1791552087; bh=hRhxlDr3ghluH/n3MjQIcZt8qG0YcCtn6rX1pd593sQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Adl6jA6J9BYPFxHQzHiaWmUINvAK8wA58GDVWDHD7lg54hvFG7MF1Yc6exVEpsZ6T
-	 D6Xxp5nThjjH+YtvgQDITVhH4czKRwtgYb0d3ufijZ2wktSRmZeqk5SbmJrvGkWieY
-	 II+Yr9pCM6gLKQF6mGQLT9LhFECZ6ow5oVPJX31Y=
-Message-ID: <5becc0b8-9b31-4539-b477-2d4af66c89a4@arm.com>
-Date: Fri, 9 Oct 2026 14:21:18 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LRTqMRX7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43C7E1F00893;
+	Fri,  9 Oct 2026 14:38:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791556694;
+	bh=J8ci6W9gR1MxfR9kQ57wvearjwn0nXnoa8PuuUu+648=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=LRTqMRX7IAs1Pe4elORWf5oNSrRK/alsop9l5NZzialDBQtNjblXusxzeL5f4HQc9
+	 f2D5VoLZAGlIeqgQTjNeclGCzgXluujD4iyUeejETwiPQQvd9eDdNNbjbG0T5/jCx7
+	 QMMLVrvizZpYoCl31/29k7s4xXy22Kslv63kmQgtDb3DM3qCJZ1t1bQGxmFGPHUdvW
+	 CX7dpSLxGxFuVTLJZp+hX5ZvfULMOQZiQeAREALdAFdFUN3PCExoKh9ZM7BqzlMVpz
+	 Mjsm8FIvnkfrOLXdTbAn937twm+L2SE5kjHakg17fm92h2ZRfGUFyZ7YvS/rvBcFiQ
+	 GRzEaKl6zEutQ==
+Date: Fri, 9 Oct 2026 15:38:05 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Frank Li <Frank.Li@kernel.org>, dmaengine@vger.kernel.org,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org, Keguang Zhang <keguang.zhang@gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: dma: loongson: Add Loongson-2 DMA
+ mux request IDs
+Message-ID: <20261009-4d8fbb63fbd8466681aa7acc@squawk>
+References: <cover.1791535540.git.zhoubinbin@loongson.cn>
+ <e61992f8e86c69305f984da676092019c0210649.1791535540.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] ARM, ARM64, LONGARCH, XTENSA: Delay HW BP notification
- to task_work()
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-rt-devel@lists.linux.dev, linux-perf-users@vger.kernel.org,
- loongarch@lists.linux.dev, "Luis Claudio R. Goncalves"
- <lgoncalv@redhat.com>, Waiman Long <longman@redhat.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Clark Williams <clrkwllms@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, Adrian Hunter
- <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, Ian Rogers <irogers@google.com>,
- Ingo Molnar <mingo@redhat.com>, James Clark <james.clark@linaro.org>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Russell King <linux@armlinux.org.uk>, WANG Xuerui <kernel@xen0n.name>,
- Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>,
- Linus Walleij <linusw@kernel.org>, Ada Couprie Diaz <ada.coupriediaz@arm.com>
-References: <20261001143516.Ew8C97WS@linutronix.de>
- <fd405cda-51bd-4b1c-803c-f2597b2b128e@arm.com>
- <20261008192117.ZIKKU3Yh@linutronix.de>
-From: Ada Couprie Diaz <ada.coupriediaz@arm.com>
-Content-Language: en-US, en-GB, fr
-Organization: Arm Ltd.
-In-Reply-To: <20261008192117.ZIKKU3Yh@linutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ME+wEtJIPtCBZWH0"
+Content-Disposition: inline
+In-Reply-To: <e61992f8e86c69305f984da676092019c0210649.1791535540.git.zhoubinbin@loongson.cn>
 
-Hi Sebastian,
+--ME+wEtJIPtCBZWH0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 08/10/2026 20:21, Sebastian Andrzej Siewior wrote:
-> On 2026-10-06 18:17:52 [+0100], Ada Couprie Diaz wrote:
->> Hi Sebastian,
-> Hi Ada,
->
->> I find the function names a bit counter-intuitive, compared to the other
->> arch-specific perf functions.
->> Given the name `perf_arch_...`, I would have expected them to be defined
->> in arch code, rather than in the generic perf code.
->>  From what I can see, usually perf functions calling an arch-specific
->> function lack the `_arch_` infix of their `arch_` counterpart.
->>
->> I do not know very well what we expect in perf, so I might be off-base,
->> but would calling them `perf_hwbp_send_sig()` and `perf_hwbp_notify()`
->> make sense ?
-> Thanks for looking at this. I renamed them as:
-> - perf_arch_hwbp_notify() -> perf_hwbp_notify() (generic)
-> - arch_hwbp_send_sig() -> perf_arch_hwbp_send_sig() (arch specific)
-> - perf_arch_hwbp_send_sig() -> perf_hwbp_send_sig() (generic)
->
-> [...]
->
-> Sebastian
-That sounds good to me, thanks !
-Kind regards
-Ada
+On Fri, Oct 09, 2026 at 05:19:32PM +0800, Binbin Zhou wrote:
+> Add DT binding constants for the Loongson-2 DMA mux.
+>=20
+> The header defines the peripheral request IDs used in the DMA specifier
+> <request channel flags> for Loongson-2K0300, covering UART0-9, I2C0-3,
+> SPI2/3, I2S, ADC and CAN0-3. It also documents the channel-pair semantics
+> for peripherals that use paired DMA channels.
+>=20
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+
+Squash this with the binding patch please.
+If checkpatch told you to split this, binding headers are bindings and
+such that warning is a false positive.
+
+pw-bot: changes-requested
+
+Thanks,
+Conor.
+> ---
+>  MAINTAINERS                                   |  1 +
+>  .../dt-bindings/dma/loongson,ls2k-dmamux.h    | 53 +++++++++++++++++++
+>  2 files changed, 54 insertions(+)
+>  create mode 100644 include/dt-bindings/dma/loongson,ls2k-dmamux.h
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 42f5165019ee..172dde21275f 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15354,6 +15354,7 @@ F:	Documentation/devicetree/bindings/dma/loongson=
+,ls2k0300-dma.yaml
+>  F:	Documentation/devicetree/bindings/dma/loongson,ls2x-apbdma.yaml
+>  F:	drivers/dma/loongson/loongson2-apb-cmc-dma.c
+>  F:	drivers/dma/loongson/loongson2-apb-dma.c
+> +F:	include/dt-bindings/dma/loongson,ls2k-dmamux.h
+> =20
+>  LOONGSON LS2X I2C DRIVER
+>  M:	Binbin Zhou <zhoubinbin@loongson.cn>
+> diff --git a/include/dt-bindings/dma/loongson,ls2k-dmamux.h b/include/dt-=
+bindings/dma/loongson,ls2k-dmamux.h
+> new file mode 100644
+> index 000000000000..1e2907ab069d
+> --- /dev/null
+> +++ b/include/dt-bindings/dma/loongson,ls2k-dmamux.h
+> @@ -0,0 +1,53 @@
+> +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
+> +/*
+> + * Loongson-2 SoC DMA Mux dt-bindings
+> + *
+> + * DMA specifier format:
+> + *   dmas =3D <&dma_mux <request> <channel> <flags>>;
+> + *
+> + * The <channel> cell selects a physical CMC DMA channel (0-7)
+> + * For peripherals using channel pairs (UART, I2C, SPI2/3, I2S),
+> + * the channel number selects the pair: 0/1 -> pair 0, 2/3 -> pair 1,
+> + * 4/5 -> pair 2, 6/7 -> pair 3.
+> + *
+> + * Copyright (C) 2026 Loongson Technology Corporation Limited
+> + */
+> +
+> +#ifndef _DT_BINDINGS_DMA_LOONGSON_LS2K_DMAMUX_H
+> +#define _DT_BINDINGS_DMA_LOONGSON_LS2K_DMAMUX_H
+> +
+> +/* UART controllers */
+> +#define LS2K0300_DMA_UART0		0
+> +#define LS2K0300_DMA_UART1		1
+> +#define LS2K0300_DMA_UART2		2
+> +#define LS2K0300_DMA_UART3		3
+> +#define LS2K0300_DMA_UART4		4
+> +#define LS2K0300_DMA_UART5		5
+> +#define LS2K0300_DMA_UART6		6
+> +#define LS2K0300_DMA_UART7		7
+> +#define LS2K0300_DMA_UART8		8
+> +#define LS2K0300_DMA_UART9		9
+> +
+> +/* I2C controllers */
+> +#define LS2K0300_DMA_I2C0		10
+> +#define LS2K0300_DMA_I2C1		11
+> +#define LS2K0300_DMA_I2C2		12
+> +#define LS2K0300_DMA_I2C3		13
+> +
+> +/* SPI controllers (IO mode) */
+> +#define LS2K0300_DMA_SPI2		14
+> +#define LS2K0300_DMA_SPI3		15
+> +
+> +/* I2S controller */
+> +#define LS2K0300_DMA_I2S		16
+> +
+> +/* ADC controller */
+> +#define LS2K0300_DMA_ADC		17
+> +
+> +/* CAN-FD controllers */
+> +#define LS2K0300_DMA_CAN0		18
+> +#define LS2K0300_DMA_CAN1		19
+> +#define LS2K0300_DMA_CAN2		20
+> +#define LS2K0300_DMA_CAN3		21
+> +
+> +#endif /* _DT_BINDINGS_DMA_LOONGSON_LS2K_DMAMUX_H */
+> --=20
+> 2.52.0
+>=20
+
+--ME+wEtJIPtCBZWH0
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCasj8TQAKCRB4tDGHoIJi
+0hB6APwIHW2m5Gtbr7+I/gCy0JMndRo93Chpi4SzuPTRHL2psAEAnSt/1xEJlu81
+oqDq8mDQ6ZEwXdr5gZu+xF5kgxWMtAc=
+=Ay2H
+-----END PGP SIGNATURE-----
+
+--ME+wEtJIPtCBZWH0--
