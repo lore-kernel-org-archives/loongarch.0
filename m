@@ -1,52 +1,52 @@
 Received: from bkemail.birger-koblitz.de (bkemail.birger-koblitz.de [23.88.97.239])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A4FF385D75
-	for <loongarch@lists.linux.dev>; Sat, 10 Oct 2026 04:54:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C587F37FF6F
+	for <loongarch@lists.linux.dev>; Sat, 10 Oct 2026 04:54:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.88.97.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791608092; cv=none; b=ttJ6OyOrj09yJd9NzHolNfdATsPn4e11lWx6tacmwigl8d3Sr0R6vXAy4OqhpEdFJrwjUS0Aciu28LByO3d/cIvZgdTUz8Ju5vbv+EWUlUQvYUPkRmiIMbsKOlofW/VKi/PJ9SDYVJkjrNDoW/4y3HxCCnNb+mudnJi0m3mH6HM=
+	t=1791608093; cv=none; b=OtGA1YkkowmLY9GgleYF5oSv3VW/kUnxhxyCtlUG1eC+jbRCfM2Ri0bBSi+NTR+Lr3JhJB8gps6LO7A5jKSQFvYAGGM75AL2q4I1wAEQXgPsZwyuiHpfFnkL5ZWw+eUaPYVWDhlWb5uwma3Sfz1TFsR2jf36jMBsSTZlQ3P1LS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791608092; c=relaxed/simple;
-	bh=s0cpwYkeVCb0kcjXGWJo938EgCbLt1S9id6R/cNC1e4=;
+	s=arc-20240116; t=1791608093; c=relaxed/simple;
+	bh=MFGlqBaFvuNac6vmOCHW9z8Cf37U4Is3R02qRLzjhLo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lXvnnx+MzQlWTthm3I9o2n3pQPPqa7s7OJgl9elldf9TWrxjoSyl7iIWapJPvEK+7DLKHLjAUiA+24AuYH/6+2jVeeQm8yddZaCgBmfpEzBm2bhzhMVJzVmZ4IXiG3pE+HTf1BeFKW+Nzh0tDPMqPbjV70ZVYR3GbBm3FEkQ8eE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=birger-koblitz.de; spf=pass smtp.mailfrom=birger-koblitz.de; dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b=XwtLGMji; dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b=Ki3c60TO; arc=none smtp.client-ip=23.88.97.239
+	 In-Reply-To:To:Cc; b=Ju/MW+PSxvrGIt7eYashWSdJghSd8IF5E0I60XAZMX77nWza70ENngwLXVMbFVkMNBUc9S+YY+HfqloM+94YMwTaJYpTjzb8EPDG+PsRdqrMYe6bE8BkeplonMap1ls8BhLjTXhzg/X15TwZigAkSqWp3IyV5N1zUbRR0Y2r7VY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=birger-koblitz.de; spf=pass smtp.mailfrom=birger-koblitz.de; dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b=pmUuJ9wk; dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b=i8MXEdk4; arc=none smtp.client-ip=23.88.97.239
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=birger-koblitz.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=birger-koblitz.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b="XwtLGMji";
-	dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b="Ki3c60TO"
+	dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b="pmUuJ9wk";
+	dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.b="i8MXEdk4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=birger-koblitz.de;
-	s=default; t=1791608089;
-	bh=s0cpwYkeVCb0kcjXGWJo938EgCbLt1S9id6R/cNC1e4=;
+	s=default; t=1791608087;
+	bh=MFGlqBaFvuNac6vmOCHW9z8Cf37U4Is3R02qRLzjhLo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=XwtLGMji0q0zkeovtapNqZSWWMdbWtjiNHzjJr98fEsk5/ybwnDeUSGoC98yIIWC3
-	 +SpK2aIJmnx4wAH9w6/5ktnvex7XdlZCjxHRTQ2B4CQGArCedTmePiEWgjvnkUGcBM
-	 o+hXTpMX5SwkIOspTVSdRoKu86tiOgLZTssyYRpH7T9ZzlofYDoU1q2DG2P1fsTjir
-	 7H/TG5Ni6xH3/USL4pLVoFwB9cJhRdacm7MByxlgPCOkz7kafXvKxrgdgOBBkBuEKq
-	 0LCrF+JAdhHkO0ShfNqgeTms2tdFeU9eZ91wRyblkiKvc+i9s7skmHpSShX1zbtpFl
-	 7zv98vi+B1cig==
+	b=pmUuJ9wk4MhUFwFcvTVIslvWu1F+N7H5wefLW1XxUziMQhNq47p+udexs/VpnKpoz
+	 QlSENFV541RdUliXqwrzXFlsXlcaw1YkYQM2bDT56m6OHr6sVjlfBbNn6ztWr2JTCe
+	 hiGFWP2dJZyCAiPdwj8Utb6iMForg1rLsftqqEW2RtOY/3HxYitsYixqwZ9en77sVc
+	 ehQ2tzE/0I5DfH8iu2aiyGboxoAw4B/C7h0FtbeBIxyIWaQtlRku8EgYb/hxbP/XOF
+	 +WcAqAqWwtnE9xdYSdeGNKeDlaVGCb7Lfr1Ei6S6lSP9xNTHOt1a8hb6hscjQW8yUj
+	 gQlF4oq6jspqQ==
 Received: by bkemail.birger-koblitz.de (Postfix, from userid 109)
-	id 0A32947541; Sat, 10 Oct 2026 04:54:49 +0000 (UTC)
+	id F0D5047564; Sat, 10 Oct 2026 04:54:47 +0000 (UTC)
 X-Spam-Level: 
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=birger-koblitz.de;
-	s=default; t=1791608074;
-	bh=s0cpwYkeVCb0kcjXGWJo938EgCbLt1S9id6R/cNC1e4=;
+	s=default; t=1791608073;
+	bh=MFGlqBaFvuNac6vmOCHW9z8Cf37U4Is3R02qRLzjhLo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Ki3c60TOaNhT6B8nHhCeNb2TFLAb4WAa/nYfkQnN7ESbwGEHJIVnY4mmwMPpPBk8C
-	 kqO6QGz7uTtWlinJl20lGNeKo02JHtW3nq2T68tJxgzt7hjNiMOnCEW8XSv8Oy1Mj0
-	 lYnIqoqZ0ljLjVNEu8saGv7SaGfuF8g05IAB0ff83HK7JNdeeiayyttCPwhMFh+bj1
-	 9oOTKLltHRny/BWOOTOCBM3xy2zIIKEAhOITyVeVzPc7il1yb1sOKdZdtypTl1Uc9j
-	 LbtFASZo6RguhGasqDjBodjWaQUiVLWOS0+Up03aDa1be+xHiHG2NPwH34lfo405aC
-	 DcxbiB3usg+tw==
+	b=i8MXEdk4unJnwUYwKoBNtJakEhUsN6RlUz4YHUsA/mSw/hGREfMIge9szHJtDFVpR
+	 Zdsz5z7mndzT2TRgcgLEj4amDVMAMGSmweM21CvB2dI7+7ajamXNFfUxXw+IwaKvJn
+	 GxMXE+eKFcMCjWzw6Ke1ol4h9O0IdEkCb97mq+/BaPsjPdu8/HsxjASZ1EicPRnSWW
+	 9r2qH8beoNH/Rsqrz77EsasbTVoDyMIUKU/tHxbCv7z7cDbbe2kth4ZxLOyFbVZppM
+	 HnRFLeS2/ySATWDK++N0sOb8PZxKy4pD34yuSH0rrlrSWp9AVRMYgZvvLT8VosHasr
+	 sxySApbRCHUDA==
 Received: from AMDDesktop.lan (unknown [IPv6:2a00:6020:47a3:e800:271c:c6c5:9fde:77cb])
-	by bkemail.birger-koblitz.de (Postfix) with ESMTPSA id 48C3F4751E;
-	Sat, 10 Oct 2026 04:54:34 +0000 (UTC)
+	by bkemail.birger-koblitz.de (Postfix) with ESMTPSA id 4CAC44752E;
+	Sat, 10 Oct 2026 04:54:33 +0000 (UTC)
 From: Birger Koblitz <mail@birger-koblitz.de>
-Date: Sat, 10 Oct 2026 06:54:35 +0200
-Subject: [PATCH net-next v19 13/13] ax88796b: Add support for AX88772D,
- AX88179A and AX88279
+Date: Sat, 10 Oct 2026 06:54:33 +0200
+Subject: [PATCH net-next v19 11/13] ax88179_178a: Update driver name and
+ information
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261010-ax88179a-v19-13-7475173cfb56@birger-koblitz.de>
+Message-Id: <20261010-ax88179a-v19-11-7475173cfb56@birger-koblitz.de>
 References: <20261010-ax88179a-v19-0-7475173cfb56@birger-koblitz.de>
 In-Reply-To: <20261010-ax88179a-v19-0-7475173cfb56@birger-koblitz.de>
 To: Andrew Lunn <andrew+netdev@lunn.ch>, 
@@ -67,223 +67,125 @@ To: Andrew Lunn <andrew+netdev@lunn.ch>,
 Cc: linux-usb@vger.kernel.org, netdev@vger.kernel.org, 
  linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
  Jianhui Xu <neuromoments@gmail.com>, 
- Birger Koblitz <mail@birger-koblitz.de>
+ Birger Koblitz <mail@birger-koblitz.de>, Nicolai Buchwitz <nb@tipi-net.de>
 X-Mailer: b4 0.14.2
 
-The AX88772D, AX88179A and AX88279 are 100MBit, 1GBit and respectively
-2.5 GBit PHYs that are found in ASIX USB-Ethernet controllers of the
-same name.
+Add additionally supported devices to Kconfig description, add
+further requirements such as PHYLINK.
+
+Update driver name in usb_driver and update MODULE_DESCRIPTION
+to include the additionally supported chips.
+
+Change Kconfig symbol name from USB_NET_AX88179_178A to USB_NET_AX88179
+and update loongson32_defconfig/loongson64_defconfig to use that
+symbol.
 
 Signed-off-by: Birger Koblitz <mail@birger-koblitz.de>
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Nicolai Buchwitz <nb@tipi-net.de>
 ---
- drivers/net/phy/ax88796b.c | 165 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 165 insertions(+)
+ arch/loongarch/configs/loongson32_defconfig |  2 +-
+ arch/loongarch/configs/loongson64_defconfig |  2 +-
+ drivers/net/usb/Kconfig                     | 10 +++++++---
+ drivers/net/usb/Makefile                    |  2 +-
+ drivers/net/usb/ax88179_178a.c              |  8 ++++----
+ 5 files changed, 14 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/phy/ax88796b.c b/drivers/net/phy/ax88796b.c
-index f20ddf64914993f7097070d1f56c1103ec1e40e8..0df44e0e236abb02e16cb7885d0c743f0a2c501d 100644
---- a/drivers/net/phy/ax88796b.c
-+++ b/drivers/net/phy/ax88796b.c
-@@ -13,6 +13,19 @@
- #define PHY_ID_ASIX_AX88772A		0x003b1861
- #define PHY_ID_ASIX_AX88772C		0x003b1881
- #define PHY_ID_ASIX_AX88796B		0x003b1841
-+#define PHY_ID_ASIX_AX88772D		0x003b772d
-+#define PHY_ID_ASIX_AX88179A		0x003b179a
-+#define PHY_ID_ASIX_AX88279		0x003b2790
-+
-+#define AX_ADVERTISE_2500		0x1000
-+
-+/* MII Vendor registers */
-+#define AX_CTRL_STATUS			0x1d
-+#define AX_CTRL_STATUS_SPEED_MASK	0x0c
-+#define   AX_CTRL_STATUS_SPEED_10	0x0
-+#define   AX_CTRL_STATUS_SPEED_100	0x4
-+#define   AX_CTRL_STATUS_SPEED_1000	0x8
-+#define   AX_CTRL_STATUS_SPEED_2500	0xc
+diff --git a/arch/loongarch/configs/loongson32_defconfig b/arch/loongarch/configs/loongson32_defconfig
+index dbef879935f322e6167b4ed878ad4cb20048c6db..a039b8e8d242073c16ea281cf8734068a1a9b29f 100644
+--- a/arch/loongarch/configs/loongson32_defconfig
++++ b/arch/loongarch/configs/loongson32_defconfig
+@@ -641,7 +641,7 @@ CONFIG_USB_RTL8150=m
+ CONFIG_USB_RTL8152=m
+ CONFIG_USB_USBNET=m
+ # CONFIG_USB_NET_AX8817X is not set
+-# CONFIG_USB_NET_AX88179_178A is not set
++# CONFIG_USB_NET_AX88179 is not set
+ CONFIG_USB_NET_CDC_EEM=m
+ CONFIG_USB_NET_HUAWEI_CDC_NCM=m
+ CONFIG_USB_NET_CDC_MBIM=m
+diff --git a/arch/loongarch/configs/loongson64_defconfig b/arch/loongarch/configs/loongson64_defconfig
+index 4f8bb77b8a1e6e30bcbd6e96d7e38b5054630ea0..b30415c03fa185cae77e81ded929c743ef22ee40 100644
+--- a/arch/loongarch/configs/loongson64_defconfig
++++ b/arch/loongarch/configs/loongson64_defconfig
+@@ -657,7 +657,7 @@ CONFIG_USB_RTL8150=m
+ CONFIG_USB_RTL8152=m
+ CONFIG_USB_USBNET=m
+ # CONFIG_USB_NET_AX8817X is not set
+-# CONFIG_USB_NET_AX88179_178A is not set
++# CONFIG_USB_NET_AX88179 is not set
+ CONFIG_USB_NET_CDC_EEM=m
+ CONFIG_USB_NET_HUAWEI_CDC_NCM=m
+ CONFIG_USB_NET_CDC_MBIM=m
+diff --git a/drivers/net/usb/Kconfig b/drivers/net/usb/Kconfig
+index 115990b0d9537aea2776544c9768b034f32aa7a4..27862e380bdb4a54d184fa8618e4c9b348354e84 100644
+--- a/drivers/net/usb/Kconfig
++++ b/drivers/net/usb/Kconfig
+@@ -195,11 +195,12 @@ config USB_NET_AX8817X
+ 	  This driver creates an interface named "ethX", where X depends on
+ 	  what other networking devices you have in use.
  
- MODULE_DESCRIPTION("Asix PHY driver");
- MODULE_AUTHOR("Michael Schmitz <schmitzmic@gmail.com>");
-@@ -83,6 +96,107 @@ static int asix_ax88772a_read_status(struct phy_device *phydev)
- 	return 0;
- }
+-config USB_NET_AX88179_178A
+-	tristate "ASIX AX88179/178A USB 3.0/2.0 to Gigabit Ethernet"
++config USB_NET_AX88179
++	tristate "ASIX AX88179/179A/178A USB 2.0/3.0 to 100M/1G/2.5GbE Adapters"
+ 	depends on USB_USBNET
+-	select CRC32
+ 	select PHYLINK
++	select AX88796B_PHY
++	select CRC32
+ 	default y
+ 	help
+ 	  This option adds support for ASIX AX88179 based USB 3.0/2.0
+@@ -207,6 +208,9 @@ config USB_NET_AX88179_178A
  
-+static int asix_ax88279_read_status(struct phy_device *phydev)
-+{
-+	int ret, val;
-+
-+	ret = genphy_read_status(phydev);
-+	if (ret)
-+		return ret;
-+
-+	if (!phydev->link)
-+		return 0;
-+
-+	/* Read actual speed from vendor register */
-+	val = phy_read(phydev, AX_CTRL_STATUS);
-+	if (val < 0)
-+		return val;
-+
-+	switch (val & AX_CTRL_STATUS_SPEED_MASK) {
-+	case AX_CTRL_STATUS_SPEED_2500:
-+		phydev->speed = SPEED_2500;
-+		break;
-+	case AX_CTRL_STATUS_SPEED_1000:
-+		phydev->speed = SPEED_1000;
-+		break;
-+	case AX_CTRL_STATUS_SPEED_100:
-+		phydev->speed = SPEED_100;
-+		break;
-+	case AX_CTRL_STATUS_SPEED_10:
-+		phydev->speed = SPEED_10;
-+	}
-+
-+	/* MDIO_AN_10GBT_STAT_LP2_5G is broken, but we can deduce that
-+	 * the link-partner advertised 2500M if remotely AN succceded
-+	 * for link speed > 1000M and we locally have a link speed of
-+	 * 2500M
-+	 */
-+	linkmode_clear_bit(ETHTOOL_LINK_MODE_2500baseT_Full_BIT, phydev->lp_advertising);
-+	val = phy_read_mmd(phydev, MDIO_MMD_AN, MDIO_AN_10GBT_STAT);
-+	if (val >= 0 && val & MDIO_AN_10GBT_STAT_REMOK) {
-+		linkmode_mod_bit(ETHTOOL_LINK_MODE_2500baseT_Full_BIT,
-+				 phydev->lp_advertising,
-+				 phydev->speed == SPEED_2500);
-+	}
-+	/* Only supports full duplex */
-+	phydev->duplex = DUPLEX_FULL;
-+
-+	/* PHY switches interface between 2.5GBit and slower modes */
-+	if (phydev->speed == SPEED_2500)
-+		phydev->interface = PHY_INTERFACE_MODE_2500BASEX;
-+	else
-+		phydev->interface = PHY_INTERFACE_MODE_SGMII;
-+
-+	return 0;
-+}
-+
-+static int asix_ax88279_config_aneg(struct phy_device *phydev)
-+{
-+	bool adv_2500;
-+	int ret;
-+
-+	if (phydev->autoneg == AUTONEG_DISABLE) {
-+		phydev_warn(phydev, "Disabling autoneg is not supported\n");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	adv_2500 = linkmode_test_bit(ETHTOOL_LINK_MODE_2500baseT_Full_BIT, phydev->advertising);
-+	ret = phy_modify_changed(phydev, MII_ADVERTISE, AX_ADVERTISE_2500,
-+				 adv_2500 ? AX_ADVERTISE_2500 : 0);
-+	if (ret < 0)
-+		return ret;
-+
-+	return __genphy_config_aneg(phydev, (ret == 1));
-+}
-+
-+static int asix_ax88279_get_features(struct phy_device *phydev)
-+{
-+	int ret;
-+
-+	/* MDIO_DEVS1/2 empty, so set mmds_present bits to allow reading abilities */
-+	phydev->c45_ids.mmds_present |= MDIO_DEVS_PMAPMD | MDIO_DEVS_AN;
-+
-+	linkmode_set_bit_array(phy_basic_ports_array, ARRAY_SIZE(phy_basic_ports_array),
-+			       phydev->supported);
-+
-+	ret = genphy_c45_pma_read_abilities(phydev);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* AX88279 does not support reported 100baseT-half duplex mode */
-+	linkmode_clear_bit(ETHTOOL_LINK_MODE_100baseT_Half_BIT, phydev->supported);
-+
-+	return 0;
-+}
-+
-+static int asix_ax88279_config_init(struct phy_device *phydev)
-+{
-+	__set_bit(PHY_INTERFACE_MODE_2500BASEX, phydev->possible_interfaces);
-+	__set_bit(PHY_INTERFACE_MODE_SGMII, phydev->possible_interfaces);
-+
-+	return 0;
-+}
-+
- static void asix_ax88772a_link_change_notify(struct phy_device *phydev)
- {
- 	/* Reset PHY, otherwise MII_LPA will provide outdated information.
-@@ -94,6 +208,25 @@ static void asix_ax88772a_link_change_notify(struct phy_device *phydev)
- 	}
- }
+ 	  This driver should work with at least the following devices:
+ 	    * ASIX AX88179
++	    * ASIX AX88179A/B
++	    * ASIX AX88279
++	    * ASIX AX88772D/E
+ 	    * ASIX AX88178A
+ 	    * Sitcomm LN-032
  
-+static int asix_ax88772D_get_features(struct phy_device *phydev)
-+{
-+	int ret;
-+
-+	/* MDIO_DEVS1/2 empty, so set mmds_present bits to allow reading abilities */
-+	phydev->c45_ids.mmds_present |= MDIO_DEVS_PMAPMD | MDIO_DEVS_AN;
-+
-+	ret = genphy_read_abilities(phydev);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* AX88772D does not support (possibly) reported 1000baseT modes */
-+	linkmode_clear_bit(ETHTOOL_LINK_MODE_1000baseT_Full_BIT, phydev->supported);
-+	linkmode_clear_bit(ETHTOOL_LINK_MODE_1000baseT_Half_BIT, phydev->supported);
-+	linkmode_clear_bit(ETHTOOL_LINK_MODE_1000baseX_Full_BIT, phydev->supported);
-+
-+	return 0;
-+}
-+
- static struct phy_driver asix_driver[] = {
- {
- 	PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88772A),
-@@ -111,6 +244,35 @@ static struct phy_driver asix_driver[] = {
- 	.suspend	= genphy_suspend,
- 	.resume		= genphy_resume,
- 	.soft_reset	= asix_soft_reset,
-+}, {
-+	PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88772D),
-+	.name		= "Asix Electronics AX88772D",
-+	.flags		= PHY_IS_INTERNAL,
-+	.get_features	= asix_ax88772D_get_features,
-+	.read_mmd	= genphy_read_mmd_c45,
-+	.write_mmd	= genphy_write_mmd_c45,
-+	.suspend	= genphy_suspend,
-+	.resume		= genphy_resume,
-+}, {
-+	PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88179A),
-+	.name		= "Asix Electronics AX88179A",
-+	.flags		= PHY_IS_INTERNAL,
-+	.suspend	= genphy_suspend,
-+	.resume		= genphy_resume,
-+	.read_mmd	= genphy_read_mmd_c45,
-+	.write_mmd	= genphy_write_mmd_c45,
-+}, {
-+	PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88279),
-+	.name		= "Asix Electronics AX88279",
-+	.flags		= PHY_IS_INTERNAL | PHY_BROKEN_FORCED,
-+	.get_features	= asix_ax88279_get_features,
-+	.read_status	= asix_ax88279_read_status,
-+	.config_aneg	= asix_ax88279_config_aneg,
-+	.config_init	= asix_ax88279_config_init,
-+	.read_mmd	= genphy_read_mmd_c45,
-+	.write_mmd	= genphy_write_mmd_c45,
-+	.suspend	= genphy_suspend,
-+	.resume		= genphy_resume,
- }, {
- 	PHY_ID_MATCH_MODEL(PHY_ID_ASIX_AX88796B),
- 	.name		= "Asix Electronics AX88796B",
-@@ -124,6 +286,9 @@ static const struct mdio_device_id __maybe_unused asix_tbl[] = {
- 	{ PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88772A) },
- 	{ PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88772C) },
- 	{ PHY_ID_MATCH_MODEL(PHY_ID_ASIX_AX88796B) },
-+	{ PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88772D) },
-+	{ PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88179A) },
-+	{ PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88279) },
- 	{ }
+diff --git a/drivers/net/usb/Makefile b/drivers/net/usb/Makefile
+index 2ecead0181eaf8d66fb6f5dbd6f2905b22b6eb57..4026f19ecb826a6465de38f1d9bb0e4c0af80421 100644
+--- a/drivers/net/usb/Makefile
++++ b/drivers/net/usb/Makefile
+@@ -12,7 +12,7 @@ obj-$(CONFIG_USB_HSO)		+= hso.o
+ obj-$(CONFIG_USB_LAN78XX)	+= lan78xx.o
+ obj-$(CONFIG_USB_NET_AX8817X)	+= asix.o
+ asix-y := asix_devices.o asix_common.o ax88172a.o
+-obj-$(CONFIG_USB_NET_AX88179_178A)      += ax88179.o
++obj-$(CONFIG_USB_NET_AX88179)      += ax88179.o
+ ax88179-y := ax88179_178a.o ax88179a_devices.o ax88179_lib.o
+ obj-$(CONFIG_USB_NET_CDCETHER)	+= cdc_ether.o
+ obj-$(CONFIG_USB_NET_CDC_EEM)	+= cdc_eem.o
+diff --git a/drivers/net/usb/ax88179_178a.c b/drivers/net/usb/ax88179_178a.c
+index ef0856627d08b456afb1569e8a4459b0e526ab46..ff68454667b08237252ccb57b0aae229f017e8e2 100644
+--- a/drivers/net/usb/ax88179_178a.c
++++ b/drivers/net/usb/ax88179_178a.c
+@@ -1355,8 +1355,8 @@ static const struct usb_device_id products[] = {
+ };
+ MODULE_DEVICE_TABLE(usb, products);
+ 
+-static struct usb_driver ax88179_178a_driver = {
+-	.name =		"ax88179_178a",
++static struct usb_driver ax88179_driver = {
++	.name =		"ax88179",
+ 	.id_table =	products,
+ 	.probe =	usbnet_probe,
+ 	.suspend =	ax88179_suspend_wrapper,
+@@ -1367,8 +1367,8 @@ static struct usb_driver ax88179_178a_driver = {
+ 	.disable_hub_initiated_lpm = 1,
  };
  
+-module_usb_driver(ax88179_178a_driver);
++module_usb_driver(ax88179_driver);
+ 
+-MODULE_DESCRIPTION("ASIX AX88179/178A based USB 3.0/2.0 Gigabit Ethernet Devices");
++MODULE_DESCRIPTION("ASIX AX88179/179A/178A/279 based USB 3.0/2.0 100M/1G/2.5GbE Controllers");
+ MODULE_LICENSE("GPL");
+ MODULE_ALIAS("ax88179_178a");
 
 -- 
 2.47.3
