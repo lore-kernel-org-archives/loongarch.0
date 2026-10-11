@@ -1,212 +1,182 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B30456DE6
-	for <loongarch@lists.linux.dev>; Sun, 11 Oct 2026 14:26:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3C7245D938
+	for <loongarch@lists.linux.dev>; Sun, 11 Oct 2026 14:30:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791728771; cv=none; b=CpCLv9g+hzJI1QZ9ztBYRYWbSW9CRN309JKDN60O0KKdShU712CHZc/W1TdyHrN/YJdd280lZ5cAb+p6s+kjTscZ1uC7joyEvBeKUjqk+mRIf4jvYK0Qcc5EzZVGz8Mi1r/ZdVlJuU0O3foN34Bz5OXeORblo1KS0ylQcSMqFno=
+	t=1791729023; cv=none; b=rfNN3bP8Hj3RDodXecerXsZt6mhUqjZr5Z1pfhbF60lgHvrtdXtSvVVDO8GX5TQ/umcPla9OVFThUKYWPHYIpjb7eyt5GnoLJble4y9FnyVdQg9/VxuyNcxSkB0JgupVtGoyUcDWbe7kwPKvvHna2hT1MngSy4jrM2Ffo4NoDho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791728771; c=relaxed/simple;
-	bh=w7839LUsgvpbY0N5QMim52V6fEawWUEf5QqYl90ZBjQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UzRZ1RTFZ7/nuVHG/XgJ354TS6W4hCX41k9Mhd7b8iZyDUU9mLh55Md/NCiHhMRDAnX/O+RLfdv0gfAOiHEOZz19ejX+ijANy2GeOJLIg2NDmjnsagRvN0oHJcJAj5VGrJUiglqqsJG4ZyFL0inuwnjRn7WE2vbYaWPSnSYKG9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L0N4LcL3; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L0N4LcL3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16F621F008A5
-	for <loongarch@lists.linux.dev>; Sun, 11 Oct 2026 14:26:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791728769;
-	bh=+UhTe7v9a62PlALZJIz+/72zupM4/GB+WgMVaR+OrXk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=L0N4LcL3MKnHNhKObDTtX6lFimRyRheB/BfPx0CZpTlPRPZeB9U3ybqp6HP3Oxi2S
-	 SB4GJ2UAqruQxqY+ER9SzdrLbpzl4KWERj6wU/YCZ3V9H0E4rngUEgv1d8zEPTr74w
-	 3Z5qzz6X/KP+MkGH+WFEliyUg/7kjwV+cP+IbAeGuS7X69aFQeXVfSPlqxgkcr77a0
-	 PlwNMGr+cbBZrR1XcsyRO61WRtde2E++vNj7JRIp6cDHA9Mm/97/bhWtlzRcd+sFv6
-	 uTJQKUd6F6tXGIEiDCXAz08u9B2GOBrpkDHURN1ZB3M2KGEjMCwtI6ECDN+5QypjPf
-	 L3YdvsEtm8Ubw==
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-6afa651700eso1643244a12.2
-        for <loongarch@lists.linux.dev>; Sun, 11 Oct 2026 07:26:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBxGRoDJix0WL5GXFzgq0rEZRsjrjja0Mv2Cp1Y83wqD6F779NSUiYQ2FcnK59DhKolUg5Cq4fazkFE=@lists.linux.dev
-X-Gm-Message-State: AFq9FYL60ggajvHzXpucZ6kGAshW3XUcF7Qevq/G/ostD6pokCPDLCGq
-	9Otyi+odqMFHs6b5kQZnF7dcLHFmyCUicy+DESpkPYYCYgag7NpH+tQ9f7uAfpgqW0pzf7eLhRi
-	tDa0RI2jnOoBcRe6s4Fh2MXUMWrE2/Nc=
-X-Received: by 2002:a05:6402:50cd:b0:6af:7d49:728e with SMTP id
- 4fb4d7f45d1cf-6b17c24437amr6097984a12.16.1791728767596; Sun, 11 Oct 2026
- 07:26:07 -0700 (PDT)
+	s=arc-20240116; t=1791729023; c=relaxed/simple;
+	bh=72qUgiSaHSs/OtjdwuJYNHnpyqD0mBkihaiADxgjWy4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rkGuOGYSuogR4jrZQ8GbDbed/IJQMmvu17hXIB4Xyua9CcC8dRJcEvpOWRPL7YhmXeVn1NUb3XvdHYXHvg0Lv+ltVcrkg+4yRvd/R6arRHqQ9/l1Yk7y5gs+J5W0Zc3XY0zFYHbQ7xgMNGiqERIXHFxFM/XYgee0l04QCkOuZrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.159])
+	by gateway (Coremail) with SMTP id _____8CxPtN5nctq+q8UAA--.60123S3;
+	Sun, 11 Oct 2026 22:30:17 +0800 (CST)
+Received: from kernelserver (unknown [223.64.68.159])
+	by front1 (Coremail) with SMTP id qMiowJDxRs1lnctqpSYrAA--.12667S2;
+	Sun, 11 Oct 2026 22:30:16 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Eric Biggers <ebiggers@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>,
+	linux-crypto@vger.kernel.org,
+	WANG Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Tianyang Zhang <zhangtianyang@loongson.cn>
+Subject: [PATCH 1/2] lib/crc: loongarch: Use hardware unaligned load in CRC32(C) loops
+Date: Sun, 11 Oct 2026 22:29:29 +0800
+Message-ID: <20261011142930.492999-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260924075655.375632-1-lianyangyang@kylinos.cn> <20261008023419.118623-1-lianyangyang@kylinos.cn>
-In-Reply-To: <20261008023419.118623-1-lianyangyang@kylinos.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 11 Oct 2026 22:25:56 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7-sRJ76282PVtwr66mLvEzhx+vaWvP5u5C++7zwVwwWw@mail.gmail.com>
-X-Gm-Features: AclHuK_sFAFRkuAykbh-HP4qmaiZ_WqlFu5h1LjeuxXTvJ2ziMzxclLf_HVqQo8
-Message-ID: <CAAhV-H7-sRJ76282PVtwr66mLvEzhx+vaWvP5u5C++7zwVwwWw@mail.gmail.com>
-Subject: Re: [PATCH v3] LoongArch: kdump: add arch_crash_save_vmcoreinfo() support
-To: Yangyang Lian <lianyangyang@kylinos.cn>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Baoquan He <baoquan.he@linux.dev>, 
-	Mike Rapoport <rppt@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Pratyush Yadav <pratyush@kernel.org>, Dave Young <ruirui.yang@linux.dev>, 
-	WANG Xuerui <kernel@xen0n.name>, kexec@lists.infradead.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Haoran Jiang <jianghaoran@kylinos.cn>, 
-	Tao Cui <cuitao@kylinos.cn>, George Guo <guodongtai@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxRs1lnctqpSYrAA--.12667S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxWF1DGF1xtF1fWrykCr47Jrc_yoW5Kr4UpF
+	Z0kF9IgF15XFZ3WFyYqw4fG3Z8Z393JrZIqFZ3K34xC3W7Jw17JFWkuFyYvFy5Cr929r1j
+	grs5XFnxKF4vqwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j8yCJUUUUU=
 
-On Thu, Oct 8, 2026 at 10:35=E2=80=AFAM Yangyang Lian <lianyangyang@kylinos=
-.cn> wrote:
->
-> Since commit 23c85094fe18 ("proc/kcore: add vmcoreinfo note to
-> /proc/kcore") the kernel has exported the vmcoreinfo PT_NOTE on
-> /proc/kcore as wellas /proc/vmcore.
->
-> LoongArch does not provide arch_crash_save_vmcoreinfo(), so the
-> arch-specific values are missing from the vmcoreinfo PT_NOTE. The
-> generic exporter in kernel/vmcore_info.c already provides
-> NUMBER(VMALLOC_START), but tools like crash cannot derive the module
-> and vmemmap ranges, VA_BITS, or the KASLR offset of a LoongArch dump.
->
-> Since commit 18210a104bb9 ("LoongArch: Expand module virtual address
-> space to 2GB") the vmalloc and module boundaries are no longer stable
-> across kernel versions either, so vmcoreinfo is the only reliable
-> source for them.
->
-> Provide this function in a separate file that is built at the same time
-> as its caller in kernel/vmcore_info.c, and add a LOONGARCH64 section to
-> Documentation/admin-guide/kdump/vmcoreinfo.rst.
->
-> Reported-by: Haoran Jiang <jianghaoran@kylinos.cn>
-> Suggested-by: Haoran Jiang <jianghaoran@kylinos.cn>
-> Tested-by: Tao Cui <cuitao@kylinos.cn>
-> Co-developed-by: George Guo <guodongtai@kylinos.cn>
-> Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> Signed-off-by: Yangyang Lian <lianyangyang@kylinos.cn>
-> ---
-> V3 -> V2: Export PAGE_OFFSET, as suggested by Huacai Chen. It is not a
->           fixed value on LoongArch (PAGE_OFFSET =3D CACHE_BASE + PHYS_OFF=
-SET)
->           and RISC-V already exports it.
-Though Dave thought PAGE_OFFSET needn't be exported, I think export is
-also OK (and the fact of fixed value may be changed in future). So I
-applied V3 to loongarch-next.
+With CONFIG_ARCH_STRICT_ALIGN=y the kernel is built with -mstrict-align,
+so get_unaligned_le{16,32,64}() compiles into a byte-by-byte load/shift/
+or sequence (~22 instructions per 8 bytes). On a Loongson-3C6000 machine
+this throttles the CRC pipeline to ~5.7 cycles per 8 bytes (2.8 GB/s),
+while the crcc.* instruction itself runs at ~1.1 cycles (latency) / ~0.8
+cycles (throughput) -- the CRC unit sits idle waiting for loads.
 
-Huacai
+CPU cores with the UAL feature handle unaligned accesses in hardware,
+so issue real ld.{h,w,d} instructions when possible and keep the generic
+get_unaligned*() path for cores without UAL.
 
-> V2 -> V1: Export VMEMMAP_END + 1 to make it an exclusive bound, matching
->           what tools like makedumpfile expect.
->           Add Tested-by tag from Tao Cui.
->
->  .../admin-guide/kdump/vmcoreinfo.rst          | 36 +++++++++++++++++++
->  arch/loongarch/kernel/Makefile                |  1 +
->  arch/loongarch/kernel/vmcore_info.c           | 22 ++++++++++++
->  3 files changed, 59 insertions(+)
->  create mode 100644 arch/loongarch/kernel/vmcore_info.c
->
-> diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentati=
-on/admin-guide/kdump/vmcoreinfo.rst
-> index 7663c610fe90..dd1f1d6225b6 100644
-> --- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
-> +++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-> @@ -594,3 +594,39 @@ va_kernel_pa_offset
->
->  Indicates the offset between the kernel virtual and physical mappings.
->  Used to translate virtual to physical addresses.
-> +
-> +LOONGARCH64
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +VA_BITS
-> +-------
-> +
-> +The maximum number of bits for virtual addresses. Used to compute the
-> +virtual memory ranges.
-> +
-> +PHYS_OFFSET
-> +-----------
-> +
-> +Indicates the physical address of the start of memory. Used to translate
-> +virtual to physical addresses.
-> +
-> +PAGE_OFFSET
-> +-----------
-> +
-> +Indicates the virtual kernel start address of the direct-mapped RAM regi=
-on.
-> +Used together with PHYS_OFFSET to translate between virtual and physical
-> +addresses.
-> +
-> +KERNELOFFSET
-> +------------
-> +
-> +The kernel randomization offset. Used to locate the kernel text in
-> +virtual memory. If KASLR is disabled, this value is zero.
-> +
-> +MODULES_VADDR|MODULES_END|VMALLOC_START|VMALLOC_END|VMEMMAP_START|VMEMMA=
-P_END
-> +------------------------------------------------------------------------=
------
-> +
-> +Used to get the correct ranges:
-> +       MODULES_VADDR ~ MODULES_END-1 : Kernel module space.
-> +       VMALLOC_START ~ VMALLOC_END-1 : vmalloc() / ioremap() space.
-> +       VMEMMAP_START ~ VMEMMAP_END-1 : vmemmap region, used for struct p=
-age array.
-> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makef=
-ile
-> index 001924877772..6260c15adaba 100644
-> --- a/arch/loongarch/kernel/Makefile
-> +++ b/arch/loongarch/kernel/Makefile
-> @@ -64,6 +64,7 @@ obj-$(CONFIG_RELOCATABLE)     +=3D relocate.o
->  obj-$(CONFIG_KEXEC_CORE)       +=3D machine_kexec.o relocate_kernel.o
->  obj-$(CONFIG_KEXEC_FILE)       +=3D machine_kexec_file.o kexec_efi.o kex=
-ec_elf.o
->  obj-$(CONFIG_CRASH_DUMP)       +=3D crash_dump.o
-> +obj-$(CONFIG_VMCORE_INFO)      +=3D vmcore_info.o
->
->  obj-$(CONFIG_UNWINDER_GUESS)   +=3D unwind_guess.o
->  obj-$(CONFIG_UNWINDER_PROLOGUE) +=3D unwind_prologue.o
-> diff --git a/arch/loongarch/kernel/vmcore_info.c b/arch/loongarch/kernel/=
-vmcore_info.c
-> new file mode 100644
-> index 000000000000..e4efc35165b1
-> --- /dev/null
-> +++ b/arch/loongarch/kernel/vmcore_info.c
-> @@ -0,0 +1,22 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <linux/vmcore_info.h>
-> +#include <asm/addrspace.h>
-> +#include <asm/pgtable.h>
-> +#include <asm/setup.h>
-> +
-> +void arch_crash_save_vmcoreinfo(void)
-> +{
-> +       VMCOREINFO_NUMBER(VA_BITS);
-> +       /* NUMBER(VMALLOC_START) is exported by the generic code */
-> +       vmcoreinfo_append_str("NUMBER(VMALLOC_END)=3D0x%lx\n", VMALLOC_EN=
-D);
-> +#ifdef CONFIG_64BIT
-> +       vmcoreinfo_append_str("NUMBER(MODULES_VADDR)=3D0x%lx\n", MODULES_=
-VADDR);
-> +       vmcoreinfo_append_str("NUMBER(MODULES_END)=3D0x%lx\n", MODULES_EN=
-D);
-> +       vmcoreinfo_append_str("NUMBER(VMEMMAP_START)=3D0x%lx\n", (unsigne=
-d long)vmemmap);
-> +       vmcoreinfo_append_str("NUMBER(VMEMMAP_END)=3D0x%lx\n", VMEMMAP_EN=
-D + 1);
-> +#endif
-> +       vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=3D0x%lx\n", PHYS_OFFSE=
-T);
-> +       vmcoreinfo_append_str("NUMBER(PAGE_OFFSET)=3D0x%lx\n", PAGE_OFFSE=
-T);
-> +       vmcoreinfo_append_str("KERNELOFFSET=3D%lx\n", kaslr_offset());
-> +}
-> --
-> 2.25.1
->
+Measured on Loongson-3C6000 (single core):
+
+    before: 2.8 GB/s
+    after:  8.4 GB/s   (~3x)
+
+Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ lib/crc/loongarch/crc32.h | 39 +++++++++++++++++++++++++++++++++------
+ 1 file changed, 33 insertions(+), 6 deletions(-)
+
+diff --git a/lib/crc/loongarch/crc32.h b/lib/crc/loongarch/crc32.h
+index d34fa4c68632..692a4165eca2 100644
+--- a/lib/crc/loongarch/crc32.h
++++ b/lib/crc/loongarch/crc32.h
+@@ -24,15 +24,40 @@ do {							\
+ #define CRC32(crc, value, size)		_CRC32(crc, value, size, crc)
+ #define CRC32C(crc, value, size)	_CRC32(crc, value, size, crcc)
+ 
++static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_ual);
+ static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_crc32);
+ 
++static inline u16 get_le16(const void *p)
++{
++	if (static_branch_likely(&have_ual))
++		return *((__le16 *)p);
++	else
++		return get_unaligned_le16(p);
++}
++
++static inline u32 get_le32(const void *p)
++{
++	if (static_branch_likely(&have_ual))
++		return *((__le32 *)p);
++	else
++		return get_unaligned_le32(p);
++}
++
++static inline u64 get_le64(const void *p)
++{
++	if (static_branch_likely(&have_ual))
++		return *((__le64 *)p);
++	else
++		return get_unaligned_le64(p);
++}
++
+ static inline u32 crc32_le_arch(u32 crc, const u8 *p, size_t len)
+ {
+ 	if (!static_branch_likely(&have_crc32))
+ 		return crc32_le_base(crc, p, len);
+ 
+ 	while (len >= sizeof(u64)) {
+-		u64 value = get_unaligned_le64(p);
++		u64 value = get_le64(p);
+ 
+ 		CRC32(crc, value, d);
+ 		p += sizeof(u64);
+@@ -40,14 +65,14 @@ static inline u32 crc32_le_arch(u32 crc, const u8 *p, size_t len)
+ 	}
+ 
+ 	if (len & sizeof(u32)) {
+-		u32 value = get_unaligned_le32(p);
++		u32 value = get_le32(p);
+ 
+ 		CRC32(crc, value, w);
+ 		p += sizeof(u32);
+ 	}
+ 
+ 	if (len & sizeof(u16)) {
+-		u16 value = get_unaligned_le16(p);
++		u16 value = get_le16(p);
+ 
+ 		CRC32(crc, value, h);
+ 		p += sizeof(u16);
+@@ -68,7 +93,7 @@ static inline u32 crc32c_arch(u32 crc, const u8 *p, size_t len)
+ 		return crc32c_base(crc, p, len);
+ 
+ 	while (len >= sizeof(u64)) {
+-		u64 value = get_unaligned_le64(p);
++		u64 value = get_le64(p);
+ 
+ 		CRC32C(crc, value, d);
+ 		p += sizeof(u64);
+@@ -76,14 +101,14 @@ static inline u32 crc32c_arch(u32 crc, const u8 *p, size_t len)
+ 	}
+ 
+ 	if (len & sizeof(u32)) {
+-		u32 value = get_unaligned_le32(p);
++		u32 value = get_le32(p);
+ 
+ 		CRC32C(crc, value, w);
+ 		p += sizeof(u32);
+ 	}
+ 
+ 	if (len & sizeof(u16)) {
+-		u16 value = get_unaligned_le16(p);
++		u16 value = get_le16(p);
+ 
+ 		CRC32C(crc, value, h);
+ 		p += sizeof(u16);
+@@ -103,6 +128,8 @@ static inline u32 crc32c_arch(u32 crc, const u8 *p, size_t len)
+ #define crc32_mod_init_arch crc32_mod_init_arch
+ static void crc32_mod_init_arch(void)
+ {
++	if (cpu_has_ual)
++		static_branch_enable(&have_ual);
+ 	if (cpu_has_crc32)
+ 		static_branch_enable(&have_crc32);
+ }
+-- 
+2.52.0
+
