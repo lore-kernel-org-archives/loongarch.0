@@ -1,96 +1,258 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 254CB3E00A9;
-	Sat, 10 Oct 2026 20:01:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 101C7457E50
+	for <loongarch@lists.linux.dev>; Sun, 11 Oct 2026 14:06:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791662476; cv=none; b=OGTBYb43qKU5hVvUEKtY5MXrwXX9LzVrQPVeydSDHUfjJcTbWfHIkIILFU+X5O0O7YjYjmS1MT2KVNh732bFMcYH4qSxk73vb2aGaVv53o5r30O3atx5mId+1EytPQrbQkUbjmdeWuUwGog4EsCNKM37dI8C3GevX1dULqI8csE=
+	t=1791727599; cv=none; b=uoibtWSOu1b+2EsWgxs8eJFEcStmJaPxTfR79UGMLXZ6wXvZq5P13MlFP9mBk7K84adYYDvbscAMHiwxkZZLZoLD4hKhX5NuoeyHrKQHUgzxJValpKiG3KTyV6aaO2T8BSqAciT3yy7blNHs/TKUkcDWh57j4uWklxLnYsB0Lnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791662476; c=relaxed/simple;
-	bh=0ej4w9K2k1nE5MBAzVddXwAyLDwy2dxb36CJ0bopUEc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=caXjXQ/aABZyl3+y13LrKFIcSvj2Eyl1fSSjZUgO5S3e7Y4HQEo5do68rQFO4SjpncSubBZEaHERYnCwHhle8ZeXkUHBP82mPPio8bUBz70vpRVSRxm4euavEKvIkOMvCihNZOY+tWpEV/DNVPqaQQxj1WxrNx71RBcyJR6of5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=WRSxdsDg; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1791727599; c=relaxed/simple;
+	bh=fJHSozjGZEQdPVvW4DhOG1+KWh2hbpMpTeyTPQL1k5c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YqCvurAAwc1G2j1Ma9QqtBJ4QS92KdGr232YFPMTRhV6qHy7wjDO3JY/zM/wLJbOBPWNzeS4Mz4FUN3ZuaUH2sMgbXjjhKDfLA3+NzZu17NAIbiGZMQwgJ5T3caHIZgskHVOkNkRXFrYnMt1sQRcbI43xxanWgnWckpMPh4/oas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R7BMjFst; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="WRSxdsDg"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EC41E1692;
-	Sat, 10 Oct 2026 13:01:08 -0700 (PDT)
-Received: from arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9A0AC3F882;
-	Sat, 10 Oct 2026 13:00:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1791662472; bh=0ej4w9K2k1nE5MBAzVddXwAyLDwy2dxb36CJ0bopUEc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WRSxdsDg02jA7Wxmfp7hUM+7z5or2VN4zazCFutQjZjCNRVVo7Znbg22CVLNz7YAi
-	 ObuzEMW4ie3Brz5P5fTbQVvsd7oFGit6h9P3YDLOgc08xfbI46WYb8fvEkIjCXqCBo
-	 Fa+IHGI5x3Zu1VuORzdk3Muk8yB8P1D4NRA1la+w=
-Date: Sat, 10 Oct 2026 21:00:51 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: will@kernel.org, mark.rutland@arm.com, chenhuacai@kernel.org,
-	kernel@xen0n.name, maddy@linux.ibm.com, mpe@ellerman.id.au,
-	npiggin@gmail.com, chleroy@kernel.org, ritesh.list@gmail.com,
-	sshegde@linux.ibm.com, tglx@kernel.org, mingo@redhat.com,
-	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
-	akpm@linux-foundation.org, baoquan.he@linux.dev, rppt@kernel.org,
-	pasha.tatashin@soleen.com, pratyush@kernel.org,
-	ruirui.yang@linux.dev, leitao@debian.org, yeoreum.yun@arm.com,
-	sourabhjain@linux.ibm.com, robh@kernel.org, coxu@redhat.com,
-	kees@kernel.org, tangyouling@kylinos.cn, liukexin@kylinos.cn,
-	zhangtianyang@loongson.cn, guodongtai@kylinos.cn,
-	maqianga@uniontech.com, chao.gao@intel.com, kai.huang@intel.com,
-	vishal.l.verma@intel.com, seanjc@google.com, piliu@redhat.com,
-	thuth@redhat.com, jbouron@amazon.com, me@linux.beauty,
-	mclapinski@google.com, graf@amazon.com, bgwin@google.com,
-	hbathini@linux.ibm.com, eric.devolder@oracle.com,
-	takahiro.akashi@linaro.org, james.morse@arm.com,
-	palmer@rivosinc.com, x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-	driver-core@lists.linux.dev, kexec@lists.infradead.org
-Subject: Re: [PATCH v6 05/14] arm64: kexec_file: Fix elf_headers memory leak
- in retry loop
-Message-ID: <asqZcwg99QbA7Sma@arm.com>
-References: <20260921090450.807575-1-ruanjinjie@huawei.com>
- <20260921090450.807575-6-ruanjinjie@huawei.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R7BMjFst"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FCC01F0089E
+	for <loongarch@lists.linux.dev>; Sun, 11 Oct 2026 14:06:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791727596;
+	bh=gtqBQyfbliur+fbz3i+MZ8zOnVcztULQ5OwziTAn4fc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=R7BMjFstDFj2YRf0qvXGSMawdkBCD1a6AHt+EhHsc8W1UCBBZ2EpVowA9uw820zX/
+	 HQdbI5xJxsLksVoY3EtYiZgvQfSdV9GKpwh9r1pWPwAz9qlwQOd1tsf74AcArhD1L8
+	 6npg0tWcaclRQC2u9AqkcDzUoONGRNEurF7bWMMyhLAMZD0CHhCYENVRZP5u+CuQGL
+	 gpB+zCy/lGWxQE2nrQl2oQgmCnLuDQ9bm8JfQQoqFpQulSz7UeaxR0ElodHGrwmKc+
+	 mSlWk+YsY7nov+04Kl9siRppIDmdqF2cESVfGZQGvJ8oDDuvtlV0GvOlIekTYN43S4
+	 jz1lhZ1qx92oA==
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-6b167ffd132so1699289a12.1
+        for <loongarch@lists.linux.dev>; Sun, 11 Oct 2026 07:06:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvBy0VxmeeogSyBdJL4rz6ChXlLJRTcvbY6kOSCBPsIQIqaYFlmGr25I/IykG5HVWI8YujchNQ0FEvtk=@lists.linux.dev
+X-Gm-Message-State: AFq9FYKw2wV2mzreaLMmhSXHov1bexlGAjMe+bb6+bTzR9cdw8RUwukR
+	y2FX5EsiFtMo0evxlNauCWXkSmX9fQQABNgvFv0O2MqFJdlkc6Eco6JbfHdu7wnJZX+Btd00SzW
+	nqUAU27VOeSCPUaLsJcI13mfmAvQMRmo=
+X-Received: by 2002:a05:6402:f0c:b0:6b1:b176:73a9 with SMTP id
+ 4fb4d7f45d1cf-6b1b1767781mr800741a12.27.1791727595203; Sun, 11 Oct 2026
+ 07:06:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260921090450.807575-6-ruanjinjie@huawei.com>
+References: <20260909085350.2046788-1-maobibo@loongson.cn> <CAAhV-H5uz3SM=tYG02Lz3WiN9stJocY7MQJFSKmVbNrNnz+9Gw@mail.gmail.com>
+ <82f2c59a-59f5-8e49-f0c5-dc6feb4070df@loongson.cn>
+In-Reply-To: <82f2c59a-59f5-8e49-f0c5-dc6feb4070df@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 11 Oct 2026 22:06:32 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4U_-u-Tb1Hn69ahmS3gstDVswrmjby2QfHYvPtLo5cXQ@mail.gmail.com>
+X-Gm-Features: AclHuK93qjD0qIBknY1CG7puAT7RifE8djAwxbcXuRkP4OeDm9mGLr7yPpV2Hy4
+Message-ID: <CAAhV-H4U_-u-Tb1Hn69ahmS3gstDVswrmjby2QfHYvPtLo5cXQ@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: KVM: Add hypercall crash support
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Sep 21, 2026 at 05:04:41PM +0800, Jinjie Ruan wrote:
-> If load_other_segments() fails after image->elf_headers is assigned,
-> the memory lifecycle is safely managed by the global kimage object
-> and will be freed in arch_kimage_file_post_load_cleanup().
-> 
-> However, during a retry loop in image_load(), a subsequent iteration
-> will allocate a new buffer and overwrite image->elf_headers. This
-> permanently leaks the stale memory from the previous iteration before
-> the global cleanup can track it.
-> 
-> Fix this by explicitly freeing the stale `image->elf_headers` buffer
-> before assigning the newly allocated headers.
-> 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Thomas Huth <thuth@redhat.com>
-> Cc: Breno Leitao <leitao@debian.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Yeoreum Yun <yeoreum.yun@arm.com>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: stable@vger.kernel.org
-> Fixes: 108aa503657e ("arm64: kexec_file: try more regions if loading segments fails")
-> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-> ---
->  arch/arm64/kernel/machine_kexec_file.c | 4 ++++
->  1 file changed, 4 insertions(+)
+On Thu, Oct 8, 2026 at 9:50=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrote=
+:
+>
+>
+>
+> On 2026/10/3 =E4=B8=8B=E5=8D=8812:02, Huacai Chen wrote:
+> > Hi, Bibo,
+> >
+> > On Wed, Sep 9, 2026 at 5:01=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> w=
+rote:
+> >>
+> >> Now generic pvpanic is supported in Linux kernel which will notify VMM
+> >> with VM crash event. There is some limitations with pvpanic, such as i=
+t
+> >> requires good kernel stack or CPU hardware context and panic() C funct=
+ion
+> >> is in health state.
+> >>
+> >> Sometimes CPU hardware context or kernel/irq stack is corrupted. Hyper=
+call
+> >> code is more direct and low-level crash method, which is useful in
+> >> exception entry with assmble language, here add one hypercall code to
+> >> support VM crash function, so that VMM can capture CPU crash context
+> >> in time.
+> >>
+> >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> >> ---
+> >>   arch/loongarch/include/asm/kvm_host.h      |  1 +
+> >>   arch/loongarch/include/asm/kvm_para.h      | 15 +++++++++++++++
+> >>   arch/loongarch/include/uapi/asm/kvm.h      |  1 +
+> >>   arch/loongarch/include/uapi/asm/kvm_para.h |  1 +
+> >>   arch/loongarch/kvm/exit.c                  | 11 +++++++++++
+> >>   arch/loongarch/kvm/vm.c                    |  3 ++-
+> >>   6 files changed, 31 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/in=
+clude/asm/kvm_host.h
+> >> index 65d91c3ce313..96f9f1317cad 100644
+> >> --- a/arch/loongarch/include/asm/kvm_host.h
+> >> +++ b/arch/loongarch/include/asm/kvm_host.h
+> >> @@ -168,6 +168,7 @@ enum emulation_result {
+> >>   #define LOONGARCH_PV_FEAT_MASK         (BIT(KVM_FEATURE_IPI) |      =
+   \
+> >>                                           BIT(KVM_FEATURE_PREEMPT) |  =
+   \
+> >>                                           BIT(KVM_FEATURE_STEAL_TIME) =
+|  \
+> >> +                                        BIT(KVM_FEATURE_CRASH) |     =
+  \
+> >>                                           BIT(KVM_FEATURE_USER_HCALL) =
+|  \
+> >>                                           BIT(KVM_FEATURE_VIRT_EXTIOI)=
+)
+> >>
+> >> diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/in=
+clude/asm/kvm_para.h
+> >> index fb17ba0fa101..3b183bb1aaa8 100644
+> >> --- a/arch/loongarch/include/asm/kvm_para.h
+> >> +++ b/arch/loongarch/include/asm/kvm_para.h
+> >> @@ -14,6 +14,7 @@
+> >>   #define KVM_HCALL_CODE_SERVICE         0
+> >>   #define KVM_HCALL_CODE_SWDBG           1
+> >>   #define KVM_HCALL_CODE_USER_SERVICE    2
+> >> +#define KVM_HCALL_CODE_CRASH           3
+> >>
+> >>   #define KVM_HCALL_SERVICE              HYPERCALL_ENCODE(HYPERVISOR_K=
+VM, KVM_HCALL_CODE_SERVICE)
+> >>   #define  KVM_HCALL_FUNC_IPI            1
+> >> @@ -22,6 +23,7 @@
+> >>   #define KVM_HCALL_SWDBG                        HYPERCALL_ENCODE(HYPE=
+RVISOR_KVM, KVM_HCALL_CODE_SWDBG)
+> >>
+> >>   #define KVM_HCALL_USER_SERVICE         HYPERCALL_ENCODE(HYPERVISOR_K=
+VM, KVM_HCALL_CODE_USER_SERVICE)
+> >> +#define KVM_HCALL_CRASH                        HYPERCALL_ENCODE(HYPER=
+VISOR_KVM, KVM_HCALL_CODE_CRASH)
+> >>
+> >>   /*
+> >>    * LoongArch hypercall return code
+> >> @@ -161,6 +163,19 @@ static __always_inline long kvm_hypercall5(u64 fi=
+d,
+> >>          return ret;
+> >>   }
+> >>
+> >> +static __always_inline long kvm_hypercall_crash(void)
+> >> +{
+> >> +       register long ret asm("a0");
+> >> +
+> >> +       __asm__ __volatile__(
+> >> +               "hvcl "__stringify(KVM_HCALL_CRASH)
+> >> +               : "=3Dr" (ret)
+> >> +               : : "memory"
+> >> +               );
+> >> +
+> >> +       return ret;
+> >> +}
+> > Why this function has no caller?
+> Currently we directly modify guest kernel and hard-code the hypercall
+> instruction to debug. This inline function is only example for howto
+> usage, the normal usage such as checking KVM_FEATURE_USER_HCALL feature
+> + kvm_hypercall_crash() is too complicated in exception entry assemble
+> language.
+There are no examples for KVM_HCALL_SWDBG and KVM_HCALL_USER_SERVICE,
+I think KVM_HCALL_CRASH is no special.
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+So if you agree, I will remove this example when applying.
+
+
+Huacai
+
+>
+> Regards
+> Bibo Mao
+> >
+> >
+> > Huacai
+> >
+> >> +
+> >>   #ifdef CONFIG_PARAVIRT
+> >>   bool kvm_para_available(void);
+> >>   unsigned int kvm_arch_para_features(void);
+> >> diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/in=
+clude/uapi/asm/kvm.h
+> >> index cd0b5c11ca9c..b222bfc48042 100644
+> >> --- a/arch/loongarch/include/uapi/asm/kvm.h
+> >> +++ b/arch/loongarch/include/uapi/asm/kvm.h
+> >> @@ -106,6 +106,7 @@ struct kvm_fpu {
+> >>   #define  KVM_LOONGARCH_VM_FEAT_PTW             8
+> >>   #define  KVM_LOONGARCH_VM_FEAT_MSGINT          9
+> >>   #define  KVM_LOONGARCH_VM_FEAT_PV_PREEMPT      10
+> >> +#define  KVM_LOONGARCH_VM_FEAT_CRASH           11
+> >>
+> >>   /* Device Control API on vcpu fd */
+> >>   #define KVM_LOONGARCH_VCPU_CPUCFG      0
+> >> diff --git a/arch/loongarch/include/uapi/asm/kvm_para.h b/arch/loongar=
+ch/include/uapi/asm/kvm_para.h
+> >> index d28cbcadd276..bf1a0c826ca6 100644
+> >> --- a/arch/loongarch/include/uapi/asm/kvm_para.h
+> >> +++ b/arch/loongarch/include/uapi/asm/kvm_para.h
+> >> @@ -16,6 +16,7 @@
+> >>   #define  KVM_FEATURE_IPI               1
+> >>   #define  KVM_FEATURE_STEAL_TIME                2
+> >>   #define  KVM_FEATURE_PREEMPT           3
+> >> +#define  KVM_FEATURE_CRASH             4
+> >>   /* BIT 24 - 31 are features configurable by user space vmm */
+> >>   #define  KVM_FEATURE_VIRT_EXTIOI       24
+> >>   #define  KVM_FEATURE_USER_HCALL                25
+> >> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+> >> index 4f58e6e2cf86..3b6daa946c76 100644
+> >> --- a/arch/loongarch/kvm/exit.c
+> >> +++ b/arch/loongarch/kvm/exit.c
+> >> @@ -911,6 +911,17 @@ static int kvm_handle_hypercall(struct kvm_vcpu *=
+vcpu, int ecode)
+> >>                  vcpu->run->hypercall.ret =3D KVM_HCALL_INVALID_CODE;
+> >>                  ret =3D RESUME_HOST;
+> >>                  break;
+> >> +       case KVM_HCALL_CRASH:
+> >> +               if (!kvm_guest_has_pv_feature(vcpu, KVM_FEATURE_CRASH)=
+) {
+> >> +                       kvm_write_reg(vcpu, LOONGARCH_GPR_A0, KVM_HCAL=
+L_INVALID_CODE);
+> >> +                       break;
+> >> +               }
+> >> +
+> >> +               vcpu->run->exit_reason =3D KVM_EXIT_SYSTEM_EVENT;
+> >> +               vcpu->run->system_event.type =3D KVM_SYSTEM_EVENT_CRAS=
+H;
+> >> +               vcpu->run->system_event.ndata =3D 0;
+> >> +               ret =3D RESUME_HOST;
+> >> +               break;
+> >>          case KVM_HCALL_SWDBG:
+> >>                  /* KVM_HCALL_SWDBG only in effective when SW_BP is en=
+abled */
+> >>                  if (vcpu->guest_debug & KVM_GUESTDBG_SW_BP_MASK) {
+> >> diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
+> >> index 6dabb227a732..e5d10ceb5e67 100644
+> >> --- a/arch/loongarch/kvm/vm.c
+> >> +++ b/arch/loongarch/kvm/vm.c
+> >> @@ -49,8 +49,9 @@ static void kvm_vm_init_features(struct kvm *kvm)
+> >>                  kvm->arch.kvm_features |=3D BIT(KVM_LOONGARCH_VM_FEAT=
+_PMU);
+> >>
+> >>          /* Enable all PV features by default */
+> >> -       kvm->arch.pv_features |=3D BIT(KVM_FEATURE_IPI);
+> >> +       kvm->arch.pv_features |=3D BIT(KVM_FEATURE_IPI) | BIT(KVM_FEAT=
+URE_CRASH);
+> >>          kvm->arch.kvm_features |=3D BIT(KVM_LOONGARCH_VM_FEAT_PV_IPI)=
+;
+> >> +       kvm->arch.kvm_features |=3D BIT(KVM_LOONGARCH_VM_FEAT_CRASH);
+> >>          if (kvm_pvtime_supported()) {
+> >>                  kvm->arch.pv_features |=3D BIT(KVM_FEATURE_PREEMPT);
+> >>                  kvm->arch.pv_features |=3D BIT(KVM_FEATURE_STEAL_TIME=
+);
+> >>
+> >> base-commit: df2908090cda368b01ff43709f51890076c56157
+> >> --
+> >> 2.39.3
+> >>
+> >>
+>
