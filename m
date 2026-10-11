@@ -1,258 +1,212 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 101C7457E50
-	for <loongarch@lists.linux.dev>; Sun, 11 Oct 2026 14:06:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B30456DE6
+	for <loongarch@lists.linux.dev>; Sun, 11 Oct 2026 14:26:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791727599; cv=none; b=uoibtWSOu1b+2EsWgxs8eJFEcStmJaPxTfR79UGMLXZ6wXvZq5P13MlFP9mBk7K84adYYDvbscAMHiwxkZZLZoLD4hKhX5NuoeyHrKQHUgzxJValpKiG3KTyV6aaO2T8BSqAciT3yy7blNHs/TKUkcDWh57j4uWklxLnYsB0Lnk=
+	t=1791728771; cv=none; b=CpCLv9g+hzJI1QZ9ztBYRYWbSW9CRN309JKDN60O0KKdShU712CHZc/W1TdyHrN/YJdd280lZ5cAb+p6s+kjTscZ1uC7joyEvBeKUjqk+mRIf4jvYK0Qcc5EzZVGz8Mi1r/ZdVlJuU0O3foN34Bz5OXeORblo1KS0ylQcSMqFno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791727599; c=relaxed/simple;
-	bh=fJHSozjGZEQdPVvW4DhOG1+KWh2hbpMpTeyTPQL1k5c=;
+	s=arc-20240116; t=1791728771; c=relaxed/simple;
+	bh=w7839LUsgvpbY0N5QMim52V6fEawWUEf5QqYl90ZBjQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YqCvurAAwc1G2j1Ma9QqtBJ4QS92KdGr232YFPMTRhV6qHy7wjDO3JY/zM/wLJbOBPWNzeS4Mz4FUN3ZuaUH2sMgbXjjhKDfLA3+NzZu17NAIbiGZMQwgJ5T3caHIZgskHVOkNkRXFrYnMt1sQRcbI43xxanWgnWckpMPh4/oas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R7BMjFst; arc=none smtp.client-ip=100.103.45.18
+	 To:Cc:Content-Type; b=UzRZ1RTFZ7/nuVHG/XgJ354TS6W4hCX41k9Mhd7b8iZyDUU9mLh55Md/NCiHhMRDAnX/O+RLfdv0gfAOiHEOZz19ejX+ijANy2GeOJLIg2NDmjnsagRvN0oHJcJAj5VGrJUiglqqsJG4ZyFL0inuwnjRn7WE2vbYaWPSnSYKG9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L0N4LcL3; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R7BMjFst"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FCC01F0089E
-	for <loongarch@lists.linux.dev>; Sun, 11 Oct 2026 14:06:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L0N4LcL3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16F621F008A5
+	for <loongarch@lists.linux.dev>; Sun, 11 Oct 2026 14:26:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791727596;
-	bh=gtqBQyfbliur+fbz3i+MZ8zOnVcztULQ5OwziTAn4fc=;
+	s=k20260515; t=1791728769;
+	bh=+UhTe7v9a62PlALZJIz+/72zupM4/GB+WgMVaR+OrXk=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=R7BMjFstDFj2YRf0qvXGSMawdkBCD1a6AHt+EhHsc8W1UCBBZ2EpVowA9uw820zX/
-	 HQdbI5xJxsLksVoY3EtYiZgvQfSdV9GKpwh9r1pWPwAz9qlwQOd1tsf74AcArhD1L8
-	 6npg0tWcaclRQC2u9AqkcDzUoONGRNEurF7bWMMyhLAMZD0CHhCYENVRZP5u+CuQGL
-	 gpB+zCy/lGWxQE2nrQl2oQgmCnLuDQ9bm8JfQQoqFpQulSz7UeaxR0ElodHGrwmKc+
-	 mSlWk+YsY7nov+04Kl9siRppIDmdqF2cESVfGZQGvJ8oDDuvtlV0GvOlIekTYN43S4
-	 jz1lhZ1qx92oA==
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-6b167ffd132so1699289a12.1
-        for <loongarch@lists.linux.dev>; Sun, 11 Oct 2026 07:06:36 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBy0VxmeeogSyBdJL4rz6ChXlLJRTcvbY6kOSCBPsIQIqaYFlmGr25I/IykG5HVWI8YujchNQ0FEvtk=@lists.linux.dev
-X-Gm-Message-State: AFq9FYKw2wV2mzreaLMmhSXHov1bexlGAjMe+bb6+bTzR9cdw8RUwukR
-	y2FX5EsiFtMo0evxlNauCWXkSmX9fQQABNgvFv0O2MqFJdlkc6Eco6JbfHdu7wnJZX+Btd00SzW
-	nqUAU27VOeSCPUaLsJcI13mfmAvQMRmo=
-X-Received: by 2002:a05:6402:f0c:b0:6b1:b176:73a9 with SMTP id
- 4fb4d7f45d1cf-6b1b1767781mr800741a12.27.1791727595203; Sun, 11 Oct 2026
- 07:06:35 -0700 (PDT)
+	b=L0N4LcL3MKnHNhKObDTtX6lFimRyRheB/BfPx0CZpTlPRPZeB9U3ybqp6HP3Oxi2S
+	 SB4GJ2UAqruQxqY+ER9SzdrLbpzl4KWERj6wU/YCZ3V9H0E4rngUEgv1d8zEPTr74w
+	 3Z5qzz6X/KP+MkGH+WFEliyUg/7kjwV+cP+IbAeGuS7X69aFQeXVfSPlqxgkcr77a0
+	 PlwNMGr+cbBZrR1XcsyRO61WRtde2E++vNj7JRIp6cDHA9Mm/97/bhWtlzRcd+sFv6
+	 uTJQKUd6F6tXGIEiDCXAz08u9B2GOBrpkDHURN1ZB3M2KGEjMCwtI6ECDN+5QypjPf
+	 L3YdvsEtm8Ubw==
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-6afa651700eso1643244a12.2
+        for <loongarch@lists.linux.dev>; Sun, 11 Oct 2026 07:26:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvBxGRoDJix0WL5GXFzgq0rEZRsjrjja0Mv2Cp1Y83wqD6F779NSUiYQ2FcnK59DhKolUg5Cq4fazkFE=@lists.linux.dev
+X-Gm-Message-State: AFq9FYL60ggajvHzXpucZ6kGAshW3XUcF7Qevq/G/ostD6pokCPDLCGq
+	9Otyi+odqMFHs6b5kQZnF7dcLHFmyCUicy+DESpkPYYCYgag7NpH+tQ9f7uAfpgqW0pzf7eLhRi
+	tDa0RI2jnOoBcRe6s4Fh2MXUMWrE2/Nc=
+X-Received: by 2002:a05:6402:50cd:b0:6af:7d49:728e with SMTP id
+ 4fb4d7f45d1cf-6b17c24437amr6097984a12.16.1791728767596; Sun, 11 Oct 2026
+ 07:26:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260909085350.2046788-1-maobibo@loongson.cn> <CAAhV-H5uz3SM=tYG02Lz3WiN9stJocY7MQJFSKmVbNrNnz+9Gw@mail.gmail.com>
- <82f2c59a-59f5-8e49-f0c5-dc6feb4070df@loongson.cn>
-In-Reply-To: <82f2c59a-59f5-8e49-f0c5-dc6feb4070df@loongson.cn>
+References: <20260924075655.375632-1-lianyangyang@kylinos.cn> <20261008023419.118623-1-lianyangyang@kylinos.cn>
+In-Reply-To: <20261008023419.118623-1-lianyangyang@kylinos.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 11 Oct 2026 22:06:32 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4U_-u-Tb1Hn69ahmS3gstDVswrmjby2QfHYvPtLo5cXQ@mail.gmail.com>
-X-Gm-Features: AclHuK93qjD0qIBknY1CG7puAT7RifE8djAwxbcXuRkP4OeDm9mGLr7yPpV2Hy4
-Message-ID: <CAAhV-H4U_-u-Tb1Hn69ahmS3gstDVswrmjby2QfHYvPtLo5cXQ@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: KVM: Add hypercall crash support
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
+Date: Sun, 11 Oct 2026 22:25:56 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7-sRJ76282PVtwr66mLvEzhx+vaWvP5u5C++7zwVwwWw@mail.gmail.com>
+X-Gm-Features: AclHuK_sFAFRkuAykbh-HP4qmaiZ_WqlFu5h1LjeuxXTvJ2ziMzxclLf_HVqQo8
+Message-ID: <CAAhV-H7-sRJ76282PVtwr66mLvEzhx+vaWvP5u5C++7zwVwwWw@mail.gmail.com>
+Subject: Re: [PATCH v3] LoongArch: kdump: add arch_crash_save_vmcoreinfo() support
+To: Yangyang Lian <lianyangyang@kylinos.cn>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Baoquan He <baoquan.he@linux.dev>, 
+	Mike Rapoport <rppt@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, Dave Young <ruirui.yang@linux.dev>, 
+	WANG Xuerui <kernel@xen0n.name>, kexec@lists.infradead.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Haoran Jiang <jianghaoran@kylinos.cn>, 
+	Tao Cui <cuitao@kylinos.cn>, George Guo <guodongtai@kylinos.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 8, 2026 at 9:50=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrote=
-:
+On Thu, Oct 8, 2026 at 10:35=E2=80=AFAM Yangyang Lian <lianyangyang@kylinos=
+.cn> wrote:
 >
+> Since commit 23c85094fe18 ("proc/kcore: add vmcoreinfo note to
+> /proc/kcore") the kernel has exported the vmcoreinfo PT_NOTE on
+> /proc/kcore as wellas /proc/vmcore.
 >
+> LoongArch does not provide arch_crash_save_vmcoreinfo(), so the
+> arch-specific values are missing from the vmcoreinfo PT_NOTE. The
+> generic exporter in kernel/vmcore_info.c already provides
+> NUMBER(VMALLOC_START), but tools like crash cannot derive the module
+> and vmemmap ranges, VA_BITS, or the KASLR offset of a LoongArch dump.
 >
-> On 2026/10/3 =E4=B8=8B=E5=8D=8812:02, Huacai Chen wrote:
-> > Hi, Bibo,
-> >
-> > On Wed, Sep 9, 2026 at 5:01=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> w=
-rote:
-> >>
-> >> Now generic pvpanic is supported in Linux kernel which will notify VMM
-> >> with VM crash event. There is some limitations with pvpanic, such as i=
-t
-> >> requires good kernel stack or CPU hardware context and panic() C funct=
-ion
-> >> is in health state.
-> >>
-> >> Sometimes CPU hardware context or kernel/irq stack is corrupted. Hyper=
-call
-> >> code is more direct and low-level crash method, which is useful in
-> >> exception entry with assmble language, here add one hypercall code to
-> >> support VM crash function, so that VMM can capture CPU crash context
-> >> in time.
-> >>
-> >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> >> ---
-> >>   arch/loongarch/include/asm/kvm_host.h      |  1 +
-> >>   arch/loongarch/include/asm/kvm_para.h      | 15 +++++++++++++++
-> >>   arch/loongarch/include/uapi/asm/kvm.h      |  1 +
-> >>   arch/loongarch/include/uapi/asm/kvm_para.h |  1 +
-> >>   arch/loongarch/kvm/exit.c                  | 11 +++++++++++
-> >>   arch/loongarch/kvm/vm.c                    |  3 ++-
-> >>   6 files changed, 31 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/in=
-clude/asm/kvm_host.h
-> >> index 65d91c3ce313..96f9f1317cad 100644
-> >> --- a/arch/loongarch/include/asm/kvm_host.h
-> >> +++ b/arch/loongarch/include/asm/kvm_host.h
-> >> @@ -168,6 +168,7 @@ enum emulation_result {
-> >>   #define LOONGARCH_PV_FEAT_MASK         (BIT(KVM_FEATURE_IPI) |      =
-   \
-> >>                                           BIT(KVM_FEATURE_PREEMPT) |  =
-   \
-> >>                                           BIT(KVM_FEATURE_STEAL_TIME) =
-|  \
-> >> +                                        BIT(KVM_FEATURE_CRASH) |     =
-  \
-> >>                                           BIT(KVM_FEATURE_USER_HCALL) =
-|  \
-> >>                                           BIT(KVM_FEATURE_VIRT_EXTIOI)=
-)
-> >>
-> >> diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/in=
-clude/asm/kvm_para.h
-> >> index fb17ba0fa101..3b183bb1aaa8 100644
-> >> --- a/arch/loongarch/include/asm/kvm_para.h
-> >> +++ b/arch/loongarch/include/asm/kvm_para.h
-> >> @@ -14,6 +14,7 @@
-> >>   #define KVM_HCALL_CODE_SERVICE         0
-> >>   #define KVM_HCALL_CODE_SWDBG           1
-> >>   #define KVM_HCALL_CODE_USER_SERVICE    2
-> >> +#define KVM_HCALL_CODE_CRASH           3
-> >>
-> >>   #define KVM_HCALL_SERVICE              HYPERCALL_ENCODE(HYPERVISOR_K=
-VM, KVM_HCALL_CODE_SERVICE)
-> >>   #define  KVM_HCALL_FUNC_IPI            1
-> >> @@ -22,6 +23,7 @@
-> >>   #define KVM_HCALL_SWDBG                        HYPERCALL_ENCODE(HYPE=
-RVISOR_KVM, KVM_HCALL_CODE_SWDBG)
-> >>
-> >>   #define KVM_HCALL_USER_SERVICE         HYPERCALL_ENCODE(HYPERVISOR_K=
-VM, KVM_HCALL_CODE_USER_SERVICE)
-> >> +#define KVM_HCALL_CRASH                        HYPERCALL_ENCODE(HYPER=
-VISOR_KVM, KVM_HCALL_CODE_CRASH)
-> >>
-> >>   /*
-> >>    * LoongArch hypercall return code
-> >> @@ -161,6 +163,19 @@ static __always_inline long kvm_hypercall5(u64 fi=
-d,
-> >>          return ret;
-> >>   }
-> >>
-> >> +static __always_inline long kvm_hypercall_crash(void)
-> >> +{
-> >> +       register long ret asm("a0");
-> >> +
-> >> +       __asm__ __volatile__(
-> >> +               "hvcl "__stringify(KVM_HCALL_CRASH)
-> >> +               : "=3Dr" (ret)
-> >> +               : : "memory"
-> >> +               );
-> >> +
-> >> +       return ret;
-> >> +}
-> > Why this function has no caller?
-> Currently we directly modify guest kernel and hard-code the hypercall
-> instruction to debug. This inline function is only example for howto
-> usage, the normal usage such as checking KVM_FEATURE_USER_HCALL feature
-> + kvm_hypercall_crash() is too complicated in exception entry assemble
-> language.
-There are no examples for KVM_HCALL_SWDBG and KVM_HCALL_USER_SERVICE,
-I think KVM_HCALL_CRASH is no special.
-
-So if you agree, I will remove this example when applying.
-
+> Since commit 18210a104bb9 ("LoongArch: Expand module virtual address
+> space to 2GB") the vmalloc and module boundaries are no longer stable
+> across kernel versions either, so vmcoreinfo is the only reliable
+> source for them.
+>
+> Provide this function in a separate file that is built at the same time
+> as its caller in kernel/vmcore_info.c, and add a LOONGARCH64 section to
+> Documentation/admin-guide/kdump/vmcoreinfo.rst.
+>
+> Reported-by: Haoran Jiang <jianghaoran@kylinos.cn>
+> Suggested-by: Haoran Jiang <jianghaoran@kylinos.cn>
+> Tested-by: Tao Cui <cuitao@kylinos.cn>
+> Co-developed-by: George Guo <guodongtai@kylinos.cn>
+> Signed-off-by: George Guo <guodongtai@kylinos.cn>
+> Signed-off-by: Yangyang Lian <lianyangyang@kylinos.cn>
+> ---
+> V3 -> V2: Export PAGE_OFFSET, as suggested by Huacai Chen. It is not a
+>           fixed value on LoongArch (PAGE_OFFSET =3D CACHE_BASE + PHYS_OFF=
+SET)
+>           and RISC-V already exports it.
+Though Dave thought PAGE_OFFSET needn't be exported, I think export is
+also OK (and the fact of fixed value may be changed in future). So I
+applied V3 to loongarch-next.
 
 Huacai
 
+> V2 -> V1: Export VMEMMAP_END + 1 to make it an exclusive bound, matching
+>           what tools like makedumpfile expect.
+>           Add Tested-by tag from Tao Cui.
 >
-> Regards
-> Bibo Mao
-> >
-> >
-> > Huacai
-> >
-> >> +
-> >>   #ifdef CONFIG_PARAVIRT
-> >>   bool kvm_para_available(void);
-> >>   unsigned int kvm_arch_para_features(void);
-> >> diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/in=
-clude/uapi/asm/kvm.h
-> >> index cd0b5c11ca9c..b222bfc48042 100644
-> >> --- a/arch/loongarch/include/uapi/asm/kvm.h
-> >> +++ b/arch/loongarch/include/uapi/asm/kvm.h
-> >> @@ -106,6 +106,7 @@ struct kvm_fpu {
-> >>   #define  KVM_LOONGARCH_VM_FEAT_PTW             8
-> >>   #define  KVM_LOONGARCH_VM_FEAT_MSGINT          9
-> >>   #define  KVM_LOONGARCH_VM_FEAT_PV_PREEMPT      10
-> >> +#define  KVM_LOONGARCH_VM_FEAT_CRASH           11
-> >>
-> >>   /* Device Control API on vcpu fd */
-> >>   #define KVM_LOONGARCH_VCPU_CPUCFG      0
-> >> diff --git a/arch/loongarch/include/uapi/asm/kvm_para.h b/arch/loongar=
-ch/include/uapi/asm/kvm_para.h
-> >> index d28cbcadd276..bf1a0c826ca6 100644
-> >> --- a/arch/loongarch/include/uapi/asm/kvm_para.h
-> >> +++ b/arch/loongarch/include/uapi/asm/kvm_para.h
-> >> @@ -16,6 +16,7 @@
-> >>   #define  KVM_FEATURE_IPI               1
-> >>   #define  KVM_FEATURE_STEAL_TIME                2
-> >>   #define  KVM_FEATURE_PREEMPT           3
-> >> +#define  KVM_FEATURE_CRASH             4
-> >>   /* BIT 24 - 31 are features configurable by user space vmm */
-> >>   #define  KVM_FEATURE_VIRT_EXTIOI       24
-> >>   #define  KVM_FEATURE_USER_HCALL                25
-> >> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-> >> index 4f58e6e2cf86..3b6daa946c76 100644
-> >> --- a/arch/loongarch/kvm/exit.c
-> >> +++ b/arch/loongarch/kvm/exit.c
-> >> @@ -911,6 +911,17 @@ static int kvm_handle_hypercall(struct kvm_vcpu *=
-vcpu, int ecode)
-> >>                  vcpu->run->hypercall.ret =3D KVM_HCALL_INVALID_CODE;
-> >>                  ret =3D RESUME_HOST;
-> >>                  break;
-> >> +       case KVM_HCALL_CRASH:
-> >> +               if (!kvm_guest_has_pv_feature(vcpu, KVM_FEATURE_CRASH)=
-) {
-> >> +                       kvm_write_reg(vcpu, LOONGARCH_GPR_A0, KVM_HCAL=
-L_INVALID_CODE);
-> >> +                       break;
-> >> +               }
-> >> +
-> >> +               vcpu->run->exit_reason =3D KVM_EXIT_SYSTEM_EVENT;
-> >> +               vcpu->run->system_event.type =3D KVM_SYSTEM_EVENT_CRAS=
-H;
-> >> +               vcpu->run->system_event.ndata =3D 0;
-> >> +               ret =3D RESUME_HOST;
-> >> +               break;
-> >>          case KVM_HCALL_SWDBG:
-> >>                  /* KVM_HCALL_SWDBG only in effective when SW_BP is en=
-abled */
-> >>                  if (vcpu->guest_debug & KVM_GUESTDBG_SW_BP_MASK) {
-> >> diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
-> >> index 6dabb227a732..e5d10ceb5e67 100644
-> >> --- a/arch/loongarch/kvm/vm.c
-> >> +++ b/arch/loongarch/kvm/vm.c
-> >> @@ -49,8 +49,9 @@ static void kvm_vm_init_features(struct kvm *kvm)
-> >>                  kvm->arch.kvm_features |=3D BIT(KVM_LOONGARCH_VM_FEAT=
-_PMU);
-> >>
-> >>          /* Enable all PV features by default */
-> >> -       kvm->arch.pv_features |=3D BIT(KVM_FEATURE_IPI);
-> >> +       kvm->arch.pv_features |=3D BIT(KVM_FEATURE_IPI) | BIT(KVM_FEAT=
-URE_CRASH);
-> >>          kvm->arch.kvm_features |=3D BIT(KVM_LOONGARCH_VM_FEAT_PV_IPI)=
-;
-> >> +       kvm->arch.kvm_features |=3D BIT(KVM_LOONGARCH_VM_FEAT_CRASH);
-> >>          if (kvm_pvtime_supported()) {
-> >>                  kvm->arch.pv_features |=3D BIT(KVM_FEATURE_PREEMPT);
-> >>                  kvm->arch.pv_features |=3D BIT(KVM_FEATURE_STEAL_TIME=
-);
-> >>
-> >> base-commit: df2908090cda368b01ff43709f51890076c56157
-> >> --
-> >> 2.39.3
-> >>
-> >>
+>  .../admin-guide/kdump/vmcoreinfo.rst          | 36 +++++++++++++++++++
+>  arch/loongarch/kernel/Makefile                |  1 +
+>  arch/loongarch/kernel/vmcore_info.c           | 22 ++++++++++++
+>  3 files changed, 59 insertions(+)
+>  create mode 100644 arch/loongarch/kernel/vmcore_info.c
+>
+> diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentati=
+on/admin-guide/kdump/vmcoreinfo.rst
+> index 7663c610fe90..dd1f1d6225b6 100644
+> --- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
+> +++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+> @@ -594,3 +594,39 @@ va_kernel_pa_offset
+>
+>  Indicates the offset between the kernel virtual and physical mappings.
+>  Used to translate virtual to physical addresses.
+> +
+> +LOONGARCH64
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +VA_BITS
+> +-------
+> +
+> +The maximum number of bits for virtual addresses. Used to compute the
+> +virtual memory ranges.
+> +
+> +PHYS_OFFSET
+> +-----------
+> +
+> +Indicates the physical address of the start of memory. Used to translate
+> +virtual to physical addresses.
+> +
+> +PAGE_OFFSET
+> +-----------
+> +
+> +Indicates the virtual kernel start address of the direct-mapped RAM regi=
+on.
+> +Used together with PHYS_OFFSET to translate between virtual and physical
+> +addresses.
+> +
+> +KERNELOFFSET
+> +------------
+> +
+> +The kernel randomization offset. Used to locate the kernel text in
+> +virtual memory. If KASLR is disabled, this value is zero.
+> +
+> +MODULES_VADDR|MODULES_END|VMALLOC_START|VMALLOC_END|VMEMMAP_START|VMEMMA=
+P_END
+> +------------------------------------------------------------------------=
+-----
+> +
+> +Used to get the correct ranges:
+> +       MODULES_VADDR ~ MODULES_END-1 : Kernel module space.
+> +       VMALLOC_START ~ VMALLOC_END-1 : vmalloc() / ioremap() space.
+> +       VMEMMAP_START ~ VMEMMAP_END-1 : vmemmap region, used for struct p=
+age array.
+> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makef=
+ile
+> index 001924877772..6260c15adaba 100644
+> --- a/arch/loongarch/kernel/Makefile
+> +++ b/arch/loongarch/kernel/Makefile
+> @@ -64,6 +64,7 @@ obj-$(CONFIG_RELOCATABLE)     +=3D relocate.o
+>  obj-$(CONFIG_KEXEC_CORE)       +=3D machine_kexec.o relocate_kernel.o
+>  obj-$(CONFIG_KEXEC_FILE)       +=3D machine_kexec_file.o kexec_efi.o kex=
+ec_elf.o
+>  obj-$(CONFIG_CRASH_DUMP)       +=3D crash_dump.o
+> +obj-$(CONFIG_VMCORE_INFO)      +=3D vmcore_info.o
+>
+>  obj-$(CONFIG_UNWINDER_GUESS)   +=3D unwind_guess.o
+>  obj-$(CONFIG_UNWINDER_PROLOGUE) +=3D unwind_prologue.o
+> diff --git a/arch/loongarch/kernel/vmcore_info.c b/arch/loongarch/kernel/=
+vmcore_info.c
+> new file mode 100644
+> index 000000000000..e4efc35165b1
+> --- /dev/null
+> +++ b/arch/loongarch/kernel/vmcore_info.c
+> @@ -0,0 +1,22 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/vmcore_info.h>
+> +#include <asm/addrspace.h>
+> +#include <asm/pgtable.h>
+> +#include <asm/setup.h>
+> +
+> +void arch_crash_save_vmcoreinfo(void)
+> +{
+> +       VMCOREINFO_NUMBER(VA_BITS);
+> +       /* NUMBER(VMALLOC_START) is exported by the generic code */
+> +       vmcoreinfo_append_str("NUMBER(VMALLOC_END)=3D0x%lx\n", VMALLOC_EN=
+D);
+> +#ifdef CONFIG_64BIT
+> +       vmcoreinfo_append_str("NUMBER(MODULES_VADDR)=3D0x%lx\n", MODULES_=
+VADDR);
+> +       vmcoreinfo_append_str("NUMBER(MODULES_END)=3D0x%lx\n", MODULES_EN=
+D);
+> +       vmcoreinfo_append_str("NUMBER(VMEMMAP_START)=3D0x%lx\n", (unsigne=
+d long)vmemmap);
+> +       vmcoreinfo_append_str("NUMBER(VMEMMAP_END)=3D0x%lx\n", VMEMMAP_EN=
+D + 1);
+> +#endif
+> +       vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=3D0x%lx\n", PHYS_OFFSE=
+T);
+> +       vmcoreinfo_append_str("NUMBER(PAGE_OFFSET)=3D0x%lx\n", PAGE_OFFSE=
+T);
+> +       vmcoreinfo_append_str("KERNELOFFSET=3D%lx\n", kaslr_offset());
+> +}
+> --
+> 2.25.1
 >
