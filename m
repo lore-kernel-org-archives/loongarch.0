@@ -1,111 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E905440A2C
-	for <loongarch@lists.linux.dev>; Mon, 12 Oct 2026 06:45:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDF674399D5;
+	Mon, 12 Oct 2026 07:16:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791787538; cv=none; b=Sx4WZ8UVlnq4ovwOtpzT+F8fqN4Ed3caif3zTwKhl+92h1jdV+gQWJRA9x46NhRApeDxOzP2WHGWKmUJLuy4PaTLWZ/vhyDXOXv9AKWP5ljWVPgWH5hOU+fpYICjiT8XBVDimqHyj3wYTmiQ47ZI5Ja8S093sK6zivGZRVUh6+E=
+	t=1791789417; cv=none; b=UU8SQOCt0yXVTnZ7/QWGh+AuIiwqdH4f82d+K/pQ2KcDNqsE/hs1sq/TdkwD+xObAsJqecN2Kqro8kjNQCPpLX6wrFn4nX0j8Vg9weG8ty+gZLXuPQO9n8JptCJgA5VbO1fo4t/XF2GgZ4qG4EUKOtKufL5o93fcIAtYT3uKaEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791787538; c=relaxed/simple;
-	bh=9MBzy/fT3/PY2882egwYAvvLh/qkN8P0o7kWIQPbE+Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YJfUDAmzjE0Lmm2OzEf2J+OU2c5tMuPF91+5UtUyTWJcMy7POunKbCM6j0k10yMkHpPHgASiJbrsRJ8Wa3GSM4ludrWI/dJK+dRud9AJVbiNT12T1cGHV7ZDM2NBWaXVYFUQcgoxH1favGXHJdB1axeHIanjESzBYFgNya8TZI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZNUqZJMX; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZNUqZJMX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 339661F00A34
-	for <loongarch@lists.linux.dev>; Mon, 12 Oct 2026 06:45:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791787536;
-	bh=c3DBHfv3LqK/91RwT2dMSYSZicBl2tHtlLK8QCPVvWY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=ZNUqZJMXXVYW2yyo8J7bzJwVupjw/wh2QM3vIj+bZ7C9CCxHVOMUQSJtB64gRlsvJ
-	 47yey9LfEZEAu3PP0hL6OtEGBPfRS6trqdua2NeFj7Hkws0SH+8cJtoCKyKT/uBs3/
-	 M0ArGm1ZjtRSZ/4NGBRD/ROTGmb/1mS1DsHutsE4Wl7XEMSne4U6Dt4sXh7xzMKGDB
-	 NqhHLN40xaogVX0rOA0WRsjS94ag/f9IJ1mvqnHXKlH0BP3bq10qjlhY9B8F7X5/s2
-	 Xt/cVWidI6dv16jBzetPQa8deA1M240ivDpJ26/Z5NwLoXkrT8hQLwpxCiaWRVn4cG
-	 w4UFEjFCf4dhw==
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-6a601ba6870so2297654a12.0
-        for <loongarch@lists.linux.dev>; Sun, 11 Oct 2026 23:45:36 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBwMX7aY2ufLDpaRVRT0Q2PphWotOdOCbT1DxKKqF0NU9wVNN+ggW9Ud8/4+eXlD7pHFg+6s1aFACf8=@lists.linux.dev
-X-Gm-Message-State: AFq9FYL2Vn7PSPpa1ML+l+YJzraK2JpavC5ZUV6dwAOB/sC0ZYkcmHLF
-	vd4wCQDDDu++FcUqr7kqNJJqYMke9AG84lWiVldHalYz5zv8FlTMs42WQDe7B6l53u0yB+5fF/7
-	MDmtlLFRXIIBTHupEmXxoRdVbXPcAfKs=
-X-Received: by 2002:a05:6402:21c3:b0:6aa:4c8b:6213 with SMTP id
- 4fb4d7f45d1cf-6b17c26ce2dmr6316528a12.18.1791787534855; Sun, 11 Oct 2026
- 23:45:34 -0700 (PDT)
+	s=arc-20240116; t=1791789417; c=relaxed/simple;
+	bh=GHGRzDu1jlT6vvkm/rdVz4B+NvejExmm3Ww2ilVvNb0=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=AIPq97Jr2PmEHK3fNBiqd7elUJT4LXAPtSIamqKrl+cW1kGQcmzwtXSJ6/RLpzknKbehlhZbVju4PQjjlF/soudE4TJv+xZd0s86/VJOmvK4hJDm0IwvK3otGJYGrDTqoehYuzOk1gTQIgc8N/Q5PDgQJ8DGc8afZDSKvy2qtks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.40.46.54])
+	by gateway (Coremail) with SMTP id _____8DxTtNkicxquNwUAA--.60215S3;
+	Mon, 12 Oct 2026 15:16:52 +0800 (CST)
+Received: from [10.40.46.54] (unknown [10.40.46.54])
+	by front1 (Coremail) with SMTP id qMiowJDxg8xeicxqAlcrAA--.63784S2;
+	Mon, 12 Oct 2026 15:16:46 +0800 (CST)
+Message-ID: <10bd45f8-2d37-42f0-b7d2-a4a84933c9b3@loongson.cn>
+Date: Mon, 12 Oct 2026 15:18:13 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20261011142930.492999-1-chenhuacai@loongson.cn>
- <20261011142930.492999-2-chenhuacai@loongson.cn> <20261011151243.GB168780@quark>
-In-Reply-To: <20261011151243.GB168780@quark>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 12 Oct 2026 14:45:24 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4YwMFMQP1razrWDG=XKvBVyN64Hv0rKsA+TNN-4bt20g@mail.gmail.com>
-X-Gm-Features: AclHuK83BGXN9i6Iiyy3rUK7fXekFO-B-XI5TgtsZDDp-fRD06uDSPzWqIETF8w
-Message-ID: <CAAhV-H4YwMFMQP1razrWDG=XKvBVyN64Hv0rKsA+TNN-4bt20g@mail.gmail.com>
-Subject: Re: [PATCH 2/2] lib/crc: loongarch: Add 3-way parallel CRC32(C) for
- large buffers
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Ard Biesheuvel <ardb@kernel.org>, 
-	linux-crypto@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Tianyang Zhang <zhangtianyang@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+To: rafael@kernel.org, linux-acpi@vger.kernel.org
+Cc: acpica-devel@lists.linux.dev, chenhuacai@kernel.org, lenb@kernel.org,
+ linux-kernel@vger.kernel.org, lixianglai@loongson.cn,
+ loongarch@lists.linux.dev, maciej.wieczor-retman@intel.com,
+ pawel.chmielewski@intel.com, maobibo@loongson.cn
+References: <20260922121058.972734-2-maobibo@loongson.cn>
+Subject: Re: [PATCH v4 1/4] ACPICA: actbl2.h: Add bit constants of the Flags
+ field in the IOVT IOMMU structure
+Content-Language: en-US
+From: Bibo Mao <maobibo@loongson.cn>
+In-Reply-To: <20260922121058.972734-2-maobibo@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:qMiowJDxg8xeicxqAlcrAA--.63784S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrZw17Xw1xCry7GF1fCry8JFc_yoWDKwb_Ca
+	na9F4kZ3WDWF1xtrs8t3WxArWjgayxAFZ3KFs5WFn8Aa92vrWUurnakryS9F4kC3929FWD
+	ZFn8WrWF9wnxGosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbzkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64vIr4
+	1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
+	8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAv
+	wI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
+	v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jUsqXUUUUU=
 
-Hi, Eric,
+This change is already merged in acpica tree.
 
-On Sun, Oct 11, 2026 at 11:12=E2=80=AFPM Eric Biggers <ebiggers@kernel.org>=
- wrote:
->
-> On Sun, Oct 11, 2026 at 10:29:30PM +0800, Huacai Chen wrote:
-> > The crc* loop is a single serial dependency chain: every instruction
-> > consumes the previous one's result. CRC is linear over GF(2), so a
-> > buffer can be split into 3 contiguous lanes processed by independent
-> > chains and combined afterwards:
-> >
-> >     crc(A|B|C) =3D shift(crc(A), |B|+|C|) ^ shift(crc(B), |C|) ^ crc(C)
-> >
-> > with lanes B and C seeded with 0. The shift (multiplication by x^(8n)
-> > mod P) is linear, so its multiplier is tabulated at module init as 4x25=
-6
-> > tables built from crc32_le_base()/crc32c_base(); each combine then cost=
-s
-> > 4 lookups instead of a log-time GF(2) square loop.
-> >
-> > Lanes use a fixed 2 KiB stride (6 KiB superblock); smaller buffers fall
-> > through to the serial path. The 3-way parallel loop CRC32 is measured o=
-n
-> > a Loongson-3C6000 machine (single core, cache-hot, with UAL):
-> >
-> >     8 KiB:   8.4 -> 12.0 GB/s
-> >     64 KiB:  8.4 -> 12.4 GB/s   (+45% over the serial hw loop,
-> >                                  ~12x over the generic table)
-> >
-> > Correctness was verified bit-exact against crc32c() over all lengths
-> > 0..6168 with 3 seeds, plus 3000 random offset/length/seed combinations.
-> >
-> > Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
->
-> So is this new code testable in QEMU?  That's a prerequisite for adding
-> new optimized CRC or crypto code.
-Yes, it is testable in QEMU (for correctness). But the improvement
-comes from super-scalar hardware, so the performance may be the same
-for QEMU.
+slightly ping.
 
->
-> Please also note that you should just run crc_kunit instead of writing
-> custom in-kernel CRC test code.
-Yes, crc_kunit is passed. Tianyang wrote his custom code but I have
-run crc_kunit, I will update the commit message.
+On Tue, Sep 22, 2026 at 08:10:55PM +0800, Bibo Mao wrote:
+ > According to the IOVT specification, define macros for each bit of the
+ > Flags field in the IOVT IOMMU structure.
+ >
+ > Link: https://github.com/open-acpica/acpica/commit/352f750e4cc0
+ > Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+ > ---
+ >  include/acpi/actbl2.h | 7 +++++++
+ >  1 file changed, 7 insertions(+)
+ >
+ > diff --git a/include/acpi/actbl2.h b/include/acpi/actbl2.h
+ > index baef525367b5..76e4a5bc79b4 100644
+ > --- a/include/acpi/actbl2.h
+ > +++ b/include/acpi/actbl2.h
+ > @@ -919,6 +919,13 @@ struct acpi_iovt_iommu {
+ >       u32 device_entry_offset;
+ >  };
+ >
+ > +/* Masks for Flags field above */
+ > +#define ACPI_IOVT_IOMMU_PCI_DEVICE           (1<<0)
+ > +#define ACPI_IOVT_IOMMU_PXM_VALID            (1<<1)
+ > +#define ACPI_IOVT_IOMMU_MAGAGE_BY_SEGMENT    (1<<2)
+ > +#define ACPI_IOVT_IOMMU_HW_CAP_SUPPORT               (1<<3)
+ > +#define ACPI_IOVT_IOMMU_MSI_INT_BYPASS               (1<<4)
+ > +
+ >  struct acpi_iovt_device_entry {
+ >       u8 type;
+ >       u8 length;
+ > --
+ > 2.39.3
+ >
 
-Huacai
-
->
-> - Eric
