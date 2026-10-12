@@ -1,237 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B48365A0B
-	for <loongarch@lists.linux.dev>; Mon, 12 Oct 2026 06:37:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00193C278A
+	for <loongarch@lists.linux.dev>; Mon, 12 Oct 2026 06:43:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791787067; cv=none; b=nimGb4sDE6X90vpG4HOlhPOlstVEaa3s74l9MPVbJqdIst3dVmS5c8vrWYpwjS1oSO5X3R5YyFp8OKJNjKowOVkEoz4J1+spls0aRv0q+sGhifoZQDHkW58vBBbghAufvw+bBYunymvdpIiYTLOJZAkpzBDpz8bYSkAM/jSaHjY=
+	t=1791787439; cv=none; b=mhuhNRID8oaWe8X0JcTJAWJcR05KppGIjIUvHxWeakwW7gue2IeIVG2AW/5Nx5fQ8P8CKYrnS4fjAKGm5w1xWyq9MyUvMaPOr4CsLektTpkV1sBYLsuLArnJIeykByGIwk2Mv3bd8JFy9bRaGN5SH7qNJ5505ldu1hOsmsr7GS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791787067; c=relaxed/simple;
-	bh=Y3S3VK8sM/eNaLuLr33gDAR5girMSkc8/FoweTN6Ru8=;
+	s=arc-20240116; t=1791787439; c=relaxed/simple;
+	bh=WvwO8Heen6gHH1/fETaLTpwy91+mtBWchDHHFWaukLE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DO4Ny8k55pNrd1I6YvcnqdCZQMEpbvAf5Lr7thajQinl3lhq5vbDAa7lCVYrIodXkA6nV/v12krzszJrkOcV29F/yRVP3vc7H4F7jRIQohzS0CnTDLAcYrLBfsFBCtlG+IrPMZmbtM1eAgJ3B7fa6tArCAe+NmKik16lrxQeS5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=itYJH3Xo; arc=none smtp.client-ip=100.103.45.18
+	 To:Cc:Content-Type; b=akoVTNASwd5dXe397JCPVuWfMur8BxNYCGQmTninT4G/Ux8Kr1jY1ELUiozHu/V/emh4v5ka0P2QLLV+IvbGr5NYLXq88VzNyPIlhzs4+f7s09AuvyBnD3Ndar/V9xF1UMe9r2B2mfmnenXuzADgri7Jk1lsKBJU371kYeAOOyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YxW8+Nx5; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="itYJH3Xo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 761D01F0089B
-	for <loongarch@lists.linux.dev>; Mon, 12 Oct 2026 06:37:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YxW8+Nx5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADF411F008A0
+	for <loongarch@lists.linux.dev>; Mon, 12 Oct 2026 06:43:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791787065;
-	bh=AikhUb3k8PSWeJgGwE14z5CoR9UYFfng1STFIj76CXY=;
+	s=k20260515; t=1791787438;
+	bh=AiZ+K3i3XydEbQliU5imZAaF688mZtezn+fB9pQXCwc=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=itYJH3XoE+kuDPBE33Xhx+lJJusmrhNLsKPtCWBXI8Nn9zo9O37X9z6dz+AM9LH/1
-	 vAaVXDUXhkLKdA9Yixc81MH816zcsrqaC+6RFjWGQAUoLwUiP7KB/pql/VfGtx25fE
-	 JASDHgVQBMyxIfZbFjZZz2GcgFqHkDWNFIfFIFwPV+f1tILtLRM3zD1RdsgwaAiesX
-	 OnSDNEXOjiUfm85EIVype0GCRTuNFuxe+itwYruomXl9NB7zoaI8LRAi2hphjkVpHw
-	 NzaWxP7oM4bI1HUFGFjgsNi+GWbnOVjM7oz2eOZM4d4iw0xQpR+6k7mcFP4Y979UaG
-	 y1EIppZALdljg==
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-6afafc89b48so2069549a12.2
-        for <loongarch@lists.linux.dev>; Sun, 11 Oct 2026 23:37:45 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBzHVUaPttcJjBViejb3+qxThsTUmTaj47dOVxLOrPgKW9A5/fVzDZQOAoiM7mpf89Gj4jfh0QGGgR4=@lists.linux.dev
-X-Gm-Message-State: AFq9FYJvgx6rZUgB8ZQXbZcfIQ2ZVUiop3av5CBa05K9uHZtYK8x5/Be
-	awtMjwGk2IlJm+lznAXD56om5u8b3c9FR6FZGKjIFSLc7RfK0gHkVQNlD5H1XYhFglMTHaKLxIu
-	FWDjGJ5tmr5D4fNr8DIpBHzo1ettWS3k=
-X-Received: by 2002:a05:6402:1ed4:b0:6b1:ba86:5f55 with SMTP id
- 4fb4d7f45d1cf-6b1ba86636dmr2219044a12.35.1791787063963; Sun, 11 Oct 2026
- 23:37:43 -0700 (PDT)
+	b=YxW8+Nx5skz6uLABXwKtvlq2Mka9YDyStii02VE/sfC+x5YJC/nJ6mRHbupufyYH/
+	 zkrFY/K9AOfUpvnYd507RuzbsLhCFtJ7G4qG7RuTQNIaD43pn2akwKFHwYfEj8WOR3
+	 m68RGoB/udFqRPLoSX59VjDv6Fb5gVLw0wVWLn8Wh+5W7ODecSjRsTrtukUVjM4E9i
+	 HkkkiwDWR1fMnB+2I3fByKGk6L55xEUKDVcV52PpXs5IQKKQmGxUNujORt6n5BVbKF
+	 gZ92wpmjjpSD2CICgVuMsmx+hZ41cMk6C7J1Y8odGtdtLtVAVkkrKzKTWw2SEvFlu4
+	 Uf3IhDBCKUbUg==
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-c2e36c3478aso194247166b.0
+        for <loongarch@lists.linux.dev>; Sun, 11 Oct 2026 23:43:58 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvBxF0UX3+QqTw+DgFQx4mszjJ8vFR/uJQx5Rym6rcxO7ugAojcKn0zVSlVbCay3hQR3aMNCMuKZP1k8=@lists.linux.dev
+X-Gm-Message-State: AFq9FYJNRKaRMTxZJ1NtWyR21bTpYFsuKeyxYsVwUfn3OymCDM4MPai9
+	KYWF3vS1HpJ0e0vpDqBHs7akPim7Nch/EpfJQh1s5VlXfohzG5YmGFh++4MaNZSLAeqrr15MwEQ
+	t8vMQ6RL19/eoIGQJNsNwXrUkRakml2Q=
+X-Received: by 2002:a17:906:c110:b0:c2e:32d3:1b5 with SMTP id
+ a640c23a62f3a-c31aa079e98mr742007666b.32.1791787437315; Sun, 11 Oct 2026
+ 23:43:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260929102821.36112-1-cui.tao@linux.dev> <20260929102821.36112-5-cui.tao@linux.dev>
- <CAAhV-H5GNKZSjB_MN2Vi7uhbf1q9nqqvsfwqF+THpkwk3dEhGQ@mail.gmail.com>
- <9a59af62-3e8a-12f5-4e6c-38c1953adb37@loongson.cn> <CAAhV-H6cgiMQn=1oct6KHaLADwWQJ7Ow3iT14_Gj5BQxMW22Sg@mail.gmail.com>
- <be33489e-fec4-ba52-45d9-6323b14da593@loongson.cn> <CAAhV-H5yXR8vN0NdiHWRTbGOsrqrVxZFd9g9QdaZGhdLR=BA7A@mail.gmail.com>
- <3aada818-e1e1-a802-2547-b8e41618df32@loongson.cn>
-In-Reply-To: <3aada818-e1e1-a802-2547-b8e41618df32@loongson.cn>
+References: <20261011142930.492999-1-chenhuacai@loongson.cn>
+ <20261011150052.GA168780@quark> <tencent_4750F9C704AA3CFA1E7309B7@qq.com>
+In-Reply-To: <tencent_4750F9C704AA3CFA1E7309B7@qq.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 12 Oct 2026 14:37:33 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4YrpPmQw=qsp1GqdD5tyG6k+-tBe4g1Y-HO5kgEyu4dA@mail.gmail.com>
-X-Gm-Features: AclHuK-7fXYykh9eRLkclJYi-Ox_9u0k7E3K67RbFTGL5j7WMd9tYvkXLJd2ipY
-Message-ID: <CAAhV-H4YrpPmQw=qsp1GqdD5tyG6k+-tBe4g1Y-HO5kgEyu4dA@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] LoongArch: KVM: Reject repeated PCH-PIC CTRL_INIT
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Tao Cui <cui.tao@linux.dev>, gaosong@loongson.cn, zhaotianrui@loongson.cn, 
-	loongarch@lists.linux.dev, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kernel@xen0n.name, nagachaithanya9911@gmail.com, Tao Cui <cuitao@kylinos.cn>
+Date: Mon, 12 Oct 2026 14:43:47 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H59DV-qF98M1Uu=Y4k1a8YNw0_RnP_nH-yr8fZu-jnFXQ@mail.gmail.com>
+X-Gm-Features: AclHuK9Vx56Shq2EC6hjhbF0Erv-m921g-ZeXyaEjehh6i5ThvU9fcIhErAA96Y
+Message-ID: <CAAhV-H59DV-qF98M1Uu=Y4k1a8YNw0_RnP_nH-yr8fZu-jnFXQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] lib/crc: loongarch: Use hardware unaligned load in
+ CRC32(C) loops
+To: Wentao Guan <guanwentao@uniontech.com>
+Cc: Eric Biggers <ebiggers@kernel.org>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Ard Biesheuvel <ardb@kernel.org>, linux-crypto <linux-crypto@vger.kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, loongarch <loongarch@lists.linux.dev>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, Tianyang Zhang <zhangtianyang@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 30, 2026 at 5:03=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
-e:
+Hi, Eric and Wentao,
+
+On Sun, Oct 11, 2026 at 11:14=E2=80=AFPM Wentao Guan <guanwentao@uniontech.=
+com> wrote:
 >
->
->
-> On 2026/9/30 =E4=B8=8B=E5=8D=884:52, Huacai Chen wrote:
-> > On Wed, Sep 30, 2026 at 10:33=E2=80=AFAM Bibo Mao <maobibo@loongson.cn>=
- wrote:
-> >>
-> >>
-> >>
-> >> On 2026/9/30 =E4=B8=8A=E5=8D=8810:24, Huacai Chen wrote:
-> >>> On Wed, Sep 30, 2026 at 9:53=E2=80=AFAM Bibo Mao <maobibo@loongson.cn=
-> wrote:
-> >>>>
-> >>>>
-> >>>>
-> >>>> On 2026/9/29 =E4=B8=8B=E5=8D=888:43, Huacai Chen wrote:
-> >>>>> Hi, Tao,
-> >>>>>
-> >>>>> On Tue, Sep 29, 2026 at 6:29=E2=80=AFPM Tao Cui <cui.tao@linux.dev>=
- wrote:
-> >>>>>>
-> >>>>>> From: Tao Cui <cuitao@kylinos.cn>
-> >>>>>>
-> >>>>>> KVM_DEV_LOONGARCH_PCH_PIC_CTRL_INIT has no guard against repeated
-> >>>>>> invocation: every call overwrites pch_pic_base and registers the s=
-ame
-> >>>>>> kvm_io_device on the MMIO bus at the new address, while
-> >>>>>> kvm_pch_pic_destroy() unregisters only one bus range.  After a rep=
-eated
-> >>>>>> init, MMIO to the stale ranges computes its register offset agains=
-t the
-> >>>>>> new base and silently reads 0 / drops writes, and the leftover bus
-> >>>>>> entries persist until the VM is destroyed.
-> >>>>>>
-> >>>>>> Reject repeated initialization with -EEXIST, tracking the state wi=
-th
-> >>>>>> a has_init flag so the check and the MMIO base update are atomic
-> >>>>>> under slots_lock.  The base is only committed after a successful b=
-us
-> >>>>>> registration, and the real registration error is propagated instea=
-d
-> >>>>>> of being replaced with -EFAULT.
-> >>>>>>
-> >>>>>> Fixes: d206d9514873 ("LoongArch: KVM: Add PCHPIC user mode read an=
-d write functions")
-> >>>>>> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
-> >>>>>> ---
-> >>>>>>     arch/loongarch/include/asm/kvm_pch_pic.h |  1 +
-> >>>>>>     arch/loongarch/kvm/intc/pch_pic.c        | 12 ++++++++++--
-> >>>>>>     2 files changed, 11 insertions(+), 2 deletions(-)
-> >>>>>>
-> >>>>>> diff --git a/arch/loongarch/include/asm/kvm_pch_pic.h b/arch/loong=
-arch/include/asm/kvm_pch_pic.h
-> >>>>>> index 887b0431fd20..679132d840e6 100644
-> >>>>>> --- a/arch/loongarch/include/asm/kvm_pch_pic.h
-> >>>>>> +++ b/arch/loongarch/include/asm/kvm_pch_pic.h
-> >>>>>> @@ -53,6 +53,7 @@ struct loongarch_pch_pic {
-> >>>>>>            spinlock_t lock;
-> >>>>>>            struct kvm *kvm;
-> >>>>>>            struct kvm_io_device device;
-> >>>>>> +       bool has_init;
-> >>>>>>            union pch_pic_id id;
-> >>>>>>            uint64_t mask; /* 1:disable irq, 0:enable irq */
-> >>>>>>            uint64_t htmsi_en; /* 1:msi */
-> >>>>>> diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kv=
-m/intc/pch_pic.c
-> >>>>>> index 7a704f18880d..a884a043feef 100644
-> >>>>>> --- a/arch/loongarch/kvm/intc/pch_pic.c
-> >>>>>> +++ b/arch/loongarch/kvm/intc/pch_pic.c
-> >>>>>> @@ -282,16 +282,24 @@ static int kvm_pch_pic_init(struct kvm_devic=
-e *dev, u64 addr)
-> >>>>>>            struct kvm_io_device *device;
-> >>>>>>            struct loongarch_pch_pic *s =3D dev->kvm->arch.pch_pic;
-> >>>>> Why so complicated? The below is enough, no?
-> >>>>>
-> >>>>> diff --git a/arch/loongarch/kvm/intc/pch_pic.c
-> >>>>> b/arch/loongarch/kvm/intc/pch_pic.c
-> >>>>> index 2b63b0c2c7ce..7855d78304b7 100644
-> >>>>> --- a/arch/loongarch/kvm/intc/pch_pic.c
-> >>>>> +++ b/arch/loongarch/kvm/intc/pch_pic.c
-> >>>>> @@ -281,6 +281,9 @@ static int kvm_pch_pic_init(struct kvm_device
-> >>>>> *dev, u64 addr)
-> >>>>>            struct kvm_io_device *device;
-> >>>>>            struct loongarch_pch_pic *s =3D dev->kvm->arch.pch_pic;
-> >>>>>
-> >>>>> +       if (s->device->ops)
-> >>>>> +               return -EEXIST;
-> >>>> This can work, however I think that it is not a good idea to access
-> >>>> internal structure field about kvm_io_device. If so, there is no use
-> >>>> about API kvm_iodevice_init(), just s->device->ops =3D &kvm_pch_pic_=
-ops is ok.
-> >>> I'm a little not agree. :)
-> >>>
-> >>> I think kvm_iodevice_init() is designed to do more work rather than
-> >>> just set the ops (though it just set the ops now), otherwise its name
-> >>> should be kvm_iodevice_set_ops().
-> >>>
-> >>> In addition, even if kvm_iodevice_init() is really a setter, there is
-> >>> no getter for the ops, so when we need to access ops, we can only
-> >>> open-code it.
-> >> if so, you can try to add kvm_iodevice_get_ops API and check the
-> >> response of KVM community.
-> > There is not a setter, so I don't think a getter is necessary.
-> why setter is necessary, getter is not necessary.
+> > On Sun, Oct 11, 2026 at 10:29:29PM +0800, Huacai Chen wrote:
+> > > +static inline u32 get_le32(const void *p)
+> > > +{
+> > > + if (static_branch_likely(&have_ual))
+> > > + return *((__le32 *)p);
+> > > + else
+> > > + return get_unaligned_le32(p);
+> > > +}
 > >
-> > Moreover, you said "no other architectures directly access ops", but
-> > in fact, __vgic_doorbell_to_its() from arch/arm64/kvm/vgic/vgic-its.c
-> > directly accesses ops.
-> If it is used by others, I have no objection any more. But for me I
-> never write such code.
-OK, Tao, please update your code, drop the 2nd patch and simplify the
-4th one. Thanks.
+> > No, this is just broken.  The bare misaligned access is undefined
+> > behavior in C.  Also, every other use of {get,put}_unaligned_* in the
+> > kernel would need this; it is not specific to the CRC code.  Also, it i=
+s
+> Right, I got your thought. It not belong to CRC level.
+>
+> > inefficient to compile both code paths into the binary.
+> >
+> > The only way that realistically works, as we know from the other
+> > architectures, is for the unaligned access support to be known at
+> > compile time, and to have {get,put}_unaligned_* do the right thing
+> > accordingly.
+> So the optimize it can be move to {get,put}_unaligned_* code?
+Yes, we considered modifying {get,put}_unaligned_* globally. But it is
+not arch-specific code and we have no way to override it.
+
+On the other hand, the byte-to-byte {get,put}_unaligned_* is always
+correct, we are free to only optimise the hot path (like crc32 code).
+
+>
+> >
+> > Since loongarch made the incorrect decision to not specify unaligned
+> > access unconditionally, similar to RISC-V it can be worked around only
+> > by overriding that in the kconfig.  For loongarch that appears that
+> > already be implemented; just unset CONFIG_ARCH_STRICT_ALIGN when you
+> > know the kernel will run only on CPUs that have fixed this bug.
+> I think that we have the use cases to provide the general kernel instead =
+of the two kernel with
+> different config, so the image increase will be tolerated.
+Yes, the default configuration is to keep CONFIG_ARCH_STRICT_ALIGN set
+for single kernel binary.
 
 Huacai
 
 >
-> >
-> >
-> > Huacai
-> >
-> >>
-> >> Regards
-> >> Bibo Mao
-> >>>
-> >>>
-> >>> Huacai
-> >>>
-> >>>>
-> >>>> If adding has_init is redundant, maybe we can set s->pch_pic_base wi=
-th
-> >>>> INVALID_GPA in kvm_pch_pic_create() or some other methods. However I
-> >>>> think directly accessing kvm_io_device::ops is not a good method, no
-> >>>> other architectures do in such way.
-> >>>>
-> >>>> Regards
-> >>>> Bibo Mao
-> >>>>> +
-> >>>>>            s->pch_pic_base =3D addr;
-> >>>>>            device =3D &s->device;
-> >>>>>            /* init device by pch pic writing and reading ops */
-> >>>>>
-> >>>>>>
-> >>>>>> -       s->pch_pic_base =3D addr;
-> >>>>>>            device =3D &s->device;
-> >>>>>>            /* init device by pch pic writing and reading ops */
-> >>>>>>            kvm_iodevice_init(device, &kvm_pch_pic_ops);
-> >>>>>>            mutex_lock(&kvm->slots_lock);
-> >>>>>> +       if (s->has_init) {
-> >>>>>> +               ret =3D -EEXIST;
-> >>>>>> +               goto out;
-> >>>>>> +       }
-> >>>>>>            /* register pch pic device */
-> >>>>>>            ret =3D kvm_io_bus_register_dev(kvm, KVM_MMIO_BUS, addr=
-, PCH_PIC_SIZE, device);
-> >>>>>> +       if (!ret) {
-> >>>>>> +               s->pch_pic_base =3D addr;
-> >>>>>> +               s->has_init =3D true;
-> >>>>>> +       }
-> >>>>>> +out:
-> >>>>>>            mutex_unlock(&kvm->slots_lock);
-> >>>>>>
-> >>>>>> -       return (ret < 0) ? -EFAULT : 0;
-> >>>>>> +       return ret;
-> >>>>>>     }
-> >>>>>>
-> >>>>>>     /* used by user space to get or set pch pic registers */
-> >>>>>> --
-> >>>>>> 2.43.0
-> >>>>>>
-> >>>>
-> >>
-> >>
->
+> BRs
+> Wentao Guan
