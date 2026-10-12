@@ -1,388 +1,388 @@
-Received: from mta1.migadu.com (out-68.mta1.migadu.com [95.215.58.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 372E8446C00
-	for <loongarch@lists.linux.dev>; Mon, 12 Oct 2026 08:05:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A679944F54A;
+	Mon, 12 Oct 2026 09:04:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791792347; cv=none; b=l/J4AAvog97z8seM77j+Py4d4mO4wW/Y5rgItBcJGEtzKxM3pGsvHsiLSnCvprP+ezWcT7ybpETcdt9Ph4Z5Ac62tjNsFdKXsjPP74qVXeCPO2FPJUVAKvkjlrLtKFAVqHf6nK9grC6chZLQ/XCbpn0COu46NcOGV0ECVsSWepQ=
+	t=1791795877; cv=none; b=P6IPPtKYk9AHvoSNTWSawMyB4l5F/V9LbzmSv1Aj2tiyMi7NvNYMRTNDU1bFtLfjNeUWg+/BJsqSE2dshexOI5Ce9h6iNJ4YT6r7gAxAi5wVkT42UgSlpNPOiS5LGkA2DaGMlrVkshZLt3RVUd0rxibCU6HDgK+54iC6TEWWV60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791792347; c=relaxed/simple;
-	bh=cURnagGbe65KxHto5z5GRrb+Q5ygp/yQROgYwU7FvL0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=YhTlJV3MJvh55XIvLdCLHF6fZzKS/l5RO54/Umgnr+7J7tj+ob5K60WErwbltgo/BxeKV8c+y2FP5hAD87GFPAzPu28coNNZkvQ+L95XNiCV/Vc81D9wqIU7zRPiRjjx6sCw182CcVFc1DDl6I8aTafR/m5uzo7lAEqMql+USi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=gfq9IWl9; arc=none smtp.client-ip=95.215.58.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1791795877; c=relaxed/simple;
+	bh=mMbCMq4mT15KjIxu5uzbDeQ+T3dgyQaQaYXJ1lPa/Ng=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=ZH3QsjrQFulkJ5zDlYQF4woLuci3bW6CWJ2xaCAbn+e6L6DnRyxyBqH0nJ/tyLzUn3Evhtt84XZUExN+cba+d+eMBPu6rLaOBKZQ8VB+TdcUCO4U0i1LG32QZjkET/2S3sJ6iL2PsJ1pg6Urz1YBeHm014GOdjExJ+kYTbklmI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oI2cKCuf; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mHtL3Njz; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="gfq9IWl9"
-X-Envelope-To: loongarch@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=cURnagGbe65KxHto5z5GRrb+Q5ygp/yQROgYwU7FvL0=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1791792343; v=1; x=1792397143;
- b=gfq9IWl95Q2v0zebolGfpQLXuGz1884eYGbjgq8ikv9tDNjCLWiCfO/nmFoTdVsL7pqJWYIA
- BJsNWhmMwNa8v1yEhqFdMaNhz8WV/nVWOJxX5p3xNIwFJOImQfTaumiyi8YYqsKuxihYbKO7r+d
- zOmf3ULnJjjI7k9Q/sRct4AM=
-X-Envelope-To: loongarch@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 20f0d5a838242d16;
-	Mon, 12 Oct 2026 08:05:43 +0000
-X-Mizu-Trace-ID: 20f0d5a838242d16
-X-Migadu-Flow: FLOW_OUT
-From: haoran.jiang@linux.dev
-To: loongarch@lists.linux.dev
-Cc: kasan-dev@googlegroups.com,
-	linux-kernel@vger.kernel.org,
-	chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	Haoran Jiang <jianghaoran@kylinos.cn>
-Subject: [PATCH] LoongArch: add KASAN_VMALLOC support
-Date: Mon, 12 Oct 2026 16:04:48 +0800
-Message-Id: <20261012080448.134274-1-haoran.jiang@linux.dev>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oI2cKCuf";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mHtL3Njz"
+Date: Mon, 12 Oct 2026 11:04:31 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1791795872;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=CA9Z+1y8hG4Kx0oUTNF/FgJsgbGVmHVoJqpnzAlnWfU=;
+	b=oI2cKCufUmNPL+SQ6sOASjCI4vjMTslu5GSL7xkh4tK8n3fpmJSYVP2cr8FoB3qe71BfBj
+	32W8stigCND7fIY6crWUI0GqAL+aNNGJ/qoYvaJmm6DUsrBjM5/5D61mViDKCKc75OSpU2
+	S53i6ebyrPqVFIO8KOGj8bCFx+wvVCd++UyTHEv4pQzafXFyEFZT+cM4YQULpEDIgjXS03
+	JJcT3p/y5AgoYoLAcR5EpDH2Sv3SJMrajaJvTTdKQrGDB7X2nQy4TNJ+8rxwq3JB/xyp0o
+	g6byzoG66OUVHYF+3ZFSqjb3b+maD1iQL9eXn3C5+tjMt5RCYbMtn/keRNDeZA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1791795872;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=CA9Z+1y8hG4Kx0oUTNF/FgJsgbGVmHVoJqpnzAlnWfU=;
+	b=mHtL3NjznWkotqpnOCifRGghUDf3z2h62DG4oIzbWGy/jVCytremJRON/FXlQ0yV3YDhCW
+	JuaI3FBfBS1cFDDA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev, linux-perf-users@vger.kernel.org,
+	loongarch@lists.linux.dev
+Cc: Mark Rutland <mark.rutland@arm.com>, Ian Rogers <irogers@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Oleg Nesterov <oleg@redhat.com>, WANG Xuerui <kernel@xen0n.name>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>, Waiman Long <longman@redhat.com>,
+	Clark Williams <clrkwllms@kernel.org>,
+	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
+	James Clark <james.clark@linaro.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Chris Zankel <chris@zankel.net>,
+	Max Filippov <jcmvbkbc@gmail.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Jiri Olsa <jolsa@kernel.org>
+Subject: [PATCH v4] ARM, ARM64, LONGARCH, XTENSA: Delay HW BP notification to
+ task_work()
+Message-ID: <20261012090431.TF3iVDsk@linutronix.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-From: Haoran Jiang <jianghaoran@kylinos.cn>
+Waiman, Luis, Ada reported that HW breakpoints on ARM64 trigger
+"sleeping while atomic" warnings on PREEMPT_RT. The hardware event is
+delivered with disabled interrupts and perf intrastrucure expects
+disabled interrupts while the overflow callback is invoked.
 
-For the page table of the VMALLOC shadow region,
-only a partial page table needs to be established,
-allowing the complete page table entries to be
-populated on demand during use.
+The callback then sends a SIGTRAP signal for which it acquires
+sighand_struct::siglock, a spinlock_t which becomes a sleeping lock and
+must not be acquired in atomic context.
 
+Delay the event callback until the return to userland.
+Add perf_hwbp_notify(), a generic perf callback which delayes the
+actual callback invocation to task_work_add() callback. This callback
+invokes the architecture defined callback perf_arch_hwbp_send_sig().
+This requires struct callback_head and the functions require
+ARCH_NEED_PERF_HW_NOTIFY to be defined.
+
+This was reported against ARM64. ARM, LongARCH and Xtensa follow the
+same pattern are also converted. Xtensa is the only not supporting
+PREEMPT_RT but now we have all architectures using the same pattern.
+
+Fixes: d8fccd9ca5f90 ("arm64: Allow to enable PREEMPT_RT.")
+Reported-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
+Reported-by: Waiman Long <longman@redhat.com>
+Closes: https://lore.kernel.org/all/aho0eqjMESuHxECr@redhat.com/
+Reviewed-by: Ada Couprie Diaz <ada.coupriediaz@arm.com>
+Tested-by: Ada Couprie Diaz <ada.coupriediaz@arm.com> (arm64)
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
-1,Through the kasan_shallow_populate_pgd/p4d/pud/pmd/pte functions,
-page tables are established for the modules and vmalloc regions,
-but the page tables are not fully populated; the complete page
-tables are established automatically when vmalloc is used.
-If the address is pgd-aligned, the page table is established
-down to the pgd level; if it is pud-aligned, it is established
-down to the pud level, and so on. While establishing the
-/pgd/pud/pmd levels, the page table entries must be initialized
-to none. For example, a pmd entry of none is an invalid_pte_table.
-Only in this way can the correct page tables be established at
-use time. At the same time, boundary issues must be considered
-when the address is not aligned. For example, mem_to_shadow(MALLOC_END)
-and mem_to_shadow(vmemmap) are in the same pmd, and the region
-[mem_to_shadow(vmemmap), mem_to_shadow(VMEMMAP_END)] needs to be
-mapped to page 0. To avoid affecting the mem_to_shadow(vmemmap) region,
-only the pmd entries for [mem_to_shadow(MALLOC_END) & PMD_MASK, mem_to_shadow(MALLOC_END)]
-need to be initialized to invalid_pte_table. The remaining pmd entries are left as they are.
+v3=E2=80=A6v4: https://lore.kernel.org/all/20261001143516.Ew8C97WS@linutron=
+ix.de/
+ - Add fixes tag
+ - Rename the functions as suggested by Ada to use the pattern that perf
+   uses in other places:
+   - perf_arch_hwbp_notify() -> perf_hwbp_notify() (generic)
+   - arch_hwbp_send_sig() -> perf_arch_hwbp_send_sig() (arch specific)
+   - perf_arch_hwbp_send_sig() -> perf_hwbp_send_sig() (generic)
+ - Rename ARCH_NEED_PERF_HW_NOTIF -> ARCH_NEED_PERF_HW_NOTIFY
 
-2,The removal of kasan_populate_early_shadow(mem_to_shadow((void *)VMALLOC_START),
-mem_to_shadow((void *)KFENCE_AREA_END)) achieves the same effect as
-kasan_pgd_populate(KASAN_SHADOW_START, KASAN_SHADOW_END, NUMA_NO_NODE, true);
- both map this region to a shared zero page. (KASAN_SHADOW_START, KASAN_SHADOW_END)
-already covers (mem_to_shadow((void *)VMALLOC_START), mem_to_shadow((void *)KFENCE_AREA_END)).
-Other architectures such as arm64/riscv need kasan_populate_early_shadow
-because clear_shadow(KASAN_SHADOW_START, KASAN_SHADOW_END) is performed before
- kasan_populate_early_shadow, so the reserved region must be mapped to the zero
-page again. On LoongArch, however, the entire shadow space is first mapped to
-page 0 via kasan_pgd_populate, and then page tables are established for the
-required regions, which is simpler and clearer.
+v2=E2=80=A6v3: https://lore.kernel.org/all/20260814085118.OPEA_Ssn@linutron=
+ix.de/
+ - Add Xtensa for completion
+ - sashiko complains and wants TWA_SIGNAL instead TWA_RESUME. His
+   argument is that a syscall will trap via get_user() and loop forever
+   instead making progress. This is wrong IMHO. ARM64 will single step
+   over the watchpoint and continue execution. The only downside is that
+   userland will get notified after the syscall completed. So my theory.
+   Using TWA_SIGNAL is worse: Assume we have a watchpoint on UADDR and
+   are in a futex() syscall. The get_user() invocation will trigger the
+   exception, the debug handler will step over and queue a signal. The
+   futex code will notice this and return ERESTARTNOINTR. A signal will
+   be sent, the syscall restarts, traps onto UADDR again, the loop
+   continues. But this should be case now, too=E2=80=A6
+   Now that I look into arch_build_bp_info() and do actual testing I must
+   say arm64 does not support mixed breakpoints. This means there is no
+   breakpoint in kernel on a userland address. \o/
 
-3,pgd_none/p4d_none/pmd_none/pte_none were added to the definitions of
-__pgd_none/__p4d_none/__pud_none/__pmd_none/__pte_none respectively
-because kasan_populate_early_vm_area_shadow requires them.
-kasan_populate_early_vm_area_shadow establishes complete KASAN shadow
-page table mappings for the early vmalloc regions before vmalloc_init.
-At this point, complete page tables need to be established, but
-kasan_populate_early_vm_area_shadow is called after step 1, at which time
-only incomplete page tables have been established for the vmalloc region.
-The condition for a page table entry to be none requires the
-pgd_none/p4d_none/pmd_none/pte_none checks. Only by correctly determining
-whether an entry is none can the complete page tables be established properly.
+v1=E2=80=A6v2: https://lore.kernel.org/all/20260713144939.FuCj9yvZ@linutron=
+ix.de/
+ - sashiko complained that a memory breakpoint might trigger several
+   times before a signal is sent if the syscall touches the memory (via
+   get_user()) more than once before returning back. This would lead to
+   list corruption in task_work_add(). To handle this, there is now a
+   variable which is set via xchg before task_work_add() and cleared
+   after the signal has been sent.
 
-Test：
+ arch/arm/include/asm/hw_breakpoint.h       |  1 +
+ arch/arm/kernel/ptrace.c                   |  7 ++----
+ arch/arm64/include/asm/hw_breakpoint.h     |  1 +
+ arch/arm64/kernel/ptrace.c                 |  6 ++---
+ arch/loongarch/include/asm/hw_breakpoint.h |  1 +
+ arch/loongarch/kernel/ptrace.c             |  6 ++---
+ arch/xtensa/include/asm/hw_breakpoint.h    |  1 +
+ arch/xtensa/kernel/ptrace.c                |  7 ++----
+ include/linux/hw_breakpoint.h              |  3 +++
+ include/linux/perf_event.h                 |  4 ++++
+ kernel/events/core.c                       | 26 ++++++++++++++++++++++
+ 11 files changed, 45 insertions(+), 18 deletions(-)
 
-https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git
-
-CONFIG_KUNIT=y
-
-CONFIG_KASAN_KUNIT_TEST=m
-
-Add `kunit.enable=1 kasan_multi_shot` to the cmdline.
-
-Test with 3-level 16K pages and 4-level 4K pages respectively.
-
-before this patch:
-
-...
-
-[  502.760009]     ok 68 vmalloc_oob # SKIP Test requires CONFIG_KASAN_VMALLOC=y
-
-...
-
-[  504.016000] # kasan: pass:49 fail:0 skip:26 total:75
-[  504.016092] # Totals: pass:49 fail:0 skip:26 total:75
-[  504.016171] ok 1 kasan
-
-after this patch:
-
-...
-
-[  531.630760]     ok 68 vmalloc_oob
-
-...
-
-[  532.891057] # kasan: pass:50 fail:0 skip:25 total:75
-[  532.891142] # Totals: pass:50 fail:0 skip:25 total:75
-[  532.891219] ok 1 kasan
-
-Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
-
----
- arch/loongarch/Kconfig         |   2 +
- arch/loongarch/mm/kasan_init.c | 173 ++++++++++++++++++++++++++++++---
- 2 files changed, 164 insertions(+), 11 deletions(-)
-
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 2067d1f2ad7a..c95c6fd8a138 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -119,6 +119,7 @@ config LOONGARCH
- 	select HAVE_ARCH_JUMP_LABEL
- 	select HAVE_ARCH_JUMP_LABEL_RELATIVE
- 	select HAVE_ARCH_KASAN if 64BIT
-+	select HAVE_ARCH_KASAN_VMALLOC
- 	select HAVE_ARCH_KFENCE if 64BIT
- 	select HAVE_ARCH_KGDB if PERF_EVENTS
- 	select HAVE_ARCH_KSTACK_ERASE
-@@ -187,6 +188,7 @@ config LOONGARCH
- 	select HOTPLUG_SMT if HOTPLUG_CPU
- 	select IRQ_FORCED_THREADING
- 	select IRQ_LOONGARCH_CPU
-+	select KASAN_VMALLOC if KASAN
- 	select LOCK_MM_AND_FIND_VMA
- 	select MMU_GATHER_MERGE_VMAS if MMU
- 	select MMU_GATHER_RCU_TABLE_FREE
-diff --git a/arch/loongarch/mm/kasan_init.c b/arch/loongarch/mm/kasan_init.c
-index 92ca0ba86406..962c37316200 100644
---- a/arch/loongarch/mm/kasan_init.c
-+++ b/arch/loongarch/mm/kasan_init.c
-@@ -17,28 +17,28 @@ static pgd_t kasan_pg_dir[PTRS_PER_PGD] __initdata __aligned(PAGE_SIZE);
- #define __pgd_none(early, pgd) (0)
- #else
- #define __pgd_none(early, pgd) (early ? (pgd_val(pgd) == 0) : \
--(__pa(pgd_val(pgd)) == (unsigned long)__pa(kasan_early_shadow_p4d)))
-+((__pa(pgd_val(pgd)) == (unsigned long)__pa(kasan_early_shadow_p4d)) || pgd_none(pgd)))
- #endif
- 
- #ifdef __PAGETABLE_PUD_FOLDED
- #define __p4d_none(early, p4d) (0)
- #else
- #define __p4d_none(early, p4d) (early ? (p4d_val(p4d) == 0) : \
--(__pa(p4d_val(p4d)) == (unsigned long)__pa(kasan_early_shadow_pud)))
-+((__pa(p4d_val(p4d)) == (unsigned long)__pa(kasan_early_shadow_pud)) || p4d_none(p4d)))
- #endif
- 
- #ifdef __PAGETABLE_PMD_FOLDED
- #define __pud_none(early, pud) (0)
- #else
- #define __pud_none(early, pud) (early ? (pud_val(pud) == 0) : \
--(__pa(pud_val(pud)) == (unsigned long)__pa(kasan_early_shadow_pmd)))
-+((__pa(pud_val(pud)) == (unsigned long)__pa(kasan_early_shadow_pmd)) || pud_none(pud)))
- #endif
- 
- #define __pmd_none(early, pmd) (early ? (pmd_val(pmd) == 0) : \
--(__pa(pmd_val(pmd)) == (unsigned long)__pa(kasan_early_shadow_pte)))
-+((__pa(pmd_val(pmd)) == (unsigned long)__pa(kasan_early_shadow_pte)) || pmd_none(pmd)))
- 
- #define __pte_none(early, pte) (early ? pte_none(pte) : \
--((pte_val(pte) & _PFN_MASK) == (unsigned long)__pa(kasan_early_shadow_page)))
-+(((pte_val(pte) & _PFN_MASK) == (unsigned long)__pa(kasan_early_shadow_page)) || pte_none(pte)))
- 
- static void *mem_to_shadow(const void *addr)
+diff --git a/arch/arm/include/asm/hw_breakpoint.h b/arch/arm/include/asm/hw=
+_breakpoint.h
+index e7f9961c53b2d..fa7fb2b2a392a 100644
+--- a/arch/arm/include/asm/hw_breakpoint.h
++++ b/arch/arm/include/asm/hw_breakpoint.h
+@@ -7,6 +7,7 @@
+ struct task_struct;
+=20
+ #ifdef CONFIG_HAVE_HW_BREAKPOINT
++#define ARCH_NEED_PERF_HW_NOTIFY
+=20
+ struct arch_hw_breakpoint_ctrl {
+ 		u32 __reserved	: 9,
+diff --git a/arch/arm/kernel/ptrace.c b/arch/arm/kernel/ptrace.c
+index ed7a2a87a6707..db4b28c6e15a4 100644
+--- a/arch/arm/kernel/ptrace.c
++++ b/arch/arm/kernel/ptrace.c
+@@ -347,9 +347,7 @@ static long ptrace_hbp_idx_to_num(int idx)
+ /*
+  * Handle hitting a HW-breakpoint.
+  */
+-static void ptrace_hbptriggered(struct perf_event *bp,
+-				     struct perf_sample_data *data,
+-				     struct pt_regs *regs)
++void perf_arch_hwbp_send_sig(struct perf_event *bp)
  {
-@@ -242,6 +242,160 @@ static void __init kasan_map_populate(unsigned long start, unsigned long end,
- 	kasan_pgd_populate(start & PAGE_MASK, PAGE_ALIGN(end), node, false);
+ 	struct arch_hw_breakpoint *bkpt =3D counter_arch_bp(bp);
+ 	long num;
+@@ -424,8 +422,7 @@ static struct perf_event *ptrace_hbp_create(struct task=
+_struct *tsk, int type)
+ 	attr.bp_type	=3D type;
+ 	attr.disabled	=3D 1;
+=20
+-	return register_user_hw_breakpoint(&attr, ptrace_hbptriggered, NULL,
+-					   tsk);
++	return register_user_hw_breakpoint(&attr, perf_hwbp_notify, NULL, tsk);
  }
- 
-+static void __init kasan_shallow_populate_pte(pmd_t *pmdp, unsigned long addr,
-+					unsigned long end, int node)
-+{
-+	unsigned long next;
-+	pte_t *ptep = pte_offset_kernel(pmdp, addr);
-+
-+	do {
-+		next = addr + PAGE_SIZE;
-+		if (__pte_none(false, ptep_get(ptep)))
-+			pte_clear(&init_mm, addr, ptep);
-+	} while (ptep++, addr = next, addr != end);
-+}
-+
-+static void __init kasan_shallow_populate_pmd(pud_t *pudp, unsigned long addr,
-+					unsigned long end, int node)
-+{
-+	unsigned long next;
-+	pmd_t *pmdp = pmd_offset(pudp, addr);
-+
-+	do {
-+		next = pmd_addr_end(addr, end);
-+
-+		if (__pmd_none(false, pmdp_get(pmdp))) {
-+			phys_addr_t pte_phys = kasan_alloc_zeroed_page(node);
-+
-+			if (IS_ALIGNED(addr, PMD_SIZE) && end - addr >= PMD_SIZE) {
-+				kernel_pte_init(__va(pte_phys));
-+				pmd_populate_kernel(NULL, pmdp, (pte_t *)__va(pte_phys));
-+				continue;
-+			} else {
-+				memcpy(__va(pte_phys), kasan_early_shadow_pte,
-+						sizeof(kasan_early_shadow_pte));
-+				pmd_populate_kernel(NULL, pmdp, (pte_t *)__va(pte_phys));
-+			}
-+		}
-+		kasan_shallow_populate_pte(pmdp, addr, next, node);
-+	} while (pmdp++, addr = next, addr != end);
-+}
-+
-+static void __init kasan_shallow_populate_pud(p4d_t *p4dp, unsigned long addr,
-+					unsigned long end, int node)
-+{
-+	unsigned long next;
-+	pud_t *pudp = pud_offset(p4dp, addr);
-+
-+	do {
-+		next = pud_addr_end(addr, end);
-+
-+		if (__pud_none(false, pudp_get(pudp))) {
-+
-+			phys_addr_t pmd_phys = kasan_alloc_zeroed_page(node);
-+
-+			if (IS_ALIGNED(addr, PUD_SIZE) && end - addr >= PUD_SIZE) {
-+#ifndef __PAGETABLE_PMD_FOLDED
-+				pmd_init(__va(pmd_phys));
-+#endif
-+				pud_populate(&init_mm, pudp, (pmd_t *)__va(pmd_phys));
-+				continue;
-+			} else {
-+				memcpy(__va(pmd_phys), kasan_early_shadow_pmd,
-+						sizeof(kasan_early_shadow_pmd));
-+				pud_populate(&init_mm, pudp, (pmd_t *)__va(pmd_phys));
-+
-+			}
-+		}
-+
-+		kasan_shallow_populate_pmd(pudp, addr, next, node);
-+	} while (pudp++, addr = next, addr != end);
-+}
-+
-+static void __init kasan_shallow_populate_p4d(pgd_t *pgdp, unsigned long addr,
-+					unsigned long end, int node)
-+{
-+	unsigned long next;
-+	p4d_t *p4dp = p4d_offset(pgdp, addr);
-+
-+	do {
-+		next = p4d_addr_end(addr, end);
-+
-+		if (__p4d_none(false, p4dp_get(p4dp))) {
-+
-+			phys_addr_t pud_phys = kasan_alloc_zeroed_page(node);
-+
-+			if (IS_ALIGNED(addr, P4D_SIZE) && end - addr >= P4D_SIZE) {
-+#ifndef __PAGETABLE_PUD_FOLDED
-+				pud_init(__va(pud_phys));
-+#endif
-+				p4d_populate(&init_mm, p4dp, (pud_t *)__va(pud_phys));
-+				continue;
-+			} else {
-+				memcpy(__va(pud_phys), kasan_early_shadow_pud,
-+						sizeof(kasan_early_shadow_pud));
-+				p4d_populate(&init_mm, p4dp, (pud_t *)__va(pud_phys));
-+			}
-+		}
-+		kasan_shallow_populate_pud(p4dp, addr, next, node);
-+	} while (p4dp++, addr = next, addr != end);
-+}
-+
-+static void __init kasan_shallow_populate_pgd(unsigned long addr,
-+					unsigned long end, int node)
-+{
-+	unsigned long next;
-+	pgd_t *pgdp;
-+
-+	pgdp = pgd_offset_k(addr);
-+
-+	do {
-+		next = pgd_addr_end(addr, end);
-+
-+		if (__pgd_none(false, pgdp_get(pgdp))) {
-+
-+			phys_addr_t p4d_phys = kasan_alloc_zeroed_page(node);
-+
-+			if (IS_ALIGNED(addr, PGDIR_SIZE) && end - addr >= PGDIR_SIZE) {
-+				pgd_init(__va(p4d_phys));
-+				pgd_populate(&init_mm, pgdp, (p4d_t *)__va(p4d_phys));
-+				continue;
-+			} else {
-+				memcpy(__va(p4d_phys), kasan_early_shadow_p4d,
-+						sizeof(kasan_early_shadow_p4d));
-+				pgd_populate(&init_mm, pgdp, (p4d_t *)__va(p4d_phys));
-+			}
-+		}
-+
-+		kasan_shallow_populate_p4d(pgdp, addr, next, node);
-+	} while (pgdp++, addr = next, addr != end);
-+}
-+
-+static void __init kasan_shallow_populate(unsigned long start, unsigned long end, int node)
-+{
-+	unsigned long vaddr = (unsigned long)start & PAGE_MASK;
-+	unsigned long vend = PAGE_ALIGN((unsigned long)end);
-+
-+	kasan_shallow_populate_pgd(vaddr, vend, node);
-+}
-+
-+#ifdef CONFIG_KASAN_VMALLOC
-+void __init kasan_populate_early_vm_area_shadow(void *start, unsigned long size)
-+{
-+	unsigned long shadow_start, shadow_end;
-+
-+	if (!is_vmalloc_or_module_addr(start))
-+		return;
-+
-+	shadow_start = (unsigned long)mem_to_shadow(start);
-+	shadow_start = ALIGN_DOWN(shadow_start, PAGE_SIZE);
-+	shadow_end = (unsigned long)mem_to_shadow(start + size);
-+	shadow_end = ALIGN(shadow_end, PAGE_SIZE);
-+
-+	kasan_map_populate(shadow_start, shadow_end, NUMA_NO_NODE);
-+}
-+#endif
-+
- asmlinkage void __init kasan_early_init(void)
+=20
+ static int ptrace_gethbpregs(struct task_struct *tsk, long num,
+diff --git a/arch/arm64/include/asm/hw_breakpoint.h b/arch/arm64/include/as=
+m/hw_breakpoint.h
+index bd81cf17744af..0bc75f42b0da6 100644
+--- a/arch/arm64/include/asm/hw_breakpoint.h
++++ b/arch/arm64/include/asm/hw_breakpoint.h
+@@ -124,6 +124,7 @@ extern void hw_breakpoint_pmu_read(struct perf_event *b=
+p);
+ extern int hw_breakpoint_slots(int type);
+=20
+ #ifdef CONFIG_HAVE_HW_BREAKPOINT
++#define ARCH_NEED_PERF_HW_NOTIFY
+ extern void hw_breakpoint_thread_switch(struct task_struct *next);
+ extern void ptrace_hw_copy_thread(struct task_struct *task);
+ #else
+diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
+index f743cbec1c3ad..dc3793c2a7c3c 100644
+--- a/arch/arm64/kernel/ptrace.c
++++ b/arch/arm64/kernel/ptrace.c
+@@ -168,9 +168,7 @@ void ptrace_disable(struct task_struct *child)
+ /*
+  * Handle hitting a HW-breakpoint.
+  */
+-static void ptrace_hbptriggered(struct perf_event *bp,
+-				struct perf_sample_data *data,
+-				struct pt_regs *regs)
++void perf_arch_hwbp_send_sig(struct perf_event *bp)
  {
- 	BUILD_BUG_ON(!IS_ALIGNED(KASAN_SHADOW_START, PGDIR_SIZE));
-@@ -297,9 +451,6 @@ void __init kasan_init(void)
- 	/* Maps everything to a single page of zeroes */
- 	kasan_pgd_populate(KASAN_SHADOW_START, KASAN_SHADOW_END, NUMA_NO_NODE, true);
- 
--	kasan_populate_early_shadow(mem_to_shadow((void *)VMALLOC_START),
--					mem_to_shadow((void *)KFENCE_AREA_END));
--
- 	/* Populate the linear mapping */
- 	for_each_mem_range(i, &pa_start, &pa_end) {
- 		void *start = (void *)phys_to_virt(pa_start);
-@@ -309,9 +460,9 @@ void __init kasan_init(void)
- 			(unsigned long)mem_to_shadow(end), NUMA_NO_NODE);
- 	}
- 
--	/* Populate modules mapping */
--	kasan_map_populate((unsigned long)mem_to_shadow((void *)MODULES_VADDR),
--		(unsigned long)mem_to_shadow((void *)MODULES_END), NUMA_NO_NODE);
-+	kasan_shallow_populate((unsigned long)mem_to_shadow((void *)MODULES_VADDR),
-+			(unsigned long)mem_to_shadow((void *)VMALLOC_END), NUMA_NO_NODE);
+ 	struct arch_hw_breakpoint *bkpt =3D counter_arch_bp(bp);
+ 	const char *desc =3D "Hardware breakpoint trap (ptrace)";
+@@ -312,7 +310,7 @@ static struct perf_event *ptrace_hbp_create(unsigned in=
+t note_type,
+ 	attr.bp_type	=3D type;
+ 	attr.disabled	=3D 1;
+=20
+-	bp =3D register_user_hw_breakpoint(&attr, ptrace_hbptriggered, NULL, tsk);
++	bp =3D register_user_hw_breakpoint(&attr, perf_hwbp_notify, NULL, tsk);
+ 	if (IS_ERR(bp))
+ 		return bp;
+=20
+diff --git a/arch/loongarch/include/asm/hw_breakpoint.h b/arch/loongarch/in=
+clude/asm/hw_breakpoint.h
+index 5faa97a87a9e2..c2d061ff3763a 100644
+--- a/arch/loongarch/include/asm/hw_breakpoint.h
++++ b/arch/loongarch/include/asm/hw_breakpoint.h
+@@ -120,6 +120,7 @@ void breakpoint_handler(struct pt_regs *regs);
+ void watchpoint_handler(struct pt_regs *regs);
+=20
+ #ifdef CONFIG_HAVE_HW_BREAKPOINT
++#define ARCH_NEED_PERF_HW_NOTIFY
+ extern void ptrace_hw_copy_thread(struct task_struct *task);
+ extern void hw_breakpoint_thread_switch(struct task_struct *next);
+ #else
+diff --git a/arch/loongarch/kernel/ptrace.c b/arch/loongarch/kernel/ptrace.c
+index be38430f7e280..27e7e64591592 100644
+--- a/arch/loongarch/kernel/ptrace.c
++++ b/arch/loongarch/kernel/ptrace.c
+@@ -384,9 +384,7 @@ static int lbt_set(struct task_struct *target,
+ /*
+  * Handle hitting a HW-breakpoint.
+  */
+-static void ptrace_hbptriggered(struct perf_event *bp,
+-				struct perf_sample_data *data,
+-				struct pt_regs *regs)
++void perf_arch_hwbp_send_sig(struct perf_event *bp)
+ {
+ 	int i;
+ 	struct arch_hw_breakpoint *bkpt =3D counter_arch_bp(bp);
+@@ -479,7 +477,7 @@ static struct perf_event *ptrace_hbp_create(unsigned in=
+t note_type,
+ 	attr.bp_type	=3D type;
+ 	attr.disabled	=3D 1;
+=20
+-	bp =3D register_user_hw_breakpoint(&attr, ptrace_hbptriggered, NULL, tsk);
++	bp =3D register_user_hw_breakpoint(&attr, perf_hwbp_notify, NULL, tsk);
+ 	if (IS_ERR(bp))
+ 		return bp;
+=20
+diff --git a/arch/xtensa/include/asm/hw_breakpoint.h b/arch/xtensa/include/=
+asm/hw_breakpoint.h
+index 9ec86f440a48e..44ea340c88742 100644
+--- a/arch/xtensa/include/asm/hw_breakpoint.h
++++ b/arch/xtensa/include/asm/hw_breakpoint.h
+@@ -12,6 +12,7 @@
+ #define __ASM_XTENSA_HW_BREAKPOINT_H
+=20
+ #ifdef CONFIG_HAVE_HW_BREAKPOINT
++#define ARCH_NEED_PERF_HW_NOTIFY
+=20
+ #include <linux/kdebug.h>
+ #include <linux/types.h>
+diff --git a/arch/xtensa/kernel/ptrace.c b/arch/xtensa/kernel/ptrace.c
+index 364e4fdabb00d..c9f583d650de2 100644
+--- a/arch/xtensa/kernel/ptrace.c
++++ b/arch/xtensa/kernel/ptrace.c
+@@ -361,9 +361,7 @@ static int ptrace_pokeusr(struct task_struct *child, lo=
+ng regno, long val)
+ }
+=20
+ #ifdef CONFIG_HAVE_HW_BREAKPOINT
+-static void ptrace_hbptriggered(struct perf_event *bp,
+-				struct perf_sample_data *data,
+-				struct pt_regs *regs)
++void perf_arch_hwbp_send_sig(struct perf_event *bp)
+ {
+ 	int i;
+ 	struct arch_hw_breakpoint *bkpt =3D counter_arch_bp(bp);
+@@ -395,8 +393,7 @@ static struct perf_event *ptrace_hbp_create(struct task=
+_struct *tsk, int type)
+ 	attr.bp_type	=3D type;
+ 	attr.disabled	=3D 1;
+=20
+-	return register_user_hw_breakpoint(&attr, ptrace_hbptriggered, NULL,
+-					   tsk);
++	return register_user_hw_breakpoint(&attr, perf_hwbp_notify, NULL, tsk);
+ }
+=20
+ /*
+diff --git a/include/linux/hw_breakpoint.h b/include/linux/hw_breakpoint.h
+index db199d653dd1a..91e8d80220c54 100644
+--- a/include/linux/hw_breakpoint.h
++++ b/include/linux/hw_breakpoint.h
+@@ -85,6 +85,9 @@ extern int register_perf_hw_breakpoint(struct perf_event =
+*bp);
+ extern void unregister_hw_breakpoint(struct perf_event *bp);
+ extern void unregister_wide_hw_breakpoint(struct perf_event * __percpu *cp=
+u_events);
+ extern bool hw_breakpoint_is_used(void);
++extern void perf_arch_hwbp_send_sig(struct perf_event *bp);
++extern void perf_hwbp_notify(struct perf_event *bp, struct perf_sample_dat=
+a *data,
++			     struct pt_regs *regs);
+=20
+ extern int dbg_reserve_bp_slot(struct perf_event *bp);
+ extern int dbg_release_bp_slot(struct perf_event *bp);
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 2d5e7687875b0..07f2c858d50d1 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -215,6 +215,10 @@ struct hw_perf_event {
+=20
+ 	/* Last sync'ed generation of filters */
+ 	unsigned long			addr_filters_gen;
++#ifdef ARCH_NEED_PERF_HW_NOTIFY
++	struct callback_head		arch_hw_notif;
++	int				arch_hw_notif_busy;
++#endif
+=20
+ /*
+  * hw_perf_event::state flags; used to track the PERF_EF_* state.
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 7846d70be57f6..619eab68d1dfd 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -13334,6 +13334,28 @@ static void account_event(struct perf_event *event)
+ 	account_pmu_sb_event(event);
+ }
+=20
++#ifdef ARCH_NEED_PERF_HW_NOTIFY
++static void perf_hwbp_send_sig(struct callback_head *head)
++{
++	struct perf_event *bp;
 +
- 	/*
- 	 * KAsan may reuse the contents of kasan_early_shadow_pte directly, so we
- 	 * should make sure that it maps the zero page read-only.
--- 
-2.43.0
++	bp =3D container_of(head, struct perf_event, hw.arch_hw_notif);
++	perf_arch_hwbp_send_sig(bp);
++	xchg_relaxed(&bp->hw.arch_hw_notif_busy, 0);
++	put_event(bp);
++}
++
++void perf_hwbp_notify(struct perf_event *bp, struct perf_sample_data *data,
++		      struct pt_regs *regs)
++{
++	if (WARN_ON_ONCE(!atomic_long_inc_not_zero(&bp->refcount)))
++		return;
++	if (xchg_relaxed(&bp->hw.arch_hw_notif_busy, 1) ||
++	    WARN_ON_ONCE(task_work_add(current, &bp->hw.arch_hw_notif, TWA_RESUME=
+)))
++		put_event(bp);
++}
++#endif
++
+ /*
+  * Allocate and initialize an event structure
+  */
+@@ -13439,6 +13461,10 @@ perf_event_alloc(struct perf_event_attr *attr, int=
+ cpu,
+ 	}
+=20
+ 	if (overflow_handler) {
++#ifdef ARCH_NEED_PERF_HW_NOTIFY
++		if (overflow_handler =3D=3D perf_hwbp_notify)
++			init_task_work(&event->hw.arch_hw_notif, perf_hwbp_send_sig);
++#endif
+ 		event->overflow_handler	=3D overflow_handler;
+ 		event->overflow_handler_context =3D context;
+ 	} else if (is_write_backward(event)){
+--=20
+2.55.0
 
