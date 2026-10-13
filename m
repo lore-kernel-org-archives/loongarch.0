@@ -1,330 +1,166 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B4F3D47C2;
-	Mon, 12 Oct 2026 23:41:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791848511; cv=none; b=Blb+o5WyhyXzQZHTb2ikWWFsuvlXSHPR0DBd7N8fcPtLIUGM+APtI3uRguQYFPgBoB/armIT3PV0J9VD87wiKWk2Yihn2DAo6rUhmqYH6bmjkJW2sEU1nSkW1SPO3hSZzko0lI4tUMnBIwss1LFYwh0Z8z1bK6M164wlqckzqu4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791848511; c=relaxed/simple;
-	bh=iD+/aLbLxyN4OPgQVnmXQ+36xaYhRSs8OGa/lzPqXVQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JxuVd6FqHAM85kyrF4YywN2BpfviVtTwtIRQAzZXitLsXFNN8XNLpRbFG/bwlQNJYY4ZEi28iVPvSsD0FPsRFNoroBe2aePkk7mkYLXNn7vhyPeuHkXTOgCoejDUkBPe93MCu0R3akSmlAI0im7of+VNAJMY2YvfMOXqQXRCuFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F3rhYTqN; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 525AA3B4EBD
+	for <loongarch@lists.linux.dev>; Tue, 13 Oct 2026 01:20:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791854424; cv=pass; b=Vy+fDuLozsWZLhzLoTAcajhjtaBmGndTi3FGKSKb+B2RA7++Q8KiNorwSrKh6Q15O12rdi6BslAL1o6J2416RXY9NX7pb6oWnp9G+HUNCcSpRoCGK+Dh7XQF59ZFmd/UbOKqXrPlxhHD0aFuFLVlNWid+UHjYKlrvyjriLtsXU8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791854424; c=relaxed/simple;
+	bh=GLdPP9wdTOmg3Lh8rLtRDBnHGBuo68uFmOzknvlhkJI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NRLK5aNIpIyc+2MxBNA3FbBEWdT77pyjMCfQEJVFKyV4b1hegQe18LIMWi3exqD5aymfgxshWzEflGxzSTmV7h9R6R0SP5mh6I5NA5XBtCxAz2Ax/1m2xFCd0irVv8CYeHWcA+JPujwWVm+Fbvys6Z6q1FbIC8lEtRpxSJnNBWY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DUszKUUE; arc=pass smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F3rhYTqN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791848509; x=1823384509;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=iD+/aLbLxyN4OPgQVnmXQ+36xaYhRSs8OGa/lzPqXVQ=;
-  b=F3rhYTqNn1jOf/080UxZTRngn6PqWLJXR1SDmRtQPOt8lsQ78hnABWeS
-   aVVzEJLXzzK2SIQQ88CSq0m3WtjwkS3C0L3ApDyJCeW5CD2hzp3wgEqiY
-   31LlCWUY1Dp3JFBmrWo6RUKYxlXHTPuK25+hV7oPYzUlpO/eCR5i2i+2q
-   Jwj9hTqGsnkaJquDtEU/p9mEqMFWYourj6NWBeHnArrZu9F4/J85fBZhi
-   CvZO+HOpQJSj3ozaR2fTqlXLry9XicApAAgj2AVW4nlB42H+iVoppcfbM
-   K6YvUncO/GyHwZMzefy66eqILEkrNupMady6onl995J5mwO99auMczQH2
-   w==;
-X-CSE-ConnectionGUID: YpZulBFDSvKIF5fEsOIs9w==
-X-CSE-MsgGUID: cIiff0TiT4ukpIMpRUogYg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11933"; a="450040"
-X-IronPort-AV: E=Sophos;i="6.27,154,1787036400"; 
-   d="scan'208";a="450040"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 16:41:48 -0700
-X-CSE-ConnectionGUID: Ul+a5TfqQzeWtVVntqfNIw==
-X-CSE-MsgGUID: d0HMC7X4QHe9fpBC8h1eFA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,154,1787036400"; 
-   d="scan'208";a="1209371"
-Received: from unknown (HELO [10.241.242.105]) ([10.241.242.105])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 16:41:48 -0700
-Message-ID: <cf703658d922b4d698d35e35bb942f359971d850.camel@linux.intel.com>
-Subject: Re: [RFC PATCH v3 02/13] drivers/base/arch_topology: Add support
- for initializing sbm topology
-From: Tim Chen <tim.c.chen@linux.intel.com>
-To: K Prateek Nayak <kprateek.nayak@amd.com>, Peter Zijlstra	
- <peterz@infradead.org>, Chen Yu <yu.c.chen@intel.com>, Ingo Molnar	
- <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot	
- <vincent.guittot@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, 
- Arnd Bergmann	 <arnd@arndb.de>, linux-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org, 	linux-s390@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, 	linux-mips@vger.kernel.org,
- loongarch@lists.linux.dev, 	driver-core@lists.linux.dev, Sudeep Holla
- <sudeep.holla@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich	 <dakr@kernel.org>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt	
- <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman	
- <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, Shrikanth
- Hegde	 <sshegde@linux.ibm.com>
-Date: Mon, 12 Oct 2026 16:41:47 -0700
-In-Reply-To: <20261001192849.74788-3-kprateek.nayak@amd.com>
-References: <20261001192849.74788-1-kprateek.nayak@amd.com>
-	 <20261001192849.74788-3-kprateek.nayak@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.1 (3.58.1-1.fc43) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DUszKUUE"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-c2e8e738ae0so387995366b.1
+        for <loongarch@lists.linux.dev>; Mon, 12 Oct 2026 18:20:22 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791854420; cv=none;
+        d=google.com; s=arc-20260327;
+        b=LmF67KUUuvz7hnWYgkcH0kWusUq0/XN5Xj6OairoxVPH2V6fWkPJGJ1b7YIH+ueEve
+         wOX3XEphH2deJhS5neDyWtGhzqo6cWbp4WsN9+iZk+6yooIKhOQVwx6av2N/PRJaQkNW
+         1AHv0uBs63JPl7+SnBWXo6KU3d+91tRGKS/YQ+DdrrUp2CCF3FMf3aAdym6JJXdnzRk9
+         HneGWJRqAWk4JqGa3T7Jp2ThKE0hF7RCYT1I/BaoklczQGJgiwnjg+71xIQHJImFO8Ye
+         cdIViTp+fqtO9Cabw5qQcIXpkO3PoQ4AIslPeUAU++pMHe9B2AZpoAdB9/SplOs5dV4x
+         zibw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=eDiCNa90nkNCt2ySXS6KYJDJLT9XVCk1KGiWa9GtHAM=;
+        fh=6/e6RWlK55jqEnpXbsIWghQuyff2kbPOz5bohUn5pdU=;
+        b=Eu70efJfBIBla5RmgXqcO/7F4V9cd+Go7Z0or438gGZG87GqKIeTn8ffeA5KJIVzNS
+         c8jTZb9i8Ssd/cdAmiz7VmUhEUROeDX8fUn7KyQ9zZrLQ/w5zhMaZJzfVmAyE3mcgNK0
+         epNicyf9z1zRrEhwjMw6bpA5lKLA4U33gWqDlnuKrmA8M3WWtPjDQoYRfe7RwUxb1jgM
+         QZXTgXdhzIGQY6HpLiQYiCbBrNEm6FZ3b+I6KUjGcRGL5aZ7EmVx7QiDqjLXQek8+MUv
+         txqJtd0O1zEqBQDBJUkq+NFQQi5xuFTjvIO1h1eRJa5AR7GuICcSm8XeaszhVj9AJ0ZC
+         1Sag==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1791854420; x=1792459220; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=eDiCNa90nkNCt2ySXS6KYJDJLT9XVCk1KGiWa9GtHAM=;
+        b=DUszKUUE/jtn+MkiaRrv3PVv95CM+APIYloDuzUqqpDAQdrws0ybax+Wm8IHNBvdTw
+         0QiMq99nAcTX+3JL4wdzfku+4cagtbvX3hDncKtkerA0d/JfeYCEeyRNYjpVO8zE0kYz
+         jjf3rS2/AZTey6VBWAcVCV+k05QVTI9fG9gd3oyXxpIIk1iH4muUhL5umP8RMU0cgbaj
+         poPclFI9lL7VbEXTdUDDa8YuaN1B4AsmH5We+mznSBpKvxshFB9EIYKfD0ClkRf9t0Pw
+         Qhicgld+LVmj1bluP6V+Wd71MySU8MeGPCM84dDNXOg1RxGQNF0uAYUWjgReRwfl2GcM
+         85bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791854420; x=1792459220;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=eDiCNa90nkNCt2ySXS6KYJDJLT9XVCk1KGiWa9GtHAM=;
+        b=rKGgc/YkZvKYVTmgNIhja4Lefj5nY+yvaqsitXmCN+wK1I/0w1kDxp0Id2+hWtLCzw
+         IribPUZeVGjel5n3J91ZW/f+fE+vLEKM8iNx3O0q17EbKIQMCuI3ke4c1JOOgjH42YRU
+         NnLXCzIdVvyq+XNtlTZjxd8891E+ghxWabGI8jRA6BWVNAus98UiECnGJB00T1rEYyM7
+         toL7VSSqNYRK4eZmzYrbSJF1QLeOhxghXgsZ7puliX6cv8rldsUTGJVxKhlRz2sKM4tH
+         trepq+PYa3DLTO1/xP9q6FZpb1LvL/AtdpygOfwSWczu4fdODubdvg2FGjezQYRrYd0Q
+         JEZw==
+X-Forwarded-Encrypted: i=1; AKwUvBxeYIuzEDY0E8Aacy0wKul6qfpJzqcihUPd6hKogkWhpTk88xPt8afZgF/DiiCtZxe0dC4jgnUAOm8=@lists.linux.dev
+X-Gm-Message-State: AFq9FYL/Gp2im7DGjYCohlSI7o3UqtAW/ONqK+zTnn6WNgcTYRt5hdeJ
+	LT0EHSpBYnfOIho0ZkrksHtXzda9XGslEFlkazLi1rGG88g0mldvRP51oYDcwq3py5l0YZfyMB/
+	FY6eRLNn8nZ9pohVpm3sUOz1o3aa69g0=
+X-Gm-Gg: AYBFou26817BSbTFPJR8ODgRzQUdUu1kaqmADaJsNTlv1tApmO+iYxBOLaStxSgW0JG
+	kJ/Nf9xU1+3ItGZzoeIIIfBjUHEn6d5ts1uIA3hwHZtvV0tIbG9yLrQC4BqsPzAXZn2b6YlOyBr
+	ZkoIDQZckpUZ4qUkMGuiTVZCe4S6UJ2UKCHgWg2gEysQqc+mo4NzZIlKVmMKo9R5WYJZJPNwbsF
+	aeUJ4X0WzDFFLiRfVpu4LN3SIY1aBlFrSPCsrPucLmNyWkEpi3WbAzmPFp+q4/6L5OmDyQU4+GN
+	mRRPXdr+/WKf5QCeExnsNwaIaglPD/XOWnOInZ620IS5Hd6AhYL1JBU=
+X-Received: by 2002:a17:907:9816:b0:c2e:378c:8ceb with SMTP id
+ a640c23a62f3a-c31a9fa39abmr1029769166b.36.1791854420304; Mon, 12 Oct 2026
+ 18:20:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <cover.1791512067.git.zhoubinbin@loongson.cn> <38f8e7cde8e454e7c6b72cb1b9a1c54e67c8a7fa.1791512067.git.zhoubinbin@loongson.cn>
+ <66a8df16-01c5-4653-9fb5-7d746f03f782@oss.qualcomm.com>
+In-Reply-To: <66a8df16-01c5-4653-9fb5-7d746f03f782@oss.qualcomm.com>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Tue, 13 Oct 2026 09:20:08 +0800
+X-Gm-Features: AclHuK83THTSYAs-3kkd9FBwRhF3injKe2tsHVZYn3kSJvncbd8B50m-i70KpDA
+Message-ID: <CAMpQs4KiGsC0=xwM+4M0GMWy9XEc60sTpPACK1s97p_JURUr-Q@mail.gmail.com>
+Subject: Re: [PATCH v7 1/8] thermal/drivers/loongson2: Fix negative
+ temperature conversion in set_trips
+To: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Yinbo Zhu <zhuyinbo@loongson.cn>, zhanghongchen <zhanghongchen@loongson.cn>, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@kernel.org>, 
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	devicetree@vger.kernel.org, linux-pm@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2026-10-01 at 19:28 +0000, K Prateek Nayak wrote:
-> Add (fragile) support for initializing sparsebitmap topology for
-> architectures that support GENERIC_ARCH_TOPOLOGY.
->=20
-> Similar to setting cpu_smt_set_num_threads(), count the number of unique
-> LLCs (if last_level_cache_is_valid() true, otherwise) / packages, and
-> the maximum threads that exist in those instance and set
-> sbm_set_proc_config().
->=20
-> Any failure on the path will default to considering the entire processor
-> as a single sbm domain and the default logic will divide the system into
-> BITS_PER_LONG chunks. In case of a failure, sbm core will skip using
-> arch_sbm_cpu_instance_id() and assume all CPUs belong to the same
-> instance with the same instance id.
->=20
-> Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
-> ---
->  drivers/base/arch_topology.c | 122 ++++++++++++++++++++++++++++++++++-
->  1 file changed, 121 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-> index 8c5e47c28d9a..f55745a93298 100644
-> --- a/drivers/base/arch_topology.c
-> +++ b/drivers/base/arch_topology.c
-> @@ -20,6 +20,7 @@
->  #include <linux/cpumask.h>
->  #include <linux/init.h>
->  #include <linux/rcupdate.h>
-> +#include <linux/sbm.h>
->  #include <linux/sched.h>
->  #include <linux/units.h>
-> =20
-> @@ -930,6 +931,114 @@ __weak int __init parse_acpi_topology(void)
->  	return 0;
->  }
-> =20
-> +/*
-> + * Note: arch_sbm_cpu_instance_id() is only used if init_sbm_topology()
-> + * below succeeds at setting the sbm topology. Either the LLC
-> + * information is valid or package_id is dependable.
-> + */
-> +int arch_sbm_cpu_instance_id(int cpu)
-> +{
-> +	if (last_level_cache_is_valid(cpu)) {
-> +		struct cacheinfo *llc_info =3D get_cpu_cacheinfo_llc(cpu);
-> +
-> +		if (!llc_info)
-> +			goto out;
-> +
-> +		if (llc_info->attributes & CACHE_ID)
-> +			return llc_info->id;
-> +
-> +		/*
-> +		 * XXX: fw_token be truncated from cast
-> +		 * when the value is returned as an int.
-> +		 */
-> +		return (int)((long)llc_info->fw_token);
-> +	}
-> +out:
-> +	return cpu_topology[cpu].package_id;
-> +}
-> +
-> +static void __init init_sbm_topology(void)
-> +{
-> +	int num_sbm_instances =3D 0, max_threads_per_instance =3D -1;
-> +	bool has_cache =3D false, has_package =3D false;
-> +	cpumask_var_t unique_cpus;
-> +	struct xarray instances;
-> +	unsigned long cpu, *count;
-> +
-> +	/*
-> +	 * If the allocation fails, the sbm core will use
-> +	 * the default logic of splitting CPUs evenly in
-> +	 * BITS_PER_LONG chunk.
-> +	 */
-> +	if (!zalloc_cpumask_var(&unique_cpus, GFP_KERNEL))
-> +		return;
-> +
-> +	xa_init(&instances);
-> +
-> +	for_each_possible_cpu(cpu) {
-> +		bool found =3D false;
-> +		int unique_cpu;
-> +
-> +		for_each_cpu(unique_cpu, unique_cpus) {
-> +			/*
-> +			 * XXX: Assumes last_level_cache_is_valid() is uniformly true
-> +			 * across the entire system if it is true for one CPU.
-> +			 */
-> +			if (last_level_cache_is_valid(cpu)) {
+Hi Daniel:
 
-I don't think last_level_cache_is_valid() can be true for any CPU at
-this point. Here is the call order on arm64. riscv is the same in
-arch/riscv/kernel/smpboot.c.
+On Tue, Oct 13, 2026 at 5:57=E2=80=AFAM Daniel Lezcano
+<daniel.lezcano@oss.qualcomm.com> wrote:
+>
+> On 10/9/26 04:57, Binbin Zhou wrote:
+> > The `MILLI` is defined as an unsigned long constant. When the
+> > temperatures passed to loongson2_thermal_set_trips() are negative, the
+> > expression `low / MILLI` triggers implicit conversion of the signed
+> > operand to unsigned long, and the division is then carried out in
+> > unsigned arithmetic.
+> >
+> > For example, with a low trip of -40000 (milli-degree Celsius):
+> >
+> >      -40000 / 1000UL =3D 18446744073709511   /* unsigned long */
+> >
+> > After truncation to the 32-bit register field this becomes
+> > 1271310379, instead of the expected 60 (i.e. -40 + HECTO). Writing such
+> > bogus value into the trip register leaves most of the upper bits set,
+> > which may hit status/trigger bits and cause spurious thermal interrupts=
+.
+> >
+> > Fix this by explicitly casting MILLI to int so that the division is
+> > performed in signed arithmetic.
+> >
+> > Cc: stable@vger.kernel.org
+> > Fixes: e7e3a7c35791 ("thermal/drivers/loongson-2: Add thermal managemen=
+t support")
+> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > ---
+> >   drivers/thermal/loongson2_thermal.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/thermal/loongson2_thermal.c b/drivers/thermal/loon=
+gson2_thermal.c
+> > index 4d40fc706a53..f5ff0cac1442 100644
+> > --- a/drivers/thermal/loongson2_thermal.c
+> > +++ b/drivers/thermal/loongson2_thermal.c
+> > @@ -108,7 +108,7 @@ static int loongson2_thermal_set_trips(struct therm=
+al_zone_device *tz, int low,
+> >   {
+> >       struct loongson2_thermal_data *data =3D thermal_zone_device_priv(=
+tz);
+> >
+> > -     return loongson2_thermal_set(data, low/MILLI, high/MILLI, true);
+> > +     return loongson2_thermal_set(data, low / (int)MILLI, high / (int)=
+MILLI, true);
+>
+> What about using MILLIDEGREE_PER_DEGREE ?
 
-  smp_prepare_cpus()                          arch/arm64/kernel/smp.c
-    init_cpu_topology()
-      fetch_cache_info(cpu)                   for every possible CPU
-        allocate_cache_info(cpu)              kzalloc: all leaves are zero
-      init_sbm_topology()                     <-- counts instances HERE
-        last_level_cache_is_valid(cpu)        false for every CPU
-        =3D> groups by package_id
-    store_cpu_topology(boot cpu)
-      update_siblings_masks()
-        detect_cache_attributes()             boot CPU leaves filled HERE
-   =20
-  kernel_init_freeable()                      init/main.c=20
-    sbm_init()
-    alloc_sbm_index(boot cpu)
-      arch_sbm_cpu_instance_id()              boot CPU: LLC id
+Yes, that's more suitable. I've been looking for the right macro for a
+while now.
+>
+> >   }
+> >
+> >   static const struct thermal_zone_device_ops loongson2_2k1000_of_therm=
+al_ops =3D {
+>
 
-  secondary_start_kernel()                    on each secondary CPU
-    store_cpu_topology(cpu)
-      update_siblings_masks()
-        detect_cache_attributes(cpu)          this CPU's leaves filled HERE
-  sched_cpu_activate(cpu)
-    alloc_sbm_index(cpu)
-      arch_sbm_cpu_instance_id()              this CPU: LLC id
-
-last_level_cache_is_valid() only returns true when the LLC leaf has
-CACHE_ID set or a fw_token:
-
-        return (llc->attributes & CACHE_ID) || !!llc->fw_token;
-
-Both are written only from detect_cache_attributes(), through
-cache_shared_cpu_map_setup() -> cache_setup_properties():
-
-  - DT:   cache_setup_of_node() sets fw_token and CACHE_ID
-          (drivers/base/cacheinfo.c)
-  - ACPI: cache_setup_acpi() sets fw_token and CACHE_ID
-          (drivers/acpi/pptt.c)
-
-fetch_cache_info() only counts the cache levels and allocates the
-leaves with kzalloc, so at init_sbm_topology() time every leaf still
-has attributes =3D=3D 0 and fw_token =3D=3D NULL. Not even the boot CPU has=
- its
-leaves filled yet, because its store_cpu_topology() runs after
-init_cpu_topology().
-
-I think complications arise if we don't have the complete cache info.
-
-How about updating the design to wait for cache detection instead? The
-earliest point where all booted CPUs have their cacheinfo is
-sched_init_smp(). That is also where the scheduler builds its own LLC
-domains, from the llc_sibling masks that store_cpu_topology() fills.
-Nothing needs an sbm index before then: nohz_balance_enter_idle()
-returns early on on_null_domain() until the domains exist, and 12/13
-already moves the nohz allocation into sched_init_smp(). Roughly:
-
- 1. Move sbm_init() and the boot CPU's alloc_sbm_index() from
-    kernel_init_freeable() to the start of sched_init_smp(), before
-    init_sched_fair_class_smp().
-   =20
- 2. Count the instances there, over the online CPUs, with
-    arch_sbm_cpu_instance_id(). At that point it can safely return
-    the LLC ID. Counting and runtime then use the same function on
-    the same data.
-   =20
- 3. Hand out indices to all active CPUs in one pass at that point. In
-    sched_cpu_activate(), call alloc_sbm_index() only once
-    sched_smp_initialized is set, i.e. for CPUs hotplugged later.
-
- 4. Leave room for possible CPUs that did not boot (maxcpus=3D, or arm64
-    ACPI vCPU hotplug). Their cacheinfo is still unknown at
-    sched_init_smp(). Possible choice is what powerpc and s390
-    do in this series: assume each of them may add a new instance, or
-    land in the largest one. Their package could give a tighter bound.
-
-Perhaps this could simplify the design.
-
+--=20
 Thanks.
-
-Tim
-
-> +				has_cache =3D true;
-> +				if (last_level_cache_is_shared(cpu, unique_cpu)) {
-> +					found =3D true;
-> +					break;
-> +				}
-> +			} else {
-> +				/* Go by package_id if no LLC information is found. */
-> +				has_package =3D true;
-> +				if (cpu_topology[unique_cpu].package_id =3D=3D
-> +				    cpu_topology[cpu].package_id) {
-> +					found =3D true;
-> +					break;
-> +				}
-> +			}
-> +		}
-> +
-> +		/* XXX: CPUs should not suddenly switch IDs mid way. */
-> +		if (has_cache && has_package)
-> +			goto out;
-> +
-> +		if (!found) {
-> +			count =3D kzalloc_obj(*count);
-> +			if (!count)
-> +				goto out;
-> +
-> +			cpumask_set_cpu(cpu, unique_cpus);
-> +			*count +=3D 1;
-> +
-> +			xa_store(&instances, cpu, count, GFP_KERNEL);
-> +			continue;
-> +		}
-> +
-> +		count =3D xa_load(&instances, unique_cpu);
-> +		if (!count)
-> +			goto out;
-> +
-> +		*count +=3D 1;
-> +	}
-> +
-> +	xa_for_each(&instances, cpu, count) {
-> +		max_threads_per_instance =3D max_t(int, max_threads_per_instance, *cou=
-nt);
-> +		num_sbm_instances++;
-> +	}
-> +
-> +	sbm_set_topology(num_sbm_instances, max_threads_per_instance);
-> +out:
-> +	xa_for_each(&instances, cpu, count) {
-> +		xa_erase(&instances, cpu);
-> +		kfree(count);
-> +	}
-> +	xa_destroy(&instances);
-> +	free_cpumask_var(unique_cpus);
-> +}
-> +
->  void __init init_cpu_topology(void)
->  {
->  	int cpu, ret;
-> @@ -954,8 +1063,19 @@ void __init init_cpu_topology(void)
->  			continue;
->  		else if (ret !=3D -ENOENT)
->  			pr_err("Early cacheinfo failed, ret =3D %d\n", ret);
-> -		return;
-> +		break;
->  	}
-> +
-> +	/*
-> +	 * If fetch_cache_info() fails for first CPU,
-> +	 * init_cpu_sbm_topology() will use pacakge_id instead.
-> +	 *
-> +	 * Uniform cache topology is a necessary since implementation
-> +	 * assumes last_level_cache_is_valid() gives same result for
-> +	 * all possible CPUs
-> +	 */
-> +	if (!ret || (cpu =3D=3D 0 && ret =3D=3D -ENOENT))
-> +		init_sbm_topology();
->  }
-> =20
->  void store_cpu_topology(unsigned int cpuid)
+Binbin
