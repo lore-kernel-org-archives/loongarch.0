@@ -1,166 +1,107 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 525AA3B4EBD
-	for <loongarch@lists.linux.dev>; Tue, 13 Oct 2026 01:20:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791854424; cv=pass; b=Vy+fDuLozsWZLhzLoTAcajhjtaBmGndTi3FGKSKb+B2RA7++Q8KiNorwSrKh6Q15O12rdi6BslAL1o6J2416RXY9NX7pb6oWnp9G+HUNCcSpRoCGK+Dh7XQF59ZFmd/UbOKqXrPlxhHD0aFuFLVlNWid+UHjYKlrvyjriLtsXU8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791854424; c=relaxed/simple;
-	bh=GLdPP9wdTOmg3Lh8rLtRDBnHGBuo68uFmOzknvlhkJI=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67C1238E8C7
+	for <loongarch@lists.linux.dev>; Tue, 13 Oct 2026 02:47:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791859633; cv=none; b=BtPu7PRulA7HgQ20QunBQgOaownOBEhI3BSuyz+AZR4TKVDduINQZtJ4UvQJVt6a7zFRiHSJ6ET4+DRBzxiXWhVkfIuLXp3gPlAf4yvLiG0lzinPMh932TZ+wn/bA8/RkQGuyG7Ez7JXyVNm31gqpSJtGMUCUhs5Ydnal/fmUMk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791859633; c=relaxed/simple;
+	bh=e5qJ7/cHRftpI/ExivZm6EQbTQ/U1hWJ1r+cnnvzTAQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NRLK5aNIpIyc+2MxBNA3FbBEWdT77pyjMCfQEJVFKyV4b1hegQe18LIMWi3exqD5aymfgxshWzEflGxzSTmV7h9R6R0SP5mh6I5NA5XBtCxAz2Ax/1m2xFCd0irVv8CYeHWcA+JPujwWVm+Fbvys6Z6q1FbIC8lEtRpxSJnNBWY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DUszKUUE; arc=pass smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=SUZhAxfMBhGvMjR0QRjLGEXt7q8Szwh4yMdqZk6LfcQvwy63FiZBBaZXEbqBIZB5oGCZmy8e0KFz+Be29mkYLZoEWWZ/0KCwb81vU4oIOlBIJphnOr26hUj8NE66xLgEjEpz7vqApEn/qmzug54rVpJ55MLN5r3UVl76c3i62pQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UY/GIQoV; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DUszKUUE"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-c2e8e738ae0so387995366b.1
-        for <loongarch@lists.linux.dev>; Mon, 12 Oct 2026 18:20:22 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1791854420; cv=none;
-        d=google.com; s=arc-20260327;
-        b=LmF67KUUuvz7hnWYgkcH0kWusUq0/XN5Xj6OairoxVPH2V6fWkPJGJ1b7YIH+ueEve
-         wOX3XEphH2deJhS5neDyWtGhzqo6cWbp4WsN9+iZk+6yooIKhOQVwx6av2N/PRJaQkNW
-         1AHv0uBs63JPl7+SnBWXo6KU3d+91tRGKS/YQ+DdrrUp2CCF3FMf3aAdym6JJXdnzRk9
-         HneGWJRqAWk4JqGa3T7Jp2ThKE0hF7RCYT1I/BaoklczQGJgiwnjg+71xIQHJImFO8Ye
-         cdIViTp+fqtO9Cabw5qQcIXpkO3PoQ4AIslPeUAU++pMHe9B2AZpoAdB9/SplOs5dV4x
-         zibw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=eDiCNa90nkNCt2ySXS6KYJDJLT9XVCk1KGiWa9GtHAM=;
-        fh=6/e6RWlK55jqEnpXbsIWghQuyff2kbPOz5bohUn5pdU=;
-        b=Eu70efJfBIBla5RmgXqcO/7F4V9cd+Go7Z0or438gGZG87GqKIeTn8ffeA5KJIVzNS
-         c8jTZb9i8Ssd/cdAmiz7VmUhEUROeDX8fUn7KyQ9zZrLQ/w5zhMaZJzfVmAyE3mcgNK0
-         epNicyf9z1zRrEhwjMw6bpA5lKLA4U33gWqDlnuKrmA8M3WWtPjDQoYRfe7RwUxb1jgM
-         QZXTgXdhzIGQY6HpLiQYiCbBrNEm6FZ3b+I6KUjGcRGL5aZ7EmVx7QiDqjLXQek8+MUv
-         txqJtd0O1zEqBQDBJUkq+NFQQi5xuFTjvIO1h1eRJa5AR7GuICcSm8XeaszhVj9AJ0ZC
-         1Sag==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791854420; x=1792459220; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=eDiCNa90nkNCt2ySXS6KYJDJLT9XVCk1KGiWa9GtHAM=;
-        b=DUszKUUE/jtn+MkiaRrv3PVv95CM+APIYloDuzUqqpDAQdrws0ybax+Wm8IHNBvdTw
-         0QiMq99nAcTX+3JL4wdzfku+4cagtbvX3hDncKtkerA0d/JfeYCEeyRNYjpVO8zE0kYz
-         jjf3rS2/AZTey6VBWAcVCV+k05QVTI9fG9gd3oyXxpIIk1iH4muUhL5umP8RMU0cgbaj
-         poPclFI9lL7VbEXTdUDDa8YuaN1B4AsmH5We+mznSBpKvxshFB9EIYKfD0ClkRf9t0Pw
-         Qhicgld+LVmj1bluP6V+Wd71MySU8MeGPCM84dDNXOg1RxGQNF0uAYUWjgReRwfl2GcM
-         85bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791854420; x=1792459220;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=eDiCNa90nkNCt2ySXS6KYJDJLT9XVCk1KGiWa9GtHAM=;
-        b=rKGgc/YkZvKYVTmgNIhja4Lefj5nY+yvaqsitXmCN+wK1I/0w1kDxp0Id2+hWtLCzw
-         IribPUZeVGjel5n3J91ZW/f+fE+vLEKM8iNx3O0q17EbKIQMCuI3ke4c1JOOgjH42YRU
-         NnLXCzIdVvyq+XNtlTZjxd8891E+ghxWabGI8jRA6BWVNAus98UiECnGJB00T1rEYyM7
-         toL7VSSqNYRK4eZmzYrbSJF1QLeOhxghXgsZ7puliX6cv8rldsUTGJVxKhlRz2sKM4tH
-         trepq+PYa3DLTO1/xP9q6FZpb1LvL/AtdpygOfwSWczu4fdODubdvg2FGjezQYRrYd0Q
-         JEZw==
-X-Forwarded-Encrypted: i=1; AKwUvBxeYIuzEDY0E8Aacy0wKul6qfpJzqcihUPd6hKogkWhpTk88xPt8afZgF/DiiCtZxe0dC4jgnUAOm8=@lists.linux.dev
-X-Gm-Message-State: AFq9FYL/Gp2im7DGjYCohlSI7o3UqtAW/ONqK+zTnn6WNgcTYRt5hdeJ
-	LT0EHSpBYnfOIho0ZkrksHtXzda9XGslEFlkazLi1rGG88g0mldvRP51oYDcwq3py5l0YZfyMB/
-	FY6eRLNn8nZ9pohVpm3sUOz1o3aa69g0=
-X-Gm-Gg: AYBFou26817BSbTFPJR8ODgRzQUdUu1kaqmADaJsNTlv1tApmO+iYxBOLaStxSgW0JG
-	kJ/Nf9xU1+3ItGZzoeIIIfBjUHEn6d5ts1uIA3hwHZtvV0tIbG9yLrQC4BqsPzAXZn2b6YlOyBr
-	ZkoIDQZckpUZ4qUkMGuiTVZCe4S6UJ2UKCHgWg2gEysQqc+mo4NzZIlKVmMKo9R5WYJZJPNwbsF
-	aeUJ4X0WzDFFLiRfVpu4LN3SIY1aBlFrSPCsrPucLmNyWkEpi3WbAzmPFp+q4/6L5OmDyQU4+GN
-	mRRPXdr+/WKf5QCeExnsNwaIaglPD/XOWnOInZ620IS5Hd6AhYL1JBU=
-X-Received: by 2002:a17:907:9816:b0:c2e:378c:8ceb with SMTP id
- a640c23a62f3a-c31a9fa39abmr1029769166b.36.1791854420304; Mon, 12 Oct 2026
- 18:20:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UY/GIQoV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 481591F00899
+	for <loongarch@lists.linux.dev>; Tue, 13 Oct 2026 02:47:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791859632;
+	bh=Py5W+zOf8jcv9SphAVIYRIsYaiROXNPiORfkJ1reQcA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=UY/GIQoVqGInseWJ0P177oKkczg7WZqyGiTPQd15EKdjXUbz9Aj1Jex+dVj3hJgX+
+	 zciF2wxTEVW2oxSfvWvBO9tw9llIS6BetYsqVw4c+0J5JHli5fHajP6eoaVUUiiQh8
+	 IYjCtHxjTBtDu5IJ/6AzNf7WAtK4WBaDQptg/xrmR7c2j6/CUyhJi8CfF2b+/OqzeF
+	 fpxNyonQY3jchjNL26IaR8nhOxEiutpLZxyZGDjsUdhGonPKG3OLNixgXILOASsAgh
+	 up4QgyFLSap5+eHjDfyr8K8LDmCLXGvmsYWLN43DaJtzXFCICHpCxpP/13iT6aMTCx
+	 xiecxPubDIA4g==
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-6ac76a02368so2252643a12.2
+        for <loongarch@lists.linux.dev>; Mon, 12 Oct 2026 19:47:12 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvByHHgQoI2D1zG/MlznVHSIZCsKnTWTeCBGEBjmNgvfnE6qVNMJegCQUXeMqs5avqWzyauDxn8aP0nw=@lists.linux.dev
+X-Gm-Message-State: AFq9FYIc80nWmoBeOH/h1eljcPPErSXuvMgmENznDkxAESGXFKj/T6uJ
+	GiUMis/e9UDhqaWXYEvEYNlPr8AI1PuHB2G8tY6hus1NYjIXxM7UvSXiSWlumIAW7LgVLZ+nXYL
+	BV+pMUPXsXGoSsblGaNpGZojO23qnK6E=
+X-Received: by 2002:a05:6402:1d49:b0:6b1:c327:a9d0 with SMTP id
+ 4fb4d7f45d1cf-6b1c327b8acmr3296104a12.40.1791859630439; Mon, 12 Oct 2026
+ 19:47:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1791512067.git.zhoubinbin@loongson.cn> <38f8e7cde8e454e7c6b72cb1b9a1c54e67c8a7fa.1791512067.git.zhoubinbin@loongson.cn>
- <66a8df16-01c5-4653-9fb5-7d746f03f782@oss.qualcomm.com>
-In-Reply-To: <66a8df16-01c5-4653-9fb5-7d746f03f782@oss.qualcomm.com>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Tue, 13 Oct 2026 09:20:08 +0800
-X-Gm-Features: AclHuK83THTSYAs-3kkd9FBwRhF3injKe2tsHVZYn3kSJvncbd8B50m-i70KpDA
-Message-ID: <CAMpQs4KiGsC0=xwM+4M0GMWy9XEc60sTpPACK1s97p_JURUr-Q@mail.gmail.com>
-Subject: Re: [PATCH v7 1/8] thermal/drivers/loongson2: Fix negative
- temperature conversion in set_trips
-To: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Yinbo Zhu <zhuyinbo@loongson.cn>, zhanghongchen <zhanghongchen@loongson.cn>, 
-	"Rafael J . Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@kernel.org>, 
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	devicetree@vger.kernel.org, linux-pm@vger.kernel.org, stable@vger.kernel.org
+References: <20261012090431.TF3iVDsk@linutronix.de> <CAAhV-H4=nnhbJS4srmt7dNdgpkEZ8_RQ5Z+0baYMiXF1UrJ3KA@mail.gmail.com>
+ <20261012102143.lpVrHb9R@linutronix.de>
+In-Reply-To: <20261012102143.lpVrHb9R@linutronix.de>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 13 Oct 2026 10:46:59 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7xME-UrgMHcfY41793yxWyvgEMAufwgcboEL2q3Jg+VA@mail.gmail.com>
+X-Gm-Features: AclHuK-5nGNIjnalns2TTYeuiR7MEop7yTmsqLsf4e42_RR9QXEQZeMe2PdFpnw
+Message-ID: <CAAhV-H7xME-UrgMHcfY41793yxWyvgEMAufwgcboEL2q3Jg+VA@mail.gmail.com>
+Subject: Re: [PATCH v4] ARM, ARM64, LONGARCH, XTENSA: Delay HW BP notification
+ to task_work()
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-rt-devel@lists.linux.dev, linux-perf-users@vger.kernel.org, 
+	loongarch@lists.linux.dev, Mark Rutland <mark.rutland@arm.com>, 
+	Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Oleg Nesterov <oleg@redhat.com>, 
+	WANG Xuerui <kernel@xen0n.name>, Will Deacon <will@kernel.org>, 
+	Russell King <linux@armlinux.org.uk>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
+	Waiman Long <longman@redhat.com>, Clark Williams <clrkwllms@kernel.org>, 
+	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>, James Clark <james.clark@linaro.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Chris Zankel <chris@zankel.net>, 
+	Max Filippov <jcmvbkbc@gmail.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Daniel:
+On Mon, Oct 12, 2026 at 6:21=E2=80=AFPM Sebastian Andrzej Siewior
+<bigeasy@linutronix.de> wrote:
+>
+> On 2026-10-12 18:15:51 [+0800], Huacai Chen wrote:
+> > Hi, Sebastian,
+> Hi Huacai,
+>
+> > > diff --git a/include/linux/hw_breakpoint.h b/include/linux/hw_breakpo=
+int.h
+> > > index db199d653dd1a..91e8d80220c54 100644
+> > > --- a/include/linux/hw_breakpoint.h
+> > > +++ b/include/linux/hw_breakpoint.h
+> > > @@ -85,6 +85,9 @@ extern int register_perf_hw_breakpoint(struct perf_=
+event *bp);
+> > >  extern void unregister_hw_breakpoint(struct perf_event *bp);
+> > >  extern void unregister_wide_hw_breakpoint(struct perf_event * __perc=
+pu *cpu_events);
+> > >  extern bool hw_breakpoint_is_used(void);
+> > > +extern void perf_arch_hwbp_send_sig(struct perf_event *bp);
+> > > +extern void perf_hwbp_notify(struct perf_event *bp, struct perf_samp=
+le_data *data,
+> > > +                            struct pt_regs *regs);
+> > Maybe this declaration can be put in one line because there is no 80
+> > characters limit now.
+>
+> We don't save much, do we? It looks more readable. Maybe if the perf
+> maintainer requests it. Looks like waste to repost it just for that.
+>
+> Any comments on the looong bits?
+Others look good to me.
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
 
-On Tue, Oct 13, 2026 at 5:57=E2=80=AFAM Daniel Lezcano
-<daniel.lezcano@oss.qualcomm.com> wrote:
 >
-> On 10/9/26 04:57, Binbin Zhou wrote:
-> > The `MILLI` is defined as an unsigned long constant. When the
-> > temperatures passed to loongson2_thermal_set_trips() are negative, the
-> > expression `low / MILLI` triggers implicit conversion of the signed
-> > operand to unsigned long, and the division is then carried out in
-> > unsigned arithmetic.
-> >
-> > For example, with a low trip of -40000 (milli-degree Celsius):
-> >
-> >      -40000 / 1000UL =3D 18446744073709511   /* unsigned long */
-> >
-> > After truncation to the 32-bit register field this becomes
-> > 1271310379, instead of the expected 60 (i.e. -40 + HECTO). Writing such
-> > bogus value into the trip register leaves most of the upper bits set,
-> > which may hit status/trigger bits and cause spurious thermal interrupts=
-.
-> >
-> > Fix this by explicitly casting MILLI to int so that the division is
-> > performed in signed arithmetic.
-> >
-> > Cc: stable@vger.kernel.org
-> > Fixes: e7e3a7c35791 ("thermal/drivers/loongson-2: Add thermal managemen=
-t support")
-> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > ---
-> >   drivers/thermal/loongson2_thermal.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/thermal/loongson2_thermal.c b/drivers/thermal/loon=
-gson2_thermal.c
-> > index 4d40fc706a53..f5ff0cac1442 100644
-> > --- a/drivers/thermal/loongson2_thermal.c
-> > +++ b/drivers/thermal/loongson2_thermal.c
-> > @@ -108,7 +108,7 @@ static int loongson2_thermal_set_trips(struct therm=
-al_zone_device *tz, int low,
-> >   {
-> >       struct loongson2_thermal_data *data =3D thermal_zone_device_priv(=
-tz);
-> >
-> > -     return loongson2_thermal_set(data, low/MILLI, high/MILLI, true);
-> > +     return loongson2_thermal_set(data, low / (int)MILLI, high / (int)=
-MILLI, true);
+> > Huacai
 >
-> What about using MILLIDEGREE_PER_DEGREE ?
-
-Yes, that's more suitable. I've been looking for the right macro for a
-while now.
->
-> >   }
-> >
-> >   static const struct thermal_zone_device_ops loongson2_2k1000_of_therm=
-al_ops =3D {
->
-
---=20
-Thanks.
-Binbin
+> Sebastian
