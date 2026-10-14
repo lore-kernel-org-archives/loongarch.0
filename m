@@ -1,207 +1,125 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F6382E11D2
-	for <loongarch@lists.linux.dev>; Wed, 14 Oct 2026 02:24:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52B3B40F73A
+	for <loongarch@lists.linux.dev>; Wed, 14 Oct 2026 03:59:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791944696; cv=none; b=A87ilfdOj71iFOCsttohuAN6VDnl4ZpI72f+TDUhihbf/kdDrF7/GWfWmPAyyUaYbYIHArwm/5z3RtjfMbAZH9oKxDm+AGa4KsOb0TfH/z1prWNHgvag4+jEdWaiejtb+ddDqPuTxMgb5rIvTn0wQOncJfX/jua1cbN79OWxZoQ=
+	t=1791950361; cv=none; b=SDxVk67GykbRH8zoi8bfvjlDSEd2Ctc+CbyDnzIPKSS0toJp9NcBQoF8OTtXRFq7x50CgqqV6Lfq0ltF7hnCmkEHcJt3aiatGW/EeeJy+ea87fceJZFYf/OeF0s3LemqhN4RaQfbmNIFVKaiMW6tWxLpdw+/ZpznAPNpotf0+RI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791944696; c=relaxed/simple;
-	bh=54HD4aWvf6er3plKu5EPRAeqkt1EkhUAEvOlSqVw+UQ=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=ZNB3ZuQV9pCkOW6Uz48fNr5W5t6sdNmtmZVxxFU9J82Vg/veb/IpqjjMOsyPqIbtrvnh1tAK3SNu8AiR3CfBFzZ8sgSvhlyXe+xohG8FeWJKlSdxTTD+3K39svJxPtQcb9jq5uCmrEPwI0JJGAZ7Tk/Vg0VtFoqm3REMZBiXBzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [123.138.236.242])
-	by gateway (Coremail) with SMTP id _____8DxytHn585qmZsVAA--.62512S3;
-	Wed, 14 Oct 2026 10:24:39 +0800 (CST)
-Received: from [10.130.40.83] (unknown [123.138.236.242])
-	by front1 (Coremail) with SMTP id qMiowJCxPs_f585qZwwsAA--.26964S2;
-	Wed, 14 Oct 2026 10:24:33 +0800 (CST)
-Subject: Re: [PATCH v2 2/2] LoongArch: BPF: Optimize 32-bit operations using
- native instructions
-To: bot+bpf-ci@kernel.org, chenhuacai@kernel.org, hengqi.chen@gmail.com
-Cc: loongarch@lists.linux.dev, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, ast@kernel.org, andrii@kernel.org,
- daniel@iogearbox.net, martin.lau@kernel.org, eddyz87@gmail.com,
- yonghong.song@linux.dev, mason@kernel.org, ihor.solodrai@linux.dev
-References: <20261013121005.626-3-yangtiezhu@loongson.cn>
- <ab9326a4770f9d1ac812e55feb39e34341d84951f3b5d276dee18d5471d8353e@mail.kernel.org>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <d5f6eb99-faf5-1aa7-1f1c-f216611d8082@loongson.cn>
-Date: Wed, 14 Oct 2026 10:24:31 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1791950361; c=relaxed/simple;
+	bh=eo2KS1rD2mthJFfkPWGzxyjARkBBzJ1ObzuNrYesD1s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hpCEgyDNpo5JroxPiOd8zOo8cKtoKEm+0+7+0i0Skw2kpC3XKRP64MMn+zapZWLoI14moKy0HRQ/x7x4Djm5FU2G2Oi6GwJ/Nolm0UlLCloQbpvNUPglo80YQv6IPshkPMhKQ+Kshc0vGeyA2HHJQTywrATcHK0N1A8zB6XanTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=HwxD4iRK; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="HwxD4iRK"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-3ab3260b35dso2295983a91.1
+        for <loongarch@lists.linux.dev>; Tue, 13 Oct 2026 20:59:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1791950358; x=1792555158; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=5STA7RRpF0bZE7yNESPvMRAN/jMwPnFqOs2b9BGo7gc=;
+        b=HwxD4iRKTiLSZ0AsmwGVmHDGtaGmuGGz2upY1fsK29Nj9cKFzTRzia23Z1AEuvAFhN
+         qjj9gg24zVouW4fOQmlIzUZwD5UM2BXZIobsF4zHpAQvIkJJqNvZhaSvhBgpDzMukCeQ
+         w1hXDcEE+9K36Xy8wZKgxNmxS7Tuujb4GlDx8GnIMWNgDGyPv1NqbCICIqAGjSjXNodI
+         tFo73xzxSjYuyTQK4gErtwRFhIMw81olETMfhpX4ntGw0jSZZqGR7yPoXhhxOmVf30L8
+         o2SFmw5snwil6Ux4xbEz9R3M27KV5TEm6YJR2rkzz/MkEiR7BH7uoBrdsSYmsu81ETo2
+         4HfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791950358; x=1792555158;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=5STA7RRpF0bZE7yNESPvMRAN/jMwPnFqOs2b9BGo7gc=;
+        b=q/nnttnqJcv+daKm+IDz5K/I7m3SKujoNkwoMdbQKzebv6ywo8+up4B2sa0nEHciWQ
+         oTirqT5AmTaitPf5QusyN9qmsQ+0Zvg4MpYWCrupWRGC4gEqBO1zvSa2VQjH+xP9lSh6
+         LL1yMO00IxbTj2922q4AB4fdl9I6nxypNWS5JfYv0KadFxx8tjhznDu+D1uuU1g6biVO
+         3eOwJYWG7RE26Rbfw0mNeCvWYQFxS8FnJvJYRIPN3JwNUheO5D7qwrE4FaVeiETJtECd
+         yQ13vyOJ4iSIayE2FH8iI/XDLdoEik6rJE9msmjtQ2YRHOW8MpWkUkmgcogqVGeRm+S1
+         AKOA==
+X-Forwarded-Encrypted: i=1; AKwUvBwbUTU+s7HCSVJPkl9/Dravwey/2DbdV5pmkNw1aDMf33UA8CHCnhz8ylJck6mkzi+U8ebpuIxbTRw=@lists.linux.dev
+X-Gm-Message-State: AFq9FYJk4bobj9n6v11TY+eyYkghIvuy17kQxLgYWAxhUhbZLiqLta+o
+	EuE8QiBNesAS+ah7LWPjjKyuP1zPAAt9u9zPPNoMZNjtBAuiJKvNHUt/eg2SaGll2Hs=
+X-Gm-Gg: AYBFou1Ki59RTFbe9FRnZPVUJnLzGe0V1DqCpVxJp2MaLwRvjr0Fvz72G6r9aHSScaZ
+	pJkGfQwzkUGmDkuP9wbZhqqNaKt0x/VZN1ZE8BLF66y46Xvd8g1Na+wxCFsVEJat5rGv5/R3EjN
+	I/+RXWDLJv+PAnVRu/nXUlprvyDOXFEYjOOkxTdXquev/kfofvsz65QQT3Evjb/GWs3uNpP3n76
+	VTHoxu17W+TqvrL2owHOWuBZzvL8DU75J1nkN+igll2Uo8YvC8Z9ocHJN2Jyr6g5gzIKOoFnzDN
+	VZUlP9TbEweaf1S6mgo6bkFmn5urSudijOpZIVOZDqejLy+kjI0ukWQ7iuxTp5xa3lI6ZRqDmpB
+	WoCZj2xhwkqAqIQeHjcUnq5YhlZXU0AqlODxS82dHG5//WA10s7Mpe+zadKAbGIoj/2Hd5bx6Q1
+	rOpH89+EtioWY7NpdZaby8y2tfuy0WKOrKD//P8+SgJ41Jqa7i4yuhinDVsAoA9eACOwLa3XbTK
+	dBglnlecDFXZ45A55El
+X-Received: by 2002:a17:90b:4c8a:b0:39e:6a80:b799 with SMTP id 98e67ed59e1d1-3ac63bfe81amr1395913a91.41.1791950357376;
+        Tue, 13 Oct 2026 20:59:17 -0700 (PDT)
+Received: from n232-176-004.byted.org ([36.110.163.103])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ac5f24a538sm2492305a91.9.2026.10.13.20.59.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Oct 2026 20:59:16 -0700 (PDT)
+From: Muchun Song <songmuchun@bytedance.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>
+Cc: Muchun Song <muchun.song@linux.dev>,
+	Muchun Song <songmuchun@bytedance.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	Helge Deller <deller@gmx.de>,
+	linux-mm@kvack.org,
+	linux-arch@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] mm: Generalize page table allocation helpers
+Date: Wed, 14 Oct 2026 11:59:07 +0800
+Message-ID: <20261014035910.687847-1-songmuchun@bytedance.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <ab9326a4770f9d1ac812e55feb39e34341d84951f3b5d276dee18d5471d8353e@mail.kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxPs_f585qZwwsAA--.26964S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxCF4DGw47CrWUJFyfuFy3trc_yoW7JrWUpF
-	ZrKF4Fkr4UJFy7ta48J39rXr42yw4akayrXF1UJrWkC39Iqr1fKF13Kr4S9asxArs3ZF92
-	qF1qvwnxXFWUK3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Fb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
-	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
-	AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI
-	42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
-	IF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2
-	KfnxnUUI43ZEXa7IU8aZX5UUUUU==
 
-On 2026/10/13 下午8:55, bot+bpf-ci@kernel.org wrote:
->> LoongArch: BPF: Optimize 32-bit operations using native instructions
-> 
-> TL;DR: LoongArch BPF JIT now feeds non-sign-extended operands to 32-bit
-> div/mod; on cores without DIV32 (e.g. 3A5000) results may be wrong, possibly
-> breaking verifier-proven bounds.
-> 
->> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
->> --- a/arch/loongarch/net/bpf_jit.c
->> +++ b/arch/loongarch/net/bpf_jit.c
-> 
-> [ ... ]
-> 
->> @@ -752,212 +741,232 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
->>
->>   	/* dst = imm */
->>   	case BPF_ALU | BPF_MOV | BPF_K:
->> +		move_imm(ctx, dst, (u32)imm);
->> +		return 0;
-> 
-> [ ... ]
-> 
->>   	/* dst = dst / src */
->>   	case BPF_ALU | BPF_DIV | BPF_X:
->> +		if (!off)
->> +			emit_insn(ctx, divwu, dst, dst, src);
->> +		else
->> +			emit_insn(ctx, divw, dst, dst, src);
->> +		break;
->>   	case BPF_ALU64 | BPF_DIV | BPF_X:
->> -		if (!off) {
->> -			emit_zext_32(ctx, dst, is32);
->> -			move_reg(ctx, t1, src);
->> -			emit_zext_32(ctx, t1, is32);
->> -			emit_insn(ctx, divdu, dst, dst, t1);
->> -			emit_zext_32(ctx, dst, is32);
->> -		} else {
->> -			emit_sext_32(ctx, dst, is32);
->> -			move_reg(ctx, t1, src);
->> -			emit_sext_32(ctx, t1, is32);
->> -			emit_insn(ctx, divd, dst, dst, t1);
->> -			emit_zext_32(ctx, dst, is32);
->> -		}
->> +		if (!off)
->> +			emit_insn(ctx, divdu, dst, dst, src);
->> +		else
->> +			emit_insn(ctx, divd, dst, dst, src);
->>   		break;
-> 
-> Can divw/divwu be used directly on dst and src here?
-> 
-> The LoongArch ISA only defines the result of div.w, div.wu, mod.w and
-> mod.wu on LA64 when both rj and rk hold sign-extended 32-bit values.  The
-> exception is a core that reports CPUCFG2_DIV32 (BIT(26) in
-> arch/loongarch/include/asm/loongarch.h), where the upper 32 bits of the
-> inputs are ignored.  Cores without that bit, such as the LA464 in the
-> 3A5000, may return any value otherwise.  Nothing in the JIT checks for
-> CPUCFG2_DIV32.
-> 
-> The operands here are often not sign-extended.  Every ALU32 result is now
-> zero-extended at the common exit of build_insn():
-> 
->> +	if (is32)
->> +		emit_insn(ctx, bstrpickd, dst, dst, 31, 0);
->> +
->>   	return 0;
-> 
-> so any 32-bit value with bit 31 set is left in the register as
-> 0x00000000xxxxxxxx.  A BPF_LDX | BPF_W load (ldwu) is zero-extended in the
-> same way, and src can hold arbitrary upper bits coming from ALU64 ops or
-> pointers, since ALU32 only consumes the low 32 bits.
-> 
-> For example, with w0 = -6 followed by w0 s/= 3, rj is 0x00000000fffffffa
-> when divw executes, so the quotient is not guaranteed to be -2 on a core
-> without DIV32.  Likewise, a ldwu of 0xffffffff followed by w1 %= 16 gives
-> modwu a rj that is not a sign-extended value.
-> 
-> The old code widened both operands (zext for unsigned, sext for signed)
-> and then used the 64-bit divdu/divd/moddu/modd, which are well defined on
-> every LA64 core.  The MIPS64 JIT, which has the same ISA restriction,
-> still sign-extends the operands before its 32-bit div/mod.
-> 
-> [ ... ]
-> 
->>   	/* dst = dst / imm */
->>   	case BPF_ALU | BPF_DIV | BPF_K:
->> +		move_imm(ctx, t1, (u32)imm);
->> +		if (!off)
->> +			emit_insn(ctx, divwu, dst, dst, t1);
->> +		else
->> +			emit_insn(ctx, divw, dst, dst, t1);
->> +		break;
-> 
-> In the K forms the divisor is built with move_imm(ctx, t1, (u32)imm), so a
-> negative signed divisor, or an unsigned divisor of 0x80000000 or above,
-> also ends up in t1 as a zero-extended value rather than a sign-extended
-> one.
-> 
-> [ ... ]
-> 
->>   	/* dst = dst % src */
->>   	case BPF_ALU | BPF_MOD | BPF_X:
->> +		if (!off)
->> +			emit_insn(ctx, modwu, dst, dst, src);
->> +		else
->> +			emit_insn(ctx, modw, dst, dst, src);
->> +		break;
-> 
-> [ ... ]
-> 
->>   	/* dst = dst % imm */
->>   	case BPF_ALU | BPF_MOD | BPF_K:
->> +		move_imm(ctx, t1, (u32)imm);
->> +		if (!off)
->> +			emit_insn(ctx, modwu, dst, dst, t1);
->> +		else
->> +			emit_insn(ctx, modw, dst, dst, t1);
->> +		break;
-> 
-> The same question applies to the modwu/modw uses in these two cases.
-> 
-> The verifier narrows 32-bit div/mod results, for example
-> scalar32_min_max_umod() bounds the result of w1 %= 16 to [0, 15].  If the
-> JITed code returns a different value on a core without DIV32, can the
-> program end up with a value outside the range the verifier proved, for
-> instance when it is used as a map value offset?
-> 
-> The commit message reports test_bpf, test_verifier and test_progs passing,
-> but does not say which CPU was used.  Would those results be reproducible
-> on a core without CPUCFG2_DIV32?
-> 
-> Would it be better to sign-extend both operands into temporaries (for
-> example addw t, reg, $zero) before divw/divwu/modw/modwu, to gate the
-> native 32-bit forms on CPUCFG2_DIV32, or to keep the previous 64-bit
-> sequence for these four opcodes?
+A subsequent series will switch runtime vmemmap population to the
+generic page-table allocators. Since vmemmap tables belong to init_mm,
+the allocators must select GFP_PGTABLE_KERNEL and mark the ptdesc as a
+kernel page table.
 
-I will modify the code to adapt to the actual CPU hardware capabilities
-dynamically. After testing the patch on CPU cores both with and without
-CPUCFG2_DIV32, I will send out the v3 series.
+Some architecture-specific allocators do not preserve both semantics.
+LoongArch and MIPS choose PMD/PUD GFP flags without checking the mm,
+which can charge kernel PMD tables to a memcg and leave user PUD tables
+unaccounted. The private PMD/PUD allocators also omit kernel ptdesc
+marking.
 
-Thanks,
-Tiezhu
+Rather than duplicate this handling in each architecture, extend the
+generic PTE, PMD and PUD allocators to support architecture
+initialization hooks and non-zero table orders. LoongArch, MIPS and
+parisc can then drop their private allocators and inherit the generic
+GFP selection and ptdesc handling.
+
+This series only prepares the allocation interfaces; the runtime
+vmemmap conversion will be submitted separately.
+
+Muchun Song (3):
+  mm: generalize kernel PTE table allocation
+  mm: generalize PMD page table allocation
+  mm: generalize PUD page table allocation
+
+ arch/loongarch/include/asm/pgalloc.h | 48 ----------------------------
+ arch/mips/include/asm/pgalloc.h      | 40 -----------------------
+ arch/parisc/include/asm/pgalloc.h    | 17 ----------
+ include/asm-generic/pgalloc.h        | 29 ++++++++++++++---
+ 4 files changed, 24 insertions(+), 110 deletions(-)
+
+
+base-commit: ad9f2d463666c64e94b04be5263c9bf8f9f96fb7
+-- 
+2.54.0
 
