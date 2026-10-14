@@ -1,125 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta0.migadu.com (out-57.mta0.migadu.com [91.218.175.57])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC3F248F009
-	for <loongarch@lists.linux.dev>; Wed, 14 Oct 2026 07:37:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FC893AD51C
+	for <loongarch@lists.linux.dev>; Wed, 14 Oct 2026 08:37:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791963461; cv=none; b=FYmZV8DaxmgU4PeR3d5AD5hXbSCWBEt0Nqe1NcdfoZkPjyEFdMDMhixCKOydt2Am/3AlYG86VC18CU2WTpr1bm0CDt21I7gNVGAL9dTi10eViyv8jQ/WiMlxiej3p8MDB+17AA3JAgaT/1OmEFiI1URa8y0cNPKnY6XKeOdg2HE=
+	t=1791967073; cv=none; b=LQB47Jo5WGC3iRuYFLm4Cg6TZ+rn9E+6Ls2WvsmKy9xY3maGa3DOrdq5Y9sfvQDFVteWJmL8KiatxTaMMiSxoFo/teqrepHr63AObJzPvA4mwOR/nnPqRUpmS6HmPsfZrTkeSVdF7xuq2hlxtXQAN/xx6OpIZ8PPujcBh/MunR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791963461; c=relaxed/simple;
-	bh=2Y9fbE9O7p8liEj4nGLfJ12MalMVV+gFP3WAl48R2RE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BsUOBlEJGoEVIylxRAqZDAyUwdws2scFJ5CwnWtiafbXCKZxirLFpVfXcrAgBN+TTv0gRss5T6hLttBynG5mh4Wy33Vi7qXqtcrpq5ZTQ+g+Xdqx8NXYhbsUCDtjg0JGam/eWGaeHPMnhM4msbHxJJt4B4wYgS+tt7OfW+RbrhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QCmlq9Rx; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791967073; c=relaxed/simple;
+	bh=ARdqFFr4feuZC36L7tKPeV266TwXot48jPTDPet42oE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eaaieKTC6rWdO872K6JCvO3luRoQ538CGC7Xf4kDi9qUZvO3ZsHLs71sSGffL3Y7fw3tNXkbxkyAwAjJrLSKL0t16LrUgwLIVMraoJ2T3Z52/VMmdRHbis2I7n1GS8PSq4OiYyV1M8xdqAl9kZLfJwLsSD8+1j8ouN6/2f3fvqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hmk7vOvd; arc=none smtp.client-ip=91.218.175.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QCmlq9Rx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A7EA1F0089F
-	for <loongarch@lists.linux.dev>; Wed, 14 Oct 2026 07:37:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791963459;
-	bh=GD+/Ha2/u4ZZXBCqFxIO50aJrY9gSr7+woMCBtv2vvw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=QCmlq9RxZwZDnDSaQtL4l5SsOSSVWHNdqYeVB8POHxJJj8qMKyTmGIyowGQhn2g+z
-	 C5apiUXipQI519XKCt1Tpb3q24ONuzrGel99EK6VOcz6+Y+4D4ogZdNan4ivHp6C30
-	 EkGXg4zXnEPGKasmv1/2JsxVyulveXbL/OEijk2jxNLOAeeCSWULY+HL7mibiM5nwO
-	 rVwiuHIp9Awhs7QCLvjyUgeslA/eKklPXVr2+bCSzTtDid3P6Dw6SsvRJ8L+gB1dze
-	 XaAcy/5ntvXjGK7uOTsOmPQ4adW0Imj9tGs3wVRcTEOw5SwJXnsXb1W4HmXCvSPX5o
-	 yAXMPR5NY345Q==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-6a374bea882so5435022a12.1
-        for <loongarch@lists.linux.dev>; Wed, 14 Oct 2026 00:37:39 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBzIZD2+8x8tgqNvz13Ux21Qqzh8e9IilRj5x3fjmFbqMDz3JX8jNemgJA976eKsfoPShpQ84CksRl4=@lists.linux.dev
-X-Gm-Message-State: AFq9FYK1tCHGBTUoXGDObjinBu7DcP8ZjLSGuFN0/fyuEMquBaEhouc2
-	MvV7Z6GlxfJpXuaPA6d76MuxZ9ev2bsoX1j3qPNF24dne9y6nqZi/zLxa/TM2JvgPhMIeGRHoVJ
-	Q2JV1eMQp4jXboBmh2iROfU51w/vOFzI=
-X-Received: by 2002:a05:6402:21c9:b0:6b1:d9ac:b757 with SMTP id
- 4fb4d7f45d1cf-6b1d9acc3e6mr4316643a12.6.1791963457821; Wed, 14 Oct 2026
- 00:37:37 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hmk7vOvd"
+X-Envelope-To: loongarch@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=ARdqFFr4feuZC36L7tKPeV266TwXot48jPTDPet42oE=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1791967068; v=1; x=1792571868;
+ b=hmk7vOvdFEyokWRFjV3eQIMh47nnjuIxIMVXbtMc2YSVjosbUB9aUu2Cmvj0Qa6AmMlgyoMS
+ vbBHCzRR7bs3l7kmIbtUMploGxCBIuHCHNg24WSqWCW3FDTMf14C9P13eUdFSMOIXQX+jcn8JYi
+ BrTB+N9/UBBUpRCjIoGg4Tt0=
+X-Envelope-To: loongarch@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id 30b45cd5fa8450ca;
+	Wed, 14 Oct 2026 08:37:48 +0000
+X-Mizu-Trace-ID: 30b45cd5fa8450ca
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <4c6f8e4a-93c9-4ba7-b66b-b294ffd70bf9@linux.dev>
+Date: Wed, 14 Oct 2026 16:37:44 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20261014052933.723303-1-cui.tao@linux.dev> <20261014052933.723303-4-cui.tao@linux.dev>
-In-Reply-To: <20261014052933.723303-4-cui.tao@linux.dev>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 14 Oct 2026 15:37:26 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5SDKsifd1GwMLU_YMny8PqwHdyuvujrAiuvkALoi3+8A@mail.gmail.com>
-X-Gm-Features: AclHuK9Ksa7VlvS-kSklI6Uruo2KF9go6WI1OnUs-g3EqUPWxpjWce4dC5vPHww
-Message-ID: <CAAhV-H5SDKsifd1GwMLU_YMny8PqwHdyuvujrAiuvkALoi3+8A@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v3 3/3] LoongArch: KVM: Reject repeated PCH-PIC CTRL_INIT
-To: Tao Cui <cui.tao@linux.dev>
-Cc: maobibo@loongson.cn, gaosong@loongson.cn, zhaotianrui@loongson.cn, 
-	loongarch@lists.linux.dev, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kernel@xen0n.name, nagachaithanya9911@gmail.com, Tao Cui <cuitao@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: maobibo@loongson.cn, gaosong@loongson.cn, zhaotianrui@loongson.cn,
+ loongarch@lists.linux.dev, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel@xen0n.name,
+ nagachaithanya9911@gmail.com, Tao Cui <cuitao@kylinos.cn>
+References: <20261014052933.723303-1-cui.tao@linux.dev>
+ <20261014052933.723303-4-cui.tao@linux.dev>
+ <CAAhV-H5SDKsifd1GwMLU_YMny8PqwHdyuvujrAiuvkALoi3+8A@mail.gmail.com>
+From: Tao Cui <cui.tao@linux.dev>
+In-Reply-To: <CAAhV-H5SDKsifd1GwMLU_YMny8PqwHdyuvujrAiuvkALoi3+8A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi, Tao,
+Hi, Huacai
 
-On Wed, Oct 14, 2026 at 1:30=E2=80=AFPM Tao Cui <cui.tao@linux.dev> wrote:
->
-> From: Tao Cui <cuitao@kylinos.cn>
->
-> KVM_DEV_LOONGARCH_PCH_PIC_CTRL_INIT has no guard against repeated
-> invocation: every call overwrites pch_pic_base and registers the same
-> kvm_io_device on the MMIO bus at the new address, while
-> kvm_pch_pic_destroy() unregisters only one bus range.  After a repeated
-> init, MMIO to the stale ranges computes its register offset against the
-> new base and silently reads 0 / drops writes, and the leftover bus
-> entries persist until the VM is destroyed.
->
-> Reject repeated initialization with -EEXIST, using the initialized
-> state of the kvm_io_device as the indicator.  The MMIO base is only
-> committed after a successful bus registration, and the real
-> registration error is propagated instead of being replaced with
-> -EFAULT.
->
-> Fixes: d206d9514873 ("LoongArch: KVM: Add PCHPIC user mode read and write=
- functions")
-> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
-> ---
->  arch/loongarch/kvm/intc/pch_pic.c | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/=
-pch_pic.c
-> index 51e4a6a39dc0..7979466de729 100644
-> --- a/arch/loongarch/kvm/intc/pch_pic.c
-> +++ b/arch/loongarch/kvm/intc/pch_pic.c
-> @@ -281,16 +281,22 @@ static int kvm_pch_pic_init(struct kvm_device *dev,=
- u64 addr)
->         struct kvm_io_device *device;
->         struct loongarch_pch_pic *s =3D dev->kvm->arch.pch_pic;
->
-> -       s->pch_pic_base =3D addr;
->         device =3D &s->device;
-> +       mutex_lock(&kvm->slots_lock);
-Why move the mutex_lock()?
+在 2026/10/14 15:37, Huacai Chen 写道:
+> Hi, Tao,
+> 
+> On Wed, Oct 14, 2026 at 1:30 PM Tao Cui <cui.tao@linux.dev> wrote:
+>>
+>> From: Tao Cui <cuitao@kylinos.cn>
+>>
+>> KVM_DEV_LOONGARCH_PCH_PIC_CTRL_INIT has no guard against repeated
+>> invocation: every call overwrites pch_pic_base and registers the same
+>> kvm_io_device on the MMIO bus at the new address, while
+>> kvm_pch_pic_destroy() unregisters only one bus range.  After a repeated
+>> init, MMIO to the stale ranges computes its register offset against the
+>> new base and silently reads 0 / drops writes, and the leftover bus
+>> entries persist until the VM is destroyed.
+>>
+>> Reject repeated initialization with -EEXIST, using the initialized
+>> state of the kvm_io_device as the indicator.  The MMIO base is only
+>> committed after a successful bus registration, and the real
+>> registration error is propagated instead of being replaced with
+>> -EFAULT.
+>>
+>> Fixes: d206d9514873 ("LoongArch: KVM: Add PCHPIC user mode read and write functions")
+>> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
+>> ---
+>>  arch/loongarch/kvm/intc/pch_pic.c | 12 +++++++++---
+>>  1 file changed, 9 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/pch_pic.c
+>> index 51e4a6a39dc0..7979466de729 100644
+>> --- a/arch/loongarch/kvm/intc/pch_pic.c
+>> +++ b/arch/loongarch/kvm/intc/pch_pic.c
+>> @@ -281,16 +281,22 @@ static int kvm_pch_pic_init(struct kvm_device *dev, u64 addr)
+>>         struct kvm_io_device *device;
+>>         struct loongarch_pch_pic *s = dev->kvm->arch.pch_pic;
+>>
+>> -       s->pch_pic_base = addr;
+>>         device = &s->device;
+>> +       mutex_lock(&kvm->slots_lock);
+> Why move the mutex_lock()?
+> 
 
-Huacai
+Thanks for the question.
 
-> +       if (s->device.ops) {
-> +               ret =3D -EEXIST;
-> +               goto out;
-> +       }
->         /* init device by pch pic writing and reading ops */
->         kvm_iodevice_init(device, &kvm_pch_pic_ops);
-> -       mutex_lock(&kvm->slots_lock);
->         /* register pch pic device */
->         ret =3D kvm_io_bus_register_dev(kvm, KVM_MMIO_BUS, addr, PCH_PIC_=
-SIZE, device);
-> +       if (!ret)
-> +               s->pch_pic_base =3D addr;
-> +out:
->         mutex_unlock(&kvm->slots_lock);
->
-> -       return (ret < 0) ? -EFAULT : 0;
-> +       return ret;
->  }
->
->  /* used by user space to get or set pch pic registers */
-> --
-> 2.43.0
->
+The intent is to keep the repeated-init check mutual-excluded with the
+bus registration.  The set_attr ioctl path holds no other lock, so with
+the check outside slots_lock, two concurrent CTRL_INIT calls could both
+see device.ops == NULL and both register the same device on the MMIO
+bus.  Holding the lock across the check, the registration and the base
+commit makes them exclusive.
+
+That said, if you prefer the check before the lock, I can respin --
+please let me know.
+
+Thanks,
+Tao
+
+> Huacai
+> 
+>> +       if (s->device.ops) {
+>> +               ret = -EEXIST;
+>> +               goto out;
+>> +       }
+>>         /* init device by pch pic writing and reading ops */
+>>         kvm_iodevice_init(device, &kvm_pch_pic_ops);
+>> -       mutex_lock(&kvm->slots_lock);
+>>         /* register pch pic device */
+>>         ret = kvm_io_bus_register_dev(kvm, KVM_MMIO_BUS, addr, PCH_PIC_SIZE, device);
+>> +       if (!ret)
+>> +               s->pch_pic_base = addr;
+>> +out:
+>>         mutex_unlock(&kvm->slots_lock);
+>>
+>> -       return (ret < 0) ? -EFAULT : 0;
+>> +       return ret;
+>>  }
+>>
+>>  /* used by user space to get or set pch pic registers */
+>> --
+>> 2.43.0
+>>
+
