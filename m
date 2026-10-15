@@ -1,69 +1,94 @@
-Received: from GVXPR05CU001.outbound.protection.outlook.com (mail-swedencentralazon11013029.outbound.protection.outlook.com [52.101.83.29])
+Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011002.outbound.protection.outlook.com [40.107.208.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF37454A7D1
-	for <loongarch@lists.linux.dev>; Thu, 15 Oct 2026 17:03:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.83.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F7EB370D61
+	for <loongarch@lists.linux.dev>; Thu, 15 Oct 2026 18:15:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.2
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792083838; cv=fail; b=TPQ59hIP+FCDiKjvZIRSRs2mIdBXvXy9Gi1fWmaNcQtol2BZhIsSQefUeOiGVHXaAau2xJM06p5OuQW/Ujyz1HFdw7BYukmie29+4CFZ47bx+ZDm1kQMVcDXL6bZfHJHeGBAmdqOyOczdVq6GQ0du5aNiV5uDgHqp9BsyjlAYvo=
+	t=1792088135; cv=fail; b=hLO7BxUQDQSjIrYISAOC2CXhYjfmG4LPpTOrAsfxrIr1TJuCj7zYBO7rsc+PZvxF4J8lpaM1Glh9KBT7FalTNCxjFNzDkT6NKcXy0LMmk5pMg1yNAjmfOkagXY3KT7OnjKHmCaSVNejjmesSaROu0MA+Gftufm4TGMqT9iAwIQI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792083838; c=relaxed/simple;
-	bh=sJLnOPWdikwIEPe6+SHvoxP7SqqsFz8idfhLmYhLEEQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=gLlHERLYMEpI89vhF0xgjufRlccXxUsUFYIZmksnVY95WWAI/psUxXfUlK5+USItYKZeHKtwUdOX+1F64UvM+r2Q+UUQ3FlNj1Lw6xGHUq5vLVpY0Mm/S6FoFzhpCx8W3ZWHzbP4zLc4pcRPTTMgQl5OqdDYnbh4RUfuBnHUP7k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=WrDdIm9h; arc=fail smtp.client-ip=52.101.83.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	s=arc-20240116; t=1792088135; c=relaxed/simple;
+	bh=esADj9QUkCBBdWV4veiNyJlKXnT5mFxj4HwKkSI530I=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=PpzdS6QRMhxdT2qRl4ywnv7xQmJ5jBCRefAYHkit39R8L1O8gdc67qpdlaowsn9gbn42aH+CyRR1NolPUcWdEkP/c3dyR5oDfjt/QQ71oQ9AuwK2VJU2R5V+Qt8EgXFy1y+dQkz5I16m6uatmsHGyCQmi32J9D2polx8NAq3cZs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ppVv/hww; arc=fail smtp.client-ip=40.107.208.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="WrDdIm9h"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ppVv/hww"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sjqSf37PjOgL/sztI8LghirKtbpPOIwF9CqlJyMVqwp/xr695cRaMvPCCNhVQetB2dHWU5sp9xoTuPj7PN0ocRXrYLvKx6iAMXcOuUtOyeLptJfWsUQC8ItI/Gm8b2elYjOp1RSG4y9CJUITHrNvM+LcScravGKUvXyJo9TQxJ80e66fyox2qlo5qaWsCts0WaSy8rHoRtAoRBz5Feak5ceG1JzZx2BWLIVYTF+Tw+rrEVTLHEJlScjk5R/Ee5cN8rkFKBafGZMq3iLipypZbeD43Btasj/F6v0UNQ33zzbm3YerLKYAzFerNO2PjJa/uGHt/uI6V/DbuxNmlr4fNQ==
+ b=xdRq4ZnwxAHr1sytVPALh3vwbuu1OHbIIe4s8iC3hIPdoGtdIMiyB/SesB+DcqqftZwAIHfoOLaElrcTvFTKG7ZI6Z8NsikGpuPzNIXadR3prnfwKHXN24D9xJ3FMpBgPalULmmQ9X/20+QgWz1ZXp4/mYGJWhI6h/LFQf4Nq6Bcqy0LBE5CTHMV4CRIUXUF+e+eS4E+GOgUr6M6cl+Q+SymClZlrykEpVUP6Vo1EwDQ4oI/wumJelZRarcQpRj2VxIksJFAEwQ2nkLWNV/7cAzgzcafjOLq1wq4mPYu94OpxOLRaCztY8l63Jdx5v7g/chsuikYieRrpMwQZZtK1w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hqVJ23GffrdvW1AZBa+Oa9TKhD6nxdbYi0l1ru19mzo=;
- b=aEmev0T2UhSiIttdrqLrkihgEMGdxC8vIRQuFEm4JwrVBkwTC/Rzf/bhLcxOVeC0/q1UESBQ4Z/zaZJM5JbB2wlV/s3d78ufJY0yBpLRND1CtCbshjJj9fcKDJYHh8oogJG66jAjrKiEsVjtnvhmk45oaJrzjs7BYgo9tTQ2Sw7UV04F7/G238eyBlEDCT76j7qtHVmWYyP/ESh+WW6oc//9zgxlQWz7VjHRjHiIc89XX93ZYKfF4PjxiW71hwMrPFxT+nJNzVpxq8Xl5M2DL9+A8toxe7UG0g35XwUx4fyEKxVyKmfh9oFwcrOTlNeYwTh37WiFU55FKl6hRgw+Qw==
+ bh=r62QDxJjs/bZ6HRi8QX1jsoxB9gTi5DuKimgnnCtrfg=;
+ b=uTQjX51uxUF50lcmFg38JhUX6ZzklYX/yfigTLa+Dyju8Kn2lSmj6/8LY4lrmA7YpwbvsNi+d/zdB/kYgQ3L9ZV4nrxdkYrGp12pcIczwGpqALjp0X+01nhrNCCTW7EWXO9eFcfSbM4OkWHnjhzCuCf+oJFOwXXq7nhSAGVDcr72M+Vo0dV4gaAF5YJjdAU8pPU68eDfLt/WWzwN20UuII1fvHffeJvQjALIZoDrwLj7cOkVk3OFoFd7W0YucK9jYC/20LFLRTdQ/zyGhKi/uFrZ+cDm0rMM9HL5702MiLwBS1GOc4Vb3u8bzWLUI8hodn71OSbFdyR1v432MBryFA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hqVJ23GffrdvW1AZBa+Oa9TKhD6nxdbYi0l1ru19mzo=;
- b=WrDdIm9hsr+hF8KmEB8AgXH9cV4DjR/b0x8LDXsydlOMOZcbBEQGB9MRxcvj152JesdOVJeu20B5rCWZDc4VIwdCEYjLAt2I3wPXdy3Hf0pGfpMzox4f5Dn/+sWzgepCPBF/6cC42mov0/Hr76bzOYRGcP0Z+BN3XcU2Gj+x084DetPpFtONCrcxPirj+INtaPa7bmHnVOLR+dGFfk9AQfO15SLmMDXsd3EIaGVzR8u8DUIHD5sxF84ajOSN3YAlBrEF6Iz43XFezhz8KiZ8SQq6ytSc6NEAXE227WuJssmEuxMab4gQZaIcuz8YscHs0IpXtqhr4ywR+lkytCZ2OA==
+ bh=r62QDxJjs/bZ6HRi8QX1jsoxB9gTi5DuKimgnnCtrfg=;
+ b=ppVv/hwwnXK8/0uHhEpjoycrYUVu4SlV2AfZVYffJKkLIdP1iVNTW/Z+H4luPliTPb/vy4t2WwSxqVj2HF8f9dvXK3nAtGObQe0UJ6Q9BOmWhyOFv4eV0LOCOd0yiK3/GB09tWc+bskQogo/gpIPpS+NPl6L15F/1syPFnGg9NmCu3tEn+T4mdqs/H89amP7mKzJjfxtjlSFamfAeGUrgTKcCYQIt8yMngK2E3AjCIO/daId2malEhM/n5L/1bwPE9g1POPi6i9mQboO36OwNzpIi3XHuUW2XstpkMJMGS+5EWuHvZ+IreOm63Af7gw4zvrNtzYYanGttATCIftqnQ==
 Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from GV2PR04MB11799.eurprd04.prod.outlook.com (2603:10a6:150:2cf::9)
- by PAXPR04MB8734.eurprd04.prod.outlook.com (2603:10a6:102:21e::14) with
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7)
+ by DS0PR12MB9058.namprd12.prod.outlook.com (2603:10b6:8:c6::10) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.522.13; Thu, 15 Oct
- 2026 17:03:37 +0000
-Received: from GV2PR04MB11799.eurprd04.prod.outlook.com
- ([fe80::2146:83a2:5329:b7c]) by GV2PR04MB11799.eurprd04.prod.outlook.com
- ([fe80::2146:83a2:5329:b7c%7]) with mapi id 15.21.0522.012; Thu, 15 Oct 2026
- 17:03:37 +0000
-Date: Thu, 15 Oct 2026 13:03:28 -0400
-From: Frank Li <Frank.li@oss.nxp.com>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>, dmaengine@vger.kernel.org,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org, Keguang Zhang <keguang.zhang@gmail.com>
-Subject: Re: [PATCH v2 3/3] dmaengine: loongson: Add Loongson-2K0300 APB DMA
- mux driver
-Message-ID: <atEHYLnJ5GTr1-ae@lizhi-Precision-Tower-5810>
-References: <cover.1791535540.git.zhoubinbin@loongson.cn>
- <54a6180b35353d2c03c5a752305636baacd02e9c.1791535540.git.zhoubinbin@loongson.cn>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <54a6180b35353d2c03c5a752305636baacd02e9c.1791535540.git.zhoubinbin@loongson.cn>
-X-ClientProxiedBy: DS7PR05CA0064.namprd05.prod.outlook.com
- (2603:10b6:8:57::26) To GV2PR04MB11799.eurprd04.prod.outlook.com
- (2603:10a6:150:2cf::9)
+ 2026 18:13:09 +0000
+Received: from IA0PR12MB8374.namprd12.prod.outlook.com
+ ([fe80::d85f:4c87:ae84:3f16]) by IA0PR12MB8374.namprd12.prod.outlook.com
+ ([fe80::d85f:4c87:ae84:3f16%6]) with mapi id 15.21.0472.016; Thu, 15 Oct 2026
+ 18:13:09 +0000
+From: Zi Yan <ziy@nvidia.com>
+Subject: [PATCH for 7.4-rc2+ 0/7] Re-enable discarding lazyfree THPs at PMD
+ level
+Date: Thu, 15 Oct 2026 14:13:00 -0400
+Message-Id: <20261015-anon_vma_uaf_fix-v1-0-7b977303b42b@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/y2N3QoCIRCFX0XmtgyVSOhVYpFJxzJIa1yXhWXfP
+ Wu7PH/fWaASJ6pwFgswTammkrvQewH+jvlGMoWuwShz0kpZiblkNz3RNYwuplmSRe+DDoZIQ5+
+ 9mLr9Q14gFhb2cJTszQ6GLa3t+iA/fqn/PtO79edxGw3r+gFYzlxJlwAAAA==
+X-Change-ID: 20261007-anon_vma_uaf_fix-e7accd1d2ee1
+To: David Hildenbrand <david@kernel.org>, 
+ Baolin Wang <baolin.wang@linux.alibaba.com>, 
+ "Liam R. Howlett" <liam@infradead.org>, Nico Pache <nico.pache@linux.dev>, 
+ Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
+ Barry Song <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>, 
+ Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, 
+ Lorenzo Stoakes <ljs@kernel.org>, Rik van Riel <riel@surriel.com>, 
+ Vlastimil Babka <vbabka@kernel.org>, Harry Yoo <harry@kernel.org>, 
+ Jann Horn <jannh@google.com>, Kyle Zeng <kylebot@openai.com>, 
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+ Zi Yan <ziy@nvidia.com>, stable@vger.kernel.org, 
+ Madhavan Srinivasan <maddy@linux.ibm.com>, 
+ Andrew Donnellan <andrew+kernel@donnellan.id.au>, 
+ Rohan McLure <rmclure@linux.ibm.com>, 
+ Pasha Tatashin <pasha.tatashin@soleen.com>, 
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+ "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
+ "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>, 
+ Shrikanth Hegde <sshegde@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org, 
+ Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+ Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+ John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
+ linux-riscv@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>, 
+ WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+ Alexander Gordeev <agordeev@linux.ibm.com>, 
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+ Christian Borntraeger <borntraeger@linux.ibm.com>, 
+ Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Andreas Larsson <andreas@gaisler.com>, sparclinux@vger.kernel.org, 
+ Jason Gunthorpe <jgg@ziepe.ca>
+X-Mailer: b4 0.16.0
+X-ClientProxiedBy: YQBPR0101CA0080.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c01:4::13) To IA0PR12MB8374.namprd12.prod.outlook.com
+ (2603:10b6:208:40e::7)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -71,303 +96,166 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: GV2PR04MB11799:EE_|PAXPR04MB8734:EE_
-X-MS-Office365-Filtering-Correlation-Id: a3e1e18f-4b90-4af0-733e-08df2ade40c0
+X-MS-TrafficTypeDiagnostic: IA0PR12MB8374:EE_|DS0PR12MB9058:EE_
+X-MS-Office365-Filtering-Correlation-Id: c99581a8-91b0-46ef-3379-08df2ae7f7c3
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|1800799024|376014|366016|23010399003|19092799006|56012099006|5023799004|4143699003|11063799006|261009223027099003|10067099003|22082099003|18002099003|6133799003;
+	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|23010399003|921020|56012099006|11063799006|261009223027099003|10067099003|18002099003;
 X-Microsoft-Antispam-Message-Info:
-	5Br2TOUZXznszCko9jw0RDe8HVrQHyqE2/eAvMA1Q3/tAnaLBxkE6Y7p9hysKRvAl/vn9Y8hVnStL1Y/1g3lWlITxynAox5mDFKLEoIGCbvh0Wz1NnQMjs02bXyZ7jZkc/yxHmLQayCwfheYZXDKrF6ITV+lDpxN4Zt3tA7PHTQWG8EZpnz+DDFApy+yf913WesFfin/DrrsYSDORdNuPis7rZYzGs8gEDoHSpbk/ALMLpv0X5KumHaCPQjyhFplprSHykh+fL2ZfQBI9BWXUB01kJyml8sow5H7fRzTwnz/5wmAxAK6YJvth8ArRzEOrO8kePdEGlcdXeueEKojjO/I5vH5PEC4UwKT6PAQYSoOpmMmCROY+YkVCGHMuV2nmkGs4SuKABFtR5+vJQedNc17FeXWuRIfLrmFc976W+YXD9kKJE61UElY0vdRZccd8l0lTXuiuIutBoY6gVqGXbJkafsugyqJjz9FYLoCfFGEEwX8aJHKh94BvLUdz7b1ZahAplDVfsBLrz02h6nii4RkvANjvwwRXG/sRfZfdX3WFDdmUPy2rxQ1XYF2RsmvIceX5oIc5HUTH5CRiZSk3BK6Z33pooLD0O74Vkp+YEzyv3jruTOVyJ5BnEWr/u2l3t/6OHC7Zc5V+fLJXiG0z+bD7dYNIwkH6XZVSOzP/9Y=
+	sR8jpc59mlpQ7HBJZQv6JaVxJHX+PXyfkTvtIETSzZelMVNxSVeAkS41diswnPgBRl1iFO7zFdtDesslk6HiTx7b61xnzob/qnxseD6J8k0SdmJZYrQOf2Sh2ERjMasGJ7GSIFhQS1Lk+pR07rm2C/DliResFcH2NLKrC5zbrTU6Nxl5PwW41XyuInmWi+ixVDTcGbz4s1jmf6bc6AkOmVuHiGnXYtbjhl+qgI9GvBUtbuH4TWpb850GZGSta4DUWPSao5jYi3N/8qGh9ClAFS+oJSrjSjcvPTnVPklvhrhE0T17UNPH3RHVaDrok1oA+3TmnNl/dBvWZAUFPMMOROgW7ouU720HgJlU1uYcEdZl0VLp4S9g3zGUJj258wxMYkL1HcJSu08iRxqE7sITirmJ5ugMr5DGhZvX2XcKviD1a1ZFQ7/AC2n7UMjDuCxsJk6FPHnJ7kFrk3Ley0HlM8zAsnSsDYBqmV0WqqknVP2KKCJxW2r5tgnCYJixyFZ8WmYSuOUDi1kRBGpHTDfCA0iQOSqNG3MoLdO5rB9GY+4NUmFawP5huCEvJPd/WkenchHoeGW4b9FOkWKStIMilSUS3ZnlhrJ7s6kXrOGw6B3mxKFZhD3POV6hTqftdEFoIu58Kylh2yPHYBv4mex9gyUCrh1s3gIkP6aKJEtrmmSVY2uyVPDol9bsi6CNOntSGFzJUvVU1ukz6yGn7SuJvw==
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR04MB11799.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(366016)(23010399003)(19092799006)(56012099006)(5023799004)(4143699003)(11063799006)(261009223027099003)(10067099003)(22082099003)(18002099003)(6133799003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8374.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(23010399003)(921020)(56012099006)(11063799006)(261009223027099003)(10067099003)(18002099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?/p6fstfcEFlloLhuMp1pqXRT1nIVc1jXWVJ0ld99niebeX8of8ybdkWSNGOp?=
- =?us-ascii?Q?UmAyMiKYV+gSJc1gLS7vAoNA6wCXk1pQdmYaKkXITZFEiQ9QusifuTdVTSpW?=
- =?us-ascii?Q?Pzk9hC/jnjwTA1kFv+kNWGxXLjqZxzhDw+sLy836xRMVzR14SinHwJP5szQn?=
- =?us-ascii?Q?CtmTdipxyN8Qgqv9ARM5Zgp1BBAoRd7XgF37ccDKb8nzWWogQvAacnyIcR0c?=
- =?us-ascii?Q?nuRfQsOATQjh1tqqTRZ3myjbConMB9msH5inN8hS+339qdIC1Qlm+gfm/JgW?=
- =?us-ascii?Q?B5BRq3UHj38Hr1bczyHA7MVBAi4/N6oDvvrPqSKyvRVpdJ9Tz9p6w8JXoFS/?=
- =?us-ascii?Q?o+zCIDDtzUt73rH799NNPcH9Ks2xtOkTnH6GXo4YlK/am79Aq9hS/L7ySeLs?=
- =?us-ascii?Q?eIodgfyF20S9IChmk2sJ36Fw1Uxlrvd3VePQl2+cizlUQFQCpvxbbbsEBe8V?=
- =?us-ascii?Q?7SoULpJEeQDgeEN1gHFz4NHWbUFBdWy7gXtDf/h2rZwUOnA80FjkvWqmANUl?=
- =?us-ascii?Q?hRP7U/95bZIetwd8HYRyQcju/8MDDpX2x/bg2bNeJIfStMDILwXZ9Hvy5s0D?=
- =?us-ascii?Q?/gk1ZOTPdBJb8yqtL1x+TewpBpKG3UcegA4Z43ekazfhF2E7XTtOkF8pHz09?=
- =?us-ascii?Q?iyX1UYQYdDVXb2XGZz/Q2z6E+mkstdHsDlruJq1aiKbV31ptYOEfgLsVbZUZ?=
- =?us-ascii?Q?QcpNbZa5PW15zlP+d7R6jScz8R+P3ozfxNKnQlCa1q5MbJiFD4hlrVCJd1+m?=
- =?us-ascii?Q?oOyJNTkzrg1IE4NiCVXgi3CcdCR9Uqk8In3EO3gO6hUxdF9I3IMKjoKvb0ad?=
- =?us-ascii?Q?8kWsEKbX9nprhGEXaeMq74YQAbgflpET0OYY7x6p0MPK86bHZgOffCkoRq5i?=
- =?us-ascii?Q?my8lf8NdCyk7tYL7JmEI0Vi2Ocz9MSsBfEyXIxyMrToyflQ5LBsF26nNAQnv?=
- =?us-ascii?Q?BBC/ZVsYjnO3SEmFUOV4qvwvou9bRAp+F+iNXLtFpsJvNOubPi1/ZMYXV0Jd?=
- =?us-ascii?Q?vVtz+JTqno/4BIDmtMvVHiPgdzABuzWG24FtBD8+Jh5ZTvTjNf6mNIH4yAXU?=
- =?us-ascii?Q?dBye4zrx3MtV2m9MXf9TCsYAdVClvRE99sQBDvhZw6D3/6w5YTiozX++j8Cc?=
- =?us-ascii?Q?nHhA9P5REQWiVmOBYz6iimT8Xk+SRjBu5P06iQZeuGmXOrSRwMkocqaoi67I?=
- =?us-ascii?Q?8ZZ2/pRu5FXOpQD2mZ7otEas2s9/roCumr5DAhgkIbkS5tZGphtRP6nMEx9H?=
- =?us-ascii?Q?IVH6VAxoVkBYFkbVuUuhGvxsh28WoYwueZNiQHqRa+bGhonCyrQCKcuIJRyD?=
- =?us-ascii?Q?FzLn7N7FQ0+0ssalSpDj7t/EklgJF8Te6qN2LichRIPMZuPuEZjAx2w0tbQA?=
- =?us-ascii?Q?1BH4IKo6sXZcMP7ekuWtbIqT8Dbu1b9+JS28NcxzlBrWiRYLL4cw2yytPg3O?=
- =?us-ascii?Q?BDVO22krdw1HweiW/6LogkG+Wwd09+B5qQEak3QdCEHhQtbop/GV6Te6BEfd?=
- =?us-ascii?Q?ReZCJZQV75p45aQsDUMDY/M6HqkMlvnnRw0nHR9dygqu425jmPQk6/iPZyWG?=
- =?us-ascii?Q?zqPe2LRTRjIVRefywKiCTkjUTKsNF/vgfiIr1kFX16WU/KzURdPNgZeYWQde?=
- =?us-ascii?Q?+IgWbOV8r5QkR86Nt4zV3a2Gz4FXYCobg/WKMFI1MuZYuQQJCJOneElb70w2?=
- =?us-ascii?Q?l6AFQcW6sbL1fDVH9S30oLv947iZbWLYsJ2niCPvFaqdvMhETLXj2nl+PBHP?=
- =?us-ascii?Q?3SU7qFhqYfOAfcxy+n2oK6TQ21F6/d4smeuDjvDt4wIsc9oD/oxr?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a3e1e18f-4b90-4af0-733e-08df2ade40c0
-X-MS-Exchange-CrossTenant-AuthSource: GV2PR04MB11799.eurprd04.prod.outlook.com
+	=?utf-8?B?YTcrTGxoK3Ric2t1NUJIcldreU55aEFhY0NWbnA1TUV5Z3hFcVpudThjMlBC?=
+ =?utf-8?B?ZjF3RmN1SmJ6UjNjNjlMNGQwdTdZUUg3UjJmQUxpa3gva3NDWkgzdlRxN1ZI?=
+ =?utf-8?B?RGRwbjlrY1dBWWM5bjJaUUdnK1M4WmtjbHBvbDZKUGpxT3FWS1piUmVncGpZ?=
+ =?utf-8?B?bWVVWC9nQWliZElUamVDWFkrVzNJTUJ2WXNXR3lzYkpWUkZaelhVWkhUWk9x?=
+ =?utf-8?B?eTRQYjEwVkVoTFQzeUdaaE9Qbm9NWTZwdnUvb244T1lndUNLVnZtaHFTakNu?=
+ =?utf-8?B?dFEvRDJpei96V1ZEMXZZUnN4dkxURXNSeHNLRXVSVjY1ZVA1Y2xqOFpMNE9P?=
+ =?utf-8?B?QlBuRytCcGtlUUdKV2JGSm9GZTFFQ3EwVkhpSkdzWVdpbHhyc1Y2WmNmaW8r?=
+ =?utf-8?B?MTZFSm5HSGFjSzRVdnd2eUVUckZHS3J1TkZTQjhIMHBBNW1VaEdvNHk5WU1H?=
+ =?utf-8?B?Z3h3QWhHVm1WVlRRcGhLbzl3RnFydU9VdjdFc05sRHM2ZTZQQUFhOHN3aEU0?=
+ =?utf-8?B?bTlPdzBGTTBtNEV3eFRBWTRKVUlZUXlQRnZzM3VEU0wwUmlIUHROUjJPLzMv?=
+ =?utf-8?B?YkE4SHRPSDgwTnVKT1M4dUg5endSbnhFbzFINk1aNklrcTBpblhVZW0zK25o?=
+ =?utf-8?B?MGVJUGZjNmFpYy9KWHo3UDBKbjJvUWFLRDhMZlJuUTJmWEFoU1RIWHhOSXhM?=
+ =?utf-8?B?dEtuTGttTGhjZzA2RWs4YVVTaWQ1Uy8rc3V6cVhhcWdPYlFpSmQxQ0NwRFlz?=
+ =?utf-8?B?QTM1WU93V1pGdEFaRktKMWVyVHl3V3NDZ0xCV2FQbE5ndVlCbit4Q015aURu?=
+ =?utf-8?B?YUFhTFRhQ1hWcnFqcGt5SXd1UWNzWEJEL3JYWkRnSDI4dlljNVZGUDBlTFhK?=
+ =?utf-8?B?aGVWSE5yZDVHZHdBL2MvcUlacnV0S1dEb1MwK3kxL2hXMnZrNHA1cDZ1Q252?=
+ =?utf-8?B?anVKSmFSVnVoUWg2SEJkY1l1ZGQ5T3JnenlONjhPc21vNktJY200akZXbFdW?=
+ =?utf-8?B?ZWQ3ZTVmRlBET3dRN3FLaGZUOXhPSHZQRVc5bFNUU1l4Q3VOZ3RlZGtMa0FY?=
+ =?utf-8?B?UC83MGpHMmtqOWVYNmNSQWVVQk5iWFpzWVYrQ2l0M21LL2pZekZHNGthSGRN?=
+ =?utf-8?B?cU5rUXYvK1k5T1RNRmRrOGpkMjhtVmxIVHRoZ1lES2t5NFI2alFrSlBENWRG?=
+ =?utf-8?B?dnhzMlZiNVRMZUU5ZHIzbEhJcUU1KzR3eVpTYkM4NkpNdTUybDdEdTZPUVZv?=
+ =?utf-8?B?elc3MHBpYUI5ZHhzRkd3UEhhNWJ3KzNYN3pSZWc1NUJ4NE5ieVBpWU9SWWV3?=
+ =?utf-8?B?MGpRRGdXVnFveGV1NE5Pd3ZQdzVmQ0QvR01KSmZhN05ZRTBFblFCOUVPOUZ5?=
+ =?utf-8?B?RWtTL0x3RVFqeXluQTNTSDVteU80SFBBMWZ6Y2tZRU1RTCtDTWdUWWJ0Q3Na?=
+ =?utf-8?B?R1d4bmNMMDRnS0U1V0xrSHZBV0JkeCtYczlhcTFJbnFCd0JxTnltVkFWRFdw?=
+ =?utf-8?B?cDdkOG9RTFJMdzlsOHFGN285ZDRZeVdmMnQzQ0xxZytZOEl6bFFYNHFVbHFS?=
+ =?utf-8?B?Nm1NL2oxWUp0MC9DaW9UVDJ6TGR5c09PRnVDSVpmbEp4bGxaOVBlbVNCUFdx?=
+ =?utf-8?B?dTZzT1hFZi9Yb3FXcmdtZy9jUGtNMGVKb1AwRUFoR2ZpSW5yZUZhUlc0cEx0?=
+ =?utf-8?B?VGZJRE03NkY2cWR3RGRQZGNwTTlaSGF5YVlRdTM1RStxeWpiVFZHSzlhemcv?=
+ =?utf-8?B?NWF5ZEhMdGpNcmY2M24rMVF4dUNFUkNXSXdPZWhCK2xDM003MWNoRXdEV21M?=
+ =?utf-8?B?cGU0d1pZTWMvSnhlbzBwWWV6MTZNbm1mTi9MNFZ6a3lBRW9CeW50MVRmUVRm?=
+ =?utf-8?B?Mk9UY0Z5Z0d4VmpTZnl0V2dpWktiWHJ0OWZKQ3p0Vm1lOHVJZkNpU0dtV1VP?=
+ =?utf-8?B?MElyN0k5RXdDQ21VTlYybm93bm01aFRXT3N1SlhXVWtIbGRFemxKc2RSWkFn?=
+ =?utf-8?B?alExays1LzEraCtpMjVxNTdzdWp3eitjRmlPL0RTcUF0VERIUTV0UjhwSjc4?=
+ =?utf-8?B?ZWlpL2V5d3lSTUdqNCs1ckVFd3czV2Y1ZDVwTTFFa1JqWGUyanhnZW1RR05K?=
+ =?utf-8?B?OHpZWG5yVmdZd3NEeitjVm9iajZXR3Jjcm9XbCtUVnF0ZFJFTGNRQmZZaENL?=
+ =?utf-8?B?bGxsTGJ3N2tQTU1TaWFQM0QyS01ieWJ6SVZJckw0a21rK2NMaWlUelVmWHUx?=
+ =?utf-8?B?am4yam9jY3hpdHh0RFNOMGx0Z3hSazVOV29mbHFnamgzTkJvZzZHek5sdmdm?=
+ =?utf-8?Q?yOh8WTaruGtsoUPWrU?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c99581a8-91b0-46ef-3379-08df2ae7f7c3
+X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8374.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Oct 2026 17:03:36.9162
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Oct 2026 18:13:09.4216
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4VD8LO0MkzPDtEJT4EIQEVhKdmcCW4MMag8nkHvZ9/hE0Q6U1FWPs+P7XE36XC/UYz98rYyiXiGl9CIC6HzEcjepbalCn8vaWVLTKGaCSbRxrEqqBncw5ua0yGagxPje
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8734
+X-MS-Exchange-CrossTenant-UserPrincipalName: edNPBf+zw3jPTo12oMtNTHcVz7b/51nIRidGdw9Sjnk3QhnO9J8wWD+dZFTWV44R
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB9058
 
-On Fri, Oct 09, 2026 at 05:19:34PM +0800, Binbin Zhou wrote:
-> The Loongson-2K0300 DMA mux is not a standalone DMA controller. It is
-> implemented as a set of routing fields in the chip global configuration
-> registers CHIP_CTRL13/14/15, which select which physical channel of the
-> on-chip CMC DMA controller handles each peripheral DMA request.
->
-> Add a driver that exposes these routing fields as an OF DMA router. The
-> router's allocation callback validates the <request> <channel> <flags>
-> specifier, programs the corresponding CHIP_CTRL register field, and then
-> rewrites the specifier to <channel> <flags> so that the parent CMC DMA
-> controller's xlate is used.
->
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
->  MAINTAINERS                                 |   1 +
->  drivers/dma/loongson/Makefile               |   1 +
->  drivers/dma/loongson/loongson2-apb-dmamux.c | 398 ++++++++++++++++++++
->  3 files changed, 400 insertions(+)
->  create mode 100644 drivers/dma/loongson/loongson2-apb-dmamux.c
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 78622b255f88..0b0c6ea41c64 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15355,6 +15355,7 @@ F:	Documentation/devicetree/bindings/dma/loongson,ls2k0300-dmamux.yaml
->  F:	Documentation/devicetree/bindings/dma/loongson,ls2x-apbdma.yaml
->  F:	drivers/dma/loongson/loongson2-apb-cmc-dma.c
->  F:	drivers/dma/loongson/loongson2-apb-dma.c
-> +F:	drivers/dma/loongson/loongson2-apb-dmamux.c
->  F:	include/dt-bindings/dma/loongson,ls2k-dmamux.h
->
->  LOONGSON LS2X I2C DRIVER
-> diff --git a/drivers/dma/loongson/Makefile b/drivers/dma/loongson/Makefile
-> index 48c19781e729..271fd38fa8f2 100644
-> --- a/drivers/dma/loongson/Makefile
-> +++ b/drivers/dma/loongson/Makefile
-> @@ -2,3 +2,4 @@
->  obj-$(CONFIG_LOONGSON1_APB_DMA) += loongson1-apb-dma.o
->  obj-$(CONFIG_LOONGSON2_APB_DMA) += loongson2-apb-dma.o
->  obj-$(CONFIG_LOONGSON2_APB_CMC_DMA) += loongson2-apb-cmc-dma.o
-> +obj-$(CONFIG_LOONGSON2_APB_CMC_DMA) += loongson2-apb-dmamux.o
-> diff --git a/drivers/dma/loongson/loongson2-apb-dmamux.c b/drivers/dma/loongson/loongson2-apb-dmamux.c
-> new file mode 100644
-> index 000000000000..01bd3ce4ca25
-> --- /dev/null
-> +++ b/drivers/dma/loongson/loongson2-apb-dmamux.c
-> @@ -0,0 +1,398 @@
-...
-> +static int loongson2_dmamux_set_route(struct loongson2_dmamux *mux, u32 request, u32 channel)
-> +{
-> +	const struct loongson2_dmamux_map *map;
-> +	u32 reg_val, route_val, high_val = 0;
-> +
-> +	if (request >= mux->config->num_maps)
-> +		return -EINVAL;
-> +
-> +	if (channel > mux->config->max_channel)
-> +		return -EINVAL;
-> +
-> +	map = &mux->config->maps[request];
-> +
-> +	switch (map->type) {
-> +	case LOONGSON_DMAMUX_PAIR:
-> +		route_val = channel / 2;
-> +		break;
-> +	case LOONGSON_DMAMUX_SINGLE:
-> +		route_val = channel;
-> +		if (map->high_reg)
-> +			high_val = (channel >> 2) & 0x1;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	guard(spinlock_irqsave)(&mux->lock);
-> +
-> +	/* Write the primary register field */
-> +	reg_val = loongson2_dmamux_read(mux, map->reg);
-> +	reg_val &= ~map->mask;
-> +	reg_val |= field_prep(map->mask, route_val);
-> +	loongson2_dmamux_write(mux, map->reg, reg_val);
-> +
-> +	/* Write the extension register field if present */
-> +	if (map->high_reg) {
-> +		reg_val = loongson2_dmamux_read(mux, map->high_reg);
-> +		reg_val &= ~BIT(map->high_shift);
-> +		reg_val |= high_val << map->high_shift;
+For maintainers, Patch 6 requires first 5 patches to work correctly, so it
+might be better to get ack from arch maintainers for first 5 patches and
+merge the series via mm tree. The patch disabling lazyfree THP discard at
+PMD level has been picked up [2] and would take some time to test, so this
+patchset probably can be considered after the merge window closes. I am
+sending it out for early feedback.
 
-assign_bit(map->high_shift, &reg_val, high_val);
+Motivation
+===
 
-other looks good
+A bug was found in the PMD-level discard of lazyfree THPs [1]. The
+proposed fix keeps the PMD invalidated with pmdp_invalidate() instead of
+clearing it, but that does not work on every architecture:
 
-Frank
-> +		loongson2_dmamux_write(mux, map->high_reg, reg_val);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * loongson2_dmamux_route_allocate() - DMA router allocation callback
-> + * @dma_spec: OF DMA specifier <request> <channel> <flags>
-> + * @ofdma:    Router's of_dma structure; ofdma->dma_router points to our
-> + *            struct dma_router embedded in struct loongson2_dmamux.
-> + *
-> + * Return: NULL as route_data (nothing to free), or an ERR_PTR on failure.
-> + */
-> +static void *loongson2_dmamux_route_allocate(struct of_phandle_args *dma_spec,
-> +					     struct of_dma *ofdma)
-> +{
-> +	struct loongson2_dmamux *mux;
-> +	u32 request, channel, flags;
-> +	int ret;
-> +
-> +	if (!ofdma->dma_router)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	mux = container_of(ofdma->dma_router, struct loongson2_dmamux, dma_router);
-> +
-> +	if (dma_spec->args_count != 3)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	request = dma_spec->args[0];
-> +	channel = dma_spec->args[1];
-> +	flags = dma_spec->args[2];
-> +
-> +	if (request >= mux->config->num_maps ||
-> +	    channel > mux->config->max_channel)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	/* Program the SoC-specific route register */
-> +	ret = loongson2_dmamux_set_route(mux, request, channel);
-> +	if (ret)
-> +		return ERR_PTR(ret);
-> +
-> +	/* The of_node_put() will be done in of_dma_router_xlate function */
-> +	dma_spec->np = of_parse_phandle(ofdma->of_node, "dma-masters", 0);
-> +	if (!dma_spec->np)
-> +		return ERR_PTR(-ENODEV);
-> +
-> +	dma_spec->args[0] = channel;
-> +	dma_spec->args[1] = flags;
-> +	dma_spec->args_count = mux->config->parent_args_count;
-> +
-> +	return NULL;
-> +}
-> +
-> +/**
-> + * loongson2_dmamux_route_free() - DMA router free callback
-> + * @dev: Back pointer to the router's device
-> + * @route_data: Router-specific data returned by route_allocate
-> + *
-> + * The driver does not allocate any per-route resources, so this callback
-> + * is intentionally empty. It must still be provided because the OF DMA
-> + * core calls it unconditionally on some error paths (e.g. -EPROBE_DEFER)
-> + * without checking for a NULL pointer.
-> + */
-> +static void loongson2_dmamux_route_free(struct device *dev, void *route_data)
-> +{
-> +}
-> +
-> +/**
-> + * loongson2_dmamux_unregister_of_dma() - devm action to unregister the router
-> + * @data: Pointer to struct loongson2_dmamux
-> + *
-> + * Called automatically by the device-managed resource framework both on
-> + * probe failure and on driver removal, ensuring the OF DMA router is
-> + * always unregistered.
-> + */
-> +static void loongson2_dmamux_unregister_of_dma(void *data)
-> +{
-> +	struct loongson2_dmamux *mux = data;
-> +
-> +	of_dma_router_free(mux->dma_router.dev->of_node);
-> +}
-> +
-> +static int loongson2_dmamux_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct loongson2_dmamux *mux;
-> +	u32 dma_requests;
-> +	int ret;
-> +
-> +	mux = devm_kzalloc(dev, sizeof(*mux), GFP_KERNEL);
-> +	if (!mux)
-> +		return -ENOMEM;
-> +
-> +	mux->base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(mux->base))
-> +		return PTR_ERR(mux->base);
-> +
-> +	spin_lock_init(&mux->lock);
-> +	mux->config = &ls2k0300_dmamux_config;
-> +
-> +	ret = of_property_read_u32(dev->of_node, "dma-requests", &dma_requests);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "missing dma-requests property\n");
-> +
-> +	if (dma_requests != mux->config->num_maps)
-> +		return dev_err_probe(dev, -EINVAL,
-> +				     "dma-requests=%u mismatches driver num_maps=%u",
-> +				     dma_requests, mux->config->num_maps);
-> +
-> +	mux->dma_router.dev = dev;
-> +	mux->dma_router.route_free = loongson2_dmamux_route_free;
-> +
-> +	platform_set_drvdata(pdev, mux);
-> +
-> +	ret = of_dma_router_register(dev->of_node, loongson2_dmamux_route_allocate,
-> +				     &mux->dma_router);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret,
-> +				     "Failed to register DMA router");
-> +
-> +	ret = devm_add_action_or_reset(dev, loongson2_dmamux_unregister_of_dma, mux);
-> +	if (ret)
-> +		return ret;
-> +
-> +	dev_info(dev,
-> +		 "Loongson2 DMA Mux Controller registered (max_channel=%u, requests=%u)",
-> +		 mux->config->max_channel, mux->config->num_maps);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id loongson2_dmamux_of_match[] = {
-> +	{ .compatible = "loongson,ls2k0300-dmamux" },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, loongson2_dmamux_of_match);
-> +
-> +static struct platform_driver loongson2_dmamux_driver = {
-> +	.driver = {
-> +		.name = "loongson2-dmamux",
-> +		.of_match_table = loongson2_dmamux_of_match,
-> +	},
-> +	.probe = loongson2_dmamux_probe,
-> +};
-> +module_platform_driver(loongson2_dmamux_driver);
-> +
-> +MODULE_DESCRIPTION("Loongson2 SoC DMA Mux Controller driver");
-> +MODULE_AUTHOR("Loongson Technology Corporation Limited");
-> +MODULE_LICENSE("GPL");
-> --
-> 2.52.0
->
+1. riscv, LoongArch and s390 let GUP-fast follow an invalidated PMD;
+2. powerpc/book3s64 page table check counts an invalidated PMD as mapped;
+3. sparc64's thp_pte_count becomes unbalanced around pmdp_invalidate().
+
+So the PMD-level discard was disabled instead [2]. This series fixes the
+arch code and re-enables it.
+
+The discard decides from the folio refcount, so GUP-fast must not take a
+reference through an invalidated PMD, and arch accounting must stay
+balanced when an invalidated PMD is set again or cleared.
+
+Details
+===
+
+Patches 1-5 fix the arch code, patch 6 from Kyle keeps the PMD invalidated
+instead of cleared until the discard is committed, and patch 7 enables the
+PMD-level discard again:
+
+1. powerpc/book3s64: page table check counts an invalidated PMD as a live
+   mapping, so setting it again or clearing it decrements the map count a
+   second time and hits BUG_ON(). This is already reachable via MADV_COLD
+   and mprotect() with CONFIG_PAGE_TABLE_CHECK.
+
+2. riscv: an invalidated PMD still passes pmd_present() and the generic
+   pmd_access_permitted(), so GUP-fast follows it. Add a
+   pmd_access_permitted() that requires _PAGE_PRESENT.
+
+3. LoongArch: same problem and fix as riscv.
+
+4. s390: _SEGMENT_ENTRY_INVALID also marks an old PMD, so GUP-fast follows
+   an invalidated PMD. Always clear _SEGMENT_ENTRY_READ in
+   pmdp_invalidate(), which makes it pmd_protnone(), so GUP-fast rejects
+   it.
+
+5. sparc64: pmdp_invalidate() decrements thp_pte_count assuming a THP
+   split follows, so setting the PMD again loses a count. Count only
+   valid huge PMDs in __set_pmd_acct() instead, which keeps invalidate,
+   restore, clear and split balanced.
+
+6. mm/huge_memory: use pmdp_invalidate() in the discard, so munmap() and
+   mremap() wait on the PMD lock instead of skipping a none PMD.
+
+7. mm/rmap: discard lazyfree THPs at PMD level again.
+
+Note
+===
+
+x86, arm64 and powerpc already make GUP-fast reject an invalidated PMD,
+and sparc64 has no GUP-fast. 32-bit MIPS would not reject it, but it
+cannot have THP: _PAGE_HUGE makes PFN_PTE_SHIFT exceed PAGE_SHIFT, so the
+BUILD_BUG_ON() in arch_mm_preinit() fires, which is why Ingenic dropped
+huge pages in commit 69b686ddd579 ("MIPS: ingenic: Remove
+CPU_SUPPORTS_HUGEPAGES").
+
+Link: https://lore.kernel.org/all/20261009165214.40212-2-kylebot@openai.com/ [1]
+Link: https://lore.kernel.org/all/20261012-lazyfree-stable-fix-v2-1-6387d6e30063@nvidia.com/ [2]
+
+Signed-off-by: Zi Yan <ziy@nvidia.com>
+---
+Kyle Zeng (1):
+      mm/huge_memory: avoid transient none PMDs during lazyfree reclaim
+
+Zi Yan (6):
+      powerpc/book3s64/mm: don't count invalidated PMDs in page table check
+      riscv: mm: don't let GUP-fast follow invalidated THP PMDs
+      LoongArch: mm: don't let GUP-fast follow invalidated THP PMDs
+      s390/mm: always clear _SEGMENT_ENTRY_READ in pmdp_invalidate()
+      sparc64: mm: fix thp_pte_count accounting around pmdp_invalidate()
+      mm/rmap: re-enable discarding lazyfree THPs at PMD level
+
+ arch/loongarch/include/asm/pgtable.h         |  6 ++++++
+ arch/powerpc/include/asm/book3s/64/pgtable.h |  3 ++-
+ arch/riscv/include/asm/pgtable.h             |  6 ++++++
+ arch/s390/include/asm/pgtable.h              |  8 ++++++--
+ arch/sparc/mm/tlb.c                          | 26 ++++++++++++--------------
+ mm/huge_memory.c                             |  5 +++--
+ mm/rmap.c                                    | 11 +++++++++++
+ 7 files changed, 46 insertions(+), 19 deletions(-)
+---
+base-commit: 71a9b024444eba184335b67867897714e4da143c
+change-id: 20261007-anon_vma_uaf_fix-e7accd1d2ee1
+
+Best regards,
+--  
+Yan, Zi
+
