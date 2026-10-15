@@ -1,157 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E2F13E008F
-	for <loongarch@lists.linux.dev>; Thu, 15 Oct 2026 03:08:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B9C149E13A
+	for <loongarch@lists.linux.dev>; Thu, 15 Oct 2026 06:47:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792033700; cv=none; b=MghdwZd6s4hhAPF4Njx7Slbk5ZykHUVQRvmqbB+WGoukabrgdtXPhrid61U0mZJT9w/5hS9nuVSLcWX63GUoaOCjdu2ImWuoK73iZmFppudDWD+9Qw/RyJPACFcRaAF1jLnsR0ST95e3VWUwCWo2M3OXgsLju1s84HfBdMZ280o=
+	t=1792046838; cv=none; b=svKBQZQ31AXKCGN3by99nf1CiskonMlAOH2O8tcVrvMpZ2wMh4Ot7OFUe7VFVasP4g8KY3JCTQDlxlp6JFHCyB1ZOuf31AJW054s+HlRwsODPYPgumtGNxrz/mgdXvilQeqLhWpjXK6OUmVeeJfllL3TBaB54rbfQ6pWpDXXBEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792033700; c=relaxed/simple;
-	bh=1TlJxRh8RdYotvgR2AMuiX7apQgW6YJvRr7xE4/eEBY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VcbfIqQXXWrz0t82WgH6NXBl7Yl8EJm0LKGVsSpvOBExLQHb9AWb3KWLkw/ClKIVncwcksyFv8M7gjJu3RviQvVo75jdRqW5nVGBcHpjCwwqoAnrD+dd0RYhKNnLYtEQJ+VL+VfrLsdsj/jCDjQVmL4GBbGp2ryEUspIlroGdgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fcHxaGhj; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fcHxaGhj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E3C11F000CC
-	for <loongarch@lists.linux.dev>; Thu, 15 Oct 2026 03:08:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792033697;
-	bh=SfjT8DL/Dv2LApscBO6xU+3PTsbFZ4cSEcwNALvRMr8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=fcHxaGhjtuMUc1GxzM/2dyMibXfxRL8Z/3zDHXRZo5jDoC/+esAnHcl9TWOIaz/r7
-	 +2k4GEDZOUMfgSgVgStOeyxwM9pmske2+nfoO7Eky8x1tIVaJFhZYFZueLt9SoD6fg
-	 N1YFn0/SQYg5OCmDPwN2Db558/icD9XlKJKLPX2lnlzCfeIf5WAs9Co7TgvPS6hHUS
-	 nC4T42ep7UdLmdItg/FpQSMSmHP9Svy4pKa5WJWSRoxzQqFLldqA1HnX/ormWcI43v
-	 yp5TWkaiufOSUwGt7Kq+ltGwtkSbbBcCAAb/97+WRLKCqd/y8/8D6v/vUu4SYpT7f7
-	 U0adJTUaO96GA==
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-6ae305e3bd9so6940413a12.0
-        for <loongarch@lists.linux.dev>; Wed, 14 Oct 2026 20:08:17 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvByjFYhuxhoSuj6hoJtqpG8l+cxiO/JPipd0iVkwx0XKPV+cPr0bIakcaUn5x0LGqsAYfUQXJivPHvM=@lists.linux.dev
-X-Gm-Message-State: AFq9FYJUH4pPZ7b+xvb6wImnebkmkPk0ko9VZg4DL3q7Hd9cMFfYChOp
-	xWIuyWXdBiYJP9BRekN1k9yarNWelfJHBQ5dnZ0MBRBHAfCPAPr95jDMLPdytug79lYyhVepNl1
-	e7NKzfqX9/wv48gxDYdGFe3helNftJTg=
-X-Received: by 2002:a05:6402:4056:10b0:6b1:e034:7e88 with SMTP id
- 4fb4d7f45d1cf-6b1e03482c2mr5454411a12.17.1792033695707; Wed, 14 Oct 2026
- 20:08:15 -0700 (PDT)
+	s=arc-20240116; t=1792046838; c=relaxed/simple;
+	bh=HzhBr8+hGnC8+QpQfpW4tkxgtK9VVNSpeBW+/1bD83Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Y210c36rTJyFdCgGVaXqC8BZdILuaaR2HPcsf+JPTzLcjn1p5EaRLUvBOER4+r/+g69T8DThuMVHLH3/n9KegcV8xIVtzFAyANLrrFXJ1ApQiVQQer0FRIwHQ0gOb2ZJDLbDgvHjxacI9rroqk2CJnoZoiLoG4RSHjUKVpTHu8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.109])
+	by gateway (Coremail) with SMTP id _____8BxLtPvdtBqKAUWAA--.63950S3;
+	Thu, 15 Oct 2026 14:47:11 +0800 (CST)
+Received: from kernelserver (unknown [223.64.68.109])
+	by front1 (Coremail) with SMTP id qMiowJAx3c7sdtBqKI4sAA--.28417S2;
+	Thu, 15 Oct 2026 14:47:11 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Paolo Bonzini <pbonzini@redhat.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>
+Cc: kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch KVM changes for v7.4
+Date: Thu, 15 Oct 2026 14:46:56 +0800
+Message-ID: <20261015064656.1525830-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20261014052933.723303-1-cui.tao@linux.dev> <20261014052933.723303-4-cui.tao@linux.dev>
- <CAAhV-H5SDKsifd1GwMLU_YMny8PqwHdyuvujrAiuvkALoi3+8A@mail.gmail.com> <4c6f8e4a-93c9-4ba7-b66b-b294ffd70bf9@linux.dev>
-In-Reply-To: <4c6f8e4a-93c9-4ba7-b66b-b294ffd70bf9@linux.dev>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 15 Oct 2026 11:08:04 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6pWaMguJYLaFTobW_XP10h_C243YeLnnbd24qjbYV5TA@mail.gmail.com>
-X-Gm-Features: AclHuK-KJSed2cijEAX7OSiLO1HgwjY17-zsTh-CCoBr53iyxwCNWrskbTl0ThQ
-Message-ID: <CAAhV-H6pWaMguJYLaFTobW_XP10h_C243YeLnnbd24qjbYV5TA@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] LoongArch: KVM: Reject repeated PCH-PIC CTRL_INIT
-To: Tao Cui <cui.tao@linux.dev>
-Cc: maobibo@loongson.cn, gaosong@loongson.cn, zhaotianrui@loongson.cn, 
-	loongarch@lists.linux.dev, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kernel@xen0n.name, nagachaithanya9911@gmail.com, Tao Cui <cuitao@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAx3c7sdtBqKI4sAA--.28417S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxXF4fAF1kGr1DCw47GrWDZFc_yoW5JFWkpF
+	y3urnxJr4rGr93Ar9Fg34kur1DJr1xGr1aqa4akFyxCr43Zr1UXry8Gr1kXFy5J3yrJry0
+	qr1fGw1agF1UJacCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8xuctUUUUU==
 
-On Wed, Oct 14, 2026 at 4:37=E2=80=AFPM Tao Cui <cui.tao@linux.dev> wrote:
->
-> Hi, Huacai
->
-> =E5=9C=A8 2026/10/14 15:37, Huacai Chen =E5=86=99=E9=81=93:
-> > Hi, Tao,
-> >
-> > On Wed, Oct 14, 2026 at 1:30=E2=80=AFPM Tao Cui <cui.tao@linux.dev> wro=
-te:
-> >>
-> >> From: Tao Cui <cuitao@kylinos.cn>
-> >>
-> >> KVM_DEV_LOONGARCH_PCH_PIC_CTRL_INIT has no guard against repeated
-> >> invocation: every call overwrites pch_pic_base and registers the same
-> >> kvm_io_device on the MMIO bus at the new address, while
-> >> kvm_pch_pic_destroy() unregisters only one bus range.  After a repeate=
-d
-> >> init, MMIO to the stale ranges computes its register offset against th=
-e
-> >> new base and silently reads 0 / drops writes, and the leftover bus
-> >> entries persist until the VM is destroyed.
-> >>
-> >> Reject repeated initialization with -EEXIST, using the initialized
-> >> state of the kvm_io_device as the indicator.  The MMIO base is only
-> >> committed after a successful bus registration, and the real
-> >> registration error is propagated instead of being replaced with
-> >> -EFAULT.
-> >>
-> >> Fixes: d206d9514873 ("LoongArch: KVM: Add PCHPIC user mode read and wr=
-ite functions")
-> >> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
-> >> ---
-> >>  arch/loongarch/kvm/intc/pch_pic.c | 12 +++++++++---
-> >>  1 file changed, 9 insertions(+), 3 deletions(-)
-> >>
-> >> diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/in=
-tc/pch_pic.c
-> >> index 51e4a6a39dc0..7979466de729 100644
-> >> --- a/arch/loongarch/kvm/intc/pch_pic.c
-> >> +++ b/arch/loongarch/kvm/intc/pch_pic.c
-> >> @@ -281,16 +281,22 @@ static int kvm_pch_pic_init(struct kvm_device *d=
-ev, u64 addr)
-> >>         struct kvm_io_device *device;
-> >>         struct loongarch_pch_pic *s =3D dev->kvm->arch.pch_pic;
-> >>
-> >> -       s->pch_pic_base =3D addr;
-> >>         device =3D &s->device;
-> >> +       mutex_lock(&kvm->slots_lock);
-> > Why move the mutex_lock()?
-> >
->
-> Thanks for the question.
->
-> The intent is to keep the repeated-init check mutual-excluded with the
-> bus registration.  The set_attr ioctl path holds no other lock, so with
-> the check outside slots_lock, two concurrent CTRL_INIT calls could both
-> see device.ops =3D=3D NULL and both register the same device on the MMIO
-> bus.  Holding the lock across the check, the registration and the base
-> commit makes them exclusive.
->
-> That said, if you prefer the check before the lock, I can respin --
-> please let me know.
-OK, moving the lock is reasonable, but I don't think updating
-pch_pic_base conditionally is necessary. So just move it before
-kvm_iodevice_init() is fine.
+The following changes since commit 24a19b953e2a3d0ea5a8c4951a0ab8f32720c907:
 
-Huacai
+  Linux 7.3-rc7 (2026-10-11 20:04:55 -0700)
 
->
-> Thanks,
-> Tao
->
-> > Huacai
-> >
-> >> +       if (s->device.ops) {
-> >> +               ret =3D -EEXIST;
-> >> +               goto out;
-> >> +       }
-> >>         /* init device by pch pic writing and reading ops */
-> >>         kvm_iodevice_init(device, &kvm_pch_pic_ops);
-> >> -       mutex_lock(&kvm->slots_lock);
-> >>         /* register pch pic device */
-> >>         ret =3D kvm_io_bus_register_dev(kvm, KVM_MMIO_BUS, addr, PCH_P=
-IC_SIZE, device);
-> >> +       if (!ret)
-> >> +               s->pch_pic_base =3D addr;
-> >> +out:
-> >>         mutex_unlock(&kvm->slots_lock);
-> >>
-> >> -       return (ret < 0) ? -EFAULT : 0;
-> >> +       return ret;
-> >>  }
-> >>
-> >>  /* used by user space to get or set pch pic registers */
-> >> --
-> >> 2.43.0
-> >>
->
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-kvm-7.4
+
+for you to fetch changes up to 34f4ce22cf25802d8026c60c13c2db81f8c8e3a0:
+
+  KVM: LoongArch: selftests: Enable HW PTW by auto detection method (2026-10-13 16:49:05 +0800)
+
+----------------------------------------------------------------
+LoongArch KVM changes for v7.4
+
+1. Add separate vmid support.
+2. Simplify MSI intterupt injection.
+3. Add hypercall crash support.
+4. Allow to set pv_feature until vCPU run.
+5. Enable HW PTW automatically in selftests.
+
+----------------------------------------------------------------
+Bibo Mao (8):
+      LoongArch: KVM: Add vmid support for stage2 MMU
+      LoongArch: KVM: Implement vmid updating logic
+      LoongArch: KVM: Probe & enable separate vmid feature
+      LoongArch: KVM: Remove parameter "level" when injecting MSI
+      LoongArch: KVM: Remove duplicated checking with DMSI irq injection
+      LoongArch: KVM: Add hypercall crash support
+      LoongArch: KVM: Allow to set pv_feature until vCPU run
+      KVM: LoongArch: selftests: Enable HW PTW by auto detection method
+
+Chaithanya Lagisetty (1):
+      LoongArch: KVM: Return the actual error code in kvm_ipi_create()
+
+ arch/loongarch/include/asm/kvm_dmsintc.h           |  3 +-
+ arch/loongarch/include/asm/kvm_host.h              | 15 ++++-
+ arch/loongarch/include/asm/kvm_para.h              |  3 +
+ arch/loongarch/include/asm/kvm_pch_pic.h           |  2 +-
+ arch/loongarch/include/asm/loongarch.h             |  5 ++
+ arch/loongarch/include/uapi/asm/kvm.h              |  1 +
+ arch/loongarch/include/uapi/asm/kvm_para.h         |  1 +
+ arch/loongarch/kernel/asm-offsets.c                |  1 +
+ arch/loongarch/kernel/cpu-probe.c                  |  4 ++
+ arch/loongarch/kvm/exit.c                          | 11 ++++
+ arch/loongarch/kvm/intc/dmsintc.c                  | 36 +++--------
+ arch/loongarch/kvm/intc/ipi.c                      |  7 +--
+ arch/loongarch/kvm/intc/pch_pic.c                  |  6 +-
+ arch/loongarch/kvm/irqfd.c                         |  4 +-
+ arch/loongarch/kvm/main.c                          | 71 ++++++++++++++++++++--
+ arch/loongarch/kvm/mmu.c                           | 25 +++++++-
+ arch/loongarch/kvm/switch.S                        |  5 +-
+ arch/loongarch/kvm/tlb.c                           | 19 +++++-
+ arch/loongarch/kvm/vcpu.c                          | 15 ++++-
+ arch/loongarch/kvm/vm.c                            |  2 +
+ .../selftests/kvm/include/loongarch/processor.h    |  3 +
+ .../selftests/kvm/lib/loongarch/processor.c        | 16 ++++-
+ 22 files changed, 194 insertions(+), 61 deletions(-)
+
