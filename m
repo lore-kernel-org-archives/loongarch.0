@@ -1,466 +1,139 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FA1245C700
-	for <loongarch@lists.linux.dev>; Fri, 16 Oct 2026 09:59:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7708047125F
+	for <loongarch@lists.linux.dev>; Fri, 16 Oct 2026 10:09:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792144774; cv=none; b=dK8PvCr8ZYQSVBMPbInBHpRwQbwfwl9Rh98eikZsrCO0+9NFVL02f3YD0qFwBUdKVDsYllRS41pvbJzPx1wtb3uPD+Ih74SBjsSFgJfoUPuYYD9zfH00VdKxfvvs7YZpaL6Cae5Me9IyWqnwYNTMah8qLTRaEngOlk9B5edlBGE=
+	t=1792145374; cv=none; b=blee+QKE7MEW+43fcQSDaXn7222La9Tjk5tp8PjbXEkdFM93s2B8P2aDteRuDh0WRhuWskXQChMYo/k2UTh9Jjr9TLCjPEgAziYhR6pj183Q1vYio6EouIWNUsySXeLzEAH1pDIQHjHTzvlVcKR46OyI5/3YGax0fFFq0IVYX08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792144774; c=relaxed/simple;
-	bh=CKj8pg5pD0CV12I761oL5c+eI8DxTIQfvceplwjqP8g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WBMmhH68LX24Ra1lsVYDzJ6tJ9HSfN5lhWagv6Q0ZxZprCV137m8CYRp3GvWnnFU2Z190NCE59s1mHcpY5ZUGEdJsUuQat8rF0wVxqlq6jh6+R/k/s4t/l97kkl+HCDGEy2KDlOwYEhwLDp0IEvEV3FyhUxopU458ilU1Oz3fsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=GYXjmrv3; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1792145374; c=relaxed/simple;
+	bh=y462Q+q8oUQGg7quqBwcm1RU1wGDkgobl8Os4e6L+To=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kU6f1T001Frq6s8yQ2AteYzjeSe0Ektxhri9LCd6Bl3zxs0OS7dGoDSKeuMA8NIw9rdANjlRISrY6k+2DjI7ro7C9oGWRwDdZRaxBs/h6Ou4uYblJKPLo7WyVLW/ZH5KaVUw6xzmSP90rL0a5ydg9lCtx3FC2i+cWSMwSjIVMOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=ZBssRs5k; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GYXjmrv3"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69G9Z4WQ3000591;
-	Fri, 16 Oct 2026 09:58:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=xvJwv3pA4begPR69A5CKA7e8Cvo9Y09czqcNKQRYg
-	44=; b=GYXjmrv35nJ8QNbSpG1xFT94WLiXppQqeo6r9qCkipZVfCdwSNZrN6x2Z
-	ik3Oa6JvOZtZYy6q7NzK+z83JjoXEYvwMdoT62iilGTs+bYAJv7Zrqm7Pip11qAF
-	/JvxdLFx/+ksm6LLW2dx5Z4Q5RVkUmu2n7KJtFQI83oCXd5wVYg8A6WxWkO/sYup
-	aLChYKAZOXsXN0v9X01kqN0L+/g1GaJCNfNsaRPlmHHe3A3b+0xtloOtuZrrCYeT
-	oyqb9GXh7ZZMRMLnEay/vG6F4geTy1Aygzld/+CgxMv6h7jUcC8640pvdGaRb1HH
-	jad3W4SXRKmGLVRnD0UF3IphiWbBg==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4h7dwhxnfq-1
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Fri, 16 Oct 2026 09:58:43 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 69G61OW92057774;
-	Fri, 16 Oct 2026 09:58:41 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4hawqwva24-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 16 Oct 2026 09:58:41 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 69G9wbec44564932
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 16 Oct 2026 09:58:37 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8506C20040;
-	Fri, 16 Oct 2026 09:58:37 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6BCA22004D;
-	Fri, 16 Oct 2026 09:58:26 +0000 (GMT)
-Received: from sapthagiri.in.ibm.com (unknown [9.123.124.175])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 16 Oct 2026 09:58:26 +0000 (GMT)
-From: Srikar Dronamraju <srikar@linux.ibm.com>
-To: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
-        Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>, Scott Wood <oss@buserror.net>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-        Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Andreas Larsson <andreas@gaisler.com>,
-        Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Srikar Dronamraju <srikar@linux.ibm.com>, Kees Cook <kees@kernel.org>,
-        Jinjie Ruan <ruanjinjie@huawei.com>,
-        mrigendrachaubey <mrigendra.chaubey@gmail.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Pengjie Zhang <zhangpengjie2@huawei.com>,
-        Thierry Reding <treding@nvidia.com>, Xi Ruoyao <xry111@xry111.site>,
-        "Rafael J. Wysocki (Intel)" <rafael@kernel.org>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>, Rong Bao <rong.bao@csmantle.top>,
-        Hui Wang <hui.wang@canonical.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Thorsten Blum <thorsten.blum@linux.dev>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org
-Subject: [PATCH] sched/hotplug: Remove unused idle_task_exit
-Date: Fri, 16 Oct 2026 15:26:40 +0530
-Message-ID: <20261016095711.1364609-1-srikar@linux.ibm.com>
-X-Mailer: git-send-email 2.55.0
+	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="ZBssRs5k"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-48e011d370dso271308f8f.0
+        for <loongarch@lists.linux.dev>; Fri, 16 Oct 2026 03:09:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre.com; s=google; t=1792145370; x=1792750170; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=DfjtBumDUQtQeiNse/0/IpCKbiv0enjynpJ+UPte5LQ=;
+        b=ZBssRs5k+y9K5pOQACoKASl/esvxUdO5LPFfik9FgXZXHrLhM834yQjLsAAZLWM5vW
+         KzssPkpL/wWBjKsOXHiswjw0WF94hbxXEHcMmFdaRJtpjxdwvPHgcolkJSK1Uw7/vQ2B
+         3NsMxTF4kW+O5bz8DBy78rVazLef0kr0MuyOiId+v3oHGmQ15w5KhH8VldD0y5T+nlkw
+         JYVqi3WwpaAYAa7/f3T/H+QbpsU8ssE4+7UtOQA3E+KW+PcwxjAx5SR8UfJEVNcdSXdM
+         njCcD0RF0YwHQjG/ediNeX7r2hfv0wy5PTi6fR+tB6OvQJBldFgj/O1Ft2NRlsYiR+Ca
+         cpCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792145370; x=1792750170;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=DfjtBumDUQtQeiNse/0/IpCKbiv0enjynpJ+UPte5LQ=;
+        b=HoiCr2yd6f/kLc0BK+LbTZS3hPop2wnfbstjcirB4LZ/xdk1P+3Ufv/p4jksaz4AZl
+         bwps5hTUdkx92EGq8cAaufX957Gqq//gIwEM8+3IczWfj/QMKhpggCQudP6VXmrnqBMr
+         dEXF0RjQnIAt0hlBpaeqOA9wbMZHeQGmyOkNCdnUdG0SouUu2+DVctfeJZfPoMxeiXB0
+         F2FXpAenQpf9GSWhUpkAcEw47wIVbeNygWnxbhkXYQ8UjwRZpNJQnFPTunwOOqgkshKK
+         bZp6Z8loyHJuT7pMek1naOmRIt0DYdVAgNW2NtLxKLuhJuOebOMzlUpBZZ6Ysw3UJofC
+         2DLw==
+X-Forwarded-Encrypted: i=1; AKwUvBxObbqYdvnNy+NJROIfGmx7wcNKbk2Q9bW4WcUkzFAqPP1QukWdZsiXmfBRNTDi6mf6w5qJK0aTKyo=@lists.linux.dev
+X-Gm-Message-State: AFq9FYI53u+pouuo7cHeahJYTg21UnG/RxZHz84h0zJlWceh7MIHO1za
+	mpe4kQdSK6baUCaEMzr4Tm+oMZ8tQCTWmTL9j3XJPoYsuEymKzqzRfBxIOB3/QmZl3I=
+X-Gm-Gg: AYBFou2FBL5n8lgxHsYgSsvkwXc0nJ9wwuR4YRvKW0X/Pposhznjk7QZ8TT0TzdBRq6
+	CugbY8cM1skI4KOPOX2qlufwl7vokN3gv0TnU9u0TM6DsE26IheaStmGNRvNDsOWrxVCBdEVf90
+	Hd088Bv1UryGNx3XVMxhLh+xjU7qM7Jh7Yug4zm8pLnrSszKQkoTbG1X+X6jbDUwPP47Fc2Mub1
+	M5MXyj1PfWmGOMlb8VFlbuUB4R3nX5TFFA14deKD9rz9hq4MRkk8YIv+H6OJdvZnQP93tRWrc1f
+	hCDruO/0Xp4cmuWNDOod5+K6R6eXgnTC5XlOdzouqR0rA6gbu4Q27qZNJOQYDO+UgyIy5dm7AqZ
+	QPM4YVkL+x5KN+SjOmkbnMv6t8tpz+LPwALEY2qvsc4klCZ0tqcVRlzv3Yc8vkZWsnrF/F4NEFc
+	R3Fz0g0jSjGF+XVYLXqnN+pP0XsLjYLJcpqWrZc1drZkGIKFppBy53Khr5ti2Am5gwwzrUkMxa4
+	Ilkdalk00zkd3iKz+g1DZVS6s8ddcwojYoh1kozTeTMJIB2VCmtST+4I/pW
+X-Received: by 2002:a05:6000:29c3:b0:488:764c:7a17 with SMTP id ffacd0b85a97d-48dba788922mr30073917f8f.1.1792145369626;
+        Fri, 16 Oct 2026 03:09:29 -0700 (PDT)
+Received: from localhost (p200300f65f19a904af4079c70d984f00.dip0.t-ipconnect.de. [2003:f6:5f19:a904:af40:79c7:d98:4f00])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-48dfd4f5b2dsm4364872f8f.31.2026.10.16.03.09.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Oct 2026 03:09:29 -0700 (PDT)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig=20=28The=20Capable=20Hub=29?= <u.kleine-koenig@baylibre.com>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Nicolas Schier <nsc@kernel.org>,
+	Armin Wolf <W_Armin@gmx.de>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Raag Jadav <raag.jadav@intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Jose Javier Rodriguez Barbarin <dev-josejavier.rodriguez@duagon.com>,
+	Andy Shevchenko <andriy.shevchenko@intel.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	=?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Hasan Basbunar <basbunarhasan@gmail.com>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-kbuild@vger.kernel.org
+Subject: [PATCH v2 0/3] <linux/mod_devicetable.h> deprecation continues
+Date: Fri, 16 Oct 2026 12:09:11 +0200
+Message-ID: <cover.1792144769.git.u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.56.0.rc1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1307; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=y462Q+q8oUQGg7quqBwcm1RU1wGDkgobl8Os4e6L+To=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBq0ffICy4QAVwGpwrBpebGe+cZKb2jzXNv49Mrv E/fwiNK8BKJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCatH3yAAKCRCPgPtYfRL+ TmUoCACZSyCbbUDkUav9mU2UDRAssLukMQD6BaQ+B0KWo8b1Xz6YWELM2d76YyJo0NYic+F2ULL eItz6V6UkKv90SFZJdF9DN9xNqeLnGUdIGls3IPrNHwakGv673gnGajgixnjiMwscDru7+CCOvW GN59gUKywNo1HSVHKDQzbDvbzjRa5LNV6mUeEHUbUxo8HXf4OOBHqEi+yb7Caef8le+sulMswAu 9n7jAyMVSDnbIYj3OFhgVTpM3NlDGMR/l4Xg2TKJatULMGjgmV/Agq+HMoY5U6TUyRlMA4NoTnh Sx0oy1ru/ntYsxCLrQ0zcQUC0N23LmKi0EVB8Bce9/KOgCwi
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMDE2MDAzOCBTYWx0ZWRfX2LzCHajlMKu+
- WDtTDJv54Iv9QPqy8eXThgjll9cI6vk98Xia7sNQNzLz0iA9UQMxo9T4JDrtlaySjak8f2UjSEd
- Man6OOgM5+Hl7tROJSddQ5/YcpqKA64=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDE2MDAzOCBTYWx0ZWRfXxPVaXQpsBLnv
- 6z+C5BHGYHI7dsBwmDBM7/aw3OFa9cQce3YujqdLd85f16xLKUYwqaqmo2cRYCGuXDO87Uz+20s
- GFOYucFhskUW1bJQ/nml9hw87uMMdArZSMfkYs86RYMSw1rLxdVMX0Mgdl4ak2LTC/HEEpiYHeM
- W3LSMj/37aDwUPliZ6l0P+Ho7epMe8j60+Ajf4lhXY88Ms3n/d+UfVRhl7AuEDr1/IvaX4Bkfv0
- TU+z2Sy1Ym1uEeHEJWE/P0MkRy1KTtClq0VEw7vbH1fcxyuc1BuJlTFMi99tofcDkT9ByaV23/f
- +2uo34MZtiBitJu9YAuYqmyPjZIfG2eKw6EKwgjdU4OIxbEoE7jOJuOHIcalYMXqxSGF5hf4z6N
- /b2aspsLLa+QAnBGfDztKC2GwvGrPFe/+wibZU4+n/NSICd48Vpplx1tsG/nMJYbetSXxa/HwUB
- L0I90BLIf9qGK21rN0A==
-X-Proofpoint-GUID: IL0R-bRx5Zo-CVHUKEE0Opykcs2lTHKR
-X-Authority-Analysis: v=2.4 cv=RoFQvymK c=1 sm=1 tr=0 ts=6ad1f553 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=660iZSQnnn4A:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8 a=jggbHb6qoK4FGpBOhhEA:9
-X-Proofpoint-ORIG-GUID: 2M4W7yLkiR76qY99sAmf4huQ0PRMzNDt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-10-14_01,2026-10-14_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 spamscore=0 phishscore=0 adultscore=0 bulkscore=0
- impostorscore=0 suspectscore=0 malwarescore=0 clxscore=1011
- lowpriorityscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2610080000
- definitions=main-2610160038
 
-Commit 21641bd9a7a7 ("lazy tlb: fix hotplug exit race with
-MMU_LAZY_TLB_SHOOTDOWN") moved the handling previously performed by
-idle_task_exit() into the scheduler CPU hotplug path using
-sched_force_init_mm().
+Hello,
 
-As a result, idle_task_exit() is now an empty stub and the remaining
-architecture call sites have no effect.
+v1 of this series is available from
+https://lore.kernel.org/lkml/cover.1789988540.git.u.kleine-koenig@baylibre.com/
 
-Remove the calls to idle_task_exit() and the now unused stub.
+Changes since then are:
 
-Signed-off-by: Srikar Dronamraju <srikar@linux.ibm.com>
----
- arch/arm/kernel/smp.c                        | 2 --
- arch/arm64/kernel/smp.c                      | 2 --
- arch/csky/kernel/smp.c                       | 2 --
- arch/loongarch/kernel/smp.c                  | 2 --
- arch/mips/cavium-octeon/smp.c                | 1 -
- arch/mips/kernel/smp-bmips.c                 | 1 -
- arch/mips/kernel/smp-cps.c                   | 1 -
- arch/mips/loongson64/smp.c                   | 1 -
- arch/parisc/kernel/process.c                 | 2 --
- arch/powerpc/platforms/85xx/smp.c            | 2 --
- arch/powerpc/platforms/powermac/smp.c        | 2 --
- arch/powerpc/platforms/powernv/smp.c         | 1 -
- arch/powerpc/platforms/pseries/hotplug-cpu.c | 2 --
- arch/powerpc/platforms/pseries/pmem.c        | 1 -
- arch/riscv/kernel/cpu-hotplug.c              | 2 --
- arch/s390/kernel/smp.c                       | 1 -
- arch/sh/kernel/smp.c                         | 1 -
- arch/sparc/kernel/smp_64.c                   | 2 --
- arch/x86/kernel/smpboot.c                    | 2 --
- arch/xtensa/kernel/smp.c                     | 1 -
- include/linux/sched/hotplug.h                | 2 --
- 21 files changed, 33 deletions(-)
+ - rebase to v7.3-rc7
+ - Add a header guard and a comment about why it's necessary
+ - Add Acked-by: for Armin Wolf
 
-diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
-index b5fb4697bc3f..bbfbbe728b7a 100644
---- a/arch/arm/kernel/smp.c
-+++ b/arch/arm/kernel/smp.c
-@@ -319,8 +319,6 @@ void __noreturn arch_cpu_idle_dead(void)
- {
- 	unsigned int cpu = smp_processor_id();
- 
--	idle_task_exit();
--
- 	local_irq_disable();
- 
- 	/*
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index a61dc3016a11..afb5aa65d737 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -370,8 +370,6 @@ void __noreturn cpu_die(void)
- 	unsigned int cpu = smp_processor_id();
- 	const struct cpu_operations *ops = get_cpu_ops(cpu);
- 
--	idle_task_exit();
--
- 	local_daif_mask();
- 
- 	/* Tell cpuhp_bp_sync_dead() that this CPU is now safe to dispose of */
-diff --git a/arch/csky/kernel/smp.c b/arch/csky/kernel/smp.c
-index 92dbbf3e0205..e6333ccc335a 100644
---- a/arch/csky/kernel/smp.c
-+++ b/arch/csky/kernel/smp.c
-@@ -294,8 +294,6 @@ void arch_cpuhp_cleanup_dead_cpu(unsigned int cpu)
- 
- void __noreturn arch_cpu_idle_dead(void)
- {
--	idle_task_exit();
--
- 	cpuhp_ap_report_dead();
- 
- 	while (!secondary_stack)
-diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-index 11f54837f56c..6b21af1c25e0 100644
---- a/arch/loongarch/kernel/smp.c
-+++ b/arch/loongarch/kernel/smp.c
-@@ -478,7 +478,6 @@ static void __noreturn idle_play_dead(void)
- 	register uint64_t addr;
- 	register void (*init_fn)(void);
- 
--	idle_task_exit();
- 	local_irq_enable();
- 	set_csr_ecfg(ECFGF_IPI);
- 	__this_cpu_write(cpu_state, CPU_DEAD);
-@@ -503,7 +502,6 @@ static void __noreturn poll_play_dead(void)
- 	register uint64_t addr;
- 	register void (*init_fn)(void);
- 
--	idle_task_exit();
- 	__this_cpu_write(cpu_state, CPU_DEAD);
- 
- 	__smp_mb();
-diff --git a/arch/mips/cavium-octeon/smp.c b/arch/mips/cavium-octeon/smp.c
-index 054e331b3202..0e557e76d616 100644
---- a/arch/mips/cavium-octeon/smp.c
-+++ b/arch/mips/cavium-octeon/smp.c
-@@ -344,7 +344,6 @@ void play_dead(void)
- {
- 	int cpu = cpu_number_map(cvmx_get_core_num());
- 
--	idle_task_exit();
- 	cpuhp_ap_report_dead();
- 	octeon_processor_boot = 0xff;
- 	per_cpu(cpu_state, cpu) = CPU_DEAD;
-diff --git a/arch/mips/kernel/smp-bmips.c b/arch/mips/kernel/smp-bmips.c
-index 35b8d810833c..e4a523b7c988 100644
---- a/arch/mips/kernel/smp-bmips.c
-+++ b/arch/mips/kernel/smp-bmips.c
-@@ -391,7 +391,6 @@ static void bmips_cpu_die(unsigned int cpu)
- 
- void __ref play_dead(void)
- {
--	idle_task_exit();
- 	cpuhp_ap_report_dead();
- 
- 	/* flush data cache */
-diff --git a/arch/mips/kernel/smp-cps.c b/arch/mips/kernel/smp-cps.c
-index b01ebaace48e..51e68a42bcc8 100644
---- a/arch/mips/kernel/smp-cps.c
-+++ b/arch/mips/kernel/smp-cps.c
-@@ -804,7 +804,6 @@ void play_dead(void)
- 	unsigned int cpu;
- 
- 	local_irq_disable();
--	idle_task_exit();
- 	cpu = smp_processor_id();
- 	cpu_death = CPU_DEATH_POWER;
- 
-diff --git a/arch/mips/loongson64/smp.c b/arch/mips/loongson64/smp.c
-index e584299d0fde..73eca9c44b04 100644
---- a/arch/mips/loongson64/smp.c
-+++ b/arch/mips/loongson64/smp.c
-@@ -766,7 +766,6 @@ void play_dead(void)
- 	unsigned int cpu = smp_processor_id();
- 	void (*play_dead_at_ckseg1)(int *);
- 
--	idle_task_exit();
- 	cpuhp_ap_report_dead();
- 
- 	prid_imp = read_c0_prid() & PRID_IMP_MASK;
-diff --git a/arch/parisc/kernel/process.c b/arch/parisc/kernel/process.c
-index 703644e5bfc4..8606ecde4c30 100644
---- a/arch/parisc/kernel/process.c
-+++ b/arch/parisc/kernel/process.c
-@@ -164,8 +164,6 @@ EXPORT_SYMBOL(running_on_qemu);
- void __noreturn arch_cpu_idle_dead(void)
- {
- #ifdef CONFIG_HOTPLUG_CPU
--	idle_task_exit();
--
- 	local_irq_disable();
- 
- 	/* Tell the core that this CPU is now safe to dispose of. */
-diff --git a/arch/powerpc/platforms/85xx/smp.c b/arch/powerpc/platforms/85xx/smp.c
-index 32fa5fb557c0..9dc81e4226f0 100644
---- a/arch/powerpc/platforms/85xx/smp.c
-+++ b/arch/powerpc/platforms/85xx/smp.c
-@@ -121,8 +121,6 @@ static void smp_85xx_cpu_offline_self(void)
- 	/* mask all irqs to prevent cpu wakeup */
- 	qoriq_pm_ops->irq_mask(cpu);
- 
--	idle_task_exit();
--
- 	mtspr(SPRN_TCR, 0);
- 	mtspr(SPRN_TSR, mfspr(SPRN_TSR));
- 
-diff --git a/arch/powerpc/platforms/powermac/smp.c b/arch/powerpc/platforms/powermac/smp.c
-index 88e92af8acf9..f8e674cfcdd7 100644
---- a/arch/powerpc/platforms/powermac/smp.c
-+++ b/arch/powerpc/platforms/powermac/smp.c
-@@ -925,7 +925,6 @@ static void pmac_cpu_offline_self(void)
- 	int cpu = smp_processor_id();
- 
- 	local_irq_disable();
--	idle_task_exit();
- 	pr_debug("CPU%d offline\n", cpu);
- 	generic_set_cpu_dead(cpu);
- 	smp_wmb();
-@@ -940,7 +939,6 @@ static void pmac_cpu_offline_self(void)
- 	int cpu = smp_processor_id();
- 
- 	local_irq_disable();
--	idle_task_exit();
- 
- 	/*
- 	 * turn off as much as possible, we'll be
-diff --git a/arch/powerpc/platforms/powernv/smp.c b/arch/powerpc/platforms/powernv/smp.c
-index b1201dbafcaf..9a480c924020 100644
---- a/arch/powerpc/platforms/powernv/smp.c
-+++ b/arch/powerpc/platforms/powernv/smp.c
-@@ -172,7 +172,6 @@ static void pnv_cpu_offline_self(void)
- 
- 	/* Standard hot unplug procedure */
- 
--	idle_task_exit();
- 	cpu = smp_processor_id();
- 	DBG("CPU%d offline\n", cpu);
- 	generic_set_cpu_dead(cpu);
-diff --git a/arch/powerpc/platforms/pseries/hotplug-cpu.c b/arch/powerpc/platforms/pseries/hotplug-cpu.c
-index bc6926dbf148..1ade9a811157 100644
---- a/arch/powerpc/platforms/pseries/hotplug-cpu.c
-+++ b/arch/powerpc/platforms/pseries/hotplug-cpu.c
-@@ -19,7 +19,6 @@
- #include <linux/kernel.h>
- #include <linux/interrupt.h>
- #include <linux/delay.h>
--#include <linux/sched.h>	/* for idle_task_exit */
- #include <linux/sched/hotplug.h>
- #include <linux/cpu.h>
- #include <linux/of.h>
-@@ -64,7 +63,6 @@ static void pseries_cpu_offline_self(void)
- 	unsigned int hwcpu = hard_smp_processor_id();
- 
- 	local_irq_disable();
--	idle_task_exit();
- 	if (xive_enabled())
- 		xive_teardown_cpu();
- 	else
-diff --git a/arch/powerpc/platforms/pseries/pmem.c b/arch/powerpc/platforms/pseries/pmem.c
-index 0f1d45f32e4a..af48dfebb640 100644
---- a/arch/powerpc/platforms/pseries/pmem.c
-+++ b/arch/powerpc/platforms/pseries/pmem.c
-@@ -9,7 +9,6 @@
- #include <linux/kernel.h>
- #include <linux/interrupt.h>
- #include <linux/delay.h>
--#include <linux/sched.h>	/* for idle_task_exit */
- #include <linux/sched/hotplug.h>
- #include <linux/cpu.h>
- #include <linux/of.h>
-diff --git a/arch/riscv/kernel/cpu-hotplug.c b/arch/riscv/kernel/cpu-hotplug.c
-index 0bc56d8381b6..348043122593 100644
---- a/arch/riscv/kernel/cpu-hotplug.c
-+++ b/arch/riscv/kernel/cpu-hotplug.c
-@@ -66,8 +66,6 @@ void arch_cpuhp_cleanup_dead_cpu(unsigned int cpu)
-  */
- void __noreturn arch_cpu_idle_dead(void)
- {
--	idle_task_exit();
--
- 	cpuhp_ap_report_dead();
- 
- 	cpu_ops->cpu_stop();
-diff --git a/arch/s390/kernel/smp.c b/arch/s390/kernel/smp.c
-index 32499cad86f0..dd1d40ec5440 100644
---- a/arch/s390/kernel/smp.c
-+++ b/arch/s390/kernel/smp.c
-@@ -918,7 +918,6 @@ void __cpu_die(unsigned int cpu)
- 
- void __noreturn cpu_die(void)
- {
--	idle_task_exit();
- 	pcpu_sigp_retry(this_cpu_ptr(&pcpu_devices), SIGP_STOP, 0);
- 	for (;;) ;
- }
-diff --git a/arch/sh/kernel/smp.c b/arch/sh/kernel/smp.c
-index 108d808767fa..afd57bdce04e 100644
---- a/arch/sh/kernel/smp.c
-+++ b/arch/sh/kernel/smp.c
-@@ -108,7 +108,6 @@ int native_cpu_disable(unsigned int cpu)
- 
- void play_dead_common(void)
- {
--	idle_task_exit();
- 	irq_ctx_exit(raw_smp_processor_id());
- 	mb();
- 
-diff --git a/arch/sparc/kernel/smp_64.c b/arch/sparc/kernel/smp_64.c
-index 371460e34484..e98b5ddebc9e 100644
---- a/arch/sparc/kernel/smp_64.c
-+++ b/arch/sparc/kernel/smp_64.c
-@@ -1290,8 +1290,6 @@ void cpu_play_dead(void)
- 	int cpu = smp_processor_id();
- 	unsigned long pstate;
- 
--	idle_task_exit();
--
- 	if (tlb_type == hypervisor) {
- 		struct trap_per_cpu *tb = &trap_block[cpu];
- 
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index ba01a9e919b7..dcbaf3f27862 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -1407,8 +1407,6 @@ int native_cpu_disable(void)
- 
- void play_dead_common(void)
- {
--	idle_task_exit();
--
- 	cpuhp_ap_report_dead();
- 
- 	local_irq_disable();
-diff --git a/arch/xtensa/kernel/smp.c b/arch/xtensa/kernel/smp.c
-index e4c25d0c2158..094e1da933a6 100644
---- a/arch/xtensa/kernel/smp.c
-+++ b/arch/xtensa/kernel/smp.c
-@@ -336,7 +336,6 @@ void __noreturn arch_cpu_idle_dead(void)
-  */
- void __ref cpu_die(void)
- {
--	idle_task_exit();
- 	local_irq_disable();
- 	__asm__ __volatile__(
- 			"	movi	a2, cpu_restart\n"
-diff --git a/include/linux/sched/hotplug.h b/include/linux/sched/hotplug.h
-index 17e04859b9a4..18fa3e63123e 100644
---- a/include/linux/sched/hotplug.h
-+++ b/include/linux/sched/hotplug.h
-@@ -18,6 +18,4 @@ extern int sched_cpu_dying(unsigned int cpu);
- # define sched_cpu_dying	NULL
- #endif
- 
--static inline void idle_task_exit(void) {}
--
- #endif /* _LINUX_SCHED_HOTPLUG_H */
+Nathan identified two merge conflicts for v1 with commits in next. These
+still happen and are easy to resolve as soon as the respective branches
+are merged into a common tree.
+
+Nathan already proposed to take this series via the Kbuild tree after
+letting it cook in next after the upcomming merge window closes.
+
+Uwe Kleine-König (The Capable Hub) (3):
+  Move struct cpu_feature to <linux/cpufeature.h>
+  devicetable-offsets: Include the needed device-id headers instead of
+    the catch-all
+  file2alias: Include the needed device-id headers instead of the
+    catch-all
+
+Best regards
+Uwe
+
+ arch/loongarch/kvm/main.c         |  2 +-
+ include/linux/cpufeature.h        | 19 ++++++++++-
+ include/linux/mod_devicetable.h   | 13 -------
+ scripts/mod/devicetable-offsets.c | 57 ++++++++++++++++++++++++++++++-
+ scripts/mod/file2alias.c          | 56 +++++++++++++++++++++++++++++-
+ 5 files changed, 130 insertions(+), 17 deletions(-)
+
+
+base-commit: 24a19b953e2a3d0ea5a8c4951a0ab8f32720c907
 -- 
-2.52.0
+2.56.0.rc1
 
