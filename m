@@ -1,110 +1,174 @@
-Received: from mta0.migadu.com (out-117.mta0.migadu.com [91.218.175.117])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE304A5EB6
-	for <loongarch@lists.linux.dev>; Thu, 15 Oct 2026 23:47:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.117
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B6A5B5AB
+	for <loongarch@lists.linux.dev>; Fri, 16 Oct 2026 00:03:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792108025; cv=none; b=nIjbeuRFD9o+s9ywy+/wmqHmuSuZxG8SXKp1sgGGcMwYFOPTLM24mjyaDJs4Vf74WRhmQn3wPJMqh2fzIrumQXW7sGaS3sMTv5uaiWnlmnCgl2Ze5CEsmL7VmNhPnG+N+v/UbJsLc+6hVadEjwFIFb2EbWsLn5nn1kB4ApPCzvE=
+	t=1792109024; cv=none; b=ZtBj11XU0nqU2UvKfO9In4CfOKMzkJ2uY4VizbQ+1FYrS9O6K02IYZqYyBsPVidpGfw8VHfW5Um832Z6wThiUVZdlpdQKOagICUgbJX0Ip1ABak4CsXI3rVpUt91HFq6yQhXnGGwZsRPzCIu/YpNwPPBo/n2dWnjBtLOClxlSwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792108025; c=relaxed/simple;
-	bh=gUFacToZ/YgAPehiviJoKIr9Z4wMDy3pgBwi576kH8M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CZq0gDYqMUsaiB5lo7zdE2OsbI5xEw4wcrjicah/DmHGSxmIQ7YPc13srPzDBxEji9Y/RwODpcvj8qSSvcXwXOV/dC4FXiCiXCmerjTcyzo2SsJFQeTwINumMhPVunEOkw8RyyP1qyQOm0Zqyrmxr02AIGej3JM2io36lG2GA0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tx4iEELV; arc=none smtp.client-ip=91.218.175.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1792109024; c=relaxed/simple;
+	bh=/J9vkQnHyxosFoJr9W9QBtjq0YYxgnpGBT61RpVtPOM=;
+	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=uxgIkQdgLuhHe4xo+anJ4DoVMfc7FGsw8M1NzFNewpExmLFQgJ+PfbJXvo32Tfaqypgx0rESDLdEekSdelhcazd1iihk4warUjlB73ho2jgA1zGOL5EM5icCWaaR6Aks+rEar5gnSWKIxDV8SFx82KjwfhlwH+XJLCbk83I0WMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=T8JmhcId; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tx4iEELV"
-X-Envelope-To: loongarch@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=gUFacToZ/YgAPehiviJoKIr9Z4wMDy3pgBwi576kH8M=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1792108020; v=1; x=1792712820;
- b=tx4iEELVnrUQyTVUDbv0Md0/Afv66n+Dd8PQm8wGkPjY9bepuneRyT45M4noS5LYQsAy2QYc
- XLzMUJldWnowY68kW85HF7TiRc0pXdU93hJtGPtK4uHTRwA3aWioBv9gDp5mXZ3RckjuN0WXzC/
- 4OGQv5AXZoyLp8N4G6dtBOiQ=
-X-Envelope-To: loongarch@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 7f36ace1deee3f32;
-	Thu, 15 Oct 2026 23:47:00 +0000
-X-Mizu-Trace-ID: 7f36ace1deee3f32
-X-Migadu-Flow: FLOW_OUT
-From: Tao Cui <cui.tao@linux.dev>
-To: chenhuacai@kernel.org,
-	maobibo@loongson.cn,
-	zhaotianrui@loongson.cn
-Cc: loongarch@lists.linux.dev,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel@xen0n.name,
-	nagachaithanya9911@gmail.com,
-	cui.tao@linux.dev,
-	Tao Cui <cuitao@kylinos.cn>
-Subject: [PATCH v4 3/3] LoongArch: KVM: Reject repeated PCH-PIC CTRL_INIT
-Date: Fri, 16 Oct 2026 07:46:38 +0800
-Message-ID: <20261015234638.1077815-4-cui.tao@linux.dev>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20261015234638.1077815-1-cui.tao@linux.dev>
-References: <20261015234638.1077815-1-cui.tao@linux.dev>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="T8JmhcId"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69FJSN6v437488;
+	Fri, 16 Oct 2026 00:02:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=/J9vkQ
+	nHyxosFoJr9W9QBtjq0YYxgnpGBT61RpVtPOM=; b=T8JmhcIdM+IZlDu1hLe31J
+	m6mbjwcWL7wzOhkhG48GMAQlsaYPR+qFspy9MtxmiqJAc7tEhHppbNKH9Ly6ZtZV
+	VqxL0sG8s2UwXNLFqIJ/BYZUI5pdL3Q7nroUwRsfUZ8NnojGqzqlf4TRT4AYhP4L
+	6FIDNuGbJCz0GmEFk/Hg39Qj1dTW+wDF8Je9F6lhuDnTz0Ez1O9eo34NkYGd3QWl
+	cZT5GXWip3BeiaEHOopn1erdpxY1LeO4vtBHH3q98w6K3sLk76T90ISRopD52k3Y
+	zDVC5jr2MvAZIMwg+xjEXbsZPTVrL2CYSC8Mm8BnPyO6Np9NnZwnVMHA81Yvggnw
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4h7dwjc4bu-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Fri, 16 Oct 2026 00:02:55 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 69FN3x9q1927457;
+	Fri, 16 Oct 2026 00:02:54 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4h9ypq94xa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 16 Oct 2026 00:02:54 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 69G02sUl44827056
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 16 Oct 2026 00:02:54 GMT
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 18558580DF;
+	Fri, 16 Oct 2026 00:02:54 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 36309580E3;
+	Fri, 16 Oct 2026 00:02:51 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.159.15])
+	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 16 Oct 2026 00:02:51 +0000 (GMT)
+Message-ID: <2dd935d171066eb4f1c251184eee871ad91f46b4.camel@linux.ibm.com>
+Subject: Re: [PATCH] kexec: Select ima_get/free_kexec_buffer() with
+ CONFIG_HAVE_IMA_KEXEC(_OF)
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Roberto Sassu <roberto.sassu@huaweicloud.com>, catalin.marinas@arm.com,
+        will@kernel.org, mark.rutland@arm.com, chenhuacai@kernel.org,
+        kernel@xen0n.name, maddy@linux.ibm.com, mpe@ellerman.id.au,
+        npiggin@gmail.com, chleroy@kernel.org, pjw@kernel.org,
+        palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+        tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, hpa@zytor.com, robh@kernel.org,
+        saravanak@kernel.org
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        devicetree@vger.kernel.org, noodles@fb.com,
+        linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org,
+        Roberto Sassu
+ <roberto.sassu@huawei.com>
+In-Reply-To: <20261014150005.138309-1-roberto.sassu@huaweicloud.com>
+References: <20261014150005.138309-1-roberto.sassu@huaweicloud.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 15 Oct 2026 20:04:39 -0400
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Evolution 3.58.3 (3.58.3-2.fc43) 
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDE1MDA5NCBTYWx0ZWRfX2HSmi+79F5sk
+ F6cJ7NPejHB+7WHifxwy2jTNeN+1trz8LY4O/c9Nrxfke0WNdl7j1Q+67s4DKMWPR6esIHz8ktI
+ K0tq6WDkqAuHdd5alAeGCbELszv+Iy4JZ0+fqSO/L13P8KVSgc+hLSs0BUMcp1abGeEddTWuQ0x
+ DgckQmdPn28cVLNyaRpJNpQgHrkPzvNhtB4BrwiL11DqWhTQ4iKZBnJ6O6YMYp3wIbPkHlbPNTu
+ yuFjLtwZNiUnx0o6/TBRUj7JJDZnA2Psv+zNVmANtyZBcqWuyk14cfQgW2Kd9p6jpMvxEPS0i4P
+ 9izNnrleHEY+3qJ5vxEC5owm2SmqeBCu4OE58PHvT8msLi1bqUTwEmcDI3uhC1lcyvBSJ8AI2/Z
+ P4yU5XoeV0+kwIer2DSUzTnv5W4e9/IuU49Yz1D77lWvgRbiAXpcAuzu2CM8QtMFWDh3J7Pn/95
+ F6Hddu++a3Zm8l5+F0g==
+X-Proofpoint-GUID: NTtm2mgFbtZvv4BT6wKycrFWT1K8ZNoK
+X-Proofpoint-ORIG-GUID: tiREeBn2CptRBXexEe4TPGoQAtBFlstP
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMDE1MDA5NCBTYWx0ZWRfX/DAorNGlPVs4
+ yv5/RElxR2BVrhNGnK8pZHiy6neDZgmPdHp2jFgKzGeIaabQ9Lw8/ORsLJZrcqeRQhQk4Obp43l
+ W/UyHe4tHhV1wBc+cnuG7GIYhmkZQRE=
+X-Authority-Analysis: v=2.4 cv=btHZl0ai c=1 sm=1 tr=0 ts=6ad169af cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=i0EeH86SAAAA:8
+ a=oj6d6ukrGZa-rDQ9-ikA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-10-14_01,2026-10-14_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 malwarescore=0 phishscore=0 impostorscore=0 adultscore=0
+ lowpriorityscore=0 priorityscore=1501 clxscore=1011 spamscore=0
+ suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2610080000
+ definitions=main-2610150094
 
-From: Tao Cui <cuitao@kylinos.cn>
+Hi Roberto,
 
-KVM_DEV_LOONGARCH_PCH_PIC_CTRL_INIT has no guard against repeated
-invocation: every call overwrites pch_pic_base and registers the same
-kvm_io_device on the MMIO bus at the new address, while
-kvm_pch_pic_destroy() unregisters only one bus range.  After a repeated
-init, MMIO to the stale ranges computes its register offset against the
-new base and silently reads 0 / drops writes, and the leftover bus
-entries persist until the VM is destroyed.
+On Wed, 2026-10-14 at 17:00 +0200, Roberto Sassu wrote:
+> From: Roberto Sassu <roberto.sassu@huawei.com>
 
-Reject repeated initialization with -EEXIST, using the initialized
-state of the kvm_io_device as the indicator.  The check, the MMIO base
-update and the bus registration are serialized by slots_lock, and the
-real registration error is propagated instead of being replaced with
--EFAULT.
+The first paragraph should explain the problem from a high level: the user-
+visible impact and cause. For example, something like:
 
-Fixes: d206d9514873 ("LoongArch: KVM: Add PCHPIC user mode read and write functions")
-Signed-off-by: Tao Cui <cuitao@kylinos.cn>
----
- arch/loongarch/kvm/intc/pch_pic.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+=E2=80=9COn x86, if CONFIG_OF_FLATTREE is enabled, the kernel uses the devi=
+ce tree
+implementation of ima_get/free_kexec_buffer(). However, x86 doesn=E2=80=99t=
+ pass the IMA
+buffer through the device tree, so the buffer is never found and the IMA
+measurement log is not carried over across kexec.=E2=80=9D
 
-diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/pch_pic.c
-index 51e4a6a39dc0..a4c35ed704be 100644
---- a/arch/loongarch/kvm/intc/pch_pic.c
-+++ b/arch/loongarch/kvm/intc/pch_pic.c
-@@ -281,16 +281,21 @@ static int kvm_pch_pic_init(struct kvm_device *dev, u64 addr)
- 	struct kvm_io_device *device;
- 	struct loongarch_pch_pic *s = dev->kvm->arch.pch_pic;
- 
--	s->pch_pic_base = addr;
- 	device = &s->device;
-+	mutex_lock(&kvm->slots_lock);
-+	if (s->device.ops) {
-+		ret = -EEXIST;
-+		goto out;
-+	}
-+	s->pch_pic_base = addr;
- 	/* init device by pch pic writing and reading ops */
- 	kvm_iodevice_init(device, &kvm_pch_pic_ops);
--	mutex_lock(&kvm->slots_lock);
- 	/* register pch pic device */
- 	ret = kvm_io_bus_register_dev(kvm, KVM_MMIO_BUS, addr, PCH_PIC_SIZE, device);
-+out:
- 	mutex_unlock(&kvm->slots_lock);
- 
--	return (ret < 0) ? -EFAULT : 0;
-+	return ret;
- }
- 
- /* used by user space to get or set pch pic registers */
--- 
-2.43.0
+Then continue with the fix: defining CONFIG_HAVE_IMA_KEXEC_OF and selecting=
+ it
+only on the architectures that use the device tree implementation.
 
+thanks,
+
+Mimi
+
+>=20
+> The ima_get/free_kexec_buffer() device tree implementation relies on the
+> arch code calling of_kexec_alloc_and_setup_fdt() to pass the information
+> about where the IMA kexec buffer is located. Only the arm64, powerpc and
+> riscv architectures support that. LoongArch implicitly assumes that the
+> device tree implementation is used, but it does not call that function.
+
+>=20
+> The ima_get/free_kexec_buffer() x86 implementation instead still relies o=
+n
+> the setup data to pass the kexec buffer information, and is built only if
+> CONFIG_OF_FLATTREE is not defined.
+>=20
+> However, if CONFIG_OF_FLATTREE is selected in x86, x86 attempts to use th=
+e
+> device tree implementations of ima_get/free_kexec_buffer(), which are nev=
+er
+> going to succeed because of_kexec_alloc_and_setup_fdt() is not called for
+> that architecture.
+>=20
+> Instead, define CONFIG_HAVE_IMA_KEXEC_OF (automatically selects
+> HAVE_IMA_KEXEC), select it for the architectures that should use the
+> ima_get/free_kexec_buffer() device tree implementation, and enable these
+> functions if the new config option is enabled. Set it also on LoongArch, =
+to
+> preserve the current behavior and avoid a link failure. LoongArch does no=
+t
+> pass the buffer location to the next kernel yet; this will be addressed
+> separately.
+>=20
+> Finally, don't select it for x86, and use x86's own setup_data-based
+> implementation regardless of CONFIG_OF_FLATTREE.
+>=20
+> Fixes: b69a2afd5afc ("x86/kexec: Carry forward IMA measurement log on kex=
+ec")
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
