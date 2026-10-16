@@ -1,33 +1,33 @@
-Received: from mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+Received: from mta1.migadu.com (out-119.mta1.migadu.com [95.215.58.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB1AD46A5E2
-	for <loongarch@lists.linux.dev>; Fri, 16 Oct 2026 09:52:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A868846F4A6
+	for <loongarch@lists.linux.dev>; Fri, 16 Oct 2026 09:52:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792144329; cv=none; b=iGanEDZx4+NN1S4Gw4xfeerkZ3bYnDaoa2Su+0d6Ye1RAVVBphT21CkFms75sHTP0Tv7tO2CB3ga6TVzGASDPCZPWSJI4xOQjI8lTh1JCOVG5Ju/RZvnBZvqHFZNxrWmkdzMr/RPHMMyQ7QHIF68RIvHsJc5FvNIwJ+deveoIY8=
+	t=1792144334; cv=none; b=aYQ0XYgj9j9ugv/CqVwd+Am+mejnZx1m/WmQpGmZpPVPQ9gI/qkUjLfQ3i6DPk0IPaJpwusJLr3NjlsYrz7VCn/5Er+5/g7y70T6iGlupuxxmpPwTLD0IxzSPqGcG7tcJqXd8MHNMcnh+sdFIzQ5zUoeBw1n9sbVjntstwHnxso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792144329; c=relaxed/simple;
-	bh=+satW2wovK5/sccsFx3tJk63vH23Jrh2NuQe+3IpqxU=;
+	s=arc-20240116; t=1792144334; c=relaxed/simple;
+	bh=Rf3CMQb2KEte/BbSHsUqY7LbOQ7Ver+Ulr3VtzWdFMk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oQPVdlJ09uX7Qz2CRQ10l/awyGuyKGonIrXW+0Bxl87oIlQ4W8Mg12wLIFlwyRBiCFr8oXvV2x6s2Q+Ib8Id7Yam6W/oYZFxi1XPP3XHtdxg32zsdSXOgbrzCb5xgnKfyD0PF5OP05an4pZYvy7SwmwdsVFrZtSZ6Gd2YhH1TnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wp00BCAB; arc=none smtp.client-ip=91.218.175.179
+	 MIME-Version; b=b6sXO6yEK+9rQ+hxa/jqpI7eGIMsBLZK8lo50rBoMR2QAGTLfjQufcUumIImfyg3EIbFY8CfG58craY0kqVwPRgN0f+paIuYpln6Zs+et+QdDX8j9Xo2cdXO6ydiSLtiqMbWTdgdRnm6zpU21eGdeZDiWrnJJbr5ROhAXnUMYpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=h/CTNynt; arc=none smtp.client-ip=95.215.58.119
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wp00BCAB"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="h/CTNynt"
 X-Envelope-To: loongarch@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=+satW2wovK5/sccsFx3tJk63vH23Jrh2NuQe+3IpqxU=;
+DKIM-Signature: a=rsa-sha256; bh=Rf3CMQb2KEte/BbSHsUqY7LbOQ7Ver+Ulr3VtzWdFMk=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1792144325; v=1; x=1792749125;
- b=wp00BCABa9mHrUcSCN9yvcrCrbAAvPTepvLQzj40dmEbUPAxzHJnvpbXluFvn/bTUSUAFF9U
- yrYCSkKUxi5n4F78Hq6N/RYhaE7H71HwYSykmD+OiwHNlNf8K0RmMEtV3emHY07YHcBDgvBRjBm
- OqvcmJ2lFRvwTmsdwFHzjpbk=
+ t=1792144328; v=1; x=1792749128;
+ b=h/CTNyntiCIZ/no26sMKMbii8PE6hEkgrCicX93LyEbMZfwsnGMLYYQk3NbXEkJ/IGhComn6
+ EXV8E3eUfKOfzsCbfTMo88y6+Pnrb3om4XdDlopsC4aqwrq9lQoOXtaIb6xhocbyL10ugn4dlH1
+ Znl1Pj/CxTfVYjZYrkoupzug=
 X-Envelope-To: loongarch@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id f63086e6ddc2fbdf;
-	Fri, 16 Oct 2026 09:52:05 +0000
-X-Mizu-Trace-ID: f63086e6ddc2fbdf
+Received: by smtp.migadu.com with ESMTPS id 374f79ebbe3a2c0d;
+	Fri, 16 Oct 2026 09:52:08 +0000
+X-Mizu-Trace-ID: 374f79ebbe3a2c0d
 X-Migadu-Flow: FLOW_OUT
 From: Tao Cui <cui.tao@linux.dev>
 To: chenhuacai@kernel.org,
@@ -41,9 +41,9 @@ Cc: loongarch@lists.linux.dev,
 	nagachaithanya9911@gmail.com,
 	cui.tao@linux.dev,
 	Tao Cui <cuitao@kylinos.cn>
-Subject: [PATCH v5 2/3] LoongArch: KVM: Propagate real error code in kvm_pch_pic_create
-Date: Fri, 16 Oct 2026 17:51:50 +0800
-Message-ID: <20261016095151.1155049-3-cui.tao@linux.dev>
+Subject: [PATCH v5 3/3] LoongArch: KVM: Reject repeated PCH-PIC CTRL_INIT
+Date: Fri, 16 Oct 2026 17:51:51 +0800
+Message-ID: <20261016095151.1155049-4-cui.tao@linux.dev>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20261016095151.1155049-1-cui.tao@linux.dev>
 References: <20261016095151.1155049-1-cui.tao@linux.dev>
@@ -57,32 +57,62 @@ Content-Transfer-Encoding: 8bit
 
 From: Tao Cui <cuitao@kylinos.cn>
 
-kvm_pch_pic_create() replaces the real error of
-kvm_setup_default_irq_routing() with a fixed -ENOMEM.  Return the
-actual code, as kvm_eiointc_create() already does; the kvm_ipi_create()
-case is fixed separately by "Return the actual error code in
-kvm_ipi_create()" (Chaithanya Lagisetty).
+KVM_DEV_LOONGARCH_PCH_PIC_CTRL_INIT has no guard against repeated
+invocation: every call overwrites pch_pic_base and registers the same
+kvm_io_device on the MMIO bus at the new address, while
+kvm_pch_pic_destroy() unregisters only one bus range.  After a repeated
+init, MMIO to the stale ranges computes its register offset against the
+new base and silently reads 0 / drops writes, and the leftover bus
+entries persist until the VM is destroyed.
 
-Fixes: e785dfacf7e7 ("LoongArch: KVM: Add PCHPIC device support")
+Reject repeated initialization with -EEXIST, using the initialized
+state of the kvm_io_device as the indicator.  The check, the MMIO base
+update and the bus registration are serialized by slots_lock, and the
+real registration error is propagated instead of being replaced with
+-EFAULT.  On a registration failure the base and the device state are
+rolled back so that a retry can start over.
+
+Fixes: d206d9514873 ("LoongArch: KVM: Add PCHPIC user mode read and write functions")
 Signed-off-by: Tao Cui <cuitao@kylinos.cn>
 Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 ---
- arch/loongarch/kvm/intc/pch_pic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/loongarch/kvm/intc/pch_pic.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
 diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/pch_pic.c
-index dab2d3f1b8f6..51e4a6a39dc0 100644
+index 51e4a6a39dc0..ee06bdfd6547 100644
 --- a/arch/loongarch/kvm/intc/pch_pic.c
 +++ b/arch/loongarch/kvm/intc/pch_pic.c
-@@ -444,7 +444,7 @@ static int kvm_pch_pic_create(struct kvm_device *dev, u32 type)
+@@ -281,16 +281,26 @@ static int kvm_pch_pic_init(struct kvm_device *dev, u64 addr)
+ 	struct kvm_io_device *device;
+ 	struct loongarch_pch_pic *s = dev->kvm->arch.pch_pic;
  
- 	ret = kvm_setup_default_irq_routing(kvm);
- 	if (ret)
--		return -ENOMEM;
-+		return ret;
+-	s->pch_pic_base = addr;
+ 	device = &s->device;
++	mutex_lock(&kvm->slots_lock);
++	if (s->device.ops) {
++		ret = -EEXIST;
++		goto out;
++	}
++	s->pch_pic_base = addr;
+ 	/* init device by pch pic writing and reading ops */
+ 	kvm_iodevice_init(device, &kvm_pch_pic_ops);
+-	mutex_lock(&kvm->slots_lock);
+ 	/* register pch pic device */
+ 	ret = kvm_io_bus_register_dev(kvm, KVM_MMIO_BUS, addr, PCH_PIC_SIZE, device);
++	if (ret) {
++		/* undo the state so that a retry can start over */
++		s->pch_pic_base = 0;
++		s->device.ops = NULL;
++	}
++out:
+ 	mutex_unlock(&kvm->slots_lock);
  
- 	s = kzalloc_obj(struct loongarch_pch_pic);
- 	if (!s)
+-	return (ret < 0) ? -EFAULT : 0;
++	return ret;
+ }
+ 
+ /* used by user space to get or set pch pic registers */
 -- 
 2.43.0
 
