@@ -1,174 +1,142 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B6A5B5AB
-	for <loongarch@lists.linux.dev>; Fri, 16 Oct 2026 00:03:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A2B82D2495
+	for <loongarch@lists.linux.dev>; Fri, 16 Oct 2026 01:02:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792109024; cv=none; b=ZtBj11XU0nqU2UvKfO9In4CfOKMzkJ2uY4VizbQ+1FYrS9O6K02IYZqYyBsPVidpGfw8VHfW5Um832Z6wThiUVZdlpdQKOagICUgbJX0Ip1ABak4CsXI3rVpUt91HFq6yQhXnGGwZsRPzCIu/YpNwPPBo/n2dWnjBtLOClxlSwU=
+	t=1792112530; cv=none; b=QkuukesswrBC3RBXZ/gVwfypjJklmfc2e3joauKjK1ov9NyP29pa1aGkf+Vl5L7mEMK+sWSQtY4VA85hX4G49UrpP/GQX1qbAphlAFMdCcl4YxBa4qzxQN5UgNouTfBlpup9xlFHJ7blTNRlPUuIoFXFo8GieMi///t51KZF+5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792109024; c=relaxed/simple;
-	bh=/J9vkQnHyxosFoJr9W9QBtjq0YYxgnpGBT61RpVtPOM=;
-	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=uxgIkQdgLuhHe4xo+anJ4DoVMfc7FGsw8M1NzFNewpExmLFQgJ+PfbJXvo32Tfaqypgx0rESDLdEekSdelhcazd1iihk4warUjlB73ho2jgA1zGOL5EM5icCWaaR6Aks+rEar5gnSWKIxDV8SFx82KjwfhlwH+XJLCbk83I0WMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=T8JmhcId; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="T8JmhcId"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69FJSN6v437488;
-	Fri, 16 Oct 2026 00:02:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=/J9vkQ
-	nHyxosFoJr9W9QBtjq0YYxgnpGBT61RpVtPOM=; b=T8JmhcIdM+IZlDu1hLe31J
-	m6mbjwcWL7wzOhkhG48GMAQlsaYPR+qFspy9MtxmiqJAc7tEhHppbNKH9Ly6ZtZV
-	VqxL0sG8s2UwXNLFqIJ/BYZUI5pdL3Q7nroUwRsfUZ8NnojGqzqlf4TRT4AYhP4L
-	6FIDNuGbJCz0GmEFk/Hg39Qj1dTW+wDF8Je9F6lhuDnTz0Ez1O9eo34NkYGd3QWl
-	cZT5GXWip3BeiaEHOopn1erdpxY1LeO4vtBHH3q98w6K3sLk76T90ISRopD52k3Y
-	zDVC5jr2MvAZIMwg+xjEXbsZPTVrL2CYSC8Mm8BnPyO6Np9NnZwnVMHA81Yvggnw
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4h7dwjc4bu-1
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Fri, 16 Oct 2026 00:02:55 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 69FN3x9q1927457;
-	Fri, 16 Oct 2026 00:02:54 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4h9ypq94xa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 16 Oct 2026 00:02:54 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 69G02sUl44827056
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 16 Oct 2026 00:02:54 GMT
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 18558580DF;
-	Fri, 16 Oct 2026 00:02:54 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 36309580E3;
-	Fri, 16 Oct 2026 00:02:51 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.159.15])
-	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 16 Oct 2026 00:02:51 +0000 (GMT)
-Message-ID: <2dd935d171066eb4f1c251184eee871ad91f46b4.camel@linux.ibm.com>
-Subject: Re: [PATCH] kexec: Select ima_get/free_kexec_buffer() with
- CONFIG_HAVE_IMA_KEXEC(_OF)
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Roberto Sassu <roberto.sassu@huaweicloud.com>, catalin.marinas@arm.com,
-        will@kernel.org, mark.rutland@arm.com, chenhuacai@kernel.org,
-        kernel@xen0n.name, maddy@linux.ibm.com, mpe@ellerman.id.au,
-        npiggin@gmail.com, chleroy@kernel.org, pjw@kernel.org,
-        palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
-        tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com, robh@kernel.org,
-        saravanak@kernel.org
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        devicetree@vger.kernel.org, noodles@fb.com,
-        linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org,
-        Roberto Sassu
- <roberto.sassu@huawei.com>
-In-Reply-To: <20261014150005.138309-1-roberto.sassu@huaweicloud.com>
-References: <20261014150005.138309-1-roberto.sassu@huaweicloud.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 15 Oct 2026 20:04:39 -0400
+	s=arc-20240116; t=1792112530; c=relaxed/simple;
+	bh=PHw2ocoZ4ZqJHQ290VNc8rnqGBq6RJZ6SBSoWHJyDOA=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=qiOAzB73DKKa8Z5b279w0sudF9tt6ZWqNJTXFgZqV7hxY1wwQ9+PN208f78bB8Q6t5wHGjwE5SShqjh/zYitOHvK+xTZLGIKk/m8etWwwRFHhuB4bygzRNXp4bU903A0kaNv6dfUhgw50gS1GjlwcTeLbXXUtyjQRvvA5d4y6rQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8CxPNKOd9FqQVQWAA--.65095S3;
+	Fri, 16 Oct 2026 09:02:06 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJCxPs+Nd9Fq_+osAA--.28582S2;
+	Fri, 16 Oct 2026 09:02:05 +0800 (CST)
+Subject: Re: [PATCH v4 1/3] LoongArch: KVM: Clear device pointer in irqchip
+ destroy callbacks
+To: Tao Cui <cui.tao@linux.dev>, chenhuacai@kernel.org,
+ zhaotianrui@loongson.cn
+Cc: loongarch@lists.linux.dev, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel@xen0n.name,
+ nagachaithanya9911@gmail.com, Tao Cui <cuitao@kylinos.cn>
+References: <20261015234638.1077815-1-cui.tao@linux.dev>
+ <20261015234638.1077815-2-cui.tao@linux.dev>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <f0eba7bd-61c6-d63a-abc3-9b50ebe62338@loongson.cn>
+Date: Fri, 16 Oct 2026 09:03:27 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Evolution 3.58.3 (3.58.3-2.fc43) 
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDE1MDA5NCBTYWx0ZWRfX2HSmi+79F5sk
- F6cJ7NPejHB+7WHifxwy2jTNeN+1trz8LY4O/c9Nrxfke0WNdl7j1Q+67s4DKMWPR6esIHz8ktI
- K0tq6WDkqAuHdd5alAeGCbELszv+Iy4JZ0+fqSO/L13P8KVSgc+hLSs0BUMcp1abGeEddTWuQ0x
- DgckQmdPn28cVLNyaRpJNpQgHrkPzvNhtB4BrwiL11DqWhTQ4iKZBnJ6O6YMYp3wIbPkHlbPNTu
- yuFjLtwZNiUnx0o6/TBRUj7JJDZnA2Psv+zNVmANtyZBcqWuyk14cfQgW2Kd9p6jpMvxEPS0i4P
- 9izNnrleHEY+3qJ5vxEC5owm2SmqeBCu4OE58PHvT8msLi1bqUTwEmcDI3uhC1lcyvBSJ8AI2/Z
- P4yU5XoeV0+kwIer2DSUzTnv5W4e9/IuU49Yz1D77lWvgRbiAXpcAuzu2CM8QtMFWDh3J7Pn/95
- F6Hddu++a3Zm8l5+F0g==
-X-Proofpoint-GUID: NTtm2mgFbtZvv4BT6wKycrFWT1K8ZNoK
-X-Proofpoint-ORIG-GUID: tiREeBn2CptRBXexEe4TPGoQAtBFlstP
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMDE1MDA5NCBTYWx0ZWRfX/DAorNGlPVs4
- yv5/RElxR2BVrhNGnK8pZHiy6neDZgmPdHp2jFgKzGeIaabQ9Lw8/ORsLJZrcqeRQhQk4Obp43l
- W/UyHe4tHhV1wBc+cnuG7GIYhmkZQRE=
-X-Authority-Analysis: v=2.4 cv=btHZl0ai c=1 sm=1 tr=0 ts=6ad169af cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=i0EeH86SAAAA:8
- a=oj6d6ukrGZa-rDQ9-ikA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-10-14_01,2026-10-14_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 malwarescore=0 phishscore=0 impostorscore=0 adultscore=0
- lowpriorityscore=0 priorityscore=1501 clxscore=1011 spamscore=0
- suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2610080000
- definitions=main-2610150094
+In-Reply-To: <20261015234638.1077815-2-cui.tao@linux.dev>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxPs+Nd9Fq_+osAA--.28582S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxXr43tr4kXFW3AF4Utr47Awc_yoW5ur4DpF
+	W5C3Z0kr4rGr1DWFZrZw1DWr4j9Fsag34Sga4jvFyUCFsIqFyrJF18Ar9rAa4qk3y8CFW0
+	qF1fK34Yva1UA3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9Yb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Jr0_Gr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
+	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v2
+	6r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
+	CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
+	0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
+	AIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIev
+	Ja73UjIFyTuYvjxU7_MaUUUUU
 
-Hi Roberto,
 
-On Wed, 2026-10-14 at 17:00 +0200, Roberto Sassu wrote:
-> From: Roberto Sassu <roberto.sassu@huawei.com>
 
-The first paragraph should explain the problem from a high level: the user-
-visible impact and cause. For example, something like:
+On 2026/10/16 上午7:46, Tao Cui wrote:
+> From: Tao Cui <cuitao@kylinos.cn>
+> 
+> The destroy callbacks of the four irqchip devices free the device
+> structure without clearing kvm->arch.{ipi,eiointc,pch_pic,dmsintc},
+> leaving a dangling pointer.  ops->destroy() is not only called at VM
+> teardown but also when KVM_CREATE_DEVICE succeeds and the following
+> anon_inode_getfd() fails (e.g. under RLIMIT_NOFILE); the VM stays
+> alive, kvm_arch_irqchip_in_kernel() still reports true, and interrupt
+> injection dereferences the freed device.
+> 
+> Clear the pointer when destroying.
+> 
+> Fixes: c532de5a67a7 ("LoongArch: KVM: Add IPI device support")
+> Fixes: 2e8b9df82631 ("LoongArch: KVM: Add EIOINTC device support")
+> Fixes: e785dfacf7e7 ("LoongArch: KVM: Add PCHPIC device support")
+> Fixes: 229132c309d6 ("LoongArch: KVM: Add DMSINTC device support")
+> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
+> ---
+>   arch/loongarch/kvm/intc/dmsintc.c | 1 +
+>   arch/loongarch/kvm/intc/eiointc.c | 1 +
+>   arch/loongarch/kvm/intc/ipi.c     | 1 +
+>   arch/loongarch/kvm/intc/pch_pic.c | 1 +
+>   4 files changed, 4 insertions(+)
+> 
+> diff --git a/arch/loongarch/kvm/intc/dmsintc.c b/arch/loongarch/kvm/intc/dmsintc.c
+> index ff327b4c05f7..c182185a3d59 100644
+> --- a/arch/loongarch/kvm/intc/dmsintc.c
+> +++ b/arch/loongarch/kvm/intc/dmsintc.c
+> @@ -146,6 +146,7 @@ static void kvm_dmsintc_destroy(struct kvm_device *dev)
+>   		return;
+>   
+>   	kfree(dev->kvm->arch.dmsintc);
+> +	dev->kvm->arch.dmsintc = NULL;
+>   	kfree(dev);
+>   }
+>   
+> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
+> index 80f78e07c74a..fe0a1918f26f 100644
+> --- a/arch/loongarch/kvm/intc/eiointc.c
+> +++ b/arch/loongarch/kvm/intc/eiointc.c
+> @@ -675,6 +675,7 @@ static void kvm_eiointc_destroy(struct kvm_device *dev)
+>   
+>   	kvm = dev->kvm;
+>   	eiointc = kvm->arch.eiointc;
+> +	kvm->arch.eiointc = NULL;
+>   	mutex_lock(&kvm->slots_lock);
+>   	kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &eiointc->device);
+>   	kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &eiointc->device_vext);
+> diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.c
+> index 80faa770c0cd..7a2dd72a4952 100644
+> --- a/arch/loongarch/kvm/intc/ipi.c
+> +++ b/arch/loongarch/kvm/intc/ipi.c
+> @@ -441,6 +441,7 @@ static void kvm_ipi_destroy(struct kvm_device *dev)
+>   
+>   	kvm = dev->kvm;
+>   	ipi = kvm->arch.ipi;
+> +	kvm->arch.ipi = NULL;
+>   	mutex_lock(&kvm->slots_lock);
+>   	kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &ipi->device);
+>   	mutex_unlock(&kvm->slots_lock);
+> diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/pch_pic.c
+> index 220fc23ffe8c..dab2d3f1b8f6 100644
+> --- a/arch/loongarch/kvm/intc/pch_pic.c
+> +++ b/arch/loongarch/kvm/intc/pch_pic.c
+> @@ -483,6 +483,7 @@ static void kvm_pch_pic_destroy(struct kvm_device *dev)
+>   
+>   	kvm = dev->kvm;
+>   	s = kvm->arch.pch_pic;
+> +	kvm->arch.pch_pic = NULL;
+>   	/* unregister pch pic device and free it's memory */
+>   	mutex_lock(&kvm->slots_lock);
+>   	kvm_io_bus_unregister_dev(kvm, KVM_MMIO_BUS, &s->device);
+> 
+Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 
-=E2=80=9COn x86, if CONFIG_OF_FLATTREE is enabled, the kernel uses the devi=
-ce tree
-implementation of ima_get/free_kexec_buffer(). However, x86 doesn=E2=80=99t=
- pass the IMA
-buffer through the device tree, so the buffer is never found and the IMA
-measurement log is not carried over across kexec.=E2=80=9D
-
-Then continue with the fix: defining CONFIG_HAVE_IMA_KEXEC_OF and selecting=
- it
-only on the architectures that use the device tree implementation.
-
-thanks,
-
-Mimi
-
->=20
-> The ima_get/free_kexec_buffer() device tree implementation relies on the
-> arch code calling of_kexec_alloc_and_setup_fdt() to pass the information
-> about where the IMA kexec buffer is located. Only the arm64, powerpc and
-> riscv architectures support that. LoongArch implicitly assumes that the
-> device tree implementation is used, but it does not call that function.
-
->=20
-> The ima_get/free_kexec_buffer() x86 implementation instead still relies o=
-n
-> the setup data to pass the kexec buffer information, and is built only if
-> CONFIG_OF_FLATTREE is not defined.
->=20
-> However, if CONFIG_OF_FLATTREE is selected in x86, x86 attempts to use th=
-e
-> device tree implementations of ima_get/free_kexec_buffer(), which are nev=
-er
-> going to succeed because of_kexec_alloc_and_setup_fdt() is not called for
-> that architecture.
->=20
-> Instead, define CONFIG_HAVE_IMA_KEXEC_OF (automatically selects
-> HAVE_IMA_KEXEC), select it for the architectures that should use the
-> ima_get/free_kexec_buffer() device tree implementation, and enable these
-> functions if the new config option is enabled. Set it also on LoongArch, =
-to
-> preserve the current behavior and avoid a link failure. LoongArch does no=
-t
-> pass the buffer location to the next kernel yet; this will be addressed
-> separately.
->=20
-> Finally, don't select it for x86, and use x86's own setup_data-based
-> implementation regardless of CONFIG_OF_FLATTREE.
->=20
-> Fixes: b69a2afd5afc ("x86/kexec: Carry forward IMA measurement log on kex=
-ec")
-> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
