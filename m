@@ -1,91 +1,71 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E5C425393E
-	for <loongarch@lists.linux.dev>; Fri, 16 Oct 2026 15:18:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBC9F3AAF5D
+	for <loongarch@lists.linux.dev>; Sat, 17 Oct 2026 07:31:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792163916; cv=none; b=Gcj2eKWjI2R1jxH6ER8EbDYuv0/hcWnTchtm1dcP4929JjwnFk3omar9Dp7v44MMf5d9aZGO3ghjpQCPA5HduHarBD6XH6NA5DzKztvVc9Bz1zNWDzKBM1ZeCSVQoQ4bsIM6OR2WEH/C0brlVDCzMZ6SuUSpOjeRHwp7lsZcf5A=
+	t=1792222300; cv=none; b=HU3nbc5Nq5t2z+RDkrDwfM2tHNNjve1Ka1ZRPDnU+jvg3O843MpnDRGils7oEvCrvo/iTOtSeOZNWUF0grWOgqbrLz5Y1BeEhTnp1k+Zfxc0yXjRHJCE5r299nek5HxEX4lTb9XZ6pJ3aIKPisPd4UGlreFYy/ZukFWSb+5f7Ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792163916; c=relaxed/simple;
-	bh=O2RzggFs1bjfXctsFTnmjze2UQnPIPO+HIGT6FFRaHE=;
-	h=Content-Type:Date:Message-Id:Subject:From:To:Cc:In-Reply-To:
-	 References:MIME-Version; b=IE0+eB7g4GRPBaLyqZn8475TWGdsD83oF4pCvhw5CCTI5FWTPoShGnq5OiH2EealXEyR6AKSA6K9yQun9Jji0c99mmuDl7qVmIggopsiCTTMoQXrchQqGxV0wvN5yPczYxZFYI7iXxoqDR3AsIBt01YJb01GOXuBc/WCZLaYzlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P7aw7J8z; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1792222300; c=relaxed/simple;
+	bh=hPwliJIrtfjOA0mdPlq4O4XFMuhybHzRdZVmphEq/Y0=;
+	h=Date:From:To:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=I6r7B1jHHBEVHqmGgIMY+IZjzzPlNqb33gAHkb5Suzrx3+iJPZ+dTQHRsv+oBGbtA1xKqx3APJRtSqIWEWDc48xXafjQkbd9BdZEcgGw3ncuGHAoSSWNDaN650/y9lAQJmr0qQ4JG6Cgw+YnA8wmfsYQQNkd7hX2+BfV8caRNFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=lpIx9Ua7; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P7aw7J8z"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-cd5e2d696e0so54492a12.1
-        for <loongarch@lists.linux.dev>; Fri, 16 Oct 2026 08:18:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792163915; x=1792768715; darn=lists.linux.dev;
-        h=mime-version:content-transfer-encoding:references:in-reply-to:cc:to
-         :from:subject:message-id:date:content-type:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=O2RzggFs1bjfXctsFTnmjze2UQnPIPO+HIGT6FFRaHE=;
-        b=P7aw7J8zII4u0hoxqYyLuL5ILVImMHsapabGOIveOsKzepI8ed4K66dWIHm9vaQlpg
-         CbLqoGZCPi5Q47ey8JkP1FgqIodGPIzQGR+Z+xs/M2//PjK6dp3j7YXY68eBa9KNLFeR
-         evHqkWgU8tO3gcYVry30KePJ0354x/x/LJPAgnAmSkihPFHGNAhNPcp00rIX4dr4NFVv
-         FjE2musqo/tfIg84aQKCS9YCPYCiY1mRWlCZ2FslqnRUhCgg3zofhl/wEFqUvtvDl+Nn
-         djPGNl7wPLFVMipnZJKvj+4L0LAqIiNwFyejAJ2FhCfJOzVVCyJTtHEt64CURYJWGhc+
-         czjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792163915; x=1792768715;
-        h=mime-version:content-transfer-encoding:references:in-reply-to:cc:to
-         :from:subject:message-id:date:content-type:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=O2RzggFs1bjfXctsFTnmjze2UQnPIPO+HIGT6FFRaHE=;
-        b=X8/8xs6HkOKGU05OskoTuNZVGG8Xbk458y7NOcA/zrsa6sdmy0CKfRdV+e0Lef05nb
-         cP7bwBYUKAkdPMNl3MAxbSOmBfBIj1pfxCQ63ZX5+UIYv4l8flzjdIusCbvV9JNU3wf1
-         Nv6Zw8gDwjS77TxC7HGQYPRkVLIn2+OuGAL2ScgyY0YR6rfy3Bb22CHiz2aYoAKP+gJq
-         uAKpaTNhZg7iHIa0mkXJn9pe3XXK5bPqJjQLvKtoadIRySCtYFRoqpdJ+ATyTEHj5Mo7
-         FIrqMoblQzbdWDbY/Gihe6XzH4fyDh20f8cA08IGPRG3755/w3G4p7VhKAH6K7vGuN5N
-         fiKQ==
-X-Gm-Message-State: AFq9FYKfV4sMbQ/HJU/HZ/qUsLy8QmXPi1O0zNtqfVW/8QCArr+6PdZR
-	qUQ7NUBjC7GoXxofGJ06TGeRZzYeDeTif+S/DMuiOcwSPJGxW/V7rLi7
-X-Gm-Gg: AYBFou04u7V5PuRWUYQ2WIRKFaL5TR0jf6UCFWJCaCeKuQAzU+JDWi+/K1bpuIdI6km
-	wBJ3Gl7pOWxztv/PX0CtnqY7fBSa21AIpDRQu1EGoecw4UuxpodPOOVnsTLlobDQONvi1sGUmci
-	bR3WNdtykJ/SDzvAsqOIykQtzzCVRgUpAt9/lqKcccbLyEJwtVJaHz4VKSyoeRP3cn16WX2xsgT
-	18FlIOV9pvxQ0OuVzAfWNFLrYsuDOtQb/dpF9yI0FKKa+cnOlIbev4BQS9461SBQF6mjVCPpw0u
-	kWbMlCpLaDL87BuSJ6LrhEBzcxTFCv2sDbkZ2dRToezbr3PR3Ub7WQdJcp2ALeeCHVxpn8y0A5n
-	E0EvJFm9LEnpNzEl8+imeXoLDzmL9mfoFT5FmKFTWmbPG6IrNeThsfc5k9AghyHV4BGMZqoG0RV
-	CwLAseatvddxcH4dCI6c5W6xiKF3BGJmCqTe+snIG9OeQHSrM15szRTfpOLUGSmN0DHzIwdmIGy
-	VBRDEfR2KN88fO6osxpzvMU/oWDiGbOW8e39kcfs1oBvmID1TcqbZN4yRV3lhVlzGyzCSHjBbtU
-	27M=
-X-Received: by 2002:a17:90b:3889:b0:3ac:95d7:2fa5 with SMTP id 98e67ed59e1d1-3acef1545d3mr137430a91.44.1792163914509;
-        Fri, 16 Oct 2026 08:18:34 -0700 (PDT)
-Received: from localhost ([153.61.198.253])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3acd403c212sm1472146a91.4.2026.10.16.08.18.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 Oct 2026 08:18:33 -0700 (PDT)
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 16 Oct 2026 15:18:33 +0000
-Message-Id: <DM6D33SL63BR.HOFSY6JUHO44@gmail.com>
-Subject: Re: [PATCH v3 3/3] LoongArch: BPF: Optimize 32-bit operations using
- native instructions
-From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
-To: "Tiezhu Yang" <yangtiezhu@loongson.cn>, "Huacai Chen"
- <chenhuacai@kernel.org>, "Hengqi Chen" <hengqi.chen@gmail.com>
-Cc: <loongarch@lists.linux.dev>, <bpf@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-In-Reply-To: <20261016081006.26069-4-yangtiezhu@loongson.cn>
-References: <20261016081006.26069-1-yangtiezhu@loongson.cn> <20261016081006.26069-4-yangtiezhu@loongson.cn>
-X-Mailer: mkdraft (claude review draft; edit before sending)
-Content-Transfer-Encoding: 8bit
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="lpIx9Ua7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=hPwliJIrtfjOA0mdPlq4O4XFMuhybHzRdZVmphEq/Y0=; b=l
+	pIx9Ua7Osh9xLfei+Z4Y1YcrGnuLedxazUd+5A3WDgJhoi3xLbe8kdjs+XRyH8j3
+	4WTOyaX1Av4aKIkMImY65pORi7rLZ9CP88Y7hdSD6zLSREyR7V+KlRqY/drOwMyn
+	MUyvRyI3t3NFUrPcgBIsqzGO6P45xZJ7VEFeqcZcqA=
+Date: Sat, 17 Oct 2026 15:31:29 +0800 (CST)
+From: "jiale yao" <19888972804@163.com>
+To: "Huacai Chen" <chenhuacai@kernel.org>, "WANG Xuerui" <kernel@xen0n.name>,
+	"Thomas Gleixner" <tglx@kernel.org>, "Radu Rendec" <radu@rendec.net>,
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re:[PATCH 5/6] irqchip/loongarch-cpu: validate MADT LIO-PIC entries
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version 2023.4-cmXT build
+ 20260511(2e539873) Copyright (c) 2002-2026 www.mailtech.cn 163com
+In-Reply-To: <20261016141357.2793046-6-yaojiale02@163.com>
+References: <20261016141357.2793046-1-yaojiale02@163.com>
+ <20261016141357.2793046-6-yaojiale02@163.com>
+X-NTES-SC: AL_Qu2SAP6ZvUoj7yaaY+kdnEkQgO0/WsS1vfQu2Y5Wc+wEgCbN4z0YdHxaDHHN8e6DOSarnDiOagNHzNRcb4JHcFKRshiwMyp61tRZ0w/xog==
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Message-ID: <2fb91df0.1858.1a148c5dee4.Coremail.19888972804@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:ZygvCgAnZyhSJNNqc_taAA--.123W
+X-CM-SenderInfo: x1dryxhdohiji6rwjhhfrp/xtbCzRGs5mrTJFEQVwAA3d
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-On Fri, Oct 16, 2026 at 04:10 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
-
-> All of the testcases of test_bpf passed on Loongson-3A6000 (with DIV32)
-> and Loongson-3A5000 (without DIV32), here are the test results:
-
-fyi test_bpf is gone. See
-commit 4532e525b286 ("selftests/bpf: Remove the old test_bpf module").
-Pls run test_progs
+QXQgMjAyNi0xMC0xNiAyMjoxMzo1NiwgIkppYWxlIFlhbyIgPHlhb2ppYWxlMDJAMTYzLmNvbT4g
+d3JvdGU6Cj5UaGUgTElPLVBJQyBNQURUIGNhbGxiYWNrIHBhc3NlcyBhIHR5cGVkIHJlY29yZCB0
+byB0aGUgY29udHJvbGxlcgo+aW5pdGlhbGl6YXRpb24gY29kZSB3aXRob3V0IGNoZWNraW5nIHRo
+YXQgdGhlIGNvbXBsZXRlIHJlY29yZCBpcwo+cHJlc2VudC4gQSB0cnVuY2F0ZWQgZmlybXdhcmUg
+ZW50cnkgY2FuIHRoZXJlZm9yZSBsZWFkIHRvIG91dC1vZi1ib3VuZHMKPmZpZWxkIHJlYWRzLgo+
+Cj5SZWplY3QgaW5jb21wbGV0ZSBMSU8tUElDIGVudHJpZXMgYmVmb3JlIHBhc3NpbmcgdGhlbSB0
+byB0aGUKPmluaXRpYWxpemF0aW9uIGhlbHBlci4KPgoKRml4ZXM6IGIyZDNlMzM1NGUyYSAoImly
+cWNoaXA6IEFkZCBMb29uZ0FyY2ggQ1BVIGludGVycnVwdCBjb250cm9sbGVyIHN1cHBvcnQiKQoK
+PlNpZ25lZC1vZmYtYnk6IEppYWxlIFlhbyA8eWFvamlhbGUwMkAxNjMuY29tPgo+LS0tCj4gZHJp
+dmVycy9pcnFjaGlwL2lycS1sb29uZ2FyY2gtY3B1LmMgfCAzICsrKwo+IDEgZmlsZSBjaGFuZ2Vk
+LCAzIGluc2VydGlvbnMoKykKPgo+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvaXJxY2hpcC9pcnEtbG9v
+bmdhcmNoLWNwdS5jIGIvZHJpdmVycy9pcnFjaGlwL2lycS1sb29uZ2FyY2gtY3B1LmMKPmluZGV4
+IDg0Y2UyNDg4OTQ4OC4uNjE4NTgyNTQ3N2Y0IDEwMDY0NAo+LS0tIGEvZHJpdmVycy9pcnFjaGlw
+L2lycS1sb29uZ2FyY2gtY3B1LmMKPisrKyBiL2RyaXZlcnMvaXJxY2hpcC9pcnEtbG9vbmdhcmNo
+LWNwdS5jCj5AQCAtMTE5LDYgKzExOSw5IEBAIHN0YXRpYyBpbnQgX19pbml0IGxpb2ludGNfcGFy
+c2VfbWFkdCh1bmlvbiBhY3BpX3N1YnRhYmxlX2hlYWRlcnMgKmhlYWRlciwKPiB7Cj4gCXN0cnVj
+dCBhY3BpX21hZHRfbGlvX3BpYyAqbGlvaW50Y19lbnRyeSA9IChzdHJ1Y3QgYWNwaV9tYWR0X2xp
+b19waWMgKiloZWFkZXI7Cj4gCj4rCWlmIChCQURfTUFEVF9FTlRSWShsaW9pbnRjX2VudHJ5LCBl
+bmQpKQo+KwkJcmV0dXJuIC1FSU5WQUw7Cj4rCj4gCXJldHVybiBsaW9pbnRjX2FjcGlfaW5pdChp
+cnFfZG9tYWluLCBsaW9pbnRjX2VudHJ5KTsKPiB9Cj4gCj4tLSAKPjIuMzQuMQo=
