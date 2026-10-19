@@ -1,83 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CBC133DEF9
-	for <loongarch@lists.linux.dev>; Mon, 19 Oct 2026 02:00:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 993023CDBD3
+	for <loongarch@lists.linux.dev>; Mon, 19 Oct 2026 03:14:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792375260; cv=none; b=UcQetzXTDEe16ME5NNn8T+Gblp8QoOwaxEw7OF0U144fFqzvEF27QMkjuAumLJ9KB/UaQvNPv//9oT7pXE92T4oMg4uGf5b0ybldml+Z5EwnBg6nfoNfjzDLShcl8odcWptKKWpHzjp5wyFlCdxCWewaAVfERSFBhGmycgMnX9g=
+	t=1792379699; cv=none; b=Uo1IuKBE8zjWPqyERG6BSxsr0vs0O5d9uPeS9WwGxdSWXJ0ep7r5qRzRhBPM9oqTVn/QhUnb8D2TZguxKgY3JO1zNt9RNwb/4ZfEMqMVSxyKwmgi7LcPMCeATVlS/T+VAQscXIGOZ50lkxGNq55X7D/ItY7xLnPGcKMlzNl8Hq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792375260; c=relaxed/simple;
-	bh=lK+xi1CtkJn6VZaJl1i9UBW4/J1clWLoaX/IdvnnHiE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oQFSOfGz1rX3YBhPeGEqdJxcSKC4xXbUPD+yseQbn63GhIxDxUZL9seyxNNX1dUA97DmrGtis7jt/c19CI/2OFR9JAF9egXWNWZ4k4lXiorAFPL0Iz7wdNJGnRQiX1V9J8Fk3q5JQy+188W7290vA1K0JonNEa1asC8pW0ojZos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BBhIJ946; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BBhIJ946"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C38051F000CB
-	for <loongarch@lists.linux.dev>; Mon, 19 Oct 2026 02:00:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792375258;
-	bh=lK+xi1CtkJn6VZaJl1i9UBW4/J1clWLoaX/IdvnnHiE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=BBhIJ946GQK80KG9eKnZtuEenkHQsoxoNskMAKXKmBi75OwPHgoyMyWIhAENHyEI8
-	 Z+ijaCs4OHW+n4TTMRdtPtSRAgr474mftliH+Pkrt12zMm3tWdATikR5UDQFRuDpSv
-	 XEcoK+Pe329cSTBUWawVckkaTAVffOKK5MHA/n0QcH8KTJiP+DsZG9otYZm1yyA3f+
-	 cItZ9huzuBs7jFr0HUlKcVZWRicOwxsmwcEo3GZHQM7NVkRAJ1VUIC2WOtPSXWjB+3
-	 mw9HCRhejqDIM2stDRzAs1OUFt8nAMT8kgMsgL47ccmQWGfxYk6QbXZ3tL2eM/Srv8
-	 ESFi3/t3UOCuQ==
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-6b1d8944cb0so2278061a12.3
-        for <loongarch@lists.linux.dev>; Sun, 18 Oct 2026 19:00:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBxIeHmGBUGwW8WphqT4l/DBA9ku7P5mAvjsg5HCy1dKrwZKt7rnUpHripw2cYc4S+G43C49qSWSmMs=@lists.linux.dev
-X-Gm-Message-State: AFq9FYJ9P4VoBreeLyyEsrO05ssnddxK995kNwhVOqN+6ArSFYk4WkSL
-	1x6i2vZdfoXVfkLVvMrWqNxAunjfNpUeCCTZYi+WAaVuQvi4Rt/JURMwKj5FmMedQiRma9Gg0br
-	XWvpn/qSoDdl1dAYefendUN8OrEp9T50=
-X-Received: by 2002:a05:6402:1952:b0:6ac:aec6:a3c5 with SMTP id
- 4fb4d7f45d1cf-6b3a81b74fcmr3685234a12.42.1792375257407; Sun, 18 Oct 2026
- 19:00:57 -0700 (PDT)
+	s=arc-20240116; t=1792379699; c=relaxed/simple;
+	bh=lx5no8xRSUwjQ9mXkI+e7sRArirdLD1Ab0RRIlqZ3ZA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ir34MDOh2GBnf4uKnJlF5kT4T52JQIDhi60vDY3QwIujZkr8XLeDqPD5yzK2XctNWctqesZabT+dFpBtJCAmF0k+IP0yBcGREqKoYxlLEJ/WLSq4sTI5Lx5aHiaq9M5qM4w3xMgsgI5xAy12XZA7CbJtc+AOVZo2jvIKvQOmUFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.109])
+	by gateway (Coremail) with SMTP id _____8Cx_9Iqi9VqyykXAA--.2011S3;
+	Mon, 19 Oct 2026 11:14:50 +0800 (CST)
+Received: from kernelserver (unknown [223.64.68.109])
+	by front1 (Coremail) with SMTP id qMiowJDxBc0li9VqQ94tAA--.2975S2;
+	Mon, 19 Oct 2026 11:14:48 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	stable@vger.kernel.org,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH] soc: loongson: Make Loongson-2 drivers depend on MACH_LOONGSON64
+Date: Mon, 19 Oct 2026 11:14:36 +0800
+Message-ID: <20261019031436.3523632-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260303070642.2785715-1-zhoubinbin@loongson.cn> <f0baa480-cd6d-42ad-bdb9-92cb793d774e@kernel.org>
-In-Reply-To: <f0baa480-cd6d-42ad-bdb9-92cb793d774e@kernel.org>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 19 Oct 2026 10:00:46 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4REngu3boHogg+s0PTkgEDFQk+JnQFtt-jF86jN3NqgA@mail.gmail.com>
-X-Gm-Features: AclHuK-3zlBaxQjMu1BZEqroXGyYsh0v3LJ2zcYsvyXhuT3eNUNMdX67fFDnKmE
-Message-ID: <CAAhV-H4REngu3boHogg+s0PTkgEDFQk+JnQFtt-jF86jN3NqgA@mail.gmail.com>
-Subject: Re: [PATCH] soc: loongson: loongson2_guts: Use of_root instead of own reference
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Binbin Zhou <zhoubb.aaron@gmail.com>, 
-	Huacai Chen <chenhuacai@loongson.cn>, Yinbo Zhu <zhuyinbo@loongson.cn>, 
-	Arnd Bergmann <arnd@arndb.de>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	soc@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxBc0li9VqQ94tAA--.2975S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Aw4rGFyUuw4xXF4UuryfAFc_yoW8WF4kpa
+	n3Z3yxCF4UtF4Yyw45JryxCFy5Z393GF9ruanrJw1Uur9rAa48Zry7AFWSvF47ArWUXFy2
+	vr95uayUG3ZxGFbCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
+	AwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y
+	6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
+	AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE
+	2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcV
+	C2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73
+	UjIFyTuYvjxU2MKZDUUUU
 
-On Sat, Mar 7, 2026 at 6:14=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.org=
-> wrote:
->
-> On 03/03/2026 08:06, Binbin Zhou wrote:
-> > There is already a global of_root reference. Use that instead of gettin=
-g
-> > one on our own. We don't need to care about the reference count either
-> > this way.
-> >
-> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > ---
->
->
-> Please follow standard defconfig submission rules, so as explained in
-> maintainer soc profile document: you are not supposed to send patches
-> soc@ for review.
-Applied to the loongarch tree.
+Loongson-2 is 64bit CPU series, their SoC drviers are not supposed to be
+used with 32bit. So make Loongson-2 drivers depend on MACH_LOONGSON64 to
+avoid build warnings:
 
-Huacai
+   drivers/soc/loongson/loongson2_pm.c: In function 'loongson2_pm_probe':
+>> drivers/soc/loongson/loongson2_pm.c:178:49: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+     178 |                 loongson_sysconf.suspend_addr = (u64)phys_to_virt(suspend_addr);
+         |
 
->
-> Best regards,
-> Krzysztof
->
+Cc: stable@vger.kernel.org
+Fixes: 3d9aba6618d1 ("LoongArch: Adjust build infrastructure for 32BIT/64BIT")
+Closes: https://lore.kernel.org/oe-kbuild-all/202610190549.WM2PO3vO-lkp@intel.com/
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ drivers/soc/loongson/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/soc/loongson/Kconfig b/drivers/soc/loongson/Kconfig
+index 368344943a93..84fac84909c4 100644
+--- a/drivers/soc/loongson/Kconfig
++++ b/drivers/soc/loongson/Kconfig
+@@ -6,6 +6,7 @@
+ config LOONGSON2_GUTS
+ 	tristate "Loongson-2 SoC Global UtiliTieS (GUTS) register block"
+ 	depends on LOONGARCH || COMPILE_TEST
++	depends on MACH_LOONGSON64
+ 	select SOC_BUS
+ 	help
+ 	 The global utilities block controls PCIE device enabling, alternate
+@@ -20,6 +21,7 @@ config LOONGSON2_GUTS
+ config LOONGSON2_PM
+ 	bool "Loongson-2 SoC Power Management Controller Driver"
+ 	depends on LOONGARCH && OF
++	depends on MACH_LOONGSON64
+ 	depends on INPUT=y
+ 	help
+ 	  The Loongson-2's power management controller was ACPI, supports ACPI
+-- 
+2.52.0
+
