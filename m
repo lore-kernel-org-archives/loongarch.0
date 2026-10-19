@@ -1,103 +1,131 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 993023CDBD3
-	for <loongarch@lists.linux.dev>; Mon, 19 Oct 2026 03:14:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from fhigh-b2-smtp.messagingengine.com (fhigh-b2-smtp.messagingengine.com [202.12.124.153])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07B2A484256
+	for <loongarch@lists.linux.dev>; Mon, 19 Oct 2026 07:28:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792379699; cv=none; b=Uo1IuKBE8zjWPqyERG6BSxsr0vs0O5d9uPeS9WwGxdSWXJ0ep7r5qRzRhBPM9oqTVn/QhUnb8D2TZguxKgY3JO1zNt9RNwb/4ZfEMqMVSxyKwmgi7LcPMCeATVlS/T+VAQscXIGOZ50lkxGNq55X7D/ItY7xLnPGcKMlzNl8Hq8=
+	t=1792394921; cv=none; b=Dih1Gw7oIQv/YisHcAwsJPsWP4T6bghgiLzV/oCO31SxLqP3ysUHVvxVMRZvLY+iDG90xYk6kF4rUan8VYlyguFSPjeXWk41KlBUWYMroSYZotP1DlDUGYdUr3Igvcr+YRZuHBdv3RzDU/701io1gRfl9Lc2mlvCs5nJwqwugLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792379699; c=relaxed/simple;
-	bh=lx5no8xRSUwjQ9mXkI+e7sRArirdLD1Ab0RRIlqZ3ZA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ir34MDOh2GBnf4uKnJlF5kT4T52JQIDhi60vDY3QwIujZkr8XLeDqPD5yzK2XctNWctqesZabT+dFpBtJCAmF0k+IP0yBcGREqKoYxlLEJ/WLSq4sTI5Lx5aHiaq9M5qM4w3xMgsgI5xAy12XZA7CbJtc+AOVZo2jvIKvQOmUFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.109])
-	by gateway (Coremail) with SMTP id _____8Cx_9Iqi9VqyykXAA--.2011S3;
-	Mon, 19 Oct 2026 11:14:50 +0800 (CST)
-Received: from kernelserver (unknown [223.64.68.109])
-	by front1 (Coremail) with SMTP id qMiowJDxBc0li9VqQ94tAA--.2975S2;
-	Mon, 19 Oct 2026 11:14:48 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	stable@vger.kernel.org,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH] soc: loongson: Make Loongson-2 drivers depend on MACH_LOONGSON64
-Date: Mon, 19 Oct 2026 11:14:36 +0800
-Message-ID: <20261019031436.3523632-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.52.0
+	s=arc-20240116; t=1792394921; c=relaxed/simple;
+	bh=+EWke+kegKWW2B563dpfhTyACjX4Bih9IB1dZgkly3I=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=jjIis2LOKoZNTkyVfhgkIbQ7SIiCwn6uNJgqAl7hIH4c7REWbRcCgC8YV/kjB2O0GzNXX8BUQ2ooHtB6slsv7qWVteFj06jzD60jKg91TytPnx+9NFhvkzVZ1vtusgiKk2VVAmuZ2LqUj2N5iXQGwZO2Fy22p5rK0csDtHMZJN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=dAZcgL1X; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=VrQOALa1; arc=none smtp.client-ip=202.12.124.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="dAZcgL1X";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VrQOALa1"
+Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 2986D7A00E9
+	for <loongarch@lists.linux.dev>; Mon, 19 Oct 2026 03:28:39 -0400 (EDT)
+Received: from ams-imap-03 ([10.64.2.23])
+  by ams-compute-02.internal (MEProxy); Mon, 19 Oct 2026 03:28:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1792394916;
+	 x=1792481316; bh=PLHYJfXPw5eZbHRCcZ0a6KnmTa621kQU2YjXteB/tC0=; b=
+	dAZcgL1Xda48bGQNimvV+30TMDWB34dW9GlC5BFaeug0K5leO6Iipw9N7StnEGIS
+	cNAIRj+KjBBi1Y2XcWg66eQfdT1Ifu/Q/JhNWHudkDtwO98sGq/DVAoD0AFppOVO
+	TgBLbF0VeNMEWgfJthmS0MY8uEpLj/me+9TA/n5nGF9XDzJEWVfWv1xCwUlQXnzM
+	/1IkmutlUP3oaoAGMiUAYZq2XWQWO9SFKTSwighnSjjQoXLXJZNG5oEatSWrTQ6V
+	jHOAhMSFYC53fq3ah7ewK13fPzf6/0Tx3gbWr2HiBOIgurSaaAHq6gwVjj+3L8ZZ
+	gba1EwKudsVvN9OD8TaSFQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1792394916; x=
+	1792481316; bh=PLHYJfXPw5eZbHRCcZ0a6KnmTa621kQU2YjXteB/tC0=; b=V
+	rQOALa1QDxzsdLrV+6cFGUFFFIhTiUQQr5UwqTAkG8kJf3tOcPXalv6cKmDbcVzx
+	rAqGa0o9t2HivL+B8t9oDRt43k4QoXvzMsVDjxqzKXSP7KjSxlNmljaF2/uk/ukE
+	Q9wdV0kylvNP5hwwpCf8Au+uxqRB7/H4YElPhiQ4JH8o2FEkVjQnN7vuBSDG4Crf
+	SKKHaakVwV/CmQHWmM1DWF/DYQ7eyth7SXlsRLOwOqSr07yRctuhsKpwdvIsiDTy
+	gYUTi+wV/ZnzI6MR+1wbXKb6fGmNVfLwQakupcWSNM07PFqcJ9/r6zCXuOY6B184
+	cjxbKef++G2StWTbzq1Bg==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
+	repo=github.com/dkim2wg/interop; date=2026-10-08; sw=lmtpprox;
+	action=sign d=arndb.de a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1792394916; d=arndb.de;
+	mf=PGFybmRAYXJuZGIuZGU+;
+	rt=PGxvb25nYXJjaEBsaXN0cy5saW51eC5kZXY+;
+	s=fm1:rsa-sha256:jfV1zFPc9DkaHtFCBF4w2UpUajufdHYdJgMGDjQRIdv4kU8
+	qn3jzg7OMmvR8hTS0+xVpGjRV3m+JGZ/y+LoFYE9g/T5PB2BwtVXD+rPzRDfnpb4
+	bXe7l9JqKjUHzPuQ2VUl0RijEnkRhR1CYtNFKFt81Pf0z5IbH8aHxib1LjQQf1Xb
+	Ts++zAZlhqUmYkgXF0HW4LLeK3OVRi0YKKbVbKNbE8rWEZdXI5jb9ENUWXAX/bII
+	BsOwXC139S3Bj1cD/C7tP6EURjf14m56IoDYcyzSi1tmFCGkBxTgB0vo6O+JSzVa
+	mDEuTw/wBDq/cfA9nri4HLopPfjgposVz/t7dAA==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
+	repo=github.com/dkim2wg/interop; date=2026-10-08; sw=lmtpprox;
+	action=mi-m=1; hc=12;
+	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
+	from,in-reply-to,message-id,mime-version,references,subject,to;
+Message-Instance: m=1; h=sha256:mjPdJaOz8JVVi9EZGnwjC/k/+t6i0OU5KJZVz1cg+XA=:+EWke+kegKWW2B563dpfhTyACjX4Bih9IB1dZgkly3I=;
+X-ME-Sender: <xms:n8bVar0hR9ty6kHHUR1QfQ75S-iQUsyT9fJHkfkfNPeFK0dVkydCiA>
+    <xme:n8bVak7_YyElYRzuvT3GNX5FqzEKmky4a_dcj5BRAC99SKMbmzsmZAsqr79qSE5Vw
+    yBysE5zCE5Es7pwcGNr9dOqxeTKtoSIux7CT2fqjEut8BEGBIBeoDsQew>
+X-ME-Proxy-Cause: dmFkZTEgTR2xr3LjwoQxTz4QE7mX+5PH46bNXCriRkEqgyvLMfGBx4gYCV93emLUYy/l5M
+    Uj0lDN5V7zucVcFPXh1K6dNdKEEFwfXHUAHartXABXQj/TBlb8Sd2SoVVoaHQnzMj+JH4u
+    rHfVcJFfbgA92Lex/Nk6wLuWq0JDbqWI9Sx+NsXOzqG0RJWZ3apQcBaysEfF8kv9uVnEjX
+    3tdLlo1+2Tv3+DpYfHNghLqk99BH+v7W0mmQ9RosYwG6Q2Mx/Np754/4x9TNHahfr53oOi
+    qVGBqJ98QI0LAARUdiTHlPZMJwD+rLIpw09e8M0Yykv4qtjMhkSxktzahgs/WxhsSbjAHX
+    JVI/h7iHJ6Cvm/7eR+xhyoKmzMJDHXjSbueGBGFrhiOHS01V7UfR8ldnhfigDagAUjH5Pi
+    lL2viOH/uQEpCEHZZt7oRLZNpi0mn07ge3xyABkkcIcoRp5HuVUCjRykLaY6Fh7IpCocMT
+    Rc1CShHHTCYtzf/kuPU02sKSJfCiRBQJ4TisBDVU8iY3R/Pd8x+ZlSl19LcMqREnO2Fq/O
+    kmLfzkbfNTVy1d02F8djTzJ7HtdiR03t0rlKldRLVaeAPSMIf6hYND5uP997F4j+82i28u
+    fHtZ8l8i+SeM16P3hjDa4n16/IHIFRWkfb6u9WgEbaXn1M65duq+3wZS0v8w
+X-ME-Proxy: <xmx:ocbVasb1HjVuJubc-t3mapr6ddPtKOWHhY5rOIm4Sr0iUEGCqzN51Q>
+    <xmx:ocbVavmZ-Hcw3Io5zJ_6bHf3W4o-UF5yf12p5-N6h20zRWvP1V-NRQ>
+    <xmx:ocbVaigHNthuBahyYD7Qq7buCImw9V4_idiE0y9HP9P7OBQD7m8d8A>
+    <xmx:ocbVahSCx0Q7hjy_DGU--Ab_5Wo6I5cOJl-7cdar0GVA3QfgXzq2yw>
+    <xmx:pMbVasjnztBiCuEhrfCJBjyRwPp0KnpeJ--w7f6o7Hf3WNuPTQYJTOas>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.ams.internal (Postfix, from userid 501)
+	id 1F95632A008E; Mon, 19 Oct 2026 03:28:31 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxBc0li9VqQ94tAA--.2975S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Aw4rGFyUuw4xXF4UuryfAFc_yoW8WF4kpa
-	n3Z3yxCF4UtF4Yyw45JryxCFy5Z393GF9ruanrJw1Uur9rAa48Zry7AFWSvF47ArWUXFy2
-	vr95uayUG3ZxGFbCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
-	AwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y
-	6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
-	AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE
-	2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcV
-	C2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73
-	UjIFyTuYvjxU2MKZDUUUU
+X-ThreadId: AzLNdjRv6F_B
+Date: Mon, 19 Oct 2026 09:28:10 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Huacai Chen" <chenhuacai@loongson.cn>,
+ "Huacai Chen" <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, "Xuefeng Li" <lixuefeng@loongson.cn>,
+ guoren <guoren@kernel.org>, "WANG Xuerui" <kernel@xen0n.name>,
+ "Jiaxun Yang" <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, "kernel test robot" <lkp@intel.com>
+Message-Id: <7f22dbbf-98e9-42ac-9c12-f6b4377ee430@app.fastmail.com>
+In-Reply-To: <20261019031436.3523632-1-chenhuacai@loongson.cn>
+References: <20261019031436.3523632-1-chenhuacai@loongson.cn>
+Subject: Re: [PATCH] soc: loongson: Make Loongson-2 drivers depend on MACH_LOONGSON64
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Loongson-2 is 64bit CPU series, their SoC drviers are not supposed to be
-used with 32bit. So make Loongson-2 drivers depend on MACH_LOONGSON64 to
-avoid build warnings:
+On Mon, Oct 19, 2026, at 05:14, Huacai Chen wrote:
+> Loongson-2 is 64bit CPU series, their SoC drviers are not supposed to be
+> used with 32bit. So make Loongson-2 drivers depend on MACH_LOONGSON64 to
+> avoid build warnings:
+>
+>    drivers/soc/loongson/loongson2_pm.c: In function 'loongson2_pm_probe':
+>>> drivers/soc/loongson/loongson2_pm.c:178:49: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+>      178 |                 loongson_sysconf.suspend_addr = 
+> (u64)phys_to_virt(suspend_addr);
+>          |
+>
+> Cc: stable@vger.kernel.org
+> Fixes: 3d9aba6618d1 ("LoongArch: Adjust build infrastructure for 
+> 32BIT/64BIT")
 
-   drivers/soc/loongson/loongson2_pm.c: In function 'loongson2_pm_probe':
->> drivers/soc/loongson/loongson2_pm.c:178:49: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-     178 |                 loongson_sysconf.suspend_addr = (u64)phys_to_virt(suspend_addr);
-         |
+I would prefer just fixing the trivial portability issue here and keep
+the COMPILE_TEST option around. loongson_sysconf.suspend_addr is
+'unsigned long', so just cast to that instead of u64, or
+change the suspend_addr type to 'void *'.
 
-Cc: stable@vger.kernel.org
-Fixes: 3d9aba6618d1 ("LoongArch: Adjust build infrastructure for 32BIT/64BIT")
-Closes: https://lore.kernel.org/oe-kbuild-all/202610190549.WM2PO3vO-lkp@intel.com/
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- drivers/soc/loongson/Kconfig | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/soc/loongson/Kconfig b/drivers/soc/loongson/Kconfig
-index 368344943a93..84fac84909c4 100644
---- a/drivers/soc/loongson/Kconfig
-+++ b/drivers/soc/loongson/Kconfig
-@@ -6,6 +6,7 @@
- config LOONGSON2_GUTS
- 	tristate "Loongson-2 SoC Global UtiliTieS (GUTS) register block"
- 	depends on LOONGARCH || COMPILE_TEST
-+	depends on MACH_LOONGSON64
- 	select SOC_BUS
- 	help
- 	 The global utilities block controls PCIE device enabling, alternate
-@@ -20,6 +21,7 @@ config LOONGSON2_GUTS
- config LOONGSON2_PM
- 	bool "Loongson-2 SoC Power Management Controller Driver"
- 	depends on LOONGARCH && OF
-+	depends on MACH_LOONGSON64
- 	depends on INPUT=y
- 	help
- 	  The Loongson-2's power management controller was ACPI, supports ACPI
--- 
-2.52.0
-
+      Arnd
