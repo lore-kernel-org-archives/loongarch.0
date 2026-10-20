@@ -1,45 +1,58 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=113.46.200.225
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792483853;
-	b=VnhAowdkcDYXL/RRRMVYXOOD1GcRIkbZQpWXJmDKGk9zXYYRE1emasWaZhLe0XnezsDN
-	 /d7ThnIZ77+4OcamaeYSf4/x7LZDQp7szomYq/F2vLrC2+/Mx2U/sYeulV5AVaH/R5l9p
-	 Ar+xn6ylXgV9iUmrJGVK26ojBIfZ/VJe2gfgCXdRefP7yFdZACGfprwUuQkrIP1eFLM2P
-	 EqGtcJNNODbARibuHJ27EBPd6Ao1xs4H3rzQ7+pd9X51Qcg4B1d8T5yOW7csVjXAZ1p+x
-	 rRRcTOMxh0fl2/To8ism57ANPlPQ9fEACDp6MOioWYbU/u/fVjXmdhNfAc0qsImxIVA==
+	t=1792485256;
+	b=Ek95mYjTA886OXlb6rQoWYWSLxIW9AQlIYvSw1NWhdUoEMJO5fhQgNpyvT2tSRMMPovM
+	 UwIuatuFqykvLXZGEiD/9ejmqguEXoJhp4ILyPLduq/rM328uKo+1fApEldfOLd9RT5CJ
+	 ZpDGFA7NbvVTxEeYn34DyBRGDC52VEkN+CCWfnFkrQ1maW/HbWk5MVgrLCorDpFmklnH2
+	 qGQjZr4l7m+QU3sh5jUu6XJAKdsmupMTw3uwzgIGeVH8cQ2RPyUrEboCdAp1bXnubhGFT
+	 ivyqdgqJ6/5RILS1VFFq4ZPfPNn00XVaWTSFo2llzcp711YvBv/InwkqH6pXE6hqnkw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792483853;
-	h=Received:DKIM-Signature:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:Subject:From:To:Cc:In-Reply-To:References:
-	 Date:Message-Id:X-Mailer;
-	bh=KZ1lrmFftcZp227HDnBABEgI98zobYONU8pPNNvhy9c=;
-	b=uFIXsVYsxTddNwP3eikkCxIwBd+S1eEf/R47+nrbsapRpKFS2srDdn8+YY2okFA5Z73n
-	 pwIhWy2AEkDoJxUadwlLpsgsN5fQaJAVbwzk09noBKilYhN8MT0BCXE3kAhRDl3L2k23X
-	 CQ547O/IIPwRijJGuN2lN1+ocavxEiR4wbTtxUT0CCNTqRUm9Ysu2ItinsR2X6/KZ2RRR
-	 ScMMR3AmsASxi2cycE/pa/T6cacV3OVFJ6+tv0D24r/xDLfnZIo8A3C6hXRWl2+8QPr+r
-	 mWAhj4JFoByofA+F4IowEK4IhrVG/TKcQXJJKxdjDgdcxIE/lX7tTbRfONO2yL3wHEA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792485256;
+	h=DMARC-Filter:dkim-signature:Received:Received:Received:Message-ID:
+	 Date:MIME-Version:User-Agent:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding:X-Originating-IP:
+	 X-ClientProxiedBy;
+	bh=vBKNWH+6fXgb7uSlyDkZ/sbNDxzLeASFOGVrmanI1ag=;
+	b=uJ81X4keCx5TEN/YTunuWlyHkzcUALJMQgMyYVqBXBZrI0MwrlF9QsqhaOhB+Og/uFVY
+	 P5I6m7Xub0zM69bV/aENDpSMjVbei3vOuJL9gLsR/dtUZ/C7ifJW3yd/iLO9MmY3Xt5RL
+	 ExV9AhYzLtd/ICWUYYAbY/6EE+AW6cIvdPTo7Cri4uzPQjQe0lctcmtZHsl2W0qGQI5Wd
+	 L+2pDX7TvY4szxO5W19Ed0cUyRuH77ToEM+uel/JDtaqQx+RQFsJXXUCTIJPloZAKZVGS
+	 v3EYZjIPVge9qj/bZ0GL2CjjBF/bRlHijqK4gEQx8AkTIRTDGPKcwyWsgMS1SUgqMZw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Si5aKroF;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=huawei.com;
+	spf=pass smtp.mailfrom=huawei.com;
+	dkim=pass header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=Kk+jgumG;
+	arc=none smtp.remote-ip=113.46.200.225
+Received: from canpmsgout10.his.huawei.com (canpmsgout10.his.huawei.com [113.46.200.225])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33646606A31C;
-	Tue, 20 Oct 2026 08:10:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FB0D606A31C;
+	Tue, 20 Oct 2026 08:34:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4FB0D606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Si5aKroF
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 843E51F000C5;
-	Tue, 20 Oct 2026 08:10:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792483852;
-	bh=KZ1lrmFftcZp227HDnBABEgI98zobYONU8pPNNvhy9c=;
-	h=Subject:From:To:Cc:In-Reply-To:References:Date;
-	b=Si5aKroFBRQWvoPfQiWUtXY5pV8QpgRTZoMyRO15GNPz4DBKDDZ4+iSIyNHYtvZqz
-	 G8lOTVxx6NmBdsjO1UBSP1zEZT4qLneCQe7uGvJPIQWns6h93fPilB2DLZGNa+FI1X
-	 oNs2kA2m181Alm8R8g1+o+T40SoWbc2YMPMz1bo6wE5Vo2J4fzJ+Of7PHBfk2YhNhd
-	 LNw3L2V3Q9kl/VRl12GSWRwMxpeyB7LrxcW/Qgu01ReVPUn0VH6x9EK6nNiGmKVqO+
-	 uomF8qMGugM60D+AO/F2HDVDsDC4mXpuL2c4vvdFyya6eaFTHDwOvRcep1YD0ejLSn
-	 ILyvkm6wO3wvA==
+	dkim=pass (1024-bit key, unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=Kk+jgumG
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=vBKNWH+6fXgb7uSlyDkZ/sbNDxzLeASFOGVrmanI1ag=;
+	b=Kk+jgumG+pv7XnaPZDeeAU8MQ3LXTfm6oVnCbW8jazUZnqZ/ORtrC7JgFvxdnO+cDQzOI4t2U
+	7vALOi9vHSSqoltGoZVUZISYSqkFZA0i7RhDVImMBjBBYnv3lpqm+y9AiV7PJ3swzXlcKzvnvXx
+	8keUXFd5fYMskZHOl9KyGJI=
+Received: from mail.maildlp.com (unknown [172.19.163.163])
+	by canpmsgout10.his.huawei.com (SkyGuard) with ESMTPS id 4j85L156ycz1K9Xh;
+	Tue, 20 Oct 2026 16:34:01 +0800 (CST)
+Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0A9C04048B;
+	Tue, 20 Oct 2026 16:34:05 +0800 (CST)
+Received: from [10.67.110.68] (10.67.110.68) by kwepemk200008.china.huawei.com
+ (7.202.194.74) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Tue, 20 Oct
+ 2026 16:34:02 +0800
+Message-ID: <d7dc6528-4ec8-46d0-b21e-8a4c38edd4ce@huawei.com>
+Date: Tue, 20 Oct 2026 16:34:02 +0800
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -49,140 +62,69 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v6 09/14] x86/crash: Fix massive out-of-bounds write on
- 32-bit Highmem
-From: Mike Rapoport <rppt@kernel.org>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, 
- chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com, 
- mpe@ellerman.id.au, npiggin@gmail.com, chleroy@kernel.org, 
- ritesh.list@gmail.com, sshegde@linux.ibm.com, tglx@kernel.org, 
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
- gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org, 
- akpm@linux-foundation.org, baoquan.he@linux.dev, rppt@kernel.org, 
- pasha.tatashin@soleen.com, pratyush@kernel.org, ruirui.yang@linux.dev, 
- leitao@debian.org, yeoreum.yun@arm.com, sourabhjain@linux.ibm.com, 
- robh@kernel.org, coxu@redhat.com, kees@kernel.org, tangyouling@kylinos.cn, 
- liukexin@kylinos.cn, zhangtianyang@loongson.cn, guodongtai@kylinos.cn, 
- maqianga@uniontech.com, chao.gao@intel.com, kai.huang@intel.com, 
- vishal.l.verma@intel.com, seanjc@google.com, piliu@redhat.com, 
- thuth@redhat.com, jbouron@amazon.com, me@linux.beauty, 
- mclapinski@google.com, graf@amazon.com, bgwin@google.com, 
- hbathini@linux.ibm.com, eric.devolder@oracle.com, 
- takahiro.akashi@linaro.org, james.morse@arm.com, palmer@rivosinc.com, 
- x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
- linuxppc-dev@lists.ozlabs.org, driver-core@lists.linux.dev, 
- kexec@lists.infradead.org
-In-Reply-To: <20260921090450.807575-10-ruanjinjie@huawei.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 01/14] kexec: Fix CMA segment address translation with
+ non-zero text_offset
+To: Mike Rapoport <rppt@kernel.org>
+CC: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
+	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
+	<mpe@ellerman.id.au>, <npiggin@gmail.com>, <chleroy@kernel.org>,
+	<ritesh.list@gmail.com>, <sshegde@linux.ibm.com>, <tglx@kernel.org>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<hpa@zytor.com>, <gregkh@linuxfoundation.org>, <rafael@kernel.org>,
+	<dakr@kernel.org>, <akpm@linux-foundation.org>, <baoquan.he@linux.dev>,
+	<pasha.tatashin@soleen.com>, <pratyush@kernel.org>, <ruirui.yang@linux.dev>,
+	<leitao@debian.org>, <yeoreum.yun@arm.com>, <sourabhjain@linux.ibm.com>,
+	<robh@kernel.org>, <coxu@redhat.com>, <kees@kernel.org>,
+	<tangyouling@kylinos.cn>, <liukexin@kylinos.cn>, <zhangtianyang@loongson.cn>,
+	<guodongtai@kylinos.cn>, <maqianga@uniontech.com>, <chao.gao@intel.com>,
+	<kai.huang@intel.com>, <vishal.l.verma@intel.com>, <seanjc@google.com>,
+	<piliu@redhat.com>, <thuth@redhat.com>, <jbouron@amazon.com>,
+	<me@linux.beauty>, <mclapinski@google.com>, <graf@amazon.com>,
+	<bgwin@google.com>, <hbathini@linux.ibm.com>, <eric.devolder@oracle.com>,
+	<takahiro.akashi@linaro.org>, <james.morse@arm.com>, <palmer@rivosinc.com>,
+	<x86@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <loongarch@lists.linux.dev>,
+	<linuxppc-dev@lists.ozlabs.org>, <driver-core@lists.linux.dev>,
+	<kexec@lists.infradead.org>
 References: <20260921090450.807575-1-ruanjinjie@huawei.com>
- <20260921090450.807575-10-ruanjinjie@huawei.com>
-Date: Tue, 20 Oct 2026 11:09:39 +0300
-Message-Id: <179248377976.302547.17579416672238014424.b4-review@b4>
-X-Mailer: b4 0.16.1-dev
+ <20260921090450.807575-2-ruanjinjie@huawei.com>
+ <179248377975.302547.13172455257147735569.b4-review@b4>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <179248377975.302547.13172455257147735569.b4-review@b4>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ kwepemk200008.china.huawei.com (7.202.194.74)
 
-Hi Jinjie,
 
-> On 32-bit x86 systems with HIGHMEM, kmap_local_page() only maps a single
-> 4KB page. However, the elfcorehdr segment can span several pages (up to
-> hundreds of kilobytes).
+
+在 2026/10/20 16:09, Mike Rapoport 写道:
+>> kimage_load_cma_segment() and kimage_map_segment() both translate
+>> a CMA segment using page_address(cma), which returns the CMA base
+>> address. This ignores segment->mem.
+>>
+>> On arm64, image_load() adds text_offset to segment->mem before the
+>> segment is loaded:
+>>
+>> 	kernel_segment->mem += text_offset;
+>> 	kernel_segment->memsz -= text_offset;
+>> 	image->start = kernel_segment->mem;
 > 
-> The original code blindly copies 'elfsz' bytes at once via
-> memcpy_flushcache(), overwriting adjacent fixmap entries or critical
-> virtual addresses.
+> That's true, but since commit 751c263bb74f ("arm64: remove TEXT_OFFSET
+> randomization") TEXT_OFFSET is always zero. This is upstream from v5.8,
+> so no LTS kernels has non-zero TEST_OFFSET.
+
+Yes, My concern is what if the kdump kernel is an old one without this
+patch?
+
+Should we just add a WARN_ON_ONCE(text_offset != 0); here?
+
 > 
-> Fix this by copying the new elfcorehdr page by page.
-
-This is independed of other fixes and can be sent as a separate x86b fix.
-
-> Cc: Thomas Gleixner <tglx@kernel.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Baoquan He <baoquan.he@linux.dev>
-> Cc: Chao Gao <chao.gao@intel.com>
-> Cc: Sean Christopherson <seanjc@google.com>
-> Cc: Eric DeVolder <eric.devolder@oracle.com>
-> Cc: Hari Bathini <hbathini@linux.ibm.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
-> Cc: stable@vger.kernel.org
-> Fixes: ea53ad9cf73b ("x86/crash: add x86 crash hotplug support")
-> Link: https://sashiko.dev/#/patchset/20260907125404.922123-1-ruanjinjie%40huawei.com
-> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-> ---
->  arch/x86/kernel/crash.c | 26 +++++++++++++-------------
->  1 file changed, 13 insertions(+), 13 deletions(-)
->
-> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-> index e681ec9cf1dc8..3c9f4fbbe7ff0 100644
-> --- a/arch/x86/kernel/crash.c
-> +++ b/arch/x86/kernel/crash.c
-> @@ -447,9 +447,10 @@ unsigned int arch_crash_get_elfcorehdr_size(void)
->   */
->  void arch_crash_handle_hotplug_event(struct kimage *image, void *arg)
->  {
-> -	void *elfbuf = NULL, *old_elfcorehdr;
->  	unsigned long mem, memsz;
->  	unsigned long elfsz = 0;
-> +	void *elfbuf = NULL;
-> +	unsigned long done;
->  
->  	/*
->  	 * As crash_prepare_elf64_headers() has already described all
-> @@ -484,21 +485,20 @@ void arch_crash_handle_hotplug_event(struct kimage *image, void *arg)
->  
->  	/*
->  	 * Copy new elfcorehdr over the old elfcorehdr at destination.
-> -	 */
-> -	old_elfcorehdr = kmap_local_page(pfn_to_page(mem >> PAGE_SHIFT));
-> -	if (!old_elfcorehdr) {
-> -		pr_err("mapping elfcorehdr segment failed\n");
-> -		goto out;
-> -	}
-> -
-> -	/*
-> -	 * Temporarily invalidate the crash image while the
-> -	 * elfcorehdr is updated.
-> +	 * The segment is physically contiguous but can span several pages.
-> +	 * On 32-bit Highmem architectures, kmap_local_page() maps only a
-> +	 * single page at a time, so copy page by page.
->  	 */
->  	xchg(&kexec_crash_image, NULL);
-> -	memcpy_flushcache(old_elfcorehdr, elfbuf, elfsz);
-> +	for (done = 0; done < elfsz; ) {
-> +		size_t chunk = min_t(size_t, PAGE_SIZE, elfsz - done);
-> +		void *dst = kmap_local_page(pfn_to_page((mem + done) >> PAGE_SHIFT));
-> +
-> +		memcpy_flushcache(dst, elfbuf + done, chunk);
-> +		kunmap_local(dst);
-> +		done += chunk;
-> +	}
-
-HIGMEM is only enabled on 32-bit and there elfsz cannot be "massive"
-because it is the size of the headers just built for the CPUs and RAM
-ranges actually present, not the large memsz reserved for hotplug.
-On x86_32 (NR_CPUS <= 64) that is a few KiB at most.
-
-Also, crashkernel is capped at CRASH_ADDR_HIGH_MAX = SZ_512M on X86_32,
-which is below the default lowmem limit. For lowmem pages,
-kmap_local_page() returns the contiguous direct-map address, so the old
-code was already fine.
-
-So the overflow needs the crash region to be in highmem, either through
-crashkernel=size@offset above lowmem or through a large vmalloc=
-setting, and an elfcorehdr larger than one page.
-
-It is still worth fixing, but please drop "massive" from the subject.
-
-The changelog should also mention the conditions when this could happen.
+> Maybe we should rather start deprecating .text_offset in arm64?
+> 
 
 -- 
-Sincerely yours,
-Mike.
+Best regards,
+Jinjie
 
