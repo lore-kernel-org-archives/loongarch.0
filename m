@@ -1,55 +1,103 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=148.163.158.5
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792493295;
-	b=JRpyebcsH57zNgph/ddW3TAiM5iXT44M7DvF9+Iusa8cnfvTVtzicPx63cy97nPmH6x8
-	 9bssEIPbdK1ANTaVRnLmqKKGs6NEMUPBBjjetdcGg5KBh49nS24gWexpbERphU5k6bnSZ
-	 A2Hyy7qnyoinR/3GLYlTxBRS2ae/HqLQ8dJpK63xCxTVhL4CexirHrH0/Pi+AgZt8Orko
-	 sk+9jflwBMYEGZUuMXSclz78Kw0FWbk3RmoChW9lrCm3MDr5DF90fexlq++fbMNKo5eSd
-	 BMzK9U4Z/wFhgXnEOAWavkDZZYg2m57xis3XNjSJGV0aW/c+gsNJ80YNvKcMS2v5lwA==
+	t=1792522201;
+	b=u65KUYEpR1ytFrGlQaQU1KDXqyYCkNwsOWuLkAue8T4CZZ+K/LSJwHxglphh1v4r3zUY
+	 DEI7ExJh33kiVxpYNL9qbHIneN1c8drX5hjrho5EFh5PE48GsRK9L4z8W5lcDam4cudaw
+	 +REFHLG2q5F433NtVaRWlZbU8jSipoDP/jdDehZJlasgctn6/9qe6VUmjrc3aWibcKgM/
+	 Q97PABMDKEWzufGUYCAtAHajg5e3GyqJAEHLqh5APhdaLgLUBJt+rhggXDPjjMIgJ/jpm
+	 3YnnhYzAhui7HXi3IQnQd66CQb0hl/WVhHQP51ZQ7uWMPS2gI7C8YgzUVwQ8I/bU54A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792493295;
-	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
-	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
-	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=9Zw24p/saADZ7syx7j8QqBGFYl8Xd5k3nVSaKsS8org=;
-	b=dVEyiKOBK4plGg82818R3cTN0jVJAH4aCEYAjkVR2WwwumsEzmqdOjQxD14yFOR6qdeR
-	 /NlbWYL/MortiLERor5oFFpwvQ0F9Pe83tuSSsmXq0SCC00XB9IbkKQbcY+7AskdjYSLw
-	 rGllH3+I946ksSvyaZWMqi1l2aEilFSLdf3w1f+4ciWnAc3D8mGrmUu+2BRI4ZJku1koK
-	 luUhFPL8SCsu4tjSGQtL+QoBVjL8rTP1qnXMOk6VrQ096w0qDH3E8b7VrHsp5Y03lG+IK
-	 z2zqhfEKueM6RVSH+/w/APKtLxFAa7IR9jLkrMSjtVJk/hUAad0sumaQJJKEQNaE59A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792522201;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
+	 Received:Received:Received:Received:Message-ID:Subject:From:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:
+	 MIME-Version:User-Agent:X-TM-AS-GCONF:X-Proofpoint-Reinject:
+	 X-Authority-Analysis:X-Proofpoint-ORIG-GUID:
+	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-Spam-Info:
+	 X-Proofpoint-GUID:X-Proofpoint-Virus-Version:
+	 X-Proofpoint-Spam-Details;
+	bh=CUipg4fJiQC0gX8LVYNaRjwOaAjhAgEsBQ5MnjXNco0=;
+	b=OZcaeUZ1rX0aRdxtHW7jHtx2qfoLBHZrtDsDuBWa+fnGX6mJwgAhnHp4uyC89peowitc
+	 iTcPPE6bLLcN3knxl7cgzqkkqQzu2aMxlNf/M1NJLSLfaO86c6pka3GEr5qsdhuEdnlhp
+	 NLpb0XTjqJMet9M2r9/vmdrZC+NPvsI9HB6tREO5VpffIRqQxjaL3d9LpFpWLg8PSZ/AJ
+	 ZlAZ6XFZBu4iTWQX1iG0sgxEbHmRlRF1XyekTvnNPSnJhUThSb/JTokPLHZppsOI8gg7S
+	 xfZY1tLpcYSLvNibEmXZQ7CTpQGk2+dz05BDqLe/Bvu2qTuxy7vqZLbss49+QW3lJ1g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dqJFDAox;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=linux.ibm.com;
+	spf=pass smtp.mailfrom=linux.ibm.com;
+	dkim=pass header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b="PyLs4m/b";
+	arc=none smtp.remote-ip=148.163.158.5
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C041606A31C
-	for <loongarch@lists.linux.dev>; Tue, 20 Oct 2026 10:48:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96054606A31C
+	for <loongarch@lists.linux.dev>; Tue, 20 Oct 2026 18:50:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 96054606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dqJFDAox
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A55CB1F01573
-	for <loongarch@lists.linux.dev>; Tue, 20 Oct 2026 10:48:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792493294;
-	bh=9Zw24p/saADZ7syx7j8QqBGFYl8Xd5k3nVSaKsS8org=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=dqJFDAoxRt1W8nDk4gwL8Z07sDdJKsQJt/PY8NoYEOY72CHEACr9xaijQNMaLPoYO
-	 zLVAYvMU0u6r6M1V+bo2MC/IHypyOYCuExl/Di12ZywZqyyKbVeLI706FG6l7D3iJ4
-	 PJgPO4Rjllw1WgsYRVkNleIFPzOzJDwRZg88KzT4GXQP+SLZFdXi/gPbwIcEsuZ/bi
-	 pTc9VLLfbBN/bcdZFcwM0cMvvfNdu8rQ8wY0E7piXilmSy+8MGtlPEXhYHW1lBeYkI
-	 9UuJ5nTtsvDNGkyBQgmQpOJe/kNJpsbg2SKNhb+aGz/z8/Tja0/+jBuCCuD6ynI6QE
-	 zjG88N+4HH/6w==
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-6b1aa4d71e7so3056315a12.0
-        for <loongarch@lists.linux.dev>; Tue, 20 Oct 2026 03:48:14 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBxh8geUY24LLn0nUwRFh51quTv3J/JxjXWSNhAlYnv1tjWtuXFoJStjYt8v+uh4/XT5J/ayRv3zCr0=@lists.linux.dev
-X-Gm-Message-State: AFq9FYIoatd46mRa25px5PhiOPn/gYLq9zWLyRikgdRBUcRCEO1LrkuX
-	+agGjVuCC4LbuyYn+QtA2NcMaiYxFZxB3Cqa0gk7wPhgTWDsbvXw5SafvOuooFLBpbqzJul6P7H
-	5vAR9g/tEgSzvsD7g54seXgDOTQRf0aE=
-X-Received: by 2002:a05:6402:518c:b0:6b3:c088:3646 with SMTP id
- 4fb4d7f45d1cf-6b3c0883973mr5683359a12.19.1792493293238; Tue, 20 Oct 2026
- 03:48:13 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=PyLs4m/b
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69KHEGYY2978623;
+	Tue, 20 Oct 2026 18:49:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=CUipg4
+	fJiQC0gX8LVYNaRjwOaAjhAgEsBQ5MnjXNco0=; b=PyLs4m/bwKvEN1Xub2+nsy
+	RvDztJMNx/Z+zoVjhqf3OXsUqlQyAwKi6Di8U1rhrdN+ORF9bIIUy2WpblIgKMrY
+	wQz5uaGWAvaV+A7KvUL4yg9m/v9EDesHFCLuqNWzfGs8kRBM6IgqNGhQw8n0tdht
+	eA+deQAvJRxk3pWNsU0LIS6ntBFtiTy68Ba6SbC3Pc87D2WQ25G8+09mz4Ij+aqj
+	fYLWN3kFHFJa9s292QZL70nuHrDz+JW2NDEXBhYrt7nyY40OuZt07GGrc2GhUGlX
+	1gCPfU03Slx8kl4J391XkgR2GEiNQu4gyoA19xotJcjdqMfJj0AXeYXgDD9RM+7w
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4hdw5ammmp-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Tue, 20 Oct 2026 18:49:13 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 69KH4pQG1836498;
+	Tue, 20 Oct 2026 18:49:13 GMT
+Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4he8vhsb58-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 Oct 2026 18:49:13 +0000 (GMT)
+Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
+	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 69KInCjW27787960
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 20 Oct 2026 18:49:12 GMT
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8711458056;
+	Tue, 20 Oct 2026 18:49:12 +0000 (GMT)
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AE8CB58052;
+	Tue, 20 Oct 2026 18:49:10 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.74.192])
+	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 20 Oct 2026 18:49:10 +0000 (GMT)
+Message-ID: <f6829d2023573445b0906b34812e5b0bfdfb2e4c.camel@linux.ibm.com>
+Subject: Re: [PATCH v2] kexec: Select ima_get/free_kexec_buffer() with
+ CONFIG_HAVE_IMA_KEXEC(_OF)
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Roberto Sassu <roberto.sassu@huaweicloud.com>, catalin.marinas@arm.com,
+        will@kernel.org, mark.rutland@arm.com, chenhuacai@kernel.org,
+        kernel@xen0n.name, maddy@linux.ibm.com, mpe@ellerman.id.au,
+        npiggin@gmail.com, chleroy@kernel.org, pjw@kernel.org,
+        palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+        tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, hpa@zytor.com, robh@kernel.org,
+        saravanak@kernel.org
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        devicetree@vger.kernel.org, noodles@fb.com,
+        linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org,
+        Roberto Sassu
+ <roberto.sassu@huawei.com>
+In-Reply-To: <20261020083727.1906495-1-roberto.sassu@huaweicloud.com>
+References: <20261020083727.1906495-1-roberto.sassu@huaweicloud.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 20 Oct 2026 14:49:10 -0400
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -59,131 +107,71 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <20261016081006.26069-1-yangtiezhu@loongson.cn> <20261016081006.26069-2-yangtiezhu@loongson.cn>
-In-Reply-To: <20261016081006.26069-2-yangtiezhu@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 20 Oct 2026 18:48:02 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H63qesMYvT-KyJFDJckZxdvKRr=++D=dMxtuvOZuO7TQw@mail.gmail.com>
-X-Gm-Features: AclHuK8hXtMJqt-eUZHz9NQiocHWzQn_jEAdqjkfZ7FHF9J_UYI2Ikx9rQXlYgE
-Message-ID: <CAAhV-H63qesMYvT-KyJFDJckZxdvKRr=++D=dMxtuvOZuO7TQw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] LoongArch: Add CPUCFG2 DIV32 feature detection
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Hengqi Chen <hengqi.chen@gmail.com>, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.3 (3.58.3-2.fc43) 
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Authority-Analysis: v=2.4 cv=X63Hu2Te c=1 sm=1 tr=0 ts=6ad7b7aa cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=i0EeH86SAAAA:8
+ a=1ZqOMbZaXgEuhprhJ6sA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: Ia0JIwvxgpSWbtDkRhI4dPoRvql5U3OQ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDIwMDA3NCBTYWx0ZWRfX6CxIfm/eOhQP
+ +/wUaq+FQGOqNArpfZIrUA+k9rkfHNtq3LEC/MDGsUMQm3qiFtctCKcsB3g0dqzV/HMTrSQIcHS
+ kh45avWcDz/fa+RP2uRW8fGU108iYPrT3oaL1/s8VqCXcyTI5mX9UO7rDq0gQiB05j54tUmphC5
+ M3UcJKnVRjGR5yF0kTH+AndvbRuqhLZdXHW5xBZ63UpJUlNFZ1AmQFZZ7EjQIaYbCuxgzixRrQ4
+ eA1AxoIEmsZQy6ehSvq9n5ynjA3GOuarZ2tJhvCrpsIWZZUbqTsIBLwtl23nBpUqhDTFfw9xvEL
+ QBTaUenCPMupL6l8hjKV2oZW8fZ1wD/GoA5VHnl9m0fQzGO+tv8xrL/dlgroHuaczSHOq+fqX5E
+ cpLrzXoAs3f5D20wkmuN/fXp+2uRCw2Ftp5wPit+Q/mAZN0Rv9mp3+/u1kRTBMxoWYlDJGKGZh2
+ LBmMkOCw1SrNQ0gUpWw==
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMDIwMDA3NCBTYWx0ZWRfX/pCk1z+OIKUf
+ 8bZpWSGlRHh+7LvRdNSDPEBz4dEG1doO2AZda9JjErBmhtY1k+w0Jzx8QJ2wYxxGwVf3bi3lXKC
+ 57cA1acf9WI/uIkewDh2r98mkDuuQnM=
+X-Proofpoint-GUID: gj5Wz7vSF5n4aqUBRYZGldP83-pRH86l
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-10-20_03,2026-10-19_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 phishscore=0 bulkscore=0 adultscore=0 malwarescore=0
+ clxscore=1015 spamscore=0 impostorscore=0 lowpriorityscore=0 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2610190000 definitions=main-2610200074
 
-This one is applied, thanks.
-
-Huacai
-
-On Fri, Oct 16, 2026 at 4:10=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> The LoongArch Architecture Manual defines a hardware capability bit
-> CPUCFG2_DIV32 (bit 26 of CPUCFG 0x2). When this bit is set to 1, it
-> indicates that on 64-bit machines, the division and mod instructions
-> (DIV.W[U] and MOD.W[U]) will ignore the upper 32 bits of the input
-> registers and only compute based on the lower 32 bits.
->
-> On certain CPU cores without this feature, these 32-bit instructions
-> require both input operands to be properly sign-extended. Otherwise,
-> the hardware execution results can be randomly meaningless values.
->
-> Add CPU_FEATURE_DIV32 to detect and export this hardware capability
-> via elf_hwcap and cpu_has_div32. This provides the infrastructure
-> for subsystems like BPF JIT to safely choose either native 32-bit
-> instructions or fallback instruction sequences based on the actual
-> CPU hardware capabilities.
->
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+On Tue, 2026-10-20 at 10:37 +0200, Roberto Sassu wrote:
+> From: Roberto Sassu <roberto.sassu@huawei.com>
+>=20
+> On x86, if CONFIG_OF_FLATTREE is enabled, the kernel uses the device tree
+> implementation of ima_get/free_kexec_buffer(). However, x86 passes the IM=
+A
+> buffer location through setup_data, not through the device tree, so the
+> buffer is never found and the IMA measurement list is not carried over
+> across kexec.
+>=20
+> Introduce CONFIG_HAVE_IMA_KEXEC_OF (which selects CONFIG_HAVE_IMA_KEXEC)
+> and select it for the architectures that pass the IMA buffer location
+> through the device tree, via of_kexec_alloc_and_setup_fdt() (arm64,
+> powerpc and riscv). Build the device tree implementation of
+> ima_get/free_kexec_buffer() only if the new option is enabled.
+>=20
+> Select the new option also on LoongArch, to preserve the current behavior
+> and avoid a link failure. LoongArch does not pass the buffer location to
+> the next kernel yet; this will be addressed separately.
+>=20
+> Finally, don't select it for x86, and use x86's own setup_data-based
+> implementation regardless of CONFIG_OF_FLATTREE.
+>=20
+> Fixes: b69a2afd5afc ("x86/kexec: Carry forward IMA measurement log on kex=
+ec")
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
 > ---
->  arch/loongarch/include/asm/cpu-features.h | 1 +
->  arch/loongarch/include/asm/cpu.h          | 2 ++
->  arch/loongarch/include/uapi/asm/hwcap.h   | 1 +
->  arch/loongarch/kernel/cpu-probe.c         | 4 ++++
->  arch/loongarch/kernel/proc.c              | 2 ++
->  5 files changed, 10 insertions(+)
->
-> diff --git a/arch/loongarch/include/asm/cpu-features.h b/arch/loongarch/i=
-nclude/asm/cpu-features.h
-> index 62059c5551b9..3e7cf1987171 100644
-> --- a/arch/loongarch/include/asm/cpu-features.h
-> +++ b/arch/loongarch/include/asm/cpu-features.h
-> @@ -69,5 +69,6 @@
->  #define cpu_has_msgint         cpu_opt(LOONGARCH_CPU_MSGINT)
->  #define cpu_has_avecint                cpu_opt(LOONGARCH_CPU_AVECINT)
->  #define cpu_has_redirectint    cpu_opt(LOONGARCH_CPU_REDIRECTINT)
-> +#define cpu_has_div32          cpu_opt(LOONGARCH_CPU_DIV32)
->
->  #endif /* __ASM_CPU_FEATURES_H */
-> diff --git a/arch/loongarch/include/asm/cpu.h b/arch/loongarch/include/as=
-m/cpu.h
-> index 91b96938861e..d1cf5dd5eceb 100644
-> --- a/arch/loongarch/include/asm/cpu.h
-> +++ b/arch/loongarch/include/asm/cpu.h
-> @@ -127,6 +127,7 @@ static inline char *id_to_core_name(unsigned int id)
->  #define CPU_FEATURE_MSGINT             31      /* CPU has MSG interrupt =
-*/
->  #define CPU_FEATURE_AVECINT            32      /* CPU has AVEC interrupt=
- */
->  #define CPU_FEATURE_REDIRECTINT                33      /* CPU has interr=
-upt remapping */
-> +#define CPU_FEATURE_DIV32              34      /* CPU has DIV32 feature =
-*/
->
->  #define LOONGARCH_CPU_CPUCFG           BIT_ULL(CPU_FEATURE_CPUCFG)
->  #define LOONGARCH_CPU_LAM              BIT_ULL(CPU_FEATURE_LAM)
-> @@ -162,5 +163,6 @@ static inline char *id_to_core_name(unsigned int id)
->  #define LOONGARCH_CPU_MSGINT           BIT_ULL(CPU_FEATURE_MSGINT)
->  #define LOONGARCH_CPU_AVECINT          BIT_ULL(CPU_FEATURE_AVECINT)
->  #define LOONGARCH_CPU_REDIRECTINT      BIT_ULL(CPU_FEATURE_REDIRECTINT)
-> +#define LOONGARCH_CPU_DIV32            BIT_ULL(CPU_FEATURE_DIV32)
->
->  #endif /* _ASM_CPU_H */
-> diff --git a/arch/loongarch/include/uapi/asm/hwcap.h b/arch/loongarch/inc=
-lude/uapi/asm/hwcap.h
-> index 90e96113ba51..00bf93683c74 100644
-> --- a/arch/loongarch/include/uapi/asm/hwcap.h
-> +++ b/arch/loongarch/include/uapi/asm/hwcap.h
-> @@ -20,5 +20,6 @@
->  #define HWCAP_LOONGARCH_LSPW           (1 << 14)
->  #define HWCAP_LOONGARCH_SCQ            (1 << 15)
->  #define HWCAP_LOONGARCH_LAM_BH         (1 << 16)
-> +#define HWCAP_LOONGARCH_DIV32          (1 << 17)
->
->  #endif /* _UAPI_ASM_HWCAP_H */
-> diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cp=
-u-probe.c
-> index 74d31f260dfd..c50fcba805f7 100644
-> --- a/arch/loongarch/kernel/cpu-probe.c
-> +++ b/arch/loongarch/kernel/cpu-probe.c
-> @@ -236,6 +236,10 @@ static void cpu_probe_common(struct cpuinfo_loongarc=
-h *c)
->                 elf_hwcap |=3D HWCAP_LOONGARCH_LBT_MIPS;
->         }
->  #endif
-> +       if (config & CPUCFG2_DIV32) {
-> +               c->options |=3D LOONGARCH_CPU_DIV32;
-> +               elf_hwcap |=3D HWCAP_LOONGARCH_DIV32;
-> +       }
->
->         config =3D read_cpucfg(LOONGARCH_CPUCFG6);
->         if (config & CPUCFG6_PMP)
-> diff --git a/arch/loongarch/kernel/proc.c b/arch/loongarch/kernel/proc.c
-> index d4ce5b585453..c8d6f397de55 100644
-> --- a/arch/loongarch/kernel/proc.c
-> +++ b/arch/loongarch/kernel/proc.c
-> @@ -94,6 +94,8 @@ static int show_cpuinfo(struct seq_file *m, void *v)
->                 seq_puts(m, " lbt_arm");
->         if (cpu_has_lbt_mips)
->                 seq_puts(m, " lbt_mips");
-> +       if (cpu_has_div32)
-> +               seq_puts(m, " div32");
->         seq_puts(m, "\n");
->
->         seq_printf(m, "Hardware Watchpoint\t: %s", str_yes_no(cpu_has_wat=
-ch));
-> --
-> 2.42.0
->
+>=20
+> v2:
+> - Reworded the commit message (no code changes), suggested by Mimi
+
+Thanks, Roberto.
+
+The patch and now the patch description look good.  Can we get some tags?
+
+thanks,
+
+Mimi
