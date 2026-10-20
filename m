@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792483825;
-	b=DvMs1SgXH40X5oicUSKDuXUpft6Glx+wq/Ygw9bDOcRTnuShXaCZSTUJ0kxvjkDJeJFt
-	 peYhiNyjOZQLDJS2T3tkVN6vV6AVHYQBZiW/UIlHglNpuMEvfL/uC/b8NWpDD6+a5Uhkp
-	 l+oScxK3g42oKP2EHT9GLTN8DKUXOJmxGXJpUvtIYPs5NEPnBnYp51BTRqE+eKnu3Nsep
-	 s6IkzeziyEojX9tJGZR+eHywt2RHRgQF4YPQI8itdpkUqslaLeKXnWzmd96UjtUQaKGm9
-	 OEq+n0WpiExoY3sJZivJhi6Y5kPnAlIcmFaqLBBI27BhuUE/xVU992cs+ru7wTQcqNw==
+	t=1792483839;
+	b=CRwAW9Nsev9fW3rcDa7YipoQMzMMmoPK+kl7A8+H6mpFNxLiEgE4FxGw6aD3MGiJ2Ydv
+	 RY+jpf/YGTmsaAKWJ5kHvAZ6MO4j5l2UL/TlALhlkCnlciMuIdOPjnCbmW0LFcHFkM6lT
+	 dT3s+hxqCEXf7S/wsAP/qCD2hQlm5qVTipQ1tMZsS2MqFznJZcgZrtxyefA5xHD6UaYJZ
+	 dw9d3qKNBu1TjCmF/bVmxC0Oqw1Ux07jDnUl2mlqNu33oryGPOd7zss9QjXGJGtXVQi5t
+	 yygDBXr1Q1p09gL3dYyAvY5QzNouenGhFNS0DUEZwXZzWqiDBAohDttmkZnVhxA4Ytg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792483825;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792483839;
 	h=Received:DKIM-Signature:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Subject:From:To:Cc:In-Reply-To:References:
 	 Date:Message-Id:X-Mailer;
-	bh=yBYSrHGCRn0VnGOMETmfFB9n0GdErJoxxpvBx0Cls0A=;
-	b=eo1K4KzZ+I+vPKgE1X5RdV+gGYNanIoPmLo56qWc7YhaWcQXUexdRsHh+Rm6exThi+Oh
-	 8E/PA3EEl5RFT7DuhEWB2vHQxr+b3SAeFtQ9YjrDQcIqEKZ2lunBPBt4LwuijJcBe2uaW
-	 xpeWXcSkkrWJZyrD7PpEil3nPIA+zqY7RuCgwwcHYp2YeIEBBWu33/xBzrWHGxT5zz8fu
-	 KJor4LYvk6jydGlDgB59ExFMHEQQs6U9z+xB+8jRW8/1zlUG1GCWtRJeAzKuiI8DESdOb
-	 kqBoY4XQJsi2kPR/COkpWdHmSUjnxy89pSzpcJTy+Jdov5xGYd87sFA/uc/IyVnfWuw==
+	bh=qE6OXYMZCNhpTVqGUe213qDW93yxbpeyhbeKhLS4ZJQ=;
+	b=UeySqhhUQ96YuulBgPHRXrJK+NWXf/BuZz+/TbZW2WyjZicz6z+S6L7p99CJJf21ly0+
+	 RUnDLu/NcNfj/dan2YdrSc6Pu2sk8vQ7JJiqjfWCPIg9uaH5j5uFtdFP1DTn1PLtl5ceK
+	 PqQuVpJOmgKmaDDbKbhjcsBOsg1Zp3qtOKA6gyIpGLWLl2n6KtVCc9b/DI3xcfcuXLgrL
+	 Kc/BCsKB35bePF1xZuy9FZCLdMMXJqk1zytTz0r6dtnAYCFkbqcyk8YpKQtB0X/uT+6UL
+	 pOKQ9bCtFrAAZiDCuy2JJUG0R5EB7FFJXJFttGjF/wCb9fcnsdZZT0Z81e3iKwhq2wA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=M4RM1DJx;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IzyGO92R;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90CF7606A31B;
-	Tue, 20 Oct 2026 08:10:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68EED606A321;
+	Tue, 20 Oct 2026 08:10:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=M4RM1DJx
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB4671F000C4;
-	Tue, 20 Oct 2026 08:10:11 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IzyGO92R
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1FC41F000C7;
+	Tue, 20 Oct 2026 08:10:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792483825;
-	bh=yBYSrHGCRn0VnGOMETmfFB9n0GdErJoxxpvBx0Cls0A=;
+	s=k20260515; t=1792483839;
+	bh=qE6OXYMZCNhpTVqGUe213qDW93yxbpeyhbeKhLS4ZJQ=;
 	h=Subject:From:To:Cc:In-Reply-To:References:Date;
-	b=M4RM1DJxucPrV9uY8fDO6NsLZA+LShmgNV4RcxcG9OSaNxMDvLJzUKksUlvNfLCLK
-	 B97wnUobAdittrCZdufknf0Lq53w5WdQcPJn0X7K3DwA0KBALEVtqaN8EmGbA5eu9r
-	 b1Kg6NkzyNR9hIQ4FsHdOENrCRWHrMqTUBy3AOd2oD0BbBd2ErC5rE9Se/fzTqOlMD
-	 lOIGdbHvJJNmS0Lgv6BZAGQ4mBHURySJ2SB1TgNH5wAyJJpRH2n69kFyItaw948hhO
-	 syFBn+u9Hq6iAJmtlRPuJw2+7EK12R/9EeP+zziXUplV6kPQ9Pxv2918smIV3WWv5j
-	 TZGTZLDl1MOEA==
+	b=IzyGO92Roy0DLQa95pMkJ03Bsx6UAwYJ9RGvSlTqTRAN5PpmHyGaPT0JR/f6L2Gqs
+	 Q7DLgOTXUy3kHWVjtLJhTqjualhaQ1wu+ge85rzJEHCMK8KDS3daees6n7Ec5J6IyW
+	 EK2hsFBuOeriYkFpDN3PJeTEIDYoNI3CcC/GFyPYdIPcVzgT6G1+FSPBq2Lv0jmSh2
+	 AUkAFSkHj1F6OOlyiafKVljw4qbKhWr7KG0+Jkv9LQAs/393EOwra7DqAiXyB7U27t
+	 Ud66NV0Hiv+XPejPYXfQRJKi8lofyLyoH7kNkBaIBpjUFCfpS7M2yDHuDCXiAzh6rF
+	 IQn8Ye8g66exw==
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -51,8 +51,8 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v6 02/14] kexec: Record allocated CMA pages to fix
- release size mismatch
+Subject: Re: [PATCH v6 04/14] arm64: kexec_file: Fix CMA page leaks in
+ segment placement retry loops
 From: Mike Rapoport <rppt@kernel.org>
 To: Jinjie Ruan <ruanjinjie@huawei.com>
 Cc: catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, 
@@ -76,23 +76,64 @@ Cc: catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
  linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
  linuxppc-dev@lists.ozlabs.org, driver-core@lists.linux.dev, 
  kexec@lists.infradead.org
-In-Reply-To: <20260921090450.807575-3-ruanjinjie@huawei.com>
+In-Reply-To: <20260921090450.807575-5-ruanjinjie@huawei.com>
 References: <20260921090450.807575-1-ruanjinjie@huawei.com>
- <20260921090450.807575-3-ruanjinjie@huawei.com>
+ <20260921090450.807575-5-ruanjinjie@huawei.com>
 Date: Tue, 20 Oct 2026 11:09:39 +0300
-Message-Id: <179248377975.302547.8708639983163316788.b4-review@b4>
+Message-Id: <179248377975.302547.8678981752345638279.b4-review@b4>
 X-Mailer: b4 0.16.1-dev
 
-> The CMA pages allocated for a kexec segment are released using the
-> segment's memsz to calculate the number of pages. However, some
-> architecture loaders modify the segment's memsz after allocation
-> (e.g. arm64 subtracts text_offset), causing the release function to
-> free fewer pages than were originally allocated, leaking the remaining
-> CMA pages.
+> During kexec image placement retry loops, any midway failure causes
+> the loader to truncate `image->nr_segments` back to its initial state
+> to purge the failed segments.
+> 
+> However, this truncation introduces a memory leak. The CMA pages
+> allocated via kexec_add_buffer() during the failed attempt are tracked
+> in the `image->segment_cma` array. Because the subsequent cleanup paths
+> only iterate up to the truncated `nr_segments` boundary, these allocated
+> CMA pages outside the new boundary are permanently leaked.
+> 
+> Fix this by explicitly releasing the associated CMA buffers in
+> the failure paths before `image->nr_segments` is reduced.
 
-Like in the previous patch, arm64 essentially subtracts zero for any
-kernel newer than v5.8, so deprecating .text_offset in arm64 seems to me
-a better solution.
+I looked and how load_other_segments() implements error handling and it
+seems it really needs more than these fixes.
+
+It does not really follow "all or nothing" and it's use of "goto
+out_err" is quite loosely coupled to actual error handling.
+
+The same applies to LoongArch.
+
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Breno Leitao <leitao@debian.org>
+> Cc: Pratyush Yadav <pratyush@kernel.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Yeoreum Yun <yeoreum.yun@arm.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: stable@vger.kernel.org
+> Fixes: 07d24902977e4 ("kexec: enable CMA based contiguous allocation")
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> ---
+>  arch/arm64/kernel/kexec_image.c        | 1 +
+>  arch/arm64/kernel/machine_kexec_file.c | 5 ++++-
+>  2 files changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
+> index b70f4df15a1ae..ffcb7f9075e62 100644
+> --- a/arch/arm64/kernel/kexec_image.c
+> +++ b/arch/arm64/kernel/kexec_image.c
+> @@ -107,6 +107,7 @@ static void *image_load(struct kimage *image,
+>  		 * We couldn't find space for the other segments; erase the
+>  		 * kernel segment and try the next available hole.
+>  		 */
+> +		kexec_free_segment_cma(image, kernel_segment_number);
+>  		image->nr_segments -= 1;
+>  		kbuf.buf_min = kernel_segment->mem + kernel_segment->memsz;
+>  		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+
+Sashiko comment about turning the loop into an infinite one seems valid
+to me:
 
 -- 
 Sincerely yours,
