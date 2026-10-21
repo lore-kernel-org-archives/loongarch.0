@@ -1,122 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.228.9
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=93.93.131.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792571556;
-	b=GTD4qOqufSDOYkKke9phgqni4nLCstlXNaeIAARLw3Td29XTOMGdKk5JAHKlxo9UIWP5
-	 Mo741mWXIYssbavAy/Voj6mfL0CEw4s69DPb1KybFNq5KeMr8+5ynfJSsA7OQjGl8qDWH
-	 rGgmgO8oj+i7WWUBFMRDv2iQD+9lPWt84d73yMYqiyto9yvBbrY460L/EZfZDZASFqygO
-	 ZQbcRQnyR/QkvAcZpNi7GZHnrt013SinaupMByw8sbs5Ed2YQ3UNiE3moTegLmgWn85qn
-	 IOaeQ2CzN0ClyfaZUXDDU0RhgwYclu4EFQZX57VqKoEDOmd50fzT1u60tU2ZaUDrblQ==
+	t=1792571898;
+	b=YbBq6KVtkRd9lhyv+c4mnvCP4tZ0pTsb+Xnbmd3Shf5son5YT3rhEEfp3ztrq4McphNY
+	 1fJcWCq8S2qI0pKVDbhLgX5XXMkNzThGbrkBwdxYacSgQ8q4xS+EgfK10gUjO1JKyMqPd
+	 SLY43FyJrQjuY51h/cXBT3sLLmhiqmmDuNiBtrZ0KhwlE0qTuqXoDSHfw1sySm4Q+mUfj
+	 2ssHuPjUI8XrmSzfbjhHZg4tPX2MCKeiRi4HZnABtFi+m5X6thjNJg4x8KpV6xkjaU2v0
+	 SaOfPKLWvKpe2ttveIr9feBJyAde5OJslC0BZem9kfRS3duyp2PW+Q8LX0sANYlKWyA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792571556;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=oKmXp2d3TpfvxuGqVqHnwKm3WEcWPeyk8O3QNAPgerw=;
-	b=XOfal2M5txusW46dMCIX71zSyYRZIoFJHkYTrKYYyk1lI9CJ42IdybTXLf+ZLCHCPXJA
-	 N45YNvg30mr9bHnDMht35Nu66u0flpwGbfL6kQsqP+kdzxDeLca7+tsTDY09x0E1cJWX8
-	 4WvwNdoDy0W2VIq761DMrnO78uTqc5WE7GThqTj96oAFqAhJA3hb+E2hIVIapmvDL6/qu
-	 8nin3ZUEYn4/JkzdHHt65uC/CpKJ8y1XkzkImZMlp5aYDVZdZ52Fovm7JwFYrl1VWyVeI
-	 BOIV5Omfe5htOZqYbZuIgVR2qPa5GjctpXLiGn5x2LvFbPIzSCFatcUh02Oga86bpLg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792571898;
+	h=DMARC-Filter:DKIM-Signature:Received:Date:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To;
+	bh=AOzqjtOMrdyYNSpa99+/UPGhu5nVwE5WpHEubCFaf5I=;
+	b=tW/VTVGOdAZD+pLhj16sjOvugC4lEieqeRMXfS5978vNfKFm4Nc4UYUK0rPjD70Xqa20
+	 4pRcbLPxhmUIkejwwkzDPOj7wO3V2ieGtgzUwqb66fgzDu9R2C4S45awS4McMEb0AGTyR
+	 27o6rMSo8Fug8y/UyAUqwhjUze0v95Ek9AOLK91F9GOUWCftqtizKGusvPt4z0+rDaRYb
+	 SHloX7Q/qOIDbSlgEdOjHKAEAuvjTUe998uA7gvYRUZ5WlhEnruAiPov+MA9pn1CW8SRt
+	 p+Qh2RVqoLchOu6/LlsNcJvApy+0Tk+TECTwgQ+V74WDrwPBTzoYJ068AftzPqXqlKw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=bc8ZhHVu;
-	arc=none smtp.remote-ip=74.125.228.9
-Received: from mail-pz2-f9.google.com (mail-pz2-f9.google.com [74.125.228.9])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=none header.from=earth.li;
+	spf=pass smtp.mailfrom=earth.li;
+	dkim=pass header.d=earth.li header.i=@earth.li header.a=rsa-sha256 header.s=the header.b=U3WKM5qY;
+	arc=none smtp.remote-ip=93.93.131.124
+Received: from the.earth.li (the.earth.li [93.93.131.124])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A35E2606A31B
-	for <loongarch@lists.linux.dev>; Wed, 21 Oct 2026 08:32:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A35E2606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ABF1606A31B
+	for <loongarch@lists.linux.dev>; Wed, 21 Oct 2026 08:38:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4ABF1606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=earth.li
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=earth.li
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=bc8ZhHVu
-Received: by mail-pz2-f9.google.com with SMTP id 41be03b00d2f7-cd66d7e32baso44507a12.0
-        for <loongarch@lists.linux.dev>; Wed, 21 Oct 2026 01:32:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792571555; x=1793176355; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=oKmXp2d3TpfvxuGqVqHnwKm3WEcWPeyk8O3QNAPgerw=;
-        b=bc8ZhHVua1M5CQ73QCiRBB0i3DOOLo6vRVKPaPQ1I4If3jejdRmgPd7aRtxM4By9Bw
-         IyrrJQsXbv0dADCeOxU7rDrST3L+YhJa6GfoO9yxqjpTjk4dfiekwsnox8v6KUnqyWA5
-         qO01zX8xTJ2J4b9RSLyLRfwEBWFq9TisIhiehmj5Nkuc90fxOJ5FdrRStTRTYBbkLz49
-         jVu+Z/qvlcYtKikDoMp3rLl/VriolzrWBdRskRh7M43i7O6kQIz2c45OdEfR21BifD/C
-         6Vp776pe8QGEpoVRiXJ/48EOI/N6GcmyspcH436pugwsceBFDk064WnqROMoTivH2DhH
-         9Z2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792571555; x=1793176355;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=oKmXp2d3TpfvxuGqVqHnwKm3WEcWPeyk8O3QNAPgerw=;
-        b=DzEcOnxHCHD5eihCgy3QgNAYtMZgYMfixLwyELqV5DXTrd0BW8agNieGwRmyOW8M9l
-         b4mke56NVBJht30CKj7G0qXzed9H6RopxtcMQCKcHjUTvcP6qVFbgEDp5255mePUJtCz
-         HT31x1JUq7TZsEAVtmUFOqX7got1YmpTMIj7vf+2syI5X13jmOWfGEVjjndUHeFFMZ2g
-         5GpgrVroD5PRyOwRn3v+GmWMz1xbZx0M8BVFXZUEaOofZU7fOcVS76FCUXCnhLx8SXvo
-         PNB/kguUGQKw8sMvBEt5Qap4RnZRK5sE8jj1vf9UfhxEHCrmpA37l3pdFD8Ck0119HWT
-         xiKg==
-X-Forwarded-Encrypted: i=1; AKwUvBwMmj9r9UBIkluvguNd0e+zpEFXkw+r1LPX/ClWsR27ehh7AitYy70z8qrPPN3OR7Km8jMoTBa0ydc=@lists.linux.dev
-X-Gm-Message-State: AFq9FYJWyh1EC/n9fo9AiLv1rrBZG0twmF+cZ0EkV7VRn0phfWcPHWx7
-	+xkvV5W9gUzN29+wRoThQb1QO30Uz57yWHA1qLsCUHMe6DdvKhi+VeQg
-X-Gm-Gg: AYBFou0xejzycVa/MVhur4aKELgexRTBHYyKc95sVakjd94w0BxXsXlaP21TMKQ5A73
-	dK64C4tusXhcnHGve7Pw/uw0BpsmHzVPstJ/gieUCsgKuA0c5p1B10tdEuxYblFnL1X+B9RO5FE
-	+VcS+wIeu4mXxdgqriTCuW6uqRHr7RC2Pk9kK2FZVTXzRSjTSNuH7PvKSgFE41aYrbzQ7fRGU0V
-	fKylLLVDdZMGK39t6zypTE5nZwPy7cWEgWXUo6BJFuRhJqXAz9B2Z8z+hl+ePLs46MVgRGvidqB
-	5Z/YzQPpRAacqZokavppZZR2qyDQKDwPFCeKYwmtMy2lIsuS749HjzgLpti+eAx5Ft3wJgKGv5E
-	V0KzShNBGzNpGZauo3hTEGtbbet3PCmeDFs80V/AOuHqLX3dbF+w4AK+9QlAmMVeXPCtDLGkF9J
-	Nu8EXHbhvDZJGMW5RlLASuH0Rc0K4zPEq+LyfhEYsKswMXHCMsleauW62Sff8msjDx7VXcbT4a+
-	MtXD0dkz8pBL9XZg/YOvB7URAK1csmpHvDf7cQpKflgip+Bwctixxwr3r+3Aav8ZqsQ
-X-Received: by 2002:a05:6a00:1786:b0:89f:3f60:cd81 with SMTP id d2e1a72fcca58-8a089d539cdmr1130152b3a.51.1792571555108;
-        Wed, 21 Oct 2026 01:32:35 -0700 (PDT)
-Received: from intel.company.local ([122.11.210.25])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8a0895e273bsm600653b3a.41.2026.10.21.01.32.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Oct 2026 01:32:33 -0700 (PDT)
-From: Wandun Chen <chenwandun1@gmail.com>
-To: robh@kernel.org,
-	baoquan.he@linux.dev,
-	rppt@kernel.org,
-	m.szyprowski@samsung.com
-Cc: catalin.marinas@arm.com,
-	will@kernel.org,
-	mark.rutland@arm.com,
-	chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	pjw@kernel.org,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	alex@ghiti.fr,
-	tglx@kernel.org,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	saravanak@kernel.org,
-	akpm@linux-foundation.org,
-	pasha.tatashin@soleen.com,
-	pratyush@kernel.org,
-	ruirui.yang@linux.dev,
-	robin.murphy@arm.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	kexec@lists.infradead.org,
-	linux-mm@kvack.org,
-	iommu@lists.linux.dev
-Subject: [PATCH v9 8/8] crash_core: skip MEMBLOCK_NODUMP regions when building vmcore ELF header
-Date: Wed, 21 Oct 2026 16:30:11 +0800
-Message-ID: <20261021083011.2170525-9-chenwandun1@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20261021083011.2170525-1-chenwandun1@gmail.com>
-References: <20261021083011.2170525-1-chenwandun1@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=earth.li header.i=@earth.li header.a=rsa-sha256 header.s=the header.b=U3WKM5qY
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
+	s=the; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject:
+	Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=AOzqjtOMrdyYNSpa99+/UPGhu5nVwE5WpHEubCFaf5I=; b=U3WKM5qYuUTXR4j3PnsdOXCn8d
+	hUOrdeBn8f28fXuqP8owg8bfXv0XP52dwZmKyFCp7/uDoH8ijZigjM4ST7QKm2B8oGxJdV8R28Ojh
+	weF4yGa/cnqEZhQ+tw0f05NmOz4DlcXcmYCo3TOlVHY0dkNDWesFksDJo5SHkACyjTo8wZJ3+TF76
+	FIEmLKlO0haAZjrmihdwsrjSU24hNEXF8/1DRXRM2UNHYMatnRoIm+pDBmtB9pLmkYd4GIFpMwuNs
+	olG5oBlqmNEma0F+AVEP9RWpkBh/8bEDcDeKB6W+AfW5CuALH/tv3LvI/KfmXzKmJK615WqYzsReS
+	+VVBXHRA==;
+Received: from noodles by the.earth.li with local (Exim 4.98.2)
+	(envelope-from <noodles@earth.li>)
+	id 1xJRpX-00000000gFP-2wKS;
+	Wed, 21 Oct 2026 09:37:51 +0100
+Date: Wed, 21 Oct 2026 09:37:51 +0100
+From: Jonathan McDowell <noodles@earth.li>
+To: Roberto Sassu <roberto.sassu@huaweicloud.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
+	chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com,
+	mpe@ellerman.id.au, npiggin@gmail.com, chleroy@kernel.org,
+	pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+	alex@ghiti.fr, tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, hpa@zytor.com, robh@kernel.org,
+	saravanak@kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+	zohar@linux.ibm.com, noodles@fb.com,
+	linux-integrity@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	Roberto Sassu <roberto.sassu@huawei.com>
+Subject: Re: [PATCH v2] kexec: Select ima_get/free_kexec_buffer() with
+ CONFIG_HAVE_IMA_KEXEC(_OF)
+Message-ID: <ath534EEbFntir8j@earth.li>
+References: <20261020083727.1906495-1-roberto.sassu@huaweicloud.com>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -126,39 +78,163 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261020083727.1906495-1-roberto.sassu@huaweicloud.com>
 
-From: Wandun Chen <chenwandun@lixiang.com>
+On Tue, Oct 20, 2026 at 10:37:27AM +0200, Roberto Sassu wrote:
+> From: Roberto Sassu <roberto.sassu@huawei.com>
+> 
+> On x86, if CONFIG_OF_FLATTREE is enabled, the kernel uses the device tree
+> implementation of ima_get/free_kexec_buffer(). However, x86 passes the IMA
+> buffer location through setup_data, not through the device tree, so the
+> buffer is never found and the IMA measurement list is not carried over
+> across kexec.
+> 
+> Introduce CONFIG_HAVE_IMA_KEXEC_OF (which selects CONFIG_HAVE_IMA_KEXEC)
+> and select it for the architectures that pass the IMA buffer location
+> through the device tree, via of_kexec_alloc_and_setup_fdt() (arm64,
+> powerpc and riscv). Build the device tree implementation of
+> ima_get/free_kexec_buffer() only if the new option is enabled.
+> 
+> Select the new option also on LoongArch, to preserve the current behavior
+> and avoid a link failure. LoongArch does not pass the buffer location to
+> the next kernel yet; this will be addressed separately.
+> 
+> Finally, don't select it for x86, and use x86's own setup_data-based
+> implementation regardless of CONFIG_OF_FLATTREE.
+> 
+> Fixes: b69a2afd5afc ("x86/kexec: Carry forward IMA measurement log on kexec")
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
 
-Reserve regions (for GPU, DSP, ...) carry no data useful for crash
-analysis. Exclude MEMBLOCK_NODUMP regions from the vmcore ELF header to
-reduce vmcore size and capture time. crash_should_skip_region() now also
-returns true for MEMBLOCK_NODUMP.
+Reviewed-By: Jonathan McDowell <noodles@meta.com>
 
-Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
-Tested-by: Meijing Zhao <zhaomeijing@lixiang.com>
-Acked-by: Baoquan He <baoquan.he@linux.dev>
----
- kernel/crash_core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I think my original intent when adding the ACPI x86 passthrough was to 
+ensure I didn't break anything for anyone who'd been trying to use OF 
+with x86 and pass it through, but if it wasn't even wired up there then 
+that's not a concern.
 
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index e161c8b65e00..0e2ddc933b22 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -283,10 +283,10 @@ static struct crash_mem *alloc_cmem(unsigned int nr_ranges)
- }
- 
- #ifdef CONFIG_ARCH_KEEP_MEMBLOCK
--/* Exclude NOMAP regions from the vmcore. */
-+/* Exclude NOMAP and NODUMP regions from the vmcore. */
- static bool crash_should_skip_region(struct memblock_region *reg)
- {
--	return memblock_is_nomap(reg);
-+	return memblock_is_nomap(reg) || memblock_is_nodump(reg);
- }
- 
- unsigned int __weak arch_get_system_nr_ranges(void)
+> ---
+> 
+> v2:
+> - Reworded the commit message (no code changes), suggested by Mimi
+> 
+>  arch/arm64/Kconfig      | 2 +-
+>  arch/loongarch/Kconfig  | 2 +-
+>  arch/powerpc/Kconfig    | 2 +-
+>  arch/riscv/Kconfig      | 2 +-
+>  arch/x86/kernel/setup.c | 2 +-
+>  drivers/of/kexec.c      | 4 ++--
+>  kernel/Kconfig.kexec    | 4 ++++
+>  7 files changed, 11 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index b5a51b0ef944..4b7e248b6c91 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -1697,7 +1697,7 @@ config ARCH_SUPPORTS_KEXEC_FILE
+>  config ARCH_SELECTS_KEXEC_FILE
+>  	def_bool y
+>  	depends on KEXEC_FILE
+> -	select HAVE_IMA_KEXEC if IMA
+> +	select HAVE_IMA_KEXEC_OF if IMA
+>  
+>  config ARCH_SUPPORTS_KEXEC_SIG
+>  	def_bool y
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 2067d1f2ad7a..b5420d482da4 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -690,7 +690,7 @@ config ARCH_SELECTS_KEXEC_FILE
+>  	depends on KEXEC_FILE
+>  	select KEXEC_ELF
+>  	select RELOCATABLE
+> -	select HAVE_IMA_KEXEC if IMA
+> +	select HAVE_IMA_KEXEC_OF if IMA
+>  
+>  config ARCH_SUPPORTS_CRASH_DUMP
+>  	def_bool 64BIT
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index 2580e27e4328..096c6061893b 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -643,7 +643,7 @@ config ARCH_SELECTS_KEXEC_FILE
+>  	def_bool y
+>  	depends on KEXEC_FILE
+>  	select KEXEC_ELF
+> -	select HAVE_IMA_KEXEC if IMA
+> +	select HAVE_IMA_KEXEC_OF if IMA
+>  
+>  config PPC64_BIG_ENDIAN_ELF_ABI_V2
+>  	# Option is available to BFD, but LLD does not support ELFv1 so this is
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index f8e26c4bed2b..161bf8a65beb 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -1118,7 +1118,7 @@ config ARCH_SUPPORTS_KEXEC_FILE
+>  config ARCH_SELECTS_KEXEC_FILE
+>  	def_bool y
+>  	depends on KEXEC_FILE
+> -	select HAVE_IMA_KEXEC if IMA
+> +	select HAVE_IMA_KEXEC_OF if IMA
+>  	select KEXEC_ELF
+>  
+>  config ARCH_SUPPORTS_KEXEC_PURGATORY
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index cda6adb9f69c..bc17e353c099 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -421,7 +421,7 @@ static void __init add_early_ima_buffer(u64 phys_addr)
+>  #endif
+>  }
+>  
+> -#if defined(CONFIG_HAVE_IMA_KEXEC) && !defined(CONFIG_OF_FLATTREE)
+> +#ifdef CONFIG_HAVE_IMA_KEXEC
+>  int __init ima_free_kexec_buffer(void)
+>  {
+>  	if (!ima_kexec_buffer_size)
+> diff --git a/drivers/of/kexec.c b/drivers/of/kexec.c
+> index 029903b986cb..724f29fef0c0 100644
+> --- a/drivers/of/kexec.c
+> +++ b/drivers/of/kexec.c
+> @@ -116,7 +116,7 @@ static int do_get_kexec_buffer(const void *prop, int len, unsigned long *addr,
+>  	return 0;
+>  }
+>  
+> -#ifdef CONFIG_HAVE_IMA_KEXEC
+> +#ifdef CONFIG_HAVE_IMA_KEXEC_OF
+>  /**
+>   * ima_get_kexec_buffer - get IMA buffer from the previous kernel
+>   * @addr:	On successful return, set to point to the buffer contents.
+> @@ -196,7 +196,7 @@ static void remove_ima_buffer(void *fdt, int chosen_node)
+>  	size_t size;
+>  	const void *prop;
+>  
+> -	if (!IS_ENABLED(CONFIG_HAVE_IMA_KEXEC))
+> +	if (!IS_ENABLED(CONFIG_HAVE_IMA_KEXEC_OF))
+>  		return;
+>  
+>  	prop = fdt_getprop(fdt, chosen_node, "linux,ima-kexec-buffer", &len);
+> diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
+> index 15632358bcf7..c6ed60f04ea4 100644
+> --- a/kernel/Kconfig.kexec
+> +++ b/kernel/Kconfig.kexec
+> @@ -17,6 +17,10 @@ config KEXEC_ELF
+>  config HAVE_IMA_KEXEC
+>  	bool
+>  
+> +config HAVE_IMA_KEXEC_OF
+> +	bool
+> +	select HAVE_IMA_KEXEC
+> +
+>  config KEXEC
+>  	bool "Enable kexec system call"
+>  	depends on ARCH_SUPPORTS_KEXEC
+> -- 
+> 2.43.0
+
+J.
+
 -- 
-2.43.0
-
+... "You are in a twisty little maze of lookup tables, all different." --
+    Joe Zeff, The Scary Devil Monastery
