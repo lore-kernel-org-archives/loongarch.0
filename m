@@ -1,64 +1,72 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=117.135.210.3
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792593944;
-	b=FPRIFL9Vj53c4lOZ2NMXPMEkgqYmJL/VUO2VY4xzf9EzY3Q3YK0dUL2EtMHEWVygRNo9
-	 hSC0zEX9s93t2iKbRoqHZcDqTU1tvTZRJ6PMUPpG9ElqtXluJKz1C4TwxPZ5/TXlt5r7Z
-	 A4ZLUb6aXxSldcEe82SOm2CQGtfouJQhBaYZ9rRePgIUiG1scgRKgX4ATlmZc50l436V5
-	 Id6GVfV/SZ6tVu8xxPkxMsydrmIVcgOfTZ1PPkJtlADHO+2ZUP8P19sGpFWA/sKL2J0AV
-	 qDhyKCKAeVNO1d9G7EOJF0EM7UXD2l7C3cSLZkWpbt/O3fSZW1r4mMQtWs7feY6+l0A==
+	t=1792593964;
+	b=NpSmvQPN/4VtUncMW8Iby9tD7DKSAl0xCxHXtvRNdUC6qhcIjZz90Zcl00Wu9hM3jCBt
+	 1JyIdBCk2UFgw16Hc4UJzBdvRfi7gdCrGRW6QavlDvAOvTb+mpgvgDO+MJurRGKU1DMp/
+	 t1syoAAZUJGTG8/JYcm3jH32yhN92Aq92Oxvikw3EcdPUrQ63ZrjokGO1pCluQmnPEiLd
+	 YFw0pA47UbdtiR8ybh4i3OWLuMq7LKBOiM13Zk9menSO5/HWcElOJLlePs8yM0arFHYsd
+	 mpuNYrBGmB828Jg1Y2ZV9T+K/FnXmB0TDfRvE67YnExP3+goLymnBiQiKYBBENAs06w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792593944;
-	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
-	 Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-CM-TRANSID:X-Coremail-Antispam:
-	 X-CM-SenderInfo;
-	bh=0eL2bzd9HSLFKqzLgVouTcXW+mDlC5BCNips3rCkPwE=;
-	b=DG5O3aJT/atBnHLSuvdJmO8YLsI28p1arrWCEFEjjtYcoYHXJtEMe94DU6y2fi2L51y0
-	 9Q6lCDmbOh3SS6C6Ru1K/GyVAPy6Uk0fKZVZkvUcOwvY6r5yJ4IzRGOvZuklijpHk69BS
-	 UAnJWbth8eLqttC/OD3zVA4Ud075Z3Gqizv+lHEBid17d+PEyiffz+rb1R83tzaJjoyLz
-	 jNJqXF0JPdMoIEUJEJs6nqqOyN9jNjzIymgaSRgcBVFa4wkf4gCB8D93KfWhThL7/tT26
-	 pYHz3FjC+KDO0zmIm/xTBWNouxydtACBFj3IcEGvr+o1UpZL0d70hSzyMHQ4VgTY7rw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792593964;
+	h=DMARC-Filter:DKIM-Signature:Received:From:To:Subject:Date:Message-Id:
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-Coremail-Antispam:X-CM-SenderInfo;
+	bh=MatOHa22WtG+l0uamrIjaG0NC2JllSJQL/SZcG1SYnk=;
+	b=bPWtg1J/p/fYaZBYSu0dv2G3LJtT37pwqacZTH6KAnYobpcq5rXYbADI3x25ht0tgGOB
+	 VLdB5L8QK87PakYzVrW+P+SL/j2zmvqoFCkdi6xq/yAR6oD97czJtRdI8db+SpTzgD5FG
+	 8lkwmnrqWLN9ZknZ3Xe5T36/tkIhDvQjL5z/hhJ9ZCg1AwO3V4Aa6aHnK5+VXW483/qrZ
+	 ehmZbqowa+fE8WdVy3pkdXFJohV39rIapfM8eztX439nSUzbTHkeHLjOBU2GnblG3oYhF
+	 IduuGOoQlWScgZRi10lyn5HCTuA0W/vH+m1gCmspbrb2hv0EtkiQOS7xjpNgwUZa5pw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=163.com;
 	spf=pass smtp.mailfrom=163.com;
-	dkim=pass header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=NGMvGGrX;
-	arc=none smtp.remote-ip=220.197.31.5
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	dkim=pass header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=C7dnPns2;
+	arc=none smtp.remote-ip=117.135.210.3
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833BB606A319
-	for <loongarch@lists.linux.dev>; Wed, 21 Oct 2026 14:45:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 833BB606A319
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE6A606A335
+	for <loongarch@lists.linux.dev>; Wed, 21 Oct 2026 14:46:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3AE6A606A335
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=NGMvGGrX
+	dkim=pass (1024-bit key, unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=C7dnPns2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=0e
-	L2bzd9HSLFKqzLgVouTcXW+mDlC5BCNips3rCkPwE=; b=NGMvGGrXxdBWVQ21oO
-	bGXLqxx+VUFtNZ5J4Ke6u5gaQXoBXkPEKj3QYO9hxPSVhyd2pQaG2hnqYDsrLVvU
-	mWsKzlvRa1K18zigAiuY6JwZQuUxBtUQD+sCOX27DCa10D4XHDfwSx8/SDKAOQ7x
-	oSulK0Bz1gPQ1RQYXhXjhFwLU=
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=Ma
+	tOHa22WtG+l0uamrIjaG0NC2JllSJQL/SZcG1SYnk=; b=C7dnPns2P32vgzywFe
+	bpTQKcDN75V5x/VBveIBCSruYf8OzOrgR262scCIwAvYaqs+0+tdTr8ohNNM3Av4
+	07sh41SFyfhUji91XZ6dAxI93JFYQUxVLj69+zwqs1ioP/IS//+UZWolm3OKG+f1
+	W2uMr0gGy7vTtktpeCdobykE4=
 Received: from pc.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wD3998G0NhqjItXBw--.10228S7;
-	Wed, 21 Oct 2026 22:45:31 +0800 (CST)
+	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wD3998G0NhqjItXBw--.10228S2;
+	Wed, 21 Oct 2026 22:45:27 +0800 (CST)
 From: Jiale Yao <yaojiale02@163.com>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Marc Zyngier <maz@kernel.org>,
 	Thomas Gleixner <tglx@kernel.org>,
 	Radu Rendec <radu@rendec.net>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Hanjun Guo <guohanjun@huawei.com>,
+	Tomasz Nowicki <tn@semihalf.com>,
+	Christoffer Dall <christoffer.dall@linaro.org>,
+	Julien Grall <julien.grall@arm.com>,
+	Jonathan Cameron <jic23@kernel.org>,
 	Jianmin Lv <lvjianmin@loongson.cn>,
-	Marc Zyngier <maz@kernel.org>,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
 	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org
-Subject: [PATCH v2 5/6] irqchip/loongarch-cpu: validate MADT LIO-PIC entries
-Date: Wed, 21 Oct 2026 22:45:23 +0800
-Message-Id: <20261021144524.364143-6-yaojiale02@163.com>
+	linux-mips@vger.kernel.org
+Subject: [PATCH v2 0/6] irqchip: validate ACPI MADT entries before use
+Date: Wed, 21 Oct 2026 22:45:18 +0800
+Message-Id: <20261021144524.364143-1-yaojiale02@163.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20261021144524.364143-1-yaojiale02@163.com>
-References: <20261021144524.364143-1-yaojiale02@163.com>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -69,42 +77,55 @@ List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3998G0NhqjItXBw--.10228S7
-X-Coremail-Antispam: 1Uf129KBjvdXoW7JrW3JFyxXr4Dtr13GF17Jrb_yoWkWFb_uF
-	1a9asrJryj9F1Utw1ktr15Z3sxt3y8uFnY9rs2qFn8C395Jw1rXFsrA3yfX3y7KryvvFn3
-	Gr4qvr1Syr12vjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUbAwIDUUUUU==
-X-CM-SenderInfo: x1dryxhdohiji6rwjhhfrp/xtbC7wsHQWrY0AsT2wAA3D
+X-CM-TRANSID:_____wD3998G0NhqjItXBw--.10228S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Ar15XFWUXr1UtF18uFW7Jwb_yoW8CrWxpF
+	W5KayYvr4fGrW7Arn3Aw4UXFy5Ja95JrW7tFWfta45ur1rK3WDXay2yFWYqF13Ar13G3ZF
+	9r4jqF1xuFZ8AaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jeLvNUUUUU=
+X-CM-SenderInfo: x1dryxhdohiji6rwjhhfrp/xtbCzQcGQGrY0Aci1gAA3d
 
-The LIO-PIC MADT callback passes a typed record to the controller
-initialization code without checking that the complete record is
-present. A truncated firmware entry can therefore lead to out-of-bounds
-field reads.
+IRQ chip ACPI probing receives MADT records supplied by firmware. The
+common probe path does not currently verify that the complete declared
+entry is contained in the table, and several callbacks access fixed-size
+or version-dependent records without checking their minimum size.
+Malformed entries can therefore cause out-of-bounds reads during early
+boot.
 
-Reject incomplete LIO-PIC entries before passing them to the
-initialization helper.
+Add the common declared-range check first, then validate the concrete ITS,
+GIC, LIO-PIC, and BIO-PIC records in their respective callbacks. Each patch
+remains independently buildable and limits its changes to one parser
+implementation.
 
-Fixes: b2d3e3354e2a ("irqchip: Add LoongArch CPU interrupt controller support")
-Cc: stable@vger.kernel.org
-Signed-off-by: Jiale Yao <yaojiale02@163.com>
+The series was checked with scripts/checkpatch.pl. Each patch was also
+checked individually and in series for application to the base commit
+below.
+
+Jiale Yao (6):
+  ACPI: irqchip: validate MADT entry bounds before probing
+  irqchip/gic-v3-its: validate MADT ITS entries
+  irqchip/gic-v3: validate MADT records before use
+  irqchip/gic-v5-its: validate MADT translate frames
+  irqchip/loongarch-cpu: validate MADT LIO-PIC entries
+  irqchip/loongson-eiointc: validate MADT BIO-PIC entries
+
 ---
- drivers/irqchip/irq-loongarch-cpu.c | 3 +++
- 1 file changed, 3 insertions(+)
+Changes in v2:
+- Use BAD_MADT_GICC_ENTRY() for version-dependent GICC records.
+- Replace the open-coded distributor size check with BAD_MADT_ENTRY().
+- Remove the redundant distributor check from gic_acpi_init().
+- Add Fixes and Cc: stable@vger.kernel.org trailers.
+- Rebase the series on the current tree.
 
-diff --git a/drivers/irqchip/irq-loongarch-cpu.c b/drivers/irqchip/irq-loongarch-cpu.c
-index 84ce24889488..6185825477f4 100644
---- a/drivers/irqchip/irq-loongarch-cpu.c
-+++ b/drivers/irqchip/irq-loongarch-cpu.c
-@@ -119,6 +119,9 @@ static int __init liointc_parse_madt(union acpi_subtable_headers *header,
- {
- 	struct acpi_madt_lio_pic *liointc_entry = (struct acpi_madt_lio_pic *)header;
- 
-+	if (BAD_MADT_ENTRY(liointc_entry, end))
-+		return -EINVAL;
-+
- 	return liointc_acpi_init(irq_domain, liointc_entry);
- }
- 
+ drivers/acpi/scan.c                    |  7 +++++++
+ drivers/irqchip/irq-gic-v3-its.c       |  3 +++
+ drivers/irqchip/irq-gic-v3.c           | 15 +++++++++++++++
+ drivers/irqchip/irq-gic-v5-its.c       |  3 +++
+ drivers/irqchip/irq-loongarch-cpu.c    |  3 +++
+ drivers/irqchip/irq-loongson-eiointc.c | 10 ++++++++--
+ 6 files changed, 39 insertions(+), 2 deletions(-)
+
+
+base-commit: a804c5742bff224d4cb4d25dd383554d598be32b
 -- 
 2.34.1
 
