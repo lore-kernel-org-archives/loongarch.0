@@ -1,63 +1,64 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=220.197.31.5
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792588990;
-	b=aEPNiCnomqIOsvrI4qZnh1e9OYq5Nz7iHHI0RgsFWksZEhFWEXG+wzx6T++qioMHjGYJ
-	 2Imwa9Fzmw54qyf2Mg1Gob6i0+Q5hia6ojbP2tpwTBmo2awmMX4tOie79PtdR3JzjTm8d
-	 NYfCEC1LLjMMDvQa1saMO5j3papKjwTPcPcI+xWhQecGqP6HTLaFQ9lmTaeB8I64PbhjK
-	 V6wESdR5QJ4GwHZsJKcJ8JegfOj+A8gJKCx7y6XbO2A/CY67zuCq1DZvtdsQ5otumgRTZ
-	 xGVG0pASSmQdAbahcHeuBMxhNUV9a4eDxbHbfYabPEjqfJf5y4CbrTtpy5NMdW78I9w==
+	t=1792593944;
+	b=FPRIFL9Vj53c4lOZ2NMXPMEkgqYmJL/VUO2VY4xzf9EzY3Q3YK0dUL2EtMHEWVygRNo9
+	 hSC0zEX9s93t2iKbRoqHZcDqTU1tvTZRJ6PMUPpG9ElqtXluJKz1C4TwxPZ5/TXlt5r7Z
+	 A4ZLUb6aXxSldcEe82SOm2CQGtfouJQhBaYZ9rRePgIUiG1scgRKgX4ATlmZc50l436V5
+	 Id6GVfV/SZ6tVu8xxPkxMsydrmIVcgOfTZ1PPkJtlADHO+2ZUP8P19sGpFWA/sKL2J0AV
+	 qDhyKCKAeVNO1d9G7EOJF0EM7UXD2l7C3cSLZkWpbt/O3fSZW1r4mMQtWs7feY6+l0A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792588990;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=pAAU30bwGvhgKc2fcWmaPUnM+q1nxRImGaxZJ4BonqU=;
-	b=AbE/7N3t1LAA4DgssqqmX8LtJfAqXtmZlQiT45Z889uZtBajXpcFl2KTnUgChc2vTsSm
-	 hRACr/Gv8g5G9hFbL11/zZTsRApvK4baxyrvAiwdITG+ctGumv2jn3yGmv2qvoA/J57wP
-	 k+jNxokaCBQGyh+aMBFn5fdKa+C72hVZ7ecrvqYD0JEcJ96op+svo+MGUlHlvY0pCKg9h
-	 GyqIrGyTiBqlntTbi8bKQqsaIWyEe60CJoG/oyUUpWM98HCUsPzW3kAse+zfzH5wBuv7i
-	 DsaYBxyvYVVGntn/Q5L9cpEhGMUFimsofoqZ8Whwg83XvxxFpe+q6DohwvnwHSFKFtA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792593944;
+	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
+	 Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding:X-CM-TRANSID:X-Coremail-Antispam:
+	 X-CM-SenderInfo;
+	bh=0eL2bzd9HSLFKqzLgVouTcXW+mDlC5BCNips3rCkPwE=;
+	b=DG5O3aJT/atBnHLSuvdJmO8YLsI28p1arrWCEFEjjtYcoYHXJtEMe94DU6y2fi2L51y0
+	 9Q6lCDmbOh3SS6C6Ru1K/GyVAPy6Uk0fKZVZkvUcOwvY6r5yJ4IzRGOvZuklijpHk69BS
+	 UAnJWbth8eLqttC/OD3zVA4Ud075Z3Gqizv+lHEBid17d+PEyiffz+rb1R83tzaJjoyLz
+	 jNJqXF0JPdMoIEUJEJs6nqqOyN9jNjzIymgaSRgcBVFa4wkf4gCB8D93KfWhThL7/tT26
+	 pYHz3FjC+KDO0zmIm/xTBWNouxydtACBFj3IcEGvr+o1UpZL0d70hSzyMHQ4VgTY7rw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Mt3hXrxe;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=163.com;
+	spf=pass smtp.mailfrom=163.com;
+	dkim=pass header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=NGMvGGrX;
+	arc=none smtp.remote-ip=220.197.31.5
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B16A606A326;
-	Wed, 21 Oct 2026 13:23:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833BB606A319
+	for <loongarch@lists.linux.dev>; Wed, 21 Oct 2026 14:45:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 833BB606A319
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Mt3hXrxe
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 039AE1F000C4;
-	Wed, 21 Oct 2026 13:23:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792588990;
-	bh=pAAU30bwGvhgKc2fcWmaPUnM+q1nxRImGaxZJ4BonqU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Mt3hXrxeKJoJfLibADZIcsXR7rI+NO9d5jFB7CsWQi7wKkA7Ivi+NuujoLsu6N0Sj
-	 xeAk+R1NrRVYx1sYEncPNYK1tOB4gOmoV/soXvOeMmPj9evSIL4UZE8ME5ru4NQo5h
-	 rdmao/ez90tKUwo3/XUgCH2iLLiz95UkX5/e2YrP1miGaCfo8O/R8cfIYLVig3VVnr
-	 r1iNDVPFLS7bpM7kU7EAqqH+8hkxOiLRbqqi3tb+hZaOnZwWSQEHk7khqjrR4q7t3A
-	 S0lU2etMBYUN25UboD24fjrlEjMmDt+fIwEsaB4T+GmpTzCmxcQVMevggk/I2FaJ6K
-	 4dRr3m+UTBq7A==
-Date: Wed, 21 Oct 2026 08:23:08 -0500
-From: Rob Herring <robh@kernel.org>
-To: Wandun Chen <chenwandun1@gmail.com>
-Cc: baoquan.he@linux.dev, rppt@kernel.org, m.szyprowski@samsung.com,
-	catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
-	chenhuacai@kernel.org, kernel@xen0n.name, pjw@kernel.org,
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
-	tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	saravanak@kernel.org, akpm@linux-foundation.org,
-	pasha.tatashin@soleen.com, pratyush@kernel.org,
-	ruirui.yang@linux.dev, robin.murphy@arm.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, kexec@lists.infradead.org,
-	linux-mm@kvack.org, iommu@lists.linux.dev
-Subject: Re: [PATCH v9 0/8] kdump: reduce vmcore size and capture time
-Message-ID: <20261021132308.GB3667411-robh@kernel.org>
-References: <20261021083011.2170525-1-chenwandun1@gmail.com>
+	dkim=pass (1024-bit key, unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=NGMvGGrX
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=0e
+	L2bzd9HSLFKqzLgVouTcXW+mDlC5BCNips3rCkPwE=; b=NGMvGGrXxdBWVQ21oO
+	bGXLqxx+VUFtNZ5J4Ke6u5gaQXoBXkPEKj3QYO9hxPSVhyd2pQaG2hnqYDsrLVvU
+	mWsKzlvRa1K18zigAiuY6JwZQuUxBtUQD+sCOX27DCa10D4XHDfwSx8/SDKAOQ7x
+	oSulK0Bz1gPQ1RQYXhXjhFwLU=
+Received: from pc.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wD3998G0NhqjItXBw--.10228S7;
+	Wed, 21 Oct 2026 22:45:31 +0800 (CST)
+From: Jiale Yao <yaojiale02@163.com>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Radu Rendec <radu@rendec.net>,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	Marc Zyngier <maz@kernel.org>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+Subject: [PATCH v2 5/6] irqchip/loongarch-cpu: validate MADT LIO-PIC entries
+Date: Wed, 21 Oct 2026 22:45:23 +0800
+Message-Id: <20261021144524.364143-6-yaojiale02@163.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20261021144524.364143-1-yaojiale02@163.com>
+References: <20261021144524.364143-1-yaojiale02@163.com>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -67,40 +68,43 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261021083011.2170525-1-chenwandun1@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3998G0NhqjItXBw--.10228S7
+X-Coremail-Antispam: 1Uf129KBjvdXoW7JrW3JFyxXr4Dtr13GF17Jrb_yoWkWFb_uF
+	1a9asrJryj9F1Utw1ktr15Z3sxt3y8uFnY9rs2qFn8C395Jw1rXFsrA3yfX3y7KryvvFn3
+	Gr4qvr1Syr12vjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUbAwIDUUUUU==
+X-CM-SenderInfo: x1dryxhdohiji6rwjhhfrp/xtbC7wsHQWrY0AsT2wAA3D
 
-On Wed, Oct 21, 2026 at 04:30:03PM +0800, Wandun Chen wrote:
-> From: Wandun Chen <chenwandun@lixiang.com>
-> 
-> On SoCs that carve out large firmware-owned reserved memory (GPU,
-> camera ISP, ...), kdump currently dumps those carveouts as part of
-> system RAM even though their contents are firmware state that is not
-> useful for kernel crash analysis.
-> 
-> ACPI systems already filter reserved memory out of the vmcore through
-> their existing path: firmware reports those carveouts as unusable in
-> the EFI memory map, they get MEMBLOCK_NOMAP set in memblock.memory
-> (is_usable_memory(), efi-init.c), and the ELF header builder has
-> always skipped nomap regions; only DT-based systems currently fail
-> to filter these regions, which is what this series addresses.
-> 
-> This series introduces a MEMBLOCK_NODUMP flag (suggested by Rob) in
-> memblock to filter reserved memory on DT-based architectures. A new
-> flag is needed because MEMBLOCK_NOMAP can only express regions without
-> a linear mapping, while MEMBLOCK_NODUMP can filter regions that are
-> linearly mapped. Reserved regions are marked MEMBLOCK_NODUMP by default
-> so kdump omits them; reusable CMA regions are different because their
-> pages are handed back to the buddy allocator and may carry crash-relevant
-> data.
+The LIO-PIC MADT callback passes a typed record to the controller
+initialization code without checking that the complete record is
+present. A truncated firmware entry can therefore lead to out-of-bounds
+field reads.
 
-There is little point in continuing to send new versions until Mike 
-agrees with MEMBLOCK_NODUMP being added. You didn't answer him on v7.
+Reject incomplete LIO-PIC entries before passing them to the
+initialization helper.
 
-Also, I intend to apply this[1] before any further reserved memory 
-changes which will greatly simplify the code.
+Fixes: b2d3e3354e2a ("irqchip: Add LoongArch CPU interrupt controller support")
+Cc: stable@vger.kernel.org
+Signed-off-by: Jiale Yao <yaojiale02@163.com>
+---
+ drivers/irqchip/irq-loongarch-cpu.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Rob
+diff --git a/drivers/irqchip/irq-loongarch-cpu.c b/drivers/irqchip/irq-loongarch-cpu.c
+index 84ce24889488..6185825477f4 100644
+--- a/drivers/irqchip/irq-loongarch-cpu.c
++++ b/drivers/irqchip/irq-loongarch-cpu.c
+@@ -119,6 +119,9 @@ static int __init liointc_parse_madt(union acpi_subtable_headers *header,
+ {
+ 	struct acpi_madt_lio_pic *liointc_entry = (struct acpi_madt_lio_pic *)header;
+ 
++	if (BAD_MADT_ENTRY(liointc_entry, end))
++		return -EINVAL;
++
+ 	return liointc_acpi_init(irq_domain, liointc_entry);
+ }
+ 
+-- 
+2.34.1
 
-[1] https://lore.kernel.org/all/20261015082315.56876-1-m.szyprowski@samsung.com/
