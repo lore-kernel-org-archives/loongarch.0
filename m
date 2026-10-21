@@ -1,103 +1,78 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.55
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792522201;
-	b=u65KUYEpR1ytFrGlQaQU1KDXqyYCkNwsOWuLkAue8T4CZZ+K/LSJwHxglphh1v4r3zUY
-	 DEI7ExJh33kiVxpYNL9qbHIneN1c8drX5hjrho5EFh5PE48GsRK9L4z8W5lcDam4cudaw
-	 +REFHLG2q5F433NtVaRWlZbU8jSipoDP/jdDehZJlasgctn6/9qe6VUmjrc3aWibcKgM/
-	 Q97PABMDKEWzufGUYCAtAHajg5e3GyqJAEHLqh5APhdaLgLUBJt+rhggXDPjjMIgJ/jpm
-	 3YnnhYzAhui7HXi3IQnQd66CQb0hl/WVhHQP51ZQ7uWMPS2gI7C8YgzUVwQ8I/bU54A==
+	t=1792553633;
+	b=D4FSW8gEsdKLmw17PiRr+81sSO0XNqg9rEEMj6vpZsxiqE1Xf/PcFxlgUzf2U8VTDRou
+	 6fFKm7f3nLVPg9YY0Uc+0II4EamldwiqDVrJmd8RKop1Rooh7onWyCqpyO8IhNkriDDzj
+	 zJP3r6wiKTV55elokWsnVlQrbS2EWholaIm8WHyMSMtQGK4QRrMvezHc1NZAOQEc+Xgb5
+	 NnPpfxgqpK5EWRlhc3NnGlElysxXkZsDKs5vm9oGYDn7j326+C5GNkkNdyDRMFHj6e92w
+	 11tUpVhsZSF2zx5n3icenkfbJX03lm80WXmXdQjkib7sZ8Vjf5fnX8OFmuqTTlO9kwg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792522201;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
-	 Received:Received:Received:Received:Message-ID:Subject:From:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:
-	 MIME-Version:User-Agent:X-TM-AS-GCONF:X-Proofpoint-Reinject:
-	 X-Authority-Analysis:X-Proofpoint-ORIG-GUID:
-	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-Spam-Info:
-	 X-Proofpoint-GUID:X-Proofpoint-Virus-Version:
-	 X-Proofpoint-Spam-Details;
-	bh=CUipg4fJiQC0gX8LVYNaRjwOaAjhAgEsBQ5MnjXNco0=;
-	b=OZcaeUZ1rX0aRdxtHW7jHtx2qfoLBHZrtDsDuBWa+fnGX6mJwgAhnHp4uyC89peowitc
-	 iTcPPE6bLLcN3knxl7cgzqkkqQzu2aMxlNf/M1NJLSLfaO86c6pka3GEr5qsdhuEdnlhp
-	 NLpb0XTjqJMet9M2r9/vmdrZC+NPvsI9HB6tREO5VpffIRqQxjaL3d9LpFpWLg8PSZ/AJ
-	 ZlAZ6XFZBu4iTWQX1iG0sgxEbHmRlRF1XyekTvnNPSnJhUThSb/JTokPLHZppsOI8gg7S
-	 xfZY1tLpcYSLvNibEmXZQ7CTpQGk2+dz05BDqLe/Bvu2qTuxy7vqZLbss49+QW3lJ1g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792553633;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=RbLlIDBzxSpd5cJfPOd2N3zvhSlGP9L2jcWxKocz/10=;
+	b=FoBo7EP9wUlBwOksEyZY7+ERQLIasaBaJ16p/b1J/y4EQ1r9U//AN8IBWtaty0AvN1d5
+	 ljqDR3yGfkqQmKmtXcv5o5NzuD3GCAucVia3JLbak7II5vZVZ/HwbTiO4exsMcXo/2W+e
+	 QbPAMLydXeMZQWXPNSNcpeR06cOtUUbr5YuydCVtEDBphHBNtBP+vwmkl2+qX7U2klwE8
+	 GLTesbQhdzdtjyqm078Ulag0COBawgUBxSy7sxWfwCEGtebmEvyK9FVJM8UDteXp+OUJL
+	 mNJYAGeevKGFSySByKN1hQQQZcTyacKu4JReQPZw/pHI3wgT/16vDUTfHH11YdSo84Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.ibm.com;
-	spf=pass smtp.mailfrom=linux.ibm.com;
-	dkim=pass header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b="PyLs4m/b";
-	arc=none smtp.remote-ip=148.163.158.5
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=HuUipxgR;
+	arc=none smtp.remote-ip=95.215.58.55
+Received: from mta1.migadu.com (out-55.mta1.migadu.com [95.215.58.55])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96054606A31C
-	for <loongarch@lists.linux.dev>; Tue, 20 Oct 2026 18:50:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 96054606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61533606A32F
+	for <loongarch@lists.linux.dev>; Wed, 21 Oct 2026 03:33:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 61533606A32F
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=PyLs4m/b
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69KHEGYY2978623;
-	Tue, 20 Oct 2026 18:49:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=CUipg4
-	fJiQC0gX8LVYNaRjwOaAjhAgEsBQ5MnjXNco0=; b=PyLs4m/bwKvEN1Xub2+nsy
-	RvDztJMNx/Z+zoVjhqf3OXsUqlQyAwKi6Di8U1rhrdN+ORF9bIIUy2WpblIgKMrY
-	wQz5uaGWAvaV+A7KvUL4yg9m/v9EDesHFCLuqNWzfGs8kRBM6IgqNGhQw8n0tdht
-	eA+deQAvJRxk3pWNsU0LIS6ntBFtiTy68Ba6SbC3Pc87D2WQ25G8+09mz4Ij+aqj
-	fYLWN3kFHFJa9s292QZL70nuHrDz+JW2NDEXBhYrt7nyY40OuZt07GGrc2GhUGlX
-	1gCPfU03Slx8kl4J391XkgR2GEiNQu4gyoA19xotJcjdqMfJj0AXeYXgDD9RM+7w
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4hdw5ammmp-1
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Tue, 20 Oct 2026 18:49:13 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 69KH4pQG1836498;
-	Tue, 20 Oct 2026 18:49:13 GMT
-Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4he8vhsb58-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 Oct 2026 18:49:13 +0000 (GMT)
-Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
-	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 69KInCjW27787960
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 20 Oct 2026 18:49:12 GMT
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8711458056;
-	Tue, 20 Oct 2026 18:49:12 +0000 (GMT)
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AE8CB58052;
-	Tue, 20 Oct 2026 18:49:10 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.74.192])
-	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 20 Oct 2026 18:49:10 +0000 (GMT)
-Message-ID: <f6829d2023573445b0906b34812e5b0bfdfb2e4c.camel@linux.ibm.com>
-Subject: Re: [PATCH v2] kexec: Select ima_get/free_kexec_buffer() with
- CONFIG_HAVE_IMA_KEXEC(_OF)
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Roberto Sassu <roberto.sassu@huaweicloud.com>, catalin.marinas@arm.com,
-        will@kernel.org, mark.rutland@arm.com, chenhuacai@kernel.org,
-        kernel@xen0n.name, maddy@linux.ibm.com, mpe@ellerman.id.au,
-        npiggin@gmail.com, chleroy@kernel.org, pjw@kernel.org,
-        palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
-        tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com, robh@kernel.org,
-        saravanak@kernel.org
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        devicetree@vger.kernel.org, noodles@fb.com,
-        linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org,
-        Roberto Sassu
- <roberto.sassu@huawei.com>
-In-Reply-To: <20261020083727.1906495-1-roberto.sassu@huaweicloud.com>
-References: <20261020083727.1906495-1-roberto.sassu@huaweicloud.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 20 Oct 2026 14:49:10 -0400
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=HuUipxgR
+X-Envelope-To: loongarch@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=y927hDeFwTRi1uuF8AFccBXiuWM2sJNn4YnO+caicLI=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1792553630; v=1; x=1793158430;
+ b=HuUipxgRWS3e7sDvPB7ilyEUPgRtTmYZ+Pmv+0G7aSfoBB64N9Ezdvggr7cyCJYhNYRoNABQ
+ 1NIALLv0lL+pT7s1Ta2HlXtIcSDzHQRv1LjU8Bz41eNK1xug9eM3nBz5/ICuWBm7aW60JdMJAdN
+ h6MPK5xaXrRLUQqt3HGTojB0=
+X-Envelope-To: loongarch@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id 071bc8b21379f3c8;
+	Wed, 21 Oct 2026 03:33:50 +0000
+X-Mizu-Trace-ID: 071bc8b21379f3c8
+X-Migadu-Flow: FLOW_OUT
+From: George Guo <dongtai.guo@linux.dev>
+To: pratyush@kernel.org
+Cc: rppt@kernel.org,
+	pasha.tatashin@soleen.com,
+	chenhuacai@kernel.org,
+	ardb@kernel.org,
+	shuah@kernel.org,
+	ilias.apalodimas@linaro.org,
+	akpm@linux-foundation.org,
+	baoquan.he@linux.dev,
+	ruirui.yang@linux.dev,
+	guodongtai@kylinos.cn,
+	kernel@xen0n.name,
+	graf@amazon.com,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	linux-efi@vger.kernel.org
+Subject: Re: [PATCH v5 1/5] efi: add a KHO configuration table channel
+Date: Wed, 21 Oct 2026 11:33:42 +0800
+Message-ID: <20261021033342.3110-1-dongtai.guo@linux.dev>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <2vxza4p95v6e.fsf@kernel.org>
+References: <2vxza4p95v6e.fsf@kernel.org>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -107,71 +82,125 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Evolution 3.58.3 (3.58.3-2.fc43) 
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=X63Hu2Te c=1 sm=1 tr=0 ts=6ad7b7aa cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=i0EeH86SAAAA:8
- a=1ZqOMbZaXgEuhprhJ6sA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: Ia0JIwvxgpSWbtDkRhI4dPoRvql5U3OQ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDIwMDA3NCBTYWx0ZWRfX6CxIfm/eOhQP
- +/wUaq+FQGOqNArpfZIrUA+k9rkfHNtq3LEC/MDGsUMQm3qiFtctCKcsB3g0dqzV/HMTrSQIcHS
- kh45avWcDz/fa+RP2uRW8fGU108iYPrT3oaL1/s8VqCXcyTI5mX9UO7rDq0gQiB05j54tUmphC5
- M3UcJKnVRjGR5yF0kTH+AndvbRuqhLZdXHW5xBZ63UpJUlNFZ1AmQFZZ7EjQIaYbCuxgzixRrQ4
- eA1AxoIEmsZQy6ehSvq9n5ynjA3GOuarZ2tJhvCrpsIWZZUbqTsIBLwtl23nBpUqhDTFfw9xvEL
- QBTaUenCPMupL6l8hjKV2oZW8fZ1wD/GoA5VHnl9m0fQzGO+tv8xrL/dlgroHuaczSHOq+fqX5E
- cpLrzXoAs3f5D20wkmuN/fXp+2uRCw2Ftp5wPit+Q/mAZN0Rv9mp3+/u1kRTBMxoWYlDJGKGZh2
- LBmMkOCw1SrNQ0gUpWw==
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMDIwMDA3NCBTYWx0ZWRfX/pCk1z+OIKUf
- 8bZpWSGlRHh+7LvRdNSDPEBz4dEG1doO2AZda9JjErBmhtY1k+w0Jzx8QJ2wYxxGwVf3bi3lXKC
- 57cA1acf9WI/uIkewDh2r98mkDuuQnM=
-X-Proofpoint-GUID: gj5Wz7vSF5n4aqUBRYZGldP83-pRH86l
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-10-20_03,2026-10-19_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 phishscore=0 bulkscore=0 adultscore=0 malwarescore=0
- clxscore=1015 spamscore=0 impostorscore=0 lowpriorityscore=0 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2610190000 definitions=main-2610200074
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2026-10-20 at 10:37 +0200, Roberto Sassu wrote:
-> From: Roberto Sassu <roberto.sassu@huawei.com>
->=20
-> On x86, if CONFIG_OF_FLATTREE is enabled, the kernel uses the device tree
-> implementation of ima_get/free_kexec_buffer(). However, x86 passes the IM=
-A
-> buffer location through setup_data, not through the device tree, so the
-> buffer is never found and the IMA measurement list is not carried over
-> across kexec.
->=20
-> Introduce CONFIG_HAVE_IMA_KEXEC_OF (which selects CONFIG_HAVE_IMA_KEXEC)
-> and select it for the architectures that pass the IMA buffer location
-> through the device tree, via of_kexec_alloc_and_setup_fdt() (arm64,
-> powerpc and riscv). Build the device tree implementation of
-> ima_get/free_kexec_buffer() only if the new option is enabled.
->=20
-> Select the new option also on LoongArch, to preserve the current behavior
-> and avoid a link failure. LoongArch does not pass the buffer location to
-> the next kernel yet; this will be addressed separately.
->=20
-> Finally, don't select it for x86, and use x86's own setup_data-based
-> implementation regardless of CONFIG_OF_FLATTREE.
->=20
-> Fixes: b69a2afd5afc ("x86/kexec: Carry forward IMA measurement log on kex=
-ec")
-> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> ---
->=20
-> v2:
-> - Reworded the commit message (no code changes), suggested by Mimi
+Hi Pratyush,
 
-Thanks, Roberto.
+Thanks for the detailed review. I've rewriten the comments and commit messages
+myself for v6. Replies inline.
 
-The patch and now the patch description look good.  Can we get some tags?
+On Tue, Sep 22 2026, Pratyush Yadav wrote:
+> > +config EFI_KHO
+> > +	bool
+> > +	depends on EFI_STUB && EFI_GENERIC_STUB && KEXEC_HANDOVER
+> > +	help
+[...]
+> I don't like adding a config for this sort of thing. Do we really need
+> this? Why not just have the code always compiled and only used by
+> loongarch? I don't really see we need a user decision for this sort of
+> thing.
 
-thanks,
+Agreed, v6 drops it.
 
-Mimi
+> > +		/*
+> > +		 * Reserve the stub-allocated table so it is neither handed
+> > +		 * out by the buddy allocator nor placed on by kexec
+> > +		 * segments, mirroring the memreserve handling above.  This
+> > +		 * runs on every boot, so it also protects the table in the
+> > +		 * next kernel until it reads it.
+> > +		 */
+>
+> Nit: this comment is too wordy. Can you please make it more concise and
+> to the point?
+
+v6:
+
+	/* Keep the buddy allocator and kexec segments off the table. */
+
+> > +			if (kho->fdt_addr)
+>
+> When can kho->fdt_addr be NULL? Also, perhaps print a warning if
+> early_memremap() fails?
+
+It is 0 when there is nothing to restore:
+
+  - on a cold boot, because the stub installs the table zeroed;
+  - after a kexec into an image without KHO state, such as a crash
+    kernel, because the table is zeroed just before that kexec.
+
+v6 says this in the struct documentation, and adds a pr_warn() when
+early_memremap() fails.
+
+> > +	/*
+> > +	 * Keep a persistent mapping of the table, the same way
+> > +	 * efi_memreserve_root_init() keeps the memreserve root mapped:
+> > +	 * efi_kho_update() is also called on the crash kexec path, where
+> > +	 * memremap() is no longer an option.
+> > +	 */
+>
+> No need to mention memreserve. Just explain the reason here. And keep it
+> as short and to the point as possible.
+
+v6:
+
+	/* Map it now: the table is also written at panic time. */
+
+> This is unreadable. Please add a human touch to this.
+>
+> And once again, the fact that it mirrors efi_mem_reserve_persistent()
+> isn't important.
+
+v6:
+
+	/*
+	 * Write the KHO addresses the next kernel should use, or zeroes
+	 * if it should boot without KHO.
+	 */
+
+> Why ENODEV? Wouldn't ENOENT be a tiny bit better?
+
+Neither, in v6. No table is the normal case outside LoongArch, so
+efi_kho_update() now returns 0. The only error left is a table that
+could not be mapped at boot, which returns -ENOMEM.
+
+> This has too much information. You need to make it more to the point.
+> For example, "without a device tree" already implies there is no /chosen
+> property in the first place. No need to mention the function either.
+>
+> The lifetime of the table is certainly useful information but again,
+> should be much more clear and to the point.
+>
+> Also, you should document what each of the members of the struct mean.
+
+Agreed. v6:
+
+	/**
+	 * struct linux_efi_kho_data - KHO state passed to the next kernel
+	 * @fdt_addr: physical address of the KHO FDT, 0 if there is none
+	 * @fdt_size: size of the KHO FDT
+	 * @bootmem_addr: physical address of the bootmem area list
+	 * @bootmem_size: size of the bootmem area list
+	 *
+	 * Pointed to by the LINUX_EFI_KEXEC_HANDOVER_GUID configuration table.
+	 *
+	 * The EFI stub installs this table zeroed on a cold boot. It stays
+	 * in place across kexec; the running kernel rewrites it just before
+	 * each kexec, and the next kernel reads it during early boot.
+	 *
+	 * The layout is fixed. Changing it requires a new GUID.
+	 */
+
+> Note: I recently sent a series that renames scratch to bootmem [0]. It
+> looks close to landing. So you likely need to rename this to
+> bootmem_{addr,size}.
+
+Thanks for the heads-up. It is in liveupdate/next now, so v6 is based
+on it and uses bootmem_{addr,size}.
+
+> Why __packed?
+
+No good reason. All four members are u64, so there is no padding
+and __packed changes nothing. Dropped.
+
+Thanks,
+George
