@@ -1,107 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.137.202.136
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792681359;
-	b=cBOp+ZdryjmLG+/amjUVK2xMaDNoLQRhiTkblYgYtr+mgZXV0LMwUBUUMqP/zXBObla9
-	 N5BzHKK+UPQsjnywHt/gZCPKIAeehhiiKVKmJTMrOTECN19ig6kNeubBbw/lRk/WFxdj/
-	 gd8GrS3VFIbX9gHlOXm9UFqJ0IdQqdFcqd6HBQNSKeVF156xBuFAxMF5j6+I/0qe/g42b
-	 8hs7E1NCMJWOmh3dNFO1wbC7KKwUMgQlq8R7SP5dXgdwhZH26NsruqK3iKhnjl66ZcAn2
-	 +pHbr7JJfI4gXie6ka8hvIwiLs04pFvm5UNtS0s8AeLrqJ2y9gfWWJkWfdAQ4I5cQYA==
+	t=1792692269;
+	b=VpFSpFCBXJl15QNqJsOhIUBAIbpMTKLxlipu++6GjNblFwsAM/QYm9CoJ9n9OtdyYwjv
+	 KzsuqdqnoRu43CFxuDGijrBfrJPRCRprAsumwIsdVHOXnvzqkyDtmiCPMbGYy1D7mPbne
+	 KwXRLWCzCTon7bwbQb0Dg3zgBOiJeNJStVcSZh+ecBohDT/oL0bnuoY0wsEgPUPkN1072
+	 rRZYxhKduXrx0QokrSIAu7wBFdlMlOzWWIMK8AOzwjTL1BaZ+gvZAhUwOaLhN2PWfQ3DE
+	 GKk8dlaVPzl4HbLCJZGtYNzge5/HW6ryD5Dh7ICt83gsV/BH+KnKsOGqpFVijxQBszw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792681359;
-	h=DMARC-Filter:Date:DKIM-Signature:DKIM-Signature:From:To:Cc:Subject:
-	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
-	 Content-Transfer-Encoding:In-Reply-To;
-	bh=UzBCi/OSOXBVd/hf35Hctx/8s00KKyC8gNB54GWWKuw=;
-	b=1otnJBQZEL9LXCf6HBjerinxkQhULTq8qqXuwU8YFKKs6CKa0LVAoBBy+OLO/IKxB6o9
-	 JXS7HSj93MCUVaWeJ1sQJvJ194BO0lDOeabgVpv4UDeNEUWv37xGZASb7rLALeE7OSmra
-	 xdpJHaSlf20Dyynw9PnuRc0Akmg01MmOrzF07oD9h3T9SX1+Q5qcLCTPuArYPgvhPWZ9S
-	 3e++2DqGLQMow51ouC1oKC+RsJL77jHKytF3fLiAhDDQ3nylEseCLuKG5lWxmQFwXFYbr
-	 kQ0ckJaukbF2Btu382TbbCxoJoyY3oluXN2LpSSk7B7V+5zvQz6hDLwPucSubLZ0S4A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792692269;
+	h=DMARC-Filter:Received:DKIM-Filter:DKIM-Signature:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:To:Cc:References:Content-Language:
+	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=RhnfvKmfoxy+HUbDsORpInOXf0Z9ck2xlJJLmjkZQrQ=;
+	b=WnBl9zA4HzmWqSKzaxVgw82KNKZ/2CfmSGms8cxG+9m5o3CtxJh7u5twXvTJbGAjp9m3
+	 Yh8lX3eR4zcD6RV3NENj0N+9hlAAnoDNNh3ogMMGmp1g35ELNtTqsV/sFMYhIvTh896tT
+	 SlTNnVFOPDzL+QsLSZa/XUWGNhKB+7OpFn2eMsvqkK3CidywkXtKuJLO4bVwkjtLfHOsG
+	 4Ac9VDHzUS4w7OYtTA/fytqPk1jC1FuTv+vkoNrOhNHmaL30LXEMif5SEijQPnetRP1ew
+	 89ThFXZMGc4hVnP0PNCjBxNEENnjo0GXp4NmjZ9ZHh4nPtAMpwB/4P6mMSSz+Xdlv9Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linutronix.de;
-	spf=pass smtp.mailfrom=linutronix.de;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=2kUGpeTG;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=rACQg86H;
-	arc=none smtp.remote-ip=193.142.43.55
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	dmarc=pass header.from=zytor.com;
+	spf=pass smtp.mailfrom=zytor.com;
+	dkim=pass header.d=zytor.com header.i=@zytor.com header.a=rsa-sha256 header.s=2026092801 header.b=wS32jOje;
+	arc=none smtp.remote-ip=198.137.202.136
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E27DE606A31B
-	for <loongarch@lists.linux.dev>; Thu, 22 Oct 2026 15:02:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E27DE606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A6A1606A320
+	for <loongarch@lists.linux.dev>; Thu, 22 Oct 2026 18:04:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1A6A1606A320
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=2kUGpeTG;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=rACQg86H
-Date: Thu, 22 Oct 2026 17:02:35 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1792681357;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UzBCi/OSOXBVd/hf35Hctx/8s00KKyC8gNB54GWWKuw=;
-	b=2kUGpeTGDVBuYHmtDUk+ioLvFvif4ltj8rhWzocDuPm3HaFe4R4vTlOrnH+/NsK85KtmTp
-	BQjRWdChCYWAdK0+eKUDRrdj71IFDIxlOzl/dpE7YHJOp63rkeZsrL+lIMWPOayKDZmWQS
-	jZAmsd4OLiERAIm81xpmW1yxnaZhra+XaRdURt8feLSfDQkUZypkuicnE2Chx4WDXJq1W7
-	gDW8/bA/PN+qgiQxlc+hLTJKpE5MORxYd7/+QpWeOeTOBVrrUrdM+PZPV0PqyhtRPzLVvf
-	zZtCZj7gdLMshXYHbUIElhTwDBoSLh7+UVN4FV0jNASdMsB3S53YU8lnjUcMbw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1792681357;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UzBCi/OSOXBVd/hf35Hctx/8s00KKyC8gNB54GWWKuw=;
-	b=rACQg86HepNQ8r26wtL/lrV9xxe+QpJ6z/mp4SnHXzsO+wI4ld+mzpC3AGpr+fKJ/pFfac
-	AwRn+5gmUDC3CcCw==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Thomas Gleixner <tglx@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	linuxppc-dev@lists.ozlabs.org, Kees Cook <kees@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	linux-riscv@lists.infradead.org,
-	Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org,
-	x86@kernel.org, Mark Rutland <mark.rutland@arm.com>,
-	Jinjie Ruan <ruanjinjie@huawei.com>,
-	Andy Lutomirski <luto@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Guo Ren <guoren@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Helge Deller <deller@gmx.de>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Richard Weinberger <richard@nod.at>,
-	Chris Zankel <chris@zankel.net>,
-	linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org,
-	linux-csky@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linux-sh@vger.kernel.org, linux-um@lists.infradead.org,
-	Arnd Bergmann <arnd@arndb.de>, Vineet Gupta <vgupta@kernel.org>,
-	Will Deacon <will@kernel.org>, Brian Cain <bcain@kernel.org>,
-	Michal Simek <monstr@monstr.eu>, Dinh Nguyen <dinguyen@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	linux-snps-arc@lists.infradead.org, linux-hexagon@vger.kernel.org,
-	linux-openrisc@vger.kernel.org, sparclinux@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	Michal =?utf-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [patch 16/18] x86/entry: Get rid of the sys_ni_syscall()
- indirection
-Message-ID: <20261022150235.V2CSdtmu@linutronix.de>
-References: <20260707181957.433213175@kernel.org>
- <20260707190254.493733289@kernel.org>
- <20261022142425.3Wx-RrU5@linutronix.de>
+	dkim=pass (2048-bit key, unprotected) header.d=zytor.com header.i=@zytor.com header.a=rsa-sha256 header.s=2026092801 header.b=wS32jOje
+Received: from [172.27.3.124] (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 69MI2jre822700
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Thu, 22 Oct 2026 11:02:46 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 69MI2jre822700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2026092801; t=1792692174;
+	bh=RhnfvKmfoxy+HUbDsORpInOXf0Z9ck2xlJJLmjkZQrQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=wS32jOjeFWsFEs7/XC2lmhjx+vaso38Aa1yvVUAkT9A1W3myWjPjlKJ97J5iL0Ywq
+	 bPF69gGCe7jooHw6vT1puqfAAMWwIenPVsBB0BtjXDHBnYwO13DlDPhjiEozTqjEHM
+	 Tnne7bJIubMKnpcLaITiN/m+5GZf8SNZmR76JFs4RsiRgOXjXb7KnOu57Xbk4+jf0R
+	 res/2bYXDI5YQACu5N7auw0s2PeA2biV4pFQrygkfChnNdCyphEU5uiDFSgPKPiKVV
+	 mrz+yPrxO0ZpIXSlYj8frGR29U2PsHFm2Ceilf5VQYeo3Indd2RWAuBubWzuARjG4V
+	 DyvcySggronVQ==
+Message-ID: <9d875fab-fdad-413e-9737-6160fac2a406@zytor.com>
+Date: Thu, 22 Oct 2026 11:00:24 -0700
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -111,25 +60,73 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20261022142425.3Wx-RrU5@linutronix.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [patch 16/18] x86/entry: Get rid of the sys_ni_syscall()
+ indirection
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra
+ <peterz@infradead.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Shrikanth Hegde <sshegde@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
+        Kees Cook <kees@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+        loongarch@lists.linux.dev, Paul Walmsley <pjw@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org,
+        Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org,
+        x86@kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Jinjie Ruan <ruanjinjie@huawei.com>, Andy Lutomirski <luto@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>, Guo Ren <guoren@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Helge Deller
+ <deller@gmx.de>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Richard Weinberger <richard@nod.at>, Chris Zankel <chris@zankel.net>,
+        linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org,
+        linux-csky@vger.kernel.org, linux-m68k@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-um@lists.infradead.org,
+        Arnd Bergmann <arnd@arndb.de>, Vineet Gupta <vgupta@kernel.org>,
+        Will Deacon <will@kernel.org>, Brian Cain <bcain@kernel.org>,
+        Michal Simek <monstr@monstr.eu>, Dinh Nguyen <dinguyen@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Andreas Larsson <andreas@gaisler.com>,
+        linux-snps-arc@lists.infradead.org, linux-hexagon@vger.kernel.org,
+        linux-openrisc@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-arch@vger.kernel.org,
+        =?UTF-8?Q?Michal_Such=C3=A1nek?= <msuchanek@suse.de>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+References: <20260707181957.433213175@kernel.org>
+ <20260707190254.493733289@kernel.org> <20261022142425.3Wx-RrU5@linutronix.de>
+ <20261022150235.V2CSdtmu@linutronix.de>
+Content-Language: en-US, sv-SE
+From: "H. Peter Anvin" <hpa@zytor.com>
+In-Reply-To: <20261022150235.V2CSdtmu@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 2026-10-22 16:24:30 [+0200], To Thomas Gleixner wrote:
-> The test could be updated via the hunk below in case the new behaviour
-> is what is expected. hpa made the extension to the test in commit
-> 795e2a023b808 ("selftests/x86/syscall: Add tests under ptrace to
-> syscall_numbering_64").
->=20
-> diff --git a/tools/testing/selftests/x86/syscall_numbering.c b/tools/test=
-ing/selftests/x86/syscall_numbering.c
-> index ca0eca7b9dced..1435394fba022 100644
-> --- a/tools/testing/selftests/x86/syscall_numbering.c
-> +++ b/tools/testing/selftests/x86/syscall_numbering.c
+On 2026-10-22 08:02, Sebastian Andrzej Siewior wrote:
+> On 2026-10-22 16:24:30 [+0200], To Thomas Gleixner wrote:
+>> The test could be updated via the hunk below in case the new behaviour
+>> is what is expected. hpa made the extension to the test in commit
+>> 795e2a023b808 ("selftests/x86/syscall: Add tests under ptrace to
+>> syscall_numbering_64").
+>>
+>> diff --git a/tools/testing/selftests/x86/syscall_numbering.c b/tools/testing/selftests/x86/syscall_numbering.c
+>> index ca0eca7b9dced..1435394fba022 100644
+>> --- a/tools/testing/selftests/x86/syscall_numbering.c
+>> +++ b/tools/testing/selftests/x86/syscall_numbering.c
+> 
+> Now I notice the fix depends on CONFIG_X86_X32_ABI=y (fails for =n).
+> But we want to get rid of it anyway so…
+> CONFIG_IA32_EMULATION is not affected (with the fix).
+> 
+It would be very simple to probe for by issuing a simple system call like
+getppid() with the x32 bit set.
 
-Now I notice the fix depends on CONFIG_X86_X32_ABI=3Dy (fails for =3Dn).
-But we want to get rid of it anyway so=E2=80=A6
-CONFIG_IA32_EMULATION is not affected (with the fix).
+	-hpa
 
-Sebastian
