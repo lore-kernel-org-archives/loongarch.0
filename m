@@ -1,56 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=113.46.200.220
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=113.46.200.216
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793001183;
-	b=kQ2MvH9iRewDJW80kw4VPtBV4H3jGsxRPMtUPn9Mg8ZlynoR73XoTkSakH0yq1+jMsuZ
-	 l6WGW4r6WvRetkVKzdRgG/xhSbvHWPQBzFZwvqGRBPpKB/cFyOd5TiVpaTgs9aR8GviyF
-	 6BdtgDZ9uoDHg/llDhm5i5gKMw2A4kSClrhdwZ3scGgmolW7ssRhEgnf47XNdaY0URBC9
-	 yeIz2KBqCLK3IGp7Fvt29K3gypCAKnSgZ0/4jEZaT4c69izdb/c1dQ6Mx98UJXj2pK1fi
-	 s9LM6629Ubfl4niMgOxQskp/xxzA7l0ZZN0dN8T7ljpW+s+bwehpJ7dYdRv6izzZc9A==
+	t=1793001178;
+	b=rBtuZo0A1bLC5LWyqgrRj7YEoV5/H4JMY57swTgwX8pLSc+u4qr651d3RyDFyl+8hiBl
+	 sIsn6Hly4SxIx+o51PxvA+5CoNeSJ03NTwsQEttt0RDh5J85/VRWaxWn2YGWPEEMcBDVy
+	 ZhESnVbNd/HKpfvFFkdn4T7g12cIF9Dt+5hnQFkAAkfU+MV5jh7RxKt68+9ULYCFol1Pz
+	 Q/eit0oFnnlWnvVxNhYB18XJPXzWsr3GtvhUwIk7lPaOvnfGDXrcdk6yU0y4+i0UQntfY
+	 ijjiE6FHdvBoBIrviI6mQFo5rW4nR1ZGOM006IVfSq0g4VZL2AGfZPtTAwLxWZIXUGQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793001183;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793001178;
 	h=DMARC-Filter:dkim-signature:Received:Received:Received:From:To:
-	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Subject:Date:Message-ID:X-Mailer:MIME-Version:
 	 Content-Transfer-Encoding:Content-Type:X-Originating-IP:
 	 X-ClientProxiedBy;
-	bh=Q37eFExC6M3HhNsbtTO2StjSIwhNf+LEG0N/7SGQYv4=;
-	b=VrYrCYK2OaTBUGiPIZEoCWmNiCV2uJrATNhp9vPsCKOcwfkoo5LI6/XFrva/za51AmXP
-	 Vy/isyoH7thB1HnLr9xfAdu0QokKv3uBot0lraBsXyJ4q6Xw6k1rPHi/bHOU7hdjK3N29
-	 of38Hhrd/VgCCGMb4S6s416DcxhB/+cqEjucEMyjDNa7UD7u7GHJlQUrmk6UISoGSjvtU
-	 vwD5k6xLkhM5PEb8OD9K+0666JCs8cONf2KAsF5hUDPR4c0jVnbVGHbOksNaAkXgiC8oe
-	 t26bUCQ6/zqhVVhsQuBOPIRfHkAZVGzlkSyyzTLBHbEvbyJf7ZQx6u4IRFGXwPPhaqA==
+	bh=AqQFdK35R3PRDVunxYa3KuNeB3Jy3YGmbat9louWLxc=;
+	b=np6X1XvV4vEWOLxuTcEKBN4e+T+SrEPinDuCrvxjclIcQ9KTiHgsHLq8JuDrHXH/zUQM
+	 42mwEXINl8Wha//7RFqn1HtoM3BZy6+KcrLVs3IKhalm5HLsbad8VaAItkkdxA+M1oYAZ
+	 lShUEdVCfR29BLXWoeNNdnLVYWQaGK9QAH1eIyRqCZS8iUhY2RkeK/PPlqVTzAFohRHYS
+	 NQdjBJM5AIbUTnC5DMjabIJaf6m+R7G4C0D3O+ChSKXEltxFdwo7neeoAwfibjBKgAAGt
+	 gSF2pG6FB/dO/eE12txUGOCBJZ9ZfqPFqHIA3vrT4qOhCXcWRYo7Lijdqjv+0fD8OQw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=huawei.com;
 	spf=pass smtp.mailfrom=huawei.com;
-	dkim=pass header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=Z3shP3oo;
-	arc=none smtp.remote-ip=113.46.200.220
-Received: from canpmsgout05.his.huawei.com (canpmsgout05.his.huawei.com [113.46.200.220])
+	dkim=pass header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=KvWkDFkJ;
+	arc=none smtp.remote-ip=113.46.200.216
+Received: from canpmsgout01.his.huawei.com (canpmsgout01.his.huawei.com [113.46.200.216])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C76606A322
-	for <loongarch@lists.linux.dev>; Mon, 26 Oct 2026 07:53:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C6C76606A322
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C15D1606A31A
+	for <loongarch@lists.linux.dev>; Mon, 26 Oct 2026 07:52:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C15D1606A31A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=Z3shP3oo
+	dkim=pass (1024-bit key, unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=KvWkDFkJ
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=Q37eFExC6M3HhNsbtTO2StjSIwhNf+LEG0N/7SGQYv4=;
-	b=Z3shP3ooxReMBA6K6DclOtd/c2nZdN888LJ5ncwYrjzheXC87zR6soeusaGbvrPDnNaF8GwCQ
-	tc4X52XOgex3AWsBhHnMMeeLI33bz6Y1GZcn3FLoZQhPUDgfmMnazgw/k4BKLKkBbrSfJ9uqVwE
-	/IsGeUkCOtVWYA6xCLw6NHY=
-Received: from mail.maildlp.com (unknown [172.19.162.197])
-	by canpmsgout05.his.huawei.com (SkyGuard) with ESMTPS id 4jCm7s1zgyz12LJ2;
-	Mon, 26 Oct 2026 15:52:57 +0800 (CST)
+	bh=AqQFdK35R3PRDVunxYa3KuNeB3Jy3YGmbat9louWLxc=;
+	b=KvWkDFkJzXndGvncGFgO/hLjASWJRdQGUv7ZBx9Kd/Y4d/gjf2/tOQPoVj+es5AzzAYYw+fZL
+	wpZ+D42NaiYDjO0KhibMF2YG20SX/Jm8lwHyRYfnUO/XjCMujysMoKBsQuUTEMEVfZxGKQ0Cymh
+	ytpS/HzSSO+e3Fp8IxNlI6E=
+Received: from mail.maildlp.com (unknown [172.19.162.223])
+	by canpmsgout01.his.huawei.com (SkyGuard) with ESMTPS id 4jCm7d1PzKz1T4MW;
+	Mon, 26 Oct 2026 15:52:45 +0800 (CST)
 Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3B53B4057D;
-	Mon, 26 Oct 2026 15:52:53 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id CDF3A40577;
+	Mon, 26 Oct 2026 15:52:51 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by kwepemk200008.china.huawei.com
  (7.202.194.74) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Mon, 26 Oct
- 2026 15:52:51 +0800
+ 2026 15:52:50 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
@@ -73,12 +73,10 @@ To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
 	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
 	<linux-riscv@lists.infradead.org>, <kexec@lists.infradead.org>
-Subject: [PATCH v7 01/15] arm64: kexec_file: Stop using the Image text_offset
-Date: Mon, 26 Oct 2026 15:51:47 +0800
-Message-ID: <20261026075201.699550-2-ruanjinjie@huawei.com>
+Subject: [PATCH v7 00/15] kexec: Fix CMA and elf header leaks and rework
+Date: Mon, 26 Oct 2026 15:51:46 +0800
+Message-ID: <20261026075201.699550-1-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20261026075201.699550-1-ruanjinjie@huawei.com>
-References: <20261026075201.699550-1-ruanjinjie@huawei.com>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -93,70 +91,89 @@ Content-Type: text/plain
 X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
  kwepemk200008.china.huawei.com (7.202.194.74)
 
-image_load() adds text_offset to kernel_segment->mem and subtracts it
-from kernel_segment->memsz.  For CMA backed segments this breaks the
-load path: the payload is copied to page_address(cma), which is the CMA
-base, while image->start is set to the adjusted address, so kexec jumps
-into the middle of the kernel.  kimage_map_segment() has the same
-mismatch when a segment has been moved.
+ARM64, LoongArch and RISC-V load the elf core header, initrd, DTB
+and cmdline parameters with almost identical code. This series fixes
+the bugs in that path. And as Mike suggested, rework the common part
+into a helper.
 
-The adjusted memsz also breaks the release path: the CMA pages are
-freed using segment->memsz >> PAGE_SHIFT, which is fewer than were
-allocated, leaking the tail of the allocation.
+Patch 1 stops using the Image text_offset for arm64, which breaks CMA
+segments in both the load and release paths, and rejects images with
+a non-zero value.
 
-Since commit 751c263bb74f ("arm64: remove TEXT_OFFSET randomization")
-TEXT_OFFSET is always zero.  This has been upstream since v5.8, so no
-LTS kernel carries a non-zero text_offset.  Drop the adjustment and
-reject images with a non-zero value instead of booting them from a
-wrong address.  With the adjustment gone, segments stay at their CMA
-base and the release size matches the allocation.
+Patches 2-7 fix the CMA page and elf core header leaks in the retry
+loops in arm64 and LoongArch, also fix a modified_cmdline leak
+in LoongArch.
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mike Rapoport <rppt@kernel.org>
-Link: https://lore.kernel.org/all/20260921090450.807575-2-ruanjinjie@huawei.com/
-Link: https://lore.kernel.org/all/20260921090450.807575-3-ruanjinjie@huawei.com/
-Fixes: 07d24902977e ("kexec: enable CMA based contiguous allocation")
-Suggested-by: Mike Rapoport <rppt@kernel.org>
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
----
- arch/arm64/kernel/kexec_image.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+Patches 8-10 pass the kbuf fields to crash_prepare_headers() to
+simplfy code.
 
-diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
-index b8d0fb0a9daf..74d24c8aa2fa 100644
---- a/arch/arm64/kernel/kexec_image.c
-+++ b/arch/arm64/kernel/kexec_image.c
-@@ -80,12 +80,17 @@ static void *image_load(struct kimage *image,
- 	kbuf.bufsz = kernel_len;
- 	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
- 	kbuf.memsz = le64_to_cpu(h->image_size);
-+	/*
-+	 * Pre-v5.8 images carry a non-zero text_offset, which is no longer
-+	 * honored; reject them instead of loading them at a wrong address.
-+	 */
- 	text_offset = le64_to_cpu(h->text_offset);
-+	if (text_offset) {
-+		pr_err("Unsupported Image text_offset 0x%lx\n", text_offset);
-+		return ERR_PTR(-ENOEXEC);
-+	}
- 	kbuf.buf_align = MIN_KIMG_ALIGN;
- 
--	/* Adjust kernel segment with TEXT_OFFSET */
--	kbuf.memsz += text_offset;
--
- 	kernel_segment_number = image->nr_segments;
- 
- 	/*
-@@ -117,8 +122,6 @@ static void *image_load(struct kimage *image,
- 	}
- 
- 	kernel_segment = &image->segment[kernel_segment_number];
--	kernel_segment->mem += text_offset;
--	kernel_segment->memsz -= text_offset;
- 	image->start = kernel_segment->mem;
- 
- 	kexec_dprintk("Loaded kernel at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+Patch 11 frees the elf core header from the generic post-load cleanup.
+
+Patches 12-15 add kexec_load_other_segments() and convert the three
+architectures, and arch_kexec_setup_other_segments() builds
+the architecture specific boot parameters (a DTB or a command line).
+
+Tested with kexec_file_load() and kdump on arm64, RISC-V and LoongArch
+under QEMU, including the non-zero text_offset rejection.
+
+This series is also available at:
+        https://github.com/ruanjinjie-eng/linux/tree/kexec_cleanup_v7
+
+Changes in v7:
+- Rework the kexec_file load code to avoid code duplication
+  as Mike suggested.
+- Add Acked-by.
+- Drop the two non-zero text_offset fix patches
+  and deprecate .text_offset in arm64 as Mike suggested.
+- Drop the x86-32 fix patch.
+- Drop the TOCTOU race fix patches.
+- Link to v6: https://lore.kernel.org/all/20260921090450.807575-1-ruanjinjie@huawei.com/
+
+Previous Versions are as below:
+- v5: https://lore.kernel.org/all/20260918100442.3841135-1-ruanjinjie@huawei.com/
+- v4: https://lore.kernel.org/all/20260907125404.922123-1-ruanjinjie@huawei.com/
+- v3: https://lore.kernel.org/all/20260826092541.3905933-1-ruanjinjie@huawei.com/
+- v2: https://lore.kernel.org/all/20260729031235.2840255-1-ruanjinjie@huawei.com/
+- v1: https://lore.kernel.org/all/20260723131242.1537633-1-ruanjinjie@huawei.com/#t
+
+Jinjie Ruan (15):
+  arm64: kexec_file: Stop using the Image text_offset
+  kexec: Extract kexec_free_segment_cma() from kimage_free_cma()
+  arm64: kexec_file: Fix CMA page leaks in segment placement retry loops
+  arm64: kexec_file: Fix elf_headers memory leak in retry loop
+  LoongArch: kexec_file: Fix CMA page leaks in segment placement retry
+    loops
+  LoongArch: kexec_file: Fix elf_headers memory leak in retry loop
+  LoongArch: kexec_file: Fix a modified_cmdline leak
+  arm64: kexec_file: Simplify load_other_segments()
+  LoongArch: kexec_file: Simplify load_other_segments()
+  riscv: kexec_file: Simplify load_extra_segments()
+  kexec: Free the elf core header in kimage_file_post_load_cleanup()
+  kexec: Add kexec_load_other_segments() helper
+  arm64: kexec_file: Use kexec_load_other_segments() to simplify code
+  LoongArch: kexec_file: Use kexec_load_other_segments() to simplify
+    code
+  riscv: kexec_file: Use kexec_load_other_segments() to simplify code
+
+ arch/arm64/include/asm/kexec.h             |   5 -
+ arch/arm64/kernel/kexec_image.c            |  33 +++++--
+ arch/arm64/kernel/machine_kexec_file.c     | 103 ++++-----------------
+ arch/loongarch/include/asm/kexec.h         |   4 -
+ arch/loongarch/kernel/kexec_efi.c          |  20 +++-
+ arch/loongarch/kernel/kexec_elf.c          |  11 ++-
+ arch/loongarch/kernel/machine_kexec.c      |   2 +
+ arch/loongarch/kernel/machine_kexec_file.c |  96 +++----------------
+ arch/powerpc/kexec/file_load_64.c          |   4 -
+ arch/riscv/include/asm/kexec.h             |   4 -
+ arch/riscv/kernel/kexec_elf.c              |  11 ++-
+ arch/riscv/kernel/kexec_image.c            |  11 ++-
+ arch/riscv/kernel/machine_kexec_file.c     |  79 ++++------------
+ arch/x86/kernel/machine_kexec_64.c         |   4 -
+ include/linux/kexec.h                      |  17 ++++
+ kernel/kexec_core.c                        |  25 ++---
+ kernel/kexec_file.c                        |  99 ++++++++++++++++++++
+ 17 files changed, 248 insertions(+), 280 deletions(-)
+
 -- 
 2.34.1
 
