@@ -1,84 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=113.46.200.218
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793001211;
-	b=ZmHA9oTfa0M4Xan7LC5nwLSDjcqt09JT9I3/TP4SuJWQm4roaMdzsk4BSMJYfs5niQHL
-	 na3iTFoDNPzrJR5I73PgNxsHN8Rso7wOTLfMDubU/HDZF4a5xtwmJhxlBSuiJgK9zkFF5
-	 huKv6TRe9PHwjUH+0i1BOqgQ66B9D6efxhD/sgtPYLuQx/uzuY3sdM5i+IFB599VTs8Ss
-	 Mpr53uuXgOuIwhPW+NS/lI3ZS/BvhTNupD0KujqZ40S+SQLKF/B0+gRsfhZl9zYfvj1hH
-	 qrLCN/ybgX4xLACYUoHKl0dgowxV9WvPK1Rm3DWWrS9E3xsSbutIG0XbKnonejUaXEQ==
+	t=1793011039;
+	b=1/Q0lJ+igq2hF/tFS5brnCF78Dig5QUG/tkgTyyEbkzJPGDIvaRqF4jwI3N5a7jAGuZ3
+	 tW2OQjFXfSZxR3RftC9NBz1t2erTl4gp4v6j9fqJxvWwxk2KbnCqej+13/+0H2h7tzeAf
+	 IGFIrbCPmWlDMljWC8Rlm+knabbgK4SHcipYHTBjUKlHErEmz10fvr8WK+YRX7Jnj/zgh
+	 agt2QRFtTyu/zmQNN/LoBS/9TfI2QjTqy7ISNPQAhDF7mLp4knalgWQrWcP12XWYNOX3G
+	 eNA9da7YBZqo21VXHGsEmGI6BDGyzdpXQ8dYglUVUtVwTg3eOwgryYv2FJ+qgxnfrwg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793001211;
-	h=DMARC-Filter:dkim-signature:Received:Received:Received:From:To:
-	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:Content-Type:X-Originating-IP:
-	 X-ClientProxiedBy;
-	bh=bRgvT4M6zCmamxWGSrBdW+BlwCux5jgaEyxoifxfGVg=;
-	b=GaDQC0c1CfWLT7WINCnLXfCu17isaHW67DYF+24jfXQ/NkZTredNbYIlHejeOv7ZlsTd
-	 ARPzpQESEFfPKZK0PQkBLkDUdNy+uB3ZePSMzTO4ClHflKnznDSyLxxMDOPhrSQCGLF9l
-	 2sARUSi5rmzENTBCHbir9+PeJYRdYtgNi/2x5Nb3b8q/2Fw2AXMazCsHQSek9VhFrCER3
-	 n2gTXEVQ57c/BbZgGHuTfyoMRdNfMxSUEm7I7MwbytUTVxg/VNeiGnjcyEiK6IJb/u0+7
-	 16HWr7IpSypDmsuw+WF8W/fKGtLqCHlAaa2aAPvVbsfCGa1HnW0+Mj1Ydu2+QBQuQhQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793011039;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:From:Content-Language:Autocrypt:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=A3UAZP3NJahgTJzf87f0H07PAHvzme0ItsgnIJVLaoY=;
+	b=ND9oIy+bfUPtAoM1D1XWSXvILIQKUOyHgdaHJgvvZxZE9LoYog9jTdz5cTEbNEr7/kYF
+	 E8aX3sa69RYHc1HGY7u3WVGRUZuo1lMH71uAJZTzwCnzIML/GQS/XLWHl4gAWEi8KPJOJ
+	 lUepg6JAqGmd7TZ1HYrB1bpMUAk/U9rdWgNWRgytfSL/Pf1JJzPX0fzXg0fel4Eujo0JL
+	 eFW50JOip2bjh5rG8c+1HA4G06PN+ZLstMlLwS2HUkPyv/WN4X7C9k1k1Eaz86OQRG+9g
+	 68pjEPVUlbMnRYmvdj65Dtuoyag75a3Y1JozhAZsv8eywhXloz35uzoEIu4d0dI+gRA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=huawei.com;
-	spf=pass smtp.mailfrom=huawei.com;
-	dkim=pass header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b="i/tDu0hR";
-	arc=none smtp.remote-ip=113.46.200.218
-Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bNyAxV8M;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AE4260A2636
-	for <loongarch@lists.linux.dev>; Mon, 26 Oct 2026 07:53:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7AE4260A2636
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295DB606A31A;
+	Mon, 26 Oct 2026 10:37:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=i/tDu0hR
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=bRgvT4M6zCmamxWGSrBdW+BlwCux5jgaEyxoifxfGVg=;
-	b=i/tDu0hR4P8PU+U8oPjyPQ9EF8alWIFqXGzv9qPyFbKCx309eZreFwDTG8P/PU+Az2OFHivnW
-	dAukHMVSlOpNoil+ylf3dggtFS+JbQEj9vm+QAD3pPqNTSUJ2NZ/u6rHuupD1GkwERJcPZI/tpz
-	ylHUt5cJqjHbMlOR32GhfdM=
-Received: from mail.maildlp.com (unknown [172.19.162.140])
-	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4jCm87640HzpStt;
-	Mon, 26 Oct 2026 15:53:11 +0800 (CST)
-Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id B1FE1202E6;
-	Mon, 26 Oct 2026 15:53:20 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by kwepemk200008.china.huawei.com
- (7.202.194.74) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Mon, 26 Oct
- 2026 15:53:19 +0800
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
-	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
-	<mpe@ellerman.id.au>, <npiggin@gmail.com>, <chleroy@kernel.org>,
-	<ritesh.list@gmail.com>, <sshegde@linux.ibm.com>, <pjw@kernel.org>,
-	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <alex@ghiti.fr>,
-	<tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <akpm@linux-foundation.org>,
-	<baoquan.he@linux.dev>, <rppt@kernel.org>, <pasha.tatashin@soleen.com>,
-	<pratyush@kernel.org>, <thuth@redhat.com>, <ruanjinjie@huawei.com>,
-	<leitao@debian.org>, <yeoreum.yun@arm.com>, <robh@kernel.org>,
-	<sourabhjain@linux.ibm.com>, <kees@kernel.org>, <coiby.xu@gmail.com>,
-	<Yeking@Red54.com>, <tangyouling@kylinos.cn>, <maqianga@uniontech.com>,
-	<zhangtianyang@loongson.cn>, <guodongtai@kylinos.cn>, <blum@kernel.org>,
-	<adityag@linux.ibm.com>, <hui.wang@canonical.com>, <sohammetha01@gmail.com>,
-	<guoren@kernel.org>, <gaohan@iscas.ac.cn>, <kai.huang@intel.com>,
-	<kas@kernel.org>, <vishal.l.verma@intel.com>, <piliu@redhat.com>,
-	<jbouron@amazon.com>, <mclapinski@google.com>, <me@linux.beauty>,
-	<graf@amazon.com>, <bgwin@google.com>, <x86@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
-	<linux-riscv@lists.infradead.org>, <kexec@lists.infradead.org>
-Subject: [PATCH v7 14/15] LoongArch: kexec_file: Use kexec_load_other_segments() to simplify code
-Date: Mon, 26 Oct 2026 15:52:00 +0800
-Message-ID: <20261026075201.699550-15-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20261026075201.699550-1-ruanjinjie@huawei.com>
-References: <20261026075201.699550-1-ruanjinjie@huawei.com>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bNyAxV8M
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 235C31F01825;
+	Mon, 26 Oct 2026 10:37:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793011039;
+	bh=A3UAZP3NJahgTJzf87f0H07PAHvzme0ItsgnIJVLaoY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=bNyAxV8MSqGKy9vRZSzVC96561skAasy5RTkam1kR+Fn+YU8hMyPqejJ9lJcuVBCY
+	 O8ZyQgSpltM9mT8a7kELB6aKqX8eVemAIOWkr64xkB47kn8aLNFY1wndkhQVPMqefz
+	 odlZckFPGAOWVYyrlqVNqfkYMz2mQAmlaP7cBf9OnhM68Ps2NC9y3NcrAEl07xxBOu
+	 nyYK31N0mNr5nIP/CVUZ8CekaB2ghnt9pJr7QtXFicB0k6bwbVa/7OAE0gX6A+ZHwa
+	 wjzeq917Ui2HCCtpht3kORS8EnTXbytSQrHNxKeufCO/jpCrlxBG+Mwb9gPnK70+67
+	 EnYleJepahYuA==
+Message-ID: <fec58606-49d0-4b67-9f28-df54159e29a5@kernel.org>
+Date: Mon, 26 Oct 2026 11:37:11 +0100
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -88,231 +51,86 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemk200008.china.huawei.com (7.202.194.74)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] mm: generalize kernel PTE table allocation
+To: Muchun Song <songmuchun@bytedance.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Muchun Song <muchun.song@linux.dev>, Arnd Bergmann <arnd@arndb.de>,
+ "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Helge Deller <deller@gmx.de>, linux-mm@kvack.org,
+ linux-arch@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20261014035910.687847-1-songmuchun@bytedance.com>
+ <20261014035910.687847-2-songmuchun@bytedance.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <20261014035910.687847-2-songmuchun@bytedance.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Replace the local copy with the common helper.  The retry loop stays
-and the command line is built in the setup hook.
+On 10/14/26 05:59, Muchun Song wrote:
+> Architectures whose empty kernel PTE representation is not all zero must
+> initialize new kernel PTE tables. LoongArch therefore wraps
+> __pte_alloc_one_kernel() solely to call kernel_pte_init().
+> 
+> Call the architecture initialization hook from the generic allocator so
+> LoongArch can use it directly. The default hook is empty, so this does not
+> change other architectures.
+> 
+> Assisted-by: LLM
+> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+> ---
+Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Baoquan He <baoquan.he@linux.dev>
-Cc: Mike Rapoport <rppt@kernel.org>
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
----
- arch/loongarch/include/asm/kexec.h         |  4 -
- arch/loongarch/kernel/kexec_efi.c          | 12 ++-
- arch/loongarch/kernel/kexec_elf.c          | 11 ++-
- arch/loongarch/kernel/machine_kexec_file.c | 94 ++++------------------
- 4 files changed, 32 insertions(+), 89 deletions(-)
-
-diff --git a/arch/loongarch/include/asm/kexec.h b/arch/loongarch/include/asm/kexec.h
-index 6be136e9f0a0..e58cf7e282a9 100644
---- a/arch/loongarch/include/asm/kexec.h
-+++ b/arch/loongarch/include/asm/kexec.h
-@@ -49,10 +49,6 @@ extern const struct kexec_file_ops kexec_elf_ops;
- 
- int arch_kimage_file_post_load_cleanup(struct kimage *image);
- #define arch_kimage_file_post_load_cleanup arch_kimage_file_post_load_cleanup
--
--extern int load_other_segments(struct kimage *image,
--		unsigned long kernel_load_addr, unsigned long kernel_size,
--		char *initrd, unsigned long initrd_len, char *cmdline, unsigned long cmdline_len);
- #endif
- 
- typedef void (*do_kexec_t)(unsigned long efi_boot,
-diff --git a/arch/loongarch/kernel/kexec_efi.c b/arch/loongarch/kernel/kexec_efi.c
-index d42711b895a2..1362e51e9171 100644
---- a/arch/loongarch/kernel/kexec_efi.c
-+++ b/arch/loongarch/kernel/kexec_efi.c
-@@ -44,6 +44,12 @@ static void *efi_kexec_load(struct kimage *image,
- 	unsigned long text_offset, kernel_segment_number;
- 	struct kexec_buf kbuf = {};
- 	struct kexec_segment *kernel_segment;
-+	struct kexec_load_params params = {
-+		.initrd = initrd,
-+		.initrd_len = initrd_len,
-+		.cmdline = cmdline,
-+		.cmdline_len = cmdline_len,
-+	};
- 	struct loongarch_image_header *h;
- 
- 	h = (struct loongarch_image_header *)kernel;
-@@ -76,9 +82,9 @@ static void *efi_kexec_load(struct kimage *image,
- 	while ((ret = kexec_add_buffer(&kbuf)) == 0) {
- 		/* Try to load additional data */
- 		kernel_segment = &image->segment[kernel_segment_number];
--		ret = load_other_segments(image, kernel_segment->mem,
--					  kernel_segment->memsz, initrd,
--					  initrd_len, cmdline, cmdline_len);
-+		params.kernel_load_addr = kernel_segment->mem;
-+		params.kernel_size = kernel_segment->memsz;
-+		ret = kexec_load_other_segments(image, &params, false);
- 		if (!ret)
- 			break;
- 
-diff --git a/arch/loongarch/kernel/kexec_elf.c b/arch/loongarch/kernel/kexec_elf.c
-index 1b6b64744c7f..47272cfa990d 100644
---- a/arch/loongarch/kernel/kexec_elf.c
-+++ b/arch/loongarch/kernel/kexec_elf.c
-@@ -62,6 +62,12 @@ static void *elf_kexec_load(struct kimage *image,
- 	struct kexec_buf kbuf = {};
- 	struct kexec_elf_info elf_info;
- 	struct kexec_segment *kernel_segment;
-+	struct kexec_load_params params = {
-+		.initrd = initrd,
-+		.initrd_len = initrd_len,
-+		.cmdline = cmdline,
-+		.cmdline_len = cmdline_len,
-+	};
- 
- 	ret = kexec_build_elf_info(kernel, kernel_len, &ehdr, &elf_info);
- 	if (ret < 0)
-@@ -83,8 +89,9 @@ static void *elf_kexec_load(struct kimage *image,
- 
- 	/* Load additional data */
- 	kernel_segment = &image->segment[kernel_segment_number];
--	ret = load_other_segments(image, kernel_segment->mem, kernel_segment->memsz,
--				  initrd, initrd_len, cmdline, cmdline_len);
-+	params.kernel_load_addr = kernel_segment->mem;
-+	params.kernel_size = kernel_segment->memsz;
-+	ret = kexec_load_other_segments(image, &params, false);
- 	if (ret < 0)
- 		goto out;
- 
-diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
-index c0a799f0d240..d65cb40ef047 100644
---- a/arch/loongarch/kernel/machine_kexec_file.c
-+++ b/arch/loongarch/kernel/machine_kexec_file.c
-@@ -110,112 +110,46 @@ static void cmdline_add_elfcorehdr(struct kimage *image, unsigned long *cmdline_
- 
- #endif
- 
--/*
-- * Try to add the initrd to the image. If it is not possible to find valid
-- * locations, this function will undo changes to the image and return non zero.
-- */
--int load_other_segments(struct kimage *image,
--			unsigned long kernel_load_addr, unsigned long kernel_size,
--			char *initrd, unsigned long initrd_len, char *cmdline, unsigned long cmdline_len)
-+int arch_kexec_setup_other_segments(struct kimage *image,
-+				    struct kexec_load_params *params,
-+				    unsigned long initrd_load_addr)
- {
--	int ret = 0;
- 	unsigned long cmdline_tmplen = 0;
--	unsigned long initrd_load_addr = 0;
--	unsigned long orig_segments = image->nr_segments;
--	char *modified_cmdline = NULL;
--	struct kexec_buf kbuf = {
--		.image = image,
--		/* Don't allocate anything below the kernel */
--		.buf_min = kernel_load_addr + kernel_size,
--		.buf_max = ULONG_MAX,
--	};
-+	unsigned long cmdline_len = params->cmdline_len;
-+	const char *cmdline = params->cmdline;
-+	char *modified_cmdline;
- 
- 	modified_cmdline = kzalloc(COMMAND_LINE_SIZE, GFP_KERNEL);
- 	if (!modified_cmdline)
--		return -EINVAL;
-+		return -ENOMEM;
- 
- 	cmdline_add_loader(&cmdline_tmplen, modified_cmdline);
- 	/* Ensure it's null terminated */
- 	modified_cmdline[COMMAND_LINE_SIZE - 1] = '\0';
- 
- #ifdef CONFIG_CRASH_DUMP
--	/* Load elf core header */
- 	if (image->type == KEXEC_TYPE_CRASH) {
--		ret = crash_prepare_headers(true, &kbuf.buffer, &kbuf.bufsz, NULL);
--		if (ret < 0) {
--			pr_err("Preparing elf core header failed\n");
--			goto out_err;
--		}
--
--		if (unlikely(image->elf_headers))
--			vfree(image->elf_headers);
--
--		image->elf_headers = kbuf.buffer;
--		image->elf_headers_sz = kbuf.bufsz;
--
--		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
--		kbuf.memsz = kbuf.bufsz;
--		kbuf.buf_align = SZ_64K; /* largest supported page size */
--		kbuf.top_down = true;
--
--		ret = kexec_add_buffer(&kbuf);
--		if (ret < 0)
--			goto out_err;
--
--		image->elf_load_addr = kbuf.mem;
--
--		kexec_dprintk("Loaded elf core header at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
--			      image->elf_load_addr, kbuf.bufsz, kbuf.memsz);
--
- 		/* Add the mem=size@start parameter to the command line */
- 		cmdline_add_mem(&cmdline_tmplen, modified_cmdline);
- 
- 		/* Add the elfcorehdr=size@start parameter to the command line */
--		cmdline_add_elfcorehdr(image, &cmdline_tmplen, modified_cmdline, kbuf.bufsz);
-+		cmdline_add_elfcorehdr(image, &cmdline_tmplen, modified_cmdline,
-+				       image->elf_headers_sz);
- 	}
- #endif
- 
--	/* Load initrd */
--	if (initrd) {
--		kbuf.buffer = initrd;
--		kbuf.bufsz = initrd_len;
--		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
--		kbuf.memsz = initrd_len;
--		kbuf.buf_align = 0;
--		/* within 1GB-aligned window of up to 32GB in size */
--		kbuf.buf_max = round_down(kernel_load_addr, SZ_1G) + (unsigned long)SZ_1G * 32;
--		kbuf.top_down = false;
--
--		ret = kexec_add_buffer(&kbuf);
--		if (ret < 0)
--			goto out_err;
--		initrd_load_addr = kbuf.mem;
--
--		kexec_dprintk("Loaded initrd at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
--			      initrd_load_addr, kbuf.bufsz, kbuf.memsz);
--
--		/* Add the initrd=start,size parameter to the command line */
-+	/* Add the initrd=start,size parameter to the command line */
-+	if (initrd_load_addr)
- 		cmdline_add_initrd(image, &cmdline_tmplen, modified_cmdline, initrd_load_addr);
--	}
- 
- 	if (cmdline_len + cmdline_tmplen > COMMAND_LINE_SIZE) {
- 		pr_err("Appending command line exceeds COMMAND_LINE_SIZE\n");
--		ret = -EINVAL;
--		goto out_err;
-+		kfree(modified_cmdline);
-+		return -EINVAL;
- 	}
- 
- 	memcpy(modified_cmdline + cmdline_tmplen, cmdline, cmdline_len);
--	cmdline = modified_cmdline;
--	image->arch.cmdline_ptr = (unsigned long)cmdline;
-+	image->arch.cmdline_ptr = (unsigned long)modified_cmdline;
- 
- 	return 0;
--
--out_err:
--	while (image->nr_segments > orig_segments) {
--		kexec_free_segment_cma(image, image->nr_segments - 1);
--		image->nr_segments--;
--	}
--
--	kfree(modified_cmdline);
--	return ret;
- }
 -- 
-2.34.1
+Cheers,
 
+David
