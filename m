@@ -1,52 +1,51 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793074230;
-	b=x2Jq+sN9FESde5krXAR+mE4Tx+eJyvVuonTI59NEn2yY51vWxtimNiulTX/7i0b/DnRg
-	 ArOfZtHAEhI5yAyJyIDjOTUzauEEDNWHrgIkMLIjGLrO9WrepegCVZ7luNKFaO6aKEMY9
-	 aTfJlJEKoyF7VR7aCZExS4fekFnFHn+3zT/iIorJiA7NHwMT/KVrxbAXYokiHO81ozO83
-	 TE4AISEL39guuhGgCA2/XeKb80sexbQT0tbh4YRbPCpKOkgd9zLwUpDDZhy8bNg3xYdv3
-	 wtMJch8M9pRXr2Ozda2Ry7atip5GouDoUAdy0ORDtJX9y4n6BAOp0REu5AQY6QvS+Qg==
+	t=1793074593;
+	b=Ra9aWsm5/Zn6fHyoocGWM1kdlFX+wsgfRxmY273S9S/yc9Rh7jwLFhugpGTzxDjN13JI
+	 Yd9P0+GsDYg6pMqQmaC2u91j2mj0okcvA+tis6MRwftUW+Z1+bQ7fNYaLcvc4ouufXwf2
+	 1/ktzeOebs1m/zP7O/Nj4npaWqgRl6cVZmqgo2RQZuDGx0ttgwzx7vLcc4ptgZKMIKzNp
+	 Rs5u86LFrn68AZijreDv/pfFfads6gNstI+eHGbOh0XdvSfOAYBt59WULMMLzaDHNZoj1
+	 DDXwMO1z0AaLBSm0JrKXI/BTdMSgHW2IASgPfulcADCannurH4Zp7HM346y+6W+k0QA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793074230;
-	h=DMARC-Filter:Received:Received:Subject:To:Cc:References:From:
-	 Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:Content-Type:
-	 Content-Language:Content-Transfer-Encoding:X-CM-TRANSID:
+	a=rsa-sha256; c=relaxed/relaxed; t=1793074593;
+	h=DMARC-Filter:Received:Received:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding:X-CM-TRANSID:
 	 X-CM-SenderInfo:X-Coremail-Antispam;
-	bh=/8PAWzs/4v7CmdiFS6NRHGflhDZfELTmdZRWhE8jV00=;
-	b=gpoq+2GODQBD3PP8Vcu44JvrR2YjRZgIfNZVwpj+Zs5YjXgy9eq8HvBvgue4BlDf3vgk
-	 Lc3sVRdOsk49/GFhFDQiquWddvOicojhHfn7fwuJSphCsGnxp5td+QHdPRDThH8njjjmE
-	 E4MCUrhx9TGA9rCG9ZrgWIjzm2IrhI9ECHNUPM0JKv2WdfltWvacW1zTTBdpW/U2P4Dud
-	 pIVvg4EpyacckH2rVWgTqSkJ6aX/LCHRIJq4aoELy3L4WJg3j1AfWVl7u9HH4wfA+OcT4
-	 0X46sS26AGCMVMjIDG1YHeQCW0NhLXQYiHH0KZYJnPjxrMRVI92AD+4f7vE1bv7aw2g==
+	bh=OKh7RMy4z39rK+91H91FMymRIBmqD8DV3FbJDx+waE4=;
+	b=ZC3mVqOGcvMuxw6dRlWF4WPpFH12l/bObNwgff/1jHBjj0Wvkm78m2d9oSrQe9PnfZfv
+	 zM3H1jMSW/y7kHpV0RGJ+ETZ/jEpaEP04G2RW+5Eo883EnDhSJ28tgGRmHNOcsn3Hyqcj
+	 PReqrcsOY7+a16S4gtVOOkLq1nKSZLpGNO3LbirFsfuTBODfwVGPaxiYbSVcytYulaf0A
+	 F6A5j+UX0bAhfJ4f+Qcc4fpmHmvzBDjKuO2WTd3kMHii1k/HsO4VEOiVNpzZ7SdNgk58Q
+	 +vO3n7XvDvMOfEKtXnwj0v1sTF8aAurFINi0ZOZM8wh9WWYxbQRs2n3+GLSfXy47vrA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=loongson.cn;
 	spf=pass smtp.mailfrom=loongson.cn;
 	arc=none smtp.remote-ip=114.242.206.163
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97CC7606A31B
-	for <loongarch@lists.linux.dev>; Tue, 27 Oct 2026 04:10:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 97CC7606A31B
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3952A606A330
+	for <loongarch@lists.linux.dev>; Tue, 27 Oct 2026 04:16:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3952A606A330
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [123.138.236.242])
-	by gateway (Coremail) with SMTP id _____8AxX9MxJOBqqbIZAA--.9147S3;
-	Tue, 27 Oct 2026 12:10:26 +0800 (CST)
-Received: from [127.0.0.1] (unknown [123.138.236.242])
-	by front1 (Coremail) with SMTP id qMiowJAxlMwxJOBq+o0wAA--.8791S2;
-	Tue, 27 Oct 2026 12:10:25 +0800 (CST)
-Subject: Re: [PATCH v3 3/3] LoongArch: BPF: Optimize 32-bit operations using
- native instructions
-To: Hengqi Chen <hengqi.chen@gmail.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20261016081006.26069-1-yangtiezhu@loongson.cn>
- <20261016081006.26069-4-yangtiezhu@loongson.cn>
- <CAEyhmHQe5T6Ai0LXiJnwXzBgy_Xu5=upeqWHbMz7J3X6QntWBA@mail.gmail.com>
+	by gateway (Coremail) with SMTP id _____8CxvtKdJeBq67IZAA--.8986S3;
+	Tue, 27 Oct 2026 12:16:29 +0800 (CST)
+Received: from linux.localdomain (unknown [123.138.236.242])
+	by front1 (Coremail) with SMTP id qMiowJAx1cycJeBqcY4wAA--.7654S2;
+	Tue, 27 Oct 2026 12:16:29 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <b5c793ec-c951-930f-fc9d-06de6f49ac9e@loongson.cn>
-Date: Tue, 27 Oct 2026 12:10:24 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>
+Cc: bpf@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH bpf-next] selftests/bpf: Enable signed division and modulo overflow tests for LoongArch
+Date: Tue, 27 Oct 2026 12:16:27 +0800
+Message-ID: <20261027041627.20792-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -56,66 +55,129 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-In-Reply-To: <CAEyhmHQe5T6Ai0LXiJnwXzBgy_Xu5=upeqWHbMz7J3X6QntWBA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxlMwxJOBq+o0wAA--.8791S2
+X-CM-TRANSID:qMiowJAx1cycJeBqcY4wAA--.7654S2
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7tr4Utw47JF4fZF1UKF4Utrc_yoW8Wr4UpF
-	sxWa9Iqa1DXa42kF12yF4DAFsxKwn5Way8Xr45A34vkF98J3Z8KayqgrsY9Fn5J3s5Ww4F
-	vF17X34DZa1qg3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoWxAw47XFyfXr1xKFyruryUurX_yoWrXw1fpF
+	WUuFZIgrs7Xw17uFWYvF4UJFs0q3WkuayrWF1rAw1Iy3s8JFnIq34Igws5Ca1rtFn5uw1F
+	vF17ZasFv3Wjg3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
-	6r1DMcIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
-	1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
-	JVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
-	vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IY
-	x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
-	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
-	wI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8ewZ7UUUUU==
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8wNVDUUUUU==
 
-On 2026/10/27 上午10:02, Hengqi Chen wrote:
-> On Fri, Oct 16, 2026 at 4:10 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->>
->> Currently, the LoongArch BPF JIT emits numerous redundant zero and sign
->> extensions across 32-bit operations, bloating the final JIT image size
->> and also leading to runtime overhead, particularly in the division and
->> modulo operations. Thus, it is necessary to optimize 32-bit operations
->> by emitting LoongArch native 32-bit word instructions.
+The LoongArch hardware divider handles signed overflow boundaries (such
+as INT_MIN/-1 or LLONG_MIN/-1) natively and perfectly well on physical
+silicon: (1)for division operations, it naturally returns the dividend
+itself; (2)for modulo operations, it returns 0. Thus enable the signed
+division and modulo overflow tests for LoongArch in verifier_sdiv.c.
 
-...
+Before:
 
->> +               if (cpu_has_div32) {
->> +                       if (!off)
->> +                               emit_insn(ctx, divwu, dst, dst, src);
->> +                       else
->> +                               emit_insn(ctx, divw, dst, dst, src);
-> 
-> For ALU32 SDIV, off != 0, it seems like there is a overflow in S32_MIN / -1.
-> verifier_sdiv.c has related test cases but annotate with
-> __arch_x86_64, so it is not run on LoongArch.
+  $ sudo ./test_progs -t verifier_sdiv | grep "MIN/-1"
+  #731/121 verifier_sdiv/SDIV64, overflow r/r, LLONG_MIN/-1:SKIP
+  #731/123 verifier_sdiv/SDIV64, overflow r/i, LLONG_MIN/-1:SKIP
+  #731/125 verifier_sdiv/SDIV32, overflow r/r, INT_MIN/-1:SKIP
+  #731/127 verifier_sdiv/SDIV32, overflow r/i, INT_MIN/-1:SKIP
+  #731/129 verifier_sdiv/SMOD64, overflow r/r, LLONG_MIN/-1:SKIP
+  #731/131 verifier_sdiv/SMOD64, overflow r/i, LLONG_MIN/-1:SKIP
+  #731/133 verifier_sdiv/SMOD32, overflow r/r, INT_MIN/-1:SKIP
+  #731/135 verifier_sdiv/SMOD32, overflow r/i, INT_MIN/-1:SKIP
 
-After enabling the signed division and modulo overflow tests for
-LoongArch, here are the test results:
+After:
 
-$ sudo ./test_progs -t verifier_sdiv | grep "MIN/-1"
-#731/121 verifier_sdiv/SDIV64, overflow r/r, LLONG_MIN/-1:OK
-#731/123 verifier_sdiv/SDIV64, overflow r/i, LLONG_MIN/-1:OK
-#731/125 verifier_sdiv/SDIV32, overflow r/r, INT_MIN/-1:OK
-#731/127 verifier_sdiv/SDIV32, overflow r/i, INT_MIN/-1:OK
-#731/129 verifier_sdiv/SMOD64, overflow r/r, LLONG_MIN/-1:OK
-#731/131 verifier_sdiv/SMOD64, overflow r/i, LLONG_MIN/-1:OK
-#731/133 verifier_sdiv/SMOD32, overflow r/r, INT_MIN/-1:OK
-#731/135 verifier_sdiv/SMOD32, overflow r/i, INT_MIN/-1:OK
+  $ sudo ./test_progs -t verifier_sdiv | grep "MIN/-1"
+  #731/121 verifier_sdiv/SDIV64, overflow r/r, LLONG_MIN/-1:OK
+  #731/123 verifier_sdiv/SDIV64, overflow r/i, LLONG_MIN/-1:OK
+  #731/125 verifier_sdiv/SDIV32, overflow r/r, INT_MIN/-1:OK
+  #731/127 verifier_sdiv/SDIV32, overflow r/i, INT_MIN/-1:OK
+  #731/129 verifier_sdiv/SMOD64, overflow r/r, LLONG_MIN/-1:OK
+  #731/131 verifier_sdiv/SMOD64, overflow r/i, LLONG_MIN/-1:OK
+  #731/133 verifier_sdiv/SMOD32, overflow r/r, INT_MIN/-1:OK
+  #731/135 verifier_sdiv/SMOD32, overflow r/i, INT_MIN/-1:OK
 
-That is to say, the current jit code is no problem.
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ tools/testing/selftests/bpf/progs/verifier_sdiv.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Thanks,
-Tiezhu
+diff --git a/tools/testing/selftests/bpf/progs/verifier_sdiv.c b/tools/testing/selftests/bpf/progs/verifier_sdiv.c
+index d6cbe1e27fd6..5e8bf781e073 100644
+--- a/tools/testing/selftests/bpf/progs/verifier_sdiv.c
++++ b/tools/testing/selftests/bpf/progs/verifier_sdiv.c
+@@ -775,6 +775,7 @@ SEC("socket")
+ __description("SDIV64, overflow r/r, LLONG_MIN/-1")
+ __success __retval(1)
+ __arch_x86_64
++__arch_loongarch
+ __xlated("0: r2 = 0x8000000000000000")
+ __xlated("2: r3 = -1")
+ __xlated("3: r4 = r2")
+@@ -839,6 +840,7 @@ SEC("socket")
+ __description("SDIV64, overflow r/i, LLONG_MIN/-1")
+ __success __retval(1)
+ __arch_x86_64
++__arch_loongarch
+ __xlated("0: r2 = 0x8000000000000000")
+ __xlated("2: r4 = r2")
+ __xlated("3: r2 = -r2")
+@@ -887,6 +889,7 @@ SEC("socket")
+ __description("SDIV32, overflow r/r, INT_MIN/-1")
+ __success __retval(1)
+ __arch_x86_64
++__arch_loongarch
+ __xlated("0: w2 = -2147483648")
+ __xlated("1: w3 = -1")
+ __xlated("2: w4 = w2")
+@@ -953,6 +956,7 @@ SEC("socket")
+ __description("SDIV32, overflow r/i, INT_MIN/-1")
+ __success __retval(1)
+ __arch_x86_64
++__arch_loongarch
+ __xlated("0: w2 = -2147483648")
+ __xlated("1: w4 = w2")
+ __xlated("2: w2 = -w2")
+@@ -1001,6 +1005,7 @@ SEC("socket")
+ __description("SMOD64, overflow r/r, LLONG_MIN/-1")
+ __success __retval(0)
+ __arch_x86_64
++__arch_loongarch
+ __xlated("0: r2 = 0x8000000000000000")
+ __xlated("2: r3 = -1")
+ __xlated("3: r4 = r2")
+@@ -1061,6 +1066,7 @@ SEC("socket")
+ __description("SMOD64, overflow r/i, LLONG_MIN/-1")
+ __success __retval(0)
+ __arch_x86_64
++__arch_loongarch
+ __xlated("0: r2 = 0x8000000000000000")
+ __xlated("2: r4 = r2")
+ __xlated("3: w2 = 0")
+@@ -1105,6 +1111,7 @@ SEC("socket")
+ __description("SMOD32, overflow r/r, INT_MIN/-1")
+ __success __retval(0)
+ __arch_x86_64
++__arch_loongarch
+ __xlated("0: w2 = -2147483648")
+ __xlated("1: w3 = -1")
+ __xlated("2: w4 = w2")
+@@ -1169,6 +1176,7 @@ SEC("socket")
+ __description("SMOD32, overflow r/i, INT_MIN/-1")
+ __success __retval(0)
+ __arch_x86_64
++__arch_loongarch
+ __xlated("0: w2 = -2147483648")
+ __xlated("1: w4 = w2")
+ __xlated("2: w2 = 0")
+-- 
+2.42.0
 
