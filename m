@@ -1,100 +1,87 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.43
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793088841;
-	b=WRowwwSp/OfvYUrSuYbC2P4Rr69VPXmkQrdr0vyHoXUc1nmeFpk5H3STmU+TFD0gcvmC
-	 djnWE8KjQif/NU++wvmpkvwkV2Rr/kc/vi8N8Beyi3TTBnrc2wsWtMz/lZHQzEGY1SQZ9
-	 rY+vjzHj6QaqhMYm4zaxnAc7DvU66zKPhVAaDaInommjKoonw4VR5Y8V5iCSJb3SSk5pb
-	 KMFxRaEhozHdrpnPsgOJD6/667Jzu1lp08G8Jh/GIMO8vwlv8Y8fB5BTrIuGukGTpH6ms
-	 2zUSyv+iTUB3Z3DpQr16tn6pUta8jqJK6/fppkXVAV9iCob/Tc/yo7V4KxIslmVlCxA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793088841;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=w8VOaIxB0TFBB/OhvCNXDLo6PM/lUvCeTHrTbRbZxP4=;
-	b=xkIzQF/rT/eJwSGpAI+8FxLYDFMx4oJBtlVLo0zeKau4s3BkpE6JjsH7BkSCWT2krarz
-	 H0LwqhVErfpXwDjzFZUH6WqEU3aQenm83RNjbZg6pYzk4w2xLD1OYk+pLAHC09PLtVCbq
-	 JiadGjNtDuY+sIoWFUCwvafgyV2XW9B3vv3aK4atyi3/yERVvWBWQVud64rjpAiD7+C7B
-	 fhHGTmVedy3I7munbHN0fxd8S9XA2C8B3LvVnFBxCL8FdiIivwJcqSSn+D+JPRponwPmp
-	 FY7zLCewDrKAijcdQD5sk7niaU0SJq4Eaicne5ZxrpBScIt/Osd8OIhRYOdyBcqbjvw==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b="CPV/f6JI";
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.43
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.50.34
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793098838;
+	b=25QkpL3bke45SPSnwHu4UNRMp9v4jh6GtjyvqFfw3gbvAYVcf1rCxLv8xvb0vEsWEfdV
+	 E+HCffd+aQFtRaQHL0HgdYUZv+4duCxbcgIrI+KXfGZkkg9LjtciQzWcWTN1ZyNK3c4Vv
+	 TsZs3HCqCTLRnzKkV67ZS+R0ft2radtoHyDHN04WeyplTRKVyFz5/x9GyW6FYtK7m3Sl1
+	 kdaXkwR3Mqs0XNp8U6WrsawwBoqAQkVEhaQXTF+7nTMvPaXk/5IWcVndpjZ6FiRDkJpGY
+	 aseuQ2toND2vD09c5fG/1OFMz7tgd2W4ONOQ2h5eKAQKQSzwqRL+XeKwtejVlvTohdA==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793098838;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To;
+	bh=PY8D/fV9b7AqgT0EI/4JhIhUH5cTst9C5yyqz6dyWcI=;
+	b=FJ5lVGPMyPpqzJ4VfbWA1sNSHDBrLSGusQ1mtHDA4p1KL+cknzILH9f3f4lodkr8hm8i
+	 9pre5RPX/ImAGLa41OZ3KtOWfTjtt4ysizP7Lh25yshw77qFP6ZbOlkjKaqN7Vgxc7RVl
+	 tgjIz+U3EDCyktWQ33SPfHGll9RiI9gAP17jYTf2cIFvZcyAWhqCjXDxjtbuMI7aaE1EV
+	 vgFRHobLIWRR4vSyB5C6pOPaKTSR3m7SdChKOlLIv4eS67A48CcQdbkdWrZHchAwVDf5s
+	 TEX7d81dze7Vv78kiOqhwgn6CFWbKY23llLVqutcH6UckTlXJl/irMSHOjfhsaWq4WA==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=infradead.org;
+	spf=pass smtp.mailfrom=infradead.org;
+	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b="j/gP54Cg";
+	arc=none smtp.remote-ip=90.155.50.34
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FB9E606A31D
-	for <loongarch@lists.linux.dev>; Tue, 27 Oct 2026 08:14:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1FB9E606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A56606A31A;
+	Tue, 27 Oct 2026 11:00:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 35A56606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=CPV/f6JI
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-4a822463a22so2134305fac.2
-        for <loongarch@lists.linux.dev>; Tue, 27 Oct 2026 01:14:00 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1793088840; cv=none;
-        d=google.com; s=arc-20260327;
-        b=shu65MPitcac8nuRRMiHjud6FLxmGFt2wXyg4ftGwHOoAAHamkf9vmLGsMzBnxsrkX
-         uo1Ug1f9OvjraI6wffJ9KwPVapWsr/U9PAqWrMofK6NL17wGUphUKoEOg/CJTBLpt9wL
-         JnzpcRfaCLVNB52oBWFtuVOK+gkvWsI3EFLL6KinPramFrkBLPlRLXUqgDUcNdBR+/fF
-         o+3dydZEdAoJlOKgaBbrgrKEDlyOyObMHFPPAu46g8wu4S0n/T7F0F9OPf1WkKVsfKip
-         np69IPFydw9FkzyHJ1n7ae8xLU48txAypsU9WFbmkQVD6v0fJH29MAs+0HUkcKeHfJY8
-         EGMg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=w8VOaIxB0TFBB/OhvCNXDLo6PM/lUvCeTHrTbRbZxP4=;
-        fh=rqvjQ1qDFPfEALQmFhMu9teFLOF1/0hdwnXkyJpctPc=;
-        b=IdL/IZ4bAmDW7GjPfNOOk3azeww8dqd1PlLoCOYbjEFMpyvCyNaTqSa/kKd+cWqDH7
-         +luGP7UGqzztVsnqUzqUhEfXGoWLxnGaArxCoy8AFiDGbhg0vRBiJvhqQ8mUvyDr7RcL
-         zfJ9pHR1ZCylg7Wc7X3U/73sVADew5z/Bt/OusjwHAYFoTKgKBIOMUaUV92/hRcplPyz
-         uRU+ZzqH3lZDLjbbLzNeXsBTQFdrrxXTQ0e1ehCZKAHekyleo6r89FkQ2jPIRB3eLTVe
-         ZPjxG6x4S81mgUBXuZWo5FfUxRagXGFyjY65QGzczRJL9JCH++Hz1d/i+dNFFK1pHitr
-         lpFg==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1793088840; x=1793693640; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=w8VOaIxB0TFBB/OhvCNXDLo6PM/lUvCeTHrTbRbZxP4=;
-        b=CPV/f6JI9EV7Ycp2YZm1N6Osx+BXZF4pVOxzQC9mFkS9e7YEo2DfFCuGZBFmKNBG4z
-         ABC1+WHg8Xw/9l0pYTJ94N8A3ovy35ehlw0OyBs/AepKEFh7+gqPt+RWuEsOI1rb6D6p
-         WotOnPFHKm8B5gFOKVW4Tx6AdKmP3whNHjNq5yJAg+i4lBVOyuCHndbT5MWDXc5VyooX
-         FPyZK9T62o8lQy4dYUqvokCCZVI2hAINI3voC+a40tRaaRso9fMZ0Ij2IZe5Nx8jK5Y7
-         8+chIPfkDySbToBDFEnU0pAndvOjaa6A6lbBcE08y0MLUzMffKuQ6s9pV8QE9gsva0Al
-         gMzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793088840; x=1793693640;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=w8VOaIxB0TFBB/OhvCNXDLo6PM/lUvCeTHrTbRbZxP4=;
-        b=Iyx5wrau+QoPTBuF6jqgcrd/bTzA/HcwtIvoqZCHJKd5ed5Qa8oxMUwp1W+bCaDrEm
-         PMqnfhcKzamPkpZuzMUpW0/rc+e4CxFbTeagxlfY79IROfuR2fxN7ui7TE5em8s1VqAC
-         EjajMfBw47syVNjHs1UzKi6ABcEWTFFnHIk4gc2wqcD+MeI7phMMLhLVF+EP+cukSpRD
-         8i3ZhlcFA18t69DjfWWwSLqBciu3/YVz+xuXPIzmGG2bP/Ny9an2TStWocFBqO6DGow5
-         RXAPneRjfQLMaDDnZqf2OPNA7RLJW9Wm1AmSN04eCiyH4E6Epm/Bl0AlXgIK2t9/QYpr
-         im1Q==
-X-Forwarded-Encrypted: i=1; AKwUvByZynk0L8vdIM/M0/79sRNcvk8gjHP+D0teb/v47FEqdkahl1x0nLxKARYxsr0tzL/8ypJGMgg3Qgw=@lists.linux.dev
-X-Gm-Message-State: AFq9FYLEoLYCErI/bI7EuTXPnGT2EB8grbz8jpVYd/ts/wkKkJMccyHf
-	egkvLuLEYvZRiwU5RFferk+VO/DSdzlybOAiSGbbTEjSsR5Yd0BqGxkPmwaeIBzh5zJGCpA4SH9
-	JQgbx8jiQU6Nc3dWb+GZ2zRZ3vlMc7gs=
-X-Gm-Gg: AYBFou1szsrhHPoEn5R2YZZ4pcOirrJ4fopwcw9Dr5x8mX6NEHsxk+WFd8yj4InZNsf
-	3nq8+iH0Q4bHV1s2iIIdL948xMNILH2HSwMB7t8GFS4OOMQdGYfLBIna0VUrXiMeS44jGapkpej
-	i6WYd5+Xp7Uovj2Ezg2W74XYGcXF/k6uhjanlzSVMRABxq7gPrzVjvQ1b2JVxem23eeIVK5tOYm
-	ARmomQLXWHyszyxcZXavWVCzqX26KAJQK0U6dpEcj7VS4upgEHUhmxiHiKs/6PmL1Zv8d8L1uh6
-	q3q8N4TKYGWLAbAcwRZNeFk4naTzWm0hN4dOv4WAETP/uKlehLMyOcbH7//fWDvdh7uamqzeMfa
-	b+wUVJz5OfGFnAZ+5HWhVJjpkA4RyKs1VeJXxGw==
-X-Received: by 2002:a05:6870:148d:b0:49d:ff8c:2070 with SMTP id
- 586e51a60fabf-4a83f64f8a1mr5440798fac.62.1793088839941; Tue, 27 Oct 2026
- 01:13:59 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=j/gP54Cg
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=PY8D/fV9b7AqgT0EI/4JhIhUH5cTst9C5yyqz6dyWcI=; b=j/gP54CgEygcRs8TL7TFvQfxWQ
+	QB9ho1aAa6pbib22ag4zbg5BRriOpt2zZs83XAJwUPSgNaowMPL5MrMYLZE17R2FRrOuUU67wGvyn
+	frXJXGOkpFQtpqntmkojch5r3MxT/xenCCROmA0AXajsGCHv+ALUG6EIcXGPrlesZEMPJIeqKnbfE
+	rKvXYdKMNv+x5Z6BYaPELqdU7BzYZRkZ5deQd1qdsznL11vi4AygDS+oQFBwhi/A3ahPkOr9uwb+p
+	9G6x0t3n2GNcA77LGfOfaYX6DwJAayTuO2uLN1Qgb3Y8jBl55D+3Hvmoe8AGLAqDoX/sDmwhAQv6E
+	+Vb690fg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
+	id 1xLeuq-0000000D62N-2Dy5;
+	Tue, 27 Oct 2026 11:00:28 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 1CBB6300DB9; Tue, 27 Oct 2026 12:00:28 +0100 (CET)
+Date: Tue, 27 Oct 2026 12:00:28 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Kiryl Shutsemau <kas@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Muchun Song <muchun.song@linux.dev>,
+	Matthew Wilcox <willy@infradead.org>,
+	Usama Arif <usamaarif642@gmail.com>,
+	Frank van der Linden <fvdl@google.com>,
+	Oscar Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Zi Yan <ziy@nvidia.com>, Baoquan He <bhe@redhat.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	kernel-team@meta.com, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCHv7 13/18] mm: Drop fake head checks
+Message-ID: <20261027110028.GH2668564@noisy.programming.kicks-ass.net>
+References: <20260227194302.274384-1-kas@kernel.org>
+ <20260227194302.274384-14-kas@kernel.org>
+ <ebc7bde1-f52e-4da8-b16f-822d6c0a4d74@kernel.org>
+ <at_f43oDv73y-t7O@thinkstation>
+ <f97a8d33-50b2-4a86-8381-ee840cdfa2f9@kernel.org>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -104,69 +91,194 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <20261016081006.26069-1-yangtiezhu@loongson.cn>
- <20261016081006.26069-4-yangtiezhu@loongson.cn> <CAEyhmHQe5T6Ai0LXiJnwXzBgy_Xu5=upeqWHbMz7J3X6QntWBA@mail.gmail.com>
- <b5c793ec-c951-930f-fc9d-06de6f49ac9e@loongson.cn>
-In-Reply-To: <b5c793ec-c951-930f-fc9d-06de6f49ac9e@loongson.cn>
-From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Tue, 27 Oct 2026 16:13:48 +0800
-X-Gm-Features: AclHuK98IjpjRz-E6wrGUKQi5ueh0VkowRqNb6vJZLkdRKcKoBwQRts6NLE8Z_U
-Message-ID: <CAEyhmHQkJzTjmYfocSqoFYBJ4Q8bq6D=Rojce3EbCAJLWEQSww@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] LoongArch: BPF: Optimize 32-bit operations using
- native instructions
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f97a8d33-50b2-4a86-8381-ee840cdfa2f9@kernel.org>
 
-On Tue, Oct 27, 2026 at 12:10=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.c=
-n> wrote:
->
-> On 2026/10/27 =E4=B8=8A=E5=8D=8810:02, Hengqi Chen wrote:
-> > On Fri, Oct 16, 2026 at 4:10=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongso=
-n.cn> wrote:
+On Tue, Oct 27, 2026 at 12:37:13AM +0100, David Hildenbrand (Arm) wrote:
+> On 10/27/26 00:25, Kiryl Shutsemau wrote:
+> > On Mon, Oct 26, 2026 at 06:45:48PM +0100, David Hildenbrand (Arm) wrote:
+> >> On 2/27/26 20:42, Kiryl Shutsemau (Meta) wrote:
+> >>> From: Kiryl Shutsemau <kas@kernel.org>
+> >>>
+> >>> With fake head pages eliminated in the previous commit, remove the
+> >>> supporting infrastructure:
+> >>>
+> >>>   - page_fixed_fake_head(): no longer needed to detect fake heads;
+> >>>   - page_is_fake_head(): no longer needed;
+> >>>   - page_count_writable(): no longer needed for RCU protection;
+> >>>   - RCU read_lock in page_ref_add_unless(): no longer needed;
 > >>
-> >> Currently, the LoongArch BPF JIT emits numerous redundant zero and sig=
-n
-> >> extensions across 32-bit operations, bloating the final JIT image size
-> >> and also leading to runtime overhead, particularly in the division and
-> >> modulo operations. Thus, it is necessary to optimize 32-bit operations
-> >> by emitting LoongArch native 32-bit word instructions.
->
-> ...
->
-> >> +               if (cpu_has_div32) {
-> >> +                       if (!off)
-> >> +                               emit_insn(ctx, divwu, dst, dst, src);
-> >> +                       else
-> >> +                               emit_insn(ctx, divw, dst, dst, src);
-> >
-> > For ALU32 SDIV, off !=3D 0, it seems like there is a overflow in S32_MI=
-N / -1.
-> > verifier_sdiv.c has related test cases but annotate with
-> > __arch_x86_64, so it is not run on LoongArch.
->
-> After enabling the signed division and modulo overflow tests for
-> LoongArch, here are the test results:
->
-> $ sudo ./test_progs -t verifier_sdiv | grep "MIN/-1"
-> #731/121 verifier_sdiv/SDIV64, overflow r/r, LLONG_MIN/-1:OK
-> #731/123 verifier_sdiv/SDIV64, overflow r/i, LLONG_MIN/-1:OK
-> #731/125 verifier_sdiv/SDIV32, overflow r/r, INT_MIN/-1:OK
-> #731/127 verifier_sdiv/SDIV32, overflow r/i, INT_MIN/-1:OK
-> #731/129 verifier_sdiv/SMOD64, overflow r/r, LLONG_MIN/-1:OK
-> #731/131 verifier_sdiv/SMOD64, overflow r/i, LLONG_MIN/-1:OK
-> #731/133 verifier_sdiv/SMOD32, overflow r/r, INT_MIN/-1:OK
-> #731/135 verifier_sdiv/SMOD32, overflow r/i, INT_MIN/-1:OK
->
-> That is to say, the current jit code is no problem.
->
+> >> I have an AI report that removing RCU read-lock was wrong.
+> > 
+> > Ughh. Yes, it is a real bug.
+> > 
+> > My reasoning in the commit message was wrong. Nothing stops a
+> > speculative get from writing to one after the remap. On x86 even a
+> > failing cmpxchg faults there.
+> > 
+> > The fix I have in mind is to let the atomic fault.
+> > 
+> > If the update faults, the struct page is a read-only HVO tail with a
+> > zero refcount, so the get just fails. An exception table entry on the
+> > cmpxchg handles it. No RCU on either side, and the fast path stays the
+> > same lock cmpxchg loop.
+> > 
+> > Only x86, riscv and loongarch have HVO. Below is x86 only, to show the
+> > idea; riscv and loongarch need the same primitive in their LL/SC
+> > fetch_add_unless().
+> > 
+> > Lightly tested on x86 by hitting a real HVO tail page.
+> > 
+> > Does it look sane?
+> 
+> I'm sure x86 folks will have an opinion :) . Let me CC them whether something
+> like that would be acceptable.
 
-Great.
+This looks quite terrible, doubly so because I have no idea what its
+trying to fix. Please try and justify this insanity.
 
-Acked-by: Hengqi Chen <hengqi.chen@gmail.com>
-
-> Thanks,
-> Tiezhu
->
+> > 
+> > I can prepare a proper patchset if looks reasonable.
+> > 
+> > diff --git a/arch/x86/include/asm/atomic.h b/arch/x86/include/asm/atomic.h
+> > index 75743f1dfd4e..5252b1382ed0 100644
+> > --- a/arch/x86/include/asm/atomic.h
+> > +++ b/arch/x86/include/asm/atomic.h
+> > @@ -108,6 +108,25 @@ static __always_inline bool arch_atomic_try_cmpxchg(atomic_t *v, int *old, int n
+> >  }
+> >  #define arch_atomic_try_cmpxchg arch_atomic_try_cmpxchg
+> >  
+> > +/*
+> > + * arch_atomic_fetch_add_unless_nofault() is arch_atomic_fetch_add_unless(),
+> > + * except that a fault on the access jumps to @label instead of oopsing.  It
+> > + * works in any context, including with IRQs disabled.
+> > + */
+> > +#define arch_atomic_fetch_add_unless_nofault(_v, _a, _u, label)	\
+> > +({									\
+> > +	atomic_t *__v = (_v);						\
+> > +	int __a = (_a), __u = (_u);					\
+> > +	int __c = arch_atomic_read(__v);				\
+> > +									\
+> > +	do {								\
+> > +		if (unlikely(__c == __u))				\
+> > +			break;						\
+> > +	} while (!__try_cmpxchg_nofault(&__v->counter, &__c,		\
+> > +					__c + __a, label));		\
+> > +	__c;								\
+> > +})
+> > +
+> >  static __always_inline int arch_atomic_xchg(atomic_t *v, int new)
+> >  {
+> >  	return arch_xchg(&v->counter, new);
+> > diff --git a/arch/x86/include/asm/cmpxchg.h b/arch/x86/include/asm/cmpxchg.h
+> > index a88b06f1c35e..685aab3edd3f 100644
+> > --- a/arch/x86/include/asm/cmpxchg.h
+> > +++ b/arch/x86/include/asm/cmpxchg.h
+> > @@ -232,6 +232,63 @@ extern void __add_wrong_size(void)
+> >  #define arch_try_cmpxchg_local(ptr, pold, new)				\
+> >  	__try_cmpxchg_local((ptr), (pold), (new), sizeof(*(ptr)))
+> >  
+> > +/*
+> > + * __try_cmpxchg_nofault() is arch_try_cmpxchg() on a 4-byte kernel variable,
+> > + * except that a fault on the access jumps to @label instead of oopsing.
+> > + */
+> > +#ifdef CONFIG_CC_HAS_ASM_GOTO_TIED_OUTPUT
+> > +#define __try_cmpxchg_nofault(_ptr, _pold, _new, label)		\
+> > +({									\
+> > +	bool success;							\
+> > +	__typeof__(_ptr) _old = (__typeof__(_ptr))(_pold);		\
+> > +	__typeof__(*(_ptr)) __old = *_old;				\
+> > +	__typeof__(*(_ptr)) __new = (_new);				\
+> > +									\
+> > +	if (sizeof(*(_ptr)) != 4)					\
+> > +		__cmpxchg_wrong_size();					\
+> > +	asm_goto_output("\n"						\
+> > +			"1: " LOCK_PREFIX "cmpxchgl %[new], %[ptr]\n"	\
+> > +			_ASM_EXTABLE(1b, %l[label])			\
+> > +			: "=@ccz" (success),				\
+> > +			  [ptr] "+m" (*(_ptr)),				\
+> > +			  [old] "+a" (__old)				\
+> > +			: [new] "r" (__new)				\
+> > +			: "memory"					\
+> > +			: label);					\
+> > +	if (unlikely(!success))						\
+> > +		*_old = __old;						\
+> > +	likely(success);						\
+> > +})
+> > +#else
+> > +#define __try_cmpxchg_nofault(_ptr, _pold, _new, label)		\
+> > +({									\
+> > +	int __err = 0;							\
+> > +	bool success;							\
+> > +	__typeof__(_ptr) _old = (__typeof__(_ptr))(_pold);		\
+> > +	__typeof__(*(_ptr)) __old = *_old;				\
+> > +	__typeof__(*(_ptr)) __new = (_new);				\
+> > +									\
+> > +	if (sizeof(*(_ptr)) != 4)					\
+> > +		__cmpxchg_wrong_size();					\
+> > +	asm volatile("\n"						\
+> > +		     "1: " LOCK_PREFIX "cmpxchgl %[new], %[ptr]\n"	\
+> > +		     "2:\n"						\
+> > +		     _ASM_EXTABLE_TYPE_REG(1b, 2b, EX_TYPE_EFAULT_REG,	\
+> > +					   %[errout])			\
+> > +		     : "=@ccz" (success),				\
+> > +		       [errout] "+r" (__err),				\
+> > +		       [ptr] "+m" (*(_ptr)),				\
+> > +		       [old] "+a" (__old)				\
+> > +		     : [new] "r" (__new)				\
+> > +		     : "memory");					\
+> > +	if (unlikely(__err))						\
+> > +		goto label;						\
+> > +	if (unlikely(!success))						\
+> > +		*_old = __old;						\
+> > +	likely(success);						\
+> > +})
+> > +#endif
+> > +
+> >  /*
+> >   * xadd() adds "inc" to "*ptr" and atomically returns the previous
+> >   * value of "*ptr".
+> > diff --git a/include/linux/page_ref.h b/include/linux/page_ref.h
+> > index 9f5c75d06f76..82a2fc445ce6 100644
+> > --- a/include/linux/page_ref.h
+> > +++ b/include/linux/page_ref.h
+> > @@ -246,9 +246,31 @@ static inline int folio_ref_dec_return(struct folio *folio)
+> >  	return page_ref_dec_return(&folio->page);
+> >  }
+> >  
+> > +#ifdef CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
+> > +/*
+> > + * HVO maps the tail struct pages of a hugetlb folio read-only.  A speculative
+> > + * caller can read a non-zero refcount, then the page gets freed, becomes a
+> > + * tail page of a hugetlb folio and is remapped before the update.  The
+> > + * atomic then faults.  A read-only struct page is a hugetlb tail page with a
+> > + * zero refcount, so the fault means no reference can be taken.
+> > + */
+> > +static __always_inline bool __page_ref_add_unless_zero(atomic_t *v, int nr)
+> > +{
+> > +	instrument_atomic_read_write(v, sizeof(*v));
+> > +	return arch_atomic_fetch_add_unless_nofault(v, nr, 0, fault) != 0;
+> > +fault:
+> > +	return false;
+> > +}
+> > +#else
+> > +static __always_inline bool __page_ref_add_unless_zero(atomic_t *v, int nr)
+> > +{
+> > +	return atomic_add_unless(v, nr, 0);
+> > +}
+> > +#endif
+> > +
+> >  static inline bool page_ref_add_unless_zero(struct page *page, int nr)
+> >  {
+> > -	bool ret = atomic_add_unless(&page->_refcount, nr, 0);
+> > +	bool ret = __page_ref_add_unless_zero(&page->_refcount, nr);
+> >  
+> >  	if (page_ref_tracepoint_active(page_ref_mod_unless))
+> >  		__page_ref_mod_unless(page, nr, ret);
+> 
+> 
+> -- 
+> Cheers,
+> 
+> David
