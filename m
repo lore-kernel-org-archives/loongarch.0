@@ -1,100 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.50
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793066543;
-	b=t6AwFzA6/P/jm5R1il/CywwbsYczYJmnawAKHYVyb/+Hgcgb3VO6OOTyHL4ZoDQTu0op
-	 RtiEDlHrgmTZnrbN0sAJ7iZegZo3SuviV37JtCCpEKab5nKlOJLMJUgofGwhO77mjxyQN
-	 6IgYhLD02Zuan95+WGRStnMzkL4eccVPSLImE/Cwcz2QKvo/7UV7SI0EstnX+h2zLD8ht
-	 whpmOhP6j4UMRmS3xzDOdKFWMq+SjYxHsyU3ex90ekfZhIeAAN5ecI06xN9vv1yEo3thc
-	 x4FiJnHXLgQtTYyTDEIVkdic95dc1IZzWEMti3XTt5dhCBWE1lrCxdDQ7KfVh9YPbeA==
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=209.85.160.170
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=fail;
+	t=1793068810;
+	b=PsMhwLZLDAMQqBjFebjCHkJ+qD/l7Bpzb6hC2AA1zxpvHZj6oZhCb2dllFAgipdb4mVR
+	 RY1aqnnfEbLx2Jr1rE6yDloeqmfExyQnFPbcrpjmUpM0StNQf6Waah7bCJOksLPZKfnQG
+	 WmcREVZY702GfP4F5+TOdf6w99hdkztTs9VRQMsIBV4WektfRmaJivcrdnJLMC5WKsjc1
+	 vBiUv3RLtJ0Jni13lybtZvqDwmtkSBnWEDNPt/zrBMzXRnfwexb4oP/Jklvl1y67YYX0z
+	 rqdNamKxroiArmFfIMryNkfNlCX6+X1/1PkQnDpyfBe+C12upHOp1YbGOP5M3UHAiVw==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793066543;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793068810;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
 	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
 	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=w7D3aSpjC+miq7WuWr1G8c3iHqlWYR8uny5AaN1Bcng=;
-	b=zMhxm0+3cJCpvYh1LN7xaRIivJgWu49rx8lTX+RDfaXpGMyo0bK/5zI2BvvaqE+ALrtN
-	 6zdHB69QPtRCA5GsuTY2g0yUV2oCYK3slbpdjBLxDIZqXTI7zOYkxUZlywsoo7GiKnt7C
-	 LpCyRXGFNLorW9t9vVyn7tCPurDXJG3jJz7cibHKOJrC6GIMn1FsJahS7BfGabFSpANkx
-	 lreOld8zEPan3N9YCfCQqTGK4DhQQW/M/4nOhhydAJaZGjGN3wmNSf0uCL/6HwlTA4etH
-	 vSyLpZrCz9MNUzp0BGG2p1jq59re3bfrNav+8BotLDCuDBlMqIF8b7eP7QvLYTGAIlw==
+	bh=uqs34zcQCNfaKeG0W4YG4prKIZumwiPNl9JfXSdONU0=;
+	b=VLmOJwPTuauNZy9D+4cMDyz+TTjxhBchkr0vXcXYjeabwtN0oOdmhNV6QsEojOXtKB1v
+	 2zM8YRKXbPbVqfGbUB/x1DoTI0gVTbfQklmDBWJ4T+ZqxSG3cJX+gdoUTEBsbc2Y396QC
+	 46sFy7F8uXWwMQs9S4aAwiksMV+n4XmBICkctgMhlhIhGKtg5t4JsPzReyIGEKQ47ShXS
+	 e+uiaWOvNaRJaK0KhSxgVRCaWp77XHMUZ4JyoWY7e+gn8PGmFHNBj8Fd0gsxH2yPd9rIF
+	 n/4VUp87L+LqitIIpODdwCGCgid/jfy4fTkixdhLZnnFXvc+KWlj+PtJCRa7yMBOI+Q==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=lnxhADGC;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.50
-Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=Yef1nR+s;
+	arc=fail smtp.remote-ip=209.85.160.170
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95F00606A31A
-	for <loongarch@lists.linux.dev>; Tue, 27 Oct 2026 02:02:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 95F00606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E94EC606A31A
+	for <loongarch@lists.linux.dev>; Tue, 27 Oct 2026 02:40:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E94EC606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=lnxhADGC
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-49e5f85ce89so1521133fac.0
-        for <loongarch@lists.linux.dev>; Mon, 26 Oct 2026 19:02:22 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1793066541; cv=none;
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=Yef1nR+s
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-535f598d126so80181cf.1
+        for <loongarch@lists.linux.dev>; Mon, 26 Oct 2026 19:40:09 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1793068809; cv=none;
         d=google.com; s=arc-20260327;
-        b=osJ36N3qQBCZkE2/4NvnHSKHwvEyMArNClti3ngKF50yn6whlzneeit4aBWNlW9nWx
-         IDm6lVUOl/izRg6BRip6i2yRm1ki2Q+z4tAvG0wbaHRd+MEudhUncTcOMzLT3rV1yp0b
-         p0Q0m78ACyLAZ5heyueyAuqu7OvAPd6OzH8Rzyw79P7m0bmqIMDiiuCPaLUrYdBC+aPk
-         LFCJvUHixv3xs/Hjk6vLfMLCU94NX6Jc60PRjhKe2mHKlvy0FL3wuXgPm2qtf3dRXK0n
-         0w6McaFJ3aaRSQ52VQkcVTyJsUwMx35rNzEEeXsJNSe/rKxWdzYywhq6RJmVJAJxX6UN
-         94Jg==
+        b=r9yd9XRa1qANKnKTp4A2jZrg26NKfaSpcmgP/6DTD0utYAVfvKb27RLQh9lfmYUTKO
+         Ds5guIzUpOXLdpdQjzzcF0TpwA9BGa/WWqEYC6QBFcZ84WOlGiarQK1Od4z3jKcZpHD3
+         rGpJPSkp3zeDiYmbh8DWCBAUgamAr7zPtRQh4AB/e47vwMrBTawqBat5i3iPwbWPgoK0
+         WRmlhPARD6FicVnrsVtG/lUgWM1tTtAw07iGwXnhQPL00C2Fet17P4P1muRwKK/36hq3
+         AEzwuBIKvIGiJNC9/Ukbjvq28MudHigVko6BLqBjg4WtZ/pQ7PsHpe9YzDZ9RbSFQWio
+         SehA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=w7D3aSpjC+miq7WuWr1G8c3iHqlWYR8uny5AaN1Bcng=;
-        fh=KHrTuKzcBKGkwcTX6f4qtCN+lBP4/aVKosPp5Wn+Xj4=;
-        b=Kqxcd+mCLZAhYJw/esUYpIq83RSlEDfosa6U4n2oJDkh8cJVvl4/HmMrn9PDOhy1Hf
-         S5c5bwldGwBHY2oB1lMhgtEeW9jIsTJi9Ytzoob03OfVK1rVnSM0jM+yb/WOBnmbIedq
-         zJ3UYt/P1WgGZyZEa4dEuZXXLIiHQnzuMw5b44+M+b4HHGynnIwNfVCJr0LJMKn16kVo
-         wsf1vX3BYFLXtYHZtK2EOjH8rYcbmIRh/VoSZXd+fIHdM2HWlJp0uEW5eJVafxjgcJ6t
-         UscHA4j995QwnyVq10ygkyjzhwrnMBC/vTKjTsc8yzbnR1zNBWe5EFm1jDVW1caOguKR
-         KoYg==;
+        bh=uqs34zcQCNfaKeG0W4YG4prKIZumwiPNl9JfXSdONU0=;
+        fh=MzbeBqBBUM8NlpWjev9sA+GPTlvMgD7nDhfO4BvfkBA=;
+        b=eJxP7MI+dNw7QKuMqPcsnebdaQH4MezUX32aubtahAA2IbeOnLsqbsTTSJjF/RYEoX
+         e68sSG9ZLICrqk8teRsFKXzEKHPv/zdt0JAY5QjumWNCIpdQmbi9r/NqoVUga6oBmugF
+         D5wsDHlPSBc5rfaFPkAIo8vOv1q8evtXFv9tUv9XJOI8jQVUS0i3DFzeJvc6tyuFSgbB
+         sLIvm9XaWMV6aZzSDOzk5OPfCgTLHXNb1OpJuZIR3ue1t0C3hu0oZtJ0xRvgU998hQao
+         yeyzW7DXPqX6nBoAwmSvtgDFjhCOouL0LAAjz45Y60v5TITRcI20xrp+vVPRr5qU/+nn
+         +mxA==;
         darn=lists.linux.dev
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1793066541; x=1793671341; darn=lists.linux.dev;
+        d=google.com; s=20251104; t=1793068809; x=1793673609; darn=lists.linux.dev;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=w7D3aSpjC+miq7WuWr1G8c3iHqlWYR8uny5AaN1Bcng=;
-        b=lnxhADGC6Aw42uhzIDY5tjny2XvSsMnCycR5UG7+N/ETZSuockXzTW9fGck+CLNY4m
-         78mpnJk7ek5RN38WV8ejguGnhbefVuEqEI6RhN44NOMNHzYZlGZvxOyjZfAhNah9ZO5C
-         mmCsZHwU/emgKy47h+OsraK0nVEX8s1yp7XIGVF6d0i0syfcDporyOjtlh/f/tt1Paqx
-         sfJtHc3YfKNO8Cm72hBSSklKTzj7h4jPNN2PGjqD+dI+/yADhyBZ5ghdxgvcjp+phQKN
-         YLhrYkXMV1xWyPY76/Fhjg5PCsVbOfTWoCTLswBM7fE4RJ7TWG2WnO+bbFvUq6ECG+7b
-         48pA==
+        bh=uqs34zcQCNfaKeG0W4YG4prKIZumwiPNl9JfXSdONU0=;
+        b=Yef1nR+s7SBTB9BS+xQLTsc02NeFeHhZ6KTymXXO8HQCwAdLGb9sSyCGTvtLUwHjXY
+         EdHEksXZrU6y+qqC/mKnqoGhSytxYKUFeBcHd2REceLu0tV1LyQ0zjYE8aYv8ih53AP4
+         2ZuViEpC7PrknO5gXsMxloGqD7g4/+kEoYHkvCZ1/yCCzuq5ikvEc7Gtl3LmaMay1QNr
+         kVM26uGBeJ3pVUlvwsPG/gZDugi+w7Ee17BpRLySGJCjqbilgBArVtrGmqHQSeYRl8Ql
+         P2b4PUjXkehTaxMbqGDqWP7+0cB2MyTWqk67SP1FrOyJsfYOtE+ekfsCYNwf5DLsBV5p
+         D5og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793066541; x=1793671341;
+        d=1e100.net; s=20260707; t=1793068809; x=1793673609;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=w7D3aSpjC+miq7WuWr1G8c3iHqlWYR8uny5AaN1Bcng=;
-        b=l+lP2UbrxeN1U3GUsbmojMK47oZOLqUz5yqKGk3Q4HrhdJVaxFSS5S9+PU8kaEChzm
-         9544zbRPNJ4Hq+oAXuVHM+Rgz0f3cOcjJR5kDCj7rUzjN3s3mCTyXCJSzK1FHsFg9Wg4
-         /T5v4QjTUKkVEWQJ3V8HTRzGnplk30+a1lzB1ALrj8nYW3+/tQsjhZv9HR6ir4MZpQns
-         cpmGAu3t0SKr3RrpJr0d30wG5cPFzyV/vBEOUlJiLg6KFEJksN/fi44YyIUYfsWXPns7
-         538awgTbu1fi961sCzTRNXeYGOv5uGYrlSB2ovwCVxmn9u0feiqW5b5QxyCrBvm3m4ev
-         1W2w==
-X-Forwarded-Encrypted: i=1; AKwUvBwnhkbfjD9hFUYzi4tuzRu+qCmoVmBAzTFSv4cYis0GvsPVR2wUjCQ/ekE8+o/zv5ByVre+NB3CGLg=@lists.linux.dev
-X-Gm-Message-State: AFq9FYJEARmdFGc8Fa8NzjcKs2hzZNSMPA5ndF3icMz4/7qfBp59qQuS
-	o+hVWo36BVR+0cQzbp9PKK5sVE52Q6WUJi97uv45Badr52t7Y3ftzILo7nQVq5BdT3uxk7NBKSx
-	IJuvxqjlyQt5wHx7p1kHYoyGNquhF88g=
-X-Gm-Gg: AYBFou2v7Rl31/pQ9aOqkTxANnacsnOHZZerdbikxqftWPjvlOtu+AOM6z/bdQgi0Ry
-	DroVrKPxLZ0Zto/arl/BgyhBYmdCBbbjKRGjUOlgoPSTmpy/yPCkuKrn0JgvY0e0+21bmgXnnl0
-	7NR+GCXYcAR14BB++iOCe119Y5e0sI0obgFPp7lHZ6qSiUW+wyH0MPZXXyhQ2yJe7X9GgL45uma
-	qDHyHFhIo5W5dtOcResY+M4mF1aroe/T+ST8oQxo73JnpwPTxlXzxbsPjQFt5PgBZwRVnoec9uI
-	Mj6J9RCmhI5v+cHuK2tYXcYYzENVgSDjPS7pmv+So5EsOOO8L6+ku6VCxBqi8o85AyYKexUq8+5
-	CmheZpgh2synoPto963YuERtaj7OI2+rWr6b6
-X-Received: by 2002:a05:6871:7bc9:b0:49e:5b59:abd0 with SMTP id
- 586e51a60fabf-4a83f53f4d9mr5471897fac.24.1793066541261; Mon, 26 Oct 2026
- 19:02:21 -0700 (PDT)
+        bh=uqs34zcQCNfaKeG0W4YG4prKIZumwiPNl9JfXSdONU0=;
+        b=KjNdW9/yfho8LmPQDLeJu02l58ZE/j5/FvHPD/plgpnMylmi8x+bXtTgfU6B4Tefjk
+         uPnSXYPdBusLtbejphYctHv7KWmcRDJNwCN9qExfYe8iPEIz4o0OCmJZpy8oNOG6OPAc
+         O8tUCwYXF7o+NakP/wEHmZ8JwHKsAMrl7mENvMzNCt9c8BKa8hJ51heFeuAGtQ/KNJXR
+         REAccDzRV2NQgxWLnPXy7CxtW9BnF2q58cYxe6+GFD/SqOqx/m2NTy1ky+pJXFcQFWUU
+         KlMuktJt9xsgA7s2MFK7UUhTBZ0BDZsXd03cqelUZprIc+wjfGu9+OVBajQhmtoeVYLB
+         fTdg==
+X-Forwarded-Encrypted: i=1; AKwUvBz/6DtT/PMmzPoYafWaLXL2HR2T5XvjEYo63tTEDRUtuxM5kkz8/jY/HDcXaFNfoLhan1uGa+lca5g=@lists.linux.dev
+X-Gm-Message-State: AFq9FYKGTXcZ/XYW0TE1H77m30hyZom7+rfJeFH5vQRnHkvR8Mw+tjBT
+	W8VgFftf2s+MfGqmxxTImtx+1VjHyAC3nbqBp89kKFncmPLgJWfZjFnk42xAqQCBVaqxQ3f3d3a
+	B/i2x342yK6yzxfeTDuaw6hSWLml11a8FOqQnH7Us
+X-Gm-Gg: AYBFou2j2Oolut9iZs7IPIXDLCeirNrvso0hZEtFVgH97x215X8VsrssDOi5LJbo5uA
+	HiWf6HeLBE7zV0q5pAnNf4ugrsyYanB4RdA9ePQ778x5DDNROMMU5xpWwLRBVLS8g1cR3OF1xYp
+	sVKxNuQdjyGHnBYM0lOLzZrLkrXFpmEGbmnqy5HPkXrXupSIPTF9IbEghaotvbvsFFxzWpXdX3m
+	QScAe6/8hpAPx2bHeyAWE8R7+CzlFrUAhIetASXDnNoYJORhd5G+RgHFjNaL/cgLAfBZOit4qnS
+	N/cCPnC3qR4gGn9QWJEibhvrPKjr6TzoZdDF86LVH+qEz8rV993NN1fFoPf4GSDpbKdclKI1hNa
+	wvGJxqQ05pv+b0CWQcOLBhur55F0aakgNmCU=
+X-Received: by 2002:ac8:5cd0:0:b0:534:b7b2:634f with SMTP id
+ d75a77b69052e-53e74f18ea0mr8104501cf.8.1793068808195; Mon, 26 Oct 2026
+ 19:40:08 -0700 (PDT)
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -104,895 +104,346 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <20261016081006.26069-1-yangtiezhu@loongson.cn> <20261016081006.26069-4-yangtiezhu@loongson.cn>
-In-Reply-To: <20261016081006.26069-4-yangtiezhu@loongson.cn>
-From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Tue, 27 Oct 2026 10:02:09 +0800
-X-Gm-Features: AclHuK_E33ZyY9y6XrgWC_29Ygg9ezxYOp3pgHauaebQsZii5XE84D9HLPGRSnI
-Message-ID: <CAEyhmHQe5T6Ai0LXiJnwXzBgy_Xu5=upeqWHbMz7J3X6QntWBA@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] LoongArch: BPF: Optimize 32-bit operations using
- native instructions
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20260911025613.1220845-1-zhanghongru@xiaomi.com>
+ <arFYRAa-i7CIwmHL@gremlin> <arF-E3Nsw9ZliH0t@casper.infradead.org>
+ <arI_w2wTfA00Mgy9@gremlin> <armexcXDiG8ryZd6@casper.infradead.org>
+ <CAGsJ_4xuFi7K+crAcFQ998SxXS0xPM6QeA34JV+6+Sy005rXLg@mail.gmail.com>
+ <ar7MsOb6IJLt4eLo@casper.infradead.org> <ar-o1TrOMGrrcxLX@gremlin> <ataDTEZIKOYtwhUF@casper.infradead.org>
+In-Reply-To: <ataDTEZIKOYtwhUF@casper.infradead.org>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Mon, 26 Oct 2026 19:39:57 -0700
+X-Gm-Features: AclHuK_tjvOAxlKicwQpIP5-vlb-UBKyvjNqAPJfVeuqkSwvVjNbbsDgO4TDlgk
+Message-ID: <CAJuCfpH88HGXyLzBr6YGxzTrOq18HaPcRvhN9RwEBxG_ptv7KQ@mail.gmail.com>
+Subject: Re: [PATCH v6] mm: retry page faults once under the per-VMA lock
+To: Matthew Wilcox <willy@infradead.org>
+Cc: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>, Barry Song <baohua@kernel.org>, 
+	Hongru Zhang <zhanghongru06@gmail.com>, akpm@linux-foundation.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, david@kernel.org, liam@infradead.org, 
+	mhocko@suse.com, rppt@kernel.org, shakeel.butt@linux.dev, vbabka@kernel.org, 
+	zhaonanzhe@xiaomi.com, linux@armlinux.org.uk, catalin.marinas@arm.com, 
+	will@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, 
+	chenhuacai@kernel.org, kernel@xen0n.name, loongarch@lists.linux.dev, 
+	maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com, 
+	chleroy@kernel.org, linuxppc-dev@lists.ozlabs.org, pjw@kernel.org, 
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, 
+	linux-riscv@lists.infradead.org, agordeev@linux.ibm.com, 
+	gerald.schaefer@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com, 
+	borntraeger@linux.ibm.com, svens@linux.ibm.com, linux-s390@vger.kernel.org, 
+	dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org, 
+	tglx@kernel.org, mingo@redhat.com, bp@alien8.de, x86@kernel.org, 
+	hpa@zytor.com, Hongru Zhang <zhanghongru@xiaomi.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 16, 2026 at 4:10=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+On Mon, Oct 19, 2026 at 1:53=E2=80=AFPM Matthew Wilcox <willy@infradead.org=
 > wrote:
 >
-> Currently, the LoongArch BPF JIT emits numerous redundant zero and sign
-> extensions across 32-bit operations, bloating the final JIT image size
-> and also leading to runtime overhead, particularly in the division and
-> modulo operations. Thus, it is necessary to optimize 32-bit operations
-> by emitting LoongArch native 32-bit word instructions.
+> On Fri, Oct 02, 2026 at 02:12:35PM +0100, Lorenzo Stoakes (ARM) wrote:
+> > On Thu, Oct 01, 2026 at 10:12:16PM +0100, Matthew Wilcox wrote:
+> > > So what I didn't realise is that fork() waits for page faults to fini=
+sh.
+> > > I don't think that's necessary, so we can just stop doing that (white=
+space
+> > > damaged):
+> > > I think this is safe.  I've booted a kernel with this change, and
+> >
+> > I'm afraid it's not safe :)
+> >
+> > We already actually did this (by mistake I think?) before. See commit
+> > fb49c455323f ("fork: lock VMAs of the parent process when forking") - w=
+e shipped
+> > that in 6.4.0 -> 6.4.2 and it corrupted memory all over the place.
+> >
+> > Reports + a consistent reproducer:
+> >
+> > https://bugzilla.kernel.org/show_bug.cgi?id=3D217624
+> > https://lore.kernel.org/all/dbdef34c-3a07-5951-e1ae-e9c6e3cdf51b@kernel=
+.org/
+> > https://lore.kernel.org/all/b198d649-f4bf-b971-31d0-e8433ec2a34c@applie=
+d-asynchrony.com/
 >
-> For general ALU32 operations, utilize native 32-bit word instructions
-> for core calculations. Given that the BPF spec requires the upper 32
-> bits of the destination register to be zero-extended upon completion,
-> use a unified 'bstrpickd' instruction to clear the upper 32 bits at
-> the common exit of build_insn(), while immediate loads are optimized
-> via (u32) casting to bypass the trailing extension.
+> I wonder if we still need this.  The commit message says:
 >
-> According to the LoongArch Reference Manual, native 32-bit division
-> and modulo instructions (DIV.W[U] and MOD.W[U]) require the upper
-> bits [63:31] of both input operands to be all 0s or all 1s (0x0 or
-> 0x1ffffffff), that is to say, they need to be properly sign-extended
-> by the software on CPU cores without the DIV32 feature. Otherwise,
-> the 32-bit division and modulo instructions could trigger undefined
-> hardware behaviors and return unexpected values.
+>     A concurrent page fault on a page newly marked read-only by the page
+>     copy might trigger wp_page_copy() and a anon_vma_prepare(vma) on the
+>     source vma, defeating the anon_vma_clone() that wasn't done because t=
+he
+>     parent vma originally didn't have an anon_vma, but we now might end u=
+p
+>     copying a pte entry for a page that has one.
 >
-> To ensure both performance and hardware compatibility, leverage the
-> newly introduced cpu_has_div32 helper:
-> (1) on newer CPUs with DIV32, emit native 32-bit div/mod instructions
-> directly for optimal performance;
-> (2) on older CPUs without DIV32, sign-extend the destination register
-> in place and the source register into a temporary register via 'addw'
-> before executing the native 32-bit div/mod instructions. Note that the
-> JIT compiler must never alter the state of the src register because it
-> remains read-only for the duration of the instruction.
+> But we're holding the mmap_lock for write here, and we need to hold the
+> mmap_lock for read in order to change a vma->anon_vma (asserted in
+> __anon_vma_prepare() with mmap_assert_locked()).
 >
-> For JMP32 conditional branches, the source operands may originate from
-> 64-bit contexts where the upper 32 bits contain arbitrary data, so use
-> 6 independent case structures to prevent 64-bit comparison inversions.
-> Furthermore, use 'bstrpickd' to mask out upper bits for unsigned JMP32,
-> and 'addw' with GPR_ZERO to re-align sign bits for signed JMP32.
+> At the time of this commit, lock_vma_under_rcu() contained:
 >
-> With this patch, the emit_{zext, sext}_32() and is_signed_bpf_cond()
-> helpers are completely wiped out from the header and source files,
-> delivering a native execution stream with a reduced JIT image size,
-> especially for division and mod operations.
+>         /* find_mergeable_anon_vma uses adjacent vmas which are not locke=
+d */
+>         if (!vma->anon_vma && !vma_is_tcp(vma))
+>                 goto inval;
 >
-> All of the testcases of test_bpf passed on Loongson-3A6000 (with DIV32)
-> and Loongson-3A5000 (without DIV32), here are the test results:
+> so we really did have to wait for read holders to finish the fault.
+> But commit a373baed5a9d deferred the check for a NULL anon VMA until we
+> actually needed it, so I think commit fb49c455323f's logic was invalidate=
+d
+> by a373baed5a9d.
 >
-> $ sudo modprobe test_bpf
-> $ dmesg -t | grep Summary
-> test_bpf: Summary: 1061 PASSED, 0 FAILED, [1049/1049 JIT'ed]
-> test_bpf: test_tail_calls: Summary: 10 PASSED, 0 FAILED, [10/10 JIT'ed]
-> test_bpf: test_skb_segment: Summary: 2 PASSED, 0 FAILED
+> Maybe I'm wrong.  This is all a bit out of my normal area.
 >
-> For the BPF selftests test_verifier and test_progs, there are no any
-> regressions.
+> > Also we have asserts for this lock in copy_page_range() and
+> > copy_hugetlb_page_range() which will now fail (and possibly more furthe=
+r down
+> > the stack?)
 >
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  arch/loongarch/include/asm/inst.h |   6 +
->  arch/loongarch/net/bpf_jit.c      | 313 +++++++++++++++++-------------
->  arch/loongarch/net/bpf_jit.h      |  18 --
->  3 files changed, 183 insertions(+), 154 deletions(-)
+> Possibly we have to adjust some assertions to check that either we have
+> the VMA locked or we have the MM write locked.  That doesn't seem
+> unreasonable.
 >
-> diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/a=
-sm/inst.h
-> index 585667e361c2..b55aae325300 100644
-> --- a/arch/loongarch/include/asm/inst.h
-> +++ b/arch/loongarch/include/asm/inst.h
-> @@ -752,11 +752,17 @@ static inline void emit_##NAME(union loongarch_inst=
-ruction *insn, \
+> > > My argument for why it's safe is that a thread which takes a page
+> > > fault during fork() might have taken the page fault either before or
+> > > after fork().  The faults will definitely happen in the parent proces=
+s.
+> > > They may or may not have happened in the child process, which can't
+> > > possibly care whether or not they've happened.
+> >
+> > The problem isn't the child it's the parent - copy_page_range() _modifi=
+es_ the
+> > _parent_'s page tables in-place, on assumption that nothing else can ac=
+cess
+> > them (for CoW).
 >
->  DEF_EMIT_REG3_FORMAT(addw, addw_op)
->  DEF_EMIT_REG3_FORMAT(addd, addd_op)
-> +DEF_EMIT_REG3_FORMAT(subw, subw_op)
->  DEF_EMIT_REG3_FORMAT(subd, subd_op)
-> +DEF_EMIT_REG3_FORMAT(mulw, mulw_op)
->  DEF_EMIT_REG3_FORMAT(muld, muld_op)
-> +DEF_EMIT_REG3_FORMAT(divw, divw_op)
->  DEF_EMIT_REG3_FORMAT(divd, divd_op)
-> +DEF_EMIT_REG3_FORMAT(modw, modw_op)
->  DEF_EMIT_REG3_FORMAT(modd, modd_op)
-> +DEF_EMIT_REG3_FORMAT(divwu, divwu_op)
->  DEF_EMIT_REG3_FORMAT(divdu, divdu_op)
-> +DEF_EMIT_REG3_FORMAT(modwu, modwu_op)
->  DEF_EMIT_REG3_FORMAT(moddu, moddu_op)
->  DEF_EMIT_REG3_FORMAT(maskeqz, maskeqz_op)
->  DEF_EMIT_REG3_FORMAT(masknez, masknez_op)
-> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-> index 77cd96a6f84c..1a7c8effc37b 100644
-> --- a/arch/loongarch/net/bpf_jit.c
-> +++ b/arch/loongarch/net/bpf_jit.c
-> @@ -288,7 +288,7 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx, in=
-t insn)
->          * if (index >=3D array->map.max_entries)
->          *       goto out;
->          */
-> -       emit_zext_32(ctx, a2, true);
-> +       emit_insn(ctx, bstrpickd, a2, a2, 31, 0);
+> I was perhaps unclear.  What I mean is that the child may or may not
+> observe them as having happened.
 >
->         off =3D offsetof(struct bpf_array, map.max_entries);
->         emit_insn(ctx, ldwu, t1, a1, off);
-> @@ -412,7 +412,6 @@ static int emit_atomic_rmw(const struct bpf_insn *ins=
-n, struct jit_ctx *ctx)
->                                 return -EINVAL;
->                         }
->                         emit_insn(ctx, amadddbb, src, t1, t3);
-> -                       emit_zext_32(ctx, src, true);
->                         break;
->                 case BPF_H:
->                         if (!cpu_has_lam_bh) {
-> @@ -420,23 +419,23 @@ static int emit_atomic_rmw(const struct bpf_insn *i=
-nsn, struct jit_ctx *ctx)
->                                 return -EINVAL;
->                         }
->                         emit_insn(ctx, amadddbh, src, t1, t3);
-> -                       emit_zext_32(ctx, src, true);
->                         break;
->                 case BPF_W:
->                         emit_insn(ctx, amadddbw, src, t1, t3);
-> -                       emit_zext_32(ctx, src, true);
->                         break;
->                 case BPF_DW:
->                         emit_insn(ctx, amadddbd, src, t1, t3);
->                         break;
->                 }
-> +               if (!isdw)
-> +                       emit_insn(ctx, bstrpickd, src, src, 31, 0);
->                 break;
->         case BPF_AND | BPF_FETCH:
->                 if (isdw) {
->                         emit_insn(ctx, amanddbd, src, t1, t3);
->                 } else {
->                         emit_insn(ctx, amanddbw, src, t1, t3);
-> -                       emit_zext_32(ctx, src, true);
-> +                       emit_insn(ctx, bstrpickd, src, src, 31, 0);
->                 }
->                 break;
->         case BPF_OR | BPF_FETCH:
-> @@ -444,7 +443,7 @@ static int emit_atomic_rmw(const struct bpf_insn *ins=
-n, struct jit_ctx *ctx)
->                         emit_insn(ctx, amordbd, src, t1, t3);
->                 } else {
->                         emit_insn(ctx, amordbw, src, t1, t3);
-> -                       emit_zext_32(ctx, src, true);
-> +                       emit_insn(ctx, bstrpickd, src, src, 31, 0);
->                 }
->                 break;
->         case BPF_XOR | BPF_FETCH:
-> @@ -452,7 +451,7 @@ static int emit_atomic_rmw(const struct bpf_insn *ins=
-n, struct jit_ctx *ctx)
->                         emit_insn(ctx, amxordbd, src, t1, t3);
->                 } else {
->                         emit_insn(ctx, amxordbw, src, t1, t3);
-> -                       emit_zext_32(ctx, src, true);
-> +                       emit_insn(ctx, bstrpickd, src, src, 31, 0);
->                 }
->                 break;
->         /* src =3D atomic_xchg(dst + off, src); */
-> @@ -464,7 +463,6 @@ static int emit_atomic_rmw(const struct bpf_insn *ins=
-n, struct jit_ctx *ctx)
->                                 return -EINVAL;
->                         }
->                         emit_insn(ctx, amswapdbb, src, t1, t3);
-> -                       emit_zext_32(ctx, src, true);
->                         break;
->                 case BPF_H:
->                         if (!cpu_has_lam_bh) {
-> @@ -472,16 +470,16 @@ static int emit_atomic_rmw(const struct bpf_insn *i=
-nsn, struct jit_ctx *ctx)
->                                 return -EINVAL;
->                         }
->                         emit_insn(ctx, amswapdbh, src, t1, t3);
-> -                       emit_zext_32(ctx, src, true);
->                         break;
->                 case BPF_W:
->                         emit_insn(ctx, amswapdbw, src, t1, t3);
-> -                       emit_zext_32(ctx, src, true);
->                         break;
->                 case BPF_DW:
->                         emit_insn(ctx, amswapdbd, src, t1, t3);
->                         break;
->                 }
-> +               if (!isdw)
-> +                       emit_insn(ctx, bstrpickd, src, src, 31, 0);
->                 break;
->         /* r0 =3D atomic_cmpxchg(dst + off, r0, src); */
->         case BPF_CMPXCHG:
-> @@ -494,13 +492,13 @@ static int emit_atomic_rmw(const struct bpf_insn *i=
-nsn, struct jit_ctx *ctx)
->                         emit_insn(ctx, beq, t3, LOONGARCH_GPR_ZERO, -4);
->                 } else {
->                         emit_insn(ctx, llw, r0, t1, 0);
-> -                       emit_zext_32(ctx, t2, true);
-> -                       emit_zext_32(ctx, r0, true);
-> +                       emit_insn(ctx, bstrpickd, t2, t2, 31, 0);
-> +                       emit_insn(ctx, bstrpickd, r0, r0, 31, 0);
->                         emit_insn(ctx, bne, t2, r0, 4);
->                         move_reg(ctx, t3, src);
->                         emit_insn(ctx, scw, t3, t1, 0);
->                         emit_insn(ctx, beq, t3, LOONGARCH_GPR_ZERO, -6);
-> -                       emit_zext_32(ctx, r0, true);
-> +                       emit_insn(ctx, bstrpickd, r0, r0, 31, 0);
->                 }
->                 emit_insn(ctx, dbar, DBAR_LLSC_MB);
->                 break;
-> @@ -605,12 +603,6 @@ static int emit_atomic_ld_st(const struct bpf_insn *=
-insn, struct jit_ctx *ctx)
->         return 0;
->  }
+> > And actually nowadays things are _even_ worse, you could also have conc=
+urrent
+> > page faults, MADV_DONTNEED, MADV_FREE, MADV_GUARD_INSTALL/REMOVE, UFFDI=
+O_COPY +
+> > UFFDIO_MOVE (yikes) all of which might introduce new issues + would hav=
+e to be
+> > audited too.
 >
-> -static bool is_signed_bpf_cond(u8 cond)
-> -{
-> -       return cond =3D=3D BPF_JSGT || cond =3D=3D BPF_JSLT ||
-> -              cond =3D=3D BPF_JSGE || cond =3D=3D BPF_JSLE;
-> -}
-> -
->  #define BPF_FIXUP_REG_MASK     GENMASK(31, 27)
->  #define BPF_FIXUP_OFFSET_MASK  GENMASK(26, 0)
->  #define REG_DONT_CLEAR_MARKER  0
-> @@ -707,7 +699,7 @@ static int build_insn(const struct bpf_insn *insn, st=
-ruct jit_ctx *ctx, bool ext
->         u8 dst =3D regmap[insn->dst_reg];
->         const s16 off =3D insn->off;
->         const s32 imm =3D insn->imm;
-> -       const bool is32 =3D BPF_CLASS(insn->code) =3D=3D BPF_ALU || BPF_C=
-LASS(insn->code) =3D=3D BPF_JMP32;
-> +       const bool is32 =3D BPF_CLASS(insn->code) =3D=3D BPF_ALU && BPF_O=
-P(insn->code) !=3D BPF_END;
+> Yup.
 >
->         switch (code) {
->         /* dst =3D src */
-> @@ -715,7 +707,7 @@ static int build_insn(const struct bpf_insn *insn, st=
-ruct jit_ctx *ctx, bool ext
->         case BPF_ALU64 | BPF_MOV | BPF_X:
->                 if (insn_is_cast_user(insn)) {
->                         move_reg(ctx, t1, src);
-> -                       emit_zext_32(ctx, t1, true);
-> +                       emit_insn(ctx, bstrpickd, t1, t1, 31, 0);
->                         move_imm(ctx, dst, (ctx->user_vm_start >> 32) << =
-32);
->                         emit_insn(ctx, beq, t1, LOONGARCH_GPR_ZERO, 2);
->                         emit_insn(ctx, or, t1, dst, t1);
-> @@ -734,15 +726,12 @@ static int build_insn(const struct bpf_insn *insn, =
-struct jit_ctx *ctx, bool ext
->                 switch (off) {
->                 case 0:
->                         move_reg(ctx, dst, src);
-> -                       emit_zext_32(ctx, dst, is32);
->                         break;
->                 case 8:
->                         emit_insn(ctx, extwb, dst, src);
-> -                       emit_zext_32(ctx, dst, is32);
->                         break;
->                 case 16:
->                         emit_insn(ctx, extwh, dst, src);
-> -                       emit_zext_32(ctx, dst, is32);
->                         break;
->                 case 32:
->                         emit_insn(ctx, addw, dst, src, LOONGARCH_GPR_ZERO=
-);
-> @@ -752,151 +741,188 @@ static int build_insn(const struct bpf_insn *insn=
-, struct jit_ctx *ctx, bool ext
+> > So - it turns out a lot of stuff implicitly assumes VMA write lock now:
+> >
+> > 1. CoW - deferred TLB flush race
+> >
+> > (The issue above)
+> >
+> > https://lore.kernel.org/all/20230705171213.2843068-2-surenb@google.com/
+> >
+> > This happens because __copy_present_ptes() does wrprotect_ptes() on the=
+ parent
+> > without a TLB flush (that's deferred until the end of the fork).
+> >
+> > But unfortunately without a VMA write lock something can then replace t=
+he page
+> > table entry in the meantime and you can end up with data loss as a resu=
+lt.
 >
->         /* dst =3D imm */
->         case BPF_ALU | BPF_MOV | BPF_K:
-> +               move_imm(ctx, dst, (u32)imm);
-> +               return 0;
->         case BPF_ALU64 | BPF_MOV | BPF_K:
->                 move_imm(ctx, dst, imm);
-> -               emit_zext_32(ctx, dst, is32);
->                 break;
->
->         /* dst =3D dst + src */
->         case BPF_ALU | BPF_ADD | BPF_X:
-> +               emit_insn(ctx, addw, dst, dst, src);
-> +               break;
->         case BPF_ALU64 | BPF_ADD | BPF_X:
->                 emit_insn(ctx, addd, dst, dst, src);
-> -               emit_zext_32(ctx, dst, is32);
->                 break;
->
->         /* dst =3D dst + imm */
->         case BPF_ALU | BPF_ADD | BPF_K:
-> +               if (is_signed_imm12(imm)) {
-> +                       emit_insn(ctx, addiw, dst, dst, imm);
-> +               } else {
-> +                       move_imm(ctx, t1, (u32)imm);
-> +                       emit_insn(ctx, addw, dst, dst, t1);
-> +               }
-> +               break;
->         case BPF_ALU64 | BPF_ADD | BPF_K:
->                 if (is_signed_imm12(imm)) {
->                         emit_insn(ctx, addid, dst, dst, imm);
->                 } else {
->                         move_imm(ctx, t1, imm);
-> -                       emit_zext_32(ctx, t1, is32);
->                         emit_insn(ctx, addd, dst, dst, t1);
->                 }
-> -               emit_zext_32(ctx, dst, is32);
->                 break;
->
->         /* dst =3D dst - src */
->         case BPF_ALU | BPF_SUB | BPF_X:
-> +               emit_insn(ctx, subw, dst, dst, src);
-> +               break;
->         case BPF_ALU64 | BPF_SUB | BPF_X:
->                 emit_insn(ctx, subd, dst, dst, src);
-> -               emit_zext_32(ctx, dst, is32);
->                 break;
->
->         /* dst =3D dst - imm */
->         case BPF_ALU | BPF_SUB | BPF_K:
-> +               if (is_signed_imm12(-imm)) {
-> +                       emit_insn(ctx, addiw, dst, dst, -imm);
-> +               } else {
-> +                       move_imm(ctx, t1, (u32)imm);
-> +                       emit_insn(ctx, subw, dst, dst, t1);
-> +               }
-> +               break;
->         case BPF_ALU64 | BPF_SUB | BPF_K:
->                 if (is_signed_imm12(-imm)) {
->                         emit_insn(ctx, addid, dst, dst, -imm);
->                 } else {
->                         move_imm(ctx, t1, imm);
-> -                       emit_zext_32(ctx, t1, is32);
->                         emit_insn(ctx, subd, dst, dst, t1);
->                 }
-> -               emit_zext_32(ctx, dst, is32);
->                 break;
->
->         /* dst =3D dst * src */
->         case BPF_ALU | BPF_MUL | BPF_X:
-> +               emit_insn(ctx, mulw, dst, dst, src);
-> +               break;
->         case BPF_ALU64 | BPF_MUL | BPF_X:
->                 emit_insn(ctx, muld, dst, dst, src);
-> -               emit_zext_32(ctx, dst, is32);
->                 break;
->
->         /* dst =3D dst * imm */
->         case BPF_ALU | BPF_MUL | BPF_K:
-> +               move_imm(ctx, t1, (u32)imm);
-> +               emit_insn(ctx, mulw, dst, dst, t1);
-> +               break;
->         case BPF_ALU64 | BPF_MUL | BPF_K:
->                 move_imm(ctx, t1, imm);
-> -               emit_zext_32(ctx, t1, is32);
->                 emit_insn(ctx, muld, dst, dst, t1);
-> -               emit_zext_32(ctx, dst, is32);
->                 break;
->
->         /* dst =3D dst / src */
->         case BPF_ALU | BPF_DIV | BPF_X:
-> -       case BPF_ALU64 | BPF_DIV | BPF_X:
-> -               if (!off) {
-> -                       emit_zext_32(ctx, dst, is32);
-> -                       move_reg(ctx, t1, src);
-> -                       emit_zext_32(ctx, t1, is32);
-> -                       emit_insn(ctx, divdu, dst, dst, t1);
-> -                       emit_zext_32(ctx, dst, is32);
-> -               } else {
-> -                       emit_sext_32(ctx, dst, is32);
-> -                       move_reg(ctx, t1, src);
-> -                       emit_sext_32(ctx, t1, is32);
-> -                       emit_insn(ctx, divd, dst, dst, t1);
-> -                       emit_zext_32(ctx, dst, is32);
-> +               if (cpu_has_div32) {
-> +                       if (!off)
-> +                               emit_insn(ctx, divwu, dst, dst, src);
-> +                       else
-> +                               emit_insn(ctx, divw, dst, dst, src);
+> Is it that fb49c455323f commit message is insufficient and we need to
+> prevent simultaneous fork/page fault for other reasons, then?
 
-For ALU32 SDIV, off !=3D 0, it seems like there is a overflow in S32_MIN / =
--1.
-verifier_sdiv.c has related test cases but annotate with
-__arch_x86_64, so it is not run on LoongArch.
+Yes, I think so. It refers to one of the reasons VMA lock is needed
+during fork, but as Lorenzo points out, there are a number of other
+reasons that require fork to protect VMAs. Note that some of those
+reasons, like MADV_GUARD_INSTALL and UFFDIO_MOVE did not exist at the
+time fb49c455323f was written.
 
-> +                       break;
->                 }
-> +               /*
-> +                * Legacy fallback for !div32: src must be extended into =
-a
-> +                * temporary register to keep the original src register i=
-ntact.
-> +                */
-> +               emit_insn(ctx, addw, dst, dst, LOONGARCH_GPR_ZERO);
-> +               emit_insn(ctx, addw, t1, src, LOONGARCH_GPR_ZERO);
-> +               if (!off)
-> +                       emit_insn(ctx, divwu, dst, dst, t1);
-> +               else
-> +                       emit_insn(ctx, divw, dst, dst, t1);
-> +               break;
-> +       case BPF_ALU64 | BPF_DIV | BPF_X:
-> +               if (!off)
-> +                       emit_insn(ctx, divdu, dst, dst, src);
-> +               else
-> +                       emit_insn(ctx, divd, dst, dst, src);
->                 break;
+Below is the list that AI pointed out, and I think Lorenzo covered
+most if not all of them:
+
+Without vma_start_write_killable(mpnt):
+      1. In-flight VMA readers that locked mpnt before
+mmap_write_lock_killable(oldmm) continue running concurrently with
+dup_mmap().
+      2. New VMA readers (page faults via lock_vma_under_rcu(),
+madvise under MADVISE_VMA_READ_LOCK, userfaultfd via uffd_lock_vma() /
+uffd_move_lock(), vma_start_read_unlocked(), etc.) continue to succeed
+on mpnt while dup_mmap() duplicates its VMA metadata and page tables.
+
+  (Note: When this lock was originally added in fb49c455323f, one
+prominent trigger was a concurrent fault calling anon_vma_prepare() on
+a VMA with mpnt->anon_vma =3D=3D NULL while anon_vma_fork() /
+vma_needs_copy() ran. Although __vmf_anon_prepare() now requires
+mmap_read_trylock()
+  when !vma->anon_vma, removing vma_start_write_killable(mpnt) today
+still breaks several critical invariants.)
+  =E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80
+  ### What would happen if we removed it
+
+  1. **Destruction of live 2MB THP mappings ("bad pmd" -> pmd_clear())
+in copy_pmd_range()**
+  As noted in the comment in copy_pte_range(), copy_pmd_range()
+assumes no concurrent THP transitions on src_pmd:
+    if (pmd_is_huge(*src_pmd)) { ... }
+    if (pmd_none_or_clear_bad(src_pmd))
+        continue;
+  On an anonymous VMA that already has mpnt->anon_vma !=3D NULL, a
+concurrent per-VMA-locked THP fault (do_huge_pmd_anonymous_page()) or
+UFFDIO_MOVE can install a transparent huge PMD into *src_pmd right
+after pmd_is_huge(*src_pmd) observed pmd_none.
+pmd_none_or_clear_bad(src_pmd)
+  then sees pmd_bad(*src_pmd) =3D=3D true (a THP leaf PMD satisfies
+pmd_bad()), prints "bad pmd ...", and calls pmd_clear_bad(src_pmd) =E2=80=
+=94
+wiping out the parent's live 2MB PMD without PTL, TLB flush, or
+rmap/refcount/deposited-pgtable/RSS cleanup (corrupting parent memory
+and
+  triggering Bad rss-counter / nr_ptes bugs on exit).
+      =E2=80=A2 The same race exists for huge PUDs in copy_pud_range()
+(pud_none_or_clear_bad(src_pud)).
+      =E2=80=A2 Similarly, copy_huge_pmd() reads special huge PMDs
+(VM_PFNMAP/VM_MIXEDMAP) locklessly and skips rechecking *src_pmd under
+src_ptl assuming it cannot change, so a concurrent MADV_DONTNEED under
+MADVISE_VMA_READ_LOCK could leave the child mapping a stale/zapped PFN
+PMD.
+  2. **Silent CoW data corruption / lost parent writes due to deferred
+flush_tlb_mm(oldmm)**
+  __copy_present_ptes(), copy_huge_pmd(), and
+copy_hugetlb_page_range() write-protect parent PTEs/PMDs without
+flushing TLBs; dup_mmap() defers the flush to flush_tlb_mm(oldmm)
+after all VMAs are copied. Normally, because each copied VMA remains
+VMA-write-locked until
+  mmap_write_unlock(oldmm), no parent thread can handle a CoW write
+fault before flush_tlb_mm(oldmm) finishes.
+  Without the VMA write lock, while CPU 0 is still in dup_mmap()
+copying later VMAs:
+      =E2=80=A2 CPU 1 (parent thread A) still holds a stale writable TLB en=
+try
+to old_folio (now CoW-shared with the child).
+      =E2=80=A2 CPU 2 (parent thread B, no cached TLB entry) writes to the
+same page, faults on the R/O PTE under per-VMA read lock, enters
+wp_page_copy(), and copies old_folio into new_folio
+(__wp_page_copy_user()) before taking PTL and calling
+ptep_clear_flush().
+      =E2=80=A2 Any store by CPU 1 through its stale writable TLB entry aft=
+er
+__wp_page_copy_user() and before ptep_clear_flush() lands directly in
+old_folio while pte_same() still succeeds =E2=80=94 losing thread A's write=
+ in
+the parent (new_folio) and leaking it into the child (old_folio).
+  3. Broken guard-page (MADV_GUARD_INSTALL) state and KCSAN race on vm_flag=
+s
+  madvise(MADV_GUARD_INSTALL) runs under MADVISE_VMA_READ_LOCK and
+atomically sets VMA_MAYBE_GUARD_BIT on mpnt via vma_set_atomic_flag()
+before installing PTE_MARKER_GUARD entries:
+      =E2=80=A2 vm_area_dup(mpnt) asserts
+ASSERT_EXCLUSIVE_WRITER(orig->vm_flags), which would trip under KCSAN.
+      =E2=80=A2 If vm_area_dup(mpnt) copies mpnt->vm_flags just before
+MADV_GUARD_INSTALL sets VMA_MAYBE_GUARD_BIT and installs
+PTE_MARKER_GUARD PTEs:
+          =E2=80=A2 On a file-backed VMA without anon_vma, tmp misses
+VM_MAYBE_GUARD (part of VM_COPY_ON_FORK), so vma_needs_copy() returns
+false and drops the guard regions in the child.
+          =E2=80=A2 On a VMA with anon_vma !=3D NULL, copy_page_range() cop=
+ies
+the PTE_MARKER_GUARD entries into tmp, leaving the child VMA with
+guard PTE markers without VM_MAYBE_GUARD set (breaking collapse checks
+such as file_backed_vma_is_retractable() and future merges/forks).
+
+  4. Inconsistent address-space snapshots against UFFDIO_MOVE and
+tcp_zerocopy_receive()
+      =E2=80=A2 When UFFD_FEATURE_EVENT_FORK is not enabled, dup_userfaultf=
+d()
+never increments octx->mmap_changing. Because move_pages()
+(UFFDIO_MOVE) only takes per-VMA read locks (uffd_move_lock()), it
+could move an exclusive folio from a not-yet-copied src address/VMA
+into an
+      already-copied dst address/VMA (losing the page at both
+addresses in the child), or move a zero page from an already-copied
+src to a not-yet-copied dst (duplicating it at both). Even with
+UFFD_FEATURE_EVENT_FORK, octx->mmap_changing is only incremented once
+dup_mmap()
+      reaches the first VMA using octx, so earlier non-uffd VMAs rely
+on VMA write-locking to prevent cross-VMA moves.
+      =E2=80=A2 tcp_mmap() sets VM_MIXEDMAP (in VM_COPY_ON_FORK, without
+VM_DONTCOPY), so copy_page_range() would race with
+tcp_zerocopy_receive() zapping and inserting pages under
+vma_start_read_unlocked().
+  5. Immediate debug assertions (CONFIG_DEBUG_VM)
+  Both copy_page_range() and copy_hugetlb_page_range() call
+vma_assert_write_locked(src_vma) on every CoW VMA, which immediately
+fires VM_WARN_ON_ONCE_VMA(!__is_vma_write_locked(vma), vma) because
+oldmm->mm_lock_seq was bumped by mmap_write_lock_killable(oldmm) while
+mpnt-
+  =EF=BF=BA>vm_lock_seq was never updated.
+
 >
->         /* dst =3D dst / imm */
->         case BPF_ALU | BPF_DIV | BPF_K:
-> +               move_imm(ctx, t1, (u32)imm);
-> +               if (!cpu_has_div32) {
-> +                       emit_insn(ctx, addw, dst, dst, LOONGARCH_GPR_ZERO=
-);
-> +                       emit_insn(ctx, addw, t1, t1, LOONGARCH_GPR_ZERO);
-> +               }
-> +               if (!off)
-> +                       emit_insn(ctx, divwu, dst, dst, t1);
-> +               else
-> +                       emit_insn(ctx, divw, dst, dst, t1);
-> +               break;
->         case BPF_ALU64 | BPF_DIV | BPF_K:
-> -               if (!off) {
-> -                       move_imm(ctx, t1, imm);
-> -                       emit_zext_32(ctx, t1, is32);
-> -                       emit_zext_32(ctx, dst, is32);
-> +               move_imm(ctx, t1, imm);
-> +               if (!off)
->                         emit_insn(ctx, divdu, dst, dst, t1);
-> -                       emit_zext_32(ctx, dst, is32);
-> -               } else {
-> -                       move_imm(ctx, t1, imm);
-> -                       emit_sext_32(ctx, t1, is32);
-> -                       emit_sext_32(ctx, dst, is32);
-> +               else
->                         emit_insn(ctx, divd, dst, dst, t1);
-> -                       emit_zext_32(ctx, dst, is32);
-> -               }
->                 break;
+> > Same issue exists with hugetlb wp too. And god only knows with uffd wp =
+:)
+> >
+> > 2. THP - can destroy parent THP mappings
+> >
+> > copy_pmd_range() does:
+> >
+> >       if (pmd_is_huge(*src_pmd)) { copy_huge_pmd(); ... }
+> >       if (pmd_none_or_clear_bad(src_pmd))
+> >               continue;
+> >
+> > Without the write lock, a concurrent fault can install a huge PMD via
+> > do_huge_pmd_anonymous_page() or filemap_map_pmd()/do_set_pmd().
+> >
+> > The issue is that pmd_bad() fires for leaf PMD (ugh) on at least x86 an=
+d arm64,
+> > meaning that'll clear the page table entry.
+> >
+> > I think Hugh left a comment alluding to this before:
+> >
+> >        * copy_pmd_range()'s prior pmd_none_or_clear_bad(src_pmd), and t=
+he
+> >        * error handling here, assume that exclusive mmap_lock on dst an=
+d src
+> >        * protects anon from unexpected THP transitions; ...
+> >
+> > It's like the mess around pmd_trans_unstable() :(
 >
->         /* dst =3D dst % src */
->         case BPF_ALU | BPF_MOD | BPF_X:
-> -       case BPF_ALU64 | BPF_MOD | BPF_X:
-> -               if (!off) {
-> -                       emit_zext_32(ctx, dst, is32);
-> -                       move_reg(ctx, t1, src);
-> -                       emit_zext_32(ctx, t1, is32);
-> -                       emit_insn(ctx, moddu, dst, dst, t1);
-> -                       emit_zext_32(ctx, dst, is32);
-> -               } else {
-> -                       emit_sext_32(ctx, dst, is32);
-> -                       move_reg(ctx, t1, src);
-> -                       emit_sext_32(ctx, t1, is32);
-> -                       emit_insn(ctx, modd, dst, dst, t1);
-> -                       emit_zext_32(ctx, dst, is32);
-> +               if (cpu_has_div32) {
-> +                       if (!off)
-> +                               emit_insn(ctx, modwu, dst, dst, src);
-> +                       else
-> +                               emit_insn(ctx, modw, dst, dst, src);
-> +                       break;
->                 }
-> +               /*
-> +                * Legacy fallback for !div32: src must be extended into =
-a
-> +                * temporary register to keep the original src register i=
-ntact.
-> +                */
-> +               emit_insn(ctx, addw, dst, dst, LOONGARCH_GPR_ZERO);
-> +               emit_insn(ctx, addw, t1, src, LOONGARCH_GPR_ZERO);
-> +               if (!off)
-> +                       emit_insn(ctx, modwu, dst, dst, t1);
-> +               else
-> +                       emit_insn(ctx, modw, dst, dst, t1);
-> +               break;
-> +       case BPF_ALU64 | BPF_MOD | BPF_X:
-> +               if (!off)
-> +                       emit_insn(ctx, moddu, dst, dst, src);
-> +               else
-> +                       emit_insn(ctx, modd, dst, dst, src);
->                 break;
+> ... could we fix this by taking the ptlock during the copy operation?
 >
->         /* dst =3D dst % imm */
->         case BPF_ALU | BPF_MOD | BPF_K:
-> +               move_imm(ctx, t1, (u32)imm);
-> +               if (!cpu_has_div32) {
-> +                       emit_insn(ctx, addw, dst, dst, LOONGARCH_GPR_ZERO=
-);
-> +                       emit_insn(ctx, addw, t1, t1, LOONGARCH_GPR_ZERO);
-> +               }
-> +               if (!off)
-> +                       emit_insn(ctx, modwu, dst, dst, t1);
-> +               else
-> +                       emit_insn(ctx, modw, dst, dst, t1);
-> +               break;
->         case BPF_ALU64 | BPF_MOD | BPF_K:
-> -               if (!off) {
-> -                       move_imm(ctx, t1, imm);
-> -                       emit_zext_32(ctx, t1, is32);
-> -                       emit_zext_32(ctx, dst, is32);
-> +               move_imm(ctx, t1, imm);
-> +               if (!off)
->                         emit_insn(ctx, moddu, dst, dst, t1);
-> -                       emit_zext_32(ctx, dst, is32);
-> -               } else {
-> -                       move_imm(ctx, t1, imm);
-> -                       emit_sext_32(ctx, t1, is32);
-> -                       emit_sext_32(ctx, dst, is32);
-> +               else
->                         emit_insn(ctx, modd, dst, dst, t1);
-> -                       emit_zext_32(ctx, dst, is32);
-> -               }
->                 break;
->
->         /* dst =3D -dst */
->         case BPF_ALU | BPF_NEG:
-> +               emit_insn(ctx, subw, dst, LOONGARCH_GPR_ZERO, dst);
-> +               break;
->         case BPF_ALU64 | BPF_NEG:
->                 emit_insn(ctx, subd, dst, LOONGARCH_GPR_ZERO, dst);
-> -               emit_zext_32(ctx, dst, is32);
->                 break;
->
->         /* dst =3D dst & src */
->         case BPF_ALU | BPF_AND | BPF_X:
->         case BPF_ALU64 | BPF_AND | BPF_X:
->                 emit_insn(ctx, and, dst, dst, src);
-> -               emit_zext_32(ctx, dst, is32);
->                 break;
->
->         /* dst =3D dst & imm */
-> @@ -905,18 +931,18 @@ static int build_insn(const struct bpf_insn *insn, =
-struct jit_ctx *ctx, bool ext
->                 if (is_unsigned_imm12(imm)) {
->                         emit_insn(ctx, andi, dst, dst, imm);
->                 } else {
-> -                       move_imm(ctx, t1, imm);
-> -                       emit_zext_32(ctx, t1, is32);
-> +                       if (is32)
-> +                               move_imm(ctx, t1, (u32)imm);
-> +                       else
-> +                               move_imm(ctx, t1, imm);
->                         emit_insn(ctx, and, dst, dst, t1);
->                 }
-> -               emit_zext_32(ctx, dst, is32);
->                 break;
->
->         /* dst =3D dst | src */
->         case BPF_ALU | BPF_OR | BPF_X:
->         case BPF_ALU64 | BPF_OR | BPF_X:
->                 emit_insn(ctx, or, dst, dst, src);
-> -               emit_zext_32(ctx, dst, is32);
->                 break;
->
->         /* dst =3D dst | imm */
-> @@ -925,18 +951,18 @@ static int build_insn(const struct bpf_insn *insn, =
-struct jit_ctx *ctx, bool ext
->                 if (is_unsigned_imm12(imm)) {
->                         emit_insn(ctx, ori, dst, dst, imm);
->                 } else {
-> -                       move_imm(ctx, t1, imm);
-> -                       emit_zext_32(ctx, t1, is32);
-> +                       if (is32)
-> +                               move_imm(ctx, t1, (u32)imm);
-> +                       else
-> +                               move_imm(ctx, t1, imm);
->                         emit_insn(ctx, or, dst, dst, t1);
->                 }
-> -               emit_zext_32(ctx, dst, is32);
->                 break;
->
->         /* dst =3D dst ^ src */
->         case BPF_ALU | BPF_XOR | BPF_X:
->         case BPF_ALU64 | BPF_XOR | BPF_X:
->                 emit_insn(ctx, xor, dst, dst, src);
-> -               emit_zext_32(ctx, dst, is32);
->                 break;
->
->         /* dst =3D dst ^ imm */
-> @@ -945,19 +971,18 @@ static int build_insn(const struct bpf_insn *insn, =
-struct jit_ctx *ctx, bool ext
->                 if (is_unsigned_imm12(imm)) {
->                         emit_insn(ctx, xori, dst, dst, imm);
->                 } else {
-> -                       move_imm(ctx, t1, imm);
-> -                       emit_zext_32(ctx, t1, is32);
-> +                       if (is32)
-> +                               move_imm(ctx, t1, (u32)imm);
-> +                       else
-> +                               move_imm(ctx, t1, imm);
->                         emit_insn(ctx, xor, dst, dst, t1);
->                 }
-> -               emit_zext_32(ctx, dst, is32);
->                 break;
->
->         /* dst =3D dst << src (logical) */
->         case BPF_ALU | BPF_LSH | BPF_X:
->                 emit_insn(ctx, sllw, dst, dst, src);
-> -               emit_zext_32(ctx, dst, is32);
->                 break;
-> -
->         case BPF_ALU64 | BPF_LSH | BPF_X:
->                 emit_insn(ctx, slld, dst, dst, src);
->                 break;
-> @@ -965,9 +990,7 @@ static int build_insn(const struct bpf_insn *insn, st=
-ruct jit_ctx *ctx, bool ext
->         /* dst =3D dst << imm (logical) */
->         case BPF_ALU | BPF_LSH | BPF_K:
->                 emit_insn(ctx, slliw, dst, dst, imm);
-> -               emit_zext_32(ctx, dst, is32);
->                 break;
-> -
->         case BPF_ALU64 | BPF_LSH | BPF_K:
->                 emit_insn(ctx, sllid, dst, dst, imm);
->                 break;
-> @@ -975,9 +998,7 @@ static int build_insn(const struct bpf_insn *insn, st=
-ruct jit_ctx *ctx, bool ext
->         /* dst =3D dst >> src (logical) */
->         case BPF_ALU | BPF_RSH | BPF_X:
->                 emit_insn(ctx, srlw, dst, dst, src);
-> -               emit_zext_32(ctx, dst, is32);
->                 break;
-> -
->         case BPF_ALU64 | BPF_RSH | BPF_X:
->                 emit_insn(ctx, srld, dst, dst, src);
->                 break;
-> @@ -985,9 +1006,7 @@ static int build_insn(const struct bpf_insn *insn, s=
-truct jit_ctx *ctx, bool ext
->         /* dst =3D dst >> imm (logical) */
->         case BPF_ALU | BPF_RSH | BPF_K:
->                 emit_insn(ctx, srliw, dst, dst, imm);
-> -               emit_zext_32(ctx, dst, is32);
->                 break;
-> -
->         case BPF_ALU64 | BPF_RSH | BPF_K:
->                 emit_insn(ctx, srlid, dst, dst, imm);
->                 break;
-> @@ -995,9 +1014,7 @@ static int build_insn(const struct bpf_insn *insn, s=
-truct jit_ctx *ctx, bool ext
->         /* dst =3D dst >> src (arithmetic) */
->         case BPF_ALU | BPF_ARSH | BPF_X:
->                 emit_insn(ctx, sraw, dst, dst, src);
-> -               emit_zext_32(ctx, dst, is32);
->                 break;
-> -
->         case BPF_ALU64 | BPF_ARSH | BPF_X:
->                 emit_insn(ctx, srad, dst, dst, src);
->                 break;
-> @@ -1005,9 +1022,7 @@ static int build_insn(const struct bpf_insn *insn, =
-struct jit_ctx *ctx, bool ext
->         /* dst =3D dst >> imm (arithmetic) */
->         case BPF_ALU | BPF_ARSH | BPF_K:
->                 emit_insn(ctx, sraiw, dst, dst, imm);
-> -               emit_zext_32(ctx, dst, is32);
->                 break;
-> -
->         case BPF_ALU64 | BPF_ARSH | BPF_K:
->                 emit_insn(ctx, sraid, dst, dst, imm);
->                 break;
-> @@ -1016,12 +1031,10 @@ static int build_insn(const struct bpf_insn *insn=
-, struct jit_ctx *ctx, bool ext
->         case BPF_ALU | BPF_END | BPF_FROM_LE:
->                 switch (imm) {
->                 case 16:
-> -                       /* zero-extend 16 bits into 64 bits */
->                         emit_insn(ctx, bstrpickd, dst, dst, 15, 0);
->                         break;
->                 case 32:
-> -                       /* zero-extend 32 bits into 64 bits */
-> -                       emit_zext_32(ctx, dst, is32);
-> +                       emit_insn(ctx, bstrpickd, dst, dst, 31, 0);
->                         break;
->                 case 64:
->                         /* do nothing */
-> @@ -1034,13 +1047,11 @@ static int build_insn(const struct bpf_insn *insn=
-, struct jit_ctx *ctx, bool ext
->                 switch (imm) {
->                 case 16:
->                         emit_insn(ctx, revb2h, dst, dst);
-> -                       /* zero-extend 16 bits into 64 bits */
->                         emit_insn(ctx, bstrpickd, dst, dst, 15, 0);
->                         break;
->                 case 32:
->                         emit_insn(ctx, revb2w, dst, dst);
-> -                       /* clear the upper 32 bits */
-> -                       emit_zext_32(ctx, dst, true);
-> +                       emit_insn(ctx, bstrpickd, dst, dst, 31, 0);
->                         break;
->                 case 64:
->                         emit_insn(ctx, revbd, dst, dst);
-> @@ -1048,7 +1059,7 @@ static int build_insn(const struct bpf_insn *insn, =
-struct jit_ctx *ctx, bool ext
->                 }
->                 break;
->
-> -       /* PC +=3D off if dst cond src */
-> +       /* PC +=3D off if dst cond src (64-bit) */
->         case BPF_JMP | BPF_JEQ | BPF_X:
->         case BPF_JMP | BPF_JNE | BPF_X:
->         case BPF_JMP | BPF_JGT | BPF_X:
-> @@ -1059,31 +1070,38 @@ static int build_insn(const struct bpf_insn *insn=
-, struct jit_ctx *ctx, bool ext
->         case BPF_JMP | BPF_JSGE | BPF_X:
->         case BPF_JMP | BPF_JSLT | BPF_X:
->         case BPF_JMP | BPF_JSLE | BPF_X:
-> +               jmp_offset =3D bpf2la_offset(i, off, ctx);
-> +               if (emit_cond_jmp(ctx, cond, dst, src, jmp_offset) < 0)
-> +                       goto toofar;
-> +               break;
-> +
-> +       /* PC +=3D off if dst cond src (32-bit unsigned) */
->         case BPF_JMP32 | BPF_JEQ | BPF_X:
->         case BPF_JMP32 | BPF_JNE | BPF_X:
->         case BPF_JMP32 | BPF_JGT | BPF_X:
->         case BPF_JMP32 | BPF_JGE | BPF_X:
->         case BPF_JMP32 | BPF_JLT | BPF_X:
->         case BPF_JMP32 | BPF_JLE | BPF_X:
-> +               jmp_offset =3D bpf2la_offset(i, off, ctx);
-> +               emit_insn(ctx, bstrpickd, t1, dst, 31, 0);
-> +               emit_insn(ctx, bstrpickd, t2, src, 31, 0);
-> +               if (emit_cond_jmp(ctx, cond, t1, t2, jmp_offset) < 0)
-> +                       goto toofar;
-> +               break;
-> +
-> +       /* PC +=3D off if dst cond src (32-bit signed) */
->         case BPF_JMP32 | BPF_JSGT | BPF_X:
->         case BPF_JMP32 | BPF_JSGE | BPF_X:
->         case BPF_JMP32 | BPF_JSLT | BPF_X:
->         case BPF_JMP32 | BPF_JSLE | BPF_X:
->                 jmp_offset =3D bpf2la_offset(i, off, ctx);
-> -               move_reg(ctx, t1, dst);
-> -               move_reg(ctx, t2, src);
-> -               if (is_signed_bpf_cond(BPF_OP(code))) {
-> -                       emit_sext_32(ctx, t1, is32);
-> -                       emit_sext_32(ctx, t2, is32);
-> -               } else {
-> -                       emit_zext_32(ctx, t1, is32);
-> -                       emit_zext_32(ctx, t2, is32);
-> -               }
-> +               emit_insn(ctx, addw, t1, dst, LOONGARCH_GPR_ZERO);
-> +               emit_insn(ctx, addw, t2, src, LOONGARCH_GPR_ZERO);
->                 if (emit_cond_jmp(ctx, cond, t1, t2, jmp_offset) < 0)
->                         goto toofar;
->                 break;
->
-> -       /* PC +=3D off if dst cond imm */
-> +       /* PC +=3D off if dst cond imm (64-bit) */
->         case BPF_JMP | BPF_JEQ | BPF_K:
->         case BPF_JMP | BPF_JNE | BPF_K:
->         case BPF_JMP | BPF_JGT | BPF_K:
-> @@ -1094,12 +1112,38 @@ static int build_insn(const struct bpf_insn *insn=
-, struct jit_ctx *ctx, bool ext
->         case BPF_JMP | BPF_JSGE | BPF_K:
->         case BPF_JMP | BPF_JSLT | BPF_K:
->         case BPF_JMP | BPF_JSLE | BPF_K:
-> +               jmp_offset =3D bpf2la_offset(i, off, ctx);
-> +               if (imm) {
-> +                       move_imm(ctx, t1, imm);
-> +                       tm =3D t1;
-> +               } else {
-> +                       tm =3D LOONGARCH_GPR_ZERO;
-> +               }
-> +               if (emit_cond_jmp(ctx, cond, dst, tm, jmp_offset) < 0)
-> +                       goto toofar;
-> +               break;
-> +
-> +       /* PC +=3D off if dst cond imm (32-bit unsigned) */
->         case BPF_JMP32 | BPF_JEQ | BPF_K:
->         case BPF_JMP32 | BPF_JNE | BPF_K:
->         case BPF_JMP32 | BPF_JGT | BPF_K:
->         case BPF_JMP32 | BPF_JGE | BPF_K:
->         case BPF_JMP32 | BPF_JLT | BPF_K:
->         case BPF_JMP32 | BPF_JLE | BPF_K:
-> +               jmp_offset =3D bpf2la_offset(i, off, ctx);
-> +               if (imm) {
-> +                       move_imm(ctx, t1, imm);
-> +                       emit_insn(ctx, bstrpickd, t1, t1, 31, 0);
-> +                       tm =3D t1;
-> +               } else {
-> +                       tm =3D LOONGARCH_GPR_ZERO;
-> +               }
-> +               emit_insn(ctx, bstrpickd, t2, dst, 31, 0);
-> +               if (emit_cond_jmp(ctx, cond, t2, tm, jmp_offset) < 0)
-> +                       goto toofar;
-> +               break;
-> +
-> +       /* PC +=3D off if dst cond imm (32-bit signed) */
->         case BPF_JMP32 | BPF_JSGT | BPF_K:
->         case BPF_JMP32 | BPF_JSGE | BPF_K:
->         case BPF_JMP32 | BPF_JSLT | BPF_K:
-> @@ -1107,19 +1151,12 @@ static int build_insn(const struct bpf_insn *insn=
-, struct jit_ctx *ctx, bool ext
->                 jmp_offset =3D bpf2la_offset(i, off, ctx);
->                 if (imm) {
->                         move_imm(ctx, t1, imm);
-> +                       emit_insn(ctx, addw, t1, t1, LOONGARCH_GPR_ZERO);
->                         tm =3D t1;
->                 } else {
-> -                       /* If imm is 0, simply use zero register. */
->                         tm =3D LOONGARCH_GPR_ZERO;
->                 }
-> -               move_reg(ctx, t2, dst);
-> -               if (is_signed_bpf_cond(BPF_OP(code))) {
-> -                       emit_sext_32(ctx, tm, is32);
-> -                       emit_sext_32(ctx, t2, is32);
-> -               } else {
-> -                       emit_zext_32(ctx, tm, is32);
-> -                       emit_zext_32(ctx, t2, is32);
-> -               }
-> +               emit_insn(ctx, addw, t2, dst, LOONGARCH_GPR_ZERO);
->                 if (emit_cond_jmp(ctx, cond, t2, tm, jmp_offset) < 0)
->                         goto toofar;
->                 break;
-> @@ -1129,7 +1166,8 @@ static int build_insn(const struct bpf_insn *insn, =
-struct jit_ctx *ctx, bool ext
->         case BPF_JMP32 | BPF_JSET | BPF_X:
->                 jmp_offset =3D bpf2la_offset(i, off, ctx);
->                 emit_insn(ctx, and, t1, dst, src);
-> -               emit_zext_32(ctx, t1, is32);
-> +               if (BPF_CLASS(code) =3D=3D BPF_JMP32)
-> +                       emit_insn(ctx, bstrpickd, t1, t1, 31, 0);
->                 if (emit_cond_jmp(ctx, cond, t1, LOONGARCH_GPR_ZERO, jmp_=
-offset) < 0)
->                         goto toofar;
->                 break;
-> @@ -1139,9 +1177,9 @@ static int build_insn(const struct bpf_insn *insn, =
-struct jit_ctx *ctx, bool ext
->         case BPF_JMP32 | BPF_JSET | BPF_K:
->                 jmp_offset =3D bpf2la_offset(i, off, ctx);
->                 move_imm(ctx, t1, imm);
-> -               emit_zext_32(ctx, t1, is32);
->                 emit_insn(ctx, and, t1, dst, t1);
-> -               emit_zext_32(ctx, t1, is32);
-> +               if (BPF_CLASS(code) =3D=3D BPF_JMP32)
-> +                       emit_insn(ctx, bstrpickd, t1, t1, 31, 0);
->                 if (emit_cond_jmp(ctx, cond, t1, LOONGARCH_GPR_ZERO, jmp_=
-offset) < 0)
->                         goto toofar;
->                 break;
-> @@ -1468,6 +1506,9 @@ static int build_insn(const struct bpf_insn *insn, =
-struct jit_ctx *ctx, bool ext
->                 return -EINVAL;
->         }
->
-> +       if (is32)
-> +               emit_insn(ctx, bstrpickd, dst, dst, 31, 0);
-> +
->         return 0;
->
->  toofar:
-> diff --git a/arch/loongarch/net/bpf_jit.h b/arch/loongarch/net/bpf_jit.h
-> index 57a98f8a055b..2bd0dc5b911c 100644
-> --- a/arch/loongarch/net/bpf_jit.h
-> +++ b/arch/loongarch/net/bpf_jit.h
-> @@ -72,24 +72,6 @@ static inline int epilogue_offset(const struct jit_ctx=
- *ctx)
->         return (to - from);
->  }
->
-> -/* Zero-extend 32 bits into 64 bits */
-> -static inline void emit_zext_32(struct jit_ctx *ctx, enum loongarch_gpr =
-reg, bool is32)
-> -{
-> -       if (!is32)
-> -               return;
-> -
-> -       emit_insn(ctx, lu32id, reg, 0);
-> -}
-> -
-> -/* Signed-extend 32 bits into 64 bits */
-> -static inline void emit_sext_32(struct jit_ctx *ctx, enum loongarch_gpr =
-reg, bool is32)
-> -{
-> -       if (!is32)
-> -               return;
-> -
-> -       emit_insn(ctx, addiw, reg, reg, 0);
-> -}
-> -
->  /* Emit proper extension according to ABI requirements.
->   * Note that it requires a value of size `size` already resides in regis=
-ter `reg`.
->   */
-> --
-> 2.42.0
->
+> > 3. copy_pte_range() skips the required pmd_same() recheck assuming writ=
+e lock
+> >
+> > It uses pte_offset_map_rw_nolock() with a dummy pmdval and:
+> >
+> >        * We already hold the exclusive mmap_lock, the copy_pte_range() =
+and
+> >        * retract_page_tables() are using vma->anon_vma to be exclusive,=
+ so
+> >        * the PTE page is stable, and there is no need to get pmdval and=
+ do
+> >        * pmd_same() check.
+> >
+> > (Probably needs updating for VMA write lock...)
+> >
+> > 4. The asserts
+> >
+> > Mentioned above!
+> >
+> > I suspect there's more as well.
+> >
+> > Some of it could be changed, but it'd all be at the cost of behaving ve=
+ry
+> > strangely (no VMA lock but mmap write lock) while manipulating things.
+> >
+> > And I am not really happy with changing page table entries in the paren=
+t VMA
+> > (for CoW) without a VMA write lock held.
+> >
+> > I also wonder whether it would achieve all that much really - the issue=
+ is with
+> > holding the VMA lock across I/O, anything else that tries to grab a wri=
+te lock
+> > is going to end up being the new thing that's blocked (mprotect, munmap=
+, mremap,
+> > mlock etc.)
+> >
+> > I think doing something like this would need a very significant redesig=
+n and I'm
+> > not convinced it's one that really achieves what we want given all the =
+other
+> > cases that'd get blocked by the VMA lock being held still.
+> >
+> > --
+> > Cheers, Lorenzo
