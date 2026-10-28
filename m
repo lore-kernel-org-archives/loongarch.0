@@ -1,84 +1,93 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793194497;
-	b=CAe7nnvoxerlWqtn6je8FGJDMpJFiRmugWMXkmclHfnBkwqbgTwtmBdKRLCztexuhzwh
-	 ud4hSxbm/YoAi6hPCGTbGmQ9vqR0eVJC3hsCZP+Q6J/Rjj2Ru9yKixbB1m9G8UZyL1Web
-	 DXpJSvuJyVXIcJUu1BEV7aGSQ7D16CWmIgMPwljScj8IquLhsCaylyChWtqLJrbjWjXzt
-	 JHqaBsX2rT8hommIyEz28x/M72KwxaoBOQRHCTBwr9pAW/fWGnmWxr5hRFIP4ZGh+34Mm
-	 1x6msOnH9bM2r7kpySGSjxAqoGznQLDZT45aOPBTxGj+Jq23mU/bAU/jBPfpDOHmsYg==
+	t=1793197028;
+	b=pNqL0PgrsjrL458ziDHAm4wxeamdTCVMYZPwlu50cRNNasLK8QFNjQGRBhJ7xkm6Erbk
+	 vbTtVfrdHfkCW2Qkz+QYDHbiezbA8OMB73zMgzkYVp6SHiXULu5aiBj0W3PT+ypsL0gZa
+	 NZbR6EanTUsiFYWgP7Smvb/yrAb3w3/YpN/7hFiRo2N9TgreOqQFQPAU0Y+VkYx55AC4V
+	 IdWLJ2jjmeOgPf4mlxsEqil3eh3mBq3h598SgHYtpxITSuXvlJKmRb1lcf5bWobLNEVq2
+	 NRe7wMhfML8Kpo9H6mOUaMhhxs7QoB2NHzYj4bGnqrAnafpvYwP+QewqLyde6rb5Vrw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793194497;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
+	a=rsa-sha256; c=relaxed/relaxed; t=1793197028;
+	h=Received:DKIM-Signature:Received:Received:X-ME-Sender:X-ME-Received:
+	 X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:Date:From:To:Cc:
 	 Subject:Message-ID:References:MIME-Version:Content-Type:
 	 Content-Disposition:In-Reply-To;
-	bh=K5sU8ZAJRz6gFhM4gDWxCHu2kvyqTC/PTTWhoAieCGY=;
-	b=zvz2UrUH8e2e/TZJ3eFZ3Y+aFSccgRLTqSKJJfiz01mtZ4xDpSbUrAtFQKXyG3/PS8pE
-	 K5OPGuezyG+6eKoVN6C/yCvp4AaxsjFjp2z2+hQ3ZUEBEVoZShMPWF1LUErzFf776dpw5
-	 CgRZEqzWfln7AOB/6DN8+8LHUXOrJc0VZmoRZx/jjWvwFBDu5c2Kd4blVzAS1+c1JD6zv
-	 tyoeMJSWMomuCNzmP3zvckVeowHSi3yJxcOQ2vK5dgf3/83yl6msvZLEF+axMnJgS0CjJ
-	 RPEqw+yWod0GfyiWjYL9pKvIHLcrNwnCm7c3CO4O/IynqnQpxkTeFSLjAsXTsa5GBWQ==
+	bh=KjE+Uii9HdIaARV62zaMQ61CIuncPf7bH8UJ3pdaQYA=;
+	b=UHq6R46b1fNVVd1rlAPxrpXkftsKVTBKWACXf+uoXX6PD2hTivYq0IY/nUKDvZ07sC9N
+	 RPpGElkQp6NNqSUE/IbMRSIVt11rpwe0YQzP4cforWuBGt/ixTyQLuXTEswK/w+qtbAWp
+	 MYiLDjK2qn1Vr9beKS/3MyvViFvluwwV4jmtebB5Ick9RtpgBNWjOfHKjkpJJ28daO5yx
+	 uxTqa8rm5Dpc4pHVf8LreTnNB9yhDdLRT3LGiSu9/mbH21eV1x9QDR1Y6nttL/GmJHXHO
+	 +xLXlk+HrLn584jP8lb8LebNVSVRZwXc4rqarDhpRR/OXJljAfR6POAqPivRVA+Cf1g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=infradead.org;
-	spf=pass smtp.mailfrom=infradead.org;
-	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=WQTo7RRj;
-	arc=none smtp.remote-ip=90.155.92.199
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Zcdh2eIB;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7A6606A31A;
-	Wed, 28 Oct 2026 13:34:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DC7A6606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A32E606A31D
+	for <loongarch@lists.linux.dev>; Wed, 28 Oct 2026 14:17:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=WQTo7RRj
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=K5sU8ZAJRz6gFhM4gDWxCHu2kvyqTC/PTTWhoAieCGY=; b=WQTo7RRjUws4wLzC6TxpAmx57w
-	qcq5fCMagtfKad2FmcZhLNiyNmxBTF8/cvyU5FhHuyznlY2ota9MN31xYDxFIv2Erfp4aIicHdOEl
-	E2jxLk1iu6UVgBFuNZDHQbP8i5O71tuJIGJbKRCf70a3PNnSQKK+sWlOzaRMzfKYFkbHgL5lDL9Vp
-	ZvXgetdmOXoLVKHD/1ZDYuRo7eMc1PaJvukhM56Ia68PICeBLH2PimR6BGNHj7GsDJbTI86FtVG5t
-	W0wLnsMXdRptmezamho6yQr8A3y96kAxjX7Nk07pkHXtbr6zoq0TtEiKMjF427WJnVaamNRv1dQ0Y
-	/t33+Xow==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xM3ne-0000000G0rh-0VGE;
-	Wed, 28 Oct 2026 13:34:43 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id E42F1300DB9; Wed, 28 Oct 2026 14:34:39 +0100 (CET)
-Date: Wed, 28 Oct 2026 14:34:39 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Kiryl Shutsemau <kas@kernel.org>
-Cc: Muchun Song <muchun.song@linux.dev>,
-	"David Hildenbrand (Arm)" <david@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Usama Arif <usamaarif642@gmail.com>,
-	Frank van der Linden <fvdl@google.com>,
-	Oscar Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Zi Yan <ziy@nvidia.com>, Baoquan He <bhe@redhat.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	kernel-team@meta.com, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
-	Dave Hansen <dave.hansen@linux.intel.com>,
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Zcdh2eIB
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01E6A1F031E0;
+	Wed, 28 Oct 2026 14:17:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793197028;
+	bh=KjE+Uii9HdIaARV62zaMQ61CIuncPf7bH8UJ3pdaQYA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Zcdh2eIBUKC4hwGul8m2X99COtLyRxU9I1tM3K8HNMrbYYnTTWhdHlgLZ8oc9hQ0E
+	 hkij64PMlw2B35u30Io3tH3HsD0bNhhXsgX59QJdkIQoqrmwecSDeQzG4blmv9KCKs
+	 zpbyI7gIirKXkwF2M7UlINaw/GRVFmWIbS7pSH3TIHgpDG7aJwpWbBcAaNwEJGxUg/
+	 UUvr1CGfqhw8l0QXJXNBe42SvHDAw91meYdE2y4qqF/osXsIl4NB3bv5lDIrCwlYfD
+	 WJwEisb3g4Fv+JB51XtPrQYsW8TA6hHI6AdqdFh3MOkHtw1CHYKUBb2HdzBgS8AyGI
+	 CnOSlmOc8ymzQ==
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfauth.ams.internal (Postfix) with ESMTP id D36591980047;
+	Wed, 28 Oct 2026 10:17:00 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-02.internal (MEProxy); Wed, 28 Oct 2026 10:17:05 -0400
+X-ME-Sender: <xms:3APiarzKAOrcCYp85okUrZ2ipEC1s0_1ePxXIfY-lxyVQMiegoW3RA>
+    <xme:3APialnQLfKLFrYVeEEVADA0jAmf6HH1ltvAfNtwvNPkBuO2C5Cpsma4S1o5FTtj9
+    VyCwbXtl-zUXNXPceKZODaNKjyKNXXbQUbQBhiWJHMUBUfJzNv-7Mn_>
+X-ME-Received: <xmr:3APiakHTaLOPvpay-J_NhtjKgcQ_ww__mVDZ3LIB3wD_2Z2fanEzh75cX_w>
+X-ME-Proxy-Cause: dmFkZTFBUCDrd/5ordvcAtkU6JjR9vrPimb+UYxK8G9IVcsl+hsz6Ui5my93/MGWrjS87u
+    fXqSgPXckr17WjUL+tJxx9X6tIeCr9bfJMhwSdRRpKBvQHhzUHHeuF90VW3GvmiAwMBcQx
+    Rf2Yec/qkpxdmRN0gn81nfMEtgtzr9xle+Sqvm4msx4Gu47eXQusCRI+UTCHDaQLpM88Zw
+    rA2KSpwrrNtwy3hNsymytz/3zQf5zrQhLIfZgGCnRsgT13HdYXLGRb5Hfufh9/xN00Sw7j
+    VoUYeEMtfP62ZRJRgpiIZ1sb8H4pSmNadcRIVzTJpNxYLEIHjCh6+OIkfWTl5h6WIw54gA
+    KE6JNmsl7DeQ0Kg8mW/mO/uEfAd5ourm2uLsVrQyqhxYxZW46VXJE/JyALAdTsn4tHLHQR
+    9J3XB/OTW36iz9yadG/flUPik6iZcWFmEGKzsegO1g5puDzneN2xiaetmpoWF0UM5wnKqK
+    MFQ06f2mDmplk9n8JKhi5ClQ5Fqm71Y2Jgt/24wpthhs2MF+1PFVTNqTJDk2AJWHnLl5y8
+    ++hBW9M77S9dYUxy+BMYF15QXjLxOsg3nNoK+b02p8kN9M/KDQpW6b5xHKMmV9hna2Qdc4
+    F2kZ6V+Uw0HniFG7WD/kBET6ZxUz0YZm4Xr7zmI/BK6THBFe4X3S7pitIvXA
+X-ME-Proxy: <xmx:3APiavvE6bgdYAFNatLpfiwUmYDHEf2Vhcf47WwzCbXrTusVjOa3qQ>
+    <xmx:3APiavmbcczH63JKhRwHD1r6QjyCYmIrLFH_oanCxvKE4F4WEB5DrA>
+    <xmx:3APianwxi9Dw8YGSVfLzE8GTkVg27tEhM9sqm9dz5SzZi_IXUNaZCA>
+    <xmx:3APiatyMDZq22FQv9KsG6a4USfJlj0dx88WiiH47AEK5QjqspxFgHA>
+    <xmx:3APiaoAX3LCP0OQaKpTMG_-mBpGkeN7sa6qxLJajKmYN5axko5dE0bEh>
+Feedback-ID: i10464835:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 28 Oct 2026 10:16:59 -0400 (EDT)
+Date: Wed, 28 Oct 2026 14:16:58 +0000
+From: Kiryl Shutsemau <kas@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Muchun Song <muchun.song@linux.dev>, 
+	"David Hildenbrand (Arm)" <david@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Matthew Wilcox <willy@infradead.org>, Usama Arif <usamaarif642@gmail.com>, 
+	Frank van der Linden <fvdl@google.com>, Oscar Salvador <osalvador@suse.de>, 
+	Mike Rapoport <rppt@kernel.org>, Vlastimil Babka <vbabka@suse.cz>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Zi Yan <ziy@nvidia.com>, Baoquan He <bhe@redhat.com>, 
+	Michal Hocko <mhocko@suse.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, kernel-team@meta.com, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-riscv@lists.infradead.org, Dave Hansen <dave.hansen@linux.intel.com>, 
 	Andy Lutomirski <luto@kernel.org>
 Subject: Re: [PATCHv7 13/18] mm: Drop fake head checks
-Message-ID: <20261028133439.GK2668804@noisy.programming.kicks-ass.net>
-References: <auCKv_omLGRc6wv2@thinkstation>
- <f3f3aca9-bdb7-4aec-9099-9fb63a60e61d@kernel.org>
+Message-ID: <auIDteFAFYTihu4_@thinkstation>
+References: <f3f3aca9-bdb7-4aec-9099-9fb63a60e61d@kernel.org>
  <auCZFckDfBMrlfxV@thinkstation>
  <070DDE5C-2183-4A8B-AC2D-891CAE15E581@linux.dev>
  <d7a634b6-8668-4753-8bfc-e9334dde705e@kernel.org>
@@ -87,6 +96,7 @@ References: <auCKv_omLGRc6wv2@thinkstation>
  <7cb3dd91-f518-49b6-b311-9ec807b3c63b@linux.dev>
  <20261028080635.GD2668804@noisy.programming.kicks-ass.net>
  <auHxIORufMbldrBr@thinkstation>
+ <20261028133439.GK2668804@noisy.programming.kicks-ass.net>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -98,63 +108,24 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <auHxIORufMbldrBr@thinkstation>
+In-Reply-To: <20261028133439.GK2668804@noisy.programming.kicks-ass.net>
 
-On Wed, Oct 28, 2026 at 12:58:11PM +0000, Kiryl Shutsemau wrote:
-> On Wed, Oct 28, 2026 at 09:06:35AM +0100, Peter Zijlstra wrote:
-> > On Wed, Oct 28, 2026 at 10:38:22AM +0800, Muchun Song wrote:
-> > > 
-> > > 
-> > > On 2026/10/28 01:51, Kiryl Shutsemau wrote:
-> > > > On Tue, Oct 27, 2026 at 10:03:54PM +0800, Muchun Song wrote:
-> > > > > Therefore, I am kind of leaning towards removing the RO protection
-> > > > > and restoring RW permissions to solve the race.
-> > > > Okay, what about this:
-> > > > 
-> > > >  From e23ab850837b53cc79d57d58f1cfb4266e745c3d Mon Sep 17 00:00:00 2001
-> > > > From: "Kiryl Shutsemau (Meta)" <kas@kernel.org>
-> > > > Date: Tue, 27 Oct 2026 17:23:47 +0000
-> > > > Subject: [PATCH] mm/hugetlb_vmemmap: map the shared tail page writable
-> > > > 
-> > > > page_ref_add_unless_zero() reads the refcount and then updates it with
-> > > > a cmpxchg.  A lockless get, such as a page cache lookup or a PFN
-> > > > scanner, can read a non-zero refcount from a page that is then freed
-> > > > and reused as a hugetlb tail page.  If HVO remaps its struct page to
-> > > > the shared tail page in between, the cmpxchg writes to read-only
-> > > > vmemmap:
-> > > > 
-> > > >      CPU0 (lockless get)               CPU1
-> > > >      c = atomic_read(&page->_refcount)
-> > > >                                        page freed
-> > > >                                        page allocated as a hugetlb tail
-> > > >                                        HVO remaps the struct page RO
-> > > >      try_cmpxchg(&page->_refcount, &c, c + 1)
-> > > >        -> write fault on read-only vmemmap
-> > > > 
-> > > > The refcount is zero by then and the compare fails, but LOCK CMPXCHG on
-> > > > x86 writes anyway.  The kernel oopses when hugetlb pages are allocated
-> > > 
-> > > Is this an X86-specific issue? If not, I suggest a more generic
-> > > description.
-> > 
-> > AFAICT most architectures that implement single compare-and-swap
-> > instructions are affected, with the possible exception of s390.
-> > 
-> > That is, sparc, arm64-lse, riscv-Zacas, loonarch-amocas, openrisc (and
-> > ia64 for those people keeping the out-of-tree port alive) all require
-> > write protection to begin cmpxchg.
-> > 
-> > All the LL/SC architectures should be fine, they'll never get to the SC
-> > part.
+On Wed, Oct 28, 2026 at 02:34:39PM +0100, Peter Zijlstra wrote:
+> > Only architectures with HVO matter here: x86-64, riscv and loongarch.
+> > arm64 has had it disabled since 060a2c92d1b6.
 > 
-> Only architectures with HVO matter here: x86-64, riscv and loongarch.
-> arm64 has had it disabled since 060a2c92d1b6.
+> Per that commit, could it be re-enabled now that its no longer marked RO?
 
-Per that commit, could it be re-enabled now that its no longer marked RO?
+No. The problem there is the PFN change on a live vmemmap PTE, which
+needs break-before-make on arm64. Dropping RO only removes the
+permission change.
 
-> riscv and loongarch implement atomic_fetch_add_unless() with LL/SC only,
-> no CAS variant, so they see the zero at the load. That leaves x86.
+James Houghton is working on it with an Access Flag trick:
 
-Ah yes, I only looked at the cmpxchg implementation rather than the
-fetch_add_unless :/
+https://lore.kernel.org/r/20261003002123.505555-1-jthoughton@google.com
 
+arm64 will need the writable tail too: its atomic_fetch_add_unless() is
+a CAS loop.
+
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
