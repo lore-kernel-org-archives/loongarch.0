@@ -1,95 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.92.199
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793192689;
-	b=sgfbBvrlnkS3AYKLQWohbS2yNoFgv/A769DTXyA6bR8b+DgOHPOA8EFvu7yFEnDYubXA
-	 ykZjPo+CU5ciFYf2Kwqz9Uw4RUkgwIcLUbDOk2bxEbFjP786RVofHbKeS5RAGVi8Wj+TH
-	 zeidJFyGyNODa7M6F6k/nqYZSDncCdwiWh5FuxqmANarfhfRMqtMA3bvD3IwpjAZWgVpb
-	 MZU9f+TEXUXz7T+x0XH3BrC+EKNtXyvrut0860cc0ER3aDthMKMm/eyuP7h790fRpTXSh
-	 JDr2YVdNzu+Tt3BMMO16mbNfZoh+ajxTEyhZEEUpNNOFVQ4Aakm1dnyjix3zcZdKj1A==
+	t=1793194497;
+	b=CAe7nnvoxerlWqtn6je8FGJDMpJFiRmugWMXkmclHfnBkwqbgTwtmBdKRLCztexuhzwh
+	 ud4hSxbm/YoAi6hPCGTbGmQ9vqR0eVJC3hsCZP+Q6J/Rjj2Ru9yKixbB1m9G8UZyL1Web
+	 DXpJSvuJyVXIcJUu1BEV7aGSQ7D16CWmIgMPwljScj8IquLhsCaylyChWtqLJrbjWjXzt
+	 JHqaBsX2rT8hommIyEz28x/M72KwxaoBOQRHCTBwr9pAW/fWGnmWxr5hRFIP4ZGh+34Mm
+	 1x6msOnH9bM2r7kpySGSjxAqoGznQLDZT45aOPBTxGj+Jq23mU/bAU/jBPfpDOHmsYg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793192689;
-	h=Received:DKIM-Signature:Received:Received:X-ME-Sender:X-ME-Received:
-	 X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:Date:From:To:Cc:
+	a=rsa-sha256; c=relaxed/relaxed; t=1793194497;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
 	 Subject:Message-ID:References:MIME-Version:Content-Type:
 	 Content-Disposition:In-Reply-To;
-	bh=OG80Mz0mVm49EyuyKHOkJqtYHLMvKooWxYEt+ri6Okc=;
-	b=DNcsEgptzANuZVN9eAAZX+I822BC7dy7rOkEyXwXW1A2fnX1FUoOaf4/SvGidVxOaeg3
-	 Fdkrp6SC1Jqnwj4QGJn84wB6BBFEsMxxUGCXZi4OQ/KYh+dqISvJzZ+nfKL3eLKeHKapS
-	 WMwBHS9btyphQeDyvn2oY75hgqsWt4tbNXg/b6BMuUmLNteACfDCmqN+Xqu5MQWn0R89A
-	 5s/e9k5rqbk8BDGiuDZkws6EPKCQh64LraWJJd2c/Ql6ewfMtgXS97tWJhcgpZCm/U1g8
-	 K42I4rhoQr/RtTClPFAWPUqQYQLXTCFcDpLwbFun/bxuIVNOZkCUThnJUMKNcxmuQpw==
+	bh=K5sU8ZAJRz6gFhM4gDWxCHu2kvyqTC/PTTWhoAieCGY=;
+	b=zvz2UrUH8e2e/TZJ3eFZ3Y+aFSccgRLTqSKJJfiz01mtZ4xDpSbUrAtFQKXyG3/PS8pE
+	 K5OPGuezyG+6eKoVN6C/yCvp4AaxsjFjp2z2+hQ3ZUEBEVoZShMPWF1LUErzFf776dpw5
+	 CgRZEqzWfln7AOB/6DN8+8LHUXOrJc0VZmoRZx/jjWvwFBDu5c2Kd4blVzAS1+c1JD6zv
+	 tyoeMJSWMomuCNzmP3zvckVeowHSi3yJxcOQ2vK5dgf3/83yl6msvZLEF+axMnJgS0CjJ
+	 RPEqw+yWod0GfyiWjYL9pKvIHLcrNwnCm7c3CO4O/IynqnQpxkTeFSLjAsXTsa5GBWQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kpfKoysa;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=infradead.org;
+	spf=pass smtp.mailfrom=infradead.org;
+	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=WQTo7RRj;
+	arc=none smtp.remote-ip=90.155.92.199
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D30B606A31A
-	for <loongarch@lists.linux.dev>; Wed, 28 Oct 2026 13:04:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7A6606A31A;
+	Wed, 28 Oct 2026 13:34:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DC7A6606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kpfKoysa
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E2721F01829;
-	Wed, 28 Oct 2026 13:04:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793192688;
-	bh=OG80Mz0mVm49EyuyKHOkJqtYHLMvKooWxYEt+ri6Okc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=kpfKoysa7BhU58nVwgtRMNFzrIouPyDwkeC9+Cgmcu4kz0oM8VTSbBCpI3TUv2h2O
-	 /xybVf4NBJEiO5n4Nm9e/4X17xJy59TNm9NBToRMfEq+V5WivGSahDsQkLlBtI0ruo
-	 +PuWKoKQo20ZzQV344L0onkXV0IWpULC+kObPTIfQS5C/YT9/zwLzojzK0eyEMUpHV
-	 3dA/nlmA7PwMg4cUAEKrf+JfTK1UMgmQ/75tMi5bYKbq2YM4ihBWpLxegQCLzdrl2m
-	 PLemYyoRBinmJ6IT0z+o2sdTM9ApeqzXPL3sYFnbPOb9zH5mM2BqtZcrqQpQwuAbQj
-	 XsbHmGVPgGe7w==
-Received: from phl-compute-11.internal (phl-compute-11.internal [10.202.2.51])
-	by mailfauth.ams.internal (Postfix) with ESMTP id 72805198003A;
-	Wed, 28 Oct 2026 09:04:41 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-11.internal (MEProxy); Wed, 28 Oct 2026 09:04:46 -0400
-X-ME-Sender: <xms:6PLhamR2N2SYNNuW2COGtT0iyhIuZN4Ab6M11IdWYpzZuKhsU46euQ>
-    <xme:6PLhasO4PXs2DpvcsOJdlR4DUwcFplQftBYqhk86Injx7DrJH78rj0Flf6xhD1ZCG
-    9pRgr7WmxxhEKvC9jS3FNwkDCbgMXER2Q_-Oi7X5VYg422dDXLURdp2>
-X-ME-Received: <xmr:6PLhalRzbQegRW9_6wGQEi1w56Rek9Y-7oRBd7AXEqBOGSgslElXkkEZ0hw>
-X-ME-Proxy-Cause: dmFkZTFg4m4oPEAUf0wKUWw/Iv3SvfDuV2dwoufosxi56rG8rE3yzXkDOL9mHtdMD5t3xb
-    TNtQvdWPVpliQZzMEq2j9Gt/Qeqa/rF77vTyxnTf5UOLPNJ2zUCh17VsnOcEYbxGgk6pd/
-    jnrFGdaKttqtWNKjNbixKC92UE8SCbRpRx0WxGiIqSl0J0ICk0JQhy9Sr/LMCk3/IVcW/o
-    bCjLH09OVr/VQlaboh+GTF0eV9P0WsRQ0NN8dvTtbJ5CULwJ3YspX58BzjPnKc4esZY0AE
-    vCO/2EXsD9kJV70LTbLoWjGuNnwDImFpXgd/qrFbj8lz7uaYEYKynkoZbbntZlYoJ2cVe9
-    /+rhqV/xdrC6ND9aiGvuSZn+fk+lMFKBk+CwBAGjoY66y4uTs5oqVkdwtiVpN3jnfufyiw
-    mbFGB54MLhrD1QUgxn90nVffgd8oQRT4PZ2d0Cv8SF1Gpgx6GZU5qUwdlixKbbdcCnstPy
-    C4OiiGs/7AHNy17plPHaquUuUuXG0T7RKsstw38S2VOjByMTyHT12LhV9xiy9nSaBbtkzo
-    eBHrVxgrtsC+JoLewb5t0X58mNTZctuMyI/X+JJS417uckswZSke7odEKVKiXLKSFCGJgN
-    lxiRKVDKgquvVnW9gYMK5Q2ompqZeG5/mSl+cviBwf32c/V8SUzaJThtISOA
-X-ME-Proxy: <xmx:6PLhaiC6UtU4qiOKsaD5z32WpUxwn9JqWMWZSp2POMwzX3Gff5sviw>
-    <xmx:6PLhau5rgYZr77ak_O9wBERlqC7gG-5MjSAFZcS46YIGK_q8Pomf4g>
-    <xmx:6PLhanADBjgOZwiVxGQ_V1IaXvAzSFbWN577V2Cq37A223MQNBj2kg>
-    <xmx:6PLhaicpZIf6CfrEn_5aKXq1MPBLbhnnSSAvw380Z41uC6bjcbw0yw>
-    <xmx:6fLhaquilv7jS-EmMG921CB-BsfpaPFMfHQ-RZ4zKq83ZgdvbLzPWKgp>
-Feedback-ID: i10464835:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 28 Oct 2026 09:04:39 -0400 (EDT)
-Date: Wed, 28 Oct 2026 13:04:38 +0000
-From: Kiryl Shutsemau <kas@kernel.org>
-To: Muchun Song <muchun.song@linux.dev>
-Cc: "David Hildenbrand (Arm)" <david@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Matthew Wilcox <willy@infradead.org>, Usama Arif <usamaarif642@gmail.com>, 
-	Frank van der Linden <fvdl@google.com>, Oscar Salvador <osalvador@suse.de>, 
-	Mike Rapoport <rppt@kernel.org>, Vlastimil Babka <vbabka@suse.cz>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Zi Yan <ziy@nvidia.com>, Baoquan He <bhe@redhat.com>, 
-	Michal Hocko <mhocko@suse.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, kernel-team@meta.com, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-riscv@lists.infradead.org, Dave Hansen <dave.hansen@linux.intel.com>, 
+	dkim=pass (2048-bit key, unprotected) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=WQTo7RRj
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=K5sU8ZAJRz6gFhM4gDWxCHu2kvyqTC/PTTWhoAieCGY=; b=WQTo7RRjUws4wLzC6TxpAmx57w
+	qcq5fCMagtfKad2FmcZhLNiyNmxBTF8/cvyU5FhHuyznlY2ota9MN31xYDxFIv2Erfp4aIicHdOEl
+	E2jxLk1iu6UVgBFuNZDHQbP8i5O71tuJIGJbKRCf70a3PNnSQKK+sWlOzaRMzfKYFkbHgL5lDL9Vp
+	ZvXgetdmOXoLVKHD/1ZDYuRo7eMc1PaJvukhM56Ia68PICeBLH2PimR6BGNHj7GsDJbTI86FtVG5t
+	W0wLnsMXdRptmezamho6yQr8A3y96kAxjX7Nk07pkHXtbr6zoq0TtEiKMjF427WJnVaamNRv1dQ0Y
+	/t33+Xow==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
+	id 1xM3ne-0000000G0rh-0VGE;
+	Wed, 28 Oct 2026 13:34:43 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id E42F1300DB9; Wed, 28 Oct 2026 14:34:39 +0100 (CET)
+Date: Wed, 28 Oct 2026 14:34:39 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Kiryl Shutsemau <kas@kernel.org>
+Cc: Muchun Song <muchun.song@linux.dev>,
+	"David Hildenbrand (Arm)" <david@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Usama Arif <usamaarif642@gmail.com>,
+	Frank van der Linden <fvdl@google.com>,
+	Oscar Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Zi Yan <ziy@nvidia.com>, Baoquan He <bhe@redhat.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	kernel-team@meta.com, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+	Dave Hansen <dave.hansen@linux.intel.com>,
 	Andy Lutomirski <luto@kernel.org>
 Subject: Re: [PATCHv7 13/18] mm: Drop fake head checks
-Message-ID: <auHxpuEHrpkvSFFi@thinkstation>
-References: <f97a8d33-50b2-4a86-8381-ee840cdfa2f9@kernel.org>
- <20261027110028.GH2668564@noisy.programming.kicks-ass.net>
- <auCKv_omLGRc6wv2@thinkstation>
+Message-ID: <20261028133439.GK2668804@noisy.programming.kicks-ass.net>
+References: <auCKv_omLGRc6wv2@thinkstation>
  <f3f3aca9-bdb7-4aec-9099-9fb63a60e61d@kernel.org>
  <auCZFckDfBMrlfxV@thinkstation>
  <070DDE5C-2183-4A8B-AC2D-891CAE15E581@linux.dev>
@@ -97,6 +85,8 @@ References: <f97a8d33-50b2-4a86-8381-ee840cdfa2f9@kernel.org>
  <4A32F5E6-977D-4720-8723-B19AFBC08FCF@linux.dev>
  <auDkbDlgSZxqlk2G@thinkstation>
  <7cb3dd91-f518-49b6-b311-9ec807b3c63b@linux.dev>
+ <20261028080635.GD2668804@noisy.programming.kicks-ass.net>
+ <auHxIORufMbldrBr@thinkstation>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -108,25 +98,63 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7cb3dd91-f518-49b6-b311-9ec807b3c63b@linux.dev>
+In-Reply-To: <auHxIORufMbldrBr@thinkstation>
 
-On Wed, Oct 28, 2026 at 10:38:22AM +0800, Muchun Song wrote:
-> > Bootmem folios optimized in early boot get their tails mapped writable
-> > and write protected later.  Drop the write protect step.
+On Wed, Oct 28, 2026 at 12:58:11PM +0000, Kiryl Shutsemau wrote:
+> On Wed, Oct 28, 2026 at 09:06:35AM +0100, Peter Zijlstra wrote:
+> > On Wed, Oct 28, 2026 at 10:38:22AM +0800, Muchun Song wrote:
+> > > 
+> > > 
+> > > On 2026/10/28 01:51, Kiryl Shutsemau wrote:
+> > > > On Tue, Oct 27, 2026 at 10:03:54PM +0800, Muchun Song wrote:
+> > > > > Therefore, I am kind of leaning towards removing the RO protection
+> > > > > and restoring RW permissions to solve the race.
+> > > > Okay, what about this:
+> > > > 
+> > > >  From e23ab850837b53cc79d57d58f1cfb4266e745c3d Mon Sep 17 00:00:00 2001
+> > > > From: "Kiryl Shutsemau (Meta)" <kas@kernel.org>
+> > > > Date: Tue, 27 Oct 2026 17:23:47 +0000
+> > > > Subject: [PATCH] mm/hugetlb_vmemmap: map the shared tail page writable
+> > > > 
+> > > > page_ref_add_unless_zero() reads the refcount and then updates it with
+> > > > a cmpxchg.  A lockless get, such as a page cache lookup or a PFN
+> > > > scanner, can read a non-zero refcount from a page that is then freed
+> > > > and reused as a hugetlb tail page.  If HVO remaps its struct page to
+> > > > the shared tail page in between, the cmpxchg writes to read-only
+> > > > vmemmap:
+> > > > 
+> > > >      CPU0 (lockless get)               CPU1
+> > > >      c = atomic_read(&page->_refcount)
+> > > >                                        page freed
+> > > >                                        page allocated as a hugetlb tail
+> > > >                                        HVO remaps the struct page RO
+> > > >      try_cmpxchg(&page->_refcount, &c, c + 1)
+> > > >        -> write fault on read-only vmemmap
+> > > > 
+> > > > The refcount is zero by then and the compare fails, but LOCK CMPXCHG on
+> > > > x86 writes anyway.  The kernel oopses when hugetlb pages are allocated
+> > > 
+> > > Is this an X86-specific issue? If not, I suggest a more generic
+> > > description.
+> > 
+> > AFAICT most architectures that implement single compare-and-swap
+> > instructions are affected, with the possible exception of s390.
+> > 
+> > That is, sparc, arm64-lse, riscv-Zacas, loonarch-amocas, openrisc (and
+> > ia64 for those people keeping the out-of-tree port alive) all require
+> > write protection to begin cmpxchg.
+> > 
+> > All the LL/SC architectures should be fine, they'll never get to the SC
+> > part.
 > 
-> For bootmem folios, I don't think the RO mapping should be removed,
-> because we are in the initialization stage of struct page.
-> No one should touch those pages at this point; otherwise, they could
-> encounter uninitialized struct page as well. This assumes no race
-> exists during early boot.
-> 
-> Since such a problem does not exist during the boot stage, why should
-> we give up the protection that RO provides?
+> Only architectures with HVO matter here: x86-64, riscv and loongarch.
+> arm64 has had it disabled since 060a2c92d1b6.
 
-Agreed. Nothing does a lockless get on bootmem folios before hugetlb
-takes them, so they can stay RO.
+Per that commit, could it be re-enabled now that its no longer marked RO?
 
-I will keep the pre-HVO write-protect and post the patch.
+> riscv and loongarch implement atomic_fetch_add_unless() with LL/SC only,
+> no CAS variant, so they see the zero at the load. That leaves x86.
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Ah yes, I only looked at the cmpxchg implementation rather than the
+fetch_add_unless :/
+
