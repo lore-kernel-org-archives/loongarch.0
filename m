@@ -1,70 +1,79 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.89
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.183
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793270072;
-	b=2gVvfFq5qn+JymZOx06KXC5pFA6lyrKPcJynBq52jPDajUhTIwaGh0sUQ+5ZMuS3oMM2
-	 Lt2C22BKkMo8P5qOz2Sno1sRPsFnCo1YrDHdiH6CrA5pSUy140ZxVFlPiIao9U0kXY523
-	 S4hBJR18z8OP3FowYH7HFI/CdjQgUYE2iPEE1J67gxg6efHrl5k3+78zXXaViJ87JSdEp
-	 k4ezSAiPgIHPzFby505sdC5hwul+2UODxzZ7JWgZqTZbBqt70ncL7fE5QUXpXvIvqPPGr
-	 J8CH+PaWsAKvhatQyVgi1x7GcJx7NbE5d/wxIwUzkP68VpW5jKCMIpYDbigG9JHyalQ==
+	t=1793295017;
+	b=2IZeoU3GdRt8XqPUTQzRLRALbTlddrCy3nngBPM7Kh6EjjPeppwExd0VWgc2qFTIRSlb
+	 4cYiz5tQdEdQh3EjSMoCjMj+1Eaplfi4LaNhFHNXDFT2sNB/G0EZpZb396SlgGi5Myi9C
+	 ++IFyvEFwaEpWPcMyRliwwzVJT/Fb+G/Juak/X55aOKvqpI+6BkHLYRc8TRRfvEGnetkx
+	 vVjgA+EF5k+q3bbeuhTpWV6knWfawVNr4GblyIjpWoo2NPmpjP0AUli8E/gqvV5Lq/uYN
+	 2VFtsDps/cp0PWaP1wepT6MDHKQmgSleYMN5nIEfyDtBzPsVm/Bqsk/uID/m8cBxf3g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793270072;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793295017;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
 	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=AOkwsWmwjY7T0BagmEwjwy19sbGkrNkf9+nM9gVRFeA=;
-	b=cc0RyzfPAqNfxMHMoI18+vy+vT2BXXbq6BPaBVEik+9ivmhxys78+ojJcHoESEVHijmN
-	 W9bRjTYImeFwffzOviMV6SN+As0nHDK+DgLkRDznOQHF78Dex59ruePpox2eN7+BRQWSC
-	 dxlRsz7J0j3Fw+1SI3Kp5SMBLBzTT47kbntNhE/1rye/YsLT/rp6OSyYRMtqfhdDsPRFw
-	 Nxmy7OIjFIJBXAB/fNMeLwG6VelW3QGC0Nz0yJcA6+rMh2Y8pL9ZWj6oEe8ww/VtjL/JM
-	 yp0HiMk5OrR0/jPEHLmFDWQTBBuWpHIqv2OgdIgg7jHIcaU4NrIWVMxRCcCrvxqGfRA==
+	 X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=lAtuW+PmqcIRrD32GU2FmHnRSvRZSE8WSvkIZYFlqEI=;
+	b=z3sZ2nGvpOyHWxbG/1qHngpTv7O0D0IUElonCtC2u9f5nRsVrviCbSp29LO/6fR8F3Oq
+	 RqxnlOsGlIbHoi6xrbwT/oEYRCL+vN55UVDVZFh3Fo/7m3FkjGxpgdv3+lCpXjxt/IJoC
+	 AaMzXdtXFOztlro19J6ejeLCI365MWQVUQUownT2HZOu1zaZzD21rViS0wZ3SVodOJftC
+	 baFKe1Ot973KSR3YtkF3UYVeIone+9S1WzN/Nq9yXlQ0mmoI3imCLh03ffeKUQJRnO/Uo
+	 2egqz88+GDc6XWMA6lpETjsNpEZZqtgE5GchOSxg0zD4Ear4wVy1Jw8wvfBpb8BzAkA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=UXOfp9RY;
-	arc=none smtp.remote-ip=95.215.58.89
-Received: from mta1.migadu.com (out-89.mta1.migadu.com [95.215.58.89])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=FXCOndxr;
+	arc=none smtp.remote-ip=95.215.58.183
+Received: from mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 367BC606A327
-	for <loongarch@lists.linux.dev>; Thu, 29 Oct 2026 10:34:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 367BC606A327
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A086606A32D
+	for <loongarch@lists.linux.dev>; Thu, 29 Oct 2026 17:30:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1A086606A32D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=UXOfp9RY
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=FXCOndxr
 X-Envelope-To: loongarch@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=V9eKCFzwICKE4rFO7Nmsc0WCMFzPWjs4u+0Fk0qiHkg=;
+DKIM-Signature: a=rsa-sha256; bh=BakrBcWbSK1C/V/NJmrPg1yKTLbeIP3Nrz+xI4DnuzI=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793270069; v=1; x=1793874869;
- b=UXOfp9RYEVzG9pxkQUlobs6A4jb1xYE3cZWLzCOHQGck1nZV/9xfA585SJTqLRsuzC5Wd36Q
- lj4xBsZMIOrGWoGZb2gahqDlSCr3eNASR11V9aCanvfVTk8onkRsgfuJQ5v8PN8sabF8JzeIo+U
- 24AXxMU3ShTpP0llLmIiyVxQ=
+ t=1793295014; v=1; x=1793899814;
+ b=FXCOndxrulaEk0PxCyRH3ODvX5d3H9KFQ/BLQhZ/42tZQJIVurIT+3imfuqAwzD1q+Y1BJnD
+ 4JvTGc7qolIhrjWi2jfh9huotl7MPypHZoqmKTMBsCMiCGKHpNDFW9Gf6EAizwVBp5O0s/yPpCn
+ cySA8bh/YyZjIdDq9yN5mPho=
 X-Envelope-To: loongarch@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id dd12de82c714536d;
-	Thu, 29 Oct 2026 10:34:29 +0000
-X-Mizu-Trace-ID: dd12de82c714536d
+Received: by smtp.migadu.com with ESMTPS id 0e3683f53b12271c;
+	Thu, 29 Oct 2026 17:30:10 +0000
+X-Mizu-Trace-ID: 0e3683f53b12271c
 X-Migadu-Flow: FLOW_OUT
 From: George Guo <dongtai.guo@linux.dev>
 To: rppt@kernel.org,
 	pasha.tatashin@soleen.com,
-	pratyush@kernel.org
-Cc: graf@amazon.com,
-	changyuanl@google.com,
-	akpm@linux-foundation.org,
+	pratyush@kernel.org,
 	chenhuacai@kernel.org,
-	sourabhjain@linux.ibm.com,
-	liukexin@kylinos.cn,
+	ardb@kernel.org,
+	shuah@kernel.org
+Cc: ilias.apalodimas@linaro.org,
+	akpm@linux-foundation.org,
+	baoquan.he@linux.dev,
+	ruirui.yang@linux.dev,
 	guodongtai@kylinos.cn,
+	kernel@xen0n.name,
+	graf@amazon.com,
+	liukexin@kylinos.cn,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
 	kexec@lists.infradead.org,
 	linux-mm@kvack.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] liveupdate: kho: calculate per-node bootmem sizes before allocating any
-Date: Thu, 29 Oct 2026 19:34:25 +0900
-Message-ID: <20261029103425.14689-1-dongtai.guo@linux.dev>
+	linux-kselftest@vger.kernel.org,
+	linux-efi@vger.kernel.org
+Subject: [PATCH v6 1/8] efi: Pass KHO state to the next kernel in a configuration table
+Date: Fri, 30 Oct 2026 02:29:48 +0900
+Message-ID: <20261029172956.20791-2-dongtai.guo@linux.dev>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20261029172956.20791-1-dongtai.guo@linux.dev>
+References: <20261029172956.20791-1-dongtai.guo@linux.dev>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -78,118 +87,266 @@ Content-Transfer-Encoding: 8bit
 
 From: George Guo <guodongtai@kylinos.cn>
 
-kho_reserve_bootmem() calculated the per-node bootmem sizes inside the
-allocation loop, after the lowmem and global areas had been allocated.
+KHO has to give the next kernel two addresses: the KHO FDT and the
+bootmem area list. arm64 and riscv put them under /chosen in the boot
+FDT. LoongArch systems booting with EFI and ACPI do not require a boot
+FDT, so KHO needs another way to pass this information.
 
-Without CONFIG_NUMA, memblock_get_region_node() returns 0 for every
-region, and memblock_reserved_kern_size() attributes a region to a node
-by memblock_get_region_node(). Since allocations are marked
-MEMBLOCK_RSRV_KERN, the newly allocated lowmem and global areas enter
-node 0's baseline and are scaled again by bootmem_size_node().
+Add a Linux EFI configuration table for them, under
+LINUX_EFI_KEXEC_HANDOVER_GUID. It points to a struct linux_efi_kho_data.
 
-In the original 1 GiB QEMU reproducer, the default 200% scale made
-node 0 request 672 MiB: twice the sum of the 98.45 MiB baseline and
-224 MiB lowmem area, rounded up to 32 MiB alignment. The reservation
-failed and KHO disabled itself.
+  - On a cold boot, the LoongArch EFI stub installs the table, zeroed.
+    Each kexec'd kernel is given the same EFI system table, so it finds
+    the same table.
 
-With CONFIG_NUMA=y, node-specific accounting excludes the NUMA_NO_NODE
-reservations.
+  - In early boot, efi_config_parse_tables() reserves the table so
+    neither the page allocator nor kexec segments use it, and calls
+    kho_populate() if the table holds KHO state.
 
-The lowmem and global sizes are already calculated by
-bootmem_size_update() before any allocation. Calculate the per-node
-sizes into the kho_bootmem descriptors before reserving any bootmem
-area as well, and allocate the per-node areas from the stored sizes.
-Use separate read and write indices to preserve the saved sizes when
-zero-sized per-node areas are skipped.
+  - Provide efi_kho_update() to update the table before kexec. Map the
+    table during boot so updates do not require allocation or mapping
+    at panic time.
 
-Fixes: 3dc92c311498 ("kexec: add Kexec HandOver (KHO) generation helpers")
-Reported-by: Kexin Liu <liukexin@kylinos.cn>
-Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
-Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
+  - efi_kho_table_found() tells architecture code whether the table was
+    found at boot, so it can turn KHO off when the table is missing.
+
+Only the LoongArch stub installs the table, and only with
+CONFIG_KEXEC_HANDOVER. Elsewhere there is no table and this code does
+nothing.
+
 Signed-off-by: George Guo <guodongtai@kylinos.cn>
 ---
-Changes in v2:
-- Calculate every size before any allocation (Mike). The lowmem and
-  global sizes are already calculated by bootmem_size_update(), so only
-  the per-node sizes move out of the allocation loop.
-- Rebase onto liveupdate-7.4: follow the "scratch" to "bootmem" rename,
-  and keep the zero-size node skip added by "kho: do not reserve empty
-  per-node bootmem areas" by reading the saved sizes with a separate
-  index.
-- Explain why only CONFIG_NUMA=n kernels are affected (Pratyush, Sourabh).
-- The global size over-allocation on NUMA systems, which I planned to
-  look at as a follow-up, is handled by Sourabh's "kho: fix global
-  scratch size calculation" [1]. Mike asked there for a broader rework
-  of the sizing; this patch only fixes the CONFIG_NUMA=n double
-  counting.
-- No Assisted-by tag, although I said on v1 that I would add one: the
-  Assisted-by references have since been removed from the documentation
-  in mainline.
+ drivers/firmware/efi/efi.c               | 68 ++++++++++++++++++++++++
+ drivers/firmware/efi/libstub/efi-stub.c  | 22 ++++++++
+ drivers/firmware/efi/libstub/efistub.h   |  2 +
+ drivers/firmware/efi/libstub/loongarch.c |  2 +
+ include/linux/efi.h                      | 40 ++++++++++++++
+ 5 files changed, 134 insertions(+)
 
-Tested with the KHO vmtest on a 1 GiB LoongArch QEMU guest, with the
-LoongArch KHO series on top: it passes with both CONFIG_NUMA=n and
-CONFIG_NUMA=y. Without this patch, KHO disables itself in the
-CONFIG_NUMA=n run.
-
-v1: https://lore.kernel.org/all/20260904025101.9959-1-dongtai.guo@linux.dev/
-[1] https://lore.kernel.org/all/20260922131217.698809-1-sourabhjain@linux.ibm.com/
-
- kernel/liveupdate/kexec_handover.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index 6f1f55fe3181..9a53d7750367 100644
---- a/kernel/liveupdate/kexec_handover.c
-+++ b/kernel/liveupdate/kexec_handover.c
-@@ -831,7 +831,7 @@ bool kho_bootmem_overlap(phys_addr_t phys, size_t size)
-  */
- static void __init kho_reserve_bootmem(void)
- {
--	int nid, i = 0, max_nr_bootmem;
-+	int nid, i, j, max_nr_bootmem;
- 	phys_addr_t addr, size;
+diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+index 0327a39d31fa..e409e4a57378 100644
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -24,6 +24,7 @@
+ #include <linux/initrd.h>
+ #include <linux/io.h>
+ #include <linux/kexec.h>
++#include <linux/kexec_handover.h>
+ #include <linux/platform_device.h>
+ #include <linux/random.h>
+ #include <linux/reboot.h>
+@@ -62,6 +63,7 @@ unsigned long __ro_after_init efi_rng_seed = EFI_INVALID_TABLE_ADDR;
+ static unsigned long __initdata mem_reserve = EFI_INVALID_TABLE_ADDR;
+ static unsigned long __initdata rt_prop = EFI_INVALID_TABLE_ADDR;
+ static unsigned long __initdata initrd = EFI_INVALID_TABLE_ADDR;
++static unsigned long efi_kho __initdata = EFI_INVALID_TABLE_ADDR;
  
- 	if (!kho_enable)
-@@ -848,6 +848,15 @@ static void __init kho_reserve_bootmem(void)
- 		goto err_disable_kho;
+ extern unsigned long primary_display_table;
+ 
+@@ -629,6 +631,7 @@ static const efi_config_table_type_t common_tables[] __initconst = {
+ 	{EFI_TCG2_FINAL_EVENTS_TABLE_GUID,	&efi.tpm_final_log,	"TPMFinalLog"	},
+ 	{EFI_CC_FINAL_EVENTS_TABLE_GUID,	&efi.tpm_final_log,	"CCFinalLog"	},
+ 	{LINUX_EFI_MEMRESERVE_TABLE_GUID,	&mem_reserve,		"MEMRESERVE"	},
++	{LINUX_EFI_KEXEC_HANDOVER_GUID,		&efi_kho,		"KHO"		},
+ 	{LINUX_EFI_INITRD_MEDIA_GUID,		&initrd,		"INITRD"	},
+ 	{EFI_RT_PROPERTIES_TABLE_GUID,		&rt_prop,		"RTPROP"	},
+ #ifdef CONFIG_OVMF_DEBUG_LOG
+@@ -806,6 +809,23 @@ int __init efi_config_parse_tables(const efi_config_table_t *config_tables,
+ 		}
  	}
  
-+	/*
-+	 * Save the per-node sizes before allocating bootmem areas. Without
-+	 * CONFIG_NUMA, new lowmem and global allocations would otherwise be
-+	 * counted as node 0 kernel reservations and scaled again.
-+	 */
-+	j = 2;
-+	for_each_node_state(nid, N_MEMORY)
-+		kho_bootmem[j++].size = bootmem_size_node(nid);
++	if (efi_kho != EFI_INVALID_TABLE_ADDR) {
++		struct linux_efi_kho_data *kho;
 +
- 	/*
- 	 * reserve bootmem area in low memory for lowmem allocations in the
- 	 * next kernel
-@@ -860,6 +869,7 @@ static void __init kho_reserve_bootmem(void)
- 		goto err_free_bootmem_desc;
- 	}
++		/* Keep the buddy allocator and kexec segments off the table. */
++		memblock_reserve(efi_kho, sizeof(*kho));
++
++		kho = early_memremap(efi_kho, sizeof(*kho));
++		if (kho) {
++			if (kho->fdt_addr)
++				kho_populate((phys_addr_t)kho->fdt_addr, kho->fdt_size,
++					     (phys_addr_t)kho->bootmem_addr, kho->bootmem_size);
++			early_memunmap(kho, sizeof(*kho));
++		} else {
++			pr_warn("Could not map UEFI KHO table!\n");
++		}
++	}
++
+ 	if (rt_prop != EFI_INVALID_TABLE_ADDR) {
+ 		efi_rt_properties_table_t *tbl;
  
-+	i = 0;
- 	kho_bootmem[i].addr = addr;
- 	kho_bootmem[i].size = size;
- 	i++;
-@@ -879,9 +889,12 @@ static void __init kho_reserve_bootmem(void)
- 	/*
- 	 * Loop over nodes that have both memory and are online. Skip
- 	 * memoryless nodes, as we can not allocate bootmem areas there.
-+	 * Skipping zero-sized areas leaves i behind j, so writes to
-+	 * kho_bootmem[i] cannot overwrite unread sizes.
- 	 */
-+	j = i;
- 	for_each_node_state(nid, N_MEMORY) {
--		size = bootmem_size_node(nid);
-+		size = kho_bootmem[j++].size;
- 		if (!size)
- 			continue;
+@@ -1171,6 +1191,54 @@ static int __init efi_memreserve_root_init(void)
+ }
+ early_initcall(efi_memreserve_root_init);
  
-
-base-commit: 9a6a70aefe77f6fb9ff2b3037dcf87f6dff65c8c
++static struct linux_efi_kho_data *efi_kho_table __ro_after_init;
++
++/* Did the previous kernel or the EFI stub pass a KHO table? */
++bool __init efi_kho_table_found(void)
++{
++	return efi_kho != EFI_INVALID_TABLE_ADDR;
++}
++
++static int __init efi_kho_table_init(void)
++{
++	if (efi_kho == EFI_INVALID_TABLE_ADDR)
++		return 0;
++
++	/* Map it now: the table is also written at panic time. */
++	efi_kho_table = memremap(efi_kho, sizeof(*efi_kho_table), MEMREMAP_WB);
++	if (WARN_ON_ONCE(!efi_kho_table))
++		efi_kho_table = ERR_PTR(-ENOMEM);
++
++	return 0;
++}
++early_initcall(efi_kho_table_init);
++
++/*
++ * Write the KHO addresses the next kernel should use, or zeroes
++ * if it should boot without KHO.
++ */
++int efi_kho_update(phys_addr_t fdt_addr, u64 fdt_size,
++		   phys_addr_t bootmem_addr, u64 bootmem_size)
++{
++	struct linux_efi_kho_data *kho = efi_kho_table;
++
++	/*
++	 * No table: either the architecture passes the KHO state some other
++	 * way, or it turned KHO off at boot because the table was missing.
++	 */
++	if (!kho)
++		return 0;
++	if (IS_ERR(kho))
++		return PTR_ERR(kho);
++
++	kho->fdt_addr		= fdt_addr;
++	kho->fdt_size		= fdt_size;
++	kho->bootmem_addr	= bootmem_addr;
++	kho->bootmem_size	= bootmem_size;
++
++	return 0;
++}
++
+ #ifdef CONFIG_KEXEC
+ static int update_efi_random_seed(struct notifier_block *nb,
+ 				  unsigned long code, void *unused)
+diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/efi/libstub/efi-stub.c
+index 42d6073bcd06..0fb0d4041d1c 100644
+--- a/drivers/firmware/efi/libstub/efi-stub.c
++++ b/drivers/firmware/efi/libstub/efi-stub.c
+@@ -100,6 +100,28 @@ static void install_memreserve_table(void)
+ 		efi_err("Failed to install memreserve config table!\n");
+ }
+ 
++void install_kho_table(void)
++{
++	struct linux_efi_kho_data *kho;
++	efi_guid_t kho_table_guid = LINUX_EFI_KEXEC_HANDOVER_GUID;
++	efi_status_t status;
++
++	if (!IS_ENABLED(CONFIG_KEXEC_HANDOVER))
++		return;
++
++	status = efi_bs_call(allocate_pool, EFI_LOADER_DATA, sizeof(*kho), (void **)&kho);
++	if (status != EFI_SUCCESS) {
++		efi_err("Failed to allocate KHO config table!\n");
++		return;
++	}
++
++	*kho = (struct linux_efi_kho_data){};
++
++	status = efi_bs_call(install_configuration_table, &kho_table_guid, kho);
++	if (status != EFI_SUCCESS)
++		efi_err("Failed to install KHO config table!\n");
++}
++
+ static u32 get_supported_rt_services(void)
+ {
+ 	const efi_rt_properties_table_t *rt_prop_table;
+diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
+index fd91fc15ec81..9e0034c1260a 100644
+--- a/drivers/firmware/efi/libstub/efistub.h
++++ b/drivers/firmware/efi/libstub/efistub.h
+@@ -1057,6 +1057,8 @@ efi_status_t efi_exit_boot_services(void *handle, void *priv,
+ efi_status_t efi_boot_kernel(void *handle, efi_loaded_image_t *image,
+ 			     unsigned long kernel_addr, char *cmdline_ptr);
+ 
++void install_kho_table(void);
++
+ void *get_fdt(unsigned long *fdt_size);
+ 
+ efi_status_t efi_alloc_virtmap(efi_memory_desc_t **virtmap,
+diff --git a/drivers/firmware/efi/libstub/loongarch.c b/drivers/firmware/efi/libstub/loongarch.c
+index 2b0c87dc9908..c2df097771e4 100644
+--- a/drivers/firmware/efi/libstub/loongarch.c
++++ b/drivers/firmware/efi/libstub/loongarch.c
+@@ -74,6 +74,8 @@ efi_status_t efi_boot_kernel(void *handle, efi_loaded_image_t *image,
+ 	efi_status_t status;
+ 	u32 desc_ver;
+ 
++	install_kho_table();
++
+ 	status = efi_alloc_virtmap(&priv.runtime_map, &desc_size, &desc_ver);
+ 	if (status != EFI_SUCCESS) {
+ 		efi_err("Unable to retrieve UEFI memory map.\n");
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index aa15ff88539b..253e98bf9922 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -422,6 +422,7 @@ void efi_native_runtime_setup(void);
+ #define LINUX_EFI_COCO_SECRET_AREA_GUID		EFI_GUID(0xadf956ad, 0xe98c, 0x484c,  0xae, 0x11, 0xb5, 0x1c, 0x7d, 0x33, 0x64, 0x47)
+ #define LINUX_EFI_BOOT_MEMMAP_GUID		EFI_GUID(0x800f683f, 0xd08b, 0x423a,  0xa2, 0x93, 0x96, 0x5c, 0x3c, 0x6f, 0xe2, 0xb4)
+ #define LINUX_EFI_UNACCEPTED_MEM_TABLE_GUID	EFI_GUID(0xd5d1de3c, 0x105c, 0x44f9,  0x9e, 0xa9, 0xbc, 0xef, 0x98, 0x12, 0x00, 0x31)
++#define LINUX_EFI_KEXEC_HANDOVER_GUID		EFI_GUID(0xc941b6c7, 0x7b3f, 0x4af6,  0x9e, 0x50, 0xfc, 0xb3, 0xa8, 0x86, 0x8a, 0x17)
+ 
+ #define RISCV_EFI_BOOT_PROTOCOL_GUID		EFI_GUID(0xccd15fec, 0x6f73, 0x4eec,  0x83, 0x95, 0x3e, 0x69, 0xe4, 0xb9, 0x40, 0xbf)
+ 
+@@ -1273,6 +1274,45 @@ struct linux_efi_memreserve {
+ 
+ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size);
+ 
++/**
++ * struct linux_efi_kho_data - KHO state passed to the next kernel
++ * @fdt_addr: physical address of the KHO FDT, 0 if there is none
++ * @fdt_size: size of the KHO FDT
++ * @bootmem_addr: physical address of the bootmem area list
++ * @bootmem_size: size of the bootmem area list
++ *
++ * Pointed to by the LINUX_EFI_KEXEC_HANDOVER_GUID configuration table.
++ *
++ * The EFI stub installs this table zeroed on a cold boot. It stays
++ * in place across kexec; the running kernel rewrites it just before
++ * each kexec, and the next kernel reads it during early boot.
++ *
++ * The layout is fixed. Changing it requires a new GUID.
++ */
++struct linux_efi_kho_data {
++	u64 fdt_addr;
++	u64 fdt_size;
++	u64 bootmem_addr;
++	u64 bootmem_size;
++};
++
++#ifdef CONFIG_EFI
++bool efi_kho_table_found(void);
++int efi_kho_update(phys_addr_t fdt_addr, u64 fdt_size,
++		   phys_addr_t bootmem_addr, u64 bootmem_size);
++#else
++static inline bool efi_kho_table_found(void)
++{
++	return false;
++}
++
++static inline int efi_kho_update(phys_addr_t fdt_addr, u64 fdt_size,
++				 phys_addr_t bootmem_addr, u64 bootmem_size)
++{
++	return 0;
++}
++#endif
++
+ /*
+  * The LINUX_EFI_MOK_VARIABLE_TABLE_GUID config table can be provided
+  * to the kernel by an EFI boot loader. The table contains a packed
 -- 
 2.53.0
 
