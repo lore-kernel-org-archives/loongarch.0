@@ -1,68 +1,62 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.226.149.37
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793302959;
-	b=TOz5mOBjAEqTPNSOZza0d+l4U+g/MB0iXVyIKAp/NMuug3wUeYyOQ2LfG4gJTyuGZiqW
-	 te37Ud2EsCWMDMvtMR79zE7DEopVf7it5C5OlOBVdR4Xl5QBRXTVdTFs3M18KeCnvTrWL
-	 wyu9jeDUt6iBKQUikgIZBLxuVJABk3PJbmD0/+Mk4t8Ms/TjLAguEy4EypzeRJm3xMPOc
-	 KErFYfKOz5+jnFPLnQ6AgF/bFksjsQ9kZhFDke67aGt3iXcwSX81Kr5AiCFyA+sPbZJzI
-	 WANhwK1+NAaRSze2x3LNWaVcgxbZ0Ib1jimOk2WS/zM6jG086RMEzmuUexZ7mxoD0nw==
+	t=1793310570;
+	b=yIFP1dKHhR//jmKBjkCggzlDWGBakASCy5DB1o/eO4LEOTE6TBC2tRh1wOAj5Te25/qD
+	 8Ox6SaK84KkLpTR4Gzs+Ep8GjNmK1rSIewoOw0F9Ycr2HQ19Vc3RufTuV0UAKVVwAXQAd
+	 VYBsiSP9Vf2yl28fJNJFqiHEvpBqkJP4NAy+vTCDPEdGhPlBU3nuTKCb3SmuY3i/mvljq
+	 ZdP4SlfeDjDKB4uPtaFae0wVsL2T0sm4Zpg0Rhzntk1CsUIR6ZwayClgmVKJYf9MImVsz
+	 AOYhs9aenSoc97NLqVS4MKX+VtL56OF7WlI5A9pVL/P6vvSITtU1n7DyAjjFpraUvow==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793302959;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:In-Reply-To:References:
-	 Date:Message-ID:User-Agent:MIME-Version:Content-Type;
-	bh=M5BOmtE/8D5RrPoWo6N/EKi/wginAI3FukwfrzZJ0T4=;
-	b=xVepFKLYMzL9/ttQc1ICrw8jFn4RmmDPEjLjsEo1c+VAWxjFY7gRvvCnmNrwEzMLDhia
-	 wJs0KECKMde35GXI3FrcoGVS+6q0LTUVZSEjDTobG0X/ojqS48zdI8hhhWKnfePwPB1Sh
-	 aFvrIz0Mbhab4ON4s2XwrbkC2/mVu1hE79cY4bXagnadA0HSIXJ3ZHE4fPISaxUIBsfdj
-	 j/MkNYzysbLe6yJA4iJm2YX9KglPOpqmhEwxehAyuuwQEBxMkmlnA7qr6Uez5mzSCjziA
-	 /3XieAr2mxyphlEEbYN/65XYf1rc4+IhL/SQxKqAhwbGaHW4nyZ46xeGEqXyotkmENw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793310570;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Message-ID:
+	 Date:MIME-Version:User-Agent:From:Subject:To:Cc:References:
+	 Content-Language:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=WEuP5oEyiIhUFwxT561uBVUyYM5if0z3+RpGqvoVIUo=;
+	b=TV6K38JjgPINvKEEj5NxV6P7pGQnceyPf9P71TOhn/+83LXQDuzCU1Fa7YUuQPrOUQD1
+	 uORIAb5TYDN5rTw9I+jcNMLqCtM/gTd079Jj57RkcbnVNN/t+QaUkmMD01tBGtlySiGT5
+	 aOVkd6Uc0pyn32QlV12jzQbTmYeqZbBAf/9e6RdWzmgxbA3kgVb2KYq333UprgdDnBDEf
+	 KunVLOWe9oO1MxM/253HXr0jiZ6+kJ4BZm2nvvBeUYUjqcZV3hv17K2BnjiyRHpX3oIUg
+	 cm/tEBAnkbv4DP8RxIJ861FeB0AfNMnsh856a/CKGxyjXI/G5+jTfqIPGzHpEDMTmIQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=n039RvLz;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=rbox.co;
+	spf=pass smtp.mailfrom=rbox.co;
+	dkim=pass header.d=rbox.co header.i=@rbox.co header.a=rsa-sha256 header.s=selector1 header.b="nCbX/UGE";
+	arc=none smtp.remote-ip=185.226.149.37
+Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47EFD606A31A;
-	Thu, 29 Oct 2026 19:42:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3627606A31A
+	for <loongarch@lists.linux.dev>; Thu, 29 Oct 2026 21:49:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D3627606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=n039RvLz
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85BE91F01816;
-	Thu, 29 Oct 2026 19:42:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793302958;
-	bh=M5BOmtE/8D5RrPoWo6N/EKi/wginAI3FukwfrzZJ0T4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=n039RvLz2MQBp9BfxMGzLnlsnUbqv3QH+HRwNf04y8I98V0PpNABrMhrQJMeaVmvi
-	 3zd85eM31AJtqMMB13jFkSzHv20sMetPAlDdCrnN+gI7jS+LzruLhraQXgfy47gOTT
-	 wpDzerJy0E9A5ce5AyJDoETbe3jRVDdWzHquTqzoqF3fmvcdz0PyWTAygUO988r7Re
-	 Dfc0Ff9jntdVerieMBs8hG4DiJnjUPBGUKeH9lxbkdygoBOOVImf8qmcqQVIOKmaO7
-	 aLxl7AN2nZfGozNkzCESmg2v5yIhJ/KpKEP2Bt8IAMYBLHSy7y/tY1SFFm/cPJ17Yg
-	 pNfHWjm/hb5jw==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: "Ard Biesheuvel" <ardb@kernel.org>
-Cc: "George Guo" <dongtai.guo@linux.dev>,  "Mike Rapoport"
- <rppt@kernel.org>,  "Pasha Tatashin" <pasha.tatashin@soleen.com>,
-  "Pratyush Yadav" <pratyush@kernel.org>,  "Huacai Chen"
- <chenhuacai@kernel.org>,  shuah@kernel.org,  "Ilias Apalodimas"
- <ilias.apalodimas@linaro.org>,  "Andrew Morton"
- <akpm@linux-foundation.org>,  baoquan.he@linux.dev,
-  ruirui.yang@linux.dev,  guodongtai@kylinos.cn,  "WANG Xuerui"
- <kernel@xen0n.name>,  "Alexander Graf" <graf@amazon.com>,
-  liukexin@kylinos.cn,  loongarch@lists.linux.dev,
-  linux-kernel@vger.kernel.org,  kexec@lists.infradead.org,
-  linux-mm@kvack.org,  linux-kselftest@vger.kernel.org,
-  linux-efi@vger.kernel.org
-Subject: Re: [PATCH v6 1/8] efi: Pass KHO state to the next kernel in a
- configuration table
-In-Reply-To: <2382a0ee-cb6d-4572-be6e-ce3cf4d006e5@app.fastmail.com> (Ard
-	Biesheuvel's message of "Thu, 29 Oct 2026 20:28:01 +0100")
-References: <20261029172956.20791-1-dongtai.guo@linux.dev>
-	<20261029172956.20791-2-dongtai.guo@linux.dev>
-	<2382a0ee-cb6d-4572-be6e-ce3cf4d006e5@app.fastmail.com>
-Date: Thu, 29 Oct 2026 20:42:34 +0100
-Message-ID: <2vxzqzh8mgyd.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key, unprotected) header.d=rbox.co header.i=@rbox.co header.a=rsa-sha256 header.s=selector1 header.b=nCbX/UGE
+Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
+	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <mhal@rbox.co>)
+	id 1xMXzx-00GdYk-Pw; Thu, 29 Oct 2026 22:49:25 +0100
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
+	s=selector1; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:References:
+	Cc:To:Subject:From:MIME-Version:Date:Message-ID;
+	bh=WEuP5oEyiIhUFwxT561uBVUyYM5if0z3+RpGqvoVIUo=; b=nCbX/UGEwHZR5ZxRLg1I2NQI5R
+	KCfi/nrZMNeaJvVP7xaR7sgZo81+nPQ3BdgADeVoXrBbFe5bONR+anQBBor5u1kEglyryIlQJItRe
+	Cg7od3yoM6XKsWULeTDUXnUDsCM3J+/+Lag/4aApjm1aKQCy/hVSnj1vzQQsNCsFB9MQtjPnu45XS
+	nHNQlPVzo2XXKf4aNwhWo6HPuaa7OKVfP5bYxQDoNmZ5NKN0zrgBazsX1ziYy2abReUDtUSqJPGec
+	7q9KNgzATcfDowDe/4dfVeYqaQrk4TgC5dK6WIVOrfhvg1PK58Rp1oGol+nBYMtxuDFHGQG0p3LRH
+	QERqhoCQ==;
+Received: from [10.9.9.74] (helo=submission03.runbox)
+	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <mhal@rbox.co>)
+	id 1xMXzx-00073l-FS; Thu, 29 Oct 2026 22:49:25 +0100
+Received: by submission03.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.95)
+	id 1xMXzm-001akT-8S;
+	Thu, 29 Oct 2026 22:49:14 +0100
+Message-ID: <b98bf7fa-2ab4-4260-8284-612e7c8812e6@rbox.co>
+Date: Thu, 29 Oct 2026 22:49:13 +0100
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -72,55 +66,43 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+From: Michal Luczaj <mhal@rbox.co>
+Subject: Re: [PATCH v2] LoongArch: Remove arch-specific
+ __smp_mb__{before,after}_atomic()
+To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
+Cc: Kumar Kartikeya Dwivedi <memxor@gmail.com>, loongarch@lists.linux.dev
+References: <20260908073906.31781-1-yangtiezhu@loongson.cn>
+Content-Language: pl-PL, en-GB
+In-Reply-To: <20260908073906.31781-1-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Ard,
+On 9/8/26 09:39, Tiezhu Yang wrote:
+> [...]
+> The root cause is that bpf_timer_cancel() relies on smp_mb__after_atomic()
+> to provide a full data barrier after a relaxed atomic_inc() to ensure the
+> proper store-load ordering before performing lockless dependency checks on
+> weakly-ordered architectures such as LoongArch, but the current definition
+> of smp_mb__after_atomic() is a plain compiler barrier.
+> [...]
 
-On Thu, Oct 29 2026, Ard Biesheuvel wrote:
+Hi,
 
-> On Thu, 29 Oct 2026, at 18:29, George Guo wrote:
->> From: George Guo <guodongtai@kylinos.cn>
->>
->> KHO has to give the next kernel two addresses: the KHO FDT and the
->> bootmem area list. arm64 and riscv put them under /chosen in the boot
->> FDT. LoongArch systems booting with EFI and ACPI do not require a boot
->> FDT, so KHO needs another way to pass this information.
->>
->> Add a Linux EFI configuration table for them, under
->> LINUX_EFI_KEXEC_HANDOVER_GUID. It points to a struct linux_efi_kho_data.
->>
->>   - On a cold boot, the LoongArch EFI stub installs the table, zeroed.
->>     Each kexec'd kernel is given the same EFI system table, so it finds
->>     the same table.
->>
->>   - In early boot, efi_config_parse_tables() reserves the table so
->>     neither the page allocator nor kexec segments use it, and calls
->>     kho_populate() if the table holds KHO state.
->>
->>   - Provide efi_kho_update() to update the table before kexec. Map the
->>     table during boot so updates do not require allocation or mapping
->>     at panic time.
->>
->>   - efi_kho_table_found() tells architecture code whether the table was
->>     found at boot, so it can turn KHO off when the table is missing.
->>
->> Only the LoongArch stub installs the table, and only with
->> CONFIG_KEXEC_HANDOVER. Elsewhere there is no table and this code does
->> nothing.
->>
->
-> Can we handle this as an arch table then, and handle everything in
-> the LoongArch arch code?
+I have a question about the (related?) smp_mb__after_spinlock(). If I
+understand correctly, the comment in include/linux/spinlock.h says that
+spinlock()+smp_mb__after_spinlock() should provide a full memory barrier.
 
-I think this is useful for all architectures that use EFI, not only
-Loongarch. Today Loongarch is the only user, but this can very easily be
-used by other architectures.
+Now, before 5f1e001be579 ("LoongArch: Add qspinlock support"), LoongArch
+used the ticket spinlock, whose ticket_spin_lock() does provide a full mem
+barrier by itself, so the current/generic/no-op smp_mb__after_spinlock()
+was ok. But then LoongArch switched to qspinlock that carries no full
+memory barrier (if I'm not mistaken).
 
-For example, I have been considering moving x86 over to this too. Today
-we use setup_data. Once we get EFI support, I would like to get rid of
-that and unify everything under EFI. It is much simpler to have a
-universal way to pass KHO payload over.
+So, shouldn't LoongArch #define smp_mb__after_spinlock() smp_mb()?
 
--- 
-Regards,
-Pratyush Yadav
+Sorry for not posting a proper patch, I have no access to LoongArch machine.
+
+thanks,
+Michal
+
