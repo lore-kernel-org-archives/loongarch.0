@@ -1,48 +1,64 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=220.197.31.3
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793245009;
-	b=xQbBtY8QGbGEltYgVMb5MUts9zu634b9paUep3xMA/1M0INWkMR/w+Ol45iTaj+L9VwB
-	 RACykttRA4xdmWc9JqNqfmWVp4XiIq9PMP6K3HUVz1/muFCn9vAtcfjJDLgVqBkZy0mI7
-	 UQvrm6ZBC9x1xd2wGYgl5klrqm0oP+6P9ntHgGsIk5QgDTHohx+Kgv2q+ZLWlUVwUsVGi
-	 9TcbY+On+c7I0DTR59GW11AJBgQNVCk1xQP9xLYchREsPso4IxWaCJJM01993LAFperIh
-	 eVfwleX49iM6rvBwA1TJxdTKnUX1bpTUkSGxJHmeQuPb/bL1Z4iPmYD7N7CVpO/nqpg==
+	t=1793245998;
+	b=ksY2y4xMMdaTQKfjqzAuJ6+9Elvm/KX9747UYsGDOgeRYgr+58T2+pl/UqZxyZ8mKtBf
+	 vbQs56HHTgW48QHsLcNHJ4vlSIs18gBPvaVbXVgo0T2aBOL3w26rasA+XEZxB73ECYWte
+	 r7p8p0opHaL0/qcw5k8bR20pXm2X3n2XfZMBfkOrUsoDKi/8tcInvEsdpHpw44trg89eB
+	 qipS00OoRh5egCaWi1pIMlcTM8StX/syXNECL0RwTfmmjISGy75u2eqsWPAqAPUDeu/mA
+	 Q/ol2/PxxMMyDH9kamGct6D8leRgZY4CkUvd6l1a9dk49yDyJhxxu4j5TLNoEhq/otg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793245009;
-	h=DMARC-Filter:Received:Received:From:To:Cc:Subject:Date:Message-Id:
-	 X-Mailer:MIME-Version:Content-Transfer-Encoding:X-CM-TRANSID:
-	 X-CM-SenderInfo:X-Coremail-Antispam;
-	bh=XUB/7JwFVR3vCwhz9vzj6yKZKYA2g43PyYaNlGDfQBs=;
-	b=5ILIoG8kqy3nfuwizVZpbg0/cUBAPEhyzrn8FAlwpQCNrFyJLtiLi5cRMYPXVf+Nfksn
-	 CAZt5nXSyD9YYycxQrXmMNMGt8gvK4AW49IURPZyXn2uAMT8nPbdGvYcdtIldkvDdrwRt
-	 s+QrQ8TJSu8/c2e6BHNrpjR8QU9KzIV7TvZOYVolSFXNAF9W6Quz49KDtYhO17anH3eGK
-	 q+NLg8lMHLQPiKmz02fJrVOs1+n6wWueIEng/piWpeaedf62gcPwC67NVUmF8ZYwP2ZVG
-	 X5fqDmMFmbI1HFwLg4PkbyEv6gzfW51xwfSx2rkNpHcejNAHeC1764DEoZ229CVrknw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793245998;
+	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
+	 Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding:X-CM-TRANSID:X-Coremail-Antispam:
+	 X-CM-SenderInfo;
+	bh=0eL2bzd9HSLFKqzLgVouTcXW+mDlC5BCNips3rCkPwE=;
+	b=g0mnI3BeTF0hDDWJeMZPqC8KoUeGjl870ypO2zTr4/lAnoXb+rmmghoiQXUSLwlAoZRn
+	 KQPgWnujrSNCcMh4g0ycph56D4iwDZCchcr1TNn46727tGpI5czDgnNLDDLYQkePZW5If
+	 reIx89RLU7jV3bpo32f9jmWr5dsp2iqCwd2UbpOnSZJS6qU90MhBQkRnveKFEUK/Grqvw
+	 gm65V9BfpmswLLsJOz4+BThliiF2LiVMoCS5hi7ku5cqXUSkRc32/uCozE8kk6MKMYyN5
+	 +tzW4etYlKs8Mdmka5KPGB2553SgbuJ7PKDARYl/6CjLwz8E9wU7iYo7DpO+M7lhlzw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=loongson.cn;
-	spf=pass smtp.mailfrom=loongson.cn;
-	arc=none smtp.remote-ip=114.242.206.163
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5336D606A320
-	for <loongarch@lists.linux.dev>; Thu, 29 Oct 2026 03:36:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5336D606A320
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8Bx79JNv+Jq01MaAA--.11438S3;
-	Thu, 29 Oct 2026 11:36:45 +0800 (CST)
-Received: from localhost.localdomain (unknown [127.0.0.1])
-	by front1 (Coremail) with SMTP id qMiowJDxzM5Nv+JqXRAxAA--.11789S2;
-	Thu, 29 Oct 2026 11:36:45 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	kvm@vger.kernel.org,
+	dmarc=pass header.from=163.com;
+	spf=pass smtp.mailfrom=163.com;
+	dkim=pass header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=IqQKsNof;
+	arc=none smtp.remote-ip=220.197.31.3
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05D8606A31F
+	for <loongarch@lists.linux.dev>; Thu, 29 Oct 2026 03:53:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C05D8606A31F
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key, unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=IqQKsNof
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=0e
+	L2bzd9HSLFKqzLgVouTcXW+mDlC5BCNips3rCkPwE=; b=IqQKsNof3NMoHHLxd2
+	1c9vUv7A3OSdVkHqs0pUy0MwvS29GJMCCe2BJy82hp/gbtgO0Fl2NGH+jrJNhLjC
+	BUm6tWbCU5Hw4QKhbiq0jr5ss2wAH+WDbjUgT5+ir3KPSKDVomaYJiLjCK3JlMG7
+	nitMT/sbH54H9ZxR4o0r+XKFY=
+Received: from pc.localdomain (unknown [])
+	by gzsmtp3 (Coremail) with SMTP id PigvCgCnsSkVw+JqTWv_Cg--.16381S7;
+	Thu, 29 Oct 2026 11:53:02 +0800 (CST)
+From: Jiale Yao <yaojiale02@163.com>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Radu Rendec <radu@rendec.net>,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	Marc Zyngier <maz@kernel.org>,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: KVM: Add KVM_LOONGARCH_VM_FEAT_CRASH feature detect support
-Date: Thu, 29 Oct 2026 11:36:36 +0800
-Message-Id: <20261029033636.1280539-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+Cc: stable@vger.kernel.org
+Subject: [PATCH v2 05/20] irqchip/loongarch-cpu: validate MADT LIO-PIC entries
+Date: Thu, 29 Oct 2026 11:52:36 +0800
+Message-Id: <20261029035253.2333852-6-yaojiale02@163.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20261029035253.2333852-1-yaojiale02@163.com>
+References: <20261029035253.2333852-1-yaojiale02@163.com>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -53,35 +69,42 @@ List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxzM5Nv+JqXRAxAA--.11789S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+X-CM-TRANSID:PigvCgCnsSkVw+JqTWv_Cg--.16381S7
+X-Coremail-Antispam: 1Uf129KBjvdXoW7JrW3JFyxXr4Dtr13GF17Jrb_yoWkWFb_uF
+	1a9asrJryj9F1Utw1ktr15Z3sxt3y8uFnY9rs2qFn8C395Jw1rXFsrA3yfX3y7KryvvFn3
+	Gr4qvr1Syr12vjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUbgTmDUUUUU==
+X-CM-SenderInfo: x1dryxhdohiji6rwjhhfrp/xtbC7x9LhWriwx9aQgAA3y
 
-Add feature detect with KVM_LOONGARCH_VM_FEAT_CRASH, so that VMM in
-user space can detect and enable this feature.
+The LIO-PIC MADT callback passes a typed record to the controller
+initialization code without checking that the complete record is
+present. A truncated firmware entry can therefore lead to out-of-bounds
+field reads.
 
-Fixes: 00289c235d40 ("LoongArch: KVM: Add hypercall crash support")
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+Reject incomplete LIO-PIC entries before passing them to the
+initialization helper.
+
+Fixes: b2d3e3354e2a ("irqchip: Add LoongArch CPU interrupt controller support")
+Cc: stable@vger.kernel.org
+Signed-off-by: Jiale Yao <yaojiale02@163.com>
 ---
- arch/loongarch/kvm/vm.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/irqchip/irq-loongarch-cpu.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
-index e4c1c65fe20b..ba5fdfcd7016 100644
---- a/arch/loongarch/kvm/vm.c
-+++ b/arch/loongarch/kvm/vm.c
-@@ -165,6 +165,7 @@ static int kvm_vm_feature_has_attr(struct kvm *kvm, struct kvm_device_attr *attr
- 	case KVM_LOONGARCH_VM_FEAT_PV_IPI:
- 	case KVM_LOONGARCH_VM_FEAT_PV_PREEMPT:
- 	case KVM_LOONGARCH_VM_FEAT_PV_STEALTIME:
-+	case KVM_LOONGARCH_VM_FEAT_CRASH:
- 		if (kvm_vm_support(&kvm->arch, attr->attr))
- 			return 0;
- 		return -ENXIO;
-
-base-commit: c339f4010dea8b0d754f84ace70cd1b089878ef8
+diff --git a/drivers/irqchip/irq-loongarch-cpu.c b/drivers/irqchip/irq-loongarch-cpu.c
+index 84ce24889488..6185825477f4 100644
+--- a/drivers/irqchip/irq-loongarch-cpu.c
++++ b/drivers/irqchip/irq-loongarch-cpu.c
+@@ -119,6 +119,9 @@ static int __init liointc_parse_madt(union acpi_subtable_headers *header,
+ {
+ 	struct acpi_madt_lio_pic *liointc_entry = (struct acpi_madt_lio_pic *)header;
+ 
++	if (BAD_MADT_ENTRY(liointc_entry, end))
++		return -EINVAL;
++
+ 	return liointc_acpi_init(irq_domain, liointc_entry);
+ }
+ 
 -- 
-2.39.3
+2.34.1
 
