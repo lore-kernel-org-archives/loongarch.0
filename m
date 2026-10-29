@@ -1,109 +1,48 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793235493;
-	b=gBDL1TL/505lh88wYWlAFS3CYqhmETTt6vSn5uqHPXHiezBuNgS+8fOeMInXmr5MI6b6
-	 NswWTKNVDsm8G5yt8+H10DognS7nC5t4R/pnW3e4Wzyze79GketYvnt95tkDPm2Y7Az1D
-	 xozMVtJOlTxHW/2PIjicsNgtPZstFqeV9ejF/pFnphqi5xjnZ9w/LhMaZwOC6RSbbWrY3
-	 yipj9ISAW/+s0o+f8g6h+BWme2i/AtmfkgYSvU5hbb7RhxNkfu0Wkg8c3tTSWPvn2aaNX
-	 breT3k41VRBaJylUScihgZRMHiJHRZZJSCkGQnacwjw/ch/i3GJh8XDBiHPmyDNB7/Q==
+	t=1793245009;
+	b=xQbBtY8QGbGEltYgVMb5MUts9zu634b9paUep3xMA/1M0INWkMR/w+Ol45iTaj+L9VwB
+	 RACykttRA4xdmWc9JqNqfmWVp4XiIq9PMP6K3HUVz1/muFCn9vAtcfjJDLgVqBkZy0mI7
+	 UQvrm6ZBC9x1xd2wGYgl5klrqm0oP+6P9ntHgGsIk5QgDTHohx+Kgv2q+ZLWlUVwUsVGi
+	 9TcbY+On+c7I0DTR59GW11AJBgQNVCk1xQP9xLYchREsPso4IxWaCJJM01993LAFperIh
+	 eVfwleX49iM6rvBwA1TJxdTKnUX1bpTUkSGxJHmeQuPb/bL1Z4iPmYD7N7CVpO/nqpg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793235493;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=MGY0Rqt9U0dIYToocgg3kUF7zpT8f/idrVBwF/VTivU=;
-	b=TFI5rEcl3gOV0SpBeARdE/sdPdVNwAAvOxfi9/GCDfmbnp8mJl0dVzLUoKdJs9rZS2dN
-	 btwbGjGhbsTzoSOS+r5xBbgxs2Q8/kQ3DnRvTq/F+VQ2RSyH4dDnI6O8eBVU36QL3jlOf
-	 44FWlDoxU0hD4nR91B9BhYluPI3ZEX5tNfPJXGn8JLqME3i+AB5Lk8fmoocwCrTptsYRu
-	 2x0qcYejLk6bMzckD56rqC8nfnP8v7VQ1loP6O+AobtBv6rEHfEniBtoacO8HNaGR6wc0
-	 o9Y99zg0QUwca0Z/hECt2qoXFriIxVZC/a2Tu1ocjKrqvCd/S4Br91v9thO4R5HcK1w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793245009;
+	h=DMARC-Filter:Received:Received:From:To:Cc:Subject:Date:Message-Id:
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-CM-SenderInfo:X-Coremail-Antispam;
+	bh=XUB/7JwFVR3vCwhz9vzj6yKZKYA2g43PyYaNlGDfQBs=;
+	b=5ILIoG8kqy3nfuwizVZpbg0/cUBAPEhyzrn8FAlwpQCNrFyJLtiLi5cRMYPXVf+Nfksn
+	 CAZt5nXSyD9YYycxQrXmMNMGt8gvK4AW49IURPZyXn2uAMT8nPbdGvYcdtIldkvDdrwRt
+	 s+QrQ8TJSu8/c2e6BHNrpjR8QU9KzIV7TvZOYVolSFXNAF9W6Quz49KDtYhO17anH3eGK
+	 q+NLg8lMHLQPiKmz02fJrVOs1+n6wWueIEng/piWpeaedf62gcPwC67NVUmF8ZYwP2ZVG
+	 X5fqDmMFmbI1HFwLg4PkbyEv6gzfW51xwfSx2rkNpHcejNAHeC1764DEoZ229CVrknw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=HzEVWmpx;
-	arc=none smtp.remote-ip=209.85.218.51
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D279606A31A
-	for <loongarch@lists.linux.dev>; Thu, 29 Oct 2026 00:58:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5D279606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=HzEVWmpx
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-c4550d8ab15so214920166b.2
-        for <loongarch@lists.linux.dev>; Wed, 28 Oct 2026 17:58:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793235492; x=1793840292; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=MGY0Rqt9U0dIYToocgg3kUF7zpT8f/idrVBwF/VTivU=;
-        b=HzEVWmpxPS/qghs7mVBo+zQM1KgbQgQAC8GQBCsejXYQUJ5J7+xqLjWWUCjN55T/Y+
-         lUfu9MiLucBjsK3WjPfc/1gDICgd9Y/Kidby3v6ArU/y2cmYwml+yRLuDzqw0jX516hk
-         YW85NTjL5OlJfcCIQ5EC/lze8sq+TfSaSqQCY2AwC5KWa7cAOCO9sRjndk8QLBUR8BkK
-         l6JTV6i3cB8EBtiNojbNGIyYVu3i8dRzvHMvo3mBU1ODRQgRKmswdFcwL7ZTj8TJwxgm
-         h/lKm1FOAdcgbt4cMqvkp5+EW8lgzdRg7RywPfq3NJMRFSIgTeMEzc4OUHt/3vHSf3xv
-         yF+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793235492; x=1793840292;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=MGY0Rqt9U0dIYToocgg3kUF7zpT8f/idrVBwF/VTivU=;
-        b=Cnd72NAqFd4HywG/iR6tjC1oHicb4W1q7eNtq0TgKJJ5lJS9E67acP0CJ9vbAHPhQO
-         cLzZxA+oNRxpkzX5/+3FxvKPKANmEaWnGEuE5gWM4vwpr6QsWIgdFUtS35BZvlpyP8s0
-         TTM8YUGBlv93y4s5m9dBYjMqt9vhKHy2XG4bbdQkVvcpi38x1bpJ9SO4Ko9CTvIQLM/L
-         8xdIud+30nCMR3h22NsXGJWqDEMdMXLtLvAr95deLVudgb3dA99/RvVuF3mEPMg4jKAO
-         jHGiYagQvj/98XGFFpiqDpI1511bu+ZtTGdWYAeaWpD2jW5ERX0w8h34zDPtK0nXA3VP
-         PeIQ==
-X-Forwarded-Encrypted: i=1; AKwUvBzifwf6XWw6WGwHTLMuZ49ogn3jWxzgS6HWd2lfjcOiPum+Ig4sA0g5VohUBLRZ3A5W+vsE5P1PcCc=@lists.linux.dev
-X-Gm-Message-State: AFq9FYI/aRYKrHQNMIUlKSEGLWrxUYSwNDGLy/EfIsr55P4p00AWoOb1
-	UY3wz2HvnxyFaMr/9WBMhkSlxXE8oS6pu3DGYrdzVPHZf5DJpEXjQAr9
-X-Gm-Gg: AYBFou0sMP3lyCEGW4QsAcwq7UoRBOuAiGqGITSOp9Y0B0O3c0XEBu0bPEJnUdzfvJC
-	ELSROSsNIz5fQHJ9u7eOL6dRuLfuRk4Ygzc9fcEC8MWNoko6S1SX+vcgPZsGf/v83M1H837rC1n
-	wl2JrRcbLA/YgL7jMKlVuyn52Ui/WNmettfyeYBxh32e/SwhhqN74QXgEIEIwIOCANFwKTGe+64
-	S4QFkZSSNGEK6k8IG8Ufn+4DL1+GM6OO1x2Wf2D36X268Tx219wBkmGBchwlPjYEob/dZCt6dCv
-	sIKpZER3p26JGBx4fBlvea0HQsNDLtGBJQb8zV6JftdFJCHHZR9ZQI9d3QbVAOPhOT0+AbE2YuJ
-	kica8BnCoMCic9wA8DadiE05LDD70s7191juCtdKTNkvhSVNMeCN7qaP1OVMpQGxtnjP9Eos80z
-	aBSjxusxAH+VFJ197dDJn9FnwriG0k0Gowjv9owqzS+UlkBVN0BePWF7DUprSr2jdxPkT8XSoVG
-	bfR3KAqXO7znMI32tbURlN8kIzBwR1XtX6PdvfYqnfsVziqy70iSgg2h8k/fo4LJphTbQGCa+qY
-	s0R0o0/dfIj/bM4kZMELDpgwV9vLtfmWPpUrlyMVzKov/3lOKZfkEK825urEiN8JyR6o166DnbT
-	XfBBr9tr5R7G9rE7QzCvJCnc6ttQuUxy0vjZ1Pl5cBmOAQFqgkdOFNSqptgijF9RNW727K3xifO
-	D83K6dTeMZjS6pdXSMcT1VdJSmuNNbQJ9AkWwC
-X-Received: by 2002:a17:907:72c3:b0:c49:b90a:988b with SMTP id a640c23a62f3a-c49bdf89bc9mr328062966b.49.1793235491600;
-        Wed, 28 Oct 2026 17:58:11 -0700 (PDT)
-Received: from localhost.localdomain (249-172-21-31.ftth.glasoperator.nl. [31.21.172.249])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c46bd66bd3asm668971966b.56.2026.10.28.17.58.09
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 28 Oct 2026 17:58:10 -0700 (PDT)
-From: Emir Beganovic <beganovic.emir@gmail.com>
-To: Birger Koblitz <mail@birger-koblitz.de>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Eric Dumazet <edumazet@kernel.org>,
-	Jianhui Xu <neuromoments@gmail.com>,
-	Nicolai Buchwitz <nb@tipi-net.de>,
-	linux-usb@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev
-Subject: Re: [PATCH net-next v19 00/13] ax88179_178a: Add support for AX88179A-based chips
-Date: Thu, 29 Oct 2026 01:58:09 +0100
-Message-ID: <20261029005809.19405-1-beganovic.emir@gmail.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20261010-ax88179a-v19-0-7475173cfb56@birger-koblitz.de>
-References: <20261010-ax88179a-v19-0-7475173cfb56@birger-koblitz.de>
+	dmarc=none header.from=loongson.cn;
+	spf=pass smtp.mailfrom=loongson.cn;
+	arc=none smtp.remote-ip=114.242.206.163
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5336D606A320
+	for <loongarch@lists.linux.dev>; Thu, 29 Oct 2026 03:36:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5336D606A320
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8Bx79JNv+Jq01MaAA--.11438S3;
+	Thu, 29 Oct 2026 11:36:45 +0800 (CST)
+Received: from localhost.localdomain (unknown [127.0.0.1])
+	by front1 (Coremail) with SMTP id qMiowJDxzM5Nv+JqXRAxAA--.11789S2;
+	Thu, 29 Oct 2026 11:36:45 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: KVM: Add KVM_LOONGARCH_VM_FEAT_CRASH feature detect support
+Date: Thu, 29 Oct 2026 11:36:36 +0800
+Message-Id: <20261029033636.1280539-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -114,47 +53,35 @@ List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxzM5Nv+JqXRAxAA--.11789S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Hi Birger,
+Add feature detect with KVM_LOONGARCH_VM_FEAT_CRASH, so that VMM in
+user space can detect and enable this feature.
 
-I tested v19 on a Dell DA305 USB-C adapter. It has an AX88179A
-(0b95:1790, bcdDevice 0x0200, FW 1.0.7.131) behind a VIA VL822 hub,
-plugged into a Dell XPS 16 (Panther Lake). The peer is an Intel I225-V
-behind a switch.
+Fixes: 00289c235d40 ("LoongArch: KVM: Add hypercall crash support")
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/kvm/vm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-I built ax88179, libphy, phylink and ax88796b as modules for a 7.2.8
-kernel. v19 needed two things on that base: a4e22e9253e7 and a backport
-of genphy_{read,write}_mmd_c45() from the adin1140 series.
+diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
+index e4c1c65fe20b..ba5fdfcd7016 100644
+--- a/arch/loongarch/kvm/vm.c
++++ b/arch/loongarch/kvm/vm.c
+@@ -165,6 +165,7 @@ static int kvm_vm_feature_has_attr(struct kvm *kvm, struct kvm_device_attr *attr
+ 	case KVM_LOONGARCH_VM_FEAT_PV_IPI:
+ 	case KVM_LOONGARCH_VM_FEAT_PV_PREEMPT:
+ 	case KVM_LOONGARCH_VM_FEAT_PV_STEALTIME:
++	case KVM_LOONGARCH_VM_FEAT_CRASH:
+ 		if (kvm_vm_support(&kvm->arch, attr->attr))
+ 			return 0;
+ 		return -ENXIO;
 
-With the current driver in configuration 1 this adapter never gets a
-link ("Failed to read reg index 0x0040: -32"). With v19:
+base-commit: c339f4010dea8b0d754f84ace70cd1b089878ef8
+-- 
+2.39.3
 
-- 1000/full link with flow control
-- download 940-941 Mbit/s in nine runs. Upload was 937-941 in five of
-  nine and lower in the other four, and I couldn't find why. Eight
-  later runs with tracing on all averaged about 932.
-- 1-byte TCP request/response around 190-200 us, against about 1.46 ms
-  with cdc_ncm on the same port (its default 400 us TX timer)
-- switching itself to configuration 1 when the device comes up in the
-  CDC configuration
-- 100M and 10M links
-- VLAN with rx-vlan-offload on and off, and rx-vlan-filter dropping a
-  VID that isn't configured
-- multicast filtering and allmulti
-- suspend/resume (s2idle) and wake-on-LAN with a magic packet
-
-Two small things I noticed:
-
-- "Switching to vendor mode" is printed twice, once per CDC interface,
-  and before the netdev is registered, so it shows up as
-  "(unnamed net_device) (uninitialized)".
-- After a WoL wake the link goes down and up twice within about 2.5 s,
-  where a normal resume shows a single link up. It comes back fine
-  either way.
-
-I only have this one adapter, so nothing on the other chips.
-
-Tested-by: Emir Beganovic <beganovic.emir@gmail.com>
-
-Thanks,
-Emir
