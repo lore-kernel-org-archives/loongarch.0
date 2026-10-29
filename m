@@ -1,100 +1,70 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.43
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793259734;
-	b=OYrklzE0Aa7xGgBBhlKHwWy+sQuntm77CAPBhVIAQQuPwvEcLj2QVMfpbdgtL/oIpR+W
-	 FFPwPX9Ddo7eLWVYWInYXY1/SsJyIKkFkqkLKgSRYzWwyEYUfmGw80HKrt7UUOM4KUY9O
-	 p3YxpO1xaUrFdRDrMGKCl8qAznZp1dh0CaJKiO98j/JKbG4rYf7mePq6XwsD5oXGijGoq
-	 Ts1KHaOulu+One17gqQdCeHi7u/5kMaBHSj46g76KR7PCvuLTxmBxZuERjdAoAspoqWTO
-	 AHVYo9qnByp8tySMw/22IkQi0tl0b11J+Eqt73awUCpJs3X254bDnNyhgkVpMLbIPwQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793259734;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=nRUCr4NQ66GLUUzHJ4QDNjrj6aEkhbXAp6tE51ISY0s=;
-	b=z0QsPbIcf9CNToC26sX1Zy+G1vP4ZW2gRPuL3mKooUKWi0s09L/ha/42zozRKC7BHLaf
-	 Y/7yqc+n2hICWBDOUj/4wqp64ivkD8uGsiD1wrEUIVg6jkHHbAxQObLGqnC8laQKrtSwe
-	 Kfx5RNlfGhFefNdPNPZZyR6+KrbEr217/IkNSDcrh6LTCsbvkCvAp1LPTxeVtgBJUYqmO
-	 eU5Nye7Yl7F20s99Fbmqht9Ugbrs5ZLmLJMGDR3XuZ448VUJPNTIqRVaEoaeknKY4qrUE
-	 5m/EAH+3ITAa44N98lNgCtKTJubEHM5zgfFseAm4LmLQ7vKPJ7ceb1IGMu7olBUC+qg==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=rvNhMib0;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.43
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.89
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793270072;
+	b=2gVvfFq5qn+JymZOx06KXC5pFA6lyrKPcJynBq52jPDajUhTIwaGh0sUQ+5ZMuS3oMM2
+	 Lt2C22BKkMo8P5qOz2Sno1sRPsFnCo1YrDHdiH6CrA5pSUy140ZxVFlPiIao9U0kXY523
+	 S4hBJR18z8OP3FowYH7HFI/CdjQgUYE2iPEE1J67gxg6efHrl5k3+78zXXaViJ87JSdEp
+	 k4ezSAiPgIHPzFby505sdC5hwul+2UODxzZ7JWgZqTZbBqt70ncL7fE5QUXpXvIvqPPGr
+	 J8CH+PaWsAKvhatQyVgi1x7GcJx7NbE5d/wxIwUzkP68VpW5jKCMIpYDbigG9JHyalQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793270072;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=AOkwsWmwjY7T0BagmEwjwy19sbGkrNkf9+nM9gVRFeA=;
+	b=cc0RyzfPAqNfxMHMoI18+vy+vT2BXXbq6BPaBVEik+9ivmhxys78+ojJcHoESEVHijmN
+	 W9bRjTYImeFwffzOviMV6SN+As0nHDK+DgLkRDznOQHF78Dex59ruePpox2eN7+BRQWSC
+	 dxlRsz7J0j3Fw+1SI3Kp5SMBLBzTT47kbntNhE/1rye/YsLT/rp6OSyYRMtqfhdDsPRFw
+	 Nxmy7OIjFIJBXAB/fNMeLwG6VelW3QGC0Nz0yJcA6+rMh2Y8pL9ZWj6oEe8ww/VtjL/JM
+	 yp0HiMk5OrR0/jPEHLmFDWQTBBuWpHIqv2OgdIgg7jHIcaU4NrIWVMxRCcCrvxqGfRA==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=UXOfp9RY;
+	arc=none smtp.remote-ip=95.215.58.89
+Received: from mta1.migadu.com (out-89.mta1.migadu.com [95.215.58.89])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7B7606A31A
-	for <loongarch@lists.linux.dev>; Thu, 29 Oct 2026 07:42:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DC7B7606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 367BC606A327
+	for <loongarch@lists.linux.dev>; Thu, 29 Oct 2026 10:34:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 367BC606A327
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=rvNhMib0
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-c468bd799ecso234285566b.1
-        for <loongarch@lists.linux.dev>; Thu, 29 Oct 2026 00:42:13 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1793259732; cv=none;
-        d=google.com; s=arc-20260327;
-        b=LcLmXhNlqRVu0VkjPDenhAAFxUvEFESic/1jSyJOijT9GqHfBZIiD7WBVFhU057byk
-         YBMMvQjedjihruOzlZb0T5BwmVCtceQWe24TxKSxzoRVVjvpDO+kDP2JLpC/qaux2x0p
-         E7OzcEdBedSGEqW1R4gXI3KLTSzy4qB2TaW3viI6PxYDbauvlDh4wQ0OMnKiiQkyDd8e
-         qBkSkLC278yi9c0n2RDXWnuHi9rQ9yHvLHLbp0WsM/V+KY+EPNrdBo5A5CefWWHTD9NU
-         za67x6A2ZPFyx993T8CsNc5k2vN51n6has+Xjh9wKttsHv7l0ikqJT3C25tF7GqADlQ6
-         00bw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=nRUCr4NQ66GLUUzHJ4QDNjrj6aEkhbXAp6tE51ISY0s=;
-        fh=HHVWOhc6uOGkJAlSlZJcVnIZ03XtpQ3pgxH8MW943P0=;
-        b=InmgWMlLbIjp2JDiy52A4qFHP/sDjYGgwQsEtanbFqv12BJuRKC8bh9lFSpQjzU2GX
-         fwz8AFDDNAN8JaM5XNN+V0rl+84W7KHrceifE4Xat7yOqFM+R62HHeF4dpEEdPFp44fN
-         2sWJr+vSqDR3Cxq2I+8eBbAne0A2fKHWA0h1w1WD5o93GaypIpwNg7Z9N+w+5SY0QZVY
-         9E5+wKtB6c+0X7qxKdFt/iEgM/8GGeg+6p7p9NmIwWVWgxFXzPHNLRwjAObub9CgtswQ
-         5SnBzLEEYV3fE0Vdw4Rt2Wl/Q6RSsW3VW4IBvMweWcsAdM7gn6SnY7hviEmhAF0AGnhS
-         gZ6g==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793259732; x=1793864532; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=nRUCr4NQ66GLUUzHJ4QDNjrj6aEkhbXAp6tE51ISY0s=;
-        b=rvNhMib0wTmSjPI68zftzxkVXnjTr5fW/urS6k4XDag3tkaTQ3gMwfXCre28VbjB7b
-         LVprTEgVdCl/cpTDQf8P1sbUBMSf8VTQ7a292BOLB2DNL3aF+EZsqHyTtCJPNdcEMNKX
-         xrMrJn1WvpM8hGa69854AcLx/lIV1pKcDuaeRboP0flxR0b3L0poQb32zv02EKYHt2/x
-         5oageYZUAA2LOo15pGG7VvTLp1jeglVo2An2ruo0z0F8pMLn4cW6ADMzjs1+Ip3APstF
-         RqDBrCnt2mwTzv3fWyyrHZiIMxFORl1cf7I8yxXgrbKP8dL1al7g31a3gd9YPdPazP5v
-         dHQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793259732; x=1793864532;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=nRUCr4NQ66GLUUzHJ4QDNjrj6aEkhbXAp6tE51ISY0s=;
-        b=XP1+k1MqYBU36i4cNgvCCCSwEclWCrR1HcL5QXFvZtD5TwnAEe8p3rrUNY0FmQzoMk
-         XeOXWmQ/h7icq47mIR5uShYTKbXbpDKcFdtLH9O34xw895tg8gKFe0TwSz3qcg54lILB
-         xGytANm1M/dFGaWcO8qzKOGHlGa+8DmOPuz63ekMWNuvQ+Jq7bzcknPe4MS4+q6Kmcvd
-         6PwfPMPeZ3eGrZg4pTUyUMeUPnNYXYopMh7iHxSM5lCf6PKRYWw4OzircjX7HJkwjpVk
-         4HZXaA5qh/PGRo7H7L6hipklZLyTrNoJ3P+Pu8yZx5IxIkxYn7z9OYrthaBXHcLEUBZC
-         SucA==
-X-Forwarded-Encrypted: i=1; AKwUvByYDJYVfw91XaXTZc7+05yuFwx1lJzciT7PDuczdQQ/BDxLWIpRvGdWXeo9CgT7apZd2d5uwJgsJwo=@lists.linux.dev
-X-Gm-Message-State: AFq9FYKxF42RDyrVDN94BtnA4RoEQRQLtj0LZkFWTwguYfY7oYztxtXL
-	u1gVJAVq1IL2uIiV2GaRztnkmeKyb04705UQ+AP4KFwqO2u0Z6Q5bZxpWzGi6rEhqlDCrDJXBFe
-	nJ7MAAius7Ue+EqnGa/22mi5vLP4Ng2o=
-X-Gm-Gg: AYBFou1EBg40W2w6ymYtaoaZ1iAEKhL6IVsbF1qLIey1ehjfnQ8IWKnD2aiXeh62074
-	5NVNew5Rq4LtBj1ZxrgNyCXz+6yvhgUmL6XRDNGE63u3cCphv35K6J4x96lqakTud6VPptEp4vj
-	JSwUWj38Ow8V9wxwh6JZuoMd5vX0SKQz1wyXUKDBjWc6aFy7NQ5PsojiWlN/pHGfeFwJcKkhQOg
-	e5BR2oXqJEPzQdUhW57LrykUmHyJcqKArpCRYs2h4VINeBKuT5nT4KsT2fNpUokoJI1DM+/rJtu
-	W0uKNzYcasjpDMCaGQ0/drWADsiE6lGU6yJm+xY1khkKmN+yhR5lBmN03EqGdcveecBtC85pZNn
-	YOo2aOxfjwW6W13lOtrSjUm/QGGpRBFJJd92Kkt0=
-X-Received: by 2002:a17:906:fd45:b0:c49:bf6a:28fa with SMTP id
- a640c23a62f3a-c49bf6a2c46mr282671766b.28.1793259730604; Thu, 29 Oct 2026
- 00:42:10 -0700 (PDT)
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=UXOfp9RY
+X-Envelope-To: loongarch@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=V9eKCFzwICKE4rFO7Nmsc0WCMFzPWjs4u+0Fk0qiHkg=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1793270069; v=1; x=1793874869;
+ b=UXOfp9RYEVzG9pxkQUlobs6A4jb1xYE3cZWLzCOHQGck1nZV/9xfA585SJTqLRsuzC5Wd36Q
+ lj4xBsZMIOrGWoGZb2gahqDlSCr3eNASR11V9aCanvfVTk8onkRsgfuJQ5v8PN8sabF8JzeIo+U
+ 24AXxMU3ShTpP0llLmIiyVxQ=
+X-Envelope-To: loongarch@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id dd12de82c714536d;
+	Thu, 29 Oct 2026 10:34:29 +0000
+X-Mizu-Trace-ID: dd12de82c714536d
+X-Migadu-Flow: FLOW_OUT
+From: George Guo <dongtai.guo@linux.dev>
+To: rppt@kernel.org,
+	pasha.tatashin@soleen.com,
+	pratyush@kernel.org
+Cc: graf@amazon.com,
+	changyuanl@google.com,
+	akpm@linux-foundation.org,
+	chenhuacai@kernel.org,
+	sourabhjain@linux.ibm.com,
+	liukexin@kylinos.cn,
+	guodongtai@kylinos.cn,
+	kexec@lists.infradead.org,
+	linux-mm@kvack.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] liveupdate: kho: calculate per-node bootmem sizes before allocating any
+Date: Thu, 29 Oct 2026 19:34:25 +0900
+Message-ID: <20261029103425.14689-1-dongtai.guo@linux.dev>
+X-Mailer: git-send-email 2.53.0
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -104,108 +74,122 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <cover.1792988985.git.zhoubinbin@loongson.cn> <dcb49d67055cc41af3bd68cce01c05e73a7c2787.1792988985.git.zhoubinbin@loongson.cn>
- <auIe15pAb8ZZWbnV@lizhi-Precision-Tower-5810>
-In-Reply-To: <auIe15pAb8ZZWbnV@lizhi-Precision-Tower-5810>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Thu, 29 Oct 2026 15:41:57 +0800
-X-Gm-Features: AclHuK8kbVDGgdNrbovyTyakUo3h504IwuEClXkjkVVljd7312xDrPpt32lzyXs
-Message-ID: <CAMpQs4KMbvRpF9axnnEbO6Rcna77WqHQykv4jvw-EOnSbH8FBw@mail.gmail.com>
-Subject: Re: [PATCH 3/4] dmaengine: loongson: loongson2-apb-cmc-dma: Program
- CNDTR when advancing sg
-To: Frank Li <Frank.li@oss.nxp.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, dmaengine@vger.kernel.org, 
-	Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	devicetree@vger.kernel.org, Keguang Zhang <keguang.zhang@gmail.com>, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Frank:
+From: George Guo <guodongtai@kylinos.cn>
 
-On Thu, Oct 29, 2026 at 12:12=E2=80=AFAM Frank Li <Frank.li@oss.nxp.com> wr=
-ote:
->
-> On Mon, Oct 26, 2026 at 12:31:22PM +0800, Binbin Zhou wrote:
-> > When configure_next_sg() moves to the next scatterlist entry it updates
-> > CMAR but leaves CNDTR at the value left over from the previous entry.
-> > The controller therefore keeps using a stale transfer count, so the
-> > hardware does not move the amount of data the descriptor describes.
->
-> How it works at 1c0028e725f1? not test ?
+kho_reserve_bootmem() calculated the per-node bootmem sizes inside the
+allocation loop, after the lowmem and global areas had been allocated.
 
-Let me clarify how I found this and what I actually tested, since
-there is a fair concern the patch may be redundant.
+Without CONFIG_NUMA, memblock_get_region_node() returns 0 for every
+region, and memblock_reserved_kern_size() attributes a region to a node
+by memblock_get_region_node(). Since allocations are marked
+MEMBLOCK_RSRV_KERN, the newly allocated lowmem and global areas enter
+node 0's baseline and are scaled again by bootmem_size_node().
 
-I hit this while debugging a CAN-FD driver. Reading through the
-Loongson CMC driver I noticed that loongson2_cmc_dma_start_transfer()
-programs both CMAR and CNDTR for an SG entry, but
-loongson2_cmc_dma_configure_next_sg() programs only CMAR. The
-asymmetry looked wrong, and I wanted configure_next_sg() to program
-the same set of registers as start_transfer().
+In the original 1 GiB QEMU reproducer, the default 200% scale made
+node 0 request 672 MiB: twice the sum of the 98.45 MiB baseline and
+224 MiB lowmem area, rounded up to 32 MiB alignment. The reservation
+failed and KHO disabled itself.
 
-I instrumented the driver to read back CNDTR before and after
-configure_next_sg(), and forced a non-uniform descriptor by
-temporarily making period 0 shorter than the rest. With the CNDTR
-write in configure_next_sg() reverted, the read-back stayed at the
-period 0 length for every subsequent period, and the TC interval
-matched that length =E2=80=94 so the hardware was reusing the first period'=
-s
-count. With the write restored, the read-back tracked each period's
-actual length.
+With CONFIG_NUMA=y, node-specific accounting excludes the NUMA_NO_NODE
+reservations.
 
-That test required a non-uniform descriptor that I built by hacking
-prep_dma_cyclic(). As you know, cyclic mode itself is uniform by
-construction =E2=80=94 buf_len % period_len is checked, and every
-sg_req[i].len is set to period_len. So in any real cyclic user today,
-the hardware CNDTR preload mechanism already reloads the correct value
-on each CCR.EN edge, and this patch changes nothing. I2S audio works
-fine without it, and I could not have found the bug from userspace
-alone.
+The lowmem and global sizes are already calculated by
+bootmem_size_update() before any allocation. Calculate the per-node
+sizes into the kho_bootmem descriptors before reserving any bootmem
+area as well, and allocate the per-node areas from the stored sizes.
+Use separate read and write indices to preserve the saved sizes when
+zero-sized per-node areas are skipped.
 
-So yes, this patch is arguably redundant for the current in-tree
-users. I kept it because it makes configure_next_sg() consistent with
-start_transfer() and removes a hidden "all SG entries are equal
-length" assumption, also I'm happy to drop it.
+Fixes: 3dc92c311498 ("kexec: add Kexec HandOver (KHO) generation helpers")
+Reported-by: Kexin Liu <liukexin@kylinos.cn>
+Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
+Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
+Signed-off-by: George Guo <guodongtai@kylinos.cn>
+---
+Changes in v2:
+- Calculate every size before any allocation (Mike). The lowmem and
+  global sizes are already calculated by bootmem_size_update(), so only
+  the per-node sizes move out of the allocation loop.
+- Rebase onto liveupdate-7.4: follow the "scratch" to "bootmem" rename,
+  and keep the zero-size node skip added by "kho: do not reserve empty
+  per-node bootmem areas" by reading the saved sizes with a separate
+  index.
+- Explain why only CONFIG_NUMA=n kernels are affected (Pratyush, Sourabh).
+- The global size over-allocation on NUMA systems, which I planned to
+  look at as a follow-up, is handled by Sourabh's "kho: fix global
+  scratch size calculation" [1]. Mike asked there for a broader rework
+  of the sizing; this patch only fixes the CONFIG_NUMA=n double
+  counting.
+- No Assisted-by tag, although I said on v1 that I would add one: the
+  Assisted-by references have since been removed from the documentation
+  in mainline.
 
->
-> Frank
->
-> >
-> > Program CNDTR together with CMAR so software and hardware progress stay
-> > in sync.
-> >
-> > Cc: stable@vger.kernel.org
-> > Fixes: 1c0028e725f1 ("dmaengine: loongson: New driver for the Loongson =
-Multi-Channel DMA controller")
-> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > ---
-> >  drivers/dma/loongson/loongson2-apb-cmc-dma.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/dma/loongson/loongson2-apb-cmc-dma.c b/drivers/dma=
-/loongson/loongson2-apb-cmc-dma.c
-> > index 8b8d530d60c3..c654e0572902 100644
-> > --- a/drivers/dma/loongson/loongson2-apb-cmc-dma.c
-> > +++ b/drivers/dma/loongson/loongson2-apb-cmc-dma.c
-> > @@ -266,6 +266,7 @@ static void loongson2_cmc_dma_configure_next_sg(str=
-uct loongson2_cmc_dma_chan *l
-> >
-> >       sg_req =3D &lchan->desc->sg_req[lchan->next_sg];
-> >       loongson2_cmc_dma_write(lddev, LOONGSON2_CMCDMA_CMAR, id, sg_req-=
->chan_reg.cmar);
-> > +     loongson2_cmc_dma_write(lddev, LOONGSON2_CMCDMA_CNDTR, id, sg_req=
-->chan_reg.cndtr);
-> >
-> >       /* Start transition */
-> >       ccr |=3D LOONGSON2_CMCDMA_CCR_EN;
-> > --
-> > 2.52.0
-> >
+Tested with the KHO vmtest on a 1 GiB LoongArch QEMU guest, with the
+LoongArch KHO series on top: it passes with both CONFIG_NUMA=n and
+CONFIG_NUMA=y. Without this patch, KHO disables itself in the
+CONFIG_NUMA=n run.
 
+v1: https://lore.kernel.org/all/20260904025101.9959-1-dongtai.guo@linux.dev/
+[1] https://lore.kernel.org/all/20260922131217.698809-1-sourabhjain@linux.ibm.com/
 
---=20
-Thanks.
-Binbin
+ kernel/liveupdate/kexec_handover.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+index 6f1f55fe3181..9a53d7750367 100644
+--- a/kernel/liveupdate/kexec_handover.c
++++ b/kernel/liveupdate/kexec_handover.c
+@@ -831,7 +831,7 @@ bool kho_bootmem_overlap(phys_addr_t phys, size_t size)
+  */
+ static void __init kho_reserve_bootmem(void)
+ {
+-	int nid, i = 0, max_nr_bootmem;
++	int nid, i, j, max_nr_bootmem;
+ 	phys_addr_t addr, size;
+ 
+ 	if (!kho_enable)
+@@ -848,6 +848,15 @@ static void __init kho_reserve_bootmem(void)
+ 		goto err_disable_kho;
+ 	}
+ 
++	/*
++	 * Save the per-node sizes before allocating bootmem areas. Without
++	 * CONFIG_NUMA, new lowmem and global allocations would otherwise be
++	 * counted as node 0 kernel reservations and scaled again.
++	 */
++	j = 2;
++	for_each_node_state(nid, N_MEMORY)
++		kho_bootmem[j++].size = bootmem_size_node(nid);
++
+ 	/*
+ 	 * reserve bootmem area in low memory for lowmem allocations in the
+ 	 * next kernel
+@@ -860,6 +869,7 @@ static void __init kho_reserve_bootmem(void)
+ 		goto err_free_bootmem_desc;
+ 	}
+ 
++	i = 0;
+ 	kho_bootmem[i].addr = addr;
+ 	kho_bootmem[i].size = size;
+ 	i++;
+@@ -879,9 +889,12 @@ static void __init kho_reserve_bootmem(void)
+ 	/*
+ 	 * Loop over nodes that have both memory and are online. Skip
+ 	 * memoryless nodes, as we can not allocate bootmem areas there.
++	 * Skipping zero-sized areas leaves i behind j, so writes to
++	 * kho_bootmem[i] cannot overwrite unread sizes.
+ 	 */
++	j = i;
+ 	for_each_node_state(nid, N_MEMORY) {
+-		size = bootmem_size_node(nid);
++		size = kho_bootmem[j++].size;
+ 		if (!size)
+ 			continue;
+ 
+
+base-commit: 9a6a70aefe77f6fb9ff2b3037dcf87f6dff65c8c
+-- 
+2.53.0
+
