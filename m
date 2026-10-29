@@ -1,76 +1,109 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.198
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.218.51
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793214192;
-	b=P/XMJ4es1Abi4IG1VGf+nSAtTCA08AjuC5HtXg+Va12odV7W3z0tOw0EQRvtHxOV8Q27
-	 PfWyaszKWw3QvWO9xVmgEVVseohdD79gFUfDtaaae5snNZFiu8gu/mfLztA/P5cGTFsLi
-	 csW4ycEBaKwnF0XrDkXOybmC025c1LRiihtSGVLBKFRjvDFFLMUj8e+LM6ZzGHv192Pqu
-	 933XQVj6xrkkO0Hr8WJfUtLlPZQxgqLJiKBQaRuFPfvVHg6CCKO1QGI8N0+oavLR/6yoU
-	 yL+KuX9VWKxqKfi26DGsXWTnQU8S1M0NnxuSrJtX0cChk0rgt9ByHQYJrPeL2Z2QWxA==
+	t=1793235493;
+	b=gBDL1TL/505lh88wYWlAFS3CYqhmETTt6vSn5uqHPXHiezBuNgS+8fOeMInXmr5MI6b6
+	 NswWTKNVDsm8G5yt8+H10DognS7nC5t4R/pnW3e4Wzyze79GketYvnt95tkDPm2Y7Az1D
+	 xozMVtJOlTxHW/2PIjicsNgtPZstFqeV9ejF/pFnphqi5xjnZ9w/LhMaZwOC6RSbbWrY3
+	 yipj9ISAW/+s0o+f8g6h+BWme2i/AtmfkgYSvU5hbb7RhxNkfu0Wkg8c3tTSWPvn2aaNX
+	 breT3k41VRBaJylUScihgZRMHiJHRZZJSCkGQnacwjw/ch/i3GJh8XDBiHPmyDNB7/Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793214192;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793235493;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Reply-To:Date:
-	 In-Reply-To:Mime-Version:References:X-Mailer:Message-ID:Subject:From:
-	 To:Cc:Content-Type;
-	bh=jCCEmu80ia44kI2vyDb6i59VDXRIs93I0WproZ1Xw/A=;
-	b=Vnh2QFMTbO3Uv++GvJJ7X6VULUYodA5Mnht4AQBkMBrpCGYVAvP2llkSqDLa49gXRv1G
-	 Aa4kdm5udsF8NqBNWKmBhEAT85kuhIameM0i9My2wbmA9UP6m9F+4vhTn95Q3NcssFVgI
-	 NzHDoICdmdriFY5dt5OL05Irgsc9efMqTJlDI+9yLlLHoUND/6cVgPj/S5pHnM/+6lOPt
-	 GMVpM2+7zRauiAqnXM4ZIXpKYi8mBWiIEQY0x2hpU4PjFPjuEd8M4ReRjufqS/ZIC8rhZ
-	 ZX7+wyv0Cwe4EYmmMBN4jvxDHoY2hBgbYRDENyQVSFiCTI8NzFepPHzFhIy7P91Gmcw==
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=MGY0Rqt9U0dIYToocgg3kUF7zpT8f/idrVBwF/VTivU=;
+	b=TFI5rEcl3gOV0SpBeARdE/sdPdVNwAAvOxfi9/GCDfmbnp8mJl0dVzLUoKdJs9rZS2dN
+	 btwbGjGhbsTzoSOS+r5xBbgxs2Q8/kQ3DnRvTq/F+VQ2RSyH4dDnI6O8eBVU36QL3jlOf
+	 44FWlDoxU0hD4nR91B9BhYluPI3ZEX5tNfPJXGn8JLqME3i+AB5Lk8fmoocwCrTptsYRu
+	 2x0qcYejLk6bMzckD56rqC8nfnP8v7VQ1loP6O+AobtBv6rEHfEniBtoacO8HNaGR6wc0
+	 o9Y99zg0QUwca0Z/hECt2qoXFriIxVZC/a2Tu1ocjKrqvCd/S4Br91v9thO4R5HcK1w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b="Dj/A115K";
-	arc=none smtp.remote-ip=209.85.215.198
-Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=HzEVWmpx;
+	arc=none smtp.remote-ip=209.85.218.51
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47093606A33A
-	for <loongarch@lists.linux.dev>; Wed, 28 Oct 2026 19:03:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 47093606A33A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D279606A31A
+	for <loongarch@lists.linux.dev>; Thu, 29 Oct 2026 00:58:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5D279606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Dj/A115K
-Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-cd68bf391e1so906849a12.3
-        for <loongarch@lists.linux.dev>; Wed, 28 Oct 2026 12:03:11 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=HzEVWmpx
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-c4550d8ab15so214920166b.2
+        for <loongarch@lists.linux.dev>; Wed, 28 Oct 2026 17:58:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793214191; x=1793818991; darn=lists.linux.dev;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:reply-to:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=jCCEmu80ia44kI2vyDb6i59VDXRIs93I0WproZ1Xw/A=;
-        b=Dj/A115Kfai53vfOtjXMo6icsx1jq0jH7AgPjA/mad90De9FOpi/xRwdjk7kfGws6Q
-         fFJ2W5xNsEN386A41Gv6cDqEdgfGNmXE/OR39QXmyiYYG+rX+el39TID2+b5b0X0dfYg
-         MyztI5vhpNm7ulitJgYgG+GoV/imFi6KKt2QG9MuORKLM8kmN0PDSX/uE6AEMjlBlnRe
-         Jb+22r/1l9Euih7t03hjMH3CEEttdmC/07DNNGnBiQ+Xpn4mXNGIg3D18o858dVTx7GN
-         zeXLRLWjPmR4auiaSBQ0T1HiGjv/88LiJ8E0wrNApWNBTb1RQRT3Ox0qbFUvIo8ooZJl
-         VNvw==
+        d=gmail.com; s=20260707; t=1793235492; x=1793840292; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=MGY0Rqt9U0dIYToocgg3kUF7zpT8f/idrVBwF/VTivU=;
+        b=HzEVWmpxPS/qghs7mVBo+zQM1KgbQgQAC8GQBCsejXYQUJ5J7+xqLjWWUCjN55T/Y+
+         lUfu9MiLucBjsK3WjPfc/1gDICgd9Y/Kidby3v6ArU/y2cmYwml+yRLuDzqw0jX516hk
+         YW85NTjL5OlJfcCIQ5EC/lze8sq+TfSaSqQCY2AwC5KWa7cAOCO9sRjndk8QLBUR8BkK
+         l6JTV6i3cB8EBtiNojbNGIyYVu3i8dRzvHMvo3mBU1ODRQgRKmswdFcwL7ZTj8TJwxgm
+         h/lKm1FOAdcgbt4cMqvkp5+EW8lgzdRg7RywPfq3NJMRFSIgTeMEzc4OUHt/3vHSf3xv
+         yF+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793214191; x=1793818991;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:reply-to:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=jCCEmu80ia44kI2vyDb6i59VDXRIs93I0WproZ1Xw/A=;
-        b=leUYym5FR5PWSXOyBFwi1gGVOCm5LW524jKR99JJRuBfGFHXVRYXmOHq3CDnceNyUH
-         B1dv8N4kvbud4FMxoLuFuzDNea9J1FzUqljzx+MzK8SNMrIkCG4zgfeu2bzDkh3SGtID
-         0y96ovnduqeiFM2swOS5O5cJJq9iNly/zO4MaXgNZdse6fM1b6PEuWxLWfpGBt3XG4oD
-         z2CdGprW0Eq+9KD3fyY4yvGTKbaQFHBcMw/hiHi5IPkg8hi1NhMUNibokgSKfUhc9DGd
-         eC3GekIi0+LH4vybSHSfaJsaL4Vk03BUTwgYeJPu7weyo1TU+vbJkkLdiUGAIhHQbhK8
-         uZeg==
-X-Forwarded-Encrypted: i=1; AKwUvBwEyOVhCCRX3VNRpXyqcTmmmTMUDg9CMUXuzNmXIneQ05FNkQMiq/ZthD+Y6BeDgwn8sSZ+CBIdVNY=@lists.linux.dev
-X-Gm-Message-State: AFq9FYIFIEVZgGDETrvyKccz533QTpQGtXE/iAkI3jl2UMj1hNcBKLOO
-	GZDDvRPXF6DHWKzW+rNtpiUfnWA5gu8O6V9i6yZF08Gr7SglV6S7tX407ORbNQp4qcWVcOUBBtV
-	U6+ry5g==
-X-Received: from pghv3.prod.google.com ([2002:a63:f203:0:b0:cd6:b233:e4aa])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4b06:b0:3ab:b64:5893
- with SMTP id 98e67ed59e1d1-3ae581bc654mr2418362a91.53.1793214190430; Wed, 28
- Oct 2026 12:03:10 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed, 28 Oct 2026 12:02:59 -0700
-In-Reply-To: <20261028190259.1819571-1-seanjc@google.com>
+        d=1e100.net; s=20260707; t=1793235492; x=1793840292;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=MGY0Rqt9U0dIYToocgg3kUF7zpT8f/idrVBwF/VTivU=;
+        b=Cnd72NAqFd4HywG/iR6tjC1oHicb4W1q7eNtq0TgKJJ5lJS9E67acP0CJ9vbAHPhQO
+         cLzZxA+oNRxpkzX5/+3FxvKPKANmEaWnGEuE5gWM4vwpr6QsWIgdFUtS35BZvlpyP8s0
+         TTM8YUGBlv93y4s5m9dBYjMqt9vhKHy2XG4bbdQkVvcpi38x1bpJ9SO4Ko9CTvIQLM/L
+         8xdIud+30nCMR3h22NsXGJWqDEMdMXLtLvAr95deLVudgb3dA99/RvVuF3mEPMg4jKAO
+         jHGiYagQvj/98XGFFpiqDpI1511bu+ZtTGdWYAeaWpD2jW5ERX0w8h34zDPtK0nXA3VP
+         PeIQ==
+X-Forwarded-Encrypted: i=1; AKwUvBzifwf6XWw6WGwHTLMuZ49ogn3jWxzgS6HWd2lfjcOiPum+Ig4sA0g5VohUBLRZ3A5W+vsE5P1PcCc=@lists.linux.dev
+X-Gm-Message-State: AFq9FYI/aRYKrHQNMIUlKSEGLWrxUYSwNDGLy/EfIsr55P4p00AWoOb1
+	UY3wz2HvnxyFaMr/9WBMhkSlxXE8oS6pu3DGYrdzVPHZf5DJpEXjQAr9
+X-Gm-Gg: AYBFou0sMP3lyCEGW4QsAcwq7UoRBOuAiGqGITSOp9Y0B0O3c0XEBu0bPEJnUdzfvJC
+	ELSROSsNIz5fQHJ9u7eOL6dRuLfuRk4Ygzc9fcEC8MWNoko6S1SX+vcgPZsGf/v83M1H837rC1n
+	wl2JrRcbLA/YgL7jMKlVuyn52Ui/WNmettfyeYBxh32e/SwhhqN74QXgEIEIwIOCANFwKTGe+64
+	S4QFkZSSNGEK6k8IG8Ufn+4DL1+GM6OO1x2Wf2D36X268Tx219wBkmGBchwlPjYEob/dZCt6dCv
+	sIKpZER3p26JGBx4fBlvea0HQsNDLtGBJQb8zV6JftdFJCHHZR9ZQI9d3QbVAOPhOT0+AbE2YuJ
+	kica8BnCoMCic9wA8DadiE05LDD70s7191juCtdKTNkvhSVNMeCN7qaP1OVMpQGxtnjP9Eos80z
+	aBSjxusxAH+VFJ197dDJn9FnwriG0k0Gowjv9owqzS+UlkBVN0BePWF7DUprSr2jdxPkT8XSoVG
+	bfR3KAqXO7znMI32tbURlN8kIzBwR1XtX6PdvfYqnfsVziqy70iSgg2h8k/fo4LJphTbQGCa+qY
+	s0R0o0/dfIj/bM4kZMELDpgwV9vLtfmWPpUrlyMVzKov/3lOKZfkEK825urEiN8JyR6o166DnbT
+	XfBBr9tr5R7G9rE7QzCvJCnc6ttQuUxy0vjZ1Pl5cBmOAQFqgkdOFNSqptgijF9RNW727K3xifO
+	D83K6dTeMZjS6pdXSMcT1VdJSmuNNbQJ9AkWwC
+X-Received: by 2002:a17:907:72c3:b0:c49:b90a:988b with SMTP id a640c23a62f3a-c49bdf89bc9mr328062966b.49.1793235491600;
+        Wed, 28 Oct 2026 17:58:11 -0700 (PDT)
+Received: from localhost.localdomain (249-172-21-31.ftth.glasoperator.nl. [31.21.172.249])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c46bd66bd3asm668971966b.56.2026.10.28.17.58.09
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 28 Oct 2026 17:58:10 -0700 (PDT)
+From: Emir Beganovic <beganovic.emir@gmail.com>
+To: Birger Koblitz <mail@birger-koblitz.de>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Eric Dumazet <edumazet@kernel.org>,
+	Jianhui Xu <neuromoments@gmail.com>,
+	Nicolai Buchwitz <nb@tipi-net.de>,
+	linux-usb@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: Re: [PATCH net-next v19 00/13] ax88179_178a: Add support for AX88179A-based chips
+Date: Thu, 29 Oct 2026 01:58:09 +0100
+Message-ID: <20261029005809.19405-1-beganovic.emir@gmail.com>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20261010-ax88179a-v19-0-7475173cfb56@birger-koblitz.de>
+References: <20261010-ax88179a-v19-0-7475173cfb56@birger-koblitz.de>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -79,104 +112,49 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
-Mime-Version: 1.0
-References: <20261028190259.1819571-1-seanjc@google.com>
-X-Mailer: git-send-email 2.56.0.313.g2479322e68-goog
-Message-ID: <20261028190259.1819571-8-seanjc@google.com>
-Subject: [PATCH 7/7] KVM: Drop kvm_vcpu_should_kick() and use kvm_request_needs_ipi()
-From: Sean Christopherson <seanjc@google.com>
-To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: Fuad Tabba <fuad.tabba@linux.dev>, Joey Gouly <joey.gouly@arm.com>, 
-	Steffen Eiden <seiden@linux.ibm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Zenghui Yu <yuzenghui@huawei.com>, Nicholas Piggin <npiggin@gmail.com>, 
-	Atish Patra <atish.patra@linux.dev>, Alexandre Ghiti <alex@ghiti.fr>, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Stefan Teodorescu <fane@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Drop kvm_vcpu_should_kick() in favor of kvm_request_needs_ipi() to fix a
-bug where KVM will fail to wait for a vCPU to exit guest mode if the vCPU
-was already marked as EXITING_GUEST_MODE by a concurrent non-waiting kick.
-Because kvm_vcpu_should_kick() (was kvm_arch_vcpu_should_kick()) only waits
-(and sends an IPI to do so) if the target vCPU is fully IN_GUEST_MODE, the
-sending task will proceed even though it hasn't actually guaranteed the
-vCPU as fully exited the guest.
+Hi Birger,
 
-The flaw is most problematic for SNP VMSA invalidation with in-place gmem
-conversion, as KVM invokes kvm_gmem_invalidate_start() => rmp_make_shared()
-(via kvm_gmem_make_shared() in quick succession when in-place conversion is
-enabled.  I.e. if the target has been marked as EXITING_GUEST_MODE but has
-not yet received the other kicker's IPI, then updating the RMP will fail as
-the VMSA is still in-use and subsequent accesses to the page will encounter
-unexpected RMP #PFs.
+I tested v19 on a Dell DA305 USB-C adapter. It has an AX88179A
+(0b95:1790, bcdDevice 0x0200, FW 1.0.7.131) behind a VIA VL822 hub,
+plugged into a Dell XPS 16 (Panther Lake). The peer is an Intel I225-V
+behind a switch.
 
-Note, the bug exists and affects VMSA invalidation even without in-place
-conversion, but is significantly more difficult to hit as PUNCH_HOLE and
-.release() have to wade through a lot more code and several locks to get
-from invalidation to kvm_gmem_free_folio().
+I built ax88179, libphy, phylink and ax88796b as modules for a 7.2.8
+kernel. v19 needed two things on that base: a4e22e9253e7 and a backport
+of genphy_{read,write}_mmd_c45() from the adin1140 series.
 
-Note #2, currently only x86 uses kvm_make_request_and_kick(), i.e. this is
-a glorified nop for all other architectures as the KVM_REQUEST_WAIT path is
-never taken.
+With the current driver in configuration 1 this adapter never gets a
+link ("Failed to read reg index 0x0040: -32"). With v19:
 
-Fixes: 309d28576f0a ("KVM: SVM: Fix SNP AP destroy race with VMRUN")
-Fixes: d1a3c2162334 ("KVM: SEV: Forcefully invalidate SNP VMSA if its backing gmem page is zapped")
-Reported-by: Stefan Teodorescu <fane@google.com>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- virt/kvm/kvm_main.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+- 1000/full link with flow control
+- download 940-941 Mbit/s in nine runs. Upload was 937-941 in five of
+  nine and lower in the other four, and I couldn't find why. Eight
+  later runs with tracing on all averaged about 932.
+- 1-byte TCP request/response around 190-200 us, against about 1.46 ms
+  with cdc_ncm on the same port (its default 400 us TX timer)
+- switching itself to configuration 1 when the device comes up in the
+  CDC configuration
+- 100M and 10M links
+- VLAN with rx-vlan-offload on and off, and rx-vlan-filter dropping a
+  VID that isn't configured
+- multicast filtering and allmulti
+- suspend/resume (s2idle) and wake-on-LAN with a magic packet
 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index f1792256576b..f99a714698e3 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -191,7 +191,6 @@ void vcpu_put(struct kvm_vcpu *vcpu)
- }
- EXPORT_SYMBOL_FOR_KVM_INTERNAL(vcpu_put);
- 
--/* TODO: merge with kvm_vcpu_should_kick */
- static bool kvm_request_needs_ipi(struct kvm_vcpu *vcpu, unsigned req)
- {
- 	int mode = kvm_vcpu_exiting_guest_mode(vcpu);
-@@ -209,11 +208,6 @@ static bool kvm_request_needs_ipi(struct kvm_vcpu *vcpu, unsigned req)
- 	return mode == IN_GUEST_MODE;
- }
- 
--static int kvm_vcpu_should_kick(struct kvm_vcpu *vcpu)
--{
--	return kvm_vcpu_exiting_guest_mode(vcpu) == IN_GUEST_MODE;
--}
--
- static void ack_kick(void *_completed)
- {
- }
-@@ -3935,7 +3929,7 @@ void __kvm_vcpu_kick(struct kvm_vcpu *vcpu, int req, bool force)
- 
- 	/*
- 	 * Note, the vCPU could get migrated to a different pCPU at any point
--	 * after kvm_vcpu_should_kick(), which could result in sending an
-+	 * after kvm_request_needs_ipi(), which could result in sending an
- 	 * IPI to the previous pCPU.  But, that's ok because the purpose of the
- 	 * IPI is to force the vCPU to leave IN_GUEST_MODE, and migrating the
- 	 * vCPU also requires it to leave IN_GUEST_MODE
-@@ -3944,7 +3938,7 @@ void __kvm_vcpu_kick(struct kvm_vcpu *vcpu, int req, bool force)
- 	 * check also modifies vcpu->mode and KVM PPC needs to avoid that side
- 	 * effect for unknown historical reasons.
- 	 */
--	if (force || kvm_vcpu_should_kick(vcpu)) {
-+	if (force || kvm_request_needs_ipi(vcpu, req)) {
- 		cpu = READ_ONCE(vcpu->cpu);
- 		if (cpu != me && (unsigned int)cpu < nr_cpu_ids && cpu_online(cpu)) {
- 			/*
--- 
-2.56.0.313.g2479322e68-goog
+Two small things I noticed:
 
+- "Switching to vendor mode" is printed twice, once per CDC interface,
+  and before the netdev is registered, so it shows up as
+  "(unnamed net_device) (uninitialized)".
+- After a WoL wake the link goes down and up twice within about 2.5 s,
+  where a normal resume shows a single link up. It comes back fine
+  either way.
+
+I only have this one adapter, so nothing on the other chips.
+
+Tested-by: Emir Beganovic <beganovic.emir@gmail.com>
+
+Thanks,
+Emir
