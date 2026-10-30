@@ -1,49 +1,64 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793389806;
-	b=48DR3u+Hd3DiMbmsV5CvBtuy0AKy5k6YJEGeYoHIHq2sNt32n66z6QiszHKjQ1lNSLgI
-	 NJU9evZBLCuSehgJw8Plxgp9AKLWFl+jO1LAfWQiOtjtc6AEKDRDOxkVVh6GhXFJkQWC9
-	 tG0yVXje8tH+OvNYokE229mdEYb/Apthu966luwc1A+ijYuBIw1e3BUmswBENHitfQCOB
-	 14lSdhCmp0XlYjiS2XgYN1qGS5MU062gq39gs9nuG7CNFvWBgQ8tB27/VM7yth0iX08DI
-	 ZFRnELkmXk9VWWGOl0+Jidp8/4zAX+anxR5T4Mx9pABKQ22/3hh8HD1E9QMsqYYuqwQ==
+	t=1793401828;
+	b=jjw7DPGSrhSYAdEAlLR3qD9TAqe00ILidY7cJM3vGdlUVnipRpAnpkWlslIUYh7eOsT8
+	 NoQ8DCEFnWzBsMmTj525wtoPEj3gTFhBSj1Ez1VcDdsjihCo3hkTcBNeY/0fKz0OLvakd
+	 454VuYGCVofaluOySCPlwnkq1gsmj1zPM+NUv0aRwX0QmL7dMNUZxYZH8f3adUZLo4Vy4
+	 rNZG1+LdlchT/jFCKO3/7FQ+ekN7H0NDExIdhExxNsikOmL2D2uJ0j2XPuGD61Fw7SW+S
+	 J494FdcBKmD2DfGnyzi3JZtAWU/7Y7rU1RpijMaOdFMkS/7Y8gI4wzjz0iACvHZiO0g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793389806;
-	h=Received:DKIM-Signature:Received:Content-Type:MIME-Version:
-	 Content-Transfer-Encoding:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc;
-	bh=dA9Guq3WRPXg1QdzKvDtdnhH9jUcQWooa2DjMScfK2Y=;
-	b=B11c3j9BUVLIHQH++sCncBdWcIyYiA3bwEkM3HMTwQV1K97orhvz9p3A5Wh/kVj8cClB
-	 PYxNNRxuKcJRLkKEhsvyIxnxNdVFJDyLG6qOO1G68jLXZm4CUPLzESgiSwQMqtUONBSv+
-	 a3b/k2QNw25VZOdEvd53uO1ZPs7cnDEqNqRuL741lpQaurbz8O1h0aMn1OHRazqQfET7x
-	 QugjgKc5gS+P3xoEMwlbphMaDQYcd/Jf3OzcNFdtJDwKformVY5082IqPvaJo5UhqY1I0
-	 8vO9PpiA4jxvh+IQ5ccG6rn6shmEAKnJT1poStRekc+nJwaQvmhK0+dYceHwhOECP3Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793401828;
+	h=Received:DKIM-Signature:Received:Subject:From:In-Reply-To:References:
+	 X-PR-Tracked-List-Id:X-PR-Tracked-Message-Id:X-PR-Tracked-Remote:
+	 X-PR-Tracked-Commit-Id:X-PR-Merge-Tree:X-PR-Merge-Refname:
+	 X-PR-Merge-Commit-Id:Message-Id:Date:To:Cc;
+	bh=FOOPF4NTkfFCMW+7iFGEX6RTBjaDe8ACYAxm4ucyncE=;
+	b=wmUDc9WJs6rqHIeU7M7NZVWFkZo0p092FGleJQQkvFFs+8Zky6HSPWvzBiiUPScIX7XQ
+	 lDeB3A446VfX2GWOYJ/PCQDiyq7/lEGsI5IBRD80hlaVP2mQPCKfbWF6/gEw6GwwK2jd+
+	 LaIlarVo8HqLK/qb18NHMsk0Jzm9M6TRUYunuWZH4PQFIqoVtY9eXT6l95MJnLvVZdQV6
+	 kEGqQZCSzspK9RJh5HuAdXScxoFM4xm4ACANaNjslKlQvlARBdbk3SLkX3vbtzYd6fEvO
+	 tx7Nl63D+0i/NTRoNCVU0DJV/Tw8+7OMWkU2KlosACq7gOquuHTCxDjYQO50bdTKR2A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DAJXd6wO;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=B+BZDlR4;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8491D606A31A;
-	Fri, 30 Oct 2026 19:50:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3114606A31A;
+	Fri, 30 Oct 2026 23:10:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DAJXd6wO
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E2EE1F000C1;
-	Fri, 30 Oct 2026 19:50:06 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=B+BZDlR4
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D0E51F000C1;
+	Fri, 30 Oct 2026 23:10:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793389806;
-	bh=dA9Guq3WRPXg1QdzKvDtdnhH9jUcQWooa2DjMScfK2Y=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc;
-	b=DAJXd6wOkEJQ01SdrAogNTCElnoFOOBr8dCFkBxDl4ZaZUzhJdQqe7WdUXtPDLix9
-	 7ovSOiMJm7xRI6bTPFfkX+LjrFli5AR8Sn1IuW/NnJ28/grnlwKGS51mZKO08Wk5nu
-	 skxkvCETVONOcF/mblvsyyFeoSSEZJ5k/RJvMtGdjcNkt9o4k52J5/7E2uPxiKoMr5
-	 h+NkZm/rO0ip2vEYs9WQOr+p4sFQjkmhA09Smuh9eXMyehNtmb6Iy9ULfmQsKebT4s
-	 K3nEvpZ60wimVQmlgA7EHJusw1/R54PJ1BqMcWXWtLBgLFheUshllFxvpXpdIU/Stx
-	 z4q/DBBKJRbsg==
+	s=k20260515; t=1793401827;
+	bh=FOOPF4NTkfFCMW+7iFGEX6RTBjaDe8ACYAxm4ucyncE=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc;
+	b=B+BZDlR4dAEXwQR9yuQA5xFSN7pipAaWOCnwd31U4Uvya93YBSgqQkARr/Yc2NhXi
+	 wJLmHjSrH2wLW6kKytQldP4kGHJ7qNriQ1q+UEQce6K0MTdAvQNVq3iLsMd0H2yKS+
+	 LckOIbc5bwjeEhzrElGbedGTANoWjODUjXOzTU0eNEIqsb1HVODbF3HFFY7A4CAwX/
+	 eJ72+gMlC36z+vwDasiEN7u8Aprp8+z7j56er7F99hYvJEv/J9b+A+1AFgqIOpTMNa
+	 5d7PZwP52cD+kYcR3HOvlzB07mgmteu+ULayRjJYqTL5erwnSC7smNw/HGkne3L8Gi
+	 n/CBjrHueEpyg==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 02FE53800476;
-	Fri, 30 Oct 2026 19:50:06 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 42B893800478;
+	Fri, 30 Oct 2026 23:10:27 +0000 (UTC)
+Subject: Re: [GIT PULL] LoongArch changes for v7.4
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20261030042753.2101956-1-chenhuacai@loongson.cn>
+References: <20261030042753.2101956-1-chenhuacai@loongson.cn>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20261030042753.2101956-1-chenhuacai@loongson.cn>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-7.4
+X-PR-Tracked-Commit-Id: 6f8d12bb1a1231dbba579932772701880745a21d
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 780cb2a5fd64901444878cf5a40c0f2ec54837ce
+Message-Id: <179340182662.1820250.8181252458187794729.pr-tracker-bot@kernel.org>
+Date: Fri, 30 Oct 2026 23:10:26 +0000
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -52,45 +67,16 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next v2] selftests/bpf: Enable signed overflow and
- small
- value tests for LoongArch
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <179338980481.1738842.11750741745247206819.git-patchwork-notify@kernel.org>
-Date: Fri, 30 Oct 2026 19:50:04 +0000
-References: <20261030091305.3277-1-yangtiezhu@loongson.cn>
-In-Reply-To: <20261030091305.3277-1-yangtiezhu@loongson.cn>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- eddyz87@gmail.com, memxor@gmail.com, bpf@vger.kernel.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 
-Hello:
+The pull request you sent on Fri, 30 Oct 2026 12:27:53 +0800:
 
-This patch was applied to bpf/bpf-next.git (master)
-by Andrii Nakryiko <andrii@kernel.org>:
+> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-7.4
 
-On Fri, 30 Oct 2026 17:13:05 +0800 you wrote:
-> The LoongArch hardware divider handles signed overflow boundaries (such
-> as INT_MIN/-1 or LLONG_MIN/-1) natively and perfectly well on physical
-> silicon: (1) for division operations, it naturally returns the dividend
-> itself; (2) for modulo operations, it returns 0.
-> 
-> Furthermore, small value signed calculations with negative divisors work
-> correctly as expected.
-> 
-> [...]
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/780cb2a5fd64901444878cf5a40c0f2ec54837ce
 
-Here is the summary with links:
-  - [bpf-next,v2] selftests/bpf: Enable signed overflow and small value tests for LoongArch
-    https://git.kernel.org/bpf/bpf-next/c/aef18c73c961
+Thank you!
 
-You are awesome, thank you!
 -- 
 Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+https://korg.docs.kernel.org/prtracker.html
