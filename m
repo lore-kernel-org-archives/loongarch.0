@@ -1,92 +1,118 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=207.54.90.47
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=212.42.244.94
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793357437;
-	b=zJ/0JwTjNAPR7k956mXsYLUogXSuycZKGqr1fQEaaHQHGFVQAwhNsVF9PWZUYEx/eJFK
-	 klc4scVcJnphgLTpy6XCKvVSm3CSHRqHxXSO/nk6IIeZuEP7PrNx8fLzrG+S2gdndaB8V
-	 mbGOPXj4MR+dpFcNJg+vDmZGoET8Qku4VsOyf5YxMuKUylCRdm5YPjYIx6Qv+uYsy2kAY
-	 /tXdVfxvWxMe6OyiHIu3Kls3BFXkyvujzQ9d3F83Noa6Vk909nM1ahPfn7gFxx1fE5QDa
-	 HKTfE1AApMp8UXpLJqJFTNtRO0/Aqmx9MDq5cCirngEIVa1kuY3YxOOCASh/vumRrNw==
+	t=1793366993;
+	b=Jk492itNeCtwuJH3FUwMabkREc7V++56XPHIE7iuoTBZGm6gG7kBd/cH2+a6pOVe86sz
+	 VMi3QdQtdgStQaaX+kGXFsFxk/CgPH6LLAnWwIFkNpoiXxhmgXIdgvYvJ+wbyYGxONk/S
+	 91baM/+4Tql5150EfAutYUBrrKtgvdoY6O7WR1XWjtugEelACOH89uPmlSe1rX5o09znX
+	 W6VcCqFn54EZKHwNButRk8N296hzeLSFol0GLGeBdMzeQxag6H94bqVSk/xu3UTpf89h/
+	 +urfyJp0C08xMGio5R5g2oUY0JiKm3G0iXdT8y9KebjUA1NU6ps6Vwf82v7/Do2HNSw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793357437;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:Received:Received:Received:Date:
-	 From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=MZqMRfPEVUiuMNxLqgmTIf03oB0BvArhy/TSmIC7oCY=;
-	b=aUxE4oKeBFv8PdMQkNlmDiTpTG2w1JtylzXi3pERhUJSBN42uvxRz6El01WzOHgFrJgs
-	 H5t3maI/ZWH5PSo8xfCQDYKlbyD/U9PxuVwGJOxhS/SbcY9hZciLFQVFl/tj2okHQpghl
-	 LGRivPwu9a8YzPZmz9Cqe1DffdowSPeG+ObZY6sUlrAGXu/B9rgnFuGyCdW5ZAhLPN1Aw
-	 dhQtnT717TxpMaK6IbLvWLxRubzhBKYMOJNo7wkiUcv+1T2DAKO58EBhxqFPM2vG0cXUj
-	 IK2Klo5yEvvvb+FUFkZDdIc/PCR0rBIjEFLfpNU9bGxnwAQ8uqT78B2fKdmTm4U0CbA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793366993;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:Organization:x-ms-reactions:
+	 X-purgate-ID:X-purgate-type:X-purgate-size:X-Notice:X-purgate:
+	 X-purgate:X-pfmilter;
+	bh=QpUKaSoVRoEgdKmoyk8G7l81p1qWRtQXTZ0eVa1XsI0=;
+	b=L2Nj/dUMSB5Ik47SwZmhUxpPqNxWCNyRPCmIOLnVQpu9gJWcyxEQQj1UyhT2SMKad/re
+	 5NIddbCNz5QkeJn9JKuxBT8jNT5gYGWkXBBmHpjsIbGd3ARVEENnRz1Ff/aO32ofLdO45
+	 VNpWlpGCWeGVnh6b5V1nr1dDGM53k/WCNogRqTPydhQXNSxjGFLxvmggO1Ivx9ht35X7S
+	 1/3Wbd/0jmPH16UGVrOsFJVCxl0RZ4B/qmSJkl9okGb2KH91zDdyQ2zV0+znT7vk6dvsQ
+	 kw64R351f2Ei7JycrjRSnCURNhE47ipNh2Tz7uO1yOoVwa9w1VGG77Q/XHrRCDeaLWQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=fujitsu.com;
-	spf=pass smtp.mailfrom=fujitsu.com;
-	dkim=pass header.d=fujitsu.com header.i=@fujitsu.com header.a=rsa-sha256 header.s=fj2 header.b=OUYPjiK8;
-	arc=none smtp.remote-ip=207.54.90.47
-Received: from esa1.hc1455-7.c3s2.iphmx.com (esa1.hc1455-7.c3s2.iphmx.com [207.54.90.47])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=fritz.com;
+	spf=pass smtp.mailfrom=fritz.com;
+	dkim=pass header.d=fritz.com header.i=@fritz.com header.a=rsa-sha256 header.s=mail header.b=AmiP1sdZ;
+	arc=none smtp.remote-ip=212.42.244.94
+Received: from mail.avm.de (mail.avm.de [212.42.244.94])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EFDF60A2631;
-	Fri, 30 Oct 2026 10:50:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3EFDF60A2631
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9926606A31A;
+	Fri, 30 Oct 2026 13:29:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E9926606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fritz.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fritz.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=fujitsu.com header.i=@fujitsu.com header.a=rsa-sha256 header.s=fj2 header.b=OUYPjiK8
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1793357443; x=1824893443;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8Bk02kov5eXaN4fQMM0pbL4dj5jWKbTsBzV8w285UiE=;
-  b=OUYPjiK8KKr+P7wB+ZViJqxu20flLzyi2Z3LkIdvolUqVeUaODwCYvOs
-   Pm1/jgbXZtyLnlXEQ0eLLwlJZeyj8j9sq8q5QMvXSrSOKuopHLpFJ/lmS
-   Y2zbW7UruEyJr8XaT+9G6GUuVgwc1297N7CYywvASeKhRJdn3q0kDurgT
-   ESr4E1LoQtZ8fGsVa/OAQlEK1IIR1MUhD6Nd0Zbb7+BedbLzdIFbHPoVY
-   oIGJzrirIxy/5tOmB9sdrrYZ7zaG+P2Ra7hugw1OBkbwKSzpsC/ZT5CKk
-   Wsq8oMzP89qO+siHNUcdYkFb09fhI6DZOxHnLZ5wDHUO6Ev8Odzn55Xve
-   A==;
-X-CSE-ConnectionGUID: IPljP3+7R4uzZqOOpSKg3g==
-X-CSE-MsgGUID: BvxVCy3EQbyXYoh16dx+Iw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11950"; a="260094587"
-X-IronPort-AV: E=Sophos;i="6.27,186,1786978800"; 
-   d="scan'208";a="260094587"
-Received: from gmgwuk01.global.fujitsu.com ([172.187.114.235])
-  by esa1.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2026 19:50:35 +0900
-Received: from az2uksmgm3.o.css.fujitsu.com (unknown [10.151.22.200])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by gmgwuk01.global.fujitsu.com (Postfix) with ESMTPS id B285E1C00C90;
-	Fri, 30 Oct 2026 10:50:28 +0000 (UTC)
-Received: from az2uksmom2.o.css.fujitsu.com (unknown [10.151.22.203])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by az2uksmgm3.o.css.fujitsu.com (Postfix) with ESMTPS id 65CACC041E9;
-	Fri, 30 Oct 2026 10:50:28 +0000 (UTC)
-Received: from FCCLS0092175.localdomain (unknown [10.9.203.66])
-	by az2uksmom2.o.css.fujitsu.com (Postfix) with SMTP id EC18C140769F;
-	Fri, 30 Oct 2026 10:50:23 +0000 (UTC)
-Date: Fri, 30 Oct 2026 19:50:20 +0900
-From: Kohei Enju <enju.kohei@fujitsu.com>
-To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	x86@kernel.org
-Subject: Re: [PATCH v6 6/8] dma: swiotlb: Centralize memory-encryption pool
- sizing
-Message-ID: <auR0fT1yrKQ9wbm8@FCCLS0092175.localdomain>
-References: <20260924060756.1325156-1-aneesh.kumar@kernel.org>
- <20260924060756.1325156-7-aneesh.kumar@kernel.org>
- <asVs3doaJ4WrT3M2@willie-the-truck>
- <asYZFXGyafRjjBS0@arm.com>
- <asYiOgskwi8JYLe_@willie-the-truck>
- <yq5awlrt3dwo.fsf@kernel.org>
- <yq5av77c92oo.fsf@kernel.org>
- <aseRzPshcoys7AJS@arm.com>
- <yq5ao6d48dqr.fsf@kernel.org>
+	dkim=pass (2048-bit key, unprotected) header.d=fritz.com header.i=@fritz.com header.a=rsa-sha256 header.s=mail header.b=AmiP1sdZ
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fritz.com; s=mail;
+	t=1793366980; bh=a/fEt90n+2smzc8tULN5m3m/hMMA3WQXHcvWhcoynLc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AmiP1sdZKE4ipmV9XkFzIAg6sDdTc8piKssit8JG5M7jVm+wWoA9HNBcL6nnioxmf
+	 UtVWmWL8HC8cipXhGGKFKn344d7QBy4BigwXDhd9cibHOOYqfnPwcm+wl7S8LyH40H
+	 PIcRpdlbp12mkcZ/qVoxVXxHxdsVB4yBgm4K8e8Gb7j8o5MGT6HVOS52CCT1ImUgYM
+	 rC8fGm5esO5fYtQK82TXSmpyrCUdX6hUkhNuydSuiEjRPAEuIkSRJ3Vr5CzOMuVEiE
+	 +YmeA56zTDNX6G2v3XBcddEQclfpxGdALH3GP+htSNoKgdV3GvyPoPiSSRu1+yw2Ux
+	 Cmo8WDvejZ5Lw==
+Received: from [212.42.244.78] (helo=mail.avm.de)
+	by mail.avm.de with ESMTP (eXpurgate 4.57.1)
+	(envelope-from <n.schier@fritz.com>)
+	id 6ae49bc4-23c8-7f0000032729-7f0000019970-1
+	for <multiple-recipients>; Fri, 30 Oct 2026 14:29:40 +0100
+Received: from mail-auth.fritz.com (unknown [212.42.244.78])
+	by mail.avm.de (Postfix) with ESMTPS;
+	Fri, 30 Oct 2026 14:29:40 +0100 (CET)
+Date: Fri, 30 Oct 2026 14:29:39 +0100
+From: Nicolas Schier <n.schier@fritz.com>
+To: Thomas Huth <thuth@redhat.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Nathan Chancellor <nathan@kernel.org>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>,
+	Magnus Lindholm <linmag7@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Luis Augenstein <luis.augenstein@tngtech.com>,
+	Maximilian Huber <maximilian.huber@tngtech.com>,
+	Anup Patel <anup@brainfault.org>,
+	Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Andy Lutomirski <luto@kernel.org>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, soc@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	Mark Rutland <mark.rutland@arm.com>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	Atish Patra <atish.patra@linux.dev>,
+	Sean Christopherson <seanjc@google.com>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-alpha@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org, linux-efi@vger.kernel.org,
+	netdev@vger.kernel.org, kvm@vger.kernel.org,
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+	linux-kselftest@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v5 13/13] treewide: Stop defining __ASSEMBLY__ for
+ assembler files
+Message-ID: <20261030-dexterous-manatee-of-honor-eac4eb@l-nschier-z2>
+References: <20261023064908.66707-1-thuth@redhat.com>
+ <20261023064908.66707-14-thuth@redhat.com>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -96,146 +122,77 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="FhzCQO4A3K0b968D"
+Content-Disposition: inline
+In-Reply-To: <20261023064908.66707-14-thuth@redhat.com>
+Organization: FRITZ! Technology GmbH
+x-ms-reactions: disallow
+X-purgate-ID: 149429::1793366980-B27F8EE4-FD80AEC5/0/0
+X-purgate-type: clean
+X-purgate-size: 2843
+X-Notice: Whitelisted
+X-purgate: This mail is considered clean (visit https://www.eleven.de for further information)
+X-purgate: clean
+X-pfmilter: host: postfix-mx-03  mail-id: CA9E3A07A1  external: no
+
+--FhzCQO4A3K0b968D
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <yq5ao6d48dqr.fsf@kernel.org>
+Content-Transfer-Encoding: quoted-printable
 
-On 10/08 20:02, Aneesh Kumar K.V wrote:
-> Catalin Marinas <catalin.marinas@arm.com> writes:
-> 
-> > On Thu, Oct 08, 2026 at 11:03:27AM +0530, Aneesh Kumar K.V wrote:
-> >> Aneesh Kumar K.V <aneesh.kumar@kernel.org> writes:
-> >> > Will Deacon <will@kernel.org> writes:
-> >> >> On Wed, Oct 07, 2026 at 11:04:05AM +0100, Catalin Marinas wrote:
-> >> >>> On Tue, Oct 06, 2026 at 10:49:17PM +0100, Will Deacon wrote:
-> >> >>> > On Thu, Sep 24, 2026 at 11:37:54AM +0530, Aneesh Kumar K.V (Arm) wrote:
-> >> >>> > > @@ -496,7 +516,8 @@ swiotlb_select_pool_policy(unsigned int flags)
-> >> >>> > >  	if (swiotlb_force_disable)
-> >> >>> > >  		return SWIOTLB_POOL_NONE;
-> >> >>> > >  
-> >> >>> > > -	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
-> >> >>> > > +	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT) &&
-> >> >>> > > +	    !restricted_dma_pool_present)
-> >> >>> > >  		return SWIOTLB_POOL_CC_GUEST;
-> >> >>> > 
-> >> >>> > I think this check on the restricted DMA pool is too general -- the pool
-> >> >>> > could be tied to a specific DMA-capable peripheral and so treating its
-> >> >>> > presence as a global property isn't right.
-> >> >>> 
-> >> >>> I agree it's a hack but that was the simplest way to avoid the pVMs
-> >> >>> getting a bounce buffer after this patch. More than happy to leave it
-> >> >>> out and reduce the buffer on cmdline or we come up with some better
-> >> >>> heuristics.
-> >> >>
-> >> >> Hrm, that does mean that reverting just this part will regress pVMs
-> >> >> because they'll suddenly be allocating a tonne more memory for an
-> >> >> entirely unused swiotlb buffer. So I think I'd prefer to drop the entire
-> >> >> series until this has been worked out properly.
-> >> >>
-> >> >>> Another option could be the arch code passing another flag that it
-> >> >>> doesn't want an encrypted pool (e.g. when running in a pKVM guest) but I
-> >> >>> don't particularly this either. The arch code doesn't know whether
-> >> >>> there's an alternative pool.
-> >> >>
-> >> >> At that point, the default size may as well be driven by the
-> >> >> drivers/virt/coco driver.
-> >> >>
-> >> >>> That said, such heuristics should have been a separate patch to make it
-> >> >>> easier to review/drop.
-> >> >>
-> >> >> I think the only right way to get a semi-accurate heuristic is to take
-> >> >> into account the set of dma-capable devices that will use the swiotlb
-> >> >> pool, but that's fiddly and should probably be tackled as a separate
-> >> >> series. Maybe a simpler hack in that direction would be to take the
-> >> >> SWIOTLB_POOL_CC_GUEST if _any_ device is going to use swiotlb? You'll
-> >> >> run into the usual problem of not being able to tell if a device is
-> >> >> DMA-capable or not, but you could probably look for a global restricted
-> >> >> DMA pool and, if that doesn't exist, check for per-device restricted pools
-> >> >> on dma-coherent devices (since restricted DMA isn't supported by ACPI) as
-> >> >> a reasonable approximation.
-> >> >
-> >> > So, something like this?
-> >> >
-> >> > 	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT) &&
-> >> > 	    swiotlb_cc_guest_needs_default_pool())
-> >> > 		return SWIOTLB_POOL_CC_GUEST;
-> >> >
-> >> 
-> >> Detecting a DMA-capable device is not straightforward, and if we get it
-> >> wrong, we will enable SWIOTLB_POOL_CC_GUEST unnecessarily. Would the
-> >> code below be a reasonable approximation of what you suggested?
-> >> 
-> >> Another option would be to make swiotlb_cc_guest_needs_default_pool() a
-> >> weak function that architectures can override. arm64 pKVM could then use
-> >> a different scheme (for this patch series default to false). Would that
-> >> be preferable?
-> >
-> > Even the rmem check for each device is still a hack that may bite us in
-> > the future (private devices for example would not need swiotlb). I'm
-> > thinking more and more of leaving the sizing an arch-specific decision,
-> > don't bother generalising it at all.
-> >
-> > On pKVM vs CCA guests, there's really nothing specific here to pKVM
-> > guests. The only difference is that confidential guests that so far have
-> > run without a swiotlb buffer will regress if their memory is tight. For
-> > confidential guests without dedicated rmem (either CCA or pKVM), I think
-> > our options are either command line swiotlb sizing or dynamic swiotlb.
-> >
-> > Could you respin your series while leaving out the generic sizing? IOW,
-> > no x86 code generalisation. We can discuss the best strategy on sizing
-> > later (I haven't checked how much of this series still makes sense
-> > without the generic sizing).
-> >
-> 
-> It would mostly consist of the first three cleanup patches, followed by
-> three patches that replace the addressing_limit argument with flags.
-> 
-> #define SWIOTLB_VERBOSE	(1 << 0) /* verbose initialization */
-> /* Initialize a pool for devices with limited DMA addressing. */
-> #define SWIOTLB_INIT_ADDRESSING_LIMIT	(1 << 1)
-> /* Initialize a pool that requires architecture remapping. */
-> #define SWIOTLB_INIT_REMAP		(1 << 2)
-> /* Initialize a pool for DMA to memory-encrypted host or guest memory. */
-> #define SWIOTLB_INIT_MEM_ENCRYPT		(1 << 3)
-> /* Initialize a pool for unaligned kmalloc bouncing. */
-> #define SWIOTLB_INIT_KMALLOC		(1 << 4)
-> /* Do not initialize a pool unless SWIOTLB is explicitly required. */
-> #define SWIOTLB_INIT_DEFAULT_OFF		(1 << 5)
-> 
-> This results in the large change below. I'm not sure we want to do this
-> for no real benefit other than making swiotlb_should_init() slightly
-> easier to follow.
-> 
-> static bool __init swiotlb_should_init(unsigned int flags)
-> {
-> 	if (swiotlb_force_disable)
-> 		return false;
-> 
-> 	if (swiotlb_force_bounce)
-> 		return true;
-> 
-> 	if (flags & (SWIOTLB_INIT_REMAP | SWIOTLB_INIT_MEM_ENCRYPT)))
-> 		return true;
-> 
-> 	/* Explicit requirements override an architecture's default opt-out. */
-> 	if (flags & SWIOTLB_INIT_DEFAULT_OFF)
-> 		return false;
-> 
-> 	return flags & (SWIOTLB_INIT_ADDRESSING_LIMIT | SWIOTLB_INIT_KMALLOC);
-> }
->  [...]
+On Fri, Oct 23, 2026 at 08:48:50AM +0200, Thomas Huth wrote:
+> All spots have been changed to __ASSEMBLER__ (i.e. the macro that
+> gets defined by the compiler), so we don't have to manually define
+> __ASSEMBLY__ anymore.
+>=20
+> Signed-off-by: Thomas Huth <thuth@redhat.com>
+> ---
+>  Makefile                                             | 2 +-
+>  arch/alpha/boot/compressed/Makefile                  | 2 +-
+>  arch/arm64/kernel/vdso32/Makefile                    | 1 -
+>  arch/loongarch/vdso/Makefile                         | 2 +-
+>  arch/mips/boot/compressed/Makefile                   | 2 +-
+>  arch/mips/vdso/Makefile                              | 2 +-
+>  arch/powerpc/boot/Makefile                           | 2 +-
+>  arch/powerpc/platforms/cell/spufs/Makefile           | 2 +-
+>  arch/s390/Makefile                                   | 2 +-
+>  arch/x86/boot/Makefile                               | 2 +-
+>  arch/x86/boot/compressed/Makefile                    | 2 +-
+>  arch/x86/realmode/rm/Makefile                        | 2 +-
+>  arch/xtensa/kernel/Makefile                          | 2 +-
+>  drivers/firmware/efi/libstub/Makefile                | 2 +-
+>  drivers/net/wan/Makefile                             | 2 +-
+>  scripts/Makefile.build                               | 2 +-
+>  scripts/gfp-translate                                | 2 +-
+>  scripts/headers_install.sh                           | 1 -
+>  scripts/sbom/tests/cmd_graph/test_savedcmd_parser.py | 2 +-
+>  tools/testing/selftests/kvm/lib/riscv/handlers.S     | 4 ----
+>  tools/testing/selftests/vDSO/vgetrandom-chacha.S     | 2 --
+>  21 files changed, 17 insertions(+), 25 deletions(-)
+>=20
 
-Hi Aneesh,
+Reviewed-by: Nicolas Schier <n.schier@fritz.com>
 
-I can reproduce the CCA regression discussed in this thread:
-  https://lore.kernel.org/all/yq5azeyxyfol.fsf@kernel.org/#t
 
-The guest runs out of SWIOTLB slots, causing disk I/O to fail and
-preventing the guest from booting.
+--FhzCQO4A3K0b968D
+Content-Type: application/pgp-signature; name=signature.asc
 
-I would like to test the fix on real CCA hardware. Could you please Cc
-me when you respin the series? I follow LKML, but I may still miss the
-posting by chance.
+-----BEGIN PGP SIGNATURE-----
 
-Thanks,
-Kohei
+iQIzBAABCAAdFiEEDv+Fiet06YHnC6RpiMa8nIiabbgFAmrkm8MACgkQiMa8nIia
+bbgYnhAAoBtAI6CuFq9HQy+0LMEBBrZiObTja20n/nhSog1KoLUqfiUozqhmkZ/q
+CT6UauaVVL+guGjUkQd4MU9Y4sF+qy0kKmfzavbo/MIofHFX6fypq5WinV83BS4k
+PfHvku6pkGUFMvVkCliG3iiJVbANl4MGycOY5VxIXI9veRse6+SRuWaP5fqRD0dv
+XZHNc+ZmLOMmkijTKgYUq7fUIdBhxmeq4Px5Q0aq0cESHCORoGOcUcdASB8KRxr/
+S2whk42NUvuQxJF/S68XDQ9N3LdkhPBY2Y0GHdcJ+esswGxGJVb7rfY38dRXkz8R
+a/X59L/D+n6k/1v/xfmmj36rd/INoushZOa+gNXEg5KPwORqTYICzhwVlfZz5mdv
+0XgTKePC+FBeKnCHfJjMK1P6SAnag5q59vu8MXmzNGH9HIhm2PzyPhRrPYA4lwBl
+N1Hh9kQBBwy4oEdLX69syKiLtIA3mDxbo80VqRIUm6MpUjxkTbkAgLQgfXDRz2M0
+Wa9/fDB/O1tJKj8IR8V+jbjPqz5/6/fNkpD9/6fpqvBgeD2vkjOk3q/IvTq5gvHK
+ApKpaLY5DYJBXdX80Rm5ofEmFac0/p9C+eX3ovHAHFIG7JPR5kTF3fwDtbSbP7z6
+ghTZsJCcqEgyM22oqOSpskYbUmxnPEnUkGMg6K1a7KZPgUJQ9zA=
+=Pwya
+-----END PGP SIGNATURE-----
+
+--FhzCQO4A3K0b968D--
