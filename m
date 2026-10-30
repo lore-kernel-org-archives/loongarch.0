@@ -1,74 +1,85 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.70
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793386632;
-	b=22FnDDW1hQGcexKG5hp2drnvEHW44kFh3xp5SXuvw5UJ7N/fjPmJAulcvwC+DmM5IWQP
-	 M+l/AUclH49fw/pHfTrU8amYSCx6u8Msr2er48mi1dpQpMn9RFX+Msfiw0N3++UHGX7Cm
-	 PEeBsi9Abvg/B9nuU1Mbcl8KeY2AWCTYCMpDc9bOL5OHX8AeO1mFaFjRywxbyWywFfeKn
-	 3IYClXVPi7HMMeaN9Fyhq0p3hsiRR6S21k8n2aYtLV8hHQlLKQWi1xJLhENg+AJ/wiS6t
-	 7E4d6VhGQTc79zLS4R/B+xohKI+RJPD4iAIp1FAVp5e5zpJBzAY6Ga1ye2v2Id0ienQ==
+	t=1793387502;
+	b=FDJ+31hkmfnpaxL+Pr+u0PtJEOWFFBU10R+/XwL0NWr1VOUGaPrhPuGX665bCzGU2Dip
+	 xrgY38MTA7DTKG2xSejXbfsLMXhUHMzWbyA1siRHINqVOPytHNEIOOS0UaLXs7oISZrby
+	 BoRjr7XVBxZo6/cWiu01+73J0Fz6ldekKckWkkAo9kJRFzk3It41ezaNU9w6+rGoPwfUW
+	 XuTZxtPuq0R4zfQLEgdOoMlW6iRZ4XoCxOXJz2rxxn+n8SarQNPApn34yooxWckiLI7bF
+	 0sFdm2a9eic6AQze1XSTa4qVebyLa5O6v++3xqn3Yy6eQOWWuxj8YqKfRvnQpvLOYPw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793386632;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
-	 Mime-Version:References:Message-ID:Subject:From:To:Cc:Content-Type;
-	bh=AqsM43MOtFOSSZV0EEwrjw089w0rw12SYsGwf7bUH9w=;
-	b=J36CrPxpAyPhWejlshe/43U2m/44mpwR1BhRKDItSWEN9XID7WC9O8cFedP3J2ltXsx2
-	 +6AokjRcjO1MKjaFx6ZEyTgyY4Rvd8SLC1Uioonlp9MStm7BAL2wmR1Fi+8Swcbo6WVP4
-	 e9p6q9U/R60Clg4m9haz/Z5rxRWoDZyebKWPL6FgXVFqDpKs1uwPEETABSI3tx27h40qO
-	 1Dcq21NjGcGKppKPtEIhMLDps2dw4HTOs2cQ3otmZhCdP5IHXbY74R0Lx2JKEffg1HOHq
-	 SIkwx5V8O+eaoOwRKsaTVNWgT/ejh5ae0t1+6Kl3JEaKkgQFHdouoxKHUdCh9ZBBuZw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793387502;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:In-Reply-To:References:
+	 Date:Message-ID:MIME-Version:Content-Type;
+	bh=T4hFvVxLfjnAJg8k+NzczjZdpae4mRcTksCIzgxfA9U=;
+	b=y+MoYQ5cHEl5xfNV7/ZaXfb13bFP5+MFZB66uUJZ52ucFUuaCvRFwBWSctjWuQfHV2DP
+	 2ZeL3YSEFdnpNKl1VfGe3LBR0qb2xIG43GTFz0OCFSQ9HxqvL2F2j+CivfgNxzn6hOM8G
+	 hpZNg3DhJTe7dZCxElvZn5/OByn9uggFBbBYjZykcLAPtoFLdBKLpSGkSTDd1xXtc5l86
+	 og4+CtWYYoSZnML+tKndMchLgcfsA28PmRpNYea54eQdCQdUo+pug2sdKxuC6AMU2zPqk
+	 6Jv14mZkuP2D6LoMdP3tFW5IS/+ahYaInhz5k6j0to7JgGN3luUZ9Stn0R2Hl87c57g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=IvZg2Ts6;
-	arc=none smtp.remote-ip=209.85.216.70
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="cJGl/G/2";
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBFE0606A31D
-	for <loongarch@lists.linux.dev>; Fri, 30 Oct 2026 18:57:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CBFE0606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B620E606A31A;
+	Fri, 30 Oct 2026 19:11:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=IvZg2Ts6
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-3ac7a4ba546so1593640a91.0
-        for <loongarch@lists.linux.dev>; Fri, 30 Oct 2026 11:57:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793386631; x=1793991431; darn=lists.linux.dev;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=AqsM43MOtFOSSZV0EEwrjw089w0rw12SYsGwf7bUH9w=;
-        b=IvZg2Ts6Cm17FpnE69Qvvi5exfUbH1yk5N+FFocSRBGRJI7WsYLi0Ad8TbWSspp++v
-         XLsRXI6Oo8o5SiKwJR/mi3mKtVDorImHXkggWiFndhCdOifTuGGy7siJi34PvLJWVu93
-         U2I6CAG/d6CDm6KQBjdfgOEj5JyCEcI4+j1os4uwttUJedZAZAHGpp+ZHqfUrAnvF0/q
-         rKCDJFJNMCe0oDL/ba4F1iv3kXDkOsU/VQyVJj+ct+ivp8kOEdTUhLaz9R2+EgO6xiuM
-         /cbH0hSUSLlAoegKMTFdyqL+dM9lVXgOMbMP4YslbxMBYGnu5ZZlOs0PncC+fyaGeygl
-         OkoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793386631; x=1793991431;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=AqsM43MOtFOSSZV0EEwrjw089w0rw12SYsGwf7bUH9w=;
-        b=Uh6YHoEIb9JNW+QEIxiuwj6WTL1VFHvSjGvMG4rPrQCvc9nF3qjZFmo/iVgmOIHjIk
-         GZ5l555DG/EuUFeT4yX3oWEs0yRAVX5bmP283Z/IHznp+O/znz7DsdU0/ZQgDC2pwqwB
-         P/SU1Sw4fc5tuECMJIx+NTIQO3MV7cz73WbKtNlEEgoIiKtgVFeGeba9loPQe3cGRY+8
-         Hqa7QcUHFyEI5cyGcrEsjcrf4xSNosmmE5wiEF64zXtpXhAFfRZ+jQjv5+Mo7KXKCOh6
-         5p87EwbbdIrqrDqLsTDkO6pcaPo+mXleD3EwrEh+VyIYXkjSpB/46J0bMNTt4J4+bi4o
-         hbEg==
-X-Forwarded-Encrypted: i=1; AKwUvBz2IKfcuOTIYBC3gNUHoEF+wfiKpkVscAStG7ZErQK4ENNX3SIvRKM2DrAWibRr6OZ+RVe260bI1FA=@lists.linux.dev
-X-Gm-Message-State: AFq9FYLDIY4hSOkXcwLnVenUwJj9gPT4L7MCWbxADtmyN/WsZxxFmPZC
-	Zr56kylKhiiU6Re3+vzvAuX2F3XTR019lIodeNMEM9ClSLvEBYMm+b5ihHqWBCmJeGSXenOK6Pg
-	XfCR7pw==
-X-Received: from pjbbo5.prod.google.com ([2002:a17:90b:905:b0:3ac:24b3:3484])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:c2c6:b0:3ac:b3c7:de04
- with SMTP id 98e67ed59e1d1-3ae897aa752mr1800362a91.34.1793386630946; Fri, 30
- Oct 2026 11:57:10 -0700 (PDT)
-Date: Fri, 30 Oct 2026 11:57:10 -0700
-In-Reply-To: <auStM0rbFol79h5o@li-fbf77acc-29ba-11b2-a85c-e8e934f50a46.ibm.com>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cJGl/G/2
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 856D71F000C1;
+	Fri, 30 Oct 2026 19:11:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793387501;
+	bh=T4hFvVxLfjnAJg8k+NzczjZdpae4mRcTksCIzgxfA9U=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=cJGl/G/2fQF1yJWHTie2xk6HB608xeSGry+Y/uMzkiv7mSAAvI/rgcFa2ycf1BTVh
+	 d35A0kNRaV1SESzGWirJvsignzKFJjZo7LJ49bkaLS5abOu8oYwNJDowAY4LXAaFk3
+	 1qvBtDFkFqlDjn51/ADmcGHjG88Z10ZTRm9cloeKGen2Fvgbp7EvWKP7Fs/k+w7w7I
+	 N+Bpq3UQzRBk81FGdRpPvr/G8hUKlkAznQ9epCS9WohqPLXX6ImGQB2IoLMbeTEcsI
+	 X7PFkJetPPJchwZrSKjuCFkEbuOgCvp7lXiZPRZWxHOpx5mbgnJHdFUTifU5ObrOgF
+	 1vyrUAqP9m8pA==
+From: Thomas Gleixner <tglx@kernel.org>
+To: "H. Peter Anvin" <hpa@zytor.com>, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Michael Ellerman <mpe@ellerman.id.au>, Shrikanth
+ Hegde <sshegde@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org, Kees Cook
+ <kees@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+ loongarch@lists.linux.dev, Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt
+ <palmer@dabbelt.com>, linux-riscv@lists.infradead.org, Sven Schnelle
+ <svens@linux.ibm.com>, linux-s390@vger.kernel.org, x86@kernel.org, Mark
+ Rutland <mark.rutland@arm.com>, Jinjie Ruan <ruanjinjie@huawei.com>, Andy
+ Lutomirski <luto@kernel.org>, Oleg Nesterov <oleg@redhat.com>, Richard
+ Henderson <richard.henderson@linaro.org>, Russell King
+ <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Guo
+ Ren <guoren@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Thomas
+ Bogendoerfer <tsbogend@alpha.franken.de>, Helge Deller <deller@gmx.de>,
+ Yoshinori Sato <ysato@users.sourceforge.jp>, Richard Weinberger
+ <richard@nod.at>, Chris Zankel <chris@zankel.net>,
+ linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org,
+ linux-csky@vger.kernel.org, linux-m68k@vger.kernel.org,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linux-sh@vger.kernel.org, linux-um@lists.infradead.org, Arnd Bergmann
+ <arnd@arndb.de>, Vineet Gupta <vgupta@kernel.org>, Will Deacon
+ <will@kernel.org>, Brian Cain <bcain@kernel.org>, Michal Simek
+ <monstr@monstr.eu>, Dinh Nguyen <dinguyen@kernel.org>, "David S. Miller"
+ <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>,
+ linux-snps-arc@lists.infradead.org, linux-hexagon@vger.kernel.org,
+ linux-openrisc@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-arch@vger.kernel.org, Michal =?utf-8?Q?Such=C3=A1nek?=
+ <msuchanek@suse.de>, Jonathan
+ Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Subject: [PATCH] x86/entry: Fix ptrace regression
+In-Reply-To: <87se1wyvs8.ffs@fw13>
+References: <20260707181957.433213175@kernel.org>
+ <20260707190254.493733289@kernel.org>
+ <20261022142425.3Wx-RrU5@linutronix.de> <87fqxx1r80.ffs@fw13>
+ <87cxt11ktr.ffs@fw13> <1149A39E-BEBA-46EA-94F4-4DFFC4733EF5@zytor.com>
+ <871p9g1s3w.ffs@fw13> <87y0boze95.ffs@fw13>
+ <C6D7BF04-4CF7-48D1-93B5-E80D52C2617D@zytor.com> <87se1wyvs8.ffs@fw13>
+Date: Fri, 30 Oct 2026 20:11:37 +0100
+Message-ID: <87mrrvxaty.ffs@fw13>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -77,83 +88,84 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
-Mime-Version: 1.0
-References: <20261028190259.1819571-1-seanjc@google.com> <20261028190259.1819571-4-seanjc@google.com>
- <auStM0rbFol79h5o@li-fbf77acc-29ba-11b2-a85c-e8e934f50a46.ibm.com>
-Message-ID: <auTohixp3V5-vNsB@google.com>
-Subject: Re: [PATCH 3/7] KVM: PPC: Explicitly force IPIs when directly kicking vCPUs
-From: Sean Christopherson <seanjc@google.com>
-To: Gautam Menghani <gautam@linux.ibm.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Fuad Tabba <fuad.tabba@linux.dev>, 
-	Joey Gouly <joey.gouly@arm.com>, Steffen Eiden <seiden@linux.ibm.com>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
-	Nicholas Piggin <npiggin@gmail.com>, Atish Patra <atish.patra@linux.dev>, 
-	Alexandre Ghiti <alex@ghiti.fr>, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Stefan Teodorescu <fane@google.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain
 
-On Fri, Oct 30, 2026, Gautam Menghani wrote:
-> On Wed, Oct 28, 2026 at 12:02:55PM -0700, Sean Christopherson wrote:
-> > Explicitly force an IPI when invoking kvm_vcpu_kick() directly instead of
-> > relying on kvm_arch_vcpu_should_kick() to unconditionally return 1/true.
-> > This will allow dropping kvm_arch_vcpu_should_kick() in favor of
-> > kvm_request_needs_ipi().
-> > 
-> > No functional change intended (1 || 1 == true).
-> > 
-> > Signed-off-by: Sean Christopherson <seanjc@google.com>
-> > ---
-> >  arch/powerpc/include/asm/kvm_ppc.h | 13 ++++++++++++-
-> >  arch/powerpc/kvm/book3s.c          |  4 ++--
-> >  arch/powerpc/kvm/book3s_pr.c       |  2 +-
-> >  arch/powerpc/kvm/booke.c           |  6 +++---
-> >  arch/powerpc/kvm/e500_emulate.c    |  2 +-
-> >  arch/powerpc/kvm/powerpc.c         |  2 +-
-> >  6 files changed, 20 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/arch/powerpc/include/asm/kvm_ppc.h b/arch/powerpc/include/asm/kvm_ppc.h
-> > index 169ea6a7fbad..bbe7378ad0ef 100644
-> > --- a/arch/powerpc/include/asm/kvm_ppc.h
-> > +++ b/arch/powerpc/include/asm/kvm_ppc.h
-> > @@ -30,6 +30,17 @@
-> >  #endif
-> >  #include <asm/inst.h>
-> >  
-> > +/*
-> > + * TODO: For unknown reasons, KVM PPC has historically ignored vcpu->mode when
-> > + *       determining if kicking a vCPU needs an IPI.  Either document why that
-> > + *       behavior is necessary, or drop this helper and the @force param from
-> > + *       __kvm_vcpu_kick().
-> > + */
-> > +static inline void kvmppc_vcpu_kick(struct kvm_vcpu *vcpu)
-> > +{
-> > +	__kvm_vcpu_kick(vcpu, false, true);
-> > +}
-> > +
-> 
-> AFAICS, there is no reason for PPC to always return 1. I was looking at
-> the old patches on mailing list and found this - https://lore.kernel.org/kvm/0FEE585F-5E21-47F2-A3F0-AD0DE05EBB43@suse.de
-> 
-> ```
-> How about we return 1 for kvm_arch_vcpu_in_guest_mode() on !x86 always, just
-> like it's done today basically? Then we can worry about needless IPIs later
-> and don't regress from the respective current kick implementations.
-> ```
+The recent rework of the syscall entry code missed the historical detail of
+the abuse of syscall number -1L to abort a syscall and keep modifications
+by tracers to the return value, while a rewrite of the syscall number to an
+invalid value undoes eventual tracer modification to the return value and
+overwrites it with -ENOSYS.
 
-FWIW, I found that as well, but there are a metric ton of kvm_vcpu_kick() calls
-that have been added since then, and they scared me.
+Restore the original behaviour.
 
-> However, I'll do some testing and get back by mid next week to make sure
-> there are no suprises.
+Fixes: 1b1f3b3e1b39 ("x86/entry: Get rid of the sys_ni_syscall() indirection")
+Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@kernel.org>
+Cc: stable@vger.kernel.org
+Closes: https://lore.kernel.org/all/20261022142425.3Wx-RrU5@linutronix.de
+---
+ arch/x86/entry/syscall_32.c |    2 ++
+ arch/x86/entry/syscall_64.c |   26 ++++++++++++++++++++++----
+ 2 files changed, 24 insertions(+), 4 deletions(-)
 
-Thanks!  If we can drop the PPC behavior, that would be wonderful!  Though if
-we do that, it should be for 7.5 in a follow-up (this series really should go
-into 7.4 due to the SNP issue).
+--- a/arch/x86/entry/syscall_32.c
++++ b/arch/x86/entry/syscall_32.c
+@@ -77,6 +77,8 @@ static __always_inline void do_syscall_3
+ 	if (likely(nr < IA32_NR_syscalls)) {
+ 		nr = array_index_nospec(nr, IA32_NR_syscalls);
+ 		regs->ax = ia32_sys_call(regs, (unsigned int)nr);
++	} else {
++		regs->ax = -ENOSYS;
+ 	}
+ }
+ 
+--- a/arch/x86/entry/syscall_64.c
++++ b/arch/x86/entry/syscall_64.c
+@@ -64,15 +64,20 @@ static __always_inline bool do_syscall_x
+ 	return false;
+ }
+ 
+-static __always_inline void do_syscall_x32(struct pt_regs *regs, unsigned long nr)
++static __always_inline bool do_syscall_x32(struct pt_regs *regs, unsigned long nr)
+ {
++	if (!IS_ENABLED(CONFIG_X86_X32_ABI))
++		return false;
++
+ 	/* Adjust the starting offset of the table */
+ 	nr -= __X32_SYSCALL_BIT;
+ 
+-	if (IS_ENABLED(CONFIG_X86_X32_ABI) && likely(nr < X32_NR_syscalls)) {
++	if (likely(nr < X32_NR_syscalls)) {
+ 		nr = array_index_nospec(nr, X32_NR_syscalls);
+ 		regs->ax = x32_sys_call(regs, (unsigned int)nr);
++		return true;
+ 	}
++	return false;
+ }
+ 
+ /* Returns true to return using SYSRET, or false to use IRET */
+@@ -81,8 +86,21 @@ static __always_inline void do_syscall_x
+ 	if (likely(syscall_enter_from_user_mode_randomize_stack(regs, &nr))) {
+ 		instrumentation_begin();
+ 
+-		if (!do_syscall_x64(regs, nr))
+-			do_syscall_x32(regs, nr);
++		if (unlikely(!do_syscall_x64(regs, nr))) {
++			/*
++			 * The special treatment of syscall number -1 is a
++			 * historical bogosity as the original code used -1 to
++			 * indicate syscall abort, which is not distinguishable
++			 * from a syscall which is invoked with syscall number
++			 * -1. The historic behavior is to keep the return value
++			 * in regs->ax unmodified in that case, which means it's
++			 * either the preset value -ENOSYS or a value which was
++			 * written by a tracer. If the syscall number is invalid
++			 * but not -1 then overwrite any tracer modification.
++			 */
++			if (!do_syscall_x32(regs, nr) && nr != -1L)
++				regs->ax = -ENOSYS;
++		}
+ 
+ 		instrumentation_end();
+ 	}
