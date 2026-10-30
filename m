@@ -1,102 +1,69 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.88.97.239
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793371754;
-	b=IBP61aViy3kV4QhYxINIa66zPZC/b7YOq0lvK5NUMrf1fRDIKgeJH/FPBnOJm2JzStn7
-	 d5RoGKYPTDrYQN3//60cvfeOI5ftXW1QKpN1i9ma2uMKoZIKc2SzG3CvA+fd7b5jt179U
-	 aMjplSEtvF1bBqUErHd9MM798gC+GO5UOx7ntRNBbU4FhwuoPGo5WUF+qonzIjGQqSvxW
-	 zh7vNAU79f5TDEZsXIryof8+ugW8zEPQS5XEH0IxqiI/5n3jTVjm76PCLsKBNpJKfgDnR
-	 8u3G9YwZXLG0aPiNTMLeOTYaWUBIzHODtQ2N4T4V+yAPIrSU3jVD4ZuojOyhBTyMRCw==
+	t=1793374976;
+	b=KqdtRaRJ4vlOAxcUDVLjeXEgWaFqYlyv+ShTE41hG6tH7ZmWr6vZOvkOGti+q4NMqgvA
+	 dFUwonxGtOU6TV+mi6Ol/pZ5dL5oTuF5xxGlgGZICYD0s3gdK8JivDDzHnIDvhU6hboqe
+	 bw786f7fRPBlgtfNQWGbj2ErcapImkG3Xa8W8Uaal7V7X09J6/B6FGo9Xr3Ft/4Xs9n4f
+	 d4jYdoNehMHC+Lf5uJ2tGptCX+zpvF8f52zxvTGmquZABqf5RG6eTvhuEZnCi4Qaj4b54
+	 qKVUun2OzgtvaMMpAwzBcBELousyoL+xPlh1WWIn2w1nvZc9KsyFiaB/vIlfrCNU2Bg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793371754;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
-	 Received:Received:Received:Received:Date:From:To:Cc:Subject:
-	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To:X-TM-AS-GCONF:X-Proofpoint-Reinject:
-	 X-Proofpoint-Spam-Details-Enc:X-Authority-Analysis:
-	 X-Proofpoint-ORIG-GUID:X-Proofpoint-Spam-Info:X-Proofpoint-GUID:
-	 X-Proofpoint-Virus-Version:X-Proofpoint-Spam-Details;
-	bh=HEHKW4LBT6GpwoTEpcbAbsyC2GPR8DDtx+QfBPo6gbI=;
-	b=XTiX8bl9swnvD2tmyZtiKx7dMeRMfp1hO/bkIrZuI4QcrUI4Q3WA+Qi/yHlpueNeyqp0
-	 s2qDB/yAc6bBlhQenJKnHCdrELWzNrjPXCeM8lyxT6s+vwE4At9YFOP+ANkFXH5vxyEBb
-	 T1WX/RU7l9awlYpzcsVyFhXZuFcF2wtJSMx0c/z/MwJvh5cgwbXafjPawXagbu8z7flVd
-	 GdQwaw1WXPUxSC1x3aR/iZxJ67I8Y9LB/g6Id3A3YJAYZrzKs+vBsJJFlsQIX9yOtf8Vw
-	 Ws9JzqWty593UbBzQcIh6eYdk1y445qQkRdyXlvtOP7x4LgakKB3fVwbZTmOiR4Egpg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793374976;
+	h=DMARC-Filter:DKIM-Signature:Received:X-Spam-Checker-Version:
+	 X-Spam-Level:X-Spam-Status:DKIM-Signature:Received:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:To:Cc:References:From:
+	 Content-Language:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=pwWMYu7cN31DeEVkMWq5JMB825n/IrZotIJKrcqkFoE=;
+	b=AJz6UP+br9qV3brqeXeoK6r4PvyFtsQ4Y3fL85A1h3BJIKD/BA9HVOtIjtlNUAAVUKvA
+	 xk2YLit/5M2bQkR7QqSWMBYwVYlHtPh/6LXhQPYydIYJ6relo6yp9U25f0z/QK0UsP5nx
+	 1VzUCKMyXqhpM0Va4kwDGNATCbmJtBQLmOkyGU9m/UJl/4VdF2+HOZGT3AWwixJHxFbTw
+	 sOwYtMEEF9MwbWE42GCvUlhzakjce+svm9yKpiy4Gb+k6lp72LWYkNvTC7ly6SnnRa7st
+	 1Jgoqe/88YHUWwPb2+WUCd+OApX5CLI2sHiSeAeR5oaS5pnCC1d2ulUFjtrUkSg1Agg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.ibm.com;
-	spf=pass smtp.mailfrom=linux.ibm.com;
-	dkim=pass header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=ExggUzQ4;
-	arc=none smtp.remote-ip=148.163.156.1
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	dmarc=none header.from=birger-koblitz.de;
+	spf=pass smtp.mailfrom=birger-koblitz.de;
+	dkim=pass header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=cAohtmzh;
+	dkim=pass header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=cAohtmzh;
+	arc=none smtp.remote-ip=23.88.97.239
+Received: from bkemail.birger-koblitz.de (bkemail.birger-koblitz.de [23.88.97.239])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99BB2606A31C;
-	Fri, 30 Oct 2026 14:49:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 99BB2606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC34606A31A
+	for <loongarch@lists.linux.dev>; Fri, 30 Oct 2026 15:42:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8CC34606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=birger-koblitz.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=birger-koblitz.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=ExggUzQ4
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69UEiNBi3396324;
-	Fri, 30 Oct 2026 14:48:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=HEHKW4LBT6GpwoTEpcbAbsyC2GPR8D
-	Dtx+QfBPo6gbI=; b=ExggUzQ455ydNTjuXERdQK9pJ5iTVLioyncMYKtaMrybI6
-	krGz53pMUesedVdfoSwrjfyPFN6oKtLJ9ZGSc6iL6qdxumYmBDC53vPEnudKaHv7
-	ymcnCFyMC7J+0pWxlYcBqIeK0xL5Z/9YzRGeSHdJ6yt7M3KM5utOvyLsWcKlRXcF
-	yEHSvxiNs8gr20+K59YSPCoH6Bsi/Qm8mTA/OrqwXkpguyWfsWkKRySnaBj+fjZY
-	gasiwKpQjKQZBIjrcRsE6shxU/5OSa3YS9rziGJQij26td/8OPz7JnoUzaAZC1iQ
-	8CB0BpLwyIXpKLthffDo9so7x8Bqsy+nL7Fptlrw==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4hmeay399t-1
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Fri, 30 Oct 2026 14:48:50 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 69UEZ5nw649967;
-	Fri, 30 Oct 2026 14:48:49 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4hm69e50qj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 30 Oct 2026 14:48:49 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 69UEmjGw30737002
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 30 Oct 2026 14:48:45 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0E9BE2004B;
-	Fri, 30 Oct 2026 14:48:45 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 69B4D20040;
-	Fri, 30 Oct 2026 14:48:38 +0000 (GMT)
-Received: from li-fbf77acc-29ba-11b2-a85c-e8e934f50a46.ibm.com (unknown [9.124.208.227])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 30 Oct 2026 14:48:38 +0000 (GMT)
-Date: Fri, 30 Oct 2026 20:18:35 +0530
-From: Gautam Menghani <gautam@linux.ibm.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>,
-        Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
-        Paolo Bonzini <pbonzini@redhat.com>, Fuad Tabba <fuad.tabba@linux.dev>,
-        Joey Gouly <joey.gouly@arm.com>, Steffen Eiden <seiden@linux.ibm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Zenghui Yu <yuzenghui@huawei.com>, Nicholas Piggin <npiggin@gmail.com>,
-        Atish Patra <atish.patra@linux.dev>, Alexandre Ghiti <alex@ghiti.fr>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-        kvm@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Stefan Teodorescu <fane@google.com>
-Subject: Re: [PATCH 3/7] KVM: PPC: Explicitly force IPIs when directly
- kicking vCPUs
-Message-ID: <auStM0rbFol79h5o@li-fbf77acc-29ba-11b2-a85c-e8e934f50a46.ibm.com>
-References: <20261028190259.1819571-1-seanjc@google.com>
- <20261028190259.1819571-4-seanjc@google.com>
+	dkim=pass (2048-bit key, unprotected) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=cAohtmzh;
+	dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=cAohtmzh
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=birger-koblitz.de;
+	s=default; t=1793374967;
+	bh=vHq78/KCfEVqvcT6Nlgv9+8UL3cGgaMMpXKNxQmnb8A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=cAohtmzhsDIsOm2y41ZIUM7tt41zPVr/LoR+MZUgkAFN278tMvliSucJaKrXKW0Sh
+	 yAJk5gzsiRzAROlNs0cSlNWCOLnVYwQ1qtE7aQt2urQQoQ+P2S99tvbSEpeiYND5Td
+	 vW/tJduTRveIgsqvOolfjyQEBYJ1PmIMQ/morAdYq6LiLGBxia7ttjGyrUEiOKUWPD
+	 M/aho1LpNAnoALSGcHqU2lfglboGrKirl4uBLRXZU9sAUdIsJ+HHy4LrvFpuQhrpxM
+	 QBV64gjowokmDRNk6N16pbXoCSmbHbMx3mFWdeyaE7aM9JDmKikBAEFQtnF8sB320C
+	 Zxt3p56kSH70g==
+Received: by bkemail.birger-koblitz.de (Postfix, from userid 109)
+	id EC96D49F46; Fri, 30 Oct 2026 15:42:47 +0000 (UTC)
+X-Spam-Level: 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=birger-koblitz.de;
+	s=default; t=1793374967;
+	bh=vHq78/KCfEVqvcT6Nlgv9+8UL3cGgaMMpXKNxQmnb8A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=cAohtmzhsDIsOm2y41ZIUM7tt41zPVr/LoR+MZUgkAFN278tMvliSucJaKrXKW0Sh
+	 yAJk5gzsiRzAROlNs0cSlNWCOLnVYwQ1qtE7aQt2urQQoQ+P2S99tvbSEpeiYND5Td
+	 vW/tJduTRveIgsqvOolfjyQEBYJ1PmIMQ/morAdYq6LiLGBxia7ttjGyrUEiOKUWPD
+	 M/aho1LpNAnoALSGcHqU2lfglboGrKirl4uBLRXZU9sAUdIsJ+HHy4LrvFpuQhrpxM
+	 QBV64gjowokmDRNk6N16pbXoCSmbHbMx3mFWdeyaE7aM9JDmKikBAEFQtnF8sB320C
+	 Zxt3p56kSH70g==
+Received: from [IPV6:2a00:6020:47a3:e800:271c:c6c5:9fde:77cb] (unknown [IPv6:2a00:6020:47a3:e800:271c:c6c5:9fde:77cb])
+	by bkemail.birger-koblitz.de (Postfix) with ESMTPSA id B75DE49F41;
+	Fri, 30 Oct 2026 15:42:46 +0000 (UTC)
+Message-ID: <2a66e94c-0fd0-4c90-bc1c-9e5699f80737@birger-koblitz.de>
+Date: Fri, 30 Oct 2026 16:42:44 +0100
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -106,87 +73,93 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261028190259.1819571-4-seanjc@google.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDMwMDA1OCBTYWx0ZWRfX231ITCmOe99R
- dfESFyd3RUHjMlk75/eFc/1OXzNu84c9omPa7EIxtAYWLGJA9eAO3zzjK7VTQa9llnkJXi4gWU8
- r/unyeMYxDjuR+cWiyOnVdmS7GG+HF21UyJwsDX2Xub75Vlm2pm0bctwtvWSinYL1jvetutMT9u
- syV9gMRp2C27a9ai2jX5gVTbQI0zWTEnKBPJsAESqMw35ihGvBQsvADDXhk3kK6RJKPFkGzUu/R
- 8hbWWaTe5yOXFUonP/DisFXU6OHDNrpGGIOnidy7knS9ossfiCuv+PjkyxIdfgZNrxB3ogLWnb/
- wIJApNH46JPjtF8WaAFMzRRJRq4ipRnblJwCI0gUhomM9spjDCQUvGpKUJceKZB8VwfgH+dzVOz
- eTTsRDooCRzKNdGwyScusI3QLV5OU6ngYDGXyI76iB5Vyotd+IKq7x3NvGErCC7qtLRge/dkbPg
- 7yc+RWco6LUsGg+cWpw==
-X-Authority-Analysis: v=2.4 cv=WJHqzXsR c=1 sm=1 tr=0 ts=6ae4ae52 cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=kj9zAlcOel0A:10 a=660iZSQnnn4A:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=VwQbUJbxAAAA:8
- a=1XWaLZrsAAAA:8 a=1goJhm9fjgf-yEZC_jsA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-ORIG-GUID: Zln3Uvbt51spdXgJNma7nXq9r9SgUHNe
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMDMwMDA1OCBTYWx0ZWRfX7S7KOd9POaV1
- Em+dt+hSOwRtH43TAR/rRI11q7Tee1s+P5cCU6Nfy9sKiFGQWrAn7ONzOJvQd/a2ydad09/AQ7n
- DooPLMaRQuyB21j0hWOf5aPFwNJGtms=
-X-Proofpoint-GUID: OIZDK0-t9uUR5jTdFJ0BXTWF-ze0VlkH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
- definitions=2026-10-30_05,2026-10-21_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1011 spamscore=0 lowpriorityscore=0 adultscore=0 priorityscore=1501
- bulkscore=0 impostorscore=0 malwarescore=0 suspectscore=0 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2610190000 definitions=main-2610300058
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v19 00/13] ax88179_178a: Add support for
+ AX88179A-based chips
+To: Emir Beganovic <beganovic.emir@gmail.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
+ Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Eric Dumazet <edumazet@kernel.org>, Jianhui Xu <neuromoments@gmail.com>,
+ Nicolai Buchwitz <nb@tipi-net.de>, linux-usb@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev
+References: <20261010-ax88179a-v19-0-7475173cfb56@birger-koblitz.de>
+ <20261029005809.19405-1-beganovic.emir@gmail.com>
+From: Birger Koblitz <mail@birger-koblitz.de>
+Content-Language: en-US
+In-Reply-To: <20261029005809.19405-1-beganovic.emir@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Oct 28, 2026 at 12:02:55PM -0700, Sean Christopherson wrote:
-> Explicitly force an IPI when invoking kvm_vcpu_kick() directly instead of
-> relying on kvm_arch_vcpu_should_kick() to unconditionally return 1/true.
-> This will allow dropping kvm_arch_vcpu_should_kick() in favor of
-> kvm_request_needs_ipi().
+Thanks so much Emir for testing!
+
+On 29/10/2026 1:58 am, Emir Beganovic wrote:
+> Hi Birger,
 > 
-> No functional change intended (1 || 1 == true).
+> I tested v19 on a Dell DA305 USB-C adapter. It has an AX88179A
+> (0b95:1790, bcdDevice 0x0200, FW 1.0.7.131) behind a VIA VL822 hub,
+> plugged into a Dell XPS 16 (Panther Lake). The peer is an Intel I225-V
+> behind a switch.
 > 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->  arch/powerpc/include/asm/kvm_ppc.h | 13 ++++++++++++-
->  arch/powerpc/kvm/book3s.c          |  4 ++--
->  arch/powerpc/kvm/book3s_pr.c       |  2 +-
->  arch/powerpc/kvm/booke.c           |  6 +++---
->  arch/powerpc/kvm/e500_emulate.c    |  2 +-
->  arch/powerpc/kvm/powerpc.c         |  2 +-
->  6 files changed, 20 insertions(+), 9 deletions(-)
+> I built ax88179, libphy, phylink and ax88796b as modules for a 7.2.8
+> kernel. v19 needed two things on that base: a4e22e9253e7 and a backport
+> of genphy_{read,write}_mmd_c45() from the adin1140 series.
 > 
-> diff --git a/arch/powerpc/include/asm/kvm_ppc.h b/arch/powerpc/include/asm/kvm_ppc.h
-> index 169ea6a7fbad..bbe7378ad0ef 100644
-> --- a/arch/powerpc/include/asm/kvm_ppc.h
-> +++ b/arch/powerpc/include/asm/kvm_ppc.h
-> @@ -30,6 +30,17 @@
->  #endif
->  #include <asm/inst.h>
->  
-> +/*
-> + * TODO: For unknown reasons, KVM PPC has historically ignored vcpu->mode when
-> + *       determining if kicking a vCPU needs an IPI.  Either document why that
-> + *       behavior is necessary, or drop this helper and the @force param from
-> + *       __kvm_vcpu_kick().
-> + */
-> +static inline void kvmppc_vcpu_kick(struct kvm_vcpu *vcpu)
-> +{
-> +	__kvm_vcpu_kick(vcpu, false, true);
-> +}
-> +
+> With the current driver in configuration 1 this adapter never gets a
+> link ("Failed to read reg index 0x0040: -32"). With v19:
+> 
+> - 1000/full link with flow control
+> - download 940-941 Mbit/s in nine runs. Upload was 937-941 in five of
+>    nine and lower in the other four, and I couldn't find why. Eight
+>    later runs with tracing on all averaged about 932.
+I have seen similar behaviour with iperf3 for an AX88279 and a 2.5GBit 
+link: in the first round, some 4-10 packets get dropped by the 
+RTL8372-switch as a link partner and then no further frame drops happen. 
+Looking into the switch's error counts, the drops are due to Flow 
+Control. I was not able to investigate further, but I have seen the same 
+behaviour with RTL8156/7/9-adapters using the r8152 driver and that 
+switch. So that seems to be "normal" and the speed of the adapter in 
+iperf3 is very close (about 2.35Mbit/s) to the theoretical limit.
 
-AFAICS, there is no reason for PPC to always return 1. I was looking at
-the old patches on mailing list and found this - https://lore.kernel.org/kvm/0FEE585F-5E21-47F2-A3F0-AD0DE05EBB43@suse.de
+> - 1-byte TCP request/response around 190-200 us, against about 1.46 ms
+>    with cdc_ncm on the same port (its default 400 us TX timer)
+> - switching itself to configuration 1 when the device comes up in the
+>    CDC configuration
+> - 100M and 10M links
+> - VLAN with rx-vlan-offload on and off, and rx-vlan-filter dropping a
+>    VID that isn't configured
+> - multicast filtering and allmulti
+> - suspend/resume (s2idle) and wake-on-LAN with a magic packet
+> 
+> Two small things I noticed:
+> 
+> - "Switching to vendor mode" is printed twice, once per CDC interface,
+>    and before the netdev is registered, so it shows up as
+>    "(unnamed net_device) (uninitialized)".
+The device can be registered only once it has been switched from CDC to 
+the vendor mode, that is why you see the message for the unregistered 
+device. That you see it twice can be due to the fact that it has 2 
+active interfaces, see the explanation given in commit c67cc43 for Anker 
+adapters.
+The devices I have print it only once and that also disappears once the 
+device has been switched and stays plugged even if the module is 
+loaded/unloaded.
 
-```
-How about we return 1 for kvm_arch_vcpu_in_guest_mode() on !x86 always, just like it's done today basically? Then we can
-worry about needless IPIs later and don't regress from the respective current kick implementations.
-```
+> - After a WoL wake the link goes down and up twice within about 2.5 s,
+>    where a normal resume shows a single link up. It comes back fine
+>    either way.
+I see this, too. It is not triggered in any way by the host or the link 
+partner, I checked. It appears that this is due to the firmware on the 
+device trying to optimize the link settings further, the out-of tree 
+ASIX driver displays the same behaviour, although it works very differently.
 
-However, I'll do some testing and get back by mid next week to make sure
-there are no suprises.
+> 
+> I only have this one adapter, so nothing on the other chips.
+> 
+> Tested-by: Emir Beganovic <beganovic.emir@gmail.com>
+Will add in upcoming v20.
 
-
-Thanks,
-Gautam
+Birger
