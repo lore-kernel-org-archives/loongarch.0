@@ -1,64 +1,48 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793401828;
-	b=jjw7DPGSrhSYAdEAlLR3qD9TAqe00ILidY7cJM3vGdlUVnipRpAnpkWlslIUYh7eOsT8
-	 NoQ8DCEFnWzBsMmTj525wtoPEj3gTFhBSj1Ez1VcDdsjihCo3hkTcBNeY/0fKz0OLvakd
-	 454VuYGCVofaluOySCPlwnkq1gsmj1zPM+NUv0aRwX0QmL7dMNUZxYZH8f3adUZLo4Vy4
-	 rNZG1+LdlchT/jFCKO3/7FQ+ekN7H0NDExIdhExxNsikOmL2D2uJ0j2XPuGD61Fw7SW+S
-	 J494FdcBKmD2DfGnyzi3JZtAWU/7Y7rU1RpijMaOdFMkS/7Y8gI4wzjz0iACvHZiO0g==
+	t=1793452910;
+	b=MrqqqupkFkh6/Oa0+/xdiwcndhovbdPJeOWj1Lc7y6JuGjbPduLVQAH1js3YVR/VJei5
+	 2br6Jnuy72zHGeTlGoMpvZHcEUxd87ceL+IvcfMAExvPHuaNKk3fCYeSOInGGcrea4QAh
+	 UUtguKseesLbI8Gp+WlzQ8wmxEuMG1dVpnT2KesL0BJ2T4b8lYbLuesNM47ClM3GtJ9Ue
+	 sAlDNiI92z2lFJLho4vcNuz5vIkcGCHLBWrpffec7Dm/L5DgTIqBe7QmO8IRqnOW24sUj
+	 RQnOlcpCO6Jd8QXrFNOmZOMPLkNVVXRGnUHXML/ec4JZjDwao1Az/SxvpV4SFbDd0IQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793401828;
-	h=Received:DKIM-Signature:Received:Subject:From:In-Reply-To:References:
-	 X-PR-Tracked-List-Id:X-PR-Tracked-Message-Id:X-PR-Tracked-Remote:
-	 X-PR-Tracked-Commit-Id:X-PR-Merge-Tree:X-PR-Merge-Refname:
-	 X-PR-Merge-Commit-Id:Message-Id:Date:To:Cc;
-	bh=FOOPF4NTkfFCMW+7iFGEX6RTBjaDe8ACYAxm4ucyncE=;
-	b=wmUDc9WJs6rqHIeU7M7NZVWFkZo0p092FGleJQQkvFFs+8Zky6HSPWvzBiiUPScIX7XQ
-	 lDeB3A446VfX2GWOYJ/PCQDiyq7/lEGsI5IBRD80hlaVP2mQPCKfbWF6/gEw6GwwK2jd+
-	 LaIlarVo8HqLK/qb18NHMsk0Jzm9M6TRUYunuWZH4PQFIqoVtY9eXT6l95MJnLvVZdQV6
-	 kEGqQZCSzspK9RJh5HuAdXScxoFM4xm4ACANaNjslKlQvlARBdbk3SLkX3vbtzYd6fEvO
-	 tx7Nl63D+0i/NTRoNCVU0DJV/Tw8+7OMWkU2KlosACq7gOquuHTCxDjYQO50bdTKR2A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793452910;
+	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:
+	 X-Mailer;
+	bh=PhhMp9/TOiCG7JAer/L+AFYkRo3zi5cH4WX46oYsUeo=;
+	b=Y7U3B+KzbzsYzzcWY583R5xVtoJ5CJXYQmhLn4Z3/rMRBGv6dt0NQy2sQHP2yHuoKivl
+	 GT9z0K8hn3/Itqv7itVVdqCMYfXn2KBzuh75AmI5xiBbVbvWBwVQ1VBWt2YSwVi8uQWwb
+	 WEZIRwoVBnKDQXVNc51P/mTbQVYfcZXccnUkZstAalfmTOFPoPbiEWECC1ad80LXIaLWI
+	 RDgJJk9xbsrSMsEGXbn/0sFA5EbE4T5e0MD9vo0cwIhCZZCRbUjYgs3bASYaEnqLtIiiS
+	 jxe4eIeheWkvY3hR5dG1uLL0aQRpJUyaTsAimJ7LUrm1zpPXqO0G2jgNXS+C1HXSX/A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=B+BZDlR4;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZkBgRzIE;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3114606A31A;
-	Fri, 30 Oct 2026 23:10:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7F9F606A31A;
+	Sat, 31 Oct 2026 13:21:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=B+BZDlR4
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D0E51F000C1;
-	Fri, 30 Oct 2026 23:10:27 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZkBgRzIE
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 618321F00919;
+	Sat, 31 Oct 2026 13:21:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793401827;
-	bh=FOOPF4NTkfFCMW+7iFGEX6RTBjaDe8ACYAxm4ucyncE=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc;
-	b=B+BZDlR4dAEXwQR9yuQA5xFSN7pipAaWOCnwd31U4Uvya93YBSgqQkARr/Yc2NhXi
-	 wJLmHjSrH2wLW6kKytQldP4kGHJ7qNriQ1q+UEQce6K0MTdAvQNVq3iLsMd0H2yKS+
-	 LckOIbc5bwjeEhzrElGbedGTANoWjODUjXOzTU0eNEIqsb1HVODbF3HFFY7A4CAwX/
-	 eJ72+gMlC36z+vwDasiEN7u8Aprp8+z7j56er7F99hYvJEv/J9b+A+1AFgqIOpTMNa
-	 5d7PZwP52cD+kYcR3HOvlzB07mgmteu+ULayRjJYqTL5erwnSC7smNw/HGkne3L8Gi
-	 n/CBjrHueEpyg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 42B893800478;
-	Fri, 30 Oct 2026 23:10:27 +0000 (UTC)
-Subject: Re: [GIT PULL] LoongArch changes for v7.4
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20261030042753.2101956-1-chenhuacai@loongson.cn>
-References: <20261030042753.2101956-1-chenhuacai@loongson.cn>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20261030042753.2101956-1-chenhuacai@loongson.cn>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-7.4
-X-PR-Tracked-Commit-Id: 6f8d12bb1a1231dbba579932772701880745a21d
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 780cb2a5fd64901444878cf5a40c0f2ec54837ce
-Message-Id: <179340182662.1820250.8181252458187794729.pr-tracker-bot@kernel.org>
-Date: Fri, 30 Oct 2026 23:10:26 +0000
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+	s=k20260515; t=1793452909;
+	bh=PhhMp9/TOiCG7JAer/L+AFYkRo3zi5cH4WX46oYsUeo=;
+	h=From:Date:Subject:To:Cc;
+	b=ZkBgRzIEkHeFIEu1mBrLS8uCcW/eiV77hYpKgOQEqGa8JuxCDDpwtONKzFMKLIZWQ
+	 ZDcGHuzAN18w/ICIqeC2OI28lVlMy4TtywZSnMdjOhQjCSlDV2bVbLYGQqL/46AX5R
+	 VWvaOxyloIrL5IlyNls7EHZpGbrkAGiEEFWNPaS62hShlFfYl6JRVKGFwkqHOSLtWK
+	 f+cIjTk02/1X1LxYbiWzezfDLyZuBPbm58lsWZawqPEd9a+DGXu0OlXbHPcBp2J4VT
+	 dgmi+KrBHw9uBoO8Q5mZtbT4K66WJceGDICYAHeM2Y3Otx7VA0evWg5rSpfLHeNClw
+	 IFqLnhGEk65FQ==
+From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+Date: Sat, 31 Oct 2026 15:21:46 +0200
+Subject: [PATCH] LoongArch: restore KFENCE pages through DMW on resume
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -67,16 +51,99 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20261031-fixes-loongarch-v1-1-e0e33e3c008e@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWMQQ7CIBBFr9LMWmILqU29inEBdIAxCmamGpOmd
+ xd0+X7e+xsIMqHAuduA8U1CJVcYDh34ZHNERUtl0L0+Db2eVKAPirqXkqNln1RYzDSOwZh5mKF
+ WT8afUqPL9c/ycjf0a7tphrOCyrHNPrWpMEXKx4eVFRn2/Qv0tSeakwAAAA==
+X-Change-ID: 20261027-fixes-loongarch-fd3755f33919
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Mike Rapoport <rppt@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+ stable@vger.kernel.org
+X-Mailer: b4 0.16.1-dev
 
-The pull request you sent on Fri, 30 Oct 2026 12:27:53 +0800:
+With KFENCE enabled, resume from hibernation triggers KFENCE reports while
+swsusp_asm_resume() copies the image pages, for example:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-7.4
+  BUG: KFENCE: use-after-free write in swsusp_asm_resume+0x20/0x94
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/780cb2a5fd64901444878cf5a40c0f2ec54837ce
+  Use-after-free write at 0x00000000a57ee925 (in kfence-#254):
+   swsusp_asm_resume+0x20/0x94
+   hibernation_restore+0x128/0x1a0
+   load_image_and_restore+0x6c/0xc8
+   software_resume+0x240/0x260
+   do_one_initcall+0x68/0x200
+   kernel_init_freeable+0x26c/0x304
+   kernel_init+0x20/0x134
+   ret_from_kernel_thread+0x24/0x1d0
+   ret_from_kernel_thread_asm+0xc/0x98
 
-Thank you!
+During resume from hibernation, the image pages that occupy physical pages
+used by the restore kernel are first loaded into free pages and then, as
+the very last step, swsusp_asm_resume() copies them to their final location
+pointed to by pbe->orig_address, which the hibernation core sets to
+page_address() of the page in the restore kernel.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+The early KFENCE pool is allocated from memblock and normally occupies the
+same physical pages in the restore kernel and in the image kernel, so these
+pages are usually copied by swsusp_asm_resume().
+
+The KFENCE pool is remapped into the KFENCE area above vm_map_base and
+set_page_address() adjusts page->virtual so that page_address() returns
+the page-table mapped alias rather than the DMW address of the pool pages.
+
+Hence, pbe->orig_address of KFENCE pages points to that alias and
+swsusp_asm_resume() writes them through the page tables. But:
+
+* the copy loop overwrites the kernel page tables, so a TLB refill for the
+  KFENCE alias may use a partially restored page table
+* the KFENCE pool pages that are protected in the restore kernel fault in
+  the middle of the copy
+
+Convert pbe->orig_address to DMW addresses before starting the copy.
+
+Fixes: 0ca84aeaee15 ("LoongArch: Make {virt, phys, page, pfn} translation work with KFENCE")
+Cc: stable@vger.kernel.org
+Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+---
+Reproduced with hibernation in QEMU, the KFENCE reports are gone with
+this patch.
+---
+ arch/loongarch/power/hibernate.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/arch/loongarch/power/hibernate.c b/arch/loongarch/power/hibernate.c
+index 817270410ef98..ff571ab4e8df9 100644
+--- a/arch/loongarch/power/hibernate.c
++++ b/arch/loongarch/power/hibernate.c
+@@ -59,6 +59,18 @@ extern int swsusp_asm_resume(void);
+ 
+ int swsusp_arch_resume(void)
+ {
++	struct pbe *pbe;
++
++	/*
++	 * page_address() of KFENCE pages is mapped by page tables that are
++	 * overwritten during restore and may be protected by KFENCE, copy
++	 * through DMW instead.
++	 */
++	if (IS_ENABLED(CONFIG_KFENCE)) {
++		for (pbe = restore_pblist; pbe; pbe = pbe->next)
++			pbe->orig_address = __va(virt_to_phys(pbe->orig_address));
++	}
++
+ 	/* Avoid TLB mismatch during and after kernel resume */
+ 	local_flush_tlb_all();
+ 	return swsusp_asm_resume();
+
+---
+base-commit: c03c1a14507dfaf8b856c2608f9ac216021fc222
+change-id: 20261027-fixes-loongarch-fd3755f33919
+
+--
+Sincerely yours,
+Mike.
+
