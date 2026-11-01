@@ -1,48 +1,63 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793452910;
-	b=MrqqqupkFkh6/Oa0+/xdiwcndhovbdPJeOWj1Lc7y6JuGjbPduLVQAH1js3YVR/VJei5
-	 2br6Jnuy72zHGeTlGoMpvZHcEUxd87ceL+IvcfMAExvPHuaNKk3fCYeSOInGGcrea4QAh
-	 UUtguKseesLbI8Gp+WlzQ8wmxEuMG1dVpnT2KesL0BJ2T4b8lYbLuesNM47ClM3GtJ9Ue
-	 sAlDNiI92z2lFJLho4vcNuz5vIkcGCHLBWrpffec7Dm/L5DgTIqBe7QmO8IRqnOW24sUj
-	 RQnOlcpCO6Jd8QXrFNOmZOMPLkNVVXRGnUHXML/ec4JZjDwao1Az/SxvpV4SFbDd0IQ==
+	t=1793506634;
+	b=YqiKp+h3dWFCZ6TG9e5sizqHPKQb0XJ3SQqobV1lb4e2S2KLP29zKQAL+j//9OTRW0HO
+	 vRzS4znXXoRqpENfRdKWGYalpuq+LcP3u901oExt1sk47wr68foiQb4GfzaL706ivLl8P
+	 YNywpM5C+SpIqMBKpmf9T5GPxfQxLQXQ4AX5CxdqljmIJimKWlN5miRtJ3D8TfrTPrt7w
+	 rzDDKfzq1dUzTJVpINWbu9mNYTSrivmkSIejPKWZg/g/Yz5Uz0SkpH7BypWPklWYcAINO
+	 n+hsaTmCM6z+Be4e+Si0TFlDImmFYGiRoLhyT9bkr/DjVku11zhfavR3ys1ZscuJM8w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793452910;
-	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:
-	 X-Mailer;
-	bh=PhhMp9/TOiCG7JAer/L+AFYkRo3zi5cH4WX46oYsUeo=;
-	b=Y7U3B+KzbzsYzzcWY583R5xVtoJ5CJXYQmhLn4Z3/rMRBGv6dt0NQy2sQHP2yHuoKivl
-	 GT9z0K8hn3/Itqv7itVVdqCMYfXn2KBzuh75AmI5xiBbVbvWBwVQ1VBWt2YSwVi8uQWwb
-	 WEZIRwoVBnKDQXVNc51P/mTbQVYfcZXccnUkZstAalfmTOFPoPbiEWECC1ad80LXIaLWI
-	 RDgJJk9xbsrSMsEGXbn/0sFA5EbE4T5e0MD9vo0cwIhCZZCRbUjYgs3bASYaEnqLtIiiS
-	 jxe4eIeheWkvY3hR5dG1uLL0aQRpJUyaTsAimJ7LUrm1zpPXqO0G2jgNXS+C1HXSX/A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793506634;
+	h=Received:DKIM-Signature:X-Mailer:From:To:Cc:Subject:In-Reply-To:
+	 References:Date:Message-ID:MIME-Version:Content-Type;
+	bh=mUqu+6HsBuPxnZ0xvfhrdFnRGtvir4qjhgMAVr4T9Ko=;
+	b=TZsF4WtDpQtIBUQco5CYMqf7pyMAN2hcLnT70ccOgCAWICdFxn5dxyCiDWPciakeScyr
+	 R7r98aQtjDyr/1iC5ooNac1yADZB+JPfPbckmeRbUSrspkE8F/8YkYnjaNCLiKAI/Atmm
+	 fj8qJ6rYAG/xhW6c1Jo3X6/ChZL5/FAdwpTN19i9xXFtexMQ2f3AfW8Iw2+VIqQGIIpGF
+	 ixK8p/f/0ExwhB1SNCP42xNAL32Wm1CXiPcFHfyg9lkZbEpBb/p3afdt1iwmkVPrkqo93
+	 dXml2ExgRnbVik1lkmKbWKsZxCz2mkfAb1X7GirwLhPZBp7N1NlUi0mHkPCma8gABKA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZkBgRzIE;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Szc8bvtd;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7F9F606A31A;
-	Sat, 31 Oct 2026 13:21:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78A0C606A324;
+	Sun,  1 Nov 2026 04:17:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZkBgRzIE
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 618321F00919;
-	Sat, 31 Oct 2026 13:21:48 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Szc8bvtd
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B3681F000C1;
+	Sun,  1 Nov 2026 04:17:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793452909;
-	bh=PhhMp9/TOiCG7JAer/L+AFYkRo3zi5cH4WX46oYsUeo=;
-	h=From:Date:Subject:To:Cc;
-	b=ZkBgRzIEkHeFIEu1mBrLS8uCcW/eiV77hYpKgOQEqGa8JuxCDDpwtONKzFMKLIZWQ
-	 ZDcGHuzAN18w/ICIqeC2OI28lVlMy4TtywZSnMdjOhQjCSlDV2bVbLYGQqL/46AX5R
-	 VWvaOxyloIrL5IlyNls7EHZpGbrkAGiEEFWNPaS62hShlFfYl6JRVKGFwkqHOSLtWK
-	 f+cIjTk02/1X1LxYbiWzezfDLyZuBPbm58lsWZawqPEd9a+DGXu0OlXbHPcBp2J4VT
-	 dgmi+KrBHw9uBoO8Q5mZtbT4K66WJceGDICYAHeM2Y3Otx7VA0evWg5rSpfLHeNClw
-	 IFqLnhGEk65FQ==
-From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Date: Sat, 31 Oct 2026 15:21:46 +0200
-Subject: [PATCH] LoongArch: restore KFENCE pages through DMW on resume
+	s=k20260515; t=1793506633;
+	bh=mUqu+6HsBuPxnZ0xvfhrdFnRGtvir4qjhgMAVr4T9Ko=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=Szc8bvtdgyfePD3Lcy+welmLY8PIM/MtSN+SWIMLPjyxSAUjFYbtzX/kg/Gk5W6ob
+	 AYPG16F5BppYWK28ekq6B4oHkbVsa+lhdlIX9kk2K7luf1zP8bvyIiQlN7cxKLefnz
+	 AoI6Ac242CTEeqI3aifav4i4kabOUAzpWrpQTkliA8ZqivaSs5YfaonNvidpfoWMJa
+	 6jPJ8xnrDXxGgY7hl5m0qHxKAk5XJempL3eDIBY50vaX+CFknAYUnPM1R+RrTcypkl
+	 ukEcKPlOK+p0kKrGynfvdOLrmP1tOsJWpENln+kYeylBrjzAxWzp/+bUv9vsW/XkIc
+	 9w+/Glq+JuypQ==
+X-Mailer: emacs 31.1 (via feedmail 11-beta-1 I)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: Kohei Enju <enju.kohei@fujitsu.com>
+Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	x86@kernel.org
+Subject: Re: [PATCH v6 6/8] dma: swiotlb: Centralize memory-encryption pool
+ sizing
+In-Reply-To: <auR0fT1yrKQ9wbm8@FCCLS0092175.localdomain>
+References: <20260924060756.1325156-1-aneesh.kumar@kernel.org>
+ <20260924060756.1325156-7-aneesh.kumar@kernel.org>
+ <asVs3doaJ4WrT3M2@willie-the-truck> <asYZFXGyafRjjBS0@arm.com>
+ <asYiOgskwi8JYLe_@willie-the-truck> <yq5awlrt3dwo.fsf@kernel.org>
+ <yq5av77c92oo.fsf@kernel.org> <aseRzPshcoys7AJS@arm.com>
+ <yq5ao6d48dqr.fsf@kernel.org> <auR0fT1yrKQ9wbm8@FCCLS0092175.localdomain>
+Date: Sun, 01 Nov 2026 09:47:05 +0530
+Message-ID: <yq5a8q3d9oe6.fsf@kernel.org>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -52,98 +67,149 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20261031-fixes-loongarch-v1-1-e0e33e3c008e@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWMQQ7CIBBFr9LMWmILqU29inEBdIAxCmamGpOmd
- xd0+X7e+xsIMqHAuduA8U1CJVcYDh34ZHNERUtl0L0+Db2eVKAPirqXkqNln1RYzDSOwZh5mKF
- WT8afUqPL9c/ycjf0a7tphrOCyrHNPrWpMEXKx4eVFRn2/Qv0tSeakwAAAA==
-X-Change-ID: 20261027-fixes-loongarch-fd3755f33919
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Mike Rapoport <rppt@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
- stable@vger.kernel.org
-X-Mailer: b4 0.16.1-dev
+Content-Type: text/plain
 
-With KFENCE enabled, resume from hibernation triggers KFENCE reports while
-swsusp_asm_resume() copies the image pages, for example:
+Kohei Enju <enju.kohei@fujitsu.com> writes:
 
-  BUG: KFENCE: use-after-free write in swsusp_asm_resume+0x20/0x94
+> On 10/08 20:02, Aneesh Kumar K.V wrote:
+>> Catalin Marinas <catalin.marinas@arm.com> writes:
+>> 
+>> > On Thu, Oct 08, 2026 at 11:03:27AM +0530, Aneesh Kumar K.V wrote:
+>> >> Aneesh Kumar K.V <aneesh.kumar@kernel.org> writes:
+>> >> > Will Deacon <will@kernel.org> writes:
+>> >> >> On Wed, Oct 07, 2026 at 11:04:05AM +0100, Catalin Marinas wrote:
+>> >> >>> On Tue, Oct 06, 2026 at 10:49:17PM +0100, Will Deacon wrote:
+>> >> >>> > On Thu, Sep 24, 2026 at 11:37:54AM +0530, Aneesh Kumar K.V (Arm) wrote:
+>> >> >>> > > @@ -496,7 +516,8 @@ swiotlb_select_pool_policy(unsigned int flags)
+>> >> >>> > >  	if (swiotlb_force_disable)
+>> >> >>> > >  		return SWIOTLB_POOL_NONE;
+>> >> >>> > >  
+>> >> >>> > > -	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
+>> >> >>> > > +	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT) &&
+>> >> >>> > > +	    !restricted_dma_pool_present)
+>> >> >>> > >  		return SWIOTLB_POOL_CC_GUEST;
+>> >> >>> > 
+>> >> >>> > I think this check on the restricted DMA pool is too general -- the pool
+>> >> >>> > could be tied to a specific DMA-capable peripheral and so treating its
+>> >> >>> > presence as a global property isn't right.
+>> >> >>> 
+>> >> >>> I agree it's a hack but that was the simplest way to avoid the pVMs
+>> >> >>> getting a bounce buffer after this patch. More than happy to leave it
+>> >> >>> out and reduce the buffer on cmdline or we come up with some better
+>> >> >>> heuristics.
+>> >> >>
+>> >> >> Hrm, that does mean that reverting just this part will regress pVMs
+>> >> >> because they'll suddenly be allocating a tonne more memory for an
+>> >> >> entirely unused swiotlb buffer. So I think I'd prefer to drop the entire
+>> >> >> series until this has been worked out properly.
+>> >> >>
+>> >> >>> Another option could be the arch code passing another flag that it
+>> >> >>> doesn't want an encrypted pool (e.g. when running in a pKVM guest) but I
+>> >> >>> don't particularly this either. The arch code doesn't know whether
+>> >> >>> there's an alternative pool.
+>> >> >>
+>> >> >> At that point, the default size may as well be driven by the
+>> >> >> drivers/virt/coco driver.
+>> >> >>
+>> >> >>> That said, such heuristics should have been a separate patch to make it
+>> >> >>> easier to review/drop.
+>> >> >>
+>> >> >> I think the only right way to get a semi-accurate heuristic is to take
+>> >> >> into account the set of dma-capable devices that will use the swiotlb
+>> >> >> pool, but that's fiddly and should probably be tackled as a separate
+>> >> >> series. Maybe a simpler hack in that direction would be to take the
+>> >> >> SWIOTLB_POOL_CC_GUEST if _any_ device is going to use swiotlb? You'll
+>> >> >> run into the usual problem of not being able to tell if a device is
+>> >> >> DMA-capable or not, but you could probably look for a global restricted
+>> >> >> DMA pool and, if that doesn't exist, check for per-device restricted pools
+>> >> >> on dma-coherent devices (since restricted DMA isn't supported by ACPI) as
+>> >> >> a reasonable approximation.
+>> >> >
+>> >> > So, something like this?
+>> >> >
+>> >> > 	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT) &&
+>> >> > 	    swiotlb_cc_guest_needs_default_pool())
+>> >> > 		return SWIOTLB_POOL_CC_GUEST;
+>> >> >
+>> >> 
+>> >> Detecting a DMA-capable device is not straightforward, and if we get it
+>> >> wrong, we will enable SWIOTLB_POOL_CC_GUEST unnecessarily. Would the
+>> >> code below be a reasonable approximation of what you suggested?
+>> >> 
+>> >> Another option would be to make swiotlb_cc_guest_needs_default_pool() a
+>> >> weak function that architectures can override. arm64 pKVM could then use
+>> >> a different scheme (for this patch series default to false). Would that
+>> >> be preferable?
+>> >
+>> > Even the rmem check for each device is still a hack that may bite us in
+>> > the future (private devices for example would not need swiotlb). I'm
+>> > thinking more and more of leaving the sizing an arch-specific decision,
+>> > don't bother generalising it at all.
+>> >
+>> > On pKVM vs CCA guests, there's really nothing specific here to pKVM
+>> > guests. The only difference is that confidential guests that so far have
+>> > run without a swiotlb buffer will regress if their memory is tight. For
+>> > confidential guests without dedicated rmem (either CCA or pKVM), I think
+>> > our options are either command line swiotlb sizing or dynamic swiotlb.
+>> >
+>> > Could you respin your series while leaving out the generic sizing? IOW,
+>> > no x86 code generalisation. We can discuss the best strategy on sizing
+>> > later (I haven't checked how much of this series still makes sense
+>> > without the generic sizing).
+>> >
+>> 
+>> It would mostly consist of the first three cleanup patches, followed by
+>> three patches that replace the addressing_limit argument with flags.
+>> 
+>> #define SWIOTLB_VERBOSE	(1 << 0) /* verbose initialization */
+>> /* Initialize a pool for devices with limited DMA addressing. */
+>> #define SWIOTLB_INIT_ADDRESSING_LIMIT	(1 << 1)
+>> /* Initialize a pool that requires architecture remapping. */
+>> #define SWIOTLB_INIT_REMAP		(1 << 2)
+>> /* Initialize a pool for DMA to memory-encrypted host or guest memory. */
+>> #define SWIOTLB_INIT_MEM_ENCRYPT		(1 << 3)
+>> /* Initialize a pool for unaligned kmalloc bouncing. */
+>> #define SWIOTLB_INIT_KMALLOC		(1 << 4)
+>> /* Do not initialize a pool unless SWIOTLB is explicitly required. */
+>> #define SWIOTLB_INIT_DEFAULT_OFF		(1 << 5)
+>> 
+>> This results in the large change below. I'm not sure we want to do this
+>> for no real benefit other than making swiotlb_should_init() slightly
+>> easier to follow.
+>> 
+>> static bool __init swiotlb_should_init(unsigned int flags)
+>> {
+>> 	if (swiotlb_force_disable)
+>> 		return false;
+>> 
+>> 	if (swiotlb_force_bounce)
+>> 		return true;
+>> 
+>> 	if (flags & (SWIOTLB_INIT_REMAP | SWIOTLB_INIT_MEM_ENCRYPT)))
+>> 		return true;
+>> 
+>> 	/* Explicit requirements override an architecture's default opt-out. */
+>> 	if (flags & SWIOTLB_INIT_DEFAULT_OFF)
+>> 		return false;
+>> 
+>> 	return flags & (SWIOTLB_INIT_ADDRESSING_LIMIT | SWIOTLB_INIT_KMALLOC);
+>> }
+>>  [...]
+>
+> Hi Aneesh,
+>
+> I can reproduce the CCA regression discussed in this thread:
+>   https://lore.kernel.org/all/yq5azeyxyfol.fsf@kernel.org/#t
+>
+> The guest runs out of SWIOTLB slots, causing disk I/O to fail and
+> preventing the guest from booting.
+>
+> I would like to test the fix on real CCA hardware. Could you please Cc
+> me when you respin the series? I follow LKML, but I may still miss the
+> posting by chance.
+>
 
-  Use-after-free write at 0x00000000a57ee925 (in kfence-#254):
-   swsusp_asm_resume+0x20/0x94
-   hibernation_restore+0x128/0x1a0
-   load_image_and_restore+0x6c/0xc8
-   software_resume+0x240/0x260
-   do_one_initcall+0x68/0x200
-   kernel_init_freeable+0x26c/0x304
-   kernel_init+0x20/0x134
-   ret_from_kernel_thread+0x24/0x1d0
-   ret_from_kernel_thread_asm+0xc/0x98
+The conclusion was to either use CONFIG_SWIOTLB_DYNAMIC or swiotlb kernel command line
+option
 
-During resume from hibernation, the image pages that occupy physical pages
-used by the restore kernel are first loaded into free pages and then, as
-the very last step, swsusp_asm_resume() copies them to their final location
-pointed to by pbe->orig_address, which the hibernation core sets to
-page_address() of the page in the restore kernel.
-
-The early KFENCE pool is allocated from memblock and normally occupies the
-same physical pages in the restore kernel and in the image kernel, so these
-pages are usually copied by swsusp_asm_resume().
-
-The KFENCE pool is remapped into the KFENCE area above vm_map_base and
-set_page_address() adjusts page->virtual so that page_address() returns
-the page-table mapped alias rather than the DMW address of the pool pages.
-
-Hence, pbe->orig_address of KFENCE pages points to that alias and
-swsusp_asm_resume() writes them through the page tables. But:
-
-* the copy loop overwrites the kernel page tables, so a TLB refill for the
-  KFENCE alias may use a partially restored page table
-* the KFENCE pool pages that are protected in the restore kernel fault in
-  the middle of the copy
-
-Convert pbe->orig_address to DMW addresses before starting the copy.
-
-Fixes: 0ca84aeaee15 ("LoongArch: Make {virt, phys, page, pfn} translation work with KFENCE")
-Cc: stable@vger.kernel.org
-Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
----
-Reproduced with hibernation in QEMU, the KFENCE reports are gone with
-this patch.
----
- arch/loongarch/power/hibernate.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/arch/loongarch/power/hibernate.c b/arch/loongarch/power/hibernate.c
-index 817270410ef98..ff571ab4e8df9 100644
---- a/arch/loongarch/power/hibernate.c
-+++ b/arch/loongarch/power/hibernate.c
-@@ -59,6 +59,18 @@ extern int swsusp_asm_resume(void);
- 
- int swsusp_arch_resume(void)
- {
-+	struct pbe *pbe;
-+
-+	/*
-+	 * page_address() of KFENCE pages is mapped by page tables that are
-+	 * overwritten during restore and may be protected by KFENCE, copy
-+	 * through DMW instead.
-+	 */
-+	if (IS_ENABLED(CONFIG_KFENCE)) {
-+		for (pbe = restore_pblist; pbe; pbe = pbe->next)
-+			pbe->orig_address = __va(virt_to_phys(pbe->orig_address));
-+	}
-+
- 	/* Avoid TLB mismatch during and after kernel resume */
- 	local_flush_tlb_all();
- 	return swsusp_asm_resume();
-
----
-base-commit: c03c1a14507dfaf8b856c2608f9ac216021fc222
-change-id: 20261027-fixes-loongarch-fd3755f33919
-
---
-Sincerely yours,
-Mike.
-
+-aneesh
