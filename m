@@ -1,63 +1,86 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793506634;
-	b=YqiKp+h3dWFCZ6TG9e5sizqHPKQb0XJ3SQqobV1lb4e2S2KLP29zKQAL+j//9OTRW0HO
-	 vRzS4znXXoRqpENfRdKWGYalpuq+LcP3u901oExt1sk47wr68foiQb4GfzaL706ivLl8P
-	 YNywpM5C+SpIqMBKpmf9T5GPxfQxLQXQ4AX5CxdqljmIJimKWlN5miRtJ3D8TfrTPrt7w
-	 rzDDKfzq1dUzTJVpINWbu9mNYTSrivmkSIejPKWZg/g/Yz5Uz0SkpH7BypWPklWYcAINO
-	 n+hsaTmCM6z+Be4e+Si0TFlDImmFYGiRoLhyT9bkr/DjVku11zhfavR3ys1ZscuJM8w==
+	t=1793555892;
+	b=FXIcFh7dOmBvLkccW6Pmtfk9UNfYtnbK2nFMIYfF7USaK2GOjNjmgWTIdZjYXK+JpG44
+	 tqyZ0MOuwDi/WYZxJq2vyrGUGsUtRFafjL2GebWj4/sufLRJsJBbyPOS6g+vpKQG2jOz/
+	 d08Nm6+1MdAl4XDfljYFpgteSVYmPyBNOrbjeYKAN+utLcDzRv7EtRP6sfdU3WPwggRhZ
+	 gt3pmB2dbX842tC4cXpO8qbDFq+1x+3GWd36mGLP3BDbxJG2s/y43YRQSG4BX8G3FL/JH
+	 VKpfCGNTp1Hz0GdDcZARYpLUn5L45Fh2eEljXH2E7aR2A95SjzD1/7WJ45Hy9hXQgLg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793506634;
-	h=Received:DKIM-Signature:X-Mailer:From:To:Cc:Subject:In-Reply-To:
-	 References:Date:Message-ID:MIME-Version:Content-Type;
-	bh=mUqu+6HsBuPxnZ0xvfhrdFnRGtvir4qjhgMAVr4T9Ko=;
-	b=TZsF4WtDpQtIBUQco5CYMqf7pyMAN2hcLnT70ccOgCAWICdFxn5dxyCiDWPciakeScyr
-	 R7r98aQtjDyr/1iC5ooNac1yADZB+JPfPbckmeRbUSrspkE8F/8YkYnjaNCLiKAI/Atmm
-	 fj8qJ6rYAG/xhW6c1Jo3X6/ChZL5/FAdwpTN19i9xXFtexMQ2f3AfW8Iw2+VIqQGIIpGF
-	 ixK8p/f/0ExwhB1SNCP42xNAL32Wm1CXiPcFHfyg9lkZbEpBb/p3afdt1iwmkVPrkqo93
-	 dXml2ExgRnbVik1lkmKbWKsZxCz2mkfAb1X7GirwLhPZBp7N1NlUi0mHkPCma8gABKA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793555892;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:In-Reply-To:References:
+	 Date:Message-ID:MIME-Version:Content-Type;
+	bh=+7HwRXGWtYS3xmU+Z46/w0lVl31Dl0sZcMyXjmUDfIs=;
+	b=e5Xj0w/BMboK2HQTrlV3GC9nl6B4wY2eIhjnYKaxYXq6FcqHV6g/4o/4sNm7Yk8pIt1P
+	 GubvDHoF3P9IfIZ64kH/SrqXU+FvyHXCkHkydGw4xIZVnM3zDZaDNVHLokOm3NLlUV5tz
+	 aj4+LvcdpZFGZawmh6JY5Sc8UMl8DTlgnC93b6QJ43JQmcZCXaa6LIvDPp3rJjDHQ9p1g
+	 0TPGTX3jwWN/n+YsCLlKSua75jB7b+KM3N/9V45vjViVZa2NwK1GRGCfVyEyuhkhDNWdl
+	 O1P/fPfVoq1Z7ZkCr6dgNpsYtUuNmhKMMMu5ivftXcMwLcIVwKssjyXi+rzxGn1H6MQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Szc8bvtd;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FkpyzqH8;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78A0C606A324;
-	Sun,  1 Nov 2026 04:17:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 155C7606A338;
+	Sun,  1 Nov 2026 17:58:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Szc8bvtd
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B3681F000C1;
-	Sun,  1 Nov 2026 04:17:09 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FkpyzqH8
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 388A21F00A17;
+	Sun,  1 Nov 2026 17:58:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793506633;
-	bh=mUqu+6HsBuPxnZ0xvfhrdFnRGtvir4qjhgMAVr4T9Ko=;
+	s=k20260515; t=1793555891;
+	bh=+7HwRXGWtYS3xmU+Z46/w0lVl31Dl0sZcMyXjmUDfIs=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=Szc8bvtdgyfePD3Lcy+welmLY8PIM/MtSN+SWIMLPjyxSAUjFYbtzX/kg/Gk5W6ob
-	 AYPG16F5BppYWK28ekq6B4oHkbVsa+lhdlIX9kk2K7luf1zP8bvyIiQlN7cxKLefnz
-	 AoI6Ac242CTEeqI3aifav4i4kabOUAzpWrpQTkliA8ZqivaSs5YfaonNvidpfoWMJa
-	 6jPJ8xnrDXxGgY7hl5m0qHxKAk5XJempL3eDIBY50vaX+CFknAYUnPM1R+RrTcypkl
-	 ukEcKPlOK+p0kKrGynfvdOLrmP1tOsJWpENln+kYeylBrjzAxWzp/+bUv9vsW/XkIc
-	 9w+/Glq+JuypQ==
-X-Mailer: emacs 31.1 (via feedmail 11-beta-1 I)
-From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-To: Kohei Enju <enju.kohei@fujitsu.com>
-Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	x86@kernel.org
-Subject: Re: [PATCH v6 6/8] dma: swiotlb: Centralize memory-encryption pool
- sizing
-In-Reply-To: <auR0fT1yrKQ9wbm8@FCCLS0092175.localdomain>
-References: <20260924060756.1325156-1-aneesh.kumar@kernel.org>
- <20260924060756.1325156-7-aneesh.kumar@kernel.org>
- <asVs3doaJ4WrT3M2@willie-the-truck> <asYZFXGyafRjjBS0@arm.com>
- <asYiOgskwi8JYLe_@willie-the-truck> <yq5awlrt3dwo.fsf@kernel.org>
- <yq5av77c92oo.fsf@kernel.org> <aseRzPshcoys7AJS@arm.com>
- <yq5ao6d48dqr.fsf@kernel.org> <auR0fT1yrKQ9wbm8@FCCLS0092175.localdomain>
-Date: Sun, 01 Nov 2026 09:47:05 +0530
-Message-ID: <yq5a8q3d9oe6.fsf@kernel.org>
+	b=FkpyzqH892Y24Bf4MzJaxg0GENU+W3h1HrKoje37+gLiStKVwoHULfobDtcxPd97k
+	 O7yDPvc5mWSjJBu8vqqdIiJljIIY/6Z6d8PFXXCg74LTEn4DannL5V6rcy3NiVl7Cu
+	 DnutKq7d2bLfY2EkKJcg1fiS7Qvebb0UQQu9SHDSugPX5Tba1NEXcVGdUEzB6sw+y5
+	 V2z/p2t+EDUDEUhm+YjJeNELsgmzPgXTja1HpGoACFV2HxgapWeRjmaKUW4P/rTSol
+	 vGE0a3SiPbMJFefI/JNfVFZ/R4iCFJ+Rd4uFfOaqAIzWd7mtslcqNYqP4841tBmpOx
+	 x3REifKbTPuGQ==
+From: Thomas Gleixner <tglx@kernel.org>
+To: "H. Peter Anvin" <hpa@zytor.com>, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Michael Ellerman <mpe@ellerman.id.au>, Shrikanth
+ Hegde <sshegde@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org, Kees Cook
+ <kees@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+ loongarch@lists.linux.dev, Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt
+ <palmer@dabbelt.com>, linux-riscv@lists.infradead.org, Sven Schnelle
+ <svens@linux.ibm.com>, linux-s390@vger.kernel.org, x86@kernel.org, Mark
+ Rutland <mark.rutland@arm.com>, Jinjie Ruan <ruanjinjie@huawei.com>, Andy
+ Lutomirski <luto@kernel.org>, Oleg Nesterov <oleg@redhat.com>, Richard
+ Henderson <richard.henderson@linaro.org>, Russell King
+ <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Guo
+ Ren <guoren@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Thomas
+ Bogendoerfer <tsbogend@alpha.franken.de>, Helge Deller <deller@gmx.de>,
+ Yoshinori Sato <ysato@users.sourceforge.jp>, Richard Weinberger
+ <richard@nod.at>, Chris Zankel <chris@zankel.net>,
+ linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org,
+ linux-csky@vger.kernel.org, linux-m68k@vger.kernel.org,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linux-sh@vger.kernel.org, linux-um@lists.infradead.org, Arnd Bergmann
+ <arnd@arndb.de>, Vineet Gupta <vgupta@kernel.org>, Will Deacon
+ <will@kernel.org>, Brian Cain <bcain@kernel.org>, Michal Simek
+ <monstr@monstr.eu>, Dinh Nguyen <dinguyen@kernel.org>, "David S. Miller"
+ <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>,
+ linux-snps-arc@lists.infradead.org, linux-hexagon@vger.kernel.org,
+ linux-openrisc@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-arch@vger.kernel.org, Michal =?utf-8?Q?Such=C3=A1nek?=
+ <msuchanek@suse.de>, Jonathan
+ Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Subject: [PATCH V2] x86/entry: Fix ptrace regression
+In-Reply-To: <87mrrvxaty.ffs@fw13>
+References: <20260707181957.433213175@kernel.org>
+ <20260707190254.493733289@kernel.org>
+ <20261022142425.3Wx-RrU5@linutronix.de> <87fqxx1r80.ffs@fw13>
+ <87cxt11ktr.ffs@fw13> <1149A39E-BEBA-46EA-94F4-4DFFC4733EF5@zytor.com>
+ <871p9g1s3w.ffs@fw13> <87y0boze95.ffs@fw13>
+ <C6D7BF04-4CF7-48D1-93B5-E80D52C2617D@zytor.com> <87se1wyvs8.ffs@fw13>
+ <87mrrvxaty.ffs@fw13>
+Date: Sun, 01 Nov 2026 18:58:08 +0100
+Message-ID: <87ecd4xwlr.ffs@fw13>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -69,147 +92,85 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain
 
-Kohei Enju <enju.kohei@fujitsu.com> writes:
+The recent rework of the syscall entry code missed the historical detail of
+the abuse of syscall number -1L to abort a syscall and keep modifications
+by tracers to the return value, while a rewrite of the syscall number to an
+invalid value undoes eventual tracer modification to the return value and
+overwrite it with -ENOSYS.
 
-> On 10/08 20:02, Aneesh Kumar K.V wrote:
->> Catalin Marinas <catalin.marinas@arm.com> writes:
->> 
->> > On Thu, Oct 08, 2026 at 11:03:27AM +0530, Aneesh Kumar K.V wrote:
->> >> Aneesh Kumar K.V <aneesh.kumar@kernel.org> writes:
->> >> > Will Deacon <will@kernel.org> writes:
->> >> >> On Wed, Oct 07, 2026 at 11:04:05AM +0100, Catalin Marinas wrote:
->> >> >>> On Tue, Oct 06, 2026 at 10:49:17PM +0100, Will Deacon wrote:
->> >> >>> > On Thu, Sep 24, 2026 at 11:37:54AM +0530, Aneesh Kumar K.V (Arm) wrote:
->> >> >>> > > @@ -496,7 +516,8 @@ swiotlb_select_pool_policy(unsigned int flags)
->> >> >>> > >  	if (swiotlb_force_disable)
->> >> >>> > >  		return SWIOTLB_POOL_NONE;
->> >> >>> > >  
->> >> >>> > > -	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
->> >> >>> > > +	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT) &&
->> >> >>> > > +	    !restricted_dma_pool_present)
->> >> >>> > >  		return SWIOTLB_POOL_CC_GUEST;
->> >> >>> > 
->> >> >>> > I think this check on the restricted DMA pool is too general -- the pool
->> >> >>> > could be tied to a specific DMA-capable peripheral and so treating its
->> >> >>> > presence as a global property isn't right.
->> >> >>> 
->> >> >>> I agree it's a hack but that was the simplest way to avoid the pVMs
->> >> >>> getting a bounce buffer after this patch. More than happy to leave it
->> >> >>> out and reduce the buffer on cmdline or we come up with some better
->> >> >>> heuristics.
->> >> >>
->> >> >> Hrm, that does mean that reverting just this part will regress pVMs
->> >> >> because they'll suddenly be allocating a tonne more memory for an
->> >> >> entirely unused swiotlb buffer. So I think I'd prefer to drop the entire
->> >> >> series until this has been worked out properly.
->> >> >>
->> >> >>> Another option could be the arch code passing another flag that it
->> >> >>> doesn't want an encrypted pool (e.g. when running in a pKVM guest) but I
->> >> >>> don't particularly this either. The arch code doesn't know whether
->> >> >>> there's an alternative pool.
->> >> >>
->> >> >> At that point, the default size may as well be driven by the
->> >> >> drivers/virt/coco driver.
->> >> >>
->> >> >>> That said, such heuristics should have been a separate patch to make it
->> >> >>> easier to review/drop.
->> >> >>
->> >> >> I think the only right way to get a semi-accurate heuristic is to take
->> >> >> into account the set of dma-capable devices that will use the swiotlb
->> >> >> pool, but that's fiddly and should probably be tackled as a separate
->> >> >> series. Maybe a simpler hack in that direction would be to take the
->> >> >> SWIOTLB_POOL_CC_GUEST if _any_ device is going to use swiotlb? You'll
->> >> >> run into the usual problem of not being able to tell if a device is
->> >> >> DMA-capable or not, but you could probably look for a global restricted
->> >> >> DMA pool and, if that doesn't exist, check for per-device restricted pools
->> >> >> on dma-coherent devices (since restricted DMA isn't supported by ACPI) as
->> >> >> a reasonable approximation.
->> >> >
->> >> > So, something like this?
->> >> >
->> >> > 	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT) &&
->> >> > 	    swiotlb_cc_guest_needs_default_pool())
->> >> > 		return SWIOTLB_POOL_CC_GUEST;
->> >> >
->> >> 
->> >> Detecting a DMA-capable device is not straightforward, and if we get it
->> >> wrong, we will enable SWIOTLB_POOL_CC_GUEST unnecessarily. Would the
->> >> code below be a reasonable approximation of what you suggested?
->> >> 
->> >> Another option would be to make swiotlb_cc_guest_needs_default_pool() a
->> >> weak function that architectures can override. arm64 pKVM could then use
->> >> a different scheme (for this patch series default to false). Would that
->> >> be preferable?
->> >
->> > Even the rmem check for each device is still a hack that may bite us in
->> > the future (private devices for example would not need swiotlb). I'm
->> > thinking more and more of leaving the sizing an arch-specific decision,
->> > don't bother generalising it at all.
->> >
->> > On pKVM vs CCA guests, there's really nothing specific here to pKVM
->> > guests. The only difference is that confidential guests that so far have
->> > run without a swiotlb buffer will regress if their memory is tight. For
->> > confidential guests without dedicated rmem (either CCA or pKVM), I think
->> > our options are either command line swiotlb sizing or dynamic swiotlb.
->> >
->> > Could you respin your series while leaving out the generic sizing? IOW,
->> > no x86 code generalisation. We can discuss the best strategy on sizing
->> > later (I haven't checked how much of this series still makes sense
->> > without the generic sizing).
->> >
->> 
->> It would mostly consist of the first three cleanup patches, followed by
->> three patches that replace the addressing_limit argument with flags.
->> 
->> #define SWIOTLB_VERBOSE	(1 << 0) /* verbose initialization */
->> /* Initialize a pool for devices with limited DMA addressing. */
->> #define SWIOTLB_INIT_ADDRESSING_LIMIT	(1 << 1)
->> /* Initialize a pool that requires architecture remapping. */
->> #define SWIOTLB_INIT_REMAP		(1 << 2)
->> /* Initialize a pool for DMA to memory-encrypted host or guest memory. */
->> #define SWIOTLB_INIT_MEM_ENCRYPT		(1 << 3)
->> /* Initialize a pool for unaligned kmalloc bouncing. */
->> #define SWIOTLB_INIT_KMALLOC		(1 << 4)
->> /* Do not initialize a pool unless SWIOTLB is explicitly required. */
->> #define SWIOTLB_INIT_DEFAULT_OFF		(1 << 5)
->> 
->> This results in the large change below. I'm not sure we want to do this
->> for no real benefit other than making swiotlb_should_init() slightly
->> easier to follow.
->> 
->> static bool __init swiotlb_should_init(unsigned int flags)
->> {
->> 	if (swiotlb_force_disable)
->> 		return false;
->> 
->> 	if (swiotlb_force_bounce)
->> 		return true;
->> 
->> 	if (flags & (SWIOTLB_INIT_REMAP | SWIOTLB_INIT_MEM_ENCRYPT)))
->> 		return true;
->> 
->> 	/* Explicit requirements override an architecture's default opt-out. */
->> 	if (flags & SWIOTLB_INIT_DEFAULT_OFF)
->> 		return false;
->> 
->> 	return flags & (SWIOTLB_INIT_ADDRESSING_LIMIT | SWIOTLB_INIT_KMALLOC);
->> }
->>  [...]
->
-> Hi Aneesh,
->
-> I can reproduce the CCA regression discussed in this thread:
->   https://lore.kernel.org/all/yq5azeyxyfol.fsf@kernel.org/#t
->
-> The guest runs out of SWIOTLB slots, causing disk I/O to fail and
-> preventing the guest from booting.
->
-> I would like to test the fix on real CCA hardware. Could you please Cc
-> me when you respin the series? I follow LKML, but I may still miss the
-> posting by chance.
->
+Restore the original behaviour.
 
-The conclusion was to either use CONFIG_SWIOTLB_DYNAMIC or swiotlb kernel command line
-option
+Fixes: 1b1f3b3e1b39 ("x86/entry: Get rid of the sys_ni_syscall() indirection")
+Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@kernel.org>
+Cc: stable@vger.kernel.org
+Closes: https://lore.kernel.org/all/20261022142425.3Wx-RrU5@linutronix.de
+---
+V2: Add the missing -1 check in the 32bit path - sashiko
+---
+ arch/x86/entry/syscall_32.c |    4 ++++
+ arch/x86/entry/syscall_64.c |   26 ++++++++++++++++++++++----
+ 2 files changed, 26 insertions(+), 4 deletions(-)
 
--aneesh
+--- a/arch/x86/entry/syscall_32.c
++++ b/arch/x86/entry/syscall_32.c
+@@ -77,6 +77,10 @@ static __always_inline void do_syscall_3
+ 	if (likely(nr < IA32_NR_syscalls)) {
+ 		nr = array_index_nospec(nr, IA32_NR_syscalls);
+ 		regs->ax = ia32_sys_call(regs, (unsigned int)nr);
++	} else {
++		/* See comment in do_syscall_64() */
++		if (nr != -1UL) {
++			regs->ax = -ENOSYS;
+ 	}
+ }
+ 
+--- a/arch/x86/entry/syscall_64.c
++++ b/arch/x86/entry/syscall_64.c
+@@ -64,15 +64,20 @@ static __always_inline bool do_syscall_x
+ 	return false;
+ }
+ 
+-static __always_inline void do_syscall_x32(struct pt_regs *regs, unsigned long nr)
++static __always_inline bool do_syscall_x32(struct pt_regs *regs, unsigned long nr)
+ {
++	if (!IS_ENABLED(CONFIG_X86_X32_ABI))
++		return false;
++
+ 	/* Adjust the starting offset of the table */
+ 	nr -= __X32_SYSCALL_BIT;
+ 
+-	if (IS_ENABLED(CONFIG_X86_X32_ABI) && likely(nr < X32_NR_syscalls)) {
++	if (likely(nr < X32_NR_syscalls)) {
+ 		nr = array_index_nospec(nr, X32_NR_syscalls);
+ 		regs->ax = x32_sys_call(regs, (unsigned int)nr);
++		return true;
+ 	}
++	return false;
+ }
+ 
+ /* Returns true to return using SYSRET, or false to use IRET */
+@@ -81,8 +86,21 @@ static __always_inline void do_syscall_x
+ 	if (likely(syscall_enter_from_user_mode_randomize_stack(regs, &nr))) {
+ 		instrumentation_begin();
+ 
+-		if (!do_syscall_x64(regs, nr))
+-			do_syscall_x32(regs, nr);
++		if (unlikely(!do_syscall_x64(regs, nr))) {
++			/*
++			 * The special treatment of syscall number -1 is a
++			 * historical bogosity as the original code used -1 to
++			 * indicate syscall abort, which is not distinguishable
++			 * from a syscall which is invoked with syscall number
++			 * -1. The historic behavior is to keep the return value
++			 * in regs->ax unmodified in that case, which means it's
++			 * either the preset value -ENOSYS or a value which was
++			 * written by a tracer. If the syscall number is invalid
++			 * but not -1 then overwrite any tracer modification.
++			 */
++			if (!do_syscall_x32(regs, nr) && nr != -1L)
++				regs->ax = -ENOSYS;
++		}
+ 
+ 		instrumentation_end();
+ 	}
