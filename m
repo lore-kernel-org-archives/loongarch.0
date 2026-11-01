@@ -1,48 +1,48 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793571392;
-	b=eLxcl05CbRRCkS+vUVPMr9Ia5+2g4VRrNudk5/HPwKclxw8uIjxirl5pkVXmaDUfl6Oy
-	 b7a34Xref5iNTkakHWZpDrvg2NQEw6RDxTUXcXuP56PzN85nptoQ3lyLSdnYUS9lopWBb
-	 qqyvQwWOzxDTPoS3qMyqoub0iGn9YLJk3yAgE/NpLCXjHrF5nU1FdWz3SmZzycHH8cr19
-	 8/svyYxbWcbJXT2sa1oWaA/w9yXKGCQGbVPVR8w2darXvcwwt7cFHe9Uj+RI4ESedXQei
-	 G0l5slWoo4exY7aKHeNP41XXVKA02HzeEKKLhOTOkkji6CYve78k82AwqzmEML8RLBQ==
+	t=1793571434;
+	b=Zn2WMrfdR7uoDG6cdtg43Q/EwHQr3KNkAcoDEG0zfj8rLIChQmbkxcZs+Kuyi7pM3ouw
+	 54qW5TkWxM2bjSr3MS4N9v/I5NkJVfzWAbPf/Jj9y/98bkOuMieuzVxmHi22KYhIjr1UN
+	 GTLUAEjfbIyExKF1zxj+jjA1yzU9ALWDcn+a0kp3uogsRh29zJYZ2KxyWvM4f2JSHr2PK
+	 qv0P+E/UrSz/fizrWIOfAuSoSK97zpEYWcYDCOJ25lcBx6UtHne32E7rmpKHU5rzXdTuG
+	 TULyTPDl1MC0EmK8jNxL5rARM+FxUF89AnpcMSjjK4tXh7KOl+lkUdlm1zAfTKgpxUA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793571392;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793571434;
 	h=Received:DKIM-Signature:Received:Content-Type:MIME-Version:
 	 Content-Transfer-Encoding:Subject:From:Message-Id:Date:References:
 	 In-Reply-To:To:Cc;
-	bh=7jMaG7E0faIciRuA0j8698KDnNXPdfgqG5SZCjrpwFM=;
-	b=v/MZbUthF9+Jdc4t5l5H4AQQIMWFhoxdOOoUJQlREtiuEX2rcAVAbBmR7FNY/j9oIbts
-	 zVKpkwmQfqpBvj1t17rEtetATynziVj3CYz8rZue17bD4JrtIU+wdAczgoOKxEyPKLpQD
-	 MvV1y2BZggk/UrjKdmXZcKYA1L1lQ2VbgTtN/ZJmHBlMELFQUBZRACXFaEcAE6B+Gs4w1
-	 cmMkt7MN0yL/y55SUWCFXepem3gLE+KH5XOjzKyBsve6pYSg1BGEAlK/jurnUeC/Q/8Gx
-	 C/Hi6N4GbwNnXKjVATYh9NZ/oqJ+GNj38bHK1U0WRjKmTjHcJ7C/UWmHUQmBOm8Av0w==
+	bh=cjatygCmxk8XIyEbtr4pyzKJ6E60G4Tfi3euF78nVXA=;
+	b=PJYFLGwy40sd5ZZg5KfKibhhzNoZ+CkH1Wt4VFtSCF3yj8Dfe+qL6Y2KQt9KeSyNQ60T
+	 yT+d8ri1iDLVjVrn4FhFVv9+vH4eAzyefY4AqhMID6vIvqQoxGStPtKpFReLDOFJs8yO9
+	 limKCWjRtleFq1dR79l6FGN5sizV7V8sCp3ALp+6/xtTsOOJc+uqR9gC1TQat5XxeIA0P
+	 QGMPQm3KaThB9d52/hVtt+VkKr/vk6K5mvrSXclwLfIG9MQtIvLx43DfuP31tYQNzUIQS
+	 x6vyBPiABzZqzoTZtfnMJD/BzhnEZAffeijNZxp1RVMfPU5XjIHIBDPcypnx3dNRs/g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RI6vqfud;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=B37CRQpc;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8573C606E500;
-	Sun,  1 Nov 2026 22:16:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D13606F2CD;
+	Sun,  1 Nov 2026 22:17:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RI6vqfud
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D4D81F000C1;
-	Sun,  1 Nov 2026 22:16:32 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=B37CRQpc
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AF4C1F0093A;
+	Sun,  1 Nov 2026 22:17:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793571392;
-	bh=7jMaG7E0faIciRuA0j8698KDnNXPdfgqG5SZCjrpwFM=;
+	s=k20260515; t=1793571434;
+	bh=cjatygCmxk8XIyEbtr4pyzKJ6E60G4Tfi3euF78nVXA=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc;
-	b=RI6vqfudUDAPQJyogDLl2CpARmQSYi02Z/r+Di8qbeK3KcSdM0cWSldHGeHFd7Wmg
-	 oZkcWTzbyfmhEOg5tcfCHfhpf6iaGm+isSH86qaujprBW88A0OM503IaD8+WPv9717
-	 bpcrsoSfdrv6EFgcaHxAfgeqBVd+9Lh2jlei+lTKhKmrMmF1DDRxKwuNJ2YAzniH64
-	 bTK3lBMxJ6uc9UCiWTe96qjtjhpAxsSnnRxROmumhMt3+M7z/8Bl4vxi21IO/fXVoH
-	 wUHNq2epY1lAcTmYzulW8paMq9f4RX7rYBp2SAoAq4o7yj3fGB1UzuSY/Wrq1aK7S0
-	 zpB9EvUeVfZow==
+	b=B37CRQpcdmmwCy32vZHgPCWMyUptn49raCX3hJZVcxsEUYOsqHqKCUFeSZMmdrHar
+	 P973m1II/ofRE5pnWqeiZvqWMGVRqsLIUP1n1XIX0nFBkKS0IRka2D7KopquB77g6O
+	 Mp/unwfBnH0l1eqg07ua7p0Vs/LC2MTS3vGGD6h6owSUEaRNT6q1AXW/x5xBnzEQnc
+	 EmKj7qUuyXmc8mBTkvUCHpgFrpk8n5Uq59fpbStEBh5xRF1iBXEyBMchINku/sQN+X
+	 GTmMdu6UOejRm4ya75HKvjJSDVBqFLUssCE8lSC7D/wzZYaWR0EmUh/OpuxZjzWe5k
+	 ui1FC15h7AaNQ==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 5347838003B8;
-	Sun,  1 Nov 2026 22:16:32 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 403AC38003B8;
+	Sun,  1 Nov 2026 22:17:14 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -54,62 +54,50 @@ List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 0/8] mm: Drop pxd_ERROR()
+Subject: Re: [PATCH RESEND] sched: Convert paravirt_steal to new static key
+ APIs
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <179357139104.2624073.10186400247460209292.git-patchwork-notify@kernel.org>
-Date: Sun, 01 Nov 2026 22:16:31 +0000
-References: <20260831054331.625505-1-anshuman.khandual@arm.com>
-In-Reply-To: <20260831054331.625505-1-anshuman.khandual@arm.com>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-riscv@lists.infradead.org, linux-mm@kvack.org,
- samuel.holland@sifive.com, david@kernel.org, rppt@kernel.org,
- akpm@linux-foundation.org, ljs@kernel.org, ysato@users.sourceforge.jp,
- dalias@libc.org, glaubitz@physik.fu-berlin.de,
- James.Bottomley@HansenPartnership.com, deller@gmx.de, chenhuacai@kernel.org,
- kernel@xen0n.name, linux-alpha@vger.kernel.org,
- linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
- loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
- linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
- linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+ <179357143279.2624073.7781801497885838332.git-patchwork-notify@kernel.org>
+Date: Sun, 01 Nov 2026 22:17:12 +0000
+References: <20260819081207.12150-1-hongyan.xia@transsion.com>
+In-Reply-To: <20260819081207.12150-1-hongyan.xia@transsion.com>
+To: Hongyan Xia <hongyan.xia@transsion.com>
+Cc: linux-riscv@lists.infradead.org, jgross@suse.com, ajay.kaher@broadcom.com,
+ alexey.makhalov@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+ catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org,
+ kernel@xen0n.name, maddy@linux.ibm.com, mpe@ellerman.id.au,
+ npiggin@gmail.com, chleroy@kernel.org, pjw@kernel.org, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, alex@ghiti.fr, tglx@kernel.org, mingo@redhat.com,
+ bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ pbonzini@redhat.com, vkuznets@redhat.com, sstabellini@kernel.org,
+ oleksandr_tyshchenko@epam.com, peterz@infradead.org, juri.lelli@redhat.com,
+ vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org,
+ bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
+ kprateek.nayak@amd.com, jiazi.li@transsion.com,
+ virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
+ xen-devel@lists.xenproject.org
 
 Hello:
 
-This series was applied to riscv/linux.git (fixes)
-by Andrew Morton <akpm@linux-foundation.org>:
+This patch was applied to riscv/linux.git (fixes)
+by Peter Zijlstra <peterz@infradead.org>:
 
-On Mon, 31 Aug 2026 11:13:22 +0530 you wrote:
-> pxd_ERROR() macros have been provided by all platforms, which are very much
-> identical and can be dropped off completely if these pgtable printing could
-> be moved to callers in generic MM aka all pxd_clear_bad().
+On Wed, 19 Aug 2026 08:12:09 +0000 you wrote:
+> From: Hongyan Xia <hongyan.xia@transsion.com>
 > 
-> But first cleanups and re-organizations are required in some platforms that
-> are using these macros internally. Afterwards [pte|pmd|pud|p4d|pgd]_ERROR()
-> macros have been completely dropped from the entire tree.
+> paravirt_steal_rq_enabled and paravirt_steal_enabled use raw static_key
+> APIs which are now deprecated. Use the new API instead.
+> 
+> No functional change.
 > 
 > [...]
 
 Here is the summary with links:
-  - [1/8] mm: Make ptval_to_str() generally available
-    (no matching commit)
-  - [2/8] mm: Stop using pxd_ERROR()
-    https://git.kernel.org/riscv/c/0666fc9d4432
-  - [3/8] loongarch/mm: Stop using pte_ERROR()
-    https://git.kernel.org/riscv/c/ea8763ac3af7
-  - [4/8] parisc/mm: Directly use generic [pmd|pgd]_clear_bad()
-    https://git.kernel.org/riscv/c/94d6c5466d1a
-  - [5/8] sh/mm: Stop using pte_ERROR()
-    https://git.kernel.org/riscv/c/6858e42cc2bc
-  - [6/8] sh/mm: Stop using [p4d|pud|pmd]_ERROR()
-    https://git.kernel.org/riscv/c/3b225ce37f62
-  - [7/8] sh/mm: Stop using pgd_ERROR()
-    https://git.kernel.org/riscv/c/66a0441a1791
-  - [8/8] mm: Drop pxd_ERROR()
-    https://git.kernel.org/riscv/c/c970236c300f
+  - [RESEND] sched: Convert paravirt_steal to new static key APIs
+    https://git.kernel.org/riscv/c/a5576ebce920
 
 You are awesome, thank you!
 -- 
