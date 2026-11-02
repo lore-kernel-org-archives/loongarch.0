@@ -1,54 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.25
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793599942;
-	b=wDMH76MmRF4pAnSODF7QAkerhkC+L63riT/eD/6NoPsR8yGSFD8bPecpc0l04X3ltULf
-	 hRfkeU3oRQYLkSw+KcrUinoiUv/BX8r/+d5ZJSk9pXO9HPDWTXXosGTHCHrSlg4spbd2g
-	 Zkb5S/Hol2nwojVYEwLUYxkJZp/qnuOWzdTQT70nQcLzhqxdG76QVHMKz7iyGIkNW+LRy
-	 o0umN0M+UuGYhZs2YvM1E3K62oFtPpXf26a6u6MGCBFwboZtZPmYD8vzqmrmU057Aga82
-	 2+7NwtTTNunQUvuTLDWSX3A9Lq1thAzAJXr61cxGXpwErhz45FdkeKz/5pPo4hnPnBw==
+	t=1793602238;
+	b=n/tKu3GyAQc1hG0DQmfQyE+6akJewXUSCFfvbUVxans9ASzi0Gg5CUGPbYDqZAsIv0Cc
+	 85bffhS8upWKTcFMhi52jMY2sWfVK2dN6FoUYM1T1Wy/YoLA/L02JvWZaCnjO+0QJ9txk
+	 NYJYToXIAwIOEhlHhp2dnZDDG9zvcBY5QtzV+Wo1EM63Z77g9sZHLCf4yXKtHWJdXqoRO
+	 4E3UmuwhCu+22hZWYNDLf9e7m9Q0QI0PEpYGe4s4sK1r9v+eXM8jMNhIGHN7nke/gBBV1
+	 +aO9oabaXQ5WBhbaJuByfrc8sB8Dz2ZMqfpXd0Bv8SBpNqQmm5LZ15oaEOcnMtXvMrw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793599942;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:Content-Type:Mime-Version:Subject:From:
-	 In-Reply-To:Date:Cc:Content-Transfer-Encoding:Message-Id:References:
-	 To:X-Mailer;
-	bh=kBdUvAVYcdKk5QVxJUldi/DhSvfwVlDkctl8DfLD0/A=;
-	b=jw3pvIXsWA9M+FQzdqIyXpsRU9dsNO6BOb0NwdXWqFQzRu4BC52YCfLtpt06iElGEAZK
-	 Rh0Zd5+abRXKe7Ibg+FIeiDl+dCo4mxu/M+gcQv35gFvEG02IPy3QOGn1p7lOOsA6kWKl
-	 tXkcjqew00VUjCJG/rKjTaeweMN6+n7/lit2pQAFczm83NMXGUfH76GFMvmiPxULVxLM7
-	 S4Do21zRaFTo+rKepWkNJdnWh+MDaFBTNGE44UgcaoQeelBfGP8rOjDlWrkSFDKl4QmAE
-	 DANlIMdZPyKFK14SAuS4CS/bROltuga1ZHKV002MVxYrEPO51cadU/cIwWOlZ263GWw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793602238;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:List-Id:To:Cc:References:From:Content-Language:Autocrypt:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=HtL+dUx5zijYY0B+lc0w6A3fJyitr/WFBbFcx2fVy0w=;
+	b=kgl+/tK2ykCnKLjuW3LJtwpijPk8TqUv4Lyoww8KS1dd9UY9SZYqTu2uAv9uY1qCfOO1
+	 07H9cGXUFcHRqR3EMU6EXfUBq3rciHL2gzeQ8CDB4zuTqzs8eIqL/ro5kGXantrUeDHMW
+	 eFzLyicawA/0+V15zY36n0q5uY0vxJW1MCsE9ZiznlDs5Q/nEdC0izvTopMCkqraWH6Mj
+	 egvmzwN3DyfWm47oj0SJAByCAsHelnxbwDlpBzpGGBx8iP+XisUcvJxAt8CLPpUPjv0Dw
+	 AC3ot1BGBoRNJc3Zhh3C8FRvK2rNKtnx9KO/bKwsB8M20D3DLnLkzGLbp3QBRH/9dFA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=hxlz7XXs;
-	arc=none smtp.remote-ip=95.215.58.25
-Received: from mta1.migadu.com (out-25.mta1.migadu.com [95.215.58.25])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aiUUzn6v;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED403606A32E
-	for <loongarch@lists.linux.dev>; Mon,  2 Nov 2026 06:12:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org ED403606A32E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4B6606A324;
+	Mon,  2 Nov 2026 06:50:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=hxlz7XXs
-X-Envelope-To: loongarch@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=oN0aDS5mKLXYjcaeH2SoZP3k/lf0JjHKzCpOCJOldLE=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793599939; v=1; x=1794204739;
- b=hxlz7XXsV0ogw2O4VuVzvxGgRDF+00OBVAG+l7S/K7JVMWKHwSrbkMIDP1fxT+jTiMViMjvl
- qmuDNF5MOEf1B2PD5KgWxipcAWZb3bWhyItcH6+BOSvr6GymVjsalr9Ji1aryVowcZReFtmoLOu
- Uv4zmKKrruuXVMr3KPmCbBoQ=
-X-Envelope-To: loongarch@lists.linux.dev
-Received: by mta10.migadu.com with ESMTPS id 7c2610fa89c3b119;
-	Mon, 02 Nov 2026 06:12:19 +0000
-X-Mizu-Trace-ID: 7c2610fa89c3b119
-X-Migadu-Flow: FLOW_OUT
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aiUUzn6v
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2CF01F000C1;
+	Mon,  2 Nov 2026 06:50:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793602237;
+	bh=HtL+dUx5zijYY0B+lc0w6A3fJyitr/WFBbFcx2fVy0w=;
+	h=Date:Subject:List-Id:To:Cc:References:From:In-Reply-To;
+	b=aiUUzn6v7lPyJuBR/8K4DSaWmIZxkxL2xuN5GHlkfQc1PvtcIO4pUGsVGvz+V4CRZ
+	 /+KnnBdTbIBSJFZBvNeFrFyAg0lqpe3Q/xc4QOfP1FjGWQoGLLVADDtH5ITUdw/Dbl
+	 yHXF2V7WjQsNXI5HERbWp8uHdNgepUfOgmz+VZiGwCPy2UgnoXPLDmbalWWdKJyIQ6
+	 Y6bgtLA0uhIo004gm/eVsgFV+/4jYzduNwueSQ4BjC1jWdV7ZGz8q7ar2ytYQJfZBr
+	 Kojp04d4gIvpdPLGbUE5fsvPGolAalIyIP19Yqs5mw/CtCnvUZAGzi6XtmKMlWrIXc
+	 kaS6aQUNPYtsA==
+Message-ID: <3ba0259a-f675-4fc6-81ec-8ed49bd104f9@kernel.org>
+Date: Mon, 2 Nov 2026 07:50:29 +0100
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -57,264 +50,86 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3901.200.71.1.16\))
-Subject: Re: [PATCH v2 07/12] mm: hugetlb_vmemmap: simplify shared tail page
- handling
-From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <sashiko-outbox-192874@kernel.org>
-Date: Mon, 2 Nov 2026 14:12:00 +0800
-Cc: Muchun Song <songmuchun@bytedance.com>,
- Oscar Salvador <osalvador@suse.de>,
- Andrew Morton <akpm@linux-foundation.org>,
- Mike Rapoport <rppt@kernel.org>,
- Qi Zheng <qi.zheng@linux.dev>,
- Lance Yang <lance.yang@linux.dev>,
- James Houghton <jthoughton@google.com>,
- David Hildenbrand <david@kernel.org>,
- linux-mm@kvack.org,
- Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>,
- loongarch@lists.linux.dev
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <2D6DE4F4-8DB1-45D4-B076-36FE6714C575@linux.dev>
-References: <20261102032525.3597743-1-songmuchun@bytedance.com>
- <20261102032525.3597743-8-songmuchun@bytedance.com>
- <sashiko-outbox-192874@kernel.org>
-To: sashiko-reviews@lists.linux.dev
-X-Mailer: Apple Mail (2.3901.200.71.1.16)
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/8] mm: Drop pxd_ERROR()
+To: patchwork-bot+linux-riscv@kernel.org,
+ Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-riscv@lists.infradead.org, linux-mm@kvack.org,
+ samuel.holland@sifive.com, rppt@kernel.org, akpm@linux-foundation.org,
+ ljs@kernel.org, ysato@users.sourceforge.jp, dalias@libc.org,
+ glaubitz@physik.fu-berlin.de, James.Bottomley@HansenPartnership.com,
+ deller@gmx.de, chenhuacai@kernel.org, kernel@xen0n.name,
+ linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+ linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+ linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-um@lists.infradead.org, linux-arch@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20260831054331.625505-1-anshuman.khandual@arm.com>
+ <179357139104.2624073.10186400247460209292.git-patchwork-notify@kernel.org>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <179357139104.2624073.10186400247460209292.git-patchwork-notify@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 11/1/26 23:16, patchwork-bot+linux-riscv@kernel.org wrote:
+> Hello:
+> 
+> This series was applied to riscv/linux.git (fixes)
+> by Andrew Morton <akpm@linux-foundation.org>:
 
+What's up with these weird messages? Can we ... stop them please?
 
-> On Nov 2, 2026, at 11:52, sashiko-bot@kernel.org wrote:
->=20
-> Thank you for your contribution! Sashiko AI review found 1 potential =
-issue(s) to consider:
-> - [High] mm: hugetlb_vmemmap: uninitialized tail page read in =
-vmemmap_optimize_pte()
-> --
->=20
-> commit 32511c4a4d8ec3d45e0f629f89666a78dc9372ee
-> Author: Muchun Song <muchun.song@linux.dev>
->=20
-> mm: hugetlb_vmemmap: simplify shared tail page handling
->=20
-> This commit removes the vmemmap_tail field from struct =
-vmemmap_remap_walk and
-> updates vmemmap_optimize_pte() and vmemmap_restore_pte() to derive the =
-shared
-> tail page directly from the folio being processed.
->=20
->> diff --git a/mm/hugetlb_vmemmap.c b/mm/hugetlb_vmemmap.c
->> index 5e84004db4b87..d0af251aa533c 100644
->> --- a/mm/hugetlb_vmemmap.c
->> +++ b/mm/hugetlb_vmemmap.c
->=20
-> [ ... ]
->=20
->> @@ -213,53 +211,53 @@ static struct page =
-*vmemmap_dup_page_from_list(const struct page *src,
->> 	return dst;
->> }
->>=20
->> -static void vmemmap_optimize_pte(pte_t *pte, unsigned long addr,
->> -				 struct vmemmap_remap_walk *walk)
->> +static inline struct page *folio_vmemmap_shared_tail_page(const =
-struct folio *folio)
->> {
->> -	struct page *page =3D pte_page(ptep_get(pte));
->> -	pte_t entry;
->> -
->> -	/* Remapping the head page requires r/w */
->> -	if (unlikely(walk->nr_walked =3D=3D 0)) {
->> -		struct page *head;
->> +	return vmemmap_shared_tail_page(folio_order(folio), =
-folio_zone(folio));
->> +}
->>=20
->> -		VM_WARN_ON_ONCE(!PageHead((const struct page *)addr));
->> +static int vmemmap_optimize_pte(pte_t *pte, unsigned long addr,
->> +				struct vmemmap_remap_walk *walk)
->> +{
->> +	const struct page *page =3D (const struct page *)addr;
->> +	const struct folio *folio =3D page_folio(page);
->> +	struct page *src =3D pte_page(ptep_get(pte)), *dst;
->>=20
->> -		head =3D vmemmap_dup_page_from_list(page, =
-walk->vmemmap_pages);
->> -		entry =3D mk_pte(head, PAGE_KERNEL);
->> +	if (likely(vmemmap_optimizable_pfn(page_to_pfn(page), =
-folio_order(folio)))) {
->> +		dst =3D folio_vmemmap_shared_tail_page(folio);
->> +		if (!dst)
->> +			return -ENOMEM;
->> 	} else {
->> -		VM_WARN_ON_ONCE(!PageTail((const struct page *)addr));
->> -
->> -		/*
->> -		 * Map the shared tail page writable. A lockless get =
-that read
->> -		 * a non-zero refcount before the remap can still do its
->> -		 * cmpxchg after it. The refcount is zero, so the =
-cmpxchg
->> -		 * fails and leaves the page unchanged.
->> -		 */
->> -		entry =3D mk_pte(walk->vmemmap_tail, PAGE_KERNEL);
->> +		dst =3D vmemmap_dup_page_from_list(src, =
-walk->vmemmap_pages);
->> 	}
->=20
-> [Severity: High]
-> Can calling page_folio(page), folio_order(folio), and
-> folio_vmemmap_shared_tail_page(folio) on every PTE in =
-vmemmap_optimize_pte()
-> read uninitialized tail struct pages for bootmem gigantic hugepages?
->=20
-> During early boot in alloc_bootmem_huge_page(), gigantic hugepages =
-mark all
-> tail pages [pfn + 1, pfn + nr_pages) with =
-memblock_reserved_mark_noinit(), so
-> memmap_init_reserved_pages() skips initializing their struct pages:
->=20
-> mm/hugetlb.c:alloc_bootmem_huge_page() {
->    ...
-> 	if (hugetlb_vmemmap_optimizable(h))
-> 		hugetlb_vmemmap_optimize_bootmem_page(pfn, =
-huge_page_order(h));
->    ...
-> 	memblock_reserved_mark_noinit(PFN_PHYS(pfn + 1),
-> 				      (nr_pages - 1) * PAGE_SIZE);
-> }
->=20
-> When a bootmem gigantic hugepage is not aligned to PAGES_PER_SECTION =
-(for
-> example, when nr_pages < PAGES_PER_SECTION, such as on 64-bit =
-LoongArch with
-> 16KB base pages where SECTION_SIZE_BITS is 29 and PMD_SHIFT is 25 with
-> CONFIG_ARCH_FORCE_MAX_ORDER=3D10), section_set_compound_order_range() =
-returns
+-- 
+Cheers,
 
-This issue does not occur with the default LoongArch configuration. For
-16KB base pages, LoongArch defaults ARCH_FORCE_MAX_ORDER to 11, which
-matches HUGETLB_PAGE_ORDER.
-
-The reported case requires manually overriding =
-CONFIG_ARCH_FORCE_MAX_ORDER
-to 10 while keeping HugeTLB enabled. This creates an **invalid =
-configuration**
-that Kconfig currently permits:
-
-HUGETLB_PAGE_ORDER	=3D 11
-MAX_FOLIO_ORDER		=3D 10
-
-LoongArch does not select ARCH_HAS_GIGANTIC_PAGE, so the generic MM code
-assumes that folios cannot exceed MAX_PAGE_ORDER. The forced =
-configuration
-violates that assumption and is already diagnosed by:
-
-	WARN_ON(order > MAX_FOLIO_ORDER);
-
-in hugetlb_add_hstate().
-
-Therefore, this is not a regression in a supported LoongArch =
-configuration,
-and I don't think this series needs to handle it. The proper fix is a =
-separate
-LoongArch Kconfig change preventing ARCH_FORCE_MAX_ORDER from being set =
-below
-the HugeTLB order when HugeTLB is enabled.
-
-Cc LoongArch maintainers.
-
-Thanks,
-Muchun
-
-> early without setting section->compound_page_order:
->=20
-> =
-include/linux/vmemmap-optimization.h:section_set_compound_order_range() =
-{
-> 	unsigned long section_nr =3D pfn_to_section_nr(pfn);
->=20
-> 	if (!IS_ALIGNED(pfn | nr_pages, PAGES_PER_SECTION))
-> 		return;
->    ...
-> }
->=20
-> In that case, sparse_init() allocates regular vmemmap pages via
-> memmap_alloc(), leaving them uninitialized (or filled with 0xff under
-> CONFIG_DEBUG_VM).
->=20
-> Later, gather_bootmem_prealloc_node() initializes only the first
-> VMEMMAP_OPTIMIZATION_NR_STRUCT_PAGES struct pages (covering only the =
-first
-> vmemmap PTE), and prep_and_add_bootmem_folios() defers initializing =
-the
-> remaining tail struct pages until after =
-hugetlb_vmemmap_optimize_folios()
-> runs and fails:
->=20
-> mm/hugetlb.c:gather_bootmem_prealloc_node() {
->    ...
-> 		hugetlb_folio_init_vmemmap(folio, h,
-> 					   =
-VMEMMAP_OPTIMIZATION_NR_STRUCT_PAGES);
-> 		init_new_hugetlb_folio(folio);
->=20
-> 		if =
-(vmemmap_optimizable_order(pfn_to_section_compound_order(pfn)))
-> 			folio_set_hugetlb_vmemmap_optimized(folio);
->    ...
-> }
->=20
-> mm/hugetlb.c:prep_and_add_bootmem_folios() {
-> 	/* Send list for bulk vmemmap optimization processing */
-> 	hugetlb_vmemmap_optimize_folios(h, folio_list);
->=20
-> 	list_for_each_entry_safe(folio, tmp_f, folio_list, lru) {
-> 		if (!folio_test_hugetlb_vmemmap_optimized(folio)) {
-> 			hugetlb_folio_init_tail_vmemmap(folio, h,
-> 					=
-VMEMMAP_OPTIMIZATION_NR_STRUCT_PAGES,
-> 					pages_per_huge_page(h));
-> 		}
->    ...
-> }
->=20
-> Previously, __hugetlb_vmemmap_optimize_folio() derived vmemmap_tail =
-upfront
-> from the initialized head folio, and vmemmap_optimize_pte() checked
-> walk->nr_walked =3D=3D 0 without inspecting tail struct pages.
->=20
-> With this change, on the second and subsequent PTEs (where addr >=3D
-> vmemmap_start + VMEMMAP_OPTIMIZATION_SIZE), page->compound_info in the =
-tail
-> struct page at addr has not been initialized by prep_compound_tail() =
-yet:
->=20
-> 1. If the raw vmemmap backing pages are zeroed, page_folio(page) =
-returns page
-> itself rather than the head folio, folio_order(folio) returns 0, and
-> vmemmap_optimizable_pfn() returns false. vmemmap_optimize_pte() then =
-falls
-> back to vmemmap_dup_page_from_list(src, walk->vmemmap_pages) for every =
-tail
-> PTE, rotating the displaced vmemmap pages across the tail PTEs instead =
-of
-> mapping the shared tail page, while leaving HPG_vmemmap_optimized set =
-so
-> prep_and_add_bootmem_folios() skips hugetlb_folio_init_tail_vmemmap().
->=20
-> 2. If CONFIG_DEBUG_VM is enabled, page_init_poison() fills the =
-uninitialized
-> tail struct pages with 0xff. _compound_head(page) then evaluates to =
-the
-> poisoned tail page itself, and folio_order(folio) reads 0xff, leading =
-to an
-> out-of-bounds shift in vmemmap_optimizable_pfn() and an out-of-bounds
-> node_zones access in folio_zone(folio).
->=20
-> --=20
-> Sashiko AI review =C2=B7 =
-https://sashiko.dev/#/patchset/20261102032525.3597743-1-songmuchun@bytedan=
-ce.com?part=3D7
-
+David
