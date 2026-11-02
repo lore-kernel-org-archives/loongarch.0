@@ -1,55 +1,104 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=148.163.156.1
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793629435;
-	b=qlzql0XVr7wlWp1OSOwzzEbzPp4wE0+ytg3VXmK2HAvBkDvwiSTJvC9ymojJkpdcRagr
-	 M/eFOgSqBwff3nZVZF4EuuQiSryi5GppezctP0LrfwUGPZvIXBBk0T3hQUfjls5/YhfNu
-	 6j6UqF/QcWhPTYtdokvv0GD+VtuE79/LL+aVPICS8mevGC7H117weuIbQ2iWkRfT5PJPg
-	 k9JE+M08zHsEACjEMTLzORs3MabORQZoBUq3qbrEL67rrp2ExRoeZom6dTFg4P2dQGbFG
-	 bsqCe8ITjkwJ+0RHVLLQ5qLrfXQhFs2wyj91vkBFRaLp5DmSWWleVxYdUqpw8iKZktw==
+	t=1793630346;
+	b=jshAB6Q5D501ZLAV42WlRx8kUZjPkzYhN/cpAqeIBmdwR6q3qnDF9x1xOchpVUJ8do2u
+	 jKdE51b1Jf/o3Dkzds4a0epQAvm1NjfClmdh1rIUBPAVgyag8kLSpXWAERW5nYtxyNbfU
+	 G8D4F2E5HjZ0a2jcaOj4kXH6WQBrNrpLOEFgy92VaWco7qJCbo9OcvpFrT52aCfblKdut
+	 STxzqcoJB2GScpTHP++/SpYZvXEdt+Bu3A9JTukZCxHQoQ13n7t9WvuMtpzeCJ64AOmLC
+	 lx7yHXgkK3nYdbWYjarDVWZXaeGAYjNxZNGe6OG1K2EWCIg+hG1/x477NTEvr4r+nLw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793629435;
-	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
-	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
-	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=kXhg0tNcz/XggPQ5n4ztmniJcr2/pUza6Nt9tHp8FTw=;
-	b=m2HRWuADLfRYYcL+AznC+RGysy7JjYqweR38mPh8c9lTEYnwizVz7oYzdPfej/oWEsj6
-	 2CnHhRJOg51q0XgHsRwjqplcxdcrWiJrUBubPOKUKU4iRVBHZt7PJT+Ls+SBts/jGYdoa
-	 yCN4OvyJZquXq8q+KvBWM/lJlvycFidrxRkcBkk6b7HBIj0gulEWMjUe6Y3f7q4vHaqiN
-	 k3NwXIqJxOApnz+hden9jP608GaFG1buYaMgkjJNYzeAlnxiYk667yTKDNvr0muf4oFkT
-	 1yQuefDNLuhQ58QoFfrDUAVAPdaEibGxE2+Z4llbrnIXSbJcUg+USw9Uvfz7zeybVZQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793630346;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
+	 Received:Received:Received:Received:Date:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To:X-TM-AS-GCONF:X-Proofpoint-Reinject:
+	 X-Proofpoint-ORIG-GUID:X-Proofpoint-Spam-Details-Enc:
+	 X-Proofpoint-Spam-Info:X-Proofpoint-GUID:X-Authority-Analysis:
+	 X-Proofpoint-Virus-Version:X-Proofpoint-Spam-Details;
+	bh=t3uMzKFF0fpXKNPzeuZqcP8SHbCjBILits3drrR5UAs=;
+	b=28cPxSxni2dnEiJvLNi3KO3nyUQiWB7737u6pCbXYWh2ayLMeV/07UsavLF5kklHUq2U
+	 gcWsYD99PGeety4HEYGzHYrCg/5+OIOVFQ0lIoJJdDr9UOhSQLIr2R0grrytfYl5mvQWV
+	 Y/NAE5a91bhhRlv/Y9nbq5tNTxsUOEbI8mAzgUZ41UxnQL55MHpB723wk4Y/lkwIL3yoy
+	 c4uOKKQ/1zvcS+PGxzWtes9EotvwoNHjKEHAoMuKYzEaXmQ+XQLjk29v+J5f7+pw/x+JP
+	 BvhQc/1hzP8YoK4izDB9wzWwYilb2BfzqbXr4Ht1jr1+Pl8G1k+Gw0o7jHQM/KuROHw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="jr1Hy/e7";
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=linux.ibm.com;
+	spf=pass smtp.mailfrom=linux.ibm.com;
+	dkim=pass header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=jrsDzUSF;
+	arc=none smtp.remote-ip=148.163.156.1
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5758460A5BEB
-	for <loongarch@lists.linux.dev>; Mon,  2 Nov 2026 14:23:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2408607B446;
+	Mon,  2 Nov 2026 14:39:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A2408607B446
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jr1Hy/e7
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 358521F00A2D
-	for <loongarch@lists.linux.dev>; Mon,  2 Nov 2026 14:23:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793629435;
-	bh=kXhg0tNcz/XggPQ5n4ztmniJcr2/pUza6Nt9tHp8FTw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=jr1Hy/e7gI3GUs274WWSQ5hTdQ5yWc90zb48gWhLb60/4pEmfw9+9uWVsm/HzyOl4
-	 MufpNBrSMEcHPhe58T6Fh5Gu9hgsP5p01G0u9dfUHlKSUWJU410IysY5UkUw7IUQHP
-	 o0OV61MWiAuIHSvjPLVOcWRf6jvD07M24AIJk9dFVb/gg3u/iLjCxyhiztczxiuZUP
-	 OD1AE0rQ3KWFQvaZRA9wHMWSz4913505VrD3fjoW5TimJK16316TKfKXDhIOzn0hvC
-	 iZomX8ra50oamAdBLDYq4OSrZUxsIEWTBwp3Sv49gLiulo6vqtrPa6ZRJcjGqcSRXm
-	 61IsqfbQiwnOQ==
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-6b1ec41d8e9so3287711a12.0
-        for <loongarch@lists.linux.dev>; Mon, 02 Nov 2026 06:23:55 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AKwUvBzrIc+BI5Njq2h3VYY1D9uOMvMWYp9nGZr8I155VUFB/o7y4HfujnHtRWiNKBDrsaGBkAtMIE2kdZk=@lists.linux.dev
-X-Gm-Message-State: APuU4Z/ui55H6kiZbPUHY5JC7jAS1+fsRnICrQD77csjj2W1GA+zgbV/
-	aOnMS0SJtCdKW6oQfm/Quwaz6Kjc2eMW1vB2V89w2Zm7nALTE4CmxElyvHF2fDjAtVQ9fgT6SjL
-	XfIIy0KUtbW+zs5cWKaqhN1CDH6q3Nv8=
-X-Received: by 2002:aa7:d901:0:b0:6b3:8456:e891 with SMTP id
- 4fb4d7f45d1cf-6b4d339252cmr5593796a12.6.1793629433728; Mon, 02 Nov 2026
- 06:23:53 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=jrsDzUSF
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6A2EEEvg3103442;
+	Mon, 2 Nov 2026 14:38:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=t3uMzKFF0fpXKNPzeuZqcP8SHbCjBI
+	Lits3drrR5UAs=; b=jrsDzUSF/OggKdN81wWhb4EQ3nK8LML9mgaSnR8qAY70jz
+	0DbJXtS4PJuv8PQiLy7abs+fG7sndfj6ShOJulStFvMaB4jzVmChtTE0sAet0Vm3
+	A1+30vWOdajDQi0XubC1JRA8+Z0IFqBUkwIt3tZHqrS7135+dwCfgEZ9oFFGPewC
+	l25ok0YfFnDEr9VN3wS8SYboK6sKCmQ6lfAwbRcX9ljp4AV5DyeSlhrCxiJoEWty
+	Y1DzMBTvPDR+g06pwD9FhYxvyUDi1W8x+t9hc8THVHlowf7A2mNVTcdtd7GnSpo3
+	aFq1FAonyVk3KK0s0pDgB8L2nMIRTSxdOjGsR3jA==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4hn826h1td-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Mon, 02 Nov 2026 14:38:33 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 6A2E5w6Q1034496;
+	Mon, 2 Nov 2026 14:38:32 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4hnu1vebv3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 02 Nov 2026 14:38:32 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6A2EcS5845613524
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 2 Nov 2026 14:38:28 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A89912004D;
+	Mon,  2 Nov 2026 14:38:28 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0A5D02004E;
+	Mon,  2 Nov 2026 14:38:22 +0000 (GMT)
+Received: from li-fbf77acc-29ba-11b2-a85c-e8e934f50a46.ibm.com (unknown [9.39.25.78])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon,  2 Nov 2026 14:38:21 +0000 (GMT)
+Date: Mon, 2 Nov 2026 20:08:19 +0530
+From: Gautam Menghani <gautam@linux.ibm.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>,
+        Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+        Paolo Bonzini <pbonzini@redhat.com>, Fuad Tabba <fuad.tabba@linux.dev>,
+        Joey Gouly <joey.gouly@arm.com>, Steffen Eiden <seiden@linux.ibm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Zenghui Yu <yuzenghui@huawei.com>, Nicholas Piggin <npiggin@gmail.com>,
+        Atish Patra <atish.patra@linux.dev>, Alexandre Ghiti <alex@ghiti.fr>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+        kvm@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Stefan Teodorescu <fane@google.com>
+Subject: Re: [PATCH 3/7] KVM: PPC: Explicitly force IPIs when directly
+ kicking vCPUs
+Message-ID: <auiZYdVzhFbnj0iy@li-fbf77acc-29ba-11b2-a85c-e8e934f50a46.ibm.com>
+References: <20261028190259.1819571-1-seanjc@google.com>
+ <20261028190259.1819571-4-seanjc@google.com>
+ <auStM0rbFol79h5o@li-fbf77acc-29ba-11b2-a85c-e8e934f50a46.ibm.com>
+ <auTohixp3V5-vNsB@google.com>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -59,171 +108,102 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <20261029035253.2333852-1-yaojiale02@163.com>
-In-Reply-To: <20261029035253.2333852-1-yaojiale02@163.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 2 Nov 2026 22:23:40 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H65Pz=9Oy5MND4XCEWUxXkt3WDuW8pUFZBKt5Ysr3_aNA@mail.gmail.com>
-X-Gm-Features: AclHuK9o0PutAsPpj7EOwjdyA0-9FdNtllxsLhyG2MkS5DpLOschCOnx7vBo5lY
-Message-ID: <CAAhV-H65Pz=9Oy5MND4XCEWUxXkt3WDuW8pUFZBKt5Ysr3_aNA@mail.gmail.com>
-Subject: Re: [PATCH v2 00/20] ACPI/irqchip: validate MADT entries before use
-To: Jiale Yao <yaojiale02@163.com>
-Cc: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Sunil V L <sunilvl@ventanamicro.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Len Brown <lenb@kernel.org>, Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Radu Rendec <radu@rendec.net>, Lorenzo Pieralisi <lpieralisi@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, Anup Patel <anup@brainfault.org>, 
-	Hanjun Guo <guohanjun@huawei.com>, Tomasz Nowicki <tn@semihalf.com>, 
-	Julien Grall <julien.grall@arm.com>, Christoffer Dall <christoffer.dall@linaro.org>, 
-	Jonathan Cameron <jic23@kernel.org>, Jianmin Lv <lvjianmin@loongson.cn>, 
-	Conor Dooley <conor.dooley@microchip.com>, Andrew Jones <andrew.jones@linux.dev>, 
-	Grant Likely <grant.likely@linaro.org>, Jason Cooper <jason@lakedaemon.net>, 
-	Robert Richter <rrichter@cavium.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Tianyang Zhang <zhangtianyang@loongson.cn>, Liupu Wang <wangliupu@loongson.cn>, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <auTohixp3V5-vNsB@google.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-ORIG-GUID: MVuzkhZ7vtCvo0_kidGaNnCzUH4z2Q5t
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTAyMDA1NiBTYWx0ZWRfX9NPC/owi16S7
+ 9yPcxDuxCXAVRis8gROnpHUQtX1lgGRd8hAKUnleFK3QWlX1SdAjhFR8oEvK54MRQDdismPxh+K
+ SQ8loUK3UQRzfSLpS9uRj+aWjubkYTlbIquMNg8PhpfWVJkZ76O3xxEXr80qfN6IOD19XJfjKtr
+ 634hKk5awadYPmt24Ux7BsSNM3cqVRZujAolWeljDDPrwops7bov/t92bCk4p83QwKy6YXStSnl
+ 0VsEIPP7bIE5T7r4zJSL0tKzTIgSYx+WFY3Qwo3DYgWTx5sTM9UVeBsh0rxrl31K1IM0pQFj1A7
+ gw+VtvRxiUYjK/87Jg4SStypE42sXR/2o22pNseu+/r/yDHR8uGSsjBtiHv4st3RTmohj8hx7JP
+ UCE4D1U1IEi/wr/eFIXPrL9wTCpxRXnB0VIgaijskvnY1QOUMWWKwaAo3sk8IykSUxckF0V1iQL
+ y3XMeya+tQcv90pkeiQ==
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMTAyMDA1NiBTYWx0ZWRfX/Jv0f66eb8FC
+ gBsCZTcz1I/pV05gMEXUAwMes48ABsD2pbDotd5Qxpz6XqvBunVHHDSaqleBJACDat+c8lSkusL
+ mmZ2c5c7i5Q1tgycd0AKgoXZ+Q680vQ=
+X-Proofpoint-GUID: 3_YY6ZYXsy9uBgG-NjaOA9L9V7gYRG4x
+X-Authority-Analysis: v=2.4 cv=EsJHPicA c=1 sm=1 tr=0 ts=6ae8a06a cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=kj9zAlcOel0A:10 a=zJRp6_cAMcgA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=VwQbUJbxAAAA:8
+ a=1XWaLZrsAAAA:8 a=VnNF1IyMAAAA:8 a=duh_M4KPJp97uAtK-N0A:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
+ definitions=2026-11-02_04,2026-11-02_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 clxscore=1015 lowpriorityscore=0 malwarescore=0
+ priorityscore=1501 adultscore=0 impostorscore=0 phishscore=0 spamscore=0
+ suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2610300000
+ definitions=main-2611020056
 
-Hi, Jiale,
+On Fri, Oct 30, 2026 at 11:57:10AM -0700, Sean Christopherson wrote:
+> On Fri, Oct 30, 2026, Gautam Menghani wrote:
+> > On Wed, Oct 28, 2026 at 12:02:55PM -0700, Sean Christopherson wrote:
+> > > Explicitly force an IPI when invoking kvm_vcpu_kick() directly instead of
+> > > relying on kvm_arch_vcpu_should_kick() to unconditionally return 1/true.
+> > > This will allow dropping kvm_arch_vcpu_should_kick() in favor of
+> > > kvm_request_needs_ipi().
+> > > 
+> > > No functional change intended (1 || 1 == true).
+> > > 
+> > > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> > > ---
+> > >  arch/powerpc/include/asm/kvm_ppc.h | 13 ++++++++++++-
+> > >  arch/powerpc/kvm/book3s.c          |  4 ++--
+> > >  arch/powerpc/kvm/book3s_pr.c       |  2 +-
+> > >  arch/powerpc/kvm/booke.c           |  6 +++---
+> > >  arch/powerpc/kvm/e500_emulate.c    |  2 +-
+> > >  arch/powerpc/kvm/powerpc.c         |  2 +-
+> > >  6 files changed, 20 insertions(+), 9 deletions(-)
+> > > 
+> > > diff --git a/arch/powerpc/include/asm/kvm_ppc.h b/arch/powerpc/include/asm/kvm_ppc.h
+> > > index 169ea6a7fbad..bbe7378ad0ef 100644
+> > > --- a/arch/powerpc/include/asm/kvm_ppc.h
+> > > +++ b/arch/powerpc/include/asm/kvm_ppc.h
+> > > @@ -30,6 +30,17 @@
+> > >  #endif
+> > >  #include <asm/inst.h>
+> > >  
+> > > +/*
+> > > + * TODO: For unknown reasons, KVM PPC has historically ignored vcpu->mode when
+> > > + *       determining if kicking a vCPU needs an IPI.  Either document why that
+> > > + *       behavior is necessary, or drop this helper and the @force param from
+> > > + *       __kvm_vcpu_kick().
+> > > + */
+> > > +static inline void kvmppc_vcpu_kick(struct kvm_vcpu *vcpu)
+> > > +{
+> > > +	__kvm_vcpu_kick(vcpu, false, true);
+> > > +}
+> > > +
+> > 
+> > AFAICS, there is no reason for PPC to always return 1. I was looking at
+> > the old patches on mailing list and found this - https://lore.kernel.org/kvm/0FEE585F-5E21-47F2-A3F0-AD0DE05EBB43@suse.de
+> > 
+> > ```
+> > How about we return 1 for kvm_arch_vcpu_in_guest_mode() on !x86 always, just
+> > like it's done today basically? Then we can worry about needless IPIs later
+> > and don't regress from the respective current kick implementations.
+> > ```
+> 
+> FWIW, I found that as well, but there are a metric ton of kvm_vcpu_kick() calls
+> that have been added since then, and they scared me.
+> 
+> > However, I'll do some testing and get back by mid next week to make sure
+> > there are no suprises.
+> 
+> Thanks!  If we can drop the PPC behavior, that would be wonderful!  Though if
+> we do that, it should be for 7.5 in a follow-up (this series really should go
+> into 7.4 due to the SNP issue).
 
-Why can't I see a full list of all Loongson-specific patches in
-https://lore.kernel.org/loongarch/ ?
 
-Huacai
+Yeah I looked into it and realized that the newer variants of KVM on PPC
+are not even using vcpu->mode at all. So that has to be fixed from our
+end.
 
-On Thu, Oct 29, 2026 at 11:53=E2=80=AFAM Jiale Yao <yaojiale02@163.com> wro=
-te:
->
-> ACPI interrupt-controller setup passes firmware-supplied MADT subtables
-> to architecture and irqchip callbacks.  The common table walker only
-> guarantees that a generic subtable header is readable.  A number of
-> callbacks cast that header to a larger controller-specific structure and
-> read typed fields before checking that the complete record is present.
-> Truncated records can therefore cause out-of-bounds reads during early
-> CPU and interrupt-controller discovery.
->
-> This series combines the previously posted generic/irqchip series [1],
-> the RISC-V series [2], and the remaining MADT callback checks into one
-> set.  The common irqchip probe path first rejects entries whose declared
-> range leaves the table.  Each parser then validates the minimum size of
-> the concrete record before its first typed access.
->
-> Testing
-> =3D=3D=3D=3D=3D=3D=3D
->
-> The RISC-V cases were tested with qemu-system-riscv64, EDK2 pflash
-> firmware, a KASAN-enabled kernel, CONFIG_ACPI_TABLE_UPGRADE=3Dy, and an
-> uncompressed initramfs containing an overriding MADT.  The malformed
-> table is one page long and ends with a three-byte RINTC entry, while a
-> complete struct acpi_madt_rintc is 36 bytes.
->
-> On an unpatched kernel the override was accepted and setup_smp() faulted
-> in acpi_parse_rintc() while reading processor->flags four bytes from the
-> start of the truncated record.  The record starts three bytes before the
-> end of the mapped page, so that read entered the following unmapped page:
->
->   Unable to handle kernel paging request
->   epc : acpi_parse_rintc+0x46/0x206
->   cause: 000000000000000d
->   Kernel panic - not syncing: Attempted to kill the idle task!
->
-> Applying only the old arch/riscv/kernel/acpi.c and
-> drivers/irqchip/irq-riscv-intc.c checks produced the same fault because
-> the setup_smp() parser runs first.  With patch 7 moving the existing
-> BAD_MADT_ENTRY() check before the flags read, plus patches 9 and 20, the
-> out-of-bounds access disappeared.  The malformed table was rejected and
-> the kernel later stopped at the existing acpi_init_rintc_map() BUG for a
-> machine with no valid RINTC entries.  This is the current fail-closed
-> behavior; it is not an out-of-bounds access.
->
-> The LoongArch LPC-PIC case was exercised with an overriding MADT ending
-> in a three-byte LPC-PIC entry.  Temporary diagnostic instrumentation in
-> pch_lpc_parse_madt() reported:
->
->   decl_len=3D3 sizeof=3D14 beyond_end=3D11
->
-> This confirms the field accesses covered by patch 19 extend eleven bytes
-> beyond the supplied record.  LoongArch maps this early table directly,
-> so the read did not itself cause a page fault.
->
-> Dynamic test coverage by patch is therefore:
->
->   7       RISC-V RINTC fault reproduced; the early check prevents it.
->   9       The malformed RINTC is rejected in acpi_init_rintc_map().
->   19      LoongArch LPC-PIC over-read observed with instrumentation.
->   20      Included in the complete RINTC fix; the boot stops at the
->           existing fail-closed BUG before irqchip probing reaches it.
->   1-6,
->   8,
->   10-18 No dynamic claim.  The required GICv5, AVEC, redirect-int,
->           HTVEC, and related controller models are not available in the
->           QEMU configurations used for this test.
->
-> All twenty patches were checked with scripts/checkpatch.pl and were
-> applied both individually where independent and as the complete series
-> to the base commit below.
->
-> Changes in v2:
-> - Combine and supersede the six-patch irqchip series [1], the two-patch
->   RISC-V series [2], and the remaining MADT checks.
-> - Add the RISC-V QEMU/EDK2 truncated-RINTC reproduction and fixed-kernel
->   result.
-> - Retain the setup_smp() RINTC fix: testing showed that the later RISC-V
->   checks alone do not prevent the early boot fault.
-> - Document the LoongArch LPC-PIC instrumentation result and the QEMU
->   hardware-model limitations for the other callbacks.
-> - Rebase on the current tree and keep Fixes and stable trailers on every
->   patch.
->
-> [1] https://lore.kernel.org/r/20261021144524.364143-1-yaojiale02@163.com
-> [2] https://lore.kernel.org/r/20261016141249.2791819-1-yaojiale02@163.com
->
-> Jiale Yao (20):
->   ACPI: irqchip: validate MADT entry bounds before probing
->   irqchip/gic-v3-its: validate MADT ITS entries
->   irqchip/gic-v3: validate MADT records before use
->   irqchip/gic-v5-its: validate MADT translate frames
->   irqchip/loongarch-cpu: validate MADT LIO-PIC entries
->   irqchip/loongson-eiointc: validate MADT BIO-PIC entries
->   riscv: validate RINTC entries before use
->   ACPI: riscv: validate interrupt controller MADT entries
->   riscv: acpi: validate RINTC entries before use
->   irqchip/gic-v5-irs: validate MADT GICC entries
->   irqchip/gic-v5-irs: validate MADT IRS entries
->   irqchip/gic-v5: validate MADT IRS records
->   irqchip/gic: validate MADT distributor records
->   irqchip/loongarch-avec: validate MADT MSI-PIC entries
->   irqchip/loongarch-ir: validate MADT MSI-PIC entries
->   irqchip/loongson-htvec: validate MADT BIO-PIC entries
->   irqchip/loongson-htvec: validate MADT MSI-PIC entries
->   irqchip/loongson-liointc: validate MADT HT-PIC entries
->   irqchip/loongson-pch-pic: validate MADT LPC-PIC entries
->   irqchip/riscv-intc: validate MADT RINTC entries
->
->  arch/riscv/kernel/acpi.c               |  3 +++
->  arch/riscv/kernel/smpboot.c            |  6 +++---
->  drivers/acpi/riscv/irq.c               |  6 ++++++
->  drivers/acpi/scan.c                    |  7 +++++++
->  drivers/irqchip/irq-gic-v3-its.c       |  3 +++
->  drivers/irqchip/irq-gic-v3.c           | 15 +++++++++++++++
->  drivers/irqchip/irq-gic-v5-irs.c       |  6 ++++++
->  drivers/irqchip/irq-gic-v5-its.c       |  3 +++
->  drivers/irqchip/irq-gic-v5.c           |  3 +++
->  drivers/irqchip/irq-gic.c              |  3 +++
->  drivers/irqchip/irq-loongarch-avec.c   |  3 +++
->  drivers/irqchip/irq-loongarch-cpu.c    |  3 +++
->  drivers/irqchip/irq-loongarch-ir.c     |  3 +++
->  drivers/irqchip/irq-loongson-eiointc.c | 10 ++++++++--
->  drivers/irqchip/irq-loongson-htvec.c   |  6 ++++++
->  drivers/irqchip/irq-loongson-liointc.c |  3 +++
->  drivers/irqchip/irq-loongson-pch-pic.c |  3 +++
->  drivers/irqchip/irq-riscv-intc.c       |  5 ++++-
->  18 files changed, 85 insertions(+), 6 deletions(-)
->
-> base-commit: 65ba8f34ec886ec72b2c07ddc8cf3d815c32869d
-> --
-> 2.34.1
->
+For this series,
+Reviewed-by: Gautam Menghani <gautam@linux.ibm.com> # PPC
