@@ -1,74 +1,110 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.69
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793633674;
-	b=gAk6YG4wHWp05m12gW0hJ/uuUmLNIKSeierogpYPI+vxlRk3dZM0yxG2+4tJWYAE3WPQ
-	 PSN27f4KEjc+mJaXcEmXjGSrEK72st/LrX6101JqrqmUPgm+juMF8ZY7xzenU/4p5HYPF
-	 ulcEQwhiqPh35T1ViL2JTDkarpCYxZ/h7GSCGsZgDkpfFC5ByntD4wDp9tWoc/7GefH87
-	 ijS93vcBYrsUBlFEx1SOeHxVldRL22cn51Cz2GDvnBzFIxS6ScnWt7lQ8BemJ1cLwPuk2
-	 nm2En0Lu7fqSfnbYxmwz89xhsTs8cI7JlwXWHJ4hN884nsOThxLqhpV6WqOFYvBO/cA==
+	t=1793636479;
+	b=Ec/Mj8hmuUXrtUomi8HGczasYph/8jlgHu1Vr2fAOjhxaCDDkVTSKbw0BTNyR8XTZWbY
+	 aDRnvNoFyhAu365qS0xfm59SksD+nKL3X7yVbuJKTEVa5eszzMF30IEajotsZ5PXWDGgn
+	 oENbGHU6s8gyOtBuq5mBsUjIAYZQ0w7h2DpgTfGvKeZYhkwogBFInYHxXEqnCQjIFfcIg
+	 Us2jSBI/7KmCRXP7qh0FJWGo5jnOR8RXdG2DBfCFwaFgA9brjDm1B7JXwRWR/F4D3zChi
+	 rVL0Z/2f9NYGtmqRPcGU4PxQYfiWWRQTTWxvr/SIrZSKk7xTsPREuAE163fQ8Ql5rIw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793633674;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
-	 Mime-Version:References:Message-ID:Subject:From:To:Cc:Content-Type;
-	bh=s4vRCplgEoCQN3eUv6q9zSWbIbV1TXU7YJjG5+iZQYY=;
-	b=ZueLeo/hVmIrOdClHooZ9z2/AQnWrqnRvoghIYrlTUQ/vE2Kh08RPNML4vUqT2xMfOfj
-	 K72v6JgZuiCkoxJV9YsZiYoMAndFbrAxO2xh2cXTj6mkG0CzvEOnZC5R/Tyr0Kc0BOXZG
-	 lTQ5F3HP0zwNRf9h3shgb6z71s+WxCFXc/I18PzAQf+PQ9l3lTZtka10brJuaR0/Nl2su
-	 2zuAm8F4jaDPCY504+6EJaE8fdGG1tbMvwmRTFJTQDNP/6cuJqx2V3eIZMbqWj7CkzJSo
-	 EIF/DcJ/RYzP8abgNYyJqop1owfMg2pk72jyg1jdmtl2kKgnHF0ywgXBz4u9AoKt9fA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793636479;
+	h=DMARC-Filter:Date:DKIM-Signature:DKIM-Signature:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To;
+	bh=CAbnxO0/qUW9BHgq0s5afN/fwZolzjrBJaRnSuaEmAo=;
+	b=WFXBtF5+YtCE6kxxz0JgQaBzp9Z9P/GE5wpsDDywA3G+M585YpOUPCnoI4uZD2cPl7tE
+	 lJzqsSTnFQKKmulEoLVWYCjR/sHHOCcEmb1xtO5p14k7QPcOv+/rwaAorKzTmhAPeSo8Q
+	 ZqnHnhQA4mM92ik3zlOxm1DxPfC1utg4QJJ8Nw/AhaFDRUUzRLH3LLqqvbJW9AojI10YH
+	 onou8N7WmtAmJulTPNo/rk6ZtxPLpN024reXkk+9ebcAMRXO4CaIGccBiDPR23fN9jNUv
+	 f5TC26cWy76Cl9/4krykR/oj0nDLyyPYPC7VhIQ2F2MCux0tbzPpsUwTZNCwospYNHQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=QR1ITLYM;
-	arc=none smtp.remote-ip=209.85.216.69
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=linutronix.de;
+	spf=pass smtp.mailfrom=linutronix.de;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=Bkvlc9Uh;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=no3DkXB1;
+	arc=none smtp.remote-ip=193.142.43.55
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C0B606B0D9
-	for <loongarch@lists.linux.dev>; Mon,  2 Nov 2026 15:34:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F3C0B606B0D9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FB4D606A90F
+	for <loongarch@lists.linux.dev>; Mon,  2 Nov 2026 16:21:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7FB4D606A90F
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=QR1ITLYM
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-3ab926c236aso2513573a91.0
-        for <loongarch@lists.linux.dev>; Mon, 02 Nov 2026 07:34:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793633673; x=1794238473; darn=lists.linux.dev;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=s4vRCplgEoCQN3eUv6q9zSWbIbV1TXU7YJjG5+iZQYY=;
-        b=QR1ITLYMlwjWfqVET1Hk0MVx3g9IL26OGxn12XrSExpgj/bTRzrJHdSTjHgIswVjxT
-         Yva/U6afi4Im4GifFv4sDN785bI2i1Kk8LTwnoJQ9KYgb20MHORq667E+PeK/K1deHkE
-         96/PoqVLQwNk+YBRrY/me2xcBoQf/9iYXiB29+YPJn6FB3SpQvtiz+7RyF2dlxlwX57s
-         1lVREpCZjb2LROHIW29AgElb9USoSmLcYAwGMbmYMM0OcL+pO+PYSXFpND5N8JvZSTBw
-         XGVvoeA+xYF/Avi0unn8LcsF2ejM8APlXW3vVo+EzECrT9DWYgccNT9iBGdRpWYJnvTD
-         7BYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793633673; x=1794238473;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=s4vRCplgEoCQN3eUv6q9zSWbIbV1TXU7YJjG5+iZQYY=;
-        b=RkZziv6uvNzp58rKentZI5tjLesXOvKKBmfm/XwZM2v0Caau+0PLqtGRE6nB1zsAAe
-         c2R+KncQIVpvJFNZAmnbneGR+fiv854TlhC7kB57hWQ+6RZkmPjDNOOHCxMO3AJFBpLC
-         35D8WUcEsOutVpHxqczwLV4sK9KZ6vHbYNH8+cdUXJoeq+OOYv4Dpy2jxCxOxkRq8Jos
-         N8ZZMpUCEpDaCyihi4qMXjPrS+vjCHzqNgipkitTXPh3LEuOa0T1ykhjWhUjreHyIatC
-         IXTdKCpfmoq+tyj/4MgMQTn5bd687lVnPiXVdn4hlE5BqaJVHWD1w8VD1qMR7DFscjik
-         Hq5w==
-X-Forwarded-Encrypted: i=1; AKwUvBx6zAe2rzP4nDaaJFV8LCuPTZ4Wh5c+Fx+ey8wu1WrCnvf2MV52jxtBxtd5VY/HCMSRdApA/2c6dtk=@lists.linux.dev
-X-Gm-Message-State: APuU4Z8DVKEpAxACDxOptaHC/GA9+lgbizYXV/JZ3uE/Th0m66g38zx6
-	fm9MZKz6yO7v0fjYEt0pbWeZKI6qqwAMTyaGEvwOeIhhxOzftq4asL8H7Ljf+o7x2bfFd+uH5qb
-	nrOAd/w==
-X-Received: from pjso1.prod.google.com ([2002:a17:90a:c081:b0:3a8:211b:6c8b])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2749:b0:3ad:43c1:7d41
- with SMTP id 98e67ed59e1d1-3ae897429b9mr7590262a91.33.1793633673063; Mon, 02
- Nov 2026 07:34:33 -0800 (PST)
-Date: Mon, 2 Nov 2026 07:34:32 -0800
-In-Reply-To: <20261102153228.240804-H-seiden@linux.ibm.com>
+	dkim=pass (2048-bit key, unprotected) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=Bkvlc9Uh;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=no3DkXB1
+Date: Mon, 2 Nov 2026 17:21:13 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1793636476;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CAbnxO0/qUW9BHgq0s5afN/fwZolzjrBJaRnSuaEmAo=;
+	b=Bkvlc9UhhyCv5ZdWUMU6G9Li+R2BVAADYWwZuoqUAyqvUjCoGYGxXIn4ALH8UCKwa4wXF8
+	oraU/gZ8eujvwMvYkEcPGl9LoaQ4y8L5gTwgvEqTaLIOKyYpw0Vt21vSoLNR9nGu5XUZGy
+	Ei+jDbIPpRtvYxUN3n40OXfMZKwhjOcptRjzclaFhqfaMjZ4DnPJp2kIUEARXrDA2lfCj7
+	Xc9td9/O5azqjpJ09IA+6VHzOt3kgO7Q3tW3z+AQm8NXUA0NJY3SKFbPnSH3MoCGBJlCpq
+	9SKkxdgYMHfQI6T9cHJ58WWsIb3edmk7YJmf4hhOdiwEorZM3Pu5QhcHBVRk7Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1793636476;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CAbnxO0/qUW9BHgq0s5afN/fwZolzjrBJaRnSuaEmAo=;
+	b=no3DkXB1ZRbLOBdX8Sfg5H+HK/netv5lLDsnHm2NNe1d6SMQE1Lawcr4U1D9QbHBAGIkXh
+	QAa36tqetUjJ21Dw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Thomas Gleixner <tglx@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>, LKML <linux-kernel@vger.kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	linuxppc-dev@lists.ozlabs.org, Kees Cook <kees@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	linux-riscv@lists.infradead.org,
+	Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org,
+	x86@kernel.org, Mark Rutland <mark.rutland@arm.com>,
+	Jinjie Ruan <ruanjinjie@huawei.com>,
+	Andy Lutomirski <luto@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Guo Ren <guoren@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Helge Deller <deller@gmx.de>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Richard Weinberger <richard@nod.at>,
+	Chris Zankel <chris@zankel.net>,
+	linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org,
+	linux-csky@vger.kernel.org, linux-m68k@vger.kernel.org,
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linux-sh@vger.kernel.org, linux-um@lists.infradead.org,
+	Arnd Bergmann <arnd@arndb.de>, Vineet Gupta <vgupta@kernel.org>,
+	Will Deacon <will@kernel.org>, Brian Cain <bcain@kernel.org>,
+	Michal Simek <monstr@monstr.eu>, Dinh Nguyen <dinguyen@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	linux-snps-arc@lists.infradead.org, linux-hexagon@vger.kernel.org,
+	linux-openrisc@vger.kernel.org, sparclinux@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	Michal =?utf-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH V2] x86/entry: Fix ptrace regression
+Message-ID: <20261102162113.LEAhpzer@linutronix.de>
+References: <20261022142425.3Wx-RrU5@linutronix.de>
+ <87fqxx1r80.ffs@fw13>
+ <87cxt11ktr.ffs@fw13>
+ <1149A39E-BEBA-46EA-94F4-4DFFC4733EF5@zytor.com>
+ <871p9g1s3w.ffs@fw13>
+ <87y0boze95.ffs@fw13>
+ <C6D7BF04-4CF7-48D1-93B5-E80D52C2617D@zytor.com>
+ <87se1wyvs8.ffs@fw13>
+ <87mrrvxaty.ffs@fw13>
+ <87ecd4xwlr.ffs@fw13>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -77,39 +113,30 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
-Mime-Version: 1.0
-References: <20261028190259.1819571-1-seanjc@google.com> <20261028190259.1819571-2-seanjc@google.com>
- <20261102153228.240804-H-seiden@linux.ibm.com>
-Message-ID: <auitiPKnFueBJzPA@google.com>
-Subject: Re: [PATCH 1/7] KVM: s390: Drop unused and unreachable kvm_arch_vcpu_should_kick()
-From: Sean Christopherson <seanjc@google.com>
-To: Steffen Eiden <seiden@linux.ibm.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Fuad Tabba <fuad.tabba@linux.dev>, 
-	Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Zenghui Yu <yuzenghui@huawei.com>, Nicholas Piggin <npiggin@gmail.com>, 
-	Atish Patra <atish.patra@linux.dev>, Alexandre Ghiti <alex@ghiti.fr>, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Stefan Teodorescu <fane@google.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <87ecd4xwlr.ffs@fw13>
 
-On Mon, Nov 02, 2026, Steffen Eiden wrote:
-> On Wed, Oct 28, 2026 at 12:02:53PM -0700, Sean Christopherson wrote:
-> > Drop s390's kvm_arch_vcpu_should_kick() stub as the one and only call site
-> > is wrapped with "#ifndef CONFIG_S390".
-> 
-> In the somehow near future I'll remove those #ifdefs and use the kick
-> stuff for kvm_arm64. The native s390 KVM then must at least keep an
-> (unused) symbol at hand. It seems that the compiler could not optimize
-> those calls away. So let's keep it there so I do not have to re-add it
-> soon.
+On 2026-11-01 18:58:08 [+0100], Thomas Gleixner wrote:
+> --- a/arch/x86/entry/syscall_32.c
+> +++ b/arch/x86/entry/syscall_32.c
+> @@ -77,6 +77,10 @@ static __always_inline void do_syscall_3
+>  	if (likely(nr < IA32_NR_syscalls)) {
+>  		nr = array_index_nospec(nr, IA32_NR_syscalls);
+>  		regs->ax = ia32_sys_call(regs, (unsigned int)nr);
+> +	} else {
+> +		/* See comment in do_syscall_64() */
+> +		if (nr != -1UL) {
+> +			regs->ax = -ENOSYS;
 
-Please read the rest of the series.  kvm_arch_vcpu_should_kick() goes away
-entirely.
+A curly closing bracket here and then it compiles for me. Or remove the
+one in the "if" line.
+
+>  	}
+>  }
+
+With either of the suggested changes:
+Tested-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+
+Sebastian
