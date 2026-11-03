@@ -1,104 +1,125 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.50
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793706384;
-	b=hl3kQj+2MQnIH7O9B7j1ndFl2Bj+z/HMXyZiDFCFKm7vFZQpHq19v69MvIzAPONxe1vL
-	 TOjkPzsh/q4RkqrxTgpup3C7jI9lBroTgC6H8bmw6Bz8CSGfCV90CQ683EFLb11GJT/1l
-	 trSlA8aW9BmoyzceXv3RKH/9r89B68VmigO6469SZ4x/uDEa9pX4Bnez0FdSK2Gfn7Luy
-	 yw+dL/tOMgPiT46laiqeZhLuaIBoB4TLsJHrVOi06H1A7PPeEWhfb5fzX6W3NZoWaxHKh
-	 kxoqIC58YUHf95DPRwyH2+WQJc2cJEgEcA619HAklU9/snowrhKbKvwNdhs8aY+SuTQ==
+	t=1793719070;
+	b=sDK4Zyz0nSqLwadXVMaa7fkC/fKa8PjCEAwgHH6Xtq71TZX0xqfg2AsVXrOrXCoFYXos
+	 EO0Ktk9Bj8ayedMwE5Gch/oeENxr7XEeYz51xfC9VjcIGmENRerj1/pReRWfpQjsR153p
+	 2RdhMNI07LxffhhqAyihehsgtaVeTb+q76C8IfugZiTzlmHsGbXmx/R7cdux0ZefMLA5K
+	 rYyQkSTfLNL093yFtIDD1SjTI7AlUIENBvpP3JST3odn40PWZ/xCivWbi6aXByGqqeMou
+	 YZhi6x1/ZOTYXXVJKR9flMu9ALHkoIMdvgAtCU1fKC5NKG24dtiUz90lvkMGUN6ifLw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793706384;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
-	 Received:Received:Received:Received:Date:From:To:Cc:Subject:
-	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To:X-TM-AS-GCONF:X-Proofpoint-Reinject:X-Proofpoint-GUID:
-	 X-Proofpoint-ORIG-GUID:X-Proofpoint-Spam-Details-Enc:
-	 X-Proofpoint-Spam-Info:X-Authority-Analysis:
-	 X-Proofpoint-Virus-Version:X-Proofpoint-Spam-Details;
-	bh=rQNgYgRzwbgahGLohNvZBfs82BLnKvw2G9BPFntd+2Y=;
-	b=Rqj/LoWjKlThj4uHNLVhqrWY227Q/TQhha1KP9Lc+947k739AReiWE7IvEMtNJdRRJjD
-	 A+fhyuTV4qqkRPlVzihXJiyYDME+lERvqtPTqXzmtiY7iAxVmaPPBEBMIsS3oFCTE2+mB
-	 VV3xcUTtJ5ZS3hsUBjd80yy0VH1AIHbv38vsJx9HyPSGQpAJGGRONJbS7E6ij3PLBPtgF
-	 75OoaWo7HkxOa1gTU26VexHMdnrzHRA09ktd2imBsvUBNgsT9uCMQSdljNHtTgWBjzT92
-	 J5NFWIS1mU3IeWFwpUf3Qq+1aIB8/Ef1xMrqZgFEGy3ygsLdq9K2ceHvH94rm3pS2vw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793719070;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:User-Agent;
+	bh=Kv57rrW9AR5Uyx8+S36d+hVUEIxbqmnbUnmaj9pRDPc=;
+	b=QnzooCLweLd5uQrjn1qCUp+zEJ4Hcvgka7gxDmJRdv1rMruOjycYUj1IQ+Er2Z1+nY+a
+	 iiJWrGkD/62kGB/VFe0zpULXL1a/yASORjcj9INkUMaVve4jNUfqPUDKOXpXwux1Tor6u
+	 NNCY4+OVdjbd4OatlRCVS8/ShJDbg4kRHEUv0y/P/7lAc8lrZQoBUugokvtIhPwixrGRP
+	 kvZ8+svj5qO/uvRj351UXjIG9GiZswl3IDMmdQIhYb7Tklj/n2EeuAYKv8zxCZfgPQqfG
+	 1sb5hmpjC3jyIlVxwMmCYthB40AQnyJiMqkJzN4fPdt4b+6gFQ2ZXpfz8gF7uX5MIQg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.ibm.com;
-	spf=pass smtp.mailfrom=linux.ibm.com;
-	dkim=pass header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=XBPDSV6U;
-	arc=none smtp.remote-ip=148.163.156.1
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=chrisdown.name;
+	spf=pass smtp.mailfrom=chrisdown.name;
+	dkim=pass header.d=chrisdown.name header.i=@chrisdown.name header.a=rsa-sha256 header.s=google header.b=JnlPEf6B;
+	arc=none smtp.remote-ip=209.85.216.50
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41AFC606A327;
-	Tue,  3 Nov 2026 11:46:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 41AFC606A327
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63717606A786
+	for <loongarch@lists.linux.dev>; Tue,  3 Nov 2026 15:17:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 63717606A786
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=chrisdown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chrisdown.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=XBPDSV6U
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6A3AEnqC4045893;
-	Tue, 3 Nov 2026 11:45:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=rQNgYgRzwbgahGLohNvZBfs82BLnKv
-	w2G9BPFntd+2Y=; b=XBPDSV6U1ByAfT/2HXWiYPBImtoE06l1RsLvOPr+Mg1Wdg
-	5bb7Q4UvH0mEeFRj51IZNVX9NifoIpA9L056gpcpDJYHk5VjyO/RQmX944rPTcqT
-	lza8DMAA2sFbSnKXHJIeLKs+Q8G1+3X9B+dEQMrLtkOkjp4pNJTbzJPAiDcZXVUE
-	p6Db6wAKv27p8hT6TDeMeXOr4Vk2Xpp7upRB50EYJzqoLgx5W9PMpVDKF0KnA/eX
-	bnd0mHKF4Ty7FsZMzKSxZD1WU4h6XYV6jH6M4KptIOxivjveMfPtf8UA4FEmQ1NM
-	hLDM5ogor5Zfi+YhNntcsukL5xZcXKcEJ/fYDveQ==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4hn80snd8h-1
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Tue, 03 Nov 2026 11:45:57 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 6A3AK5Iq2350043;
-	Tue, 3 Nov 2026 11:45:56 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4hqbqk8stp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 03 Nov 2026 11:45:56 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6A3BjoS127460120
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 3 Nov 2026 11:45:50 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 770852004D;
-	Tue,  3 Nov 2026 11:45:50 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9A1B320040;
-	Tue,  3 Nov 2026 11:45:49 +0000 (GMT)
-Received: from osiris (unknown [9.111.24.158])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue,  3 Nov 2026 11:45:49 +0000 (GMT)
-Date: Tue, 3 Nov 2026 12:45:48 +0100
-From: Steffen Eiden <seiden@linux.ibm.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>,
-        Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
-        Paolo Bonzini <pbonzini@redhat.com>, Fuad Tabba <fuad.tabba@linux.dev>,
-        Joey Gouly <joey.gouly@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Zenghui Yu <yuzenghui@huawei.com>, Nicholas Piggin <npiggin@gmail.com>,
-        Atish Patra <atish.patra@linux.dev>, Alexandre Ghiti <alex@ghiti.fr>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-        kvm@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Stefan Teodorescu <fane@google.com>
-Subject: Re: [PATCH 1/7] KVM: s390: Drop unused and unreachable
- kvm_arch_vcpu_should_kick()
-Message-ID: <20261103114548.119911-B-seiden@linux.ibm.com>
-References: <20261028190259.1819571-1-seanjc@google.com>
- <20261028190259.1819571-2-seanjc@google.com>
- <20261102153228.240804-H-seiden@linux.ibm.com>
- <auitiPKnFueBJzPA@google.com>
+	dkim=pass (1024-bit key, unprotected) header.d=chrisdown.name header.i=@chrisdown.name header.a=rsa-sha256 header.s=google header.b=JnlPEf6B
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-3ad787e0593so2068633a91.3
+        for <loongarch@lists.linux.dev>; Tue, 03 Nov 2026 07:17:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chrisdown.name; s=google; t=1793719069; x=1794323869; darn=lists.linux.dev;
+        h=user-agent:content-disposition:content-type:mime-version:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Kv57rrW9AR5Uyx8+S36d+hVUEIxbqmnbUnmaj9pRDPc=;
+        b=JnlPEf6BHoXl6cwMVhvhbW3/WTu3vh1A3PHeVP3LdKVQ6P8noYUvctth0ub1VO9xND
+         LyWMW+vFoRfi/+wgU6RXVb8CLpilQw4S5UnL05DJg0zwgGI6uD66Xv2UVQ6UZM1mldTo
+         19NQjw/36auDHfkjm5r5O8pmMmi8rGG5gWDa8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793719069; x=1794323869;
+        h=user-agent:content-disposition:content-type:mime-version:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=Kv57rrW9AR5Uyx8+S36d+hVUEIxbqmnbUnmaj9pRDPc=;
+        b=W3PrjjwRFGs5b8e3Gk0IVYhUwUd6zAVst6oTi7v3yZX8WLDPYjtuj1fOTsm2NNiFRk
+         29cwpPrqDMEnB43Lgc7dFbblr8HYCB0qYaMDFLvTAxzU0qAtr4T0aZcTkzeUsJKHC8OR
+         ICXO6nq1CyroYNsFH8mWrmvS8b7y8xfkoY/IRcdkcFYtT9MiLnTn5BRTcbIcvR12cemJ
+         Ld4Lrrv8goM+ZNoNlghk7que5s2zEVttCfv3fQC0CDmjkZMmyBal0wxNBckA8FZYkOG6
+         EU77cM8EtAhbQMcOqc1FKn21jJX/JInIv/Wk9tIPPfjlMpAcQdYX8YZ6NDlM5eH2ik6s
+         ZPPA==
+X-Forwarded-Encrypted: i=1; AKwUvByvZR85uL/6lHm2hTdUwhc7vze7jN8vVUFdiRSdqEvNicuz9G/06YTHBiW0Vs5TE6Ulmz2aXD8kuqc=@lists.linux.dev
+X-Gm-Message-State: APuU4Z/5vi24zyULJYcLJqJA1wNIOUJz7Rusi1FGgOc1D0D1uy80Lrdq
+	DGvFpeLbqZUHIT2a5aKsmh5azPjiARCSZoy8nXtfg+8doo9LWHyb5wcW1h5xcFMZu4k=
+X-Gm-Gg: AYBFou0ijoVE/dGia4mdQAPGL84JsY+/LSlLUi4jpI/XiwE6vJPyMfWmWiwabzv6vZn
+	mpJefOcDWkFACQPRHRi5p3TBF6BbkGBIZ3Xap/lnaq4VAh/e/s2reLdvkmKlLHa2E6m9GeNyjdn
+	20CIKvpeMCW6l8j93cbJG4i36Ou8T0iNM6XbMQPax6hEBPYCsIdd19ji9iTQ6m0K3WKKLF+JDAA
+	UWsivg76+UCLSAu4h837+AOYzS+Qvh4suYBlRSUqXezP0yERACF1MWGWpgmW3LyaFs7CIi9QhJ9
+	LgFfNvxhT0hzocbm3MdExfZCLLKCtWFre1POERiU4tK/lMG/3cR04JIh+P3Pi/8d6szXicay348
+	N9nRowiinv5dLVxWUD/egV3SXBg94c06dNEZkZd851kWTvOhO3ivX0pjAAXVkgEMkPpqwzCB7qN
+	e0zP7LG+pzoNuFeaiV5i0QTqr2e+0avRr6VclSPfm81/VN5+pMt5TaMZkyUVCAMiq1x7G4kL24u
+	BR5oNKsE/inwA5ay0u2fnrBnc/h9pO0+I1Zz+RcRkHftjGirPmRTj53JgLmnv2oGEPRXgJizSR+
+	+noet/E3sEo/RyP5G8SWn2d6VcACmseBYstMJA742im56kZyD3km1vkLHIop9IVQ2T0RGGmZ6Kq
+	PJGR5aqgB/G41I1xzpGRe9AaiNDSJTeNu8qRJjBJN8d9c8qb4349uAKBIAn3505rUPlp4qwiAWw
+	X8TVJDX1b9+AU8o2SOZw==
+X-Received: by 2002:a17:90b:3f84:b0:3ab:b39f:41da with SMTP id 98e67ed59e1d1-3ae89776af6mr10813768a91.11.1793719068633;
+        Tue, 03 Nov 2026 07:17:48 -0800 (PST)
+Received: from localhost ([116.86.153.182])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b07c62984bsm4849760a91.9.2026.11.03.07.17.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Nov 2026 07:17:47 -0800 (PST)
+Date: Tue, 3 Nov 2026 23:17:43 +0800
+From: Chris Down <chris@chrisdown.name>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Lorenzo Stoakes <ljs@kernel.org>
+Cc: Jeff Xu <jeffxu@google.com>, David Hildenbrand <david@kernel.org>,
+	Vlastimil Babka <vbabka@kernel.org>, Jann Horn <jannh@google.com>,
+	Pedro Falcato <pfalcato@suse.de>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>,
+	Andrey Vagin <avagin@gmail.com>,
+	Alexander Mikhalitsyn <alexander@mihalicyn.com>,
+	Shuah Khan <shuah@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>, Jiri Olsa <jolsa@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Randy Dunlap <rdunlap@infradead.org>, linux-mm@kvack.org,
+	linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-security-module@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com
+Subject: [PATCH v2 0/8] mseal sysmap: Choose system mapping sealing at boot
+Message-ID: <cover.1793718940.git.chris@chrisdown.name>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -110,52 +131,89 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <auitiPKnFueBJzPA@google.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-GUID: pVpgdP1XGIbnstN6hf1_H30Mry2kEc8w
-X-Proofpoint-ORIG-GUID: l9khr2_nw7GEkBcFn3H6-NSEwUfuIP0C
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTAzMDA0NiBTYWx0ZWRfX1XmGS9lHsUL0
- R/pqFn7OS4O6sIvO6xkJJLw7ub5XYBJJ8rT4n7ytkLsrM+nXxJ8ALAk6IZ7cxaLgxzx/sz6YekU
- QUQNLzCc+AcEIzFSIIId4SI+3jZ4xWcemIVFHv+lYM846eTlTDBy/sVfsO3lwE4suzbkGudS2Kb
- gxPBGGgvMaIVdytp/A39MMoe5QDoT7CkGj5SGrkaqTAe4eTeD+SzsmTdUt/UyjY9TJC3JseqnJa
- QEo75BJzfvgqw3u+U+2wRBpyO7uPflzaZ5caj2HokpnoTurGkxzXBgpUXpjVDxTHjuBmXjI8rPa
- vxWDAmBlV9AhIXjL/sn+6LcGLT5sIIA/1vfGnxBH9hGUn2tSE9JXdCrUFdxql4RE+ZLXgJZ4H1I
- Kt9BEBx2jKRF/wavIUPm0bKdaAiukt/xqjNHAoSCxYurQjxD+KTis8S/8SmPNJktwNxtQkMBgIp
- 7SZvF2lkFSgtvQ77a7g==
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMTAzMDA0NiBTYWx0ZWRfX8KXTgj3ZDXIb
- rszJKiaYCEhjwddi22AWOUixDabzaYbTZeZqW4OyLHY9z/7j8facbJ5/xv2IRGOBpQn4thL/pQY
- S1fxrlzI0e+Xs7MM8Gx7oKdd53KSVec=
-X-Authority-Analysis: v=2.4 cv=FIqOVOos c=1 sm=1 tr=0 ts=6ae9c975 cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=kj9zAlcOel0A:10 a=zJRp6_cAMcgA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=14yfDfNcGX1pIiSJYtUA:9
- a=CjuIK1q_8ugA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
- definitions=2026-11-03_02,2026-11-02_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 malwarescore=0 impostorscore=0 spamscore=0 lowpriorityscore=0
- bulkscore=0 suspectscore=0 clxscore=1015 priorityscore=1501 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2610300000 definitions=main-2611030046
+User-Agent: Mutt/2.3.3 (9073d26d) (2026-06-12)
 
-On Mon, Nov 02, 2026 at 07:34:32AM -0800, Sean Christopherson wrote:
-> On Mon, Nov 02, 2026, Steffen Eiden wrote:
-> > On Wed, Oct 28, 2026 at 12:02:53PM -0700, Sean Christopherson wrote:
-> > > Drop s390's kvm_arch_vcpu_should_kick() stub as the one and only call site
-> > > is wrapped with "#ifndef CONFIG_S390".
-> > 
-> > In the somehow near future I'll remove those #ifdefs and use the kick
-> > stuff for kvm_arm64. The native s390 KVM then must at least keep an
-> > (unused) symbol at hand. It seems that the compiler could not optimize
-> > those calls away. So let's keep it there so I do not have to re-add it
-> > soon.
-> 
-> Please read the rest of the series.  kvm_arch_vcpu_should_kick() goes away
-> entirely.
+System mapping sealing is currently a build time choice. Hosts which
+want it and hosts which need to move or unmap these mappings therefore
+need separate kernels, which is not ideal. Let's allow the administrator
+to choose at boot time.
 
-Sorry for that. This patch just jumped to my attention and I had no time
-yet to read the rest. 
+v2:
 
-	Steffen
+- Skip destructive vDSO tests on unsealed 32-bit x86 mappings
+- Move the sysmap tests into selftests/mm (Lorenzo)
+- Use shared vm_util helpers in the sysmap tests (Lorenzo)
+- Use PROCMAP_QUERY for the vDSO lookup (Lorenzo)
+- Keep test changes in separate patches (Lorenzo)
+- Put the enforcement tests before the kernel changes (Lorenzo)
+- Move MSEAL_SYSTEM_MAPPINGS to mm/Kconfig (Lorenzo)
+- Remove VM_SEALED_SYSMAP (Lorenzo)
+- Seal mappings in __install_special_mapping() (Lorenzo)
+- Leave a sealed uprobe trampoline mapped if optimisation fails
+- Replace the boolean parameter with no_mseal_sys_mappings (Lorenzo)
+- Drop MSEAL_SYSTEM_MAPPINGS_DEFAULT_ON (Lorenzo)
+- Drop the CHECKPOINT_RESTORE dependency (Lorenzo)
+- Document the software which sealing breaks (Lorenzo)
+- Keep Kconfig default-n regardless of CHECKPOINT_RESTORE (Andrei)
+- Retain sealing by default when built in, with no_mseal_sys_mappings as
+  the boot-time opt-out (Lorenzo)
+- Explain the security rationale (Lorenzo)
+- Describe the Meta/Reverie use case (Lorenzo)
+- Skip general checks on unsealed kernels (Lorenzo)
+- Add expect_sealed for strict CI checks (Jeff)
+- Use the existing -T filter to exclude strict checks when needed (Jeff)
+- Test that no_mseal_sys_mappings leaves mappings unsealed (Jeff)
+- Add the vDSO mprotect() enforcement test (Jeff)
+
+v1: https://lore.kernel.org/r/cover.1793094611.git.chris@chrisdown.name
+
+Chris Down (8):
+  selftests/mm: Move sysmap_is_sealed into mm
+  selftests/mm: Skip sysmap_is_sealed when system mappings aren't sealed
+  selftests/mm: Test that the seal on system mappings is enforced
+  mm/mseal: Move MSEAL_SYSTEM_MAPPINGS to mm/Kconfig
+  uprobes/x86: Leave sealed trampolines in place on optimisation failure
+  mm/mseal: Seal system mappings in __install_special_mapping()
+  mm/mseal: Add no_mseal_sys_mappings boot parameter
+  selftests/mm: Check that no_mseal_sys_mappings unseals system mappings
+
+ .../admin-guide/kernel-parameters.txt         |   7 +
+ Documentation/userspace-api/mseal.rst         |  12 +-
+ arch/arm64/kernel/vdso.c                      |   9 +-
+ arch/loongarch/kernel/vdso.c                  |   3 +-
+ arch/riscv/kernel/vdso.c                      |   2 +-
+ arch/s390/kernel/vdso.c                       |   2 +-
+ arch/x86/entry/vdso/vma.c                     |   5 +-
+ arch/x86/kernel/uprobes.c                     |   2 +-
+ include/linux/mm.h                            |   6 -
+ init/Kconfig                                  |   5 +-
+ kernel/events/uprobes.c                       |   2 +-
+ lib/vdso/datastore.c                          |   2 +-
+ mm/Kconfig                                    |  23 ++
+ mm/mseal.c                                    |  12 +
+ mm/vma.c                                      |   2 +
+ mm/vma.h                                      |   8 +
+ security/Kconfig                              |  21 --
+ tools/testing/selftests/Makefile              |   1 -
+ tools/testing/selftests/mm/Makefile           |   1 +
+ tools/testing/selftests/mm/config             |   1 +
+ tools/testing/selftests/mm/run_vmtests.sh     |   6 +
+ tools/testing/selftests/mm/sysmap_is_sealed.c | 259 ++++++++++++++++++
+ tools/testing/selftests/mm/vm_util.c          |   5 +
+ tools/testing/selftests/mm/vm_util.h          |   1 +
+ .../mseal_system_mappings/.gitignore          |   2 -
+ .../selftests/mseal_system_mappings/Makefile  |   6 -
+ .../selftests/mseal_system_mappings/config    |   1 -
+ .../mseal_system_mappings/sysmap_is_sealed.c  | 119 --------
+ 28 files changed, 345 insertions(+), 180 deletions(-)
+ create mode 100644 tools/testing/selftests/mm/sysmap_is_sealed.c
+ delete mode 100644 tools/testing/selftests/mseal_system_mappings/.gitignore
+ delete mode 100644 tools/testing/selftests/mseal_system_mappings/Makefile
+ delete mode 100644 tools/testing/selftests/mseal_system_mappings/config
+ delete mode 100644 tools/testing/selftests/mseal_system_mappings/sysmap_is_sealed.c
+
+
+base-commit: 734a9da61a5bc5d82b496a86bacc097d11dc6871
+-- 
+2.54.0
+
