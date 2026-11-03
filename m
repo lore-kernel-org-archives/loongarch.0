@@ -1,110 +1,53 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793636479;
-	b=Ec/Mj8hmuUXrtUomi8HGczasYph/8jlgHu1Vr2fAOjhxaCDDkVTSKbw0BTNyR8XTZWbY
-	 aDRnvNoFyhAu365qS0xfm59SksD+nKL3X7yVbuJKTEVa5eszzMF30IEajotsZ5PXWDGgn
-	 oENbGHU6s8gyOtBuq5mBsUjIAYZQ0w7h2DpgTfGvKeZYhkwogBFInYHxXEqnCQjIFfcIg
-	 Us2jSBI/7KmCRXP7qh0FJWGo5jnOR8RXdG2DBfCFwaFgA9brjDm1B7JXwRWR/F4D3zChi
-	 rVL0Z/2f9NYGtmqRPcGU4PxQYfiWWRQTTWxvr/SIrZSKk7xTsPREuAE163fQ8Ql5rIw==
+	t=1793670740;
+	b=n6+SHMoyS4NFRYDXcwbOOwiuYZASExbH9VBrwaQ1vSN+3PSpbHzp8Jp8POLy7Ggg3Loy
+	 8KL9xD0K/q+9q1Tbm4IlsBz/1fYU/I+QflC3G1B7EK+ONh1WiRWyYhlJCocV4ZGSbcsaW
+	 HCggqguuyPEtACQRhbxbTKoXPe/ERT76qfKsU+GD3POecDQKv+3mxt7t8KZxZsUrF53q9
+	 agNy3bTXqG/v4mdUfsJpMTuUNPD1tZhysgBOfG+GewBLs0YYXu9WQu8PtYO3e4IWEZXUZ
+	 gxXrPab15sPzphGtwXihdxtnk8Udl08R5GFUDi6oCo0xTYsCHMge49eOuiVJHlwPRkA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793636479;
-	h=DMARC-Filter:Date:DKIM-Signature:DKIM-Signature:From:To:Cc:Subject:
-	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To;
-	bh=CAbnxO0/qUW9BHgq0s5afN/fwZolzjrBJaRnSuaEmAo=;
-	b=WFXBtF5+YtCE6kxxz0JgQaBzp9Z9P/GE5wpsDDywA3G+M585YpOUPCnoI4uZD2cPl7tE
-	 lJzqsSTnFQKKmulEoLVWYCjR/sHHOCcEmb1xtO5p14k7QPcOv+/rwaAorKzTmhAPeSo8Q
-	 ZqnHnhQA4mM92ik3zlOxm1DxPfC1utg4QJJ8Nw/AhaFDRUUzRLH3LLqqvbJW9AojI10YH
-	 onou8N7WmtAmJulTPNo/rk6ZtxPLpN024reXkk+9ebcAMRXO4CaIGccBiDPR23fN9jNUv
-	 f5TC26cWy76Cl9/4krykR/oj0nDLyyPYPC7VhIQ2F2MCux0tbzPpsUwTZNCwospYNHQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793670740;
+	h=DMARC-Filter:Received:Received:Subject:To:Cc:References:From:
+	 Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:Content-Type:
+	 Content-Language:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-CM-SenderInfo:X-Coremail-Antispam;
+	bh=RtyNW0gmNKu+F4S4geYgGRfWCseBxV4f/FbulQHc5qY=;
+	b=b3Tk7BcogUVHywTqEKy7EOA79n0QkxLHrWt6tHSec7JMIe2TxojbpQLkvlqVPTuwv6sm
+	 U7DM6rn3CnEC/TnSiG4zO/AGnL1vTmvGuxZENoK4MfvNQbpxruogmbItJOg/8BIac5fwF
+	 7gIl907Rt81Svvh9Wnc/8bdtQeqqux/J55BfLtp8/wh4+tGf9hLzrryW4HY3r9KuQPCrE
+	 QN3yV5m6TTeCuvKy64u7FAZCGTxqdACRR7bEMXTeq8JngPKnTAiM4V+Dl4nBAz51Lp+OF
+	 X1rD5ZkTCTGb325JegceyJu97qitT468UAbBacEx3bVBzB6CgVpsuEgBJOUNQfq3SRg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linutronix.de;
-	spf=pass smtp.mailfrom=linutronix.de;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=Bkvlc9Uh;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=no3DkXB1;
-	arc=none smtp.remote-ip=193.142.43.55
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FB4D606A90F
-	for <loongarch@lists.linux.dev>; Mon,  2 Nov 2026 16:21:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7FB4D606A90F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=Bkvlc9Uh;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=no3DkXB1
-Date: Mon, 2 Nov 2026 17:21:13 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1793636476;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CAbnxO0/qUW9BHgq0s5afN/fwZolzjrBJaRnSuaEmAo=;
-	b=Bkvlc9UhhyCv5ZdWUMU6G9Li+R2BVAADYWwZuoqUAyqvUjCoGYGxXIn4ALH8UCKwa4wXF8
-	oraU/gZ8eujvwMvYkEcPGl9LoaQ4y8L5gTwgvEqTaLIOKyYpw0Vt21vSoLNR9nGu5XUZGy
-	Ei+jDbIPpRtvYxUN3n40OXfMZKwhjOcptRjzclaFhqfaMjZ4DnPJp2kIUEARXrDA2lfCj7
-	Xc9td9/O5azqjpJ09IA+6VHzOt3kgO7Q3tW3z+AQm8NXUA0NJY3SKFbPnSH3MoCGBJlCpq
-	9SKkxdgYMHfQI6T9cHJ58WWsIb3edmk7YJmf4hhOdiwEorZM3Pu5QhcHBVRk7Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1793636476;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CAbnxO0/qUW9BHgq0s5afN/fwZolzjrBJaRnSuaEmAo=;
-	b=no3DkXB1ZRbLOBdX8Sfg5H+HK/netv5lLDsnHm2NNe1d6SMQE1Lawcr4U1D9QbHBAGIkXh
-	QAa36tqetUjJ21Dw==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Thomas Gleixner <tglx@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>, LKML <linux-kernel@vger.kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	linuxppc-dev@lists.ozlabs.org, Kees Cook <kees@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	linux-riscv@lists.infradead.org,
-	Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org,
-	x86@kernel.org, Mark Rutland <mark.rutland@arm.com>,
-	Jinjie Ruan <ruanjinjie@huawei.com>,
-	Andy Lutomirski <luto@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Guo Ren <guoren@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Helge Deller <deller@gmx.de>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Richard Weinberger <richard@nod.at>,
-	Chris Zankel <chris@zankel.net>,
-	linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org,
-	linux-csky@vger.kernel.org, linux-m68k@vger.kernel.org,
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linux-sh@vger.kernel.org, linux-um@lists.infradead.org,
-	Arnd Bergmann <arnd@arndb.de>, Vineet Gupta <vgupta@kernel.org>,
-	Will Deacon <will@kernel.org>, Brian Cain <bcain@kernel.org>,
-	Michal Simek <monstr@monstr.eu>, Dinh Nguyen <dinguyen@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	linux-snps-arc@lists.infradead.org, linux-hexagon@vger.kernel.org,
-	linux-openrisc@vger.kernel.org, sparclinux@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	Michal =?utf-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Subject: Re: [PATCH V2] x86/entry: Fix ptrace regression
-Message-ID: <20261102162113.LEAhpzer@linutronix.de>
-References: <20261022142425.3Wx-RrU5@linutronix.de>
- <87fqxx1r80.ffs@fw13>
- <87cxt11ktr.ffs@fw13>
- <1149A39E-BEBA-46EA-94F4-4DFFC4733EF5@zytor.com>
- <871p9g1s3w.ffs@fw13>
- <87y0boze95.ffs@fw13>
- <C6D7BF04-4CF7-48D1-93B5-E80D52C2617D@zytor.com>
- <87se1wyvs8.ffs@fw13>
- <87mrrvxaty.ffs@fw13>
- <87ecd4xwlr.ffs@fw13>
+	dmarc=none header.from=loongson.cn;
+	spf=pass smtp.mailfrom=loongson.cn;
+	arc=none smtp.remote-ip=114.242.206.163
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5A01606A329
+	for <loongarch@lists.linux.dev>; Tue,  3 Nov 2026 01:52:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C5A01606A329
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [123.138.236.242])
+	by gateway (Coremail) with SMTP id _____8AxHNJNPulqFM0bAA--.15221S3;
+	Tue, 03 Nov 2026 09:52:13 +0800 (CST)
+Received: from [127.0.0.1] (unknown [123.138.236.242])
+	by front1 (Coremail) with SMTP id qMiowJDxBc1MPulq3QkyAA--.9889S2;
+	Tue, 03 Nov 2026 09:52:12 +0800 (CST)
+Subject: Re: [PATCH v1] mm/slub: Genericize x86-specific cmpxchg16b comment
+To: Harry Yoo <harry@kernel.org>
+Cc: Vlastimil Babka <vbabka@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, Hao Li <hao.li@linux.dev>,
+ Christoph Lameter <cl@gentwo.org>, David Rientjes <rientjes@google.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>, linux-mm@kvack.org,
+ loongarch@lists.linux.dev, bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20261102082730.12430-1-yangtiezhu@loongson.cn>
+ <auihvtpGJPDbb4Hz@thinkstation>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <5ce58389-db68-54f2-51fb-0d43b0e0cb2d@loongson.cn>
+Date: Tue, 3 Nov 2026 09:52:11 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -114,29 +57,61 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <87ecd4xwlr.ffs@fw13>
+In-Reply-To: <auihvtpGJPDbb4Hz@thinkstation>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxBc1MPulq3QkyAA--.9889S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Ar13WFyktF43uFyDCF13WrX_yoW8Gr18pa
+	yktFW8X398Xr1a9ws7Ca17Ww1fXa4UKr97Cw15G348Jr9xKr15GFy0yrWfWayrXryS9342
+	kas2qFW3Zw4UXFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
+	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	k0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l
+	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxV
+	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI
+	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+	1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+	42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j5o7tUUUUU=
 
-On 2026-11-01 18:58:08 [+0100], Thomas Gleixner wrote:
-> --- a/arch/x86/entry/syscall_32.c
-> +++ b/arch/x86/entry/syscall_32.c
-> @@ -77,6 +77,10 @@ static __always_inline void do_syscall_3
->  	if (likely(nr < IA32_NR_syscalls)) {
->  		nr = array_index_nospec(nr, IA32_NR_syscalls);
->  		regs->ax = ia32_sys_call(regs, (unsigned int)nr);
-> +	} else {
-> +		/* See comment in do_syscall_64() */
-> +		if (nr != -1UL) {
-> +			regs->ax = -ENOSYS;
+On 2026/11/2 下午10:49, Harry Yoo wrote:
+> On Mon, Nov 02, 2026 at 04:27:30PM +0800, Tiezhu Yang wrote:
+>> The kmalloc_nolock() infrastructure relies on slab caches with double-word
+>> atomic cmpxchg capabilities (__CMPXCHG_DOUBLE). The current inline comment
+>> in __kmalloc_nolock_noprof() uses 'cmpxchg16b' as the prerequisite hardware
+>> capability.
 
-A curly closing bracket here and then it compiles for me. Or remove the
-one in the "if" line.
+...
 
->  	}
->  }
+>> diff --git a/mm/slub.c b/mm/slub.c
+>> index 45e077c7526c..216bc6b5d776 100644
+>> --- a/mm/slub.c
+>> +++ b/mm/slub.c
+>> @@ -5589,8 +5589,8 @@ static void *__kmalloc_nolock_noprof(DECL_TOKEN_PARAMS(size, token), gfp_t gfp_f
+>>   	if (!(s->flags & __CMPXCHG_DOUBLE) && !kmem_cache_debug(s))
+>>   		/*
+>>   		 * kmalloc_nolock() is not supported on architectures that
+>> -		 * don't implement cmpxchg16b and thus need slab_lock()
+>> -		 * which could be preempted by a nmi.
+>> +		 * don't implement 128-bit atomic cmpxchg and thus need
+>> +		 * slab_lock() which could be preempted by a nmi.
+> 
+> maybe "double-width atomic cmpxchg" is more accurate considering
+> e.g.) x86-32 implements cmpxchg8b?
 
-With either of the suggested changes:
-Tested-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+OK. Using "double-width atomic cmpxchg" is much more accurate
+as it perfectly covers both 32-bit and 64-bit platforms, and
+aligns well with the __CMPXCHG_DOUBLE flag.
 
-Sebastian
+I will send out v2 with this update later if no more comments.
+
+Thanks,
+Tiezhu
+
