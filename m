@@ -1,58 +1,58 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=113.46.200.216
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=113.46.200.217
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793697369;
-	b=VvF6Zz75qSDV2lgiPD/S97x5Z5Zc9m8VU1I0jkrZvFWXTCrRmObnUk+8UTrOnm/lPm7g
-	 Jf+kT85EVpPCtw48RYU7PaXqIeDia4Wnx1iPVgMfthPUwCw9k6OUaKsyRI87ZJeQ/h5hd
-	 gFLZ1njlwVQbNKo6CJHgx4Hr6WGFd0wxNE36pgknbmhivuKgFZovzHBAGLW1Twh5OugpJ
-	 iHOG347IVgD7Z121m44iA2G6ng6dAYNyuiMqYFAJ51EdwZReQbOFxkXuxqhFfRp1DzILE
-	 T21sMJm4W2oYhDPPhbvV8GP2uTXJiwoGWBCJ+tdqjFQuyiaA1YVi+7GnZaf0adyqFfg==
+	t=1793697390;
+	b=u7B1JMzzl7W2yiufQD/FVt2tDMCP/ApsVa03F0KoCAAZI1YiEHnN5lST7EumunRcaGR1
+	 HVRsA6UUzXoklAUidUUI8Wm+ka8mfK18NmK6IGFC+ZpxSx5GGW4OfHiXOGGMKr+Hy24G8
+	 4ROxi9m3JT0yMH0s9f4RjJfAFeok4cuER0Umm9eLA6ii9rofuUchRjZGJBJic9/4141dq
+	 gXmbU9+LDCB15if5fvjuYQ22VyVN76gSAaj6NLWw7D5zRa17ja19LRyaGdcphZvfZIc01
+	 mV9s9p9sRzx37b16O3b7/VbZaJtRBeqYanfS5Yb98Bs6dYIHKjyv7StEdLdgOSE4xRw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793697369;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793697390;
 	h=DMARC-Filter:dkim-signature:Received:Received:Received:Message-ID:
 	 Date:MIME-Version:User-Agent:Subject:To:References:From:In-Reply-To:
 	 Content-Type:Content-Transfer-Encoding:X-Originating-IP:
 	 X-ClientProxiedBy;
-	bh=48sfBtezaLrmsDLxpZBqDtVgmBMh4esLZj8eSRsa2cM=;
-	b=eQVE/G/zCwXtb3rhAHdrTQC954vwDzcwTZjUYMkg4RvE27VgoqnUR7J25S2LA/WggZR6
-	 gLacMruk52MEi+Y2Xv9ZkQE/j1SXIftf60ysb+UCTfFaZC6AdatxP9rbEsTfDEzKWF7p2
-	 m5tVJhdReY+KIlYKNsYJI+Z0qIWit+TNDVNrQGxQ8IYK4uz6vuzRBA42akfX6DE+DkSvr
-	 LywbPdaKyeFpH2w0XCvduGCQGZerBbBeAzQDt7p7njpmhgA1oBWw5SfNVtaznG1MbgN/9
-	 t+OJLYYDRltmFeG49gkyhglcdJo0UJeGr1Pa4ysN0lzMheF+tnStq0BYq7YY2nj6XQw==
+	bh=c/0hZKufvkH/OYW00aRP0EoGvS2iUIY4dlDmgt6M/Mw=;
+	b=1L8d9KGWyQjQ5ECpRELL/H0CGKWltEIQsSrGSLX2cl4pBQQVqUHBPjygyQEcSGNYVzno
+	 unG/0YL9JZ5rn/LCxordHYLurhLJCuUrMB5vYxgVDAMOsNrLcaNg/yvQGQxv11a9+yJ1A
+	 tVch/ueGYlpXmgX2cvCPeP7RmG6oQv18tohkvP082mmUjAsri7hTbsRfVIWceu/X2dPoV
+	 k465nIj+Dxn7yvSijh2+poAyuSM3jHgH4ZGsY7EkozbWhQmAynqR8IyqD/Bu3pcG4+QXN
+	 7xo26v0Yp2NX/kmd0Wsab1YzsYLJEAqh+CyYHa9AMrZSgoJwtb720T3AwdeVllYg2jA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=huawei.com;
 	spf=pass smtp.mailfrom=huawei.com;
-	dkim=pass header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b="MQ7/wjZC";
-	arc=none smtp.remote-ip=113.46.200.216
-Received: from canpmsgout01.his.huawei.com (canpmsgout01.his.huawei.com [113.46.200.216])
+	dkim=pass header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=4DXGQ09b;
+	arc=none smtp.remote-ip=113.46.200.217
+Received: from canpmsgout02.his.huawei.com (canpmsgout02.his.huawei.com [113.46.200.217])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20DE606A32F
-	for <loongarch@lists.linux.dev>; Tue,  3 Nov 2026 09:16:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F20DE606A32F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BA31606A326
+	for <loongarch@lists.linux.dev>; Tue,  3 Nov 2026 09:16:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8BA31606A326
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=MQ7/wjZC
+	dkim=pass (1024-bit key, unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=4DXGQ09b
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=48sfBtezaLrmsDLxpZBqDtVgmBMh4esLZj8eSRsa2cM=;
-	b=MQ7/wjZCJByib4DUAG1rr8PWbq4ZKNqzIaaZ0Biehny2BBZjAjV3wKEwUZvkviWzcCEbf0g+v
-	XU2u1c0FR7BeFFcd2sKiP2M9NRejpiGNFnV1aQNjASXnIdM5gSq78pUOH9pz1/Cnp1FM1nmDrIn
-	G/mzrhIC2kG1FA5PLDo4uzc=
-Received: from mail.maildlp.com (unknown [172.19.162.144])
-	by canpmsgout01.his.huawei.com (SkyGuard) with ESMTPS id 4jJjbc4bwXz1T4JR;
-	Tue,  3 Nov 2026 17:15:40 +0800 (CST)
+	bh=c/0hZKufvkH/OYW00aRP0EoGvS2iUIY4dlDmgt6M/Mw=;
+	b=4DXGQ09bqE2PEAJtjiuGEIxPkyR4WjwiC7ksDXHrbemdIxEQDHk6VaPRbtJElOvQBITMnTqnY
+	srWuVrJKqwgvc1zcbqHERnrW2EJ6xbZjtycFl6KEG6RooII6hHAUnHUHO9DbyxyTM0ByJl5fvpa
+	OfjJ7hHwPYGxreXazxTjPfg=
+Received: from mail.maildlp.com (unknown [172.19.162.197])
+	by canpmsgout02.his.huawei.com (SkyGuard) with ESMTPS id 4jJjbp6kLMzcZxn;
+	Tue,  3 Nov 2026 17:15:50 +0800 (CST)
 Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id D79EB40538;
-	Tue,  3 Nov 2026 17:15:58 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id CBADA40579;
+	Tue,  3 Nov 2026 17:16:15 +0800 (CST)
 Received: from [10.67.110.68] (10.67.110.68) by kwepemk200008.china.huawei.com
  (7.202.194.74) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Tue, 3 Nov
- 2026 17:15:57 +0800
-Message-ID: <f3f239df-6d94-46b2-aa0d-e890a509cda1@huawei.com>
-Date: Tue, 3 Nov 2026 17:15:56 +0800
+ 2026 17:16:13 +0800
+Message-ID: <9ef43c59-72b8-4ef8-96cd-0dfd133cde0f@huawei.com>
+Date: Tue, 3 Nov 2026 17:16:13 +0800
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -63,8 +63,8 @@ List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 03/15] arm64: kexec_file: Fix CMA page leaks in segment
- placement retry loops
+Subject: Re: [PATCH v7 05/15] LoongArch: kexec_file: Fix CMA page leaks in
+ segment placement retry loops
 To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
 	<mpe@ellerman.id.au>, <npiggin@gmail.com>, <chleroy@kernel.org>,
@@ -87,9 +87,9 @@ To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
 	<linux-riscv@lists.infradead.org>, <kexec@lists.infradead.org>
 References: <20261026075201.699550-1-ruanjinjie@huawei.com>
- <20261026075201.699550-4-ruanjinjie@huawei.com>
+ <20261026075201.699550-6-ruanjinjie@huawei.com>
 From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <20261026075201.699550-4-ruanjinjie@huawei.com>
+In-Reply-To: <20261026075201.699550-6-ruanjinjie@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
@@ -102,26 +102,26 @@ Will fix sashiko review issue in v8.
 > segments.  Release them first, and disable CMA for the retry: it
 > ignores buf_min and would hand out the same region forever.
 > 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Breno Leitao <leitao@debian.org>
-> Cc: Pratyush Yadav <pratyush@kernel.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Yeoreum Yun <yeoreum.yun@arm.com>
-> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Huacai Chen <chenhuacai@kernel.org>
+> Cc: WANG Xuerui <kernel@xen0n.name>
+> Cc: Youling Tang <tangyouling@kylinos.cn>
+> Cc: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
+> Cc: Kees Cook <kees@kernel.org>
 > Cc: stable@vger.kernel.org
-> Fixes: 07d24902977e ("kexec: enable CMA based contiguous allocation")
+> Link: https://sashiko.dev/#/patchset/20260729031235.2840255-1-ruanjinjie%40huawei.com
+> Fixes: 55d990f0084c ("LoongArch: Add EFI binary support for kexec_file")
 > Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 > ---
->  arch/arm64/kernel/kexec_image.c        | 8 ++++++++
->  arch/arm64/kernel/machine_kexec_file.c | 5 ++++-
->  2 files changed, 12 insertions(+), 1 deletion(-)
+>  arch/loongarch/kernel/kexec_efi.c          | 8 ++++++++
+>  arch/loongarch/kernel/machine_kexec_file.c | 6 +++++-
+>  2 files changed, 13 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
-> index 74d24c8aa2fa..6ed1991e3142 100644
-> --- a/arch/arm64/kernel/kexec_image.c
-> +++ b/arch/arm64/kernel/kexec_image.c
-> @@ -111,6 +111,14 @@ static void *image_load(struct kimage *image,
+> diff --git a/arch/loongarch/kernel/kexec_efi.c b/arch/loongarch/kernel/kexec_efi.c
+> index 5ee78ebb1546..d42711b895a2 100644
+> --- a/arch/loongarch/kernel/kexec_efi.c
+> +++ b/arch/loongarch/kernel/kexec_efi.c
+> @@ -86,6 +86,14 @@ static void *efi_kexec_load(struct kimage *image,
 >  		 * We couldn't find space for the other segments; erase the
 >  		 * kernel segment and try the next available hole.
 >  		 */
@@ -136,11 +136,11 @@ Will fix sashiko review issue in v8.
 >  		image->nr_segments -= 1;
 >  		kbuf.buf_min = kernel_segment->mem + kernel_segment->memsz;
 >  		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-> index 854d872dfd0f..e48f29167b38 100644
-> --- a/arch/arm64/kernel/machine_kexec_file.c
-> +++ b/arch/arm64/kernel/machine_kexec_file.c
-> @@ -179,7 +179,10 @@ int load_other_segments(struct kimage *image,
+> diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
+> index 5412aa9f3568..62a5be102065 100644
+> --- a/arch/loongarch/kernel/machine_kexec_file.c
+> +++ b/arch/loongarch/kernel/machine_kexec_file.c
+> @@ -217,7 +217,11 @@ int load_other_segments(struct kimage *image,
 >  	return 0;
 >  
 >  out_err:
@@ -149,7 +149,8 @@ Will fix sashiko review issue in v8.
 > +		kexec_free_segment_cma(image, image->nr_segments - 1);
 > +		image->nr_segments--;
 > +	}
->  	kvfree(dtb);
+> +
+>  	kfree(modified_cmdline);
 >  	return ret;
 >  }
 
