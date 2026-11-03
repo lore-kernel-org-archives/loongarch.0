@@ -1,39 +1,39 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793689693;
-	b=TAQTFZqTXdwDdbsCogncwA85OzlsPIIevKIhtHDIWUFInaXgSpKGVy5XA2HAMd5o3K9C
-	 OFP5CPGYA6R8JQ6wR8I16tp7VIet7vpHiM5ChYYOy/KLLWExqZW9ft3FJD7GM7uOSsAAg
-	 KX+P+qiD6FGnA3veATXBh+E8m/kUPh8aACtdB1vFN6kN61DOtjS0iKoe1duZIzzq6hZ5V
-	 o3twmpcxI3FCY7WxV6KRo5C5T3YdW071Yvy1PARDX6LKa0TbbFX7PAbqzMbkGc0y3jyxk
-	 me+BP/Gg4vxArrm5SMHWkemlqrhIhSZ3NBsJomsiI/bdQl0cs8NlcGFbektXyd3bMGg==
+	t=1793689697;
+	b=3FGqk6J2MdAuFhHrNazI7RrX9p9Fq8kgCzxwtkCK+xf17fWVddI5KflkXgSWqUw2QP9f
+	 UpcagZL0qZx4EybX2TCkfAnZbupowGFhw3VzaP505ycWVdhv2ieJImClEwFfVTKocLct2
+	 j+iifjnl0pwcGjLH/jEENuyzB49LVo0LtNl/QdLYKix9S2H1W4FE5Xun1u895/mmzgL0f
+	 QvsVLijNDSoMHnW0VErXojP2JPWhkYHiu56/jICGmXuDR5vzC4ETeFrCuDcsdD/COyKfq
+	 Zfl8ghH9SOgm6GLk855S5o5zZ86ha88PZGpgFYV+tfZWIBGhqbMuNq/qgHS39qFTWxQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793689693;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793689697;
 	h=DMARC-Filter:Received:Received:From:To:Cc:Subject:Date:Message-ID:
 	 X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding:X-CM-TRANSID:X-CM-SenderInfo:
 	 X-Coremail-Antispam;
-	bh=p7Oow2uLp+Jls7a3wouiafa+AzM9o4l2mEgHcW18EfM=;
-	b=YtU8LiQ/KNCJ3/PNP1cVpSUB3oQODlMYoFfH6+ixbXwWVf4I1lXsH/HCWXIX65zkMjSS
-	 2Vidn/jxuwfBrtyMCLaFTh1cUaokHtZoq0no7MQYlpdAV761gqfN5TSs++skNYe2dSJmN
-	 XV+6TRU4Vl16oZWZQ2XuHqBU6i1wjoNKmujBCXT0f3UGNEfCd7HJ7gDW+ek+SVCbwbL0e
-	 kB8b1NWipK/bd7yCObRgShzWFY1lWt0+WCIElyfLofFWofWLzMp1U461LCa+Sj3gt8yHM
-	 0VgyF+z6vldfaATlbbSFFeRV+dRxitb0ANcEYHdTQIMwKfecSTj/OFFCzSplWh4ZQsg==
+	bh=IOP38ng0OrUw8jCeyA/WwEceZHaeBLeVkfJ4GjCKTqU=;
+	b=1ZNcfuuIbuKxJmrqTqF3nKUmzckf1MblEap5+p3zQFgUC4gQrIy4MeiBhkoIdwCHpvUQ
+	 Ls1taiuvtTTk21K/U1PFGc3ZBHRVMm0OSzaAVnGBCzJ4XWs+RXsKhw62Iq/U7GL0VjvFs
+	 UFrCKvtKst3Zt22GqDPoSCzPmL7ffjpLm+dTeX1C3b5t4zz/FXAN0GO2CBAnmsoawp/MW
+	 tnzkGLdmBgP7ITswkiETEoBj4gE55sLsAo9UKa1eoahBHlETbc4q93FirEngWT2090X1w
+	 dxwoROHuju1ToyPivjHHzR5TQmmctgf/Cyv3KTbXvzlQhiRD09Wf5DfraBBSjOLduOQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=loongson.cn;
 	spf=pass smtp.mailfrom=loongson.cn;
 	arc=none smtp.remote-ip=114.242.206.163
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68533606A32F
-	for <loongarch@lists.linux.dev>; Tue,  3 Nov 2026 07:08:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 68533606A32F
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2EF7606A32C
+	for <loongarch@lists.linux.dev>; Tue,  3 Nov 2026 07:08:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C2EF7606A32C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [223.64.69.17])
-	by gateway (Coremail) with SMTP id _____8BxbdJaiOlqodwbAA--.16754S3;
-	Tue, 03 Nov 2026 15:08:10 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8BxbdJbiOlqptwbAA--.16756S3;
+	Tue, 03 Nov 2026 15:08:11 +0800 (CST)
 Received: from kernelserver (unknown [223.64.69.17])
-	by front1 (Coremail) with SMTP id qMiowJCxtMxXiOlq4BQyAA--.11182S4;
-	Tue, 03 Nov 2026 15:08:09 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJCxtMxXiOlq4BQyAA--.11182S5;
+	Tue, 03 Nov 2026 15:08:10 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
@@ -44,9 +44,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	loongarch@lists.linux.dev,
 	linux-spi@vger.kernel.org,
 	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH 2/8] spi: loongson: Fix CS idle state for SPI_CS_HIGH devices
-Date: Tue,  3 Nov 2026 15:07:49 +0800
-Message-ID: <bb60200c6802f255fc730f3f5c664e86bea8061c.1793689461.git.zhoubinbin@loongson.cn>
+Subject: [PATCH 3/8] spi: loongson: Make suspend/resume registers PM-specific
+Date: Tue,  3 Nov 2026 15:07:50 +0800
+Message-ID: <ba943ed040b1c6a04a88612c1a62c04fefe876ba.1793689461.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <cover.1793689461.git.zhoubinbin@loongson.cn>
 References: <cover.1793689461.git.zhoubinbin@loongson.cn>
@@ -60,14 +60,14 @@ List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxtMxXiOlq4BQyAA--.11182S4
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQEACGrpQPoEjwAAs6
-X-Coremail-Antispam: 1Uk129KBj93XoW7Cw18WrW5Jw45KryfZFyrGrX_yoW8JFy3pF
-	47Cay8Cr4kJw48Aa9rJrZ3XFyYk34fXrsrWFW7Kw4F9r98Xw1jvF1jgF1jyr43AF1rXF15
-	XFy0grWkCFn8WrcCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:qMiowJCxtMxXiOlq4BQyAA--.11182S5
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAgEACGrpUP0DaQAAsP
+X-Coremail-Antispam: 1Uk129KBj93XoWxtrW7tr4UKw43ury3GF45urX_yoWfAFW5pF
+	1ayw45Wr4ftr4rArn8JrZ8WF1YyryfGwnrJa92vw4jgr9xZw1UX345WFn5Gr4ayFyUZF13
+	ZFWrurWkGFn5CwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
 	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
 	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
@@ -77,39 +77,207 @@ X-Coremail-Antispam: 1Uk129KBj93XoW7Cw18WrW5Jw45KryfZFyrGrX_yoW8JFy3pF
 	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
 	C0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
 	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j5l1kUUUUU=
+	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jOdb8UUUUU=
 
-In loongson_spi_setup(), the chip select (CS) is unconditionally driven
-high (loongson_spi_set_cs(spi, true)) to set it to the idle state.
+Currently, the driver reuses fields like spcr, sper, spsr, and para
+within struct loongson_spi for multiple purposes (runtime setup,
+polling, and PM state). This state overloading makes the code fragile.
+For example, set_clk() modifies spcr/sper during normal operations,
+which can corrupt the saved state right before a suspend.
 
-However, for devices that require active-high chip select
-(SPI_CS_HIGH), driving the CS line high actually asserts the device
-selection. This may cause the device to misinterpret bus traffic or
-enter an unexpected state before the first transfer begins.
-
-Fix this by using !(spi->mode & SPI_CS_HIGH) to ensure the CS pin is
-driven to the correct deasserted (idle) physical level based on the
-device's polarity configuration.
+To fix this, move these register caches into a dedicated struct
+loongson_spi_suspend_store (lss) so they are exclusively used by the
+PM callbacks. Other functions (set_clk, write_read_8bit, message
+handling) are updated to use local variables instead of mutating the
+global PM state.
 
 Fixes: 6c7a864007b6 ("spi: loongson: add bus driver for the loongson spi controller")
 Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 ---
- drivers/spi/spi-loongson-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi-loongson-core.c | 80 ++++++++++++++++++---------------
+ drivers/spi/spi-loongson.h      | 14 +++---
+ 2 files changed, 52 insertions(+), 42 deletions(-)
 
 diff --git a/drivers/spi/spi-loongson-core.c b/drivers/spi/spi-loongson-core.c
-index e95a9af94772..deda754e214d 100644
+index deda754e214d..9f3acf583984 100644
 --- a/drivers/spi/spi-loongson-core.c
 +++ b/drivers/spi/spi-loongson-core.c
-@@ -99,7 +99,7 @@ static int loongson_spi_setup(struct spi_device *spi)
- 		return -EINVAL;
+@@ -40,22 +40,23 @@ static void loongson_spi_set_cs(struct spi_device *spi, bool en)
  
- 	loongson_spi->hz = 0;
--	loongson_spi_set_cs(spi, true);
-+	loongson_spi_set_cs(spi, !(spi->mode & SPI_CS_HIGH));
+ static void loongson_spi_set_clk(struct loongson_spi *loongson_spi, unsigned int hz)
+ {
+-	unsigned char val;
+-	unsigned int div, div_tmp;
+ 	static const char rdiv[12] = {0, 1, 4, 2, 3, 5, 6, 7, 8, 9, 10, 11};
++	unsigned char val, spr, spre;
++	unsigned int div, div_tmp;
+ 
+ 	div = clamp_val(DIV_ROUND_UP_ULL(loongson_spi->clk_rate, hz), 2, 4096);
+ 	div_tmp = rdiv[fls(div - 1)];
+-	loongson_spi->spcr = (div_tmp & GENMASK(1, 0)) >> 0;
+-	loongson_spi->sper = (div_tmp & GENMASK(3, 2)) >> 2;
++
++	spr = (div_tmp & GENMASK(1, 0)) >> 0;
+ 	val = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_SPCR_REG);
+ 	val &= ~GENMASK(1, 0);
+-	loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_SPCR_REG, val |
+-			       loongson_spi->spcr);
++	loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_SPCR_REG, val | spr);
++
++	spre = (div_tmp & GENMASK(3, 2)) >> 2;
+ 	val = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_SPER_REG);
+ 	val &= ~GENMASK(1, 0);
+-	loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_SPER_REG, val |
+-			       loongson_spi->sper);
++	loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_SPER_REG, val | spre);
++
+ 	loongson_spi->hz = hz;
+ }
+ 
+@@ -107,8 +108,9 @@ static int loongson_spi_setup(struct spi_device *spi)
+ static int loongson_spi_write_read_8bit(struct spi_device *spi, const u8 **tx_buf,
+ 					u8 **rx_buf, unsigned int num)
+ {
+-	int ret;
+ 	struct loongson_spi *loongson_spi = spi_controller_get_devdata(spi->controller);
++	unsigned char status;
++	int ret;
+ 
+ 	if (tx_buf && *tx_buf)
+ 		loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_FIFO_REG, *((*tx_buf)++));
+@@ -116,8 +118,8 @@ static int loongson_spi_write_read_8bit(struct spi_device *spi, const u8 **tx_bu
+ 		loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_FIFO_REG, 0);
+ 
+ 	ret = readb_poll_timeout(loongson_spi->base + LOONGSON_SPI_SPSR_REG,
+-				 loongson_spi->spsr, (loongson_spi->spsr &
+-				 LOONGSON_SPI_SPSR_RFEMPTY) != LOONGSON_SPI_SPSR_RFEMPTY,
++				 status,
++				 !(status & LOONGSON_SPI_SPSR_RFEMPTY),
+ 				 1, USEC_PER_MSEC);
+ 
+ 	if (rx_buf && *rx_buf)
+@@ -148,10 +150,11 @@ static int loongson_spi_write_read(struct spi_device *spi, struct spi_transfer *
+ static int loongson_spi_prepare_message(struct spi_controller *ctlr, struct spi_message *m)
+ {
+ 	struct loongson_spi *loongson_spi = spi_controller_get_devdata(ctlr);
++	unsigned char para;
+ 
+-	loongson_spi->para = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_PARA_REG);
+-	loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_PARA_REG, loongson_spi->para &
+-			       ~LOONGSON_SPI_PARA_MEM_EN);
++	para = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_PARA_REG);
++	loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_PARA_REG,
++			       para & ~LOONGSON_SPI_PARA_MEM_EN);
  
  	return 0;
  }
+@@ -171,8 +174,12 @@ static int loongson_spi_transfer_one(struct spi_controller *ctrl, struct spi_dev
+ static int loongson_spi_unprepare_message(struct spi_controller *ctrl, struct spi_message *m)
+ {
+ 	struct loongson_spi *loongson_spi = spi_controller_get_devdata(ctrl);
++	unsigned char para;
+ 
+-	loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_PARA_REG, loongson_spi->para);
++	/* Restore the hardware SPI Flash read path */
++	para = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_PARA_REG);
++	loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_PARA_REG,
++			       para | LOONGSON_SPI_PARA_MEM_EN);
+ 
+ 	return 0;
+ }
+@@ -231,38 +238,37 @@ EXPORT_SYMBOL_NS_GPL(loongson_spi_init_controller, "SPI_LOONGSON_CORE");
+ 
+ static int loongson_spi_suspend(struct device *dev)
+ {
+-	struct loongson_spi *loongson_spi;
+-	struct spi_controller *controller;
+-
+-	controller = dev_get_drvdata(dev);
+-	spi_controller_suspend(controller);
++	struct spi_controller *controller = dev_get_drvdata(dev);
++	struct loongson_spi *loongson_spi = spi_controller_get_devdata(controller);
++	int ret;
+ 
+-	loongson_spi = spi_controller_get_devdata(controller);
++	ret = spi_controller_suspend(controller);
++	if (ret)
++		return ret;
+ 
+-	loongson_spi->spcr = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_SPCR_REG);
+-	loongson_spi->sper = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_SPER_REG);
+-	loongson_spi->spsr = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_SPSR_REG);
+-	loongson_spi->para = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_PARA_REG);
+-	loongson_spi->sfcs = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_SFCS_REG);
+-	loongson_spi->timi = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_TIMI_REG);
++	loongson_spi->lss.spcr = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_SPCR_REG);
++	loongson_spi->lss.sper = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_SPER_REG);
++	loongson_spi->lss.spsr = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_SPSR_REG);
++	loongson_spi->lss.para = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_PARA_REG);
++	loongson_spi->lss.sfcs = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_SFCS_REG);
++	loongson_spi->lss.timi = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_TIMI_REG);
+ 
+ 	return 0;
+ }
+ 
+ static int loongson_spi_resume(struct device *dev)
+ {
+-	struct loongson_spi *loongson_spi;
+-	struct spi_controller *controller;
++	struct spi_controller *controller = dev_get_drvdata(dev);
++	struct loongson_spi *loongson_spi = spi_controller_get_devdata(controller);
+ 
+-	controller = dev_get_drvdata(dev);
+-	loongson_spi = spi_controller_get_devdata(controller);
++	loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_SPCR_REG, loongson_spi->lss.spcr);
++	loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_SPER_REG, loongson_spi->lss.sper);
++	loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_PARA_REG, loongson_spi->lss.para);
++	loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_SFCS_REG, loongson_spi->lss.sfcs);
++	loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_TIMI_REG, loongson_spi->lss.timi);
+ 
+-	loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_SPCR_REG, loongson_spi->spcr);
+-	loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_SPER_REG, loongson_spi->sper);
+-	loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_SPSR_REG, loongson_spi->spsr);
+-	loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_PARA_REG, loongson_spi->para);
+-	loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_SFCS_REG, loongson_spi->sfcs);
+-	loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_TIMI_REG, loongson_spi->timi);
++	loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_SPSR_REG,
++			       LOONGSON_SPI_SPSR_SPIF | LOONGSON_SPI_SPSR_WCOL);
+ 
+ 	spi_controller_resume(controller);
+ 
+diff --git a/drivers/spi/spi-loongson.h b/drivers/spi/spi-loongson.h
+index 35f95b161842..b2e73fa12420 100644
+--- a/drivers/spi/spi-loongson.h
++++ b/drivers/spi/spi-loongson.h
+@@ -29,19 +29,23 @@
+ struct device;
+ struct spi_controller;
+ 
+-struct loongson_spi {
+-	struct	spi_controller	*controller;
+-	void __iomem		*base;
+-	int			cs_active;
+-	unsigned int		hz;
++struct loongson_spi_suspend_store {
+ 	unsigned char		spcr;
+ 	unsigned char		sper;
+ 	unsigned char		spsr;
+ 	unsigned char		para;
+ 	unsigned char		sfcs;
+ 	unsigned char		timi;
++};
++
++struct loongson_spi {
++	struct	spi_controller	*controller;
++	void __iomem		*base;
++	int			cs_active;
++	unsigned int		hz;
+ 	unsigned int		mode;
+ 	u64			clk_rate;
++	struct loongson_spi_suspend_store lss;
+ };
+ 
+ int loongson_spi_init_controller(struct device *dev, void __iomem *reg);
 -- 
 2.52.0
 
