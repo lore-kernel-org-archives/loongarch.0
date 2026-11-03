@@ -1,64 +1,58 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=113.46.200.216
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793690730;
-	b=rWlkbyKi84v2avzrasLicgO6qCHgvVDxVF/+4tILfZ7LcoEm0iMoMJCJyfjHg7EHB3f4
-	 hJs9WuLQCdIXB3/qrkItePdOzdrSK62N8FYnAnbCfXvCJ1CSk45tTQq/bwsTFSembdfIS
-	 vWK1MPmCEvjHTi2UdflVb0ChiQM2N8e1tsMEaR8SR/Cr61ACR5toUYJGCfVG3bgQRJwQA
-	 zB9uSmMa3Wxd/ITff/RAEclupNC/SfqCZ5gkP4k5PBQKZcPQ6en5eV37f5RTowfsGmLT6
-	 wJ617bDdPiyEQKjnNrxZsbQk+mTIWUPu1dKkmRryCHwmohcQCZ856VyxPV3cKEYrgTg==
+	t=1793697287;
+	b=wS6SoiOsSy7r6Pbd3xrhbOWRZTemCEgvzIQNRco6jtKvxxPIdjetVQz3IzyfYzTFGsmg
+	 hSLOQKBgi03zOaXJnVkKlvyuVFgAeIjc9G8J8I+boUSVBs1YWfZiqeEKtH0gVXkiO6Rt1
+	 Z6CkxN80UKGFZZkh3p1xdnr2ndR62DdLxBw8KfNcMdkJISypny6u41HwmrdRQIRqg8Qo8
+	 GpYggwNtr42ZlNn3nCF41SlvopaI/sL0eSJgC2tQ+GVqB6vUsAiNYxlxm+F6RgVVk6iTy
+	 01a7P1MYFC2kpOhXXmPFwMNuSMcHeIu3u7BNSR/DfkpTmHy5qj1PMMb335vPQtZ7mDA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793690730;
-	h=DMARC-Filter:Received:Received:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-CM-TRANSID:X-CM-SenderInfo:
-	 X-Coremail-Antispam;
-	bh=G1j5rMKnJ6ihVq5uHJzfwFefjl3D9s3JCtiCZjnJzRU=;
-	b=iNiC9rCA1dg91lhvgkr/khmyJ8jODy1xbKsFOG7UGGl1K+kgY8mcXXha7ikPOvTsQzpT
-	 Jv4qzJy4byIvzmNDD2uev4w8bloHU5CjowU/sBluu/lz4B7fEf6QD69I7kMFEYxWXhFF/
-	 BHw/UA0oTdIC8jpDqwP9N8edXo8R/6NKG70bGBvMBEps2u1rNDeu+nyn7kJn3YYbWx2Tz
-	 x9zVHyZjxtr7DW2pA8A2vuIrVNFZM4Fp507jh0z6NHoqzdZE6y9bjF1ElDHAAHlcq71oA
-	 vmipwC1UJsfi/XX8Ws+wfHjERU377hNoTYXCUp/3eB8MehNfC2WdxeyRBJdpFY0DbpQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793697287;
+	h=DMARC-Filter:dkim-signature:Received:Received:Received:Message-ID:
+	 Date:MIME-Version:User-Agent:Subject:To:References:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:X-Originating-IP:
+	 X-ClientProxiedBy;
+	bh=Tn8JJ6e2rb+ujxI+sTGHT+OqEATEBHO8rrC9BgLrjPE=;
+	b=rKxYIvcQHVhpxSh01v8K9hOJKiS1BSVq77P5A5NAhNYTqUSg5xmp0wnl518NdVu58vBY
+	 wqTgg8qB4qauwgWzfDH40G7S1lTvmwboCgXdvLQKvS7YH4cbm+c57lZ4HUlTyA4QsCdoz
+	 MId9R1u+4wr1B4s/N4LzoTEo54MT1mR+Izn6gQrBZD51cew1RH8KJI4MY4aSJB5RRxuYo
+	 Hd+6ahdkkgj/U8FE7LoKP862ARNzPV3YeQyEHqGFl72vTn4N07Z9ZFmKOVFNNzZPCFIfN
+	 aFKvRNNPmz0iqUqA9bHaKiiHVuwnjp9KqLTB1bMHzJ01Rcu5xYCIw/f+w9PS3Pr7I8A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=loongson.cn;
-	spf=pass smtp.mailfrom=loongson.cn;
-	arc=none smtp.remote-ip=114.242.206.163
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E792606A333
-	for <loongarch@lists.linux.dev>; Tue,  3 Nov 2026 07:25:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5E792606A333
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.69.17])
-	by gateway (Coremail) with SMTP id _____8CxQNFmjOlqKt4bAA--.15750S3;
-	Tue, 03 Nov 2026 15:25:26 +0800 (CST)
-Received: from kernelserver (unknown [223.64.69.17])
-	by front1 (Coremail) with SMTP id qMiowJBx5cxijOlq7xUyAA--.10875S4;
-	Tue, 03 Nov 2026 15:25:25 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Yinbo Zhu <zhuyinbo@loongson.cn>,
-	zhanghongchen <zhanghongchen@loongson.cn>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@kernel.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v8 6/7] dt-bindings: thermal: loongson,ls2k-thermal: Add compatible for Loongson-2K0300
-Date: Tue,  3 Nov 2026 15:25:15 +0800
-Message-ID: <42000d97b3e8429b732aa113d6b08c786fe2e339.1793690276.git.zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <cover.1793690276.git.zhoubinbin@loongson.cn>
-References: <cover.1793690276.git.zhoubinbin@loongson.cn>
+	dmarc=pass header.from=huawei.com;
+	spf=pass smtp.mailfrom=huawei.com;
+	dkim=pass header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=ZZLh0PUQ;
+	arc=none smtp.remote-ip=113.46.200.216
+Received: from canpmsgout01.his.huawei.com (canpmsgout01.his.huawei.com [113.46.200.216])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF31606A33E
+	for <loongarch@lists.linux.dev>; Tue,  3 Nov 2026 09:14:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5DF31606A33E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key, unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=ZZLh0PUQ
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=Tn8JJ6e2rb+ujxI+sTGHT+OqEATEBHO8rrC9BgLrjPE=;
+	b=ZZLh0PUQ1ZZiNnfLu8uV6kw465/92VoTefC9sc818KZ47gSrCoOLE4H+gQBVYp/oXtMCHQGBE
+	/xxU76TnM8sqb8j6X269lFFu/zBlJdYIDfc09Pt9kMeIGaLVXeVOU+Fj5wlRPONrYU2LJAaTcTe
+	QH3ZbbAuATkrqCZCdRFZpKs=
+Received: from mail.maildlp.com (unknown [172.19.163.0])
+	by canpmsgout01.his.huawei.com (SkyGuard) with ESMTPS id 4jJjZ432W9z1T4LL;
+	Tue,  3 Nov 2026 17:14:20 +0800 (CST)
+Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
+	by mail.maildlp.com (Postfix) with ESMTPS id A470540537;
+	Tue,  3 Nov 2026 17:14:38 +0800 (CST)
+Received: from [10.67.110.68] (10.67.110.68) by kwepemk200008.china.huawei.com
+ (7.202.194.74) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Tue, 3 Nov
+ 2026 17:14:36 +0800
+Message-ID: <6ed88169-f663-4b72-a8f7-f75f2c7dc080@huawei.com>
+Date: Tue, 3 Nov 2026 17:14:35 +0800
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -68,150 +62,131 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 00/15] kexec: Fix CMA and elf header leaks and rework
+To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
+	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
+	<mpe@ellerman.id.au>, <npiggin@gmail.com>, <chleroy@kernel.org>,
+	<ritesh.list@gmail.com>, <sshegde@linux.ibm.com>, <pjw@kernel.org>,
+	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <alex@ghiti.fr>,
+	<tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <akpm@linux-foundation.org>,
+	<baoquan.he@linux.dev>, <rppt@kernel.org>, <pasha.tatashin@soleen.com>,
+	<pratyush@kernel.org>, <thuth@redhat.com>, <leitao@debian.org>,
+	<yeoreum.yun@arm.com>, <robh@kernel.org>, <sourabhjain@linux.ibm.com>,
+	<kees@kernel.org>, <coiby.xu@gmail.com>, <Yeking@Red54.com>,
+	<tangyouling@kylinos.cn>, <maqianga@uniontech.com>,
+	<zhangtianyang@loongson.cn>, <guodongtai@kylinos.cn>, <blum@kernel.org>,
+	<adityag@linux.ibm.com>, <hui.wang@canonical.com>, <sohammetha01@gmail.com>,
+	<guoren@kernel.org>, <gaohan@iscas.ac.cn>, <kai.huang@intel.com>,
+	<kas@kernel.org>, <vishal.l.verma@intel.com>, <piliu@redhat.com>,
+	<jbouron@amazon.com>, <mclapinski@google.com>, <me@linux.beauty>,
+	<graf@amazon.com>, <bgwin@google.com>, <x86@kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
+	<linux-riscv@lists.infradead.org>, <kexec@lists.infradead.org>
+References: <20261026075201.699550-1-ruanjinjie@huawei.com>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <20261026075201.699550-1-ruanjinjie@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBx5cxijOlq7xUyAA--.10875S4
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAgEACGrpUP0D2AAAs+
-X-Coremail-Antispam: 1Uk129KBj93XoWxCr45Gw43Gr4fWF4rXrW7KFX_yoW5CryDpF
-	sxCw48Gr1kKF17Z398tFy8CanYvF92yasrurs7Wr13trs8K3yaq3y3K3WYvayfur10qFy7
-	uryv9rWUCF1DCrXCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBlb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1a6r1DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E
-	14v26r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6x
-	kI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
-	6rWY6Fy7McIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48Icx
-	kI7VAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCj
-	c4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY
-	6xIIjxv20xvE14v26F1j6w1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcV
-	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26F4j6r4UJwCI42IY6I8E87Iv
-	6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7IU8YLvtUUUUU==
+X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
+ kwepemk200008.china.huawei.com (7.202.194.74)
 
-Add a new compatible string `loongson,ls2k0300-thermal` for the thermal
-sensor found on the Loongson-2K0300 SoC.
 
-The hardware differs from existing SoCs in that it requires a phandle to
-a syscon node that provides the CHIP ID register, used as a compensation
-source in the temperature calculation.
 
-Update the binding to make `loongson,chipid` required for this new
-compatible, and clarify the register region requirements for each
-variant.
+在 2026/10/26 15:51, Jinjie Ruan 写道:
+> ARM64, LoongArch and RISC-V load the elf core header, initrd, DTB
+> and cmdline parameters with almost identical code. This series fixes
+> the bugs in that path. And as Mike suggested, rework the common part
+> into a helper.
+> 
+> Patch 1 stops using the Image text_offset for arm64, which breaks CMA
+> segments in both the load and release paths, and rejects images with
+> a non-zero value.
+> 
+> Patches 2-7 fix the CMA page and elf core header leaks in the retry
+> loops in arm64 and LoongArch, also fix a modified_cmdline leak
+> in LoongArch.
+> 
+> Patches 8-10 pass the kbuf fields to crash_prepare_headers() to
+> simplfy code.
+> 
+> Patch 11 frees the elf core header from the generic post-load cleanup.
+> 
+> Patches 12-15 add kexec_load_other_segments() and convert the three
+> architectures, and arch_kexec_setup_other_segments() builds
+> the architecture specific boot parameters (a DTB or a command line).
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- .../thermal/loongson,ls2k-thermal.yaml        | 73 ++++++++++++++-----
- 1 file changed, 55 insertions(+), 18 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.yaml b/Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.yaml
-index 79e691b08341..d312e27737a2 100644
---- a/Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.yaml
-+++ b/Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.yaml
-@@ -10,13 +10,11 @@ maintainers:
-   - zhanghongchen <zhanghongchen@loongson.cn>
-   - Yinbo Zhu <zhuyinbo@loongson.cn>
- 
--allOf:
--  - $ref: /schemas/thermal/thermal-sensor.yaml#
--
- properties:
-   compatible:
-     oneOf:
-       - enum:
-+          - loongson,ls2k0300-thermal
-           - loongson,ls2k1000-thermal
-           - loongson,ls2k2000-thermal
-       - items:
-@@ -34,28 +32,56 @@ properties:
-   '#thermal-sensor-cells':
-     const: 1
- 
-+  loongson,chipid:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      Phandle to the syscon with the Loongson-2K0300 CHIP ID.
-+
- required:
-   - compatible
-   - reg
-   - interrupts
- 
--if:
--  properties:
--    compatible:
--      contains:
--        enum:
--          - loongson,ls2k2000-thermal
-+allOf:
-+  - $ref: /schemas/thermal/thermal-sensor.yaml#
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: loongson,ls2k0300-thermal
-+    then:
-+      properties:
-+        reg:
-+          items:
-+            - description: Thermal base register region
-+      required:
-+        - loongson,chipid
- 
--then:
--  properties:
--    reg:
--      minItems: 2
--      maxItems: 2
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: loongson,ls2k1000-thermal
-+    then:
-+      properties:
-+        loongson,chipid: false
-+        reg:
-+          items:
-+            - description: Thermal base register region
- 
--else:
--  properties:
--    reg:
--      maxItems: 1
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: loongson,ls2k2000-thermal
-+    then:
-+      properties:
-+        loongson,chipid: false
-+        reg:
-+          items:
-+            - description: Thermal base register region
-+            - description: Thermal data output register region
- 
- unevaluatedProperties: false
- 
-@@ -69,3 +95,14 @@ examples:
-         interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
-         #thermal-sensor-cells = <1>;
-     };
-+
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    thermal-sensor@16001500 {
-+       compatible = "loongson,ls2k0300-thermal";
-+       reg = <0x16001500 0x30>;
-+       interrupt-parent = <&liointc1>;
-+       interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
-+       loongson,chipid = <&chipid>;
-+       #thermal-sensor-cells = <1>;
-+    };
+Hi, everyone,
+
+Any thoughts or suggestions?
+
+> 
+> Tested with kexec_file_load() and kdump on arm64, RISC-V and LoongArch
+> under QEMU, including the non-zero text_offset rejection.
+> 
+> This series is also available at:
+>         https://github.com/ruanjinjie-eng/linux/tree/kexec_cleanup_v7
+> 
+> Changes in v7:
+> - Rework the kexec_file load code to avoid code duplication
+>   as Mike suggested.
+> - Add Acked-by.
+> - Drop the two non-zero text_offset fix patches
+>   and deprecate .text_offset in arm64 as Mike suggested.
+> - Drop the x86-32 fix patch.
+> - Drop the TOCTOU race fix patches.
+> - Link to v6: https://lore.kernel.org/all/20260921090450.807575-1-ruanjinjie@huawei.com/
+> 
+> Previous Versions are as below:
+> - v5: https://lore.kernel.org/all/20260918100442.3841135-1-ruanjinjie@huawei.com/
+> - v4: https://lore.kernel.org/all/20260907125404.922123-1-ruanjinjie@huawei.com/
+> - v3: https://lore.kernel.org/all/20260826092541.3905933-1-ruanjinjie@huawei.com/
+> - v2: https://lore.kernel.org/all/20260729031235.2840255-1-ruanjinjie@huawei.com/
+> - v1: https://lore.kernel.org/all/20260723131242.1537633-1-ruanjinjie@huawei.com/#t
+> 
+> Jinjie Ruan (15):
+>   arm64: kexec_file: Stop using the Image text_offset
+>   kexec: Extract kexec_free_segment_cma() from kimage_free_cma()
+>   arm64: kexec_file: Fix CMA page leaks in segment placement retry loops
+>   arm64: kexec_file: Fix elf_headers memory leak in retry loop
+>   LoongArch: kexec_file: Fix CMA page leaks in segment placement retry
+>     loops
+>   LoongArch: kexec_file: Fix elf_headers memory leak in retry loop
+>   LoongArch: kexec_file: Fix a modified_cmdline leak
+>   arm64: kexec_file: Simplify load_other_segments()
+>   LoongArch: kexec_file: Simplify load_other_segments()
+>   riscv: kexec_file: Simplify load_extra_segments()
+>   kexec: Free the elf core header in kimage_file_post_load_cleanup()
+>   kexec: Add kexec_load_other_segments() helper
+>   arm64: kexec_file: Use kexec_load_other_segments() to simplify code
+>   LoongArch: kexec_file: Use kexec_load_other_segments() to simplify
+>     code
+>   riscv: kexec_file: Use kexec_load_other_segments() to simplify code
+> 
+>  arch/arm64/include/asm/kexec.h             |   5 -
+>  arch/arm64/kernel/kexec_image.c            |  33 +++++--
+>  arch/arm64/kernel/machine_kexec_file.c     | 103 ++++-----------------
+>  arch/loongarch/include/asm/kexec.h         |   4 -
+>  arch/loongarch/kernel/kexec_efi.c          |  20 +++-
+>  arch/loongarch/kernel/kexec_elf.c          |  11 ++-
+>  arch/loongarch/kernel/machine_kexec.c      |   2 +
+>  arch/loongarch/kernel/machine_kexec_file.c |  96 +++----------------
+>  arch/powerpc/kexec/file_load_64.c          |   4 -
+>  arch/riscv/include/asm/kexec.h             |   4 -
+>  arch/riscv/kernel/kexec_elf.c              |  11 ++-
+>  arch/riscv/kernel/kexec_image.c            |  11 ++-
+>  arch/riscv/kernel/machine_kexec_file.c     |  79 ++++------------
+>  arch/x86/kernel/machine_kexec_64.c         |   4 -
+>  include/linux/kexec.h                      |  17 ++++
+>  kernel/kexec_core.c                        |  25 ++---
+>  kernel/kexec_file.c                        |  99 ++++++++++++++++++++
+>  17 files changed, 248 insertions(+), 280 deletions(-)
+> 
+
 -- 
-2.52.0
+Best regards,
+Jinjie
 
