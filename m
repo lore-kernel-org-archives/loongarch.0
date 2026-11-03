@@ -1,38 +1,39 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793689693;
-	b=VEO6hoLx9ma4fB/M56lkxWZ2zzCesRMTiFj0bW5hCX91a0InjrrbudnM6nfoG12Y844o
-	 gMWfQDK+D5WZllBiGCJrj4hqTB0gwimxlgdTrFcryO1t9vpHbuoJzBxmaIrrSEoJseyUp
-	 Cz4F/LfMBsYOsCUDIXHxMWSg84xHxoOV1mYj8e3pYG+9f22Y7GGvwMu+HZlAH4o4+NZUn
-	 WbzndBmONxuBC3mEkzRdI9gfWhNb06YtGJz/71PwbsXtBdrEXRky2nxX159ntm5L3ecXM
-	 AcMk2ZZJHg6mccP8JRApzlER4EYEwfhfpOs7kjapJmZoVae0igf7irnN9N3VfJwxUJQ==
+	t=1793689711;
+	b=pjK1cR+t4t8ltD477fPi4vhl/LwM4VYvU50tz5PrS/IX2I0lOKEHhg+gM0/5KKxLP7Cl
+	 x1eUdTnZBczA52skjGV60InUdPxu/fBld9nORRLBHbsAyz2YmjpkKqyEdd7oXhChVV0ME
+	 wRyWNR+x89cLjkKy6fGt/ek9qpNIveA8X+OYMwSpgwTkXvUBe422bw80fBdYhQAvqkd+x
+	 ECWwTxfBtCUftRyjAqVcd9GhONMt8afYp91JQxFeWjObViTLjy9bywCErIC38B5rkO4ez
+	 tCWHnPXjZPl8xFzXBLz+TVxv1nkieXMbu6Gj8k+s3gugabs6MISyS5B2gidEvbuN2Iw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793689693;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793689711;
 	h=DMARC-Filter:Received:Received:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:MIME-Version:Content-Transfer-Encoding:X-CM-TRANSID:
-	 X-CM-SenderInfo:X-Coremail-Antispam;
-	bh=dFj0a/EKFZ24fIVp+xOvR4+qo4gXBCRZ4uJatICBRCw=;
-	b=XonAvWqol+rleYAtd06wb88ONy8ocWAwoCFMrqFqk+vfKx5grJNcqpLaCw6N9ogl3sC6
-	 jKFAvVCaH6f2hzz5H7qW/gzfAQVrfDpNxZmEC54hjPupGy3p0PILX3NeOnPzaSJxvE01N
-	 aOanUUHggR6LXsWHnKp+4IjjOz7c3wcRvWhnyewEokhGd7bsI9TWB4XJi+DxtGc/fEn6h
-	 viRiRhiEMKMKGQyUdK3Mh639WC7X5N6IfBv3D1Yw5S+8UcCqodRnymxpnhvBae1J5YRBX
-	 RXlOjz60OcrrgHy4h63YJzyi1EW2y82r6oK8wBHoHJwcKSA+Yr9s7TRK2yzkDur39YA==
+	 X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding:X-CM-TRANSID:X-CM-SenderInfo:
+	 X-Coremail-Antispam;
+	bh=uEBYLLthGFpGnCbGDHUtH8idskzdse8n5cw8b5clfso=;
+	b=1Byj7xmCYM2eNzPhe/y1RRytUwHwlLhLU92+VQfAMx2oqbCkE/BsKw8WkxTjQ6SgqpUw
+	 P9eVoKg7q+1QtGaVkJHSWCpN0ffYl1ZU44U8OuDghxqJ05sjOrygSRatosHgKgY+aN0i3
+	 jlbxcN6u62tBUAj/5tKnhLazKcERJ/ZUZuNcdtnJ1eJ+L+6tY87rVRfaggczH2Hr3e5sq
+	 GcfVbKDvtUE0o7YSYgQ4kMv7q7A6zhk530IdmXVgz7l7/Ua4eRifwxg3IkdxxYXnSnWpM
+	 iViE3ziDM1zIM94WukDeW4Uf1ERDBV5HGOhUybLDAW6l/vgrhEjGkf3Vtdc51jtUl/Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=loongson.cn;
 	spf=pass smtp.mailfrom=loongson.cn;
 	arc=none smtp.remote-ip=114.242.206.163
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CDED606A331
-	for <loongarch@lists.linux.dev>; Tue,  3 Nov 2026 07:08:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7CDED606A331
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7D2B606A329
+	for <loongarch@lists.linux.dev>; Tue,  3 Nov 2026 07:08:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A7D2B606A329
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [223.64.69.17])
-	by gateway (Coremail) with SMTP id _____8DxpvBYiOlql9wbAA--.15373S3;
-	Tue, 03 Nov 2026 15:08:08 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxdvBsiOlqu9wbAA--.14771S3;
+	Tue, 03 Nov 2026 15:08:28 +0800 (CST)
 Received: from kernelserver (unknown [223.64.69.17])
-	by front1 (Coremail) with SMTP id qMiowJCxtMxXiOlq4BQyAA--.11182S2;
-	Tue, 03 Nov 2026 15:08:08 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJDxRs1qiOlq6RQyAA--.24713S3;
+	Tue, 03 Nov 2026 15:08:28 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
@@ -43,10 +44,12 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	loongarch@lists.linux.dev,
 	linux-spi@vger.kernel.org,
 	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH 0/8] spi: loongson: Fixes, cleanup and IRQ support
-Date: Tue,  3 Nov 2026 15:07:47 +0800
-Message-ID: <cover.1793689461.git.zhoubinbin@loongson.cn>
+Subject: [PATCH 5/8] spi: loongson: Support ACPI clock-frequency and add error handling
+Date: Tue,  3 Nov 2026 15:08:17 +0800
+Message-ID: <221190e4b561b9ea7aaf7eea98f22e943f4fa121.1793689461.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.52.0
+In-Reply-To: <cover.1793689461.git.zhoubinbin@loongson.cn>
+References: <cover.1793689461.git.zhoubinbin@loongson.cn>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -57,76 +60,95 @@ List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxtMxXiOlq4BQyAA--.11182S2
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAgEACGrpUP0DZQAAsD
-X-Coremail-Antispam: 1Uk129KBj93XoW7uF4kJw48GryxCw1UJw13trc_yoW8ZryUpF
-	W3Gas8CF17JFWxZrnxAa40vFy5Z393GF45KayxJw45ur90y34Yvrn8tFyYyay7JryxJ3Wj
-	vry8K3WxCF4rCrXCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:qMiowJDxRs1qiOlq6RQyAA--.24713S3
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQEACGrpQPoEkwAAsm
+X-Coremail-Antispam: 1Uk129KBj93XoW7Ary7KFyrXw1xuw4fKFyUurX_yoW5Jry8pF
+	4rZa13Kr4UJrs7CrnxJ3ykGF1Yvas3JanrGa97tw18WrnxJw1jqFy3KFy5AF43AFyxXF4U
+	Zry0gFW8CF4DuFcCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1EksDUUUUU==
+	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
+	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
+	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcCD7UUUUU
 
-Hi all:
+On platforms using ACPI (e.g., certain Loongson-2K3000 boards), the clock
+framework might not be available, or clk_get_rate() may return 0. This
+causes the driver to calculate an incorrect clock divider.
 
-This series fixes several long-standing bugs in the Loongson SPI
-controller driver, cleans up the core driver, and adds interrupt-driven
-transfers with a polling fallback.
+Introduce a helper function loongson_spi_get_clk_rate() to resolve the
+input clock rate. It first attempts to read the rate via the clk framework.
+If that fails or returns 0, it falls back to reading the standard
+"clock-frequency" device property (which covers ACPI and DT).
 
-The series is grouped as follows:
+Additionally, add proper error checking to ensure the driver fails to
+probe gracefully if neither method provides a valid clock rate.
 
-  Bug fixes (suitable for stable):
-    1. Fix the SPI mode caching logic so mode bits can be cleared.
-    2. Fix the chip-select idle level for SPI_CS_HIGH devices.
-    3. Separate PM register state from runtime register usage.
-    4. Fix the clock divider calculation with an explicit divider table.
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+---
+ drivers/spi/spi-loongson-core.c | 30 +++++++++++++++++++++++++-----
+ 1 file changed, 25 insertions(+), 5 deletions(-)
 
-  Robustness and cleanup:
-    5. Support the ACPI "clock-frequency" property and validate the
-       input clock rate during probe.
-    6. Move private register definitions and the private controller
-       structure into the core driver.
-    7. Convert the driver to the regmap-mmio API.
-
-  New feature:
-    8. Add interrupt-driven transfers, keeping polling as a fallback
-       when no IRQ is available.
-
-The IRQ path also brings a significant performance improvement. On a
-Loongson-2K3000 board, reading SPI flash with dd improved from about
-50 kB/s in polling mode to about 382 kB/s with IRQ-driven transfers,
-roughly 7.6x faster.
-
-Binbin.
-Thanks.
-
-Binbin Zhou (8):
-  spi: loongson: Fix incorrect SPI mode caching logic
-  spi: loongson: Fix CS idle state for SPI_CS_HIGH devices
-  spi: loongson: Make suspend/resume registers PM-specific
-  spi: loongson: Fix clock divider calculation with explicit table
-  spi: loongson: Support ACPI clock-frequency and add error handling
-  spi: loongson: Move private definitions into the core driver
-  spi: loongson: Convert to regmap API
-  spi: loongson: Add interrupt support for SPI controller
-
- drivers/spi/spi-loongson-core.c | 566 ++++++++++++++++++++++++--------
- drivers/spi/spi-loongson-pci.c  |  25 +-
- drivers/spi/spi-loongson-plat.c |  17 +-
- drivers/spi/spi-loongson.h      |  48 +--
- 4 files changed, 457 insertions(+), 199 deletions(-)
-
-
-base-commit: 8ab8c079820e6134bc0d8c312244644afb66ae9c
+diff --git a/drivers/spi/spi-loongson-core.c b/drivers/spi/spi-loongson-core.c
+index 083157786790..91d7acbe4302 100644
+--- a/drivers/spi/spi-loongson-core.c
++++ b/drivers/spi/spi-loongson-core.c
+@@ -242,11 +242,32 @@ static void loongson_spi_reginit(struct loongson_spi *loongson_spi_dev)
+ 	loongson_spi_write_reg(loongson_spi_dev, LOONGSON_SPI_SPCR_REG, val);
+ }
+ 
++static int loongson_spi_get_clk_rate(struct device *dev, u64 *clk_rate)
++{
++	unsigned long rate;
++	struct clk *clk;
++	u32 freq;
++
++	clk = devm_clk_get_optional(dev, NULL);
++	if (IS_ERR(clk))
++		return PTR_ERR(clk);
++
++	rate = clk_get_rate(clk);
++	if (!rate && !device_property_read_u32(dev, "clock-frequency", &freq))
++		rate = freq;
++
++	if (!rate)
++		return -EINVAL;
++
++	*clk_rate = rate;
++	return 0;
++}
++
+ int loongson_spi_init_controller(struct device *dev, void __iomem *regs)
+ {
+ 	struct spi_controller *controller;
+ 	struct loongson_spi *spi;
+-	struct clk *clk;
++	int ret;
+ 
+ 	controller = devm_spi_alloc_host(dev, sizeof(struct loongson_spi));
+ 	if (controller == NULL)
+@@ -265,11 +286,10 @@ int loongson_spi_init_controller(struct device *dev, void __iomem *regs)
+ 	spi->base = regs;
+ 	spi->controller = controller;
+ 
+-	clk = devm_clk_get_optional(dev, NULL);
+-	if (IS_ERR(clk))
+-		return dev_err_probe(dev, PTR_ERR(clk), "unable to get clock\n");
++	ret = loongson_spi_get_clk_rate(dev, &spi->clk_rate);
++	if (ret)
++		return dev_err_probe(dev, ret, "unable to get clock rate");
+ 
+-	spi->clk_rate = clk_get_rate(clk);
+ 	loongson_spi_reginit(spi);
+ 
+ 	spi->mode = 0;
 -- 
 2.52.0
 
