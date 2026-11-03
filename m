@@ -1,61 +1,79 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.146
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.113
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793699070;
-	b=TIpx6MrhdfKAREMGesZ9H6BPmPkE0Fl+8EfXLAYlh6xMp5JOvCf2mBgWIilRPFOAH+TX
-	 atOqDGO9sADBj3ytvTZV9yqtTsdmSTNrBDmqWvfUamBHRegyiiQ+OSy/cuvUPZlEsfS2k
-	 Mk6Zc5tI8bcVaUT76dmUMSi4zKjpUwQw5Xg8Ppc9xoEf437OFi9+b/osw80Beo+7ckV5b
-	 Nwk7Bpu8QgLsyBDRq5SpBbJO/HpUZExKtKZjAdZQ0fs0E7orbTwRpESJoJ4vhnFEignqV
-	 lPP5qT39Jfh0DcTSxA/3mMK4r/p3ioD4Ll+o42Nk+7sYFQsqv6mrhxBML0l87/21Mog==
+	t=1793701788;
+	b=fKJX7LEYPeIldPUswKiHptUoQuNM92cq7Bm/h16gn8mYUYcmSmOP7iPj9+fXclEuqDHt
+	 ta8GIfAeoi2oci9XCXB0JbV2FsgTo9KjoP88jWiA+HjFcLtCIK0Ftz4Ehe0lAfnGMjV1x
+	 +8LtknsgwPntq18UklPH6ZUL/nBHYZxgiyLiRVGHtltNohSV9si9z2PI4UHBunvvlVdqS
+	 +6LZroR0vxzvKYVYcife3bwXDxpcE6Ls7mT+QrBq/R3h8EuNrX4hCDClA8qg6BJR42rcB
+	 Ra01sj5b+c0tI8C1hl5y3ERHiIm+IJrOT03zWRfpGqxj4C5KQ68fU53cbwSF9co3DLw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793699070;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793701788;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=SYguy4w1YM/41pc0M9vIj3VvmIP455ki3qTLrxyk+EI=;
-	b=tu/HTkP7By+z+P4k1DaiRNr3+E0ahuXDnTT8AJa12pUpL+DJGiyDhEYMUIpfi+G4DGZe
-	 yMhH+lXkImSG2zDMtA7yxDXG2rpCFD0wmrRzlRmw61EP0ySnq+doAS9lKWOgxWeKpt85K
-	 Z1SUINY1KHFAolKoBce5WAlRTR0OzqmNDtmLshxTGKObx2M/7/JVfSw+Z8mHHy2gjQw7u
-	 jF4VzNqt90PvUTKcTgDAM6Da/g4muNXgXc35YOtlJmwPMDm7TrZlRiBkjcARAu7kIzIAx
-	 v1YYOUAOFce2qRaAUYK1wfjZ6wT121Fu2OUp5lYRIe6yruic30zotcztu/6mbvY5wmQ==
+	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=9OSvScGRwha8A7Tb2tHR3R5F02sXRmMamVkr8+PRTWs=;
+	b=25BtNcdUqea7U7K0RMv2W+jLo+2FgI26rGePlaWcnhpNjg/S3hqJmMN/CWfJGYPaCFfH
+	 Hl5d4MAtE9Z3J5ObbETbamCfzsmBnFd4IqdDMSeQ3hdRdi+FOsSP8Tg5Eh/3UaBqL7djh
+	 MKruMVVWUg6qFJni3vjJ6vLLaRF78kvcLv6uo8o3B4Tnyo7lYcHwgjR1lZwfWWdluspgk
+	 N9uTYgjDgewHLP68fP0T6VFy1mgKs91ZRTdEl/P5jOPQxhqm2Nt5+c7CE8OmOgYWSt315
+	 rR1QBSFDixe+8H3b+SHzaAQvRDFVl56UtX2OCTG0KnLfW9Op/+C7lLU568j5Z9G5DGQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=ieFLPrAQ;
-	arc=none smtp.remote-ip=95.215.58.146
-Received: from mta1.migadu.com (out-146.mta1.migadu.com [95.215.58.146])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=QQ1qfgqU;
+	arc=none smtp.remote-ip=95.215.58.113
+Received: from mta1.migadu.com (out-113.mta1.migadu.com [95.215.58.113])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE85F606A335
-	for <loongarch@lists.linux.dev>; Tue,  3 Nov 2026 09:44:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DE85F606A335
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1A3A606B12E
+	for <loongarch@lists.linux.dev>; Tue,  3 Nov 2026 10:29:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A1A3A606B12E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=ieFLPrAQ
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=QQ1qfgqU
 X-Envelope-To: loongarch@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=ytP1FYc4mLUgzvNlPS6MBB0Sb8vEqTbsbrXFac19CKg=;
+DKIM-Signature: a=rsa-sha256; bh=9OSvScGRwha8A7Tb2tHR3R5F02sXRmMamVkr8+PRTWs=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793699061; v=1; x=1794303861;
- b=ieFLPrAQNPYCccev6UXHzMnB/eE9I4RjivSB7cPgBCgLf1Z8p1TfRXG7rfFpnXmyGRMvcsl1
- wsGBySrF6FiAcQiv89dASwBemAj0bwqYL7FYUJTfTHDnWlsdVoKgpiWfJybTAW6RWw5nyL+peva
- vSSJ4ykA1PniS3QBWk7KaNO4=
+ t=1793701785; v=1; x=1794306585;
+ b=QQ1qfgqUbGhGBerxeLuJhyNk7bgr29IpB6mdUWq7I5GBjwVxZyy1/52gPaY/7kXtM0GXHLCx
+ 4RpcT2uiJ1ar4EFiI4YDe8tiB1L5f3BVfM1Orm01rf7eF0WUMSfamObsQPcMPJ6r1YAuC3tWkmp
+ 0vu1Vhi7wZbuoThW/OWjzw8w=
 X-Envelope-To: loongarch@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 4fced7d92f6bec66;
-	Tue, 03 Nov 2026 09:44:21 +0000
-X-Mizu-Trace-ID: 4fced7d92f6bec66
+Received: by smtp.migadu.com with ESMTPS id 129eb9b76a2afe71;
+	Tue, 03 Nov 2026 10:29:45 +0000
+X-Mizu-Trace-ID: 129eb9b76a2afe71
 X-Migadu-Flow: FLOW_OUT
-Date: Tue, 3 Nov 2026 17:44:13 +0800
-From: Hao Li <hao.li@linux.dev>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Vlastimil Babka <vbabka@kernel.org>, Harry Yoo <harry@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Christoph Lameter <cl@gentwo.org>, 
-	David Rientjes <rientjes@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, linux-mm@kvack.org, 
-	loongarch@lists.linux.dev, bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] mm/slub: Genericize x86-specific cmpxchg16b comment
-Message-ID: <aumssHCOA4D_BFm1@fedora>
-References: <20261102082730.12430-1-yangtiezhu@loongson.cn>
+From: George Guo <dongtai.guo@linux.dev>
+To: ardb@kernel.org,
+	pratyush@kernel.org
+Cc: rppt@kernel.org,
+	pasha.tatashin@soleen.com,
+	chenhuacai@kernel.org,
+	shuah@kernel.org,
+	ilias.apalodimas@linaro.org,
+	akpm@linux-foundation.org,
+	baoquan.he@linux.dev,
+	ruirui.yang@linux.dev,
+	guodongtai@kylinos.cn,
+	kernel@xen0n.name,
+	graf@amazon.com,
+	liukexin@kylinos.cn,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	linux-efi@vger.kernel.org
+Subject: Re: [PATCH v6 1/8] efi: Pass KHO state to the next kernel in a configuration table
+Date: Tue,  3 Nov 2026 19:29:41 +0900
+Message-ID: <20261103102941.11087-1-dongtai.guo@linux.dev>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <2382a0ee-cb6d-4572-be6e-ce3cf4d006e5@app.fastmail.com>
+References: <2382a0ee-cb6d-4572-be6e-ce3cf4d006e5@app.fastmail.com>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -65,32 +83,25 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261102082730.12430-1-yangtiezhu@loongson.cn>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Nov 02, 2026 at 04:27:30PM +0800, Tiezhu Yang wrote:
-> The kmalloc_nolock() infrastructure relies on slab caches with double-word
-> atomic cmpxchg capabilities (__CMPXCHG_DOUBLE). The current inline comment
-> in __kmalloc_nolock_noprof() uses 'cmpxchg16b' as the prerequisite hardware
-> capability.
-> 
-> However, "cmpxchg16b" is an x86-specific instruction mnemonic (CX16). On
-> modern architectures supported by the Linux kernel, this 128-bit atomic
-> primitive is satisfied by different hardware implementations:
->   - arm64: satisfies it via LSE atomics ('casp' instruction)
->   - s390: satisfies it via native 'cdsg' instruction
->   - riscv: satisfies it via ZACAS extension ('amocas.q' instruction)
->   - loongarch: satisfies it via SCQ extension (using an 'll.d'/'sc.q' loop)
-> 
-> Update the comment to refer to "128-bit atomic cmpxchg" to accurately
-> describe the cross-platform hardware invariant needed by the lockless
-> allocator, and to avoid misleading developers of non-x86 archs.
+Hi Ard, Pratyush,
 
-Personally, I feel the commit message is a bit lengthy for a simple
-comment-only patch. It might be better to keep it concise and just directly
-state the purpose of the change.
+On Thu, Oct 29 2026, Ard Biesheuvel wrote:
+> Can we handle this as an arch table then, and handle everything in
+> the LoongArch arch code?
 
--- 
+Ard, LoongArch is currently the only user, so I understand the suggestion
+to keep the handling in the architecture code.
+
+My preference is to keep the table definition and handling common, given
+the potential for x86 to use it as Pratyush described in his reply, to
+replace setup_data once x86 gains EFI support. The table contains no
+LoongArch-specific fields, and only the LoongArch stub installs it. On
+systems without the table, the common code does nothing.
+
+Would that be acceptable, or would you prefer to keep the handling in
+LoongArch until a second architecture adopts it?
+
 Thanks,
-Hao
+George
