@@ -1,39 +1,39 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793689711;
-	b=pjK1cR+t4t8ltD477fPi4vhl/LwM4VYvU50tz5PrS/IX2I0lOKEHhg+gM0/5KKxLP7Cl
-	 x1eUdTnZBczA52skjGV60InUdPxu/fBld9nORRLBHbsAyz2YmjpkKqyEdd7oXhChVV0ME
-	 wRyWNR+x89cLjkKy6fGt/ek9qpNIveA8X+OYMwSpgwTkXvUBe422bw80fBdYhQAvqkd+x
-	 ECWwTxfBtCUftRyjAqVcd9GhONMt8afYp91JQxFeWjObViTLjy9bywCErIC38B5rkO4ez
-	 tCWHnPXjZPl8xFzXBLz+TVxv1nkieXMbu6Gj8k+s3gugabs6MISyS5B2gidEvbuN2Iw==
+	t=1793689712;
+	b=wYO6gchnHBwg8+oam3zMVEJOXM9dkrHRE1mWEyojlSBR0RNBlK0wb1N+XtRpnWvWxYPP
+	 +FUj0QXD2pG0h9sNBTlryovCJx0SQzPAiI+QVpsf2iw9+2cGV/ieZL6o1frQQ/9YHrbAP
+	 ssW7hhN7Ut1afGxYyAOEKRv9qnJxGmgqbJJnjlUFDeyrJJJo7Qf/VmiFT/kexHKrHA45I
+	 VNPxnY1KTxIucjteaSTeBLs6pRr/JtklBqnTbyLKesUTXd2Osh01YVMwU5zO2BCiAt8z8
+	 /nkIgHtTzIgTSlFN3EooHG2u5LdGc+zHRv4WaY83g4jtkiHf9PrfqIauIv8AycxAOHw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793689711;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793689712;
 	h=DMARC-Filter:Received:Received:From:To:Cc:Subject:Date:Message-ID:
 	 X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding:X-CM-TRANSID:X-CM-SenderInfo:
 	 X-Coremail-Antispam;
-	bh=uEBYLLthGFpGnCbGDHUtH8idskzdse8n5cw8b5clfso=;
-	b=1Byj7xmCYM2eNzPhe/y1RRytUwHwlLhLU92+VQfAMx2oqbCkE/BsKw8WkxTjQ6SgqpUw
-	 P9eVoKg7q+1QtGaVkJHSWCpN0ffYl1ZU44U8OuDghxqJ05sjOrygSRatosHgKgY+aN0i3
-	 jlbxcN6u62tBUAj/5tKnhLazKcERJ/ZUZuNcdtnJ1eJ+L+6tY87rVRfaggczH2Hr3e5sq
-	 GcfVbKDvtUE0o7YSYgQ4kMv7q7A6zhk530IdmXVgz7l7/Ua4eRifwxg3IkdxxYXnSnWpM
-	 iViE3ziDM1zIM94WukDeW4Uf1ERDBV5HGOhUybLDAW6l/vgrhEjGkf3Vtdc51jtUl/Q==
+	bh=Wrl7zcHEUWl/wBFu8hjRicNPiiY2gJ6+Yx5JI+WHfRE=;
+	b=UmKQaju6chxpvpTwz7ra+6vLXEf9LeVv7gKg0ds0sWNAWvqcND7GOJh+EmV6bS/j08Gz
+	 aY/4ioANoVIrYYl5+r6tsMxc8tNzKVNNc4jUsHV5LwUc9zwGRmKI+imyA4qPQoixTTkDr
+	 CRZ4YvUK8DRh8o21TCUd/6KNoNIi1TktsTw893gGMhHhKemmBbf/A/IcmY4wtfYvsi1Mj
+	 1ovttmKarkitVdoxLeaYngikD8SpnoNM8BT7EFuDMvoQKCbJDcQkbelMwTCwjj9Ombu7B
+	 HSaGUCQDR8l9tkSk1psBA83tI1I2AmFhM+VI3hDZi1bKBt0efUaDFTWlqMiQZfLA4ZA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=loongson.cn;
 	spf=pass smtp.mailfrom=loongson.cn;
 	arc=none smtp.remote-ip=114.242.206.163
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7D2B606A329
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23E46606A32E
 	for <loongarch@lists.linux.dev>; Tue,  3 Nov 2026 07:08:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A7D2B606A329
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 23E46606A32E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [223.64.69.17])
-	by gateway (Coremail) with SMTP id _____8AxdvBsiOlqu9wbAA--.14771S3;
-	Tue, 03 Nov 2026 15:08:28 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Bx79JtiOlqwNwbAA--.15709S3;
+	Tue, 03 Nov 2026 15:08:29 +0800 (CST)
 Received: from kernelserver (unknown [223.64.69.17])
-	by front1 (Coremail) with SMTP id qMiowJDxRs1qiOlq6RQyAA--.24713S3;
-	Tue, 03 Nov 2026 15:08:28 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJDxRs1qiOlq6RQyAA--.24713S4;
+	Tue, 03 Nov 2026 15:08:29 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
@@ -44,9 +44,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	loongarch@lists.linux.dev,
 	linux-spi@vger.kernel.org,
 	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH 5/8] spi: loongson: Support ACPI clock-frequency and add error handling
-Date: Tue,  3 Nov 2026 15:08:17 +0800
-Message-ID: <221190e4b561b9ea7aaf7eea98f22e943f4fa121.1793689461.git.zhoubinbin@loongson.cn>
+Subject: [PATCH 6/8] spi: loongson: Move private definitions into the core driver
+Date: Tue,  3 Nov 2026 15:08:18 +0800
+Message-ID: <17c0bde3ddc14f6f34eea98558f535d772e79623.1793689461.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <cover.1793689461.git.zhoubinbin@loongson.cn>
 References: <cover.1793689461.git.zhoubinbin@loongson.cn>
@@ -60,95 +60,668 @@ List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxRs1qiOlq6RQyAA--.24713S3
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQEACGrpQPoEkwAAsm
-X-Coremail-Antispam: 1Uk129KBj93XoW7Ary7KFyrXw1xuw4fKFyUurX_yoW5Jry8pF
-	4rZa13Kr4UJrs7CrnxJ3ykGF1Yvas3JanrGa97tw18WrnxJw1jqFy3KFy5AF43AFyxXF4U
-	Zry0gFW8CF4DuFcCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcCD7UUUUU
+X-CM-TRANSID:qMiowJDxRs1qiOlq6RQyAA--.24713S4
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAgEACGrpUP0DbgAAsI
+X-Coremail-Antispam: 1Uk129KBj9fXoWfArWxXr4kGF1fKrWkAFW5Arc_yoW8KFyDGo
+	WxXa4kXr48uw18WFyjqr1rtr47X3W5ur4qyrn3Ca4kJ3yYyFyDJry3Xw47uF18Z3W3JFW3
+	ZFyfKFW8Kr4IgFWDl-sFpf9Il3svdjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8wcxFpf
+	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
+	UjIYCTnIWjp_UUUY87kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
+	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
+	Y2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14
+	v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
+	wI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
+	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWrXVW3AwAv7VC2z280
+	aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28Icx
+	kI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2Iq
+	xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42
+	IY6xIIjxv20xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY
+	6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aV
+	CY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0lPfDUUUUU==
 
-On platforms using ACPI (e.g., certain Loongson-2K3000 boards), the clock
-framework might not be available, or clk_get_rate() may return 0. This
-causes the driver to calculate an incorrect clock divider.
+The Loongson SPI register definitions and the private controller
+structure are only used by the core driver.  Move them from the shared
+header into spi-loongson-core.c and rename the structure to
+loongson_spi_priv to make it clear that it is driver-private data.
 
-Introduce a helper function loongson_spi_get_clk_rate() to resolve the
-input clock rate. It first attempts to read the rate via the clk framework.
-If that fails or returns 0, it falls back to reading the standard
-"clock-frequency" device property (which covers ACPI and DT).
+The shared header now only contains the exported init function and the
+PM ops declaration, which reduces the surface exposed to the PCI and
+platform glue drivers.
 
-Additionally, add proper error checking to ensure the driver fails to
-probe gracefully if neither method provides a valid clock rate.
+While at it, update the copyright years and add MODULE_AUTHOR() entries
+to the PCI and platform drivers.
 
 Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 ---
- drivers/spi/spi-loongson-core.c | 30 +++++++++++++++++++++++++-----
- 1 file changed, 25 insertions(+), 5 deletions(-)
+ drivers/spi/spi-loongson-core.c | 252 +++++++++++++++++++-------------
+ drivers/spi/spi-loongson-pci.c  |  19 +--
+ drivers/spi/spi-loongson-plat.c |  11 +-
+ drivers/spi/spi-loongson.h      |  53 +------
+ 4 files changed, 173 insertions(+), 162 deletions(-)
 
 diff --git a/drivers/spi/spi-loongson-core.c b/drivers/spi/spi-loongson-core.c
-index 083157786790..91d7acbe4302 100644
+index 91d7acbe4302..082248f29ae7 100644
 --- a/drivers/spi/spi-loongson-core.c
 +++ b/drivers/spi/spi-loongson-core.c
-@@ -242,11 +242,32 @@ static void loongson_spi_reginit(struct loongson_spi *loongson_spi_dev)
- 	loongson_spi_write_reg(loongson_spi_dev, LOONGSON_SPI_SPCR_REG, val);
+@@ -1,21 +1,71 @@
+ // SPDX-License-Identifier: GPL-2.0+
+-// Loongson SPI Support
+-// Copyright (C) 2023 Loongson Technology Corporation Limited
++//
++// Loongson SPI Controller driver
++//
++// Copyright (C) 2023-2026 Loongson Technology Corporation Limited
+ 
+ #include <linux/clk.h>
+-#include <linux/delay.h>
+ #include <linux/err.h>
+ #include <linux/export.h>
+ #include <linux/init.h>
+-#include <linux/interrupt.h>
+ #include <linux/io.h>
+ #include <linux/iopoll.h>
+-#include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/spi/spi.h>
+ 
+ #include "spi-loongson.h"
+ 
++/* SPI controller register offsets */
++#define LOONGSON_SPI_SPCR_REG		0x00
++#define LOONGSON_SPI_SPSR_REG		0x01
++#define LOONGSON_SPI_FIFO_REG		0x02
++#define LOONGSON_SPI_SPER_REG		0x03
++#define LOONGSON_SPI_PARA_REG		0x04
++#define LOONGSON_SPI_SFCS_REG		0x05
++#define LOONGSON_SPI_TIMI_REG		0x06
++
++/* SPCR bits */
++#define LOONGSON_SPI_SPCR_SPR		GENMASK(1, 0)
++#define LOONGSON_SPI_SPCR_CPHA		BIT(2)
++#define LOONGSON_SPI_SPCR_CPOL		BIT(3)
++#define LOONGSON_SPI_SPCR_SPE		BIT(6)
++#define LOONGSON_SPI_SPCR_SPIE		BIT(7)
++
++/* SPSR bits */
++#define LOONGSON_SPI_SPSR_RFEMPTY	BIT(0)
++#define LOONGSON_SPI_SPSR_RFFULL	BIT(1)
++#define LOONGSON_SPI_SPSR_WFEMPTY	BIT(2)
++#define LOONGSON_SPI_SPSR_WFFULL	BIT(3)
++#define LOONGSON_SPI_SPSR_WCOL		BIT(6)
++#define LOONGSON_SPI_SPSR_SPIF		BIT(7)
++
++/* SPER bits */
++#define LOONGSON_SPI_SPER_SPRE		GENMASK(1, 0)
++
++/* SFC_PARAM bits */
++#define LOONGSON_SPI_PARA_MEM_EN	BIT(0)
++
++#define LOONGSON_SPI_DIV_MIN		2
++#define LOONGSON_SPI_DIV_MAX		4096
++
++struct loongson_spi_suspend_store {
++	unsigned char		spcr;
++	unsigned char		sper;
++	unsigned char		spsr;
++	unsigned char		para;
++	unsigned char		sfcs;
++	unsigned char		timi;
++};
++
++struct loongson_spi_priv {
++	struct spi_controller	*controller;
++	void __iomem		*base;
++	unsigned int		hz;
++	unsigned int		mode;
++	u64			clk_rate;
++	struct loongson_spi_suspend_store lss;
++};
++
+ static const struct {
+ 	unsigned int	div;
+ 	unsigned char	spr;
+@@ -35,38 +85,38 @@ static const struct {
+ 	{4096, 3, 2 },
+ };
+ 
+-static inline void loongson_spi_write_reg(struct loongson_spi *spi, unsigned char reg,
++static inline void loongson_spi_write_reg(struct loongson_spi_priv *priv, unsigned char reg,
+ 					  unsigned char data)
+ {
+-	writeb(data, spi->base + reg);
++	writeb(data, priv->base + reg);
  }
  
-+static int loongson_spi_get_clk_rate(struct device *dev, u64 *clk_rate)
-+{
-+	unsigned long rate;
-+	struct clk *clk;
-+	u32 freq;
-+
-+	clk = devm_clk_get_optional(dev, NULL);
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	rate = clk_get_rate(clk);
-+	if (!rate && !device_property_read_u32(dev, "clock-frequency", &freq))
-+		rate = freq;
-+
-+	if (!rate)
-+		return -EINVAL;
-+
-+	*clk_rate = rate;
-+	return 0;
-+}
-+
- int loongson_spi_init_controller(struct device *dev, void __iomem *regs)
+-static inline char loongson_spi_read_reg(struct loongson_spi *spi, unsigned char reg)
++static inline char loongson_spi_read_reg(struct loongson_spi_priv *priv, unsigned char reg)
  {
- 	struct spi_controller *controller;
- 	struct loongson_spi *spi;
--	struct clk *clk;
+-	return readb(spi->base + reg);
++	return readb(priv->base + reg);
+ }
+ 
+ static void loongson_spi_set_cs(struct spi_device *spi, bool en)
+ {
+-	int cs;
++	struct loongson_spi_priv *priv = spi_controller_get_devdata(spi->controller);
+ 	unsigned char mask = (BIT(4) | BIT(0)) << spi_get_chipselect(spi, 0);
+-	unsigned char val = en ? mask :  (BIT(0) << spi_get_chipselect(spi, 0));
+-	struct loongson_spi *loongson_spi = spi_controller_get_devdata(spi->controller);
++	unsigned char val = en ? mask : (BIT(0) << spi_get_chipselect(spi, 0));
++	int cs;
+ 
+-	cs = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_SFCS_REG) & ~mask;
+-	loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_SFCS_REG, val | cs);
++	cs = loongson_spi_read_reg(priv, LOONGSON_SPI_SFCS_REG) & ~mask;
++	loongson_spi_write_reg(priv, LOONGSON_SPI_SFCS_REG, val | cs);
+ }
+ 
+-static int loongson_spi_set_clk(struct loongson_spi *loongson_spi, unsigned int hz)
++static int loongson_spi_set_clk(struct loongson_spi_priv *priv, unsigned int hz)
+ {
+ 	unsigned long div;
+ 	unsigned char val;
+ 	unsigned int i;
+ 
+-	if (!hz || !loongson_spi->clk_rate)
++	if (!hz || !priv->clk_rate)
+ 		return -EINVAL;
+ 
+-	div = DIV_ROUND_UP_ULL(loongson_spi->clk_rate, hz);
++	div = DIV_ROUND_UP_ULL(priv->clk_rate, hz);
+ 	if (div < LOONGSON_SPI_DIV_MIN)
+ 		div = LOONGSON_SPI_DIV_MIN;
+ 
+@@ -78,106 +128,106 @@ static int loongson_spi_set_clk(struct loongson_spi *loongson_spi, unsigned int
+ 	if (i == ARRAY_SIZE(loongson_spi_div_table))
+ 		return -EINVAL;
+ 
+-	val = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_SPCR_REG);
++	val = loongson_spi_read_reg(priv, LOONGSON_SPI_SPCR_REG);
+ 	val &= ~GENMASK(1, 0);
+-	loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_SPCR_REG,
++	loongson_spi_write_reg(priv, LOONGSON_SPI_SPCR_REG,
+ 			       val | loongson_spi_div_table[i].spr);
+ 
+-	val = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_SPER_REG);
++	val = loongson_spi_read_reg(priv, LOONGSON_SPI_SPER_REG);
+ 	val &= ~GENMASK(1, 0);
+-	loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_SPER_REG,
++	loongson_spi_write_reg(priv, LOONGSON_SPI_SPER_REG,
+ 			       val | loongson_spi_div_table[i].spre);
+ 
+-	loongson_spi->hz = hz;
++	priv->hz = hz;
+ 
+ 	return 0;
+ }
+ 
+-static void loongson_spi_set_mode(struct loongson_spi *loongson_spi,
++static void loongson_spi_set_mode(struct loongson_spi_priv *priv,
+ 				  struct spi_device *spi)
+ {
+ 	unsigned char val;
+ 
+-	val = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_SPCR_REG);
++	val = loongson_spi_read_reg(priv, LOONGSON_SPI_SPCR_REG);
+ 	val &= ~(LOONGSON_SPI_SPCR_CPOL | LOONGSON_SPI_SPCR_CPHA);
++
+ 	if (spi->mode & SPI_CPOL)
+ 		val |= LOONGSON_SPI_SPCR_CPOL;
++
+ 	if (spi->mode & SPI_CPHA)
+ 		val |= LOONGSON_SPI_SPCR_CPHA;
+ 
+-	loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_SPCR_REG, val);
+-	loongson_spi->mode = spi->mode;
++	loongson_spi_write_reg(priv, LOONGSON_SPI_SPCR_REG, val);
++	priv->mode = spi->mode;
+ }
+ 
+-static int loongson_spi_update_state(struct loongson_spi *loongson_spi,
+-				struct spi_device *spi, struct spi_transfer *t)
++static int loongson_spi_update_state(struct loongson_spi_priv *priv, struct spi_device *spi,
++				     struct spi_transfer *t)
+ {
+ 	int ret;
+ 
+-	if (t && loongson_spi->hz != t->speed_hz) {
+-		ret = loongson_spi_set_clk(loongson_spi, t->speed_hz);
++	if (t && priv->hz != t->speed_hz) {
++		ret = loongson_spi_set_clk(priv, t->speed_hz);
+ 		if (ret)
+ 			return ret;
+ 	}
+ 
+-	if ((spi->mode ^ loongson_spi->mode) & SPI_MODE_X_MASK)
+-		loongson_spi_set_mode(loongson_spi, spi);
++	if ((spi->mode ^ priv->mode) & SPI_MODE_X_MASK)
++		loongson_spi_set_mode(priv, spi);
+ 
+ 	return 0;
+ }
+ 
+ static int loongson_spi_setup(struct spi_device *spi)
+ {
+-	struct loongson_spi *loongson_spi;
++	struct loongson_spi_priv *priv = spi_controller_get_devdata(spi->controller);
+ 
+-	loongson_spi = spi_controller_get_devdata(spi->controller);
+ 	if (spi->bits_per_word % 8)
+ 		return -EINVAL;
+ 
+ 	if (spi_get_chipselect(spi, 0) >= spi->controller->num_chipselect)
+ 		return -EINVAL;
+ 
+-	loongson_spi->hz = 0;
++	priv->hz = 0;
+ 	loongson_spi_set_cs(spi, !(spi->mode & SPI_CS_HIGH));
+ 
+ 	return 0;
+ }
+ 
+ static int loongson_spi_write_read_8bit(struct spi_device *spi, const u8 **tx_buf,
+-					u8 **rx_buf, unsigned int num)
++					u8 **rx_buf)
+ {
+-	struct loongson_spi *loongson_spi = spi_controller_get_devdata(spi->controller);
++	struct loongson_spi_priv *priv = spi_controller_get_devdata(spi->controller);
+ 	unsigned char status;
+ 	int ret;
+ 
+ 	if (tx_buf && *tx_buf)
+-		loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_FIFO_REG, *((*tx_buf)++));
++		loongson_spi_write_reg(priv, LOONGSON_SPI_FIFO_REG, *((*tx_buf)++));
+ 	else
+-		loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_FIFO_REG, 0);
++		loongson_spi_write_reg(priv, LOONGSON_SPI_FIFO_REG, 0);
+ 
+-	ret = readb_poll_timeout(loongson_spi->base + LOONGSON_SPI_SPSR_REG,
++	ret = readb_poll_timeout(priv->base + LOONGSON_SPI_SPSR_REG,
+ 				 status,
+ 				 !(status & LOONGSON_SPI_SPSR_RFEMPTY),
+ 				 1, USEC_PER_MSEC);
+ 
+ 	if (rx_buf && *rx_buf)
+-		*(*rx_buf)++ = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_FIFO_REG);
++		*(*rx_buf)++ = loongson_spi_read_reg(priv, LOONGSON_SPI_FIFO_REG);
+ 	else
+-		loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_FIFO_REG);
++		loongson_spi_read_reg(priv, LOONGSON_SPI_FIFO_REG);
+ 
+ 	return ret;
+ }
+ 
+ static int loongson_spi_write_read(struct spi_device *spi, struct spi_transfer *xfer)
+ {
+-	int ret;
+-	unsigned int count;
++	unsigned int count = xfer->len;
+ 	const u8 *tx = xfer->tx_buf;
+ 	u8 *rx = xfer->rx_buf;
 +	int ret;
  
- 	controller = devm_spi_alloc_host(dev, sizeof(struct loongson_spi));
- 	if (controller == NULL)
-@@ -265,11 +286,10 @@ int loongson_spi_init_controller(struct device *dev, void __iomem *regs)
- 	spi->base = regs;
- 	spi->controller = controller;
+-	count = xfer->len;
+ 	do {
+-		ret = loongson_spi_write_read_8bit(spi, &tx, &rx, count);
++		ret = loongson_spi_write_read_8bit(spi, &tx, &rx);
+ 		if (ret)
+ 			break;
+ 	} while (--count);
+@@ -185,25 +235,25 @@ static int loongson_spi_write_read(struct spi_device *spi, struct spi_transfer *
+ 	return ret;
+ }
  
--	clk = devm_clk_get_optional(dev, NULL);
--	if (IS_ERR(clk))
--		return dev_err_probe(dev, PTR_ERR(clk), "unable to get clock\n");
-+	ret = loongson_spi_get_clk_rate(dev, &spi->clk_rate);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "unable to get clock rate");
+-static int loongson_spi_prepare_message(struct spi_controller *ctlr, struct spi_message *m)
++static int loongson_spi_prepare_message(struct spi_controller *host, struct spi_message *m)
+ {
+-	struct loongson_spi *loongson_spi = spi_controller_get_devdata(ctlr);
++	struct loongson_spi_priv *priv = spi_controller_get_devdata(host);
+ 	unsigned char para;
  
--	spi->clk_rate = clk_get_rate(clk);
- 	loongson_spi_reginit(spi);
+-	para = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_PARA_REG);
+-	loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_PARA_REG,
++	para = loongson_spi_read_reg(priv, LOONGSON_SPI_PARA_REG);
++	loongson_spi_write_reg(priv, LOONGSON_SPI_PARA_REG,
+ 			       para & ~LOONGSON_SPI_PARA_MEM_EN);
  
- 	spi->mode = 0;
+ 	return 0;
+ }
+ 
+-static int loongson_spi_transfer_one(struct spi_controller *ctrl, struct spi_device *spi,
++static int loongson_spi_transfer_one(struct spi_controller *host, struct spi_device *spi,
+ 				     struct spi_transfer *xfer)
+ {
+-	struct loongson_spi *loongson_spi = spi_controller_get_devdata(spi->controller);
++	struct loongson_spi_priv *priv = spi_controller_get_devdata(spi->controller);
+ 	int ret;
+ 
+-	ret = loongson_spi_update_state(loongson_spi, spi, xfer);
++	ret = loongson_spi_update_state(priv, spi, xfer);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -213,33 +263,33 @@ static int loongson_spi_transfer_one(struct spi_controller *ctrl, struct spi_dev
+ 	return 0;
+ }
+ 
+-static int loongson_spi_unprepare_message(struct spi_controller *ctrl, struct spi_message *m)
++static int loongson_spi_unprepare_message(struct spi_controller *host, struct spi_message *m)
+ {
+-	struct loongson_spi *loongson_spi = spi_controller_get_devdata(ctrl);
++	struct loongson_spi_priv *priv = spi_controller_get_devdata(host);
+ 	unsigned char para;
+ 
+ 	/* Restore the hardware SPI Flash read path */
+-	para = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_PARA_REG);
+-	loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_PARA_REG,
++	para = loongson_spi_read_reg(priv, LOONGSON_SPI_PARA_REG);
++	loongson_spi_write_reg(priv, LOONGSON_SPI_PARA_REG,
+ 			       para | LOONGSON_SPI_PARA_MEM_EN);
+ 
+ 	return 0;
+ }
+ 
+-static void loongson_spi_reginit(struct loongson_spi *loongson_spi_dev)
++static void loongson_spi_reginit(struct loongson_spi_priv *priv)
+ {
+ 	unsigned char val;
+ 
+-	val = loongson_spi_read_reg(loongson_spi_dev, LOONGSON_SPI_SPCR_REG);
++	val = loongson_spi_read_reg(priv, LOONGSON_SPI_SPCR_REG);
+ 	val &= ~LOONGSON_SPI_SPCR_SPE;
+-	loongson_spi_write_reg(loongson_spi_dev, LOONGSON_SPI_SPCR_REG, val);
++	loongson_spi_write_reg(priv, LOONGSON_SPI_SPCR_REG, val);
+ 
+-	loongson_spi_write_reg(loongson_spi_dev, LOONGSON_SPI_SPSR_REG,
++	loongson_spi_write_reg(priv, LOONGSON_SPI_SPSR_REG,
+ 			       (LOONGSON_SPI_SPSR_SPIF | LOONGSON_SPI_SPSR_WCOL));
+ 
+-	val = loongson_spi_read_reg(loongson_spi_dev, LOONGSON_SPI_SPCR_REG);
++	val = loongson_spi_read_reg(priv, LOONGSON_SPI_SPCR_REG);
+ 	val |= LOONGSON_SPI_SPCR_SPE;
+-	loongson_spi_write_reg(loongson_spi_dev, LOONGSON_SPI_SPCR_REG, val);
++	loongson_spi_write_reg(priv, LOONGSON_SPI_SPCR_REG, val);
+ }
+ 
+ static int loongson_spi_get_clk_rate(struct device *dev, u64 *clk_rate)
+@@ -265,74 +315,73 @@ static int loongson_spi_get_clk_rate(struct device *dev, u64 *clk_rate)
+ 
+ int loongson_spi_init_controller(struct device *dev, void __iomem *regs)
+ {
+-	struct spi_controller *controller;
+-	struct loongson_spi *spi;
++	struct loongson_spi_priv *priv;
++	struct spi_controller *host;
+ 	int ret;
+ 
+-	controller = devm_spi_alloc_host(dev, sizeof(struct loongson_spi));
+-	if (controller == NULL)
++	host = devm_spi_alloc_host(dev, sizeof(*priv));
++	if (!host)
+ 		return -ENOMEM;
+ 
+-	controller->mode_bits = SPI_MODE_X_MASK | SPI_CS_HIGH;
+-	controller->setup = loongson_spi_setup;
+-	controller->prepare_message = loongson_spi_prepare_message;
+-	controller->transfer_one = loongson_spi_transfer_one;
+-	controller->unprepare_message = loongson_spi_unprepare_message;
+-	controller->set_cs = loongson_spi_set_cs;
+-	controller->num_chipselect = 4;
+-	dev_set_drvdata(dev, controller);
++	host->mode_bits = SPI_MODE_X_MASK | SPI_CS_HIGH;
++	host->setup = loongson_spi_setup;
++	host->prepare_message = loongson_spi_prepare_message;
++	host->transfer_one = loongson_spi_transfer_one;
++	host->unprepare_message = loongson_spi_unprepare_message;
++	host->set_cs = loongson_spi_set_cs;
++	host->num_chipselect = 4;
++	dev_set_drvdata(dev, host);
+ 
+-	spi = spi_controller_get_devdata(controller);
+-	spi->base = regs;
+-	spi->controller = controller;
++	priv = spi_controller_get_devdata(host);
++	priv->base = regs;
++	priv->controller = host;
+ 
+-	ret = loongson_spi_get_clk_rate(dev, &spi->clk_rate);
++	ret = loongson_spi_get_clk_rate(dev, &priv->clk_rate);
+ 	if (ret)
+ 		return dev_err_probe(dev, ret, "unable to get clock rate");
+ 
+-	loongson_spi_reginit(spi);
+-
+-	spi->mode = 0;
++	loongson_spi_reginit(priv);
++	priv->mode = 0;
+ 
+-	return devm_spi_register_controller(dev, controller);
++	return devm_spi_register_controller(dev, host);
+ }
+ EXPORT_SYMBOL_NS_GPL(loongson_spi_init_controller, "SPI_LOONGSON_CORE");
+ 
+ static int loongson_spi_suspend(struct device *dev)
+ {
+-	struct spi_controller *controller = dev_get_drvdata(dev);
+-	struct loongson_spi *loongson_spi = spi_controller_get_devdata(controller);
++	struct spi_controller *host = dev_get_drvdata(dev);
++	struct loongson_spi_priv *priv = spi_controller_get_devdata(host);
+ 	int ret;
+ 
+-	ret = spi_controller_suspend(controller);
++	ret = spi_controller_suspend(host);
+ 	if (ret)
+ 		return ret;
+ 
+-	loongson_spi->lss.spcr = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_SPCR_REG);
+-	loongson_spi->lss.sper = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_SPER_REG);
+-	loongson_spi->lss.spsr = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_SPSR_REG);
+-	loongson_spi->lss.para = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_PARA_REG);
+-	loongson_spi->lss.sfcs = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_SFCS_REG);
+-	loongson_spi->lss.timi = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_TIMI_REG);
++	priv->lss.spcr = loongson_spi_read_reg(priv, LOONGSON_SPI_SPCR_REG);
++	priv->lss.sper = loongson_spi_read_reg(priv, LOONGSON_SPI_SPER_REG);
++	priv->lss.spsr = loongson_spi_read_reg(priv, LOONGSON_SPI_SPSR_REG);
++	priv->lss.para = loongson_spi_read_reg(priv, LOONGSON_SPI_PARA_REG);
++	priv->lss.sfcs = loongson_spi_read_reg(priv, LOONGSON_SPI_SFCS_REG);
++	priv->lss.timi = loongson_spi_read_reg(priv, LOONGSON_SPI_TIMI_REG);
+ 
+ 	return 0;
+ }
+ 
+ static int loongson_spi_resume(struct device *dev)
+ {
+-	struct spi_controller *controller = dev_get_drvdata(dev);
+-	struct loongson_spi *loongson_spi = spi_controller_get_devdata(controller);
++	struct spi_controller *host = dev_get_drvdata(dev);
++	struct loongson_spi_priv *priv = spi_controller_get_devdata(host);
+ 
+-	loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_SPCR_REG, loongson_spi->lss.spcr);
+-	loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_SPER_REG, loongson_spi->lss.sper);
+-	loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_PARA_REG, loongson_spi->lss.para);
+-	loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_SFCS_REG, loongson_spi->lss.sfcs);
+-	loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_TIMI_REG, loongson_spi->lss.timi);
++	loongson_spi_write_reg(priv, LOONGSON_SPI_SPCR_REG, priv->lss.spcr);
++	loongson_spi_write_reg(priv, LOONGSON_SPI_SPER_REG, priv->lss.sper);
++	loongson_spi_write_reg(priv, LOONGSON_SPI_PARA_REG, priv->lss.para);
++	loongson_spi_write_reg(priv, LOONGSON_SPI_SFCS_REG, priv->lss.sfcs);
++	loongson_spi_write_reg(priv, LOONGSON_SPI_TIMI_REG, priv->lss.timi);
+ 
+-	loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_SPSR_REG,
++	loongson_spi_write_reg(priv, LOONGSON_SPI_SPSR_REG,
+ 			       LOONGSON_SPI_SPSR_SPIF | LOONGSON_SPI_SPSR_WCOL);
+ 
+-	spi_controller_resume(controller);
++	spi_controller_resume(host);
+ 
+ 	return 0;
+ }
+@@ -342,4 +391,5 @@ DEFINE_SIMPLE_DEV_PM_OPS(loongson_spi_dev_pm_ops, loongson_spi_suspend, loongson
+ EXPORT_SYMBOL_NS_GPL(loongson_spi_dev_pm_ops, "SPI_LOONGSON_CORE");
+ 
+ MODULE_DESCRIPTION("Loongson SPI core driver");
++MODULE_AUTHOR("Loongson Technology Corporation Limited");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/spi/spi-loongson-pci.c b/drivers/spi/spi-loongson-pci.c
+index ccc26efd88fe..ad90be956e1e 100644
+--- a/drivers/spi/spi-loongson-pci.c
++++ b/drivers/spi/spi-loongson-pci.c
+@@ -1,31 +1,31 @@
+ // SPDX-License-Identifier: GPL-2.0+
++//
+ // PCI interface driver for Loongson SPI Support
+-// Copyright (C) 2023 Loongson Technology Corporation Limited
++//
++// Copyright (C) 2023-2026 Loongson Technology Corporation Limited
+ 
+ #include <linux/pci.h>
+ 
+ #include "spi-loongson.h"
+ 
+-static int loongson_spi_pci_register(struct pci_dev *pdev,
+-			const struct pci_device_id *ent)
++static int loongson_spi_pci_register(struct pci_dev *pdev, const struct pci_device_id *ent)
+ {
+-	int ret;
+-	void __iomem *reg_base;
+ 	struct device *dev = &pdev->dev;
+-	int pci_bar = 0;
++	void __iomem *reg_base;
++	int pci_bar = 0, ret;
+ 
+ 	ret = pcim_enable_device(pdev);
+ 	if (ret < 0)
+-		return dev_err_probe(dev, ret, "cannot enable pci device\n");
++		return dev_err_probe(dev, ret, "cannot enable pci device");
+ 
+ 	reg_base = pcim_iomap_region(pdev, pci_bar, pci_name(pdev));
+ 	ret = PTR_ERR_OR_ZERO(reg_base);
+ 	if (ret)
+-		return dev_err_probe(dev, ret, "failed to request and remap memory\n");
++		return dev_err_probe(dev, ret, "failed to request and remap memory");
+ 
+ 	ret = loongson_spi_init_controller(dev, reg_base);
+ 	if (ret)
+-		return dev_err_probe(dev, ret, "failed to initialize controller\n");
++		return dev_err_probe(dev, ret, "failed to initialize controller");
+ 
+ 	return 0;
+ }
+@@ -49,5 +49,6 @@ static struct pci_driver loongson_spi_pci_driver = {
+ module_pci_driver(loongson_spi_pci_driver);
+ 
+ MODULE_DESCRIPTION("Loongson spi pci driver");
++MODULE_AUTHOR("Loongson Technology Corporation Limited");
+ MODULE_LICENSE("GPL");
+ MODULE_IMPORT_NS("SPI_LOONGSON_CORE");
+diff --git a/drivers/spi/spi-loongson-plat.c b/drivers/spi/spi-loongson-plat.c
+index 6f8202264341..dcfbdd50e996 100644
+--- a/drivers/spi/spi-loongson-plat.c
++++ b/drivers/spi/spi-loongson-plat.c
+@@ -1,6 +1,8 @@
+ // SPDX-License-Identifier: GPL-2.0+
++//
+ // Platform driver for Loongson SPI Support
+-// Copyright (C) 2023 Loongson Technology Corporation Limited
++//
++// Copyright (C) 2023-2026 Loongson Technology Corporation Limited
+ 
+ #include <linux/err.h>
+ #include <linux/platform_device.h>
+@@ -9,9 +11,9 @@
+ 
+ static int loongson_spi_platform_probe(struct platform_device *pdev)
+ {
+-	int ret;
+-	void __iomem *reg_base;
+ 	struct device *dev = &pdev->dev;
++	void __iomem *reg_base;
++	int ret;
+ 
+ 	reg_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(reg_base))
+@@ -19,7 +21,7 @@ static int loongson_spi_platform_probe(struct platform_device *pdev)
+ 
+ 	ret = loongson_spi_init_controller(dev, reg_base);
+ 	if (ret)
+-		return dev_err_probe(dev, ret, "failed to initialize controller\n");
++		return dev_err_probe(dev, ret, "failed to initialize controller");
+ 
+ 	return 0;
+ }
+@@ -42,5 +44,6 @@ static struct platform_driver loongson_spi_plat_driver = {
+ module_platform_driver(loongson_spi_plat_driver);
+ 
+ MODULE_DESCRIPTION("Loongson spi platform driver");
++MODULE_AUTHOR("Loongson Technology Corporation Limited");
+ MODULE_LICENSE("GPL");
+ MODULE_IMPORT_NS("SPI_LOONGSON_CORE");
+diff --git a/drivers/spi/spi-loongson.h b/drivers/spi/spi-loongson.h
+index 89efd4ce69d8..c8b722bc5fb5 100644
+--- a/drivers/spi/spi-loongson.h
++++ b/drivers/spi/spi-loongson.h
+@@ -1,56 +1,13 @@
+ /* SPDX-License-Identifier: GPL-2.0+ */
+-/* Header File for Loongson SPI Driver. */
+-/* Copyright (C) 2023 Loongson Technology Corporation Limited */
++//
++// Loongson SPI Support - common header
++//
++// Copyright (C) 2023-2026 Loongson Technology Corporation Limited
+ 
+ #ifndef __LINUX_SPI_LOONGSON_H
+ #define __LINUX_SPI_LOONGSON_H
+ 
+-#include <linux/bits.h>
+-#include <linux/pm.h>
+-#include <linux/types.h>
+-
+-#define	LOONGSON_SPI_SPCR_REG	0x00
+-#define	LOONGSON_SPI_SPSR_REG	0x01
+-#define	LOONGSON_SPI_FIFO_REG	0x02
+-#define	LOONGSON_SPI_SPER_REG	0x03
+-#define	LOONGSON_SPI_PARA_REG	0x04
+-#define	LOONGSON_SPI_SFCS_REG	0x05
+-#define	LOONGSON_SPI_TIMI_REG	0x06
+-
+-/* Bits definition for Loongson SPI register */
+-#define	LOONGSON_SPI_PARA_MEM_EN	BIT(0)
+-#define	LOONGSON_SPI_SPCR_CPHA	BIT(2)
+-#define	LOONGSON_SPI_SPCR_CPOL	BIT(3)
+-#define	LOONGSON_SPI_SPCR_SPE	BIT(6)
+-#define	LOONGSON_SPI_SPSR_RFEMPTY	BIT(0)
+-#define	LOONGSON_SPI_SPSR_WCOL	BIT(6)
+-#define	LOONGSON_SPI_SPSR_SPIF	BIT(7)
+-
+-#define LOONGSON_SPI_DIV_MIN		2
+-#define LOONGSON_SPI_DIV_MAX		4096
+-
+-struct device;
+-struct spi_controller;
+-
+-struct loongson_spi_suspend_store {
+-	unsigned char		spcr;
+-	unsigned char		sper;
+-	unsigned char		spsr;
+-	unsigned char		para;
+-	unsigned char		sfcs;
+-	unsigned char		timi;
+-};
+-
+-struct loongson_spi {
+-	struct	spi_controller	*controller;
+-	void __iomem		*base;
+-	int			cs_active;
+-	unsigned int		hz;
+-	unsigned int		mode;
+-	u64			clk_rate;
+-	struct loongson_spi_suspend_store lss;
+-};
+-
+ int loongson_spi_init_controller(struct device *dev, void __iomem *reg);
+ extern const struct dev_pm_ops loongson_spi_dev_pm_ops;
++
+ #endif /* __LINUX_SPI_LOONGSON_H */
 -- 
 2.52.0
 
