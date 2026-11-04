@@ -1,45 +1,69 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.198
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793804214;
-	b=BN/6Q28YdQ9/EyoBkUK6rg4o2EI+rbNZr7VbB/ygQgj0rBcUkr7ixjFiDEjExBnebizq
-	 dRbPD241XJrNcT77v3dahVBA3xurbwtAnpHni+oJfLvgSomRRDjzDF7yDs58U3oJipx1U
-	 vmRL9YjxQvMAX3y8oyGHSUsHJ2f3/B9siv3s2Uz35qYphrb/3zdLSMhgXJur915QQp3lN
-	 ijefrcRBoQeJIhhrmt47Fxtf3ZZ4HjgVvURVg6RzPDGYjK3WHC+TrS3Db8tJXTx0qYKvX
-	 HaG0cXthWIWnStwKs3U6SNF7S0bOS8KsXbZJbmX/7T0nvkC38zWTGRiluUXv088OWvg==
+	t=1793823297;
+	b=M62otfUIdqzeLlOgcfFKr8jn2gAvQ2aydeZhdQcIULN0jX0IvEEk2aUK8Cp0TO/9UmXl
+	 Ov/CI37T9QVF4+qWyFnsnDRw2//aU01OXBulsz1G3XmByO00jUe3JxgSi22z3YkFLyGPc
+	 MPLMnjV9STAvJVfC6LkWg76x6o9KIaH0y/dVObbQbgM7AdJgtaQlV6lp00A/Z/ANyc+bs
+	 utjuYSZeR80XxtXaAEvHnkOkl7dbC4eZYJAJu2cetpCZuiagFoYoKdBIJY++IG0BFU0Oi
+	 7kX7rCwp+Wl8W/Yy2JAo1+veyb+baY6c+u2p7qvXz3J3n2U8JyUg+caOiHkt+0xZ0GQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793804214;
-	h=Received:DKIM-Signature:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:Subject:From:To:Cc:In-Reply-To:References:
-	 Date:Message-Id:X-Mailer;
-	bh=T7rOMPplLomFK+EC05LzdPzGrXETZLxt3EvKKKVvcv0=;
-	b=f+JPZUojzs1Nppa/l9wV0QpII8GxxBXyko4IS53hd6VKbfAJLz67pvIkWYSpXTZjGFxL
-	 uAYedNlN7vdFoyXU8Px6PZ/L1VVMGe/FX3n5fo3tXvQWlepQVkwl70RrKKotu9K6UvbR8
-	 7weeMvpLicDk6zyWN7fbaHrvStqaS7P5zBUgJ130pIxoPsdlCNRy8AtwADboJSWDQJRZA
-	 BNr+mUk8fJ8MgIdp5JogpcpMxslHOUOzQ5WWKIgMzb+9+Ls4C8mghFjoz6Uipq4vOstdM
-	 HQ4Fn4mBAzfuKyHsQ+E4TCO8pRSL8QUKuj9IGkgk7WxQh//PJRtC5O8nPEiH8ftiVEQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793823297;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:MIME-Version:X-Received:
+	 In-Reply-To:References:Message-ID:Date:Subject:From:To:Cc:
+	 Content-Type;
+	bh=AS/luxCxZZ4IKfwOyJu4Ue765u+vBG+6P6QAZr4AiP8=;
+	b=u5Hz38xGMvMiZKR1erGEw3TU3n9UDDEUd6yGblM8Y9cUgqdaF3Bgr0Z+TbPFTnAILwlr
+	 rT1NYMWoN2qN3Q68IRdJHZs5Yb2aX9I7KuoE4lz9VUbfY/n94m42gdzjr0Uk9+meOYOJT
+	 KhtvgcXeKO0qXCxn8mzHHHLyUkyQM/skRzhgeTgp7EONUmllrOvQscyVarCO+LLsTS2W4
+	 gw8h4o0IR4VzBra3hHJqZB6BhUSl77xdTu8lXgPUKNeiTQgLVgCjZg2VDDK1qS0QfL6Bl
+	 7b/2KIUOD5aQFm55gjpsfwgVJzLCSlpIZkYzJcYl0oJBfLb9dzGlwPJDaGOrE4SFVLQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MrptcyWU;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=flex--jeffxu.bounces.google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=bec2Xgmh;
+	arc=none smtp.remote-ip=74.125.82.198
+Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com [74.125.82.198])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EEFF606A330;
-	Wed,  4 Nov 2026 14:56:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 389AE60841B8
+	for <loongarch@lists.linux.dev>; Wed,  4 Nov 2026 20:14:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 389AE60841B8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jeffxu.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MrptcyWU
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29CC11F000C1;
-	Wed,  4 Nov 2026 14:56:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793804214;
-	bh=T7rOMPplLomFK+EC05LzdPzGrXETZLxt3EvKKKVvcv0=;
-	h=Subject:From:To:Cc:In-Reply-To:References:Date;
-	b=MrptcyWUAcszN49zHQTkn3Vlr/HscV8Bl4lEC7R76+MYv7gQJXdxpylZ79fGVxJJG
-	 9g2RjZrokNB6qDNHG67TRkFttmgL1t2KdGdPIq0zjGZQ2tpCDDyqj1gOxcwehdfXY+
-	 WNHZuIs47sffQbdvvDUJo0zkxJB0m5g+Zo5ngvZRNdtigj8ZxmrYguaza/nDk0M3CY
-	 G5c7zitroMfYhwxfXt68GtCd4yiMACIrJ5qsb2puVDshMKSWVxOz6W6kzvD8gW2gAO
-	 +MF/8nKz3uZpWHQ8FC5h0nznRoxul5JcWwA09pW2w+j3axirgz6HMdNa1MuyG7qGfV
-	 qv8X6UKrIz32Q==
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=bec2Xgmh
+Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-36d69ab3c2bso772510eec.0
+        for <loongarch@lists.linux.dev>; Wed, 04 Nov 2026 12:14:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20260707; t=1793823296; x=1794428096; darn=lists.linux.dev;
+        h=content-type:cc:to:from:subject:date:message-id:references
+         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=AS/luxCxZZ4IKfwOyJu4Ue765u+vBG+6P6QAZr4AiP8=;
+        b=bec2XgmhEZBjJm69ICq0QlPBn1QSww+6o56/8AWfvn64HyLwyfHCTN4TtsLaEU0q3e
+         8E/d4f0tTG8lVIIFM2aMtDxMycuw3j7GBB3bi/CrphMJP2FDgMGlnQfoWE3JNyuBZOlT
+         zGpKgtfU0t00+C9WJtlmxMjq6IiVITAf5dsaCExqfWKOBgXUgaNqwS2HGRVoVzY1v+ol
+         1gISviHcE7IzpTotBJ5OfsQzl1dL2LJZ0gCmSRtGxvFzBLd03t1DCS7hB8WHawYSx9IC
+         Mm0Ncqgb71/il2yHG5vJFa35fR4PR5ge4g+afT+GygvTZ7RX16cEenzqK2bT/aHr9OGT
+         daLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793823296; x=1794428096;
+        h=content-type:cc:to:from:subject:date:message-id:references
+         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=AS/luxCxZZ4IKfwOyJu4Ue765u+vBG+6P6QAZr4AiP8=;
+        b=HdJo1J5R9yiZxAaLoUBUyGMn0pqEGgb+Imjoiyfoz09OAw4Vw9FzQjvZhnTEyO0k9z
+         vDon0RCFtrZRKWng9TNTZ8bQp80sh8mMZFJm1aLRSFm18tKW0D+kUGNx/luUM4ldBs7P
+         EQ+MTk7wqK4SFA26fckOKzRYkwrlIUodDNhrUthUcnf85ik3aZxLLCTu5SboHjPVekRQ
+         Tnd7OXmnu3cAEUWARWHZwCDNyMXD/BytCg3swTKV0e4L1Mhjv1Vo/+D/UrAuLpvDy5rx
+         wyx7wxdcuE/Rlwmmw0z5suA5EjWK9EuS5ZLTX22GZx3vUlNmr6ZD1KetRX09A9Xai3ww
+         Tj+w==
+X-Forwarded-Encrypted: i=1; AKwUvBx/+UdfKEhKA0ZaWnRsb1wa6iV2enk+zc6cR24YTyPOw77xcDAn4UJXQDIewHgXLmZ2jAXASFREec8=@lists.linux.dev
+X-Gm-Message-State: APuU4Z8cTRaGOD5jZmNeJ9vsD33noLacp3c+1hPToLh4JAnYoBzw+vtM
+	MFd6YNKsezWJpPqRNv5RaZsPBlx176oszzFYkOwQLBA+4nhJdXDpKdb+5W98SsVwZKvUfo0Glxb
+	1ZKR1GQ==
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -49,91 +73,52 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v7 00/15] kexec: Fix CMA and elf header leaks and
- rework
-From: Mike Rapoport <rppt@kernel.org>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, 
- chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com, 
- mpe@ellerman.id.au, npiggin@gmail.com, chleroy@kernel.org, 
- ritesh.list@gmail.com, sshegde@linux.ibm.com, pjw@kernel.org, 
- palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, tglx@kernel.org, 
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
- akpm@linux-foundation.org, baoquan.he@linux.dev, rppt@kernel.org, 
- pasha.tatashin@soleen.com, pratyush@kernel.org, thuth@redhat.com, 
- leitao@debian.org, yeoreum.yun@arm.com, robh@kernel.org, 
- sourabhjain@linux.ibm.com, kees@kernel.org, coiby.xu@gmail.com, 
- Yeking@Red54.com, tangyouling@kylinos.cn, maqianga@uniontech.com, 
- zhangtianyang@loongson.cn, guodongtai@kylinos.cn, blum@kernel.org, 
- adityag@linux.ibm.com, hui.wang@canonical.com, sohammetha01@gmail.com, 
- guoren@kernel.org, gaohan@iscas.ac.cn, kai.huang@intel.com, kas@kernel.org, 
- vishal.l.verma@intel.com, piliu@redhat.com, jbouron@amazon.com, 
- mclapinski@google.com, me@linux.beauty, graf@amazon.com, bgwin@google.com, 
- x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
- kexec@lists.infradead.org
-In-Reply-To: <20261026075201.699550-1-ruanjinjie@huawei.com>
-References: <20261026075201.699550-1-ruanjinjie@huawei.com>
-Date: Wed, 04 Nov 2026 16:56:37 +0200
-Message-Id: <179380419709.28814.2122135856184991710.b4-review@b4>
-X-Mailer: b4 0.16.1-dev
+X-Received: from dybkf8.prod.google.com ([2002:a05:7301:3a88:b0:36a:e67:fbc2])
+ (user=jeffxu job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:1608:b0:185:4ad4:3d15
+ with SMTP id a92af1059eb24-1ac56302329mr19203878c88.1.1793823295901; Wed, 04
+ Nov 2026 12:14:55 -0800 (PST)
+In-Reply-To: <cover.1793718940.git.chris@chrisdown.name>
+References: <cover.1793718940.git.chris@chrisdown.name>
+Message-ID: <18e4f0c895c8d2ed.3137322e32382e342e3434.27cc5b.0000sendgmr@google.com>
+Date: Wed, 04 Nov 2026 20:14:55 +0000
+Subject: Re: [PATCH v2 0/8] mseal sysmap: Choose system mapping sealing at boot
+From: Jeff Xu <jeffxu@google.com>
+To: Chris Down <chris@chrisdown.name>, Andrew Morton <akpm@linux-foundation.org>, 
+	"Liam R. Howlett" <liam@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>
+Cc: Jeff Xu <jeffxu@google.com>, David Hildenbrand <david@kernel.org>, 
+	Vlastimil Babka <vbabka@kernel.org>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Kees Cook <kees@kernel.org>, Andrey Vagin <avagin@gmail.com>, 
+	Alexander Mikhalitsyn <alexander@mihalicyn.com>, Shuah Khan <shuah@kernel.org>, 
+	Oleg Nesterov <oleg@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Andy Lutomirski <luto@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, Jonathan Corbet <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>, 
+	linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel-team@meta.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 
-Hi Jinjie,
+On Tue, Nov 3, 2026 at 11:17:43PM +0800, Chris Down wrote:
+> System mapping sealing is currently a build time choice. Hosts which
+> want it and hosts which need to move or unmap these mappings therefore
+> need separate kernels, which is not ideal. Let's allow the administrator
+> to choose at boot time.
 
-> ARM64, LoongArch and RISC-V load the elf core header, initrd, DTB
-> and cmdline parameters with almost identical code. This series fixes
-> the bugs in that path. And as Mike suggested, rework the common part
-> into a helper.
-> 
-> Patch 1 stops using the Image text_offset for arm64, which breaks CMA
-> segments in both the load and release paths, and rejects images with
-> a non-zero value.
-> 
-> Patches 2-7 fix the CMA page and elf core header leaks in the retry
-> loops in arm64 and LoongArch, also fix a modified_cmdline leak
-> in LoongArch.
+Thanks Chris for the updates and for adding the unsealed boot parameter
+test coverage! The v2 series looks good to me.
 
-These mix fixes that can be easily merged via arch trees and something
-that depends on a change to the generic kexec code.
-
-Besides, elf_headers leak and arm64's text_offset fixes should be
-applied to most if not all stable kernels, while CMA fixes are only for
-the relatively new kernels.
-
-I'd suggest splitting
-
-	arm64: kexec_file: Stop using the Image text_offset
-	arm64: kexec_file: Fix elf_headers memory leak in retry loop
-
-and sending as pure arm64 material, and
-
-
-	LoongArch: kexec_file: Fix elf_headers memory leak in retry loop
-	LoongArch: kexec_file: Fix a modified_cmdline leak
-
-as pure LoongArch material.
-
-And then working on CMA fixes after these land.
-
-If there are real dependencies or potential conflicts, b4 prep can help
-you with managing them.
-
-> Patches 8-10 pass the kbuf fields to crash_prepare_headers() to
-> simplfy code.
-> 
-> Patch 11 frees the elf core header from the generic post-load cleanup.
-> 
-> Patches 12-15 add kexec_load_other_segments() and convert the three
-> architectures, and arch_kexec_setup_other_segments() builds
-> the architecture specific boot parameters (a DTB or a command line).
-
-I think the refactoring should go before the identical fixes in arch/
-code.
-
--- 
-Sincerely yours,
-Mike.
-
+Reviewed-by: Jeff Xu <jeffxu@google.com>
