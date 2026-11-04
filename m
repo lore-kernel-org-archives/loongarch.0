@@ -1,54 +1,60 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793780974;
-	b=Y2x5ZfZxyrC8jCq7DZJ4Ko4ez6n0gGsWo1EdKtLuEnm3EtfObmziG9TtI9Sg8P3kmpIO
-	 wYkdKX5+sZBOQVAvAgAJa2YPDRjiwps0bvnP6RqBVDhOp5Bn0RNxCEqah4DRGKMkMaBYy
-	 ImmbwTFL8a1nUpdD7GYn51EhsVmUF9ZEuzbwz3THPX+XCTr5Jln6liedTrrE2IlsqMuXr
-	 pbMpfeMVqHUXN126d8v001awjNAloCeF3uj76PZ+lA6ttvZufq26fOW77MPFTmYTviXq7
-	 C1mvuUf4OHCtoWRAAOYNg4S645SxggVSd6DHqvh4dsn/fXMTeryp0w//JlPf+Lrs4MQ==
+	t=1793783704;
+	b=HaX8GYHJa2ZPn9xZaaVQVzBYeEPOop5G4pIGmnxGdzvzPWHMscSwaUuM0X+F4qvih9y5
+	 JUvBv3qOsR+mYoqqKCr9Q+e3kVMV4qB9Fxx3Xg/QeEa9acQiajQLVDELZs2HrwkWDEUGc
+	 3WrFdksSsqkET5/RKdpDRMIe6ZR6MkxeyaGK9oACS5qOAYH3MnVtIkk59e0ueAIoNAOg0
+	 4WH1FWGgwwUdgsL4g40IoKi9rTrbU7mGiYUYAEG17FN9YKUm6M51Xlyx5nam0ZAI+UV/j
+	 RkrNntq0f4mxUG4ZFnJxZZNgusRyszELxInOgbGEOSBw14r0jLvS6chfiMNZumfAdxQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793780974;
-	h=DMARC-Filter:Received:Received:Subject:To:Cc:References:From:
-	 Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:Content-Type:
-	 Content-Language:Content-Transfer-Encoding:X-CM-TRANSID:
-	 X-CM-SenderInfo:X-Coremail-Antispam;
-	bh=BdRyfiAiBhdEip/a7W+YtBi0UikVbecSudJU78nJFMQ=;
-	b=LJ1olb9ltzxsVYeXHl6px4x8c/Oa0QSw7+KFagcsiDjWgNixD0W9GKgOpE1vCfhoDD9a
-	 EZqX25eQNHNL/wQLKrOW/8+AgXbkcz6/i/LUAafwyFKVgvGw5NSV8txOpxdKbhzA2Pq5f
-	 i9Afx/p3/JwomFhVryIZVwnOryG07ZB2ZYOU8vsP2k4fb7NYXbJgFibw7OLARPPNsbzxO
-	 snbuZ3uz2hv4Pq72tOD1rOsqNnWjL3BrSF6weGnwBibNrha5Z3FZYVQRXasxQQeROCIxX
-	 4+kCjtfWUhMlzAcvIcxK34S1E1jojsgSdw6BBtIZpa7aYTi1LvUsOpb/uXNhS9tfFCA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793783704;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=zCFfm843u8/elBaIEdb8AzgdS0+hlymbLUHyiHn895g=;
+	b=a4wiJduvCRF4k5DcvsPPEmY1MAbCTOtr2Ug3FsfmptU08gzeyLuq4R2ERNW8JNopjWn+
+	 Y89vclGIRtB9gmaOAkSoFSpFhieonfY2aNJpupTtqe3fAuczvTqCoWMbGuocc5neus43R
+	 iIysQcdgKyDTGUNflenQIPB6t465wpOIWTV7pBu8hicuEDlFnTvOuFfP7kgs5oX1ZlumN
+	 NnYH9vP6sjnFxAKsG4PVaJIamTs89qjdcb3anpBgeuoXLXGgv8+IaFre9I7hb/7LBQUxa
+	 V+J6nazggm1Dtj1qjO34KJRRlXKn8R0Gr/TVuD79Xe04CfsFj3lOj0S5cGdN5T5nL8Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=loongson.cn;
-	spf=pass smtp.mailfrom=loongson.cn;
-	arc=none smtp.remote-ip=114.242.206.163
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D35B606A329;
-	Wed,  4 Nov 2026 08:29:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5D35B606A329
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8AxntLn7Opqjj0cAA--.16101S3;
-	Wed, 04 Nov 2026 16:29:27 +0800 (CST)
-Received: from [127.0.0.1] (unknown [127.0.0.1])
-	by front1 (Coremail) with SMTP id qMiowJBxpMzj7Opq10cyAA--.11207S2;
-	Wed, 04 Nov 2026 16:29:25 +0800 (CST)
-Subject: Re: [PATCH v4 1/4] ACPICA: actbl2.h: Add bit constants of the Flags
- field in the IOVT IOMMU structure
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: rafael@kernel.org, linux-acpi@vger.kernel.org,
- acpica-devel@lists.linux.dev, lenb@kernel.org, linux-kernel@vger.kernel.org,
- lixianglai@loongson.cn, loongarch@lists.linux.dev,
- maciej.wieczor-retman@intel.com, pawel.chmielewski@intel.com
-References: <20260922121058.972734-2-maobibo@loongson.cn>
- <10bd45f8-2d37-42f0-b7d2-a4a84933c9b3@loongson.cn>
- <CAAhV-H7Vq2ayLJNLRSo5RRiWOcmF2BXT_QOhEDg_jWOzYteqWw@mail.gmail.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <7e7a61a3-eda7-8b22-0df1-648426492e30@loongson.cn>
-Date: Wed, 4 Nov 2026 16:30:40 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=P2VyHUmX;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B4F606A32C;
+	Wed,  4 Nov 2026 09:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=P2VyHUmX
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 072401F0093A;
+	Wed,  4 Nov 2026 09:15:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793783704;
+	bh=zCFfm843u8/elBaIEdb8AzgdS0+hlymbLUHyiHn895g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=P2VyHUmXOTKNccAWnsWQzGG4kjE2tHG11Fb3k5VTve3RIeyUyrwUL6y/DUqe2KhQ/
+	 qrdaEjdMIbUev3XrFs+Ls+dcv7bDqqET0CWUGdq/PmXijGJQq5eGEBsqUFp7f4O3FF
+	 zkyaL6jGtaLRL1x1xmXnnAxmpV30wJdXL4j2Wf6q6nw3Y6o5RWboW6zeaQVeNsJpnE
+	 Au61t1i1IcpHhkQnpCSZ7l++U97L6h/DZiEvqExZdwhTGZk5z6xJoYaMNmSXL0FeUK
+	 QxXsgpg9iBETtbilcbZd5els7i48g2auyc00OUb6m5WFc0k0/IJbg2ClCjAlasEjB+
+	 jMKZz7T9gjomA==
+Date: Wed, 4 Nov 2026 10:14:57 +0100
+From: "Oscar Salvador (SUSE)" <osalvador@kernel.org>
+To: Muchun Song <songmuchun@bytedance.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Oscar Salvador <osalvador@suse.de>,
+	Muchun Song <muchun.song@linux.dev>,
+	David Hildenbrand <david@kernel.org>,
+	Kiryl Shutsemau <kas@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, Sashiko <sashiko-bot@kernel.org>,
+	linux-mm@kvack.org, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm/hugetlb: fix validation of unsupported HugeTLB
+ orders
+Message-ID: <aur3kWpnFAOaX8nE@localhost.localdomain>
+References: <20261104071858.757793-1-songmuchun@bytedance.com>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -58,83 +64,76 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H7Vq2ayLJNLRSo5RRiWOcmF2BXT_QOhEDg_jWOzYteqWw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxpMzj7Opq10cyAA--.11207S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7CF1ftr48JFWxCryxurW5twc_yoW8WryxpF
-	s2ka18KFyDXr47Cw1vgw13GF1rt3yrCr1I9w1Igr42yr9Ikw1rtF4Uua1Y9F97urs5CF4I
-	yFy2qrWfWFyjvrXCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GF
-	ylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8xu
-	ctUUUUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261104071858.757793-1-songmuchun@bytedance.com>
 
-
-
-On 2026/10/23 下午3:59, Huacai Chen wrote:
-> Bibo,
+On Wed, Nov 04, 2026 at 03:18:57PM +0800, Muchun Song wrote:
+> Commit 7ce6048d3a7d ("loongarch: drop ranges for definition of
+> ARCH_FORCE_MAX_ORDER") removed the ARCH_FORCE_MAX_ORDER ranges for
+> LoongArch. Besides dropping unreasonable upper limits, this allowed
+> values below the architecture defaults.
 > 
-> Now I have applied this series but with some modifications, please
-> double check and test the code.
+> With 16KB pages, LoongArch defaults ARCH_FORCE_MAX_ORDER to 11,
+> matching HUGETLB_PAGE_ORDER. Forcing it to 10 while enabling HugeTLB
+> permits order-11 HugeTLB folios even though MAX_FOLIO_ORDER is 10.
+> LoongArch does not select ARCH_HAS_GIGANTIC_PAGE, so this violates the
+> generic MM assumption that folios cannot exceed MAX_PAGE_ORDER.
 > 
-> https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git/log/?h=loongarch-next
-
-Thanks, it works well on 7.4.0-rc1 version.
-
-Regards
-Bibo Mao
+> This invalid configuration is accepted by Kconfig.
+> BUILD_BUG_ON_INVALID() does not reject it either because it only checks
+> whether the expression is valid and never evaluates the comparison.
+> Detection is left to the runtime warning in hugetlb_add_hstate(), after
+> earlier boot paths may already have used the invalid configuration.
 > 
-> Huacai
+> When an invalid HugeTLB order can be identified at build time, reject it
+> there. Otherwise, reject it at runtime before the mismatch propagates
+> further. Use MAYBE_BUILD_BUG_ON() so constant violations fail the build
+> while dynamically determined orders are checked at runtime.
 > 
-> On Mon, Oct 12, 2026 at 3:16 PM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->> This change is already merged in acpica tree.
->>
->> slightly ping.
->>
->> On Tue, Sep 22, 2026 at 08:10:55PM +0800, Bibo Mao wrote:
->>   > According to the IOVT specification, define macros for each bit of the
->>   > Flags field in the IOVT IOMMU structure.
->>   >
->>   > Link: https://github.com/open-acpica/acpica/commit/352f750e4cc0
->>   > Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->>   > ---
->>   >  include/acpi/actbl2.h | 7 +++++++
->>   >  1 file changed, 7 insertions(+)
->>   >
->>   > diff --git a/include/acpi/actbl2.h b/include/acpi/actbl2.h
->>   > index baef525367b5..76e4a5bc79b4 100644
->>   > --- a/include/acpi/actbl2.h
->>   > +++ b/include/acpi/actbl2.h
->>   > @@ -919,6 +919,13 @@ struct acpi_iovt_iommu {
->>   >       u32 device_entry_offset;
->>   >  };
->>   >
->>   > +/* Masks for Flags field above */
->>   > +#define ACPI_IOVT_IOMMU_PCI_DEVICE           (1<<0)
->>   > +#define ACPI_IOVT_IOMMU_PXM_VALID            (1<<1)
->>   > +#define ACPI_IOVT_IOMMU_MAGAGE_BY_SEGMENT    (1<<2)
->>   > +#define ACPI_IOVT_IOMMU_HW_CAP_SUPPORT               (1<<3)
->>   > +#define ACPI_IOVT_IOMMU_MSI_INT_BYPASS               (1<<4)
->>   > +
->>   >  struct acpi_iovt_device_entry {
->>   >       u8 type;
->>   >       u8 length;
->>   > --
->>   > 2.39.3
->>   >
->>
+> Fixes: 7ce6048d3a7d ("loongarch: drop ranges for definition of ARCH_FORCE_MAX_ORDER")
+> Reported-by: Sashiko <sashiko-bot@kernel.org>
+> Closes: https://lore.kernel.org/sashiko-outbox-192874@kernel.org/
+> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+> Suggested-by: Huacai Chen <chenhuacai@kernel.org>
 
+Acked-by: Oscar Salvador <osalvador@suse.de>
+
+> ---
+> v2:
+> - Move the order check after hugepages_supported() to avoid a false
+>   PowerPC BUG_ON() (suggested by Sashiko)
+> ---
+>  mm/hugetlb.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index 779b1de33c78..b49130eb7ad8 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -4197,7 +4197,6 @@ static int __init hugetlb_init(void)
+>  
+>  	BUILD_BUG_ON(sizeof_field(struct page, private) * BITS_PER_BYTE <
+>  			__NR_HPAGEFLAGS);
+> -	BUILD_BUG_ON_INVALID(HUGETLB_PAGE_ORDER > MAX_FOLIO_ORDER);
+>  
+>  	if (!hugepages_supported()) {
+>  		if (hugetlb_max_hstate || default_hstate_max_huge_pages)
+> @@ -4205,6 +4204,8 @@ static int __init hugetlb_init(void)
+>  		return 0;
+>  	}
+>  
+> +	MAYBE_BUILD_BUG_ON(HUGETLB_PAGE_ORDER > MAX_FOLIO_ORDER);
+> +
+>  	/*
+>  	 * Make sure HPAGE_SIZE (HUGETLB_PAGE_ORDER) hstate exists.  Some
+>  	 * architectures depend on setup being done here.
+> 
+> base-commit: 74d73ffcffe03804f97e9fb82301dadf75671282
+> -- 
+> 2.54.0
+> 
+
+-- 
+Oscar Salvador
+SUSE Labs
