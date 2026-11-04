@@ -1,52 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793764770;
-	b=qHtkbKVVhhAbjbo3DaI7npA6XLQsTDzz8tZQ8uKxAuUh/yuJizjOVo86womiUtXrt4NU
-	 MsjQT+xnUKmh0yBMI5aQYcDTUn4cqKa1NJ6Omgr/XC+YY2jSrT7p3Vl282dMufJS/zTm8
-	 TZyw2iaPNo7xJlhfQJHX0IU3rkdA8kup3XYIMv1zIp1lA5JzhMXE79f6amMd1hRibHC+k
-	 9CSUJyHd94O7xKJo8mvG+IjB/BLOcsEflMxHmzzsKLTtK3hR88u+Dbem9WrZSreMQAWWB
-	 xijoFHFljBpedgJbljYjdETEFdKpO0W3gJ4CwlB19NvCvRPSQqSKsgTRzTXrucc09dg==
+	t=1793766558;
+	b=MV78dN2vWHEGGi7xMDS5/srlUyIjpK7Xc1XC0uJwImgut4y1FzMjgzXPawvkv4lemjea
+	 yzThO5bXQPBeppsEuMMzCNt3+L4cAbr0ILh98Sv+TYbIULDRTNgDewCS5rYPyKIcmFEoB
+	 eFvW1dRPFdplhG+GWBJU6R7CZHYscxEPQ2pIIfKoLWiJ4PLV29hE9Smz4QDhjk2AZuqa+
+	 A+ir4228+XW0WlJrRxj92vZgwFwSHtnvvAF70hzZPvKRcXipWQVySh0JNgTUKeJGZEr+V
+	 eT2vt19IuClAAlu0VqFN+fE0C/GGInchkMkIhmCuXi40kN9urxBoQJzj7+DI3p+Nl8g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793764770;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793766558;
 	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
 	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
 	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
 	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=aVD57Vyoa++azfiqBAhfzngOl8QvU9DsGw/NobLJvHM=;
-	b=QvorTsAAkJEjIu48Gb9Wx2Q4OwXIS77aLo8YT2bH+pn8tYiAtv6nC7xS/xuAAMNqXbRR
-	 r4MgCQwwK5BuhVtauAVEG8bJtCINSoGwxLURm+mgHpVFvqmUbV9N1qV1NvE10aYF8fdhS
-	 jp/bmU8dmU0DNaydcRVq6AGMwQGNTK5/butVTeS9wZ7MovgWTOODzEAStmptyOt1SClVe
-	 Y3mcUdsjjIYMy2mjYZhOo+2sY7cwRWYVUnph1fgI++FQhMJ1E+Hriml2X+StYxlx2KgGV
-	 NCU7GryatG6N5/BTb7tHZ/b+ErB4N/8QhdyGtNLXJ46kBhj52+NuNU99qL5JuitsmZQ==
+	bh=LDYMmvOBK4q7hJhqT63nAAwc74NWaz+sOAw95hHamsE=;
+	b=eIdUOzVq05tLkWgHHdAbwPPrilXf2lvXrKhcHUDFl969KFwVTihLVUeY8i8SaB6ftpcU
+	 QPTvkjsSbzwvzo1xjGTh+HUgnX8JMsvscCtdjtjIUg4rWfG8Y3XYDzwEsP2jmboVtx8BW
+	 oEjQCEtKGI0atUmmt4lBUD+6eAYNRaldG+YE3MNSWiDghf7QpvHpe3MywIQP8Yr41Vgk5
+	 GIyfSuaPI+lvnkZ+ITRxPvrH6R/PJgKHi+5t9aWg9JWQvnBYrMZNAjVmJN2ybxB8JgF8D
+	 oii3KhbRCH7j97ZYEyLG7hSqlVRl7o6sRqOODKjDmOcjzPu8rtaQmUTS6aoBd5ifU+A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dW6chahP;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD94606A332
-	for <loongarch@lists.linux.dev>; Wed,  4 Nov 2026 03:59:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DA081F0093A
-	for <loongarch@lists.linux.dev>; Wed,  4 Nov 2026 03:59:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 005E0606A328
+	for <loongarch@lists.linux.dev>; Wed,  4 Nov 2026 04:29:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dW6chahP
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87A521F00A15
+	for <loongarch@lists.linux.dev>; Wed,  4 Nov 2026 04:29:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793764770;
-	bh=aVD57Vyoa++azfiqBAhfzngOl8QvU9DsGw/NobLJvHM=;
+	s=k20260515; t=1793766557;
+	bh=LDYMmvOBK4q7hJhqT63nAAwc74NWaz+sOAw95hHamsE=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=MD8HHl2V9nd3qEjuMbvRrBTZH2bsLxioMX7oFVjfHv6Tesnt0q7hLLNSr/m+49jT8
-	 lSaMljX+4CfG6xelFsRF1fxldkH8GVcb5JOkwpvBTB6C904Npj4yaJEsjO6nsYj8ky
-	 PiTyHb3iLt9aZhE4hj5wbXMfIg2RSBp5ev3N2fC5Zj1mxwDiJy86cQwRZb4AVliw3Q
-	 RwP5uHM1C6vmwTxZCfbm+Pbg1xxqSdX9YQI/nAp+Zkv4z5kDyaFy/li/WcsfKzh4sk
-	 2fq9e0+Qa+LlcBpy/2sOS5dBim+3SbmMjvx243pGgrt4PUVTbroGo+xDHS+eYE2LqK
-	 T53xBvgdG3ILQ==
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-6b21cf1a580so287363a12.1
-        for <loongarch@lists.linux.dev>; Tue, 03 Nov 2026 19:59:30 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AKwUvBy3FPdSJ8n823+j7dpVTcmj3zed51vwrhhz6FMJ89Cw7HRqrTUfXYIXxRWl//8qlKyvawUCZzn+uAw=@lists.linux.dev
-X-Gm-Message-State: APuU4Z/olCGg1EafAXfFzWx4hFMK9Yt1OMu/+VFF78y44A7ur+rtJ0Nv
-	AjFkVASPKbvmC7w32JcdyYbeXWu4Ab5zilN8RlChmcih28ksFR6VHd24r70/Gjawsy8NWfcpRvn
-	8j8ak/YT6bv9AJGqs1y3WKkTZwgfNnYw=
-X-Received: by 2002:a05:6402:270f:b0:6ac:934e:a9ca with SMTP id
- 4fb4d7f45d1cf-6b4d3289b13mr10634683a12.0.1793764768813; Tue, 03 Nov 2026
- 19:59:28 -0800 (PST)
+	b=dW6chahP08DaTLrno2PMUuGgwQ/4coLGO3CdiftLMvEPvr05H6+yxLv3TRl1crL4b
+	 vji3Orp/ErBdyNMDf4D7nsmsHZXw7Fze+BT4svVV4PXCOeOlTaPpK9GMIUUsOyO1lQ
+	 Y0q91CeJSCb8hI5deySIaPtmuGhpa/uXErJ4XEOskgLu9lt+YCyiD3L1RKqii5VSKL
+	 YqJUgyo91RVlDa+TpArSTT7DL1EBObiEnMlB1HFGCXgquMWL8dgeO0LP34KI9jZFLf
+	 aY93lUjphdRQ4NMcTFr9BBn2sXrDF+vacdkS3bFV2kj94WBCU2NYag5/8r9YXBT/Hf
+	 1KI8u1mRnk/xA==
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-6b4e814214aso259740a12.3
+        for <loongarch@lists.linux.dev>; Tue, 03 Nov 2026 20:29:17 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AKwUvBypLTyYFVyF891Hf6JVXItuUELpeu1W85ruY2vSd7ZH84en28/UqXVs4aO9wiknb6Mo68YURY71MJE=@lists.linux.dev
+X-Gm-Message-State: APuU4Z+d3KcL8nAeCcCS5hYH5xW7Sc56XCoxLPIBwo1DrfczNnLOcgww
+	v+R5fjQx7Zhiy0Fb2dPB5uiXF/sJgondg78YIX8/WH1Bww0+cBnQD1JXA1v+KnAkbW7+H2ZEt7Z
+	NQ/mB4Q/rbdTMRmDONvNRzqH+nGsQlXc=
+X-Received: by 2002:a05:6402:90c:b0:6b4:1629:b1aa with SMTP id
+ 4fb4d7f45d1cf-6b4d3370d2bmr11376191a12.2.1793766556207; Tue, 03 Nov 2026
+ 20:29:16 -0800 (PST)
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -56,51 +59,127 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <2382a0ee-cb6d-4572-be6e-ce3cf4d006e5@app.fastmail.com> <20261103102941.11087-1-dongtai.guo@linux.dev>
-In-Reply-To: <20261103102941.11087-1-dongtai.guo@linux.dev>
+References: <20261102072808.23080-1-yangtiezhu@loongson.cn>
+ <20261102072808.23080-2-yangtiezhu@loongson.cn> <CAAhV-H52mbZJX2vkgG_h=XfwHoio=asLjFdhTJwUYqDp4V5JMg@mail.gmail.com>
+ <8b00e5a7-4e60-19bd-7953-f76dc71e15ec@loongson.cn>
+In-Reply-To: <8b00e5a7-4e60-19bd-7953-f76dc71e15ec@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 4 Nov 2026 11:59:14 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5Vse=pKC3Beqhqxa7fqadiGVNqkSy_06HZ3Luw2Pmj5Q@mail.gmail.com>
-X-Gm-Features: AclHuK_D5CUCusV0Gl1o9MYw2oMRSISAj8jwmHzHqtDwF9y7DdV5NfyDMepEVEM
-Message-ID: <CAAhV-H5Vse=pKC3Beqhqxa7fqadiGVNqkSy_06HZ3Luw2Pmj5Q@mail.gmail.com>
-Subject: Re: [PATCH v6 1/8] efi: Pass KHO state to the next kernel in a
- configuration table
-To: George Guo <dongtai.guo@linux.dev>
-Cc: ardb@kernel.org, pratyush@kernel.org, rppt@kernel.org, 
-	pasha.tatashin@soleen.com, shuah@kernel.org, ilias.apalodimas@linaro.org, 
-	akpm@linux-foundation.org, baoquan.he@linux.dev, ruirui.yang@linux.dev, 
-	guodongtai@kylinos.cn, kernel@xen0n.name, graf@amazon.com, 
-	liukexin@kylinos.cn, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-mm@kvack.org, 
-	linux-kselftest@vger.kernel.org, linux-efi@vger.kernel.org
+Date: Wed, 4 Nov 2026 12:29:02 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H52bqRD1SyrZsvMkNbCpGiM5DPSGPARiasZ8G3XsE5Tgw@mail.gmail.com>
+X-Gm-Features: AclHuK-f4gMcp2qAOufsbV572BaO2w6ixQ0D3tlSSirFRvRGjI9TObJIDPst5n8
+Message-ID: <CAAhV-H52bqRD1SyrZsvMkNbCpGiM5DPSGPARiasZ8G3XsE5Tgw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] LoongArch: BPF: Make arena support depend on SCQ extension
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Hengqi Chen <hengqi.chen@gmail.com>, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 3, 2026 at 6:29=E2=80=AFPM George Guo <dongtai.guo@linux.dev> w=
-rote:
+On Tue, Nov 3, 2026 at 10:24=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
 >
-> Hi Ard, Pratyush,
+> On 2026/11/2 =E4=B8=8B=E5=8D=8810:20, Huacai Chen wrote:
+> > Hi, Tiezhu,
+> >
+> > On Mon, Nov 2, 2026 at 3:28=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson=
+.cn> wrote:
+> >>
+> >> When testing bpf selftest "jit_insns/cast_to_user", there are differen=
+t
+> >> behaviors on different Loongson machines.
 >
-> On Thu, Oct 29 2026, Ard Biesheuvel wrote:
-> > Can we handle this as an arch table then, and handle everything in
-> > the LoongArch arch code?
+> ...
 >
-> Ard, LoongArch is currently the only user, so I understand the suggestion
-> to keep the handling in the architecture code.
+> >> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit=
+.c
+> >> index 3ab039d0afb6..01c12da168ee 100644
+> >> --- a/arch/loongarch/net/bpf_jit.c
+> >> +++ b/arch/loongarch/net/bpf_jit.c
+> >> @@ -2489,7 +2489,15 @@ bool bpf_jit_bypass_spec_v4(void)
+> >>
+> >>   bool bpf_jit_supports_arena(void)
+> >>   {
+> >> -       return true;
+> >> +       /*
+> >> +        * The arena range tree uses kmalloc_nolock(), which requires =
+128-bit
+> >> +        * atomic cmpxchg support, provided by SCQ extension on LoongA=
+rch.
+> >> +        */
+> >> +#ifdef system_has_cmpxchg128
+> >> +       return system_has_cmpxchg128();
+> >> +#else
+> >> +       return false;
+> >> +#endif
+> > You can "return cpu_has_scq" directly.
 >
-> My preference is to keep the table definition and handling common, given
-> the potential for x86 to use it as Pratyush described in his reply, to
-> replace setup_data once x86 gains EFI support. The table contains no
-> LoongArch-specific fields, and only the LoongArch stub installs it. On
-> systems without the table, the common code does nothing.
+> This was my initial thought too; it is simpler, but unfortunately
+> not enough here.
 >
-> Would that be acceptable, or would you prefer to keep the handling in
-> LoongArch until a second architecture adopts it?
-I prefer to keep it in LoongArch until a second architecture, and I
-think Ard is the same. But this is not a strong objection to Pratyush.
+> The 128-bit atomic cmpxchg arch_cmpxchg128() not only depends on
+> the hardware SCQ extension, but also requires assembler support,
+> which was addressed in commit c8b8f3c50f48 ("LoongArch: Only use
+> SC.Q when supported by the assembler").
+>
+> Therefore, using #ifdef system_has_cmpxchg128 as in the current
+> patch is necessary to handle toolchain compatibility properly.
+>
+> Here is a simple diff to verify this scenario. On a 3A6000 machine
+> with hardware SCQ extension, if we hack bpf_jit_supports_arena() to
+> return cpu_has_scq directly, but force AS_HAS_SCQ_EXTENSION to 'n'
+> to simulate an environment without assembler support, the original
+> test error "libbpf: map 'arena': failed to create: -ENOMEM" still
+> shows up because the underlying slab allocator lacks the flag
+> __CMPXCHG_DOUBLE.
+>
+> ```
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index b5ed4881d3c0..6f572d24d2c3 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -336,7 +336,7 @@ config AS_HAS_LVZ_EXTENSION
+>          def_bool $(as-instr,hvcl 0)
+>
+>   config AS_HAS_SCQ_EXTENSION
+> -       def_bool $(as-instr,sc.q \$t0$(comma)\$t1$(comma)\$t2)
+> +       def_bool n
+>
+>   config CC_HAS_ANNOTATE_TABLEJUMP
+>          def_bool $(cc-option,-mannotate-tablejump)
+> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+> index 8cc78efe722d..1e8049937851 100644
+> --- a/arch/loongarch/net/bpf_jit.c
+> +++ b/arch/loongarch/net/bpf_jit.c
+> @@ -2490,15 +2490,7 @@ bool bpf_jit_bypass_spec_v4(void)
+>
+>   bool bpf_jit_supports_arena(void)
+>   {
+> -       /*
+> -        * The arena range tree uses kmalloc_nolock(), which requires
+> 128-bit
+> -        * atomic cmpxchg support, provided by SCQ extension on LoongArch=
+.
+> -        */
+> -#ifdef system_has_cmpxchg128
+> -       return system_has_cmpxchg128();
+> -#else
+> -       return false;
+> -#endif
+> +       return cpu_has_scq;
+>   }
+>
+>   bool bpf_jit_supports_fsession(void)
+> ```
+>
+> So, the current patch has no problem IMO.
+OK, then I think we can use:
+
+return __is_defined(system_has_cmpxchg128) && system_has_cmpxchg128();
 
 Huacai
 
 >
 > Thanks,
-> George
+> Tiezhu
+>
+>
