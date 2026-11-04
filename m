@@ -1,55 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793786104;
-	b=G1E7om58Y5rgO3wUskspQUtGLsB6mr2bofzQFCJI8U+8pOlogVGmayU95adlBOTv9lgK
-	 oJ7POo+ktu5kR1U370A7i9yidObJOctWWseR/mixJ4D90LnZh/F5bSA3ka+/w6spSYuvW
-	 UEx3cx6NCD4t9QMIVyZ2E9HWRmYWivmsDo/eJwr+jJ9ZWvfEb8/fOyKnel6AjYEGXqmRQ
-	 iAV3AJ2n5WqkR/eueipSiO6pUtFH3fdJxZgdeaSfB1Q26y12VAb93ivN8NlgAb10Uzcyq
-	 SsA5zu/nqY6yDuL9Ki4fzAX3705rxTSMWXeQ9EipsiE6h7FOR+ykFBEa8H9D9PvZJzQ==
+	t=1793786568;
+	b=2oLhCn+NHQGPC1j3Bhkf84VlFGHpf/ijzDGi/rIu36f1k1kSs2cMcLzSznQsTYvpc1+S
+	 IX7UJSgixVq0D0UslnYVLwCZ+W/AvyXuOtbEJAjpr7lNqmiFDB/bEfd+ptqj+8oz328og
+	 875ETkkDBdI0cfAvrUFJfFyEqlruRGTAlJADrwbWop1N11Q6wt4CYbnNvx5jznC4kxmT2
+	 pRX4V3O5jwYz6pU/JsZDqiRG/igeHemEqkJgTjoW7bdA12DExm/TOVL0I2Qz3tMJzg77G
+	 DApRpujeovlJ7tCBCPjU11fG9uipRdxKD9IBGJLgmA5V4jZqMeuiypym/Puy3HD0peg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793786104;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793786568;
 	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
 	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
 	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
 	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=7S4gJgJJUabrpB6VRwq4SCe6ojSm3qa1EXPFVgqVgUc=;
-	b=Xpbvja4bnDQiA0sthqd5zmi+hoWeTUdlb+22IEoLqDQ3IS4rlbkl5Vd4DUGXgBcQ8vEM
-	 GBi17vspRDFoyx+uBSOnc4WKMbC+1SyL7IGf994jR09hBizZdeRUtdiKUffImwQcsIGBy
-	 sdD9QxraC2tSXWKzHAURehRTidu1nv00NoXriYs+0XYQfiACzcmES6o/2jav1ykUAzjhO
-	 Y2RH20b8cxX2IZ5R7CF73YQzkeT8ZC82j2Qu+a7FH8oNDtvL8gurC579XaNbSBOAtlhUS
-	 XyB3gONZszkB/6Y+fu1wsglqBELlwnSMoE5xkYg0YpeOqPP4kbtxL6XQMCLsQ9NUydQ==
+	bh=OsbxJZpAZx1h36y2vzu/iL+NpozhILVCBKZvXimWDaY=;
+	b=nICldMbyab7uEc1dVuXM0nzqrVnjAjGfZgcOiLm8yUu5tsIpa8bgE3sKPZTI0CeMtsJ/
+	 qrQAIUmpSbz1wG/i832lq/Ggnk7fE6X6tDRzIijmcj2EKXVeJc54f6PYmz011E2Pbfu50
+	 RLFc6h9Dn9y4jofNaGybaWobAX05gm8S/ilT3uTY0ENyCm25NjkgLR0xqv8bnoiFBl6Zz
+	 iiLcoLHaa6zc3vecdu/WlOOCCGxJNAAx39+G5IqgdP4BC535weQPCEoYdcpfaoXwqij2c
+	 O+b2rDg2+TlanyAv5l/2dD0Cqp8bo7tpXaPJMymMhrwkVNrLxc8gDSRRyr9TVTFsQAQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=N3H3whoU;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dK0tn36H;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E7D606A329
-	for <loongarch@lists.linux.dev>; Wed,  4 Nov 2026 09:55:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F782606A326
+	for <loongarch@lists.linux.dev>; Wed,  4 Nov 2026 10:02:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=N3H3whoU
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3EFE1F00A02
-	for <loongarch@lists.linux.dev>; Wed,  4 Nov 2026 09:55:03 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dK0tn36H
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D18B11F00A02
+	for <loongarch@lists.linux.dev>; Wed,  4 Nov 2026 10:02:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793786103;
-	bh=7S4gJgJJUabrpB6VRwq4SCe6ojSm3qa1EXPFVgqVgUc=;
+	s=k20260515; t=1793786566;
+	bh=OsbxJZpAZx1h36y2vzu/iL+NpozhILVCBKZvXimWDaY=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=N3H3whoUPIS4XVnOUkJ/nDq0kerw2hmhnX6FZG9zM/0PnnG52q8Y9eUXvk2u6X6Vx
-	 tE6lKwbZuaYis0bcmNrMMz618HT6CaSrhhFRMtfhxEb2OUL5J50tUy7VLE9GqCE1ll
-	 QXSRMqB1a6reS6WaXFxCw5CGUlr3dJo0MKRaIo6HJ8fgwlOJ0vxP/3y6XrJPylHHI3
-	 YOsem5mQqT6tRdEMSYWZ+hvzQ9SSwjNJyyn+rHG7qvizWaSpOSk3WsxfuruMiY6ERG
-	 48hsOCW+Th2qfvd2sACPO69ShOsEetXoY99XA1NB44Qdjc0Yh5YQlG5JFEJaKJbsYK
-	 OKGtAZV7HMqKg==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-6b203527bceso585718a12.0
-        for <loongarch@lists.linux.dev>; Wed, 04 Nov 2026 01:55:03 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AKwUvBx+eIg+HQIlKg2brsd54xn3+iR1QNUcrjnjtUXPgHTIuHfrz8ATvhdlp9rBxE/OJr5NMRM2ptrJ76Q=@lists.linux.dev
-X-Gm-Message-State: APuU4Z8t4lu695LuKjrMsLzWMw9omGxMIl68XkkdrZ967BZnyD+X1A9r
-	Pr/YyV6Od0xva8qxPhjvAMQuzxkB8h63Mc6LGqpB9b7KwAGcD1hkki5i5b23t9BgOCymZqCpWqx
-	FJLju0NbgLPfB025stbVaPqV1TuP63ac=
-X-Received: by 2002:a05:6402:a510:20b0:6b4:201f:17b6 with SMTP id
- 4fb4d7f45d1cf-6b4d3374079mr8567339a12.6.1793786102316; Wed, 04 Nov 2026
- 01:55:02 -0800 (PST)
+	b=dK0tn36HQB0FgFCOs6lMaQtn970fqm1+UitCSCe5sQFvw/9ooxnBe19Q1qR7HsHJC
+	 OLm3g6zAwih81SeU+hnHL7nbWR9Ex7v1pEteOBwcebvEY0XGrZcEWjCdqLIGRl8qbA
+	 i+/+s0xMytH1ixwQLsAsNsP5ZQP3I93geQQYzg+Qkaz1y244jf7B9RaC3jOKssqtDt
+	 GvKt+ew57koXKm6puSxc5idn62dN6hdwyTaPN9VS155FKzWIXKg79itjkIjHxxXib7
+	 Z5WXPJnpxSF2iOT5eyC0+CKMbG7YGXvh7xyO0r8GM+hoEz8ID7p2YX1vlDWQaxDo6A
+	 gaGzPhuoYMdJA==
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-c4cb6834eaaso88411166b.2
+        for <loongarch@lists.linux.dev>; Wed, 04 Nov 2026 02:02:46 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AKwUvBwvHRUBiBnhqOuyL243FEDoFlDqkOcgNrmfUDlfuuKk1mcTmUr85tuoc26xcdNOBZ+zmJziqpHUa+U=@lists.linux.dev
+X-Gm-Message-State: APuU4Z+8fDOJrCKasoFgxShQrqpsFWggLxoo0ImihfJA4xhxLld6Bq+S
+	lbPCbrGjOJTv/irEBwvUjBbUqu8x/aazo0UTLPAos517QqFfzK/i7B8uYdPwJK90UXSEkwX06WA
+	tlw3D9evRE/Vi6zBXca9cbAbirQRWwjY=
+X-Received: by 2002:a17:906:7309:b0:c41:c718:f5c5 with SMTP id
+ a640c23a62f3a-c4ca7a15633mr1378905866b.13.1793786565446; Wed, 04 Nov 2026
+ 02:02:45 -0800 (PST)
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -59,163 +59,285 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <20261102072808.23080-1-yangtiezhu@loongson.cn>
- <20261102072808.23080-2-yangtiezhu@loongson.cn> <CAAhV-H52mbZJX2vkgG_h=XfwHoio=asLjFdhTJwUYqDp4V5JMg@mail.gmail.com>
- <8b00e5a7-4e60-19bd-7953-f76dc71e15ec@loongson.cn> <CAAhV-H52bqRD1SyrZsvMkNbCpGiM5DPSGPARiasZ8G3XsE5Tgw@mail.gmail.com>
- <6446c385-623c-d4cf-5a07-0c2276c6f50c@loongson.cn>
-In-Reply-To: <6446c385-623c-d4cf-5a07-0c2276c6f50c@loongson.cn>
+References: <cover.1793689461.git.zhoubinbin@loongson.cn> <ba943ed040b1c6a04a88612c1a62c04fefe876ba.1793689461.git.zhoubinbin@loongson.cn>
+In-Reply-To: <ba943ed040b1c6a04a88612c1a62c04fefe876ba.1793689461.git.zhoubinbin@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 4 Nov 2026 17:54:50 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4m-cokYz19HHAoDeLAjRGp4T=vwDOJaJEcHXZDW15rkQ@mail.gmail.com>
-X-Gm-Features: AclHuK-tyGt7dKynXW9DKY0ZRtsdV6cnh8v5lndrM8_P4nSQD_OrvjPPBDK8wfA
-Message-ID: <CAAhV-H4m-cokYz19HHAoDeLAjRGp4T=vwDOJaJEcHXZDW15rkQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] LoongArch: BPF: Make arena support depend on SCQ extension
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Hengqi Chen <hengqi.chen@gmail.com>, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Date: Wed, 4 Nov 2026 18:02:31 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7FL1oc0sS_Dm8kcSg0dTX5G8ZfQfQvfWEr_gXQWGAqfg@mail.gmail.com>
+X-Gm-Features: AclHuK_CDla3dRoNl3MCe3qp5KneL316zHPQCTZkiJ1u0xoSfIQ3io3-O827cno
+Message-ID: <CAAhV-H7FL1oc0sS_Dm8kcSg0dTX5G8ZfQfQvfWEr_gXQWGAqfg@mail.gmail.com>
+Subject: Re: [PATCH 3/8] spi: loongson: Make suspend/resume registers PM-specific
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Yinbo Zhu <zhuyinbo@loongson.cn>, Mark Brown <broonie@kernel.org>, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, linux-spi@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 4, 2026 at 2:58=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn>=
+Hi, Binbin,
+
+On Tue, Nov 3, 2026 at 3:08=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn>=
  wrote:
 >
-> On 11/4/26 12:29 PM, Huacai Chen wrote:
-> > On Tue, Nov 3, 2026 at 10:24=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongso=
-n.cn> wrote:
+> Currently, the driver reuses fields like spcr, sper, spsr, and para
+> within struct loongson_spi for multiple purposes (runtime setup,
+> polling, and PM state). This state overloading makes the code fragile.
+> For example, set_clk() modifies spcr/sper during normal operations,
+> which can corrupt the saved state right before a suspend.
 >
-> ...
+> To fix this, move these register caches into a dedicated struct
+> loongson_spi_suspend_store (lss) so they are exclusively used by the
+> PM callbacks. Other functions (set_clk, write_read_8bit, message
+> handling) are updated to use local variables instead of mutating the
+> global PM state.
 >
-> >> So, the current patch has no problem IMO.
-> > OK, then I think we can use:
-> >
-> > return __is_defined(system_has_cmpxchg128) && system_has_cmpxchg128();
+> Fixes: 6c7a864007b6 ("spi: loongson: add bus driver for the loongson spi =
+controller")
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> ---
+>  drivers/spi/spi-loongson-core.c | 80 ++++++++++++++++++---------------
+>  drivers/spi/spi-loongson.h      | 14 +++---
+>  2 files changed, 52 insertions(+), 42 deletions(-)
 >
-> If CONFIG_AS_HAS_SCQ_EXTENSION is not enabled, system_has_cmpxchg128()
-> is not defined at all. If we change the code to follow your suggestion,
-> something like this:
+> diff --git a/drivers/spi/spi-loongson-core.c b/drivers/spi/spi-loongson-c=
+ore.c
+> index deda754e214d..9f3acf583984 100644
+> --- a/drivers/spi/spi-loongson-core.c
+> +++ b/drivers/spi/spi-loongson-core.c
+> @@ -40,22 +40,23 @@ static void loongson_spi_set_cs(struct spi_device *sp=
+i, bool en)
 >
-> ```
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index b5ed4881d3c0..6f572d24d2c3 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -336,7 +336,7 @@ config AS_HAS_LVZ_EXTENSION
->          def_bool $(as-instr,hvcl 0)
+>  static void loongson_spi_set_clk(struct loongson_spi *loongson_spi, unsi=
+gned int hz)
+>  {
+> -       unsigned char val;
+> -       unsigned int div, div_tmp;
+>         static const char rdiv[12] =3D {0, 1, 4, 2, 3, 5, 6, 7, 8, 9, 10,=
+ 11};
+> +       unsigned char val, spr, spre;
+> +       unsigned int div, div_tmp;
 >
->   config AS_HAS_SCQ_EXTENSION
-> -       def_bool $(as-instr,sc.q \$t0$(comma)\$t1$(comma)\$t2)
-> +       def_bool n
+>         div =3D clamp_val(DIV_ROUND_UP_ULL(loongson_spi->clk_rate, hz), 2=
+, 4096);
+>         div_tmp =3D rdiv[fls(div - 1)];
+> -       loongson_spi->spcr =3D (div_tmp & GENMASK(1, 0)) >> 0;
+> -       loongson_spi->sper =3D (div_tmp & GENMASK(3, 2)) >> 2;
+> +
+> +       spr =3D (div_tmp & GENMASK(1, 0)) >> 0;
+>         val =3D loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_SPCR_REG=
+);
+>         val &=3D ~GENMASK(1, 0);
+> -       loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_SPCR_REG, val |
+> -                              loongson_spi->spcr);
+> +       loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_SPCR_REG, val |=
+ spr);
+> +
+> +       spre =3D (div_tmp & GENMASK(3, 2)) >> 2;
+>         val =3D loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_SPER_REG=
+);
+>         val &=3D ~GENMASK(1, 0);
+> -       loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_SPER_REG, val |
+> -                              loongson_spi->sper);
+> +       loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_SPER_REG, val |=
+ spre);
+> +
+>         loongson_spi->hz =3D hz;
+>  }
 >
->   config CC_HAS_ANNOTATE_TABLEJUMP
->          def_bool $(cc-option,-mannotate-tablejump)
-> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-> index d7ea515045ec..d124632b0fa9 100644
-> --- a/arch/loongarch/net/bpf_jit.c
-> +++ b/arch/loongarch/net/bpf_jit.c
-> @@ -2495,11 +2495,7 @@ bool bpf_jit_supports_arena(void)
->           * atomic cmpxchg; this is provided by not only hardware SCQ
-> extension
->           * but also assembler support on LoongArch.
->           */
-> -#ifdef system_has_cmpxchg128
-> -       return system_has_cmpxchg128();
-> -#else
-> -       return false;
-> -#endif
-> +       return __is_defined(system_has_cmpxchg128) &&
-> system_has_cmpxchg128();
->   }
+> @@ -107,8 +108,9 @@ static int loongson_spi_setup(struct spi_device *spi)
+>  static int loongson_spi_write_read_8bit(struct spi_device *spi, const u8=
+ **tx_buf,
+>                                         u8 **rx_buf, unsigned int num)
+>  {
+> -       int ret;
+>         struct loongson_spi *loongson_spi =3D spi_controller_get_devdata(=
+spi->controller);
+> +       unsigned char status;
+> +       int ret;
 >
->   bool bpf_jit_supports_fsession(void)
-> ```
+>         if (tx_buf && *tx_buf)
+>                 loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_FIFO_RE=
+G, *((*tx_buf)++));
+> @@ -116,8 +118,8 @@ static int loongson_spi_write_read_8bit(struct spi_de=
+vice *spi, const u8 **tx_bu
+>                 loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_FIFO_RE=
+G, 0);
 >
-> We will encounter a fatal build error:
+>         ret =3D readb_poll_timeout(loongson_spi->base + LOONGSON_SPI_SPSR=
+_REG,
+> -                                loongson_spi->spsr, (loongson_spi->spsr =
+&
+> -                                LOONGSON_SPI_SPSR_RFEMPTY) !=3D LOONGSON=
+_SPI_SPSR_RFEMPTY,
+> +                                status,
+> +                                !(status & LOONGSON_SPI_SPSR_RFEMPTY),
+>                                  1, USEC_PER_MSEC);
 >
->    CC      arch/loongarch/net/bpf_jit.o
-> arch/loongarch/net/bpf_jit.c: In function =E2=80=98bpf_jit_supports_arena=
-=E2=80=99:
-> arch/loongarch/net/bpf_jit.c:2498:55: error: implicit declaration of
-> function =E2=80=98system_has_cmpxchg128=E2=80=99 [-Wimplicit-function-dec=
-laration]
->   2498 |         return __is_defined(system_has_cmpxchg128) &&
-> system_has_cmpxchg128();
->        |
-> ^~~~~~~~~~~~~~~~~~~~~
-> make[5]: *** [scripts/Makefile.build:290: arch/loongarch/net/bpf_jit.o]
-> Error 1
+>         if (rx_buf && *rx_buf)
+> @@ -148,10 +150,11 @@ static int loongson_spi_write_read(struct spi_devic=
+e *spi, struct spi_transfer *
+>  static int loongson_spi_prepare_message(struct spi_controller *ctlr, str=
+uct spi_message *m)
+>  {
+>         struct loongson_spi *loongson_spi =3D spi_controller_get_devdata(=
+ctlr);
+> +       unsigned char para;
 >
-> Even if we change it to use IS_ENABLED(CONFIG_AS_HAS_SCQ_EXTENSION),
-> something like this:
+> -       loongson_spi->para =3D loongson_spi_read_reg(loongson_spi, LOONGS=
+ON_SPI_PARA_REG);
+> -       loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_PARA_REG, loong=
+son_spi->para &
+> -                              ~LOONGSON_SPI_PARA_MEM_EN);
+> +       para =3D loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_PARA_RE=
+G);
+> +       loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_PARA_REG,
+> +                              para & ~LOONGSON_SPI_PARA_MEM_EN);
 >
-> ```
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index b5ed4881d3c0..6f572d24d2c3 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -336,7 +336,7 @@ config AS_HAS_LVZ_EXTENSION
->          def_bool $(as-instr,hvcl 0)
+>         return 0;
+>  }
+> @@ -171,8 +174,12 @@ static int loongson_spi_transfer_one(struct spi_cont=
+roller *ctrl, struct spi_dev
+>  static int loongson_spi_unprepare_message(struct spi_controller *ctrl, s=
+truct spi_message *m)
+>  {
+>         struct loongson_spi *loongson_spi =3D spi_controller_get_devdata(=
+ctrl);
+> +       unsigned char para;
 >
->   config AS_HAS_SCQ_EXTENSION
-> -       def_bool $(as-instr,sc.q \$t0$(comma)\$t1$(comma)\$t2)
-> +       def_bool n
+> -       loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_PARA_REG, loong=
+son_spi->para);
+> +       /* Restore the hardware SPI Flash read path */
+> +       para =3D loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_PARA_RE=
+G);
+> +       loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_PARA_REG,
+> +                              para | LOONGSON_SPI_PARA_MEM_EN);
 >
->   config CC_HAS_ANNOTATE_TABLEJUMP
->          def_bool $(cc-option,-mannotate-tablejump)
-> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-> index d7ea515045ec..1b87b1e4262e 100644
-> --- a/arch/loongarch/net/bpf_jit.c
-> +++ b/arch/loongarch/net/bpf_jit.c
-> @@ -2495,11 +2495,7 @@ bool bpf_jit_supports_arena(void)
->           * atomic cmpxchg; this is provided by not only hardware SCQ
-> extension
->           * but also assembler support on LoongArch.
->           */
-> -#ifdef system_has_cmpxchg128
-> -       return system_has_cmpxchg128();
-> -#else
-> -       return false;
-> -#endif
-> +       return IS_ENABLED(CONFIG_AS_HAS_SCQ_EXTENSION) &&
-> system_has_cmpxchg128();
->   }
+>         return 0;
+>  }
+> @@ -231,38 +238,37 @@ EXPORT_SYMBOL_NS_GPL(loongson_spi_init_controller, =
+"SPI_LOONGSON_CORE");
 >
->   bool bpf_jit_supports_fsession(void)
-> ```
+>  static int loongson_spi_suspend(struct device *dev)
+>  {
+> -       struct loongson_spi *loongson_spi;
+> -       struct spi_controller *controller;
+> -
+> -       controller =3D dev_get_drvdata(dev);
+> -       spi_controller_suspend(controller);
+> +       struct spi_controller *controller =3D dev_get_drvdata(dev);
+> +       struct loongson_spi *loongson_spi =3D spi_controller_get_devdata(=
+controller);
+> +       int ret;
 >
-> It still fails with the same error due to the macro visibility:
+> -       loongson_spi =3D spi_controller_get_devdata(controller);
+> +       ret =3D spi_controller_suspend(controller);
+> +       if (ret)
+> +               return ret;
 >
->    CC      arch/loongarch/net/bpf_jit.o
-> arch/loongarch/net/bpf_jit.c: In function =E2=80=98bpf_jit_supports_arena=
-=E2=80=99:
-> arch/loongarch/net/bpf_jit.c:2498:59: error: implicit declaration of
-> function =E2=80=98system_has_cmpxchg128=E2=80=99 [-Wimplicit-function-dec=
-laration]
->   2498 |         return IS_ENABLED(CONFIG_AS_HAS_SCQ_EXTENSION) &&
-> system_has_cmpxchg128();
->        |
-> ^~~~~~~~~~~~~~~~~~~~~
-> make[5]: *** [scripts/Makefile.build:290: arch/loongarch/net/bpf_jit.o]
-> Error 1
+> -       loongson_spi->spcr =3D loongson_spi_read_reg(loongson_spi, LOONGS=
+ON_SPI_SPCR_REG);
+> -       loongson_spi->sper =3D loongson_spi_read_reg(loongson_spi, LOONGS=
+ON_SPI_SPER_REG);
+> -       loongson_spi->spsr =3D loongson_spi_read_reg(loongson_spi, LOONGS=
+ON_SPI_SPSR_REG);
+> -       loongson_spi->para =3D loongson_spi_read_reg(loongson_spi, LOONGS=
+ON_SPI_PARA_REG);
+> -       loongson_spi->sfcs =3D loongson_spi_read_reg(loongson_spi, LOONGS=
+ON_SPI_SFCS_REG);
+> -       loongson_spi->timi =3D loongson_spi_read_reg(loongson_spi, LOONGS=
+ON_SPI_TIMI_REG);
+> +       loongson_spi->lss.spcr =3D loongson_spi_read_reg(loongson_spi, LO=
+ONGSON_SPI_SPCR_REG);
+> +       loongson_spi->lss.sper =3D loongson_spi_read_reg(loongson_spi, LO=
+ONGSON_SPI_SPER_REG);
+> +       loongson_spi->lss.spsr =3D loongson_spi_read_reg(loongson_spi, LO=
+ONGSON_SPI_SPSR_REG);
+> +       loongson_spi->lss.para =3D loongson_spi_read_reg(loongson_spi, LO=
+ONGSON_SPI_PARA_REG);
+> +       loongson_spi->lss.sfcs =3D loongson_spi_read_reg(loongson_spi, LO=
+ONGSON_SPI_SFCS_REG);
+> +       loongson_spi->lss.timi =3D loongson_spi_read_reg(loongson_spi, LO=
+ONGSON_SPI_TIMI_REG);
 >
-> Therefore, using the explicit #ifdef block in the original patch is the
-> only way to ensure toolchain compatibility and compile-time robustness
-> here IMO.
-This is OK:
-
-return cpu_has_scq && __is_defined(system_has_cmpxchg128);
-
-It means two things:
-1. CPU supports SC.Q;
-2. Kernel defines system_has_cmpxchg128.
-
-Very clear.
+>         return 0;
+>  }
+>
+>  static int loongson_spi_resume(struct device *dev)
+>  {
+> -       struct loongson_spi *loongson_spi;
+> -       struct spi_controller *controller;
+> +       struct spi_controller *controller =3D dev_get_drvdata(dev);
+> +       struct loongson_spi *loongson_spi =3D spi_controller_get_devdata(=
+controller);
+>
+> -       controller =3D dev_get_drvdata(dev);
+> -       loongson_spi =3D spi_controller_get_devdata(controller);
+> +       loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_SPCR_REG, loong=
+son_spi->lss.spcr);
+> +       loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_SPER_REG, loong=
+son_spi->lss.sper);
+> +       loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_PARA_REG, loong=
+son_spi->lss.para);
+> +       loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_SFCS_REG, loong=
+son_spi->lss.sfcs);
+> +       loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_TIMI_REG, loong=
+son_spi->lss.timi);
+>
+> -       loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_SPCR_REG, loong=
+son_spi->spcr);
+> -       loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_SPER_REG, loong=
+son_spi->sper);
+> -       loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_SPSR_REG, loong=
+son_spi->spsr);
+> -       loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_PARA_REG, loong=
+son_spi->para);
+> -       loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_SFCS_REG, loong=
+son_spi->sfcs);
+> -       loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_TIMI_REG, loong=
+son_spi->timi);
+> +       loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_SPSR_REG,
+> +                              LOONGSON_SPI_SPSR_SPIF | LOONGSON_SPI_SPSR=
+_WCOL);
+>
+>         spi_controller_resume(controller);
+>
+> diff --git a/drivers/spi/spi-loongson.h b/drivers/spi/spi-loongson.h
+> index 35f95b161842..b2e73fa12420 100644
+> --- a/drivers/spi/spi-loongson.h
+> +++ b/drivers/spi/spi-loongson.h
+> @@ -29,19 +29,23 @@
+>  struct device;
+>  struct spi_controller;
+>
+> -struct loongson_spi {
+> -       struct  spi_controller  *controller;
+> -       void __iomem            *base;
+> -       int                     cs_active;
+> -       unsigned int            hz;
+> +struct loongson_spi_suspend_store {
+Maybe loongson_spi_pm_state is a better name.
 
 Huacai
 
+>         unsigned char           spcr;
+>         unsigned char           sper;
+>         unsigned char           spsr;
+>         unsigned char           para;
+>         unsigned char           sfcs;
+>         unsigned char           timi;
+> +};
+> +
+> +struct loongson_spi {
+> +       struct  spi_controller  *controller;
+> +       void __iomem            *base;
+> +       int                     cs_active;
+> +       unsigned int            hz;
+>         unsigned int            mode;
+>         u64                     clk_rate;
+> +       struct loongson_spi_suspend_store lss;
+>  };
 >
-> Anyway, I will modify the patch subject, update the commit message
-> and code comment to make it more clear.
->
-> Thanks,
-> Tiezhu
+>  int loongson_spi_init_controller(struct device *dev, void __iomem *reg);
+> --
+> 2.52.0
 >
