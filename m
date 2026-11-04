@@ -1,111 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793798111;
-	b=ZNq0ivxH4Xzu6Efqs6yq0Msyt4+RtM+P0MoWbhd3YQleM3M/FcmhNtF8Dir3DanWPo8i
-	 fJDPy/aadGr7iRHM3ZGMwnhR5Kh3eBRngvtRQaej78CP2weEDdJp2g+MnRsByn/QM+Vte
-	 +8tJk+SOwur7hwhUcl4oPNifkkU3n/gQDIru72WqXaczQTplExwkgx6jz1UmMjeO9Smqq
-	 kbb4mL1UKwUmQYxaZEyymjwXWBLS/C1AAeIQ6bTxur2dw2fElaJ0miILMdSJvS4WC+J2g
-	 LweEANYgRmI8jnvrUnRxITlaKH8VpYv9UK+Rk4LUEgT06wsHpC5upsGM8xAqe88wY3Q==
+	t=1793801258;
+	b=wr9WXccx/RGh4503N7GG9EuZfVJn43y1tD7NpZ6sn2MaolhKE2r9D5sK9vwXJ5YE6rkI
+	 s0DlXPtSVB63+M5hiJcYXk633wKenjG3YkVhdmaEMdpM9CAYNhkNA4H413NrWIAx9LkHq
+	 jU3p87CtgI/UiKhocWxa0Vom8mKJmW7e2KxmB2DObACxA29DBWPjtx+L0ovirODT3SKM/
+	 mP6oyHsIgouIsa8oqzlnWGzHSPCnegkEtrEs8j+fPgvH8pgq9Er9oH1ic6uzhX80ZDhbx
+	 LBlwoctA04OzwqBnoQWLCM1kT+6e8X6sXMFKRH7Pz0/arlF53S6rBDBK07++MdVCg5Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793798111;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:
-	 DKIM-Signature:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:X-Received:Received:Message-ID:
-	 Date:MIME-Version:User-Agent:Subject:To:Cc:References:
-	 Content-Language:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-Proofpoint-ORIG-GUID:
-	 X-Proofpoint-Spam-Info:X-Proofpoint-Spam-Details-Enc:
-	 X-Proofpoint-GUID:X-Authority-Analysis:X-Proofpoint-Virus-Version:
-	 X-Proofpoint-Spam-Details;
-	bh=Xh9EOmcuI9wyEV/Jmo9i6NtzTlnDgJymp46o7FRpHF8=;
-	b=l5opozFrXkvMcFWKbWlPE6Njbx3IMRxh1jembrHl8p690ylXqFmt84UuAroTTDVFOBpI
-	 BLB2YwBFtuZph1h/f5RxUhkG/0I8KgdB8FMap7UbPY/yxwHuWfit2JEFXeQWjqaLVu/6Z
-	 49yHsqXBdwUCaNr/UZ9gVHyQc34ff/Q5+eakKv/YMcgw596ujRJV2wMvDnf+e+PtoRxdC
-	 hO6GHJkSDAxwOV0brVwRMTAwmC11sWW5V4W50VCGqgtI209NGOlM9inqTaD2GlvK39/JF
-	 w/6D+S8AU8HO3GVzgh2KdHRD4t3x/o1WCzMlrgcjpbPayI7gzVi/NevoSztIdxJhdbw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793801258;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:From:Content-Language:Autocrypt:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=lu+By1tioveqgXijEvnKTH9hPcb3YW7+OPvZU2YHEqU=;
+	b=fNdBoxtcsO4cARk7xkpYCAu+BEhkSqAOrD0baBYUumhCfajq1bkfB7Xrk9/VoqvGA8ja
+	 9Naml6dBynrFAD5USGGMYkeYluEaIVcYdRFal9jErhew3w24oSE2ocDrHQ6LBgYH05YXP
+	 wBxRiyHx/Y1A25gCilF0oFS1TtB0JUP8hAW2LHooymz6qLHQ/Fr/YvZrMYSTM5wEU2wPl
+	 1OhkS3fOPZ6hg9RXTe4W5EglFPDFxNqx5daXTu2fDQaR+pimU5F7wZT6sfNj7n1akFlgt
+	 oM3Pw2DqAcpLXc+I7XHQCjB8BlRKcF3lmRHerIOl9x24gc4v+INybjwhK5YiMTl5pkg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=oss.qualcomm.com;
-	spf=pass smtp.mailfrom=oss.qualcomm.com;
-	dkim=pass header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=cNnOeYV5;
-	dkim=pass header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=jBfblJYS;
-	arc=none smtp.remote-ip=205.220.168.131
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Xtq1rXDH;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F8CB606A32D
-	for <loongarch@lists.linux.dev>; Wed,  4 Nov 2026 13:15:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8F8CB606A32D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4B6606A32C;
+	Wed,  4 Nov 2026 14:07:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=cNnOeYV5;
-	dkim=pass (2048-bit key, unprotected) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=jBfblJYS
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6A4BZvUb739262
-	for <loongarch@lists.linux.dev>; Wed, 4 Nov 2026 13:15:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Xh9EOmcuI9wyEV/Jmo9i6NtzTlnDgJymp46o7FRpHF8=; b=cNnOeYV5Qx+nStdG
-	2Ty3Uxe5LC7IKPsYJsO+ryjcl1DMmkJGy2p2um6SfkUYaneSsxr05OTL9Eq8lamG
-	MqJQEFjAreX3XliKerA373JHZSxtSnxFvRmR3iDzEG7xRNwND7+lGWvDFJFdo4Aq
-	lRUrd7grcvT7R7JHB3P/kur93Qt+MxBue+N/dtrGY5ovuj57Pd8u9YBPuAIO4r0G
-	rys9n+k7BKZ9I61CDD0nfbvOEpNeBxBagKuSFmJbqkLjyz1WVbPgWz/mLOgGO2L1
-	Ik/HYXhhwAYbOUAC/mk1gYfJcbVH1HyJlNrYmXwLK/gFdDe2VLiYaeC4FSjSM6zG
-	GPSuYQ==
-Received: from mail-oo1-f71.google.com (mail-oo1-f71.google.com [209.85.161.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4hr163h4up-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <loongarch@lists.linux.dev>; Wed, 04 Nov 2026 13:15:09 +0000 (GMT)
-Received: by mail-oo1-f71.google.com with SMTP id 006d021491bc7-6dfe0f03baeso773149eaf.1
-        for <loongarch@lists.linux.dev>; Wed, 04 Nov 2026 05:15:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1793798109; x=1794402909; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Xh9EOmcuI9wyEV/Jmo9i6NtzTlnDgJymp46o7FRpHF8=;
-        b=jBfblJYS7V87LcW7vyJ1PrID8+lgJCWP33gpeQDd6nCCNIG26yEigmObyy/OxWdxM4
-         pqUKRDT9s1eZYAfy/rBvvWq66RffjItcb33ml/CF8HlIpYTott1+0grzeMKIJZgiAf28
-         hsK68mQ4seUVBDLjXkvD2ptVyhiVsgqWkXnLAP9f3paItDblkeGjM04KmWQ9BjKLF/Bf
-         nXqBymEDU11nGQ3WTcvjDSZjI/lsj1+qbvh+DBbMs3EFJW6RpNc0n9eY+DgT9f0cjN4K
-         I4Dp5tv43cq1wXFIxxeztsURyubnEkAiRoHWlmAkxetgxbsIuWCOiW6TWltLDlJHWpuB
-         DbpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793798109; x=1794402909;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=Xh9EOmcuI9wyEV/Jmo9i6NtzTlnDgJymp46o7FRpHF8=;
-        b=m4RTfaZgeQ60a3cyWD1fe/6MhdpRA4hW7OUNpDRV4HIDJhSIJRnKTsTGv1700p/2EB
-         6KyZk0kqaFB/dPO8FbwgYo5izerOZRQbN2aKMvej1y78wQPkF68irxGm5rEQs2BcIjfB
-         viJIruj6OoGNYRj8kd4cbUOnp5gdwlO/iCKLUJgWCXQrj47FKwWgcLYUlzAir5UxUbYr
-         /5ouDhC0dfD3pLr6LU70MK2gnBbx+luiHW6Deki35963vZMw9400y0ASc2nseyA2unOx
-         QHbHokYJNzSMAGjxinrFbTg0IC9v/HR/We4HBSed0aGOAEcAZRUGg1b6leCLkGLdu5lj
-         21+A==
-X-Forwarded-Encrypted: i=1; AKwUvBz7GJWQNq9Wz5tRCdb935xtu+BvqRDk7E3pUeBCBj3Oo5haKteoZb/zf6f62KCnlZu+fGCF3UO5p0w=@lists.linux.dev
-X-Gm-Message-State: APuU4Z+fLiOGWo21nUC9yz5CJrRQFm6BfAcVUsGQx8veWmmMSqKz6LsJ
-	o5n43cd4vg3Ix464O/2IHXK7ZRHKemQGP7dHd64DaA8ZY5V2kzGxhsNwFXdeyeIHRhS3uqPSM4c
-	67u5R+3nXlM8O8oJwcik0avsHKeAodv/uMvCrOoNgqbU4PlfaEoAsXJ+93pH9BFo=
-X-Gm-Gg: AYBFou1lyyEEeF7maC5+At/2eg0V2cZHNeOc4DlimfJvzCB7lZik2r41URkqwo2AW0L
-	jTQy1Pv3jNAVGZeQGzjjO78oiEsHSwj8G1eC8DvmjTuG9d4PfAOaVk/rAPMmbIyX5tgtF5HdgpA
-	giTCkT8SnoOv20cryjqjrVDnUqq1gRIfFcRaSmXH82eElZZpAu4uHrEkYuVntXcsFfxcryKsgq9
-	O+gR/H+oALNhrsT0sLHvOYcz/5j2xaIgLE1qINMIQizkOa2p9ZcpkECRD9l9oOftGv+QkzGH+sI
-	a1GlfLvRswZTtvn1I56K1spKRDDqWR2jplmvqupVtVVHe8m5ybMyzDZmOJuTwqRrg6c5t6kgPfR
-	UK+dSPQx7yp8FtBWApvCb8iU/ZGIeHl1ROeCn8AhT2QvyPAWQV6Vj6/7R+0CBqF3jrp8=
-X-Received: by 2002:a05:6820:1504:b0:6d9:8fed:b732 with SMTP id 006d021491bc7-714f29d7767mr8519152eaf.56.1793798108844;
-        Wed, 04 Nov 2026 05:15:08 -0800 (PST)
-X-Received: by 2002:a05:6820:1504:b0:6d9:8fed:b732 with SMTP id 006d021491bc7-714f29d7767mr8519124eaf.56.1793798108043;
-        Wed, 04 Nov 2026 05:15:08 -0800 (PST)
-Received: from [172.20.4.37] ([192.210.17.203])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-716c1317c7dsm1583094eaf.13.2026.11.04.05.15.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Nov 2026 05:15:07 -0800 (PST)
-Message-ID: <d0a13ee7-c3b7-486c-b3a2-6c4fc06694ac@oss.qualcomm.com>
-Date: Wed, 4 Nov 2026 14:15:04 +0100
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Xtq1rXDH
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7652A1F00919;
+	Wed,  4 Nov 2026 14:07:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793801257;
+	bh=lu+By1tioveqgXijEvnKTH9hPcb3YW7+OPvZU2YHEqU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=Xtq1rXDHtjUtiz8ZQNhGl864CXHsKzFi7B8tvlmfWu7TR4c8iU1QQ7cE7+ej14qL7
+	 pS6JNOtv23O1/J8qhN2eLLxNFn2kbXGEqpCY8pZ1HAwQNIaSurSyvEUbjql/gPvPal
+	 T61iZnGV/vR2e3ac0Bw20MADsSnu4thaTB1LlycSD0uxm/ysKcL7IDveGbARhJDu2n
+	 UqqT1++qFKe5w5mHs/I5Tz0WsPNt65ShBsotTQGk4N2WWfr9HhScOOyEFInpetJXft
+	 htHQMU8YKPJgBdeZNHOobv7YqLUCZLSGPQa21XFzFhn26VdaOrT6x53EJ8UNTJmbov
+	 BccP2EIaWfYYA==
+Message-ID: <64b74093-541c-4f32-8ea4-c8007067eeea@kernel.org>
+Date: Wed, 4 Nov 2026 15:07:16 +0100
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -116,209 +52,288 @@ List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 0/7] thermal/drivers/loongson2: Fix trip programming
- and add Loongson-2K0300 support
-To: Binbin Zhou <zhoubinbin@loongson.cn>,
-        Binbin Zhou
- <zhoubb.aaron@gmail.com>,
-        Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Yinbo Zhu <zhuyinbo@loongson.cn>,
-        zhanghongchen <zhanghongchen@loongson.cn>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
-        loongarch@lists.linux.dev, devicetree@vger.kernel.org,
-        linux-pm@vger.kernel.org
-References: <cover.1793690276.git.zhoubinbin@loongson.cn>
+Subject: Re: [PATCH RESEND v2 00/21] mm: change behavior of
+ pXdp_get()/pXd_page() in compile-time folded pgtable
+To: Yeoreum Yun <yeoreum.yun@arm.com>, Russell King <linux@armlinux.org.uk>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>,
+ Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Barry Song <baohua@kernel.org>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ Michal Hocko <mhocko@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+ Anup Patel <anup@brainfault.org>, Atish Patra <atish.patra@linux.dev>,
+ Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
+ <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, "Liam R. Howlett" <liam@infradead.org>,
+ Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Jonas Bonn <jonas@southpole.se>,
+ Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+ Stafford Horne <shorne@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org,
+ kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+ linux-openrisc@vger.kernel.org, Muhammad Usama Anjum <usama.anjum@arm.com>,
+ Sohil Mehta <sohil.mehta@intel.com>
+References: <20261102-dummy_ptxp3-v2-0-78840b2ec73c@arm.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
-In-Reply-To: <cover.1793690276.git.zhoubinbin@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <20261102-dummy_ptxp3-v2-0-78840b2ec73c@arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: 3F6FGR6NjInO1NpMpNTErrUw0mJeJjon
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMTA0MDA1MiBTYWx0ZWRfX3UT5cufT9hTH
- 1wQPhvWP42x/v5hEc1ynyq92RKkAFX2fvD+GoGpZ5KWim7SeUGrg5Hqq+yJxyHNnwbziEok0Vki
- LHo60I0eeg9lnBfr6mByWA0hmqsKtCU=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTA0MDA1MiBTYWx0ZWRfXwzchRvQiQVp8
- tSDcMImI1oD0lgAYp09m5RTiFC5lGHJZAayiO64lmsf4CM78BC/HlokhxQayu8W8Q6JNwfwVJdh
- X+QlYOI5RhV2vo3xJneplfoBGy0B6UkPWEv8hQenYmywcEOIBGegRs1WPDR0Sfwn/bWKXwAPsHl
- fIMBo9WnVCD/qjl9MElyAKgqZtpgFuMlhhavUQuZ1gF7tZSfHR1c4ZGyan1HRpH4nJ1HZsLCbfF
- StgO8BYMFxf8O1dtxVnY2p0zaYUzcrNxXRM8Bb4grx2xNeWqIhdH8UqaX3xf0MQI6FCGAW0VMcw
- 1UsuCG5s7mLJfq0tE7/YQNxen+HKgKaa+bOSRCdlfxz4soZ+HdVsVzFYERzobeL3BwbdlFc51Y+
- yHEM8gIW8KFTZtabKd8+9wnSDB1M7oD0j2cFQFCyw8UBtJuJGnlHhfyV/pEtgO1CxG40ehVKB7w
- QJsYLb9/eaydJNm4ZaQ==
-X-Proofpoint-GUID: 3F6FGR6NjInO1NpMpNTErrUw0mJeJjon
-X-Authority-Analysis: v=2.4 cv=O5OsLx9W c=1 sm=1 tr=0 ts=6aeb2fdd cx=c_pps
- a=V4L7fE8DliODT/OoDI2WOg==:117 a=3CSVYe8HblTQFsWiJzwA3g==:17
- a=IkcTkHD0fZMA:10 a=zJRp6_cAMcgA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=YMgV9FUhrdKAYTUUvYB2:22
- a=c92rfblmAAAA:8 a=VwQbUJbxAAAA:8 a=PsDKY8HSHSVfbGAcyQIA:9 a=QEXdDO2ut3YA:10
- a=WZGXeFmKUf7gPmL3hEjn:22 a=GvGzcOZaWPEFPQC_NcjD:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
- definitions=2026-11-04_04,2026-11-03_04,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 adultscore=0 phishscore=0 lowpriorityscore=0 malwarescore=0
- clxscore=1015 impostorscore=0 suspectscore=0 priorityscore=1501 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2610300000 definitions=main-2611040052
 
+On 11/2/26 12:21, Yeoreum Yun wrote:
+> Using ptep_get() and its counterparts in common code is suboptimal on
+> kernel configurations with generic compile-time folded page tables.
+> By default, ptep_get() and its friends expands to READ_ONCE(),
+> forcing the compiler to emit a load even when the value is not used afterwards.
+> 
+> This issue was recently reported by Christophe Leroy [1] for ppc32
+> preventing futher code conversion to ptep_get()/pmdp_get()/... helper
+> and the same behavior can also be observed on arm64 when built with
+> 2- or 3-level page tables
+> 
+> e.g) perf_get_page_size() in arm64 with CONFIG_PGTABLE_LEVEL=3:
+> 
+> 00000000000052a0 <perf_get_page_size>:
+>     ...
+>     52dc: d53b4234     	mrs	x20, DAIF
+>     52e0: d50343df     	msr	DAIFSet, #0x3
+>     ...
+>     52fc: d35e9a69     	ubfx	x9, x19, #30, #9        /* pud_offset_lockless() */
+>     5300: f9403508     	ldr	x8, [x8, #0x68]
+>     5304: f869790a     	ldr	x10, [x8, x9, lsl #3]   /* pudp_get() */
+>     5308: f90007ea     	str	x10, [sp, #0x8]
+>     530c: f8697908     	ldr	x8, [x8, x9, lsl #3]    /* pudp_get() */
+>     ...
+>     5360: 90000009     	adrp	x9, 0x5000 <perf_prepare_sample+0x548>
+>     5364: 92746908     	and	x8, x8, #0x7ffffff000
+>     5368: d3557675     	ubfx	x21, x19, #21, #9       /* pmd_offset_lockless() */
+>     ...
+>     5394: f8757ac8     	ldr	x8, [x22, x21, lsl #3]  /* pmdp_get() */
+> 
+> Though PGTABLE_LEVEL=3, since the pudp_get() still remain with
+> READ_ONCE(), there's redundant load for the pud which is folded.
+> 
+> To prevent generating suboptimal code, make pXdp_get() return a dummy
+> entry for compile-time folded page tables, make the helpers such as
+> pXd_offset()/pXd_offset_lockless(), set_pXd() validate dummy entries
+> at compile time to catch the wrong usage and prohibit calls to
+> pXd_page() in pgtable-nopXd.h.
+> 
+> This series does not change the behaviour of existing code that directly
+> manipulates folded page-table levels using set_pgd(), pgd_page_vaddr(), and
+> related helpers. Those helpers continue to behave as before.
+> 
+> The new restrictions only apply to code that adopts the pXdp_get()-based
+> access model for compile-time folded page tables.
+> 
+> As the pXdp_get() can return *dummy* entry, some of code using
+> the stack value where saves the pXdp_get() could be a problematic:
+> 
+>   1. Passing address of stack value where saves the pXdp_get() result
+>      to pXd_offset() for example:
+> 
+>        pud_t *pudp, pud;
+>        pmd_t *pmdp;
+> 
+>        pud = pudp_get(pudp, address);
+>        pmdp = pmd_offset(&pud, pud, address);
+> 
+>      (e.g. host_pfn_mapping_level() in loongarch).
+> 
+>   2. Using the pXdp_get() result to use as argument of pXd_val() and
+>      to check prot without checking pgtable is folded.
+>      for example, x86's effective_prot().
+> 
+>   3. Using set_pXd() with pXdp_get() will set problematic dummy entry
+>      in folded page table like:
+> 
+>        set_pXd(pxdp, pXdp_get(pxdp_k));
+> 
+>   4. Using pgd_page_vaddr() to get the first-level pgtable.
+>      passing dummy pxdp_get() for pgd_page_vaddr() will return wrong
+>      address. Therefore, make pgd_page_vaddr() and pXd_pgtable() to
+>      trigger the error for improper usage with folded dummy entry in the
+>      generic compile-time folded pgtable.
+> 
+> Thanksfully, above cases are rare since (1) most of usage using
+> pXd_offset() with result of upper pXd_offset(), (2) it's extreamely
+> rare to use pXd_val() for non-leaf entry in the kernel,
+> (3) is to handle the vmalloc_fault or set the first level of page table
+> and (4) to setup early page table and etc.
+> 
+> Therefore, properly handle this uncommon and problematic pattern, and
+> document the current design of compile-time folded page tables.
+> 
+> This patch is based on mm-unstable.
+> 
+> Future work
+> ===========
+>  - print_bad_page_map() and show_pte() still prints dummy values
+>    instead of printing the same content for all generic compile-time
+>    folded page tables. We might want to skip printing dummy values later.
+> 
+>  - We currently catch abuse of dummy values on the stack at compile-time by
+>    relying on constant propagation by the compiler. Usama's work [3] on using
+>    distinct types for sw vs. hw PTEs could help here as well."
+> 
+>  - Clean up vmalloc fault handling by synchronizing the vmalloc entry on
+>    32-bit architectures. This code is almost identical across architectures.
+> 
+>  - Unfortunately, the current design of compile-time folded page tables appears
+>    to be internally consistent but confusing. For example,
+>    when CONFIG_PGTABLE_LEVELS is 2, p4d, pud, and pmd are expected to
+>    be folded into pgd. However, the architecture code uses set_pmd()
+>    to update the top-level page-table entry, even though it includes pgtable-nopmd.h.
+> 
+>    In the future, it would be good to eliminate this source of confusion,
+>    possibly by treating all folded upper levels consistently as dummy wrappers
+>    around the highest real page-table level:
+> 
+>          NOPGD
+>    --> +------+           P4D
+>        | ptr0 |-------> +------+           PUD
+>        +------+         | ptr0 |-------> +-----+
+>                         | ptr1 |-        | ptr | -------> ...
+>                         | ptr2 | \       | ptr |
+>                         | ptr3 |  \        ...
+>                           ...      \
+>                                     \        PUD
+>                                      +----> +-----+
+>                                             | ptr | -------> ...
+>                                             | ptr |
+>                                               ...
+> 
+> Link: [1] https://lore.kernel.org/all/0019d675-ce3d-4a5c-89ed-f126c45145c9@kernel.org/
+> Link: [2] https://lore.kernel.org/all/20251113014656.2605447-1-samuel.holland@sifive.com/
+> Link: [3] https://lore.kernel.org/r/74182e50-b54f-4d2d-a27f-3a59a538d6bc@arm.com
+> 
+> Patch History
+> =============
+> from v1 to v2:
+>   - fix docutils warning.
+>   - Link to v1: https://lore.kernel.org/r/20260921-dummy_ptxp3-v1-0-cd40cf68242e@arm.com
+> 
+> from RFC v3 to v1:
+>   - Drop and rebase for CONFIG_X86_DIRECT_GBPAGES and use the Dave's
+>     patch (https://lore.kernel.org/all/20260902194718.E1FF3041@davehans-spike.ostc.intel.com/)
+>   - Link to RFC v3: https://lore.kernel.org/r/20260902-dummy_ptxp3-v3-0-5d8f5b17c25c@arm.com
+> 
+> from RFC v2 to RFC v3:
+>   - repasre commit message
+>   - move ptdump_pgtable_first_level() into pgalloc.h
+>   - skip the huge pud operation when CONFIG_X86_DIRECT_GBPAGES is disabled
+>   - docuemtns compile-time folded page table
+>   - drop the applied patch.
+>   - Link to RFC v2: https://lore.kernel.org/all/20260722-dummy_ptxp3-v2-0-d9e4bad31e0a@arm.com/
+> 
+> from RFC v1 to RFC v2:
+>   - Restore slient fallback to next pXd in set_pXd() and pXd_pgtable()
+>     and add check whether they're called with dummy entry.
+>   - Add some comment for returning first entry of pgd in arm with
+>     2 pgtable-level
+>   - Link to RFC v1: https://lore.kernel.org/all/20260713135614.1618183-1-yeoreum.yun@arm.com/
+> 
+> ---
+> Dave Hansen (1):
+>       x86/mm: Introduce helper for checking direct map 1G page support
+> 
+> David Hildenbrand (Arm) (13):
+>       ARM: mm: make nommu pgd_t a scalar
+>       ARM: mm: make 2-level pgd_t a scalar
+>       ARM: mm: remove custom pgdp_get()
+>       LoongArch: mm: define pud_leaf() only when PUD exists
+>       MIPS: mm: define pud_leaf() only when PUD exists
+>       mm/pgtable: define (pgd|p4d|pud)_leaf() for folded page tables
+>       mm/pgtable: define (pgd|p4d|pud)_offset_lockless() for folded page tables
+>       openrisc/pgtable: drop __pmd_offset()
+>       mm/pgtable: optimize pmdp_get() and friends for folded pagetable levels
+>       mm/pgtable: catch abuse of folded dummy pgd_t/p4d_t/pud_t
+>       mm/pgtable: disallow calling (pgd|p4d|pud)_page, pgd_page_vaddr() and (p4d|pud)_pgtable with dummy
+>       mm/pgtable: disallow calling folded set_pgd/set_p4d/set_pud with dummy
+>       Documentation: mm: clarify behaviour of compile-time folded page tables
+> 
+> Yeoreum Yun (7):
+>       mm: vmscan: remove stack copy address of pud/pmd pass in walk_pud/pmd_range()
+>       loongarch: kvm: remove stack copy address of pXd in pXd_offset()
+>       riscv: kvm: remove stack copy address of pXd in pXd_offset()
+>       riscv: mm: use proper set_pXd() for generic compile-time folded patable in vmalloc_fault()
+>       mm/pgtable: redefine PGTABLE_LEVEL enum with ascend order from PGD
+>       x86: mm: use pgtable_level enum in effective_prot_pXd()
+>       x86: mm: carve out the generic compile-time folded pgtable case in effective_prot()
+> 
+>  Documentation/mm/page_tables.rst            | 84 +++++++++++++++++++++++++----
+>  arch/arm/include/asm/page-nommu.h           |  4 +-
+>  arch/arm/include/asm/pgtable-2level-types.h | 20 +++++--
+>  arch/arm/include/asm/pgtable.h              |  2 -
+>  arch/arm64/include/asm/pgtable.h            | 23 --------
+>  arch/loongarch/include/asm/pgtable.h        |  2 +
+>  arch/loongarch/kvm/mmu.c                    | 20 ++++---
+>  arch/mips/include/asm/pgtable.h             |  2 +
+>  arch/openrisc/include/asm/pgtable.h         |  3 --
+>  arch/riscv/kvm/mmu.c                        | 20 ++++---
+>  arch/riscv/mm/fault.c                       | 52 +++++++++++-------
 
-This series still has report from sashiko
+To move forward with this we need an ACK from riscv folks. All other arch
+changes are fairly trivial.
 
-https://sashiko.dev/#/patchset/cover.1793690276.git.zhoubinbin%40loongson.cn
+@Riscv people, any comments?
 
-On 11/3/26 08:23, Binbin Zhou wrote:
-> Hi all:
-> 
-> This series fixes trip-point handling in the Loongson-2 thermal driver,
-> refactors the driver around per-SoC chip data, and adds support for the
-> Loongson-2K0300 thermal sensor.
-> 
-> The first three patches are fixes and are marked for stable:
-> 
-> - Patch 1 fixes signed division when converting negative milli-degree
->    trip points to degrees Celsius.
-> - Patch 2 fixes the arguments to clamp() so trip points are limited to
->    the supported sensor range.
-> - Patch 3 fixes Loongson-2K2000 trip-point programming by adding a
->    per-SoC register callback and handling the split HI_GATE register.
-> 
-> Patches 4-5 are cleanups and preparation work:
-> 
-> - Patch 4 removes the unnecessary multi-sensor registration loop.
-> - Patch 5 moves the per-SoC ops and hardware initialization into chip
->    data.
-> 
-> Patch 6 adds the Loongson-2K0300 DT binding, and patch 7 adds driver
-> support for the Loongson-2K0300 thermal sensor.
-> 
-> The patchset have been validated on the Loongson-2K series development
-> boards.
-> 
-> Thanks.
-> Binbin
-> 
-> =========
-> V8:
-> Patch (1/7):
->   - Use MILLIDEGREE_PER_DEGREE macro instead of explicitly casting MILLI;
-> 
-> - Split patch-4 into two parts: the bitfields section will be merged into
->    patch-3, and the remaining changes will be merged into patch-6 as
->    preparation for introducing the new SoC.
-> 
-> Link to V7:
-> https://lore.kernel.org/all/cover.1791512067.git.zhoubinbin@loongson.cn/
-> 
-> V7:
-> Patch (1/8):
->   - New patch;
->   - Fix negative temperature conversion in set_trips;
-> Patch (3/8):
->   - Use writew()/writeb() in loongson2_2k2000_set_trips_regs;
-> Patch (4/8):
->   - Rewite the thermal sensor registration loop to clearer;
-> Patch (5/8):
->   - Fix `loognson2_thermal_set_trips` typo;
-> Patch (8/8):
->   - Read CHIP_ID1 only when EXTERN_ID is set;
->   - Simplify the Internal ID calculation;
->   - Add the necessary comments.
-> 
-> Link to V6:
-> https://lore.kernel.org/all/cover.1790561983.git.zhoubinbin@loongson.cn/
-> 
-> V6:
->   - Rebase on linux-pm/thermal;
-> Patch (2/7):
->   - New patch;
->   - Fix incorrect clamp() argument order for thermal trip points;
-> Patch (3/7):
->   - New patch;
->   - Fix Loongson-2K2000 trip point programming by adding a per-SoC
->     set_trips_regs callback and handling the split HI_GATE registers;
-> Patch (4/7):
->   - New patch;
->   - cleanup: use GENMASK/FIELD_* helpers, add named constants, and factor
->     common trip point setup;
-> Patch (5/7):
->   - New patch;
->   - refactor: move thermal_zone_device_ops into chip_data and replace the
->     Loongson-2K2000 flag special case with an optional init_extend_resource
->     callback;
-> Patch (7/7):
->   - Updated the 10-bit output to 11-bit in commit message;
->   - Temporarily remove the implementation of `set_trips`;
->   - Remove unnecessary header files;
->   - Rewrite `get_temp`, separating `read_calib` and `detect_old_fuse` into
->     new functions to be called during the probe;
->   - Use macros to define the relevant numbers.
-> 
-> Link to V5:
-> https://lore.kernel.org/all/cover.1789546118.git.zhoubinbin@loongson.cn/#t
-> 
-> V5:
->   - Rebase on linux-pm/thermal;
->   - Drop patch-3 for it was applied.
-> 
-> Link to V4:
-> https://lore.kernel.org/all/cover.1785829933.git.zhoubinbin@loongson.cn/
-> 
-> V4:
->   - Rebase on linux-mfd/for-mfd-next;
-> Patch (3/5):
->   - Remove the operation that adds `compatible` to the `select` node.
-> 
-> Link to V3:
-> https://lore.kernel.org/all/cover.1785480242.git.zhoubinbin@loongson.cn/
-> 
-> V3:
-> Patch (2/5):
->   - New patch for moving thermal_ops to chip_data;
-> Patch (3/5):
->   - Correct spelling errors;
-> Patch (4/5):
->   - Add Acked-by from Conor, thanks;
-> Patch (5/5):
->   - Keep loongson2_thermal_data->chip_data as const, and use
->     data->flags as the private data.
->   - Renmae LOONGSON2_THSENS_OUT_10B_MASK ->
->     LOONGSON2_THSENS_OUT_11B_MASK;
-> 
-> Link to V2:
-> https://lore.kernel.org/all/cover.1784619512.git.zhoubinbin@loongson.cn/
-> 
-> V2:
-> Patch (1/4):
->   - New patch form Sashiko;
-> Patch (2/4):
->   - New patch for adding chipid syscon compatible;
-> Patch (3/4):
->   - Use `loongson,chipid` phandle replace reg property;
-> Patch (3/4):
->   - Refact `calib_offset` calculate routing;
->   - Add LS2K0300_OLD_FUSE_FLAG flag.
-> 
-> Link to V1:
-> https://lore.kernel.org/all/cover.1783670011.git.zhoubinbin@loongson.cn/
-> 
-> Binbin Zhou (7):
->    thermal/drivers/loongson2: Fix negative trip conversion in set_trips
->    thermal/drivers/loongson2: Fix clamp() usage for thermal trip points
->    thermal/drivers/loongson2: Fix Loongson-2K2000 trip point programming
->    thermal/drivers/loongson2: Simplify thermal sensor registration
->    thermal/drivers/loongson2: Move per-SoC ops and init into chip data
->    dt-bindings: thermal: loongson,ls2k-thermal: Add compatible for
->      Loongson-2K0300
->    thermal/drivers/loongson2: Add Loongson-2K0300 support
-> 
->   .../thermal/loongson,ls2k-thermal.yaml        |  73 +++-
->   drivers/thermal/loongson2_thermal.c           | 359 ++++++++++++++----
->   2 files changed, 332 insertions(+), 100 deletions(-)
-> 
-> 
-> base-commit: 4358090906b01806ee483229e8d7163b806bd116
+-- 
+Cheers,
 
+David
