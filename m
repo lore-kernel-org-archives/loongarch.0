@@ -1,65 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.40
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793787494;
-	b=yBJ/Ifk7OFEpWtjAIo96Cgm3woYrDJolkqVdowGswrhka5/YM2+GZKcg+aSnWJRjaMuI
-	 gchlBtozu0TXbBrv/Nnj9iy1wMVym7zkUW4ZbOJ608E1kVRFYymdtCUrzWWyyA0UwVsx6
-	 tqVO6S5RNqMAnWWz1fZE74zC2ufiK9CIiTOuZ7XvlaPXkA2dFPZM3LtzQOhvBN/5MCq4Y
-	 EJXO+3jvVUWt/l37j6sb7CK3it087DSt2QEpBNTWttxBRpar0RNKBXvAs0jKOvCnLG25N
-	 PfoBMK7DNvkDH4ANAHrRQnV6aqS7oIUzTpt0VYHd58F3zh2FYSRSCPo6BSoa1KysmCQ==
+	t=1793797579;
+	b=bY8ECpmx4TY5kStXY/BNAruDr66hUPp5CvpmfSdIJsvR+xf8O/ichiV1QetCDo+fQh8P
+	 +5xjxbmAEvoPGScwQdAmTeeffWW7LXj5qn93QrXy+ixr9pzX9j+lRwvT3sG/W8NFPdSdH
+	 XaA9Sclw39wfa/i5xScHagDGvta9R7V1BrgHBwVHWY023Zuie6pJSvRoShS/F6aenLVLG
+	 r0hDjcqO2MeW8L3ygHf2KnK+wUXfQOrVs8oEpaw10N6JQkOP4NBx41bSoryrL+uqsg5gz
+	 EEhI/UJChf37zzUVAUpjmMeRzyA+UqU9OoGm3tohwcbBF/+d5sI71ruvSkaJCO47T0Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793787494;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=kzlN/YSlDBcWBl/PHuR26tChnN3ik0juVI5FwAqXzXw=;
-	b=uhh0xWXMbAaTrHoqPTxQvnOXK/sHHjsB1Zmg7H58ywfZcrpSNYviTanArGkvpaQM0ZoR
-	 BnCrkMFjMWhGpAKCU0dm0iDA53jygJ/N4fokkSHsBv4ZhH/E8qrKKo+DAMEM89Zyc7hg/
-	 yusJE/Kqp+YNKqYU8rtfHF4dx5AXRe4oj/uBxQ0EKFBuhez9FYMMSJsCwdpK8n//KLcoM
-	 BJ9cnWv0OX1Z3A4eapuDqJbLX/yoWdbcRMfLZ3aUPuLxPbwNNS048qAV6z3ERbURzJ1mU
-	 zk5HNkGw1MvusSb0kMhi60S1tpLWJ75dc1QpG2HAjvRLX9MbqXaToZBun1WsXt+lLfQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793797579;
+	h=DMARC-Filter:Received:Received:Subject:To:Cc:References:From:
+	 Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:Content-Type:
+	 Content-Language:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-CM-SenderInfo:X-Coremail-Antispam;
+	bh=t0N3y9MtqQSrXVauEHd0fFtWMbMzBCQaF+BK87D4JBk=;
+	b=hO0f2ds3p9yxYSKjR5E+BN218udgrrD1wRXxEPmiG9K+zfT8ND/0am212tJuCgbuocWX
+	 ke5Yulb5cKim1hbycuYOhjfqgPOyXuIHCH/BSHzi6bgPDPKckr6cci9aiatTP0f0/vE4l
+	 LVyKV62wQPl7ju8mGszU9lJBMeHXZvVsuudwvMJR7UF6OxS6ebBiuhD8jve1Y+5/ORnjy
+	 v5FTW4Hp24oE6Ra8/afxG+00xq1973jvjLYXU4n7GawcvMbQ/ryb5VMWipBD2wXIlm5OU
+	 PICZYzqefSA4nmsQQVpVOiGU2n6bjjGsg5819mjkAKL0Z5Ekqal6+0tU5Z7Gobv+Row==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b="s/Dw6yqL";
-	arc=none smtp.remote-ip=95.215.58.40
-Received: from mta1.migadu.com (out-40.mta1.migadu.com [95.215.58.40])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 878B1606A329
-	for <loongarch@lists.linux.dev>; Wed,  4 Nov 2026 10:18:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 878B1606A329
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=s/Dw6yqL
-X-Envelope-To: loongarch@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=QICrwvJ1q+p6O5FfC7tO/QRvFz9LYnqsPT4idoPDTMg=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793787486; v=1; x=1794392286;
- b=s/Dw6yqLjHgjK4hC+q3he0UIo9WlnSbuhHZictdeYHfn0g5eLA+/jLTEsDkKqQY+gbMBbTFv
- E0JxTJeYiHFf5PxfyrFlG4LPlvNpuBlWmQasw907mX2iCbXTKmT3DQAlg/i7orQfFNco2MRDl5F
- /JMtvzwzP+ultA/y2OOC4zBo=
-X-Envelope-To: loongarch@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id b7af79601e9f84b4;
-	Wed, 04 Nov 2026 10:18:06 +0000
-X-Mizu-Trace-ID: b7af79601e9f84b4
-X-Migadu-Flow: FLOW_OUT
-From: George Guo <dongtai.guo@linux.dev>
-To: yangtiezhu@loongson.cn
-Cc: chenhuacai@kernel.org,
-	hengqi.chen@gmail.com,
-	loongarch@lists.linux.dev,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] LoongArch: BPF: Make arena support depend on SCQ extension
-Date: Wed,  4 Nov 2026 19:17:53 +0900
-Message-ID: <20261104101753.20704-1-dongtai.guo@linux.dev>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20261102072808.23080-2-yangtiezhu@loongson.cn>
-References: <20261102072808.23080-2-yangtiezhu@loongson.cn>
+	dmarc=none header.from=loongson.cn;
+	spf=pass smtp.mailfrom=loongson.cn;
+	arc=none smtp.remote-ip=114.242.206.163
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64DA7606A335
+	for <loongarch@lists.linux.dev>; Wed,  4 Nov 2026 13:06:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 64DA7606A335
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [123.138.236.242])
+	by gateway (Coremail) with SMTP id _____8BxbdLHLetqIUwcAA--.18051S3;
+	Wed, 04 Nov 2026 21:06:15 +0800 (CST)
+Received: from [127.0.0.1] (unknown [123.138.236.242])
+	by front1 (Coremail) with SMTP id qMiowJCx9czFLetqql8yAA--.10756S2;
+	Wed, 04 Nov 2026 21:06:14 +0800 (CST)
+Subject: Re: [PATCH v1 1/2] LoongArch: BPF: Make arena support depend on SCQ
+ extension
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Hengqi Chen <hengqi.chen@gmail.com>, loongarch@lists.linux.dev,
+ bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20261102072808.23080-1-yangtiezhu@loongson.cn>
+ <20261102072808.23080-2-yangtiezhu@loongson.cn>
+ <CAAhV-H52mbZJX2vkgG_h=XfwHoio=asLjFdhTJwUYqDp4V5JMg@mail.gmail.com>
+ <8b00e5a7-4e60-19bd-7953-f76dc71e15ec@loongson.cn>
+ <CAAhV-H52bqRD1SyrZsvMkNbCpGiM5DPSGPARiasZ8G3XsE5Tgw@mail.gmail.com>
+ <6446c385-623c-d4cf-5a07-0c2276c6f50c@loongson.cn>
+ <CAAhV-H4m-cokYz19HHAoDeLAjRGp4T=vwDOJaJEcHXZDW15rkQ@mail.gmail.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <64b8f867-029d-3cdb-7896-1229a076e25c@loongson.cn>
+Date: Wed, 4 Nov 2026 21:06:13 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -69,36 +60,154 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+In-Reply-To: <CAAhV-H4m-cokYz19HHAoDeLAjRGp4T=vwDOJaJEcHXZDW15rkQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCx9czFLetqql8yAA--.10756S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxXF17Zw1rtry8Cw1xZr13GFX_yoWrJw1xpa
+	yrCr4DKrWjgr4Fy397KFnxuw1UCrsIkrWUWayFkrWkZrn0qw17Gr1Fk3W5ZF4DtrWF93Wj
+	9Fs0y3ZI93WkAagCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-
+	e5UUUUU==
 
-Hi Tiezhu,
+On 11/4/26 5:54 PM, Huacai Chen wrote:
+> On Wed, Nov 4, 2026 at 2:58 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
 
-On 2026/11/2 15:28, Tiezhu Yang wrote:
-> This is because the arena range tree uses kmalloc_nolock(), which requires
-> 128-bit atomic cmpxchg support, provided by SCQ extension on LoongArch.
+...
 
-There is an existing SLUB debug fallback worth checking before making
-arena support depend on SCQ.
+>> Therefore, using the explicit #ifdef block in the original patch is the
+>> only way to ensure toolchain compatibility and compile-time robustness
+>> here IMO.
+> This is OK:
+> 
+> return cpu_has_scq && __is_defined(system_has_cmpxchg128);
+> 
+> It means two things:
+> 1. CPU supports SC.Q;
+> 2. Kernel defines system_has_cmpxchg128.
+> 
+> Very clear.
 
-In __kmalloc_nolock_noprof(), the rejection condition is:
+I tested your suggestion:
+return cpu_has_scq && __is_defined(system_has_cmpxchg128);
 
-        if (!(s->flags & __CMPXCHG_DOUBLE) && !kmem_cache_debug(s))
-                return NULL;
+There is no build error. However, this introduces a fatal functional
+bug because __is_defined(system_has_cmpxchg128) is blindly evaluated
+to 0 as a text string token. As a result, the expression is always
+translated into "return cpu_has_scq && 0;", which disables BPF Arena
+support permanently even on the Loongson-3A6000 system with hardware
+SCQ extension and assembler sc.q support.
 
-Debug caches do not require cmpxchg128 for this path. They use
-kmem_cache_node->list_lock with spin_trylock_irqsave() instead.
-With CONFIG_SLUB_DEBUG=y, booting with slab_debug enables this path;
-CONFIG_SLUB_DEBUG_ON=y enables debugging by default as well.
+I did the following changes:
 
-The proposed bpf_jit_supports_arena() check would reject arena maps on
-CPUs without SCQ, even when the SLUB debug fallback is available.
-This would prevent us from running arena tests on those machines
-with slab_debug enabled.
+```
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index 3ab039d0afb6..b61cca6a8947 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -2489,7 +2489,13 @@ bool bpf_jit_bypass_spec_v4(void)
 
-Could you rerun jit_insns/cast_to_user on the 3A5000 with slab_debug
-enabled, before and after this patch? The claim that kmalloc_nolock()
-requires 128-bit cmpxchg should account for debug caches, and it would
-be useful to preserve that fallback when addressing the error reporting.
+  bool bpf_jit_supports_arena(void)
+  {
+-       return true;
++       /*
++        * The arena range tree uses kmalloc_nolock(), which requires 
+128-bit
++        * atomic cmpxchg; this is provided by not only hardware SCQ 
+extension
++        * but also assembler support on LoongArch.
++        */
++       pr_info("__is_defined(system_has_cmpxchg128)=%d\n", 
+__is_defined(system_has_cmpxchg128));
++       return cpu_has_scq && __is_defined(system_has_cmpxchg128);
+  }
+
+  bool bpf_jit_supports_fsession(void)
+```
+
+Here is the test result on the Loongson-3A6000 system with hardware
+SCQ extension and assembler sc.q support:
+
+   $ sudo ./test_progs -a jit_insns/cast_to_user
+   ...
+   libbpf: map 'arena': failed to create: -EOPNOTSUPP
+   run_subtest:FAIL:unexpected_load_failure unexpected error: -95 (errno 95)
+   ...
+   #197/2   jit_insns/cast_to_user:FAIL
+   #197     jit_insns:FAIL
+   Summary: 0/0 PASSED, 0 SKIPPED, 1/1 FAILED
+
+   $ dmesg -t | grep system_has_cmpxchg128
+   __is_defined(system_has_cmpxchg128)=0
+
+This is not expected.
+
+AFAICT, there are two viable ways to handle both assembler and runtime
+constraints:
+
+(1)Use system_has_cmpxchg128 at compile-time and run-time. This is
+more aligned with semantic intent, as BPF relies on the generic
+128-bit cmpxchg interface.
+
+```
+bool bpf_jit_supports_arena(void)
+{
+         /*
+          * The arena range tree uses kmalloc_nolock(), which requires 
+128-bit
+          * atomic cmpxchg; this is provided by not only hardware SCQ 
+extension
+          * but also assembler support on LoongArch.
+          */
+#ifdef system_has_cmpxchg128
+         return system_has_cmpxchg128();
+#else
+         return false;
+#endif
+}
+```
+
+(2) Use CONFIG_AS_HAS_SCQ_EXTENSION at compile-time and cpu_has_scq
+at run-time. This is more aligned with kernel coding aesthetics by
+avoiding #ifdef blocks.
+
+```
+bool bpf_jit_supports_arena(void)
+{
+         /*
+          * The arena range tree uses kmalloc_nolock(), which requires 
+128-bit
+          * atomic cmpxchg; this is provided by not only hardware SCQ 
+extension
+          * but also assembler support on LoongArch.
+          */
+         return IS_ENABLED(CONFIG_AS_HAS_SCQ_EXTENSION) && cpu_has_scq;
+}
+```
+
+Since cpu_has_scq and system_has_cmpxchg128() share the exact same
+runtime expansion (cpu_opt(LOONGARCH_CPU_SCQ)), both approaches are
+functionally equivalent and produce identical machine code.
+
+Personally, I feel Approach 1 represents the pure semantic intent
+better, whereas Approach 2 looks more aesthetically pleasing.
+
+Which one do you prefer for the v2 patch?
 
 Thanks,
-George
+Tiezhu
+
