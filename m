@@ -1,54 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.52
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793775517;
-	b=oEDKsy9SODSaXkDIDiAGtno36d1PAnAT92Ntm60ozqi7BdE45DFMwlaFXjhuQsjd2TSq
-	 d7saBGO7LL9byQyknuoWzwU8NJJ1QQdGbL+Gj0d6yAA3gaiVtsk2GX9g+jwHcuZ+6JZxc
-	 XZId0cDdvRaRtf2KaJRu2GtzxRDWYnfmqZ6LM4MzP95TipZd5UD3kK75FajVpEvljXMT9
-	 kijy/BeEKhRaFaMapMwOBCpTgds4Iy++UOGJpk3S+YS5lnJTTcoTTsQmzK8cYWji39dIN
-	 YiV9zmNlwoyNFfmsal+5II3qjMHxGoOR58zYastunDLZAnzSVE3IZYdXl/8uX48Xo+Q==
+	t=1793776791;
+	b=TVclX6HqI/Q5UAyVENPALBpaYVvD9HEYWmw4bvWtgYtU24cxX/B8SYitT1ASWsmp/Mpk
+	 8SNGM78q5X2u9/4WlMPW/FMb/jp7CW+w1onHgi9K7WSH85PF789C7YyhslHEzwyxWSfxU
+	 mTeLOZaNm0FrOlyB08SQQPL8e1bonMYMLwTfOrtC+V/bUtXHT9wdAvSJ5QZvYzCtJ9BdK
+	 rU2sjvVg8SHI9gmV6dkgqzFmS/q6mluNAjHmbbWYzmol9I/+h7VBhTfWe//7b4pVzSM7J
+	 Xg15ziX3mivnd07nqeeTM3HXmlLzFj5eI9KP+ThhL+1cLL5BAmao8j/wEHRtpVveODQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793775517;
-	h=DMARC-Filter:Received:Received:Subject:To:Cc:References:From:
-	 Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:Content-Type:
-	 Content-Language:Content-Transfer-Encoding:X-CM-TRANSID:
-	 X-CM-SenderInfo:X-Coremail-Antispam;
-	bh=hdQK57f7HyDlb+RjbKtfMWetjSY2KiFfxeS/E3Ij6Cw=;
-	b=NRgAwEu2mS+EIKOPEIYY5uCNdnXD62ClNEj7uIsL692WrIAGXonkreNe8yhMEjbojbkg
-	 mpcrRjFvNyBDJ8Qivq4n0Ve4ID+m093w2hloY+ij0vawNLEdTxxJVNLju7yrZWL3jVYlE
-	 7yI7ExtCo9Mqy8uL5fnYvldfXYi6REvIdcPWbNxCpp42zpQsdujR6ipFMXylYBhCgb1Mh
-	 rWhFW8MRunyD0NN2+sd0V0nFYrXeG19x/vJhwQbVoHBr9L3BNYmHJvvKYbiuSKemKMM00
-	 qxvN8kYfuGcFh9VAKrzioOIcS6ONw7E6p6E/aEAbMQwiHNFdyfbKcEQJLDK7yxQdwjg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793776791;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=rrzBvJUH0m6X73oGrOP8Fx5drxVGiUnw51WPWWQEE/8=;
+	b=RcEvRSwXnSmNLQPGGj5yby72xld2jm2R3hjqMkIOnRyPXF9rnw+10vHfcVHtFwpcrVSc
+	 0nHRki8Cxlv6Mz/0GmW0afEJgkrm2C+Xv1nHXOQTDz3cbWYhQeXk+JDjyWCzRRUonf2ZA
+	 gz6zJY0II/+iETzJF/dnbabS2xY4ypn8tEZ7Q7Plw/oto5kRE9vn5CkMk2MiGzKfhT17U
+	 IPtu6oIS4A+DYhM9VDhx8Jsz74xcNLDAqk7MiVhHxoASf1YCVw8/qAfkm4xo6yyfns3db
+	 exD+GFJN7FQwj6hw+fR2N8iNs9wv9R4PU18kcdEOEc3ht4r5rUCqXyyMLKF6qEmU2lw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=loongson.cn;
-	spf=pass smtp.mailfrom=loongson.cn;
-	arc=none smtp.remote-ip=114.242.206.163
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80A96606A328
-	for <loongarch@lists.linux.dev>; Wed,  4 Nov 2026 06:58:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 80A96606A328
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [123.138.236.242])
-	by gateway (Coremail) with SMTP id _____8AxntKY1+pq6TccAA--.16032S3;
-	Wed, 04 Nov 2026 14:58:33 +0800 (CST)
-Received: from [127.0.0.1] (unknown [123.138.236.242])
-	by front1 (Coremail) with SMTP id qMiowJAxlMyW1+pq2UQyAA--.10843S2;
-	Wed, 04 Nov 2026 14:58:31 +0800 (CST)
-Subject: Re: [PATCH v1 1/2] LoongArch: BPF: Make arena support depend on SCQ
- extension
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Hengqi Chen <hengqi.chen@gmail.com>, loongarch@lists.linux.dev,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20261102072808.23080-1-yangtiezhu@loongson.cn>
- <20261102072808.23080-2-yangtiezhu@loongson.cn>
- <CAAhV-H52mbZJX2vkgG_h=XfwHoio=asLjFdhTJwUYqDp4V5JMg@mail.gmail.com>
- <8b00e5a7-4e60-19bd-7953-f76dc71e15ec@loongson.cn>
- <CAAhV-H52bqRD1SyrZsvMkNbCpGiM5DPSGPARiasZ8G3XsE5Tgw@mail.gmail.com>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <6446c385-623c-d4cf-5a07-0c2276c6f50c@loongson.cn>
-Date: Wed, 4 Nov 2026 14:58:30 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	dmarc=pass header.from=bytedance.com;
+	spf=pass smtp.mailfrom=bytedance.com;
+	dkim=pass header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=jZFlqzq9;
+	arc=none smtp.remote-ip=209.85.216.52
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5DF1606A31B
+	for <loongarch@lists.linux.dev>; Wed,  4 Nov 2026 07:19:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B5DF1606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=jZFlqzq9
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-3ac7842c17dso303408a91.3
+        for <loongarch@lists.linux.dev>; Tue, 03 Nov 2026 23:19:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1793776789; x=1794381589; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=rrzBvJUH0m6X73oGrOP8Fx5drxVGiUnw51WPWWQEE/8=;
+        b=jZFlqzq9Bbr2TrToRYAsrK5nTDzHwQDYcr+9dFkQGvhMeG8Q4qwcC7hIMUG1P0DBLS
+         NWSi8tiCXKNDYKHUZywEB/4f6ZvXQrhwbqOMSgdzA/shXEULFOhE9GeymwM/GbUl4BDO
+         YFiRCTzCLiSi2pNcf8dM3CumhOQDVNmGe3NxnT4g4eQP++Qbt8qpj26SkFbAbv0z2Qrg
+         cYaqDNtDxMxPpFQ25H5k2vJnx3O9Wvad9WDmwCODKjfU6EXWxcsr/AP8JTgrpUGOFy+k
+         JM33v5YDu4UFUmXhnNcc7Chjw5FXQ/iSRblgJsZaFs+M4RNo/lECevqAR52U/7lwnl/9
+         GsxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793776789; x=1794381589;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=rrzBvJUH0m6X73oGrOP8Fx5drxVGiUnw51WPWWQEE/8=;
+        b=d7PAZZN1ZVuMkSAh9OEyTm9p0Zou24Xl2cjddrQzCLIa/GF74OGBOZrkxSW2MW6UFL
+         LanH4iExpHMJCLooQ4SGvuZcUjPdWkcVmPkphExczTaxzBznT7a5wPoQl2sKMsJwbFXn
+         vlXWcmeGtC39Q49d4/4zX6s1bAZL5V/5wqVTOUVUMPG5QTztsSKPs1d1SlvtmE9iV8dm
+         wH63D/YE1vS8fbgL4NgUoAkjeoaXcsgjxsat23xGGdaNoxs1C2/nWm0sgUT8Ua1PBI5e
+         VjBNsIQmA4RE4Tm9NdBu8kwNTDGPsla76BxP9jvxEi4SS7f9PNXkCs6P/T8QsxsHcJIm
+         LJvA==
+X-Forwarded-Encrypted: i=1; AKwUvByOgh20FPU4c/YwLCmeg7/uY5SkMShUfvFPUPgBtYljYy9qyCff/l4hAiwgrPbS6CIWUo+dxu/l508=@lists.linux.dev
+X-Gm-Message-State: APuU4Z9kaav/TyVOVyFTjFDjfU0z3q7tydYg0/6Eujm3Vjvoj0qRpUZw
+	FIM/BfBbqfKiy5u/TWJQKkUR4Rmqe6BarZiBH53sAKwD+Qli8qDK6xFJ9dLnVXmvuNM=
+X-Gm-Gg: AYBFou0SR/j5+fKZqSJ18I8gQEVqVA5pRrxmeEgAGOPYvFcuCYmJa2hL3ac2FYdamzy
+	55n+mOMGAmC9Ska4Ewn30KptZirpqhTJY3lQKDHwAg34iQ9z1r9DXcACiu43rTvPxR00D8LrWuJ
+	zZpOEc6/kHWJf9tTuDRhTrLz7Get5qczxQItkSDbLI3JoXVCkC8x322453zdT4dEqUf/7UX7QJy
+	v0XJBRIYypyVuNFb9NaBAw0DPDnN96wD88bo9640j8N1Z5e9wftcizBilXkE5intnQIfyMBTPpY
+	roh2UDzIlXit6qxqcmoPK5N/eBLXUCIvSi0hvgcFVAHSQjFA/Wjt45pJ424+dKFPAWEQIDhr2eA
+	QNQ9NxsTDXkAOncIJeym12i/162ug1rC9OrSTmhslDs/WuexTNfVVkUpm1JE/UbYbj93Ieu3ro6
+	OVEiv4WB3JqosTfBgdrpo3owMNHRDuMQKSNfNMr8QmHEdDDzIYRZlkReB3GdSPwUtoQCdHQ2zZJ
+	PDMmpV5/q0XE2dahS9gnUYTnDfYmexkaNMHvG8txcUm3zABbzjL0puE3iE+jBVSa85Vq2F505aK
+	B/i9dTVGzJJPtKiGHDNOGkR46qBjc+quoeAfoecaVXt2AHUtr0RrZjDciRVqnO6E2ojHs11k
+X-Received: by 2002:a17:90b:2691:b0:3ab:189b:6980 with SMTP id 98e67ed59e1d1-3ae89776111mr11952482a91.39.1793776788793;
+        Tue, 03 Nov 2026 23:19:48 -0800 (PST)
+Received: from n232-176-004.byted.org ([36.110.163.103])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b099189fb6sm1027403a91.2.2026.11.03.23.19.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Nov 2026 23:19:48 -0800 (PST)
+From: Muchun Song <songmuchun@bytedance.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Oscar Salvador <osalvador@suse.de>
+Cc: Muchun Song <muchun.song@linux.dev>,
+	David Hildenbrand <david@kernel.org>,
+	Kiryl Shutsemau <kas@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Sashiko <sashiko-bot@kernel.org>,
+	linux-mm@kvack.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Muchun Song <songmuchun@bytedance.com>
+Subject: [PATCH v2] mm/hugetlb: fix validation of unsupported HugeTLB orders
+Date: Wed,  4 Nov 2026 15:18:57 +0800
+Message-ID: <20261104071858.757793-1-songmuchun@bytedance.com>
+X-Mailer: git-send-email 2.54.0
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -58,150 +104,66 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H52bqRD1SyrZsvMkNbCpGiM5DPSGPARiasZ8G3XsE5Tgw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxlMyW1+pq2UQyAA--.10843S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxAry5uFyxWryUWFy3KrW3Jwc_yoWrWFyUp3
-	yxArnrGrWUWr1kJrZxt3yrWr4Dtr98K34a9a18A348Aan8Xa48Xr10kwn5WF1Dt39Yg3WF
-	qFWrK3ZI9Fy8AabCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y
-	6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
-	1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
-	JVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
-	vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IY
-	x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
-	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
-	wI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8fsqJUUUUU==
 
-On 11/4/26 12:29 PM, Huacai Chen wrote:
-> On Tue, Nov 3, 2026 at 10:24 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+Commit 7ce6048d3a7d ("loongarch: drop ranges for definition of
+ARCH_FORCE_MAX_ORDER") removed the ARCH_FORCE_MAX_ORDER ranges for
+LoongArch. Besides dropping unreasonable upper limits, this allowed
+values below the architecture defaults.
 
-...
+With 16KB pages, LoongArch defaults ARCH_FORCE_MAX_ORDER to 11,
+matching HUGETLB_PAGE_ORDER. Forcing it to 10 while enabling HugeTLB
+permits order-11 HugeTLB folios even though MAX_FOLIO_ORDER is 10.
+LoongArch does not select ARCH_HAS_GIGANTIC_PAGE, so this violates the
+generic MM assumption that folios cannot exceed MAX_PAGE_ORDER.
 
->> So, the current patch has no problem IMO.
-> OK, then I think we can use:
-> 
-> return __is_defined(system_has_cmpxchg128) && system_has_cmpxchg128();
+This invalid configuration is accepted by Kconfig.
+BUILD_BUG_ON_INVALID() does not reject it either because it only checks
+whether the expression is valid and never evaluates the comparison.
+Detection is left to the runtime warning in hugetlb_add_hstate(), after
+earlier boot paths may already have used the invalid configuration.
 
-If CONFIG_AS_HAS_SCQ_EXTENSION is not enabled, system_has_cmpxchg128()
-is not defined at all. If we change the code to follow your suggestion,
-something like this:
+When an invalid HugeTLB order can be identified at build time, reject it
+there. Otherwise, reject it at runtime before the mismatch propagates
+further. Use MAYBE_BUILD_BUG_ON() so constant violations fail the build
+while dynamically determined orders are checked at runtime.
 
-```
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index b5ed4881d3c0..6f572d24d2c3 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -336,7 +336,7 @@ config AS_HAS_LVZ_EXTENSION
-         def_bool $(as-instr,hvcl 0)
+Fixes: 7ce6048d3a7d ("loongarch: drop ranges for definition of ARCH_FORCE_MAX_ORDER")
+Reported-by: Sashiko <sashiko-bot@kernel.org>
+Closes: https://lore.kernel.org/sashiko-outbox-192874@kernel.org/
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+Suggested-by: Huacai Chen <chenhuacai@kernel.org>
+---
+v2:
+- Move the order check after hugepages_supported() to avoid a false
+  PowerPC BUG_ON() (suggested by Sashiko)
+---
+ mm/hugetlb.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-  config AS_HAS_SCQ_EXTENSION
--       def_bool $(as-instr,sc.q \$t0$(comma)\$t1$(comma)\$t2)
-+       def_bool n
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 779b1de33c78..b49130eb7ad8 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -4197,7 +4197,6 @@ static int __init hugetlb_init(void)
+ 
+ 	BUILD_BUG_ON(sizeof_field(struct page, private) * BITS_PER_BYTE <
+ 			__NR_HPAGEFLAGS);
+-	BUILD_BUG_ON_INVALID(HUGETLB_PAGE_ORDER > MAX_FOLIO_ORDER);
+ 
+ 	if (!hugepages_supported()) {
+ 		if (hugetlb_max_hstate || default_hstate_max_huge_pages)
+@@ -4205,6 +4204,8 @@ static int __init hugetlb_init(void)
+ 		return 0;
+ 	}
+ 
++	MAYBE_BUILD_BUG_ON(HUGETLB_PAGE_ORDER > MAX_FOLIO_ORDER);
++
+ 	/*
+ 	 * Make sure HPAGE_SIZE (HUGETLB_PAGE_ORDER) hstate exists.  Some
+ 	 * architectures depend on setup being done here.
 
-  config CC_HAS_ANNOTATE_TABLEJUMP
-         def_bool $(cc-option,-mannotate-tablejump)
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index d7ea515045ec..d124632b0fa9 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -2495,11 +2495,7 @@ bool bpf_jit_supports_arena(void)
-          * atomic cmpxchg; this is provided by not only hardware SCQ 
-extension
-          * but also assembler support on LoongArch.
-          */
--#ifdef system_has_cmpxchg128
--       return system_has_cmpxchg128();
--#else
--       return false;
--#endif
-+       return __is_defined(system_has_cmpxchg128) && 
-system_has_cmpxchg128();
-  }
-
-  bool bpf_jit_supports_fsession(void)
-```
-
-We will encounter a fatal build error:
-
-   CC      arch/loongarch/net/bpf_jit.o
-arch/loongarch/net/bpf_jit.c: In function ‘bpf_jit_supports_arena’:
-arch/loongarch/net/bpf_jit.c:2498:55: error: implicit declaration of 
-function ‘system_has_cmpxchg128’ [-Wimplicit-function-declaration]
-  2498 |         return __is_defined(system_has_cmpxchg128) && 
-system_has_cmpxchg128();
-       | 
-^~~~~~~~~~~~~~~~~~~~~
-make[5]: *** [scripts/Makefile.build:290: arch/loongarch/net/bpf_jit.o] 
-Error 1
-
-Even if we change it to use IS_ENABLED(CONFIG_AS_HAS_SCQ_EXTENSION),
-something like this:
-
-```
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index b5ed4881d3c0..6f572d24d2c3 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -336,7 +336,7 @@ config AS_HAS_LVZ_EXTENSION
-         def_bool $(as-instr,hvcl 0)
-
-  config AS_HAS_SCQ_EXTENSION
--       def_bool $(as-instr,sc.q \$t0$(comma)\$t1$(comma)\$t2)
-+       def_bool n
-
-  config CC_HAS_ANNOTATE_TABLEJUMP
-         def_bool $(cc-option,-mannotate-tablejump)
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index d7ea515045ec..1b87b1e4262e 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -2495,11 +2495,7 @@ bool bpf_jit_supports_arena(void)
-          * atomic cmpxchg; this is provided by not only hardware SCQ 
-extension
-          * but also assembler support on LoongArch.
-          */
--#ifdef system_has_cmpxchg128
--       return system_has_cmpxchg128();
--#else
--       return false;
--#endif
-+       return IS_ENABLED(CONFIG_AS_HAS_SCQ_EXTENSION) && 
-system_has_cmpxchg128();
-  }
-
-  bool bpf_jit_supports_fsession(void)
-```
-
-It still fails with the same error due to the macro visibility:
-
-   CC      arch/loongarch/net/bpf_jit.o
-arch/loongarch/net/bpf_jit.c: In function ‘bpf_jit_supports_arena’:
-arch/loongarch/net/bpf_jit.c:2498:59: error: implicit declaration of 
-function ‘system_has_cmpxchg128’ [-Wimplicit-function-declaration]
-  2498 |         return IS_ENABLED(CONFIG_AS_HAS_SCQ_EXTENSION) && 
-system_has_cmpxchg128();
-       | 
-^~~~~~~~~~~~~~~~~~~~~
-make[5]: *** [scripts/Makefile.build:290: arch/loongarch/net/bpf_jit.o] 
-Error 1
-
-Therefore, using the explicit #ifdef block in the original patch is the
-only way to ensure toolchain compatibility and compile-time robustness
-here IMO.
-
-Anyway, I will modify the patch subject, update the commit message
-and code comment to make it more clear.
-
-Thanks,
-Tiezhu
+base-commit: 74d73ffcffe03804f97e9fb82301dadf75671282
+-- 
+2.54.0
 
