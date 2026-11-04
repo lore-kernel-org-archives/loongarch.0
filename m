@@ -1,55 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793779004;
-	b=ZxwgvEEYOodz1tWPeUm2mCD5tXmkfKs8/AT5sNcVEZiHk9YArUQHGO8gjHKmFrsUoOyi
-	 rLZISPkuoX14eZd1nWTeP2Z7Hi7Um8jY1kYa5t5nuZy2Xmi4NTDbbHbG03iH5U0QHxrC7
-	 IOPatzZm6i6ah2R8hCkCn5p9YA5AspNbN89JY9HMZewQ3QocOA+D0BGXIAEkvraUIomPp
-	 j6zvm/xvQA31Zt1mRRNEc1Njay53h/sYdBauOGGxtrg08/yt/+GqwNkEfqTweqiCwP+A8
-	 Is7WMHQrdcRQHcWZoQZYl/6SHYtBOp35nuLVddgVB966RwA3nFf3pAuMi1iecXGkVnQ==
+	t=1793779113;
+	b=Rdb3+y8idKV1i6TWS9QY2TfxA+IPLfIJT41Cql7bJzzLBydAigWwbYyQ+I/boAHuR0b4
+	 ba0MvHTY0FH0EtpEeclaT7odqXkKiDtWeCNBQWPa9ZAJis/Rjtmkdpq7PP8gViXw8o88n
+	 vFDPEWTxbydxMrLHeqIa1G5mrS0oYCXttNF9u2vmLifhy+R7eiJ9XyVdCPGIGcr+7972x
+	 yiPkVfkvE/qHuCGB5qJogHmYWGh4Pe3zdqoHB8JyT3QtCtGtV7nC6m0wksELs8+sa0DkQ
+	 pFqpVHEVv4ZvZSFCQQIpJA48yQqr2/2rpc/wlFPbKXgdnLQWEQJ5Vtjh9G51pxWNBHA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793779004;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793779113;
 	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
 	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
 	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
 	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=HNu4ods6c1120leIpzJBlK6eHIivapUdba0o3Dpccdc=;
-	b=bTF4Ip5LoXvs0avl6ifcf/x6eCm7un1zsE3LKOvoqlwiqaJbd8jqCbB+DJsisWTSlLzD
-	 nYgVoxUGnRndcGXPEplEFQbxShsjsflj2NomCKVL0yhJbO9ij+/kpWI3oc5EogGBGrPVg
-	 NUp1gPSrIZi7v/rUNfmJbKkhDngYydF+a+OqnMyUzH8qixEdv2YOUzfpl9qvkIhneRFZD
-	 qdcyYi7COD+9wBD1SZd5KZJH0/jgN1BHD1upSVw9UCZ3Q9JTcR/jxFairIC7dUTk6kPH6
-	 584ILismltCb0QGtqLkPNkd3jemnrdiu30rs1KIJ1uK+I1qy3C9SGI0VXOpWphRaT2A==
+	bh=Yzs3TvTUyCNgvkC1v8i5/KukWGuWF2PDxlQsJeMPHXU=;
+	b=Cg+/deMJFenZjw4qlWTWawA8jMRFH3+qPfUEIjlTBG/vWUlwVhmRpuN8iVHmXboM3pzt
+	 bU7TqgWyQvi6kdgNY33VoTpPaLS+XzisujBy1JYEwfZE0rSeqHotl6RoGe8cNvKK1Ssg2
+	 Bzy2WHRq3TV11ReebSjers0IcEHbRlotkl3/4Svrsq58/7+xhe9uqffyXUDR9h5Wg/ULZ
+	 1S6IuPcoVvDVUpz3dno5XAubSmxSdSu5L6EcOYJ2QzHUUfbcKPxWjq2LTSB/q+02dDzHN
+	 WqOoBSuptuIBfGwa78+BDo91Qvd7w46yds0Wn+M/EM/RC392H9FCQo9mZdONoSgNBPg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EIJoeGEx;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=APD3QMfW;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48578606A326
-	for <loongarch@lists.linux.dev>; Wed,  4 Nov 2026 07:56:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08A6606A326
+	for <loongarch@lists.linux.dev>; Wed,  4 Nov 2026 07:58:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EIJoeGEx
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA37C1F00A02
-	for <loongarch@lists.linux.dev>; Wed,  4 Nov 2026 07:56:43 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=APD3QMfW
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9B1B1F00A1D
+	for <loongarch@lists.linux.dev>; Wed,  4 Nov 2026 07:58:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793779003;
-	bh=HNu4ods6c1120leIpzJBlK6eHIivapUdba0o3Dpccdc=;
+	s=k20260515; t=1793779112;
+	bh=Yzs3TvTUyCNgvkC1v8i5/KukWGuWF2PDxlQsJeMPHXU=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=EIJoeGExgzZz1jBK0fbEdK0x0YUnVwYfC/LqbcFPSvjKhaUFrq2Naa2FnzUoL6xTF
-	 IKMnljZKrx+GC74WRV9uv4ZXPZZPwfcqQrIXx/Lqegi6JdNQT6jFoNpmbK8mexTP+u
-	 fw0ynpvCwbUP+mMpB8P0eBAzq7ZWI6sXmGQp8wAoD0hF0dOSo1q7T/vbpcOj0oMhjd
-	 cVP/Y3KYlO6hDgTyaxBsxH2W/tOjDrbS53uFra842uTf2oc6XnAkxlgDOAKAvq/u7n
-	 LRtNEd9cf0O/zufCsgMycNSO9un3rDfwSMwCDmUb7ujLOgUHTsjb/m3n3d0/jUZ3Xb
-	 /i6HHgM6/6usQ==
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-6b566cf56c1so31836a12.2
-        for <loongarch@lists.linux.dev>; Tue, 03 Nov 2026 23:56:43 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AKwUvBzL+s1wcGFdW9L7mIPlX0a59cJsHL1PRtvdLGMJ92Du/lHtW9ebphRdn0CzmwVO8niwB79Ye0PimVw=@lists.linux.dev
-X-Gm-Message-State: APuU4Z9Jb+ROaWpXcN/ZS75nWoH71tV883sCbzY3IaJz6tq5cXaJomRO
-	KfHIw1mSUyDqNXmy+Z9j8P7v3it1kRcNK1vXWZr7+te8W9lx1EPulDolupcZIb5hWKrWR8uAnhz
-	YYR3ajWU5UjoAfw7DI5NcDjYqcRw6wCA=
-X-Received: by 2002:aa7:d386:0:b0:6b3:c422:9257 with SMTP id
- 4fb4d7f45d1cf-6b4d4d7c182mr7792710a12.25.1793779002538; Tue, 03 Nov 2026
- 23:56:42 -0800 (PST)
+	b=APD3QMfWSKD1BEqDuFPXE3+ohbtpJ6xbOkKF6/O6IX/sFmf/WP6tCTDPkk7Blzesk
+	 9AEVKiwcntw99HFpLfc/vRRK6t0gNxTIHcHq6gE7VkH0GGGP9gA6kD74UuMoPnvQ0d
+	 aeM08aciNUWSsTLf6qfTtyp8IerYG5yHTVghZ8eNRM61BcV9BHFMi22/mNmPB4rybU
+	 KF5Nvz87trX80hDjstvXlqRP/RjVqVM6sTq+llZVdRujHeg3C+ozXR41e2+7gr+L2C
+	 Kwjz4N1LwdZIcYXIK4HaVufFg8C/SwduBh5RJqtnmLsAfz/WtWsIWMBcNzUdGkFzHC
+	 5L2yR8fY5rTXA==
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-6b203527bceso463533a12.0
+        for <loongarch@lists.linux.dev>; Tue, 03 Nov 2026 23:58:32 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AKwUvByFS9b+iKvf/4AlBy78Ro7WSEU+OW8KPQAuLzpeiyDUhLO7tWl3o0ufzrtt6XEBIENgALV8TYgIK6I=@lists.linux.dev
+X-Gm-Message-State: APuU4Z/0f1MGjduF0lZ9IjsHQiKnflepw0WSZDy6SB4rsylOgsHSsVFL
+	4e6wOpfDt3NwE3q/jjOC7m61dM8+NCupfcJhVHOM3xUnwvtSCPWIjjgvpu2DkDcdoANSnZzboxS
+	b+eH7RMtpNCJRBRaHYwTGILg+Z42mGac=
+X-Received: by 2002:a05:6402:4608:b0:6b3:dd6e:3dca with SMTP id
+ 4fb4d7f45d1cf-6b4d4d82589mr10723248a12.28.1793779111329; Tue, 03 Nov 2026
+ 23:58:31 -0800 (PST)
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -59,88 +59,60 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <20261104071858.757793-1-songmuchun@bytedance.com>
-In-Reply-To: <20261104071858.757793-1-songmuchun@bytedance.com>
+References: <cover.1793776192.git.zhoubinbin@loongson.cn>
+In-Reply-To: <cover.1793776192.git.zhoubinbin@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 4 Nov 2026 15:56:30 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5iiGZEqf_W2KmtfdqYaKY1HmeK+ZdSz1t+epAhY=X+0A@mail.gmail.com>
-X-Gm-Features: AclHuK93_XxdZekUa7K7uSHByhrComWPKbTc4AurJlwH-qxA4RI5N514mVEKT4Y
-Message-ID: <CAAhV-H5iiGZEqf_W2KmtfdqYaKY1HmeK+ZdSz1t+epAhY=X+0A@mail.gmail.com>
-Subject: Re: [PATCH v2] mm/hugetlb: fix validation of unsupported HugeTLB orders
-To: Muchun Song <songmuchun@bytedance.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Oscar Salvador <osalvador@suse.de>, 
-	Muchun Song <muchun.song@linux.dev>, David Hildenbrand <david@kernel.org>, 
-	Kiryl Shutsemau <kas@kernel.org>, Mike Rapoport <rppt@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Sashiko <sashiko-bot@kernel.org>, linux-mm@kvack.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
+Date: Wed, 4 Nov 2026 15:58:19 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5xomk3dwDScquwWWCD3_FCoJG8dur0b09j68QUqPT3VQ@mail.gmail.com>
+X-Gm-Features: AclHuK9cpjirvuwWJw1GRdeY1qyvEyu7MaMSjIH4ln9noIFTiQtqfBK6yL3oNPQ
+Message-ID: <CAAhV-H5xomk3dwDScquwWWCD3_FCoJG8dur0b09j68QUqPT3VQ@mail.gmail.com>
+Subject: Re: [PATCH 0/3] serial: 8250: Add Loongson-2K0300 and Loongson-2K3000
+ UART support
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Haowei Zheng <zhenghaowei@loongson.cn>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	devicetree@vger.kernel.org, linux-serial@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 4, 2026 at 3:19=E2=80=AFPM Muchun Song <songmuchun@bytedance.co=
-m> wrote:
->
-> Commit 7ce6048d3a7d ("loongarch: drop ranges for definition of
-> ARCH_FORCE_MAX_ORDER") removed the ARCH_FORCE_MAX_ORDER ranges for
-> LoongArch. Besides dropping unreasonable upper limits, this allowed
-> values below the architecture defaults.
->
-> With 16KB pages, LoongArch defaults ARCH_FORCE_MAX_ORDER to 11,
-> matching HUGETLB_PAGE_ORDER. Forcing it to 10 while enabling HugeTLB
-> permits order-11 HugeTLB folios even though MAX_FOLIO_ORDER is 10.
-> LoongArch does not select ARCH_HAS_GIGANTIC_PAGE, so this violates the
-> generic MM assumption that folios cannot exceed MAX_PAGE_ORDER.
->
-> This invalid configuration is accepted by Kconfig.
-> BUILD_BUG_ON_INVALID() does not reject it either because it only checks
-> whether the expression is valid and never evaluates the comparison.
-> Detection is left to the runtime warning in hugetlb_add_hstate(), after
-> earlier boot paths may already have used the invalid configuration.
->
-> When an invalid HugeTLB order can be identified at build time, reject it
-> there. Otherwise, reject it at runtime before the mismatch propagates
-> further. Use MAYBE_BUILD_BUG_ON() so constant violations fail the build
-> while dynamically determined orders are checked at runtime.
->
-> Fixes: 7ce6048d3a7d ("loongarch: drop ranges for definition of ARCH_FORCE=
-_MAX_ORDER")
-> Reported-by: Sashiko <sashiko-bot@kernel.org>
-> Closes: https://lore.kernel.org/sashiko-outbox-192874@kernel.org/
-> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-> Suggested-by: Huacai Chen <chenhuacai@kernel.org>
+For this series:
 
-Reviewed-by: Huacai Chen <chenhuacai@kernel.org>
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
 
-> ---
-> v2:
-> - Move the order check after hugepages_supported() to avoid a false
->   PowerPC BUG_ON() (suggested by Sashiko)
-> ---
->  mm/hugetlb.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+On Wed, Nov 4, 2026 at 3:46=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn>=
+ wrote:
 >
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index 779b1de33c78..b49130eb7ad8 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -4197,7 +4197,6 @@ static int __init hugetlb_init(void)
+> Hi all:
 >
->         BUILD_BUG_ON(sizeof_field(struct page, private) * BITS_PER_BYTE <
->                         __NR_HPAGEFLAGS);
-> -       BUILD_BUG_ON_INVALID(HUGETLB_PAGE_ORDER > MAX_FOLIO_ORDER);
+> This series adds UART support for two Loongson SoCs.
 >
->         if (!hugepages_supported()) {
->                 if (hugetlb_max_hstate || default_hstate_max_huge_pages)
-> @@ -4205,6 +4204,8 @@ static int __init hugetlb_init(void)
->                 return 0;
->         }
+> The Loongson-2K0300 UART is the same as the one found on the
+> Loongson-2K1500, so it is documented as falling back to
+> "loongson,ls2k1500-uart" and then "ns16550a". No driver changes are
+> needed.
 >
-> +       MAYBE_BUILD_BUG_ON(HUGETLB_PAGE_ORDER > MAX_FOLIO_ORDER);
-> +
->         /*
->          * Make sure HPAGE_SIZE (HUGETLB_PAGE_ORDER) hstate exists.  Some
->          * architectures depend on setup being done here.
+> The Loongson-2K3000 UART differs from earlier Loongson UARTs in that it
+> does not require MCR/MSR signal inversion. It also supports a fractional
+> baud rate divisor. A dedicated compatible and driver data are added so
+> the driver can distinguish it.
 >
-> base-commit: 74d73ffcffe03804f97e9fb82301dadf75671282
+> Thanks.
+> Binbin
+>
+> Binbin Zhou (3):
+>   dt-bindings: serial: 8250: Document Loongson-2K0300 UART compatible
+>   dt-bindings: serial: 8250: Add dedicated Loongson-2K3000 UART
+>     compatible
+>   serial: 8250_loongson: Add Loongson-2K3000 UART support
+>
+>  Documentation/devicetree/bindings/serial/8250.yaml | 4 ++++
+>  drivers/tty/serial/8250/8250_loongson.c            | 7 +++++++
+>  2 files changed, 11 insertions(+)
+>
+>
+> base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
 > --
-> 2.54.0
+> 2.52.0
 >
