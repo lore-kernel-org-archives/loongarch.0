@@ -1,58 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=113.46.200.220
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793865905;
-	b=0SqLiNM44yc3SfYjpiQ9bOD1b8041Xh1aFvvjDZ+ZQwa24DQoul7VhZoF5YiErJkjVnL
-	 CghQ3gJgV/4j3Wnx12/b1cyHw2v38F/GP2VorKUuTi+agY1Of8pM+gMZpQFyettRMy75T
-	 UI0jaIF42PRvrHi6fOOFq+0kP4FP3+2qxSrQYXj/45xESBc4/qMJsSM6olWT3DHfeADIO
-	 00+vbzVGUfo7Pp8JCUxHFiSq9KJXT5PFfXlwVv7TDfnmUZXLhch998L1m8SyaMl0dv2DS
-	 UfO1Rw/X/l65gEjBvUtmp/eysgt1g4tqYBQNUhG1FnATbBYGBGoLEftu/wktrm67KPA==
+	t=1793870048;
+	b=jkq202nmQphFZqbTy6D3Eqo10R1w+3gOrCTJGUGsr5gmhsSKyB7r/Eb+srneANW4BxDe
+	 P+nlCvIfu7CW8Hw1kSTn2RBdVYsKIrLast5FFA/ho9Te7My2lAJBgQkOJMFqnNchW8Pew
+	 AbTH0GRvYKgnLkiBqva6hujA3LgJoy63sjPafe1lYw1Lt3MNinfA3PoBh/lJKfxjlgIBf
+	 RZY5GovB+7Ihxwtc9IIk4brKchUDqBrEZAnXIbh9x/D9AkD+9VVUUCRikBy+RzWzj/Uy3
+	 goErNCcUD4rFchAcbh466000W5LnTiItbbg5jY4QtkQNERDhNeMb/Td+5VeCI+1mK4Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793865905;
-	h=DMARC-Filter:dkim-signature:Received:Received:Received:Message-ID:
-	 Date:MIME-Version:User-Agent:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type:Content-Transfer-Encoding:X-Originating-IP:
-	 X-ClientProxiedBy;
-	bh=CCGzWBfX1X9cSsHPu2mqWEF8NpNHLDATFqyNNjfsFkw=;
-	b=IqnZYBvQBoyHbHSTiCFxTU1REcQW7aFpihB7FlbAaU9ledK0ILnmteO/L1ypTT+OHwBR
-	 Id9/N6ON1Wc2TkLLbFmOpRnxKrbHNcQ80lGGo28P91w82cgeiQBurCKDPPAHVMXqAZKpt
-	 LAWF9TDBGMyJEgz7uuzt7z1lXidWEcXsGJxHUMYfk1PuI/D4kaqha+ppIhS8CvN+b666e
-	 WLHQGtOP2FjD9Ed2x4c5WNWY3+2Gzh0qXi142MLaEWWuxXLzhDKKX8N2iuXqpE9PKHwVQ
-	 3X49jPCgLxlhv6/NDyIDjbxAPYYP6nlyDqeMLlo0kPLb6M8nfSF0/yygXyYpGxs/spQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793870048;
+	h=DMARC-Filter:Received:Received:Subject:To:Cc:References:From:
+	 Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:Content-Type:
+	 Content-Language:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-CM-SenderInfo:X-Coremail-Antispam;
+	bh=n9Rf37eO4THPEC6BfsALgd8nh4beTqOK842MpIGgx80=;
+	b=IKIwA+MqJxR0B5NqGjSxNHpMXIFsG9w8VYPzOIygQex4vk//BfPhXEaUJW1esNlSQj8F
+	 OMJiNq00be06uQahhLLHrCGg+rawSzZ7giSTXexNHjMqAue8wVADeWJmmn6rEWUsiXsfh
+	 Zteikx0wtXXp2k2YA7YdAE7CHlvS04w7t+AbbP0/b1iunO2qLpmOIVL8c7xcnHt/GWmPX
+	 qBXUlrqgkx17vrSJZ0RhrIhOS5qBfBhDZGP8lADzsv55j/zzjhpyrOB34nWdZVY9+Wc0H
+	 lYnzdKdoqtRd4p2IaGYfNAVrNoBf9lEeOdv9JGNwsjOmCALKxeJuytVusm7kOe92W+Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=huawei.com;
-	spf=pass smtp.mailfrom=huawei.com;
-	dkim=pass header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=3Lj0XuRp;
-	arc=none smtp.remote-ip=113.46.200.220
-Received: from canpmsgout05.his.huawei.com (canpmsgout05.his.huawei.com [113.46.200.220])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E115E606A31B
-	for <loongarch@lists.linux.dev>; Thu,  5 Nov 2026 08:05:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E115E606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=3Lj0XuRp
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=CCGzWBfX1X9cSsHPu2mqWEF8NpNHLDATFqyNNjfsFkw=;
-	b=3Lj0XuRpdOCEztpedA6GSSl5x4O4JddmtxEbTLNoJlR2C54wDBW8jorT/6aOBic8BqPVyewSl
-	x8e38gtEwgurpOUkkDhNyzVD/e6X4ayKuii44trLaEH0J0I7w9kRCxr2qDXmrth0z2EzyiGCtdk
-	TbamYBpLt/lj+b5ImptgI7A=
-Received: from mail.maildlp.com (unknown [172.19.163.104])
-	by canpmsgout05.his.huawei.com (SkyGuard) with ESMTPS id 4jKvx71hllz12LDh;
-	Thu,  5 Nov 2026 16:04:59 +0800 (CST)
-Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id D2F8E4057F;
-	Thu,  5 Nov 2026 16:04:57 +0800 (CST)
-Received: from [10.67.110.68] (10.67.110.68) by kwepemk200008.china.huawei.com
- (7.202.194.74) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Thu, 5 Nov
- 2026 16:04:56 +0800
-Message-ID: <2db15115-a06a-48ba-86a2-9a343f1e2a2b@huawei.com>
-Date: Thu, 5 Nov 2026 16:04:55 +0800
+	dmarc=none header.from=loongson.cn;
+	spf=pass smtp.mailfrom=loongson.cn;
+	arc=none smtp.remote-ip=114.242.206.163
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 804C7606A328;
+	Thu,  5 Nov 2026 09:14:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 804C7606A328
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8CxPtPcSOxqmpocAA--.17262S3;
+	Thu, 05 Nov 2026 17:14:04 +0800 (CST)
+Received: from [127.0.0.1] (unknown [127.0.0.1])
+	by front1 (Coremail) with SMTP id qMiowJCx9czZSOxqbYgyAA--.10853S2;
+	Thu, 05 Nov 2026 17:14:03 +0800 (CST)
+Subject: Re: [PATCH v4 1/4] ACPICA: actbl2.h: Add bit constants of the Flags
+ field in the IOVT IOMMU structure
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: rafael@kernel.org, linux-acpi@vger.kernel.org,
+ acpica-devel@lists.linux.dev, lenb@kernel.org, linux-kernel@vger.kernel.org,
+ lixianglai@loongson.cn, loongarch@lists.linux.dev,
+ maciej.wieczor-retman@intel.com, pawel.chmielewski@intel.com
+References: <20260922121058.972734-2-maobibo@loongson.cn>
+ <10bd45f8-2d37-42f0-b7d2-a4a84933c9b3@loongson.cn>
+ <CAAhV-H7Vq2ayLJNLRSo5RRiWOcmF2BXT_QOhEDg_jWOzYteqWw@mail.gmail.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <6f8a9203-6fb1-268a-8d37-37e69fbf2ee9@loongson.cn>
+Date: Thu, 5 Nov 2026 17:15:17 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -62,87 +58,93 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 00/15] kexec: Fix CMA and elf header leaks and rework
-To: Mike Rapoport <rppt@kernel.org>
-CC: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
-	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
-	<mpe@ellerman.id.au>, <npiggin@gmail.com>, <chleroy@kernel.org>,
-	<ritesh.list@gmail.com>, <sshegde@linux.ibm.com>, <pjw@kernel.org>,
-	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <alex@ghiti.fr>,
-	<tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <akpm@linux-foundation.org>,
-	<baoquan.he@linux.dev>, <pasha.tatashin@soleen.com>, <pratyush@kernel.org>,
-	<thuth@redhat.com>, <leitao@debian.org>, <yeoreum.yun@arm.com>,
-	<robh@kernel.org>, <sourabhjain@linux.ibm.com>, <kees@kernel.org>,
-	<coiby.xu@gmail.com>, <Yeking@red54.com>, <tangyouling@kylinos.cn>,
-	<maqianga@uniontech.com>, <zhangtianyang@loongson.cn>,
-	<guodongtai@kylinos.cn>, <blum@kernel.org>, <adityag@linux.ibm.com>,
-	<hui.wang@canonical.com>, <sohammetha01@gmail.com>, <guoren@kernel.org>,
-	<gaohan@iscas.ac.cn>, <kai.huang@intel.com>, <kas@kernel.org>,
-	<vishal.l.verma@intel.com>, <piliu@redhat.com>, <jbouron@amazon.com>,
-	<mclapinski@google.com>, <me@linux.beauty>, <graf@amazon.com>,
-	<bgwin@google.com>, <x86@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <loongarch@lists.linux.dev>,
-	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
-	<kexec@lists.infradead.org>
-References: <20261026075201.699550-1-ruanjinjie@huawei.com>
- <179380419709.28814.2122135856184991710.b4-review@b4>
- <932cdfda-7030-4829-8b43-062d208450e4@huawei.com>
- <auw1qgmjWko52oS_@kernel.org>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <auw1qgmjWko52oS_@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAAhV-H7Vq2ayLJNLRSo5RRiWOcmF2BXT_QOhEDg_jWOzYteqWw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
- kwepemk200008.china.huawei.com (7.202.194.74)
+X-CM-TRANSID:qMiowJCx9czZSOxqbYgyAA--.10853S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7CF1ftr48JFWxuw4fAr1xXrc_yoW8ZrWrpr
+	s2vayrKFWDXr47Gr1vgwnxCF1rt398CF1a9r4Sgry7tr9akr1rtF4Uua1Y9a97CrZ5CayI
+	vFy2vrWfWFyjvrgCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GF
+	ylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j8
+	yCJUUUUU=
 
 
 
-在 2026/11/5 15:52, Mike Rapoport 写道:
-> On Thu, Nov 05, 2026 at 11:45:39AM +0800, Jinjie Ruan wrote:
->> 在 2026/11/4 22:56, Mike Rapoport 写道:
+On 2026/10/23 下午3:59, Huacai Chen wrote:
+> Bibo,
+> 
+> Now I have applied this series but with some modifications, please
+> double check and test the code.
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git/log/?h=loongarch-next
+In my v4 submit, it is:
++               case ACPI_IOVT_DEVICE_ENTRY_START:
++                       is_start = true;
++                       start_devid = ep->device_id;
++                       break;
+however in rc1, it is modified as:
+                 case ACPI_IOVT_DEVICE_ENTRY_START:
+                         is_start = true;
+                         entry->start_devid = ep->device_id;
+                         break;
+Here entry is not allocated and NULL pointer, it is allocated in 
+ACPI_IOVT_DEVICE_ENTRY_END switch case.
+
+I really do not know what is aid to modify it and let others to test.
+
+> 
+> Huacai
+> 
+> On Mon, Oct 12, 2026 at 3:16 PM Bibo Mao <maobibo@loongson.cn> wrote:
 >>
->>>> Patches 8-10 pass the kbuf fields to crash_prepare_headers() to
->>>> simplfy code.
->>>>
->>>> Patch 11 frees the elf core header from the generic post-load cleanup.
->>>>
->>>> Patches 12-15 add kexec_load_other_segments() and convert the three
->>>> architectures, and arch_kexec_setup_other_segments() builds
->>>> the architecture specific boot parameters (a DTB or a command line).
->>>
->>> I think the refactoring should go before the identical fixes in arch/
->>> code.
+>> This change is already merged in acpica tree.
 >>
->> However, this will cause trouble for the fix patch in the stable round.
-> 
-> That's right, but since actual fixes anyway require changes to kexec core,
-> I think it's better to refactor first. The core than will take care of
-> proper freeing in the most cases.
-
-This way, each architecture doesn't have to worry about the issue of
-incomplete resource release.
-
-> 
-> And since CMA support in kexec is quite new I think the entire set can be
-> backported to stable then.
-
-Make sense for me.
-
-> 
-> I'm planning to have a closer look at the refactoring Really Soon :) 
-
-Thank you very much! Looking forward to your review.
-
-> 
->> -- 
->> Best regards,
->> Jinjie
+>> slightly ping.
 >>
-> 
-
--- 
-Best regards,
-Jinjie
+>> On Tue, Sep 22, 2026 at 08:10:55PM +0800, Bibo Mao wrote:
+>>   > According to the IOVT specification, define macros for each bit of the
+>>   > Flags field in the IOVT IOMMU structure.
+>>   >
+>>   > Link: https://github.com/open-acpica/acpica/commit/352f750e4cc0
+>>   > Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>>   > ---
+>>   >  include/acpi/actbl2.h | 7 +++++++
+>>   >  1 file changed, 7 insertions(+)
+>>   >
+>>   > diff --git a/include/acpi/actbl2.h b/include/acpi/actbl2.h
+>>   > index baef525367b5..76e4a5bc79b4 100644
+>>   > --- a/include/acpi/actbl2.h
+>>   > +++ b/include/acpi/actbl2.h
+>>   > @@ -919,6 +919,13 @@ struct acpi_iovt_iommu {
+>>   >       u32 device_entry_offset;
+>>   >  };
+>>   >
+>>   > +/* Masks for Flags field above */
+>>   > +#define ACPI_IOVT_IOMMU_PCI_DEVICE           (1<<0)
+>>   > +#define ACPI_IOVT_IOMMU_PXM_VALID            (1<<1)
+>>   > +#define ACPI_IOVT_IOMMU_MAGAGE_BY_SEGMENT    (1<<2)
+>>   > +#define ACPI_IOVT_IOMMU_HW_CAP_SUPPORT               (1<<3)
+>>   > +#define ACPI_IOVT_IOMMU_MSI_INT_BYPASS               (1<<4)
+>>   > +
+>>   >  struct acpi_iovt_device_entry {
+>>   >       u8 type;
+>>   >       u8 length;
+>>   > --
+>>   > 2.39.3
+>>   >
+>>
 
