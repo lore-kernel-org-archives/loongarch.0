@@ -1,66 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=113.46.200.221
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793883696;
-	b=QobFmfDfRm8qMO+rKI79cjjlEtucjkHXXIx1395qZPG5v3LhmeHPbakV5g07r7Kul9CH
-	 FdDtVUfIz4gl/IZjIgPXGtEDlcg9fZJhZYsp5s7W+G2JA7y+yryo4mOC68bNTHROOF4S2
-	 7FGjCsRW82jTyU+69HeJg5tHRwTDSEWBrejJDvUD7ehDOd7PQJn45V8jm+kY5cKaz1VKx
-	 n1sQW4oYFrecmBPnr5mLAmUnsWY5psp6G9SHcSk91vQU3vz4HqUtY5YBsOGjzuNuTqfbS
-	 ZDfRAz9hBBs+0ujYTEj/D5sc9vatdRv8dmGdQoWDcP2pEF+sshpQOyGy5j6Mzinimnw==
+	t=1793891234;
+	b=uxxYGZN0dEzaSxUwyJjdtquzjiD2VYDNcj3ZvUoOvv3AFesL9iURSfI0VMoVQ6hboY6s
+	 QK9fMEUi+ek9mNcEHZM7YOC4uFoHlc7dNnFhDxml+tGyhowxcPeqVEjXS49+Vh751p8Xy
+	 t/eXoxOfXipJVjdCyHdC6N4UYdMqlvE9NaAYElg/zVihfzleLjcTryXVmoyRaip3HdN//
+	 uBEblnYBWyJfF0hzdD02HeMDhWpdlk56k9ILHlcdj78Va7MpckmcsW9RsQ2irlpjXUUnf
+	 H9mZYigzhEANY7O/0OJjgOSQL7O3hb1FFrmbYgKGhyXdPOSYy+1OOYpRn25Q4V4e92A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793883696;
-	h=DMARC-Filter:dkim-signature:Received:Received:Received:From:To:CC:
-	 Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding:Content-Type:X-Originating-IP:
-	 X-ClientProxiedBy;
-	bh=PU/FIz15JXZpFNfzPT/NKA0ktSqGeC0/uUKobt6aQcs=;
-	b=cfUPv7thBc0cztQodAO0CQcldRCSvlIvD24Kg64fiPCab/T69RkpU/RsMPmP0sx6O9Gn
-	 uVAGwjnUdIdKlj69YBXGhVz9LsHJjEkOkgIvn5p0hvsBqey799iCFzLAs8SQhP8gCkax1
-	 Pz1bKeaKkiByVQZ6UT3zu+yjxNjrAXcQ8pxNCcXJN8eR6mC8FP/lCt82oOXA37ostdjOB
-	 63EbIr3C6T4Ok8/SiINry0GOzA5zUzdXR+ntW9Q1MuZIJ45oni/9MnTjSXC7qntYi4Hnb
-	 6Saq44LobiAwvedep9AfN32PwogNZsmGu1j+zvdvwx5c69+6Add+QlsSCdFYNp7jHsA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793891234;
+	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
+	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
+	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=6LZ+1+Vvz+jfm5vRHAeunaTxWBAAAXS8a4MaB1JvOmw=;
+	b=ippAXXvT95r2R/TsMqk348poyAq/fdjUUEilXNNkWvDqRH0NKXQEUyo7fE1JdDuCXMgU
+	 aCfTlUww7kQ4eX6PIS77FfyfqzrVftc/3dduN281//O4IzB8hkwg9lr3HfWjiKCZX6Yjv
+	 ZxzumNjTQ5kT2hbwZy9kn6wtAWlqeIiDXgG1M6iaxysM2vIyVMzEQOyoXXEdGKC7MLQOc
+	 xIgD78ipWWtx+wEQ2VmdwQF+WorR8SKlT5LroRvLUxh6CnzECOM3rrYmWbQC2/V3Ombve
+	 5su5vy1ET/LamQOTta3zta0lGNio8WdMSKNO+PN8QOZB/XVfWPIzm75kuOa3ka+rdFA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=huawei.com;
-	spf=pass smtp.mailfrom=huawei.com;
-	dkim=pass header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=nrYvSKWQ;
-	arc=none smtp.remote-ip=113.46.200.221
-Received: from canpmsgout06.his.huawei.com (canpmsgout06.his.huawei.com [113.46.200.221])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="EO2BJ/6+";
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0C2606A333
-	for <loongarch@lists.linux.dev>; Thu,  5 Nov 2026 13:01:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8C0C2606A333
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5633F606A328
+	for <loongarch@lists.linux.dev>; Thu,  5 Nov 2026 15:07:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=nrYvSKWQ
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=PU/FIz15JXZpFNfzPT/NKA0ktSqGeC0/uUKobt6aQcs=;
-	b=nrYvSKWQoD72jLY8eqX20KRZScdaXrfd6JXFGHw8ECltbPTnMwErLIst3YwaDyTrwZn3oPQDM
-	18JUNVpZkAxU834BA7snNuOY9SFfcOubyrCutUB0fPWS03DcqSMW64f2UWbgoqoc5gvkyqBYcFq
-	xqMMFKaMbuo2toYbnZTIczw=
-Received: from mail.maildlp.com (unknown [172.19.163.104])
-	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4jL2W76XpnzRhRx;
-	Thu,  5 Nov 2026 21:01:23 +0800 (CST)
-Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id D29874058F;
-	Thu,  5 Nov 2026 21:01:30 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by kwepemk200008.china.huawei.com
- (7.202.194.74) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Thu, 5 Nov
- 2026 21:01:30 +0800
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-To: <chenhuacai@kernel.org>, <kernel@xen0n.name>, <guodongtai@kylinos.cn>,
-	<liukexin@kylinos.cn>, <zhangtianyang@loongson.cn>, <maqianga@uniontech.com>,
-	<tangyouling@kylinos.cn>, <loongarch@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>
-CC: <ruanjinjie@huawei.com>
-Subject: [PATCH v8] LoongArch: kexec_file: Fix a modified_cmdline leak
-Date: Thu, 5 Nov 2026 21:01:13 +0800
-Message-ID: <20261105130113.2284690-1-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EO2BJ/6+
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 146A31F00A16
+	for <loongarch@lists.linux.dev>; Thu,  5 Nov 2026 15:07:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793891234;
+	bh=6LZ+1+Vvz+jfm5vRHAeunaTxWBAAAXS8a4MaB1JvOmw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=EO2BJ/6+M7a0iVK+i0E4JAgIf0guklGRku6bWT0XQ+WcRveIX2swjjcEIo80eGySO
+	 Zxwzw8nUep52BHRGVFDCqzj8MkwArw/D/cG+4k9VHdAUSkeTKyuVvrWfqL9HngrE+b
+	 fctXZ9EOEIb2b2BwXoMxVj1b3kwiSyO3Te/F20K90NaAQvczD7ROuj9T2Wh7m9zwx4
+	 qoffAGSr4/I8IVNzmJCJDgjFqm14vbHAlpFE4Ddpq+2dosEMN65pDabHtkLRweRqSF
+	 FKXUAGogl5giMaahe7YMTTTl4OLkvYcSN4TZEU9UC4zNJKQ6bMkXRDwPZkGTMDpUh6
+	 Yi0+lZbT1/B/w==
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-6b429f71dbeso196414a12.1
+        for <loongarch@lists.linux.dev>; Thu, 05 Nov 2026 07:07:14 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AKwUvBy5QkhWxleDnU4YpbwChwG05jgDiH0qWcLSfKFunHqxfpheh9OfkzxqOKHb+VtrAX+lfVCay60CpAM=@lists.linux.dev
+X-Gm-Message-State: APuU4Z/7uxY0lUVNnywuvKjHVAMWvvwzKeYBA8xhzjF+c/nBloqIFzV/
+	vpfX7XmGAsFoGAuNoEnEd4nW36HJ6UnX3Qyxs12xILYn4DnQMr6W9HjpHWMEbUJl2QbdYDtfeod
+	kG9HjycVCb9Yu5ybFmNvWMUZXyFuzdoc=
+X-Received: by 2002:a05:6402:27cb:b0:6b5:685a:aa29 with SMTP id
+ 4fb4d7f45d1cf-6b5685aabaemr3342720a12.30.1793891232594; Thu, 05 Nov 2026
+ 07:07:12 -0800 (PST)
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -70,54 +59,54 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemk200008.china.huawei.com (7.202.194.74)
+References: <20261029172956.20791-1-dongtai.guo@linux.dev> <20261029172956.20791-6-dongtai.guo@linux.dev>
+ <aux9Hm0QFJLUDPWv@kernel.org>
+In-Reply-To: <aux9Hm0QFJLUDPWv@kernel.org>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 5 Nov 2026 23:07:01 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7Dsnz03iXChzE6nYM2cs+D6fdDFiWrDxX5jM13kYL6HA@mail.gmail.com>
+X-Gm-Features: AclHuK-7ZT562FqR8Q8-CsL50vorYou5ohB9VqtWfcaV8ssgwEH9NV-xDdP2-NM
+Message-ID: <CAAhV-H7Dsnz03iXChzE6nYM2cs+D6fdDFiWrDxX5jM13kYL6HA@mail.gmail.com>
+Subject: Re: [PATCH v6 5/8] LoongArch: Allow memblock arrays to resize
+To: Mike Rapoport <rppt@kernel.org>
+Cc: George Guo <dongtai.guo@linux.dev>, pasha.tatashin@soleen.com, pratyush@kernel.org, 
+	ardb@kernel.org, shuah@kernel.org, ilias.apalodimas@linaro.org, 
+	akpm@linux-foundation.org, baoquan.he@linux.dev, ruirui.yang@linux.dev, 
+	guodongtai@kylinos.cn, kernel@xen0n.name, graf@amazon.com, 
+	liukexin@kylinos.cn, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	kexec@lists.infradead.org, linux-mm@kvack.org, 
+	linux-kselftest@vger.kernel.org, linux-efi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-machine_kexec_prepare() copies it to KEXEC_CMDLINE_ADDR
-and overwrites the pointer.
+Hi, Mike,
 
-Free the heap buffer after the copy.
+On Thu, Nov 5, 2026 at 8:57=E2=80=AFPM Mike Rapoport <rppt@kernel.org> wrot=
+e:
+>
+> On Fri, Oct 30, 2026 at 02:29:52AM +0900, George Guo wrote:
+> > From: George Guo <guodongtai@kylinos.cn>
+> >
+> > LoongArch never calls memblock_allow_resize(), so the reserved region
+> > array cannot grow beyond INIT_MEMBLOCK_RESERVED_REGIONS entries
+> > (INIT_MEMBLOCK_REGIONS + NR_CPUS).
+>
+> This might be something to fix independent of KHO.
+>
+> Huacai,
+>
+> What's the reason LoongArch never enables memblock resizing and why it
+> defines INIT_MEMBLOCK_RESERVED_REGIONS to include NR_CPUS?
+At first we didn't define INIT_MEMBLOCK_RESERVED_REGIONS, then we got
+boot failures on a 128-cores machine, so define it, and the value is
+similar to arm64.
 
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>
-Cc: Kexin Liu <liukexin@kylinos.cn>
-Cc: Youling Tang <tangyouling@kylinos.cn>
-Cc: Qiang Ma <maqianga@uniontech.com>
-Cc: Tianyang Zhang <zhangtianyang@loongson.cn>
-Cc: George Guo <guodongtai@kylinos.cn>
-Cc: stable@vger.kernel.org
-Fixes: d162feec6b6e ("LoongArch: Add preparatory infrastructure for kexec_file")
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
----
-v7 -> v8:
-- Split out from the patch set as Mike suggested.
-- Link to v7: https://lore.kernel.org/all/20261026075201.699550-1-ruanjinjie@huawei.com/
----
- arch/loongarch/kernel/machine_kexec.c | 2 ++
- 1 file changed, 2 insertions(+)
+The reason LoongArch never enables memblock resizing is because the mm
+code is derived from MIPS, and MIPS never enables it.
 
-diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kernel/machine_kexec.c
-index 1883cae93bc3..19ccc91b6f2a 100644
---- a/arch/loongarch/kernel/machine_kexec.c
-+++ b/arch/loongarch/kernel/machine_kexec.c
-@@ -14,6 +14,7 @@
- #include <linux/mm.h>
- #include <linux/of_fdt.h>
- #include <linux/reboot.h>
-+#include <linux/slab.h>
- #include <linux/sched.h>
- #include <linux/sched/task_stack.h>
- 
-@@ -56,6 +57,7 @@ int machine_kexec_prepare(struct kimage *kimage)
- 		 */
- 		memcpy((void *)KEXEC_CMDLINE_ADDR, (void *)kimage->arch.cmdline_ptr,
- 					strlen((char *)kimage->arch.cmdline_ptr) + 1);
-+		kfree((void *)kimage->arch.cmdline_ptr);
- 		kimage->arch.cmdline_ptr = (unsigned long)KEXEC_CMDLINE_ADDR;
- 	} else {
- 		/* Find the command line */
--- 
-2.34.1
+Huacai
 
+>
+> --
+> Sincerely yours,
+> Mike.
