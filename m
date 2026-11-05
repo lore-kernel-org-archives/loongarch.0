@@ -1,84 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.180
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793859173;
-	b=yBOlOZDoEWuB8Gi4P/Gb+yLezYATivMJu1d7HBFkl442Mbvjc0dbl1njjjL1doSmBrV3
-	 AXYIpYJX93njrBbFA2Vj+7t3zu3Pq7SnkPtzLMQdby55/PV92n1RKqpRBLaHz4AIf2ulo
-	 lFNcpgbHQtJUDAhjFuWxbnvZhtiy50yaXNStPjGah1PDkTmIb7M2XwpTven/cJLo0t4uH
-	 jtM5yol1jhqjO1ZKSHrZ9bT9G7tfZtTxvntW1yHsGZ+t8l4pIugqu1ncOOUMY3w2K7S3J
-	 /lD6Ps+hi349q0kw+MEh4hLI/xl/7hFJgmu4nrl3uWIafSm8ZVRZrQDRY/e1O1yP5fA==
+	t=1793859179;
+	b=BIEHMfcBOL1E7CyCliRZu4mBtm76vrZbUiG270J7vyVsWcQtSoU/kMrR3oRVSzXMbGDL
+	 ZV7BxF2p/5s5BBgvWr99stAPxvRwHxy/9nsflhcNOCLr9AjD3nqOmZ/1Uj2ZnSW6FoO1n
+	 mPkOzvdLqmGxxwQLJJecC+isUfkmXvnOSFh58YOoH9r3z1YBHioyn5oRqQKiO4ucxF46l
+	 GTxgZa+Gzar++tCI8b3marqBjtcathPhd2Ohp4WYZ7sjrgBQPiYDdbbFf8/FdNIc2bI6o
+	 KwrxLu4xl6H31Twvhi99fXnbkBdVNXoA8aGNpJ1UXbYGZ0pVaHf4CAvVk7Oy/HGtsRg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793859173;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793859179;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=/SKim++0/v959SqW2Qj0ZN00Ia9M3Z26xYKJjxKUd6k=;
-	b=QB0d6Gb9JQuEYTp+46piHe8HuFqLLei6i9WBnPObOKz7y7lePb67fPsW6rc02QoREIfN
-	 W2GEJHr8XugBBp2/+zgn5oC5MnQbibnNmhumShL0IIkj+wQaBtbJsub31M5ncPi0oGFLP
-	 NQx9REaTOzyMRsxlDeQudsW3Wmma6ioxthNnnhj1mRzttpv6pyDjDTNrVP3AUAw3WVOTd
-	 QeSm0QyLEAXCyNR3amIIwDIHbx3Q6T0wAl2AXfZYBOUH4U+4yZQZxKTAdrOK0bxTFtKOU
-	 rWhr7zNUC9kKZLJ5OMlDrD6MSXoAo6YirBs2Pcw827tLrNDBu5jztFn7S9MSpYrjqEw==
+	bh=kKRQNq+YvdEons4PssMSMvDyZ1aDaAIj0dg+GEUgY+U=;
+	b=bkwh4BXde0AOUeescakOky4sflgofjw96HlDz/YROqQDcokTUq+oxoKzBWKYHrlsp7XV
+	 onVE/Z0FAfDdSCaysM4OlRmSYklC36/WVDy8mx5lL1pX1Gqn8IhjF3P6xlVeWSJ+Xqd+Z
+	 uf2HHstH652V/UJJDNy64fNj+z0aSoSWRBCKAbFBXM+VAtdYzjvLlrqPLyYcmX2PtTTGf
+	 3KwVVPcASby4BvQf8GpuBGfuRbAFfVU6TBPpATMwRAFNcuHT2D5ircp22Mka6KG1/GTzw
+	 oye454MpI/YX/VHbZqS2TDK514aXq9WN4spgB1DkJn2z+M8fcO4qivS7KeTzc3hA6Dg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=bytedance.com;
 	spf=pass smtp.mailfrom=bytedance.com;
-	dkim=pass header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=dRZE0pLm;
-	arc=none smtp.remote-ip=209.85.216.52
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	dkim=pass header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=TZDXM04d;
+	arc=none smtp.remote-ip=209.85.214.180
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE887606A328
-	for <loongarch@lists.linux.dev>; Thu,  5 Nov 2026 06:12:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BE887606A328
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77DE0606A330
+	for <loongarch@lists.linux.dev>; Thu,  5 Nov 2026 06:12:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 77DE0606A330
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=dRZE0pLm
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-3ab41538192so1275147a91.0
-        for <loongarch@lists.linux.dev>; Wed, 04 Nov 2026 22:12:52 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=TZDXM04d
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2e5fb79ce82so8982055ad.0
+        for <loongarch@lists.linux.dev>; Wed, 04 Nov 2026 22:12:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1793859172; x=1794463972; darn=lists.linux.dev;
+        d=bytedance.com; s=google; t=1793859178; x=1794463978; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=/SKim++0/v959SqW2Qj0ZN00Ia9M3Z26xYKJjxKUd6k=;
-        b=dRZE0pLmMsg07HhwP1Ad+ziwZhT0yIss4iLZYbvgHQy0rBOwc35hSyTH086i6aC/ql
-         gqxGnJkWN4yMKTxGkxOia76RvQ6bRc1w3nkEXE59jBrZs5NOUrcnoar54X1AnUvXBuOq
-         tuN5KpuXZlRfC+48+17wI8TrdXIqpvooncxLhsttxiJSdYe3lHzPCZeyoYlMHomIadSK
-         PWjzZT9H4h6GDxiYYqgLch5UBD4kunygGkBxVWLhe2jwkY1/pBRXecc/xxBbEqqqcQAw
-         U2ZNYJWp74nRxzDP6J5i7koBirWCPkSzZkZMvpKELYCDP0O8RKsn8UIEj6lSZOIM+FNy
-         xStw==
+        bh=kKRQNq+YvdEons4PssMSMvDyZ1aDaAIj0dg+GEUgY+U=;
+        b=TZDXM04dXjw4lekKgP2yVd4e2aEh5Bu0UTvvVcTHs0MaAO/+smgqY1j77CGR2ZCp8d
+         6q38YJvQj5sCzDi1vWBopY+pLe3HZSt8awsbZTRqTqUNuy3/okWWSwryTvI16qsPzxZg
+         wkJcYbXGy0+LpNoOxyq7TLDryEdji0KG2JcZ8PS5WpFIPd8JhgpSXlhjgR1MwFvbIqBV
+         tWsyfksciWv0NmVPqMZz3bUeR0NVsvgu+2VB7MZo1pvUqNfualVX/kno6nQBKytPoBPW
+         GXILZt5zYOzvViMwQy67J7s9QVQ3V6w7LNS4x6trKA0C/KmmGtMjykzylTKFzHz2RAJx
+         SCQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793859172; x=1794463972;
+        d=1e100.net; s=20260707; t=1793859178; x=1794463978;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=/SKim++0/v959SqW2Qj0ZN00Ia9M3Z26xYKJjxKUd6k=;
-        b=KePCNPuY11pOnsczzZJY3XTUE/cYSxUW/Bes1PuuuujygNEwlm3FP0aJRRnzAiJLMW
-         qsQHRoFULGvafu/5cLxio7Gt1MBTAQZb7rRSVRwA46DNhJViOxSsHT4+o24TX0uND1K/
-         RK2JqTIGcP37vW2iLwaa26gZR3VZWrLtfca7u945GxNg7m8aSib94EySeJgtN8n4yUkT
-         31r0cgBjAvx6ACWD0pNCE9lYTmrRMvAts8Jp5giJlY6aV/vNJH+zcPRNIJa+rWK4pc0D
-         JSy2z8d3I7z3AU45GCiJtbfr8sqA2SC0YIt7XRZz0Q9sKZlFoXYHEOR/NeaWGEBcs8CX
-         E0sA==
-X-Forwarded-Encrypted: i=1; AKwUvBwaLiYVLC8W5fkeE1Zg1HDBxvhmPJMo9HRIkbMJ831M2Pt3q/EKGubBuoCGdKR+kWrF/Bf/SqPGEHs=@lists.linux.dev
-X-Gm-Message-State: APuU4Z+YoCkZf/p/R4LuCPj5C09VWfiDMERWiA53HCwe5Sf9PPxtqgSA
-	zrHnQ5KIhVs1AX5eA/ENRbaaA7NJvhC21b8CdXp4D7f0g9mXguO6HV1XiaNXyZAj240=
-X-Gm-Gg: AYBFou3hn9/TS8v2nROxOemL2h5IICdkxd6qPtfJEg9BhUpr/6bmaNnaJ7habsiw8z6
-	tUtbOJwGCFwVPiUEvOTrRgvuaexrSdZ+1EPey+cYc6UJ+E5flNqc/6dIXhdP+uBmV2WV9hEjEIg
-	os8dTm7nWiYOc432vMZNhkzQL680LAH+0Mnlv+kuTqwvuSDM1EYSHFcn7qe67HbYInm85Gynhvv
-	gKGCTKySbtBLbOhsWnuqjtu2/afNw5yE0jAqdNre1k1M2tkD3+NvJm5GkNr7oRx0qfPpicI5KzP
-	M8qbVbzFnvXC97PBjg6YyvH+CmmIwKRNCt3gLEmCqM/JK6u/kPOEPcJrKh0crylGFrBi3V8RSIq
-	PT0vxBmUnEzuTQIPu5vaUjrko8xO1mlBOIojD3jqWw8wSW47bdOJPmfmWH93mQtoJpLNy9qOxuM
-	eUB6mj83fWCeok6Zu7lxHmvaFtTqMkBWlNkZWDkanUUHXaEG36HGzAi7XCHeNsa63gizZ9zzHsT
-	bE16q9ofWTvfagtUfNhAVj8IMZ6Lh7rHa+liA/cLPx9lwUXbljx8Q9z3WaXu9LJZSPChpCRuJg4
-	5sAiw/bDWw9ZYEIp5TbUBymlt0Fvf8yc3TqjaIrayfXRGZnlVAsM8z2e50/OCBL3bQMZFdUEzgE
-	PS1t+lG3oPdo=
-X-Received: by 2002:a17:90b:37d0:b0:3ad:c4e9:7beb with SMTP id 98e67ed59e1d1-3ae8979d2d3mr14790005a91.43.1793859171930;
-        Wed, 04 Nov 2026 22:12:51 -0800 (PST)
+        bh=kKRQNq+YvdEons4PssMSMvDyZ1aDaAIj0dg+GEUgY+U=;
+        b=MpCi4sN30W1/gsl0M+bLlFWM8HuwLFcN6e1tBZAt5o1v/o2V9JjZ0OZG8u+rPp1wmo
+         M8sK0y1KMCIeb2e/S0tQu4sNok+Z7pZDkr2McAL63gonLPBJk7sxRETtpPGnF0crxpfe
+         ahThE/vkS1OpM3jLUdm97X+8l2oXw60MWmcBFyK6g0cxxBfblQnJxNpjocoLONw5omQY
+         3UIHaGOVYmZNYOFOdkKD7HsEZbYGR+USBHWIszD8lf0zz4+47A/+FGmf3F6SRpRBwHoz
+         CeqslS1oJxL6agczX/rO994VT082emDXO2MVrp+Vvg/pGF0vMNhwWUp8UIb81Z/cyEX7
+         C1Kw==
+X-Forwarded-Encrypted: i=1; AKwUvBxozh7dDtJkJPhgMp7tk8E6sGlyb3nxVZXdWeeWTKG3BbYGicbC24HvYeHJoTOCsBljOPIXD8SaXNY=@lists.linux.dev
+X-Gm-Message-State: APuU4Z8bmS0L9xD/Y11xQ/aV1IdI+O1dESvNQluOSwg2RY4zdYnCyPdi
+	w+QXVATzFpdHTiSgBD+lgkJO9hlHCU7AFGoe4Qzep0T0mSPuwAi00zJ9SsQXcMcTtYY=
+X-Gm-Gg: AYBFou0FBIAGwixoh742ZPQjdpEy5dkI5rgEI43KgjxTPoMjhcvIl7P43q2tRC+MBMx
+	Ktxuks45bHjCn28bwphYwANCAyZR+B/UCjgHR4999q4tCleLNAehe2la9bPk7Jc9bk3fALME9Pv
+	4GsAQK84WXj9nZ/qZjaFUqG1Nt0GwO5+yAYSzxEoIKXbX4ZUFgYkCA1KusoHKUak9u/Jo2mIW6c
+	7yHZy/8/zFnC1syzvQwU7slGMbzNKi5jNnU3VdPcp3PK6lefDCoVK1REnSlBKLe9Pcxqs9flYKo
+	8pFnY48x9SIDANT3WXYBjG0iaUnpS++7Ft6R+pMWbLPpH96Pr5XO0DZvI9DKsf/F3x7rhpRK4e8
+	T6venc2XYepc5/ZwbdMl0/zyVAbcSGSmchY2ziHNOrmfhLowmBkAVZ5U8DewsMvPHaQYFOidNgU
+	1kLlnBn0ytLmIz/oZIrZQjw3hGaPYqu6Mi/NskVc2n/SgxPNVjzw6TYLpvpXyONYhcoZfjGC85i
+	i+TgMb76kemEbA9SwNusTg7+1c8mnY/49Cf8veul2b1Hay8ZZcPHz2DSRkdWdgKox+K8eFOGOWq
+	qFXuUjwNedNB/MBKXrdWGnufxS5omf7/6hWI+8PANmUpY2pc9A9AEQpvLx6PMYgtqA==
+X-Received: by 2002:a17:90b:380c:b0:3a7:250:333e with SMTP id 98e67ed59e1d1-3ae896f8315mr16195357a91.11.1793859177566;
+        Wed, 04 Nov 2026 22:12:57 -0800 (PST)
 Received: from G6L4RL2QG9.bytedance.net ([61.213.176.8])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b0b323a1fdsm2107528a91.5.2026.11.04.22.12.46
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b0b323a1fdsm2107528a91.5.2026.11.04.22.12.52
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 04 Nov 2026 22:12:51 -0800 (PST)
+        Wed, 04 Nov 2026 22:12:57 -0800 (PST)
 From: Muchun Song <songmuchun@bytedance.com>
 To: David Hildenbrand <david@kernel.org>,
 	Madhavan Srinivasan <maddy@linux.ibm.com>,
@@ -104,9 +103,9 @@ Cc: Lance Yang <lance.yang@linux.dev>,
 	loongarch@lists.linux.dev,
 	linux-s390@vger.kernel.org,
 	Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH v2 3/5] loongarch/mm: disable device DAX vmemmap optimization
-Date: Thu,  5 Nov 2026 14:12:15 +0800
-Message-ID: <20261105061217.13302-4-songmuchun@bytedance.com>
+Subject: [PATCH v2 4/5] mm/sparse-vmemmap: drop vmemmap_can_optimize()
+Date: Thu,  5 Nov 2026 14:12:16 +0800
+Message-ID: <20261105061217.13302-5-songmuchun@bytedance.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20261105061217.13302-1-songmuchun@bytedance.com>
 References: <20261105061217.13302-1-songmuchun@bytedance.com>
@@ -121,47 +120,153 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-LoongArch selects ARCH_WANT_OPTIMIZE_HUGETLB_VMEMMAP but not
-ARCH_WANT_OPTIMIZE_DAX_VMEMMAP. Its vmemmap_free() implementation is also
-empty, so it cannot tear down optimized Device DAX mappings.
-
-A later change removes the generic Device DAX architecture gate and lets
-vmemmap_populate() decide whether a section can use optimization. Clear the
-section compound order in the LoongArch path so Device DAX keeps using
-unoptimized mappings.
-
-This does not affect HugeTLB HVO: LoongArch does not support gigantic
-pages, so HugeTLB does not use section-based vmemmap optimization there.
+section_vmemmap_optimizable() can already decide whether a section uses
+vmemmap optimization based on the section compound order. The DAX-specific
+vmemmap_can_optimize() helper duplicates that policy, so remove it to
+simplify the code.
 
 Signed-off-by: Muchun Song <songmuchun@bytedance.com>
 ---
 v2:
-- New patch using section_vmemmap_optimization_disable() to keep Device
-  DAX vmemmap optimization disabled on LoongArch (reported by Sashiko)
+- Ignore non-optimizable nonzero section orders while retaining zero
+  as the reset value (reported by Sashiko)
+- Use section_vmemmap_optimization_disable() for the altmap fallback
+- Move vmemmap_optimizable_order() before its first caller
 ---
- arch/loongarch/mm/init.c | 2 ++
- 1 file changed, 2 insertions(+)
+ include/linux/mm.h                   | 37 ----------------------------
+ include/linux/vmemmap-optimization.h | 25 ++++++++++---------
+ mm/sparse-vmemmap.c                  |  6 +++--
+ 3 files changed, 18 insertions(+), 50 deletions(-)
 
-diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
-index f801f7097f03..ea769e479241 100644
---- a/arch/loongarch/mm/init.c
-+++ b/arch/loongarch/mm/init.c
-@@ -15,6 +15,7 @@
- #include <linux/memblock.h>
- #include <linux/memremap.h>
- #include <linux/mm.h>
-+#include <linux/vmemmap-optimization.h>
- #include <linux/mman.h>
- #include <linux/highmem.h>
- #include <linux/swap.h>
-@@ -143,6 +144,7 @@ void __meminit vmemmap_set_pmd(pmd_t *pmd, void *p, int node,
- int __meminit vmemmap_populate(unsigned long start, unsigned long end,
- 			       int node, struct vmem_altmap *altmap)
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index a060a7150401..2fa5ce73b382 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -38,7 +38,6 @@
+ #include <linux/bitops.h>
+ #include <linux/iommu-debug-pagealloc.h>
+ #include <linux/kcsan-checks.h>
+-#include <linux/vmemmap-optimization.h>
+ 
+ struct mempolicy;
+ struct anon_vma;
+@@ -5366,42 +5365,6 @@ static inline void vmem_altmap_free(struct vmem_altmap *altmap,
+ }
+ #endif
+ 
+-#ifdef CONFIG_ARCH_WANT_OPTIMIZE_DAX_VMEMMAP
+-static inline bool __vmemmap_can_optimize(struct vmem_altmap *altmap,
+-					  struct dev_pagemap *pgmap)
+-{
+-	unsigned long nr_pages;
+-	unsigned long nr_vmemmap_pages;
+-
+-	if (!IS_ENABLED(CONFIG_VMEMMAP_OPTIMIZATION))
+-		return false;
+-
+-	if (!pgmap || !is_power_of_2(sizeof(struct page)))
+-		return false;
+-
+-	nr_pages = pgmap_vmemmap_nr(pgmap);
+-	nr_vmemmap_pages = ((nr_pages * sizeof(struct page)) >> PAGE_SHIFT);
+-	/*
+-	 * For vmemmap optimization with DAX we need minimum 2 vmemmap
+-	 * pages. See layout diagram in Documentation/mm/vmemmap_dedup.rst
+-	 */
+-	return !altmap && (nr_vmemmap_pages > VMEMMAP_OPTIMIZATION_PAGES);
+-}
+-/*
+- * If we don't have an architecture override, use the generic rule
+- */
+-#ifndef vmemmap_can_optimize
+-#define vmemmap_can_optimize __vmemmap_can_optimize
+-#endif
+-
+-#else
+-static inline bool vmemmap_can_optimize(struct vmem_altmap *altmap,
+-					   struct dev_pagemap *pgmap)
+-{
+-	return false;
+-}
+-#endif
+-
+ enum mf_flags {
+ 	MF_COUNT_INCREASED = 1 << 0,
+ 	MF_ACTION_REQUIRED = 1 << 1,
+diff --git a/include/linux/vmemmap-optimization.h b/include/linux/vmemmap-optimization.h
+index 5c09da4df4d8..9d9f7a67d195 100644
+--- a/include/linux/vmemmap-optimization.h
++++ b/include/linux/vmemmap-optimization.h
+@@ -31,6 +31,17 @@
+ #define VMEMMAP_OPTIMIZATION_NR_STRUCT_PAGES	(VMEMMAP_OPTIMIZATION_SIZE / sizeof(struct page))
+ #define VMEMMAP_OPTIMIZATION_MIN_ORDER		(ilog2(VMEMMAP_OPTIMIZATION_NR_STRUCT_PAGES) + 1)
+ 
++static inline bool vmemmap_optimizable_order(unsigned int order)
++{
++	if (!IS_ENABLED(CONFIG_VMEMMAP_OPTIMIZATION))
++		return false;
++
++	if (!is_power_of_2(sizeof(struct page)))
++		return false;
++
++	return order >= VMEMMAP_OPTIMIZATION_MIN_ORDER;
++}
++
+ #ifdef CONFIG_VMEMMAP_OPTIMIZATION
+ static inline unsigned int section_compound_order(const struct mem_section *section)
  {
-+	section_vmemmap_optimization_disable(start, end);
- #if CONFIG_PGTABLE_LEVELS == 2
- 	return vmemmap_populate_basepages(start, end, node, NULL);
- #else
+@@ -40,6 +51,9 @@ static inline unsigned int section_compound_order(const struct mem_section *sect
+ static inline void section_set_compound_order(struct mem_section *section,
+ 					      unsigned int order)
+ {
++	if (order && !vmemmap_optimizable_order(order))
++		return;
++
+ 	VM_WARN_ON(section_compound_order(section) && order &&
+ 		   section_compound_order(section) != order);
+ 	section->compound_page_order = order;
+@@ -134,15 +148,4 @@ static inline bool vmemmap_optimizable_pfn(unsigned long pfn, unsigned int order
+ 
+ 	return (pfn & (nr_pages - 1)) >= VMEMMAP_OPTIMIZATION_NR_STRUCT_PAGES;
+ }
+-
+-static inline bool vmemmap_optimizable_order(unsigned int order)
+-{
+-	if (!IS_ENABLED(CONFIG_VMEMMAP_OPTIMIZATION))
+-		return false;
+-
+-	if (!is_power_of_2(sizeof(struct page)))
+-		return false;
+-
+-	return order >= VMEMMAP_OPTIMIZATION_MIN_ORDER;
+-}
+ #endif /* _LINUX_VMEMMAP_OPTIMIZATION_H */
+diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
+index b8b55e12f5ba..71a927d67a9f 100644
+--- a/mm/sparse-vmemmap.c
++++ b/mm/sparse-vmemmap.c
+@@ -473,6 +473,9 @@ struct page * __meminit __populate_section_memmap(unsigned long pfn,
+ 		!IS_ALIGNED(nr_pages, PAGES_PER_SUBSECTION)))
+ 		return NULL;
+ 
++	/* Altmap-backed vmemmap pages cannot be optimized. */
++	if (altmap)
++		section_vmemmap_optimization_disable(start, end);
+ 	r = vmemmap_populate(start, end, nid, altmap);
+ 	if (r < 0)
+ 		return NULL;
+@@ -700,10 +703,9 @@ static struct page * __meminit section_activate(int nid, unsigned long pfn,
+ 	struct mem_section *ms = __pfn_to_section(pfn);
+ 	struct mem_section_usage *usage = NULL;
+ 	struct page *memmap;
+-	unsigned int order;
++	unsigned int order = pgmap ? pgmap->vmemmap_shift : 0;
+ 	int rc;
+ 
+-	order = vmemmap_can_optimize(altmap, pgmap) ? pgmap->vmemmap_shift : 0;
+ 	if (nr_pages < PAGES_PER_SECTION && section_compound_order(ms))
+ 		return ERR_PTR(-EOPNOTSUPP);
+ 
 -- 
 2.54.0
 
