@@ -1,69 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.198
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793823297;
-	b=M62otfUIdqzeLlOgcfFKr8jn2gAvQ2aydeZhdQcIULN0jX0IvEEk2aUK8Cp0TO/9UmXl
-	 Ov/CI37T9QVF4+qWyFnsnDRw2//aU01OXBulsz1G3XmByO00jUe3JxgSi22z3YkFLyGPc
-	 MPLMnjV9STAvJVfC6LkWg76x6o9KIaH0y/dVObbQbgM7AdJgtaQlV6lp00A/Z/ANyc+bs
-	 utjuYSZeR80XxtXaAEvHnkOkl7dbC4eZYJAJu2cetpCZuiagFoYoKdBIJY++IG0BFU0Oi
-	 7kX7rCwp+Wl8W/Yy2JAo1+veyb+baY6c+u2p7qvXz3J3n2U8JyUg+caOiHkt+0xZ0GQ==
+	t=1793843424;
+	b=MwiOgFS63Y1oD3j+h9miCrlIcKO9zg9isxxmHtPZ3Xc2vCGeVnPwf31+cTeQa9CO5ShE
+	 OPpLcQOAN05ELzS0VJLEN4nabUJBne4ybtGhUcWicjIhNXcILrI/nr8R6qGpcfk9m7tUN
+	 Z30aMSltnYX718eEisxrImyADQmj73hm6uWdiiRCC/IAO2EDl7eqBpKwTE9QOoKe0svG4
+	 z5zFqmRUgw5RCWxUEh9GCy0xm8W/kqldZILZj5b3tD+j20y7LISAVfGMQZfgIDRjwEdI6
+	 pm8y/Ne88qAATgruR/SZGuzsSX+FxaHw/KimnnzyP8yDbvRfr4WU5wA6YTiIj/7biZQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793823297;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:MIME-Version:X-Received:
-	 In-Reply-To:References:Message-ID:Date:Subject:From:To:Cc:
-	 Content-Type;
-	bh=AS/luxCxZZ4IKfwOyJu4Ue765u+vBG+6P6QAZr4AiP8=;
-	b=u5Hz38xGMvMiZKR1erGEw3TU3n9UDDEUd6yGblM8Y9cUgqdaF3Bgr0Z+TbPFTnAILwlr
-	 rT1NYMWoN2qN3Q68IRdJHZs5Yb2aX9I7KuoE4lz9VUbfY/n94m42gdzjr0Uk9+meOYOJT
-	 KhtvgcXeKO0qXCxn8mzHHHLyUkyQM/skRzhgeTgp7EONUmllrOvQscyVarCO+LLsTS2W4
-	 gw8h4o0IR4VzBra3hHJqZB6BhUSl77xdTu8lXgPUKNeiTQgLVgCjZg2VDDK1qS0QfL6Bl
-	 7b/2KIUOD5aQFm55gjpsfwgVJzLCSlpIZkYzJcYl0oJBfLb9dzGlwPJDaGOrE4SFVLQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793843424;
+	h=DMARC-Filter:Received:Received:Subject:To:Cc:References:From:
+	 Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:Content-Type:
+	 Content-Language:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-CM-SenderInfo:X-Coremail-Antispam;
+	bh=w3bjmnRpABvjjTMc+j8jy7xf8N+60afMMXD7WGaabWI=;
+	b=3B90j2wl/luCzYBK52seem+7o5MgAI26BR+AAcRgHFpISczS4vwvick26kZUDCA+Y5B2
+	 rCw5Vxte+1SUFRDZqRmbaD37jnR9nViqfBhmIju+k5nENIZkmOo2kcrjQHt6BqnL5ov1J
+	 oIUEUPb0qJ1/aSga6yr+yVrNJf4fB4d5GQCOwZNcn5zCNwN5vnM+39Bgpx0ssttPMEpvo
+	 t+Z817Hte0NjptQ2sfcHPsA8R5W/x67K10DSAyk4zs64d1jfkKgn3hnyYD4IgKLTz+wzP
+	 TF7bcWpgl0qlb16oF7/pRjc6xWzR4u2fP1rFY6SfAVm7T5JDRbC0MEizBi6eFgk9dnQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=flex--jeffxu.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=bec2Xgmh;
-	arc=none smtp.remote-ip=74.125.82.198
-Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com [74.125.82.198])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 389AE60841B8
-	for <loongarch@lists.linux.dev>; Wed,  4 Nov 2026 20:14:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 389AE60841B8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jeffxu.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=bec2Xgmh
-Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-36d69ab3c2bso772510eec.0
-        for <loongarch@lists.linux.dev>; Wed, 04 Nov 2026 12:14:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793823296; x=1794428096; darn=lists.linux.dev;
-        h=content-type:cc:to:from:subject:date:message-id:references
-         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=AS/luxCxZZ4IKfwOyJu4Ue765u+vBG+6P6QAZr4AiP8=;
-        b=bec2XgmhEZBjJm69ICq0QlPBn1QSww+6o56/8AWfvn64HyLwyfHCTN4TtsLaEU0q3e
-         8E/d4f0tTG8lVIIFM2aMtDxMycuw3j7GBB3bi/CrphMJP2FDgMGlnQfoWE3JNyuBZOlT
-         zGpKgtfU0t00+C9WJtlmxMjq6IiVITAf5dsaCExqfWKOBgXUgaNqwS2HGRVoVzY1v+ol
-         1gISviHcE7IzpTotBJ5OfsQzl1dL2LJZ0gCmSRtGxvFzBLd03t1DCS7hB8WHawYSx9IC
-         Mm0Ncqgb71/il2yHG5vJFa35fR4PR5ge4g+afT+GygvTZ7RX16cEenzqK2bT/aHr9OGT
-         daLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793823296; x=1794428096;
-        h=content-type:cc:to:from:subject:date:message-id:references
-         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=AS/luxCxZZ4IKfwOyJu4Ue765u+vBG+6P6QAZr4AiP8=;
-        b=HdJo1J5R9yiZxAaLoUBUyGMn0pqEGgb+Imjoiyfoz09OAw4Vw9FzQjvZhnTEyO0k9z
-         vDon0RCFtrZRKWng9TNTZ8bQp80sh8mMZFJm1aLRSFm18tKW0D+kUGNx/luUM4ldBs7P
-         EQ+MTk7wqK4SFA26fckOKzRYkwrlIUodDNhrUthUcnf85ik3aZxLLCTu5SboHjPVekRQ
-         Tnd7OXmnu3cAEUWARWHZwCDNyMXD/BytCg3swTKV0e4L1Mhjv1Vo/+D/UrAuLpvDy5rx
-         wyx7wxdcuE/Rlwmmw0z5suA5EjWK9EuS5ZLTX22GZx3vUlNmr6ZD1KetRX09A9Xai3ww
-         Tj+w==
-X-Forwarded-Encrypted: i=1; AKwUvBx/+UdfKEhKA0ZaWnRsb1wa6iV2enk+zc6cR24YTyPOw77xcDAn4UJXQDIewHgXLmZ2jAXASFREec8=@lists.linux.dev
-X-Gm-Message-State: APuU4Z8cTRaGOD5jZmNeJ9vsD33noLacp3c+1hPToLh4JAnYoBzw+vtM
-	MFd6YNKsezWJpPqRNv5RaZsPBlx176oszzFYkOwQLBA+4nhJdXDpKdb+5W98SsVwZKvUfo0Glxb
-	1ZKR1GQ==
+	dmarc=none header.from=loongson.cn;
+	spf=pass smtp.mailfrom=loongson.cn;
+	arc=none smtp.remote-ip=114.242.206.163
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED38C606A326
+	for <loongarch@lists.linux.dev>; Thu,  5 Nov 2026 01:50:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org ED38C606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [123.138.236.242])
+	by gateway (Coremail) with SMTP id _____8DxC9LV4Otq7H4cAA--.17085S3;
+	Thu, 05 Nov 2026 09:50:14 +0800 (CST)
+Received: from [127.0.0.1] (unknown [123.138.236.242])
+	by front1 (Coremail) with SMTP id qMiowJBxJs3T4OtqVHgyAA--.61748S2;
+	Thu, 05 Nov 2026 09:50:12 +0800 (CST)
+Subject: Re: [PATCH v1 1/2] LoongArch: BPF: Make arena support depend on SCQ
+ extension
+To: George Guo <dongtai.guo@linux.dev>
+Cc: chenhuacai@kernel.org, hengqi.chen@gmail.com, loongarch@lists.linux.dev,
+ bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20261102072808.23080-2-yangtiezhu@loongson.cn>
+ <20261104101753.20704-1-dongtai.guo@linux.dev>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <4e9bcddf-7dfe-b78f-035f-8a4b76584fdd@loongson.cn>
+Date: Thu, 5 Nov 2026 09:50:11 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -73,52 +55,73 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-X-Received: from dybkf8.prod.google.com ([2002:a05:7301:3a88:b0:36a:e67:fbc2])
- (user=jeffxu job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:1608:b0:185:4ad4:3d15
- with SMTP id a92af1059eb24-1ac56302329mr19203878c88.1.1793823295901; Wed, 04
- Nov 2026 12:14:55 -0800 (PST)
-In-Reply-To: <cover.1793718940.git.chris@chrisdown.name>
-References: <cover.1793718940.git.chris@chrisdown.name>
-Message-ID: <18e4f0c895c8d2ed.3137322e32382e342e3434.27cc5b.0000sendgmr@google.com>
-Date: Wed, 04 Nov 2026 20:14:55 +0000
-Subject: Re: [PATCH v2 0/8] mseal sysmap: Choose system mapping sealing at boot
-From: Jeff Xu <jeffxu@google.com>
-To: Chris Down <chris@chrisdown.name>, Andrew Morton <akpm@linux-foundation.org>, 
-	"Liam R. Howlett" <liam@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>
-Cc: Jeff Xu <jeffxu@google.com>, David Hildenbrand <david@kernel.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Kees Cook <kees@kernel.org>, Andrey Vagin <avagin@gmail.com>, 
-	Alexander Mikhalitsyn <alexander@mihalicyn.com>, Shuah Khan <shuah@kernel.org>, 
-	Oleg Nesterov <oleg@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Andy Lutomirski <luto@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, Jonathan Corbet <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>, 
-	linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kernel-team@meta.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20261104101753.20704-1-dongtai.guo@linux.dev>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:qMiowJBxJs3T4OtqVHgyAA--.61748S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7WFW3Cr17ZFW5tFWDAry7Jwc_yoW8ur15pa
+	y8Wr4UZrZ0gw1jyr4Iyw4fuF4rW34rCF4UJw1fW348Zwn8Wr1fWr4FkFW5XF1Uurs3AF4U
+	tF4Iqa429r4jyagCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
+	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	k0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l
+	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxV
+	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI
+	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+	1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+	42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jOxhLUUUUU=
 
-On Tue, Nov 3, 2026 at 11:17:43PM +0800, Chris Down wrote:
-> System mapping sealing is currently a build time choice. Hosts which
-> want it and hosts which need to move or unmap these mappings therefore
-> need separate kernels, which is not ideal. Let's allow the administrator
-> to choose at boot time.
+On 11/4/26 6:17 PM, George Guo wrote:
+> Hi Tiezhu,
+> 
+> On 2026/11/2 15:28, Tiezhu Yang wrote:
+>> This is because the arena range tree uses kmalloc_nolock(), which requires
+>> 128-bit atomic cmpxchg support, provided by SCQ extension on LoongArch.
+> 
+> There is an existing SLUB debug fallback worth checking before making
+> arena support depend on SCQ.
+> 
+> In __kmalloc_nolock_noprof(), the rejection condition is:
+> 
+>          if (!(s->flags & __CMPXCHG_DOUBLE) && !kmem_cache_debug(s))
+>                  return NULL;
+> 
+> Debug caches do not require cmpxchg128 for this path. They use
+> kmem_cache_node->list_lock with spin_trylock_irqsave() instead.
+> With CONFIG_SLUB_DEBUG=y, booting with slab_debug enables this path;
+> CONFIG_SLUB_DEBUG_ON=y enables debugging by default as well.
+> 
+> The proposed bpf_jit_supports_arena() check would reject arena maps on
+> CPUs without SCQ, even when the SLUB debug fallback is available.
+> This would prevent us from running arena tests on those machines
+> with slab_debug enabled.
+> 
+> Could you rerun jit_insns/cast_to_user on the 3A5000 with slab_debug
+> enabled, before and after this patch? The claim that kmalloc_nolock()
+> requires 128-bit cmpxchg should account for debug caches, and it would
+> be useful to preserve that fallback when addressing the error reporting.
 
-Thanks Chris for the updates and for adding the unsealed boot parameter
-test coverage! The v2 series looks good to me.
+I noticed that a similar concern regarding the slub_debug exception
+was previously raised by the CI bot in the RISC-V ZACAS patch:
+https://lore.kernel.org/bpf/594ed4944926f6a7202b016eca03d879d11bfdf09a2cbaea039421ae4ab962c0@mail.kernel.org/
 
-Reviewed-by: Jeff Xu <jeffxu@google.com>
+I highly agree with the bot's conclusion there:
+ > "That narrowing is arguably desirable (BPF should not depend on a SLUB
+ > debug-mode escape hatch)."
+
+Moreover, handling this runtime debug mode inside the architecture's JIT
+layer would inevitably introduce undesirable cross-module coupling with
+SLUB internals. Restricting the JIT capability solely to native hardware
+and toolchain support keeps the implementation clean and robust.
+
+Thanks,
+Tiezhu
+
