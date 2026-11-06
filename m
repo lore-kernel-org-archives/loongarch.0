@@ -1,93 +1,76 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.65
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793904006;
-	b=ZehYW9przfHTp/aI52I1ynWTj7Hqz6ecD5aPLo0bz7zn0tFHfocVS87Bwltyzg6SCjk1
-	 TKxG7gloAP0QgOM1oFMWc8MMZ92k4AzyOhemGvpfK0ijdU2c6P1hFfzykEPjpI+LtWL9V
-	 6dh8SmLvUcqJcrxRJTqM1RIIRxBstq+Cwr8uV23yptt9I9D6nt8N8OWRnKxeEZ5IeoNUs
-	 2a0AuGqOtLaxTYYrOukJ8WCO6KoOnCyd0aX6EIbBkkfd+9T8qRl2HLjwlrzk9YsfR1C3i
-	 6zDGFsmmUHzke+FYxX2mB33aPa9nMZ4YgnGXzc94NrYs/Lio/DtOeFuBOyUToXLHR+Q==
+	t=1793925112;
+	b=Hralmv98gAYdmg3Weje6fsD6wxBzTs46Q+sbTdfVtpD7vply11k+S8Vq5bkQjjMBV/bq
+	 XaDyg5HXg3XqXDIGQ1UrIv9iWQggzIdQcedoKwHSad7kNVwQOfcioVD//YkXaZAY6A3bU
+	 Icfh3bK8muM+gaKVeCjZF/bEvcJI5/LeLstModz8+p7YSGNgjh1pUdKM9K5uLpco0p61I
+	 yYLTibFRG3DBTHlL1c7SzDNe4Fm0JbCUdA2cNGD+NDE41knCXfo5e03Yim2nsqI5ciKtc
+	 hGojVGknWG6Iyt/L7DTewc9ziUQv8NKoFOPa+u7PnWxg8knV3FwsbTeUs/m3/9PcGiQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793904006;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=TAssQInwTzZeF9VmFhLMiXUuVNp0io3xxOUzWahhLeo=;
-	b=02ibJMwePyQkaMmJPeTq0irGh6T7Vh9BXgZFghyZbLc5IVKu4zTira4IFqrOHmGraYfP
-	 pZkgCVOvSBRg7J4rq56D13bsG/ELrU+5vf5Zs7K8R/HVHPQJlVjlACZZlkuPj3F2sbNJn
-	 5euO0WOKsJZOyExRoYtQb6fOp0huKy89iXxW4PmzkMJhNOeuBIYdn/gCztIQUmVF4Y6Bp
-	 F+lQoFZd9pEhgypyGgJZNQzzXh0QVyQcRD9G16r7iezBgSV6LfP3mBCiTqs8ehXhr3B8B
-	 aBDDe8iIAbHXT36GPuKzTlTIsGvy251m1NtHFGp3q3dur8f5i2XnBH1vw2KI4lhs2Wg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793925112;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
+	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
+	bh=1otFFXdDof6ggI5sQakdV+w/DaicL2aXrQ4bTY44jlQ=;
+	b=IrkAdavgNz4TaErFh1Qk5rjuoQ8E9LhQeyN+coXSoVwmcmYVrLxCuY36uhBljDxIxwIy
+	 vHw6it4JVmuo9XRG9OGtIyMLVL1P/nkZH13Xcmh9VekAiM/RzkNa6GPUGS/FqVlAplWRy
+	 9JWLVOSsjPGI8pOUFiu4v66LZ02pyk2fPIXEqZWgLiD973I9K/+K9clNz33eyy3CjEjbC
+	 eF56SP7ryzk0qfJocKOhbGqLeU0AQarYcwwleETSDaoA05fPxYmLbV3csPqKfSYuuOqrB
+	 9fu6RvzSlLDon2PSzkzacueg5oRPl9gaZdxWrUf5qwy7vrbi1dGuF7c59gnt9ZVFrMQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=nq305rAv;
-	arc=none smtp.remote-ip=91.218.175.65
-Received: from mta0.migadu.com (out-65.mta0.migadu.com [91.218.175.65])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=J0kEdA0H;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62E34606A332
-	for <loongarch@lists.linux.dev>; Thu,  5 Nov 2026 18:40:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 62E34606A332
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E634E606A31B;
+	Fri,  6 Nov 2026 00:31:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=nq305rAv
-X-Envelope-To: loongarch@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=pqwePApOX37WLHzM+DYHEdjaAYjW4/j8D/dxxSnSyeY=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793904003; v=1; x=1794508803;
- b=nq305rAvrvVVYJHBRX5INQ4WQaVWhPX/M0d2q4R8aYvbbAAbbNfrHlp8LhQLLr54GOFQobl8
- YweM0loiPIOJ2seeyM7JbMH+QbOmwR+R3hUvSrypPX9ehTWXe2XkaxWB6rJy3n8VQBxGexXOp9q
- KAewyTowABDNg+u0eGDA6dkw=
-X-Envelope-To: loongarch@lists.linux.dev
-Received: by mta12.migadu.com with ESMTPS id 1f78b343f3c7b01b;
-	Thu, 05 Nov 2026 18:40:02 +0000
-X-Mizu-Trace-ID: 1f78b343f3c7b01b
-X-Migadu-Flow: FLOW_OUT
-From: Usama Arif <usama.arif@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	david@kernel.org,
-	chrisl@kernel.org,
-	kasong@tencent.com,
-	ljs@kernel.org,
-	ziy@nvidia.com,
-	linux-mm@kvack.org
-Cc: chenhuacai@kernel.org,
-	ying.huang@linux.alibaba.com,
-	Baoquan He <baoquan.he@linux.dev>,
-	willy@infradead.org,
-	youngjun.park@lge.com,
-	hannes@cmpxchg.org,
-	riel@surriel.com,
-	shakeel.butt@linux.dev,
-	alex@ghiti.fr,
-	kas@kernel.org,
-	baohua@kernel.org,
-	dev.jain@arm.com,
-	baolin.wang@linux.alibaba.com,
-	Nico Pache <nico.pache@linux.dev>,
-	Liam R. Howlett <liam@infradead.org>,
-	ryan.roberts@arm.com,
-	Vlastimil Babka <vbabka@kernel.org>,
-	lance.yang@linux.dev,
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=J0kEdA0H
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C7E81F0089F;
+	Fri,  6 Nov 2026 00:31:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793925111;
+	bh=1otFFXdDof6ggI5sQakdV+w/DaicL2aXrQ4bTY44jlQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=J0kEdA0H/7AskFv0xSLHnpmFKPu8OVP54rNURNvOmb16qmpSHm0vEv/ZENxdeGtyo
+	 KmafwdZA/Z00TIs6m9Zx6JoB2GJGNP2Br5Ld72sgTjuuKJ8hycIl1xitjn3EAMyEwb
+	 QztyeC0cz3YjBzqgm2dt6ht39WcPcM5UyQ49CNVwikNpFfsfEjt0D0CGbhji8d+4Ot
+	 WP+2nKCwEPK1Y5npFMffZ+jaQG0LZeg4Y8+1qJKaWeS0e7PuYeRiTMoNFe2PPYghCV
+	 HXOAtqZABR89ynrIymCWDdReJbyrNYZlcZXluSdL3eVJxkwKkGw0fEWGEJ6WDdf0vd
+	 CdwPNeN1QUI7Q==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: gregkh@linuxfoundation.org
+Cc: achill@achill.org,
+	akpm@linux-foundation.org,
+	broonie@kernel.org,
+	conor@kernel.org,
+	f.fainelli@gmail.com,
+	hargar@microsoft.com,
+	jonathanh@nvidia.com,
 	linux-kernel@vger.kernel.org,
-	nphamcs@gmail.com,
-	shikemeng@huaweicloud.com,
-	yosry@kernel.org,
-	qi.zheng@linux.dev,
-	luizcap@redhat.com,
-	kernel-team@meta.com,
-	Usama Arif <usama.arif@linux.dev>,
-	loongarch@lists.linux.dev
-Subject: [PATCH v9 03/32] loongarch: mm: add PMD swap-exclusive helpers
-Date: Thu,  5 Nov 2026 10:38:47 -0800
-Message-ID: <20261105183940.2236717-4-usama.arif@linux.dev>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20261105183940.2236717-1-usama.arif@linux.dev>
-References: <20261105183940.2236717-1-usama.arif@linux.dev>
+	linux@roeck-us.net,
+	lkft-triage@lists.linaro.org,
+	patches@kernelci.org,
+	patches@lists.linux.dev,
+	pavel@nabladev.com,
+	rwarsow@gmx.de,
+	shuah@kernel.org,
+	sr@sladewatkins.com,
+	stable@vger.kernel.org,
+	sudipm.mukherjee@gmail.com,
+	torvalds@linux-foundation.org,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	Carlos Maiolino <cem@kernel.org>,
+	linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 7.3 000/547] 7.3.2-rc1 review
+Date: Fri,  6 Nov 2026 01:31:38 +0100
+Message-ID: <20261106003138.73413-1-ojeda@kernel.org>
+In-Reply-To: <20261104211038.406938024@linuxfoundation.org>
+References: <20261104211038.406938024@linuxfoundation.org>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -99,52 +82,47 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Prepare for keeping a PMD-mapped anonymous THP mapped by a PMD across the
-swap round-trip, which makes PG_anon_exclusive have to survive in a swap
-PMD and not just in a swap PTE.
+On Wed, 04 Nov 2026 16:03:04 -0500 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 7.3.2 release.
+> There are 547 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri, 06 Nov 2026 21:07:23 +0000.
+> Anything received after that time might be too late.
 
-A LoongArch swap PMD is the swap PTE value plus _PAGE_HUGE, and
-_PAGE_SWP_EXCLUSIVE sits outside both the type and the offset field, so the
-PMD helpers can use the same bit.
+Boot-tested under QEMU for Rust x86_64, arm64 and riscv64; built-tested
+for loongarch64 and arm32:
+
+Tested-by: Miguel Ojeda <ojeda@kernel.org>
+
+On loongarch64, I am seeing:
+
+     fs/xfs/scrub/agheader.c:123:6: warning: variable 'error' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
+      123 |         if (agno == 0)
+          |             ^~~~~~~~~
+    fs/xfs/scrub/agheader.c:435:9: note: uninitialized use occurs here
+      435 |         return error;
+          |                ^~~~~
+    fs/xfs/scrub/agheader.c:123:2: note: remove the 'if' if its condition is always false
+      123 |         if (agno == 0)
+          |         ^~~~~~~~~~~~~~
+      124 |                 goto out_xref;
+          |                 ~~~~~~~~~~~~~
+    fs/xfs/scrub/agheader.c:111:13: note: initialize the variable 'error' to silence this warning
+      111 |         int                     error;
+          |                                      ^
+          |                                       = 0
 
 Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
 Cc: loongarch@lists.linux.dev
-Signed-off-by: Usama Arif <usama.arif@linux.dev>
-Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
----
- arch/loongarch/include/asm/pgtable.h | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
 
-diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
-index f876031351319..30a256a99bfcf 100644
---- a/arch/loongarch/include/asm/pgtable.h
-+++ b/arch/loongarch/include/asm/pgtable.h
-@@ -352,6 +352,25 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte)
- 	return pte;
- }
- 
-+#ifdef CONFIG_ARCH_HAS_PMD_SOFTLEAVES
-+static inline bool pmd_swp_exclusive(pmd_t pmd)
-+{
-+	return pmd_val(pmd) & _PAGE_SWP_EXCLUSIVE;
-+}
-+
-+static inline pmd_t pmd_swp_mkexclusive(pmd_t pmd)
-+{
-+	pmd_val(pmd) |= _PAGE_SWP_EXCLUSIVE;
-+	return pmd;
-+}
-+
-+static inline pmd_t pmd_swp_clear_exclusive(pmd_t pmd)
-+{
-+	pmd_val(pmd) &= ~_PAGE_SWP_EXCLUSIVE;
-+	return pmd;
-+}
-+#endif
-+
- #define pte_none(pte)		(!(pte_val(pte) & ~_PAGE_GLOBAL))
- #define pte_present(pte)	(pte_val(pte) & (_PAGE_PRESENT | _PAGE_PROTNONE))
- #define pte_no_exec(pte)	(pte_val(pte) & _PAGE_NO_EXEC)
--- 
-2.53.0-Meta
+Cc: Carlos Maiolino <cem@kernel.org>
+Cc: linux-xfs@vger.kernel.org
 
+Thanks!
+
+Cheers,
+Miguel
