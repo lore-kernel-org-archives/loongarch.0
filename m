@@ -1,55 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793975713;
-	b=UFqc4beVvZliNAf9gQ5/I1g9PHzL0WS2XU3RSlwDRqBuZ7gXVDyWFk8xcODOUeCoCL8R
-	 a9mPWRCt1UI3TLFYLEv+3SEieLR5q4sCXJ1hqnlEgrekuddJaeDJ+zf57EL6OxxOpti3g
-	 ugOfvcZnS2V2+iNekvQk3dgFXAOi5icw/KLT0CyJ4nPW56UemGIFL1sswaUdjKui32EJ1
-	 v2dLoxUTzS5sk+EjnOhteAkmPzTja950e758NZXoa2OCZttvDQW/NPIh1+lCsrYnx9lnb
-	 md7N7A9vBgPpbCiexcQU+QHDeHx8TffpUnEO+UW3FqcDsbFkUHF3QsGNCH72/XSyyuA==
+	t=1793976344;
+	b=zXU0b6ty+yFLQwqXl1zrCoTxPgKWN94milWWqRCuE+OWEmXSZevmT1SajZnQGCWNKFrO
+	 AwGzlVE6HYVRNuGDcjj4M6KQs8JvnL+MEymzQA1rwe8YD77pChx1nIvp0LWkCIL4fYCZR
+	 GYHjaYIcEC7z+LvjmCnqf9h5F4LXUGySHf09IcNhpWPRzsoQ1oqt/4QfJEkzBOp+pBZeT
+	 oTKkRXgEgzorTLuCVRtoBLXgUAcjubV9rybxL7yCKvnrFVclQNYBUPKmHL99gS/bxeD59
+	 SCX7DvPiUZnbHfEL7Owv1eiERI7Wvu9okR/FFrqItiYe0HaSfE+LUPdkz6n6CIRxMiA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793975713;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793976344;
 	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
 	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
 	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
 	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=ABFV9qqW5v9B/veTK1qFSxVFzw8UX9r8phfo5f88bHM=;
-	b=fzwAQd/nAlNGRMXEwUA9FTOgxbivBI2o8NWn7kt1fpl5z5L4IwV7j4zt+u23Hg1rx1S7
-	 u0Dg4I6rTA/c6hSLH6MpwoMtye4fkjhJJgpIZlKuEIEdHUot5kH9nic/FqAlAsh+EbW2a
-	 J55ZUKZKuZcMPg8j5Z8yax5m59S4rdZPdM3OdObpmhk1loVMaimu6wfkPKa2QNDxSJ5WB
-	 j14lo2BzGoRacDQg3J/hH438RX4fHGqYibFT3eCOTtJ+vugdFgmQURliOnp0AoI1RotGO
-	 pPB8XkUwNSTk6iAEaTw36areNzDCoPB4Meue3d2W7BMi3ATJeJZV5aQI9IOF8/SOIOg==
+	bh=D8oZmxNlOKsm/Rp//d88vLIxrb2bjb3rSm4pQQTcZQA=;
+	b=Q7qHvs7xMyO4rzjuVv2cUHUQSPJHLvXvjaaIIbSrcmd43I/AuulZJ/Z6d89muqEl1Im0
+	 +Itf5qAq3sLJeTci24ZN4R2HvYUIMQzKgSY5LGbTnyIazYVyNbJKAvtB+7K/U4jAdGDbh
+	 a8TgGTiQv9btyJhxRsoz3bMA9uvXB83DGmdv4Lw78bVZXbv9VRdw9ACDfaO9SM0sEJTTS
+	 UhVaawwkBPeXxEawBnDJpBUL1bDTcMk64UQccHVVVEhx2NpaKECszgQvJxsBaF1Ox1rQx
+	 59xNaWkwK/LRAP/kXl5Ku1Cj8/Rmr2t2EFnWa4D+T9lxSXH2lTLSOwa4c5LI/siGs0Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=a7LdKMpo;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=O694iKXS;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9687D606A332
-	for <loongarch@lists.linux.dev>; Fri,  6 Nov 2026 14:35:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DDE0606A329
+	for <loongarch@lists.linux.dev>; Fri,  6 Nov 2026 14:45:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=a7LdKMpo
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC00A1F008BE
-	for <loongarch@lists.linux.dev>; Fri,  6 Nov 2026 14:35:12 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=O694iKXS
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38A661F008A5
+	for <loongarch@lists.linux.dev>; Fri,  6 Nov 2026 14:45:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793975713;
-	bh=ABFV9qqW5v9B/veTK1qFSxVFzw8UX9r8phfo5f88bHM=;
+	s=k20260515; t=1793976344;
+	bh=D8oZmxNlOKsm/Rp//d88vLIxrb2bjb3rSm4pQQTcZQA=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=a7LdKMpoABR41gUzcHoVbB11ZSqAhEI7ksiYmrBmVIMoLE4+exZ0z1ZbAUDkTAQ7A
-	 VnZON0YcjmLVL0l3KiRts6YZttZHIsit3U/hSekKUtQfCvpSRAe5wgqrX+nizmAq6B
-	 pUwVBY9cU/y9IRbgLaIO//6RcUCnpi5ITVMhrR/k7j/cQiy8IgLXBx6KR4b/2Sf7bp
-	 nH1n4vZjf7wCcdHRAKr4ovoS6JJy7XvG0Z+EqZoaDWIfhO2MyR+QFynbk4EoLoSwzH
-	 +BWrUi1wDukYRSEJ7ww9XGzZQqvCyFe7GrcMeU2KcAVFN+2mCsbKRUhW5JgumVuKlR
-	 nCwWDpi/f2fUw==
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-6b1b13e09ffso850471a12.3
-        for <loongarch@lists.linux.dev>; Fri, 06 Nov 2026 06:35:12 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AL+hErGJdeum6+0AAgVHGXVnHMsOZc3uhaGPZ8786xmJGX4CgwagZBRgpSQ8k8ngiVgBVt5MGYGqhoWO0hg=@lists.linux.dev
-X-Gm-Message-State: APuU4Z9eApuASTmsM3X08Du9moUFZwZD7O8TFC7B88xQbUJ1o/Q5YNqz
-	1SFejD0A3ERI7hJmwLN4cMMh8aGQ2NWsibk0LZ3g3pGsry2bOTBKbhB2hJi/mMQO+Uuh3O0IBGW
-	KRYC7XRLsZ/1bx54bZuuqyxjEn57wFxE=
-X-Received: by 2002:a05:6402:1e94:b0:6b6:edd7:7928 with SMTP id
- 4fb4d7f45d1cf-6b6edd7899emr802991a12.26.1793975711577; Fri, 06 Nov 2026
- 06:35:11 -0800 (PST)
+	b=O694iKXSJRyqv5P7AKWdMgVg7eGV5VUqteLay04fKbnkp91vwNvnX16VRNjlaStw3
+	 cYtFjfmZ90GRSfquVrpsyY1tr+Yv6Evr1KB2h1m6vRaKpmtfUSrJPyVWym4MxdqrWL
+	 8q2sl2nGqfQDnO8FMEngOW/krdseih27x3q7S/qgWv8Ts7HxFQ48RXc6IT0arBV2og
+	 FIzuqpHAOh/vi6Sf5lVzXlbRa/p1DdM6szpZxDSM5h8QToI/Im8Uo8TFS39fHaVYaF
+	 O1FnA3169YX/JYR2T8P8EwJa677u0bM37kegN4iE9hwZmiNx/qntsGTAAh/IxUkJKE
+	 /YjKJ14GC5Tuw==
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-6b561b60b78so2691261a12.1
+        for <loongarch@lists.linux.dev>; Fri, 06 Nov 2026 06:45:44 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AL+hErFZG/WlJWrxGA9Y1KyyhTQgWe9e1D3yPtyP3YchZikFGsRyFLNvdSOyN7g5JQhVMU9O6gYLoz6Q6qI=@lists.linux.dev
+X-Gm-Message-State: APuU4Z+5gGKaokhVN6aJZtW3rgNlKASv9jiBWFbqF2mp4tpQQZFjS0B1
+	TIDMnv19MAKf6M0OPaSfZKYVBm/xuk3WDFsB4VHJbU883MNgNJILz9OVUf7hHc2XYDEwGgM98gC
+	IU/NYJ4DMYcOP4zvY+BJKoVVKnS0KTuk=
+X-Received: by 2002:a05:6402:3207:b0:6b6:e808:96f7 with SMTP id
+ 4fb4d7f45d1cf-6b6e80899eemr1325905a12.3.1793976342883; Fri, 06 Nov 2026
+ 06:45:42 -0800 (PST)
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -59,78 +59,53 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <20261029172956.20791-1-dongtai.guo@linux.dev> <20261029172956.20791-6-dongtai.guo@linux.dev>
- <aux9Hm0QFJLUDPWv@kernel.org> <CAAhV-H7Dsnz03iXChzE6nYM2cs+D6fdDFiWrDxX5jM13kYL6HA@mail.gmail.com>
- <auypq8_7T-vml5_B@kernel.org>
-In-Reply-To: <auypq8_7T-vml5_B@kernel.org>
+References: <20261102072808.23080-3-yangtiezhu@loongson.cn>
+ <c3b8e6ae47164ab1a643a1730f0600993de03c8a30e35122a9812ac73d807697@mail.kernel.org>
+ <1276eb14-b851-aee7-36ad-d61e2ddd9ba4@loongson.cn>
+In-Reply-To: <1276eb14-b851-aee7-36ad-d61e2ddd9ba4@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 6 Nov 2026 22:35:01 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6aO_QNEzV-r6+FbNa=9EUQgv1vH0ET-ETXAH5x6oQGjA@mail.gmail.com>
-X-Gm-Features: AclHuK9KCIrf61pzsewLNfcg32ftrSETM4BdWXL6OTYNNDPn4F3U0UamXyiZ-QM
-Message-ID: <CAAhV-H6aO_QNEzV-r6+FbNa=9EUQgv1vH0ET-ETXAH5x6oQGjA@mail.gmail.com>
-Subject: Re: [PATCH v6 5/8] LoongArch: Allow memblock arrays to resize
-To: Mike Rapoport <rppt@kernel.org>
-Cc: George Guo <dongtai.guo@linux.dev>, pasha.tatashin@soleen.com, pratyush@kernel.org, 
-	ardb@kernel.org, shuah@kernel.org, ilias.apalodimas@linaro.org, 
-	akpm@linux-foundation.org, baoquan.he@linux.dev, ruirui.yang@linux.dev, 
-	guodongtai@kylinos.cn, kernel@xen0n.name, graf@amazon.com, 
-	liukexin@kylinos.cn, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-mm@kvack.org, 
-	linux-kselftest@vger.kernel.org, linux-efi@vger.kernel.org
+Date: Fri, 6 Nov 2026 22:45:32 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4GyC5=PvF5yvYnoBpUpU3VTuE8kdNUnApNqvN4vHZfhg@mail.gmail.com>
+X-Gm-Features: AclHuK_E27SlHuF9Up4hvhe95PGG3OxpyR3ULOjCKnQ_VAfUevX4tHqFUb9HhkY
+Message-ID: <CAAhV-H4GyC5=PvF5yvYnoBpUpU3VTuE8kdNUnApNqvN4vHZfhg@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] LoongArch: BPF: Use beqz and bnez instructions for trampoline
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: bot+bpf-ci@kernel.org, hengqi.chen@gmail.com, loongarch@lists.linux.dev, 
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, ast@kernel.org, 
+	andrii@kernel.org, daniel@iogearbox.net, martin.lau@kernel.org, 
+	eddyz87@gmail.com, yonghong.song@linux.dev, mason@kernel.org, 
+	ihor.solodrai@linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 6, 2026 at 12:07=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wro=
-te:
+On Tue, Nov 3, 2026 at 10:27=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
 >
-> On Thu, Nov 05, 2026 at 11:07:01PM +0800, Huacai Chen wrote:
-> > Hi, Mike,
+> On 2026/11/2 =E4=B8=8B=E5=8D=883:53, bot+bpf-ci@kernel.org wrote:
+> >> LoongArch: BPF: Use beqz and bnez instructions for trampoline
 > >
-> > On Thu, Nov 5, 2026 at 8:57=E2=80=AFPM Mike Rapoport <rppt@kernel.org> =
-wrote:
-> > >
-> > > On Fri, Oct 30, 2026 at 02:29:52AM +0900, George Guo wrote:
-> > > > From: George Guo <guodongtai@kylinos.cn>
-> > > >
-> > > > LoongArch never calls memblock_allow_resize(), so the reserved regi=
-on
-> > > > array cannot grow beyond INIT_MEMBLOCK_RESERVED_REGIONS entries
-> > > > (INIT_MEMBLOCK_REGIONS + NR_CPUS).
-> > >
-> > > This might be something to fix independent of KHO.
-> > >
-> > > Huacai,
-> > >
-> > > What's the reason LoongArch never enables memblock resizing and why i=
-t
-> > > defines INIT_MEMBLOCK_RESERVED_REGIONS to include NR_CPUS?
-> > At first we didn't define INIT_MEMBLOCK_RESERVED_REGIONS, then we got
-> > boot failures on a 128-cores machine, so define it, and the value is
-> > similar to arm64.
+> > TL;DR: Commit message only: the claimed branch-overflow risk looks impo=
+ssible,
+> > since trampolines fit in one page and the old code behaved identically,=
+ so the
+> > Fixes: and Cc: stable tags may not be justified.
 >
-> AFAIR, arm64 had to reserve some per cpu data before they could enable
-> memblock resizing, so they had to make it static.
-LoongArch is similar, so below 64-cores machine has no problem.
-
+> ...
 >
-> > The reason LoongArch never enables memblock resizing is because the mm
-> > code is derived from MIPS, and MIPS never enables it.
+> > Could the changelog drop the overflow-risk wording, or describe the cha=
+nge
+> > as a cleanup, and could the Fixes: and Cc: stable tags be reconsidered =
+given
+> > that stable-kernel-rules requires a fix for a real bug?
 >
-> If that's the only reason, you might want to revisit that :)
-Yes, it seems we need memblock_allow_resize(), but maybe it is better
-to bring back paging_init()? Most other archs call
-memblock_allow_resize() in paging_init().
+> Will update the commit message and remove the 'Fixes' and 'Cc: stable'
+> tags. If no more comments, I will send out v2 next week.
+Fixes can be removed but I suggest keep Cc: stable, the overflow risk
+actually exists.
 
 Huacai
 
 >
-> > Huacai
-> >
-> > >
-> > > --
-> > > Sincerely yours,
-> > > Mike.
+> Thanks,
+> Tiezhu
 >
-> --
-> Sincerely yours,
-> Mike.
