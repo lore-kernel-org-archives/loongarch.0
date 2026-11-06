@@ -1,58 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.246.84.56
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793959896;
-	b=pgZfl+W/ZSUVCA/rDDYLhKuoueQqx2vfrWTNglJuvy6vvveL7CU9UDsitROywGuI9NZ0
-	 iJobGiW3xBV0NtshnqgGPYF81Y8PeiTasdRdDTgla4IO+olIUVuXQNBOAEmtUXK98YVuo
-	 wL4htm/qAhS+B+5kiHSTTGel48rX120l+VSxBjFrosb0vs0nIbsqnTWAjqBT2Utx05Sl7
-	 HGVz2kPUigBSGSsLA+09o6e7D5PoyH2zXt8gTdKOyNIQxO/Rt/oaA3TW7aLQdX5ehyObe
-	 b10frZwmxIjzuaIxj71r1wTkBleRaJNiYiULCbhwuix4CTMLDu9zJh/pOOFOQ5Pv4tQ==
+	t=1793975713;
+	b=UFqc4beVvZliNAf9gQ5/I1g9PHzL0WS2XU3RSlwDRqBuZ7gXVDyWFk8xcODOUeCoCL8R
+	 a9mPWRCt1UI3TLFYLEv+3SEieLR5q4sCXJ1hqnlEgrekuddJaeDJ+zf57EL6OxxOpti3g
+	 ugOfvcZnS2V2+iNekvQk3dgFXAOi5icw/KLT0CyJ4nPW56UemGIFL1sswaUdjKui32EJ1
+	 v2dLoxUTzS5sk+EjnOhteAkmPzTja950e758NZXoa2OCZttvDQW/NPIh1+lCsrYnx9lnb
+	 md7N7A9vBgPpbCiexcQU+QHDeHx8TffpUnEO+UW3FqcDsbFkUHF3QsGNCH72/XSyyuA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793959896;
-	h=DMARC-Filter:Received:Received:Received:DKIM-Signature:Message-ID:
-	 Date:MIME-Version:User-Agent:Subject:To:Cc:References:From:
-	 Content-Language:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 X-Last-TLS-Session-Version;
-	bh=6ogeEWksxpSUWmxEpBUUGjIXdCyDlrjJdIfYEM0KO6U=;
-	b=Hn/ms51I7V0j8z3u22Su50aODqHsMNd1BYDTReOLvcXkoKX5wO20bUZb4HFTQxq9YuTR
-	 bDXk5EccXh5MeWpVmkTIhRfQMTfkWxFEgy9EVKWmDankNwIpdho8SXS/Zs8DXjV/1o7/r
-	 7b0zaXrw9/Uh93baor1gVcRzgik8EQA8yTFq04AOpVGjpIlKOKTuu2ZU46MFMIM4+0s45
-	 dRh6ROcueeeBcOpHySwhj8r/vLn1Yl8+xvaL5PmtlsdDciOoW/VX5m9mJWLzc1K8DQqps
-	 9Hjf8dT4cb4yORuhxOmqv5YJP4KaIbSARwLWTOhOWqQFo+gvJ7418M8d5Og9oQRqtNQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793975713;
+	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
+	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
+	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=ABFV9qqW5v9B/veTK1qFSxVFzw8UX9r8phfo5f88bHM=;
+	b=fzwAQd/nAlNGRMXEwUA9FTOgxbivBI2o8NWn7kt1fpl5z5L4IwV7j4zt+u23Hg1rx1S7
+	 u0Dg4I6rTA/c6hSLH6MpwoMtye4fkjhJJgpIZlKuEIEdHUot5kH9nic/FqAlAsh+EbW2a
+	 J55ZUKZKuZcMPg8j5Z8yax5m59S4rdZPdM3OdObpmhk1loVMaimu6wfkPKa2QNDxSJ5WB
+	 j14lo2BzGoRacDQg3J/hH438RX4fHGqYibFT3eCOTtJ+vugdFgmQURliOnp0AoI1RotGO
+	 pPB8XkUwNSTk6iAEaTw36areNzDCoPB4Meue3d2W7BMi3ATJeJZV5aQI9IOF8/SOIOg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=bootlin.com;
-	spf=pass smtp.mailfrom=bootlin.com;
-	dkim=pass header.d=bootlin.com header.i=@bootlin.com header.a=rsa-sha256 header.s=dkim header.b=I5CrbdBu;
-	arc=none smtp.remote-ip=185.246.84.56
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=a7LdKMpo;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0675B606A338
-	for <loongarch@lists.linux.dev>; Fri,  6 Nov 2026 10:11:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0675B606A338
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9687D606A332
+	for <loongarch@lists.linux.dev>; Fri,  6 Nov 2026 14:35:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=bootlin.com header.i=@bootlin.com header.a=rsa-sha256 header.s=dkim header.b=I5CrbdBu
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 5A71E1A1355;
-	Fri,  6 Nov 2026 10:11:33 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 259005FFBC;
-	Fri,  6 Nov 2026 10:11:33 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 31F8B103291F9;
-	Fri,  6 Nov 2026 11:11:22 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1793959891; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:content-language:in-reply-to:references;
-	bh=6ogeEWksxpSUWmxEpBUUGjIXdCyDlrjJdIfYEM0KO6U=;
-	b=I5CrbdBuFxZWEIZBIc49EI2RZqfWkGbm2L+NrRyTZJ1N7ucRBbZshseI6mtnf2iQ3+ecuf
-	TZG5FPUEC8BVovD0Lf4OeEwwfYCnCw5cabRSLhaM/tpvKlEXiVUqyphsti7+20dCBbX7eR
-	3QfM1qOkrHcwXrRl7p/4ajr228FR1M8E4ae6lcwSWl6JoJyv+x90JYK+ArGk9c2k1OvUd1
-	M5vAWbaCSezXJFI6izU+WQDs5QUa8CnH0sYx+gcaQHkSYdKStZ9qWmZtJsof/RYe5gRp6L
-	+mwvNx385Qq0wRzYny1U2cmcT6XKsQ5q2WxsH7uFmqOSYqfLA5CN/lBtmnjinQ==
-Message-ID: <69be2cfe-e296-4f90-ad19-0bd48a83e287@bootlin.com>
-Date: Fri, 6 Nov 2026 11:11:22 +0100
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=a7LdKMpo
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC00A1F008BE
+	for <loongarch@lists.linux.dev>; Fri,  6 Nov 2026 14:35:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793975713;
+	bh=ABFV9qqW5v9B/veTK1qFSxVFzw8UX9r8phfo5f88bHM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=a7LdKMpoABR41gUzcHoVbB11ZSqAhEI7ksiYmrBmVIMoLE4+exZ0z1ZbAUDkTAQ7A
+	 VnZON0YcjmLVL0l3KiRts6YZttZHIsit3U/hSekKUtQfCvpSRAe5wgqrX+nizmAq6B
+	 pUwVBY9cU/y9IRbgLaIO//6RcUCnpi5ITVMhrR/k7j/cQiy8IgLXBx6KR4b/2Sf7bp
+	 nH1n4vZjf7wCcdHRAKr4ovoS6JJy7XvG0Z+EqZoaDWIfhO2MyR+QFynbk4EoLoSwzH
+	 +BWrUi1wDukYRSEJ7ww9XGzZQqvCyFe7GrcMeU2KcAVFN+2mCsbKRUhW5JgumVuKlR
+	 nCwWDpi/f2fUw==
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-6b1b13e09ffso850471a12.3
+        for <loongarch@lists.linux.dev>; Fri, 06 Nov 2026 06:35:12 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AL+hErGJdeum6+0AAgVHGXVnHMsOZc3uhaGPZ8786xmJGX4CgwagZBRgpSQ8k8ngiVgBVt5MGYGqhoWO0hg=@lists.linux.dev
+X-Gm-Message-State: APuU4Z9eApuASTmsM3X08Du9moUFZwZD7O8TFC7B88xQbUJ1o/Q5YNqz
+	1SFejD0A3ERI7hJmwLN4cMMh8aGQ2NWsibk0LZ3g3pGsry2bOTBKbhB2hJi/mMQO+Uuh3O0IBGW
+	KRYC7XRLsZ/1bx54bZuuqyxjEn57wFxE=
+X-Received: by 2002:a05:6402:1e94:b0:6b6:edd7:7928 with SMTP id
+ 4fb4d7f45d1cf-6b6edd7899emr802991a12.26.1793975711577; Fri, 06 Nov 2026
+ 06:35:11 -0800 (PST)
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -62,100 +59,78 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v20 01/13] phylink: Add phylink_mac_interrupt
-To: Birger Koblitz <mail@birger-koblitz.de>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
- Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Eric Dumazet <edumazet@kernel.org>
-Cc: linux-usb@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- Jianhui Xu <neuromoments@gmail.com>,
- Emir Beganovic <beganovic.emir@gmail.com>, Nicolai Buchwitz <nb@tipi-net.de>
-References: <20261106-ax88179a-v20-0-37b5a1189983@birger-koblitz.de>
- <20261106-ax88179a-v20-1-37b5a1189983@birger-koblitz.de>
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Content-Language: en-US
-In-Reply-To: <20261106-ax88179a-v20-1-37b5a1189983@birger-koblitz.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Last-TLS-Session-Version: TLSv1.3
+References: <20261029172956.20791-1-dongtai.guo@linux.dev> <20261029172956.20791-6-dongtai.guo@linux.dev>
+ <aux9Hm0QFJLUDPWv@kernel.org> <CAAhV-H7Dsnz03iXChzE6nYM2cs+D6fdDFiWrDxX5jM13kYL6HA@mail.gmail.com>
+ <auypq8_7T-vml5_B@kernel.org>
+In-Reply-To: <auypq8_7T-vml5_B@kernel.org>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 6 Nov 2026 22:35:01 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6aO_QNEzV-r6+FbNa=9EUQgv1vH0ET-ETXAH5x6oQGjA@mail.gmail.com>
+X-Gm-Features: AclHuK9KCIrf61pzsewLNfcg32ftrSETM4BdWXL6OTYNNDPn4F3U0UamXyiZ-QM
+Message-ID: <CAAhV-H6aO_QNEzV-r6+FbNa=9EUQgv1vH0ET-ETXAH5x6oQGjA@mail.gmail.com>
+Subject: Re: [PATCH v6 5/8] LoongArch: Allow memblock arrays to resize
+To: Mike Rapoport <rppt@kernel.org>
+Cc: George Guo <dongtai.guo@linux.dev>, pasha.tatashin@soleen.com, pratyush@kernel.org, 
+	ardb@kernel.org, shuah@kernel.org, ilias.apalodimas@linaro.org, 
+	akpm@linux-foundation.org, baoquan.he@linux.dev, ruirui.yang@linux.dev, 
+	guodongtai@kylinos.cn, kernel@xen0n.name, graf@amazon.com, 
+	liukexin@kylinos.cn, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	kexec@lists.infradead.org, linux-mm@kvack.org, 
+	linux-kselftest@vger.kernel.org, linux-efi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Fri, Nov 6, 2026 at 12:07=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wro=
+te:
+>
+> On Thu, Nov 05, 2026 at 11:07:01PM +0800, Huacai Chen wrote:
+> > Hi, Mike,
+> >
+> > On Thu, Nov 5, 2026 at 8:57=E2=80=AFPM Mike Rapoport <rppt@kernel.org> =
+wrote:
+> > >
+> > > On Fri, Oct 30, 2026 at 02:29:52AM +0900, George Guo wrote:
+> > > > From: George Guo <guodongtai@kylinos.cn>
+> > > >
+> > > > LoongArch never calls memblock_allow_resize(), so the reserved regi=
+on
+> > > > array cannot grow beyond INIT_MEMBLOCK_RESERVED_REGIONS entries
+> > > > (INIT_MEMBLOCK_REGIONS + NR_CPUS).
+> > >
+> > > This might be something to fix independent of KHO.
+> > >
+> > > Huacai,
+> > >
+> > > What's the reason LoongArch never enables memblock resizing and why i=
+t
+> > > defines INIT_MEMBLOCK_RESERVED_REGIONS to include NR_CPUS?
+> > At first we didn't define INIT_MEMBLOCK_RESERVED_REGIONS, then we got
+> > boot failures on a 128-cores machine, so define it, and the value is
+> > similar to arm64.
+>
+> AFAIR, arm64 had to reserve some per cpu data before they could enable
+> memblock resizing, so they had to make it static.
+LoongArch is similar, so below 64-cores machine has no problem.
 
-On 11/6/26 08:21, Birger Koblitz wrote:
-> Add the phylink_mac_interrupt() function to phylink, which
-> passes a link-change interrupt received by the MAC to phylib.
-> This function can be used by drivers which want to avoid
-> polling the PHY and instead rely on an interrupt received by
-> the MAC when a link-change happens.
-> 
-> Signed-off-by: Birger Koblitz <mail@birger-koblitz.de>
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> Reviewed-by: Nicolai Buchwitz <nb@tipi-net.de>
+>
+> > The reason LoongArch never enables memblock resizing is because the mm
+> > code is derived from MIPS, and MIPS never enables it.
+>
+> If that's the only reason, you might want to revisit that :)
+Yes, it seems we need memblock_allow_resize(), but maybe it is better
+to bring back paging_init()? Most other archs call
+memblock_allow_resize() in paging_init().
 
-> ---
->  drivers/net/phy/phylink.c | 20 ++++++++++++++++++++
->  include/linux/phylink.h   |  1 +
->  2 files changed, 21 insertions(+)
-> 
-> diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
-> index e885da1c28311a12a869e29ceb3c96886f31adc6..a87eaa2f3db5bef8fe56e12b90375bdb7f9c52e7 100644
-> --- a/drivers/net/phy/phylink.c
-> +++ b/drivers/net/phy/phylink.c
-> @@ -1616,6 +1616,26 @@ static bool phylink_link_is_up(struct phylink *pl)
->  	return pl->netdev ? netif_carrier_ok(pl->netdev) : pl->old_link_state;
->  }
->  
-> +/**
-> + * phylink_mac_interrupt() - wrapper for phy_mac_interrupt()
-> + * @pl: a pointer to a &struct phylink returned from phylink_create()
-> + *
-> + * Passes a link-change interrupt received by the MAC to phylib.
-> + * This function may be called in interrupt context, and therefore cannot take
-> + * a mutex. However, it is safe to assume that the reference to phy does not
-> + * disappear during the call, as only an SFP module may be unplugged to make a
-> + * PHY disappear. SFP modules however do not support interrupts.
+Huacai
 
-I don't see the relevance of PHY SFP supporting interrupts or not here,
-this just re-triggers the PHY state machine. Looks like a comment to
-make sashiko happy.
-
-Anyways, I'm OK with the approach, maybe reword that comment if you need
-to respin,
-
-Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-
-Maxime
-
-> + */
-> +void phylink_mac_interrupt(struct phylink *pl)
-> +{
-> +	struct phy_device *phy;
-> +
-> +	phy = pl->phydev;
-> +	if (phy)
-> +		phy_mac_interrupt(phy);
-> +}
-> +EXPORT_SYMBOL_GPL(phylink_mac_interrupt);
-> +
->  static void phylink_resolve(struct work_struct *w)
->  {
->  	struct phylink *pl = container_of(w, struct phylink, resolve);
-> diff --git a/include/linux/phylink.h b/include/linux/phylink.h
-> index 3a88a69882a610afb868b55df6f6e77aea918649..a7b6294cc4a075bd2aaa43ed6484de17a6cb88b1 100644
-> --- a/include/linux/phylink.h
-> +++ b/include/linux/phylink.h
-> @@ -768,6 +768,7 @@ int phylink_ethtool_set_eee(struct phylink *link, struct ethtool_keee *eee);
->  int phylink_mii_ioctl(struct phylink *, struct ifreq *, int);
->  int phylink_speed_down(struct phylink *pl, bool sync);
->  int phylink_speed_up(struct phylink *pl);
-> +void phylink_mac_interrupt(struct phylink *pl);
->  
->  #define phylink_zero(bm) \
->  	bitmap_zero(bm, __ETHTOOL_LINK_MODE_MASK_NBITS)
-> 
-
+>
+> > Huacai
+> >
+> > >
+> > > --
+> > > Sincerely yours,
+> > > Mike.
+>
+> --
+> Sincerely yours,
+> Mike.
