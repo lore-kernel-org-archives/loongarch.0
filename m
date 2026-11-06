@@ -1,71 +1,58 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.88.97.239
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.246.84.56
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793949713;
-	b=ICPWqowR+RH1ZUrPtro2ZCLMUwx9/qEWCBPBUhjpSM+pSoJUbGJrQX8B6DWz5kywJVLK
-	 z/sqU2XPu59mnCcF766ztGfN0JcGBA0ijLzVrEXw6hnZOmvOlwcRzD1+UWFQECrUAunTT
-	 14pBjSiLknS3u8DDUZztdAeAUmW7nu3EruTuFP7T44kUyLTR51ZmQtQ26Lqk/FiWocHY4
-	 uAceMkx1BJwTe07ddpwAIh+0J9zuRFQE/ao2HTCNGCDNtoqb2CisvWU1N6e4bOs23FYdl
-	 2Hj1JrlZ5iK1C7jvAogI6vO1zzNIOMJK9bAzSnBJDlVAmnXW5VyCFRfYkJw3xkd3YPw==
+	t=1793959896;
+	b=pgZfl+W/ZSUVCA/rDDYLhKuoueQqx2vfrWTNglJuvy6vvveL7CU9UDsitROywGuI9NZ0
+	 iJobGiW3xBV0NtshnqgGPYF81Y8PeiTasdRdDTgla4IO+olIUVuXQNBOAEmtUXK98YVuo
+	 wL4htm/qAhS+B+5kiHSTTGel48rX120l+VSxBjFrosb0vs0nIbsqnTWAjqBT2Utx05Sl7
+	 HGVz2kPUigBSGSsLA+09o6e7D5PoyH2zXt8gTdKOyNIQxO/Rt/oaA3TW7aLQdX5ehyObe
+	 b10frZwmxIjzuaIxj71r1wTkBleRaJNiYiULCbhwuix4CTMLDu9zJh/pOOFOQ5Pv4tQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793949713;
-	h=DMARC-Filter:DKIM-Signature:Received:X-Spam-Checker-Version:
-	 X-Spam-Level:X-Spam-Status:DKIM-Signature:Received:From:Date:Subject:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:
-	 References:In-Reply-To:To:Cc:X-Mailer;
-	bh=mVZiHmOuEdRMqFN7HnpPW986NDBFbPJFJP84aT4kdvI=;
-	b=0lEzQRRha5u6m/2U66GpsvHngJZCl+OSBnf7NCFlFfzact4XhNqwmudN7JSoOQvGz77Y
-	 xhA8GCjxuqG/jk4OpAMmvi78657pzbkVdDjr1iLoiWx9yiNQjn8Oa1z22SJKpX/kxWuQV
-	 NRrhXUrq8zhSuTMPcMvavHFQhniz1ibRanpTfVHoB/fXKc467mAnq11NYQQLB9IgYvp0t
-	 fmCzr/2DbAgLIxVK4qJtBXeu/stOwKjVQQJAygoUV1McWLC0MwdIC9QFocYmNb9Xu+3x9
-	 DtSOQ6m9gvMuEgk4HPoZkFSja1Gs9g8ldkOFPPBH/wtXvvf3ywjFm2yrV+9IjWWluxg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793959896;
+	h=DMARC-Filter:Received:Received:Received:DKIM-Signature:Message-ID:
+	 Date:MIME-Version:User-Agent:Subject:To:Cc:References:From:
+	 Content-Language:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 X-Last-TLS-Session-Version;
+	bh=6ogeEWksxpSUWmxEpBUUGjIXdCyDlrjJdIfYEM0KO6U=;
+	b=Hn/ms51I7V0j8z3u22Su50aODqHsMNd1BYDTReOLvcXkoKX5wO20bUZb4HFTQxq9YuTR
+	 bDXk5EccXh5MeWpVmkTIhRfQMTfkWxFEgy9EVKWmDankNwIpdho8SXS/Zs8DXjV/1o7/r
+	 7b0zaXrw9/Uh93baor1gVcRzgik8EQA8yTFq04AOpVGjpIlKOKTuu2ZU46MFMIM4+0s45
+	 dRh6ROcueeeBcOpHySwhj8r/vLn1Yl8+xvaL5PmtlsdDciOoW/VX5m9mJWLzc1K8DQqps
+	 9Hjf8dT4cb4yORuhxOmqv5YJP4KaIbSARwLWTOhOWqQFo+gvJ7418M8d5Og9oQRqtNQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=birger-koblitz.de;
-	spf=pass smtp.mailfrom=birger-koblitz.de;
-	dkim=pass header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=QHXvqQPj;
-	dkim=pass header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=z11N2o4t;
-	arc=none smtp.remote-ip=23.88.97.239
-Received: from bkemail.birger-koblitz.de (bkemail.birger-koblitz.de [23.88.97.239])
+	dmarc=pass header.from=bootlin.com;
+	spf=pass smtp.mailfrom=bootlin.com;
+	dkim=pass header.d=bootlin.com header.i=@bootlin.com header.a=rsa-sha256 header.s=dkim header.b=I5CrbdBu;
+	arc=none smtp.remote-ip=185.246.84.56
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D9446082BFE
-	for <loongarch@lists.linux.dev>; Fri,  6 Nov 2026 07:21:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8D9446082BFE
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=birger-koblitz.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=birger-koblitz.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0675B606A338
+	for <loongarch@lists.linux.dev>; Fri,  6 Nov 2026 10:11:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0675B606A338
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=QHXvqQPj;
-	dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=z11N2o4t
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=birger-koblitz.de;
-	s=default; t=1793949701;
-	bh=sB85/P4cqRZNZK4mHg9B3Ife2nyKRrwIcHiALBjVneM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=QHXvqQPjZSpj9GrW6PcIkpFvMRQiBLke08dJeB4VcU4A3rdDDIOzgeNj5P7xz7Ln3
-	 OjgShzJwTbL9nHOPYh2g05cSQeN5PLGBxDL3cOb8yr9B5bk8DFKVJXcncKBxBWuzUB
-	 3EgpH3z1I9WZun86UPu/Xoxwwtk+TT/umRvJFSlG56ic1iy2HFf2EzcGsFmN+6NVVP
-	 2CH5OHMwrGiOBZwXCxzmHpgFmVqVWhz91Hx69BwxVVxUe9F/WDKJ2Hts7gC723yBov
-	 lTEcXmol9kCIE1hpVO6wsfBHYMAYLurmYwrxWBwdr8mss66mYsudakzLgCjkNopYi3
-	 ZSus06cUXKjsA==
-Received: by bkemail.birger-koblitz.de (Postfix, from userid 109)
-	id 2BCE048BB1; Fri,  6 Nov 2026 07:21:41 +0000 (UTC)
-X-Spam-Level: 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=birger-koblitz.de;
-	s=default; t=1793949687;
-	bh=sB85/P4cqRZNZK4mHg9B3Ife2nyKRrwIcHiALBjVneM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=z11N2o4tRks+9eqpFil/zHLsyQBP0zFgJS/6AeUghmZtjm0Yu8e770LIjz/4x2R/l
-	 Nz2Q9ZiA1STBaXLtz8pE76KsHmalQWdeCCki3jw+trS2zSEQWPs4daql8a+k7ORFrp
-	 jcflA22wmEbb7B3g4Ig4Wh1wi7glhzkBTdWQ+oTDPkCFXda+kRtD9heZLvFLfWwu5e
-	 3KD+9tUQPZUyWOKr+N949uFyxucDkEoiNMZsCzGdUOMndXPU+5E36LGJSr64aTLZV3
-	 fTBGQFa51blo7iLSHr0xsMJ/LhKYWlwbszfXSkboMgLM7qQ7Al0aLNmTqBBzrRMKmw
-	 LgBNSs6EFssfw==
-Received: from AMDDesktop.lan (unknown [IPv6:2a00:6020:47a3:e800:271c:c6c5:9fde:77cb])
-	by bkemail.birger-koblitz.de (Postfix) with ESMTPSA id 88F9748B86;
-	Fri,  6 Nov 2026 07:21:27 +0000 (UTC)
-From: Birger Koblitz <mail@birger-koblitz.de>
-Date: Fri, 06 Nov 2026 08:21:24 +0100
-Subject: [PATCH net-next v20 09/13] ax88179_178a: Add Suspend/resume
- support for AX88179A/772D/279
+	dkim=pass (2048-bit key, unprotected) header.d=bootlin.com header.i=@bootlin.com header.a=rsa-sha256 header.s=dkim header.b=I5CrbdBu
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-02.galae.net (Postfix) with ESMTPS id 5A71E1A1355;
+	Fri,  6 Nov 2026 10:11:33 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 259005FFBC;
+	Fri,  6 Nov 2026 10:11:33 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 31F8B103291F9;
+	Fri,  6 Nov 2026 11:11:22 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1793959891; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:content-language:in-reply-to:references;
+	bh=6ogeEWksxpSUWmxEpBUUGjIXdCyDlrjJdIfYEM0KO6U=;
+	b=I5CrbdBuFxZWEIZBIc49EI2RZqfWkGbm2L+NrRyTZJ1N7ucRBbZshseI6mtnf2iQ3+ecuf
+	TZG5FPUEC8BVovD0Lf4OeEwwfYCnCw5cabRSLhaM/tpvKlEXiVUqyphsti7+20dCBbX7eR
+	3QfM1qOkrHcwXrRl7p/4ajr228FR1M8E4ae6lcwSWl6JoJyv+x90JYK+ArGk9c2k1OvUd1
+	M5vAWbaCSezXJFI6izU+WQDs5QUa8CnH0sYx+gcaQHkSYdKStZ9qWmZtJsof/RYe5gRp6L
+	+mwvNx385Qq0wRzYny1U2cmcT6XKsQ5q2WxsH7uFmqOSYqfLA5CN/lBtmnjinQ==
+Message-ID: <69be2cfe-e296-4f90-ad19-0bd48a83e287@bootlin.com>
+Date: Fri, 6 Nov 2026 11:11:22 +0100
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -75,306 +62,100 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20261106-ax88179a-v20-9-37b5a1189983@birger-koblitz.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v20 01/13] phylink: Add phylink_mac_interrupt
+To: Birger Koblitz <mail@birger-koblitz.de>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
+ Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Eric Dumazet <edumazet@kernel.org>
+Cc: linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ Jianhui Xu <neuromoments@gmail.com>,
+ Emir Beganovic <beganovic.emir@gmail.com>, Nicolai Buchwitz <nb@tipi-net.de>
 References: <20261106-ax88179a-v20-0-37b5a1189983@birger-koblitz.de>
-In-Reply-To: <20261106-ax88179a-v20-0-37b5a1189983@birger-koblitz.de>
-To: Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>, 
- Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
- Eric Dumazet <edumazet@kernel.org>, Eric Dumazet <edumazet@kernel.org>
-Cc: linux-usb@vger.kernel.org, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
- Jianhui Xu <neuromoments@gmail.com>, 
- Emir Beganovic <beganovic.emir@gmail.com>, 
- Birger Koblitz <mail@birger-koblitz.de>
-X-Mailer: b4 0.14.2
+ <20261106-ax88179a-v20-1-37b5a1189983@birger-koblitz.de>
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Content-Language: en-US
+In-Reply-To: <20261106-ax88179a-v20-1-37b5a1189983@birger-koblitz.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-The suspend and resume functions are called via the usb_driver structure,
-for which the driver has only a single instance. Add wrapper functions
-for the different implementations for the AX88179 and AX179A architecutres
-in ax88179_lib which calls the 2 implementations in ax88179_178a and
-ax88179a_devices, respectively.
+Hi,
 
-Signed-off-by: Birger Koblitz <mail@birger-koblitz.de>
-Suggested-by: Jianhui Xu <neuromoments@gmail.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
----
- drivers/net/usb/ax88179_178a.c     |   9 ++-
- drivers/net/usb/ax88179_lib.c      |  19 ++++++
- drivers/net/usb/ax88179_lib.h      |   4 ++
- drivers/net/usb/ax88179a_devices.c | 129 +++++++++++++++++++++++++++++++++++--
- 4 files changed, 153 insertions(+), 8 deletions(-)
+On 11/6/26 08:21, Birger Koblitz wrote:
+> Add the phylink_mac_interrupt() function to phylink, which
+> passes a link-change interrupt received by the MAC to phylib.
+> This function can be used by drivers which want to avoid
+> polling the PHY and instead rely on an interrupt received by
+> the MAC when a link-change happens.
+> 
+> Signed-off-by: Birger Koblitz <mail@birger-koblitz.de>
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> Reviewed-by: Nicolai Buchwitz <nb@tipi-net.de>
 
-diff --git a/drivers/net/usb/ax88179_178a.c b/drivers/net/usb/ax88179_178a.c
-index f78ad344c1c4f1f057164728e4f21f875e6cdc1a..b077b7153f0c07676aafd5dfd13a2c0d9a826719 100644
---- a/drivers/net/usb/ax88179_178a.c
-+++ b/drivers/net/usb/ax88179_178a.c
-@@ -685,6 +685,9 @@ static int ax88179_bind(struct usbnet *dev, struct usb_interface *intf)
- 	dev->driver_priv = ax179_data;
- 	mutex_init(&ax179_data->medium_status_mutex);
- 
-+	ax179_data->resume = ax88179_resume;
-+	ax179_data->suspend = ax88179_suspend;
-+
- 	ret = ax88179_read_cmd(dev, AX_ACCESS_MAC, AX_CHIP_STATUS,
- 			       1, 1, &ax179_data->chip_version);
- 	if (ret < 0)
-@@ -1362,9 +1365,9 @@ static struct usb_driver ax88179_178a_driver = {
- 	.name =		"ax88179_178a",
- 	.id_table =	products,
- 	.probe =	usbnet_probe,
--	.suspend =	ax88179_suspend,
--	.resume =	ax88179_resume,
--	.reset_resume =	ax88179_resume,
-+	.suspend =	ax88179_suspend_wrapper,
-+	.resume =	ax88179_resume_wrapper,
-+	.reset_resume =	ax88179_resume_wrapper,
- 	.disconnect =	ax88179_disconnect,
- 	.supports_autosuspend = 1,
- 	.disable_hub_initiated_lpm = 1,
-diff --git a/drivers/net/usb/ax88179_lib.c b/drivers/net/usb/ax88179_lib.c
-index b4b00c8b4b62320471e13ae34a1fed5d02e80441..b54e98e781f334c5aeff0b3d2861a5565934454c 100644
---- a/drivers/net/usb/ax88179_lib.c
-+++ b/drivers/net/usb/ax88179_lib.c
-@@ -495,3 +495,22 @@ int ax88179_set_mac_addr(struct net_device *net, void *p)
- 	return 0;
- }
- 
-+int ax88179_suspend_wrapper(struct usb_interface *intf, pm_message_t message)
-+{
-+	struct usbnet *dev = usb_get_intfdata(intf);
-+	struct ax88179_data *priv;
-+
-+	priv = dev->driver_priv;
-+
-+	return priv->suspend(intf, message);
-+}
-+
-+int ax88179_resume_wrapper(struct usb_interface *intf)
-+{
-+	struct usbnet *dev = usb_get_intfdata(intf);
-+	struct ax88179_data *priv;
-+
-+	priv = dev->driver_priv;
-+	return priv->resume(intf);
-+}
-+
-diff --git a/drivers/net/usb/ax88179_lib.h b/drivers/net/usb/ax88179_lib.h
-index adc2b4598bb52d80c18a6e2cc467144d3bd57a88..401c0bed3d28b4b94f0a0cad7509cd7087ef0639 100644
---- a/drivers/net/usb/ax88179_lib.h
-+++ b/drivers/net/usb/ax88179_lib.h
-@@ -315,6 +315,8 @@ struct ax88179_data {
- 	struct phy_device *phydev;
- 	struct phylink *phylink;
- 	struct phylink_config phylink_config;
-+	int (*resume)(struct usb_interface *intf);
-+	int (*suspend)(struct usb_interface *intf, pm_message_t message);
- };
- 
- struct ax88179_int_data {
-@@ -348,6 +350,8 @@ int ax88179_set_features(struct net_device *net, netdev_features_t features);
- void ax88179_get_mac_addr(struct usbnet *dev);
- int ax88179_change_mtu(struct net_device *net, int new_mtu);
- int ax88179_set_mac_addr(struct net_device *net, void *p);
-+int ax88179_suspend_wrapper(struct usb_interface *intf, pm_message_t message);
-+int ax88179_resume_wrapper(struct usb_interface *intf);
- 
- extern const struct driver_info ax88179a_info;
- extern const struct driver_info ax88772d_info;
-diff --git a/drivers/net/usb/ax88179a_devices.c b/drivers/net/usb/ax88179a_devices.c
-index a6b0a3f47118c46db38d483792c083510aa2641a..01d6a35f68b2c56f79acbe2875ce8e99ccdfb197 100644
---- a/drivers/net/usb/ax88179a_devices.c
-+++ b/drivers/net/usb/ax88179a_devices.c
-@@ -5,6 +5,8 @@
- #include <linux/if_vlan.h>
- #include "ax88179_lib.h"
- 
-+static int ax88179a_reset(struct usbnet *dev);
-+
- #define AX88279_EEPROM_LEN			0x4000
- #define AX88179A_EEPROM_LEN			(32 * 20)
- 
-@@ -126,6 +128,63 @@ static void ax88179a_status(struct usbnet *dev, struct urb *urb)
- 	phylink_mac_interrupt(data->phylink);
- }
- 
-+static int ax88179a_suspend(struct usb_interface *intf, pm_message_t message)
-+{
-+	struct usbnet *dev = usb_get_intfdata(intf);
-+	struct ax88179_data *priv;
-+	u8 tmp8 = 0;
-+	u16 tmp16;
-+	int ret;
-+
-+	priv = dev->driver_priv;
-+	ax88179_set_pm_mode(dev, true);
-+
-+	if (netif_running(dev->net)) {
-+		rtnl_lock();
-+		phylink_suspend(priv->phylink, !!priv->wolopts);
-+		rtnl_unlock();
-+	}
-+
-+	ret = usbnet_suspend(intf, message);
-+	if (ret && netif_running(dev->net)) {
-+		rtnl_lock();
-+		phylink_resume(priv->phylink);
-+		rtnl_unlock();
-+		ax88179_set_pm_mode(dev, false);
-+		return ret;
-+	}
-+
-+	/* Enable WoL */
-+	if (priv->wolopts) {
-+		ax88179_read_cmd(dev, AX_ACCESS_MAC, AX_MONITOR_MOD, 1, 1, &tmp8);
-+		tmp8 &= ~(AX_MONITOR_MODE_RWLC | AX_MONITOR_MODE_RWMP);
-+		if (priv->wolopts & WAKE_PHY)
-+			tmp8 |= AX_MONITOR_MODE_RWLC;
-+		if (priv->wolopts & WAKE_MAGIC)
-+			tmp8 |= AX_MONITOR_MODE_RWMP;
-+
-+		ax88179_write_cmd(dev, AX_ACCESS_MAC, AX_MONITOR_MOD, 1, 1, &tmp8);
-+
-+		ax88179_read_cmd(dev, AX_ACCESS_MAC, AX_MEDIUM_STATUS_MODE, 2, 2, &tmp16);
-+		tmp16 |= AX_MEDIUM_RECEIVE_EN;
-+		ax88179_write_cmd(dev, AX_ACCESS_MAC, AX_MEDIUM_STATUS_MODE, 2, 2, &tmp16);
-+
-+		if (priv->chip_version == AX_VERSION_AX88279)
-+			ax88179_write_cmd(dev, AX88179A_WAKEUP_SETTING, 8,
-+					  EPHY_LOW_POWER_EN | S5_WOL_EN
-+					  | S5_WOL_LOW_POWER | 0x8000, 0, NULL);
-+		else
-+			ax88179_write_cmd(dev, AX88179A_WAKEUP_SETTING, 0,
-+					  EPHY_LOW_POWER_EN, 0, NULL);
-+
-+	} else if (priv->chip_version == AX_VERSION_AX88279) {
-+		ax88179_write_cmd(dev, AX88179A_WAKEUP_SETTING, 8, 0x8000, 0, NULL);
-+	}
-+
-+	ax88179_set_pm_mode(dev, false);
-+	return 0;
-+}
-+
- static int ax88179a_auto_detach(struct usbnet *dev)
- {
- 	u16 tmp16;
-@@ -135,6 +194,47 @@ static int ax88179a_auto_detach(struct usbnet *dev)
- 	return 0;
- }
- 
-+static int ax88179a_resume(struct usb_interface *intf)
-+{
-+	struct usbnet *dev = usb_get_intfdata(intf);
-+	struct ax88179_data *ax179_data;
-+	u8 reg8 = 0;
-+	int ret;
-+
-+	ax179_data = dev->driver_priv;
-+	ax88179_set_pm_mode(dev, true);
-+
-+	ret = ax88179_read_cmd(dev, AX88179A_PHY_POWER, 0, 0, 1, &reg8);
-+	if (ret < 0)
-+		goto err_out;
-+
-+	if (!(reg8 & AX_PHY_POWER)) {
-+		reg8 = AX_PHY_POWER;
-+		ax88179_write_cmd(dev, AX88179A_PHY_POWER, 0, 0, 1, &reg8);
-+		msleep(250);
-+	}
-+	ax88179_write_cmd(dev, AX_FW_MODE, AX_FW_MODE_179A, 0, 0, NULL);
-+
-+	/* Now, that AX_FW_MODE_179A is enabled, the PHY needs a power-cycle.
-+	 * PHY-power is re-enabled in ax88179a_reset()
-+	 */
-+	ax88179_write_u8(dev, AX88179A_PHY_POWER, 0, 0, 0);
-+	msleep(250);
-+
-+	ax88179a_reset(dev);
-+
-+err_out:
-+	if (netif_running(dev->net)) {
-+		rtnl_lock();
-+		phylink_resume(ax179_data->phylink);
-+		rtnl_unlock();
-+	}
-+
-+	ax88179_set_pm_mode(dev, false);
-+
-+	return usbnet_resume(intf);
-+}
-+
- static void ax88179a_bulkin_config(struct usbnet *dev, u8 link_sts, u8 speed, bool full_duplex)
- {
- 	struct ax88179_data *ax179_data = dev->driver_priv;
-@@ -755,6 +855,9 @@ static int ax88179a_bind(struct usbnet *dev, struct usb_interface *intf)
- 		ax179_data->eeprom_wen = 0;
- 	}
- 
-+	ax179_data->resume = ax88179a_resume;
-+	ax179_data->suspend = ax88179a_suspend;
-+
- 	dev->net->netdev_ops = &ax88179a_netdev_ops;
- 	dev->net->ethtool_ops = &ax88179a_ethtool_ops;
- 	dev->net->needed_headroom = 8;
-@@ -802,6 +905,13 @@ static int ax88179a_bind(struct usbnet *dev, struct usb_interface *intf)
- 	if (ret)
- 		goto initphy_err;
- 
-+	/* Keep this interface runtime-PM active by taking a usage ref.
-+	 * Prevents runtime suspend while bound and avoids resume paths
-+	 * that could deadlock (autoresume under RTNL while USB PM lock
-+	 * is held, phylink/MDIO wants RTNL).
-+	 */
-+	pm_runtime_get_noresume(&intf->dev);
-+
- 	return 0;
- 
- initphy_err:
-@@ -829,7 +939,8 @@ static void ax88179a_unbind(struct usbnet *dev, struct usb_interface *intf)
- 	ax88179a_mdio_unregister(ax179_data);
- 
- 	ax88179_write_u8(dev, AX88179A_PHY_POWER, 0, 0, 0);
--
-+	/* Drop the PM usage ref taken in bind() */
-+	pm_runtime_put_noidle(&intf->dev);
- 	kfree(ax179_data);
- }
- 
-@@ -1055,9 +1166,13 @@ static int ax88179a_reset(struct usbnet *dev)
- 	ax88179_write_u8(dev, AX_ACCESS_MAC, AX88179A_MAC_SWP_CTRL, 1, 0);
- 	ax88179_write_u8(dev, AX_ACCESS_MAC, AX88179A_MAC_TX_HDR_CKSUM, 1, 0);
- 
--	/* Read MAC address from DTB or asix chip */
--	ax88179_get_mac_addr(dev);
--	memcpy(dev->net->perm_addr, dev->net->dev_addr, ETH_ALEN);
-+	/* Read MAC address from DTB or asix chip, except when called
-+	 * from resume context.
-+	 */
-+	if (!ax179_data->in_pm) {
-+		ax88179_get_mac_addr(dev);
-+		memcpy(dev->net->perm_addr, dev->net->dev_addr, ETH_ALEN);
-+	}
- 
- 	/* The Bulk-Register configuration for the AX88179A is done in
- 	 * ax88179a_mac_link_up(), once the link is up for a given link and USB-speed.
-@@ -1117,7 +1232,11 @@ static int ax88179a_reset(struct usbnet *dev)
- 	/* Ensure EEE state is off, consistent with phylink setup */
- 	ax88179_write_cmd(dev, AX_GPHY_CTL, AX_GPHY_EEE_CTRL, false, 0, NULL);
- 
--	phylink_start(ax179_data->phylink);
-+	/* ax88179a_reset() may also be called from resume context,
-+	 * phylink_resume() will start phylink, then.
-+	 */
-+	if (!ax179_data->in_pm)
-+		phylink_start(ax179_data->phylink);
- 
- 	return 0;
- }
+> ---
+>  drivers/net/phy/phylink.c | 20 ++++++++++++++++++++
+>  include/linux/phylink.h   |  1 +
+>  2 files changed, 21 insertions(+)
+> 
+> diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+> index e885da1c28311a12a869e29ceb3c96886f31adc6..a87eaa2f3db5bef8fe56e12b90375bdb7f9c52e7 100644
+> --- a/drivers/net/phy/phylink.c
+> +++ b/drivers/net/phy/phylink.c
+> @@ -1616,6 +1616,26 @@ static bool phylink_link_is_up(struct phylink *pl)
+>  	return pl->netdev ? netif_carrier_ok(pl->netdev) : pl->old_link_state;
+>  }
+>  
+> +/**
+> + * phylink_mac_interrupt() - wrapper for phy_mac_interrupt()
+> + * @pl: a pointer to a &struct phylink returned from phylink_create()
+> + *
+> + * Passes a link-change interrupt received by the MAC to phylib.
+> + * This function may be called in interrupt context, and therefore cannot take
+> + * a mutex. However, it is safe to assume that the reference to phy does not
+> + * disappear during the call, as only an SFP module may be unplugged to make a
+> + * PHY disappear. SFP modules however do not support interrupts.
 
--- 
-2.47.3
+I don't see the relevance of PHY SFP supporting interrupts or not here,
+this just re-triggers the PHY state machine. Looks like a comment to
+make sashiko happy.
+
+Anyways, I'm OK with the approach, maybe reword that comment if you need
+to respin,
+
+Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+
+Maxime
+
+> + */
+> +void phylink_mac_interrupt(struct phylink *pl)
+> +{
+> +	struct phy_device *phy;
+> +
+> +	phy = pl->phydev;
+> +	if (phy)
+> +		phy_mac_interrupt(phy);
+> +}
+> +EXPORT_SYMBOL_GPL(phylink_mac_interrupt);
+> +
+>  static void phylink_resolve(struct work_struct *w)
+>  {
+>  	struct phylink *pl = container_of(w, struct phylink, resolve);
+> diff --git a/include/linux/phylink.h b/include/linux/phylink.h
+> index 3a88a69882a610afb868b55df6f6e77aea918649..a7b6294cc4a075bd2aaa43ed6484de17a6cb88b1 100644
+> --- a/include/linux/phylink.h
+> +++ b/include/linux/phylink.h
+> @@ -768,6 +768,7 @@ int phylink_ethtool_set_eee(struct phylink *link, struct ethtool_keee *eee);
+>  int phylink_mii_ioctl(struct phylink *, struct ifreq *, int);
+>  int phylink_speed_down(struct phylink *pl, bool sync);
+>  int phylink_speed_up(struct phylink *pl);
+> +void phylink_mac_interrupt(struct phylink *pl);
+>  
+>  #define phylink_zero(bm) \
+>  	bitmap_zero(bm, __ETHTOOL_LINK_MODE_MASK_NBITS)
+> 
 
