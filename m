@@ -1,69 +1,71 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.88.97.239
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=156.67.10.101
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793979158;
-	b=owdwRpYULazd8jUoDcsMNf2EI1e/hci6Lz8CbWNTbLBooY4Cr2mDMKDDZTBC/5RMktki
-	 u0gddBlWMOm6V6GpyfFBBfOBOZ5PoyA80P9VueRCwvOmPQdHqqNFHeCXtdTIlfSikKwbY
-	 eJMl0ljWdAkTNQ7ashFtDAoIvC0U+GKHcOXxVa7XUxGz+/WBYYxhuY7b4dp+MxQAOhl8Q
-	 DPImklrTL18zpD1r2u3vqN1ouwbX/rcFp0WnRoDzglSKHS95MvJgjrW1XGkp01I2euqNC
-	 Gyyxi/bV5MV6rCLluyQq4Z3VBcjdU005mu7gHQoxpHsoNLajxVHi12xNVpf7iulVJNw==
+	t=1793980557;
+	b=DYbBK4BZ60k3n6kXgqAevR7lzc6BGUlNiqFDmVWLjzubNC/0glOzrTQKcchRCuC7UCjG
+	 xhR0q78HFk8aYrRGEHOTGRUB66rgubnkxvKBdMPecQOqR2+1TLM5D/5C8lahpJzZ5cXx+
+	 ZQWj2YphUw4Wn8uA8A17sQWjyDG+6oqDOdiA1asfqI3VImBnbxPrvDPxEUGmRNeRDg+GT
+	 XIVdGiOrnt6r6C4ohz/wqERZdRZZwWws4JnMUKoOSjeCaWQ1TKvUt0Oiio/uX6q1B8krK
+	 dw65gwa830BLYT4MDrEdUjn0O8R6BWtA2jSOC36hr/6OZX3YT78nYcAvB41em8D0kZw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793979158;
-	h=DMARC-Filter:DKIM-Signature:Received:X-Spam-Checker-Version:
-	 X-Spam-Level:X-Spam-Status:DKIM-Signature:Received:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:To:Cc:References:From:
-	 Content-Language:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=P+m9BQcu9O/FHNLOowWjO5xa3x2BuTOUOzKKSEpxq9U=;
-	b=j1faZPwLewpO1ZjP0dn7ezizu1BVaUuJCYgvzQqrJsarLJdsxyqRSLoktWTREZNSIIbg
-	 nS0GrN3OQel7IPN/EjPk/1BGz0SRlJ/Qop/4dHhspua/rZhujvc5wy/MiEjEw42ab4Sfn
-	 UiAF7p1nfgUgmVzkK55MgHfKNhd1aabBtgNGYHqTUvzOAc6ZDroBX/M1toaMzQ2da0g1Z
-	 SfWRpt9U69VQe4AujUUjRjbaKqK9MfvE64oG6jqoWJMRLCuv277RsIsIqWYaDvoB/KsOu
-	 aNJreD2+gY4Rc6cvkm2fJd5Lg8CcjBarv5uA1I4VoE9PxJIlxLGjIyX5yy37zRTeQNw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793980557;
+	h=DMARC-Filter:DKIM-Signature:Received:Date:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To;
+	bh=BCioul3B6OdYvFh9JZhAwvMgFeXlmvL+TKu9XvZlfGg=;
+	b=JP7R/F0blMAEA/fHYmLFQn8c5UkvBxKMCBxft2fRuhbEUzr+VnFN0FjoZJZkWnnI2YLw
+	 rz8fe+6k123eT7dEpx5Gfvkx97m3weSN8aAUVCaKzBn3m7A9LN2aCcE8NVpwSFUu/vcdN
+	 nK5IPMt3VLoblNzeCXncmt/02dbD7PRuw037J8jVkCn9c/vPFhmfGnM4zzsgO3U3kqnnv
+	 A1ZzOtFoAxtgxxvDKNnxGQ5AQHGwZcNQPfpZzy0L3zBkxzf18vSKS8vUAEGuS/ScILNxT
+	 /aNxvxSdvADVZuh+B8PW4sFg0vOrXu7lpDF9hMOIe54VRh54bGKXv2TboZtj+Ip0sxw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=birger-koblitz.de;
-	spf=pass smtp.mailfrom=birger-koblitz.de;
-	dkim=pass header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b="b8pae/Tu";
-	dkim=pass header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b="w427/YYm";
-	arc=none smtp.remote-ip=23.88.97.239
-Received: from bkemail.birger-koblitz.de (bkemail.birger-koblitz.de [23.88.97.239])
+	dmarc=pass header.from=lunn.ch;
+	spf=pass smtp.mailfrom=lunn.ch;
+	dkim=pass header.d=lunn.ch header.i=@lunn.ch header.a=rsa-sha256 header.s=20171124 header.b=JrgZiFs7;
+	arc=none smtp.remote-ip=156.67.10.101
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 433AC606A32C
-	for <loongarch@lists.linux.dev>; Fri,  6 Nov 2026 15:32:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 433AC606A32C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=birger-koblitz.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=birger-koblitz.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EDD9606A329;
+	Fri,  6 Nov 2026 15:55:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2EDD9606A329
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=b8pae/Tu;
-	dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=w427/YYm
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=birger-koblitz.de;
-	s=default; t=1793979156;
-	bh=xHy9AAwYbUNDRIPqlGFP8rBNvBDMvPDQk8lTAq0vRB8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=b8pae/Tuh1waK9UCpykRDAPc2iXoXOsKS242SiVWo4sBDNyaO/hUml89ptZvsw2fx
-	 wFP76Ng3rzrTEDafJNx49BPuRsXg2pntDMuB4OYC9qgeueurSGZDOu4Bo6cX9Zss32
-	 T0248xVN0/Z2GNI8pnxPySq67VESEN+BidDWMI8ukC2qKKrOd7AWCtsU99bj2Kdfm2
-	 8DE8lPIQqtNtDQfLFtK1At1kdepFjAHioIWpBRpxCan7pHqzGAQ89s6h0fssGpjXWq
-	 6TlruDjR0njrtExbRpcvWl8Nq0UNy1O5zDOYpuHImJs9xCVd4NiWT95mzff1MOTI7K
-	 gnClIvaRCXt0A==
-Received: by bkemail.birger-koblitz.de (Postfix, from userid 109)
-	id 4BA0E48BA4; Fri,  6 Nov 2026 15:32:36 +0000 (UTC)
-X-Spam-Level: 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=birger-koblitz.de;
-	s=default; t=1793979154;
-	bh=xHy9AAwYbUNDRIPqlGFP8rBNvBDMvPDQk8lTAq0vRB8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=w427/YYm70AKnIjmqwOeLkuvEfLMrPh841E6+W65j1YHuy0vePY4VMnrFWKFhiPAS
-	 YutnMYtqG/7+CcBf3098NZ0Z+8xDb+pIyhdL6JWs9XrIWE5R1s2nmQ4VrAg2Tl2GlT
-	 VlOHkI6u6L+GAFW6aTOJU6MXK4Rx2a3uZ9r41MraU0VheSksRmePDSiwf1mb21tf8Z
-	 BMdb9AOxA4AzyOfKO4o5TL3SEY7ygL1bhm7C64V0GyBHl1UFh68BfFjKS4oAEqt0Vh
-	 xqeGI8HsxepVkZd79lTyb/Ke1BSytnbzLY1hW+4SsW7IBV/xTjcQSE+6bRHwmfA/zP
-	 rbyRfOqZ1lrjw==
-Received: from [IPV6:2a00:6020:47a3:e800:271c:c6c5:9fde:77cb] (unknown [IPv6:2a00:6020:47a3:e800:271c:c6c5:9fde:77cb])
-	by bkemail.birger-koblitz.de (Postfix) with ESMTPSA id DDA7C48B84;
-	Fri,  6 Nov 2026 15:32:33 +0000 (UTC)
-Message-ID: <27119213-dccc-4c17-bf7e-b39a038038cf@birger-koblitz.de>
-Date: Fri, 6 Nov 2026 16:32:30 +0100
+	dkim=pass (1024-bit key, unprotected) header.d=lunn.ch header.i=@lunn.ch header.a=rsa-sha256 header.s=20171124 header.b=JrgZiFs7
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=BCioul3B6OdYvFh9JZhAwvMgFeXlmvL+TKu9XvZlfGg=; b=JrgZiFs7WDRFq9M7AGZBt8AcxS
+	REpmImLbWhal0W9riTLTJk7DNQE/OQcuDDLWjVHzbsTXyLwfKP9hAe/SNkrv883pvFT287Mp6uNKq
+	K4R1kEvxErlJdK/+Zs6eRcXJoB8+vrQaI58sXp2BCHzLXl7AUGPucHlk9crAN4ywvoxo=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1xPMI4-00EoZW-0R; Fri, 06 Nov 2026 16:55:44 +0100
+Date: Fri, 6 Nov 2026 16:55:43 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Birger Koblitz <mail@birger-koblitz.de>
+Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, Eric Dumazet <edumazet@kernel.org>,
+	linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	Jianhui Xu <neuromoments@gmail.com>,
+	Emir Beganovic <beganovic.emir@gmail.com>,
+	Nicolai Buchwitz <nb@tipi-net.de>
+Subject: Re: [PATCH net-next v20 01/13] phylink: Add phylink_mac_interrupt
+Message-ID: <1bcae18f-ca18-44bc-980f-ed34e87db5a7@lunn.ch>
+References: <20261106-ax88179a-v20-0-37b5a1189983@birger-koblitz.de>
+ <20261106-ax88179a-v20-1-37b5a1189983@birger-koblitz.de>
+ <69be2cfe-e296-4f90-ad19-0bd48a83e287@bootlin.com>
+ <27119213-dccc-4c17-bf7e-b39a038038cf@birger-koblitz.de>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -73,57 +75,42 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v20 01/13] phylink: Add phylink_mac_interrupt
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
- Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Eric Dumazet <edumazet@kernel.org>
-Cc: linux-usb@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- Jianhui Xu <neuromoments@gmail.com>,
- Emir Beganovic <beganovic.emir@gmail.com>, Nicolai Buchwitz <nb@tipi-net.de>
-References: <20261106-ax88179a-v20-0-37b5a1189983@birger-koblitz.de>
- <20261106-ax88179a-v20-1-37b5a1189983@birger-koblitz.de>
- <69be2cfe-e296-4f90-ad19-0bd48a83e287@bootlin.com>
-From: Birger Koblitz <mail@birger-koblitz.de>
-Content-Language: en-US
-In-Reply-To: <69be2cfe-e296-4f90-ad19-0bd48a83e287@bootlin.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <27119213-dccc-4c17-bf7e-b39a038038cf@birger-koblitz.de>
 
-Thanks Maxime for reviewing!
-
-On 06/11/2026 11:11 am, Maxime Chevallier wrote:
-
->>   
->> +/**
->> + * phylink_mac_interrupt() - wrapper for phy_mac_interrupt()
->> + * @pl: a pointer to a &struct phylink returned from phylink_create()
->> + *
->> + * Passes a link-change interrupt received by the MAC to phylib.
->> + * This function may be called in interrupt context, and therefore cannot take
->> + * a mutex. However, it is safe to assume that the reference to phy does not
->> + * disappear during the call, as only an SFP module may be unplugged to make a
->> + * PHY disappear. SFP modules however do not support interrupts.
+On Fri, Nov 06, 2026 at 04:32:30PM +0100, Birger Koblitz wrote:
+> Thanks Maxime for reviewing!
 > 
-> I don't see the relevance of PHY SFP supporting interrupts or not here,
-> this just re-triggers the PHY state machine. Looks like a comment to
-> make sashiko happy.
-Indeed, this is for sashiko. Unfortunately it followed up with: "The 
-function comment notes that SFP modules do not support interrupts. 
-However, when an SFP module is physically unplugged, the electrical link 
-drops. Could this link drop trigger the MAC interrupt being handled 
-here?", which is equally irrelevant, I believe.
-
+> On 06/11/2026 11:11 am, Maxime Chevallier wrote:
 > 
-> Anyways, I'm OK with the approach, maybe reword that comment if you need
-> to respin,
-> 
-> Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Thanks, will add.
+> > > +/**
+> > > + * phylink_mac_interrupt() - wrapper for phy_mac_interrupt()
+> > > + * @pl: a pointer to a &struct phylink returned from phylink_create()
+> > > + *
+> > > + * Passes a link-change interrupt received by the MAC to phylib.
+> > > + * This function may be called in interrupt context, and therefore cannot take
+> > > + * a mutex. However, it is safe to assume that the reference to phy does not
+> > > + * disappear during the call, as only an SFP module may be unplugged to make a
+> > > + * PHY disappear. SFP modules however do not support interrupts.
+> > 
+> > I don't see the relevance of PHY SFP supporting interrupts or not here,
+> > this just re-triggers the PHY state machine. Looks like a comment to
+> > make sashiko happy.
+> Indeed, this is for sashiko. Unfortunately it followed up with: "The
+> function comment notes that SFP modules do not support interrupts. However,
+> when an SFP module is physically unplugged, the electrical link drops. Could
+> this link drop trigger the MAC interrupt being handled here?", which is
+> equally irrelevant, I believe.
 
-Birger
+It does appear the LLM does not understand what an SFP is and how it
+operates.
+
+We should just accept the LLM is wrong, and don't add too many
+comments to try to correct it.
+
+The danger is, this code gets merged, and LLM kiddies come along,
+there LLM thinks it is broken, they try to fix it and submit
+patches. But lets see if that actually happens.
+
+	Andrew
