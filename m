@@ -1,71 +1,71 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.88.97.239
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793949699;
-	b=Jpp12RYfCSenSHTg0Jx9Ghe3/l6eVwkS85+sve4Dw5sPCfgH7TuEjiTWKGADJaW3Qr1B
-	 yTbgwjM4wARkM/4EFq2zFvRYDujT9tg4t8XcHWAjlA/ixoPiJDBOv371Q64copyQ9HaH0
-	 T+Wuv41l0V46Z3Kq0ut7OxAV67abTcEoOWKqD8ON2x0MqdOqu+AzfSe2RDQ4Of4FZvNO9
-	 sqgUVketaVMj05vTuIQRSucJ8HsSYYo/WhoBr+zIN/ngCIcYDzXQt0NZf4/lDDElGwyyJ
-	 Qxy9Zi1DInNTEljI2ooHTLJwCQd0ZJj+WHtDX10a013LpJy+3BlEevDxaEQDgZWpYTg==
+	t=1793949700;
+	b=ptz47kVVMbJr28JFcHJEa6jW7CTTHAQmb33J2CSXXfZgp6+jlwHmfjx9Xz40Q+pcH92H
+	 AZYf4go2cEtWoIs1UyXciQsZwCf5R7NYPq8qHl30i3dAGWQMsSyXY/F2ZyweN+BFcjAR9
+	 tEUmN+UYM/rpTE1MpFE/mPdfzGU+VvC2qphbOtNOfXbJxH6CcFEhUtiLuP2wQmKJR7mgp
+	 0FPrmwihNZ08PsA5H4yEv2QZV9iilzdM54PdzdUddN1netMHheBngfwAQh8C5hjVe8974
+	 fuNs6Uxm8j2qAPErbFLAYs09wIW79y92Tj+MUicl28nLMB5AS0EAP/M84wiWnwFQ9Zg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793949699;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793949700;
 	h=DMARC-Filter:DKIM-Signature:Received:X-Spam-Checker-Version:
 	 X-Spam-Level:X-Spam-Status:DKIM-Signature:Received:From:Date:Subject:
 	 MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:
 	 References:In-Reply-To:To:Cc:X-Mailer;
-	bh=26rwK9emvjRNxgkx1aM0VjRaoRMNaYYnmRitPoyIuNc=;
-	b=tKk3vTnkF57u33at82M3oQi8sUuyZV1cWyKda4ptjRPYhBC5AynDZ6NTxsMzjt7f3DOl
-	 BR66XMQh+/Lbzj7SGkidlrGxeBzqPUyjbAMoQCWlG+Hp3QfecL/ApDsfRXdbC5rL2ckLA
-	 fwp4OLoOdqkEh5DfJry/e+UvAzfA4caurIVQDfbd+jx3Cv5bfbQ2vp44xZ/rYaQkR4qtp
-	 LcgiqgbEugQEymesxfho6rdTCJxM7AGiALMvGWnfmH9zmuW1hOxvINdcl2y/60SFyR+sa
-	 bRwlr/SNiM/117fSkuJ2wgYTyF/GR32UpxB0iJqUFlFIzdiYrgrxsMTijHTAXp5YmgQ==
+	bh=MhADV3IyydkqsTPMH3tU3wvA/vLc7fc8EWdcpm0ov70=;
+	b=QpA/zKS7al68PR9BQqAjIRiAu6tYC5T1nMZKeeKHX1K4oCglyQgzeb5KKtiVLhKw+72j
+	 QbYijMvi5o8UVgBud0TyQXwkws0ylbK5q4F0bT1OIJKODbfoGKb1vIwRexqL+md3gUzZJ
+	 afVdZUT65DhMKKL9A9oVAMwb2q8YsZKosvIT0JxuheoQrG1RNgimCxxYSwCeuwQDybJlz
+	 C8vrRwSoiH7bJajWi0GB65hEh6HJHorZwxV13pfQsZGEXB3855JDB7cHnPDjc9Lo7ayru
+	 wdQqTixGqRLt+Eu1yf+Y2Aoek1rEb/kTtm8JxE1aHSyuvH86sJ9N0fwyBFqmi0K+j4A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=birger-koblitz.de;
 	spf=pass smtp.mailfrom=birger-koblitz.de;
-	dkim=pass header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=ewoxcO0G;
-	dkim=pass header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=MU5jOZYH;
+	dkim=pass header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=Z86uJjNo;
+	dkim=pass header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=uGYh0zRU;
 	arc=none smtp.remote-ip=23.88.97.239
 Received: from bkemail.birger-koblitz.de (bkemail.birger-koblitz.de [23.88.97.239])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39E16606D811
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5DEA606A339
 	for <loongarch@lists.linux.dev>; Fri,  6 Nov 2026 07:21:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 39E16606D811
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C5DEA606A339
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=birger-koblitz.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=birger-koblitz.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=ewoxcO0G;
-	dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=MU5jOZYH
+	dkim=pass (2048-bit key, unprotected) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=Z86uJjNo;
+	dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=uGYh0zRU
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=birger-koblitz.de;
-	s=default; t=1793949697;
-	bh=t6c76qrcB5Xzyp5vYgM4qQyIE9cJhW/WseYa5dwzUCw=;
+	s=default; t=1793949698;
+	bh=cg39L093dm5ZgWsTfiATniGIm12jPVEs5/MdqNtJY2Q=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=ewoxcO0GigD0m/NbACWYtHubLGsbqr4RyjY7JoE+g0bG3chneiewuGXmI2Mnud86q
-	 FIW8STqllt8xdM8TxXcjlTX4fRnlS/pxpznfXBuGtqepzGA/UJFcy2EPTb+/vJEEKi
-	 pMvr/scKX+fFnXwaKNiMRvICHLpJyy3PKI/r/qZt1HjHBmVpaWhCL6qJ9aa0in3wXh
-	 /3YckUjFzkugduG+96s9/2K3KFNTbc0dBUo/MMb4lSorqZAB3WpWaXnSQVvJdKG/Ag
-	 6U0JrkCQIao30HdQiKJojr1YaNHlmHRcvgvE265aaE7LQEJnH/4n+e90wbfyTETjCS
-	 KMssT8u0GyKfA==
+	b=Z86uJjNoHVfoUxw1WqL23yxwHT8+maNT6e0WKhpiQqN+ehVRmPAojI5Q9FrlG39r4
+	 vYBjENqcSJ9jexj6QXUdFbUQpq0hj7WrbZhdjmnWH+B9+khw40Q2auJfy6sMUzvbCV
+	 X7tV45kkBvuWh9akSd+q4BCpAhF0lDcaVkcblnl+8+jWjXMbMuLyPOTHvuu8k1oqif
+	 ovhlci4pdVCGSVB34ibF+FkUePHjwGsQ8qfoHcUN4ll2Mo7kRX7x8GRcvwo7hIir2H
+	 l1JGjyDB/KbWmWVARVspwJKuXDM+tPWrvsyYwvmxbifF2WP/3zCBbDfK1zWVh8T1Vr
+	 eeDXL8diFEvYQ==
 Received: by bkemail.birger-koblitz.de (Postfix, from userid 109)
-	id C717448BBB; Fri,  6 Nov 2026 07:21:37 +0000 (UTC)
+	id 60D5A48BC8; Fri,  6 Nov 2026 07:21:38 +0000 (UTC)
 X-Spam-Level: 
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=birger-koblitz.de;
 	s=default; t=1793949686;
-	bh=t6c76qrcB5Xzyp5vYgM4qQyIE9cJhW/WseYa5dwzUCw=;
+	bh=cg39L093dm5ZgWsTfiATniGIm12jPVEs5/MdqNtJY2Q=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=MU5jOZYHlwDlTgovqPNIV59fE9wyN/vLO0RoyQThDaLvVW2q/NrEBqEkF+4LQa+4f
-	 +j3Kt9fgPlfmhcddgZZcRaCjDg7fXHLjrFcPa0SlJ3Urpo/YTiLdjD54e22yiHg73l
-	 XH8+4VLOU7k1RVmwBmP0oTb+0c70DTVoox6dy6uoUJnVeRXVd3n2XRJTrcP+Y89Ahu
-	 QLTAaufu64FZP464xBwQjdD7UY0R3wXSUgdzC3lgWxfSuxXYXMCKeY5qxS7qpOGueA
-	 XZLWFU4oamEIRpBpN0QydAxKJE7cn/O+MY49Y7KO82mIoElSw/wnvztkevpLoiFrsX
-	 tHcu5IudMjntg==
+	b=uGYh0zRURGY7FrxzJvr8vqyPJMayJODkStAkG6XseYTGZTG5dC5AywXLHgWHbCo5L
+	 eu5VDWjZhgCzNSVorY77wyHq51JLALLqkuPTTgfmEczyTRxF4JjgLrNBOz/kDsFHXn
+	 QNJt4+Otg917PUXaaW3H0dg+/5OYkuITq9am+DuYq0mw0zgGLF4P7rKDbe5Qk63yB2
+	 Qf4aKaO3AbM6qT+UwzYIq4sjMe4zYVARYmxPTpcMFXUyDEwc6WSmJVW7OTHU1C2ojS
+	 pvTZCvJK09ZbLaYJifHbaajsBXTObgs3Dz3jnXKVxQ0aovdFAg1/Xl+TqkI1uYVCAM
+	 DZshu60m2rjxA==
 Received: from AMDDesktop.lan (unknown [IPv6:2a00:6020:47a3:e800:271c:c6c5:9fde:77cb])
-	by bkemail.birger-koblitz.de (Postfix) with ESMTPSA id 9464448B8E;
-	Fri,  6 Nov 2026 07:21:25 +0000 (UTC)
+	by bkemail.birger-koblitz.de (Postfix) with ESMTPSA id 1661D48B90;
+	Fri,  6 Nov 2026 07:21:26 +0000 (UTC)
 From: Birger Koblitz <mail@birger-koblitz.de>
-Date: Fri, 06 Nov 2026 08:21:20 +0100
-Subject: [PATCH net-next v20 05/13] ax88179_178a: Add EEE configuration
- support for AX88179A MACs
+Date: Fri, 06 Nov 2026 08:21:21 +0100
+Subject: [PATCH net-next v20 06/13] ax88179_178a: Add EEE configuration
+ support for AX88179A PHYs
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -77,7 +77,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261106-ax88179a-v20-5-37b5a1189983@birger-koblitz.de>
+Message-Id: <20261106-ax88179a-v20-6-37b5a1189983@birger-koblitz.de>
 References: <20261106-ax88179a-v20-0-37b5a1189983@birger-koblitz.de>
 In-Reply-To: <20261106-ax88179a-v20-0-37b5a1189983@birger-koblitz.de>
 To: Andrew Lunn <andrew+netdev@lunn.ch>, 
@@ -90,52 +90,64 @@ Cc: linux-usb@vger.kernel.org, netdev@vger.kernel.org,
  linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
  Jianhui Xu <neuromoments@gmail.com>, 
  Emir Beganovic <beganovic.emir@gmail.com>, 
- Birger Koblitz <mail@birger-koblitz.de>
+ Birger Koblitz <mail@birger-koblitz.de>, Nicolai Buchwitz <nb@tipi-net.de>
 X-Mailer: b4 0.14.2
 
-The AX88179A uses a simple HW configuration for EEE
-via a single EEE configuration register without LPI timer support
-Add support for setting this EEE enable/disable register in implementations
-of mac_enable_tx_lpi/mac_disable_tx_lpi.
+Configure phylink to work with the PHYs in the AX88179A controllers
+and provide ethtool get/set eee operations calling into phylink.
 
 Signed-off-by: Birger Koblitz <mail@birger-koblitz.de>
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Nicolai Buchwitz <nb@tipi-net.de>
 ---
- drivers/net/usb/ax88179a_devices.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ drivers/net/usb/ax88179a_devices.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
 diff --git a/drivers/net/usb/ax88179a_devices.c b/drivers/net/usb/ax88179a_devices.c
-index 1aa8479422517bff6758c884c5e47258c5d3ed3a..62619fd68c408f453e48c94020bce2254da9a1f9 100644
+index 62619fd68c408f453e48c94020bce2254da9a1f9..272e92365683247b42a5fd25013c728a9c1af711 100644
 --- a/drivers/net/usb/ax88179a_devices.c
 +++ b/drivers/net/usb/ax88179a_devices.c
-@@ -395,10 +395,27 @@ static void ax88179a_mac_link_up(struct phylink_config *config,
- 			 AX_MAC_RX_PATH_READY | AX_MAC_TX_PATH_READY);
+@@ -225,6 +225,20 @@ static int ax88179a_get_eeprom_len(struct net_device *net)
+ 		return AX88179A_EEPROM_LEN;
  }
  
-+static void ax88179a_mac_disable_tx_lpi(struct phylink_config *config)
++static int ax88179a_get_eee(struct net_device *net, struct ethtool_keee *edata)
 +{
-+	struct usbnet *dev = netdev_priv(to_net_dev(config->dev));
++	struct ax88179_data *ax179_data = netdev2data(net);
 +
-+	ax88179_write_cmd(dev, AX_GPHY_CTL, AX_GPHY_EEE_CTRL, false, 0, NULL);
++	return phylink_ethtool_get_eee(ax179_data->phylink, edata);
 +}
 +
-+static int ax88179a_mac_enable_tx_lpi(struct phylink_config *config, u32 timer, bool tx_clk_stop)
++static int ax88179a_set_eee(struct net_device *net, struct ethtool_keee *edata)
 +{
-+	struct usbnet *dev = netdev_priv(to_net_dev(config->dev));
++	struct ax88179_data *ax179_data = netdev2data(net);
 +
-+	/* AX88179A does not provide LPI timer registers */
-+	return ax88179_write_cmd(dev, AX_GPHY_CTL, AX_GPHY_EEE_CTRL, true, 0, NULL);
++	return phylink_ethtool_set_eee(ax179_data->phylink, edata);
 +}
 +
- static const struct phylink_mac_ops ax88179a_phylink_mac_ops = {
- 	.mac_config = ax88179a_mac_config,
- 	.mac_link_down = ax88179a_mac_link_down,
- 	.mac_link_up = ax88179a_mac_link_up,
-+	.mac_disable_tx_lpi = ax88179a_mac_disable_tx_lpi,
-+	.mac_enable_tx_lpi = ax88179a_mac_enable_tx_lpi,
- };
+ static const struct ethtool_ops ax88179a_ethtool_ops = {
+ 	.get_link		= ethtool_op_get_link,
+ 	.get_msglevel		= usbnet_get_msglevel,
+@@ -234,6 +248,8 @@ static const struct ethtool_ops ax88179a_ethtool_ops = {
+ 	.get_eeprom_len		= ax88179a_get_eeprom_len,
+ 	.get_eeprom		= ax88179_get_eeprom,
+ 	.set_eeprom		= ax88179_set_eeprom,
++	.get_eee		= ax88179a_get_eee,
++	.set_eee		= ax88179a_set_eee,
+ 	.nway_reset		= phy_ethtool_nway_reset,
+ 	.get_link_ksettings	= ax88179a_get_link_ksettings,
+ 	.set_link_ksettings	= ax88179a_set_link_ksettings,
+@@ -451,6 +467,10 @@ static int ax88179a_phylink_setup(struct usbnet *dev)
+ 		phy_if_mode = PHY_INTERFACE_MODE_SGMII;
+ 	}
  
- static int ax88179a_phylink_setup(struct usbnet *dev)
++	memcpy(data->phylink_config.lpi_interfaces,
++	       data->phylink_config.supported_interfaces,
++	       sizeof(data->phylink_config.lpi_interfaces));
++
+ 	phylink = phylink_create(&data->phylink_config, dev->net->dev.fwnode,
+ 				 phy_if_mode, &ax88179a_phylink_mac_ops);
+ 	if (IS_ERR(phylink))
 
 -- 
 2.47.3
