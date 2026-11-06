@@ -1,71 +1,71 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.88.97.239
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793949696;
-	b=wNSEqHDmllInBkCSp4kHOj7/EQ0yV6N0tB7LoW0CfBWfpz0V5Nt6v7r8hiYZF8a8eR8e
-	 FLtzPcrVaSKJ//TQYVJMqfR7XikVF99Wxz+pXTUIzJY2ToWpTsUJOkyBWq14PIRXvLEGR
-	 xnqzD1XxG+hkH2BNcTuobTAYE4Qy1Et1BIMh4P5cL5dUaKhq48O4xG43SvBUs+ZMTW1jK
-	 I4YJ27kqbXy8qBPCKLEwD14NssXPb1fzCP5yTNezJ1mIAzKp0YjXib90aNhVDWc1OOA6j
-	 MieVQmZ5S3MsBRVEXnE6OAnVcanbkFvgRNliZkEciOUnubk0yw4rwT/8OKtSkRdgpDg==
+	t=1793949699;
+	b=Jpp12RYfCSenSHTg0Jx9Ghe3/l6eVwkS85+sve4Dw5sPCfgH7TuEjiTWKGADJaW3Qr1B
+	 yTbgwjM4wARkM/4EFq2zFvRYDujT9tg4t8XcHWAjlA/ixoPiJDBOv371Q64copyQ9HaH0
+	 T+Wuv41l0V46Z3Kq0ut7OxAV67abTcEoOWKqD8ON2x0MqdOqu+AzfSe2RDQ4Of4FZvNO9
+	 sqgUVketaVMj05vTuIQRSucJ8HsSYYo/WhoBr+zIN/ngCIcYDzXQt0NZf4/lDDElGwyyJ
+	 Qxy9Zi1DInNTEljI2ooHTLJwCQd0ZJj+WHtDX10a013LpJy+3BlEevDxaEQDgZWpYTg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793949696;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793949699;
 	h=DMARC-Filter:DKIM-Signature:Received:X-Spam-Checker-Version:
 	 X-Spam-Level:X-Spam-Status:DKIM-Signature:Received:From:Date:Subject:
 	 MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:
 	 References:In-Reply-To:To:Cc:X-Mailer;
-	bh=GygRlI01+cPXv/DoLTlbQ1cIRi1q+Mc9UFQJg7H+g0U=;
-	b=TbtgO4MEMETwwHrD4bgF9xN0oEFQgNweRXY/YbGsfUVMiEm3wDxkS/UPeQVJQBUUdDie
-	 M9kwjNow0VZTgyOaMRJ64NNSkMRr2Y8gONqTyJ8SxN4oDW4WG/LScefC6ArYrrT8JpQIY
-	 oLrgL+iTFVimuCB/EPvYRSxqmW6DFXr5sL69zIWeRWSp+F4mHMvzVOROHjei48kt+s5UQ
-	 pwDupL0wMnaEjmWoAeHE/NkV2liVtSGSRFm0yKH132uK6bERUYwhr2h0398745D5Nb0pq
-	 763ICbQTUwFL0YIq+8DZAIdwuzGS3e2oMdSwiNQ8rxK/sja84+0upjFd9hz1DSpqePg==
+	bh=26rwK9emvjRNxgkx1aM0VjRaoRMNaYYnmRitPoyIuNc=;
+	b=tKk3vTnkF57u33at82M3oQi8sUuyZV1cWyKda4ptjRPYhBC5AynDZ6NTxsMzjt7f3DOl
+	 BR66XMQh+/Lbzj7SGkidlrGxeBzqPUyjbAMoQCWlG+Hp3QfecL/ApDsfRXdbC5rL2ckLA
+	 fwp4OLoOdqkEh5DfJry/e+UvAzfA4caurIVQDfbd+jx3Cv5bfbQ2vp44xZ/rYaQkR4qtp
+	 LcgiqgbEugQEymesxfho6rdTCJxM7AGiALMvGWnfmH9zmuW1hOxvINdcl2y/60SFyR+sa
+	 bRwlr/SNiM/117fSkuJ2wgYTyF/GR32UpxB0iJqUFlFIzdiYrgrxsMTijHTAXp5YmgQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=birger-koblitz.de;
 	spf=pass smtp.mailfrom=birger-koblitz.de;
-	dkim=pass header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=YSWa8uin;
-	dkim=pass header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=x9TTDlWT;
+	dkim=pass header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=ewoxcO0G;
+	dkim=pass header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=MU5jOZYH;
 	arc=none smtp.remote-ip=23.88.97.239
 Received: from bkemail.birger-koblitz.de (bkemail.birger-koblitz.de [23.88.97.239])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F7AC606D802
-	for <loongarch@lists.linux.dev>; Fri,  6 Nov 2026 07:21:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9F7AC606D802
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39E16606D811
+	for <loongarch@lists.linux.dev>; Fri,  6 Nov 2026 07:21:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 39E16606D811
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=birger-koblitz.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=birger-koblitz.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=YSWa8uin;
-	dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=x9TTDlWT
+	dkim=pass (2048-bit key, unprotected) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=ewoxcO0G;
+	dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=MU5jOZYH
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=birger-koblitz.de;
-	s=default; t=1793949688;
-	bh=P6OG2gM1klz3dLoSZQfBExeLecMGKof44yOnBaFhd8k=;
+	s=default; t=1793949697;
+	bh=t6c76qrcB5Xzyp5vYgM4qQyIE9cJhW/WseYa5dwzUCw=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=YSWa8uinALBgNbykYS/uDzIDqplRmNDcgTie7gXi/0RRQP/MRkyhf6IkHgST7LDzq
-	 etWAVlGG6/E8eFWaZlf5sb53NTlP8wI//jUxvvAX+vSR/uvC2956JIOgvEuhYvhpQA
-	 ObrKu58pGsQ/G00ZZSwZ4DtM7n9Bw2o4MdVOdPUa6xTsUAest0caOPbxKHRsmy+as/
-	 jHtlgNupQICeRHNdRugxdjTq9PAHz55Mv0vZqSBDPzblt6CN5T5KpKhCzgZrG66Oaj
-	 byWnbjW/x9vqXmaeUSYK5hbYv3KljqNEwIfAOlm/nPCcF8JfyqOPvmF3pF5gTfamB3
-	 jPhX5QKL87kSQ==
+	b=ewoxcO0GigD0m/NbACWYtHubLGsbqr4RyjY7JoE+g0bG3chneiewuGXmI2Mnud86q
+	 FIW8STqllt8xdM8TxXcjlTX4fRnlS/pxpznfXBuGtqepzGA/UJFcy2EPTb+/vJEEKi
+	 pMvr/scKX+fFnXwaKNiMRvICHLpJyy3PKI/r/qZt1HjHBmVpaWhCL6qJ9aa0in3wXh
+	 /3YckUjFzkugduG+96s9/2K3KFNTbc0dBUo/MMb4lSorqZAB3WpWaXnSQVvJdKG/Ag
+	 6U0JrkCQIao30HdQiKJojr1YaNHlmHRcvgvE265aaE7LQEJnH/4n+e90wbfyTETjCS
+	 KMssT8u0GyKfA==
 Received: by bkemail.birger-koblitz.de (Postfix, from userid 109)
-	id 2356848BC0; Fri,  6 Nov 2026 07:21:28 +0000 (UTC)
+	id C717448BBB; Fri,  6 Nov 2026 07:21:37 +0000 (UTC)
 X-Spam-Level: 
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=birger-koblitz.de;
-	s=default; t=1793949684;
-	bh=P6OG2gM1klz3dLoSZQfBExeLecMGKof44yOnBaFhd8k=;
+	s=default; t=1793949686;
+	bh=t6c76qrcB5Xzyp5vYgM4qQyIE9cJhW/WseYa5dwzUCw=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=x9TTDlWT5ViSU+7tefhDnyXVuDHRhKktXGcX1K5vryHY7PUC/8JnJuoNp1jYG1qeQ
-	 D/gHr4TRejsFy5P1dgGtzu7Ymix96rzC9Qr3SXVCwWdcD4WDhPWXKtvE2gMlqefkja
-	 Bk7M1cQcFWlPiser/B/MY4CMZVCqn07ZMqQTY3FumOln59Im9oTCqvxzQ7edRTMdVZ
-	 /dv+a9ad5kcr8Wr2l/1Vp6/PH4syrUGXOCeYeDSg27QiP4qfxtyyfpkarYySjfBZ0Q
-	 0rlYaMJjzH8xchh37BlvmWsuS8UOyIHruSh+OedJXxlMThUBXiTNCANW11ZgbeLfm4
-	 5UBvYdKy6PByg==
+	b=MU5jOZYHlwDlTgovqPNIV59fE9wyN/vLO0RoyQThDaLvVW2q/NrEBqEkF+4LQa+4f
+	 +j3Kt9fgPlfmhcddgZZcRaCjDg7fXHLjrFcPa0SlJ3Urpo/YTiLdjD54e22yiHg73l
+	 XH8+4VLOU7k1RVmwBmP0oTb+0c70DTVoox6dy6uoUJnVeRXVd3n2XRJTrcP+Y89Ahu
+	 QLTAaufu64FZP464xBwQjdD7UY0R3wXSUgdzC3lgWxfSuxXYXMCKeY5qxS7qpOGueA
+	 XZLWFU4oamEIRpBpN0QydAxKJE7cn/O+MY49Y7KO82mIoElSw/wnvztkevpLoiFrsX
+	 tHcu5IudMjntg==
 Received: from AMDDesktop.lan (unknown [IPv6:2a00:6020:47a3:e800:271c:c6c5:9fde:77cb])
-	by bkemail.birger-koblitz.de (Postfix) with ESMTPSA id 0E5B048B8B;
-	Fri,  6 Nov 2026 07:21:24 +0000 (UTC)
+	by bkemail.birger-koblitz.de (Postfix) with ESMTPSA id 9464448B8E;
+	Fri,  6 Nov 2026 07:21:25 +0000 (UTC)
 From: Birger Koblitz <mail@birger-koblitz.de>
-Date: Fri, 06 Nov 2026 08:21:17 +0100
-Subject: [PATCH net-next v20 02/13] phylib: Add support for PHYs with
- broken forced mode
+Date: Fri, 06 Nov 2026 08:21:20 +0100
+Subject: [PATCH net-next v20 05/13] ax88179_178a: Add EEE configuration
+ support for AX88179A MACs
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -77,7 +77,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261106-ax88179a-v20-2-37b5a1189983@birger-koblitz.de>
+Message-Id: <20261106-ax88179a-v20-5-37b5a1189983@birger-koblitz.de>
 References: <20261106-ax88179a-v20-0-37b5a1189983@birger-koblitz.de>
 In-Reply-To: <20261106-ax88179a-v20-0-37b5a1189983@birger-koblitz.de>
 To: Andrew Lunn <andrew+netdev@lunn.ch>, 
@@ -90,59 +90,52 @@ Cc: linux-usb@vger.kernel.org, netdev@vger.kernel.org,
  linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
  Jianhui Xu <neuromoments@gmail.com>, 
  Emir Beganovic <beganovic.emir@gmail.com>, 
- Birger Koblitz <mail@birger-koblitz.de>, Nicolai Buchwitz <nb@tipi-net.de>
+ Birger Koblitz <mail@birger-koblitz.de>
 X-Mailer: b4 0.14.2
 
-Add support for PHYs which only supported auto-negotiated
-speed modes. This prevents a kernel warning and stack-trace within the
-phy_state_machine when PHYs return -EOPNOTSUPP from config_aneg()
-because they do not support forced modes.
+The AX88179A uses a simple HW configuration for EEE
+via a single EEE configuration register without LPI timer support
+Add support for setting this EEE enable/disable register in implementations
+of mac_enable_tx_lpi/mac_disable_tx_lpi.
 
 Signed-off-by: Birger Koblitz <mail@birger-koblitz.de>
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Nicolai Buchwitz <nb@tipi-net.de>
 ---
- drivers/net/phy/phy.c | 7 +++++++
- include/linux/phy.h   | 1 +
- 2 files changed, 8 insertions(+)
+ drivers/net/usb/ax88179a_devices.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-index fce9bc7be3304b408c9f3ec9b5b95c76d3680a88..079c53516f424ca5f8d50292f1912af04b45b07a 100644
---- a/drivers/net/phy/phy.c
-+++ b/drivers/net/phy/phy.c
-@@ -354,6 +354,9 @@ int phy_mii_ioctl(struct phy_device *phydev, struct ifreq *ifr, int cmd)
- 			switch (devad) {
- 			case MII_BMCR:
- 				if ((val & (BMCR_RESET | BMCR_ANENABLE)) == 0) {
-+					if (phydev->drv &&
-+					    (phydev->drv->flags & PHY_BROKEN_FORCED))
-+						return -EOPNOTSUPP;
- 					if (phydev->autoneg == AUTONEG_ENABLE)
- 						change_autoneg = true;
- 					phydev->autoneg = AUTONEG_DISABLE;
-@@ -1190,6 +1193,10 @@ int phy_ethtool_ksettings_set(struct phy_device *phydev,
- 	      duplex != DUPLEX_FULL)))
- 		return -EINVAL;
+diff --git a/drivers/net/usb/ax88179a_devices.c b/drivers/net/usb/ax88179a_devices.c
+index 1aa8479422517bff6758c884c5e47258c5d3ed3a..62619fd68c408f453e48c94020bce2254da9a1f9 100644
+--- a/drivers/net/usb/ax88179a_devices.c
++++ b/drivers/net/usb/ax88179a_devices.c
+@@ -395,10 +395,27 @@ static void ax88179a_mac_link_up(struct phylink_config *config,
+ 			 AX_MAC_RX_PATH_READY | AX_MAC_TX_PATH_READY);
+ }
  
-+	if (autoneg == AUTONEG_DISABLE && phydev->drv &&
-+	    (phydev->drv->flags & PHY_BROKEN_FORCED))
-+		return -EOPNOTSUPP;
++static void ax88179a_mac_disable_tx_lpi(struct phylink_config *config)
++{
++	struct usbnet *dev = netdev_priv(to_net_dev(config->dev));
 +
- 	mutex_lock(&phydev->lock);
- 	phydev->autoneg = autoneg;
++	ax88179_write_cmd(dev, AX_GPHY_CTL, AX_GPHY_EEE_CTRL, false, 0, NULL);
++}
++
++static int ax88179a_mac_enable_tx_lpi(struct phylink_config *config, u32 timer, bool tx_clk_stop)
++{
++	struct usbnet *dev = netdev_priv(to_net_dev(config->dev));
++
++	/* AX88179A does not provide LPI timer registers */
++	return ax88179_write_cmd(dev, AX_GPHY_CTL, AX_GPHY_EEE_CTRL, true, 0, NULL);
++}
++
+ static const struct phylink_mac_ops ax88179a_phylink_mac_ops = {
+ 	.mac_config = ax88179a_mac_config,
+ 	.mac_link_down = ax88179a_mac_link_down,
+ 	.mac_link_up = ax88179a_mac_link_up,
++	.mac_disable_tx_lpi = ax88179a_mac_disable_tx_lpi,
++	.mac_enable_tx_lpi = ax88179a_mac_enable_tx_lpi,
+ };
  
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 21afc2082b1741ff276a9588246c2f98351464f5..f1b1ad1dd82f5c51ddd2f0759666e17802894c96 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -64,6 +64,7 @@ extern const int phy_basic_ports_array[3];
- #define PHY_RST_AFTER_CLK_EN	0x00000002
- #define PHY_POLL_CABLE_TEST	0x00000004
- #define PHY_ALWAYS_CALL_SUSPEND	0x00000008
-+#define PHY_BROKEN_FORCED	0x00000010
- #define MDIO_DEVICE_IS_PHY	0x80000000
- 
- /**
+ static int ax88179a_phylink_setup(struct usbnet *dev)
 
 -- 
 2.47.3
