@@ -1,55 +1,69 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.88.97.239
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793977131;
-	b=TY4NSwLWXXcR/wDq+XCOurE3TkdTGKE5cYc4BGw+WSflHnjjz0HriNDj/w6QhgvIjV3p
-	 Aw8FjKMAj5EqIaT4gXlErba0LNny7+oGlJinQWvowfeuPZk5lUB4uC+1/5AKflqGFPvlc
-	 Ml1jrQviOLJFj2HCYtpDZOLOBiYp9bAaecBCrMwiTHkdobfZpJReTYJu6QiVq9cd27mId
-	 p5owC7B1FjewQxhFYc4BNLbkacPkrRFKowB2qyR8WTQUndYtfulKP5G4Bsw+NvNTgQAZd
-	 oVJe3GPYoh1cHgMkwKzThWr+M3XEa2EtsWIyckBdMWVA/2VGFRsZAMisN1CTuKfNVVA==
+	t=1793979158;
+	b=owdwRpYULazd8jUoDcsMNf2EI1e/hci6Lz8CbWNTbLBooY4Cr2mDMKDDZTBC/5RMktki
+	 u0gddBlWMOm6V6GpyfFBBfOBOZ5PoyA80P9VueRCwvOmPQdHqqNFHeCXtdTIlfSikKwbY
+	 eJMl0ljWdAkTNQ7ashFtDAoIvC0U+GKHcOXxVa7XUxGz+/WBYYxhuY7b4dp+MxQAOhl8Q
+	 DPImklrTL18zpD1r2u3vqN1ouwbX/rcFp0WnRoDzglSKHS95MvJgjrW1XGkp01I2euqNC
+	 Gyyxi/bV5MV6rCLluyQq4Z3VBcjdU005mu7gHQoxpHsoNLajxVHi12xNVpf7iulVJNw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793977131;
-	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
-	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
-	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=XEalOsXN3Dev0rHb+5Zu8ZzbpTD7rK6WayG4C7CI4C4=;
-	b=oSrQDguUWRYktEVf6vU0gr9V5m4+Wc5a2VYMPZ81nwKObsvPHxFSVuvE1XDPYpv8V0W1
-	 4ve7Lmt9wJcA8ctPu7sDxxxVRV8XKmQGmWx0WsKCY+G36MOEPjHeGTJdF6j+zlHJT92pH
-	 bo0ySpxdALZAOUree2qRLwKakD5rlRSfXzIIV5S2n8RGHkpf/aJXbF4Ju7AJ3y6NwISEt
-	 TrAxRHPzG9ykQJ7UeIj0DmZ4UcBjA1QRbYdlekdZdqytNOFhzRBAd1m6biL3eZLrQcGTj
-	 tzg26ucVeFTJs6+dmXT9wBy30ntmK+3f+NxlDaxSGw+mvTYQ580WsNGBUSO7IKtGpJQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793979158;
+	h=DMARC-Filter:DKIM-Signature:Received:X-Spam-Checker-Version:
+	 X-Spam-Level:X-Spam-Status:DKIM-Signature:Received:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:To:Cc:References:From:
+	 Content-Language:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=P+m9BQcu9O/FHNLOowWjO5xa3x2BuTOUOzKKSEpxq9U=;
+	b=j1faZPwLewpO1ZjP0dn7ezizu1BVaUuJCYgvzQqrJsarLJdsxyqRSLoktWTREZNSIIbg
+	 nS0GrN3OQel7IPN/EjPk/1BGz0SRlJ/Qop/4dHhspua/rZhujvc5wy/MiEjEw42ab4Sfn
+	 UiAF7p1nfgUgmVzkK55MgHfKNhd1aabBtgNGYHqTUvzOAc6ZDroBX/M1toaMzQ2da0g1Z
+	 SfWRpt9U69VQe4AujUUjRjbaKqK9MfvE64oG6jqoWJMRLCuv277RsIsIqWYaDvoB/KsOu
+	 aNJreD2+gY4Rc6cvkm2fJd5Lg8CcjBarv5uA1I4VoE9PxJIlxLGjIyX5yy37zRTeQNw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UN1zk4Up;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=none header.from=birger-koblitz.de;
+	spf=pass smtp.mailfrom=birger-koblitz.de;
+	dkim=pass header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b="b8pae/Tu";
+	dkim=pass header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b="w427/YYm";
+	arc=none smtp.remote-ip=23.88.97.239
+Received: from bkemail.birger-koblitz.de (bkemail.birger-koblitz.de [23.88.97.239])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7F9F606A329
-	for <loongarch@lists.linux.dev>; Fri,  6 Nov 2026 14:58:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 433AC606A32C
+	for <loongarch@lists.linux.dev>; Fri,  6 Nov 2026 15:32:38 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 433AC606A32C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=birger-koblitz.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=birger-koblitz.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UN1zk4Up
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 525821F008A4
-	for <loongarch@lists.linux.dev>; Fri,  6 Nov 2026 14:58:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793977130;
-	bh=XEalOsXN3Dev0rHb+5Zu8ZzbpTD7rK6WayG4C7CI4C4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=UN1zk4Uphe5CdaTHvBnATH/qAbECMB+wDcg5c7jQfY83OidxuC6MXhLoNJ/DwDtWS
-	 oLZXPFZx2caD+67L5pPpp5DATkI5kTxdVgAKIgKQ3GD7PLkfIGhQw5Tc8uDjl/JgIY
-	 W4i2iI2rCfl8zo7EHzy/sq2Ii5loj74rKah/JNf8nIF4vH0UtnVuf47eQ0bFFDgMDv
-	 WVGIxhCAXIkmlMTcJnMIyOLGqxmuy/qsIeQElbHwp2V8r/4lGwB9qzrR0U2QmYPsuA
-	 knyAEytypGzLhPULxb5+wPBpWMYrEmeCCwdkieEaKm/rR8j8bIDKXGASOQRJm4ThRo
-	 m5qgqdTDsuftQ==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-6b57182c4c6so888216a12.2
-        for <loongarch@lists.linux.dev>; Fri, 06 Nov 2026 06:58:50 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AL+hErGwVXYsZEIoeo+nAZnJ2aSSSWJNFWB4Qf519VBvfZBr1mBCjePTY0jxdqKL0bpGp1Aqa+7vhVoZSLY=@lists.linux.dev
-X-Gm-Message-State: APuU4Z9azdHqQwgvSs37XNxeREZth1Q9kLaslsu8GRC63ohLnNcVJSdj
-	YsI9xzlhdS1e5hzsiwmajmG3u/RuWUdx1Ah2nLQvSFfMT9vohwyAtGBavLcl9FpWoZqWaws3wNH
-	OemGAHD4pa19vBdq+T8TiQP7eYlXF4Tk=
-X-Received: by 2002:aa7:d34e:0:b0:6b5:8cf6:18aa with SMTP id
- 4fb4d7f45d1cf-6b597816c51mr1300269a12.45.1793977128939; Fri, 06 Nov 2026
- 06:58:48 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=b8pae/Tu;
+	dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=w427/YYm
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=birger-koblitz.de;
+	s=default; t=1793979156;
+	bh=xHy9AAwYbUNDRIPqlGFP8rBNvBDMvPDQk8lTAq0vRB8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=b8pae/Tuh1waK9UCpykRDAPc2iXoXOsKS242SiVWo4sBDNyaO/hUml89ptZvsw2fx
+	 wFP76Ng3rzrTEDafJNx49BPuRsXg2pntDMuB4OYC9qgeueurSGZDOu4Bo6cX9Zss32
+	 T0248xVN0/Z2GNI8pnxPySq67VESEN+BidDWMI8ukC2qKKrOd7AWCtsU99bj2Kdfm2
+	 8DE8lPIQqtNtDQfLFtK1At1kdepFjAHioIWpBRpxCan7pHqzGAQ89s6h0fssGpjXWq
+	 6TlruDjR0njrtExbRpcvWl8Nq0UNy1O5zDOYpuHImJs9xCVd4NiWT95mzff1MOTI7K
+	 gnClIvaRCXt0A==
+Received: by bkemail.birger-koblitz.de (Postfix, from userid 109)
+	id 4BA0E48BA4; Fri,  6 Nov 2026 15:32:36 +0000 (UTC)
+X-Spam-Level: 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=birger-koblitz.de;
+	s=default; t=1793979154;
+	bh=xHy9AAwYbUNDRIPqlGFP8rBNvBDMvPDQk8lTAq0vRB8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=w427/YYm70AKnIjmqwOeLkuvEfLMrPh841E6+W65j1YHuy0vePY4VMnrFWKFhiPAS
+	 YutnMYtqG/7+CcBf3098NZ0Z+8xDb+pIyhdL6JWs9XrIWE5R1s2nmQ4VrAg2Tl2GlT
+	 VlOHkI6u6L+GAFW6aTOJU6MXK4Rx2a3uZ9r41MraU0VheSksRmePDSiwf1mb21tf8Z
+	 BMdb9AOxA4AzyOfKO4o5TL3SEY7ygL1bhm7C64V0GyBHl1UFh68BfFjKS4oAEqt0Vh
+	 xqeGI8HsxepVkZd79lTyb/Ke1BSytnbzLY1hW+4SsW7IBV/xTjcQSE+6bRHwmfA/zP
+	 rbyRfOqZ1lrjw==
+Received: from [IPV6:2a00:6020:47a3:e800:271c:c6c5:9fde:77cb] (unknown [IPv6:2a00:6020:47a3:e800:271c:c6c5:9fde:77cb])
+	by bkemail.birger-koblitz.de (Postfix) with ESMTPSA id DDA7C48B84;
+	Fri,  6 Nov 2026 15:32:33 +0000 (UTC)
+Message-ID: <27119213-dccc-4c17-bf7e-b39a038038cf@birger-koblitz.de>
+Date: Fri, 6 Nov 2026 16:32:30 +0100
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -59,229 +73,57 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <20260922121058.972734-2-maobibo@loongson.cn> <10bd45f8-2d37-42f0-b7d2-a4a84933c9b3@loongson.cn>
- <CAAhV-H7Vq2ayLJNLRSo5RRiWOcmF2BXT_QOhEDg_jWOzYteqWw@mail.gmail.com>
- <6f8a9203-6fb1-268a-8d37-37e69fbf2ee9@loongson.cn> <CAAhV-H5k8EJrAuqPH44y_+1gcXGCjCoozzK5ii9cLtiLDj5eog@mail.gmail.com>
- <66b9d482-d577-748c-729d-0fba70701d3d@loongson.cn> <CAAhV-H6PL6RLM3KA4BLQEt804FnsDE4CtKeB0KaW7Gj8rm2PMw@mail.gmail.com>
- <843a9418-2017-c2c6-45c5-38628e7e0bdb@loongson.cn>
-In-Reply-To: <843a9418-2017-c2c6-45c5-38628e7e0bdb@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 6 Nov 2026 22:58:38 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4O07hKyPJ8rTMo=vD=t+qFM7UAJOPDGZDVJ0Ti-gOdEQ@mail.gmail.com>
-X-Gm-Features: AclHuK_AEHK_XvIpwEC7N5JxRM5P9YdQztWX0TP-7vlsuAjfx-iuC3kJWfywbDw
-Message-ID: <CAAhV-H4O07hKyPJ8rTMo=vD=t+qFM7UAJOPDGZDVJ0Ti-gOdEQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/4] ACPICA: actbl2.h: Add bit constants of the Flags
- field in the IOVT IOMMU structure
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: rafael@kernel.org, linux-acpi@vger.kernel.org, 
-	acpica-devel@lists.linux.dev, lenb@kernel.org, linux-kernel@vger.kernel.org, 
-	lixianglai@loongson.cn, loongarch@lists.linux.dev, 
-	maciej.wieczor-retman@intel.com, pawel.chmielewski@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v20 01/13] phylink: Add phylink_mac_interrupt
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
+ Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Eric Dumazet <edumazet@kernel.org>
+Cc: linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ Jianhui Xu <neuromoments@gmail.com>,
+ Emir Beganovic <beganovic.emir@gmail.com>, Nicolai Buchwitz <nb@tipi-net.de>
+References: <20261106-ax88179a-v20-0-37b5a1189983@birger-koblitz.de>
+ <20261106-ax88179a-v20-1-37b5a1189983@birger-koblitz.de>
+ <69be2cfe-e296-4f90-ad19-0bd48a83e287@bootlin.com>
+From: Birger Koblitz <mail@birger-koblitz.de>
+Content-Language: en-US
+In-Reply-To: <69be2cfe-e296-4f90-ad19-0bd48a83e287@bootlin.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Nov 5, 2026 at 7:22=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrote=
-:
->
->
->
-> On 2026/11/5 =E4=B8=8B=E5=8D=886:31, Huacai Chen wrote:
-> > On Thu, Nov 5, 2026 at 5:49=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> w=
-rote:
-> >>
-> >>
-> >>
-> >> On 2026/11/5 =E4=B8=8B=E5=8D=885:31, Huacai Chen wrote:
-> >>> On Thu, Nov 5, 2026 at 5:14=E2=80=AFPM Bibo Mao <maobibo@loongson.cn>=
- wrote:
-> >>>>
-> >>>>
-> >>>>
-> >>>> On 2026/10/23 =E4=B8=8B=E5=8D=883:59, Huacai Chen wrote:
-> >>>>> Bibo,
-> >>>>>
-> >>>>> Now I have applied this series but with some modifications, please
-> >>>>> double check and test the code.
-> >>>>>
-> >>>>> https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-lo=
-ongson.git/log/?h=3Dloongarch-next
-> >>>> In my v4 submit, it is:
-> >>>> +               case ACPI_IOVT_DEVICE_ENTRY_START:
-> >>>> +                       is_start =3D true;
-> >>>> +                       start_devid =3D ep->device_id;
-> >>>> +                       break;
-> >>>> however in rc1, it is modified as:
-> >>>>                    case ACPI_IOVT_DEVICE_ENTRY_START:
-> >>>>                            is_start =3D true;
-> >>>>                            entry->start_devid =3D ep->device_id;
-> >>>>                            break;
-> >>>> Here entry is not allocated and NULL pointer, it is allocated in
-> >>>> ACPI_IOVT_DEVICE_ENTRY_END switch case.
-> >>>>
-> >>>> I really do not know what is aid to modify it and let others to test=
-.
-> >>> Sorry, it's my fault.
-> >>>
-> >>> In theory I should point out the modification (eliminating the local
-> >>> variable start_devid) and refresh a new version. But we have no time
-> >>> to do this because when the first patch is merged into the ACPI repo
-> >>> it is near the merge window.
-> >> Maybe our work style is different, I do not care much for the coding s=
-tyle.
-> >>>
-> >>> If you agree, I will submit such modifications to fix it.
-> >> fix is welcome.
-> >>>
-> >>> diff --git a/drivers/acpi/loongarch/iovt.c b/drivers/acpi/loongarch/i=
-ovt.c
-> >>> index 87cee4f0fc80..4cdac28a1fd0 100644
-> >>> --- a/drivers/acpi/loongarch/iovt.c
-> >>> +++ b/drivers/acpi/loongarch/iovt.c
-> >>> @@ -115,6 +115,10 @@ static int __init iovt_add_iommu(struct
-> >>> acpi_iovt_iommu *iommu)
-> >>>           for (i =3D 0; i < iommu->device_entry_num; i++) {
-> >>>                   switch (ep->type) {
-> >>>                   case ACPI_IOVT_DEVICE_ENTRY_START:
-> >>> +                       entry =3D kzalloc_obj(struct iovt_device_entr=
-y,
-> >>> GFP_ATOMIC);
-> >> There will be memory leak problem if there are START/START/END in the =
-table.
-> > That means a broken table? I think we don't need to consider broken
-> > tables, because there may be kinds of broken pattern rather than just
-> > a START/START/END.
-> yes, START/END/START, START/START/END, START/SINGLE/END. what is the
-> relationship between "don't need to consider" and kinds of broken pattern=
-?
->
-> what is the policy from your side with such BIOS table? let memory leak
-> and continue?
-The driver can only work with a good table or no table, but not with a
-broken table.
+Thanks Maxime for reviewing!
 
-Take START1/START2/END as an example of broken table: in your original
-code, the END entry will be pairing with START2. But for a broken
-table who can ensure they are the correct pair? If the real correct
-pair is START1 and END, then (entry->start_devid, entry->end_devid)
-will be a wrong device range. Such mistakes are much worse than a
-memery leak.
+On 06/11/2026 11:11 am, Maxime Chevallier wrote:
 
-If you want to say "I don't care about correct pairing, memory leak is
-bad in any case.", OK, we can do it like this:
+>>   
+>> +/**
+>> + * phylink_mac_interrupt() - wrapper for phy_mac_interrupt()
+>> + * @pl: a pointer to a &struct phylink returned from phylink_create()
+>> + *
+>> + * Passes a link-change interrupt received by the MAC to phylib.
+>> + * This function may be called in interrupt context, and therefore cannot take
+>> + * a mutex. However, it is safe to assume that the reference to phy does not
+>> + * disappear during the call, as only an SFP module may be unplugged to make a
+>> + * PHY disappear. SFP modules however do not support interrupts.
+> 
+> I don't see the relevance of PHY SFP supporting interrupts or not here,
+> this just re-triggers the PHY state machine. Looks like a comment to
+> make sashiko happy.
+Indeed, this is for sashiko. Unfortunately it followed up with: "The 
+function comment notes that SFP modules do not support interrupts. 
+However, when an SFP module is physically unplugged, the electrical link 
+drops. Could this link drop trigger the MAC interrupt being handled 
+here?", which is equally irrelevant, I believe.
 
-diff --git a/drivers/acpi/loongarch/iovt.c b/drivers/acpi/loongarch/iovt.c
-index 87cee4f0fc80..ebd11e22c9be 100644
---- a/drivers/acpi/loongarch/iovt.c
-+++ b/drivers/acpi/loongarch/iovt.c
-@@ -115,6 +115,13 @@ static int __init iovt_add_iommu(struct
-acpi_iovt_iommu *iommu)
-        for (i =3D 0; i < iommu->device_entry_num; i++) {
-                switch (ep->type) {
-                case ACPI_IOVT_DEVICE_ENTRY_START:
-+                       if (is_start)
-+                               break;
-+
-+                       entry =3D kzalloc_obj(struct iovt_device_entry,
-GFP_ATOMIC);
-+                       if (!entry)
-+                               return -ENOMEM;
-+
-                        is_start =3D true;
-                        entry->start_devid =3D ep->device_id;
-                        break;
-@@ -122,10 +129,6 @@ static int __init iovt_add_iommu(struct
-acpi_iovt_iommu *iommu)
-                        if (!is_start)
-                                break;
+> 
+> Anyways, I'm OK with the approach, maybe reword that comment if you need
+> to respin,
+> 
+> Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Thanks, will add.
 
--                       entry =3D kzalloc_obj(struct iovt_device_entry,
-GFP_ATOMIC);
--                       if (!entry)
--                               return -ENOMEM;
--
-                        is_start =3D false;
-                        entry->end_devid =3D ep->device_id;
-                        list_add_tail(&entry->list, &np->ep_list);
-
-Huacai
-
->
-> >
-> > Huacai
-> >
-> >>
-> >> Regards
-> >> Bibo Mao
-> >>> +                       if (!entry)
-> >>> +                               return -ENOMEM;
-> >>> +
-> >>>                           is_start =3D true;
-> >>>                           entry->start_devid =3D ep->device_id;
-> >>>                           break;
-> >>> @@ -122,10 +126,6 @@ static int __init iovt_add_iommu(struct
-> >>> acpi_iovt_iommu *iommu)
-> >>>                           if (!is_start)
-> >>>                                   break;
-> >>>
-> >>> -                       entry =3D kzalloc_obj(struct iovt_device_entr=
-y,
-> >>> GFP_ATOMIC);
-> >>> -                       if (!entry)
-> >>> -                               return -ENOMEM;
-> >>> -
-> >>>                           is_start =3D false;
-> >>>                           entry->end_devid =3D ep->device_id;
-> >>>                           list_add_tail(&entry->list, &np->ep_list);
-> >>>
-> >>> Huacai
-> >>>
-> >>>>
-> >>>>>
-> >>>>> Huacai
-> >>>>>
-> >>>>> On Mon, Oct 12, 2026 at 3:16=E2=80=AFPM Bibo Mao <maobibo@loongson.=
-cn> wrote:
-> >>>>>>
-> >>>>>> This change is already merged in acpica tree.
-> >>>>>>
-> >>>>>> slightly ping.
-> >>>>>>
-> >>>>>> On Tue, Sep 22, 2026 at 08:10:55PM +0800, Bibo Mao wrote:
-> >>>>>>     > According to the IOVT specification, define macros for each =
-bit of the
-> >>>>>>     > Flags field in the IOVT IOMMU structure.
-> >>>>>>     >
-> >>>>>>     > Link: https://github.com/open-acpica/acpica/commit/352f750e4=
-cc0
-> >>>>>>     > Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> >>>>>>     > ---
-> >>>>>>     >  include/acpi/actbl2.h | 7 +++++++
-> >>>>>>     >  1 file changed, 7 insertions(+)
-> >>>>>>     >
-> >>>>>>     > diff --git a/include/acpi/actbl2.h b/include/acpi/actbl2.h
-> >>>>>>     > index baef525367b5..76e4a5bc79b4 100644
-> >>>>>>     > --- a/include/acpi/actbl2.h
-> >>>>>>     > +++ b/include/acpi/actbl2.h
-> >>>>>>     > @@ -919,6 +919,13 @@ struct acpi_iovt_iommu {
-> >>>>>>     >       u32 device_entry_offset;
-> >>>>>>     >  };
-> >>>>>>     >
-> >>>>>>     > +/* Masks for Flags field above */
-> >>>>>>     > +#define ACPI_IOVT_IOMMU_PCI_DEVICE           (1<<0)
-> >>>>>>     > +#define ACPI_IOVT_IOMMU_PXM_VALID            (1<<1)
-> >>>>>>     > +#define ACPI_IOVT_IOMMU_MAGAGE_BY_SEGMENT    (1<<2)
-> >>>>>>     > +#define ACPI_IOVT_IOMMU_HW_CAP_SUPPORT               (1<<3)
-> >>>>>>     > +#define ACPI_IOVT_IOMMU_MSI_INT_BYPASS               (1<<4)
-> >>>>>>     > +
-> >>>>>>     >  struct acpi_iovt_device_entry {
-> >>>>>>     >       u8 type;
-> >>>>>>     >       u8 length;
-> >>>>>>     > --
-> >>>>>>     > 2.39.3
-> >>>>>>     >
-> >>>>>>
-> >>>>
-> >>>>
-> >>
->
->
+Birger
