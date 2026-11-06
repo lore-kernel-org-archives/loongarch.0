@@ -1,71 +1,71 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.88.97.239
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1793949705;
-	b=uIngBQ+m6CW0T3erGRCKDoLO95oW6CiTLI/v3jELxIR3thG+Uvn9ZRh0nyaeki8FSs+0
-	 hJV8fqryG2stqHPCmd37bfSphSsRkbjM3NVpglm9Xf2OkRv1sfabk+jWLpNTHvmDYa7Cw
-	 XxNzqhkcTacP9p+ssJrh5iJb8cl+M+828klIAi88Zwi5DjIpgoDK69jVlOjsAxmrntSKN
-	 NaqHthoVefELhrRHDqn615o6b3VzwrxhHz/cAXITXDT/QtHkFqCTMA1yPQuDwe4dTAF0A
-	 AI7j0/06QMfqliGqNh0fXg9E0DNR0DzJdcmAf7UIjAOjbdDo7VUfRRDICFBt3rGrKUg==
+	b=SRT+Fud3Edocj9c9Yc0wSV4BYsROV8mMrsdT6MWFDsI5Ko6uy4FNjsRPZ/jKA3uWCsR9
+	 ghA0Q9In5wB5m1lJD3JBaOeFN5YcAC0LPoSTKVQZ6IBH3QSH+8xlOyNJ7TazV1VNyuit4
+	 qltOvOIW7B53tV/GFuDUN9zNIU2vIOKENsnNa6jTfAP9uJdio1csai7oT6UVt3Aa8XLMI
+	 g2MgSBHh1cgoderVzty7svTWlIS/Uy8shArSVLjJ+NjctQzvtM8CBUwgy/dEDsRCcxWN8
+	 b6be1FaTOJd9j3MCIw+B0Aoczf6U4rmhXSdiIqL1j7jHs1Xx2+TqboFABHKNvqTiBhQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1793949705;
 	h=DMARC-Filter:DKIM-Signature:Received:X-Spam-Checker-Version:
 	 X-Spam-Level:X-Spam-Status:DKIM-Signature:Received:From:Date:Subject:
 	 MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:
 	 References:In-Reply-To:To:Cc:X-Mailer;
-	bh=qUNd6kXD91woJetM+lXs4L874hiv0cRTV46+6IT4S/c=;
-	b=YYrLbGQQQ7kzH//eaUC2qITG/rX5GQl/I4H/qYbY6IYloWePcV53gzMVhmZYSN/TJggF
-	 CQ/Gxzaqzz5RzGu4DYrbLnsbPddTDiEZjvnFFgTTqVH6BIVIUNqEdnmsZEKRqG5A+cAFe
-	 pxecmIu37eHCxV05fcb7u5oBH40qj/Tqph7rLlwsIC+zFrK5hj1Ktec/+CkWW2+vxxVj/
-	 nAjSxIJVHCS7T3T8I/oV8dxZajK+ar7mo97PAH/n3BOnNTpGgBTkiwTUGXDkTx4tZ0cAe
-	 OW/hBXF/HV/sqpbibJvcmbFTRpak40d5g5NNvpPZPfuKNVgp3lHwlQRxcOJkg1qxMsQ==
+	bh=/Bn1UWSqe/x7wRcIRhV+YWmEErOE4N8bWv5vbZ8rj8A=;
+	b=XlfuR7PjT84cFduVvm05l0PtWpzFLhH6Q/VnoKZnqftouoIkLUK7h5KV/xvf0tJIAiUn
+	 6pUBWaGz1/98t6/HwrGJskxBT583rw82N2hquhQJ2AuZt7m124bTgGKjlBdVj8DtrH2Zt
+	 Pm9P1DfOVxnE6GU7XXnHXaxucbi5yo1Ee/24zy8pzVZ9dw39i8/+n4ayP2BFwFnvml1eU
+	 WdYT6EEDWWHqUnS2tg9XlU1o7aD5HIyrRgDPXrDePDkiwyLbw8b+7ui5AoM1Ya/02GuYe
+	 zEyQp0GyK52MxwAPvAlWxHScOK2oiVvK3d7xO2vjH50WINfR4t1XOye5p/RMViq5pfQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=birger-koblitz.de;
 	spf=pass smtp.mailfrom=birger-koblitz.de;
-	dkim=pass header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=Ui0IQsIV;
-	dkim=pass header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b="TuHBy/yi";
+	dkim=pass header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=oKiWHIcL;
+	dkim=pass header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=XeIKluzk;
 	arc=none smtp.remote-ip=23.88.97.239
 Received: from bkemail.birger-koblitz.de (bkemail.birger-koblitz.de [23.88.97.239])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C098F606D833
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2559606D835
 	for <loongarch@lists.linux.dev>; Fri,  6 Nov 2026 07:21:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C098F606D833
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E2559606D835
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=birger-koblitz.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=birger-koblitz.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=Ui0IQsIV;
-	dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=TuHBy/yi
+	dkim=pass (2048-bit key, unprotected) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=oKiWHIcL;
+	dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=XeIKluzk
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=birger-koblitz.de;
 	s=default; t=1793949703;
-	bh=0kKsGJW5I991lB/XYv7HVOnFpAaEd/5zFhjNi8hK5ss=;
+	bh=wbyh46mLbRX2HAkQs8o5MxoEDkveQAGJhXB98EFdgcY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Ui0IQsIV0By+kpHTCaTqK8zXnOscXytRWVFJfdoFy7mUYe6DhWQs8wsEl5jjDrH0h
-	 OyeYVy3jtHHz7W+9W3UXPeuINhHUih5ZUL16YovE5AumWyjiXjNLMeActWHXaQTX4j
-	 iwJtmx9zMGkyo9xr2GrznBs60ySSP8TtSpI74Oha8fcN1I22ZIBHsyFr+iOliSy+Sj
-	 R/PytfY5kVib0wiuUGJfYqvoAhIORM5JWmLfT7s8Zghmk0ShX4Ag1RX9Ya/iR+LkZK
-	 4dj7mymyLlKzxgBxDQUzO+AOFnRaxvxSjVBu40PQqElWT9xbdU4AtyLKtBiKmwKnx1
-	 7n6y/GJSRnuwg==
+	b=oKiWHIcL/aNokAtq0xsNHmsLZLNI5C97R/90M0ydO2G77urbAYGhlVI1g8zqe2h3D
+	 xFxMF7yb7tBohl7FT6MqRV7gqPkVnx3iK9o9wn08p5Q2nlM+f+WXNXuZKYsudJOTWN
+	 Zt1l/rhzQ1cIqF8NLRKdYQPHSfBrMwxwelkAgnJI0NJZcFKpHjzhWzhQcDYCW2rCzd
+	 dQGgcNxR+cDOR6zFnOCTYbHO97J+nfc8+6Q+tU2Y6HuAqllbyddg0KKfoDRITbjA4s
+	 lJ6PB/kYEUQbGe+k7592L10NayYVL9HRzDQ9usBOLRUNwAW5DHIslpFCHAzKI8B2jb
+	 Z9zewxs9Coptw==
 Received: by bkemail.birger-koblitz.de (Postfix, from userid 109)
-	id 6F0CC48BA6; Fri,  6 Nov 2026 07:21:43 +0000 (UTC)
+	id 5814248B98; Fri,  6 Nov 2026 07:21:43 +0000 (UTC)
 X-Spam-Level: 
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=birger-koblitz.de;
 	s=default; t=1793949689;
-	bh=0kKsGJW5I991lB/XYv7HVOnFpAaEd/5zFhjNi8hK5ss=;
+	bh=wbyh46mLbRX2HAkQs8o5MxoEDkveQAGJhXB98EFdgcY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=TuHBy/yiD6zllyBdnZkk50J6MDabrwyLq4m9MBvksDpOs4fP6iV30me0qiBfTbpD+
-	 jrvRTt2NxOAD5pwsGITgdmO1Nj85IYEWFa6+bAulD+JhEu9Y+wKj/FozysQfgg5GRl
-	 Zqkymm04qNJNOXCFVzxxFP7MForuhSTEs9D0sdlqlry9yvu8SDl1mtQ4nBVLRCnnAQ
-	 l+mGtBIH1cZqbHY1WjOmVuvgj/+n3tyVvqvYNBPrGVWlODxYztJKUzDxkiqnWfs48f
-	 F9HXzKDfXf0dkQkO+klKg2ZUx+UnkSlyUnKmTsAa10XgxgSvmg/7C7C/pRgAN8RuXg
-	 VLkGCKJASwutA==
+	b=XeIKluzkztNDIagzrLM9WcfRLNY3odtXDfVxr7pkSCsBrKTSQ9vJ19seKg3Jv6irE
+	 sSMvSIq/77zQ/3BCOklWdLx1UCf/HQhOPdwrV/EdzQ5u+CocsIzxvqWlgexKPdvgmy
+	 FyUTw+0T56+o+2bOP+eL+p9vW2GA1KdwJ37aHvzJRTUtdo5IGMZYTyoa9Gn0LSBegw
+	 51oCG0kHf2rEzUOnEAVpU4AvBWnbpsnqRjSy0muuk59gvlgTgRaqJhqaY1py/haqCM
+	 xeUbEifI2DInWhLWmGVDUOQf5kC/j7BRKeFe4QT8apTIloxow5nBCFzFrMo11uszIa
+	 v7/CvHZVZBsJw==
 Received: from AMDDesktop.lan (unknown [IPv6:2a00:6020:47a3:e800:271c:c6c5:9fde:77cb])
-	by bkemail.birger-koblitz.de (Postfix) with ESMTPSA id 87AE048BB5;
-	Fri,  6 Nov 2026 07:21:28 +0000 (UTC)
+	by bkemail.birger-koblitz.de (Postfix) with ESMTPSA id 0F98C48B89;
+	Fri,  6 Nov 2026 07:21:29 +0000 (UTC)
 From: Birger Koblitz <mail@birger-koblitz.de>
-Date: Fri, 06 Nov 2026 08:21:26 +0100
-Subject: [PATCH net-next v20 11/13] ax88179_178a: Update driver name and
- information
+Date: Fri, 06 Nov 2026 08:21:27 +0100
+Subject: [PATCH net-next v20 12/13] ax88179_178a: Add support for
+ AX88179A/772D/279 EEPROM access
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -77,7 +77,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261106-ax88179a-v20-11-37b5a1189983@birger-koblitz.de>
+Message-Id: <20261106-ax88179a-v20-12-37b5a1189983@birger-koblitz.de>
 References: <20261106-ax88179a-v20-0-37b5a1189983@birger-koblitz.de>
 In-Reply-To: <20261106-ax88179a-v20-0-37b5a1189983@birger-koblitz.de>
 To: Andrew Lunn <andrew+netdev@lunn.ch>, 
@@ -90,125 +90,118 @@ Cc: linux-usb@vger.kernel.org, netdev@vger.kernel.org,
  linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
  Jianhui Xu <neuromoments@gmail.com>, 
  Emir Beganovic <beganovic.emir@gmail.com>, 
- Birger Koblitz <mail@birger-koblitz.de>, Nicolai Buchwitz <nb@tipi-net.de>
+ Birger Koblitz <mail@birger-koblitz.de>
 X-Mailer: b4 0.14.2
 
-Add additionally supported devices to Kconfig description, add
-further requirements such as PHYLINK.
+The AX88179A/772D devices have 32 efuses with 20 bytes each,
+which can be randomly programmed. The AX88279 has 16K FLASH.
 
-Update driver name in usb_driver and update MODULE_DESCRIPTION
-to include the additionally supported chips.
-
-Change Kconfig symbol name from USB_NET_AX88179_178A to USB_NET_AX88179
-and update loongson32_defconfig/loongson64_defconfig to use that
-symbol.
+Provide ethtool read capability for these devices. However,
+no write access is provided.
 
 Signed-off-by: Birger Koblitz <mail@birger-koblitz.de>
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Nicolai Buchwitz <nb@tipi-net.de>
 ---
- arch/loongarch/configs/loongson32_defconfig |  2 +-
- arch/loongarch/configs/loongson64_defconfig |  2 +-
- drivers/net/usb/Kconfig                     | 10 +++++++---
- drivers/net/usb/Makefile                    |  2 +-
- drivers/net/usb/ax88179_178a.c              |  8 ++++----
- 5 files changed, 14 insertions(+), 10 deletions(-)
+ drivers/net/usb/ax88179_lib.c | 56 +++++++++++++++++++++++++++++++++----------
+ 1 file changed, 43 insertions(+), 13 deletions(-)
 
-diff --git a/arch/loongarch/configs/loongson32_defconfig b/arch/loongarch/configs/loongson32_defconfig
-index dbef879935f322e6167b4ed878ad4cb20048c6db..a039b8e8d242073c16ea281cf8734068a1a9b29f 100644
---- a/arch/loongarch/configs/loongson32_defconfig
-+++ b/arch/loongarch/configs/loongson32_defconfig
-@@ -641,7 +641,7 @@ CONFIG_USB_RTL8150=m
- CONFIG_USB_RTL8152=m
- CONFIG_USB_USBNET=m
- # CONFIG_USB_NET_AX8817X is not set
--# CONFIG_USB_NET_AX88179_178A is not set
-+# CONFIG_USB_NET_AX88179 is not set
- CONFIG_USB_NET_CDC_EEM=m
- CONFIG_USB_NET_HUAWEI_CDC_NCM=m
- CONFIG_USB_NET_CDC_MBIM=m
-diff --git a/arch/loongarch/configs/loongson64_defconfig b/arch/loongarch/configs/loongson64_defconfig
-index 4f8bb77b8a1e6e30bcbd6e96d7e38b5054630ea0..b30415c03fa185cae77e81ded929c743ef22ee40 100644
---- a/arch/loongarch/configs/loongson64_defconfig
-+++ b/arch/loongarch/configs/loongson64_defconfig
-@@ -657,7 +657,7 @@ CONFIG_USB_RTL8150=m
- CONFIG_USB_RTL8152=m
- CONFIG_USB_USBNET=m
- # CONFIG_USB_NET_AX8817X is not set
--# CONFIG_USB_NET_AX88179_178A is not set
-+# CONFIG_USB_NET_AX88179 is not set
- CONFIG_USB_NET_CDC_EEM=m
- CONFIG_USB_NET_HUAWEI_CDC_NCM=m
- CONFIG_USB_NET_CDC_MBIM=m
-diff --git a/drivers/net/usb/Kconfig b/drivers/net/usb/Kconfig
-index 115990b0d9537aea2776544c9768b034f32aa7a4..27862e380bdb4a54d184fa8618e4c9b348354e84 100644
---- a/drivers/net/usb/Kconfig
-+++ b/drivers/net/usb/Kconfig
-@@ -195,11 +195,12 @@ config USB_NET_AX8817X
- 	  This driver creates an interface named "ethX", where X depends on
- 	  what other networking devices you have in use.
+diff --git a/drivers/net/usb/ax88179_lib.c b/drivers/net/usb/ax88179_lib.c
+index b54e98e781f334c5aeff0b3d2861a5565934454c..d5bbaa0c4e4c6f978722a6ec4461bb1d45679e15 100644
+--- a/drivers/net/usb/ax88179_lib.c
++++ b/drivers/net/usb/ax88179_lib.c
+@@ -210,36 +210,61 @@ int ax88179_set_wol(struct net_device *net, struct ethtool_wolinfo *wolinfo)
+ 	return 0;
+ }
  
--config USB_NET_AX88179_178A
--	tristate "ASIX AX88179/178A USB 3.0/2.0 to Gigabit Ethernet"
-+config USB_NET_AX88179
-+	tristate "ASIX AX88179/179A/178A USB 2.0/3.0 to 100M/1G/2.5GbE Adapters"
- 	depends on USB_USBNET
--	select CRC32
- 	select PHYLINK
-+	select AX88796B_PHY
-+	select CRC32
- 	default y
- 	help
- 	  This option adds support for ASIX AX88179 based USB 3.0/2.0
-@@ -207,6 +208,9 @@ config USB_NET_AX88179_178A
++static void
++ax88179_eeprom_access_params(struct ax88179_data *ax179_data, int i, u16 *value, u16 *idx)
++{
++	/* AX88179 has a word-addressable EEPROM
++	 * AX88179A uses EFUSES with 20 bytes length
++	 * AX88279 has an EEPROM addressable in 256 byte blocks
++	 */
++	if (ax179_data->chip_version < AX_VERSION_AX88179A) {
++		*value = i;
++		*idx = 1;
++	} else if (ax179_data->chip_version == AX_VERSION_AX88279) {
++		*value = (i * ax179_data->eeprom_block) >> 16;
++		*idx = (i * ax179_data->eeprom_block) & 0xffff;
++	} else {
++		*value = i << 4;
++		*idx = 0;
++	}
++}
++
+ int ax88179_get_eeprom(struct net_device *net, struct ethtool_eeprom *eeprom, u8 *data)
+ {
+ 	struct usbnet *dev = netdev_priv(net);
+-	u16 *eeprom_buff;
+-	int first_word, last_word;
+-	int i, ret;
++	struct ax88179_data *ax179_data;
++	int first, last, i, ret;
++	u8 *eeprom_buff;
++
++	ax179_data = dev->driver_priv;
  
- 	  This driver should work with at least the following devices:
- 	    * ASIX AX88179
-+	    * ASIX AX88179A/B
-+	    * ASIX AX88279
-+	    * ASIX AX88772D/E
- 	    * ASIX AX88178A
- 	    * Sitcomm LN-032
+ 	if (eeprom->len == 0)
+ 		return -EINVAL;
  
-diff --git a/drivers/net/usb/Makefile b/drivers/net/usb/Makefile
-index 2ecead0181eaf8d66fb6f5dbd6f2905b22b6eb57..4026f19ecb826a6465de38f1d9bb0e4c0af80421 100644
---- a/drivers/net/usb/Makefile
-+++ b/drivers/net/usb/Makefile
-@@ -12,7 +12,7 @@ obj-$(CONFIG_USB_HSO)		+= hso.o
- obj-$(CONFIG_USB_LAN78XX)	+= lan78xx.o
- obj-$(CONFIG_USB_NET_AX8817X)	+= asix.o
- asix-y := asix_devices.o asix_common.o ax88172a.o
--obj-$(CONFIG_USB_NET_AX88179_178A)      += ax88179.o
-+obj-$(CONFIG_USB_NET_AX88179)      += ax88179.o
- ax88179-y := ax88179_178a.o ax88179a_devices.o ax88179_lib.o
- obj-$(CONFIG_USB_NET_CDCETHER)	+= cdc_ether.o
- obj-$(CONFIG_USB_NET_CDC_EEM)	+= cdc_eem.o
-diff --git a/drivers/net/usb/ax88179_178a.c b/drivers/net/usb/ax88179_178a.c
-index b077b7153f0c07676aafd5dfd13a2c0d9a826719..88dce368eacfeee5df4062ff277041427f6ff475 100644
---- a/drivers/net/usb/ax88179_178a.c
-+++ b/drivers/net/usb/ax88179_178a.c
-@@ -1361,8 +1361,8 @@ static const struct usb_device_id products[] = {
- };
- MODULE_DEVICE_TABLE(usb, products);
+ 	eeprom->magic = AX88179_EEPROM_MAGIC;
  
--static struct usb_driver ax88179_178a_driver = {
--	.name =		"ax88179_178a",
-+static struct usb_driver ax88179_driver = {
-+	.name =		"ax88179",
- 	.id_table =	products,
- 	.probe =	usbnet_probe,
- 	.suspend =	ax88179_suspend_wrapper,
-@@ -1373,8 +1373,8 @@ static struct usb_driver ax88179_178a_driver = {
- 	.disable_hub_initiated_lpm = 1,
- };
+-	first_word = eeprom->offset >> 1;
+-	last_word = (eeprom->offset + eeprom->len - 1) >> 1;
+-	eeprom_buff = kmalloc_array(last_word - first_word + 1, sizeof(u16),
+-				    GFP_KERNEL);
++	first = eeprom->offset / ax179_data->eeprom_block;
++	last = (eeprom->offset + eeprom->len - 1) / ax179_data->eeprom_block;
++
++	eeprom_buff = kzalloc((last - first + 1) * ax179_data->eeprom_block, GFP_KERNEL);
+ 	if (!eeprom_buff)
+ 		return -ENOMEM;
  
--module_usb_driver(ax88179_178a_driver);
-+module_usb_driver(ax88179_driver);
+-	/* ax88179/178A returns 2 bytes from eeprom on read */
+-	for (i = first_word; i <= last_word; i++) {
+-		ret = __ax88179_read_cmd(dev, AX_ACCESS_EEPROM, i, 1, 2,
+-					 &eeprom_buff[i - first_word]);
+-		if (ret < 0) {
++	for (i = first; i <= last; i++) {
++		u16 value, idx;
++
++		ax88179_eeprom_access_params(ax179_data, i, &value, &idx);
++		ret = __ax88179_read_cmd(dev, ax179_data->eeprom_read_cmd,
++					 value, idx, ax179_data->eeprom_block,
++					 eeprom_buff + (i - first) * ax179_data->eeprom_block);
++
++		if (ret != ax179_data->eeprom_block) {
+ 			kfree(eeprom_buff);
+ 			return -EIO;
+ 		}
+ 	}
  
--MODULE_DESCRIPTION("ASIX AX88179/178A based USB 3.0/2.0 Gigabit Ethernet Devices");
-+MODULE_DESCRIPTION("ASIX AX88179/179A/178A/279 based USB 3.0/2.0 100M/1G/2.5GbE Controllers");
- MODULE_LICENSE("GPL");
- MODULE_ALIAS("ax88179_178a");
+-	memcpy(data, (u8 *)eeprom_buff + (eeprom->offset & 1), eeprom->len);
++	memcpy(data, eeprom_buff + eeprom->offset % ax179_data->eeprom_block, eeprom->len);
+ 	kfree(eeprom_buff);
+ 	return 0;
+ }
+@@ -247,12 +272,17 @@ int ax88179_get_eeprom(struct net_device *net, struct ethtool_eeprom *eeprom, u8
+ int ax88179_set_eeprom(struct net_device *net, struct ethtool_eeprom *eeprom, u8 *data)
+ {
+ 	struct usbnet *dev = netdev_priv(net);
++	struct ax88179_data *ax179_data;
+ 	u16 *eeprom_buff;
+ 	int first_word;
+ 	int last_word;
+ 	int ret;
+ 	int i;
+ 
++	ax179_data = dev->driver_priv;
++	if (ax179_data->chip_version >= AX_VERSION_AX88179A)
++		return -EOPNOTSUPP;
++
+ 	netdev_dbg(net, "write EEPROM len %d, offset %d, magic 0x%x\n",
+ 		   eeprom->len, eeprom->offset, eeprom->magic);
+ 
 
 -- 
 2.47.3
