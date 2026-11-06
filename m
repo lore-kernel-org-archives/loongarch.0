@@ -1,55 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793976344;
-	b=zXU0b6ty+yFLQwqXl1zrCoTxPgKWN94milWWqRCuE+OWEmXSZevmT1SajZnQGCWNKFrO
-	 AwGzlVE6HYVRNuGDcjj4M6KQs8JvnL+MEymzQA1rwe8YD77pChx1nIvp0LWkCIL4fYCZR
-	 GYHjaYIcEC7z+LvjmCnqf9h5F4LXUGySHf09IcNhpWPRzsoQ1oqt/4QfJEkzBOp+pBZeT
-	 oTKkRXgEgzorTLuCVRtoBLXgUAcjubV9rybxL7yCKvnrFVclQNYBUPKmHL99gS/bxeD59
-	 SCX7DvPiUZnbHfEL7Owv1eiERI7Wvu9okR/FFrqItiYe0HaSfE+LUPdkz6n6CIRxMiA==
+	t=1793977131;
+	b=TY4NSwLWXXcR/wDq+XCOurE3TkdTGKE5cYc4BGw+WSflHnjjz0HriNDj/w6QhgvIjV3p
+	 Aw8FjKMAj5EqIaT4gXlErba0LNny7+oGlJinQWvowfeuPZk5lUB4uC+1/5AKflqGFPvlc
+	 Ml1jrQviOLJFj2HCYtpDZOLOBiYp9bAaecBCrMwiTHkdobfZpJReTYJu6QiVq9cd27mId
+	 p5owC7B1FjewQxhFYc4BNLbkacPkrRFKowB2qyR8WTQUndYtfulKP5G4Bsw+NvNTgQAZd
+	 oVJe3GPYoh1cHgMkwKzThWr+M3XEa2EtsWIyckBdMWVA/2VGFRsZAMisN1CTuKfNVVA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793976344;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793977131;
 	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
 	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
 	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
 	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=D8oZmxNlOKsm/Rp//d88vLIxrb2bjb3rSm4pQQTcZQA=;
-	b=Q7qHvs7xMyO4rzjuVv2cUHUQSPJHLvXvjaaIIbSrcmd43I/AuulZJ/Z6d89muqEl1Im0
-	 +Itf5qAq3sLJeTci24ZN4R2HvYUIMQzKgSY5LGbTnyIazYVyNbJKAvtB+7K/U4jAdGDbh
-	 a8TgGTiQv9btyJhxRsoz3bMA9uvXB83DGmdv4Lw78bVZXbv9VRdw9ACDfaO9SM0sEJTTS
-	 UhVaawwkBPeXxEawBnDJpBUL1bDTcMk64UQccHVVVEhx2NpaKECszgQvJxsBaF1Ox1rQx
-	 59xNaWkwK/LRAP/kXl5Ku1Cj8/Rmr2t2EFnWa4D+T9lxSXH2lTLSOwa4c5LI/siGs0Q==
+	bh=XEalOsXN3Dev0rHb+5Zu8ZzbpTD7rK6WayG4C7CI4C4=;
+	b=oSrQDguUWRYktEVf6vU0gr9V5m4+Wc5a2VYMPZ81nwKObsvPHxFSVuvE1XDPYpv8V0W1
+	 4ve7Lmt9wJcA8ctPu7sDxxxVRV8XKmQGmWx0WsKCY+G36MOEPjHeGTJdF6j+zlHJT92pH
+	 bo0ySpxdALZAOUree2qRLwKakD5rlRSfXzIIV5S2n8RGHkpf/aJXbF4Ju7AJ3y6NwISEt
+	 TrAxRHPzG9ykQJ7UeIj0DmZ4UcBjA1QRbYdlekdZdqytNOFhzRBAd1m6biL3eZLrQcGTj
+	 tzg26ucVeFTJs6+dmXT9wBy30ntmK+3f+NxlDaxSGw+mvTYQ580WsNGBUSO7IKtGpJQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=O694iKXS;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UN1zk4Up;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DDE0606A329
-	for <loongarch@lists.linux.dev>; Fri,  6 Nov 2026 14:45:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7F9F606A329
+	for <loongarch@lists.linux.dev>; Fri,  6 Nov 2026 14:58:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=O694iKXS
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38A661F008A5
-	for <loongarch@lists.linux.dev>; Fri,  6 Nov 2026 14:45:44 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UN1zk4Up
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 525821F008A4
+	for <loongarch@lists.linux.dev>; Fri,  6 Nov 2026 14:58:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793976344;
-	bh=D8oZmxNlOKsm/Rp//d88vLIxrb2bjb3rSm4pQQTcZQA=;
+	s=k20260515; t=1793977130;
+	bh=XEalOsXN3Dev0rHb+5Zu8ZzbpTD7rK6WayG4C7CI4C4=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=O694iKXSJRyqv5P7AKWdMgVg7eGV5VUqteLay04fKbnkp91vwNvnX16VRNjlaStw3
-	 cYtFjfmZ90GRSfquVrpsyY1tr+Yv6Evr1KB2h1m6vRaKpmtfUSrJPyVWym4MxdqrWL
-	 8q2sl2nGqfQDnO8FMEngOW/krdseih27x3q7S/qgWv8Ts7HxFQ48RXc6IT0arBV2og
-	 FIzuqpHAOh/vi6Sf5lVzXlbRa/p1DdM6szpZxDSM5h8QToI/Im8Uo8TFS39fHaVYaF
-	 O1FnA3169YX/JYR2T8P8EwJa677u0bM37kegN4iE9hwZmiNx/qntsGTAAh/IxUkJKE
-	 /YjKJ14GC5Tuw==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-6b561b60b78so2691261a12.1
-        for <loongarch@lists.linux.dev>; Fri, 06 Nov 2026 06:45:44 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AL+hErFZG/WlJWrxGA9Y1KyyhTQgWe9e1D3yPtyP3YchZikFGsRyFLNvdSOyN7g5JQhVMU9O6gYLoz6Q6qI=@lists.linux.dev
-X-Gm-Message-State: APuU4Z+5gGKaokhVN6aJZtW3rgNlKASv9jiBWFbqF2mp4tpQQZFjS0B1
-	TIDMnv19MAKf6M0OPaSfZKYVBm/xuk3WDFsB4VHJbU883MNgNJILz9OVUf7hHc2XYDEwGgM98gC
-	IU/NYJ4DMYcOP4zvY+BJKoVVKnS0KTuk=
-X-Received: by 2002:a05:6402:3207:b0:6b6:e808:96f7 with SMTP id
- 4fb4d7f45d1cf-6b6e80899eemr1325905a12.3.1793976342883; Fri, 06 Nov 2026
- 06:45:42 -0800 (PST)
+	b=UN1zk4Uphe5CdaTHvBnATH/qAbECMB+wDcg5c7jQfY83OidxuC6MXhLoNJ/DwDtWS
+	 oLZXPFZx2caD+67L5pPpp5DATkI5kTxdVgAKIgKQ3GD7PLkfIGhQw5Tc8uDjl/JgIY
+	 W4i2iI2rCfl8zo7EHzy/sq2Ii5loj74rKah/JNf8nIF4vH0UtnVuf47eQ0bFFDgMDv
+	 WVGIxhCAXIkmlMTcJnMIyOLGqxmuy/qsIeQElbHwp2V8r/4lGwB9qzrR0U2QmYPsuA
+	 knyAEytypGzLhPULxb5+wPBpWMYrEmeCCwdkieEaKm/rR8j8bIDKXGASOQRJm4ThRo
+	 m5qgqdTDsuftQ==
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-6b57182c4c6so888216a12.2
+        for <loongarch@lists.linux.dev>; Fri, 06 Nov 2026 06:58:50 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AL+hErGwVXYsZEIoeo+nAZnJ2aSSSWJNFWB4Qf519VBvfZBr1mBCjePTY0jxdqKL0bpGp1Aqa+7vhVoZSLY=@lists.linux.dev
+X-Gm-Message-State: APuU4Z9azdHqQwgvSs37XNxeREZth1Q9kLaslsu8GRC63ohLnNcVJSdj
+	YsI9xzlhdS1e5hzsiwmajmG3u/RuWUdx1Ah2nLQvSFfMT9vohwyAtGBavLcl9FpWoZqWaws3wNH
+	OemGAHD4pa19vBdq+T8TiQP7eYlXF4Tk=
+X-Received: by 2002:aa7:d34e:0:b0:6b5:8cf6:18aa with SMTP id
+ 4fb4d7f45d1cf-6b597816c51mr1300269a12.45.1793977128939; Fri, 06 Nov 2026
+ 06:58:48 -0800 (PST)
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -59,53 +59,229 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <20261102072808.23080-3-yangtiezhu@loongson.cn>
- <c3b8e6ae47164ab1a643a1730f0600993de03c8a30e35122a9812ac73d807697@mail.kernel.org>
- <1276eb14-b851-aee7-36ad-d61e2ddd9ba4@loongson.cn>
-In-Reply-To: <1276eb14-b851-aee7-36ad-d61e2ddd9ba4@loongson.cn>
+References: <20260922121058.972734-2-maobibo@loongson.cn> <10bd45f8-2d37-42f0-b7d2-a4a84933c9b3@loongson.cn>
+ <CAAhV-H7Vq2ayLJNLRSo5RRiWOcmF2BXT_QOhEDg_jWOzYteqWw@mail.gmail.com>
+ <6f8a9203-6fb1-268a-8d37-37e69fbf2ee9@loongson.cn> <CAAhV-H5k8EJrAuqPH44y_+1gcXGCjCoozzK5ii9cLtiLDj5eog@mail.gmail.com>
+ <66b9d482-d577-748c-729d-0fba70701d3d@loongson.cn> <CAAhV-H6PL6RLM3KA4BLQEt804FnsDE4CtKeB0KaW7Gj8rm2PMw@mail.gmail.com>
+ <843a9418-2017-c2c6-45c5-38628e7e0bdb@loongson.cn>
+In-Reply-To: <843a9418-2017-c2c6-45c5-38628e7e0bdb@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 6 Nov 2026 22:45:32 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4GyC5=PvF5yvYnoBpUpU3VTuE8kdNUnApNqvN4vHZfhg@mail.gmail.com>
-X-Gm-Features: AclHuK_E27SlHuF9Up4hvhe95PGG3OxpyR3ULOjCKnQ_VAfUevX4tHqFUb9HhkY
-Message-ID: <CAAhV-H4GyC5=PvF5yvYnoBpUpU3VTuE8kdNUnApNqvN4vHZfhg@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] LoongArch: BPF: Use beqz and bnez instructions for trampoline
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: bot+bpf-ci@kernel.org, hengqi.chen@gmail.com, loongarch@lists.linux.dev, 
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, ast@kernel.org, 
-	andrii@kernel.org, daniel@iogearbox.net, martin.lau@kernel.org, 
-	eddyz87@gmail.com, yonghong.song@linux.dev, mason@kernel.org, 
-	ihor.solodrai@linux.dev
+Date: Fri, 6 Nov 2026 22:58:38 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4O07hKyPJ8rTMo=vD=t+qFM7UAJOPDGZDVJ0Ti-gOdEQ@mail.gmail.com>
+X-Gm-Features: AclHuK_AEHK_XvIpwEC7N5JxRM5P9YdQztWX0TP-7vlsuAjfx-iuC3kJWfywbDw
+Message-ID: <CAAhV-H4O07hKyPJ8rTMo=vD=t+qFM7UAJOPDGZDVJ0Ti-gOdEQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/4] ACPICA: actbl2.h: Add bit constants of the Flags
+ field in the IOVT IOMMU structure
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: rafael@kernel.org, linux-acpi@vger.kernel.org, 
+	acpica-devel@lists.linux.dev, lenb@kernel.org, linux-kernel@vger.kernel.org, 
+	lixianglai@loongson.cn, loongarch@lists.linux.dev, 
+	maciej.wieczor-retman@intel.com, pawel.chmielewski@intel.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 3, 2026 at 10:27=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
+On Thu, Nov 5, 2026 at 7:22=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrote=
+:
 >
-> On 2026/11/2 =E4=B8=8B=E5=8D=883:53, bot+bpf-ci@kernel.org wrote:
-> >> LoongArch: BPF: Use beqz and bnez instructions for trampoline
-> >
-> > TL;DR: Commit message only: the claimed branch-overflow risk looks impo=
-ssible,
-> > since trampolines fit in one page and the old code behaved identically,=
- so the
-> > Fixes: and Cc: stable tags may not be justified.
 >
-> ...
 >
-> > Could the changelog drop the overflow-risk wording, or describe the cha=
-nge
-> > as a cleanup, and could the Fixes: and Cc: stable tags be reconsidered =
-given
-> > that stable-kernel-rules requires a fix for a real bug?
+> On 2026/11/5 =E4=B8=8B=E5=8D=886:31, Huacai Chen wrote:
+> > On Thu, Nov 5, 2026 at 5:49=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> w=
+rote:
+> >>
+> >>
+> >>
+> >> On 2026/11/5 =E4=B8=8B=E5=8D=885:31, Huacai Chen wrote:
+> >>> On Thu, Nov 5, 2026 at 5:14=E2=80=AFPM Bibo Mao <maobibo@loongson.cn>=
+ wrote:
+> >>>>
+> >>>>
+> >>>>
+> >>>> On 2026/10/23 =E4=B8=8B=E5=8D=883:59, Huacai Chen wrote:
+> >>>>> Bibo,
+> >>>>>
+> >>>>> Now I have applied this series but with some modifications, please
+> >>>>> double check and test the code.
+> >>>>>
+> >>>>> https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-lo=
+ongson.git/log/?h=3Dloongarch-next
+> >>>> In my v4 submit, it is:
+> >>>> +               case ACPI_IOVT_DEVICE_ENTRY_START:
+> >>>> +                       is_start =3D true;
+> >>>> +                       start_devid =3D ep->device_id;
+> >>>> +                       break;
+> >>>> however in rc1, it is modified as:
+> >>>>                    case ACPI_IOVT_DEVICE_ENTRY_START:
+> >>>>                            is_start =3D true;
+> >>>>                            entry->start_devid =3D ep->device_id;
+> >>>>                            break;
+> >>>> Here entry is not allocated and NULL pointer, it is allocated in
+> >>>> ACPI_IOVT_DEVICE_ENTRY_END switch case.
+> >>>>
+> >>>> I really do not know what is aid to modify it and let others to test=
+.
+> >>> Sorry, it's my fault.
+> >>>
+> >>> In theory I should point out the modification (eliminating the local
+> >>> variable start_devid) and refresh a new version. But we have no time
+> >>> to do this because when the first patch is merged into the ACPI repo
+> >>> it is near the merge window.
+> >> Maybe our work style is different, I do not care much for the coding s=
+tyle.
+> >>>
+> >>> If you agree, I will submit such modifications to fix it.
+> >> fix is welcome.
+> >>>
+> >>> diff --git a/drivers/acpi/loongarch/iovt.c b/drivers/acpi/loongarch/i=
+ovt.c
+> >>> index 87cee4f0fc80..4cdac28a1fd0 100644
+> >>> --- a/drivers/acpi/loongarch/iovt.c
+> >>> +++ b/drivers/acpi/loongarch/iovt.c
+> >>> @@ -115,6 +115,10 @@ static int __init iovt_add_iommu(struct
+> >>> acpi_iovt_iommu *iommu)
+> >>>           for (i =3D 0; i < iommu->device_entry_num; i++) {
+> >>>                   switch (ep->type) {
+> >>>                   case ACPI_IOVT_DEVICE_ENTRY_START:
+> >>> +                       entry =3D kzalloc_obj(struct iovt_device_entr=
+y,
+> >>> GFP_ATOMIC);
+> >> There will be memory leak problem if there are START/START/END in the =
+table.
+> > That means a broken table? I think we don't need to consider broken
+> > tables, because there may be kinds of broken pattern rather than just
+> > a START/START/END.
+> yes, START/END/START, START/START/END, START/SINGLE/END. what is the
+> relationship between "don't need to consider" and kinds of broken pattern=
+?
 >
-> Will update the commit message and remove the 'Fixes' and 'Cc: stable'
-> tags. If no more comments, I will send out v2 next week.
-Fixes can be removed but I suggest keep Cc: stable, the overflow risk
-actually exists.
+> what is the policy from your side with such BIOS table? let memory leak
+> and continue?
+The driver can only work with a good table or no table, but not with a
+broken table.
+
+Take START1/START2/END as an example of broken table: in your original
+code, the END entry will be pairing with START2. But for a broken
+table who can ensure they are the correct pair? If the real correct
+pair is START1 and END, then (entry->start_devid, entry->end_devid)
+will be a wrong device range. Such mistakes are much worse than a
+memery leak.
+
+If you want to say "I don't care about correct pairing, memory leak is
+bad in any case.", OK, we can do it like this:
+
+diff --git a/drivers/acpi/loongarch/iovt.c b/drivers/acpi/loongarch/iovt.c
+index 87cee4f0fc80..ebd11e22c9be 100644
+--- a/drivers/acpi/loongarch/iovt.c
++++ b/drivers/acpi/loongarch/iovt.c
+@@ -115,6 +115,13 @@ static int __init iovt_add_iommu(struct
+acpi_iovt_iommu *iommu)
+        for (i =3D 0; i < iommu->device_entry_num; i++) {
+                switch (ep->type) {
+                case ACPI_IOVT_DEVICE_ENTRY_START:
++                       if (is_start)
++                               break;
++
++                       entry =3D kzalloc_obj(struct iovt_device_entry,
+GFP_ATOMIC);
++                       if (!entry)
++                               return -ENOMEM;
++
+                        is_start =3D true;
+                        entry->start_devid =3D ep->device_id;
+                        break;
+@@ -122,10 +129,6 @@ static int __init iovt_add_iommu(struct
+acpi_iovt_iommu *iommu)
+                        if (!is_start)
+                                break;
+
+-                       entry =3D kzalloc_obj(struct iovt_device_entry,
+GFP_ATOMIC);
+-                       if (!entry)
+-                               return -ENOMEM;
+-
+                        is_start =3D false;
+                        entry->end_devid =3D ep->device_id;
+                        list_add_tail(&entry->list, &np->ep_list);
 
 Huacai
 
 >
-> Thanks,
-> Tiezhu
+> >
+> > Huacai
+> >
+> >>
+> >> Regards
+> >> Bibo Mao
+> >>> +                       if (!entry)
+> >>> +                               return -ENOMEM;
+> >>> +
+> >>>                           is_start =3D true;
+> >>>                           entry->start_devid =3D ep->device_id;
+> >>>                           break;
+> >>> @@ -122,10 +126,6 @@ static int __init iovt_add_iommu(struct
+> >>> acpi_iovt_iommu *iommu)
+> >>>                           if (!is_start)
+> >>>                                   break;
+> >>>
+> >>> -                       entry =3D kzalloc_obj(struct iovt_device_entr=
+y,
+> >>> GFP_ATOMIC);
+> >>> -                       if (!entry)
+> >>> -                               return -ENOMEM;
+> >>> -
+> >>>                           is_start =3D false;
+> >>>                           entry->end_devid =3D ep->device_id;
+> >>>                           list_add_tail(&entry->list, &np->ep_list);
+> >>>
+> >>> Huacai
+> >>>
+> >>>>
+> >>>>>
+> >>>>> Huacai
+> >>>>>
+> >>>>> On Mon, Oct 12, 2026 at 3:16=E2=80=AFPM Bibo Mao <maobibo@loongson.=
+cn> wrote:
+> >>>>>>
+> >>>>>> This change is already merged in acpica tree.
+> >>>>>>
+> >>>>>> slightly ping.
+> >>>>>>
+> >>>>>> On Tue, Sep 22, 2026 at 08:10:55PM +0800, Bibo Mao wrote:
+> >>>>>>     > According to the IOVT specification, define macros for each =
+bit of the
+> >>>>>>     > Flags field in the IOVT IOMMU structure.
+> >>>>>>     >
+> >>>>>>     > Link: https://github.com/open-acpica/acpica/commit/352f750e4=
+cc0
+> >>>>>>     > Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> >>>>>>     > ---
+> >>>>>>     >  include/acpi/actbl2.h | 7 +++++++
+> >>>>>>     >  1 file changed, 7 insertions(+)
+> >>>>>>     >
+> >>>>>>     > diff --git a/include/acpi/actbl2.h b/include/acpi/actbl2.h
+> >>>>>>     > index baef525367b5..76e4a5bc79b4 100644
+> >>>>>>     > --- a/include/acpi/actbl2.h
+> >>>>>>     > +++ b/include/acpi/actbl2.h
+> >>>>>>     > @@ -919,6 +919,13 @@ struct acpi_iovt_iommu {
+> >>>>>>     >       u32 device_entry_offset;
+> >>>>>>     >  };
+> >>>>>>     >
+> >>>>>>     > +/* Masks for Flags field above */
+> >>>>>>     > +#define ACPI_IOVT_IOMMU_PCI_DEVICE           (1<<0)
+> >>>>>>     > +#define ACPI_IOVT_IOMMU_PXM_VALID            (1<<1)
+> >>>>>>     > +#define ACPI_IOVT_IOMMU_MAGAGE_BY_SEGMENT    (1<<2)
+> >>>>>>     > +#define ACPI_IOVT_IOMMU_HW_CAP_SUPPORT               (1<<3)
+> >>>>>>     > +#define ACPI_IOVT_IOMMU_MSI_INT_BYPASS               (1<<4)
+> >>>>>>     > +
+> >>>>>>     >  struct acpi_iovt_device_entry {
+> >>>>>>     >       u8 type;
+> >>>>>>     >       u8 length;
+> >>>>>>     > --
+> >>>>>>     > 2.39.3
+> >>>>>>     >
+> >>>>>>
+> >>>>
+> >>>>
+> >>
+>
 >
