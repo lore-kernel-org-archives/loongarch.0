@@ -1,84 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.45
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794025952;
-	b=HLCeIyB/cr72Yx7bp43gkCiUm/ZPgZBe9Jxfzu8AMF6h6/yHiewPzeyHasTp+iDMpINI
-	 2wA114BlZHV8dVJlgdYim9KMHj4X09JHniXHqlqV7hwix7yqzKjLZKzSbiP4vM6RIS90m
-	 cXU5Se8Eg9HpN1FZhqaIUKzl3DHdMkdJ61H19CsE7KgqEoxMBKYFLVRk8gtwdi/pZREBi
-	 syJGt9NfAgfTRElAKu4x+AVNBEwDmJ9WDSuUP7P+EH7mEUAjUjGFEdpHF+nqbrBoiEgUY
-	 MqbwPwZkJ0ZafJvgM5VLZb3DMS4DzV21pm7uUe6FZYkzM40rIy0OccereFnQuUj2vww==
+	t=1794025960;
+	b=Uo5QmwQy2bHTT0ns3DBqX8UAVMiQ4UlHQxwrAKDi33KZOFeOisVXJNtp9gdjQVJbM/4o
+	 yc9bujvkGyrJAbjDVK15X7YOqTKyBbAnkFAXlsknylqscRYPLDJgQ9VMSl6/5CXOKzY3P
+	 yyMxsWNIr2AlCV4AJDQBs9H9ZaJU15kBiII3ekOTUJndoPZcmXuH+UlBFFhOBX7e0vdlr
+	 n9mnOdKnxr/4vLrM/o44pUTlxn8Bv35F30UibQ4VESTAb9EJ31lKXW8jQwpGRXmdEviMA
+	 TrimQbKYAOxZa0auJhJ9Ep/TbvIKpzUM01JirmhpsqPSSm2h/ine16V5MEFGtuWBP1g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794025952;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794025960;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=BY1PW5EQCsSwahWNQsNirKWCM+cX6Fs3QmmMD9rosww=;
-	b=2HzJPvELC4bzw4dLxrRz8I7hEbehAS3wQbVHRbi8vbaHmjsBLBd5vBhWGwlbeXl8PMW2
-	 HTQFdvLYyIVefPUs4w0SA/ctKETgytvtPxHEu+FRHygBDkyxrhwGcmGEg6BRJ6JV1m1I0
-	 Ak1DnNcDyvjWIyEb1XCRybfgGnPEkC3ofk8UXEXCgsfpRXLXlmAq8yW5JnFCRUvlZxle2
-	 OYUA5WqvV4SwxE3FWGSL6Pnz79xjxazVYvHvvY6HljCx4cbVfGLRuzGRS1P+fMh11XJOt
-	 9GE8RJI8xQprQDTtFBdZOzmIrWv1I87QJ65sA4EqKFhPUNRPpQ3fReIH2pgkGjeS5/w==
+	bh=+Uk8SfBKjPwwPmEXtec6BXU6Fwk6+Fw2T2stfCAovGY=;
+	b=10j0ELjdF5TQdlk34gRnufB/AaXp+nh9PvzJrUN5x8jaT/jVGzQJJhubZ0zcOC9qxfTy
+	 uzruT5iya+XCKYPmcsDSjbtY2PjStAHNTriAmAmgRa1TejkWJjad5QCVToe9zTqeqVDe9
+	 RHTuxNnxn9nGBiLYWDNvLQw6U98Z8Rnu+d9JJiim45/dM3Bo7q/xxnw1Xs8rhHrWjsgcv
+	 8bIRo1/NC3XfORRqPIM8ALnIKPskOQg4zEXDWxY6tDd33eValWGEW4mRgS/2uju15zKXB
+	 CK5nRfPs74uJ5oX0UVoHlbzNrIvgmoUwIQS55bLHxJPOXPX/G9Mmm0n2rdBTcL8a5/w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=bytedance.com;
 	spf=pass smtp.mailfrom=bytedance.com;
-	dkim=pass header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=jNqFLFE+;
-	arc=none smtp.remote-ip=209.85.216.52
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	dkim=pass header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=ANGZVjZN;
+	arc=none smtp.remote-ip=209.85.216.45
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCABD606A32D
-	for <loongarch@lists.linux.dev>; Sat,  7 Nov 2026 04:32:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CCABD606A32D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0EA2606A32D
+	for <loongarch@lists.linux.dev>; Sat,  7 Nov 2026 04:32:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C0EA2606A32D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=jNqFLFE+
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-3b0e0e65adbso617544a91.3
-        for <loongarch@lists.linux.dev>; Fri, 06 Nov 2026 20:32:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=ANGZVjZN
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-3b0a519049aso883185a91.1
+        for <loongarch@lists.linux.dev>; Fri, 06 Nov 2026 20:32:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1794025951; x=1794630751; darn=lists.linux.dev;
+        d=bytedance.com; s=google; t=1794025959; x=1794630759; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=BY1PW5EQCsSwahWNQsNirKWCM+cX6Fs3QmmMD9rosww=;
-        b=jNqFLFE+aIah5+hY+A8gCMY9GfaScg795XHx1sAH58PI/eAlS+aPxxXA38HBTk4xVe
-         RRiPBd5lL6Nn+v87dhBSArm7Bj5FdzsXPpRMe1UavfyYYKoc/SzLdEYXgoDpp3nNkC+H
-         cIAVVv7OL20Ves5T0DTegySBI1vjZqk9txi4wRw0x+557hRrzkjg83TBBXbQq/A2ktWK
-         bGbStJlP4Dk1M1Mkx9qGRHm+Fm4Q+ufRhrqgHPvnjd43qybs7P1oM0FxNBeLeE0ckepO
-         PC5ZVz8/ZYEZ23X+YL2wwKq82qygGxiFItSn0Rg4Y5DS4LGdEn3K8CR8/Xtnq6R7W7Jl
-         atiA==
+        bh=+Uk8SfBKjPwwPmEXtec6BXU6Fwk6+Fw2T2stfCAovGY=;
+        b=ANGZVjZNhMsQUZ0McjcF2555B8EON+0lu7/VmQeg3RwWWLpJDLYvR9uSR/x6jkNaNw
+         lWfElMZQ+r7bpGx8KckfHsuadlkVKzbQion0qukPU3SjR1j/BFXO86vx3vRLkGKdtByu
+         3PD7dfrt/frzZ9+yuruBn6mCbVQ4RtibOgpKmeYZbYaDxFLwMVP/erArDe4xeLG+gHNh
+         pJsH14c1OT50cnq+oPM2PIRowB6yBUWjok5eWsfnCkwbIRCcxubH4p+pCWvizAsWmguh
+         XYI8x/WO8i5MRVZd1f5hkTON9/FuC/HicdYrS5H8vfj4TWOpDeNe9cppsbWtKjemfrsH
+         lrEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794025951; x=1794630751;
+        d=1e100.net; s=20260707; t=1794025959; x=1794630759;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=BY1PW5EQCsSwahWNQsNirKWCM+cX6Fs3QmmMD9rosww=;
-        b=Y7vHGatcDoYhBkM59ySC3854Y9meIdtZFBTP9CW/U950aQsHnGjahfBocmQQn46wkt
-         uv9Kw5jGWTymFGG+hw/QTtiMGBUcQjYcpUxGLEUx1MVStYpxoMC23jVnWoWMkkgTVFG1
-         k/QLnIdkhOuQbb9fQtMwK7in4Yupi9QEv+wUYosshnYTVzgE915lfkYT+9zcM55ePfAs
-         ok9tPOUXqLpUJQCrj4A4jkAfzNna6cXKLR8MqpjXLDRHlBCw6qI0T7Mp0znsDGQ5pWNU
-         5rXau/F/s/Y/2coasdOd0bIlJ6onW6WZ296nAHQ6s1BgEzWIeRLrO+vdo88CuS1ZY24n
-         3ewQ==
-X-Forwarded-Encrypted: i=1; AL+hErERZH/V9ZCkz1B+fbUkDMT13+ZuhVrtR0dQDPMjamyOUYBt85ARyL688zYxKPjxBuALDMs6E3v4scM=@lists.linux.dev
-X-Gm-Message-State: APuU4Z8bQxk7R73ukXumPU6Yr7QvovRbGZes83WKyJ5rhUZfLlSP8YqH
-	gqCisxKz+Ewf22eDD2IQSP1NkLrbMgPRicSaiFoOepY83XSFjEyhwJx5y+RC0K8Ik3k=
-X-Gm-Gg: AYBFou33eZWa49e+xiff7sygl2dUle+CEDEN9EJ7XFpxq1PgFtDV/xu74JqjO8Oqbn5
-	PD6mSGcmfko80q21LQcRz5LHKOFpkl5w831PxbJPC6kz73ZsmVeQUj21qcilrYtXN7o+i4Jc2SZ
-	Dl1i122grFopMaPym+BL0dnSxO92sQ2FWi2iF+jbZsLpyNU2+qLhQPPmtz5vUZVcOH983/HwOkq
-	M+7dYQsJcWKor/xk/zNRs9di47ISfqZhdc6jtVX3Kj+hne+9FcCrewjYiivfsc2uif9pwNnBdT6
-	V8uWPJj1X6EBej3bMJTMyOK/0Wx5uTvBSKISxjNYNpbgXPGqSFAQYFjj7P57s2B0rFyHo/vYBta
-	6ARWc1MLbtVmAdEfXL99d9/Lf+v8ddi4zAkx2A88vYUnD6yQ9+SEi0yOa8fbZt86l5pQZ7HHjW/
-	mTiV8zC0n6JKz0NsK63zdkaZDDDWXTpYAGizQ+Kllz3PjYbEiQ3SoWIrfa89Pf8FEHCiWovtQ19
-	npwoIV8UlAtXPHuAe3XbJSbRKeSWKyBiiKlllehL1LYigPxStDxnwU9JCYN9XxU0j+tPPYYY4ds
-	xsmzytZ7KEsBCSM8+cwMDZRgQXLTHfCM1nQYMNwDHE05NgQx9KOuRaRr1fXKWL7pCs/lCdYpd93
-	MIDHaoA==
-X-Received: by 2002:a17:90b:530c:b0:3a8:59d3:530f with SMTP id 98e67ed59e1d1-3b0db71d480mr4559125a91.57.1794025951057;
-        Fri, 06 Nov 2026 20:32:31 -0800 (PST)
+        bh=+Uk8SfBKjPwwPmEXtec6BXU6Fwk6+Fw2T2stfCAovGY=;
+        b=fjogFpZKDI8tKPMUVu5MlKX1qxmPap+7603fQZHGIVARW1EiM7o2YbYdZ/ckqfmekp
+         VCVtTwrgeFyoYbdaY/3dlX9+Eq7fcMeprgzBe8ZxF1mvBghvUHpRBNZuZksqZ2F+Qc1X
+         0qAMG2q3UVfuu1OesA+EbcqMtuogMHUocaLIw9/AF+ABDtarLjnVckRuC+6AKhAYBsDd
+         yVkZ8RFG/z8Xiw1Rw3D1wkW/aWSI8gtCHBsWs5URBF6f/AXoYn2qaXUMu6MRoOR2rrFL
+         b7udMxiqkxn/crcBwuXEDYaoB2CbYYqtfscMQ89PTXWDxV7A4gXhh3sz4oZ0hY5cesDa
+         ZCDA==
+X-Forwarded-Encrypted: i=1; AL+hErEnRaf5XcofAtqNkQzfakCO1k/14z2jZ7O/Fz719ayFqVOhiLYuNAbeqpfRtQlgpQAOfphCUWATZOc=@lists.linux.dev
+X-Gm-Message-State: APuU4Z+VWd+qH0jhXEcC1WPFREN57/ycsr9IncpSotlZbrU8KIIw3H7u
+	wAWYP7D5Croa20vGa8lnnbj3xUJKGFE/q5M/i6+DJmpKsiLatqq2dMhZayksGjEJwHQ=
+X-Gm-Gg: AYBFou0HuL7cMz7bshN/9wajDWwYr0R7CVXimcsj7VOqoaPYQZBW2tNtvEtUaeikoK/
+	FAsoXgq+I/i4W1PRyG1Bi0g5Aa+xyEsCSw7dt94yFLByOK4Z6Bych+y3ljY32IzYoYAt56N0Mqy
+	uz9Iq5WXbajXZblmfw9es9nNC+Fsv2sVVdlnDZvxX0Mb6DYZIlWMadSt4elQFiD/E2PyG/DPPZ9
+	etmVSLSegGPMbL3PNOVsRX90M92696wz+62USvt0sBp/Nvw5feggky7QqAgX98LDzKx9S4Yw/fX
+	09UKqemOufmySMxzSv7xzFHEmdetrEa33sGWTRn1aqHcqEZR99HOEiq3BYCy6DP/DwLfdp6VSYv
+	6CVq3T0YDfdgyucGp0ofTv8fXzN7HZ4dsJvopjA7o8EBMpeyB6BN5to/Akj6YG0vnJdM5c+3TZ8
+	lQElMzl1P9w647h95kaT1io22mU8bQQ40n1WwUwOUw2N6SV+UJy0kBPY3HVfueAzFpOu/2HH0wZ
+	EjzHa67XAkf6ia19iTBpI5ZQSmGC36wgcbUyCwVcUO8yaPIGurFVsM1wDSeurcvQvGhUCUssHb9
+	kSFa5N79mM2Pq8CX0PEDzS54+O+bNBlXgVWZH57QdRlhuAicDFp3SOWN1gEa
+X-Received: by 2002:a17:90b:4a89:b0:3ac:9c37:9426 with SMTP id 98e67ed59e1d1-3b0db6cdd17mr4665173a91.31.1794025959015;
+        Fri, 06 Nov 2026 20:32:39 -0800 (PST)
 Received: from G6L4RL2QG9 ([2409:8a00:1832:6900:c8de:13da:804b:a0fa])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b10584b66bsm1578451a91.14.2026.11.06.20.32.23
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b10584b66bsm1578451a91.14.2026.11.06.20.32.31
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 06 Nov 2026 20:32:30 -0800 (PST)
+        Fri, 06 Nov 2026 20:32:38 -0800 (PST)
 From: Muchun Song <songmuchun@bytedance.com>
 To: David Hildenbrand <david@kernel.org>,
 	Madhavan Srinivasan <maddy@linux.ibm.com>,
@@ -104,9 +103,9 @@ Cc: Lance Yang <lance.yang@linux.dev>,
 	loongarch@lists.linux.dev,
 	linux-s390@vger.kernel.org,
 	Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH v3 4/5] mm/sparse-vmemmap: drop vmemmap_can_optimize()
-Date: Sat,  7 Nov 2026 12:31:21 +0800
-Message-ID: <20261107043122.25650-5-songmuchun@bytedance.com>
+Subject: [PATCH v3 5/5] mm/sparse-vmemmap: drop @pgmap from vmemmap population APIs
+Date: Sat,  7 Nov 2026 12:31:22 +0800
+Message-ID: <20261107043122.25650-6-songmuchun@bytedance.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20261107043122.25650-1-songmuchun@bytedance.com>
 References: <20261107043122.25650-1-songmuchun@bytedance.com>
@@ -121,153 +120,402 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-section_vmemmap_optimizable() can already decide whether a section uses
-vmemmap optimization based on the section compound order. The DAX-specific
-vmemmap_can_optimize() helper duplicates that policy, so remove it to
-simplify the code.
+The vmemmap population and memory hotplug paths no longer need @pgmap
+to decide whether a mapping can be optimized. That state is now carried
+in mem_section, and the architecture-specific population code can make
+the remaining decisions internally.
+
+Drop the @pgmap parameter from the vmemmap population helpers and the
+related memory hotplug interfaces, and remove the remaining
+dev_pagemap-specific coupling from those call chains.
 
 Signed-off-by: Muchun Song <songmuchun@bytedance.com>
 ---
-v2:
-- Ignore non-optimizable nonzero section orders while retaining zero
-  as the reset value (reported by Sashiko)
-- Use section_vmemmap_optimization_disable() for the altmap fallback
-- Move vmemmap_optimizable_order() before its first caller
----
- include/linux/mm.h                   | 37 ----------------------------
- include/linux/vmemmap-optimization.h | 25 ++++++++++---------
- mm/sparse-vmemmap.c                  |  6 +++--
- 3 files changed, 18 insertions(+), 50 deletions(-)
+ arch/arm64/mm/mmu.c                        |  5 ++---
+ arch/loongarch/mm/init.c                   |  5 ++---
+ arch/powerpc/include/asm/book3s/64/radix.h |  1 -
+ arch/powerpc/mm/mem.c                      |  5 ++---
+ arch/riscv/mm/init.c                       |  5 ++---
+ arch/s390/mm/init.c                        |  5 ++---
+ arch/x86/mm/init_64.c                      |  5 ++---
+ include/linux/memory_hotplug.h             |  8 +++-----
+ include/linux/mm.h                         |  3 +--
+ mm/memory_hotplug.c                        | 16 +++++++--------
+ mm/memremap.c                              |  4 ++--
+ mm/sparse-vmemmap.c                        | 23 ++++++++++------------
+ mm/sparse.c                                |  6 ++----
+ 13 files changed, 37 insertions(+), 54 deletions(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 2d0b8a4c9974..43eb19474d26 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -38,7 +38,6 @@
- #include <linux/bitops.h>
- #include <linux/iommu-debug-pagealloc.h>
- #include <linux/kcsan-checks.h>
--#include <linux/vmemmap-optimization.h>
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index 19459a4a870a..a6b5774005b6 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -2038,13 +2038,12 @@ int arch_add_memory(int nid, u64 start, u64 size,
+ 	return ret;
+ }
  
- struct mempolicy;
- struct anon_vma;
-@@ -5385,42 +5384,6 @@ static inline void vmem_altmap_free(struct vmem_altmap *altmap,
+-void arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap,
+-			struct dev_pagemap *pgmap)
++void arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
+ {
+ 	unsigned long start_pfn = start >> PAGE_SHIFT;
+ 	unsigned long nr_pages = size >> PAGE_SHIFT;
+ 
+-	__remove_pages(start_pfn, nr_pages, altmap, pgmap);
++	__remove_pages(start_pfn, nr_pages, altmap);
+ 	__remove_pgd_mapping(swapper_pg_dir, __phys_to_virt(start), size);
+ }
+ 
+diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
+index ea769e479241..c91afce46136 100644
+--- a/arch/loongarch/mm/init.c
++++ b/arch/loongarch/mm/init.c
+@@ -120,13 +120,12 @@ int arch_add_memory(int nid, u64 start, u64 size, struct mhp_params *params)
+ 	return ret;
+ }
+ 
+-void arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap,
+-			struct dev_pagemap *pgmap)
++void arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
+ {
+ 	unsigned long start_pfn = start >> PAGE_SHIFT;
+ 	unsigned long nr_pages = size >> PAGE_SHIFT;
+ 
+-	__remove_pages(start_pfn, nr_pages, altmap, pgmap);
++	__remove_pages(start_pfn, nr_pages, altmap);
  }
  #endif
  
--#ifdef CONFIG_ARCH_WANT_OPTIMIZE_DAX_VMEMMAP
--static inline bool __vmemmap_can_optimize(struct vmem_altmap *altmap,
--					  struct dev_pagemap *pgmap)
--{
--	unsigned long nr_pages;
--	unsigned long nr_vmemmap_pages;
--
--	if (!IS_ENABLED(CONFIG_VMEMMAP_OPTIMIZATION))
--		return false;
--
--	if (!pgmap || !is_power_of_2(sizeof(struct page)))
--		return false;
--
--	nr_pages = pgmap_vmemmap_nr(pgmap);
--	nr_vmemmap_pages = ((nr_pages * sizeof(struct page)) >> PAGE_SHIFT);
--	/*
--	 * For vmemmap optimization with DAX we need minimum 2 vmemmap
--	 * pages. See layout diagram in Documentation/mm/vmemmap_dedup.rst
--	 */
--	return !altmap && (nr_vmemmap_pages > VMEMMAP_OPTIMIZATION_PAGES);
--}
--/*
-- * If we don't have an architecture override, use the generic rule
-- */
--#ifndef vmemmap_can_optimize
--#define vmemmap_can_optimize __vmemmap_can_optimize
--#endif
--
--#else
--static inline bool vmemmap_can_optimize(struct vmem_altmap *altmap,
--					   struct dev_pagemap *pgmap)
--{
--	return false;
--}
--#endif
--
- enum mf_flags {
- 	MF_COUNT_INCREASED = 1 << 0,
- 	MF_ACTION_REQUIRED = 1 << 1,
-diff --git a/include/linux/vmemmap-optimization.h b/include/linux/vmemmap-optimization.h
-index 22e5a322be0b..985a37dfcab7 100644
---- a/include/linux/vmemmap-optimization.h
-+++ b/include/linux/vmemmap-optimization.h
-@@ -31,6 +31,17 @@
- #define VMEMMAP_OPTIMIZATION_NR_STRUCT_PAGES	(VMEMMAP_OPTIMIZATION_SIZE / sizeof(struct page))
- #define VMEMMAP_OPTIMIZATION_MIN_ORDER		(ilog2(VMEMMAP_OPTIMIZATION_NR_STRUCT_PAGES) + 1)
+diff --git a/arch/powerpc/include/asm/book3s/64/radix.h b/arch/powerpc/include/asm/book3s/64/radix.h
+index df67209b0c5b..0c9195dd50c9 100644
+--- a/arch/powerpc/include/asm/book3s/64/radix.h
++++ b/arch/powerpc/include/asm/book3s/64/radix.h
+@@ -316,7 +316,6 @@ static inline int radix__has_transparent_pud_hugepage(void)
+ #endif
  
-+static inline bool vmemmap_optimizable_order(unsigned int order)
-+{
-+	if (!IS_ENABLED(CONFIG_VMEMMAP_OPTIMIZATION))
-+		return false;
-+
-+	if (!is_power_of_2(sizeof(struct page)))
-+		return false;
-+
-+	return order >= VMEMMAP_OPTIMIZATION_MIN_ORDER;
-+}
-+
- #ifdef CONFIG_VMEMMAP_OPTIMIZATION
- static inline unsigned int section_compound_order(const struct mem_section *section)
- {
-@@ -40,6 +51,9 @@ static inline unsigned int section_compound_order(const struct mem_section *sect
- static inline void section_set_compound_order(struct mem_section *section,
- 					      unsigned int order)
- {
-+	if (order && !vmemmap_optimizable_order(order))
-+		return;
-+
- 	VM_WARN_ON(section_compound_order(section) && order &&
- 		   section_compound_order(section) != order);
- 	section->compound_page_order = order;
-@@ -109,15 +123,4 @@ static inline bool vmemmap_optimizable_pfn(unsigned long pfn, unsigned int order
- 
- 	return (pfn & (nr_pages - 1)) >= VMEMMAP_OPTIMIZATION_NR_STRUCT_PAGES;
+ struct vmem_altmap;
+-struct dev_pagemap;
+ extern int __meminit radix__vmemmap_create_mapping(unsigned long start,
+ 					     unsigned long page_size,
+ 					     unsigned long phys);
+diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+index b617b69452cd..2432ff888c03 100644
+--- a/arch/powerpc/mm/mem.c
++++ b/arch/powerpc/mm/mem.c
+@@ -158,13 +158,12 @@ int __ref arch_add_memory(int nid, u64 start, u64 size,
+ 	return rc;
  }
--
--static inline bool vmemmap_optimizable_order(unsigned int order)
--{
--	if (!IS_ENABLED(CONFIG_VMEMMAP_OPTIMIZATION))
--		return false;
--
--	if (!is_power_of_2(sizeof(struct page)))
--		return false;
--
--	return order >= VMEMMAP_OPTIMIZATION_MIN_ORDER;
--}
- #endif /* _LINUX_VMEMMAP_OPTIMIZATION_H */
+ 
+-void __ref arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap,
+-			      struct dev_pagemap *pgmap)
++void __ref arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
+ {
+ 	unsigned long start_pfn = start >> PAGE_SHIFT;
+ 	unsigned long nr_pages = size >> PAGE_SHIFT;
+ 
+-	__remove_pages(start_pfn, nr_pages, altmap, pgmap);
++	__remove_pages(start_pfn, nr_pages, altmap);
+ 	arch_remove_linear_mapping(start, size);
+ }
+ #endif
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index e822fce0af4b..6f064875ce8d 100644
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -1749,10 +1749,9 @@ int __ref arch_add_memory(int nid, u64 start, u64 size, struct mhp_params *param
+ 	return ret;
+ }
+ 
+-void __ref arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap,
+-			      struct dev_pagemap *pgmap)
++void __ref arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
+ {
+-	__remove_pages(start >> PAGE_SHIFT, size >> PAGE_SHIFT, altmap, pgmap);
++	__remove_pages(start >> PAGE_SHIFT, size >> PAGE_SHIFT, altmap);
+ 	remove_linear_mapping(start, size);
+ 	flush_tlb_all();
+ }
+diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
+index be7e009e7b59..91c0edccbb12 100644
+--- a/arch/s390/mm/init.c
++++ b/arch/s390/mm/init.c
+@@ -293,13 +293,12 @@ int arch_add_memory(int nid, u64 start, u64 size,
+ 	return rc;
+ }
+ 
+-void arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap,
+-			struct dev_pagemap *pgmap)
++void arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
+ {
+ 	unsigned long start_pfn = start >> PAGE_SHIFT;
+ 	unsigned long nr_pages = size >> PAGE_SHIFT;
+ 
+-	__remove_pages(start_pfn, nr_pages, altmap, pgmap);
++	__remove_pages(start_pfn, nr_pages, altmap);
+ 	vmem_remove_mapping(start, size);
+ }
+ #endif /* CONFIG_MEMORY_HOTPLUG */
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index 8b6d86fb5a42..2a635b7f78ea 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -1273,13 +1273,12 @@ kernel_physical_mapping_remove(unsigned long start, unsigned long end)
+ 	remove_pagetable(start, end, true, NULL);
+ }
+ 
+-void __ref arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap,
+-			      struct dev_pagemap *pgmap)
++void __ref arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
+ {
+ 	unsigned long start_pfn = start >> PAGE_SHIFT;
+ 	unsigned long nr_pages = size >> PAGE_SHIFT;
+ 
+-	__remove_pages(start_pfn, nr_pages, altmap, pgmap);
++	__remove_pages(start_pfn, nr_pages, altmap);
+ 	kernel_physical_mapping_remove(start, start + size);
+ }
+ #endif /* CONFIG_MEMORY_HOTPLUG */
+diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+index b39605d30896..ec71debc0673 100644
+--- a/include/linux/memory_hotplug.h
++++ b/include/linux/memory_hotplug.h
+@@ -136,10 +136,9 @@ static inline bool movable_node_is_enabled(void)
+ 	return movable_node_enabled;
+ }
+ 
+-extern void arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap,
+-			       struct dev_pagemap *pgmap);
++extern void arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap);
+ extern void __remove_pages(unsigned long start_pfn, unsigned long nr_pages,
+-			   struct vmem_altmap *altmap, struct dev_pagemap *pgmap);
++			   struct vmem_altmap *altmap);
+ 
+ /* reasonably generic interface to expand the physical pages */
+ extern int __add_pages(int nid, unsigned long start_pfn, unsigned long nr_pages,
+@@ -320,8 +319,7 @@ extern int sparse_add_section(int nid, unsigned long pfn,
+ 		unsigned long nr_pages, struct vmem_altmap *altmap,
+ 		struct dev_pagemap *pgmap);
+ extern void sparse_remove_section(unsigned long pfn, unsigned long nr_pages,
+-				  struct vmem_altmap *altmap,
+-				  struct dev_pagemap *pgmap);
++				  struct vmem_altmap *altmap);
+ extern struct zone *zone_for_pfn_range(enum mmop online_type,
+ 		int nid, struct memory_group *group, unsigned long start_pfn,
+ 		unsigned long nr_pages);
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 43eb19474d26..77b5d450fe45 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -5335,8 +5335,7 @@ static inline void print_vma_addr(char *prefix, unsigned long rip)
+ #endif
+ 
+ struct page * __populate_section_memmap(unsigned long pfn,
+-		unsigned long nr_pages, int nid, struct vmem_altmap *altmap,
+-		struct dev_pagemap *pgmap);
++		unsigned long nr_pages, int nid, struct vmem_altmap *altmap);
+ void *vmemmap_alloc_block(unsigned long size, int node);
+ struct vmem_altmap;
+ void *vmemmap_alloc_block_buf(unsigned long size, int node,
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 1bfd1f4daeb2..f04a248d8ada 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -416,8 +416,7 @@ int __add_pages(int nid, unsigned long pfn, unsigned long nr_pages,
+ 		err = sparse_add_section(nid, pfn, cur_nr_pages, altmap,
+ 					 params->pgmap);
+ 		if (err) {
+-			__remove_pages(start_pfn, pfn - start_pfn, altmap,
+-				       params->pgmap);
++			__remove_pages(start_pfn, pfn - start_pfn, altmap);
+ 			break;
+ 		}
+ 		cond_resched();
+@@ -565,7 +564,6 @@ void remove_pfn_range_from_zone(struct zone *zone,
+  * @pfn: starting pageframe (must be aligned to start of a section)
+  * @nr_pages: number of pages to remove (must be multiple of section size)
+  * @altmap: alternative device page map or %NULL if default memmap is used
+- * @pgmap: device page map or %NULL if not ZONE_DEVICE
+  *
+  * Generic helper function to remove section mappings and sysfs entries
+  * for the section of the memory we are removing. Caller needs to make
+@@ -573,7 +571,7 @@ void remove_pfn_range_from_zone(struct zone *zone,
+  * calling offline_pages().
+  */
+ void __remove_pages(unsigned long pfn, unsigned long nr_pages,
+-		    struct vmem_altmap *altmap, struct dev_pagemap *pgmap)
++		    struct vmem_altmap *altmap)
+ {
+ 	const unsigned long end_pfn = pfn + nr_pages;
+ 	unsigned long cur_nr_pages;
+@@ -588,7 +586,7 @@ void __remove_pages(unsigned long pfn, unsigned long nr_pages,
+ 		/* Select all remaining pages up to the next section boundary */
+ 		cur_nr_pages = min(end_pfn - pfn,
+ 				   SECTION_ALIGN_UP(pfn + 1) - pfn);
+-		sparse_remove_section(pfn, cur_nr_pages, altmap, pgmap);
++		sparse_remove_section(pfn, cur_nr_pages, altmap);
+ 	}
+ }
+ 
+@@ -1421,7 +1419,7 @@ static void remove_memory_blocks_and_altmaps(u64 start, u64 size)
+ 		memory_block_put(mem);
+ 
+ 		remove_memory_block_devices(cur_start, memblock_size);
+-		arch_remove_memory(cur_start, memblock_size, altmap, NULL);
++		arch_remove_memory(cur_start, memblock_size, altmap);
+ 		altmap_free(altmap);
+ 	}
+ }
+@@ -1461,7 +1459,7 @@ static int create_altmaps_and_memory_blocks(int nid, struct memory_group *group,
+ 		ret = create_memory_block_devices(cur_start, memblock_size, nid,
+ 						  params.altmap, group);
+ 		if (ret) {
+-			arch_remove_memory(cur_start, memblock_size, params.altmap, NULL);
++			arch_remove_memory(cur_start, memblock_size, params.altmap);
+ 			altmap_free(params.altmap);
+ 			goto out;
+ 		}
+@@ -1548,7 +1546,7 @@ static int __add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags,
+ 		/* create memory block devices after memory was added */
+ 		ret = create_memory_block_devices(start, size, nid, NULL, group);
+ 		if (ret) {
+-			arch_remove_memory(start, size, params.altmap, NULL);
++			arch_remove_memory(start, size, params.altmap);
+ 			goto error;
+ 		}
+ 	}
+@@ -2309,7 +2307,7 @@ static int try_remove_memory(u64 start, u64 size)
+ 		 * No altmaps present, do the removal directly
+ 		 */
+ 		remove_memory_block_devices(start, size);
+-		arch_remove_memory(start, size, NULL, NULL);
++		arch_remove_memory(start, size, NULL);
+ 	} else {
+ 		/* all memblocks in the range have altmaps */
+ 		remove_memory_blocks_and_altmaps(start, size);
+diff --git a/mm/memremap.c b/mm/memremap.c
+index accba23aef28..683a77dd679d 100644
+--- a/mm/memremap.c
++++ b/mm/memremap.c
+@@ -97,10 +97,10 @@ static void pageunmap_range(struct dev_pagemap *pgmap, int range_id)
+ 				   PHYS_PFN(range_len(range)));
+ 	if (pgmap->type == MEMORY_DEVICE_PRIVATE) {
+ 		__remove_pages(PHYS_PFN(range->start),
+-			       PHYS_PFN(range_len(range)), NULL, pgmap);
++			       PHYS_PFN(range_len(range)), NULL);
+ 	} else {
+ 		arch_remove_memory(range->start, range_len(range),
+-				pgmap_altmap(pgmap), pgmap);
++				pgmap_altmap(pgmap));
+ 		kasan_remove_zero_shadow(__va(range->start), range_len(range));
+ 	}
+ 	mem_hotplug_done();
 diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
-index 57aa5c2d8034..f6a8b8e51b6c 100644
+index f6a8b8e51b6c..9b80dd7326f7 100644
 --- a/mm/sparse-vmemmap.c
 +++ b/mm/sparse-vmemmap.c
-@@ -490,6 +490,9 @@ struct page * __meminit __populate_section_memmap(unsigned long pfn,
- 		!IS_ALIGNED(nr_pages, PAGES_PER_SUBSECTION)))
- 		return NULL;
+@@ -479,8 +479,7 @@ int __meminit vmemmap_populate_hugepages(unsigned long start, unsigned long end,
+ }
  
-+	/* Altmap-backed vmemmap pages cannot be optimized. */
-+	if (altmap)
-+		section_vmemmap_optimization_disable(start, end);
- 	r = vmemmap_populate(start, end, nid, altmap);
- 	if (r < 0)
- 		return NULL;
-@@ -717,10 +720,9 @@ static struct page * __meminit section_activate(int nid, unsigned long pfn,
+ struct page * __meminit __populate_section_memmap(unsigned long pfn,
+-		unsigned long nr_pages, int nid, struct vmem_altmap *altmap,
+-		struct dev_pagemap *pgmap)
++		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
+ {
+ 	unsigned long start = (unsigned long) pfn_to_page(pfn);
+ 	unsigned long end = start + nr_pages * sizeof(struct page);
+@@ -572,11 +571,9 @@ void offline_mem_sections(unsigned long start_pfn, unsigned long end_pfn)
+ }
+ 
+ static struct page * __meminit populate_section_memmap(unsigned long pfn,
+-		unsigned long nr_pages, int nid, struct vmem_altmap *altmap,
+-		struct dev_pagemap *pgmap)
++		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
+ {
+-	struct page *page = __populate_section_memmap(pfn, nr_pages, nid, altmap,
+-						      pgmap);
++	struct page *page = __populate_section_memmap(pfn, nr_pages, nid, altmap);
+ 
+ 	memmap_pages_add(section_nr_vmemmap_pages(pfn, nr_pages));
+ 
+@@ -584,7 +581,7 @@ static struct page * __meminit populate_section_memmap(unsigned long pfn,
+ }
+ 
+ static void depopulate_section_memmap(unsigned long pfn, unsigned long nr_pages,
+-		struct vmem_altmap *altmap, struct dev_pagemap *pgmap)
++		struct vmem_altmap *altmap)
+ {
+ 	unsigned long start = (unsigned long) pfn_to_page(pfn);
+ 	unsigned long end = start + nr_pages * sizeof(struct page);
+@@ -665,7 +662,7 @@ static int fill_subsection_map(unsigned long pfn, unsigned long nr_pages)
+  * usage map, but still need to free the vmemmap range.
+  */
+ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+-		struct vmem_altmap *altmap, struct dev_pagemap *pgmap)
++		struct vmem_altmap *altmap)
+ {
  	struct mem_section *ms = __pfn_to_section(pfn);
- 	struct mem_section_usage *usage = NULL;
- 	struct page *memmap;
--	unsigned int order;
-+	unsigned int order = pgmap ? pgmap->vmemmap_shift : 0;
- 	int rc;
+ 	bool section_is_early = early_section(ms);
+@@ -703,7 +700,7 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+ 	 * section_activate() and pfn_valid() .
+ 	 */
+ 	if (!section_is_early)
+-		depopulate_section_memmap(pfn, nr_pages, altmap, pgmap);
++		depopulate_section_memmap(pfn, nr_pages, altmap);
+ 	else if (memmap)
+ 		free_map_bootmem(memmap);
  
--	order = vmemmap_can_optimize(altmap, pgmap) ? pgmap->vmemmap_shift : 0;
- 	if (nr_pages < PAGES_PER_SECTION && section_compound_order(ms))
- 		return ERR_PTR(-EOPNOTSUPP);
+@@ -752,9 +749,9 @@ static struct page * __meminit section_activate(int nid, unsigned long pfn,
+ 		return pfn_to_page(pfn);
  
+ 	section_set_compound_order_range(pfn, nr_pages, order);
+-	memmap = populate_section_memmap(pfn, nr_pages, nid, altmap, pgmap);
++	memmap = populate_section_memmap(pfn, nr_pages, nid, altmap);
+ 	if (!memmap) {
+-		section_deactivate(pfn, nr_pages, altmap, pgmap);
++		section_deactivate(pfn, nr_pages, altmap);
+ 		return ERR_PTR(-ENOMEM);
+ 	}
+ 
+@@ -818,13 +815,13 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
+ }
+ 
+ void sparse_remove_section(unsigned long pfn, unsigned long nr_pages,
+-		struct vmem_altmap *altmap, struct dev_pagemap *pgmap)
++		struct vmem_altmap *altmap)
+ {
+ 	struct mem_section *ms = __pfn_to_section(pfn);
+ 
+ 	if (WARN_ON_ONCE(!valid_section(ms)))
+ 		return;
+ 
+-	section_deactivate(pfn, nr_pages, altmap, pgmap);
++	section_deactivate(pfn, nr_pages, altmap);
+ }
+ #endif /* CONFIG_MEMORY_HOTPLUG */
+diff --git a/mm/sparse.c b/mm/sparse.c
+index 6acb628c8a73..0b9a6c23a227 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -204,8 +204,7 @@ void __init sparse_sections_init(void)
+ }
+ #ifndef CONFIG_SPARSEMEM_VMEMMAP
+ struct page __init *__populate_section_memmap(unsigned long pfn,
+-		unsigned long nr_pages, int nid, struct vmem_altmap *altmap,
+-		struct dev_pagemap *pgmap)
++		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
+ {
+ 	const unsigned long size = PAGE_ALIGN(sizeof(struct page) * PAGES_PER_SECTION);
+ 
+@@ -236,8 +235,7 @@ static void __init sparse_metadata_init_nid(int nid,
+ 		if (section_nr >= end_section_nr)
+ 			break;
+ 
+-		mem_map = __populate_section_memmap(pfn, PAGES_PER_SECTION, nid,
+-						    NULL, NULL);
++		mem_map = __populate_section_memmap(pfn, PAGES_PER_SECTION, nid, NULL);
+ 		if (!mem_map)
+ 			panic("Failed to allocate memmap for section %lu\n",
+ 			      section_nr);
 -- 
 2.54.0
 
