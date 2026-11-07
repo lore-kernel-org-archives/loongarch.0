@@ -1,56 +1,111 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.171
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794017788;
-	b=UN4pXneEcdyEIGjj/WCxRgpvHlhoxfkl2vG5l7KQ7hXSOunIVxCr7kHN/AmgSnwywMDo
-	 yrpBU9HwhF1bjxZiQzamyDc1TiBeQW33KrLMLI3jRhP2xQ2k0d23OdsIJWBIE5nFPR6T4
-	 jo17HYos2OgbRNCmajYUWgMH2yYYha4fVMiw4JdaXwqAzpIUT4W9PtqO1KX4GEwq/v1Bz
-	 TjqQvY+4N/9IsAVrEI3ouiIE0paVHykYNwG1O28SCv3UO1uXN6/Hs1kVwVrMbHQlcw833
-	 hdEc3U3Y9DFJgujlrYeMuYkLj+dG5qyNM9Wm7/RGuF3DV+om/c/X0JTCEu0Ax7JpVkA==
+	t=1794025919;
+	b=sHzLQGo/6AMoSaBydOJpC36gxIaj/3PriQl74sGPp692Swd9F4LVOsQSEDe6zU5s22QB
+	 EaxFbiuUV0xgnu4yf7VvcRsGIlBaf8+Ia+pPvJOjUiY6kb1nCqGbz0/vHoMtxSJIHabqJ
+	 nK22K4YbD+RLMblbnRJrvls8LYhPmbbeStOIqerKpq7EQ1P2YKtk5Yfe+wlrWZwZVYsEZ
+	 v/97SlW9vH1U1458qnvpxBQYvvnqNlGDVBXxChIBSshvoZUMGgil3KgqWKE3nQBzEtwAS
+	 rQfR9XXFEYXwya/OSeZgAG4KAzfiwCtodGbbMYxiVKeivm0lB5UGOnuj3p86CFKrz2w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794017788;
-	h=DMARC-Filter:Received:Received:Subject:To:Cc:References:From:
-	 Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:Content-Type:
-	 Content-Language:Content-Transfer-Encoding:X-CM-TRANSID:
-	 X-CM-SenderInfo:X-Coremail-Antispam;
-	bh=blAcGwT6RrU9VkPRjXupRrOhmEXz2ix0BTNPVck3W3E=;
-	b=5s4QiBQ6Qoup2/U5s2TXq/zs7o6QFuP/Pm1Y1gLdr8nNyTGvvji+ECZ5Ik8AAGQVtQ23
-	 CLX4Cb824qWvnrylkF+X/UmVUkiamEZZmt+7lxwNn8KMNR/7YUCvF5fYhnAcwjySteoR/
-	 a1fT7MKhCLxSuMjQGTACoUq9lLkmtppdnn9py9JeAfR7e8jJxru8/0WUqQ51wtSKu7hu7
-	 JcjP7z9GIf+cWH5t44XRXhlOpV1TIJpTE+cYKGHrdyRAT5Ltx5ByT2PPPemIB+LPw9OsK
-	 V87co2r0bBhNl2TmwmbKq3+Svc5ZMMQT6DdZxnAD5Bt1EU4SL8CUhUE27GJSBIAxeoA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794025919;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=tMJYIXC5HK/L92Fsjcvgr4iGfrMwtNzZGIshDMxf8u0=;
+	b=Iy+zrYg44MNprrTxIKD6OeSG8mHH8pbFvDz4RAiev4t15MTqHZ4iV8U4gzjL/+QvLT+K
+	 ARgLLKM13byuF2UV0/fHyC0VItcW74pZdz2lmQPMiG15hQvLIvaI7o8cwYxeS7+B7kgmo
+	 9UjTPesPpA5ytNkwcqdUQmkREuq8ARuuOzHbL86ILtD1lEp6klUJANQjtYaxl+BHVnHNS
+	 vgGfvz97pykFqEVz/NZKDVGWSpopUkak4/aQVLa46J+2/JwVdsfidAqtc25ZWhyuxlzNA
+	 AKsxXupqLrGyw++Lev+grH4K3zR1UR5SPCXsHG9OwI9jEyH9csnvdphixGOPvAWtIyQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=loongson.cn;
-	spf=pass smtp.mailfrom=loongson.cn;
-	arc=none smtp.remote-ip=114.242.206.163
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E81A606A32C
-	for <loongarch@lists.linux.dev>; Sat,  7 Nov 2026 02:16:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3E81A606A32C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [123.138.236.242])
-	by gateway (Coremail) with SMTP id _____8AxntL4ie5qN0wdAA--.18991S3;
-	Sat, 07 Nov 2026 10:16:24 +0800 (CST)
-Received: from [127.0.0.1] (unknown [123.138.236.242])
-	by front1 (Coremail) with SMTP id qMiowJAxX8_zie5qfOEyAA--.38436S2;
-	Sat, 07 Nov 2026 10:16:20 +0800 (CST)
-Subject: Re: [PATCH v1 2/2] LoongArch: BPF: Use beqz and bnez instructions for
- trampoline
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: bot+bpf-ci@kernel.org, hengqi.chen@gmail.com, loongarch@lists.linux.dev,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org, ast@kernel.org,
- andrii@kernel.org, daniel@iogearbox.net, martin.lau@kernel.org,
- eddyz87@gmail.com, yonghong.song@linux.dev, mason@kernel.org,
- ihor.solodrai@linux.dev
-References: <20261102072808.23080-3-yangtiezhu@loongson.cn>
- <c3b8e6ae47164ab1a643a1730f0600993de03c8a30e35122a9812ac73d807697@mail.kernel.org>
- <1276eb14-b851-aee7-36ad-d61e2ddd9ba4@loongson.cn>
- <CAAhV-H4GyC5=PvF5yvYnoBpUpU3VTuE8kdNUnApNqvN4vHZfhg@mail.gmail.com>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <20f7051a-4f56-7122-c241-93948c465dc9@loongson.cn>
-Date: Sat, 7 Nov 2026 10:16:19 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	dmarc=pass header.from=bytedance.com;
+	spf=pass smtp.mailfrom=bytedance.com;
+	dkim=pass header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=GWouNigy;
+	arc=none smtp.remote-ip=209.85.215.171
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA0C606A32D
+	for <loongarch@lists.linux.dev>; Sat,  7 Nov 2026 04:31:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3BA0C606A32D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=GWouNigy
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-cc147d86bebso163429a12.0
+        for <loongarch@lists.linux.dev>; Fri, 06 Nov 2026 20:31:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1794025917; x=1794630717; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=tMJYIXC5HK/L92Fsjcvgr4iGfrMwtNzZGIshDMxf8u0=;
+        b=GWouNigyQVpx7Y3yLMvXxf96LmTfJ9jrvOaK2NzUzjFqm1YKS/e6lu831H85UfzUvQ
+         7cyuKIWsaEgmNnSjeAOIcgruHEZ667rKB4ovkRyGTmrNMScXfm1gp94KNJKpSxUOf4SC
+         hvEZWmGu612xKdXZyNMrEb7JfcH7TV10mNlBMVhtM7JZhckhOb/MhP58r/1ELweJ8fOC
+         fpniMoB0oKMw5zMI0s2fTqZFJeVEko/hyzl7vG4yYg3tgsd8v/Igy+xiOgt2EwumQYtc
+         W0hlFD0h1hpnvXV/A/Op+fwFNQLv/VEa2vwzVLr88OjwAfryRtredpNPr5MwtlAMY2LW
+         HKjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794025917; x=1794630717;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=tMJYIXC5HK/L92Fsjcvgr4iGfrMwtNzZGIshDMxf8u0=;
+        b=O9A94koKNh3l9Mm1buZ9jjCQFvrm1AkU+2/d7YIIdrcGoSbT+5ONvpzZO7cmpbEQGP
+         gdKcTqHOBIpYFSfVfy6XHrTBPNM7o3FZI46G5eCMbfDP8pBrzAGhzqlHHSDuaRuwnZJD
+         hTZGVKMzOGXlK4/cUsdJ08lSe+VnKJbBea3YnsZDWUaHIVUuYMC2RmeOHb2Pekz1KIIq
+         134VyHrYCil5kznoS4Rf0E8iuPyY+M0Lw1gSxQx7CuMYcg1Zkg488HhIZiRyqTJUYENu
+         k8ZYO5w35DGM0GYYChHOcUWUxoY03Fc6HqhnEyyndyKl64KmvaTaY0iacoREM0yDK8h9
+         8X5g==
+X-Forwarded-Encrypted: i=1; AL+hErHaNxzWwN+ax/Iz+NZ46uCiRUxvkbiLecYq2zXUPEh0P5FEzSfXGBQkguhH2dK6tUQuJszNNCLbZqA=@lists.linux.dev
+X-Gm-Message-State: APuU4Z8sTfqY9yj/MsKF9fHrQhAIK1ROCsD3AfgXLfCU1wrreHnRPiXg
+	BbaDc7Ge8n/RyvdkokLgWlXNpttBhom21ZbP3KM8Kvg0QjQaBnkRJGPOBxcnJs2q9mM=
+X-Gm-Gg: AYBFou0TwPrv6e4dthaQNsQ+agoc3FO25SRPzmNkjCq5OXb/KbtCmhgoYjmKocwTDFE
+	PAMFxGurNF51+huwDGaT2qozJw4tFVDqWY8RpTcbUHdeHcXFwa7j70aHHLFIaUBwa3nWDhgZ3o8
+	RP7T7CNeb73KKMacS4uds2++A1utc/POF0YqCmOV+I/kQtNPyTw0UP7TYN3Kz5hpeTPFSA8Pu2W
+	LKUu7VwsmAGWg8Ks91jH5xtUyymDfFz/gZ33GXWT8G4t1t0qnMrAS2qfsBOK/cA2shGW+s7K6iQ
+	RcobrP82suXkx7I5IyUM6PjhWIMMOjM/1EXnFV88Z8V7G0pJH8eZD1xNnT+pYO7CFa881lT8zsK
+	6ulQMW8Hks0tA04untS/cBeU2mqETFOso9Faz5KGjMuMrRUAG/Yo5DIqJ1KSCAkIpHg54pCrRyz
+	tg/h91uyx3uTwP6kmq2QVkWZC1CpyLRuXYn0sqJQNUw2MJ4MgGsh4PqMXYxLttg174ILwNNzVTn
+	Me91HJy04zsgjwZiv+8tF6rAILL4gcE78hgJrjL/cliWXfv5GSibJ4G0JztMxnI6hmqsUOnxITc
+	6qWvlFwcc5NWE7dlYtDKug/Ea7HNNM9eza15aNPS4peiiHIOt8xgXvZ8taej
+X-Received: by 2002:a17:90b:3c0a:b0:3a0:eec6:b065 with SMTP id 98e67ed59e1d1-3b1060a6be4mr758538a91.13.1794025917280;
+        Fri, 06 Nov 2026 20:31:57 -0800 (PST)
+Received: from G6L4RL2QG9 ([2409:8a00:1832:6900:c8de:13da:804b:a0fa])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b10584b66bsm1578451a91.14.2026.11.06.20.31.47
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Fri, 06 Nov 2026 20:31:56 -0800 (PST)
+From: Muchun Song <songmuchun@bytedance.com>
+To: David Hildenbrand <david@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Lance Yang <lance.yang@linux.dev>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <chleroy@kernel.org>,
+	Ritesh Harjani <ritesh.list@gmail.com>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Qi Zheng <qi.zheng@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	linux-mm@kvack.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org,
+	x86@kernel.org,
+	loongarch@lists.linux.dev,
+	linux-s390@vger.kernel.org,
+	Muchun Song <songmuchun@bytedance.com>
+Subject: [PATCH v3 0/5] mm: Simplify device DAX vmemmap optimization plumbing
+Date: Sat,  7 Nov 2026 12:31:17 +0800
+Message-ID: <20261107043122.25650-1-songmuchun@bytedance.com>
+X-Mailer: git-send-email 2.54.0
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -60,58 +115,88 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H4GyC5=PvF5yvYnoBpUpU3VTuE8kdNUnApNqvN4vHZfhg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxX8_zie5qfOEyAA--.38436S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Kw4DJr1DJw1fArW3ZFWrJFc_yoW8JFWDpw
-	s5JF17KF95tr47Zrs2y3yFga4Fkw1IvFW7W3W5CFyrGw1rAr1IqrWxWryS9FyUXr1I9F1F
-	vFyvqFWkWa1UZFXCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Fb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
-	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
-	AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI
-	42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
-	IF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2
-	KfnxnUUI43ZEXa7IU8aZX5UUUUU==
 
-On 11/6/26 10:45 PM, Huacai Chen wrote:
-> On Tue, Nov 3, 2026 at 10:27 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->>
->> On 2026/11/2 下午3:53, bot+bpf-ci@kernel.org wrote:
->>>> LoongArch: BPF: Use beqz and bnez instructions for trampoline
->>>
->>> TL;DR: Commit message only: the claimed branch-overflow risk looks impossible,
->>> since trampolines fit in one page and the old code behaved identically, so the
->>> Fixes: and Cc: stable tags may not be justified.
->>
->> ...
->>
->>> Could the changelog drop the overflow-risk wording, or describe the change
->>> as a cleanup, and could the Fixes: and Cc: stable tags be reconsidered given
->>> that stable-kernel-rules requires a fix for a real bug?
->>
->> Will update the commit message and remove the 'Fixes' and 'Cc: stable'
->> tags. If no more comments, I will send out v2 next week.
-> Fixes can be removed but I suggest keep Cc: stable, the overflow risk
-> actually exists.
+Hi,
 
-Since the branch overflow is technically impossible under the current
-1-page limit of BPF trampoline, I plan to drop the Fixes and Cc: stable
-tags in v2 to align with standard upstream cleanup rules.
+This series is split out from the earlier, larger series "mm: Generalize
+HVO for HugeTLB and device DAX" [1]. While the parent series generalizes
+vmemmap optimization across HugeTLB and device DAX, this subset addresses
+a single, self-contained step: simplifying the device DAX vmemmap
+optimization plumbing.
 
-If you still prefer to backport this for architecture-level defense,
-please feel free to append the Cc: stable tag when applying the patch.
+After device DAX was converted to section-based vmemmap optimization,
+whether a mapping can be optimized is carried in mem_section, and the
+architecture-specific population path can handle any remaining fallback.
+The code still retains the DAX-specific vmemmap_can_optimize() helper, a
+PowerPC override, and @pgmap arguments threaded through lower-level
+vmemmap population and memory-removal interfaces. These duplicate the
+section-order policy and keep otherwise generic paths coupled to
+dev_pagemap.
 
-Thanks,
-Tiezhu
+This series removes that obsolete plumbing by consolidating the
+optimization policy around memory-section metadata and simplifying the
+generic and architecture-specific population paths. This also eliminates
+dependencies that are no longer needed once the optimization state is
+carried by the memory section.
+
+This leaves the section compound order as the single source of truth for
+vmemmap optimization and decouples the generic sparse-vmemmap and
+memory-hotplug paths from device DAX.
+
+This is another smaller step toward the broader HVO generalization.
+
+[1] https://lore.kernel.org/20260513130542.35604-1-songmuchun@bytedance.com/
+
+v3:
+- Rebase onto mm-new at 684242af7090.
+- Move section_vmemmap_optimization_disable() out of line to fix the
+  LoongArch header-order build failure (reported by Sashiko and the
+  kernel test robot).
+- Keep section_vmemmap_optimizable() in mm/sparse.h and leave the
+  vmemmap_optimizable_order() relocation in patch 4.
+- Tighten the disable helper checks to require one aligned memory
+  section.
+- Collect Reviewed-by from Lance Yang.
+
+v2: https://lore.kernel.org/20261105061217.13302-1-songmuchun@bytedance.com/
+- Rebase onto mm-new at dba8aba0a9a0
+- Add section_vmemmap_optimization_disable() and use it for PowerPC,
+  LoongArch, and altmap fallbacks.
+- Add a LoongArch patch that keeps device DAX vmemmap optimization
+  disabled while leaving HugeTLB HVO unchanged.
+- Ignore section compound orders that cannot be optimized.
+- Add direct vmemmap-optimization.h includes for architecture users.
+
+v1: https://lore.kernel.org/20261030140720.1256062-1-songmuchun@bytedance.com/
+
+Muchun Song (5):
+  powerpc/mm: make vmemmap_populate_compound_pages() static
+  powerpc/mm: drop powerpc vmemmap_can_optimize()
+  loongarch/mm: disable device DAX vmemmap optimization
+  mm/sparse-vmemmap: drop vmemmap_can_optimize()
+  mm/sparse-vmemmap: drop @pgmap from vmemmap population APIs
+
+ arch/arm64/mm/mmu.c                        |  5 +--
+ arch/loongarch/mm/init.c                   |  7 ++--
+ arch/powerpc/include/asm/book3s/64/radix.h | 12 ------
+ arch/powerpc/mm/book3s64/radix_pgtable.c   | 23 ++++-------
+ arch/powerpc/mm/init_64.c                  |  2 +
+ arch/powerpc/mm/mem.c                      |  5 +--
+ arch/riscv/mm/init.c                       |  5 +--
+ arch/s390/mm/init.c                        |  5 +--
+ arch/x86/mm/init_64.c                      |  5 +--
+ include/linux/memory_hotplug.h             |  8 ++--
+ include/linux/mm.h                         | 40 +------------------
+ include/linux/vmemmap-optimization.h       | 31 +++++++++------
+ mm/memory_hotplug.c                        | 16 ++++----
+ mm/memremap.c                              |  4 +-
+ mm/sparse-vmemmap.c                        | 46 +++++++++++++++-------
+ mm/sparse.c                                |  6 +--
+ 16 files changed, 89 insertions(+), 131 deletions(-)
+
+
+base-commit: 684242af7090928ada5e48fd40a0f3a539b3fd5b
+-- 
+2.54.0
 
