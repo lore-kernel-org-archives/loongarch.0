@@ -1,114 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794025960;
-	b=Uo5QmwQy2bHTT0ns3DBqX8UAVMiQ4UlHQxwrAKDi33KZOFeOisVXJNtp9gdjQVJbM/4o
-	 yc9bujvkGyrJAbjDVK15X7YOqTKyBbAnkFAXlsknylqscRYPLDJgQ9VMSl6/5CXOKzY3P
-	 yyMxsWNIr2AlCV4AJDQBs9H9ZaJU15kBiII3ekOTUJndoPZcmXuH+UlBFFhOBX7e0vdlr
-	 n9mnOdKnxr/4vLrM/o44pUTlxn8Bv35F30UibQ4VESTAb9EJ31lKXW8jQwpGRXmdEviMA
-	 TrimQbKYAOxZa0auJhJ9Ep/TbvIKpzUM01JirmhpsqPSSm2h/ine16V5MEFGtuWBP1g==
+	t=1794054354;
+	b=VgFwrlZf5KMFlSMI27N6vdTmaDTELr5eFPl0QoRNqqTHtJaKvSrmAkHdqbDdQqV2cAE7
+	 NLyE0druDxXQabNJorVgw7aOy4v5yS7pn/RqvogMDTD1uM89BiUAxLGlc5k1bZcPj37q6
+	 W6qkJrig9pQjTpGhOJ4Hg8uet9nd4W/ZDpE/FAukuRe/LT8qz6ol+5X8V1MMEswN1HRU6
+	 X798k25YTeTP+gyMgBwuNCoUON3e9pg2J0uHgBNpU934RpUrR4EBdc6wX1cBZhngRiX0S
+	 dsIgYUau4HNLBoEpIPwA8Xbwy9xipaiS6ieZeJkTHVW3YNJyHFuRKYM0I/tpsL0RETA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794025960;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=+Uk8SfBKjPwwPmEXtec6BXU6Fwk6+Fw2T2stfCAovGY=;
-	b=10j0ELjdF5TQdlk34gRnufB/AaXp+nh9PvzJrUN5x8jaT/jVGzQJJhubZ0zcOC9qxfTy
-	 uzruT5iya+XCKYPmcsDSjbtY2PjStAHNTriAmAmgRa1TejkWJjad5QCVToe9zTqeqVDe9
-	 RHTuxNnxn9nGBiLYWDNvLQw6U98Z8Rnu+d9JJiim45/dM3Bo7q/xxnw1Xs8rhHrWjsgcv
-	 8bIRo1/NC3XfORRqPIM8ALnIKPskOQg4zEXDWxY6tDd33eValWGEW4mRgS/2uju15zKXB
-	 CK5nRfPs74uJ5oX0UVoHlbzNrIvgmoUwIQS55bLHxJPOXPX/G9Mmm0n2rdBTcL8a5/w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794054354;
+	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
+	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
+	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=nMZivJOM2oM45m9Nztv0AW9BCNHvPrOKaR0tdk/NVrk=;
+	b=OJHuCROEQRIHD/2cM3cO50UhSrpyhGflGFIp5d652awoEpd1/tjPOc+KSyKMwEYYEKIv
+	 4tbU380nCc3hXloDqDbl2HiJsaTP1hguOGonWRauzrIdtWZiNCTenaWZ6zcQF8u3FZiSI
+	 A3W/QOR0LuvXB+8e/DOKhLw5X95DxSUw54+Y7jR+pUE6IiSuf8s4hWSbbV4A/tIslr2Dn
+	 pQ3paCEkD24J55kEOJb4xXY6p9tMiDGp57xnn7DvDS/95NoW185Yvw7KZJnD2S7JK68lD
+	 M1Gp4cBnEgVUE2Dven7d4eXDEGw9Ao9h+Yv2fA3eVlZRisg+QpWIfEVQsXl0tY7eM8g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=bytedance.com;
-	spf=pass smtp.mailfrom=bytedance.com;
-	dkim=pass header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=ANGZVjZN;
-	arc=none smtp.remote-ip=209.85.216.45
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WumXMJ5q;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0EA2606A32D
-	for <loongarch@lists.linux.dev>; Sat,  7 Nov 2026 04:32:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C0EA2606A32D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B303606A32E
+	for <loongarch@lists.linux.dev>; Sat,  7 Nov 2026 12:25:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=ANGZVjZN
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-3b0a519049aso883185a91.1
-        for <loongarch@lists.linux.dev>; Fri, 06 Nov 2026 20:32:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1794025959; x=1794630759; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=+Uk8SfBKjPwwPmEXtec6BXU6Fwk6+Fw2T2stfCAovGY=;
-        b=ANGZVjZNhMsQUZ0McjcF2555B8EON+0lu7/VmQeg3RwWWLpJDLYvR9uSR/x6jkNaNw
-         lWfElMZQ+r7bpGx8KckfHsuadlkVKzbQion0qukPU3SjR1j/BFXO86vx3vRLkGKdtByu
-         3PD7dfrt/frzZ9+yuruBn6mCbVQ4RtibOgpKmeYZbYaDxFLwMVP/erArDe4xeLG+gHNh
-         pJsH14c1OT50cnq+oPM2PIRowB6yBUWjok5eWsfnCkwbIRCcxubH4p+pCWvizAsWmguh
-         XYI8x/WO8i5MRVZd1f5hkTON9/FuC/HicdYrS5H8vfj4TWOpDeNe9cppsbWtKjemfrsH
-         lrEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794025959; x=1794630759;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=+Uk8SfBKjPwwPmEXtec6BXU6Fwk6+Fw2T2stfCAovGY=;
-        b=fjogFpZKDI8tKPMUVu5MlKX1qxmPap+7603fQZHGIVARW1EiM7o2YbYdZ/ckqfmekp
-         VCVtTwrgeFyoYbdaY/3dlX9+Eq7fcMeprgzBe8ZxF1mvBghvUHpRBNZuZksqZ2F+Qc1X
-         0qAMG2q3UVfuu1OesA+EbcqMtuogMHUocaLIw9/AF+ABDtarLjnVckRuC+6AKhAYBsDd
-         yVkZ8RFG/z8Xiw1Rw3D1wkW/aWSI8gtCHBsWs5URBF6f/AXoYn2qaXUMu6MRoOR2rrFL
-         b7udMxiqkxn/crcBwuXEDYaoB2CbYYqtfscMQ89PTXWDxV7A4gXhh3sz4oZ0hY5cesDa
-         ZCDA==
-X-Forwarded-Encrypted: i=1; AL+hErEnRaf5XcofAtqNkQzfakCO1k/14z2jZ7O/Fz719ayFqVOhiLYuNAbeqpfRtQlgpQAOfphCUWATZOc=@lists.linux.dev
-X-Gm-Message-State: APuU4Z+VWd+qH0jhXEcC1WPFREN57/ycsr9IncpSotlZbrU8KIIw3H7u
-	wAWYP7D5Croa20vGa8lnnbj3xUJKGFE/q5M/i6+DJmpKsiLatqq2dMhZayksGjEJwHQ=
-X-Gm-Gg: AYBFou0HuL7cMz7bshN/9wajDWwYr0R7CVXimcsj7VOqoaPYQZBW2tNtvEtUaeikoK/
-	FAsoXgq+I/i4W1PRyG1Bi0g5Aa+xyEsCSw7dt94yFLByOK4Z6Bych+y3ljY32IzYoYAt56N0Mqy
-	uz9Iq5WXbajXZblmfw9es9nNC+Fsv2sVVdlnDZvxX0Mb6DYZIlWMadSt4elQFiD/E2PyG/DPPZ9
-	etmVSLSegGPMbL3PNOVsRX90M92696wz+62USvt0sBp/Nvw5feggky7QqAgX98LDzKx9S4Yw/fX
-	09UKqemOufmySMxzSv7xzFHEmdetrEa33sGWTRn1aqHcqEZR99HOEiq3BYCy6DP/DwLfdp6VSYv
-	6CVq3T0YDfdgyucGp0ofTv8fXzN7HZ4dsJvopjA7o8EBMpeyB6BN5to/Akj6YG0vnJdM5c+3TZ8
-	lQElMzl1P9w647h95kaT1io22mU8bQQ40n1WwUwOUw2N6SV+UJy0kBPY3HVfueAzFpOu/2HH0wZ
-	EjzHa67XAkf6ia19iTBpI5ZQSmGC36wgcbUyCwVcUO8yaPIGurFVsM1wDSeurcvQvGhUCUssHb9
-	kSFa5N79mM2Pq8CX0PEDzS54+O+bNBlXgVWZH57QdRlhuAicDFp3SOWN1gEa
-X-Received: by 2002:a17:90b:4a89:b0:3ac:9c37:9426 with SMTP id 98e67ed59e1d1-3b0db6cdd17mr4665173a91.31.1794025959015;
-        Fri, 06 Nov 2026 20:32:39 -0800 (PST)
-Received: from G6L4RL2QG9 ([2409:8a00:1832:6900:c8de:13da:804b:a0fa])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b10584b66bsm1578451a91.14.2026.11.06.20.32.31
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 06 Nov 2026 20:32:38 -0800 (PST)
-From: Muchun Song <songmuchun@bytedance.com>
-To: David Hildenbrand <david@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Lance Yang <lance.yang@linux.dev>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <chleroy@kernel.org>,
-	Ritesh Harjani <ritesh.list@gmail.com>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Qi Zheng <qi.zheng@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	linux-mm@kvack.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org,
-	x86@kernel.org,
-	loongarch@lists.linux.dev,
-	linux-s390@vger.kernel.org,
-	Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH v3 5/5] mm/sparse-vmemmap: drop @pgmap from vmemmap population APIs
-Date: Sat,  7 Nov 2026 12:31:22 +0800
-Message-ID: <20261107043122.25650-6-songmuchun@bytedance.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20261107043122.25650-1-songmuchun@bytedance.com>
-References: <20261107043122.25650-1-songmuchun@bytedance.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WumXMJ5q
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB0391F008A1
+	for <loongarch@lists.linux.dev>; Sat,  7 Nov 2026 12:25:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794054354;
+	bh=nMZivJOM2oM45m9Nztv0AW9BCNHvPrOKaR0tdk/NVrk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=WumXMJ5qltMqk65sOnjxbsv6rOOuGJ9zPL2Io2hJ6robyxoxR7182pZGf7Wm4mxfl
+	 PPGVtexG0IIu9PXo7i4UjqqxYrp8FeekNF2rnPHKxH1t07e/+Ufb+UU0W6Yg22BiNm
+	 6Z4qABRqb7Lv9OInLANGS15JsluikM5tpvBDPy1ixkAhHO/fdy2zvWVHc4MG3VonDQ
+	 Usk/YOSnaO4TgK2cKFoONRt+AVFUVRCmP9YDJPtMHHCLEn7O7hTt456AoJBnTQpMfa
+	 SR9cBOmp+w4W/ha8mI41vM+/m3g0n0PqpMwHdwSSshtbPmdcJRpe90rntVsp+y9jm4
+	 EVGQ9GrCPCUfg==
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-6afbc363efeso1775026a12.3
+        for <loongarch@lists.linux.dev>; Sat, 07 Nov 2026 04:25:53 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AL+hErEroBVZR4IqN0xre1t75Nom8sVKaDrVQi2nnmT6DSIcGwCBfE/1pBP6bjc3mtoEoT8MdQTjezoNKFY=@lists.linux.dev
+X-Gm-Message-State: APuU4Z8C3xNlJWrkCQsZCAKhk9evi1lzQaNxwrsVgDow8DJUL+kqI7Pv
+	lUtu8gimQ8ArA/OLPJWTOd8HkjO8SnC+ZROPgJgMBg5Re7TaYQwo/TOAp2ZZrRf8PA4yl4AcMVQ
+	TJeNvASzmVSKNgpne9uwOGOegirm6MOQ=
+X-Received: by 2002:a05:6402:2804:b0:6b6:eefc:ae7a with SMTP id
+ 4fb4d7f45d1cf-6b6eefcb1e3mr2504856a12.4.1794054352574; Sat, 07 Nov 2026
+ 04:25:52 -0800 (PST)
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -118,404 +59,368 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260922121058.972734-2-maobibo@loongson.cn> <10bd45f8-2d37-42f0-b7d2-a4a84933c9b3@loongson.cn>
+ <CAAhV-H7Vq2ayLJNLRSo5RRiWOcmF2BXT_QOhEDg_jWOzYteqWw@mail.gmail.com>
+ <6f8a9203-6fb1-268a-8d37-37e69fbf2ee9@loongson.cn> <CAAhV-H5k8EJrAuqPH44y_+1gcXGCjCoozzK5ii9cLtiLDj5eog@mail.gmail.com>
+ <66b9d482-d577-748c-729d-0fba70701d3d@loongson.cn> <CAAhV-H6PL6RLM3KA4BLQEt804FnsDE4CtKeB0KaW7Gj8rm2PMw@mail.gmail.com>
+ <843a9418-2017-c2c6-45c5-38628e7e0bdb@loongson.cn> <CAAhV-H4O07hKyPJ8rTMo=vD=t+qFM7UAJOPDGZDVJ0Ti-gOdEQ@mail.gmail.com>
+ <e04352c2-f4ce-d415-72d4-21e03b828843@loongson.cn>
+In-Reply-To: <e04352c2-f4ce-d415-72d4-21e03b828843@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 7 Nov 2026 20:25:43 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7phy=T1MMNpSnZdjjiQXH41S7jnFcgfZd_4b5aqffB6g@mail.gmail.com>
+X-Gm-Features: AclHuK_Qu3xOXcYgx1roXJhondQU01JPqY5k6JB0ia-i-ADZ4-jS10PfrK6FB8w
+Message-ID: <CAAhV-H7phy=T1MMNpSnZdjjiQXH41S7jnFcgfZd_4b5aqffB6g@mail.gmail.com>
+Subject: Re: [PATCH v4 1/4] ACPICA: actbl2.h: Add bit constants of the Flags
+ field in the IOVT IOMMU structure
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: rafael@kernel.org, linux-acpi@vger.kernel.org, 
+	acpica-devel@lists.linux.dev, lenb@kernel.org, linux-kernel@vger.kernel.org, 
+	lixianglai@loongson.cn, loongarch@lists.linux.dev, 
+	maciej.wieczor-retman@intel.com, pawel.chmielewski@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The vmemmap population and memory hotplug paths no longer need @pgmap
-to decide whether a mapping can be optimized. That state is now carried
-in mem_section, and the architecture-specific population code can make
-the remaining decisions internally.
+On Sat, Nov 7, 2026 at 9:43=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrote=
+:
+>
+>
+>
+> On 2026/11/6 =E4=B8=8B=E5=8D=8810:58, Huacai Chen wrote:
+> > On Thu, Nov 5, 2026 at 7:22=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> w=
+rote:
+> >>
+> >>
+> >>
+> >> On 2026/11/5 =E4=B8=8B=E5=8D=886:31, Huacai Chen wrote:
+> >>> On Thu, Nov 5, 2026 at 5:49=E2=80=AFPM Bibo Mao <maobibo@loongson.cn>=
+ wrote:
+> >>>>
+> >>>>
+> >>>>
+> >>>> On 2026/11/5 =E4=B8=8B=E5=8D=885:31, Huacai Chen wrote:
+> >>>>> On Thu, Nov 5, 2026 at 5:14=E2=80=AFPM Bibo Mao <maobibo@loongson.c=
+n> wrote:
+> >>>>>>
+> >>>>>>
+> >>>>>>
+> >>>>>> On 2026/10/23 =E4=B8=8B=E5=8D=883:59, Huacai Chen wrote:
+> >>>>>>> Bibo,
+> >>>>>>>
+> >>>>>>> Now I have applied this series but with some modifications, pleas=
+e
+> >>>>>>> double check and test the code.
+> >>>>>>>
+> >>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-=
+loongson.git/log/?h=3Dloongarch-next
+> >>>>>> In my v4 submit, it is:
+> >>>>>> +               case ACPI_IOVT_DEVICE_ENTRY_START:
+> >>>>>> +                       is_start =3D true;
+> >>>>>> +                       start_devid =3D ep->device_id;
+> >>>>>> +                       break;
+> >>>>>> however in rc1, it is modified as:
+> >>>>>>                     case ACPI_IOVT_DEVICE_ENTRY_START:
+> >>>>>>                             is_start =3D true;
+> >>>>>>                             entry->start_devid =3D ep->device_id;
+> >>>>>>                             break;
+> >>>>>> Here entry is not allocated and NULL pointer, it is allocated in
+> >>>>>> ACPI_IOVT_DEVICE_ENTRY_END switch case.
+> >>>>>>
+> >>>>>> I really do not know what is aid to modify it and let others to te=
+st.
+> >>>>> Sorry, it's my fault.
+> >>>>>
+> >>>>> In theory I should point out the modification (eliminating the loca=
+l
+> >>>>> variable start_devid) and refresh a new version. But we have no tim=
+e
+> >>>>> to do this because when the first patch is merged into the ACPI rep=
+o
+> >>>>> it is near the merge window.
+> >>>> Maybe our work style is different, I do not care much for the coding=
+ style.
+> >>>>>
+> >>>>> If you agree, I will submit such modifications to fix it.
+> >>>> fix is welcome.
+> >>>>>
+> >>>>> diff --git a/drivers/acpi/loongarch/iovt.c b/drivers/acpi/loongarch=
+/iovt.c
+> >>>>> index 87cee4f0fc80..4cdac28a1fd0 100644
+> >>>>> --- a/drivers/acpi/loongarch/iovt.c
+> >>>>> +++ b/drivers/acpi/loongarch/iovt.c
+> >>>>> @@ -115,6 +115,10 @@ static int __init iovt_add_iommu(struct
+> >>>>> acpi_iovt_iommu *iommu)
+> >>>>>            for (i =3D 0; i < iommu->device_entry_num; i++) {
+> >>>>>                    switch (ep->type) {
+> >>>>>                    case ACPI_IOVT_DEVICE_ENTRY_START:
+> >>>>> +                       entry =3D kzalloc_obj(struct iovt_device_en=
+try,
+> >>>>> GFP_ATOMIC);
+> >>>> There will be memory leak problem if there are START/START/END in th=
+e table.
+> >>> That means a broken table? I think we don't need to consider broken
+> >>> tables, because there may be kinds of broken pattern rather than just
+> >>> a START/START/END.
+> >> yes, START/END/START, START/START/END, START/SINGLE/END. what is the
+> >> relationship between "don't need to consider" and kinds of broken patt=
+ern?
+> >>
+> >> what is the policy from your side with such BIOS table? let memory lea=
+k
+> >> and continue?
+> > The driver can only work with a good table or no table, but not with a
+> > broken table.
+> With a broken table, software can discard the whole table, or discard
+> the single table entry.
+Discard a single entry is dangerous because the pairing may be wrong,
+so if we should handle a broken table, we should discard the whole
+table.
 
-Drop the @pgmap parameter from the vmemmap population helpers and the
-related memory hotplug interfaces, and remove the remaining
-dev_pagemap-specific coupling from those call chains.
+Discarding the whole table need a rework, the is_start variable is not
+enough. You can consider the below solution:
 
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
----
- arch/arm64/mm/mmu.c                        |  5 ++---
- arch/loongarch/mm/init.c                   |  5 ++---
- arch/powerpc/include/asm/book3s/64/radix.h |  1 -
- arch/powerpc/mm/mem.c                      |  5 ++---
- arch/riscv/mm/init.c                       |  5 ++---
- arch/s390/mm/init.c                        |  5 ++---
- arch/x86/mm/init_64.c                      |  5 ++---
- include/linux/memory_hotplug.h             |  8 +++-----
- include/linux/mm.h                         |  3 +--
- mm/memory_hotplug.c                        | 16 +++++++--------
- mm/memremap.c                              |  4 ++--
- mm/sparse-vmemmap.c                        | 23 ++++++++++------------
- mm/sparse.c                                |  6 ++----
- 13 files changed, 37 insertions(+), 54 deletions(-)
+diff --git a/drivers/acpi/loongarch/iovt.c b/drivers/acpi/loongarch/iovt.c
+index 87cee4f0fc80..8381de278e3a 100644
+--- a/drivers/acpi/loongarch/iovt.c
++++ b/drivers/acpi/loongarch/iovt.c
+@@ -73,10 +73,44 @@ static int __init iovt_get_pci_iommu_fwnode(struct
+iovt_fwnode *np, u16 segment,
+        return 0;
+ }
 
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index 19459a4a870a..a6b5774005b6 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -2038,13 +2038,12 @@ int arch_add_memory(int nid, u64 start, u64 size,
- 	return ret;
- }
- 
--void arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap,
--			struct dev_pagemap *pgmap)
-+void arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
++static int __init iovt_validate_entries(struct acpi_iovt_iommu *iommu)
++{
++       int i, done =3D 1;
++       struct acpi_iovt_device_entry *ep;
++
++       ep =3D ACPI_ADD_PTR(struct acpi_iovt_device_entry, iommu,
+iommu->device_entry_offset);
++       for (i =3D 0; i < iommu->device_entry_num; i++) {
++               switch (ep->type) {
++               case ACPI_IOVT_DEVICE_ENTRY_START:
++                       if (!done)
++                               return -EINVAL;
++
++                       done =3D 0;
++                       break;
++               case ACPI_IOVT_DEVICE_ENTRY_END:
++                       if (done)
++                               return -EINVAL;
++
++                       done =3D 1;
++                       break;
++               case ACPI_IOVT_DEVICE_ENTRY_SINGLE:
++                       if (!done)
++                               return -EINVAL;
++
++                       done =3D 1;
++                       break;
++               default:
++                       return -EINVAL;
++               }
++               ep =3D ACPI_ADD_PTR(struct acpi_iovt_device_entry, ep,
+ep->length);
++       }
++
++       return done ? 0 : -EINVAL;
++}
++
+ static int __init iovt_add_iommu(struct acpi_iovt_iommu *iommu)
  {
- 	unsigned long start_pfn = start >> PAGE_SHIFT;
- 	unsigned long nr_pages = size >> PAGE_SHIFT;
- 
--	__remove_pages(start_pfn, nr_pages, altmap, pgmap);
-+	__remove_pages(start_pfn, nr_pages, altmap);
- 	__remove_pgd_mapping(swapper_pg_dir, __phys_to_virt(start), size);
- }
- 
-diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
-index ea769e479241..c91afce46136 100644
---- a/arch/loongarch/mm/init.c
-+++ b/arch/loongarch/mm/init.c
-@@ -120,13 +120,12 @@ int arch_add_memory(int nid, u64 start, u64 size, struct mhp_params *params)
- 	return ret;
- }
- 
--void arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap,
--			struct dev_pagemap *pgmap)
-+void arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
- {
- 	unsigned long start_pfn = start >> PAGE_SHIFT;
- 	unsigned long nr_pages = size >> PAGE_SHIFT;
- 
--	__remove_pages(start_pfn, nr_pages, altmap, pgmap);
-+	__remove_pages(start_pfn, nr_pages, altmap);
- }
- #endif
- 
-diff --git a/arch/powerpc/include/asm/book3s/64/radix.h b/arch/powerpc/include/asm/book3s/64/radix.h
-index df67209b0c5b..0c9195dd50c9 100644
---- a/arch/powerpc/include/asm/book3s/64/radix.h
-+++ b/arch/powerpc/include/asm/book3s/64/radix.h
-@@ -316,7 +316,6 @@ static inline int radix__has_transparent_pud_hugepage(void)
- #endif
- 
- struct vmem_altmap;
--struct dev_pagemap;
- extern int __meminit radix__vmemmap_create_mapping(unsigned long start,
- 					     unsigned long page_size,
- 					     unsigned long phys);
-diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-index b617b69452cd..2432ff888c03 100644
---- a/arch/powerpc/mm/mem.c
-+++ b/arch/powerpc/mm/mem.c
-@@ -158,13 +158,12 @@ int __ref arch_add_memory(int nid, u64 start, u64 size,
- 	return rc;
- }
- 
--void __ref arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap,
--			      struct dev_pagemap *pgmap)
-+void __ref arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
- {
- 	unsigned long start_pfn = start >> PAGE_SHIFT;
- 	unsigned long nr_pages = size >> PAGE_SHIFT;
- 
--	__remove_pages(start_pfn, nr_pages, altmap, pgmap);
-+	__remove_pages(start_pfn, nr_pages, altmap);
- 	arch_remove_linear_mapping(start, size);
- }
- #endif
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index e822fce0af4b..6f064875ce8d 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -1749,10 +1749,9 @@ int __ref arch_add_memory(int nid, u64 start, u64 size, struct mhp_params *param
- 	return ret;
- }
- 
--void __ref arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap,
--			      struct dev_pagemap *pgmap)
-+void __ref arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
- {
--	__remove_pages(start >> PAGE_SHIFT, size >> PAGE_SHIFT, altmap, pgmap);
-+	__remove_pages(start >> PAGE_SHIFT, size >> PAGE_SHIFT, altmap);
- 	remove_linear_mapping(start, size);
- 	flush_tlb_all();
- }
-diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
-index be7e009e7b59..91c0edccbb12 100644
---- a/arch/s390/mm/init.c
-+++ b/arch/s390/mm/init.c
-@@ -293,13 +293,12 @@ int arch_add_memory(int nid, u64 start, u64 size,
- 	return rc;
- }
- 
--void arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap,
--			struct dev_pagemap *pgmap)
-+void arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
- {
- 	unsigned long start_pfn = start >> PAGE_SHIFT;
- 	unsigned long nr_pages = size >> PAGE_SHIFT;
- 
--	__remove_pages(start_pfn, nr_pages, altmap, pgmap);
-+	__remove_pages(start_pfn, nr_pages, altmap);
- 	vmem_remove_mapping(start, size);
- }
- #endif /* CONFIG_MEMORY_HOTPLUG */
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index 8b6d86fb5a42..2a635b7f78ea 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -1273,13 +1273,12 @@ kernel_physical_mapping_remove(unsigned long start, unsigned long end)
- 	remove_pagetable(start, end, true, NULL);
- }
- 
--void __ref arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap,
--			      struct dev_pagemap *pgmap)
-+void __ref arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
- {
- 	unsigned long start_pfn = start >> PAGE_SHIFT;
- 	unsigned long nr_pages = size >> PAGE_SHIFT;
- 
--	__remove_pages(start_pfn, nr_pages, altmap, pgmap);
-+	__remove_pages(start_pfn, nr_pages, altmap);
- 	kernel_physical_mapping_remove(start, start + size);
- }
- #endif /* CONFIG_MEMORY_HOTPLUG */
-diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-index b39605d30896..ec71debc0673 100644
---- a/include/linux/memory_hotplug.h
-+++ b/include/linux/memory_hotplug.h
-@@ -136,10 +136,9 @@ static inline bool movable_node_is_enabled(void)
- 	return movable_node_enabled;
- }
- 
--extern void arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap,
--			       struct dev_pagemap *pgmap);
-+extern void arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap);
- extern void __remove_pages(unsigned long start_pfn, unsigned long nr_pages,
--			   struct vmem_altmap *altmap, struct dev_pagemap *pgmap);
-+			   struct vmem_altmap *altmap);
- 
- /* reasonably generic interface to expand the physical pages */
- extern int __add_pages(int nid, unsigned long start_pfn, unsigned long nr_pages,
-@@ -320,8 +319,7 @@ extern int sparse_add_section(int nid, unsigned long pfn,
- 		unsigned long nr_pages, struct vmem_altmap *altmap,
- 		struct dev_pagemap *pgmap);
- extern void sparse_remove_section(unsigned long pfn, unsigned long nr_pages,
--				  struct vmem_altmap *altmap,
--				  struct dev_pagemap *pgmap);
-+				  struct vmem_altmap *altmap);
- extern struct zone *zone_for_pfn_range(enum mmop online_type,
- 		int nid, struct memory_group *group, unsigned long start_pfn,
- 		unsigned long nr_pages);
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 43eb19474d26..77b5d450fe45 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -5335,8 +5335,7 @@ static inline void print_vma_addr(char *prefix, unsigned long rip)
- #endif
- 
- struct page * __populate_section_memmap(unsigned long pfn,
--		unsigned long nr_pages, int nid, struct vmem_altmap *altmap,
--		struct dev_pagemap *pgmap);
-+		unsigned long nr_pages, int nid, struct vmem_altmap *altmap);
- void *vmemmap_alloc_block(unsigned long size, int node);
- struct vmem_altmap;
- void *vmemmap_alloc_block_buf(unsigned long size, int node,
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 1bfd1f4daeb2..f04a248d8ada 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -416,8 +416,7 @@ int __add_pages(int nid, unsigned long pfn, unsigned long nr_pages,
- 		err = sparse_add_section(nid, pfn, cur_nr_pages, altmap,
- 					 params->pgmap);
- 		if (err) {
--			__remove_pages(start_pfn, pfn - start_pfn, altmap,
--				       params->pgmap);
-+			__remove_pages(start_pfn, pfn - start_pfn, altmap);
- 			break;
- 		}
- 		cond_resched();
-@@ -565,7 +564,6 @@ void remove_pfn_range_from_zone(struct zone *zone,
-  * @pfn: starting pageframe (must be aligned to start of a section)
-  * @nr_pages: number of pages to remove (must be multiple of section size)
-  * @altmap: alternative device page map or %NULL if default memmap is used
-- * @pgmap: device page map or %NULL if not ZONE_DEVICE
-  *
-  * Generic helper function to remove section mappings and sysfs entries
-  * for the section of the memory we are removing. Caller needs to make
-@@ -573,7 +571,7 @@ void remove_pfn_range_from_zone(struct zone *zone,
-  * calling offline_pages().
-  */
- void __remove_pages(unsigned long pfn, unsigned long nr_pages,
--		    struct vmem_altmap *altmap, struct dev_pagemap *pgmap)
-+		    struct vmem_altmap *altmap)
- {
- 	const unsigned long end_pfn = pfn + nr_pages;
- 	unsigned long cur_nr_pages;
-@@ -588,7 +586,7 @@ void __remove_pages(unsigned long pfn, unsigned long nr_pages,
- 		/* Select all remaining pages up to the next section boundary */
- 		cur_nr_pages = min(end_pfn - pfn,
- 				   SECTION_ALIGN_UP(pfn + 1) - pfn);
--		sparse_remove_section(pfn, cur_nr_pages, altmap, pgmap);
-+		sparse_remove_section(pfn, cur_nr_pages, altmap);
- 	}
- }
- 
-@@ -1421,7 +1419,7 @@ static void remove_memory_blocks_and_altmaps(u64 start, u64 size)
- 		memory_block_put(mem);
- 
- 		remove_memory_block_devices(cur_start, memblock_size);
--		arch_remove_memory(cur_start, memblock_size, altmap, NULL);
-+		arch_remove_memory(cur_start, memblock_size, altmap);
- 		altmap_free(altmap);
- 	}
- }
-@@ -1461,7 +1459,7 @@ static int create_altmaps_and_memory_blocks(int nid, struct memory_group *group,
- 		ret = create_memory_block_devices(cur_start, memblock_size, nid,
- 						  params.altmap, group);
- 		if (ret) {
--			arch_remove_memory(cur_start, memblock_size, params.altmap, NULL);
-+			arch_remove_memory(cur_start, memblock_size, params.altmap);
- 			altmap_free(params.altmap);
- 			goto out;
- 		}
-@@ -1548,7 +1546,7 @@ static int __add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags,
- 		/* create memory block devices after memory was added */
- 		ret = create_memory_block_devices(start, size, nid, NULL, group);
- 		if (ret) {
--			arch_remove_memory(start, size, params.altmap, NULL);
-+			arch_remove_memory(start, size, params.altmap);
- 			goto error;
- 		}
- 	}
-@@ -2309,7 +2307,7 @@ static int try_remove_memory(u64 start, u64 size)
- 		 * No altmaps present, do the removal directly
- 		 */
- 		remove_memory_block_devices(start, size);
--		arch_remove_memory(start, size, NULL, NULL);
-+		arch_remove_memory(start, size, NULL);
- 	} else {
- 		/* all memblocks in the range have altmaps */
- 		remove_memory_blocks_and_altmaps(start, size);
-diff --git a/mm/memremap.c b/mm/memremap.c
-index accba23aef28..683a77dd679d 100644
---- a/mm/memremap.c
-+++ b/mm/memremap.c
-@@ -97,10 +97,10 @@ static void pageunmap_range(struct dev_pagemap *pgmap, int range_id)
- 				   PHYS_PFN(range_len(range)));
- 	if (pgmap->type == MEMORY_DEVICE_PRIVATE) {
- 		__remove_pages(PHYS_PFN(range->start),
--			       PHYS_PFN(range_len(range)), NULL, pgmap);
-+			       PHYS_PFN(range_len(range)), NULL);
- 	} else {
- 		arch_remove_memory(range->start, range_len(range),
--				pgmap_altmap(pgmap), pgmap);
-+				pgmap_altmap(pgmap));
- 		kasan_remove_zero_shadow(__va(range->start), range_len(range));
- 	}
- 	mem_hotplug_done();
-diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
-index f6a8b8e51b6c..9b80dd7326f7 100644
---- a/mm/sparse-vmemmap.c
-+++ b/mm/sparse-vmemmap.c
-@@ -479,8 +479,7 @@ int __meminit vmemmap_populate_hugepages(unsigned long start, unsigned long end,
- }
- 
- struct page * __meminit __populate_section_memmap(unsigned long pfn,
--		unsigned long nr_pages, int nid, struct vmem_altmap *altmap,
--		struct dev_pagemap *pgmap)
-+		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
- {
- 	unsigned long start = (unsigned long) pfn_to_page(pfn);
- 	unsigned long end = start + nr_pages * sizeof(struct page);
-@@ -572,11 +571,9 @@ void offline_mem_sections(unsigned long start_pfn, unsigned long end_pfn)
- }
- 
- static struct page * __meminit populate_section_memmap(unsigned long pfn,
--		unsigned long nr_pages, int nid, struct vmem_altmap *altmap,
--		struct dev_pagemap *pgmap)
-+		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
- {
--	struct page *page = __populate_section_memmap(pfn, nr_pages, nid, altmap,
--						      pgmap);
-+	struct page *page = __populate_section_memmap(pfn, nr_pages, nid, altmap);
- 
- 	memmap_pages_add(section_nr_vmemmap_pages(pfn, nr_pages));
- 
-@@ -584,7 +581,7 @@ static struct page * __meminit populate_section_memmap(unsigned long pfn,
- }
- 
- static void depopulate_section_memmap(unsigned long pfn, unsigned long nr_pages,
--		struct vmem_altmap *altmap, struct dev_pagemap *pgmap)
-+		struct vmem_altmap *altmap)
- {
- 	unsigned long start = (unsigned long) pfn_to_page(pfn);
- 	unsigned long end = start + nr_pages * sizeof(struct page);
-@@ -665,7 +662,7 @@ static int fill_subsection_map(unsigned long pfn, unsigned long nr_pages)
-  * usage map, but still need to free the vmemmap range.
-  */
- static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
--		struct vmem_altmap *altmap, struct dev_pagemap *pgmap)
-+		struct vmem_altmap *altmap)
- {
- 	struct mem_section *ms = __pfn_to_section(pfn);
- 	bool section_is_early = early_section(ms);
-@@ -703,7 +700,7 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
- 	 * section_activate() and pfn_valid() .
- 	 */
- 	if (!section_is_early)
--		depopulate_section_memmap(pfn, nr_pages, altmap, pgmap);
-+		depopulate_section_memmap(pfn, nr_pages, altmap);
- 	else if (memmap)
- 		free_map_bootmem(memmap);
- 
-@@ -752,9 +749,9 @@ static struct page * __meminit section_activate(int nid, unsigned long pfn,
- 		return pfn_to_page(pfn);
- 
- 	section_set_compound_order_range(pfn, nr_pages, order);
--	memmap = populate_section_memmap(pfn, nr_pages, nid, altmap, pgmap);
-+	memmap = populate_section_memmap(pfn, nr_pages, nid, altmap);
- 	if (!memmap) {
--		section_deactivate(pfn, nr_pages, altmap, pgmap);
-+		section_deactivate(pfn, nr_pages, altmap);
- 		return ERR_PTR(-ENOMEM);
- 	}
- 
-@@ -818,13 +815,13 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
- }
- 
- void sparse_remove_section(unsigned long pfn, unsigned long nr_pages,
--		struct vmem_altmap *altmap, struct dev_pagemap *pgmap)
-+		struct vmem_altmap *altmap)
- {
- 	struct mem_section *ms = __pfn_to_section(pfn);
- 
- 	if (WARN_ON_ONCE(!valid_section(ms)))
- 		return;
- 
--	section_deactivate(pfn, nr_pages, altmap, pgmap);
-+	section_deactivate(pfn, nr_pages, altmap);
- }
- #endif /* CONFIG_MEMORY_HOTPLUG */
-diff --git a/mm/sparse.c b/mm/sparse.c
-index 6acb628c8a73..0b9a6c23a227 100644
---- a/mm/sparse.c
-+++ b/mm/sparse.c
-@@ -204,8 +204,7 @@ void __init sparse_sections_init(void)
- }
- #ifndef CONFIG_SPARSEMEM_VMEMMAP
- struct page __init *__populate_section_memmap(unsigned long pfn,
--		unsigned long nr_pages, int nid, struct vmem_altmap *altmap,
--		struct dev_pagemap *pgmap)
-+		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
- {
- 	const unsigned long size = PAGE_ALIGN(sizeof(struct page) * PAGES_PER_SECTION);
- 
-@@ -236,8 +235,7 @@ static void __init sparse_metadata_init_nid(int nid,
- 		if (section_nr >= end_section_nr)
- 			break;
- 
--		mem_map = __populate_section_memmap(pfn, PAGES_PER_SECTION, nid,
--						    NULL, NULL);
-+		mem_map = __populate_section_memmap(pfn, PAGES_PER_SECTION, nid, NULL);
- 		if (!mem_map)
- 			panic("Failed to allocate memmap for section %lu\n",
- 			      section_nr);
--- 
-2.54.0
+        int i, ret;
+-       bool is_start =3D false;
+        struct iovt_fwnode *np;
+        struct iovt_device_entry *entry;
+        struct acpi_iovt_device_entry *ep;
+@@ -110,23 +144,22 @@ static int __init iovt_add_iommu(struct
+acpi_iovt_iommu *iommu)
+        if (np->flag & ACPI_IOVT_IOMMU_MAGAGE_BY_SEGMENT)
+                goto skip;
 
++       if (iovt_validate_entries(iommu) < 0)
++               return -EINVAL;
++
+        INIT_LIST_HEAD(&np->ep_list);
+        ep =3D ACPI_ADD_PTR(struct acpi_iovt_device_entry, iommu,
+iommu->device_entry_offset);
+        for (i =3D 0; i < iommu->device_entry_num; i++) {
+                switch (ep->type) {
+                case ACPI_IOVT_DEVICE_ENTRY_START:
+-                       is_start =3D true;
+-                       entry->start_devid =3D ep->device_id;
+-                       break;
+-               case ACPI_IOVT_DEVICE_ENTRY_END:
+-                       if (!is_start)
+-                               break;
+-
+                        entry =3D kzalloc_obj(struct iovt_device_entry,
+GFP_ATOMIC);
+                        if (!entry)
+                                return -ENOMEM;
+
+-                       is_start =3D false;
++                       entry->start_devid =3D ep->device_id;
++                       break;
++               case ACPI_IOVT_DEVICE_ENTRY_END:
++                       /* START & END are paired */
+                        entry->end_devid =3D ep->device_id;
+                        list_add_tail(&entry->list, &np->ep_list);
+                        break;
+@@ -135,13 +168,12 @@ static int __init iovt_add_iommu(struct
+acpi_iovt_iommu *iommu)
+                        if (!entry)
+                                return -ENOMEM;
+
+-                       is_start =3D false;
+                        entry->start_devid =3D ep->device_id;
+                        entry->end_devid =3D ep->device_id;
+                        list_add_tail(&entry->list, &np->ep_list);
+                        break;
+                default:
+-                       break;
++                       return -EINVAL;
+                }
+                ep =3D ACPI_ADD_PTR(struct acpi_iovt_device_entry, ep,
+ep->length);
+        }
+
+> >
+> > Take START1/START2/END as an example of broken table: in your original
+> > code, the END entry will be pairing with START2. But for a broken
+> > table who can ensure they are the correct pair? If the real correct
+> > pair is START1 and END, then (entry->start_devid, entry->end_devid)
+> there is only one policy, software does not know START1/END is right or
+> START2/END is right.
+> > will be a wrong device range. Such mistakes are much worse than a
+> > memery leak.
+> >
+> > If you want to say "I don't care about correct pairing, memory leak is
+> > bad in any case.", OK, we can do it like this:
+> >
+> > diff --git a/drivers/acpi/loongarch/iovt.c b/drivers/acpi/loongarch/iov=
+t.c
+> > index 87cee4f0fc80..ebd11e22c9be 100644
+> > --- a/drivers/acpi/loongarch/iovt.c
+> > +++ b/drivers/acpi/loongarch/iovt.c
+> > @@ -115,6 +115,13 @@ static int __init iovt_add_iommu(struct
+> > acpi_iovt_iommu *iommu)
+> >          for (i =3D 0; i < iommu->device_entry_num; i++) {
+> >                  switch (ep->type) {
+> >                  case ACPI_IOVT_DEVICE_ENTRY_START:
+> > +                       if (is_start)
+> > +                               break;
+> there is still memory leak with START/SINGLE/END pairs, is_start set
+> with false with ACPI_IOVT_DEVICE_ENTRY_SINGLE case.
+>
+> Regards
+> Bibo Mao
+> > +
+> > +                       entry =3D kzalloc_obj(struct iovt_device_entry,
+> > GFP_ATOMIC);
+> > +                       if (!entry)
+> > +                               return -ENOMEM;
+> > +
+> >                          is_start =3D true;
+> >                          entry->start_devid =3D ep->device_id;
+> >                          break;
+> > @@ -122,10 +129,6 @@ static int __init iovt_add_iommu(struct
+> > acpi_iovt_iommu *iommu)
+> >                          if (!is_start)
+> >                                  break;
+> >
+> > -                       entry =3D kzalloc_obj(struct iovt_device_entry,
+> > GFP_ATOMIC);
+> > -                       if (!entry)
+> > -                               return -ENOMEM;
+> > -
+> >                          is_start =3D false;
+> >                          entry->end_devid =3D ep->device_id;
+> >                          list_add_tail(&entry->list, &np->ep_list);
+> >
+> > Huacai
+> >
+> >>
+> >>>
+> >>> Huacai
+> >>>
+> >>>>
+> >>>> Regards
+> >>>> Bibo Mao
+> >>>>> +                       if (!entry)
+> >>>>> +                               return -ENOMEM;
+> >>>>> +
+> >>>>>                            is_start =3D true;
+> >>>>>                            entry->start_devid =3D ep->device_id;
+> >>>>>                            break;
+> >>>>> @@ -122,10 +126,6 @@ static int __init iovt_add_iommu(struct
+> >>>>> acpi_iovt_iommu *iommu)
+> >>>>>                            if (!is_start)
+> >>>>>                                    break;
+> >>>>>
+> >>>>> -                       entry =3D kzalloc_obj(struct iovt_device_en=
+try,
+> >>>>> GFP_ATOMIC);
+> >>>>> -                       if (!entry)
+> >>>>> -                               return -ENOMEM;
+> >>>>> -
+> >>>>>                            is_start =3D false;
+> >>>>>                            entry->end_devid =3D ep->device_id;
+> >>>>>                            list_add_tail(&entry->list, &np->ep_list=
+);
+> >>>>>
+> >>>>> Huacai
+> >>>>>
+> >>>>>>
+> >>>>>>>
+> >>>>>>> Huacai
+> >>>>>>>
+> >>>>>>> On Mon, Oct 12, 2026 at 3:16=E2=80=AFPM Bibo Mao <maobibo@loongso=
+n.cn> wrote:
+> >>>>>>>>
+> >>>>>>>> This change is already merged in acpica tree.
+> >>>>>>>>
+> >>>>>>>> slightly ping.
+> >>>>>>>>
+> >>>>>>>> On Tue, Sep 22, 2026 at 08:10:55PM +0800, Bibo Mao wrote:
+> >>>>>>>>      > According to the IOVT specification, define macros for ea=
+ch bit of the
+> >>>>>>>>      > Flags field in the IOVT IOMMU structure.
+> >>>>>>>>      >
+> >>>>>>>>      > Link: https://github.com/open-acpica/acpica/commit/352f75=
+0e4cc0
+> >>>>>>>>      > Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> >>>>>>>>      > ---
+> >>>>>>>>      >  include/acpi/actbl2.h | 7 +++++++
+> >>>>>>>>      >  1 file changed, 7 insertions(+)
+> >>>>>>>>      >
+> >>>>>>>>      > diff --git a/include/acpi/actbl2.h b/include/acpi/actbl2.=
+h
+> >>>>>>>>      > index baef525367b5..76e4a5bc79b4 100644
+> >>>>>>>>      > --- a/include/acpi/actbl2.h
+> >>>>>>>>      > +++ b/include/acpi/actbl2.h
+> >>>>>>>>      > @@ -919,6 +919,13 @@ struct acpi_iovt_iommu {
+> >>>>>>>>      >       u32 device_entry_offset;
+> >>>>>>>>      >  };
+> >>>>>>>>      >
+> >>>>>>>>      > +/* Masks for Flags field above */
+> >>>>>>>>      > +#define ACPI_IOVT_IOMMU_PCI_DEVICE           (1<<0)
+> >>>>>>>>      > +#define ACPI_IOVT_IOMMU_PXM_VALID            (1<<1)
+> >>>>>>>>      > +#define ACPI_IOVT_IOMMU_MAGAGE_BY_SEGMENT    (1<<2)
+> >>>>>>>>      > +#define ACPI_IOVT_IOMMU_HW_CAP_SUPPORT               (1<=
+<3)
+> >>>>>>>>      > +#define ACPI_IOVT_IOMMU_MSI_INT_BYPASS               (1<=
+<4)
+> >>>>>>>>      > +
+> >>>>>>>>      >  struct acpi_iovt_device_entry {
+> >>>>>>>>      >       u8 type;
+> >>>>>>>>      >       u8 length;
+> >>>>>>>>      > --
+> >>>>>>>>      > 2.39.3
+> >>>>>>>>      >
+> >>>>>>>>
+> >>>>>>
+> >>>>>>
+> >>>>
+> >>
+> >>
+>
