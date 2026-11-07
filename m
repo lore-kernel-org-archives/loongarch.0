@@ -1,48 +1,70 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794064672;
-	b=LnA4gts38k+wW5zTsPlJSmpCTeJIxmFsHwDd22BIwji6M4MrPmhR+7xSnVVP3qNgcU8u
-	 erb4Que54ZpTndLXBkoipF+aJdRAbbzmIbZFWkOW0X2zXVWjHKFL4M8WN2uBUFEJCfXch
-	 ESVcvaoj/tZMvH0a131CtzNdYjt9RXF33XdCd9NLGsmIXL+KPPRoIDPZDhwXOPLuqoS+j
-	 +7uBcHT881i0HzecnjqOlYvkpoHZw9Hk+Mhtj+JDOTvtZq+6iYDbw7byjsmoCCK22Mkjt
-	 SdDtGcuZMsunC3dgwaGHVfl0wtcylmZft10BPqQecqnY31Uw4TkxME4l2hS9adzYtdw==
+	t=1794072157;
+	b=BsrSPB+kf/6USRTaAAo+/OIIfEhwfqQLPS0VT8sQkMyOJ+AFVwdqqwMED5fHc+0ZLglb
+	 Y8oszC3zwfLs1pYmFRq+jznEKymZTP8q293/bVJ4/8R7594+AbB4NfkZqUhv+069boIy3
+	 k0E08n+0VEZ0kQ/0CKwtg0uxf6MWjcpvIpRaWc3fp/kLvzWulBGDQGbohLdFUvUQac4hW
+	 g5R7kFNPPUphlNYY06kRnad5MKdkf2nHCqPTd3Ke9YJDUpMHCblTwFT/j3Q6QymvR7/Iu
+	 156eR139YHa2z1AzHKKqykRedLkcToTA865GjcArXfvh9+fI7YCWfPah8NE9JfhXQ4g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794064672;
-	h=Received:DKIM-Signature:Received:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:Subject:From:To:Cc:In-Reply-To:References:
-	 Date:Message-Id:X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=OrS8Vw9EJK4CMhHFx8Kx1+vACI7GK4ya2o51LnoPIt4=;
-	b=lA4ExPm69CXDdeYNhDtN0iLrcPikXYYXSdxKzwMAXMGtp9wCZxeynJKDfUUb4BpMaLxx
-	 aw+ZZltMOisnA0LluFxOc1l9K+ZH6b12VpFyJLchUnz4BCPjRYP/xdouMWctHTfX4QXOV
-	 FYDhgs873zR3A+nv8wTjVUFFZA8aODC9ydaBemzfZ+GPMvP8wGKdQsCh+KsitpH1vOo0n
-	 K7RjouoJ3xILru/4uDaQ5giakIYaGpr2H8muzMaRtblVCFf11i27IoTBFiQV/ZHZRyh7Z
-	 sCnrLWF2ukF843AHE24tQbLJvPN4LxZYd2HQxu5IgimSg8OTwPkEfcg4kIdyuBLUq7w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794072157;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=XmI8rWYPQf/Yk3+VD2zo2YslLq5vKVW6l7UCq9+Iu4s=;
+	b=mcIfkIWK8vLOx0ie0KVbPcbB6ONY/c3I6pA/is2Ovd/J4xecvaZcKYzP6bhrXB6ijgMD
+	 6SmHzZsDGxBHSu14suJlYg2JODuywV3VUmD44osAayHHfp8Z0c37YVpUdyafHbhV6ffKl
+	 A5o+34YhHW9Zlck/YQlOFpaLQ/krWVsLNSfuQO7iIZpXHWQJE783HK9isFB4eBI5JXnuv
+	 UZ/gz3Wz6nlJ3at+R3mhgNDbizctLd3DmPR8Z6Wrv+8ihsSxs7z0ofD6W9ace6Orewm39
+	 D4POP0YFVrMPEQZdwSm1krx1YeYwGkKy/fVKdntkeUfe2ji6t1LFwxhO/+cgFNQUsnA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=G+lLv2Ae;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KolnCTI7;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CEDA606B89B;
-	Sat,  7 Nov 2026 15:17:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A2B606A326;
+	Sat,  7 Nov 2026 17:22:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=G+lLv2Ae
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BB0B1F008A2;
-	Sat,  7 Nov 2026 15:17:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KolnCTI7
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FBA21F0089F;
+	Sat,  7 Nov 2026 17:22:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794064671;
-	bh=OrS8Vw9EJK4CMhHFx8Kx1+vACI7GK4ya2o51LnoPIt4=;
-	h=Subject:From:To:Cc:In-Reply-To:References:Date;
-	b=G+lLv2AeIPBg9Doy0iFL/uNEXU2efyC6xo4Rli+CowStHjXgbYPXLMMrX1PZdDKpu
-	 wnUT/kceUI5I2p6H6pTcZucU7jkUL2Zwe3NM48vWtu3CRwAm7NuK1E+2e/jZRRsJ3A
-	 OSiG07iIaKW9rtj/TJuojw/E8MXDLbnYcn5OwPxvedDyq8f//2H+pTB8aAmg16UBzz
-	 Fs5PeLLM7N537lrj5Icp8XEJiZAdPS4AYUxcI4IOqGPYmh0aqhkvmL3z9S22fPkYkl
-	 FdPFoSfG8NylUtHMby9Sa2rIMJ1JkFK4beZB+mS6Zmd4uWakU4NzUfe6pL4X9edtOs
-	 NAQuUohNQDnSQ==
-Received: from traversing.sirena.org.uk (localhost [IPv6:::1])
-	by traversing.sirena.org.uk (Postfix) with ESMTP id C01092AB31C6;
-	Sat, 07 Nov 2026 15:17:49 +0000 (GMT)
+	s=k20260515; t=1794072156;
+	bh=XmI8rWYPQf/Yk3+VD2zo2YslLq5vKVW6l7UCq9+Iu4s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=KolnCTI7SaK31zca7v7wy2Mycrmz3EJfGWSoHQT+xw4wMvA5veAkZQyAzR0RHLf53
+	 7z0w2Y1hoaKGxi6XRZfkLKShmaUF9YXKLnTCvVHVorxctr/2riWCRhVYDHO6JUDsb+
+	 /txQnwAPITgzg67QQgZLuuhvC4TDhau41rQl1Dtom+Utzu4v7VHiNwoZu0/cn0y8/P
+	 PLwkFVCeoUea5WmCr0NKAudWsjpf99WGVzC3JmNDIMMiNqWVwtxCRaxhwoowmDT/Lj
+	 FsIWGLvtajb3oBbBnZA/TWCD+SHD/vs+w/hy5dKGnepbpDYnrmj8WXDbUyZV3nfOeW
+	 odC6ug+HnuAgA==
+Date: Sat, 7 Nov 2026 18:22:28 +0100
+From: "Oscar Salvador (SUSE)" <osalvador@kernel.org>
+To: Muchun Song <songmuchun@bytedance.com>
+Cc: David Hildenbrand <david@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Lance Yang <lance.yang@linux.dev>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <chleroy@kernel.org>,
+	Ritesh Harjani <ritesh.list@gmail.com>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	Oscar Salvador <osalvador@suse.de>, Qi Zheng <qi.zheng@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, linux-mm@kvack.org,
+	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, x86@kernel.org,
+	loongarch@lists.linux.dev, linux-s390@vger.kernel.org
+Subject: Re: [PATCH v3 1/5] powerpc/mm: make
+ vmemmap_populate_compound_pages() static
+Message-ID: <au9eVOrRrnRNLUZb@localhost.localdomain>
+References: <20261107043122.25650-1-songmuchun@bytedance.com>
+ <20261107043122.25650-2-songmuchun@bytedance.com>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -52,84 +74,25 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 8/8] spi: loongson: Add interrupt support for SPI
- controller
-From: Mark Brown <broonie@kernel.org>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, 
- Huacai Chen <chenhuacai@loongson.cn>, Yinbo Zhu <zhuyinbo@loongson.cn>, 
- Mark Brown <broonie@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
- Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
- linux-spi@vger.kernel.org
-In-Reply-To: <7258e7e16b8a563e60b7129946c292f70aeee1d5.1793689461.git.zhoubinbin@loongson.cn>
-References: <cover.1793689461.git.zhoubinbin@loongson.cn>
- <7258e7e16b8a563e60b7129946c292f70aeee1d5.1793689461.git.zhoubinbin@loongson.cn>
-Date: Sat, 07 Nov 2026 15:17:48 +0000
-Message-Id: <179406466808.3424803.8169701061345998672.b4-review@b4>
-X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2142; i=broonie@kernel.org;
- h=from:subject:message-id; bh=sjIYzY9UPQTzvhV4lLGLUIsOUJ29rpXZkCc9wF6r4a0=;
- b=owGbwMvMwCWm/754w+YLFp2Mp9WSGLLeO8pOezh5hfLMEpUFh065aWem7FDOXzdNhN/6QZ5+W
- Q1Hwl+ujlIWBjEuBlkxRZa4LO6X9SWv1/AdXNgGM4eVCWQIAxenAExk1QRGhkOnO2c2LX9wRUOu
- Pk1M7KFE9InZiy70K/v8O1X7I/zEy5cMfwXzDBjXLeas2qMt9qO2Ubh/1oQHDBGblkg+jV1y98/
- mxRwA
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261107043122.25650-2-songmuchun@bytedance.com>
 
-> The Loongson SPI controller can generate an interrupt on byte
-> completion.  Add an interrupt-driven transfer path and use it when an
-> IRQ is available, while keeping the existing polling path as a fallback.
+On Sat, Nov 07, 2026 at 12:31:18PM +0800, Muchun Song wrote:
+> vmemmap_populate_compound_pages() is no longer used outside
+> radix_pgtable.c.
+> 
+> Make it static and drop the unused dev_pagemap argument from
+> its only remaining caller to simplify the code.
+> 
+> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+> Acked-by: Qi Zheng <qi.zheng@linux.dev>
+> Reviewed-by: Lance Yang <lance.yang@linux.dev>
 
-> +	/* Read out the byte that was clocked in */
-> +	regmap_read(priv->regmap, LOONGSON_SPI_FIFO_REG, &data);
-> +	if (priv->rx_ptr)
-> +		priv->rx_ptr[priv->count] = (u8)data;
+Reviewed-by: Oscar Salvador (SUSE) <osalvador@kernel.org>
 
-We should really have a handle_err() which stops the transfer running,
-otherwise this might run after a timeout has stopped things and told the
-user that it owns the buffers again.
-
-> +static size_t loongson_spi_max_transfer_size(struct spi_device *spi)
-> +{
-> +	return LOONGSON_SPI_MAX_XFER_SIZE;
-
-Is there a particular reason to encode this limit, it doesn't look like
-it comes from the hardware.
-
-> +	/*
-> +	 * Split large transfers so that each individual spi_transfer
-> +	 * completes well within the SPI core's completion timeout.
-> +	 * We allow roughly one second of data per chunk, capped by
-> +	 * the controller's hardware maximum transfer size.
-> +	 */
-> +	speed_hz = m->spi->max_speed_hz ? m->spi->max_speed_hz : host->max_speed_hz;
-> +	maxsize = min_t(size_t, hw_max, (size_t)speed_hz / 8);
-> +	maxsize = max_t(size_t, maxsize, 64);
-
-The core should already be scaling the timeout based on the transfer
-parameters?
-
-> @@ -23,7 +23,11 @@ static int loongson_spi_pci_register(struct pci_dev *pdev, const struct pci_devi
->  	if (ret)
->  		return dev_err_probe(dev, ret, "failed to request and remap memory");
->  
-> -	ret = loongson_spi_init_controller(dev, reg_base);
-> +	irq = pci_irq_vector(pdev, 0);
-> +	if (irq < 0)
-> +		dev_info(dev, "no IRQ available, will use PIO mode");
-
-This either needs pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_ALL_TYPES)
-or a check for irq <= 0.
-
-> -	ret = loongson_spi_init_controller(dev, reg_base);
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0)
-> +		dev_info(dev, "no IRQ specified, will use PIO mode");
-
-This should handle -EPROBE_DEFER, and since the IRQ is optional it
-should be platform_get_irq_optional().
+ 
 
 -- 
-Mark Brown <broonie@kernel.org>
+Oscar Salvador
+SUSE Labs
