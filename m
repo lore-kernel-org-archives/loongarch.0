@@ -1,57 +1,52 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=109.224.244.25
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794121423;
-	b=3yUZmjSB9IpXhw82I9e9VrcSv51bLd49f2fz/S8+4SL5TGtrViUYdox6CskdXcGYe3XJ
-	 iJXK8+A8W2lKL/6kJOqKzLEte4uKXAdCyCMLyr4IOr3suSK7SqkVq8xQNVdzS8myOSHVj
-	 5fXzXFa/qjkT63CFTsv1+BpLo4p0Jr2S93dWZg02eiFxOhdEyPc2QPRzySZijt0ySf8ne
-	 19ThAf8Jd0xdKL6iQPr7KNHUIJqIGdNFJywFNFr559Enel4zojKKWpaB9Cgd8+vtWKbtB
-	 iNd1+kxouZRHHJOi1SC964JBAmF5n6neia5kPJ1maDben90m53YP1BFNlZ+O5ChsbyQ==
+	t=1794124793;
+	b=Z2Z3EDAj0yRVBoG6cYCEJAwbyZla/t4GlZKiTfRsI4nx0piq46FzU91YePRx4CRS+pQg
+	 pi+fNkapoPDfXUY47FXFd41kkOt8aeV2pgwJfgVSVILc9NZceTCKbxtXJ2PswCgd/OSUd
+	 lqKMWnw41b8gA8uZch0ELYjfcTltgfs1t6cU9YR/6edXeZOMKQLEu2Yywq8IwBpr7fcYl
+	 rBe0rJyE8Ire2pqulAOWMOrNEKCQlaQKw+EizNj0Js6asxtyh1eVMQWVw+llMcbIfVXRG
+	 GnPjCb9TCRPY6negETL3a5Wn/8HSMHJT+ugwAx4BgseXiXaFQSB0OxWfQHtU6bnKKKg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794121423;
-	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
-	 In-Reply-To:References:Feedback-ID:X-Pm-Message-ID:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=PqCraRvsBkJjRXkU4N7Ds+WrstGBtwW2/wRIicmkLGg=;
-	b=BFN0xBR+2r+HFWuHGZ6j1XRyEaIA7m9uep+NpOllfGVXv5XPcCueE4ZuJQywgGrHkHBz
-	 x5IMYln4CDKiK4Oxb1AYeOHJ6gVPblxaYo7CXg2w/wsNrOD/ttziJDLf7oJ9phpREUia4
-	 5FpQJnpLPulc7nvjEppqq6UcnWpRsvcwXQynTdXFjA6zJnZQcZPNg5CGn+WvuiMtxTZdj
-	 LM4jdmCkhHILOFrCsa4EfwfRBfZCu89zZP1g2nmIAfnjCzie0bTWuWt2SsXN2gMiZlHVo
-	 V+gulM8mq919g2qwtEvggHhCpNBFQjolYKeY2rnr7x3NwHGoqxruWLBv65B8+rYL/BA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794124793;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=kiWdoUL35CtK4AqpYlqytBUDE4prNrZdQBOX59MoB6Q=;
+	b=Wuvy/2Mlk9r77G7ehx1Qj02wkV1q/Y6bknEdD9E+Hr/zQ4iUpfHXtDRPYGIPzvmeKiuw
+	 HLE+pqH73IVLe+DjnrJZsd+FGRrXE5WZTgMEbakM9ne5YpHZA4uoFFryQ+9ekhEEuJq4G
+	 /lvyYkFPyxLJbjcZbEwIQ2WBp3FdsGF1NNUU4aUIeZb0ZvOdJ3CuFBrCuQRwx2UB2+Tet
+	 2bLQQdH/XAooDI3fIeVPqdx//G8mfnhBmSChhrlODnWulvlljGwzb+T1ZZxfpj6U0i755
+	 V+zRtz53kkhyFK1CjRxlPIKBFZ2/+BmmRZvhpHyQ/lnAeKBk4cw+/KC71u043y2JkYg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=proton.me;
-	spf=pass smtp.mailfrom=proton.me;
-	arc=none smtp.remote-ip=109.224.244.25
-Received: from mail-24425.protonmail.ch (mail-24425.protonmail.ch [109.224.244.25])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KU8+Oqyd;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06446606A31A
-	for <loongarch@lists.linux.dev>; Sun,  8 Nov 2026 07:03:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 06446606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=zf5wghusr5e5xbw23powvy4lpi.protonmail2; t=1794121418;
-	x=1794380618; bh=PqCraRvsBkJjRXkU4N7Ds+WrstGBtwW2/wRIicmkLGg=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=vqlX1b9vNU5TWIYAJZ2WZAZMVGyZGJEEKcFtlZVuybiCXwIaX2PbLo6SbWpJ38GqQ
-	 r5km4Y69FDqmYWPr+veJHm4mJIEwtve2K9GHUSjcL0gXDVfj9Su6UjNPnJhb77tS78
-	 Y3boTgrUDfVgVCPpQVtw7Qp63Jf4eButM9Vyxy+gTSsI6x6XUXNyxcGNf3VNmTtADm
-	 DWIuu3AJhjm15FQyVQovY3noJYuVDSPezvlKIOxDnALr2mX2nOaTCgrJlIHjSXvY1N
-	 R3OoSUAh2dpqboSFOh2WW7c6/wh7Q57u7hW4kD+XTJdhTjVdnXFG8aiZ7CFrJXHpOy
-	 oFPBX7FacjA+w==
-Date: Sun, 08 Nov 2026 07:03:33 +0000
-To: Vincent Li <vincent.mc.li@gmail.com>
-From: soffialanotte <soffialanotte@proton.me>
-Cc: "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>
-Subject: Re: How can I get started with loongson?
-Message-ID: <fSJxsbJsW39TYhfbAbDhnY1GO08lZNNqS7U7G7050XxmFGBMtyULBoBOeWhOEjcm67O4H5Qq9ryDu0OvRk_Ao3XBInS6T9WtYa0NdWvwEWY=@proton.me>
-In-Reply-To: <238b4f71-81ed-81b5-1bf0-5ad5773b5846@gmail.com>
-References: <nIF7OzD8u33FHJ3qE1qFaK7jIfY6eOxk3R7imk_36Akc-o0DTFbXgpOe0Svpcw0Mi_Usx8t_WXLc8j3VjwJCVbLeXmCba5YxdiNsk7dkHWI=@proton.me> <238b4f71-81ed-81b5-1bf0-5ad5773b5846@gmail.com>
-Feedback-ID: 192581689:user:proton
-X-Pm-Message-ID: 968a157c1a6b955cfb572faf6ed5fcd8784f157a
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2513E606A320;
+	Sun,  8 Nov 2026 07:59:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KU8+Oqyd
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A93D1F0089F;
+	Sun,  8 Nov 2026 07:59:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794124792;
+	bh=kiWdoUL35CtK4AqpYlqytBUDE4prNrZdQBOX59MoB6Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=KU8+OqydZHEZXN/+TG8ILc1PNHKh2vWp7gMa7DE6Q1h5MszIKjTR44HBtcSD5xWF/
+	 WGQb+vaULnSmHrV7CaaS0xw6Nilxb+LcvNGqrhOHwHA+IswpAaaw6H6kB8MMVmbWy7
+	 NjMeqTI4nx5hl8DgP9Qx0ADl3keAj1QN1d5bvyBWM3SHxXHZOFl4jS3/8ercXnnvSl
+	 MDE9gs4B9BxhVotzyHHLes3aMGjmRmUgKp4Ouw7tqvNbFALy3tRwoDuy40+ZASca7l
+	 AkGfBToogtiaGAraKSFxdcjDeUqWp6G8ZgXqb2ExtwXvbyx0b/t1xz0RNR2/hRqhQk
+	 KYmjUyxXj5cSg==
+Date: Sun, 8 Nov 2026 09:59:47 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, stable@vger.kernel.org
+Subject: Re: [PATCH] LoongArch: restore KFENCE pages through DMW on resume
+Message-ID: <avAr894n6lNGD9C8@kernel.org>
+References: <20261031-fixes-loongarch-v1-1-e0e33e3c008e@kernel.org>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -61,73 +56,96 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261031-fixes-loongarch-v1-1-e0e33e3c008e@kernel.org>
 
-On Thursday, October 22nd, 2026 at 9:06 AM, Vincent Li <vincent.mc.li@gmail=
-.com> wrote:
-> On Wed, 21 Oct 2026, soffialanotte wrote:
->=20
-> > Hi, everyone.
-> >
-> > This is a quick question. It may be inappropriate, and apologies
-> > for remaining anonymous.
-> >
-> > I just became an employee of the loongson for a while. My business
-> > unit is not related to upstream Linux directly. Before joining the
-> > company, I had been a Linux amateur who contributed to the upstream
-> > for other platforms. Since I can access to the loongson hardwares
-> > easily now, may I ask how can I get started with loongson upstream?
-> > Open documents, schematic diagrams, datasheets, web pages accessbile
-> > only internally, etc. All of them are welcome.
-> >
-> > With best regards,
-> > An anonymous
-> >
-> Hi "An anonymous",
->=20
-> Welcome aboard (to Loongson and to the list)! Great to hear you've
-> contributed upstream before =E2=80=94 that experience will serve you well=
- here.
->=20
-> On getting started: the usual paths apply =E2=80=94 watch the list for pa=
-tches
-> touching LoongArch, grab a board, try booting mainline on it, and fix
-> whatever breaks. For docs and schematics, the internal channels are the
-> right place to ask; folks on this list can point you to the public ones
-> (kernel docs, the LoongArch wiki, device tree bindings) but the
-> internal-only material has to go through your company's own process. That
-> part is a conversation for your BU, not this list.
->=20
+Gentle ping :)
 
-Sorry for my late reply. Thank you, Vincent. What I meant was not
-getting the detailed material from the mail list, it can be loongeco
-or other sites, where I can use my internal identity to access
-something, but the sites themselves are legal to talk about publicly,
-since the information in my BU is not well documented, I cannot find
-the useful material. For now, I have not asked my line manager for
-the material, because I do not want my manager to think that I am
-occupied with these things instead of my work. That is also the reason
-why I use a new mail to remain anonymous. But I will use my real name
-when I submit the patches. Thanks again!
+On Sat, Oct 31, 2026 at 03:21:46PM +0200, Mike Rapoport (Microsoft) wrote:
+> With KFENCE enabled, resume from hibernation triggers KFENCE reports while
+> swsusp_asm_resume() copies the image pages, for example:
+> 
+>   BUG: KFENCE: use-after-free write in swsusp_asm_resume+0x20/0x94
+> 
+>   Use-after-free write at 0x00000000a57ee925 (in kfence-#254):
+>    swsusp_asm_resume+0x20/0x94
+>    hibernation_restore+0x128/0x1a0
+>    load_image_and_restore+0x6c/0xc8
+>    software_resume+0x240/0x260
+>    do_one_initcall+0x68/0x200
+>    kernel_init_freeable+0x26c/0x304
+>    kernel_init+0x20/0x134
+>    ret_from_kernel_thread+0x24/0x1d0
+>    ret_from_kernel_thread_asm+0xc/0x98
+> 
+> During resume from hibernation, the image pages that occupy physical pages
+> used by the restore kernel are first loaded into free pages and then, as
+> the very last step, swsusp_asm_resume() copies them to their final location
+> pointed to by pbe->orig_address, which the hibernation core sets to
+> page_address() of the page in the restore kernel.
+> 
+> The early KFENCE pool is allocated from memblock and normally occupies the
+> same physical pages in the restore kernel and in the image kernel, so these
+> pages are usually copied by swsusp_asm_resume().
+> 
+> The KFENCE pool is remapped into the KFENCE area above vm_map_base and
+> set_page_address() adjusts page->virtual so that page_address() returns
+> the page-table mapped alias rather than the DMW address of the pool pages.
+> 
+> Hence, pbe->orig_address of KFENCE pages points to that alias and
+> swsusp_asm_resume() writes them through the page tables. But:
+> 
+> * the copy loop overwrites the kernel page tables, so a TLB refill for the
+>   KFENCE alias may use a partially restored page table
+> * the KFENCE pool pages that are protected in the restore kernel fault in
+>   the middle of the copy
+> 
+> Convert pbe->orig_address to DMW addresses before starting the copy.
+> 
+> Fixes: 0ca84aeaee15 ("LoongArch: Make {virt, phys, page, pfn} translation work with KFENCE")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> ---
+> Reproduced with hibernation in QEMU, the KFENCE reports are gone with
+> this patch.
+> ---
+>  arch/loongarch/power/hibernate.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/arch/loongarch/power/hibernate.c b/arch/loongarch/power/hibernate.c
+> index 817270410ef98..ff571ab4e8df9 100644
+> --- a/arch/loongarch/power/hibernate.c
+> +++ b/arch/loongarch/power/hibernate.c
+> @@ -59,6 +59,18 @@ extern int swsusp_asm_resume(void);
+>  
+>  int swsusp_arch_resume(void)
+>  {
+> +	struct pbe *pbe;
+> +
+> +	/*
+> +	 * page_address() of KFENCE pages is mapped by page tables that are
+> +	 * overwritten during restore and may be protected by KFENCE, copy
+> +	 * through DMW instead.
+> +	 */
+> +	if (IS_ENABLED(CONFIG_KFENCE)) {
+> +		for (pbe = restore_pblist; pbe; pbe = pbe->next)
+> +			pbe->orig_address = __va(virt_to_phys(pbe->orig_address));
+> +	}
+> +
+>  	/* Avoid TLB mismatch during and after kernel resume */
+>  	local_flush_tlb_all();
+>  	return swsusp_asm_resume();
+> 
+> ---
+> base-commit: c03c1a14507dfaf8b856c2608f9ac216021fc222
+> change-id: 20261027-fixes-loongarch-fd3755f33919
+> 
+> --
+> Sincerely yours,
+> Mike.
+> 
 
---
-With best regards,
-An anonymous
-
-> One small thing, though =E2=80=94 and I say this with a smile: Linux upst=
-ream has
-> a strict "no anonymous contributors" policy. The Signed-off-by: tag is a
-> legal statement (see Documentation/process/submitting-patches.rst), and i=
-t
-> requires a real name and a real email. So if you want to contribute to
-> upstream =E2=80=94 and we hope you do =E2=80=94 you'll need to introduce =
-yourself
-> properly, both here and in your patches. Anonymity is fine for asking
-> questions on some forums, but it doesn't survive contact with git
-> send-email.
->=20
-> Looking forward to seeing your first patch (with a real name attached!).
->=20
-> Best regards,
-> Vincent
+-- 
+Sincerely yours,
+Mike.
