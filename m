@@ -1,55 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=109.224.244.25
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794114352;
-	b=Uai89jwEHK45mAhj1mHCTERaPHUYb+rPfB1Ft/uRmRrf7mtMfBfsPU3FdUPo4n0rmsVQ
-	 OJb/DPUw546AuryfGp9ekGcvYiqLhenfh8t6J4Bch5ZSxF/3KFbyMd1tmQVvzy2//1loq
-	 s/YSnSxpEg0YSiXsjzemR6mvIV0zsUAg06V4+WgKiuZSHkeQtwAl9K3gh/QsgROBpxePl
-	 mWQX777mpR1FZnFiWwA6etLZRGFDdrvFsCibRDCK1M+07OdVH5Rxp4o5arLdcYM9vI+09
-	 E+1v2kP+b0n2rSdphYqTBZch9OS1lcF4ByPrxDezp02mWJUoWiCgBmZ0t0OUPZV8C/g==
+	t=1794121423;
+	b=3yUZmjSB9IpXhw82I9e9VrcSv51bLd49f2fz/S8+4SL5TGtrViUYdox6CskdXcGYe3XJ
+	 iJXK8+A8W2lKL/6kJOqKzLEte4uKXAdCyCMLyr4IOr3suSK7SqkVq8xQNVdzS8myOSHVj
+	 5fXzXFa/qjkT63CFTsv1+BpLo4p0Jr2S93dWZg02eiFxOhdEyPc2QPRzySZijt0ySf8ne
+	 19ThAf8Jd0xdKL6iQPr7KNHUIJqIGdNFJywFNFr559Enel4zojKKWpaB9Cgd8+vtWKbtB
+	 iNd1+kxouZRHHJOi1SC964JBAmF5n6neia5kPJ1maDben90m53YP1BFNlZ+O5ChsbyQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794114352;
-	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
-	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
-	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=DMAnc9Xs3KUNlFWK24lYx3EB87h8Uvn2c/RHBGCf0T0=;
-	b=csa6Vk61J1rvng0RdzhKWAZlUNx8pbVKG/a3SVzwS0iAWiOrNh2OeNK656hi03msgL8u
-	 YjX0O2OSCKVQ9nXZ2Z0GPZYYqXLM23PwkLpDTSLrQ3+YenCoqwKU5iFEJzkMwDuDlrUrX
-	 Um/74yRusbIglafOjQK+JddI4i9hg9gZNoJyxC/q02w3v1/6enUDlbs5Cl6wYNSFCXvbr
-	 i7WKoaKT446KhIwxNGoPmPFE9otarRW2nGe9cUz3vdGUIaJM7afqmQoOE128gdc36HGmk
-	 Smgtl9VqKrsmbh+c3OkGIPFjDt5fb2v+zaOmLiCIUFHLZwdy2iQp16xYx1531ifDvsA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794121423;
+	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
+	 In-Reply-To:References:Feedback-ID:X-Pm-Message-ID:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=PqCraRvsBkJjRXkU4N7Ds+WrstGBtwW2/wRIicmkLGg=;
+	b=BFN0xBR+2r+HFWuHGZ6j1XRyEaIA7m9uep+NpOllfGVXv5XPcCueE4ZuJQywgGrHkHBz
+	 x5IMYln4CDKiK4Oxb1AYeOHJ6gVPblxaYo7CXg2w/wsNrOD/ttziJDLf7oJ9phpREUia4
+	 5FpQJnpLPulc7nvjEppqq6UcnWpRsvcwXQynTdXFjA6zJnZQcZPNg5CGn+WvuiMtxTZdj
+	 LM4jdmCkhHILOFrCsa4EfwfRBfZCu89zZP1g2nmIAfnjCzie0bTWuWt2SsXN2gMiZlHVo
+	 V+gulM8mq919g2qwtEvggHhCpNBFQjolYKeY2rnr7x3NwHGoqxruWLBv65B8+rYL/BA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mgM1vKkj;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=proton.me;
+	spf=pass smtp.mailfrom=proton.me;
+	arc=none smtp.remote-ip=109.224.244.25
+Received: from mail-24425.protonmail.ch (mail-24425.protonmail.ch [109.224.244.25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC06606A31D
-	for <loongarch@lists.linux.dev>; Sun,  8 Nov 2026 05:05:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mgM1vKkj
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE0881F008BC
-	for <loongarch@lists.linux.dev>; Sun,  8 Nov 2026 05:05:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794114351;
-	bh=DMAnc9Xs3KUNlFWK24lYx3EB87h8Uvn2c/RHBGCf0T0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=mgM1vKkjWvnbxg+M64llnEwsiUdt77IDEbiGWMQmQyb8WSiM5PRKMXZEYZ7HHqWS+
-	 B3MXncZMF3EkvxTNYx0bijIDEIT/9q1o9j5FIt5fXdW1FJmzs4maXTuc/8n3TzyDaZ
-	 Xkcah3DOIrsPoNe/K0qE3XrMPfcjO6CZ4TBn8b13P5AHZtLW27w9zrWYoLLeT++URP
-	 VRXPFjMaJwJiQUg4Y+99KxplHjtVlzblBTAVfZUDiI41TUsoNoz2wJpFdSpeSjWDk+
-	 1xwAsoX2hQMjxBJ6JUsAQCDSZumzcFqEa8ztimIAPbSE6efH2t6WwJC3lvIBjtKxSI
-	 F2wefJtZRekqQ==
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6ae305e3bd9so269815a12.0
-        for <loongarch@lists.linux.dev>; Sat, 07 Nov 2026 21:05:50 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AKwUvBybAxSDVbYqds9khRD9sGb8kRMFErwo13ESkzruuOrtj61WBlvEWxDIpCTeQAgMo01T4YHk3DCmiF0=@lists.linux.dev
-X-Gm-Message-State: APuU4Z/QDP7fWfd/R4e4NRqVi/HL4a2mk0itRmtRKlAwGPp94CjD4wpl
-	7CMlJKa7pNs3VcEuwE9BfIibOV7rTfokdPERDUuM8Za10H0cFLcCQSkni1VQcCgfEfjSGlrlLI4
-	7K+dQMxKaK55CmD627fR8ysc7E6TrhS0=
-X-Received: by 2002:a17:906:d550:b0:c4c:e344:ecec with SMTP id
- a640c23a62f3a-c4d6d15a575mr44829966b.6.1794114349578; Sat, 07 Nov 2026
- 21:05:49 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06446606A31A
+	for <loongarch@lists.linux.dev>; Sun,  8 Nov 2026 07:03:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 06446606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=zf5wghusr5e5xbw23powvy4lpi.protonmail2; t=1794121418;
+	x=1794380618; bh=PqCraRvsBkJjRXkU4N7Ds+WrstGBtwW2/wRIicmkLGg=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=vqlX1b9vNU5TWIYAJZ2WZAZMVGyZGJEEKcFtlZVuybiCXwIaX2PbLo6SbWpJ38GqQ
+	 r5km4Y69FDqmYWPr+veJHm4mJIEwtve2K9GHUSjcL0gXDVfj9Su6UjNPnJhb77tS78
+	 Y3boTgrUDfVgVCPpQVtw7Qp63Jf4eButM9Vyxy+gTSsI6x6XUXNyxcGNf3VNmTtADm
+	 DWIuu3AJhjm15FQyVQovY3noJYuVDSPezvlKIOxDnALr2mX2nOaTCgrJlIHjSXvY1N
+	 R3OoSUAh2dpqboSFOh2WW7c6/wh7Q57u7hW4kD+XTJdhTjVdnXFG8aiZ7CFrJXHpOy
+	 oFPBX7FacjA+w==
+Date: Sun, 08 Nov 2026 07:03:33 +0000
+To: Vincent Li <vincent.mc.li@gmail.com>
+From: soffialanotte <soffialanotte@proton.me>
+Cc: "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>
+Subject: Re: How can I get started with loongson?
+Message-ID: <fSJxsbJsW39TYhfbAbDhnY1GO08lZNNqS7U7G7050XxmFGBMtyULBoBOeWhOEjcm67O4H5Qq9ryDu0OvRk_Ao3XBInS6T9WtYa0NdWvwEWY=@proton.me>
+In-Reply-To: <238b4f71-81ed-81b5-1bf0-5ad5773b5846@gmail.com>
+References: <nIF7OzD8u33FHJ3qE1qFaK7jIfY6eOxk3R7imk_36Akc-o0DTFbXgpOe0Svpcw0Mi_Usx8t_WXLc8j3VjwJCVbLeXmCba5YxdiNsk7dkHWI=@proton.me> <238b4f71-81ed-81b5-1bf0-5ad5773b5846@gmail.com>
+Feedback-ID: 192581689:user:proton
+X-Pm-Message-ID: 968a157c1a6b955cfb572faf6ed5fcd8784f157a
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -59,96 +61,73 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <20261016095151.1155049-1-cui.tao@linux.dev>
-In-Reply-To: <20261016095151.1155049-1-cui.tao@linux.dev>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 8 Nov 2026 13:05:38 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4ZU1KaagDfObCZFYDTowG5EYf3QpdUebdpBdtozzF00g@mail.gmail.com>
-X-Gm-Features: AclHuK_a2jTQjAVHTLhyRW9kDvdj1qOm6NVMjMG_Ua0PORpvn7SJ5WZ1nS5nXwA
-Message-ID: <CAAhV-H4ZU1KaagDfObCZFYDTowG5EYf3QpdUebdpBdtozzF00g@mail.gmail.com>
-Subject: Re: [PATCH v5 0/3] LoongArch: KVM: irqchip fixes
-To: Tao Cui <cui.tao@linux.dev>
-Cc: maobibo@loongson.cn, gaosong@loongson.cn, zhaotianrui@loongson.cn, 
-	loongarch@lists.linux.dev, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kernel@xen0n.name, nagachaithanya9911@gmail.com, Tao Cui <cuitao@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-Series applied, thanks.
+On Thursday, October 22nd, 2026 at 9:06 AM, Vincent Li <vincent.mc.li@gmail=
+.com> wrote:
+> On Wed, 21 Oct 2026, soffialanotte wrote:
+>=20
+> > Hi, everyone.
+> >
+> > This is a quick question. It may be inappropriate, and apologies
+> > for remaining anonymous.
+> >
+> > I just became an employee of the loongson for a while. My business
+> > unit is not related to upstream Linux directly. Before joining the
+> > company, I had been a Linux amateur who contributed to the upstream
+> > for other platforms. Since I can access to the loongson hardwares
+> > easily now, may I ask how can I get started with loongson upstream?
+> > Open documents, schematic diagrams, datasheets, web pages accessbile
+> > only internally, etc. All of them are welcome.
+> >
+> > With best regards,
+> > An anonymous
+> >
+> Hi "An anonymous",
+>=20
+> Welcome aboard (to Loongson and to the list)! Great to hear you've
+> contributed upstream before =E2=80=94 that experience will serve you well=
+ here.
+>=20
+> On getting started: the usual paths apply =E2=80=94 watch the list for pa=
+tches
+> touching LoongArch, grab a board, try booting mainline on it, and fix
+> whatever breaks. For docs and schematics, the internal channels are the
+> right place to ask; folks on this list can point you to the public ones
+> (kernel docs, the LoongArch wiki, device tree bindings) but the
+> internal-only material has to go through your company's own process. That
+> part is a conversation for your BU, not this list.
+>=20
 
-Huacai
+Sorry for my late reply. Thank you, Vincent. What I meant was not
+getting the detailed material from the mail list, it can be loongeco
+or other sites, where I can use my internal identity to access
+something, but the sites themselves are legal to talk about publicly,
+since the information in my BU is not well documented, I cannot find
+the useful material. For now, I have not asked my line manager for
+the material, because I do not want my manager to think that I am
+occupied with these things instead of my work. That is also the reason
+why I use a new mail to remain anonymous. But I will use my real name
+when I submit the patches. Thanks again!
 
-On Fri, Oct 16, 2026 at 5:52=E2=80=AFPM Tao Cui <cui.tao@linux.dev> wrote:
->
-> From: Tao Cui <cuitao@kylinos.cn>
->
-> Hi,
->
-> Three fixes for the LoongArch KVM irqchip code:
->
-> - Patch 1 clears the device pointer in the destroy callbacks: when
->   KVM_CREATE_DEVICE succeeds but the following fd allocation fails
->   (e.g. under RLIMIT_NOFILE), ops->destroy() frees the irqchip while
->   kvm->arch.* still points to it.
->
-> - Patch 2 aligns kvm_pch_pic_create() with kvm_eiointc_create() by
->   propagating the real error code; the kvm_ipi_create() counterpart is
->   being fixed separately (Chaithanya Lagisetty).
->
-> - Patch 3 rejects repeated PCH-PIC CTRL_INIT with -EEXIST, using the
->   initialized state of the kvm_io_device as the indicator.  The check,
->   the MMIO base update and the bus registration are serialized by
->   slots_lock; on a registration failure the state is rolled back so
->   that a retry can start over.
->
-> All patches carry Fixes tags.
->
-> Changes in v5:
->
-> - Patch 3: roll back the base and the device state on registration
->   failure, as suggested by Bibo.
->
-> Changes in v4:
->
-> - Patch 3: update pch_pic_base unconditionally, as suggested by
->   Huacai.
->
-> Changes in v3:
->
-> - Drop "Load dmsintc pointer once in pch_msi_set_irq" (v2 patch 2),
->   suggested by Bibo and Huacai.
->
-> - Patch 3 (v2 patch 4): reject repeated CTRL_INIT by checking the
->   kvm_io_device state instead of a separate has_init flag, also
->   suggested by Huacai; the check stays under slots_lock.
->
-> Changes in v2:
->
-> - Drop "Guard against NULL irqchip in irq injection" (v1 patch 2) and
->   "Rebase steal time counter in vcpu context" (v1 patch 4) after
->   review discussion: their trigger scenarios are not reachable
->   through real VMM behaviour.
->
-> - Use the one-line destroy style in dmsintc suggested by Bibo.
->
-> - Track repeated PCH-PIC CTRL_INIT with a has_init flag and return
->   -EEXIST instead of -EBUSY, also suggested by Bibo; move the check
->   and base update under slots_lock so they are atomic.
->
-> - Add READ_ONCE() to the dmsintc pointer loads so the compiler
->   keeps each of them a single load.
->
-> Tao Cui (3):
->   LoongArch: KVM: Clear device pointer in irqchip destroy callbacks
->   LoongArch: KVM: Propagate real error code in kvm_pch_pic_create
->   LoongArch: KVM: Reject repeated PCH-PIC CTRL_INIT
->
->  arch/loongarch/kvm/intc/dmsintc.c |  1 +
->  arch/loongarch/kvm/intc/eiointc.c |  1 +
->  arch/loongarch/kvm/intc/ipi.c     |  1 +
->  arch/loongarch/kvm/intc/pch_pic.c | 19 +++++++++++++++----
->  4 files changed, 18 insertions(+), 4 deletions(-)
->
-> --
-> 2.43.0
->
+--
+With best regards,
+An anonymous
+
+> One small thing, though =E2=80=94 and I say this with a smile: Linux upst=
+ream has
+> a strict "no anonymous contributors" policy. The Signed-off-by: tag is a
+> legal statement (see Documentation/process/submitting-patches.rst), and i=
+t
+> requires a real name and a real email. So if you want to contribute to
+> upstream =E2=80=94 and we hope you do =E2=80=94 you'll need to introduce =
+yourself
+> properly, both here and in your patches. Anonymity is fine for asking
+> questions on some forums, but it doesn't survive contact with git
+> send-email.
+>=20
+> Looking forward to seeing your first patch (with a real name attached!).
+>=20
+> Best regards,
+> Vincent
