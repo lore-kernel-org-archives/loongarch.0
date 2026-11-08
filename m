@@ -1,55 +1,82 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794138644;
-	b=EFIqVVEEKyGhKFJ76QaEJ4MrHUEKNiUEwIAYIVEFKnQ9vldnVgKdx0UjzWcUg40KKAZw
-	 mv6jsqExsv3X4gdciwX1tZv0/862g3TwtazjwMG4JmDmDCb607TdUA3EX7gcF3EETgfKB
-	 hpXBZJm14zVM668J5nKKM3AwHUh+A0kzXy2FEA53AqVaMUHaiRSDmP5t2/e2aTDZicOfA
-	 aorMbiqz9ohl/m3HdPzJd0vScGCs2170aNhv0Y5TJmthtnFC0Gv3NbsulzGByiffonW4C
-	 HjDUiDC43RQqa7y8/j36seViMz7/V7fqEbRsV5FuY9+K5UIOw5iVy5C7wWFAPER17tg==
+	t=1794153270;
+	b=E2e4Q3QI9ChnB2zcio+b8dGrmuUT+4Z6DUFfrZlaaVIAZJmobHr/AmL6VPDqo0NkkKTJ
+	 L3aQ7X3EZv1xuVk+Mhq8tyIo0vbOFvOradtgvnMmLoNB6BJLWqtnKgMl31vwSyffdI9B0
+	 FelcFnhgH96ju+mcz0I3Q+7E8lcFGM4tQQTNWFXOnkTPXttDpLjLuON5e/UXuVg3UHA9K
+	 l7B/NyRlclBDDRsU8jwogDN7NDX6SloDGE0H0bLnDcICTOS8ugkynqgz+rj+l6L++tBqH
+	 ZaVWcldNRp3vYftKSiLVU0zg/nzQE6oOJl6zubTuabZexi1NRiybs3ZKSOB86XIB6tg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794138644;
-	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
-	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
-	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=iFs5od5bXdQ2LegEpfRcPnj5K0IUuQOJdja1+2xaK9M=;
-	b=QR7UlI2kcFvAnnCRnqMjHADXTDyTfS9r0FADlOzbwl5XDNN4Rzu3Cjtgxxelp0o/MLtz
-	 8GRpBRCFTwPQGcoYKwjnxgaJnI0AoOvGkonG7Kv8FZDCf2ofdXUyh0shU2tCPgWJYHh8x
-	 fz3F+XsgwtQorngkv2xEor3VqU5r02TFzIm84edP/i+3aYI8Nu2XKEoNamixJbrOQSnQT
-	 DuOYAmGa0/KMQSj+mgjKA81YUqYGQjDEEliycFq1e+N30Tv54p+P8jJ0fjU6Wp8/CJ/nj
-	 L+wMp/QXPuQQaTrkj2kZ35nNrpQmImGN3HNkUE+4ddNYD0u+xLlOaX8161Xw1s3FKmw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794153270;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
+	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
+	bh=5GBHjUTFcUUKHRDe6Uz5ToMncS7KWKXWOvxbmPEhwVE=;
+	b=ulv9bpskAkhsJnq5Ac9ya+hT/GQ5w6ybCqglLj8tcWdSvapag17WLfuRK9mFDdYMQipv
+	 eAoSQDYuKThdJ822icqaKJAexVLpAQ7VGwSSx2j+m7+L0Db/0qG/t5G4pn8unv4tJDOwR
+	 leoLhQNJphQlIo9Hg79P+HOs1hBBB/8Z5hF/sRGUuUQPTnM2aMlj+5OQMbdZBCBD/zfPT
+	 +rAbfacCzwkBPCpWWMFJen8spjiFsHbf7GCYymJCAfBVFr+7bMs2RaA6h7kZiZsCM51J/
+	 HP9AC6FVdS2asPJFaPyyzU3t7DNxBvvfCJ5nGajGaL7HEopDi/HHt+G+fZRLT6usrNQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EX+JTdfk;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZJmK8oUf;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A2C8606A31C
-	for <loongarch@lists.linux.dev>; Sun,  8 Nov 2026 11:50:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C817606A31C;
+	Sun,  8 Nov 2026 15:54:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EX+JTdfk
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1E181F008A1
-	for <loongarch@lists.linux.dev>; Sun,  8 Nov 2026 11:50:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZJmK8oUf
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 041841F0089F;
+	Sun,  8 Nov 2026 15:54:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794138643;
-	bh=iFs5od5bXdQ2LegEpfRcPnj5K0IUuQOJdja1+2xaK9M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=EX+JTdfkulIwbmfRHO3BEyl0Mu/jQohxptPSymEDIoS7NCbGzJiGpt00ug2c6rpbo
-	 nr2vnWFTrHuuIrYLxBOpkdjUvgnfmx9L/ba9Kf6o8AN1kE71tmQDOGldfr6wFYHUSj
-	 1O8yfbtpEgK8TbHGdk30hfMnAa9KodMpxpqTOwZZgsqb5nRyViGomK7vsskZBAMdBQ
-	 /P68vjTboM8dbp4jPtnFcpQR454+GA6TYHGcPs/2ugGAZQutcQeMad5I+l9zoz/VA4
-	 WVEiUotakbacQLqNf1dOFYzpF1yV15k7BUrmtGvBsdCYsPf3AFbhOxZe/2buEJkbrU
-	 dzzF1a0Znwr2Q==
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-c450ab1483cso7882166b.3
-        for <loongarch@lists.linux.dev>; Sun, 08 Nov 2026 03:50:43 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AKwUvBw7LkVPWC0m7gKttBT5AjoOOUI6oUxmn63BOkJdQAAlAtPeTJfujYKUZZQU3fMW0tGHRUOVB/6pc+c=@lists.linux.dev
-X-Gm-Message-State: APuU4Z9BAF1ygNz6hAFrte70zHGQkaexr2KBDZHT43ZECjdsD6rloWVr
-	9mERYwrCXXaBA9r0HCxy9K65NdNFZIb7y+GncpCtuFBmKHXGUZ6OZtjItxwxZKWc5lTJ74PL05Z
-	fruKLK18CSYFIXtJFGiR/mWLhaAxm+P8=
-X-Received: by 2002:a17:907:2d8d:b0:c4d:4be1:4197 with SMTP id
- a640c23a62f3a-c4d6db2179bmr97283866b.41.1794138642533; Sun, 08 Nov 2026
- 03:50:42 -0800 (PST)
+	s=k20260515; t=1794153270;
+	bh=5GBHjUTFcUUKHRDe6Uz5ToMncS7KWKXWOvxbmPEhwVE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=ZJmK8oUfB5GK4SbMw3dQ4gH4wjlNa4ufA6yaxygD3Pbs5aQPHdlk4heug6b52tepR
+	 HDxpJJlU8tRKZUgzaTxtMt5yfwa6BJUtuObFCmPlQp5ro1G/aANuVZyCqpQyvuACBd
+	 xQCn+U+Ijo6zuGkJ2P84IAnkz63BANh0VFfve8TpGzqv/J3WeIZpC75uiyvmv2YXa8
+	 TsQJxAJxz8iLLP+w6S1PYYF6XGDXOJq7Yspz2c9uANiujJOPDZ53koYaa7XAmvDESh
+	 qfV16MLzWmPUrgefTB0jcFCI8f2brVRUadBdyxsFQ5aUyC1DtJHF8qO9VpNcFrUyj0
+	 FSoBfoNzq3IQw==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: gregkh@linuxfoundation.org
+Cc: achill@achill.org,
+	akpm@linux-foundation.org,
+	broonie@kernel.org,
+	conor@kernel.org,
+	f.fainelli@gmail.com,
+	hargar@microsoft.com,
+	jonathanh@nvidia.com,
+	linux-kernel@vger.kernel.org,
+	linux@roeck-us.net,
+	lkft-triage@lists.linaro.org,
+	patches@kernelci.org,
+	patches@lists.linux.dev,
+	pavel@nabladev.com,
+	rwarsow@gmx.de,
+	shuah@kernel.org,
+	sr@sladewatkins.com,
+	stable@vger.kernel.org,
+	sudipm.mukherjee@gmail.com,
+	torvalds@linux-foundation.org,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Carlos Maiolino <cem@kernel.org>,
+	linux-xfs@vger.kernel.org,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	linux-um@lists.infradead.org
+Subject: Re: [PATCH 6.18 000/869] 6.18.63-rc1 review
+Date: Sun,  8 Nov 2026 16:54:16 +0100
+Message-ID: <20261108155416.119775-1-ojeda@kernel.org>
+In-Reply-To: <20261107134852.069646174@linuxfoundation.org>
+References: <20261107134852.069646174@linuxfoundation.org>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -59,152 +86,48 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <20261031-fixes-loongarch-v1-1-e0e33e3c008e@kernel.org>
- <avAr894n6lNGD9C8@kernel.org> <CAAhV-H5kDgiaDF3t9BakAeD31JxET+27jcVvNU=ZQDZv_vSBcA@mail.gmail.com>
- <avBV048xzXRp-cnC@kernel.org>
-In-Reply-To: <avBV048xzXRp-cnC@kernel.org>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 8 Nov 2026 19:50:31 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6Paunrio+OX6JchQr3JOfLJW=1D_GGVzCjyAn53291Qw@mail.gmail.com>
-X-Gm-Features: AclHuK_oerMpFdYcgrwKmLKMjsGFuCdSpGwy5J6w8hQgR6esaNKhIPEaZQlT5sI
-Message-ID: <CAAhV-H6Paunrio+OX6JchQr3JOfLJW=1D_GGVzCjyAn53291Qw@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: restore KFENCE pages through DMW on resume
-To: Mike Rapoport <rppt@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sun, Nov 8, 2026 at 6:58=E2=80=AFPM Mike Rapoport <rppt@kernel.org> wrot=
-e:
+On Sat, 07 Nov 2026 08:44:42 -0500 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 >
-> On Sun, Nov 08, 2026 at 04:17:02PM +0800, Huacai Chen wrote:
-> > On Sun, Nov 8, 2026 at 3:59=E2=80=AFPM Mike Rapoport <rppt@kernel.org> =
-wrote:
-> > >
-> > > Gentle ping :)
-> > Sorry for the late response, would you mind if I modify it to use
-> > #ifdef? Usually it should be avoided, but I want to signal users that
-> > KFENCE is not a usually enabled feature.
+> This is the start of the stable review cycle for the 6.18.63 release.
+> There are 869 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> Up to you :)
->
-> Do you want me to resend or you can update while applying?
-I will update while applying.
+> Responses should be made by Mon, 09 Nov 2026 13:46:08 +0000.
+> Anything received after that time might be too late.
 
-Huacai
+Boot-tested under QEMU for Rust x86_64, arm64 and riscv64; built-tested
+for loongarch64 and arm32:
 
->
-> > Huacai
-> >
-> > >
-> > > On Sat, Oct 31, 2026 at 03:21:46PM +0200, Mike Rapoport (Microsoft) w=
-rote:
-> > > > With KFENCE enabled, resume from hibernation triggers KFENCE report=
-s while
-> > > > swsusp_asm_resume() copies the image pages, for example:
-> > > >
-> > > >   BUG: KFENCE: use-after-free write in swsusp_asm_resume+0x20/0x94
-> > > >
-> > > >   Use-after-free write at 0x00000000a57ee925 (in kfence-#254):
-> > > >    swsusp_asm_resume+0x20/0x94
-> > > >    hibernation_restore+0x128/0x1a0
-> > > >    load_image_and_restore+0x6c/0xc8
-> > > >    software_resume+0x240/0x260
-> > > >    do_one_initcall+0x68/0x200
-> > > >    kernel_init_freeable+0x26c/0x304
-> > > >    kernel_init+0x20/0x134
-> > > >    ret_from_kernel_thread+0x24/0x1d0
-> > > >    ret_from_kernel_thread_asm+0xc/0x98
-> > > >
-> > > > During resume from hibernation, the image pages that occupy physica=
-l pages
-> > > > used by the restore kernel are first loaded into free pages and the=
-n, as
-> > > > the very last step, swsusp_asm_resume() copies them to their final =
-location
-> > > > pointed to by pbe->orig_address, which the hibernation core sets to
-> > > > page_address() of the page in the restore kernel.
-> > > >
-> > > > The early KFENCE pool is allocated from memblock and normally occup=
-ies the
-> > > > same physical pages in the restore kernel and in the image kernel, =
-so these
-> > > > pages are usually copied by swsusp_asm_resume().
-> > > >
-> > > > The KFENCE pool is remapped into the KFENCE area above vm_map_base =
-and
-> > > > set_page_address() adjusts page->virtual so that page_address() ret=
-urns
-> > > > the page-table mapped alias rather than the DMW address of the pool=
- pages.
-> > > >
-> > > > Hence, pbe->orig_address of KFENCE pages points to that alias and
-> > > > swsusp_asm_resume() writes them through the page tables. But:
-> > > >
-> > > > * the copy loop overwrites the kernel page tables, so a TLB refill =
-for the
-> > > >   KFENCE alias may use a partially restored page table
-> > > > * the KFENCE pool pages that are protected in the restore kernel fa=
-ult in
-> > > >   the middle of the copy
-> > > >
-> > > > Convert pbe->orig_address to DMW addresses before starting the copy=
-.
-> > > >
-> > > > Fixes: 0ca84aeaee15 ("LoongArch: Make {virt, phys, page, pfn} trans=
-lation work with KFENCE")
-> > > > Cc: stable@vger.kernel.org
-> > > > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> > > > ---
-> > > > Reproduced with hibernation in QEMU, the KFENCE reports are gone wi=
-th
-> > > > this patch.
-> > > > ---
-> > > >  arch/loongarch/power/hibernate.c | 12 ++++++++++++
-> > > >  1 file changed, 12 insertions(+)
-> > > >
-> > > > diff --git a/arch/loongarch/power/hibernate.c b/arch/loongarch/powe=
-r/hibernate.c
-> > > > index 817270410ef98..ff571ab4e8df9 100644
-> > > > --- a/arch/loongarch/power/hibernate.c
-> > > > +++ b/arch/loongarch/power/hibernate.c
-> > > > @@ -59,6 +59,18 @@ extern int swsusp_asm_resume(void);
-> > > >
-> > > >  int swsusp_arch_resume(void)
-> > > >  {
-> > > > +     struct pbe *pbe;
-> > > > +
-> > > > +     /*
-> > > > +      * page_address() of KFENCE pages is mapped by page tables th=
-at are
-> > > > +      * overwritten during restore and may be protected by KFENCE,=
- copy
-> > > > +      * through DMW instead.
-> > > > +      */
-> > > > +     if (IS_ENABLED(CONFIG_KFENCE)) {
-> > > > +             for (pbe =3D restore_pblist; pbe; pbe =3D pbe->next)
-> > > > +                     pbe->orig_address =3D __va(virt_to_phys(pbe->=
-orig_address));
-> > > > +     }
-> > > > +
-> > > >       /* Avoid TLB mismatch during and after kernel resume */
-> > > >       local_flush_tlb_all();
-> > > >       return swsusp_asm_resume();
-> > > >
-> > > > ---
-> > > > base-commit: c03c1a14507dfaf8b856c2608f9ac216021fc222
-> > > > change-id: 20261027-fixes-loongarch-fd3755f33919
-> > > >
-> > > > --
-> > > > Sincerely yours,
-> > > > Mike.
-> > > >
-> > >
-> > > --
-> > > Sincerely yours,
-> > > Mike.
->
-> --
-> Sincerely yours,
-> Mike.
+Tested-by: Miguel Ojeda <ojeda@kernel.org>
+
+In loongarch64, I am seeing again the XFS issue:
+
+  https://lore.kernel.org/stable/20261106071743.90363-1-ojeda@kernel.org/
+
+Cc: Carlos Maiolino <cem@kernel.org>
+Cc: linux-xfs@vger.kernel.org
+Cc: Darrick J. Wong <djwong@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>
+
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev
+
+For completeness, for UML I have been seeing (I will skip reporting these):
+
+  arch/um/drivers/ubd_kern.c:780:13: warning: stack frame size (1480) exceeds limit (1024) in 'ubd_device_release' [-Wframe-larger-than]
+
+  lib/kunit/test.c:684:5: warning: stack frame size (1208) exceeds limit (1024) in 'kunit_run_tests' [-Wframe-larger-than]
+
+Cc: Richard Weinberger <richard@nod.at>
+Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Cc: Johannes Berg <johannes@sipsolutions.net>
+Cc: linux-um@lists.infradead.org
+
+Thanks!
+
+Cheers,
+Miguel
