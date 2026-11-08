@@ -1,52 +1,64 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794124793;
-	b=Z2Z3EDAj0yRVBoG6cYCEJAwbyZla/t4GlZKiTfRsI4nx0piq46FzU91YePRx4CRS+pQg
-	 pi+fNkapoPDfXUY47FXFd41kkOt8aeV2pgwJfgVSVILc9NZceTCKbxtXJ2PswCgd/OSUd
-	 lqKMWnw41b8gA8uZch0ELYjfcTltgfs1t6cU9YR/6edXeZOMKQLEu2Yywq8IwBpr7fcYl
-	 rBe0rJyE8Ire2pqulAOWMOrNEKCQlaQKw+EizNj0Js6asxtyh1eVMQWVw+llMcbIfVXRG
-	 GnPjCb9TCRPY6negETL3a5Wn/8HSMHJT+ugwAx4BgseXiXaFQSB0OxWfQHtU6bnKKKg==
+	t=1794125697;
+	b=nBd5FmhmL1ERbIILAjZjanGe35FMNVjqPyAy0wo6a150KUyRdFqLvcB1KJZQny+8nqX8
+	 ZotODc+qYAwRoDaAnaLezA+pb7DSwBtYlHjAGqU0peJNvTQVs14vr2QzDrmq1NTzfCr4G
+	 01NuJg+cCatLN6kNfRji2yUCinzMoQl+aDHoHOAmZFBTQDdrlMC6usxEkKqblhK5+3T3L
+	 IyVTPktoZlHn5fbv3JzGE/WTLyrIQhc0uChfZpGqsSx5jCQQTcMaEVLQTHLCDroSNSoFV
+	 aFgsko5xQZOQzv+aclTxWpeaStTUtBzMPUgQDR94w21IO+JhfZwNQBoOK3hmlfvykEA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794124793;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794125697;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=kiWdoUL35CtK4AqpYlqytBUDE4prNrZdQBOX59MoB6Q=;
-	b=Wuvy/2Mlk9r77G7ehx1Qj02wkV1q/Y6bknEdD9E+Hr/zQ4iUpfHXtDRPYGIPzvmeKiuw
-	 HLE+pqH73IVLe+DjnrJZsd+FGRrXE5WZTgMEbakM9ne5YpHZA4uoFFryQ+9ekhEEuJq4G
-	 /lvyYkFPyxLJbjcZbEwIQ2WBp3FdsGF1NNUU4aUIeZb0ZvOdJ3CuFBrCuQRwx2UB2+Tet
-	 2bLQQdH/XAooDI3fIeVPqdx//G8mfnhBmSChhrlODnWulvlljGwzb+T1ZZxfpj6U0i755
-	 V+zRtz53kkhyFK1CjRxlPIKBFZ2/+BmmRZvhpHyQ/lnAeKBk4cw+/KC71u043y2JkYg==
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 Content-Transfer-Encoding:In-Reply-To;
+	bh=0W/6CqRYQKhRFQh0YmGByeLiEw+AYRdR3bmjVY7Mfnw=;
+	b=epci4E9X3u5sXZK0uzov5kunDpRN+EgPLn6y+zghOQ5eISXRDRpou+Z1wYiqQuvt2Utu
+	 F7AVzDRk5TXp7IJDfUc/qa7/fFJLEs6APjJNHuRAu1/4nnyxyz2xErjPMWRmR709ilnmP
+	 R/AngaRLnqtvwrweoIGcyvNSBzIqtKd1KsbgAGiZNv+Vj1oH7Td2AgGiOGRtMfQLlUJNX
+	 GHY2PIvRHv5k13Td/6SQND7gGokgt0FOS2nGlYT+o8MqvU99179ZuxQnZ6KJTxmqOba2S
+	 SMoHpErgIJ+VBXO1132p05EayspBBJbvkIj0qR57wOadAHKROASbnkVakpUrnYv4myQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KU8+Oqyd;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MKFzGvSF;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2513E606A320;
-	Sun,  8 Nov 2026 07:59:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7D69606A31C;
+	Sun,  8 Nov 2026 08:14:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KU8+Oqyd
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A93D1F0089F;
-	Sun,  8 Nov 2026 07:59:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MKFzGvSF
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41F881F008A1;
+	Sun,  8 Nov 2026 08:14:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794124792;
-	bh=kiWdoUL35CtK4AqpYlqytBUDE4prNrZdQBOX59MoB6Q=;
+	s=k20260515; t=1794125696;
+	bh=0W/6CqRYQKhRFQh0YmGByeLiEw+AYRdR3bmjVY7Mfnw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=KU8+OqydZHEZXN/+TG8ILc1PNHKh2vWp7gMa7DE6Q1h5MszIKjTR44HBtcSD5xWF/
-	 WGQb+vaULnSmHrV7CaaS0xw6Nilxb+LcvNGqrhOHwHA+IswpAaaw6H6kB8MMVmbWy7
-	 NjMeqTI4nx5hl8DgP9Qx0ADl3keAj1QN1d5bvyBWM3SHxXHZOFl4jS3/8ercXnnvSl
-	 MDE9gs4B9BxhVotzyHHLes3aMGjmRmUgKp4Ouw7tqvNbFALy3tRwoDuy40+ZASca7l
-	 AkGfBToogtiaGAraKSFxdcjDeUqWp6G8ZgXqb2ExtwXvbyx0b/t1xz0RNR2/hRqhQk
-	 KYmjUyxXj5cSg==
-Date: Sun, 8 Nov 2026 09:59:47 +0200
+	b=MKFzGvSFZwWIFFRA0ZXyvs16A8suXF5CnHj8Yu6DWVn1XNaXrMDEdixojJ9WmXEb7
+	 B8HFMUjzOTvU6RwlNQjwdzjqPDvQCGA/4AJ0Em0zHhj4ypRhnI0mKxzYLZP1OV0ifL
+	 eA9/fxW3Pxy16892wCazYquUCYCuIsm8XcchNAPA4t/tkQu4javpgOcU7RVq4A3nxo
+	 k4uHK/8yLyZ3smraijDdggziz20OX07t14xfVyqW5GBbR1PgqbbVWyHXUI4Z32Xbrc
+	 0iyAWtnR+xfX5UnU/tie3OAW89SLmVQEk/G3YHRAs2N39oS4qhXV1enxnkV6a1AaEm
+	 jVNdWp25bMNnQ==
+Date: Sun, 8 Nov 2026 10:14:46 +0200
 From: Mike Rapoport <rppt@kernel.org>
 To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, stable@vger.kernel.org
-Subject: Re: [PATCH] LoongArch: restore KFENCE pages through DMW on resume
-Message-ID: <avAr894n6lNGD9C8@kernel.org>
-References: <20261031-fixes-loongarch-v1-1-e0e33e3c008e@kernel.org>
+Cc: George Guo <dongtai.guo@linux.dev>, pasha.tatashin@soleen.com,
+	pratyush@kernel.org, ardb@kernel.org, shuah@kernel.org,
+	ilias.apalodimas@linaro.org, akpm@linux-foundation.org,
+	baoquan.he@linux.dev, ruirui.yang@linux.dev, guodongtai@kylinos.cn,
+	kernel@xen0n.name, graf@amazon.com, liukexin@kylinos.cn,
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org, linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org, linux-efi@vger.kernel.org
+Subject: Re: [PATCH v6 5/8] LoongArch: Allow memblock arrays to resize
+Message-ID: <avAvdiYY7SJ_Gfwt@kernel.org>
+References: <20261029172956.20791-1-dongtai.guo@linux.dev>
+ <20261029172956.20791-6-dongtai.guo@linux.dev>
+ <aux9Hm0QFJLUDPWv@kernel.org>
+ <CAAhV-H7Dsnz03iXChzE6nYM2cs+D6fdDFiWrDxX5jM13kYL6HA@mail.gmail.com>
+ <auypq8_7T-vml5_B@kernel.org>
+ <CAAhV-H6aO_QNEzV-r6+FbNa=9EUQgv1vH0ET-ETXAH5x6oQGjA@mail.gmail.com>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -56,95 +68,58 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20261031-fixes-loongarch-v1-1-e0e33e3c008e@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAhV-H6aO_QNEzV-r6+FbNa=9EUQgv1vH0ET-ETXAH5x6oQGjA@mail.gmail.com>
 
-Gentle ping :)
+On Fri, Nov 06, 2026 at 10:35:01PM +0800, Huacai Chen wrote:
+> On Fri, Nov 6, 2026 at 12:07 AM Mike Rapoport <rppt@kernel.org> wrote:
+> >
+> > On Thu, Nov 05, 2026 at 11:07:01PM +0800, Huacai Chen wrote:
+> > > Hi, Mike,
+> > >
+> > > On Thu, Nov 5, 2026 at 8:57 PM Mike Rapoport <rppt@kernel.org> wrote:
+> > > >
+> > > > On Fri, Oct 30, 2026 at 02:29:52AM +0900, George Guo wrote:
+> > > > > From: George Guo <guodongtai@kylinos.cn>
+> > > > >
+> > > > > LoongArch never calls memblock_allow_resize(), so the reserved region
+> > > > > array cannot grow beyond INIT_MEMBLOCK_RESERVED_REGIONS entries
+> > > > > (INIT_MEMBLOCK_REGIONS + NR_CPUS).
+> > > >
+> > > > This might be something to fix independent of KHO.
+> > > >
+> > > > Huacai,
+> > > >
+> > > > What's the reason LoongArch never enables memblock resizing and why it
+> > > > defines INIT_MEMBLOCK_RESERVED_REGIONS to include NR_CPUS?
+> > > At first we didn't define INIT_MEMBLOCK_RESERVED_REGIONS, then we got
+> > > boot failures on a 128-cores machine, so define it, and the value is
+> > > similar to arm64.
+> >
+> > AFAIR, arm64 had to reserve some per cpu data before they could enable
+> > memblock resizing, so they had to make it static.
+> LoongArch is similar, so below 64-cores machine has no problem.
+> 
+> >
+> > > The reason LoongArch never enables memblock resizing is because the mm
+> > > code is derived from MIPS, and MIPS never enables it.
+> >
+> > If that's the only reason, you might want to revisit that :)
+> Yes, it seems we need memblock_allow_resize(), but maybe it is better
+> to bring back paging_init()? Most other archs call
+> memblock_allow_resize() in paging_init().
 
-On Sat, Oct 31, 2026 at 03:21:46PM +0200, Mike Rapoport (Microsoft) wrote:
-> With KFENCE enabled, resume from hibernation triggers KFENCE reports while
-> swsusp_asm_resume() copies the image pages, for example:
-> 
->   BUG: KFENCE: use-after-free write in swsusp_asm_resume+0x20/0x94
-> 
->   Use-after-free write at 0x00000000a57ee925 (in kfence-#254):
->    swsusp_asm_resume+0x20/0x94
->    hibernation_restore+0x128/0x1a0
->    load_image_and_restore+0x6c/0xc8
->    software_resume+0x240/0x260
->    do_one_initcall+0x68/0x200
->    kernel_init_freeable+0x26c/0x304
->    kernel_init+0x20/0x134
->    ret_from_kernel_thread+0x24/0x1d0
->    ret_from_kernel_thread_asm+0xc/0x98
-> 
-> During resume from hibernation, the image pages that occupy physical pages
-> used by the restore kernel are first loaded into free pages and then, as
-> the very last step, swsusp_asm_resume() copies them to their final location
-> pointed to by pbe->orig_address, which the hibernation core sets to
-> page_address() of the page in the restore kernel.
-> 
-> The early KFENCE pool is allocated from memblock and normally occupies the
-> same physical pages in the restore kernel and in the image kernel, so these
-> pages are usually copied by swsusp_asm_resume().
-> 
-> The KFENCE pool is remapped into the KFENCE area above vm_map_base and
-> set_page_address() adjusts page->virtual so that page_address() returns
-> the page-table mapped alias rather than the DMW address of the pool pages.
-> 
-> Hence, pbe->orig_address of KFENCE pages points to that alias and
-> swsusp_asm_resume() writes them through the page tables. But:
-> 
-> * the copy loop overwrites the kernel page tables, so a TLB refill for the
->   KFENCE alias may use a partially restored page table
-> * the KFENCE pool pages that are protected in the restore kernel fault in
->   the middle of the copy
-> 
-> Convert pbe->orig_address to DMW addresses before starting the copy.
-> 
-> Fixes: 0ca84aeaee15 ("LoongArch: Make {virt, phys, page, pfn} translation work with KFENCE")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> ---
-> Reproduced with hibernation in QEMU, the KFENCE reports are gone with
-> this patch.
-> ---
->  arch/loongarch/power/hibernate.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/arch/loongarch/power/hibernate.c b/arch/loongarch/power/hibernate.c
-> index 817270410ef98..ff571ab4e8df9 100644
-> --- a/arch/loongarch/power/hibernate.c
-> +++ b/arch/loongarch/power/hibernate.c
-> @@ -59,6 +59,18 @@ extern int swsusp_asm_resume(void);
->  
->  int swsusp_arch_resume(void)
->  {
-> +	struct pbe *pbe;
-> +
-> +	/*
-> +	 * page_address() of KFENCE pages is mapped by page tables that are
-> +	 * overwritten during restore and may be protected by KFENCE, copy
-> +	 * through DMW instead.
-> +	 */
-> +	if (IS_ENABLED(CONFIG_KFENCE)) {
-> +		for (pbe = restore_pblist; pbe; pbe = pbe->next)
-> +			pbe->orig_address = __va(virt_to_phys(pbe->orig_address));
-> +	}
-> +
->  	/* Avoid TLB mismatch during and after kernel resume */
->  	local_flush_tlb_all();
->  	return swsusp_asm_resume();
-> 
-> ---
-> base-commit: c03c1a14507dfaf8b856c2608f9ac216021fc222
-> change-id: 20261027-fixes-loongarch-fd3755f33919
-> 
-> --
-> Sincerely yours,
-> Mike.
-> 
+paging_init() is a historical relict that hugely misnamed everywhere :)
+
+I think platform_init() should be fine.
+
+As far as I can tell, by the time platform_init() calls init_numa_memory(),
+all memory reservations that must happen before any memblock allocations
+are done.
+ 
+> Huacai
 
 -- 
 Sincerely yours,
