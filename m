@@ -1,63 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794211813;
-	b=aXf0ZFs37/eUvx5/K+xsTWmii6LkbPaayJAfMeXEImpHYa7em6TIPWtOeqQm4llnuP4V
-	 aCnMUlhHPcifg36nPMYk4+lrOU7YQkoD4DEp4+d+sKj9Qg8jI66Tv0wPZ17CCwp0gRyDQ
-	 rWiBRaFdaaMQG/EDimHdRwrOkyU0B8jDyEOGOMahJkDLxlYNaw/PlJatOrvRFwhcrWXWf
-	 hzP/PHutJFxDrhiYO2y27kfabnDpaZf5l1+FCEYI84UctbWUZuP+c2bEoAQuTAktIkT1P
-	 INAZmG6cOt4lFF6/IgD3mf4dwbwfnvGeL6M+UPG7wh3qIexIx8Wav0WpsEcyJXUVKzQ==
+	t=1794213748;
+	b=iLC25gUDIU3JYYT4HlEZL1Q5ImRtrsX5FIh00yAQHLFQVhXMmu1dACuf5fiLkxaw/1Q9
+	 JF+vthcYlZJzL7TuOFDF2JhcV0GXwP13IFe+OtNwCHdwElVZK0riPIMn9P/S4B5xwACuX
+	 K3++KJPu1MTifTn3CFPmVNdcqrkiPGu6odexgcrlMc1mUA5jlIvvuL1k5IZ2tOZ0nvVY/
+	 OsQFZCD962Y2rubO5FKEGSE85bfzrELspWSsoLZPlkLBk1vUoiFmrSyFvfVkBKmlJcFJe
+	 xHY7MQDA37Um7vK2rrSNvklQG4JN3yoR4oIFjOHJX8RlFSIkJtzcnEz/lQCpc30JZsA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794211813;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794213748;
 	h=DMARC-Filter:Received:Received:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-CM-TRANSID:X-CM-SenderInfo:
-	 X-Coremail-Antispam;
-	bh=cfQs218hEfiPmp95dYiG+HifWnorDku0ftPAGJMkuVY=;
-	b=mPUTEl71BHyNMmon22qY8bVDeq5/f17kLR+p+Ipi/+6gmLZsaBoYYHEGHcBkxlacJ2Qn
-	 mo5B2uH577sbTlymzwSFJ9YINbV+n4idHtW40XA1ZUGjHhelR/tsSGsh0ZMr/n7n4mSEV
-	 q6y+1CUWIxzGUHMJ7tzIUlas6AUaAZWai350GvhqqDOCVshGLExACqSKQWWHtobjDlt6K
-	 9BlEg6kKx+iKTksRyNRr52Sj/4mphiLnLtfiyKtAbYgsr1CAfJZTE/h5BAiUffVqtMOQJ
-	 532hmiclUwRWaoEn2EnggKyduos1FptueWQo+e6nYvug8t6JGOOv+N99CA73ginDN+g==
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-CM-SenderInfo:X-Coremail-Antispam;
+	bh=PtS0W981U/nxZ5sxl304PswdtbM/S0T+To3or/yNvBQ=;
+	b=A9NRj/hDSf2z8Kr4YW2UbAisVqRv28felQlJqOT0qE8J0kUYOLFC6KEvz5vgH+EEoqGk
+	 JtIef7jqmatZ6YNPb73Zep1A6eCHRm3JLdLQkqMSAbLTH1s2yaYhVCto7s6Xmf6OR1k5C
+	 2o6XqJWb3ct9z2rlKm5HaDKSMc62WwGshJA83dMHTMiV4PM1raYbPKrF+U9a7COIcBkQz
+	 B5S7+ASxKGpNItszhIG7OG67BfRmzanLzGO2vJpBztKGF+NV4VZyPWyq9gs+VcwS3VxWM
+	 J9Hxkd7zWsEwnEGvVOhma5xcScdtoM2I7vy+vBNA3o1KTxOCeNYZOd3B9xl4t65Z+iw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=loongson.cn;
 	spf=pass smtp.mailfrom=loongson.cn;
 	arc=none smtp.remote-ip=114.242.206.163
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11760606A31C
-	for <loongarch@lists.linux.dev>; Mon,  9 Nov 2026 08:10:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 11760606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4E8B606A323
+	for <loongarch@lists.linux.dev>; Mon,  9 Nov 2026 08:42:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D4E8B606A323
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [223.64.69.17])
-	by gateway (Coremail) with SMTP id _____8BxrtLjf_Fq778dAA--.20620S3;
-	Mon, 09 Nov 2026 16:10:11 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Bxn9Fvh_FqPcIdAA--.19612S3;
+	Mon, 09 Nov 2026 16:42:23 +0800 (CST)
 Received: from kernelserver (unknown [223.64.69.17])
-	by front1 (Coremail) with SMTP id qMiowJCxf8_gf_FqjCQzAA--.40900S2;
-	Mon, 09 Nov 2026 16:10:09 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJCxf89sh_FqUCYzAA--.40908S2;
+	Mon, 09 Nov 2026 16:42:21 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Yinbo Zhu <zhuyinbo@loongson.cn>,
-	zhanghongchen <zhanghongchen@loongson.cn>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@kernel.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	Vincent Mailhol <mailhol@kernel.org>,
+	Bingxiong Li <libingxiong@loongson.cn>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
 	Xuerui Wang <kernel@xen0n.name>,
 	loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	linux-pm@vger.kernel.org,
+	linux-can@vger.kernel.org,
+	jeffbai@aosc.io,
 	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH v9 7/7] thermal/drivers/loongson2: Add Loongson-2K0300 support
-Date: Mon,  9 Nov 2026 16:10:01 +0800
-Message-ID: <038de1cc102684e0abad6c25cac0138f065a0311.1794211535.git.zhoubinbin@loongson.cn>
+Subject: [PATCH v9 0/2] Add Loongson CAN-FD controller driver
+Date: Mon,  9 Nov 2026 16:42:11 +0800
+Message-ID: <cover.1794213427.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.52.0
-In-Reply-To: <cover.1794211535.git.zhoubinbin@loongson.cn>
-References: <cover.1794211535.git.zhoubinbin@loongson.cn>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -68,270 +59,251 @@ List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxf8_gf_FqjCQzAA--.40900S2
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAgEGCGrxOf4EVAABsA
-X-Coremail-Antispam: 1Uk129KBj93XoW3JFWxGryfJF17Xr4rZF4UKFX_yoW3KFW5pa
-	y5AFyYyrZ5Gr48uw4Iyr4kZF4Yqr9rtFy3ZFs7Kw4ruwsxt34aqFy8tFyYvry8CrWDJFy7
-	ZrZ09rWUCayDX3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:qMiowJCxf89sh_FqUCYzAA--.40908S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQEGCGrxKfoGRAAAsE
+X-Coremail-Antispam: 1Uk129KBj93XoW3WFyfCF4fKry7GFyxXw45CFX_yoWfGr15pF
+	W5Cw4Dur1DKr1UAws3Jay8CF15Ca1rJr43WFZ3J34Ikas0v3WjvrySk3WUuryUCrZ8CFy2
+	vrWF9ay8Ca4DuFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBGb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E
-	14v26r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6x
-	kI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
-	6rWY6Fy7McIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48Icx
-	kI7VAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCj
-	c4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY
-	6xIIjxv20xvE14v26F1j6w1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0x
-	vE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2z280
-	aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07jVeHDUUUUU=
+	0xBIdaVrnRJUUUkSb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
+	67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28Icx
+	kI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2Iq
+	xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42
+	IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY
+	6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2js
+	IEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjxUFwZ2UUUUU
 
-The Loongson-2K0300 sensor provides an 11-bit output and requires
-calibration data from the CHIP ID registers. Read the calibration offset
-through the `loongson,chipid` syscon phandle, initialize the sensor
-configuration register, and calculate the temperature with the
-calibrated slope and offset.
+Hi all:
 
-Early Loongson-2K0300 fuse revisions may provide unusable calibration
-data. If the calibrated formula reports a temperature outside the valid
-sensor range, fall back to the old-fuse slope with a zero calibration
-offset.
+This patchset adds support for the CAN-FD controller found on Loongson
+CPUs.
 
-Trip-point programming for Loongson-2K0300 will be added later.
+Patch 1 introduces the basic CAN-FD controller driver with support
+for classic CAN and CAN FD, including bit timing, error handling,
+NAPI-based RX, and multiple TX buffers.
 
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- drivers/thermal/Kconfig             |   1 +
- drivers/thermal/loongson2_thermal.c | 150 ++++++++++++++++++++++++++++
- 2 files changed, 151 insertions(+)
+Patch 2 adds optional DMA support for RX path using the Loongson APB
+CMC DMA engine, which significantly reduces CPU load under high
+receive throughput.
 
-diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-index 810eeccedfba..b91032d90aa8 100644
---- a/drivers/thermal/Kconfig
-+++ b/drivers/thermal/Kconfig
-@@ -522,6 +522,7 @@ config LOONGSON2_THERMAL
- 	tristate "Loongson-2 SoC series thermal driver"
- 	depends on LOONGARCH || COMPILE_TEST
- 	depends on OF
-+	depends on MFD_SYSCON
- 	help
- 	  Support for Thermal driver found on Loongson-2 SoC series platforms.
- 	  The thermal driver realizes get_temp and set_trips function, which
-diff --git a/drivers/thermal/loongson2_thermal.c b/drivers/thermal/loongson2_thermal.c
-index 4ce162dfb122..68e6105051c6 100644
---- a/drivers/thermal/loongson2_thermal.c
-+++ b/drivers/thermal/loongson2_thermal.c
-@@ -8,10 +8,12 @@
- #include <linux/bitfield.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
-+#include <linux/mfd/syscon.h>
- #include <linux/minmax.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/property.h>
-+#include <linux/regmap.h>
- #include <linux/thermal.h>
- #include <linux/units.h>
- 
-@@ -32,11 +34,41 @@
- #define LOONGSON2_THSENS_CTRL_SEL_MASK	GENMASK(11, 10)
- 
- #define LOONGSON2_THSENS_OUT_8B_MASK	GENMASK(7, 0)
-+#define LOONGSON2_THSENS_OUT_11B_MASK	GENMASK(10, 0)
- #define LOONGSON2_THSENS_OUT_16B_MASK	GENMASK(15, 0)
- 
- #define LOONGSON2_LOWEST_VALID_TEMP     (-40000)
- #define LOONGSON2_HIGHEST_VALID_TEMP    (125000)
- 
-+/* Loongson-2K0300 CHIP ID syscon registers */
-+#define LS2K0300_SYSCON_CHIP_ID0	0x10
-+#define LS2K0300_SYSCON_CHIP_ID1	0x14
-+
-+/* Loongson-2K0300 thermal sensor registers */
-+#define LS2K0300_THSENS_CFG_REG		0x18
-+
-+#define LS2K0300_THSENS_INIT_MASK	0xff03
-+
-+#define LS2K0300_EXTERN_ID		BIT(4)
-+/* Internal ID: 12-bit unsigned compensation value */
-+#define LS2K0300_ID0_VAL_MASK		GENMASK(31, 20)
-+/* External ID: 16-bit signed compensation value */
-+#define LS2K0300_ID1_VAL_MASK		GENMASK(15, 0)
-+
-+#define LS2K0300_COMP_VAL_MASK		GENMASK(14, 0)
-+#define LS2K0300_COMP_SIGN_BIT		BIT(15)
-+
-+#define LS2K0300_TEMP_SLOPE		(570)	/* calibrated */
-+#define LS2K0300_TEMP_SLOPE_OLD		(569)	/* old fuse */
-+#define LS2K0300_TEMP_OFFSET		(394700)
-+
-+/*
-+ * Set when the on-chip calibration data is unusable (early LS2K0300
-+ * fuse revision). The driver then uses LS2K0300_TEMP_SLOPE_OLD with
-+ * calib_offset = 0 instead of the calibrated formula.
-+ */
-+#define LS2K0300_UNCALIBRATED_FLAG	BIT(0)
-+
- /* Loongson-2K2000-Specific Registers */
- #define LS2K2000_THSENS_HI_GATE_HI_REG	0x18
- #define LS2K2000_THSENS_HI_GATE_LOW_REG	0x1c
-@@ -62,6 +94,9 @@ struct loongson2_thermal_chip_data {
- struct loongson2_thermal_data {
- 	void __iomem *ctrl_reg;
- 	void __iomem *extend_reg;
-+	struct regmap *regmap_cfg;
-+	unsigned int flags;
-+	int calib_offset;
- 	const struct loongson2_thermal_chip_data *chip_data;
- };
- 
-@@ -87,6 +122,107 @@ static int loongson2_thermal_set_trips(struct thermal_zone_device *tz, int low,
- 	return 0;
- }
- 
-+static int ls2k0300_thermal_adc_to_temp_mc(struct loongson2_thermal_data *data, int slope)
-+{
-+	int raw_adc;
-+
-+	raw_adc = FIELD_GET(LOONGSON2_THSENS_OUT_11B_MASK,
-+			    readl(data->ctrl_reg + LOONGSON2_THSENS_OUT_REG));
-+
-+	return (raw_adc + data->calib_offset) * slope - LS2K0300_TEMP_OFFSET;
-+}
-+
-+static int ls2k0300_thermal_get_temp(struct thermal_zone_device *tz, int *temp)
-+{
-+	struct loongson2_thermal_data *data = thermal_zone_device_priv(tz);
-+	int slope = LS2K0300_TEMP_SLOPE;
-+
-+	if (data->flags & LS2K0300_UNCALIBRATED_FLAG)
-+		slope = LS2K0300_TEMP_SLOPE_OLD;
-+
-+	*temp = ls2k0300_thermal_adc_to_temp_mc(data, slope);
-+
-+	return 0;
-+}
-+
-+static void ls2k0300_thermal_detect_old_fuse(struct device *dev,
-+					     struct loongson2_thermal_data *data)
-+{
-+	int temp;
-+
-+	temp = ls2k0300_thermal_adc_to_temp_mc(data, LS2K0300_TEMP_SLOPE);
-+
-+	if (temp < LOONGSON2_LOWEST_VALID_TEMP ||
-+	    temp > LOONGSON2_HIGHEST_VALID_TEMP) {
-+		dev_warn(dev, "calibrated temperature %d mC out of range [%d, %d], using old fuse formula",
-+			 temp, LOONGSON2_LOWEST_VALID_TEMP, LOONGSON2_HIGHEST_VALID_TEMP);
-+		data->flags = LS2K0300_UNCALIBRATED_FLAG;
-+		data->calib_offset = 0;
-+	}
-+}
-+
-+static int ls2k0300_thermal_read_calib(struct loongson2_thermal_data *data)
-+{
-+	int calib_data, calib_offset, ret;
-+	u32 chip_id0, chip_id1;
-+
-+	ret = regmap_read(data->regmap_cfg, LS2K0300_SYSCON_CHIP_ID0, &chip_id0);
-+	if (ret)
-+		return ret;
-+
-+	if (chip_id0 & LS2K0300_EXTERN_ID) {
-+		ret = regmap_read(data->regmap_cfg, LS2K0300_SYSCON_CHIP_ID1, &chip_id1);
-+		if (ret)
-+			return ret;
-+
-+		/*
-+		 * External ID: the signed compensation value is stored in
-+		 * CHIP_ID1, with bit 15 as the sign and bits 14:0 as the
-+		 * magnitude.
-+		 */
-+		calib_data = FIELD_GET(LS2K0300_ID1_VAL_MASK, chip_id1);
-+		calib_offset = FIELD_GET(LS2K0300_COMP_VAL_MASK, calib_data);
-+		if (calib_data & LS2K0300_COMP_SIGN_BIT)
-+			calib_offset = -calib_offset;
-+	} else {
-+		/*
-+		 * Internal ID: the compensation value is unsigned and is
-+		 * stored in CHIP_ID0[31:20].
-+		 */
-+		calib_offset = FIELD_GET(LS2K0300_ID0_VAL_MASK, chip_id0);
-+	}
-+
-+	data->calib_offset = calib_offset;
-+	return 0;
-+}
-+
-+static int ls2k0300_thermal_hw_init(struct platform_device *pdev,
-+				    struct loongson2_thermal_data *data)
-+{
-+	struct device *dev = &pdev->dev;
-+	int ret;
-+
-+	data->regmap_cfg = syscon_regmap_lookup_by_phandle(dev->of_node, "loongson,chipid");
-+	if (IS_ERR(data->regmap_cfg))
-+		return PTR_ERR(data->regmap_cfg);
-+
-+	ret = ls2k0300_thermal_read_calib(data);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed to read calibration data");
-+
-+	writel(LS2K0300_THSENS_INIT_MASK, data->ctrl_reg + LS2K0300_THSENS_CFG_REG);
-+
-+	/*
-+	 * Wait for the ADC to produce the first valid conversion before
-+	 * using OUT_REG for the old-fuse sanity check.
-+	 */
-+	usleep_range(1000, 2000);
-+
-+	ls2k0300_thermal_detect_old_fuse(dev, data);
-+
-+	return 0;
-+}
-+
- static int ls2k1000_thermal_get_temp(struct thermal_zone_device *tz, int *temp)
- {
- 	struct loongson2_thermal_data *data = thermal_zone_device_priv(tz);
-@@ -178,6 +314,10 @@ static int ls2k2000_thermal_hw_init(struct platform_device *pdev,
- 	return 0;
- }
- 
-+static const struct thermal_zone_device_ops ls2k0300_thermal_zone_ops = {
-+	.get_temp = ls2k0300_thermal_get_temp,
-+};
-+
- static const struct thermal_zone_device_ops ls2k1000_thermal_zone_ops = {
- 	.get_temp = ls2k1000_thermal_get_temp,
- 	.set_trips = loongson2_thermal_set_trips,
-@@ -188,6 +328,12 @@ static const struct thermal_zone_device_ops ls2k2000_thermal_zone_ops = {
- 	.set_trips = loongson2_thermal_set_trips,
- };
- 
-+static const struct loongson2_thermal_chip_data ls2k0300_thermal_chip_data = {
-+	.thermal_sensor_sel = 0,
-+	.thermal_ops = &ls2k0300_thermal_zone_ops,
-+	.hw_init = ls2k0300_thermal_hw_init,
-+};
-+
- static const struct loongson2_thermal_chip_data ls2k1000_thermal_chip_data = {
- 	.thermal_sensor_sel = 0,
- 	.thermal_ops = &ls2k1000_thermal_zone_ops,
-@@ -256,6 +402,10 @@ static int loongson2_thermal_probe(struct platform_device *pdev)
- }
- 
- static const struct of_device_id of_loongson2_thermal_match[] = {
-+	{
-+		.compatible = "loongson,ls2k0300-thermal",
-+		.data = &ls2k0300_thermal_chip_data,
-+	},
- 	{
- 		.compatible = "loongson,ls2k1000-thermal",
- 		.data = &ls2k1000_thermal_chip_data,
+The driver has been tested on Loongson-2K3000 platforms with various
+CAN/CAN FD traffic patterns.
+
+Finally, I'd like to thank Bingxiong, the original author of this driver,
+for his efforts in working on the patch.
+
+Thanks.
+Binbin
+
+=========
+V9:
+Patch (1/2):
+ - Add hardware timestamping support;
+ - Refactor RX into descriptor parsing/validation/delivery;
+ - Improve IRQ handling: add DOI overrun handlinga;
+ - Improve TX path: add free TX buffer helper, support CC_LEN8_DLC;
+ - Split error reporting into state-change/arb-loss/bus-error helpers;
+ - Cancel restart_work before free_irq();
+Patch (2/2):
+ - Enlarge RX DMA ring to 32K and use 4K cyclic DMA periods.
+ - Split DMA init from start/stop; start DMA before chip_start(),
+   stop after chip_stop(), and restart DMA on CAN_MODE_START.
+ - Add DMA RX empty/overrun/bad-header recovery, partial-header -EAGAIN
+   retry with bounded cpu_relax(), and pointer resync.
+ - Rename RX callbacks to read_rx_word/rx_is_empty/process_rx;
+ - Release DMA on probe/register error and in remove().
+
+Testing & Validation:
+----------------------
+To validate the robustness and data integrity of this driver patch, extensive stress
+tests were conducted across two different speed configurations under high bus load. 
+
+To prove both system stability and data correctness, the test suite introduced
+strict data integrity checks at the payload level:
+
+1. Traffic Generation & Load Control:
+   - Traffic consists of both periodic business PDUs (20ms, 50ms, 100ms, 200ms)
+     and 64-byte fill frames.
+   - An accumulator-based algorithm is used to precisely maintain an 80% total bus
+     load on both ends without bursting the driver queues.
+
+2. Data Integrity Verification:
+   - Each frame payload embeds a 32-bit sequence number (SEQ32), a deterministic data
+     fingerprint, and a CRC32 checksum.
+   - The receiving ends strictly verify every received frame (including fill frames)
+     against these metrics to detect any bit flips, payload corruption, or frame
+     duplication.
+
+3. Test Case A: 500 kbps / 2 Mbps (Industry Baseline)
+   - Duration: ~66 hours.
+   - Throughput: Over 20 million business frames and 160 million fill frames.
+   - Results: 0 CRC errors, 0 fingerprint mismatches, and 0 duplicated frames. The overall
+     frame loss rate was 0.00%. The driver handled transient bus interference gracefully
+     (2 "error-warn" events) without any Bus-Off.
+
+4. Test Case B: 1 Mbps / 4 Mbps (High-Speed Stress)
+   - Duration: ~45.5 hours.
+   - Throughput: Over 13.9 million business frames and 227 million fill frames.
+   - Data Integrity: 0 CRC errors and 0 fingerprint mismatches across all hundreds of millions
+     of frames.
+   - Driver Recovery: During this high-speed test, minor physical layer interference triggered
+     the `ERROR-PASSIVE` state (TEC=128). However, the driver successfully recovered, and no
+     Bus-Off was observed.
+
+The complete test suite (C and Python) and raw test logs have been published for reproducibility
+and can be found here:
+
+zlg python link: https://gist.github.com/AaronDot/e33f48c6c89d64e6b3564d9125ac2b82
+linux C link: https://gist.github.com/AaronDot/6b7bbbc07a378fc263ccbc9f4c42e23a
+500k+2M result link: https://gist.github.com/AaronDot/2ec489b1175d52f87bb9ba043168b80c
+1M+4M result link: https://gist.github.com/AaronDot/a91fb52ffcec859b0eddc4f89b64eb3c
+
+Link to V8:
+https://lore.kernel.org/all/cover.1788945497.git.zhoubinbin@loongson.cn/
+
+V8:
+Patch (1/2):
+ - Use local copy of can_bittiming in set_btr to avoid corrupting
+   persistent structure;
+ - Fix endianness and strict aliasing in TX/RX data paths;
+ - Fixed spelling errors;
+Patch (2/2):
+ - Add overflow detection for RXDMA;
+ - Simplified callback function names
+
+Link to V7:
+https://lore.kernel.org/all/cover.1785898181.git.zhoubinbin@loongson.cn/
+
+V7:
+Patch (1/2):
+ - Fix can_bittiming_const->tseg1_max;
+ - Fix TX buffer id in loongson_canfd_start_xmit();
+ - Add rwcnt checking in loongson_canfd_rx()
+ - Add netdev stats spinlock;
+ - Add net_ratelimit() to control log output in
+   loongson_canfd_err_interrupt);
+ - Rewrite `loongson_canfd_rx_napi()` to clearly distinguish between the
+   two scenarios: "no more data to process" and "quota exhausted".
+
+Patch (2/2):
+ - Put dmaengine_terminate_sync() before loongson_canfd_rxdma_free();
+
+Link to V6:
+https://lore.kernel.org/all/cover.1784597141.git.zhoubinbin@loongson.cn/
+
+V6:
+- Rebase on linux-can/master;
+Patch (1/2):
+ - Drop CAN_CTRLMODE_3_SAMPLES ctrlmode;
+ - Replace kfree_skb() with dev_kfree_skb_any();
+ - Drop REG_CMD_ERCRST operation;
+ - Rewrite `loongson_canfd_tx_interrupt()` to prevent duplicate handling
+   of TX completion';
+Patch (2/2):
+ - Added a fallback to true when dmaengine_tx_status() returns an error;
+ - Replaced all direct regmap_read() from LOONGSON_CANFD_RX_DATA with
+   the priv->get_rx_data() callback;
+ - Release the DMA channel and clear priv->rx_ch on dma_alloc_coherent()
+   failure;
+
+Link to V5:
+https://lore.kernel.org/all/cover.1783670733.git.zhoubinbin@loongson.cn/
+
+V5:
+Patch (1/2):
+ - Fix tseg1_max const value;
+ - Empty FIFO when SKB allocate failed.
+ - Use REG_FRAME_META1_RWCNT as the playload read count value;
+ - Only clean processed interrupt flags in
+   loongson_canfd_err_interrupt();
+ - Refact loongson_canfd_tx_interrupt();
+ - Add LOONGSON_CANFD_TRV_DLY into loongson_canfd_volatile_reg();
+Patch (2/2):
+ - Fix dma_request_chan() error path;
+ - Fix build error;
+ - Fix loongson_canfd_rxdma_init() error path;
+
+Link to V4:
+https://lore.kernel.org/all/cover.1783391759.git.zhoubinbin@loongson.cn/
+
+V4:
+- Fix some issues from sashiko.
+Patch (1/2):
+ - Update commit message;
+ - Use common APIs to calculate DLC;
+ - Correct CAN_RTR_FLAG judgement;
+ - Add skb check for CAN_STATE_ERROR_ACTIVE case;
+ - Use regmap_write() rather than regmap_update_bits() to
+   disable all interrupts;
+ - Add napi_disable() in error paths;
+ - Add `clock-frequency` return value check;
+ - More comments for macros.
+
+Link to V3:
+https://lore.kernel.org/all/cover.1782787997.git.zhoubinbin@loongson.cn/
+
+V3:
+Patch (1/2):
+ - Replace the switch-case statement with a calculated mask in
+   `loongson_canfd_get_txbuf_sts()`;
+ - Change `loongson_canfd_reset()` return type to `void`;
+ - Drop old code in `loongson_canfd_set_btr()`;
+ - Rename `loongson_canfd_set_mode()` to `loongson_canfd_set_conf_mode()`;
+ - Drop `cf->__res*` usage;
+ - Drop unnecessary macro definitions;
+ - Add `netif_napi_del()` in probe error route path;
+ - Replace ternary operator with `if-else`;
+ - Drop stats->rx_packets and stats->rx_bytes count in CAN error frames;
+ - Add ethtool_ops;
+ - Add CAN_CTRLMODE_CC_LEN8_DLC;
+
+Patch (2/2):
+ - Fix W=2 warning;
+ - Rename get_rx_frc() -> get_rxbuf_empty();
+ - Put `loongson_canfd_rxdma_remove()` before free_candev();
+ - Adjust the RXDMA probe process.
+
+Link to V2:
+https://lore.kernel.org/all/cover.1780908445.git.zhoubinbin@loongson.cn/
+
+V2:
+Patch (1/2):
+ - Put all code into one file;
+ - Add COMPILE_TEST Kconfig option;
+ - Rewrite Kconfig description;
+ - Use `regmap_test_bits()` to simplify bit field checks;
+ - Drop odd FIELD_GET() usage;
+ - Don't use FIELD_GET() for a single bit;
+ - Use an if/else instead of the ternary operator;
+ - Use the CAN TDC framework to get the SSP value;
+ - Use guard(spinlock)/scoped_guard(spinlock);
+ - Use netdev_debug() to be less verboss;
+ - Check for memory allocation failure;
+ - Add CAN_ERR_CNT flag;
+ - Drop unused REG_DATA_xx_yy_W_DATA_yy definition;
+ - Add more function comment;
+
+Link to V1:
+https://lore.kernel.org/all/cover.1777273055.git.zhoubinbin@loongson.cn/
+
+Binbin Zhou (2):
+  can: Add Loongson CAN-FD controller driver
+  can: loongson_canfd: Add RXDMA support
+
+ MAINTAINERS                      |    7 +
+ drivers/net/can/Kconfig          |   11 +
+ drivers/net/can/Makefile         |    1 +
+ drivers/net/can/loongson_canfd.c | 3075 ++++++++++++++++++++++++++++++
+ 4 files changed, 3094 insertions(+)
+ create mode 100644 drivers/net/can/loongson_canfd.c
+
+
+base-commit: 647b81ddefc6364290e67bf33c89d54971f8995e
 -- 
 2.52.0
 
