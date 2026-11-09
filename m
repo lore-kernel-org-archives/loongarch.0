@@ -1,51 +1,51 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794196991;
-	b=t8dxe6RHpjmD+O/vFZf/d79o79VBtyLjJ040u/gXHl+4GXiJQQnmb6ro+ZMaqtLhfibg
-	 j0UFyF5h4ciDCezAXvaIbdkTxJBA9nGpZ/hBFc76tzSsuS6KhMLRXUdvxe+hhChM/Dh/D
-	 GGZzCzqvOtxi8VKDGjzwo4Z1z4KXzl6Nm6BJWjedqMP1Chszorl8wDMFMphWXqqZNLJMW
-	 r+jEovohLQtBGJKJSoCvkym8hxXiWmovONDtt3cNaXsicI2D5V/JhUfNY2rao7JJEY3Et
-	 XAlvWGvYPNlh+LtK6fyNrDgkwzLnF0nw93akdq7YjHfFbhWFyM2u33hl/JbMc1UIVCg==
+	t=1794197532;
+	b=FYXF0eQeiYo9l/wdvYmSW3baXGXU3wAzPi7e4c1saEs5VvO6WX27WW5nFMs/UAO80BA/
+	 bfEf98GW+yiVajALj8YSzXNRFmawGdf54CpI/Vi+0FWC44PMXmMenqOmP6kM8TgpzkvfU
+	 MBfcQa2xENZ930rgCr0pRyOritTNlc4Qmq9QqmK1+jo+h4rwkkqAaOWZF1KEfjHulOQZd
+	 JJJExKZ/4q/ndTwPgYWvPeEchQWtGFXU78vRiOPgsdj6W9zyxXre00rCLAPoJ2xBKC6Vy
+	 154TRKS1tYGkmxgjSHFx04q5iW29MJQssfxExXAaHX3LD32UO46w8u9ZPuhAS9pDX7A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794196991;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794197532;
 	h=DMARC-Filter:Received:Received:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-CM-TRANSID:X-CM-SenderInfo:
-	 X-Coremail-Antispam;
-	bh=qkD8MjWseQOJfnadaF4/vhz7UYdj2TH3JKdu6mu1bQg=;
-	b=Zfb9sZie6a6X/zYeA4tAvvThffOQ09yROPK2XuBzfZDUkAokYik652ZTMZtidsa0EKCZ
-	 fctcpNzvekjGWQd0m6pO5TjMReXZDRWLFJqS8Dv0PAHw4TGUBQgNewSyfgoBNHxh13n7S
-	 msp7rdlaJz+Whch92zz0Hc4UKAv0JSUeIHM+ftHCoPOflUeHFl9/HPAc7cwZlciW2tHEU
-	 CMrhu7rtxGrj5U6fknzH6cjd+SGfNgN2Ku7NEOnoLWfVu2A1OqesU/WNXl/Tzbscp/eJa
-	 o6RcpChvasT/cm1JRvnr5xtedoWhXes0B8Vh9o3yi54buZSKzMfopTfT2HFgvWh5PEg==
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-CM-SenderInfo:X-Coremail-Antispam;
+	bh=IVCjuZZQPo7i/RLyprlQW7kGel9zzof2nAxQQyiVyGg=;
+	b=wl0qwqkIH9jvOPjBrzma9yHRvNwpaAAHR+in8CRuGIRFLc+DcgdvvnLtfF1UczM2hFCa
+	 q/SMYkjCxkMrWeE/dQ2NhG5GeWU2lmez+3WcxO2TtYunYk07IDBm6//HgGarjlAKdhoMi
+	 fUJb7KsXU7XsCEsUEw5mR+4FQWAcuioA/jyH1P+GkiOpIx8PJuhR881HG9Hkdv0Zvmvt7
+	 t7DH7NyGsdGfjHozbDBGohppfH8pMHe4ioGpOFYTcy/yzr4ksTX8lDPmpJ5ADM8PFMZNn
+	 23H5mmY4GaK1OA06+BKMurrq8F8k7cNttu0J3+JhtOHXI5B4krFInslPFivdUjubofQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=loongson.cn;
 	spf=pass smtp.mailfrom=loongson.cn;
 	arc=none smtp.remote-ip=114.242.206.163
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DF26606A326
-	for <loongarch@lists.linux.dev>; Mon,  9 Nov 2026 04:03:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5DF26606A326
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D67CA606A31C
+	for <loongarch@lists.linux.dev>; Mon,  9 Nov 2026 04:12:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D67CA606A31C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [123.138.236.242])
-	by gateway (Coremail) with SMTP id _____8DxD9P9RfFqBLMdAA--.20306S3;
-	Mon, 09 Nov 2026 12:03:09 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxPNIYSPFqlLMdAA--.20494S3;
+	Mon, 09 Nov 2026 12:12:08 +0800 (CST)
 Received: from linux.localdomain (unknown [123.138.236.242])
-	by front1 (Coremail) with SMTP id qMiowJAxlMz7RfFq9hszAA--.11822S4;
-	Mon, 09 Nov 2026 12:03:08 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJDxxMwXSPFqQRwzAA--.11813S2;
+	Mon, 09 Nov 2026 12:12:08 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Hengqi Chen <hengqi.chen@gmail.com>
-Cc: loongarch@lists.linux.dev,
-	bpf@vger.kernel.org,
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>
+Cc: bpf@vger.kernel.org,
+	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] LoongArch: BPF: Make use of beqz and bnez for trampoline branches
-Date: Mon,  9 Nov 2026 12:03:06 +0800
-Message-ID: <20261109040306.11536-3-yangtiezhu@loongson.cn>
+Subject: [PATCH bpf-next v2 0/2] selftests/bpf: Handle some unexpected failures
+Date: Mon,  9 Nov 2026 12:12:05 +0800
+Message-ID: <20261109041207.15221-1-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20261109040306.11536-1-yangtiezhu@loongson.cn>
-References: <20261109040306.11536-1-yangtiezhu@loongson.cn>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -56,149 +56,41 @@ List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxlMz7RfFq9hszAA--.11822S4
+X-CM-TRANSID:qMiowJDxxMwXSPFqQRwzAA--.11813S2
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3ArWDArWkCFWrXFyDXr4kKrX_yoW7GrWrpr
-	yjvwn5JrW8GryfXr95J3yDZr15Jan7WrZFgFZIy392kw4UXFyrtFy8KrWDJFyjgw48uF4F
-	qa13tw1I93W5J3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE
-	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07josjUUUUUU=
+X-Coremail-Antispam: 1Uk129KBj9xXoWruFWrKF13WF4kAw1UKr1ktFc_yoWxtFbE9w
+	40qrykXrZ5ZFyYyF15K3WrCr95C3yrZw4xJrWUX34fCr15Zr15XF4kAryvqry8Wa93t34I
+	yF1DJa4rWr13XosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAF
+	wI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x
+	0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8l38UUUUUU==
 
-Currently, the implementation for BPF trampoline branches does not match
-the existing technical comments. The code uses larch_insn_gen_beq, where
-the comment indicates beqz should be used.
+v2:
+  - Use libbpf_probe_bpf_map_type() in prog_tests instead of
+     handling EOPNOTSUPP globally in test_loader.
+  - Fix unaligned access at the source by applying a bitmask
+     'off &= ~1' instead of skipping these tests entirely.
+  - Modify the patch subjects and update the commit messages.
 
-While the BPF trampoline size is restricted within a single memory page
-(at most 64KB on LoongArch) and cannot cross the original 16-bit branch
-offset limit of the reg2i16 format, switching to the beqz instruction
-(which belongs to the reg1i21 format) avoids explicitly specifying the
-zero register during dynamic JIT encoding, resulting in cleaner assembly
-generation.
+Tiezhu Yang (2):
+  selftests/bpf: Skip jit_insns_arena tests if not supported
+  selftests/bpf: Fix unaligned access failure in fexit_bpf2bpf
 
-While at it, also apply the same optimization to the bne instruction by
-replacing it with bnez and adding a corresponding comment.
+ tools/testing/selftests/bpf/prog_tests/jit_insns.c  | 9 ++++++++-
+ tools/testing/selftests/bpf/progs/fexit_bpf2bpf.c   | 1 +
+ tools/testing/selftests/bpf/progs/test_pkt_access.c | 1 +
+ 3 files changed, 10 insertions(+), 1 deletion(-)
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/include/asm/inst.h | 21 +++++++++++++++++++++
- arch/loongarch/kernel/inst.c      | 28 ++++++++++++++++++++++++++++
- arch/loongarch/net/bpf_jit.c      |  5 +++--
- 3 files changed, 52 insertions(+), 2 deletions(-)
-
-diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-index b55aae325300..e061f966f7d1 100644
---- a/arch/loongarch/include/asm/inst.h
-+++ b/arch/loongarch/include/asm/inst.h
-@@ -535,6 +535,8 @@ u32 larch_insn_gen_lu32id(enum loongarch_gpr rd, int imm);
- u32 larch_insn_gen_lu52id(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm);
- u32 larch_insn_gen_beq(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm);
- u32 larch_insn_gen_bne(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm);
-+u32 larch_insn_gen_beqz(enum loongarch_gpr rj, int imm);
-+u32 larch_insn_gen_bnez(enum loongarch_gpr rj, int imm);
- u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm);
- 
- static inline bool signed_imm_check(long val, unsigned int bit)
-@@ -592,6 +594,25 @@ DEF_EMIT_REG1I20_FORMAT(lu12iw, lu12iw_op)
- DEF_EMIT_REG1I20_FORMAT(lu32id, lu32id_op)
- DEF_EMIT_REG1I20_FORMAT(pcaddu18i, pcaddu18i_op)
- 
-+#define DEF_EMIT_REG1I21_FORMAT(NAME, OP)				\
-+static inline void emit_##NAME(union loongarch_instruction *insn,	\
-+			       enum loongarch_gpr rj, int offset)	\
-+{									\
-+	unsigned int immediate_l, immediate_h;				\
-+									\
-+	immediate_l = offset & 0xffff;					\
-+	offset >>= 16;							\
-+	immediate_h = offset & 0x1f;					\
-+									\
-+	insn->reg1i21_format.opcode = OP;				\
-+	insn->reg1i21_format.immediate_l = immediate_l;			\
-+	insn->reg1i21_format.rj = rj;					\
-+	insn->reg1i21_format.immediate_h = immediate_h;			\
-+}
-+
-+DEF_EMIT_REG1I21_FORMAT(beqz, beqz_op)
-+DEF_EMIT_REG1I21_FORMAT(bnez, bnez_op)
-+
- #define DEF_EMIT_REG2_FORMAT(NAME, OP)					\
- static inline void emit_##NAME(union loongarch_instruction *insn,	\
- 			       enum loongarch_gpr rd,			\
-diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
-index 0b9228b7c13a..0d5076cfd7d1 100644
---- a/arch/loongarch/kernel/inst.c
-+++ b/arch/loongarch/kernel/inst.c
-@@ -428,6 +428,34 @@ u32 larch_insn_gen_bne(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm)
- 	return insn.word;
- }
- 
-+u32 larch_insn_gen_beqz(enum loongarch_gpr rj, int imm)
-+{
-+	union loongarch_instruction insn;
-+
-+	if ((imm & 3) || imm < -SZ_4M || imm >= SZ_4M) {
-+		pr_warn("The generated beqz instruction is out of range.\n");
-+		return INSN_BREAK;
-+	}
-+
-+	emit_beqz(&insn, rj, imm >> 2);
-+
-+	return insn.word;
-+}
-+
-+u32 larch_insn_gen_bnez(enum loongarch_gpr rj, int imm)
-+{
-+	union loongarch_instruction insn;
-+
-+	if ((imm & 3) || imm < -SZ_4M || imm >= SZ_4M) {
-+		pr_warn("The generated bnez instruction is out of range.\n");
-+		return INSN_BREAK;
-+	}
-+
-+	emit_bnez(&insn, rj, imm >> 2);
-+
-+	return insn.word;
-+}
-+
- u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm)
- {
- 	union loongarch_instruction insn;
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index b845083d1d74..d7ea515045ec 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -1819,7 +1819,7 @@ static int invoke_bpf_prog(struct jit_ctx *ctx, struct bpf_tramp_image *im,
- 	/* update branch with beqz */
- 	if (ctx->image) {
- 		int offset = (void *)(&ctx->image[ctx->idx]) - (void *)branch;
--		*branch = larch_insn_gen_beq(LOONGARCH_GPR_A0, LOONGARCH_GPR_ZERO, offset);
-+		*branch = larch_insn_gen_beqz(LOONGARCH_GPR_A0, offset);
- 	}
- 
- 	/* arg1: prog */
-@@ -2132,9 +2132,10 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
- 		emit_insn(ctx, std, regmap[BPF_REG_0], LOONGARCH_GPR_FP, -(retval_off - 8));
- 	}
- 
-+	/* update branches with bnez */
- 	for (i = 0; ctx->image && i < fmod_ret->nr_nodes; i++) {
- 		int offset = (void *)(&ctx->image[ctx->idx]) - (void *)branches[i];
--		*branches[i] = larch_insn_gen_bne(LOONGARCH_GPR_T1, LOONGARCH_GPR_ZERO, offset);
-+		*branches[i] = larch_insn_gen_bnez(LOONGARCH_GPR_T1, offset);
- 	}
- 
- 	/* Set "is_return" flag for fsession */
 -- 
 2.42.0
 
