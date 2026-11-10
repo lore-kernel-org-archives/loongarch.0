@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794274715;
-	b=g0vDgNKau8lP2l/BFOpSI+eyeZuDXn7T5zu8IVD6rf9hYGTbR2haNzbS5K1rNSuVbLpY
-	 peum1Pwg2yCxItc5RUiAFQSoGzGOM+iMOUw/ZTwFJj58gvGw1jnBOPszX6pmI770suXwl
-	 4QwG7y5HuSosvJJSsptIlyc+6qanXMSpASoz9yl170qCy2mCx6qwtCBY+Omx+aYKytngj
-	 54mXzDZnuc0UgSnl4VYp8CanMjPeV+eH+9gI+XekbXqbXDziMX5iVPQQoqh27IAP3vgPm
-	 TN92y3xY4EQ1NevLOhwKI8W2O5ILMPy+TraFRDsBnQxtBxv9SzdVsF09hu5u/+Ota8g==
+	t=1794274717;
+	b=qWLF0JxIIoCtJzAw23cEjpicl7wnSMAL/8FOYdD3IbK7ascs0RKv0l3qaHbDsSS8KyLn
+	 G5xITert2g4W1SOG0zgnirmlBJbWU21xshAhh2RH0ADOrchVNqijOrxWwJdYzfdJBHA7R
+	 CGwiV5dXTQySS7KQ75yOE+rvHQEhw42GSvppf5Q1L9UCijrtiSj52POXePSYgRZ2psobG
+	 738g6wUA114hANDKKGS4S0Easj3lJhK3wc33uGt/rvsYT3WxCIQ7dEr3JDdY9UqNneslg
+	 1rv3cEu66MNFprl9XXn2XbbQcgi3K/ZbMVXn0hdqCpPJJ0GKpiJn326mIu8Wky49/qw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794274715;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794274717;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=0bYZ/zOlq+OiPPFtzwsws4ROrxwK9LWmpXGJUjz7tLE=;
-	b=qpnP0SLJDfMdET46naAS4/vmDOnAG1BQPEVWE9z4K1W0c6qa6gjAjoSWHJoYyzUKU3XA
-	 f8tE8zwh0VF36+EIeJ1Rwy/Nm92P/uIb2oKpO3uu/rgaDbC4H6CsnPMd6OzLlEDvKBAtN
-	 dqQXcMpW5Ph+YjfQC/+pDEPw8O6+8akRvmQMP1wkLWzad3SYM/bmUcgRxJNARB6HY3ij9
-	 xDhZrXIXyiX1LwI6ahABt/8eBQAdeKZzGY9+taX1ilBa8r2+a0i0pvdiq4RxRcY5t5f3f
-	 IXd0zE8Ix1C7ZIhI4d89ixBoi4eIYogdoD4i4KznXMvZWFA68ChkX07gC0z64MLrreA==
+	bh=mgZWax0CROPTd0jbS/MexNgXxV705CGMTqZEFbzUWic=;
+	b=kjs9DAS0oyr/tOm4YWn8ZpQFaTJRw6JcqDJD5woVZb15COMm9ZpWEPrck+g5sTbGerJk
+	 3/iYhDrwEmo4Rl7+87EQGH2X49PlF6q2+Bf2WLBiMGIBqTZpmNQ80PjeXtouMFjiANiMy
+	 f8mOI1XfCefyRza03l5FW5xzAIwygVZni7guN6mqU6qWTgyaJTOgsa+yL1YtmBlqX6gZ2
+	 ieruWt/ErPCt3ydoCkrFf1Ko3WfYmh6dElUm/yL00bq/I7QsDLTEXB8CFhVJexpfQO3WB
+	 wWT+Dc8r6wGqDPmSfJqPIP4+IXtr5b1+z5IiA5S8VLLDucpkmPmC/L8jYwBzaELNk6Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Hmk3FgkE;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=g6ZVy11U;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD4360A3801;
-	Tue, 10 Nov 2026 01:38:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 237F460A6F59;
+	Tue, 10 Nov 2026 01:38:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Hmk3FgkE
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6956B1F008A3;
-	Tue, 10 Nov 2026 01:38:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=g6ZVy11U
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D37001F00901;
+	Tue, 10 Nov 2026 01:38:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794274715;
-	bh=0bYZ/zOlq+OiPPFtzwsws4ROrxwK9LWmpXGJUjz7tLE=;
+	s=k20260515; t=1794274716;
+	bh=mgZWax0CROPTd0jbS/MexNgXxV705CGMTqZEFbzUWic=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=Hmk3FgkEcL1lKKJ1m1XhaZy/2R9kESJuQ2EwhfK2LhoJ1xhGuXaLQB+4gOdfuJznu
-	 E5SDn7Nm8DYCNDVV79gIP4eiBFXDoc6RLDFfToCbuTxae21n7Vv50+BJS9+RQO/sAe
-	 6qcu+kW6i7ePkiMa5QvDe/UNBoE7FGHqCaQthS6P1LKtKhBZYfOjDadGze+Prl/6kO
-	 LrIFV8oHc4PAQiiFez+U/w00UXaVDqx27b5oGSgPXnpxRNofCYMTjTcHZg5Vze0ogN
-	 4r1b76IVTXTKtf0z5nHw9I1afP15jU+uzgcd66snZJBo6IoDZCnm7uv1NaLw5WMq/8
-	 czDGXf5r0vbcA==
-Subject: Re: [PATCH net-next v20 05/13] ax88179_178a: Add EEE configuration
- support for AX88179A MACs
+	b=g6ZVy11UqhrRhTWPfoRAJn5l992aRTZOg4P1jBrp7xZQGlEFF/451z3Mpzj3x/mZr
+	 02Ed6nmE7riDabHLRGfa4x9fx6u+D+pSgHtqxyDxmMsihQAs8QmTEcgHfMR3PzFEk9
+	 Nh91NDhGQnoVsRsN3tzyaH2YEortqm8+rKHGBGVuhbgHTQWTQ+G753o0eiVFwkWvI3
+	 3FI1BMxrRPv5K7nhdD4sHKqfcwb8DOmgFpvsjOUEVbuqxRuWW4Xv5tQHt99ldZgpPx
+	 JQyshGvMZ82yk3CH1ThgrAGzf/K1ZrUdadIVIU35r7wvK4OqzT8BWJCHzzD1KYCbFY
+	 Sc5yIhdGKZs8A==
+Subject: Re: [PATCH net-next v20 06/13] ax88179_178a: Add EEE configuration
+ support for AX88179A PHYs
 From: netdev-bot+sashiko@kernel.org
 To: mail@birger-koblitz.de
 Cc: andrew+netdev@lunn.ch, davem@davemloft.net, kuba@kernel.org,
@@ -50,11 +50,11 @@ Cc: andrew+netdev@lunn.ch, davem@davemloft.net, kuba@kernel.org,
  edumazet@kernel.org, linux-usb@vger.kernel.org, netdev@vger.kernel.org,
  linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
  neuromoments@gmail.com, beganovic.emir@gmail.com
-Date: Tue, 10 Nov 2026 01:38:34 +0000
-Message-ID: <179427471400.994134.4547536241742867057@kernel.org>
-In-Reply-To: <20261106-ax88179a-v20-5-37b5a1189983@birger-koblitz.de>
-References: <20261106-ax88179a-v20-5-37b5a1189983@birger-koblitz.de>
-X-sashiko-severity: Low
+Date: Tue, 10 Nov 2026 01:38:35 +0000
+Message-ID: <179427471542.994134.8751513782745732734@kernel.org>
+In-Reply-To: <20261106-ax88179a-v20-6-37b5a1189983@birger-koblitz.de>
+References: <20261106-ax88179a-v20-6-37b5a1189983@birger-koblitz.de>
+X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: loongarch@lists.linux.dev
@@ -67,103 +67,166 @@ List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found more severe
-issue(s) in other patches of this series. This mail is only an FYI, in case
-you want to address the nit picks below when you respin.
+Thank you for your contribution! Sashiko AI review found 2 potential
+issue(s) to consider.
 
-Low priority / nit picks for your consideration:
+Critical: 0 · High: 0 · Medium: 1 · Low: 1
 
-- [Low] Baseline decision: false positive, because the next patch in the
-  series fixes it.
-- [Low] Baseline decision: false positive, because the next patch in the
-  series fixes it.
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
+
+- [Medium] This patch fills phylink_config.lpi_interfaces in
+  ax88179a_phylink_setup() (drivers/net/usb/ax88179a_devices.c).
+- [Low] The new ax88179a_set_eee()
+  (drivers/net/usb/ax88179a_devices.c:235-240) passes the user's struct…
 
 --
 
-ax88179_178a: Add EEE configuration support for AX88179A MACs
+ax88179_178a: Add EEE configuration support for AX88179A PHYs
 
-This commit adds mac_enable_tx_lpi and mac_disable_tx_lpi phylink callbacks
-for the AX88179A. They toggle the single AX_GPHY_EEE_CTRL register through
-ax88179_write_cmd(). The hardware has no LPI timer registers.
+This commit copies supported_interfaces into phylink_config.lpi_interfaces
+in ax88179a_phylink_setup(), so phylink now treats the MAC as supporting
+EEE. It also adds get_eee/set_eee ethtool ops that forward to
+phylink_ethtool_get_eee() and phylink_ethtool_set_eee().
 
 > diff --git a/drivers/net/usb/ax88179a_devices.c b/drivers/net/usb/ax88179a_devices.c
-> index 1aa8479422517..62619fd68c408 100644
+> index 62619fd68c408..272e923656832 100644
 > --- a/drivers/net/usb/ax88179a_devices.c
 > +++ b/drivers/net/usb/ax88179a_devices.c
+> @@ -225,6 +225,20 @@ static int ax88179a_get_eeprom_len(struct net_device *net)
+>  		return AX88179A_EEPROM_LEN;
+>  }
+>  
+> +static int ax88179a_get_eee(struct net_device *net, struct ethtool_keee *edata)
+> +{
+> +	struct ax88179_data *ax179_data = netdev2data(net);
+> +
+> +	return phylink_ethtool_get_eee(ax179_data->phylink, edata);
+> +}
+> +
+> +static int ax88179a_set_eee(struct net_device *net, struct ethtool_keee *edata)
+> +{
+> +	struct ax88179_data *ax179_data = netdev2data(net);
+> +
+> +	return phylink_ethtool_set_eee(ax179_data->phylink, edata);
+> +}
+
+[Severity: Low]
+Should ax88179a_set_eee() reject a tx_lpi_timer that the hardware cannot
+apply?
+
+Neither ax88179a_set_eee() nor phylink_ethtool_set_eee() checks
+edata->tx_lpi_timer. The value is stored in pl->eee_cfg and
+phydev->eee_cfg, and get_eee reports it back. The MAC callback ignores
+the timer, though:
+
+drivers/net/usb/ax88179a_devices.c:ax88179a_mac_enable_tx_lpi() {
+    ...
+	/* AX88179A does not provide LPI timer registers */
+	return ax88179_write_cmd(dev, AX_GPHY_CTL, AX_GPHY_EEE_CTRL, true, 0, NULL);
+}
+
+The phylink_mac_ops documentation for mac_enable_tx_lpi() says
+"Configure the LPI timeout accordingly".
+
+As a result, "ethtool --set-eee ethX tx-timer N" succeeds and
+"--show-eee" reports N, but the hardware never uses it.
+phylink_config.lpi_timer_default is never set either, so the reported
+default timer is 0.
+
+Other drivers whose LPI timer cannot be changed reject this request.
+e1000e_set_eee() and ixgbe_validate_keee() both return an error when
+tx_lpi_timer differs from the fixed value.
+
+Could the wrapper do the same here? Another option is to set
+lpi_timer_default to the real hardware value and refuse changes. The
+last commit in the series still has this code unchanged.
+
+> +
+>  static const struct ethtool_ops ax88179a_ethtool_ops = {
 
 [ ... ]
 
->  static const struct phylink_mac_ops ax88179a_phylink_mac_ops = {
->  	.mac_config = ax88179a_mac_config,
->  	.mac_link_down = ax88179a_mac_link_down,
->  	.mac_link_up = ax88179a_mac_link_up,
-> +	.mac_disable_tx_lpi = ax88179a_mac_disable_tx_lpi,
-> +	.mac_enable_tx_lpi = ax88179a_mac_enable_tx_lpi,
->  };
+> @@ -451,6 +467,10 @@ static int ax88179a_phylink_setup(struct usbnet *dev)
+>  		phy_if_mode = PHY_INTERFACE_MODE_SGMII;
+>  	}
+>  
+> +	memcpy(data->phylink_config.lpi_interfaces,
+> +	       data->phylink_config.supported_interfaces,
+> +	       sizeof(data->phylink_config.lpi_interfaces));
+> +
 
-[Severity: Low]
-With both LPI ops present, phylink_create() sets pl->mac_supports_eee_ops
-to true. At this commit, ax88179a_phylink_setup() sets lpi_capabilities but
-does not fill phylink_config.lpi_interfaces:
+[Severity: Medium]
+Does this change the default EEE advertisement on the wire for every
+non-AX88772D chip, including AX88279?
 
-    if (!data->is_ax88772d) {
-        data->phylink_config.lpi_capabilities = MAC_100FD | MAC_1000FD;
-        data->phylink_config.eee_enabled_default = false;
-    }
+Before this patch lpi_interfaces was empty. phylink_create() therefore
+set mac_supports_eee to false while mac_supports_eee_ops was true, and
+phylink_bringup_phy() called phy_disable_eee().
 
-phylink_create() requires a non-empty lpi_interfaces:
+With lpi_interfaces filled in, mac_supports_eee becomes true. This
+earlier setup also applies:
 
-    pl->mac_supports_eee = pl->mac_supports_eee_ops &&
-                           pl->config->lpi_capabilities &&
-                           !phy_interface_empty(pl->config->lpi_interfaces);
+	if (!data->is_ax88772d) {
+		data->phylink_config.lpi_capabilities = MAC_100FD | MAC_1000FD;
+		data->phylink_config.eee_enabled_default = false;
+	}
 
-So mac_supports_eee comes out false. Does phylink_bringup_phy() then take
-this branch for every AX88179A/AX88279 device?
+So pl->eee_cfg.eee_enabled is false, and phylink_bringup_phy() takes
+neither branch that changes the PHY's EEE enable:
 
-    } else if (pl->mac_supports_eee_ops) {
-        /* MAC supports phylink EEE, but wants EEE always disabled. */
-        phy_disable_eee(phy);
+drivers/net/phy/phylink.c:phylink_bringup_phy() {
+    ...
+	if (pl->mac_supports_eee) {
+		...
+		if (pl->eee_cfg.eee_enabled)
+			phy_support_eee(phy);
+		...
+	} else if (pl->mac_supports_eee_ops) {
+		/* MAC supports phylink EEE, but wants EEE always disabled. */
+		phy_disable_eee(phy);
+	}
+    ...
+}
 
-ax88179a_mac_enable_tx_lpi() also looks unreachable here.
-phylink_link_up() does not call phylink_activate_lpi() when
-mac_supports_eee is false, and phylink_activate_lpi() returns early in any
-case:
+phydev->eee_cfg.eee_enabled keeps the value phy_probe() derived from the
+PHY's power-on advertisement:
 
-    if (!test_bit(pl->cur_interface, pl->config->lpi_interfaces)) {
+	phydev->eee_cfg.eee_enabled = !linkmode_empty(phydev->advertising_eee);
 
-phylink_ethtool_get_eee() and phylink_ethtool_set_eee() would return
--EOPNOTSUPP in this state as well.
+If the internal GPHY advertises EEE at reset, genphy_c45_an_config_eee_aneg()
+will keep advertising the 100FD/1000FD EEE modes on every autoneg. That
+includes after the PHY power-cycle in resume and reset. The link partner
+then negotiates EEE while MAC TX LPI stays off.
 
-The next patch in the series, "ax88179_178a: Add EEE configuration support
-for AX88179A PHYs", copies supported_interfaces into lpi_interfaces before
-phylink_create(), so this gap only exists at this one commit. The default
-behaviour seen by users is unchanged, because the driver already defaults
-to EEE off with eee_enabled_default = false.
+The legacy ax88179_178a.c reset path explicitly disables EEE and clears
+the EEE advertisement. That suggests this family does advertise EEE by
+default, but this was not confirmed for the AX88179A/AX88279 PHYs.
 
-Would it make sense to fill lpi_interfaces in this patch, so the new
-callbacks can be reached at this commit?
+This also seems to conflict with the comment in ax88179a_reset():
 
-[Severity: Low]
-At this commit ax88179a_ethtool_ops has no .get_eee or .set_eee entries:
+	/* Ensure EEE state is off, consistent with phylink setup */
+	ax88179_write_cmd(dev, AX_GPHY_CTL, AX_GPHY_EEE_CTRL, false, 0, NULL);
 
-    static const struct ethtool_ops ax88179a_ethtool_ops = {
-        ...
-        .set_eeprom             = ax88179_set_eeprom,
-        .nway_reset             = phy_ethtool_nway_reset,
-        ...
-    };
+That only clears the MAC-side LPI control. phylink_ethtool_get_eee()
+would then report the PHY's eee_enabled as true together with
+tx_lpi_enabled as false, which does not match phylink's own eee_cfg.
 
-So ethtool --set-eee on an AX88179A returns -EOPNOTSUPP. Userspace has no
-way to enable EEE through the new mac_enable_tx_lpi/mac_disable_tx_lpi
-callbacks. EEE stays off, which matches eee_enabled_default = false.
+Was this default change intended? If not, should the PHY's EEE
+advertisement be disabled explicitly when eee_enabled_default is false?
 
-The next patch, "ax88179_178a: Add EEE configuration support for AX88179A
-PHYs", adds ax88179a_get_eee() and ax88179a_set_eee(). These wrap
-phylink_ethtool_get_eee() and phylink_ethtool_set_eee() and are wired into
-ax88179a_ethtool_ops.
+The commit message also does not mention that AX88279 gets
+phylink-managed EEE (lpi_capabilities is set for all !is_ax88772d chips).
+Nor does it mention that AX88772D now has get_eee/set_eee ops that always
+return -EOPNOTSUPP. The final commit in the series has the same code, so
+nothing later in the series changes this.
 
-Is splitting the MAC side and the ethtool side across these two patches
-intended?
+>  	phylink = phylink_create(&data->phylink_config, dev->net->dev.fwnode,
+>  				 phy_if_mode, &ax88179a_phylink_mac_ops);
+>  	if (IS_ERR(phylink))
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261106-ax88179a-v20-0-37b5a1189983%40birger-koblitz.de
