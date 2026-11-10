@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.70
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.71
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794313072;
-	b=5h7fHEwbNi13/M1dOLDn6Np4Y25u80BpzAfIt7OzqVcRZujWF0nkulaVkPnWOmCCT0OT
-	 E4Jhi1+kWFBBWcfRBT3jF2nR2S1dikJGRpDoowqT34Rrs5CDvOgDuwCjUfDK5nFxn7/e4
-	 M/RQTJlmjcDn+5TgIjbOOCoS+j+PAu3NYhFr96mcOagy81Gf585t/10nI4gfpemhMcBtI
-	 v1XmW73VzKkn9TMlSMDrFN/k8ghhNj03QZ/rZz6E6e3qFbC2IPwI5+cqkXdWE40n0OqhD
-	 1ykFGCKu//8vuYH5gWv7eyofOG1uSlPkKdTqdd7jTTuQPR6n+ORc5rPyPekJmpeZLOw==
+	t=1794313073;
+	b=rMTOyMjJ74FUw+0RzAM29t06hsPr7kz2R3wHSWzwrSgQ9UCAPwVuARzHfm8+n3hvOh32
+	 rOpz/BvDQyo6Qv/KTRVSkE+1o5d1jX8lCzsXJsLZrnIbPDJxqggFMYg1q+dVjA36x8Ktt
+	 IMSPyfCswZq0TcMN5jw/O+/99SYZill0d950XvnmYmDoc3nSGnQNaF9RCwulM4MApjYLL
+	 SIT1ovvXVknFke99/46DudULuhxeg/U5GMheo0Jvk6hB2Mdps+BrB64a7tBwxXC39YoAJ
+	 Y0H62Xxb4N8CwaD0sWEzQgRVegjElBMKv0QYF1+I6e88ICSMaOLbo3D24EnrHi/Bkug==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794313072;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794313073;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=/NOGXHiMglGNlkAHWoIUlx58rvJ+/z9H2Q0oQTuWMl4=;
-	b=Fr6Ka2tkb1nDvmxPagm4C+bS8LG/uUdBpZv++LXnje/U/2gQ+KbDeZciB6D21twfsdzT
-	 beawzZ6QP+25r19KEdYByUs4fjJXeueAYRwoNDTRxBBdzEGKhgACdcnf4/xaNOHdv8E+c
-	 +g4RuATMdCZzZnI/CuFoGSiaYact/xTCh8RyU2QZ6D8eeUX7/AmyK5t3GA6CN+lsQcrzP
-	 Mp3Lz4VVQWM1fbpVFkAHeDNnO6MJUhQ2vZWKEbERGIsZlcjL7AX4gWvNf1e+q47L/HZ7k
-	 SRWDo7Nsr/8+4uGaypVFBo5a6VQOeHaEkxhv0kNZyuslh/l5yRGpABVNveVBVk0aJqQ==
+	bh=HdvBqOsbdSb+5XW1VvJy1N+JD/q5Zf64Jcn34ls18MA=;
+	b=yZukyG4DBWdCKfQf3jZFBX7nRqeRIHYy/JjgJsbpoLlP72KlbXzzN+o+CKXnaiDpVaY7
+	 NTzIwmJciCu7bPIq7EALXuu6b6P+zcLgI0C2UGcvPkBzMJUQwTglL2LwfxlxgwWuJyuh2
+	 U9dnVUNEkwTfBeW/sUYlOmjRt4jsuafQ/9+ag19H8m6ICy3ZcxPIUpSaHeLDx5uTx+hTn
+	 FY72PJxhyeLoqffC82U25QjYBAhdMRs09NDuEIZP3bxQFr6gmYQ5FzXYXFhm0bIpNQ7EC
+	 Owolwc3ukRCJ+bi23jZ9K7xxMQnYbiaYcKctLIAj7rp9oIiSkMI6zbZGq/jvShMXiWw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--ardb.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=MXneGRQ2;
-	arc=none smtp.remote-ip=209.85.128.70
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=i62SMoQ8;
+	arc=none smtp.remote-ip=209.85.221.71
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEAFB606A321
-	for <loongarch@lists.linux.dev>; Tue, 10 Nov 2026 12:17:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AEAFB606A321
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13F72606A325
+	for <loongarch@lists.linux.dev>; Tue, 10 Nov 2026 12:17:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 13F72606A325
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=MXneGRQ2
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4a17741243eso11417545e9.0
-        for <loongarch@lists.linux.dev>; Tue, 10 Nov 2026 04:17:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=i62SMoQ8
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-492e3189fc9so1499299f8f.1
+        for <loongarch@lists.linux.dev>; Tue, 10 Nov 2026 04:17:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794313070; x=1794917870; darn=lists.linux.dev;
+        d=google.com; s=20260707; t=1794313071; x=1794917871; darn=lists.linux.dev;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=/NOGXHiMglGNlkAHWoIUlx58rvJ+/z9H2Q0oQTuWMl4=;
-        b=MXneGRQ2zVWUkXUdJ2EOBPeJlybZhnXt4oTnaS+CDBQLcaKLimdShkufKG5hTTdkA0
-         rRlu4zBQKKsBnGMfPlLchOtqXpd8D3JJW2zCYQYzrFpTXpSD0Ov3Gya+/J6k9ZszE+7Y
-         yp8KNH0sm3Ce3LW1cF2JRYaJwfkn2v2FuNP8znGGsPCi3UpjtudwJv5WSSTsCOr3JGyS
-         mpK2/C0ZeEZ8lyZoRsnTgb+TJTytD0VGGSDVWeQN8u/DYk3DAuAec9CgxKKY8EzUKBly
-         Q7kj1Gw0VLUWowtO4IzBes38POmegOmlaEQsnWi4s3kg/XIREntKgVjDO/vK7GqAgg5H
-         1zpg==
+        bh=HdvBqOsbdSb+5XW1VvJy1N+JD/q5Zf64Jcn34ls18MA=;
+        b=i62SMoQ8gefICkqhQ7E5NxNTed0yKM5vJgzvbdP7VYXSekxbdwjJhgNiNFogJInR+i
+         vf6QCsNOSnYpAwh6qVsgCJEqE0GldPl0OyDaDcrTSyvlCNMh3npq5Q5ChoAtjvKkIgjf
+         kcedYkbqq89wszS3bNX+PV2B2+BwFiltm2+lW37HeU9KjOtoICvd7XQC5eWnSYuUkQCa
+         qEWv6i12z/Xy+V+tMf7ZoMrBWJhKjPW68dHQj9H6WU1m+K2ZBhnybSuK5iUfHDWjzexL
+         pSflwuateaX674UPyoMQqdYnNacUEzEz/uajGrFjDtjyx3Zi9fNRkiQAVUI8zbVTYl8Z
+         wjDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794313070; x=1794917870;
+        d=1e100.net; s=20260707; t=1794313071; x=1794917871;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=/NOGXHiMglGNlkAHWoIUlx58rvJ+/z9H2Q0oQTuWMl4=;
-        b=rk7YhRazD/k7UhfPKMBa2qmGQ7DjWcPzS6gjH9uyZLvpR6o9fmEYd0+0DP/Y8aHcdH
-         2T3tmV+kpYisz2GMwFCo967pudqrkFraPPQO4VilYMbRk5w5lzjNMW9sp3OSrlHSqISI
-         5IDq4ski5AbEI4sNLVFogwY4mYUmyG0LlmUVltqayY+sjPE5WUgqV5enkhUrcmz+k3pH
-         ENg1PMslvXSmyV7biMrVrQ/LJaODNXViRls4M+YJ9xFsAStLtU4m/+dmPzjeQGw6V8QX
-         chFSgdDhuDG4v7CxlsPDNu34SgDmkbbBZR1w+zh86OAcpaPIWRCRZauGFRcJb9dFvX/9
-         M+NQ==
-X-Forwarded-Encrypted: i=1; AL+hErHySoeTzZ7sBHwBkvl2gMsQQUNO1st1wqvMJRwO65dy7ZrGPN6XyDOpRb8p9WsfCD9sR9R7qLhNbUw=@lists.linux.dev
-X-Gm-Message-State: APuU4Z/NUbrU201OF4Hhcz0ImxjBKc61SB/PKB9tefhM46nZpXa0qntL
-	ba7qg18FnQ2cwT7un2PSiTpWYk4JTX2W1CAlzRBVREmYslBUSZVeumIVnvd8e/kT4X6w6arfEA=
+        bh=HdvBqOsbdSb+5XW1VvJy1N+JD/q5Zf64Jcn34ls18MA=;
+        b=o7m0/VyZww62nw9daNl27wHd1UIkZBtOzwdbYGkxvSE5NPgJFkYrczPVbFtSJNvGOK
+         8Q16BKdQDBgFQ7fNoPWruL1aUP+veYMCNMovJHhwg3xfl/R/e3oABA2ETS+x1FylYqHu
+         kp9oM1xPeADvEKjOpTt83kxumMW7czJTmMDFiAICEV44UuVdGZPjuXZAt7tdJrHWoRXs
+         NofPjZDZ+NlhPDZaCvkeQrGRgX7qCBMePoAm/yNA+K2b6+5xER/pxH6ah2wI0s6aJzOO
+         Ri6NhbhybuRL0Iu/AAZnElCS9MxsZNJ1wGz9mXWfUmmRIadqHtLboeCULd/c52ICvLZw
+         5Eyw==
+X-Forwarded-Encrypted: i=1; AL+hErHmSU1VGPiztAEj3cJr4S23xSgMSFuZUtgt27/4Xdd3uqg14RQOPFA2Ez/5+JwTGbRsyV5JyQxPk90=@lists.linux.dev
+X-Gm-Message-State: APuU4Z+mtMpt2MNUxN8fiq/iDM0i8deRrbjP5KliEpXubXohSieK3wqw
+	orLmFumGfFfbXMi0HZx/snJc6dinXZSZ44MlgLRvOI1vAaJ7cxZFDFsu0xUxWzlKbbZgBhm2gg=
 	=
-X-Received: from wmbgx15.prod.google.com ([2002:a05:600c:858f:b0:4a2:8ef:a5af])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:1392:b0:4a2:1e1:d55
- with SMTP id 5b1f17b1804b1-4ba02355ab0mr37537145e9.28.1794313070010; Tue, 10
- Nov 2026 04:17:50 -0800 (PST)
-Date: Tue, 10 Nov 2026 13:17:41 +0100
+X-Received: from wrso6.prod.google.com ([2002:a5d:4746:0:b0:497:913:6e4b])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:468b:b0:48f:e879:5890
+ with SMTP id ffacd0b85a97d-4982fc49566mr3226218f8f.32.1794313071241; Tue, 10
+ Nov 2026 04:17:51 -0800 (PST)
+Date: Tue, 10 Nov 2026 13:17:42 +0100
 In-Reply-To: <20261110121731.2728824-12-ardb+git@google.com>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -81,8 +81,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261110121731.2728824-12-ardb+git@google.com>
 X-Mailer: git-send-email 2.56.0.542.g3ef89b7020-goog
-Message-ID: <20261110121731.2728824-21-ardb+git@google.com>
-Subject: [PATCH v2 09/10] efi/zboot: Disentangle efi_remap_image() from efi_cache_sync_image()
+Message-ID: <20261110121731.2728824-22-ardb+git@google.com>
+Subject: [PATCH v2 10/10] efi/libstub: arm64: Drop zboot code_size hack
 From: Ard Biesheuvel <ardb+git@google.com>
 To: linux-efi@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org, Ard Biesheuvel <ardb@kernel.org>, 
@@ -93,90 +93,89 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-Refactor efi_cache_sync_image() so that it is not in charge of calling
-efi_remap_image(), which is really the wrong way around.
-
-Instead, call efi_remap_image() from the primary zboot procedure, where
-it is more straight-forward to obtain the code size from the loaded
-image.
+Now that the code size can be obtained via the generic image_info
+struct, there is no longer a need to inject it explicitly during the
+build.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- drivers/firmware/efi/libstub/arm64.c                 |  2 --
- drivers/firmware/efi/libstub/zboot-decompress-gzip.c |  2 --
- drivers/firmware/efi/libstub/zboot-decompress-zstd.c |  2 --
- drivers/firmware/efi/libstub/zboot.c                 | 14 +++++++++++++-
- 4 files changed, 13 insertions(+), 7 deletions(-)
+ arch/arm64/boot/Makefile               | 3 ---
+ arch/arm64/kernel/image-vars.h         | 4 ----
+ drivers/firmware/efi/libstub/arm64.c   | 4 +---
+ drivers/firmware/efi/libstub/zboot.lds | 4 ----
+ 4 files changed, 1 insertion(+), 14 deletions(-)
 
+diff --git a/arch/arm64/boot/Makefile b/arch/arm64/boot/Makefile
+index d42d07667822..509b59518818 100644
+--- a/arch/arm64/boot/Makefile
++++ b/arch/arm64/boot/Makefile
+@@ -51,7 +51,4 @@ EFI_ZBOOT_BFD_TARGET	:= elf64-littleaarch64
+ EFI_ZBOOT_MACH_TYPE	:= ARM64
+ EFI_ZBOOT_FORWARD_CFI	:= $(CONFIG_ARM64_BTI_KERNEL)
+ 
+-EFI_ZBOOT_OBJCOPY_FLAGS	= --add-symbol zboot_code_size=0x$$( \
+-				$(NM) vmlinux|grep _kernel_codesize|cut -d' ' -f1)
+-
+ include $(srctree)/drivers/firmware/efi/libstub/Makefile.zboot
+diff --git a/arch/arm64/kernel/image-vars.h b/arch/arm64/kernel/image-vars.h
+index 9ab71d103f64..22b242a7a21b 100644
+--- a/arch/arm64/kernel/image-vars.h
++++ b/arch/arm64/kernel/image-vars.h
+@@ -144,10 +144,6 @@ KVM_NVHE_ALIAS(kvm_protected_mode_initialized);
+ 
+ #endif /* CONFIG_KVM */
+ 
+-#ifdef CONFIG_EFI_ZBOOT
+-_kernel_codesize = ABSOLUTE(__inittext_end - _text);
+-#endif
+-
+ /*
+  * LLD will occasionally error out with a '__init_end does not converge' error
+  * if INIT_IDMAP_DIR_SIZE is defined in terms of _end, as this results in a
 diff --git a/drivers/firmware/efi/libstub/arm64.c b/drivers/firmware/efi/libstub/arm64.c
-index 62fc8e53c8a0..fdd48ba0f9f1 100644
+index fdd48ba0f9f1..4399b23fa237 100644
 --- a/drivers/firmware/efi/libstub/arm64.c
 +++ b/drivers/firmware/efi/libstub/arm64.c
-@@ -114,8 +114,6 @@ void efi_cache_sync_image(unsigned long image_base,
- 	asm("ic ialluis");
- 	dsb(ish);
- 	isb();
+@@ -88,8 +88,6 @@ efi_status_t check_platform_features(void)
+ #define DCTYPE	"cvau"
+ #endif
+ 
+-u32 __weak code_size;
 -
--	efi_remap_image(image_base, alloc_size, code_size);
- }
- 
- unsigned long __weak primary_entry_offset(void)
-diff --git a/drivers/firmware/efi/libstub/zboot-decompress-gzip.c b/drivers/firmware/efi/libstub/zboot-decompress-gzip.c
-index e97a7e9d3c98..79cf8c48b033 100644
---- a/drivers/firmware/efi/libstub/zboot-decompress-gzip.c
-+++ b/drivers/firmware/efi/libstub/zboot-decompress-gzip.c
-@@ -62,7 +62,5 @@ efi_status_t efi_zboot_decompress(u8 *out, unsigned long outlen)
- 		return EFI_LOAD_ERROR;
- 	}
- 
--	efi_cache_sync_image((unsigned long)out, outlen);
--
- 	return EFI_SUCCESS;
- }
-diff --git a/drivers/firmware/efi/libstub/zboot-decompress-zstd.c b/drivers/firmware/efi/libstub/zboot-decompress-zstd.c
-index bde9d94dd2e3..dd7f11238154 100644
---- a/drivers/firmware/efi/libstub/zboot-decompress-zstd.c
-+++ b/drivers/firmware/efi/libstub/zboot-decompress-zstd.c
-@@ -43,7 +43,5 @@ efi_status_t efi_zboot_decompress(u8 *out, unsigned long outlen)
- 		return EFI_LOAD_ERROR;
- 	}
- 
--	efi_cache_sync_image((unsigned long)out, outlen);
--
- 	return EFI_SUCCESS;
- }
-diff --git a/drivers/firmware/efi/libstub/zboot.c b/drivers/firmware/efi/libstub/zboot.c
-index c6071b0e8f1a..25ff5960771c 100644
---- a/drivers/firmware/efi/libstub/zboot.c
-+++ b/drivers/firmware/efi/libstub/zboot.c
-@@ -38,6 +38,17 @@ const struct efi_image_info *zboot_get_image_info(unsigned long image_base)
- 	return (void *)image_base + efistub_image_info_offset;
- }
- 
-+static efi_status_t efi_zboot_remap_image(const struct efi_image_info *image_info,
-+					  unsigned long image_base,
-+					  unsigned long image_size)
-+{
-+	unsigned long code_size = efistub_kernel_codesize(image_info);
-+
-+	efi_cache_sync_image(image_base, code_size);
-+
-+	return efi_remap_image(image_base, image_size, code_size);
-+}
-+
- asmlinkage efi_status_t __efiapi
- efi_zboot_entry(efi_handle_t handle, efi_system_table_t *systab)
+ void efi_cache_sync_image(unsigned long image_base,
+ 			  unsigned long alloc_size)
  {
-@@ -105,7 +116,8 @@ efi_zboot_entry(efi_handle_t handle, efi_system_table_t *systab)
- 		goto error;
+@@ -100,7 +98,7 @@ void efi_cache_sync_image(unsigned long image_base,
+ 	/* only perform the cache maintenance if needed for I/D coherency */
+ 	if (!(ctr & BIT(CTR_EL0_IDC_SHIFT))) {
+ 		unsigned long base = image_base;
+-		unsigned long size = code_size;
++		unsigned long size = alloc_size;
  
- 	auto image_info = zboot_get_image_info(image_base);
--	status = efi_stub_common(handle, image, image_base, cmdline_ptr,
-+	status = efi_zboot_remap_image(image_info, image_base, alloc_size) ?:
-+	         efi_stub_common(handle, image, image_base, cmdline_ptr,
- 				 image_info);
+ 		do {
+ 			asm("dc " DCTYPE ", %0" :: "r"(base));
+diff --git a/drivers/firmware/efi/libstub/zboot.lds b/drivers/firmware/efi/libstub/zboot.lds
+index e1365907f805..e0f0bf005854 100644
+--- a/drivers/firmware/efi/libstub/zboot.lds
++++ b/drivers/firmware/efi/libstub/zboot.lds
+@@ -2,8 +2,6 @@
  
- error:
+ ENTRY(__efistub_efi_zboot_header);
+ 
+-PROVIDE(zboot_code_size = ABSOLUTE(0));
+-
+ SECTIONS
+ {
+ 	.head : ALIGN(4096) {
+@@ -22,8 +20,6 @@ SECTIONS
+ 		*(.rodata* .init.rodata* .srodata*)
+ 
+ 		. = ALIGN(4);
+-		__efistub_code_size = .;
+-		LONG(zboot_code_size);
+ 		__efistub_efistub_image_info_offset = .;
+ 		LONG(efistub_image_info_offset);
+ 
 -- 
 2.56.0.542.g3ef89b7020-goog
 
