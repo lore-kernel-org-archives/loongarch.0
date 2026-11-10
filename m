@@ -1,54 +1,61 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794274156;
-	b=AlEnqllxplc8SOtq/05tSgjwq1ABP3xKNn10DYofYgs6Lt+WcgofAUZk+JaFQixSBqk1
-	 uG5jV4NqtidlinIkyOyKgFj9Ff3QyIb8Z9sLR/LmyHybJIDan/Eqc4WxHc24Y0E4/SILC
-	 4S1aOJw4Jnr1fzhoTg5qjVCyrXJx1B+9GcE5EayO2RT68cQ/rdQBsSmiyhx5mQvgS7yA2
-	 s3OYLYaUrEeK4E2ZXKmXIelSCvQTdesXPLVLWkCpkEqNf3/2FTyMizbmjc9Ceb4PedQp1
-	 eyGQX8dY0wGq5ZFipbhRJvGt+q5HWVuN5fG+Ws33m5pFZRblZ1t5kJe64iTOAQbkg7g==
+	t=1794274711;
+	b=VHR2U1HDtF/zcd1eejb9fR5HvBLgtRYE7S3rrGwoGDNPrwRWmxoYKgPZT4fzOjXupQkQ
+	 nSrJsd6oRXtGRTplvntxdkwriWWnoRovA7jNnoUQPaopE+TR7Eg7xNwRae1xCsCtyc6tI
+	 SmE7hZc1DZqP6t+2DoZoj+KCGIIAe7RlRrH0no08EGT4FfefZOF6HpNgsQsNgUhAl7SE4
+	 MEr+DR11BUqgWWr3NJv1RNG0slAlqt81l/2ql/b6fW6ItPdjFzRuUT4m6DZ9j6bQvXdV4
+	 AWYeHM9NMN878+qYw4bFG10YyDfg+jT8u2b7zsxPI59tnyeG9NsCHKydBDsuhW/yhOg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794274156;
-	h=DMARC-Filter:Received:Received:Subject:To:Cc:References:From:
-	 Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:Content-Type:
-	 Content-Language:Content-Transfer-Encoding:X-CM-TRANSID:
-	 X-CM-SenderInfo:X-Coremail-Antispam;
-	bh=aVUk5KNfoVM/ifJWEbEfsYize+Uhc5V1gasZQZSUIGY=;
-	b=u5yV7lQVcmS5SoLPo/LfGcNA1ar/zfjck7vfr3bJaBqX7VOeiwKH7p99pgXRrF2COmqj
-	 ZIyIG9U/C55qDxf569rN5rWwO0AcivsTJF+2NVzU+sZ8hoiM6C+Qkj0huOhIc9f/ChSq1
-	 NwcnU3ptUXw91duAuSQhLFJlaeFComhAuOYUVRYudCBmvaFU9ofQmH0YPIbusQk40Iivq
-	 4zkdnLchsXfuoOOPNg71TdHSFKY7gAj4JHYNDrsoA82xlXTbfg35HK4vmuvkdxDt9hCNx
-	 1BZHf0t0Fou8V4WEGZunE+LX2yXIThPPXIh8ilRKwm0/kIG4wQuQycId1H2HqsQXCbw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794274711;
+	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
+	 In-Reply-To:References:X-sashiko-severity:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version;
+	bh=Su/uMX+ApZIjipiA8KePgZGhQr+mwH/KvKqJqOZRBlU=;
+	b=fbhblBnitY54f9iH7k9HCrweXBg2fgv+VgqNC4AUS4VDsVzzU+SubuSpi6ClfOVgGVEI
+	 +PD0H/ePSwd5/UQtmgfqWD33j0XIDn7dVIvdZY+EfFFnKZq4IZKtp/lAKTOxF6be9tBu7
+	 SUWYCpqCfDa7hvmBPdDAXpwM62BBM9oiBsHSUKX938AKFLWyNvr6A4z7afd16tgr28XTb
+	 1EdZI8xK9X3WSikDN1nPEjJnBqFnqnu2pFT6hYAFy0HCTsEjFS+xgVtP26NsyXdFOCMcf
+	 uyUd1WTdY1dw7A1GeoydgqGKV7dRMhPQ+6Tluwap+xiSHH0jlgi269e+DEmtgAM7ejQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=loongson.cn;
-	spf=pass smtp.mailfrom=loongson.cn;
-	arc=none smtp.remote-ip=114.242.206.163
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEE1D606A325
-	for <loongarch@lists.linux.dev>; Tue, 10 Nov 2026 01:29:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BEE1D606A325
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [123.138.236.242])
-	by gateway (Coremail) with SMTP id _____8BxrtJic_JqZAQeAA--.21391S3;
-	Tue, 10 Nov 2026 09:29:06 +0800 (CST)
-Received: from [127.0.0.1] (unknown [123.138.236.242])
-	by front1 (Coremail) with SMTP id qMiowJDxTs9gc_Jq7l0zAA--.39359S2;
-	Tue, 10 Nov 2026 09:29:05 +0800 (CST)
-Subject: Re: [PATCH v2] mm/slub: Genericize x86-specific cmpxchg16b comment
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
- Vlastimil Babka <vbabka@kernel.org>, Harry Yoo <harry@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>, Hao Li <hao.li@linux.dev>,
- Christoph Lameter <cl@gentwo.org>, David Rientjes <rientjes@google.com>,
- Roman Gushchin <roman.gushchin@linux.dev>
-Cc: linux-mm@kvack.org, loongarch@lists.linux.dev, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20261109035906.10857-1-yangtiezhu@loongson.cn>
- <DMQW32TTNOPX.24GN6Q7VI6QJR@gmail.com>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <145c23ea-bc4d-b235-c822-df94b00a647a@loongson.cn>
-Date: Tue, 10 Nov 2026 09:29:04 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cdnEq3Zp;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F37F60A2634;
+	Tue, 10 Nov 2026 01:38:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cdnEq3Zp
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B35751F008A1;
+	Tue, 10 Nov 2026 01:38:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794274710;
+	bh=Su/uMX+ApZIjipiA8KePgZGhQr+mwH/KvKqJqOZRBlU=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=cdnEq3Zp/Gqo8U6RBnHlSxZ9mf3/ARX0MXfVpAHwgIQ/bQ71J0thFuUB3B4/0Q21Q
+	 y0i7ottg+dIprxQvL52M+7dSjR9WPbxFYXIMHjYAiFqUj/hvzUBX5iBjmOU3rnMqDh
+	 5Ywf5mJrvIs9gfOUtmv/k06PGEiLAlwJ8kFby5xlVIel02jxhKup72UNQYOKu7QyVf
+	 Fl6iEpaVDe7+Sact1eQYwHjd8AHwmBbryTALcKYzqmyXKf/bJI8n31w/F6VvDZRBcf
+	 BvmrPgpg7hrKNiMEMfuXGxxaXUqi4srbTcWBMzqEfKyCvbQgM4hRC9ed44KTlVCCqV
+	 EfLPnYIMYxW1w==
+Subject: Re: [PATCH net-next v20 01/13] phylink: Add phylink_mac_interrupt
+From: netdev-bot+sashiko@kernel.org
+To: mail@birger-koblitz.de
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, kuba@kernel.org,
+ pabeni@redhat.com, linux@armlinux.org.uk, andrew@lunn.ch,
+ hkallweit1@gmail.com, chenhuacai@kernel.org, kernel@xen0n.name,
+ edumazet@kernel.org, linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ neuromoments@gmail.com, beganovic.emir@gmail.com
+Date: Tue, 10 Nov 2026 01:38:29 +0000
+Message-ID: <179427470922.994134.16776316201780098943@kernel.org>
+In-Reply-To: <20261106-ax88179a-v20-1-37b5a1189983@birger-koblitz.de>
+References: <20261106-ax88179a-v20-1-37b5a1189983@birger-koblitz.de>
+X-sashiko-severity: Medium
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -58,51 +65,149 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-In-Reply-To: <DMQW32TTNOPX.24GN6Q7VI6QJR@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qMiowJDxTs9gc_Jq7l0zAA--.39359S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoWruryxJF1kWr43AFykXF43urX_yoWfGFb_Cw
-	n8GF1vkw18XFnayF10kF12vryUuws2qrs7ZrZ8JFyYy34kt3s5CFs5Cr4fGr15XFsayrs3
-	Kw4DXF9xZFZxCosvyTuYvTs0mTUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbDkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8
-	JVW8Jr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
-	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
-	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
-	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r
-	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
-	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
-	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
-	0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8Dl1DUUUUU==
 
-On 11/10/26 2:25 AM, Alexei Starovoitov wrote:
-> On Sun, Nov 08, 2026 at 07:59 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->> atomic primitive is satisfied by different hardware implementations:
->> (1) arm64: satisfies it via LSE atomics ('casp' instruction)
-> [...]
->> Update the comment to "double-width atomic cmpxchg", which provides the
->> following advantages:
->> (1) Accurately describes the cross-platform hardware invariant.
-> 
-> You ignored Hao's point about shorter commit logs.
+Thank you for your contribution! Sashiko AI review found 2 potential
+issue(s) to consider.
 
-If the following shorter commit message is preferred:
+Critical: 0 · High: 0 · Medium: 1 · Low: 1
 
-   mm/slub: Genericize x86-specific cmpxchg16b comment
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
 
-   In __kmalloc_nolock_noprof(), update the comment from x86-specific
-   "cmpxchg16b" to generic "double-width atomic cmpxchg".
+- [Medium] phylink_mac_interrupt() (drivers/net/phy/phylink.c:1629-1637)
+  loads pl->phydev with no lock, no RCU and no reference, then calls…
+- [Low] phylink_mac_interrupt() reads pl->phydev with a plain load (`phy
+  = pl->phydev;`) and no lock.
 
-I will wait for a while for more feedback from mm maintainers and send
-v3 if necessary.
+--
 
-Thanks,
-Tiezhu
+phylink: Add phylink_mac_interrupt
 
+This commit adds phylink_mac_interrupt(), an exported wrapper that passes a
+link-change interrupt received by the MAC to phylib by calling
+phy_mac_interrupt() on the PHY attached to the phylink instance. It is meant
+for drivers that want to stop polling the PHY.
+
+> diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+> index e885da1c28311..a87eaa2f3db5b 100644
+> --- a/drivers/net/phy/phylink.c
+> +++ b/drivers/net/phy/phylink.c
+> @@ -1616,6 +1616,26 @@ static bool phylink_link_is_up(struct phylink *pl)
+>  	return pl->netdev ? netif_carrier_ok(pl->netdev) : pl->old_link_state;
+>  }
+>  
+> +/**
+> + * phylink_mac_interrupt() - wrapper for phy_mac_interrupt()
+> + * @pl: a pointer to a &struct phylink returned from phylink_create()
+> + *
+> + * Passes a link-change interrupt received by the MAC to phylib.
+> + * This function may be called in interrupt context, and therefore cannot take
+> + * a mutex. However, it is safe to assume that the reference to phy does not
+> + * disappear during the call, as only an SFP module may be unplugged to make a
+> + * PHY disappear. SFP modules however do not support interrupts.
+> + */
+> +void phylink_mac_interrupt(struct phylink *pl)
+> +{
+> +	struct phy_device *phy;
+> +
+> +	phy = pl->phydev;
+> +	if (phy)
+> +		phy_mac_interrupt(phy);
+
+[Severity: Medium]
+Is the lifetime argument in the kernel-doc above accurate? It says:
+
+  "it is safe to assume that the reference to phy does not disappear
+  during the call, as only an SFP module may be unplugged to make a PHY
+  disappear. SFP modules however do not support interrupts."
+
+phylink_disconnect_phy() is not specific to SFP. Any MAC driver can call it
+under RTNL at runtime, for example from ndo_stop or on unbind.
+
+Also, the interrupt here comes from the MAC, not the PHY. Whether an SFP PHY
+supports interrupts doesn't seem to matter, and phylink_mac_interrupt() has
+no check on phy->is_on_sfp_module or phy->irq.
+
+phylink_disconnect_phy() clears pl->phydev under locks that this IRQ path
+never takes. It then stops the PHY without waiting for lockless readers:
+
+drivers/net/phy/phylink.c:phylink_disconnect_phy() {
+    ...
+		mutex_lock(&phy->lock);
+		mutex_lock(&pl->state_mutex);
+		pl->phydev = NULL;
+    ...
+	if (phy) {
+		flush_work(&pl->resolve);
+		phy_disconnect(phy);
+	}
+}
+
+Could this interleaving happen?
+
+CPU0 (MAC IRQ)                 CPU1
+phylink_mac_interrupt()
+  phy = pl->phydev;
+                               phylink_disconnect_phy()
+                                 pl->phydev = NULL;
+                                 phy_disconnect(phy)
+                                   phy_stop_machine()
+                                     cancel_delayed_work_sync(
+                                         &phydev->state_queue);
+  phy_mac_interrupt(phy)
+    phy_trigger_machine()
+      phy_queue_state_machine()
+        mod_delayed_work(..., &phydev->state_queue, ...);
+
+If so, state_queue gets re-armed after the cancel has already finished.
+
+On SFP module removal, sfp_sm_phy_detach() frees the phy_device right after
+the disconnect:
+
+drivers/net/phy/sfp.c:sfp_sm_phy_detach() {
+	sfp_remove_phy(sfp->sfp_bus);
+	phy_device_remove(sfp->mod_phy);
+	phy_device_free(sfp->mod_phy);
+	...
+}
+
+sfp_remove_phy() reaches phylink_disconnect_phy() through
+phylink_sfp_disconnect_phy(), and phy_device_remove() does not cancel
+state_queue. Would this leave a delayed work queued inside a freed
+phy_device? On the non-SFP paths, it would restart the state machine on a
+stopped, detached PHY.
+
+The only caller in this series, ax88179a_status(), does not seem to hit
+this today. usbnet_stop()->usbnet_status_stop() kills the interrupt URB
+before ax88179a_unbind() disconnects the PHY.
+
+This is an exported, generic API, though. Should the kernel-doc tell
+callers to quiesce their interrupt source before calling
+phylink_disconnect_phy()? Or should phylink synchronize this itself, for
+example with RCU and a grace period before phy_disconnect()?
+
+[Severity: Low]
+pl->phydev is read here with a plain load and no lock held.
+phylink_bringup_phy() and phylink_disconnect_phy() write it with plain
+stores under phydev_mutex and state_mutex. Will KCSAN report this as a data
+race?
+
+Without READ_ONCE(), the compiler may also reload pl->phydev after the NULL
+check. The pointer passed to phy_mac_interrupt() could then differ from the
+one that was tested. If a writer stored NULL in between, could
+mod_delayed_work() end up called on &NULL->state_queue?
+
+The current caller, ax88179a_status(), does not race with connect or
+disconnect. Even so, would READ_ONCE() (or rcu_dereference()) here, paired
+with WRITE_ONCE() (or rcu_assign_pointer()) in the writers, be appropriate?
+
+> +}
+> +EXPORT_SYMBOL_GPL(phylink_mac_interrupt);
+
+[ ... ]
+
+-- 
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261106-ax88179a-v20-0-37b5a1189983%40birger-koblitz.de
