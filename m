@@ -1,67 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794310060;
-	b=fb9Xn6xk2j18exVJdU9YQ0PNzsWQfDi0V5T8Ex/ElsvEvpHuceY7igRCMZBQq+wNHWYs
-	 UmxBJNGZI4jygISTWugUzGUT90frOpdldc51gMQz9kjS2eSKlE+xusbI/HZFdX8YhUF7Z
-	 xIZmh1kt0/Tx8UyQlR8ZzKj1qaznQsdpdeuuANZyPETAAXaMxKICWPjWfkIp+MZ7+8l9U
-	 0qL1Raq2cy+QUC+6Rrma2W31ZYRcHAy5JCmWGkVTOyQxm8gnDFILeHjLWwCBVLjM8ZsO/
-	 5ik2Je3Nf7B2eaqawaNvNXKHJeWT2jYEeVDHPVPXnfK2yolSZiBLzZeZZgCyyUJFwbQ==
+	t=1794311927;
+	b=GU7K4CIL3t+WrD3HBse7KerDuGUv4WH5bfOIgxSwx+U/4wTuPwWpkjqXvGRLtA5k+xbS
+	 VEEdp+Kpj7BHZ4rvwtoTsSNzGczn10q1oq0plZRec7sSqbBgQlgt91O7tXkI78lVE8hUH
+	 UgjRUiVWFxPbZCQOC/qRvz59VFy2QqYvVjsM5j+tZPKdhpd+TprEubXK37cTaLkJ43dR3
+	 ypWVFVKCsGSSzJIhOoCXVwLZJ4V6qsSQ4e3FoK54rmVHKpGyQaGBwfoqA6Z5IdPFFb58P
+	 yXt5B+R54N+JgIh41yXFSrEk68dlfFEHgdHhtyZWXd2jfp0saMuahlvqv705J8d1zoA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794310060;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:X-UD-Smtp-Session:Date:
-	 From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=9HIzVh31hyf55nxZGnhbK7DgBdHZtDQ985jcK15h/6Q=;
-	b=xPd519YVPpljWZsulFmcLyid6M+N9jTe+OV5PNQgw/NiQiJn64S4aB/r6C2n8nvYQjJy
-	 oUQ8PB9WETfiyPkysqH1FZMOeqYQyFK0yQFUi7lyTcAf439icfNStuKFYH5bSkJ0f5XCm
-	 JbZvXEAKhyHlPFPwKPLS3lahEvVF7NSFoErjaSiutwzweshsV/WDOtTHic2MiYizMqoem
-	 w0gbgk54CE04S8OVpRDgnIeGZ5YGigJU3vwhyeFPmP+cAL2hPDIdq9RIF0zInfyBJdAqh
-	 gS2uEs2FXhacCYVklfSo9eruxTHn43bk1fV+QYLOfJ5SlgCQzssgtYElhtHBdhUljpg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794311927;
+	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
+	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
+	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=8xrzXhTL0WVs+COqTlijJQelSK0Qwyr/ovJyC3RLEII=;
+	b=PbumaVIsQt5pOc0p7g5sRCwgCqNhHOAtzKdDuDesSiq/uHmQ//h89Xcpy4/fG3v1cgGv
+	 AOZXRmm2FT2cjcjZHFMkAg7GXGqXw0ofpnLQJw4/Vx7scqvrl76/LOQ4brXipoZNKgNho
+	 LheoAvYZ+DfJQ73FBkghlfs3bR89KKnrB8ZIPb4Bam75WSpmFrqbdvTkAsf3zU9EqYAb1
+	 +3/cwJQN8ssBNCrN+nHY/9xd0AyboSFL9opCfVtvSXhHwOb7wAOdu35/9HvK330Qq/Zsd
+	 UmEOkTWHXx3yaBOCcOIEx5wC+PQyWWk4ke18jzU6Xxaeo2k1faEHQE+fVXCQ6YZtCyg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=sang-engineering.com;
-	spf=pass smtp.mailfrom=sang-engineering.com;
-	dkim=pass header.d=sang-engineering.com header.i=@sang-engineering.com header.a=rsa-sha256 header.s=k1 header.b=O9Oy9UBV;
-	arc=none smtp.remote-ip=194.117.254.33
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=emMxNhtQ;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D59160A2604
-	for <loongarch@lists.linux.dev>; Tue, 10 Nov 2026 11:27:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6D59160A2604
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20A5606A331
+	for <loongarch@lists.linux.dev>; Tue, 10 Nov 2026 11:58:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=sang-engineering.com header.i=@sang-engineering.com header.a=rsa-sha256 header.s=k1 header.b=O9Oy9UBV
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=9HIz
-	Vh31hyf55nxZGnhbK7DgBdHZtDQ985jcK15h/6Q=; b=O9Oy9UBVAzW6BoI3x1aK
-	wMI2MrrOyTXtIjK7MgYSni5W9nt4sN9PqoBfqcJTaDfaKkeZC7DTM8u0tBHa6BIy
-	iNPGIAB5ygVVIaCro1CVoMXswbLl2ePSSG49Xc2jUL7F0plJ7zYHzbOuMYMMFqKk
-	TnZELgPF81ZUil35Oj8PliGWi5lfQH0Iyd1y8aR/61umBDy94j9VolOKB8RW9nEv
-	mwopaoy6790Gido5nzO6s4AI8QRLvFUnYJyUivnelK+nZ2626bMGgNthO2NJsdDe
-	J1DMyDpsy1QZR1/T8uKOsEebPk6jZenBFPPOwwmW8NCwjXDMAAuIjSKzU4QaEe6c
-	Gg==
-Received: (qmail 210884 invoked from network); 10 Nov 2026 12:27:36 +0100
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 10 Nov 2026 12:27:36 +0100
-X-UD-Smtp-Session: l3s3148p1@6JqJXepfqrEujnsO
-Date: Tue, 10 Nov 2026 12:27:36 +0100
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Hongliang Wang <wanghongliang@loongson.cn>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
-	Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>, linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org, loongarch@lists.linux.dev,
-	Xi Ruoyao <xry111@xry111.site>,
-	Huacai Chen <chenhuacai@loongson.cn>, stable@vger.kernel.org
-Subject: Re: [PATCH v11 2/2] i2c: ls2x: Add clocks property parsing and
- adjust bus speed
-Message-ID: <avL_qCs9EFquoZ7_@shikoro>
-References: <20261106030203.15709-1-wanghongliang@loongson.cn>
- <20261106030203.15709-3-wanghongliang@loongson.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=emMxNhtQ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 838FB1F008A5
+	for <loongarch@lists.linux.dev>; Tue, 10 Nov 2026 11:58:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794311926;
+	bh=8xrzXhTL0WVs+COqTlijJQelSK0Qwyr/ovJyC3RLEII=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=emMxNhtQXT6GeTvh+kRkYwEWLH00HiNJERy3KvUu1oP+Jo823ihfoYWMD4dWQ8b3E
+	 D0PKYmvBaybuB0d57/MYtPdxyy4SiFEw5FXFGmhFYvVkK2RJtp3I1S9+mBSR/k3Dv3
+	 f01ILM37j7MCQsznWJh+JlhOj+ohzsv472o4Gfozjnx2hkqfju4OIeFeP395+l3Qld
+	 8p9rfS/OiakXatmNF4PYWIUBV24HVxbyvA5uW6jLZ1Z/FJv3ssc5ctzqjC9UByWLPY
+	 21FQLvDjtxcBFETPHRDCV5rEnM/2XbOHpdgeqRG/ARr54N7RGDN8AILQE1zJbuSwWB
+	 3Odo42VY0GyqQ==
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-c4d21051042so298814066b.0
+        for <loongarch@lists.linux.dev>; Tue, 10 Nov 2026 03:58:46 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AL+hErHRb0JSuu8pDvkRjcH8hK92mAgAjZUZvtizvtIDKm0mKocGpZ2tcBgZ0ldHV94ltcrrmHg6ZI4Osws=@lists.linux.dev
+X-Gm-Message-State: APuU4Z9LlIsSxKeJr56+qW+Mpdgj767XYvwHT5Kl94tfocKjWgppEGPO
+	aB5MMRqm8/OXnyxVqgHd3UUwMW3gs+xHIuWqwJhS0OwXoXa6NRsZHY+Cyued2y6KT7x8A0RZhN/
+	TDRpACd7H3h4Ps5JELso2PCOU/PdS6Vw=
+X-Received: by 2002:a17:906:3f97:b0:c46:8909:963b with SMTP id
+ a640c23a62f3a-c5049548348mr132813666b.9.1794311925102; Tue, 10 Nov 2026
+ 03:58:45 -0800 (PST)
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -71,45 +59,47 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261106030203.15709-3-wanghongliang@loongson.cn>
+References: <20261110084613.2746641-1-maobibo@loongson.cn>
+In-Reply-To: <20261110084613.2746641-1-maobibo@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 10 Nov 2026 19:58:33 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6DetSReoZviN_JuJzuzs9ZvUxXg9UXqKg-nfCu-+eRWQ@mail.gmail.com>
+X-Gm-Features: AclHuK84cDWlYHFN5XyFvyk3vWEarUjoMDQprQZIFAhcunkS7NK99kky2uOcYIo
+Message-ID: <CAAhV-H6DetSReoZviN_JuJzuzs9ZvUxXg9UXqKg-nfCu-+eRWQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] ACPI: LoongArch: Fix IOVT table parsing and add
+ checksum validation
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>, 
+	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>, 
+	Pawel Chmielewski <pawel.chmielewski@intel.com>, Len Brown <lenb@kernel.org>, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev, 
+	lixianglai@loongson.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 06, 2026 at 11:02:03AM +0800, Hongliang Wang wrote:
-> The original driver uses a fixed PCLK frequency(LS2X_I2C_PCLK_FREQ) and
-> fixed div(5) for I2C bus speed calculation. As PCLK frequency and div
-> vary on different SoCs and ACPI platforms, this leads to inaccurate I2C
-> bus speed calculation and poor adaptability across platforms.
-> 
-> Improve the accuracy of I2C bus speed calculation across different
-> platforms by parsing the real I2C bus reference clock (PCLK) and div.
-> Support both DTS and ACPI.
-> 
-> For DTS:
-> - Retrieve I2C bus reference clock via the common clock framework
-> - Fetch div from match data for LS2K/LS7A series
-> - Fallback to default values if clock lookup fails or the obtained
->   pclk or div is zero
-> 
-> For ACPI:
-> - Parse "clocks" property to get I2C bus reference clock
-> - Parse "clock-div" property to get div
-> - Fallback to the default values if property parsing fails or the
->   obtained pclk or div is zero
-> 
-> Calculate the I2C clock prescaler based on reference clock, div and
-> target bus frequency with the formula:
-> 
-> prescale = (pclk * 10) / (div * bus_freq_hz) - 1
-> 
-> Dynamically acquiring PCLK and div per platform ensures accurate I2C bus
-> speed calculation and reliable operation across different platforms.
-> 
-> Reviewed-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> Tested-by: Xi Ruoyao <xry111@xry111.site>
-> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Hongliang Wang <wanghongliang@loongson.cn>
+Applied, thanks.
 
-Applied to my for-andi branch, thanks!
+Huacai
 
+On Tue, Nov 10, 2026 at 4:46=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
+>
+> In acpi_iovt_init(), hdr is already a pointer, so passing &hdr is
+> incorrect. Pass hdr directly instead.
+>
+> Also add checksum calculation/validation for the IOVT table.
+>
+> Bibo Mao (2):
+>   ACPI: LoongArch: Fix incorrect pointer argument in acpi_iovt_init()
+>   ACPI: LoongArch: Add checksum support with IOVT table
+>
+>  drivers/acpi/loongarch/iovt.c | 24 +++++++++++++++++++++++-
+>  1 file changed, 23 insertions(+), 1 deletion(-)
+>
+>
+> base-commit: 7475ea8b58616b33c04afb976cf0fbaad9dd63fb
+> --
+> 2.39.3
+>
+>
