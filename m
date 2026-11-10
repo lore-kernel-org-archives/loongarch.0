@@ -1,61 +1,51 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794302788;
-	b=SrZHlW2cqOXuzTRi+XnwJaQfDGSUMJR/dl2Ei80wWHbc114YhUncyakXzIz+NEbXKt3j
-	 7cUdtpjvYqB4TQgMg4yamrQjFSHU4yH3X3Vh6DGAwqaXkl4NrX3R+P2zBNOeCztb1nzoP
-	 sXq/eZ6LK0WfBQUuiIvm8vfJWU3ZPKbKZlQBWj/VRlgXAaU3CPvMDJ1uFtPC5l5PjSy6p
-	 xlNeEyR/V333MnKUsftdGrsM7qffoY3PsLztzBmcotTIQH8t7YsU+alY874rureGPDpV8
-	 UM1UiM7nqHYVSjlrqYGXvJ43Ts7D0YLqC5K3U/7H9iEQqrDFKDp2t4Gw1zCnnb0006A==
+	t=1794303317;
+	b=HOhH8jpN8J05SzhEY8x86/CNrzJU+BwfTQO+ws8CoVdDHnH3L+4UuKr2u1A+yOq7SUT3
+	 6hAtUYN9bHB8uxrlDJQT0DlkNS53cHsHvh7iPn+/NbHO1ZQElFGs+3h2HHlcApBaKyLHv
+	 hKRnpICprcUB+o7Y/gCAoIyU0MPZhyESZ8bpS+aa6K6rID0iaQlvlcquLsV7wcDVyJWIP
+	 wvQKJbXsBxqdHVaJbUxTB5m7+E14GXZD+5pdFS+0eqWYW02i5l7751Mdr+QciQvZDFJjL
+	 RP4ymYzZxNE0wLYNsCHVxuJdS9GQuyukUtUcBPr3RGSBUkVV2J3301lzIxYFp6JbW+w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794302788;
-	h=DMARC-Filter:Received:Received:From:To:Cc:Subject:Date:Message-Id:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-CM-TRANSID:X-CM-SenderInfo:
-	 X-Coremail-Antispam;
-	bh=bnII0DF8BaZXT0t528ffy71g+QEopq5IXdLrMPJAYhk=;
-	b=RMMmmYjeqWYxNEHvRrTAzRYbZgFvTcAIjodBPzRirXrbYmVJscOsB/GB/Vpj79NM5q+x
-	 v+oq1mPtDwypL1RgwB2v1/Tzh5615xh/sBXhM2CV3Rei5e1I1HK4Y+P/Ii5LvR0Yyj2St
-	 TjnqFZcuJk9rzxL4yQwbWw+hi7GBuIflr2zaH8vbgExOtD/7bDZU7dj4BBnRn301XF3wS
-	 Qs3E5Yu5njnSbnrThINyhd2B61W0ZjGA7tqJqQveDmBHvN3Pm/MMR9lMb9tqOXfqQhU6j
-	 e8CGSZkKjlSCCbZDj0/XQG2tlTdn9ZyT5dvW+7GCt/f4YjaSldTz3usIwyxQcpyL8lA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794303317;
+	h=DMARC-Filter:Received:Received:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-CM-SenderInfo:X-Coremail-Antispam;
+	bh=xRUrPvQvMgrqsZdTYJoukiNn/2QqZsUFyrY9jS0BkVA=;
+	b=fnvISB4GMrGp8wiqhLsYEHBE4uNlrpCpwuYL896cfLun4XgEzTJcnw3fyteoLrxqizPc
+	 dAVdVCzjNs3AZp5/iCK2nv20zBy/4Xe7yhVWfgfvd97/5+wR1w/erXfUysUzr1r3GEnpX
+	 wTwcFTBHmei/AsT7cA+zzc3u47/SM2ox1rvcUYAeOOQ2Ntou/yIvifG8d2/WKHW2LeQFl
+	 +C0jFi0G+2X2dd8nC0Gb8QAPmLv83S5ajGHwuIiAzOI69XXoLmhsRMfJvPQ+YkgkDWJCV
+	 8FOPBcE00zoBQz0mmN5hOZOOURx9BulN5XgCLSSaOLEHD6VGLI8SeKq44RofU6G2nnQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=loongson.cn;
 	spf=pass smtp.mailfrom=loongson.cn;
 	arc=none smtp.remote-ip=114.242.206.163
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85764606B178
-	for <loongarch@lists.linux.dev>; Tue, 10 Nov 2026 09:26:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 85764606B178
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6D9D606CFB9
+	for <loongarch@lists.linux.dev>; Tue, 10 Nov 2026 09:35:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C6D9D606CFB9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.172])
-	by gateway (Coremail) with SMTP id _____8DxD9M_4_JqSyMeAA--.21582S3;
-	Tue, 10 Nov 2026 17:26:23 +0800 (CST)
-Received: from ubuntu.loongson.cn (unknown [127.0.0.1])
-	by front1 (Coremail) with SMTP id qMiowJDxDc824_JqlHUzAA--.21861S2;
-	Tue, 10 Nov 2026 17:26:14 +0800 (CST)
-From: wuqianhai@loongson.cn
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	tzimmermann@suse.de,
-	deller@gmx.de,
-	bhelgaas@google.com
-Cc: ardb@kernel.org,
-	ilias.apalodimas@linaro.org,
-	javierm@redhat.com,
-	loongarch@lists.linux.dev,
-	linux-pci@vger.kernel.org,
-	linux-efi@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	wuqianhai <wuqianhai@loongson.cn>
-Subject: [PATCH v3 4/6] LoongArch: video: Implement primary framebuffer device detection
-Date: Tue, 10 Nov 2026 17:24:18 +0800
-Message-Id: <20261110092418.2647821-1-wuqianhai@loongson.cn>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20261110090203.2631481-1-wuqianhai@loongson.cn>
-References: <20261110090203.2631481-1-wuqianhai@loongson.cn>
+Received: from loongson.cn (unknown [223.64.69.17])
+	by gateway (Coremail) with SMTP id _____8DxytFQ5fJq8iMeAA--.20996S3;
+	Tue, 10 Nov 2026 17:35:13 +0800 (CST)
+Received: from kernelserver (unknown [223.64.69.17])
+	by front1 (Coremail) with SMTP id qMiowJAxmM1O5fJqHXYzAA--.38371S2;
+	Tue, 10 Nov 2026 17:35:12 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	"Rafael J . Wysocki" <rjw@rjwysocki.net>,
+	Len Brown <lenb@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] ACPI: LoongArch: Validate ACPI IOVT device entries
+Date: Tue, 10 Nov 2026 17:35:00 +0800
+Message-ID: <20261110093500.2875664-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.52.0
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -66,127 +56,130 @@ List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxDc824_JqlHUzAA--.21861S2
-X-CM-SenderInfo: 5zxtxtpqkdxqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxXr4rCFy8Cw13uF43XrWUGFX_yoW5tFWDpF
-	1DAF95Jr4kWrn7G3sxJa43Zr15Jr1kGr1agFyI9Fy8CrnxXrn5Zr93tryDJa4UJ398JFWF
-	qF9xGw13WF45XabCm3ZEXasCq-sJn29KB7ZKAUJUUUjU529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:qMiowJAxmM1O5fJqHXYzAA--.38371S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxWrWxAF1kur1kJF4DXF18JFc_yoW5CrW8pF
+	43urW5trWxJr47Wr1Iqwn8uFWa9ayv9ayF9rW3K3yYkFs7GrWrXFWxAF90vas5Aa9rWa1f
+	J3WUtF4UKF1UZwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUmCb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUtVW8ZwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	tVWrXwAv7VC2z280aVAFwI0_Gr1j6F4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2
-	Ij64vIr41lF7xvrVCFI7AF6II2Y40_Zr0_Gr1UM4kE6xkIj40Ew7xC0wCY1x0262kKe7AK
-	xVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267
-	AKxVWUtVW8ZwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
-	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5Jw
-	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
-	MIIF0xvEx4A2jsIE14v26r4UJVWxJr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYx
-	BIdaVFxhVjvjDU0xZFpf9x07bIdbbUUUUU=
+	0xBIdaVrnRJUUU9Fb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
+	wI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
+	xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x
+	0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AK
+	xVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
+	AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI
+	42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
+	IF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2
+	KfnxnUUI43ZEXa7IU8fsqJUUUUU==
 
-From: wuqianhai <wuqianhai@loongson.cn>
+START and END device entries in ACPI IOVT should be paired and
+adjacent, while SINGLE entries shouldn't be between START and END.
+So add a iovt_validate_entries() function to validate the entries
+before the real parsing.
 
-The LoongArch port does not implement video_is_primary_device(), so it
-falls back to the generic stub that always returns false.  As a result,
-with CONFIG_FRAMEBUFFER_CONSOLE_DETECT_PRIMARY=y the framebuffer console
-cannot map itself to the primary display device and instead binds to the
-first registered framebuffer, which is not necessarily the one the
-firmware used for the boot console.
+By the way, move kzalloc_obj() from the ACPI_IOVT_DEVICE_ENTRY_END
+case to the ACPI_IOVT_DEVICE_ENTRY_START case, so as to avoid NULL
+pointer dereference.
 
-Implement video_is_primary_device() by returning whether the device is
-the VGA default device.  This reuses the VGA arbiter's choice instead of
-matching the firmware framebuffer by address, so it is stable across BAR
-resizing: the default device is fixed before any driver runs.
-
-Signed-off-by: wuqianhai <wuqianhai@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- arch/loongarch/Makefile             |  3 +++
- arch/loongarch/include/asm/video.h  |  7 +++++++
- arch/loongarch/video/Makefile       |  3 +++
- arch/loongarch/video/video-common.c | 29 +++++++++++++++++++++++++++++
- 4 files changed, 42 insertions(+)
- create mode 100644 arch/loongarch/video/Makefile
- create mode 100644 arch/loongarch/video/video-common.c
+ drivers/acpi/loongarch/iovt.c | 53 ++++++++++++++++++++++++++++-------
+ 1 file changed, 43 insertions(+), 10 deletions(-)
 
-diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-index 4b22f95aaafb..7fca93298cef 100644
---- a/arch/loongarch/Makefile
-+++ b/arch/loongarch/Makefile
-@@ -166,6 +166,9 @@ bootvars-y	= VMLINUX_LOAD_ADDRESS=$(load-y)
+diff --git a/drivers/acpi/loongarch/iovt.c b/drivers/acpi/loongarch/iovt.c
+index c972805c8e53..1e97669eaeea 100644
+--- a/drivers/acpi/loongarch/iovt.c
++++ b/drivers/acpi/loongarch/iovt.c
+@@ -84,10 +84,43 @@ static int __init iovt_get_pci_iommu_fwnode(struct iovt_fwnode *np, u16 segment,
+ 	return 0;
+ }
  
- drivers-$(CONFIG_PCI)		+= arch/loongarch/pci/
- 
-+# framebuffer console primary device detection
-+drivers-$(CONFIG_VIDEO)		+= arch/loongarch/video/
-+
- KBUILD_AFLAGS	+= $(cflags-y)
- KBUILD_CFLAGS	+= $(cflags-y)
- KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y)
-diff --git a/arch/loongarch/include/asm/video.h b/arch/loongarch/include/asm/video.h
-index 9f76845f2d4f..7b38881ea1d6 100644
---- a/arch/loongarch/include/asm/video.h
-+++ b/arch/loongarch/include/asm/video.h
-@@ -8,6 +8,13 @@
- #include <linux/compiler.h>
- #include <linux/string.h>
- 
-+struct device;
-+
-+#ifdef CONFIG_VIDEO
-+bool video_is_primary_device(struct device *dev);
-+#define video_is_primary_device video_is_primary_device
-+#endif
-+
- static inline void fb_memcpy_fromio(void *to, const volatile void __iomem *from, size_t n)
- {
- 	memcpy(to, (void __force *)from, n);
-diff --git a/arch/loongarch/video/Makefile b/arch/loongarch/video/Makefile
-new file mode 100644
-index 000000000000..f1b2a7e54033
---- /dev/null
-+++ b/arch/loongarch/video/Makefile
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+
-+obj-$(CONFIG_VIDEO)		+= video-common.o
-diff --git a/arch/loongarch/video/video-common.c b/arch/loongarch/video/video-common.c
-new file mode 100644
-index 000000000000..6fea46661cb6
---- /dev/null
-+++ b/arch/loongarch/video/video-common.c
-@@ -0,0 +1,29 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2026 Loongson Technology Corporation Limited
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/pci.h>
-+#include <linux/vgaarb.h>
-+
-+#include <asm/video.h>
-+
-+bool video_is_primary_device(struct device *dev)
++static int __init iovt_validate_entries(struct acpi_iovt_iommu *iommu)
 +{
-+	struct pci_dev *pdev;
++	int i, done = 1;
++	struct acpi_iovt_device_entry *ep;
 +
-+	if (!dev_is_pci(dev))
-+		return false;
++	ep = ACPI_ADD_PTR(struct acpi_iovt_device_entry, iommu, iommu->device_entry_offset);
++	for (i = 0; i < iommu->device_entry_num; i++) {
++		switch (ep->type) {
++		case ACPI_IOVT_DEVICE_ENTRY_START:
++			if (!done)
++				return -EINVAL;
 +
-+	pdev = to_pci_dev(dev);
++			done = 0;
++			break;
++		case ACPI_IOVT_DEVICE_ENTRY_END:
++			if (done)
++				return -EINVAL;
 +
-+	if (!pci_is_display(pdev))
-+		return false;
++			done = 1;
++			break;
++		case ACPI_IOVT_DEVICE_ENTRY_SINGLE:
++		default:  /* Reserved for future */
++			if (!done)
++				return -EINVAL;
 +
-+	return pdev == vga_default_device();
++			done = 1;
++			break;
++		}
++		ep = ACPI_ADD_PTR(struct acpi_iovt_device_entry, ep, ep->length);
++	}
++
++	return done ? 0 : -EINVAL;
 +}
-+EXPORT_SYMBOL(video_is_primary_device);
 +
-+MODULE_DESCRIPTION("LoongArch video helpers");
-+MODULE_LICENSE("GPL");
+ static int __init iovt_add_iommu(struct acpi_iovt_iommu *iommu)
+ {
+ 	int i, ret;
+-	bool is_start = false;
+ 	struct iovt_fwnode *np;
+ 	struct iovt_device_entry *entry;
+ 	struct acpi_iovt_device_entry *ep;
+@@ -121,23 +154,24 @@ static int __init iovt_add_iommu(struct acpi_iovt_iommu *iommu)
+ 	if (np->flag & ACPI_IOVT_IOMMU_MAGAGE_BY_SEGMENT)
+ 		goto skip;
+ 
++	if (iovt_validate_entries(iommu) < 0) {
++		kfree(np);
++		return -EINVAL;
++	}
++
+ 	INIT_LIST_HEAD(&np->ep_list);
+ 	ep = ACPI_ADD_PTR(struct acpi_iovt_device_entry, iommu, iommu->device_entry_offset);
+ 	for (i = 0; i < iommu->device_entry_num; i++) {
+ 		switch (ep->type) {
+ 		case ACPI_IOVT_DEVICE_ENTRY_START:
+-			is_start = true;
+-			entry->start_devid = ep->device_id;
+-			break;
+-		case ACPI_IOVT_DEVICE_ENTRY_END:
+-			if (!is_start)
+-				break;
+-
+ 			entry = kzalloc_obj(struct iovt_device_entry, GFP_ATOMIC);
+ 			if (!entry)
+ 				return -ENOMEM;
+ 
+-			is_start = false;
++			entry->start_devid = ep->device_id;
++			break;
++		case ACPI_IOVT_DEVICE_ENTRY_END:
++			/* START & END are paired */
+ 			entry->end_devid = ep->device_id;
+ 			list_add_tail(&entry->list, &np->ep_list);
+ 			break;
+@@ -146,7 +180,6 @@ static int __init iovt_add_iommu(struct acpi_iovt_iommu *iommu)
+ 			if (!entry)
+ 				return -ENOMEM;
+ 
+-			is_start = false;
+ 			entry->start_devid = ep->device_id;
+ 			entry->end_devid = ep->device_id;
+ 			list_add_tail(&entry->list, &np->ep_list);
 -- 
-2.34.1
+2.52.0
 
