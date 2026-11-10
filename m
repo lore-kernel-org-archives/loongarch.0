@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.72
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.69
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794313069;
-	b=TldURGmWoG823nLLH4TEMqUUhpS3mYYPQMOZo4xZUshXo9tanTIL3wGlKBjOq45j0DAs
-	 lwe2xzE4bWHL9TbnoiOe+8cVLUenpmxovlytH3pjxbHytqktBezSrKFOzsfVeV//XR93a
-	 FSNl4vNwSmfspqWHNwij2eKvok3cQPCwC7Phckcxm5KGQykbtYXvCeLXrv5jTJ+3M3RLq
-	 fyKuGPxUl3Oh2qNFYy1dkWyMIn4mnc4857eOiYtcKAGayqRDdqfcp83TiXXLGWUOgZRT1
-	 t92R3NkjGOFTL9T/piyMewSd1HJuNxkS3AfFwgRLpDFDbcwZqe6+z0lQJvsp43auZaQ==
+	t=1794313071;
+	b=GriayHezFtdB4l4ZLwukSFc1ai7DKpgSaqdQ8AkTf+xwwYNgVxNafIBgbdLoGAOxIkk1
+	 t4uPPZ6WUsAQaEzUirLx6XZAxo5Dg63S8Ctfe1MAY8QH+ZYcIRwaz8X5307zb0lpPzB5q
+	 YlW+CLhcToYPQ5f3+vfLq4oexcHGiYGtG0mcZKlcLGtvfRLMIOzjWVM73RReUXeLpKJJm
+	 PcM+dT4x+CnmB7YbpJoXxoEFvAESiLchPl8HrEc+ljWwWWCB6bme69qHF/lwD+loo9ZSD
+	 5Vu6yPAXdcPVKMOBtMdbXthLM3fIpT1f7vIuPcDxtrTyY2gQOUmvTsIQnVYjIze6JRg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794313069;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794313071;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=7NfbOn3Kflbxnh3F008n5JJpxbmKMRJyc/lu3FOPZxo=;
-	b=RYwA9GVokIgChRwimEJPBm/KeKkBzLAm035QodErIIzso+Jgje4ruoQ2Ej0n5ETI8A3J
-	 LSixotTrV61HgeC+/a+ziE5s3o41/nBdHK0aYBX3vMU5zK5F/slzaLJg/aE+iH82GmWbM
-	 1ssz6l9weJ4MLV0neMANdiuKBYKKH5fPRqW0VuzGcQEKwbPJWU736JZlw/NchUlGNU0zD
-	 XxB/iwkXNQmcGjmpJoqy4BJdtvFemajv5FvNMT/jXEh3iozFIIc1w8xKzNCylIaRxjJ7f
-	 aepPWepBTmCoRE0tRbrYnR7sl6hM698qCwjfzCT5QNcjnJiSgnxR1nAFMu6TzqHF2Yg==
+	bh=XeENm8YGI/YCcxTaf8fM3RRrPARxs0Acfc/5LAWqFwc=;
+	b=ITwajtxmvcY7+OUkNCbF5jr5/iTIdFxuKn++Suk9zdDIqgfeqXEYWepYlfDs+YnEQ+LC
+	 HDwoKyYdNVYym8xNPKWJ4jWiLgRwXDuUisofyj9ufcPSeE65NLYyOgJdqVXj3n0aqkugU
+	 2sY6Dgp2XLKQGH063x/nIIdX7OQ0fCzj3sRfWg7XWgSjGEo/cutSnoGUsWdicLcPZeLWV
+	 6V/kaZVojN4kFsIzNNRfBKD5E8xIhyrZMVKx/ac2NUeJJnL0dir4YDlLmJSEuGq5AlPro
+	 QKIAb6/kihjacKK1LAA4bYr3vF3bFc5yPZ8TzmHdT4EbQ6IK231GEVsZeoPUtww/DQg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--ardb.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Tt4erqsL;
-	arc=none smtp.remote-ip=209.85.221.72
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b="fiuXTFa/";
+	arc=none smtp.remote-ip=209.85.128.69
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B4C0606A31C
-	for <loongarch@lists.linux.dev>; Tue, 10 Nov 2026 12:17:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0B4C0606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB03C606A31C
+	for <loongarch@lists.linux.dev>; Tue, 10 Nov 2026 12:17:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AB03C606A31C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Tt4erqsL
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-48fbcf023dcso1184312f8f.2
-        for <loongarch@lists.linux.dev>; Tue, 10 Nov 2026 04:17:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=fiuXTFa/
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4a2065a2ef9so15415615e9.3
+        for <loongarch@lists.linux.dev>; Tue, 10 Nov 2026 04:17:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794313067; x=1794917867; darn=lists.linux.dev;
+        d=google.com; s=20260707; t=1794313069; x=1794917869; darn=lists.linux.dev;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=7NfbOn3Kflbxnh3F008n5JJpxbmKMRJyc/lu3FOPZxo=;
-        b=Tt4erqsL4gerLKKN9KmAKoPVoG0CU6T6jtZHLZuLXDm2kB3UentjpeUwGXAkiAhbp7
-         Nc4M+PTaEBUXPIiy8FvNHSHo3bV13Um7fX6cAsytSMxMZPQMqW4myQSsrQTqNYu8anMk
-         TSGmvjMF4aw7LzvG5FZMV21iRdpkDyyz4nNPOI1GpdB3sfph1CWm8mV1/wcroL6hJYSx
-         SZ0NVaPuHMUt1wBOS5+XRAOWfq6mcBAfpCrUaiiiDs/e0JGJ5yBOgQPb3S2Ov/gT4+42
-         v6GHV9EyJ27llhPmVAwSy3ugWRvpIoOP4OZjvcYcdUmzbEBJu8z6C2nBkm/CzJIfwv/V
-         1deA==
+        bh=XeENm8YGI/YCcxTaf8fM3RRrPARxs0Acfc/5LAWqFwc=;
+        b=fiuXTFa/lGRW9SUlOFHjnzRTlBt+pl3m6j+iJon5lmLaqQQKGXhGKAyf4b3DSayNNt
+         YO+szxsfW0hRN2DUDtR4wxbTo3IGyCCd+a8X8T4GbPtMx+qT9vQ5Zm39BIWvskNyb0dd
+         FBdcWvUmNva9k0luYHiKOvmT04qevIKPX+wfQAQ9z9vypoxOQHFT5N9LTtGMVpSNZL2F
+         7rf8LACsoxAoCGRH7wVsi8oWi8Vcg/TQhHYotUROVMicYR2U4lWFSldhvK3wXv1NZ8c2
+         GLoEOZzeV0XGvBhTAdl7ERM/R/03yfSBtqn5v+MFHUuhtqAJAxAbYUlFj3yCKzoJgyZg
+         b+0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794313067; x=1794917867;
+        d=1e100.net; s=20260707; t=1794313069; x=1794917869;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=7NfbOn3Kflbxnh3F008n5JJpxbmKMRJyc/lu3FOPZxo=;
-        b=g14aCd2vWSNaPzj4qdoKZoNBjpWAvHoIudtpzHlw1b93+uLDksTh6bddSv/n9bpXEp
-         gYDOvsdjuzbegFWBY4+wS9vh0qywR08hH/Xqm0zXHqwRcWez3W8GsapIeFqDlsYBkL6V
-         1P6KOHr60yAmg3URRtYK3UqV7vR3MMoBjH4IHfvdxXA7zDw5O0i4tIBWwh4DVWfCZMUn
-         Zd/fmWC3ZMl3LUyUhWyx0jA2wlgKj+uFLNM5xiEDI3/HBh0DcC8XxBRU6lonjpeMCUvN
-         wcLgilQQTcZgtkwpQPLGOKUDgVl48Ut6ceqFkCcZOA2SL830u5MtLLG0TccrkCNp3LvQ
-         aIEA==
-X-Forwarded-Encrypted: i=1; AL+hErFuc3t6J7rqI74SX2+eKPxnBF+GkFD5fzm4Ai6blC6xYNf8LqLJw80kkMaDIHvCyF2cPiOyi5RTBW4=@lists.linux.dev
-X-Gm-Message-State: APuU4Z+munP8TNbPzz9d99lopXN0ro+vp9hGaXTxC88DOhUVkuzWZGTJ
-	zvDHL/MMPMUtw12COtZBt7nlx5lDT49x79H9Eogig9K9xd6qwekRTNaA4pHfdavQifVn+YpWjg=
+        bh=XeENm8YGI/YCcxTaf8fM3RRrPARxs0Acfc/5LAWqFwc=;
+        b=RnOq/2L9D6z5+xI1cgHGsPAV8vY0OJPTfLGhLp8TEM51YbLuje6Tfn82ODp+2chnu+
+         1VBj3sAw0bbLncWQdGddUHBj0a/y+kuiK4AJYHxEm1QYUmuZq6ZA7G8Lv9cS1fzxHn9T
+         csITQgcAabudYOjkQ7z5hhu4z38CxyHVGgBLyVijdFAMY0WPkBnfwmEDYzEYidmWEo1I
+         eJ5Ed6Q8xZ0yWLVJjc4mmAHF+RP9jyv5glZi9RRdLDyOjC9HeBlhWrtZT8jk/MjW3l0A
+         THaiWiQEAIkDt+qO9fQo6Q7nAD296fmfhtVQR2Nt2HAlTNO0x7M+DH4aIMiNdhqiHsY8
+         3u0w==
+X-Forwarded-Encrypted: i=1; AL+hErEYSaWD3dmYyY+5c1cV2t+HKzkwT3KdwEPERExkDJ0oDqzzvfGSW5VggPkgBIq5qJnB+UTH9ZUyOsk=@lists.linux.dev
+X-Gm-Message-State: APuU4Z84C3wA52b59yxsMdx8Li+6kCi4QItcpfBw8EqFzaEfqLQp4gwD
+	UvaRA5q7ToSXtulDtcHaC9R7+qZvJMX5G4Y/NUdELjdqoRY3oBv2HD1veEf8F2fg1JgvJ4Iw1w=
 	=
-X-Received: from wrnj18.prod.google.com ([2002:adf:ea52:0:b0:48c:4566:c9eb])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:34d3:b0:4a1:e6c5:e44c
- with SMTP id 5b1f17b1804b1-4ba0233e7f5mr39656725e9.10.1794313067235; Tue, 10
- Nov 2026 04:17:47 -0800 (PST)
-Date: Tue, 10 Nov 2026 13:17:39 +0100
+X-Received: from wmpj1.prod.google.com ([2002:a05:600c:4881:b0:4ae:2747:b6c5])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:8b33:b0:4a4:4d57:8487
+ with SMTP id 5b1f17b1804b1-4ba0233684bmr40944525e9.5.1794313068535; Tue, 10
+ Nov 2026 04:17:48 -0800 (PST)
+Date: Tue, 10 Nov 2026 13:17:40 +0100
 In-Reply-To: <20261110121731.2728824-12-ardb+git@google.com>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -81,9 +81,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261110121731.2728824-12-ardb+git@google.com>
 X-Mailer: git-send-email 2.56.0.542.g3ef89b7020-goog
-Message-ID: <20261110121731.2728824-19-ardb+git@google.com>
-Subject: [PATCH v2 07/10] efi/libstub: riscv: Use struct efi_image_info to
- access image properties
+Message-ID: <20261110121731.2728824-20-ardb+git@google.com>
+Subject: [PATCH v2 08/10] efi/libstub: Make efi_remap_image() return efi_status_t
 From: Ard Biesheuvel <ardb+git@google.com>
 To: linux-efi@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org, Ard Biesheuvel <ardb@kernel.org>, 
@@ -94,76 +93,92 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-Instead of exposing individual symbols to the EFI stub explicitly via
-the linker script, use the generic struct efi_image_info, which accesses
-the original symbols via PC-relative references from the stub itself.
+efi_remap_image() uses the EFI Memory Attributes Protocol to remap code
+and data regions with the appropriate permissions. This could fail for a
+variety of regions, all of which are currently ignored.
 
-This improves code reuse across architectures, and makes it easier to
-add new references in a generic manner.
+So relay the failure status code if any occur when invoking the
+protocol. Locating the protocol itself is allowed to fail, as remapping
+the image is likely unnecessary in the first place if the protocol does
+not exist.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/riscv/kernel/image-vars.h            |  5 -----
- drivers/firmware/efi/libstub/riscv-stub.c | 14 +++++++-------
- 2 files changed, 7 insertions(+), 12 deletions(-)
+ drivers/firmware/efi/libstub/efi-stub-helper.c | 15 ++++++++++-----
+ drivers/firmware/efi/libstub/efistub.h         |  4 ++--
+ 2 files changed, 12 insertions(+), 7 deletions(-)
 
-diff --git a/arch/riscv/kernel/image-vars.h b/arch/riscv/kernel/image-vars.h
-index bf703eba3fa5..27efb990da43 100644
---- a/arch/riscv/kernel/image-vars.h
-+++ b/arch/riscv/kernel/image-vars.h
-@@ -23,11 +23,6 @@
-  * linked at. The routines below are all implemented in assembler in a
-  * position independent manner
+diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
+index 8e43eb3f418b..e50deec99686 100644
+--- a/drivers/firmware/efi/libstub/efi-stub-helper.c
++++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
+@@ -697,9 +697,11 @@ efi_status_t efi_wait_for_key(unsigned long usec, efi_input_key_t *key)
+  * region of the loaded image read-only/executable, and the remainder
+  * read-write/non-executable. The code region is assumed to start at the base
+  * of the image, and will therefore cover the PE/COFF header as well.
++ *
++ * Return: EFI_SUCCESS on success, other EFI status codes on failure.
   */
--__efistub__start		= _start;
--__efistub__start_kernel		= _start_kernel;
--__efistub__end			= _end;
--__efistub__edata		= _edata;
--__efistub___inittext_end	= __inittext_end;
- #if defined(CONFIG_EFI_EARLYCON) || defined(CONFIG_SYSFB)
- __efistub_sysfb_primary_display	= sysfb_primary_display;
- #endif
-diff --git a/drivers/firmware/efi/libstub/riscv-stub.c b/drivers/firmware/efi/libstub/riscv-stub.c
-index 5cbc50a814e1..e8d66f6fe8e0 100644
---- a/drivers/firmware/efi/libstub/riscv-stub.c
-+++ b/drivers/firmware/efi/libstub/riscv-stub.c
-@@ -6,7 +6,6 @@
- #include <linux/efi.h>
- 
- #include <asm/efi.h>
--#include <asm/sections.h>
- #include <linux/unaligned.h>
- 
- #include "efistub.h"
-@@ -20,7 +19,7 @@ unsigned long stext_offset(void)
- 	 * of the file representation. So instead, we need to jump to the
- 	 * actual entrypoint in the .text region of the image.
- 	 */
--	return _start_kernel - _start;
-+	return efistub_kernel_entry_offset(efistub_get_image_info());
- }
- 
- efi_status_t handle_kernel_image(unsigned long *image_addr,
-@@ -30,13 +29,14 @@ efi_status_t handle_kernel_image(unsigned long *image_addr,
- 				 efi_loaded_image_t *image,
- 				 efi_handle_t image_handle)
+-void efi_remap_image(unsigned long image_base, unsigned alloc_size,
+-		     unsigned long code_size)
++efi_status_t efi_remap_image(unsigned long image_base, unsigned alloc_size,
++			     unsigned long code_size)
  {
--	unsigned long kernel_size, kernel_codesize, kernel_memsize;
-+	auto image_info			= efistub_get_image_info();
-+	unsigned long kernel_base	= efistub_kernel_base(image_info);
-+	unsigned long kernel_size	= efistub_kernel_size(image_info);
-+	unsigned long kernel_codesize	= efistub_kernel_codesize(image_info);
-+	unsigned long kernel_memsize	= efistub_kernel_memsize(image_info);
- 	efi_status_t status;
+ 	static efi_guid_t guid = EFI_MEMORY_ATTRIBUTE_PROTOCOL_GUID;
+ 	efi_memory_attribute_protocol_t *memattr;
+@@ -710,10 +712,12 @@ void efi_remap_image(unsigned long image_base, unsigned alloc_size,
+ 	 * If the firmware implements the EFI_MEMORY_ATTRIBUTE_PROTOCOL, let's
+ 	 * invoke it to remap the text/rodata region of the decompressed image
+ 	 * as read-only and the data/bss region as non-executable.
++	 * Don't bother if the protocol does not exist: it means all memory is
++	 * read-write-exec anyway.
+ 	 */
+ 	status = efi_bs_call(locate_protocol, &guid, NULL, (void **)&memattr);
+ 	if (status != EFI_SUCCESS)
+-		return;
++		return EFI_SUCCESS;
  
--	kernel_size = _edata - _start;
--	kernel_codesize = __inittext_end - _start;
--	kernel_memsize = kernel_size + (_end - _edata);
--	*image_addr = (unsigned long)_start;
-+	*image_addr = kernel_base;
- 	*reserve_size = kernel_memsize;
+ 	// Get the current attributes for the entire region
+ 	status = memattr->get_memory_attributes(memattr, image_base,
+@@ -721,7 +725,7 @@ void efi_remap_image(unsigned long image_base, unsigned alloc_size,
+ 	if (status != EFI_SUCCESS) {
+ 		efi_warn("Failed to retrieve memory attributes for image region: 0x%lx\n",
+ 			 status);
+-		return;
++		return status;
+ 	}
  
- 	status = efi_kaslr_relocate_kernel(image_addr,
+ 	// Mark the code region as read-only
+@@ -729,7 +733,7 @@ void efi_remap_image(unsigned long image_base, unsigned alloc_size,
+ 						EFI_MEMORY_RO);
+ 	if (status != EFI_SUCCESS) {
+ 		efi_warn("Failed to remap code region read-only\n");
+-		return;
++		return status;
+ 	}
+ 
+ 	// If the entire region was already mapped as non-exec, clear the
+@@ -749,4 +753,5 @@ void efi_remap_image(unsigned long image_base, unsigned alloc_size,
+ 		if (status != EFI_SUCCESS)
+ 			efi_warn("Failed to remap data region non-executable\n");
+ 	}
++	return status;
+ }
+diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
+index 394796472cc0..e2a9339f3e2c 100644
+--- a/drivers/firmware/efi/libstub/efistub.h
++++ b/drivers/firmware/efi/libstub/efistub.h
+@@ -1283,8 +1283,8 @@ struct efi_smbios_type4_record {
+ const u8 *__efi_get_smbios_string(const struct efi_smbios_record *record,
+ 				  const u8 *offset);
+ 
+-void efi_remap_image(unsigned long image_base, unsigned alloc_size,
+-		     unsigned long code_size);
++efi_status_t efi_remap_image(unsigned long image_base, unsigned alloc_size,
++			     unsigned long code_size);
+ efi_status_t efi_kaslr_relocate_kernel(unsigned long *image_addr,
+ 				       unsigned long *reserve_addr,
+ 				       unsigned long *reserve_size,
 -- 
 2.56.0.542.g3ef89b7020-goog
 
