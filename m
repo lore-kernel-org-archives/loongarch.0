@@ -1,39 +1,39 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794301107;
-	b=KuMnUwbkXAtwV/b1mNbbLJ8uPROyLI2hsn0HQkiSEW+0dbvMKCOYLBLH5Uv9TrPb/at9
-	 C+ZmAkm4ftZeyuzNruQTe3q8Hu/DCgpowhp1HJC7dNkyrXyE1tRjzdh6L0BerZOV3cf6X
-	 uMjSHqmzNb/WABs2NTkhv925n5gv0tdnyceiZuOAl+zhGjLwXybEC6Nq/rZXXNb62G6n9
-	 EqWEeZEO8nJA41CL5+0J65alqez0Rdk7cEqBslkO/3ka9N7gjReUShHP4p9jK9nxyP5zX
-	 oZxBA3N/MO9HVXvqhql63ofB2+YpFTHfBJOi6VKOeslbHvGOM05bv5kclqIH0a8x16w==
+	t=1794301171;
+	b=iXUqA45TF5oXk2hDRme4mcaIutkV8jC6l2o77dZIW2WL6XLzU6uVeRUAI16NFuzS7563
+	 g3hzTrCNrIsHg+ZU3DtA8Goy3cWIfYNL4G9zCEFv+F8MlBNfRPLVj6f7xJg41hwvRAxaa
+	 ZzS4lM1O1tujUrDqLPyLAaXqAQ3U9XszR4reXvz1P93uPB9vmH4Y5mvhS8mkCUQ/0N7H4
+	 8CiBJj3f4JJmR2Ea/piyL0uZwAC98JB8QhX5LFkO5MzuSOLtm12wX0eI5YlImvcicurT/
+	 QBaQKoMFI5M2N0yWZPd7MFTk+FObHdYfbzSf109jB5XDTHf+ksx5k0RJrCxQX9ZaBaQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794301107;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794301171;
 	h=DMARC-Filter:Received:Received:From:To:Cc:Subject:Date:Message-Id:
 	 X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding:X-CM-TRANSID:X-CM-SenderInfo:
 	 X-Coremail-Antispam;
-	bh=HIr2gJNYKSV9Po7OTlCzbHRJ4V+/f5BdHK/WDaIaT64=;
-	b=4ka9NW1NXUstdBgPHDO3zJjxPsN9pG9bS7DDYfU/AtqyTa36/mPWXdmDc/Xgt90Db3Xc
-	 7kd/SD/8idZ8YRinIbJwe5z0ttqzFFQGDPdzqFA/iuF5m3hq2iPDrZuLHlyZwGoh+xBsU
-	 rAgfa5fIjLLxhUqtkFSp/h8HFtp+MU51FsXS5PvcZgh3zAMToidzdCbe2/viX0jnuUYUb
-	 HUTgPAuoThXXIC2ii5edMRTTeBAhndRQfK9ToDps9FP1FPSBHybPRTrWmvhdrOxP1Zru+
-	 b1zpmtH16QBXY6abeF1CZJRX8i8sXbskHc00/CArDLRJRIB8CxzTePihQo0SK047A1Q==
+	bh=tJNhHzwB5LcleXTM/9uMvCleiUrNIQKHQSO/1T92eLo=;
+	b=XCqaWRxdae5b1u/a0PUMyff9uYEJgozOizU7ALYwLkoD8XqaoFFvcuGzrlhKBwCOBdKv
+	 TufuJpq29w8CoGvsig/GW+bykEyu56DWk5D/Q02dojVLHu8AKQ2jhoGjlkHjc+0iaQNsS
+	 KXUYEObcM1hwdKfZvg1Ls/lgle1zFbbm5ZlmnheNstSHlBRRVoVI6erK3Z2w5nSV5smza
+	 797enCaK7TGcm8IuEvaEiyIuYMju0KQK9khxnJAOEy3gdYRez24EZRvLHh7u4EoNOKPkY
+	 4Fuw3fl4/QvV9l2OIuhr1jzSRbBNznJFi+1m0IvlkN+9oeXOITIoNscF7VTETu62LCw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=loongson.cn;
 	spf=pass smtp.mailfrom=loongson.cn;
 	arc=none smtp.remote-ip=114.242.206.163
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44BBF606A335
-	for <loongarch@lists.linux.dev>; Tue, 10 Nov 2026 08:58:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 44BBF606A335
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E475606A321
+	for <loongarch@lists.linux.dev>; Tue, 10 Nov 2026 08:59:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0E475606A321
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.20.42.172])
-	by gateway (Coremail) with SMTP id _____8BxrtKx3PJqgyAeAA--.21672S3;
-	Tue, 10 Nov 2026 16:58:25 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxC9Lx3PJquyAeAA--.21483S3;
+	Tue, 10 Nov 2026 16:59:29 +0800 (CST)
 Received: from ubuntu.loongson.cn (unknown [127.0.0.1])
-	by front1 (Coremail) with SMTP id qMiowJBxrM6m3PJq83MzAA--.21431S5;
-	Tue, 10 Nov 2026 16:58:24 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJBxa87t3PJqCXQzAA--.20943S4;
+	Tue, 10 Nov 2026 16:59:28 +0800 (CST)
 From: wuqianhai@loongson.cn
 To: chenhuacai@kernel.org,
 	kernel@xen0n.name,
@@ -50,13 +50,12 @@ Cc: ardb@kernel.org,
 	linux-fbdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	wuqianhai <wuqianhai@loongson.cn>
-Subject: [PATCH v3 3/6] LoongArch/PCI: Remove vga default device override
-Date: Tue, 10 Nov 2026 16:56:14 +0800
-Message-Id: <20261110085617.2626835-4-wuqianhai@loongson.cn>
+Subject: [PATCH v3 6/6] PCI/VGA: Enable firmware default device detection on LoongArch
+Date: Tue, 10 Nov 2026 16:57:29 +0800
+Message-Id: <20261110085729.2628009-3-wuqianhai@loongson.cn>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20261110085617.2626835-1-wuqianhai@loongson.cn>
-References: <20261029033440.973077-1-wuqianhai@loongson.cn>
- <20261110085617.2626835-1-wuqianhai@loongson.cn>
+In-Reply-To: <20261110085729.2628009-1-wuqianhai@loongson.cn>
+References: <20261110085729.2628009-1-wuqianhai@loongson.cn>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -67,82 +66,70 @@ List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxrM6m3PJq83MzAA--.21431S5
+X-CM-TRANSID:qMiowJBxa87t3PJqCXQzAA--.20943S4
 X-CM-SenderInfo: 5zxtxtpqkdxqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Cw45ZFW7WryDWrWDJF1rKrX_yoW8trW5pF
-	9xZFs7KFZ7Gr15GrnFvw18Gr1qyas7C34xuFWUCry8K3W3A34Fq39ayw1kXFW7Ja97XFy8
-	ZFZIkF47GF4DtabCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW7Cw1kJr1kKr1xWr4kJw1fGrX_yoW8Wr1fpF
+	WkJFyIyF48XFs8J3y7X34kWF98uan7CFyIkFWYkwnxua43A3yjk34ftasxtr9rXrs5ZF1S
+	vFn3t3WUAayrGFgCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	0xBIdaVrnRJUUUPSb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1q6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr1j6F4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
-	xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
-	Wrv_ZF1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x
-	0EwIxGrwAKzVCY07xG64k0F24lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l
-	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxV
-	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI
-	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
-	4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI
-	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUVkn5DUUUU
+	0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E
+	14v26r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6x
+	kI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
+	6rWY6Fy7McIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48Icx
+	kI7VAKI48JM4kE6xkIj40Ew7xC0wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxG
+	rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW7JVWDJwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8
+	Jr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU804Et
+	UUUUU==
 
 From: wuqianhai <wuqianhai@loongson.cn>
 
-pci_fixup_vgadev() forces the VGA default device to a non-Loongson VGA
-device whenever a Loongson display controller is present.  This was
-added to prefer a discrete graphics card as the default boot device, but
-it makes vga_default_device() inconsistent with the firmware boot
-display: the firmware framebuffer lives on the integrated controller,
-while the override points the default at a discrete card (or leaves it
-unset when there is no discrete card).
+Use CONFIG_SCREEN_INFO rather than an architecture-specific condition to
+guard vga_is_firmware_default().  LoongArch now provides
+sysfb_primary_display whenever CONFIG_SCREEN_INFO is enabled, so have
+VGA_ARB select SCREEN_INFO on LoongArch as well.
 
-The fixup runs from pci_bus_add_device(), i.e. after the VGA arbiter has
-already selected the default device through the firmware framebuffer, so
-it overrides that choice.  Drop it so vga_default_device() consistently
-reflects the boot display.
+The screen_info staleness is handled by the PCI resource-assignment path
+in the previous patch, so vga_arb_device_init() no longer has to refresh
+screen_info itself.
 
 Signed-off-by: wuqianhai <wuqianhai@loongson.cn>
 ---
- arch/loongarch/pci/pci.c | 18 ------------------
- 1 file changed, 18 deletions(-)
+ drivers/pci/Kconfig  | 2 +-
+ drivers/pci/vgaarb.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/loongarch/pci/pci.c b/arch/loongarch/pci/pci.c
-index f33c7ea1443d..b756a44272ab 100644
---- a/arch/loongarch/pci/pci.c
-+++ b/arch/loongarch/pci/pci.c
-@@ -8,7 +8,6 @@
- #include <linux/delay.h>
- #include <linux/types.h>
- #include <linux/pci.h>
--#include <linux/vgaarb.h>
- #include <linux/io-64-nonatomic-lo-hi.h>
- #include <asm/cacheflush.h>
- #include <asm/loongson.h>
-@@ -88,23 +87,6 @@ int pcibios_alloc_irq(struct pci_dev *dev)
- 	return acpi_pci_irq_enable(dev);
- }
+diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+index 0c7408509ba2..01e6378effae 100644
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@ -255,7 +255,7 @@ config VGA_ARB
+ 	bool "VGA Arbitration" if EXPERT
+ 	default y
+ 	depends on !S390
+-	select SCREEN_INFO if X86
++	select SCREEN_INFO if X86 || LOONGARCH
+ 	help
+ 	  Some "legacy" VGA devices implemented on PCI typically have the same
+ 	  hard-decoded addresses as they did on ISA. When multiple PCI devices
+diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+index 3e58b2c05c85..4528ad038610 100644
+--- a/drivers/pci/vgaarb.c
++++ b/drivers/pci/vgaarb.c
+@@ -566,7 +566,7 @@ EXPORT_SYMBOL(vga_put);
  
--static void pci_fixup_vgadev(struct pci_dev *pdev)
--{
--	struct pci_dev *devp = NULL;
--
--	while ((devp = pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, devp))) {
--		if (devp->vendor != PCI_VENDOR_ID_LOONGSON) {
--			vga_set_default_device(devp);
--			dev_info(&pdev->dev,
--				"Overriding boot device as %X:%X\n",
--				devp->vendor, devp->device);
--		}
--	}
--}
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, PCI_DEVICE_ID_LOONGSON_DC1, pci_fixup_vgadev);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, PCI_DEVICE_ID_LOONGSON_DC2, pci_fixup_vgadev);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, PCI_DEVICE_ID_LOONGSON_DC3, pci_fixup_vgadev);
--
- #define CRTC_NUM_MAX		2
- #define CRTC_OUTPUT_ENABLE	0x100
- 
+ static bool vga_is_firmware_default(struct pci_dev *pdev)
+ {
+-#if defined CONFIG_X86
++#ifdef CONFIG_SCREEN_INFO
+ 	return pdev == screen_info_pci_dev(&sysfb_primary_display.screen);
+ #else
+ 	return false;
 -- 
 2.34.1
 
