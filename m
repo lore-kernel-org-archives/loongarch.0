@@ -1,98 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.161.49
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794269029;
-	b=rFm+Y+5xB6vW06rIJxJE7sNqI3DKIdl/8Rds72Cdg70dMJD5G1+oHdyixVMEbCQm9T7P
-	 teYikCRHdEssWipxMIOs1irBMhSF0ScTCG9UAZm3x+wWsuQ8c1aokr6Pem0RfQYLaX2J+
-	 FoQt5ZCytJ6KLbXO7UI4Zh02ItEf3gEsxElwejpYgwFSA6JQwdzPdblgeoqaWKp8y/IKx
-	 qtYl6YTIO7HWlzrBVaA7BrDXnJk8jN63gngf0Ued48fHYaowwtqo8hjF3dbKjFaHpG1Vo
-	 NezhTYhMHQF6LUnlTtobL5HM6uM4V1jy4+x4e2ERIMtwZ/d1sMz/iMB3fTVoagmWHUQ==
+	t=1794274156;
+	b=AlEnqllxplc8SOtq/05tSgjwq1ABP3xKNn10DYofYgs6Lt+WcgofAUZk+JaFQixSBqk1
+	 uG5jV4NqtidlinIkyOyKgFj9Ff3QyIb8Z9sLR/LmyHybJIDan/Eqc4WxHc24Y0E4/SILC
+	 4S1aOJw4Jnr1fzhoTg5qjVCyrXJx1B+9GcE5EayO2RT68cQ/rdQBsSmiyhx5mQvgS7yA2
+	 s3OYLYaUrEeK4E2ZXKmXIelSCvQTdesXPLVLWkCpkEqNf3/2FTyMizbmjc9Ceb4PedQp1
+	 eyGQX8dY0wGq5ZFipbhRJvGt+q5HWVuN5fG+Ws33m5pFZRblZ1t5kJe64iTOAQbkg7g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794269029;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-Id:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=0PXwHeGALupf0331RmW1wRjuSer7MEVZbJRazHgd5E8=;
-	b=pCh42VMiTTHSOTAwmbnx60OAVd/1lYdkKJfOUshafKLTkdMEBzW58AuMd58oHj83AfSo
-	 0MCESDAhVDbhBk6bZYGmUzt6MCDqClWmMmyX9GNhxKqwWsNcu5a8Uj7J0Sqjm2FEZcT8v
-	 ArEwpUKgvpMJYoI/j+T4eRysUqtyjDCA0j0l1QdXYbD+CKW7R74m/02pkDQlev84vSA+e
-	 9UUP/99+XJQNUy5O6ocll3/nD3vO5JPs+5d1BcjiI7Ahb5LXQ6Iwae9bbHJQfqyoj2wfS
-	 KJFgMm2x8ap0Kd9lWtT1tOVJfLaSKxI5W6XZcP3nO7nvqjSR20xWiF6hUO/chkesmbQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794274156;
+	h=DMARC-Filter:Received:Received:Subject:To:Cc:References:From:
+	 Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:Content-Type:
+	 Content-Language:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-CM-SenderInfo:X-Coremail-Antispam;
+	bh=aVUk5KNfoVM/ifJWEbEfsYize+Uhc5V1gasZQZSUIGY=;
+	b=u5yV7lQVcmS5SoLPo/LfGcNA1ar/zfjck7vfr3bJaBqX7VOeiwKH7p99pgXRrF2COmqj
+	 ZIyIG9U/C55qDxf569rN5rWwO0AcivsTJF+2NVzU+sZ8hoiM6C+Qkj0huOhIc9f/ChSq1
+	 NwcnU3ptUXw91duAuSQhLFJlaeFComhAuOYUVRYudCBmvaFU9ofQmH0YPIbusQk40Iivq
+	 4zkdnLchsXfuoOOPNg71TdHSFKY7gAj4JHYNDrsoA82xlXTbfg35HK4vmuvkdxDt9hCNx
+	 1BZHf0t0Fou8V4WEGZunE+LX2yXIThPPXIh8ilRKwm0/kIG4wQuQycId1H2HqsQXCbw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=vlARALGr;
-	arc=none smtp.remote-ip=209.85.161.49
-Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 719A960A263A
-	for <loongarch@lists.linux.dev>; Tue, 10 Nov 2026 00:03:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 719A960A263A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=vlARALGr
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-714d57774d8so887278eaf.1
-        for <loongarch@lists.linux.dev>; Mon, 09 Nov 2026 16:03:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794269028; x=1794873828; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=0PXwHeGALupf0331RmW1wRjuSer7MEVZbJRazHgd5E8=;
-        b=vlARALGrlspGouKBU/1BCyw0iH3MQeiqBphW2CUjnNCULHHFHT6jO1dk+NI/9mLMiN
-         EFcA9W6jZork8BpH7kiV9oT2KIiGPWbsbuIRO30ZLRFCW3rq79nJjs8ZJGeZLxS3bjYr
-         S5P4ToE9FnrmUp98aDZreF5it6h8dXwXYbbr+bfQK9la++xRzad/mgqW4Rn413EbWD1n
-         O3m6EbO/cYQpmM81DFW2iOaMyIu7KjC6DmqBkyanCog4pknnpk5JleX28CZ6IMAj/aYv
-         HAScEsUBqC/3nKxifv/xFm63k+gssvNlRi2N+RdvdA6nqumIhzcmukDlTPqZ9u/OFnvC
-         WHUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794269028; x=1794873828;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=0PXwHeGALupf0331RmW1wRjuSer7MEVZbJRazHgd5E8=;
-        b=Vj985Euz/Mt5BRlmtE+scPgPjyNO2KL8FzNyuS/cFcn4/z+htQlL/+kZ5ihi3k0Fn/
-         6ugyXggXbvwApK2kh88DfwTcInRtYhVLK5YrSRV+uIjEUCPFq09UtYAW9a1wVUxn2UJ9
-         xh1wvbpGSiEILKjbhw9eztbm+QGo17zDBWB7z07UOMZ6vtes2OwGuOLZj2hl7fmJLslO
-         2zxComs6zbOdvHsBdbHXfhAiFWFrQeBTVpE+8dur+K+EVKYGWY17Ai03SJiySawsOcVG
-         DV8vn9+U8jPwbwNQGCYpBDKj/MxPOLTudT5IO6z2TWOkkiA1mOrv2PSSPXG8Xalh9gxA
-         dRAQ==
-X-Forwarded-Encrypted: i=1; AL+hErFgZFDJiJUpxzv7AyhfBelzObywZzWm92nzlBsubi93s2q6667n5S/yMkB77OxSlH+LAoztAytio/0=@lists.linux.dev
-X-Gm-Message-State: APuU4Z+p97teLIqGlkrIWCtygAjFTXjwFCYyyd2tYx8EwUzPCp3Z33Z0
-	OlULh3KVAkEPNbh7+knxWuPN/9P2A/POGkjEw70uZu6USuH2RdWEEyl5
-X-Gm-Gg: AYBFou2Zs3O6aVn/EW3WSijwN/Bey893HsydSC/WsiXsjr0grGu+ripedCwCATtxCpM
-	BypVm7dQfY2jjQP9yWhoYKlmk3KQIAbAKuZOV/+t+C6CUxVlqbTu9wIHcTHFSzi5MOcsxxwaARx
-	26swReAK3ALrGEmABPu56OSSLjGZ6ZbKWwHZMW+gKYfIRcuMFnOsYCG80mD+iUbDDT55mFlmxuB
-	rt2UyFLcIKWvnSoCj1c7Jh7heKFu7aJc1fmuYoKpC3wirlJ4O4r1oSQLgABMD8FawFO60GON8Wj
-	bI5zVtMKXScOEW6HIYs0py+2cLXkOG2uf3ZKJtpJd+0tXoYLeH12Y6Cb+XcVnWsL7KRn5NwzQzy
-	xy6n4jFKS1pC2cSRs1+M8tHcGnpLA09uH+Y6yCHud+jPu0FIRRUpyDY/XclwBs4fVhi98Kk8gd5
-	Z3ahGbVZfLJITuoMYEZRzMDv7bvRFjPdA0Mc0494TBs2ow7UhHl0YdgP1a9PNs+mCoVy38t6v26
-	ShK5iwTGBInXsujhn/1Kiv5u91R5h9KW1n0xmei/bllM9Q9JG9kJoj0z1Vq5cVgwBiMGWMjyPMU
-	4F/R6lgc6gxdGxvgIBfOjN7RuO5UC14AHhUAi/nvb1s=
-X-Received: by 2002:a05:6820:338a:20b0:702:f7c2:1937 with SMTP id 006d021491bc7-718a7adc206mr309940eaf.83.1794269028466;
-        Mon, 09 Nov 2026 16:03:48 -0800 (PST)
-Received: from sheng2080.cmix.louisiana.edu ([130.70.15.5])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-718aa03dbeasm513036eaf.12.2026.11.09.16.03.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Nov 2026 16:03:47 -0800 (PST)
-From: Leizhen Zhang <lzsx618@gmail.com>
-To: jpoimboe@kernel.org,
-	peterz@infradead.org
-Cc: yangtiezhu@loongson.cn,
-	chenhuacai@kernel.org,
-	alexandre.chartre@oracle.com,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Leizhen Zhang <lzsx618@gmail.com>
-Subject: [PATCH 3/3] objtool: Fix misaligned load of the alternative feature word
-Date: Mon,  9 Nov 2026 18:02:55 -0600
-Message-Id: <20261110000255.1720945-4-lzsx618@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20261110000255.1720945-1-lzsx618@gmail.com>
-References: <20261110000255.1720945-1-lzsx618@gmail.com>
+	dmarc=none header.from=loongson.cn;
+	spf=pass smtp.mailfrom=loongson.cn;
+	arc=none smtp.remote-ip=114.242.206.163
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEE1D606A325
+	for <loongarch@lists.linux.dev>; Tue, 10 Nov 2026 01:29:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BEE1D606A325
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [123.138.236.242])
+	by gateway (Coremail) with SMTP id _____8BxrtJic_JqZAQeAA--.21391S3;
+	Tue, 10 Nov 2026 09:29:06 +0800 (CST)
+Received: from [127.0.0.1] (unknown [123.138.236.242])
+	by front1 (Coremail) with SMTP id qMiowJDxTs9gc_Jq7l0zAA--.39359S2;
+	Tue, 10 Nov 2026 09:29:05 +0800 (CST)
+Subject: Re: [PATCH v2] mm/slub: Genericize x86-specific cmpxchg16b comment
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ Vlastimil Babka <vbabka@kernel.org>, Harry Yoo <harry@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, Hao Li <hao.li@linux.dev>,
+ Christoph Lameter <cl@gentwo.org>, David Rientjes <rientjes@google.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>
+Cc: linux-mm@kvack.org, loongarch@lists.linux.dev, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20261109035906.10857-1-yangtiezhu@loongson.cn>
+ <DMQW32TTNOPX.24GN6Q7VI6QJR@gmail.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <145c23ea-bc4d-b235-c822-df94b00a647a@loongson.cn>
+Date: Tue, 10 Nov 2026 09:29:04 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -102,47 +58,51 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <DMQW32TTNOPX.24GN6Q7VI6QJR@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:qMiowJDxTs9gc_Jq7l0zAA--.39359S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWruryxJF1kWr43AFykXF43urX_yoWfGFb_Cw
+	n8GF1vkw18XFnayF10kF12vryUuws2qrs7ZrZ8JFyYy34kt3s5CFs5Cr4fGr15XFsayrs3
+	Kw4DXF9xZFZxCosvyTuYvTs0mTUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbDkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8
+	JVW8Jr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
+	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r
+	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
+	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
+	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8Dl1DUUUUU==
 
-get_alt_entry() reads the feature word of a group alternative through
-an 'unsigned int *' at offset + entry->feature.  On x86 struct alt_instr
-is packed and 14 bytes long (ALT_ENTRY_SIZE) with the feature word at
-offset 8, so for every odd-numbered .altinstructions entry the load is
-only 2-byte aligned.  That is undefined behaviour in C, and UBSan
-reports it on an x86_64 defconfig build of v7.4-rc2:
+On 11/10/26 2:25 AM, Alexei Starovoitov wrote:
+> On Sun, Nov 08, 2026 at 07:59 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>> atomic primitive is satisfied by different hardware implementations:
+>> (1) arm64: satisfies it via LSE atomics ('casp' instruction)
+> [...]
+>> Update the comment to "double-width atomic cmpxchg", which provides the
+>> following advantages:
+>> (1) Accurately describes the cross-platform hardware invariant.
+> 
+> You ignored Hao's point about shorter commit logs.
 
-  special.c:84:18: runtime error: load of misaligned address 0x52e000018416 for type 'unsigned int', which requires 4 byte alignment
+If the following shorter commit message is preferred:
 
-x86 hosts tolerate the access, but objtool may run on hosts that do
-not, and the compiler is allowed to assume the alignment.  Copy the
-value out with memcpy() instead.  Running objtool with and without
-this patch on the same defconfig vmlinux.o gives byte-identical output.
+   mm/slub: Genericize x86-specific cmpxchg16b comment
 
-The report was found with UBSan, and the analysis and fix were
-prepared with the help of an AI coding assistant; I reviewed and
-tested the result.
+   In __kmalloc_nolock_noprof(), update the comment from x86-specific
+   "cmpxchg16b" to generic "double-width atomic cmpxchg".
 
-Fixes: be5ee60ac554 ("objtool: Provide access to feature and flags of group alternatives")
-Signed-off-by: Leizhen Zhang <lzsx618@gmail.com>
----
- tools/objtool/special.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I will wait for a while for more feedback from mm maintainers and send
+v3 if necessary.
 
-diff --git a/tools/objtool/special.c b/tools/objtool/special.c
-index 2a533afbc69a..5df169d0e45d 100644
---- a/tools/objtool/special.c
-+++ b/tools/objtool/special.c
-@@ -81,8 +81,8 @@ static int get_alt_entry(struct elf *elf, const struct special_entry *entry,
- 						   entry->orig_len);
- 		alt->new_len = *(unsigned char *)(sec->data->d_buf + offset +
- 						  entry->new_len);
--		alt->feature = *(unsigned int *)(sec->data->d_buf + offset +
--						 entry->feature);
-+		memcpy(&alt->feature, sec->data->d_buf + offset + entry->feature,
-+		       sizeof(alt->feature));
- 	}
- 
- 	orig_reloc = find_reloc_by_dest(elf, sec, offset + entry->orig);
--- 
-2.34.1
+Thanks,
+Tiezhu
 
