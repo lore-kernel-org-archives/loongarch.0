@@ -1,69 +1,64 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.88.97.239
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.115
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794286022;
-	b=LJSdWpgDTyeqs6Wyuqbr/kllv0DMesMCwtGG8YJEgcWmOh0+jJzXrW2+PonQmUE7xILq
-	 JP3DcTnDT25LaPMdxXxZLUqqxh6T+rUUnntN8KpJzh1tVHzEKrEToASXqsrlyaXWYhZNv
-	 sax9LlHdmVzdNpNiO5Ha46YhFqHLRpOXQQNjCeRhe745+rA4QW9N+nqNuqM2VfexCZ5Nb
-	 YYCE/ygVrhhvLe+m1syuUIeqATlSEVQTbE4YU/yaejhNOp1iyJEPYocVH9QvSWdZKPkaO
-	 MSCJMv/Z54fxu8roN1CPNI7PP3Hsmzu1PzbfQTSFgWLcBO8a9sjfDxVxBwCaMKqNe9A==
+	t=1794294353;
+	b=TLoHZVYoy+PLJkxdf093xkBpANGI3fEYARyoR6s0VibamK3oHkxsRCkc0aHJSTL0LRgp
+	 sNisWaNAZeajPTrZlqQRJ1evDxX3ekbH76kJpCLl1JBFwjTmkavfp3fewbJusRO4rXSv8
+	 TAaMRHRzCcg202EErS0lyXxTexZVEhhVFHy6PhINGRZVFMAavol+3PAhlmLJDVqdVh2K5
+	 Vnjo8IcVtIc8Qo7rIzZhfUmLRaIDM81atX2TfokubQ8Q8zN3+0Y0DkjXpyJ1K4F5wOiJQ
+	 dqTvjKMSXVeXgtpoyI77hce+Qol+ubI5lRshSmGKvw5wXqDvPiYHAootxZZqhrfl65Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794286022;
-	h=DMARC-Filter:DKIM-Signature:Received:X-Spam-Checker-Version:
-	 X-Spam-Level:X-Spam-Status:DKIM-Signature:Received:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:To:Cc:References:From:
-	 Content-Language:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=qeHwILNQGply0KqQmlcAkFwCx/TwT+bJHyeDxiQI18U=;
-	b=4XjxFsq2OOgNmixSYs87sj0vAyKN0xfBvdqo1xpr3Q16zPSM/mg2JoQWn4R6zrN5Ha31
-	 LN5xw8sdBdGmEWUKWJGBYnXtoSfLPXNsuY5HPVF/lT1GSr+L/yquB9uP6XIJDke6Gk9wv
-	 UOMN2ZnYLWgPByeZVQdvc6GN+6pUk5TaznV9tSMVio1JpNE1hTngTv4hRGa6Pi0Jy2rNf
-	 9rnPygoq6S2m1FCg+HVweYC5B/mHRf2JcBVWt8WFzQHvqazCJbCZnlfZwLXA25jLGXiVH
-	 sWOGxX2rSzMPLeAVgc3tbGzWezeE3gQpylzbZb1T7uZP/tTC9cZUDKNCWRllXTi7ofg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794294353;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=zZk3SsVUMy8xoTgawAV8jGI3OOcRbHbKMzszzz5dC0s=;
+	b=0XPnRzvs5Hqt/s6SAMZfKcKySINedwp3bkf39xcHSaN9DoahGiVkeCOQ6owfDfbG6USe
+	 veSVW0y2nrwbGpva1Bbks2xzJKlEuyP+2HQHsfKvMMvOT4b7mkYobsk5r3NeyWoJMav/6
+	 KB2fX3HrMlEHTvvIKLsQ5hgALM9t90BbMyQpEpOv8zcfrICU20VIiOeY3k1hiuWw+xX6U
+	 TSG2uiSTO/RichE8fyrFNAyxPFMUTcbuVCKolEe8NLMsjhkKLJ03G342Kk38yIOrO759S
+	 Xqu6IuJdzSkkED02KtFf/N7WTXAhSubUxGYGUYEn4t2iWK5QbWLLLgi3MY1ew9k3iNA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=birger-koblitz.de;
-	spf=pass smtp.mailfrom=birger-koblitz.de;
-	dkim=pass header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=WrT1BvF8;
-	dkim=pass header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=WrT1BvF8;
-	arc=none smtp.remote-ip=23.88.97.239
-Received: from bkemail.birger-koblitz.de (bkemail.birger-koblitz.de [23.88.97.239])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b="uX/FQNF4";
+	arc=none smtp.remote-ip=95.215.58.115
+Received: from mta1.migadu.com (out-115.mta1.migadu.com [95.215.58.115])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64778606A326
-	for <loongarch@lists.linux.dev>; Tue, 10 Nov 2026 04:47:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 64778606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=birger-koblitz.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=birger-koblitz.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 876B3606A321
+	for <loongarch@lists.linux.dev>; Tue, 10 Nov 2026 07:05:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 876B3606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=WrT1BvF8;
-	dkim=pass (2048-bit key) header.d=birger-koblitz.de header.i=@birger-koblitz.de header.a=rsa-sha256 header.s=default header.b=WrT1BvF8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=birger-koblitz.de;
-	s=default; t=1794286013;
-	bh=ZB63gzCuOHYpjLLMilJz9otldB10xXorS9YPyJ3fmfE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WrT1BvF84pm5hCTmr5G04ulNCFZToyJ8qH1j+W9zQI0i2R1GZl5W13R9u9R0TQtP0
-	 6/2DeFbKxSj0iSU2mNyRHIM8heTSSjK5DDWIoclxdkiHSqS5RSEgEsb/n+i9hxNDhd
-	 VIQ4eplV4CHMRcgRdQBDYNs59roQD/YX9aE2LEibl4mGyHSSD530QZw657S6ttedEF
-	 oQVl3d6m2zgWEilUtdpMOoGqH+Tbpr01PCYnURdcBwmu0NS/FyV0WYv/WAXpcVuHKJ
-	 41GHSJNbw6dtHlLceoC6JWJ2Iaf14ySRqN9WUYW9vs2t3uqIRm20AVXV4FIKWTbaPp
-	 oCKLBPuBTDG3w==
-Received: by bkemail.birger-koblitz.de (Postfix, from userid 109)
-	id C5FAA48C15; Tue, 10 Nov 2026 04:46:53 +0000 (UTC)
-X-Spam-Level: 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=birger-koblitz.de;
-	s=default; t=1794286013;
-	bh=ZB63gzCuOHYpjLLMilJz9otldB10xXorS9YPyJ3fmfE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WrT1BvF84pm5hCTmr5G04ulNCFZToyJ8qH1j+W9zQI0i2R1GZl5W13R9u9R0TQtP0
-	 6/2DeFbKxSj0iSU2mNyRHIM8heTSSjK5DDWIoclxdkiHSqS5RSEgEsb/n+i9hxNDhd
-	 VIQ4eplV4CHMRcgRdQBDYNs59roQD/YX9aE2LEibl4mGyHSSD530QZw657S6ttedEF
-	 oQVl3d6m2zgWEilUtdpMOoGqH+Tbpr01PCYnURdcBwmu0NS/FyV0WYv/WAXpcVuHKJ
-	 41GHSJNbw6dtHlLceoC6JWJ2Iaf14ySRqN9WUYW9vs2t3uqIRm20AVXV4FIKWTbaPp
-	 oCKLBPuBTDG3w==
-Received: from [IPV6:2a00:6020:47a3:e800:271c:c6c5:9fde:77cb] (unknown [IPv6:2a00:6020:47a3:e800:271c:c6c5:9fde:77cb])
-	by bkemail.birger-koblitz.de (Postfix) with ESMTPSA id 9EDFD48C07;
-	Tue, 10 Nov 2026 04:46:52 +0000 (UTC)
-Message-ID: <64d05861-c4e1-4506-ac2f-4109f1062932@birger-koblitz.de>
-Date: Tue, 10 Nov 2026 05:46:42 +0100
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=uX/FQNF4
+X-Envelope-To: loongarch@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=PDz+qwYH/e/DPGEx5k9eJgKdIlMjdKtiXOXsonysk0k=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1794294345; v=1; x=1794899145;
+ b=uX/FQNF40xr/pIkkUgsE2UNKnZG75Tt6NWSf5BNLlae16iQAeBMtFrIU9GhpOqq/Euhb5aXY
+ euuyrcGDewk+jI62Yq7+p2mLv6DqABEtEDLGNMGy3wNBO17j1cUZsBPTnCsrB6BUimiEtWjhrgZ
+ mESlCW1ciTfPNgA3w+DJiY/8=
+X-Envelope-To: loongarch@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id 6dea8860f641d184;
+	Tue, 10 Nov 2026 07:05:27 +0000
+X-Mizu-Trace-ID: 6dea8860f641d184
+X-Migadu-Flow: FLOW_OUT
+Date: Tue, 10 Nov 2026 15:05:14 +0800
+From: Hao Li <hao.li@linux.dev>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, 
+	Vlastimil Babka <vbabka@kernel.org>, Harry Yoo <harry@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Christoph Lameter <cl@gentwo.org>, 
+	David Rientjes <rientjes@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, linux-mm@kvack.org, 
+	loongarch@lists.linux.dev, bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm/slub: Genericize x86-specific cmpxchg16b comment
+Message-ID: <avK8RqLl69zIkVY2@fedora>
+References: <20261109035906.10857-1-yangtiezhu@loongson.cn>
+ <DMQW32TTNOPX.24GN6Q7VI6QJR@gmail.com>
+ <145c23ea-bc4d-b235-c822-df94b00a647a@loongson.cn>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -73,46 +68,35 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v20 01/13] phylink: Add phylink_mac_interrupt
-To: netdev-bot+sashiko@kernel.org
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, kuba@kernel.org,
- pabeni@redhat.com, linux@armlinux.org.uk, andrew@lunn.ch,
- hkallweit1@gmail.com, chenhuacai@kernel.org, kernel@xen0n.name,
- edumazet@kernel.org, linux-usb@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- neuromoments@gmail.com, beganovic.emir@gmail.com
-References: <20261106-ax88179a-v20-1-37b5a1189983@birger-koblitz.de>
- <179427470922.994134.16776316201780098943@kernel.org>
-From: Birger Koblitz <mail@birger-koblitz.de>
-Content-Language: en-US
-In-Reply-To: <179427470922.994134.16776316201780098943@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <145c23ea-bc4d-b235-c822-df94b00a647a@loongson.cn>
 
-On 10/11/2026 2:38 am, netdev-bot+sashiko@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 2 potential
-> issue(s) to consider.
+On Tue, Nov 10, 2026 at 09:29:04AM +0800, Tiezhu Yang wrote:
+> On 11/10/26 2:25 AM, Alexei Starovoitov wrote:
+> > On Sun, Nov 08, 2026 at 07:59 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+> > > atomic primitive is satisfied by different hardware implementations:
+> > > (1) arm64: satisfies it via LSE atomics ('casp' instruction)
+> > [...]
+> > > Update the comment to "double-width atomic cmpxchg", which provides the
+> > > following advantages:
+> > > (1) Accurately describes the cross-platform hardware invariant.
+> > 
+> > You ignored Hao's point about shorter commit logs.
 > 
-> Critical: 0 · High: 0 · Medium: 1 · Low: 1
+> If the following shorter commit message is preferred:
 > 
-> If you believe none of the issues are legitimate, please reply to each
-> issue of Medium severity or higher and explain why the AI is wrong.
-> If any of them are legitimate and you plan to respin, please let patchwork
-> know by including "pw-bot: cr" as a separate line at the end of your reply
-> (one such reply per series is enough).
+>   mm/slub: Genericize x86-specific cmpxchg16b comment
 > 
-> - [Medium] phylink_mac_interrupt() (drivers/net/phy/phylink.c:1629-1637)
->    loads pl->phydev with no lock, no RCU and no reference, then calls…
-> - [Low] phylink_mac_interrupt() reads pl->phydev with a plain load (`phy
->    = pl->phydev;`) and no lock.
-> 
-The possible issues for the series have all been raised before and I 
-have answered to them, some of them more than 4 times. None of these 
-answers are being referred to by the AI, so it does not appear to make 
-sense to provide such answers. Asking nevertheless to answer them again 
-(all medium and above!) constitutes harassment in my eyes.
-At this point I am asking a human to intervene and tell me whether 
-anything really still needs to be done.
+>   In __kmalloc_nolock_noprof(), update the comment from x86-specific
+>   "cmpxchg16b" to generic "double-width atomic cmpxchg".
 
-Birger
+Ok, LGTM.
+
+> 
+> I will wait for a while for more feedback from mm maintainers and send
+> v3 if necessary.
+> 
+> Thanks,
+> Tiezhu
+> 
