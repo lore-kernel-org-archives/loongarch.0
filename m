@@ -1,62 +1,62 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794274728;
-	b=XXfderq2YEcfJljlfuEJZIiL3Z45qBNMeMiLLyUmBB70xd/a7Ilk8gC/b/kVqW47wfKo
-	 fKvgukD7C7FUcnlC91wc6kNfGwsJSVP8XFWOyDFbb0NJNKml/3fdKiFUBtC0eIyC6NiZA
-	 htRBdfHMR0X4Fr3ZZw2NpBnZjfN7NbZlgqsF7sxn0DrbCyUVjAfMf6AfDMuv2VFG4SZ9Z
-	 iKsMtvec+aLpHSCJ3MVSbj/rMQTBEqTdxJTYVWqQFM3p/0Ait5hlqXTBu7GLsEcPBu2Pf
-	 Bb/paAIq3T264e9j8ouoEI/H58WYvFygZEYXPhuhhE02/++LGYnx9bTjuJ60b4BKcOQ==
+	t=1794281915;
+	b=AY33E91UHWs6F82K0c/6AjCoqxwX35ClZH6bvyIXRbO5SCFwa40Zt8iUPN4oVmFuCgK1
+	 RV8KVOV6HRtS/nUa8yoFNhNsYdJyMtrCTihyjpFaJCbxdXeEtn5Fyt0GUuE6Xh8BT88VD
+	 /UdpRjjk6URq/g4s5Pb9x1EE1xHRZI+78UkVGrLcj2vm+qlib52oELyuUo7tA/Lr5mVS3
+	 K0aWGfp0PV3Hjd4oNU4X7Vq1ehIVLFrOCwMjmhswSjUZ5EreOoXvph74gqMWY1wapmbnx
+	 yH1w4urpbP3OWUQG0g0mq5u45MHxwaT8dAREMkVJq4fcYJHvFP/XB6XwifYbR8YhW+w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794274728;
-	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
-	 In-Reply-To:References:X-sashiko-severity:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version;
-	bh=yHdaa5SHknrKYMQ9LgMfKhfAdpZAC1oCwJJhw6z/bsM=;
-	b=MTeSuXR9A5x83iUDmVxWuExCGhl/bKM1jHYUwqiW933A9QWh7rZfjLGWtvMHcqkIaSb+
-	 E9ysEpHO7kKPEK5tVAZRFPRLypKYfd+nKgsthuz8PsKgT5AoGy+MKasBvFF2PNH0kzUtk
-	 gZvxFi9J6aTO/PPdK1MoXsTSZMMKXwlpo2FYQnQR7LD0NKW3k6T6/UhG1YNbS5ql++MkK
-	 P4D6kjvWKw8icolvgxdXd6pgFZWCN7NhSZFbc9MN0UBvf3BEHVFbVzJarusSgoGG9IzSU
-	 4+X59UXlYZyVUZsNin/RZ6wTAeTPVPGG5w+ZE0BCSQOS0D+KBQ4KcC6o96gFZ1Ato1A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794281915;
+	h=DMARC-Filter:Received:Received:Subject:To:Cc:References:From:
+	 Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:Content-Type:
+	 Content-Language:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-CM-SenderInfo:X-Coremail-Antispam;
+	bh=p86ga6u7hXinuSjqc52ThqtMwLged1/cVeZQ94YK+Oc=;
+	b=wgVkkOLThpJLomLuUQs1pz//UTs0LbszEX3Ohj21jiTN6KICg9DzTMpR5Dk9TbUUt78e
+	 nvRVaRuvcaWvB+j3oUUzu9jPXfz/aD/aLNH5weQ2vjAiyJ1OkA5Eo2stMX7lFFb+frxso
+	 Urh0SGUTHm3SzUWgjN7+/JDZC2ew7Nyx3R8RvnpzYZex3abM8uzoAzBd5fy1PXGiIPdWM
+	 cTxdPs6iYye6s4oSGBWYqH+kX24qk8+6mix/UdXShBVd4pQObNE7Jt9GOeu2rcjbQzqJK
+	 tKADUJfUgkEG1daeFCRTn80eNuZedlhFvZcQoYtgyHHJ4SHEnSMB1p+BZYQ4O59YZuA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=V+jqwou0;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A795E606B511;
-	Tue, 10 Nov 2026 01:38:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=V+jqwou0
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60BBB1F008A1;
-	Tue, 10 Nov 2026 01:38:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794274727;
-	bh=yHdaa5SHknrKYMQ9LgMfKhfAdpZAC1oCwJJhw6z/bsM=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=V+jqwou0lnEXxpN8Be9ZUm88IoXRkxRnb8OwjYp1kZzTLf5EmGphPXb/93efMuLLi
-	 7jter6X5rZz3RM6R6t5BakyDXDxRtUxkhZJ7BzZpfaQPXOHDTxJbQO+S3nk38nHuFb
-	 K3dhfaBARB7py3UOOJLuvpcTlm2TgyQU1jDg2YEerlq7nUm1vEgflKp4arDBQoMBu2
-	 fC8Sj7PDzP5R3/XSADmmzmF2YpErtjVk0mtJ9SBGGXOfvEhwMKxVMtXtXV14ilwbaT
-	 MnJKACiM+M1Yrm7NX5TBL7lkj5vwZ/SPdoBPgw6uQXgwyapMqu+nN+VR6qt4dcyDS+
-	 7JmtlCk/FE/Zw==
-Subject: Re: [PATCH net-next v20 13/13] ax88796b: Add support for AX88772D,
- AX88179A and AX88279
-From: netdev-bot+sashiko@kernel.org
-To: mail@birger-koblitz.de
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, kuba@kernel.org,
- pabeni@redhat.com, linux@armlinux.org.uk, andrew@lunn.ch,
- hkallweit1@gmail.com, chenhuacai@kernel.org, kernel@xen0n.name,
- edumazet@kernel.org, linux-usb@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- neuromoments@gmail.com, beganovic.emir@gmail.com
-Date: Tue, 10 Nov 2026 01:38:45 +0000
-Message-ID: <179427472591.994134.4882634953420736856@kernel.org>
-In-Reply-To: <20261106-ax88179a-v20-13-37b5a1189983@birger-koblitz.de>
-References: <20261106-ax88179a-v20-13-37b5a1189983@birger-koblitz.de>
-X-sashiko-severity: Medium
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dmarc=none header.from=loongson.cn;
+	spf=pass smtp.mailfrom=loongson.cn;
+	arc=none smtp.remote-ip=114.242.206.163
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A1DF606A326;
+	Tue, 10 Nov 2026 03:38:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1A1DF606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8Cxf9O1kfJqgw0eAA--.21127S3;
+	Tue, 10 Nov 2026 11:38:30 +0800 (CST)
+Received: from [127.0.0.1] (unknown [127.0.0.1])
+	by front1 (Coremail) with SMTP id qMiowJDxg8ywkfJqe2YzAA--.11625S2;
+	Tue, 10 Nov 2026 11:38:26 +0800 (CST)
+Subject: Re: [PATCH v4 1/4] ACPICA: actbl2.h: Add bit constants of the Flags
+ field in the IOVT IOMMU structure
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: rafael@kernel.org, linux-acpi@vger.kernel.org,
+ acpica-devel@lists.linux.dev, lenb@kernel.org, linux-kernel@vger.kernel.org,
+ lixianglai@loongson.cn, loongarch@lists.linux.dev,
+ maciej.wieczor-retman@intel.com, pawel.chmielewski@intel.com
+References: <20260922121058.972734-2-maobibo@loongson.cn>
+ <10bd45f8-2d37-42f0-b7d2-a4a84933c9b3@loongson.cn>
+ <CAAhV-H7Vq2ayLJNLRSo5RRiWOcmF2BXT_QOhEDg_jWOzYteqWw@mail.gmail.com>
+ <6f8a9203-6fb1-268a-8d37-37e69fbf2ee9@loongson.cn>
+ <CAAhV-H5k8EJrAuqPH44y_+1gcXGCjCoozzK5ii9cLtiLDj5eog@mail.gmail.com>
+ <66b9d482-d577-748c-729d-0fba70701d3d@loongson.cn>
+ <CAAhV-H6PL6RLM3KA4BLQEt804FnsDE4CtKeB0KaW7Gj8rm2PMw@mail.gmail.com>
+ <843a9418-2017-c2c6-45c5-38628e7e0bdb@loongson.cn>
+ <CAAhV-H4O07hKyPJ8rTMo=vD=t+qFM7UAJOPDGZDVJ0Ti-gOdEQ@mail.gmail.com>
+ <e04352c2-f4ce-d415-72d4-21e03b828843@loongson.cn>
+ <CAAhV-H7phy=T1MMNpSnZdjjiQXH41S7jnFcgfZd_4b5aqffB6g@mail.gmail.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <bc99d5e3-8365-fd4a-2a15-925e25f08f43@loongson.cn>
+Date: Tue, 10 Nov 2026 11:39:39 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -66,287 +66,364 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+In-Reply-To: <CAAhV-H7phy=T1MMNpSnZdjjiQXH41S7jnFcgfZd_4b5aqffB6g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxg8ywkfJqe2YzAA--.11625S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Cw15KrWfZF1kJr1xAF4rtFc_yoWDKryUpF
+	4UGFW5tFWUJr17Kr10qw1DCr1Yyr18KryxWry5WryUGrnrKr1rJF4UJFyYkF95A34DGF1x
+	tF1UtrW7WF1UArgCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4j6r4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_
+	JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48J
+	MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI
+	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
+	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+	IxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7iFxUUUUU
 
-Thank you for your contribution! Sashiko AI review found 7 potential
-issue(s) to consider.
 
-Critical: 0 · High: 0 · Medium: 2 · Low: 5
 
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
-
-- [Medium] The new AX88772D/AX88179A/AX88279 PHY support is added only to
-  the C driver, ax88796b.c.
-- [Medium] asix_ax88279_read_status() returns early on `if
-  (!phydev->link) return 0;` before it reaches…
-- [Low] Series ordering breaks bisection.
-- [Low] The commit message only says the three PHYs exist.
-- [Low] asix_ax88772D_get_features() sets phydev->c45_ids.mmds_present |=
-  MDIO_DEVS_PMAPMD | MDIO_DEVS_AN with the comment "to allow reading…
-- [Low] The AX88796B_PHY Kconfig help still says it "Currently supports
-  the Asix Electronics PHY found in the X-Surf 100 AX88796B package."…
-- [Low] The three new PHY IDs are synthetic.
-
---
-
-ax88796b: Add support for AX88772D, AX88179A and AX88279
-
-This patch adds PHY driver entries for the AX88772D (100M), AX88179A (1G)
-and AX88279 (2.5G) PHYs found in ASIX USB-Ethernet controllers. The
-AX88279 gets its own get_features, config_aneg, read_status and
-config_init callbacks, and the AX88772D gets a get_features fixup.
-
-> ax88796b: Add support for AX88772D, AX88179A and AX88279
->
-> The AX88772D, AX88179A and AX88279 are 100MBit, 1GBit and respectively
-> 2.5 GBit PHYs that are found in ASIX USB-Ethernet controllers of the
-> same name.
-
-[Severity: Low]
-Could the commit message describe the restrictions and quirks this patch
-adds? It only says the three PHYs exist, but the patch also:
-
-  - refuses AUTONEG_DISABLE with -EOPNOTSUPP in asix_ax88279_config_aneg()
-    and sets PHY_BROKEN_FORCED, so "ethtool -s <if> autoneg off" fails
-  - advertises 2.5G through vendor bit 0x1000 in MII_ADVERTISE
-  - infers the link partner's 2.5G ability in asix_ax88279_read_status()
-    because MDIO_AN_10GBT_STAT_LP2_5G is broken
-  - always reports DUPLEX_FULL and switches phydev->interface between
-    SGMII and 2500BASE-X
-  - removes 100baseT-Half from the AX88279 and 1000baseT/X from the
-    AX88772D
-
-This isn't a bug, but the subject is missing the usual "net: phy:"
-prefix.
-
-> diff --git a/drivers/net/phy/ax88796b.c b/drivers/net/phy/ax88796b.c
-> index f20ddf6491499..0df44e0e236ab 100644
-> --- a/drivers/net/phy/ax88796b.c
-> +++ b/drivers/net/phy/ax88796b.c
-> @@ -13,6 +13,19 @@
->  #define PHY_ID_ASIX_AX88772A		0x003b1861
->  #define PHY_ID_ASIX_AX88772C		0x003b1881
->  #define PHY_ID_ASIX_AX88796B		0x003b1841
-> +#define PHY_ID_ASIX_AX88772D		0x003b772d
-> +#define PHY_ID_ASIX_AX88179A		0x003b179a
-> +#define PHY_ID_ASIX_AX88279		0x003b2790
-
-[Severity: Low]
-Are these IDs actually inside the ASIX identifier block? The MAC side
-fakes them in ax88179_mdiobus_read() in drivers/net/usb/ax88179a_devices.c
-(added earlier in the series), with this comment:
-
-	/* When reading PHYSID, return unused PHY-IDs from the ASIX vendor range */
-
-In the C22 identifier layout, bits [31:10] carry the OUI. The existing
-ASIX IDs 0x003b1861, 0x003b1881 and 0x003b1841 all give phy_id >> 10 ==
-0xec6, which means PHYSID2 values in the 0x1800-0x1bff range.
-
-The new IDs give:
-
-  0x003b772d >> 10 == 0xedd
-  0x003b179a >> 10 == 0xec5
-  0x003b2790 >> 10 == 0xec9
-
-so all three fall outside that block.
-
-asix_tbl is a MODULE_DEVICE_TABLE. A PHY from another vendor that reports
-one of these exact IDs would autoload this module and bind to callbacks
-that assume MII_ADVERTISE bit 12, vendor register 0x1d and full duplex
-only.
-
-Would model values inside 0x18xx-0x1bxx be a better choice?
-
-[ ... ]
-
-> @@ -83,6 +96,107 @@ static int asix_ax88772a_read_status(struct phy_device *phydev)
->  	return 0;
->  }
->  
-> +static int asix_ax88279_read_status(struct phy_device *phydev)
+On 2026/11/7 下午8:25, Huacai Chen wrote:
+> On Sat, Nov 7, 2026 at 9:43 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>
+>>
+>>
+>> On 2026/11/6 下午10:58, Huacai Chen wrote:
+>>> On Thu, Nov 5, 2026 at 7:22 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 2026/11/5 下午6:31, Huacai Chen wrote:
+>>>>> On Thu, Nov 5, 2026 at 5:49 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> On 2026/11/5 下午5:31, Huacai Chen wrote:
+>>>>>>> On Thu, Nov 5, 2026 at 5:14 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>>>>>
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> On 2026/10/23 下午3:59, Huacai Chen wrote:
+>>>>>>>>> Bibo,
+>>>>>>>>>
+>>>>>>>>> Now I have applied this series but with some modifications, please
+>>>>>>>>> double check and test the code.
+>>>>>>>>>
+>>>>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git/log/?h=loongarch-next
+>>>>>>>> In my v4 submit, it is:
+>>>>>>>> +               case ACPI_IOVT_DEVICE_ENTRY_START:
+>>>>>>>> +                       is_start = true;
+>>>>>>>> +                       start_devid = ep->device_id;
+>>>>>>>> +                       break;
+>>>>>>>> however in rc1, it is modified as:
+>>>>>>>>                      case ACPI_IOVT_DEVICE_ENTRY_START:
+>>>>>>>>                              is_start = true;
+>>>>>>>>                              entry->start_devid = ep->device_id;
+>>>>>>>>                              break;
+>>>>>>>> Here entry is not allocated and NULL pointer, it is allocated in
+>>>>>>>> ACPI_IOVT_DEVICE_ENTRY_END switch case.
+>>>>>>>>
+>>>>>>>> I really do not know what is aid to modify it and let others to test.
+>>>>>>> Sorry, it's my fault.
+>>>>>>>
+>>>>>>> In theory I should point out the modification (eliminating the local
+>>>>>>> variable start_devid) and refresh a new version. But we have no time
+>>>>>>> to do this because when the first patch is merged into the ACPI repo
+>>>>>>> it is near the merge window.
+>>>>>> Maybe our work style is different, I do not care much for the coding style.
+>>>>>>>
+>>>>>>> If you agree, I will submit such modifications to fix it.
+>>>>>> fix is welcome.
+>>>>>>>
+>>>>>>> diff --git a/drivers/acpi/loongarch/iovt.c b/drivers/acpi/loongarch/iovt.c
+>>>>>>> index 87cee4f0fc80..4cdac28a1fd0 100644
+>>>>>>> --- a/drivers/acpi/loongarch/iovt.c
+>>>>>>> +++ b/drivers/acpi/loongarch/iovt.c
+>>>>>>> @@ -115,6 +115,10 @@ static int __init iovt_add_iommu(struct
+>>>>>>> acpi_iovt_iommu *iommu)
+>>>>>>>             for (i = 0; i < iommu->device_entry_num; i++) {
+>>>>>>>                     switch (ep->type) {
+>>>>>>>                     case ACPI_IOVT_DEVICE_ENTRY_START:
+>>>>>>> +                       entry = kzalloc_obj(struct iovt_device_entry,
+>>>>>>> GFP_ATOMIC);
+>>>>>> There will be memory leak problem if there are START/START/END in the table.
+>>>>> That means a broken table? I think we don't need to consider broken
+>>>>> tables, because there may be kinds of broken pattern rather than just
+>>>>> a START/START/END.
+>>>> yes, START/END/START, START/START/END, START/SINGLE/END. what is the
+>>>> relationship between "don't need to consider" and kinds of broken pattern?
+>>>>
+>>>> what is the policy from your side with such BIOS table? let memory leak
+>>>> and continue?
+>>> The driver can only work with a good table or no table, but not with a
+>>> broken table.
+>> With a broken table, software can discard the whole table, or discard
+>> the single table entry.
+> Discard a single entry is dangerous because the pairing may be wrong,
+> so if we should handle a broken table, we should discard the whole
+> table.
+> 
+> Discarding the whole table need a rework, the is_start variable is not
+> enough. You can consider the below solution:
+> 
+> diff --git a/drivers/acpi/loongarch/iovt.c b/drivers/acpi/loongarch/iovt.c
+> index 87cee4f0fc80..8381de278e3a 100644
+> --- a/drivers/acpi/loongarch/iovt.c
+> +++ b/drivers/acpi/loongarch/iovt.c
+> @@ -73,10 +73,44 @@ static int __init iovt_get_pci_iommu_fwnode(struct
+> iovt_fwnode *np, u16 segment,
+>          return 0;
+>   }
+> 
+> +static int __init iovt_validate_entries(struct acpi_iovt_iommu *iommu)
 > +{
-> +	int ret, val;
+> +       int i, done = 1;
+> +       struct acpi_iovt_device_entry *ep;
 > +
-> +	ret = genphy_read_status(phydev);
-> +	if (ret)
-> +		return ret;
+> +       ep = ACPI_ADD_PTR(struct acpi_iovt_device_entry, iommu,
+> iommu->device_entry_offset);
+> +       for (i = 0; i < iommu->device_entry_num; i++) {
+> +               switch (ep->type) {
+> +               case ACPI_IOVT_DEVICE_ENTRY_START:
+> +                       if (!done)
+> +                               return -EINVAL;
 > +
-> +	if (!phydev->link)
-> +		return 0;
-
-[Severity: Medium]
-Does this early return leave a stale 2500baseT_Full bit in
-phydev->lp_advertising after a 2.5G link goes down?
-
-The bit is only cleared further down in this function:
-
-	linkmode_clear_bit(ETHTOOL_LINK_MODE_2500baseT_Full_BIT, phydev->lp_advertising);
-
-On link down with autoneg enabled, genphy_read_status()->genphy_read_lpa()
-only clears the C22 derived bits:
-
-	if (!phydev->autoneg_complete) {
-		mii_stat1000_mod_linkmode_lpa_t(phydev->lp_advertising,
-						0);
-		mii_lpa_mod_linkmode_lpa_t(phydev->lp_advertising, 0);
-		return 0;
-	}
-
-Neither phy_check_link_status() nor phy_link_down() clears lp_advertising.
-
-phy_ethtool_ksettings_get() then copies the stale bit to userspace, so
-ethtool would show the partner advertising 2500baseT/Full while the link
-is down.
-
-On the next link-up, phy_resolve_aneg_linkmode() also runs with the stale
-bit set, before the AX_CTRL_STATUS read overwrites phydev->speed.
-
-Would clearing the bit before the !phydev->link return fix this?
-
-[ ... ]
-
-> @@ -94,6 +208,25 @@ static void asix_ax88772a_link_change_notify(struct phy_device *phydev)
->  	}
->  }
->  
-> +static int asix_ax88772D_get_features(struct phy_device *phydev)
-> +{
-> +	int ret;
+> +                       done = 0;
+> +                       break;
+> +               case ACPI_IOVT_DEVICE_ENTRY_END:
+> +                       if (done)
+> +                               return -EINVAL;
 > +
-> +	/* MDIO_DEVS1/2 empty, so set mmds_present bits to allow reading abilities */
-> +	phydev->c45_ids.mmds_present |= MDIO_DEVS_PMAPMD | MDIO_DEVS_AN;
+> +                       done = 1;
+> +                       break;
+> +               case ACPI_IOVT_DEVICE_ENTRY_SINGLE:
+> +                       if (!done)
+> +                               return -EINVAL;
 > +
-> +	ret = genphy_read_abilities(phydev);
-> +	if (ret < 0)
-> +		return ret;
+> +                       done = 1;
+> +                       break;
+> +               default:
+one small bit about default case, which is reserved for future use. I 
+prefer to skip this type rather than treat it as error,such as:
+  +               case ACPI_IOVT_DEVICE_ENTRY_SINGLE:
+  +               default:
+  +                       if (!done)
+  +                               return -EINVAL;
+  +
+  +                       done = 1;
+  +                       break;
+
+Because if iovt table spec is updated and new type is added, the old 
+kernel will skip the new type and continue to run.
+
+Regards
+Bibo Mao
+> +                       return -EINVAL;
+> +               }
+> +               ep = ACPI_ADD_PTR(struct acpi_iovt_device_entry, ep,
+> ep->length);
+> +       }
 > +
-> +	/* AX88772D does not support (possibly) reported 1000baseT modes */
-> +	linkmode_clear_bit(ETHTOOL_LINK_MODE_1000baseT_Full_BIT, phydev->supported);
-> +	linkmode_clear_bit(ETHTOOL_LINK_MODE_1000baseT_Half_BIT, phydev->supported);
-> +	linkmode_clear_bit(ETHTOOL_LINK_MODE_1000baseX_Full_BIT, phydev->supported);
+> +       return done ? 0 : -EINVAL;
+> +}
+> +
+>   static int __init iovt_add_iommu(struct acpi_iovt_iommu *iommu)
+>   {
+>          int i, ret;
+> -       bool is_start = false;
+>          struct iovt_fwnode *np;
+>          struct iovt_device_entry *entry;
+>          struct acpi_iovt_device_entry *ep;
+> @@ -110,23 +144,22 @@ static int __init iovt_add_iommu(struct
+> acpi_iovt_iommu *iommu)
+>          if (np->flag & ACPI_IOVT_IOMMU_MAGAGE_BY_SEGMENT)
+>                  goto skip;
+> 
+> +       if (iovt_validate_entries(iommu) < 0)
+> +               return -EINVAL;
+> +
+>          INIT_LIST_HEAD(&np->ep_list);
+>          ep = ACPI_ADD_PTR(struct acpi_iovt_device_entry, iommu,
+> iommu->device_entry_offset);
+>          for (i = 0; i < iommu->device_entry_num; i++) {
+>                  switch (ep->type) {
+>                  case ACPI_IOVT_DEVICE_ENTRY_START:
+> -                       is_start = true;
+> -                       entry->start_devid = ep->device_id;
+> -                       break;
+> -               case ACPI_IOVT_DEVICE_ENTRY_END:
+> -                       if (!is_start)
+> -                               break;
+> -
+>                          entry = kzalloc_obj(struct iovt_device_entry,
+> GFP_ATOMIC);
+>                          if (!entry)
+>                                  return -ENOMEM;
+> 
+> -                       is_start = false;
+> +                       entry->start_devid = ep->device_id;
+> +                       break;
+> +               case ACPI_IOVT_DEVICE_ENTRY_END:
+> +                       /* START & END are paired */
+>                          entry->end_devid = ep->device_id;
+>                          list_add_tail(&entry->list, &np->ep_list);
+>                          break;
+> @@ -135,13 +168,12 @@ static int __init iovt_add_iommu(struct
+> acpi_iovt_iommu *iommu)
+>                          if (!entry)
+>                                  return -ENOMEM;
+> 
+> -                       is_start = false;
+>                          entry->start_devid = ep->device_id;
+>                          entry->end_devid = ep->device_id;
+>                          list_add_tail(&entry->list, &np->ep_list);
+>                          break;
+>                  default:
+> -                       break;
+> +                       return -EINVAL;
+>                  }
+>                  ep = ACPI_ADD_PTR(struct acpi_iovt_device_entry, ep,
+> ep->length);
+>          }
+> 
+>>>
+>>> Take START1/START2/END as an example of broken table: in your original
+>>> code, the END entry will be pairing with START2. But for a broken
+>>> table who can ensure they are the correct pair? If the real correct
+>>> pair is START1 and END, then (entry->start_devid, entry->end_devid)
+>> there is only one policy, software does not know START1/END is right or
+>> START2/END is right.
+>>> will be a wrong device range. Such mistakes are much worse than a
+>>> memery leak.
+>>>
+>>> If you want to say "I don't care about correct pairing, memory leak is
+>>> bad in any case.", OK, we can do it like this:
+>>>
+>>> diff --git a/drivers/acpi/loongarch/iovt.c b/drivers/acpi/loongarch/iovt.c
+>>> index 87cee4f0fc80..ebd11e22c9be 100644
+>>> --- a/drivers/acpi/loongarch/iovt.c
+>>> +++ b/drivers/acpi/loongarch/iovt.c
+>>> @@ -115,6 +115,13 @@ static int __init iovt_add_iommu(struct
+>>> acpi_iovt_iommu *iommu)
+>>>           for (i = 0; i < iommu->device_entry_num; i++) {
+>>>                   switch (ep->type) {
+>>>                   case ACPI_IOVT_DEVICE_ENTRY_START:
+>>> +                       if (is_start)
+>>> +                               break;
+>> there is still memory leak with START/SINGLE/END pairs, is_start set
+>> with false with ACPI_IOVT_DEVICE_ENTRY_SINGLE case.
+>>
+>> Regards
+>> Bibo Mao
+>>> +
+>>> +                       entry = kzalloc_obj(struct iovt_device_entry,
+>>> GFP_ATOMIC);
+>>> +                       if (!entry)
+>>> +                               return -ENOMEM;
+>>> +
+>>>                           is_start = true;
+>>>                           entry->start_devid = ep->device_id;
+>>>                           break;
+>>> @@ -122,10 +129,6 @@ static int __init iovt_add_iommu(struct
+>>> acpi_iovt_iommu *iommu)
+>>>                           if (!is_start)
+>>>                                   break;
+>>>
+>>> -                       entry = kzalloc_obj(struct iovt_device_entry,
+>>> GFP_ATOMIC);
+>>> -                       if (!entry)
+>>> -                               return -ENOMEM;
+>>> -
+>>>                           is_start = false;
+>>>                           entry->end_devid = ep->device_id;
+>>>                           list_add_tail(&entry->list, &np->ep_list);
+>>>
+>>> Huacai
+>>>
+>>>>
+>>>>>
+>>>>> Huacai
+>>>>>
+>>>>>>
+>>>>>> Regards
+>>>>>> Bibo Mao
+>>>>>>> +                       if (!entry)
+>>>>>>> +                               return -ENOMEM;
+>>>>>>> +
+>>>>>>>                             is_start = true;
+>>>>>>>                             entry->start_devid = ep->device_id;
+>>>>>>>                             break;
+>>>>>>> @@ -122,10 +126,6 @@ static int __init iovt_add_iommu(struct
+>>>>>>> acpi_iovt_iommu *iommu)
+>>>>>>>                             if (!is_start)
+>>>>>>>                                     break;
+>>>>>>>
+>>>>>>> -                       entry = kzalloc_obj(struct iovt_device_entry,
+>>>>>>> GFP_ATOMIC);
+>>>>>>> -                       if (!entry)
+>>>>>>> -                               return -ENOMEM;
+>>>>>>> -
+>>>>>>>                             is_start = false;
+>>>>>>>                             entry->end_devid = ep->device_id;
+>>>>>>>                             list_add_tail(&entry->list, &np->ep_list);
+>>>>>>>
+>>>>>>> Huacai
+>>>>>>>
+>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> Huacai
+>>>>>>>>>
+>>>>>>>>> On Mon, Oct 12, 2026 at 3:16 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>>>>>>>
+>>>>>>>>>> This change is already merged in acpica tree.
+>>>>>>>>>>
+>>>>>>>>>> slightly ping.
+>>>>>>>>>>
+>>>>>>>>>> On Tue, Sep 22, 2026 at 08:10:55PM +0800, Bibo Mao wrote:
+>>>>>>>>>>       > According to the IOVT specification, define macros for each bit of the
+>>>>>>>>>>       > Flags field in the IOVT IOMMU structure.
+>>>>>>>>>>       >
+>>>>>>>>>>       > Link: https://github.com/open-acpica/acpica/commit/352f750e4cc0
+>>>>>>>>>>       > Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>>>>>>>>>>       > ---
+>>>>>>>>>>       >  include/acpi/actbl2.h | 7 +++++++
+>>>>>>>>>>       >  1 file changed, 7 insertions(+)
+>>>>>>>>>>       >
+>>>>>>>>>>       > diff --git a/include/acpi/actbl2.h b/include/acpi/actbl2.h
+>>>>>>>>>>       > index baef525367b5..76e4a5bc79b4 100644
+>>>>>>>>>>       > --- a/include/acpi/actbl2.h
+>>>>>>>>>>       > +++ b/include/acpi/actbl2.h
+>>>>>>>>>>       > @@ -919,6 +919,13 @@ struct acpi_iovt_iommu {
+>>>>>>>>>>       >       u32 device_entry_offset;
+>>>>>>>>>>       >  };
+>>>>>>>>>>       >
+>>>>>>>>>>       > +/* Masks for Flags field above */
+>>>>>>>>>>       > +#define ACPI_IOVT_IOMMU_PCI_DEVICE           (1<<0)
+>>>>>>>>>>       > +#define ACPI_IOVT_IOMMU_PXM_VALID            (1<<1)
+>>>>>>>>>>       > +#define ACPI_IOVT_IOMMU_MAGAGE_BY_SEGMENT    (1<<2)
+>>>>>>>>>>       > +#define ACPI_IOVT_IOMMU_HW_CAP_SUPPORT               (1<<3)
+>>>>>>>>>>       > +#define ACPI_IOVT_IOMMU_MSI_INT_BYPASS               (1<<4)
+>>>>>>>>>>       > +
+>>>>>>>>>>       >  struct acpi_iovt_device_entry {
+>>>>>>>>>>       >       u8 type;
+>>>>>>>>>>       >       u8 length;
+>>>>>>>>>>       > --
+>>>>>>>>>>       > 2.39.3
+>>>>>>>>>>       >
+>>>>>>>>>>
+>>>>>>>>
+>>>>>>>>
+>>>>>>
+>>>>
+>>>>
+>>
 
-[Severity: Low]
-Does the mmds_present assignment do anything here? genphy_read_abilities()
-only reads MII_BMSR and MII_ESTATUS and never looks at
-c45_ids.mmds_present.
-
-In drivers/net/phy, only genphy_c45_read_link(),
-genphy_c45_pma_read_abilities() and the phylink C45 MII emulation check
-mmds_present, and none of them run for this C22 PHY. The line and its
-comment look like they were copied from asix_ax88279_get_features().
-
-There is also an ordering question for EEE. genphy_read_abilities() ends
-with genphy_c45_read_eee_abilities()->genphy_c45_read_eee_cap1(), which
-masks supported_eee against supported:
-
-	linkmode_and(phydev->supported_eee, phydev->supported_eee,
-		     phydev->supported);
-
-At that point 1000baseT_Full can still be set in supported, and it is
-only cleared here afterwards.
-
-If ESTATUS reports 1000T and MDIO_PCS_EEE_ABLE reports 1000T EEE, can
-supported_eee keep 1000baseT_Full after it has been removed from
-supported?
-
-With the in-tree MAC, lpi_capabilities is 0 for the AX88772D, so phylink
-disables EEE and users don't see this today.
-
-[ ... ]
-
-> @@ -111,6 +244,35 @@ static struct phy_driver asix_driver[] = {
->  	.suspend	= genphy_suspend,
->  	.resume		= genphy_resume,
->  	.soft_reset	= asix_soft_reset,
-
-[ ... ]
-
-> +}, {
-> +	PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88279),
-> +	.name		= "Asix Electronics AX88279",
-> +	.flags		= PHY_IS_INTERNAL | PHY_BROKEN_FORCED,
-> +	.get_features	= asix_ax88279_get_features,
-> +	.read_status	= asix_ax88279_read_status,
-> +	.config_aneg	= asix_ax88279_config_aneg,
-> +	.config_init	= asix_ax88279_config_init,
-
-[Severity: Low]
-Can a bisect stop on a commit where the AX88279 doesn't work? This patch
-is the last one in the series. The earlier patch "ax88179_178a: Add HW
-support for AX179A-based chips" already returns PHYSID1/2 of
-0x003b/0x2790 (and 0x179a/0x772d) from ax88179_mdiobus_read().
-
-That patch also sets up phylink for the AX88279 in
-ax88179a_phylink_setup() with only 2500BASEX and SGMII in
-supported_interfaces, and an initial interface of 2500BASEX.
-
-Between that patch and this one, nothing matches these IDs, so genphy
-binds. It fills supported with C22 10/100/1000 modes only and leaves
-possible_interfaces empty.
-
-phylink_validate_phy() then validates against 2500BASEX, because is_c45
-is false and it does not fall back to PHY_INTERFACE_MODE_NA. The only
-capability for 2500BASEX is 2500 full duplex, so no mode is left and the
-PHY fails to attach once ax88179 binds instead of cdc_ncm.
-
-The AX88179A and AX88772D also run on genphy without the quirks added
-here.
-
-Could this patch be moved ahead of the MAC patch that depends on it?
-
-[ ... ]
-
-> @@ -124,6 +286,9 @@ static const struct mdio_device_id __maybe_unused asix_tbl[] = {
->  	{ PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88772A) },
->  	{ PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88772C) },
->  	{ PHY_ID_MATCH_MODEL(PHY_ID_ASIX_AX88796B) },
-> +	{ PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88772D) },
-> +	{ PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88179A) },
-> +	{ PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88279) },
->  	{ }
->  };
-
-[Severity: Medium]
-What happens to these PHYs when CONFIG_AX88796B_RUST_PHY=y?
-drivers/net/phy/Makefile builds only one of the two drivers:
-
-ifdef CONFIG_AX88796B_RUST_PHY
-  obj-$(CONFIG_AX88796B_PHY)	+= ax88796b_rust.o
-else
-  obj-$(CONFIG_AX88796B_PHY)	+= ax88796b.o
-endif
-
-drivers/net/phy/ax88796b_rust.rs still registers only the old three:
-
-    drivers: [PhyAX88772A, PhyAX88772C, PhyAX88796B],
-
-USB_NET_AX88179 selects AX88796B_PHY so that this module provides the
-PHY driver for the new chips. With the Rust variant, genphy binds to
-0x003b2790, and the AX88279 fails phylink_validate_phy() against
-2500BASEX as described above.
-
-The AX88179A and AX88772D also lose the read_mmd/write_mmd hooks, and the
-AX88772D loses its feature fixup.
-
-The AX88796B_RUST_PHY help text also still says "The features are
-equivalent", which is no longer the case.
-
-Does the Rust driver need the same entries? Alternatively, could the
-Kconfig dependencies reflect that it doesn't cover these PHYs?
-
-[Severity: Low]
-This isn't a bug, but the AX88796B_PHY help text in
-drivers/net/phy/Kconfig still says:
-
-	  Currently supports the Asix Electronics PHY found in the X-Surf 100
-	  AX88796B package.
-
-It already left out the AX88772A/C. Now it also leaves out the AX88772D,
-AX88179A and AX88279 used by USB adapters, and USB_NET_AX88179 selects
-this symbol. Could the help text be updated?
-
--- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261106-ax88179a-v20-0-37b5a1189983%40birger-koblitz.de
