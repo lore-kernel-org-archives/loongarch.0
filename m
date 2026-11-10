@@ -1,100 +1,95 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.161.43
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794248713;
-	b=00PEPN7I9XLDzaBegoHlhusCR6YmDtKOWm9uwtgW5ymwFHHcRT5vjSpKe+iea034hzjZ
-	 9JUgyFXgoPOg0oB9lo2zdAzB6EXCk0SK/d+/nrT3tSMRSejXJRshpW2laKnI+38ahV0Ul
-	 BjNtHP7NgNQvasJPZc8Ffn8q8ik/eSNkDjbgSTl2gDYbJNNYnMx8XJ1NxZl+T1Sn9X1zE
-	 PJU2mZanxTZO73HJjDBdeTAtWmOEs+wNOK69vbiKfkLmzbNRX/3s5EWWYJjGnrMGVlAto
-	 Qm4mDCbxLKndg2LbE5fYNMBIK8omZkMgWkXXAiitK7L8xm1TQw634kivJP222AWkpGw==
+	t=1794269021;
+	b=ZA3d6ATPzou+wvdJOl3doFORR0IpnAsil9yu5y+jT1+T+ICpstOZT7hddXArjpIvvt/C
+	 meL/33xaLlnSwZoGofl6vKm0dvzgr/HoFgIp7++3t3KhxIJlpxcMWJhmkIcirA9aiqfRU
+	 QIbIfe00nKQKMJ1ApxQQMwMbrT0rK37UumXXu5OvNhhLdcAI+vfBc2RxIcA1IUnTEkrGa
+	 8xDw4xK3NCDMTKXDPv5nSDYgzmroINX4261GHe4lQQXamsLMiM4vAS0KjGGrl7S8EAdC4
+	 4Vn8YMNljwSlj8D19YX8Doa0Cz8JV6gPOl1RcHCUUOJCf3BCPFryEKeolVwei+/mlOw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794248713;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794269021;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Content-Type:Date:Message-Id:To:Cc:Subject:From:In-Reply-To:
-	 References:Content-Transfer-Encoding:MIME-Version;
-	bh=y4Cmesc6c6L7Z5O7qy6m8HiVqUJHOjQyHRE0+sJjwZY=;
-	b=s2sRTr2J4BCpPPMQAOR4EvmtjFqgNKJihelKzbRLE3kS0tK3rSZt1BVDQ1+co7C+ul0V
-	 uf7lkXe1RfOD2OVVTBhoJ9oPH/J5ycaivBh8KbB39zlS3DshAjy1VmfTxflZL387ouRpI
-	 mCqXi4ZqReuUQpIsDCCg9SWXqx+ue2Yqxcpns27QK4/elzME1GtU18nwVVcP0ubbkWav2
-	 B8IrjvwOvCPfFyo8lQyHrNxa/EAN9zVokW9ABqnbf4Biz75KVBQiAO6p6QDdPJEJrMUch
-	 open5EmnCyaxsvNd/4ELx4wfcQNh6f9kqB3Q2bbEijVYelmEAy3Qu9mScyAagOv/Tiw==
+	 From:To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=A1ekNc0B2q5hqHVaqyrrPmobu/u9RVnhuIQihIy7wRk=;
+	b=yEpz/KZSULFtitk/OZqlHpnfnpIKE7GOzBzbOPAJ6BD7IxOuk9+byGbwJsySduqh+EUn
+	 WT/Wgrul9G/bwgGKeIZLWoy00RH9Gfw3JFpiLbo/x2XKvKf9H8h6us0PNCdeQku9uP19Z
+	 pOuCojCdx/KJc+8xzaRujuaghbqdB/iyDQNU6LwOfRAHT0M5lJgGbZpWTE102D1yfJb/Y
+	 4QR23mYKSVF4xotmGvKMw4xLogAZH8Fuf0wVk4rFIrmmoys2sbQMAqWuxrkdzv5W9cseD
+	 vD1Zz5xQZU+piAe4kmGWaWFoqmrKNvN8vCR8gOzJvzt84PVgbkDaH7+0hlJxuLQ1jEw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=lGjkS+9A;
-	arc=none smtp.remote-ip=209.85.210.178
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="Rk0wdJ/e";
+	arc=none smtp.remote-ip=209.85.161.43
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B359606A325
-	for <loongarch@lists.linux.dev>; Mon,  9 Nov 2026 18:25:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9B359606A325
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33DE0606A332
+	for <loongarch@lists.linux.dev>; Tue, 10 Nov 2026 00:03:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 33DE0606A332
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=lGjkS+9A
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-8b8ecfa886bso538879b3a.0
-        for <loongarch@lists.linux.dev>; Mon, 09 Nov 2026 10:25:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Rk0wdJ/e
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-716c0217635so1240091eaf.0
+        for <loongarch@lists.linux.dev>; Mon, 09 Nov 2026 16:03:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794248713; x=1794853513; darn=lists.linux.dev;
-        h=mime-version:content-transfer-encoding:references:in-reply-to:from
-         :subject:cc:to:message-id:date:content-type:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=y4Cmesc6c6L7Z5O7qy6m8HiVqUJHOjQyHRE0+sJjwZY=;
-        b=lGjkS+9A7rxGOPcXilJv/TLthBJ+/OveUhRydoWIOnWIM3e2XHYSMijB5b1mhehhzn
-         tlJN2lXwiFgk2lP0trrtwFask0KqlrxOAy6bMJIz2/6xv5Uo7lRy8Kdju0yv5N6o7xxn
-         7uQIbZ1B8qWCdnVjD6BS/qLXhi+g2cTqCS05NPXSJQQVDPfQ3DH+fDKt/MtmmX26qpwN
-         CEM0KcVsaogy16wwOdGmQhTB3qENeI8QPp5/gUzqPPOGHUe7mYQUw45q7qQFVjPOslCt
-         AoK2ChQlaYSvKdfyPbcknIqQ+U5phKkzP6QUx79pOKlxIo2a6pXqDF0eqzprnh1rj6o9
-         BSnQ==
+        d=gmail.com; s=20260707; t=1794269020; x=1794873820; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=A1ekNc0B2q5hqHVaqyrrPmobu/u9RVnhuIQihIy7wRk=;
+        b=Rk0wdJ/e+JY70794MqDFedh7gDf0mdhuWwPgbXg5R4Lb/1M6fe0gyFlsCu4FlsJS22
+         ZKM9leuKkOb0ElMltUxWNNLCBsY4PmqHQpF71nW91yIpoaMmYMTVSqdi6lLMTCSIxVjz
+         1XEB1G1As3IuTv3rGsiLI6tWejNTvYcPoZkyiqqx3yT3p/hHm+s4BOfszGzYXRjlGS//
+         My6oxa4YDX+k5PMT2LpgBIPS4Tw71j3krsSYQgyBPPanKesU7GHx2tWA2q1KczRx8pYm
+         22TEfqlwyfW+IUhyTTc0i5+s+uRUVj4pDvgF0eK2jonPe+eD8HAtkfI6wYQi2t35oUQY
+         +XOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794248713; x=1794853513;
-        h=mime-version:content-transfer-encoding:references:in-reply-to:from
-         :subject:cc:to:message-id:date:content-type:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=y4Cmesc6c6L7Z5O7qy6m8HiVqUJHOjQyHRE0+sJjwZY=;
-        b=GfvrrBStomXWejCuF9h2ljATltl9h49LC3Q7TFM7Y+QeUoyjlFsGrjjep0hhJNnltH
-         YUVHohrIvIuVfOnz83kNfFgsD9ef7LAssQ/vePkM00BFZl8aKmkBnfS0oaN67Ecx6nUj
-         pDs96sVdk77Gs+69DKB60cabx46saG72dqPafyO4tfpqZFvxYcKGm8S6MNW4wqSffVss
-         kcBEnrCzRPnuTXF3TsXC4ipxheNyEKP2xZQVZKervYkjP81OPRWXTFTNOzXYnUp4F3B2
-         c/0oojvBeNNzEBtn5Omj67ItlEoAJI2wy7O2Pa+6ygpTd20NYN/vpdBCSa5wogz2oI3C
-         YmSA==
-X-Forwarded-Encrypted: i=1; AL+hErGYmQUpQcolLMClaoH/7fN7zQTzrZRVwlYQaKx1Xudsu8s0S/6RISEyUmX6UWSBkQ+V7dJhgei7LXE=@lists.linux.dev
-X-Gm-Message-State: APuU4Z8W3G2HcHgkeRN+2MDIxlys1afHGVogJB0uM/s1thNoYcITDBXl
-	WEN8YBhz04yM9Cdfxkweya/OUB+xFG5h8o6a5PF2jFhvjx76bUZRo7i5
-X-Gm-Gg: AYBFou1ax7lP72qP1FpJN6/djrsQlpqbIasRVo7nhBqVtUq3yN7mrw0Em3gBHRsQKvs
-	++fl52uNgckPiVMoU/6kb3ZEVcMgahB3CTVK7Pf0IduKPHgCo2RLD3yBzgpkfq8XTUiFo0E9he9
-	vltCBgpvAdY9i/OrPmWAuoXGjHnTH4HcbMlmQ19KTVMYmMV+V3uoKMP5truzKTGUIdt3U0xiOfU
-	t5VimjIxJ1PrElU3fAE+qvULTGqNgoERMdyupgfK4/9EKN/T28a9fz+fKqFUr1i3usziLBy1npu
-	hWJVDBb7f0XRXFehpp36sTQbnu7aYy34aIxOz/xfUPHruI8tSeSsyZMS4Wq5pIR0DvGVLb8Qj7V
-	FztK3ZuDsiORzBKeCukc3yV59T5CXu3xfmOZHtvWyjyVBoNzVfmWyhc1qH5upNF4zGnaJ0Fk6Ip
-	REc9oivk1QT/A/Z0cUFatt9d8xQggnWDvtldnE4Ly9s+nC745JpmI8Nssnf04RsRbTqVpoCZcin
-	zmi9Bz2YxgMRJY3DnMnoMiG3nPYxcXcAJ70vvJgDTysJCZ5f3LgOIJ+isUxlowOSGX7PSU2j+6O
-	e1YGnfNUj/ly/La3lGRGYJuw/a94NJPP7oeIG35S3kbNPpbys0hnUbGi0Hs0cUp/SMERyswgiWn
-	wMcks9QPGQee7dpwSKw+gIpp9LjyufDu1SGA=
-X-Received: by 2002:a17:90b:4a46:b0:3b1:6689:a016 with SMTP id 98e67ed59e1d1-3b167931c23mr197925a91.16.1794248712676;
-        Mon, 09 Nov 2026 10:25:12 -0800 (PST)
-Received: from localhost ([153.61.198.249])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b1678d4e49sm436923a91.8.2026.11.09.10.25.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Nov 2026 10:25:11 -0800 (PST)
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 09 Nov 2026 18:25:11 +0000
-Message-Id: <DMQW32TTNOPX.24GN6Q7VI6QJR@gmail.com>
-To: "Tiezhu Yang" <yangtiezhu@loongson.cn>, "Vlastimil Babka"
- <vbabka@kernel.org>, "Harry Yoo" <harry@kernel.org>, "Andrew Morton"
- <akpm@linux-foundation.org>, "Hao Li" <hao.li@linux.dev>, "Christoph
- Lameter" <cl@gentwo.org>, "David Rientjes" <rientjes@google.com>, "Roman
- Gushchin" <roman.gushchin@linux.dev>
-Cc: <linux-mm@kvack.org>, <loongarch@lists.linux.dev>,
- <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] mm/slub: Genericize x86-specific cmpxchg16b comment
-From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
-In-Reply-To: <20261109035906.10857-1-yangtiezhu@loongson.cn>
-References: <20261109035906.10857-1-yangtiezhu@loongson.cn>
-Content-Transfer-Encoding: 8bit
+        d=1e100.net; s=20260707; t=1794269020; x=1794873820;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=A1ekNc0B2q5hqHVaqyrrPmobu/u9RVnhuIQihIy7wRk=;
+        b=wuRQD6BvqvO4+dYt54K+c69PLVrlGVu46G5HqecUfrAgbz+thFXMHj68wNZ2Sv3h3q
+         e2NNTnV9YeGkY293iL50yCSrwiU2eHl70w5rrHA96Nlj7iP238asZsa7zASfSli7TQXA
+         o0/hbihGm1yfLq2lZDUm28otUmHnqdWBgmp+RQp0caf437KKxQTksujyVPjnHy5S/Uge
+         LtTpaJ+mUoeqPJHWuWQrBzq5dM4xfgHX3MwQm/2PCYZXqpe4BSy6Unujw/Uf0GY+u0cq
+         VS7v/0nsxZF1zX4apKWfqxlQoic/QiHk9pvq1VRisz7aAVWZnwLKTgs+LOzQGyOyXNDj
+         9k6Q==
+X-Forwarded-Encrypted: i=1; AL+hErEbwflIEX8wsKPAQOVKhEqgJ8iGb6BM645lOgYDFhH844E1RhkZkhb8mV6kR9pAIZ8kal/9hyvjSqY=@lists.linux.dev
+X-Gm-Message-State: APuU4Z/5xl6J4xTNSdSzO1PZnX1BbfNFWtkc91MU48Z1YVruOjflWwXP
+	1L+XAlGfS8qxaygJOS2/MxKeL5cCaF/1hEKvoYkXALrJjMU/8cBHi7VH
+X-Gm-Gg: AYBFou1yqMxpDS/5ZX34qoUAO0X1IwElaJsp36d13rRyeUixU0oPL21qcC+OPhuSlli
+	FErae1nZOuNJtIWdpZreLi5CuzDVNYy07nlxWQlLyg5BZZyd29dNX0th4aBarhyjhY/TWCLZKcC
+	nbHDkdYAF6AZCUc030I+ec42gm2NNnZlKnYkT3+1Xp8C6fLkGEe9pYbYOubfEuKEbBngflkrYuv
+	kq1I/zwU9a81tpeWncXw4ZNiCfikfZEOxge31aYCcd/luD0fiFO8X5/4c374xpLYuSG2mj9RKtH
+	wQcHEK6J6bPTddsnw1GYG0FTpxB3JOjUH3IF5648P/rJ54pcf72uE+lgNx/2Tf+fa9G4ulveCfJ
+	JQMugo98FKG3YpjGxRbVpN5yY9aN5bibnOosGqpeETQXDzu1IbqtYHTwXGuNVwy+U12R3R/y+2v
+	qbywDzRPaPIr/9Q2G6JjyTvtnW9n+pFl2NRw07RbMTrshELsn2HoSdqYo5rU67rqJaSV+y+95lG
+	zh6jz7M4m6SiKdnF1aFEr7FGCtyiu8iW/7WGPezQ/WJFSoRbmD6w2nM75u/OXUE7cK2X71Lsho8
+	vrethiVAsD0ZjlJffjR15S9ICw2DIwYayRAPwr0UzeplDiUSRaaoyDaySRGpboGf
+X-Received: by 2002:a05:6820:a711:20b0:716:e9e0:542e with SMTP id 006d021491bc7-718a528656cmr220220eaf.12.1794269020089;
+        Mon, 09 Nov 2026 16:03:40 -0800 (PST)
+Received: from sheng2080.cmix.louisiana.edu ([130.70.15.5])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-718aa03dbeasm513036eaf.12.2026.11.09.16.03.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Nov 2026 16:03:38 -0800 (PST)
+From: Leizhen Zhang <lzsx618@gmail.com>
+To: jpoimboe@kernel.org,
+	peterz@infradead.org
+Cc: yangtiezhu@loongson.cn,
+	chenhuacai@kernel.org,
+	alexandre.chartre@oracle.com,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Leizhen Zhang <lzsx618@gmail.com>
+Subject: [PATCH 0/3] objtool: Fix undefined behaviour reported by UBSan on a defconfig build
+Date: Mon,  9 Nov 2026 18:02:52 -0600
+Message-Id: <20261110000255.1720945-1-lzsx618@gmail.com>
+X-Mailer: git-send-email 2.34.1
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -104,17 +99,47 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Sun, Nov 08, 2026 at 07:59 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
-> atomic primitive is satisfied by different hardware implementations:
-> (1) arm64: satisfies it via LSE atomics ('casp' instruction)
-[...]
-> Update the comment to "double-width atomic cmpxchg", which provides the
-> following advantages:
-> (1) Accurately describes the cross-platform hardware invariant.
+An x86_64 defconfig build of v7.4-rc2 with objtool built with
+-fsanitize=address,undefined (GCC 12) gives two UBSan reports from
+objtool, both on the normal vmlinux.o pass, no unusual input involved:
 
-You ignored Hao's point about shorter commit logs.
+  arch/x86/orc.c:11:18: runtime error: member access within null pointer of type 'struct cfi_state'
+  special.c:84:18: runtime error: load of misaligned address ... for type 'unsigned int', which requires 4 byte alignment
 
-I dropped all of your pending patches.
+1/3 fixes the first one: init_orc_entry() takes &cfi->regs[CFI_BP]
+before its own "if (!cfi)" check.  2/3 is the same pattern in the
+LoongArch copy of the function; I compile-tested objtool for LoongArch
+but have no LoongArch object to run it on.  3/3 fixes the second one:
+the feature word of a 14-byte packed struct alt_instr is read through
+an 'unsigned int *', so every odd-numbered entry is misaligned.
 
-pw-bot: cr
+Testing: I relinked vmlinux.o without objtool and ran the old and the
+new objtool binary on two copies of it, with the arguments Kbuild uses.
+The old one prints both reports, the new one prints none, and the two
+resulting vmlinux.o files are byte-identical.  A full rebuild with the
+patched objtool is also clean for objtool.
+
+None of this is a security issue: objtool only processes objects from
+the build itself.
+
+The two reports were found with UBSan, and the analysis and fixes were
+prepared with the help of an AI coding assistant; I reviewed and tested
+the result.
+
+Leizhen Zhang (3):
+  objtool/x86: Move the cfi->regs access after the NULL check
+  objtool/LoongArch: Move the cfi->regs access after the NULL check
+  objtool: Fix misaligned load of the alternative feature word
+
+ tools/objtool/arch/loongarch/orc.c | 6 ++++--
+ tools/objtool/arch/x86/orc.c       | 4 +++-
+ tools/objtool/special.c            | 4 ++--
+ 3 files changed, 9 insertions(+), 5 deletions(-)
+
+
+base-commit: 7475ea8b58616b33c04afb976cf0fbaad9dd63fb
+-- 
+2.34.1
+
