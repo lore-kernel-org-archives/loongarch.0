@@ -1,55 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794304866;
-	b=vJxQfvc6Ftbf2hbQyZIHr6nYqCgRxAA1icX425hZvZ61V9Qxmef6MfIJ9YrXVBQJzQSo
-	 xAwuAQpWuG5bTTNj07HFMETJ1uimC1b6Zo/mCtIQkEGNJnHK1OhDCMnAPkycAgmyens23
-	 4kpoGY6aaY1O1bB8JT8hKZdVxixwoj5Ku50SiQX6BU3gUIwjS8yNPq8pNBfg5IJJzCn1c
-	 Yw5hwJjYnH4+GIzkcDCRH+nhk3yzZfPBgvTlATWK4dXFLRrUYXIg9zygWd794VUx+sO0y
-	 FjpvNIsksf2UwKbTPGiwFOeyQU0+sO4KDUMBFj3u132RqN/fn485rPSQr47JZpesrKw==
+	t=1794305064;
+	b=ESLO7ODhOtrq7TKXdBihNGvUREQ/RG5KaXu0/PDGVsR9hP9kcwW8fbMW0+X+42+nxdL1
+	 0tSLTZzFvGfch8Eg5bsBkWvEzvYaFxbPYQRD0gbxCTAn6zVtuDuieYbAJC75S5Cn6PZA9
+	 24zwNBu2XImx3gsCbyjG/TwxWX+EVIPXyA9EA/Cn6+YmifPqMVxBoM8kPy2O60WKhX2wx
+	 VX0hhAVb0IwHCAcB2lyxxtDdF03KI2FLnKD0bCBhJwnQQS1WT9/OvCZbVbm8PPu6Uimw5
+	 ZfOk0xqCc3UcU1v3t767GqW04axDYkBDaMRSpdISmihxPXI7tzoDo5HwfRU0Yu+J+rg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794304866;
-	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
-	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
-	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=InjrUa8PtgxebaoPU5gAdUxBP+Q7iA9KZue8Z0bePJ0=;
-	b=ZDId1IHfhh8251fY0CNqg6hG+oV0Ug7nVnAuGesdHk4r/NfIqrCPRiQJWEzPu9/GAEzc
-	 YZUBh8/OKrv3pQ0dgPXUIvvbubZAoapxniXi2+AUzXFsgGCCLR+UQ4n1SzH+4XhSLas4a
-	 piv0ZS75iv1SL3fagz0E91GngjJF+fi0UC2ZFCZbfq0c4GkUHvW7+nZKhPrPFog+2W4/s
-	 Mx4xAPPVgKccnZ/suaTCUS0WdYNpa4othu4VE3MlGdjwurqVKmJPML8tFMUShCoOI1tJs
-	 m2AKWu3CJbrmPugpXM7ln6EY5lwRN2qdl3StXL546QPSdNlIwHOvrwvtR0Z8yOskb3A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794305064;
+	h=Received:DKIM-Signature:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:Subject:From:To:Cc:In-Reply-To:References:
+	 Date:Message-Id:X-Mailer;
+	bh=eY1DjQBxx9pGJujq6jDGfkVxNU4BxXGTTLJbRN2wf4U=;
+	b=4TB43BzmtZFZLGGQ4MgafTIuN3OXslZcMSwHzZvgQj/+5A5Tywn8Zi5LgfXPV+DarQI+
+	 guoBuVhIyprWJncbzstEqT2Pj/Baz9z5ivM7pNtJFy2y6V1Lu+qvpOGVmUXN50ydDs95F
+	 75TFh8UqJQQMxjtrJu+7WJ60p5vDgO9OePgqjsxeKgDeRx6jXMOj8pjM1yV0fp1K2hYCW
+	 HHkJNbHv2/glyNdOx664aBo8c2lfbNzPrRtQO1N7pdqjgUxyJZSA92XY4Cw0p8MM4vLtT
+	 scsZhKAjHts2/lfQkw5qsiW04nfGNtMxB7/5kUl/3cUAFGF/pUQbINh2tdGZiD+z4fA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=K+hfUJO7;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QT0hLtk9;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A752606A32E
-	for <loongarch@lists.linux.dev>; Tue, 10 Nov 2026 10:01:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC1B606A325;
+	Tue, 10 Nov 2026 10:04:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=K+hfUJO7
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04FD31F008BC
-	for <loongarch@lists.linux.dev>; Tue, 10 Nov 2026 10:01:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QT0hLtk9
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A80651F0089F;
+	Tue, 10 Nov 2026 10:04:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794304866;
-	bh=InjrUa8PtgxebaoPU5gAdUxBP+Q7iA9KZue8Z0bePJ0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=K+hfUJO7sVbzoCoh+i1LFy+ufPpUI+d5dAtrssBx/TGKR0PeddorTjht1Ef9+5Mqz
-	 EBuXqLBI4C0xb/2o0t4XecOnWq43i/1z9OInIaDmW3Sot4Z7VWjR1KCPSWDBYEjnS+
-	 R6B5EjC88Ae9Nvq9gBtlEtQCQuu92xn1eJzaOCymhRBNVOcFDFrQTWkVapHl2WoEci
-	 SCxsi6tBkIyI/L7zbE/D2crP9b9TAZ7TKrjL79Yz/cT0F4yFLSHpFpkkKX3mn07f/0
-	 s+Y07IB4qT9OjKrj/dOjXFacjsuBoF7LG7Zkux4d7uzzt1hHyIVMs5cE9SABePpBbO
-	 yReDGAkO9gfnQ==
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-c505c561fd5so13215466b.1
-        for <loongarch@lists.linux.dev>; Tue, 10 Nov 2026 02:01:05 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AL+hErHSgC2gboWR0wvU3lMfVlmM68g2zMUTIX9M7hvKTa7yCMGGUOb4tn7x7Pk3wuS5/8x5mpAO6TUW1+U=@lists.linux.dev
-X-Gm-Message-State: APuU4Z9nMBBTIpJRUCi+zC68TTPp6L/LcKn6BtkwDruv8/f+y2u6Memp
-	j0HLpmEbQyYJpYp+XXDA7RyUZdX/OgDNazn0CWVMBm1XnRJYPpWZJmfqYtVG5gF7VXnnKEaPRop
-	PxaXmReUgG9J+7VaoLd4P24sG/8tCRx4=
-X-Received: by 2002:a17:907:ea89:b0:c4d:31cd:9dec with SMTP id
- a640c23a62f3a-c50495a3646mr156885666b.30.1794304864528; Tue, 10 Nov 2026
- 02:01:04 -0800 (PST)
+	s=k20260515; t=1794305063;
+	bh=eY1DjQBxx9pGJujq6jDGfkVxNU4BxXGTTLJbRN2wf4U=;
+	h=Subject:From:To:Cc:In-Reply-To:References:Date;
+	b=QT0hLtk9QO9NQkSAMafK//Ctz1CLu6QbM11Rc9ypRgZvHyr5B908aYtoNJaavFGGr
+	 0fInfPXPrGa6TWHGLogzkkxJ+Xx00GGNu+4+rA8qxV1XsW1X1hTqN6DD16TSa3JAKp
+	 zFkHqXG9t7lCkgbbuWrsooy4xekpacKz3RZeGeb/jw/+M3qMTK0+w0JDpZwYMFWKGh
+	 gQ6rTH8699FKSbnCwHqDJJrCqVSQyUMdoE56xaNNnc1h9qrqjX4Oq+tJRybK9TVJke
+	 XsntNYFGeRI83Yhcix3xoAuRHe6qn+3qze9Zkb5x2CzaRLiQXjUBcD/HiBTyyy2Dku
+	 wT9SVixRtBFow==
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -59,129 +49,250 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <20261029033440.973077-1-wuqianhai@loongson.cn> <20261110090203.2631481-1-wuqianhai@loongson.cn>
-In-Reply-To: <20261110090203.2631481-1-wuqianhai@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 10 Nov 2026 18:00:52 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6=7SbhLpzWOYFxi9MaM5f2BHfJXjWjQW-uBeLCKMHPVw@mail.gmail.com>
-X-Gm-Features: AclHuK-9P_C8nOOOdEbmYQVc8OO7W71bMN2RKSel305MdnvrCGkGtc7VDw_SrUo
-Message-ID: <CAAhV-H6=7SbhLpzWOYFxi9MaM5f2BHfJXjWjQW-uBeLCKMHPVw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] LoongArch: Identify the firmware/boot display device
-To: wuqianhai@loongson.cn
-Cc: kernel@xen0n.name, tzimmermann@suse.de, deller@gmx.de, bhelgaas@google.com, 
-	ardb@kernel.org, ilias.apalodimas@linaro.org, javierm@redhat.com, 
-	loongarch@lists.linux.dev, linux-pci@vger.kernel.org, 
-	linux-efi@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v7 12/15] kexec: Add kexec_load_other_segments() helper
+From: Mike Rapoport <rppt@kernel.org>
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, 
+ chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com, 
+ mpe@ellerman.id.au, npiggin@gmail.com, chleroy@kernel.org, 
+ ritesh.list@gmail.com, sshegde@linux.ibm.com, pjw@kernel.org, 
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, tglx@kernel.org, 
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
+ akpm@linux-foundation.org, baoquan.he@linux.dev, rppt@kernel.org, 
+ pasha.tatashin@soleen.com, pratyush@kernel.org, thuth@redhat.com, 
+ leitao@debian.org, yeoreum.yun@arm.com, robh@kernel.org, 
+ sourabhjain@linux.ibm.com, kees@kernel.org, coiby.xu@gmail.com, 
+ Yeking@Red54.com, tangyouling@kylinos.cn, maqianga@uniontech.com, 
+ zhangtianyang@loongson.cn, guodongtai@kylinos.cn, blum@kernel.org, 
+ adityag@linux.ibm.com, hui.wang@canonical.com, sohammetha01@gmail.com, 
+ guoren@kernel.org, gaohan@iscas.ac.cn, kai.huang@intel.com, kas@kernel.org, 
+ vishal.l.verma@intel.com, piliu@redhat.com, jbouron@amazon.com, 
+ mclapinski@google.com, me@linux.beauty, graf@amazon.com, bgwin@google.com, 
+ x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+ kexec@lists.infradead.org
+In-Reply-To: <20261026075201.699550-13-ruanjinjie@huawei.com>
+References: <20261026075201.699550-1-ruanjinjie@huawei.com>
+ <20261026075201.699550-13-ruanjinjie@huawei.com>
+Date: Tue, 10 Nov 2026 12:04:05 +0200
+Message-Id: <179430504583.425130.15302016434972990362.b4-review@b4>
+X-Mailer: b4 0.16.1-dev
 
-Hi, Qianhai,
+Hi Jinjie,
 
-On Tue, Nov 10, 2026 at 5:04=E2=80=AFPM <wuqianhai@loongson.cn> wrote:
->
-> From: wuqianhai <wuqianhai@loongson.cn>
->
-> On LoongArch the kernel cannot reliably identify the display device that
-> was set up by the firmware and used for the boot console.  Two code paths
-> need this information and currently get it wrong:
->
->   * The PCI VGA arbiter: vga_is_firmware_default() is compiled only on
->     x86, so on LoongArch vga_default_device() may select the wrong GPU
->     when several are present (for example an integrated display
->     controller and a discrete card).
->
->   * The framebuffer console: LoongArch does not implement
->     video_is_primary_device(), so with
->     CONFIG_FRAMEBUFFER_CONSOLE_DETECT_PRIMARY=3Dy the console falls back =
-to
->     the generic stub that always returns false and binds to the first
->     registered framebuffer instead of the boot display.
->
-> This series fixes both by publishing the firmware framebuffer information
-> through screen_info on LoongArch and consuming it the same way x86 does.
->
-> Patch 1 always defines and initializes sysfb_primary_display, and always
-> provides its EFI stub alias, instead of guarding them behind
-> SYSFB/EFI_EARLYCON.
->
-> Patch 2 refreshes screen_info from the PCI resource-assignment path after
-> the root-bus resources are assigned, so the framebuffer address is final
-> before the VGA arbiter and sysfb_init() consume it.  The call is placed
-> in the LoongArch PCI scan path because only LoongArch has this ordering:
-> acpi_init() relocates the BAR before vga_arb_device_init() runs.  On x86
-> the screen_info address is still accurate at that point.  If you would
-> rather have the helper called from the generic
-> pci_assign_unassigned_root_bus_resources() path so that all architectures
-> share it, that can be done instead.
->
-> Patch 3 removes pci_fixup_vgadev(), which overrides the VGA default
-> device to a discrete card after the arbiter has already selected the
-> firmware framebuffer device, so vga_default_device() consistently
-> reflects the boot display.
->
-> Patch 4 implements video_is_primary_device() for LoongArch by reusing the
-> VGA default device selected by the arbiter.
->
-> Patch 5 lets the EFI stub link directly to sysfb_primary_display on
-> LoongArch, so the firmware framebuffer information is always populated.
->
-> Patch 6 lets the VGA arbiter use CONFIG_SCREEN_INFO instead of an
-> architecture check and makes VGA_ARB select SCREEN_INFO on LoongArch.
->
-> Patches 1-4 are LoongArch-specific.  Patches 5 and 6 touch generic code
-> (the EFI stub and the PCI VGA arbiter) and are placed last so they can be
-> reviewed and merged separately.  Patches 3 and 4 depend on patch 6 taking
-> effect, but are ordered ahead of it only to group the LoongArch changes
-> together.
->
-> Changes since v2:
->   - Split the screen_info refresh out of vga_arb_device_init() into the
->     LoongArch PCI resource-assignment path (patch 2), following Thomas'
->     suggestion to decouple it from sysfb_init().
->   - Drop the per-architecture check in vgaarb.c and the select of SYSFB
->     in favour of CONFIG_SCREEN_INFO and select SCREEN_INFO (patch 6).
->   - Always define and initialize sysfb_primary_display, and let the EFI
->     stub link to it directly (patches 1 and 5), instead of guarding them
->     behind SYSFB/EFI_EARLYCON.
->   - Remove the vga_default_device() override (patch 3) so the arbiter's
->     firmware-framebuffer selection takes effect.
->   - Implement video_is_primary_device() (patch 4) by reusing the arbiter'=
-s
->     default device, so FRAMEBUFFER_CONSOLE_DETECT_PRIMARY works.
->
-> Build-tested on loongarch64 with GCC 8.3.0.
->
-> wuqianhai (6):
->   LoongArch: efi: Provide sysfb_primary_display for screen_info users
->   LoongArch/PCI: Refresh screen_info after resource assignment
->   LoongArch/PCI: Remove vga default device override
->   LoongArch: video: Implement primary framebuffer device detection
->   efi/libstub: Enable direct sysfb_primary_display access on LoongArch
-Please fold this patch to the first one.
+> arm64, LoongArch and RISC-V duplicate the elf core header and initrd
+> loading.  Move it into a common helper with one arch hook for the boot
+> parameters; a failure releases everything added for the attempt.
 
-And your signature should be:
-Qianhai Wu <wuqianhai@loongson.cn>
+I like the idea of pulling out the common code, but I'm not convinced
+that the split you suggest is right.
 
-Huacai
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Baoquan He <baoquan.he@linux.dev>
+> Cc: Mike Rapoport <rppt@kernel.org>
+> Suggested-by: Mike Rapoport <rppt@kernel.org>
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> ---
+>  include/linux/kexec.h | 15 ++++++++
+>  kernel/kexec_file.c   | 90 +++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 105 insertions(+)
+>
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index faba26f871a4a..de1d83ddc38bd 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -259,6 +259,21 @@ int kexec_kernel_verify_pe_sig(const char *kernel, unsigned long kernel_len);
+>  extern int kexec_add_buffer(struct kexec_buf *kbuf);
+>  int kexec_locate_mem_hole(struct kexec_buf *kbuf);
+>  
+> +struct kexec_load_params {
+> +	unsigned long kernel_load_addr;
+> +	unsigned long kernel_size;
+> +	char *initrd;
+> +	unsigned long initrd_len;
+> +	char *cmdline;
+> +	unsigned long cmdline_len;
+> +};
 
->   PCI/VGA: Enable firmware default device detection on LoongArch
->
->  arch/loongarch/Makefile                       |  3 ++
->  arch/loongarch/include/asm/video.h            |  7 +++++
->  arch/loongarch/kernel/efi.c                   |  5 +---
->  arch/loongarch/kernel/image-vars.h            |  2 --
->  arch/loongarch/pci/acpi.c                     |  4 +++
->  arch/loongarch/pci/pci.c                      | 18 ------------
->  arch/loongarch/video/Makefile                 |  3 ++
->  arch/loongarch/video/video-common.c           | 29 +++++++++++++++++++
->  drivers/firmware/efi/libstub/efi-stub-entry.c |  1 +
->  drivers/pci/Kconfig                           |  2 +-
->  drivers/pci/vgaarb.c                          |  2 +-
->  11 files changed, 50 insertions(+), 26 deletions(-)
->  create mode 100644 arch/loongarch/video/Makefile
->  create mode 100644 arch/loongarch/video/video-common.c
->
-> --
-> 2.34.1
->
+initrd and cmdline are already in image->initrd_buf, initrd_buf_len,
+cmdline_buf and cmdline_buf_len, that's where fops->load() gets them from.
+
+And the outputs are scattered: elf_load_addr goes to the image, the initrd
+address is passed as a separate argument to the hook, and LoongArch infers
+"there is an initrd" from initrd_load_addr != 0.
+
+
+
+> +
+> +int arch_kexec_setup_other_segments(struct kimage *image,
+> +				    struct kexec_load_params *params,
+> +				    unsigned long initrd_load_addr);
+> +int kexec_load_other_segments(struct kimage *image,
+> +			      struct kexec_load_params *params, bool top_down);
+> +
+
+The call chain is now fops->load() in arch -> kexec_load_other_segments()
+in core -> arch_kexec_setup_other_segments() back in arch. That's a
+midlayer: the core helper owns the sequence and the arch fills a hole in
+the middle of it.
+
+The weak default is never used, all three users override it, and x86,
+powerpc and s390 build a helper and a hook that nothing calls.
+
+>  #ifndef arch_kexec_locate_mem_hole
+>  /**
+>   * arch_kexec_locate_mem_hole - Find free memory to place the segments.
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index 62d4cba278a57..8b80f1186875b 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -1295,3 +1295,93 @@ int kexec_purgatory_get_set_symbol(struct kimage *image, const char *name,
+>  	return 0;
+>  }
+>  #endif /* CONFIG_ARCH_SUPPORTS_KEXEC_PURGATORY */
+> +
+> +int __weak arch_kexec_setup_other_segments(struct kimage *image,
+> +					   struct kexec_load_params *params,
+> +					   unsigned long initrd_load_addr)
+> +{
+> +	return 0;
+> +}
+> +
+> +int kexec_load_other_segments(struct kimage *image,
+> +			      struct kexec_load_params *params, bool top_down)
+> +{
+> +	struct kexec_buf kbuf = {
+> +		.image = image,
+> +		/* Do not allocate anything below the kernel */
+> +		.buf_min = params->kernel_load_addr + params->kernel_size,
+> +		.buf_max = top_down ? PFN_PHYS(max_low_pfn) : ULONG_MAX,
+> +	};
+
+top_down does not describe a direction, it selects "RISC-V policy" vs
+"arm64 policy": the upper limit for all buffers, the initrd direction and
+the 32G initrd window.
+
+These are boot protocol constraints and they belong to the architecture.
+The 32G window comes from arm64 booting.rst and the SZ_64K alignment below
+is "largest supported page size" on arm64 and LoongArch. With this patch
+they become generic and RISC-V silently switches from
+ELF_CORE_HEADER_ALIGN to 64K in 15/15.
+
+
+> +
+> +	unsigned long orig_segments = image->nr_segments;
+> +	unsigned long initrd_load_addr = 0;
+> +	int ret = 0;
+> +
+> +#ifdef CONFIG_CRASH_DUMP
+> +	if (image->type == KEXEC_TYPE_CRASH) {
+> +		ret = crash_prepare_headers(true, &kbuf.buffer, &kbuf.bufsz, NULL);
+> +		if (ret) {
+> +			pr_err("Preparing elf core header failed\n");
+> +			goto out_err;
+> +		}
+> +
+> +		if (unlikely(image->elf_headers))
+> +			vfree(image->elf_headers);
+
+The headers don't depend on where the kernel is placed, yet they are
+rebuilt on every iteration of the arm64 and LoongArch retry loops. That's
+why the vfree() above is needed, and with the out_err path freeing them
+it's now dead code.
+
+Building the headers once and only placing them in the loop removes the
+leak instead of fixing it.
+
+
+> +
+> +		image->elf_headers = kbuf.buffer;
+> +		image->elf_headers_sz = kbuf.bufsz;
+> +
+> +		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+> +		kbuf.memsz = kbuf.bufsz;
+> +		kbuf.buf_align = SZ_64K; /* largest supported page size */
+> +		kbuf.top_down = true;
+> +
+> +		ret = kexec_add_buffer(&kbuf);
+> +		if (ret)
+> +			goto out_err;
+> +
+> +		image->elf_load_addr = kbuf.mem;
+> +
+> +		kexec_dprintk("Loaded elf core header at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+> +			      image->elf_load_addr, kbuf.bufsz, kbuf.memsz);
+> +	}
+> +#endif
+> +
+> +	if (params->initrd) {
+> +		kbuf.buffer = params->initrd;
+> +		kbuf.bufsz = params->initrd_len;
+> +		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+> +		kbuf.memsz = params->initrd_len;
+> +		kbuf.buf_align = 0;
+> +		/* within 1GB-aligned window of up to 32GB in size */
+> +		if (!top_down)
+> +			kbuf.buf_max = round_down(params->kernel_load_addr, SZ_1G) +
+> +					(unsigned long)SZ_1G * 32;
+> +		kbuf.top_down = top_down;
+> +
+> +		ret = kexec_add_buffer(&kbuf);
+> +		if (ret)
+> +			goto out_err;
+> +		initrd_load_addr = kbuf.mem;
+> +
+> +		kexec_dprintk("Loaded initrd at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+> +			      initrd_load_addr, kbuf.bufsz, kbuf.memsz);
+> +	}
+> +
+> +	ret = arch_kexec_setup_other_segments(image, params,
+> +					      initrd_load_addr);
+> +	if (ret)
+> +		goto out_err;
+> +
+> +	return 0;
+> +
+> +out_err:
+> +	while (image->nr_segments > orig_segments) {
+> +		kexec_free_segment_cma(image, image->nr_segments - 1);
+> +		image->nr_segments--;
+> +	}
+> +
+> +	kexec_free_elf_headers(image);
+
+This drops segments added by the arch hook (DTB, RISC-V purgatory, arm64
+dm-crypt keys) without knowing anything about the state attached to them,
+like image->dm_crypt_keys_addr or the purgatory info. The hook, in turn,
+frees its buffers but not its segments.
+
+Nobody owns the unwind, so "a failure releases everything added for the
+attempt" is not quite what happens.
+
+The conversions also bury ordering changes in "simplify" patches: on arm64
+dm-crypt keys move after the initrd, and on RISC-V the initrd moves before
+the purgatory. And dm-crypt keys loading is not an arm64 boot parameter,
+x86 and powerpc use it as well.
+
+> +
+> +	return ret;
+> +}
+
+
+What I had in mind was to make the core provide building blocks and let
+the architectures compose them, e.g. a common rollback function that
+frees CMAs and drops segments above nr. The retry loops in arm64 and
+LoongArch image loaders can use it instead of open coding
+kexec_free_segment_cma() and nr_segments--. There also could be a helper
+for adding FDT for example and maybe some other common parts, like, say,
+efl headers.
+
+Arch's load_other_segments() could use these helpers and still define
+their own policy for segment placement.
+
+-- 
+Sincerely yours,
+Mike.
+
