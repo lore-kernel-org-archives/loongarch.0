@@ -1,104 +1,102 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=195.135.223.130
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794322008;
-	b=V5dj+qCn7GuWBvFFV2ZrP8tGj+yP1m3A1iAzRsvLjRY+pSotxfGBmpfwQN7iXUJyDGN5
-	 2jnTEH/ql4qpUbco52hkcSVZwZ1FCn23//LRnXSi0UjhnSqy/hN4S29xkCDmP0pAfdx1u
-	 8kaCbNUeLsMqk1kFa4w0Fl8UGLEqu5IJJW/HMFuPbgUh/3PPmcwu8JQH/1Igu6IGylJ9n
-	 p14wkZKzrP8UgotD4Cyt9KkMmGBGWYRZIOAExXDrhCNVU39WMmH2W794v/8c7Y5wKZngF
-	 yBIz2KpRgVPVY7eN88UJt6UD2j5d5+XO4kRAzUFPweYvHvL9aUkw4hZVXpzzoERZB5g==
+	t=1794327958;
+	b=nbbrxojE5YnlVKJtV4ssGsl+LQmuVwnKChkUrZ5fe1fFXBpNXuuczeb/fm9g6N1EfhPX
+	 pztds1LcaV+eOC7DH1xWiNLO/EL6MvEj7Eb5XzKImT6u0YW+r/Rxrq7xww+WnfBxoKEMw
+	 yRDRaMCU0TVldS1TkpaYQ6SKIGsRZ1PtFC6Q2Cllb52PijJHHvyJ9OF1TJTea2bMnHDNP
+	 s7hl+KYGwXFhTUuc//6/VnzrGc1YZgJbxH4b9vFfMxjyGxOn1sjB9+8e8lMdPOLOmnUBF
+	 T3tUw80f8wIyIjMvM5ESq05D9WH2PQB+CE034vwZymyg3p3xuHiwhZkfYeLXlZtB4qg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794322008;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794327958;
 	h=DMARC-Filter:Received:DKIM-Signature:DKIM-Signature:DKIM-Signature:
 	 DKIM-Signature:Received:Received:Message-ID:Date:MIME-Version:
 	 User-Agent:Subject:To:Cc:References:Content-Language:From:Autocrypt:
 	 In-Reply-To:Content-Type:Content-Transfer-Encoding:X-Spamd-Result:
-	 X-Rspamd-Server:X-Rspamd-Action:X-Spam-Flag:X-Spam-Score:X-Spam-Level:
-	 X-Rspamd-Queue-Id;
-	bh=3fpw5vkQV00MZzYQ5OK3lZxe4BbABKYr3Pz4v+FktUg=;
-	b=pI2MsWo7cYRMQFot5WNAh9QgFKSjZM6PmPAArVEsq7TP2vyLNLBlQPziuFDiD9tW9+6s
-	 VLruaXneMCbtJ6wVZvitHnO7oIwXf7YSrg6NwUJ3bXKK+5FyibwN4FTooV/8hjzAqoPwM
-	 /CXUSXvjktlvRAXaqf4071C1vXqD/mR3ekePkxoTvCUT9u3QtEbMCAp5ibFufKvKWennQ
-	 FfK3pjhqQAoUBbH0AasTx1xQ6Pz3vE9dlW2HM4jhA5yyJIZFJQY5i+MSxktHhOQ9eJqrc
-	 jdrOtanp+w81NVSIOTqrgIGsynTmdSVO5Vjg2Gzg02qYFk9frJKsz/W/O59zsNiJtjQ==
+	 X-Spam-Score:X-Spam-Level:X-Spam-Flag;
+	bh=ATK+YqeQgXY50uB6ssooNlAaHRhaH0LqEgi3TMhGkNQ=;
+	b=on1dA5gx8t9qugR4rLGFGaBcOEE4Vc58CJN4TxBsl2i5ug73FLf8TG97ZD84FSLrLq5U
+	 B9w7Xgnba3btEBem3obOdz60tJO7AfQ/gV66hZ1qhgYzROflP52MsJn7Z47Jgh4QGjWia
+	 clUVuSLQI8rJh2JYAeqJHrVEI2ZnqLAJdcX7qBzzk8PjST1NHbzdK85w4kDEPEVBBjF9Q
+	 2MuLBWfw08YvcN9OvCmFIkPnpzKYFCo6KDhn9C8XRVMVQUHDM4+3oPeIbj8Zs7AxE24kj
+	 F4ZlbRvvi7X0xIFDkd4ZjzIVfJbgJeziMXGpxXhRxkyMa/ufsu4gurnpT8kBvcVq37Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=suse.de;
 	spf=pass smtp.mailfrom=suse.de;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=vGXUB5CM;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b="5vwS/Kh1";
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=vGXUB5CM;
-	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b="5vwS/Kh1";
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=iYWrj5Xr;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=bHAcxfGF;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=MpfyAsz2;
+	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=hRXH0l7P;
 	arc=none smtp.remote-ip=195.135.223.130
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BDB1606A31C
-	for <loongarch@lists.linux.dev>; Tue, 10 Nov 2026 14:46:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6BDB1606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61C1A606A32E
+	for <loongarch@lists.linux.dev>; Tue, 10 Nov 2026 16:25:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 61C1A606A32E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=vGXUB5CM;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=5vwS/Kh1;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=vGXUB5CM;
-	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=5vwS/Kh1
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=iYWrj5Xr;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=bHAcxfGF;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=MpfyAsz2;
+	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=hRXH0l7P
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 74A6121F09;
-	Tue, 10 Nov 2026 14:46:45 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 6B30321F57;
+	Tue, 10 Nov 2026 16:25:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1794322005; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1794327955; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=3fpw5vkQV00MZzYQ5OK3lZxe4BbABKYr3Pz4v+FktUg=;
-	b=vGXUB5CMFdvnAKPLlYK1zWAQuk/FiBryrNG327MvzaMIDpJzZzfPBVkRGlnt9oyVwbtOIO
-	nnZPHGMWffgmh1tPmMhTPKB8lg4In8N339yacvLbiXGmIv6WZ5kSHLZBePOy9B9h74/NeV
-	HA6fDdfsBf9k3YSGKrPyMdc4pkaC5XE=
+	bh=ATK+YqeQgXY50uB6ssooNlAaHRhaH0LqEgi3TMhGkNQ=;
+	b=iYWrj5XrAZn5FDOjN9EYYVDFi6U9zlAiFRm+ThPRCq0Si49LXXuhxSISDFBor4JTEC1R6Q
+	hKRDSYyJPEL0ABEAnDBTSmgqjlMbnkTDduS13Ds1s7/G8Ek8XcyVZ4lrW2Wsc4pBz6WgBk
+	ezg3wU4NMEmU6VVZK0NEwORWH5hdAMI=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1794322005;
+	s=susede2_ed25519; t=1794327955;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=3fpw5vkQV00MZzYQ5OK3lZxe4BbABKYr3Pz4v+FktUg=;
-	b=5vwS/Kh1ntJmKOvwdlC32GY7RBrN5Z8bSngFoKazMeGR1LlCBEKsxMH+AoxIbo2MjY+jrO
-	AdDZrTNYuBOqvtAg==
+	bh=ATK+YqeQgXY50uB6ssooNlAaHRhaH0LqEgi3TMhGkNQ=;
+	b=bHAcxfGFcv+p7zPtJdGDOlmOrVt89AeKhU5HhhuOgphJpP5qxPAl+6LT+K/Y0qp5EzS6PU
+	FVbbuGMPZXzWePAg==
 Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=vGXUB5CM;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="5vwS/Kh1"
+	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1794322005; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1794327954; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=3fpw5vkQV00MZzYQ5OK3lZxe4BbABKYr3Pz4v+FktUg=;
-	b=vGXUB5CMFdvnAKPLlYK1zWAQuk/FiBryrNG327MvzaMIDpJzZzfPBVkRGlnt9oyVwbtOIO
-	nnZPHGMWffgmh1tPmMhTPKB8lg4In8N339yacvLbiXGmIv6WZ5kSHLZBePOy9B9h74/NeV
-	HA6fDdfsBf9k3YSGKrPyMdc4pkaC5XE=
+	bh=ATK+YqeQgXY50uB6ssooNlAaHRhaH0LqEgi3TMhGkNQ=;
+	b=MpfyAsz2fWr84UvXpemBvDAiJkBwJHEc9ZEjOK4QVPB9ROzkZUl2WfYFMxokTNOiSSqPxN
+	mtRXBYs90YmC6Oi2X8SY7sEsZklxsIJGyjut4jPHkwmMNHlZ4FmWyRW0qIYPOjEhLQZmrU
+	kdb0lplI7J8Ma9kuBay17Krw2BcB1jQ=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1794322005;
+	s=susede2_ed25519; t=1794327954;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=3fpw5vkQV00MZzYQ5OK3lZxe4BbABKYr3Pz4v+FktUg=;
-	b=5vwS/Kh1ntJmKOvwdlC32GY7RBrN5Z8bSngFoKazMeGR1LlCBEKsxMH+AoxIbo2MjY+jrO
-	AdDZrTNYuBOqvtAg==
+	bh=ATK+YqeQgXY50uB6ssooNlAaHRhaH0LqEgi3TMhGkNQ=;
+	b=hRXH0l7PQ1ia9RofC4xrbyWiC116wTXqMd+xdjjGaL5ysK8oho1oZCDEFEVvnbZALiYbp4
+	dM711rXViNwzLeAQ==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EDA1A1339F;
-	Tue, 10 Nov 2026 14:46:44 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E34D413479;
+	Tue, 10 Nov 2026 16:25:53 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id HNSjMFQu82rQNwAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Tue, 10 Nov 2026 14:46:44 +0000
-Message-ID: <ad517faa-3c8d-43a5-a3d6-8cd6f046f757@suse.de>
-Date: Tue, 10 Nov 2026 15:46:44 +0100
+	id uM4yLZFF82o0HwAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Tue, 10 Nov 2026 16:25:53 +0000
+Message-ID: <31fdcc5a-c944-43cf-9390-60e8cdd964ed@suse.de>
+Date: Tue, 10 Nov 2026 17:25:53 +0100
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -109,8 +107,8 @@ List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/6] LoongArch/PCI: Refresh screen_info after resource
- assignment
+Subject: Re: [PATCH v3 1/6] LoongArch: efi: Provide sysfb_primary_display for
+ screen_info users
 To: wuqianhai@loongson.cn, chenhuacai@kernel.org, kernel@xen0n.name,
  deller@gmx.de, bhelgaas@google.com
 Cc: ardb@kernel.org, ilias.apalodimas@linaro.org, javierm@redhat.com,
@@ -119,7 +117,7 @@ Cc: ardb@kernel.org, ilias.apalodimas@linaro.org, javierm@redhat.com,
  linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20261029033440.973077-1-wuqianhai@loongson.cn>
  <20261110085617.2626835-1-wuqianhai@loongson.cn>
- <20261110085617.2626835-3-wuqianhai@loongson.cn>
+ <20261110085617.2626835-2-wuqianhai@loongson.cn>
 Content-Language: en-US
 From: Thomas Zimmermann <tzimmermann@suse.de>
 Autocrypt: addr=tzimmermann@suse.de; keydata=
@@ -146,94 +144,104 @@ Autocrypt: addr=tzimmermann@suse.de; keydata=
  SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
  Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
  4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <20261110085617.2626835-3-wuqianhai@loongson.cn>
+In-Reply-To: <20261110085617.2626835-2-wuqianhai@loongson.cn>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-13.50 / 50.00];
+X-Spamd-Result: default: False [-13.29 / 50.00];
 	SUSE_INTERNAL_BYPASS(-9.00)[];
 	BAYES_HAM(-3.00)[100.00%];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
 	XM_UA_NO_VERSION(0.01)[];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FREEMAIL_TO(0.00)[loongson.cn,kernel.org,xen0n.name,gmx.de,google.com];
 	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_TO(0.00)[loongson.cn,kernel.org,xen0n.name,gmx.de,google.com];
 	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
 	FREEMAIL_ENVRCPT(0.00)[gmx.de];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	RCVD_COUNT_TWO(0.00)[2];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	URIBL_BLOCKED(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:url,loongson.cn:email];
 	FROM_EQ_ENVFROM(0.00)[];
 	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
 	RCVD_TLS_ALL(0.00)[];
 	TO_DN_NONE(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:url,loongson.cn:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spam-Score: -13.50
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:url,loongson.cn:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -13.29
 X-Spam-Level: 
-X-Rspamd-Queue-Id: 74A6121F09
+X-Spam-Flag: NO
 
 Hi
 
 Am 10.11.26 um 09:56 schrieb wuqianhai@loongson.cn:
 > From: wuqianhai <wuqianhai@loongson.cn>
 >
-> PCI resource assignment runs from acpi_init() at subsys_initcall time.
-> The firmware framebuffer BAR can be relocated, leaving screen_info's
-> lfb_base stale.  vga_arb_device_init() runs later at subsys_initcall_sync
-> time and reads screen_info to identify the firmware default VGA device.
+> LoongArch defines and initializes sysfb_primary_display only when
+> CONFIG_SYSFB or CONFIG_EFI_EARLYCON is enabled.  The PCI VGA arbiter and
+> the framebuffer console need the firmware framebuffer information through
+> screen_info whenever CONFIG_SCREEN_INFO is enabled, even if neither of
+> those options is set.
 >
-> Update screen_info through the generic screen_info_apply_fixups() helper
-> right after the root bus resources have been assigned, so both the VGA
-> arbiter and sysfb_init() observe the final framebuffer address.
+> Drop the guards so sysfb_primary_display is always defined and
+> initialized, and its EFI stub alias is always provided, mirroring x86.
+> This avoids selecting SYSFB just to obtain the symbol.
 
-I don't know much about the internals of the PCI subsystem.  But I would 
-assume that there's a common function that sets up PCI resources on all 
-architectures. And this is the place where we'd want to call 
-screen_info_apply_fixups().
+The idea is that you select SYSFB is you're interested in that 
+information.  I guess we could make sysfb_primary_display available if 
+CONFIG_VGA_ARB=y.
 
 Best regards
 Thomas
 
-
 >
 > Signed-off-by: wuqianhai <wuqianhai@loongson.cn>
 > ---
->   arch/loongarch/pci/acpi.c | 4 ++++
->   1 file changed, 4 insertions(+)
+>   arch/loongarch/kernel/efi.c        | 5 +----
+>   arch/loongarch/kernel/image-vars.h | 2 --
+>   2 files changed, 1 insertion(+), 6 deletions(-)
 >
-> diff --git a/arch/loongarch/pci/acpi.c b/arch/loongarch/pci/acpi.c
-> index ccbcea61fcd9..cb313ff67f7e 100644
-> --- a/arch/loongarch/pci/acpi.c
-> +++ b/arch/loongarch/pci/acpi.c
-> @@ -9,6 +9,7 @@
->   #include <linux/slab.h>
->   #include <linux/pci-acpi.h>
->   #include <linux/pci-ecam.h>
-> +#include <linux/screen_info.h>
+> diff --git a/arch/loongarch/kernel/efi.c b/arch/loongarch/kernel/efi.c
+> index 69dd83f8082f..e491a82b2e0d 100644
+> --- a/arch/loongarch/kernel/efi.c
+> +++ b/arch/loongarch/kernel/efi.c
+> @@ -74,10 +74,8 @@ bool efi_poweroff_required(void)
 >   
->   #include <asm/pci.h>
->   #include <asm/numa.h>
-> @@ -256,6 +257,9 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
->   		 */
->   		pci_assign_unassigned_root_bus_resources(bus);
+>   unsigned long __initdata primary_display_table = EFI_INVALID_TABLE_ADDR;
 >   
-> +		if (IS_ENABLED(CONFIG_SCREEN_INFO))
-> +			screen_info_apply_fixups();
-> +
->   		list_for_each_entry(child, &bus->children, node)
->   			pcie_bus_configure_settings(child);
->   	}
+> -#if defined(CONFIG_SYSFB) || defined(CONFIG_EFI_EARLYCON)
+>   struct sysfb_display_info sysfb_primary_display __section(".data");
+>   EXPORT_SYMBOL_GPL(sysfb_primary_display);
+> -#endif
+>   
+>   static void __init init_primary_display(void)
+>   {
+> @@ -129,8 +127,7 @@ void __init efi_init(void)
+>   
+>   	set_bit(EFI_CONFIG_TABLES, &efi.flags);
+>   
+> -	if (IS_ENABLED(CONFIG_EFI_EARLYCON) || IS_ENABLED(CONFIG_SYSFB))
+> -		init_primary_display();
+> +	init_primary_display();
+>   
+>   	if (boot_memmap == EFI_INVALID_TABLE_ADDR)
+>   		return;
+> diff --git a/arch/loongarch/kernel/image-vars.h b/arch/loongarch/kernel/image-vars.h
+> index e557ebd46c2b..4d1d7978553a 100644
+> --- a/arch/loongarch/kernel/image-vars.h
+> +++ b/arch/loongarch/kernel/image-vars.h
+> @@ -11,9 +11,7 @@ __efistub_strcmp		= strcmp;
+>   __efistub_kernel_entry		= kernel_entry;
+>   __efistub_kernel_asize		= kernel_asize;
+>   __efistub_kernel_fsize		= kernel_fsize;
+> -#if defined(CONFIG_EFI_EARLYCON) || defined(CONFIG_SYSFB)
+>   __efistub_sysfb_primary_display	= sysfb_primary_display;
+> -#endif
+>   
+>   #endif
+>   
 
 -- 
 --
