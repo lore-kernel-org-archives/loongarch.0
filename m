@@ -1,39 +1,38 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794301172;
-	b=YaimlWtnBQji+mSFnyqb3kGabMfLAe4xjqlfAlUKXFmnZtSAoX107/rGrZjYMy7PiBB9
-	 ioMmZOC1qWufBKX74Rb9cOyL9YMawmuQ2+ljfBirgY/8KTNsIkktoDv2JUk4aIHqiFgqJ
-	 h0y4gzS9eGG4ZZR9xP44/tV29Mem1pELxm+ny7gxZyGzjpr65Wc0DF4PJUu9SsteJGw3u
-	 QKGOTOJtQfHkogK4Pd53KdFnpEKIr9+9vcKbNGzTz8b2cTRqlOQ61eBhqG6uy/WAGQFzp
-	 iZFSOV/pFCeNebFRIMLao/QnHBKn+qfw23ieJ4kxMGu9HGbeEGwfCEYIjPu2g2JzqCQ==
+	t=1794301174;
+	b=eTViQt/6Z7L3VGcNrvs0gZYJD98A89PSK3jfuI2Q5OY2hRKZXkz2Aa//ZyjDLkfA1Oob
+	 c+vAhT0fmc+xFNgdoewZonYBTXc4mnXcww3tJmmxfYsc/jvFr4IdaiXJR4TfX1A0f3asM
+	 QExMVaVjquYRGajm/teAg8+DfeXDW6q/oVzqhmr4Y+5cL4URW3kJB2sGAfi9mPuoewb/S
+	 ZOlo0a7Ypcsvh+B0//FN83NE4XKBHNxsAmBOZCw4GlwWD2PUWUEi2sx13Q1anjVC048hI
+	 aIn8vvsss8imYPn42XeEbLHzvLnEsDI7eRRkmCrBL5GwIdit8ZBSgoEsbV8iEbznipQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794301172;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794301174;
 	h=DMARC-Filter:Received:Received:From:To:Cc:Subject:Date:Message-Id:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-CM-TRANSID:X-CM-SenderInfo:
-	 X-Coremail-Antispam;
-	bh=UriPUrEKGMPcV1kTeVLDKkGMmTprVWESy8oG8aPSbZo=;
-	b=PS+Nnwcv8P73rEx8niALe/EFslw/Sju1tKVx1ACOGxj4J8d4Pfp2Xbq3mlxjHcJ6EvKw
-	 0bztGNTWmOM9VubI4YxrjfBIyMasLlQcu4OPRwar7e77+N0LchWDx4IHgxiJfpQ6Im9dj
-	 /mjXca2YY120lnZ8g25AYqFlycrOd8PE6ud1IvrIV7GC1+lX0RaRswGWtj5h1vyRSedWD
-	 DEO5Qm+fi1kKC15yBuyPE2P2ro7d9IDQvIijwv+YXtjsEq1E8Y/qQfMtcP2yEA5CVF3qx
-	 UXZD2zO/aP/gIzq2INrvBa3yLUSmB8tz3/KTe+pb7R1EZ7JddqGi/CgyU6L0zGusjQA==
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-CM-SenderInfo:X-Coremail-Antispam;
+	bh=bnII0DF8BaZXT0t528ffy71g+QEopq5IXdLrMPJAYhk=;
+	b=KqaqQGayL0XxV4S2m2cI/OLahVHpX486JbsKlc3Pl3n5QIXcjVF1UXxWFWRGVZ9hy/ge
+	 Uj/AZF23mMQu1YiwBLR5jQfZtBwAGo2vyfj91ByjpUkgSgY6dROgMbOZVKFEZebGY3X2o
+	 SfCUgWzM9ouD73OIniNOO5RAmz2XY2LJj2iVcoJHkiMepNAJdfA3Q9EGUojhEFXPfPmYt
+	 RpUj7vy8nVdLrBB/AUrE7/z98qvNCm0WTC6DXf7cJsER86d/Qi8sqhP2++T1GbQJyaZ6H
+	 geosZpB/tjAjpN14umatCOQL2xI/iSmPBklNcjLVJ4yT7/wcPo/NUuI3znyah1XFXLA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=loongson.cn;
 	spf=pass smtp.mailfrom=loongson.cn;
 	arc=none smtp.remote-ip=114.242.206.163
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E538606A325
-	for <loongarch@lists.linux.dev>; Tue, 10 Nov 2026 08:59:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0E538606A325
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A613606A339
+	for <loongarch@lists.linux.dev>; Tue, 10 Nov 2026 08:59:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2A613606A339
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.20.42.172])
-	by gateway (Coremail) with SMTP id _____8AxS_Dx3PJquCAeAA--.21460S3;
-	Tue, 10 Nov 2026 16:59:29 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxTtPz3PJqxSAeAA--.20624S3;
+	Tue, 10 Nov 2026 16:59:31 +0800 (CST)
 Received: from ubuntu.loongson.cn (unknown [127.0.0.1])
-	by front1 (Coremail) with SMTP id qMiowJBxa87t3PJqCXQzAA--.20943S3;
-	Tue, 10 Nov 2026 16:59:27 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJBxa87t3PJqCXQzAA--.20943S2;
+	Tue, 10 Nov 2026 16:59:25 +0800 (CST)
 From: wuqianhai@loongson.cn
 To: chenhuacai@kernel.org,
 	kernel@xen0n.name,
@@ -50,12 +49,10 @@ Cc: ardb@kernel.org,
 	linux-fbdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	wuqianhai <wuqianhai@loongson.cn>
-Subject: [PATCH v3 5/6] efi/libstub: Enable direct sysfb_primary_display access on LoongArch
-Date: Tue, 10 Nov 2026 16:57:28 +0800
-Message-Id: <20261110085729.2628009-2-wuqianhai@loongson.cn>
+Subject: [PATCH v3 4/6] LoongArch: video: Implement primary framebuffer device detection
+Date: Tue, 10 Nov 2026 16:57:27 +0800
+Message-Id: <20261110085729.2628009-1-wuqianhai@loongson.cn>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20261110085729.2628009-1-wuqianhai@loongson.cn>
-References: <20261110085729.2628009-1-wuqianhai@loongson.cn>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -66,52 +63,127 @@ List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxa87t3PJqCXQzAA--.20943S3
+X-CM-TRANSID:qMiowJBxa87t3PJqCXQzAA--.20943S2
 X-CM-SenderInfo: 5zxtxtpqkdxqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7GF1fCFW5GrWxCFykWFWxuFX_yoWkCFgEya
-	s8urZrWr4j9ryYgr4UKrWfuas0qay0qw1kZF92yrW3tw4jgwn5Ww4kXwn7CF13AryvkrZ8
-	A3WDCF9xAr48tosvyTuYvTs0mTUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbqAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jw0_Gr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr1j6F4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
-	xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
-	Wrv_ZF1lYx0Ex4A2jsIE14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2
-	Ij64vIr41lw4CEc2x0rVAKj4xxMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48J
-	MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI
-	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
-	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26F1j6w1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-	WxJVW8Jr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26F4j6r4U
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU7IzuDU
-	UUU
+X-Coremail-Antispam: 1Uk129KBj93XoWxXr4rCFy8Cw13uF43XrWUGFX_yoW5tFWDpF
+	1DAF95Jr4kWrn7G3sxJa43Zr15Jr1kGr1agFyI9Fy8CrnxXrn5Zr93tryDJa4UJ398JFWF
+	qF9xGw13WF45XabCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPqb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E
+	14v26r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6x
+	kI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
+	6Fy26r45twAv7VC2z280aVAFwI0_Cr0_Gr1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0x
+	vY0x0EwIxGrwAKzVCY07xG64k0F24lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
+	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Ar0_tr1lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26F4j6r4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_
+	Gr1UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jcdb
+	bUUUUU=
 
 From: wuqianhai <wuqianhai@loongson.cn>
 
-alloc_primary_display() returns NULL on LoongArch when neither
-CONFIG_EFI_EARLYCON nor CONFIG_SYSFB is enabled, so the EFI stub does not
-populate the core kernel's sysfb_primary_display.  Allow LoongArch to link
-directly to sysfb_primary_display, like x86, so the firmware framebuffer
-information is always available.
+The LoongArch port does not implement video_is_primary_device(), so it
+falls back to the generic stub that always returns false.  As a result,
+with CONFIG_FRAMEBUFFER_CONSOLE_DETECT_PRIMARY=y the framebuffer console
+cannot map itself to the primary display device and instead binds to the
+first registered framebuffer, which is not necessarily the one the
+firmware used for the boot console.
+
+Implement video_is_primary_device() by returning whether the device is
+the VGA default device.  This reuses the VGA arbiter's choice instead of
+matching the firmware framebuffer by address, so it is stable across BAR
+resizing: the default device is fixed before any driver runs.
 
 Signed-off-by: wuqianhai <wuqianhai@loongson.cn>
 ---
- drivers/firmware/efi/libstub/efi-stub-entry.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/loongarch/Makefile             |  3 +++
+ arch/loongarch/include/asm/video.h  |  7 +++++++
+ arch/loongarch/video/Makefile       |  3 +++
+ arch/loongarch/video/video-common.c | 29 +++++++++++++++++++++++++++++
+ 4 files changed, 42 insertions(+)
+ create mode 100644 arch/loongarch/video/Makefile
+ create mode 100644 arch/loongarch/video/video-common.c
 
-diff --git a/drivers/firmware/efi/libstub/efi-stub-entry.c b/drivers/firmware/efi/libstub/efi-stub-entry.c
-index efa3ab8ad1c6..2ac22720675c 100644
---- a/drivers/firmware/efi/libstub/efi-stub-entry.c
-+++ b/drivers/firmware/efi/libstub/efi-stub-entry.c
-@@ -20,6 +20,7 @@ struct sysfb_display_info *alloc_primary_display(void)
- 		return __alloc_primary_display();
+diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+index 4b22f95aaafb..7fca93298cef 100644
+--- a/arch/loongarch/Makefile
++++ b/arch/loongarch/Makefile
+@@ -166,6 +166,9 @@ bootvars-y	= VMLINUX_LOAD_ADDRESS=$(load-y)
  
- 	if (IS_ENABLED(CONFIG_X86) ||
-+	    IS_ENABLED(CONFIG_LOONGARCH) ||
- 	    IS_ENABLED(CONFIG_EFI_EARLYCON) ||
- 	    IS_ENABLED(CONFIG_SYSFB))
- 		return kernel_image_addr(&sysfb_primary_display);
+ drivers-$(CONFIG_PCI)		+= arch/loongarch/pci/
+ 
++# framebuffer console primary device detection
++drivers-$(CONFIG_VIDEO)		+= arch/loongarch/video/
++
+ KBUILD_AFLAGS	+= $(cflags-y)
+ KBUILD_CFLAGS	+= $(cflags-y)
+ KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y)
+diff --git a/arch/loongarch/include/asm/video.h b/arch/loongarch/include/asm/video.h
+index 9f76845f2d4f..7b38881ea1d6 100644
+--- a/arch/loongarch/include/asm/video.h
++++ b/arch/loongarch/include/asm/video.h
+@@ -8,6 +8,13 @@
+ #include <linux/compiler.h>
+ #include <linux/string.h>
+ 
++struct device;
++
++#ifdef CONFIG_VIDEO
++bool video_is_primary_device(struct device *dev);
++#define video_is_primary_device video_is_primary_device
++#endif
++
+ static inline void fb_memcpy_fromio(void *to, const volatile void __iomem *from, size_t n)
+ {
+ 	memcpy(to, (void __force *)from, n);
+diff --git a/arch/loongarch/video/Makefile b/arch/loongarch/video/Makefile
+new file mode 100644
+index 000000000000..f1b2a7e54033
+--- /dev/null
++++ b/arch/loongarch/video/Makefile
+@@ -0,0 +1,3 @@
++# SPDX-License-Identifier: GPL-2.0-only
++
++obj-$(CONFIG_VIDEO)		+= video-common.o
+diff --git a/arch/loongarch/video/video-common.c b/arch/loongarch/video/video-common.c
+new file mode 100644
+index 000000000000..6fea46661cb6
+--- /dev/null
++++ b/arch/loongarch/video/video-common.c
+@@ -0,0 +1,29 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2026 Loongson Technology Corporation Limited
++ */
++
++#include <linux/module.h>
++#include <linux/pci.h>
++#include <linux/vgaarb.h>
++
++#include <asm/video.h>
++
++bool video_is_primary_device(struct device *dev)
++{
++	struct pci_dev *pdev;
++
++	if (!dev_is_pci(dev))
++		return false;
++
++	pdev = to_pci_dev(dev);
++
++	if (!pci_is_display(pdev))
++		return false;
++
++	return pdev == vga_default_device();
++}
++EXPORT_SYMBOL(video_is_primary_device);
++
++MODULE_DESCRIPTION("LoongArch video helpers");
++MODULE_LICENSE("GPL");
 -- 
 2.34.1
 
