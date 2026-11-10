@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794274726;
-	b=zZE35qwso4r7vbBQ+z3j45vnGLFOmWTrUSICNebX9ZSlEUq6O23pHT5ajf5+MUeCwXRS
-	 DhmAKaMvdPFzeIbTRxUeASZ8NACKNWkPEv63enZAgsUBjH2icB5+OYm2uANdjBeoQSfAb
-	 c9jWh7RwfpNuS9e3VzGptBfC/ETCVLdfU3GQG9YcgYr0D3cSYtTx7fmlh9tYb6cOSJnuJ
-	 MURe2p2SWIaODWijSutw3BPIA+r1g6psrAY+9j5koX5oyj5GY1q03DTk4qgOUiWs4kRW+
-	 sm+Pf+nKFMIv6klapHmZgsJxV6i011iNYLBRpwFswc1iIju3iJYJJ4JQQitGO09ybzQ==
+	t=1794274728;
+	b=XXfderq2YEcfJljlfuEJZIiL3Z45qBNMeMiLLyUmBB70xd/a7Ilk8gC/b/kVqW47wfKo
+	 fKvgukD7C7FUcnlC91wc6kNfGwsJSVP8XFWOyDFbb0NJNKml/3fdKiFUBtC0eIyC6NiZA
+	 htRBdfHMR0X4Fr3ZZw2NpBnZjfN7NbZlgqsF7sxn0DrbCyUVjAfMf6AfDMuv2VFG4SZ9Z
+	 iKsMtvec+aLpHSCJ3MVSbj/rMQTBEqTdxJTYVWqQFM3p/0Ait5hlqXTBu7GLsEcPBu2Pf
+	 Bb/paAIq3T264e9j8ouoEI/H58WYvFygZEYXPhuhhE02/++LGYnx9bTjuJ60b4BKcOQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794274726;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794274728;
 	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
 	 In-Reply-To:References:X-sashiko-severity:Content-Type:
 	 Content-Transfer-Encoding:MIME-Version;
-	bh=2gT4xkmYTZQ1QAjCys64b42dgibXNxZEFuSdlN9sffs=;
-	b=bk9IfGCVcsICggyk5Y0kjGJ91eqKiJakOk9iv5RswfxT5iu1AQTpEgzXPMBUA0SmknGg
-	 TGanZE0+bV2FkOOupJEM7+rwCTwSKW+b8feunjg9kvV8i9lqd/Pyq/ZZ7MRKLfaqlRx/2
-	 3qJuLsBoYdKSzzXomBOULvuDgycpkiqneqjkCFmdxRi3s0RQo7tb0N7f0PdL+3XgpuSr0
-	 nqOzx9bye9H92pLn304RA10Z4077sb8OYAq19F/91LZLNAH+XE+T7KKF5KegZfrIaAVjS
-	 4vZ+l0EVVB3Qdv1YS/q/V/xwapHiT3soISbhtghRd4qaLfhY/b0gT2PBAtw6LYmZ3ZA==
+	bh=yHdaa5SHknrKYMQ9LgMfKhfAdpZAC1oCwJJhw6z/bsM=;
+	b=MTeSuXR9A5x83iUDmVxWuExCGhl/bKM1jHYUwqiW933A9QWh7rZfjLGWtvMHcqkIaSb+
+	 E9ysEpHO7kKPEK5tVAZRFPRLypKYfd+nKgsthuz8PsKgT5AoGy+MKasBvFF2PNH0kzUtk
+	 gZvxFi9J6aTO/PPdK1MoXsTSZMMKXwlpo2FYQnQR7LD0NKW3k6T6/UhG1YNbS5ql++MkK
+	 P4D6kjvWKw8icolvgxdXd6pgFZWCN7NhSZFbc9MN0UBvf3BEHVFbVzJarusSgoGG9IzSU
+	 4+X59UXlYZyVUZsNin/RZ6wTAeTPVPGG5w+ZE0BCSQOS0D+KBQ4KcC6o96gFZ1Ato1A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gLz4jP3i;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=V+jqwou0;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E34260A380C;
-	Tue, 10 Nov 2026 01:38:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A795E606B511;
+	Tue, 10 Nov 2026 01:38:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gLz4jP3i
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E39021F0089F;
-	Tue, 10 Nov 2026 01:38:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=V+jqwou0
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60BBB1F008A1;
+	Tue, 10 Nov 2026 01:38:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794274725;
-	bh=2gT4xkmYTZQ1QAjCys64b42dgibXNxZEFuSdlN9sffs=;
+	s=k20260515; t=1794274727;
+	bh=yHdaa5SHknrKYMQ9LgMfKhfAdpZAC1oCwJJhw6z/bsM=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=gLz4jP3iyleYaVGjPMkdPys2zSbH1I6rbzb22Rtr28kAVdZewFJVM1S5oqwkJJMLk
-	 39zhsSyX1ZuhQ2cUXtuZGb/LAqyYiLB4WF70ed0V23DxPvKr3UU9NxUJ1n9ZwxVz81
-	 SYlLZFRJiQAjhIXtRgS8wN3/vrw8x/gw/s6gXzF2jcy9db9NKY58rw8oNJnpBEnuP0
-	 zBtl7kbUkMuVSsP57MUVcyUApjOWxnChPIOACNM4nQyODbslVyKazSouIUpjGTauuC
-	 XkbBJweLnwTPb9+WaPmY+DjTQ459TFHKPPWnJkNkPEqMQhlUJtMH4zPA7qHcb/bBWP
-	 oGRExSre9AKOg==
-Subject: Re: [PATCH net-next v20 12/13] ax88179_178a: Add support for
- AX88179A/772D/279 EEPROM access
+	b=V+jqwou0lnEXxpN8Be9ZUm88IoXRkxRnb8OwjYp1kZzTLf5EmGphPXb/93efMuLLi
+	 7jter6X5rZz3RM6R6t5BakyDXDxRtUxkhZJ7BzZpfaQPXOHDTxJbQO+S3nk38nHuFb
+	 K3dhfaBARB7py3UOOJLuvpcTlm2TgyQU1jDg2YEerlq7nUm1vEgflKp4arDBQoMBu2
+	 fC8Sj7PDzP5R3/XSADmmzmF2YpErtjVk0mtJ9SBGGXOfvEhwMKxVMtXtXV14ilwbaT
+	 MnJKACiM+M1Yrm7NX5TBL7lkj5vwZ/SPdoBPgw6uQXgwyapMqu+nN+VR6qt4dcyDS+
+	 7JmtlCk/FE/Zw==
+Subject: Re: [PATCH net-next v20 13/13] ax88796b: Add support for AX88772D,
+ AX88179A and AX88279
 From: netdev-bot+sashiko@kernel.org
 To: mail@birger-koblitz.de
 Cc: andrew+netdev@lunn.ch, davem@davemloft.net, kuba@kernel.org,
@@ -50,10 +50,10 @@ Cc: andrew+netdev@lunn.ch, davem@davemloft.net, kuba@kernel.org,
  edumazet@kernel.org, linux-usb@vger.kernel.org, netdev@vger.kernel.org,
  linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
  neuromoments@gmail.com, beganovic.emir@gmail.com
-Date: Tue, 10 Nov 2026 01:38:44 +0000
-Message-ID: <179427472449.994134.11592093531851838540@kernel.org>
-In-Reply-To: <20261106-ax88179a-v20-12-37b5a1189983@birger-koblitz.de>
-References: <20261106-ax88179a-v20-12-37b5a1189983@birger-koblitz.de>
+Date: Tue, 10 Nov 2026 01:38:45 +0000
+Message-ID: <179427472591.994134.4882634953420736856@kernel.org>
+In-Reply-To: <20261106-ax88179a-v20-13-37b5a1189983@birger-koblitz.de>
+References: <20261106-ax88179a-v20-13-37b5a1189983@birger-koblitz.de>
 X-sashiko-severity: Medium
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -67,10 +67,10 @@ List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 2 potential
+Thank you for your contribution! Sashiko AI review found 7 potential
 issue(s) to consider.
 
-Critical: 0 · High: 0 · Medium: 1 · Low: 1
+Critical: 0 · High: 0 · Medium: 2 · Low: 5
 
 If you believe none of the issues are legitimate, please reply to each
 issue of Medium severity or higher and explain why the AI is wrong.
@@ -78,174 +78,275 @@ If any of them are legitimate and you plan to respin, please let patchwork
 know by including "pw-bot: cr" as a separate line at the end of your reply
 (one such reply per series is enough).
 
-- [Medium] The EEPROM request encoding is split across two independent
-  sources that can disagree.
-- [Low] struct ax88179_data has two fields, eeprom_write_cmd and
-  eeprom_wen, that both bind routines set and nothing ever reads.
+- [Medium] The new AX88772D/AX88179A/AX88279 PHY support is added only to
+  the C driver, ax88796b.c.
+- [Medium] asix_ax88279_read_status() returns early on `if
+  (!phydev->link) return 0;` before it reaches…
+- [Low] Series ordering breaks bisection.
+- [Low] The commit message only says the three PHYs exist.
+- [Low] asix_ax88772D_get_features() sets phydev->c45_ids.mmds_present |=
+  MDIO_DEVS_PMAPMD | MDIO_DEVS_AN with the comment "to allow reading…
+- [Low] The AX88796B_PHY Kconfig help still says it "Currently supports
+  the Asix Electronics PHY found in the X-Surf 100 AX88796B package."…
+- [Low] The three new PHY IDs are synthetic.
 
 --
 
-ax88179_178a: Add support for AX88179A/772D/279 EEPROM access
+ax88796b: Add support for AX88772D, AX88179A and AX88279
 
-This patch extends ax88179_get_eeprom() to read the efuses on the
-AX88179A/772D and the FLASH on the AX88279. The opcode and block size
-come from per-bind state, and a new helper computes wValue/wIndex.
-ax88179_set_eeprom() now returns -EOPNOTSUPP for AX88179A and later
-chips.
+This patch adds PHY driver entries for the AX88772D (100M), AX88179A (1G)
+and AX88279 (2.5G) PHYs found in ASIX USB-Ethernet controllers. The
+AX88279 gets its own get_features, config_aneg, read_status and
+config_init callbacks, and the AX88772D gets a get_features fixup.
 
-> diff --git a/drivers/net/usb/ax88179_lib.c b/drivers/net/usb/ax88179_lib.c
-> index b54e98e781f33..d5bbaa0c4e4c6 100644
-> --- a/drivers/net/usb/ax88179_lib.c
-> +++ b/drivers/net/usb/ax88179_lib.c
-> @@ -210,36 +210,61 @@ int ax88179_set_wol(struct net_device *net, struct ethtool_wolinfo *wolinfo)
->  	return 0;
->  }
+> ax88796b: Add support for AX88772D, AX88179A and AX88279
 >
-> +static void
-> +ax88179_eeprom_access_params(struct ax88179_data *ax179_data, int i, u16 *value, u16 *idx)
-> +{
-> +	/* AX88179 has a word-addressable EEPROM
-> +	 * AX88179A uses EFUSES with 20 bytes length
-> +	 * AX88279 has an EEPROM addressable in 256 byte blocks
-> +	 */
-> +	if (ax179_data->chip_version < AX_VERSION_AX88179A) {
-> +		*value = i;
-> +		*idx = 1;
-> +	} else if (ax179_data->chip_version == AX_VERSION_AX88279) {
-> +		*value = (i * ax179_data->eeprom_block) >> 16;
-> +		*idx = (i * ax179_data->eeprom_block) & 0xffff;
-> +	} else {
-> +		*value = i << 4;
-> +		*idx = 0;
-> +	}
-> +}
-
-[ ... ]
-
-> +	for (i = first; i <= last; i++) {
-> +		u16 value, idx;
-> +
-> +		ax88179_eeprom_access_params(ax179_data, i, &value, &idx);
-> +		ret = __ax88179_read_cmd(dev, ax179_data->eeprom_read_cmd,
-> +					 value, idx, ax179_data->eeprom_block,
-> +					 eeprom_buff + (i - first) * ax179_data->eeprom_block);
-
-[Severity: Medium]
-
-Can the addressing mode and the rest of this request disagree?
-
-ax88179_eeprom_access_params() picks value/idx from chip_version alone.
-The opcode and transfer length passed to __ax88179_read_cmd() come from
-eeprom_read_cmd and eeprom_block, which are set at bind time. chip_version
-is the raw upper nibble of AX_CHIP_STATUS, and neither bind routine
-validates it.
-
-In ax88179_bind() in ax88179_178a.c:
-
-	ax179_data->chip_version = (ax179_data->chip_version & 0xf0) >> 4;
-	...
-	ax179_data->eeprom_read_cmd = AX_ACCESS_EEPROM;
-	ax179_data->eeprom_write_cmd = AX_ACCESS_EEPROM;
-	ax179_data->eeprom_block = 2;
-
-Suppose a device bound by ax88179_bind() (generic 0b95:1790, AX88178A,
-Cypress GX3, or one of the OEM IDs) reports a nibble >= 6. Would it then
-get AX_ACCESS_EEPROM requests with efuse or FLASH style value/idx? Before
-this patch the value=i, idx=1 encoding was always used.
-
-The loop only checks ret == eeprom_block, so that data would go back to
-userspace as EEPROM contents. ax88179_set_eeprom() would also start
-returning -EOPNOTSUPP for a device that bind set up for word EEPROM
-writes.
-
-In ax88179a_bind() in ax88179a_devices.c, the geometry is chosen by
-== AX_VERSION_AX88279 versus everything else:
-
-	if (ax179_data->chip_version == AX_VERSION_AX88279) {
-		...
-		ax179_data->eeprom_read_cmd = AX88179A_FLASH_READ;
-		...
-		ax179_data->eeprom_block = 256;
-	} else {
-		...
-		ax179_data->eeprom_read_cmd = AX_ACCESS_EFUS;
-		...
-		ax179_data->eeprom_block = 20;
-
-ax88179a_get_eeprom_len() uses >= instead:
-
-	if (ax179_data->chip_version >= AX_VERSION_AX88279)
-		return AX88279_EEPROM_LEN;
-
-With chip_version > 7, ethtool would see 16 KiB while the reads use the
-20-byte efuse geometry. Couldn't that request efuse indices up to 819
-when only 32 efuses exist?
-
-ax88179a_get_drvinfo() and ax88179a_reset() both check for
-chip_version < AX_VERSION_AX88179A. If that case happens under
-ax88179a_bind(), this helper would send AX_ACCESS_EFUS with word EEPROM
-value/idx and a 20-byte length.
-
-ax88179_set_eeprom() doesn't block that case either. The legacy
-AX_ACCESS_EEPROM word write loop and AX_RELOAD_EEPROM_EFUSE would then run
-against the advertised 640-byte length.
-
-Would it be more robust to store an explicit addressing mode in
-ax88179_data at bind time, next to eeprom_read_cmd and eeprom_block?
-ax88179_eeprom_access_params(), ax88179_set_eeprom() and the
-get_eeprom_len callbacks could all use it. ax88179a_bind() could also
-reject unknown chip versions, or default them consistently.
-
-> +
-> +		if (ret != ax179_data->eeprom_block) {
->  			kfree(eeprom_buff);
->  			return -EIO;
->  		}
->  	}
-
-[ ... ]
-
-> @@ -247,12 +272,17 @@ int ax88179_get_eeprom(struct net_device *net, struct ethtool_eeprom *eeprom, u8
->  int ax88179_set_eeprom(struct net_device *net, struct ethtool_eeprom *eeprom, u8 *data)
->  {
->  	struct usbnet *dev = netdev_priv(net);
-> +	struct ax88179_data *ax179_data;
->  	u16 *eeprom_buff;
->  	int first_word;
->  	int last_word;
->  	int ret;
->  	int i;
->
-> +	ax179_data = dev->driver_priv;
-> +	if (ax179_data->chip_version >= AX_VERSION_AX88179A)
-> +		return -EOPNOTSUPP;
-> +
+> The AX88772D, AX88179A and AX88279 are 100MBit, 1GBit and respectively
+> 2.5 GBit PHYs that are found in ASIX USB-Ethernet controllers of the
+> same name.
 
 [Severity: Low]
+Could the commit message describe the restrictions and quirks this patch
+adds? It only says the three PHYs exist, but the patch also:
 
-This isn't a bug, but with writes disabled here for AX88179A/AX88279, are
-the eeprom_write_cmd and eeprom_wen fields in struct ax88179_data used
-anywhere?
+  - refuses AUTONEG_DISABLE with -EOPNOTSUPP in asix_ax88279_config_aneg()
+    and sets PHY_BROKEN_FORCED, so "ethtool -s <if> autoneg off" fails
+  - advertises 2.5G through vendor bit 0x1000 in MII_ADVERTISE
+  - infers the link partner's 2.5G ability in asix_ax88279_read_status()
+    because MDIO_AN_10GBT_STAT_LP2_5G is broken
+  - always reports DUPLEX_FULL and switches phydev->interface between
+    SGMII and 2500BASE-X
+  - removes 100baseT-Half from the AX88279 and 1000baseT/X from the
+    AX88772D
 
-Both bind routines set them. For example, ax88179a_bind() does this for
-the AX88279:
+This isn't a bug, but the subject is missing the usual "net: phy:"
+prefix.
 
-	ax179_data->eeprom_write_cmd = AX88179A_FLASH_WRITE;
-	ax179_data->eeprom_block = 256;
-	ax179_data->eeprom_wen = 1;
+> diff --git a/drivers/net/phy/ax88796b.c b/drivers/net/phy/ax88796b.c
+> index f20ddf6491499..0df44e0e236ab 100644
+> --- a/drivers/net/phy/ax88796b.c
+> +++ b/drivers/net/phy/ax88796b.c
+> @@ -13,6 +13,19 @@
+>  #define PHY_ID_ASIX_AX88772A		0x003b1861
+>  #define PHY_ID_ASIX_AX88772C		0x003b1881
+>  #define PHY_ID_ASIX_AX88796B		0x003b1841
+> +#define PHY_ID_ASIX_AX88772D		0x003b772d
+> +#define PHY_ID_ASIX_AX88179A		0x003b179a
+> +#define PHY_ID_ASIX_AX88279		0x003b2790
 
-There don't seem to be any readers, though. The only write path,
-ax88179_set_eeprom(), still hard-codes AX_ACCESS_EEPROM:
+[Severity: Low]
+Are these IDs actually inside the ASIX identifier block? The MAC side
+fakes them in ax88179_mdiobus_read() in drivers/net/usb/ax88179a_devices.c
+(added earlier in the series), with this comment:
 
-	ret = ax88179_write_cmd(dev, AX_ACCESS_EEPROM, i, 1, 2,
-				&eeprom_buff[i - first_word]);
+	/* When reading PHYSID, return unused PHY-IDs from the ASIX vendor range */
 
-The commit message says "no write access is provided". Should these
-fields be dropped until a write implementation actually uses them?
+In the C22 identifier layout, bits [31:10] carry the OUI. The existing
+ASIX IDs 0x003b1861, 0x003b1881 and 0x003b1841 all give phy_id >> 10 ==
+0xec6, which means PHYSID2 values in the 0x1800-0x1bff range.
 
->  	netdev_dbg(net, "write EEPROM len %d, offset %d, magic 0x%x\n",
->  		   eeprom->len, eeprom->offset, eeprom->magic);
->
+The new IDs give:
+
+  0x003b772d >> 10 == 0xedd
+  0x003b179a >> 10 == 0xec5
+  0x003b2790 >> 10 == 0xec9
+
+so all three fall outside that block.
+
+asix_tbl is a MODULE_DEVICE_TABLE. A PHY from another vendor that reports
+one of these exact IDs would autoload this module and bind to callbacks
+that assume MII_ADVERTISE bit 12, vendor register 0x1d and full duplex
+only.
+
+Would model values inside 0x18xx-0x1bxx be a better choice?
+
+[ ... ]
+
+> @@ -83,6 +96,107 @@ static int asix_ax88772a_read_status(struct phy_device *phydev)
+>  	return 0;
+>  }
+>  
+> +static int asix_ax88279_read_status(struct phy_device *phydev)
+> +{
+> +	int ret, val;
+> +
+> +	ret = genphy_read_status(phydev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!phydev->link)
+> +		return 0;
+
+[Severity: Medium]
+Does this early return leave a stale 2500baseT_Full bit in
+phydev->lp_advertising after a 2.5G link goes down?
+
+The bit is only cleared further down in this function:
+
+	linkmode_clear_bit(ETHTOOL_LINK_MODE_2500baseT_Full_BIT, phydev->lp_advertising);
+
+On link down with autoneg enabled, genphy_read_status()->genphy_read_lpa()
+only clears the C22 derived bits:
+
+	if (!phydev->autoneg_complete) {
+		mii_stat1000_mod_linkmode_lpa_t(phydev->lp_advertising,
+						0);
+		mii_lpa_mod_linkmode_lpa_t(phydev->lp_advertising, 0);
+		return 0;
+	}
+
+Neither phy_check_link_status() nor phy_link_down() clears lp_advertising.
+
+phy_ethtool_ksettings_get() then copies the stale bit to userspace, so
+ethtool would show the partner advertising 2500baseT/Full while the link
+is down.
+
+On the next link-up, phy_resolve_aneg_linkmode() also runs with the stale
+bit set, before the AX_CTRL_STATUS read overwrites phydev->speed.
+
+Would clearing the bit before the !phydev->link return fix this?
+
+[ ... ]
+
+> @@ -94,6 +208,25 @@ static void asix_ax88772a_link_change_notify(struct phy_device *phydev)
+>  	}
+>  }
+>  
+> +static int asix_ax88772D_get_features(struct phy_device *phydev)
+> +{
+> +	int ret;
+> +
+> +	/* MDIO_DEVS1/2 empty, so set mmds_present bits to allow reading abilities */
+> +	phydev->c45_ids.mmds_present |= MDIO_DEVS_PMAPMD | MDIO_DEVS_AN;
+> +
+> +	ret = genphy_read_abilities(phydev);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* AX88772D does not support (possibly) reported 1000baseT modes */
+> +	linkmode_clear_bit(ETHTOOL_LINK_MODE_1000baseT_Full_BIT, phydev->supported);
+> +	linkmode_clear_bit(ETHTOOL_LINK_MODE_1000baseT_Half_BIT, phydev->supported);
+> +	linkmode_clear_bit(ETHTOOL_LINK_MODE_1000baseX_Full_BIT, phydev->supported);
+
+[Severity: Low]
+Does the mmds_present assignment do anything here? genphy_read_abilities()
+only reads MII_BMSR and MII_ESTATUS and never looks at
+c45_ids.mmds_present.
+
+In drivers/net/phy, only genphy_c45_read_link(),
+genphy_c45_pma_read_abilities() and the phylink C45 MII emulation check
+mmds_present, and none of them run for this C22 PHY. The line and its
+comment look like they were copied from asix_ax88279_get_features().
+
+There is also an ordering question for EEE. genphy_read_abilities() ends
+with genphy_c45_read_eee_abilities()->genphy_c45_read_eee_cap1(), which
+masks supported_eee against supported:
+
+	linkmode_and(phydev->supported_eee, phydev->supported_eee,
+		     phydev->supported);
+
+At that point 1000baseT_Full can still be set in supported, and it is
+only cleared here afterwards.
+
+If ESTATUS reports 1000T and MDIO_PCS_EEE_ABLE reports 1000T EEE, can
+supported_eee keep 1000baseT_Full after it has been removed from
+supported?
+
+With the in-tree MAC, lpi_capabilities is 0 for the AX88772D, so phylink
+disables EEE and users don't see this today.
+
+[ ... ]
+
+> @@ -111,6 +244,35 @@ static struct phy_driver asix_driver[] = {
+>  	.suspend	= genphy_suspend,
+>  	.resume		= genphy_resume,
+>  	.soft_reset	= asix_soft_reset,
+
+[ ... ]
+
+> +}, {
+> +	PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88279),
+> +	.name		= "Asix Electronics AX88279",
+> +	.flags		= PHY_IS_INTERNAL | PHY_BROKEN_FORCED,
+> +	.get_features	= asix_ax88279_get_features,
+> +	.read_status	= asix_ax88279_read_status,
+> +	.config_aneg	= asix_ax88279_config_aneg,
+> +	.config_init	= asix_ax88279_config_init,
+
+[Severity: Low]
+Can a bisect stop on a commit where the AX88279 doesn't work? This patch
+is the last one in the series. The earlier patch "ax88179_178a: Add HW
+support for AX179A-based chips" already returns PHYSID1/2 of
+0x003b/0x2790 (and 0x179a/0x772d) from ax88179_mdiobus_read().
+
+That patch also sets up phylink for the AX88279 in
+ax88179a_phylink_setup() with only 2500BASEX and SGMII in
+supported_interfaces, and an initial interface of 2500BASEX.
+
+Between that patch and this one, nothing matches these IDs, so genphy
+binds. It fills supported with C22 10/100/1000 modes only and leaves
+possible_interfaces empty.
+
+phylink_validate_phy() then validates against 2500BASEX, because is_c45
+is false and it does not fall back to PHY_INTERFACE_MODE_NA. The only
+capability for 2500BASEX is 2500 full duplex, so no mode is left and the
+PHY fails to attach once ax88179 binds instead of cdc_ncm.
+
+The AX88179A and AX88772D also run on genphy without the quirks added
+here.
+
+Could this patch be moved ahead of the MAC patch that depends on it?
+
+[ ... ]
+
+> @@ -124,6 +286,9 @@ static const struct mdio_device_id __maybe_unused asix_tbl[] = {
+>  	{ PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88772A) },
+>  	{ PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88772C) },
+>  	{ PHY_ID_MATCH_MODEL(PHY_ID_ASIX_AX88796B) },
+> +	{ PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88772D) },
+> +	{ PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88179A) },
+> +	{ PHY_ID_MATCH_EXACT(PHY_ID_ASIX_AX88279) },
+>  	{ }
+>  };
+
+[Severity: Medium]
+What happens to these PHYs when CONFIG_AX88796B_RUST_PHY=y?
+drivers/net/phy/Makefile builds only one of the two drivers:
+
+ifdef CONFIG_AX88796B_RUST_PHY
+  obj-$(CONFIG_AX88796B_PHY)	+= ax88796b_rust.o
+else
+  obj-$(CONFIG_AX88796B_PHY)	+= ax88796b.o
+endif
+
+drivers/net/phy/ax88796b_rust.rs still registers only the old three:
+
+    drivers: [PhyAX88772A, PhyAX88772C, PhyAX88796B],
+
+USB_NET_AX88179 selects AX88796B_PHY so that this module provides the
+PHY driver for the new chips. With the Rust variant, genphy binds to
+0x003b2790, and the AX88279 fails phylink_validate_phy() against
+2500BASEX as described above.
+
+The AX88179A and AX88772D also lose the read_mmd/write_mmd hooks, and the
+AX88772D loses its feature fixup.
+
+The AX88796B_RUST_PHY help text also still says "The features are
+equivalent", which is no longer the case.
+
+Does the Rust driver need the same entries? Alternatively, could the
+Kconfig dependencies reflect that it doesn't cover these PHYs?
+
+[Severity: Low]
+This isn't a bug, but the AX88796B_PHY help text in
+drivers/net/phy/Kconfig still says:
+
+	  Currently supports the Asix Electronics PHY found in the X-Surf 100
+	  AX88796B package.
+
+It already left out the AX88772A/C. Now it also leaves out the AX88772D,
+AX88179A and AX88279 used by USB adapters, and USB_NET_AX88179 selects
+this symbol. Could the help text be updated?
 
 -- 
 Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261106-ax88179a-v20-0-37b5a1189983%40birger-koblitz.de
