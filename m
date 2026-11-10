@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.70
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.71
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794313063;
-	b=or0lMOebOws/uq9SXlcOOmqXucwmFEkPPoSlV3Eo8uX1OX0MhUv8pVnkkvvPiDvS7JuF
-	 mYbvQ6qaevVNMK/h7iohqqv/+TbMZxBVAZeE5xYuIBOOXtgVv+hKNglJaiZZ3IodZ/YTK
-	 ndFWT5dYXeZor7yTbGzIbL1YDqBqEfufUGor+uEsTc3kingZ3V8vfJ86BevbcF/buWJ70
-	 25Cfh2dszmaZdIH3E5LSXd/F03c4oQ5Qy5gsAtSmRJvc34IA9wwEFky6lYWYyTlrRRkeJ
-	 20d7KyddHhqGAYpiQVzxU4QVGURmlaJkdPdL4QpVCJ47InnrpMlEFq7vFHm7R7x/HSw==
+	t=1794313064;
+	b=WuIBkS0ZOPHm5ZAHGC64X1+fWLDhFV4hqLZfbHDJ8mVlWRkZKeiZCD33fX7ibijXsEyD
+	 zpIUpSf3nvlMJ6YKhPDf8LOFAWBikB4WDdMIgPlX8tCtL7sTC1axT96UELi12W1glWuUz
+	 vvB8xOJ0L0aOiBiZWMiOnEUYhXxRKlakXqB/V5XqAzIMEzpndMib5MYUFyOENYVXWymys
+	 LgyuU3RMsmJ1ny7HI860kCLfxTISPOk2LHhXVVn2pdmupkjidYgxAjQQuJby8Oji/MP3N
+	 mgjDLxniBIHTItjvV+WyO98gQeOcxwHdYmtH5ZsPC8ljAzqPgx9b0FChD4ei0q8qfiw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794313063;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794313064;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=FKyHqeXkJfnFo2/e42CmLuZIRnayYURfHn0ko47n0QU=;
-	b=sJ+5kisuH5SM9ppCoQaVxIy+WiAtr480kVzsHZfgkxAEwxywqlprrVqBoluxvmuTHWNC
-	 7jF3UnxmNs40aGaEgjZpod8tkEF7P7EJX18aDa5hLw4r67kpeGX3vJ08CVlDS1z+7I9fF
-	 o7CEN/sL570h0kJRzaEpGn7yOeZEpp2cZOpU22FCRirLLiIVVwhGOYUitsxqj8YcvIw6e
-	 wKQNvqwRO6jYjHa1UgVTxm4AYZBJ2DgdFD41iOA8lHIWSoWstfYGwJ/o0O4mZjZUKamqA
-	 YbM2/w4ZeIXlSOdKrjV0tGqmNruE8A1RsltuS5Ly7pn9fbVi3Q0sbs7GwH7SC8CQyTg==
+	bh=Gy+owdWhI9aq49SvOXumwy6C5wawdvH/TU7Zgbh6cFQ=;
+	b=mmMBLGcm7b/SBuLe4/9tLKZGde8ukDD+eN/nPIz/CtpO0bMngsQOAKSmTuH9zwcGjUb6
+	 O7X2klmv0z2zk2yl/rb6tYXA16tQlyIKYkOEiKlNEWblkFZ3tAVqBO0FSm7tJx7uYtr/Q
+	 dw+c0fwBUSO39aNxWWb2ie1KFpEVKbx4vlTQKNju6Yv53bOLtaWtUk8QS/qzXduYlO6E1
+	 1U4Aa4dAGvVN2KvAQ+2bBzkzkhk4FNlBb/ela4yOGx0qDvMcm9REPWCL9uIQWvU1wS8Rt
+	 TLuI/t36TXzQDssuL+7qyy+irR/wDPNjJAPsq8TyFME7abDwVmQkbcJyhb+bABLnAGA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--ardb.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=TIFjpn4B;
-	arc=none smtp.remote-ip=209.85.128.70
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=gqORsJ04;
+	arc=none smtp.remote-ip=209.85.221.71
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72062606A338
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0561606A33A
 	for <loongarch@lists.linux.dev>; Tue, 10 Nov 2026 12:17:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 72062606A338
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F0561606A33A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=TIFjpn4B
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4a0284121c6so14461845e9.3
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=gqORsJ04
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-48e011829easo1297883f8f.3
         for <loongarch@lists.linux.dev>; Tue, 10 Nov 2026 04:17:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20260707; t=1794313062; x=1794917862; darn=lists.linux.dev;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=FKyHqeXkJfnFo2/e42CmLuZIRnayYURfHn0ko47n0QU=;
-        b=TIFjpn4BQ6sB3bwQsf0BUnbpYG+dLbnsP4mHvqEw6eu9vsnda09ZxBpiQHHJlUKcNX
-         6I3bIhcOiAIWtlcYGaMyTDnSLzjOhWufTgAYgcYzxakIh247wQT5Akxeq1DWs+qQ/Q02
-         f3HBerF/5zJ6+UOA7/VHTs1EvHEOI46FkHfvEM6Iza/VYqcDcd1hvWK5M5vyI2idprkp
-         ao13x6OKe4mSTTxrcwAIjmk5xh4MJ31Ri9isLyM7MtNm2UvvRfkbTOogvsCInN0qED9M
-         vbDFuFYdHrcHCPmNesPtBXeOhxYPmSEXuaxXJR8vGv39t9eiSuRHDxRsPdYBUeR9Eg2X
-         F6ig==
+        bh=Gy+owdWhI9aq49SvOXumwy6C5wawdvH/TU7Zgbh6cFQ=;
+        b=gqORsJ044yc6RuNHtpEJdAmQobaSjkkO23vQoSVrTmClhbNKrv3DqHxDsnjEw3KbqL
+         gDApINUvrdE/bSA809JnvONK8JaOaBUDBxKnAyN2kKf1IvFqCJRo8MVCCBJIrE2BYYJm
+         iekZzrpM77X8qVGNQmlvG1xddtK6LioRazYpwDH5m6HqnNtL7GDoSOfy7ZwWjmAq90NK
+         0JSfeVtaEln32H5/dIpcTWhd8uYaSCtg73MiLMIsQYfe1BMUGjJetd8ZBZ89FdmZSe+h
+         EY5ztC13qWgVJspFmHP/5NBl5glEdRBmDmMuT6vr0hpHtzTRAk6Cmod6cWL7xWsPQLdQ
+         S4FQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20260707; t=1794313062; x=1794917862;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=FKyHqeXkJfnFo2/e42CmLuZIRnayYURfHn0ko47n0QU=;
-        b=EML6SJMm5+DovjIimgen5XfF8p8+UGToOfBgwB1YhWY0kVaPAOV4bcMEB9M7jt41Zi
-         XKpkZogA29JTGln0L/CJKv3sDOtf8KTMey/kj+RPOBIUZxc5elDoqxz2Xlqyl6jeo8dN
-         tq04Sw19RYbaeSttHi8akVJ6MvQzsybvGsuOiV3g2fr90cq4KuwylgoJG3mfazCuMG1G
-         mlVzAXP7ShzuOhVbLVqQiOa3A6iysVYLEa0LsCn+lFLs2JBuyzo5/KessLB1E7vHTcMO
-         tCrozAm983zQ+w35MAqT7ZTvY2Ei/FWS+8KRKK1K7kmJ37c+VIpq0DQDl0+O6+BreZX0
-         knww==
-X-Forwarded-Encrypted: i=1; AL+hErHqQiE8W4YxOxdmVUcxIUrvUFxOfI1LykjGok/mbu6i7OQFR5o+Ys0RwWudnoddgSrl0ULKtr8Lh/M=@lists.linux.dev
-X-Gm-Message-State: APuU4Z9ZSsS1IJ2lHV+iFHgDklkSSmVsKRlQkmA4HEn5aNvilOy2YZBb
-	ExzJwdz+7EawH7NZUQIocoZzZ7g15vCQ6PDLMHsONFzBg7SvHk9G9QyczM8Bzd5MX/QvckfkrQ=
+        bh=Gy+owdWhI9aq49SvOXumwy6C5wawdvH/TU7Zgbh6cFQ=;
+        b=IC+12j8NpJ7gKKDWhzEMc9d5RMfIs+H6gw0b1kwMXPfh31ZGvQcyr5s1kFQG6BXFsq
+         SB8gt7D/ywfsrJ5eVg+f/EPae4XLCQgjdrd4yGuQw6DwqjGW7e8Po0zitI8TcLIhgK7U
+         KB49n8zhJk5PWw+stRGX3ziylKu29zTJ2ZgZZKEzaz6Yfk0A3lV9GKdcyeWN31Yn52eO
+         +HIuyVn67WOOKwfTLxQhy5758ih3wVwqYEG7qE03DgrpqHCf9JhZcFTwcBIOMQ6lihGy
+         HHhhfayuKim4uCiOjUwNtcyql5rT8+SwPwuvJVUZ25YRJvTf6+fIqUAbcT+X55lQ8Azz
+         7u5w==
+X-Forwarded-Encrypted: i=1; AL+hErGWujwsySPPf95ajtKjRBPlXmoS+rW8w7+ql8xHOmD7I2NibZIr+5ppzgn0/ZGLcnXJjU31xX6jHvQ=@lists.linux.dev
+X-Gm-Message-State: APuU4Z+xgMel3cLQvJXn1z5PufdNyhAHA5LPAt+dOMkC38vdzt6hHHNh
+	MJVmLREnkE3G7Oe+Pn3oMJ4D/ctCPQ2vnTMhSPbSyi4UqSp22LdVWhbf8W8DJwspeUUXvUwpYg=
 	=
-X-Received: from wrul8.prod.google.com ([2002:a5d:6688:0:b0:48d:edc0:5a37])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:198f:b0:4b4:49d7:bc25
- with SMTP id 5b1f17b1804b1-4ba0234a940mr39574545e9.21.1794313061406; Tue, 10
- Nov 2026 04:17:41 -0800 (PST)
-Date: Tue, 10 Nov 2026 13:17:34 +0100
+X-Received: from wrxp4.prod.google.com ([2002:a05:6000:184:b0:495:feb9:bf43])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:298d:20b0:48e:202:6718
+ with SMTP id ffacd0b85a97d-4982ecf6701mr3321662f8f.25.1794313062387; Tue, 10
+ Nov 2026 04:17:42 -0800 (PST)
+Date: Tue, 10 Nov 2026 13:17:35 +0100
 In-Reply-To: <20261110121731.2728824-12-ardb+git@google.com>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -81,9 +81,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261110121731.2728824-12-ardb+git@google.com>
 X-Mailer: git-send-email 2.56.0.542.g3ef89b7020-goog
-Message-ID: <20261110121731.2728824-14-ardb+git@google.com>
-Subject: [PATCH v2 02/10] efi/riscv: Rename __init_text_end to __inittext_end
- like other archs
+Message-ID: <20261110121731.2728824-15-ardb+git@google.com>
+Subject: [PATCH v2 03/10] efi/libstub: Avoid _end section marker in library code
 From: Ard Biesheuvel <ardb+git@google.com>
 To: linux-efi@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org, Ard Biesheuvel <ardb@kernel.org>, 
@@ -94,80 +93,31 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-Align RISC-V with arm64, LoongArch and x86, and drop the underscore
-between 'init' and 'text' in the section markers. This allows the value
-to be captured by generic EFI stub code that can be shared between all
-those architectures.
+The _end marker could point to the end of the kernel image being loaded,
+or to the _end of the zboot decompressor image, and so it should only be
+used in code that is obviously only intended for the former case.
+
+So instead, use kernel_memsize and the image address to obtain the same
+quantity.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/riscv/include/asm/sections.h         | 2 +-
- arch/riscv/kernel/image-vars.h            | 2 +-
- arch/riscv/kernel/vmlinux.lds.S           | 4 ++--
- drivers/firmware/efi/libstub/riscv-stub.c | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/firmware/efi/libstub/kaslr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/riscv/include/asm/sections.h b/arch/riscv/include/asm/sections.h
-index a393d5035c54..4a882a28f414 100644
---- a/arch/riscv/include/asm/sections.h
-+++ b/arch/riscv/include/asm/sections.h
-@@ -11,7 +11,7 @@
- extern char _start[];
- extern char _start_kernel[];
- extern char __init_data_begin[], __init_data_end[];
--extern char __init_text_begin[], __init_text_end[];
-+extern char __inittext_begin[], __inittext_end[];
- extern char __alt_start[], __alt_end[];
- extern char __exittext_begin[], __exittext_end[];
- 
-diff --git a/arch/riscv/kernel/image-vars.h b/arch/riscv/kernel/image-vars.h
-index 7b44b94f1283..bf703eba3fa5 100644
---- a/arch/riscv/kernel/image-vars.h
-+++ b/arch/riscv/kernel/image-vars.h
-@@ -27,7 +27,7 @@ __efistub__start		= _start;
- __efistub__start_kernel		= _start_kernel;
- __efistub__end			= _end;
- __efistub__edata		= _edata;
--__efistub___init_text_end	= __init_text_end;
-+__efistub___inittext_end	= __inittext_end;
- #if defined(CONFIG_EFI_EARLYCON) || defined(CONFIG_SYSFB)
- __efistub_sysfb_primary_display	= sysfb_primary_display;
- #endif
-diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
-index 1f4f8496941a..08ada0591f3a 100644
---- a/arch/riscv/kernel/vmlinux.lds.S
-+++ b/arch/riscv/kernel/vmlinux.lds.S
-@@ -46,7 +46,7 @@ SECTIONS
- 
- 	. = ALIGN(SECTION_ALIGN);
- 	__init_begin = .;
--	__init_text_begin = .;
-+	__inittext_begin = .;
- 	.init.text : AT(ADDR(.init.text) - LOAD_OFFSET) ALIGN(SECTION_ALIGN) { \
- 		_sinittext = .;						\
- 		INIT_TEXT						\
-@@ -72,7 +72,7 @@ SECTIONS
- 	}
- 	__exittext_end = .;
- 
--	__init_text_end = .;
-+	__inittext_end = .;
- 	. = ALIGN(SECTION_ALIGN);
- #ifdef CONFIG_EFI
- 	. = ALIGN(PECOFF_SECTION_ALIGNMENT);
-diff --git a/drivers/firmware/efi/libstub/riscv-stub.c b/drivers/firmware/efi/libstub/riscv-stub.c
-index 725b634c5179..5cbc50a814e1 100644
---- a/drivers/firmware/efi/libstub/riscv-stub.c
-+++ b/drivers/firmware/efi/libstub/riscv-stub.c
-@@ -34,7 +34,7 @@ efi_status_t handle_kernel_image(unsigned long *image_addr,
- 	efi_status_t status;
- 
- 	kernel_size = _edata - _start;
--	kernel_codesize = __init_text_end - _start;
-+	kernel_codesize = __inittext_end - _start;
- 	kernel_memsize = kernel_size + (_end - _edata);
- 	*image_addr = (unsigned long)_start;
- 	*reserve_size = kernel_memsize;
+diff --git a/drivers/firmware/efi/libstub/kaslr.c b/drivers/firmware/efi/libstub/kaslr.c
+index 8f8dc335b3b3..b34e4599f0f6 100644
+--- a/drivers/firmware/efi/libstub/kaslr.c
++++ b/drivers/firmware/efi/libstub/kaslr.c
+@@ -125,7 +125,7 @@ efi_status_t efi_kaslr_relocate_kernel(unsigned long *image_addr,
+ 		if (!check_image_region(*image_addr, kernel_memsize)) {
+ 			efi_err("FIRMWARE BUG: Image BSS overlaps adjacent EFI memory region\n");
+ 		} else if (IS_ALIGNED(*image_addr, min_kimg_align) &&
+-			   (unsigned long)_end < EFI_ALLOC_LIMIT) {
++			   (*image_addr + kernel_memsize) < EFI_ALLOC_LIMIT) {
+ 			/*
+ 			 * Just execute from wherever we were loaded by the
+ 			 * UEFI PE/COFF loader if the placement is suitable.
 -- 
 2.56.0.542.g3ef89b7020-goog
 
