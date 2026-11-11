@@ -1,116 +1,58 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=139.138.36.223
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=113.46.200.221
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794398011;
-	b=xX1nz36o0ioG9cC7vP7OtbKuRm0ui5eh98ZyewRNZnqZrOxMs+ArdBrw2xGMJkPvMMuS
-	 tGd4+h4Po40sy2owNe1bajh+vRnaXbuXzz/jUCsyfI2oO1RAsPe4E+4+B7PO9Kdq8VpFd
-	 PtQProSebmZoTnEZE34Gl4aLRGbC9J2sVnq0yYl9Cpo6OgRGZzqh4+Obfx27eYtVKhyrB
-	 o3w5hb6EKvMwBOGZVTIoKSJomKcD/UGZZfq1OygpoT4h9RXTOgf75+CSAF9qb8XMR9/5d
-	 PevyUtXgiZ6LZKnxzKCpPm2CDzNJqTB65+JpLDUrBQFrP1Xv4HSWaKFdsznN1iiMdKQ==
+	t=1794398527;
+	b=ihVm0Ue0Z00+kiQ7696ZuU3PZrYa+g1U8b+De5y+3UfJPlFtCMxusIMVdMIi2h87I4kv
+	 796uMlgn1nMFZMgAe3kIviYjhFFGasFWi0pUAVIeZzpPci3pGG+5CW8W6etI9XGRK+WeY
+	 oChZoi/kZi+/p5IhvS5dYqAdoOp4M1uZAItuDD2N2GsBNQMrh88uq5jn0H+gdSbZkmi78
+	 TAnBBdbXhEG+T/YYrF6Y3nlm78v2+i4Lo9osYWV5M7hNY8rdcMaGvlXx47oW6MuFNR3MX
+	 BQUaLQlo0RCCIQdr8580Xwy+Glp5bEliJYE7Y/3qrj578Zf9BkNPiouGXYCrmAhCJoA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794398011;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:Received:Received:Received:Date:
-	 From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=LHx3sOu0nRc26uMaGdX5eIGUhuQ24/CQDwrvILlx8g0=;
-	b=w01VUEKqY819aTnBKrK5V0AybCeyQyeiXm+2nXctCcPFID378BgYo6oXBmBZYqCfx/+w
-	 IZIqIqve88mcxP0HT9kiUXO1e5RMDDuJ+oBoIWskYjA2L9JNUzdt0WHztFV/Ci1MBx7t4
-	 2osRB5TGxN9rwEGkYQVbvRN+p/scw/OIWfjDwfEu237j2i489960F5GrObDLb92iIelQJ
-	 sDuhQdArzjXYN6optOgoW6evhSYKOY4ELlZPY4oJmEs/gG6Eegij9Xkk557hPoMoqtvTU
-	 5GVMR7zn6EyJQtBWbsqwoGdBPRfJot2J6zdU/ruPh1TujGwE3LiHdHnK7sV8S1VX6ew==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794398527;
+	h=DMARC-Filter:dkim-signature:Received:Received:Received:Message-ID:
+	 Date:MIME-Version:User-Agent:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding:X-Originating-IP:
+	 X-ClientProxiedBy;
+	bh=hLlB9PIDPa4FwR0ytVgqyr+GYjQb+wnK9lGZmR7GcW4=;
+	b=eON8xvnw2IuCSSTnHNN2b+XCd5vnQ01ePF9bOMO5yVnAVVLB6lAtuTpgmSFBOxNoVB76
+	 1hTZTOpB2jJo2HUGkRna07kMEnEgztxMZF0FaMeJpc/1Q6sBG7qLi2XfZ3abKm5LsJYXb
+	 A7+R5z6yUdc2jUq8P376PXeGLmtcmydOYvOw8pg6vxMarNbZMyRlA0iqtRZh+IuS0O6D8
+	 iPbRLljl4pkvM4x4Km+hYWvfPe/kpM2hq0aLceI0/6tq6tQBpzH5jWupB12Jxpd3yU0Iu
+	 kjZpw8SSOnryZazJTt6NkFNpkK9NZgtCyp8Ua/F1z+mCqjC8w865yp8ySzojhtKyNow==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=fujitsu.com;
-	spf=pass smtp.mailfrom=fujitsu.com;
-	dkim=pass header.d=fujitsu.com header.i=@fujitsu.com header.a=rsa-sha256 header.s=fj2 header.b=hnJNAMc2;
-	arc=none smtp.remote-ip=139.138.36.223
-Received: from esa9.hc1455-7.c3s2.iphmx.com (esa9.hc1455-7.c3s2.iphmx.com [139.138.36.223])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=huawei.com;
+	spf=pass smtp.mailfrom=huawei.com;
+	dkim=pass header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b="A/8QfyjR";
+	arc=none smtp.remote-ip=113.46.200.221
+Received: from canpmsgout06.his.huawei.com (canpmsgout06.his.huawei.com [113.46.200.221])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9528A606A333;
-	Wed, 11 Nov 2026 11:53:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9528A606A333
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D238606A8A3
+	for <loongarch@lists.linux.dev>; Wed, 11 Nov 2026 12:02:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3D238606A8A3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.a=rsa-sha256 header.s=fj2 header.b=hnJNAMc2
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1794398018; x=1825934018;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=HCCipxtjnPjwYW8DIXAeMVHDqScHm74Hg2zPPlBSipM=;
-  b=hnJNAMc2naJcpaT3CdnHUXMKZ+ww81bmwJAIWYkBK58kvOKTqeA8W+KQ
-   Rp4PxPFZK/C0Fd7Uh6rbka5/DStILFAFgNlh5dW0yBhz4E3KOxuHRbYtI
-   YjZAU8439T50ZceEXb0Esft3S19Do88PdM/jd25k3orHG9TnLA8BME3Hg
-   e3Xip51jijOE6QHdT/rlC0f+7aGZ3Hxe1eyHCAUNYJAlL15jyCSgOruew
-   z9eApGBfiZIKgPbnusw4qXc6r8Oi8bxEhJtF35kgGSOqRydks4x+buY2q
-   krGWMep4/8gN8NeeLDsvvJTdknyYImdwAbw4mHT91SQa7ZPlwhtfOONoK
-   A==;
-X-CSE-ConnectionGUID: D+8FdQFCRieWhewwBx3sWA==
-X-CSE-MsgGUID: ZJzzCanBTmiAzDJZgVMp9g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11962"; a="248961070"
-X-IronPort-AV: E=Sophos;i="6.27,207,1786978800"; 
-   d="scan'208";a="248961070"
-Received: from gmgwuk01.global.fujitsu.com ([172.187.114.235])
-  by esa9.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2026 20:53:30 +0900
-Received: from az2uksmgm1.o.css.fujitsu.com (unknown [10.151.22.198])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by gmgwuk01.global.fujitsu.com (Postfix) with ESMTPS id A83798214C0;
-	Wed, 11 Nov 2026 11:53:22 +0000 (UTC)
-Received: from az2nlsmom3.fujitsu.com (unknown [10.150.26.199])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by az2uksmgm1.o.css.fujitsu.com (Postfix) with ESMTPS id 50C048D6DA5;
-	Wed, 11 Nov 2026 11:53:22 +0000 (UTC)
-Received: from FCCLS0092175.localdomain (unknown [10.9.86.149])
-	by az2nlsmom3.fujitsu.com (Postfix) with SMTP id 52B3F101BB7F;
-	Wed, 11 Nov 2026 11:53:02 +0000 (UTC)
-Date: Wed, 11 Nov 2026 20:53:00 +0900
-From: Kohei Enju <enju.kohei@fujitsu.com>
-To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, iommu@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Robin Murphy <robin.murphy@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Marc Zyngier <maz@kernel.org>, Steven Price <steven.price@arm.com>, 
-	Suzuki K Poulose <Suzuki.Poulose@arm.com>, Jiri Pirko <jiri@resnulli.us>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Mostafa Saleh <smostafa@google.com>, Petr Tesarik <ptesarik@suse.com>, 
-	Alexey Kardashevskiy <aik@amd.com>, Dan Williams <dan.j.williams@intel.com>, 
-	Xu Yilun <yilun.xu@linux.intel.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>, 
-	Shrikanth Hegde <sshegde@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Stefano Stabellini <sstabellini@kernel.org>, 
-	Russell King <linux@armlinux.org.uk>, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Andy Lutomirski <luto@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	x86@kernel.org
-Subject: Re: [PATCH v6 6/8] dma: swiotlb: Centralize memory-encryption pool
- sizing
-Message-ID: <avRKiCBs81XSYMqW@FCCLS0092175.localdomain>
-References: <20260924060756.1325156-7-aneesh.kumar@kernel.org>
- <asVs3doaJ4WrT3M2@willie-the-truck>
- <asYZFXGyafRjjBS0@arm.com>
- <asYiOgskwi8JYLe_@willie-the-truck>
- <yq5awlrt3dwo.fsf@kernel.org>
- <yq5av77c92oo.fsf@kernel.org>
- <aseRzPshcoys7AJS@arm.com>
- <yq5ao6d48dqr.fsf@kernel.org>
- <auR0fT1yrKQ9wbm8@FCCLS0092175.localdomain>
- <yq5a8q3d9oe6.fsf@kernel.org>
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=A/8QfyjR
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=hLlB9PIDPa4FwR0ytVgqyr+GYjQb+wnK9lGZmR7GcW4=;
+	b=A/8QfyjRiaBChHXgN5XNj/qC6s6VEqJwOoJCEIPPsSdA1xn/u9+4I2BNIdvO6VwakQ1MwuTCd
+	pj5GIPYBFjb6edzmQpShYUk32wfSlLjBaFgXCSpJhe/z8AYNpDzsASB94Ju4K3qlDzqztwlntQB
+	KB4pcepY8BB3ooGO1+Evs6g=
+Received: from mail.maildlp.com (unknown [172.19.162.144])
+	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4jPhvg5fcvzRhT3;
+	Wed, 11 Nov 2026 20:01:51 +0800 (CST)
+Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3A53140538;
+	Wed, 11 Nov 2026 20:02:02 +0800 (CST)
+Received: from [10.67.110.68] (10.67.110.68) by kwepemk200008.china.huawei.com
+ (7.202.194.74) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Wed, 11 Nov
+ 2026 20:02:00 +0800
+Message-ID: <d6047caf-4838-4007-8483-8739dd2a429a@huawei.com>
+Date: Wed, 11 Nov 2026 20:01:59 +0800
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -120,188 +62,325 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <yq5a8q3d9oe6.fsf@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 12/15] kexec: Add kexec_load_other_segments() helper
+To: Mike Rapoport <rppt@kernel.org>
+CC: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
+	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
+	<mpe@ellerman.id.au>, <npiggin@gmail.com>, <chleroy@kernel.org>,
+	<ritesh.list@gmail.com>, <sshegde@linux.ibm.com>, <pjw@kernel.org>,
+	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <alex@ghiti.fr>,
+	<tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <akpm@linux-foundation.org>,
+	<baoquan.he@linux.dev>, <pasha.tatashin@soleen.com>, <pratyush@kernel.org>,
+	<thuth@redhat.com>, <leitao@debian.org>, <yeoreum.yun@arm.com>,
+	<robh@kernel.org>, <sourabhjain@linux.ibm.com>, <kees@kernel.org>,
+	<coiby.xu@gmail.com>, <Yeking@Red54.com>, <tangyouling@kylinos.cn>,
+	<maqianga@uniontech.com>, <zhangtianyang@loongson.cn>,
+	<guodongtai@kylinos.cn>, <blum@kernel.org>, <adityag@linux.ibm.com>,
+	<hui.wang@canonical.com>, <sohammetha01@gmail.com>, <guoren@kernel.org>,
+	<gaohan@iscas.ac.cn>, <kai.huang@intel.com>, <kas@kernel.org>,
+	<vishal.l.verma@intel.com>, <piliu@redhat.com>, <jbouron@amazon.com>,
+	<mclapinski@google.com>, <me@linux.beauty>, <graf@amazon.com>,
+	<bgwin@google.com>, <x86@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <loongarch@lists.linux.dev>,
+	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
+	<kexec@lists.infradead.org>
+References: <20261026075201.699550-1-ruanjinjie@huawei.com>
+ <20261026075201.699550-13-ruanjinjie@huawei.com>
+ <179430504583.425130.15302016434972990362.b4-review@b4>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <179430504583.425130.15302016434972990362.b4-review@b4>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ kwepemk200008.china.huawei.com (7.202.194.74)
 
-Hi Aneesh,
 
-On 11/01 09:47, Aneesh Kumar K.V wrote:
-[...]
-> >
-> > Hi Aneesh,
-> >
-> > I can reproduce the CCA regression discussed in this thread:
-> >   https://lore.kernel.org/all/yq5azeyxyfol.fsf@kernel.org/#t
-> >
-> > The guest runs out of SWIOTLB slots, causing disk I/O to fail and
-> > preventing the guest from booting.
-> >
-> > I would like to test the fix on real CCA hardware. Could you please Cc
-> > me when you respin the series? I follow LKML, but I may still miss the
-> > posting by chance.
-> >
+
+在 2026/11/10 18:04, Mike Rapoport 写道:
+> Hi Jinjie,
+
+Hi Mike,
+
 > 
-> The conclusion was to either use CONFIG_SWIOTLB_DYNAMIC or swiotlb kernel command line
-> option
+>> arm64, LoongArch and RISC-V duplicate the elf core header and initrd
+>> loading.  Move it into a common helper with one arch hook for the boot
+>> parameters; a failure releases everything added for the attempt.
+> 
+> I like the idea of pulling out the common code, but I'm not convinced
 
-Thanks for the clarification.
+Thank you for the review.
 
-After reading this whole thread, I agree that dynamic sizing would be
-appropriate.
+> that the split you suggest is right.
 
-However, currently some distributions do not enable
-CONFIG_SWIOTLB_DYNAMIC. Users of such distributions would therefore need
-to rebuild their kernels with the option enabled. This is not a
-practical solution for many users, particularly cloud users who use
-kernels provided by their distributions or cloud providers.
+Yes, the current solution is straightforward.
 
-Specifying swiotlb= on the kernel command line is also not particularly
-user-friendly. It requires users or cloud providers to choose a fixed
-value in advance, without automatically taking into account properties
-of the VM, such as its memory size or whether it is a confidential
-guest.
+> 
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Baoquan He <baoquan.he@linux.dev>
+>> Cc: Mike Rapoport <rppt@kernel.org>
+>> Suggested-by: Mike Rapoport <rppt@kernel.org>
+>> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+>> ---
+>>  include/linux/kexec.h | 15 ++++++++
+>>  kernel/kexec_file.c   | 90 +++++++++++++++++++++++++++++++++++++++++++
+>>  2 files changed, 105 insertions(+)
+>>
+>> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+>> index faba26f871a4a..de1d83ddc38bd 100644
+>> --- a/include/linux/kexec.h
+>> +++ b/include/linux/kexec.h
+>> @@ -259,6 +259,21 @@ int kexec_kernel_verify_pe_sig(const char *kernel, unsigned long kernel_len);
+>>  extern int kexec_add_buffer(struct kexec_buf *kbuf);
+>>  int kexec_locate_mem_hole(struct kexec_buf *kbuf);
+>>  
+>> +struct kexec_load_params {
+>> +	unsigned long kernel_load_addr;
+>> +	unsigned long kernel_size;
+>> +	char *initrd;
+>> +	unsigned long initrd_len;
+>> +	char *cmdline;
+>> +	unsigned long cmdline_len;
+>> +};
+> 
+> initrd and cmdline are already in image->initrd_buf, initrd_buf_len,
+> cmdline_buf and cmdline_buf_len, that's where fops->load() gets them from.
 
-I do not think the existing heuristic used for x86 CoCo guests is
-necessarily optimal, but a fixed swiotlb= value chosen by each user may
-be even less appropriate.
+OK, will delete them.
 
-Overall, I would prefer the dynamic sizing approach. However, I believe
-the initial pool size still matters.
+> 
+> And the outputs are scattered: elf_load_addr goes to the image, the initrd
+> address is passed as a separate argument to the hook, and LoongArch infers
+> "there is an initrd" from initrd_load_addr != 0.
 
-Also, as Catalin pointed out earlier in the following message:
+These are currently just being shoehorned in.
 
-    https://lore.kernel.org/all/ann6noRzoPLL9kDY@arm.com/
+> 
+> 
+> 
+>> +
+>> +int arch_kexec_setup_other_segments(struct kimage *image,
+>> +				    struct kexec_load_params *params,
+>> +				    unsigned long initrd_load_addr);
+>> +int kexec_load_other_segments(struct kimage *image,
+>> +			      struct kexec_load_params *params, bool top_down);
+>> +
+> 
+> The call chain is now fops->load() in arch -> kexec_load_other_segments()
+> in core -> arch_kexec_setup_other_segments() back in arch. That's a
+> midlayer: the core helper owns the sequence and the arch fills a hole in
+> the middle of it.
 
-the arm64 adjustment also reduces the target size used for dynamic
-pool allocation, since both the initial pool and dynamic allocation
-currently use default_nslabs.
+The new refactoring will follow this principle to ensure that the
+framework code is in control of the order.
 
-I am testing the patch below to decouple the initial pool size from the
-dynamic allocation target. It adds swiotlb_adjust_initial_size() for
-callers that only want to reduce the initial allocation, while keeping
-the existing swiotlb_adjust_size() semantics for callers that want to
-adjust both sizes.
+> 
+> The weak default is never used, all three users override it, and x86,
+> powerpc and s390 build a helper and a hook that nothing calls.
 
-Thanks,
-Kohei
+Yes, x86 and powerpc has not used it, Some adjustments need for the rework.
 
---->8---
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 4e7682dfe366..80a2c171895f 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -349,7 +349,7 @@ void __init arch_mm_preinit(void)
-                unsigned long size =
-                        DIV_ROUND_UP(memblock_phys_mem_size(), 1024);
+> 
+>>  #ifndef arch_kexec_locate_mem_hole
+>>  /**
+>>   * arch_kexec_locate_mem_hole - Find free memory to place the segments.
+>> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+>> index 62d4cba278a57..8b80f1186875b 100644
+>> --- a/kernel/kexec_file.c
+>> +++ b/kernel/kexec_file.c
+>> @@ -1295,3 +1295,93 @@ int kexec_purgatory_get_set_symbol(struct kimage *image, const char *name,
+>>  	return 0;
+>>  }
+>>  #endif /* CONFIG_ARCH_SUPPORTS_KEXEC_PURGATORY */
+>> +
+>> +int __weak arch_kexec_setup_other_segments(struct kimage *image,
+>> +					   struct kexec_load_params *params,
+>> +					   unsigned long initrd_load_addr)
+>> +{
+>> +	return 0;
+>> +}
+>> +
+>> +int kexec_load_other_segments(struct kimage *image,
+>> +			      struct kexec_load_params *params, bool top_down)
+>> +{
+>> +	struct kexec_buf kbuf = {
+>> +		.image = image,
+>> +		/* Do not allocate anything below the kernel */
+>> +		.buf_min = params->kernel_load_addr + params->kernel_size,
+>> +		.buf_max = top_down ? PFN_PHYS(max_low_pfn) : ULONG_MAX,
+>> +	};
+> 
+> top_down does not describe a direction, it selects "RISC-V policy" vs
+> "arm64 policy": the upper limit for all buffers, the initrd direction and
+> the 32G initrd window.
 
--               swiotlb_adjust_size(min(swiotlb_default_pool_size(), size));
-+               swiotlb_adjust_initial_size(min(swiotlb_default_pool_size(), size));
-        }
+Yes its the topdown of initrd and distinguish between different
+architectures is a bit of a stretch here.
 
-        swiotlb_init(true, flags);
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index 070ee69eabb3..7dd9fcec90a5 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -189,7 +189,7 @@ void __init arch_mm_preinit(void)
-                 */
-                unsigned long size =
-                        DIV_ROUND_UP(memblock_phys_mem_size(), 1024);
--               swiotlb_adjust_size(min(swiotlb_default_pool_size(), size));
-+               swiotlb_adjust_initial_size(min(swiotlb_default_pool_size(), size));
-                swiotlb = true;
-                swiotlb_flags |= SWIOTLB_ANY;
-        }
-diff --git a/include/linux/swiotlb.h b/include/linux/swiotlb.h
-index 5f24edf47b68..c1984ee12355 100644
---- a/include/linux/swiotlb.h
-+++ b/include/linux/swiotlb.h
-@@ -190,6 +190,7 @@ size_t swiotlb_max_mapping_size(struct device *dev);
- bool is_swiotlb_allocated(void);
- bool is_swiotlb_active(struct device *dev);
- void __init swiotlb_adjust_size(unsigned long size);
-+void __init swiotlb_adjust_initial_size(unsigned long size);
- phys_addr_t default_swiotlb_base(void);
- phys_addr_t default_swiotlb_limit(void);
- #else
-@@ -232,6 +233,10 @@ static inline void swiotlb_adjust_size(unsigned long size)
- {
- }
+Right! arm64 has its unique boot protocol restrictions. Here, RISC-V has
+a bug fix that requires specifying a memory top limit.
 
-+static inline void swiotlb_adjust_initial_size(unsigned long size)
-+{
-+}
-+
- static inline phys_addr_t default_swiotlb_base(void)
- {
-        return 0;
-diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-index 2c57b49ac7c0..211fefb32fb5 100644
---- a/kernel/dma/swiotlb.c
-+++ b/kernel/dma/swiotlb.c
-@@ -99,6 +99,7 @@ static struct io_tlb_mem io_tlb_default_mem;
- #endif /* CONFIG_SWIOTLB_DYNAMIC */
+> 
+> These are boot protocol constraints and they belong to the architecture.
 
- static unsigned long default_nslabs = IO_TLB_DEFAULT_SIZE >> IO_TLB_SHIFT;
-+static unsigned long dynamic_nslabs = IO_TLB_DEFAULT_SIZE >> IO_TLB_SHIFT;
- static unsigned long default_nareas;
- static bool swiotlb_cmdline_size_set __initdata;
+Agree
 
-@@ -152,6 +153,8 @@ static void swiotlb_adjust_nareas(unsigned int nareas)
-                nareas = roundup_pow_of_two(nareas);
+> The 32G window comes from arm64 booting.rst and the SZ_64K alignment below
+> is "largest supported page size" on arm64 and LoongArch. With this patch
 
-        default_nareas = nareas;
-+       dynamic_nslabs =
-+               swiotlb_calc_nslabs(dynamic_nslabs << IO_TLB_SHIFT, nareas);
+Yes.
 
-        pr_info("area num %d.\n", nareas);
-        nslabs = swiotlb_calc_nslabs(default_nslabs << IO_TLB_SHIFT, nareas);
-@@ -254,6 +257,7 @@ setup_io_tlb_npages(char *str)
-                /* avoid tail segment of size < IO_TLB_SEGSIZE */
-                default_nslabs =
-                        ALIGN(simple_strtoul(str, &str, 0), IO_TLB_SEGSIZE);
-+               dynamic_nslabs = default_nslabs;
-                swiotlb_cmdline_size_set = true;
-        }
-        if (*str == ',')
-@@ -290,7 +294,7 @@ unsigned long swiotlb_default_pool_size(void)
-        return default_nslabs << IO_TLB_SHIFT;
- }
+> they become generic and RISC-V silently switches from
+> ELF_CORE_HEADER_ALIGN to 64K in 15/15.
 
--void __init swiotlb_adjust_size(unsigned long size)
-+void __init swiotlb_adjust_initial_size(unsigned long size)
- {
-        /*
-         * If swiotlb parameter has not been specified, give a chance to
-@@ -305,6 +309,12 @@ void __init swiotlb_adjust_size(unsigned long size)
-        pr_info("SWIOTLB bounce buffer size adjusted to %luMB", size >> 20);
- }
+There are indeed some function changes, which are also mentioned
+in the commit message.
 
-+void __init swiotlb_adjust_size(unsigned long size)
-+{
-+       swiotlb_adjust_initial_size(size);
-+       dynamic_nslabs = default_nslabs;
-+}
-+
- void swiotlb_print_info(void)
- {
-        struct io_tlb_pool *mem = &io_tlb_default_mem.defpool;
-@@ -507,6 +517,7 @@ void __init swiotlb_init_remap(bool addressing_limit, unsigned int flags,
-                pr_info("SWIOTLB bounce buffer size adjusted %lu -> %lu slabs",
-                        default_nslabs, nslabs);
-                default_nslabs = nslabs;
-+               dynamic_nslabs = default_nslabs;
-        }
+> 
+> 
+>> +
+>> +	unsigned long orig_segments = image->nr_segments;
+>> +	unsigned long initrd_load_addr = 0;
+>> +	int ret = 0;
+>> +
+>> +#ifdef CONFIG_CRASH_DUMP
+>> +	if (image->type == KEXEC_TYPE_CRASH) {
+>> +		ret = crash_prepare_headers(true, &kbuf.buffer, &kbuf.bufsz, NULL);
+>> +		if (ret) {
+>> +			pr_err("Preparing elf core header failed\n");
+>> +			goto out_err;
+>> +		}
+>> +
+>> +		if (unlikely(image->elf_headers))
+>> +			vfree(image->elf_headers);
+> 
+> The headers don't depend on where the kernel is placed, yet they are
+> rebuilt on every iteration of the arm64 and LoongArch retry loops. That's
+> why the vfree() above is needed, and with the out_err path freeing them
+> it's now dead code.
 
-        alloc_size = PAGE_ALIGN(array_size(sizeof(*mem->slots), nslabs));
-@@ -889,7 +900,7 @@ static void swiotlb_dyn_alloc(struct work_struct *work)
-                container_of(work, struct io_tlb_mem, dyn_alloc);
-        struct io_tlb_pool *pool;
+Yes, it need deleted now.
 
--       pool = swiotlb_alloc_pool(NULL, mem, IO_TLB_MIN_SLABS, default_nslabs,
-+       pool = swiotlb_alloc_pool(NULL, mem, IO_TLB_MIN_SLABS, dynamic_nslabs,
-                                  default_nareas, mem->phys_limit, GFP_KERNEL);
-        if (!pool) {
-                pr_warn_ratelimited("Failed to allocate new pool");
+> 
+> Building the headers once and only placing them in the loop removes the
+> leak instead of fixing it.
+
+I agree, I had a similar fix attempt before, where I only allocated once
+to avoid placing it in a loop.
+
+> 
+> 
+>> +
+>> +		image->elf_headers = kbuf.buffer;
+>> +		image->elf_headers_sz = kbuf.bufsz;
+>> +
+>> +		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+>> +		kbuf.memsz = kbuf.bufsz;
+>> +		kbuf.buf_align = SZ_64K; /* largest supported page size */
+>> +		kbuf.top_down = true;
+>> +
+>> +		ret = kexec_add_buffer(&kbuf);
+>> +		if (ret)
+>> +			goto out_err;
+>> +
+>> +		image->elf_load_addr = kbuf.mem;
+>> +
+>> +		kexec_dprintk("Loaded elf core header at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+>> +			      image->elf_load_addr, kbuf.bufsz, kbuf.memsz);
+>> +	}
+>> +#endif
+>> +
+>> +	if (params->initrd) {
+>> +		kbuf.buffer = params->initrd;
+>> +		kbuf.bufsz = params->initrd_len;
+>> +		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+>> +		kbuf.memsz = params->initrd_len;
+>> +		kbuf.buf_align = 0;
+>> +		/* within 1GB-aligned window of up to 32GB in size */
+>> +		if (!top_down)
+>> +			kbuf.buf_max = round_down(params->kernel_load_addr, SZ_1G) +
+>> +					(unsigned long)SZ_1G * 32;
+>> +		kbuf.top_down = top_down;
+>> +
+>> +		ret = kexec_add_buffer(&kbuf);
+>> +		if (ret)
+>> +			goto out_err;
+>> +		initrd_load_addr = kbuf.mem;
+>> +
+>> +		kexec_dprintk("Loaded initrd at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+>> +			      initrd_load_addr, kbuf.bufsz, kbuf.memsz);
+>> +	}
+>> +
+>> +	ret = arch_kexec_setup_other_segments(image, params,
+>> +					      initrd_load_addr);
+>> +	if (ret)
+>> +		goto out_err;
+>> +
+>> +	return 0;
+>> +
+>> +out_err:
+>> +	while (image->nr_segments > orig_segments) {
+>> +		kexec_free_segment_cma(image, image->nr_segments - 1);
+>> +		image->nr_segments--;
+>> +	}
+>> +
+>> +	kexec_free_elf_headers(image);
+> 
+> This drops segments added by the arch hook (DTB, RISC-V purgatory, arm64
+> dm-crypt keys) without knowing anything about the state attached to them,
+> like image->dm_crypt_keys_addr or the purgatory info. The hook, in turn,
+> frees its buffers but not its segments.
+
+Yes
+
+> 
+> Nobody owns the unwind, so "a failure releases everything added for the
+> attempt" is not quite what happens.
+> 
+> The conversions also bury ordering changes in "simplify" patches: on arm64
+> dm-crypt keys move after the initrd, and on RISC-V the initrd moves before
+> the purgatory. And dm-crypt keys loading is not an arm64 boot parameter,
+> x86 and powerpc use it as well.
+>
+
+Yes, the segment allocation order is indeed changed.
+
+
+>> +
+>> +	return ret;
+>> +}
+> 
+> 
+> What I had in mind was to make the core provide building blocks and let
+> the architectures compose them, e.g. a common rollback function that
+> frees CMAs and drops segments above nr. The retry loops in arm64 and
+> LoongArch image loaders can use it instead of open coding
+> kexec_free_segment_cma() and nr_segments--. There also could be a helper
+
+I agree.
+
+> for adding FDT for example and maybe some other common parts, like, say,
+> efl headers.
+
+
+I am trying out your refactoring ideas so that x86 and PowerPC can also
+use these newly added small hook functions.
+
+> 
+> Arch's load_other_segments() could use these helpers and still define
+> their own policy for segment placement.
+
+This will eliminate the issue of changes in the above sequence or the
+problem of the startup protocol being modified.
+
+Thank you again for your review and suggestions for refactoring. I will
+thoroughly consider the issues you raised, revise the code, and conduct
+more testing.
+
+> 
+
+-- 
+Best regards,
+Jinjie
 
