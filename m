@@ -1,54 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.50.34
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1794436157;
-	b=JEkE3I2dmm2lWv0H5TUbHE66U1/AeK0ZXzR0BGqFg9iHcFrDSdM4Or+Rsdk7tOybmTjL
-	 uA3tK/+zzZVCLXoSLK4c39SwWXFWK3vjXVW67EjxtD1gSwGQ9I9NVMKYBaTNyEZKZEP6D
-	 UQMQ12tehYzF4evMRTq89HIhJMKDLrq3gx0ag/7Z4pG5uvWn+f4MOpN0O4Z/M120XYUQo
-	 wi6cwlPSWb9qw7rM4jeI8caQzxHIMpkA4pefG4VqnhxYgujJnBiLTsNXoSq7irCk0ASt1
-	 tJi8443V6QndrB3kpR+OJnBuqCxHD2qJJCKFc2YcCI02yV+S+H4x1BhlAHiuBvc9rbg==
+	b=byFvvWXziB9236BUmbt1FmqZUvSZJBt08hvCqvQEQAFmqqvXC1joJSqOxiVe+IIo8zQI
+	 MdweTmUPB1Q0RLitOqAw2yffkskitg1rhW/Y+3ctfnv0VHoOjDioXQZHCaY7r9Bvgd8wk
+	 JMEDOgE4pU73hN17WZB+fqdOneWSoKKn8ELA9toHlUHxs2UelPLQbeK32PoLMsaLFsXlO
+	 Wj3sPtNnZgkZrT+RPzYcyaTdpRjAv21L/8L8jeTOnPkpVyANeVOZCTlACx55IPcKa71DA
+	 HKJZm3OSj9cYOQ/lgOfDjHu8f0QtXAUKNRwJgfZBgdg9M0ytty4xoOw1TjzHCfo10rg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1794436157;
 	h=DMARC-Filter:DKIM-Signature:Received:Received:From:To:Cc:Subject:
 	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding:Sender:X-SRS-Rewrite;
-	bh=pYQ14F/+fxHoO9/xGsZmzWpMCLg2l3VgkgG8NG25FZc=;
-	b=4JAnqnm2WftHpXCbnjwUu4WhVcaGmGAqMljtPtrsymSqDtQgX6AMX9p+CrCEWvPhtPer
-	 MeNY5VrywUzb2Qb1TskEhkw7bntf3cC3xnUAfwCD8Oz2SXVu9iXQ9VAT60FyWuQG/j9ve
-	 qOn8xPp2MHVUQ4AL9fQ4x46Mks4B+K+HbKSD9bkfXsCtc4BO5ji8eobt2KqiWs5qpaM58
-	 u6c0sS+lRQtAfy7WIWiGpw6+VUaLrImHBoTgXpesonpv1Nw8FF2PCyj5s74Nx1ckU4NqL
-	 6JiPrCLfTW/6FPh2hOTaXy7wUBEsvW15IVKmRYvbacTaLWpvvRLaWgafLuMrcS+XknQ==
+	bh=E8rVfKCMqU27RWIM2bfWVZEtsM9bj4ortAwrQwz/hPM=;
+	b=vyCAjfpg+m7JkxZ8yBGXQJra7bfVnxU62erglp0Qi6k9CUsc4z8V29aVAOcK60hb5Cu7
+	 uC6Pang5wo7F2qgQ1qLzz8ZgvsNjTf/kTk+2Wa6pQF6znW2arBy7ngiXbUrMZK1lY0HB+
+	 lbtGiZe4JE1BEFY8ChgHsrcY0A7K+MBrnhyp6TEsoW/QOffonA3SurSUdw6Z+tN8X+CIk
+	 rolMq5HUHQI8NvVzupqUW8MQFCF5KvHphlNtX6vgM0tB8d7kG4UCN8ozIRPHpUZSPzOu2
+	 VzwdMooLOJ1elGczkcCNA3sVq/TezdFI0Ocpg56+kcuTdpJ+sdEJ0ExWDT4Yg6F4pAA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=infradead.org;
 	spf=none smtp.mailfrom=casper.srs.infradead.org;
-	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=dwekS5pm;
+	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=wCjtEbpv;
 	arc=none smtp.remote-ip=90.155.50.34
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE08606A32A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE23606A32D;
 	Wed, 11 Nov 2026 22:29:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6EE08606A32A
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6EE23606A32D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=dwekS5pm
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=wCjtEbpv
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Sender:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=pYQ14F/+fxHoO9/xGsZmzWpMCLg2l3VgkgG8NG25FZc=; b=dwekS5pmE08jICmxIc5r9J4NUF
-	+UBiqr1bzFUHz4/AYzaUc0d9uqBuPjn5xzA7tZVUY0gmQHpOgk4253xcNOToEsn/x2W/Q3t3sqFGg
-	ItGITbLIzEe1MKsuv3KY1fiHFof+7aU/WSpzZhyJ/37x5nvKaVeY6QzgjYtEVVWDOt3lAi1iD2b5B
-	3fnMDEwKQLetpx4TnyTrn4MP99/D51MmbQ2lYHmuWewd9xTmvSijZ62LTUkT1Vb05wz0zHb1Iq1gF
-	7Esnd6wYHW6SWvoYJygiVqwkq5h5bHRq99C8vHK22JqFEW06q5ShGbBrS9d3Yh4zkcmo3fSCyx3Ou
-	KGglwn6A==;
+	bh=E8rVfKCMqU27RWIM2bfWVZEtsM9bj4ortAwrQwz/hPM=; b=wCjtEbpv8XHuBy6wJMmQMnzuo0
+	h0jSZydE2akV5ZyvNvFU8gfabmnnX1AvPipDVPw8246mtWUuU0pqGoi9KOmi9xDMlTnWUd3RFEsvu
+	wNx9R8j+Tv10A/0+n1ha9K917Mfen35ra3jusd2RJHDj8TcYgZoU6ofIr1TSFWqRK3h8Sh3fPEAxu
+	svIoD7jIOopcL6q84r7feglY523gu6q+DATzxxIoGKhygr5u8wz/Bx0cJ1oknpRP3XqCD8DJW7JiH
+	5OjrfuABd5NyZA3x73i3dJcjLwYlKffTZdbNWzzOmLK1VFVZZoIq5/XVZiQvOzF9Sotr67KDOwB5P
+	5M3WSmmg==;
 Received: from [2001:8b0:10b:1::425] (helo=i7.infradead.org)
 	by casper.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRGoa-0000000G3o8-23CV;
+	id 1xRGoa-0000000G3ny-1BO7;
 	Wed, 11 Nov 2026 22:29:12 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.99.5 #2 (Red Hat Linux))
-	id 1xRGoa-0000000008q-1G9V;
+	id 1xRGoa-0000000008W-0P3R;
 	Wed, 11 Nov 2026 22:29:12 +0000
 From: David Woodhouse <dwmw2@infradead.org>
 To: =?UTF-8?q?J=C3=B6rg=20R=C3=B6del?= <joro@8bytes.org>
@@ -74,9 +74,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	Mushahid Hussain <hmushi@amazon.co.uk>,
 	Sriram Nambakam <snambakam@linux.microsoft.com>,
 	David Woodhouse <dwmw@amazon.co.uk>
-Subject: [PATCH 16/16] KVM: SVM: Make KVM_REQ_VMSA_PAGE_RELOAD per plane
-Date: Wed, 11 Nov 2026 14:29:11 -0800
-Message-ID: <20261111222911.477-17-dwmw2@infradead.org>
+Subject: [PATCH 11/16] KVM: x86: Load each plane twin while updating it after KVM_SET_CPUID
+Date: Wed, 11 Nov 2026 14:29:06 -0800
+Message-ID: <20261111222911.477-12-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261111222911.477-1-dwmw2@infradead.org>
 References: <20260608144252.351443-1-joro@8bytes.org>
@@ -96,89 +96,70 @@ X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.
 
 From: David Woodhouse <dwmw@amazon.co.uk>
 
-An SNP guest with multiple VMPLs gives each plane's vCPU its own VMSA,
-but KVM_REQ_VMSA_PAGE_RELOAD still treats the vCPU as having one. When
-guest_memfd invalidates the page behind a higher VMPL's VMSA,
-sev_gmem_invalidate_range() looks only at the plane-0 vCPUs and never
-asks the twin to reload. And when a twin's own reload races with an
-invalidation and re-raises the request, it lands in the shared common
-requests and is consumed by whichever twin runs first. That reloads
-*its* VMSA and leaves the target twin entering the guest with a stale
-vmsa_pa.
+kvm_vcpu_ioctl_set_cpuid() runs kvm_vcpu_after_set_cpuid() on every
+plane twin, but only the calling vCPU is loaded. The vendor callback
+writes VMCS/VMCB controls, and on VMX those writes go to whatever VMCS
+is loaded on the current pCPU: the caller's, not the twin's. The
+twin's controls shadow is updated anyway, so the stale values in its
+real VMCS can never be corrected later; a twin created before
+KVM_SET_CPUID2 keeps its empty-CPUID controls (RDSEED/RDRAND exiting
+among them), and the guest's higher VTL takes a spurious #UD on its
+first RDSEED.
 
-Mark the request KVM_REQUEST_PER_PLANE, as
-KVM_REQ_UPDATE_PROTECTED_GUEST_STATE already is, so it stays with the
-twin it was raised on, and have the invalidation walk every twin of
-each vCPU and target the one whose VMSA GPA falls in the range. The
-kick still reaches whichever twin is running, because mode is shared
-in the common.
+Swap each twin in as the loaded vCPU for its update, and reload the
+caller once at the end. Plane ioctls all share the common vCPU mutex,
+so the twin cannot be loaded elsewhere concurrently. A preemption
+inside the window is safe only because vcpu_load() now publishes the
+loaded twin as common->current_vcpu (previous patch); before that, the
+preempt notifiers would arch-put and arch-load the caller instead.
 
-UNTESTED on SNP: build-tested only, as I have no multi-VMPL SNP host.
+Fixes the twin updates in "kvm: x86: Update state for all plane VCPUs
+after CPUID update".
 
-Fixes the VMSA reload for higher VMPLs in "kvm: sev: Allow for VMPL
-level specification in AP create".
-
-Fixes: https://lore.kernel.org/all/20260608144252.351443-58-joro@8bytes.org/
+Fixes: https://lore.kernel.org/all/20260608144252.351443-46-joro@8bytes.org/
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
 ---
- arch/x86/include/asm/kvm_host.h |  3 ++-
- arch/x86/kvm/svm/sev.c          | 21 +++++++++++++++------
- 2 files changed, 17 insertions(+), 7 deletions(-)
+ arch/x86/kvm/cpuid.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index c7471699e2af..a4912735ad3d 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -129,7 +129,8 @@
- #define KVM_REQ_HV_TLB_FLUSH \
- 	KVM_ARCH_REQ_FLAGS(32, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
- #define KVM_REQ_VMSA_PAGE_RELOAD \
--	KVM_ARCH_REQ_FLAGS(33, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
-+	KVM_ARCH_REQ_FLAGS(33, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP | \
-+			       KVM_REQUEST_PER_PLANE)
- #define KVM_REQ_UPDATE_PROTECTED_GUEST_STATE \
- 	KVM_ARCH_REQ_FLAGS(34, KVM_REQUEST_WAIT | KVM_REQUEST_PER_PLANE)
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 54bcfedc5226..c9b7dfc5c967 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -501,7 +501,7 @@ static int kvm_set_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid_entry2 *e2,
+ {
+ 	struct kvm_vcpu_common *common = vcpu->common;
+ 	u32 vcpu_caps[NR_KVM_CPU_CAPS];
+-	struct kvm_vcpu *v;
++	struct kvm_vcpu *v, *loaded = vcpu;
+ 	unsigned i;
+ 	int r;
  
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index 32a4ba4ffdbb..c8a9f808dcc4 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -5682,7 +5682,13 @@ void sev_gmem_invalidate_range(struct kvm *kvm, struct kvm_gfn_range *range)
- 		return;
- 
- 	kvm_for_each_vcpu(i, vcpu, kvm) {
-+		struct kvm_vcpu *twin;
-+		int p;
-+
- 		/*
-+		 * Every plane's vCPU has its own VMSA, so check each twin and
-+		 * target the request at the twin whose VMSA it is.
-+		 *
- 		 * Read snp_guest_vmsa_gpa without taking the vCPU's VMSA mutex
- 		 * (or its generic mutex) as mmu_lock is held, i.e. this task
- 		 * can't sleep.  The VMSA is invalidated outside of mmu_lock,
-@@ -5691,12 +5697,15 @@ void sev_gmem_invalidate_range(struct kvm *kvm, struct kvm_gfn_range *range)
- 		 * positive is benign, as a spurious request simply forces the
- 		 * vCPU to re-establish its VMSA.
- 		 */
--		gpa_t gpa = READ_ONCE(to_svm(vcpu)->sev_es.snp_guest_vmsa_gpa);
--
--		if (VALID_PAGE(gpa) &&
--		    gpa_to_gfn(gpa) >= range->start &&
--		    gpa_to_gfn(gpa) < range->end)
--			kvm_make_request_and_kick(KVM_REQ_VMSA_PAGE_RELOAD, vcpu);
-+		vcpu_for_each_plane(vcpu->common, p, twin) {
-+			gpa_t gpa = READ_ONCE(to_svm(twin)->sev_es.snp_guest_vmsa_gpa);
-+
-+			if (VALID_PAGE(gpa) &&
-+			    gpa_to_gfn(gpa) >= range->start &&
-+			    gpa_to_gfn(gpa) < range->end)
-+				kvm_make_request_and_kick(KVM_REQ_VMSA_PAGE_RELOAD,
-+							  twin);
+@@ -568,9 +568,24 @@ static int kvm_set_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid_entry2 *e2,
+ #ifdef CONFIG_KVM_XEN
+ 		v->arch.xen.cpuid = kvm_get_hypervisor_cpuid(vcpu, XEN_SIGNATURE);
+ #endif
++		/*
++		 * The ioctl loaded the calling vCPU; updating a twin's
++		 * VMCS/VMCB controls requires that twin to be the loaded
++		 * one, so swap it in for the update.
++		 */
++		if (v != loaded) {
++			vcpu_put(loaded);
++			vcpu_load(v);
++			loaded = v;
 +		}
+ 		kvm_vcpu_after_set_cpuid(v);
  	}
- }
  
++	if (loaded != vcpu) {
++		vcpu_put(loaded);
++		vcpu_load(vcpu);
++	}
++
+ success:
+ 	kvfree(e2);
+ 	return 0;
 -- 
 2.50.1
 
