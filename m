@@ -1,47 +1,50 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794390745;
-	b=qBvyPgBehgPaF/pFqJvMDI3ep5tNX+20NXERYRsCpVc2006kGNFjZuya1w5A5zC6mObD
-	 +oQAeLeQznyIQZXi4GkK6tk7BRjxqH/4Wxt9Z+ksKlWGJC1AicdB8zZwu5j8A8smBvnn1
-	 V34QG9Oiz5XT82eHPBEgg7f57x7fkXD8qewoA4EZgREw6zOjFBFuP4DpnDEaArDdOA3Kc
-	 D66obKGpMkDahVXXjNmzAoRBVhhpmV6IutPWACrzztRvGrQSD4ak0ZU1DIi/kb8y9eR8b
-	 6YZ2HlMDL6QokE7y5yukOaDvBvvnqHMQTPcVGi0C9Slerzsc1jQSaXDMHIH9ncIYQgw==
+	t=1794390748;
+	b=orMKbUK3htSlw6gRmmW/CJJSeAsjO1LCuGPuCO923WRqfgVyuYq8XzRW2sgUlDfVmZTk
+	 KSTbXgtj/iUyHBSsWkPLhtI5s0UkdB1eJkXJ9pwuUCLfQuTfKT93Gpdu2usbfCCfzh+J9
+	 r3l18gcCVOdYgfYNeAfsCS7axteCNa8Z+lnTNaHDh42OMN40u26uzlhitH6AinDqS3V2K
+	 CFRMy/AGP4Bq8ptSoGrYvyHkJOlzcDO4uTpSwwfHBwuEw+ciB29Qu5wrER83mNdIqvSiG
+	 xXhacv0UesJYLu6xcPMAzaOGZR/A19+HpDobT6NvSDaxgJkKfDvwYxdeuu8MSsfoRlg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794390745;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794390748;
 	h=DMARC-Filter:Received:Received:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:MIME-Version:Content-Transfer-Encoding:X-CM-TRANSID:
-	 X-CM-SenderInfo:X-Coremail-Antispam;
-	bh=E6l4GGAmgvSu85gCL1YVNUedtbF84qfhJ1alEiUbsUc=;
-	b=eGsTzdEr1f2DQenVKAebY57e3s8SyYwtXzUpqSfSKrwG/WlnQsiow4U0vwT5SmJ6seyM
-	 I4JlACoO7E+3B3e54bKU6N72q9GXdjzTv977+uZXsUVv9T9O39v1rdDKizUgZ0u1Qw8+Y
-	 vdUw8MRzfaUfdt8km4OTx61o/inowWbSOsVS75PQ/jQi9vpU5xchc1Dx6g2Q4eKiO8oNN
-	 G2Y/4N+jxQY2SEQmSLRSV7N2RrwyQDoIcuE1r4zqkpMldB9WfxFzcXV86Er8t8khz2CYF
-	 pmyu/X3JQAgQe2PTY3iyRD2OdZspiH30Nq4OlcCL0TeF/PVeqV1AwVGCVkCgeO9LPdA==
+	 X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding:X-CM-TRANSID:X-CM-SenderInfo:
+	 X-Coremail-Antispam;
+	bh=rKjspfH/rKh5u+ezX8DhTrlI7niVp5pQK4NpR7IycPc=;
+	b=otHJurPh8xAecVee5rmiufkoMMp3lrprT1+R2vYrZffclKHuIwTXwaCkkgpKWmSHzzrf
+	 xK9BDxIfADEEq3lfafE24InbMwhqS8YVOqZNSgcKMAiwfRcRw9gEdITbOLNpPlxwGzWkH
+	 pJoOPr9R0H53ydJc5MaEnvjK71s9ElpVI7n778s+xEKBIlRlcvhfl2XuwqP0Uqxa+/768
+	 cw17POQ7QFaZfAioN4XBSLm1CCOLZeWfrQzV7jtOtazWUZuq27oKxDLfJ/0y9CG2bF6El
+	 eHw/P3Ri2Xu3dZfvjsKuo5ak4VKZdzC3yQNlVgar0d4T2OsyOjaeoQr0H0SN7w9a+pg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=loongson.cn;
 	spf=pass smtp.mailfrom=loongson.cn;
 	arc=none smtp.remote-ip=114.242.206.163
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B44B9606A321
-	for <loongarch@lists.linux.dev>; Wed, 11 Nov 2026 09:52:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B44B9606A321
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49776606A33E
+	for <loongarch@lists.linux.dev>; Wed, 11 Nov 2026 09:52:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 49776606A33E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [123.138.236.242])
-	by gateway (Coremail) with SMTP id _____8CxutHVOvRqXIEeAA--.22281S3;
-	Wed, 11 Nov 2026 17:52:21 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Bxb9PZOvRqX4EeAA--.22220S3;
+	Wed, 11 Nov 2026 17:52:25 +0800 (CST)
 Received: from linux.localdomain (unknown [123.138.236.242])
-	by front1 (Coremail) with SMTP id qMiowJDxg8zSOvRqrLMzAA--.12000S2;
-	Wed, 11 Nov 2026 17:52:19 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJDxg8zSOvRqrLMzAA--.12000S3;
+	Wed, 11 Nov 2026 17:52:22 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	Hengqi Chen <hengqi.chen@gmail.com>
 Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 0/3] Add some new features for LoongArch BPF
-Date: Wed, 11 Nov 2026 17:52:14 +0800
-Message-ID: <20261111095217.31415-1-yangtiezhu@loongson.cn>
+Subject: [RFC PATCH 1/3] LoongArch: BPF: Add support for instructions array
+Date: Wed, 11 Nov 2026 17:52:15 +0800
+Message-ID: <20261111095217.31415-2-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20261111095217.31415-1-yangtiezhu@loongson.cn>
+References: <20261111095217.31415-1-yangtiezhu@loongson.cn>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -52,33 +55,53 @@ List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxg8zSOvRqrLMzAA--.12000S2
+X-CM-TRANSID:qMiowJDxg8zSOvRqrLMzAA--.12000S3
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
-	BjDU0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
-	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
-	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxV
-	AFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
-	67AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
-	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E
-	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82
-	IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC2
-	0s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMI
-	IF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF
-	0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87
-	Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcrWFUUUUU
+X-Coremail-Antispam: 1Uk129KBj9xXoWrZF4kZFWfAFy3JFyrGFykJFc_yoWkZFcEqa
+	4xXasrW3WrGr18Jw1j9rWfXF4jk34rWFn5uryxWrWkZ3s8Aw45urZ7t3s2k3yUWrW7Ja1S
+	krZrJas0vw4IvosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb28YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE
+	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jY38nUUUUU=
 
-Not tested yet, just RFC.
+Add support for the instructions array map type in the LoongArch
+JIT by calling bpf_prog_update_insn_ptrs() with the offsets that
+map xlated_offset to the jited_offset in the final image.
 
-Tiezhu Yang (3):
-  LoongArch: BPF: Add support for instructions array
-  LoongArch: BPF: Add support for indirect jumps
-  LoongArch: BPF: Add support for indirect calls
+LoongArch JIT already has this offset array which was being used
+for bpf_prog_fill_jited_linfo() and can be used directly for the
+function bpf_prog_update_insn_ptrs().
 
- arch/loongarch/net/bpf_jit.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+This is similar to commit 84b1c40d5b4d ("bpf: arm64: Add support
+for instructions array").
 
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/loongarch/net/bpf_jit.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index d7ea515045ec..26904010d9b5 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -2393,6 +2393,7 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_verifier_env *env, struct bpf_pr
+ 		for (i = 0; i <= prog->len; i++)
+ 			ctx.offset[i] *= LOONGARCH_INSN_SIZE;
+ 		bpf_prog_fill_jited_linfo(prog, ctx.offset + 1);
++		bpf_prog_update_insn_ptrs(prog, ctx.offset, ctx.ro_image);
+ 
+ out_offset:
+ 		kvfree(ctx.offset);
 -- 
 2.42.0
 
