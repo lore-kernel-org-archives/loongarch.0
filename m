@@ -1,53 +1,61 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.128
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794361221;
-	b=HY/ojgx/+oQem/ffIskOocnqwr21nJTNLSEfeJpYQ/evJ42NhaA0qt7CX1JS7gDrrjqj
-	 lJy5Zz3dae6ptZlwLQ11fJKZ8wr4RZntMOUxy3U8DsFR/mLi2dnSrez7QD6ByA0UmbIOr
-	 Oq6g5/0Ie6MiWdCsG2GIUn3t2GNRCUIztU8EX5ihiXdIOB+/maUulc3bk1Z4HiYAdy/CS
-	 XoZ4FIgAktHcZkLGWc3K/8AP22S/jty5bAfgvNGBQjJCnwimjRLgPqIhSnj7k8SfnwSVK
-	 JyR6OdLmbap3JB+eyyesdHm6T7mbOvYo0r3A8Af7iw9B4YynKsqYHHMfdsONOKSsVsA==
+	t=1794385202;
+	b=w+u/U99aq2z+FUIDnoZ/lJnAEH+NLpKYmBHLeiJd4V4asDzCaGKhj6m2f9iWEQaQnIHk
+	 2+VcdydhfVT0sXJIhmw+jnKI7MDhtT/JG7nBnlxaxuGa0DxtYculSvUtx0/hO8ZW7zAVy
+	 K7aZgujPBcdRt2WXJ+xpBlPj+nNezUeec0qxEi9Xriibs4Uj2qce96NaLHJ15Msj9iO7H
+	 FCd+lTN+Jny+qxRRTQRCaADvT2LAJQTCghXa8kYk2pgpD0TiOZgMWgnjd8sjYMOmyLQoI
+	 S1LICRSvzOQfYPUo5guIKktWODBUDeQ+2M5Vl7O2nMCFXshqrsHvTzOeFwPLfuY3dqA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794361221;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	a=rsa-sha256; c=relaxed/relaxed; t=1794385202;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Date:From:To:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=oLJHCEJ/Kg3bxSfLgZSUAEgI1pARL/D/gn1f00Ae+ok=;
-	b=I2waomLavLBk4H9nU5yi3ekSiAssgR9nfiIYqBk1fveI/iraK+U9kqRhfFtxfjLzijHS
-	 k7VjCT0d6njDZbiQgZJu6wPeIunEM6xx8Sq2NkrHyoz1jHDeAozxran80pvG0ZqYoaEdG
-	 lXI8z96XvpOb6oPBojYc5UQ1vqEt4Pz2H30R9s3aFcC6GPcKlFIsjK/KR4WIBIxUctUBh
-	 CAHPKrmf5IHuqHZHWn+XU0Tlqse0VVmAtgtzSu4AIUne2ZQDIwEncRrOYV+NemnUInn9M
-	 N1wHgY25p+qUxAlTcK9LFz0meGZ2rkQHnygSwai9sBoAg4FM66AUBUmirpJPWVVp+wQ==
+	bh=G3d3b2tM519kuIvjkSRexg4H0KkdNZyWkRnjj4rZTd4=;
+	b=5f5H0IMoVKw0KEr04QwukZHoZ+veRXM4FJLnvLicm9iv82vZmKaVEjBut5YK/RDVaHji
+	 /Nqq+lxIrxeneg2nw52z8TMzFVrULt6O8L7hwCLSyL2Ni5unksF1B9QeM/woGB2UCBZKt
+	 HF6fgGkYG8gwzaDR7hUrVfmxZVmbPRXJWz4JkDQxPb8JTHsyLltIzjKak6PXChicPb9XK
+	 TvTRGZSLQzCno3jt+s9hXkYIKtM1g6jOiZ77A6DHmpFDu9I7KVBc16XMnZwxqOhZxMf6J
+	 HpptqSz8C8RRFpC9o3uP89yNXEaSZKs3qX/9Jemw9ho8KQ5o2A1w6BE9nTG7jjZdD5A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YZbx2v03;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=iyOp41w6;
+	arc=none smtp.remote-ip=91.218.175.128
+Received: from mta0.migadu.com (out-128.mta0.migadu.com [91.218.175.128])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F19760A260F;
-	Wed, 11 Nov 2026 01:40:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 948D3606A321
+	for <loongarch@lists.linux.dev>; Wed, 11 Nov 2026 08:20:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 948D3606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YZbx2v03
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 651FC1F00A07;
-	Wed, 11 Nov 2026 01:40:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794361220;
-	bh=oLJHCEJ/Kg3bxSfLgZSUAEgI1pARL/D/gn1f00Ae+ok=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=YZbx2v03TUvN/jlvNMNVqE8NL9fIogzqvldc+MpZuXy4HIGSpIWlclbL7D5RzoHsA
-	 gyEk6bypVlrMhvT3RNfgJo8MAh7kjojX7VwhKpkrIJtsteaYgagqNps+gwlaQ01HmE
-	 rmCWx4lLFbYi2fPIEOBJhdeicAlc4YSjjRM7eI2jW2FFuMjvlGwOF/+IKrKHyciv37
-	 BfyuDQmTl8Nwmlq0KSNj+X97TreCGTOfm1n+YE+tebkrVwwHnZHNjTkGUzgj+XbHha
-	 J76oI+9YPtlygcFqa8bkXIAtr1Om0kqtKl93PZAww+GapjyezHbX7K0hTrV9cl8lZK
-	 odYJDPmsGamEQ==
-Date: Tue, 10 Nov 2026 17:40:18 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Leizhen Zhang <lzsx618@gmail.com>
-Cc: peterz@infradead.org, yangtiezhu@loongson.cn, chenhuacai@kernel.org, 
-	alexandre.chartre@oracle.com, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] objtool: Fix undefined behaviour reported by UBSan
- on a defconfig build
-Message-ID: <avPHcvpkqSqyMPRP@jpoimboe>
-References: <20261110000255.1720945-1-lzsx618@gmail.com>
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=iyOp41w6
+X-Envelope-To: loongarch@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=01hkxhMvjpH0YwUfWPSVcu2PhKCcNEL9gg0Q0PcG8gI=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1794385199; v=1; x=1794989999;
+ b=iyOp41w6ePFfiABPcVNymqvnRo7CvaC7mYHYLS9IIcdtQDFFSmovUlyn7TOR60F6UJXjYQHx
+ HBdMKlOMlV0Fj9OFgH1bcGEq7R3P7yexH45CjSDoP4/BLlil+pzb4rmq/ZUZgqqgEe0v0YN/1Yc
+ B25Xx13HT1EETMUH+9zTErRQ=
+X-Envelope-To: loongarch@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id 2365b7a9a39834f0;
+	Wed, 11 Nov 2026 08:19:59 +0000
+X-Mizu-Trace-ID: 2365b7a9a39834f0
+X-Migadu-Flow: FLOW_OUT
+Date: Wed, 11 Nov 2026 16:19:49 +0800
+From: Hao Li <hao.li@linux.dev>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Vlastimil Babka <vbabka@kernel.org>, Harry Yoo <harry@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Christoph Lameter <cl@gentwo.org>, 
+	David Rientjes <rientjes@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, linux-mm@kvack.org, 
+	loongarch@lists.linux.dev, bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] mm/slub: Genericize x86-specific cmpxchg16b comment
+Message-ID: <avQkXxpsIdxB5Ye6@fedora>
+References: <20261111011108.29311-1-yangtiezhu@loongson.cn>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -57,49 +65,47 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261110000255.1720945-1-lzsx618@gmail.com>
+In-Reply-To: <20261111011108.29311-1-yangtiezhu@loongson.cn>
 
-On Mon, Nov 09, 2026 at 06:02:52PM -0600, Leizhen Zhang wrote:
-> An x86_64 defconfig build of v7.4-rc2 with objtool built with
-> -fsanitize=address,undefined (GCC 12) gives two UBSan reports from
-> objtool, both on the normal vmlinux.o pass, no unusual input involved:
+On Wed, Nov 11, 2026 at 09:11:08AM +0800, Tiezhu Yang wrote:
+> In __kmalloc_nolock_noprof(), update the comment from x86-specific
+> "cmpxchg16b" to generic "double-width atomic cmpxchg".
 > 
->   arch/x86/orc.c:11:18: runtime error: member access within null pointer of type 'struct cfi_state'
->   special.c:84:18: runtime error: load of misaligned address ... for type 'unsigned int', which requires 4 byte alignment
+> Suggested-by: Harry Yoo <harry@kernel.org>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+> v3:
+>   - add missing Suggested-by tag for Harry
+>   - use shorter commit message as requested
 > 
-> 1/3 fixes the first one: init_orc_entry() takes &cfi->regs[CFI_BP]
-> before its own "if (!cfi)" check.  2/3 is the same pattern in the
-> LoongArch copy of the function; I compile-tested objtool for LoongArch
-> but have no LoongArch object to run it on.  3/3 fixes the second one:
-> the feature word of a 14-byte packed struct alt_instr is read through
-> an 'unsigned int *', so every odd-numbered entry is misaligned.
+>  mm/slub.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> Testing: I relinked vmlinux.o without objtool and ran the old and the
-> new objtool binary on two copies of it, with the arguments Kbuild uses.
-> The old one prints both reports, the new one prints none, and the two
-> resulting vmlinux.o files are byte-identical.  A full rebuild with the
-> patched objtool is also clean for objtool.
+> diff --git a/mm/slub.c b/mm/slub.c
+> index 45e077c7526c..090302f1daeb 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -5589,8 +5589,8 @@ static void *__kmalloc_nolock_noprof(DECL_TOKEN_PARAMS(size, token), gfp_t gfp_f
+>  	if (!(s->flags & __CMPXCHG_DOUBLE) && !kmem_cache_debug(s))
+>  		/*
+>  		 * kmalloc_nolock() is not supported on architectures that
+> -		 * don't implement cmpxchg16b and thus need slab_lock()
+> -		 * which could be preempted by a nmi.
+> +		 * don't implement double-width atomic cmpxchg and thus need
+> +		 * slab_lock() which could be preempted by a nmi.
+>  		 * But debug caches don't use that and only rely on
+>  		 * kmem_cache_node->list_lock, so kmalloc_nolock() can attempt
+>  		 * to allocate from debug caches by
+> -- 
+> 2.42.0
 > 
-> None of this is a security issue: objtool only processes objects from
-> the build itself.
-> 
-> The two reports were found with UBSan, and the analysis and fixes were
-> prepared with the help of an AI coding assistant; I reviewed and tested
-> the result.
-> 
-> Leizhen Zhang (3):
->   objtool/x86: Move the cfi->regs access after the NULL check
->   objtool/LoongArch: Move the cfi->regs access after the NULL check
->   objtool: Fix misaligned load of the alternative feature word
-> 
->  tools/objtool/arch/loongarch/orc.c | 6 ++++--
->  tools/objtool/arch/x86/orc.c       | 4 +++-
->  tools/objtool/special.c            | 4 ++--
->  3 files changed, 9 insertions(+), 5 deletions(-)
 
-Thanks!  I will queue these up.
+Looks good to me.
+
+Reviewed-by: Hao Li <hao.li@linux.dev>
 
 -- 
-Josh
+Thanks,
+Hao
