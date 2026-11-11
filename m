@@ -1,110 +1,64 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794421186;
-	b=V8RXO87EF4oFqX5wnonNBm8qQxOWhVzgNMV8KjMaQW46Wj/rSjzT5E7Q0q92lhqg0f6d
-	 Mjib7ccBSy1QgTXSC9OyOfiWcpYTTwIVfliFzKjDyF8XdAY0f3b+Q7ZD5+Op73CfaYrhW
-	 A73Iae4DESr/pHH0Ak+R46rXfbmYEHkHEZBAuXTSZCeZm+zNIBGdrWfBfb/mll2m9z91n
-	 Pj+lrdWgItHXtRsMz8EXtZUK+NNjM7rZVwKZoN1Dyt65pHyZgDouYKT/2URwxol7tPzDW
-	 GHeKEhtE4LSQ2RorQUHAupDpOQaIrnUQ50Zo/qWLmliCBvez5hficPY2DnGFc5Djzmw==
+	t=1794434460;
+	b=tV5G+nnxIXJg8fsUUhYxtZRt1a0mb4a7iwxF2elKsmT4KoD+stJoTLrXaSJHXrhD64TU
+	 SzZwpkvDkuy7XqLbiWq3nRxe9FW1Hyb0qQxRssgNYA3hqj91c0kn5fOk8tS7/NcTmxRzL
+	 4dii7G3Vj1rmeOWdq8i6nCVXMrLhSr8Zw3rin2loyECcWMvq4PpulOjiiYdFnoacFkhlR
+	 buUquz8fTBX1j/SI4SxiHs+tXfQTOJTeCrsh1n1v45ANVHbl2Ax21LKMPxQwVDyygZZdz
+	 aLIdrYpkNufaSozktbsVNm6TpYwNfiPz11zxF+35Ne1bqvkKbtcdSNQiP9wnh8GA5JQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794421186;
-	h=DMARC-Filter:From:DKIM-Signature:DKIM-Signature:To:Cc:Subject:Date:
-	 Message-ID:MIME-Version:Content-Transfer-Encoding;
-	bh=miHmWkTPhUcAEvpsJtGNKtqPm0O9WXg4DLHkHhO3x30=;
-	b=VGFyMyheViHK/30V1OfOREY9aaC9gvNerXVyR2YSfhdR5RkrkynOopeHwpXsDCIhGlL1
-	 EPwH7p7vVMzDOexWkKRWNvZt70KCbmXZuGhXrTPe1J6wcTQaJFO5fj0BK/5bXT+7ItUib
-	 OGi++b17kAQX5+BmpTsgIsBf6BqsjuBYe3V65Aa6TnFPhSerPQ/5OmJy7DjsjPrGxUtZx
-	 PP2fNMl01RspU0eaOsICZP6/UHaNaAiSgZbKuIyjGaiDZBrnkUlV6CrMc/RLKr69aLhtn
-	 lKFCX+3F/fLl47SxEhZU3oIu4bg1cahVUC37uCHpX1duQwOTmRm8DBIMEmI/AhTyEXw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794434460;
+	h=Received:DKIM-Signature:Received:Subject:From:In-Reply-To:References:
+	 X-PR-Tracked-List-Id:X-PR-Tracked-Message-Id:X-PR-Tracked-Remote:
+	 X-PR-Tracked-Commit-Id:X-PR-Merge-Tree:X-PR-Merge-Refname:
+	 X-PR-Merge-Commit-Id:Message-Id:Date:To:Cc;
+	bh=8XAiWXGUUjdOqLPEz8B5qkEY7IIzdgIv8dHSwzYxyw4=;
+	b=KEsSnx1Wx5gqmaOXJzdQmE8KBQYvrc9qj/Qog4SPMlzt0MqC/iybofM4f4x9hEnx/Blo
+	 jijK2gDYNLpciZZdBK/LQzBug8A+Zdq/JPyZvqqDfR9yRvVEF/t2VszAtcq5s/o3SVfda
+	 LEVkSrMXSXClhY5xKt6rnkYxfbhKHM4inOS+TLTQdJfdKzDmgCo787fayr+tvMw9/aGmL
+	 GIWbeZhYVa/Wo+3DQryRnZsyoJquZyBdD43o3os4t5vGLFiEvEqJqYsSOejyWjNTH7Yhb
+	 Rr6rLa5fPWxvcTuYpXjKDMeYjYZG4ll4pJvaWXoQQbZgFBVtM2dgGQMo7QR36WTSOAQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linutronix.de;
-	spf=pass smtp.mailfrom=linutronix.de;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=rXyV+V8m;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b="67f/wVrW";
-	arc=none smtp.remote-ip=193.142.43.55
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jNxG+lRk;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F9AF606AE1F;
-	Wed, 11 Nov 2026 18:19:45 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1F9AF606AE1F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14FCA606A890;
+	Wed, 11 Nov 2026 22:01:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=rXyV+V8m;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=67f/wVrW
-From: John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1794421184;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=miHmWkTPhUcAEvpsJtGNKtqPm0O9WXg4DLHkHhO3x30=;
-	b=rXyV+V8mB3WGQYt0D1cbKm+3TdQH5P7EkBB0BuarwzijqP3FTDgXeDtU+702Qha3Vjesjd
-	ZOM+Cs2Cjqf95W9HPfwGmTijj2qXHfWvu2anJBtqLqoaWKO9FjvL7fGv6zbAmkaqKvsvsQ
-	RLNM7MfGFGooJ30UY9ORSGfoi0Y4Pd/bLfBvxxCuZ0XnCWN6lhknFqGFfTdjfbjgodCXyL
-	9khOfeXGPBb8Che0NlD4shfupUeTEen9ahuAZgPlfkyLNV7YY0wetUpUm0wM8itMWW7+PD
-	8f+X28nEXLQlCNh1FQ2LsARwu+5HxRkTrDJVnz2voRACc/e1f7hBk3Crxa9Caw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1794421184;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=miHmWkTPhUcAEvpsJtGNKtqPm0O9WXg4DLHkHhO3x30=;
-	b=67f/wVrWqykxVxVPvO3YPpqenX7yBp2KyE+jBcUbzvEX+HrwwBjv1vgxB6QxoqLtZqXPOF
-	cVUFfC/MqkcyEyAw==
-To: Petr Mladek <pmladek@suse.com>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Breno Leitao <leitao@debian.org>,
-	printk@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jason Wessel <jason.wessel@windriver.com>,
-	Daniel Thompson <danielt@kernel.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mukesh Kumar Chaurasiya <mchauras@linux.ibm.com>,
-	Feng Tang <feng.tang@linux.alibaba.com>,
-	Rio <rioo.tsukatsukii@gmail.com>,
-	Bradley Morgan <brads@mainlining.org>,
-	Pnina Feder <pnina.feder@mobileye.com>,
-	Gal Pressman <gal@nvidia.com>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Pavel Tikhomirov <ptikhomirov@virtuozzo.com>,
-	Oleg Nesterov <oleg@redhat.com>,
-	"Cen Zhang (Microsoft)" <blbllhy@gmail.com>,
-	loongarch@lists.linux.dev,
-	linuxppc-dev@lists.ozlabs.org,
-	kgdb-bugreport@lists.sourceforge.net,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Alessandro Carminati <acarmina@redhat.com>,
-	Baoquan He <baoquan.he@linux.dev>,
-	Mike Rapoport <rppt@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Dave Young <ruirui.yang@linux.dev>,
-	kexec@lists.infradead.org,
-	Gustavo Luiz Duarte <gustavold@gmail.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org
-Subject: [PATCH printk v2 0/6] Introduce policies for unsafe flushing
-Date: Wed, 11 Nov 2026 19:25:16 +0106
-Message-ID: <20261111181942.593695-1-john.ogness@linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jNxG+lRk
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E34481F00A06;
+	Wed, 11 Nov 2026 22:00:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794434459;
+	bh=8XAiWXGUUjdOqLPEz8B5qkEY7IIzdgIv8dHSwzYxyw4=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc;
+	b=jNxG+lRky6MZZKND/V9WnPkb0TuJ4I8992hsoRue94RW99Am4JlkMaV6gz0UCBptS
+	 JbqTwi7JZbD9x6IquJjLI2ceFzJe2kAFLtcr6EYMbAUq5q7xl3+aeDgP5QIqsGJ7RX
+	 uk8WTOIp/OKIwDwMB76CTYJqadwe0WRG0DPvzxDEvfpClLbNGoeb9ThVNlQ+4npPgv
+	 Tm34a7MDOGTbN2n4u1OUwjY2I7lwgLdUBC0ZDWU9PdiFg03aIldipdaJglyQMbom4t
+	 Zvgc/riziUwLZtV2UYGki5VP9eOtMpL9jr9Z6Pj/7ZzbqIKRaxgwYl44rDFHMqjb/J
+	 76Ph6zV42zGjA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id D8305391AFAA;
+	Wed, 11 Nov 2026 22:00:59 +0000 (UTC)
+Subject: Re: [GIT PULL] LoongArch fixes for v7.4-rc3
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20261111140535.3899978-1-chenhuacai@loongson.cn>
+References: <20261111140535.3899978-1-chenhuacai@loongson.cn>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20261111140535.3899978-1-chenhuacai@loongson.cn>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-7.4-1
+X-PR-Tracked-Commit-Id: 422e532809572ba1043192bf6a0c653bc68b3140
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 79eb6679ef6a0d5ea68da53a8321fb1dc72299b9
+Message-Id: <179443445882.1663589.5239313471674239048.pr-tracker-bot@kernel.org>
+Date: Wed, 11 Nov 2026 22:00:58 +0000
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -113,89 +67,16 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-v1 is here [0].
+The pull request you sent on Wed, 11 Nov 2026 22:05:34 +0800:
 
-Until now unsafe flushing is only performed at the very end of
-panic(), before entering the infinite loop. For other situations
-(such as panic-kexec or panic-reboot or emergency-reboot) no
-unsafe flushing is performed. The reasoning for this is because
-an unsafe flush could lead to fireworks, which could prevent the
-kexec or reboot from occurring.
+> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-7.4-1
 
-However, some users may be willing to take on such risks in order
-to see panic output. Indeed, for the netconsole (which does not
-support safe atomic printing) it is a regression that such unsafe
-printing does not occur. [1] 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/79eb6679ef6a0d5ea68da53a8321fb1dc72299b9
 
-This series adds unsafe flushing policy flags per-console to
-allow individual consoles to perform unsafe flushing for such
-scenarios. The unsafe flushing is hard-code-enabled for the
-netconsole in patch 6/6. The justification is that this is not
-less safe than the legacy netconsole.
+Thank you!
 
-Later these policy flags could be easily exposed to userspace
-via /sys/class/consoles/, once the sysfs per-console interface
-is available.
-
-Changes since v1:
-
-- Make console.unsafe_flush_flags unsigned.
-
-- Add missing kerneldoc description for printk_trigger_flush().
-
-- Remove the WARN_ON_ONCE() in
-  nbcon_context_try_acquire_hostile() since hostile takeovers
-  are now possible from non-panic contexts.
-
-- Also provide a flush reason for console_flush_on_panic().
-
-- Add a global variable @legacy_flush_reason to track reason
-  for legacy flushing.
-
-- Explicitly set PR_FLUSH_RUNTIME to 0 since it is now used to
-  initialize @legacy_flush_reason.
-
-- Temporarily set @legacy_flush_reason during legacy flushing
-  of console_flush_on_panic() and printk_trigger_flush().
-
-- Also set/check ctxt->allow_unsafe_takeover in
-  nbcon_legacy_emit_next_record() to enforce flush policies
-  for legacy flushing.
-
-John Ogness
-
-[0] https://lore.kernel.org/lkml/20261109123127.489676-1-john.ogness@linutronix.de
-[1] https://lore.kernel.org/lkml/20260915100140.3631650-1-ryan.roberts@arm.com
-
-John Ogness (6):
-  printk: Introduce and specify flush reasons
-  console: Introduce unsafe flush policy flags
-  printk: Evaluate flush policy in nbcon_allow_unsafe_takeover()
-  printk: Remove nbcon_atomic_flush_unsafe()
-  printk: Add panic+kexec flush point
-  netconsole: Always perform unsafe flushing on panic/kdb/restart
-
- arch/loongarch/kernel/reset.c  |   2 +-
- arch/powerpc/kernel/traps.c    |   2 +-
- arch/powerpc/kernel/watchdog.c |   2 +-
- drivers/net/netconsole.c       |   4 +
- include/linux/console.h        |  39 +++++++---
- include/linux/printk.h         |  27 +++++--
- kernel/crash_core.c            |   1 +
- kernel/debug/debug_core.c      |   2 +-
- kernel/panic.c                 |   8 +-
- kernel/printk/internal.h       |   5 +-
- kernel/printk/nbcon.c          | 129 ++++++++++++++++++++++-----------
- kernel/printk/printk.c         |  38 +++++++---
- kernel/reboot.c                |   2 +-
- lib/nmi_backtrace.c            |   2 +-
- 14 files changed, 181 insertions(+), 82 deletions(-)
-
-
-base-commit: d01f86a7da8161aac8c6304b377cf58fb75861ca
 -- 
-2.47.3
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
