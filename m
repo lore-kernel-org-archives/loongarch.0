@@ -1,61 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.128
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794385202;
-	b=w+u/U99aq2z+FUIDnoZ/lJnAEH+NLpKYmBHLeiJd4V4asDzCaGKhj6m2f9iWEQaQnIHk
-	 2+VcdydhfVT0sXJIhmw+jnKI7MDhtT/JG7nBnlxaxuGa0DxtYculSvUtx0/hO8ZW7zAVy
-	 K7aZgujPBcdRt2WXJ+xpBlPj+nNezUeec0qxEi9Xriibs4Uj2qce96NaLHJ15Msj9iO7H
-	 FCd+lTN+Jny+qxRRTQRCaADvT2LAJQTCghXa8kYk2pgpD0TiOZgMWgnjd8sjYMOmyLQoI
-	 S1LICRSvzOQfYPUo5guIKktWODBUDeQ+2M5Vl7O2nMCFXshqrsHvTzOeFwPLfuY3dqA==
+	t=1794386569;
+	b=M8EyM3MozP70eEIcGcLKs7RhQRhCMUq5pkVnTS5wrjJAv4b3NnfxmFG3QHBW+ktyOldB
+	 +LdZ6xpbV3rKv0gx4HFKjPmihzZp1FsXInfjjnnbxXU61H2/+0xtc+broc8hZBH6XZFYh
+	 EhhvU29hjVkyE7mvSbE0TdweUihqXLRx4U6DVYyqQv2ZRmVwCCdABM4BEAgIH2ykeee9w
+	 VHoSh4VNWZPiARAbeQXDv0fV85OwaeTd1MNE/mgY1X7C/Xy3/r6x7oXj+buGGfYACKUnp
+	 nms7SzZGwslXQEngAQbminU7z0OU0B1j0Xu9gCCwrKYyu89V3N2nvyx6KMfPIi7PcyA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794385202;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=G3d3b2tM519kuIvjkSRexg4H0KkdNZyWkRnjj4rZTd4=;
-	b=5f5H0IMoVKw0KEr04QwukZHoZ+veRXM4FJLnvLicm9iv82vZmKaVEjBut5YK/RDVaHji
-	 /Nqq+lxIrxeneg2nw52z8TMzFVrULt6O8L7hwCLSyL2Ni5unksF1B9QeM/woGB2UCBZKt
-	 HF6fgGkYG8gwzaDR7hUrVfmxZVmbPRXJWz4JkDQxPb8JTHsyLltIzjKak6PXChicPb9XK
-	 TvTRGZSLQzCno3jt+s9hXkYIKtM1g6jOiZ77A6DHmpFDu9I7KVBc16XMnZwxqOhZxMf6J
-	 HpptqSz8C8RRFpC9o3uP89yNXEaSZKs3qX/9Jemw9ho8KQ5o2A1w6BE9nTG7jjZdD5A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794386569;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:Content-Language:To:Cc:References:From:Autocrypt:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=J9TlcmZOHl4GDK38pDne6xs3KrODI10b3Bsj+fs2XwA=;
+	b=2rJl6IQDi4bRcIYGVtAXaQppe3gu+KXWwvbl3mbW9BoV1UA64cXEwQ92I3K8d5ASqqNm
+	 VIjT9+Nmn2moGoX4aIB/ZQ//qMhg+A5dfnH8Nx+5zAnB+ycZa3Sp9moT+TWv55gFovE1X
+	 KJ9u8x0L5wAdclL+RhMdmlkpTZWp/WuEGmS+TxVAwnLmmOBdLoBdkLW0VBZsjEWZdWtI3
+	 ZR9CMix3qhtbfp4YqLdOfWcN4jh5DUI9o5GnWGtmliazLVHPVoJFcRB+8q0tCmRfGF7GQ
+	 aeFm2kM5RqZSRqL0XI0NfwzhoO1IuQzlzeQeHBbu/Gtu13nH/gktGGoqN3sCYVYs4lg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=iyOp41w6;
-	arc=none smtp.remote-ip=91.218.175.128
-Received: from mta0.migadu.com (out-128.mta0.migadu.com [91.218.175.128])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PnVgkc9J;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 948D3606A321
-	for <loongarch@lists.linux.dev>; Wed, 11 Nov 2026 08:20:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 948D3606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA4C606A320;
+	Wed, 11 Nov 2026 08:42:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=iyOp41w6
-X-Envelope-To: loongarch@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=01hkxhMvjpH0YwUfWPSVcu2PhKCcNEL9gg0Q0PcG8gI=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1794385199; v=1; x=1794989999;
- b=iyOp41w6ePFfiABPcVNymqvnRo7CvaC7mYHYLS9IIcdtQDFFSmovUlyn7TOR60F6UJXjYQHx
- HBdMKlOMlV0Fj9OFgH1bcGEq7R3P7yexH45CjSDoP4/BLlil+pzb4rmq/ZUZgqqgEe0v0YN/1Yc
- B25Xx13HT1EETMUH+9zTErRQ=
-X-Envelope-To: loongarch@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 2365b7a9a39834f0;
-	Wed, 11 Nov 2026 08:19:59 +0000
-X-Mizu-Trace-ID: 2365b7a9a39834f0
-X-Migadu-Flow: FLOW_OUT
-Date: Wed, 11 Nov 2026 16:19:49 +0800
-From: Hao Li <hao.li@linux.dev>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Vlastimil Babka <vbabka@kernel.org>, Harry Yoo <harry@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Christoph Lameter <cl@gentwo.org>, 
-	David Rientjes <rientjes@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, linux-mm@kvack.org, 
-	loongarch@lists.linux.dev, bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] mm/slub: Genericize x86-specific cmpxchg16b comment
-Message-ID: <avQkXxpsIdxB5Ye6@fedora>
-References: <20261111011108.29311-1-yangtiezhu@loongson.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PnVgkc9J
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F39811F00A0B;
+	Wed, 11 Nov 2026 08:42:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794386569;
+	bh=J9TlcmZOHl4GDK38pDne6xs3KrODI10b3Bsj+fs2XwA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=PnVgkc9JqLBFSG0LJoC7O/CKjwo/iFu8jg1I6tlJ2K3MdRuUwj4p3Fdt9Pnoofaqj
+	 WLhKes4xiquvPFKfUJDXgD/zwr7etoWMZhP2V+msyAfvlSAkmYBKYDMBU6qmfePqcg
+	 AvZJ+ZfQgiipiLLRy5gP7s5czGjlErYEAMwbiLXuGF2h3IhIRkOM1EOmKvS78PoJ3p
+	 yi+srwCCcegYJ1lBPX1MILZPLYHbHz7HnfFSHCD2YyC7kjRSynAFllcQy9m18npqRD
+	 c1i4Dx2spI63nDb8GeMeu3yzZt3YZ2v9aRE5J4YksdhL9lEyXKf0WTGTDqTDb0QuX5
+	 +53E20EfgvT6g==
+Message-ID: <79a14b15-cd1c-4345-bcea-c13e2ed73973@kernel.org>
+Date: Wed, 11 Nov 2026 09:42:44 +0100
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -65,16 +51,70 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] mm/slub: Genericize x86-specific cmpxchg16b comment
+Content-Language: en-US
+To: Tiezhu Yang <yangtiezhu@loongson.cn>, Harry Yoo <harry@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, Hao Li <hao.li@linux.dev>,
+ Christoph Lameter <cl@gentwo.org>, David Rientjes <rientjes@google.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>
+Cc: linux-mm@kvack.org, loongarch@lists.linux.dev, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20261111011108.29311-1-yangtiezhu@loongson.cn>
+From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
+Autocrypt: addr=vbabka@kernel.org; keydata=
+ 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
 In-Reply-To: <20261111011108.29311-1-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Nov 11, 2026 at 09:11:08AM +0800, Tiezhu Yang wrote:
+On 11/11/26 02:11, Tiezhu Yang wrote:
 > In __kmalloc_nolock_noprof(), update the comment from x86-specific
 > "cmpxchg16b" to generic "double-width atomic cmpxchg".
 > 
 > Suggested-by: Harry Yoo <harry@kernel.org>
 > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+
+Acked-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
+
+
 > ---
 > v3:
 >   - add missing Suggested-by tag for Harry
@@ -98,14 +138,4 @@ On Wed, Nov 11, 2026 at 09:11:08AM +0800, Tiezhu Yang wrote:
 >  		 * But debug caches don't use that and only rely on
 >  		 * kmem_cache_node->list_lock, so kmalloc_nolock() can attempt
 >  		 * to allocate from debug caches by
-> -- 
-> 2.42.0
-> 
 
-Looks good to me.
-
-Reviewed-by: Hao Li <hao.li@linux.dev>
-
--- 
-Thanks,
-Hao
