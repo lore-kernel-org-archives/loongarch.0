@@ -1,56 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=113.46.200.219
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=113.46.200.222
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794490493;
-	b=c5x6RUdhGkdEP+zheYwabwZZVBCpTF1ADzuBajGTNA8sP/5qAhiYuXG75RvEaeFvxwje
-	 c+Ea/qc/rBpH2k6GbIzF7/0G1+bK7tiOMYHLwhCEuJsmJ7NH39Nesu2gQyF9gvAvNxIWY
-	 g2mCschwvSQU4pR4e3oyilX34IdEWc30hXil8brfknlu+OZT1K/5Hdx2QGLRkJGTCZ0e5
-	 IyURC6qrcVfBpV3i4xVe4bP7p4ayTpaJ770Q2Pnrt9kfcsXQ0C8PWUoJKyonR7hGR9o4P
-	 z7PSaEDhHUmSpN5Okf83ocsH9x0c29OEKxQlZoTsoVsLyD1QgXdb4OfiU5awx60EMBQ==
+	t=1794490495;
+	b=4O0RYcbH4FADYV9ItNd/yJyhv47r32Noo6cqHQKf2RIKYdkN8KsPj+CpLXRyG/rpALch
+	 crd6z6wvOc6lmBLx0maZpgKVfzBvvMPcFZrXqnNSaESFNF33U/2iizGJRYSZM+sHA3oOf
+	 dHsUdU/IjFHUMg1pOj3v0OEy67iCQP+vMmGWnYpBm41mo7J+fBOI7Ae0fPXlL348PFGtM
+	 M4tZXjEby+zvy+/Qpfkk8dElcpR//ygvngVNIZthMVkrfmfYEn1Bj/6/+P3ktlWONQxUP
+	 8cGhXh96zZiPA9GmsKFtApjZamvzEJvHMdH2abFbXr81/OLgGsmIxnWCjOYz4vRDZ1A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794490493;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794490495;
 	h=DMARC-Filter:dkim-signature:Received:Received:Received:From:To:
 	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding:Content-Type:X-Originating-IP:
 	 X-ClientProxiedBy;
-	bh=LDrMUXDiGwEodm+UO1zYbp0STV2HpN8QjsxDMPk/zv4=;
-	b=OE/3LBFLS/JWeyQ6BBEQ9EERLjbMXmZH6e3wjYw0OI+M2bv1tHQ4QR8WQGf/TLk7w9Hf
-	 0Q2QsvKei9BWbEv5sLi3tlbu0qW/gfWzrNfjzP//edRNUjSF4JAzrqMr0JutGXVb+h84u
-	 TMCdgrUJ2p6uoU9m48GhMrM6nl3ufmtOXjIBanNi+lVRCD+66SDXOrD4oWzKsNAK0C+q8
-	 2Pg3f6krlRAiad0x0InlziGsOfMaV4VovNdZ14HqitTujt6Wu9GeTQJgLrWeKzMn5G9VN
-	 cK4LqKFOpXig1gF6FzJ1DsTUyfAfTEJG8PAhmxhfXTToxF5ql0TwHiZepYs+/0zCMCA==
+	bh=Eh7Neg9wcVMsJIfAcLR2eiV7KLyb1KF97UJjwNvN0YY=;
+	b=3jaSAqdQr1a/QJJBfZgZ1gas2K8+p68YvCXWAcrhEaGFM7ToDlSGhF0FLwo7ny81vzZY
+	 wp5c0GtufwtbUv/LathrkOwjYxysh1KXdKtofTFvy3W9WvxY117pQa4GQG6BCCQJTBi+X
+	 5QNs6wIZaharGyUujpRXS6UOGZ2+P+yZHJvsjsuD9qbw0KiPtPVloEvkoHKgZA66cXuwp
+	 2ZvmTY+tLbcEHObn9S2ZlEJ6ZEy22ITSgfqZ6I+aA6CGm2jrb07fdUUSEX9YqxRThwwvT
+	 r2bmVMULllwa6anhgW2bO5SH++/vwY3SKwEbbw3MDMrqr3GUKJCbSu6Hpw8Eq2z4QVg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=huawei.com;
 	spf=pass smtp.mailfrom=huawei.com;
-	dkim=pass header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=B4ZY9D3j;
-	arc=none smtp.remote-ip=113.46.200.219
-Received: from canpmsgout04.his.huawei.com (canpmsgout04.his.huawei.com [113.46.200.219])
+	dkim=pass header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=2OMn6j1I;
+	arc=none smtp.remote-ip=113.46.200.222
+Received: from canpmsgout07.his.huawei.com (canpmsgout07.his.huawei.com [113.46.200.222])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C1EB60A261A
-	for <loongarch@lists.linux.dev>; Thu, 12 Nov 2026 13:34:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4C1EB60A261A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23E7560A380B
+	for <loongarch@lists.linux.dev>; Thu, 12 Nov 2026 13:34:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 23E7560A380B
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=B4ZY9D3j
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=2OMn6j1I
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=LDrMUXDiGwEodm+UO1zYbp0STV2HpN8QjsxDMPk/zv4=;
-	b=B4ZY9D3jYXEUivvy5xzhpPy/FAqMkWeNLbZEsmKs9U6vsxCJ8fSWmCWeg5u7pyPrHGer38JHp
-	a6Oi2PTBdFwcS3EuQuyWqRyzHBTMMFyH5wKsaKfm5bZju6VsHXuho8Z2+uNpRyrXiGeyk358NBC
-	THl9TyI1Ur49hbWWTOT/wlI=
-Received: from mail.maildlp.com (unknown [172.19.163.0])
-	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4jQLwG1RgJz1prlM;
-	Thu, 12 Nov 2026 21:34:38 +0800 (CST)
+	bh=Eh7Neg9wcVMsJIfAcLR2eiV7KLyb1KF97UJjwNvN0YY=;
+	b=2OMn6j1I6kW0FIr1YLk16y/U44dDnyyOLth3L7D/XtmzWy6p/ocvPBVpkPiJFrBcEZbwU6JX4
+	oJW5JKmAoWvyPoSQ1VzPS2Fax3IQ6815Ely6hLdkMhaL7PipT2wDxpx9E1T/8t2UfWxJPoQdXgz
+	ndMmWxA5Yk4SjKwWTABu52U=
+Received: from mail.maildlp.com (unknown [172.19.162.92])
+	by canpmsgout07.his.huawei.com (SkyGuard) with ESMTPS id 4jQLwB3CvszLlsq;
+	Thu, 12 Nov 2026 21:34:34 +0800 (CST)
 Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9DBC540537;
-	Thu, 12 Nov 2026 21:34:47 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 5BBAA40565;
+	Thu, 12 Nov 2026 21:34:50 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by kwepemk200008.china.huawei.com
  (7.202.194.74) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Thu, 12 Nov
- 2026 21:34:46 +0800
+ 2026 21:34:48 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
@@ -77,9 +77,9 @@ To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<linux-kernel@vger.kernel.org>, <loongarch@lists.linux.dev>,
 	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
 	<kexec@lists.infradead.org>
-Subject: [PATCH v8 08/11] kexec: Extract kexec_free_segment_cma() from kimage_free_cma()
-Date: Thu, 12 Nov 2026 21:34:15 +0800
-Message-ID: <20261112133418.4044428-9-ruanjinjie@huawei.com>
+Subject: [PATCH v8 10/11] arm64: kexec_file: Fix CMA segment placement retries
+Date: Thu, 12 Nov 2026 21:34:17 +0800
+Message-ID: <20261112133418.4044428-11-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20261112133418.4044428-1-ruanjinjie@huawei.com>
 References: <20261112133418.4044428-1-ruanjinjie@huawei.com>
@@ -97,85 +97,88 @@ Content-Type: text/plain
 X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
  kwepemk200008.china.huawei.com (7.202.194.74)
 
-Arch loaders truncate nr_segments when a placement fails, so the CMA
-pages of the dropped segments become unreachable.  Export a per-segment
-helper so they can be released first.
+The file-based kexec system call places segments with kexec_add_buffer(),
+which takes them from CMA when kexec_alloc_contig() succeeds, to avoid
+copying the payload at kexec time.
 
-No functional change intended.
+When load_other_segments() cannot place the initrd or the DTB, the
+segments of the attempt are dropped but their CMA pages are leaked.
+Release them with kexec_rollback_segments() in the retry loop and in the
+error path of load_other_segments().
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Baoquan He <baoquan.he@linux.dev>
-Cc: Mike Rapoport <rppt@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: Pratyush Yadav <pratyush@kernel.org>
+The loop makes progress by advancing buf_min past a segment placed by the
+walk.  kexec_alloc_contig() ignores buf_min, so once the pages of a CMA
+segment are released, the next attempt can get the same region again and
+the retry makes no progress.  Disable CMA for the retry.
+
+A CMA segment can be anywhere in RAM, so moving buf_min to its end can
+raise the walk's lower bound close to the top of memory and leave the
+retry with too little space for the initrd and DTB, failing with
+-EADDRNOTAVAIL.  Only advance buf_min for segments found by the walk.
+
+Tested with a non-crash kexec_file_load() on QEMU virt, 1 GiB RAM and
+cma=64M, which places CMA at the top of RAM.
+
+Before the fix:
+	The retry leaks the CMA pages and kexec_file_load() returns
+	-EADDRNOTAVAIL even though RAM below CMA is free.
+
+After the fix:
+	The kernel and initrd are placed below CMA and the second
+	kernel boots.
+
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
 Cc: Breno Leitao <leitao@debian.org>
+Cc: Pratyush Yadav <pratyush@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: stable@vger.kernel.org
+Fixes: 07d24902977e ("kexec: enable CMA based contiguous allocation")
 Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 ---
- include/linux/kexec.h |  2 ++
- kernel/kexec_core.c   | 25 ++++++++++++++-----------
- 2 files changed, 16 insertions(+), 11 deletions(-)
+ arch/arm64/kernel/kexec_image.c        | 12 ++++++++----
+ arch/arm64/kernel/machine_kexec_file.c |  2 +-
+ 2 files changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 89cb47521d6d..be7c827e8f7e 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -529,6 +529,7 @@ extern bool kexec_file_dbg_print;
+diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
+index a2a7c283b331..1cbb3c73c6e9 100644
+--- a/arch/arm64/kernel/kexec_image.c
++++ b/arch/arm64/kernel/kexec_image.c
+@@ -109,11 +109,15 @@ static void *image_load(struct kimage *image,
+ 			break;
  
- extern void *kimage_map_segment(struct kimage *image, int idx);
- extern void kimage_unmap_segment(void *buffer);
-+void kexec_free_segment_cma(struct kimage *image, unsigned long idx);
- #else /* !CONFIG_KEXEC_CORE */
- struct pt_regs;
- struct task_struct;
-@@ -540,6 +541,7 @@ static inline int kexec_crash_loaded(void) { return 0; }
- static inline void *kimage_map_segment(struct kimage *image, int idx)
- { return NULL; }
- static inline void kimage_unmap_segment(void *buffer) { }
-+static inline void kexec_free_segment_cma(struct kimage *image, unsigned long idx) { }
- #define kexec_in_progress false
- static inline bool kexec_is_in_progress(void) { return false; }
- #endif /* CONFIG_KEXEC_CORE */
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index f4a31565c447..03b396869e34 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -571,22 +571,25 @@ static void kimage_free_entry(kimage_entry_t entry)
- 	kimage_free_pages(page);
+ 		/*
+-		 * We couldn't find space for the other segments; erase the
+-		 * kernel segment and try the next available hole.
++		 * kexec_alloc_contig() ignores buf_min and always returns
++		 * CMA memory, so disable it and keep buf_min.
+ 		 */
+-		image->nr_segments -= 1;
+-		kbuf.buf_min = kernel_segment->mem + kernel_segment->memsz;
++		if (image->segment_cma[kernel_segment_number])
++			image->no_cma = true;
++		else
++			kbuf.buf_min = kernel_segment->mem + kernel_segment->memsz;
++
++		kexec_rollback_segments(image, kernel_segment_number);
+ 		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+ 	}
+ 
+diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+index 82122ded1467..8747daa23079 100644
+--- a/arch/arm64/kernel/machine_kexec_file.c
++++ b/arch/arm64/kernel/machine_kexec_file.c
+@@ -132,7 +132,7 @@ int load_other_segments(struct kimage *image, unsigned long kernel_load_addr,
+ 	return 0;
+ 
+ out_err:
+-	image->nr_segments = orig_segments;
++	kexec_rollback_segments(image, orig_segments);
+ 	kvfree(dtb);
+ 	return ret;
  }
- 
--static void kimage_free_cma(struct kimage *image)
-+void kexec_free_segment_cma(struct kimage *image, unsigned long idx)
- {
--	unsigned long i;
-+	u32 nr_pages = image->segment[idx].memsz >> PAGE_SHIFT;
-+	struct page *cma = image->segment_cma[idx];
- 
--	for (i = 0; i < image->nr_segments; i++) {
--		struct page *cma = image->segment_cma[i];
--		u32 nr_pages = image->segment[i].memsz >> PAGE_SHIFT;
-+	if (!cma)
-+		return;
- 
--		if (!cma)
--			continue;
-+	arch_kexec_pre_free_pages(page_address(cma), nr_pages);
-+	dma_release_from_contiguous(NULL, cma, nr_pages);
-+	image->segment_cma[idx] = NULL;
-+}
- 
--		arch_kexec_pre_free_pages(page_address(cma), nr_pages);
--		dma_release_from_contiguous(NULL, cma, nr_pages);
--		image->segment_cma[i] = NULL;
--	}
-+static void kimage_free_cma(struct kimage *image)
-+{
-+	unsigned long i;
- 
-+	for (i = 0; i < image->nr_segments; i++)
-+		kexec_free_segment_cma(image, i);
- }
- 
- void kimage_free(struct kimage *image)
 -- 
 2.34.1
 
