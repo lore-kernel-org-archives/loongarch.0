@@ -1,88 +1,50 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=113.46.200.219
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794490501;
-	b=1AESsFrKG97+ctbFhA6ZVWcjhhu/JnHw4U+AQp9IqafnVoyPCrEEy2xfWG4eHWA7lskq
-	 cTbA9W8Efe7z9dHFTjswBMhrtv0w/+z4FvD//6ZPj7IFPA/VPp/hckuZRGUJ6ediz9d9F
-	 Mu3g382ILMRWLm/2KKv99SIXSRUZcZ5fKX3W41Z7ebqo/e4XpaHAItLZbQfzZgR1yzKR0
-	 1GcH5MyIizNQLibvljuGFEUbG6acsqkaSDYVqnsRND6t4dtaRdWzjbmctaKiFkVpRLcUM
-	 t2Ru3iVMpvga9XXWGQDFg0ZKF19hrFvSArJQJjtsjxU/dh4M91l8oYd+OQwD0XpxSYA==
+	t=1794501475;
+	b=re/Sz8Z5yjLMLhkXhl2KnzNW8HCnlac4nNq4ku706MszVhrJT9qZLz9iViCoq/9cYikQ
+	 Jo9HF1Ea5RP9gJXMMVX0FGLuKm25F0fFYozNAwNUQlsXIsqJo6FufciFP2sgIvO7rR++1
+	 E/3hVvAEnGPiCMVNc52EIqQGqgleAWlditRH6SS4s3rNP9JWxOozsO0rr5a1yeeRsltMY
+	 qcLszOsFB33eHkgdq/qao6NmAO63V8Ewu9rQhwbQoAfe4Dp8VyVc1d/OctopsxRH3UEPj
+	 TnJkjcqZ3yEsJwmYIXIp84VMenS5cQQeJ+EMWhzppf3hGmMjNguJ2gPjgFcW/cTSMxw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794490501;
-	h=DMARC-Filter:dkim-signature:Received:Received:Received:From:To:
-	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:Content-Type:X-Originating-IP:
-	 X-ClientProxiedBy;
-	bh=tIQmeBavWwtlHFLNqUczBSlf/4cBgAc0LbNh8aHp/iA=;
-	b=JW0ifrG+i5hpKujOZK8lZKx5unkC8wKVau2SG5e6lskseXwWWCYqbHTnFfLiT4txScHk
-	 NT5TsXfXhrCTzKy5mLSsSIprrXJpHTEBOXcuffzPDmoMWJ9qihxiyHXFbq1t2ypdxnAfS
-	 wFayCfAOQEIarfoCajv6lEqoFgEFLMnwcxgWYb+okH8EQLMM8SKQVSGwAQCyy0VMlt6aM
-	 MjbJEFZpsnzUxy1zYAUGb6X2JAeXQFrsulKWP8dwizVAGhzKhcDywlj/5iM8LTnGuSGVK
-	 6PUIMUWoxQdF8FVD0aA7xfC10n9QIYwH73881F6PEVqtjV5espeV5sqgcrxyHcSKwiA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794501475;
+	h=Received:DKIM-Signature:From:Subject:Date:Message-Id:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:X-B4-Tracking:X-Change-ID:To:
+	 Cc:X-Mailer:X-Developer-Signature:X-Developer-Key;
+	bh=jCZcwaVbEXSO6fmP+AQbtigP75VIYTb9aAjDi7oBhe8=;
+	b=sapR9csF0QTLBibpBehDZTIjQGEPL6cxnPNTK36hoDLcCnZ6cMh4lwVk8lh5yAUghG11
+	 vWpJAaXo6apupJRu6k8IxAb1jGB6Xmq6yIDabDHsBbFCZruoqKlli9w/756sGRiJvGW8U
+	 80Fu1H9laa3ZMoaoxRjFzT6krNYaqIBA4eGBU9qMa6rTTlvN8vXxR1NTThd/x6g7R958X
+	 22xmMnBxqOPDq2ZuR9Za3QyzWQVWDyYyrO6AUN97KOWJGUcWjTMg/GTJkQ/wromoNKNf/
+	 XUkg3Cr+0mVQTNYiHEQhTR7O7VEDzwqwzKvn0+g2ibJTXqfWAeWMW0zxOpEdilC9Wpg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=huawei.com;
-	spf=pass smtp.mailfrom=huawei.com;
-	dkim=pass header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=OiDtIf6u;
-	arc=none smtp.remote-ip=113.46.200.219
-Received: from canpmsgout04.his.huawei.com (canpmsgout04.his.huawei.com [113.46.200.219])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=j2ksWvqT;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EDE5606A333
-	for <loongarch@lists.linux.dev>; Thu, 12 Nov 2026 13:34:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4EDE5606A333
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0AEC606A31C;
+	Thu, 12 Nov 2026 16:37:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=OiDtIf6u
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=tIQmeBavWwtlHFLNqUczBSlf/4cBgAc0LbNh8aHp/iA=;
-	b=OiDtIf6uHabJJFsJNnuEonq52+w08+gk6rdCnY2NaGXjd5htZSxj7F8mCjUYZPXpl4pZV5PxC
-	VGhb+9xcp8qbHZ0/wxqyPQtTdYeyi5kW9zaM8hFzgNvHT1Ikpeeq9Oly0GN6T5u8GrGZuREJAmA
-	7mDKp5UskfIYOmb/dwgS9BA=
-Received: from mail.maildlp.com (unknown [172.19.163.0])
-	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4jQLwL23jvz1prLQ;
-	Thu, 12 Nov 2026 21:34:42 +0800 (CST)
-Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id B3D3140537;
-	Thu, 12 Nov 2026 21:34:51 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by kwepemk200008.china.huawei.com
- (7.202.194.74) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Thu, 12 Nov
- 2026 21:34:50 +0800
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
-	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
-	<mpe@ellerman.id.au>, <npiggin@gmail.com>, <chleroy@kernel.org>,
-	<ritesh.list@gmail.com>, <sshegde@linux.ibm.com>, <pjw@kernel.org>,
-	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <alex@ghiti.fr>,
-	<tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <akpm@linux-foundation.org>,
-	<baoquan.he@linux.dev>, <rppt@kernel.org>, <pasha.tatashin@soleen.com>,
-	<pratyush@kernel.org>, <ruanjinjie@huawei.com>, <leitao@debian.org>,
-	<yeoreum.yun@arm.com>, <mpilaniy@redhat.com>, <robh@kernel.org>,
-	<coiby.xu@gmail.com>, <Yeking@Red54.com>, <prudo@redhat.com>,
-	<brads@mainlining.org>, <sourabhjain@linux.ibm.com>, <mkchauras@gmail.com>,
-	<blum@kernel.org>, <adityag@linux.ibm.com>, <qirui.001@bytedance.com>,
-	<hui.wang@canonical.com>, <sohammetha01@gmail.com>, <guoren@kernel.org>,
-	<gaohan@iscas.ac.cn>, <ionut.nechita@windriver.com>,
-	<vishal.l.verma@intel.com>, <seanjc@google.com>, <ardb@kernel.org>,
-	<richard.lyu@suse.com>, <arnd@arndb.de>, <tzimmermann@suse.de>,
-	<rick.p.edgecombe@intel.com>, <kai.huang@intel.com>, <kas@kernel.org>,
-	<piliu@redhat.com>, <thuth@redhat.com>, <shradhagupta@linux.microsoft.com>,
-	<ebiggers@kernel.org>, <jbouron@amazon.com>, <me@linux.beauty>,
-	<mclapinski@google.com>, <graf@amazon.com>, <tangyouling@kylinos.cn>,
-	<x86@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <loongarch@lists.linux.dev>,
-	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
-	<kexec@lists.infradead.org>
-Subject: [PATCH v8 11/11] LoongArch: kexec_file: Fix CMA segment placement retries
-Date: Thu, 12 Nov 2026 21:34:18 +0800
-Message-ID: <20261112133418.4044428-12-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20261112133418.4044428-1-ruanjinjie@huawei.com>
-References: <20261112133418.4044428-1-ruanjinjie@huawei.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=j2ksWvqT
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 527B61F000C5;
+	Thu, 12 Nov 2026 16:37:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794501474;
+	bh=jCZcwaVbEXSO6fmP+AQbtigP75VIYTb9aAjDi7oBhe8=;
+	h=From:Subject:Date:To:Cc;
+	b=j2ksWvqTjSpZRpEsyTzmS8gn1fYVO4+77jjtVD2TTFlIgfkVQlOk4zXryc2kB9+JC
+	 T3OtQ+rN/tMSqHZomvQ/G5Cx/WXIMv3mMEYGQ4qvgX8LiABhA8sQK0N6QYHi7Fsp4e
+	 Hk2pUwIxYgFmsDpRsRCOCGb79e9HTkdNFz9F9ThBcu/ofn6qdF/vOYMyi0NhEk2ePx
+	 zyjSDNgbA4HYZWd2NgF4NUeouIylYH4zt8BRnBbYz8tK66jZQcBHuvxyulHFFfvNoQ
+	 HvYmM4CcWOgiMGC6XGwj7KPtbncI/6XyGlUbOREprjSfMgxNUVuKQRC+//pxEYh94L
+	 81/mSZ987PGpA==
+From: Christian Brauner <brauner@kernel.org>
+Subject: [PATCH RFC 0/4] crash_dump: recover from machine checks in
+ copy_oldmem_page()
+Date: Thu, 12 Nov 2026 17:37:06 +0100
+Message-Id: <20261112-work-procfs-oldmem-v1-0-ecdcafd99265@kernel.org>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -92,93 +54,93 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- kwepemk200008.china.huawei.com (7.202.194.74)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWMSw7CMAxEr1J5jasmC35bJA7AFrGIU5cGaFLZ/
+ KSqdyehy3kz8yZQlsAK+2oC4XfQkGIOZlWB7128MoY2Z7CNXRtjLH6S3HGU5DvF9GgHHnDH28Z
+ bJkcbgnwchbvw/UvPcDoe4LJAfdGN/bPoyoycMpK46PuCirhexHWpYJ5/L4zYOZ4AAAA=
+X-Change-ID: 20261112-work-procfs-oldmem-9e80c2ebab7b
+To: linux-fsdevel@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
+ Breno Leitao <leitao@debian.org>, Chris Mason <mason@kernel.org>, 
+ Thomas Gleixner <tglx@kernel.org>, x86@kernel.org, 
+ kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+ linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
+ linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ David Hildenbrand <david@kernel.org>, 
+ "Christian Brauner (Amutable)" <brauner@kernel.org>, stable@vger.kernel.org
+X-Mailer: b4 0.17-dev-ce4c1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2874; i=brauner@kernel.org;
+ h=from:subject:message-id; bh=sqtljLIH8KoO+/k7KE1Gt/hrphFZnwIFPTrrlrdZ//8=;
+ b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWR9fR2u/02Pnzf6SneSIY/3/COb93oukuRYOudztZZ0u
+ oHTlZwPHaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABO5G8jwP0xmhXO+VVRl/K9S
+ y+eKH67dmLyl77jre1aL/4d5T4k1eDIyXFQTW+N5kUUj5zrH27dnf60ybtdbuU7Bn/07Y+aJqU7
+ lTAA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp;
+ fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 
-The file-based kexec system call places segments with kexec_add_buffer(),
-which takes them from CMA when kexec_alloc_contig() succeeds, to avoid
-copying the payload at kexec time.
+A capture kernel reads the memory of the crashed kernel. That memory
+may have uncorrectable errors in it. Which is likely also what murdered
+the first kernel.
 
-When load_other_segments() cannot place the initrd, the segments of the
-attempt are dropped but their CMA pages are leaked.  Release them with
-kexec_rollback_segments() in the retry loop and in the error path of
-load_other_segments().
+On x86 a machine check in the copy that /proc/vmcore does out of an old
+page panics the capture kernel. On book3s64 the read() comes up short
+and splice() panics. Breno has observed that on a fleet iiuc. The first
+kernel dies of a machine check and then there's no vmcore either.
 
-The loop makes progress by advancing buf_min past a segment placed by the
-walk.  kexec_alloc_contig() ignores buf_min, so once the pages of a CMA
-segment are released, the next attempt can get the same region again and
-the retry makes no progress.  Disable CMA for the retry.
+I had the powerpc half of this as a fix in part 1 of the procfs series
+because Chris ran into it there. Breno pointed out that x86 has the same
+hole.
 
-A CMA segment can be anywhere in RAM, so moving buf_min to its end can
-raise the walk's lower bound close to the top of memory and leave the
-retry with too little space for the initrd, failing with -EADDRNOTAVAIL.
-Only advance buf_min for segments found by the walk.
+I think that likely makes this a kdump problem and not a procfs problem.
+So I moved this out together with the ioremap_cache() fix.
 
-Tested with a non-crash kexec_file_load() on QEMU virt, 2 GiB RAM and
-cma=64M@0xe8000000, which leaves only 64 MiB above the CMA area.
+The first two patches make powerpc's and sh's copy_oldmem_page() check
+whether mapping the old page worked.
 
-Before the fix:
-	The retry leaks the CMA pages and kexec_file_load() returns
-	-EADDRNOTAVAIL even though RAM below CMA is free.
+Every architecture that maps a page of the old kernel copies it out with
+copy_to_iter(). The third patch puts that copy into a new
+copy_oldmem_to_iter() helper. It's just copy_to_iter() with
+_copy_mc_to_iter() underneath.
 
-After the fix:
-	The kernel and initrd are placed below CMA and the second
-	kernel boots.
+On x86_64 (and book3s64 - whatever that is) that's the machine check
+safe copy and the machine check turns into a short read and -EFAULT.
+Everywhere else it's copy_to_iter() under another name.
 
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>
-Cc: Youling Tang <tangyouling@kylinos.cn>
-Cc: Mike Rapoport (Microsoft) <rppt@kernel.org>
-Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
-Cc: Kees Cook <kees@kernel.org>
-Cc: stable@vger.kernel.org
-Link: https://sashiko.dev/#/patchset/20260729031235.2840255-1-ruanjinjie%40huawei.com
-Fixes: 55d990f0084c ("LoongArch: Add EFI binary support for kexec_file")
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+I then convert the remaining architectures so the copy lives in one
+place and any new architecture with ARCH_HAS_COPY_MC later gets this for
+free.
+
+I reproduced the x86 panic in a kdump VM by injecting a machine check
+into the copy. Without it the capture kernel is gone, with it the read()
+fails with EFAULT and the kernel logs the event and keeps going.
+
+The helper is a static inline in crash_dump.h and that pulls uio.h into
+it. If people would rather have it out of line it can go into
+kernel/crash_core.c, which builds for CRASH_DUMP just like the arch
+crash_dump.c files do.
+
+Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
- arch/loongarch/kernel/kexec_efi.c          | 12 ++++++++----
- arch/loongarch/kernel/machine_kexec_file.c |  2 +-
- 2 files changed, 9 insertions(+), 5 deletions(-)
+Christian Brauner (4):
+      powerpc/crash_dump: check ioremap_cache() in copy_oldmem_page()
+      sh/crash_dump: check ioremap() in copy_oldmem_page()
+      crash_dump: recover from a machine check in copy_oldmem_page()
+      crash_dump: use copy_oldmem_to_iter() everywhere
 
-diff --git a/arch/loongarch/kernel/kexec_efi.c b/arch/loongarch/kernel/kexec_efi.c
-index 4824c47907ac..1fbd0ee1deb6 100644
---- a/arch/loongarch/kernel/kexec_efi.c
-+++ b/arch/loongarch/kernel/kexec_efi.c
-@@ -82,11 +82,15 @@ static void *efi_kexec_load(struct kimage *image,
- 			break;
- 
- 		/*
--		 * We couldn't find space for the other segments; erase the
--		 * kernel segment and try the next available hole.
-+		 * kexec_alloc_contig() ignores buf_min and always returns
-+		 * CMA memory, so disable it and keep buf_min.
- 		 */
--		image->nr_segments -= 1;
--		kbuf.buf_min = kernel_segment->mem + kernel_segment->memsz;
-+		if (image->segment_cma[kernel_segment_number])
-+			image->no_cma = true;
-+		else
-+			kbuf.buf_min = kernel_segment->mem + kernel_segment->memsz;
-+
-+		kexec_rollback_segments(image, kernel_segment_number);
- 		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
- 	}
- 
-diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
-index 5a3d5026303e..0341dfd04b1f 100644
---- a/arch/loongarch/kernel/machine_kexec_file.c
-+++ b/arch/loongarch/kernel/machine_kexec_file.c
-@@ -191,7 +191,7 @@ int load_other_segments(struct kimage *image,
- 	return 0;
- 
- out_err:
--	image->nr_segments = orig_segments;
-+	kexec_rollback_segments(image, orig_segments);
- 	kfree(modified_cmdline);
- 	return ret;
- }
--- 
-2.34.1
+ arch/arm/kernel/crash_dump.c       |  2 +-
+ arch/arm64/kernel/crash_dump.c     |  2 +-
+ arch/loongarch/kernel/crash_dump.c |  2 +-
+ arch/mips/kernel/crash_dump.c      |  2 +-
+ arch/powerpc/kernel/crash_dump.c   |  6 ++++--
+ arch/riscv/kernel/crash_dump.c     |  2 +-
+ arch/sh/kernel/crash_dump.c        |  5 ++++-
+ arch/x86/kernel/crash_dump_32.c    |  2 +-
+ arch/x86/kernel/crash_dump_64.c    |  2 +-
+ include/linux/crash_dump.h         | 22 ++++++++++++++++++++++
+ 10 files changed, 37 insertions(+), 10 deletions(-)
+---
+base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
+change-id: 20261112-work-procfs-oldmem-9e80c2ebab7b
 
