@@ -1,110 +1,86 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=113.46.200.218
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794478458;
-	b=nIRuzlpw4BrRY1S6c29Eis3S85DGz5rizDImSL9zIOd6XC5J0UVAXi+gGt5FMgBIzohJ
-	 sv7MDentg+1DK3ObCLZjuB4tIQbmwxZt6hRlSZ9SFoSz6FfXuI08U0XxW+5tcF0DF9ien
-	 t0XJ6cU+oq2brjLF0q/L59pTvx5QdN0tXwp91DCnUhRbHSD/br0sJ41pfrba4/2jWl2D0
-	 fh/fuSqB42+e+YdBKJuhuAwafWiHgo17OIj0P9OAY4Qsi5G6hpmE22MiXJy5Zc2+nJ1Pl
-	 hVYGzGvnDHNNQc0fJ1MzBph4BuxoWi/Joxw4SnzuWpxuZQJt2K07p8bozNxV7Hoeysg==
+	t=1794490481;
+	b=Aw7gVtBZDlPGiA2fq9wPpChwVGSF5uGGuakZg/siwpA6ooJJsBdxlckFNP3iCIVoEaue
+	 6Y3kRt0IYgdCamZGRWAc/JpnG/UkQoBaz9XsK6c5l6a957tEXINmf+BKHuB4yZnlj1Q3A
+	 FLI46w1yqFHmk/MNhJeNWn/UTtWNAA4NZElSa0bTZNSsip+boIqLGyGusvW86d+/BGLbL
+	 a6YqmhcmgV4is7kEBThL9WMv1GFoovK7EJSvqhiUzkowVFzH7ZLeCYI78t7g/77TnxXxl
+	 F1qlQ57axToGwDnNHnHedM7GFIM92bS5EFuUnd+QjmlUKDT06/R6Fh4anZjJ434oL6A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794478458;
-	h=Received:DKIM-Signature:X-Mailer:From:To:Cc:Subject:In-Reply-To:
-	 References:Date:Message-ID:MIME-Version:Content-Type;
-	bh=Y6qGWFGnpPL1ZkxmjT2jfKkaXhHx34ppHOpZ4kDJJ7I=;
-	b=IKgTXIVCSeBxqpi3sM+YwnN4XPuYdR/DLugkpU9gooytPHk9Lx9T739pH6dCin8vnAtw
-	 2zNq9+iLXnq8yTWqMqLYq7kojUEhAPmDkE2Txbh5PmoIJyJOB4JMW5csPWD2/FwWYwt47
-	 oLxzT7mx9oKWRNXtrFnle7+eHYrHH5X8oVBmiss7kOS7Ka5b/CeNq/ZfmqDzVbDIvLMVG
-	 ruwKZC+zHnXuqWm/oG1HlQSARd+dck96sK/uMqJ/HaoQBgS7IFRdaAYPzRjUQ9vPgUimE
-	 IyPSlore5k5FbjquXoN3VC5SLJp5UhTyKqxsc74PkOB6XYn3lnfH4R2BcA4fTwFbwsw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794490481;
+	h=DMARC-Filter:dkim-signature:Received:Received:Received:From:To:
+	 Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding:Content-Type:X-Originating-IP:
+	 X-ClientProxiedBy;
+	bh=ZBHTfkePstkdhYPStihPwpZhe6evYsJ4HxGFWI7xQIQ=;
+	b=aY0HFQDJU7lU7hF3PXOAMmrdntzOB3Ha9J5BczQrBFiw59bIicQcvxsqIEBNCOr4dIp3
+	 5kTya0lst5Bi/ltMOR7YwMoR9L7hnkuuNVSX7eu2ZXTWqZj6c1mW/lMwQbw86m8XCt0pa
+	 o0OKiP9BD20vA/Gp0XuItbm29BvKXeP8U4MegcDwSm3wYB1AA9yIrGq/WpnKYnxkfj+DI
+	 QyL9ttrTKl0RTmBbyeBcqCzDR5H6nKYWN4aP4gqiR4/34w/rm1Yb7XbA6VBghxRP1QAaw
+	 V7xcRZxspyB4rOrG84KejI6xK1KGKp4JWebfWU0dmN/L+vmkcIDTlAhb3ORl2fJDwvw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MBTA1Nam;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=huawei.com;
+	spf=pass smtp.mailfrom=huawei.com;
+	dkim=pass header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=WXo9wn0N;
+	arc=none smtp.remote-ip=113.46.200.218
+Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32BE4606A323;
-	Thu, 12 Nov 2026 10:14:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1AA9606A31C
+	for <loongarch@lists.linux.dev>; Thu, 12 Nov 2026 13:34:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B1AA9606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MBTA1Nam
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EF6C1F00A05;
-	Thu, 12 Nov 2026 10:14:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794478458;
-	bh=Y6qGWFGnpPL1ZkxmjT2jfKkaXhHx34ppHOpZ4kDJJ7I=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=MBTA1NamdzwTkZFr1duA2LSuyBzBxb6sNOwn0iO8KEGEo5pBXxgtCA30N+7GE/2Pw
-	 GLLvMwMZMI+da7JzcTnuS0bMCdJanR2u9J/lPT9ckfrvKZNg8LhcDu8V7C+TbIeSjw
-	 8yAMG4KCQ37LswDNHi5a/WIuQLaVB3XmEBALQQYzAaV+Q8iEdtJJ3Dxcj6qOxTLYnK
-	 jVkJEIC1HFd3EBLbKlThHyGFKsjs0LGuM/niOEOMAHspsHAU9Gpim1bszdlXVU+ehU
-	 fummkjIScD+yhHq9nloKuZ6lIpGJGM30bseMr702s+Ru+2cT98q/Bl763g0e0qb8DX
-	 66KW6Lsjq8WcA==
-X-Mailer: emacs 31.1 (via feedmail 11-beta-1 I)
-From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-To: Kohei Enju <enju.kohei@fujitsu.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Robin Murphy <robin.murphy@arm.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Steven Price <steven.price@arm.com>,
-	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Mostafa Saleh <smostafa@google.com>,
-	Petr Tesarik <ptesarik@suse.com>,
-	Alexey Kardashevskiy <aik@amd.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	x86@kernel.org
-Subject: Re: [PATCH v6 6/8] dma: swiotlb: Centralize memory-encryption pool
- sizing
-In-Reply-To: <avRKiCBs81XSYMqW@FCCLS0092175.localdomain>
-References: <20260924060756.1325156-7-aneesh.kumar@kernel.org>
- <asVs3doaJ4WrT3M2@willie-the-truck> <asYZFXGyafRjjBS0@arm.com>
- <asYiOgskwi8JYLe_@willie-the-truck> <yq5awlrt3dwo.fsf@kernel.org>
- <yq5av77c92oo.fsf@kernel.org> <aseRzPshcoys7AJS@arm.com>
- <yq5ao6d48dqr.fsf@kernel.org> <auR0fT1yrKQ9wbm8@FCCLS0092175.localdomain>
- <yq5a8q3d9oe6.fsf@kernel.org> <avRKiCBs81XSYMqW@FCCLS0092175.localdomain>
-Date: Thu, 12 Nov 2026 15:43:59 +0530
-Message-ID: <yq5a33t6qrvc.fsf@kernel.org>
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=WXo9wn0N
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=ZBHTfkePstkdhYPStihPwpZhe6evYsJ4HxGFWI7xQIQ=;
+	b=WXo9wn0NXhZX7pp7ZUMh/iOPIRLVlUIH2p8LTgXE7ANDOBqTMLMcJn+ioAx56LEYcQClNy3LR
+	fhpJPlEmx97/Kbdl53DCIYli9z7cMxKnOY197T93hS34sNl3vH29acpUDwGroc1TguVRSPeD6C6
+	amzAd2VIz8neRJeZS5pH9T0=
+Received: from mail.maildlp.com (unknown [172.19.162.197])
+	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4jQLvT1RGbzpSt9;
+	Thu, 12 Nov 2026 21:33:57 +0800 (CST)
+Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
+	by mail.maildlp.com (Postfix) with ESMTPS id B50E040579;
+	Thu, 12 Nov 2026 21:34:36 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by kwepemk200008.china.huawei.com
+ (7.202.194.74) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Thu, 12 Nov
+ 2026 21:34:35 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
+	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
+	<mpe@ellerman.id.au>, <npiggin@gmail.com>, <chleroy@kernel.org>,
+	<ritesh.list@gmail.com>, <sshegde@linux.ibm.com>, <pjw@kernel.org>,
+	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <alex@ghiti.fr>,
+	<tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <akpm@linux-foundation.org>,
+	<baoquan.he@linux.dev>, <rppt@kernel.org>, <pasha.tatashin@soleen.com>,
+	<pratyush@kernel.org>, <ruanjinjie@huawei.com>, <leitao@debian.org>,
+	<yeoreum.yun@arm.com>, <mpilaniy@redhat.com>, <robh@kernel.org>,
+	<coiby.xu@gmail.com>, <Yeking@Red54.com>, <prudo@redhat.com>,
+	<brads@mainlining.org>, <sourabhjain@linux.ibm.com>, <mkchauras@gmail.com>,
+	<blum@kernel.org>, <adityag@linux.ibm.com>, <qirui.001@bytedance.com>,
+	<hui.wang@canonical.com>, <sohammetha01@gmail.com>, <guoren@kernel.org>,
+	<gaohan@iscas.ac.cn>, <ionut.nechita@windriver.com>,
+	<vishal.l.verma@intel.com>, <seanjc@google.com>, <ardb@kernel.org>,
+	<richard.lyu@suse.com>, <arnd@arndb.de>, <tzimmermann@suse.de>,
+	<rick.p.edgecombe@intel.com>, <kai.huang@intel.com>, <kas@kernel.org>,
+	<piliu@redhat.com>, <thuth@redhat.com>, <shradhagupta@linux.microsoft.com>,
+	<ebiggers@kernel.org>, <jbouron@amazon.com>, <me@linux.beauty>,
+	<mclapinski@google.com>, <graf@amazon.com>, <tangyouling@kylinos.cn>,
+	<x86@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <loongarch@lists.linux.dev>,
+	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
+	<kexec@lists.infradead.org>
+Subject: [PATCH v8 00/11] kexec: Rework segment loading and fix CMA retries
+Date: Thu, 12 Nov 2026 21:34:07 +0800
+Message-ID: <20261112133418.4044428-1-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -114,40 +90,91 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ kwepemk200008.china.huawei.com (7.202.194.74)
 
-Kohei Enju <enju.kohei@fujitsu.com> writes:
+ARM64, LoongArch, RISC-V, x86 and powerpc build the elf core header
+and place it together with the initrd and the DTB with almost identical
+code.
 
-> Hi Aneesh,
->
-> On 11/01 09:47, Aneesh Kumar K.V wrote:
-> [...]
->> >
->> > Hi Aneesh,
->> >
+This series reworks that path into common helpers that the architectures
+reuse, and fixes the CMA page and elf core header leaks in the arm64
+and LoongArch placement retry loops.
 
- [ ... 35 lines skipped ... ] 
+The patch organization is as follows:
 
-> Overall, I would prefer the dynamic sizing approach. However, I believe
-> the initial pool size still matters.
->
-> Also, as Catalin pointed out earlier in the following message:
->
->     https://lore.kernel.org/all/ann6noRzoPLL9kDY@arm.com/
->
-> the arm64 adjustment also reduces the target size used for dynamic
-> pool allocation, since both the initial pool and dynamic allocation
-> currently use default_nslabs.
->
-> I am testing the patch below to decouple the initial pool size from the
-> dynamic allocation target. It adds swiotlb_adjust_initial_size() for
-> callers that only want to reduce the initial allocation, while keeping
-> the existing swiotlb_adjust_size() semantics for callers that want to
-> adjust both sizes.
->
+- Patch 1 moves the release of the elf core header into the generic
+  post-load cleanup, so that the architectures no longer free it
+  themselves.
 
-Should we instead update the logic so that reducing the swiotlb size
-leaves the dynamic allocation size unchanged, while increasing it also
-bumps the dynamic allocation size?
+- Patch 2 adds the common helpers
 
--aneesh
+- Patches 3-7 convert arm64, LoongArch, RISC-V, X86 and Powerpc to
+  reuse the common helpers
+
+- Patches 8-11 fix the CMA pages leaked by the retry loops and
+  the loop that makes no progress
+
+Tested with kexec_file_load() on arm64, LoongArch, RISC-V, X86 and
+Powerpc under QEMU, including the CMA retry paths, loading a crash
+kernel and booting the second kernel, with the agent help.
+
+This series is also available at:
+	https://github.com/ruanjinjie-eng/linux/tree/kexec_rework_cma_bugfx_v9
+
+Changes in v8:
+- Rework the common code as Mike suggested: the core provides building
+  blocks and the architectures uses them (Mike)
+- Build the elf core header once and only place it on the retries (Mike)
+- Keep the segment order and the arch placement policy unchanged (Mike)
+- Convert x86 and powerpc as well
+- Move the CMA fixes to the end of the series (Mike)
+- Link to v7: https://lore.kernel.org/all/20261026075201.699550-1-ruanjinjie@huawei.com/
+
+Previous Versions are as below:
+- v6: https://lore.kernel.org/all/20260921090450.807575-1-ruanjinjie@huawei.com/
+- v5: https://lore.kernel.org/all/20260918100442.3841135-1-ruanjinjie@huawei.com/
+- v4: https://lore.kernel.org/all/20260907125404.922123-1-ruanjinjie@huawei.com/
+- v3: https://lore.kernel.org/all/20260826092541.3905933-1-ruanjinjie@huawei.com/
+- v2: https://lore.kernel.org/all/20260729031235.2840255-1-ruanjinjie@huawei.com/
+- v1: https://lore.kernel.org/all/20260723131242.1537633-1-ruanjinjie@huawei.com/#t
+
+Jinjie Ruan (11):
+  kexec: Free the elf core header in kimage_file_post_load_cleanup()
+  kexec: Add helpers to load the elf core header, initrd and FDT
+  arm64: kexec_file: Load the other segments with common helpers
+  LoongArch: kexec_file: Load the other segments with common helpers
+  riscv: kexec_file: Load the extra segments with common helpers
+  x86: kexec_file: Use the common segment helpers
+  powerpc: kexec_file: Use the common segment helpers
+  kexec: Extract kexec_free_segment_cma() from kimage_free_cma()
+  kexec: Add kexec_rollback_segments() helper
+  arm64: kexec_file: Fix CMA segment placement retries
+  LoongArch: kexec_file: Fix CMA segment placement retries
+
+ arch/arm64/include/asm/kexec.h             |   4 +-
+ arch/arm64/kernel/kexec_image.c            |  15 ++-
+ arch/arm64/kernel/machine_kexec_file.c     |  87 ++++----------
+ arch/loongarch/include/asm/kexec.h         |   3 +-
+ arch/loongarch/kernel/kexec_efi.c          |  15 ++-
+ arch/loongarch/kernel/kexec_elf.c          |   3 +-
+ arch/loongarch/kernel/machine_kexec_file.c |  80 +++++--------
+ arch/powerpc/kexec/elf_64.c                |   9 +-
+ arch/powerpc/kexec/file_load_64.c          |  18 +--
+ arch/riscv/include/asm/kexec.h             |   4 +-
+ arch/riscv/kernel/kexec_elf.c              |   3 +-
+ arch/riscv/kernel/kexec_image.c            |   3 +-
+ arch/riscv/kernel/machine_kexec_file.c     |  83 ++++----------
+ arch/x86/kernel/crash.c                    |  25 +----
+ arch/x86/kernel/kexec-bzimage64.c          |   8 +-
+ arch/x86/kernel/machine_kexec_64.c         |   4 -
+ include/linux/kexec.h                      |  14 +++
+ kernel/kexec_core.c                        |  25 +++--
+ kernel/kexec_file.c                        | 125 +++++++++++++++++++++
+ 19 files changed, 254 insertions(+), 274 deletions(-)
+
+-- 
+2.34.1
+
