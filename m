@@ -1,75 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.199
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794577677;
-	b=t5+KJ7oFrNOQdmBqiO8DS61QpmxTb+3XgCzthUrJrOpSmikawyRKpskGP9X68o4CnCME
-	 lDUzrhGvKSVkp1IMBteyc4chwOiBr2SQgJEZ/s9cl4r4wcEh8V1eQNVy64A9eVToH9bI8
-	 Jsk3b8oKU8y5MpnfJYBf32kFVBmwbS0gFKSDTczqDerHd4TPpFLmRJcjnTpAWAfRbsJof
-	 ZRwwZVWzyCSn5MTjMl5Gaip6pMrHCY2oRqQ5TxuUEgcQ0xenMHilLFBkbnHqHAXAg2ocC
-	 uYFTt0zS/784HFbuQBHtfyA21joRJoGszoD/Ytx7AaCRsyH0ENHEHk5u6raW19MSNFg==
+	t=1794580577;
+	b=jZ7cWCcmPI/iekvaFLHTY/WGYeTbNdp8pW9W8exRLakStO2JUjmKk15PYwO0Op6+EL2/
+	 EvMCOoyjPU0nOTpdLj6P5OjE8GIxRF0DDv4wzN7/03IDjqX+CP+hVjLgOMRgkWnFx5f73
+	 JXXFq/LLLpY9tCUnfWGigtEynqLwG/EHZDXZ7yCYte9BO93fUkWD9qoQLTN0LcqaavZqd
+	 IXO18ehbtJmYsoEHmX5EcW9RHrSR3U7v7PBWaNctfxRR/mQ79bZHwpdwY7dZfVfz9KjR2
+	 OBcx8tSwwW4wexZUt9ZAdjdpKOQ++ULzIUi5nm5uQVFaN9qgOvo968/8CWwhzTxF6eA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794577677;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
-	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
-	 Content-Type;
-	bh=1Ihy3Y1Ag1S58REu5bFFliNMMA5gpdpH88jS//LlU0Y=;
-	b=WTmBkdxxEBuKrhD0KOBQBowAp1gVup8YvakR+6x7VNY56wUJWExT0HlmRI46OtK0GnC9
-	 AZveQnrEyDFsNmQzX0u2Om71zW7XVy8Q3vMMSBnJTngOnl5+S5ft2dH9G+HOO2e9OJKqp
-	 FHT5Lm/7Y82LPzxkTcq/XHAfZds5UddslPoqhdx78NQd3tbn3qvtpXIBY3YwQIrwbldq8
-	 R6H1pc/qIco9Kgjy1O3Qs9OCUgpdKA0F2vc62CEWjn2kJ1Lzv2UcuYkg0S+WuAFuhlM25
-	 YDykd9W5FbQM+3q4vNznqEwVerwekuRFRIeJnIbOd2a98lDLfihhnyJ1G3X0ZL6i/2g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794580577;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=w49hyKAjJNYQc0T0xEVaI68+0oF+m2dcDRcRYzEk8rs=;
+	b=OtwB2aXtZOl+ucpDClDVKDR7uUEqEjuYNerfG4u1kOAqAhopQ4XfofcZyQVUNNtmA4q7
+	 brkJqiBoLRaaYBDufLX9OL2sauWefFNq7hDz4a3DucgEKykUgv/5xSN9zYgUZ8RbjA1qT
+	 k6Xna6VuEQjo5RLTTev5N9tfk3k8VyjHKqZumcYxCWxxs4qS3qiArN+HDKMipLusxYWGq
+	 D3PyRbXGSP2B65jvCrF8LX4SC+DydffFJoGItwEGhbxdgCFh/G8SE3zN3lp7VROF2dRbI
+	 lbkygIl7z57fI5mUAWCKvAIiFF1ZfA7lqwYCPglocO27LO3L5KaSEbM2eFJAw62WouA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=i74Ooph0;
-	arc=none smtp.remote-ip=209.85.215.199
-Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com [209.85.215.199])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jDjzVVrU;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D17F606A881
-	for <loongarch@lists.linux.dev>; Fri, 13 Nov 2026 13:47:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1D17F606A881
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EAD0606A327;
+	Fri, 13 Nov 2026 14:36:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=i74Ooph0
-Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-cdb90a6230cso503704a12.1
-        for <loongarch@lists.linux.dev>; Fri, 13 Nov 2026 05:47:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794577676; x=1795182476; darn=lists.linux.dev;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=1Ihy3Y1Ag1S58REu5bFFliNMMA5gpdpH88jS//LlU0Y=;
-        b=i74Ooph0lAeaXEwSm2PpNbYOcDPqplmbGEG4iNsA9vPYvfnifLwEdQrucZMyTroXwj
-         bkSiCKYEIKQOulJbHiumExYpiTxa2cKWc5O7jZeL/+aNcL65TmPrGLjHo8lLNdSp1txZ
-         OUyRc3qA9UURZVfdqvebrRA5dpU5xqG7a3HJmKJ047Kp3SV2ppTdy8bwL34i6UTZf4QS
-         LEeml1LuzBK6via09f6Kb0uej7SZWntJ/c/8yWSrQ/EN1Xn0ciVxQ0wl9kbEevbtBBQf
-         2YE55b1/hzNYdUdRb1xefH9kzrYjhxC1ptu/CfykGadT4xjvnLAX+Ud1lJE1jW2JtUp/
-         q6mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794577676; x=1795182476;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=1Ihy3Y1Ag1S58REu5bFFliNMMA5gpdpH88jS//LlU0Y=;
-        b=QR9gF7VKu54g5POf8GzyF4T97COl2DsEOoWGuoSGzH+S9Lp1dYgfiKUgp/zMqPZWQm
-         PxHOCiJPSufzWT3JC/G2CeuoJHL4jcNY2pIeS+jhq4gtR92sP9Dw+4pCOyVllreW1Tgj
-         24nMdR9CEA3sALJgfvrUYvSiCtvMNVtVWWUiQNHxRxGcyb6hCUWCmoVyW204VaZhIQmz
-         woNmzQVZ+dnnPddV0VNFeACDEMyVoAt9aetPbVO+e6h5w0Ny/D2+3QJmMbXdt17lxklD
-         8yKKL6moAN5dTxgqzDm5diyaSOmVtbyZLNXpAG/dlsQv6DS7hn0ur+2nFfCN0CjgIcCi
-         SJAA==
-X-Forwarded-Encrypted: i=1; AL+hErGWFgLgS3DTBaoDIVRN3RwM9SqoQpSOh1LJiee5WUYhIGxnxzAApNk+kZ9XqJtMOXZrIsaJfhvq5Zg=@lists.linux.dev
-X-Gm-Message-State: APuU4Z9D2IO6y9KNwR/dSb+0Ii4dvUNvS9h62pW+zzs9sP7sDNMLHtqr
-	jBMYY1iVYQflCqiRafaDEGIKaKr49gEiic1uZf8tCZ6S886au/DhsXXIB7F0mWfGONMXP0YSin8
-	t+NiV1g==
-X-Received: from pgbda11.prod.google.com ([2002:a05:6a02:238b:b0:cd6:1a09:f41d])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:e212:b0:3e1:c6e6:d101
- with SMTP id adf61e73a8af0-3f7a76c2160mr2595125637.29.1794577676197; Fri, 13
- Nov 2026 05:47:56 -0800 (PST)
-Date: Fri, 13 Nov 2026 05:46:18 -0800
-In-Reply-To: <20261028190259.1819571-1-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jDjzVVrU
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88B8A1F000C4;
+	Fri, 13 Nov 2026 14:36:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794580577;
+	bh=w49hyKAjJNYQc0T0xEVaI68+0oF+m2dcDRcRYzEk8rs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=jDjzVVrUjcqqvOcF2zRf/R4D2SkobqauH5sB4E4FWc03X74m4jxFCQSio9YHHHuuR
+	 9Ml4Tlrckfk60OSmZz+hec4p2l9kmjLvQBMrX/YWsRQQvgUFJp0NHQZIrCyw0Gwiek
+	 QZbpgzhogd+cwsY3Nd25gGqUKt3Baw/aKdlCaoUNBkxmn6Z5pyPj2weF8qqKc3/A8M
+	 /Hvf3OTZxfDyyZ1sLXoNdqhyld8LAWFVmEcfNS1X7e6OGeS63NUqhOrnPQq/ZF6Igj
+	 DMtYYds7K9Hh4P0SFcSWYXYIJSddoBhMr/8mdEZ/t7+gx48plf7GD6vYahVdtRVM4l
+	 DMbaEQTybkmNw==
+Message-ID: <3f7af771-87a7-4ae7-9919-bc4c23bd31c9@kernel.org>
+Date: Fri, 13 Nov 2026 15:36:01 +0100
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -78,55 +50,136 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
-Mime-Version: 1.0
-References: <20261028190259.1819571-1-seanjc@google.com>
-X-Mailer: git-send-email 2.56.1.703.gf848ed807c-goog
-Message-ID: <179441821375.80587.11807540842100479305.b4-ty@b4>
-Subject: Re: [PATCH 0/7] KVM: Ensure WAIT requests actually wait
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Paolo Bonzini <pbonzini@redhat.com>
-Cc: Fuad Tabba <fuad.tabba@linux.dev>, Joey Gouly <joey.gouly@arm.com>, 
-	Steffen Eiden <seiden@linux.ibm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Zenghui Yu <yuzenghui@huawei.com>, Nicholas Piggin <npiggin@gmail.com>, 
-	Atish Patra <atish.patra@linux.dev>, Alexandre Ghiti <alex@ghiti.fr>, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Stefan Teodorescu <fane@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND v8 11/16] powerpc: extend execmem_params for
+ kprobes allocations
+To: Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
+ "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
+ Andrew Morton <akpm@linux-foundation.org>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ "David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>,
+ Donald Dutile <ddutile@redhat.com>, Eric Chanudet <echanude@redhat.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ Kent Overstreet <kent.overstreet@linux.dev>, Liviu Dudau
+ <liviu@dudau.co.uk>, Luis Chamberlain <mcgrof@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nadav Amit <nadav.amit@gmail.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Peter Zijlstra <peterz@infradead.org>,
+ =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>,
+ Russell King <linux@armlinux.org.uk>, Sam Ravnborg <sam@ravnborg.org>,
+ Song Liu <song@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
+ bpf@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+ linux-mm@kvack.org, linux-modules@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+ netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+References: <20240505160628.2323363-1-rppt@kernel.org>
+ <20240505160628.2323363-12-rppt@kernel.org>
+Content-Language: fr-FR
+From: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
+In-Reply-To: <20240505160628.2323363-12-rppt@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, 28 Oct 2026 12:02:52 -0700, Sean Christopherson wrote:
-> Fix a bug in where kvm_make_request_and_kick() won't actually wait if the
-> kick races without another non-waiting kick.  The issue is that all of the
-> conditional kvm_arch_vcpu_should_kick() implementations are missing this code:
+Hi Mike,
+
+Looks like I missed this change ...
+
+Le 05/05/2024 à 18:06, Mike Rapoport a écrit :
+> From: "Mike Rapoport (IBM)" <rppt@kernel.org>
 > 
-> 	if (req & KVM_REQUEST_WAIT)
-> 		return mode != OUTSIDE_GUEST_MODE;
+> powerpc overrides kprobes::alloc_insn_page() to remove writable
+> permissions when STRICT_MODULE_RWX is on.
 > 
-> [...]
+> Add definition of EXECMEM_KRPOBES to execmem_params to allow using the
+> generic kprobes::alloc_insn_page() with the desired permissions.
+> 
+> As powerpc uses breakpoint instructions to inject kprobes, it does not
+> need to constrain kprobe allocations to the modules area and can use the
+> entire vmalloc address space.
 
-Applied to kvm-x86 fixes, thanks!
+Using breakpoint means the segment must still be executable.
+On book3s/32 VMALLOC segment is not executable, while module segment is.
 
-[1/7] KVM: s390: Drop unused and unreachable kvm_arch_vcpu_should_kick()
-      https://github.com/kvm-x86/linux/commit/20cf5e54a1bc
-[2/7] KVM: Add a @force param to __kvm_vcpu_kick() for PPC backwards compatibility
-      https://github.com/kvm-x86/linux/commit/0ee75a9dee9c
-[3/7] KVM: PPC: Explicitly force IPIs when directly kicking vCPUs
-      https://github.com/kvm-x86/linux/commit/2530231b023e
-[4/7] KVM: MIPS: Rework kvm_arch_vcpu_should_kick() to use standard implementation
-      https://github.com/kvm-x86/linux/commit/a8dabc687ddb
-[5/7] KVM: Move kvm_arch_vcpu_should_kick() to common code as kvm_vcpu_should_kick()
-      https://github.com/kvm-x86/linux/commit/7e52636d9c37
-[6/7] KVM: Plumb the full request into __kvm_vcpu_kick()
-      https://github.com/kvm-x86/linux/commit/5c430e211f4d
-[7/7] KVM: Drop kvm_vcpu_should_kick() and use kvm_request_needs_ipi()
-      https://github.com/kvm-x86/linux/commit/fd3dd4d9c186
+See commit 6ca055322da8 ("powerpc/32s: Use dedicated segment for modules 
+with STRICT_KERNEL_RWX")
 
---
-https://github.com/kvm-x86/linux/tree/next
+See report and fix at 
+https://lore.kernel.org/all/ed03d290d440d579a81ae0b7de5243721291d903.1794543909.git.ritesh.list@gmail.com/
+
+Christophe
+
+
+
+> 
+> Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
+> ---
+>   arch/powerpc/kernel/kprobes.c | 20 --------------------
+>   arch/powerpc/kernel/module.c  |  7 +++++++
+>   2 files changed, 7 insertions(+), 20 deletions(-)
+> 
+> diff --git a/arch/powerpc/kernel/kprobes.c b/arch/powerpc/kernel/kprobes.c
+> index 9fcd01bb2ce6..14c5ddec3056 100644
+> --- a/arch/powerpc/kernel/kprobes.c
+> +++ b/arch/powerpc/kernel/kprobes.c
+> @@ -126,26 +126,6 @@ kprobe_opcode_t *arch_adjust_kprobe_addr(unsigned long addr, unsigned long offse
+>   	return (kprobe_opcode_t *)(addr + offset);
+>   }
+>   
+> -void *alloc_insn_page(void)
+> -{
+> -	void *page;
+> -
+> -	page = execmem_alloc(EXECMEM_KPROBES, PAGE_SIZE);
+> -	if (!page)
+> -		return NULL;
+> -
+> -	if (strict_module_rwx_enabled()) {
+> -		int err = set_memory_rox((unsigned long)page, 1);
+> -
+> -		if (err)
+> -			goto error;
+> -	}
+> -	return page;
+> -error:
+> -	execmem_free(page);
+> -	return NULL;
+> -}
+> -
+>   int arch_prepare_kprobe(struct kprobe *p)
+>   {
+>   	int ret = 0;
+> diff --git a/arch/powerpc/kernel/module.c b/arch/powerpc/kernel/module.c
+> index ac80559015a3..2a23cf7e141b 100644
+> --- a/arch/powerpc/kernel/module.c
+> +++ b/arch/powerpc/kernel/module.c
+> @@ -94,6 +94,7 @@ static struct execmem_info execmem_info __ro_after_init;
+>   
+>   struct execmem_info __init *execmem_arch_setup(void)
+>   {
+> +	pgprot_t kprobes_prot = strict_module_rwx_enabled() ? PAGE_KERNEL_ROX : PAGE_KERNEL_EXEC;
+>   	pgprot_t prot = strict_module_rwx_enabled() ? PAGE_KERNEL : PAGE_KERNEL_EXEC;
+>   	unsigned long fallback_start = 0, fallback_end = 0;
+>   	unsigned long start, end;
+> @@ -132,6 +133,12 @@ struct execmem_info __init *execmem_arch_setup(void)
+>   				.fallback_start	= fallback_start,
+>   				.fallback_end	= fallback_end,
+>   			},
+> +			[EXECMEM_KPROBES] = {
+> +				.start	= VMALLOC_START,
+> +				.end	= VMALLOC_END,
+> +				.pgprot	= kprobes_prot,
+> +				.alignment = 1,
+> +			},
+>   			[EXECMEM_MODULE_DATA] = {
+>   				.start	= VMALLOC_START,
+>   				.end	= VMALLOC_END,
+
