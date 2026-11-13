@@ -1,135 +1,79 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=158.69.130.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=148.163.158.5
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794575964;
-	b=hVBV6Dj88u34TLYVpq787/stnspoK1Q8Xs87wr2cgQKVV5ZBn1EIcuU+8JEYQKxwTiX0
-	 OUkRPCMaCiHGKL63630PXOXXHhB0XS0Ma3p1mssrxqLuYfSB+cXojDs1Ev7MRO9gCvjIN
-	 Gp42HN0w31NQj7Shqm8TCQ2UzWrusLaan9IZFsb09U0p8TGOwurn/Kp/tMpL7cLtLbx2l
-	 MHG5+elomMmAC1hdCq2B2rdOcIJQ2dyteBriKE0aqI3fVG+Nrs/+Z3JPYH6Oh0gPx/1RD
-	 JgsZF64k5WTJJZ4vFiVsHMdTdKCTM2LwYXUFmXkF4hIWDwAMKRkhgemRhvVVdupemAQ==
+	t=1794576662;
+	b=koKl8NxoVm/+Gh9KkLm9qEqLE/ed9oJbL+J+IC5SzeJ5LlcFys6HfqNcs2efxFLyT4UK
+	 PZW2mKtJwh2KzuLhVgPMZI8NOKuDdNc35teCaHFJ91VfVder1zz1YnRjF0fKLvRuFE+4S
+	 q7H0nFNPKUCUpYGfP9EJVtLVRErPGXkMCvG/VixTf/08mx5yrDk26fQ9o0k23Ws+A6/AE
+	 5Pfnqy4Shwa+CKe+0Khr7YFZWXK4MjUV+aKJg947Ecf9DtLPDaJ62oTMNSWngeT7Mlq1q
+	 E1sBubt6gkJdBZsWlDaDnpXxm078rdTPUdGwfQvOKa/bPsP7/4YuL8y75e/YC1O+ozg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794575964;
-	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
-	 Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=6K5+1bJFXUKUg3IFl6qgg/BC25Z/G5ULg9pbLn4UPTA=;
-	b=4i1eXjkR8LeHBwEcHKWt/qMk4E1jq87sIBhc7JgUPRCn825moYg3UwyCrOGsQia1zXgS
-	 oTaOdBurEj24Y1g+pcY+lfp3EzDdX4KpmvnpH3TWjnjGRfGgKzhtoaXtlDrZ2nIw4JnsP
-	 QSdd8kc9YzR3SMNkMDg9PwJGj/70TEju5wsM1wm/OdkZ5Iaj275ckuqQYO/JF0qicg3vj
-	 m4qolCJhoKRnYswXEpUeJFhRGk+sdg8J+agrvBDtD6zIPBrvpGbN3R0gAApua/uRA7n9A
-	 MVyfJmo+OedlFWOhHTv3SJU+YDn/2kDenHPemz1xyfstuJegSQcq95dnAFq5TpUN+6w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794576662;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
+	 Received:Received:Received:Received:MIME-Version:Date:From:To:Cc:
+	 Subject:Reply-To:Mail-Reply-To:In-Reply-To:References:Message-ID:
+	 X-Sender:Content-Type:Content-Transfer-Encoding:X-TM-AS-GCONF:
+	 X-Authority-Analysis:X-Proofpoint-Spam-Details-Enc:
+	 X-Proofpoint-Spam-Info:X-Proofpoint-GUID:X-Proofpoint-ORIG-GUID:
+	 X-Proofpoint-Virus-Version:X-Proofpoint-Spam-Details;
+	bh=sjfGDhqsQQgcjYHH2kwsSi64IsRr+LqbxLOZSsUHavg=;
+	b=jXQ1az+zeqUau4Z/xaUdwgetrX5/u1GGXKxIINEzhdo2V6JxsIcldOVVk3auxxp22n8h
+	 JfmtLFqkW0X5uE4HhDGDoHufYtj/4ndcmfoiuR2+/0j56+6Q/XHPiXnMxWSBb4nG20Kis
+	 eJhshWOhSZugTqosdWfqKqCulnv47RI6P4OZFlh4HEAHKXBW7cSeotWFue21T4W6oWm2K
+	 Oj5fBxb5ytFkKlj8C2zCvJVFsE4tVrOaBtC5qIjXe9KW1w9Z36rAsKjB632vTTX++EWuy
+	 XcYsp3OqOXOjAJ1YySUQ6IOOe3TxzQzA4LBhebd3svzgUepT0IKcFRKSrZtmm8u+KtQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=efficios.com;
-	spf=pass smtp.mailfrom=efficios.com;
-	dkim=pass header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=EnxNh76r;
-	arc=none smtp.remote-ip=158.69.130.18
-Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
+	dmarc=pass header.from=linux.ibm.com;
+	spf=pass smtp.mailfrom=linux.ibm.com;
+	dkim=pass header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=FBcqAvpP;
+	arc=none smtp.remote-ip=148.163.158.5
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7CD3606CAA9;
-	Fri, 13 Nov 2026 13:19:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D7CD3606CAA9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4EBB606A33B;
+	Fri, 13 Nov 2026 13:31:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A4EBB606A33B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=EnxNh76r
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-	s=smtpout1; t=1794575952;
-	bh=6K5+1bJFXUKUg3IFl6qgg/BC25Z/G5ULg9pbLn4UPTA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EnxNh76rEx+TrhUSzsnsZ3F3UT4G7JmFnAvOLo6y79PyIBiGOXO4WqcvtgE72z/My
-	 XLC2uBUfs5RuTsJHWD7upDrBo2yWHu2qw00ST7Al48W+unxLZ8BcO64rq5v44UaUJG
-	 ceddhO7H2rLjQWrMw6RoD3eygdTLKoWz6eaak4Nt3rN4oMAZ0/bzVhrBGx2A3X9WZ+
-	 ed2zb6dOBn8sZzAi/6MdgfCFQyoG+LKrByO4Fd9u7jJvYSBqp5Sy5AJPSeeVkDdLO0
-	 0lE7M6E5Wvw5G12zAdr1LZyZj/Q2uCcfbdxMx/wltow8YbrqtXEvHcy6UpX9CT5M4a
-	 sRsxvpkpqemUA==
-Received: from thinkos.internal.efficios.com (mtl.efficios.com [216.120.195.104])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4jQyX04hD8zPxN;
-	Fri, 13 Nov 2026 08:19:12 -0500 (EST)
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>
-Cc: linux-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Michal Clapinski <mclapinski@google.com>,
-	Andrei Vagin <avagin@gmail.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Aniket Gattani <aniketgattani@google.com>,
-	linux-kselftest@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Chris Gellermann <christian.gellermann@codasip.com>,
-	Bala-Vignesh-Reddy <reddybalavignesh9979@gmail.com>,
-	Wei Yang <richard.weiyang@gmail.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	Helge Deller <deller@gmx.de>,
-	John David Anglin <dave.anglin@bell.net>,
-	linux-parisc@vger.kernel.org,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Guo Ren <guoren@kernel.org>,
-	linux-doc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-csky@vger.kernel.org,
-	Jonas Bonn <jonas@southpole.se>,
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-	Stafford Horne <shorne@gmail.com>,
-	linux-openrisc@vger.kernel.org,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	linux-sh@vger.kernel.org,
-	Chris Zankel <chris@zankel.net>,
-	Max Filippov <jcmvbkbc@gmail.com>,
-	linux-arch@vger.kernel.org,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Andy Lutomirski <luto@kernel.org>,
-	Alan Stern <stern@rowland.harvard.edu>,
-	Andrea Parri <parri.andrea@gmail.com>,
-	Boqun Feng <boqun@kernel.org>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	David Howells <dhowells@redhat.com>,
-	Jade Alglave <j.alglave@ucl.ac.uk>,
-	Luc Maranget <luc.maranget@inria.fr>,
-	Akira Yokosawa <akiyks@gmail.com>,
-	Daniel Lustig <dlustig@nvidia.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	lkmm@lists.linux.dev,
-	bpf@vger.kernel.org,
-	Naveen N Rao <naveen@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org
-Subject: [RFC PATCH 16/16] selftests/membarrier: Check the core serialization of the sync core command
-Date: Fri, 13 Nov 2026 08:19:03 -0500
-Message-Id: <20261113131903.157186-17-mathieu.desnoyers@efficios.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20261113131903.157186-1-mathieu.desnoyers@efficios.com>
-References: <20261113131903.157186-1-mathieu.desnoyers@efficios.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=FBcqAvpP
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6ADCEPf31667815;
+	Fri, 13 Nov 2026 13:30:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:to; s=pp1;
+	 bh=sjfGDhqsQQgcjYHH2kwsSi64IsRr+LqbxLOZSsUHavg=; b=FBcqAvpPcebE
+	gm1Mg6Xfg2yNvftA6HvGkzDVDAupWZAPP1PsurYNXIv70pT/WVVpohDPlHhD0zfU
+	wFfIWLO38k/oL6A2cfsKF4Ego51TmoVmz1kD1bABqdNY6FqV1FNwz8Mr8Ai9RwQ6
+	/7BbLHM2jAi1uqwN+mR68d5r7Wnj6xctBdIZ7jvPLUDrIb8uo1RoT6dvg5PnVxXV
+	65/Rj/mAnUnas5LJ2jeBQDpUMPDhK0MTdyMImmriNOsAYqWdDnByayFe9SU26DEC
+	lM+Cp7kx+00Oj3x7tXZMa75GKmCN4qixQqetjUyvCPpA9y27d3uV3yI4GxDpB8ON
+	H1PYMbgirw==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4hstdgjmrf-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Fri, 13 Nov 2026 13:30:55 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 6ADC5FMv2213383;
+	Fri, 13 Nov 2026 13:30:54 GMT
+Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4hwegfbyw6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 13 Nov 2026 13:30:54 +0000 (GMT)
+Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
+	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6ADDUrOL63832502
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 13 Nov 2026 13:30:53 GMT
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8985358067;
+	Fri, 13 Nov 2026 13:30:53 +0000 (GMT)
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2E33C58043;
+	Fri, 13 Nov 2026 13:30:52 +0000 (GMT)
+Received: from ltc.linux.ibm.com (unknown [9.5.196.140])
+	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 13 Nov 2026 13:30:52 +0000 (GMT)
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -139,349 +83,114 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Date: Fri, 13 Nov 2026 14:30:51 +0100
+From: Harald Freudenberger <freude@linux.ibm.com>
+To: Sasha Levin <sashal@kernel.org>
+Cc: Nicolas Schier <nsc@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+        Holger
+ Dengler <dengler@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily
+ Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+        Thomas
+ Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-kbuild@vger.kernel.org, linux-s390@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, "kernelci.org bot"
+ <bot@kernelci.org>
+Subject: Re: [PATCH 1/2] s390/pkey: Include <linux/device-id/ap.h> for struct
+ ap_device_id
+Reply-To: freude@linux.ibm.com
+Mail-Reply-To: freude@linux.ibm.com
+In-Reply-To: <66e4ee9c7f9b4bc48fcee92a94b6bb6d92fe1ad2.1794233316.git.sashal@kernel.org>
+References: <cover.1792144769.git.u.kleine-koenig@baylibre.com>
+ <179416565740.60865.16102443399828949110.b4-review@b4>
+ <66e4ee9c7f9b4bc48fcee92a94b6bb6d92fe1ad2.1794233316.git.sashal@kernel.org>
+Message-ID: <c9762ccd45e25032384bf9d83fa39765@linux.ibm.com>
+X-Sender: freude@linux.ibm.com
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=J+M/fwnS c=1 sm=1 tr=0 ts=6af7110f cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=kj9zAlcOel0A:10 a=zJRp6_cAMcgA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=V8glGbnc2Ofi9Qvn3v5h:22 a=U0zfkUukAAAA:8
+ a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=fHy9Ve0kNF58s2Fdc2gA:9 a=CjuIK1q_8ugA:10
+ a=rXRU1dkEVDZ1dOovDhQH:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTEzMDA1MiBTYWx0ZWRfX2yEBsMs3Fufc
+ X6ekDLWcm+zuX3nZH7lq9SbE6VKES2cB7zbRBXOKX4qnt6Kr1Zcop1JqjrMcj2u/6XuK3hoP3N+
+ 5IWH9kZ88j7hBXmmH6YpnLKDL5Re/ojiGWzAhhDA4+ctqHxhM7HY/MA1yGyfGLF/4U8I8a7Za6M
+ 0CFLE0RmDijyvQXuRxEoTA4iLGFoORWy191AcdKfRSGSImEUJOZg5oynXrcfZbqsDMOptdIP3Hb
+ mRMowyejOqOlm+ZKDs7qBboJ/3E+r6JPeT1iX5eJjkcu7qOlI9bL1VTvp/8eoVPfOnsr1FieL1m
+ /oCE+46hk0b5PStRwFXBqw3h3d35RJ/6GYv6YVo9G2LHYyVa+uFyW8Pi/IBUb5vUZvc+Mwg053W
+ MN2bLO8iDs5vaazt6/JkPBU013CetqcIpHxuguyT/+9GPQo2ev+6O8h4aTMkvmKIPIqhBnpZYY+
+ iXYmFpDK0Fipl/BioNQ==
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMTEzMDA1MiBTYWx0ZWRfX7nb3+ufzodPl
+ KsRl5+G2CveEw3hjF3u4u2jzp3ByxtkPDzd5C8XzMvXVEd2kKQsZ8IVfsUJXOQK2RQ1gqZvmUl4
+ BNKtz+8onhMo7Q/+OltEy138iMLQ2AQ=
+X-Proofpoint-GUID: GMFUUyxkH7_jTqBOBqxJPpjx62uyavg8
+X-Proofpoint-ORIG-GUID: GMFUUyxkH7_jTqBOBqxJPpjx62uyavg8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
+ definitions=2026-11-13_04,2026-11-11_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 phishscore=0 bulkscore=0 adultscore=0 suspectscore=0
+ malwarescore=0 clxscore=1011 priorityscore=1501 impostorscore=0 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2611040001 definitions=main-2611130052
 
-MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE promises more than a
-memory barrier. Each running sibling thread of the caller executes a
-core serializing instruction after the call starts, and before it
-runs user-space code again. A thread which is not running executes
-one before it resumes user-space. This supports memory reclaim by a
-JIT compiler.
+On 2026-11-09 15:14, Sasha Levin wrote:
+> pkey_cca.c and pkey_ep11.c got struct ap_device_id from
+> <linux/mod_devicetable.h> by way of <linux/cpufeature.h>. Commit
+> cdfdbc11552b ("Move struct cpu_feature to <linux/cpufeature.h>") 
+> dropped
+> that include, so s390 defconfig no longer builds:
+> 
+>   drivers/s390/crypto/pkey_cca.c:22:28: error: array type has
+> incomplete element type 'struct ap_device_id'
+>   drivers/s390/crypto/pkey_ep11.c:23:28: error: array type has
+> incomplete element type 'struct ap_device_id'
+> 
+> Include the header that defines it, as the other AP drivers do.
+> 
+> Reported-by: kernelci.org bot <bot@kernelci.org>
+> Closes:
+> https://d.kernelci.org/i/maestro:7baaa311bc9c30a8ad43f42c24225ab2fead866a
+> Fixes: cdfdbc11552b ("Move struct cpu_feature to <linux/cpufeature.h>")
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/s390/crypto/pkey_cca.c  | 1 +
+>  drivers/s390/crypto/pkey_ep11.c | 1 +
+>  2 files changed, 2 insertions(+)
+> 
+> diff --git a/drivers/s390/crypto/pkey_cca.c 
+> b/drivers/s390/crypto/pkey_cca.c
+> index e8dc2f77c137b..f95d61fd5b090 100644
+> --- a/drivers/s390/crypto/pkey_cca.c
+> +++ b/drivers/s390/crypto/pkey_cca.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/init.h>
+>  #include <linux/module.h>
+>  #include <linux/cpufeature.h>
+> +#include <linux/device-id/ap.h>
+> 
+>  #include "zcrypt_ccamisc.h"
+>  #include "pkey_base.h"
+> diff --git a/drivers/s390/crypto/pkey_ep11.c 
+> b/drivers/s390/crypto/pkey_ep11.c
+> index f99c19323f3d7..f66fc97ad5adc 100644
+> --- a/drivers/s390/crypto/pkey_ep11.c
+> +++ b/drivers/s390/crypto/pkey_ep11.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/init.h>
+>  #include <linux/module.h>
+>  #include <linux/cpufeature.h>
+> +#include <linux/device-id/ap.h>
+> 
+>  #include "zcrypt_ccamisc.h"
+>  #include "zcrypt_ep11misc.h"
 
-On x86, the kernel serializes the core in the IPI handler and in the
-scheduler. membarrier_test_barrier counts the memory barriers of each
-thread, but not these instructions.
-
-Count them as well. These are the instructions, for x86-64:
-
- - sync_core() in ipi_sync_core(),
- - the writes to CR3 in switch_mm_irqs_off(),
- - sync_core() in finish_task_switch().
-
-sync_core() issues SERIALIZE or IRET. An IRET cannot be probed, so the
-instruction before it is probed instead.
-
-The sync core test case then checks two more things:
-
- - A call makes each target execute a core serializing instruction
-   in the IPI handler. A check where the target was scheduled out is
-   dropped.
-
- - A target can be scheduled in after a task of another mm or after
-   a kernel thread. The scheduler then executes a core serializing
-   instruction before the target is scheduled out again.
-
-These checks are skipped with page table isolation. The kernel then
-serializes the core with the write to CR3 of each return to
-user-space, in entry code which cannot be probed.
-
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
----
- .../membarrier/membarrier_test_barrier.bpf.c  |  11 +-
- .../membarrier/membarrier_test_barrier.c      | 102 +++++++++++++++++-
- .../membarrier/membarrier_test_barrier.h      |   6 ++
- 3 files changed, 112 insertions(+), 7 deletions(-)
-
-diff --git a/tools/testing/selftests/membarrier/membarrier_test_barrier.bpf.c b/tools/testing/selftests/membarrier/membarrier_test_barrier.bpf.c
-index 46cfba13f00f..ce18089f8dab 100644
---- a/tools/testing/selftests/membarrier/membarrier_test_barrier.bpf.c
-+++ b/tools/testing/selftests/membarrier/membarrier_test_barrier.bpf.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Count the memory barriers which membarrier relies on, for each
-- * registered thread.
-+ * Count the memory barriers and the core serializing instructions which
-+ * membarrier relies on, for each registered thread.
-  *
-  * See membarrier_test_barrier.c.
-  */
-@@ -40,6 +40,7 @@ struct {
- 
- /* What the scheduler owes to the thread which it switched to. */
- #define OWES_BARRIER	1
-+#define OWES_SYNC_CORE	2
- 
- struct cpu_state {
- 	/* Slot, plus one, of the thread which this CPU last switched to. */
-@@ -111,6 +112,8 @@ int barrier_site(struct pt_regs *ctx)
- 		slot = state->slot;
- 		if (mask & (1U << MBT_SWITCH_MM))
- 			state->owed &= ~OWES_BARRIER;
-+		if (mask & (1U << MBT_SYNC_CORE_SWITCH))
-+			state->owed &= ~OWES_SYNC_CORE;
- 	} else {
- 		slot = slot_of(bpf_get_current_task_btf());
- 	}
-@@ -131,13 +134,15 @@ int BPF_PROG(sched_switch, bool preempt, struct task_struct *prev,
- 	/* The CPU leaves the thread which it last switched to. */
- 	if (state->owed & OWES_BARRIER)
- 		count(state->slot, 1U << MBT_SCHED_IN_MISSED);
-+	if (state->owed & OWES_SYNC_CORE)
-+		count(state->slot, 1U << MBT_SYNC_CORE_IN_MISSED);
- 	count(slot_of(prev), 1U << MBT_SCHED_OUT);
- 	slot = slot_of(next);
- 	state->slot = slot;
- 	state->owed = 0;
- 	/* The cases which need a barrier after the store to rq->curr. */
- 	if (slot && next->mm && prev->mm != next->mm) {
--		state->owed = OWES_BARRIER;
-+		state->owed = OWES_BARRIER | OWES_SYNC_CORE;
- 		count(slot, 1U << MBT_SCHED_IN);
- 	}
- 	return 0;
-diff --git a/tools/testing/selftests/membarrier/membarrier_test_barrier.c b/tools/testing/selftests/membarrier/membarrier_test_barrier.c
-index 46502d271242..a8152ec4eecd 100644
---- a/tools/testing/selftests/membarrier/membarrier_test_barrier.c
-+++ b/tools/testing/selftests/membarrier/membarrier_test_barrier.c
-@@ -36,6 +36,9 @@
-  * must then execute a memory barrier after the store to rq->curr,
-  * before the target is scheduled out again.
-  *
-+ * The sync core command is checked in the same way, with the core
-+ * serializing instructions.
-+ *
-  * The instructions are found by their bytes in the kernel text, which
-  * is read from /proc/kcore. The list is for x86-64. It depends on what
-  * the compiler inlines into the functions it names.
-@@ -94,6 +97,10 @@ struct target_stats {
- 	atomic_ulong sched_in;
- 	/* Scheduled in without a barrier after the store to rq->curr. */
- 	atomic_ulong sched_in_missed;
-+	/* Checks where the target did not serialize its core. */
-+	atomic_ulong sync_core_missed;
-+	/* Scheduled in without a core serializing instruction. */
-+	atomic_ulong sync_core_in_missed;
- };
- 
- struct shared {
-@@ -126,6 +133,9 @@ struct target {
- static struct shared *shared;
- static int shared_fd;
- 
-+/* The targets of this process also check the sync core guarantee. */
-+static bool check_sync_core;
-+
- static int sys_membarrier(int cmd, unsigned int flags, int cpu_id)
- {
- 	return syscall(__NR_membarrier, cmd, flags, cpu_id);
-@@ -190,6 +200,11 @@ enum match {
- 	MATCH_CR3,
- 	/* Instruction with a LOCK prefix. */
- 	MATCH_LOCK,
-+	/*
-+	 * SERIALIZE or IRET, as issued by sync_core(). An IRET cannot be
-+	 * probed: the instruction before it is probed instead.
-+	 */
-+	MATCH_SYNC_CORE,
- };
- 
- struct site {
-@@ -205,15 +220,21 @@ struct site {
- #define IPI		(1U << MBT_IPI)
- #define SYSCALL		(1U << MBT_SYSCALL)
- #define SWITCH_MM	(1U << MBT_SWITCH_MM)
-+#define SYNC_CORE	(1U << MBT_SYNC_CORE)
-+#define SYNC_CORE_SWITCH (1U << MBT_SYNC_CORE_SWITCH)
- 
- static const struct site sites[] = {
- 	{ "ipi_mb", MATCH_MB, IPI },
- 	{ "ipi_sync_core", MATCH_MB, IPI },
-+	{ "ipi_sync_core", MATCH_SYNC_CORE, SYNC_CORE },
- 	{ "ipi_rseq", MATCH_MB, IPI },
- 	{ "membarrier_global_expedited", MATCH_MB, SYSCALL },
- 	{ "membarrier_private_expedited", MATCH_MB, SYSCALL },
--	/* Switch to another mm: write to CR3. It is a full barrier. */
--	{ "switch_mm_irqs_off", MATCH_CR3, SWITCH_MM, true },
-+	/*
-+	 * Switch to another mm: write to CR3. It is a full barrier and
-+	 * it is core serializing.
-+	 */
-+	{ "switch_mm_irqs_off", MATCH_CR3, SWITCH_MM | SYNC_CORE_SWITCH, true },
- 	/* Switch to the mm which the CPU kept in lazy TLB mode: smp_mb(). */
- 	{ "switch_mm_irqs_off", MATCH_MB, SWITCH_MM, true },
- 	/*
-@@ -221,6 +242,8 @@ static const struct site sites[] = {
- 	 * locked instruction of this function counts as well.
- 	 */
- 	{ "finish_task_switch", MATCH_LOCK, SWITCH_MM, true },
-+	/* membarrier_mm_sync_core_before_usermode() */
-+	{ "finish_task_switch", MATCH_SYNC_CORE, SYNC_CORE_SWITCH, true },
- };
- 
- struct probe {
-@@ -319,6 +342,7 @@ static void scan_function(const struct site *site, const struct ksym *sym,
- {
- 	unsigned char *text;
- 	size_t i, left;
-+	int32_t imm;
- 
- 	text = malloc(size);
- 	if (!text || !read_kernel(sym->addr, text, size)) {
-@@ -350,6 +374,24 @@ static void scan_function(const struct site *site, const struct ksym *sym,
- 			if (insn[0] == 0xf0)
- 				probe_insn(site, sym, addr);
- 			break;
-+		case MATCH_SYNC_CORE:
-+			/* SERIALIZE is 0f 01 e8. */
-+			if (left >= 3 && insn[0] == 0x0f && insn[1] == 0x01 &&
-+			    insn[2] == 0xe8) {
-+				probe_insn(site, sym, addr);
-+				break;
-+			}
-+			/*
-+			 * iret_to_self() is "pushq $1f; iretq; 1:". Probe the
-+			 * push.
-+			 */
-+			if (left < 7 || insn[0] != 0x68 || insn[5] != 0x48 ||
-+			    insn[6] != 0xcf)
-+				break;
-+			memcpy(&imm, insn + 1, sizeof(imm));
-+			if (imm == (int32_t)(addr + 7))
-+				probe_insn(site, sym, addr);
-+			break;
- 		}
- 	}
- 	free(text);
-@@ -624,8 +666,9 @@ static bool check_call(const uint64_t *counters, struct target_stats *stats)
- 	unsigned long done = atomic_load(&shared->done);
- 	uint64_t ipi = counter(counters, MBT_IPI);
- 	uint64_t sched_out = counter(counters, MBT_SCHED_OUT);
-+	uint64_t sync_core = counter(counters, MBT_SYNC_CORE);
- 	unsigned long started = atomic_load(&shared->started);
--	bool by_ipi, scheduled;
-+	bool by_ipi, scheduled, serialized;
- 	int spins = 0;
- 
- 	/* A call is in flight. */
-@@ -637,6 +680,7 @@ static bool check_call(const uint64_t *counters, struct target_stats *stats)
- 	}
- 	by_ipi = counter(counters, MBT_IPI) != ipi;
- 	scheduled = counter(counters, MBT_SCHED_OUT) != sched_out;
-+	serialized = counter(counters, MBT_SYNC_CORE) != sync_core;
- 	if (scheduled) {
- 		atomic_fetch_add(&stats->by_sched, 1);
- 		return true;
-@@ -648,6 +692,8 @@ static bool check_call(const uint64_t *counters, struct target_stats *stats)
- 		atomic_fetch_add(&stats->by_ipi, 1);
- 	else
- 		atomic_fetch_add(&stats->missed, 1);
-+	if (check_sync_core && !serialized)
-+		atomic_fetch_add(&stats->sync_core_missed, 1);
- 	return true;
- }
- 
-@@ -658,7 +704,8 @@ static void run_target(const struct target *target)
- 	const uint64_t *counters;
- 	long deadline = now_ms() + target->ms;
- 	unsigned long checks = 0;
--	uint64_t first_ipi, first_sched_in;
-+	uint64_t first_ipi, first_sched_in, first_sync_core_missed;
-+	uint64_t first_sched_out;
- 
- 	if (target->cpu >= 0 && pin_to_cpu(target->cpu))
- 		setup_error("sched_setaffinity");
-@@ -671,6 +718,18 @@ static void run_target(const struct target *target)
- 	atomic_fetch_add(&shared->ready, 1);
- 	while (!atomic_load(&shared->registered) && !atomic_load(&shared->stop))
- 		sched_yield();
-+	/*
-+	 * The scheduler serializes the core of a registered process
-+	 * only. The target may have been scheduled in before the
-+	 * registration. So wait until it is scheduled out, and count
-+	 * from there.
-+	 */
-+	first_sched_out = counter(counters, MBT_SCHED_OUT);
-+	while (check_sync_core &&
-+	       counter(counters, MBT_SCHED_OUT) == first_sched_out &&
-+	       !atomic_load(&shared->stop))
-+		usleep(1000);
-+	first_sync_core_missed = counter(counters, MBT_SYNC_CORE_IN_MISSED);
- 	first_ipi = counter(counters, MBT_IPI);
- 	first_sched_in = counter(counters, MBT_SCHED_IN);
- 	while (!atomic_load(&shared->stop)) {
-@@ -690,6 +749,10 @@ static void run_target(const struct target *target)
- 			 counter(counters, MBT_SCHED_IN) - first_sched_in);
- 	atomic_fetch_add(&stats->sched_in_missed,
- 			 counter(counters, MBT_SCHED_IN_MISSED));
-+	if (check_sync_core)
-+		atomic_fetch_add(&stats->sync_core_in_missed,
-+				 counter(counters, MBT_SYNC_CORE_IN_MISSED) -
-+				 first_sync_core_missed);
- }
- 
- static void *target_thread(void *arg)
-@@ -816,6 +879,9 @@ static void sum_stats(int first, int nr, struct target_stats *sum)
- 		sum->ipis += atomic_load(&stats->ipis);
- 		sum->sched_in += atomic_load(&stats->sched_in);
- 		sum->sched_in_missed += atomic_load(&stats->sched_in_missed);
-+		sum->sync_core_missed += atomic_load(&stats->sync_core_missed);
-+		sum->sync_core_in_missed +=
-+			atomic_load(&stats->sync_core_in_missed);
- 	}
- }
- 
-@@ -828,6 +894,8 @@ static void sum_stats(int first, int nr, struct target_stats *sum)
- 	       __sum.by_ipi, __sum.by_sched, __sum.ipis);		\
- 	EXPECT_EQ(__sum.missed, 0);					\
- 	EXPECT_EQ(__sum.sched_in_missed, 0);				\
-+	EXPECT_EQ(__sum.sync_core_missed, 0);				\
-+	EXPECT_EQ(__sum.sync_core_in_missed, 0);			\
- 	EXPECT_GT(__sum.by_ipi + __sum.by_sched + __sum.missed, 0);			\
- } while (0)
- 
-@@ -902,8 +970,34 @@ TEST(private_expedited)
- 		     MEMBARRIER_CMD_PRIVATE_EXPEDITED);
- }
- 
-+/*
-+ * With page table isolation, the kernel serializes the core with the
-+ * write to CR3 of each return to user-space. This write is in the entry
-+ * code, which cannot be probed.
-+ */
-+static bool page_table_isolation(void)
-+{
-+	char *line = NULL;
-+	bool pti = false;
-+	size_t len = 0;
-+	FILE *f;
-+
-+	f = fopen("/proc/cpuinfo", "r");
-+	if (!f)
-+		return false;
-+	while (!pti && getline(&line, &len, f) >= 0)
-+		pti = !strncmp(line, "flags", 5) &&
-+		      (strstr(line, " pti ") || strstr(line, " pti\n"));
-+	free(line);
-+	fclose(f);
-+	return pti;
-+}
-+
- TEST(private_expedited_sync_core)
- {
-+	check_sync_core = !page_table_isolation();
-+	if (!check_sync_core)
-+		TH_LOG("page table isolation: core serialization not checked");
- 	test_private(_metadata,
- 		     MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_SYNC_CORE,
- 		     MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE);
-diff --git a/tools/testing/selftests/membarrier/membarrier_test_barrier.h b/tools/testing/selftests/membarrier/membarrier_test_barrier.h
-index d615ad1d9e8a..7c31d8cba544 100644
---- a/tools/testing/selftests/membarrier/membarrier_test_barrier.h
-+++ b/tools/testing/selftests/membarrier/membarrier_test_barrier.h
-@@ -24,6 +24,12 @@ enum {
- 	 * the scheduler executed no memory barrier in between.
- 	 */
- 	MBT_SCHED_IN_MISSED,
-+	/* Core serializing instruction of the membarrier IPI handler. */
-+	MBT_SYNC_CORE,
-+	/* Core serializing instruction of the scheduler. */
-+	MBT_SYNC_CORE_SWITCH,
-+	/* Like MBT_SCHED_IN_MISSED, for a core serializing instruction. */
-+	MBT_SYNC_CORE_IN_MISSED,
- 	MBT_NR_COUNTERS,
- };
- 
--- 
-2.47.3
-
+Acked-by: Harald Freudenberger <freude@linux.ibm.com>
