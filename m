@@ -1,51 +1,51 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=158.69.130.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1794575959;
-	b=nwBRiBHEhKSEJ+PJZ7E+Za9YJQhfiNbCEhJmwugG2XnkVSEsuVODKTlHqwbV98Q167Js
-	 4iK/UsK4mCvK0SX4nKlH9+MDf1mNnxVBJtqeV9vwUUAx1t0ilSKEDsBSqf3TpdIzvbKSX
-	 rciv2B0lilsQzEXky3+osvsJ5Fg7V0Ga5n7PZvYF61e77pSfyNTsN/+peif+HNDQeBWue
-	 JKsydVgPMBcAk21plvHQuxLOzsECTk1tMJudxGytCTe1hTLC/ghQ/rR98v9Ka2foISYBz
-	 c2E/D8DsgMH/AUvSewH4f3YnwYeNdj+odhIv1MAaWsSg+n0w8RfpDqdNXuLuGsuDJsA==
+	b=ujB1FXdEpUB5Ce4nNha0AWZkyjjQwLfO0QVA+gTLyISUzZhNwdpKkr1LCsDY4vMKRK0r
+	 KfeVGqw42GTlfEH1uN7dPtAJ1kqFz+OB5MnuIQGSZ6Lap7CKB2pu3Q6khfFwRfutpJWKC
+	 AuJphgdMi4chr234sN2tyxm6k74/IETv/yqi0EPiGZpol6IrQ7+b8DQHO899U4/14Bbjy
+	 c+V6160phPrQ4pkjvuA8dGX05XYlI1qGsBJ4DKgPhwkrqM19K275uppQ3UGtaGxC2VbWt
+	 5bX/xaKCsvz5EUi4Zp5ra2edw5Tc+VpEz+A/Gow6VLczOtO2csOp198t8+5O8vePBmA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1794575959;
 	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
 	 Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=Aa+Ay1/zkX9mW1dHapCcJ29KkN3LrR+HogZO/SC57M4=;
-	b=MUHuggQbR3EpCNuHFDDV26HO39V3eIAQekRwzttAnp4OqCdYnb9XC6Q1wklCmbt964Zc
-	 MWiBY2SdV7maIktPXhIxElrwv/3CPErrxatNyYciHIkF6ZmimfxG0PCNZdoA8jYG2+KhL
-	 mhsg+PAXsRzop9VrXCxL+EEsIMMF976H+NJp4vnW4kwoLGAG8aDP++q6nq6mHw0Mcjxe1
-	 OwM7m03X9u8QHsQmaB6lA9HVTe7nri6bC0f3FpPxY/c4kJrdHxMShv5vHI9DdLMCEyxrQ
-	 VY7ewkYze6AmqU38jDlfKrd1B82MfLtJjeNJb3tMzMD74SzjgVKTzi4ohRuPZ8DaXUA==
+	bh=6kRCE4e9B1yAdG4N0ntHe8x6Dfjo7HptYTW2o7NmsLw=;
+	b=FDzkkDKg8BB1DoWoxfxAMeYDRNqTsOZ1tzXTL8QjFZbTFtol5fROgxHugPwqP3EqYqbp
+	 XnnmEke9TnCV74xOmWbGk19833E/Ikto2R9hzf47But2lUda2iYTij2udl5GeQ/8/C7K+
+	 oQMKRhwbU85ZPiGvlnot4/EIuuhVoBqYoXyveSYqtB8nBh+LlAkh+HQXUa0dgSmWmFIyX
+	 lJYqGC+7WlPeuGkJPi5214VzjR4T9xw3veoPzvYXHKv5dM4XKjyTDUatdkkBmEqJtPjKh
+	 YRPI0dbuyFuWlA4zZXqD0bHIthMDybBT+/wfWXfI0MOFkNB5xDOqlfrgArsMvKqgk3g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=efficios.com;
 	spf=pass smtp.mailfrom=efficios.com;
-	dkim=pass header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=BwjQlAo3;
+	dkim=pass header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=rXc0LWC5;
 	arc=none smtp.remote-ip=158.69.130.18
 Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85FF460A262D;
-	Fri, 13 Nov 2026 13:19:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 85FF460A262D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4706560A6F6D;
+	Fri, 13 Nov 2026 13:19:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4706560A6F6D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=BwjQlAo3
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=rXc0LWC5
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-	s=smtpout1; t=1794575949;
-	bh=Aa+Ay1/zkX9mW1dHapCcJ29KkN3LrR+HogZO/SC57M4=;
+	s=smtpout1; t=1794575951;
+	bh=6kRCE4e9B1yAdG4N0ntHe8x6Dfjo7HptYTW2o7NmsLw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BwjQlAo3LP5/9O8aYqc8iir985kQXJphrvkxKSX6WMEBk2P8Uj1wC+ES6Q9U5yjCc
-	 kfzBHW4ky7CnbsIvv6sL6aqYizwNscb+MuzkiBZ4CVqc2QmoWC74Hil99Gka7InJ8w
-	 WjEtGpv1Sk1S0QJLdMffA+QolJYPlIiCjbL2XJwPT5m/AAFmMOUuTT/aux+wol9Im+
-	 ntMtSPodsJ+i9VdYiXA5fb1wGFs9lak33v0MAvwj18n37WjbCaYDix/byQt4sQSfyA
-	 K3jaG/90Ic5SLIZtaMIsH8ZB3yMyuTjyzfQNHmtuzuihy3Ypuh8bdlSq2Up7g9ZqYp
-	 TAnnGGRfwsuiw==
+	b=rXc0LWC55m33lD2R0r5M3n76HjAex1pHw8WVeP9ZTm0ZhX1+MYDwsJIN0gfNK2UhW
+	 TRR7QBdncW81mang3ROWagbQDWFPh38fmGx+Xhp+V8QoVSwRa1nPkTlOcIr5AeaGJZ
+	 0KarrrJqY278HYhS13nTHDyfKcK5s1ZxOwgDoVE+dHlq/UDu4TkX+WuuryJR8jXNIq
+	 S0O337gRdeP1p9eiWO89AeBPsQpRgble7/QlS4rO3hDJWIqsV8y/chXBRoV9UVDsue
+	 4grM0bb2TyUs+fCHvavwyM6je6duJxKnC0GOeLqXDdPQT99AYTROVrBkQXsygqRNtt
+	 LLVzbj4Bk5yfA==
 Received: from thinkos.internal.efficios.com (mtl.efficios.com [216.120.195.104])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4jQyWx39HJzQ0V;
-	Fri, 13 Nov 2026 08:19:09 -0500 (EST)
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4jQyWz22Z0zQ2l;
+	Fri, 13 Nov 2026 08:19:11 -0500 (EST)
 From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>
@@ -123,11 +123,10 @@ Cc: linux-kernel@vger.kernel.org,
 	Naveen N Rao <naveen@kernel.org>,
 	"David S. Miller" <davem@davemloft.net>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [RFC PATCH 04/16] selftests/membarrier: Issue the sync core command in its test
-Date: Fri, 13 Nov 2026 08:18:51 -0500
-Message-Id: <20261113131903.157186-5-mathieu.desnoyers@efficios.com>
+	linux-trace-kernel@vger.kernel.org
+Subject: [RFC PATCH 11/16] Documentation/features: Update the membarrier sync core requirements
+Date: Fri, 13 Nov 2026 08:18:58 -0500
+Message-Id: <20261113131903.157186-12-mathieu.desnoyers@efficios.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20261113131903.157186-1-mathieu.desnoyers@efficios.com>
 References: <20261113131903.157186-1-mathieu.desnoyers@efficios.com>
@@ -142,45 +141,88 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-test_membarrier_private_expedited_sync_core_success() is meant to
-check that MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE succeeds after
-its registration. It issues MEMBARRIER_CMD_PRIVATE_EXPEDITED instead.
-No test issues the sync core command with success.
+The x86 text says that the return from interrupt uses IRET, which
+serializes the core after the IPI. This is not what the code relies
+on, and it is not always true:
 
-Issue the sync core command.
+ - Since commit a493d1ca1a03 ("x86/membarrier: Get rid of a dubious
+   optimization"), the IPI handler issues a core serializing
+   instruction right away. The interrupted thread can be rescheduled
+   before the return from interrupt, and another thread of the mm can
+   then return to user-space through SYSRET.
 
-While at it, pass the third system call argument. It was left
-uninitialized.
+ - With FRED, the kernel returns through ERETS and ERETU. The Intel
+   SDM does not list them as serializing instructions. It states that
+   ERETU has the instruction ordering guarantees of SYSRET.
+   The AMD APM does not describe these two instructions.
 
-Fixes: 460e8c3340a2 ("membarrier/selftest: Test private expedited sync core command")
-Cc: stable@vger.kernel.org
+Describe what x86 relies on instead: sync_core_before_usermode() and
+the writes to CR3.
+
+On arm64 with FEAT_ExS, an exception return is a context
+synchronization event only when SCTLR_ELx.EOS is set. The kernel sets
+it. Document that the sync core command depends on it.
+
 Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 ---
- tools/testing/selftests/membarrier/membarrier_test_impl.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../membarrier-sync-core/arch-support.txt     | 35 +++++++++++++------
+ 1 file changed, 24 insertions(+), 11 deletions(-)
 
-diff --git a/tools/testing/selftests/membarrier/membarrier_test_impl.h b/tools/testing/selftests/membarrier/membarrier_test_impl.h
-index b4dcbb32538d..4b9d1771916e 100644
---- a/tools/testing/selftests/membarrier/membarrier_test_impl.h
-+++ b/tools/testing/selftests/membarrier/membarrier_test_impl.h
-@@ -13,7 +13,7 @@ static int registrations;
- 
- static int sys_membarrier(int cmd, int flags)
- {
--	return syscall(__NR_membarrier, cmd, flags);
-+	return syscall(__NR_membarrier, cmd, flags, 0);
- }
- 
- static int membarrier_get_registrations(void)
-@@ -221,7 +221,7 @@ static int test_membarrier_register_private_expedited_sync_core_success(void)
- 
- static int test_membarrier_private_expedited_sync_core_success(void)
- {
--	int cmd = MEMBARRIER_CMD_PRIVATE_EXPEDITED, flags = 0;
-+	int cmd = MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE, flags = 0;
- 	const char *test_name = "sys membarrier MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE";
- 
- 	if (sys_membarrier(cmd, flags) != 0) {
+diff --git a/Documentation/features/sched/membarrier-sync-core/arch-support.txt b/Documentation/features/sched/membarrier-sync-core/arch-support.txt
+index 7425d2b994a3..2782b0d25f43 100644
+--- a/Documentation/features/sched/membarrier-sync-core/arch-support.txt
++++ b/Documentation/features/sched/membarrier-sync-core/arch-support.txt
+@@ -10,6 +10,10 @@
+ # Rely on implicit context synchronization as a result of exception return
+ # when returning from IPI handler, and when returning to user-space.
+ #
++# On arm64 with FEAT_ExS, an exception return is a context synchronization
++# event only when SCTLR_ELx.EOS is set. The kernel sets it, cf.
++# SCTLR_EL1_EOS in INIT_SCTLR_EL1_MMU_ON. It must stay set.
++#
+ # * riscv
+ #
+ # riscv uses xRET as return from interrupt and to return to user-space.
+@@ -28,19 +32,28 @@
+ #
+ # * x86
+ #
+-# x86-32 uses IRET as return from interrupt, which takes care of the IPI.
+-# However, it uses both IRET and SYSEXIT to go back to user-space. The IRET
+-# instruction is core serializing, but not SYSEXIT.
++# x86-32 returns to user-space through either IRET or SYSEXIT. x86-64 returns
++# to user-space through either SYSRETL (compat code), SYSRETQ or IRET, or
++# through ERETU when FRED is enabled. It returns from interrupt through IRET,
++# or through ERETS or ERETU when FRED is enabled.
++#
++# The IRET instruction is core serializing. SYSRET{L,Q}, SYSEXIT, ERETS and
++# ERETU are not. Therefore x86 does not rely on the return instruction:
++#
++#  - the IPI handler calls sync_core_before_usermode(), which issues a core
++#    serializing instruction right away (cf. ipi_sync_core()). The thread may
++#    otherwise be rescheduled before the return from interrupt, and a thread
++#    of the same mm may return to user-space through SYSRET,
++#
++#  - write_cr3() performed by switch_mm() provides core serialization after
++#    changing the current mm,
+ #
+-# x86-64 uses IRET as return from interrupt, which takes care of the IPI.
+-# However, it can return to user-space through either SYSRETL (compat code),
+-# SYSRETQ, or IRET.
++#  - the special case of kthread -> uthread (temporarily keeping current mm
++#    into active_mm) issues a sync_core_before_usermode().
+ #
+-# Given that neither SYSRET{L,Q}, nor SYSEXIT, are core serializing, we rely
+-# instead on write_cr3() performed by switch_mm() to provide core serialization
+-# after changing the current mm, and deal with the special case of kthread ->
+-# uthread (temporarily keeping current mm into active_mm) by issuing a
+-# sync_core_before_usermode() in that specific case.
++# With page table isolation, sync_core_before_usermode() does nothing: each
++# return to user-space writes to CR3, which is core serializing. Page table
++# isolation and FRED are mutually exclusive.
+ #
+     -----------------------
+     |         arch |status|
 -- 
 2.47.3
 
