@@ -1,50 +1,50 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=158.69.130.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794575959;
-	b=ujB1FXdEpUB5Ce4nNha0AWZkyjjQwLfO0QVA+gTLyISUzZhNwdpKkr1LCsDY4vMKRK0r
-	 KfeVGqw42GTlfEH1uN7dPtAJ1kqFz+OB5MnuIQGSZ6Lap7CKB2pu3Q6khfFwRfutpJWKC
-	 AuJphgdMi4chr234sN2tyxm6k74/IETv/yqi0EPiGZpol6IrQ7+b8DQHO899U4/14Bbjy
-	 c+V6160phPrQ4pkjvuA8dGX05XYlI1qGsBJ4DKgPhwkrqM19K275uppQ3UGtaGxC2VbWt
-	 5bX/xaKCsvz5EUi4Zp5ra2edw5Tc+VpEz+A/Gow6VLczOtO2csOp198t8+5O8vePBmA==
+	t=1794575960;
+	b=oVUab8LdDGsJsisiAv2lRkl8lZOTNajbB6OKOgIjcJ2HBsbjXtK3ncVVJqkzdcAz6jpA
+	 U2K6UNZOm4BgSFzJqiy6KPyzJA8eV2YxhlkPEb9lYrYWB92FcNFsw9oAt5s4+GeF9zxU6
+	 WLTQk8my+Df2yaX73h9y6UGaJmbTjplECQjNE5Udg3TYYv6SlC64ZmeZCe0ToB3dV53Fg
+	 A6gKZoPSn69McOhZK0XH1iyhux5q9XrwIC2witIo7PNuGQnYx1Gou2H/mkLYNjle75+zQ
+	 bjMSg1N3xRFErdnBYJe7kAlW+48guxME4POlyRPr7es3L7UTjynr/NvfZ2yf7n0seBQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794575959;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794575960;
 	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
 	 Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=6kRCE4e9B1yAdG4N0ntHe8x6Dfjo7HptYTW2o7NmsLw=;
-	b=FDzkkDKg8BB1DoWoxfxAMeYDRNqTsOZ1tzXTL8QjFZbTFtol5fROgxHugPwqP3EqYqbp
-	 XnnmEke9TnCV74xOmWbGk19833E/Ikto2R9hzf47But2lUda2iYTij2udl5GeQ/8/C7K+
-	 oQMKRhwbU85ZPiGvlnot4/EIuuhVoBqYoXyveSYqtB8nBh+LlAkh+HQXUa0dgSmWmFIyX
-	 lJYqGC+7WlPeuGkJPi5214VzjR4T9xw3veoPzvYXHKv5dM4XKjyTDUatdkkBmEqJtPjKh
-	 YRPI0dbuyFuWlA4zZXqD0bHIthMDybBT+/wfWXfI0MOFkNB5xDOqlfrgArsMvKqgk3g==
+	bh=uKCrPR60jaWb2Zhk534ZCZD0Kw22aJy6wHHdu9KIW1I=;
+	b=pECBYWzNzRT+17GBnJo+/tp8M6RKZjzUy7ChCOXznwnBkErEYmxTm/GoY9wWhTr1xrXn
+	 VUnhdhY3PMZvyzMb8tMfEu/b8//nsRId+4HFZbg0OsXgHUS5K5MogjEx7sZQ7pwR9fNxD
+	 oHxd9KrDro4cj3bsJ70y65rUE4Bpu0mYrsULh0sNEVmgejiv44oKlaEf+HEG7LrGtpmIA
+	 ji91RJKnf966zng5o97BMX7RqNoaB4HHD364l5V8r1IEe4Onva1cfJTIJNz6nNL7kBehF
+	 YuOnJkELJG2ghgcdrJKaEDTBOb7lGeNBb0ARBw14CVTCYtbm8e7vrxCgi3FPBQBF+Rw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=efficios.com;
 	spf=pass smtp.mailfrom=efficios.com;
-	dkim=pass header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=rXc0LWC5;
+	dkim=pass header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b="ZKjZ1/DZ";
 	arc=none smtp.remote-ip=158.69.130.18
 Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4706560A6F6D;
-	Fri, 13 Nov 2026 13:19:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4706560A6F6D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A92A606BC1E;
+	Fri, 13 Nov 2026 13:19:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0A92A606BC1E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=rXc0LWC5
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=ZKjZ1/DZ
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
 	s=smtpout1; t=1794575951;
-	bh=6kRCE4e9B1yAdG4N0ntHe8x6Dfjo7HptYTW2o7NmsLw=;
+	bh=uKCrPR60jaWb2Zhk534ZCZD0Kw22aJy6wHHdu9KIW1I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rXc0LWC55m33lD2R0r5M3n76HjAex1pHw8WVeP9ZTm0ZhX1+MYDwsJIN0gfNK2UhW
-	 TRR7QBdncW81mang3ROWagbQDWFPh38fmGx+Xhp+V8QoVSwRa1nPkTlOcIr5AeaGJZ
-	 0KarrrJqY278HYhS13nTHDyfKcK5s1ZxOwgDoVE+dHlq/UDu4TkX+WuuryJR8jXNIq
-	 S0O337gRdeP1p9eiWO89AeBPsQpRgble7/QlS4rO3hDJWIqsV8y/chXBRoV9UVDsue
-	 4grM0bb2TyUs+fCHvavwyM6je6duJxKnC0GOeLqXDdPQT99AYTROVrBkQXsygqRNtt
-	 LLVzbj4Bk5yfA==
+	b=ZKjZ1/DZ+BbeqkXr02agu+P8pZdpihHKuQ0XAT1QoQwv8CcTezyVrjKPoNObytxzg
+	 ns09pwr2kdmkE3cdfcO60ogsBCpDXvl3CTO+i5kEh8WsasY9QeuWFW4r9+IBTX3c7o
+	 /gthaseC16IfnekPSSS9mO0ZQKu+j2xBewoW1tMjb4uSQSHhiW9JJu/weuCT0PjpK3
+	 rYOVYQuuQK29EbONku9W21tZ9NTcyx1UAUzi4/f/vQKf5yAXXYzSsAktQAPAHe9Swl
+	 r86jY3miUpVYBwYe2XD6xMO9kvo3JTK+G24t7AYcCvdlG7y2pJtCPY0dAqoiChFvVE
+	 4cEP7H5ydYEIg==
 Received: from thinkos.internal.efficios.com (mtl.efficios.com [216.120.195.104])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4jQyWz22Z0zQ2l;
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4jQyWz3y7FzQ2m;
 	Fri, 13 Nov 2026 08:19:11 -0500 (EST)
 From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To: Peter Zijlstra <peterz@infradead.org>,
@@ -124,9 +124,9 @@ Cc: linux-kernel@vger.kernel.org,
 	"David S. Miller" <davem@davemloft.net>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	linux-trace-kernel@vger.kernel.org
-Subject: [RFC PATCH 11/16] Documentation/features: Update the membarrier sync core requirements
-Date: Fri, 13 Nov 2026 08:18:58 -0500
-Message-Id: <20261113131903.157186-12-mathieu.desnoyers@efficios.com>
+Subject: [RFC PATCH 12/16] x86/entry: Remove stale membarrier sync core comments
+Date: Fri, 13 Nov 2026 08:18:59 -0500
+Message-Id: <20261113131903.157186-13-mathieu.desnoyers@efficios.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20261113131903.157186-1-mathieu.desnoyers@efficios.com>
 References: <20261113131903.157186-1-mathieu.desnoyers@efficios.com>
@@ -141,88 +141,69 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The x86 text says that the return from interrupt uses IRET, which
-serializes the core after the IPI. This is not what the code relies
-on, and it is not always true:
+Two comments state that the membarrier sync core command relies on
+the IRET which returns from the IPI handler. This is no longer true
+since commit a493d1ca1a03 ("x86/membarrier: Get rid of a dubious
+optimization"): sync_core_before_usermode() serializes the core in
+the IPI handler.
 
- - Since commit a493d1ca1a03 ("x86/membarrier: Get rid of a dubious
-   optimization"), the IPI handler issues a core serializing
-   instruction right away. The interrupted thread can be rescheduled
-   before the return from interrupt, and another thread of the mm can
-   then return to user-space through SYSRET.
+Remove both comments.
 
- - With FRED, the kernel returns through ERETS and ERETU. The Intel
-   SDM does not list them as serializing instructions. It states that
-   ERETU has the instruction ordering guarantees of SYSRET.
-   The AMD APM does not describe these two instructions.
-
-Describe what x86 relies on instead: sync_core_before_usermode() and
-the writes to CR3.
-
-On arm64 with FEAT_ExS, an exception return is a context
-synchronization event only when SCTLR_ELx.EOS is set. The kernel sets
-it. Document that the sync core command depends on it.
+The comment of sync_core_before_usermode() lists the instructions
+which return to user-space without serializing the core. Fix a typo
+in it ("sysrel") and add ERETU, which FRED uses.
 
 Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 ---
- .../membarrier-sync-core/arch-support.txt     | 35 +++++++++++++------
- 1 file changed, 24 insertions(+), 11 deletions(-)
+ arch/x86/entry/entry_32.S        | 5 -----
+ arch/x86/entry/entry_64.S        | 4 ----
+ arch/x86/include/asm/sync_core.h | 2 +-
+ 3 files changed, 1 insertion(+), 10 deletions(-)
 
-diff --git a/Documentation/features/sched/membarrier-sync-core/arch-support.txt b/Documentation/features/sched/membarrier-sync-core/arch-support.txt
-index 7425d2b994a3..2782b0d25f43 100644
---- a/Documentation/features/sched/membarrier-sync-core/arch-support.txt
-+++ b/Documentation/features/sched/membarrier-sync-core/arch-support.txt
-@@ -10,6 +10,10 @@
- # Rely on implicit context synchronization as a result of exception return
- # when returning from IPI handler, and when returning to user-space.
- #
-+# On arm64 with FEAT_ExS, an exception return is a context synchronization
-+# event only when SCTLR_ELx.EOS is set. The kernel sets it, cf.
-+# SCTLR_EL1_EOS in INIT_SCTLR_EL1_MMU_ON. It must stay set.
-+#
- # * riscv
- #
- # riscv uses xRET as return from interrupt and to return to user-space.
-@@ -28,19 +32,28 @@
- #
- # * x86
- #
--# x86-32 uses IRET as return from interrupt, which takes care of the IPI.
--# However, it uses both IRET and SYSEXIT to go back to user-space. The IRET
--# instruction is core serializing, but not SYSEXIT.
-+# x86-32 returns to user-space through either IRET or SYSEXIT. x86-64 returns
-+# to user-space through either SYSRETL (compat code), SYSRETQ or IRET, or
-+# through ERETU when FRED is enabled. It returns from interrupt through IRET,
-+# or through ERETS or ERETU when FRED is enabled.
-+#
-+# The IRET instruction is core serializing. SYSRET{L,Q}, SYSEXIT, ERETS and
-+# ERETU are not. Therefore x86 does not rely on the return instruction:
-+#
-+#  - the IPI handler calls sync_core_before_usermode(), which issues a core
-+#    serializing instruction right away (cf. ipi_sync_core()). The thread may
-+#    otherwise be rescheduled before the return from interrupt, and a thread
-+#    of the same mm may return to user-space through SYSRET,
-+#
-+#  - write_cr3() performed by switch_mm() provides core serialization after
-+#    changing the current mm,
- #
--# x86-64 uses IRET as return from interrupt, which takes care of the IPI.
--# However, it can return to user-space through either SYSRETL (compat code),
--# SYSRETQ, or IRET.
-+#  - the special case of kthread -> uthread (temporarily keeping current mm
-+#    into active_mm) issues a sync_core_before_usermode().
- #
--# Given that neither SYSRET{L,Q}, nor SYSEXIT, are core serializing, we rely
--# instead on write_cr3() performed by switch_mm() to provide core serialization
--# after changing the current mm, and deal with the special case of kthread ->
--# uthread (temporarily keeping current mm into active_mm) by issuing a
--# sync_core_before_usermode() in that specific case.
-+# With page table isolation, sync_core_before_usermode() does nothing: each
-+# return to user-space writes to CR3, which is core serializing. Page table
-+# isolation and FRED are mutually exclusive.
- #
-     -----------------------
-     |         arch |status|
+diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
+index 92c0b4a94e0a..d47bb08afb24 100644
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -954,11 +954,6 @@ restore_all_switch_stack:
+ 	RESTORE_REGS pop=4			# skip orig_eax/error_code
+ 	CLEAR_CPU_BUFFERS
+ .Lirq_return:
+-	/*
+-	 * ARCH_HAS_MEMBARRIER_SYNC_CORE rely on IRET core serialization
+-	 * when returning from IPI handler and when returning from
+-	 * scheduler to user-space.
+-	 */
+ 	iret
+ 
+ .Lasm_iret_error:
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index 253f0a585927..b8661064232c 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -626,10 +626,6 @@ SYM_INNER_LABEL(restore_regs_and_return_to_kernel, SYM_L_GLOBAL)
+ #endif
+ 	POP_REGS
+ 	addq	$8, %rsp	/* skip regs->orig_ax */
+-	/*
+-	 * ARCH_HAS_MEMBARRIER_SYNC_CORE rely on IRET core serialization
+-	 * when returning from IPI handler.
+-	 */
+ #ifdef CONFIG_XEN_PV
+ SYM_INNER_LABEL(early_xen_iret_patch, SYM_L_GLOBAL)
+ 	ANNOTATE_NOENDBR
+diff --git a/arch/x86/include/asm/sync_core.h b/arch/x86/include/asm/sync_core.h
+index df22113db9cd..0ab91f7e2020 100644
+--- a/arch/x86/include/asm/sync_core.h
++++ b/arch/x86/include/asm/sync_core.h
+@@ -91,7 +91,7 @@ static __always_inline void sync_core(void)
+ /*
+  * Ensure that a core serializing instruction is issued before returning
+  * to user-mode. x86 implements return to user-space through sysexit,
+- * sysrel, and sysretq, which are not core serializing.
++ * sysretl, sysretq and eretu, which are not core serializing.
+  */
+ static inline void sync_core_before_usermode(void)
+ {
 -- 
 2.47.3
 
