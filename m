@@ -1,76 +1,96 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.179
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.167.44
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794510620;
-	b=GiERjAoMnKAZJQmUX7wW6kfYqbyRl6I8BhAoKlK5PRsQ5GI+TqPXMbXmMERfLJqnYOOL
-	 TW2GAYn+f3XwyulPvI6pY49BY499IMmv32vxB6GwDjczigWWuyahc8DkKcaOw0E1TUEoZ
-	 Cgu0jQ+QIwadEWoMRts1KEuksE4tU0YV61AAElxypwgChuGacAAdNznDlAQv+Wvz8QhOc
-	 njP1LZ0G6AJZn1LHMRzMNh7KH7ssR+JSMSOQ9B9YaaWWgit2nXEyMTxsoPYhIgtl6TVZm
-	 Foil18ElfJ91kqLVml3eFdlLQYRlql5TVJYIwGxD4g04nP8WHIWkRuVDq2PovYkATOw==
+	t=1794528908;
+	b=TpcqVUYObFJY+8+hQCqupgQHjBs0AD92DvLsl7G3lm0fOA9A4pvnkZnLYT6ShlXH//L9
+	 U8ZGbg+4TU1ORqFxvo/RNoFNrPcBGwPuChiKjT22fL6x9C8dE5HUT/lEE3f6fEVXoeD4Z
+	 WL5TNlasHs8h5HVLN8brrezIOsLtJDLqBo+MmXlOXvERE36akpodFa/hdE7QPBh5I37Q5
+	 txMM8JM5foAQyBpYRSfrnuHiwe5HXRbK1jdPRFRO3rgo+nVGYJ0EJNdDsmTqikJ0uRJxi
+	 45NwhLcCBdlKlqXYXn+xhx0c+Bzkh2+MPu7w9JesSECiLuaFvL3pL+0A6ECb8YuXDrA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794510620;
-	h=DMARC-Filter:Received:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Received:
-	 X-Forwarded-Encrypted:X-Received:MIME-Version:References:In-Reply-To:
-	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
-	 Subject:To:Cc:Content-Type;
-	bh=BiDOWQWnXjiTVlwWz8It4XU8j0IkMRXtLOxSJ2sBmUk=;
-	b=IPTpUiNVmjJivkB52f9rpAT5bZ0pxEAmO3SZMMLW5ArBEV5m5wpAKl8EC3tPohwRTh1N
-	 jQPx0XhbsTDYDpRlWN1zmx1gI2UyRdReVfAo7SLATQR+CPmdHi59Ho4GYeKz/s/Ykaj+x
-	 iSbRzcDyRJ5u4dirYqpVlU5pzgZYykKYGY/C5Cwjl+5bGgV3OQ07T8+YrsPdrxBcKYKPV
-	 tYq881vyr0x+zmjrj7ricWI/zDqrqrQt68P0YWHg9J6JCllj1Re1D/szSleoJIPbMcK+D
-	 zePaSBDOR3mV4IuaSawCsZs1rxlkfKhy7touQ1g5X2myfEbBA6VHGxzwjWJ9pJy/hNQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794528908;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=d1TISz9BJ+a5QOSJr7M6z9zKZhHkNytH1MrYfjk3YS8=;
+	b=xxt8KZ90mllQPCBf9V2UnA2Ze5i4uk++uSt7UIGbHKE1d1ZSGOEk30klxO8tcPZVn0/b
+	 6Z9DmG1SajgyHgheOH8JbvI/noNVK5SDRQMlumIHfGeL4Pc1q3rY87sebVkPBPHRUQgLS
+	 jDrKhCJ1XsrtfaILEExEYO8vuxWDQ6J+9ADFD1Rp7hkGJHMJukPx9oBzW9om0vFZemgXb
+	 dx5nlIr4j/fM8y8Q2GN2EV9a5RdsIFo6KG0KzRK0LYxE7H+gdqeTDcs+FfPpxlBha/nF7
+	 gvDgK5qRClWhNIEPrXRISesm44ZCgl7OmetsN2nYpvXvxXvTqVhKx06KOOwNRVG3fEQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=linux-m68k.org;
+	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	arc=none smtp.remote-ip=209.85.221.179
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=rRfJm87o;
+	arc=none smtp.remote-ip=209.85.167.44
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71232606A886
-	for <loongarch@lists.linux.dev>; Thu, 12 Nov 2026 19:10:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 71232606A886
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4062606A333
+	for <loongarch@lists.linux.dev>; Fri, 13 Nov 2026 00:15:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B4062606A333
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-5eac01ff101so101486e0c.2
-        for <loongarch@lists.linux.dev>; Thu, 12 Nov 2026 11:10:20 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=rRfJm87o
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5c14f6f58aeso403436e87.2
+        for <loongarch@lists.linux.dev>; Thu, 12 Nov 2026 16:15:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794528906; x=1795133706; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=d1TISz9BJ+a5QOSJr7M6z9zKZhHkNytH1MrYfjk3YS8=;
+        b=rRfJm87oQdN5PrSEwqm/Qqsugfvb9HGMF2GKeKSsy9zEuCFFkQ11zDQoQMHCyyiAnu
+         1HQuRwBxsZ88+8NXu+C1vh8uG/jgSZ3NZRozRTBgzkdYXBXE8Fgso1W1raZE/O8HzXgr
+         yv8QBCxLcoNruo93E9p9Ddmvbrn5OWR7OWkhu5bQLuM1hh9IxNoOy0uyD/WaTc23HWpe
+         BlpIJAyFoL9hpxTvKJlki5qGLDwPBev5a493Q+gOpm/2+BkJBptwLMU0ayIuYESdC2Jj
+         bHHkCtRjhLjPQwL/IOZyvpLhuipFCkDUCEs3unCfJNaGiMZPb7RyBOw73MGsjZbWumed
+         U+mQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794510619; x=1795115419;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=BiDOWQWnXjiTVlwWz8It4XU8j0IkMRXtLOxSJ2sBmUk=;
-        b=m2ss7JJKndiDViEVddjWmfZotlr99iKYnfC6B7Vk4zvF0VVDDfRoUdnLiyzrpu9Kr3
-         u0s6IYBAgEmc8CBXHhUaEf8Gc6lZCS4dKpB+BY8N+Y91VIsUpaUIh5K972vThuvLem7l
-         uvc2mOjnI5z2trLHPTJE1b7uZu49RyqulCmWBaoX73Zvu+EAO/HSfr0D1E1BaY7lOhw6
-         iDx5X8+ObcdBRTzfpil6Wca+fzGpCo9QgfVtDH4dyvLTrjcB84vPXez0r3Zmj7J62uc9
-         NGXxVGYZFBleqce8MkRzKFGLkkY/ZjgLra/O6ZKgs2n9OzhNPICzAmmDTrdfDSEwgPQ7
-         ZEmA==
-X-Forwarded-Encrypted: i=1; AL+hErHFzxleHk0e0/85gAfpisZiuXsyOviPhF2xLFNcrMzr6VUFJj7QLk8utn5ObjRsr4I2SwAZBm5TT4E=@lists.linux.dev
-X-Gm-Message-State: APuU4Z8iqGNYrnTTnMymBs1a/ZTnP7+GsS2w+/BK/F60UGu3Vl/SW6EI
-	GN6HCl+qgS7bKWu88K3L3HMiEnHA960EMaU/Y7c8J3eMspjg7OSJdN7GLWTlwTqnRnw=
-X-Gm-Gg: AYBFou39DV0JzgIgL+qGDrb1wQQjTZbnxNTpChM+Qu2e1wvZ/xJ+9mBMRhqPNn4vExK
-	q2zftHjkPWNiwuY8ai7OE2tQjQMzoHeN09nmc58EEnHNVyNEhKyoH3kVxICUfOuBbsJ/E0Dl/kv
-	PPBaqfr8YIWt1mzDtNQtMcuVdah1hUf07SbyMOk0ju8wEOLFF3JHAJKBEoTG2RhLTdrcG7L8BjV
-	cci/BgrJQCfBWyparTkNt/EWTOZBXzh6bXsv2VW62rhyHxLRNh6Mhv2I2jiUyLSguEV4YHD9E+s
-	flxqFqL/kHhpA20ZJ9166GzAgjyWsBtgPbvjl1eX5bKBiv583kc3YU4Zqiyi8Ns7uViP5v4YKpW
-	HWeSeNC/pdvOAdekBT6YETuNDFUlgUw7ZfuG+OctFvTWij7BQ1MvRxQoY5vQdb7gHtO4SDPia0R
-	aDANjjJRthaNEjUgHnm8lmFM0+121W1NK6K5xKXNBOtWoaOQzK1Ie/HOVoPB9Yyy95O7GVgWUgC
-	dFXpTfE1/ufZtG9Ll3vnL8PU/0OMtt0mENHeIE0dvDRFonkEq7NsdD/U8+3xa3xyd169KfPhocd
-	yoyfMQfTBtkym8U5Zfzx70CRHkfHXcycKtiV8jprpNG2YE/UtcBAqdC3jcrjUw+CLDM=
-X-Received: by 2002:a05:6122:30e4:b0:5c9:a60b:e5bd with SMTP id 71dfb90a1353d-5ee34a89a41mr38906e0c.13.1794510619391;
-        Thu, 12 Nov 2026 11:10:19 -0800 (PST)
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com. [209.85.217.47])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5ee34d4f67csm2566e0c.1.2026.11.12.11.10.18
-        for <loongarch@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Nov 2026 11:10:18 -0800 (PST)
-Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-7cc81984fceso32290137.0
-        for <loongarch@lists.linux.dev>; Thu, 12 Nov 2026 11:10:18 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AL+hErGb0AWqXCBIBvueRITiwpERLTRjANtN+kFQd3/O5MQNNI1fxkmQa7dzZKo1ZaOjj7U4erSNQVGQhik=@lists.linux.dev
-X-Received: by 2002:a05:6102:5ccb:b0:7ce:5952:125d with SMTP id
- ada2fe7eead31-7d64db29605mr42432137.36.1794510618289; Thu, 12 Nov 2026
- 11:10:18 -0800 (PST)
+        d=1e100.net; s=20260707; t=1794528906; x=1795133706;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=d1TISz9BJ+a5QOSJr7M6z9zKZhHkNytH1MrYfjk3YS8=;
+        b=baR0o3G57A001vFWc8WTP4NuUJe/vnjuazM8arPpnvlM1dL7q6d77cl1IBzPDKrKvE
+         HHcgH+9Pbvqc2IHAcy+F7KxzC2k5ECUodYokBIH2ut7Y4mY5QMj4MfFZ3gTCKHTjOJvk
+         qcdAlhENKNgq/WOgQCY/daqK9wXIhuINy1samI3Cl+WvbM90Skj3BIPuhkdz6qlnXU1E
+         mW9DRMU7VK6nVv/RHYP0brrWwZTJWifCOpxj1s6n6Q+g4QS8MuVy1DVi69xUS4EX/pFi
+         ZSlJaV/Ir4cy+fq+PXgaZW7AEdVURgJEOq+DpOLZtrWeQW7l6N7+/Ro8E4oxnaEBUiNw
+         aZag==
+X-Forwarded-Encrypted: i=1; AL+hErHPiQxT6cF7K8blaMm5sZN5pMQ2drz5uTvZuoZBN5MnCa9qsoYvSBVsPo48ymtd5mVjyhXY4IeYHT0=@lists.linux.dev
+X-Gm-Message-State: APuU4Z95LvdnBHOrTMxkfKQ/RMM3ks4pm+5uIiulZJsAP3gZE5TLaNt8
+	pifpb2EG42Zf1lRupei/al+fkpns7r3KwajDk/UWiU+GhNrv6r/m3nxK
+X-Gm-Gg: AYBFou0x0s+8puWGsFytXSAxhJybD8zlwlpvn/m1onrPNfCCvTsXX/P+3/gBXEI8t+u
+	qwnr5R+DY7no0i1qv7yGtx7bWOSYOKn85NztMCGzJQmcbCjHuLzIqYpZetFb3Y4BZ8OABessEht
+	OmXXdKO2rp/Ws4Uo6gk3/UoRutGzyu2OlgVPWCL02jVy90/wJI9J+ulYNcwRO4TZSFeYZXwtm5y
+	12qh4iNvG2Pb6kpXG5jco8x9sHfWxim/prqKppN/FIlCOINLqodVvQNoR7ME0DrluAhyWWgeCFC
+	m/MEkg3Xdb44Q3cmoz9ohbp7ZA0vxvU1Qe8SD+e/yWdl432be7FkmgcwgIiW7pRtyBimyxUF2dD
+	l0Wvch+ULi2MNDu9ZkrIfzvyT9nLYwnlQEilNHOUWJy4pbwP83Sz7XQfjz7oU4MvWffW0lVcpZh
+	JSjPJNAjA1bop+RSHtB4II+Y5xvFnVquYjJoQjlMuASwitnOCotAnsl2c6uRC9T5y618d4vNnye
+	3GjkF18Qjxjde/yZ+RXpuw37fwf+Rksp6L8e9xHNyl4PEjo7bTH7ReO1NzGcwHkERo8eC4ZkYmg
+	3v1j7Go1dBFN31bofbDzEVqrVA3HdIQ2Dhrs+ISuLB1mkvLL4CWz4VmgwzfJDcxd4kcEoVcUWmT
+	cK0iXy4tY1Q==
+X-Received: by 2002:a05:6512:b92:b0:5bf:bd7e:197a with SMTP id 2adb3069b0e04-5c17079aab8mr424399e87.16.1794528905892;
+        Thu, 12 Nov 2026 16:15:05 -0800 (PST)
+Received: from SafoStation ([31.40.65.49])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5c17133ca01sm200968e87.36.2026.11.12.16.15.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Nov 2026 16:15:05 -0800 (PST)
+From: Safocl Stollmannovic <safocl88@gmail.com>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: [PATCH 02/10] loongarch: fix duplicate extern declarations
+Date: Fri, 13 Nov 2026 04:14:08 +0400
+Message-ID: <20261113001432.128201-3-safocl88@gmail.com>
+X-Mailer: git-send-email 2.56.1
+In-Reply-To: <20261113001432.128201-1-safocl88@gmail.com>
+References: <20261113001432.128201-1-safocl88@gmail.com>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -80,50 +100,63 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <20261112-work-procfs-oldmem-v1-0-ecdcafd99265@kernel.org> <20261112-work-procfs-oldmem-v1-1-ecdcafd99265@kernel.org>
-In-Reply-To: <20261112-work-procfs-oldmem-v1-1-ecdcafd99265@kernel.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 12 Nov 2026 20:10:05 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXgM_TMX7HrpsvDaQi96Ht-K6KTBu5PPRRBpcCegf3Q9g@mail.gmail.com>
-X-Gm-Features: AclHuK-k7G9fpVKu6BhCbcWfXavvnldoQZhCl9e2eioRf49lg5T7xpzAfc2z5gM
-Message-ID: <CAMuHMdXgM_TMX7HrpsvDaQi96Ht-K6KTBu5PPRRBpcCegf3Q9g@mail.gmail.com>
-Subject: Re: [PATCH RFC 1/4] powerpc/crash_dump: check ioremap_cache() in copy_oldmem_page()
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Breno Leitao <leitao@debian.org>, 
-	Chris Mason <mason@kernel.org>, Thomas Gleixner <tglx@kernel.org>, x86@kernel.org, 
-	kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	David Hildenbrand <david@kernel.org>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, 12 Nov 2026 at 17:39, Christian Brauner <brauner@kernel.org> wrote:
-> copy_oldmem_page() maps a page of the old kernel that isn't in the
-> linear mapping with ioremap_cache() and copies from it without checking
-> whether the mapping worked. If it didn't, the copy reads from an offset
-> into the NULL page. That oopses unless the copy happens to be a user
-> copy, whose exception table entries turn the fault into a short copy.
->
-> Return -ENOMEM like the other architectures do. read_from_oldmem()
-> turns that into -EFAULT like any other short copy.
->
-> Reported-by: Chris Mason <mason@kernel.org>
-> Fixes: 54c32021eb6f ("[PATCH] powerpc: Add arch-dependent copy_oldmem_page")
-> Cc: stable@vger.kernel.org
-> Reviewed-by: Breno Leitao <leitao@debian.org>
-> Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
+Compiling a kernel module with a C++ compiler results in a duplicate
+echo ‘extern’ specifier error.
+This occurs because the code contains , and
+expands to  when processed by a C++ compiler.
+The  specifier must be removed.
+https://bugzilla.kernel.org/show_bug.cgi?id=222257
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Safocl Stollmannovic <safocl88@gmail.com>
+---
+ arch/loongarch/include/asm/idle.h      | 2 +-
+ arch/loongarch/include/asm/smp.h       | 4 ++--
+ arch/loongarch/include/asm/switch_to.h | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/arch/loongarch/include/asm/idle.h b/arch/loongarch/include/asm/idle.h
+index f7f2b7dbf..9913191cb 100644
+--- a/arch/loongarch/include/asm/idle.h
++++ b/arch/loongarch/include/asm/idle.h
+@@ -4,6 +4,6 @@
+ 
+ #include <linux/linkage.h>
+ 
+-extern asmlinkage void __arch_cpu_idle(void);
++asmlinkage void __arch_cpu_idle(void);
+ 
+ #endif /* __ASM_IDLE_H  */
+diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/asm/smp.h
+index dd1457065..c21a5b60e 100644
+--- a/arch/loongarch/include/asm/smp.h
++++ b/arch/loongarch/include/asm/smp.h
+@@ -87,8 +87,8 @@ struct secondary_data {
+ };
+ extern struct secondary_data cpuboot_data;
+ 
+-extern asmlinkage void smpboot_entry(void);
+-extern asmlinkage void start_secondary(void);
++asmlinkage void smpboot_entry(void);
++asmlinkage void start_secondary(void);
+ 
+ extern void calculate_cpu_foreign_map(void);
+ 
+diff --git a/arch/loongarch/include/asm/switch_to.h b/arch/loongarch/include/asm/switch_to.h
+index ab9e0292c..aa5d3da68 100644
+--- a/arch/loongarch/include/asm/switch_to.h
++++ b/arch/loongarch/include/asm/switch_to.h
+@@ -21,7 +21,7 @@ struct task_struct;
+  * This function is used whilst scheduling to save the context of prev & load
+  * the context of next. Returns prev.
+  */
+-extern asmlinkage struct task_struct *__switch_to(struct task_struct *prev,
++asmlinkage struct task_struct *__switch_to(struct task_struct *prev,
+ 			struct task_struct *next, void *sched_ra, void *sched_cfa);
+ 
+ /*
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.56.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
