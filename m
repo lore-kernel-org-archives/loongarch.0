@@ -1,73 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794586556;
-	b=NEuAlFDnb9Bpu0WjG3xpF6/ENjXM5jF05YrcMQtCBpUUAwqsg/nrzIaRART4j/7be1ak
-	 20x4SpyLMzWvI7ErIg/+/5qfVuDFrE+54UDHIixJduR0Lb/p6fXAz52AVm6VP7obRA1CW
-	 lUxYSgYy+QRbOonm0hFDP8KZ2gE6KLnQHNkpESLvtoix7nUu+Twxn31aAQTrPtsiK8+ga
-	 Wma6ZuFLcTamsma7Wbfp2LxYa/UZeWXRw2Zcxf8zfTrFdHH6tyoCGRJ3jGzZmzrf6lOb2
-	 oms/Be4BhSOXsCOMuWGuQpqPBUy8ZDk1Stg6n48khtz6+fay9ZUpWSKUKpuEHKv3Fkg==
+	t=1794592900;
+	b=kybzwTKJd33YbRxDGt/zWeF9sFlR1kpF1ELkD3iWtp/r/NIlY7+9516Bq5LvpjZ4v3mY
+	 SU6+ODm1J+e/Z+7Z/xoIbrAmeKa3LlTuNVUI9yjNXwq32lGdxeg0P7lxeHJQQTzXVQ6aD
+	 njGCEc3RstJGbCR9jTF9+1csdow2Kd5+Kikc5Fn6ODt2jYMq7FjfyBfsUbYolUtRgYHHJ
+	 9OX9I/T642mLq1bdkKRaKiK7CENBGTSU4gwph2b4tbjsRT11NLAr9sp3nFB2uokkcJ8w/
+	 yfVNAhk+KG+9pbQ990ajXDJDO5352oRRToMkKcjoA0yMaLaFg+godtYSM8t174uH+6Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794586556;
-	h=Received:DKIM-Signature:Received:Received:X-ME-Sender:
-	 X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
-	 MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type:Content-Transfer-Encoding;
-	bh=UvoCI+F3UN/r+kCCyYEcI97wbIPvzPchSwyBMSLm3Yw=;
-	b=o4xnlWcYC6JroHnQWV1CG7NpZl3bZSzjn+lh7PcjB5ahcD5CDm6z0/baiRqntkIxoxhc
-	 urRCEmJb5axOw/1Z9qgfNLU7+j5fKJ23VWXPb3zkvJQ+nPI3p+dE2gGl1XHBiD6n9Epf8
-	 K6MOT/On0U4FGPmDJcbfIUyJH7+uQyG6GqEWFfendZ+YP+r+FdwCL4PoSeOlBEWQvm6Mo
-	 Sgg3CsC7i3lcpexAwEDxRK2nkjX3fkIv0keAmGmGr2RsiTpjGlm2hCCK4fv1pbH6sa2D7
-	 loLPJpq3W8lxnZhxBzNuqBLVB0Qxij96r6IGiUxxmEHXfmw/4nt8lrI2m01z9oaj3WA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794592900;
+	h=Received:DKIM-Signature:From:To:Cc:In-Reply-To:References:Subject:
+	 Message-Id:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	 X-Mailer:X-Developer-Signature:X-Developer-Key;
+	bh=fei6i2HUpsCUUYKRfgUiNwOal5hCWRa/kM9HPb8mLEw=;
+	b=D+n+PBQazpOdDIi5qEQoqL8Owbp2142CjG/J7b5GLKm9C/5nvTA/S68wblMPaENhR3GR
+	 8F4QSiwFTNp3a5xVHUT+13iD4q/NV70BJJgHqvhdZyX/NarHqdjvoxo4np1rSB56K+0Fs
+	 j/FVNhLL9NqrpwNVbFC0ATAUhkh+NoIT9cc4zi7jKLkDhQbz3i3bixkOc5unogaREBrL0
+	 CZXmgdbQhAM2bRpPFY8Vl/LLJn/GstWV9hdnbfTk9xM4lU2lICgCZShUD7FbzeT7m11Pv
+	 TLCAS91KJ/fy1iLS7kYkNCtI8rHFpZa787dEZLcdZjg5XwFIwftw01S+IuZS4o8Zouw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=m9cRC5y4;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OEpv5h1y;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0515D606A333
-	for <loongarch@lists.linux.dev>; Fri, 13 Nov 2026 16:15:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC0F606B220;
+	Fri, 13 Nov 2026 18:01:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=m9cRC5y4
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA2881F000C4;
-	Fri, 13 Nov 2026 16:15:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OEpv5h1y
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B5A51F000C6;
+	Fri, 13 Nov 2026 18:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794586555;
-	bh=UvoCI+F3UN/r+kCCyYEcI97wbIPvzPchSwyBMSLm3Yw=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=m9cRC5y4jEqyeUfTSiVv1SHJ/FydJ1utrE8vOHrzFWXR2EPMNSdg41+mwBMikFNz4
-	 /MBj2cfNiV7S/OblzgS4W3wbSJAbURSzCfBuqgPpiaX+qPtP4pUftzY10ikl0jP4JU
-	 DxQ+ryIydfzMgIC9Jld37fyVF36gJIHuIZmjOzN1BpYWEYtejmGT2rHBltgVVY43A3
-	 YTtv4eMONGxHzrpotvKXTcqaOOssYWGYUboJiWiwCJrPOMTz05fkPkfxH7m+yfEpo2
-	 zpX9c2q+5rgsDzx48oYn5q8rjdufVgTLIDNnnCpjdKszr5Pp9WnCLmwtw1hr7/aNi2
-	 3+n20jkvBiauA==
-Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
-	by mailfauth.ams.internal (Postfix) with ESMTP id 0240D198003A;
-	Fri, 13 Nov 2026 11:15:53 -0500 (EST)
-Received: from ams-imap-11 ([10.64.2.31])
-  by ams-compute-02.internal (MEProxy); Fri, 13 Nov 2026 11:15:53 -0500
-X-ME-Sender: <xms:tjf3anI-XrM1rzyEKV3TsVn0tQkQzK2XUXBxRhJP5kB-KddizlLQ0w>
-    <xme:tjf3akk4lCV2YgUyysfOinfbMl0AeVuHNAC_TQGRnH4c7vErfaPMU63i_RYmyECVR
-    cmHz6vQlxJXJZKRdm4TljeAYvoPcntPZ4L4Vn961g_nqmsamp1ivLSO>
-X-ME-Proxy-Cause: dmFkZTFAQfv4vgc59PJfnI7+gnjbFo5pjWqPci2q637Dc+jTlN98BS3SOu191Kx5oeX5zT
-    cpsU4696TXwbo6E9T70+3zgZ4ZQT4u2WZYZrLNrdudOZVkNXMyzUwvt29gWlqjMBSeCuS9
-    xWLhKpKLiLkYBm/I4/mkEe9fPCWkZoThd9No+pzePTALJyZz0DWj5omvVUsTJm/N8GHQYm
-    DOd8INghd05soloR06GFbIa7ZzhmJnA5LN2JEN1zSxA5iEYfypiw5rdG7NEX58RL/EvMbS
-    7slEaTvIn0pajVNLktDqnig4nTGsVfUSIfAs0Ux0u7J4sDsFCJhyhxUP6Frqsgl8B1A/CG
-    s/j6i18iK4vWXI1FdcRk9LnIkKn74i9Yhk81YCSMJfEnMcLY20EVMRM/6UGEolaZOYQCzg
-    ZvC+RNRsBxv3IJxnLtOn70i8xsFr9xBrv/ED+iFr2bHy4x+BpbFRBEf7SfIb8XLr6hK8kF
-    Baaop2OXhbUjF5ZuU5duB/0k6jn1CPCJdS4dvDXPS3Bt8iXz9s6WH1dFfnVd7zGCchXAQG
-    E2n7fVlr1OZ0/+MDkpS4Kv5tFhlIodvqjId3+7qOGwlktbRSBVu8JWi6yCOMroglq/vqEM
-    4wP+wSNywxxU1uJBN1CbH4i7HphUnvs7PZo4+opuiJE8SPFkwU3I+VU4lUQA
-X-ME-Proxy: <xmx:uDf3ajCoYN_KPZOMcB6qtN-R6od7UDzch01jyl6v8tk6cBQxj2Cj4Q>
-    <xmx:uDf3avEbNlME5ubNM4a2O4OrZanjSXdVtBK6BowjWnUXilDqtk7mXA>
-    <xmx:uDf3aoLzod8yEADhATBJWWS2gEZOnq8dAHTLTmA0h7i_jo60t5MVIg>
-    <xmx:uDf3amq4GdBo6Xpqdf1_bUNO_PW5EFSPUTAP7JF17vb9ewtylzlYhg>
-    <xmx:uDf3avjcVhpjhgRD-idErmSAru7l6xJZID9o6TemQcneI_udBuOohP9R>
-Feedback-ID: ice86485a:Fastmail
-Received: by mailuser.ams.internal (Postfix, from userid 501)
-	id 768CAF80093; Fri, 13 Nov 2026 11:15:50 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20260515; t=1794592899;
+	bh=fei6i2HUpsCUUYKRfgUiNwOal5hCWRa/kM9HPb8mLEw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date;
+	b=OEpv5h1yLV8OFSZCu+UvI9BFOHqrnvFckVSjU/GYLfx5ZBm9/kvEbk5qoXxf4ymd3
+	 LzsezAE7ZUDdfa2vop6R46I0l/7PPU8lNtAfpvfT+njTsRclL/A4PnUxs8wGSa+ANs
+	 FQy8qFfhmL2kXJaTfLpSP8TPUZlSoSRQ3wujKaYqHSlxRHhpiYHQTc/6u7QAlgcGs1
+	 y0R7XofHW5AFhHKXiJAyA07DeMWCTshwJmNVW5wv+Vhyj1U8G/9nDjIO887fTxAGDn
+	 0m1zoQ7/KnP8oCQTSJF2FJ6OlPnBmT/gcoT9UPFhOHbI21ryaBmS/+KFokoi1MWgfO
+	 93EW87uYExEtg==
+From: Mark Brown <broonie@kernel.org>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>, Yinbo Zhu <zhuyinbo@loongson.cn>, 
+ Huacai Chen <chenhuacai@kernel.org>, Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
+ loongarch@lists.linux.dev, linux-spi@vger.kernel.org
+In-Reply-To: <cover.1794538736.git.zhoubinbin@loongson.cn>
+References: <cover.1794538736.git.zhoubinbin@loongson.cn>
+Subject: Re: [PATCH v2 0/7] spi: loongson: Fixes, cleanup and IRQ support
+Message-Id: <179458651530.68977.3697194516871626286.b4-ty@b4>
+Date: Fri, 13 Nov 2026 16:15:15 +0000
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -77,217 +59,66 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Date: Fri, 13 Nov 2026 17:15:29 +0100
-From: "Ard Biesheuvel" <ardb@kernel.org>
-To: "Jason Gunthorpe" <jgg@nvidia.com>, "Ard Biesheuvel" <ardb+git@google.com>
-Cc: linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- "Paul Walmsley" <pjw@kernel.org>, "Palmer Dabbelt" <palmer@dabbelt.com>,
- "Albert Ou" <aou@eecs.berkeley.edu>, "Huacai Chen" <chenhuacai@kernel.org>,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
-Message-Id: <274609cc-2c17-4bde-bcf3-f309655f0594@app.fastmail.com>
-In-Reply-To: <179458262195.3625095.6692761412463057203.b4-review@b4>
-References: <20261110121731.2728824-12-ardb+git@google.com>
- <20261110121731.2728824-16-ardb+git@google.com>
- <179458262195.3625095.6692761412463057203.b4-review@b4>
-Subject: Re: [PATCH v2 04/10] efi/libstub: Capture loaded image information in struct
- efi_image_info
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.17-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2037; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=GPgo+uG8JpRAExqEI7ahg9NF4Ya79KVDkuNdAF1ApAY=;
+ b=owGbwMvMwCWm/754w+YLFp2Mp9WSGLK+BzQE34pdqFN7YvH9ssrjkZMil4aZez89Vmep2vZqA
+ 7PK7pv9HaUsDGJcDLJiiixxWdwv60ter+E7uLANZg4rE8gQBi5OAZhI0wpGhrO3n+YsM0jp36w9
+ uaorqih35s7pj42vHjb8s+xf+G71S0sYGVYJLXMxjd22udf5+ab9AkekJ3/j2SF6bTujVHzfj8d
+ JmVwA
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-
-On Fri, 13 Nov 2026, at 16:10, Jason Gunthorpe wrote:
->> [ ... 131 lines skipped ... ]
->> @@ -80,7 +87,8 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
->>  
->>  	kernel_image_offset = image_addr - (unsigned long)image->image_base;
->>  
->> -	status = efi_stub_common(handle, image, image_addr, cmdline_ptr);
->> +	status = efi_stub_common(handle, image, image_addr, cmdline_ptr,
->> +				 efistub_get_image_info());
->
-> efistub_get_image_info() always returns the pointer from the EFI stubs
-> location, but at this point the kernel has been relocated and now we
-> are passing an info pointer that is outside image to everything else
-> while the zboot path passes an info inside the image.
->
-> It would be better if info is always pointing inside the final
-> image. Then you can use info to always get a pointer inside the
-> ultimate kernel, which is what all the DRTM values need.
->
-> Having efistub_get_image_info() take in image_base, and then using
-> weak to overlay it with zboot's version would give a consistent
-> interface.
->
-> The adjustment can be calculated like this:
->
-> 	return (const void *)(image_base - efistub_image_info._text_offset);
->
-> That would allow cleaning up the primary_entry() flow to just use
-> info, and remove the weak functions:
->
-> void __noreturn efi_enter_kernel(const struct efi_image_info *image_info,
-> 				 unsigned long fdt_addr,
-> 				 unsigned long fdt_size)
-> {
-> 	void (* __noreturn enter_kernel)(u64, u64, u64, u64) =
->                  efistub_kernel_ptr(image_info, entry);
-> 	enter_kernel(fdt_addr, 0, 0, 0);
-> }
->
-> (see below for macro)
->
-> You could do the same by passing image_base and image_info everywhere,
-> but that seems less nice.
->
-
-I'd prefer to handle this by adding another offset, and an API to update
-it after moving the image. That way, the EFI stub code can still grab the
-info struct pointer without threading it through the API, while it will
-always remain valid.
-
->> [ ... 20 lines skipped ... ]
->> +++ b/drivers/firmware/efi/libstub/efistub.h
->> @@ -1148,11 +1148,53 @@ efi_status_t handle_kernel_image(unsigned long *image_addr,
->>  				 efi_loaded_image_t *image,
->>  				 efi_handle_t image_handle);
->>  
->> +struct efi_image_info {
->> +	s32	_text_offset;
->> +	s32	__inittext_end_offset;
->> +	s32	_edata_offset;
->> +	s32	_end_offset;
->> +	s32	entry_offset;
->> +};
->
-> This ends up in a cross-arch header.. It seems OK, the x86 voffset.h
-> parts can fit cross-arch like this too.
->
-> For DRTM I will do it like this:
->
-> #ifdef CONFIG_EFI_STUB_DRTM
-> 	s32	__drtm_measured_start_offset;
-> 	s32	__drtm_measured_end_offset;
-> 	s32	drtm_entry_offset;
-> 	s32	drtm_handoff_offset;
-> #endif
->
-> Which should be fine, every DRTM will need those four things at least.
->
-
-I think that is fine. We could add an arch substruct once we need it
-but that seems premature at this point.
-
->> +
->> +const struct efi_image_info *efistub_get_image_info(void);
->> +const struct efi_image_info *zboot_get_image_info(unsigned long image_base);
->> +
->> +static inline
->> +unsigned long efistub_kernel_base(const struct efi_image_info *image_info)
->> +{
->> +	return (unsigned long)offset_to_ptr(&image_info->_text_offset);
->> +}
->> +
->> +static inline
->> +unsigned long efistub_kernel_size(const struct efi_image_info *image_info)
->> +{
->> +	return image_info->_edata_offset - image_info->_text_offset;
->> +}
->> +
->> +static inline
->> +unsigned long efistub_kernel_memsize(const struct efi_image_info *image_info)
->> +{
->> +	return image_info->_end_offset - image_info->_text_offset;
->> +}
->> +
->> +static inline
->> +unsigned long efistub_kernel_codesize(const struct efi_image_info *image_info)
->> +{
->> +	return image_info->__inittext_end_offset - image_info->_text_offset;
->> +}
->> +
->> +static inline
->> +unsigned long efistub_kernel_entry_offset(const struct efi_image_info *image_info)
->> +{
->> +	return image_info->entry_offset - image_info->_text_offset;
->> +}
->
-> As above a little helper to get a void * would be useful:
->
->   static inline void *
->   __efistub_kernel_entry_ptr(const struct efi_image_info *image_info, 
-> s32 offset)
->   {
-> 	  return (void *)((offset - image_info->_text_offset) +
-> 			  efistub_kernel_base(image_info));
->   }
->   #define efistub_kernel_ptr(image_info, ptr) \
-> 	  __efistub_kernel_entry_ptr(image_info, (image_info)->ptr##_offset)
->
-> If the rework above is done this would replace
-> efistub_kernel_entry_offset()
->
->> [ ... 15 lines skipped ... ]
->> +++ b/drivers/firmware/efi/libstub/image_info.S
->> @@ -0,0 +1,12 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +
->> +#define REL_REF(sym)	.long	sym - 0b
->
-> The code could consistently use the offset_to_ptr() macro if the label was
-> included in the macro?
+On Fri, 13 Nov 2026 13:42:21 +0800, Binbin Zhou wrote:
+> spi: loongson: Fixes, cleanup and IRQ support
 > 
->   #define REL_REF(sym)	0: .long	sym - 0b
->
-> It would make the efistub_kernel_ptr() simpler, and the three size
-> calculations would look like:
->
-> 	return efistub_kernel_ptr(image_info, __inittext_end) - 
-> 	       efistub_kernel_ptr(image_info, _text);
->
+> Hi all:
+> 
+> This series fixes several long-standing bugs in the Loongson SPI
+> controller driver, cleans up register access, and adds interrupt-driven
+> transfers with a polling fallback.
+> 
+> [...]
 
-Again, probably cleaner to just refer to the copy of the struct once
-it exists.
+Applied to
 
->> +
->> +	.globl		__efistub_efistub_image_info
->> +	.p2align	3
->> +__efistub_efistub_image_info:
->> +0:	REL_REF(_text)
->> +	REL_REF(__inittext_end)
->> +	REL_REF(_edata)
->> +	REL_REF(_end)
->> +	REL_REF(efi_primary_entry)
->
-> Can you put a
->
-> +	.section	".init.rodata", "a"
->
-> Here?
->
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-7.5
 
-Ack
+Thanks!
 
-> The DRTM patch points this to various things in .init. sections and
-> modpost will complain. I think nothing outside the efi stub should
-> touch this stuct and it should be freed as init data right?
->
+[1/7] spi: loongson: Fix incorrect SPI mode caching logic
+      https://git.kernel.org/broonie/spi/c/99967afeeffe
+[2/7] spi: loongson: Drop redundant CS deassert in setup()
+      https://git.kernel.org/broonie/spi/c/d60a8b838ba7
+[3/7] spi: loongson: Make suspend/resume registers PM-specific
+      https://git.kernel.org/broonie/spi/c/30d93695c357
+[4/7] spi: loongson: Fix clock rate retrieval on ACPI platforms
+      https://git.kernel.org/broonie/spi/c/39a0b497e0db
+[5/7] spi: loongson: Fix clock divider calculation with explicit table
+      https://git.kernel.org/broonie/spi/c/fdaf557e63c3
+[6/7] spi: loongson: Use bitfield helpers for register access
+      https://git.kernel.org/broonie/spi/c/834d129ceef0
+[7/7] spi: loongson: Add interrupt mode support
+      https://git.kernel.org/broonie/spi/c/bb8651fab896
 
-Yes.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
->> [ ... 18 lines skipped ... ]
->> @@ -93,9 +100,15 @@ efi_zboot_entry(efi_handle_t handle, efi_system_table_t *systab)
->>  	}
->>  
->>  	// Decompress the payload into the newly allocated buffer
->> -	status = efi_zboot_decompress((void *)image_base, alloc_size) ?:
->> -	         efi_stub_common(handle, image, image_base, cmdline_ptr);
->> +	status = efi_zboot_decompress((void *)image_base, alloc_size);
->> +	if (status != EFI_SUCCESS)
->> +		goto error;
->>  
->> +	auto image_info = zboot_get_image_info(image_base);
->
-> auto is allowed in the kernel now?
->
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-Yes.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
