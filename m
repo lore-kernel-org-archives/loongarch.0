@@ -1,55 +1,69 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=82.195.75.108
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794548577;
-	b=EXidElPeNQL+VHiX/BP+8fVcGY5J1+g+O5SvEntMx+mIsnRzEzaJL/9BgTvtBQo/tI78
-	 enErPKW6anWQriFShcycTIatBoPUh6WLkcP52ETihLAWa9BQ7mBi6thZJ0I/UPn5MiMmk
-	 NNcqpDwbXz2Nd22wP44+EiZDce5tUyoBbkH42cZhNH/k9Gm1IQlYkhX+WWzvl9YHz9i0E
-	 e3L1Q5xf0e7yu3qRNBRhBCrBymGIiE38DR0WrPowlwNeZ1qkN9MAgxH8hilEVtcCGZ1X8
-	 4nfMhwExWQdug2Ns5aSca3/C3gKVCdE6nn5gCxNZAm2aKp9Wvmf+lpkslScCqIVXk9g==
+	t=1794562714;
+	b=aXoDrqRT9xGU2cC237yM8Wklz4uAJkfokUOYHVuSbOYBfdfjTRV/ZdJskOlWRKovVoRe
+	 Lq1MbueWmhsCNfV6kGMB2skGV/oYGMJjkemy8SkrQtMw/y9/CIRtzZm7nWb10RFxxWe/H
+	 +L3lngc1L5Ixc+4MfIuaEEQtyqzf78AgqtUCUel13xgRE+396JAOkj2zvnQYfz8M3A3VR
+	 PWP8k6hHhNZbgLHB10/0LeikJEIqWATrHBkZBQeimCpXU0xrhQPFDC6voS3O5UetATcbh
+	 BqLl6hF2KK+cS3pQiGRbjIOtr4w/ryVFXBrze0oNiUm/HAoZTmk5mAL2rXCRnuzXolg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794548577;
-	h=DMARC-Filter:Received:Received:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-CM-TRANSID:X-CM-SenderInfo:
-	 X-Coremail-Antispam;
-	bh=Y2c4gWC7HilQCJ9Zmz99cY/PoxHeM2QFnZyYqSm31ZY=;
-	b=1EaD4y1bk1Ncy20R8/gQIjTWzbLYdIrOFXaE9i68S8Nw4s4kAMnQfotriW44+85Fs1Q6
-	 BmxdwDjAEKQtcOCNdt4dZBvQmj5k7rzAYH7S/VEOaKVvkfD683XojOiyU+uvVd5GWiJY4
-	 TjrsGxUd27uAngkkQUjxMB5BoyAqiEAFKOCijDiFWSd84sP6Xs9qDVrujPfk1Yawz7+Mi
-	 rMidoqkSqedYu9kLmCLuSD1n32Oh5W8VEHLa4R3io6t0HifN40qSKimIGT3h4Mt1g52KU
-	 jt0oNT+eXd/7mCczx85q/43+NEE1XG605HaLzOKyNfj4Z/L62vcdhZv5QcOen8NKJqg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794562714;
+	h=DMARC-Filter:DKIM-Signature:Received:Date:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To:X-Debian-User;
+	bh=8Pc1VZfIDVGJzZNtwuo8QG46Hbc/13m3DgBGkiUdd+o=;
+	b=ngNnkuWzP+fVmJA9dZVzJ0Qrp19C/0WtELAvUfR2GngU59w9hTtCxaM2O+hUC3fu/vDG
+	 MYucPeXAF9bIoAx+qtOxKIstrp+m/FF3B+p2nbA71ZucWnbMUAOBloh6nacfbzHiD9NFy
+	 dpvEvgGnjVrnumhxPHEqUopJYv6+4pPnsTo0N2dsMy4HIoTtlVPesCznZW+65yuHyiuNU
+	 P0UrcaDTW7bhdBItOCRN4zi8sHksoqf44QIeBA/iL4OuqOH+SKOVlCfPh3ZtxESM2v0U8
+	 lReck9Ra8H8oRha7w+OT+M3zoG+KfSkBWUsRxZH9+jXEkODG/GuSHzVX/PpUi3SQEQw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=loongson.cn;
-	spf=pass smtp.mailfrom=loongson.cn;
-	arc=none smtp.remote-ip=114.242.206.163
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8012C606A332
-	for <loongarch@lists.linux.dev>; Fri, 13 Nov 2026 05:42:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8012C606A332
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.69.17])
-	by gateway (Coremail) with SMTP id _____8AxdvBeo_Zq4B4fAA--.23782S3;
-	Fri, 13 Nov 2026 13:42:54 +0800 (CST)
-Received: from kernelserver (unknown [223.64.69.17])
-	by front1 (Coremail) with SMTP id qMiowJAxFs1ao_ZqMSg0AA--.48458S5;
-	Fri, 13 Nov 2026 13:42:53 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Yinbo Zhu <zhuyinbo@loongson.cn>,
-	Mark Brown <broonie@kernel.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	linux-spi@vger.kernel.org,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH v2 7/7] spi: loongson: Add interrupt mode support
-Date: Fri, 13 Nov 2026 13:42:43 +0800
-Message-ID: <09d0183cecce30fde0165af5fe3d4b3a362cfc1e.1794538736.git.zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <cover.1794538736.git.zhoubinbin@loongson.cn>
-References: <cover.1794538736.git.zhoubinbin@loongson.cn>
+	dmarc=pass header.from=debian.org;
+	spf=pass smtp.mailfrom=debian.org;
+	dkim=pass header.d=debian.org header.i=@debian.org header.a=rsa-sha256 header.s=smtpauto.stravinsky header.b=UpCRHb2K;
+	arc=none smtp.remote-ip=82.195.75.108
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3227606A33D;
+	Fri, 13 Nov 2026 09:38:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F3227606A33D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=debian.org header.i=@debian.org header.a=rsa-sha256 header.s=smtpauto.stravinsky header.b=UpCRHb2K
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=8Pc1VZfIDVGJzZNtwuo8QG46Hbc/13m3DgBGkiUdd+o=; b=UpCRHb2KbmBJPwtI+DbP0LaL8d
+	sOk0q8WFr88S3iAMSHj2p/NnbWVzQGiNdZN3nNdO1zLyJsTHzDT2AYpDsszvlBsPXovwNFHmP0hr1
+	SY9lV829yFxFIN3zvj63ln8CFFNj2wJUNMYIHBmKmY/JsW4XoVGlDKbDaDwxxN5mWJ+s4cUXlOuR/
+	42UfaRA1qiSu2ICNxybe2yLc35tfTycNpZWbHnjQ/jcxlqy6tYUcS/Bi6fkLYSwXtlLGPpV1jMI8t
+	xnhOZeXq4yQ0FVHQXpu6b4xvxJ6oAklL5bw8J+RqC+cFo9eyWVg+5AE204arB4mOGXs0IEiF0Nobe
+	Yc0NfHCw==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1xRnjp-00Eeb5-2V;
+	Fri, 13 Nov 2026 09:38:30 +0000
+Date: Fri, 13 Nov 2026 01:38:22 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Christian Brauner <brauner@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Chris Mason <mason@kernel.org>, 
+	Thomas Gleixner <tglx@kernel.org>, x86@kernel.org, kexec@lists.infradead.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
+	linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	David Hildenbrand <david@kernel.org>, stable@vger.kernel.org
+Subject: Re: [PATCH RFC 3/4] crash_dump: recover from a machine check in
+ copy_oldmem_page()
+Message-ID: <avbagwxWrmFrjrtV@gmail.com>
+References: <20261112-work-procfs-oldmem-v1-0-ecdcafd99265@kernel.org>
+ <20261112-work-procfs-oldmem-v1-3-ecdcafd99265@kernel.org>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -59,480 +73,100 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxFs1ao_ZqMSg0AA--.48458S5
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQEKCGr2b-sDTwAAsG
-X-Coremail-Antispam: 1Uk129KBj9fXoW3ZFW8GrykWF1DJr48KF1rAFc_yoW8XFy8Wo
-	WxZ3Z3Z3y8ur1xWFyjqr1Fqr47X3W5ur4qyrsay3WkJw4YvryDJry5Xr47uF18u3W3JFy7
-	AFyfGFW8GF4IgrWDl-sFpf9Il3svdjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8wcxFpf
-	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
-	UjIYCTnIWjp_UUUY87kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
-	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
-	Y2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14
-	v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
-	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWrXVW3AwAv7VC2z280
-	aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28Icx
-	kI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2Iq
-	xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42
-	IY6xIIjxv20xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY
-	6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aV
-	CY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0lPfDUUUUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261112-work-procfs-oldmem-v1-3-ecdcafd99265@kernel.org>
+X-Debian-User: leitao
 
-Add an interrupt-driven transfer path alongside polling. The IRQ
-handler drains the RX FIFO, refills TX up to icnt+1 bytes and
-finalizes the transfer when complete; if no IRQ is available the
-driver falls back to polling.
+On Thu, Nov 12, 2026 at 05:37:09PM +0100, Christian Brauner wrote:
+> A capture kernel reads the memory of the crashed kernel, and that memory
+> may well have uncorrectable errors. That is after all what the first
+> kernel often died of. Every architecture that maps a page of the old
+> kernel and copies it out does so with copy_to_iter(), and a machine
+> check in that copy takes the capture kernel down.
+> 
+> On x86 a machine check in the kernel is only recovered from if the
+> instruction that took it has a machine check safe exception table entry
+> or copies from userspace (cf. error_context()). The copy of an old page
+> is neither. Its source is kernel memory, whether it goes to the buffer
+> of a read() or, since commit 4a22fd20379c ("vmcore: convert
+> __read_vmcore to use an iov_iter"), into a kernel page for splice(),
+> sendfile() and copy_file_range(). So a read of /proc/vmcore that runs
+> into a poisoned page panics the capture kernel, and so do vmcore's own
+> reads of the ELF headers and notes. Breno sees the result on a fleet:
+> the first kernel dies of a machine check and the capture kernel produces
+> no usable vmcore at all (cf. [1]).
+> 
+> On book3s64 a machine check in the kernel is recovered from if the
+> instruction that took it has an exception table entry (cf.
+> mce_common_process_ue()). The user copy has them, so a read() comes up
+> short there and read_from_oldmem() returns -EFAULT. The copies into
+> kernel pages have none and panic the same way. Other powerpc platforms
+> don't recover from a machine check in such a copy at all.
+> 
+> Copy with _copy_mc_to_iter() instead. x86_64 and PPC64 select
+> ARCH_HAS_COPY_MC, and on x86_64 and book3s64 the machine check safe copy
+> turns the machine check into a short copy, which read_from_oldmem()
+> turns into -EFAULT like any other short copy. On x86 that holds for the
+> fragile and the enhanced fast string variant, a CPU with neither gets
+> the plain copy it has today. Everywhere else _copy_mc_to_iter() is
+> _copy_to_iter(). Put the call into a helper, copy_oldmem_to_iter(), so
+> that the copy of a page of the old kernel lives in one place and an
+> architecture that gains a machine check safe copy later gets this for
+> free. The helper does the same check_copy_size() as copy_to_iter(), so
+> hardened usercopy keeps checking the copy.
+> 
+> With a v7.4-rc1 capture kernel reading /proc/vmcore and a machine check
+> injected into the copy of an old page the capture kernel is gone. A
+> machine check panic prints no trace of its own, this one comes from
+> panic_sys_info=all_bt:
+> 
+> [    0.580568] mce: [Hardware Error]: CPU 0: Machine Check Exception: 7 Bank 1: bd80000000000134
+> [    0.580574] mce: [Hardware Error]: RIP 10:<ffffffff81909b11> {_copy_to_iter+0x81/0x850}
+> [    0.580584] mce: [Hardware Error]: TSC 202f2117f ADDR 10000000 MISC 8c
+> [    0.580587] mce: [Hardware Error]: PROCESSOR 2:aa0f02 TIME 1794493617 SOCKET 0 APIC 0 microcode aa0021c
+> [    0.580589] mce: [Hardware Error]: Machine check: Uncorrected unrecoverable error in kernel context
+> [    0.580591] Kernel panic - not syncing: Fatal local machine check
+> [    0.582587] CPU: 0 UID: 0 PID: 1 Comm: init Not tainted 7.4.0-rc1-g6628e7d4c6b2 #1 PREEMPT(lazy)
+> [    0.583101] Call Trace:
+> [    0.583198]  <#MC>
+> [    0.583279]  dump_stack_lvl+0x4d/0x70
+> [    0.583419]  nmi_cpu_backtrace.cold+0x18/0x6e
+> [    0.583584]  ? __pfx_nmi_raise_cpu_backtrace+0x10/0x10
+> [    0.583772]  nmi_trigger_cpumask_backtrace+0xba/0xf0
+> [    0.583955]  sys_info+0x83/0xb0
+> [    0.584075]  vpanic+0x1b4/0x303
+> [    0.584197]  panic+0x66/0x70
+> [    0.584488]  mce_panic+0x19e/0x290
+> [    0.584799]  do_machine_check+0x627/0x9a0
+> [    0.584953]  ? _copy_to_iter+0x81/0x850
+> [    0.585099]  exc_machine_check+0x68/0xb0
+> [    0.585246]  asm_exc_machine_check+0x1e/0x40
+> [    0.587747]  </#MC>
+> [    0.587831]  <TASK>
+> [    0.588092]  ? iomem_map_sanity_check+0x98/0xb0
+> [    0.588430]  ? __ioremap_caller.isra.0+0x1a9/0x300
+> [    0.588604]  ? __copy_oldmem_page+0x3d/0xb0
+> [    0.588928]  __copy_oldmem_page+0x5e/0xb0
+> [    0.589079]  read_from_oldmem.part.0+0xe3/0x140
+> [    0.589247]  read_vmcore+0x137/0x280
+> [    0.589381]  proc_reg_read_iter+0x49/0x90
+> [    0.589533]  vfs_read+0x348/0x490
+> [    0.589666]  ksys_read+0x76/0x100
+> [    0.589792]  do_syscall_64+0xde/0x4b0
+> [    0.590103]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> 
+> With this patch the same injection ends the read() with -EFAULT, the
+> capture kernel logs the machine check and keeps running.
+> 
+> [1]: https://lore.kernel.org/all/avRXzzCSzT9Qj2FC@gmail.com/
+> 
+> Reported-by: Chris Mason <mason@kernel.org>
+> Suggested-by: Breno Leitao <leitao@debian.org>
+> Fixes: 4ae362be5093 ("[PATCH] kdump: read previous kernel's memory")
+> Fixes: 54c32021eb6f ("[PATCH] powerpc: Add arch-dependent copy_oldmem_page")
+> Fixes: 4a22fd20379c ("vmcore: convert __read_vmcore to use an iov_iter")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
-Because a tail shorter than the interrupt period does not raise SPIF,
-the period is chosen to divide the transfer length, so the last batch
-always completes. Messages are also split into bounded chunks to keep
-each transfer within the SPI core timeout, given the low per-byte
-throughput of this controller.
-
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- drivers/spi/spi-loongson-core.c | 241 ++++++++++++++++++++++++++++++--
- drivers/spi/spi-loongson-pci.c  |  28 ++--
- drivers/spi/spi-loongson-plat.c |  17 ++-
- drivers/spi/spi-loongson.h      |  23 ++-
- 4 files changed, 285 insertions(+), 24 deletions(-)
-
-diff --git a/drivers/spi/spi-loongson-core.c b/drivers/spi/spi-loongson-core.c
-index 74f47150cc6b..8d9f85d58dba 100644
---- a/drivers/spi/spi-loongson-core.c
-+++ b/drivers/spi/spi-loongson-core.c
-@@ -1,5 +1,16 @@
- // SPDX-License-Identifier: GPL-2.0+
- // Loongson SPI Support
-+//
-+// - Host-only controller with up to 4 chip selects.
-+// - Tx/Rx FIFO with 4-bit wide entries;
-+//   (1 on Loongson-2K0300, 4 on Loongson-2K3000).
-+// - Supports booting the SoC from SPI flash.
-+// - Both a polling mode and an interrupt mode are supported; in
-+//   interrupt mode the number of bytes per interrupt is chosen from
-+//   the FIFO depth (one byte per IRQ on a single-entry FIFO, up to
-+//   4 bytes per IRQ on an 4-entry FIFO). The driver automatically
-+//   falls back to polling if no IRQ is available.
-+//
- // Copyright (C) 2023 Loongson Technology Corporation Limited
- 
- #include <linux/bitfield.h>
-@@ -201,9 +212,178 @@ static int loongson_spi_write_read(struct spi_device *spi, struct spi_transfer *
- 	return ret;
- }
- 
-+/*
-+ * SPIF fires every (icnt + 1) bytes, and a tail shorter than that
-+ * does not raise SPIF, which stalls the transfer. Pick the largest
-+ * (icnt + 1) that divides len, falling back to 1 byte per interrupt.
-+ */
-+static unsigned int loongson_spi_calc_icnt(struct loongson_spi *loongson_spi,
-+					   unsigned int len)
-+{
-+	unsigned int icnt_max;
-+
-+	icnt_max = min_t(unsigned int,
-+			 FIELD_MAX(LOONGSON_SPI_SPER_ICNT),
-+			 loongson_spi->fifo_depth - 1);
-+
-+	for (unsigned int icnt = icnt_max; icnt > 0; icnt--)
-+		if (!(len % (icnt + 1)))
-+			return icnt;
-+	return 0;
-+}
-+
-+static irqreturn_t loongson_spi_irq(int irq, void *dev_id)
-+{
-+	struct loongson_spi *loongson_spi = dev_id;
-+	struct spi_controller *ctrl = loongson_spi->controller;
-+	unsigned char status, data, limit;
-+	bool done = false;
-+
-+	scoped_guard(spinlock_irqsave, &loongson_spi->lock) {
-+		if (!loongson_spi->total)
-+			return IRQ_HANDLED;
-+
-+		status = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_SPSR_REG);
-+
-+		if (!(status & LOONGSON_SPI_SPSR_EVENTS))
-+			return IRQ_NONE;
-+
-+		if (status & LOONGSON_SPI_SPSR_WCOL)
-+			loongson_spi_write_reg(loongson_spi,
-+					       LOONGSON_SPI_SPSR_REG, LOONGSON_SPI_SPSR_WCOL);
-+
-+		if (!(status & LOONGSON_SPI_SPSR_SPIF))
-+			return IRQ_HANDLED;
-+
-+		loongson_spi_write_reg(loongson_spi,
-+				       LOONGSON_SPI_SPSR_REG, LOONGSON_SPI_SPSR_SPIF);
-+
-+		/* Drain the RX FIFO */
-+		while (loongson_spi->count < loongson_spi->total) {
-+			status = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_SPSR_REG);
-+			if (status & LOONGSON_SPI_SPSR_RFEMPTY)
-+				break;
-+
-+			data = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_FIFO_REG);
-+			if (loongson_spi->rx_ptr)
-+				loongson_spi->rx_ptr[loongson_spi->count] = (u8)data;
-+
-+			loongson_spi->count++;
-+		}
-+
-+		/*
-+		 * Refill the TX FIFO only until in-flight bytes reach icnt + 1,
-+		 * so the next batch still forms a full interrupt period.
-+		 */
-+		limit = loongson_spi->icnt + 1;
-+		while (loongson_spi->sent < loongson_spi->total &&
-+		       (loongson_spi->sent - loongson_spi->count) < limit) {
-+			status = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_SPSR_REG);
-+			if (status & LOONGSON_SPI_SPSR_WFFULL)
-+				break;
-+
-+			data = loongson_spi->tx_ptr ?
-+			       loongson_spi->tx_ptr[loongson_spi->sent] : 0;
-+
-+			loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_FIFO_REG, data);
-+			loongson_spi->sent++;
-+		}
-+
-+		if (loongson_spi->count >= loongson_spi->total) {
-+			loongson_spi_clear_bits(loongson_spi,
-+						LOONGSON_SPI_SPCR_REG, LOONGSON_SPI_SPCR_SPIE);
-+			done = true;
-+		}
-+	}
-+
-+	if (done)
-+		spi_finalize_current_transfer(ctrl);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int loongson_spi_transfer_one_irq(struct spi_controller *host, struct spi_device *spi,
-+					 struct spi_transfer *xfer)
-+{
-+	struct loongson_spi *loongson_spi = spi_controller_get_devdata(host);
-+	unsigned int prefill, n = 0;
-+
-+	guard(spinlock_irqsave)(&loongson_spi->lock);
-+
-+	loongson_spi->tx_ptr = xfer->tx_buf;
-+	loongson_spi->rx_ptr = xfer->rx_buf;
-+	loongson_spi->total = xfer->len;
-+	loongson_spi->count = 0;
-+	loongson_spi->sent = 0;
-+
-+	/* Calculate and configure icnt */
-+	loongson_spi->icnt = loongson_spi_calc_icnt(loongson_spi, xfer->len);
-+	loongson_spi_update_bits(loongson_spi, LOONGSON_SPI_SPER_REG,
-+				 LOONGSON_SPI_SPER_ICNT,
-+				 FIELD_PREP(LOONGSON_SPI_SPER_ICNT, loongson_spi->icnt));
-+
-+	/* Clear any stale status */
-+	loongson_spi_write_reg(loongson_spi,
-+			       LOONGSON_SPI_SPSR_REG, LOONGSON_SPI_SPSR_EVENTS);
-+
-+	/* Prefill at most icnt + 1 bytes */
-+	prefill = min_t(unsigned int, xfer->len, loongson_spi->icnt + 1);
-+	for (unsigned int i = 0; i < prefill; i++) {
-+		unsigned int data = 0, status;
-+
-+		status = loongson_spi_read_reg(loongson_spi, LOONGSON_SPI_SPSR_REG);
-+		if (status & LOONGSON_SPI_SPSR_WFFULL)
-+			break;
-+
-+		if (loongson_spi->tx_ptr)
-+			data = loongson_spi->tx_ptr[i];
-+		loongson_spi_write_reg(loongson_spi, LOONGSON_SPI_FIFO_REG, data);
-+
-+		n++;
-+	}
-+	loongson_spi->sent = n;
-+
-+	/* Enable the byte-completion interrupt */
-+	loongson_spi_set_bits(loongson_spi,
-+			      LOONGSON_SPI_SPCR_REG, LOONGSON_SPI_SPCR_SPIE);
-+
-+	return 1;
-+}
-+
-+static void loongson_spi_handle_err(struct spi_controller *host, struct spi_message *msg)
-+{
-+	struct loongson_spi *loongson_spi = spi_controller_get_devdata(host);
-+
-+	/*
-+	 * The SPI core has given up on this message (e.g. timeout) and
-+	 * handed the buffers back to the caller. Stop the byte
-+	 * interrupt, clear pending status, and mark the transfer dead so
-+	 * that a late IRQ cannot write into the now-invalid buffers.
-+	 */
-+	loongson_spi_clear_bits(loongson_spi,
-+				LOONGSON_SPI_SPCR_REG, LOONGSON_SPI_SPCR_SPIE);
-+
-+	loongson_spi_write_reg(loongson_spi,
-+			       LOONGSON_SPI_SPSR_REG, LOONGSON_SPI_SPSR_EVENTS);
-+
-+	scoped_guard(spinlock_irqsave, &loongson_spi->lock) {
-+		loongson_spi->tx_ptr = NULL;
-+		loongson_spi->rx_ptr = NULL;
-+		loongson_spi->total = 0;
-+		loongson_spi->count = 0;
-+		loongson_spi->sent = 0;
-+		loongson_spi->icnt = 0;
-+	}
-+}
-+
- static int loongson_spi_prepare_message(struct spi_controller *ctlr, struct spi_message *m)
- {
- 	struct loongson_spi *loongson_spi = spi_controller_get_devdata(ctlr);
-+	int ret;
-+
-+	ret = spi_split_transfers_maxsize(ctlr, m, LOONGSON_SPI_MAX_XFER_SIZE);
-+	if (ret)
-+		return ret;
- 
- 	loongson_spi_clear_bits(loongson_spi,
- 				LOONGSON_SPI_PARA_REG, LOONGSON_SPI_PARA_MEM_EN);
-@@ -221,10 +401,13 @@ static int loongson_spi_transfer_one(struct spi_controller *ctrl, struct spi_dev
- 	if (ret)
- 		return ret;
- 
--	if (xfer->len)
--		return loongson_spi_write_read(spi, xfer);
-+	if (!xfer->len)
-+		return 0;
-+
-+	if (loongson_spi->use_irq)
-+		return loongson_spi_transfer_one_irq(ctrl, spi, xfer);
- 
--	return 0;
-+	return loongson_spi_write_read(spi, xfer);
- }
- 
- static int loongson_spi_unprepare_message(struct spi_controller *ctrl, struct spi_message *m)
-@@ -240,15 +423,16 @@ static int loongson_spi_unprepare_message(struct spi_controller *ctrl, struct sp
- 
- static void loongson_spi_reginit(struct loongson_spi *loongson_spi_dev)
- {
--	/* Disable SPI */
-+	/* Disable SPI and its interrupt */
- 	loongson_spi_clear_bits(loongson_spi_dev,
--				LOONGSON_SPI_SPCR_REG, LOONGSON_SPI_SPCR_SPE);
-+				LOONGSON_SPI_SPCR_REG,
-+				LOONGSON_SPI_SPCR_SPE | LOONGSON_SPI_SPCR_SPIE);
- 
- 	/* Clear status flags (write 1 to clear) */
- 	loongson_spi_write_reg(loongson_spi_dev,
- 			       LOONGSON_SPI_SPSR_REG, LOONGSON_SPI_SPSR_EVENTS);
- 
--	/* Enable SPI */
-+	/* Enable SPI (interrupt remains disabled until a transfer starts) */
- 	loongson_spi_set_bits(loongson_spi_dev,
- 			      LOONGSON_SPI_SPCR_REG, LOONGSON_SPI_SPCR_SPE);
- }
-@@ -280,7 +464,45 @@ static int loongson_spi_get_clk_rate(struct device *dev)
- 	return 0;
- }
- 
--int loongson_spi_init_controller(struct device *dev, void __iomem *regs)
-+static void loongson_spi_get_fifo_depth(struct device *dev)
-+{
-+	struct spi_controller *controller = dev_get_drvdata(dev);
-+	struct loongson_spi *loongson_spi = spi_controller_get_devdata(controller);
-+	unsigned int depth;
-+
-+	if (device_property_read_u32(dev, "fifo-depth", &depth)) {
-+		loongson_spi->fifo_depth = 1;
-+		dev_warn(dev,
-+			 "fifo-depth not declared, defaulting to 1 (single-byte)");
-+		return;
-+	}
-+
-+	loongson_spi->fifo_depth = depth;
-+}
-+
-+static void loongson_spi_irqinit(struct device *dev, int irq)
-+{
-+	struct spi_controller *controller = dev_get_drvdata(dev);
-+	struct loongson_spi *loongson_spi = spi_controller_get_devdata(controller);
-+	int ret;
-+
-+	if (irq <= 0) {
-+		loongson_spi->use_irq = false;
-+		return;
-+	}
-+
-+	ret = devm_request_irq(dev, irq, loongson_spi_irq, 0, "loongson-spi", loongson_spi);
-+	if (ret) {
-+		loongson_spi->use_irq = false;
-+		dev_warn(dev, "failed to request IRQ %d with %d, using polling", irq, ret);
-+		return;
-+	}
-+
-+	spin_lock_init(&loongson_spi->lock);
-+	loongson_spi->use_irq = true;
-+}
-+
-+int loongson_spi_init_controller(struct device *dev, void __iomem *regs, int irq)
- {
- 	struct spi_controller *controller;
- 	struct loongson_spi *spi;
-@@ -295,6 +517,7 @@ int loongson_spi_init_controller(struct device *dev, void __iomem *regs)
- 	controller->prepare_message = loongson_spi_prepare_message;
- 	controller->transfer_one = loongson_spi_transfer_one;
- 	controller->unprepare_message = loongson_spi_unprepare_message;
-+	controller->handle_err = loongson_spi_handle_err;
- 	controller->set_cs = loongson_spi_set_cs;
- 	controller->num_chipselect = LOONGSON_SPI_NUM_CS;
- 	dev_set_drvdata(dev, controller);
-@@ -312,8 +535,8 @@ int loongson_spi_init_controller(struct device *dev, void __iomem *regs)
- 	controller->min_speed_hz = DIV_ROUND_UP_ULL(spi->clk_rate, LOONGSON_SPI_DIV_MAX);
- 
- 	loongson_spi_reginit(spi);
--
--	spi->mode = 0;
-+	loongson_spi_get_fifo_depth(dev);
-+	loongson_spi_irqinit(dev, irq);
- 
- 	return devm_spi_register_controller(dev, controller);
- }
-diff --git a/drivers/spi/spi-loongson-pci.c b/drivers/spi/spi-loongson-pci.c
-index ccc26efd88fe..5317603dc486 100644
---- a/drivers/spi/spi-loongson-pci.c
-+++ b/drivers/spi/spi-loongson-pci.c
-@@ -7,25 +7,33 @@
- #include "spi-loongson.h"
- 
- static int loongson_spi_pci_register(struct pci_dev *pdev,
--			const struct pci_device_id *ent)
-+				     const struct pci_device_id *ent)
- {
--	int ret;
--	void __iomem *reg_base;
- 	struct device *dev = &pdev->dev;
--	int pci_bar = 0;
-+	void __iomem *reg_base;
-+	int ret, irq = 0;
- 
- 	ret = pcim_enable_device(pdev);
- 	if (ret < 0)
--		return dev_err_probe(dev, ret, "cannot enable pci device\n");
-+		return dev_err_probe(dev, ret, "cannot enable pci device");
- 
--	reg_base = pcim_iomap_region(pdev, pci_bar, pci_name(pdev));
-+	reg_base = pcim_iomap_region(pdev, 0, pci_name(pdev));
- 	ret = PTR_ERR_OR_ZERO(reg_base);
- 	if (ret)
--		return dev_err_probe(dev, ret, "failed to request and remap memory\n");
--
--	ret = loongson_spi_init_controller(dev, reg_base);
-+		return dev_err_probe(dev, ret, "failed to request and remap memory");
-+
-+	ret = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_ALL_TYPES);
-+	if (ret < 0) {
-+		dev_warn(dev, "no IRQ available, will use PIO mode");
-+	} else {
-+		irq = pci_irq_vector(pdev, 0);
-+		if (irq < 0)
-+			dev_warn(dev, "failed to get IRQ vector, will use PIO mode");
-+	}
-+
-+	ret = loongson_spi_init_controller(dev, reg_base, irq);
- 	if (ret)
--		return dev_err_probe(dev, ret, "failed to initialize controller\n");
-+		return dev_err_probe(dev, ret, "failed to initialize controller");
- 
- 	return 0;
- }
-diff --git a/drivers/spi/spi-loongson-plat.c b/drivers/spi/spi-loongson-plat.c
-index 6f8202264341..82d8505b6b66 100644
---- a/drivers/spi/spi-loongson-plat.c
-+++ b/drivers/spi/spi-loongson-plat.c
-@@ -9,17 +9,26 @@
- 
- static int loongson_spi_platform_probe(struct platform_device *pdev)
- {
--	int ret;
--	void __iomem *reg_base;
- 	struct device *dev = &pdev->dev;
-+	void __iomem *reg_base;
-+	int ret, irq = 0;
- 
- 	reg_base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(reg_base))
- 		return PTR_ERR(reg_base);
- 
--	ret = loongson_spi_init_controller(dev, reg_base);
-+	ret = platform_get_irq_optional(pdev, 0);
-+	if (ret == -EPROBE_DEFER)
-+		return -EPROBE_DEFER;
-+
-+	if (ret < 0)
-+		dev_warn(dev, "no IRQ specified, will use PIO mode");
-+	else
-+		irq = ret;
-+
-+	ret = loongson_spi_init_controller(dev, reg_base, irq);
- 	if (ret)
--		return dev_err_probe(dev, ret, "failed to initialize controller\n");
-+		return dev_err_probe(dev, ret, "failed to initialize controller");
- 
- 	return 0;
- }
-diff --git a/drivers/spi/spi-loongson.h b/drivers/spi/spi-loongson.h
-index c46169e8c780..442f22ee89af 100644
---- a/drivers/spi/spi-loongson.h
-+++ b/drivers/spi/spi-loongson.h
-@@ -35,6 +35,7 @@
- 
- /* SPER bits */
- #define LOONGSON_SPI_SPER_SPRE		GENMASK(1, 0)
-+#define LOONGSON_SPI_SPER_ICNT		GENMASK(7, 6)
- 
- /* SFC_PARAM bits */
- #define LOONGSON_SPI_PARA_MEM_EN	BIT(0)
-@@ -54,6 +55,16 @@
- 
- #define LOONGSON_SPI_NUM_CS		4
- 
-+/*
-+ * This controller has no DMA and moves one byte per IRQ/polling
-+ * iteration, so actual throughput is far below speed_hz while the
-+ * SPI core scales its timeout from the theoretical speed_hz.
-+ * Split messages into fixed-size chunks so each transfer completes
-+ * well inside the core's per-transfer timeout. This is a software
-+ * policy, not a hardware limit.
-+ */
-+#define LOONGSON_SPI_MAX_XFER_SIZE	SZ_4K
-+
- /* Hardware limits and divider masks */
- #define LOONGSON_SPI_DIV_MIN		2
- #define LOONGSON_SPI_DIV_MAX		4096
-@@ -92,8 +103,18 @@ struct loongson_spi {
- 	unsigned int		mode;
- 	u64			clk_rate;
- 	struct loongson_spi_suspend_store lss;
-+
-+	spinlock_t		lock;	/* protects tx_ptr, rx_ptr and transfer state */
-+	bool			use_irq;
-+	const unsigned char	*tx_ptr;
-+	unsigned char		*rx_ptr;
-+	unsigned int		count;
-+	unsigned int		sent;
-+	unsigned int		total;
-+	unsigned int		icnt;
-+	unsigned int		fifo_depth;
- };
- 
--int loongson_spi_init_controller(struct device *dev, void __iomem *reg);
-+int loongson_spi_init_controller(struct device *dev, void __iomem *regs, int irq);
- extern const struct dev_pm_ops loongson_spi_dev_pm_ops;
- #endif /* __LINUX_SPI_LOONGSON_H */
--- 
-2.52.0
-
+Reviewed-by: Breno Leitao <leitao@debian.org>
