@@ -1,97 +1,73 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.52.23
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794582722;
-	b=hTCmJo/N10OCg4TywrFcAxImIMlqODUh0Y3x9acNi/MwBbxZ2nbnrYcOF2LLBNGr6tOh
-	 XfbYbfMctduVoL/z/91V6pekgVfLKnw2Xg2qLqPw1PDJIYOa7cz/kJpP67QuXjUbl3PRo
-	 anRTbCSAlKMeXSfuej7gtkb205yn56vsdDY05QxpJNWgIb0jYvRpXgZORdHWNsRfnKkkc
-	 5w6bzoWkSgc2JBHvT1V78FWQoUutmQEUvwLOUXpl6uv0JAPyfCy96QgZCKCGrvAQEPpPK
-	 h5XGMoKvtOWPHV07ZEVANMNypohpJY5Sh1ij0NlXCru6mHuiez1NY1eT5WuPvONUs3A==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794582722;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Content-Type:
-	 Content-Transfer-Encoding:Subject:From:To:Cc:In-Reply-To:References:
-	 Date:Message-Id:X-Mailer:X-ClientProxiedBy:MIME-Version:
-	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
-	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
-	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
-	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-	 X-MS-Exchange-CrossTenant-UserPrincipalName:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=k6x0VuUO0GYkxDaYcjvmAuGzdvUMZ0O8Cyp9uzcwxKY=;
-	b=Q46wuxULpAY/7B729+tg7HwXeXumcrwkkCSWeu39ljvEPqv2n5IF6o2xD/X49p0H/qOz
-	 CwFpBqybbNQTY0DN+QU66mn9rbcupv4FYfg81lsyWBWCucejXuuAOmrRcWbxsWBDETJVk
-	 0SYjmtn4DjGBb9CuECHoTSX8zlwyXduJaTn1+hK8oLQDESQWTxWZ/+znUbaS5aPinvmao
-	 obzTrs9oJtS6Jeaq8qNaxCoWIxdgkxGq5oflK/U9biEMVWiTt0hCw8xgjwq9iMRof4b/U
-	 pAj2r4Wfl3/EZ4nIouIbVK6m1J5H0Gv7BCUHNhL8Sc/qxNISqlGcHhAH6ZHQ7PZHuhg==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=nvidia.com;
-	spf=fail smtp.mailfrom=nvidia.com;
-	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=WMs3Cyj6;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.52.23
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011023.outbound.protection.outlook.com [52.101.52.23])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1794586556;
+	b=NEuAlFDnb9Bpu0WjG3xpF6/ENjXM5jF05YrcMQtCBpUUAwqsg/nrzIaRART4j/7be1ak
+	 20x4SpyLMzWvI7ErIg/+/5qfVuDFrE+54UDHIixJduR0Lb/p6fXAz52AVm6VP7obRA1CW
+	 lUxYSgYy+QRbOonm0hFDP8KZ2gE6KLnQHNkpESLvtoix7nUu+Twxn31aAQTrPtsiK8+ga
+	 Wma6ZuFLcTamsma7Wbfp2LxYa/UZeWXRw2Zcxf8zfTrFdHH6tyoCGRJ3jGzZmzrf6lOb2
+	 oms/Be4BhSOXsCOMuWGuQpqPBUy8ZDk1Stg6n48khtz6+fay9ZUpWSKUKpuEHKv3Fkg==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794586556;
+	h=Received:DKIM-Signature:Received:Received:X-ME-Sender:
+	 X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
+	 MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type:Content-Transfer-Encoding;
+	bh=UvoCI+F3UN/r+kCCyYEcI97wbIPvzPchSwyBMSLm3Yw=;
+	b=o4xnlWcYC6JroHnQWV1CG7NpZl3bZSzjn+lh7PcjB5ahcD5CDm6z0/baiRqntkIxoxhc
+	 urRCEmJb5axOw/1Z9qgfNLU7+j5fKJ23VWXPb3zkvJQ+nPI3p+dE2gGl1XHBiD6n9Epf8
+	 K6MOT/On0U4FGPmDJcbfIUyJH7+uQyG6GqEWFfendZ+YP+r+FdwCL4PoSeOlBEWQvm6Mo
+	 Sgg3CsC7i3lcpexAwEDxRK2nkjX3fkIv0keAmGmGr2RsiTpjGlm2hCCK4fv1pbH6sa2D7
+	 loLPJpq3W8lxnZhxBzNuqBLVB0Qxij96r6IGiUxxmEHXfmw/4nt8lrI2m01z9oaj3WA==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=m9cRC5y4;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0493B606A323
-	for <loongarch@lists.linux.dev>; Fri, 13 Nov 2026 15:12:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0493B606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0515D606A333
+	for <loongarch@lists.linux.dev>; Fri, 13 Nov 2026 16:15:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=WMs3Cyj6
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qeiFExsnHvWQeOLTwl1yONqTD+gRKI+oO3dDFM/TPHvYOiD0Yh1suennGeynZUnF5yemofLy7FkITfDaXxXk9uULzsvMf5uCW03ZzDnLQrKCSqW8JjAdUFTX49vT7g7Mwzp3uJGnp1GKXBq3GPhmpyOgsTCWnSr5bIfU55Bjct4jNl8EhsMqBACvY2sVxC8GlHomYSMKNUVhXUjwSAOc9FyOpv9E1Bg+fYDuc5tmOaq+EYmi+o5s82ZEmMn+wMZsTozPRdqdpmHctTK/YhVVrlcIFp7sjtEZANGgsoF3xaqLFsuotVVdZXZDOCIXflbqCthIXA57WgYpySbm4bcBqQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=k6x0VuUO0GYkxDaYcjvmAuGzdvUMZ0O8Cyp9uzcwxKY=;
- b=XXypcempK/coKxuAO7DMfG3j6xp5kP4OQrLltXOOtngcbjbtZOkdsmPQNLwHckkAgYqc+GoKeFTu3ERLqsW8D9ophh2asFXklI1kDO3he7CzbVP6kAQ6sVnAu3NqAm2F42aY7I1xY8BuBjN685JPjzbw4dQHxTjYKG5NCCSOHFwPty554DZ2AM3cU6+8nvCp3Ze2Gn9cwWqI1/dTDnRrEmfAgH2pJEz90+YUvxvk1l/x21mUI3wohYj1aI+ftcBFb1UzLAht3vkWzzTAEJKbRVa59BivdHRSHNuU+xaPuoyit+z+FSiKrVOkU9tHyoy5eXC1tzq0UUFVyW7voWeOZg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k6x0VuUO0GYkxDaYcjvmAuGzdvUMZ0O8Cyp9uzcwxKY=;
- b=WMs3Cyj6bH2WlpwMvKqr8RxjuU63y+Rq/DBmqn1OwWFDerB4ELGnwSY2yZfVNmwAuw5LprY7g+SnOafZoINCdCFSL8I4Q1vPoh1n7KTrv64aMh+rBoNv6Dk02HHyve/Te0DvtiyCTK09hj5ZurS+FoxiXMbQV9UO1LENjTr1KpmuGD7XPk3hvL+4W1j9IwDiqIL7BSNqK0/yHEk/Cn9sV9NTb38iZmXEOVgG6f5GWrxpWHS7hftKLk3Uq3gUsWR/EiMH2D06o0l5wy8eQL+AMMzmuOxkRKwDajvhkQCuVAfeZE6qI+GtE1f/Wo+JaLkaViST2yTdEdf4Jeox83JCrg==
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CHBPR12MB731189.namprd12.prod.outlook.com
- (2603:10b6:610:33d::12) by LV3PR12MB9332.namprd12.prod.outlook.com
- (2603:10b6:408:20f::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.615.8; Fri, 13 Nov
- 2026 15:10:25 +0000
-Received: from CHBPR12MB731189.namprd12.prod.outlook.com
- ([fe80::b0e5:123d:fe06:e10d]) by CHBPR12MB731189.namprd12.prod.outlook.com
- ([fe80::b0e5:123d:fe06:e10d%6]) with mapi id 15.21.0615.009; Fri, 13 Nov 2026
- 15:10:25 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v2 02/10] efi/riscv: Rename __init_text_end to
- __inittext_end like other archs
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- Ard Biesheuvel <ardb@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>, 
- Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
- Albert Ou <aou@eecs.berkeley.edu>, Huacai Chen <chenhuacai@kernel.org>, 
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
-In-Reply-To: <20261110121731.2728824-14-ardb+git@google.com>
-References: <20261110121731.2728824-12-ardb+git@google.com>
- <20261110121731.2728824-14-ardb+git@google.com>
-Date: Fri, 13 Nov 2026 11:10:21 -0400
-Message-Id: <179458262193.3625095.9553451202764579940.b4-review@b4>
-X-Mailer: b4 0.17-dev
-X-ClientProxiedBy: YT4PR01CA0272.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:109::24) To CHBPR12MB731189.namprd12.prod.outlook.com
- (2603:10b6:610:33d::12)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=m9cRC5y4
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA2881F000C4;
+	Fri, 13 Nov 2026 16:15:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794586555;
+	bh=UvoCI+F3UN/r+kCCyYEcI97wbIPvzPchSwyBMSLm3Yw=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject;
+	b=m9cRC5y4jEqyeUfTSiVv1SHJ/FydJ1utrE8vOHrzFWXR2EPMNSdg41+mwBMikFNz4
+	 /MBj2cfNiV7S/OblzgS4W3wbSJAbURSzCfBuqgPpiaX+qPtP4pUftzY10ikl0jP4JU
+	 DxQ+ryIydfzMgIC9Jld37fyVF36gJIHuIZmjOzN1BpYWEYtejmGT2rHBltgVVY43A3
+	 YTtv4eMONGxHzrpotvKXTcqaOOssYWGYUboJiWiwCJrPOMTz05fkPkfxH7m+yfEpo2
+	 zpX9c2q+5rgsDzx48oYn5q8rjdufVgTLIDNnnCpjdKszr5Pp9WnCLmwtw1hr7/aNi2
+	 3+n20jkvBiauA==
+Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
+	by mailfauth.ams.internal (Postfix) with ESMTP id 0240D198003A;
+	Fri, 13 Nov 2026 11:15:53 -0500 (EST)
+Received: from ams-imap-11 ([10.64.2.31])
+  by ams-compute-02.internal (MEProxy); Fri, 13 Nov 2026 11:15:53 -0500
+X-ME-Sender: <xms:tjf3anI-XrM1rzyEKV3TsVn0tQkQzK2XUXBxRhJP5kB-KddizlLQ0w>
+    <xme:tjf3akk4lCV2YgUyysfOinfbMl0AeVuHNAC_TQGRnH4c7vErfaPMU63i_RYmyECVR
+    cmHz6vQlxJXJZKRdm4TljeAYvoPcntPZ4L4Vn961g_nqmsamp1ivLSO>
+X-ME-Proxy-Cause: dmFkZTFAQfv4vgc59PJfnI7+gnjbFo5pjWqPci2q637Dc+jTlN98BS3SOu191Kx5oeX5zT
+    cpsU4696TXwbo6E9T70+3zgZ4ZQT4u2WZYZrLNrdudOZVkNXMyzUwvt29gWlqjMBSeCuS9
+    xWLhKpKLiLkYBm/I4/mkEe9fPCWkZoThd9No+pzePTALJyZz0DWj5omvVUsTJm/N8GHQYm
+    DOd8INghd05soloR06GFbIa7ZzhmJnA5LN2JEN1zSxA5iEYfypiw5rdG7NEX58RL/EvMbS
+    7slEaTvIn0pajVNLktDqnig4nTGsVfUSIfAs0Ux0u7J4sDsFCJhyhxUP6Frqsgl8B1A/CG
+    s/j6i18iK4vWXI1FdcRk9LnIkKn74i9Yhk81YCSMJfEnMcLY20EVMRM/6UGEolaZOYQCzg
+    ZvC+RNRsBxv3IJxnLtOn70i8xsFr9xBrv/ED+iFr2bHy4x+BpbFRBEf7SfIb8XLr6hK8kF
+    Baaop2OXhbUjF5ZuU5duB/0k6jn1CPCJdS4dvDXPS3Bt8iXz9s6WH1dFfnVd7zGCchXAQG
+    E2n7fVlr1OZ0/+MDkpS4Kv5tFhlIodvqjId3+7qOGwlktbRSBVu8JWi6yCOMroglq/vqEM
+    4wP+wSNywxxU1uJBN1CbH4i7HphUnvs7PZo4+opuiJE8SPFkwU3I+VU4lUQA
+X-ME-Proxy: <xmx:uDf3ajCoYN_KPZOMcB6qtN-R6od7UDzch01jyl6v8tk6cBQxj2Cj4Q>
+    <xmx:uDf3avEbNlME5ubNM4a2O4OrZanjSXdVtBK6BowjWnUXilDqtk7mXA>
+    <xmx:uDf3aoLzod8yEADhATBJWWS2gEZOnq8dAHTLTmA0h7i_jo60t5MVIg>
+    <xmx:uDf3amq4GdBo6Xpqdf1_bUNO_PW5EFSPUTAP7JF17vb9ewtylzlYhg>
+    <xmx:uDf3avjcVhpjhgRD-idErmSAru7l6xJZID9o6TemQcneI_udBuOohP9R>
+Feedback-ID: ice86485a:Fastmail
+Received: by mailuser.ams.internal (Postfix, from userid 501)
+	id 768CAF80093; Fri, 13 Nov 2026 11:15:50 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -101,77 +77,217 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CHBPR12MB731189:EE_|LV3PR12MB9332:EE_
-X-MS-Office365-Filtering-Correlation-Id: 794e9d13-b4e9-4366-fb31-08df41983ec9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|23010399003|7416014|1800799024|366016|11063799006|4143699003|56012099006|18002099003|22082099003|10067099003;
-X-Microsoft-Antispam-Message-Info:
-	FSL0JcNHzpdVjUnKoY1PC718lHe+8Zusg4mT4vMXmPDSjxJ71frWl1JG6eSVGtk3YNKpfcWuZQ5rCWhwwkSBklgFj9/SYBo0xovY+uMusv/6nQvfsgubnh/GyNB0XD0wQA69O5RjQoR0tD+idFS2nHGF8I8ADCamzLt5rPuXOX9blygKldkXD74HpQTeJDJNJ0x+eG5CohdJfsgPfu50Il3740FQKmDWQ6zX2oU6VbC71x/i7UfTxbRNcMZlaWjiQN8sm7bZ+GjM1oa8rGvk2QtMo3PvsudDQmohOKDb3tQxqOmKlxYujK3cr51Qz5fuQ3kztRkJpUnxcvlETT+/s/k5zyAGLKjq70O01rpA1Jm5ZYzHjJTbroJPNmK+Gq+C994sf37pW6/Rv2TKJRkoON2S0HaHjmX+HOfROCA0kUWw5Ytkl/Crbp31B3wJHYLWyEJjUH8Oso0ibgK80jvUd2PDiYHINaeZwYo0NOboQeLR7iC++trci5dm2At+i2YgB/rOdLXe36ibtvdrmcwgfu/qz97/0I4Xd07CR5/c7e7r22EGCHvsOzWx9jmheWxKz0auFVaNuEnsl7/xIbe/Uxexy/VJc2FkN0IVweibHCbC6rIwU9qq9bvtZ5a/2ZSr46R/12IhuZDQrTqrwVoNpK9DPdp5Ef+A5s1WZDkpRiw=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CHBPR12MB731189.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(23010399003)(7416014)(1800799024)(366016)(11063799006)(4143699003)(56012099006)(18002099003)(22082099003)(10067099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MVBqNnMyQ1VYNTEvS2pHdjU2T0pPYmZqQnUrVW9kUWg3WEd2NkFmekY3Qjhz?=
- =?utf-8?B?SnppTU94NVR1UTd3ZDFkSUVtN1NUSmNmeDEvTHg2cWc4clNxZDhvbDY1dGRY?=
- =?utf-8?B?M3hMakw1YW5tYzd5ejVnWXdldVZHZTFVc3UyN1ozckpId2FhVlNNdDJvc1Mw?=
- =?utf-8?B?ckpuYk5ZTERmeXozVElCbXNYOGcvcnFXWlp3bDROTUNjWU5OYUZEckUrYVJG?=
- =?utf-8?B?THBEMVdZekIzcnlXaS9kUGplbHQrY1E5MnBDYWdScWUvVFFKMmI2aHNaNnhT?=
- =?utf-8?B?T2xIZGxRZ3JkUGFuVlExWTBPN2pBV1FDSjV3RklpTWFkY2gwNjA4ajZieTF1?=
- =?utf-8?B?bWUrRlJsY29JdkNzaXZFN1ZqaHl6eGxvclhtZ3daZGZjVko2RFJOK1IxeVdu?=
- =?utf-8?B?N3ltay9UTVcza3lMYWsrSFVGVllWb0gyWXQ0WjZkdlJ1c0dRbWNzeXRBaXhx?=
- =?utf-8?B?RlBHZ3BTc015RGplUy91UEoxdi8vYlc1NkVCREUzOWRXcEZBdEt2NUhuNUVQ?=
- =?utf-8?B?aTUrQlVyYnFhYjk0ZWhmTjNWN2RVSXFSR3RDMXpwd2k1dGZNM3lZTy9FNXls?=
- =?utf-8?B?VG5WTzkvaVZBZU1kd2dBbDA2S2VqbDdSVXhTNmpNalBiSFkrQ0JSL1dvb0tX?=
- =?utf-8?B?Q2gzOWIvTU1ISjFpQ2tyQmd4cTBWNUtDK1ZKcVFFMk0wQ0JjLy9aWE9qZkND?=
- =?utf-8?B?RzdUam44bmxyU2E0MmZiZ0tRY2ZCdWZCLzZCTU01NnJGYUNoSWZlSitxcytM?=
- =?utf-8?B?aVhRVG1aRXR2RlkxeklHZC9jbDR1ODkyM20wdFBnSmdZYm5tQ2wyd1YwNlF6?=
- =?utf-8?B?cnlLTGhnbHp4RUtHV0pQTEtsYnpCb09EbmxSSFROSkhQRlJSRWVQMjVkbFB6?=
- =?utf-8?B?NVF4clJhdmFaWWZkMXUwdFRSWmNkUGFqZThoQ1Q0WUF0NFhEQ05neWtzenRp?=
- =?utf-8?B?Nm5YVER1RHYzdlo5dXhZSXpVU01VRnJKUVliYkhpaXdMU0s3N0JvY0ZmclU4?=
- =?utf-8?B?WVptQkllMU92LzQzRzFCL2EwVGVIdXlLdSsvTXh2aDV1WmhQTmUweWF4U1dO?=
- =?utf-8?B?TEoxTHpZbnc1MUxYK0NCTmkwS0NSUDhiVkpLamo0YWVMZXhPTEFHM2NialVD?=
- =?utf-8?B?ZERYSjJSMUpLQW05MWc0aXlhWlVVK3ZzVXVXczF5d0FkQmJPd0sveVBCdjM1?=
- =?utf-8?B?ZDM4WFR3VFVUTnBNR3dpVDRmeUtUVUVIM1lsRHJLVXFtem55d0R5akRtNE1I?=
- =?utf-8?B?QytvazJrYkMrb0d0eVkzWjlLSXlIMkdROXBneGtYd1FwZGVURDA4U0Z3dTN2?=
- =?utf-8?B?UFdYa0lVcmJqU0pXajU1b3FuTGdXbHBQaEljOW5wMjBWbXdQckltdm0vUjYr?=
- =?utf-8?B?dE9QcEJUY0xmSXY0Y1VYWlNDeDd3d3FLa2FONzNEVU9PQWF4UXBBNGhhNFMy?=
- =?utf-8?B?cFp3aEN1d1dIQjRRbitOR2lvL3ovREtTbjlPejZVNXdwNUVzZVZIRThESER3?=
- =?utf-8?B?V1JwT1B0QUsyN3lMZGJJWGJ5VFB2eFhiU2pLK1FZYUVYaHNHV3RzVlBJMTB5?=
- =?utf-8?B?Q2VMUHB6RUF0M3dUSmdaK09LNnlZNTMvN011RzV3azBVc0YvVldibkRVZkow?=
- =?utf-8?B?OUJTS2U2K0hXWm9FQUxMWm1mZzJSRkJuMDFRenZ6OFBpMU5zcXhaYnNvam1z?=
- =?utf-8?B?ZDUxQWI1Z2RWbXprOXJIQkhrT1p1UHUrYlpFRVYxalU4K3F0N3dzQkNMTEZS?=
- =?utf-8?B?VEF5NGI0RkloTU12QXBmdnUwYk1aMWlOYkdJZHVuY1pLdWxCOXVhS3FDYWhJ?=
- =?utf-8?B?aytxZWdlcFlVRHhlN0VobTFhZGlZVkg5bTh3K00yWk5kVEdWQXVqWDRMdGMy?=
- =?utf-8?B?cVYzdEVEM09xdlcwVmc4UXQyZkJ1NmVuaEp2RUJjWVRPdk9pKzZyYTV4Z0Zv?=
- =?utf-8?B?cVk5dGFyMDFjMThZK3hTTDhzbUZTRHFXd3Y0dkMvRFhIclF3VVJCRGx6MCtR?=
- =?utf-8?B?dUI1SmFxTVhIZFpLUStzZHhLemgwcjdTdnZjR3luVTdobUxlNXFiaGNXUmhq?=
- =?utf-8?B?azZhc2hHSEl6SDdvZFZRS0taTGQybVEwQlFUZmxMdi9BeGdLYnM0ZDI2ZGJu?=
- =?utf-8?B?c1F6d0lReDJqQmV2NVhsUkRMdVI0QkU3M3hCNUY5WmV5ckkwZXFaM1hiQ3pJ?=
- =?utf-8?B?bmdlam1XbEpSbHpKTVh2am1odGtEb0FvS25WcnFwWHFkY3NNZkNjZGZDaGxx?=
- =?utf-8?B?RVRWQTlTcGxqd1BmbW04c3BWVjAwb0R5V3pGczdQQXZ4VkJlbjlOVGVOMnU4?=
- =?utf-8?Q?bURkZ//QkzDAEvxHu4?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 794e9d13-b4e9-4366-fb31-08df41983ec9
-X-MS-Exchange-CrossTenant-AuthSource: CHBPR12MB731189.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Nov 2026 15:10:25.5390
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: g0mElw+zmWSdBg4PEU100I/31FYBkaaP1x/6JLO5GLcDr7MX2E/tTCWK0Xgp/RjF
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9332
+Date: Fri, 13 Nov 2026 17:15:29 +0100
+From: "Ard Biesheuvel" <ardb@kernel.org>
+To: "Jason Gunthorpe" <jgg@nvidia.com>, "Ard Biesheuvel" <ardb+git@google.com>
+Cc: linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ "Paul Walmsley" <pjw@kernel.org>, "Palmer Dabbelt" <palmer@dabbelt.com>,
+ "Albert Ou" <aou@eecs.berkeley.edu>, "Huacai Chen" <chenhuacai@kernel.org>,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
+Message-Id: <274609cc-2c17-4bde-bcf3-f309655f0594@app.fastmail.com>
+In-Reply-To: <179458262195.3625095.6692761412463057203.b4-review@b4>
+References: <20261110121731.2728824-12-ardb+git@google.com>
+ <20261110121731.2728824-16-ardb+git@google.com>
+ <179458262195.3625095.6692761412463057203.b4-review@b4>
+Subject: Re: [PATCH v2 04/10] efi/libstub: Capture loaded image information in struct
+ efi_image_info
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Tue, 10 Nov 2026 13:17:34 +0100, Ard Biesheuvel <ardb+git@google.com> wrote:
-> Align RISC-V with arm64, LoongArch and x86, and drop the underscore
-> between 'init' and 'text' in the section markers. This allows the value
-> to be captured by generic EFI stub code that can be shared between all
-> those architectures.
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+On Fri, 13 Nov 2026, at 16:10, Jason Gunthorpe wrote:
+>> [ ... 131 lines skipped ... ]
+>> @@ -80,7 +87,8 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
+>>  
+>>  	kernel_image_offset = image_addr - (unsigned long)image->image_base;
+>>  
+>> -	status = efi_stub_common(handle, image, image_addr, cmdline_ptr);
+>> +	status = efi_stub_common(handle, image, image_addr, cmdline_ptr,
+>> +				 efistub_get_image_info());
+>
+> efistub_get_image_info() always returns the pointer from the EFI stubs
+> location, but at this point the kernel has been relocated and now we
+> are passing an info pointer that is outside image to everything else
+> while the zboot path passes an info inside the image.
+>
+> It would be better if info is always pointing inside the final
+> image. Then you can use info to always get a pointer inside the
+> ultimate kernel, which is what all the DRTM values need.
+>
+> Having efistub_get_image_info() take in image_base, and then using
+> weak to overlay it with zboot's version would give a consistent
+> interface.
+>
+> The adjustment can be calculated like this:
+>
+> 	return (const void *)(image_base - efistub_image_info._text_offset);
+>
+> That would allow cleaning up the primary_entry() flow to just use
+> info, and remove the weak functions:
+>
+> void __noreturn efi_enter_kernel(const struct efi_image_info *image_info,
+> 				 unsigned long fdt_addr,
+> 				 unsigned long fdt_size)
+> {
+> 	void (* __noreturn enter_kernel)(u64, u64, u64, u64) =
+>                  efistub_kernel_ptr(image_info, entry);
+> 	enter_kernel(fdt_addr, 0, 0, 0);
+> }
+>
+> (see below for macro)
+>
+> You could do the same by passing image_base and image_info everywhere,
+> but that seems less nice.
+>
 
--- 
-Jason
+I'd prefer to handle this by adding another offset, and an API to update
+it after moving the image. That way, the EFI stub code can still grab the
+info struct pointer without threading it through the API, while it will
+always remain valid.
+
+>> [ ... 20 lines skipped ... ]
+>> +++ b/drivers/firmware/efi/libstub/efistub.h
+>> @@ -1148,11 +1148,53 @@ efi_status_t handle_kernel_image(unsigned long *image_addr,
+>>  				 efi_loaded_image_t *image,
+>>  				 efi_handle_t image_handle);
+>>  
+>> +struct efi_image_info {
+>> +	s32	_text_offset;
+>> +	s32	__inittext_end_offset;
+>> +	s32	_edata_offset;
+>> +	s32	_end_offset;
+>> +	s32	entry_offset;
+>> +};
+>
+> This ends up in a cross-arch header.. It seems OK, the x86 voffset.h
+> parts can fit cross-arch like this too.
+>
+> For DRTM I will do it like this:
+>
+> #ifdef CONFIG_EFI_STUB_DRTM
+> 	s32	__drtm_measured_start_offset;
+> 	s32	__drtm_measured_end_offset;
+> 	s32	drtm_entry_offset;
+> 	s32	drtm_handoff_offset;
+> #endif
+>
+> Which should be fine, every DRTM will need those four things at least.
+>
+
+I think that is fine. We could add an arch substruct once we need it
+but that seems premature at this point.
+
+>> +
+>> +const struct efi_image_info *efistub_get_image_info(void);
+>> +const struct efi_image_info *zboot_get_image_info(unsigned long image_base);
+>> +
+>> +static inline
+>> +unsigned long efistub_kernel_base(const struct efi_image_info *image_info)
+>> +{
+>> +	return (unsigned long)offset_to_ptr(&image_info->_text_offset);
+>> +}
+>> +
+>> +static inline
+>> +unsigned long efistub_kernel_size(const struct efi_image_info *image_info)
+>> +{
+>> +	return image_info->_edata_offset - image_info->_text_offset;
+>> +}
+>> +
+>> +static inline
+>> +unsigned long efistub_kernel_memsize(const struct efi_image_info *image_info)
+>> +{
+>> +	return image_info->_end_offset - image_info->_text_offset;
+>> +}
+>> +
+>> +static inline
+>> +unsigned long efistub_kernel_codesize(const struct efi_image_info *image_info)
+>> +{
+>> +	return image_info->__inittext_end_offset - image_info->_text_offset;
+>> +}
+>> +
+>> +static inline
+>> +unsigned long efistub_kernel_entry_offset(const struct efi_image_info *image_info)
+>> +{
+>> +	return image_info->entry_offset - image_info->_text_offset;
+>> +}
+>
+> As above a little helper to get a void * would be useful:
+>
+>   static inline void *
+>   __efistub_kernel_entry_ptr(const struct efi_image_info *image_info, 
+> s32 offset)
+>   {
+> 	  return (void *)((offset - image_info->_text_offset) +
+> 			  efistub_kernel_base(image_info));
+>   }
+>   #define efistub_kernel_ptr(image_info, ptr) \
+> 	  __efistub_kernel_entry_ptr(image_info, (image_info)->ptr##_offset)
+>
+> If the rework above is done this would replace
+> efistub_kernel_entry_offset()
+>
+>> [ ... 15 lines skipped ... ]
+>> +++ b/drivers/firmware/efi/libstub/image_info.S
+>> @@ -0,0 +1,12 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +
+>> +#define REL_REF(sym)	.long	sym - 0b
+>
+> The code could consistently use the offset_to_ptr() macro if the label was
+> included in the macro?
+> 
+>   #define REL_REF(sym)	0: .long	sym - 0b
+>
+> It would make the efistub_kernel_ptr() simpler, and the three size
+> calculations would look like:
+>
+> 	return efistub_kernel_ptr(image_info, __inittext_end) - 
+> 	       efistub_kernel_ptr(image_info, _text);
+>
+
+Again, probably cleaner to just refer to the copy of the struct once
+it exists.
+
+>> +
+>> +	.globl		__efistub_efistub_image_info
+>> +	.p2align	3
+>> +__efistub_efistub_image_info:
+>> +0:	REL_REF(_text)
+>> +	REL_REF(__inittext_end)
+>> +	REL_REF(_edata)
+>> +	REL_REF(_end)
+>> +	REL_REF(efi_primary_entry)
+>
+> Can you put a
+>
+> +	.section	".init.rodata", "a"
+>
+> Here?
+>
+
+Ack
+
+> The DRTM patch points this to various things in .init. sections and
+> modpost will complain. I think nothing outside the efi stub should
+> touch this stuct and it should be freed as init data right?
+>
+
+Yes.
+
+>> [ ... 18 lines skipped ... ]
+>> @@ -93,9 +100,15 @@ efi_zboot_entry(efi_handle_t handle, efi_system_table_t *systab)
+>>  	}
+>>  
+>>  	// Decompress the payload into the newly allocated buffer
+>> -	status = efi_zboot_decompress((void *)image_base, alloc_size) ?:
+>> -	         efi_stub_common(handle, image, image_base, cmdline_ptr);
+>> +	status = efi_zboot_decompress((void *)image_base, alloc_size);
+>> +	if (status != EFI_SUCCESS)
+>> +		goto error;
+>>  
+>> +	auto image_info = zboot_get_image_info(image_base);
+>
+> auto is allowed in the kernel now?
+>
+
+Yes.
