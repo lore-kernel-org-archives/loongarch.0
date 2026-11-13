@@ -1,86 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.92.199
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794594399;
-	b=HT5dTJdTpObEsTF8pKUhAEz2xGMQUXlb0dEeJXwXFDYGPz7+jxq7PwEj3UhX74/vku1V
-	 X6y4QwDZ71oeNIJvAHk56XTGH5eztW2tsFc2tSNd+64xZddXe0dAqSCarS0dvjimzTsOW
-	 LJ2OrQROt9cE8PSisAA8UtzYqC+N5MeJt9hiopVUMVFnwiBXsYa86/cvJHsyAdYOuirXk
-	 99e3VPCX0ZbjDj4yvGbS26Y532dZ3eHFmscI74FJFWTQ6G+vFQvxHl9aEt8b+d0gNOvQn
-	 H4OfjANvGHyrebTzpgcJcW2X6W5bUfHsZQsNdhnuCodO0sIQ4GQYir9LW2ywf/Uog6g==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794594399;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:Sender:X-SRS-Rewrite;
-	bh=1AnoyR0j7y5hdrymYbL+ph5cczEf+Al0Tzoil8ZfR/Q=;
-	b=qpBtbY2kvlpcTBp2litcszcP1yKM+rFyxrN2W2tYxld24K4CKPeYU6zyQkMOipBj+tc3
-	 l5CPFKbu+HyklhPpRkGSlO3vCuZuEOdsz8K49I4uPByz1I9/9nJjj/XSd93pCCEX/Ngr9
-	 VbtI0coU4QWQy6ITBI6NDjbi/M7+LyXcR7VPzCpyVxsuVi/ZCeWoCYlyc1flT60fKUBM7
-	 kKOF+3TPYrU+YULit1+jjIx8yF20zC1pd3jNmSVgkR5+ipp6j0wRwUgmx9SDXNwZla6Zc
-	 OEW46hiKbI9T87OOQRKTnxKL/dX9lOFGOHQ9L7LatKvfMLCiVT8dC6yofGjxY1Kx1nw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=infradead.org;
-	spf=none smtp.mailfrom=desiato.srs.infradead.org;
-	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=hEmKYu4c;
-	arc=none smtp.remote-ip=90.155.92.199
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=40.107.159.39
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794600001;
+	b=pRQrawT63ket8/R8+P5QL4JYQMx5cl94IFW2AD17mQ5Sglb3rQN7p8DG47qCxrudv3Xi
+	 nC8bICqJedEVb5X9JHOqawS21UVfJyUa6bg6TVnSQhL2L/bBK+wwxZ9+gqnYg328xNUra
+	 fUEIde/R7EFMWYgwBsGl68tmhKJDRdiOhiW8IVher2FJtkG6LKlVfYkzuJyveRwZet33d
+	 YTBx4oiH977AzCWbo8vjoCoZXjk9VDdgI6CNTGSO2H1wyf6DOh1Oaihm/Ew9dl5ILdKm/
+	 fcFHOjSaVB1yzrgez0vbpSBZGPLFwZB3InRGGnmkRmE3xtn5IPZX9WCIgSq0wC2tXiQ==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794600001;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:Content-Type:Content-Disposition:
+	 In-Reply-To:X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
+	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
+	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
+	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+	 X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+	 X-MS-Exchange-CrossTenant-UserPrincipalName:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=bcyEaCTJB5x2lTTiE9sRVpRFqS54gJwf/dcFY/Dj5K4=;
+	b=FgZ4Bp3/T3c6mPjap+s6piSmuW8TVi4mySm+72uc5twCPDmLZI34Ca9E2glq4GzCz03S
+	 +V5YOAnEYJsjo9UQIkyyG0L8CN6c4BouaI34oGWSwyZKw81cnVvMHHtzviyJ5c4rHxxxL
+	 3hX7N4E8tXuUTNilrwwHj74kJWJ8T156e09/TAVcz7mYW7rBGJ826WbFveOPz6MOIqVNL
+	 geHYZDnsYM33vU8LbLu5y5NcOHiqSo3rBZXVmuQyoUrnq4Cv9TvFr6RreuZUpPEhOmejW
+	 kxPKvItmsh60aA+xvPkmcnybuRReQu9stmACbLrXqobWeX9oNBqyAiVRW+9oa8I78Gg==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=oss.nxp.com;
+	spf=pass smtp.mailfrom=oss.nxp.com;
+	dkim=pass header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.a=rsa-sha256 header.s=selector1-NXP1-onmicrosoft-com header.b=EHbVxTWv;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=40.107.159.39
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013039.outbound.protection.outlook.com [40.107.159.39])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EE11606C14B;
-	Fri, 13 Nov 2026 18:26:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9EE11606C14B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A22E606AE96
+	for <loongarch@lists.linux.dev>; Fri, 13 Nov 2026 19:59:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4A22E606AE96
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=hEmKYu4c
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=1AnoyR0j7y5hdrymYbL+ph5cczEf+Al0Tzoil8ZfR/Q=; b=hEmKYu4crsHN6alaS6gx4febeC
-	bBb2NUhbMZ5nWRl3GR3qDIUZZj9V3hZFviUpX5E2SmikEwTum+wkvcL4hR0+ud4EXfbfT1pTv97r7
-	H4nSpPnODolqqQyw81YXnMDLl0QPwSyDqGfhmTW7fXZZ8+vwMO0rVE5rjn8OPd9mCSstFbUmL8VKp
-	C4gP2NpnmJg/mzEAIWov1vU4Y6mRSlilz+pPxacK8RJLR6siF04H7xrN0yrsJXKReF40AqvkNEXAM
-	L+zp+1MsgIWI5PCEqROMMPtxAiLdq0lcO2na+uqUF9pTLSSafp6xbLjyHWyynqv6BPqWFTL6CBVCY
-	e26pXl9g==;
-Received: from [2001:8b0:10b:1::425] (helo=i7.infradead.org)
-	by desiato.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRvyU-0000000BeOY-15uE;
-	Fri, 13 Nov 2026 18:26:30 +0000
-Received: from dwoodhou by i7.infradead.org with local (Exim 4.99.5 #2 (Red Hat Linux))
-	id 1xRvyR-00000000LY7-2B60;
-	Fri, 13 Nov 2026 18:26:07 +0000
-From: David Woodhouse <dwmw2@infradead.org>
-To: =?UTF-8?q?J=C3=B6rg=20R=C3=B6del?= <joro@8bytes.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	ashish.kalra@amd.com,
-	michael.roth@amd.com,
-	nsaenz@amazon.com,
-	anelkz@amazon.de,
-	James.Bottomley@HansenPartnership.com,
-	Melody Wang <huibo.wang@amd.com>,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kvmarm@lists.linux.dev,
-	loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	kvm-riscv@lists.infradead.org,
-	x86@kernel.org,
-	coconut-svsm@lists.linux.dev,
-	joerg.roedel@amd.com,
-	Mushahid Hussain <hmushi@amazon.co.uk>,
-	Sriram Nambakam <snambakam@linux.microsoft.com>,
-	David Woodhouse <dwmw@amazon.co.uk>
-Subject: [RFC PATCH 05/13] KVM: selftests: Cover plane run-state ioctls in planes_test
-Date: Fri, 13 Nov 2026 11:25:59 -0700
-Message-ID: <20261113182607.82813-6-dwmw2@infradead.org>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20261113182607.82813-1-dwmw2@infradead.org>
-References: <20260608144252.351443-1-joro@8bytes.org>
- <20261113182607.82813-1-dwmw2@infradead.org>
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.a=rsa-sha256 header.s=selector1-NXP1-onmicrosoft-com header.b=EHbVxTWv
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gGo773YY+YT2x9m17tJFt3hHl8C7IZM08MPD+nigmhtvq5Aq0+iTPmbUlKsSOdBEzeNsBWI7hRP4pQcUJ95lDZkqKjdScDHI2N9wbHg8cyUz4rptMWlrPNYIadgNb8iXNJXyOB3AXy4UQIX8dac+mdGzJvfGvl7suxnM+KbPgJ/liAsaC1jguHHwChz4nW5c1qSzS+iy3Up8Z/6Afs6YwuMmyELj1D88785XcnJNhA1vyQoP69kbpXZCCQ9yYGUzSwn9iQ4WEuh5O6R6rmisT29ezg2YMtgxD0Acq91OoAPwiQm0Z6OTgZxNgmsQFFZ/G7s/nywMoakfasAgwX1jjw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bcyEaCTJB5x2lTTiE9sRVpRFqS54gJwf/dcFY/Dj5K4=;
+ b=TgIjM86CW0UiM0YY0O++iC5QxZ/RyHPHZZ0ol587IdYvuDfAvESqMAI+EbmoB0JSqQBz39NMCFev3L7agmWNzCBJhgNuYAQoBn9bLeZ0tHa+QwU32a/GaXNLAolvLH7AKP3MNqabK2daKdG/YZFP45Xzkb/Bjn2BCOu4Hg4osM/ki+/hm0dg0kChXeuHV8u5nP53qGSUbRzkZ4dIm8nGxVutaBrIvnQVE13dScJpSn2kv9Hs9mOuhuEoMZPrnRo5UjKiQ3h6mJZgXQYhWoEzxh/MzHMnzS0+E4WPm8rEZ1vMbbRyJWmxmKeU5C2NODS1XnNMjNlx4bPbLktL0xmzDA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bcyEaCTJB5x2lTTiE9sRVpRFqS54gJwf/dcFY/Dj5K4=;
+ b=EHbVxTWvuS0c+voJojBbHpG5huFK4qZM3kbnTDWYw+qTSSFPUKqqe5076vTl91GOxOx1VAMA8yjH9TXmJYdOfDulzLg5JHnVyvtqPfodM5Sajr+E4DHZHS3yM/0VQhz/kQ8QzZEVOXld93QPRKvDQiuTvxyJ+s7uH75xrsp/LmboVtOQDFTA1KHZL+88WW/rH2d+D2qws6hHOQOcztOl5pHj8un/I60thOA8sQ665ouUDT8kWJex8TdwpBihLBaEskGluzIviISR5VkKvfPydAWmB2imXva5/9apDNvs6AzntQuqqUq0MguvSWwtv5qHR4TbQBLsrhvtPR0RGgnPWw==
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from MI3PR04MB12438.eurprd04.prod.outlook.com (2603:10a6:290:76::14)
+ by AM9PPF06182BE30.eurprd04.prod.outlook.com (2603:10a6:20f:fff1::a04) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.615.8; Fri, 13 Nov
+ 2026 19:59:56 +0000
+Received: from MI3PR04MB12438.eurprd04.prod.outlook.com
+ ([fe80::c715:c32:8bb1:b70b]) by MI3PR04MB12438.eurprd04.prod.outlook.com
+ ([fe80::c715:c32:8bb1:b70b%4]) with mapi id 15.21.0615.009; Fri, 13 Nov 2026
+ 19:59:56 +0000
+Date: Fri, 13 Nov 2026 14:59:48 -0500
+From: Frank Li <Frank.li@oss.nxp.com>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Frank Li <Frank.Li@kernel.org>, dmaengine@vger.kernel.org,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org, Keguang Zhang <keguang.zhang@gmail.com>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH 1/4] dmaengine: loongson: loongson2-apb-cmc-dma: Fix
+ cyclic residue wrap NULL dereference
+Message-ID: <avdsNCgta3XIY4FV@lizhi-Precision-Tower-5810>
+References: <cover.1792988985.git.zhoubinbin@loongson.cn>
+ <e094c8dc1d01af2f296457f6c18b5d85ae76905f.1792988985.git.zhoubinbin@loongson.cn>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e094c8dc1d01af2f296457f6c18b5d85ae76905f.1792988985.git.zhoubinbin@loongson.cn>
+X-ClientProxiedBy: DS1PR02CA0008.namprd02.prod.outlook.com
+ (2603:10b6:8:452::7) To MI3PR04MB12438.eurprd04.prod.outlook.com
+ (2603:10a6:290:76::14)
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -90,264 +104,113 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: David Woodhouse <dwmw2@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MI3PR04MB12438:EE_|AM9PPF06182BE30:EE_
+X-MS-Office365-Filtering-Correlation-Id: 75ef2586-8b9d-41c8-2d5f-08df41c0b0c6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|19092799006|1800799024|376014|23010399003|7416014|366016|22082099003|18002099003|10067099003|56012099006|11063799006|261026140227099003|261102123227099003|261021121427099003|261009223027099003|261021123027099003|261022075727099003|261028144727099003|261022105027099003|4143699003;
+X-Microsoft-Antispam-Message-Info:
+	ctRxRYIqEp4mXrUnL4TME8FaRkF4kBrZUssyzYHvV/YgjC+NnS43QHcOGiDkDIDgDHj9walRcOwmcycK8seS0jRClNY3unGZuu4MkH8ah2Nu459enY0BOUJ5datYbjNib486Y7/cu9+Q5tnsNSo9FX0lhXTP+LKhwNrZMQ85rNN4WpjtvExD9Z9b8Sl5UWsFSkL+PCFVTwPtrQK/0BTqZNpj+zlKbmpEuAN222/Mu6Y/7WFOsrQGjq7Z+KGPKb87ub/+M/4zurGPK+S0Bir3VYTsuy4wjXDXk+S3m7sk/0odIod3ENOoCSgCMkMgG2ey+M8IgfeMm5tscWKSP/1243pKY8gu0v+rYz4OOIAqLu/Hyrh78YSOXM8R/ozkP09f76h7leI9d3hzxBpCg0i3rcrfEQFVqH+1Bun0ywiAlOTQTB652SlUeY9XktCxe7Ab1mXksiWmuwVMXe+9RvumzC7XPTFm9LWJkU52n3axuETuFmEXf5xguXq1i4EYR5h+OYfkiDmKoMDdIoy1MtZR0ZstMOK6MjPHu3N8tgjF2cUvQKETMisIdDSClUDlpFHJGZW/h8jh0GV3dMdJjANo7ritRLDVFjKU1eeFQFOIbv+shaeo01luJhz4E+1VrlA4tLJScnzkUb/Kn0zXrfWku+Y4tsi8ngXD7IxxBOVPEP0=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MI3PR04MB12438.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(19092799006)(1800799024)(376014)(23010399003)(7416014)(366016)(22082099003)(18002099003)(10067099003)(56012099006)(11063799006)(261026140227099003)(261102123227099003)(261021121427099003)(261009223027099003)(261021123027099003)(261022075727099003)(261028144727099003)(261022105027099003)(4143699003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?AhzEAtA8Wzc1At6ebHK2VgDvpF8uut7cIbpmpUZRC3gEiNqekVM+hCR99pcA?=
+ =?us-ascii?Q?psNxjohUof2uiBA8NogaXmNgY90XnPPhE1x30kN1RlloDgbaE32PYFRA2PbD?=
+ =?us-ascii?Q?XD+VuzYmFhJWUof4bNX635j3wP/aVaL41Qfhoz29cj0i5gm9j6gWDhBgGShs?=
+ =?us-ascii?Q?Ct4H/9l2Mkgxolj/tEBQ2WUXGP6AgKPt5YYlLbpI8PAmxOVVWEL+9XCJHjiW?=
+ =?us-ascii?Q?LJLiVhKWFapI67yj3PJFaxwf5k2moIHDvksXhm/AGHmkkdYxl6oMc0BEPwYk?=
+ =?us-ascii?Q?B8BlE5TlUKgSbXVBHMwHk1cvVbVveOOeKJjmt/rC7tuFNEyr+UbhmCgM7KZf?=
+ =?us-ascii?Q?nEIfOCKttQYUy7M8ERf3fegyeqkOOcCCZ7LSvdw20EN5CrbcpuRLow+htKsm?=
+ =?us-ascii?Q?fQTHqH033slN/dnb9Bk3JG8BqWlVWD1dt1CbQDYcEws8uK0HoBBJe3qQh6KQ?=
+ =?us-ascii?Q?vlnNu2P4ekzhDCLur1ZipmIggxRem7O4tHuA607temSt0NUpKYg2HmclYBvj?=
+ =?us-ascii?Q?prZ/To3KOp9G/IMTHJJbt1IciyV0L0cwMvgWdDMd2d+kvFaf+tNeFSR10xya?=
+ =?us-ascii?Q?RhqrHS+QTcRK4FypHHVhuwg+jxty4SEfKGyh4pV9R0G17pVF3HR3q+k0b4EY?=
+ =?us-ascii?Q?yU4tjhEdaBNetVJvi/D5V2UJgA9/MmPU7k9g90G4aSETZAMTUu2ywBEem3sQ?=
+ =?us-ascii?Q?9eawXurIcpSzEpYzAKVI5Q+2ar2BF73qblODYpa/5v/vK0w4AkMp/FQobMEQ?=
+ =?us-ascii?Q?kbVN6BTmAcwCpYr/lCnd6DVVAQUBXrqm2ainxfDp8YDkD50X1VkbiA5z8y+W?=
+ =?us-ascii?Q?eZCo4JFGx/r5JMIM8+9fTg4XIt4srYebB93HxFRXcaFCnf5IOz61P2UsCLMr?=
+ =?us-ascii?Q?Q40eNC232u5UzRpJjFymbptJigBkrcqvh6Lct7zt7X5NU5q1yXNsHFYuxig4?=
+ =?us-ascii?Q?7lpX8AMaR6GEb4M60uE91MhbVlwGhQ1jEyWKAfjfLJG08lPaHoJRmNb0w+s+?=
+ =?us-ascii?Q?xcS8e5w3RyFhFp/hsAgiJs8Nxp87t0QpA0qOqgPECNQWNdQXGKQkp88EaMIz?=
+ =?us-ascii?Q?JBTqclPlUU1KBOZhyP5iHBTAOhDaUtL/vYcedwAMxerKUShV+2FPmt2ET0DX?=
+ =?us-ascii?Q?SXg94WmNJxgebUcW2TFjzOgTAb4Phm9B5TcGc9vRoXO2WdJeM9qRgDmAhY/X?=
+ =?us-ascii?Q?zjMu8ymKovWMSjn20fdgB3lzRtBqamMfrPriPibDtOVKO0sErn/HB84Wo3v3?=
+ =?us-ascii?Q?1loTtuLLDuIBy0Li7OqrkyUwdKmbv66jE5Ip5pTO4gMUtukV+Ntd06ukok+w?=
+ =?us-ascii?Q?lEdE5SRpHk2OcvvCKhrj7WcvAgvB8z38l1MPVR9O+UR/DQNlJtGZTBcJWEcF?=
+ =?us-ascii?Q?X1vuMqCn2uvUS7P1nA8cqEyqSIWzUd/jNNOU9XNkguuSXCSMTpluRnCvldJh?=
+ =?us-ascii?Q?/GM9eg4U7S64QERrY7ddHK5GxyQDchQi+Y5CXtQKNDaBNdisRqMe4rKDrbr/?=
+ =?us-ascii?Q?PkCjTu4ZknT5cl69oWsmL++N/GnE83lbR78Oi4j3aadkzwW3IYs01lCmiYVG?=
+ =?us-ascii?Q?bbuKAQw6oIx8e+f1lAmQ4d2zLjifR1KyPpoJfMNFiWeNNr7T8JzjZDprroGd?=
+ =?us-ascii?Q?pHz/iPfiBq9FZKlwRMODf5ZJsMGHygwZWVz5rBaVC2PTxWw3QYrHyf5yVsK1?=
+ =?us-ascii?Q?9txfyqy8RUk7SF1437nsX3WWLbzKpvLNbrUvtFdPgx/ZOiJdNr42dn20yV+q?=
+ =?us-ascii?Q?3MLUl+jCkLbaJxsHKDng4NEvrhPrgC5NxH3GdQ2ob1ALavfAz7Ti?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 75ef2586-8b9d-41c8-2d5f-08df41c0b0c6
+X-MS-Exchange-CrossTenant-AuthSource: MI3PR04MB12438.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Nov 2026 19:59:56.6482
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: k0nfKZhgtnbQ3t+IjZU+N3u2s4WC81tzvBE7FserXii1DGAJVCrASshi+8S/173cbztVgaEBuNcx+uW8AxMxLektDhNN9+JGWbxk3sC2mcSP5CT4FeLmXO5OcL0FXaif
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PPF06182BE30
 
-From: David Woodhouse <dwmw@amazon.co.uk>
+On Mon, Oct 26, 2026 at 12:31:20PM +0800, Binbin Zhou wrote:
+> loongson2_cmc_dma_desc_residue()'s cyclic wrap special case checks
+> lchan->desc->cyclic instead of desc->cyclic.
+>
+> When tx_status() is called for a queued descriptor while no descriptor
+> is active, it reaches the "else if (vdesc)" branch with lchan->desc ==
+> NULL and passes the queued descriptor to this helper. The helper then
+> dereferences lchan->desc->cyclic and oopses.
+>
+> Even when lchan->desc is non-NULL, keying the check on lchan->desc is
+> semantically wrong: the wrap decision belongs to the descriptor being
+> queried, not to whatever descriptor happens to be active.
+>
+> Use desc->cyclic. This fixes the NULL dereference and makes the helper
+> self-contained.
+>
+> Cc: stable@vger.kernel.org
+> Fixes: 1c0028e725f1 ("dmaengine: loongson: New driver for the Loongson Multi-Channel DMA controller")
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> ---
 
-Assert that a new plane-1 vCPU starts with KVM_PLANE_RUN_STATE_INACTIVE
-and plane 0's with no flags, that every valid combination of
-KVM_PLANE_RUN_STATE_USER_HOLD, KVM_PLANE_RUN_STATE_SUSPENDED and
-KVM_PLANE_RUN_STATE_INACTIVE reads back as written (so a saved state
-restores), and that clearing them reads back as runnable. INACTIVE on
-plane 0, INACTIVE together with SUSPENDED and the lowest undefined bit
-are refused with EINVAL, and a refused SET leaves an existing hold in
-place. On a VM that did not enable more than one plane both ioctls fail
-with EINVAL.
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
 
-With plane 0 held and nothing runnable, KVM_RUN still honours
-immediate_exit with EINTR, and otherwise exits with KVM_EXIT_PLANE_EVENT
-and cause KVM_PLANE_EVENT_HELD, with kvm_run's if_flag and apic_base
-filled in as on any other exit. That exit leaves registers marked in
-kvm_dirty_regs unconsumed and unrefreshed, and once plane 1 is released
-they land in plane 1, not plane 0. If plane 0 holds a pending I/O
-completion, here from a real-mode OUT, a held KVM_RUN fails with EBUSY,
-with or without immediate_exit, leaves the KVM_EXIT_IO in kvm_run and
-plane 0's RIP on the OUT, and the OUT retires once plane 0 is released.
 
-Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
----
- tools/testing/selftests/kvm/x86/planes_test.c | 198 +++++++++++++++++-
- 1 file changed, 196 insertions(+), 2 deletions(-)
-
-diff --git a/tools/testing/selftests/kvm/x86/planes_test.c b/tools/testing/selftests/kvm/x86/planes_test.c
-index f7db6cb6807d..968f1b099b8e 100644
---- a/tools/testing/selftests/kvm/x86/planes_test.c
-+++ b/tools/testing/selftests/kvm/x86/planes_test.c
-@@ -8,6 +8,10 @@
- #include <string.h>
- 
- #include "kvm_util.h"
-+#include "processor.h"
-+
-+/* Where the run-state test puts plane 0's one instruction. */
-+#define CODE_GPA	0x1000
- 
- /*
-  * Whether this host lets a VM have more than one plane: the opt-in also
-@@ -61,12 +65,22 @@ static void test_enable_cap_bounds(void)
- static void test_enable_cap_too_late(void)
- {
- 	struct kvm_vm *vm = vm_create_barebones_irqchip(true);
--
--	__vm_vcpu_add(vm, 0);
-+	struct kvm_vcpu *vcpu = __vm_vcpu_add(vm, 0);
- 
- 	TEST_ASSERT_EQ(__vm_enable_cap(vm, KVM_CAP_PLANES, 2), -1);
- 	TEST_ASSERT_EQ(errno, EEXIST);
- 
-+	/* Without more than one user-managed plane there is no run state. */
-+	{
-+		u64 flags;
-+
-+		TEST_ASSERT_EQ(__vcpu_ioctl(vcpu, KVM_GET_PLANE_RUN_STATE, &flags), -1);
-+		TEST_ASSERT_EQ(errno, EINVAL);
-+		flags = 0;
-+		TEST_ASSERT_EQ(__vcpu_ioctl(vcpu, KVM_SET_PLANE_RUN_STATE, &flags), -1);
-+		TEST_ASSERT_EQ(errno, EINVAL);
-+	}
-+
- 	kvm_vm_free(vm);
- }
- 
-@@ -107,6 +121,186 @@ static void test_plane_lifecycle(void)
- 	vcpu0 = __vm_vcpu_add(vm, 0);
- 	vcpu1 = __vm_plane_vcpu_add(vcpu0, plane);
- 
-+	/*
-+	 * A new plane-1 vCPU is inactive, and plane 0's has no flags.
-+	 * Every valid combination reads back as written, so a saved state
-+	 * restores; unknown bits, INACTIVE on plane 0 and INACTIVE together
-+	 * with SUSPENDED are refused.
-+	 */
-+	{
-+		static const u64 states[] = {
-+			KVM_PLANE_RUN_STATE_USER_HOLD,
-+			KVM_PLANE_RUN_STATE_SUSPENDED,
-+			KVM_PLANE_RUN_STATE_USER_HOLD |
-+				KVM_PLANE_RUN_STATE_SUSPENDED,
-+			KVM_PLANE_RUN_STATE_INACTIVE,
-+			KVM_PLANE_RUN_STATE_USER_HOLD |
-+				KVM_PLANE_RUN_STATE_INACTIVE,
-+			0,
-+		};
-+		u64 flags = ~0ULL;
-+		int i;
-+
-+		plane_vcpu_ioctl(vcpu1, KVM_GET_PLANE_RUN_STATE, &flags);
-+		TEST_ASSERT_EQ(flags, KVM_PLANE_RUN_STATE_INACTIVE);
-+		flags = ~0ULL;
-+		vcpu_ioctl(vcpu0, KVM_GET_PLANE_RUN_STATE, &flags);
-+		TEST_ASSERT_EQ(flags, 0);
-+
-+		flags = KVM_PLANE_RUN_STATE_INACTIVE;
-+		TEST_ASSERT_EQ(__vcpu_ioctl(vcpu0, KVM_SET_PLANE_RUN_STATE,
-+					    &flags), -1);
-+		TEST_ASSERT_EQ(errno, EINVAL);
-+
-+		for (i = 0; i < ARRAY_SIZE(states); i++) {
-+			flags = states[i];
-+			plane_vcpu_ioctl(vcpu1, KVM_SET_PLANE_RUN_STATE, &flags);
-+			flags = ~0ULL;
-+			plane_vcpu_ioctl(vcpu1, KVM_GET_PLANE_RUN_STATE, &flags);
-+			TEST_ASSERT_EQ(flags, states[i]);
-+		}
-+
-+		/* A refused SET leaves the hold in place. */
-+		flags = KVM_PLANE_RUN_STATE_USER_HOLD;
-+		plane_vcpu_ioctl(vcpu1, KVM_SET_PLANE_RUN_STATE, &flags);
-+
-+		flags = KVM_PLANE_RUN_STATE_INACTIVE | KVM_PLANE_RUN_STATE_SUSPENDED;
-+		TEST_ASSERT_EQ(__plane_vcpu_ioctl(vcpu1, KVM_SET_PLANE_RUN_STATE,
-+						  &flags), -1);
-+		TEST_ASSERT_EQ(errno, EINVAL);
-+
-+		/* The lowest bit that no flag defines. */
-+		flags = ~(u64)(KVM_PLANE_RUN_STATE_USER_HOLD |
-+			       KVM_PLANE_RUN_STATE_SUSPENDED |
-+			       KVM_PLANE_RUN_STATE_INACTIVE);
-+		flags &= -flags;
-+		TEST_ASSERT_EQ(__plane_vcpu_ioctl(vcpu1, KVM_SET_PLANE_RUN_STATE,
-+						  &flags), -1);
-+		TEST_ASSERT_EQ(errno, EINVAL);
-+		flags = ~0ULL;
-+		plane_vcpu_ioctl(vcpu1, KVM_GET_PLANE_RUN_STATE, &flags);
-+		TEST_ASSERT_EQ(flags, KVM_PLANE_RUN_STATE_USER_HOLD);
-+	}
-+
-+	/*
-+	 * Plane 1 is held from above.  With plane 0 held too, nothing is
-+	 * runnable, and KVM_RUN hands that back to userspace instead of
-+	 * running the held plane 0.
-+	 */
-+	{
-+		u64 flags = KVM_PLANE_RUN_STATE_USER_HOLD;
-+		struct kvm_regs regs;
-+
-+		vcpu_ioctl(vcpu0, KVM_SET_PLANE_RUN_STATE, &flags);
-+
-+		/* immediate_exit yields EINTR, as on any KVM_RUN. */
-+		vcpu0->run->immediate_exit = 1;
-+		TEST_ASSERT_EQ(__vcpu_run(vcpu0), -1);
-+		TEST_ASSERT_EQ(errno, EINTR);
-+		vcpu0->run->immediate_exit = 0;
-+
-+		/* The exit fills in kvm_run like any other: poison two fields. */
-+		vcpu0->run->if_flag = 0xff;
-+		vcpu0->run->apic_base = 0;
-+		TEST_ASSERT_EQ(__vcpu_run(vcpu0), 0);
-+		TEST_ASSERT_EQ(vcpu0->run->exit_reason, KVM_EXIT_PLANE_EVENT);
-+		TEST_ASSERT_EQ(vcpu0->run->plane_event.cause, KVM_PLANE_EVENT_HELD);
-+		TEST_ASSERT_EQ(vcpu0->run->plane_event.plane, 0);
-+		TEST_ASSERT_EQ(vcpu0->run->if_flag, 0);
-+		TEST_ASSERT_EQ(vcpu0->run->apic_base,
-+			       vcpu_get_msr(vcpu0, MSR_IA32_APICBASE));
-+
-+		/*
-+		 * Registers userspace marks dirty are for the plane that runs
-+		 * next: the held exit neither consumes nor overwrites them.
-+		 */
-+		plane_vcpu_ioctl(vcpu1, KVM_GET_REGS, &vcpu0->run->s.regs.regs);
-+		vcpu0->run->s.regs.regs.rdx = 0x5ca1ab1e;	/* arbitrary marker */
-+		vcpu0->run->kvm_valid_regs = KVM_SYNC_X86_REGS;
-+		vcpu0->run->kvm_dirty_regs = KVM_SYNC_X86_REGS;
-+		TEST_ASSERT_EQ(__vcpu_run(vcpu0), 0);
-+		TEST_ASSERT_EQ(vcpu0->run->exit_reason, KVM_EXIT_PLANE_EVENT);
-+		TEST_ASSERT_EQ(vcpu0->run->kvm_dirty_regs, KVM_SYNC_X86_REGS);
-+		TEST_ASSERT_EQ(vcpu0->run->s.regs.regs.rdx, 0x5ca1ab1e);
-+
-+		/*
-+		 * Released, plane 1 is next and takes them; immediate_exit
-+		 * stops it before entry, after the registers are applied.
-+		 */
-+		flags = 0;
-+		plane_vcpu_ioctl(vcpu1, KVM_SET_PLANE_RUN_STATE, &flags);
-+		vcpu0->run->immediate_exit = 1;
-+		TEST_ASSERT_EQ(__vcpu_run(vcpu0), -1);
-+		TEST_ASSERT_EQ(errno, EINTR);
-+		vcpu0->run->immediate_exit = 0;
-+		TEST_ASSERT_EQ(vcpu0->run->kvm_dirty_regs, 0);
-+		vcpu0->run->kvm_valid_regs = 0;
-+
-+		plane_vcpu_ioctl(vcpu1, KVM_GET_REGS, &regs);
-+		TEST_ASSERT_EQ(regs.rdx, 0x5ca1ab1e);
-+		vcpu_ioctl(vcpu0, KVM_GET_REGS, &regs);
-+		TEST_ASSERT(regs.rdx != 0x5ca1ab1e,
-+			    "plane 0 took the registers dirtied while it was held");
-+
-+		vcpu_ioctl(vcpu0, KVM_SET_PLANE_RUN_STATE, &flags);
-+	}
-+
-+	/*
-+	 * A completion plane 0 still owes its last exit stays pending while
-+	 * plane 0 is held: KVM_RUN fails with EBUSY and leaves the exit in
-+	 * kvm_run, and the completion runs once plane 0 runs again.  The
-+	 * exit is a real-mode OUT at CODE_GPA, which userspace handles.
-+	 */
-+	{
-+		static const u8 out_insn[] = { 0xe6, 0x10 };	/* out %al, $0x10 */
-+		u64 flags = KVM_PLANE_RUN_STATE_USER_HOLD;
-+		struct kvm_sregs sregs;
-+		struct kvm_regs regs;
-+
-+		vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS, CODE_GPA,
-+					    1, 1, 0);
-+		memcpy(addr_gpa2hva(vm, CODE_GPA), out_insn, sizeof(out_insn));
-+
-+		vcpu_sregs_get(vcpu0, &sregs);
-+		sregs.cs.selector = 0;
-+		sregs.cs.base = 0;
-+		vcpu_sregs_set(vcpu0, &sregs);
-+		vcpu_regs_get(vcpu0, &regs);
-+		regs.rip = CODE_GPA;
-+		vcpu_regs_set(vcpu0, &regs);
-+
-+		/* Plane 1 stays held, so only plane 0 can run. */
-+		plane_vcpu_ioctl(vcpu1, KVM_SET_PLANE_RUN_STATE, &flags);
-+		TEST_ASSERT_EQ(__vcpu_run(vcpu0), 0);
-+		TEST_ASSERT_EQ(vcpu0->run->exit_reason, KVM_EXIT_IO);
-+		TEST_ASSERT_EQ(vcpu0->run->io.direction, KVM_EXIT_IO_OUT);
-+		TEST_ASSERT_EQ(vcpu0->run->io.port, 0x10);
-+
-+		vcpu_ioctl(vcpu0, KVM_SET_PLANE_RUN_STATE, &flags);
-+		vcpu0->run->immediate_exit = 1;
-+		TEST_ASSERT_EQ(__vcpu_run(vcpu0), -1);
-+		TEST_ASSERT_EQ(errno, EBUSY);
-+		vcpu0->run->immediate_exit = 0;
-+		TEST_ASSERT_EQ(__vcpu_run(vcpu0), -1);
-+		TEST_ASSERT_EQ(errno, EBUSY);
-+		TEST_ASSERT_EQ(vcpu0->run->exit_reason, KVM_EXIT_IO);
-+		TEST_ASSERT_EQ(vcpu0->run->io.port, 0x10);
-+		vcpu_regs_get(vcpu0, &regs);
-+		TEST_ASSERT_EQ(regs.rip, CODE_GPA);
-+
-+		/* Released, plane 0 retires the OUT before immediate_exit. */
-+		flags = 0;
-+		vcpu_ioctl(vcpu0, KVM_SET_PLANE_RUN_STATE, &flags);
-+		vcpu0->run->immediate_exit = 1;
-+		TEST_ASSERT_EQ(__vcpu_run(vcpu0), -1);
-+		TEST_ASSERT_EQ(errno, EINTR);
-+		vcpu0->run->immediate_exit = 0;
-+		vcpu_regs_get(vcpu0, &regs);
-+		TEST_ASSERT_EQ(regs.rip, CODE_GPA + sizeof(out_insn));
-+
-+		plane_vcpu_ioctl(vcpu1, KVM_SET_PLANE_RUN_STATE, &flags);
-+	}
-+
- 	/* Register state is per plane: write plane 1, plane 0 unaffected. */
- 	plane_vcpu_ioctl(vcpu1, KVM_GET_REGS, &regs1);
- 	regs1.rbx = 0x5157ca11;	/* arbitrary marker */
--- 
-2.50.1
-
+>  drivers/dma/loongson/loongson2-apb-cmc-dma.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/dma/loongson/loongson2-apb-cmc-dma.c b/drivers/dma/loongson/loongson2-apb-cmc-dma.c
+> index 2037120b23ca..f090fbe0b8a1 100644
+> --- a/drivers/dma/loongson/loongson2-apb-cmc-dma.c
+> +++ b/drivers/dma/loongson/loongson2-apb-cmc-dma.c
+> @@ -484,7 +484,19 @@ static size_t loongson2_cmc_dma_desc_residue(struct loongson2_cmc_dma_chan *lcha
+>  	ndtr = loongson2_cmc_dma_read(lddev, LOONGSON2_CMCDMA_CNDTR, lchan->id);
+>  	residue = ndtr << width;
+>
+> -	if (lchan->desc->cyclic && next_sg == 0)
+> +	/*
+> +	 * For a cyclic descriptor that has wrapped (next_sg == 0), the
+> +	 * current period only has the in-flight entry left; the entries
+> +	 * from sg[0] onwards belong to the next period. Adding them would
+> +	 * make residue exceed one period.
+> +	 *
+> +	 * Use desc->cyclic, not lchan->desc->cyclic: this helper is also
+> +	 * reachable with a descriptor that is not lchan->desc, and only
+> +	 * the active-descriptor branch passes lchan->desc today. Keying
+> +	 * the wrap decision on the descriptor being queried keeps the
+> +	 * result correct and avoids depending on lchan->desc being set.
+> +	 */
+> +	if (desc->cyclic && next_sg == 0)
+>  		return residue;
+>
+>  	for (i = next_sg; i < desc->num_sgs; i++)
+> --
+> 2.52.0
+>
