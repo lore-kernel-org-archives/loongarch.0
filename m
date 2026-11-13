@@ -1,95 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794532016;
-	b=M+/39ORj1r3wdHWcDOlKXl3hHCXstmJrm/I5WXBNDo4H50YB7HjW5njiYXczmMe99N+b
-	 n7CEtozL8uYbxb1oLF7eDyZ+ERTibKuyJqZoHi63JtbT/Z5ULUnDxutxsuFPsm/FPvoeA
-	 cbZGrv0VPzU5Jj/MGlUZKID2JxZwqXGL8nwVQ28CEY8f22WdmYFQaWR0xKDXbVtIF+2G3
-	 ZS/R/NU34IkQjbqNg26Phj6+q15zUs0GHoUjSwGKrbq2l5sUU/BPJveARFcOMyv9Ekp91
-	 YGifag2yOfzbAcuQlC6RhP38woj3SfvmbQYypUHF2z5ORNH2oLrukrpbfBGrkixiH/A==
+	t=1794548565;
+	b=ums3QuBCnJPiBwUuQyARi+Bw0E4Wn6zo5ud2GghDFJg71q5/j5ImmTJIz2wWnBbi3CRm
+	 1ItUTlnf2/M+lNa3wrYKDcYuk5uTcymdPJkS1cp3j3KyEs7VJmEb0sOnu417Y3JVyw32F
+	 4zrnoCKTXzuwgpy13Q4UhSBPoL9K6vRvSc43GpfP4kXWIlTfmkSknXhhNIWl5tYyI+MBM
+	 sUb78pvTZr6/WW7CPFeqmtKQJrxLXnDjKdEpV0BHXuyjrFABp0x21weIJPKWFTr0IAk3m
+	 jq9pIeWZhKocfKmYpbp0AkTaM/QK7zsH9smMcpoH5aCy5ekRI3bkXo3K4DFaYF7WLFg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794532016;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=NKYkMYlyfAhnpmLGIPz+YvV5NZYvXGnBV/EqnVTYPBE=;
-	b=YYUpPqyizSmRHPn2QnyuIP0FPfSyGs2guxJNzd/IoDOUjBuLym7YZ1JPz4mfoMYa9y62
-	 KqoCji0rPieG8jfwLPvWW2s1c6l5ZIjZqApuBz6JaoKlDzxVNM7lkUiQyKtWV3zDCC5vP
-	 vFDGZbPXDOydN/j6XS2q9MDgOnNcSoljmn/s/Qlf+QBepFR9+4AqeUz1B+r5sIfvsr63S
-	 X6nsf3h2wverDoL1V0/wL6w9eKlJdF/tx0tWpN7YbqraCva+InG9g5FMIofzrduR0UNks
-	 ZqpnpUHAqtbOXT7tcmpMCYLqF7kpG/t3iiqGfH5CjZq5FdLdjaBT9NEgL3ocdGWEdOQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794548565;
+	h=DMARC-Filter:Received:Received:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding:X-CM-TRANSID:X-CM-SenderInfo:
+	 X-Coremail-Antispam;
+	bh=hpfwxkMNlo+7YincGJQVuDLj3jP1gmXE6ucfT+jTToU=;
+	b=o6Vgu1gJEIOAx0FuOXlrR8gRYNacUWKlwuSgS7iGyCuDZL3JaxNE1xZfHcvRSxQSd4bt
+	 80eBLyB0C22A1WevK91fSIKXC2Z0NICMk0tc0oHu6DMtr2bkUy5Lkos81MUBMDdqQ8dlj
+	 190E+7tU0koMhqsWxrLEiNr9ceMrvtKBToKCmpeGH7GK92WIJVejczrtY49lCcreExct3
+	 9VLgYIJnJm5TcoM0D+azp1e7VM2ZqGeZxrrhYySemj5+/QJ+wYljAwImAm4KztAI3F5E0
+	 IY6t6ix7W53Es5a5vh4PbedVWtVZQP0tw7KmL+HnljBAXTupz1OlRRN+Kb7H/ZpyDIg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=AHRpRJZi;
-	arc=none smtp.remote-ip=209.85.208.182
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5C1A606A327
-	for <loongarch@lists.linux.dev>; Fri, 13 Nov 2026 01:06:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D5C1A606A327
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=AHRpRJZi
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-3a49a022221so4314361fa.3
-        for <loongarch@lists.linux.dev>; Thu, 12 Nov 2026 17:06:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794532014; x=1795136814; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=NKYkMYlyfAhnpmLGIPz+YvV5NZYvXGnBV/EqnVTYPBE=;
-        b=AHRpRJZidoH/G/UtPy4fQ1b0ll+CJ/StxVbDGccg4uQAlGwnKPjMStmL4qtTJKl4D6
-         snEmM5uF2Dgk0YFFJ1hdFSMmHABIQcmHoEOqUce0+nELaOHTT7dTc2SpZ99hA9Wg4MHF
-         9wutJMr4donYliHM2GPhGFB1sFkHNlNy2yIBICCmT+9ja+pVchJLVpFyu+Z9k/ZTRkHm
-         icuvPyI7zNzNzhqKHdKJqroHs6XYWSgpCAbJ+PimTqi2mYnWyr6fpbRP2b4ctELenUkC
-         QrAAezdkV/SkgqsUq4iz9qEPWa2dv9wbvxqdljk61Xp46LlmWX1wEc7k3b0bCsiKzCnx
-         CPDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794532014; x=1795136814;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=NKYkMYlyfAhnpmLGIPz+YvV5NZYvXGnBV/EqnVTYPBE=;
-        b=vZ0p70z1PcBhWZss1/r4/8hshmonFZNG7rH3+PsrbmoBJsW4/jMkobbJmaDU04NWgo
-         sKAsTVuosVlcm7AD9rNbLCoIbnvMSHxam/D1Dk/0nZFrVi8ueQ2Sl4UxbHwJC5TKhV6y
-         UEc71Mx9VTrFyfXBJa9F7fAo244C3E0LGV6GZkeMOewrscpR0Q3rWxuF8Wm6/qigjYRb
-         l4ZWT0Uck1L5xmfnBtWmHGCTexEm6QMRGp21G0oKF+f8y/G2AmZyyWtPM7lkdtMOxMHX
-         0MEbP32oXDsX7l762d+xLuYRYk9s9QArNlrFy250aSduI0iLcbPme0YRNMmp2y9P/el8
-         l7uw==
-X-Forwarded-Encrypted: i=1; AL+hErFe3TGOQRc1BUnSrW7TEt285Ym9q4KXX1oxNtiPyk3i6CLR/ezKvXccpVEFkmrk81Eb7qBUQb7hejs=@lists.linux.dev
-X-Gm-Message-State: APuU4Z+j50Mg627ZaZxUDOW+ESCthrsTQ//X+YlqBeq2sXF8FcAjESPT
-	MMzQ3GNGmK3wQeIars6cUqzRRn17rDZCmmb1gbZW04awKtUSeUmyiR/p
-X-Gm-Gg: AYBFou1SnWGcQF4pJkfbfb3Uq37sS98J+3l0+GHzDwAbhrN2ERiEwcobGpTBJeA1Uy9
-	gfSAA0IBDDpPTMEoXO8Na2siHqUU28Zojyz08UsCKHTSIYO/6vhUq2BwnEoUprz3cr8H3lC6T7I
-	dGFLdaXhZbBszeJzWvux9PXzcNupxJILUJ/K7r1OCUUF8c7F9n66mrFy6z4VRdiVfIhy+V9SfJu
-	/It4PqI78ZEIJ3y80h2zRLFizJD04RdyEvivsVrTI/JOUP4mG8j01DuyxOyiIRkB6o1gowgCICY
-	NrNwX1cGo3OqXrj2yVD6Lqe3eIR20kq79kdDeb/kEPUskXBIa3RUz3M9oFAjDZ2YbbPXutfRYp+
-	3JLUa1d7AOQzXzo3RPGjvrr3JzUgYyxfv6lRmgkEy/MxKP3BL7x9Cwsd3aLoG8mG8sv76xrJLYQ
-	wIdX8IM8lVo2gWGh6PBQ2g64T3nSiqvcLX4u1Y8+z8/hPrrB6EwXyDBDGY3ebosF2IIlmEoHMT+
-	bLnEjs/ns02pPzJOpKjGSWv/wvAfUulLeaXbQwp+Ew7LyWu0kRhAJCaJybBElnfvhiN6Z6p+3Hr
-	CNvgE/SqZA3JLanl+N8nrPs48IJkBwFGFPnhHoOIA86XpQz2oQNFxaANmO8estiozh7ddR0ccOn
-	+Oe6T7wH3uA==
-X-Received: by 2002:a05:651c:b2c:b0:3ae:25c8:dc9a with SMTP id 38308e7fff4ca-3ae2b4b75c8mr3543631fa.5.1794532014041;
-        Thu, 12 Nov 2026 17:06:54 -0800 (PST)
-Received: from SafoStation ([31.40.65.49])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3ae2b7d183bsm3133941fa.31.2026.11.12.17.06.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Nov 2026 17:06:52 -0800 (PST)
-From: Safocl Stollmannovic <safocl88@gmail.com>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev
-Subject: [PATCH v2 02/10] loongarch: fix duplicate extern declarations
-Date: Fri, 13 Nov 2026 05:06:07 +0400
-Message-ID: <20261113010631.139191-3-safocl88@gmail.com>
-X-Mailer: git-send-email 2.56.1
-In-Reply-To: <20261113010631.139191-1-safocl88@gmail.com>
-References: <20261113010631.139191-1-safocl88@gmail.com>
+	dmarc=none header.from=loongson.cn;
+	spf=pass smtp.mailfrom=loongson.cn;
+	arc=none smtp.remote-ip=114.242.206.163
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFE83606A32D
+	for <loongarch@lists.linux.dev>; Fri, 13 Nov 2026 05:42:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CFE83606A32D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.69.17])
+	by gateway (Coremail) with SMTP id _____8DxytFMo_Zqwx4fAA--.23753S3;
+	Fri, 13 Nov 2026 13:42:36 +0800 (CST)
+Received: from kernelserver (unknown [223.64.69.17])
+	by front1 (Coremail) with SMTP id qMiowJAx3c5Ho_ZqLSg0AA--.40410S4;
+	Fri, 13 Nov 2026 13:42:36 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Yinbo Zhu <zhuyinbo@loongson.cn>,
+	Mark Brown <broonie@kernel.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	linux-spi@vger.kernel.org,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v2 2/7] spi: loongson: Drop redundant CS deassert in setup()
+Date: Fri, 13 Nov 2026 13:42:23 +0800
+Message-ID: <b64464fbd2cfef301b83a7a36e30a6aecdc12307.1794538736.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <cover.1794538736.git.zhoubinbin@loongson.cn>
+References: <cover.1794538736.git.zhoubinbin@loongson.cn>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -100,65 +60,51 @@ List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAx3c5Ho_ZqLSg0AA--.40410S4
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAgEKCGr2f-4BuAAAsl
+X-Coremail-Antispam: 1Uk129KBj9xXoWrZF1ruFW8Jr48Cw1Dtw4DWrX_yoWDXrg_ua
+	yIvr1xGw4rCr47Ga4UW3WrZF9FvFW5Xa4F9Fn7KrWfXw15tr15Zrn5AFnrGa47Zr45Ar15
+	ur4fWw4xAryxCosvyTuYvTs0mTUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAF
+	wI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x
+	0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8QJ57UUUUU==
 
-Compiling a kernel module with a C++ compiler results in a "duplicate
-extern specifier" error.
-This occurs because the code contains `extern asmlinkage`, and `asmlinkage`
-expands to `extern C` when processed by a C++ compiler.
-Since the code already contains sections that respond to a C++ compiler,
-I believe it is a perfectly valid approach to gradually move toward a state
-where kernel modules can be compiled by a C++ compiler without any issues.
-The `extern` specifier must be removed.
+loongson_spi_setup() calls loongson_spi_set_cs(spi, true) to idle the
+chip select, but set_cs() receives the physical pin level after the
+core applied SPI_CS_HIGH, so true asserts an active-high device.
+The core also calls spi_set_cs(spi, false, true) after ->setup()
+returns, making the manual call both wrong and redundant.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=222257
+Remove the manual call.
 
-Signed-off-by: Safocl Stollmannovic <safocl88@gmail.com>
+Fixes: 6c7a864007b6 ("spi: loongson: add bus driver for the loongson spi controller")
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 ---
- arch/loongarch/include/asm/idle.h      | 2 +-
- arch/loongarch/include/asm/smp.h       | 4 ++--
- arch/loongarch/include/asm/switch_to.h | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/spi/spi-loongson-core.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/loongarch/include/asm/idle.h b/arch/loongarch/include/asm/idle.h
-index f7f2b7dbf..9913191cb 100644
---- a/arch/loongarch/include/asm/idle.h
-+++ b/arch/loongarch/include/asm/idle.h
-@@ -4,6 +4,6 @@
+diff --git a/drivers/spi/spi-loongson-core.c b/drivers/spi/spi-loongson-core.c
+index e95a9af94772..bd4289022519 100644
+--- a/drivers/spi/spi-loongson-core.c
++++ b/drivers/spi/spi-loongson-core.c
+@@ -99,7 +99,6 @@ static int loongson_spi_setup(struct spi_device *spi)
+ 		return -EINVAL;
  
- #include <linux/linkage.h>
+ 	loongson_spi->hz = 0;
+-	loongson_spi_set_cs(spi, true);
  
--extern asmlinkage void __arch_cpu_idle(void);
-+asmlinkage void __arch_cpu_idle(void);
- 
- #endif /* __ASM_IDLE_H  */
-diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/asm/smp.h
-index dd1457065..c21a5b60e 100644
---- a/arch/loongarch/include/asm/smp.h
-+++ b/arch/loongarch/include/asm/smp.h
-@@ -87,8 +87,8 @@ struct secondary_data {
- };
- extern struct secondary_data cpuboot_data;
- 
--extern asmlinkage void smpboot_entry(void);
--extern asmlinkage void start_secondary(void);
-+asmlinkage void smpboot_entry(void);
-+asmlinkage void start_secondary(void);
- 
- extern void calculate_cpu_foreign_map(void);
- 
-diff --git a/arch/loongarch/include/asm/switch_to.h b/arch/loongarch/include/asm/switch_to.h
-index ab9e0292c..aa5d3da68 100644
---- a/arch/loongarch/include/asm/switch_to.h
-+++ b/arch/loongarch/include/asm/switch_to.h
-@@ -21,7 +21,7 @@ struct task_struct;
-  * This function is used whilst scheduling to save the context of prev & load
-  * the context of next. Returns prev.
-  */
--extern asmlinkage struct task_struct *__switch_to(struct task_struct *prev,
-+asmlinkage struct task_struct *__switch_to(struct task_struct *prev,
- 			struct task_struct *next, void *sched_ra, void *sched_cfa);
- 
- /*
+ 	return 0;
+ }
 -- 
-2.56.1
+2.52.0
 
