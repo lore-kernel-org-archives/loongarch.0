@@ -1,96 +1,85 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.50.34
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794528908;
-	b=TpcqVUYObFJY+8+hQCqupgQHjBs0AD92DvLsl7G3lm0fOA9A4pvnkZnLYT6ShlXH//L9
-	 U8ZGbg+4TU1ORqFxvo/RNoFNrPcBGwPuChiKjT22fL6x9C8dE5HUT/lEE3f6fEVXoeD4Z
-	 WL5TNlasHs8h5HVLN8brrezIOsLtJDLqBo+MmXlOXvERE36akpodFa/hdE7QPBh5I37Q5
-	 txMM8JM5foAQyBpYRSfrnuHiwe5HXRbK1jdPRFRO3rgo+nVGYJ0EJNdDsmTqikJ0uRJxi
-	 45NwhLcCBdlKlqXYXn+xhx0c+Bzkh2+MPu7w9JesSECiLuaFvL3pL+0A6ECb8YuXDrA==
+	t=1794529793;
+	b=uq7KgBCp9rByJJYuolpts9heX15M3KI946pWr1WuDlJxDZqnyQicWnUyouBIvbLzo517
+	 o310op+k4wRuleaqg2E7aFrwlfSGKvpkp/8LdR/dHpXXnQon4UFd+TT/rYmhILRMs8SqE
+	 4Ig+4x2+R4gkTvhRj3GF/SAcVV25VfggSPyjqXBAoGW5a0Z3fS70EdSFcdoktcwWk9zEM
+	 JYd2e2zYxVG1W+5DJsucUtFGkv0VTDJcVlCvgD48q3PrnLuDInGqUN7HEIl7OxIH6oAi4
+	 LlZtu20kQLJfg+Q6cACFsBZug6tbXqkYI5986s0tbH6zZnxIbYD6Jci+9QRwv935hyg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794528908;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding;
-	bh=d1TISz9BJ+a5QOSJr7M6z9zKZhHkNytH1MrYfjk3YS8=;
-	b=xxt8KZ90mllQPCBf9V2UnA2Ze5i4uk++uSt7UIGbHKE1d1ZSGOEk30klxO8tcPZVn0/b
-	 6Z9DmG1SajgyHgheOH8JbvI/noNVK5SDRQMlumIHfGeL4Pc1q3rY87sebVkPBPHRUQgLS
-	 jDrKhCJ1XsrtfaILEExEYO8vuxWDQ6J+9ADFD1Rp7hkGJHMJukPx9oBzW9om0vFZemgXb
-	 dx5nlIr4j/fM8y8Q2GN2EV9a5RdsIFo6KG0KzRK0LYxE7H+gdqeTDcs+FfPpxlBha/nF7
-	 gvDgK5qRClWhNIEPrXRISesm44ZCgl7OmetsN2nYpvXvxXvTqVhKx06KOOwNRVG3fEQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794529793;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding:Sender:X-SRS-Rewrite;
+	bh=r4E+MTESEWZeubmBM7/YkvNZnlWh5Dhkmonv/pR6l2E=;
+	b=y6f0Nll5v/bOf33u1/7aD0GoJQNWwZy/8Y6ojD/zIkJZ9P83ixny6wbl3kWFM4zn8S2p
+	 BlPAikAWePzSVgfv2p559zU2tdlebbo+tIZQwsjfSPAi3oNcS+WImLknn2bTWwRaMshvI
+	 Sy/Bl4vODa10+zlBiMoBc300MHDc4JrGMALqTQXBa1RuaaiDV8K7MawlpZ3Pqcl55F6AM
+	 Pm+8aNmkITIgZWpzaKhKpu+rfLWxvbHUWECOLwL106rVUeyXYxH1mvYlYTh98/xFWaxII
+	 n1UcKugRWL2skDeLKczxuwih/vd70LPlyg7m5QU4hW1JvLGrLiza/C8UFtroLvMwp4Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=rRfJm87o;
-	arc=none smtp.remote-ip=209.85.167.44
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=infradead.org;
+	spf=none smtp.mailfrom=casper.srs.infradead.org;
+	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=t8lS+h1x;
+	arc=none smtp.remote-ip=90.155.50.34
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4062606A333
-	for <loongarch@lists.linux.dev>; Fri, 13 Nov 2026 00:15:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B4062606A333
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7296606A321;
+	Fri, 13 Nov 2026 00:29:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E7296606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=rRfJm87o
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5c14f6f58aeso403436e87.2
-        for <loongarch@lists.linux.dev>; Thu, 12 Nov 2026 16:15:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794528906; x=1795133706; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=d1TISz9BJ+a5QOSJr7M6z9zKZhHkNytH1MrYfjk3YS8=;
-        b=rRfJm87oQdN5PrSEwqm/Qqsugfvb9HGMF2GKeKSsy9zEuCFFkQ11zDQoQMHCyyiAnu
-         1HQuRwBxsZ88+8NXu+C1vh8uG/jgSZ3NZRozRTBgzkdYXBXE8Fgso1W1raZE/O8HzXgr
-         yv8QBCxLcoNruo93E9p9Ddmvbrn5OWR7OWkhu5bQLuM1hh9IxNoOy0uyD/WaTc23HWpe
-         BlpIJAyFoL9hpxTvKJlki5qGLDwPBev5a493Q+gOpm/2+BkJBptwLMU0ayIuYESdC2Jj
-         bHHkCtRjhLjPQwL/IOZyvpLhuipFCkDUCEs3unCfJNaGiMZPb7RyBOw73MGsjZbWumed
-         U+mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794528906; x=1795133706;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=d1TISz9BJ+a5QOSJr7M6z9zKZhHkNytH1MrYfjk3YS8=;
-        b=baR0o3G57A001vFWc8WTP4NuUJe/vnjuazM8arPpnvlM1dL7q6d77cl1IBzPDKrKvE
-         HHcgH+9Pbvqc2IHAcy+F7KxzC2k5ECUodYokBIH2ut7Y4mY5QMj4MfFZ3gTCKHTjOJvk
-         qcdAlhENKNgq/WOgQCY/daqK9wXIhuINy1samI3Cl+WvbM90Skj3BIPuhkdz6qlnXU1E
-         mW9DRMU7VK6nVv/RHYP0brrWwZTJWifCOpxj1s6n6Q+g4QS8MuVy1DVi69xUS4EX/pFi
-         ZSlJaV/Ir4cy+fq+PXgaZW7AEdVURgJEOq+DpOLZtrWeQW7l6N7+/Ro8E4oxnaEBUiNw
-         aZag==
-X-Forwarded-Encrypted: i=1; AL+hErHPiQxT6cF7K8blaMm5sZN5pMQ2drz5uTvZuoZBN5MnCa9qsoYvSBVsPo48ymtd5mVjyhXY4IeYHT0=@lists.linux.dev
-X-Gm-Message-State: APuU4Z95LvdnBHOrTMxkfKQ/RMM3ks4pm+5uIiulZJsAP3gZE5TLaNt8
-	pifpb2EG42Zf1lRupei/al+fkpns7r3KwajDk/UWiU+GhNrv6r/m3nxK
-X-Gm-Gg: AYBFou0x0s+8puWGsFytXSAxhJybD8zlwlpvn/m1onrPNfCCvTsXX/P+3/gBXEI8t+u
-	qwnr5R+DY7no0i1qv7yGtx7bWOSYOKn85NztMCGzJQmcbCjHuLzIqYpZetFb3Y4BZ8OABessEht
-	OmXXdKO2rp/Ws4Uo6gk3/UoRutGzyu2OlgVPWCL02jVy90/wJI9J+ulYNcwRO4TZSFeYZXwtm5y
-	12qh4iNvG2Pb6kpXG5jco8x9sHfWxim/prqKppN/FIlCOINLqodVvQNoR7ME0DrluAhyWWgeCFC
-	m/MEkg3Xdb44Q3cmoz9ohbp7ZA0vxvU1Qe8SD+e/yWdl432be7FkmgcwgIiW7pRtyBimyxUF2dD
-	l0Wvch+ULi2MNDu9ZkrIfzvyT9nLYwnlQEilNHOUWJy4pbwP83Sz7XQfjz7oU4MvWffW0lVcpZh
-	JSjPJNAjA1bop+RSHtB4II+Y5xvFnVquYjJoQjlMuASwitnOCotAnsl2c6uRC9T5y618d4vNnye
-	3GjkF18Qjxjde/yZ+RXpuw37fwf+Rksp6L8e9xHNyl4PEjo7bTH7ReO1NzGcwHkERo8eC4ZkYmg
-	3v1j7Go1dBFN31bofbDzEVqrVA3HdIQ2Dhrs+ISuLB1mkvLL4CWz4VmgwzfJDcxd4kcEoVcUWmT
-	cK0iXy4tY1Q==
-X-Received: by 2002:a05:6512:b92:b0:5bf:bd7e:197a with SMTP id 2adb3069b0e04-5c17079aab8mr424399e87.16.1794528905892;
-        Thu, 12 Nov 2026 16:15:05 -0800 (PST)
-Received: from SafoStation ([31.40.65.49])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5c17133ca01sm200968e87.36.2026.11.12.16.15.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Nov 2026 16:15:05 -0800 (PST)
-From: Safocl Stollmannovic <safocl88@gmail.com>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev
-Subject: [PATCH 02/10] loongarch: fix duplicate extern declarations
-Date: Fri, 13 Nov 2026 04:14:08 +0400
-Message-ID: <20261113001432.128201-3-safocl88@gmail.com>
-X-Mailer: git-send-email 2.56.1
-In-Reply-To: <20261113001432.128201-1-safocl88@gmail.com>
-References: <20261113001432.128201-1-safocl88@gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=t8lS+h1x
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Sender:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description;
+	bh=r4E+MTESEWZeubmBM7/YkvNZnlWh5Dhkmonv/pR6l2E=; b=t8lS+h1xoqqcNCX6bvUQ6GPBG3
+	czOnBE3wbdobT8Xt4PbuAuPs6szpn7rX1ZYfX4KebCgyrEdTx+HfnnFUSEjMVNXqEJzWPXJPmTDzl
+	G2jDnmgINPeVSnatFqidjs2yw/xK3G/hIg72zvZo1RoW1Y8u8zJnkNvxWVJ4BgNLyatu8CmydO5hT
+	btrhY2LDnkjTrKfX4BmMJGovM0g0FvdzxKr8PMjjy80ZjTDzIIWr/MRyamnDb7s9yLSSP57oCwDU2
+	xdsRsVcWR0GsFxCvyPbRygnISpR20u9vxhzIJfcUO5UB/u9ZCIUHDTw2v4xbZVhheW+5uC92tv89q
+	ga5jTSFA==;
+Received: from [2001:8b0:10b:1::425] (helo=i7.infradead.org)
+	by casper.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
+	id 1xRfAq-0000000D12s-1rZk;
+	Fri, 13 Nov 2026 00:29:48 +0000
+Received: from dwoodhou by i7.infradead.org with local (Exim 4.99.5 #2 (Red Hat Linux))
+	id 1xRfAq-00000000DvP-11Bi;
+	Fri, 13 Nov 2026 00:29:48 +0000
+From: David Woodhouse <dwmw2@infradead.org>
+To: =?UTF-8?q?J=C3=B6rg=20R=C3=B6del?= <joro@8bytes.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	ashish.kalra@amd.com,
+	michael.roth@amd.com,
+	nsaenz@amazon.com,
+	anelkz@amazon.de,
+	James.Bottomley@HansenPartnership.com,
+	Melody Wang <huibo.wang@amd.com>,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kvmarm@lists.linux.dev,
+	loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	kvm-riscv@lists.infradead.org,
+	x86@kernel.org,
+	coconut-svsm@lists.linux.dev,
+	joerg.roedel@amd.com,
+	Mushahid Hussain <hmushi@amazon.co.uk>,
+	Sriram Nambakam <snambakam@linux.microsoft.com>,
+	David Woodhouse <dwmw@amazon.co.uk>
+Subject: [PATCH 18/16] KVM: SVM: Bound the SNP plane count by the architectural VMPL limit
+Date: Thu, 12 Nov 2026 17:29:48 -0700
+Message-ID: <20261113002948.53522-2-dwmw2@infradead.org>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20261111222911.477-1-dwmw2@infradead.org>
+References: <20261111222911.477-1-dwmw2@infradead.org>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -100,63 +89,48 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Sender: David Woodhouse <dwmw2@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 
-Compiling a kernel module with a C++ compiler results in a duplicate
-echo ‘extern’ specifier error.
-This occurs because the code contains , and
-expands to  when processed by a C++ compiler.
-The  specifier must be removed.
-https://bugzilla.kernel.org/show_bug.cgi?id=222257
+From: David Woodhouse <dwmw@amazon.co.uk>
 
-Signed-off-by: Safocl Stollmannovic <safocl88@gmail.com>
+sev_snp_max_planes() reports the VMPL count straight from CPUID
+0x8000001f EBX[15:12], a 4-bit field the host provides. A value above
+four lets userspace create SNP planes that no VMPL switch can ever
+reach, because the switch already refuses a VMPL at or above
+SVM_SEV_VMPL_MAX.
+
+Clamp the count to between one and SVM_SEV_VMPL_MAX, so that a
+VM's plane count never exceeds what the architecture defines.
+
+Fixes the plane count in "kvm: svm: Implement max_planes x86
+operation".
+
+Fixes: https://lore.kernel.org/all/20260608144252.351443-60-joro@8bytes.org/
+Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
 ---
- arch/loongarch/include/asm/idle.h      | 2 +-
- arch/loongarch/include/asm/smp.h       | 4 ++--
- arch/loongarch/include/asm/switch_to.h | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ arch/x86/kvm/svm/sev.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/idle.h b/arch/loongarch/include/asm/idle.h
-index f7f2b7dbf..9913191cb 100644
---- a/arch/loongarch/include/asm/idle.h
-+++ b/arch/loongarch/include/asm/idle.h
-@@ -4,6 +4,6 @@
- 
- #include <linux/linkage.h>
- 
--extern asmlinkage void __arch_cpu_idle(void);
-+asmlinkage void __arch_cpu_idle(void);
- 
- #endif /* __ASM_IDLE_H  */
-diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/asm/smp.h
-index dd1457065..c21a5b60e 100644
---- a/arch/loongarch/include/asm/smp.h
-+++ b/arch/loongarch/include/asm/smp.h
-@@ -87,8 +87,8 @@ struct secondary_data {
- };
- extern struct secondary_data cpuboot_data;
- 
--extern asmlinkage void smpboot_entry(void);
--extern asmlinkage void start_secondary(void);
-+asmlinkage void smpboot_entry(void);
-+asmlinkage void start_secondary(void);
- 
- extern void calculate_cpu_foreign_map(void);
- 
-diff --git a/arch/loongarch/include/asm/switch_to.h b/arch/loongarch/include/asm/switch_to.h
-index ab9e0292c..aa5d3da68 100644
---- a/arch/loongarch/include/asm/switch_to.h
-+++ b/arch/loongarch/include/asm/switch_to.h
-@@ -21,7 +21,7 @@ struct task_struct;
-  * This function is used whilst scheduling to save the context of prev & load
-  * the context of next. Returns prev.
-  */
--extern asmlinkage struct task_struct *__switch_to(struct task_struct *prev,
-+asmlinkage struct task_struct *__switch_to(struct task_struct *prev,
- 			struct task_struct *next, void *sched_ra, void *sched_cfa);
- 
- /*
+diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+index c8a9f808dcc4..eefa8641100b 100644
+--- a/arch/x86/kvm/svm/sev.c
++++ b/arch/x86/kvm/svm/sev.c
+@@ -6010,8 +6010,10 @@ bool sev_snp_blocked(enum inject_type type, struct kvm_vcpu *vcpu)
+ int sev_snp_max_planes(struct kvm *kvm)
+ {
+ 	/*
+-	 * CPUID 0x8000001f EBX[15:12] is host-provided data; a zero there
+-	 * must not report "no planes at all" (plane 0 always exists).
++	 * CPUID 0x8000001f EBX[15:12] is host-provided data.  A zero there
++	 * must not report "no planes at all" (plane 0 always exists), and
++	 * the architecture defines no more than SVM_SEV_VMPL_MAX VMPLs, the
++	 * bound the VMPL switch already enforces.
+ 	 */
+-	return max(vmpl_levels, 1U);
++	return clamp(vmpl_levels, 1U, SVM_SEV_VMPL_MAX);
+ }
 -- 
-2.56.1
+2.50.1
 
