@@ -1,73 +1,75 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.71
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.218.70
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794839234;
-	b=hLEPM8Cn/Dp2rp2wi5B5+HvhX9PWOsdEeXfX+fJ8HYllo++Q+eLmnFMFVJNwkh7qgo/s
-	 4ew4uUL9/jGAd3ha8+PAn8/ZUeef1dPh/nX2L4JX4tHZUCub9S60c+gkPQEdt1J20x26w
-	 81dxwi09bNEgRmIW257YgDb+B0LF6/tE9r0/UK05ewc6wMB7dPytGzc8zc/cKSWrJEPQQ
-	 fzB35TyyDaPBNgB16RXYRta80DE97KGxtRlYIDJS6GOTOOjzNcmSRSQjyYcIome3yegOK
-	 ATEdQwWjpKkdeuzCndhRUmN8yrBBxEV56hhHwJEj6VKL1vFA036TusbttWMllSuSO9A==
+	t=1794839235;
+	b=xZCxGVaKEo6QgA+8FWynYB57azR3rgsCZp88nG9KkLbaQxqtO0A3v2QAGvoCY2fji2ed
+	 +ZE9pjYwpDFQ5Xi5A+qV2fCEh5Nm7+1qF+eoXaUVYfXlRnr66VMwCZU7yvs2emxX8S4nI
+	 ID1Ldb3KYEB7MvbjtjN2Qf2xguYcvVtw1ChUCdBAQ8446yvWxx/ASvnfRJ/9o/vlqoRBs
+	 +yUrpPIfL3cIKArY/Y8LyFLVDMq1DtrvchlGhb+aU+LSDvUynOmCkIl9+KR0V22sGb9hG
+	 HYgBQu3KzPo28vtJA3F8UqW1aMMz+4ax3qXQXiuvInQtsAXThdyJ8eOVPAsBHi67IsA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794839234;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794839235;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:Mime-Version:
-	 X-Developer-Key:X-Developer-Signature:X-Mailer:Message-ID:Subject:
-	 From:To:Cc:Content-Type;
-	bh=NqHB2bqFPRhr2sa2L1nGYaDpYxg62blVD/y+oKNndDs=;
-	b=QhNzSfhl6spSyQXQKLRQ5MBu/hkE7DPqquU624i2XQgubV5qaE8ihLp1aiGI53YKQfw2
-	 V3Gtr7pa0/HpfB0LKlV1JwOH4Y5Kev6wNr7U+dA/cdGJF3Pa+1z9YJU8vrpRU9+5F3UAQ
-	 7NBovr6M9PQomyWqydMsKO+4gl7GO6UlpyUZrbB8Xhn2710NUFiqIfkP9licBjyWv1DhH
-	 eJ8NbjBc/tQldBS5A7ZkJetWN7ztT+RpyRivmPUbshQhpWyTrlJzSZHo/kS5tO9m50pSJ
-	 339pFKzBV48vdGiJotI3uXbvFB+Lf/8RGwaedCNfbTujl2GpHMzadehloQhLCq1p5fA==
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
+	 Mime-Version:References:X-Developer-Key:X-Developer-Signature:
+	 X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
+	bh=90r0f+b5kRu0Uic25PAyXOgLnJJKMJ4pyDwq3qDyCYw=;
+	b=vQF5IDdS/Rv316RYudHJYgBI4NzHXHP7PD4CdhfeNzd2xFesRumVa1Qqp7wgRhW/dWN7
+	 j5byVdGOc4StBgmP1qUzyNvzjB1PEnI+2ttYjLegr5Xlybjf9Td3RAyTlLpSC/Mb0NpKk
+	 UTwUIDMh9u5OFgUfmQIjDcy90YEwYHJYpkOHmJhVVuGMteCR80pPTUAwVUwMj6NQIuaRP
+	 Y22KxVyabGyPVIDK25zkkYQT7ynQoE5GMo5sXQUp0c4a8A7eRB8Gmv4J7s8eYTjntXKo/
+	 yNMa4Qn1Qs7B7aS4V4tt6kjL1VJwMT1nb8R8etAzIyRgwxirWcAogyLMg8h2VFYCScQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--ardb.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=KkjnO9qx;
-	arc=none smtp.remote-ip=209.85.221.71
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=LADL3hSh;
+	arc=none smtp.remote-ip=209.85.218.70
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com [209.85.218.70])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C383606A32C
-	for <loongarch@lists.linux.dev>; Mon, 16 Nov 2026 14:27:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7C383606A32C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0BE1606A32A
+	for <loongarch@lists.linux.dev>; Mon, 16 Nov 2026 14:27:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D0BE1606A32A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=KkjnO9qx
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-48e29c25101so1459549f8f.3
-        for <loongarch@lists.linux.dev>; Mon, 16 Nov 2026 06:27:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=LADL3hSh
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-c50a8e37286so268879866b.3
+        for <loongarch@lists.linux.dev>; Mon, 16 Nov 2026 06:27:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794839232; x=1795444032; darn=lists.linux.dev;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=NqHB2bqFPRhr2sa2L1nGYaDpYxg62blVD/y+oKNndDs=;
-        b=KkjnO9qxaFfjujdITTkTWwAlOdHNDQktcL3gFiB9BHh4a/PtCrAyXOfBuhbtp7SHKg
-         GwbGtWppteaNiJyjQ6k09egBTkL4a6aCfrUEyRO2LsDjVjtz6+K7IXrK/8kC5CqBj0hW
-         2kIokAZaUQPqb52NpG8cR0ts294zbDpH1nSp9vJFGpCb6bz6nzOEQfBUbq3Vd65BP3nc
-         n8KtdzsQIigVAve+/ulVy1RJ3rw29X+IoB1Y+VQFeAEtVnqTl+eNiBt70vS9urF33Uz2
-         xJ9JqRAfTjcSlcJsaE2y3C3c6Kgd21xSU6NpF4oofwS9aidfDV6POkf1SVq5jCDz/Pbf
-         IlhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794839232; x=1795444032;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=google.com; s=20260707; t=1794839233; x=1795444033; darn=lists.linux.dev;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=NqHB2bqFPRhr2sa2L1nGYaDpYxg62blVD/y+oKNndDs=;
-        b=E900eIn7lRt6BZBwmsSQmh1trG7vahZ9OULJZ0QdovoFuS3MNTfdIg3dMQ+f6BLtf1
-         L7iR8G2wWJPv5JqDkEoBWKa+dZ7awxcNK2iX/iRm8c5JaGx+/fhQhzMBfC1ObKcsIt51
-         H5JSVoLgE0j/Z2QHtHLktvnTAVxgenn+DYViTBAoicOssGhFTDJchaVnRXClR6ZUzgJY
-         eFhwHRdWmsj9D3C3mGVzIXfsO2cAeAh4oK/QM10LpCg5hfk4472cwAu2olunUbCwr2di
-         6z3RP1lAHaiMrHyDWTti3dRACBWDQPd8cgEcd57jrCY4QJR7SWfsLzLHqwMRm7m2ykk5
-         dPcg==
-X-Forwarded-Encrypted: i=1; AL+hErE0NfrWOos6njjF8IXcIlkrTt+6fNe1f23bF3g8kLNEpPO35DL2AREP0tPYYsh1YS1wbwvBJ56DMMc=@lists.linux.dev
-X-Gm-Message-State: APuU4Z/Qj6p408qdMX+MMuLSVN210y0h2lqLQ3gVu9SmYzHcz5JQoQXc
-	kn0C5S56tDKvzFXLV570FM89RzG336yEMa/8qn5k+I5EqNmNKq0K/3fTXAGr2W/ucAA+w42c3w=
+        bh=90r0f+b5kRu0Uic25PAyXOgLnJJKMJ4pyDwq3qDyCYw=;
+        b=LADL3hShJXWCp9sMJVv8jbE5Y0OzGdT/MSh5A7ur0ewYbypFQq3KT2vQ6wORJmsozI
+         ETMMM+vslPQ1szf+MuN0+Fua2iv3XWvamzr2996MpgQJNdn2o8O4nqrC1aTNghzdqlrX
+         0xfMGxEp5w/wzwZg+qf74wT33stPfas96sS77DqsvwIFq6GjumWYRhKgpToRd/n9Hzdh
+         uNzQpga6YSxwtEYj22cT1AULJNOqi7QHUd1U28xsSBGhXDqZpU2LkzB4uVWnun90xdtJ
+         Zr4sZtbLO26KTkcDyv3L1gKJ1teOKhWrTCaNVHDkF3YyH1yMxzWRLi1btV0rWOaFF+DA
+         klyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794839233; x=1795444033;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=90r0f+b5kRu0Uic25PAyXOgLnJJKMJ4pyDwq3qDyCYw=;
+        b=gAQ1NrcBus5J8YB1PLt+w/wicBGgIJRo2d5sPU0Q5k/JWLClbXUTGPwvCVoTn/FwLB
+         MTY5PLxCtK1hqLTzaU/eLkQSNeihpqmO3UURqA+te/yiQEebgybazPE4UFrdY4XwFn6C
+         rOqbRC3mFy5fZRphiMCFfFML90pLuN3cd6THRSq5rdxrJ2Wc5VZ9/vRds5X7iN0tkTCZ
+         qj1pA3WGKbQpMAQ1eP1b9eWPRbZkz0eWI4psOf2HEdULRz+CNimOfKTna3rxwB3BDg4l
+         x/JaXcEN4emQo29xbegNb/2rh5fCcrtB3xpvGjpouwGokSBuvpmaoUSuW6jCLeJyorij
+         v9Eg==
+X-Forwarded-Encrypted: i=1; AL+hErFm4Vk85C5SzVgJm4AIgvPGnEznAd5OkymPqJjJrQqiCYnn4TV7cWki4G9ys8Y6WfYIJ5rZrFRLq84=@lists.linux.dev
+X-Gm-Message-State: APuU4Z+hKtw+eBZu8ZAxXf8+uwbdriKM5JaXsbq0CuvtQVZ+z4yokU3q
+	QmPTIVFU8n2RKyNWgaeNAmLkK8pGpkFBC51CApfBfuFMxkJPbNOmIJmpIsVDq+5OqSmxN/tDdQ=
 	=
-X-Received: from wrrz7.prod.google.com ([2002:a5d:44c7:0:b0:499:de0a:f0c0])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:4697:b0:492:c53e:2ea8
- with SMTP id ffacd0b85a97d-49c7458620emr17115499f8f.49.1794839231620; Mon, 16
- Nov 2026 06:27:11 -0800 (PST)
-Date: Mon, 16 Nov 2026 15:26:19 +0100
+X-Received: from ejbm16.prod.google.com ([2002:a17:906:2590:b0:c31:b9d1:9418])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a17:907:3f93:b0:c50:4a71:cb5
+ with SMTP id a640c23a62f3a-c5096325a62mr886143966b.15.1794839232899; Mon, 16
+ Nov 2026 06:27:12 -0800 (PST)
+Date: Mon, 16 Nov 2026 15:26:20 +0100
+In-Reply-To: <20261116142618.1687025-17-ardb+git@google.com>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -77,136 +79,48 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 Mime-Version: 1.0
+References: <20261116142618.1687025-17-ardb+git@google.com>
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5815; i=ardb@kernel.org;
- h=from:subject; bh=4h21oJbzpY+BN/Rm4SjBto+DpUA56NZXutkaqN//M8I=;
- b=owGbwMvMwCVmkMcZplerG8N4Wi2JIeu3UHfE+Yl3K9tdjnM7qv3X3/Y3o8bm9OVjhrkhc8I7l
- z+Wuva5o5SFQYyLQVZMkUVg9t93O09PlKp1niULM4eVCWQIAxenAEwk6wQjw8U9/tcXhZy979/0
- Y5/C4daVgblvWiN1bOU0jmzvTFYKiWRkeP3llMaKY5OuXJFo/3ekoKP96aaJnfa3U+tz5Sz25P7 awwcA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=746; i=ardb@kernel.org;
+ h=from:subject; bh=iJCrUIisab7JCQVRK3E8zIw6kz1I277eBbn3gnc4d2w=;
+ b=owGbwMvMwCVmkMcZplerG8N4Wi2JIeu3UG90+Yzl1rc013y9ZXnQWS/H/X/bfbaiq8UBCq2FN
+ gdPX+bsKGVhEONikBVTZBGY/ffdztMTpWqdZ8nCzGFlAhnCwMUpABPh2cPwh6dmke6e8uL/z2ad
+ mSb4JvW/NQNDXmW2/c78Vb+e+jD+jmP4X6y5KONutmDPSvfWR4F7GjZoFLxQSRbMnznVJfniZ95 cXgA=
 X-Mailer: git-send-email 2.56.0.611.g1030f0b940-goog
-Message-ID: <20261116142618.1687025-17-ardb+git@google.com>
-Subject: [PATCH v3 00/15] efi: Expose loaded image properties via info struct
+Message-ID: <20261116142618.1687025-18-ardb+git@google.com>
+Subject: [PATCH v3 01/15] efi/zboot: arm64: Add missing barrier after cache maintenance
 From: Ard Biesheuvel <ardb+git@google.com>
 To: linux-efi@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org, Ard Biesheuvel <ardb@kernel.org>, 
 	Jason Gunthorpe <jgg@nvidia.com>, Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
 	Albert Ou <aou@eecs.berkeley.edu>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, 
-	linux-riscv@lists.infradead.org
+	linux-riscv@lists.infradead.org, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-Clean up the arm64 build script and linker hacks that zboot uses to
-obtain properties of the loaded image (which it cannot access directly
-via a relative reference like the ordinary EFI stub).
+Prevent the I-cache from fetching stale data by issuing a barrier after
+the data cache maintenance completes but before performing the I-cache
+maintenance.
 
-Instead, define a generic struct efi_image_info, and expose its offset
-in the loaded image in a similar manner, but without relying on explicit
-linker script exports.
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+---
+ drivers/firmware/efi/libstub/arm64.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Populate the struct with section markers that all architecture use for
-loading the kernel image at boot, so that all the linker exports can be
-dropped for them.
-
-Changes since v2:
-- Add some additional fixes for RISC-V, which deviates from other
-  architectures wrt its section markers. These patches have been sent
-  out separately as well [0] as they will likely be taken through the
-  RISC-V tree.
-- Pass an efi_image_pointer to efi_stub_common() that points to the
-  version inside the loaded image, so that its relative references
-  accurately describe vmlinux in memory before boot.
-- Avoid weak linkage hacks to derive the kernel entrypoint, and instead,
-  always use the entrypoint passed via efi_image_info
-- Use efi_image_info for sysfb_display_info so that efifb earlycon works
-  much earlier on zboot
-- Drop changes related to the previous bullet that are now no longer
-  needed
-- Add acks from Jason
-
-Changes since v1:
-- drop arm64 image header changes
-- move efi_image_info out of __efistub_ scope so it can access vmlinux
-  symbols directly
-- implement in a generic manner for all architectures that support zboot
-- address Sashiko comments
-
-[0] https://lore.kernel.org/all/20261111164345.4059964-5-ardb+git@google.com/
-
-Cc: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Paul Walmsley <pjw@kernel.org>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Albert Ou <aou@eecs.berkeley.edu>
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev
-Cc: linux-riscv@lists.infradead.org
-Link: https://lore.kernel.org/all/0-v2-989a18390eb1+486-arm64_drtm_jgg@nvidia.com/
-
-
-Ard Biesheuvel (15):
-  efi/zboot: arm64: Add missing barrier after cache maintenance
-  riscv: Use _stext not _text to denote the start of kernel code
-  riscv: Make _text point to the start of the kernel image
-  efi/riscv: Rename __init_text_end to __inittext_end like other archs
-  efi/libstub: Avoid _end section marker in library code
-  efi/libstub: Capture loaded image information in struct efi_image_info
-  efi/libstub: Pass kernel entrypoint down to efi_enter_kernel()
-  efi/libstub: arm64: Use struct efi_image_info to access image
-    properties
-  efi/libstub: loongarch: Use struct efi_image_info to access image
-    properties
-  efi/libstub: riscv: Use struct efi_image_info to access image
-    properties
-  efi/libstub: Make efi_remap_image() return efi_status_t
-  efi/zboot: Disentangle efi_remap_image() from efi_cache_sync_image()
-  efi/libstub: arm64: Drop zboot code_size hack
-  efi: Make config table based primary display handover ARM-only again
-  Revert "efi: earlycon: Reprobe after parsing config tables"
-
- arch/arm/boot/compressed/head.S                      |  2 +-
- arch/arm/kernel/efi.c                                | 27 ++++++++
- arch/arm64/boot/Makefile                             |  3 -
- arch/arm64/kernel/efi-header.S                       |  2 +
- arch/arm64/kernel/image-vars.h                       | 14 ----
- arch/loongarch/kernel/efi.c                          | 20 +-----
- arch/loongarch/kernel/head.S                         |  1 +
- arch/loongarch/kernel/image-vars.h                   |  4 --
- arch/riscv/include/asm/sections.h                    |  2 +-
- arch/riscv/kernel/head.S                             |  1 +
- arch/riscv/kernel/image-vars.h                       |  8 ---
- arch/riscv/kernel/setup.c                            |  2 +-
- arch/riscv/kernel/vmlinux.lds.S                      |  6 +-
- drivers/firmware/efi/earlycon.c                      | 16 +----
- drivers/firmware/efi/efi-init.c                      | 24 ++-----
- drivers/firmware/efi/efi.c                           |  5 --
- drivers/firmware/efi/libstub/Makefile                |  3 +-
- drivers/firmware/efi/libstub/Makefile.zboot          | 11 ++-
- drivers/firmware/efi/libstub/arm32-stub.c            | 48 ++++++++++++-
- drivers/firmware/efi/libstub/arm64-stub.c            | 44 ++++++------
- drivers/firmware/efi/libstub/arm64.c                 | 23 ++-----
- drivers/firmware/efi/libstub/efi-stub-entry.c        | 27 ++------
- drivers/firmware/efi/libstub/efi-stub-helper.c       | 15 +++--
- drivers/firmware/efi/libstub/efi-stub.c              | 26 +++++--
- drivers/firmware/efi/libstub/efistub.h               | 71 +++++++++++++++++---
- drivers/firmware/efi/libstub/fdt.c                   |  5 +-
- drivers/firmware/efi/libstub/image_info.S            | 19 ++++++
- drivers/firmware/efi/libstub/kaslr.c                 |  2 +-
- drivers/firmware/efi/libstub/loongarch-stub.c        | 12 +---
- drivers/firmware/efi/libstub/loongarch.c             | 10 +--
- drivers/firmware/efi/libstub/primary_display.c       | 56 ---------------
- drivers/firmware/efi/libstub/riscv-stub.c            | 27 +++-----
- drivers/firmware/efi/libstub/riscv.c                 | 16 +----
- drivers/firmware/efi/libstub/zboot-decompress-gzip.c |  2 -
- drivers/firmware/efi/libstub/zboot-decompress-zstd.c |  2 -
- drivers/firmware/efi/libstub/zboot.c                 | 28 ++++++--
- drivers/firmware/efi/libstub/zboot.lds               |  6 +-
- include/linux/efi.h                                  |  1 -
- 38 files changed, 289 insertions(+), 302 deletions(-)
- create mode 100644 drivers/firmware/efi/libstub/image_info.S
- delete mode 100644 drivers/firmware/efi/libstub/primary_display.c
-
-
-base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
+diff --git a/drivers/firmware/efi/libstub/arm64.c b/drivers/firmware/efi/libstub/arm64.c
+index e57cd3de0a00..d35c6dd76601 100644
+--- a/drivers/firmware/efi/libstub/arm64.c
++++ b/drivers/firmware/efi/libstub/arm64.c
+@@ -109,6 +109,7 @@ void efi_cache_sync_image(unsigned long image_base,
+ 		} while (size >= lsize);
+ 	}
+ 
++	dsb(ish);
+ 	asm("ic ialluis");
+ 	dsb(ish);
+ 	isb();
 -- 
 2.56.0.611.g1030f0b940-goog
 
