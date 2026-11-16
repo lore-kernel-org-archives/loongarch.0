@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.70
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.72
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794839239;
-	b=azDWps1DTmhqODjGxBvQYxVJVA9YzYopZWAWOEoMvnM3OiaVntYyNr+l96d4YqzHkNpi
-	 wQUw4WLjLIA4IojJcOdba9w6DK3ddS/JRyrT+3+WoXf/zLFVsbwVLifdyb+BsXeBwYRfK
-	 /BHmCENED9o2XPRds+Zgf5R4f/j493ft0xzTX5dEAvP3cAp9TFuekt/Odi+0+c46AV6FC
-	 HdkgL9K5sfeKNwo3gFzKUFcVdrDQ8FD8AlLWG/Rqczq67GCsvyKK2LONVLeAq0AmUaY+3
-	 CpkuQA1NI/izPgtNU5gpqns0jDy0J8gtHMUo7EVjDzPTxam5ESp7AWMQc9w+AhDIKPw==
+	t=1794839240;
+	b=S8SNxT4Cb4Qm7YjZdkfsAUwwuMnuKuOgVxYiqWgtcPba8jbZPe2x1TpuBopg320BUeJC
+	 M97/AA8i8xuXAhNVEdhf/JbPFhOrIFF2fnp7OpwJF+sbi3gn4xeKx+1bxe+W2Wg/Yd+xm
+	 DDP8WeJ0L7FVE4bi06pBUCmSUZjdHkLTHCJqQzOp0nwlEXOdOI1Pum4dEf6M46Ba3DMGw
+	 z0YQK/04LGqNHRtFl+cryygXf5Uze0xJXhlm88YvZl4OooeMM56qAqRKufgroL2DUhc3H
+	 1XwP4lpsfKF6xof9QQYq8/lPipflhxtFVDcoiGGC6el8qHZyMh40Pmzl9Olk/mRX9Ng==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794839239;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794839240;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Developer-Key:X-Developer-Signature:
 	 X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
-	bh=5R2g9UB0W7Cq1TglUi5KIOs/VyvT4iQcIBDMlZHHNJ4=;
-	b=ZYZVGEfeiJ9yuI872+nYJ2TlwxmqQRuj7Dlf/IoLEtdRDWP90M0ZnfHMSPErgKZ+gUrs
-	 yadMehGZj7DHbjziReZ97TQ0tAGlIOjcknhrTr5A6qcwqbBGwcVSfJ1t1z7HeJBpOogA+
-	 LTHjxpwhwaYxGUbLO4f34xMwmAGJu5DxdDqCW0nGnCZIHFa1UsBARXpU1EFJNgPe58ZYj
-	 oghznbOwWmghG0LeLa+sFCv25U+bBAVKS0wQBqoNJD2t5qg3pnMPzXD29yKsxxW9JZexX
-	 kD73GEQl+E87O+9+zAeFPh3SUXYGnGJXsGeCZNh6R4RisgEogw42Bds10LAIrFGAuLQ==
+	bh=c/NQHRNe6l6YOGUDkv9ZNGcgPj475MvlcuYl9auZYJY=;
+	b=TOt7+VGyjhg6EYjt4Zgwb2knW5hlkKrjxncoqDlMs6vL4VmhhQLtUuvhoq35CK3EP9uk
+	 MKcg880TZ4CUxg4VjzwNz6fS6O/DsLTkwIpFN/f6NGnGJL849mi+ITUKx8DxIHZWqA0vN
+	 EFg0DSBSevt83f+gS7WBhjXJabO+9WnZFIUNR+br4AnmqJVZKcPvTlQcMvmNft5igmM0A
+	 rn5H3QpFAIrWcfuaJW+5o6M5+MCYKHfKFnl6wSF1or1L4amp9J0Y01/YHglFIgS63Xbxf
+	 mtDy5LuIicCe1BRC9xjPyYbiPNJ7/4fbFkqRtOp44oUfemr3TgtPrmkyJXOM4D0UeAQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--ardb.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Uuy+MYp1;
-	arc=none smtp.remote-ip=209.85.221.70
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=c5nlFlRk;
+	arc=none smtp.remote-ip=209.85.128.72
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A202606A32C
-	for <loongarch@lists.linux.dev>; Mon, 16 Nov 2026 14:27:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2A202606A32C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734BD606A334
+	for <loongarch@lists.linux.dev>; Mon, 16 Nov 2026 14:27:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 734BD606A334
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Uuy+MYp1
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-4915ba023d4so1590062f8f.0
-        for <loongarch@lists.linux.dev>; Mon, 16 Nov 2026 06:27:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=c5nlFlRk
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4a16dc2323cso27103575e9.3
+        for <loongarch@lists.linux.dev>; Mon, 16 Nov 2026 06:27:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794839237; x=1795444037; darn=lists.linux.dev;
+        d=google.com; s=20260707; t=1794839239; x=1795444039; darn=lists.linux.dev;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=5R2g9UB0W7Cq1TglUi5KIOs/VyvT4iQcIBDMlZHHNJ4=;
-        b=Uuy+MYp136Fg4vrzI2f97NihKfAs3zMLH0ErpFpywJtFIYO9sGE4Ssl35zaaTTmhSO
-         n7L9zZWHgGP8oI239uyCNzlcdjPuJH3rbjKHsdak1knDtQoiIMostqJxEaCX9I23SGzG
-         r0CidASRz7EImAPWauhmEfowXbH/p83qw1t8ZqXfc+1LalMXagqfoWOaSciHMN0uEEvy
-         O4Fg0uWOGaKTv+WLrTaenJ0MvPU4QJhbUaKZgiS8qRgjJovb+xeBzk3etKTAY29LlSOy
-         0sgOnoS6YNxp3i7PxdC4rms/geOYcXh56jvqCQfSmQjFo13cmo6yVg3LqMWvWkBc/T8/
-         BaVg==
+        bh=c/NQHRNe6l6YOGUDkv9ZNGcgPj475MvlcuYl9auZYJY=;
+        b=c5nlFlRka23E0W0jgL3Ystj8Jph2g2QOEtvUrJamCE12ry4VRoB1D0Oci+72+apW/k
+         7/jqsElhEedxWDjlirU72BonHs2fJfDEFpkYuxEhYT7MjwAugFRNhhbN4+/X3SKv7vA3
+         H649T11D9frfQn1M6CVbvPRNw25qOzOyOeILY0hG/YeUEjbCCcR9erqCq8wgBTgGj1NL
+         xD0R6oe8uJEwFWlWtiimgT9O8+L6u/eeMUSITvMdtPW23Q6VSpcd66uN7KTL6cKBcJv8
+         acwFUpZa7TrR52SRW9Q38j1na73pBBPtVSji4aO/4oGfuRLswodu2RR+QB6dj9wXmYm3
+         yhqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794839237; x=1795444037;
+        d=1e100.net; s=20260707; t=1794839239; x=1795444039;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=5R2g9UB0W7Cq1TglUi5KIOs/VyvT4iQcIBDMlZHHNJ4=;
-        b=u3mZFeIks3JfJlXX+afvGpZydNrjzywDrQAp9Ubh3dZVFMgBbo54xrfbi4OShUGlHh
-         soy+rctJmX/sFeXhCRXc6YXJ2R7sz+lomHI5YfbYtxhj3tFpJW7xJw3VcpItkgDtPajc
-         amf834UAVPchaB9rM/m7PLOaIRnMeS5lnAaXAjkNz80R8ybvna0RiBY2rc+2KKhBAQPo
-         gpYDyE/pgstqUqUGoVDmDTFuvie8ylzUGhpwa9ssrnxpbpq+cMQuddFQM0zqkU6dsSc6
-         zGIvp4l4Wh4VsFN60b1qYnV/alDDCtniu5wV30KT0uGm9gIfdKRQIsU1vdZlkmkxx/Y+
-         u/LQ==
-X-Forwarded-Encrypted: i=1; AL+hErGremMwME++NfGUYJ4uDDUGbrBrEm/R6vWUECS8L13iSwPMmxvfEaxSro7s1b2CIhDMRX1OEewklZw=@lists.linux.dev
-X-Gm-Message-State: APuU4Z+UDccN2foUYArljPfTxg/A+j+07ZfvdzAiOIlLVpjVfaSsB3g7
-	e8VhsrVBm86XEemU7art+e6jTqk7ecyzF/cYM1oz01dqeAwG8qcfGtxe5/+WXz9LATLO4iU0CQ=
+        bh=c/NQHRNe6l6YOGUDkv9ZNGcgPj475MvlcuYl9auZYJY=;
+        b=zQ35aQLVWbXAk1Qhc8Yv2OY9m8RN2ddsBNlbRh6LodSvUXxGff4RhfMSIHLyyaUh5u
+         sx5fn30NhY74e6ufRekfSP3lG6DvvNMyenyAYnJW7KKgdo+DK6OfbEA+qnVZkYatFjpQ
+         O6tfNQT3Td9GiqUepkTSwd+G2Xc1caekpTc+fZqZOrPiirMu5FCHMH+H3NzADwp7ix2N
+         y/byN1UWnKhHsg/1Y3tnjvJo7JyYnfOIoYCeIOVFovKiHWK94mg+Viqv+tzpmCdeh5cl
+         c3ZCcqvFe643eegvOpc5lUUZZjXkxwbOs/poqsJsu1IrsVu4m/6KjZb9oq73kTMlUoQg
+         KY6g==
+X-Forwarded-Encrypted: i=1; AL+hErGmFIYvpCJ3ohm47XurglQA5h3jKWPQkwpv3dvf5EwqyAJ+vzFFWN36Oa0A9dn68qAaliCZw/qSomw=@lists.linux.dev
+X-Gm-Message-State: APuU4Z9Ja3hIZyGpUMXR8z60m8a4VKn4Mg2pd2xsEJztH5FnTHnmy34J
+	pyhrxK8sgDSbjwnfjVLov3GI0ovBMUgdPyI7GphA2lg4f0vOEtzWZsZBAmvq9ABEUawlR2uZfA=
 	=
-X-Received: from wrok6.prod.google.com ([2002:adf:f286:0:b0:493:d441:be7f])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a5d:584b:0:b0:490:71a7:6f51
- with SMTP id ffacd0b85a97d-49c72ba6509mr22449676f8f.45.1794839236764; Mon, 16
- Nov 2026 06:27:16 -0800 (PST)
-Date: Mon, 16 Nov 2026 15:26:23 +0100
+X-Received: from wmbjj17.prod.google.com ([2002:a05:600c:6a11:b0:4a3:5d5b:9ad9])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:6286:b0:49f:e8bf:8f9b
+ with SMTP id 5b1f17b1804b1-4bb55a23b4emr228382165e9.4.1794839238088; Mon, 16
+ Nov 2026 06:27:18 -0800 (PST)
+Date: Mon, 16 Nov 2026 15:26:24 +0100
 In-Reply-To: <20261116142618.1687025-17-ardb+git@google.com>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -81,15 +81,14 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261116142618.1687025-17-ardb+git@google.com>
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2981; i=ardb@kernel.org;
- h=from:subject; bh=8ndYJWrl5/5wY4uh6dzMJ+7YlbAJMHVUNmS0W0hi37A=;
- b=owGbwMvMwCVmkMcZplerG8N4Wi2JIeu30MSrTJ27pkw5q/E2uejHnms/n2+SWLfg1plna36U6
- s4Uyfxi1FHKwiDGxSArpsgiMPvvu52nJ0rVOs+ShZnDygQyhIGLUwAmsquFkeGL/Zr2F/FRRtFF
- 3L9sW+7N3qJ1/c1Dg9yKmY+eR046/1uJkeHT1Pev7Cpzzr93SnY6G7djx68ll3oyj09f9z0v/fi 9U8cYAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1222; i=ardb@kernel.org;
+ h=from:subject; bh=gNFwqEvRPin0drZTY8vZ8X80jlSMfocbKk0VdpmbVRA=;
+ b=owGbwMvMwCVmkMcZplerG8N4Wi2JIeu30KSg3fcv87JE2Vwx2/OUl40vW2RrsPb6oCrlHnF1u
+ dmyb9M6SlkYxLgYZMUUWQRm/3238/REqVrnWbIwc1iZQIYwcHEKwER6PzEyrM+807hgHuvh1S8n
+ 7DDjYHotYHn95jar+8ULlgkKbOBwnMPIcDTjw5LJIe92RiypnXv/9FrZ3E0/bCS3WkXYaqwq8vY LYwUA
 X-Mailer: git-send-email 2.56.0.611.g1030f0b940-goog
-Message-ID: <20261116142618.1687025-21-ardb+git@google.com>
-Subject: [PATCH v3 04/15] efi/riscv: Rename __init_text_end to __inittext_end
- like other archs
+Message-ID: <20261116142618.1687025-22-ardb+git@google.com>
+Subject: [PATCH v3 05/15] efi/libstub: Avoid _end section marker in library code
 From: Ard Biesheuvel <ardb+git@google.com>
 To: linux-efi@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org, Ard Biesheuvel <ardb@kernel.org>, 
@@ -100,81 +99,31 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-Align RISC-V with arm64, LoongArch and x86, and drop the underscore
-between 'init' and 'text' in the section markers. This allows the value
-to be captured by generic EFI stub code that can be shared between all
-those architectures.
+The _end marker could point to the end of the kernel image being loaded,
+or to the _end of the zboot decompressor image, and so it should only be
+used in code that is obviously only intended for the former case.
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+So instead, use kernel_memsize and the image address to obtain the same
+quantity.
+
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/riscv/include/asm/sections.h         | 2 +-
- arch/riscv/kernel/image-vars.h            | 2 +-
- arch/riscv/kernel/vmlinux.lds.S           | 4 ++--
- drivers/firmware/efi/libstub/riscv-stub.c | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/firmware/efi/libstub/kaslr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/riscv/include/asm/sections.h b/arch/riscv/include/asm/sections.h
-index a393d5035c54..4a882a28f414 100644
---- a/arch/riscv/include/asm/sections.h
-+++ b/arch/riscv/include/asm/sections.h
-@@ -11,7 +11,7 @@
- extern char _start[];
- extern char _start_kernel[];
- extern char __init_data_begin[], __init_data_end[];
--extern char __init_text_begin[], __init_text_end[];
-+extern char __inittext_begin[], __inittext_end[];
- extern char __alt_start[], __alt_end[];
- extern char __exittext_begin[], __exittext_end[];
- 
-diff --git a/arch/riscv/kernel/image-vars.h b/arch/riscv/kernel/image-vars.h
-index 7b44b94f1283..bf703eba3fa5 100644
---- a/arch/riscv/kernel/image-vars.h
-+++ b/arch/riscv/kernel/image-vars.h
-@@ -27,7 +27,7 @@ __efistub__start		= _start;
- __efistub__start_kernel		= _start_kernel;
- __efistub__end			= _end;
- __efistub__edata		= _edata;
--__efistub___init_text_end	= __init_text_end;
-+__efistub___inittext_end	= __inittext_end;
- #if defined(CONFIG_EFI_EARLYCON) || defined(CONFIG_SYSFB)
- __efistub_sysfb_primary_display	= sysfb_primary_display;
- #endif
-diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
-index 9849a3e4d102..ba939c7365b2 100644
---- a/arch/riscv/kernel/vmlinux.lds.S
-+++ b/arch/riscv/kernel/vmlinux.lds.S
-@@ -46,7 +46,7 @@ SECTIONS
- 
- 	. = ALIGN(SECTION_ALIGN);
- 	__init_begin = .;
--	__init_text_begin = .;
-+	__inittext_begin = .;
- 	.init.text : AT(ADDR(.init.text) - LOAD_OFFSET) ALIGN(SECTION_ALIGN) { \
- 		_sinittext = .;						\
- 		INIT_TEXT						\
-@@ -72,7 +72,7 @@ SECTIONS
- 	}
- 	__exittext_end = .;
- 
--	__init_text_end = .;
-+	__inittext_end = .;
- 	. = ALIGN(SECTION_ALIGN);
- #ifdef CONFIG_EFI
- 	. = ALIGN(PECOFF_SECTION_ALIGNMENT);
-diff --git a/drivers/firmware/efi/libstub/riscv-stub.c b/drivers/firmware/efi/libstub/riscv-stub.c
-index 725b634c5179..5cbc50a814e1 100644
---- a/drivers/firmware/efi/libstub/riscv-stub.c
-+++ b/drivers/firmware/efi/libstub/riscv-stub.c
-@@ -34,7 +34,7 @@ efi_status_t handle_kernel_image(unsigned long *image_addr,
- 	efi_status_t status;
- 
- 	kernel_size = _edata - _start;
--	kernel_codesize = __init_text_end - _start;
-+	kernel_codesize = __inittext_end - _start;
- 	kernel_memsize = kernel_size + (_end - _edata);
- 	*image_addr = (unsigned long)_start;
- 	*reserve_size = kernel_memsize;
+diff --git a/drivers/firmware/efi/libstub/kaslr.c b/drivers/firmware/efi/libstub/kaslr.c
+index 8f8dc335b3b3..b34e4599f0f6 100644
+--- a/drivers/firmware/efi/libstub/kaslr.c
++++ b/drivers/firmware/efi/libstub/kaslr.c
+@@ -125,7 +125,7 @@ efi_status_t efi_kaslr_relocate_kernel(unsigned long *image_addr,
+ 		if (!check_image_region(*image_addr, kernel_memsize)) {
+ 			efi_err("FIRMWARE BUG: Image BSS overlaps adjacent EFI memory region\n");
+ 		} else if (IS_ALIGNED(*image_addr, min_kimg_align) &&
+-			   (unsigned long)_end < EFI_ALLOC_LIMIT) {
++			   (*image_addr + kernel_memsize) < EFI_ALLOC_LIMIT) {
+ 			/*
+ 			 * Just execute from wherever we were loaded by the
+ 			 * UEFI PE/COFF loader if the placement is suitable.
 -- 
 2.56.0.611.g1030f0b940-goog
 
