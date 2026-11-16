@@ -1,54 +1,104 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.54
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794801557;
-	b=qkXm20hIZZMfgRAWMhzVgBv4yt3Mh5luNHO47ObGo4GZi2qlTk0NJb2EFQQczKZQKJuE
-	 kYU8hDOUpVWZnd6txul/JeyM7GAvShc5ASarRu+B1KNa0GxVYh2U/xAhfIn+hDhPALouT
-	 Waj4HGAl/upHH+bZOu/ijTPC+0SvAlrHAgbZALwpCZ0gxWRj73QZvg5Z/M9Ubv1cNqVKs
-	 5Wko58lTUT1Yq4zC9y8hvFasQLvWbTLj6FAVC2CJkAg1LecJPKKI/9Dn7Af2KF7hw8f+m
-	 G9Y1gaCGl5p+ID+0JVmeh1IHCqPZC9MJBGiBZsx92A77BuJ/DbLifCf8+0ovi6C048g==
+	t=1794815911;
+	b=c2J54NDrwcVhOXbHmeojCPFCERXnXaF6McejkNV8060Y6X/oZ/VpeOuMqXvE19X19tl5
+	 IWxjPCqMuqLyXyMu4wg06gOrOECWTBJVcwBl+M5zDFWzp1S7k0EtYld90b2z4EXw77eOW
+	 YtoN9/jJxosxlySe2hMCIYoClf7xHu39lzM3LVsfiON8d2gg/BamiVTjPDE1Og51DSWuE
+	 AKrhqQxazJgvNSJCEMNOBKEFVkkGm2R+gNPjsWqfCzpt/vAlsXWru2wP8J6wfVHG/CE0e
+	 /mxc8cLJqEZuDH8g6SAAkZdqWkjxjcxAXuDyo5XwKafbBP8hUW2gXQehUDuVdS5JoIQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794801557;
-	h=DMARC-Filter:Received:Received:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-CM-TRANSID:X-CM-SenderInfo:
-	 X-Coremail-Antispam;
-	bh=j5y/xB7R2/Z2LDaXzlFtsMtmuvZKAkljLigBDMKHnPI=;
-	b=YyXo78GB5wNKWAW03GDUeueX4xsXuEV2rx08AZUb/DUhWNBBV8OIwKCwO94VOotXUeW5
-	 y/2ksfVfsROIU1T1Q8gWV8pmmYcGyOBFzRDN2FH5kTggWTcsZvfvX+j8/UJNBealUYh7F
-	 vGd6DjNaTMnjv4FSv7rqBFX15WQbzInfNKZLDQr0j4cyl8Wwyb5FEyVb3QFovEylcHCjA
-	 TXEH7LzTLHxFvIyT86+LyDosnQDdOMowzOB/hXMcAXEzrrq3kBZQYVu975yGVNbC5+8W9
-	 gikRbqihTLSjEXo9oWzkjJJuS14Hx0UPOsrPuBvbetljo4zkS6m+GUM+yRFU3O+CjVw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794815911;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:Content-Transfer-Encoding:User-Agent:MIME-Version;
+	bh=MJ7d3rNHeUtNAkSjUSjsQ3HRQiSBTnNiLXOBSu1liKw=;
+	b=C/5CXyx2ev+31TT8N80ssk1G9U9LVySLMQr8udliaWoOZh9eYR82do/kDgIhnXO8Hja2
+	 GTxqxRhfftBLolzp4LL/7RPka5W2iyTFR1gfTdz7MWIQh6GogH5dD5qDj5fAYi5PgEILi
+	 UJC15GAyS3vP/rqTPNQ8oz+3moAH0nSeiuccnOYm7Xq/Yx3OFBQHZCC8g6uZGNPmXwp9n
+	 GntZO23Q0YfQ2us7HeVB1CimmUZS80Xu2S2WNOByFfac0RejuF71jXh86QK4AgyytPtbS
+	 Q1pTSUetaeKmvEBKgVlrXrst3N6VH3dIJw377RY6zo8mJ6uTMmWGLoIxG9Ofm+PjA8g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=loongson.cn;
-	spf=pass smtp.mailfrom=loongson.cn;
-	arc=none smtp.remote-ip=114.242.206.163
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73D39606A89F
-	for <loongarch@lists.linux.dev>; Mon, 16 Nov 2026 03:59:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 73D39606A89F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [123.138.236.242])
-	by gateway (Coremail) with SMTP id _____8CxfdKSf_pqRwAgAA--.26688S3;
-	Mon, 16 Nov 2026 11:59:14 +0800 (CST)
-Received: from linux.localdomain (unknown [123.138.236.242])
-	by front1 (Coremail) with SMTP id qMiowJBxJs2Mf_pqKNE0AA--.64529S5;
-	Mon, 16 Nov 2026 11:59:11 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>
-Cc: bpf@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH bpf-next v3 3/4] selftests/bpf: Fix unaligned access failure in fexit_bpf2bpf
-Date: Mon, 16 Nov 2026 11:59:06 +0800
-Message-ID: <20261116035907.4215-4-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20261116035907.4215-1-yangtiezhu@loongson.cn>
-References: <20261116035907.4215-1-yangtiezhu@loongson.cn>
+	dmarc=none header.from=amutable.com;
+	spf=pass smtp.mailfrom=amutable.com;
+	dkim=pass header.d=amutable-com.20260707.gappssmtp.com header.i=@amutable-com.20260707.gappssmtp.com header.a=rsa-sha256 header.s=20260707 header.b=S2ueUYGp;
+	arc=none smtp.remote-ip=209.85.221.54
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91A89606A323
+	for <loongarch@lists.linux.dev>; Mon, 16 Nov 2026 07:58:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 91A89606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=amutable.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amutable.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=amutable-com.20260707.gappssmtp.com header.i=@amutable-com.20260707.gappssmtp.com header.a=rsa-sha256 header.s=20260707 header.b=S2ueUYGp
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-49412eb1474so1449596f8f.3
+        for <loongarch@lists.linux.dev>; Sun, 15 Nov 2026 23:58:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amutable-com.20260707.gappssmtp.com; s=20260707; t=1794815909; x=1795420709; darn=lists.linux.dev;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=MJ7d3rNHeUtNAkSjUSjsQ3HRQiSBTnNiLXOBSu1liKw=;
+        b=S2ueUYGpD1uZilgYd/EJdmDK+c5ppHCqFaHeHD99lDJHkSDfoN9k1nJAofUEAY6HNG
+         1qx45jR80eyu0ctM01HXR2oMt6zWA74bo1sC7Y5sMsvGIqFBk0tfCfl5cE1nP87rOeAR
+         OqM5foR10KPE5Y+OFi15V3r/Nti8aJWjO4B/2qI0h+PJLCqI87OPnbwca2++0dhdcCTe
+         H5B1XQsgWojrjv1CCtnFUiYke4G7t4qAeYDb96zDns/Q8VgZPQA16Ds1aFI1ed/fhBmj
+         MINtQ9SHK/qAQU955aWktyq01K3ISosEdfyglVVloyl2Yss6hD9S6ruHW+eZUxUAJHSo
+         OZ3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794815909; x=1795420709;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=MJ7d3rNHeUtNAkSjUSjsQ3HRQiSBTnNiLXOBSu1liKw=;
+        b=00mL/vuQiNVLaoEjjy9INd5QanMjd2ltSg5tnbforGK2NIYkg4wUYv4q8g/OXkW1Rz
+         3GAf2wRKUoUFlVM/ZL9tkJDvnPdcyv2WaoPN402KJJ7x+9eKRbmc517McUr2SSVAb0yJ
+         argY3Xsc0Fz0dYWZQwYznArRof1nm51BB+uCjLuHzQaOTIm7crVyZoWzdp4aj0oEuy3g
+         MlEVtFUZ475Gxmx2XNWyZTb12xTS7LtK/8aE4dUzVMF4tI754yrcZ4DiBCZwlDQeLh0j
+         0NETTjVoOeNddnpcfKk2S3K20EOW/vjNR6UCllk72xIGwIBOLbksd/cyoGmJ+K73yjiy
+         XqEg==
+X-Forwarded-Encrypted: i=1; AL+hErGm7Bfvhcv9NAN1GR+CmKuRyuGLZiXm7SEMwedk1rxqjD4T0twm+wJRuBBtxkLFpS/H4a48maAYw1k=@lists.linux.dev
+X-Gm-Message-State: APuU4Z9/1c2TbCU7bCngL7S8sV1jcEKSduEW/4E3EhG519WdTYtQPhIC
+	dPSAq3cl4h92Xdz4xUM7NYRVGDfsHnyEZLIjO1b1/0VYYm00Ne87CGP6iZayhfdR6ULb
+X-Gm-Gg: AYBFou2g0n2FtZXxdCuaWtOEVqPpWlzHubqL/9sUFrjjivU2Mifj+/Aeiqj2nTnKsWI
+	yPohFaCIXG2io4e9ohcHYHtvPSMrYz8bhJGg4tbRT87LcHRBWa6hxEpn5F3u+md8EtjnIYrPkDc
+	2he4X300IIEwVSqIixztuEFHDYSz9tyZWolXg79I4IIuZ1oS8jN37GA8C0TfrDmR9nYpJT3we0d
+	S1ARblsf7LtbnLTEr3IM2GLgGGPZrmj37Nn8g4Edd3T6SoMmLj9V1U2nlxeJXOpQRCXOfq9SwpN
+	0VuXL6ZMJerI2uOPEr+s4cEN/J9RjIackX8PFCb83wjSwwUtdN6uQmUre0LtDEi6XVZLmareBPw
+	a1JhHTRt2Q0DD9h3dpJqKXvbHi73odl8kzCBhLJa8/Aa9a1FQ5JkIi9cd7rR1153hPfJ0hgw8+Q
+	a5l7/Fh8J4jYi6GoVuXolZ464ZYr3oOnpwYsexWwPyc0yXwNmw+iVFPCAjpWj4XfYpGr9c1NsJe
+	cZWo189Ix8Sfgmuly9896Hg6y0ahDR8YYjirmF78xFUa1P4f8V6n0Tk5xCCTNpYbskZrlstCXxL
+	yR4xcBUhgUk4ry/IyDuqUYXdcOYmD2fAkYsicYxs3HskmG7F1BkcLJWfTOy3co0=
+X-Received: by 2002:a05:6000:3108:b0:48d:f9dd:e3de with SMTP id ffacd0b85a97d-49c7353c415mr20084703f8f.45.1794815908942;
+        Sun, 15 Nov 2026 23:58:28 -0800 (PST)
+Received: from [10.0.0.233] (tmo-086-54.customers.d1-online.com. [80.187.86.54])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-49c5ff2be55sm21124748f8f.28.2026.11.15.23.58.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Nov 2026 23:58:28 -0800 (PST)
+Message-ID: <19b4c35c016a91302bf6bc3380bfcd3d21dc50c0.camel@amutable.com>
+Subject: Re: [PATCH RFC 1/4] powerpc/crash_dump: check ioremap_cache() in
+ copy_oldmem_page()
+From: Alexander Mikhalitsyn <alex@amutable.com>
+To: Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Breno Leitao
+	 <leitao@debian.org>, Chris Mason <mason@kernel.org>, Thomas Gleixner
+	 <tglx@kernel.org>, x86@kernel.org, kexec@lists.infradead.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, loongarch@lists.linux.dev, 
+	linux-mips@vger.kernel.org, linux-sh@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, David Hildenbrand <david@kernel.org>, 
+	stable@vger.kernel.org
+Date: Mon, 16 Nov 2026 08:58:26 +0100
+In-Reply-To: <20261112-work-procfs-oldmem-v1-1-ecdcafd99265@kernel.org>
+References: <20261112-work-procfs-oldmem-v1-0-ecdcafd99265@kernel.org>
+	 <20261112-work-procfs-oldmem-v1-1-ecdcafd99265@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-0+deb13u1 
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -58,83 +108,44 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxJs2Mf_pqKNE0AA--.64529S5
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Ww1DZrW8Jw1rAFW5ZrWDAwc_yoW8KFWkpa
-	97A34jkryIg3W5X3Wjyw47GFWFgFn7tay8Kr1rtr98Zw1DJry0qr1fKF1UKF9xW39Yvwsa
-	vas7KFZ8Z3ykXabCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE
-	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07josjUUUUUU=
 
-When executing "./test_progs -t fexit_bpf2bpf", there are 5 subtest
-failures on platforms where CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
-is not set, as the BPF verifier enforces strict alignment checks:
+On Thu, 2026-11-12 at 17:37 +0100, Christian Brauner wrote:
+> copy_oldmem_page() maps a page of the old kernel that isn't in the
+> linear mapping with ioremap_cache() and copies from it without
+> checking
+> whether the mapping worked. If it didn't, the copy reads from an
+> offset
+> into the NULL page. That oopses unless the copy happens to be a user
+> copy, whose exception table entries turn the fault into a short copy.
+>=20
+> Return -ENOMEM like the other architectures do. read_from_oldmem()
+> turns that into -EFAULT like any other short copy.
+>=20
+> Reported-by: Chris Mason <mason@kernel.org>
+> Fixes: 54c32021eb6f ("[PATCH] powerpc: Add arch-dependent
+> copy_oldmem_page")
+> Cc: stable@vger.kernel.org
+> Reviewed-by: Breno Leitao <leitao@debian.org>
+> Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 
-  ; tcp->check++; @ test_pkt_access.c:98
-  226: (69) r1 = *(u16 *)(r2 +16)
-  misaligned packet access off 2+(0x0; 0x3f)+16 size 2
-  ...
-  libbpf: prog 'test_pkt_access': failed to load: -EACCES
-  libbpf: failed to load object './test_pkt_access.bpf.o'
+Reviewed-by: Alexander Mikhalitsyn <alex@amutable.com>
 
-Rather than skipping the tests or setting BPF_F_ANY_ALIGNMENT to
-bypass the alignment check, fix this at the source by applying a
-bitmask 'off &= ~1' right after the initial range check.
-
-This explicitly communicates the 2-byte alignment state to pass
-the verifier and run the full fexit_bpf2bpf test matrix.
-
-Before:
-  $ sudo ./test_progs -t fexit_bpf2bpf | tail -1
-  Summary: 0/10 PASSED, 1 SKIPPED, 1/5 FAILED
-
-After:
-  $ sudo ./test_progs -t fexit_bpf2bpf | tail -1
-  Summary: 1/15 PASSED, 1 SKIPPED, 0/0 FAILED
-
-Fixes: 6dc03dc71387 ("selftests/bpf: Add test for freplace program with write access")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- tools/testing/selftests/bpf/progs/fexit_bpf2bpf.c   | 1 +
- tools/testing/selftests/bpf/progs/test_pkt_access.c | 1 +
- 2 files changed, 2 insertions(+)
-
-diff --git a/tools/testing/selftests/bpf/progs/fexit_bpf2bpf.c b/tools/testing/selftests/bpf/progs/fexit_bpf2bpf.c
-index f4bbf87b82dd..ed06345825e2 100644
---- a/tools/testing/selftests/bpf/progs/fexit_bpf2bpf.c
-+++ b/tools/testing/selftests/bpf/progs/fexit_bpf2bpf.c
-@@ -173,6 +173,7 @@ int new_test_pkt_write_access_subprog(struct __sk_buff *skb, __u32 off)
- 	if (off > sizeof(struct ethhdr) + sizeof(struct ipv6hdr))
- 		return -1;
- 
-+	off &= ~1;
- 	tcp = data + off;
- 	if (tcp + 1 > data_end)
- 		return -1;
-diff --git a/tools/testing/selftests/bpf/progs/test_pkt_access.c b/tools/testing/selftests/bpf/progs/test_pkt_access.c
-index bce7173152c6..21f28a762d60 100644
---- a/tools/testing/selftests/bpf/progs/test_pkt_access.c
-+++ b/tools/testing/selftests/bpf/progs/test_pkt_access.c
-@@ -91,6 +91,7 @@ int test_pkt_write_access_subprog(struct __sk_buff *skb, __u32 off)
- 	if (off > sizeof(struct ethhdr) + sizeof(struct ipv6hdr))
- 		return -1;
- 
-+	off &= ~1;
- 	tcp = data + off;
- 	if (tcp + 1 > data_end)
- 		return -1;
--- 
-2.42.0
-
+> ---
+> =C2=A0arch/powerpc/kernel/crash_dump.c | 2 ++
+> =C2=A01 file changed, 2 insertions(+)
+>=20
+> diff --git a/arch/powerpc/kernel/crash_dump.c
+> b/arch/powerpc/kernel/crash_dump.c
+> index 103b6605dd68f..1543917bd3e1d 100644
+> --- a/arch/powerpc/kernel/crash_dump.c
+> +++ b/arch/powerpc/kernel/crash_dump.c
+> @@ -86,6 +86,8 @@ ssize_t copy_oldmem_page(struct iov_iter *iter,
+> unsigned long pfn,
+> =C2=A0		csize =3D copy_to_iter(vaddr + offset, csize, iter);
+> =C2=A0	} else {
+> =C2=A0		vaddr =3D ioremap_cache(paddr, PAGE_SIZE);
+> +		if (!vaddr)
+> +			return -ENOMEM;
+> =C2=A0		csize =3D copy_to_iter(vaddr + offset, csize, iter);
+> =C2=A0		iounmap(vaddr);
+> =C2=A0	}
