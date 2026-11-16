@@ -1,86 +1,97 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794849625;
-	b=KL494rlUO8FlA1zmL2c3+Bo5JsueJbxyXMmCjEFTikY1rf2670QAQYUEIbbhiESaWvZO
-	 6qZxx9snSHUJUMggwSz3dLkot9Joj0ztrpxcVvJRfpKkoIjuf6t7mM2etYxK8a3EOEUFh
-	 RI40xsmoUInfw3ObTbIaYtJaXGANsNW1M/6dSqBkNGAnvhbb1V2ZxdFthUGMdEhVO0sgq
-	 5xAjG+aLuk8fVwDzjhhRREIizWnUpN/wBETHKEHA4FKIn+LX3sc279BqrZIS1H60K6w2D
-	 9jdxSIL+AOvzlfknauePX71JcY1ddLMw54lOylRcBckfiQtdjqAX+K7VjKaS5JrUNBw==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794849625;
-	h=DMARC-Filter:From:DKIM-Signature:DKIM-Signature:To:Cc:Subject:
-	 In-Reply-To:References:Date:Message-ID:MIME-Version:Content-Type;
-	bh=Uhn3Xh440rrzv0xOTkiny4cGS6bsXvzVeqcYJ4nwTDs=;
-	b=loxiTedk1+fvIMpRyE/Gy2pWW08a1sIVnaTgtpX9pxgf5xNiFbYhLvA7J3zM4DOF1vB+
-	 JnIfVrLiThcnfGte74YDSWIRvMWv6kG8rR+hWV9YpmFL86R52uuIRtC1ZvFmbtdK2Ju/h
-	 VfXMtaAeyr+eYxhgtohSHZ6Kyx+oEoN3bhXs2kUOAS2VjU58JpvoWxF7l9bWEJ7OWIPMm
-	 d4QARd0xCbuTHDT1h91MHl7Smg8Btkk5ZR8sQpHG0jDnBJKx1VU88HTGXzazE6vzYd/a6
-	 MavDmEtF/pT4Rxoz8+F6uNsOIMrB/u4Rl1X/CNQ95ZBilwAJoDPAxJxE4ACqon8gYbw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linutronix.de;
-	spf=pass smtp.mailfrom=linutronix.de;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=aX5WK4VM;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=IwT+AooZ;
-	arc=none smtp.remote-ip=193.142.43.55
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.85.62
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794855148;
+	b=U1Zvn25JrlSbdIgRzBjCwlwrYtDoMzBs6Y4Gwb3hHMDMcj2K+zdoLaPvzLCcIhsUfFYl
+	 r9J4hQsr3L+PvmLjcZ0KCDQqSlQbyLXyqnhLqKH1Y/V6iVHMqSawtodt46yCFWk/RdmY2
+	 J+YyrY+a5ai1mzjTvjfPiyVVT4FaupUI5s/42yZd+tsrzE+GGHM+LidnPaT6soLlzaTj6
+	 vOoUIpFvsmV5FkgsAdcrYNWPsxl856YY2Y5zrm1EfG+lyIk3xs8vCfuTzPmSSUrhwLWVE
+	 MAvGRoa2SIEptV0ApBvc1q4xg4taLCzciDLcGI4h5Fz09S9bv6mXTAkHKoAdEaEHqYA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794855148;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:Content-Type:
+	 Content-Transfer-Encoding:Subject:From:To:Cc:In-Reply-To:References:
+	 Date:Message-Id:X-Mailer:X-ClientProxiedBy:MIME-Version:
+	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
+	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
+	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
+	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+	 X-MS-Exchange-CrossTenant-UserPrincipalName:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=fne59OLCfzObsqoTcBwjTpqKprh3ztnnwcCbs7+DLs8=;
+	b=3bd1x7AvWTUJtYbZcUKnE9K2uCQfjZc2OQRv4xG0eaZLqxg8Uiq/KR0Nmv0BmEftV/hF
+	 yQfPbtossoOZL066BrNX4eaYt1naUfUSTzj5dT4c20oeOdUgijdtC7vneAR8D64HP9kjh
+	 q2Yllke4ScQ0rUqxlMX+S2xWkvjDqlpX4LIF0VPZur+qvTVnUkE7X5dLO88j7tthi4NjN
+	 NE5uhhW8297g8sZvYOa5ltlM2ymOlMs6bpudBZgHHTxWfKe++C9leGYOpjWN+O544uqhr
+	 52MJUZw1jd5ogAZKA0w3QcfEtoXYbNN09a0/tZ2aFsE6YIzB8OrwOjcVSHfg7Qd/IDw==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=nvidia.com;
+	spf=fail smtp.mailfrom=nvidia.com;
+	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=WmWHOmR7;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.85.62
+Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11010062.outbound.protection.outlook.com [52.101.85.62])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53459606A323;
-	Mon, 16 Nov 2026 17:20:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 53459606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA79606A323
+	for <loongarch@lists.linux.dev>; Mon, 16 Nov 2026 18:52:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4DA79606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=aX5WK4VM;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=IwT+AooZ
-From: John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1794849622;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Uhn3Xh440rrzv0xOTkiny4cGS6bsXvzVeqcYJ4nwTDs=;
-	b=aX5WK4VMEnjF9i1VKVQSHFX2GLhbxsGh0rUUEpq16akWX/oza8TC2x4U2Wc5M2cea5s+pr
-	FG7n6wly3PaZ/Mq8S4XaUkpXwJXmNwINcQe529CM2y8TtfwdUsQI7umWEMC/Y6npD4Rv5b
-	NKWunLOmi55uB+seqegTvmwiHNVscAexBW+ovmpj5P+GxXl0MDs14cFZ1Vso7OS8RUyUxE
-	CMJFtuouBK/6+19icelMId62QdTq41y3v+LEABahmYc2lUj3TT9bSVBO5W49uxQurGRjp+
-	JzpHZoiHSeL3p9a67NtjbjE0DjZmidChXhXxBYZxCcPAa1JbWT3+OPcJ41ujFA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1794849622;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Uhn3Xh440rrzv0xOTkiny4cGS6bsXvzVeqcYJ4nwTDs=;
-	b=IwT+AooZ8H8ysTr1pAwAVYo/Aex9uA3/+R34PP1Hz0Mquv2Mb6PM8k4ReFej4Va7RWRgfC
-	3kUcg2AomgSL65DA==
-To: Petr Mladek <pmladek@suse.com>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, Steven Rostedt
- <rostedt@goodmis.org>, Ryan Roberts <ryan.roberts@arm.com>, Breno Leitao
- <leitao@debian.org>, printk@lists.linux.dev, linux-kernel@vger.kernel.org,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman
- <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, "Christophe
- Leroy (CS GROUP)" <chleroy@kernel.org>, "Ritesh Harjani (IBM)"
- <ritesh.list@gmail.com>, Shrikanth Hegde <sshegde@linux.ibm.com>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Jason Wessel
- <jason.wessel@windriver.com>, Daniel Thompson <danielt@kernel.org>,
- Douglas Anderson <dianders@chromium.org>, Andrew Morton
- <akpm@linux-foundation.org>, Mukesh Kumar Chaurasiya
- <mchauras@linux.ibm.com>, Feng Tang <feng.tang@linux.alibaba.com>, Rio
- <rioo.tsukatsukii@gmail.com>, Bradley Morgan <brads@mainlining.org>, Pnina
- Feder <pnina.feder@mobileye.com>, Gal Pressman <gal@nvidia.com>, Petr
- Pavlu <petr.pavlu@suse.com>, Pavel Tikhomirov <ptikhomirov@virtuozzo.com>,
- Oleg Nesterov <oleg@redhat.com>, "Cen Zhang (Microsoft)"
- <blbllhy@gmail.com>, loongarch@lists.linux.dev,
- linuxppc-dev@lists.ozlabs.org, kgdb-bugreport@lists.sourceforge.net
-Subject: Re: [PATCH printk v2 1/6] printk: Introduce and specify flush reasons
-In-Reply-To: <avcnSjj2P9UfsBn7@pathway.suse.cz>
-References: <20261111181942.593695-1-john.ogness@linutronix.de>
- <20261111181942.593695-2-john.ogness@linutronix.de>
- <avcnSjj2P9UfsBn7@pathway.suse.cz>
-Date: Mon, 16 Nov 2026 18:26:21 +0106
-Message-ID: <87cxs4y9pm.fsf@jogness.linutronix.de>
+	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=WmWHOmR7
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=V13l+X2wzTn4hJh8viS7CKjw0dB4PgvxpNrkpoclRVcNOriXqdGCy8uXtg8epNQf0h9Q9jdiobNfPAnEybNxQ288oQVopXJZdrTp+Mk/i1A/IjbM3AW58bScYCULNqWnTbT4fuPKCtuEhcA0dORM3lEK7zIUNrG6dGoIsguVOTv4UkvxLHnrKdabN6ueFL4+rg/HSkl62YRYKfd7jr29zVBM6QADs0YXTUi2khew6n7yM/IfYObeSr9Zr2xTvzMqcmZQPRsP00MSvP3nTwwrbmWQym1spq480vHo6vjAzmoMC3/YXGJRyE0mwQcFodT3wKX5loBvGpYhHaN8GQh8ng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fne59OLCfzObsqoTcBwjTpqKprh3ztnnwcCbs7+DLs8=;
+ b=DGN+2rh4QsjvQYMTkbbOZj7lHK6QWbrrvQbNzqp+d+f8xxn/ws2PlNIUCfeDd/LKtKPDMeT8/M5ZVHtJmHQiOKn2e2DL2RZUrQ7IZh73w5+nx8rR7CEI1D4JVWgMrAN6yXl3r96E1WaA+zSSoXC1bbKELwy3ucwgAuJd9yG/zqvhLis1pk8e2BLPzFIz3Ue8FrU1ckpGTy7+TlNlLTQf7p3TdQoncLEUg1X22Ef9SR/LJdR+hnT8BV8F0HlaP+sbHwupPovZ8clFSOoT8ztKz0NKju5+T+/P4rXgkt7oMG4Cxpv4LYi1S6lzeo0LTWij3uK8zUdnuBo6NFc8ePMspQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fne59OLCfzObsqoTcBwjTpqKprh3ztnnwcCbs7+DLs8=;
+ b=WmWHOmR7QNNcgFHynsQMFvEGZG/7LcEes2SszPPgxeNunIQSucXMHS7UwGFN9Rbk49B1kekLoSWh12jz8X1OFa33KK9Embx95agjsfbxpJ1yj98tt4fyFZV+oeZ0Le7noGPUx51PuLTP1KK2XyoczNQUWgQKuAC7zkt1S85sBE49Xk0sbSy6N9lNvtw1bhJCxmlI+k5s9MHi97+Fy0SifodRjgh6hBUEkppGPo/ys863qviN03uIb+5cil/sH+OIqvpnxqe/snoEj2K+mxskt53OL6bc9od1P6B29eqvIRCfVnUjpfv3YMVzXigWCJLfLseRinOD8HwAOSYE/hfDVg==
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CHBPR12MB731189.namprd12.prod.outlook.com
+ (2603:10b6:610:33d::12) by IA1PR12MB9062.namprd12.prod.outlook.com
+ (2603:10b6:208:3aa::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.615.14; Mon, 16 Nov
+ 2026 18:52:22 +0000
+Received: from CHBPR12MB731189.namprd12.prod.outlook.com
+ ([fe80::b0e5:123d:fe06:e10d]) by CHBPR12MB731189.namprd12.prod.outlook.com
+ ([fe80::b0e5:123d:fe06:e10d%6]) with mapi id 15.21.0615.013; Mon, 16 Nov 2026
+ 18:52:22 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v3 15/15] Revert "efi: earlycon: Reprobe after parsing
+ config tables"
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Ard Biesheuvel <ardb+git@google.com>
+Cc: linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ Ard Biesheuvel <ardb@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>, 
+ Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+ Albert Ou <aou@eecs.berkeley.edu>, Huacai Chen <chenhuacai@kernel.org>, 
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
+In-Reply-To: <20261116142618.1687025-32-ardb+git@google.com>
+References: <20261116142618.1687025-17-ardb+git@google.com>
+ <20261116142618.1687025-32-ardb+git@google.com>
+Date: Mon, 16 Nov 2026 14:52:15 -0400
+Message-Id: <179485513576.2274641.4258294521341946928.b4-review@b4>
+X-Mailer: b4 0.17-dev
+X-ClientProxiedBy: BN9PR03CA0583.namprd03.prod.outlook.com
+ (2603:10b6:408:10d::18) To CHBPR12MB731189.namprd12.prod.outlook.com
+ (2603:10b6:610:33d::12)
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -90,62 +101,81 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CHBPR12MB731189:EE_|IA1PR12MB9062:EE_
+X-MS-Office365-Filtering-Correlation-Id: 897e503a-401e-485b-8c14-08df4412be6f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|23010399003|366016|1800799024|7416014|376014|22082099003|18002099003|6133799003|261009223027099003|11063799006|4143699003|56012099006|261028144727099003|261102123227099003|261026140227099003|261022105027099003|261022075727099003|261021121427099003|10067099003;
+X-Microsoft-Antispam-Message-Info:
+	1C+Z5pdE8qP6pLeXCyWCPXSGnwoNVmrhXOq2/XeeY8F8Dh3dAtCKu4IbTmDF2e34bIl3a7I9o8rlPSlRV2+ywTpXO0IrRZ3K/wgKOPYmuZ+Dr/KxKgB9Xzy4B8XgHW46vP8U5zTn6rHPSOcCzh+r5MLGq6fV95GWgsOjPWtzR1EQy1ODirIznrFv2NcijfC7TNSehlmoh/1mKwKUTWoT2FUi0puCNqsE3H1hIgmeEtecNKy7Vk26WrLzuxHYEVIQhO5/dU7+DJlo96/F3u45gGQNPh7oDSh6t+5R8SO7W7ajNhAi12ytrv0hY6bRwiLLHl3P9q03bqXVFETHzn6uduTT8uYukB1u88J7x8fr1l3rPv2lqs1stub/On4U5v8YIYMXh0xdztDkPCIjIFo4OYIbqJaLtks2eO5ULEpfcQDH6NpIimvZa2Hzsg+Ni1XRdCqtGIk8H15/Jw6r9kCA0vDX2GPf30ZFYBbm8G3JNwd39QD0fW1gcgcF61/mQKNSzR6430FsQ/VYjkTVI/Ib/+nvwOov5oXuXjbh9XTilwJSn0zeXkQkWB1pK4+LCsrS9175svhpbI+Z71ZrVGfeALqbIYxvC460RCFaCzIef91rs8YZwMdA9haUeGfXHctnr80hzZWEbC/+qPpZEACCrSHnn1pshMMzeMvWaU624R4=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CHBPR12MB731189.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(366016)(1800799024)(7416014)(376014)(22082099003)(18002099003)(6133799003)(261009223027099003)(11063799006)(4143699003)(56012099006)(261028144727099003)(261102123227099003)(261026140227099003)(261022105027099003)(261022075727099003)(261021121427099003)(10067099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Vml5S0NHUm1wY2hKUjhMNHRzbENVcy9GQ05JVWkvR0VUNFZlaTZrUU4wNEx6?=
+ =?utf-8?B?SkxHL24wRFg5L0xLQnlSb0lCVk1aWng3UnhSVlNFM3F6MThHU09aM1hyN1Jz?=
+ =?utf-8?B?UW5lUUJESW11eHpONEV6cUxZaUZiTUMvLzBqZ3gwTVU2R1BTaWw1RFlQcCtw?=
+ =?utf-8?B?Wnlablg2YmVuQ0xyNWFwVmV0clBPMXEyV213S01yc0JNUUVTMGI2b2tJNm9z?=
+ =?utf-8?B?a2pRRDNXWVI3ZWdsVEhGTG5xTk1GaEY2RG9Ra0RiWk5ZZlRpRkhnQWFXRWRs?=
+ =?utf-8?B?bTRkdWptYm5MM0hwRmhPL2lxRDZRS1RxckJEWGlWREZMZldrbVZDUHVlYlc5?=
+ =?utf-8?B?NSt4UGZKbXZ0cDlOZnhCZ2x4MWtsN1VhcU1wZjNVcHNlL0w2L0xSbnE1ekcw?=
+ =?utf-8?B?TERLTUU2UEVJKzF0T1VxRkJpYm9OaEtEcW5UZk1WbERmRVNHZmJqUEFlR1dp?=
+ =?utf-8?B?cDk4aVhKZzF4bCtXdWxGRGg4T2RPMDJCVVptbU5pZFZROXJWelJqOHArdjFL?=
+ =?utf-8?B?MWcwTVVzLzBEYk82NEVXN0FpeEtyUlFiUkh3YkY3TW0raEs0enFpZG1IMmhT?=
+ =?utf-8?B?djZ2aUxDbkN3a2NSTXJXT3NWR2FYZHBwKytyN1pzSVJ2Q0FocG16aU12Z0FF?=
+ =?utf-8?B?bVVYRGNrOVlSRFBnRzhnRW9RMzNvK0F2bUs2L1Q5SnBsNTlmMU9hM2VwQjlQ?=
+ =?utf-8?B?YjhzcDIzT1NkN0RzeTZPRndFemlxK0xVUWJqamVJTDhPa09PNTBUSHNrd2Zy?=
+ =?utf-8?B?TG5SNGxlUGxqUU0zVmhlT09TYllxRkMxZ3d4RW1ueGk1VG5aQ3pJNHFBSDAr?=
+ =?utf-8?B?enU2aFJzaGNiV1pMT2RKV1g4ZzhpUzFOdFZWNFB0RmlxS01DbVBLNkhhdGJU?=
+ =?utf-8?B?N2FXQ210TGdQVk1MYnpWYmZDVHdnejFsSHNhQ2YrbXV1UlpzcDBBWDB1MWlU?=
+ =?utf-8?B?b3BkRkF0WVhWNUF4bW9naDV2Z1lpUTJueHpYbGNYMzBvSklBNUtmQS94RFVh?=
+ =?utf-8?B?Q3htUWRKMlRhWlk4S0xmQ0FqVm5udlZYOURYZW1aOHBqV3lVb01SY1RWQURW?=
+ =?utf-8?B?bEdGOENiRG5jWUpFajNPZC9lL2hNL21SVURNL2JIV3MvcXl4cERHU29TbWZw?=
+ =?utf-8?B?Z2VVcVdWeEdEQUlSNWFZOTZtRVExazJlRzF5U2JGNTdnaUNEUnJ4cWtRWjJh?=
+ =?utf-8?B?YzBXUlNmU2YrdmExelhycHRiMHFUcU00VHRQdTQ5RDFLa1RJK0pDSnJhVzRJ?=
+ =?utf-8?B?ZThVS0tpeW5hVEZ5alpLdzBkbU5XL0l3YWtCVWlxZjZHQktyanQ2S1JpdHk4?=
+ =?utf-8?B?NVpkZ0EyRmlqZ2dMVU9EU3cxOW1rdGRLTXpqU0ZBeHBPOWtYMGhCbGhzQThn?=
+ =?utf-8?B?QjVROFY2cUVwSzJDeHoxWG1BL01NWU15ZUI3YW5GU3lhS3VFSU44Z0k1c2Ra?=
+ =?utf-8?B?TWtEbnZBTEpyTVE3VUJEbzJ5U2FzZXV6aGgvYUE2ek5yZS9ydHphU2FuK01E?=
+ =?utf-8?B?d09kSVFyekZPUHNBZW9iWVEwZVpqQ1VXcTZaNExHU0lONldrZCtvUkJNZ2hv?=
+ =?utf-8?B?UlNSWVpUa2QzcG5ER1JOVXdnK2diUE5OaS9jcEl4T3hTcThnMXVjZU1NTHBl?=
+ =?utf-8?B?d1MxZTJXa09BMi83bVR5eklscWN6Qm9BTnU0Z1M4amZXYUEzeW16eU93Z2JL?=
+ =?utf-8?B?VTRQNmFYNldsY1FsQnZqY2k4RGtrckpNNDNOeGdyNCtQaUpkNU5tQjVkbGgv?=
+ =?utf-8?B?dlVyaXRxU3dyZnhmWlZ5UlcwOFI0ZTdPL1lyR3ZvMjQyeVBUQVhuWDdRQzNr?=
+ =?utf-8?B?UWlrREU3WElaM0UwSDhFeERGazJRdFFldHU0aHVTMXdId2lKb1R2YXVRSHk2?=
+ =?utf-8?B?NVF2MEVNT1F5bkd3ZElnSWNBVjArc2U4Zks1ajZGSm5lMUhodVlnaFpKUDBH?=
+ =?utf-8?B?U3pMMDhSc3BGOGdxTGFxTnVFYVRDVFYxL20zOVJ1VnFXMnUzekdyMlpVY0Zu?=
+ =?utf-8?B?TTN1NTA5VHB3Qzh4U0RQRG9CNTdoQ1ZTVDd6TFVMc1hpdUNqZ2dhNnBkSHc3?=
+ =?utf-8?B?YkxxSmQ1NE0vc2dnanBUWm9ZdTVGTzJ0ejcrVitEaytEYjVhcjd0dVFzR0Rx?=
+ =?utf-8?B?MGVWcWVlelkrUktiNzZKT1UyczNIOWhGeHVpdXZhaUltYWJOTDVheDBZUkxO?=
+ =?utf-8?B?R2EwSFd0N0k2SlRzMEhPYmNCdEZwMm5FYzVkbURkQk56WVh6djV0eE14anZn?=
+ =?utf-8?B?amJwUm1TZGpTdWpHalRMV3R5MUtjR2RpVXdkc0tjRTZFZlZHTi9Cdmdva09u?=
+ =?utf-8?Q?TZ0zAvc6W0MxYl0l2g?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 897e503a-401e-485b-8c14-08df4412be6f
+X-MS-Exchange-CrossTenant-AuthSource: CHBPR12MB731189.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Nov 2026 18:52:20.5911
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8SqOPO7SFeBg1lzx9zZcIyFYuuyzhgCB/DpQzPJ1I0lOK7Bgr51dHkMzn0iLeDqQ
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB9062
 
-On 2026-11-13, Petr Mladek <pmladek@suse.com> wrote:
-> This entire patchset adds a lot of complexity just to enable all
-> 4 new policy flags for netconsole in the last patch.
->
-> There already have few dimensions which affect console flushing:
->
->    + console_loglevel
->    + nbcon_prio
+On Mon, 16 Nov 2026 15:26:34 +0100, Ard Biesheuvel <ardb+git@google.com> wrote:
+> This reverts commit 8b3a149db461d3286d1e211112de3b44ccaeaf71.
+> 
+> That commit added logic to probe the EFI framebuffer earlycon again after
+> the EFI configuration tables have been parsed, as the primary display
+> information may not have been available yet when the earlycon= early
+> parameter was processed.
+> 
+> [...]
 
-"Dimensions" is the correct word. These are orthogonal:
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 
-  + console_loglevel: which messages to print
-  + nbcon_prio: which context is allowed access to hardware
-  + pr_flush_reason: reason for atomic flushing
-  + unsafe_flush_flags: policy when unsafe flushing is acceptable
-
-I do not see a single property above where a value in one implies a
-value in another.
-
-> This patchset adds 8 new terms in pr_flush_reason and
-> nbcon_unsafe_flush_flags just to explicitly set all
-> flush_flags in netconsole.
->
-> Let's start with pr_flush_reason. I am not sure if it is worth it:
->
->   + PR_FLUSH_RUNTIME is the default
->
->   + PR_FLUSH_RESTART can be detected by system_state > SYSTEM_RUNNING
-
-This does not cover the panic-restart case.
-
->   + PR_FLUSH_HANG has only one caller currently distinguished by
-> 	the global panic_nbcon_allow_unsafe_takeover
-
-In my series there is another user:
-
-arch/loongarch/kernel/reset.c:machine_halt()
-
->   +  PR_FLUSH_KDB can be detected by kdb_trap_printk and
->      kdb_printf_cpu, see vprintk() implementation.
-
-Ack. PR_FLUSH_RUNTIME could cover this case.
-
-> IMHO, it makes things worse because nbcon_atomic_flush_pending() has
-> to use PR_FLUSH_RUNTIME in vprintk_emit(). But I think that we
-> would like to flush it the same way as an explicit flush called
-> in the given context.
-
-You write it backwards. vprintk_emit() uses
-nbcon_atomic_flush_pending(). Calling printk() (a single record) is
-quite different than calling printk_trigger_flush() (flushing a
-backlog).
-
-Let us discuss this after I respond to your comments on patch 2/6. There
-you include many details and suggestions that require closer inspection.
-
-John
+-- 
+Jason
