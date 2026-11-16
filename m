@@ -1,73 +1,61 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794791455;
-	b=IkWxynaPeE3Xj6HJGGo2nOyZ7Flk53uuIgWE5Vnf56t5fhGsNQqQj18odcBC93u9SyZU
-	 ockv8fYczbw862Wx00pwxZgCSKpuRhSMNU0u4+Q+IT2aEMlUtRNAi2nPHK1YDwa8O9S8j
-	 3+EC+G2zpG5CaO73i153WAxg1nSbs9VW06oeK6/syLzPqN4xD9tSwWoMbX5Gcc9u9OGbg
-	 my+zp9w2OmL1WS/5TAL5CRgjx8+fH0tHEq6Nb0Tb/QxdNiwAepZL3bw7xi5gSbgqXmj3N
-	 VD2pGbLzKBQKpWeWHVFnONtjxnDG9UPbQMPR8436glzgghbuQAWzKTVr7Z2Q2ibYmpg==
+	t=1794794814;
+	b=2ZmT/hwu4IRE8/iDkEKM7VReo8CFAstToH26GzhxPYjJrDmBj5Yc4e5VhmXSYQ03+21n
+	 Ahw4NSIg+JiKlQcdyB2jB41xangTc/N+CWxlkMYtcj7lDhnY/SCfgcKdS4GVsFnr67Gsh
+	 VUioa0/nmlsqGLf1P1ZfZf9sGVVze6rt4p2DQlvXgtNy73g3Y0QX6MA7kMARFK7cp5+OW
+	 NLRpvUSGysNrJYo+pkEkJLIPkG10tjzt6iFlEFgl5vNY/a8MCXTCJ45NRRj24gAgnACCG
+	 dC/PrY2HHy/qyYXApxca0I3xqm2CPaHFjMohNwy5j398tlC7JRLyR96pyP1msK8HvBw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794791455;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Date:From:To:Cc:
-	 Subject:Message-ID:MIME-Version:Content-Type:Content-Disposition;
-	bh=lhioPZdrg6ehG82EdncwrlUWsJrKi85IbXPZWP6O8F0=;
-	b=FoBZ/wthOYwMgnvQA9dJyA+UjZYmN0Q4qrjlQPBycvmNxGTjDo6ZTJfsMQR07IebEyg7
-	 szrJ/48zji6XEe+zoMHw4hHTRgH/id9wgnpzpMhjHxRNknhtnckBMX2RLL/5d41tLFufi
-	 P/H+sOcEv0Kr5FtibZFY2A/QQW679sPj9CgvS5dgqi2JI5uzfzoC37oc7e+MJyVFhejWi
-	 HoLPkMSv+WQeJ9uya84upgna2u51jkzsSs3RBNbO6jxX8NrZJiyrnw7OQLVV6CdT/lW1c
-	 cC+JJC8NxMQrg6LHWW1ykUTJIsveeIvqH8BjZIk5vJxsFLaIj/owjFsjtMbWSFm8JMg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794794814;
+	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
+	 In-Reply-To:References:X-sashiko-severity:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version;
+	bh=AyN9oXLJLPfu4KohfU23gdr6R758HYP5wTMLtnJg4oM=;
+	b=B4KYMJQ7NAuLx3lUxC4ouenjDr0PqWE7xyYKgo8MqAUOXBLX1w79q06dH1TVWh0i5RiH
+	 h9bLf0BNVMvYtHEJAKCbeTToLuIwOE2vdtlLL1P3jtnj8++yVlUXCt5LvpZWL9Nt64SNO
+	 YdO1TaJl+fLgRM7pmGcsu1N6lZjiHR4V5vs3+vuAc2KeeJ8s3bw/6oDPjLYtdbA5lxpzE
+	 CxcXw1VGx/qMbT1RoESyonrQuYFc2rbeZhXOngm5AvNyghF7lB0TaZazG3exLiL4EVSRi
+	 TVYCwlKeuHTpuOuJtP/8++Aprublj/PkbDraLQXn+SFxmztWCrOQAjHtBxgduU9R34g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Bi8Ksc8N;
-	arc=none smtp.remote-ip=198.175.65.15
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YsdU2VCy;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C992E606A32C;
-	Mon, 16 Nov 2026 01:10:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C992E606A32C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17ECD606A32C;
+	Mon, 16 Nov 2026 02:06:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Bi8Ksc8N
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794791455; x=1826327455;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=eTvb7GqTwI+2+KPPonfctytUf/DK5YzSaz6s/Ai6e18=;
-  b=Bi8Ksc8NpGQ485ipQ7xYom4L0KZfBJXjyURIgnLWGHS3swtn3j/OGWtj
-   mu1ZdcQLySRxgQPcEdOT0osqndDQ/pJHLqAFnNZxJ13M+rzbZpiYfE7U9
-   tCdGeEY+lO+EOQsQPmFrrUcCUQeQb9hIcDh0AmQKMcjMbTDaITxSnJr3p
-   VPWssvTiNSO+STL4C6Z9IZPXFEbW/ASuOUzOQRQdrMyI/km1ecG2wSW4o
-   1zYiIZbosCGh6hDgY5VpslA3BQ5rFZtsZ6yvlO8U6vXQsqiLL++zg3zyJ
-   f+AUyJ5sEhv9SpVzWjRQmDR2sPG2DLr4/ychJPFsKYxpmjwXoTFXkbU4x
-   g==;
-X-CSE-ConnectionGUID: D122W/xtQBKe0k2jNUUBlA==
-X-CSE-MsgGUID: +7p4iXmmT+uvC4Ubwmp58Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11967"; a="3517633"
-X-IronPort-AV: E=Sophos;i="6.27,215,1787036400"; 
-   d="scan'208";a="3517633"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2026 17:10:55 -0800
-X-CSE-ConnectionGUID: JA6FGKPHQoCiIx866PnL7g==
-X-CSE-MsgGUID: U7+5EfQBRFKzhHjU3f+bCA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,215,1787036400"; 
-   d="scan'208";a="9573936"
-Received: from ly-workstation.sh.intel.com (HELO ly-workstation) ([10.239.182.64])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2026 17:10:52 -0800
-Date: Mon, 16 Nov 2026 09:10:48 +0800
-From: kernel test robot <yi1.lai@intel.com>
-To: Nicolas Saenz Julienne <nsaenz@amazon.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, kvm@vger.kernel.org,
-	Farrah Chen <farrah.chen@intel.com>,
-	Paolo Bonzini <pbonzini@redhat.com>, loongarch@lists.linux.dev,
-	yi1.lai@intel.com
-Subject: [kvm:kvm-memprot-v4] [KVM]  4764db743f: WARNING:suspicious_RCU_usage
-Message-ID: <202611160117.9e3da157-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YsdU2VCy
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CFEB1F000C4;
+	Mon, 16 Nov 2026 02:06:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794794813;
+	bh=AyN9oXLJLPfu4KohfU23gdr6R758HYP5wTMLtnJg4oM=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=YsdU2VCyTnH9kd1vgtOrBKt0ITGI+JRBPI+lG4V5Ec3ZYDtW+I3dBo+PiDPBmc1j5
+	 sgg6vhj3l0V4sREkxH96mIQt0pe/Ux4/PYhXru0qz0opFsFqQvhD+FLu1suut6mF8j
+	 9GAjfsvCjXco9lB+Ja3A8oIYiwKS31XSSa4CG2n1SShGxUqeV0B5g5XY09MLxIpNHL
+	 7a54fmMB23BaJT6pyHNjzk0hCCgYqWER/8kHYFR6Gnv2u+gnc7ye9trEeBf84bPJxd
+	 uKlE5lGu1RE1yrv+u6+VBSqDlHBVtVnmplKFGyW/LrLlCD/3oLAE3Z8bwGYUppb8kx
+	 fcGnuglm0dyOw==
+Subject: Re: [PATCH net-next v21 01/13] phylink: Add phylink_mac_interrupt
+From: netdev-bot+sashiko@kernel.org
+To: mail@birger-koblitz.de
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, kuba@kernel.org,
+ pabeni@redhat.com, linux@armlinux.org.uk, andrew@lunn.ch,
+ hkallweit1@gmail.com, chenhuacai@kernel.org, kernel@xen0n.name,
+ edumazet@kernel.org, linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ neuromoments@gmail.com, beganovic.emir@gmail.com
+Date: Mon, 16 Nov 2026 02:06:52 +0000
+Message-ID: <179479481209.3136.3578602024095855268@kernel.org>
+In-Reply-To: <20261114-ax88179a-v21-1-c2d34410bcbe@birger-koblitz.de>
+References: <20261114-ax88179a-v21-1-c2d34410bcbe@birger-koblitz.de>
+X-sashiko-severity: Medium
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -77,131 +65,123 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue(s) to consider.
 
+Critical: 0 · High: 0 · Medium: 1 · Low: 0
 
-Hello,
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
 
-kernel test robot noticed "WARNING:suspicious_RCU_usage" on:
-
-commit: 4764db743fe860556eea711a26ef11c74db647d2 ("KVM: Introduce a generation number for memory attributes") https://git.kernel.org/cgit/virt/kvm/kvm.git kvm-memprot-v4
-
-in testcase: kselftests
-version: kselftests-x86_64-24a19b953e2a-1_20261012
-with following parameters:
-
-	group: kvm
-
-
-config: x86_64-rhel-9.4-kselftests
-compiler: gcc-14
-test machine: 16 threads Intel(R) Core(TM) i7-13620H (Raptor Lake) with 32G memory
-
-(please refer to attached dmesg/kmsg for entire log/backtrace)
-
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <yi1.lai@intel.com>
-| Closes: https://lore.kernel.org/oe-lkp/202611160117.9e3da157-lkp@intel.com
-
-
-
-kern  :warn  : [  359.591440] [   T5823] WARNING: suspicious RCU usage
-kern  :warn  : [  359.592715] [   T5823] 7.3.0-rc7+ #1 Tainted: G S      W
-kern  :warn  : [  359.594141] [   T5823] -----------------------------
-kern  :warn  : [  359.595825] [   T5823] include/linux/kvm_host.h:2631 Suspicious memory attribute generation usage
-!
-kern  :warn  : [  359.598735] [   T5823]
-other info that might help us debug this:
-
-kern  :warn  : [  359.603182] [   T5823]
-rcu_scheduler_active = 2, debug_locks = 1
-kern  :warn  : [  359.606347] [   T5823] locks held by hyperv_evmcs/5823: 0, last CPU#10
-kern  :warn  : [  359.607343] [   T5823]
-stack backtrace:
-kern  :warn  : [  359.610037] [   T5823] CPU: 10 UID: 0 PID: 5823 Comm: hyperv_evmcs Tainted: G S      W           7.3.0-rc7+ #1 PREEMPTLAZY
-kern  :warn  : [  359.610042] [   T5823] Tainted: [S]=CPU_OUT_OF_SPEC, [W]=WARN
-kern  :warn  : [  359.610043] [   T5823] Hardware name: LENOVO 90XW004HPL/336B, BIOS M5LKT1CA 01/06/2025
-kern  :warn  : [  359.610045] [   T5823] Call Trace:
-kern  :warn  : [  359.610047] [   T5823]  <TASK>
-kern  :warn  : [  359.610048] [   T5823]  dump_stack_lvl (dump_stack.c:94 dump_stack.c:120)
-kern  :warn  : [  359.610057] [   T5823]  lockdep_rcu_suspicious.cold (locking/lockdep.c:6972)
-kern  :warn  : [  359.610062] [   T5823] __kvm_gfn_to_hva_cache_init (linux/kvm_host.h:2631 (discriminator 9) x86/kvm/../../../virt/kvm/kvm_main.c:3675 (discriminator 9)) kvm
-kern  :warn  : [  359.610141] [   T5823]  ? kvm_gpc_deactivate (linux/mutex.h:253 x86/kvm/../../../virt/kvm/pfncache.c:454) kvm
-kern  :warn  : [  359.610208] [   T5823]  ? lock_acquire (trace/events/lock.h:23 (discriminator 21) locking/lockdep.c:5905 (discriminator 21))
-kern  :warn  : [  359.610212] [   T5823]  ? __pfx___kvm_gfn_to_hva_cache_init (x86/kvm/../../../virt/kvm/kvm_main.c:4145) kvm
-kern  :warn  : [  359.610276] [   T5823]  ? vmx_vcpu_load_vmcs (x86/kvm/vmx/vmx.c:1514) kvm_intel
-kern  :warn  : [  359.610291] [   T5823] kvm_read_guest_offset_cached (x86/kvm/../../../virt/kvm/kvm_main.c:3746) kvm
-kern  :warn  : [  359.610389] [   T5823] nested_get_evmptr (x86/kvm/vmx/hyperv.c:21) kvm_intel
-kern  :warn  : [  359.610408] [   T5823] nested_vmx_handle_enlightened_vmptrld (x86/kvm/vmx/nested.c:2196) kvm_intel
-kern  :warn  : [  359.610430] [   T5823] __nested_vmx_vmexit (x86/kvm/vmx/nested.c:3427 x86/kvm/vmx/nested.c:5093) kvm_intel
-kern  :warn  : [  359.610455] [   T5823] nested_vmx_free_vcpu (x86/kvm/vmx/nested.h:46 x86/kvm/vmx/nested.c:6889 x86/kvm/vmx/nested.c:389) kvm_intel
-kern  :warn  : [  359.610473] [   T5823] vmx_vcpu_free (x86/kvm/vmx/vmx.c:7521) kvm_intel
-kern  :warn  : [  359.610492] [   T5823] kvm_arch_vcpu_destroy (x86/kvm/x86.c:9582) kvm
-kern  :warn  : [  359.610598] [   T5823] kvm_destroy_vcpus (x86/kvm/../../../virt/kvm/kvm_main.c:477 x86/kvm/../../../virt/kvm/kvm_main.c:497) kvm
-kern  :warn  : [  359.610698] [   T5823]  ? __pfx_kvm_destroy_vcpus (x86/include/asm/smp.h:90) kvm
-kern  :warn  : [  359.610797] [   T5823]  ? synchronize_srcu (rcu/srcutree.c:1502 rcu/srcutree.c:1558)
-kern  :warn  : [  359.610805] [   T5823] kvm_arch_destroy_vm (x86/kvm/x86.c:10153) kvm
-kern  :warn  : [  359.610906] [   T5823] kvm_destroy_vm (x86/kvm/../../../virt/kvm/kvm_main.c:1314) kvm
-kern  :warn  : [  359.611013] [   T5823] kvm_vm_stats_release (x86/kvm/../../../virt/kvm/kvm_main.c:5394) kvm
-kern  :warn  : [  359.611112] [   T5823]  __fput (file_table.c:512)
-kern  :warn  : [  359.611122] [   T5823]  fput_close_sync (file_table.c:618)
-kern  :warn  : [  359.611126] [   T5823]  ? __pfx_fput_close_sync (file_table.c:479)
-kern  :warn  : [  359.611135] [   T5823]  __x64_sys_close (open.c:1560 open.c:1545 open.c:1545)
-kern  :warn  : [  359.611140] [   T5823]  do_syscall_64 (x86/entry/syscall_64.c:61 x86/entry/syscall_64.c:84)
-kern  :warn  : [  359.611173] [   T5823]  ? do_syscall_64 (linux/irq-entry-common.h:108 x86/entry/syscall_64.c:81)
-kern  :warn  : [  359.611178] [   T5823]  ? do_syscall_64 (x86/entry/syscall_64.c:81 (discriminator 39))
-kern  :warn  : [  359.611184] [   T5823]  entry_SYSCALL_64_after_hwframe (x86/entry/entry_64.S:121)
-kern  :warn  : [  359.611187] [   T5823] RIP: 0033:0x7fcca72733a7
-kern  :warn  : [  359.611191] [   T5823] Code: 48 89 fa 4c 89 df e8 78 b3 00 00 8b 93 08 03 00 00 59 5e 48 83 f8 fc 74 1a 5b c3 0f 1f 84 00 00 00 00 00 48 8b 44 24 10 0f 05 <5b> c3 0f 1f 80 00 00 00 00 83 e2 39 83 fa 08 75 de e8 23 ff ff ff
-All code
-========
-   0:	48 89 fa             	mov    %rdi,%rdx
-   3:	4c 89 df             	mov    %r11,%rdi
-   6:	e8 78 b3 00 00       	call   0xb383
-   b:	8b 93 08 03 00 00    	mov    0x308(%rbx),%edx
-  11:	59                   	pop    %rcx
-  12:	5e                   	pop    %rsi
-  13:	48 83 f8 fc          	cmp    $0xfffffffffffffffc,%rax
-  17:	74 1a                	je     0x33
-  19:	5b                   	pop    %rbx
-  1a:	c3                   	ret
-  1b:	0f 1f 84 00 00 00 00 	nopl   0x0(%rax,%rax,1)
-  22:	00 
-  23:	48 8b 44 24 10       	mov    0x10(%rsp),%rax
-  28:	0f 05                	syscall
-  2a:*	5b                   	pop    %rbx		<-- trapping instruction
-  2b:	c3                   	ret
-  2c:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
-  33:	83 e2 39             	and    $0x39,%edx
-  36:	83 fa 08             	cmp    $0x8,%edx
-  39:	75 de                	jne    0x19
-  3b:	e8 23 ff ff ff       	call   0xffffffffffffff63
-
-Code starting with the faulting instruction ===========================================
-   0:	5b                   	pop    %rbx
-   1:	c3                   	ret
-   2:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
-   9:	83 e2 39             	and    $0x39,%edx
-   c:	83 fa 08             	cmp    $0x8,%edx
-   f:	75 de                	jne    0xffffffffffffffef
-  11:	e8 23 ff ff ff       	call   0xffffffffffffff39
-kern  :warn  : [  359.611194] [   T5823] RSP: 002b:00007ffecc86c270 EFLAGS: 00000202 ORIG_RAX: 0000000000000003
-kern  :warn  : [  359.611198] [   T5823] RAX: ffffffffffffffda RBX: 00007fcca71e3280 RCX: 00007fcca72733a7
-kern  :warn  : [  359.611201] [   T5823] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000007
-kern  :warn  : [  359.611202] [   T5823] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-kern  :warn  : [  359.611204] [   T5823] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000000
-kern  :warn  : [  359.611206] [   T5823] R13: 000000001529f270 R14: 000000001529f240 R15: 000000001529f270
-kern  :warn  : [  359.611219] [   T5823]  </TASK>
-
-
-The kernel config and materials to reproduce are available at:
-https://download.01.org/0day-ci/archive/20261116/202611160117.9e3da157-lkp@intel.com
-
+- [Medium] phylink_mac_interrupt() (drivers/net/phy/phylink.c:1629-1637)
+  is meant to be called from interrupt context.
 
 --
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
+phylink: Add phylink_mac_interrupt
+
+This adds an exported helper, phylink_mac_interrupt(), that MAC drivers
+can call from interrupt context. It forwards a link-change interrupt seen
+by the MAC to phylib by calling phy_mac_interrupt() on the attached PHY.
+Drivers can then skip polling the PHY.
+
+> diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+> index e885da1c28311..a87eaa2f3db5b 100644
+> --- a/drivers/net/phy/phylink.c
+> +++ b/drivers/net/phy/phylink.c
+> @@ -1616,6 +1616,26 @@ static bool phylink_link_is_up(struct phylink *pl)
+>  	return pl->netdev ? netif_carrier_ok(pl->netdev) : pl->old_link_state;
+>  }
+>  
+> +/**
+> + * phylink_mac_interrupt() - wrapper for phy_mac_interrupt()
+> + * @pl: a pointer to a &struct phylink returned from phylink_create()
+> + *
+> + * Passes a link-change interrupt received by the MAC to phylib.
+> + * This function may be called in interrupt context, and therefore cannot take
+> + * a mutex. However, it is safe to assume that the reference to phy does not
+> + * disappear during the call, as only an SFP module may be unplugged to make a
+> + * PHY disappear. SFP modules however do not support interrupts.
+> + */
+> +void phylink_mac_interrupt(struct phylink *pl)
+> +{
+> +	struct phy_device *phy;
+> +
+> +	phy = pl->phydev;
+> +	if (phy)
+> +		phy_mac_interrupt(phy);
+
+[Severity: Medium]
+
+Does the lifetime argument in the kernel-doc above hold?
+
+pl->phydev is read here with a plain load. No lock, RCU or reference is
+taken. Every writer, phylink_bringup_phy() and phylink_disconnect_phy(),
+changes it while holding phydev_mutex, phy->lock and state_mutex. KCSAN
+would likely report this as a data race.
+
+The pointer is then used by phy_mac_interrupt()->phy_trigger_machine(),
+which calls mod_delayed_work() on phy->state_queue.
+
+phylink_disconnect_phy() is not specific to SFP. It does not wait for a
+phylink_mac_interrupt() call that is already running:
+
+drivers/net/phy/phylink.c:phylink_disconnect_phy() {
+    ...
+		pl->phydev = NULL;
+    ...
+	if (phy) {
+		flush_work(&pl->resolve);
+		phy_disconnect(phy);
+	}
+}
+
+phy_disconnect() goes through phy_stop_machine(), which calls
+cancel_delayed_work_sync(&phydev->state_queue). Then phy_detach() drops
+the attach reference.
+
+Suppose an IRQ loaded the old pointer before pl->phydev was cleared. Can
+it then queue state_queue again after the cancel, on a PHY that has
+already been stopped and detached?
+
+The SFP part of the argument may not hold either. SFP module PHYs are
+also stored in pl->phydev, via
+phylink_sfp_connect_phy()->phylink_bringup_phy(), and
+phylink_mac_interrupt() does not check phy->is_on_sfp_module.
+
+The interrupt comes from the MAC, not from the SFP PHY. Removing a module
+is just the kind of event that makes a MAC or PCS report a link change.
+
+When the module is removed, sfp_sm_phy_detach() does:
+
+	sfp_remove_phy(sfp->sfp_bus);
+	phy_device_remove(sfp->mod_phy);
+	phy_device_free(sfp->mod_phy);
+
+Here sfp_remove_phy() ends up in
+phylink_sfp_disconnect_phy()->phylink_disconnect_phy().
+
+If a MAC hardirq has already loaded the old pl->phydev, could
+mod_delayed_work() run on a phy_device that has already been freed?
+
+The only caller in this series, ax88179a_status(), looks safe.
+usbnet_stop() kills the status URB before ->unbind() calls
+phylink_disconnect_phy(). The concern is the contract of the exported
+API. The kernel-doc says the call is safe and does not tell callers to
+mask and synchronize the MAC interrupt before phylink_disconnect_phy() or
+PHY teardown.
+
+Should the kernel-doc state that requirement, or should
+phylink_mac_interrupt() protect the pl->phydev pointer itself?
+
+> +}
+> +EXPORT_SYMBOL_GPL(phylink_mac_interrupt);
+
+[ ... ]
+
+-- 
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261114-ax88179a-v21-0-c2d34410bcbe%40birger-koblitz.de
