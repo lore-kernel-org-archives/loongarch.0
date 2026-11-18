@@ -1,51 +1,128 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794996090;
-	b=vaDRmtHH8ulkMEzLaLyVFpQ/fRpGyaij5SMW68vd00JAfAyCjZ3aTp0ACADVGmymlkc/
-	 g0mHdoygYat9KbWUZjKmA0lSpHprJVEPYK9sPnqH1S4MuUa0Cdno9cVxYD/O1/QlhJEJj
-	 6KPCVU4k+gWpzdc197KjupZS+/hu+YyZYDzPD1UrzV6kYpzTZdC8AbQonqmson4zGyJGG
-	 K20cZsx3fhwhUrU8ydSd/BbNFTtxPpixedaunNpHo3FgE6gPsr3jhnLsk9urhQkqLagbC
-	 lW2lz2/jR3sLJIjqDfcj3XWOuJHgZtOz6xKX3agw1WmZv7bbghJdtwr979bGzUTsG4A==
+	t=1794998515;
+	b=BuiwPBzRT2LP5Kl+1hP5Csf3Fw3qXmbtQD+gBoTyLDj+krpnROlH3HzScVb4d0rD3ncW
+	 cUVmWqiTQx4krIDEXeocqIUGe09y7EZBHS9Vlx8ud8hCOQi5uasuOzzcArLhKBjJhZf/P
+	 JEbu2KASF0sr+FSXC/7zropyWAhafA64ecWkJidA1lQJzI5/kvPq6yVlEptHubgZpXr3r
+	 qXClUD8j3tXbqloPiK7RAyUDEaieXxnkcbPiuAL0c7I8SdnmQ0XcL+EP6n3h0dhHuW2UA
+	 rw1GntVAIwxBY6v/iJ/V2ERRBh/Lcr5abaMthEqk2cKiuZJC67IPXFhc0Cp9GokrZ7w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794996090;
-	h=DMARC-Filter:Received:Received:Subject:To:Cc:References:From:
-	 Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:Content-Type:
-	 Content-Language:Content-Transfer-Encoding:X-CM-TRANSID:
-	 X-CM-SenderInfo:X-Coremail-Antispam;
-	bh=UKWjVZpbhwfl1kXwmyPrP7TMuw/VD84DqotItrop890=;
-	b=Mfk07YuYaYtn6x+uASgtddcCKLAoWBmZ8mLXs8LRUkxgKrYi2dwi9B4M8CXq+6vcha8B
-	 lEu/1u1uzUvMQXFf81o5I/MqHsDQrpz3NK7RK94bTYP5K2FKzegyF2D/yLmLFE+lNkBu5
-	 VqMjY3vVqd6xu9MAKH/o7nfQAeimM6WzXcnINshDVp86WZbZQIzS8xxuyc6Gd+o+cmsDo
-	 rcNpcOVF4V+Vyt54YryODZ3Ysnhty+yp+2GlHv0rTh5UeJPEGv+reGgqSzxbl5PPAKNAu
-	 fLrWJyEfsu1ax+7SOQlO3RzpoHulO5UINmJRXh7ieRVUm81LHP2S63vij+ROUfE49VA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794998515;
+	h=Received:DKIM-Signature:Received:Date:Message-ID:From:To:Cc:Subject:
+	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
+	 X-SA-Exim-Connect-IP:X-SA-Exim-Rcpt-To:X-SA-Exim-Mail-From:
+	 X-SA-Exim-Scanned;
+	bh=sY+sAZbrr9MFv4Pz0Kc/4nMk77/MPigr7GAG+Y6LLrw=;
+	b=actYOc5W42wBtGaFxK9wEg/Eo5Fc+wvI74rO2hY7gURxn16YLKi1QlThAZ97DYKCEZJG
+	 ygbxSau5z1JBMk1M5TfjqF5LqkaxzxGKx4qgmdgYQAG9J0rgrg3skRC7QO8luVDy0jSF/
+	 hHggmX3bJEt/oQyRvYfoqCfb4AubiDgKBmbE7v0B373qFBMfSNGxg3QAo8e/hq1B9nwHl
+	 Qnh9ZE1V1NLBWhG/pxoqTWTDEYCthXXMuISWWjDj5fAWiNssmQxpd1PMGhxCmTZVFoJTg
+	 ttyPW8JUm9mZNbrpCpOxfDC9ms0b/fSfHocf+XczWN391ZcEj/lcFG+lbzIgDqRMIqg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=loongson.cn;
-	spf=pass smtp.mailfrom=loongson.cn;
-	arc=none smtp.remote-ip=114.242.206.163
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9CAD606A883
-	for <loongarch@lists.linux.dev>; Wed, 18 Nov 2026 10:01:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E9CAD606A883
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [123.138.236.242])
-	by gateway (Coremail) with SMTP id _____8Ax39J1d_1qJccgAA--.28219S3;
-	Wed, 18 Nov 2026 18:01:25 +0800 (CST)
-Received: from [127.0.0.1] (unknown [123.138.236.242])
-	by front1 (Coremail) with SMTP id qMiowJAx3c50d_1q0JQ1AA--.41976S2;
-	Wed, 18 Nov 2026 18:01:24 +0800 (CST)
-Subject: Re: [PATCH v2] LoongArch: BPF: Fix the offset of stptr.w and stptr.d
- stores
-To: George Guo <dongtai.guo@linux.dev>, chenhuacai@kernel.org
-Cc: hengqi.chen@gmail.com, guodongtai@kylinos.cn, bpf@vger.kernel.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-References: <20261118071444.10258-1-dongtai.guo@linux.dev>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <25a0f5b9-93aa-7d80-423e-b283efcc4b89@loongson.cn>
-Date: Wed, 18 Nov 2026 18:01:24 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TxYrnDyp;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A044606A320;
+	Wed, 18 Nov 2026 10:41:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TxYrnDyp
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC87E1F000C4;
+	Wed, 18 Nov 2026 10:41:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794998515;
+	bh=sY+sAZbrr9MFv4Pz0Kc/4nMk77/MPigr7GAG+Y6LLrw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=TxYrnDypzM3e7JBSIBnX6AyKkQsKfwPrA2ry8lUYErmw0JQx/G6r0ttoymBx7BOsI
+	 +4Rzx3e4tzmRz0NgS9WalY9CgjAQ1+jgJ9RXg6eDZbqtcqbarNOBAMQmMDCOJgBtGG
+	 J1AFOpijvxM2Htv+gQshgrr9dWtcl1BcIF89mLPZAn0XRrZdYy0lqitEKV1B8pUXfz
+	 C6le5T+lKrAuCnLO24LwFAcFoOvI2RRnFuhSBkFdNsGlgG3rFuWCLhm9EMgP+pR04I
+	 kG0IKZhfATgM5jbDRYxYQ+rZTkFTH2LRoBdT5SBaNoFf9oVaaQf+JhXlGMnPeu/0b3
+	 jWTdpSnCWZgVw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <maz@kernel.org>)
+	id 1xTd6u-0000000HTLD-08Oa;
+	Wed, 18 Nov 2026 10:41:52 +0000
+Date: Wed, 18 Nov 2026 10:41:50 +0000
+Message-ID: <868q2q1kwh.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Peng Fan <peng.fan@linux.dev>
+Cc: Thomas Gleixner <tglx@kernel.org>,
+	Radu Rendec <radu@rendec.net>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Peter Griffin <peter.griffin@linaro.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Gregory Clement <gregory.clement@bootlin.com>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Ryan Chen <ryan_chen@aspeedtech.com>,
+	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+	Joel Stanley <joel@jms.id.au>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>,
+	Billy Tsai <billy_tsai@aspeedtech.com>,
+	Tan Siewert <tan.siewert@9elements.com>,
+	Eddie James <eajames@linux.ibm.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Caleb James DeLisle <cjd@cjdns.fr>,
+	Miodrag Dinic <miodrag.dinic@mips.com>,
+	Frank Li <Frank.Li@nxp.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
+	Anup Patel <anup@brainfault.org>,
+	Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Qin Jian <qinjian@cqplus1.com>,
+	Changhuang Liang <changhuang.liang@starfivetech.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Chen-Yu Tsai <wens@kernel.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Nishanth Menon <nm@ti.com>,
+	Tero Kristo <kristo@kernel.org>,
+	Santosh Shilimkar <ssantosh@kernel.org>,
+	Linus Walleij <linusw@kernel.org>,
+	Michal Simek <michal.simek@amd.com>,
+	Anirudha Sarangi <anirudha.sarangi@amd.com>,
+	Tushar Nimkar <tushar.nimkar@amd.com>,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	openbmc@lists.ozlabs.org,
+	linux-aspeed@lists.ozlabs.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-mips@vger.kernel.org,
+	imx@lists.linux.dev,
+	loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-sunxi@lists.linux.dev,
+	git@amd.com,
+	linux-arm-msm@vger.kernel.org,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH] irqchip: Convert chained handlers to guard_chained_irq()
+In-Reply-To: <20261114-irqchip-cleanup-api-v1-1-4a9d598b0bdb@nxp.com>
+References: <20261114-irqchip-cleanup-api-v1-1-4a9d598b0bdb@nxp.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -54,44 +131,32 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
-In-Reply-To: <20261118071444.10258-1-dongtai.guo@linux.dev>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qMiowJAx3c50d_1q0JQ1AA--.41976S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
-	BjDU0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
-	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
-	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxV
-	AFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
-	67AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
-	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E
-	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
-	AS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s02
-	6c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw
-	0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvE
-	c7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14
-	v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x
-	07jYSoJUUUUU=
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: peng.fan@linux.dev, tglx@kernel.org, radu@rendec.net, krzk@kernel.org, peter.griffin@linaro.org, alim.akhtar@samsung.com, andrew@lunn.ch, gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, ryan_chen@aspeedtech.com, benh@kernel.crashing.org, joel@jms.id.au, andrew@codeconstruct.com.au, billy_tsai@aspeedtech.com, tan.siewert@9elements.com, eajames@linux.ibm.com, florian.fainelli@broadcom.com, rjui@broadcom.com, sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com, cjd@cjdns.fr, miodrag.dinic@mips.com, Frank.Li@nxp.com, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, herve.codina@bootlin.com, chenhuacai@kernel.org, kernel@xen0n.name, jiaxun.yang@flygoat.com, vz@mleia.com, piotr.wojtaszczyk@timesys.com, anup@brainfault.org, pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, samuel.holland@sifive.com, qinjian@cqplus1.com, changhuang.liang@starfivetech.com, mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.co
+ m, wens@kernel.org, jernej.skrabec@gmail.com, nm@ti.com, kristo@kernel.org, ssantosh@kernel.org, linusw@kernel.org, michal.simek@amd.com, anirudha.sarangi@amd.com, tushar.nimkar@amd.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org, linux-aspeed@lists.ozlabs.org, linux-rpi-kernel@lists.infradead.org, linux-mips@vger.kernel.org, imx@lists.linux.dev, loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com, linux-sunxi@lists.linux.dev, git@amd.com, linux-arm-msm@vger.kernel.org, peng.fan@nxp.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On 11/18/26 3:14 PM, George Guo wrote:
-> From: George Guo <guodongtai@kylinos.cn>
+On Sat, 14 Nov 2026 15:06:15 +0000,
+Peng Fan <peng.fan@linux.dev> wrote:
 > 
-> When testing bpf selftests "jit_insns" and "jit_insns_blinded", the
-> "ldst_offsets" subtest fails for word and doubleword stores:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> Use the scope-based guard_chained_irq() helper in all chained handlers
+> under drivers/irqchip/ so that chained_irq_exit() is always invoked when
+> the handler returns. Handlers that duplicated the exit call on an error
+> path or jumped to a common exit label simply return now and rely on the
+> guard.
+> 
+> No functional changes.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
-...
+Acked-by: Marc Zyngier <maz@kernel.org>
 
-> Cc: stable@vger.kernel.org
-> Fixes: 5dc615520c4d ("LoongArch: Add BPF JIT support")
-> Signed-off-by: George Guo <guodongtai@kylinos.cn>
+	M.
 
-Acked-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Tested-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-
-Thanks,
-Tiezhu
-
+-- 
+Without deviation from the norm, progress is not possible.
