@@ -1,55 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795003173;
-	b=HDpB2j97ZwUW9CT7RSHYUtmHkKt2C36s8Jc9pToqv6Gg7cvH9+HQhoKZZsvB/Ge3KS3Y
-	 jNtYEbaMXpc82AGb+Sr1dVC4JROdw4WW9Imi+NkPBCy1DCEoE2WW1Yr02wIltCVswSoNa
-	 GdsY8zu+Yix/BmqrO3CC71fqr9zOL5R0GrmGBleTi8TQ06qspiR+11xrchaFmxfN4xbwJ
-	 vXjAIrLWJwDla1y9BttnnBNKhwoixFZrnv/oi3nna2XzLlc0X5INKit+Tps1aIhhYHuGB
-	 GzM9J0r/guBwg5qLzzacuhXeLGP0bk1bC1LfM0GqyxWwAylYZvvX9HbcsPO/rlgIyxA==
+	t=1795009518;
+	b=ZtakB8O7qhOHntQyNv3dvRutsSFwNvGMrG4fhoE31EG3nwfL2dSOZQnZrrUWnkTun/qY
+	 Aagjs7xDARBxtg7+7TId3RfJ6ANNQ+KA4cPeQQfagfltxYzQTOj4/RtqwhpDoKLp7GHma
+	 Vac/bfPNrksS/KcilN02sIhp/gzLxCFf+sU7u245G+zv5MHrUjGNLbQDJTWx7kMDKsddl
+	 B9K/znjjThQ6p/YILnvPG9tm3UIz40AKkRyDhQxNuzTimCCMitbrNKMtgBejSpI27paEX
+	 jsZLuLSVq1DEkWE3jMQ8v+fSoxDpiVNEP9lmSuC7shLEsfQ0hkq7GhhbEIdgp0UEPNQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795003173;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795009518;
 	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
 	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
-	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
-	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=bH6ZQZME+UP8h4wG+aB33LFx7GanxI9Syn/JAZf9Ig0=;
-	b=21/g6hGY3e+jGhp28CngFda1RLhC+drzFovypvTFSxo7XSZZBqQEAiLiPeCmVa3fyIGL
-	 5dWEFy9fpxCbwbNbCgZj/20z1WX/lHnGbEdTAPwpbLrOlVkWWNgoe4+YrYkK4efs+1L9i
-	 fj80H4FaTptAUYlFtAP7IiS1lLkXmX6jGw0ECWpvHVgiytVBTjiYn75gAyhhyL2IyZJpI
-	 Eksy4L//oEiriVLadnZcrpNTgAl66Muc7ymM0D1ZqIl+SZOTxG3B+gidVVY6WYLVJ35E5
-	 nV/GAJgMF6FcsTCqgFmntuSxN4eNoZ0GJ5AdDoPEPwF5yRZ5/eNSGYI4rGmM6A2LcQA==
+	 Reply-To:From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=zbYI8uP1li72NzJh/wjWDJ72bmhe8G4M88p9Kdrkgp4=;
+	b=XJFOU/get9XYTyxIZb8AMGJqwqFZAEO196ub1cvnR28Pv4/76rpTajOagPIAKHNKTCz+
+	 jG3NysHGgxGK6sQDR/GKA2WyZvWetsgT1gh8+qfLrX5/8nay3DD6Y9q1NVzTLGUHx1duh
+	 CtblC+GxE6zBat6VrX6viY4NW2Gw/V8ogZvNuHLRg9nctkpIPCQEgvTc3rUV/v03bl7Bh
+	 61y23eThPnmWkDYCXsA9lUU9Cm+t7l/V90c8M34Cdj6t/AAa03F9ntECu49tB+/l5e2oF
+	 IFzbFRsx7wBUoMPLhdIYltYkpkvHrxqS34T8q+CbXodD7ms1Qi8GoTnsYsV9Qp8ioRA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bKFIY6XU;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RxwDW1Jg;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB9260A2634
-	for <loongarch@lists.linux.dev>; Wed, 18 Nov 2026 11:59:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD416606A330
+	for <loongarch@lists.linux.dev>; Wed, 18 Nov 2026 13:45:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bKFIY6XU
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAA6B1F0092B
-	for <loongarch@lists.linux.dev>; Wed, 18 Nov 2026 11:59:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RxwDW1Jg
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 993231F000CA
+	for <loongarch@lists.linux.dev>; Wed, 18 Nov 2026 13:45:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795003172;
-	bh=bH6ZQZME+UP8h4wG+aB33LFx7GanxI9Syn/JAZf9Ig0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=bKFIY6XU2YYUsOecjd3tLHcjepljyJH467mRnE0AJXl4hfJOSVjobJrGSgpow+jue
-	 5wXKoLqG+z3KP5jhahdtxYzbbgqk8vXHP814+fQiIbhsw1KQiMjnL0tqV+lf/la5Ho
-	 7HcueY0YIEL5KzodtSNdh9s7lSxMVR4RLFDiLs71SE5Op6E5t85eVUtDKjpZjzdt4C
-	 9yVuJjl1hhzJ7wBvfctumEliZpQzJjGP3wbRlirzIDm0uATkhrdcBF2Lr6blKPhZXo
-	 q8161LGkuJCTIqQmVwvSHWJ/ePGd58lbYgqKHErT1UXxSObo1YUMBGs8qPLaP25C+Q
-	 leD+M3+7SlMwA==
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-6ae305e3bd9so1644205a12.0
-        for <loongarch@lists.linux.dev>; Wed, 18 Nov 2026 03:59:32 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AL+hErG40/X83FWRJeMBN2mjIKgn1GezHD6PG1bSC5rDQ5fi+HxOxZLSs7qxwjWqg9ml5VcJz5MurDqlWlk=@lists.linux.dev
-X-Gm-Message-State: APuU4Z/iLDm4aBAMbZLKAn0kPR8eMR2FFOHfrHzGFre70ZAOwz+bep2C
-	zhS+ylQDfANn+DFLwoWgUpUS5qMj2KynrM2FuyreaNgV+gLKTAjHkjic9jqLPH/ckIv/FF1buY4
-	lh1yruGbAwlEKeCocXNOmhLAdKm1Vinc=
-X-Received: by 2002:a05:6402:42c2:b0:6b8:981e:9896 with SMTP id
- 4fb4d7f45d1cf-6b8981e9a77mr1167842a12.15.1795003171385; Wed, 18 Nov 2026
- 03:59:31 -0800 (PST)
+	s=k20260515; t=1795009518;
+	bh=zbYI8uP1li72NzJh/wjWDJ72bmhe8G4M88p9Kdrkgp4=;
+	h=References:In-Reply-To:Reply-To:From:Date:Subject:To:Cc;
+	b=RxwDW1JguCDucDNsShayzwrpopd1ZL9Qf2ZCAagnmVvg0zW+stUUkU79tiVnQB/Zo
+	 Pmp7J5O40OKniL5gftISQKy3xeMQgqfUbNtMIYx/OgRyH5+WyU2VySZ2IsBbRbmLyD
+	 Lcv2pp9ib1bXBYNArl1iETwXLKN6wdgElDCYFpz/BMJc+rZuNQ37QytMx+d2WMCe0H
+	 FOrOeLU8pFP47A4NCAla2ZZdXV5MbYDeQMlL1zoWCPwvU6TpWK/+ZlW3NnD/6hU3zj
+	 TjvzFKfPvmXqp86SHZoCLdg9t9YdEaZ5DJG81/QUfM4q8+rzPhOD6DXr9sxVvO3l1m
+	 hi3EWHj5PIRRg==
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-3ae417eb235so9180641fa.3
+        for <loongarch@lists.linux.dev>; Wed, 18 Nov 2026 05:45:18 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AL+hErHw4HMoUiF6/oeGCTFZ5boOK5l52R2eU8q2YBcd01twv0glN5lbPds/2sy721plcBu3veWBZYBwplY=@lists.linux.dev
+X-Gm-Message-State: APuU4Z/0DGpdzaOu03kt7L7Jh6Dpd9r9GG0XFvhGOoe+2hUjb1Uh9tTc
+	XryaDtwcQNvkiL8Ifq7M8iFh39rCX3kUJc5WBgNqu9AxrFT7jXtheKSoVNYL1IMEbO56gBF51zD
+	PVmsZZ3aVIuRo98/lGSkWUhEb/injTHY=
+X-Received: by 2002:a05:651c:b27:b0:3ab:3b73:4560 with SMTP id
+ 38308e7fff4ca-3ae670b2ef1mr8658421fa.11.1795009516447; Wed, 18 Nov 2026
+ 05:45:16 -0800 (PST)
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -59,161 +59,122 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <20261118071444.10258-1-dongtai.guo@linux.dev>
-In-Reply-To: <20261118071444.10258-1-dongtai.guo@linux.dev>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 18 Nov 2026 19:59:20 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4TNuXk60LyzZhFwQTfNtdzLEFQTwS84u3ZMQ6b=8S0NA@mail.gmail.com>
-X-Gm-Features: AclHuK9RMXtq8INuqJyxShDP1iB7lCD0ZsGtokFdu5T-DLvL7gz_akNiwodRTL0
-Message-ID: <CAAhV-H4TNuXk60LyzZhFwQTfNtdzLEFQTwS84u3ZMQ6b=8S0NA@mail.gmail.com>
-Subject: Re: [PATCH v2] LoongArch: BPF: Fix the offset of stptr.w and stptr.d stores
-To: George Guo <dongtai.guo@linux.dev>
-Cc: yangtiezhu@loongson.cn, hengqi.chen@gmail.com, guodongtai@kylinos.cn, 
-	bpf@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
+References: <20261114-irqchip-cleanup-api-v1-1-4a9d598b0bdb@nxp.com>
+In-Reply-To: <20261114-irqchip-cleanup-api-v1-1-4a9d598b0bdb@nxp.com>
+Reply-To: wens@kernel.org
+From: Chen-Yu Tsai <wens@kernel.org>
+Date: Wed, 18 Nov 2026 21:45:03 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65uyYnE-sryit44oXBwstxkG7HRtYWip5nyuHeZ034TbQ@mail.gmail.com>
+X-Gm-Features: AclHuK_Ko1utGgb-Cp6pja7wJidoLs_raftCWPKZ3OajYizpg1rSK6L9ElxDv8s
+Message-ID: <CAGb2v65uyYnE-sryit44oXBwstxkG7HRtYWip5nyuHeZ034TbQ@mail.gmail.com>
+Subject: Re: [PATCH] irqchip: Convert chained handlers to guard_chained_irq()
+To: Peng Fan <peng.fan@linux.dev>
+Cc: Thomas Gleixner <tglx@kernel.org>, Radu Rendec <radu@rendec.net>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Peter Griffin <peter.griffin@linaro.org>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Gregory Clement <gregory.clement@bootlin.com>, 
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Ryan Chen <ryan_chen@aspeedtech.com>, 
+	Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joel Stanley <joel@jms.id.au>, 
+	Andrew Jeffery <andrew@codeconstruct.com.au>, Billy Tsai <billy_tsai@aspeedtech.com>, 
+	Tan Siewert <tan.siewert@9elements.com>, Eddie James <eajames@linux.ibm.com>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui <rjui@broadcom.com>, 
+	Scott Branden <sbranden@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Caleb James DeLisle <cjd@cjdns.fr>, 
+	Marc Zyngier <maz@kernel.org>, Miodrag Dinic <miodrag.dinic@mips.com>, Frank Li <Frank.Li@nxp.com>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Herve Codina <herve.codina@bootlin.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Vladimir Zapolskiy <vz@mleia.com>, 
+	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>, Anup Patel <anup@brainfault.org>, 
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Samuel Holland <samuel.holland@sifive.com>, 
+	Qin Jian <qinjian@cqplus1.com>, Changhuang Liang <changhuang.liang@starfivetech.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>, 
+	Santosh Shilimkar <ssantosh@kernel.org>, Linus Walleij <linusw@kernel.org>, 
+	Michal Simek <michal.simek@amd.com>, Anirudha Sarangi <anirudha.sarangi@amd.com>, 
+	Tushar Nimkar <tushar.nimkar@amd.com>, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org, 
+	linux-aspeed@lists.ozlabs.org, linux-rpi-kernel@lists.infradead.org, 
+	linux-mips@vger.kernel.org, imx@lists.linux.dev, loongarch@lists.linux.dev, 
+	linux-riscv@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-sunxi@lists.linux.dev, git@amd.com, linux-arm-msm@vger.kernel.org, 
+	Peng Fan <peng.fan@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 18, 2026 at 3:15=E2=80=AFPM George Guo <dongtai.guo@linux.dev> =
-wrote:
+On Sat, Nov 14, 2026 at 11:06=E2=80=AFPM Peng Fan <peng.fan@linux.dev> wrot=
+e:
 >
-> From: George Guo <guodongtai@kylinos.cn>
+> From: Peng Fan <peng.fan@nxp.com>
 >
-> When testing bpf selftests "jit_insns" and "jit_insns_blinded", the
-> "ldst_offsets" subtest fails for word and doubleword stores:
+> Use the scope-based guard_chained_irq() helper in all chained handlers
+> under drivers/irqchip/ so that chained_irq_exit() is always invoked when
+> the handler returns. Handlers that duplicated the exit call on an error
+> path or jumped to a common exit label simply return now and rely on the
+> guard.
 >
->   $ sudo ./test_progs -t jit_insns/ldst_offsets | grep FAIL | head -1
->   store_offsets:FAIL:stx size=3D0 base=3Dr0 src=3Dr1: byte at offset -163=
-84
+> No functional changes.
 >
-> The JIT incorrectly treats the signed 14-bit immediate of stptr.w
-> and stptr.d as a byte offset. For offsets outside the signed 12-bit
-> range of st.w and st.d, it checks the byte offset with
-> is_signed_imm14() and encodes it unchanged. However, the hardware
-> scales the encoded immediate by 4 when calculating the memory
-> address. For example, a store at offset -4096 writes at offset -16384
-> instead, outside the memory range checked by the verifier.
->
-> Pass the offset in units of 4 bytes when emitting stptr.w and stptr.d
-> for both immediate and register stores. Use these instructions only
-> for offsets that are multiples of 4 in the range [-32768, 32764], and
-> keep the register-offset fallback for other offsets that do not fit
-> the signed 12-bit immediate of st.w or st.d.
->
-> Before:
->   $ sudo ./test_progs -t jit_insns/ldst_offsets | tail -1
->   Summary: 0/0 PASSED, 0 SKIPPED, 2/2 FAILED
->
-> After:
->   $ sudo ./test_progs -t jit_insns/ldst_offsets | tail -1
->   Summary: 2/2 PASSED, 0 SKIPPED, 0/0 FAILED
->
-> Cc: stable@vger.kernel.org
-> Fixes: 5dc615520c4d ("LoongArch: Add BPF JIT support")
-> Signed-off-by: George Guo <guodongtai@kylinos.cn>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 > ---
-> v2:
-> - Rename is_ptr_off() to is_aligned_signed_imm16() and drop its comment (=
-Tiezhu)
-> - Remove the now unused is_signed_imm14() (Tiezhu)
-> - Reword the commit message
-> v1: https://lore.kernel.org/all/20261118030219.6230-1-dongtai.guo@linux.d=
-ev/
+> With [1] now merged in irq/drivers, convert the chained IRQ handlers in
+> drivers/irqchip/ to use guard_chained_irq(). This removes the explicit
+> chained_irq_exit() calls and the gotos that only existed to reach them,
+> reducing boilerplate.
 >
->  arch/loongarch/net/bpf_jit.c | 16 ++++++++--------
->  arch/loongarch/net/bpf_jit.h |  6 +++++-
->  2 files changed, 13 insertions(+), 9 deletions(-)
+> I use a script to do the job, and after that, do mannual checking.
 >
-> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-> index 15af1abb5cb6..906f34f420f1 100644
-> --- a/arch/loongarch/net/bpf_jit.c
-> +++ b/arch/loongarch/net/bpf_jit.c
-> @@ -1400,8 +1400,8 @@ static int build_insn(const struct bpf_insn *insn, =
-struct jit_ctx *ctx, bool ext
->                         move_imm(ctx, t1, imm);
->                         if (is_signed_imm12(off)) {
->                                 emit_insn(ctx, stw, t1, dst, off);
-> -                       } else if (is_signed_imm14(off)) {
-> -                               emit_insn(ctx, stptrw, t1, dst, off);
-> +                       } else if (is_aligned_signed_imm16(off)) {
-> +                               emit_insn(ctx, stptrw, t1, dst, off >> 2)=
-;
->                         } else {
->                                 move_imm(ctx, t2, off);
->                                 emit_insn(ctx, stxw, t1, dst, t2);
-> @@ -1411,8 +1411,8 @@ static int build_insn(const struct bpf_insn *insn, =
-struct jit_ctx *ctx, bool ext
->                         move_imm(ctx, t1, imm);
->                         if (is_signed_imm12(off)) {
->                                 emit_insn(ctx, std, t1, dst, off);
-> -                       } else if (is_signed_imm14(off)) {
-> -                               emit_insn(ctx, stptrd, t1, dst, off);
-> +                       } else if (is_aligned_signed_imm16(off)) {
-> +                               emit_insn(ctx, stptrd, t1, dst, off >> 2)=
-;
->                         } else {
->                                 move_imm(ctx, t2, off);
->                                 emit_insn(ctx, stxd, t1, dst, t2);
-> @@ -1460,8 +1460,8 @@ static int build_insn(const struct bpf_insn *insn, =
-struct jit_ctx *ctx, bool ext
->                 case BPF_W:
->                         if (is_signed_imm12(off)) {
->                                 emit_insn(ctx, stw, src, dst, off);
-> -                       } else if (is_signed_imm14(off)) {
-> -                               emit_insn(ctx, stptrw, src, dst, off);
-> +                       } else if (is_aligned_signed_imm16(off)) {
-> +                               emit_insn(ctx, stptrw, src, dst, off >> 2=
-);
->                         } else {
->                                 move_imm(ctx, t1, off);
->                                 emit_insn(ctx, stxw, src, dst, t1);
-> @@ -1470,8 +1470,8 @@ static int build_insn(const struct bpf_insn *insn, =
-struct jit_ctx *ctx, bool ext
->                 case BPF_DW:
->                         if (is_signed_imm12(off)) {
->                                 emit_insn(ctx, std, src, dst, off);
-> -                       } else if (is_signed_imm14(off)) {
-> -                               emit_insn(ctx, stptrd, src, dst, off);
-> +                       } else if (is_aligned_signed_imm16(off)) {
-> +                               emit_insn(ctx, stptrd, src, dst, off >> 2=
-);
->                         } else {
->                                 move_imm(ctx, t1, off);
->                                 emit_insn(ctx, stxd, src, dst, t1);
-> diff --git a/arch/loongarch/net/bpf_jit.h b/arch/loongarch/net/bpf_jit.h
-> index 2bd0dc5b911c..777c76112d95 100644
-> --- a/arch/loongarch/net/bpf_jit.h
-> +++ b/arch/loongarch/net/bpf_jit.h
-> @@ -45,13 +45,17 @@ do {                                                 =
-                               \
->  } while (0)
+> No functional changes.
 >
->  #define is_signed_imm12(val)   signed_imm_check(val, 12)
-> -#define is_signed_imm14(val)   signed_imm_check(val, 14)
-Is there instructions really take a 14bit imm (not something like
-ldptr.d/stptr.d)?
-If yes, I suggest keeping is_signed_imm14() because maybe we need it in fut=
-ure.
+> [1] https://lore.kernel.org/all/179417458323.2093942.14330197609841896598=
+.tip-bot2@tip-bot2/#t
+> ---
+>  drivers/irqchip/exynos-combiner.c          | 7 ++-----
+>  drivers/irqchip/irq-aclint-sswi.c          | 4 +---
+>  drivers/irqchip/irq-armada-370-xp.c        | 4 +---
+>  drivers/irqchip/irq-aspeed-i2c-ic.c        | 4 +---
+>  drivers/irqchip/irq-aspeed-scu-ic.c        | 8 ++------
+>  drivers/irqchip/irq-ast2700-intc1.c        | 4 +---
+>  drivers/irqchip/irq-ath79-misc.c           | 5 +----
+>  drivers/irqchip/irq-bcm2836.c              | 4 +---
+>  drivers/irqchip/irq-bcm6345-l1.c           | 4 +---
+>  drivers/irqchip/irq-bcm7038-l1.c           | 4 +---
+>  drivers/irqchip/irq-bcm7120-l2.c           | 4 +---
+>  drivers/irqchip/irq-brcmstb-l2.c           | 4 +---
+>  drivers/irqchip/irq-dw-apb-ictl.c          | 4 +---
+>  drivers/irqchip/irq-econet-en751221.c      | 4 +---
+>  drivers/irqchip/irq-gic.c                  | 6 ++----
+>  drivers/irqchip/irq-goldfish-pic.c         | 4 +---
+>  drivers/irqchip/irq-idt3243x.c             | 4 +---
+>  drivers/irqchip/irq-imx-intmux.c           | 4 +---
+>  drivers/irqchip/irq-imx-irqsteer.c         | 7 ++-----
+>  drivers/irqchip/irq-imx-mu-msi.c           | 3 +--
+>  drivers/irqchip/irq-ingenic-tcu.c          | 4 +---
+>  drivers/irqchip/irq-lan966x-oic.c          | 3 +--
+>  drivers/irqchip/irq-loongarch-avec.c       | 4 +---
+>  drivers/irqchip/irq-loongson-eiointc.c     | 4 +---
+>  drivers/irqchip/irq-loongson-htpic.c       | 3 +--
+>  drivers/irqchip/irq-loongson-htvec.c       | 4 +---
+>  drivers/irqchip/irq-loongson-liointc.c     | 4 +---
+>  drivers/irqchip/irq-loongson-pch-lpc.c     | 3 +--
+>  drivers/irqchip/irq-lpc32xx.c              | 4 +---
+>  drivers/irqchip/irq-ls-scfg-msi.c          | 4 +---
+>  drivers/irqchip/irq-ls1x.c                 | 4 +---
+>  drivers/irqchip/irq-mmp.c                  | 7 ++-----
+>  drivers/irqchip/irq-mscc-ocelot.c          | 4 +---
+>  drivers/irqchip/irq-mvebu-pic.c            | 4 +---
+>  drivers/irqchip/irq-mvebu-sei.c            | 4 +---
+>  drivers/irqchip/irq-pruss-intc.c           | 4 +---
+>  drivers/irqchip/irq-realtek-rtl.c          | 7 ++-----
+>  drivers/irqchip/irq-riscv-aplic-direct.c   | 4 +---
+>  drivers/irqchip/irq-riscv-imsic-early.c    | 4 +---
+>  drivers/irqchip/irq-sifive-plic.c          | 8 ++------
+>  drivers/irqchip/irq-sp7021-intc.c          | 4 +---
+>  drivers/irqchip/irq-starfive-jhb100-intc.c | 4 +---
+>  drivers/irqchip/irq-stm32-exti.c           | 4 +---
 
-Huacai
+>  drivers/irqchip/irq-sunxi-nmi.c            | 3 +--
 
->  #define is_signed_imm16(val)   signed_imm_check(val, 16)
->  #define is_signed_imm26(val)   signed_imm_check(val, 26)
->  #define is_signed_imm32(val)   signed_imm_check(val, 32)
->  #define is_signed_imm52(val)   signed_imm_check(val, 52)
->  #define is_unsigned_imm12(val) unsigned_imm_check(val, 12)
->
-> +static inline bool is_aligned_signed_imm16(int off)
-> +{
-> +       return !(off & 3) && is_signed_imm16(off);
-> +}
-> +
->  static inline int bpf2la_offset(int bpf_insn, int off, const struct jit_=
-ctx *ctx)
->  {
->         /* BPF JMP offset is relative to the next instruction */
->
-> base-commit: aebb7274476403040d582c61478df8f4a7bf9cd3
-> --
-> 2.53.0
->
+Acked-by: Chen-Yu Tsai <wens@kernel.org> # sunxi-nmi
