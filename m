@@ -1,54 +1,103 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.171.202.116
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794987402;
-	b=5FAssg3phy4UAgyG5kBg/GWLtoR5Dw6Lj+BABnnI2ijxOuhZRgPdS5cQZk7wL1TYyTET
-	 RkQEA0E2VVus4nxomUdQA9weGoNYZdMa1RSMawU3FMMVKYewaPC/tN1PxV4XkYHpDUPvA
-	 O+XCmhEVhrKfWY/4l+1g24GygnY8n4eMKHlNZBG43iHzqO2gdzsPSCTWB81gg8q78xOhm
-	 HS7dpBxxA9wIX4bS3SKWSFKxOzqZrRSEjB4NncINTOxctcnaQu5Er5FEUb4rRhk89eLdZ
-	 YC6N7D0WHwc9edSMIpwby1ylC2IrpTMYTgf/G2ti8V93HCNtBeBFI8uNJbKTfSmdLLw==
+	t=1794987819;
+	b=N21Cjg/e2KBn2l1Ws7N3Tss/HhnapYgzcGMVb+SUssEFb2/4x0JZH+YwItnljRZXPrWa
+	 fLUg6Xag/4GwBWx092vTx5aqLkcILcDUp+32MpQ+4Q3TpnGt+EdN1Emlfe6lbWFONtlWp
+	 uxwStFl9743BPGWNh6IvQE8VglEVDOvjdDEUwrOd+f7bttfYlIVtmr+rLWcO36Iks9pDS
+	 V//0qnVKNwgedZirEpSnfmjDtrQHph+e+iOen0yoQaZkD19Kwhmg/4CiQw4/eTmyptqIe
+	 7SENbhODBoroy4JCayKqcdAal26i88Qc1iJCsi+UnOkCkf6JQK/VSk56ikIIQNM4qWA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794987402;
-	h=Received:DKIM-Signature:Received:X-Gm-Message-State:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:
-	 X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:Subject:To:Cc:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=3bQUkTtQtFHtNT717eq7Cz4Y5/0ywVBOTDLcqCWHl/g=;
-	b=4nC/oghxJde8Md0QVXN8T2tbfgKZvl/ZXmKIyIdrHdHiOclXWtlpa2EHLU0RBAFTnJdZ
-	 XxxRgXnHrsaQAew3MNjm00tjwFUUjwduh7d8Zk1Kccmmc99uQ1b9EDGIMYw16UN7I/AGD
-	 hLTZ1UUaAOY6AT9947fJLd3djjC0l+x9guxrn+c1e0+m05vKOf3a/5OQSW8aLHzOcdBu4
-	 j0ewBoAWIDq3XWp5mGyN+os3Y3me8bGsNMkY/jos8oBndhCTqjGBXM2Qd1WIpK6siJGZt
-	 /pqjnxRf7wMJhVHI7+TZkiyyhm+mFSERinRFT+/RVZIBPe2ZsecZNTVy+fVuP5jnSyw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794987819;
+	h=DMARC-Filter:Received:Received:Received:DKIM-Signature:Date:From:To:
+	 Cc:Subject:Message-ID:In-Reply-To:References:Organization:X-Mailer:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:
+	 X-Last-TLS-Session-Version;
+	bh=5tdOi87MUQVrh0lDnm0y5zaT0nPUT+qlg7v5xkEiqMk=;
+	b=2FKci8Zlc5VpMrr0GtqBRgGDg8QDOEIy5YGlCoQpgBxWkNnYmYulh/TBOubLF5h4oNSn
+	 mEKgxoxvzEcJlOPNa6IW2jkuknXQBopk7uc44umXwkc2DKmfYm3Zqs+s2csKrw/rIxG8J
+	 a7kVMtDrvKd+hd9qym0tXPzy3XND8UrbDJw42CxC/kU+an76/N6oH8XHgVoK0VlCdLA/s
+	 Iwh8Uj/NnIeTQ3zyOqMSvlfhPN5mXeyhFL2tK2PBKoXdxQaNjlp+zeFVDiJaHDF2EMOTm
+	 YqfiQ0V96asA7Kfx0SEwNhiinlGYbk9n/tRRCqmfoi7Dumsrzq5a9MxkJ1/WbQVLLhg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UlUVR8Lb;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=bootlin.com;
+	spf=pass smtp.mailfrom=bootlin.com;
+	dkim=pass header.d=bootlin.com header.i=@bootlin.com header.a=rsa-sha256 header.s=dkim header.b=lvlw2APD;
+	arc=none smtp.remote-ip=185.171.202.116
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7F20606A31C
-	for <loongarch@lists.linux.dev>; Wed, 18 Nov 2026 07:36:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88707606A338
+	for <loongarch@lists.linux.dev>; Wed, 18 Nov 2026 07:43:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 88707606A338
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UlUVR8Lb
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59CCE1F000C5
-	for <loongarch@lists.linux.dev>; Wed, 18 Nov 2026 07:36:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794987402;
-	bh=3bQUkTtQtFHtNT717eq7Cz4Y5/0ywVBOTDLcqCWHl/g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=UlUVR8Lb92kBC1DwaybFFuN4+9DOao0o8SXKRFLvyFXQA5hSHmiRFervy/P/BZbk/
-	 Ji1VyuGzQP64IBTwS7ObTW+cSnyWLGCDHACLY/EX4Ld2yzBMtSubE/qAbjmjucZOCt
-	 vCnTQnls8Sv7TnFV0ha4tqHoGwD+pqLiXPJp+gzAnZrt0OKmPVoKTehog2bqbphVdv
-	 fpRXHt53HrOrPgq5njmDLVVHnUBgVrQZN1EFS10dob34BNaB8C/ruQXEifA14qJg57
-	 ZVM4EkdFYPeKNMqj5i1D9UHVfG8pKx9HD7M6kOaihHjIYtzxXT6Ocp5jfw0ewnAUOa
-	 7a6DyMUROBHgg==
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-6b87a92c17eso1133656a12.3
-        for <loongarch@lists.linux.dev>; Tue, 17 Nov 2026 23:36:42 -0800 (PST)
-X-Gm-Message-State: APuU4Z8eCR0efhUcvehdGU0NkMtt7EK9q54r1/sCwA9JuhWBvU8L42i+
-	pXo2CzWfnDjwPMQHoMK3HcdMmwd6FmjHVWHoaVpY2vSDNBggSgooXoXZW1L0zS2sOHnqB/CQ2/h
-	KMmdnMj+9SFzNk4oFUblUOWZv9hfkZBw=
-X-Received: by 2002:a05:6402:1598:b0:6b6:e808:9711 with SMTP id
- 4fb4d7f45d1cf-6b887eed9a7mr1089834a12.29.1794987401013; Tue, 17 Nov 2026
- 23:36:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.a=rsa-sha256 header.s=dkim header.b=lvlw2APD
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-04.galae.net (Postfix) with ESMTPS id EA76CC4CBD8;
+	Wed, 18 Nov 2026 07:43:39 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 1DE395FE9B;
+	Wed, 18 Nov 2026 07:43:35 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 77C8D11BC076C;
+	Wed, 18 Nov 2026 08:42:47 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1794987811; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=5tdOi87MUQVrh0lDnm0y5zaT0nPUT+qlg7v5xkEiqMk=;
+	b=lvlw2APDkLOsWdPZXrcTGO0SBvJt5AeVKx0Z42miklOsc8vPctTcjUfLvtwVkHahSrHPLo
+	CGkq45BFyuEH8fedQgM6HJ/XMbau2Rz9aKP/PJ7PtvuBj2hMJXvtJKDgvO7p6Q3pjLfN6i
+	0Ut1+LTYYEyg77hZo16dxZxUGEgStz4MKBFw9hj/2Tiw4koxWXy5yQ8yIHNJQ0YwvKbt02
+	l/18CHS5c8YF9Wb/y9UNTxVZrOZMCPnkOtQCGZPI3/uD2p7Qv4dv6TVs+LHq5iTBVHSMvU
+	434h8Tsq1BRLh2Btis1Fush6eJ7xmbr9hxqVcPbs2tV0AeddsTbxh0K8Mz1lOg==
+Date: Wed, 18 Nov 2026 08:42:46 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Peng Fan <peng.fan@linux.dev>
+Cc: Thomas Gleixner <tglx@kernel.org>, Radu Rendec <radu@rendec.net>,
+ Krzysztof Kozlowski <krzk@kernel.org>, Peter Griffin
+ <peter.griffin@linaro.org>, Alim Akhtar <alim.akhtar@samsung.com>, Andrew
+ Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>,
+ Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Ryan Chen
+ <ryan_chen@aspeedtech.com>, Benjamin Herrenschmidt
+ <benh@kernel.crashing.org>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery
+ <andrew@codeconstruct.com.au>, Billy Tsai <billy_tsai@aspeedtech.com>, Tan
+ Siewert <tan.siewert@9elements.com>, Eddie James <eajames@linux.ibm.com>,
+ Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
+ <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Broadcom
+ internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Caleb
+ James DeLisle <cjd@cjdns.fr>, Marc Zyngier <maz@kernel.org>, Miodrag Dinic
+ <miodrag.dinic@mips.com>, Frank Li <Frank.Li@nxp.com>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Vladimir Zapolskiy <vz@mleia.com>, Piotr Wojtaszczyk
+ <piotr.wojtaszczyk@timesys.com>, Anup Patel <anup@brainfault.org>, Paul
+ Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Samuel Holland
+ <samuel.holland@sifive.com>, Qin Jian <qinjian@cqplus1.com>, Changhuang
+ Liang <changhuang.liang@starfivetech.com>, Maxime Coquelin
+ <mcoquelin.stm32@gmail.com>, Alexandre Torgue
+ <alexandre.torgue@foss.st.com>, Chen-Yu Tsai <wens@kernel.org>, Jernej
+ Skrabec <jernej.skrabec@gmail.com>, Nishanth Menon <nm@ti.com>, Tero Kristo
+ <kristo@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, Linus Walleij
+ <linusw@kernel.org>, Michal Simek <michal.simek@amd.com>, Anirudha Sarangi
+ <anirudha.sarangi@amd.com>, Tushar Nimkar <tushar.nimkar@amd.com>,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
+ openbmc@lists.ozlabs.org, linux-aspeed@lists.ozlabs.org,
+ linux-rpi-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+ imx@lists.linux.dev, loongarch@lists.linux.dev,
+ linux-riscv@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-sunxi@lists.linux.dev, git@amd.com, linux-arm-msm@vger.kernel.org,
+ Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH] irqchip: Convert chained handlers to
+ guard_chained_irq()
+Message-ID: <20261118084246.5b5bf203@bootlin.com>
+In-Reply-To: <20261114-irqchip-cleanup-api-v1-1-4a9d598b0bdb@nxp.com>
+References: <20261114-irqchip-cleanup-api-v1-1-4a9d598b0bdb@nxp.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -58,83 +107,31 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <20261115193107.571674-1-hanbings@hanbings.io>
-In-Reply-To: <20261115193107.571674-1-hanbings@hanbings.io>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 18 Nov 2026 15:36:31 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6ww3dObKa3zNxj4jv7JWoB_fukX+b-HYnb_31_=sPbEw@mail.gmail.com>
-X-Gm-Features: AclHuK_D_Un9lgED40yjZJGpoQ-aah58o4T7MJlx8H1GjYPfzxP6N8z6Qn2PuhM
-Message-ID: <CAAhV-H6ww3dObKa3zNxj4jv7JWoB_fukX+b-HYnb_31_=sPbEw@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Fix off-by-one in bt_address() exception
- vector check
-To: hanbings <hanbings@hanbings.io>
-Cc: loongarch@lists.linux.dev, WANG Xuerui <kernel@xen0n.name>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-Hi, Tiezhu,
+Hi Peng,
 
-What's your opinion?
+On Sat, 14 Nov 2026 23:06:15 +0800
+Peng Fan <peng.fan@linux.dev> wrote:
 
-Huacai
-
-On Mon, Nov 16, 2026 at 3:31=E2=80=AFAM hanbings <hanbings@hanbings.io> wro=
-te:
->
-> EXCCODE_INT_END names the last valid interrupt exception code, not an
-> exclusive upper bound.  Since INT_AVEC is 14:
->
->     EXCCODE_INT_NUM =3D INT_AVEC + 1 =3D 15
->     EXCCODE_INT_END =3D EXCCODE_INT_START + EXCCODE_INT_NUM - 1 =3D 78
->
-> trap_init() installs handle_vint for vectors 64 through 78 inclusive,
-> and the switch in bt_address() also maps types up to EXCCODE_INT_END
-> inclusive.  But the range check uses:
->
->     ra < eentry + EXCCODE_INT_END * VECSIZE
->
-> which stops at the start of vector 78, so an address in the last
-> interrupt vector is never translated.  For example, eentry + 78 *
-> VECSIZE + 0x154 is rejected instead of being mapped to handle_vint +
-> 0x154.
->
-> The off-by-one has existed since the ORC unwinder was added; at that
-> time EXCCODE_INT_END was 77, so vector 77 was excluded.  After AVEC
-> support made vector 78 the last interrupt vector, vector 78 is the one
-> that is excluded.  Before commit 4cd641a79e69 ("LoongArch: Remove
-> unnecessary checks for ORC unwinder"), this silently ended the unwind.
-> Since that commit, bt_address() returns 0 and unwind_next_frame()
-> logs:
->
->     cannot find unwind pc at ...
->
-> Fixes: cb8a2ef0848c ("LoongArch: Add ORC stack unwinder support")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: hanbings <hanbings@hanbings.io>
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> Use the scope-based guard_chained_irq() helper in all chained handlers
+> under drivers/irqchip/ so that chained_irq_exit() is always invoked when
+> the handler returns. Handlers that duplicated the exit call on an error
+> path or jumped to a common exit label simply return now and rely on the
+> guard.
+> 
+> No functional changes.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 > ---
->  arch/loongarch/kernel/unwind_orc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/loongarch/kernel/unwind_orc.c b/arch/loongarch/kernel/u=
-nwind_orc.c
-> index 9cfb5bb19..784edf6a7 100644
-> --- a/arch/loongarch/kernel/unwind_orc.c
-> +++ b/arch/loongarch/kernel/unwind_orc.c
-> @@ -366,7 +366,7 @@ static inline unsigned long bt_address(unsigned long =
-ra)
->         }
->  #endif
->
-> -       if (ra >=3D eentry && ra < eentry +  EXCCODE_INT_END * VECSIZE) {
-> +       if (ra >=3D eentry && ra < eentry + (EXCCODE_INT_END + 1) * VECSI=
-ZE) {
->                 unsigned long func;
->                 unsigned long type =3D (ra - eentry) / VECSIZE;
->                 unsigned long offset =3D (ra - eentry) % VECSIZE;
->
-> base-commit: 422e532809572ba1043192bf6a0c653bc68b3140
-> --
-> 2.54.0
->
->
+
+For the irq-lan966x-oic driver:
+
+Reviewed-by: Herve Codina <herve.codina@bootlin.com> # irq-lan966x-oic.c
+
+Best regards,
+Hervé
