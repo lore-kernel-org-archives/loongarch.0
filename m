@@ -1,68 +1,73 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.70
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795024737;
-	b=TqF1sA4dAHyAAvKsBlN9bUZo+bYECD0V64v3XgIw+9VxupiZ5jRoZg6SZJduVdwUTD6h
-	 9EFddMF9LqDRj/1Egg0/OJ8hqCxT346tiHtzJA3RWTuOJ9hlgppz/dEmsZA3m71rvuDUP
-	 f0DX9mIDUdu34fnxPqLVbckoOLNf+73Lwjd47KaU89QOuGrWUkuvTjMB4FVUaSUu1PDit
-	 1Jgfb3JOtR+f4oesUSqnUHnaU7jUzbGzw6WIFt183R/wcWTENXg/zUzI5Ujv7C0hSQZ0y
-	 F9mhZqOoi8oi9TH8y5/5o4YqpZREY2JGoAoNSgM0rdvRIn/6ztVCFakGAVr63zSODTw==
+	t=1795026105;
+	b=URaRX2YJ78W6tERyz+XkZ93jiUu+pOmDasQ5yYbcLDSznORaA+95jslmq91/xaJz7fcR
+	 JZ4L3vhou5H3guK27be/n45SOgNwIwYyTJ6jdub3jRLSsA6F8QR9NhNip+vz/dRuhBURS
+	 crxqqKZ/zlapIJk5h77WRk4KDmnpyIQpLe8Xqls0JUZQdUUce2ihNIhRUaavQCFkmgO41
+	 4Ps0APCqIUzgqiFlPGX+7IWTapDNqiBehTYfHK3lC+0OlfGNSZrH2iV4S4RPWNAppmfS8
+	 /9QhXi+dxBUTQdQLqC3lM+WfQzh5yDBtc63m81RtT/JEpzgOHsUGaRsucHSOdv8t0vg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795024737;
-	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
-	 X-Mimecast-MFC-AGG-ID:Received:Received:Message-ID:Date:MIME-Version:
-	 User-Agent:Subject:To:Cc:References:From:Autocrypt:In-Reply-To:
-	 X-Scanned-By:X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:
-	 Content-Language:Content-Type:Content-Transfer-Encoding;
-	bh=/aEvVPN2vkIpoOGbqbjwslntOnXXcoUrCbDoxZ9fqIU=;
-	b=ltfc5MafLBBrbhIxF3CHJofVnci1PrUH6YdcpQL1UJFRdcL0CIywKVcz+VGqTKxqO0Qm
-	 rWC4zisq8c7REDDPh1SuEFPLM4aE6C3s8yilBB3JRteK+rqEZcSECFInAYY9J2KR2CPnH
-	 +begn7GEw53hQWLdD677KdyznBZrDPP6xzhkti6WI5zbYvV8oDr0UkQSXnXQbAqErOwsA
-	 n12q66ICr7enYBRJSdbMR3HZCLiN9Ynl6CY/zOxHDOGTDIr2R9TSkSrC3gIRRDTkx3Zyu
-	 swsawF1HSxxkLc/PBkYrliGvvK9/IFIU5CNhjakUmCKVjcudSN49ysggmrVhP2CFi5w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795026105;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:Mime-Version:
+	 X-Developer-Key:X-Developer-Signature:X-Mailer:Message-ID:Subject:
+	 From:To:Cc:Content-Type;
+	bh=ltwMOlHQb7KXQHw1z5VBs+MReZmVIy0Qa1qSs/vHRAk=;
+	b=p2RftDi7HMaIUAmtj9fUfRvM75WxR07ZYkJWotlNnbSRp3sKExlEKEy3YKy7tpvKmr6U
+	 UCbSb868T6E2JBOx6mOCRCfy80r/MWc/K2bUJwxZeRDYB3a/F38IvnGXOPJ12nbPB5St4
+	 Uy7wqfMUGde+hqWfr6RLLENK1wr3LufDAEtoiB0Dr+Vpg+tif4MtL9GS34TZ/qvba9jjk
+	 ZXlmgEKFEjtjk2+CwhB7vQyBMxBGb5MEKLfxLSkCwd5DtKgdBc/W7BgkYzknAyWrSRxnF
+	 MPWJZgcKgt8kvdygOtFXortLFdJbuTsQ/TXPQw9P4lpbx81cNwUq8rJRFliaKndj8fA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=redhat.com;
-	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=BRccyczS;
-	arc=none smtp.remote-ip=170.10.133.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=flex--ardb.bounces.google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=d1lYrT0q;
+	arc=none smtp.remote-ip=209.85.128.70
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C514960A2601
-	for <loongarch@lists.linux.dev>; Wed, 18 Nov 2026 17:58:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C514960A2601
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3477606A325
+	for <loongarch@lists.linux.dev>; Wed, 18 Nov 2026 18:21:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D3477606A325
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=BRccyczS
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1795024735;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=/aEvVPN2vkIpoOGbqbjwslntOnXXcoUrCbDoxZ9fqIU=;
-	b=BRccyczSYv3JgxKELFiDUxofYFmJKqR+MDdi36DExika5ycsmZxOxxlNAsntq5JzcPez2s
-	i8mEbClgh0WkJKaphrroVPhLIJlK10+gNNuJZKR7R1M3zI6nSnYG7K3Fqk2Kmi5ojASlM1
-	LNVzcOajYGCqjAm5psdAjmPgXRNP08U=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-454-eKEYaacdP5iXcYIWe_UR6A-1; Wed,
- 18 Nov 2026 12:58:49 -0500
-X-MC-Unique: eKEYaacdP5iXcYIWe_UR6A-1
-X-Mimecast-MFC-AGG-ID: eKEYaacdP5iXcYIWe_UR6A_1795024724
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A7C8C1954B09;
-	Wed, 18 Nov 2026 17:58:42 +0000 (UTC)
-Received: from [100.90.222.41] (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id ED59A18004F5;
-	Wed, 18 Nov 2026 17:58:35 +0000 (UTC)
-Message-ID: <4e4fb011-9171-42c1-b499-27b0333a2fd6@redhat.com>
-Date: Wed, 18 Nov 2026 18:58:33 +0100
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=d1lYrT0q
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4bb6bac1e84so9896955e9.0
+        for <loongarch@lists.linux.dev>; Wed, 18 Nov 2026 10:21:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20260707; t=1795026103; x=1795630903; darn=lists.linux.dev;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=ltwMOlHQb7KXQHw1z5VBs+MReZmVIy0Qa1qSs/vHRAk=;
+        b=d1lYrT0qGW5dR6rNyHf9SQ1jXGrVMazpekxsStuvsRsaiZtXUzopniVsooWAFquYhC
+         9CfgR6Uee8sLaL1QLHUFDa6+wmUT3MMp/qegOgn4D/lK+Oag6JRYpj+PJ8wtT0WVzkxY
+         ghzeYUZGTGFGIOP+Tsjl5K5coPeHFkob7bGZIzULzBuR5r7b+sbMzE865OBdsv4ergxS
+         57CT0r+58suBvs7cT4/bFTEEHFbTa/cTmx3zNdCA/tBvVDmtZSdD6CtUW4c9MxL3vYCe
+         CExTgK523/41tGJsAYi+iyBN1qkYvcJ2OW29mF9YZKt/EWby7y1vd1/VG6oDxEN63FSX
+         InVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795026103; x=1795630903;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ltwMOlHQb7KXQHw1z5VBs+MReZmVIy0Qa1qSs/vHRAk=;
+        b=SbvumqQZFEncKr3eHzEhaj4ifKq3CydzOnrLNRSkksFW02Dm85nHarnUhUxer1QnLB
+         Hg4pw2hKUJTz3bB5ihT+8IxpBz8jCuh9pLPGBmMVWSwsFpYEx9jRhl89ntWxcX479k2X
+         ebMfNywh2SLJ0br6rODVmZ7lvtbqJDI6KLr916TT1S77m0cZdrhBEFYRwz65+B6TzHlc
+         REtEsEdY/Tiqes07lb8npjRCUHP0KFmijsCbkQBqKoKrREQLG4qfAnzCTXGAaNgFRenj
+         h+Jx3DXwJ3D+Lw3lcfHsQqYdoy+1U3IndKX1XK2BbmVRP/VH8qRtBsfR+QbwvsWD7VWx
+         sKVg==
+X-Forwarded-Encrypted: i=1; AL+hErHWodtF5R82a31N7fKizUzCgT7+cwzU/gconVpmroqF7rrkSTBA7sxJPq4rIyODdL1KMG9ykxJSnQs=@lists.linux.dev
+X-Gm-Message-State: APuU4Z92FSXsxnDdeWEdo9QCSNxg39qBR1aiXkMOyYWmBCx2+SVEALJx
+	/B+pXFOkpupE5ktfO92cIWWe1V4LuWN4HT7H+gY2rICLvPHhicfw3HzZC90tc4XOwyPnoSdzIQ=
+	=
+X-Received: from wrws4.prod.google.com ([2002:a5d:69c4:0:b0:48e:a88:307b])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:b99:b0:4ba:6d8:dfad
+ with SMTP id 5b1f17b1804b1-4bb7da1aa22mr67684765e9.14.1795026102835; Wed, 18
+ Nov 2026 10:21:42 -0800 (PST)
+Date: Wed, 18 Nov 2026 19:21:06 +0100
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -71,98 +76,155 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 06/16] KVM: x86: Widen the plane vCPU fd ioctl allowlist
-To: David Woodhouse <dwmw2@infradead.org>, =?UTF-8?B?SsO2cmcgUsO2ZGVs?=
- <joro@8bytes.org>
-Cc: Sean Christopherson <seanjc@google.com>,
- Tom Lendacky <thomas.lendacky@amd.com>, ashish.kalra@amd.com,
- michael.roth@amd.com, nsaenz@amazon.com, anelkz@amazon.de,
- James.Bottomley@HansenPartnership.com, Melody Wang <huibo.wang@amd.com>,
- kvm@vger.kernel.org, linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
- loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
- x86@kernel.org, coconut-svsm@lists.linux.dev, joerg.roedel@amd.com,
- Mushahid Hussain <hmushi@amazon.co.uk>,
- Sriram Nambakam <snambakam@linux.microsoft.com>,
- David Woodhouse <dwmw@amazon.co.uk>
-References: <20260608144252.351443-1-joro@8bytes.org>
- <20261111222911.477-1-dwmw2@infradead.org>
- <20261111222911.477-7-dwmw2@infradead.org>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Autocrypt: addr=pbonzini@redhat.com; keydata=
- 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
-In-Reply-To: <20261111222911.477-7-dwmw2@infradead.org>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: WNqw8QVK5e9GCQas1eZ8vwHRLyhhzjD984MqDo5Q_Lo_1795024724
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6816; i=ardb@kernel.org;
+ h=from:subject; bh=ROU61ckYiXxQPdXaEdC2Y85DXEPZDxapPOtwOwcXvJE=;
+ b=owGbwMvMwCVmkMcZplerG8N4Wi2JIevvm0n3E/PsF5oJSmaZ7zQ7bb12mbfH3ITECuZlP6fs8
+ rqX7G/SUcrCIMbFICumyCIw+++7nacnStU6z5KFmcPKBDKEgYtTACayt53hf3pgxFmdszM57y/e
+ kn9woU3P23jXKe295fNV4zvfrnqxpIzhf36HyiuW8xZpxfw58kdKSiYo7tr7RvHDjatuUjax75Z U8gIA
+X-Mailer: git-send-email 2.56.1.708.g77570a6a1d-goog
+Message-ID: <20261118182105.1633603-21-ardb+git@google.com>
+Subject: [PATCH v4 00/19] efi: Expose loaded image properties via info struct
+From: Ard Biesheuvel <ardb+git@google.com>
+To: linux-efi@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, Ard Biesheuvel <ardb@kernel.org>, 
+	Jason Gunthorpe <jgg@nvidia.com>, Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, 
+	linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 11/11/26 23:29, David Woodhouse wrote:
-> From: David Woodhouse <dwmw@amazon.co.uk>
-> 
-> A VMM that puts an initial VTL context on a higher plane cannot finish
-> the job through the plane vCPU's fd. kvm_arch_is_vcpu_plane_ioctl()
-> refuses the ioctls it needs, while the one capability ioctl it does
-> admit, KVM_ENABLE_CAP, reaches *every* vCPU capability handler.
-> 
->   - KVM_GET/SET_MP_STATE: a plane vCPU for an AP starts in
->     wait-for-INIT like any non-boot x86 vCPU, and nothing ever sends
->     INIT/SIPI to the higher plane of an AP. The VMM has to mark it
->     runnable itself.
->   - KVM_SET_GUEST_DEBUG: single-step and breakpoints on a non-zero
->     plane. The debug exits surface through the plane-0 KVM_RUN loop
->     like any other plane exit.
->   - KVM_X86_SETUP_MCE: mcg_cap is per vCPU and every twin starts with
->     the KVM_MAX_MCE_BANKS default, so programming plane 0 alone leaves
->     the planes disagreeing. Hyper-V shares MCG state across VTLs.
->   - KVM_ENABLE_CAP: accept only the audited capabilities on a plane fd,
->     the SynIC pair and the two CPUID-enforcement toggles, which change
->     state that each twin keeps separately. Anything else gets -EINVAL, as
->     non-allowlisted ioctls already do. The nested paths behind
->     enlightened VMCS and direct TLB flush have never been audited for
->     plane_level > 0, and without the filter any future vCPU cap would
->     work on planes without anyone having decided that it should.
+From: Ard Biesheuvel <ardb@kernel.org>
 
-Not sure about KVM_ENABLE_CAP, the other seem sane.
+Clean up the arm64 build script and linker hacks that zboot uses to
+obtain properties of the loaded image (which it cannot access directly
+via a relative reference like the ordinary EFI stub).
 
-BTW at some point I'll rewrite these commit messages, they're infuriating...
+Instead, define a generic struct efi_image_info, and expose its offset
+in the loaded image in a similar manner, but without relying on explicit
+linker script exports.
 
-Paolo
+Populate the struct with section markers that all architecture use for
+loading the kernel image at boot, so that all the linker exports can be
+dropped for them.
+
+Changes since v3:
+- Populate efi_image_info for ARM correctly
+- Fix a pre-existing issue in the ARM allocation logic
+- Simplify the prototype of handle_kernel_image()
+- Pass image_info pointer down to efi_kaslr_relocate_kernel() and
+  simplify the callers
+- Align RISC-V's __inittext_end correctly so it can be remapped.
+- Add some more acks from Jason
+
+Changes since v2:
+- Add some additional fixes for RISC-V, which deviates from other
+  architectures wrt its section markers. These patches have been sent
+  out separately as well [0] as they will likely be taken through the
+  RISC-V tree.
+- Pass an efi_image_pointer to efi_stub_common() that points to the
+  version inside the loaded image, so that its relative references
+  accurately describe vmlinux in memory before boot.
+- Avoid weak linkage hacks to derive the kernel entrypoint, and instead,
+  always use the entrypoint passed via efi_image_info
+- Use efi_image_info for sysfb_display_info so that efifb earlycon works
+  much earlier on zboot
+- Drop changes related to the previous bullet that are now no longer
+  needed
+- Add acks from Jason
+
+Changes since v1:
+- drop arm64 image header changes
+- move efi_image_info out of __efistub_ scope so it can access vmlinux
+  symbols directly
+- implement in a generic manner for all architectures that support zboot
+- address Sashiko comments
+
+[0] https://lore.kernel.org/all/20261111164345.4059964-5-ardb+git@google.com/
+
+Cc: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Paul Walmsley <pjw@kernel.org>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Albert Ou <aou@eecs.berkeley.edu>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev
+Cc: linux-riscv@lists.infradead.org
+Link: https://lore.kernel.org/all/0-v2-989a18390eb1+486-arm64_drtm_jgg@nvidia.com/
+
+Ard Biesheuvel (19):
+  efi/zboot: arm64: Add missing barrier after cache maintenance
+  riscv: Use _stext not _text to denote the start of kernel code
+  riscv: Make _text point to the start of the kernel image
+  efi/riscv: Rename __init_text_end to __inittext_end like other archs
+  efi/libstub: Avoid _end section marker in library code
+  efi/libstub: arm: Size the decompressed kernel allocation precisely
+  efi/libstub: Avoid reserve_addr/_size in efi_kaslr_relocate_kernel()
+  efi/libstub: Capture loaded image information in struct efi_image_info
+  efi/libstub: Pass kernel entrypoint down to efi_enter_kernel()
+  efi/libstub: arm: Simplify handle_kernel_image()
+  efi/libstub: Drop reserve_addr/_size params from handle_kernel_image()
+  efi/libstub: arm64: Use struct efi_image_info to access image
+    properties
+  efi/libstub: loongarch: Use struct efi_image_info to access image
+    properties
+  efi/libstub: riscv: Use struct efi_image_info to access image
+    properties
+  efi/libstub: Make efi_remap_image() return efi_status_t
+  efi/zboot: Disentangle efi_remap_image() from efi_cache_sync_image()
+  efi/libstub: arm64: Drop zboot code_size hack
+  efi: Make config table based primary display handover ARM-only again
+  Revert "efi: earlycon: Reprobe after parsing config tables"
+
+ arch/arm/boot/compressed/head.S                      |  3 +-
+ arch/arm/include/asm/efi.h                           | 15 +---
+ arch/arm/kernel/efi.c                                | 27 ++++++
+ arch/arm64/boot/Makefile                             |  3 -
+ arch/arm64/include/asm/efi.h                         |  2 -
+ arch/arm64/kernel/efi-header.S                       |  2 +
+ arch/arm64/kernel/image-vars.h                       | 14 ---
+ arch/loongarch/kernel/efi.c                          | 20 +----
+ arch/loongarch/kernel/head.S                         |  4 +-
+ arch/loongarch/kernel/image-vars.h                   |  6 --
+ arch/loongarch/kernel/vmlinux.lds.S                  |  1 -
+ arch/riscv/include/asm/efi.h                         |  2 -
+ arch/riscv/include/asm/sections.h                    |  2 +-
+ arch/riscv/kernel/head.S                             |  1 +
+ arch/riscv/kernel/image-vars.h                       |  8 --
+ arch/riscv/kernel/setup.c                            |  2 +-
+ arch/riscv/kernel/vmlinux.lds.S                      |  6 +-
+ drivers/firmware/efi/earlycon.c                      | 16 +---
+ drivers/firmware/efi/efi-init.c                      | 24 +-----
+ drivers/firmware/efi/efi.c                           |  5 --
+ drivers/firmware/efi/libstub/Makefile                |  3 +-
+ drivers/firmware/efi/libstub/Makefile.zboot          | 11 ++-
+ drivers/firmware/efi/libstub/arm32-stub.c            | 90 +++++++++++++++-----
+ drivers/firmware/efi/libstub/arm64-stub.c            | 37 ++------
+ drivers/firmware/efi/libstub/arm64.c                 | 23 +----
+ drivers/firmware/efi/libstub/efi-stub-entry.c        | 33 +------
+ drivers/firmware/efi/libstub/efi-stub-helper.c       | 15 ++--
+ drivers/firmware/efi/libstub/efi-stub.c              | 26 ++++--
+ drivers/firmware/efi/libstub/efistub.h               | 84 +++++++++++++-----
+ drivers/firmware/efi/libstub/fdt.c                   |  5 +-
+ drivers/firmware/efi/libstub/image_info.S            | 19 +++++
+ drivers/firmware/efi/libstub/kaslr.c                 | 45 +++++-----
+ drivers/firmware/efi/libstub/loongarch-stub.c        | 21 ++---
+ drivers/firmware/efi/libstub/loongarch-stub.h        |  4 -
+ drivers/firmware/efi/libstub/loongarch.c             | 11 +--
+ drivers/firmware/efi/libstub/primary_display.c       | 56 ------------
+ drivers/firmware/efi/libstub/riscv-stub.c            | 29 +------
+ drivers/firmware/efi/libstub/riscv.c                 | 16 +---
+ drivers/firmware/efi/libstub/zboot-decompress-gzip.c |  2 -
+ drivers/firmware/efi/libstub/zboot-decompress-zstd.c |  2 -
+ drivers/firmware/efi/libstub/zboot.c                 | 28 +++++-
+ drivers/firmware/efi/libstub/zboot.lds               |  6 +-
+ include/linux/efi.h                                  |  1 -
+ 43 files changed, 324 insertions(+), 406 deletions(-)
+ create mode 100644 drivers/firmware/efi/libstub/image_info.S
+ delete mode 100644 drivers/firmware/efi/libstub/loongarch-stub.h
+ delete mode 100644 drivers/firmware/efi/libstub/primary_display.c
+
+
+base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
+-- 
+2.56.1.708.g77570a6a1d-goog
 
