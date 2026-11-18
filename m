@@ -1,75 +1,72 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.71
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.92.199
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795026141;
-	b=K5zAh+IDlqDjQ6CWwMk4lJjK0yqPIyR3DVJA8x01xfSeHbCLbueF0YcUl0HnfBpZpamy
-	 xD/sNxpuSM6N9hkpWXorXlRVKghBtbGtT0l08W8aiXm116+iuYdpw3AloCt1ekWPecdlc
-	 F4zeB7ETrX2ABG6oTMpaySs6RYzU2Oi2MisMZmxtwBSvgx7AUoSyHDFimbY8CP3Rk9/3m
-	 HnXFcwqzvUHvwLHTjhObjXHWKDFX/5OtbSTJ80Zx7xsAhuppMk7T2ksx+9as5rV9HAy8F
-	 lFyxjkY9kIi3qubC1nfoALv5Ftahc+YtK3TVQWCFaF1VlgznZgmQZB7y1Jwd3+OeyXA==
+	t=1795029014;
+	b=1wqi61LcrR4LTl+rgmr4DrrUitA52tivkolCKZCkA28R71ICO0w1XUpwbA6J1ay4buRx
+	 MfPf8J105pT/r4iCIrP/5hHjvN2sJ7VaLoHlk8JnpDX5u3eNbe9abxE6sK6GDWMnz2K7D
+	 KkHP48mXVinQHdePDC7BiFe/W6cLo6ax3Fb9uIloz0C0fSbU+0th7bFxKL+G/kM9vcEpn
+	 kKDb23cB+D2f9M3s2b1VKo7J1KdrbbiVZJAPA/oQ0u4wfD72llEJ4SXVJbLuCQSnh16J1
+	 77nyTJ378mYjde0Ijagx2csSjoHo1ZISYIt/6i4v0n8waQNRtE/zs+qkoVnLv7+Gn4A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795026141;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
-	 Mime-Version:References:X-Developer-Key:X-Developer-Signature:
-	 X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
-	bh=/uw6eSasL1b/vj1BX3jiErELTDd2rhnZAcbAAr5FXR4=;
-	b=DQ2qG95w9NfDCbYi42MZWrASZfM7GC8mWld8f2xB7hpfFrUo21+njcbmrbEUv+XIue9I
-	 hShsKqP9Yef90ylo2jShXZiDrxb4tzwSlY7iapjiydbe9vl5ic4EysLe5+iMcPGIfxMxQ
-	 Z2pZVZF6yYCqwDbnKbbUHCWFUJCwOBW8fA8bkhbTX0abOimszU4GDapam477UIiK70sus
-	 OzxlwRYREirYEo6W03zh3TN7c2/tJoqDewIwMzAWhknFVuWEJHsNhUa/kqhLNrxUdWsGz
-	 plwYAXyxzx/uq+YMxvsMeotPwQRdD/tosZQDi/AaJhpn5WICr5YXqe0Up1Q9DvHavEw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795029014;
+	h=DMARC-Filter:DKIM-Signature:Received:Date:From:To:CC:Subject:
+	 User-Agent:In-Reply-To:References:Message-ID:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:X-SRS-Rewrite;
+	bh=YxWsOpaN6CU+fFgVMclUNy68ZrjNu1idGsKCVJ6O9Z4=;
+	b=4T/1Ueq6uZyFYbRStjJugXV4AP8dov3sLN+NlINzXBFTlzMkhsriQSD3u2aV1CMyR2xZ
+	 P7ATWuSB5XOfB8BC4wKzERixFQ2qMqu4FqKxy69AQzLuKy6c/MUYz1eoJkzirFz8dGWhF
+	 Thy71k7RBuCFmIokERdmo8g1pER4QffsqFaI5uSzevLbWXZB/rN7v8aUvRWoOFHVJWMwX
+	 xx+dgzgcpkTI56WPdVe+ATGBnUnlFbgq4U/pI7+Il+M4nTP/EOLrNWpWZFfq9DWJQxiGJ
+	 ob9LWjxaUFtfGfzL/OvzAXjfVz9nfCfIRvuAX9YuFXU3bLfasnk00FKN8Mh6UuztF1Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=flex--ardb.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=VXyQSkGS;
-	arc=none smtp.remote-ip=209.85.128.71
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=infradead.org;
+	spf=none smtp.mailfrom=desiato.srs.infradead.org;
+	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=i6T5OkA6;
+	arc=none smtp.remote-ip=90.155.92.199
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A133606A32A
-	for <loongarch@lists.linux.dev>; Wed, 18 Nov 2026 18:22:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3A133606A32A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E65606A31C;
+	Wed, 18 Nov 2026 19:10:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C2E65606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=VXyQSkGS
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4bb818d8dcfso2969395e9.3
-        for <loongarch@lists.linux.dev>; Wed, 18 Nov 2026 10:22:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795026140; x=1795630940; darn=lists.linux.dev;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=/uw6eSasL1b/vj1BX3jiErELTDd2rhnZAcbAAr5FXR4=;
-        b=VXyQSkGSc7ohkYfn6nZRUax6ZFDOU2ylquOydoCggb+xmLLkU/A3LHrIyornvBA2Zl
-         EdM1jlKNZc0IueAIu3EcSZdMDsZDD/mDJGACsnLuOArpJE471P2v3TqXpn7PHhlK4Ew2
-         IsH9a7NqVveD1OO55rBne8a8ZdpkUtDGO4JuM3aZytnU/rLukFBbcRwGEuMjOLByZJQY
-         Qz8IdaV2aGvnSNvGDcKjA5yQpz8SUPRj6ijHrVjrAmb+nPEuHWcyJxwO6XrxaqgyxMOG
-         IRo95yj2+f+AZVSZ6KK+3nzaPTz3fiOjPF2wGOMavelflbzJZA1d/AJugbzW9uOxfgeL
-         MsqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795026140; x=1795630940;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=/uw6eSasL1b/vj1BX3jiErELTDd2rhnZAcbAAr5FXR4=;
-        b=JBfpH0QDRM4hT3w2b/cyD/3EDcKpqdJnohhRotiXV8bAv+Qt3zfvzR0A87YHbCTfI0
-         kDjM0LttoO6m0fXGj/AcDN7dexzMdLCwyemVnRrpBuxfUZJ292EoKdCNVxm02BYXYAd2
-         XmIKTC9zKMH9Z3Ge1+7JtJxS0x32SKRQtsYGwPegvDd22Myrkn/IRlg3BJnqUPOT7dtD
-         rPhruGWBfQKuwZKv379OUhNPYNWszyiCV5gZ9hOKUiyGKlCWovXdZ9+fNO005lHStINh
-         KChNY8yUDSCTr+FUER/tkKPxZIL7lON0nO81OXpMhc3BJQEsAXgNIIZSHYDv4Jm/rL28
-         e3ug==
-X-Forwarded-Encrypted: i=1; AL+hErGRClsPYnnA/YgoXztXVwmAYntUdVkR6ava4SQ2hWrHsVopqszH+YbcFi0mlZ3TYssmZ/BN7Z9yU7g=@lists.linux.dev
-X-Gm-Message-State: APuU4Z/NmxJDmMZOtf9ozk4oKAHQPh0r7GuoAgoUgeA9C3ZhyicDAqBB
-	dB00hlzyYF6V5OXIDt2bwKq++kU3yjrFUGufPlUYy1tdMNe86OVLYs4yLhvO5+AsGMaOsTnfMg=
-	=
-X-Received: from wmdn7.prod.google.com ([2002:a05:600c:2947:b0:4a2:8ef:a5af])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:a4b:b0:4a2:59:f568
- with SMTP id 5b1f17b1804b1-4bb7da12963mr69266665e9.14.1795026139303; Wed, 18
- Nov 2026 10:22:19 -0800 (PST)
-Date: Wed, 18 Nov 2026 19:21:25 +0100
-In-Reply-To: <20261118182105.1633603-21-ardb+git@google.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=i6T5OkA6
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=YxWsOpaN6CU+fFgVMclUNy68ZrjNu1idGsKCVJ6O9Z4=; b=i6T5OkA6HB7NG25CMcQ8Te4Ltr
+	KxIOzXx/mNFMONQ4ViCWFPNmIrUOuZVTIe8TZnkkJlz9SvrT7bF+8x41WWOLI8qO2kRjpz3bGORzX
+	iZXB3H/1+181sDQQBjKkDX3Ecxc0BS+EsdKOocrWt+stbQmWHtKIf0QpLepBumkQf/831tPfnEejg
+	Mn0K+Y6S4HnvTOy97cfE4cJl/H97wFiYDnoEOJ+PmptkQJL2VFtvIU9o0jXrb7h8DKMAaRLOBo6Ic
+	75Zv3gjRNJV25Ap9P2B/c6B1/SSOXgveIKaxkIQi9zRBBjJ2Hb8o/hzhGZMKQfHMsaX3VVDtMH58Q
+	ZlneSFqw==;
+Received: from [2a00:23ee:2910:16f:a90:4999:d4c:f045] (helo=ehlo.thunderbird.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
+	id 1xTl2l-0000000GRW5-1yMX;
+	Wed, 18 Nov 2026 19:10:07 +0000
+Date: Wed, 18 Nov 2026 19:10:01 +0000
+From: David Woodhouse <dwmw2@infradead.org>
+To: Paolo Bonzini <pbonzini@redhat.com>,
+ =?ISO-8859-1?Q?J=F6rg_R=F6del?= <joro@8bytes.org>
+CC: Sean Christopherson <seanjc@google.com>,
+ Tom Lendacky <thomas.lendacky@amd.com>, ashish.kalra@amd.com,
+ michael.roth@amd.com, nsaenz@amazon.com, anelkz@amazon.de,
+ James.Bottomley@HansenPartnership.com, Melody Wang <huibo.wang@amd.com>,
+ kvm@vger.kernel.org, linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, x86@kernel.org,
+ coconut-svsm@lists.linux.dev, joerg.roedel@amd.com,
+ Mushahid Hussain <hmushi@amazon.co.uk>,
+ Sriram Nambakam <snambakam@linux.microsoft.com>,
+ David Woodhouse <dwmw@amazon.co.uk>
+Subject: Re: [PATCH 06/16] KVM: x86: Widen the plane vCPU fd ioctl allowlist
+User-Agent: K-9 Mail for Android
+In-Reply-To: <4e4fb011-9171-42c1-b499-27b0333a2fd6@redhat.com>
+References: <20260608144252.351443-1-joro@8bytes.org> <20261111222911.477-1-dwmw2@infradead.org> <20261111222911.477-7-dwmw2@infradead.org> <4e4fb011-9171-42c1-b499-27b0333a2fd6@redhat.com>
+Message-ID: <D0EE54A9-3FF3-4005-875B-A9AF04EB1341@infradead.org>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -78,98 +75,59 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
-Mime-Version: 1.0
-References: <20261118182105.1633603-21-ardb+git@google.com>
-X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2331; i=ardb@kernel.org;
- h=from:subject; bh=iMPCb+Keab2MgLv3M4zpVvDMgTGioYSkOer/TnS5abo=;
- b=owGbwMvMwCVmkMcZplerG8N4Wi2JIevvm7XCHZeeHX8f+DPD6s/EiYutrt4v2FF5+G3G5ovFp
- gkTt/vzd5SyMIhxMciKKbIIzP77bufpiVK1zrNkYeawMoEMYeDiFICJrGViZNj06n4gj8DV5D38
- 0+a2fkhoXPTgWswsFkENBVf2sAsbVv5j+CunwqFvkPC1JSbr9sY1t0SfFbxp3j7/ep6t8usHajm MT3gA
-X-Mailer: git-send-email 2.56.1.708.g77570a6a1d-goog
-Message-ID: <20261118182105.1633603-40-ardb+git@google.com>
-Subject: [PATCH v4 19/19] Revert "efi: earlycon: Reprobe after parsing config tables"
-From: Ard Biesheuvel <ardb+git@google.com>
-To: linux-efi@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, Ard Biesheuvel <ardb@kernel.org>, 
-	Jason Gunthorpe <jgg@nvidia.com>, Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, 
-	linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 
-From: Ard Biesheuvel <ardb@kernel.org>
+On 18 November 2026 17:58:33 GMT, Paolo Bonzini <pbonzini@redhat=2Ecom> wro=
+te:
+>On 11/11/26 23:29, David Woodhouse wrote:
+>> From: David Woodhouse <dwmw@amazon=2Eco=2Euk>
+>>=20
+>> A VMM that puts an initial VTL context on a higher plane cannot finish
+>> the job through the plane vCPU's fd=2E kvm_arch_is_vcpu_plane_ioctl()
+>> refuses the ioctls it needs, while the one capability ioctl it does
+>> admit, KVM_ENABLE_CAP, reaches *every* vCPU capability handler=2E
+>>=20
+>>   - KVM_GET/SET_MP_STATE: a plane vCPU for an AP starts in
+>>     wait-for-INIT like any non-boot x86 vCPU, and nothing ever sends
+>>     INIT/SIPI to the higher plane of an AP=2E The VMM has to mark it
+>>     runnable itself=2E
+>>   - KVM_SET_GUEST_DEBUG: single-step and breakpoints on a non-zero
+>>     plane=2E The debug exits surface through the plane-0 KVM_RUN loop
+>>     like any other plane exit=2E
+>>   - KVM_X86_SETUP_MCE: mcg_cap is per vCPU and every twin starts with
+>>     the KVM_MAX_MCE_BANKS default, so programming plane 0 alone leaves
+>>     the planes disagreeing=2E Hyper-V shares MCG state across VTLs=2E
+>>   - KVM_ENABLE_CAP: accept only the audited capabilities on a plane fd,
+>>     the SynIC pair and the two CPUID-enforcement toggles, which change
+>>     state that each twin keeps separately=2E Anything else gets -EINVAL=
+, as
+>>     non-allowlisted ioctls already do=2E The nested paths behind
+>>     enlightened VMCS and direct TLB flush have never been audited for
+>>     plane_level > 0, and without the filter any future vCPU cap would
+>>     work on planes without anyone having decided that it should=2E
+>
+>Not sure about KVM_ENABLE_CAP, the other seem sane=2E
+>
+>BTW at some point I'll rewrite these commit messages, they're infuriating=
+=2E=2E=2E
 
-This reverts commit 8b3a149db461d3286d1e211112de3b44ccaeaf71.
+Yeah=2E I've grown kind of immune to them now=2E Even found myself typing =
+"load-bearing" with my actual meat fingers the other day=2E
 
-That commit added logic to probe the EFI framebuffer earlycon again after
-the EFI configuration tables have been parsed, as the primary display
-information may not have been available yet when the earlycon= early
-parameter was processed.
+I've also been looking harder at the completion thing=2E We *can't* (well,=
+ I don't want to) enter another plane while there's still a completion wait=
+ing on the first plane=2E
 
-Now that only ARM uses a configuration table to pass the primary display
-information to the core kernel, and the EFI framebuffer earlycon is not
-supported on ARM, the reprobe logic no longer has any callers. So revert
-it.
+Which means any control register or MSR interception which needs to be han=
+ded to another plane has to completed first=2E
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
----
- drivers/firmware/efi/earlycon.c | 16 +++-------------
- include/linux/efi.h             |  1 -
- 2 files changed, 3 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/firmware/efi/earlycon.c b/drivers/firmware/efi/earlycon.c
-index 3d060d59968c..997f69ce46cb 100644
---- a/drivers/firmware/efi/earlycon.c
-+++ b/drivers/firmware/efi/earlycon.c
-@@ -216,14 +216,6 @@ efi_earlycon_write(struct console *con, const char *str, unsigned int num)
- 	}
- }
- 
--static bool __initdata fb_probed;
--
--void __init efi_earlycon_reprobe(void)
--{
--	if (fb_probed)
--		setup_earlycon("efifb");
--}
--
- static int __init efi_earlycon_setup(struct earlycon_device *device,
- 				     const char *opt)
- {
-@@ -231,17 +223,15 @@ static int __init efi_earlycon_setup(struct earlycon_device *device,
- 	u16 xres, yres;
- 	u32 i;
- 
--	fb_wb = opt && !strcmp(opt, "ram");
--
--	if (si->orig_video_isVGA != VIDEO_TYPE_EFI) {
--		fb_probed = true;
-+	if (si->orig_video_isVGA != VIDEO_TYPE_EFI)
- 		return -ENODEV;
--	}
- 
- 	fb_base = si->lfb_base;
- 	if (si->capabilities & VIDEO_CAPABILITY_64BIT_BASE)
- 		fb_base |= (u64)si->ext_lfb_base << 32;
- 
-+	fb_wb = opt && !strcmp(opt, "ram");
-+
- 	xres = si->lfb_width;
- 	yres = si->lfb_height;
- 
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index cc1df1577d5f..4a809c6ae724 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -719,7 +719,6 @@ efi_guid_to_str(const efi_guid_t *guid, char *out)
- }
- 
- extern void efi_init (void);
--extern void efi_earlycon_reprobe(void);
- #ifdef CONFIG_EFI
- extern void efi_enter_virtual_mode (void);	/* switch EFI to virtual mode, if possible */
- #else
--- 
-2.56.1.708.g77570a6a1d-goog
+I think we need to be able to complete them with the RIP unchanged (not ad=
+vanced over the instruction)=2E Then for VSM, it's VTL1 which will handle t=
+hem and then advance RIP for its VTL0=2E VTL1 wants to be told the instruct=
+ion length too; I could make QEMU find it but since KVM tends to have it an=
+yway, I'm looking at how I can export that=2E
 
