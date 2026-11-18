@@ -1,64 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.208
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794970961;
-	b=IT1t6bvukpjKeTiy4RFk9j65sBTn59ZcNo9+mkxqu5a7u6iYKkeYVp4xsYHIoaaXSh+j
-	 r1ZmvfSj1M994h9D8rjwjfdNn+suETnQ+Lb3o+8SUbc+iihZ+RY6b2BZYf9a/E1vSDuMY
-	 AbrAA0wvmy4MTrgB/rYitLKfPrNTXCZQnaWp5r7FxVCHVE40a0xM7kWEJJbFB5+UCcTDZ
-	 6NkFMx6xRHIyW/oAkyzwIlsZ4Hpug8VWDaPy9/Xe7uKA81mna8uxB4m0lfAh5C93tLREL
-	 /zSpCOBLCqCb9a9G2oE14ZTewnWezQ+Wi6dqOjgZ3u+Mlk/SWT3lN7F+igKlPdSYvOw==
+	t=1794975291;
+	b=HBsVBsstUMnLEkTpZAz+pcX9isxIsA3T6LrRe+3t15b2U8E3ZhCO7xfrQ2fAoXHt/YWg
+	 FTqFVgkjLLyYLaPO7KuaftrL126dO3Zw3wRXbwtNvqDFDAmoM3OIcRU8SgUw7nKhhMu0F
+	 3xyy3/sS5cOtSTEqNoNMCQwEIEUFrZQxnuekC/QWooIqZH/aejbpCYmFqIEhzvhquU7n4
+	 NKmDaYU71WA9OLW5dND4KURFtzqdWOVxKuPTD4r2r5qHEJlcgIGOS27Jxfgyl6vPZsxgm
+	 pejTY0hqcNA3gLViMEpVC7/BVM10mkFBHyGb6sZR2qTBxEys7s5DScYGJzgDEdAeqcQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794970961;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=QBDyWzDsJEXBE+HUMN83GaHrQvFEUg2tZXZUzLfc4I8=;
-	b=IQX38XZ600RxUyh8qIfspz8RB/SPzUTwAt7cqnwmGlQLS9yxO0hQQTOBpAxt7qtLqhQp
-	 XrIHB7avkPzX8cAXKsKXBW62Dnv/kIQjkNJ9Gmu0OKS5FNp5hwotOjKpKQou8tbtwoYCZ
-	 GCSnFeN/Z/Y0zpbrS9tN+qtjwjpTgxmiPWQtSfRKT+f3I56GJGQJ+qgST6MeLERNKGrMe
-	 9THvsG2oi+UB+Ly/ulZtaNRkFiy5IOAeV6/K7XeFoX7962yJrFYct7ur+6f6+YDNoCryQ
-	 4ANLTwk5rjONgLBfKTsKAr/WliXq35t7xPTdCbja+1/Bo9kRd9NA8fkzFkLIn+bdMZQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794975291;
+	h=DMARC-Filter:Received:Received:Subject:To:Cc:References:From:
+	 Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:Content-Type:
+	 Content-Language:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-CM-SenderInfo:X-Coremail-Antispam;
+	bh=YaOJJ7N+YdkFsLd9dYhGoiJMuptcbuFjKbt7Cq4JOQQ=;
+	b=BnkiXYRmnQUImn1BNjcMbbvAaEDfoDkrANLo2QvwDZeIlV6Jh+vVM0c7NFqyyEpC3XUL
+	 5czWx1Rtr9HPYTjEHPAi0cUng17kmaXZUQz7yZcY+xStf512IwNS/BND11mVwlDuXLTVQ
+	 qrqt0COzwKp3+Zx2iuLgPZLr3eoJ2ZSgEv1aaEB/T2kisNNb63OquXvEyh/XlK23c1Uwq
+	 0YJOtppSDSFGIHP91ZZnyxmtPwUOfnl9/6EpMfy4CVY9bLUjKIWg6S/LQZWeB296krhBJ
+	 nYmhAv0Ycf4PdaWpAKefWpu1S9gH4prnUHMctGWfd1tOQ5tPbDYe+RKnXk4/c3w/AeQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=mbCXTH6K;
-	arc=none smtp.remote-ip=91.218.175.208
-Received: from mta0.migadu.com (out-208.mta0.migadu.com [91.218.175.208])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD7B606A32F
-	for <loongarch@lists.linux.dev>; Wed, 18 Nov 2026 03:02:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3DD7B606A32F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=mbCXTH6K
-X-Envelope-To: loongarch@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=RfydaBjTvqp0ShnNlaeJnvlPZ3CZOLNGFmInsl50U98=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1794970959; v=1; x=1795575759;
- b=mbCXTH6KEBNLQKqghEfJNW//WuPDRk1gq3mzbVQiepxryrwR19BTZbpaD+yrrTaGWbVxez/L
- PBU62/HDuLzCtPgN/9spIe1eEC5v7Zcch5tiZ9OQpmJjGxvZmUODNshuumHfZDQaTfe302Z4NDj
- 4JvP4u9e7V2t1UqQsZ98L7ig=
-X-Envelope-To: loongarch@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 18f3657c6622a384;
-	Wed, 18 Nov 2026 03:02:39 +0000
-X-Mizu-Trace-ID: 18f3657c6622a384
-X-Migadu-Flow: FLOW_OUT
-From: George Guo <dongtai.guo@linux.dev>
-To: chenhuacai@kernel.org,
-	yangtiezhu@loongson.cn
-Cc: hengqi.chen@gmail.com,
-	guodongtai@kylinos.cn,
-	bpf@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH] LoongArch: BPF: Fix the offset of stptr.w and stptr.d stores
-Date: Wed, 18 Nov 2026 12:02:18 +0900
-Message-ID: <20261118030219.6230-1-dongtai.guo@linux.dev>
-X-Mailer: git-send-email 2.53.0
+	dmarc=none header.from=loongson.cn;
+	spf=pass smtp.mailfrom=loongson.cn;
+	arc=none smtp.remote-ip=114.242.206.163
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B220F606A31C
+	for <loongarch@lists.linux.dev>; Wed, 18 Nov 2026 04:14:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B220F606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [123.138.236.242])
+	by gateway (Coremail) with SMTP id _____8Dxl7UxJv1qobQgAA--.808S3;
+	Wed, 18 Nov 2026 12:14:41 +0800 (CST)
+Received: from [127.0.0.1] (unknown [123.138.236.242])
+	by front1 (Coremail) with SMTP id qMiowJBxJs0wJv1qSII1AA--.65343S2;
+	Wed, 18 Nov 2026 12:14:40 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: BPF: Fix the offset of stptr.w and stptr.d
+ stores
+To: George Guo <dongtai.guo@linux.dev>, chenhuacai@kernel.org
+Cc: hengqi.chen@gmail.com, guodongtai@kylinos.cn, bpf@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20261118030219.6230-1-dongtai.guo@linux.dev>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <7226bf46-05e3-b52d-af28-aabf1d504929@loongson.cn>
+Date: Wed, 18 Nov 2026 12:14:40 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -68,118 +55,66 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20261118030219.6230-1-dongtai.guo@linux.dev>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:qMiowJBxJs0wJv1qSII1AA--.65343S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrur1kur1DGry5Cw1kGF18CrX_yoWkAwcEqw
+	nrC39rWw1rAayDJF17Kry5Jw4UK3WrAryrCF1kWr17AF1Y9r45XFWvgryku3y0g3y3CrWa
+	9ay5XFyS93y2yosvyTuYvTs0mTUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbxAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
+	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
+	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MI
+	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
+	14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
+	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1WlkU
+	UUUU=
 
-From: George Guo <guodongtai@kylinos.cn>
+On 11/18/26 11:02 AM, George Guo wrote:
+> From: George Guo <guodongtai@kylinos.cn>
+> 
+> When testing bpf selftests "jit_insns" and "jit_insns_blinded", the
+> "ldst_offsets" subtest fails for word and doubleword stores:
 
-When testing bpf selftests "jit_insns" and "jit_insns_blinded", the
-"ldst_offsets" subtest fails for word and doubleword stores:
+...
 
-  store_offsets:FAIL:stx size=24 base=r9 src=r0: byte at offset -16384
-  unexpected ... actual 255 != expected 67
-  ...
-  #197/11  jit_insns_blinded/ldst_offsets:FAIL
+> diff --git a/arch/loongarch/net/bpf_jit.h b/arch/loongarch/net/bpf_jit.h
+> index 2bd0dc5b911c..5207ad30fade 100644
+> --- a/arch/loongarch/net/bpf_jit.h
+> +++ b/arch/loongarch/net/bpf_jit.h
+> @@ -52,6 +52,15 @@ do {										\
+>   #define is_signed_imm52(val)	signed_imm_check(val, 52)
+>   #define is_unsigned_imm12(val)	unsigned_imm_check(val, 12)
+>   
+> +/*
+> + * ldptr.{w,d} and stptr.{w,d} take a 14-bit signed immediate in units of
+> + * 4 bytes: they reach a multiple of 4 in [-32768, 32764], passed as off >> 2.
+> + */
+> +static inline bool is_ptr_off(int off)
+> +{
+> +	return !(off & 3) && is_signed_imm16(off);
+> +}
+> +
 
-This is because the JIT emits stptr.w or stptr.d for store offsets
-that do not fit a signed 12-bit immediate but fit a signed 14-bit
-immediate, and passes the byte offset directly to the instruction
-encoder. However, these instructions scale their signed 14-bit
-immediate by 4 when calculating the memory address. For example, a
-store at offset -4096 writes at offset -16384 instead, outside the
-memory range checked by the verifier.
+Please use a self-documenting function name and remove the redundant
+comment:
 
-Pass the offset in units of 4 bytes when emitting stptr.w and stptr.d
-for both immediate and register stores. Use these instructions only
-for offsets that are multiples of 4 in the range [-32768, 32764], and
-keep the register-offset fallback for other offsets that do not fit
-the signed 12-bit immediate of st.w or st.d.
+static inline bool is_aligned_signed_imm16(int off)
+{
+	return !(off & 3) && is_signed_imm16(off);
+}
 
-With this patch, both "ldst_offsets" subtests pass:
+Moreover, please remove the unused is_signed_imm14 macro in bpf_jit.h.
 
-  $ sudo ./test_progs -t jit_insns -t jit_insns_blinded
-  ...
-  #196/26  jit_insns/ldst_offsets:OK
-  ...
-  #197/11  jit_insns_blinded/ldst_offsets:OK
-
-Cc: stable@vger.kernel.org
-Fixes: 5dc615520c4d ("LoongArch: Add BPF JIT support")
-Signed-off-by: George Guo <guodongtai@kylinos.cn>
----
- arch/loongarch/net/bpf_jit.c | 16 ++++++++--------
- arch/loongarch/net/bpf_jit.h |  9 +++++++++
- 2 files changed, 17 insertions(+), 8 deletions(-)
-
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index 15af1abb5cb6..16e59722620f 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -1400,8 +1400,8 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
- 			move_imm(ctx, t1, imm);
- 			if (is_signed_imm12(off)) {
- 				emit_insn(ctx, stw, t1, dst, off);
--			} else if (is_signed_imm14(off)) {
--				emit_insn(ctx, stptrw, t1, dst, off);
-+			} else if (is_ptr_off(off)) {
-+				emit_insn(ctx, stptrw, t1, dst, off >> 2);
- 			} else {
- 				move_imm(ctx, t2, off);
- 				emit_insn(ctx, stxw, t1, dst, t2);
-@@ -1411,8 +1411,8 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
- 			move_imm(ctx, t1, imm);
- 			if (is_signed_imm12(off)) {
- 				emit_insn(ctx, std, t1, dst, off);
--			} else if (is_signed_imm14(off)) {
--				emit_insn(ctx, stptrd, t1, dst, off);
-+			} else if (is_ptr_off(off)) {
-+				emit_insn(ctx, stptrd, t1, dst, off >> 2);
- 			} else {
- 				move_imm(ctx, t2, off);
- 				emit_insn(ctx, stxd, t1, dst, t2);
-@@ -1460,8 +1460,8 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
- 		case BPF_W:
- 			if (is_signed_imm12(off)) {
- 				emit_insn(ctx, stw, src, dst, off);
--			} else if (is_signed_imm14(off)) {
--				emit_insn(ctx, stptrw, src, dst, off);
-+			} else if (is_ptr_off(off)) {
-+				emit_insn(ctx, stptrw, src, dst, off >> 2);
- 			} else {
- 				move_imm(ctx, t1, off);
- 				emit_insn(ctx, stxw, src, dst, t1);
-@@ -1470,8 +1470,8 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
- 		case BPF_DW:
- 			if (is_signed_imm12(off)) {
- 				emit_insn(ctx, std, src, dst, off);
--			} else if (is_signed_imm14(off)) {
--				emit_insn(ctx, stptrd, src, dst, off);
-+			} else if (is_ptr_off(off)) {
-+				emit_insn(ctx, stptrd, src, dst, off >> 2);
- 			} else {
- 				move_imm(ctx, t1, off);
- 				emit_insn(ctx, stxd, src, dst, t1);
-diff --git a/arch/loongarch/net/bpf_jit.h b/arch/loongarch/net/bpf_jit.h
-index 2bd0dc5b911c..5207ad30fade 100644
---- a/arch/loongarch/net/bpf_jit.h
-+++ b/arch/loongarch/net/bpf_jit.h
-@@ -52,6 +52,15 @@ do {										\
- #define is_signed_imm52(val)	signed_imm_check(val, 52)
- #define is_unsigned_imm12(val)	unsigned_imm_check(val, 12)
- 
-+/*
-+ * ldptr.{w,d} and stptr.{w,d} take a 14-bit signed immediate in units of
-+ * 4 bytes: they reach a multiple of 4 in [-32768, 32764], passed as off >> 2.
-+ */
-+static inline bool is_ptr_off(int off)
-+{
-+	return !(off & 3) && is_signed_imm16(off);
-+}
-+
- static inline int bpf2la_offset(int bpf_insn, int off, const struct jit_ctx *ctx)
- {
- 	/* BPF JMP offset is relative to the next instruction */
-
-base-commit: aebb7274476403040d582c61478df8f4a7bf9cd3
--- 
-2.53.0
+Thanks,
+Tiezhu
 
