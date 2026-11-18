@@ -1,54 +1,48 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794987826;
-	b=4u7IWCYrU1oy4oGYjShdiC0p/ZeEsmS2DA9DpM7gps3OtxFM44GTSdFO3Rs3Jc1UW7qf
-	 MaCc92M9yFl+p03VhFkL/+guZgH+wXv9nuZ8SYfMvYtWp+Thvds+QjegN+J91S35bo4hA
-	 xeyKyZAw9OyPTwY81L0rOD96K9CnmL4aCIot+zl9eghyFC7rlg6i3Bpl6z1Xkl/5HtG0/
-	 yGqhOFXytD52F3tThPrFNWe3DsdEbfhcPa8yx83Vw4bSBEIQu2grbuJ/iP5eBL09MAj/o
-	 tnIJjSNXsOWP8cy6UMCrw6CwakqjrLRO289dy3vnHTeDQxVBs+HndUDQ/X2/Pc7LOYg==
+	t=1794989528;
+	b=P0HNlT+dBiEXN9bwa99hwbKVwsW7NEvZQS7eRKwXSTSkrLGhLkLCvCBxfcDm8jJF310z
+	 +JLbpnI2EoO7x81fm9iVvWTLmWdG7zB2auHMVq9gAqQz2+Xv3iY8OmrwrmGLe1yNnJ3Ky
+	 g2jjPll8Hhbtg4v0eWZ2DCSE9uxbD16WXSktq6hjiu0eVMWwl555CKcVOBydzKkseCiBZ
+	 8eMrpfxIASC1b10YQOxUDGG+iQxH3QPgD0z27L/gDDMJlJS5jcy/+obXObN2fPUHWlM9j
+	 oUkm/SFt/jInp2/8Aqm7izWviQd2Sq4om1JrXUwSfhiaVmCM8M++qRnFhGrXgcN/gUw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794987826;
-	h=Received:DKIM-Signature:Received:X-Gm-Message-State:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:
-	 X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:Subject:To:Cc:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=/qN+6LtVRqzfP3UHzEAgHQks8jfWwjKEKIfLOFdp7dY=;
-	b=PRwUaLAJl2rba32mYUPdobenDDKC5c7nWrOzF12YPkStxGJXCh4RMF61AifrVD/o+T8n
-	 rD61icAoWPG/39hOSwtdSuaQ+RGdbn7BMgwk7KPtwpiRFh5o+QQmNClCBBjK8l3+X2wKR
-	 5cSXlbZZPEF7OYTZl/UV3cFCH28v7pfh7xcqK6+epXNi0dK1hdCgrz4mX4mvLXFVQSo/C
-	 CHx/9XTQ8SNq31Y1uOKGlJWeBwCDTsN2nve9IAjOLY+yIXFn6poMFuEV91KAZIDCfwBi2
-	 LyfJ4/KcNfD5RFO8HwekItFY7vqLewfxZw1IyEMCZ2hLnSK9CNOMlWH+c0WujsS3iDg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794989528;
+	h=DMARC-Filter:Received:Received:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-CM-SenderInfo:X-Coremail-Antispam;
+	bh=vTPzdvuJQqBp5xH9v4iHahHPRW4Vz6i/Z2rINVyIBeg=;
+	b=ZEDMQthecXVcai+3T8Q5NRjQkkvjBt1XJ/X5a/n8Z60iLLTTnOjkcrrc/WLlPK5y5ylf
+	 INyJKiUkyTrC7GbNKspcUdLNgHFqeilmMEF9QwNW6tjcDVGdcxJLIkkFIrJUtMTJm/ri6
+	 XIURq4oUgeYUdDXNrcr+jN/lRn1YhAeJwXgBNXmO11Ua2aQnPMgTBP64k+0LjNOflEJ5e
+	 9mZLsaIyuqW/lIwoWk92FdvXxnuksjlVnKVSNsTVYfMcQYiEHwQGOVi6KikGJPjO/Gv4L
+	 GIQ3OKmpgzqtUW7l2enwsirEXjasHjV/dzQWwtoN8Gic8oiKnkpQxsXBqQm/UoT3rYw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="BuW/Sl7f";
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA471606A31C
-	for <loongarch@lists.linux.dev>; Wed, 18 Nov 2026 07:43:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BuW/Sl7f
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C85521F000C8
-	for <loongarch@lists.linux.dev>; Wed, 18 Nov 2026 07:43:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794987825;
-	bh=/qN+6LtVRqzfP3UHzEAgHQks8jfWwjKEKIfLOFdp7dY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=BuW/Sl7fLdIK7h5FbOk8PcU1Ls2wIFrmkLJqlyrHBJv6Y9rMXd7f5jL86LaMqP2Fv
-	 la7qi5e2oJe2osDafmmCGnZIiy9AI1FR1qAxhzw2HAJ1If2to0egBqCJHTteUn/HVQ
-	 6MPCR6iKg0Bfecoafi3BrqDlbpCCobiet5rUkMncu56nlelQu4tUXjiuy0BcwJeo28
-	 JW9XkUt6O/xBznxycAYAiAfaIeaG9gGWScTMfeLphwCIMSJ2TEAkeez/zvMkYegNei
-	 DnYyOcttFgZyp7NMkXdzLheHflJtAo1/YC6No9Vah3s+ML2iEUKKi8O7cMjUWTgkD9
-	 puwmFBvlBGwPQ==
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-6b894d9a075so459231a12.2
-        for <loongarch@lists.linux.dev>; Tue, 17 Nov 2026 23:43:45 -0800 (PST)
-X-Gm-Message-State: APuU4Z9hX/3AzIXk0pVu8rRC1KTvhE62+qngvPCTxU/EmUCjHWIeSbl2
-	6pQNqWuFw9MhN/vKpBCvfbOE+w+q4k7Z2ays39Xpesn5+grqIaXt8aUojlXLzxZosU3DHALGR/W
-	8ksJC4dJ5q7A3VMRuDx5xbh+uWKhfp6M=
-X-Received: by 2002:a05:6402:a510:20b0:6b6:8ed8:765a with SMTP id
- 4fb4d7f45d1cf-6b887ec9568mr795186a12.38.1794987824468; Tue, 17 Nov 2026
- 23:43:44 -0800 (PST)
+	dmarc=none header.from=loongson.cn;
+	spf=pass smtp.mailfrom=loongson.cn;
+	arc=none smtp.remote-ip=114.242.206.163
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62AB7606A31C
+	for <loongarch@lists.linux.dev>; Wed, 18 Nov 2026 08:12:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 62AB7606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [123.138.236.242])
+	by gateway (Coremail) with SMTP id _____8Axj9HTXf1qVsAgAA--.28984S3;
+	Wed, 18 Nov 2026 16:12:03 +0800 (CST)
+Received: from linux.localdomain (unknown [123.138.236.242])
+	by front1 (Coremail) with SMTP id qMiowJAxX8_RXf1qZI41AA--.41807S2;
+	Wed, 18 Nov 2026 16:12:02 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Hengqi Chen <hengqi.chen@gmail.com>
+Cc: loongarch@lists.linux.dev,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: BPF: Optimize doubleword loads with ld.d and ldptr.d
+Date: Wed, 18 Nov 2026 16:12:01 +0800
+Message-ID: <20261118081201.10498-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -58,170 +52,70 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <20261111113738.862-1-yangtiezhu@loongson.cn>
-In-Reply-To: <20261111113738.862-1-yangtiezhu@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 18 Nov 2026 15:43:34 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4WtgeVh2TDYd_g7t6M=uHHzA+8hm2YcuUSZ4GY2vfB5g@mail.gmail.com>
-X-Gm-Features: AclHuK_h8JNTX-5Meu7QfVVVQqwUSxk0h8ch28jLABiFynCybHXEvnfXl6-LMUc
-Message-ID: <CAAhV-H4WtgeVh2TDYd_g7t6M=uHHzA+8hm2YcuUSZ4GY2vfB5g@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Fix preemptible warnings in cacheinfo and
- local TLB flush
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAxX8_RXf1qZI41AA--.41807S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7KF4kJr1xur1rKF4fKF4xZrc_yoW8WrW3pr
+	n7Cr4Skr4rXr95XF1xJa97Wr1xKFsa9r13WF43KayrAwnxXFW3WF1fKanI9F15J39YgF1k
+	XFySyFn0vFWDXagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07URa0PUUUUU=
 
-Hi, Tiezhu,
+Currently, 64-bit doubleword loads (BPF_DW) unconditionally load the
+offset into a temporary register with move_imm() and emit ldx.d.
 
-On Wed, Nov 11, 2026 at 7:37=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> When CONFIG_DEBUG_PREEMPT is enabled on a Non-SMP kernel, calls to
-> smp_processor_id() (including via current_cpu_data) in preemptible
-> contexts trigger many "BUG: using smp_processor_id() in preemptible"
-> warnings during cacheinfo setup and local TLB flushes.
-The cacheinfo part is fine, but the tlb part can just use
-raw_processor_id(). For the SMP case, tlb functions are already
-protected, and for the UP case, migration is impossible.
+Optimize these loads by emitting ld.d for signed 12-bit offsets and
+ldptr.d for 4-byte aligned signed 16-bit offsets, or falling back to
+move_imm() + ldx.d when necessary.
 
-Huacai
+With this patch, only a single load instruction is emitted in most
+cases.
 
->
-> Moreover, accessing current CPU data without preemption disabled in
-> local TLB flushes is also unsafe on SMP systems.
->
-> Fix the callers properly:
-> - Use the passed-in 'cpu' parameter to index cpu_data[cpu] directly
->   in init_cache_level() and populate_cache_leaves().
-> - Protect the critical sections with get_cpu()/put_cpu() and reuse
->   cpu_data[cpu] in local_flush_tlb_{range, page}().
-> - Also convert local_flush_tlb_mm() to use get_cpu()/put_cpu() for
->   consistency.
->
-> This eliminates the warnings on Non-SMP builds while ensuring strict
-> preemption safety on SMP systems.
->
-> Fixes: b61a40afca16 ("LoongArch: Refactor cache probe and flush methods")
-> Fixes: 09cfefb7fa70 ("LoongArch: Add memory management")
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  arch/loongarch/kernel/cacheinfo.c |  8 ++++----
->  arch/loongarch/mm/tlb.c           | 22 +++++++++++-----------
->  2 files changed, 15 insertions(+), 15 deletions(-)
->
-> diff --git a/arch/loongarch/kernel/cacheinfo.c b/arch/loongarch/kernel/ca=
-cheinfo.c
-> index 8e231b0d2cd6..334d116e4c29 100644
-> --- a/arch/loongarch/kernel/cacheinfo.c
-> +++ b/arch/loongarch/kernel/cacheinfo.c
-> @@ -11,11 +11,11 @@
->
->  int init_cache_level(unsigned int cpu)
->  {
-> -       int cache_present =3D current_cpu_data.cache_leaves_present;
-> +       int cache_present =3D cpu_data[cpu].cache_leaves_present;
->         struct cpu_cacheinfo *this_cpu_ci =3D get_cpu_cacheinfo(cpu);
->
->         this_cpu_ci->num_levels =3D
-> -               current_cpu_data.cache_leaves[cache_present - 1].level;
-> +               cpu_data[cpu].cache_leaves[cache_present - 1].level;
->         this_cpu_ci->num_leaves =3D cache_present;
->
->         return 0;
-> @@ -67,10 +67,10 @@ static void cache_cpumap_setup(unsigned int cpu)
->
->  int populate_cache_leaves(unsigned int cpu)
->  {
-> -       int i, cache_present =3D current_cpu_data.cache_leaves_present;
-> +       int i, cache_present =3D cpu_data[cpu].cache_leaves_present;
->         struct cpu_cacheinfo *this_cpu_ci =3D get_cpu_cacheinfo(cpu);
->         struct cacheinfo *this_leaf =3D this_cpu_ci->info_list;
-> -       struct cache_desc *cd, *cdesc =3D current_cpu_data.cache_leaves;
-> +       struct cache_desc *cd, *cdesc =3D cpu_data[cpu].cache_leaves;
->
->         for (i =3D 0; i < cache_present; i++) {
->                 cd =3D cdesc + i;
-> diff --git a/arch/loongarch/mm/tlb.c b/arch/loongarch/mm/tlb.c
-> index aaf7d685cc2a..ea52a55ca85e 100644
-> --- a/arch/loongarch/mm/tlb.c
-> +++ b/arch/loongarch/mm/tlb.c
-> @@ -40,25 +40,21 @@ EXPORT_SYMBOL(local_flush_tlb_kernel);
->   */
->  void local_flush_tlb_mm(struct mm_struct *mm)
->  {
-> -       int cpu;
-> -
-> -       preempt_disable();
-> -
-> -       cpu =3D smp_processor_id();
-> +       int cpu =3D get_cpu();
->
->         if (asid_valid(mm, cpu))
->                 drop_mmu_context(mm, cpu);
->         else
->                 cpumask_clear_cpu(cpu, mm_cpumask(mm));
->
-> -       preempt_enable();
-> +       put_cpu();
->  }
->
->  void local_flush_tlb_range(struct vm_area_struct *vma, unsigned long sta=
-rt,
->         unsigned long end)
->  {
->         struct mm_struct *mm =3D vma->vm_mm;
-> -       int cpu =3D smp_processor_id();
-> +       int cpu =3D get_cpu();
->
->         if (asid_valid(mm, cpu)) {
->                 unsigned long size, flags;
-> @@ -67,9 +63,9 @@ void local_flush_tlb_range(struct vm_area_struct *vma, =
-unsigned long start,
->                 start =3D round_down(start, PAGE_SIZE << 1);
->                 end =3D round_up(end, PAGE_SIZE << 1);
->                 size =3D (end - start) >> (PAGE_SHIFT + 1);
-> -               if (size <=3D (current_cpu_data.tlbsizestlbsets ?
-> -                            current_cpu_data.tlbsize / 8 :
-> -                            current_cpu_data.tlbsize / 2)) {
-> +               if (size <=3D (cpu_data[cpu].tlbsizestlbsets ?
-> +                            cpu_data[cpu].tlbsize / 8 :
-> +                            cpu_data[cpu].tlbsize / 2)) {
->                         int asid =3D cpu_asid(cpu, mm);
->
->                         while (start < end) {
-> @@ -83,6 +79,8 @@ void local_flush_tlb_range(struct vm_area_struct *vma, =
-unsigned long start,
->         } else {
->                 cpumask_clear_cpu(cpu, mm_cpumask(mm));
->         }
-> +
-> +       put_cpu();
->  }
->
->  void local_flush_tlb_kernel_range(unsigned long start, unsigned long end=
-)
-> @@ -112,7 +110,7 @@ void local_flush_tlb_kernel_range(unsigned long start=
-, unsigned long end)
->
->  void local_flush_tlb_page(struct vm_area_struct *vma, unsigned long page=
-)
->  {
-> -       int cpu =3D smp_processor_id();
-> +       int cpu =3D get_cpu();
->
->         if (asid_valid(vma->vm_mm, cpu)) {
->                 int newpid;
-> @@ -123,6 +121,8 @@ void local_flush_tlb_page(struct vm_area_struct *vma,=
- unsigned long page)
->         } else {
->                 cpumask_clear_cpu(cpu, mm_cpumask(vma->vm_mm));
->         }
-> +
-> +       put_cpu();
->  }
->
->  /*
-> --
-> 2.42.0
->
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+This is based on the patch:
+LoongArch: BPF: Fix the offset of stptr.w and stptr.d stores
+https://lore.kernel.org/loongarch/20261118071444.10258-1-dongtai.guo@linux.dev/T/#u
+
+Note that BPF_W is left unchanged because LoongArch provides ldptr.w
+(which sign-extends to 64 bits) but lacks an unsigned zero-extending
+ldptr.wu instruction required by standard 32-bit BPF loads.
+
+ arch/loongarch/net/bpf_jit.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index 906f34f420f1..d36891db1179 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -1352,8 +1352,14 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 			}
+ 			break;
+ 		case BPF_DW:
+-			move_imm(ctx, t1, off);
+-			emit_insn(ctx, ldxd, dst, src, t1);
++			if (is_signed_imm12(off)) {
++				emit_insn(ctx, ldd, dst, src, off);
++			} else if (is_aligned_signed_imm16(off)) {
++				emit_insn(ctx, ldptrd, dst, src, off >> 2);
++			} else {
++				move_imm(ctx, t1, off);
++				emit_insn(ctx, ldxd, dst, src, t1);
++			}
+ 			break;
+ 		}
+ 
+-- 
+2.42.0
+
