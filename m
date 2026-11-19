@@ -1,64 +1,63 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.72
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795082543;
-	b=3YTkaj/KJe8VTLUrmHuW+Wjg/cmXfXK9ezJyhFVGjv9UNrf4E//leK5dOX8K/xuF8Whh
-	 KhDTbWyRH5kF7vOYpsxvAlYPRuWTGbAI2z13A72QsZpTA/vP4WHuriMdANVJN1D69RMIQ
-	 IDs8YOQZU/2q32y8ozoDW8INPujzIyTFOyqShGQlecUErQydt1zX6isxoFg1kEbf61F1u
-	 KsgWGS49K8oXyDraK8W6KWkYnhGnKyK5SihUWcLT04/W8w9whmovjdiO2IxNPtEnRY2wA
-	 ekoRlfF+CyXowpwC39041NSxxQ13ztW4molm+cypkqk8aBvf+JTCwbGvX61pH9Ph+3w==
+	t=1795085897;
+	b=ZDp1JjGtBzueTNwrKc9B3Ma+Kb71/yTlsjXdkHrw2+UbjupEV/Jr4pyVDg4Q6a/QEjSf
+	 FaLFWNraJ2hF8mIgknb1VIHN7gO0rkIIw5zNbBRjCbQ5kQJGB/p2ecXEQWpH+rPhsUTNQ
+	 yN8lroyXUI1fZU5LRUlJVloZvRZsZlz9Ws8adAftX5BOcgQCH0vdVTN7UagnqQ6L6fkFu
+	 kr3tWBpJatIQVVc030y87gLfNhPB+SEyTM+mFtR2JFsJoDC/y+Oh0ImSCrSVpyJ9QRf0C
+	 wqKGSxt/Irbb0mh6eGtXr59RxgVdpZrNvQSCWZbVWFPBB9M6gDike39wqU3+jYOvr6Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795082543;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=6SenI4mOj1mO3410qGPpVUgFUHJmec0t3Tk7LJoTcF4=;
-	b=LiZifO0nLgIo61evoyPlRrT/ewPB2c+KWGP0BXoNamnVXVNIQv3o0D3rz9Lt8oo33Mqq
-	 atqQhDGvETFAn4LW/K3aWz6L5ib1kDMZSkdOqDHdcAKepYUX8RqxcEQ2Ty24K8tHQaRe7
-	 2wd4bDyQHkiu6NAsEW9QWyvUqcuTQqUbFu65MAiaB4BuGOwzq54PTC1wKyw/91xpZkemR
-	 EvNnIr4Inhy1n//YPlxl5q3yNKRBOmiS/rZWEY094PPEg5xlGtLzFKP3FBwRGloW/XEW3
-	 oy5ay50rxLgxRujxdlBNlRNAjbifHCb5o+JH9wWvmtj9l1ww2YqYDp1cHvZBtB3tY/g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795085897;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:In-Reply-To:References:
+	 Date:Message-ID:User-Agent:MIME-Version:Content-Type;
+	bh=+o0bQUd8q0A+WRUXZxAmN8P7csYU6Eu6m9jj0vuUv3w=;
+	b=nG7GbMg5/iu6PhCKeQ6D6zePghhxP/fBp8NVXzMBzaaJVqotauIbdlHIVhgaeRyKnRlw
+	 quhFm8/8f7zCX7fMPCxafgVyrb25jo+23Ryuhh3k0G00DSpcLfHWMCmpiXkWIO/pWsAOx
+	 P3dWSMckHfDwPpRuDXQIQaavG7WuLq0R4oy238Ngq1+SldS7ylwwodxojLg/1liG2UWgc
+	 q0RB30HHoRXfn/w8AwfhFL+vpGBXSDQMvpUUwLRnXpgfQj/UC4ocCpoSyHo1X7h+KI3//
+	 sPZ0iTB099UjoqNdHThM5LT91IkPzZR4UezVV6hSmGD2ekfRLH+vE0NIkVzeK+VxkAg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=o5JH2Rt7;
-	arc=none smtp.remote-ip=91.218.175.72
-Received: from mta0.migadu.com (out-72.mta0.migadu.com [91.218.175.72])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MIHzLV8A;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84BD606A32C
-	for <loongarch@lists.linux.dev>; Thu, 19 Nov 2026 10:02:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C84BD606A32C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 240C8606A324;
+	Thu, 19 Nov 2026 10:58:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=o5JH2Rt7
-X-Envelope-To: loongarch@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=ZvPZUStYyZqiE1rcutwmPpn5KDJpY/jNBe9EWDim99w=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1795082540; v=1; x=1795687340;
- b=o5JH2Rt7ArgHEghvZnio6UWTdvSfvwMeuFm6zNC4QSaQUhXz/2TLcRqktaesDvGhkMbDrZix
- yZ7Inc9jbKlrpuhfXAtSSW78d96K7tpaLgDNEFoo77l6Wys1K/nOcbCB7bg+UYNU1ZlsLaLpLPp
- GwLO2axTm+ANhoHSO/s/NBec=
-X-Envelope-To: loongarch@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 09177ad08c17784d;
-	Thu, 19 Nov 2026 10:02:20 +0000
-X-Mizu-Trace-ID: 09177ad08c17784d
-X-Migadu-Flow: FLOW_OUT
-From: George Guo <dongtai.guo@linux.dev>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name
-Cc: rppt@kernel.org,
-	liukexin@kylinos.cn,
-	guodongtai@kylinos.cn,
-	loongarch@lists.linux.dev,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: Allow memblock arrays to resize
-Date: Thu, 19 Nov 2026 19:02:16 +0900
-Message-ID: <20261119100216.10182-1-dongtai.guo@linux.dev>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MIHzLV8A
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA28D1F000C4;
+	Thu, 19 Nov 2026 10:58:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795085896;
+	bh=+o0bQUd8q0A+WRUXZxAmN8P7csYU6Eu6m9jj0vuUv3w=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=MIHzLV8As6nXxtqY6me3mqzdXMBaRaBOWQfGJwhvK3jossC2GDG2Ra6MFKWW4G+PA
+	 FSE2j3Y2nrgYKsoZRqeaQlmmR8HldEkKQX/ibJlGfPtyxwuDyYtL+xn/5wmzzz9v7l
+	 5FGWgzmXPkWsCVt8Us7AHZKoM27j4CijTLiDv3A5kZZVUgHGXiPdfaNJLoY6UIIyb3
+	 5zUQWEG9CGNQ5rsRZ+yKBwxyMv1MVd/HvFPW6rmUc8+i1/G3rENaOYczrKWZpdGWCp
+	 PdEYWVcB7FsPeI2kwfT60Qzmw+M8L3OMHvVFc0+jgQvHEL/6alUpmO0kf3kFqCnvDg
+	 nyLPMZIojBYvw==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: George Guo <dongtai.guo@linux.dev>
+Cc: chenhuacai@kernel.org,  ardb@kernel.org,  pratyush@kernel.org,
+  rppt@kernel.org,  pasha.tatashin@soleen.com,  shuah@kernel.org,
+  ilias.apalodimas@linaro.org,  akpm@linux-foundation.org,
+  baoquan.he@linux.dev,  ruirui.yang@linux.dev,  guodongtai@kylinos.cn,
+  kernel@xen0n.name,  graf@amazon.com,  liukexin@kylinos.cn,
+  loongarch@lists.linux.dev,  linux-kernel@vger.kernel.org,
+  kexec@lists.infradead.org,  linux-mm@kvack.org,
+  linux-kselftest@vger.kernel.org,  linux-efi@vger.kernel.org
+Subject: Re: [PATCH v6 1/8] efi: Pass KHO state to the next kernel in a
+ configuration table
+In-Reply-To: <20261119082252.9120-1-dongtai.guo@linux.dev> (George Guo's
+	message of "Thu, 19 Nov 2026 17:22:52 +0900")
+References: <CAAhV-H5Vse=pKC3Beqhqxa7fqadiGVNqkSy_06HZ3Luw2Pmj5Q@mail.gmail.com>
+	<20261119082252.9120-1-dongtai.guo@linux.dev>
+Date: Thu, 19 Nov 2026 10:58:11 +0000
+Message-ID: <2vxzecch3x6k.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -68,67 +67,57 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-From: George Guo <guodongtai@kylinos.cn>
+On Thu, Nov 19 2026, George Guo wrote:
 
-LoongArch never calls memblock_allow_resize(), so the memblock region
-arrays cannot grow beyond their static sizes. For the reserved array
-that is INIT_MEMBLOCK_RESERVED_REGIONS (INIT_MEMBLOCK_REGIONS +
-NR_CPUS) entries. Once it is full, the next reservation that needs a
-new region panics:
+> Hi Huacai, Ard, Pratyush,
+>
+> On Wed, Nov 04 2026, Huacai Chen wrote:
+>> I prefer to keep it in LoongArch until a second architecture, and I
+>> think Ard is the same. But this is not a strong objection to Pratyush.
+>
+> Kexin Liu and I have tried x86 as the second user, to see whether the
+> common table holds up. It needed only small changes:
+>
+> - The x86 EFI stub installs the table, as the LoongArch stub does.
+>   install_kho_table() moves from efi-stub.c to efi-stub-helper.c so
+>   that the x86 stub can call it.
+>
+> - kexec_file_load() skips the SETUP_KEXEC_KHO record when the table
+>   exists and the next kernel will get efi_info. Otherwise, for example
+>   on a legacy BIOS boot or with noefi, it falls back to setup_data.
 
-  Kernel panic - not syncing: memblock: cannot resize reserved array
+Do we even care about non-EFI boot? I'd say ignore that for now until
+someone comes with a real use case for KHO on such systems.
 
-The memory setup code was derived from MIPS, which never enables
-resizing either. Nothing on LoongArch needs the arrays to stay static.
+>
+> - When there is no SETUP_KEXEC_KHO record, the decompressor's KASLR
+>   code looks up the KHO bootmem areas in the table, so the kernel is
+>   not decompressed onto preserved memory.
+>
+> The table layout did not change. The only change to the common code is
+> that efi_kho_table_found() is no longer __init, since x86 calls it at
+> kexec load time.
+>
+> Tested in QEMU on x86_64. With OVMF, the KHO vmtest and
+> luo_kexec_simple pass, and the second kernel finds the KHO state
+> through the table. With SeaBIOS, the KHO vmtest passes through
+> setup_data.
+>
+> So I would like to keep the table common in v7. Would you prefer the
+> x86 patches in the same series, so that the generic code comes with a
+> second user, or as a separate series on top?
 
-When an array is full, memblock allocates a bigger one from free
-memory, so resizing is only safe once all memory in use is reserved.
-By the time setup_arch() calls arch_mem_init(), the kernel image, the
-initrd, the firmware memory map, the device tree reserved-memory
-regions and the crash kernel are reserved, so enable resizing there.
+This should be a follow up series. Don't get your series get caught up
+in x86 changes.
 
-Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
-Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
-Signed-off-by: George Guo <guodongtai@kylinos.cn>
----
-This was patch 5/8 of the LoongArch KHO series v6 [1]. Mike suggested
-fixing it independently of KHO, and Huacai preferred arch_mem_init()
-to platform_init() [1].
+>
+> Pratyush, does this match what you had in mind for x86?
 
-KHO for LoongArch needs this: after kexec, kho_memory_init() reserves
-every preserved range, and luo_stress_files with 500 files overflows
-the reserved array without CONFIG_SMP. A bigger array cannot land on
-preserved memory, because KHO limits memblock allocations to its
-bootmem areas by then.
+Sounds good to me. You will still need to chase Ard for an ACK on the
+generic EFI table though.
 
-Changes since v6 5/8:
-- Sent on its own, without the KHO series.
-- Reworded the commit message and the comment so they do not depend
-  on KHO.
-
-[1] https://lore.kernel.org/all/20261029172956.20791-6-dongtai.guo@linux.dev/
-
- arch/loongarch/kernel/setup.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-index 6fa4a22a58fd..8c33346a123a 100644
---- a/arch/loongarch/kernel/setup.c
-+++ b/arch/loongarch/kernel/setup.c
-@@ -402,6 +402,9 @@ static void __init arch_mem_init(char **cmdline_p)
- 
- 	check_kernel_sections_mem();
- 
-+	/* All memory in use is reserved now, so memblock can grow its arrays. */
-+	memblock_allow_resize();
-+
- 	memblock_set_bottom_up(true);
- 
- 	swiotlb_init(true, SWIOTLB_VERBOSE);
-
-base-commit: 422e532809572ba1043192bf6a0c653bc68b3140
 -- 
-2.53.0
-
+Regards,
+Pratyush Yadav
