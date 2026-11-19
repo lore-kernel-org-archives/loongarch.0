@@ -1,79 +1,64 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.30
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.72
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795076580;
-	b=HEfqUYbN5AIk6vemxQ7Hs+JmTywHD13v9rx4RZF5t7HPWmFpwMbqjcphGivkFvVMTd6M
-	 5H0kvgKm3b+5nRqosuanO3O+H9GRq2P+b7BULt/JgMummCw6Pmeepisxwy6CQxid4ybPb
-	 ze4YPmOYjGWoI5+9yPcuwXETXPGv90N/84OFpexbjGPF7jA0mL7SEPaYvJLUvE4tQOcWu
-	 gBWFNRJi9car/LOrawL+TPwdRZlrJia6Dfa57nMvemPFyuw/LihBURnYt2kgIGAlfEncG
-	 hSJdd/NlyM94Vt168rUHlIhNmRhrFv17DHsKpOBofJ04KrREb3MWN3KrP4ciYaupmrA==
+	t=1795082543;
+	b=3YTkaj/KJe8VTLUrmHuW+Wjg/cmXfXK9ezJyhFVGjv9UNrf4E//leK5dOX8K/xuF8Whh
+	 KhDTbWyRH5kF7vOYpsxvAlYPRuWTGbAI2z13A72QsZpTA/vP4WHuriMdANVJN1D69RMIQ
+	 IDs8YOQZU/2q32y8ozoDW8INPujzIyTFOyqShGQlecUErQydt1zX6isxoFg1kEbf61F1u
+	 KsgWGS49K8oXyDraK8W6KWkYnhGnKyK5SihUWcLT04/W8w9whmovjdiO2IxNPtEnRY2wA
+	 ekoRlfF+CyXowpwC39041NSxxQ13ztW4molm+cypkqk8aBvf+JTCwbGvX61pH9Ph+3w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795076580;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795082543;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
 	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=9xtLTQESNoyZANIpHgUGyLeoukqSPARphk8aXo+VHwE=;
-	b=RTLxMh7np1zCd0YR+UoeH/8b72T417juvCVNcfh1w0Pjv5k8TC8kg2CRHoBzE4oW/FYL
-	 ZbvWYh4CLz8Yal1oxdtZy/VGo/wPGWlnENyQTgzl8VHS+UBM/qR6boc7ZtHBHnbmpMSX0
-	 WC268OboF1iGji6XRrVQbwwdCDXom7Xv65Gnk/nQ/FuM3AjdMTaBEqAkQxd2W0EvuCbS1
-	 AnV6n+zp8ab340VfGGMWhGzvYIl18Obf9HIUkmzBJk8byoxhzVRQ4AoYtrMCfIEBbXrRH
-	 5KKLR9FPMF6Gt1M1X1CCOuyrpEYqda6lFqhPpsHZyZL3jZzZp0PoYJ14eutsfODwPkw==
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=6SenI4mOj1mO3410qGPpVUgFUHJmec0t3Tk7LJoTcF4=;
+	b=LiZifO0nLgIo61evoyPlRrT/ewPB2c+KWGP0BXoNamnVXVNIQv3o0D3rz9Lt8oo33Mqq
+	 atqQhDGvETFAn4LW/K3aWz6L5ib1kDMZSkdOqDHdcAKepYUX8RqxcEQ2Ty24K8tHQaRe7
+	 2wd4bDyQHkiu6NAsEW9QWyvUqcuTQqUbFu65MAiaB4BuGOwzq54PTC1wKyw/91xpZkemR
+	 EvNnIr4Inhy1n//YPlxl5q3yNKRBOmiS/rZWEY094PPEg5xlGtLzFKP3FBwRGloW/XEW3
+	 oy5ay50rxLgxRujxdlBNlRNAjbifHCb5o+JH9wWvmtj9l1ww2YqYDp1cHvZBtB3tY/g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b="TLtOz3/V";
-	arc=none smtp.remote-ip=95.215.58.30
-Received: from mta1.migadu.com (out-30.mta1.migadu.com [95.215.58.30])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=o5JH2Rt7;
+	arc=none smtp.remote-ip=91.218.175.72
+Received: from mta0.migadu.com (out-72.mta0.migadu.com [91.218.175.72])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6D1606A325
-	for <loongarch@lists.linux.dev>; Thu, 19 Nov 2026 08:22:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BB6D1606A325
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84BD606A32C
+	for <loongarch@lists.linux.dev>; Thu, 19 Nov 2026 10:02:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C84BD606A32C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=TLtOz3/V
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=o5JH2Rt7
 X-Envelope-To: loongarch@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=v7j+so0A9nPKyNFG/7i7Z4Ia8f3AlnUzgV4OZVQCLNk=;
+DKIM-Signature: a=rsa-sha256; bh=ZvPZUStYyZqiE1rcutwmPpn5KDJpY/jNBe9EWDim99w=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1795076577; v=1; x=1795681377;
- b=TLtOz3/Vwuj2oRnKgQShgwM2JXmHAm/33S/i82MEq1IycE+UakLvzLvRpgvUdIVIZ0BHoC8l
- Akr2G97MGgshl1tAB1+QvcUIremLvLiFkC4ETGpEHGZ+DwWlMmW7F3ywhbnde1jS4mbSipLh4lc
- vXrUVH6O539xox5E6fdKLvsI=
+ t=1795082540; v=1; x=1795687340;
+ b=o5JH2Rt7ArgHEghvZnio6UWTdvSfvwMeuFm6zNC4QSaQUhXz/2TLcRqktaesDvGhkMbDrZix
+ yZ7Inc9jbKlrpuhfXAtSSW78d96K7tpaLgDNEFoo77l6Wys1K/nOcbCB7bg+UYNU1ZlsLaLpLPp
+ GwLO2axTm+ANhoHSO/s/NBec=
 X-Envelope-To: loongarch@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 09da8324dc43e42a;
-	Thu, 19 Nov 2026 08:22:57 +0000
-X-Mizu-Trace-ID: 09da8324dc43e42a
+Received: by smtp.migadu.com with ESMTPS id 09177ad08c17784d;
+	Thu, 19 Nov 2026 10:02:20 +0000
+X-Mizu-Trace-ID: 09177ad08c17784d
 X-Migadu-Flow: FLOW_OUT
 From: George Guo <dongtai.guo@linux.dev>
 To: chenhuacai@kernel.org,
-	ardb@kernel.org,
-	pratyush@kernel.org
+	kernel@xen0n.name
 Cc: rppt@kernel.org,
-	pasha.tatashin@soleen.com,
-	shuah@kernel.org,
-	ilias.apalodimas@linaro.org,
-	akpm@linux-foundation.org,
-	baoquan.he@linux.dev,
-	ruirui.yang@linux.dev,
-	guodongtai@kylinos.cn,
-	kernel@xen0n.name,
-	graf@amazon.com,
 	liukexin@kylinos.cn,
+	guodongtai@kylinos.cn,
 	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org,
 	linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	linux-efi@vger.kernel.org
-Subject: Re: [PATCH v6 1/8] efi: Pass KHO state to the next kernel in a configuration table
-Date: Thu, 19 Nov 2026 17:22:52 +0900
-Message-ID: <20261119082252.9120-1-dongtai.guo@linux.dev>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: Allow memblock arrays to resize
+Date: Thu, 19 Nov 2026 19:02:16 +0900
+Message-ID: <20261119100216.10182-1-dongtai.guo@linux.dev>
 X-Mailer: git-send-email 2.53.0
-In-Reply-To: <CAAhV-H5Vse=pKC3Beqhqxa7fqadiGVNqkSy_06HZ3Luw2Pmj5Q@mail.gmail.com>
-References: <CAAhV-H5Vse=pKC3Beqhqxa7fqadiGVNqkSy_06HZ3Luw2Pmj5Q@mail.gmail.com>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -85,41 +70,65 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi Huacai, Ard, Pratyush,
+From: George Guo <guodongtai@kylinos.cn>
 
-On Wed, Nov 04 2026, Huacai Chen wrote:
-> I prefer to keep it in LoongArch until a second architecture, and I
-> think Ard is the same. But this is not a strong objection to Pratyush.
+LoongArch never calls memblock_allow_resize(), so the memblock region
+arrays cannot grow beyond their static sizes. For the reserved array
+that is INIT_MEMBLOCK_RESERVED_REGIONS (INIT_MEMBLOCK_REGIONS +
+NR_CPUS) entries. Once it is full, the next reservation that needs a
+new region panics:
 
-Kexin Liu and I have tried x86 as the second user, to see whether the
-common table holds up. It needed only small changes:
+  Kernel panic - not syncing: memblock: cannot resize reserved array
 
-- The x86 EFI stub installs the table, as the LoongArch stub does.
-  install_kho_table() moves from efi-stub.c to efi-stub-helper.c so
-  that the x86 stub can call it.
+The memory setup code was derived from MIPS, which never enables
+resizing either. Nothing on LoongArch needs the arrays to stay static.
 
-- kexec_file_load() skips the SETUP_KEXEC_KHO record when the table
-  exists and the next kernel will get efi_info. Otherwise, for example
-  on a legacy BIOS boot or with noefi, it falls back to setup_data.
+When an array is full, memblock allocates a bigger one from free
+memory, so resizing is only safe once all memory in use is reserved.
+By the time setup_arch() calls arch_mem_init(), the kernel image, the
+initrd, the firmware memory map, the device tree reserved-memory
+regions and the crash kernel are reserved, so enable resizing there.
 
-- When there is no SETUP_KEXEC_KHO record, the decompressor's KASLR
-  code looks up the KHO bootmem areas in the table, so the kernel is
-  not decompressed onto preserved memory.
+Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
+Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
+Signed-off-by: George Guo <guodongtai@kylinos.cn>
+---
+This was patch 5/8 of the LoongArch KHO series v6 [1]. Mike suggested
+fixing it independently of KHO, and Huacai preferred arch_mem_init()
+to platform_init() [1].
 
-The table layout did not change. The only change to the common code is
-that efi_kho_table_found() is no longer __init, since x86 calls it at
-kexec load time.
+KHO for LoongArch needs this: after kexec, kho_memory_init() reserves
+every preserved range, and luo_stress_files with 500 files overflows
+the reserved array without CONFIG_SMP. A bigger array cannot land on
+preserved memory, because KHO limits memblock allocations to its
+bootmem areas by then.
 
-Tested in QEMU on x86_64. With OVMF, the KHO vmtest and
-luo_kexec_simple pass, and the second kernel finds the KHO state
-through the table. With SeaBIOS, the KHO vmtest passes through
-setup_data.
+Changes since v6 5/8:
+- Sent on its own, without the KHO series.
+- Reworded the commit message and the comment so they do not depend
+  on KHO.
 
-So I would like to keep the table common in v7. Would you prefer the
-x86 patches in the same series, so that the generic code comes with a
-second user, or as a separate series on top?
+[1] https://lore.kernel.org/all/20261029172956.20791-6-dongtai.guo@linux.dev/
 
-Pratyush, does this match what you had in mind for x86?
+ arch/loongarch/kernel/setup.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Thanks,
-George
+diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+index 6fa4a22a58fd..8c33346a123a 100644
+--- a/arch/loongarch/kernel/setup.c
++++ b/arch/loongarch/kernel/setup.c
+@@ -402,6 +402,9 @@ static void __init arch_mem_init(char **cmdline_p)
+ 
+ 	check_kernel_sections_mem();
+ 
++	/* All memory in use is reserved now, so memblock can grow its arrays. */
++	memblock_allow_resize();
++
+ 	memblock_set_bottom_up(true);
+ 
+ 	swiotlb_init(true, SWIOTLB_VERBOSE);
+
+base-commit: 422e532809572ba1043192bf6a0c653bc68b3140
+-- 
+2.53.0
+
