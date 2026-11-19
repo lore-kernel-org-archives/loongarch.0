@@ -1,84 +1,53 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795086077;
-	b=AT0xHmqv85pKDzOSN9lx79Xej3mT1Le5PdFBbbMaTXuCf9FKNDZEMYv3QB5NHXOSWkgr
-	 BVLegwIgH8TsrKPf6zZccoRj+w5XOwVfFdOYSud+mkhjp6izXNTLl5og5ZBb/p0RHnmFS
-	 tyF5J35e3kEpv21rJvzSk/Um2PorNi+h3yRaj28RsDsTGQVb7lCaNtoIBrwQkXGJdXYL1
-	 E2bDyReaEuDVJ5tLJJboLy42Uwe3bhYajgK94Nskq0DIJ0Yqru6OJY7wDaiLlzAMKHskG
-	 Wnmx5/JDOMHnlV9t6giXqKABR1K/BxOtmSGA4GnJDTQeya2aQik6OaCR5IQZKFTQNtA==
+	t=1795086458;
+	b=ffvnMpUXwYhcNwwH8yih6DgA4xK6hTJOznnnnykFS4BqtD5xDAcAD/oD10iazh3d+kr+
+	 dAZ+O42Z9vQWhlycgJY0Huim8S9w8TDvq6s7YLMUN39ZV7o5PxBgfHeIwYjOy3HUaUUUX
+	 27+jGDeITKdyGggsYmvBRAfaWLzvnepY4yHDs93ZL7c5oZsWyEsjvBVG9FF35dSXqKq4a
+	 BSr8uOdX+rzM59DNzIJdJElAFgHwmYNCsxg1Dp7oMhuvrqLeFI9vBA8/GhjUMdNugKxll
+	 uKgUnOe2yRNbrvuq4+r2yKlQxFhhqjid/TzplSIbuk8Jc7Z4qJ7dJvwYtHid7CmVIPA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795086077;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:In-Reply-To:References:
-	 Date:Message-ID:User-Agent:MIME-Version:Content-Type;
-	bh=NlUvq2HpnerQLH3flTbOZH1bj0OHRcxRHwUIA48QJc0=;
-	b=ciC4Mx6umESihwpLSxiEECTbgzWzWEQ3N0QM5umhsdyY08xjvvF/EBntGC386fuvuIDl
-	 L6YBVpxfS8ZGBPjfCAKpoeBdfLYNTxNMiKdi2wBa0acgAyn09nR7Fe0myQ0twWmjNJNSx
-	 tCXOzRbribCUbEmgbMsT8lKm2Hy/xlDZDJzI4yS/a17l3FPFjQ8wiTi2BZuveKHtVCNGv
-	 4BjYeLIlaXLgKPIfmv7MPiORCH18YHUstUxhGLeAaAJ9B9tq1vjyQjzXsz4cjas/rE5zL
-	 Gd6xNhT14N4p7t1MReSKt8fnIlvvXz/BxM+hbBs8ciw9hMUGN1mkR4wosab17CXapJg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795086458;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=ROUL/Vc/05NVBxBY34tWsXgeOJdPCC39DtodeyW5ZQg=;
+	b=TNjZgffFeiChJ7ohqI2DFDaXd96826S+aN3+oV0NCuSHsZL0OAm7gS8Tb3dQku8uyv7k
+	 7sqmfkkwmJwEV1rtkXxHJV2PyggSIFBQJKDPbLPBQUJL/6B1VS1mPwUaNKCvhm84Ah3Iv
+	 tNo+RLQ2MmA4zGZEkdoJEL2syB3vfgGd1qmLZZPaSBo0DosP9VT4nDGdOoL8n0xx9MqeX
+	 fvTq38pyD6AQ7juCEKivZGZhNVzesUWYzs1KbtStRFLy0Qny4Pjgywa6KodZFwpichfnS
+	 HSjZjf+bjrfTuUGI077zcibHKTLFXJKgfL6EWOBrMho+rfAOFDEBprIioAVomOIAoiw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=K0w4y3pq;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SfPvoyK+;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DDE3606A320;
-	Thu, 19 Nov 2026 11:01:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 111B0606A324;
+	Thu, 19 Nov 2026 11:07:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=K0w4y3pq
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 128761F000C6;
-	Thu, 19 Nov 2026 11:01:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SfPvoyK+
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93FB51F000C4;
+	Thu, 19 Nov 2026 11:07:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795086077;
-	bh=NlUvq2HpnerQLH3flTbOZH1bj0OHRcxRHwUIA48QJc0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=K0w4y3pqXsaP3ubeldycHwHdzHusNNZ8UWp+6vQiAMiUx60nPEzsEI6UORCWk2eQM
-	 Wr9MQq++PwU5z61f5LSDEP/iq4naKOipL4OMYf3DinFcFig10sjtTbY97erbnHEo4N
-	 YUsiICY5uHAbdPH6LrzIgPYWrXrSB9l/2O0n7IlxkCsCvQCLsq4VEjI6XjjyL4rxmv
-	 iQPAM4DO3b1e/YXAvLTi7iTezPwfGOpMZZWOUYfE8tL1pN806bFh5j5ih6yGAgPP1a
-	 FfTA7G26gf/3dkJHKJphG6zjuFB4DY41xyN0dDytK5Ezt06txmdtB1kzNPaWLRDwgR
-	 3LJf+KdeFvAjA==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Cc: Albert Ou <aou@eecs.berkeley.edu>,  Alexander Gordeev
- <agordeev@linux.ibm.com>,  Andrew Morton <akpm@linux-foundation.org>,
-  Baoquan He <baoquan.he@linux.dev>,  Borislav Petkov <bp@alien8.de>,
-  Catalin Marinas <catalin.marinas@arm.com>,  Dave Hansen
- <dave.hansen@linux.intel.com>,  Geert Uytterhoeven <geert@linux-m68k.org>,
-  Heiko Carstens <hca@linux.ibm.com>,  Helge Deller <deller@gmx.de>,
-  Huacai Chen <chenhuacai@kernel.org>,  Ingo Molnar <mingo@redhat.com>,
-  "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,  John
- Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,  Madhavan Srinivasan
- <maddy@linux.ibm.com>,  Palmer Dabbelt <palmer@dabbelt.com>,  Pasha
- Tatashin <pasha.tatashin@soleen.com>,  Paul Walmsley <pjw@kernel.org>,
-  Pratyush Yadav <pratyush@kernel.org>,  Rich Felker <dalias@libc.org>,
-  Russell King <linux@armlinux.org.uk>,  Thomas Bogendoerfer
- <tsbogend@alpha.franken.de>,  Thomas Gleixner <tglx@kernel.org>,  Vasily
- Gorbik <gor@linux.ibm.com>,  Will Deacon <will@kernel.org>,  Yoshinori
- Sato <ysato@users.sourceforge.jp>,  x86@kernel.org,  Alexandre Ghiti
- <alex@ghiti.fr>,  Christian Borntraeger <borntraeger@linux.ibm.com>,
-  "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,  Cong Wang
- <cwang@multikernel.io>,  Mark Rutland <mark.rutland@arm.com>,  Michael
- Ellerman <mpe@ellerman.id.au>,  Nicholas Piggin <npiggin@gmail.com>,  "H.
- Peter Anvin" <hpa@zytor.com>,  "Ritesh Harjani (IBM)"
- <ritesh.list@gmail.com>,  Shrikanth Hegde <sshegde@linux.ibm.com>,  Sven
- Schnelle <svens@linux.ibm.com>,  WANG Xuerui <kernel@xen0n.name>,
-  kexec@lists.infradead.org,  linux-arm-kernel@lists.infradead.org,
-  linux-kernel@vger.kernel.org,  linux-m68k@lists.linux-m68k.org,
-  linux-mips@vger.kernel.org,  linux-parisc@vger.kernel.org,
-  linux-riscv@lists.infradead.org,  linux-s390@vger.kernel.org,
-  linux-sh@vger.kernel.org,  linuxppc-dev@lists.ozlabs.org,
-  loongarch@lists.linux.dev
-Subject: Re: [PATCH 2/2] arch, kexec: declare kexec and crash capabilities
- in Kconfig.kexec
-In-Reply-To: <20261119-arch-kconfig-v1-2-37c276fe4d26@kernel.org> (Mike
-	Rapoport's message of "Thu, 19 Nov 2026 08:16:58 +0200")
-References: <20261119-arch-kconfig-v1-0-37c276fe4d26@kernel.org>
-	<20261119-arch-kconfig-v1-2-37c276fe4d26@kernel.org>
-Date: Thu, 19 Nov 2026 11:01:06 +0000
-Message-ID: <2vxza4n53x1p.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=k20260515; t=1795086457;
+	bh=ROUL/Vc/05NVBxBY34tWsXgeOJdPCC39DtodeyW5ZQg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=SfPvoyK+9KlmRpG703U6jl/NLnRdSEjycGz0XJ/6xbWJPMUIWmjVPJAGkRBrB8KaU
+	 b/+gGVKmCIFIXoYZvOXm0ljG8iAQUdrW9zDMXb35+msUCr0JIBP0vVzWTcpm/rCpHt
+	 L9tSUsDHSSuzeYEaLENZnN8gFbzOysB/MbJHrztkIlY8/c0xJQf1DA9/AnUqBiKEXz
+	 X9jJYLcJuma7wp1N5DaWfiZ/0SJx6xotaGh4We2okitxksgBlQQ4CHWeYm51YBPaUp
+	 oc9NtOvq8BoktlekVvP80SK6F2UzvgHzskz381t8TFJsG60HPJsaS6ePYwuo/jbBlr
+	 8fOQg3IuNNb0g==
+Date: Thu, 19 Nov 2026 13:07:32 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: George Guo <dongtai.guo@linux.dev>
+Cc: chenhuacai@kernel.org, kernel@xen0n.name, liukexin@kylinos.cn,
+	guodongtai@kylinos.cn, loongarch@lists.linux.dev,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] LoongArch: Allow memblock arrays to resize
+Message-ID: <av7YdBobrANyYgqg@kernel.org>
+References: <20261119100216.10182-1-dongtai.guo@linux.dev>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -88,28 +57,78 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261119100216.10182-1-dongtai.guo@linux.dev>
 
-On Thu, Nov 19 2026, Mike Rapoport (Microsoft) wrote:
+On Thu, Nov 19, 2026 at 07:02:16PM +0900, George Guo wrote:
+> From: George Guo <guodongtai@kylinos.cn>
+> 
+> LoongArch never calls memblock_allow_resize(), so the memblock region
+> arrays cannot grow beyond their static sizes. For the reserved array
+> that is INIT_MEMBLOCK_RESERVED_REGIONS (INIT_MEMBLOCK_REGIONS +
+> NR_CPUS) entries. Once it is full, the next reservation that needs a
+> new region panics:
+> 
+>   Kernel panic - not syncing: memblock: cannot resize reserved array
+> 
+> The memory setup code was derived from MIPS, which never enables
+> resizing either. Nothing on LoongArch needs the arrays to stay static.
+> 
+> When an array is full, memblock allocates a bigger one from free
+> memory, so resizing is only safe once all memory in use is reserved.
+> By the time setup_arch() calls arch_mem_init(), the kernel image, the
+> initrd, the firmware memory map, the device tree reserved-memory
+> regions and the crash kernel are reserved, so enable resizing there.
+> 
+> Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
+> Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
+> Signed-off-by: George Guo <guodongtai@kylinos.cn>
+> ---
+> This was patch 5/8 of the LoongArch KHO series v6 [1]. Mike suggested
+> fixing it independently of KHO, and Huacai preferred arch_mem_init()
+> to platform_init() [1].
+> 
+> KHO for LoongArch needs this: after kexec, kho_memory_init() reserves
+> every preserved range, and luo_stress_files with 500 files overflows
+> the reserved array without CONFIG_SMP. A bigger array cannot land on
+> preserved memory, because KHO limits memblock allocations to its
+> bootmem areas by then.
+> 
+> Changes since v6 5/8:
+> - Sent on its own, without the KHO series.
+> - Reworded the commit message and the comment so they do not depend
+>   on KHO.
+> 
+> [1] https://lore.kernel.org/all/20261029172956.20791-6-dongtai.guo@linux.dev/
+> 
+>  arch/loongarch/kernel/setup.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+> index 6fa4a22a58fd..8c33346a123a 100644
+> --- a/arch/loongarch/kernel/setup.c
+> +++ b/arch/loongarch/kernel/setup.c
+> @@ -402,6 +402,9 @@ static void __init arch_mem_init(char **cmdline_p)
+>  
+>  	check_kernel_sections_mem();
+>  
+> +	/* All memory in use is reserved now, so memblock can grow its arrays. */
+> +	memblock_allow_resize();
+> +
+>  	memblock_set_bottom_up(true);
 
-> The options that let an architecture opt in to kexec and crash dump
-> features, like ARCH_SUPPORTS_KEXEC or ARCH_SUPPORTS_CRASH_DUMP, are
-> defined in each architecture's Kconfig as def_bool, and most of them are
-> copied over several architectures.
->
-> Declare these options once in kernel/Kconfig.kexec next to the options
-> that depend on them, similarly to how mm/Kconfig does it, and make the
-> architectures select them instead.
->
-> Selection conditions are preserved, so there is no functional change.
->
-> Acked-by: Baoquan He <baoquan.he@linux.dev>
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+The placement seems about right to me :)
 
-Acked-by: Pratyush Yadav <pratyush@kernel.org>
-
-[...]
+Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+  
+>  	swiotlb_init(true, SWIOTLB_VERBOSE);
+> 
+> base-commit: 422e532809572ba1043192bf6a0c653bc68b3140
+> -- 
+> 2.53.0
+> 
 
 -- 
-Regards,
-Pratyush Yadav
+Sincerely yours,
+Mike.
