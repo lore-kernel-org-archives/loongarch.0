@@ -1,56 +1,46 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=52.59.177.22
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795090983;
-	b=U7Dn4kq3F4FCxwNVU/xxqxkgHr6hel80sM9i8a3VwRUqrncWRKbF5E7mxfqQULzc1YGq
-	 NICXxTqEdC1+jkh2p85wGYDOXmhxrHO5F72myBUTwsSIrIlYQrGa1TmqUx2NQ2FoLOmm1
-	 wiSj5rLudT5Vn/KD9bmYVCmpdzIPqmL2wyMFsladN5CEA54xBexpWrpWvYftqsXqlXE3W
-	 H9NbYcYpZ1lBLR16fRStYkYPBdc/4HnvZNgx5LV6I0XCMOIA7kqTE3cE+SrzW5Ouwm9bU
-	 wGoRfOw55cJwH4gSBSW6TbjXzmMNBP5SykQ6/kKV5SFiJHbKfpH9AmC6E563vpYS2ZQ==
+	t=1795091596;
+	b=MMs6gMXmT6ogft7Re+OBI04KOdJPPZRqanh0DopW+bwFmm0kjaeHsB8QewchFIcf6NEH
+	 0X4axe/VDR6bATjM42m0sl/0ifJWuo3dif66JUxeazOYIgQsLQPlqJklzrJRVMLxV2vSj
+	 zi8aKszF0ucIEKsGyaTz5HpFohV9sKcuF4KFLopIMLs0aXW+LxtJHCt0UIWGJ7irVxZ2n
+	 5dVEgAEX5xzGS8k6ujvDoxdRjrfaLiGLp2nlke/g95i+7OUO+7ywpTPKS9c6zElZv0Kdu
+	 MR7KBFaf1/UKp+UhNcjlr7yPnKNuO97ZeOiTlGxAHWvkbRFisXWauYxKPTXP+9f6K7g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795090983;
-	h=DMARC-Filter:X-QQ-mid:X-QQ-Originating-IP:Received:X-QQ-SSF:
-	 X-QQ-GoodBg:X-BIZMAIL-ID:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 MIME-Version:Content-Transfer-Encoding:X-QQ-SENDSIZE:Feedback-ID:
-	 X-QQ-XMAILINFO:X-QQ-XMRINFO:X-QQ-RECHKSPAM;
-	bh=6W4tTNb+kgDIVSWyfMU6HSxB+Dr8oZihxHB4spQItl0=;
-	b=arwEd7+etQqc+2x4RbKE7olQ0EzLexTZOcEBklUMWoKJgCpTAyuI4eIKXeyScQ5HizMD
-	 R3AVd7N7MLknjMqedELPDLDu8H5iskSdma6jgyqLP6Wc+GdxS5K15Ulb91GJBdwdP3S0k
-	 L+6tZG8i7+pFhkdHhLHZfJFBEpF+bFIVGdwFSIyuBJu0eOaTThYeriZBeDvxn/x2HnYJX
-	 VN9MKHVxedudJ/SSb1LIiLmI/F6/JPSG1uFsRKAobAJz3J9FvfK6fyNn7qJyHpE6cSiLD
-	 BHR51ajxsk5OLJ9axaqCPFQ4nKbiLi/AS2JRHe/uhiikoPcjph4WQOCxIY1yrvpRNpw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795091596;
+	h=DMARC-Filter:Received:Received:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-CM-SenderInfo:X-Coremail-Antispam;
+	bh=GZIXt1FCyY7wDUEDFTTQTc83fPqS8/sH+Vhx8EdNRsk=;
+	b=q73fO6ottNKrb+hwZZxVIcs2QciKjNe7BAHhYwoX5Olub+oT+NwDuNTXtZ5YAYZQEsn7
+	 PGnRgtfub9+LFXStIxTo0xxAgs2f8ul/bqEYQF9/79oiDDPFDn91k7j8yEjJKIyQjv4qV
+	 TgezGE9KVNX9qz8RH3hwAqzUzisAU3J+FUAoLGlOIytY7AQZ3yZuxsMzbnSc/8yCZh+Ie
+	 ZWjLgR2CZW6temm/gbGa6tKJYKaC/N47vvxbYL+Tmc8PMVILpbqCmQ2UB/r81sHmF+0if
+	 vsxxgSosUWHXbiUsJgnYxiKhcJ58ZXJZFWkZVMF6Hf2a1yaiilDaLnWfXp5UqfvLVNw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=kylinsec.com.cn;
-	spf=pass smtp.mailfrom=kylinsec.com.cn;
-	arc=none smtp.remote-ip=52.59.177.22
-Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38C1F606A32F
-	for <loongarch@lists.linux.dev>; Thu, 19 Nov 2026 12:22:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 38C1F606A32F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinsec.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinsec.com.cn
-X-QQ-mid: esmtpgz14t1795090890tb815eca8
-X-QQ-Originating-IP: fwc4cfVGoeIqaBRjxMZyyuwBKLkTal6gSF2+iLTfqKM=
-Received: from arch ( [175.0.188.152])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 19 Nov 2026 20:21:28 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 14019034921868307575
-From: Luo Qiu <luoqiu@kylinsec.com.cn>
-To: Jianmin Lv <lvjianmin@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Yao Zi <ziyao@disroot.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-	Zixing Liu <liushuyu@aosc.io>
+	dmarc=none header.from=loongson.cn;
+	spf=pass smtp.mailfrom=loongson.cn;
+	arc=none smtp.remote-ip=114.242.206.163
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66A59606A324
+	for <loongarch@lists.linux.dev>; Thu, 19 Nov 2026 12:33:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 66A59606A324
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [123.138.236.242])
+	by gateway (Coremail) with SMTP id _____8Ax39KG7P5qgCghAA--.29129S3;
+	Thu, 19 Nov 2026 20:33:10 +0800 (CST)
+Received: from linux.localdomain (unknown [123.138.236.242])
+	by front1 (Coremail) with SMTP id qMiowJBx5cyE7P5qquY1AA--.15507S2;
+	Thu, 19 Nov 2026 20:33:08 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/loongarch: laptop: Fix backlight device lifetime on unload
-Date: Thu, 19 Nov 2026 20:19:37 +0800
-Message-ID: <C3361EF435F90A22+20261119121937.2447021-1-luoqiu@kylinsec.com.cn>
-X-Mailer: git-send-email 2.56.1
+Subject: [PATCH v3] LoongArch: Fix preemptible warnings from smp_processor_id()
+Date: Thu, 19 Nov 2026 20:33:07 +0800
+Message-ID: <20261119123307.28574-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -61,105 +51,166 @@ List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpgz:kylinsec.com.cn:qybglogicsvrgz:qybglogicsvrgz3a-0
-X-QQ-XMAILINFO: NSQm2ODd9qLZII/S/l8bWgzRXko93qEWUfhnrgep9CloUGqKKaBujEIz
-	UG8uxRE5fXmCfwj+561+xp3MMqY8w/aD2L8hF4WsVeu7lE4TdAPGuzkrScOHBRdgkrvZJyw
-	P35hFGSahPwrkMcnri2CcMTbFP2aiWa6rGjOnRWH3pqNAhaLhu/uYUY1SjKP5YPKKHk/4LO
-	vKfZdfOlbRoeOqOFPw8byS4XvwWndIxpTW0QXWB7JUM15EJviRPvki8/+R/N/nCpTX8oZO0
-	TE0DH6vJ1s8LFtmTuABunOyUg6Qu0RvHNK28OjYo7ckem2XRWGhmLHMfkY5LNKDIpOx2w9k
-	9W4c7+PHESMX/Wc8I2zCSA+CVYGGqe0Ij+9QIjYAfHfL5e9JzA0R5KtJwPy6Ox5hkyzdtNn
-	jQFNqIwbmwDIiLgqGbzaTiLOAK+RdQPjpAXGGEwHlEEdwi5Z6w2phsH4JESrnl2Cg9+UV1+
-	cIwB0f60biNAzI/q72FmTA1hzy1Rx16PEwcqFd1skH4yShX89sjSwVO6OUz54erELWHMlPX
-	mRJ5P+1jygdWtDkAEUgn7YdbszVVl+vgKV3LnqcrRX6gyQsvI+E/isGxBmGzvmFesoZ6z8n
-	mEibocJReyE6nnRGdbviRhJlDsmeE2885m4fN2frhGK1N674QKCo/uX1AqCeEt9/BUdRPqL
-	cHKcH8qt044QrN0zOF8mNIknKB4gUSWXP1pioNanP9599yeE0i7QnTNcE56RVpUE7jjPWQl
-	k9yPFo8ZSfQBosikipHjPbgLAaQLO2k/zY5EHhN7Sipchv+OEm5y7xNljPsastSVVB/y0wV
-	7wbmBvQqAEcT1Q3exHvkGk7Fpl4blejVCm/iiAIIfKgbGWgcdg/TQddql99Uigzr0PpDtrm
-	8ym5SmiviqCZ8OVXno/mwnBUKIL3OBSoTloacK/kK7BVRGuI2YjrwYIKYN2HnJh2gVviiNK
-	iipOw30hmFtjSFblGOnze6hbiGQpykYhB1QF2sQ5WW9XSh1ZRTdOewd0LN1F94rG5I90=
-X-QQ-XMRINFO: OWPUhxQsoeAVwkVaQIEGSKwwgKCxK/fD5g==
-X-QQ-RECHKSPAM: 0
+X-CM-TRANSID:qMiowJBx5cyE7P5qquY1AA--.15507S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Xw18JF4rWFW7Wry7trWkAFc_yoW7Xry5pF
+	yxu3Z5Jr4fJ3WkGw1Iqw4rury3J3s5Xa1xtanxAa4fZa1YvryDWrn3K34xZF1Uu34rWr4S
+	93sIqw1Y9a1UAagCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
+	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcyxRUUUUU
 
-The driver registers a platform backlight device during module init but
-discards the returned pointer. Consequently, the device is never
-unregistered when the module is removed, leaving its ops callbacks
-pointing into freed module text. After module removal, reading the
-backlight's actual_brightness attribute can call the stale callback and
-crash the kernel. Registration failures are also silently ignored.
+When CONFIG_DEBUG_PREEMPT is enabled on a Non-SMP kernel, calls to
+smp_processor_id() (including via current_cpu_data) in preemptible
+contexts trigger numerous "using smp_processor_id() in preemptible"
+warnings during cacheinfo setup and local TLB flushes.
 
-Store the returned pointer, use it for resume, and unregister it on
-module exit. Propagate registration failures to avoid silently
-continuing without a backlight device.
+Furthermore, disabling preemption in local TLB flushes is strictly
+required for safety even on preemptible UP kernels. On !CONFIG_SMP,
+flush_tlb_{mm,range,page}() map directly to local_flush_tlb_*(),
+bypassing the preemption protection in smp.c. Without preemption
+disabled, a context switch after asid_valid() can trigger an ASID
+generation rollover and corrupt the ASID state mid-operation.
 
-Fixes: 6246ed09111f ("LoongArch: Add ACPI-based generic laptop driver")
-Signed-off-by: Luo Qiu <luoqiu@kylinsec.com.cn>
+Fix the callers properly:
+- Use the passed-in 'cpu' parameter to index cpu_data[cpu] directly
+  in init_cache_level() and populate_cache_leaves().
+- Use get_cpu() and put_cpu() in local_flush_tlb_{range, page}(),
+  and reuse cpu_data[cpu] in local_flush_tlb_range().
+- Also convert local_flush_tlb_mm() to use get_cpu() and put_cpu()
+  for consistency.
+
+This eliminates warnings on Non-SMP builds while ensuring strict
+preemption safety in preemptible UP configurations.
+
+Fixes: b61a40afca16 ("LoongArch: Refactor cache probe and flush methods")
+Fixes: 09cfefb7fa70 ("LoongArch: Add memory management")
+Cc: stable@vger.kernel.org
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- drivers/platform/loongarch/loongson-laptop.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+v3: Restore get_cpu()/put_cpu() in local TLB flush functions to prevent
+    ASID rollover races on preemptible UP kernels.
+v2: Use raw_smp_processor_id() instead of get_cpu()/put_cpu() in local
+    TLB flush functions.
 
-diff --git a/drivers/platform/loongarch/loongson-laptop.c b/drivers/platform/loongarch/loongson-laptop.c
-index 4ec56621db24..ec0742e5ed46 100644
---- a/drivers/platform/loongarch/loongson-laptop.c
-+++ b/drivers/platform/loongarch/loongson-laptop.c
-@@ -56,6 +56,7 @@ static acpi_handle hotkey_handle;
- static struct key_entry hotkey_keycode_map[GENERIC_HOTKEY_MAP_MAX];
+ arch/loongarch/kernel/cacheinfo.c |  8 ++++----
+ arch/loongarch/mm/tlb.c           | 22 +++++++++++-----------
+ 2 files changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/arch/loongarch/kernel/cacheinfo.c b/arch/loongarch/kernel/cacheinfo.c
+index 8e231b0d2cd6..334d116e4c29 100644
+--- a/arch/loongarch/kernel/cacheinfo.c
++++ b/arch/loongarch/kernel/cacheinfo.c
+@@ -11,11 +11,11 @@
  
- static bool bl_powered;
-+static struct backlight_device *backlight_dev;
- static int loongson_laptop_backlight_update(struct backlight_device *bd);
- 
- /* 2. ACPI Helpers and device model */
-@@ -194,13 +195,12 @@ static int loongson_hotkey_resume(struct device *dev)
+ int init_cache_level(unsigned int cpu)
  {
- 	int status = 0;
- 	struct key_entry ke;
--	struct backlight_device *bd;
+-	int cache_present = current_cpu_data.cache_leaves_present;
++	int cache_present = cpu_data[cpu].cache_leaves_present;
+ 	struct cpu_cacheinfo *this_cpu_ci = get_cpu_cacheinfo(cpu);
  
--	bd = backlight_device_get_by_type(BACKLIGHT_PLATFORM);
--	if (bd) {
--		loongson_laptop_backlight_update(bd) ?
-+	if (backlight_dev) {
-+		loongson_laptop_backlight_update(backlight_dev) ?
- 		pr_warn("Loongson_backlight: resume brightness failed") :
--		pr_info("Loongson_backlight: resume brightness %d\n", bd->props.brightness);
-+		pr_info("Loongson_backlight: resume brightness %d\n",
-+				backlight_dev->props.brightness);
- 	}
- 
- 	/*
-@@ -409,6 +409,7 @@ static int laptop_backlight_register(void)
- {
- 	int status = 0, ret;
- 	struct backlight_properties props;
-+	struct backlight_device *bd;
- 
- 	memset(&props, 0, sizeof(props));
- 
-@@ -426,9 +427,12 @@ static int laptop_backlight_register(void)
- 	props.power = BACKLIGHT_POWER_ON;
- 	props.type = BACKLIGHT_PLATFORM;
- 
--	backlight_device_register("loongson_laptop",
-+	bd = backlight_device_register("loongson_laptop",
- 				NULL, NULL, &backlight_laptop_ops, &props);
-+	if (IS_ERR(bd))
-+		return PTR_ERR(bd);
- 
-+	backlight_dev = bd;
+ 	this_cpu_ci->num_levels =
+-		current_cpu_data.cache_leaves[cache_present - 1].level;
++		cpu_data[cpu].cache_leaves[cache_present - 1].level;
+ 	this_cpu_ci->num_leaves = cache_present;
  
  	return 0;
- }
-@@ -622,6 +626,9 @@ static void __exit generic_acpi_laptop_exit(void)
- 				generic_subdriver_exit(&generic_sub_drivers[i]);
- 		}
- 	}
-+
-+	backlight_device_unregister(backlight_dev);
-+	backlight_dev = NULL;
+@@ -67,10 +67,10 @@ static void cache_cpumap_setup(unsigned int cpu)
+ 
+ int populate_cache_leaves(unsigned int cpu)
+ {
+-	int i, cache_present = current_cpu_data.cache_leaves_present;
++	int i, cache_present = cpu_data[cpu].cache_leaves_present;
+ 	struct cpu_cacheinfo *this_cpu_ci = get_cpu_cacheinfo(cpu);
+ 	struct cacheinfo *this_leaf = this_cpu_ci->info_list;
+-	struct cache_desc *cd, *cdesc = current_cpu_data.cache_leaves;
++	struct cache_desc *cd, *cdesc = cpu_data[cpu].cache_leaves;
+ 
+ 	for (i = 0; i < cache_present; i++) {
+ 		cd = cdesc + i;
+diff --git a/arch/loongarch/mm/tlb.c b/arch/loongarch/mm/tlb.c
+index aaf7d685cc2a..ea52a55ca85e 100644
+--- a/arch/loongarch/mm/tlb.c
++++ b/arch/loongarch/mm/tlb.c
+@@ -40,25 +40,21 @@ EXPORT_SYMBOL(local_flush_tlb_kernel);
+  */
+ void local_flush_tlb_mm(struct mm_struct *mm)
+ {
+-	int cpu;
+-
+-	preempt_disable();
+-
+-	cpu = smp_processor_id();
++	int cpu = get_cpu();
+ 
+ 	if (asid_valid(mm, cpu))
+ 		drop_mmu_context(mm, cpu);
+ 	else
+ 		cpumask_clear_cpu(cpu, mm_cpumask(mm));
+ 
+-	preempt_enable();
++	put_cpu();
  }
  
- module_init(generic_acpi_laptop_init);
+ void local_flush_tlb_range(struct vm_area_struct *vma, unsigned long start,
+ 	unsigned long end)
+ {
+ 	struct mm_struct *mm = vma->vm_mm;
+-	int cpu = smp_processor_id();
++	int cpu = get_cpu();
+ 
+ 	if (asid_valid(mm, cpu)) {
+ 		unsigned long size, flags;
+@@ -67,9 +63,9 @@ void local_flush_tlb_range(struct vm_area_struct *vma, unsigned long start,
+ 		start = round_down(start, PAGE_SIZE << 1);
+ 		end = round_up(end, PAGE_SIZE << 1);
+ 		size = (end - start) >> (PAGE_SHIFT + 1);
+-		if (size <= (current_cpu_data.tlbsizestlbsets ?
+-			     current_cpu_data.tlbsize / 8 :
+-			     current_cpu_data.tlbsize / 2)) {
++		if (size <= (cpu_data[cpu].tlbsizestlbsets ?
++			     cpu_data[cpu].tlbsize / 8 :
++			     cpu_data[cpu].tlbsize / 2)) {
+ 			int asid = cpu_asid(cpu, mm);
+ 
+ 			while (start < end) {
+@@ -83,6 +79,8 @@ void local_flush_tlb_range(struct vm_area_struct *vma, unsigned long start,
+ 	} else {
+ 		cpumask_clear_cpu(cpu, mm_cpumask(mm));
+ 	}
++
++	put_cpu();
+ }
+ 
+ void local_flush_tlb_kernel_range(unsigned long start, unsigned long end)
+@@ -112,7 +110,7 @@ void local_flush_tlb_kernel_range(unsigned long start, unsigned long end)
+ 
+ void local_flush_tlb_page(struct vm_area_struct *vma, unsigned long page)
+ {
+-	int cpu = smp_processor_id();
++	int cpu = get_cpu();
+ 
+ 	if (asid_valid(vma->vm_mm, cpu)) {
+ 		int newpid;
+@@ -123,6 +121,8 @@ void local_flush_tlb_page(struct vm_area_struct *vma, unsigned long page)
+ 	} else {
+ 		cpumask_clear_cpu(cpu, mm_cpumask(vma->vm_mm));
+ 	}
++
++	put_cpu();
+ }
+ 
+ /*
 -- 
-2.56.1
+2.42.0
 
