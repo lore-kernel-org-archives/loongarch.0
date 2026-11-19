@@ -1,121 +1,79 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.30
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795075465;
-	b=KlUfUFf/KyYrNW99Fu2EzUJnBP/aeVQQ984gygiqjSqKmxCu6KR8kf1FljMi4LOnulyN
-	 UCUzOwC1ah582ImLsCL5wrEAYOF/rJQhXuO5oqrQambs5sK9cXDVge6gbQ2Cm15GiUKGM
-	 5tgdpYEfNzQVI8afC2wtwTY356vi82YCKuo86O+KwH++1PmgCMUdNxDJ9Qi5iGKshsrw1
-	 BllJcDYc/PNkpShQK33vPvz5pUO8g1fzKEG9mT/PGJHmexQOKlGG5sJkQqUXO/3Ld/Mh/
-	 HRGTgYOYtHgDlAHZnN+VACwOKneyGXuEled3W+fEQNF4skiLdCnj9wQqej7LCDwOG3A==
+	t=1795076580;
+	b=HEfqUYbN5AIk6vemxQ7Hs+JmTywHD13v9rx4RZF5t7HPWmFpwMbqjcphGivkFvVMTd6M
+	 5H0kvgKm3b+5nRqosuanO3O+H9GRq2P+b7BULt/JgMummCw6Pmeepisxwy6CQxid4ybPb
+	 ze4YPmOYjGWoI5+9yPcuwXETXPGv90N/84OFpexbjGPF7jA0mL7SEPaYvJLUvE4tQOcWu
+	 gBWFNRJi9car/LOrawL+TPwdRZlrJia6Dfa57nMvemPFyuw/LihBURnYt2kgIGAlfEncG
+	 hSJdd/NlyM94Vt168rUHlIhNmRhrFv17DHsKpOBofJ04KrREb3MWN3KrP4ciYaupmrA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795075465;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
-	 Received:Received:Received:Received:Date:From:To:Cc:Subject:
-	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To:X-TM-AS-GCONF:X-Proofpoint-Reinject:
-	 X-Proofpoint-Spam-Details-Enc:X-Authority-Analysis:X-Proofpoint-GUID:
-	 X-Proofpoint-ORIG-GUID:X-Proofpoint-Spam-Info:
-	 X-Proofpoint-Virus-Version:X-Proofpoint-Spam-Details;
-	bh=KJVj/kj9TUfC5U25moNOJpfG8IeN1Z/DKDptskt/i9I=;
-	b=KftyMluYIKgmx5/dofOViT1ZPZX5TSyPmgNfLJlqtZKXwEY6CzDJSfTBv9KDFarKd5/f
-	 8Lnn6uD+dYe/8l6QluVER3ViqpLt/61u3WOz356WTKoeIwzy3mp6X1srtWja/zyKBLl73
-	 r7aDpk7YweAm39Khd8348uD3oXciAPITMJFt77bSZpNOHYe5ctHGqPO4R3G50T6S3wIOI
-	 BbWi86vpveG3BVp/ZkM6oPfp1E/Dk5b3/vvLOWAu0DNzGwZFCzV2GX/pOIWjdHwDs+xG4
-	 wRQaZxoUnVdaNLENdSSi6K++gM/We5bUBw36jmrmgJ6gQ187fJYNHNc5fx5uOKxkppA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795076580;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=9xtLTQESNoyZANIpHgUGyLeoukqSPARphk8aXo+VHwE=;
+	b=RTLxMh7np1zCd0YR+UoeH/8b72T417juvCVNcfh1w0Pjv5k8TC8kg2CRHoBzE4oW/FYL
+	 ZbvWYh4CLz8Yal1oxdtZy/VGo/wPGWlnENyQTgzl8VHS+UBM/qR6boc7ZtHBHnbmpMSX0
+	 WC268OboF1iGji6XRrVQbwwdCDXom7Xv65Gnk/nQ/FuM3AjdMTaBEqAkQxd2W0EvuCbS1
+	 AnV6n+zp8ab340VfGGMWhGzvYIl18Obf9HIUkmzBJk8byoxhzVRQ4AoYtrMCfIEBbXrRH
+	 5KKLR9FPMF6Gt1M1X1CCOuyrpEYqda6lFqhPpsHZyZL3jZzZp0PoYJ14eutsfODwPkw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.ibm.com;
-	spf=pass smtp.mailfrom=linux.ibm.com;
-	dkim=pass header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=NNXYf4Is;
-	arc=none smtp.remote-ip=148.163.156.1
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b="TLtOz3/V";
+	arc=none smtp.remote-ip=95.215.58.30
+Received: from mta1.migadu.com (out-30.mta1.migadu.com [95.215.58.30])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16FA260A2600;
-	Thu, 19 Nov 2026 08:04:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 16FA260A2600
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6D1606A325
+	for <loongarch@lists.linux.dev>; Thu, 19 Nov 2026 08:22:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BB6D1606A325
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=NNXYf4Is
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6AJ6uX0n3598174;
-	Thu, 19 Nov 2026 08:03:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=KJVj/kj9TUfC5U25moNOJpfG8IeN1Z
-	/DKDptskt/i9I=; b=NNXYf4Iskp9aW7wh9wp5+yD++njdn0lJ9UHUxyVtLnGcOh
-	+imeaNzLylMStHs7rWLVAS/6zxMvGlf790mWbLINInkhlMr5NPZfjBMEo93R6TDo
-	v1DieXnPNHqmI2iGeOfK2qN8k+7IyE/kJf5EkWt7mNkDf6dP4/w4u3TpBCrupPQ6
-	pDqkt+RQPiyksep4NBjfa54jrMrXYOPKvNmCqIAXAWDBQBpMyufCtsh83WEqcMFN
-	ht4aQkWJNRHECdzT4s6B/WQLa81T2r3p9hEXy2PAyIhG1A3SoyH2PU2IMB/IZTHN
-	Q9Sl/8Ox0awQGrT5FVxR6BIilCP6EhsnMa8O+44A==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4j105nfft6-1
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Thu, 19 Nov 2026 08:03:37 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 6AJ74was179507;
-	Thu, 19 Nov 2026 08:03:36 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4j1m3htdru-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 19 Nov 2026 08:03:36 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6AJ83T0246989662
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 19 Nov 2026 08:03:29 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 53ABD20040;
-	Thu, 19 Nov 2026 08:03:29 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BBB2B2004E;
-	Thu, 19 Nov 2026 08:03:28 +0000 (GMT)
-Received: from osiris (unknown [9.68.31.201])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu, 19 Nov 2026 08:03:28 +0000 (GMT)
-Date: Thu, 19 Nov 2026 09:03:27 +0100
-From: Heiko Carstens <hca@linux.ibm.com>
-To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Cc: Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Baoquan He <baoquan.he@linux.dev>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Pasha Tatashin <pasha.tatashin@soleen.com>,
-        Paul Walmsley <pjw@kernel.org>, Pratyush Yadav <pratyush@kernel.org>,
-        Rich Felker <dalias@libc.org>, Russell King <linux@armlinux.org.uk>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@kernel.org>, Vasily Gorbik <gor@linux.ibm.com>,
-        Will Deacon <will@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>, x86@kernel.org,
-        Alexandre Ghiti <alex@ghiti.fr>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-        Cong Wang <cwang@multikernel.io>, Mark Rutland <mark.rutland@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>,
-        "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
-        Shrikanth Hegde <sshegde@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>, WANG Xuerui <kernel@xen0n.name>,
-        kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        loongarch@lists.linux.dev
-Subject: Re: [PATCH 2/2] arch, kexec: declare kexec and crash capabilities in
- Kconfig.kexec
-Message-ID: <20261119080327.12916Ac7-hca@linux.ibm.com>
-References: <20261119-arch-kconfig-v1-0-37c276fe4d26@kernel.org>
- <20261119-arch-kconfig-v1-2-37c276fe4d26@kernel.org>
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=TLtOz3/V
+X-Envelope-To: loongarch@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=v7j+so0A9nPKyNFG/7i7Z4Ia8f3AlnUzgV4OZVQCLNk=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1795076577; v=1; x=1795681377;
+ b=TLtOz3/Vwuj2oRnKgQShgwM2JXmHAm/33S/i82MEq1IycE+UakLvzLvRpgvUdIVIZ0BHoC8l
+ Akr2G97MGgshl1tAB1+QvcUIremLvLiFkC4ETGpEHGZ+DwWlMmW7F3ywhbnde1jS4mbSipLh4lc
+ vXrUVH6O539xox5E6fdKLvsI=
+X-Envelope-To: loongarch@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id 09da8324dc43e42a;
+	Thu, 19 Nov 2026 08:22:57 +0000
+X-Mizu-Trace-ID: 09da8324dc43e42a
+X-Migadu-Flow: FLOW_OUT
+From: George Guo <dongtai.guo@linux.dev>
+To: chenhuacai@kernel.org,
+	ardb@kernel.org,
+	pratyush@kernel.org
+Cc: rppt@kernel.org,
+	pasha.tatashin@soleen.com,
+	shuah@kernel.org,
+	ilias.apalodimas@linaro.org,
+	akpm@linux-foundation.org,
+	baoquan.he@linux.dev,
+	ruirui.yang@linux.dev,
+	guodongtai@kylinos.cn,
+	kernel@xen0n.name,
+	graf@amazon.com,
+	liukexin@kylinos.cn,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	linux-efi@vger.kernel.org
+Subject: Re: [PATCH v6 1/8] efi: Pass KHO state to the next kernel in a configuration table
+Date: Thu, 19 Nov 2026 17:22:52 +0900
+Message-ID: <20261119082252.9120-1-dongtai.guo@linux.dev>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <CAAhV-H5Vse=pKC3Beqhqxa7fqadiGVNqkSy_06HZ3Luw2Pmj5Q@mail.gmail.com>
+References: <CAAhV-H5Vse=pKC3Beqhqxa7fqadiGVNqkSy_06HZ3Luw2Pmj5Q@mail.gmail.com>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -125,65 +83,43 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261119-arch-kconfig-v1-2-37c276fe4d26@kernel.org>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTE5MDAzMSBTYWx0ZWRfXy8bDEZD/HzO1
- Ej6fSCUmufwaGVs8qDbsLLSFspAjGF8EV57/b1UAhhkJVI7XRX4gvSjQSKfcSsiK74DRTfmozkt
- /ROcpv4UPzkhercU92Bv3pOW124/C4PyRRuMx/ikvSMd1AE3EG9BKsoxjRjGUkLK9hw7IJKrg4/
- YRAYeEUUMXCqn82c56PVhZptydQWuHKP4jJKXE05r4eSXDJU3z8jTciGXLv0tpOPm13aCmj/f0c
- VlJi7ZYKgBQELDj74CX57DaiLHPhuPSCjFRc6oLUx8NvurAyLoOAcOcizOtr/oEPqrKfVSGXr8Z
- I+pWvX+KMJTvAl1hPVIiPa366OqIAmWq2w0D6SVFoDpZkCddgcNowB9MS0YkiNpmHwVIKkH3Aig
- TSWl3fJ/fu21seeQCA7tRQxlIoKvqNtJGr/wq/mpgR9CL98J1JRMfDEC9Y0n62mBzCDYUXdtbhh
- 6zgnLpz9nmHYhElrFug==
-X-Authority-Analysis: v=2.4 cv=HN9WhYtv c=1 sm=1 tr=0 ts=6afead5a cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=kj9zAlcOel0A:10 a=zJRp6_cAMcgA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=VwQbUJbxAAAA:8
- a=VnNF1IyMAAAA:8 a=rNe8aJYx3auY1A-cjiAA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-GUID: 6EMbp8-aufz9djOo_kjz6yvOKs-gD7lm
-X-Proofpoint-ORIG-GUID: 3vzaEwyOTJJHOeKIPx0B_GRjewJ73XWm
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMTE5MDAzMSBTYWx0ZWRfX+jzSPCVdQB28
- e9b6AO4bXKV5KrHOR5wnZ38l6ryoyS9P0QgO17Eyyj1+OKhehU8TYsQNMNVX7bkCr++NTblrk4q
- XKZmhJevMP70D8zhZsJSq4dAvRO2bY0=
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
- definitions=2026-11-19_02,2026-11-16_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 priorityscore=1501 impostorscore=0 suspectscore=0 malwarescore=0
- adultscore=0 phishscore=0 lowpriorityscore=0 clxscore=1011 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2611040001 definitions=main-2611190031
+Content-Transfer-Encoding: 8bit
 
-On Thu, Nov 19, 2026 at 08:16:58AM +0200, Mike Rapoport (Microsoft) wrote:
-> The options that let an architecture opt in to kexec and crash dump
-> features, like ARCH_SUPPORTS_KEXEC or ARCH_SUPPORTS_CRASH_DUMP, are
-> defined in each architecture's Kconfig as def_bool, and most of them are
-> copied over several architectures.
-> 
-> Declare these options once in kernel/Kconfig.kexec next to the options
-> that depend on them, similarly to how mm/Kconfig does it, and make the
-> architectures select them instead.
-> 
-> Selection conditions are preserved, so there is no functional change.
-> 
-> Acked-by: Baoquan He <baoquan.he@linux.dev>
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> ---
->  arch/arm/Kconfig       | 12 +++---------
->  arch/arm64/Kconfig     | 36 +++++++++---------------------------
->  arch/loongarch/Kconfig | 20 +++++---------------
->  arch/m68k/Kconfig      |  4 +---
->  arch/mips/Kconfig      | 12 +++---------
->  arch/parisc/Kconfig    |  8 ++------
->  arch/powerpc/Kconfig   | 30 +++++++-----------------------
->  arch/riscv/Kconfig     | 28 +++++++---------------------
->  arch/s390/Kconfig      | 28 ++++++----------------------
->  arch/sh/Kconfig        | 16 ++++------------
->  arch/x86/Kconfig       | 48 ++++++++++++------------------------------------
->  kernel/Kconfig.kexec   | 42 ++++++++++++++++++++++++++++++++++++++++++
->  12 files changed, 101 insertions(+), 183 deletions(-)
+Hi Huacai, Ard, Pratyush,
 
-Acked-by: Heiko Carstens <hca@linux.ibm.com> # s390
+On Wed, Nov 04 2026, Huacai Chen wrote:
+> I prefer to keep it in LoongArch until a second architecture, and I
+> think Ard is the same. But this is not a strong objection to Pratyush.
+
+Kexin Liu and I have tried x86 as the second user, to see whether the
+common table holds up. It needed only small changes:
+
+- The x86 EFI stub installs the table, as the LoongArch stub does.
+  install_kho_table() moves from efi-stub.c to efi-stub-helper.c so
+  that the x86 stub can call it.
+
+- kexec_file_load() skips the SETUP_KEXEC_KHO record when the table
+  exists and the next kernel will get efi_info. Otherwise, for example
+  on a legacy BIOS boot or with noefi, it falls back to setup_data.
+
+- When there is no SETUP_KEXEC_KHO record, the decompressor's KASLR
+  code looks up the KHO bootmem areas in the table, so the kernel is
+  not decompressed onto preserved memory.
+
+The table layout did not change. The only change to the common code is
+that efi_kho_table_found() is no longer __init, since x86 calls it at
+kexec load time.
+
+Tested in QEMU on x86_64. With OVMF, the KHO vmtest and
+luo_kexec_simple pass, and the second kernel finds the KHO state
+through the table. With SeaBIOS, the KHO vmtest passes through
+setup_data.
+
+So I would like to keep the table common in v7. Would you prefer the
+x86 patches in the same series, so that the generic code comes with a
+second user, or as a separate series on top?
+
+Pratyush, does this match what you had in mind for x86?
+
+Thanks,
+George
