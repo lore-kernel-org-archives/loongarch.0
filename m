@@ -1,50 +1,121 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=148.163.156.1
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795074406;
-	b=I92fn1SoqrW2U4vrxoHNxjTynLZ3bajkAFxGg1bD1L9Q84KqiittZAIPQ0En87hUKalt
-	 3ogOpSV15qQw8EUmU93zrz24/bDCJv7OLEPKAgegPZrOTHg6B7PyHWEylM47tRTByPmkt
-	 HUk/LSyRo1N7j2a23JXAfWnqMRr5GBrlISUAMSdFdvARwMqvbjqS2qPzbj6LPCiQtk4VB
-	 WGPrUFPzNeVWgyinpJQhQlH+rnYLI8D+OCw/HimDpFKggmaKL5nSHxNGgmCSu1L9N7f+m
-	 knbAhmVZKAAbo4as6o1TWhBt8nNyDHNzmPpJVU70X+ikgCdEu+CZ8rZS06gRfQgw9HQ==
+	t=1795075465;
+	b=KlUfUFf/KyYrNW99Fu2EzUJnBP/aeVQQ984gygiqjSqKmxCu6KR8kf1FljMi4LOnulyN
+	 UCUzOwC1ah582ImLsCL5wrEAYOF/rJQhXuO5oqrQambs5sK9cXDVge6gbQ2Cm15GiUKGM
+	 5tgdpYEfNzQVI8afC2wtwTY356vi82YCKuo86O+KwH++1PmgCMUdNxDJ9Qi5iGKshsrw1
+	 BllJcDYc/PNkpShQK33vPvz5pUO8g1fzKEG9mT/PGJHmexQOKlGG5sJkQqUXO/3Ld/Mh/
+	 HRGTgYOYtHgDlAHZnN+VACwOKneyGXuEled3W+fEQNF4skiLdCnj9wQqej7LCDwOG3A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795074406;
-	h=DMARC-Filter:Received:Received:Subject:From:To:Cc:References:
-	 Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:Content-Type:
-	 Content-Language:Content-Transfer-Encoding:X-CM-TRANSID:
-	 X-CM-SenderInfo:X-Coremail-Antispam;
-	bh=mY9EYFtlMX/MPL/gDCu7rzWVjhTIcPHK01mhC8Sxd9I=;
-	b=2k1VLgXFCwhFARDFRIc5d1FDoIlV4tJ6Sit1zUd4FEOu2lTfBwGg9JumTURE0W/3I1Ad
-	 5O/U5xMJlvwth4P/WcdmYu43eC7RSDExd4q5qHo/AoaGuKHdetQHVva6NcbS5Ii5fpkE9
-	 +wKScwOv19ILSOsWPrJrJ1+O8n/2XYf/m6t+rV6SU70uMOIwn7gpB71IlimgCdyt+cL/a
-	 NFhqwWthVPwIUTIFNBUpzwfq6SR63tEl2H7RZ0VpC9O9zokRF0vjPPqckunSen7wPZ7AD
-	 A+VKfvoaDEmOYilTyyWTf/aESaVRGGZhRRPsHFsvORJwRih0WqlBFX7HWNGNx6r77Pg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795075465;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
+	 Received:Received:Received:Received:Date:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To:X-TM-AS-GCONF:X-Proofpoint-Reinject:
+	 X-Proofpoint-Spam-Details-Enc:X-Authority-Analysis:X-Proofpoint-GUID:
+	 X-Proofpoint-ORIG-GUID:X-Proofpoint-Spam-Info:
+	 X-Proofpoint-Virus-Version:X-Proofpoint-Spam-Details;
+	bh=KJVj/kj9TUfC5U25moNOJpfG8IeN1Z/DKDptskt/i9I=;
+	b=KftyMluYIKgmx5/dofOViT1ZPZX5TSyPmgNfLJlqtZKXwEY6CzDJSfTBv9KDFarKd5/f
+	 8Lnn6uD+dYe/8l6QluVER3ViqpLt/61u3WOz356WTKoeIwzy3mp6X1srtWja/zyKBLl73
+	 r7aDpk7YweAm39Khd8348uD3oXciAPITMJFt77bSZpNOHYe5ctHGqPO4R3G50T6S3wIOI
+	 BbWi86vpveG3BVp/ZkM6oPfp1E/Dk5b3/vvLOWAu0DNzGwZFCzV2GX/pOIWjdHwDs+xG4
+	 wRQaZxoUnVdaNLENdSSi6K++gM/We5bUBw36jmrmgJ6gQ187fJYNHNc5fx5uOKxkppA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=loongson.cn;
-	spf=pass smtp.mailfrom=loongson.cn;
-	arc=none smtp.remote-ip=114.242.206.163
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E734A606A320
-	for <loongarch@lists.linux.dev>; Thu, 19 Nov 2026 07:46:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E734A606A320
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [123.138.236.242])
-	by gateway (Coremail) with SMTP id _____8AxZ7Viqf5qghMhAA--.1613S3;
-	Thu, 19 Nov 2026 15:46:42 +0800 (CST)
-Received: from [127.0.0.1] (unknown [123.138.236.242])
-	by front1 (Coremail) with SMTP id qMiowJDxTs9gqf5qMtM1AA--.42306S2;
-	Thu, 19 Nov 2026 15:46:41 +0800 (CST)
-Subject: Re: [PATCH v2] LoongArch: Fix preemptible warnings in cacheinfo and
- local TLB flush
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20261119060503.4114-1-yangtiezhu@loongson.cn>
- <4d58c06e-87a2-f01e-a669-d8bef1dec340@loongson.cn>
-Message-ID: <fb963628-3a3a-637a-6836-65001bf369ef@loongson.cn>
-Date: Thu, 19 Nov 2026 15:46:40 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	dmarc=pass header.from=linux.ibm.com;
+	spf=pass smtp.mailfrom=linux.ibm.com;
+	dkim=pass header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=NNXYf4Is;
+	arc=none smtp.remote-ip=148.163.156.1
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16FA260A2600;
+	Thu, 19 Nov 2026 08:04:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 16FA260A2600
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=NNXYf4Is
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6AJ6uX0n3598174;
+	Thu, 19 Nov 2026 08:03:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=KJVj/kj9TUfC5U25moNOJpfG8IeN1Z
+	/DKDptskt/i9I=; b=NNXYf4Iskp9aW7wh9wp5+yD++njdn0lJ9UHUxyVtLnGcOh
+	+imeaNzLylMStHs7rWLVAS/6zxMvGlf790mWbLINInkhlMr5NPZfjBMEo93R6TDo
+	v1DieXnPNHqmI2iGeOfK2qN8k+7IyE/kJf5EkWt7mNkDf6dP4/w4u3TpBCrupPQ6
+	pDqkt+RQPiyksep4NBjfa54jrMrXYOPKvNmCqIAXAWDBQBpMyufCtsh83WEqcMFN
+	ht4aQkWJNRHECdzT4s6B/WQLa81T2r3p9hEXy2PAyIhG1A3SoyH2PU2IMB/IZTHN
+	Q9Sl/8Ox0awQGrT5FVxR6BIilCP6EhsnMa8O+44A==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4j105nfft6-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Thu, 19 Nov 2026 08:03:37 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 6AJ74was179507;
+	Thu, 19 Nov 2026 08:03:36 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4j1m3htdru-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 19 Nov 2026 08:03:36 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6AJ83T0246989662
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 19 Nov 2026 08:03:29 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 53ABD20040;
+	Thu, 19 Nov 2026 08:03:29 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BBB2B2004E;
+	Thu, 19 Nov 2026 08:03:28 +0000 (GMT)
+Received: from osiris (unknown [9.68.31.201])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 19 Nov 2026 08:03:28 +0000 (GMT)
+Date: Thu, 19 Nov 2026 09:03:27 +0100
+From: Heiko Carstens <hca@linux.ibm.com>
+To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+Cc: Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Baoquan He <baoquan.he@linux.dev>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Pasha Tatashin <pasha.tatashin@soleen.com>,
+        Paul Walmsley <pjw@kernel.org>, Pratyush Yadav <pratyush@kernel.org>,
+        Rich Felker <dalias@libc.org>, Russell King <linux@armlinux.org.uk>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@kernel.org>, Vasily Gorbik <gor@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>, x86@kernel.org,
+        Alexandre Ghiti <alex@ghiti.fr>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+        Cong Wang <cwang@multikernel.io>, Mark Rutland <mark.rutland@arm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>,
+        "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+        Shrikanth Hegde <sshegde@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>, WANG Xuerui <kernel@xen0n.name>,
+        kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        loongarch@lists.linux.dev
+Subject: Re: [PATCH 2/2] arch, kexec: declare kexec and crash capabilities in
+ Kconfig.kexec
+Message-ID: <20261119080327.12916Ac7-hca@linux.ibm.com>
+References: <20261119-arch-kconfig-v1-0-37c276fe4d26@kernel.org>
+ <20261119-arch-kconfig-v1-2-37c276fe4d26@kernel.org>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -54,49 +125,65 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-In-Reply-To: <4d58c06e-87a2-f01e-a669-d8bef1dec340@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qMiowJDxTs9gqf5qMtM1AA--.42306S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrZr1kCFyDAry3Xr45GF4xKrX_yoW3uFg_Wr
-	4fWrn8tw40yr1ay3Z3Kw17XF1YqryUCw40g342kay5WwnrZ3y8GFWkKFnFyw4rJFsYgrs3
-	XrWq9r9Ivr4avosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbIxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
-	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
-	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
-	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUXVWUAw
-	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
-	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr
-	0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU83U
-	UUUUUUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261119-arch-kconfig-v1-2-37c276fe4d26@kernel.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTE5MDAzMSBTYWx0ZWRfXy8bDEZD/HzO1
+ Ej6fSCUmufwaGVs8qDbsLLSFspAjGF8EV57/b1UAhhkJVI7XRX4gvSjQSKfcSsiK74DRTfmozkt
+ /ROcpv4UPzkhercU92Bv3pOW124/C4PyRRuMx/ikvSMd1AE3EG9BKsoxjRjGUkLK9hw7IJKrg4/
+ YRAYeEUUMXCqn82c56PVhZptydQWuHKP4jJKXE05r4eSXDJU3z8jTciGXLv0tpOPm13aCmj/f0c
+ VlJi7ZYKgBQELDj74CX57DaiLHPhuPSCjFRc6oLUx8NvurAyLoOAcOcizOtr/oEPqrKfVSGXr8Z
+ I+pWvX+KMJTvAl1hPVIiPa366OqIAmWq2w0D6SVFoDpZkCddgcNowB9MS0YkiNpmHwVIKkH3Aig
+ TSWl3fJ/fu21seeQCA7tRQxlIoKvqNtJGr/wq/mpgR9CL98J1JRMfDEC9Y0n62mBzCDYUXdtbhh
+ 6zgnLpz9nmHYhElrFug==
+X-Authority-Analysis: v=2.4 cv=HN9WhYtv c=1 sm=1 tr=0 ts=6afead5a cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=kj9zAlcOel0A:10 a=zJRp6_cAMcgA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=VwQbUJbxAAAA:8
+ a=VnNF1IyMAAAA:8 a=rNe8aJYx3auY1A-cjiAA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-GUID: 6EMbp8-aufz9djOo_kjz6yvOKs-gD7lm
+X-Proofpoint-ORIG-GUID: 3vzaEwyOTJJHOeKIPx0B_GRjewJ73XWm
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMTE5MDAzMSBTYWx0ZWRfX+jzSPCVdQB28
+ e9b6AO4bXKV5KrHOR5wnZ38l6ryoyS9P0QgO17Eyyj1+OKhehU8TYsQNMNVX7bkCr++NTblrk4q
+ XKZmhJevMP70D8zhZsJSq4dAvRO2bY0=
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
+ definitions=2026-11-19_02,2026-11-16_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 priorityscore=1501 impostorscore=0 suspectscore=0 malwarescore=0
+ adultscore=0 phishscore=0 lowpriorityscore=0 clxscore=1011 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2611040001 definitions=main-2611190031
 
-On 11/19/26 2:09 PM, Tiezhu Yang wrote:
-> On 11/19/26 2:05 PM, Tiezhu Yang wrote:
->> When CONFIG_DEBUG_PREEMPT is enabled on a Non-SMP kernel, calls to
->> smp_processor_id() (including via current_cpu_data) in preemptible
->> contexts trigger many "BUG: using smp_processor_id() in preemptible"
->> warnings during cacheinfo setup and local TLB flushes.
-
-...
-
-> After switching back to get_cpu() / put_cpu() (as in v1), this ASID
-> race completely disappears under the exact same test.
+On Thu, Nov 19, 2026 at 08:16:58AM +0200, Mike Rapoport (Microsoft) wrote:
+> The options that let an architecture opt in to kexec and crash dump
+> features, like ARCH_SUPPORTS_KEXEC or ARCH_SUPPORTS_CRASH_DUMP, are
+> defined in each architecture's Kconfig as def_bool, and most of them are
+> copied over several architectures.
 > 
-> So I think we should keep get_cpu() / put_cpu() in
-> local_flush_tlb_{mm,range,page}() (as in v1) to ensure preemption
-> safety, especially for UP preemptible kernels.
+> Declare these options once in kernel/Kconfig.kexec next to the options
+> that depend on them, similarly to how mm/Kconfig does it, and make the
+> architectures select them instead.
+> 
+> Selection conditions are preserved, so there is no functional change.
+> 
+> Acked-by: Baoquan He <baoquan.he@linux.dev>
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> ---
+>  arch/arm/Kconfig       | 12 +++---------
+>  arch/arm64/Kconfig     | 36 +++++++++---------------------------
+>  arch/loongarch/Kconfig | 20 +++++---------------
+>  arch/m68k/Kconfig      |  4 +---
+>  arch/mips/Kconfig      | 12 +++---------
+>  arch/parisc/Kconfig    |  8 ++------
+>  arch/powerpc/Kconfig   | 30 +++++++-----------------------
+>  arch/riscv/Kconfig     | 28 +++++++---------------------
+>  arch/s390/Kconfig      | 28 ++++++----------------------
+>  arch/sh/Kconfig        | 16 ++++------------
+>  arch/x86/Kconfig       | 48 ++++++++++++------------------------------------
+>  kernel/Kconfig.kexec   | 42 ++++++++++++++++++++++++++++++++++++++++++
+>  12 files changed, 101 insertions(+), 183 deletions(-)
 
-If you are OK with the above analysis, I will send v3 (same to the
-code changes in v1, but need to update the commit message).
-
-Thanks,
-Tiezhu
-
+Acked-by: Heiko Carstens <hca@linux.ibm.com> # s390
