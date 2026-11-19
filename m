@@ -1,67 +1,76 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.54
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=212.42.244.94
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795092751;
-	b=2QLoJtb2f9Phr2W/2s04LKPukt/V2wBYU6hNyNlNkSxija8hQIWfiffiCfU7Pj9mCJdn
-	 IPMUeBjn0diDvxD1OMsGh1VFo2EItom9ms0gxclhwHi5APqkSj663L+l0tlYA57pnBqU4
-	 XYaMgmUdjLm27hwJpRdNLToCmWvpPdQbqNKiVUPipG3iWWBt6K68Y1QptWTl0ZA9DT9U7
-	 W83TCxqGoksxT4g0LjEi6kosz6rtkiBPhDQbU+FERzyovzVe46TA6T7j+x72W3aiuMAKf
-	 P7ho4MmWyx7S7QvUq7Zs1CuT+uDrLFSKwpzfcI2cd5E6cGX5pDuIs6DkNAapsLJmp6A==
+	t=1795101900;
+	b=SRO4Owc3jHQ5mSL528egwfJv7gPsfjyTCZcYgNJEyfqojSODeXOnfW7AF95ro0cl9JQw
+	 PC/3v3wJFTTv5Ayb2iGxqFDDw/3u5J4gRLL+MbHWrKLEfaeG6xO5WWwSWTLRIOKjE2Adz
+	 7htUtHoNDj14uHV8Fo1db4rT08pLaLnm8dZ0Us4kt6+f+JYNM9SbPKRNAzd2lG+/s8Uax
+	 qmRue1wcnqCTeyvaX3XRuR7UPifO4g30WcFwADhEK1bi+BO2G9hzbnbV1zo7oe9kvFr9R
+	 FVJg7AM6Cto93Rh5W3h+RoAiuSNBh7994Egcn0v3syGNz/70HKkREeGRyUvJ/VfAIvA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795092751;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=nOPSfl7MrQH3aAdmvuLmCg2r2GTpQs9P2IrkXtthaEg=;
-	b=RPMUQ94f82BueVYpeye7PEkHVC88jBcSXuukxTUY3qtDQW8PAYYxJlRH+q7MVZ+slPwI
-	 rdzngVwkBddIFYTJJhGeQYFSiPt9a1kLbDIHEej5Ffbg3rgRq96yWjmjBimZOAit/aG1J
-	 pue79tlR9CDKKGC4/3yQ8RMhxbjg6b+2rw8Jm31SMMniHiCP7Q1XEIRFhk75QO1X63GgC
-	 JAU81cfx8B5le7FID9nHoesG8geGajtxSej7D8yQ8Zmr9Xd0hZs1ZUW/HGtz75nW80Tlx
-	 b1X0NN0y/hAz4aual3QF/NqfC/hBG8J0UlRmZkCQvFgdHCGKvhY4JkvZ0dcy5tdPn/g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795101900;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
+	 Subject:Message-ID:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To:X-purgate-ID:X-purgate-type:X-purgate-size:X-Notice:
+	 X-purgate:X-purgate:X-pfmilter;
+	bh=UeMwgVjDLnDVqjMPlLrZzad82di4zvuEFr1fKsZ6T0U=;
+	b=n8hDvK7upFvLzzlnXsZnAp54ue60k+AnMyXUCqia+J4sl9DG743N7AS+YiJn09TXypqr
+	 BqfycxpzIsHBWtBdCNmbp3q1fKZPJnE2EyAkDnFKlKWTG/0zw+QkVgCRx8xgmmqyDLF5d
+	 I55mkFivlOoaaHvFZqziqh9MrSPVtlNHA5L+v83kbnblqzR2HFZhVD15NlTyji8fgYVqv
+	 9z3YAHjmWOMThctHjTs7klm3f0OfnjlB7xnIgEQvwWvmQNqvxfJaqakh43Ix2fFC8RE0H
+	 4ByF2/KC1lIBVX3tCAt1kaqhUC1uZAFaxI88YdH0pke4Z8Y09N9s3qmNRb27rFxGTUw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b="GcxX/XWM";
-	arc=none smtp.remote-ip=95.215.58.54
-Received: from mta1.migadu.com (out-54.mta1.migadu.com [95.215.58.54])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=fritz.com;
+	spf=pass smtp.mailfrom=fritz.com;
+	dkim=pass header.d=fritz.com header.i=@fritz.com header.a=rsa-sha256 header.s=mail header.b=KSPq04XI;
+	arc=none smtp.remote-ip=212.42.244.94
+Received: from mail.avm.de (mail.avm.de [212.42.244.94])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E45ED606A324
-	for <loongarch@lists.linux.dev>; Thu, 19 Nov 2026 12:52:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E45ED606A324
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94733606A324
+	for <loongarch@lists.linux.dev>; Thu, 19 Nov 2026 15:24:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 94733606A324
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fritz.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fritz.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=GcxX/XWM
-X-Envelope-To: loongarch@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=nOPSfl7MrQH3aAdmvuLmCg2r2GTpQs9P2IrkXtthaEg=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1795092747; v=1; x=1795697547;
- b=GcxX/XWMeZeuTZblPzOCtHls2XYIzke8Wax5r/ZTDw01/8E0Ew5c+J5EUDAe6wPJ+SBNgxO2
- W1IO25VH7eI9UG4Pun7lF/zTewsf0Qe0eTP3N9GVUTCSBNSFInYGMP0Cpy0Rrh4x5KPEFMc63FB
- jGN0iSoqJ4DjznvX+zMivyik=
-X-Envelope-To: loongarch@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id c26360b5cbcdfa14;
-	Thu, 19 Nov 2026 12:52:27 +0000
-X-Mizu-Trace-ID: c26360b5cbcdfa14
-X-Migadu-Flow: FLOW_OUT
-From: George Guo <dongtai.guo@linux.dev>
-To: chenhuacai@kernel.org
-Cc: kernel@xen0n.name,
-	rppt@kernel.org,
-	liukexin@kylinos.cn,
-	guodongtai@kylinos.cn,
-	loongarch@lists.linux.dev,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] LoongArch: Allow memblock arrays to resize
-Date: Thu, 19 Nov 2026 21:52:21 +0900
-Message-ID: <20261119125221.11897-1-dongtai.guo@linux.dev>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <CAAhV-H4pmcV8hah8sPyQn3nR9cO-NwkXMPLeSABAO-VEnS08fg@mail.gmail.com>
-References: <CAAhV-H4pmcV8hah8sPyQn3nR9cO-NwkXMPLeSABAO-VEnS08fg@mail.gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=fritz.com header.i=@fritz.com header.a=rsa-sha256 header.s=mail header.b=KSPq04XI
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fritz.com; s=mail;
+	t=1795101890; bh=VUtPMxOjNKGPZQ6FkAk4L2n05vBEr9KfdwlyPB8FDFE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=KSPq04XIh/icCo8uVqSQs19xHVWrI8882+qMc4rh4bnaLIrVTIRUI5hta3IrnJmKr
+	 LiyH5gQnmHg4hi6fnGQQBTCKUhzPV5pUnddTLwq7tRo1sqFXC60ubABjjxwzr5BZpW
+	 xWTrAU/q3VmuS9xkaoOGD0Jn8oy3l4DTPHEwBClrN0JI8F1idZN9rc232N+9cBlDYK
+	 ACrbDLomre7mciio5dpLUoD4CR9a2MKIulNcOOn2MdgHr/fEhjD84N0ReNb2vbEW0l
+	 Lnh7zob5INdPpt9ISPclBVJ2Qwnd7Kvc739eXQJq5JMQwSX7BtOtazOhV28Kxzl2ng
+	 8sp7wX8P0KG5Q==
+Received: from [212.42.244.71] (helo=mail.avm.de)
+	by mail.avm.de with ESMTP (eXpurgate 4.57.1)
+	(envelope-from <nschier-oss@fritz.com>)
+	id 6aff14c1-b6d3-7f0000032729-7f0000019f2e-1
+	for <multiple-recipients>; Thu, 19 Nov 2026 16:24:49 +0100
+Received: from mail-auth.avm.de (dovecot-mx-01.avm.de [212.42.244.71])
+	by mail.avm.de (Postfix) with ESMTPS;
+	Thu, 19 Nov 2026 16:24:49 +0100 (CET)
+Date: Thu, 19 Nov 2026 16:24:47 +0100
+From: Nicolas Schier <n.schier@fritz.com>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Sasha Levin <sashal@kernel.org>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	Harald Freudenberger <freude@linux.ibm.com>,
+	Holger Dengler <dengler@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	linux-kbuild@vger.kernel.org, linux-s390@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org, "kernelci.org bot" <bot@kernelci.org>,
+	Nicolas Schier <nsc@kernel.org>
+Subject: Re: [PATCH 2/2] devicetable-offsets: Get struct cpu_feature from a
+ device-id header
+Message-ID: <av8Uv7EV3sLqUBfr@derry.ads.avm.de>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -71,16 +80,58 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <179424040477.1704532.18231793404479518924.b4-ty@b4>
+X-purgate-ID: 149429::1795101889-B9515B85-B73617E7/0/0
+X-purgate-type: clean
+X-purgate-size: 1742
+X-Notice: Whitelisted
+X-purgate: This mail is considered clean (visit https://www.eleven.de for further information)
+X-purgate: clean
+X-pfmilter: host: postfix-mx-03  mail-id: F259FA066E  external: no
 
-Hi Huacai,
+Hi,
 
-On Thu, Nov 19, 2026 at 8:05 PM Huacai Chen <chenhuacai@kernel.org> wrote:
-> Would you mind if I move it between memblock_dump_all() and
-> memblock_set_bottom_up(false)?
+I have a question regarding best-practise:
 
-Not at all, please go ahead. KHO still works with it there, since
-kho_memory_init() runs after setup_arch().
+On Mon, Nov 09, 2026 at 05:07:05PM +0100, Nicolas Schier wrote:
+> On Mon, 09 Nov 2026 09:14:41 -0500, Sasha Levin wrote:
+> > Since commit cdfdbc11552b ("Move struct cpu_feature to
+> > <linux/cpufeature.h>"), devicetable-offsets.c includes
+> > <linux/cpufeature.h>, which includes <asm/cpufeature.h> on architectures
+> > that select GENERIC_CPU_AUTOPROBE. On loongarch and mips that header
+> > pulls in <asm/elf.h>, and from there <linux/fs.h> and <linux/mmzone.h>,
+> > which need <generated/bounds.h>. devicetable-offsets.c is built before
+> > that header is generated, so even defconfig fails on both:
+> > 
+> > [...]
+> 
+> Applied to kbuild/linux.git (kbuild-next-unstable), thanks!
+> 
+> [2/2] devicetable-offsets: Get struct cpu_feature from a device-id header
+>       https://git.kernel.org/kbuild/c/50ccc340
 
-Thanks,
-George
+I applied this fix on kbuild-next-unstable (and rebased today [1]), two
+commits after "Move struct cpu_feature to <linux/cpufeature.h>" [2],
+which is being "fixed" by this patch.
+
+If we keep it this way, a bisect may hit the issue; folding does not
+look correct to me as that would mix-up related but different things.
+
+So my questions:
+
+ * Shall we keep it the way it is to keep the original patch order
+   (bisect might fail on the two commits before this patch)?
+
+ * Or shall the patch be moved before Uwe's (removing the 'Fixes' tag,
+   and rewriting the commit msg)?
+
+I am in favor of the latter.  Are there any objections?
+
+
+[1]: https://git.kernel.org/kbuild/c/f1dc66c38b7eb4b2fb946a2fd6929250ecd2d85a
+[2]: https://patch.msgid.link/bc9fbf5784f6788e10c749a05d56c42bdb68f3d9.1792144769.git.u.kleine-koenig@baylibre.com
+
+-- 
+Nicolas
