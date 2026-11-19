@@ -1,49 +1,52 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795048815;
-	b=xOzzuk6vhbj1l+KlR/7Tushk7QbZEw81g7aLqSS3jitwwowOb+8Jt7XLpDUue4rRA0Jt
-	 7rCfMJCz/SMG/DaconLxmaUgAtgvmzH0EAafJAr0AKjhjaEm7rb18ySMRQj/tI+QCURxp
-	 iIH6vTbPr5347OOeF+rkGGdjSU7qMad26fz9PRJuWYTMM/kDeVNix2734xeoxgoRhfmVe
-	 ryxd2DXJM3G5m2yRQrhKiiT27ILxoQtO4coY/Tr/J2yJpc3RkhbHQebcfmCBs+6btBtom
-	 5g2nq2/txIqci1UdMxuxOMKUJT75H5QlwYHkcnQQ6+tT5nHRXW+DIPR/VthYZkpmSLw==
+	t=1795050692;
+	b=DlWCSU4Puxz5r1uZzF4fwG92ywHoWP93eT3qZ+LueIxBjKDuVv4EmosyzgqflK3uTN7b
+	 r07fNuDxqy4HjsfmKJdw3VNo68wWlaUyHHuClEFWl3FGJyYocH7o5AxKXyfL98nduGmuj
+	 U3vMoqX0sV0ivKUg4GvsMoObVhTaADRlQfwH5o+qrOJK3u+YyJzvRJoOe1Ikub8YSk3ma
+	 WOYMlJbCzqgGr+up602ofGdiJXtc2W8cFeR8V0EKmXzmOlH2HhqLVbdyNGZcbxayCM/SZ
+	 Z1UAuLx0yhuJsZLr41jTNjy+nKx6OY0s9c/j0hoEbUbxabFt0shIZs9PO3+6gmCpTDQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795048815;
-	h=Received:DKIM-Signature:Received:Content-Type:MIME-Version:
-	 Content-Transfer-Encoding:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc;
-	bh=mH/GpsPPirC6mELIGbZkxdo7T8fe/zXCXZSCzaQ6v48=;
-	b=tRFWTOowocZVBO474l2KjPFlAbEujfPmQjMAJHx1CE5cqG5du7HSUtbb3E4Ljssd+CC5
-	 jYQA+3L07cZKJJrTDnhCoojku/J9myrC8Tf8tmLVXH428FiwyKlG+Y8T0Q10Yk3vOG+R2
-	 hFA1qeOZC4d0oy0UCjjqIRlekrOBZy6e1R9lrskfid1qvVv0ylzCqb+lypRrpvK5Mo7Hn
-	 GaNWRJineoB93mwz9QAIvmNO7dcqWXqsPHiDdHgncYQBT4pqjWkOHfL5c3WJqSjxB+Ly2
-	 1aLlMG+LJTI3ciT3lz3IEdcjS5HTkSA/sVpEhdvS8pj74n/jVA0clywapAou+0OMKJw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795050692;
+	h=DMARC-Filter:Received:Received:Subject:To:Cc:References:From:
+	 Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:Content-Type:
+	 Content-Language:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-CM-SenderInfo:X-Coremail-Antispam;
+	bh=dqweL7BsG9XRQRfrzEERF8eiQCXHDKK+nX4SLZICRgY=;
+	b=1BoRHD7P/bqlQaqqb2Xg3972KvZTcN/W9zfjl2QUvkmHm/yKapqrukBHOOt9kNXvXEaO
+	 W8bh2X3DqQ8bt+4cgRBI6b7GtNUNiufvY87bDMMnZogrbifWjdlXZ9ikBATksQuE4TOqH
+	 16rL7467dzcB/Egiae+1/9JmBDN95MeJBg8kQwe9q1UJ1R98JKxDc37do2oY0BPSbI4Tl
+	 41veuTSOWqMA8Dh3F30TMChdGqxiqG9bjrVu/cCuuU/xucftou+h66hqKA1gkIhaVcnzK
+	 5F9l5ntEvfcVp+WfFjbEM/lih8aVXmVrIk/yKG6yEvhsIiKKaGEBK/HL8pVSyHcimEA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SqbEWm72;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3E47606A31C;
-	Thu, 19 Nov 2026 00:40:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SqbEWm72
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCAD41F000C4;
-	Thu, 19 Nov 2026 00:40:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795048814;
-	bh=mH/GpsPPirC6mELIGbZkxdo7T8fe/zXCXZSCzaQ6v48=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc;
-	b=SqbEWm72dT6Bo95rB5VC2FbvrmPHfSxWidxxZvfwym9vUInok0SFU/BWXpQVWMKC5
-	 7foGxa1IsR3AEIqXo+R9X/kl+PxXTOlC8uIQJlnrhsSjIiX5U3Yly3ch/QbC9jrzWq
-	 uAnzZclfiOaz613oeDAErQrEmGyBlhfrb34uPcqf+vVxqYdouwRX/2IbKJT7GUPRpY
-	 lTHXJOfb+YnoUagoV6qFhRqjLyMFEd1MD52h1Itv8mA6nPA4ggaE4Qa/0sshKApMoi
-	 PJlrIIj04GwnbtAlm3pxNgPSNdZ9qV8gunbO0+1dR5iUt7LJrXJs4zxz31CBzuICZS
-	 6roT5G7NEjyQw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id B44443808210;
-	Thu, 19 Nov 2026 00:40:14 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dmarc=none header.from=loongson.cn;
+	spf=pass smtp.mailfrom=loongson.cn;
+	arc=none smtp.remote-ip=114.242.206.163
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BC9F606A32C
+	for <loongarch@lists.linux.dev>; Thu, 19 Nov 2026 01:11:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5BC9F606A32C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [123.138.236.242])
+	by gateway (Coremail) with SMTP id _____8Ax39K9TP5qFgAhAA--.28756S3;
+	Thu, 19 Nov 2026 09:11:25 +0800 (CST)
+Received: from [127.0.0.1] (unknown [123.138.236.242])
+	by front1 (Coremail) with SMTP id qMiowJCx9cy7TP5qNr41AA--.14754S2;
+	Thu, 19 Nov 2026 09:11:25 +0800 (CST)
+Subject: Re: [PATCH v2] LoongArch: BPF: Fix the offset of stptr.w and stptr.d
+ stores
+To: Huacai Chen <chenhuacai@kernel.org>, George Guo <dongtai.guo@linux.dev>
+Cc: hengqi.chen@gmail.com, guodongtai@kylinos.cn, bpf@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20261118071444.10258-1-dongtai.guo@linux.dev>
+ <CAAhV-H4TNuXk60LyzZhFwQTfNtdzLEFQTwS84u3ZMQ6b=8S0NA@mail.gmail.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <0f79389b-ceb3-8c2f-16bb-1111ac40fc43@loongson.cn>
+Date: Thu, 19 Nov 2026 09:11:23 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -53,76 +56,62 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+In-Reply-To: <CAAhV-H4TNuXk60LyzZhFwQTfNtdzLEFQTwS84u3ZMQ6b=8S0NA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v21 00/13] ax88179_178a: Add support for
- AX88179A-based chips
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <179504881327.2666484.11881850734497891131.git-patchwork-notify@kernel.org>
-Date: Thu, 19 Nov 2026 00:40:13 +0000
-References: <20261114-ax88179a-v21-0-c2d34410bcbe@birger-koblitz.de>
-In-Reply-To: <20261114-ax88179a-v21-0-c2d34410bcbe@birger-koblitz.de>
-To: Birger Koblitz <mail@birger-koblitz.de>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, kuba@kernel.org,
- pabeni@redhat.com, linux@armlinux.org.uk, andrew@lunn.ch,
- hkallweit1@gmail.com, chenhuacai@kernel.org, kernel@xen0n.name,
- edumazet@kernel.org, linux-usb@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- neuromoments@gmail.com, beganovic.emir@gmail.com, nb@tipi-net.de,
- maxime.chevallier@bootlin.com
+X-CM-TRANSID:qMiowJCx9cy7TP5qNr41AA--.14754S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7WrW5XryxZry8ZFWUKFy8Zwc_yoW8Jw4kpw
+	4DKw4SyrykArZ3twnxXwn5J3WIyw45Kr45WrW3t34DAw15WFyIgFyxKFW5Kay5XrZ5Zw1U
+	ZFWxtw1xua9xJacCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zwZ7UU
+	UUU==
 
-Hello:
+On 11/18/26 7:59 PM, Huacai Chen wrote:
+> On Wed, Nov 18, 2026 at 3:15 PM George Guo <dongtai.guo@linux.dev> wrote:
+>>
+>> From: George Guo <guodongtai@kylinos.cn>
+>>
+>> When testing bpf selftests "jit_insns" and "jit_insns_blinded", the
+>> "ldst_offsets" subtest fails for word and doubleword stores:
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+...
 
-On Sat, 14 Nov 2026 11:50:56 +0100 you wrote:
-> This adds support for the current generation of ASIX network adapter chips,
-> which are based on the AX88179A. This includes the AX88179A/B (1GBit-PHY),
-> AX88772D/E (100MBit) and AX88279 (2.5GBit).
-> 
-> The AX179A-based chips all provide both a CDC-NCM compatible USB interface,
-> and a proprietary vendor interface with more features. By default, the
-> proprietary vendor interface is not active and Linux will load the CDC-NCM
-> driver to support the devices. If the ax88179_178a module is configured by
-> the OS to have precedence over CDC-NCM, then this driver will switch the
-> device to use the vendor interface, and the device will be controlled by
-> the ax88179_178a driver when the device is probed again after an automatic
-> reset of the device bringing up the vendor interface.
-> 
-> [...]
+>>   #define is_signed_imm12(val)   signed_imm_check(val, 12)
+>> -#define is_signed_imm14(val)   signed_imm_check(val, 14)
+> Is there instructions really take a 14bit imm (not something like
+> ldptr.d/stptr.d)?
+> If yes, I suggest keeping is_signed_imm14() because maybe we need it in future.
 
-Here is the summary with links:
-  - [net-next,v21,01/13] phylink: Add phylink_mac_interrupt
-    https://git.kernel.org/netdev/net-next/c/525e055f026b
-  - [net-next,v21,02/13] phylib: Add support for PHYs with broken forced mode
-    https://git.kernel.org/netdev/net-next/c/73f8fcee8453
-  - [net-next,v21,03/13] ax88179_178a: Split driver into library and device specific code
-    https://git.kernel.org/netdev/net-next/c/aadb4048a412
-  - [net-next,v21,04/13] ax88179_178a: Add HW support for AX179A-based chips
-    https://git.kernel.org/netdev/net-next/c/7d573278f9a5
-  - [net-next,v21,05/13] ax88179_178a: Add EEE configuration support for AX88179A MACs
-    https://git.kernel.org/netdev/net-next/c/ac12cbe7b385
-  - [net-next,v21,06/13] ax88179_178a: Add EEE configuration support for AX88179A PHYs
-    https://git.kernel.org/netdev/net-next/c/4ae4234e779c
-  - [net-next,v21,07/13] ax88179_178a: Add VLAN offload support for AX88179A
-    https://git.kernel.org/netdev/net-next/c/faea93a5239c
-  - [net-next,v21,08/13] ax88179_178a: Add AX179A/AX279 multicast configuration
-    https://git.kernel.org/netdev/net-next/c/192c7b09608a
-  - [net-next,v21,09/13] ax88179_178a: Add Suspend/resume support for AX88179A/772D/279
-    https://git.kernel.org/netdev/net-next/c/24543aeed42f
-  - [net-next,v21,10/13] ax88179_178a: Add ethtool get_drvinfo
-    https://git.kernel.org/netdev/net-next/c/8d405df176e1
-  - [net-next,v21,11/13] ax88179_178a: Update driver name and information
-    https://git.kernel.org/netdev/net-next/c/d7e3ce733ae3
-  - [net-next,v21,12/13] ax88179_178a: Add support for AX88179A/772D/279 EEPROM access
-    https://git.kernel.org/netdev/net-next/c/bfa4a3adf638
-  - [net-next,v21,13/13] ax88796b: Add support for AX88772D, AX88179A and AX88279
-    https://git.kernel.org/netdev/net-next/c/8cacc4fd1518
+According to the LoongArch Reference Manual, there are 8 instructions
+in total that take a 14-bit signed immediate (si14):
+ldptr.{w,d}, stptr.{w,d}, ll.{w,d}, and sc.{w,d}.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+All of them implicitly shift si14 left by 2 bits when calculating the
+virtual address (vaddr = GR[rj] + SignExtend({si14, 2'b0}, GRLEN)),
+so none of them take an unscaled 14-bit immediate directly.
 
+In the JIT, byte offsets for all these instructions should be validated
+with is_aligned_signed_imm16() and encoded as (off >> 2). Removing the
+unused is_signed_imm14() macro also helps prevent similar misuse in the
+future.
+
+So there is no need to keep is_signed_imm14(), and v2 should be good
+to go.
+
+Thanks,
+Tiezhu
 
