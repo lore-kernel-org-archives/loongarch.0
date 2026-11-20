@@ -1,91 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.21
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795195136;
-	b=uvxvH/z4RViLQCYSxsE2b3XLWjal4aoyswa+hM8rIb0PNEaKnOiiNOiH6yfhqMPW/zeT
-	 fLSAxMFWCUl7ANv1yRM3GYzmwuXu8JlbaUF8KcT8OJW8UwOPdPH37qGUwSQV8fhnX98rK
-	 nwX0xPni2fGC0NaqfPyAyX+8wx8u3+am/oBu0ymzyvjQ5yPHUrPMg0ERzWO8C9cY7uP2G
-	 5qWSp0fq37qdluT9zOXoOMlMirG4r2OAPw0aRk+yfxl9wGXyKpdvIVV1zZG19zNLXEu4N
-	 XTZt7zf2cj4xbaBVXDCvc+JGVsPqGnOJP0WU6TWK1fsx2fkPXd4muvpeDcwY/jJ++og==
+	t=1795195332;
+	b=UoJtmlpsNoWUP8PJZBvH3sLtXpZ/qjpv+GTA7YdJgEQBUzyeGth0FQ5KM5JyVKf9MvXl
+	 FD1QhQVzI3xgI+oiSpMpdi4YG4wG4y1G/YEfEEAzZqkaGvd/Sq0t8T7RYI8Mma2rvBQec
+	 UtTEobEOVOT5+5V8yEgg/+n9v6BuYp+Fou7ALsqtk0kk/dyQdDqGN/ZF7SMOQlZbZbalS
+	 FNVKqxh2QRD1jpbcqe8ziiu5p9d3859yCadhhZdo3Tjuo5aI4DonArA1IsJqKla0v4/VO
+	 2MYq1ipifirqWkMCUG2kDVrnPjN0ODugDVCa+VWRaAlD3uHmJFkjIqsKzpIF7Of2n7g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795195136;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795195332;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=QIQEjm3d2yUWI7XJ5oSFB+PNWsrkD9quGMx3NyrE8X0=;
-	b=qGcyg82yatJyKTD1Jbx+BOaYt+qh08tUey4TBtDIdmXpZX6h2m95cv7JpbMB7+BFQ7EV
-	 kojZgSWudfTMbPIUjkranNxcIUanknCzbCemIKu/VbG2E5/HeJXsICo8AR5fTLUBuobAb
-	 1+/36FCSGd9GpneI2yyPLRCh6XgIaKdHrQ0VBmxtl+dQTW1C0AXg7WOe+a+Noi659GG2i
-	 Ts9tPxbAkUNjeKRvzoxYw4LnzUCsyDCVhCXdsCJrfJD1VMw1uAvGYUhh8q8wHh/nFBMIV
-	 xpqj/5G0xnOAe2GsA++Mck4RDF2PgrPB8rxsq1Uf5o7ejunyMKmY6pYGY2sj8NXRA5w==
+	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=PUUb0sVha9mz+Q5P2aB5wJO+l3MzTX7urtq3WM77HY4=;
+	b=L280poUaul5D+mOlh1JUzoJUfG+y3jyp7OHxtKuPBPPy54R46cBd171sQhUgNKprFBpn
+	 SZej8nz0xVs6hX6AsPzko3Y09S/1ft3obkSMLPF4mprwzH8JUBKw1F/ggYgYBrrpmn/9W
+	 4QuKIRRzVUDWlBc7ERNhZBreLGvPszjN4WPHh7mIfND8V3XdUcKhaLJjPyrh9rwplwOW/
+	 iPTZPQ28wiVLSW4uNk+jrKfW4QHie/vY696id8Qu4BARrxCKk8hZWFPLkZp2hAlnhIUJY
+	 RWuii58UHz9S45q3VxMDr7fLn92J6wom0qe9HBDAM7RyywzBxN9VMvKz0UPLsl2mGVQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=intel.com;
 	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=YqgJxxyi;
-	arc=none smtp.remote-ip=198.175.65.15
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=ZRxj78q2;
+	arc=none smtp.remote-ip=198.175.65.21
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C72F3606A337;
-	Fri, 20 Nov 2026 17:18:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C72F3606A337
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C576F606A773;
+	Fri, 20 Nov 2026 17:22:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C576F606A773
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=YqgJxxyi
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=ZRxj78q2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795195136; x=1826731136;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=/1HtlNbVvYtajBQoreiIL3kcVHwbMdxKszmOsBzjyRE=;
-  b=YqgJxxyiF1DKWBJtN96WEQXM1JfB6zK1nb5/NdbN1o42o5kG5NqAc3ik
-   e5/3zbIyjb1vl0mqyCW45hrULWGK4jNalyvkP5BRHL0d+fEQUPy3GHLIX
-   ZZSyNFTu8YU8v9iPWbhKKUe8iOy1jq/R9c2Swlx8QzfVPyaBVs3DpWCBQ
-   F2hN7jGOdjUUQHHjuXjaoEd0Ow94ys8pgWU0jN0yknvuBHM4oUkKbaMc3
-   avpqRiziy6JFDwEgOCQ4zhF9I1gAuFyphBDq/tVOIcbwT+6TvveyqvCc5
-   xpTnH2Uefh9Ib9bWOrOoja+bJ7+OsFpNhf9gFt+xOJ/k5Xfg1g5CbKuWO
+  t=1795195332; x=1826731332;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=gMhaDCLJsFJHsJoXjlaoBAIT9Wuj3F6Exo4WcsaYWMQ=;
+  b=ZRxj78q2nzvEBRlpRsW/M2w4PckLYdtcpM+3xS99AkzUJVIVKdsk+pee
+   H9PDu/DSmbcyqupwmhCZy+gySWht9JuQUkHy4S8/YWv3tFBrQbjj/vXeE
+   kyaOjhBijDXUlgCgt6OnGXLiyvhlo536Tg4ieba3C5FDU/s8H8uCDh9tc
+   cYuzTPAp8KSzJmG9E1Pizw+nquUJ11UQhl70nX6pXGdKM8db1c32BGUAh
+   Ir7NDL2CbW7nBxsTtXiPS0VPXo+iFl4zMlJIdqll8+lRvZO+foqOSeTWK
+   EVe05oXKlBWv+3xDU0iBsVQBvPJ5Gttg1omRT40JoZGHv8B2qAc/RmzqD
    Q==;
-X-CSE-ConnectionGUID: qzMZJRhsQ92rxIOOynS12w==
-X-CSE-MsgGUID: G3xlMJqHRh2zowyt7BvsPA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11972"; a="4083509"
+X-CSE-ConnectionGUID: cEGrCFTbQROHq9oqIVYr6w==
+X-CSE-MsgGUID: KVsL12rSSZunfoA81QSFVw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11972"; a="4157636"
 X-IronPort-AV: E=Sophos;i="6.27,223,1787036400"; 
-   d="scan'208";a="4083509"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2026 09:18:55 -0800
-X-CSE-ConnectionGUID: XjeTSy/9S3a+dpzJiY3r5w==
-X-CSE-MsgGUID: CovpluibRWqPAawUn0BefQ==
+   d="scan'208";a="4157636"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2026 09:22:11 -0800
+X-CSE-ConnectionGUID: SAzC80goRoO+buGWsGRGxg==
+X-CSE-MsgGUID: 63Zk4WsRSNixERqOnr3xEw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,223,1787036400"; 
-   d="scan'208";a="11092229"
+   d="scan'208";a="10868306"
 Received: from hrotuna-mobl2.ger.corp.intel.com (HELO wieczorr-mobl1.intel.com) ([10.245.245.215])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2026 09:18:49 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2026 09:22:08 -0800
 From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-To: catalin.marinas@arm.com,
-	pawel.chmielewski@intel.com,
-	kyle.d.pelton@intel.com,
-	lenb@kernel.org,
-	guohanjun@huawei.com,
-	maobibo@loongson.cn,
-	lpieralisi@kernel.org,
-	will@kernel.org,
-	sudeep.holla@kernel.org,
-	erik.kaneda@intel.com,
-	rafael@kernel.org,
-	robert.moore@intel.com,
-	void0red@gmail.com,
-	maciej.wieczor-retman@intel.com,
-	superm1@kernel.org,
-	chenhuacai@kernel.org
-Cc: acpica-devel@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
+To: Bibo Mao <maobibo@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+	Pawel Chmielewski <pawel.chmielewski@intel.com>
+Cc: linux-acpi@vger.kernel.org,
+	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	loongarch@lists.linux.dev
-Subject: [PATCH v2 00/42] ACPICA: ACPICA 20260930 with follow-up fixes
-Date: Fri, 20 Nov 2026 18:17:24 +0100
-Message-ID: <cover.1795194329.git.maciej.wieczor-retman@intel.com>
+	acpica-devel@lists.linux.dev
+Subject: [PATCH v2 42/42] ACPICA: acpica: Fix typo in the IOVT_IOMMU table definitions
+Date: Fri, 20 Nov 2026 18:19:03 +0100
+Message-ID: <e20e813ff50db584712f86edd2bb8c672ad755e3.1795194329.git.maciej.wieczor-retman@intel.com>
 X-Mailer: git-send-email 2.56.0
+In-Reply-To: <cover.1795194329.git.maciej.wieczor-retman@intel.com>
+References: <cover.1795194329.git.maciej.wieczor-retman@intel.com>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -97,214 +89,59 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The following patches are ported from upstream ACPICA and contain the 20260930
-release and some follow up fixes (so generally everything after the 20260408
-release). Only source files relevant to the Linux kernel are being ported.
+Change MAGAGE to MANAGE in ACPI_IOVT_IOMMU_MAGAGE_BY_SEGMENT.
 
-Changes since v1:
-v1 [1] contained only commits between the 20260408 and 20260930 releases.
-However sashiko.dev [2] raised some issues that needed to be either applied or
-rejected. Most issues were valid and were resolved in patches that follow the
-20260930 release. Things that were rejected were the whole patch [3] due to not
-being a full solution to a very unlikely, debug only problem. Also the sashiko
-comment related to ACPI_GPE_AUTO_ENABLED in patch [4] wasn't applied due to
-not being realistically possible to happen and consequences were only an odd
-looking log entry.
+Link: https://github.com/acpica/acpica/commit/dee9a9e3c797
+Signed-off-by: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+---
+ drivers/acpi/loongarch/iovt.c | 6 +++---
+ include/acpi/actbl2.h         | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-There are non-ACPICA changes related to constants/variable name changes
-in these patches:
-- ACPICA: actbl2: MPAM: adapt to MPAM ACPI spec v3.1
-- ACPICA: acpica: Fix typo in the IOVT_IOMMU table definitions
-
-The base for this patches is upstream kernel v7.4-rc3 and it consists of
-the following material:
-
-Andre Przywara (1):
-      ACPICA: actbl2: MPAM: adapt to MPAM ACPI spec v3.1
-
-Colin Ian King (2):
-      ACPICA: components: Fix typo "Supress" -> "Suppress"
-      ACPICA: components: Fix typo: "numer" -> "number"
-
-Dave Jiang (2):
-      ACPICA: CEDT: RDPAS: Add missing reserved field in RDPAS structure
-      ACPICA: CEDT: RDPAS: Fix incorrect field positions for RDPAS
-
-Hanjun Guo (1):
-      ACPICA: add UBRT (UnifiedBus Root Table) definitions
-
-Himanshu Chauhan (1):
-      ACPICA: Introduce a new HEST notification type for RISC-V SSE events
-
-Iurii Trukhin (1):
-      ACPICA: parser: Fix parse tree memory leak on AML execution error unwind
-
-Leonard Lausen (1):
-      ACPICA: Executer: Resolve package index references used as integer operands
-
-Maciej Strozek (1):
-      ACPICA: Utilities: Fix for AcpiUtVerifyChecksum warning display
-
-Maciej Wieczor-Retman (17):
-      ACPICA: executer: Fix NULL pointer dereference in AcpiExStoreObjectToIndex()
-      ACPICA: compiler: Add _Ixx GPE object
-      ACPICA: namespace: Fix possible underflow and NULL pointer dereference
-      ACPICA: iASL: Fix the truncated count of external control methods
-      ACPICA: release: Update version to 20260930
-      ACPICA: events: Add missing event mutex to AcpiEvClearGpeDispatchByOwner()
-      ACPICA: events: Remove redundant code
-      ACPICA: events: Fix AcpiEvClearGpeDispatchByOwner handler type processing
-      ACPICA: events: Fix GPE cleanup return after changing program state
-      ACPICA: events: Handle GPEs' Notify dispatch type
-      ACPICA: tables: Fix wrong table unload and notify call order
-      ACPICA: tables: Fix global table read missing mutex
-      ACPICA: executer: Fix copying PCC source buffer data
-      ACPICA: dispatcher: Fix zero size non-NULL PCC buffer pointer
-      ACPICA: utilities: Clear NextObject so the outer loop doesn't read it
-      ACPICA: namespace: Fix memory leak around compiler alias flag
-      ACPICA: acpica: Fix typo in the IOVT_IOMMU table definitions
-
-Mario Limonciello (AMD) (1):
-      ACPICA: Add ACPI_MSG_DEBUG to set KERN_DEBUG for debug output
-
-Pawel Chmielewski (3):
-      ACPICA: ACPI 6.5 Add support for the MISC table
-      ACPICA: iASL: Complete KEYP support
-      ACPICA: tables: Fix table buffer leak when Load fails verification
-
-Rong Zhang (1):
-      ACPICA: parser: Set AML length for bytelist
-
-Vidya Sagar (1):
-      ACPICA: IORT: Add Root Complex PASID Flags field
-
-ikaros (8):
-      ACPICA: Events: Clear GPE dispatch by owner during table unload
-      ACPICA: executer: Add bounds checking for PCC field read access
-      ACPICA: Validate 4-char field names before namespace lookup
-      ACPICA: Improve error handling in table loading process
-      ACPICA: executer: Add bounds checking for PCC field write access
-      ACPICA: tables: Fix heap-buffer-overflow in AcpiTbFindTable
-      ACPICA: Fix object reference update to skip non-local notify types
-      ACPICA: namespace: Recognize alias node types in detach
-
-purofle (1):
-      ACPICA: fix: build error with gcc 16: unused-but-set-variable
-
-[1] https://lore.kernel.org/all/20261020141051.2194123-1-pawel.chmielewski@intel.com/
-[2] https://sashiko.dev/#/patchset/20261020141051.2194123-1-pawel.chmielewski%40intel.com
-[3] https://sashiko.dev/#/message/20261020141051.2194123-9-pawel.chmielewski%40intel.com
-[4] https://sashiko.dev/#/patchset/20261020141051.2194123-1-pawel.chmielewski%40intel.com?part=7
-
-Andre Przywara (1):
-  ACPICA: actbl2: MPAM: adapt to MPAM ACPI spec v3.1
-
-Colin Ian King (2):
-  ACPICA: components: Fix typo "Supress" -> "Suppress"
-  ACPICA: components: Fix typo: "numer" -> "number"
-
-Dave Jiang (2):
-  ACPICA: CEDT: RDPAS: Add missing reserved field in RDPAS structure
-  ACPICA: CEDT: RDPAS: Fix incorrect field positions for RDPAS
-
-Hanjun Guo (1):
-  ACPICA: add UBRT (UnifiedBus Root Table) definitions
-
-Himanshu Chauhan (1):
-  ACPICA: Introduce a new HEST notification type for RISC-V SSE events
-
-Iurii Trukhin (1):
-  ACPICA: parser: Fix parse tree memory leak on AML execution error
-    unwind
-
-Leonard Lausen (1):
-  ACPICA: Executer: Resolve package index references used as integer
-    operands
-
-Maciej Strozek (1):
-  ACPICA: Utilities: Fix for AcpiUtVerifyChecksum warning display
-
-Maciej Wieczor-Retman (17):
-  ACPICA: executer: Fix NULL pointer dereference in
-    AcpiExStoreObjectToIndex()
-  ACPICA: compiler: Add _Ixx GPE object
-  ACPICA: namespace: Fix possible underflow and NULL pointer dereference
-  ACPICA: iASL: Fix the truncated count of external control methods
-  ACPICA: release: Update version to 20260930
-  ACPICA: events: Add missing event mutex to
-    AcpiEvClearGpeDispatchByOwner()
-  ACPICA: events: Remove redundant code
-  ACPICA: events: Fix AcpiEvClearGpeDispatchByOwner handler type
-    processing
-  ACPICA: events: Fix GPE cleanup return after changing program state
-  ACPICA: events: Handle GPEs' Notify dispatch type
-  ACPICA: tables: Fix wrong table unload and notify call order
-  ACPICA: tables: Fix global table read missing mutex
-  ACPICA: executer: Fix copying PCC source buffer data
-  ACPICA: dispatcher: Fix zero size non-NULL PCC buffer pointer
-  ACPICA: utilities: Clear NextObject so the outer loop doesn't read it
-  ACPICA: namespace: Fix memory leak around compiler alias flag
-  ACPICA: acpica: Fix typo in the IOVT_IOMMU table definitions
-
-Mario Limonciello (AMD) (1):
-  ACPICA: Add ACPI_MSG_DEBUG to set KERN_DEBUG for debug output
-
-Pawel Chmielewski (3):
-  ACPICA: ACPI 6.5 Add support for the MISC table
-  ACPICA: iASL: Complete KEYP support
-  ACPICA: tables: Fix table buffer leak when Load fails verification
-
-Rong Zhang (1):
-  ACPICA: parser: Set AML length for bytelist
-
-Vidya Sagar (1):
-  ACPICA: IORT: Add Root Complex PASID Flags field
-
-ikaros (8):
-  ACPICA: Events: Clear GPE dispatch by owner during table unload
-  ACPICA: executer: Add bounds checking for PCC field read access
-  ACPICA: Validate 4-char field names before namespace lookup
-  ACPICA: Improve error handling in table loading process
-  ACPICA: executer: Add bounds checking for PCC field write access
-  ACPICA: tables: Fix heap-buffer-overflow in AcpiTbFindTable
-  ACPICA: Fix object reference update to skip non-local notify types
-  ACPICA: namespace: Recognize alias node types in detach
-
-purofle (1):
-  ACPICA: fix: build error with gcc 16: unused-but-set-variable
-
- drivers/acpi/acpica/acevents.h  |   4 +
- drivers/acpi/acpica/acglobal.h  |   2 +-
- drivers/acpi/acpica/acpredef.h  |   1 +
- drivers/acpi/acpica/acutils.h   |   3 +
- drivers/acpi/acpica/dsfield.c   |  24 +++
- drivers/acpi/acpica/evgpe.c     | 355 ++++++++++++++++++++++++++++++++
- drivers/acpi/acpica/exconfig.c  |   3 +-
- drivers/acpi/acpica/exconvrt.c  |   4 +-
- drivers/acpi/acpica/exfield.c   | 105 +++++++---
- drivers/acpi/acpica/exresop.c   |  26 +++
- drivers/acpi/acpica/exstore.c   |  20 +-
- drivers/acpi/acpica/extrace.c   |   2 +-
- drivers/acpi/acpica/nsaccess.c  |   2 +-
- drivers/acpi/acpica/nsobject.c  |   7 +-
- drivers/acpi/acpica/nsxfname.c  |   8 +
- drivers/acpi/acpica/psargs.c    |   8 +-
- drivers/acpi/acpica/psloop.c    |   5 +-
- drivers/acpi/acpica/psobject.c  |   1 -
- drivers/acpi/acpica/psparse.c   |  16 +-
- drivers/acpi/acpica/tbdata.c    |  32 ++-
- drivers/acpi/acpica/tbfind.c    |  16 +-
- drivers/acpi/acpica/utcksum.c   |   3 +-
- drivers/acpi/acpica/utdebug.c   |   9 +-
- drivers/acpi/acpica/utdelete.c  |   5 +
- drivers/acpi/arm64/mpam.c       |   6 +-
- drivers/acpi/loongarch/iovt.c   |   6 +-
- include/acpi/acpixf.h           |   2 +-
- include/acpi/actbl1.h           |   6 +-
- include/acpi/actbl2.h           | 200 +++++++++++++++++-
- include/acpi/platform/aclinux.h |   1 +
- 30 files changed, 811 insertions(+), 71 deletions(-)
-
+diff --git a/drivers/acpi/loongarch/iovt.c b/drivers/acpi/loongarch/iovt.c
+index 1e97669eaeea..e891170d9b8b 100644
+--- a/drivers/acpi/loongarch/iovt.c
++++ b/drivers/acpi/loongarch/iovt.c
+@@ -42,7 +42,7 @@ static void __init iovt_enable_acs(struct acpi_iovt_iommu *iommu)
+ 
+ 	/* IOMMU V1 only supports PCI device management */
+ 	if ((iommu->header.type == ACPI_IOVT_IOMMU_V1) ||
+-	    (iommu->flags & (ACPI_IOVT_IOMMU_PCI_DEVICE | ACPI_IOVT_IOMMU_MAGAGE_BY_SEGMENT))) {
++	    (iommu->flags & (ACPI_IOVT_IOMMU_PCI_DEVICE | ACPI_IOVT_IOMMU_MANAGE_BY_SEGMENT))) {
+ 		pci_request_acs();
+ 		acs_enabled = true;
+ 	}
+@@ -151,7 +151,7 @@ static int __init iovt_add_iommu(struct acpi_iovt_iommu *iommu)
+ 	}
+ 
+ 	/* All devices in the segment are managed by this IOMMU */
+-	if (np->flag & ACPI_IOVT_IOMMU_MAGAGE_BY_SEGMENT)
++	if (np->flag & ACPI_IOVT_IOMMU_MANAGE_BY_SEGMENT)
+ 		goto skip;
+ 
+ 	if (iovt_validate_entries(iommu) < 0) {
+@@ -280,7 +280,7 @@ static int iovt_pci_iommu_init(struct pci_dev *pdev, u16 dev_id, void *data)
+ 		if (dev_id == np->devid)
+ 			return -EINVAL;
+ 
+-		if (np->flag & ACPI_IOVT_IOMMU_MAGAGE_BY_SEGMENT)
++		if (np->flag & ACPI_IOVT_IOMMU_MANAGE_BY_SEGMENT)
+ 			goto found;
+ 
+ 		list_for_each_entry(entry, &np->ep_list, list) {
+diff --git a/include/acpi/actbl2.h b/include/acpi/actbl2.h
+index 1dafb2a71368..fe767fcf5726 100644
+--- a/include/acpi/actbl2.h
++++ b/include/acpi/actbl2.h
+@@ -928,7 +928,7 @@ struct acpi_iovt_iommu {
+ /* Masks for Flags field above */
+ #define ACPI_IOVT_IOMMU_PCI_DEVICE		(1<<0)
+ #define ACPI_IOVT_IOMMU_PXM_VALID		(1<<1)
+-#define ACPI_IOVT_IOMMU_MAGAGE_BY_SEGMENT	(1<<2)
++#define ACPI_IOVT_IOMMU_MANAGE_BY_SEGMENT	(1<<2)
+ #define ACPI_IOVT_IOMMU_HW_CAP_SUPPORT		(1<<3)
+ #define ACPI_IOVT_IOMMU_MSI_INT_BYPASS		(1<<4)
+ 
 -- 
 2.56.0
 
