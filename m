@@ -1,82 +1,91 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.15
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795190294;
-	b=YvBW5MTkULj32QKzr9QQk4y99pgK/VeLpgOrsbZBOF7VKQQX5OI5okV/S2J4gfx+AeJO
-	 lvsi5+y2PslahL8OlGZcxld6UWw4E40aRcprBMwYOmLv4Z+mW0lD7EczZP6DQ5rByTxE6
-	 Z34Dq2EdVWZ8Ef21zpY32lZqqDJ3YSe1PEfdgN6zzCQY4AlwZoYVx2URa0GwxF86KVLR2
-	 H0CBdO+qoNP9XgGMJJWZQ5YVvFxr3u+fbAcyzRakw+Kw9bnmmhvQ1jKh5+aGhjJzpm/tj
-	 l9XRQSdPOTttdkP2I9AkUqrvNpzIJ+zzbY6Pb+MsVUbjIrXuNIA471lpO589Xq3HN0g==
+	t=1795195136;
+	b=uvxvH/z4RViLQCYSxsE2b3XLWjal4aoyswa+hM8rIb0PNEaKnOiiNOiH6yfhqMPW/zeT
+	 fLSAxMFWCUl7ANv1yRM3GYzmwuXu8JlbaUF8KcT8OJW8UwOPdPH37qGUwSQV8fhnX98rK
+	 nwX0xPni2fGC0NaqfPyAyX+8wx8u3+am/oBu0ymzyvjQ5yPHUrPMg0ERzWO8C9cY7uP2G
+	 5qWSp0fq37qdluT9zOXoOMlMirG4r2OAPw0aRk+yfxl9wGXyKpdvIVV1zZG19zNLXEu4N
+	 XTZt7zf2cj4xbaBVXDCvc+JGVsPqGnOJP0WU6TWK1fsx2fkPXd4muvpeDcwY/jJ++og==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795190294;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=HshqsJTVQWKzzCpeTZNQ6x3UViMzlSmZnpb8BEfK+Ro=;
-	b=oQFGr4vcFUA9x3EvTH5kqQWa9NXxkSkXj2jFVbADeP28+rP6u7Ow0PVUY+BO5h/Rj0/G
-	 jZQiXen702A3afi7zgGtYiMLS+UgymNypcq2CnvoikFohHnfHXGh/woOgsKEPsofNACYE
-	 TXJIxC3JLMCuKQDEy4fX2xlXXeZQEb99ZjJYN62dDXVUwepMAfDKJly0YZ6uQfi7bkjfI
-	 sT/sllomR/ARcPohG8Qe/3SEVTU2R2ROS6R3GMXBE9W+m9LyBKofW5CBlmk75wXzhg1QI
-	 Zr3j2s3o79I2yfvQFz6WG7GNbLL1j2dyx76MY1LY8qpXe5SscQVa8nUicTpxfX0zt6w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795195136;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=QIQEjm3d2yUWI7XJ5oSFB+PNWsrkD9quGMx3NyrE8X0=;
+	b=qGcyg82yatJyKTD1Jbx+BOaYt+qh08tUey4TBtDIdmXpZX6h2m95cv7JpbMB7+BFQ7EV
+	 kojZgSWudfTMbPIUjkranNxcIUanknCzbCemIKu/VbG2E5/HeJXsICo8AR5fTLUBuobAb
+	 1+/36FCSGd9GpneI2yyPLRCh6XgIaKdHrQ0VBmxtl+dQTW1C0AXg7WOe+a+Noi659GG2i
+	 Ts9tPxbAkUNjeKRvzoxYw4LnzUCsyDCVhCXdsCJrfJD1VMw1uAvGYUhh8q8wHh/nFBMIV
+	 xpqj/5G0xnOAe2GsA++Mck4RDF2PgrPB8rxsq1Uf5o7ejunyMKmY6pYGY2sj8NXRA5w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=infradead.org;
-	spf=pass smtp.mailfrom=infradead.org;
-	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=PZz3Ur2a;
-	arc=none smtp.remote-ip=90.155.92.199
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=intel.com;
+	spf=pass smtp.mailfrom=intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=YqgJxxyi;
+	arc=none smtp.remote-ip=198.175.65.15
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95DF8606A325;
-	Fri, 20 Nov 2026 15:58:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 95DF8606A325
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C72F3606A337;
+	Fri, 20 Nov 2026 17:18:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C72F3606A337
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=PZz3Ur2a
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=HshqsJTVQWKzzCpeTZNQ6x3UViMzlSmZnpb8BEfK+Ro=; b=PZz3Ur2a6OdHwfi/J7tRqJKf9c
-	JkB20MtKPZOMm1TsoCDmVdbABbvFgh1EhVDiZpaUhJpTZNOYGkBRAVRz+6dYnh/a9lM8RWeglMFAz
-	K/eyFBbBpcD6e53eMfHFrnLewpMKDbjDz6vkzYRYJ9i83WrYAmGk2lX8WdjsRD+5N37QPcD6rIq05
-	agoYB1y7GZEKf8mIoWsrR5ObRnwu6kQF9KRyddWGskcEsgdJh161/MKbTocHRzDUcWy4ycgu1UiCb
-	PwvTUf0hxXaSuBdtZT5Uewoy/KcD+mOn2BpqaBihQ1GITzP1HRA8zki1cleFXPxPozCnRuyIv6RWe
-	dQZs4rYA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xUR04-00000000vlw-0aHt;
-	Fri, 20 Nov 2026 15:58:08 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 7F50E3008D6; Fri, 20 Nov 2026 16:58:06 +0100 (CET)
-Date: Fri, 20 Nov 2026 16:58:06 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev, linux-perf-users@vger.kernel.org,
-	loongarch@lists.linux.dev, Mark Rutland <mark.rutland@arm.com>,
-	Ian Rogers <irogers@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Oleg Nesterov <oleg@redhat.com>, WANG Xuerui <kernel@xen0n.name>,
-	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>, Waiman Long <longman@redhat.com>,
-	Clark Williams <clrkwllms@kernel.org>,
-	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
-	James Clark <james.clark@linaro.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Chris Zankel <chris@zankel.net>,
-	Max Filippov <jcmvbkbc@gmail.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ada Couprie Diaz <ada.coupriediaz@arm.com>
-Subject: Re: [PATCH v5] ARM, ARM64, LONGARCH, XTENSA: Delay HW BP
- notification to task_work()
-Message-ID: <20261120155806.GK2669272@noisy.programming.kicks-ass.net>
-References: <20261120144553.TjgAd_G6@linutronix.de>
- <20261120150320.GQ2668804@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=YqgJxxyi
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1795195136; x=1826731136;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=/1HtlNbVvYtajBQoreiIL3kcVHwbMdxKszmOsBzjyRE=;
+  b=YqgJxxyiF1DKWBJtN96WEQXM1JfB6zK1nb5/NdbN1o42o5kG5NqAc3ik
+   e5/3zbIyjb1vl0mqyCW45hrULWGK4jNalyvkP5BRHL0d+fEQUPy3GHLIX
+   ZZSyNFTu8YU8v9iPWbhKKUe8iOy1jq/R9c2Swlx8QzfVPyaBVs3DpWCBQ
+   F2hN7jGOdjUUQHHjuXjaoEd0Ow94ys8pgWU0jN0yknvuBHM4oUkKbaMc3
+   avpqRiziy6JFDwEgOCQ4zhF9I1gAuFyphBDq/tVOIcbwT+6TvveyqvCc5
+   xpTnH2Uefh9Ib9bWOrOoja+bJ7+OsFpNhf9gFt+xOJ/k5Xfg1g5CbKuWO
+   Q==;
+X-CSE-ConnectionGUID: qzMZJRhsQ92rxIOOynS12w==
+X-CSE-MsgGUID: G3xlMJqHRh2zowyt7BvsPA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11972"; a="4083509"
+X-IronPort-AV: E=Sophos;i="6.27,223,1787036400"; 
+   d="scan'208";a="4083509"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2026 09:18:55 -0800
+X-CSE-ConnectionGUID: XjeTSy/9S3a+dpzJiY3r5w==
+X-CSE-MsgGUID: CovpluibRWqPAawUn0BefQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,223,1787036400"; 
+   d="scan'208";a="11092229"
+Received: from hrotuna-mobl2.ger.corp.intel.com (HELO wieczorr-mobl1.intel.com) ([10.245.245.215])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2026 09:18:49 -0800
+From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+To: catalin.marinas@arm.com,
+	pawel.chmielewski@intel.com,
+	kyle.d.pelton@intel.com,
+	lenb@kernel.org,
+	guohanjun@huawei.com,
+	maobibo@loongson.cn,
+	lpieralisi@kernel.org,
+	will@kernel.org,
+	sudeep.holla@kernel.org,
+	erik.kaneda@intel.com,
+	rafael@kernel.org,
+	robert.moore@intel.com,
+	void0red@gmail.com,
+	maciej.wieczor-retman@intel.com,
+	superm1@kernel.org,
+	chenhuacai@kernel.org
+Cc: acpica-devel@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: [PATCH v2 00/42] ACPICA: ACPICA 20260930 with follow-up fixes
+Date: Fri, 20 Nov 2026 18:17:24 +0100
+Message-ID: <cover.1795194329.git.maciej.wieczor-retman@intel.com>
+X-Mailer: git-send-email 2.56.0
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -86,53 +95,216 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261120150320.GQ2668804@noisy.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Nov 20, 2026 at 04:03:20PM +0100, Peter Zijlstra wrote:
-> On Fri, Nov 20, 2026 at 03:45:53PM +0100, Sebastian Andrzej Siewior wrote:
-> > Waiman, Luis, Ada reported that HW breakpoints on ARM64 trigger
-> > "sleeping while atomic" warnings on PREEMPT_RT. The hardware event is
-> > delivered with disabled interrupts and perf intrastrucure expects
-> > disabled interrupts while the overflow callback is invoked.
-> > 
-> > The callback then sends a SIGTRAP signal for which it acquires
-> > sighand_struct::siglock, a spinlock_t which becomes a sleeping lock and
-> > must not be acquired in atomic context.
-> > 
-> > Delay the event callback until the return to userland.
-> > Add perf_hwbp_notify(), a generic perf callback which delayes the
-> > actual callback invocation to task_work_add() callback. This callback
-> > invokes the architecture defined callback perf_arch_hwbp_send_sig().
-> > This requires struct callback_head and the functions require
-> > ARCH_NEED_PERF_HW_NOTIFY to be defined.
-> > 
-> > This was reported against ARM64. ARM, LongARCH and Xtensa follow the
-> > same pattern are also converted. Xtensa is the only not supporting
-> > PREEMPT_RT but now we have all architectures using the same pattern.
-> > 
-> > Fixes: d8fccd9ca5f90 ("arm64: Allow to enable PREEMPT_RT.")
-> > Reported-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
-> > Reported-by: Waiman Long <longman@redhat.com>
-> > Closes: https://lore.kernel.org/all/aho0eqjMESuHxECr@redhat.com/
-> > Reviewed-by: Ada Couprie Diaz <ada.coupriediaz@arm.com>
-> > Tested-by: Ada Couprie Diaz <ada.coupriediaz@arm.com>
-> > Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-> > Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> > ---
-> 
-> Mark; you was going to stare at this :-)
-> 
-> I'm thinking the archs are doing it wrong and should be sending the
-> signal elsewhere.
+The following patches are ported from upstream ACPICA and contain the 20260930
+release and some follow up fixes (so generally everything after the 20260408
+release). Only source files relevant to the Linux kernel are being ported.
 
-Notably, I'm thinking arm64 should be sending the signal from either
-do_watchpoint()/do_breakpoint(), after it has done perf_bp_event(),
-or from el0_watchpt()/el0_breakpt().
+Changes since v1:
+v1 [1] contained only commits between the 20260408 and 20260930 releases.
+However sashiko.dev [2] raised some issues that needed to be either applied or
+rejected. Most issues were valid and were resolved in patches that follow the
+20260930 release. Things that were rejected were the whole patch [3] due to not
+being a full solution to a very unlikely, debug only problem. Also the sashiko
+comment related to ACPI_GPE_AUTO_ENABLED in patch [4] wasn't applied due to
+not being realistically possible to happen and consequences were only an odd
+looking log entry.
 
-Perf overflow handlers are not the place to send signals from.
+There are non-ACPICA changes related to constants/variable name changes
+in these patches:
+- ACPICA: actbl2: MPAM: adapt to MPAM ACPI spec v3.1
+- ACPICA: acpica: Fix typo in the IOVT_IOMMU table definitions
 
-That is very much what x86 also does, we send the signal from
-exc_debug_user(); which is roughly equivalent to the above mentioned
-functions.
+The base for this patches is upstream kernel v7.4-rc3 and it consists of
+the following material:
+
+Andre Przywara (1):
+      ACPICA: actbl2: MPAM: adapt to MPAM ACPI spec v3.1
+
+Colin Ian King (2):
+      ACPICA: components: Fix typo "Supress" -> "Suppress"
+      ACPICA: components: Fix typo: "numer" -> "number"
+
+Dave Jiang (2):
+      ACPICA: CEDT: RDPAS: Add missing reserved field in RDPAS structure
+      ACPICA: CEDT: RDPAS: Fix incorrect field positions for RDPAS
+
+Hanjun Guo (1):
+      ACPICA: add UBRT (UnifiedBus Root Table) definitions
+
+Himanshu Chauhan (1):
+      ACPICA: Introduce a new HEST notification type for RISC-V SSE events
+
+Iurii Trukhin (1):
+      ACPICA: parser: Fix parse tree memory leak on AML execution error unwind
+
+Leonard Lausen (1):
+      ACPICA: Executer: Resolve package index references used as integer operands
+
+Maciej Strozek (1):
+      ACPICA: Utilities: Fix for AcpiUtVerifyChecksum warning display
+
+Maciej Wieczor-Retman (17):
+      ACPICA: executer: Fix NULL pointer dereference in AcpiExStoreObjectToIndex()
+      ACPICA: compiler: Add _Ixx GPE object
+      ACPICA: namespace: Fix possible underflow and NULL pointer dereference
+      ACPICA: iASL: Fix the truncated count of external control methods
+      ACPICA: release: Update version to 20260930
+      ACPICA: events: Add missing event mutex to AcpiEvClearGpeDispatchByOwner()
+      ACPICA: events: Remove redundant code
+      ACPICA: events: Fix AcpiEvClearGpeDispatchByOwner handler type processing
+      ACPICA: events: Fix GPE cleanup return after changing program state
+      ACPICA: events: Handle GPEs' Notify dispatch type
+      ACPICA: tables: Fix wrong table unload and notify call order
+      ACPICA: tables: Fix global table read missing mutex
+      ACPICA: executer: Fix copying PCC source buffer data
+      ACPICA: dispatcher: Fix zero size non-NULL PCC buffer pointer
+      ACPICA: utilities: Clear NextObject so the outer loop doesn't read it
+      ACPICA: namespace: Fix memory leak around compiler alias flag
+      ACPICA: acpica: Fix typo in the IOVT_IOMMU table definitions
+
+Mario Limonciello (AMD) (1):
+      ACPICA: Add ACPI_MSG_DEBUG to set KERN_DEBUG for debug output
+
+Pawel Chmielewski (3):
+      ACPICA: ACPI 6.5 Add support for the MISC table
+      ACPICA: iASL: Complete KEYP support
+      ACPICA: tables: Fix table buffer leak when Load fails verification
+
+Rong Zhang (1):
+      ACPICA: parser: Set AML length for bytelist
+
+Vidya Sagar (1):
+      ACPICA: IORT: Add Root Complex PASID Flags field
+
+ikaros (8):
+      ACPICA: Events: Clear GPE dispatch by owner during table unload
+      ACPICA: executer: Add bounds checking for PCC field read access
+      ACPICA: Validate 4-char field names before namespace lookup
+      ACPICA: Improve error handling in table loading process
+      ACPICA: executer: Add bounds checking for PCC field write access
+      ACPICA: tables: Fix heap-buffer-overflow in AcpiTbFindTable
+      ACPICA: Fix object reference update to skip non-local notify types
+      ACPICA: namespace: Recognize alias node types in detach
+
+purofle (1):
+      ACPICA: fix: build error with gcc 16: unused-but-set-variable
+
+[1] https://lore.kernel.org/all/20261020141051.2194123-1-pawel.chmielewski@intel.com/
+[2] https://sashiko.dev/#/patchset/20261020141051.2194123-1-pawel.chmielewski%40intel.com
+[3] https://sashiko.dev/#/message/20261020141051.2194123-9-pawel.chmielewski%40intel.com
+[4] https://sashiko.dev/#/patchset/20261020141051.2194123-1-pawel.chmielewski%40intel.com?part=7
+
+Andre Przywara (1):
+  ACPICA: actbl2: MPAM: adapt to MPAM ACPI spec v3.1
+
+Colin Ian King (2):
+  ACPICA: components: Fix typo "Supress" -> "Suppress"
+  ACPICA: components: Fix typo: "numer" -> "number"
+
+Dave Jiang (2):
+  ACPICA: CEDT: RDPAS: Add missing reserved field in RDPAS structure
+  ACPICA: CEDT: RDPAS: Fix incorrect field positions for RDPAS
+
+Hanjun Guo (1):
+  ACPICA: add UBRT (UnifiedBus Root Table) definitions
+
+Himanshu Chauhan (1):
+  ACPICA: Introduce a new HEST notification type for RISC-V SSE events
+
+Iurii Trukhin (1):
+  ACPICA: parser: Fix parse tree memory leak on AML execution error
+    unwind
+
+Leonard Lausen (1):
+  ACPICA: Executer: Resolve package index references used as integer
+    operands
+
+Maciej Strozek (1):
+  ACPICA: Utilities: Fix for AcpiUtVerifyChecksum warning display
+
+Maciej Wieczor-Retman (17):
+  ACPICA: executer: Fix NULL pointer dereference in
+    AcpiExStoreObjectToIndex()
+  ACPICA: compiler: Add _Ixx GPE object
+  ACPICA: namespace: Fix possible underflow and NULL pointer dereference
+  ACPICA: iASL: Fix the truncated count of external control methods
+  ACPICA: release: Update version to 20260930
+  ACPICA: events: Add missing event mutex to
+    AcpiEvClearGpeDispatchByOwner()
+  ACPICA: events: Remove redundant code
+  ACPICA: events: Fix AcpiEvClearGpeDispatchByOwner handler type
+    processing
+  ACPICA: events: Fix GPE cleanup return after changing program state
+  ACPICA: events: Handle GPEs' Notify dispatch type
+  ACPICA: tables: Fix wrong table unload and notify call order
+  ACPICA: tables: Fix global table read missing mutex
+  ACPICA: executer: Fix copying PCC source buffer data
+  ACPICA: dispatcher: Fix zero size non-NULL PCC buffer pointer
+  ACPICA: utilities: Clear NextObject so the outer loop doesn't read it
+  ACPICA: namespace: Fix memory leak around compiler alias flag
+  ACPICA: acpica: Fix typo in the IOVT_IOMMU table definitions
+
+Mario Limonciello (AMD) (1):
+  ACPICA: Add ACPI_MSG_DEBUG to set KERN_DEBUG for debug output
+
+Pawel Chmielewski (3):
+  ACPICA: ACPI 6.5 Add support for the MISC table
+  ACPICA: iASL: Complete KEYP support
+  ACPICA: tables: Fix table buffer leak when Load fails verification
+
+Rong Zhang (1):
+  ACPICA: parser: Set AML length for bytelist
+
+Vidya Sagar (1):
+  ACPICA: IORT: Add Root Complex PASID Flags field
+
+ikaros (8):
+  ACPICA: Events: Clear GPE dispatch by owner during table unload
+  ACPICA: executer: Add bounds checking for PCC field read access
+  ACPICA: Validate 4-char field names before namespace lookup
+  ACPICA: Improve error handling in table loading process
+  ACPICA: executer: Add bounds checking for PCC field write access
+  ACPICA: tables: Fix heap-buffer-overflow in AcpiTbFindTable
+  ACPICA: Fix object reference update to skip non-local notify types
+  ACPICA: namespace: Recognize alias node types in detach
+
+purofle (1):
+  ACPICA: fix: build error with gcc 16: unused-but-set-variable
+
+ drivers/acpi/acpica/acevents.h  |   4 +
+ drivers/acpi/acpica/acglobal.h  |   2 +-
+ drivers/acpi/acpica/acpredef.h  |   1 +
+ drivers/acpi/acpica/acutils.h   |   3 +
+ drivers/acpi/acpica/dsfield.c   |  24 +++
+ drivers/acpi/acpica/evgpe.c     | 355 ++++++++++++++++++++++++++++++++
+ drivers/acpi/acpica/exconfig.c  |   3 +-
+ drivers/acpi/acpica/exconvrt.c  |   4 +-
+ drivers/acpi/acpica/exfield.c   | 105 +++++++---
+ drivers/acpi/acpica/exresop.c   |  26 +++
+ drivers/acpi/acpica/exstore.c   |  20 +-
+ drivers/acpi/acpica/extrace.c   |   2 +-
+ drivers/acpi/acpica/nsaccess.c  |   2 +-
+ drivers/acpi/acpica/nsobject.c  |   7 +-
+ drivers/acpi/acpica/nsxfname.c  |   8 +
+ drivers/acpi/acpica/psargs.c    |   8 +-
+ drivers/acpi/acpica/psloop.c    |   5 +-
+ drivers/acpi/acpica/psobject.c  |   1 -
+ drivers/acpi/acpica/psparse.c   |  16 +-
+ drivers/acpi/acpica/tbdata.c    |  32 ++-
+ drivers/acpi/acpica/tbfind.c    |  16 +-
+ drivers/acpi/acpica/utcksum.c   |   3 +-
+ drivers/acpi/acpica/utdebug.c   |   9 +-
+ drivers/acpi/acpica/utdelete.c  |   5 +
+ drivers/acpi/arm64/mpam.c       |   6 +-
+ drivers/acpi/loongarch/iovt.c   |   6 +-
+ include/acpi/acpixf.h           |   2 +-
+ include/acpi/actbl1.h           |   6 +-
+ include/acpi/actbl2.h           | 200 +++++++++++++++++-
+ include/acpi/platform/aclinux.h |   1 +
+ 30 files changed, 811 insertions(+), 71 deletions(-)
+
+-- 
+2.56.0
+
