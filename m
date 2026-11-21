@@ -1,71 +1,46 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=54.204.34.129
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795206441;
-	b=5ExFDnUO/4/Fl3eHuUqWNOiIWUoQFmM69EQBxoYKt8zGMP2tG/rtZlQbc18vk+JWMhfE
-	 mDW7xqSY63lvshxyJoHpwvstouAGjFtuO5hNnJvIe5315HYcREu9aYWh1oJqJRzjQAMQo
-	 tDRlcuY5SURrxbTQ81GKNvAgKdNLRju4v/bklhTGlIo4aJzJ87hZuvORCJUisHetMqCgr
-	 h7lP0W3ePA62wH+TEYMeMwf93KfTBr9mD530QRaSkt0mIe3AnzoS8a6x8b33QxSSxI4nN
-	 z9Rh7ltVg9xwN7kENlNzOQ+VpX44YYgG0BZKkJCJPT3ADr3kD4PPn8hHGafG1z0vZqg==
+	t=1795221924;
+	b=rvmtE7cuzQpo12+89kyYR3fKfAAtCsY6Y8IPUDN1aXnTU1MXDQtNrsXEBsDFXc0on0za
+	 ICcTSHTExqCijFvubZaYoOfJNrSaUoWKuJAVDALGQbJoW/YvVPjP7crA1oU1B7vVRl8IJ
+	 iJtESOC0LmkYjYjUGqlmq6lQQvFrPvM6H5MDAqb5+1UMH6z343vhkAl2uHeck7ruuGKQS
+	 K48ZE5Ah/+ziDR0dGm4cIys8xp0sGwgfq+GpiDP+O8ybfkEaE9xGnfbP/2Fe6wxYF5KHO
+	 deSdyzxPJ9t+eOWjhNmiTQ6EYvsjjv2RZbv66FUtg+pgNwuSvxZO66dWM9vrisk1f2A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795206441;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=WqSlxQyh/dRBNidv695WpWTljoCnNVjA21ZydepqoMA=;
-	b=di8FUR0lRjT+ZHrFkYrAtmbLU2uAxxtq5aDy2Ll8aNCJgwoB3qnvZayAX2aF88XqZVqz
-	 OSW3IsQlilAK5XUkCE/uJYPjCPxvbS6ChIocJ/XEjCry6AYN7XDT0Hmb/iBC2ck2xtN6k
-	 l5L1VTEBaB0ip61Wh/l8dnpXhYlbNCHvcryKOhVjdVwwS6A5RIy1moI5pHmOMmSaLkZSx
-	 pe0B+kSQeXFFqOUmh12N9ESuIn+yfI7MBz8acPLZFB0wjEot6H3pSLd1D3lQ2GxnaEH2G
-	 wnx5zdzwHK3fS31ZGrdEwXbAqfs7XFte/lko2y2kXTZhZN6IBV62aHgDqeYlS/Iqgug==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795221924;
+	h=DMARC-Filter:X-QQ-mid:X-QQ-Originating-IP:Received:X-QQ-SSF:
+	 X-QQ-GoodBg:X-BIZMAIL-ID:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:X-QQ-SENDSIZE:Feedback-ID:
+	 X-QQ-XMAILINFO:X-QQ-XMRINFO:X-QQ-RECHKSPAM;
+	bh=wJW+40nF/GQo4qoIjCf6SARWpRHQ7H2pfRgqL2CtGG8=;
+	b=fRIvMh/eiLudQeoMPyMvwSoHWersOFF2FAUSm+abc6DHQCcKtChACYLR2R+esmI0WcDv
+	 wSCyHofYHJPskaB1+qXVinexSU/5LhUJpn33t+G46t2nided6s6J3isqlH+V6XzYJRIUO
+	 EjeVsnqRmu30KfP8vJNEgWEyipDYoup9COc1q1l61jBfn0E6M0pAJR7Ln6ElecvlB6it0
+	 x3dYEuymatsFPsSyvrefN8rQiY/SveHNJ260W2XKlxvadrxMjnMyciee80UqFxXBEazK5
+	 5Re2FlZPY/FOOPj6QHpljpLsGuiCUt6Htl6LwO9VH5STPK4menCjM/8m12dckXWvmBg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aAh0JewX;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=none header.from=kylinsec.com.cn;
+	spf=pass smtp.mailfrom=kylinsec.com.cn;
+	arc=none smtp.remote-ip=54.204.34.129
+Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with UTF8SMTPS id 859A6606A334;
-	Fri, 20 Nov 2026 20:27:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aAh0JewX
-Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id 482A51F0093C;
-	Fri, 20 Nov 2026 20:27:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795206440;
-	bh=WqSlxQyh/dRBNidv695WpWTljoCnNVjA21ZydepqoMA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=aAh0JewXcORIykTJumZLPOgBhpU1O1hlpDrce6ow61FXnF/Whwv+JbEvYmfeAxVLt
-	 v6rAqCv5Omd54azLHfA9A9qlfwC2DRIAUFmsNvPSd7uRg2nqMCUtg+94d610TpC10p
-	 D3DrDk81X3mmt4wyu9EL6fPHJZs+l5fYufbCZ05kABLisAkfOM1xcVVxYUG9yvCM6/
-	 iB1FXeQQgb5NIrwC7n+wq13jtreBzqEt3D+0MEkHW1mfrZWGgIjXECzPAZrxR+A4/Q
-	 35jrfBasep83+NQWsREqh2dh7YkvFSaUt2n4dftk9h7bUxxGCgQVaSApJzOK4uxtmL
-	 BDZsEikzLY0qQ==
-From: Nicolas Schier <nsc@kernel.org>
-To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Sasha Levin <sashal@kernel.org>
-Cc: Nicolas Schier <nsc@kernel.org>,
-	Harald Freudenberger <freude@linux.ibm.com>,
-	Holger Dengler <dengler@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	linux-kbuild@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"kernelci.org bot" <bot@kernelci.org>,
-	Nicolas Schier <n.schier@fritz.com>
-Subject: [PATCH] Move struct cpu_feature to a <linux/device-id/cpu_feature.h>
-Date: Fri, 20 Nov 2026 21:27:11 +0100
-Message-ID: <20261120202712.3377691-1-nsc@kernel.org>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <awCruYkI2TkxJfPC@levanger>
-References: <awCruYkI2TkxJfPC@levanger>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25020606A6AE
+	for <loongarch@lists.linux.dev>; Sat, 21 Nov 2026 00:45:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 25020606A6AE
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinsec.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinsec.com.cn
+X-QQ-mid: zesmtpgz5t1795221839t002b40ea
+X-QQ-Originating-IP: 7wS3+5A+uu5zsLmDUp+3xxbRo7iKjj7aXaBavT7rNPA=
+Received: from [10.20.30.2] ( [175.0.188.152])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Sat, 21 Nov 2026 08:43:57 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 15264283437573830944
+Message-ID: <6C1A5340F9F491C3+2f4be193-b25b-4386-89e5-654277569ad6@kylinsec.com.cn>
+Date: Sat, 21 Nov 2026 08:42:10 +0800
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -75,137 +50,187 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/loongarch: laptop: Fix backlight device lifetime
+ on unload
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Jianmin Lv <lvjianmin@loongson.cn>, Yao Zi <ziyao@disroot.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+ Zixing Liu <liushuyu@aosc.io>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <C3361EF435F90A22+20261119121937.2447021-1-luoqiu@kylinsec.com.cn>
+ <CAAhV-H7037=znoeU3+V086qGuDkRMVeSmt0PKe8DrdiFKcvF0A@mail.gmail.com>
+ <6ADB4C8146800DEE+635e4c74-fbd8-46bc-b1b7-670a35e62cb8@kylinsec.com.cn>
+ <CAAhV-H4PM0iPH0mBQy=Tj16b2o_5zNwzEyjd8LqMMQeRQpDxNg@mail.gmail.com>
+Content-Language: en-US
+From: Luo Qiu <luoqiu@kylinsec.com.cn>
+In-Reply-To: <CAAhV-H4PM0iPH0mBQy=Tj16b2o_5zNwzEyjd8LqMMQeRQpDxNg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpgz:kylinsec.com.cn:qybglogicsvrgz:qybglogicsvrgz3a-0
+X-QQ-XMAILINFO: NfykWmRlrd2oJY1f2fs5ltHdmHuJK7VVRQiTWSEBHnACtiWsX+WVI36A
+	0pxXnDFOf1FlJ+kRWUJJ36vtpXqwmj3xZAGJkkmY73pWKBl2ILIw84tsArFJD7yNocgu5Rj
+	y0GhcSDdLeZFVCD42uiOZxHkiAAMhDBpw4SzrTkFp4ObsQ+HkUelNzTs1xIZJcjxejjcj5T
+	gArf6dpAI0fOlvmMZA0gGtf7VnSMxYk2DZxyUQ78+i5yOObJy6/qbjy3cvq0TAmnbaodiXg
+	asu4gnW4AckIVVuDQkVHTU+H0QpnSik56TQ7x8r1xKLykrrxvuuynM/3j8sz0jv982wp5fh
+	w+R/ts4c5uIrf+UksGpXZhA+CIN5/p0HpzazxjmPPfd0qRNgI7ozBtMQslDZurPsMrFPoLP
+	XQcCsnbOkcK5ITIHJz0YORUE6/OQL3+E9x4K5gLxmQgCvMPAUHGhvzu7rQMwUhJSv/xF9OB
+	QnkHf3hnJrZVGQ643UctH/YT42o9MSzB0Orrr89FsLX075usteIywb5D6lnnPR4skwxw/hN
+	j9SmxZ6rQkvzTF+ebj2XS5gyBqIcM9pc7twpkQYO1kx/g7cNwHkskfI4KgTZZ6qPgplDnDJ
+	90iZ3XoiT4GHmEunqHMQ23X5aEh4dzyJFBRlH5XZy/BBwsDqq6XKxfaFv3cGJ1awgKccYo4
+	UObmcsGk6mXc7oRQLxl0VjCjs06boDFEb+5jm35xNlBrgk/3ELY302ZD82Sl51+2YlFmL88
+	nhmDjl1LyuOy8XfaWDbBpOYiFvwBt9Sqh/Vh+njRwCLKDyTcDJVpqlnNbJE9C4CKxg7i+xG
+	Ij/VTWFgIGBwhR8EVYlHVa19e7CCU4uxSR0o2Y6AtQtsbBTIB9NmVLW91ZxG1sWnYfbk2DH
+	99MsY+ZMHngbeNdHEnSYLCeR8aAjkiWXnKKDKM0qhkxgM3MP/o4aeLiuH+YPFjOXKCS+H1F
+	nvxKeY5Uy+pIdYtcw6BsScqv5iUwnA0b1WieU5lqKqYB05OblgPAsxUlZ4wUnbVmtaBv7Hv
+	bTxi0zvAfsnNNtTdPdwhUNLMbp1q8AIePgEKjyp6fcKBskFI4e+gz8WS4Walc=
+X-QQ-XMRINFO: MSVp+SPm3vtSI1QTLgDHQqIV1w2oNKDqfg==
+X-QQ-RECHKSPAM: 0
 
-From: Nicolas Schier <n.schier@fritz.com>
 
-struct cpu_feature used to be defined in <linux/mod_devicetable.h>. Move
-it to <linux/device-id/cpu_feature.h> to let users of mod_devicetable.h
-that only need struct cpu_feature switch to the new include file, and
-to reduce the number of users of mod_devicetable.h.
+On 11/20/26 6:16 PM, Huacai Chen wrote:
+> On Fri, Nov 20, 2026 at 5:13 PM Luo Qiu <luoqiu@kylinsec.com.cn> wrote:
+>>
+>> On 11/20/26 4:16 PM, Huacai Chen wrote:
+>>> Hi, Qiu,
+>>>
+>>> On Thu, Nov 19, 2026 at 8:22 PM Luo Qiu <luoqiu@kylinsec.com.cn> wrote:
+>>>> The driver registers a platform backlight device during module init but
+>>>> discards the returned pointer. Consequently, the device is never
+>>>> unregistered when the module is removed, leaving its ops callbacks
+>>>> pointing into freed module text. After module removal, reading the
+>>>> backlight's actual_brightness attribute can call the stale callback and
+>>>> crash the kernel. Registration failures are also silently ignored.
+>>>>
+>>>> Store the returned pointer, use it for resume, and unregister it on
+>>>> module exit. Propagate registration failures to avoid silently
+>>>> continuing without a backlight device.
+>>>>
+>>>> Fixes: 6246ed09111f ("LoongArch: Add ACPI-based generic laptop driver")
+>>>> Signed-off-by: Luo Qiu <luoqiu@kylinsec.com.cn>
+>>>> ---
+>>>>    drivers/platform/loongarch/loongson-laptop.c | 19 +++++++++++++------
+>>>>    1 file changed, 13 insertions(+), 6 deletions(-)
+>>>>
+>>>> diff --git a/drivers/platform/loongarch/loongson-laptop.c b/drivers/platform/loongarch/loongson-laptop.c
+>>>> index 4ec56621db24..ec0742e5ed46 100644
+>>>> --- a/drivers/platform/loongarch/loongson-laptop.c
+>>>> +++ b/drivers/platform/loongarch/loongson-laptop.c
+>>>> @@ -56,6 +56,7 @@ static acpi_handle hotkey_handle;
+>>>>    static struct key_entry hotkey_keycode_map[GENERIC_HOTKEY_MAP_MAX];
+>>>>
+>>>>    static bool bl_powered;
+>>>> +static struct backlight_device *backlight_dev;
+>>>>    static int loongson_laptop_backlight_update(struct backlight_device *bd);
+>>>>
+>>>>    /* 2. ACPI Helpers and device model */
+>>>> @@ -194,13 +195,12 @@ static int loongson_hotkey_resume(struct device *dev)
+>>>>    {
+>>>>           int status = 0;
+>>>>           struct key_entry ke;
+>>>> -       struct backlight_device *bd;
+>>>>
+>>>> -       bd = backlight_device_get_by_type(BACKLIGHT_PLATFORM);
+>>>> -       if (bd) {
+>>>> -               loongson_laptop_backlight_update(bd) ?
+>>>> +       if (backlight_dev) {
+>>>> +               loongson_laptop_backlight_update(backlight_dev) ?
+>>>>                   pr_warn("Loongson_backlight: resume brightness failed") :
+>>>> -               pr_info("Loongson_backlight: resume brightness %d\n", bd->props.brightness);
+>>>> +               pr_info("Loongson_backlight: resume brightness %d\n",
+>>>> +                               backlight_dev->props.brightness);
+>>>>           }
+>>>>
+>>>>           /*
+>>>> @@ -409,6 +409,7 @@ static int laptop_backlight_register(void)
+>>>>    {
+>>>>           int status = 0, ret;
+>>>>           struct backlight_properties props;
+>>>> +       struct backlight_device *bd;
+>>>>
+>>>>           memset(&props, 0, sizeof(props));
+>>>>
+>>>> @@ -426,9 +427,12 @@ static int laptop_backlight_register(void)
+>>>>           props.power = BACKLIGHT_POWER_ON;
+>>>>           props.type = BACKLIGHT_PLATFORM;
+>>>>
+>>>> -       backlight_device_register("loongson_laptop",
+>>>> +       bd = backlight_device_register("loongson_laptop",
+>>>>                                   NULL, NULL, &backlight_laptop_ops, &props);
+>>>> +       if (IS_ERR(bd))
+>>>> +               return PTR_ERR(bd);
+>>>>
+>>>> +       backlight_dev = bd;
+>>>>
+>>>>           return 0;
+>>>>    }
+>>>> @@ -622,6 +626,9 @@ static void __exit generic_acpi_laptop_exit(void)
+>>>>                                   generic_subdriver_exit(&generic_sub_drivers[i]);
+>>>>                   }
+>>>>           }
+>>>> +
+>>>> +       backlight_device_unregister(backlight_dev);
+>>> backlight_device_register is called conditionally but
+>>> backlight_device_unregister() is called unconditionally, I think this
+>>> is wrong.
+>>>
+>>> Huacai
+>> Hi, Huacai.
+>>
+>> Thanks for the review. The unconditional call is intentional and is safe
+>>
+>> because backlight_device_unregister() explicitly accepts a NULL device:
+>>
+>>       void backlight_device_unregister(struct backlight_device *bd)
+>>       {
+>>           if (!bd)
+>>               return;
+>>           ...
+>>       }
+>>
+>> backlight_dev is statically initialized to NULL. It is only assigned after
+>> backlight_device_register() succeeds and the IS_ERR() check has passed. If
+>> registration is skipped or fails, the pointer remains NULL, so the call in
+>> the module exit path is a no-op rather than a NULL dereference.
+>>
+>> I can change it to `if (backlight_dev) backlight_device_unregister(...)` in
+>> a follow-up if you prefer that style.
+> Yes, I think that is better. And it is also better to put this block
+> before the "if (generic_inputdev)" block.
+Thanks for the suggestion. I would prefer to keep the backlight
+unregistration after the generic_inputdev cleanup block.
 
-While moving struct cpu_feature to <linux/cpufeature.h> instead sounds
-reasonable, it would break defconfig on loongarch and mips [1].
+loongson_hotkey_resume() accesses backlight_dev, and that resume callback
+belongs to loongson_hotkey_driver, which is only unregistered by
+generic_subdriver_exit(). If we unregister the backlight before that block,
+the PM callback remains reachable while its backlight_dev dependency may
+already have been released.
 
-Link: https://lore.kernel.org/r/f610c07f39df15f3e7ebdc63bfcd759ca7a687a8.1794233316.git.sashal@kernel.org # [1]
-Original-patch-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
-Original-patch-by: Sasha Levin <sashal@kernel.org>
-Signed-off-by: Nicolas Schier <n.schier@fritz.com>
----
-This patch is a combination of [1] and [2]; both patches have been
-merged to prevent failures during bisecting.
+The backlight device itself is independent of generic_inputdev. The
+ordering is required by the hotkey PM callback lifetime, rather than by a
+device dependency between the backlight and the input device.
 
-Acked-by, Reported-by and Closes tags have been dropped due to the
-rewrite.
+I think keeping the teardown order as:
 
-Thanks to Uwe and Sasha!
+     generic_inputdev/generic_subdriver_exit()
+     backlight_device_unregister()
 
-[2]: https://patch.msgid.link/bc9fbf5784f6788e10c749a05d56c42bdb68f3d9.1792144769.git.u.kleine-koenig@baylibre.com
----
- arch/loongarch/kvm/main.c             |  2 +-
- include/linux/cpufeature.h            |  3 ++-
- include/linux/device-id/cpu_feature.h | 23 +++++++++++++++++++++++
- include/linux/mod_devicetable.h       | 14 +-------------
- 4 files changed, 27 insertions(+), 15 deletions(-)
- create mode 100644 include/linux/device-id/cpu_feature.h
+is safer.
 
-diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
-index c65ae2fa4c4b..fb3dc8237499 100644
---- a/arch/loongarch/kvm/main.c
-+++ b/arch/loongarch/kvm/main.c
-@@ -5,7 +5,7 @@
- 
- #include <linux/err.h>
- #include <linux/module.h>
--#include <linux/mod_devicetable.h>
-+#include <linux/device-id/cpu_feature.h>
- #include <linux/kvm_host.h>
- #include <asm/cacheflush.h>
- #include <asm/cpufeature.h>
-diff --git a/include/linux/cpufeature.h b/include/linux/cpufeature.h
-index 6aff540ee9e5..cd470987777f 100644
---- a/include/linux/cpufeature.h
-+++ b/include/linux/cpufeature.h
-@@ -6,10 +6,11 @@
- #ifndef __LINUX_CPUFEATURE_H
- #define __LINUX_CPUFEATURE_H
- 
-+#include <linux/device-id/cpu_feature.h>
-+
- #ifdef CONFIG_GENERIC_CPU_AUTOPROBE
- 
- #include <linux/init.h>
--#include <linux/mod_devicetable.h>
- #include <asm/cpufeature.h>
- 
- /*
-diff --git a/include/linux/device-id/cpu_feature.h b/include/linux/device-id/cpu_feature.h
-new file mode 100644
-index 000000000000..e14fe8bba85a
---- /dev/null
-+++ b/include/linux/device-id/cpu_feature.h
-@@ -0,0 +1,23 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef LINUX_DEVICE_ID_CPU_FEATURE_H
-+#define LINUX_DEVICE_ID_CPU_FEATURE_H
-+
-+/*
-+ * This file is included by scripts/mod/file2alias.c which is compiled
-+ * using the host compiler which might not have <linux/types.h> but the
-+ * __u{8,16,32} types are defined there locally.
-+ */
-+#ifdef __KERNEL__
-+#include <linux/types.h>
-+#endif
-+
-+/*
-+ * Generic table type for matching CPU features.
-+ * @feature:	the bit number of the feature (0 - 65535)
-+ */
-+
-+struct cpu_feature {
-+	__u16	feature;
-+};
-+
-+#endif /* ifndef LINUX_DEVICE_ID_CPU_FEATURE_H */
-diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
-index d1581bb64729..a69947f2c1dc 100644
---- a/include/linux/mod_devicetable.h
-+++ b/include/linux/mod_devicetable.h
-@@ -8,10 +8,6 @@
- #ifndef LINUX_MOD_DEVICETABLE_H
- #define LINUX_MOD_DEVICETABLE_H
- 
--#ifdef __KERNEL__
--#include <linux/types.h>
--#endif
--
- #include "device-id/acpi.h"
- #include "device-id/amba.h"
- #include "device-id/ap.h"
-@@ -21,6 +17,7 @@
- #include "device-id/ccw.h"
- #include "device-id/cdx.h"
- #include "device-id/coreboot.h"
-+#include "device-id/cpu_feature.h"
- #include "device-id/css.h"
- #include "device-id/dfl.h"
- #include "device-id/dmi.h"
-@@ -69,13 +66,4 @@
- #include "device-id/x86_cpu.h"
- #include "device-id/zorro.h"
- 
--/*
-- * Generic table type for matching CPU features.
-- * @feature:	the bit number of the feature (0 - 65535)
-- */
--
--struct cpu_feature {
--	__u16	feature;
--};
--
- #endif /* LINUX_MOD_DEVICETABLE_H */
--- 
-2.47.3
+Qiu Luo
 
+>
+> Huacai
+>
+>> Thanks.
+>>
+>> Qiu Luo
+>>>> +       backlight_dev = NULL;
+>>>>    }
+>>>>
+>>>>    module_init(generic_acpi_laptop_init);
+>>>> --
+>>>> 2.56.1
+>>>>
