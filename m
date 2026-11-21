@@ -1,85 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=54.254.200.92
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795266998;
-	b=AzNbGvHHy1ehSFjcmkYJI6J220L/ZTJ+0SRP13j87L3UjO/V8YLcigQcLzpds0wpdlSY
-	 UaxdwytEU4nf++sDl3xEcaiGO01JjE2VTu3HhoK6MyOPz1UQq4eLehy/W/x6UI6J6z68J
-	 pq7BfFaQsB3v/niVOs0t1FNIdI9+fT6XbdDmIc10h7yW1rAjbvCSSm7nQxyahvdzK0/Yv
-	 8kYtSOv4maITplIF6ZhBk8eEPsHP3vIJOrx6xLWC8iyxth3tcyI05+bmOLLByLXw+coPl
-	 pKhbVh3Acn6v5qcgSObHzcumc77PVONxnpUIxhAkQgN4xC2H4YPBJ/4wP0XF8CSAABg==
+	t=1795267223;
+	b=GV0tLDGZoCax4z5O3SiNtbh+LWpae+a4KXiPI6aO5lWzJ9p1PVlYvCPYav/N9QdyGhUH
+	 5ufbqHjEIQciWa8Nl4geVqM7dkHwg/pRR+mzu7dAnCAob76y0uRwS/0nDlZZs/BICvGg1
+	 mHsPd/iwMnjrAtjFK4Js5zFgNEwrcb5+Iv75TDpVGxqI67rtEoy+r/bcm4zNWkdAYeRzb
+	 hFpElhVP/ILDdjGTjUSVERFXKqZd/lSWWxZPVgd2507yZ+K9qzNygKCqdjpjX/ZMQ0JaL
+	 bUbGDVDh7kh125aPgI2V6KdJyefaQbCEu5XpsSJDa1TW0y047bAgv0ypnQxHTFQroDQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795266998;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 Mail-Followup-To:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=TxW/RAptOpxLkind6FtvVROcaKbdd/cBMgMOKwStZeM=;
-	b=U3NkHpsa4qmmNgUoA1YsEvU/t4ZJL/1SaCrn3ACeq3Sxoi4J6NEwaQQmEpfCRvpWT0/P
-	 oBWHWR8mpxXCeZdCAUH/6H96dg6apN1nnPdKzk8JimjZJuFc8FMOHD8KBR22NaWX3egzF
-	 XBHgEwViFkiY8JcalCYdNicDMOLST997JAVwLSoy0eLyfq1OMw2/Or60lj16lL+rH+u47
-	 fXRiMXm4MKMjFEhWygN610iTsy08a5H2bGtw/fM3YUCbQnS4u1SKogBzaMNLDQp8DSMpT
-	 zb6ObHBgkBHAWSs6/Z3IHd1apupBTIGgbsBpEA0LgF/ZJy7hSO0+IjMF1toS7S3aEgA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795267223;
+	h=DMARC-Filter:X-QQ-mid:X-QQ-Originating-IP:Received:X-QQ-SSF:
+	 X-QQ-GoodBg:X-BIZMAIL-ID:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 MIME-Version:Content-Transfer-Encoding:X-QQ-SENDSIZE:Feedback-ID:
+	 X-QQ-XMAILINFO:X-QQ-XMRINFO:X-QQ-RECHKSPAM;
+	bh=d/pLCyn5nrRN5SKWeNMFsROQuE+5ueEG2459NsXjUsQ=;
+	b=pPLK1OqI6wZJWyyzAIzylI2rMwJnAuXWTi0QeVE2Ne5hrbIxXBnjhi91m/HmlQXtloWo
+	 jskBePJENROg69i+Uo4tPSqFfoOOI5aWY2ydeTeJfQtX0E5pz5Q/rOqfre8FJlO7+kvfk
+	 Cc3Tm/x+H0hkTSk0U4HDR/YxLmCx1XKshJTDA1PhqtxjEn4pMPIW5iGuCdKHGRgxkOo1l
+	 estv0XkyW/KCGhCRzJEj3awmOmaSNQ6TWT7U2T48F3SufcW7xf9tw1h0Lh5UB3ZUr/r3U
+	 ygYxnqz6tU62kpZsItq2qY+gUAakMW1DtIILPfY+9elTSC2DW9qWqMByKmD3kGFJtWw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bPAShBr7;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=none header.from=kylinsec.com.cn;
+	spf=pass smtp.mailfrom=kylinsec.com.cn;
+	arc=none smtp.remote-ip=54.254.200.92
+Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with UTF8SMTPS id 77793606A32C;
-	Sat, 21 Nov 2026 13:16:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bPAShBr7
-Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id 930CA1F000C0;
-	Sat, 21 Nov 2026 13:16:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795266998;
-	bh=TxW/RAptOpxLkind6FtvVROcaKbdd/cBMgMOKwStZeM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=bPAShBr7KOOGPBKH+XTeVXkgXBPFn40auFQSlE9hM8FDZmc2VPBT8Pq0gw83FDHHz
-	 puDG/SloQy85d6f6pt40euCNXoB9KNLlbgkAg8nEZEwPv26NTv12dnjuIX1/hEkd7F
-	 Y+v34WLQW/heaHEZxlua+xB+3xcxWtK887Hdmb/5Kj5r/xUU7kORPO2reS/uCP5scj
-	 28VUcr02GlWxQzAWdy5DXSsAacKGZplfY7yTt8sxZ31jBcV/4+tI3snCWxj+0uAVEJ
-	 Hbjv/Gkh1sBmM/osurXObPF/vRMcavLbYjGrfmTZo2LL7YmOjGy/E0D83NqUxvDb/r
-	 +CjTnZ4TPRP7g==
-Date: Sat, 21 Nov 2026 13:51:44 +0100
-From: Nicolas Schier <nsc@kernel.org>
-To: kernel test robot <lkp@intel.com>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Sasha Levin <sashal@kernel.org>, llvm@lists.linux.dev,
-	oe-kbuild-all@lists.linux.dev,
-	Harald Freudenberger <freude@linux.ibm.com>,
-	Holger Dengler <dengler@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 880E0606A320
+	for <loongarch@lists.linux.dev>; Sat, 21 Nov 2026 13:20:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 880E0606A320
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinsec.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinsec.com.cn
+X-QQ-mid: zesmtpsz8t1795267117t73df3d34
+X-QQ-Originating-IP: 7zsZ9rFdTsq82y8pmBSeqBNpQV3EcqWqJHVukzyBbMI=
+Received: from yoga14s ( [113.246.119.150])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Sat, 21 Nov 2026 21:18:35 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 16635128251189827061
+From: Luo Qiu <luoqiu@kylinsec.com.cn>
+To: Jianmin Lv <lvjianmin@loongson.cn>,
 	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	linux-kbuild@vger.kernel.org, linux-s390@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org, "kernelci.org bot" <bot@kernelci.org>
-Subject: Re: [PATCH] Move struct cpu_feature to a
- <linux/device-id/cpu_feature.h>
-Message-ID: <awGT4AhwcFcLsW0c@levanger>
-Mail-Followup-To: Nicolas Schier <nsc@kernel.org>,
-	kernel test robot <lkp@intel.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Sasha Levin <sashal@kernel.org>, llvm@lists.linux.dev,
-	oe-kbuild-all@lists.linux.dev,
-	Harald Freudenberger <freude@linux.ibm.com>,
-	Holger Dengler <dengler@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	linux-kbuild@vger.kernel.org, linux-s390@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org, "kernelci.org bot" <bot@kernelci.org>
-References: <20261120202712.3377691-1-nsc@kernel.org>
- <202611211941.G0rlpNpN-lkp@intel.com>
+	Yao Zi <ziyao@disroot.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+	Zixing Liu <liushuyu@aosc.io>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] platform/loongarch: laptop: Fix backlight device lifetime on unload
+Date: Sat, 21 Nov 2026 21:18:20 +0800
+Message-ID: <9F3855F1130E2878+20261121131820.6759-1-luoqiu@kylinsec.com.cn>
+X-Mailer: git-send-email 2.56.1
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -89,57 +60,112 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202611211941.G0rlpNpN-lkp@intel.com>
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpsz:kylinsec.com.cn:qybglogicsvrgz:qybglogicsvrgz3a-0
+X-QQ-XMAILINFO: McoPngcDBvM5KG3yOoQR8DNlUOOsx6JppJOOXaixIObZmtD/dhw7LM2Z
+	9cHD9Q7E+TFL89UYmxsFf62JlYQDQdRbpm4c1x7NoMH+gty1Z+x7n+OT/eCp0ZaaHpfESCd
+	8P43bEnQNCpCiglM2zxzjdAVfFI6eIfbv9m2dARfDVvXsJjqH5p6sEPYQpp0+ny3KBWwWfe
+	KpFMpQOWG/qWrp1EkVcL1ntuNMDLJlC/Cf8uK+9t3i3N26Fv909PuX4jz0PrcBZoyQcCzd1
+	nRuLAXDquW4JOxBvVWnqNcEFlQdUpHrYtlilwPQkwh9S0VH7CWfacgdhYlfYMuqwtjYuZr3
+	HmJuh0HdKURUCXNPwSxW1c74YR3iNeXIk3PXFVkLq+GrrsRid9Aiw0yMaUnHOVP6WVfI8Yp
+	DD5KJBSZsAEivYnPu8ohJIaFU99oEzZ/myFE4F5NKSsqSJMBEu41lhMXtu6H67d6SrS7oJR
+	3A/50VcNuLoZ5PhF27EmUBKUF2wbaZVUok+ireseX4wPG3w6axeQww4bEAJh02QOzbj+86g
+	a4eZ5svatdgUsFa6rNvYMJvCqkdq+mXEqyD8/hggqnl9GYsMKcSGGazZUq9aU/C6vJZjBhf
+	bOR2MJbT3qNqpdA197oMs6tINICD1KZVKKtx5psSXLi03T0WcFIbsJSSXcLkMnCEnbfQ9Kb
+	4h22mBO+/hKmOKjy8Nq2v/OaooHuvJbghbpRaKVk3EKi6hORQQcaCEX88s4jBNO4skX5x84
+	rQONjz1GKAxrixMDeYuyI651GGo5y6A/xi9qmUF0WXpMpy8v/9wIf04wbGUD9DRb6TyS0j9
+	UwwWKMMPKdKd6ixsvcCxiDzeEfXW3vSpdq9uPZCyNBMV3nSNp24A8qIfRANGUCebf4UsIkp
+	ZntYuB0p38bZlEJjwj7psBIDu8f2CRhvLQPnE6Uq5TKkBx0SpT7Kj8t5oLSc16ew1zrtHL6
+	w+ZNr+mjJbEbnTjh92lrY5XhClrsE+oIsMFGJwRN+nyCRQqty8OVWE+FqkNR0rIA6YQka7E
+	i2ncDZyPmwIXMwlBQmI+YNUHTj7/M=
+X-QQ-XMRINFO: NI4Ajvh11aEjEMj13RCX7UuhPEoou2bs1g==
+X-QQ-RECHKSPAM: 0
 
-On Sat, Nov 21, 2026 at 08:01:20PM +0800, kernel test robot wrote:
-> Hi Nicolas,
-> 
-> kernel test robot noticed the following build errors:
-> 
-> [auto build test ERROR on kvm/queue]
-> [also build test ERROR on kvm/next linus/master v7.4-rc3]
-> [cannot apply to kvm/linux-next next-20261119]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Nicolas-Schier/Move-struct-cpu_feature-to-a-linux-device-id-cpu_feature-h/20261120-212711
-> base:   https://git.kernel.org/pub/scm/virt/kvm/kvm.git queue
-> patch link:    https://lore.kernel.org/r/20261120202712.3377691-1-nsc%40kernel.org
-> patch subject: [PATCH] Move struct cpu_feature to a <linux/device-id/cpu_feature.h>
-> config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20261121/202611211941.G0rlpNpN-lkp@intel.com/config)
-> compiler: clang version 24.0.0git (https://github.com/llvm/llvm-project 3b14d7c370558b46e5f0c6494a05c492e59bf32c)
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20261121/202611211941.G0rlpNpN-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202611211941.G0rlpNpN-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
-> >> drivers/s390/crypto/pkey_cca.c:22:45: error: array has incomplete element type 'struct ap_device_id'
->       22 | static struct ap_device_id pkey_cca_card_ids[] = {
->          |                                             ^
->    drivers/s390/crypto/ap_bus.h:158:9: note: forward declaration of 'struct ap_device_id'
->      158 |         struct ap_device_id *ids;
->          |                ^
->    1 error generated.
-> --
-> >> drivers/s390/crypto/pkey_ep11.c:23:46: error: array has incomplete element type 'struct ap_device_id'
->       23 | static struct ap_device_id pkey_ep11_card_ids[] = {
->          |                                              ^
->    drivers/s390/crypto/ap_bus.h:158:9: note: forward declaration of 'struct ap_device_id'
->      158 |         struct ap_device_id *ids;
->          |                ^
->    1 error generated.
+The driver registers a platform backlight device during module init but
+discards the returned pointer. Consequently, the device is never
+unregistered when the module is removed, leaving its ops callbacks
+pointing into freed module text. After module removal, reading the
+backlight's actual_brightness attribute can call the stale callback and
+crash the kernel. Registration failures are also silently ignored.
 
-That is fixed by [1] which is to be applied before the patch referenced
-above.
+Store the returned pointer, use it for resume, and unregister it on
+module exit. Check and report backlight registration failures.
 
-[1]: https://lore.kernel.org/linux-kbuild/66e4ee9c7f9b4bc48fcee92a94b6bb6d92fe1ad2.1794233316.git.sashal@kernel.org/
+Fixes: 6246ed09111f ("LoongArch: Add ACPI-based generic laptop driver")
+Signed-off-by: Luo Qiu <luoqiu@kylinsec.com.cn>
+---
+Changes in v2:
+- Add a NULL check around backlight_device_unregister().
+- Correct the changelog to state that registration failures are checked
+  and reported, rather than propagated.
+ drivers/platform/loongarch/loongson-laptop.c | 21 ++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
 
+diff --git a/drivers/platform/loongarch/loongson-laptop.c b/drivers/platform/loongarch/loongson-laptop.c
+index 4ec56621db24..65e92a250614 100644
+--- a/drivers/platform/loongarch/loongson-laptop.c
++++ b/drivers/platform/loongarch/loongson-laptop.c
+@@ -56,6 +56,7 @@ static acpi_handle hotkey_handle;
+ static struct key_entry hotkey_keycode_map[GENERIC_HOTKEY_MAP_MAX];
+ 
+ static bool bl_powered;
++static struct backlight_device *backlight_dev;
+ static int loongson_laptop_backlight_update(struct backlight_device *bd);
+ 
+ /* 2. ACPI Helpers and device model */
+@@ -194,13 +195,12 @@ static int loongson_hotkey_resume(struct device *dev)
+ {
+ 	int status = 0;
+ 	struct key_entry ke;
+-	struct backlight_device *bd;
+ 
+-	bd = backlight_device_get_by_type(BACKLIGHT_PLATFORM);
+-	if (bd) {
+-		loongson_laptop_backlight_update(bd) ?
++	if (backlight_dev) {
++		loongson_laptop_backlight_update(backlight_dev) ?
+ 		pr_warn("Loongson_backlight: resume brightness failed") :
+-		pr_info("Loongson_backlight: resume brightness %d\n", bd->props.brightness);
++		pr_info("Loongson_backlight: resume brightness %d\n",
++				backlight_dev->props.brightness);
+ 	}
+ 
+ 	/*
+@@ -409,6 +409,7 @@ static int laptop_backlight_register(void)
+ {
+ 	int status = 0, ret;
+ 	struct backlight_properties props;
++	struct backlight_device *bd;
+ 
+ 	memset(&props, 0, sizeof(props));
+ 
+@@ -426,9 +427,12 @@ static int laptop_backlight_register(void)
+ 	props.power = BACKLIGHT_POWER_ON;
+ 	props.type = BACKLIGHT_PLATFORM;
+ 
+-	backlight_device_register("loongson_laptop",
++	bd = backlight_device_register("loongson_laptop",
+ 				NULL, NULL, &backlight_laptop_ops, &props);
++	if (IS_ERR(bd))
++		return PTR_ERR(bd);
+ 
++	backlight_dev = bd;
+ 
+ 	return 0;
+ }
+@@ -622,6 +626,11 @@ static void __exit generic_acpi_laptop_exit(void)
+ 				generic_subdriver_exit(&generic_sub_drivers[i]);
+ 		}
+ 	}
++
++	if (backlight_dev) {
++		backlight_device_unregister(backlight_dev);
++		backlight_dev = NULL;
++	}
+ }
+ 
+ module_init(generic_acpi_laptop_init);
 -- 
-Nicolas
+2.56.1
+
