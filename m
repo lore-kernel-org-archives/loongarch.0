@@ -1,55 +1,85 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795266224;
-	b=GtHe+aW0iU7wCQpK7O0YKoHuqynMQjTD+dAJTpULY5Jk+F5ifjFZG1a1K2bWhupr4lTc
-	 +LL2BQ0Fj4nn3+NGp7KRiD6hJds4LsZcYgH/dpv0LWadNC3uK9m86clZbyZDhxrFFVteE
-	 7AFAhXOsMLx+s9xbh86/+9oiBq5DMv8mZ+A3oi285hoGUYM27Br7iUx2BNmRPUo95QQck
-	 EVHSlNKndvLdu28mcfhBTMz9Ro6DxgBs+ATMi2uyaufpXVKammU6Yza2hU/ZFBlFmZlO7
-	 5UQRWtx6w6GrrWCoyp49iIaWPYiNEK5iu3tZ/F3otlCEykKt1azZlizs+FlRlbGCx9w==
+	t=1795266998;
+	b=AzNbGvHHy1ehSFjcmkYJI6J220L/ZTJ+0SRP13j87L3UjO/V8YLcigQcLzpds0wpdlSY
+	 UaxdwytEU4nf++sDl3xEcaiGO01JjE2VTu3HhoK6MyOPz1UQq4eLehy/W/x6UI6J6z68J
+	 pq7BfFaQsB3v/niVOs0t1FNIdI9+fT6XbdDmIc10h7yW1rAjbvCSSm7nQxyahvdzK0/Yv
+	 8kYtSOv4maITplIF6ZhBk8eEPsHP3vIJOrx6xLWC8iyxth3tcyI05+bmOLLByLXw+coPl
+	 pKhbVh3Acn6v5qcgSObHzcumc77PVONxnpUIxhAkQgN4xC2H4YPBJ/4wP0XF8CSAABg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795266224;
-	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
-	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
-	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=NN9PV3EIA0LeMNEdrMa7ju2o8RGtnqlY03dOr+4MbQs=;
-	b=dq1MMVBIhsq9TTyfpqAKektozWjTdYAc2bww0ZsR5JtpCoKtSfDrqeNnZojcBt13hYTT
-	 6aHwaGqCfnBkeO2CJLJ0S/AjDv2EMoyEqEBNrBwtS+cUXqp4Nr/7Jh6PVQPb9mFhI3JR+
-	 uE9UKp5YveYmWw3SwFaLlXcDzQKkxLInWeYzZaINFAHOhwWBtbZMaAj28jxCICQ+Mk9D5
-	 YSSb+iLVeHn99WIwpD+lG+BzU6mi50i4S6Z7H0zw4e9oPy3is3+PfrsfGj3Ji7gCr16sv
-	 2TGSnaKAbeYlJ0xz5e+Dg0JnYjGtN7Zdmk29zIBz7xoFQZKTnhmx33wBRYJchVbZOIg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795266998;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 Mail-Followup-To:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To;
+	bh=TxW/RAptOpxLkind6FtvVROcaKbdd/cBMgMOKwStZeM=;
+	b=U3NkHpsa4qmmNgUoA1YsEvU/t4ZJL/1SaCrn3ACeq3Sxoi4J6NEwaQQmEpfCRvpWT0/P
+	 oBWHWR8mpxXCeZdCAUH/6H96dg6apN1nnPdKzk8JimjZJuFc8FMOHD8KBR22NaWX3egzF
+	 XBHgEwViFkiY8JcalCYdNicDMOLST997JAVwLSoy0eLyfq1OMw2/Or60lj16lL+rH+u47
+	 fXRiMXm4MKMjFEhWygN610iTsy08a5H2bGtw/fM3YUCbQnS4u1SKogBzaMNLDQp8DSMpT
+	 zb6ObHBgkBHAWSs6/Z3IHd1apupBTIGgbsBpEA0LgF/ZJy7hSO0+IjMF1toS7S3aEgA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CCk6n69f;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bPAShBr7;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784AC606A320
-	for <loongarch@lists.linux.dev>; Sat, 21 Nov 2026 13:03:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with UTF8SMTPS id 77793606A32C;
+	Sat, 21 Nov 2026 13:16:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CCk6n69f
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29CDB1F000D4
-	for <loongarch@lists.linux.dev>; Sat, 21 Nov 2026 13:03:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bPAShBr7
+Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id 930CA1F000C0;
+	Sat, 21 Nov 2026 13:16:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795266224;
-	bh=NN9PV3EIA0LeMNEdrMa7ju2o8RGtnqlY03dOr+4MbQs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=CCk6n69fw2sJmloh3K1tFqvaHZD5cQdd8OXIgLZyT6nVox3M4v/BKO68xzNhLeqaO
-	 HXn9kWaCiI9ehpdXrs9ncUN7kQe/a0BCTlpq5ZpocS+Du/NuiVqPssINbwBy2UMGTy
-	 E+zYZ2w8VeW0d2s6T3Im78sAdosMz5hg3dG1ApGShT16uZSrHT1SdV5wut6q4F0aZ/
-	 wJqlenrgZSB4HmWXjArujeZFcjnUVyNatbrpNsaxP9AGz10TCh3B2fM5QjYRMH2f7e
-	 QfbgLxxtJZKzb5DcTSG1RCj5r2gr6IaFuUS0DJPHlvnbe61yxJTEt58SpWbAOflOcY
-	 HICcAKF4dR3DA==
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-6b587538a37so2663939a12.2
-        for <loongarch@lists.linux.dev>; Sat, 21 Nov 2026 05:03:44 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AL+hErECZttqVXUHlEY58a+24VcHr4ZFODKXPDvcq/JaoyEjp0okx1WptRGVoMuJTDJUELVXZgvsUVfqjaw=@lists.linux.dev
-X-Gm-Message-State: APuU4Z9wCJ8jFGfXwS2iG32+aT5dGqCUp+16tNxvaByi3FBoMNiMLYhX
-	6WCk3ECoBD87VXO3yCLeBRMIliN3imzc0thBzC6c7UTAwviNUtXZ/Z1ns9iBPuSB/74Fqxrpo5R
-	5pyAJijAlLhJs1w8YrFtbvDCIpUAyyLg=
-X-Received: by 2002:a05:6402:4501:b0:6ba:144f:ae47 with SMTP id
- 4fb4d7f45d1cf-6ba37ec05c3mr4590419a12.26.1795266222631; Sat, 21 Nov 2026
- 05:03:42 -0800 (PST)
+	s=k20260515; t=1795266998;
+	bh=TxW/RAptOpxLkind6FtvVROcaKbdd/cBMgMOKwStZeM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=bPAShBr7KOOGPBKH+XTeVXkgXBPFn40auFQSlE9hM8FDZmc2VPBT8Pq0gw83FDHHz
+	 puDG/SloQy85d6f6pt40euCNXoB9KNLlbgkAg8nEZEwPv26NTv12dnjuIX1/hEkd7F
+	 Y+v34WLQW/heaHEZxlua+xB+3xcxWtK887Hdmb/5Kj5r/xUU7kORPO2reS/uCP5scj
+	 28VUcr02GlWxQzAWdy5DXSsAacKGZplfY7yTt8sxZ31jBcV/4+tI3snCWxj+0uAVEJ
+	 Hbjv/Gkh1sBmM/osurXObPF/vRMcavLbYjGrfmTZo2LL7YmOjGy/E0D83NqUxvDb/r
+	 +CjTnZ4TPRP7g==
+Date: Sat, 21 Nov 2026 13:51:44 +0100
+From: Nicolas Schier <nsc@kernel.org>
+To: kernel test robot <lkp@intel.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Sasha Levin <sashal@kernel.org>, llvm@lists.linux.dev,
+	oe-kbuild-all@lists.linux.dev,
+	Harald Freudenberger <freude@linux.ibm.com>,
+	Holger Dengler <dengler@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	linux-kbuild@vger.kernel.org, linux-s390@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org, "kernelci.org bot" <bot@kernelci.org>
+Subject: Re: [PATCH] Move struct cpu_feature to a
+ <linux/device-id/cpu_feature.h>
+Message-ID: <awGT4AhwcFcLsW0c@levanger>
+Mail-Followup-To: Nicolas Schier <nsc@kernel.org>,
+	kernel test robot <lkp@intel.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Sasha Levin <sashal@kernel.org>, llvm@lists.linux.dev,
+	oe-kbuild-all@lists.linux.dev,
+	Harald Freudenberger <freude@linux.ibm.com>,
+	Holger Dengler <dengler@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	linux-kbuild@vger.kernel.org, linux-s390@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org, "kernelci.org bot" <bot@kernelci.org>
+References: <20261120202712.3377691-1-nsc@kernel.org>
+ <202611211941.G0rlpNpN-lkp@intel.com>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -59,198 +89,57 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <C3361EF435F90A22+20261119121937.2447021-1-luoqiu@kylinsec.com.cn>
- <CAAhV-H7037=znoeU3+V086qGuDkRMVeSmt0PKe8DrdiFKcvF0A@mail.gmail.com>
- <6ADB4C8146800DEE+635e4c74-fbd8-46bc-b1b7-670a35e62cb8@kylinsec.com.cn>
- <CAAhV-H4PM0iPH0mBQy=Tj16b2o_5zNwzEyjd8LqMMQeRQpDxNg@mail.gmail.com> <6C1A5340F9F491C3+2f4be193-b25b-4386-89e5-654277569ad6@kylinsec.com.cn>
-In-Reply-To: <6C1A5340F9F491C3+2f4be193-b25b-4386-89e5-654277569ad6@kylinsec.com.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 21 Nov 2026 21:03:30 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7W3WLvdJGVb210PU=TPUUs7X3wm=mLknZ3B3DkY_KnPA@mail.gmail.com>
-X-Gm-Features: Aa3M54owCyzpPXl5Qb34BuhzUxT_xhNRDfl_3UvftNMZO-G5W6GfbCgJM06_zZc
-Message-ID: <CAAhV-H7W3WLvdJGVb210PU=TPUUs7X3wm=mLknZ3B3DkY_KnPA@mail.gmail.com>
-Subject: Re: [PATCH] platform/loongarch: laptop: Fix backlight device lifetime
- on unload
-To: Luo Qiu <luoqiu@kylinsec.com.cn>
-Cc: Jianmin Lv <lvjianmin@loongson.cn>, Yao Zi <ziyao@disroot.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Zixing Liu <liushuyu@aosc.io>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202611211941.G0rlpNpN-lkp@intel.com>
 
-On Sat, Nov 21, 2026 at 8:45=E2=80=AFAM Luo Qiu <luoqiu@kylinsec.com.cn> wr=
-ote:
->
->
-> On 11/20/26 6:16 PM, Huacai Chen wrote:
-> > On Fri, Nov 20, 2026 at 5:13=E2=80=AFPM Luo Qiu <luoqiu@kylinsec.com.cn=
-> wrote:
-> >>
-> >> On 11/20/26 4:16 PM, Huacai Chen wrote:
-> >>> Hi, Qiu,
-> >>>
-> >>> On Thu, Nov 19, 2026 at 8:22=E2=80=AFPM Luo Qiu <luoqiu@kylinsec.com.=
-cn> wrote:
-> >>>> The driver registers a platform backlight device during module init =
-but
-> >>>> discards the returned pointer. Consequently, the device is never
-> >>>> unregistered when the module is removed, leaving its ops callbacks
-> >>>> pointing into freed module text. After module removal, reading the
-> >>>> backlight's actual_brightness attribute can call the stale callback =
-and
-> >>>> crash the kernel. Registration failures are also silently ignored.
-> >>>>
-> >>>> Store the returned pointer, use it for resume, and unregister it on
-> >>>> module exit. Propagate registration failures to avoid silently
-> >>>> continuing without a backlight device.
-> >>>>
-> >>>> Fixes: 6246ed09111f ("LoongArch: Add ACPI-based generic laptop drive=
-r")
-> >>>> Signed-off-by: Luo Qiu <luoqiu@kylinsec.com.cn>
-> >>>> ---
-> >>>>    drivers/platform/loongarch/loongson-laptop.c | 19 +++++++++++++--=
-----
-> >>>>    1 file changed, 13 insertions(+), 6 deletions(-)
-> >>>>
-> >>>> diff --git a/drivers/platform/loongarch/loongson-laptop.c b/drivers/=
-platform/loongarch/loongson-laptop.c
-> >>>> index 4ec56621db24..ec0742e5ed46 100644
-> >>>> --- a/drivers/platform/loongarch/loongson-laptop.c
-> >>>> +++ b/drivers/platform/loongarch/loongson-laptop.c
-> >>>> @@ -56,6 +56,7 @@ static acpi_handle hotkey_handle;
-> >>>>    static struct key_entry hotkey_keycode_map[GENERIC_HOTKEY_MAP_MAX=
-];
-> >>>>
-> >>>>    static bool bl_powered;
-> >>>> +static struct backlight_device *backlight_dev;
-> >>>>    static int loongson_laptop_backlight_update(struct backlight_devi=
-ce *bd);
-> >>>>
-> >>>>    /* 2. ACPI Helpers and device model */
-> >>>> @@ -194,13 +195,12 @@ static int loongson_hotkey_resume(struct devic=
-e *dev)
-> >>>>    {
-> >>>>           int status =3D 0;
-> >>>>           struct key_entry ke;
-> >>>> -       struct backlight_device *bd;
-> >>>>
-> >>>> -       bd =3D backlight_device_get_by_type(BACKLIGHT_PLATFORM);
-> >>>> -       if (bd) {
-> >>>> -               loongson_laptop_backlight_update(bd) ?
-> >>>> +       if (backlight_dev) {
-> >>>> +               loongson_laptop_backlight_update(backlight_dev) ?
-> >>>>                   pr_warn("Loongson_backlight: resume brightness fai=
-led") :
-> >>>> -               pr_info("Loongson_backlight: resume brightness %d\n"=
-, bd->props.brightness);
-> >>>> +               pr_info("Loongson_backlight: resume brightness %d\n"=
-,
-> >>>> +                               backlight_dev->props.brightness);
-> >>>>           }
-> >>>>
-> >>>>           /*
-> >>>> @@ -409,6 +409,7 @@ static int laptop_backlight_register(void)
-> >>>>    {
-> >>>>           int status =3D 0, ret;
-> >>>>           struct backlight_properties props;
-> >>>> +       struct backlight_device *bd;
-> >>>>
-> >>>>           memset(&props, 0, sizeof(props));
-> >>>>
-> >>>> @@ -426,9 +427,12 @@ static int laptop_backlight_register(void)
-> >>>>           props.power =3D BACKLIGHT_POWER_ON;
-> >>>>           props.type =3D BACKLIGHT_PLATFORM;
-> >>>>
-> >>>> -       backlight_device_register("loongson_laptop",
-> >>>> +       bd =3D backlight_device_register("loongson_laptop",
-> >>>>                                   NULL, NULL, &backlight_laptop_ops,=
- &props);
-> >>>> +       if (IS_ERR(bd))
-> >>>> +               return PTR_ERR(bd);
-> >>>>
-> >>>> +       backlight_dev =3D bd;
-> >>>>
-> >>>>           return 0;
-> >>>>    }
-> >>>> @@ -622,6 +626,9 @@ static void __exit generic_acpi_laptop_exit(void=
-)
-> >>>>                                   generic_subdriver_exit(&generic_su=
-b_drivers[i]);
-> >>>>                   }
-> >>>>           }
-> >>>> +
-> >>>> +       backlight_device_unregister(backlight_dev);
-> >>> backlight_device_register is called conditionally but
-> >>> backlight_device_unregister() is called unconditionally, I think this
-> >>> is wrong.
-> >>>
-> >>> Huacai
-> >> Hi, Huacai.
-> >>
-> >> Thanks for the review. The unconditional call is intentional and is sa=
-fe
-> >>
-> >> because backlight_device_unregister() explicitly accepts a NULL device=
-:
-> >>
-> >>       void backlight_device_unregister(struct backlight_device *bd)
-> >>       {
-> >>           if (!bd)
-> >>               return;
-> >>           ...
-> >>       }
-> >>
-> >> backlight_dev is statically initialized to NULL. It is only assigned a=
-fter
-> >> backlight_device_register() succeeds and the IS_ERR() check has passed=
-. If
-> >> registration is skipped or fails, the pointer remains NULL, so the cal=
-l in
-> >> the module exit path is a no-op rather than a NULL dereference.
-> >>
-> >> I can change it to `if (backlight_dev) backlight_device_unregister(...=
-)` in
-> >> a follow-up if you prefer that style.
-> > Yes, I think that is better. And it is also better to put this block
-> > before the "if (generic_inputdev)" block.
-> Thanks for the suggestion. I would prefer to keep the backlight
-> unregistration after the generic_inputdev cleanup block.
->
-> loongson_hotkey_resume() accesses backlight_dev, and that resume callback
-> belongs to loongson_hotkey_driver, which is only unregistered by
-> generic_subdriver_exit(). If we unregister the backlight before that bloc=
-k,
-> the PM callback remains reachable while its backlight_dev dependency may
-> already have been released.
->
-> The backlight device itself is independent of generic_inputdev. The
-> ordering is required by the hotkey PM callback lifetime, rather than by a
-> device dependency between the backlight and the input device.
->
-> I think keeping the teardown order as:
->
->      generic_inputdev/generic_subdriver_exit()
->      backlight_device_unregister()
->
-> is safer.
-OK, go ahead please.
+On Sat, Nov 21, 2026 at 08:01:20PM +0800, kernel test robot wrote:
+> Hi Nicolas,
+> 
+> kernel test robot noticed the following build errors:
+> 
+> [auto build test ERROR on kvm/queue]
+> [also build test ERROR on kvm/next linus/master v7.4-rc3]
+> [cannot apply to kvm/linux-next next-20261119]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Nicolas-Schier/Move-struct-cpu_feature-to-a-linux-device-id-cpu_feature-h/20261120-212711
+> base:   https://git.kernel.org/pub/scm/virt/kvm/kvm.git queue
+> patch link:    https://lore.kernel.org/r/20261120202712.3377691-1-nsc%40kernel.org
+> patch subject: [PATCH] Move struct cpu_feature to a <linux/device-id/cpu_feature.h>
+> config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20261121/202611211941.G0rlpNpN-lkp@intel.com/config)
+> compiler: clang version 24.0.0git (https://github.com/llvm/llvm-project 3b14d7c370558b46e5f0c6494a05c492e59bf32c)
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20261121/202611211941.G0rlpNpN-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202611211941.G0rlpNpN-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
+> 
+> >> drivers/s390/crypto/pkey_cca.c:22:45: error: array has incomplete element type 'struct ap_device_id'
+>       22 | static struct ap_device_id pkey_cca_card_ids[] = {
+>          |                                             ^
+>    drivers/s390/crypto/ap_bus.h:158:9: note: forward declaration of 'struct ap_device_id'
+>      158 |         struct ap_device_id *ids;
+>          |                ^
+>    1 error generated.
+> --
+> >> drivers/s390/crypto/pkey_ep11.c:23:46: error: array has incomplete element type 'struct ap_device_id'
+>       23 | static struct ap_device_id pkey_ep11_card_ids[] = {
+>          |                                              ^
+>    drivers/s390/crypto/ap_bus.h:158:9: note: forward declaration of 'struct ap_device_id'
+>      158 |         struct ap_device_id *ids;
+>          |                ^
+>    1 error generated.
 
-Huacai
+That is fixed by [1] which is to be applied before the patch referenced
+above.
 
->
-> Qiu Luo
->
-> >
-> > Huacai
-> >
-> >> Thanks.
-> >>
-> >> Qiu Luo
-> >>>> +       backlight_dev =3D NULL;
-> >>>>    }
-> >>>>
-> >>>>    module_init(generic_acpi_laptop_init);
-> >>>> --
-> >>>> 2.56.1
-> >>>>
+[1]: https://lore.kernel.org/linux-kbuild/66e4ee9c7f9b4bc48fcee92a94b6bb6d92fe1ad2.1794233316.git.sashal@kernel.org/
+
+-- 
+Nicolas
