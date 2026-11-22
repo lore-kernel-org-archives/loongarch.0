@@ -1,61 +1,103 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.104
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795284837;
-	b=kTcP6x3FTPa/jur7K1p9aKQs8jmfJ4fUohAypLeQZmxpcfWQAVCAhz9LyQ+x4SECkgbW
-	 F+4OmmW8WOJeUTjURdsBN1MxogwPqjtanSZCJDdSG3E5b6NTxc/qme41sz+7w22jJI5k+
-	 I0AwquuGYbJusDyHtrtts4KGE77GmWmcd4gcd4nPCajqG08zkZUFE63c/NONUj4zSbZ4X
-	 N9iyFGjFLxNZDJgX/wBF45FlP08V/SzwRxFEcJxyczEapi7/MG0cROL/m+yXXlBEJ0r7g
-	 Iy8xUcVpkuV3F7EoSB1+DQPuT0FG0OS+bnzvp9E/X34wkmK1/Z6nG7VDFm0mqsLK0/Q==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795284837;
-	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
-	 Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-ZohoMailClient;
-	bh=6bkrtyevoYSQBBHxSmlCzsD0kdOIPCxJGVLyXOpEk/M=;
-	b=Su6EkghW+9g3N2fa5nYvd3YwOhdpQdKZ1Xhs9oDSZ4q606SgmSI2RVfc5+iTnTVYQlXc
-	 JknftEc/gBEyzeTSoigpxRJ02ZrhsjdiUAYyphWeYn30KfQkNloODzZ51M3r2vDb+Agcq
-	 0D4DdxJJrstVqduJ4H+Zvkwng1zAYCYBruCBWC6gSH0N7IiQArPlm6NbhAdn+8tJ0xZZh
-	 wbBRnmvG9tm0oJrO4d+0RQxVlS3TDVgxrAiw8rIMB1S0ONW0QJIhQqfGsqfNu39Y2BMRh
-	 mm3sO+X0xfI3V3dwUItNx6ceYv6LSprsgPZFLITUq27F7fXxKFWnnMHVYaJ5g8dJ6jQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=none header.from=hanbings.io;
-	spf=pass smtp.mailfrom=hanbings.io;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.104
-Received: from sender5-pp-e104.zoho.com (sender5-pp-e104.zoho.com [165.173.182.104])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.180
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795316692;
+	b=cDG96vVaIvH9CMa+T6liBqn4SIVPPY5L1wUalkyQAhtJXKJrwydYx6Tkm5AWasBgDMYA
+	 X4YBJk3qvjq8dqpFiKDmblbfQJwE6OGuhuwJLfZ6lo5Jo5ZdKRNmcz21hQ9cKuCnjho3f
+	 U6Vmtg7DYB0gaJMRL5169ejPOjpy1lYSB8Z0CIiLZFFKfSBmNDthrsw+gjokqZrhg0nDA
+	 bl0G2JNdsZa0dftMEilVfZJBQqSBIHjE/gxKgwaV/KxAH+Zacu7MD0P2xQhGJTrPAa188
+	 k2CPlW/wr/eBwR0O/OYUDup/sobgKrgKLaEzmjeOdhDbyb80+6DApNW7TJnhyrOKMOw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795316692;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
+	 MIME-Version:Content-Type;
+	bh=NieCLCvG+gDw8VjVQsEmj+Xb3Nuvde1xSdj6TYYBmIA=;
+	b=VV1ap4dlR6izinAQWed/bKA8RwAJmCJBGDiC0XYevjOs5fbvWuV+z+dretaCv+mVzNY2
+	 hGPkWDQ2PQeM3v2/LB8Mwwx/FC42bTi/MfnXBiQJLvqkpdNpmsOHwuNJ8OocqMAZL22a3
+	 4zyHznK/VWF/uS1X2bPBLzDKxs0Cxwn9tqpfAI3y5I0ntjN75bn02zrgh69HSuNtfAWLP
+	 Sx1UvsdYhAK4JTHZ0vkBz6YSiIt4tdSiHk+bL9o3wE6+tvNp6oNH4269aph7laEzoTZwM
+	 KNn7n4islDVTzE2lnow6Fk3t5xFSzPdaMTDVRLS6ObWww/H/RWqpsqzcBkdVsO0cDcQ==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=iOpDhYR4;
+	arc=none smtp.remote-ip=74.125.82.180
+Received: from mail-dy1-f180.google.com (mail-dy1-f180.google.com [74.125.82.180])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22E94606A320
-	for <loongarch@lists.linux.dev>; Sat, 21 Nov 2026 18:13:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 22E94606A320
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hanbings.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hanbings.io
-ARC-Seal: i=1; a=rsa-sha256; t=1795284822; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=i5xn0413XcAlCKFR6h0Far/q4Cibn5AlgfnomTmvA7pwBY7c5VExWj48Jd085c52PRkaz48w2bd/RcAbqsUPoU0Xa2nh3gD+e7bdKwY0qBfYYtwTh4nknzyN+GDsFqCylmb4bT1r8bQcxVX+yU+pFDtRkPFYZIzoznt2i+QJVIE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1795284822; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=6bkrtyevoYSQBBHxSmlCzsD0kdOIPCxJGVLyXOpEk/M=; 
-	b=gwWPqfASjyX5frcbPCXn8ybbbF1VYRnvkx7PkigbW2oLqfGodu84YUyCO4fd+43U1tpW8MxK7M1H0Oc/Zbg8chOXlp8OFwvqTnzLq5PKuk1bsdsNtHGMYnfO3TjqhU/b7sVvxeG3Z4TQk4x1+BUVQyIPgMhOAucKjS7Ufuph9oU=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=hanbings.io;
-	spf=pass  smtp.mailfrom=hanbings@hanbings.io;
-	dmarc=pass header.from=<hanbings@hanbings.io>
-DKIM-Signature: a=rsa-sha256; b=VB8jSN+1ucqZLzXMjWovN6Wt9dQe0vXHdMSFo3afwNKCq/3cIHg0oj6AFTn6JvOa2QXIi27Fngor46YrHFnBw7IWnC/m0Z1JRWv3YNU1oauWm0X56aIViBtedvTpvM1af7UYRI45+XmMzuIimvBTVwqElx4QZ5DtDF4pb6IHIAI=; c=relaxed/relaxed; s=zmail; d=hanbings.io; v=1; bh=6bkrtyevoYSQBBHxSmlCzsD0kdOIPCxJGVLyXOpEk/M=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
-Received: by smtp.zohomail.com with SMTPS id 1795284817804675.349651293514;
-	Sat, 21 Nov 2026 10:13:37 -0800 (PST)
-From: hanbings <hanbings@hanbings.io>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] LoongArch: Fix off-by-one in bt_address() exception vector check
-Date: Sun, 22 Nov 2026 02:13:28 +0800
-Message-ID: <20261121181328.1892266-1-hanbings@hanbings.io>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <575cc834-aca1-a38d-3db9-deea93d0d2f6@loongson.cn>
-References: <20261115193107.571674-1-hanbings@hanbings.io> <CAAhV-H6ww3dObKa3zNxj4jv7JWoB_fukX+b-HYnb_31_=sPbEw@mail.gmail.com> <575cc834-aca1-a38d-3db9-deea93d0d2f6@loongson.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CF17606A331
+	for <loongarch@lists.linux.dev>; Sun, 22 Nov 2026 03:04:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7CF17606A331
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=iOpDhYR4
+Received: by mail-dy1-f180.google.com with SMTP id 5a478bee46e88-38564b4b017so2258382eec.0
+        for <loongarch@lists.linux.dev>; Sat, 21 Nov 2026 19:04:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795316691; x=1795921491; darn=lists.linux.dev;
+        h=content-type:mime-version:references:message-id:date:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=NieCLCvG+gDw8VjVQsEmj+Xb3Nuvde1xSdj6TYYBmIA=;
+        b=iOpDhYR4MTQOrdXk1PK5dVMTHMkqfEp006EuAzL+oin4Cv4+VxzXDL9AcBZDrhm4gJ
+         o1DAuBdNaOIaf+OCvJoNEZxTT5yQQ7TU5H7zDyvVDZjjinNow8xxsYZhZhLy9qAvBLta
+         raOnU8b+Gy6loBFNmXT2bnhvnBjsLAm9eFn0wzmCi1ValDmZyxA2z1yui83fyGMg/sSI
+         PThrHXneSLq8NM/6Tq69VYuQeffhRTC39KtvA2HbZKauJhUEEQnQteLkwrjw8oSq/Tk5
+         QM8JuESVBOv+0YBNpq6wPLpDBCdetkPitvQyer0lhVx1l9jyZwZemWepB+Qfjd2T8SOT
+         touQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795316691; x=1795921491;
+        h=content-type:mime-version:references:message-id:date:in-reply-to
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=NieCLCvG+gDw8VjVQsEmj+Xb3Nuvde1xSdj6TYYBmIA=;
+        b=1kZ35VL3AN6smm4IWfBzdYlFi3b7dNLhlXkFD89Ks/zo1uTn/ZQJYK5erIPhdVAiMx
+         WrjhQL9Qd+An9vxPAuIaIwptLU9XphAUJ1uHTbWgu1H/N7+O9nAbNczX64e8UhBrAoVg
+         78bPgqeFZFUKmF2X55G24yUKszlUq1JEeagz+g+a2jo8Ut3gq/Q8f52OK0RbntSGYh5A
+         C/IvOseISnpI6Y+XCnc5zufCkdWIbHgwGAYyM8HGX/BbuZDv8svmJ6UTWKIdssi51sDk
+         y+2Z8G7JLwdEUk+lHKOfxZ3aWqQ1LG+SZKAj0ZNtk9TSf09Ieew/WJNo22A78WVa79ag
+         rCRw==
+X-Forwarded-Encrypted: i=1; AL+hErEfNshbBP0tMRFnjbjXsroOBljyEWZg/y9Kz1xEgZjMlOBbTaKgi2tytq4WBUT2n7knIf6vlT1fFvs=@lists.linux.dev
+X-Gm-Message-State: APuU4Z9I+Z+z7l6pVuZlnSd5OugC4wJAwxl6OED8p1eJh9AG1gSI8+zg
+	OgsXjcTwBwclhB95zBGwsftMOI1VTVlWxERhu5IuySVrCSAkf6IbhtgmXKAW6Q==
+X-Gm-Gg: AZFdTZcTxa8KC4UW4iT/1OEyFiCUcs3KYjVzbNIn4v8rOwgrch/Ya/A7ta4213FvN7i
+	8bz3f1xFI/1+wfM9PzbAYsbfhvpuk5QZEWHmY/spa4BQURRdKnDG9g5z9VtASBUFjgo5ikYHcU4
+	8163xmLVdNcHDPFmCaxQr/h0coIkKzmg95IDyTO7+jqjuFpSUxbloZcl91zQCbRPK32Y4eGfzhp
+	/wHe1hbAHUnOI9MlePp4uS4uSDLjMJZimVmdKXlSwyHM295GKW7pysAhytn+q8pxouUM3+xuO4M
+	fn/pihil0uwrowJpm0tnf12o/xZksrt04BZk2VQCh0VEmpSwDLC3qW7DUp66dVPzcJ5u6yKLpI5
+	fayP2JDxhXGmgBghhAh3z/NCrwoi2eGf5Xr2fZ54cYRRB0k44zsRsFl5BD4kVnseJ323jpF8Xyl
+	y9K8QUUH3bUP83lUhp2iSjhLE0WQbjhd0GomcwhK0WSNkGZLGI5vYxtd81UP8SBBbWLAXzQl0gn
+	56qOj/vMvEWxdWO1fQfkkEoqv9u82HimYivSmRoMglEdLpmkG3XFfhZq+nfv5Cfsn6Ahweh4iyG
+	8+EIXPIExEhziqamcgXBlvHbtmT94NX4cZHRbyKOOJITyvw+
+X-Received: by 2002:a05:7300:50fa:b0:383:9f52:e54d with SMTP id 5a478bee46e88-3856ff52e83mr8869235eec.8.1795316691531;
+        Sat, 21 Nov 2026 19:04:51 -0800 (PST)
+Received: from pve-server ([49.205.216.49])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-38567da4f85sm24302948eec.27.2026.11.21.19.04.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Nov 2026 19:04:50 -0800 (PST)
+From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Baoquan He <baoquan.he@linux.dev>, Borislav Petkov <bp@alien8.de>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, 
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Paul Walmsley <pjw@kernel.org>, Pratyush Yadav <pratyush@kernel.org>, Rich Felker <dalias@libc.org>, 
+	Russell King <linux@armlinux.org.uk>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Thomas Gleixner <tglx@kernel.org>, Vasily Gorbik <gor@linux.ibm.com>, Will Deacon <will@kernel.org>, 
+	Yoshinori Sato <ysato@users.sourceforge.jp>, x86@kernel.org
+Cc: Alexandre Ghiti <alex@ghiti.fr>, Christian Borntraeger <borntraeger@linux.ibm.com>, "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Cong Wang <cwang@multikernel.io>, Mark Rutland <mark.rutland@arm.com>, Michael Ellerman <mpe@ellerman.id.au>, Mike Rapoport <rppt@kernel.org>, Nicholas Piggin <npiggin@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>, Shrikanth Hegde <sshegde@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, WANG Xuerui <kernel@xen0n.name>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev
+Subject: Re: [PATCH 2/2] arch, kexec: declare kexec and crash capabilities in Kconfig.kexec
+In-Reply-To: <20261119-arch-kconfig-v1-2-37c276fe4d26@kernel.org>
+Date: Sun, 22 Nov 2026 08:33:10 +0530
+Message-ID: <wlq5k1ox.ritesh.list@gmail.com>
+References: <20261119-arch-kconfig-v1-0-37c276fe4d26@kernel.org> <20261119-arch-kconfig-v1-2-37c276fe4d26@kernel.org>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -65,133 +107,26 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain
 
-Hi Tiezhu,
+"Mike Rapoport (Microsoft)" <rppt@kernel.org> writes:
 
-Thanks for looking at this.  I can reproduce it deterministically on
-QEMU with vanilla v7.2.9; the machine here runs 7.2.9, so I used the
-same version for the test.
+> The options that let an architecture opt in to kexec and crash dump
+> features, like ARCH_SUPPORTS_KEXEC or ARCH_SUPPORTS_CRASH_DUMP, are
+> defined in each architecture's Kconfig as def_bool, and most of them are
+> copied over several architectures.
+>
+> Declare these options once in kernel/Kconfig.kexec next to the options
+> that depend on them, similarly to how mm/Kconfig does it, and make the
+> architectures select them instead.
+>
+> Selection conditions are preserved, so there is no functional change.
+>
+> Acked-by: Baoquan He <baoquan.he@linux.dev>
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-The important detail is that vector 78 is a real, installed vector:
-trap_init() copies handle_vint into every slot from
-EXCCODE_INT_START (64) through EXCCODE_INT_END (78).  In the
-handle_vint generated by this build (GCC 16.2.0), the call to do_vint
-is at handle_vint + 0x154:
+No function change observed in this patch (as described in the commit msg).
 
-    ...
-    jirl    $ra, $t0, 0        # handle_vint + 0x154
-    ...
+LGTM, feel free to add:
+Reviewed-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com> #powerpc
 
-So when an interrupt enters vector 78 and do_vint is running, the
-return address left in $ra is:
-
-    eentry + 78 * VECSIZE + 0x154 + LOONGARCH_INSN_SIZE
-
-unwind_next_frame() subtracts LOONGARCH_INSN_SIZE and calls
-bt_address() with eentry + 78 * VECSIZE + 0x154, which is exactly the
-address the current range check rejects.
-
-To isolate this, I used the small out-of-tree module below.  It sets
-state.pc = 0 (which selects the NULL-IP ORC entry, so the unwinder
-consumes state.ra) and:
-
-    state.ra = eentry + vec * VECSIZE + 0x154 + LOONGARCH_INSN_SIZE
-
-then calls unwind_next_frame().  It checks three vectors:
-
-    77 (last - 1): must succeed on both kernels
-    78 (last):     must fail before the fix, succeed after
-    79 (last + 1): control, must fail on both
-
-The module returns -EINVAL from init on purpose, so it is discarded
-after printing; the results are in dmesg.
-
-Both kernels were built from the same v7.2.9 source and base
-configuration.  The only source code difference was the one-line
-patch.  The module was built separately against each kernel.
-
-Unpatched:
-    unwind: vec=77 ok=1 ...
-    cannot find unwind pc at ...
-    unwind: vec=78 ok=0 ...
-    cannot find unwind pc at ...
-    unwind: vec=79 ok=0 ...
-
-Patched:
-    unwind: vec=77 ok=1 ...
-    unwind: vec=78 ok=1 ...
-    cannot find unwind pc at ...
-    unwind: vec=79 ok=0 ...
-
-The patched vec=78 result maps to handle_vint + 0x154, i.e. the
-do_vint call site.
-
-To give some background: this issue shows up intermittently on a
-3B6000 machine that I run as a NAS.  In the end I only saw the kernel
-log line, without a stack trace or any other context, for example:
-
-    [470049.376195] cannot find unwind pc at 9000000004e09d54
-
-or, from journalctl -k:
-
-    Nov 14 12:19:30.400918 Lihuas kernel: cannot find unwind pc at 9000000004fc9d54
-    Nov 14 16:17:12.068835 Lihuas kernel: cannot find unwind pc at 9000000004fc9d54
-    Nov 15 03:53:19.899813 Lihuas kernel: cannot find unwind pc at 9000000004fc9d54
-    Nov 15 22:38:45.406173 Lihuas kernel: cannot find unwind pc at 9000000004fc9d54
-
-All of these addresses end in ...9d54, which is the vector-78 slot
-plus 0x154.  But the log lines do not identify which software
-triggered the interrupt, so the reproducer below simulates that
-return address instead of actually triggering an AVEC interrupt.
-
-On the real machine, which runs 7.2.9 with the fix installed since
-2026-11-15, I have not seen the "cannot find unwind pc" message
-again.
-
-If you want to run the exact QEMU A/B, I can send the kernel build and
-qemu-system-loongarch64 commands and the full logs.
-
-The test module follows.  It is test-only and not part of the patch.
-
-// SPDX-License-Identifier: GPL-2.0
-#include <linux/module.h>
-#include <linux/kernel.h>
-#include <linux/sched.h>
-#include <asm/unwind.h>
-#include <asm/loongarch.h>
-#include <asm/inst.h>
-#include <asm/setup.h>
-
-static int __init unwind_boundary_init(void)
-{
-	unsigned long base;
-	int i;
-
-	asm volatile("csrrd %0, %1" : "=r"(base) : "i"(LOONGARCH_CSR_EENTRY));
-
-	for (i = -1; i <= 1; i++) {
-		struct unwind_state state = {
-			.task = current,
-			.sp = (unsigned long)__builtin_frame_address(0),
-			.pc = 0,
-			.stack_info.type = STACK_TYPE_TASK,
-		};
-		bool ok;
-
-		state.ra = base + (EXCCODE_INT_END + i) * VECSIZE +
-			   0x154 + LOONGARCH_INSN_SIZE;
-		ok = unwind_next_frame(&state);
-		pr_info("unwind: vec=%d ok=%d pc=%px error=%d\n",
-			EXCCODE_INT_END + i, ok,
-			(void *)state.pc, state.error);
-	}
-
-	return -EINVAL;	/* Fail init intentionally so the module is discarded. */
-}
-module_init(unwind_boundary_init);
-MODULE_LICENSE("GPL");
-
-Thanks,
-hanbings
