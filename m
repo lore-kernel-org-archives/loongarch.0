@@ -1,64 +1,64 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795441884;
-	b=hYSIkV9yfcqrq8QtvNsl6D+NLCIj1I19Psfxzqeb/gQuLf8VLrqw8NaKbIfJpDRNjOLE
-	 E94XFbI43V118UNzxI8DCfEdiL71XvR58GU77ryMe5i9lR73vMyKru3ompLsPkVX+8zPI
-	 DeJG6IYm8mPfNmsKZgz1eAHe0SVviQjhSTGTZt3ddsWoiW0gKzChpuSE4QXFIhHVSArGW
-	 0K59oEzuDvW2McqzNKKi3jCY4sLeq9iNKPCq9DLb0z0nVsVWxtPvH+FJTkSyDzchehMMY
-	 4lg7LnAJNLCpseRVyE+gereYO444bvvQ48BdZgF3+XLsO1H48wmyuEZfzkppLjL22Pw==
+	t=1795441885;
+	b=BaiD0eSeuMb2OLWN1jS6ESxQXs+i+KhcKMUwM5wJTKMMbhGBRYKDn6HuWpvP88teW5Bi
+	 xszMwHHNsYt5xgIIrz8tFKphJDm6cK9KMQQccJ0BXZX7BYOWoD/sEEhe6Ie7i0zYGUHki
+	 8aUr2W4X0GCxzbws+ukylrqf/Wophb8ntNNBYjgiKf+r1F1wO4t6tUJlpGrFLrKDY3Zmu
+	 Ket0yBShkI1gqqYU5590XodD3f3F3G0YbHtaMBGD7calm3bB5Emn2WV+nuQEdK5NCMejw
+	 Oopn+4iWHlFYoTvtQX2BAzkdM0JkHTqPOgP7qdSNSpd5NfoRwUZqpVGTfQRb7EKExlA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795441884;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795441885;
 	h=DMARC-Filter:From:DKIM-Signature:DKIM-Signature:Date:Subject:
 	 MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:
 	 References:In-Reply-To:To:Cc:X-Developer-Signature:X-Developer-Key;
-	bh=Guhg1K0FMFBPE0u0CIJl3O+ZgtOjrn7cr+GEqqxWqko=;
-	b=r/LhPPbHfObFLuVjiYNAq0ml/oRH/7+ajivll/HtHzV+HmAbv2GNAThhydWeI2DBuk23
-	 6dWcxwC/dzzkaBMrHBt65ibeP5yuX7C68exx16liHWP49bAO7PeBgHCmOFiYVqXE4kEPm
-	 opI7QSPwOM9GE+Zqhhd5NQXCYftaoQ5Ii78q49HfgwSXuqo8hV9XCZJcBL0BE8m9eN/1Y
-	 TlHWN81pNglwZMQiJPg+RGtg8lQUmem64gZsWrPLkSCtffBj+leZE89TkIfyzjg4u4MO3
-	 zyCtgWv+MhmRRfeeTF+CXYZaZnYBbTvKEr+Kf5aTMKr8xePxLtJn9HvLAkzHdJ+G5Fw==
+	bh=wbaUWZC28smuRoW90pWpaXz3GGY4MsOKGg8st7PIjvw=;
+	b=5gd0lX8N33QymgH091CvEkpx3BcCovqHG3ysrVog/3bxJCpq1LrWwx/p0WAOtUwas1vr
+	 DbrmL0MfNwBRfMqmqFRhp6hK7hZfo3a1lQpyqidMndpYcCBbyn+ntdINzi7dAsbnmq+hx
+	 gGI1uvcaZhSTLhkwZPaWgXPvjEgKJUpN4rVEwQLVByVYwdR9uonDfr7G+b4u2YjczzczC
+	 HvVO6hr+SATUailewBMHVy83c/6/sHnsdHo0+tJdGMDnAdXByDk2mzMs7aEzn4zsyXjrx
+	 plI52QJzr4Mkt+/koPg+lMz9i/axUEp9TXk1WSPuDz2GlNiWp13Tm4QALwQITVFDnIg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linutronix.de;
 	spf=pass smtp.mailfrom=linutronix.de;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=NuQxcyBf;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=Ee7e9mzF;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b="AdnWR/fT";
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=CiSYPSUw;
 	arc=none smtp.remote-ip=193.142.43.55
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FAE2606A6A6;
-	Mon, 23 Nov 2026 13:51:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8FAE2606A6A6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E94C606A6B9;
+	Mon, 23 Nov 2026 13:51:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8E94C606A6B9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=NuQxcyBf;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=Ee7e9mzF
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=AdnWR/fT;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=CiSYPSUw
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1795441881;
+	s=2020; t=1795441882;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Guhg1K0FMFBPE0u0CIJl3O+ZgtOjrn7cr+GEqqxWqko=;
-	b=NuQxcyBfhV7EAPhhJJ0IrWwI8Sg6agHEvml/ui+39lfH4IvCvHOhVb3sTcEszxrptDYhzM
-	KOTWGp0s724CoC63fsCVglfZK3pNCVB8Dpc4O3J+oZJetwugA7rRVDeJweiqPTc8fFxGvo
-	RmhJHmEu3rwm40c8zSLI4bxEI1qi65sJ8cASKE5pWCVY38ce3oB6mbJaStD5r9bHbVd18/
-	R42vVr0ltwptVz13BPAw5JmRofzhPG5tYJKVGp3gS5RHItjXpfpb6NKiTXVnBsh/nC0c3b
-	8kgM8WRRit79N6lKDO5GVLdWFOxuL3Rdld+lG35LGAQjhk+TpvfZuqpuvy+zig==
+	bh=wbaUWZC28smuRoW90pWpaXz3GGY4MsOKGg8st7PIjvw=;
+	b=AdnWR/fT44yXzm+ht95OqsrELNCyH358idfw54sxV+82ZCQh8b1aIvskImaSeMPYYiPAGX
+	tMSFHMm39iz7ISqX2w8pj4D8L/qzXb1g+WS97tFqN8moTMNum/DjAz0AOhUR9mHeaYQxj9
+	5LZEWcHDHmfyVG3iQ0WvT8vFcoQbpRxTznUUUuQTu76cbBTyn3KQ4CodP8l937jaO91ZuP
+	Qt441N7af+F5t3S2BxLy/sH8WAJ3bW5O4y6lY0UQw0K7A+UQhTXKdNOY7nqA7niM/tyffr
+	0vxJK9JiP8+NfpneuW9wJzwcEPrvj3p/SNvKjKHMhV35bVoateZvXcf6rspcBQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1795441881;
+	s=2020e; t=1795441882;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Guhg1K0FMFBPE0u0CIJl3O+ZgtOjrn7cr+GEqqxWqko=;
-	b=Ee7e9mzFD85deKLGcm8e5YD0L+U1o17HaFbybIhTLTjFkWWkRB4gFePrbUFQEhupkaPgbn
-	0vbj4CqmhgO4CrAg==
-Date: Mon, 23 Nov 2026 14:50:55 +0100
-Subject: [PATCH v6 04/11] arm64: vdso: Enable the vdsocheck tool
+	bh=wbaUWZC28smuRoW90pWpaXz3GGY4MsOKGg8st7PIjvw=;
+	b=CiSYPSUwyavYYl1x/i+wWbxPyj9epV9FlY90gd2wiTfE4WxtGjnCDB5MgwLKxaEC26eTmC
+	kUVvWJED9GTdvTAw==
+Date: Mon, 23 Nov 2026 14:50:56 +0100
+Subject: [PATCH v6 05/11] powerpc/vdso: Enable the vdsocheck tool
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -70,7 +70,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20261123-vdso-absolute-reloc-v6-4-161e218dd217@linutronix.de>
+Message-Id: <20261123-vdso-absolute-reloc-v6-5-161e218dd217@linutronix.de>
 References: <20261123-vdso-absolute-reloc-v6-0-161e218dd217@linutronix.de>
 In-Reply-To: <20261123-vdso-absolute-reloc-v6-0-161e218dd217@linutronix.de>
 To: Paul Walmsley <paul.walmsley@sifive.com>, 
@@ -112,11 +112,11 @@ Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
  Arnaldo Carvalho de Melo <acme@redhat.com>, 
  Peter Zijlstra <peterz@infradead.org>, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1795441872; l=2617;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1795441872; l=3226;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=ORz4l21C1iPuk7FCAsvH2byEFW0UweMz0824cCTy53M=;
- b=q7DXOLJiNCyz2OBeq2mHIOnoqJ70WoExeUnEefxSG/lSMIqTsqHDcIrncJ9VEiIXA1Umw12+U
- OOQlmf3HB4zBZUGjar3eMCLr8sFDPZAeV+wIvbVyQBy37Hse7yPcaaY
+ bh=Cgbtb7qSJ3AcXOvZFi0BZIPMWqlXOiwZ1bBjbdIILZ8=;
+ b=tf9jQyiu6Hx303xQeraxjP8OCezqMY+3qKghsgR/OWQajoh6hO04aKYTX/3KWhg5DquWsJP8b
+ aAXQOlfMR3eDCtoARUDmA0kN0uVLstrGS/+wTZDeacxxM2luRimKr84
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
@@ -126,62 +126,72 @@ with the vDSO which need to be worked around.
 
 Wire it up for the architecture.
 
-The compat vDSO will be handled by the existing 32-bit ARM configuration.
-
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- arch/arm64/Kconfig              |  1 +
- arch/arm64/kernel/vdso/Makefile |  4 ++--
- lib/vdso/check/vdsocheck.rs     | 12 ++++++++++++
- 3 files changed, 15 insertions(+), 2 deletions(-)
+ arch/powerpc/Kconfig              |  1 +
+ arch/powerpc/kernel/vdso/Makefile |  4 ++--
+ lib/vdso/check/vdsocheck.rs       | 27 +++++++++++++++++++++++++++
+ 3 files changed, 30 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 1075bc661833..df22b4ed5e29 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -258,6 +258,7 @@ config ARM64
- 	select TRACE_IRQFLAGS_NMI_SUPPORT
- 	select HAVE_SOFTIRQ_ON_OWN_STACK
- 	select USER_STACKTRACE_SUPPORT
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index c3b6cd655606..1c4a75c3a830 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -327,6 +327,7 @@ config PPC
+ 	select SYSCTL_EXCEPTION_TRACE
+ 	select THREAD_INFO_IN_TASK
+ 	select TRACE_IRQFLAGS_SUPPORT
 +	select VDSO_CHECK
+ 	select VDSO_DATASTORE
  	select VDSO_GETRANDOM
- 	select VMAP_STACK
- 	help
-diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Makefile
-index f6619e1cb2ce..5d8c34c7be51 100644
---- a/arch/arm64/kernel/vdso/Makefile
-+++ b/arch/arm64/kernel/vdso/Makefile
-@@ -61,7 +61,7 @@ targets += vdso.lds
- CPPFLAGS_vdso.lds += -P -C -U$(ARCH)
+ 	#
+diff --git a/arch/powerpc/kernel/vdso/Makefile b/arch/powerpc/kernel/vdso/Makefile
+index 0d1a49529885..b2e399e10273 100644
+--- a/arch/powerpc/kernel/vdso/Makefile
++++ b/arch/powerpc/kernel/vdso/Makefile
+@@ -82,9 +82,9 @@ targets += vdso64.lds
+ CPPFLAGS_vdso64.lds += -P -C
  
- # Link rule for the .so file, .lds has to be first
--$(obj)/vdso.so.dbg: $(obj)/vdso.lds $(obj-vdso) FORCE
-+$(obj)/vdso.so.dbg: $(obj)/vdso.lds $(obj-vdso) $(vdsocheck) FORCE
- 	$(call if_changed,vdsold_and_vdso_check)
+ # link rule for the .so file, .lds has to be first
+-$(obj)/vdso32.so.dbg: $(obj)/vdso32.lds $(obj-vdso32) $(obj)/vgettimeofday-32.o $(obj)/vgetrandom-32.o $(obj)/crtsavres-32.o FORCE
++$(obj)/vdso32.so.dbg: $(obj)/vdso32.lds $(obj-vdso32) $(obj)/vgettimeofday-32.o $(obj)/vgetrandom-32.o $(obj)/crtsavres-32.o $(vdsocheck) FORCE
+ 	$(call if_changed,vdso32ld_and_check)
+-$(obj)/vdso64.so.dbg: $(obj)/vdso64.lds $(obj-vdso64) $(obj)/vgettimeofday-64.o $(obj)/vgetrandom-64.o FORCE
++$(obj)/vdso64.so.dbg: $(obj)/vdso64.lds $(obj-vdso64) $(obj)/vgettimeofday-64.o $(obj)/vgetrandom-64.o $(vdsocheck) FORCE
+ 	$(call if_changed,vdso64ld_and_check)
  
- # Strip rule for the .so file
-@@ -79,4 +79,4 @@ include/generated/vdso-offsets.h: $(obj)/vdso.so.dbg FORCE
- 
- # Actual build commands
- quiet_cmd_vdsold_and_vdso_check = LD      $@
--      cmd_vdsold_and_vdso_check = $(cmd_ld); $(cmd_vdso_check)
-+      cmd_vdsold_and_vdso_check = $(cmd_ld_vdso); $(cmd_vdso_check)
+ # assembly rules for the .S files
 diff --git a/lib/vdso/check/vdsocheck.rs b/lib/vdso/check/vdsocheck.rs
-index e28ee59a900d..0d5ceaca34d7 100644
+index 0d5ceaca34d7..da58ff220eab 100644
 --- a/lib/vdso/check/vdsocheck.rs
 +++ b/lib/vdso/check/vdsocheck.rs
-@@ -57,6 +57,18 @@ fn allowed_relocations_for_machine(machine: u16) -> Option<AllowedRelocations<'s
+@@ -69,6 +69,33 @@ fn allowed_relocations_for_machine(machine: u16) -> Option<AllowedRelocations<'s
              ..Default::default()
          }
          .into(),
-+        bindings::EM_AARCH64 => AllowedRelocations {
++        bindings::EM_PPC => AllowedRelocations {
 +            in_object_file: &[
-+                260, /* R_AARCH64_PREL64 */
-+                261, /* R_AARCH64_PREL32 */
-+                262, /* R_AARCH64_PREL16 */
-+                273, /* R_AARCH64_LD_PREL_LO19 */
-+                274, /* R_AARCH64_ADR_PREL_LO21 */
-+                283, /* R_AARCH64_CALL26 */
++                10,  /* R_PPC_REL24 */
++                11,  /* R_PPC_REL14 */
++                26,  /* R_PPC_REL32 */
++                249, /* R_PPC_REL16 */
++                250, /* R_PPC_REL16_LO */
++                251, /* R_PPC_REL16_HI */
++                252, /* R_PPC_REL16_HA */
++            ],
++            ..Default::default()
++        }
++        .into(),
++        bindings::EM_PPC64 => AllowedRelocations {
++            in_object_file: &[
++                10,  /* R_PPC64_REL24 */
++                11,  /* R_PPC64_REL14 */
++                26,  /* R_PPC64_REL32 */
++                44,  /* R_PPC64_REL64 */
++                249, /* R_PPC64_REL16 */
++                250, /* R_PPC64_REL16_LO */
++                251, /* R_PPC64_REL16_HI */
++                252, /* R_PPC64_REL16_HA */
 +            ],
 +            ..Default::default()
 +        }
