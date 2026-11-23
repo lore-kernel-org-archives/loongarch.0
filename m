@@ -1,60 +1,75 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795427130;
-	b=hnUZ4alNQ/yJ75M+rIzb2V2bRqg5ZoFUDPYcuIwCTKQ57Ohlc+2ud5aqdu8Mpu6liCfI
-	 MPZSJa1pNg3E7n6Q5h+xWJnf5u8t5ePc6DeKXGKAol4AZKKYjSPMi86vadkx/Yica33PC
-	 EP2LAhZyQ8w5gX5J1BNLoPPf04nTShTcANsPs5otEt9SyDVhpbPUIdDAVLNftYR+Vs/K5
-	 xl5JcnDNid3bGYdG9+T5ysRejTM1ftn7iYK2Zr+WA3cWcVMLnuHfgeOz7zYjbXfSuVs6h
-	 pXb41lP3osTYMN8lLVsGdCWrf6DABfBiYyBwbp5gWCve5SYxnEWVe55GiA/fDM23scw==
+	t=1795428206;
+	b=jsuPoNZ66hoY2kMgl1NjL/oxi/p+ecyggS9TXSq83BDC3LcZNCPs3dD5MD1ZZDta1zxC
+	 Rpf0vI0M/HMQt8FejkzJjC+QyKDDfglOCQuCcOPHEFyyOPaATW8lBMGSEAZVg+SlICJqa
+	 TusXVLgi+dlj4eofZmBKHUhmBiw/Yf4ZVH2OdttPvVbxPZJugAakznjJlxUpV2ZTd3Mad
+	 6iuXOxxbWNRIGK1h00Th0EnE6xQauHCuUsYu0vKPrG+J5QoPHLOtJxZ7t0EFgQvnsYzI8
+	 q1y2elj1NnOQxPAwIQvBC2+kWo17P5CwZkU7ydiAMIXU8nLlpiG9DSobp1SJKtGAUZg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795427130;
-	h=DMARC-Filter:Received:Received:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-CM-TRANSID:X-CM-SenderInfo:
-	 X-Coremail-Antispam;
-	bh=y3UYMDoE62FnPRMaab0//uR3dPofijPadlX41Yz+0ZA=;
-	b=jyoqoML7nE7POGg+0T8cZJ4xZVtN03qBevs6tHDZLkCvew2fnYMZ5/YO1bk6aOVPHdt3
-	 XoU/MTURBwvr3bMb91jRa8Ejj9AX7tA8njQvsMx1g4kVL3zALTRkvN/hEjvcAXKp6xyls
-	 ZHZlm4l4cVO4O1wcjmu7i9t7PCzy/gGU3s7j7KPndM3GcNa9xFOI6vCfcEmnjn4n4onas
-	 BYvk3BprIvU3PH0AbQ02BEGfT7Dyx6a8JnyEKA2UZzCi8Kyz5YwXxtjJNeAx0EFcsO2b+
-	 q7vSplZUizT4FSAPx7NvVtwtHZwSeywbKnpyVdeERzFK98wQowBCOpa6cLumM3xwcbA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795428206;
+	h=DMARC-Filter:Date:DKIM-Signature:DKIM-Signature:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
+	 Content-Transfer-Encoding:In-Reply-To;
+	bh=CD4ic9Gltp6sjM8mfIwiECFvv0TUSDYXBdZI3py6+Hs=;
+	b=cQ+e2XOo8/OcRBu7FEivj3RmM2AbS/TXduJy4G2KYEkNvJDwDZv0ob6f8r1BhfTrvHb8
+	 vAHKaiF+DLLdXQr2Qu6HXysy6zb74YwzWx3I0WRHkMO+3u2WifdSdS+cjyMHlZyPh0ArE
+	 YRLazpUOKfWvqU5UjvM+YyEs+azMbQb3D/Y22+25FX0Lvk7+J+KCq9Yg/uUXd397un/8V
+	 URhakP2jFF5BnFoECwGlm7LaJk2vwVFaJ9gHboDqRaLCB3eLOFoU/LyKWOViFu6sRRqkW
+	 2jN32PKMoooy1nJe4eMtTLhJol4wAxEdxk8vNLmSiOYkbwKc+AjM8C24qCqymcdo7XQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=loongson.cn;
-	spf=pass smtp.mailfrom=loongson.cn;
-	arc=none smtp.remote-ip=114.242.206.163
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 403C6606A333
-	for <loongarch@lists.linux.dev>; Mon, 23 Nov 2026 09:45:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 403C6606A333
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.69.66])
-	by gateway (Coremail) with SMTP id _____8Bxd7U3CwRrMDEiAA--.3999S3;
-	Mon, 23 Nov 2026 17:45:27 +0800 (CST)
-Received: from kernelserver (unknown [223.64.69.66])
-	by front1 (Coremail) with SMTP id qMiowJCxPs80CwRrgNo2AA--.43474S3;
-	Mon, 23 Nov 2026 17:45:27 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Yinbo Zhu <zhuyinbo@loongson.cn>,
-	Mark Brown <broonie@kernel.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	linux-spi@vger.kernel.org,
-	Bingxiong Li <libingxiong@loongson.cn>,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH 5/5] MAINTAINERS: Add myself as Loongson SPI maintainer
-Date: Mon, 23 Nov 2026 17:45:17 +0800
-Message-ID: <8612d33a00246e3049e4cb849ef303bb93622bb6.1795425389.git.zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <cover.1795425389.git.zhoubinbin@loongson.cn>
-References: <cover.1795425389.git.zhoubinbin@loongson.cn>
+	dmarc=pass header.from=linutronix.de;
+	spf=pass smtp.mailfrom=linutronix.de;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=3VkflIru;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=kAAiYpzk;
+	arc=none smtp.remote-ip=193.142.43.55
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98CA5606A31E
+	for <loongarch@lists.linux.dev>; Mon, 23 Nov 2026 10:03:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 98CA5606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=3VkflIru;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=kAAiYpzk
+Date: Mon, 23 Nov 2026 11:03:22 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1795428203;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CD4ic9Gltp6sjM8mfIwiECFvv0TUSDYXBdZI3py6+Hs=;
+	b=3VkflIruKARozyrkLHlX2mQ95+oFUmmPQ9g7O4L3WFJ+V/4YkuEfXhftFZgsdG9N+ReUrC
+	3ECXYSLczZ5sfXJmW/dp9rUJNM/FMjQfywHZgZtQzuHb0kSoe7hHEhJUgFIKC0qG05v5/W
+	deQUhf+pARzVbGBEEIbo6yBX9OA7AK30MKgGM9nFf9PO5zjwkdkfGkZM9cxjaj34VKvOsw
+	myOUpmdrBt4nOPgZIRTrtBBjy4he4UJ8IukvSGDbAO08UnI4M4oCeuCrk04sAimvWyNpHh
+	OeIZxe3E8yO3AcaESf76ss7nR72GuxDw2HX74Yv5N4Yb5IVJ8j/g7DgcR1hCiw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1795428203;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CD4ic9Gltp6sjM8mfIwiECFvv0TUSDYXBdZI3py6+Hs=;
+	b=kAAiYpzkfztPq6MYwun6e1Y8Vy2mVk9Secfye9usXniusBTfN7Fozg38iBhnOT33Y8lwOo
+	+hHvYlvL/ixDdMDQ==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Kees Cook <kees@kernel.org>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, loongarch@lists.linux.dev, 
+	linux-s390@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-mips@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-sh@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	Paul Walmsley <pjw@kernel.org>, Andy Chiu <andybnac@gmail.com>, 
+	Magnus Lindholm <linmag7@gmail.com>
+Subject: Re: [PATCH v3 00/15] exec: Remove AT_VECTOR_SIZE_ARCH from UAPI
+Message-ID: <20261123110111-6431e85f-39a4-427e-b545-2e7a590a6c19@linutronix.de>
+References: <20261123-at-vector-size-arch-v3-0-d342dae9e843@linutronix.de>
+ <ec5359c1-c16e-4177-8dfa-2ae5ab8a874f@app.fastmail.com>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -64,47 +79,35 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxPs80CwRrgNo2AA--.43474S3
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQEACGsDnvwLCwAAsC
-X-Coremail-Antispam: 1Uk129KBj9xXoW7Gr4UAw17GF1DGr47Gw4fCrX_yoW3GFb_A3
-	Wxta1xWr1kAr17C3y8ZFn2vryaqayxC3WfC3ZrtwsrAa4Dtwn8tryqywnrG3WxCrZ8ur13
-	ua17GryxurWxXosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb2kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY
-	6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aV
-	CY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU84xRDUUUUU==
+In-Reply-To: <ec5359c1-c16e-4177-8dfa-2ae5ab8a874f@app.fastmail.com>
 
-Add myself as a maintainer for the Loongson SPI driver. I have been
-working on the Loongson SPI flash and SPI IO controller drivers and
-would like to help review and maintain them.
+On Mon, Nov 23, 2026 at 10:44:40AM +0100, Arnd Bergmann wrote:
+> On Mon, Nov 23, 2026, at 10:37, Thomas Weiﬂschuh wrote:
+> > There is nothing userspace can do with this value. In the kernel is
+> > always combined with AT_VECTOR_SIZE_BASE, which is not exposed to
+> > userspace and also changes from time to time.
+> >
+> > Move the symbol to kernel-internal headers.
+> >
+> > Meant to be applied through the asm-generic or execve tree.
+> > The default recipient list was huge. I trimmed it to only the
+> > architecture lists.
+> >
+> > Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+> 
+> Hi Thomas,
+> 
+> I'm happy to take this through the asm-generic tree. I've already
+> made sure it all applies and the patches look good to me. I'd
+> wait a few more days for additional Ack or any other replies,
+> let me know once you think I should apply this version.
 
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+This v3 is functionally identical to v1 and v2 which have been on the
+list of a long time. I am not sure how much more feedback will come.
+IMO it can already be applied to gain more exposure in -next.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 70789ce6e507..8223f1b61348 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15738,6 +15738,7 @@ F:	include/dt-bindings/clock/loongson,ls2k-clk.h
- 
- LOONGSON SPI DRIVER
- M:	Yinbo Zhu <zhuyinbo@loongson.cn>
-+M:	Binbin Zhou <zhoubinbin@loongson.cn>
- L:	linux-spi@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/spi/loongson,ls2k-spi.yaml
--- 
-2.52.0
 
+Thomas
