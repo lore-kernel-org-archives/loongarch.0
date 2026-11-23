@@ -1,46 +1,64 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=54.254.200.128
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795440641;
-	b=wfBsTjjxidGlGiMIozJtK2r2dsXelPCLMyorkKwE4bMQnkv+gRiV4iccE8bAxRk2wfhW
-	 jOXnpYbTenMaPowHqmtAj0KvVwe6tJxjcbNvAE/Bc4nxjwko6Jv34sIUGC+PjHrHPqZSh
-	 ZXKFECyLv6HWyHPWTnBP5mBEIWmeo3bSzzaFlK/qfIt0tIiS/ThzhX0916aK5IEqO1Q5W
-	 rbgHgnWLY2tc6mrP1LZbyy512kFBIHWsWLr1l/P3mt5RGA6CPag8OvgHykeurHzATSmNV
-	 VcBzHtb62MozAN0cGOdDpu4fhokAIR6fd6e+0ECR/UnHoGoGjFGd7VbkEiF9pDxbNRg==
+	t=1795441881;
+	b=kh2o5N4SfwDuFc1lQPcuFFq11Ou0aAk1ii9Y24aWGKaz+Xdn1qeL4+qwRsc2M4SzoWX+
+	 S3YRiOkjAIBLzCo3y0+eC4EGeXP2CyBPvIMJJQdsEkJ+rUUwt7cJiT+lOhRmdI/uJ4DS1
+	 pLB39vkmYI4mXhWiV6ocvI8daPsmGC6Vzxr4bpgWHEnO5ra8fB/NJ8o7iEYVcIwHNAYvq
+	 zOA3VBqSWSX61DV8FVH5IVflq73mczApmuPkcNZD/hPNnbFo8cQy9RatXMRs1XH4AG4vD
+	 tixajTzdz+5vKQptcOhYz3ZWMGG3xYH+Bm604Oo6B5esrNUhtN6izbVqOCplz1viRLA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795440641;
-	h=DMARC-Filter:X-QQ-mid:X-QQ-Originating-IP:Received:X-QQ-SSF:
-	 X-QQ-GoodBg:X-BIZMAIL-ID:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:X-QQ-SENDSIZE:Feedback-ID:
-	 X-QQ-XMAILINFO:X-QQ-XMRINFO:X-QQ-RECHKSPAM;
-	bh=xBl4LenZgMO7u9uyhu6pCiLNFdtLVtDM8Nkt6YyrMJo=;
-	b=dI4Y/narzwLUvgyCVBzBfKWOMxr/ph0YHom7W7/KJDdaASpzZR3JmjQAAR5cZe5naGYj
-	 tLVuxNK4oF5X/Tjsch/6JoiNrR97VyVNiIL0GJ+CT/fBmnykpTFDRVd8dEMiz0uA4VLbm
-	 4UICs3pXKHVVAud3EaxlE09MuhxqMdD7055Ks8WT4FF2Rdb/wC7twWi4kobQpqalIzjsJ
-	 tjvARssYcoweTL6ebAStPzXtv8vVPdsuG+Xq1GpE1+NhKIbyNv2HOsX2xWu2mcDmi6XCK
-	 jzbs3XEov4nxXYk6VmbVpKkYK3qrNXnVVhTRYCRr1g0G6brbmnvG6RhEV220+sb+AgA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795441881;
+	h=DMARC-Filter:From:DKIM-Signature:DKIM-Signature:Date:Subject:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:
+	 References:In-Reply-To:To:Cc:X-Developer-Signature:X-Developer-Key;
+	bh=0fNIEVViECvihrD85daCu0dk/1VD5ib5FTeZ8ZA+CDQ=;
+	b=kdEuU/5Y6hxeotVNb9qTyrekcwXhnkvgU8P3nuzT8mWRVE6uNCRVD/E1FtPTr9rFtF5S
+	 T/paTFMnl9OU+69PwllEdLV58Mx+8iOsqvCi4kD4rIv85hacI5cLYl3SgJNL8OmvxCZl1
+	 MlbzN3cTyvG+Nru0RAkT4y2ZFM0bMTl0BZ54lsAuFNCmQ0c360rcrTVxrDKmwM5iqFZ4t
+	 junCLmTOOP1ZTk0Hnv2JtgS9AeJv0Co3FBiBvpEFFg3BL1qpM7D33w5IWinKQQu+W5Shl
+	 5Hv5veC0toZahqM8dL+KZd0O3UyIjdVM1Zqm2xLLaCBNLVMnOl68dVo8dlT/b6MVUmQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=kylinsec.com.cn;
-	spf=pass smtp.mailfrom=kylinsec.com.cn;
-	arc=none smtp.remote-ip=54.254.200.128
-Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=linutronix.de;
+	spf=pass smtp.mailfrom=linutronix.de;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=Et6OaiTK;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=PkJZ1TZj;
+	arc=none smtp.remote-ip=193.142.43.55
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED75A606A321
-	for <loongarch@lists.linux.dev>; Mon, 23 Nov 2026 13:30:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org ED75A606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinsec.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinsec.com.cn
-X-QQ-mid: zesmtpgz9t1795440566t4f637ce5
-X-QQ-Originating-IP: GTrHbK18YCbs2CfsF9VuBtkgPArveTdhmkzt+7qYrNE=
-Received: from [192.168.50.3] ( [113.246.116.110])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 23 Nov 2026 21:29:24 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 1721452454829110470
-Message-ID: <07E7C8DDC6521658+9b2f67d7-b3d9-45d7-b86f-39bea74869f2@kylinsec.com.cn>
-Date: Mon, 23 Nov 2026 21:29:44 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C89606A321;
+	Mon, 23 Nov 2026 13:51:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 89C89606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=Et6OaiTK;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=PkJZ1TZj
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1795441878;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0fNIEVViECvihrD85daCu0dk/1VD5ib5FTeZ8ZA+CDQ=;
+	b=Et6OaiTKe1Dv/1PXGzaZuOk8fPehw3wUVDIWfo2OHJfO1EeQDW8jBFwjHbGAI3HS/bMi9k
+	RzhCpPg/Pv6M93SHP8vSSvwopQ+sTqHBZnHhwQogNQQNb1nhtcNNn6f8ryecyHfFhFJ1Se
+	Z7llS+yZSeF2w/Y919EEr45P3aRYIUCDWrk6Q668WXRQwb2TSvx5zNmAJgQdLujcXeo8IO
+	hssNMaRblVRG9+ZmtuagbLK7ISocsUjyC6a69F6CHP6UCdwhfg9G8nDtQnjIEmsurMm2Hq
+	PoGP+O+JvT6hdlrhrEJvu1oWhVsgb4C53UwBa/M0R0YhSWkxc6SQOjEUoXfySg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1795441878;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0fNIEVViECvihrD85daCu0dk/1VD5ib5FTeZ8ZA+CDQ=;
+	b=PkJZ1TZjHjaQboG1NJ1P2GnRfqWoqUNvv/UIA9humXqPAdHLugyWT5HoZAEVFNiQ6jJIxP
+	TIZGFdQhaFTnJpBw==
+Date: Mon, 23 Nov 2026 14:50:52 +0100
+Subject: [PATCH v6 01/11] vdso: Add the vdsocheck tool
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -50,106 +68,883 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] platform/loongarch: laptop: Fix backlight device
- lifetime on unload
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Jianmin Lv <lvjianmin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
- Yao Zi <ziyao@disroot.org>, "Rafael J . Wysocki"
- <rafael.j.wysocki@intel.com>, Zixing Liu <liushuyu@aosc.io>,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <9F3855F1130E2878+20261121131820.6759-1-luoqiu@kylinsec.com.cn>
- <awQSXIASqC_MdC5u@ashevche-desk.local>
-Content-Language: en-US
-From: Luo Qiu <luoqiu@kylinsec.com.cn>
-In-Reply-To: <awQSXIASqC_MdC5u@ashevche-desk.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpgz:kylinsec.com.cn:qybglogicsvrgz:qybglogicsvrgz3a-0
-X-QQ-XMAILINFO: OGmpL5CFYt/YgBDtf6vAlNUiXf8/TwJXXjRN3ywYqxLio27v2XPzJKur
-	S2M4BSjFiff6dv4hM9cLQf72T5JyfXwrhRL79T/Eg8AydbGEYNzOjZ78ZtY9miWvyojvPCe
-	FY11xCY28rdQ0c5DeVlwJqM+TVLjW5Qc110vS25y6k5G2jm+chNO3uq/cuSOHJarZtxvM6q
-	dQp1faWwB0kvnQ2JNpOuyoYqzyt2h3exVaq3rgxzbgsfHlUOuytOEPxLO3vPBIRnLIX8QBt
-	mXFCWis7KoeIX1VTvthB13WnSiZzuPkyt3ofLB6XpF9MEXojxHpHh+RqjnHIiYn/kMPWQTF
-	r6P+lNI1l9t3k/hLSNODCeZ8ST56hcI8InH9fer52GGOqF28yqXg53SF7TXR6WKHo9XKfup
-	/YjTVY0tULIhElOW416yKvnPUqrpM486rzMwJ9Rb+9nBqWrjuDWKKww6f6mqVx9lJO77ij9
-	KkBZWrruIDgGG45qm+69f14hZF1px0TUjn3XeoFaBKDLk5J11W084c+Se2OLnjax+lVjluh
-	XZgqk0m3aRtWre+W+nVGMfskqqz8WOuu9tEvjBCol7Og1G6R1z2fc1PwTnSy1zFKOyt+/dy
-	pSUnRo2h9VtKXKXyh2jxARsj8Ww9GY52s73feLazk0Gou8Ae2ebHOs/wuLPdezGwGbxNc6X
-	aaSudSHGpdd6ICh8An+g/zcI4EXBztR56djC4/WZ1uL3an/YOAX2q1KnqO1QJih6DoeUd7G
-	nYC+9n/co2cOeZRKzlCxHN+WATJ+7tYW+AsItIfQc6L2Zrc1MbfBaAjB/rdQDdKsoiE1bZF
-	zR0Hi6hBx448cP+ZRV9+7YdFWGwyW9+miodxe9zgmfkosCdj1MfHNpAeZ1zvdIF8HrAE+8l
-	E8q/22lieOKwydQTe9qjqh8GSCEW4qSa97kSE0z3Nl9/+9m9V4k1Igbc3UYfJHVud8H0oYR
-	Gw6Z3BsJUyn0PyxCsqAoXEDyhB1A8cxqSBbAjqR/uwmAEyqO4dIv3M3Bj8T7MB6X3WvCz2H
-	rzSRD+4sH1lMTpf7Ot8Z/PIivyIP6hLqJQnpPpCZz4ZeS2cC8HRFmJTmokr+NaaL+tzJ2D7
-	3WnXDRRXaehKZe5NIj9pS46pE7LAMLkTjtXud8cCxmC
-X-QQ-XMRINFO: Mp0Kj//9VHAxzExpfF+O8yhSrljjwrznVg==
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20261123-vdso-absolute-reloc-v6-1-161e218dd217@linutronix.de>
+References: <20261123-vdso-absolute-reloc-v6-0-161e218dd217@linutronix.de>
+In-Reply-To: <20261123-vdso-absolute-reloc-v6-0-161e218dd217@linutronix.de>
+To: Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Alexandre Ghiti <alex@ghiti.fr>, Nathan Chancellor <nathan@kernel.org>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ Andy Lutomirski <luto@kernel.org>, 
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, Kees Cook <kees@kernel.org>, 
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+ "H. Peter Anvin" <hpa@zytor.com>, Richard Weinberger <richard@nod.at>, 
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
+ Johannes Berg <johannes@sipsolutions.net>, 
+ Russell King <linux@armlinux.org.uk>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Madhavan Srinivasan <maddy@linux.ibm.com>, 
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+ Alexander Gordeev <agordeev@linux.ibm.com>, 
+ Christian Borntraeger <borntraeger@linux.ibm.com>, 
+ Sven Schnelle <svens@linux.ibm.com>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+ Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+ Danilo Krummrich <dakr@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
+ Christophe Leroy <chleroy@kernel.org>, Boqun Feng <boqun@kernel.org>, 
+ Nicolas Schier <nsc@kernel.org>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ llvm@lists.linux.dev, linux-mm@kvack.org, linux-um@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+ loongarch@lists.linux.dev, linux-s390@vger.kernel.org, 
+ linux-mips@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+ linux-kbuild@vger.kernel.org, Jan Stancek <jstancek@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@redhat.com>, 
+ Peter Zijlstra <peterz@infradead.org>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1795441872; l=27708;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=gkLi0zRVAsKn9AO1aA7VH3kWdsSU1xXQ3APEJ1c/+4s=;
+ b=PpQ9Ed/Eg78jylWfPvLDRe/yvR4YWTcI17uL+sa4Z1y4r2YC4eia27/+vgn/aSy7mvqPGy0nR
+ fTqj/APEVU1Deex+vp8KrFCNadEmAJGsnG/nqt1Nmol6p3K16NgDPwt
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
+All vDSO code needs to be completely position independent. Symbol
+references are marked as hidden so the compiler emits PC-relative
+relocations. However there are cases where the compiler may still
+emit absolute relocations, as they are valid in regular PIC DSO code.
+These would be resolved by the linker and will break at runtime.
+This has been observed on arm64, see commit 0c314cda9325 ("arm64: vdso:
+Work around invalid absolute relocations from GCC")
 
-On 11/23/26 6:15 PM, Andy Shevchenko wrote:
-> On Sat, Nov 21, 2026 at 09:18:20PM +0800, Luo Qiu wrote:
->> The driver registers a platform backlight device during module init but
->> discards the returned pointer. Consequently, the device is never
->> unregistered when the module is removed, leaving its ops callbacks
->> pointing into freed module text. After module removal, reading the
->> backlight's actual_brightness attribute can call the stale callback and
->> crash the kernel. Registration failures are also silently ignored.
->>
->> Store the returned pointer, use it for resume, and unregister it on
->> module exit. Check and report backlight registration failures.
-> ...
->
->> static int loongson_hotkey_resume(struct device *dev)
->>   {
->>   	int status = 0;
->>   	struct key_entry ke;
->> -	struct backlight_device *bd;
->>   
->> -	bd = backlight_device_get_by_type(BACKLIGHT_PLATFORM);
->> -	if (bd) {
->> -		loongson_laptop_backlight_update(bd) ?
->> +	if (backlight_dev) {
->> +		loongson_laptop_backlight_update(backlight_dev) ?
->>   		pr_warn("Loongson_backlight: resume brightness failed") :
->> -		pr_info("Loongson_backlight: resume brightness %d\n", bd->props.brightness);
->> +		pr_info("Loongson_backlight: resume brightness %d\n",
->> +				backlight_dev->props.brightness);
-> Indentation is broken here.
-Hi Andy,
+Introduce a tool to check for absolute relocations during the build,
+as the current inline-shell logic is not expressive enough.
+The check is done on the object files as the relocations will not exist
+anymore in the final DSO. As there is no extension point for the
+compilation of each object file, perform the validation in vdso_check.
 
-Thanks for the review. I have fixed the formatting issues in v3.
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+ Makefile                    |  19 ++
+ lib/vdso/Kconfig            |   5 +
+ lib/vdso/Makefile           |   2 +
+ lib/vdso/Makefile.include   |  14 ++
+ lib/vdso/check/.gitignore   |   3 +
+ lib/vdso/check/Makefile     |  34 +++
+ lib/vdso/check/elf.rs       | 498 ++++++++++++++++++++++++++++++++++++++++++++
+ lib/vdso/check/vdsocheck.rs | 154 ++++++++++++++
+ 8 files changed, 729 insertions(+)
 
-https://lore.kernel.org/all/C95EAA0918240E5D+20261123131944.77149-1-luoqiu@kylinsec.com.cn/
+diff --git a/Makefile b/Makefile
+index f895752d4b05..a3403066c1cf 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1571,6 +1571,25 @@ vdso_install: export INSTALL_FILES = $(vdso-install-y)
+ vdso_install:
+ 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.vdsoinst
+ 
++# ---------------------------------------------------------------------------
++# vDSO check
++
++ifdef CONFIG_RUST_IS_AVAILABLE
++ifdef CONFIG_VDSO_CHECK
++
++# Build the checker early.
++prepare: vdsocheck
++
++# If the architecture builds the vDSO early, make sure to be earlier.
++PHONY += vdso_prepare
++vdso_prepare: vdsocheck
++
++PHONY += vdsocheck
++vdsocheck:
++	$(Q)$(MAKE) $(build)=lib/vdso/check $@
++endif
++endif
++
+ # ---------------------------------------------------------------------------
+ # Tools
+ 
+diff --git a/lib/vdso/Kconfig b/lib/vdso/Kconfig
+index 597f5f0f9681..559f5534831e 100644
+--- a/lib/vdso/Kconfig
++++ b/lib/vdso/Kconfig
+@@ -23,3 +23,8 @@ config VDSO_GETRANDOM
+ 	select VDSO_DATASTORE
+ 	help
+ 	  Selected by architectures that support vDSO getrandom().
++
++config VDSO_CHECK
++	bool
++	help
++	  Selected for architectures that are supported by the 'vdsocheck' program.
+diff --git a/lib/vdso/Makefile b/lib/vdso/Makefile
+index ac304def42d6..9932b43d5bac 100644
+--- a/lib/vdso/Makefile
++++ b/lib/vdso/Makefile
+@@ -1,3 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ 
+ obj-$(CONFIG_VDSO_DATASTORE) += datastore.o
++
++obj-y += check/
+diff --git a/lib/vdso/Makefile.include b/lib/vdso/Makefile.include
+index cedbf15f8087..5528e548f02e 100644
+--- a/lib/vdso/Makefile.include
++++ b/lib/vdso/Makefile.include
+@@ -6,6 +6,12 @@ GENERIC_VDSO_DIR := $(dir $(GENERIC_VDSO_MK_PATH))
+ c-gettimeofday-$(CONFIG_GENERIC_GETTIMEOFDAY) := $(addprefix $(GENERIC_VDSO_DIR), gettimeofday.c)
+ c-getrandom-$(CONFIG_VDSO_GETRANDOM) := $(addprefix $(GENERIC_VDSO_DIR), getrandom.c)
+ 
++ifeq ($(CONFIG_RUST_IS_AVAILABLE)$(CONFIG_VDSO_CHECK),yy)
++vdsocheck := lib/vdso/check/vdsocheck
++else
++vdsocheck :=
++endif
++
+ # This cmd checks that the vdso library does not contain dynamic relocations.
+ # It has to be called after the linking of the vdso library and requires it
+ # as a parameter.
+@@ -13,6 +19,14 @@ c-getrandom-$(CONFIG_VDSO_GETRANDOM) := $(addprefix $(GENERIC_VDSO_DIR), getrand
+ # As a workaround for some GNU ld ports which produce unneeded R_*_NONE
+ # dynamic relocations, ignore R_*_NONE.
+ quiet_cmd_vdso_check = VDSOCHK $@
++ifneq ($(vdsocheck),)
++      cmd_vdso_check = $(vdsocheck) $(filter %.o, $(real-prereqs)) $@
++else
+       cmd_vdso_check = if $(READELF) -rW $@ | grep -v _NONE | grep -q " R_\w*_"; \
+ 		       then (echo >&2 "$@: dynamic relocations are not supported"; \
+ 			     rm -f $@; /bin/false); fi
++endif
++
++# Variant of cmd_ld which does not try to link the vdsocheck tool.
++quiet_cmd_ld_vdso = VDSOLD $@
++      cmd_ld_vdso = $(LD) $(ld_flags) $(filter-out $(vdsocheck), $(real-prereqs)) -o $@
+diff --git a/lib/vdso/check/.gitignore b/lib/vdso/check/.gitignore
+new file mode 100644
+index 000000000000..751be38f11f2
+--- /dev/null
++++ b/lib/vdso/check/.gitignore
+@@ -0,0 +1,3 @@
++/bindings.rs
++/libbindings.rlib
++/vdsocheck
+diff --git a/lib/vdso/check/Makefile b/lib/vdso/check/Makefile
+new file mode 100644
+index 000000000000..98de42c6c0eb
+--- /dev/null
++++ b/lib/vdso/check/Makefile
+@@ -0,0 +1,34 @@
++# SPDX-License-Identifier: GPL-2.0-only
++
++quiet_cmd_host_bindgen = HOSTBINDGEN $@
++      cmd_host_bindgen = $(BINDGEN) $< -o $@ --depfile $(depfile) -- $(HOSTBINDGEN_FLAGS)
++
++quiet_cmd_host_rustlib = HOSTRUSTC L $@
++      cmd_host_rustlib = \
++	$(HOSTRUSTC) $(hostrust_flags) \
++		--emit=dep-info=$(depfile) --emit=link=$@ \
++		--crate-type rlib \
++		--crate-name $(patsubst %.rlib,%,$(notdir $@)) $<
++
++uapi-directory := $(srctree)/tools/include/uapi
++
++# bindings.rs will be generated in the build directory, but rustc can not use
++# source code from both the source and build directory together.
++# Compile the binding code into a library first.
++$(obj)/bindings.rs: HOSTBINDGEN_FLAGS := -I$(uapi-directory)
++$(obj)/bindings.rs: $(uapi-directory)/linux/elf.h FORCE
++	$(call if_changed_dep,host_bindgen)
++
++HOSTRUSTFLAGS_libbindings := -Amissing_docs -Anon-camel-case-types
++$(obj)/libbindings.rlib: $(obj)/bindings.rs FORCE
++	$(call if_changed_dep,host_rustlib)
++
++targets += bindings.rs libbindings.rlib
++
++hostprogs += vdsocheck
++vdsocheck-rust := y
++HOSTRUSTFLAGS_vdsocheck := --extern=bindings=$(obj)/libbindings.rlib
++$(obj)/vdsocheck: $(obj)/libbindings.rlib
++
++PHONY += vdsocheck
++vdsocheck: $(obj)/vdsocheck
+diff --git a/lib/vdso/check/elf.rs b/lib/vdso/check/elf.rs
+new file mode 100644
+index 000000000000..520285d6fd10
+--- /dev/null
++++ b/lib/vdso/check/elf.rs
+@@ -0,0 +1,498 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#![allow(unreachable_pub)]
++
++use core::fmt;
++use core::iter::Iterator;
++use core::result::Result;
++use core::str;
++
++use ::bindings;
++
++#[derive(Debug, Copy, Clone)]
++enum ByteOrder {
++    LittleEndian,
++    BigEndian,
++}
++
++trait ToCpu {
++    fn to_cpu(self, byteorder: ByteOrder) -> Self;
++}
++
++macro_rules! declare_to_cpu {
++    ($t:ty) => {
++        impl ToCpu for $t {
++            fn to_cpu(self, byteorder: ByteOrder) -> Self {
++                match byteorder {
++                    ByteOrder::LittleEndian => Self::from_le(self),
++                    ByteOrder::BigEndian => Self::from_be(self),
++                }
++            }
++        }
++    };
++}
++
++declare_to_cpu!(u16);
++declare_to_cpu!(u32);
++declare_to_cpu!(u64);
++
++#[derive(Debug, Copy, Clone)]
++enum Class {
++    Elf32,
++    Elf64,
++}
++
++enum ClassAlternative<T32, T64> {
++    Elf32(T32),
++    Elf64(T64),
++}
++
++#[derive(Debug)]
++pub enum ParseError {
++    InvalidFileMagic([u8; 4]),
++    InvalidFileClass(u32),
++    InvalidFileByteOrder(u32),
++    InvalidSectionSize,
++    MissingStringTable,
++    StrtabIndexOutOfRange,
++    IndexOutOfRange,
++    StrtabInvalidData(str::Utf8Error),
++}
++
++pub type ParseResult<T> = Result<T, ParseError>;
++
++impl fmt::Display for ParseError {
++    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
++        match self {
++            ParseError::InvalidFileMagic(m) => write!(f, "Invalid ELF magic {:?}", m),
++            ParseError::InvalidFileClass(c) => write!(f, "Invalid ELF class {}", c),
++            ParseError::InvalidFileByteOrder(b) => write!(f, "Invalid ELF byteorder {}", b),
++            ParseError::InvalidSectionSize => write!(f, "Invalid ELF section size"),
++            ParseError::MissingStringTable => write!(f, "Missing string table"),
++            ParseError::IndexOutOfRange => write!(f, "Index out of range"),
++            ParseError::StrtabIndexOutOfRange => write!(f, "String table index out of range"),
++            ParseError::StrtabInvalidData(e) => write!(f, "Invalid data in string table: {}", e),
++        }
++    }
++}
++
++fn read_from_bytes<T: Copy>(data: &[u8]) -> ParseResult<T> {
++    if data.len() < core::mem::size_of::<T>() {
++        Err(ParseError::IndexOutOfRange)?
++    }
++    let ptr = data.as_ptr() as *const T;
++    // SAFETY: `T` is `Copy` by the type constraints.
++    // `ptr` is valid as it is derived from the slice `data` above.
++    // `self.data.len()` being large enough is guaranteed by the runtime check above.
++    Ok(unsafe { ptr.read_unaligned() })
++}
++
++fn get_data_subslice(data: &[u8], offset: u64, size: u64) -> ParseResult<&[u8]> {
++    let start: usize = offset.try_into().map_err(|_| ParseError::IndexOutOfRange)?;
++    let size: usize = size.try_into().map_err(|_| ParseError::IndexOutOfRange)?;
++    let end = start.checked_add(size).ok_or(ParseError::IndexOutOfRange)?;
++
++    Ok(&data[start..end])
++}
++
++/// Representation of a complete ELF file.
++#[derive(Debug)]
++pub struct File<'a> {
++    byteorder: ByteOrder,
++    class: Class,
++    pub type_: u16,
++    pub machine: u16,
++    pub data: &'a [u8],
++    section_headers: SectionInfo<'a>,
++    section_names: StrtabSection<'a>,
++}
++
++impl<'a> File<'a> {
++    pub fn new_from_bytes(data: &'a [u8]) -> Result<Self, ParseError> {
++        const ELF_MAGIC: [u8; 4] = [
++            bindings::ELFMAG0 as u8,
++            bindings::ELFMAG1 as u8,
++            bindings::ELFMAG2 as u8,
++            bindings::ELFMAG3 as u8,
++        ];
++        let ehdr: bindings::elf32_hdr = read_from_bytes(data)?;
++
++        let magic = [
++            ehdr.e_ident[bindings::EI_MAG0 as usize],
++            ehdr.e_ident[bindings::EI_MAG1 as usize],
++            ehdr.e_ident[bindings::EI_MAG2 as usize],
++            ehdr.e_ident[bindings::EI_MAG3 as usize],
++        ];
++
++        if magic != ELF_MAGIC {
++            return Err(ParseError::InvalidFileMagic(magic));
++        }
++
++        let class = match ehdr.e_ident[bindings::EI_CLASS as usize] as u32 {
++            bindings::ELFCLASS32 => Class::Elf32,
++            bindings::ELFCLASS64 => Class::Elf64,
++            c => return Err(ParseError::InvalidFileClass(c)),
++        };
++
++        let byteorder = match ehdr.e_ident[bindings::EI_DATA as usize] as u32 {
++            bindings::ELFDATA2LSB => ByteOrder::LittleEndian,
++            bindings::ELFDATA2MSB => ByteOrder::BigEndian,
++            b => return Err(ParseError::InvalidFileByteOrder(b)),
++        };
++
++        let (type_, machine, shnum, shoff, shentsize, shstrndx) = match class {
++            Class::Elf32 => {
++                let ehdr: bindings::elf32_hdr = read_from_bytes(data)?;
++                (
++                    ehdr.e_type.to_cpu(byteorder),
++                    ehdr.e_machine.to_cpu(byteorder),
++                    ehdr.e_shnum.to_cpu(byteorder),
++                    ehdr.e_shoff.to_cpu(byteorder).into(),
++                    ehdr.e_shentsize.to_cpu(byteorder),
++                    ehdr.e_shstrndx.to_cpu(byteorder),
++                )
++            }
++            Class::Elf64 => {
++                let ehdr: bindings::elf64_hdr = read_from_bytes(data)?;
++                (
++                    ehdr.e_type.to_cpu(byteorder),
++                    ehdr.e_machine.to_cpu(byteorder),
++                    ehdr.e_shnum.to_cpu(byteorder),
++                    ehdr.e_shoff.to_cpu(byteorder),
++                    ehdr.e_shentsize.to_cpu(byteorder),
++                    ehdr.e_shstrndx.to_cpu(byteorder),
++                )
++            }
++        };
++
++        let section_headers = SectionInfo {
++            byteorder,
++            class,
++            entsize: shentsize.into(),
++            data: get_data_subslice(data, shoff, u64::from(shnum) * u64::from(shentsize))?,
++            name: "<section headers>",
++        };
++
++        let string_table = SectionHeaderIterator::new(&section_headers, data)?
++            .nth(shstrndx.into())
++            .ok_or(ParseError::MissingStringTable)??;
++
++        let section_names = StrtabSection(SectionInfo {
++            name: "<section header names>",
++            byteorder,
++            class,
++            data: string_table.data,
++            entsize: string_table.entsize,
++        });
++
++        Ok(File {
++            byteorder,
++            class,
++            type_,
++            machine,
++            section_headers,
++            section_names,
++            data,
++        })
++    }
++
++    pub fn sections(&self) -> ParseResult<SectionIterator<'_>> {
++        Ok(SectionIterator {
++            file: self,
++            section_headers: SectionHeaderIterator::new(&self.section_headers, self.data)?,
++        })
++    }
++}
++
++/// High-level representation of an ELF section.
++#[derive(Clone, Debug)]
++pub struct SectionInfo<'a> {
++    byteorder: ByteOrder,
++    class: Class,
++    pub name: &'a str,
++    entsize: u64,
++    pub data: &'a [u8],
++}
++
++/// Typed high-level iterator over all sections in a `File`.
++#[derive(Debug)]
++pub enum Section<'a> {
++    Null(SectionInfo<'a>),
++    Rel(RelSection<'a>),
++    Rela(RelaSection<'a>),
++    Strtab(StrtabSection<'a>),
++    Unknown(SectionInfo<'a>),
++}
++
++impl<'a> Section<'a> {
++    pub fn info(&'a self) -> &'a SectionInfo<'a> {
++        match self {
++            Section::Null(info) | Section::Unknown(info) => info,
++            Section::Rel(rel) => &rel.0,
++            Section::Rela(rela) => &rela.0,
++            Section::Strtab(strtab) => &strtab.0,
++        }
++    }
++}
++
++pub struct SectionIterator<'a> {
++    file: &'a File<'a>,
++    section_headers: SectionHeaderIterator<'a, 'a>,
++}
++
++impl<'a> Iterator for SectionIterator<'a> {
++    type Item = ParseResult<Section<'a>>;
++
++    fn next(&mut self) -> Option<Self::Item> {
++        self.section_headers.next().map(|header| {
++            let header = header?;
++            let info = SectionInfo {
++                byteorder: self.file.byteorder,
++                class: self.file.class,
++                name: self.file.section_names.entry(header.name)?,
++                entsize: header.entsize,
++                data: header.data,
++            };
++
++            Ok(match header.type_ {
++                bindings::SHT_NULL => Section::Null(info),
++                bindings::SHT_RELA => Section::Rela(RelaSection(info)),
++                bindings::SHT_REL => Section::Rel(RelSection(info)),
++                bindings::SHT_STRTAB => Section::Strtab(StrtabSection(info)),
++                _ => Section::Unknown(info),
++            })
++        })
++    }
++}
++
++/// Iterator over a section of data containing instances of type `T`.
++struct SectionEntityIterator<'a, T: Copy> {
++    data: &'a [u8],
++    byteorder: ByteOrder,
++    _phantom: core::marker::PhantomData<T>,
++}
++
++impl<'a, T: Copy> SectionEntityIterator<'a, T> {
++    const ENTITY_SIZE: usize = core::mem::size_of::<T>();
++
++    fn new(section: &'a SectionInfo<'a>) -> ParseResult<Self> {
++        let data = section.data;
++
++        if section.entsize != Self::ENTITY_SIZE as u64 {
++            return Err(ParseError::InvalidSectionSize);
++        }
++
++        if !data.len().is_multiple_of(Self::ENTITY_SIZE) {
++            return Err(ParseError::InvalidSectionSize);
++        }
++
++        Ok(Self {
++            data,
++            byteorder: section.byteorder,
++            _phantom: core::marker::PhantomData,
++        })
++    }
++}
++
++impl<'a, T: Copy> Iterator for SectionEntityIterator<'a, T> {
++    type Item = T;
++
++    fn next(&mut self) -> Option<Self::Item> {
++        if self.data.len() != 0 {
++            let ptr = self.data.as_ptr() as *const T;
++            // SAFETY: `T` is `Copy` by the type constraints.
++            // `ptr` is valid as it is derived from the slice `data` above.
++            // `self.data.len()` being a multiple of `Self::ENTITY_SIZE` is
++            // guaranteed by `SectionEntityIterator::new`.
++            let entity: T = unsafe { ptr.read_unaligned() };
++            self.data = &self.data[Self::ENTITY_SIZE..];
++            Some(entity)
++        } else {
++            None
++        }
++    }
++}
++
++/// Class-independent representation of an entry in a section header table.
++#[derive(Debug)]
++struct SectionHeader<'a> {
++    name: u32,
++    type_: u32,
++    entsize: u64,
++    data: &'a [u8],
++}
++
++/// Iterator over the section header table.
++struct SectionHeaderIterator<'f: 'a, 'a>(
++    ClassAlternative<
++        SectionEntityIterator<'a, bindings::elf32_shdr>,
++        SectionEntityIterator<'a, bindings::elf64_shdr>,
++    >,
++    &'f [u8],
++);
++
++impl<'f: 'a, 'a> SectionHeaderIterator<'f, 'a> {
++    fn new(section: &'a SectionInfo<'a>, file_data: &'f [u8]) -> ParseResult<Self> {
++        Ok(Self(
++            match section.class {
++                Class::Elf32 => ClassAlternative::Elf32(SectionEntityIterator::new(section)?),
++                Class::Elf64 => ClassAlternative::Elf64(SectionEntityIterator::new(section)?),
++            },
++            file_data,
++        ))
++    }
++}
++
++impl<'f: 'a, 'a> Iterator for SectionHeaderIterator<'f, 'a> {
++    type Item = ParseResult<SectionHeader<'f>>;
++
++    fn next(&mut self) -> Option<Self::Item> {
++        let file_data = self.1;
++
++        match &mut self.0 {
++            ClassAlternative::Elf32(iter) => iter.next().map(|n| {
++                Ok(SectionHeader {
++                    name: n.sh_name.to_cpu(iter.byteorder).into(),
++                    type_: n.sh_type.to_cpu(iter.byteorder).into(),
++                    entsize: n.sh_entsize.to_cpu(iter.byteorder).into(),
++                    data: get_data_subslice(
++                        file_data,
++                        n.sh_offset.to_cpu(iter.byteorder).into(),
++                        n.sh_size.to_cpu(iter.byteorder).into(),
++                    )?,
++                })
++            }),
++            ClassAlternative::Elf64(iter) => iter.next().map(|n| {
++                Ok(SectionHeader {
++                    name: n.sh_name.to_cpu(iter.byteorder).into(),
++                    type_: n.sh_type.to_cpu(iter.byteorder).into(),
++                    entsize: n.sh_entsize.to_cpu(iter.byteorder).into(),
++                    data: get_data_subslice(
++                        file_data,
++                        n.sh_offset.to_cpu(iter.byteorder).into(),
++                        n.sh_size.to_cpu(iter.byteorder).into(),
++                    )?,
++                })
++            }),
++        }
++    }
++}
++
++/// High-level interface to a SHT_STRTAB string table.
++#[derive(Debug)]
++pub struct StrtabSection<'a>(SectionInfo<'a>);
++
++impl<'a> StrtabSection<'a> {
++    pub fn entry(&'a self, index: u32) -> ParseResult<&'a str> {
++        let data = self.0.data;
++        let index = index as usize;
++
++        if index >= data.len() {
++            Err(ParseError::StrtabIndexOutOfRange)
++        } else {
++            let len = data[index..]
++                .iter()
++                .position(|b| *b == 0x00)
++                .ok_or(ParseError::StrtabIndexOutOfRange)?;
++            let s = str::from_utf8(&data[index..index + len])
++                .map_err(|e| ParseError::StrtabInvalidData(e))?;
++            Ok(s)
++        }
++    }
++}
++
++/// High-level interface to a SHT_REL relocation table.
++#[derive(Debug)]
++pub struct RelSection<'a>(SectionInfo<'a>);
++
++impl<'a> RelSection<'a> {
++    pub fn entries(&'a self) -> ParseResult<RelSectionIterator<'a>> {
++        RelSectionIterator::new(&self.0)
++    }
++}
++
++#[derive(Debug)]
++pub struct Rel {
++    pub type_: u32,
++}
++
++pub struct RelSectionIterator<'a>(
++    ClassAlternative<
++        SectionEntityIterator<'a, bindings::elf32_rel>,
++        SectionEntityIterator<'a, bindings::elf64_rel>,
++    >,
++);
++
++impl<'a> RelSectionIterator<'a> {
++    fn new(section: &'a SectionInfo<'a>) -> ParseResult<Self> {
++        Ok(Self(match section.class {
++            Class::Elf32 => ClassAlternative::Elf32(SectionEntityIterator::new(section)?),
++            Class::Elf64 => ClassAlternative::Elf64(SectionEntityIterator::new(section)?),
++        }))
++    }
++}
++
++impl<'a> Iterator for RelSectionIterator<'a> {
++    type Item = Rel;
++
++    fn next(&mut self) -> Option<Self::Item> {
++        match &mut self.0 {
++            ClassAlternative::Elf32(iter) => iter.next().map(|n| {
++                let type_ = n.r_info.to_cpu(iter.byteorder) & 0xff;
++                Self::Item { type_ }
++            }),
++            ClassAlternative::Elf64(iter) => iter.next().map(|n| {
++                let type_ = n.r_info.to_cpu(iter.byteorder) as u32;
++                Self::Item { type_ }
++            }),
++        }
++    }
++}
++
++/// High-level interface to a SHT_RELA relocation table.
++#[derive(Debug)]
++pub struct RelaSection<'a>(SectionInfo<'a>);
++
++impl<'a> RelaSection<'a> {
++    pub fn entries(&'a self) -> ParseResult<RelaSectionIterator<'a>> {
++        RelaSectionIterator::new(&self.0)
++    }
++}
++
++#[derive(Debug)]
++pub struct Rela {
++    pub type_: u32,
++}
++
++pub struct RelaSectionIterator<'a>(
++    ClassAlternative<
++        SectionEntityIterator<'a, bindings::elf32_rela>,
++        SectionEntityIterator<'a, bindings::elf64_rela>,
++    >,
++);
++
++impl<'a> RelaSectionIterator<'a> {
++    fn new(section: &'a SectionInfo<'a>) -> ParseResult<Self> {
++        Ok(Self(match section.class {
++            Class::Elf32 => ClassAlternative::Elf32(SectionEntityIterator::new(section)?),
++            Class::Elf64 => ClassAlternative::Elf64(SectionEntityIterator::new(section)?),
++        }))
++    }
++}
++
++impl<'a> Iterator for RelaSectionIterator<'a> {
++    type Item = Rela;
++
++    fn next(&mut self) -> Option<Self::Item> {
++        match &mut self.0 {
++            ClassAlternative::Elf32(iter) => iter.next().map(|n| {
++                let type_ = n.r_info.to_cpu(iter.byteorder) & 0xff;
++                Self::Item { type_ }
++            }),
++            ClassAlternative::Elf64(iter) => iter.next().map(|n| {
++                let type_ = n.r_info.to_cpu(iter.byteorder) as u32;
++                Self::Item { type_ }
++            }),
++        }
++    }
++}
+diff --git a/lib/vdso/check/vdsocheck.rs b/lib/vdso/check/vdsocheck.rs
+new file mode 100644
+index 000000000000..f4c0730bc976
+--- /dev/null
++++ b/lib/vdso/check/vdsocheck.rs
+@@ -0,0 +1,154 @@
++// SPDX-License-Identifier: GPL-2.0
++
++//! vDSO build-time validation
++//!
++//! Check that the vDSO library does not contain dynamic relocations.
++
++use std::default::Default;
++use std::fmt;
++use std::fs;
++use std::option::Option;
++use std::process;
++
++use ::bindings;
++
++mod elf;
++
++#[derive(Default)]
++struct AllowedRelocations<'a> {
++    ignored_object_file_sections: &'a [&'a str],
++    in_object_file: &'a [u32],
++}
++
++impl<'a> AllowedRelocations<'a> {
++    fn is_ignored_section(&self, section: &elf::Section<'_>) -> bool {
++        let name = section.info().name;
++
++        if name.starts_with(".rel.debug_") || name.starts_with(".rela.debug_") {
++            true
++        } else {
++            self.ignored_object_file_sections.contains(&name)
++        }
++    }
++}
++
++fn allowed_relocations_for_machine(machine: u16) -> Option<AllowedRelocations<'static>> {
++    match machine as u32 {
++        _ => None,
++    }
++}
++
++#[derive(Debug)]
++enum ValidationError<'a> {
++    ParseError(elf::ParseError),
++    UnsupportedArchitecture(u16),
++    UnrecognizedElfFileType(u32),
++    UnexpectedSection(elf::Section<'a>),
++    InvalidRelocation(elf::Section<'a>, u32),
++}
++
++impl<'a> From<elf::ParseError> for ValidationError<'a> {
++    fn from(parse_error: elf::ParseError) -> Self {
++        Self::ParseError(parse_error)
++    }
++}
++
++impl fmt::Display for ValidationError<'_> {
++    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
++        match self {
++            ValidationError::ParseError(e) => write!(f, "Parsing error: {}", e),
++            ValidationError::UnsupportedArchitecture(n) => {
++                write!(f, "Unsupported ELF architecture {}", n)
++            }
++            ValidationError::UnrecognizedElfFileType(t) => {
++                write!(f, "Unrecognized ELF file type {}", t)
++            }
++            ValidationError::UnexpectedSection(ref s) => {
++                write!(f, "Unexpected section '{}'", s.info().name)
++            }
++            ValidationError::InvalidRelocation(ref s, t) => {
++                write!(f, "Invalid relocation {} in section '{}'", t, s.info().name)
++            }
++        }
++    }
++}
++
++type ValidationResult<'a> = Result<(), ValidationError<'a>>;
++
++fn validate_linked_dso<'a>(file: &'a elf::File<'a>) -> ValidationResult<'a> {
++    for section in file.sections()? {
++        let section = section?;
++
++        /* No relocations are allowed */
++        match section {
++            elf::Section::Rel(_) | elf::Section::Rela(_) => {
++                return Err(ValidationError::UnexpectedSection(section))
++            }
++            _ => {}
++        }
++    }
++
++    Ok(())
++}
++
++fn validate_object_file<'a>(file: &'a elf::File<'a>) -> ValidationResult<'a> {
++    let allowed_relocs = allowed_relocations_for_machine(file.machine)
++        .ok_or(ValidationError::UnsupportedArchitecture(file.machine))?;
++
++    for section in file.sections()? {
++        let section = section?;
++
++        if allowed_relocs.is_ignored_section(&section) {
++            continue;
++        }
++
++        match section {
++            elf::Section::Rel(ref rel) => {
++                for entry in rel.entries()? {
++                    if !allowed_relocs.in_object_file.contains(&entry.type_) {
++                        return Err(ValidationError::InvalidRelocation(section, entry.type_));
++                    }
++                }
++            }
++            elf::Section::Rela(ref rela) => {
++                for entry in rela.entries()? {
++                    if !allowed_relocs.in_object_file.contains(&entry.type_) {
++                        return Err(ValidationError::InvalidRelocation(section, entry.type_));
++                    }
++                }
++            }
++            _ => {}
++        };
++    }
++
++    Ok(())
++}
++
++fn main() {
++    let mut args = std::env::args_os();
++
++    let program_name = args.next().unwrap_or("vdsocheck".into());
++
++    for path in args {
++        let data = fs::read(&path).unwrap_or_else(|err| {
++            println!("{}: {}: {}", program_name.display(), path.display(), err);
++            process::exit(1);
++        });
++
++        let file = elf::File::new_from_bytes(&data).unwrap_or_else(|err| {
++            println!("{}: {}: {}", program_name.display(), path.display(), err);
++            process::exit(2);
++        });
++
++        let result = match file.type_ as u32 {
++            bindings::ET_DYN => validate_linked_dso(&file),
++            bindings::ET_REL => validate_object_file(&file),
++            t => Err(ValidationError::UnrecognizedElfFileType(t)),
++        };
++
++        result.unwrap_or_else(|err| {
++            println!("{}: {}: {}", program_name.display(), path.display(), err);
++            process::exit(3);
++        });
++    }
++}
 
-
-Qiu Luo
->
->>   	}
-> ...
->
->> static int laptop_backlight_register(void)
->>   {
->>   	int status = 0, ret;
->>   	struct backlight_properties props;
->> +	struct backlight_device *bd;
->>   
->>   	memset(&props, 0, sizeof(props));
->
->>   	props.power = BACKLIGHT_POWER_ON;
->>   	props.type = BACKLIGHT_PLATFORM;
->>   
->> -	backlight_device_register("loongson_laptop",
->> +	bd = backlight_device_register("loongson_laptop",
->>   				NULL, NULL, &backlight_laptop_ops, &props);
-> ...and here.
->
->> +	if (IS_ERR(bd))
->> +		return PTR_ERR(bd);
->>   
->> +	backlight_dev = bd;
->>   
->>   	return 0;
->>   }
+-- 
+2.56.1
 
