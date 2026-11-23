@@ -1,100 +1,64 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.46
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795426329;
-	b=fPGYoReD5Ge1yWDfJpZrHckrZlIIb2Gve0L2EzJMBdx0fgnDsdDDTulBpHW4RsLVMf/1
-	 RDFkkUEBhyJ0w3tYYrwFXnucYiBTUEXdYMlSyNHNPKrKUOwaFFJeBTCp7mOtoWn2djces
-	 yN2bDx+WocJbk/OFcGF5gePPNAOCUr/u87eFC+DnsE1qYYYZP6evZxd8bz0AMBNZw6tzT
-	 Sg08DFhvbX7h2Zdr2FjjcCGRcm7ZaWQ2sqSRrDY+/Jiu5IN+b9N9MCrlUq3EyFILE+I6c
-	 dH5NguaxBSY9mFUn2YmAtitClfmcDnSNeDBhx5qHMi4pXxug4YPROi23TaflyecoA9g==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795426329;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=JqaNNY8+fBRcbsHJnnz48qA9IbD7DLdSU3+18Z2kgkk=;
-	b=CM+Lpoxt9sxAZjiHJSIkYVwYoseYOgZ5B3oDMi2uKcomKNmsVEis7JITYir4w9ECmU67
-	 3p8DQFKFRJ6sBV5Xj7KqWE4tHbISQMCFHv7JzAi4ZiaXnLi9N6MObV4nR4AUEzIy/lSID
-	 MrgdnoSD4xfs5meOf3hjSrFnM4uRh6BxQcZNd6YN4rAMCip8VYn/JStAucG1nGtCjQAeq
-	 bPQpcFv8kg8YdfUm9molDMtjivhbVxo3BtG0CjYtiv84qtg9dmd4GclpBTxLZsjPGIDat
-	 HxX9UBV07J5RrdMOAH0KjskpGCXpND+Ssu4iSHclUohuzM8Ea13t4RnocOmB4nvYasQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=lYcQbQDE;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.46
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795426648;
+	b=Q9/DVDwQC0qQusdepSOCq3am5MtLPb1JmjRgSwygQcrDV7URsZr6Nk+lhgZ4m9T8nsfT
+	 OlLh6kMlzLs77m/WkFRTVDcxeyrKVTJskhE9l5/vZGQjWrNTeFDkdEVMyKeEs5NplDqrI
+	 uuN1V45gxzfqaCcYSn6wpkb+w3rS457xKKMb87c8t6TdGP3I/8fVSEpyGA0peFy0DsuE5
+	 YEOEQJ2X7zzTFLQoA3vX0i4+zzT+KX1MQsc6LtpfcvK8HMZq40UysX8uiSniji1JkgeZl
+	 WAtGt3dh/6v29sOT1CW/4ArVlHA/XBatf5QHOFgcTvOkjm10uwMb+N+tUOsOHgaQqTw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795426648;
+	h=DMARC-Filter:From:DKIM-Signature:DKIM-Signature:Date:Subject:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:
+	 References:In-Reply-To:To:Cc:X-Developer-Signature:X-Developer-Key;
+	bh=E1kpH9qtmZAMmYTBOk6CnIKFezpBGJI84FmVahSpOrc=;
+	b=E4HpkkFl+F6MX7P1lH9MYCfdfLnTaAorOUz//T8UiJ3Ty+N386HoWVJq6QOzO9dlfAEw
+	 8g+JcF8DUUyooHXGv8LyuBVWZTtMDt84SkaKSmXTDpQUPBkuHqyeHmZ6JaVrCvLyd7OYK
+	 BhF9bqe9OyPAZeyL/7NtE42rZrhOUXICRHn39onm01xtl7+Tt/YgPMHa3EoOHyTC8LHvZ
+	 hi9WYnXZIqJoflnbMMhiuetCFt89AbgwPYLF02BJk9HwQ0UjcBPsvhUuvN/gL/vo5cfc/
+	 LriwZ6P/ORmOPrIShKBi8ISoOjFNUVRNpVnjRUJWvF4yBjXKK54KNVMVLQe68shrmkg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=linutronix.de;
+	spf=pass smtp.mailfrom=linutronix.de;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=kEyAOZ+f;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b="lIn2F/rY";
+	arc=none smtp.remote-ip=193.142.43.55
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E810606A31F
-	for <loongarch@lists.linux.dev>; Mon, 23 Nov 2026 09:32:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0E810606A31F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BB44606A31E
+	for <loongarch@lists.linux.dev>; Mon, 23 Nov 2026 09:37:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0BB44606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=lYcQbQDE
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-c4d581da0aaso394545266b.2
-        for <loongarch@lists.linux.dev>; Mon, 23 Nov 2026 01:32:08 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1795426327; cv=none;
-        d=google.com; s=arc-20260327;
-        b=ioIXxQjMIomHbGKlXKnph82ruGVCsjShdDBtKi3NMa7RTg6j1R6M/KuYEeEbzuMH8t
-         9WFFzndF/D3g/lGRNrZZai2NLNFk4vyfttnSQFGZtNeDl6uPTsSIhngPdcH4fb1L8K2w
-         Fl3t2jYmNEjp1uhcsggZuP02CzW6/WBHiVNHvbR18QoRJuT9P2VY6MCb9W5OoxnQX5ol
-         ZBn2iYQuszHbW3PNjL+3m9HpZKwBWSwcfUMZb19RaJWcOCYm8vJrilEXLB1EFKJcqIUS
-         5c77/xTbexTnfZ6wiQXlq73VEfUeJup4eugmmcsKqmvsPOxnGXeSGsaYYc3C4XHZVJhH
-         K6Fg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=JqaNNY8+fBRcbsHJnnz48qA9IbD7DLdSU3+18Z2kgkk=;
-        fh=jMWGs8j19W0FvgXB2w8IB7H8gYdZmkUNsT72qnreSPE=;
-        b=hswKCDKXbJGOeg8/u2bmMoGo7PV7IAk7XJnh4zKgaXvTKSaOp3kqOr3D4CewWUNzhw
-         hKAjQWY28/IN0NF68kO+J7EmIJAqNJ8hWYMy94GXrCIW9Gc1pZjCl+rp8vQ26ONPM5P0
-         EwpCjDKPwf2j+S0HIFAcmvPmENoXGhlJtW6zAMnEIBRRsTMez82d/eH8+YlqxBxsABwt
-         NqepnD0uo8PzJRFhlp3RO7VK/yc9hRvcjaDdmc703+TCDKNobg04eKIXYtDgL1sqSYum
-         Hlu6bOFuJnfm2VSPRQOdUOop0t5a/ZNk3viOExMyjDVx+HghyZu8FGy5er0SKNkefTN8
-         nq8g==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795426327; x=1796031127; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=JqaNNY8+fBRcbsHJnnz48qA9IbD7DLdSU3+18Z2kgkk=;
-        b=lYcQbQDEq+ehCGljEqSMmq8d39H5IwGTiW2vklkNijYCSvkoV5IM3AcIfR8pirm8JS
-         vyE45jQQTtN/YtQCkLaKFDTHgLiU0a52eE9WxINVjoOcGDyXpwIPq2VhXMKlfF6MqqNJ
-         HO7v2V/P66WkcHpoo7H+3URQjXlnwl45YSz+ssgeu3T6qyTRubD6S49eY+CoM0oPi8fV
-         AwDfF5FpRu6pkbY/9EphCq1DkbAmc+56KHxsNRcjnFZtJw3GKDtGLVvyVQzNq+VfL9Hg
-         k5Lp9u28kDWUdsqM8PTa/bIaJq4hxH6y0uXtXqTH4HWeCOE5AaniVnIr3+lZiLEiOVXY
-         AQDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795426327; x=1796031127;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=JqaNNY8+fBRcbsHJnnz48qA9IbD7DLdSU3+18Z2kgkk=;
-        b=gzfdU2sBWyuPdQk8WAAAljAyovoRFwM5oHp7KYUsR6NwOReKxfJtcOA/DnLGU9yzZC
-         T7p66k01dsSc/f031MBJpUfDclHPr7O/MbVWSz4MKHR6MM0pcC2GYakxna9e3NLbQkcA
-         l8HHCrZy3pQGHkF4ItJVMvMVSE8cnN/N5c+DFySzMGTxyBPr2nIs3ADIkrUE+pp9iYIF
-         op5+XKSnXr7Mi6Ng8sPBR+GKQtAlWp1gJClQvLpsCgQBbJQhrWmtxf3gED5sRWqYmiBX
-         TwmbVStUlFjH/S2wj0KWx0ZJ3iuh+MIMwbGzSj/QctZMbFILkYsfPE+t4woHQz/bpUNT
-         hjQg==
-X-Forwarded-Encrypted: i=1; AL+hErH7UHwCmJ7EjLy8ckVi0XU3RhRdeDDWneRtxyDC0j7262Cvn/skE8zu0RQ+CBAClD/xGdZl9yhevTc=@lists.linux.dev
-X-Gm-Message-State: APuU4Z9pm1vBsPDzt2odx3olcEKJewVRg/aM03MOTo5SrZNYLNmrnDVL
-	qNcH/9p7NTYafmXviexHo8sB4hFaIDRF1CskPJ9CRMnjOysxLO5f2jQWcYJTj4OXeEVuV25n2kv
-	3uilLyxfJrrXC24EuogEPlbgwNNJ8/sk=
-X-Gm-Gg: AZFdTZePSlNc1N/b3laYMoGl1hjij3RP7hdAtfRSJ0R22XrZXSqwnlfdE+I6pTpEJu6
-	wmsz7hqYefF64T2au76NI+bx8zk2FU5NjlmSuOPZxTRVm6xxH+Svi5pkUYtsWg4L6YBeU2bZL/M
-	u6coBydarvrUmTdUU65QVNheH2fA/+98yfYWDpDHVhrQUMJBSO6DJqNXi9HfApTj1BHwzX1HDsL
-	O5PUTbKVDqQl8v1JUE/NRsD+LAa5lM/lwsWyeh+f9ai4XK9j4RUKM6p12qHwT0ohty0XbZdrocu
-	y+xLICGWi874Jl6/LZNYQN3aRCb+JBixqRYMsdzhf48+I2awlT2wM6VgvwdqPcTyYeExEyh/xwD
-	DI6BGK414jfUOghqbo0vLJlXz0GCv6AOAHLyY
-X-Received: by 2002:a17:906:3b04:b0:c29:3c97:c994 with SMTP id
- a640c23a62f3a-c513ab47f35mr695113266b.35.1795426327146; Mon, 23 Nov 2026
- 01:32:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=kEyAOZ+f;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=lIn2F/rY
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1795426646;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=E1kpH9qtmZAMmYTBOk6CnIKFezpBGJI84FmVahSpOrc=;
+	b=kEyAOZ+fXfpEFfXli9cKb4jaOvep+YD+wGpQAMUQQojZWoFAqgtWYb70a2ykA+VO1bRedq
+	xJ1z/x/EoR0vCb1RSKcWCP09fC16ImShi/WU9K9AboAh6Pl6VYOpQX7L3Va0rbVF8sRgwZ
+	j1VkZWwgTUUpmxL3P+j222I9Hpz4yBmTIIBjdDdZJBGCITy12dETeke7yfjVz6eOwfrX2T
+	qwIgn0zPKXkYeYkzAhQRrFUZf3oInFDCx1beSUFl6BqCyxq769Dp3hpWe19ngJScL2Wjxr
+	jwMUd1tmM8P3eypY0Zj/ISZvHtFUuVCqtBxqaoGWMGH3MzUX5NwVGjxH9YMJBQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1795426646;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=E1kpH9qtmZAMmYTBOk6CnIKFezpBGJI84FmVahSpOrc=;
+	b=lIn2F/rYSSMxABLTJM4B3AbW/3uEZC8vK5/mSmfekSgDDXw9MHlSZZVoCJyH3+Wc1EX+Zc
+	QINruovqqc4qHEBA==
+Date: Mon, 23 Nov 2026 10:37:06 +0100
+Subject: [PATCH v3 01/15] MAINTAINERS: exec: Add more auxvec.h variants
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -104,106 +68,58 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <cover.1792986696.git.zhoubinbin@loongson.cn>
-In-Reply-To: <cover.1792986696.git.zhoubinbin@loongson.cn>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Mon, 23 Nov 2026 17:31:54 +0800
-X-Gm-Features: Aa3M54rO-ksGTZJl4gmuLyF4LQ_Lpi7KMAzUqlHvweFGPCWngAkxXQw_vYlvNLk
-Message-ID: <CAMpQs4KyZbsQO3-kvKrzAVJWEFghpGG7kSmpJvniYeKYaGfanA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] Add Loongson-2K0300 APB DMA mux support
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
-	Frank Li <Frank.Li@kernel.org>, dmaengine@vger.kernel.org, 
-	Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	devicetree@vger.kernel.org, Keguang Zhang <keguang.zhang@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20261123-at-vector-size-arch-v3-1-d342dae9e843@linutronix.de>
+References: <20261123-at-vector-size-arch-v3-0-d342dae9e843@linutronix.de>
+In-Reply-To: <20261123-at-vector-size-arch-v3-0-d342dae9e843@linutronix.de>
+To: Kees Cook <kees@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+ linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-riscv@lists.infradead.org, loongarch@lists.linux.dev, 
+ linux-s390@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+ linux-mips@vger.kernel.org, sparclinux@vger.kernel.org, 
+ linux-sh@vger.kernel.org, linux-alpha@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1795426640; l=979;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=hyCnjfQwzbLi6OQVQUQL35+BD4s52Bt4na4vvI8iM88=;
+ b=Yd3vnnMHSBep+pRQRmyi1AA40DEVjxA2c8/dBeFWV4J0rKudeRDSHvhOeNFfw6AFADdjfzkJf
+ OYY7DU1b6DAAWfLpRxBPgKDgCI6NtpX+tyAlSPU38iJqHr9hcKiFypZ
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Hi all:
+There are quite a few auxvec.h headers. Mark all of them maintained
+as part of 'EXEC & BINFMT API, ELF'.
 
-On Mon, Oct 26, 2026 at 12:33=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.c=
-n> wrote:
->
-> Hi all:
->
-> Loongson-2K0300 integrates a CMC DMA controller with 8 physical
-> channels. Peripheral DMA requests are not hard-wired to these channels;
-> they are routed through the CHIP_CTRL13/14/15 DMA_MAP fields.
->
-> This series adds support for that DMA request router.
->
-> Patch 1 adds the DT binding constants for the peripheral request IDs
-> and yaml file for the DMA mux.
-> Patch 2 adds the driver, Kconfig symbol and Makefile entry.
->
-> The driver registers with of_dma_router_register(). In the route
-> allocation callback it validates the <request> <channel> <flags>
-> specifier, programs the SoC-specific route register, and forwards
-> <channel> <flags> to the parent CMC DMA controller.
->
-> Thanks.
-> Binbin.
->
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D
-> V3:
-> Patch(1/2):
->  - Merged the two commits containing the dt-binding header file and
->    the YAML file; no other changes were made;
->  - Add Acked-by tag from Conor.
->
-> Patch(2/2):
->  - Append the dmamux object to the existing CMC DMA line;
->  - Add loongson2_dmamux_assign_bits() helper, no functional change;
->  - Add Reviewed-by tag from Frank.
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Reviewed-by: Kees Cook <kees@kernel.org>
+---
+ MAINTAINERS | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Gentle ping.
-Any comments about this patchset ?
->
-> Link to V2:
-> https://lore.kernel.org/all/cover.1791535540.git.zhoubinbin@loongson.cn/
->
-> V2:
-> Patch(1/3):
->  - Drop LS2K0300_DMA_REQ_MAX as it is not part of the ABI;
-> Patch(2/3):
->  - A more detailed description of `dma-cells`;
->  - Add the `dma_requests` constraint
-> Patch(3/3):
->  - Drop loongson2_dmamux_map->shift;
->  - Move of_parse_phandle() into loongson2_dmamux_route_allocate() avoid
->    UAF;
->  - Drop loongson2_dmamux->dma_np;
->  - Check dma_requests;
->  - Add devm_add_action_or_reset() instead of .remove();
->  - Replace `metux()` with `spinlock()`, which has lower overhead;
->  - Add loongson2_dmamux_route_free().
->
-> Link to V1:
-> https://lore.kernel.org/all/cover.1790068409.git.zhoubinbin@loongson.cn/
->
-> Binbin Zhou (2):
->   dt-bindings: dma: Document DMA mux support for Loongson-2K0300
->   dmaengine: loongson: Add Loongson-2K0300 APB DMA mux driver
->
->  .../dma/loongson,ls2k0300-dmamux.yaml         |  72 ++++
->  MAINTAINERS                                   |   3 +
->  drivers/dma/loongson/Makefile                 |   2 +-
->  drivers/dma/loongson/loongson2-apb-dmamux.c   | 404 ++++++++++++++++++
->  .../dt-bindings/dma/loongson,ls2k-dmamux.h    |  53 +++
->  5 files changed, 533 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/dma/loongson,ls2k03=
-00-dmamux.yaml
->  create mode 100644 drivers/dma/loongson/loongson2-apb-dmamux.c
->  create mode 100644 include/dt-bindings/dma/loongson,ls2k-dmamux.h
->
->
-> base-commit: aff5e6a77fc69a7c490246465940d18422d7c631
-> --
-> 2.52.0
->
->
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 93abbb315065..a659c9bfb0f0 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10073,13 +10073,16 @@ L:	linux-mm@kvack.org
+ S:	Supported
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/execve
+ F:	Documentation/userspace-api/ELF.rst
++F:	arch/*/include/uapi/asm/auxvec.h
+ F:	fs/*binfmt_*.c
+ F:	fs/Kconfig.binfmt
+ F:	fs/exec.c
+ F:	fs/tests/binfmt_*_kunit.c
+ F:	fs/tests/exec_kunit.c
++F:	include/linux/auxvec.h
+ F:	include/linux/binfmts.h
+ F:	include/linux/elf.h
++F:	include/uapi/asm-generic/auxvec.h
+ F:	include/uapi/linux/auxvec.h
+ F:	include/uapi/linux/binfmts.h
+ F:	include/uapi/linux/elf.h
 
---=20
-Thanks.
-Binbin
+-- 
+2.56.1
+
