@@ -1,54 +1,51 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795397154;
-	b=nW0/I3XBzdEXSlycoadPbxxwGURaH6PKoWMWC28Kv5+1RLUi6xHtDSjzg5zteVhZaMjq
-	 WKZryDp5NsCienYghmM/b8XMFfXt/U7ZCQbq97DJdctaLJQ7VPQOXpI00X0FNhZw1Vj2y
-	 tkKt7L3+zfqEIlPJ0PsXlsSMWXyXjCnHholUJIb2ndmz3LPgdoWsXUDc2encyQXdjNusl
-	 ujyZFqfcms105IXb/YLfA/Kv4sw0a0ZvMMM4tYhseNZ6av9iEJs97UlFQxIskESVk63J9
-	 pcG1OaoiZNf7z+on6aQLOzXhHwXE4brsK4V9yM+qexcdJBK0eWEW+i2Vn2uC8LSiB1w==
+	t=1795408756;
+	b=2idDN5a6XcrbK5ZkTm3pBcYCnb3Wbxfyse0UziStc4GwexTIPEgeIqQ1GARUysXHqX0e
+	 L8mrgIvA7PAO+B3vXUClfWegUp+xbsubXX6ho+uKqKdVd+3KgdYPI5NdBnYK4mf/U0K9g
+	 B9GMu/wTWvvIrO9NleeDkW6+ga71GG2bib2c6A8wah+piijMbB83qThMERkhJkut8ehXN
+	 OcdMRf6OG1hgAE54wEzj13hsj24puh9UOKgwg63SC4WA3ZO8PmWG33OwFXtTqU+SsRNEL
+	 eUH/uSbWCFiCcFiVpJHX1nrmDiEKbqJc79BCgi1T7VTRozMxIFGODlKUKaomwjDS2MQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795397154;
-	h=DMARC-Filter:Received:Received:Subject:To:Cc:References:From:
-	 Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:Content-Type:
-	 Content-Language:Content-Transfer-Encoding:X-CM-TRANSID:
-	 X-CM-SenderInfo:X-Coremail-Antispam;
-	bh=6YsYPTuo2VbtL6rAHEG5MgX/FjIFiklyL5vCpof+Lk4=;
-	b=uagCjoIi0eMJfMTH60lQWOrsjxhfwsCJ8oggVhLkLbZEoo/AfnG5A8nYP7127fAXypji
-	 WdGjgoNxOdkgq07GyAyGt3D/RM7zKwTLaLYCuQCa/23VaKjxKArkIpuxJKKdoXg8oAFeF
-	 DC4utS9HUUDKF7Bb5WrN8nDcq1U8HWJvPRS+mIlUNNMmsnFvn8kN1PWvxxrSh6x7yPemV
-	 cYzi+ZfTfZYruZWmm/nrXRWxSax6Nkag4xLiufSpJAFXHOup2QCDkvDH4pKow/28+Qv2B
-	 d4pLXiY4YvqipaG+A2OQVB5Ai9ViMQxQe00lUmz1k6UcmpQGOQpTUqwiyWez+PTnHXg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795408756;
+	h=DMARC-Filter:Received:Received:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding:X-CM-TRANSID:X-CM-SenderInfo:
+	 X-Coremail-Antispam;
+	bh=Y5vnHn5+SNVJPardiVVrlUUndhewH/fyUFaks4gQYFQ=;
+	b=HQWSsDViFixeY6lYCwO4hghbBoigzLfMjSqKgAkgERRXUIsB4I41KhEWH6sxBYhq5Ylo
+	 rWxTRqEQaaFLMY6tyRPjaTbQkIcV4cpkK/8Xur4q/I4l/vpbwEDhQO5Rzz3wakuJH9UHQ
+	 GuPXW0n+qyM/MYKBb5LstO1XSUfPmxBSxc9ijjZbYo5ybL7iUZk5N1SB38bnYNJ7t3t1p
+	 m3S9SUXDmiPdZZawvA/oXI4jdiV5PglLbEGvDU7EEAHjWrRbBXI2F9XpsDwWXlwhBLJls
+	 OFv0RBOnn9LuLw849YTwRTNujR1bziXjHnK7x0YXJUGX5gAG0MJusmMWJZcqyG/L1nw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=loongson.cn;
 	spf=pass smtp.mailfrom=loongson.cn;
 	arc=none smtp.remote-ip=114.242.206.163
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7546606A320;
-	Mon, 23 Nov 2026 01:25:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E7546606A320
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50CA8606A327
+	for <loongarch@lists.linux.dev>; Mon, 23 Nov 2026 04:39:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 50CA8606A327
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8CxfdAZlgNrqBQiAA--.3899S3;
-	Mon, 23 Nov 2026 09:25:46 +0800 (CST)
-Received: from [127.0.0.1] (unknown [127.0.0.1])
-	by front1 (Coremail) with SMTP id qMiowJCxNs13lANrO782AA--.30056S2;
-	Mon, 23 Nov 2026 09:18:49 +0800 (CST)
-Subject: Re: [PATCH v2 42/42] ACPICA: acpica: Fix typo in the IOVT_IOMMU table
- definitions
-To: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
- Huacai Chen <chenhuacai@kernel.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Pawel Chmielewski <pawel.chmielewski@intel.com>
-Cc: linux-acpi@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, acpica-devel@lists.linux.dev
-References: <cover.1795194329.git.maciej.wieczor-retman@intel.com>
- <e20e813ff50db584712f86edd2bb8c672ad755e3.1795194329.git.maciej.wieczor-retman@intel.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <38cd8d64-8e08-4eab-78d3-3775b0eb93cc@loongson.cn>
-Date: Mon, 23 Nov 2026 09:20:00 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from loongson.cn (unknown [123.138.236.242])
+	by gateway (Coremail) with SMTP id _____8Cx+9FxwwNrDh0iAA--.31822S3;
+	Mon, 23 Nov 2026 12:39:13 +0800 (CST)
+Received: from linux.localdomain (unknown [123.138.236.242])
+	by front1 (Coremail) with SMTP id qMiowJCxPs9rwwNra8s2AA--.43419S3;
+	Mon, 23 Nov 2026 12:39:12 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Hengqi Chen <hengqi.chen@gmail.com>
+Cc: loongarch@lists.linux.dev,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1 1/4] LoongArch: BPF: Optimize BPF_CALL control flow
+Date: Mon, 23 Nov 2026 12:39:04 +0800
+Message-ID: <20261123043907.20225-2-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20261123043907.20225-1-yangtiezhu@loongson.cn>
+References: <20261123043907.20225-1-yangtiezhu@loongson.cn>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -58,89 +55,60 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-In-Reply-To: <e20e813ff50db584712f86edd2bb8c672ad755e3.1795194329.git.maciej.wieczor-retman@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxNs13lANrO782AA--.30056S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7CF18CFW7GrWDKr4xGFWxAFc_yoW8Kw48pr
-	sF9F47KF4xJrs7GF18A3sF9F1rZa95KFy2gr43Kr9F9F1qkr15tayayFWYyFn8GFWkuas3
-	tFyUtr1rJF4jqwcCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:qMiowJCxPs9rwwNra8s2AA--.43419S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7WFyrtr4xKFyxJw1xGF43twc_yoW8XrWkpr
+	n8C3Z5Cr48Wa4jgF1kta97Wr1SyF4DWF17ua42y3yxA3ZIqw1fWa4UKw1aka90yw1rJr4x
+	Xrs0yF1j9a1DCwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Fb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
-	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
-	AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI
-	42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
-	IF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2
-	KfnxnUUI43ZEXa7IU8fOz7UUUUU==
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zwZ7UUUUU==
 
-Hi Maciej,
+Separate BPF_PSEUDO_CALL handling into its own execution path by
+emitting the jump instruction and breaking early. This eliminates
+the need for a redundant 'insn->src_reg != BPF_PSEUDO_CALL' check
+at the end of the main BPF_CALL case.
 
-Thanks for the fix.
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/loongarch/net/bpf_jit.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Reviewed-by: Bibo Mao <maobibo@loongson.cn>
-
-On 2026/11/21 上午1:19, Maciej Wieczor-Retman wrote:
-> Change MAGAGE to MANAGE in ACPI_IOVT_IOMMU_MAGAGE_BY_SEGMENT.
-> 
-> Link: https://github.com/acpica/acpica/commit/dee9a9e3c797
-> Signed-off-by: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-> ---
->   drivers/acpi/loongarch/iovt.c | 6 +++---
->   include/acpi/actbl2.h         | 2 +-
->   2 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/acpi/loongarch/iovt.c b/drivers/acpi/loongarch/iovt.c
-> index 1e97669eaeea..e891170d9b8b 100644
-> --- a/drivers/acpi/loongarch/iovt.c
-> +++ b/drivers/acpi/loongarch/iovt.c
-> @@ -42,7 +42,7 @@ static void __init iovt_enable_acs(struct acpi_iovt_iommu *iommu)
->   
->   	/* IOMMU V1 only supports PCI device management */
->   	if ((iommu->header.type == ACPI_IOVT_IOMMU_V1) ||
-> -	    (iommu->flags & (ACPI_IOVT_IOMMU_PCI_DEVICE | ACPI_IOVT_IOMMU_MAGAGE_BY_SEGMENT))) {
-> +	    (iommu->flags & (ACPI_IOVT_IOMMU_PCI_DEVICE | ACPI_IOVT_IOMMU_MANAGE_BY_SEGMENT))) {
->   		pci_request_acs();
->   		acs_enabled = true;
->   	}
-> @@ -151,7 +151,7 @@ static int __init iovt_add_iommu(struct acpi_iovt_iommu *iommu)
->   	}
->   
->   	/* All devices in the segment are managed by this IOMMU */
-> -	if (np->flag & ACPI_IOVT_IOMMU_MAGAGE_BY_SEGMENT)
-> +	if (np->flag & ACPI_IOVT_IOMMU_MANAGE_BY_SEGMENT)
->   		goto skip;
->   
->   	if (iovt_validate_entries(iommu) < 0) {
-> @@ -280,7 +280,7 @@ static int iovt_pci_iommu_init(struct pci_dev *pdev, u16 dev_id, void *data)
->   		if (dev_id == np->devid)
->   			return -EINVAL;
->   
-> -		if (np->flag & ACPI_IOVT_IOMMU_MAGAGE_BY_SEGMENT)
-> +		if (np->flag & ACPI_IOVT_IOMMU_MANAGE_BY_SEGMENT)
->   			goto found;
->   
->   		list_for_each_entry(entry, &np->ep_list, list) {
-> diff --git a/include/acpi/actbl2.h b/include/acpi/actbl2.h
-> index 1dafb2a71368..fe767fcf5726 100644
-> --- a/include/acpi/actbl2.h
-> +++ b/include/acpi/actbl2.h
-> @@ -928,7 +928,7 @@ struct acpi_iovt_iommu {
->   /* Masks for Flags field above */
->   #define ACPI_IOVT_IOMMU_PCI_DEVICE		(1<<0)
->   #define ACPI_IOVT_IOMMU_PXM_VALID		(1<<1)
-> -#define ACPI_IOVT_IOMMU_MAGAGE_BY_SEGMENT	(1<<2)
-> +#define ACPI_IOVT_IOMMU_MANAGE_BY_SEGMENT	(1<<2)
->   #define ACPI_IOVT_IOMMU_HW_CAP_SUPPORT		(1<<3)
->   #define ACPI_IOVT_IOMMU_MSI_INT_BYPASS		(1<<4)
->   
-> 
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index d36891db1179..873b2b146f02 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -1219,6 +1219,9 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 		if (insn->src_reg == BPF_PSEUDO_CALL) {
+ 			tcc_ptr_off = BPF_TAIL_CALL_CNT_PTR_STACK_OFF(ctx->stack_size);
+ 			emit_insn(ctx, ldd, REG_TCC, LOONGARCH_GPR_SP, tcc_ptr_off);
++			move_addr(ctx, t1, func_addr);
++			emit_insn(ctx, jirl, LOONGARCH_GPR_RA, t1, 0);
++			break;
+ 		}
+ 
+ 		if (insn->src_reg == BPF_PSEUDO_KFUNC_CALL) {
+@@ -1245,8 +1248,7 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 		 * convention with the argument and return value in BPF_REG_AX,
+ 		 * so skip moving the C return value into BPF_REG_0.
+ 		 */
+-		if (insn->src_reg != BPF_PSEUDO_CALL &&
+-		    func_addr != (u64)arch_bpf_timed_may_goto)
++		if (func_addr != (u64)arch_bpf_timed_may_goto)
+ 			move_reg(ctx, regmap[BPF_REG_0], LOONGARCH_GPR_A0);
+ 
+ 		break;
+-- 
+2.42.0
 
