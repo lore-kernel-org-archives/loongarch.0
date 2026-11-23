@@ -1,82 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.179
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.44
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795428443;
-	b=fN511uhdiOuYUzwKY33t8aNuCQrntim0mwgeHyf+nr5+MtI4zYES17I+hENQvDpAJYsv
-	 FuI/snGy73i5CUXnUUyo7qaB7LZ1WcToz0zbXmRiCW1n+a6TmSBrCtTr9rCoB7AIk/flu
-	 miZLeMtFSChe6Usnrha6Puvks8QBl6+9ngSuPb2jkx4L7KrBQEITyiBPCkW1GNNS7OO1I
-	 IF+JKEU47Bbhd0RZCT3ETywtuxxFn/K20hn71PSD+k0h2u1zSXIVGzZsqWFOvhpYdYjqy
-	 XK70anWgE2ZOyhjGgBugY5LyTtf/O5Ub3QNqQSaprJJ7UptLmiLdRTI27A4MUPl764g==
+	t=1795428452;
+	b=qSDLZPn94YgvgpmKua7nehyVKCd4o2jvTDT7NV1Ke+rPtbZ+6uDnEJw8hTKnYxW/pWB0
+	 Q9Cxq+uFiDXJ6aSsXphLO+HP4sO/Cv4gC1JWDhpIu5bGUz+w9izZTN/Ksaxl6kM7PJpEE
+	 Q6eFWuKWEVx+VijaolFrEvLvVnnGP9G4djvtrBxZDT4s90pgvSZJGJEwCG3Di6Z/qO5Fq
+	 25PGT0JBgUKNXAaf1cRX2ZjMVJb9KUHPq+zSm6uMNPCwbDSpMH4nyD2AL9ZBCH3ICNH3y
+	 lCMt0pijz3b4KbhTEzmWm4zMDQZKb5g24Mti8zi7LlRjBv42ilR0RGubcNgQoiPiWqg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795428443;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795428452;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=ZCV7rj7O3YjHOcFzGHR54dLdeKT96fbmxzbKfW4RNF8=;
-	b=pUSFhc/bkkxJrKZBUkskPowAYXxdyju8fM63qREQLVMXYadS4eq/weW+mDf9SPp7k8zf
-	 gNviukaLeQb8MlUB10C39CwvHakTbwTmspVKbf6mjbN0HeNB1jcPUbm0z4O5nCfoZPZRC
-	 yaR9Y/l00cNNuLlWS0tGdKexNpM18cstcrY31kx55Twsetfgb+bbywLivwaZITzQJ+aFC
-	 /5He1olZink82dkwSUEIaJVxElzKiuh8mNygyBB0+S0rM2L5KJ1fseA9WJWcLaj/8qEDF
-	 hzw4WBb08rHaM30EExXjOe+v6W4fAhP439BePyY/lVEbJyaItYNYwvZ+89JKyYid/EA==
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=YNXr1cJRDxjFRtGHo1Yw8wGLJl2y+mtXfW9P9FUgeCE=;
+	b=JXG79rHbcvE/V536hPheytEZGiBI6bJIy32aS9lPMZ+29joyLDeZkvnTZ4ptavynpFm3
+	 3o5oAjvPHh8sQh1BYzALNM9NIK/AcNki50Btg1RjMfFp+a1qBkKGGqAj2XdB21FWbhujq
+	 MX6biI2H9HXiKJrwPg5yAjRrG7AEW8M7ONxl9z64er/yEkjcB9JgpgvMJpKa1YEG0BaFE
+	 /snAjz3ENbH4T8m1c/zj8Qllxnuy+Ld6UQ6jdFuxN1l0X8Bg0v/2R+bsDgRrPv/3ykV9K
+	 LIrzgugaSXCd5yDA2uxd/K2yUU22BBdbeFbgMKjk8/QjdYYTztyJVtKFPdRa/r5ksKg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=05J8LrBz;
-	arc=none smtp.remote-ip=74.125.82.179
-Received: from mail-dy1-f179.google.com (mail-dy1-f179.google.com [74.125.82.179])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=vLnWJXsC;
+	arc=none smtp.remote-ip=74.125.82.44
+Received: from mail-dl1-f44.google.com (mail-dl1-f44.google.com [74.125.82.44])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C39A5606A31F
-	for <loongarch@lists.linux.dev>; Mon, 23 Nov 2026 10:07:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C39A5606A31F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B6B606A31A
+	for <loongarch@lists.linux.dev>; Mon, 23 Nov 2026 10:07:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E9B6B606A31A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=05J8LrBz
-Received: by mail-dy1-f179.google.com with SMTP id 5a478bee46e88-3282db206d3so9325991eec.0
-        for <loongarch@lists.linux.dev>; Mon, 23 Nov 2026 02:07:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=vLnWJXsC
+Received: by mail-dl1-f44.google.com with SMTP id a92af1059eb24-1ae58d17cd9so2869791c88.1
+        for <loongarch@lists.linux.dev>; Mon, 23 Nov 2026 02:07:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795428442; x=1796033242; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=ZCV7rj7O3YjHOcFzGHR54dLdeKT96fbmxzbKfW4RNF8=;
-        b=05J8LrBz9rPVW+q00PRldk2dSwepgiaEeXyQn+h0VnaKiA8CznP6kwyIYBNpnD7xy1
-         PF2vUx7Uz62Xyou0ovO84XEJBsWwuKDSsHbUyc6TOnbT6rSC1XccBpCc2NE81Q/t0Jjz
-         fiJVVxw/k/GqxqvDkD9NExCc2s87rvFGJ6Hlqg7iX9DKURkP/F4XSHJ6ScMmR/uTHAm9
-         U1PyAPRMyom3FBrmHEryfOCgeZglcMrcKV46oRYvfeUFgZ3yZ5Py0epF4HXHHPaChn1Q
-         LNrYAkaLdKEBguC5p/sMx1GiO4CSrQBhM+3F9Stzxo5mt4aAOQMAxts/SDOFlFhdaYIs
-         6rQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795428442; x=1796033242;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20260707; t=1795428451; x=1796033251; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=ZCV7rj7O3YjHOcFzGHR54dLdeKT96fbmxzbKfW4RNF8=;
-        b=KDwUOGRFIzjeTZ2w+uSQQSqZn9Yf9Ua0zPQ4qt8MG5O65XfTqJ2E/BwHuy/9zeG7XR
-         VBOYYCVXxzsCUtQeHEuAhGtYtOqLvO/X/WzRkE9qH2r1DQYv97g7NusS4QHmH7n+KptO
-         XjCRCoergcU35zWZs4/9Aeza7mNCdRtkU/J0V476Blv9jlw+EzAVpJB38CkxK54Y+NJ3
-         MjwrI0R9P/un2vyFN9YyDTsUz9oTCMASlmC3SvM4Uiaz2oFEaTOQtKl29PIXDfo3hsHO
-         +mqZ38598HgeWbJ8suWYfw6XRljyQR2Riux6gEaqF3rp0+Q7B/3xMl9uDGtMZH+Mgq0p
-         dSZQ==
-X-Forwarded-Encrypted: i=1; AL+hErEzfKgGQY/OD4EdNaglFYfZAhKzOEpmRvtjPnKIIfxJDyU1X0YRY/4B1oX4a7jA9SIUWuJ82PI5M48=@lists.linux.dev
-X-Gm-Message-State: APuU4Z9RUWetBVw0WsCEtKaDRShR04vy75QWY8JlhR6S+N3AzxF6mvx0
-	qmtVEb4K65zGKOcaIUc8ljRps0ydx3C8xDvC2jmznGpq4wFxKPSNvGqB
-X-Gm-Gg: AZFdTZcYy74pZcvhqmHowL16cckwqMZlGbsBjxDeBGn+FQun8ucC582LdT2/+69kswZ
-	8hqITnQIo2r2Xj3C3JbKEGgE6CgIJsMCb3ZfRqDBgbR03znFq95hiO4Sf4QDLPdYAyxGqGjer+M
-	HiivRledLuivwBhYWGgSlIqRK17fsJ8K8TlcDfnK4i66Vcc0f79PL8cVpN8LGgoXa4Fwj9MLJAc
-	L/JcD0xZFVRYBCvOz7n99nZ/r/056WZRxFzSnsud6pHrYb8qhcngk6ov5/jieIjEe4jMvH7mGmZ
-	k5FHHNBEEFRuBlRv5juymAZ4BfmZ2gBaZfwGH18GJBQJt+PHvvU1NK8+gC4zfX0WtAvxud3+s3W
-	9k905fDJv1wHmDw/SGJIEMRLTWiAsRyYzLL5FdvM2g8BI5k7BCaXDLvGCxbHjGEZhPjt/Imj2x0
-	k65cAe7rz0c0T9424GzD9hj8nKj25CBur/0fmg6Z2OPLpMxKajorG75yEHvj32QWEiYgziyjBk/
-	ICDw+7B822tYNq9AFjDNYoQBBJbcrVhcTpA1e7F4RSTbnQnPYCFGkW7WEzToTmnWwRx2Dc2nMUM
-	+ARA0W/b92iiD7KQW7e3Co+O9zDWbxBmp0VTEH1AHg==
-X-Received: by 2002:a05:7300:f498:b0:386:a716:916b with SMTP id 5a478bee46e88-386a7169544mr5039152eec.31.1795428441777;
-        Mon, 23 Nov 2026 02:07:21 -0800 (PST)
+        bh=YNXr1cJRDxjFRtGHo1Yw8wGLJl2y+mtXfW9P9FUgeCE=;
+        b=vLnWJXsCNISrtigDKVDYfqxJ+fvpnpdYnRxJGzoVwtTa2KX0oWfug8ueCi3ieR2Or+
+         SsbcAF8ug7+SesJMFf0tnS5l03T3vk1ZphSPHu4BuaJyGR6vOTATbsRllr4IaYuMMlW5
+         iHwFDznyFJWSjUmEcuifTE13Xm5utX9gwpfuXgip0gKCzZvO3/oK8WMb4F3QXL53Y1IP
+         oa6nziTV0U72P91iggMO+e74ko+zwj3jGFSs4nJUqUDhWdfUEEQCtaE3o6KtYMHI6zNQ
+         ietwQzyc295pq1wKPAYBXE5g2cOK4CsyB5kMDqgdCreMMKN25rkemrXFVj2mAOpVeubX
+         ht6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795428451; x=1796033251;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=YNXr1cJRDxjFRtGHo1Yw8wGLJl2y+mtXfW9P9FUgeCE=;
+        b=EZ+9ryPPC06ozPmn8wnHuMJB//vlr2EHlQfR3TRQQytjD9rPvrQmbkcgxQ1nfxGL34
+         vEMMoWwdcveliKRErIFwSxavmiKbgRBN8rpbIFnhNKXa0xyzh1iuZJ2DXKrgkrd//5RH
+         vG8xv47rqWKxM+LjMnIj3TAnHYaWnIQ0B22/zjSF78yu6Skx15R+kvbLN33QbChd4q8k
+         2czTiI5pq7xsHpBRCHsw1VLeEs4WxadLVYRXasvLvZ+64hgc91K8yeRaK9nLKdgAhuCr
+         H9XN/XpFaFscdhAlE1DyhfsSToVgPL7sb9Bnrq3VXISKzcP2cFCow9mTFyFJdqgQ5n7B
+         rYjA==
+X-Forwarded-Encrypted: i=1; AL+hErE6JVaZBpDZXmbj8SCs1D3NpQQXfHtvJ8Np7XRoCZB8fx+rbRTr8eGxEEm5VHwJSqKEEXs7sZFcUPw=@lists.linux.dev
+X-Gm-Message-State: APuU4Z+O3SBAy1jpfVT10HQc5gBrbKIkKGO6UPBfaOL+BCTvRgPOzsHS
+	hZ8QB8AhgpOSexJgtrmLvcJyZFLWlKAAZIxcdrk0ufBfxWgZapPI3OlW
+X-Gm-Gg: AZFdTZeuV4kiDEMTkSvHruzMUWcpbY4BXB3mdDwRN5OKErV8MJ8X015sY8PAr7fm3ey
+	2QfxmtkqnDHtyHoh2Q62JK7q8viJD5eSHbtw8AjLHZJgpzg/hgZLZk9aHLX5epjg4Ioz5Jlp8Tq
+	kzuZ6Nr1V+5oV8K4IcRaxXO4562TT/ajd9Id3/4mlfHlfecxQBvGJyvBNlz8aDOWCPfpyYdnw5f
+	kR7xzqMpvfK99ilEiDijxYaTpFcm8Kl+HBzC20xpog8QF+bZS4pGpzjdncyhHBpDpBaYoUsgoK3
+	I6o7Z9Va1qjG4zJLXJn5Jl6v61Ji2MyvyHYmDYVRLU8+phuyvnKrgf7qCxdmPqSHGS/ORzgxxJM
+	oHVqBSNMsms8pidB/mXkFJVVzT92nINY8+4BtgfoaOTTML218xwoyw1k/dmwiUztwikjFktWh1U
+	eLlKejHNe9a2ntdnLiAbrulpCcYNiQCxRdo8On8mz/yF2rNaT06PsU7yGRKPx7Y7Mm+FQSf2BIu
+	e2Y50Egt++JXz81mxdV+ydqVH+xor8u8mU+r68r4/G2KvH1rr1QfbdUF9/wP6UhpDd5ZHzJFcdw
+	uoHV53H+nQD7mDW2YqtCckzdMwElfnmxlZVym7/MaA==
+X-Received: by 2002:a05:7022:ea8d:b0:1ae:59d6:91d7 with SMTP id a92af1059eb24-1b5568eebafmr10409997c88.40.1795428450986;
+        Mon, 23 Nov 2026 02:07:30 -0800 (PST)
 Received: from 10-86-27-207.ban-spse ([165.204.217.251])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-385672c6f31sm34145673eec.15.2026.11.23.02.07.17
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-385677c0c1dsm37650054eec.21.2026.11.23.02.07.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Nov 2026 02:07:21 -0800 (PST)
+        Mon, 23 Nov 2026 02:07:30 -0800 (PST)
 From: Gokul K <gokul02k@gmail.com>
 To: Tianrui Zhao <zhaotianrui@loongson.cn>,
 	Bibo Mao <maobibo@loongson.cn>,
@@ -89,10 +90,12 @@ To: Tianrui Zhao <zhaotianrui@loongson.cn>,
 Cc: Sean Christopherson <seanjc@google.com>,
 	Song Gao <gaosong@loongson.cn>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] KVM: LoongArch: selftests: MAINTAINERS coverage and a VM leak
-Date: Mon, 23 Nov 2026 15:36:59 +0530
-Message-ID: <20261123100701.1679376-1-gokul02k@gmail.com>
+Subject: [PATCH 1/2] MAINTAINERS: Add the LoongArch KVM selftests directory
+Date: Mon, 23 Nov 2026 15:37:00 +0530
+Message-ID: <20261123100701.1679376-2-gokul02k@gmail.com>
 X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20261123100701.1679376-1-gokul02k@gmail.com>
+References: <20261123100701.1679376-1-gokul02k@gmail.com>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -104,35 +107,32 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Two small fixes to the LoongArch KVM selftests. Patch 2 frees the VM on
-the PMU test's skip path. Patch 1 came out of routing it:
-get_maintainer.pl did not name the LoongArch KVM maintainers for
-tools/testing/selftests/kvm/loongarch/, because the MAINTAINERS entry
-does not cover that directory, so this series would otherwise have
-gone to Paolo, Sean and Shuah only.
+The KVM/LoongArch entry covers tools/testing/selftests/kvm/*/loongarch/
+and lib/loongarch/, but not tools/testing/selftests/kvm/loongarch/,
+where the tests themselves live. The */loongarch/ pattern needs a
+directory between kvm/ and loongarch/, so it does not match it.
 
-Based on loongarch-kvm in linux-loongson.git.
+As a result get_maintainer.pl omits the LoongArch KVM maintainers and
+loongarch@lists.linux.dev for patches to those tests. arm64, riscv, s390
+and x86 each list both forms.
 
-Patch 2's hunk sits next to the one in "KVM: selftests: Convert comma
-to semicolon" [1], which is not applied yet. They do not overlap and
-apply in either order.
+Signed-off-by: Gokul K <gokul02k@gmail.com>
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-Compile-tested only. Patch 2 builds: tools/testing/selftests/kvm/loongarch/
-pmu_test links for loongarch64 with a GCC 15.2.1 cross compiler, using
-glibc from Debian's loong64 port as the sysroot. The binary was not run.
-Patch 2 changes the PMU-not-enabled skip path, which only runs on a
-LoongArch host whose VM config leaves the PMU off.
-
-[1] https://lore.kernel.org/all/20260428053204.1018608-1-nichen@iscas.ac.cn/
-
-Gokul K (2):
-  MAINTAINERS: Add the LoongArch KVM selftests directory
-  KVM: LoongArch: selftests: Free the VM when the PMU test skips
-
- MAINTAINERS                                      | 1 +
- tools/testing/selftests/kvm/loongarch/pmu_test.c | 3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f53047aa8d3c..fed2245b979f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14327,6 +14327,7 @@ F:	arch/loongarch/include/uapi/asm/kvm*
+ F:	arch/loongarch/kvm/
+ F:	tools/testing/selftests/kvm/*/loongarch/
+ F:	tools/testing/selftests/kvm/lib/loongarch/
++F:	tools/testing/selftests/kvm/loongarch/
+ 
+ KERNEL VIRTUAL MACHINE FOR MIPS (KVM/mips)
+ M:	Huacai Chen <chenhuacai@kernel.org>
 -- 
 2.54.0
 
