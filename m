@@ -1,110 +1,72 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=103.168.172.148
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795443438;
-	b=Kr/GpEm4F7kKptOu7/imB81DzeDYXSliC1V+t0jGEAg3o7jwcMtt7s6tLdo9z2D4TGo4
-	 qYcciRkgsmaleM4hOWeDOoSaaIKaqF7H1xrQbGI6GGB2mv2DKVw3Dx5/++lKrrQn+5KNw
-	 2dIN9XEGWC0jqj+ebrHlTv9uot0mBqvn5Qz7W4wnCCG/curUoZixUB53/3bn67XbSYks3
-	 yipLoa/z0Lf87aLID2eyC+Iq7aQACgZPqYYprT6uHDdWrephg9UuAYfq9D6I3PbCOac85
-	 +nbjdNd2wrR2+44Bp4tTSEPXfVP/E6DfYOHmBsZBpnQ72gS6hLJ2VEnlJ3RGr/aJapQ==
+	t=1795445588;
+	b=ymiEAU2+Z0H8NBrtAYHKhu0HuMMkXkWE661CWu20+fAL7R+ZEL8rTiotBAPGmTNTXi6f
+	 IKRjcB86SGMOw48HpV1VlAoBIFMjQHBaiVym7m28B636+kxfXZLUqZHJkjZmNvWcfItR7
+	 j/w8iHdb6lI3aiUElf2ThRaPDExxlGdCiJHb2DlCthm7PcEbSnHF24V0lRF6DdNFcuUc8
+	 0TeWVxmNa0Hp9BISwtrujo/51g0zshpgKdU7vYEzwkMtdIagN1Jtzcsr815w3lG+kmS1/
+	 q3R4TU/zl6OE3/IzmU6u7nf79Kinklj2srvqu38mQbeXSmPTkwLoCHNfQFyJBQZFtFQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795443438;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
-	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
-	 X-ME-Sender:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
-	 MIME-Version:X-ThreadId:Date:From:To:Cc:Message-Id:In-Reply-To:
-	 References:Subject:Content-Type:Content-Transfer-Encoding;
-	bh=BHJ91NJtNYQ6/J6+FaRGzznho5yPOY/r3tuo2Sshg1o=;
-	b=gKMw+nn+d0llQPAW/NHwu+zPsgHxWFHWisKDc7kDVSp6sQv7lFXlxheIE8QoDevkmQDF
-	 lgzwNBTGfofdRZ0c+RRf4udqIJghm+ltn8Dy5J76tc8LZWIdVUEvYMOexid0fuTyRWKjY
-	 +8IfXsgl4qg5KLrYI7aw23i5A/2uPo59YSbAAIgIJmwNq86a3ByzRLZZN36/MJnbIik3b
-	 HbJAjmD6Fe4zXE+I4AKskakH3FLejaLfCxTGYdr7VflSuW9f3e94MpPyc1+nPUpEIKZRw
-	 iqLdhJ7c24r/uhkunQ8zI1QnTMgQKlXGyjndPC1zj2hXA7pRMgOwjzsrvK3Hb442UwQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795445588;
+	h=Received:DKIM-Signature:Received:Received:X-ME-Sender:
+	 X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
+	 MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type:Content-Transfer-Encoding;
+	bh=Y3UAiBv26yNrSECYQZNbEZMUMcL7HPyi8uxH4eCNkJY=;
+	b=aQBOd1wu4EKKSpkbNZXgCpjJIMwXmfZIY9TKgVjxfLYitRLKOsvqRRyuUgnMp6swSTzG
+	 Be09yPHbAtqBnDYHd7jlg/vI1LZjalJHiwqF4DG0SrMstf8Jj14GVyVFfQYIpOYp9Q2PL
+	 HHwx29i03QUveLlttKKwBd7SNpcyFgKuNlCzy0zkxINfApiIfgh+aCeRQ7GkbWaxVMhnx
+	 YLRNs9WKg8+Czzi0FQ9adzljxURZiqZJ55VGTlvhR0O+CZ62U3+UwzTJWEvGmyu29vRC7
+	 SFSgaljW6DX40Y5u5NPJZC6651ZAY05tObyetl9sJrrN2UqAxBa7D7IvLMgrMmBMLAw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=arndb.de;
-	spf=pass smtp.mailfrom=arndb.de;
-	dkim=pass header.d=arndb.de header.i=@arndb.de header.a=rsa-sha256 header.s=fm2 header.b=cPLj8Yt9;
-	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=hC6LIkJb;
-	arc=none smtp.remote-ip=103.168.172.148
-Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mkdW4pbn;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A28B606A31A
-	for <loongarch@lists.linux.dev>; Mon, 23 Nov 2026 14:17:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6A28B606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88A7606A31E
+	for <loongarch@lists.linux.dev>; Mon, 23 Nov 2026 14:53:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=arndb.de header.i=@arndb.de header.a=rsa-sha256 header.s=fm2 header.b=cPLj8Yt9;
-	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=hC6LIkJb
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mkdW4pbn
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 389E41F000CA;
+	Mon, 23 Nov 2026 14:53:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795445588;
+	bh=Y3UAiBv26yNrSECYQZNbEZMUMcL7HPyi8uxH4eCNkJY=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject;
+	b=mkdW4pbntZ3BT3VmzWq3IAQ9I6JLBaAuqK1JsITmIrsL5eTXH6+RYBc9WniSGP1gQ
+	 qcYTZcmFsi64NH7avowVwCL/i2RDN+w2V5HQNVgxEpUuRvcNJH5CufqxPKXOoHIStH
+	 NfmSgcAe0NuUu2eKESpxSHr0yH4fOjwMx5G8yGWgiIiYFTlrwAFOUjUVYybMBZSAM0
+	 BnJRkNmBXhXcsmYWCGIqD9k30BZf5XwYcxD/sRjdFbzFObRBkkr8gO6HtMKhBdeYI7
+	 6sUrC9BXgOpzdItXoCrGKH6EMON4NhYPBkVWvB7pn2Jcpe9/W4yTp5bSMAvDaQTUpg
+	 M5YnsxRFu27pg==
 Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
-	by mailfout.phl.internal (Postfix) with ESMTP id 49BA6EC09E0
-	for <loongarch@lists.linux.dev>; Mon, 23 Nov 2026 09:17:16 -0500 (EST)
-Received: from ams-imap-03 ([10.64.2.23])
-  by ams-compute-02.internal (MEProxy); Mon, 23 Nov 2026 09:17:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1795443431;
-	 x=1795529831; bh=BHJ91NJtNYQ6/J6+FaRGzznho5yPOY/r3tuo2Sshg1o=; b=
-	cPLj8Yt9KDzFT9oOBUn+/GuSsf5mynsPFU3peaGSzzjdcM3xPq2nCeDkNchhwU0y
-	agEnTSgyBbGQ/yirLqdAtbec6K/eMPAPx84L678ABrYcb+wpXySl2GHRp4LB9WLN
-	CFo2ebu58MUl9iNZ9Ieq9B5w0n8KUsPK5DwUz9m8y9EZ7/GezgGomuFh9mdki4r/
-	+BIiXtKtzOGG5D+kuw3mpodMWyr20zPfOAhpC9pxJqrf1XcU6K399GtXsEQMc/8R
-	39qj2UCf7kgamdATa+Pl6YH54Dj6cd0VQx4T8GjJ0eSyaIyzVoR7OVUL9GzpK8m7
-	+ruoO3v7zMRO6WezXgniMQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1795443431; x=
-	1795529831; bh=BHJ91NJtNYQ6/J6+FaRGzznho5yPOY/r3tuo2Sshg1o=; b=h
-	C6LIkJbKj92f5S7k/JXfyeaid1Af9ZzNDUOfhQPFxJP9BRVK8CoFu3txAUBGFSdE
-	kDtEOIgPiZzvlCZbCv4YLx/KipUoHlpFtABBaFDzTO/Eo99zurKqUHK11ZRFH3nk
-	zrK7lUHYw/5sxSK66fxI2EBGUdhZg116RSbILC1OuB62zbnw2sD4sW3+a4PBWhw+
-	vIkMNp+LX1SFD5zMvRTmes4VjgpqWOOFse8Womzu4lb2d/5udJ8V95DWmA0O1EvJ
-	RGzmtn81sr/9oZLy7H3BztHTIli/UeDdJz4S0o8+2QlJ2kzB0w3ffJ58MILv/tOp
-	VBsPDLa1+OUIFoA4NwwtQ==
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
-	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
-	action=sign d=arndb.de a=rsa-sha256;
-DKIM2-Signature: i=1; m=1; t=1795443431; d=arndb.de;
-	mf=PGFybmRAYXJuZGIuZGU+;
-	rt=PGxvb25nYXJjaEBsaXN0cy5saW51eC5kZXY+;
-	s=fm2:rsa-sha256:C510qsFNgsFTKzck/Fyx2UcFZpIMuzzRFEKgz8bRQwUJccG
-	WSuVZwQ2pkQRiXsPtYB0O/jpSosn4KHdn2eyXoOSaUv+hzH7V8jqp7TmKGaDVoPT
-	0VOV9+EoBpXgEDi8SkAyKg+1q4XhZNIUYokIPUJCXcXswDaJ1xVE/uF5BsaMg1Wq
-	+C+zUIaU1/ZAmnE2I2ywEIl09YIwsiBON91o9RFH9STsVDmw8f3EvrBWaMYDi5i9
-	OkVsEIkUSMNrN8io4/KPTRp8KdVc7I7n0A0DtGmI4lGcELXxopZ54EwWzmNAUQWo
-	DTcA9fSxEDIrYx7dCTBakc+pn6wkHkhMFcvMR8A==;
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
-	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
-	action=mi-m=1; hc=12;
-	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
-	from,in-reply-to,message-id,mime-version,references,subject,to;
-Message-Instance: m=1; h=sha256:Sap56MIkcyZT8r4cYNPG+lEt8q7zj6cm/hR6DX/YHXU=:rDsMBjpfa65jK66igtyHf1M93PmlfJObl6/94lUiVSI=;
-X-ME-Sender: <xms:4koEa8b6jWHk9Km-gWsvkjXKBe9FOycLSAoQHdX1x28WgylltvrlXg>
-    <xme:4koEayN-2NZ5tuVMTv_F6M4wNcDyjmgtjmjdAzvHywIA7KHMufFQZrYw4q170T5Th
-    fPdBGfTNlodLlNUN9knmz7mxDJr9FP9Hc2uPOv3pg8T14AiyewMGhM>
-X-ME-Proxy-Cause: dmFkZTGFrwq2MF5SSuOMe3naqs9tbtMAmc3XEG2p+PrgD+xfiVSS77ldCceRFMgHOXXvSL
-    Ging+R6VT6K3yz4OUeCdmIETXjNj7XXI0r9Tg2543OHjiuaKhMh+yVJAoB6OkAWbwGP/U3
-    JowxnSxhNhDyTsBNjiM7LlqkLGWpphbuTeJ0WjErvJ9KhK0fJtLolaHFC6Kw2talXF2YGF
-    JN7yWyVcYnsY66wGn8uoBc1Op9fn/HtafFpC/Ha3Z7ng5ziTGTERGiQYQq5K4ZdS/5JuDE
-    HH1gfdWjYiM0bW96wZfgClnWGF2XIAu99qwAHGam6Iwuv/kahBWnYmwWVFrVPNzzZ/ahP5
-    U1UkBFU5ZxOctbFZFvYR87OCQ9D85IrFkHXF9AU7aFYWG6vLW8lI9uDg5E561v2/5hKHQA
-    sjQFn5A8NcDFUKKIz/Gj2N6XcZVOTlbQkDMhl7pFKmJR0nTwtc/ea8J3ozLffLR/0wUUbB
-    iamGkspUsbgem4niF9wBtKb8Aybdc10XaTbLUSATly8dgGeAoj4vWgf2FM9ltEDrHvDjNY
-    51emBC5k6bV+SyYpJacMFkokFxMkxKPk9r+T99bzSjJsfdRVRAC/r+2KM3FJJSK6C1f8wW
-    I+V82FhA+/RpOowStt3CO/53UAvaoCC1+Mr9HKqAkD73+MJL10fMk/SelFXQ
-X-ME-Proxy: <xmx:5UoEa7zTEzd5mDVuAJ0khzXfAhl-NnyAwD2CijXl1cunNEN88JhvqQ>
-    <xmx:5UoEa4LmzfnQ4K0KUaYuA7sCKQ4bXebQmmhpsTBdhtm50HSfa0pUZw>
-    <xmx:5UoEa9456MjeyYgj744opH-waU6skY_xuQzxaCDvT7bwukaslpL8Pw>
-    <xmx:5UoEa2xmieeiTKUZnDvuF-Yhydil8f6ZkK_qEXx5P2wofodg1yRZbQ>
-    <xmx:50oEa5l_6AC-8c6ZgGJR10cedMu4FgnH1XmeVBS7jPfPPs2PoWN-CFom>
-Feedback-ID: i56a14606:Fastmail
+	by mailfauth.ams.internal (Postfix) with ESMTP id 6B165198003A;
+	Mon, 23 Nov 2026 09:53:05 -0500 (EST)
+Received: from ams-imap-11 ([10.64.2.31])
+  by ams-compute-02.internal (MEProxy); Mon, 23 Nov 2026 09:53:05 -0500
+X-ME-Sender: <xms:TlMEa2ozJj8ItmpzSXPdFsXFslchd8T3j3fPzg-uOfi_kMOXjfwIpA>
+    <xme:TlMEa_fzu2LIdaY8l2JJT91ZJe7IEdJM_rQR0fcjT2lPLxTdVg2-YcAdBydN4uE5p
+    CAdo9I1MlRiJ4gdrGMfq38hCfTXLEH6Siz825g3K44pS-r2NHET6Af_>
+X-ME-Proxy-Cause: dmFkZTEewuPfbqgwdpsEvLIHAOywqATfEwpQe1EWawCpTqgNDsOOIqXhp/6WgJ6VsQ5cgH
+    uDUcfDchAzO7ZxVv7hOpvM1uuAkGmoa05dw80LsEIKBF/6sp6Ffs7JF6VNRdIm/JlonDR7
+    U0g+3XQLpva2S7VXNe6V64ro+op8FWKdp4TeisIWYhIFy9/DGW/fQqaaoluStg31otRUCO
+    GVRB3uvq6XKpKxBdU8FwsGDgwIbK9jr8LmbfZn9bWIhYSwkYic8fS58JYDnRJo6JeUxnwz
+    u+4Zp3Y8fsiCc+wHOdN5rCAVK9AUWRLqIM68yHfo850i8tnSNLBl23924cBMRlSkCuPgHe
+    4pz6MKePvM0GCw1jrWiakJ3P96ytvPTyi47zUolPFBnFGgOVWjrusG2phiuHEgXPoSXTG8
+    sz1r/uacWm6eGoLk4BmNAnuQER4pTSHFoBNuMvWZXZs1DmNqkjahM2nair4/sHepn1Td2T
+    PRKloo974wwgKWmWUvgHwPONOwCvHgDwUH6NBqqLNm/iFwify4+qmTPL5xWeQJ/+VE5Ixh
+    TFS+M26Oxxh07aCMBQ4kMh9D7GTRNXGhWXGbm0IMLTbbN2KlsUCKaM9rnIlCdcJBg1TsyB
+    BoVSBzVtzzldeBs3ZEgd8UbEniMEu7Xsci+7CYHlSYPTWfmfkGPUlM3MKraQ
+X-ME-Proxy: <xmx:UVMEa4PtmmTpx1rwnX9jg1XYfkIf3K60LcBN0Fm0nK3H-TXnfZsGWQ>
+    <xmx:UVMEa62lA40nFwrIVV4vpqPWnDwmK1_Y4HIIfGFMPF-VvGk8xJ7MMA>
+    <xmx:UVMEa8QTruJjJMHfyTIKYnDhMhqq031UJ6JOpYv3ekhvNX171_kg1w>
+    <xmx:UVMEa1ntwdewc2nRTtJKjpN02_qQiOResxAjosEGKfWajj1uKFEm0A>
+    <xmx:UVMEa1M-Ld2ThFONY1IKeXnnTib1jPtZK5Af_m8JiZvbW1E81c6DFc59>
+Feedback-ID: ice86485a:Fastmail
 Received: by mailuser.ams.internal (Postfix, from userid 501)
-	id 6EB4832A009C; Mon, 23 Nov 2026 09:17:06 -0500 (EST)
+	id D4D5BF80093; Mon, 23 Nov 2026 09:53:02 -0500 (EST)
 X-Mailer: MessagingEngine.com Webmail Interface
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -115,55 +77,164 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-X-ThreadId: AMjdjL9dYp0J
-Date: Mon, 23 Nov 2026 15:16:41 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: "Kees Cook" <kees@kernel.org>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org,
- loongarch@lists.linux.dev, linux-s390@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-mips@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-sh@vger.kernel.org,
- linux-alpha@vger.kernel.org, "Paul Walmsley" <pjw@kernel.org>,
- "Andy Chiu" <andybnac@gmail.com>, "Magnus Lindholm" <linmag7@gmail.com>
-Message-Id: <b7b8e8cd-d0ba-4e37-93f3-0fa209207124@app.fastmail.com>
-In-Reply-To: 
- <20261123110111-6431e85f-39a4-427e-b545-2e7a590a6c19@linutronix.de>
-References: <20261123-at-vector-size-arch-v3-0-d342dae9e843@linutronix.de>
- <ec5359c1-c16e-4177-8dfa-2ae5ab8a874f@app.fastmail.com>
- <20261123110111-6431e85f-39a4-427e-b545-2e7a590a6c19@linutronix.de>
-Subject: Re: [PATCH v3 00/15] exec: Remove AT_VECTOR_SIZE_ARCH from UAPI
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Date: Mon, 23 Nov 2026 15:52:42 +0100
+From: "Ard Biesheuvel" <ardb@kernel.org>
+To: "Ard Biesheuvel" <ardb+git@google.com>, linux-efi@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, "Jason Gunthorpe" <jgg@nvidia.com>,
+ "Paul Walmsley" <pjw@kernel.org>, "Palmer Dabbelt" <palmer@dabbelt.com>,
+ "Albert Ou" <aou@eecs.berkeley.edu>, "Huacai Chen" <chenhuacai@kernel.org>,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
+Message-Id: <c7de6586-917b-4fab-be8f-f8cfef6ee3fa@app.fastmail.com>
+In-Reply-To: <20261118182105.1633603-21-ardb+git@google.com>
+References: <20261118182105.1633603-21-ardb+git@google.com>
+Subject: Re: [PATCH v4 00/19] efi: Expose loaded image properties via info struct
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Mon, Nov 23, 2026, at 11:03, Thomas Wei=C3=9Fschuh wrote:
-> On Mon, Nov 23, 2026 at 10:44:40AM +0100, Arnd Bergmann wrote:
->> On Mon, Nov 23, 2026, at 10:37, Thomas Wei=C3=9Fschuh wrote:
->> > There is nothing userspace can do with this value. In the kernel is
->> > always combined with AT_VECTOR_SIZE_BASE, which is not exposed to
->> > userspace and also changes from time to time.
->> >
->> > Move the symbol to kernel-internal headers.
->> >
->> > Meant to be applied through the asm-generic or execve tree.
->> > The default recipient list was huge. I trimmed it to only the
->> > architecture lists.
->> >
->> > Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.=
-de>
->>=20
->> Hi Thomas,
->>=20
->> I'm happy to take this through the asm-generic tree. I've already
->> made sure it all applies and the patches look good to me. I'd
->> wait a few more days for additional Ack or any other replies,
->> let me know once you think I should apply this version.
+
+On Wed, 18 Nov 2026, at 19:21, Ard Biesheuvel wrote:
+> From: Ard Biesheuvel <ardb@kernel.org>
 >
-> This v3 is functionally identical to v1 and v2 which have been on the
-> list of a long time. I am not sure how much more feedback will come.
-> IMO it can already be applied to gain more exposure in -next.
+> Clean up the arm64 build script and linker hacks that zboot uses to
+> obtain properties of the loaded image (which it cannot access directly
+> via a relative reference like the ordinary EFI stub).
+>
+> Instead, define a generic struct efi_image_info, and expose its offset
+> in the loaded image in a similar manner, but without relying on explicit
+> linker script exports.
+>
+> Populate the struct with section markers that all architecture use for
+> loading the kernel image at boot, so that all the linker exports can be
+> dropped for them.
+>
+> Changes since v3:
+> - Populate efi_image_info for ARM correctly
+> - Fix a pre-existing issue in the ARM allocation logic
+> - Simplify the prototype of handle_kernel_image()
+> - Pass image_info pointer down to efi_kaslr_relocate_kernel() and
+>   simplify the callers
+> - Align RISC-V's __inittext_end correctly so it can be remapped.
+> - Add some more acks from Jason
+>
+> Changes since v2:
+> - Add some additional fixes for RISC-V, which deviates from other
+>   architectures wrt its section markers. These patches have been sent
+>   out separately as well [0] as they will likely be taken through the
+>   RISC-V tree.
+> - Pass an efi_image_pointer to efi_stub_common() that points to the
+>   version inside the loaded image, so that its relative references
+>   accurately describe vmlinux in memory before boot.
+> - Avoid weak linkage hacks to derive the kernel entrypoint, and instead,
+>   always use the entrypoint passed via efi_image_info
+> - Use efi_image_info for sysfb_display_info so that efifb earlycon works
+>   much earlier on zboot
+> - Drop changes related to the previous bullet that are now no longer
+>   needed
+> - Add acks from Jason
+>
+> Changes since v1:
+> - drop arm64 image header changes
+> - move efi_image_info out of __efistub_ scope so it can access vmlinux
+>   symbols directly
+> - implement in a generic manner for all architectures that support zboot
+> - address Sashiko comments
+>
+> [0] https://lore.kernel.org/all/20261111164345.4059964-5-ardb+git@google.com/
+>
+> Cc: Jason Gunthorpe <jgg@nvidia.com>
+> Cc: Paul Walmsley <pjw@kernel.org>
+> Cc: Palmer Dabbelt <palmer@dabbelt.com>
+> Cc: Albert Ou <aou@eecs.berkeley.edu>
+> Cc: Huacai Chen <chenhuacai@kernel.org>
+> Cc: loongarch@lists.linux.dev
+> Cc: linux-riscv@lists.infradead.org
+> Link: 
+> https://lore.kernel.org/all/0-v2-989a18390eb1+486-arm64_drtm_jgg@nvidia.com/
+>
+> Ard Biesheuvel (19):
+>   efi/zboot: arm64: Add missing barrier after cache maintenance
+>   riscv: Use _stext not _text to denote the start of kernel code
+>   riscv: Make _text point to the start of the kernel image
+>   efi/riscv: Rename __init_text_end to __inittext_end like other archs
 
-Fair enough, pushed out to the asm-generic tree now.
 
-     Arnd
+Ping to the RISC-V maintainers: I'd like to incorporate these RISC-V
+changes for the next cycle using a stable shared branch.
+
+I'd like to queue up this series this week. I'll put the RISC-V changes
+on a separate branch so I'll be able to swap in another one later, if
+needed.
+
+Thanks,
+
+>   efi/libstub: Avoid _end section marker in library code
+>   efi/libstub: arm: Size the decompressed kernel allocation precisely
+>   efi/libstub: Avoid reserve_addr/_size in efi_kaslr_relocate_kernel()
+>   efi/libstub: Capture loaded image information in struct efi_image_info
+>   efi/libstub: Pass kernel entrypoint down to efi_enter_kernel()
+>   efi/libstub: arm: Simplify handle_kernel_image()
+>   efi/libstub: Drop reserve_addr/_size params from handle_kernel_image()
+>   efi/libstub: arm64: Use struct efi_image_info to access image
+>     properties
+>   efi/libstub: loongarch: Use struct efi_image_info to access image
+>     properties
+>   efi/libstub: riscv: Use struct efi_image_info to access image
+>     properties
+>   efi/libstub: Make efi_remap_image() return efi_status_t
+>   efi/zboot: Disentangle efi_remap_image() from efi_cache_sync_image()
+>   efi/libstub: arm64: Drop zboot code_size hack
+>   efi: Make config table based primary display handover ARM-only again
+>   Revert "efi: earlycon: Reprobe after parsing config tables"
+>
+>  arch/arm/boot/compressed/head.S                      |  3 +-
+>  arch/arm/include/asm/efi.h                           | 15 +---
+>  arch/arm/kernel/efi.c                                | 27 ++++++
+>  arch/arm64/boot/Makefile                             |  3 -
+>  arch/arm64/include/asm/efi.h                         |  2 -
+>  arch/arm64/kernel/efi-header.S                       |  2 +
+>  arch/arm64/kernel/image-vars.h                       | 14 ---
+>  arch/loongarch/kernel/efi.c                          | 20 +----
+>  arch/loongarch/kernel/head.S                         |  4 +-
+>  arch/loongarch/kernel/image-vars.h                   |  6 --
+>  arch/loongarch/kernel/vmlinux.lds.S                  |  1 -
+>  arch/riscv/include/asm/efi.h                         |  2 -
+>  arch/riscv/include/asm/sections.h                    |  2 +-
+>  arch/riscv/kernel/head.S                             |  1 +
+>  arch/riscv/kernel/image-vars.h                       |  8 --
+>  arch/riscv/kernel/setup.c                            |  2 +-
+>  arch/riscv/kernel/vmlinux.lds.S                      |  6 +-
+>  drivers/firmware/efi/earlycon.c                      | 16 +---
+>  drivers/firmware/efi/efi-init.c                      | 24 +-----
+>  drivers/firmware/efi/efi.c                           |  5 --
+>  drivers/firmware/efi/libstub/Makefile                |  3 +-
+>  drivers/firmware/efi/libstub/Makefile.zboot          | 11 ++-
+>  drivers/firmware/efi/libstub/arm32-stub.c            | 90 +++++++++++++++-----
+>  drivers/firmware/efi/libstub/arm64-stub.c            | 37 ++------
+>  drivers/firmware/efi/libstub/arm64.c                 | 23 +----
+>  drivers/firmware/efi/libstub/efi-stub-entry.c        | 33 +------
+>  drivers/firmware/efi/libstub/efi-stub-helper.c       | 15 ++--
+>  drivers/firmware/efi/libstub/efi-stub.c              | 26 ++++--
+>  drivers/firmware/efi/libstub/efistub.h               | 84 +++++++++++++-----
+>  drivers/firmware/efi/libstub/fdt.c                   |  5 +-
+>  drivers/firmware/efi/libstub/image_info.S            | 19 +++++
+>  drivers/firmware/efi/libstub/kaslr.c                 | 45 +++++-----
+>  drivers/firmware/efi/libstub/loongarch-stub.c        | 21 ++---
+>  drivers/firmware/efi/libstub/loongarch-stub.h        |  4 -
+>  drivers/firmware/efi/libstub/loongarch.c             | 11 +--
+>  drivers/firmware/efi/libstub/primary_display.c       | 56 ------------
+>  drivers/firmware/efi/libstub/riscv-stub.c            | 29 +------
+>  drivers/firmware/efi/libstub/riscv.c                 | 16 +---
+>  drivers/firmware/efi/libstub/zboot-decompress-gzip.c |  2 -
+>  drivers/firmware/efi/libstub/zboot-decompress-zstd.c |  2 -
+>  drivers/firmware/efi/libstub/zboot.c                 | 28 +++++-
+>  drivers/firmware/efi/libstub/zboot.lds               |  6 +-
+>  include/linux/efi.h                                  |  1 -
+>  43 files changed, 324 insertions(+), 406 deletions(-)
+>  create mode 100644 drivers/firmware/efi/libstub/image_info.S
+>  delete mode 100644 drivers/firmware/efi/libstub/loongarch-stub.h
+>  delete mode 100644 drivers/firmware/efi/libstub/primary_display.c
+>
+>
+> base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
+> -- 
+> 2.56.1.708.g77570a6a1d-goog
