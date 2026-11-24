@@ -1,55 +1,69 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=54.204.34.130
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795505073;
-	b=Mu5CX5m8MLMiPK+5fgmsB08AbUN4OAQWBHe4CJZ7J5edt4N7WYSnbukdHy0DilO07Lam
-	 xwXnGlZONMiN2QTLiNPF2R7luwrqM1yYPYnPtl0VGG4V/JO/2m83wPqiDqJwF3WB6OkdM
-	 Q/Io/i1J4SkSTQX8BDUI6nEuT5EWNhvTOuI2Uf2qfO+NZDy/9EJrm5JFJij0CzJLmL60X
-	 PZlSmaOXpWYuBNcuR7Ncv8wwMwOBfkwrtr5pieMhBdqGdU8vl1g3ZfB+eI7OQ0LM72O+b
-	 GmFWJrZNEaUNmWJuC/rqVfZnR0Ga0bIJHETafyi5X6Yg61i1yvk7xxdLhR10MeQ6Udw==
+	t=1795517750;
+	b=U0gGD99iXnP4DXaMRzvKv02CdEn+LqzAe5OeQtP9RrnzgP+HHdRcgUrSEAfCNm5aIz5A
+	 Fbd7qJPg7gmGqsosca9S1JNWFkJxASy+xjiARFhLQP6ZudcoFUB5EV1QA5aoRx59gcAsU
+	 YT1h06Po0X5BrlZt7UOtoj6JhQvF94BqqDH8CiSfueVdgiWJTMrt9Shoix4QvmCtUpkq7
+	 zC3MtHt/h6QG+3YevdKhjvTa1Il+QboQtvMDlSYNPQ+/nsC33e+2au2prQpiwdjneJ1kc
+	 JrcrgelOl+vJqzjPyjsIXxDKm3jIkYZJG8zP8/9Gemz7qjiehs7SQ/iMhL/XDBFaiMg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795505073;
-	h=DMARC-Filter:Received:Received:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:MIME-Version:Content-Transfer-Encoding:X-CM-TRANSID:
-	 X-CM-SenderInfo:X-Coremail-Antispam;
-	bh=IIXf2HR8u9Gd/1ONsl6HkyIM2LQj9LSZX8ukWkT9n/k=;
-	b=phO9O6+CrzsMwLH1EHzjcGhyX3TfXB7mZCsP0Q1ETZH/glfe8g149TxZ0udHVbKXy+hT
-	 ENvb2tLVgU7ZtpqowlhRzx9U27Stwcao/Rg8at827bVrmmUE67MRyMQTBwI48xeAOlKMr
-	 V/9zz/0Kh1OZs+N4K8ePeejoaoQiE3LXi2IglgDK25G8xqF6w1TBwbAnRRC28Lig7bN2q
-	 VXlW4xp27u/+k8DG44sMeg/s0yNF3dwsGu9C9/kAj4ZGgzf7N5kXclDcoLhTgb+FPe400
-	 /+1SSjwcZ7qVjdY8hmru6JH6PQD93OrPDxHJGJGSumtEUe4qM6x1+5phIJA+Z/iaJcQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795517750;
+	h=DMARC-Filter:DKIM-Signature:X-QQ-mid:X-QQ-Originating-IP:Received:
+	 X-QQ-SSF:X-QQ-GoodBg:X-BIZMAIL-ID:EX-QQ-RecipientCnt:From:To:Cc:
+	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding:X-QQ-SENDSIZE:Feedback-ID:X-QQ-XMAILINFO:
+	 X-QQ-XMRINFO:X-QQ-RECHKSPAM;
+	bh=S2tNmjbHbXihDyQvhwnGgSo720BubGjr/0hf+WyLAzU=;
+	b=H166LIMJKOkYlVi3qypTtXCt7FlVdzoVA3UlM+IAJWEcudAHSbAQygUykBkFl6VtXyyv
+	 34j55svSKhVI5vTiA8UPeq9A/6Xem+mQjO+AfmHXX1U6uW91619TwoJhmUz8u/kG9ljtL
+	 eskRG481qqxikfNwYoToNWsSMwlIbyP5scX8xwZQ39oQXYNlp5IzoamufW9QMd4evz8JG
+	 JKO/+qS+p+6thHlCBPdY5HVf0VK/sfgYRs7l/uH7ixy/wnyhx8UmXwPPh9zm3sI07GGVM
+	 02loy+p/V1tLiWPaodaf7TEi23o2s53UtBjHAtCWUOZO6A3XIQh9PSyPCoNTyMdRv4g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=loongson.cn;
-	spf=pass smtp.mailfrom=loongson.cn;
-	arc=none smtp.remote-ip=114.242.206.163
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D237A606A326
-	for <loongarch@lists.linux.dev>; Tue, 24 Nov 2026 07:24:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D237A606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.69.66])
-	by gateway (Coremail) with SMTP id _____8DxC9KsOwVrLnwiAA--.32651S3;
-	Tue, 24 Nov 2026 15:24:29 +0800 (CST)
-Received: from kernelserver (unknown [223.64.69.66])
-	by front1 (Coremail) with SMTP id qMiowJAx3c6nOwVrkwM3AA--.44223S2;
-	Tue, 24 Nov 2026 15:24:25 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Keguang Zhang <keguang.zhang@gmail.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
+	dmarc=pass header.from=uniontech.com;
+	spf=pass smtp.mailfrom=uniontech.com;
+	dkim=pass header.d=uniontech.com header.i=@uniontech.com header.a=rsa-sha256 header.s=onoh2408 header.b=QfUT3OHK;
+	arc=none smtp.remote-ip=54.204.34.130
+Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C005606A326
+	for <loongarch@lists.linux.dev>; Tue, 24 Nov 2026 10:55:46 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6C005606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key, unprotected) header.d=uniontech.com header.i=@uniontech.com header.a=rsa-sha256 header.s=onoh2408 header.b=QfUT3OHK
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1795517707;
+	bh=S2tNmjbHbXihDyQvhwnGgSo720BubGjr/0hf+WyLAzU=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=QfUT3OHKtRTd42cJd/P9zAHo3L5zLU2TYYLhbsvPstBDR7CyTTAk8Hbri5vyVoRsu
+	 WS7a9qjgGwQ1pnZyUHOgF6eiCXRk27nLmYudsKyFabri6gpfDC9NeB1eBZdSqw4Z1o
+	 hVbLMFcvXcb23i2eGK5WVXmw1Gsq0F1Jd9HHZ9co=
+X-QQ-mid: esmtpsz19t1795517690tf6a9809a
+X-QQ-Originating-IP: tack00IUInozFJUlLf1Z5WpUEH/D5Y+SjtPpOVje3r4=
+Received: from localhost.localdomain ( [61.183.83.60])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 24 Nov 2026 18:54:21 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 6100977041111537589
+EX-QQ-RecipientCnt: 7
+From: Wentao Guan <guanwentao@uniontech.com>
+To: nathan@kernel.org
+Cc: chenhuacai@kernel.org,
+	guanwentao@uniontech.com,
+	linux-kbuild@vger.kernel.org,
 	loongarch@lists.linux.dev,
-	linux-sound@vger.kernel.org,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH] ASoC: loongson: Set dai_fmt for auto format selection
-Date: Tue, 24 Nov 2026 15:24:13 +0800
-Message-ID: <20261124072413.3282851-1-zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.52.0
+	charlie@rivosinc.com,
+	masahiroy@kernel.org
+Subject: [RFC PATCH v2] kbuild: modinst: drop orphaned local labels from stripped modules
+Date: Tue, 24 Nov 2026 18:54:09 +0800
+Message-ID: <6E960C21EF6F6A78+20261124105408.3119771-2-guanwentao@uniontech.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20261124035942.GB2738970@ax162>
+References: <20261124035942.GB2738970@ax162>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -60,75 +74,122 @@ List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAx3c6nOwVrkwM3AA--.44223S2
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQEBCGsE8HwEyQAAsn
-X-Coremail-Antispam: 1Uk129KBj93XoWxJrW5tF13KFW5XF4UJw4fZwc_yoW8tFW3p3
-	W3Z3yDKrW5tF1UZFn5t3yrJFn8A3yfGrnxJF47t3s2krs3Aw45uryDGF12yFW2yr95JFyj
-	qFy8GrWkGF45GagCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Fb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	XVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
-	AKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v2
-	6r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
-	CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
-	0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
-	AIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2
-	KfnxnUUI43ZEXa7IU88Ma5UUUUU==
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz3a-0
+X-QQ-XMAILINFO: M3ziZXKDk+iOq7w38GVz7vR4mMUT9A/U75Xhk/1ky7gqEGK1xpIDOcMJ
+	rGUJYgI/Ep21K3fSI15qxv5yOXuWKDWgWWRSngeAoP0ypAmSidX6T2hM6swsTm7L3OtdKd/
+	Uf30pIwXMcp8KEfMhz0fiv63Guwjkb2A+pG9zUBLu1h8ePejJTOMph4fM9ykE/UxcdKGwMg
+	iZfdTcsm8lFYnlwLrIlucfw79G3Rpv7jDW/qyuAJfF1F4dmoamURpVlZyigW6zWAFW50iNC
+	yHNS5cGCbnwGKnYxoKjejn3CmdLXkqnrOgunxCw8S+Xfu7YNTc2YRkL7fX1blol0FEulIod
+	2znCVwQV02xanmeexKB2aiuZRtdJ9vV4rdtwD4xC/iabJ70qxPvczu4ZJ9+Oau1o8zCY+mj
+	piaAgrJPeDqQO2MUq3/k3C22fITq1UFOThceAIsz591qKQD0MltTMccoPxx8mDAwv8cYByq
+	B0/FH5OXqPOEgIQFDgxp311IYxY0iQDkoTfzUBr+UgPHCIYCZu/uPgMJiMJ93/XBWynHNBc
+	Hbv9OrKS5im1M9NLYPws3VAprmYT3yyqJgAR21q/JlTSHtLsBijLZBYzShFr8TQq3LN8ufD
+	CIaAk2qmi34PR1Teg9RgqtV23AbguYTpcSY9p7Llrv/B858HNkQ9o92I2XLgsjb3Xw9MRh7
+	pwOSRgweq5SlUHztGQrxXWtKE4gT+m2sa+1rcwIhyo3zMD0R5ywAAA2J0OZoztMaWNY4bnl
+	DrevmXZgFpJWC17im1xZZHbm4v4yAZxoQMyTyNve3JZJoLAiuOEyo0OYLq8F0w1E4UEhivZ
+	RkSOD10o2oyyoZyyvHyS4DCJwsaykAPZgJmBQSlNpp37as57fGj1I+wtLlAZ2DGy0Pyv2Tf
+	0HM/6mAZemqo1WW6ZVFTZPj3Xiki79z4IIGx9DNtqYAZYbAdjL3soEsMDH6qXH8oKnWu27A
+	XlhE4K1F7pU7TnoV+EfKGmD03pDZpxqa+3qjhmLFzscWWyJDMz1YpaqH1S1xrZ5X6g8vFPO
+	KjXtLo2E9nZhNdy9sT47UhPYs3YpwgsCnBq23Hgrl/rYD4V1G1+nLg1hOsdL+uDmlbwuLDq
+	ZSR68g1R16x
+X-QQ-XMRINFO: NS+P29fieYNwqS3WCnRCOn9D1NpZuCnCRA==
+X-QQ-RECHKSPAM: 0
 
-.auto_selectable_formats only covers the signal format, clock gating and
-polarity, not the clock provider: the core takes that field from
-dai_link->dai_fmt. loongson_dai_links leaves .dai_fmt unset and only
-programmed the format from hw_params, which worked until both es8328 and
-loongson-i2s advertised .auto_selectable_formats. The core now sets
-SND_SOC_DAIFMT_I2S (1) without CLOCK_PROVIDER bits at bind time and
-es8328_set_dai_fmt() rejects it with -EINVAL.
+INSTALL_MOD_STRIP=1 maps to "strip --strip-debug", which is a section
+operation: it removes .debug_* and .rela.debug_* but leaves the symbol
+table alone.  When the assembler has to name gcc's -g labels in the
+relocations it emits for debug data, those labels stay in .symtab and
+survive the strip as orphans.  Whether that happens is a property of the
+target's assembler, not of the kernel: the x86-64 and arm64 assemblers
+resolve the DWARF references against the section symbol with an addend,
+so the labels never reach .symtab, while the LoongArch assembler names
+them:
 
-Set .dai_fmt from the board config, and drop the redundant
-snd_soc_runtime_set_dai_fmt() call from hw_params.
+    R_LARCH_64          .LFB1 + 0
+    R_LARCH_ADD_ULEB128 .LVL0 + 0
 
-Fixes: da659805e0b0 ("ASoC: loongson: Add Loongson-2K0300 CTCISZ Forever Pi sound card support")
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+and the .LVL, .LBI, .LBB, .LFB and .LPFE labels of every object survive
+the strip as orphans.
+
+On a 7.2.2-based LoongArch distribution build such labels are 86.7% of
+the symbol entries in a stratified sample of 295 of the 5712 modules.
+Dropping them shrinks the module payload by 22% (176 MB to 136 MB) and
+the linux-image package by 20% (195 MB to 156 MB).
+
+Add --discard-locals to the default.  binutils removes a local symbol
+only when its name follows the assembler's local label convention and no
+relocation in the output names it, so what the module loader needs
+survives: the relocation set of every module is byte-for-byte identical
+before and after, .LC constants, .LPFE and the
+-fpatchable-function-entry labels stay, and exactly one SHT_SYMTAB
+remains as elf_validity_cache_index_sym() requires.  Source-level
+symbols are kept as well, which is where this differs from
+--strip-unneeded, proposed for the riscv module bloat by Charlie Jenkins
+[1]; Masahiro Yamada objected that it also removes real symbols such as
+abm_settings from kallsyms.
+
+Keep LLVM builds on plain --strip-debug: llvm-strip refuses to strip a
+symbol that a relocation still names and aborts the whole install, and a
+clang-built LoongArch module carries such labels, the .L.str of its
+string constants:
+
+    llvm-strip: error: 'fc.ko': not stripping symbol '.L.str.1' because
+    it is named in a relocation
+
+so probe $(STRIP) for binutils.  Nothing is lost on LLVM builds: clang
+emits none of the debug labels that bloat the package.
+
+Placing the option in the INSTALL_MOD_STRIP=1 default also covers the
+other in-tree users of the variable, the rpm and Arch packaging under
+scripts/package/.
+
+Boot tested with qemu-system-loongarch64 (EDK2 firmware, vmlinuz.efi,
+test modules loaded from the initramfs with finit_module()): modules
+stripped with --strip-debug, --discard-locals and --strip-unneeded all
+load with rc=0, while --strip-all is rejected with "module has no
+symbols (stripped?)".
+
+Link: https://lore.kernel.org/all/CAK7LNAQ809M8VKAOBfqSn_Sc8iPgTMVu5icOgnddH_YKDvOpzA@mail.gmail.com/ [1]
+Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
 ---
- sound/soc/loongson/loongson_card.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+Changes in v2:
+as Nathan Chancellor suggested.
+- Move the option from the Debian packaging to the INSTALL_MOD_STRIP=1
+  default in scripts/Makefile.modinst, so that the rpm and Arch
+  packaging and plain "make modules_install" get the same treatment.
+- Drop the LoongArch condition: whether the labels exist is a property
+  of the target's assembler, and on x86-64 and arm64 the option removes
+  nothing to speak of, so one generic default is safe everywhere.
+- Replace the projected package numbers with a measured full bindeb-pkg
+  run: the linux-image package shrinks from 195 MB to 156 MB.
+- Reference the earlier riscv discussion of --strip-unneeded and its
+  kallsyms objection.
+- Rebase onto v7.4-rc3.
+v1 Link: https://lore.kernel.org/loongarch/E73BE2D8A39F2EBF+20261123121554.2559667-2-guanwentao@uniontech.com/
 
-diff --git a/sound/soc/loongson/loongson_card.c b/sound/soc/loongson/loongson_card.c
-index b06b596047b8..b4dc3cd6e4d6 100644
---- a/sound/soc/loongson/loongson_card.c
-+++ b/sound/soc/loongson/loongson_card.c
-@@ -152,7 +152,7 @@ static int loongson_card_hw_params(struct snd_pcm_substream *substream,
- 		return ret;
- 	}
- 
--	return snd_soc_runtime_set_dai_fmt(rtd, ls_card->cfg->fmt);
-+	return 0;
- }
- 
- static const struct snd_soc_ops loongson_ops = {
-@@ -312,6 +312,16 @@ static int loongson_asoc_card_probe(struct platform_device *pdev)
- 	card->dai_link = loongson_dai_links;
- 	card->num_links = ARRAY_SIZE(loongson_dai_links);
- 
-+	/*
-+	 * The DAI format is fixed per board. Describe it in the DAI link so
-+	 * that the ASoC core takes it into account when it auto-selects the
-+	 * format from the DAIs' .auto_selectable_formats. Otherwise the
-+	 * CLOCK_PROVIDER bits are lost and the codec is configured with a
-+	 * format it cannot accept (e.g. es8328_set_dai_fmt() rejecting it).
-+	 */
-+	for (unsigned int i = 0; i < card->num_links; i++)
-+		loongson_dai_links[i].dai_fmt = ls_priv->cfg->fmt;
-+
- 	if (ls_priv->cfg->add_dapm_widgets) {
- 		card->dapm_widgets = loongson_asoc_dapm_widgets;
- 		card->num_dapm_widgets = ARRAY_SIZE(loongson_asoc_dapm_widgets);
+ scripts/Makefile.modinst | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-base-commit: 2c0f21bfcda98db49f6476ff9b042402e5f20d3e
+diff --git a/scripts/Makefile.modinst b/scripts/Makefile.modinst
+index 9ba45e5b32b18..57fdfeda9130d 100644
+--- a/scripts/Makefile.modinst
++++ b/scripts/Makefile.modinst
+@@ -81,6 +81,12 @@ ifdef INSTALL_MOD_STRIP
+ 
+ ifeq ($(INSTALL_MOD_STRIP),1)
+ strip-option := --strip-debug
++# llvm-strip fails the install when --discard-locals hits a symbol that
++# a relocation still names; GNU strip keeps it, so limit the option to
++# binutils.
++ifneq ($(shell $(STRIP) --version 2>/dev/null | grep -qs '^GNU strip' && echo y),)
++strip-option += --discard-locals
++endif
+ else
+ strip-option := $(INSTALL_MOD_STRIP)
+ endif
+
+base-commit: aebb7274476403040d582c61478df8f4a7bf9cd3
 -- 
-2.52.0
+2.47.3
 
