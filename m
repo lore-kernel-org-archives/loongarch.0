@@ -1,47 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.161
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795496688;
-	b=HYhLHssJwYtZIWj9iWrjBMAckicqX6FCgfKzGjfYedjFaeizRAcpgDII8rdIvLd5vKyT
-	 bQRk++udd24lefNgkgXJVWI/AbnSMo5A+8RjNBTZJmOvzMeF3V2ih5GNxGgAD32MJUVIQ
-	 hK6/TvoYVu29du8Je+Zi1hLgt/y5JRgysAtCRcrzmDIclXSVAjatEFoGLb3ibQbV1TmqX
-	 Uk/dIuqpfvaEDqb1MO7Lwt+dZWRbh+Fzka4ohqir/M/uNZ8a1YcTn1ALUXYT/OpIVm+pU
-	 ysyW9qzbq5006YPfm+WJBiitI5ixX4IQGch7S6OZBWaaVldYrSg6zWz4VC/mqJSjXHQ==
+	t=1795497805;
+	b=MIO/i6D+c44auZiP3f5K6QARX0R3/QHsVl8N9u8rv0bj4vBNu9PekKv7sQpO9gTMc3aH
+	 ND/XYe0wWJP51IJzS+vwzK81MlWNynHI3NRQh0tOLZ4ZTtw/Fqi6eE3TfuS9C2R+2XVBl
+	 v5UHZUcANyXdriPgor1/JcTWxC+l2mdvj3Z3NoFNdHZk7wAso8/hzy7pESi+bS4wayHy3
+	 YoMRv3fnJtnlI0A6lAM/4K5zY9XstDN8IxypAZOb/i2SMZkBWspGllinB7bo2YlaVbd3J
+	 4HiPoOWaPsgnzLZ9wVN564wjiulHU3ZhZOZ9atfhgShwpDRSYG8zIjXtt2OCYiSDKAQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795496688;
-	h=DMARC-Filter:Received:Received:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:MIME-Version:Content-Transfer-Encoding:X-CM-TRANSID:
-	 X-CM-SenderInfo:X-Coremail-Antispam;
-	bh=S9siEsISEhUmobrHfk43GWP8sT+YJJExitvIuJS0LwQ=;
-	b=nNVBAb0bqzjNdeqGlwLlnKU7cU4NTA4fQ4V89sy4MsCtN0BxkSATzXLh/bQoG9259wxE
-	 DMOzdXM99M5CWo30ylPOuheyVRL1wOb59tEQXwejUYmEHN3QZ2Rtl1Csjs2hNEU/cwqTS
-	 2aIKZlWvoO14rweNFaqfRk9aiB43M3IKud3oS1rXAmdJXo5dBd7NJmk+VPEtPnu0n9yvI
-	 q/fDoczIm2BqjE6oS7/y8ZYC2bqz/vNI3+X0ClCE7XfpBefBud0smMVXGtSdTiQkKyRvn
-	 /5yLq8ntbYnvRoGKBUVEMvhC5hZKagtRapMEPNTOCM6rlwVmzRMTjUA2ilmfY+ENB9w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795497805;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=qEvIk+aHNDceYWGtYqNUvdpoCP1Y0OFLjkamC7OJOgs=;
+	b=mnrct4du7TNiLZoRQR14N3LDLpU1ekJVH9mhHr3u2JzaXpM1XI0V1jG7bgSLkHbre9t2
+	 Xub7VmB5w9ZIcF9c0FBXHEqe/lDI0VN6nWX3a7lrprnXvyGLgYJDgaV/U163s0aN0xzjN
+	 MSaHR/aF8myDdI5VT6jooHMztQMngGlcP6JvkaqDzYzaZ+BfcdoaSKGv9ZMTOkdEdxuzR
+	 qXdtjJBVE4S4vq27PRpi8aFEW/wq9kD+3/rspzUJnTFQUns19BRnip+Xha5V39hGdbLut
+	 XTtiOjdk8z1EzEt1U8XRrtvtaU+Gt/qj2caTMHtg4+9MnrY7RbseN/AuvTqQpl4+6Eg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=loongson.cn;
-	spf=pass smtp.mailfrom=loongson.cn;
-	arc=none smtp.remote-ip=114.242.206.163
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1F94606A321
-	for <loongarch@lists.linux.dev>; Tue, 24 Nov 2026 05:04:46 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F1F94606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [123.138.236.242])
-	by gateway (Coremail) with SMTP id _____8AxS_DmGgVrgHUiAA--.32708S3;
-	Tue, 24 Nov 2026 13:04:38 +0800 (CST)
-Received: from linux.localdomain (unknown [123.138.236.242])
-	by front1 (Coremail) with SMTP id qMiowJCxNs3lGgVr3_82AA--.30298S2;
-	Tue, 24 Nov 2026 13:04:38 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Hengqi Chen <hengqi.chen@gmail.com>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH RFC] LoongArch: BPF: Add support for UHMUL and SHMUL
-Date: Tue, 24 Nov 2026 13:04:37 +0800
-Message-ID: <20261124050437.392-1-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=xXPugBxM;
+	arc=none smtp.remote-ip=91.218.175.161
+Received: from mta0.migadu.com (out-161.mta0.migadu.com [91.218.175.161])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 484E3606A322
+	for <loongarch@lists.linux.dev>; Tue, 24 Nov 2026 05:23:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 484E3606A322
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=xXPugBxM
+X-Envelope-To: loongarch@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=DmzO0Sk4kjvl9NzB/hFxZeqrskX83I/OHqCcDGtmZfk=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1795497803; v=1; x=1796102603;
+ b=xXPugBxMP+28DxutyNPzKPouigEmCdMrXvYbCshiS2azD8ytHez4mQfLJmcpmUbLWIBVtIKT
+ QxCpfl/ewMIMLl6VN7RgzDC0TFqfMWFgA2GHFDPKvPJnG8n+qO25mV/K53ZM2+DdsJYdOHkvnha
+ MvcB29+kOzNTTpBtM3EYiSnc=
+X-Envelope-To: loongarch@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id e92b5db1fdfb7210;
+	Tue, 24 Nov 2026 05:23:23 +0000
+X-Mizu-Trace-ID: e92b5db1fdfb7210
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <f634fd52-fe7a-46ef-ad2b-3b4a90b7154f@linux.dev>
+Date: Tue, 24 Nov 2026 13:23:11 +0800
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -51,104 +58,51 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxNs3lGgVr3_82AA--.30298S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7uFy3uw1rtw17XF47CF1kCrX_yoW5JFy3pr
-	ZFkrn5Crs5XFySqF9rJwsrur43tan3Cry2qF1ayayfJrW3Xa45XF18KwnrKFZ3JaykXFsY
-	gr429rn8uFy3J3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UUUUU==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] MAINTAINERS: Add the LoongArch KVM selftests
+ directory
+To: Gokul K <gokul02k@gmail.com>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ Shuah Khan <shuah@kernel.org>, kvm@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-kselftest@vger.kernel.org,
+ Sean Christopherson <seanjc@google.com>, Song Gao <gaosong@loongson.cn>,
+ linux-kernel@vger.kernel.org
+References: <20261123100701.1679376-1-gokul02k@gmail.com>
+ <20261123100701.1679376-2-gokul02k@gmail.com>
+Content-Language: en-US
+From: Zenghui Yu <zenghui.yu@linux.dev>
+In-Reply-To: <20261123100701.1679376-2-gokul02k@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Implement JIT lowering for UHMUL and SHMUL on LoongArch by utilizing
-hardware multiplication instructions MULH.{DU,D} and enabling support
-via bpf_jit_supports_hmul().
+On 11/23/26 6:07 PM, Gokul K wrote:
+> The KVM/LoongArch entry covers tools/testing/selftests/kvm/*/loongarch/
+> and lib/loongarch/, but not tools/testing/selftests/kvm/loongarch/,
+> where the tests themselves live. The */loongarch/ pattern needs a
+> directory between kvm/ and loongarch/, so it does not match it.
+> 
+> As a result get_maintainer.pl omits the LoongArch KVM maintainers and
+> loongarch@lists.linux.dev for patches to those tests. arm64, riscv, s390
+> and x86 each list both forms.
+> 
+> Signed-off-by: Gokul K <gokul02k@gmail.com>
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index f53047aa8d3c..fed2245b979f 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14327,6 +14327,7 @@ F:	arch/loongarch/include/uapi/asm/kvm*
+>  F:	arch/loongarch/kvm/
+>  F:	tools/testing/selftests/kvm/*/loongarch/
+>  F:	tools/testing/selftests/kvm/lib/loongarch/
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
-Not tested yet, just RFC.
+This line is redundant and can be removed.
 
- arch/loongarch/include/asm/inst.h |  2 ++
- arch/loongarch/net/bpf_jit.c      | 24 ++++++++++++++++++++++--
- 2 files changed, 24 insertions(+), 2 deletions(-)
-
-diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-index e061f966f7d1..fd6b39d5f0d0 100644
---- a/arch/loongarch/include/asm/inst.h
-+++ b/arch/loongarch/include/asm/inst.h
-@@ -777,6 +777,8 @@ DEF_EMIT_REG3_FORMAT(subw, subw_op)
- DEF_EMIT_REG3_FORMAT(subd, subd_op)
- DEF_EMIT_REG3_FORMAT(mulw, mulw_op)
- DEF_EMIT_REG3_FORMAT(muld, muld_op)
-+DEF_EMIT_REG3_FORMAT(mulhd, mulhd_op)
-+DEF_EMIT_REG3_FORMAT(mulhdu, mulhdu_op)
- DEF_EMIT_REG3_FORMAT(divw, divw_op)
- DEF_EMIT_REG3_FORMAT(divd, divd_op)
- DEF_EMIT_REG3_FORMAT(modw, modw_op)
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index 567729921d6d..b12da3e422c6 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -683,6 +683,21 @@ static int add_exception_handler(const struct bpf_insn *insn,
- 	return 0;
- }
- 
-+static void emit_various_muld(struct jit_ctx *ctx, u8 dst, u8 src, s16 off)
-+{
-+	switch (off) {
-+	case BPF_UHMUL:
-+		emit_insn(ctx, mulhdu, dst, dst, src);
-+		break;
-+	case BPF_SHMUL:
-+		emit_insn(ctx, mulhd, dst, dst, src);
-+		break;
-+	default:
-+		emit_insn(ctx, muld, dst, dst, src);
-+		break;
-+	}
-+}
-+
- static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool extra_pass)
- {
- 	u8 tm = -1;
-@@ -804,7 +819,7 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
- 		emit_insn(ctx, mulw, dst, dst, src);
- 		break;
- 	case BPF_ALU64 | BPF_MUL | BPF_X:
--		emit_insn(ctx, muld, dst, dst, src);
-+		emit_various_muld(ctx, dst, src, off);
- 		break;
- 
- 	/* dst = dst * imm */
-@@ -814,7 +829,7 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
- 		break;
- 	case BPF_ALU64 | BPF_MUL | BPF_K:
- 		move_imm(ctx, t1, imm);
--		emit_insn(ctx, muld, dst, dst, t1);
-+		emit_various_muld(ctx, dst, t1, off);
- 		break;
- 
- 	/* dst = dst / src */
-@@ -2571,3 +2586,8 @@ bool bpf_jit_supports_callx(void)
- {
- 	return true;
- }
-+
-+bool bpf_jit_supports_hmul(void)
-+{
-+	return true;
-+}
--- 
-2.42.0
-
+> +F:	tools/testing/selftests/kvm/loongarch/
+>  
+>  KERNEL VIRTUAL MACHINE FOR MIPS (KVM/mips)
+>  M:	Huacai Chen <chenhuacai@kernel.org>
