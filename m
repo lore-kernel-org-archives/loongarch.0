@@ -1,69 +1,67 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=54.204.34.130
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=89.208.246.23
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795517750;
-	b=U0gGD99iXnP4DXaMRzvKv02CdEn+LqzAe5OeQtP9RrnzgP+HHdRcgUrSEAfCNm5aIz5A
-	 Fbd7qJPg7gmGqsosca9S1JNWFkJxASy+xjiARFhLQP6ZudcoFUB5EV1QA5aoRx59gcAsU
-	 YT1h06Po0X5BrlZt7UOtoj6JhQvF94BqqDH8CiSfueVdgiWJTMrt9Shoix4QvmCtUpkq7
-	 zC3MtHt/h6QG+3YevdKhjvTa1Il+QboQtvMDlSYNPQ+/nsC33e+2au2prQpiwdjneJ1kc
-	 JrcrgelOl+vJqzjPyjsIXxDKm3jIkYZJG8zP8/9Gemz7qjiehs7SQ/iMhL/XDBFaiMg==
+	t=1795525372;
+	b=bOpkrJRkkm+lRPPljfWVyL3M011aNEpoff+UvLgERCpE37sU9hprZDt+w9eHQNeQbbHI
+	 P7P2hAy0Mk+eP1KRabOXmGx0li11Mba2bKbUAMr59lfljR8B2Vq/wTR7Lbz8KdhDxJ4Q6
+	 wDNnfIaxWc9DPU1bh7gODdqFG9q9c6Ql4UqSkJe/SrgWh+5hsHwPUmnKyG/vbGaux5jrN
+	 iEWmHjpda2V2rcqav61ZXwl558U4rg70WtXE8gS2cP1GBnbxlIzPW2xaBmaiuEdrvPZBf
+	 4CeUpF7Q/lYkQ8/QVq6ORi0d6iXl374bBuYix330OsdW50nO3hADJE3ZXQ2WOK1XHUQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795517750;
-	h=DMARC-Filter:DKIM-Signature:X-QQ-mid:X-QQ-Originating-IP:Received:
-	 X-QQ-SSF:X-QQ-GoodBg:X-BIZMAIL-ID:EX-QQ-RecipientCnt:From:To:Cc:
-	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-QQ-SENDSIZE:Feedback-ID:X-QQ-XMAILINFO:
-	 X-QQ-XMRINFO:X-QQ-RECHKSPAM;
-	bh=S2tNmjbHbXihDyQvhwnGgSo720BubGjr/0hf+WyLAzU=;
-	b=H166LIMJKOkYlVi3qypTtXCt7FlVdzoVA3UlM+IAJWEcudAHSbAQygUykBkFl6VtXyyv
-	 34j55svSKhVI5vTiA8UPeq9A/6Xem+mQjO+AfmHXX1U6uW91619TwoJhmUz8u/kG9ljtL
-	 eskRG481qqxikfNwYoToNWsSMwlIbyP5scX8xwZQ39oQXYNlp5IzoamufW9QMd4evz8JG
-	 JKO/+qS+p+6thHlCBPdY5HVf0VK/sfgYRs7l/uH7ixy/wnyhx8UmXwPPh9zm3sI07GGVM
-	 02loy+p/V1tLiWPaodaf7TEi23o2s53UtBjHAtCWUOZO6A3XIQh9PSyPCoNTyMdRv4g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795525372;
+	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:Cc:
+	 Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:
+	 User-Agent:MIME-Version;
+	bh=e7umvq3b2Qjy6OI4P5AfLqfekqPHHMBAinW/wTd6ikg=;
+	b=jQfxc8/F7mIoYg/qJLwPbaHaZAUho4kvwV4TawHNjZYFpKyimGkaZWWZfN8aAtufHPc0
+	 sD5y5FqeYkKKFIPOOdt8ihW+Pa5cz1/HJvzh/vUTQgkKBTnww6IePoQsWonQwr2qaRjWl
+	 x2hFetDsurvzA75XMnVNSVrvlOmfLo8xrS3aEMAiJa2zNfbAj5kvox3smzlWGhA8tvtoB
+	 kI9Jv50px9UtBSF8WEhBBI/jKHi2IO+Cj+R8Jori1FkyDbHiV7BaazPNoBkjSAtWyiWKQ
+	 iX1pIPcDW64LaYAV/W9rGfNxV6YShrOJJdy5jVQFcf//da4hhLHGmLbWgjF2kU+Ey/A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=uniontech.com;
-	spf=pass smtp.mailfrom=uniontech.com;
-	dkim=pass header.d=uniontech.com header.i=@uniontech.com header.a=rsa-sha256 header.s=onoh2408 header.b=QfUT3OHK;
-	arc=none smtp.remote-ip=54.204.34.130
-Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=xry111.site;
+	spf=pass smtp.mailfrom=xry111.site;
+	dkim=pass header.d=xry111.site header.i=@xry111.site header.a=rsa-sha256 header.s=default header.b="WTJzaO/Y";
+	arc=none smtp.remote-ip=89.208.246.23
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C005606A326
-	for <loongarch@lists.linux.dev>; Tue, 24 Nov 2026 10:55:46 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6C005606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C8A5606A31E
+	for <loongarch@lists.linux.dev>; Tue, 24 Nov 2026 13:02:46 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9C8A5606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=uniontech.com header.i=@uniontech.com header.a=rsa-sha256 header.s=onoh2408 header.b=QfUT3OHK
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1795517707;
-	bh=S2tNmjbHbXihDyQvhwnGgSo720BubGjr/0hf+WyLAzU=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=QfUT3OHKtRTd42cJd/P9zAHo3L5zLU2TYYLhbsvPstBDR7CyTTAk8Hbri5vyVoRsu
-	 WS7a9qjgGwQ1pnZyUHOgF6eiCXRk27nLmYudsKyFabri6gpfDC9NeB1eBZdSqw4Z1o
-	 hVbLMFcvXcb23i2eGK5WVXmw1Gsq0F1Jd9HHZ9co=
-X-QQ-mid: esmtpsz19t1795517690tf6a9809a
-X-QQ-Originating-IP: tack00IUInozFJUlLf1Z5WpUEH/D5Y+SjtPpOVje3r4=
-Received: from localhost.localdomain ( [61.183.83.60])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 24 Nov 2026 18:54:21 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 6100977041111537589
-EX-QQ-RecipientCnt: 7
-From: Wentao Guan <guanwentao@uniontech.com>
-To: nathan@kernel.org
-Cc: chenhuacai@kernel.org,
-	guanwentao@uniontech.com,
-	linux-kbuild@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	charlie@rivosinc.com,
-	masahiroy@kernel.org
-Subject: [RFC PATCH v2] kbuild: modinst: drop orphaned local labels from stripped modules
-Date: Tue, 24 Nov 2026 18:54:09 +0800
-Message-ID: <6E960C21EF6F6A78+20261124105408.3119771-2-guanwentao@uniontech.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20261124035942.GB2738970@ax162>
+	dkim=pass (1024-bit key, unprotected) header.d=xry111.site header.i=@xry111.site header.a=rsa-sha256 header.s=default header.b=WTJzaO/Y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1795525359;
+	bh=e7umvq3b2Qjy6OI4P5AfLqfekqPHHMBAinW/wTd6ikg=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=WTJzaO/Yml+FImT9nkd5vU/rhpD5MScZLTqBe9h2H2KF/kEbGMb2snKLIcuQAlk46
+	 zYINEDApkRBq3QIrXE5VuLFFCjgLpMDPgqN6uIxu1rh7r4vpLuaw8zMrwoNEce0/CJ
+	 gdKRKZJP/88mKPLaiAPcgKG93NE+MVrb0tMpbOyo=
+Received: from [127.0.0.1] (2607-8700-5500-e873-0000-0000-0000-1001.16clouds.com [IPv6:2607:8700:5500:e873::1001])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 3E28F65EC3;
+	Tue, 24 Nov 2026 08:02:37 -0500 (EST)
+Message-ID: <84a64a3f632f9e1e3208c0ceac55cedf0f266e9d.camel@xry111.site>
+Subject: Re: [RFC PATCH v2] kbuild: modinst: drop orphaned local labels from
+ stripped modules
+From: Xi Ruoyao <xry111@xry111.site>
+To: Wentao Guan <guanwentao@uniontech.com>, nathan@kernel.org, 
+	mengqinggang@loongson.cn
+Cc: chenhuacai@kernel.org, linux-kbuild@vger.kernel.org, 
+	loongarch@lists.linux.dev, charlie@rivosinc.com, masahiroy@kernel.org
+Date: Tue, 24 Nov 2026 21:02:34 +0800
+In-Reply-To: <6E960C21EF6F6A78+20261124105408.3119771-2-guanwentao@uniontech.com>
 References: <20261124035942.GB2738970@ax162>
+	 <6E960C21EF6F6A78+20261124105408.3119771-2-guanwentao@uniontech.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.62.1 
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -73,123 +71,21 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz3a-0
-X-QQ-XMAILINFO: M3ziZXKDk+iOq7w38GVz7vR4mMUT9A/U75Xhk/1ky7gqEGK1xpIDOcMJ
-	rGUJYgI/Ep21K3fSI15qxv5yOXuWKDWgWWRSngeAoP0ypAmSidX6T2hM6swsTm7L3OtdKd/
-	Uf30pIwXMcp8KEfMhz0fiv63Guwjkb2A+pG9zUBLu1h8ePejJTOMph4fM9ykE/UxcdKGwMg
-	iZfdTcsm8lFYnlwLrIlucfw79G3Rpv7jDW/qyuAJfF1F4dmoamURpVlZyigW6zWAFW50iNC
-	yHNS5cGCbnwGKnYxoKjejn3CmdLXkqnrOgunxCw8S+Xfu7YNTc2YRkL7fX1blol0FEulIod
-	2znCVwQV02xanmeexKB2aiuZRtdJ9vV4rdtwD4xC/iabJ70qxPvczu4ZJ9+Oau1o8zCY+mj
-	piaAgrJPeDqQO2MUq3/k3C22fITq1UFOThceAIsz591qKQD0MltTMccoPxx8mDAwv8cYByq
-	B0/FH5OXqPOEgIQFDgxp311IYxY0iQDkoTfzUBr+UgPHCIYCZu/uPgMJiMJ93/XBWynHNBc
-	Hbv9OrKS5im1M9NLYPws3VAprmYT3yyqJgAR21q/JlTSHtLsBijLZBYzShFr8TQq3LN8ufD
-	CIaAk2qmi34PR1Teg9RgqtV23AbguYTpcSY9p7Llrv/B858HNkQ9o92I2XLgsjb3Xw9MRh7
-	pwOSRgweq5SlUHztGQrxXWtKE4gT+m2sa+1rcwIhyo3zMD0R5ywAAA2J0OZoztMaWNY4bnl
-	DrevmXZgFpJWC17im1xZZHbm4v4yAZxoQMyTyNve3JZJoLAiuOEyo0OYLq8F0w1E4UEhivZ
-	RkSOD10o2oyyoZyyvHyS4DCJwsaykAPZgJmBQSlNpp37as57fGj1I+wtLlAZ2DGy0Pyv2Tf
-	0HM/6mAZemqo1WW6ZVFTZPj3Xiki79z4IIGx9DNtqYAZYbAdjL3soEsMDH6qXH8oKnWu27A
-	XlhE4K1F7pU7TnoV+EfKGmD03pDZpxqa+3qjhmLFzscWWyJDMz1YpaqH1S1xrZ5X6g8vFPO
-	KjXtLo2E9nZhNdy9sT47UhPYs3YpwgsCnBq23Hgrl/rYD4V1G1+nLg1hOsdL+uDmlbwuLDq
-	ZSR68g1R16x
-X-QQ-XMRINFO: NS+P29fieYNwqS3WCnRCOn9D1NpZuCnCRA==
-X-QQ-RECHKSPAM: 0
 
-INSTALL_MOD_STRIP=1 maps to "strip --strip-debug", which is a section
-operation: it removes .debug_* and .rela.debug_* but leaves the symbol
-table alone.  When the assembler has to name gcc's -g labels in the
-relocations it emits for debug data, those labels stay in .symtab and
-survive the strip as orphans.  Whether that happens is a property of the
-target's assembler, not of the kernel: the x86-64 and arm64 assemblers
-resolve the DWARF references against the section symbol with an addend,
-so the labels never reach .symtab, while the LoongArch assembler names
-them:
+On Tue, 2026-11-24 at 18:54 +0800, Wentao Guan wrote:
+> INSTALL_MOD_STRIP=3D1 maps to "strip --strip-debug", which is a section
+> operation: it removes .debug_* and .rela.debug_* but leaves the symbol
+> table alone.=C2=A0 When the assembler has to name gcc's -g labels in the
+> relocations it emits for debug data, those labels stay in .symtab and
+> survive the strip as orphans.=C2=A0 Whether that happens is a property of=
+ the
+> target's assembler, not of the kernel: the x86-64 and arm64 assemblers
+> resolve the DWARF references against the section symbol with an addend,
 
-    R_LARCH_64          .LFB1 + 0
-    R_LARCH_ADD_ULEB128 .LVL0 + 0
+Qinggang has recently improved ld.bfd to handle relocations against
+section + addend in relaxation, thus I guess the assembler can be
+modified to use section + addend like x86-64 and arm64 for DWARF now
+(maybe opt-in with a switch to keep compatibility with old linkers).
 
-and the .LVL, .LBI, .LBB, .LFB and .LPFE labels of every object survive
-the strip as orphans.
-
-On a 7.2.2-based LoongArch distribution build such labels are 86.7% of
-the symbol entries in a stratified sample of 295 of the 5712 modules.
-Dropping them shrinks the module payload by 22% (176 MB to 136 MB) and
-the linux-image package by 20% (195 MB to 156 MB).
-
-Add --discard-locals to the default.  binutils removes a local symbol
-only when its name follows the assembler's local label convention and no
-relocation in the output names it, so what the module loader needs
-survives: the relocation set of every module is byte-for-byte identical
-before and after, .LC constants, .LPFE and the
--fpatchable-function-entry labels stay, and exactly one SHT_SYMTAB
-remains as elf_validity_cache_index_sym() requires.  Source-level
-symbols are kept as well, which is where this differs from
---strip-unneeded, proposed for the riscv module bloat by Charlie Jenkins
-[1]; Masahiro Yamada objected that it also removes real symbols such as
-abm_settings from kallsyms.
-
-Keep LLVM builds on plain --strip-debug: llvm-strip refuses to strip a
-symbol that a relocation still names and aborts the whole install, and a
-clang-built LoongArch module carries such labels, the .L.str of its
-string constants:
-
-    llvm-strip: error: 'fc.ko': not stripping symbol '.L.str.1' because
-    it is named in a relocation
-
-so probe $(STRIP) for binutils.  Nothing is lost on LLVM builds: clang
-emits none of the debug labels that bloat the package.
-
-Placing the option in the INSTALL_MOD_STRIP=1 default also covers the
-other in-tree users of the variable, the rpm and Arch packaging under
-scripts/package/.
-
-Boot tested with qemu-system-loongarch64 (EDK2 firmware, vmlinuz.efi,
-test modules loaded from the initramfs with finit_module()): modules
-stripped with --strip-debug, --discard-locals and --strip-unneeded all
-load with rc=0, while --strip-all is rejected with "module has no
-symbols (stripped?)".
-
-Link: https://lore.kernel.org/all/CAK7LNAQ809M8VKAOBfqSn_Sc8iPgTMVu5icOgnddH_YKDvOpzA@mail.gmail.com/ [1]
-Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
----
-Changes in v2:
-as Nathan Chancellor suggested.
-- Move the option from the Debian packaging to the INSTALL_MOD_STRIP=1
-  default in scripts/Makefile.modinst, so that the rpm and Arch
-  packaging and plain "make modules_install" get the same treatment.
-- Drop the LoongArch condition: whether the labels exist is a property
-  of the target's assembler, and on x86-64 and arm64 the option removes
-  nothing to speak of, so one generic default is safe everywhere.
-- Replace the projected package numbers with a measured full bindeb-pkg
-  run: the linux-image package shrinks from 195 MB to 156 MB.
-- Reference the earlier riscv discussion of --strip-unneeded and its
-  kallsyms objection.
-- Rebase onto v7.4-rc3.
-v1 Link: https://lore.kernel.org/loongarch/E73BE2D8A39F2EBF+20261123121554.2559667-2-guanwentao@uniontech.com/
-
- scripts/Makefile.modinst | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/scripts/Makefile.modinst b/scripts/Makefile.modinst
-index 9ba45e5b32b18..57fdfeda9130d 100644
---- a/scripts/Makefile.modinst
-+++ b/scripts/Makefile.modinst
-@@ -81,6 +81,12 @@ ifdef INSTALL_MOD_STRIP
- 
- ifeq ($(INSTALL_MOD_STRIP),1)
- strip-option := --strip-debug
-+# llvm-strip fails the install when --discard-locals hits a symbol that
-+# a relocation still names; GNU strip keeps it, so limit the option to
-+# binutils.
-+ifneq ($(shell $(STRIP) --version 2>/dev/null | grep -qs '^GNU strip' && echo y),)
-+strip-option += --discard-locals
-+endif
- else
- strip-option := $(INSTALL_MOD_STRIP)
- endif
-
-base-commit: aebb7274476403040d582c61478df8f4a7bf9cd3
--- 
-2.47.3
-
+--=20
+Xi Ruoyao <xry111@xry111.site>
