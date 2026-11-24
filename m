@@ -1,53 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795492787;
-	b=eW8hcHA0hoGpfy2odSOCsbR2g8qDC9NbRJGHQOprThNV3SnSvprYfYDoQ+T9whKS95e0
-	 l727SpdwPMM+paFtSn36BQvLMPLPKVALNqHkgICWFJDn/afLdg+2gBi4Xawx2CMQpQmQ1
-	 aqXqbItMv1Yh6gRIq9jU47CN8fMrBXicCoamS64b0AoQj9D5SN9LUujXOXz2jzGziKmHY
-	 1C4j3G3h3h5eMFzNT0rg5MHctw9tJNQYtn3UU5K6VD/iRb6b1uzaa7R7dGURVJ9FaMvMl
-	 uttB4Kl7XuFhKaw3oEa+WZgsR+1oxQO3y1fCWun0T4lnLRWvY8txyJSVmEtdoPjOFcA==
+	t=1795496688;
+	b=HYhLHssJwYtZIWj9iWrjBMAckicqX6FCgfKzGjfYedjFaeizRAcpgDII8rdIvLd5vKyT
+	 bQRk++udd24lefNgkgXJVWI/AbnSMo5A+8RjNBTZJmOvzMeF3V2ih5GNxGgAD32MJUVIQ
+	 hK6/TvoYVu29du8Je+Zi1hLgt/y5JRgysAtCRcrzmDIclXSVAjatEFoGLb3ibQbV1TmqX
+	 Uk/dIuqpfvaEDqb1MO7Lwt+dZWRbh+Fzka4ohqir/M/uNZ8a1YcTn1ALUXYT/OpIVm+pU
+	 ysyW9qzbq5006YPfm+WJBiitI5ixX4IQGch7S6OZBWaaVldYrSg6zWz4VC/mqJSjXHQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795492787;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=D5LeOMqsJtStfPtah2unndSv6bQPxqZYjgEqECB3thM=;
-	b=iU7zi4cImz5kgLBmvsocILOjML7JS+Xj1SxXGqS2RTmKhUlUm88DLbscSwHJ3Z3HS8Du
-	 EScvCVvN2XNuKwBK6RoaD/3g4g5Aby9Mbzfoi0+EvBTGsX1kkXqJXOSYBMZyS42jVaGUG
-	 rfMNEEVcmVDcEsSniWagN4LsXAPCsNlAWaqxvOQiklnIzhYu5T27F4E5drxKyTjIQEYIK
-	 OEMJPA3kA46shftonyXa9dqAvLMn1BpERIp8INB/AvHmeLcaNXH9hTNKGQgqQ1puYgK6+
-	 WRXjWhfvNRZziWp8B6MuA27Qzditkuy+mzPKa7AUf9o3g8EnKDtt9ByEE0miUHgpvoA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795496688;
+	h=DMARC-Filter:Received:Received:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-CM-SenderInfo:X-Coremail-Antispam;
+	bh=S9siEsISEhUmobrHfk43GWP8sT+YJJExitvIuJS0LwQ=;
+	b=nNVBAb0bqzjNdeqGlwLlnKU7cU4NTA4fQ4V89sy4MsCtN0BxkSATzXLh/bQoG9259wxE
+	 DMOzdXM99M5CWo30ylPOuheyVRL1wOb59tEQXwejUYmEHN3QZ2Rtl1Csjs2hNEU/cwqTS
+	 2aIKZlWvoO14rweNFaqfRk9aiB43M3IKud3oS1rXAmdJXo5dBd7NJmk+VPEtPnu0n9yvI
+	 q/fDoczIm2BqjE6oS7/y8ZYC2bqz/vNI3+X0ClCE7XfpBefBud0smMVXGtSdTiQkKyRvn
+	 /5yLq8ntbYnvRoGKBUVEMvhC5hZKagtRapMEPNTOCM6rlwVmzRMTjUA2ilmfY+ENB9w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LQEkO3Io;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22117606A33A;
-	Tue, 24 Nov 2026 03:59:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LQEkO3Io
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 754431F000CF;
-	Tue, 24 Nov 2026 03:59:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795492786;
-	bh=D5LeOMqsJtStfPtah2unndSv6bQPxqZYjgEqECB3thM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=LQEkO3Io+NWWzI6HqfHv1pePR5pVKKy1znmGzqHLrOlgfaunV1+Uk3YI9aoGZ0hLz
-	 igLCHBJNm43KSCBxi1l1SCT4xhKAJti6H6/iE9Scv17VOnLhFu291VWq4eiB1mpEjA
-	 EvYzpU6W8FiFIJ154V8aKwRuEqe/rZEPS82NoRbgdNbARlBoMgC1bdZnOZ0CyPHM40
-	 tO9CLpXynrqocCFPaMI4c5XCZ5h7rUUo+lo0b5ndVRG0DsysX0fWM0lcV1FKHRSob1
-	 apOOVMxoce7t0pXbKFuL+8XRyC0rXPAWuAjPkfEXihNR8ODzRAU/QGMfi+R4rz9juD
-	 cMIKOhhpNtgjA==
-Date: Mon, 23 Nov 2026 20:59:42 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Wentao Guan <guanwentao@uniontech.com>
-Cc: chenhuacai@kernel.org, linux-kbuild@vger.kernel.org,
-	loongarch@lists.linux.dev
-Subject: Re: [PATCH RFC] kbuild: deb-pkg: strip orphaned debug labels from
- LoongArch modules
-Message-ID: <20261124035942.GB2738970@ax162>
-References: <E73BE2D8A39F2EBF+20261123121554.2559667-2-guanwentao@uniontech.com>
+	dmarc=none header.from=loongson.cn;
+	spf=pass smtp.mailfrom=loongson.cn;
+	arc=none smtp.remote-ip=114.242.206.163
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1F94606A321
+	for <loongarch@lists.linux.dev>; Tue, 24 Nov 2026 05:04:46 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F1F94606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [123.138.236.242])
+	by gateway (Coremail) with SMTP id _____8AxS_DmGgVrgHUiAA--.32708S3;
+	Tue, 24 Nov 2026 13:04:38 +0800 (CST)
+Received: from linux.localdomain (unknown [123.138.236.242])
+	by front1 (Coremail) with SMTP id qMiowJCxNs3lGgVr3_82AA--.30298S2;
+	Tue, 24 Nov 2026 13:04:38 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Hengqi Chen <hengqi.chen@gmail.com>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH RFC] LoongArch: BPF: Add support for UHMUL and SHMUL
+Date: Tue, 24 Nov 2026 13:04:37 +0800
+Message-ID: <20261124050437.392-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -57,102 +51,104 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <E73BE2D8A39F2EBF+20261123121554.2559667-2-guanwentao@uniontech.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxNs3lGgVr3_82AA--.30298S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7uFy3uw1rtw17XF47CF1kCrX_yoW5JFy3pr
+	ZFkrn5Crs5XFySqF9rJwsrur43tan3Cry2qF1ayayfJrW3Xa45XF18KwnrKFZ3JaykXFsY
+	gr429rn8uFy3J3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UUUUU==
 
-On Mon, Nov 23, 2026 at 08:15:55PM +0800, Wentao Guan wrote:
-> With CONFIG_DEBUG_INFO, gcc emits .L-prefixed labels for function and
-> block boundaries and for location views (.LVL, .LBI, .LBB, .LFB, .LPFE),
-> and the assembler keeps them in .symtab as long as a debug section
-> references them.  On x86-64 those references are expressed as a section
-> symbol plus an addend and the labels are discarded, but the LoongArch
-> assembler has to name them in relocations:
-> 
->     0000000000000057 R_LARCH_64          .LFB1 + 0
->     0000000000000015 R_LARCH_ADD_ULEB128 .LVL0 + 0
-> 
-> so they end up in the object's symbol table.
-> 
-> INSTALL_MOD_STRIP=1 expands to "strip --strip-debug", which is a section
-> operation: it drops .debug_* and .rela.debug_* but leaves the symbol
-> table alone, so every label that was only referenced from debug data
-> stays behind as an orphan.  On 7.2.2-loong64-desktop-rolling 86.7% of the
-> roughly 3M module symbols are such labels.  Nothing uses them at run time,
-> yet they cost 22% of the module payload (168 MB -> 130 MB) and 19% of the
-> linux-image package (195 MB -> 157 MB).  This is the same problem
-> commit ac031f26e89cc ("kbuild: add option for stripping modules while
-> installing them") addressed for the general debug-info case.
-> 
-> Strip them with --discard-locals as well.  binutils removes a local
-> symbol only when its name still follows the assembler's local label
-> convention (.L, .., _.L_ and the L<digits> pseudo labels) *and* no
-> relocation in the output still names it: mark_symbols_used_in_relocations()
-> sets BSF_KEEP on every relocation target and filter_symbols() keeps those
-> unconditionally.  What the module loader needs therefore survives -- the
-> relocation set of every module is byte-for-byte identical before and
-> after, .LC, .LPFE and the -fpatchable-function-entry labels stay, exactly
-> one SHT_SYMTAB remains as elf_validity_cache_index_sym() requires, and
-> the modules are still signed, because modules_install strips before it
-> signs.  The dbg package is built from the unstripped modules in the build
-> tree, so it keeps all debug information.
-> 
-> Restrict this to LoongArch on a GNU toolchain, everyone else keeps
-> INSTALL_MOD_STRIP=1.  Other architectures never see these labels: on
-> x86-64 the option drops two unreferenced .LC symbols out of an amdgpu.ko
-> and leaves all 429,648 relocations alone, so there is nothing to gain
-> there.  LLVM builds have to keep the plain option, because
-> kbuild hands the same value to llvm-strip for LLVM=1 and llvm-strip
-> refuses to strip a symbol that a relocation still names, aborting the
-> build, while clang does emit such labels for string constants:
-> 
->     llvm-strip: error: 'super.ko': not stripping symbol '.L.str.1'
->     because it is named in a relocation
-> 
-> Clang none the less generates none of the debug labels that make the
-> package grow, so an LLVM build loses nothing by being left alone.
-> 
-> Boot tested with qemu-system-loongarch64 (EDK2 firmware, vmlinuz.efi,
-> test modules loaded from the initramfs with finit_module()): modules
-> stripped with --strip-debug, --discard-locals and --strip-unneeded all
-> load with rc=0, while --strip-all is rejected with "module has no symbols
-> (stripped?)".
-> 
-> Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
-> ---
->  scripts/package/builddeb | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/scripts/package/builddeb b/scripts/package/builddeb
-> index a806f5094da44..a355d65927115 100755
-> --- a/scripts/package/builddeb
-> +++ b/scripts/package/builddeb
-> @@ -35,7 +35,14 @@ install_linux_image () {
->  		${MAKE} -f ${srctree}/Makefile INSTALL_DTBS_PATH="${pdir}/usr/lib/linux-image-${KERNELRELEASE}" dtbs_install
->  	fi
->  
-> -	${MAKE} -f ${srctree}/Makefile INSTALL_MOD_PATH="${pdir}" INSTALL_MOD_STRIP=1 modules_install
-> +	mod_strip="1"
-> +	if [ "${SRCARCH}" = loongarch ] &&
-> +		"${STRIP:-strip}" --version 2>/dev/null | grep -qs "^GNU strip"; then
-> +		mod_strip="--strip-debug --discard-locals"
-> +	fi
-> +
-> +	${MAKE} -f ${srctree}/Makefile INSTALL_MOD_PATH="${pdir}" \
-> +		INSTALL_MOD_STRIP="${mod_strip}" modules_install
->  	rm -f "${pdir}/lib/modules/${KERNELRELEASE}/build"
->  
->  	# Install the kernel
-> -- 
-> 2.47.3
-> 
+Implement JIT lowering for UHMUL and SHMUL on LoongArch by utilizing
+hardware multiplication instructions MULH.{DU,D} and enabling support
+via bpf_jit_supports_hmul().
 
-I don't like this patch. This feels like a generic problem that is being
-stuffed in the wrong place. At the very least, this probably belongs in
-scripts/Makefile.modinst rather than the Debian packaging. Furthermore,
-are other architectures impacted by this? Is there a toolchain bug filed
-for this?
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+Not tested yet, just RFC.
 
+ arch/loongarch/include/asm/inst.h |  2 ++
+ arch/loongarch/net/bpf_jit.c      | 24 ++++++++++++++++++++++--
+ 2 files changed, 24 insertions(+), 2 deletions(-)
+
+diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
+index e061f966f7d1..fd6b39d5f0d0 100644
+--- a/arch/loongarch/include/asm/inst.h
++++ b/arch/loongarch/include/asm/inst.h
+@@ -777,6 +777,8 @@ DEF_EMIT_REG3_FORMAT(subw, subw_op)
+ DEF_EMIT_REG3_FORMAT(subd, subd_op)
+ DEF_EMIT_REG3_FORMAT(mulw, mulw_op)
+ DEF_EMIT_REG3_FORMAT(muld, muld_op)
++DEF_EMIT_REG3_FORMAT(mulhd, mulhd_op)
++DEF_EMIT_REG3_FORMAT(mulhdu, mulhdu_op)
+ DEF_EMIT_REG3_FORMAT(divw, divw_op)
+ DEF_EMIT_REG3_FORMAT(divd, divd_op)
+ DEF_EMIT_REG3_FORMAT(modw, modw_op)
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index 567729921d6d..b12da3e422c6 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -683,6 +683,21 @@ static int add_exception_handler(const struct bpf_insn *insn,
+ 	return 0;
+ }
+ 
++static void emit_various_muld(struct jit_ctx *ctx, u8 dst, u8 src, s16 off)
++{
++	switch (off) {
++	case BPF_UHMUL:
++		emit_insn(ctx, mulhdu, dst, dst, src);
++		break;
++	case BPF_SHMUL:
++		emit_insn(ctx, mulhd, dst, dst, src);
++		break;
++	default:
++		emit_insn(ctx, muld, dst, dst, src);
++		break;
++	}
++}
++
+ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool extra_pass)
+ {
+ 	u8 tm = -1;
+@@ -804,7 +819,7 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 		emit_insn(ctx, mulw, dst, dst, src);
+ 		break;
+ 	case BPF_ALU64 | BPF_MUL | BPF_X:
+-		emit_insn(ctx, muld, dst, dst, src);
++		emit_various_muld(ctx, dst, src, off);
+ 		break;
+ 
+ 	/* dst = dst * imm */
+@@ -814,7 +829,7 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 		break;
+ 	case BPF_ALU64 | BPF_MUL | BPF_K:
+ 		move_imm(ctx, t1, imm);
+-		emit_insn(ctx, muld, dst, dst, t1);
++		emit_various_muld(ctx, dst, t1, off);
+ 		break;
+ 
+ 	/* dst = dst / src */
+@@ -2571,3 +2586,8 @@ bool bpf_jit_supports_callx(void)
+ {
+ 	return true;
+ }
++
++bool bpf_jit_supports_hmul(void)
++{
++	return true;
++}
 -- 
-Cheers,
-Nathan
+2.42.0
+
