@@ -1,89 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795539957;
-	b=PutiI5ctFsxI4aXG/EshvDDO7PGzmXF8K42NDR95Bqq1hJAXDQHMFIYHsot3v7BgZ+/G
-	 4X9kR0TGPWJVPERBuPCdTCuYrRw1aDbfIpx8eBMs2wPcvg2G4g4El7UHtt3yeDw9zUAx4
-	 2EN4TiO0kkDguu8snSh5EPN+HmHwo1trfpFsHvG6WmI9wG+7UcmArIOhWa1jaI93CS+hd
-	 DeghQX7nWq/HWVe+DzObA2BDYuW2v0rZA4e4MyLieOiShHdgpTJeCjwqtfY9RoCGAURX8
-	 aOhKbFMDI1jH2E+5bk7h9mfbBdZHMUvHkoIO/t4TNDC4giJ4QaWIFr7vEoTzjBggKGg==
+	t=1795540667;
+	b=PU+P8XxFXLeAIBZTgsPiM7zioelPSlwyznSjaQWvuZ59B6L3bu8C9EKEzFS28n/cetYg
+	 hX/gmjLuJfqJFOq4Mdf6BMJO3ppRNc0mEzLIpSGvGrNcownNx2iWeUDAcuFhM1GrNvDqw
+	 jRHy6cCLBdveRj38HN8a0Z/VjZOipMoijLRPZh45QX5O04UrfIT8RhFIHjZ0NeWeWNZLl
+	 pwUBu1B5YIBgxn28btEdIyTxib6KWoGTpdRNbwdLEbcKoBeAuXHmTv+G6/Oeh2Zo1GWLO
+	 n4+hamdWmqGJAoCYdeetYLj9Vrglk22V94gNSxd8dAlHg7fQ8yMoQUkPb09OwwGokgw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795539957;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=cEp/cXDtvYTiH8Vp1GK2CqYt15Bi6PXi0it+ySjQOVc=;
-	b=dY4QLchuU6MA147eesKlpdmq1cTsssIUWsZxFAyNh82pi2M6ChFwhv31C5z+URg2hRNX
-	 87zuekccpuYbCsnup2cpuWHhjQACF2OQxLTTRIySiOg0b81NjNAFJr1nPzvhntNKmkW8o
-	 1NM80Ek7oAwxi99ccrRpV3gQt4iu8P2P1MKCb8o6dg920MtidLrsGH6EufmYRN8g0O7JW
-	 /sP7PmzDZDvnLXiRZkbyTlYZenr37h2BG/0PhmlSXcMTn/yzAspGsl2033xRySCB1p+OA
-	 P+5ygoZPd/sBx2OUQmgJIYll7tSWTTt7aMcFmnpQ36FsoXWDw958VQDg186LIIlStcQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795540667;
+	h=Received:DKIM-Signature:From:To:Cc:In-Reply-To:References:Subject:
+	 Message-Id:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	 X-Mailer:X-Developer-Signature:X-Developer-Key;
+	bh=8g/Vm4O1rEWsEjj5TW0V+S131Vo2iWAqlSkIzIpnpdk=;
+	b=NAOm8ES97xxYqDARMN73g3r2oj7efs82gYgm4T8tpZ7Pi9Ajb5gc34qSPTuz96WE2aB7
+	 +lt7biYOPG1cCC0WBEX3OF/GeDjxNyWU2d3l4/kmEU/ghYZVMI40ZLDNSpM7TrsThr5il
+	 GkYLNx4qCqFNxE95nTSe/SSYtCU45j/ziIJ6Bczc5+8G4KNHhP32OobTEHz+XbKe9UiFb
+	 qAcknpY5tuckcWAiEoPh89ljhcQf+18IMdj/jN/UOGYi+BB2NdFuyCINkkW+BYMdOuvyJ
+	 hqsLpQOKk9eHwmzyBBn9UM1zgY94WxgaEo7GqeD51fxC3d1b3qfN5YH1uygixxKh+hA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bni2B9pu;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LNqnjne5;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC76606A31E;
-	Tue, 24 Nov 2026 17:05:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 354E9606A321;
+	Tue, 24 Nov 2026 17:17:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bni2B9pu
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1346D1F000C0;
-	Tue, 24 Nov 2026 17:05:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LNqnjne5
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3EBC1F000EB;
+	Tue, 24 Nov 2026 17:17:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795539957;
-	bh=cEp/cXDtvYTiH8Vp1GK2CqYt15Bi6PXi0it+ySjQOVc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=bni2B9puF7kfV9Am5t1Ov8WQVRWkWZkohYhFYaAOCp/DQ8YyK4hiNB/6DDEmutNnx
-	 9DItMmeG9wGbsSnTa/2g6Bc+qZD0MoOo2QOCjGO0RuxOqF3Tm1xaa1EZJ9bnO6HeVo
-	 aY1UKSh6mwdd27HE+ANXhvMJYuMadmQYUspZ9MtLopcJo2kqu6TZRKLJOQ+VmUeRA8
-	 BHSro9BNahirHyqaXlAUVp75XTw4Ei0heRmarVboAGmlnTryJvfEdsallK7L2ZowDl
-	 Fuw7NBHUoexrLNsU88p9DA3WymGQjoLqXzSxY/kk/t5a2Ys6NENMpuN8WNAadIMoey
-	 tbOkOgbd3/Bhg==
-Date: Tue, 24 Nov 2026 19:05:38 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Yeoreum Yun <yeoreum.yun@arm.com>
-Cc: Russell King <linux@armlinux.org.uk>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Barry Song <baohua@kernel.org>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	David Hildenbrand <david@kernel.org>,
-	Michal Hocko <mhocko@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>, Anup Patel <anup@brainfault.org>,
-	Atish Patra <atish.patra@linux.dev>, Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Jonas Bonn <jonas@southpole.se>,
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-	Stafford Horne <shorne@gmail.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
-	linux-openrisc@vger.kernel.org
-Subject: Re: [PATCH RESEND v2 12/21] mm/pgtable: redefine PGTABLE_LEVEL enum
- with ascend order from PGD
-Message-ID: <awXD4i47F-VAG1tD@kernel.org>
-References: <20261102-dummy_ptxp3-v2-0-78840b2ec73c@arm.com>
- <20261102-dummy_ptxp3-v2-12-78840b2ec73c@arm.com>
+	s=k20260515; t=1795540666;
+	bh=8g/Vm4O1rEWsEjj5TW0V+S131Vo2iWAqlSkIzIpnpdk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date;
+	b=LNqnjne5/f65lSTK2EHGuwMzt9Q5apk0gatGUe3I1rUBe7pT7mqHIb8nfd7mbqbw5
+	 6EehB5xeTVdT48q7RjeChj6k1rdci86f1pavdzAioG3yTNBFSAmvGdGsk9OhpgZfUz
+	 ADJlnVzyD4utQAZ2zhaXjCYXMUlxihAmLYwK6rRuFSEQTu2pjiw7hvkgnJ72wvXTb8
+	 MnGe2J6+j/Ti48JvM9aMo1zeL6asTw5Ej9uTQIoJjeSICQgGNBkGyy4MQM21OfZLcA
+	 5LkmU/b4HvW89P/3OqXMkKoRnoW3v2C33CWwrGyJiJ8P+pXqKiz19epfKLYsiarvrq
+	 h6UCGc8K7x/Cw==
+From: Mark Brown <broonie@kernel.org>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Keguang Zhang <keguang.zhang@gmail.com>, 
+ Huacai Chen <chenhuacai@kernel.org>, Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
+ loongarch@lists.linux.dev, linux-sound@vger.kernel.org
+In-Reply-To: <20261124072413.3282851-1-zhoubinbin@loongson.cn>
+References: <20261124072413.3282851-1-zhoubinbin@loongson.cn>
+Subject: Re: [PATCH] ASoC: loongson: Set dai_fmt for auto format selection
+Message-Id: <179553036944.264265.14453578369983572823.b4-ty@b4>
+Date: Tue, 24 Nov 2026 14:26:09 +0000
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -93,65 +61,46 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261102-dummy_ptxp3-v2-12-78840b2ec73c@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.17-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1123; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=W5mecpkLSmd6cJfRbUgrBak2oNQOqMfqUpqEzESQHPg=;
+ b=owGbwMvMwCWm/754w+YLFp2Mp9WSGLJZj21fsmxp26HmWkfn9+/Z/hTfTlo5yU0wr+ygyN170
+ xhcVAtyO0pZGMS4GGTFFFnisrhf1pe8XsN3cGEbzBxWJpAhDFycAjCRhhmMDHfj9hike/o/6dh+
+ 5HGiU1ynyaWsSYZ1Z/0K/y+1m51yu5mR4VJPaL9FpZ9+6pqbL48KHLZyMxaeKOL7S9Q6nmPyrQo
+ hBgA=
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-On Mon, Nov 02, 2026 at 11:21:25AM +0000, Yeoreum Yun wrote:
-> The PGTABLE_LEVEL enum values appear to be ordered in the opposite direction
-> from their intended usage.
-> 
-> Intuitively, higher page table levels should have smaller enum values,
-> but PTE is currently assigned 0.
+On Tue, 24 Nov 2026 15:24:13 +0800, Binbin Zhou wrote:
+> ASoC: loongson: Set dai_fmt for auto format selection
 
-That's not what x86 thinks :)
-They even expose it in /proc/vmstat with smaller numbers meaning lower levels
+Applied to
 
-$ grep direct_map /proc/vmstat 
-direct_map_level2_splits 152
-direct_map_level3_splits 4
-direct_map_level2_collapses 0
-direct_map_level3_collapses 0
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-7.5
 
-Just an observation, I don't mind either order.
- 
-> For consistency and cleanup, reverse the enum value ordering.
-> 
-> Since there is no current user relies on these numbers to be ascending from
-> PTE->PGD, so it can be changed to be ascending from PGD->PTE, in the
-> direction of the page table walk.
-> 
-> Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
-> Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
-> ---
->  include/linux/pgtable.h | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-> index 780fe849ff8b7..a032f95943357 100644
-> --- a/include/linux/pgtable.h
-> +++ b/include/linux/pgtable.h
-> @@ -2288,11 +2288,11 @@ static inline bool arch_has_pfn_modify_check(void)
->  typedef unsigned int pgtbl_mod_mask;
->  
->  enum pgtable_level {
-> -	PGTABLE_LEVEL_PTE = 0,
-> -	PGTABLE_LEVEL_PMD,
-> -	PGTABLE_LEVEL_PUD,
-> +	PGTABLE_LEVEL_PGD = 0,
->  	PGTABLE_LEVEL_P4D,
-> -	PGTABLE_LEVEL_PGD,
-> +	PGTABLE_LEVEL_PUD,
-> +	PGTABLE_LEVEL_PMD,
-> +	PGTABLE_LEVEL_PTE,
->  };
->  
->  static inline const char *pgtable_level_to_str(enum pgtable_level level)
-> 
-> -- 
-> 2.43.0
-> 
+Thanks!
 
--- 
-Sincerely yours,
-Mike.
+[1/1] ASoC: loongson: Set dai_fmt for auto format selection
+      https://git.kernel.org/broonie/sound/c/279cd42031ae
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
