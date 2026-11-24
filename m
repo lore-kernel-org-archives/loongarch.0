@@ -1,94 +1,53 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.52
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795475408;
-	b=KGG+QfNHxej8e7IQXAdG+bcF9/vmJTmSccGU24ZKEIdWxpbapfNV1R+y0Bll8I7nSbTA
-	 DZfDV9gYtXAN7Pi4Rg6XjjtAFnFXsaFjZBsZOJjKbq9/t6FQDkVEa5pOo4h/9ZurS5pPe
-	 43765j2ISSIafaX1uLohMcUNiQ7DaY7qykankY7Zon1n63f9ZP5VfPqGmrw8r+UtKA/0D
-	 AZSWJRsFYdqYdHluAYJWUo7kBhBPR5M0EgYzkRQ2hl1FOIlsBRHxX6wyhKjOTlCe5bhBz
-	 V1u7EBnJN3c0V3MiLm9qmRq7WdBSKzQjLwA35HtMmwqCf9hJeAfoNiN15nh5++gGZ0Q==
+	t=1795492787;
+	b=eW8hcHA0hoGpfy2odSOCsbR2g8qDC9NbRJGHQOprThNV3SnSvprYfYDoQ+T9whKS95e0
+	 l727SpdwPMM+paFtSn36BQvLMPLPKVALNqHkgICWFJDn/afLdg+2gBi4Xawx2CMQpQmQ1
+	 aqXqbItMv1Yh6gRIq9jU47CN8fMrBXicCoamS64b0AoQj9D5SN9LUujXOXz2jzGziKmHY
+	 1C4j3G3h3h5eMFzNT0rg5MHctw9tJNQYtn3UU5K6VD/iRb6b1uzaa7R7dGURVJ9FaMvMl
+	 uttB4Kl7XuFhKaw3oEa+WZgsR+1oxQO3y1fCWun0T4lnLRWvY8txyJSVmEtdoPjOFcA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795475408;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Date:X-Google-Original-Date:Subject:In-Reply-To:CC:From:To:Message-ID:
-	 Mime-Version:Content-Type:Content-Transfer-Encoding;
-	bh=omPzYJsyHFXBTWaYCXRuHKP+shwbFJ7ykCdiwHLxPZA=;
-	b=TeaVCK78tlW/mx3ArMDBQvKdhn2gmWUY77s3i9+pX2mIZk3MrrkmUVqDXFqKiyLJHqyr
-	 iDrOepIdmhauKV8K5EP0vptK0PtRENOn0D2OVN/n0DcfduhJjf9b7m2A7EJfZzvqRWSQe
-	 MsBYmu9R2/bi7ZhNlwJYt8HBVKQ/mzxNoLUxcxT9w5g9yzGyzbZPzwAmJ0lzNt6PeBq+V
-	 zVbJhbYBgTSUMwsJJiiV/mlZOemb84+6hNBJKNFmINP2tDbH+x7ssHDmC4LeVi7f3ff1V
-	 rp0q7FQHCM+e9tioXvLjFEJRlEpNnfY0I8xgyJY2wzFx2OIc6ZMCX2wGzHBZb8Ivpdg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795492787;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=D5LeOMqsJtStfPtah2unndSv6bQPxqZYjgEqECB3thM=;
+	b=iU7zi4cImz5kgLBmvsocILOjML7JS+Xj1SxXGqS2RTmKhUlUm88DLbscSwHJ3Z3HS8Du
+	 EScvCVvN2XNuKwBK6RoaD/3g4g5Aby9Mbzfoi0+EvBTGsX1kkXqJXOSYBMZyS42jVaGUG
+	 rfMNEEVcmVDcEsSniWagN4LsXAPCsNlAWaqxvOQiklnIzhYu5T27F4E5drxKyTjIQEYIK
+	 OEMJPA3kA46shftonyXa9dqAvLMn1BpERIp8INB/AvHmeLcaNXH9hTNKGQgqQ1puYgK6+
+	 WRXjWhfvNRZziWp8B6MuA27Qzditkuy+mzPKa7AUf9o3g8EnKDtt9ByEE0miUHgpvoA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=dabbelt.com;
-	spf=pass smtp.mailfrom=dabbelt.com;
-	dkim=pass header.d=dabbelt-com.20260707.gappssmtp.com header.i=@dabbelt-com.20260707.gappssmtp.com header.a=rsa-sha256 header.s=20260707 header.b=EvVhhyOF;
-	arc=none smtp.remote-ip=74.125.82.52
-Received: from mail-dl1-f52.google.com (mail-dl1-f52.google.com [74.125.82.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LQEkO3Io;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A05C606A338
-	for <loongarch@lists.linux.dev>; Mon, 23 Nov 2026 23:10:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6A05C606A338
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22117606A33A;
+	Tue, 24 Nov 2026 03:59:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20260707.gappssmtp.com header.i=@dabbelt-com.20260707.gappssmtp.com header.a=rsa-sha256 header.s=20260707 header.b=EvVhhyOF
-Received: by mail-dl1-f52.google.com with SMTP id a92af1059eb24-18818daa3e7so2279461c88.0
-        for <loongarch@lists.linux.dev>; Mon, 23 Nov 2026 15:10:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20260707.gappssmtp.com; s=20260707; t=1795475406; x=1796080206; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:mime-version:message-id:to
-         :from:cc:in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=omPzYJsyHFXBTWaYCXRuHKP+shwbFJ7ykCdiwHLxPZA=;
-        b=EvVhhyOF1QJ9XKMvDvFEixTTqFnRI47w9mjeud4zXdwGonv3NnmYC8iZ4+nfJkBmx3
-         hgVkmMGiGdbDE8yzW/MCOVzFOwEyYJaGbkU1aixc/seaBfL325pv2GYHP5CeDJrkFDXU
-         2XgFoe4MJLfCgGcF/CcIAtEAbYlNsVrllIo/VLQ6uVwngDd7Yw+I3xtggd4vp/NpkmPq
-         WsKjg7+O9qp9nTLnvyQTTEGuorByMyMZ2N1CVi2m7mENRuGla59sJWZuAZsIiOIfKwrL
-         ZvBmshB9JYtzUoTAKfwzZawcl7HFQ3+pmFkVD+y5nwroYpwMBrhxHJA03kcpv8AJb0Gb
-         cPEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795475406; x=1796080206;
-        h=content-transfer-encoding:content-type:mime-version:message-id:to
-         :from:cc:in-reply-to:subject:date:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=omPzYJsyHFXBTWaYCXRuHKP+shwbFJ7ykCdiwHLxPZA=;
-        b=aqtnvBEsqBsaAJi2L4okS03NKuJWHOizUlKs0+1+gycfAPlAUY/Vt6rFg62JrphTql
-         DpSqAS66mgA2UwiOJMPJ6UVE+Q0+BR5CSjx/zOMDTWKDHOYX+Ll0cHAEn8gfELkhgIxu
-         T56E1VgWS2NWJFqXPaVeY57sid9Sw35UFfuU7RWvrp4J54dVwcuzhlLVag+llD0BN+kW
-         6Vz+YOyWxlbrYT+9UdSVtIZecTDXEUeM7sXNYU1T/og7whO0XewGGwXWCR4Klht60K2D
-         +fqJ8a1ZEJcL8KFcGrBQUpaRO8azva0yBhtYHLUdF4fX107wBUReVrA2ilDqlogLK/TO
-         lZNg==
-X-Forwarded-Encrypted: i=1; AL+hErHpZTXAchvADu8cbu21xi+MLG1MdXXXy0iyPG2y/TYHm9kNDSNj8uakm8HNjzMGi2xcocsjdGA25Eo=@lists.linux.dev
-X-Gm-Message-State: APuU4Z9uR9xfgPa5sVWWp00ehkqIqXJvRCUUxGiFAHbBBNweA7bNS7Rt
-	TNl0RaYjpxR5cbcX7dkA0ZHwtycr4ynNa+pp0mIA8MvTGq0nXDVuxY6KGPxpu7hs8hg=
-X-Gm-Gg: AZFdTZeIml2juuv/hIIPUlrvT0QGwJ1kZtLIX5xrz3nQJrvr7k3QY5bzgz7ZQFugfsL
-	PGQK5J9DxfmqpMvvJq6i/54kpCmh8EoXqdf0r/ofCFwQvVslyMsa0qAnEYQhCmlPrdKDBGxZv+S
-	w11O3BseK0RfBxgH0ZVyEFdGAOfa2VrhwBkECSb/2/25AKZV1gBtgtC4wIW/R3esZojQ1DdZR9T
-	KO8yybijfRCyD6b1qo2QbXqyO67hqpt2BHPeEgKwtvGtuiGeBxbOKK43kWAQbNueCnD8roivZ60
-	chA6CxmbJ+S9D5rkcdgc1TCaQwVKZOi5RPz72Qf7HolJXy1qg7+F3yLLUvdwdns+TZRXXIOfv5/
-	wKhaKrVKCudYUeRI9YjUcHdFLqlBbF3WZRxuNUTdaofuwDDrTGdSRTzZym7peaoo+xf+KuvJ7az
-	8WJZA+VpfrXXsy3YFGdP3RUJmKlpwjE1mFL1KRu2VNLjj4xH/YtC3kYqGLaQmiJzK8h7k/T0gMT
-	rxFPQ1irlIfN1M0M974VRjz545lxhnkxYf0aSeY2aEHs6wDk3WPFdwemjGrRqmRwgGa55BhCeUD
-	S9rpzY4hh2c8ptL5LIIt0n3yFtFaCl50kiVu7oG2nIeWXdalP3nV5PU3QYMkcWW7Q6LzYP7iuxw
-	WJBeHTswhjB6bEzto0NBF1rXfiBc=
-X-Received: by 2002:a05:7022:4181:b0:14a:a6dc:9cbf with SMTP id a92af1059eb24-1b5568abf0bmr18844780c88.4.1795475406085;
-        Mon, 23 Nov 2026 15:10:06 -0800 (PST)
-Received: from localhost ([192.184.165.199])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1b5567ff27bsm33422877c88.6.2026.11.23.15.10.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Nov 2026 15:10:05 -0800 (PST)
-Date: Mon, 23 Nov 2026 15:10:05 -0800 (PST)
-X-Google-Original-Date: Mon, 23 Nov 2026 15:09:50 PST (-0800)
-Subject:     Re: [PATCH v4 04/19] efi/riscv: Rename __init_text_end to __inittext_end like other archs
-In-Reply-To: <20261118182105.1633603-25-ardb+git@google.com>
-CC: linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-  Ard Biesheuvel <ardb@kernel.org>, jgg@nvidia.com, pjw@kernel.org, aou@eecs.berkeley.edu, chenhuacai@kernel.org,
-  loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: ardb+git@google.com
-Message-ID: <mhng-D54B7D56-AACE-456E-AF40-670E83DF8B47@Palmers-Mini.rwc.dabbelt.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LQEkO3Io
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 754431F000CF;
+	Tue, 24 Nov 2026 03:59:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795492786;
+	bh=D5LeOMqsJtStfPtah2unndSv6bQPxqZYjgEqECB3thM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=LQEkO3Io+NWWzI6HqfHv1pePR5pVKKy1znmGzqHLrOlgfaunV1+Uk3YI9aoGZ0hLz
+	 igLCHBJNm43KSCBxi1l1SCT4xhKAJti6H6/iE9Scv17VOnLhFu291VWq4eiB1mpEjA
+	 EvYzpU6W8FiFIJ154V8aKwRuEqe/rZEPS82NoRbgdNbARlBoMgC1bdZnOZ0CyPHM40
+	 tO9CLpXynrqocCFPaMI4c5XCZ5h7rUUo+lo0b5ndVRG0DsysX0fWM0lcV1FKHRSob1
+	 apOOVMxoce7t0pXbKFuL+8XRyC0rXPAWuAjPkfEXihNR8ODzRAU/QGMfi+R4rz9juD
+	 cMIKOhhpNtgjA==
+Date: Mon, 23 Nov 2026 20:59:42 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Wentao Guan <guanwentao@uniontech.com>
+Cc: chenhuacai@kernel.org, linux-kbuild@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: Re: [PATCH RFC] kbuild: deb-pkg: strip orphaned debug labels from
+ LoongArch modules
+Message-ID: <20261124035942.GB2738970@ax162>
+References: <E73BE2D8A39F2EBF+20261123121554.2559667-2-guanwentao@uniontech.com>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -97,93 +56,103 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <E73BE2D8A39F2EBF+20261123121554.2559667-2-guanwentao@uniontech.com>
 
-On Wed, 18 Nov 2026 10:21:10 PST (-0800), ardb+git@google.com wrote:
-> From: Ard Biesheuvel <ardb@kernel.org>
->
-> Align RISC-V with arm64, LoongArch and x86, and drop the underscore
-> between 'init' and 'text' in the section markers. This allows the value
-> to be captured by generic EFI stub code that can be shared between all
-> those architectures.
->
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+On Mon, Nov 23, 2026 at 08:15:55PM +0800, Wentao Guan wrote:
+> With CONFIG_DEBUG_INFO, gcc emits .L-prefixed labels for function and
+> block boundaries and for location views (.LVL, .LBI, .LBB, .LFB, .LPFE),
+> and the assembler keeps them in .symtab as long as a debug section
+> references them.  On x86-64 those references are expressed as a section
+> symbol plus an addend and the labels are discarded, but the LoongArch
+> assembler has to name them in relocations:
+> 
+>     0000000000000057 R_LARCH_64          .LFB1 + 0
+>     0000000000000015 R_LARCH_ADD_ULEB128 .LVL0 + 0
+> 
+> so they end up in the object's symbol table.
+> 
+> INSTALL_MOD_STRIP=1 expands to "strip --strip-debug", which is a section
+> operation: it drops .debug_* and .rela.debug_* but leaves the symbol
+> table alone, so every label that was only referenced from debug data
+> stays behind as an orphan.  On 7.2.2-loong64-desktop-rolling 86.7% of the
+> roughly 3M module symbols are such labels.  Nothing uses them at run time,
+> yet they cost 22% of the module payload (168 MB -> 130 MB) and 19% of the
+> linux-image package (195 MB -> 157 MB).  This is the same problem
+> commit ac031f26e89cc ("kbuild: add option for stripping modules while
+> installing them") addressed for the general debug-info case.
+> 
+> Strip them with --discard-locals as well.  binutils removes a local
+> symbol only when its name still follows the assembler's local label
+> convention (.L, .., _.L_ and the L<digits> pseudo labels) *and* no
+> relocation in the output still names it: mark_symbols_used_in_relocations()
+> sets BSF_KEEP on every relocation target and filter_symbols() keeps those
+> unconditionally.  What the module loader needs therefore survives -- the
+> relocation set of every module is byte-for-byte identical before and
+> after, .LC, .LPFE and the -fpatchable-function-entry labels stay, exactly
+> one SHT_SYMTAB remains as elf_validity_cache_index_sym() requires, and
+> the modules are still signed, because modules_install strips before it
+> signs.  The dbg package is built from the unstripped modules in the build
+> tree, so it keeps all debug information.
+> 
+> Restrict this to LoongArch on a GNU toolchain, everyone else keeps
+> INSTALL_MOD_STRIP=1.  Other architectures never see these labels: on
+> x86-64 the option drops two unreferenced .LC symbols out of an amdgpu.ko
+> and leaves all 429,648 relocations alone, so there is nothing to gain
+> there.  LLVM builds have to keep the plain option, because
+> kbuild hands the same value to llvm-strip for LLVM=1 and llvm-strip
+> refuses to strip a symbol that a relocation still names, aborting the
+> build, while clang does emit such labels for string constants:
+> 
+>     llvm-strip: error: 'super.ko': not stripping symbol '.L.str.1'
+>     because it is named in a relocation
+> 
+> Clang none the less generates none of the debug labels that make the
+> package grow, so an LLVM build loses nothing by being left alone.
+> 
+> Boot tested with qemu-system-loongarch64 (EDK2 firmware, vmlinuz.efi,
+> test modules loaded from the initramfs with finit_module()): modules
+> stripped with --strip-debug, --discard-locals and --strip-unneeded all
+> load with rc=0, while --strip-all is rejected with "module has no symbols
+> (stripped?)".
+> 
+> Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
 > ---
->  arch/riscv/include/asm/sections.h         | 2 +-
->  arch/riscv/kernel/image-vars.h            | 2 +-
->  arch/riscv/kernel/vmlinux.lds.S           | 4 ++--
->  drivers/firmware/efi/libstub/riscv-stub.c | 2 +-
->  4 files changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/sections.h b/arch/riscv/include/asm/sections.h
-> index a393d5035c54..4a882a28f414 100644
-> --- a/arch/riscv/include/asm/sections.h
-> +++ b/arch/riscv/include/asm/sections.h
-> @@ -11,7 +11,7 @@
->  extern char _start[];
->  extern char _start_kernel[];
->  extern char __init_data_begin[], __init_data_end[];
-> -extern char __init_text_begin[], __init_text_end[];
-> +extern char __inittext_begin[], __inittext_end[];
->  extern char __alt_start[], __alt_end[];
->  extern char __exittext_begin[], __exittext_end[];
->
-> diff --git a/arch/riscv/kernel/image-vars.h b/arch/riscv/kernel/image-vars.h
-> index 7b44b94f1283..bf703eba3fa5 100644
-> --- a/arch/riscv/kernel/image-vars.h
-> +++ b/arch/riscv/kernel/image-vars.h
-> @@ -27,7 +27,7 @@ __efistub__start		= _start;
->  __efistub__start_kernel		= _start_kernel;
->  __efistub__end			= _end;
->  __efistub__edata		= _edata;
-> -__efistub___init_text_end	= __init_text_end;
-> +__efistub___inittext_end	= __inittext_end;
->  #if defined(CONFIG_EFI_EARLYCON) || defined(CONFIG_SYSFB)
->  __efistub_sysfb_primary_display	= sysfb_primary_display;
->  #endif
-> diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
-> index 9849a3e4d102..0ec1b4b55e41 100644
-> --- a/arch/riscv/kernel/vmlinux.lds.S
-> +++ b/arch/riscv/kernel/vmlinux.lds.S
-> @@ -46,7 +46,7 @@ SECTIONS
->
->  	. = ALIGN(SECTION_ALIGN);
->  	__init_begin = .;
-> -	__init_text_begin = .;
-> +	__inittext_begin = .;
->  	.init.text : AT(ADDR(.init.text) - LOAD_OFFSET) ALIGN(SECTION_ALIGN) { \
->  		_sinittext = .;						\
->  		INIT_TEXT						\
-> @@ -72,12 +72,12 @@ SECTIONS
->  	}
->  	__exittext_end = .;
->
-> -	__init_text_end = .;
->  	. = ALIGN(SECTION_ALIGN);
->  #ifdef CONFIG_EFI
->  	. = ALIGN(PECOFF_SECTION_ALIGNMENT);
->  	__pecoff_text_end = .;
->  #endif
-> +	__inittext_end = .;
->  	/* Start of init data section */
->  	__init_data_begin = .;
->  	INIT_DATA_SECTION(16)
-> diff --git a/drivers/firmware/efi/libstub/riscv-stub.c b/drivers/firmware/efi/libstub/riscv-stub.c
-> index 725b634c5179..5cbc50a814e1 100644
-> --- a/drivers/firmware/efi/libstub/riscv-stub.c
-> +++ b/drivers/firmware/efi/libstub/riscv-stub.c
-> @@ -34,7 +34,7 @@ efi_status_t handle_kernel_image(unsigned long *image_addr,
->  	efi_status_t status;
->
->  	kernel_size = _edata - _start;
-> -	kernel_codesize = __init_text_end - _start;
-> +	kernel_codesize = __inittext_end - _start;
->  	kernel_memsize = kernel_size + (_end - _edata);
->  	*image_addr = (unsigned long)_start;
->  	*reserve_size = kernel_memsize;
+>  scripts/package/builddeb | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/scripts/package/builddeb b/scripts/package/builddeb
+> index a806f5094da44..a355d65927115 100755
+> --- a/scripts/package/builddeb
+> +++ b/scripts/package/builddeb
+> @@ -35,7 +35,14 @@ install_linux_image () {
+>  		${MAKE} -f ${srctree}/Makefile INSTALL_DTBS_PATH="${pdir}/usr/lib/linux-image-${KERNELRELEASE}" dtbs_install
+>  	fi
+>  
+> -	${MAKE} -f ${srctree}/Makefile INSTALL_MOD_PATH="${pdir}" INSTALL_MOD_STRIP=1 modules_install
+> +	mod_strip="1"
+> +	if [ "${SRCARCH}" = loongarch ] &&
+> +		"${STRIP:-strip}" --version 2>/dev/null | grep -qs "^GNU strip"; then
+> +		mod_strip="--strip-debug --discard-locals"
+> +	fi
+> +
+> +	${MAKE} -f ${srctree}/Makefile INSTALL_MOD_PATH="${pdir}" \
+> +		INSTALL_MOD_STRIP="${mod_strip}" modules_install
+>  	rm -f "${pdir}/lib/modules/${KERNELRELEASE}/build"
+>  
+>  	# Install the kernel
+> -- 
+> 2.47.3
+> 
 
-Reviewed-by: Palmer Dabbelt <palmer@dabbelt.com>
-Acked-by: Palmer Dabbelt <palmer@dabbelt.com>
+I don't like this patch. This feels like a generic problem that is being
+stuffed in the wrong place. At the very least, this probably belongs in
+scripts/Makefile.modinst rather than the Debian packaging. Furthermore,
+are other architectures impacted by this? Is there a toolchain bug filed
+for this?
+
+-- 
+Cheers,
+Nathan
