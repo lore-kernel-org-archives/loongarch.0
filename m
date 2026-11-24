@@ -1,60 +1,89 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=54.207.19.206
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795538788;
-	b=BAsUCfUNc+DkrJKd82chyZpsy8MdcVZkPN2luhM4kDS/hoEQe1W0iTWUsL/9e+8TsxOg
-	 IDIFXOerVnVqtymUQN/24Ah+o+pW8K6th6087L4HCXV9klfW6s8PWpXBxcYTMJx9TqdQn
-	 9tnGPSnu1gSXKVpDw3qOCZrSHTtPaYLN5Mcnr5xzzcvMyLyNzHtB1GYb45lXf/PUii/yD
-	 8BLDOLx6ylD70UDiGyk4ufu1CQ+XsdSzNtAhKia2P9ZYDj9HMAKX5I4XGO6B3o+VjEUJv
-	 g3F7LYVeGuw/0LkC6v39WrcRbwc6D7rSxYaD7xXtcF7n7/0dHtZaNv8VAGEy098anJQ==
+	t=1795539957;
+	b=PutiI5ctFsxI4aXG/EshvDDO7PGzmXF8K42NDR95Bqq1hJAXDQHMFIYHsot3v7BgZ+/G
+	 4X9kR0TGPWJVPERBuPCdTCuYrRw1aDbfIpx8eBMs2wPcvg2G4g4El7UHtt3yeDw9zUAx4
+	 2EN4TiO0kkDguu8snSh5EPN+HmHwo1trfpFsHvG6WmI9wG+7UcmArIOhWa1jaI93CS+hd
+	 DeghQX7nWq/HWVe+DzObA2BDYuW2v0rZA4e4MyLieOiShHdgpTJeCjwqtfY9RoCGAURX8
+	 aOhKbFMDI1jH2E+5bk7h9mfbBdZHMUvHkoIO/t4TNDC4giJ4QaWIFr7vEoTzjBggKGg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795538788;
-	h=DMARC-Filter:DKIM-Signature:EX-QQ-RecipientCnt:X-QQ-GoodBg:X-QQ-SSF:
-	 X-QQ-FEAT:X-QQ-BUSINESS-ORIGIN:X-QQ-Originating-IP:X-Originating-IP:
-	 X-QQ-STYLE:X-QQ-mid:From:To:Cc:Subject:Mime-Version:Content-Type:
-	 Content-Transfer-Encoding:Date:X-Priority:Message-ID:X-QQ-MIME:
-	 X-Mailer:X-QQ-Mailer:References:In-Reply-To:X-QQ-ReplyHash:
-	 X-BIZMAIL-ID:X-Address-Ticket:X-QQ-SENDSIZE:Received:Feedback-ID:
-	 X-QQ-XMAILINFO:X-QQ-XMRINFO:X-QQ-RECHKSPAM;
-	bh=8jv0dN0+3TdUOlryQUtoAvIXg9Hhg6ZTTqg/pyui1no=;
-	b=1h4cSuvDPgrycEUDoICf38ZiSBZHswwxXR7sQyOPMypb7yjB1xGFfV0y0xiekM7/lLjD
-	 rTdvNfOTjgi7YjygRrYMjma6DPMLmakfwAMeOu5fYvcYD0Iq8j1xixx7JsiZElGZe0KrS
-	 igcZCVCJ7VRCqm8UCydaDNtIxFWXOc5/nxUeP8Kn2o75WADP9Oj+lEsYt8pHI9SnZM0R1
-	 5tqqxGDL30VjwTHSsbwmshTBRP587U6M4qPLLh62MGTeVRA9Z1jX2tcd6q9BNPKBykxyH
-	 fZj66WrU0ff4co5r7kXG7nHlgRfyiMBPmYn2bIhXlPZ0ivV8B2Nr9U4UK1gy36LMt0w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795539957;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=cEp/cXDtvYTiH8Vp1GK2CqYt15Bi6PXi0it+ySjQOVc=;
+	b=dY4QLchuU6MA147eesKlpdmq1cTsssIUWsZxFAyNh82pi2M6ChFwhv31C5z+URg2hRNX
+	 87zuekccpuYbCsnup2cpuWHhjQACF2OQxLTTRIySiOg0b81NjNAFJr1nPzvhntNKmkW8o
+	 1NM80Ek7oAwxi99ccrRpV3gQt4iu8P2P1MKCb8o6dg920MtidLrsGH6EufmYRN8g0O7JW
+	 /sP7PmzDZDvnLXiRZkbyTlYZenr37h2BG/0PhmlSXcMTn/yzAspGsl2033xRySCB1p+OA
+	 P+5ygoZPd/sBx2OUQmgJIYll7tSWTTt7aMcFmnpQ36FsoXWDw958VQDg186LIIlStcQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=uniontech.com;
-	spf=pass smtp.mailfrom=uniontech.com;
-	dkim=pass header.d=uniontech.com header.i=@uniontech.com header.a=rsa-sha256 header.s=onoh2408 header.b=JfnjOZ85;
-	arc=none smtp.remote-ip=54.207.19.206
-Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bni2B9pu;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE687606A323
-	for <loongarch@lists.linux.dev>; Tue, 24 Nov 2026 16:46:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EE687606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC76606A31E;
+	Tue, 24 Nov 2026 17:05:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=uniontech.com header.i=@uniontech.com header.a=rsa-sha256 header.s=onoh2408 header.b=JfnjOZ85
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1795538733;
-	bh=8jv0dN0+3TdUOlryQUtoAvIXg9Hhg6ZTTqg/pyui1no=;
-	h=From:To:Subject:Mime-Version:Date:Message-ID;
-	b=JfnjOZ85MFowkBMF3lSUs1xmn3kOLJ+w4MgphIK/J7QYY18ISpAaqhzWMtVTYr44z
-	 atg7Hj7cPiHKTOJFtlEtXWEJNdD9hpYtNrQWDZpb62tTkSfHQ2C2y/ofCMj/FwVU97
-	 OkbPjbswHeOWzc+w1B+lmenCiN5Hohf2lJBiyWrM=
-EX-QQ-RecipientCnt: 8
-X-QQ-GoodBg: 1
-X-QQ-SSF: 00400000000000F0
-X-QQ-FEAT: D4aqtcRDiqSlXlpbK7AkXTDcolCrkFqn3C7Hjr8FHuU=
-X-QQ-BUSINESS-ORIGIN: 2
-X-QQ-Originating-IP: mI5wsHrhAGn3z9KN6EGMHjOAENWwObKmtBu91xCGWSs=
-X-QQ-STYLE: 
-X-QQ-mid: lv3gz7b-6t1795538732tbb016ca4
-From: "=?utf-8?B?5YWz5paH5rab?=" <guanwentao@uniontech.com>
-To: "=?utf-8?B?WGkgUnVveWFv?=" <xry111@xry111.site>, "=?utf-8?B?TmF0aGFuIENoYW5jZWxsb3I=?=" <nathan@kernel.org>, "=?utf-8?B?bWVuZ3FpbmdnYW5n?=" <mengqinggang@loongson.cn>
-Cc: "=?utf-8?B?Y2hlbmh1YWNhaQ==?=" <chenhuacai@kernel.org>, "=?utf-8?B?bGludXgta2J1aWxk?=" <linux-kbuild@vger.kernel.org>, "=?utf-8?B?bG9vbmdhcmNo?=" <loongarch@lists.linux.dev>, "=?utf-8?B?Y2hhcmxpZQ==?=" <charlie@rivosinc.com>, "=?utf-8?B?bWFzYWhpcm95?=" <masahiroy@kernel.org>
-Subject: Re: [RFC PATCH v2] kbuild: modinst: drop orphaned local labels from stripped modules
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bni2B9pu
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1346D1F000C0;
+	Tue, 24 Nov 2026 17:05:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795539957;
+	bh=cEp/cXDtvYTiH8Vp1GK2CqYt15Bi6PXi0it+ySjQOVc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=bni2B9puF7kfV9Am5t1Ov8WQVRWkWZkohYhFYaAOCp/DQ8YyK4hiNB/6DDEmutNnx
+	 9DItMmeG9wGbsSnTa/2g6Bc+qZD0MoOo2QOCjGO0RuxOqF3Tm1xaa1EZJ9bnO6HeVo
+	 aY1UKSh6mwdd27HE+ANXhvMJYuMadmQYUspZ9MtLopcJo2kqu6TZRKLJOQ+VmUeRA8
+	 BHSro9BNahirHyqaXlAUVp75XTw4Ei0heRmarVboAGmlnTryJvfEdsallK7L2ZowDl
+	 Fuw7NBHUoexrLNsU88p9DA3WymGQjoLqXzSxY/kk/t5a2Ys6NENMpuN8WNAadIMoey
+	 tbOkOgbd3/Bhg==
+Date: Tue, 24 Nov 2026 19:05:38 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: Russell King <linux@armlinux.org.uk>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Barry Song <baohua@kernel.org>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	David Hildenbrand <david@kernel.org>,
+	Michal Hocko <mhocko@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>, Anup Patel <anup@brainfault.org>,
+	Atish Patra <atish.patra@linux.dev>, Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Jonas Bonn <jonas@southpole.se>,
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+	Stafford Horne <shorne@gmail.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org,
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+	linux-openrisc@vger.kernel.org
+Subject: Re: [PATCH RESEND v2 12/21] mm/pgtable: redefine PGTABLE_LEVEL enum
+ with ascend order from PGD
+Message-ID: <awXD4i47F-VAG1tD@kernel.org>
+References: <20261102-dummy_ptxp3-v2-0-78840b2ec73c@arm.com>
+ <20261102-dummy_ptxp3-v2-12-78840b2ec73c@arm.com>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -63,71 +92,66 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
-Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
-Date: Wed, 25 Nov 2026 00:45:32 +0800
-X-Priority: 3
-Message-ID: <tencent_1B2677463422B57E770DF6E9@qq.com>
-X-QQ-MIME: TCMime 1.0 by Tencent
-X-Mailer: QQMail 2.x
-X-QQ-Mailer: QQMail 2.x
-References: <20261124035942.GB2738970@ax162>
-	<6E960C21EF6F6A78+20261124105408.3119771-2-guanwentao@uniontech.com>
-	<84a64a3f632f9e1e3208c0ceac55cedf0f266e9d.camel@xry111.site>
-In-Reply-To: <84a64a3f632f9e1e3208c0ceac55cedf0f266e9d.camel@xry111.site>
-X-QQ-ReplyHash: 2173645982
-X-BIZMAIL-ID: 2559094563994576182
-X-Address-Ticket:version=;type=;ticket_id=;id_list=;display_name=;session_id=;
-X-QQ-SENDSIZE: 520
-Received: from qq.com (unknown [127.0.0.1])
-	by smtp.qq.com (ESMTP) with SMTP
-	id ; Wed, 25 Nov 2026 00:45:32 +0800 (CST)
-Feedback-ID: lv:uniontech.com:qybglogicsvrgz:qybglogicsvrgz3a-1
-X-QQ-XMAILINFO: N6euzTYZA5gv4ng9qITAK46DYXvRjP4lwMI4BB7guFDF7GVosbqWkd5t
-	si72RwHDXWlKm/2UdqXt8BMIzOBOOz+iX1xx33DO7Swc3kyxyUn6mQJ6ADX0L1LdvCDGJs/
-	PlOkgTtwvcRvSIZAtB3Dlma+LMlMVsw9b0tBsOfEh/fo1MOqddCHnpwGLQJxO621NlsE23k
-	bnyLe4AzqMVhuY4IGItAWmeG7zRPJ4R3p2/NXLxNPXqCj+J/hF3yxSTUr04ye7ButAo2/Q4
-	z71ny0WoaZaVkls+VHph7UaPtz67RltIqIHuuOirNDkBKnxT0TgaIFT96Wmbgf1dOA4rdna
-	N66em8QYp23cFhB/LNJ82/W3U2BA4RpUPkMKbNIjCGlFzu0RW3vytZ8+kTF09AWBjALdIfW
-	C9Vg2dvxTq4uRO6qyHhe6xCxL10s4wKy/nMxxXC0w6r1LuaQCdh0MLmpdvG8VG8N7Ry/kI5
-	8KOiDvMtYBW2xTgBFRh0PoiqNrVF89QvFDJyOhWIoyQzeMFB1aVF4CZJpFepmpGgPkkJrep
-	h5pp+CvA8B22pe1MCGqZrmBAPie1nWTtbTXd0qJWryyb2vxrz4bqFhj2l1/rdOmNnvF/i6k
-	HUpZvuqaeDZKWGg+m+8NuMKjMPxsevnbnOKFuVhaejmfuyNUxMnkNvteZLg/gd8hPa3+ecI
-	8g7NtRxq1K3OSMvWqPRZB8g3vu1uQz3eceGZymLSkxUX6SolN0dLuSDBzY6MdRB7aCWejEY
-	3E0d7E+1hNcUaR0WVDAqqsUbYX6pHMJgeEn6Wb06pdENh7wNgIn4lQRNoYjsTAyRQDECxAC
-	/5x4PAqY/otxqdCfKLrtQ0n0EIezve10FCBbtxM//jI8o3LvHPcjmTluan+ZJ88C3SC7v3n
-	niATjAh1vg1yQ9yNVocGYWOJXEvbhC1CTwoh/FkpayqBViqQfVeupzq3kbUiIbzv+FlMqmT
-	WMQz5HPRjDwqZqxG2MhpXZQJXo1OpHRdrJxLMdfdTuh/F4z3j8icuWuaKwcn+KFPNm+zyXH
-	vTHPi5i3Ad9xb3XMu5
-X-QQ-XMRINFO: NI4Ajvh11aEjEMj13RCX7UuhPEoou2bs1g==
-X-QQ-RECHKSPAM: 0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261102-dummy_ptxp3-v2-12-78840b2ec73c@arm.com>
 
-SGksDQoNCj4gT24gVHVlLCAyMDI2LTExLTI0IGF0IDE4OjU0ICswODAwLCBXZW50YW8gR3Vh
-biB3cm90ZToNCj4gPiBJTlNUQUxMX01PRF9TVFJJUD0xIG1hcHMgdG8gInN0cmlwIC0tc3Ry
-aXAtZGVidWciLCB3aGljaCBpcyBhIHNlY3Rpb24NCj4gPiBvcGVyYXRpb246IGl0IHJlbW92
-ZXMgLmRlYnVnXyogYW5kIC5yZWxhLmRlYnVnXyogYnV0IGxlYXZlcyB0aGUgc3ltYm9sDQo+
-ID4gdGFibGUgYWxvbmUuICBXaGVuIHRoZSBhc3NlbWJsZXIgaGFzIHRvIG5hbWUgZ2NjJ3Mg
-LWcgbGFiZWxzIGluIHRoZQ0KPiA+IHJlbG9jYXRpb25zIGl0IGVtaXRzIGZvciBkZWJ1ZyBk
-YXRhLCB0aG9zZSBsYWJlbHMgc3RheSBpbiAuc3ltdGFiIGFuZA0KPiA+IHN1cnZpdmUgdGhl
-IHN0cmlwIGFzIG9ycGhhbnMuICBXaGV0aGVyIHRoYXQgaGFwcGVucyBpcyBhIHByb3BlcnR5
-IG9mIHRoZQ0KPiA+IHRhcmdldCdzIGFzc2VtYmxlciwgbm90IG9mIHRoZSBrZXJuZWw6IHRo
-ZSB4ODYtNjQgYW5kIGFybTY0IGFzc2VtYmxlcnMNCj4gPiByZXNvbHZlIHRoZSBEV0FSRiBy
-ZWZlcmVuY2VzIGFnYWluc3QgdGhlIHNlY3Rpb24gc3ltYm9sIHdpdGggYW4gYWRkZW5kLA0K
-PiANCj4gUWluZ2dhbmcgaGFzIHJlY2VudGx5IGltcHJvdmVkIGxkLmJmZCB0byBoYW5kbGUg
-cmVsb2NhdGlvbnMgYWdhaW5zdA0KPiBzZWN0aW9uICsgYWRkZW5kIGluIHJlbGF4YXRpb24s
-IHRodXMgSSBndWVzcyB0aGUgYXNzZW1ibGVyIGNhbiBiZQ0KPiBtb2RpZmllZCB0byB1c2Ug
-c2VjdGlvbiArIGFkZGVuZCBsaWtlIHg4Ni02NCBhbmQgYXJtNjQgZm9yIERXQVJGIG5vdw0K
-PiAobWF5YmUgb3B0LWluIHdpdGggYSBzd2l0Y2ggdG8ga2VlcCBjb21wYXRpYmlsaXR5IHdp
-dGggb2xkIGxpbmtlcnMpLg0KDQpUaGFua3MgZm9yIHlvdXIgcmV2aWV3IGFuZCBwb2ludGVy
-LiBBZ3JlZWQsIHRoYXQgaXMgdGhlIHJvb3QgY2F1c2UsDQpJIGd1ZXNzIHlvdXIgbWVhbnMg
-YXJlIFFpbmdnYW5nYHMgdHdvIFJGQ3MgWzFdIFsyXS4gSSBhbSBub3QgYW4gZXhwZXJ0LA0K
-YW55IGNvbW1lbnRzIHdpbGwgYmUgd2VsY29tZWQuDQoNCkkgYWxzbyB0ZXN0ZWQgLS1kaXNj
-YXJkcy1sb2NhbHMgaW4geDg2LTY0IGlzIGFsbW9zdCBuby1vcCAodHdvIHVucmVmZXJlbmNl
-ZCAuTEMgc3ltYm9scyBkcm9wcGVkIA0KZnJvbSBhbiBhbWRncHUua28gYWxsIDQyOSw2NDgg
-cmVsb2NhdGlvbnMgdW5jaGFuZ2VkKS4NCg0KWzFdOiBodHRwczovL3NvdXJjZXdhcmUub3Jn
-L3BpcGVybWFpbC9iaW51dGlscy8yMDI2LVNlcHRlbWJlci8xNTE2MTUuaHRtbA0KWzJdOiBo
-dHRwczovL3NvdXJjZXdhcmUub3JnL3BpcGVybWFpbC9iaW51dGlscy8yMDI2LVNlcHRlbWJl
-ci8xNTE1NDQuaHRtbA0KDQpCUnMNCldlbnRhbyBHdWFu
+On Mon, Nov 02, 2026 at 11:21:25AM +0000, Yeoreum Yun wrote:
+> The PGTABLE_LEVEL enum values appear to be ordered in the opposite direction
+> from their intended usage.
+> 
+> Intuitively, higher page table levels should have smaller enum values,
+> but PTE is currently assigned 0.
 
+That's not what x86 thinks :)
+They even expose it in /proc/vmstat with smaller numbers meaning lower levels
+
+$ grep direct_map /proc/vmstat 
+direct_map_level2_splits 152
+direct_map_level3_splits 4
+direct_map_level2_collapses 0
+direct_map_level3_collapses 0
+
+Just an observation, I don't mind either order.
+ 
+> For consistency and cleanup, reverse the enum value ordering.
+> 
+> Since there is no current user relies on these numbers to be ascending from
+> PTE->PGD, so it can be changed to be ascending from PGD->PTE, in the
+> direction of the page table walk.
+> 
+> Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
+> Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+> ---
+>  include/linux/pgtable.h | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+> index 780fe849ff8b7..a032f95943357 100644
+> --- a/include/linux/pgtable.h
+> +++ b/include/linux/pgtable.h
+> @@ -2288,11 +2288,11 @@ static inline bool arch_has_pfn_modify_check(void)
+>  typedef unsigned int pgtbl_mod_mask;
+>  
+>  enum pgtable_level {
+> -	PGTABLE_LEVEL_PTE = 0,
+> -	PGTABLE_LEVEL_PMD,
+> -	PGTABLE_LEVEL_PUD,
+> +	PGTABLE_LEVEL_PGD = 0,
+>  	PGTABLE_LEVEL_P4D,
+> -	PGTABLE_LEVEL_PGD,
+> +	PGTABLE_LEVEL_PUD,
+> +	PGTABLE_LEVEL_PMD,
+> +	PGTABLE_LEVEL_PTE,
+>  };
+>  
+>  static inline const char *pgtable_level_to_str(enum pgtable_level level)
+> 
+> -- 
+> 2.43.0
+> 
+
+-- 
+Sincerely yours,
+Mike.
