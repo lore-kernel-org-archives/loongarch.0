@@ -1,67 +1,60 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=54.207.19.206
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795525372;
-	b=bOpkrJRkkm+lRPPljfWVyL3M011aNEpoff+UvLgERCpE37sU9hprZDt+w9eHQNeQbbHI
-	 P7P2hAy0Mk+eP1KRabOXmGx0li11Mba2bKbUAMr59lfljR8B2Vq/wTR7Lbz8KdhDxJ4Q6
-	 wDNnfIaxWc9DPU1bh7gODdqFG9q9c6Ql4UqSkJe/SrgWh+5hsHwPUmnKyG/vbGaux5jrN
-	 iEWmHjpda2V2rcqav61ZXwl558U4rg70WtXE8gS2cP1GBnbxlIzPW2xaBmaiuEdrvPZBf
-	 4CeUpF7Q/lYkQ8/QVq6ORi0d6iXl374bBuYix330OsdW50nO3hADJE3ZXQ2WOK1XHUQ==
+	t=1795538788;
+	b=BAsUCfUNc+DkrJKd82chyZpsy8MdcVZkPN2luhM4kDS/hoEQe1W0iTWUsL/9e+8TsxOg
+	 IDIFXOerVnVqtymUQN/24Ah+o+pW8K6th6087L4HCXV9klfW6s8PWpXBxcYTMJx9TqdQn
+	 9tnGPSnu1gSXKVpDw3qOCZrSHTtPaYLN5Mcnr5xzzcvMyLyNzHtB1GYb45lXf/PUii/yD
+	 8BLDOLx6ylD70UDiGyk4ufu1CQ+XsdSzNtAhKia2P9ZYDj9HMAKX5I4XGO6B3o+VjEUJv
+	 g3F7LYVeGuw/0LkC6v39WrcRbwc6D7rSxYaD7xXtcF7n7/0dHtZaNv8VAGEy098anJQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795525372;
-	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:Cc:
-	 Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:
-	 User-Agent:MIME-Version;
-	bh=e7umvq3b2Qjy6OI4P5AfLqfekqPHHMBAinW/wTd6ikg=;
-	b=jQfxc8/F7mIoYg/qJLwPbaHaZAUho4kvwV4TawHNjZYFpKyimGkaZWWZfN8aAtufHPc0
-	 sD5y5FqeYkKKFIPOOdt8ihW+Pa5cz1/HJvzh/vUTQgkKBTnww6IePoQsWonQwr2qaRjWl
-	 x2hFetDsurvzA75XMnVNSVrvlOmfLo8xrS3aEMAiJa2zNfbAj5kvox3smzlWGhA8tvtoB
-	 kI9Jv50px9UtBSF8WEhBBI/jKHi2IO+Cj+R8Jori1FkyDbHiV7BaazPNoBkjSAtWyiWKQ
-	 iX1pIPcDW64LaYAV/W9rGfNxV6YShrOJJdy5jVQFcf//da4hhLHGmLbWgjF2kU+Ey/A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795538788;
+	h=DMARC-Filter:DKIM-Signature:EX-QQ-RecipientCnt:X-QQ-GoodBg:X-QQ-SSF:
+	 X-QQ-FEAT:X-QQ-BUSINESS-ORIGIN:X-QQ-Originating-IP:X-Originating-IP:
+	 X-QQ-STYLE:X-QQ-mid:From:To:Cc:Subject:Mime-Version:Content-Type:
+	 Content-Transfer-Encoding:Date:X-Priority:Message-ID:X-QQ-MIME:
+	 X-Mailer:X-QQ-Mailer:References:In-Reply-To:X-QQ-ReplyHash:
+	 X-BIZMAIL-ID:X-Address-Ticket:X-QQ-SENDSIZE:Received:Feedback-ID:
+	 X-QQ-XMAILINFO:X-QQ-XMRINFO:X-QQ-RECHKSPAM;
+	bh=8jv0dN0+3TdUOlryQUtoAvIXg9Hhg6ZTTqg/pyui1no=;
+	b=1h4cSuvDPgrycEUDoICf38ZiSBZHswwxXR7sQyOPMypb7yjB1xGFfV0y0xiekM7/lLjD
+	 rTdvNfOTjgi7YjygRrYMjma6DPMLmakfwAMeOu5fYvcYD0Iq8j1xixx7JsiZElGZe0KrS
+	 igcZCVCJ7VRCqm8UCydaDNtIxFWXOc5/nxUeP8Kn2o75WADP9Oj+lEsYt8pHI9SnZM0R1
+	 5tqqxGDL30VjwTHSsbwmshTBRP587U6M4qPLLh62MGTeVRA9Z1jX2tcd6q9BNPKBykxyH
+	 fZj66WrU0ff4co5r7kXG7nHlgRfyiMBPmYn2bIhXlPZ0ivV8B2Nr9U4UK1gy36LMt0w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=xry111.site;
-	spf=pass smtp.mailfrom=xry111.site;
-	dkim=pass header.d=xry111.site header.i=@xry111.site header.a=rsa-sha256 header.s=default header.b="WTJzaO/Y";
-	arc=none smtp.remote-ip=89.208.246.23
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=uniontech.com;
+	spf=pass smtp.mailfrom=uniontech.com;
+	dkim=pass header.d=uniontech.com header.i=@uniontech.com header.a=rsa-sha256 header.s=onoh2408 header.b=JfnjOZ85;
+	arc=none smtp.remote-ip=54.207.19.206
+Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C8A5606A31E
-	for <loongarch@lists.linux.dev>; Tue, 24 Nov 2026 13:02:46 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9C8A5606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE687606A323
+	for <loongarch@lists.linux.dev>; Tue, 24 Nov 2026 16:46:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EE687606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=xry111.site header.i=@xry111.site header.a=rsa-sha256 header.s=default header.b=WTJzaO/Y
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1795525359;
-	bh=e7umvq3b2Qjy6OI4P5AfLqfekqPHHMBAinW/wTd6ikg=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=WTJzaO/Yml+FImT9nkd5vU/rhpD5MScZLTqBe9h2H2KF/kEbGMb2snKLIcuQAlk46
-	 zYINEDApkRBq3QIrXE5VuLFFCjgLpMDPgqN6uIxu1rh7r4vpLuaw8zMrwoNEce0/CJ
-	 gdKRKZJP/88mKPLaiAPcgKG93NE+MVrb0tMpbOyo=
-Received: from [127.0.0.1] (2607-8700-5500-e873-0000-0000-0000-1001.16clouds.com [IPv6:2607:8700:5500:e873::1001])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 3E28F65EC3;
-	Tue, 24 Nov 2026 08:02:37 -0500 (EST)
-Message-ID: <84a64a3f632f9e1e3208c0ceac55cedf0f266e9d.camel@xry111.site>
-Subject: Re: [RFC PATCH v2] kbuild: modinst: drop orphaned local labels from
- stripped modules
-From: Xi Ruoyao <xry111@xry111.site>
-To: Wentao Guan <guanwentao@uniontech.com>, nathan@kernel.org, 
-	mengqinggang@loongson.cn
-Cc: chenhuacai@kernel.org, linux-kbuild@vger.kernel.org, 
-	loongarch@lists.linux.dev, charlie@rivosinc.com, masahiroy@kernel.org
-Date: Tue, 24 Nov 2026 21:02:34 +0800
-In-Reply-To: <6E960C21EF6F6A78+20261124105408.3119771-2-guanwentao@uniontech.com>
-References: <20261124035942.GB2738970@ax162>
-	 <6E960C21EF6F6A78+20261124105408.3119771-2-guanwentao@uniontech.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.62.1 
+	dkim=pass (1024-bit key, unprotected) header.d=uniontech.com header.i=@uniontech.com header.a=rsa-sha256 header.s=onoh2408 header.b=JfnjOZ85
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1795538733;
+	bh=8jv0dN0+3TdUOlryQUtoAvIXg9Hhg6ZTTqg/pyui1no=;
+	h=From:To:Subject:Mime-Version:Date:Message-ID;
+	b=JfnjOZ85MFowkBMF3lSUs1xmn3kOLJ+w4MgphIK/J7QYY18ISpAaqhzWMtVTYr44z
+	 atg7Hj7cPiHKTOJFtlEtXWEJNdD9hpYtNrQWDZpb62tTkSfHQ2C2y/ofCMj/FwVU97
+	 OkbPjbswHeOWzc+w1B+lmenCiN5Hohf2lJBiyWrM=
+EX-QQ-RecipientCnt: 8
+X-QQ-GoodBg: 1
+X-QQ-SSF: 00400000000000F0
+X-QQ-FEAT: D4aqtcRDiqSlXlpbK7AkXTDcolCrkFqn3C7Hjr8FHuU=
+X-QQ-BUSINESS-ORIGIN: 2
+X-QQ-Originating-IP: mI5wsHrhAGn3z9KN6EGMHjOAENWwObKmtBu91xCGWSs=
+X-QQ-STYLE: 
+X-QQ-mid: lv3gz7b-6t1795538732tbb016ca4
+From: "=?utf-8?B?5YWz5paH5rab?=" <guanwentao@uniontech.com>
+To: "=?utf-8?B?WGkgUnVveWFv?=" <xry111@xry111.site>, "=?utf-8?B?TmF0aGFuIENoYW5jZWxsb3I=?=" <nathan@kernel.org>, "=?utf-8?B?bWVuZ3FpbmdnYW5n?=" <mengqinggang@loongson.cn>
+Cc: "=?utf-8?B?Y2hlbmh1YWNhaQ==?=" <chenhuacai@kernel.org>, "=?utf-8?B?bGludXgta2J1aWxk?=" <linux-kbuild@vger.kernel.org>, "=?utf-8?B?bG9vbmdhcmNo?=" <loongarch@lists.linux.dev>, "=?utf-8?B?Y2hhcmxpZQ==?=" <charlie@rivosinc.com>, "=?utf-8?B?bWFzYWhpcm95?=" <masahiroy@kernel.org>
+Subject: Re: [RFC PATCH v2] kbuild: modinst: drop orphaned local labels from stripped modules
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -70,22 +63,71 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
+Date: Wed, 25 Nov 2026 00:45:32 +0800
+X-Priority: 3
+Message-ID: <tencent_1B2677463422B57E770DF6E9@qq.com>
+X-QQ-MIME: TCMime 1.0 by Tencent
+X-Mailer: QQMail 2.x
+X-QQ-Mailer: QQMail 2.x
+References: <20261124035942.GB2738970@ax162>
+	<6E960C21EF6F6A78+20261124105408.3119771-2-guanwentao@uniontech.com>
+	<84a64a3f632f9e1e3208c0ceac55cedf0f266e9d.camel@xry111.site>
+In-Reply-To: <84a64a3f632f9e1e3208c0ceac55cedf0f266e9d.camel@xry111.site>
+X-QQ-ReplyHash: 2173645982
+X-BIZMAIL-ID: 2559094563994576182
+X-Address-Ticket:version=;type=;ticket_id=;id_list=;display_name=;session_id=;
+X-QQ-SENDSIZE: 520
+Received: from qq.com (unknown [127.0.0.1])
+	by smtp.qq.com (ESMTP) with SMTP
+	id ; Wed, 25 Nov 2026 00:45:32 +0800 (CST)
+Feedback-ID: lv:uniontech.com:qybglogicsvrgz:qybglogicsvrgz3a-1
+X-QQ-XMAILINFO: N6euzTYZA5gv4ng9qITAK46DYXvRjP4lwMI4BB7guFDF7GVosbqWkd5t
+	si72RwHDXWlKm/2UdqXt8BMIzOBOOz+iX1xx33DO7Swc3kyxyUn6mQJ6ADX0L1LdvCDGJs/
+	PlOkgTtwvcRvSIZAtB3Dlma+LMlMVsw9b0tBsOfEh/fo1MOqddCHnpwGLQJxO621NlsE23k
+	bnyLe4AzqMVhuY4IGItAWmeG7zRPJ4R3p2/NXLxNPXqCj+J/hF3yxSTUr04ye7ButAo2/Q4
+	z71ny0WoaZaVkls+VHph7UaPtz67RltIqIHuuOirNDkBKnxT0TgaIFT96Wmbgf1dOA4rdna
+	N66em8QYp23cFhB/LNJ82/W3U2BA4RpUPkMKbNIjCGlFzu0RW3vytZ8+kTF09AWBjALdIfW
+	C9Vg2dvxTq4uRO6qyHhe6xCxL10s4wKy/nMxxXC0w6r1LuaQCdh0MLmpdvG8VG8N7Ry/kI5
+	8KOiDvMtYBW2xTgBFRh0PoiqNrVF89QvFDJyOhWIoyQzeMFB1aVF4CZJpFepmpGgPkkJrep
+	h5pp+CvA8B22pe1MCGqZrmBAPie1nWTtbTXd0qJWryyb2vxrz4bqFhj2l1/rdOmNnvF/i6k
+	HUpZvuqaeDZKWGg+m+8NuMKjMPxsevnbnOKFuVhaejmfuyNUxMnkNvteZLg/gd8hPa3+ecI
+	8g7NtRxq1K3OSMvWqPRZB8g3vu1uQz3eceGZymLSkxUX6SolN0dLuSDBzY6MdRB7aCWejEY
+	3E0d7E+1hNcUaR0WVDAqqsUbYX6pHMJgeEn6Wb06pdENh7wNgIn4lQRNoYjsTAyRQDECxAC
+	/5x4PAqY/otxqdCfKLrtQ0n0EIezve10FCBbtxM//jI8o3LvHPcjmTluan+ZJ88C3SC7v3n
+	niATjAh1vg1yQ9yNVocGYWOJXEvbhC1CTwoh/FkpayqBViqQfVeupzq3kbUiIbzv+FlMqmT
+	WMQz5HPRjDwqZqxG2MhpXZQJXo1OpHRdrJxLMdfdTuh/F4z3j8icuWuaKwcn+KFPNm+zyXH
+	vTHPi5i3Ad9xb3XMu5
+X-QQ-XMRINFO: NI4Ajvh11aEjEMj13RCX7UuhPEoou2bs1g==
+X-QQ-RECHKSPAM: 0
 
-On Tue, 2026-11-24 at 18:54 +0800, Wentao Guan wrote:
-> INSTALL_MOD_STRIP=3D1 maps to "strip --strip-debug", which is a section
-> operation: it removes .debug_* and .rela.debug_* but leaves the symbol
-> table alone.=C2=A0 When the assembler has to name gcc's -g labels in the
-> relocations it emits for debug data, those labels stay in .symtab and
-> survive the strip as orphans.=C2=A0 Whether that happens is a property of=
- the
-> target's assembler, not of the kernel: the x86-64 and arm64 assemblers
-> resolve the DWARF references against the section symbol with an addend,
+SGksDQoNCj4gT24gVHVlLCAyMDI2LTExLTI0IGF0IDE4OjU0ICswODAwLCBXZW50YW8gR3Vh
+biB3cm90ZToNCj4gPiBJTlNUQUxMX01PRF9TVFJJUD0xIG1hcHMgdG8gInN0cmlwIC0tc3Ry
+aXAtZGVidWciLCB3aGljaCBpcyBhIHNlY3Rpb24NCj4gPiBvcGVyYXRpb246IGl0IHJlbW92
+ZXMgLmRlYnVnXyogYW5kIC5yZWxhLmRlYnVnXyogYnV0IGxlYXZlcyB0aGUgc3ltYm9sDQo+
+ID4gdGFibGUgYWxvbmUuICBXaGVuIHRoZSBhc3NlbWJsZXIgaGFzIHRvIG5hbWUgZ2NjJ3Mg
+LWcgbGFiZWxzIGluIHRoZQ0KPiA+IHJlbG9jYXRpb25zIGl0IGVtaXRzIGZvciBkZWJ1ZyBk
+YXRhLCB0aG9zZSBsYWJlbHMgc3RheSBpbiAuc3ltdGFiIGFuZA0KPiA+IHN1cnZpdmUgdGhl
+IHN0cmlwIGFzIG9ycGhhbnMuICBXaGV0aGVyIHRoYXQgaGFwcGVucyBpcyBhIHByb3BlcnR5
+IG9mIHRoZQ0KPiA+IHRhcmdldCdzIGFzc2VtYmxlciwgbm90IG9mIHRoZSBrZXJuZWw6IHRo
+ZSB4ODYtNjQgYW5kIGFybTY0IGFzc2VtYmxlcnMNCj4gPiByZXNvbHZlIHRoZSBEV0FSRiBy
+ZWZlcmVuY2VzIGFnYWluc3QgdGhlIHNlY3Rpb24gc3ltYm9sIHdpdGggYW4gYWRkZW5kLA0K
+PiANCj4gUWluZ2dhbmcgaGFzIHJlY2VudGx5IGltcHJvdmVkIGxkLmJmZCB0byBoYW5kbGUg
+cmVsb2NhdGlvbnMgYWdhaW5zdA0KPiBzZWN0aW9uICsgYWRkZW5kIGluIHJlbGF4YXRpb24s
+IHRodXMgSSBndWVzcyB0aGUgYXNzZW1ibGVyIGNhbiBiZQ0KPiBtb2RpZmllZCB0byB1c2Ug
+c2VjdGlvbiArIGFkZGVuZCBsaWtlIHg4Ni02NCBhbmQgYXJtNjQgZm9yIERXQVJGIG5vdw0K
+PiAobWF5YmUgb3B0LWluIHdpdGggYSBzd2l0Y2ggdG8ga2VlcCBjb21wYXRpYmlsaXR5IHdp
+dGggb2xkIGxpbmtlcnMpLg0KDQpUaGFua3MgZm9yIHlvdXIgcmV2aWV3IGFuZCBwb2ludGVy
+LiBBZ3JlZWQsIHRoYXQgaXMgdGhlIHJvb3QgY2F1c2UsDQpJIGd1ZXNzIHlvdXIgbWVhbnMg
+YXJlIFFpbmdnYW5nYHMgdHdvIFJGQ3MgWzFdIFsyXS4gSSBhbSBub3QgYW4gZXhwZXJ0LA0K
+YW55IGNvbW1lbnRzIHdpbGwgYmUgd2VsY29tZWQuDQoNCkkgYWxzbyB0ZXN0ZWQgLS1kaXNj
+YXJkcy1sb2NhbHMgaW4geDg2LTY0IGlzIGFsbW9zdCBuby1vcCAodHdvIHVucmVmZXJlbmNl
+ZCAuTEMgc3ltYm9scyBkcm9wcGVkIA0KZnJvbSBhbiBhbWRncHUua28gYWxsIDQyOSw2NDgg
+cmVsb2NhdGlvbnMgdW5jaGFuZ2VkKS4NCg0KWzFdOiBodHRwczovL3NvdXJjZXdhcmUub3Jn
+L3BpcGVybWFpbC9iaW51dGlscy8yMDI2LVNlcHRlbWJlci8xNTE2MTUuaHRtbA0KWzJdOiBo
+dHRwczovL3NvdXJjZXdhcmUub3JnL3BpcGVybWFpbC9iaW51dGlscy8yMDI2LVNlcHRlbWJl
+ci8xNTE1NDQuaHRtbA0KDQpCUnMNCldlbnRhbyBHdWFu
 
-Qinggang has recently improved ld.bfd to handle relocations against
-section + addend in relaxation, thus I guess the assembler can be
-modified to use section + addend like x86-64 and arm64 for DWARF now
-(maybe opt-in with a switch to keep compatibility with old linkers).
-
---=20
-Xi Ruoyao <xry111@xry111.site>
