@@ -1,93 +1,53 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795546332;
-	b=LQm1qWWmWm9nf4c3AkLBeGzumyrq24j9m/rJk7+5UjKr1G8p1hyb3LnuBSAMtX7HWNfK
-	 u/isFVPs8RifsmnEa87hmpxoujKTVQk4imWea1lYFx5XpWMyy/OOQGZxZIk58Xkg0GEQi
-	 C0t8hjFaw1SaHuCRBmJqOXEPaAsMbTPR4OcXX4PdfVqX18wgndWd+X8PsTSzCMN/uHKWc
-	 MQ1ksDDCRxa7zDe0b1OahEzaGmr9/i/oNVM2exMf15zlvEeXb+HRV5MHbfAwRKAHItfC2
-	 Nm79DgAL5nnlQrKcF1iMQHq4MWxyP7ZJFvnW4NaVfNZdqDFYmV0yMSb6vUMln/5/+fQ==
+	t=1795573294;
+	b=g+99dtbZU8/Hj+/fUcoce/wuXC9Udpfn1rLKUfOx2QukffHkdR8hmGFmxPjIl5B5s+GR
+	 nV9/QUWVdKnHhktYry/7i0uYx9ANXyKbbEGC2/qwQC6Kk0SDZsn5ikX1EbR2C7+pHAO0P
+	 MaXM9tk+EdXwfmAiUgPlj0MmNmS8AzVwWewmUpNMDoT8xl4/Lvirq3fYoXh4B9ABZbNfA
+	 3FN7ObKvX2y8clJAlPQHaevAil5bysxE5xwrcwOfIqjhnni38RY4Izn0laM+X2qm8MIGU
+	 PiW/BDKsxVf2/16RVKbgsMjE8dEkijygTTvL7cyATvGb4/bGoYbp0exu8XFZgRS3vXw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795546332;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=0sNoW/KWYC5fenn6W3ZO2QgTuASrJJ6ujM7Ci83DK9o=;
-	b=2AydVjQLAfItolBQ+TwbwzdXeykIRptrn52++gdKZg5MkvtQAfiHTyzlfwkl45HR9W5k
-	 QIjfwYl+4v4x7a3VWXjHQauobV9xedfszpNRzXGA/bye9CSqG2sAek8voGdcb/mwRTIjG
-	 XAzd7hHDfi05R5Op0BCGcX8cLxhb8p1iaqPnXPyY3WFmdrvhtpf3AzyLl3VakNLlIA05K
-	 67UgroY6OeAai6HWseqa2lrfxuYGZNT22aI2abceX3x0fqP+aoF7W0fWLwVtT8X9CcPh1
-	 HsjakbxFxdJ0ScjFV770wWXINikVI14MSJdmCnVxBx7kNF2nNbJRkn9ugYR8a2mkd7Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795573294;
+	h=DMARC-Filter:Received:Received:Subject:To:Cc:References:From:
+	 Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:Content-Type:
+	 Content-Language:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-CM-SenderInfo:X-Coremail-Antispam;
+	bh=Y17hgNWNA7kruKX7tewFtYjQBeTk6p6Hs0dO6G9YonQ=;
+	b=nfJdrMZjuM55wkBm3O6QV0CfY1TUEyrA041bLEr+STp3pfpHS8ePZD0mLT+1hGYtXd8y
+	 mAyigPNlIyMp4SIp9MlhRxXEI0ub1S8/8OqDFG6bbg385pBHxaABFtmfBTfnox1H14b2u
+	 J39CK8rRw//zbwt6R3l+xBlBtGigBh5GIuE+9c1cR7KmyIvlHIagLNxLL0inBFHkUTNkM
+	 2Wrg5iemxE5WWGQJbW59cs/wdeW/FEcsG0JlZ3wYBkiIlLYlFN9lIzv91wnavJoepQcpj
+	 mmdQFH39kuBMkyqGuXRzGOuSgaMp+p23hoLRAQIOq/pYiWpoxXeTZXvBrbm87IcohCw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=arm.com;
-	spf=pass smtp.mailfrom=arm.com;
-	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=HxpQmHpN;
-	arc=none smtp.remote-ip=217.140.110.172
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C73F606A323
-	for <loongarch@lists.linux.dev>; Tue, 24 Nov 2026 18:52:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8C73F606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=HxpQmHpN
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1019F497;
-	Tue, 24 Nov 2026 10:52:08 -0800 (PST)
-Received: from e129823.arm.com (e129823.arm.com [10.2.213.3])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7EAC33F86C;
-	Tue, 24 Nov 2026 10:52:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1795546330; bh=cEx0NNr4v9OqxertlfeaIBCZsjK0gqeBlEmSznQ0QE4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HxpQmHpNrqXVqUfjE0HPfLK3ewOjjeolAx23daMcxTI88aKM+hL6rA2Fg+4rqd8+R
-	 qMFVk/rzRBXFpbU1Dfr/ftkZEjuXw3RMnNovsFD1RM3+rwaFKpdU0NBWTD4cVkNWWE
-	 Ki55UEoYDf7IlCgUAL9LE2jIQWyjvIsSNBfWze2I=
-Date: Tue, 24 Nov 2026 18:52:00 +0000
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Yeoreum Yun <yeoreum.yun@arm.com>, Russell King <linux@armlinux.org.uk>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Barry Song <baohua@kernel.org>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	David Hildenbrand <david@kernel.org>,
-	Michal Hocko <mhocko@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>, Anup Patel <anup@brainfault.org>,
-	Atish Patra <atish.patra@linux.dev>, Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Jonas Bonn <jonas@southpole.se>,
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-	Stafford Horne <shorne@gmail.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
-	linux-openrisc@vger.kernel.org
-Subject: Re: [PATCH RESEND v2 12/21] mm/pgtable: redefine PGTABLE_LEVEL enum
- with ascend order from PGD
-Message-ID: <awXc0MSZl9t9VW8e@e129823.arm.com>
-References: <20261102-dummy_ptxp3-v2-0-78840b2ec73c@arm.com>
- <20261102-dummy_ptxp3-v2-12-78840b2ec73c@arm.com>
- <awXD4i47F-VAG1tD@kernel.org>
+	dmarc=none header.from=loongson.cn;
+	spf=pass smtp.mailfrom=loongson.cn;
+	arc=none smtp.remote-ip=114.242.206.163
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 889CB606A321
+	for <loongarch@lists.linux.dev>; Wed, 25 Nov 2026 02:21:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 889CB606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [123.138.236.242])
+	by gateway (Coremail) with SMTP id _____8AxHNApRgZrxsYiAA--.5518S3;
+	Wed, 25 Nov 2026 10:21:29 +0800 (CST)
+Received: from [127.0.0.1] (unknown [123.138.236.242])
+	by front1 (Coremail) with SMTP id qMiowJBxpMwnRgZrfi03AA--.17634S2;
+	Wed, 25 Nov 2026 10:21:28 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: Fix off-by-one in bt_address() exception
+ vector check
+To: hanbings <hanbings@hanbings.io>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20261115193107.571674-1-hanbings@hanbings.io>
+ <CAAhV-H6ww3dObKa3zNxj4jv7JWoB_fukX+b-HYnb_31_=sPbEw@mail.gmail.com>
+ <575cc834-aca1-a38d-3db9-deea93d0d2f6@loongson.cn>
+ <20261121181328.1892266-1-hanbings@hanbings.io>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <b41eac12-ef10-41b4-8731-f057471ee11b@loongson.cn>
+Date: Wed, 25 Nov 2026 10:21:27 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -97,77 +57,100 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <awXD4i47F-VAG1tD@kernel.org>
+In-Reply-To: <20261121181328.1892266-1-hanbings@hanbings.io>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:qMiowJBxpMwnRgZrfi03AA--.17634S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7uFyUAw4rArW5AF18Zr4DKFX_yoW8KFWxpa
+	4Yya1UGr48Wr1DtFyxA34UZr9Fkan7uFWfurs7J34UZan5JFyftr18JayUXFy5ArWYgay8
+	ZFy8Jw15Ka1UXagCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UU
+	UUU==
 
-On Tue, Nov 24, 2026 at 07:05:38PM +0200, Mike Rapoport wrote:
-> On Mon, Nov 02, 2026 at 11:21:25AM +0000, Yeoreum Yun wrote:
-> > The PGTABLE_LEVEL enum values appear to be ordered in the opposite direction
-> > from their intended usage.
-> > 
-> > Intuitively, higher page table levels should have smaller enum values,
-> > but PTE is currently assigned 0.
+On 11/22/26 2:13 AM, hanbings wrote:
+> Hi Tiezhu,
 > 
-> That's not what x86 thinks :)
-> They even expose it in /proc/vmstat with smaller numbers meaning lower levels
-> 
-> $ grep direct_map /proc/vmstat 
-> direct_map_level2_splits 152
-> direct_map_level3_splits 4
-> direct_map_level2_collapses 0
-> direct_map_level3_collapses 0
-> 
-> Just an observation, I don't mind either order.
+> Thanks for looking at this.  I can reproduce it deterministically on
+> QEMU with vanilla v7.2.9; the machine here runs 7.2.9, so I used the
+> same version for the test.
 
-Right. I made this change because a depth-based scheme seems more intuitive.
+I tested this patch on physical machines with the following small
+debug code:
 
-As you pointed out, though, the x86 specification uses smaller
-numbers (0) for lower levels (pte), so I think we can leave the
-x86-specific direct_map_* entries as they are.
+diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
+index 20ce2c8d77a1..1dfeb8ecfb76 100644
+--- a/arch/loongarch/kernel/traps.c
++++ b/arch/loongarch/kernel/traps.c
+@@ -1113,6 +1113,11 @@ asmlinkage void noinstr do_vint(struct pt_regs 
+*regs, unsigned long sp)
+         register unsigned long stack;
+         irqentry_state_t state = irqentry_enter(regs);
 
->  
-> > For consistency and cleanup, reverse the enum value ordering.
-> > 
-> > Since there is no current user relies on these numbers to be ascending from
-> > PTE->PGD, so it can be changed to be ascending from PGD->PTE, in the
-> > direction of the page table walk.
-> > 
-> > Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
-> > Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
-> > ---
-> >  include/linux/pgtable.h | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-> > index 780fe849ff8b7..a032f95943357 100644
-> > --- a/include/linux/pgtable.h
-> > +++ b/include/linux/pgtable.h
-> > @@ -2288,11 +2288,11 @@ static inline bool arch_has_pfn_modify_check(void)
-> >  typedef unsigned int pgtbl_mod_mask;
-> >  
-> >  enum pgtable_level {
-> > -	PGTABLE_LEVEL_PTE = 0,
-> > -	PGTABLE_LEVEL_PMD,
-> > -	PGTABLE_LEVEL_PUD,
-> > +	PGTABLE_LEVEL_PGD = 0,
-> >  	PGTABLE_LEVEL_P4D,
-> > -	PGTABLE_LEVEL_PGD,
-> > +	PGTABLE_LEVEL_PUD,
-> > +	PGTABLE_LEVEL_PMD,
-> > +	PGTABLE_LEVEL_PTE,
-> >  };
-> >  
-> >  static inline const char *pgtable_level_to_str(enum pgtable_level level)
-> > 
-> > -- 
-> > 2.43.0
-> > 
-> 
-> -- 
-> Sincerely yours,
-> Mike.
++       if (regs->csr_estat & BIT(INT_AVEC)) {
++               pr_info_once("AVEC interrupt triggered!\n");
++               DO_ONCE_LITE(dump_stack);
++       }
++
+         cpu = smp_processor_id();
 
--- 
-Sincerely,
-Yeoreum Yun
+         if (on_irq_stack(cpu, sp))
+
+I could not reproduce this issue on a Loongson-3A6000 where AVEC is
+not enabled by firmware, but I reproduced it on a Loongson-3C6000
+with AVEC enabled.
+
+With this patch applied, the issue completely disappears under the
+exact same test.
+
+Before:
+   $ dmesg -t | grep "AVEC interrupt triggered"
+   AVEC interrupt triggered!
+   $ dmesg -t | grep -A 4 "Call Trace"
+   Call Trace:
+   [<9000000000c97f48>] show_stack+0xf8/0x1c0
+   [<9000000000c90b2c>] dump_stack_lvl+0x6c/0x9c
+   [<900000000241b638>] do_vint+0xf8/0x120
+   cannot find unwind pc at 9000000100979d54
+
+After:
+   $ dmesg -t | grep "AVEC interrupt triggered"
+   AVEC interrupt triggered!
+   $ dmesg -t | grep -A 11 "Call Trace"
+   Call Trace:
+   [<9000000000867f48>] show_stack+0xf8/0x1c0
+   [<9000000000860b2c>] dump_stack_lvl+0x6c/0x9c
+   [<9000000001feb638>] do_vint+0xf8/0x120
+   [<9000000000865914>] handle_vint+0x154/0x1f4
+   [<9000000001fee14c>] idle_exit+0x0/0x4
+   [<9000000001fee158>] arch_cpu_idle+0x8/0x30
+   [<9000000001fee218>] default_idle_call+0x18/0x60
+   [<90000000008fceb8>] do_idle+0xb8/0x180
+   [<90000000008fd1e4>] cpu_startup_entry+0x34/0x40
+   [<9000000000874e30>] start_secondary+0xd0/0xe0
+   [<9000000001fef1b4>] smpboot_entry+0x8c/0x98
+
+Thanks for the fix! One small nit: please use your real name for
+"From:" and "Signed-off-by:".
+
+Other than that, feel free to add:
+
+Reviewed-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Tested-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+
+Thanks,
+Tiezhu
+
