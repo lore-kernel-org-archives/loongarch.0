@@ -1,46 +1,59 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795574404;
-	b=HDRtG6h+QYf9VAedTwFTbD/1N37/C8O/uFJC3DyTzYUx0EbwZ/r0xb8vHsJLnNMBTI/I
-	 6iuf46a3vMBjZ+z5dzCkIzSCWYYxZEn43cYhloVidqG8GfCEBkBcm9YQZA7oKk/LLfdsI
-	 6Vm2vGF/sg13OzP9H9QUHPd+GlRJHvPzuq264cZwr67qgAkb3KA24DE7C8eFVPO5ZNYyH
-	 E1NAAkNdYDmKiFJdsQ6rU4UjAs/GIxPc13s9HvRpWQMBC+KTElFKzkwkHUhmGp5/rqJp/
-	 phtjpnPZDCKDiUfESlzeCmzOccQ6s9vOIr0yRP3yrBUfN9UEFcFsc/7PlFE8zUZnuPQ==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795574404;
-	h=DMARC-Filter:Received:Received:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:MIME-Version:Content-Transfer-Encoding:X-CM-TRANSID:
-	 X-CM-SenderInfo:X-Coremail-Antispam;
-	bh=x9IONys28uxvQ48AVO1v+lm6hsIk1POMmg5EdVLd3Z8=;
-	b=rt8pD9gktxQNsA7uV98w3wK3hK4CTucgQOBdjIdHfoM+oEmW3GE7q1OKlVp3J40XJWHh
-	 hYW7NonLu1xxt9/07J35Sj3tobAlkxbK8v/VBfj70s4OZDMefZm0l4o2VtM6DkhXy98cx
-	 6wDFO5Dvaqyw2TTCPiWUzKW5EG2+1h2Qncu6O54YUbYEQZkwsgsnc71AU5H/6fhfm13hl
-	 nt00MQWdeeBmGo9fNOnATT7Lx//rd7ZLlAx1HIDNyPm5WlwT51mV8X7c77z/4S4J07BxZ
-	 QyWBAnLviv0Am8SmqEa4KeKf5QryZ1ununKjKgFgIJVBrjREsvAJVlIT24XW4CGB8KA==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=loongson.cn;
-	spf=pass smtp.mailfrom=loongson.cn;
-	arc=none smtp.remote-ip=114.242.206.163
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37A65606A321
-	for <loongarch@lists.linux.dev>; Wed, 25 Nov 2026 02:40:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 37A65606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [123.138.236.242])
-	by gateway (Coremail) with SMTP id _____8DxytF_SgZr58ciAA--.32914S3;
-	Wed, 25 Nov 2026 10:39:59 +0800 (CST)
-Received: from linux.localdomain (unknown [123.138.236.242])
-	by front1 (Coremail) with SMTP id qMiowJCxf899SgZrUC43AA--.46328S2;
-	Wed, 25 Nov 2026 10:39:58 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.15
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795580145;
+	b=x1BRjrOIEXosXa8YNIzsL0Pt1IRa8WXzZEjEmObFOJxjcfGXdmwa0hDVJ0SyIISUOKzA
+	 +QciPpc/NSR2E2hPPrTgTdIX6Kmt6k919RVgvfjKk7aZzdSPyk3H0WeC/rUe1Qpakq2Np
+	 yAmMs+W1Ik3gnXxgBoR1xFYh64/se8RWhiIF4Zm5Z+2g3W2hXpwtMjgQhTt0N5B8U7bxR
+	 sT5H2RwqXujk92oNMwElHwOeQ5xQObLHNH8xX89DNelgzKdcChMfIfdBZrOW2rT4BNUbl
+	 sBJGCRJ8W6Amvg5dLduOvo+cwT9qZz5Vr7KPplzCQ3bdihp077+Z0uCkVW3Ul5J8zRQ==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795580145;
+	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
+	 Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding:
+	 X-ZohoMailClient;
+	bh=pFAx7qQojwr0lrhab2y8yFDQk42crxk3XlNNA9FGuYc=;
+	b=xoRwN3LRC0GqrTqPYHYWWHlGqH3sz33cfOtcFIpmuPJXYuK81DlryHs7z9aXWZAgirlt
+	 FnAQXBrXRaq04WQGNv0Ko943YPhw/2tt8Dco65JV2XRNvYF8T7bSctLQkAaONUS/2M9MJ
+	 xG1sug4m6Fz0whbaHgB5CalI14wUrkdny4NhOCj1UTvCQQTodgyWJggNlvCPoWXScblaT
+	 ErldlJpvo3AA8HF4GLLhmj6ZR6DzkSrT/WQSEPkgQT9DxH87f+Mr/e5vohd+8O/tpQmI9
+	 tGiiM0HPNSmXUhiJmm5l1fk8Ytw8fsB0gZ4EsJ2TyFuEumQLeGcWWrnzY3f7SoUdxjw==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=none header.from=hanbings.io;
+	spf=pass smtp.mailfrom=hanbings.io;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.15
+Received: from sender6-op-o15.zoho.com (sender6-op-o15.zoho.com [165.173.180.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E422606A335
+	for <loongarch@lists.linux.dev>; Wed, 25 Nov 2026 04:15:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0E422606A335
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hanbings.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hanbings.io
+ARC-Seal: i=1; a=rsa-sha256; t=1795580125; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=QIZXX/SaEb1uIXYQTEADwWnMcUh6scrrxNSwNGWcmWap9AvysIEKhPVL+ToUJm0Pu/ez7vkY6kni6DYBz2c1O2flwalFSwYlJlNxMTClHrKlSq43zRnoVGexP4VVDzXeoEfHUJ/xfcyNgIYftvnXiMIHs9oU4NwC/sBXlTmaAuA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1795580125; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=pFAx7qQojwr0lrhab2y8yFDQk42crxk3XlNNA9FGuYc=; 
+	b=msZBfiXGEVXW3c88Pp0zfgc8Z761KOgKBlIFkPrhZdbfQ5DOwgJYD3WTZRMhKloHRShE2XJOj1TeurAp03a8mD7kmIiUfaNQGTq7oajxUtGaW9IQV6U0gH2+ZLJWZF8jT3MQIEIZAJaiWEPCJwjJUrbWKI/+8rwxb77XUDRmNYo=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=hanbings.io;
+	spf=pass  smtp.mailfrom=hanbings@hanbings.io;
+	dmarc=pass header.from=<hanbings@hanbings.io>
+DKIM-Signature: a=rsa-sha256; b=PI8DRbswv2SbxB2N0iWYoOi85M7b72Oc2gVubrWEJBhoiLrmm6bg8DvjASpXz/4alXqx3zfkyHHDjNOdNo1mYiZxBe1P6ZH/ON021vJfJsOOwRo+BCdqd3yXLGWFGVW3EhN0SJREbylg/F5s9JdzKBg5udjwFSNHFxhQ4z2wFNQ=; c=relaxed/relaxed; s=zmail; d=hanbings.io; v=1; bh=pFAx7qQojwr0lrhab2y8yFDQk42crxk3XlNNA9FGuYc=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
+Received: by smtp.zohomail.com with SMTPS id 1795580117993364.48635298628324;
+	Tue, 24 Nov 2026 20:15:17 -0800 (PST)
+From: Xuanlin Chen <hanbings@hanbings.io>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	loongarch@lists.linux.dev
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] LoongArch: Expose msgint and avecint in /proc/cpuinfo
-Date: Wed, 25 Nov 2026 10:39:56 +0800
-Message-ID: <20261125023956.26825-1-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
+Subject: [PATCH v2] LoongArch: Fix off-by-one in bt_address() exception vector check
+Date: Wed, 25 Nov 2026 12:15:14 +0800
+Message-ID: <20261125041514.2431377-1-hanbings@hanbings.io>
+X-Mailer: git-send-email 2.54.0
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -51,52 +64,61 @@ List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxf899SgZrUC43AA--.46328S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7Jry5XrWUtF4kCw4fWr4DGFX_yoWDZwbE9F
-	y7Gw1UGr48Gr4j9wn8K3W5Jry8A348tFnY93Z7uF1UZryYkr1aq398Z3WrAr1DKFZrtrZ5
-	Aay8Jryvvw1a9osvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb7xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
-	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jUsqXUUUUU=
+X-ZohoMailClient: External
 
-Expose the msgint (cpu_has_msgint) and avecint (cpu_has_avecint) feature
-flags in the Features line of /proc/cpuinfo.
+EXCCODE_INT_END names the last valid interrupt exception code, not an
+exclusive upper bound.  Since INT_AVEC is 14:
 
-Having both flags visible in userspace makes it straightforward to check
-whether the CPU hardware supports message interrupts versus whether AVEC
-is actually enabled by firmware and exposed via IOCSR.
+    EXCCODE_INT_NUM = INT_AVEC + 1 = 15
+    EXCCODE_INT_END = EXCCODE_INT_START + EXCCODE_INT_NUM - 1 = 78
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+trap_init() installs handle_vint for vectors 64 through 78 inclusive,
+and the switch in bt_address() also maps types up to EXCCODE_INT_END
+inclusive.  But the range check uses:
+
+    ra < eentry + EXCCODE_INT_END * VECSIZE
+
+which stops at the start of vector 78, so an address in the last
+interrupt vector is never translated.  For example, eentry + 78 *
+VECSIZE + 0x154 is rejected instead of being mapped to handle_vint +
+0x154.
+
+The off-by-one has existed since the ORC unwinder was added; at that
+time EXCCODE_INT_END was 77, so vector 77 was excluded.  After AVEC
+support made vector 78 the last interrupt vector, vector 78 is the one
+that is excluded.  Before commit 4cd641a79e69 ("LoongArch: Remove
+unnecessary checks for ORC unwinder"), this silently ended the unwind.
+Since that commit, bt_address() returns 0 and unwind_next_frame()
+logs:
+
+    cannot find unwind pc at ...
+
+Fixes: cb8a2ef0848c ("LoongArch: Add ORC stack unwinder support")
+Cc: stable@vger.kernel.org
+Reviewed-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Tested-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Xuanlin Chen <hanbings@hanbings.io>
+
 ---
- arch/loongarch/kernel/proc.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Changes in v2:
+- Update the author and Signed-off-by.
+- Add Tiezhu's Reviewed-by and Tested-by.
 
-diff --git a/arch/loongarch/kernel/proc.c b/arch/loongarch/kernel/proc.c
-index 37e9b144ec09..df0ce4e4bdc2 100644
---- a/arch/loongarch/kernel/proc.c
-+++ b/arch/loongarch/kernel/proc.c
-@@ -98,6 +98,10 @@ static int show_cpuinfo(struct seq_file *m, void *v)
- 		seq_puts(m, " lbt_arm");
- 	if (cpu_has_lbt_mips)
- 		seq_puts(m, " lbt_mips");
-+	if (cpu_has_msgint)
-+		seq_puts(m, " msgint");
-+	if (cpu_has_avecint)
-+		seq_puts(m, " avecint");
- 	seq_puts(m, "\n");
+ arch/loongarch/kernel/unwind_orc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/loongarch/kernel/unwind_orc.c b/arch/loongarch/kernel/unwind_orc.c
+index 9cfb5bb19..784edf6a7 100644
+--- a/arch/loongarch/kernel/unwind_orc.c
++++ b/arch/loongarch/kernel/unwind_orc.c
+@@ -366,7 +366,7 @@ static inline unsigned long bt_address(unsigned long ra)
+ 	}
+ #endif
  
- 	seq_printf(m, "Hardware Watchpoint\t: %s", str_yes_no(cpu_has_watch));
+-	if (ra >= eentry && ra < eentry +  EXCCODE_INT_END * VECSIZE) {
++	if (ra >= eentry && ra < eentry + (EXCCODE_INT_END + 1) * VECSIZE) {
+ 		unsigned long func;
+ 		unsigned long type = (ra - eentry) / VECSIZE;
+ 		unsigned long offset = (ra - eentry) % VECSIZE;
 -- 
-2.42.0
-
+2.54.0
