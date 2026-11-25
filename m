@@ -1,55 +1,130 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=148.163.156.1
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795625159;
-	b=PbOE2KsVYpV6JkyoLq+f8FYEETwVvELJyxeeBjguZujsI2QwK1Kx3XW5x/mZImsjUMG5
-	 H3Wsgy6GDiPJ174KGS6mh5TOORHzsGJKVE1f8gIAZlZgE84mP0ZmPJSD0LzyJNYQeEUQ9
-	 jLwdNRO2jVxYj4XwayQcucg9n/EZGlQIACXkbFIqdxFhgDdmNwnP8ES01h9j3MoQwbYxc
-	 IZMbYuP28TZ/r+UDpaQGoZNJchHc5o61cgbmImqczpdLmgubBCNDnjpunN9oCUPr/v+6c
-	 ICraxdf1GAXfTZl7KSbu1AylE97YFpQnejDEpzGvO6tNBp1Jc6VatHa94+BOGKGoRiQ==
+	t=1795634447;
+	b=EJm4H/hXLS9KV8Jdlxivvu0jPtSZ0+f8uEgJd5IlSuYDxboGal+kSVaIDHh+dTTwXlOq
+	 ZZg+cFZPDqn9efTgNQepP0j+BAYz2gPK9Fbhuo9qTpjjs+psytZIniRLJ3ovqr+ljt9Q/
+	 SOLDLpT0zUp/qxrd44Tf+Y6KWeF/m++57GL3McBR8rxW/xKov8wGo0LGEmoPDYtwNZHIf
+	 JmoMenQg+KP30xp4V+fACWqbkk27Z0tCC3KOcA6H/JBptzYRD7W7/ObMXgkQzLhGMSTzW
+	 TqbVqenWjtBRLa7XUAC87zAExvnNTiFgGrz8Q4/4L6e6CCYS4eCQO8ME28uFxOR1D8w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795625159;
-	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
-	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
-	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=7Ofy+nGZGG5GjSQ/p9hjatkioBWd7QndibG1/NjdTig=;
-	b=prJILZFjkeq/oyAVJVz44guphcIz3Z5180Cwlf5/AXc8P0bIuLA5lwF/Yixn+Cv+4jpC
-	 g4KyAldkoecriRG7Wm7AsW5RmyMbgfxCs/GBV6AtJbDLUPC3IKfxIGCOCyAnTowv5O0Wv
-	 zE02xDzJwmPj3yjzosKgzC/ricN5xHJ2xh3fZiqvD+j+e0ikOg1s5ocyqZawc2mkIdzh3
-	 PzW9/XAhjs9Z3ZK4Mu4AHa+M0MtD4edXev1QoQFQe+CSFShS3ZGnIzimOc0MzOflVMIRs
-	 GpnMa54QVgj/yo+R+IA76RpsKSQZ82vEkpKT63fHTtuTkc8mcP9uMSju79ykTd44UYA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795634447;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
+	 Received:Received:Received:Received:Date:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
+	 Content-Transfer-Encoding:In-Reply-To:X-TM-AS-GCONF:
+	 X-Proofpoint-Reinject:X-Proofpoint-Spam-Details-Enc:
+	 X-Proofpoint-ORIG-GUID:X-Authority-Analysis:X-Proofpoint-GUID:
+	 X-Proofpoint-Spam-Info:X-Proofpoint-Virus-Version:
+	 X-Proofpoint-Spam-Details;
+	bh=gjkmUYAQqhObZomEhSZvG/YB77KWT+YtxY8LYQ+JXBM=;
+	b=ueMDUTiU/1j693kDbkmSgNgCpOoAPNHvSHdSBza/t5eRwv97AMQyorrCgDVd2lVZQbuI
+	 Zx6tFVrDa8DKr4BvTtr9wFlhdMsK4urXC3INySV0aQ693/vWvLR10wTa52CBCUcHwodvw
+	 hvR9pdoF/at7dTC5a/6GsJBxMhYs6TlbyhG/9X39pswUJG1m3WWNTY9iXI+ixWXceiZE/
+	 HdoCUxVa54zvFDehBwwFPRG4WxiOkdBgpu6Y6bXdMkL1SSSQU7OcZ3lHaxVeQqn9SCzkK
+	 G1D+BFDrfYOul5PNLPdUTyHSO/xsscB8dg3Ge6dYeUa53JFxjiRvNDgWZ4iabXSZofw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FnbISpxn;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=linux.ibm.com;
+	spf=pass smtp.mailfrom=linux.ibm.com;
+	dkim=pass header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=b4o1XNDl;
+	arc=none smtp.remote-ip=148.163.156.1
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19CB606A31E
-	for <loongarch@lists.linux.dev>; Wed, 25 Nov 2026 16:45:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64ADF606A31E;
+	Wed, 25 Nov 2026 19:20:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 64ADF606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FnbISpxn
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64BF41F000ED
-	for <loongarch@lists.linux.dev>; Wed, 25 Nov 2026 16:45:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795625158;
-	bh=7Ofy+nGZGG5GjSQ/p9hjatkioBWd7QndibG1/NjdTig=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=FnbISpxnsBf8m0U3xd/OLVl7vxIJAa+9YONUmKpGpEnWKMf08r9xzEpHz/jgp+Wy3
-	 hYR8DcSI4C7QgnHZRVTeRA9aG7YpFTOQgXH1pXIwyOSyFwFK5C767S+VcEkIW08ND0
-	 47idpSLK+NeC5zqL5mCSMA7g14tj2hVsBJfvpe1ltsneuxkdau490DpgLtvhx013XE
-	 kDhjEtwauDJ/g0dIqATs0tWCLtpR9E1aj1ZNY7PA0IRgazQTx/XDU4o7GDyyC3KGuq
-	 um/ULeytSQIBUQwk/zXNaYoYOZde63xfl2rgQuHFI6SBJTnyoUMa/R6dphUCShnUWs
-	 nTnEf1w8hLE0A==
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-3ae85e3685cso40497451fa.2
-        for <loongarch@lists.linux.dev>; Wed, 25 Nov 2026 08:45:58 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AL+hErHn+q9/ECy2iaIru3ZKOEhzK3lR07AJZLDKu7KSoSqPOoGiwsR9NriPQsHK6bZiaHfeZKjuAn4qUWc=@lists.linux.dev
-X-Gm-Message-State: APuU4Z+LQcDaNZ4dppxFHVlI1yste3gVITPfxay9QXXd4pvFFz/TwdLo
-	hF1Ni1CYke+94w8eo+dx/CtUzvjEGB1ymmAzNM69ePxiXmjm5H+uzPU2HErH8cx/kCbT8mj8SIG
-	LuZb9VnyhrbZ2enZXNAFL1dcy7ofp7tY=
-X-Received: by 2002:a05:6512:401c:b0:5c1:ad4b:4be7 with SMTP id
- 2adb3069b0e04-5c1bc7d00aamr5425949e87.20.1795625156701; Wed, 25 Nov 2026
- 08:45:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=b4o1XNDl
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6APGYdNb1999322;
+	Wed, 25 Nov 2026 19:19:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=gjkmUY
+	AQqhObZomEhSZvG/YB77KWT+YtxY8LYQ+JXBM=; b=b4o1XNDlfljukz22wGJQ0h
+	hFDvCKahLQE5+oELMoxpvR8yus1xr/9HFGs7jXKfv24NedjQNfOPAQLQsOYaYxmJ
+	dUFE5fhXckqAuW0PYjKLfUY4rjnJnXiiEJ3J6heXYs/hWnlWwEUIeiE6+U2PbLg2
+	8YmBlg57Xz94o6TGMiXCPGRFMqcx7uqeKTvP5PT0Ve/GxmJjLufrD15klX7U8Hzv
+	zal0O8X8xVHjp69b9e+a0liO17XVYXOOvkfuUiwLL6YKgBmTbYUQ+hOU7A7uWYN1
+	Af/9bgIBBKYXWxK+4RRNAGIaKYwc8nTS7EMTL98PhsZN4n/5Bz49Dm62UQ2Sqx/g
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4j34fae8qk-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Wed, 25 Nov 2026 19:19:44 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 6APJJJGp505545;
+	Wed, 25 Nov 2026 19:19:43 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4j5uxx22n6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Nov 2026 19:19:43 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6APJJdNd42139928
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 25 Nov 2026 19:19:39 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EBD8220043;
+	Wed, 25 Nov 2026 19:19:38 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 75D8420040;
+	Wed, 25 Nov 2026 19:19:14 +0000 (GMT)
+Received: from shivang.upadyay (unknown [9.67.112.155])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 25 Nov 2026 19:19:14 +0000 (GMT)
+Date: Thu, 26 Nov 2026 00:49:10 +0530
+From: Shivang Upadhyay <shivangu@linux.ibm.com>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+        Alexandre Ghiti <alex@ghiti.fr>, Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+        Bill Wendling <morbo@google.com>,
+        Justin Stitt <justinstitt@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Kees Cook <kees@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+        Gary Guo <gary@garyguo.net>,
+        =?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+        Benno Lossin <lossin@kernel.org>,
+        Andreas Hindborg <a.hindborg@kernel.org>,
+        Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+        Danilo Krummrich <dakr@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+        Christophe Leroy <chleroy@kernel.org>, Boqun Feng <boqun@kernel.org>,
+        Nicolas Schier <nsc@kernel.org>, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, llvm@lists.linux.dev, linux-mm@kvack.org,
+        linux-um@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+        linux-s390@vger.kernel.org, linux-mips@vger.kernel.org,
+        rust-for-linux@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        Jan Stancek <jstancek@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v6 05/11] powerpc/vdso: Enable the vdsocheck tool
+Message-ID: <awc0rvqmahY6cHtv@shivang.upadyay>
+References: <20261123-vdso-absolute-reloc-v6-0-161e218dd217@linutronix.de>
+ <20261123-vdso-absolute-reloc-v6-5-161e218dd217@linutronix.de>
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -59,258 +134,65 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <cover.1795194329.git.maciej.wieczor-retman@intel.com>
-In-Reply-To: <cover.1795194329.git.maciej.wieczor-retman@intel.com>
-From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Date: Wed, 25 Nov 2026 17:45:42 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0hUQBr0k3GNqf2t118nRZnBS_Chw4NJXA+j501Bf=AEGQ@mail.gmail.com>
-X-Gm-Features: Aa3M54qST7obZ3zrfYaLQiJELeljnYeJDcQKh7-DXwYZlMnrrNHk2B9oFBxFD3s
-Message-ID: <CAJZ5v0hUQBr0k3GNqf2t118nRZnBS_Chw4NJXA+j501Bf=AEGQ@mail.gmail.com>
-Subject: Re: [PATCH v2 00/42] ACPICA: ACPICA 20260930 with follow-up fixes
-To: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-Cc: catalin.marinas@arm.com, pawel.chmielewski@intel.com, 
-	kyle.d.pelton@intel.com, lenb@kernel.org, guohanjun@huawei.com, 
-	maobibo@loongson.cn, lpieralisi@kernel.org, will@kernel.org, 
-	sudeep.holla@kernel.org, erik.kaneda@intel.com, rafael@kernel.org, 
-	robert.moore@intel.com, void0red@gmail.com, superm1@kernel.org, 
-	chenhuacai@kernel.org, acpica-devel@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20261123-vdso-absolute-reloc-v6-5-161e218dd217@linutronix.de>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTI1MDA3NiBTYWx0ZWRfX3whPefz46WC1
+ hNygsADgWWH3q76IQ97vzHqlw0KVrxx7r7UAw5SVuBqmP03DlIHvveHdnCb8I+LFUdhf3IBTEF4
+ 8I0LKw8A6RDat+2jMShRhIdJyHC/snbMARzB3j97ZRg4dk9eQk6Kb/c17OPxkgsEeh56QxlIgDC
+ wUPWuvr9YTBgUtvA8T8GCqkSSvcvT95hsmx8Ct0PUUDgvFCs7cWvxl/cHPmpiD4Kk1M2+/XY3xk
+ DLiaxWKhSrSivaxvdgJ1EA4G7gz0ulJrAaMk8ySQ2/S47CSLA2FI3plB5nV4GNPFWQXLUfRWPHl
+ QcXK+Qe1+YjjykPhUcW6RI716uPTfT8UPFmL8V6qwT/f4oC1rJT58R1VQobyjiFZ9MGmwr6WlCS
+ z5ZKV+GghS12zlmcdRFYX61cx8WcuTghM7JYnVHIKLaR9Q0N8q8XzXIjmtuCeYWzKrV/9/k7FwS
+ CZCtvJAPPqeb1X+3DCw==
+X-Proofpoint-ORIG-GUID: 9DuPW81bc1Ne1-Acmq-ZFQ1oXTeQgO4D
+X-Authority-Analysis: v=2.4 cv=U6QHnuru c=1 sm=1 tr=0 ts=6b0734d1 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=8nJEP1OIZ-IA:10 a=zJRp6_cAMcgA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8
+ a=K52B-zMjTZoA2OaJzQcA:9 a=3ZKOabzyN94A:10 a=wPNLvfGTeEIA:10
+X-Proofpoint-GUID: kgd6ntmKeCF4y3vpHzpfFLVurSHBIu2a
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMTI1MDA3NiBTYWx0ZWRfXwLCiikm0vVyM
+ 9boHPXPDQcdJQkQPxTdXN6x3x8c/RPGIYsu6hqtP046Hh/4b5uaJA5LSJKyG0fXuE8vE282QQVw
+ jau+sQ3OeVvDMeZGSzccJJHxqp+Tqsg=
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
+ definitions=2026-11-25_04,2026-11-25_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 lowpriorityscore=0 spamscore=0 impostorscore=0
+ clxscore=1011 bulkscore=0 suspectscore=0 adultscore=0 phishscore=0
+ malwarescore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2611040001
+ definitions=main-2611250076
 
-On Fri, Nov 20, 2026 at 6:18=E2=80=AFPM Maciej Wieczor-Retman
-<maciej.wieczor-retman@intel.com> wrote:
->
-> The following patches are ported from upstream ACPICA and contain the 202=
-60930
-> release and some follow up fixes (so generally everything after the 20260=
-408
-> release). Only source files relevant to the Linux kernel are being ported=
-.
->
-> Changes since v1:
-> v1 [1] contained only commits between the 20260408 and 20260930 releases.
-> However sashiko.dev [2] raised some issues that needed to be either appli=
-ed or
-> rejected. Most issues were valid and were resolved in patches that follow=
- the
-> 20260930 release. Things that were rejected were the whole patch [3] due =
-to not
-> being a full solution to a very unlikely, debug only problem. Also the sa=
-shiko
-> comment related to ACPI_GPE_AUTO_ENABLED in patch [4] wasn't applied due =
-to
-> not being realistically possible to happen and consequences were only an =
-odd
-> looking log entry.
->
-> There are non-ACPICA changes related to constants/variable name changes
-> in these patches:
-> - ACPICA: actbl2: MPAM: adapt to MPAM ACPI spec v3.1
-> - ACPICA: acpica: Fix typo in the IOVT_IOMMU table definitions
->
-> The base for this patches is upstream kernel v7.4-rc3 and it consists of
-> the following material:
->
-> Andre Przywara (1):
->       ACPICA: actbl2: MPAM: adapt to MPAM ACPI spec v3.1
->
-> Colin Ian King (2):
->       ACPICA: components: Fix typo "Supress" -> "Suppress"
->       ACPICA: components: Fix typo: "numer" -> "number"
->
-> Dave Jiang (2):
->       ACPICA: CEDT: RDPAS: Add missing reserved field in RDPAS structure
->       ACPICA: CEDT: RDPAS: Fix incorrect field positions for RDPAS
->
-> Hanjun Guo (1):
->       ACPICA: add UBRT (UnifiedBus Root Table) definitions
->
-> Himanshu Chauhan (1):
->       ACPICA: Introduce a new HEST notification type for RISC-V SSE event=
-s
->
-> Iurii Trukhin (1):
->       ACPICA: parser: Fix parse tree memory leak on AML execution error u=
-nwind
->
-> Leonard Lausen (1):
->       ACPICA: Executer: Resolve package index references used as integer =
-operands
->
-> Maciej Strozek (1):
->       ACPICA: Utilities: Fix for AcpiUtVerifyChecksum warning display
->
-> Maciej Wieczor-Retman (17):
->       ACPICA: executer: Fix NULL pointer dereference in AcpiExStoreObject=
-ToIndex()
->       ACPICA: compiler: Add _Ixx GPE object
->       ACPICA: namespace: Fix possible underflow and NULL pointer derefere=
-nce
->       ACPICA: iASL: Fix the truncated count of external control methods
->       ACPICA: release: Update version to 20260930
->       ACPICA: events: Add missing event mutex to AcpiEvClearGpeDispatchBy=
-Owner()
->       ACPICA: events: Remove redundant code
->       ACPICA: events: Fix AcpiEvClearGpeDispatchByOwner handler type proc=
-essing
->       ACPICA: events: Fix GPE cleanup return after changing program state
->       ACPICA: events: Handle GPEs' Notify dispatch type
->       ACPICA: tables: Fix wrong table unload and notify call order
->       ACPICA: tables: Fix global table read missing mutex
->       ACPICA: executer: Fix copying PCC source buffer data
->       ACPICA: dispatcher: Fix zero size non-NULL PCC buffer pointer
->       ACPICA: utilities: Clear NextObject so the outer loop doesn't read =
-it
->       ACPICA: namespace: Fix memory leak around compiler alias flag
->       ACPICA: acpica: Fix typo in the IOVT_IOMMU table definitions
->
-> Mario Limonciello (AMD) (1):
->       ACPICA: Add ACPI_MSG_DEBUG to set KERN_DEBUG for debug output
->
-> Pawel Chmielewski (3):
->       ACPICA: ACPI 6.5 Add support for the MISC table
->       ACPICA: iASL: Complete KEYP support
->       ACPICA: tables: Fix table buffer leak when Load fails verification
->
-> Rong Zhang (1):
->       ACPICA: parser: Set AML length for bytelist
->
-> Vidya Sagar (1):
->       ACPICA: IORT: Add Root Complex PASID Flags field
->
-> ikaros (8):
->       ACPICA: Events: Clear GPE dispatch by owner during table unload
->       ACPICA: executer: Add bounds checking for PCC field read access
->       ACPICA: Validate 4-char field names before namespace lookup
->       ACPICA: Improve error handling in table loading process
->       ACPICA: executer: Add bounds checking for PCC field write access
->       ACPICA: tables: Fix heap-buffer-overflow in AcpiTbFindTable
->       ACPICA: Fix object reference update to skip non-local notify types
->       ACPICA: namespace: Recognize alias node types in detach
->
-> purofle (1):
->       ACPICA: fix: build error with gcc 16: unused-but-set-variable
->
-> [1] https://lore.kernel.org/all/20261020141051.2194123-1-pawel.chmielewsk=
-i@intel.com/
-> [2] https://sashiko.dev/#/patchset/20261020141051.2194123-1-pawel.chmiele=
-wski%40intel.com
-> [3] https://sashiko.dev/#/message/20261020141051.2194123-9-pawel.chmielew=
-ski%40intel.com
-> [4] https://sashiko.dev/#/patchset/20261020141051.2194123-1-pawel.chmiele=
-wski%40intel.com?part=3D7
->
-> Andre Przywara (1):
->   ACPICA: actbl2: MPAM: adapt to MPAM ACPI spec v3.1
->
-> Colin Ian King (2):
->   ACPICA: components: Fix typo "Supress" -> "Suppress"
->   ACPICA: components: Fix typo: "numer" -> "number"
->
-> Dave Jiang (2):
->   ACPICA: CEDT: RDPAS: Add missing reserved field in RDPAS structure
->   ACPICA: CEDT: RDPAS: Fix incorrect field positions for RDPAS
->
-> Hanjun Guo (1):
->   ACPICA: add UBRT (UnifiedBus Root Table) definitions
->
-> Himanshu Chauhan (1):
->   ACPICA: Introduce a new HEST notification type for RISC-V SSE events
->
-> Iurii Trukhin (1):
->   ACPICA: parser: Fix parse tree memory leak on AML execution error
->     unwind
->
-> Leonard Lausen (1):
->   ACPICA: Executer: Resolve package index references used as integer
->     operands
->
-> Maciej Strozek (1):
->   ACPICA: Utilities: Fix for AcpiUtVerifyChecksum warning display
->
-> Maciej Wieczor-Retman (17):
->   ACPICA: executer: Fix NULL pointer dereference in
->     AcpiExStoreObjectToIndex()
->   ACPICA: compiler: Add _Ixx GPE object
->   ACPICA: namespace: Fix possible underflow and NULL pointer dereference
->   ACPICA: iASL: Fix the truncated count of external control methods
->   ACPICA: release: Update version to 20260930
->   ACPICA: events: Add missing event mutex to
->     AcpiEvClearGpeDispatchByOwner()
->   ACPICA: events: Remove redundant code
->   ACPICA: events: Fix AcpiEvClearGpeDispatchByOwner handler type
->     processing
->   ACPICA: events: Fix GPE cleanup return after changing program state
->   ACPICA: events: Handle GPEs' Notify dispatch type
->   ACPICA: tables: Fix wrong table unload and notify call order
->   ACPICA: tables: Fix global table read missing mutex
->   ACPICA: executer: Fix copying PCC source buffer data
->   ACPICA: dispatcher: Fix zero size non-NULL PCC buffer pointer
->   ACPICA: utilities: Clear NextObject so the outer loop doesn't read it
->   ACPICA: namespace: Fix memory leak around compiler alias flag
->   ACPICA: acpica: Fix typo in the IOVT_IOMMU table definitions
->
-> Mario Limonciello (AMD) (1):
->   ACPICA: Add ACPI_MSG_DEBUG to set KERN_DEBUG for debug output
->
-> Pawel Chmielewski (3):
->   ACPICA: ACPI 6.5 Add support for the MISC table
->   ACPICA: iASL: Complete KEYP support
->   ACPICA: tables: Fix table buffer leak when Load fails verification
->
-> Rong Zhang (1):
->   ACPICA: parser: Set AML length for bytelist
->
-> Vidya Sagar (1):
->   ACPICA: IORT: Add Root Complex PASID Flags field
->
-> ikaros (8):
->   ACPICA: Events: Clear GPE dispatch by owner during table unload
->   ACPICA: executer: Add bounds checking for PCC field read access
->   ACPICA: Validate 4-char field names before namespace lookup
->   ACPICA: Improve error handling in table loading process
->   ACPICA: executer: Add bounds checking for PCC field write access
->   ACPICA: tables: Fix heap-buffer-overflow in AcpiTbFindTable
->   ACPICA: Fix object reference update to skip non-local notify types
->   ACPICA: namespace: Recognize alias node types in detach
->
-> purofle (1):
->   ACPICA: fix: build error with gcc 16: unused-but-set-variable
->
->  drivers/acpi/acpica/acevents.h  |   4 +
->  drivers/acpi/acpica/acglobal.h  |   2 +-
->  drivers/acpi/acpica/acpredef.h  |   1 +
->  drivers/acpi/acpica/acutils.h   |   3 +
->  drivers/acpi/acpica/dsfield.c   |  24 +++
->  drivers/acpi/acpica/evgpe.c     | 355 ++++++++++++++++++++++++++++++++
->  drivers/acpi/acpica/exconfig.c  |   3 +-
->  drivers/acpi/acpica/exconvrt.c  |   4 +-
->  drivers/acpi/acpica/exfield.c   | 105 +++++++---
->  drivers/acpi/acpica/exresop.c   |  26 +++
->  drivers/acpi/acpica/exstore.c   |  20 +-
->  drivers/acpi/acpica/extrace.c   |   2 +-
->  drivers/acpi/acpica/nsaccess.c  |   2 +-
->  drivers/acpi/acpica/nsobject.c  |   7 +-
->  drivers/acpi/acpica/nsxfname.c  |   8 +
->  drivers/acpi/acpica/psargs.c    |   8 +-
->  drivers/acpi/acpica/psloop.c    |   5 +-
->  drivers/acpi/acpica/psobject.c  |   1 -
->  drivers/acpi/acpica/psparse.c   |  16 +-
->  drivers/acpi/acpica/tbdata.c    |  32 ++-
->  drivers/acpi/acpica/tbfind.c    |  16 +-
->  drivers/acpi/acpica/utcksum.c   |   3 +-
->  drivers/acpi/acpica/utdebug.c   |   9 +-
->  drivers/acpi/acpica/utdelete.c  |   5 +
->  drivers/acpi/arm64/mpam.c       |   6 +-
->  drivers/acpi/loongarch/iovt.c   |   6 +-
->  include/acpi/acpixf.h           |   2 +-
->  include/acpi/actbl1.h           |   6 +-
->  include/acpi/actbl2.h           | 200 +++++++++++++++++-
->  include/acpi/platform/aclinux.h |   1 +
->  30 files changed, 811 insertions(+), 71 deletions(-)
->
-> --
+On Mon, Nov 23, 2026 at 02:50:56PM +0100, Thomas Weißschuh wrote:
+> +        bindings::EM_PPC64 => AllowedRelocations {
+> +            in_object_file: &[
+> +                10,  /* R_PPC64_REL24 */
+> +                11,  /* R_PPC64_REL14 */
+> +                26,  /* R_PPC64_REL32 */
+> +                44,  /* R_PPC64_REL64 */
+> +                249, /* R_PPC64_REL16 */
+> +                250, /* R_PPC64_REL16_LO */
+> +                251, /* R_PPC64_REL16_HI */
+> +                252, /* R_PPC64_REL16_HA */
+> +            ],
+Seems to excluise list of all reletive relocations.
+I only could find the following being actually used, for defconfig ppc64le.
+But good to have all there.
 
-Whole series applied as 7.5 material, thanks!
+[root@system vdso]# for i in `ls *.o`; do objdump -r -SD $i  | grep -oP 'R_PPC\w*' ; done | sort |  uniq
+R_PPC64_REL16_HA
+R_PPC64_REL16_LO
+R_PPC64_REL24
+R_PPC64_REL32
+R_PPC64_REL64
+[root@system vdso]#
+
+Looks good. Feel free to add,
+Reviewed-by: Shivang Upadhyay <shivangu@linux.ibm.com>
+
+~Shivang.
