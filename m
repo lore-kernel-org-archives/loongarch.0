@@ -1,51 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795602756;
-	b=b4RW1shebyHaUxslBa+pq1KHiMCzTCqItBG7lYtpCA0EnLR4CXwfcRKYrEsz966jI18e
-	 2cClbxDI1Vs+oZQUe0vhtE9r2fVkCKsosz+06aHAF/7Nr9GJ+Wfhr5CRnUOLvM8w+FwI+
-	 Uso2cR4J55BOn19f2U11aC56tKIrfrUurfsGrY/6u++rPajY1wutYLB6ixE7loHjXqGhJ
-	 7cDoTF+/84BfIcLJ1DqPgf7Yn847amiL+V2iPocwqqSTByW1RQ2svkZchQz/ck9n/oC24
-	 NRojel/p2x0YCAIx1ss2MkTt03qxtZ7/iVu6XEX64HUBndrgWz4Lpu3rRoGsaVdC6Kg==
+	t=1795625159;
+	b=PbOE2KsVYpV6JkyoLq+f8FYEETwVvELJyxeeBjguZujsI2QwK1Kx3XW5x/mZImsjUMG5
+	 H3Wsgy6GDiPJ174KGS6mh5TOORHzsGJKVE1f8gIAZlZgE84mP0ZmPJSD0LzyJNYQeEUQ9
+	 jLwdNRO2jVxYj4XwayQcucg9n/EZGlQIACXkbFIqdxFhgDdmNwnP8ES01h9j3MoQwbYxc
+	 IZMbYuP28TZ/r+UDpaQGoZNJchHc5o61cgbmImqczpdLmgubBCNDnjpunN9oCUPr/v+6c
+	 ICraxdf1GAXfTZl7KSbu1AylE97YFpQnejDEpzGvO6tNBp1Jc6VatHa94+BOGKGoRiQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795602756;
-	h=DMARC-Filter:Received:Received:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:MIME-Version:Content-Transfer-Encoding:X-CM-TRANSID:
-	 X-CM-SenderInfo:X-Coremail-Antispam;
-	bh=87gTgiD7MR15A5o/DOYg98octD+Ko4H+zSK7DmZdHPI=;
-	b=YZUrPKSVmS0MWLIIFkpIr/8NYMk87hqRzyMEvutRQJ2NNblVbq0QVlUtmlMSmGUZkw54
-	 zD4QhdCNdGeCkSFuZ5tT1+vqkB8Py44hM3WJkqDtYUsAmcX8FNm+9njb3UEBkS+Lgc0sG
-	 usbuWcGt9Z98pXG4GNqycucSq2GJBkW/svUOIWrhZB/K7KkRfOO8xQ7rUx191Ey0N4Qz5
-	 xv5ktfrJ9HUqq8RCOOdEeGlBgix+2a+4w+Hdhz0D1JXducu+9A4wW0PBVRkIent1sjJLS
-	 oA5MURsfgkTbQvErnTD2rJXnJErI9T9xZ0EwrPzpXAvfBsnl65y7FlPmF7ca6FK4ExQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795625159;
+	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
+	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
+	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=7Ofy+nGZGG5GjSQ/p9hjatkioBWd7QndibG1/NjdTig=;
+	b=prJILZFjkeq/oyAVJVz44guphcIz3Z5180Cwlf5/AXc8P0bIuLA5lwF/Yixn+Cv+4jpC
+	 g4KyAldkoecriRG7Wm7AsW5RmyMbgfxCs/GBV6AtJbDLUPC3IKfxIGCOCyAnTowv5O0Wv
+	 zE02xDzJwmPj3yjzosKgzC/ricN5xHJ2xh3fZiqvD+j+e0ikOg1s5ocyqZawc2mkIdzh3
+	 PzW9/XAhjs9Z3ZK4Mu4AHa+M0MtD4edXev1QoQFQe+CSFShS3ZGnIzimOc0MzOflVMIRs
+	 GpnMa54QVgj/yo+R+IA76RpsKSQZ82vEkpKT63fHTtuTkc8mcP9uMSju79ykTd44UYA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=loongson.cn;
-	spf=pass smtp.mailfrom=loongson.cn;
-	arc=none smtp.remote-ip=114.242.206.163
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 522AC606A333
-	for <loongarch@lists.linux.dev>; Wed, 25 Nov 2026 10:32:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 522AC606A333
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [123.138.236.242])
-	by gateway (Coremail) with SMTP id _____8BxLNI5uQZrzuUiAA--.33671S3;
-	Wed, 25 Nov 2026 18:32:25 +0800 (CST)
-Received: from linux.localdomain (unknown [123.138.236.242])
-	by front1 (Coremail) with SMTP id qMiowJBxpMwouQZrBEs3AA--.17721S2;
-	Wed, 25 Nov 2026 18:32:09 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>
-Cc: bpf@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH bpf-next v1] selftests/bpf: Restrict JIT tests to 64-bit LoongArch
-Date: Wed, 25 Nov 2026 18:32:08 +0800
-Message-ID: <20261125103208.15242-1-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FnbISpxn;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19CB606A31E
+	for <loongarch@lists.linux.dev>; Wed, 25 Nov 2026 16:45:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FnbISpxn
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64BF41F000ED
+	for <loongarch@lists.linux.dev>; Wed, 25 Nov 2026 16:45:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795625158;
+	bh=7Ofy+nGZGG5GjSQ/p9hjatkioBWd7QndibG1/NjdTig=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=FnbISpxnsBf8m0U3xd/OLVl7vxIJAa+9YONUmKpGpEnWKMf08r9xzEpHz/jgp+Wy3
+	 hYR8DcSI4C7QgnHZRVTeRA9aG7YpFTOQgXH1pXIwyOSyFwFK5C767S+VcEkIW08ND0
+	 47idpSLK+NeC5zqL5mCSMA7g14tj2hVsBJfvpe1ltsneuxkdau490DpgLtvhx013XE
+	 kDhjEtwauDJ/g0dIqATs0tWCLtpR9E1aj1ZNY7PA0IRgazQTx/XDU4o7GDyyC3KGuq
+	 um/ULeytSQIBUQwk/zXNaYoYOZde63xfl2rgQuHFI6SBJTnyoUMa/R6dphUCShnUWs
+	 nTnEf1w8hLE0A==
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-3ae85e3685cso40497451fa.2
+        for <loongarch@lists.linux.dev>; Wed, 25 Nov 2026 08:45:58 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AL+hErHn+q9/ECy2iaIru3ZKOEhzK3lR07AJZLDKu7KSoSqPOoGiwsR9NriPQsHK6bZiaHfeZKjuAn4qUWc=@lists.linux.dev
+X-Gm-Message-State: APuU4Z+LQcDaNZ4dppxFHVlI1yste3gVITPfxay9QXXd4pvFFz/TwdLo
+	hF1Ni1CYke+94w8eo+dx/CtUzvjEGB1ymmAzNM69ePxiXmjm5H+uzPU2HErH8cx/kCbT8mj8SIG
+	LuZb9VnyhrbZ2enZXNAFL1dcy7ofp7tY=
+X-Received: by 2002:a05:6512:401c:b0:5c1:ad4b:4be7 with SMTP id
+ 2adb3069b0e04-5c1bc7d00aamr5425949e87.20.1795625156701; Wed, 25 Nov 2026
+ 08:45:56 -0800 (PST)
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -55,526 +59,258 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxpMwouQZrBEs3AA--.17721S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9fXoWfZF13trW8ur47Wr13CrW5twc_yoW8ZFWxuo
-	W3KFZIvw1UGw4UZrWa9r1fJryxXryjkr95XFW7Wa4rCFsrGr15CryUCws5ur4aq398Wayq
-	ga47CasFvFZ7GF1kl-sFpf9Il3svdjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8wcxFpf
-	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
-	UjIYCTnIWjp_UUUY17kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
-	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
-	Y2AK021l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14
-	v26r1j6r4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
-	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280
-	aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28Icx
-	kI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2Iq
-	xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42
-	IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY
-	6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aV
-	CY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUzsqWUUUUU
+References: <cover.1795194329.git.maciej.wieczor-retman@intel.com>
+In-Reply-To: <cover.1795194329.git.maciej.wieczor-retman@intel.com>
+From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
+Date: Wed, 25 Nov 2026 17:45:42 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0hUQBr0k3GNqf2t118nRZnBS_Chw4NJXA+j501Bf=AEGQ@mail.gmail.com>
+X-Gm-Features: Aa3M54qST7obZ3zrfYaLQiJELeljnYeJDcQKh7-DXwYZlMnrrNHk2B9oFBxFD3s
+Message-ID: <CAJZ5v0hUQBr0k3GNqf2t118nRZnBS_Chw4NJXA+j501Bf=AEGQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/42] ACPICA: ACPICA 20260930 with follow-up fixes
+To: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+Cc: catalin.marinas@arm.com, pawel.chmielewski@intel.com, 
+	kyle.d.pelton@intel.com, lenb@kernel.org, guohanjun@huawei.com, 
+	maobibo@loongson.cn, lpieralisi@kernel.org, will@kernel.org, 
+	sudeep.holla@kernel.org, erik.kaneda@intel.com, rafael@kernel.org, 
+	robert.moore@intel.com, void0red@gmail.com, superm1@kernel.org, 
+	chenhuacai@kernel.org, acpica-devel@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Now that 32-bit LoongArch support has been added to the kernel while the
-eBPF JIT remains 64-bit only (HAVE_EBPF_JIT depends on 64BIT), limit the
-BPF JIT-specific test cases and architecture macros to 64-bit LoongArch.
+On Fri, Nov 20, 2026 at 6:18=E2=80=AFPM Maciej Wieczor-Retman
+<maciej.wieczor-retman@intel.com> wrote:
+>
+> The following patches are ported from upstream ACPICA and contain the 202=
+60930
+> release and some follow up fixes (so generally everything after the 20260=
+408
+> release). Only source files relevant to the Linux kernel are being ported=
+.
+>
+> Changes since v1:
+> v1 [1] contained only commits between the 20260408 and 20260930 releases.
+> However sashiko.dev [2] raised some issues that needed to be either appli=
+ed or
+> rejected. Most issues were valid and were resolved in patches that follow=
+ the
+> 20260930 release. Things that were rejected were the whole patch [3] due =
+to not
+> being a full solution to a very unlikely, debug only problem. Also the sa=
+shiko
+> comment related to ACPI_GPE_AUTO_ENABLED in patch [4] wasn't applied due =
+to
+> not being realistically possible to happen and consequences were only an =
+odd
+> looking log entry.
+>
+> There are non-ACPICA changes related to constants/variable name changes
+> in these patches:
+> - ACPICA: actbl2: MPAM: adapt to MPAM ACPI spec v3.1
+> - ACPICA: acpica: Fix typo in the IOVT_IOMMU table definitions
+>
+> The base for this patches is upstream kernel v7.4-rc3 and it consists of
+> the following material:
+>
+> Andre Przywara (1):
+>       ACPICA: actbl2: MPAM: adapt to MPAM ACPI spec v3.1
+>
+> Colin Ian King (2):
+>       ACPICA: components: Fix typo "Supress" -> "Suppress"
+>       ACPICA: components: Fix typo: "numer" -> "number"
+>
+> Dave Jiang (2):
+>       ACPICA: CEDT: RDPAS: Add missing reserved field in RDPAS structure
+>       ACPICA: CEDT: RDPAS: Fix incorrect field positions for RDPAS
+>
+> Hanjun Guo (1):
+>       ACPICA: add UBRT (UnifiedBus Root Table) definitions
+>
+> Himanshu Chauhan (1):
+>       ACPICA: Introduce a new HEST notification type for RISC-V SSE event=
+s
+>
+> Iurii Trukhin (1):
+>       ACPICA: parser: Fix parse tree memory leak on AML execution error u=
+nwind
+>
+> Leonard Lausen (1):
+>       ACPICA: Executer: Resolve package index references used as integer =
+operands
+>
+> Maciej Strozek (1):
+>       ACPICA: Utilities: Fix for AcpiUtVerifyChecksum warning display
+>
+> Maciej Wieczor-Retman (17):
+>       ACPICA: executer: Fix NULL pointer dereference in AcpiExStoreObject=
+ToIndex()
+>       ACPICA: compiler: Add _Ixx GPE object
+>       ACPICA: namespace: Fix possible underflow and NULL pointer derefere=
+nce
+>       ACPICA: iASL: Fix the truncated count of external control methods
+>       ACPICA: release: Update version to 20260930
+>       ACPICA: events: Add missing event mutex to AcpiEvClearGpeDispatchBy=
+Owner()
+>       ACPICA: events: Remove redundant code
+>       ACPICA: events: Fix AcpiEvClearGpeDispatchByOwner handler type proc=
+essing
+>       ACPICA: events: Fix GPE cleanup return after changing program state
+>       ACPICA: events: Handle GPEs' Notify dispatch type
+>       ACPICA: tables: Fix wrong table unload and notify call order
+>       ACPICA: tables: Fix global table read missing mutex
+>       ACPICA: executer: Fix copying PCC source buffer data
+>       ACPICA: dispatcher: Fix zero size non-NULL PCC buffer pointer
+>       ACPICA: utilities: Clear NextObject so the outer loop doesn't read =
+it
+>       ACPICA: namespace: Fix memory leak around compiler alias flag
+>       ACPICA: acpica: Fix typo in the IOVT_IOMMU table definitions
+>
+> Mario Limonciello (AMD) (1):
+>       ACPICA: Add ACPI_MSG_DEBUG to set KERN_DEBUG for debug output
+>
+> Pawel Chmielewski (3):
+>       ACPICA: ACPI 6.5 Add support for the MISC table
+>       ACPICA: iASL: Complete KEYP support
+>       ACPICA: tables: Fix table buffer leak when Load fails verification
+>
+> Rong Zhang (1):
+>       ACPICA: parser: Set AML length for bytelist
+>
+> Vidya Sagar (1):
+>       ACPICA: IORT: Add Root Complex PASID Flags field
+>
+> ikaros (8):
+>       ACPICA: Events: Clear GPE dispatch by owner during table unload
+>       ACPICA: executer: Add bounds checking for PCC field read access
+>       ACPICA: Validate 4-char field names before namespace lookup
+>       ACPICA: Improve error handling in table loading process
+>       ACPICA: executer: Add bounds checking for PCC field write access
+>       ACPICA: tables: Fix heap-buffer-overflow in AcpiTbFindTable
+>       ACPICA: Fix object reference update to skip non-local notify types
+>       ACPICA: namespace: Recognize alias node types in detach
+>
+> purofle (1):
+>       ACPICA: fix: build error with gcc 16: unused-but-set-variable
+>
+> [1] https://lore.kernel.org/all/20261020141051.2194123-1-pawel.chmielewsk=
+i@intel.com/
+> [2] https://sashiko.dev/#/patchset/20261020141051.2194123-1-pawel.chmiele=
+wski%40intel.com
+> [3] https://sashiko.dev/#/message/20261020141051.2194123-9-pawel.chmielew=
+ski%40intel.com
+> [4] https://sashiko.dev/#/patchset/20261020141051.2194123-1-pawel.chmiele=
+wski%40intel.com?part=3D7
+>
+> Andre Przywara (1):
+>   ACPICA: actbl2: MPAM: adapt to MPAM ACPI spec v3.1
+>
+> Colin Ian King (2):
+>   ACPICA: components: Fix typo "Supress" -> "Suppress"
+>   ACPICA: components: Fix typo: "numer" -> "number"
+>
+> Dave Jiang (2):
+>   ACPICA: CEDT: RDPAS: Add missing reserved field in RDPAS structure
+>   ACPICA: CEDT: RDPAS: Fix incorrect field positions for RDPAS
+>
+> Hanjun Guo (1):
+>   ACPICA: add UBRT (UnifiedBus Root Table) definitions
+>
+> Himanshu Chauhan (1):
+>   ACPICA: Introduce a new HEST notification type for RISC-V SSE events
+>
+> Iurii Trukhin (1):
+>   ACPICA: parser: Fix parse tree memory leak on AML execution error
+>     unwind
+>
+> Leonard Lausen (1):
+>   ACPICA: Executer: Resolve package index references used as integer
+>     operands
+>
+> Maciej Strozek (1):
+>   ACPICA: Utilities: Fix for AcpiUtVerifyChecksum warning display
+>
+> Maciej Wieczor-Retman (17):
+>   ACPICA: executer: Fix NULL pointer dereference in
+>     AcpiExStoreObjectToIndex()
+>   ACPICA: compiler: Add _Ixx GPE object
+>   ACPICA: namespace: Fix possible underflow and NULL pointer dereference
+>   ACPICA: iASL: Fix the truncated count of external control methods
+>   ACPICA: release: Update version to 20260930
+>   ACPICA: events: Add missing event mutex to
+>     AcpiEvClearGpeDispatchByOwner()
+>   ACPICA: events: Remove redundant code
+>   ACPICA: events: Fix AcpiEvClearGpeDispatchByOwner handler type
+>     processing
+>   ACPICA: events: Fix GPE cleanup return after changing program state
+>   ACPICA: events: Handle GPEs' Notify dispatch type
+>   ACPICA: tables: Fix wrong table unload and notify call order
+>   ACPICA: tables: Fix global table read missing mutex
+>   ACPICA: executer: Fix copying PCC source buffer data
+>   ACPICA: dispatcher: Fix zero size non-NULL PCC buffer pointer
+>   ACPICA: utilities: Clear NextObject so the outer loop doesn't read it
+>   ACPICA: namespace: Fix memory leak around compiler alias flag
+>   ACPICA: acpica: Fix typo in the IOVT_IOMMU table definitions
+>
+> Mario Limonciello (AMD) (1):
+>   ACPICA: Add ACPI_MSG_DEBUG to set KERN_DEBUG for debug output
+>
+> Pawel Chmielewski (3):
+>   ACPICA: ACPI 6.5 Add support for the MISC table
+>   ACPICA: iASL: Complete KEYP support
+>   ACPICA: tables: Fix table buffer leak when Load fails verification
+>
+> Rong Zhang (1):
+>   ACPICA: parser: Set AML length for bytelist
+>
+> Vidya Sagar (1):
+>   ACPICA: IORT: Add Root Complex PASID Flags field
+>
+> ikaros (8):
+>   ACPICA: Events: Clear GPE dispatch by owner during table unload
+>   ACPICA: executer: Add bounds checking for PCC field read access
+>   ACPICA: Validate 4-char field names before namespace lookup
+>   ACPICA: Improve error handling in table loading process
+>   ACPICA: executer: Add bounds checking for PCC field write access
+>   ACPICA: tables: Fix heap-buffer-overflow in AcpiTbFindTable
+>   ACPICA: Fix object reference update to skip non-local notify types
+>   ACPICA: namespace: Recognize alias node types in detach
+>
+> purofle (1):
+>   ACPICA: fix: build error with gcc 16: unused-but-set-variable
+>
+>  drivers/acpi/acpica/acevents.h  |   4 +
+>  drivers/acpi/acpica/acglobal.h  |   2 +-
+>  drivers/acpi/acpica/acpredef.h  |   1 +
+>  drivers/acpi/acpica/acutils.h   |   3 +
+>  drivers/acpi/acpica/dsfield.c   |  24 +++
+>  drivers/acpi/acpica/evgpe.c     | 355 ++++++++++++++++++++++++++++++++
+>  drivers/acpi/acpica/exconfig.c  |   3 +-
+>  drivers/acpi/acpica/exconvrt.c  |   4 +-
+>  drivers/acpi/acpica/exfield.c   | 105 +++++++---
+>  drivers/acpi/acpica/exresop.c   |  26 +++
+>  drivers/acpi/acpica/exstore.c   |  20 +-
+>  drivers/acpi/acpica/extrace.c   |   2 +-
+>  drivers/acpi/acpica/nsaccess.c  |   2 +-
+>  drivers/acpi/acpica/nsobject.c  |   7 +-
+>  drivers/acpi/acpica/nsxfname.c  |   8 +
+>  drivers/acpi/acpica/psargs.c    |   8 +-
+>  drivers/acpi/acpica/psloop.c    |   5 +-
+>  drivers/acpi/acpica/psobject.c  |   1 -
+>  drivers/acpi/acpica/psparse.c   |  16 +-
+>  drivers/acpi/acpica/tbdata.c    |  32 ++-
+>  drivers/acpi/acpica/tbfind.c    |  16 +-
+>  drivers/acpi/acpica/utcksum.c   |   3 +-
+>  drivers/acpi/acpica/utdebug.c   |   9 +-
+>  drivers/acpi/acpica/utdelete.c  |   5 +
+>  drivers/acpi/arm64/mpam.c       |   6 +-
+>  drivers/acpi/loongarch/iovt.c   |   6 +-
+>  include/acpi/acpixf.h           |   2 +-
+>  include/acpi/actbl1.h           |   6 +-
+>  include/acpi/actbl2.h           | 200 +++++++++++++++++-
+>  include/acpi/platform/aclinux.h |   1 +
+>  30 files changed, 811 insertions(+), 71 deletions(-)
+>
+> --
 
-Pass -D__loongarch_grlen to the BPF program compiler in Makefile, so that
-it is able to guard the BPF test cases with __loongarch_grlen == 64 under
-progs.
-
-Furthermore, rename the macro __arch_loongarch to __arch_loongarch64 in
-its definition and callers.
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
-This is a cleanup patch, inspired by Sashiko AI review:
-https://lore.kernel.org/bpf/sashiko-outbox-228693@kernel.org/
-
- tools/testing/selftests/bpf/Makefile          |  2 +-
- tools/testing/selftests/bpf/progs/bpf_misc.h  |  6 ++--
- tools/testing/selftests/bpf/progs/stream.c    |  2 +-
- .../selftests/bpf/progs/test_ldsx_insn.c      |  3 +-
- .../bpf/progs/verifier_bpf_fastcall.c         |  2 +-
- .../selftests/bpf/progs/verifier_bswap.c      |  2 +-
- .../selftests/bpf/progs/verifier_jit_inline.c |  4 +--
- .../selftests/bpf/progs/verifier_ldsx.c       |  2 +-
- .../selftests/bpf/progs/verifier_may_goto_1.c | 10 +++---
- .../selftests/bpf/progs/verifier_movsx.c      |  2 +-
- .../selftests/bpf/progs/verifier_patch_list.c |  4 +--
- .../selftests/bpf/progs/verifier_precision.c  |  3 +-
- .../selftests/bpf/progs/verifier_sdiv.c       | 34 +++++++++----------
- .../selftests/bpf/progs/verifier_stack_arg.c  |  4 +--
- .../selftests/bpf/progs/verifier_var_off.c    |  4 +--
- tools/testing/selftests/bpf/test_loader.c     | 10 +++---
- 16 files changed, 48 insertions(+), 46 deletions(-)
-
-diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
-index ef6736d930e3..7c3d54305a4b 100644
---- a/tools/testing/selftests/bpf/Makefile
-+++ b/tools/testing/selftests/bpf/Makefile
-@@ -364,7 +364,7 @@ define get_sys_includes
- $(shell $(1) $(2) -v -E - </dev/null 2>&1 \
- 	| sed -n '/<...> search starts here:/,/End of search list./{ s| \(/.*\)|-idirafter \1|p }') \
- $(shell $(1) $(2) -dM -E - </dev/null | grep '__riscv_xlen ' | awk '{printf("-D__riscv_xlen=%d -D__BITS_PER_LONG=%d", $$3, $$3)}') \
--$(shell $(1) $(2) -dM -E - </dev/null | grep '__loongarch_grlen ' | awk '{printf("-D__BITS_PER_LONG=%d", $$3)}') \
-+$(shell $(1) $(2) -dM -E - </dev/null | grep '__loongarch_grlen ' | awk '{printf("-D__loongarch_grlen=%d -D__BITS_PER_LONG=%d", $$3, $$3)}') \
- $(shell $(1) $(2) -dM -E - </dev/null | grep -E 'MIPS(EL|EB)|_MIPS_SZ(PTR|LONG) |_MIPS_SIM |_ABI(O32|N32|64) ' | awk '{printf("-D%s=%s ", $$2, $$3)}')
- endef
- 
-diff --git a/tools/testing/selftests/bpf/progs/bpf_misc.h b/tools/testing/selftests/bpf/progs/bpf_misc.h
-index 6b930cb48f8d..2a617e9a51ed 100644
---- a/tools/testing/selftests/bpf/progs/bpf_misc.h
-+++ b/tools/testing/selftests/bpf/progs/bpf_misc.h
-@@ -185,7 +185,7 @@
- #define __arch_arm64		__arch("ARM64")
- #define __arch_riscv64		__arch("RISCV64")
- #define __arch_s390x		__arch("s390x")
--#define __arch_loongarch	__arch("LOONGARCH")
-+#define __arch_loongarch64	__arch("LOONGARCH64")
- #define __caps_unpriv(caps)	__test_tag("test_caps_unpriv=" EXPAND_QUOTE(caps))
- #define __prepare_priv		__test_tag("test_prepare_priv")
- #define __load_if_JITed()	__test_tag("load_mode=jited")
-@@ -285,7 +285,7 @@
- #if (defined(__TARGET_ARCH_arm64) || defined(__TARGET_ARCH_x86) ||	\
-      (defined(__TARGET_ARCH_riscv) && __riscv_xlen == 64) ||		\
-      defined(__TARGET_ARCH_arm) || defined(__TARGET_ARCH_s390) ||	\
--     defined(__TARGET_ARCH_loongarch)) &&				\
-+     (defined(__TARGET_ARCH_loongarch) && __loongarch_grlen == 64)) &&	\
- 	(__clang_major__ >= 18 || defined(__BPF_FEATURE_GOTOL))
- #define CAN_USE_GOTOL
- #endif
-@@ -300,7 +300,7 @@
- 	 (defined(__TARGET_ARCH_riscv) && __riscv_xlen == 64) ||	\
- 	 defined(__TARGET_ARCH_s390) ||					\
- 	 defined(__TARGET_ARCH_powerpc) ||				\
--	 defined(__TARGET_ARCH_loongarch))
-+	 (defined(__TARGET_ARCH_loongarch) && __loongarch_grlen == 64))
- #define CAN_USE_LOAD_ACQ_STORE_REL
- #endif
- 
-diff --git a/tools/testing/selftests/bpf/progs/stream.c b/tools/testing/selftests/bpf/progs/stream.c
-index 8c49a130150b..beba861803be 100644
---- a/tools/testing/selftests/bpf/progs/stream.c
-+++ b/tools/testing/selftests/bpf/progs/stream.c
-@@ -71,7 +71,7 @@ __arch_x86_64
- __arch_arm64
- __arch_s390x
- __arch_riscv64
--__arch_loongarch
-+__arch_loongarch64
- __success __retval(0)
- __stderr("ERROR: Timeout detected for may_goto instruction")
- __stderr("CPU: {{[0-9]+}} UID: 0 PID: {{[0-9]+}} Comm: {{.*}}")
-diff --git a/tools/testing/selftests/bpf/progs/test_ldsx_insn.c b/tools/testing/selftests/bpf/progs/test_ldsx_insn.c
-index 2a2a942737d7..4c58d00eb89d 100644
---- a/tools/testing/selftests/bpf/progs/test_ldsx_insn.c
-+++ b/tools/testing/selftests/bpf/progs/test_ldsx_insn.c
-@@ -7,7 +7,8 @@
- 
- #if (defined(__TARGET_ARCH_arm64) || defined(__TARGET_ARCH_x86) || \
-      (defined(__TARGET_ARCH_riscv) && __riscv_xlen == 64) ||       \
--     defined(__TARGET_ARCH_s390) || defined(__TARGET_ARCH_loongarch)) && \
-+     (defined(__TARGET_ARCH_loongarch) && __loongarch_grlen == 64) || \
-+     defined(__TARGET_ARCH_s390)) && \
-      __clang_major__ >= 18
- const volatile int skip = 0;
- #else
-diff --git a/tools/testing/selftests/bpf/progs/verifier_bpf_fastcall.c b/tools/testing/selftests/bpf/progs/verifier_bpf_fastcall.c
-index 2120f4e71fb8..b9e3c5741cf9 100644
---- a/tools/testing/selftests/bpf/progs/verifier_bpf_fastcall.c
-+++ b/tools/testing/selftests/bpf/progs/verifier_bpf_fastcall.c
-@@ -979,7 +979,7 @@ __naked void may_goto_interaction_x86_64(void)
- SEC("raw_tp")
- __arch_arm64
- __arch_riscv64
--__arch_loongarch
-+__arch_loongarch64
- __log_level(4)
- __msg("subprog 0 (may_goto_interaction) main {{.*}} stack 8")
- /* may_goto counter and timestamp */
-diff --git a/tools/testing/selftests/bpf/progs/verifier_bswap.c b/tools/testing/selftests/bpf/progs/verifier_bswap.c
-index 48ffb5b242d2..73e5465ee0cc 100644
---- a/tools/testing/selftests/bpf/progs/verifier_bswap.c
-+++ b/tools/testing/selftests/bpf/progs/verifier_bswap.c
-@@ -7,7 +7,7 @@
- #if (defined(__TARGET_ARCH_arm64) || defined(__TARGET_ARCH_x86) || \
- 	(defined(__TARGET_ARCH_riscv) && __riscv_xlen == 64) || \
- 	defined(__TARGET_ARCH_arm) || defined(__TARGET_ARCH_s390) || \
--	defined(__TARGET_ARCH_loongarch)) && \
-+	(defined(__TARGET_ARCH_loongarch) && __loongarch_grlen == 64)) && \
- 	(__clang_major__ >= 18 || defined(__BPF_FEATURE_BSWAP))
- 
- SEC("socket")
-diff --git a/tools/testing/selftests/bpf/progs/verifier_jit_inline.c b/tools/testing/selftests/bpf/progs/verifier_jit_inline.c
-index 5b92da2ab75c..89a2c27358ba 100644
---- a/tools/testing/selftests/bpf/progs/verifier_jit_inline.c
-+++ b/tools/testing/selftests/bpf/progs/verifier_jit_inline.c
-@@ -12,7 +12,7 @@ __arch_arm64
- __jited("	mrs	x8, SP_EL0")
- __arch_riscv64
- __jited("	mv	t6, tp")
--__arch_loongarch
-+__arch_loongarch64
- __jited("	move	$a5, $tp")
- int inline_bpf_get_current_task(void)
- {
-@@ -23,7 +23,7 @@ int inline_bpf_get_current_task(void)
- 
- SEC("fentry/bpf_fentry_test2")
- __success __retval(0)
--__arch_loongarch
-+__arch_loongarch64
- __jited("	ld.wu	$a5, $tp, 16")
- int inline_bpf_get_smp_processor_id(void)
- {
-diff --git a/tools/testing/selftests/bpf/progs/verifier_ldsx.c b/tools/testing/selftests/bpf/progs/verifier_ldsx.c
-index 232082428cb9..6d06a3e61c92 100644
---- a/tools/testing/selftests/bpf/progs/verifier_ldsx.c
-+++ b/tools/testing/selftests/bpf/progs/verifier_ldsx.c
-@@ -8,7 +8,7 @@
- #if (defined(__TARGET_ARCH_arm64) || defined(__TARGET_ARCH_x86) || \
- 	(defined(__TARGET_ARCH_riscv) && __riscv_xlen == 64) || \
- 	defined(__TARGET_ARCH_arm) || defined(__TARGET_ARCH_s390) || \
--	defined(__TARGET_ARCH_loongarch)) && \
-+	(defined(__TARGET_ARCH_loongarch) && __loongarch_grlen == 64)) && \
- 	(__clang_major__ >= 18 || defined(__BPF_FEATURE_LDSX))
- 
- SEC("socket")
-diff --git a/tools/testing/selftests/bpf/progs/verifier_may_goto_1.c b/tools/testing/selftests/bpf/progs/verifier_may_goto_1.c
-index 8d231fb2a317..35e7054dc78f 100644
---- a/tools/testing/selftests/bpf/progs/verifier_may_goto_1.c
-+++ b/tools/testing/selftests/bpf/progs/verifier_may_goto_1.c
-@@ -12,7 +12,7 @@ __arch_x86_64
- __arch_s390x
- __arch_arm64
- __arch_riscv64
--__arch_loongarch
-+__arch_loongarch64
- __xlated("0: r0 = 1")
- __xlated("1: exit")
- __success
-@@ -34,7 +34,7 @@ __arch_x86_64
- __arch_s390x
- __arch_arm64
- __arch_riscv64
--__arch_loongarch
-+__arch_loongarch64
- __xlated("0: r0 = 1")
- __xlated("1: exit")
- __success
-@@ -58,7 +58,7 @@ __arch_x86_64
- __arch_s390x
- __arch_arm64
- __arch_riscv64
--__arch_loongarch
-+__arch_loongarch64
- __xlated("0: r0 = 1")
- __xlated("1: exit")
- __success
-@@ -87,7 +87,7 @@ __arch_x86_64
- __arch_s390x
- __arch_arm64
- __arch_riscv64
--__arch_loongarch
-+__arch_loongarch64
- /* the main prog sets count, timestamp, owner */
- __xlated("0: r0 = ")
- __xlated("2: r0 = &(void __percpu *)(r0)")
-@@ -132,7 +132,7 @@ __arch_x86_64
- __arch_s390x
- __arch_arm64
- __arch_riscv64
--__arch_loongarch
-+__arch_loongarch64
- __success
- __retval(0)
- __naked void timed_may_goto_preserves_regs(void)
-diff --git a/tools/testing/selftests/bpf/progs/verifier_movsx.c b/tools/testing/selftests/bpf/progs/verifier_movsx.c
-index 0197c2c21b8e..f038cd4c1d6b 100644
---- a/tools/testing/selftests/bpf/progs/verifier_movsx.c
-+++ b/tools/testing/selftests/bpf/progs/verifier_movsx.c
-@@ -7,7 +7,7 @@
- #if (defined(__TARGET_ARCH_arm64) || defined(__TARGET_ARCH_x86) || \
- 	(defined(__TARGET_ARCH_riscv) && __riscv_xlen == 64) || \
- 	defined(__TARGET_ARCH_arm) || defined(__TARGET_ARCH_s390) || \
--	defined(__TARGET_ARCH_loongarch)) && \
-+	(defined(__TARGET_ARCH_loongarch) && __loongarch_grlen == 64)) && \
- 	(__clang_major__ >= 18 || defined(__BPF_FEATURE_MOVSX))
- 
- SEC("socket")
-diff --git a/tools/testing/selftests/bpf/progs/verifier_patch_list.c b/tools/testing/selftests/bpf/progs/verifier_patch_list.c
-index 80d08d93b625..0bcea2f07ba2 100644
---- a/tools/testing/selftests/bpf/progs/verifier_patch_list.c
-+++ b/tools/testing/selftests/bpf/progs/verifier_patch_list.c
-@@ -129,7 +129,7 @@ __naked void patch_list_may_goto(void)
- /* the JITs that support gotol */
- #if defined(__TARGET_ARCH_x86) || defined(__TARGET_ARCH_arm64) || \
- 	defined(__TARGET_ARCH_powerpc) || defined(__TARGET_ARCH_s390) || \
--	defined(__TARGET_ARCH_loongarch) || \
-+	(defined(__TARGET_ARCH_loongarch) && __loongarch_grlen == 64) || \
- 	(defined(__TARGET_ARCH_riscv) && __riscv_xlen == 64)
- 
- /* The patches turn 8200 divisions into 32800 insns, too far for a 16-bit offset. */
-@@ -400,7 +400,7 @@ __arch_x86_64
- __arch_s390x
- __arch_arm64
- __arch_riscv64
--__arch_loongarch
-+__arch_loongarch64
- __success
- __xlated("23: call pc+7")
- __xlated("...")
-diff --git a/tools/testing/selftests/bpf/progs/verifier_precision.c b/tools/testing/selftests/bpf/progs/verifier_precision.c
-index d48daefd7b7b..d17ca3fe4f43 100644
---- a/tools/testing/selftests/bpf/progs/verifier_precision.c
-+++ b/tools/testing/selftests/bpf/progs/verifier_precision.c
-@@ -69,7 +69,8 @@ __naked int bpf_end_to_be(void)
- #if (defined(__TARGET_ARCH_arm64) || defined(__TARGET_ARCH_x86) || \
- 	(defined(__TARGET_ARCH_riscv) && __riscv_xlen == 64) || \
- 	defined(__TARGET_ARCH_arm) || defined(__TARGET_ARCH_s390) || \
--	defined(__TARGET_ARCH_loongarch)) && __clang_major__ >= 18
-+	(defined(__TARGET_ARCH_loongarch) && __loongarch_grlen == 64)) && \
-+	__clang_major__ >= 18
- 
- SEC("?raw_tp")
- __success __log_level(2)
-diff --git a/tools/testing/selftests/bpf/progs/verifier_sdiv.c b/tools/testing/selftests/bpf/progs/verifier_sdiv.c
-index 02e2065c9669..fd7c82abebb8 100644
---- a/tools/testing/selftests/bpf/progs/verifier_sdiv.c
-+++ b/tools/testing/selftests/bpf/progs/verifier_sdiv.c
-@@ -8,7 +8,7 @@
- #if (defined(__TARGET_ARCH_arm64) || defined(__TARGET_ARCH_x86) || \
- 	(defined(__TARGET_ARCH_riscv) && __riscv_xlen == 64) || \
- 	defined(__TARGET_ARCH_arm) || defined(__TARGET_ARCH_s390) || \
--	defined(__TARGET_ARCH_loongarch)) && \
-+	(defined(__TARGET_ARCH_loongarch) && __loongarch_grlen == 64)) && \
- 	(__clang_major__ >= 18 || defined(__BPF_FEATURE_SDIV_SMOD))
- 
- SEC("socket")
-@@ -775,7 +775,7 @@ SEC("socket")
- __description("SDIV64, overflow r/r, LLONG_MIN/-1")
- __success __retval(1)
- __arch_x86_64
--__arch_loongarch
-+__arch_loongarch64
- __xlated("0: r2 = 0x8000000000000000")
- __xlated("2: r3 = -1")
- __xlated("3: r4 = r2")
-@@ -811,7 +811,7 @@ SEC("socket")
- __description("SDIV64, r/r, small_val/-1")
- __success __retval(-5)
- __arch_x86_64
--__arch_loongarch
-+__arch_loongarch64
- __xlated("0: r2 = 5")
- __xlated("1: r3 = -1")
- __xlated("2: r13 = r3")
-@@ -841,7 +841,7 @@ SEC("socket")
- __description("SDIV64, overflow r/i, LLONG_MIN/-1")
- __success __retval(1)
- __arch_x86_64
--__arch_loongarch
-+__arch_loongarch64
- __xlated("0: r2 = 0x8000000000000000")
- __xlated("2: r4 = r2")
- __xlated("3: r2 = -r2")
-@@ -868,7 +868,7 @@ SEC("socket")
- __description("SDIV64, r/i, small_val/-1")
- __success __retval(-5)
- __arch_x86_64
--__arch_loongarch
-+__arch_loongarch64
- __xlated("0: r2 = 5")
- __xlated("1: r4 = r2")
- __xlated("2: r2 = -r2")
-@@ -891,7 +891,7 @@ SEC("socket")
- __description("SDIV32, overflow r/r, INT_MIN/-1")
- __success __retval(1)
- __arch_x86_64
--__arch_loongarch
-+__arch_loongarch64
- __xlated("0: w2 = -2147483648")
- __xlated("1: w3 = -1")
- __xlated("2: w4 = w2")
-@@ -927,7 +927,7 @@ SEC("socket")
- __description("SDIV32, r/r, small_val/-1")
- __success __retval(5)
- __arch_x86_64
--__arch_loongarch
-+__arch_loongarch64
- __xlated("0: w2 = -5")
- __xlated("1: w3 = -1")
- __xlated("2: w4 = w2")
-@@ -959,7 +959,7 @@ SEC("socket")
- __description("SDIV32, overflow r/i, INT_MIN/-1")
- __success __retval(1)
- __arch_x86_64
--__arch_loongarch
-+__arch_loongarch64
- __xlated("0: w2 = -2147483648")
- __xlated("1: w4 = w2")
- __xlated("2: w2 = -w2")
-@@ -986,7 +986,7 @@ SEC("socket")
- __description("SDIV32, r/i, small_val/-1")
- __success __retval(-5)
- __arch_x86_64
--__arch_loongarch
-+__arch_loongarch64
- __xlated("0: w2 = 5")
- __xlated("1: w4 = w2")
- __xlated("2: w2 = -w2")
-@@ -1009,7 +1009,7 @@ SEC("socket")
- __description("SMOD64, overflow r/r, LLONG_MIN/-1")
- __success __retval(0)
- __arch_x86_64
--__arch_loongarch
-+__arch_loongarch64
- __xlated("0: r2 = 0x8000000000000000")
- __xlated("2: r3 = -1")
- __xlated("3: r4 = r2")
-@@ -1040,7 +1040,7 @@ SEC("socket")
- __description("SMOD64, r/r, small_val/-1")
- __success __retval(0)
- __arch_x86_64
--__arch_loongarch
-+__arch_loongarch64
- __xlated("0: r2 = 5")
- __xlated("1: r3 = -1")
- __xlated("2: r4 = r2")
-@@ -1071,7 +1071,7 @@ SEC("socket")
- __description("SMOD64, overflow r/i, LLONG_MIN/-1")
- __success __retval(0)
- __arch_x86_64
--__arch_loongarch
-+__arch_loongarch64
- __xlated("0: r2 = 0x8000000000000000")
- __xlated("2: r4 = r2")
- __xlated("3: w2 = 0")
-@@ -1094,7 +1094,7 @@ SEC("socket")
- __description("SMOD64, r/i, small_val/-1")
- __success __retval(0)
- __arch_x86_64
--__arch_loongarch
-+__arch_loongarch64
- __xlated("0: r2 = 5")
- __xlated("1: r4 = r2")
- __xlated("2: w2 = 0")
-@@ -1117,7 +1117,7 @@ SEC("socket")
- __description("SMOD32, overflow r/r, INT_MIN/-1")
- __success __retval(0)
- __arch_x86_64
--__arch_loongarch
-+__arch_loongarch64
- __xlated("0: w2 = -2147483648")
- __xlated("1: w3 = -1")
- __xlated("2: w4 = w2")
-@@ -1150,7 +1150,7 @@ SEC("socket")
- __description("SMOD32, r/r, small_val/-1")
- __success __retval(0)
- __arch_x86_64
--__arch_loongarch
-+__arch_loongarch64
- __xlated("0: w2 = -5")
- __xlated("1: w3 = -1")
- __xlated("2: w4 = w2")
-@@ -1183,7 +1183,7 @@ SEC("socket")
- __description("SMOD32, overflow r/i, INT_MIN/-1")
- __success __retval(0)
- __arch_x86_64
--__arch_loongarch
-+__arch_loongarch64
- __xlated("0: w2 = -2147483648")
- __xlated("1: w4 = w2")
- __xlated("2: w2 = 0")
-@@ -1206,7 +1206,7 @@ SEC("socket")
- __description("SMOD32, r/i, small_val/-1")
- __success __retval(0)
- __arch_x86_64
--__arch_loongarch
-+__arch_loongarch64
- __xlated("0: w2 = 5")
- __xlated("1: w4 = w2")
- __xlated("2: w2 = 0")
-diff --git a/tools/testing/selftests/bpf/progs/verifier_stack_arg.c b/tools/testing/selftests/bpf/progs/verifier_stack_arg.c
-index c642675dd92b..b4f219dfeb92 100644
---- a/tools/testing/selftests/bpf/progs/verifier_stack_arg.c
-+++ b/tools/testing/selftests/bpf/progs/verifier_stack_arg.c
-@@ -42,7 +42,7 @@ SEC("tc")
- __description("stack_arg: static subprog takes less than its prototype says")
- __success __retval(15)
- __load_if_JITed()
--__arch_x86_64 __arch_arm64 __arch_riscv64 __arch_s390x __arch_loongarch
-+__arch_x86_64 __arch_arm64 __arch_riscv64 __arch_s390x __arch_loongarch64
- __naked void less_than_prototype(void)
- {
- 	asm volatile ("r2 = %[jmp_table] ll; r3 = 0; call %[bpf_tail_call];"
-@@ -1162,7 +1162,7 @@ __naked void stack_arg_precision_fallback(void)
- SEC("tc")
- __description("stack_arg: r11 where JIT has no stack arguments")
- __failure __msg("JIT does not support stack arguments")
--__arch_s390x __arch_loongarch
-+__arch_s390x __arch_loongarch64
- __naked void r11_no_jit_support(void)
- {
- 	asm volatile (".8byte %[st_r11]; r0 = 0; exit;"
-diff --git a/tools/testing/selftests/bpf/progs/verifier_var_off.c b/tools/testing/selftests/bpf/progs/verifier_var_off.c
-index bc45adafca33..4f2c1454a009 100644
---- a/tools/testing/selftests/bpf/progs/verifier_var_off.c
-+++ b/tools/testing/selftests/bpf/progs/verifier_var_off.c
-@@ -762,7 +762,7 @@ __naked void variable_offset_stack_access_ok(void)
- /* The next two need bpf_jit_bypass_spec_v1() */
- SEC("socket")
- __description("variable-offset stack write of a pointer")
--__arch_loongarch
-+__arch_loongarch64
- __success __caps_unpriv(CAP_BPF) __failure_unpriv
- __msg_unpriv("R1 leaks addr into stack")
- __naked void stack_write_ptr_var_off(void)
-@@ -785,7 +785,7 @@ __naked void stack_write_ptr_var_off(void)
- 
- SEC("socket")
- __description("variable-offset stack pointer at the header of a loop")
--__arch_loongarch
-+__arch_loongarch64
- __success __caps_unpriv(CAP_BPF) __success_unpriv
- __naked void stack_ptr_var_off_in_loop(void)
- {
-diff --git a/tools/testing/selftests/bpf/test_loader.c b/tools/testing/selftests/bpf/test_loader.c
-index d24e4fedae46..a4ca7a76c240 100644
---- a/tools/testing/selftests/bpf/test_loader.c
-+++ b/tools/testing/selftests/bpf/test_loader.c
-@@ -386,7 +386,7 @@ enum arch {
- 	ARCH_ARM64	= 0x4,
- 	ARCH_RISCV64	= 0x8,
- 	ARCH_S390X	= 0x10,
--	ARCH_LOONGARCH	= 0x20,
-+	ARCH_LOONGARCH64 = 0x20,
- };
- 
- static int get_current_arch(void)
-@@ -399,8 +399,8 @@ static int get_current_arch(void)
- 	return ARCH_RISCV64;
- #elif defined(__s390x__)
- 	return ARCH_S390X;
--#elif defined(__loongarch__)
--	return ARCH_LOONGARCH;
-+#elif defined(__loongarch__) && __loongarch_grlen == 64
-+	return ARCH_LOONGARCH64;
- #endif
- 	return ARCH_UNKNOWN;
- }
-@@ -605,8 +605,8 @@ static int parse_test_spec(struct test_loader *tester,
- 				arch = ARCH_RISCV64;
- 			} else if (strcmp(val, "s390x") == 0) {
- 				arch = ARCH_S390X;
--			} else if (strcmp(val, "LOONGARCH") == 0) {
--				arch = ARCH_LOONGARCH;
-+			} else if (strcmp(val, "LOONGARCH64") == 0) {
-+				arch = ARCH_LOONGARCH64;
- 			} else {
- 				PRINT_FAIL("bad arch spec: '%s'\n", val);
- 				err = -EINVAL;
--- 
-2.42.0
-
+Whole series applied as 7.5 material, thanks!
