@@ -1,101 +1,65 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.180
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.70
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795669488;
-	b=qhPka9qzUzRLgYTyJ3EP3JlP52818MEg08ab6TRnOt0cl9bd6p79G+u1ah51mJuHyNzR
-	 WcLDuum9HXCDTLd1AoVx4Q7Zz8sDkKNC/XjmzgD0rvs8j2oOgogzNQ9k9SGMbDIc3uURH
-	 +nL4Ng0C6Yv/wDS9G7hQsPE9YL2crKKguz1ECUXy7RsQWniH+f1yJXj+pRe9RvDMmj+AQ
-	 hVtNqMk7rXy8r/ZKW+e3t45BMBuAl6Ekg/3tHwiPefUoVC7vwK1spy9T9JYsD3iqYeO5F
-	 7KN9loJ/2aopUcah94cc7Xg49mDA2rYdhBbelDBJU28Lejd5TfCqYEstVt2tSv3/3kQ==
+	t=1795672446;
+	b=SLiCWodLLkvHCzaIZ3odrqvxQI3lRYLApacunbZzvNaj3pXGZcNm69ihismN+chvxw5G
+	 341T0flh3VFdD6QiAkzlOW8TtSRfeOs7eprq3dZdg5/7x2TFNN/i3ikvb9SiVyCItbfn5
+	 AM3rIXtLlN1F1ZD+i00wJaHrE+GqbBxK6fMqLKN59rwDHogLt807M3zSV2RDUHMsqjMwA
+	 346Iyg00xn1I5zTN6MPeBK5RYXWiKbrQjANEdKs7t+GltWenwDhiLoRSHKcNlmbrA8u1g
+	 d3LO4t8rXk2rW7vvz1MYm+iGbDPDzZEFqp7UvMk6e5Rq4vJZ9AyqgjUaSL02S6U7wuQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795669488;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=oswIDQIw5LddBDurs3uO2kKP08jbhDgi91nn5G7lxQo=;
-	b=vAqKtZQ3Gj1d6sfdI/NxyeDmqbvMubhNpz98OA+1K8HXk2EN4SZc/oo/poGXG9p6fYN/
-	 OiGWnAHRlbaRUMy9lIezSTDi8EGWQoJFtT8crWz4NXQjcYmRnF48cfDle7twACI2NsY6y
-	 6ne41DqYfAYJAOgJ27atKtH/EP6dL2l7A0A018sBN9aMshi9HDtsjeSgvV0MVSVR4zd40
-	 +nQr+ECMPkbT3BHKJ7Du3CiHiojwFoBTF9SICU2T/KphhloOjIqRUObxjJVX9rvTelLMm
-	 0YhZt4f4noAIDvkWHlENkV9I3UpgW3jHQbAJLJjbs2AE8MCZKDSfVbPa560P5rZN57w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795672446;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=sy8OCHsSECMY/f4pzR3nMQfXTLgjwJahY/PuIuEYUM4=;
+	b=O06G1HrO0lR7KEeHpKZ3u7+WXCLnXgfUXK8L5GHXwZsxRM+NtNkc7AHkxS6xWOjqWdA1
+	 ge5ru2Zv8kkZ1KHbFsrKqC4jLv4WbwNks1k1uAZsHmJhXCRatKA6uYpEMf1h5vq/bkX2Q
+	 7S/a91NJtOHVrJCpoQAJKTZrsglOT5XRHWsrzSW0vG/88w/sctgd+3MW13sFAVfh/Lwmy
+	 XnKpOrAfD/MX5oH/UyxxHh21EAp+atiq+UWWLkQZU6Y83YOeDLU+oHHFM2j4wG0MEE1NZ
+	 PBwVydzH3QlPXADKLvJ7emuLFSV1v2F+RFLLsV8wM/MvkPUYY93kHNl1nLsNvYGz7qQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=VhPsALVz;
-	arc=none smtp.remote-ip=74.125.82.180
-Received: from mail-dy1-f180.google.com (mail-dy1-f180.google.com [74.125.82.180])
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=FncFVUau;
+	arc=none smtp.remote-ip=95.215.58.70
+Received: from mta1.migadu.com (out-70.mta1.migadu.com [95.215.58.70])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B71606A323
-	for <loongarch@lists.linux.dev>; Thu, 26 Nov 2026 05:04:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 11B71606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42C16606A321
+	for <loongarch@lists.linux.dev>; Thu, 26 Nov 2026 05:54:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 42C16606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=VhPsALVz
-Received: by mail-dy1-f180.google.com with SMTP id 5a478bee46e88-386bd881d39so6154100eec.1
-        for <loongarch@lists.linux.dev>; Wed, 25 Nov 2026 21:04:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795669487; x=1796274287; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=oswIDQIw5LddBDurs3uO2kKP08jbhDgi91nn5G7lxQo=;
-        b=VhPsALVzU8Bzl4a6IXoHwNGgJPLxFDe1tqxWa84kT4MyS4jx+k6QtzAP0FDDWEhI+i
-         MQ2K80FCT1rugWLUTJbBQhRQr3/qnuyljTiatX5pcI9WUJGRDzNm4OOlq/LIRgzA4ovX
-         s9GXMlEERY0n+NHKKT+WsAd7qryUiU/A6kHLS8MqmOMYleO4eAyHqI1rkskDqE2T0sWA
-         tu1E7LmGQMazL8rxcyUwzHVQq20YPvxNCMVQ0z5g0nR8aIvbmEHr8zBXvglIiEap+ZDC
-         TECH4l1w1V+elhXgYK86B5s/UXSrOTzWXJ3DOSJAemY4ioUcG9ywIfBkO9XxGgQIujvk
-         198g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795669487; x=1796274287;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=oswIDQIw5LddBDurs3uO2kKP08jbhDgi91nn5G7lxQo=;
-        b=FvCrx3xc7m3wHpohid2PyCsf2qx+Ubm9vZHxj6ZuVKQGuhZgnyWBJoPMslY0MTqAzE
-         N/YzO1fLzYfWvFGx9momGgEtywakb2yixO8edeCE6paZH5YbeHvh6aeYIjWTabcozWsY
-         YBp5VTsTu25aXNR2KXeN1c0nm4i9SuGhbqHrbsuEGBQ+8oesQKPfZnO7+8Fg3tlk+x0/
-         jEGuYXCLtHA72D4iQQPjNtFGeND/N0ZGhqKp2yHpfJWrXypnXiMHQnPJP9WGj6uqHJ8T
-         2IFczh0lVTuTxXxFGYwFecbM+jAEp0WvNgaT8gsKZfS/p1x51S2cdyamlUkQ+zUiW+3O
-         295w==
-X-Forwarded-Encrypted: i=1; AL+hErHmr+lYFFAOad4034vplzUULDCKciAZsPz+ySy8ManGr//yN2UQ9lH7kFdStbaIsTEmQTgP3J5rbcc=@lists.linux.dev
-X-Gm-Message-State: APuU4Z9ZBpYY7Fo6zpPTAF53+nudV1pFXUw+nuxi1pw0AJpA+B4z1m4z
-	mJe6lpCrZKHPcD4nEQSv+WzOQimhtZB4mudAIEHolAuAZWnLIK083cA/
-X-Gm-Gg: AZFdTZcxhDc2/pc//g7oXZTeAhjeSDGF3XGFFQhWQTq4mMTvKPUbjxDYRhqxblghlkC
-	xYdVT7CCZSrdH99Q/GeuDXHFGFAXNGBgd0CDKU+zxN2iRRUdPmDz27y00ZptXFgjNoyN+eArHpU
-	U52ZkZbgFnUR3z1buKa7r+u8Dk7SA1cxGgiSUVqh3VKMKNEFJUk4SXReIe+0cMv4+a9qs9U5WXn
-	hyDssV7DfdKulQx7JNQHYl9lidv3MMoMMxGRYX+OCF8U3tFOEbZSp8KvBH17TthHaUCZcqSE9mx
-	TqQ2KOrhdMH14fXCaZZuJm4hxjGYP2+QHx8I3ZjI2s+jvzbObyaUCSrSrpR2XtoRwGwV8mOvnVp
-	FRfWVk+gqseoVT6llSUI0pgrvHsp4s/cIHBXGg3POpwevus2t9V38moH4suJT/EJb8gzBk/MEVH
-	FrcgchS8OgoSFZlneAqo623d/wFyEBfePVD8ahjphsOXpCB9IXIQTK95bI5ktOUbQxcPrfkG/CV
-	Rb62x5HQ8YT2SD2yaEPKflOiji9nURmr7ObqL2Q5sW/9U5wwSyFAsO2Q2y7WqpAQuOoKZq/YU2S
-	TkxE0AztO02hXQ5LTF6+YkNl7t73W08ZTsqCB9ys2g==
-X-Received: by 2002:a05:693c:60d4:b0:360:5f7e:2eb9 with SMTP id 5a478bee46e88-3857111f65amr22517783eec.32.1795669487141;
-        Wed, 25 Nov 2026 21:04:47 -0800 (PST)
-Received: from 10-86-27-207.ban-spse ([165.204.217.251])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-386c7c62a91sm17154865eec.17.2026.11.25.21.04.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Nov 2026 21:04:46 -0800 (PST)
-From: Gokul K <gokul02k@gmail.com>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	kvm@vger.kernel.org,
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=FncFVUau
+X-Envelope-To: loongarch@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=MhyRJ8jiUP4r8T6n581TUC2swBZMvDYOP+3qPSW8ysk=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1795672444; v=1; x=1796277244;
+ b=FncFVUauXD3srqbg+KPdw4vnFEP7kR63DWnz5xWAvJ6ykNIS7H1ybZrJs7NFJMS0OVCWwcFH
+ rkwZ+2lypkMw1oqs82UjzaIFpPcopNt1XYMgBp5Zlo8xmRMnxUjhWQXdGV+vpgWZUJHIa/4h5VQ
+ mt6s2kZv1dOW+wQRJGczl9JI=
+X-Envelope-To: loongarch@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id a832319221069530;
+	Thu, 26 Nov 2026 05:54:04 +0000
+X-Mizu-Trace-ID: a832319221069530
+X-Migadu-Flow: FLOW_OUT
+From: George Guo <dongtai.guo@linux.dev>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	eddyz87@gmail.com,
+	memxor@gmail.com
+Cc: bpf@vger.kernel.org,
 	loongarch@lists.linux.dev,
-	linux-kselftest@vger.kernel.org
-Cc: Sean Christopherson <seanjc@google.com>,
-	Song Gao <gaosong@loongson.cn>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] KVM: LoongArch: selftests: Free the VM when the PMU test skips
-Date: Thu, 26 Nov 2026 10:33:52 +0530
-Message-ID: <20261126050352.1957454-3-gokul02k@gmail.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20261126050352.1957454-1-gokul02k@gmail.com>
-References: <20261126050352.1957454-1-gokul02k@gmail.com>
+	linux-kernel@vger.kernel.org,
+	George Guo <guodongtai@kylinos.cn>
+Subject: [PATCH bpf-next v1 0/5] selftests/bpf: Enable private stack, large stack and arena tests for LoongArch
+Date: Thu, 26 Nov 2026 14:53:49 +0900
+Message-ID: <20261126055355.9967-1-dongtai.guo@linux.dev>
+X-Mailer: git-send-email 2.53.0
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -107,32 +71,60 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-main() creates the VM before asking whether it has the PMU feature, and
-when it does not, returns KSFT_SKIP directly. That skips the done: label
-through which every other exit frees the VM. Set ret and jump there
-instead.
+From: George Guo <guodongtai@kylinos.cn>
 
-Fixes: 11c840192768 ("KVM: LoongArch: selftests: Add basic PMU event counting test")
-Signed-off-by: Gokul K <gokul02k@gmail.com>
----
- tools/testing/selftests/kvm/loongarch/pmu_test.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+This series enables the BPF selftests for the new LoongArch JIT
+features, and fixes a libarena build failure with clang 19.
 
-diff --git a/tools/testing/selftests/kvm/loongarch/pmu_test.c b/tools/testing/selftests/kvm/loongarch/pmu_test.c
-index ec3fefb9ea97..c9dd3cf5de06 100644
---- a/tools/testing/selftests/kvm/loongarch/pmu_test.c
-+++ b/tools/testing/selftests/kvm/loongarch/pmu_test.c
-@@ -176,7 +176,8 @@ int main(int argc, char *argv[])
- 		pr_info("PMU is enabled in VM\n");
- 	} else {
- 		print_skip("PMU not enabled by VM config\n");
--		return KSFT_SKIP;
-+		ret = KSFT_SKIP;
-+		goto done;
- 	}
- 
- 	while (1) {
+Patch 1 fixes the build of the libarena buddy allocator selftests with
+clang 19, which refuses the signed remainder in test_buddy_alloc_free().
+
+Patches 2-5 enable the following tests for LoongArch:
+
+  - the 2 KiB private stack test in verifier_large_stack
+  - the struct_ops private stack tests
+  - the arena LDSX tests in verifier_ldsx
+  - the arena load-acquire and store-release tests in arena_atomics, and
+    the libarena spmc and bitmap parallel tests
+
+The LoongArch JIT support for these features is in the following series,
+which goes through the LoongArch tree:
+
+  LoongArch: BPF: Add private stack, exceptions, large stack and arena support
+  https://lore.kernel.org/loongarch/20261126034048.7370-1-dongtai.guo@linux.dev/T/#u
+
+These patches were part of v2 of the LoongArch BPF series:
+https://lore.kernel.org/loongarch/20260702022322.51033-1-dongtai.guo@linux.dev/
+
+Since then:
+  - Split the selftests patches out of the LoongArch series and rebase
+    them onto bpf-next.
+  - New patch 1: use an unsigned loop counter in test_buddy_alloc_free.
+  - New patch 2: enable the 2 KiB private stack test.
+  - Patch 5: also enable the libarena spmc test, which has the same
+    guard as arena_atomics (Sashiko), and the libarena bitmap test,
+    which needs cmpxchg on arena too.
+  - Drop "selftests/bpf: Add LoongArch deny list" (Tiezhu).
+  - Reword the subjects and commit messages.
+
+George Guo (5):
+  selftests/bpf: Use unsigned loop counter in test_buddy_alloc_free
+  selftests/bpf: Enable 2 KiB private stack test for LoongArch
+  selftests/bpf: Enable struct_ops private stack tests for LoongArch
+  selftests/bpf: Enable arena LDSX tests for LoongArch
+  selftests/bpf: Enable arena atomics tests for LoongArch
+
+ .../bpf/libarena/selftests/test_buddy.bpf.c     |  3 ++-
+ .../selftests/test_parallel_bitmap.bpf.c        |  1 +
+ .../libarena/selftests/test_parallel_spmc.bpf.c |  1 +
+ .../bpf/prog_tests/struct_ops_private_stack.c   |  3 ++-
+ .../testing/selftests/bpf/progs/arena_atomics.c |  3 +++
+ .../selftests/bpf/progs/verifier_large_stack.c  |  1 +
+ .../testing/selftests/bpf/progs/verifier_ldsx.c | 17 +++++++++++++++++
+ 7 files changed, 27 insertions(+), 2 deletions(-)
+
+
+base-commit: 486b5ce7184f7449ef2fe1e951455b0b8a114060
 -- 
-2.54.0
-
+2.53.0
 
