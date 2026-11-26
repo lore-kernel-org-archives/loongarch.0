@@ -1,51 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.28
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.35
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795664463;
-	b=3wtUMVsDflt9vZObg+CFAPG94tRiLalGqOXS024LIvwDmcLE+fVluAFUeJMwzwb87Plz
-	 U9GsduwZM8nySfcPJalMPftGnNK0edu49NmypFvgXWgdE2i08pyK7n26ezA+u7PrX+tiP
-	 ye7Ktzge0s++6ottTecofErBOoj6gZK/VUo9/+YSK9XeqexqbzHkF92JYs/0HggMgqM3v
-	 oSgpsIut5dUMtye5e9Fz8lNy+8O43AkX1o/2RRCnnSfLFI+94RNFEg62Ap4Lvb8fFjqey
-	 TMxhVuX1VE4OcbzaQdB6VxXDjpopHjGMJ5X5xSYSXPQTWxyfhCnL34JYWAgJ1Gzrk6Q==
+	t=1795664469;
+	b=l24G/0FzJkZy2Dqxsdk7dhdHJK0Awvj9IMcOltMANI+k45rNCKl0gLt5quTcXn+3I1S8
+	 wqwd2FR+wWLbllx++Ovtb9HXFmCvvH8/qLx77aJlotFVxh+tD2VQ53Bs4IPpBmC4M3I6m
+	 vG/3j4ZkTOJ5xSIEoySxnJClCbOWrf3ZPeXxo5MAlsirxJXSJQvswZQv5q3X+roFpbiEu
+	 4ZvZI+EybsbY3p0x9G72IiPsTLneXMeJ4f3YW5WCMR6lPefHhEihvslppGKrBm/YwZsbw
+	 OL0YAU/ECQAkoNl1FMAXGUBQPGg85+QiCYYLRKRAFKu+nr678vq4m36G0NZIfshhpGw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795664463;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795664469;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
 	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
 	 X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=UvABF4Vmpbt0VgP3jmnGLg/wsjwcbKnkPtDigc04e44=;
-	b=T4V7xahK31kMrRcltuRosnKn1xGtq/pL74kqIFtGIABnuj6P3mp4LtVTVeGbhdHSIlhX
-	 +btnBAsgwZpIUf4Nk5rs6SNhUXiOa5bI9itLPcBnAsEzGB+zMf0GbNOAB1I+RpL8AUozZ
-	 C7EabV6wuf/tC5ZBpQi/JFSSLHReId2/fENhV8MQFJ/nxP2QdXkUm+MtPuy/GteD0GlQv
-	 8gKa1QwG3GgiCy+dQpc8rtJYUdqzFQ1fQ0dlpZDO6Z9O8apUqLeksLMpzqBC4KmAD18NM
-	 TfuJYB1Lv4zakoz5C3ISuYv5dnd7V1qFSdr6d/DjWCmbPCPIepB3649CEjNyhDmh1bA==
+	bh=Cu4/QMNgUDttlkSirFHlpJU0ZVFgHAqcFhz9QrC0Vy0=;
+	b=n+2YdqHclgLZRNuhRKBHYOC1KnZUbt81LX/Fdo329d/CUpG2gflIFdHRaVjFaziWkXry
+	 x8b5PeO4LP56k/QL8OD+zXZLFS61DvTFTH0oUBmYkwIgnSJ2A1t30P3Q0hR8C8AQvC9OE
+	 U5LWNqNXRzAD16f6nyK5OCvvFEBjKz6OqBWmariJOZDlWJ0RWu7V1oIZU01m4va7Ru5QB
+	 GaLjFyaDJjhoZyuiCn3x7EK+tYt1QKQd/U8gGXAL2QuQq0lJ0AkVaQmiuujBStRhUsWdx
+	 v6pCJG81COs3Xhp2xBiiQEBUWHZ9kkss70uIfoW5lXXMiLNpeREjpRaWJ2z6EHoR7UA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=hH6bs4UW;
-	arc=none smtp.remote-ip=91.218.175.28
-Received: from mta0.migadu.com (out-28.mta0.migadu.com [91.218.175.28])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=VAOTSOJx;
+	arc=none smtp.remote-ip=91.218.175.35
+Received: from mta0.migadu.com (out-35.mta0.migadu.com [91.218.175.35])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0A3E606A327
-	for <loongarch@lists.linux.dev>; Thu, 26 Nov 2026 03:41:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C0A3E606A327
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9CC8606A335
+	for <loongarch@lists.linux.dev>; Thu, 26 Nov 2026 03:41:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E9CC8606A335
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=hH6bs4UW
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=VAOTSOJx
 X-Envelope-To: loongarch@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=B5Xq7hAtzi7nCHHx/u6hYsscW66m+IcqB/D+SXuKXQU=;
+DKIM-Signature: a=rsa-sha256; bh=RtOybAiEodjNlqWR1fpxn/WkDzI29SyP9n7ldos+97I=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1795664460; v=1; x=1796269260;
- b=hH6bs4UWCfDjek6vWbFi5pwN5cMPklFjA5bRrlrYHEgwJFKqW/Mg2W3RzfjOtqIDZSKhGmLU
- AikpDmIFdu7NjsL1UYSFX9Y7JC4Umg4EIWJ132oYG/TxDgHvaNe9VBfgUAGICCBSVdSPbI9sndX
- kR/1q6ntJk0U7U0GRulcEZ5o=
+ t=1795664466; v=1; x=1796269266;
+ b=VAOTSOJxWeNsUA4PJwgx03ykDKNzNwc3MKL815YBifpUsy/2ztzU5PI03k2IupcdS95r1tlK
+ dJ0JL3eVrLRCnYt39MV8wjg9P0gxIhTGK9qKslvLdjEFXVGL2bXzy84LALrcdTwNuuHx/IJ53W4
+ GN5rz41bMVJYxxHtLz5lcBNM=
 X-Envelope-To: loongarch@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 923d574f246e9554;
-	Thu, 26 Nov 2026 03:41:00 +0000
-X-Mizu-Trace-ID: 923d574f246e9554
+Received: by smtp.migadu.com with ESMTPS id 43dfb654f877169c;
+	Thu, 26 Nov 2026 03:41:06 +0000
+X-Mizu-Trace-ID: 43dfb654f877169c
 X-Migadu-Flow: FLOW_OUT
 From: George Guo <dongtai.guo@linux.dev>
 To: chenhuacai@kernel.org,
@@ -55,9 +55,9 @@ Cc: hengqi.chen@gmail.com,
 	bpf@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/5] LoongArch: BPF: Add support for exceptions
-Date: Thu, 26 Nov 2026 12:40:44 +0900
-Message-ID: <20261126034048.7370-3-dongtai.guo@linux.dev>
+Subject: [PATCH v3 3/5] LoongArch: BPF: Allow programs 2 KiB of stack
+Date: Thu, 26 Nov 2026 12:40:45 +0900
+Message-ID: <20261126034048.7370-4-dongtai.guo@linux.dev>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20261126034048.7370-1-dongtai.guo@linux.dev>
 References: <20261126034048.7370-1-dongtai.guo@linux.dev>
@@ -74,144 +74,292 @@ Content-Transfer-Encoding: 8bit
 
 From: George Guo <guodongtai@kylinos.cn>
 
-In order to implement JIT support for BPF exceptions, bpf_throw() needs
-to find the frame of the exception boundary program by walking the
-stack, and then call the exception callback with the stack pointer and
-frame pointer of that frame.
+Currently, the LoongArch JIT allocates the whole frame of a program with
+a single addi.d, and saves and restores the callee-saved registers at
+$sp-relative offsets computed from the whole frame size. All of these
+instructions take a signed 12-bit immediate, so the frame must stay
+below 2 KiB, otherwise emit_insn() silently truncates the offsets. The
+same applies to loading tcc_ptr from $sp and to adding the private stack
+depth to the BPF frame pointer with addi.d.
 
-The stack walking is done by arch_bpf_stack_walk(), which was added by
-commit e7103e5e3bde ("LoongArch: BPF: Add arch_bpf_stack_walk()
-implementation") and only works with the ORC unwinder, so make
-bpf_jit_supports_exceptions() return true only if CONFIG_UNWINDER_ORC
-is enabled.
+To fix this, allocate the save area and the BPF stack separately. The
+save area is still addressed with small offsets from $sp, and the BPF
+stack below it is allocated with addi.d if its size fits the immediate,
+otherwise with move_imm() and sub.d. The epilogue releases the BPF stack
+by deriving $sp from $fp before restoring the registers. tcc_ptr is at a
+fixed offset from $fp, so load it from $fp for tail calls, direct and
+indirect bpf2bpf calls. Fold the depth of a private stack into the
+per-CPU address of its top.
 
-The exception callback does not set up a frame of its own: it takes the
-frame pointer of the boundary program from its third argument (a2) and
-reuses that frame, so its epilogue restores the callee-saved registers
-of the boundary program and returns to the caller of the boundary
-program. In order to keep the same stack layout for the boundary program
-and the callback, always reserve the $s6 slot for them, just like for
-arena programs.
+The frame layout does not change, and a program whose BPF stack is on
+the kernel stack gets one more instruction in both the prologue and the
+epilogue. Then make bpf_jit_supports_large_stack() return true to give
+the JITed programs the same 2 KiB budget as on x86-64 and arm64. Since
+LoongArch has 16 KiB kernel stacks, the worst case of a tail call chain
+is the same as on x86-64, a little over 10 KiB.
 
-This is similar to commit 22fc0e80aeb5 ("bpf, arm64: support
-exceptions").
+This is similar to commit 1d5306c11da2 ("bpf, arm64: Allow programs
+2 KiB of stack").
 
 Signed-off-by: George Guo <guodongtai@kylinos.cn>
 ---
- arch/loongarch/net/bpf_jit.c | 45 ++++++++++++++++++++++++++++++++----
- 1 file changed, 40 insertions(+), 5 deletions(-)
+ Documentation/bpf/bpf_design_QA.rst |  13 ++--
+ arch/loongarch/net/bpf_jit.c        | 110 +++++++++++++++++-----------
+ 2 files changed, 76 insertions(+), 47 deletions(-)
 
+diff --git a/Documentation/bpf/bpf_design_QA.rst b/Documentation/bpf/bpf_design_QA.rst
+index 98d70b8a2533..cbedc56379c3 100644
+--- a/Documentation/bpf/bpf_design_QA.rst
++++ b/Documentation/bpf/bpf_design_QA.rst
+@@ -223,12 +223,13 @@ Q: How much stack space a BPF program uses?
+ -------------------------------------------
+ A: A program may use up to 2 KiB of stack, combined over its call
+ chain, when the JIT of the architecture reports support for large
+-stacks (currently x86-64 and arm64); a single function may use all of
+-it, and every frame of a program running on a private stack gets the
+-whole amount. Elsewhere, and for programs verified for the interpreter,
+-the limit is 512 bytes; the interpreter itself never runs a frame
+-larger than that. The verifier computes the actual amount of stack
+-used and both interpreter and most JITed code consume necessary amount.
++stacks (currently x86-64, arm64 and LoongArch); a single function may
++use all of it, and every frame of a program running on a private stack
++gets the whole amount. Elsewhere, and for programs verified for the
++interpreter, the limit is 512 bytes; the interpreter itself never runs
++a frame larger than that. The verifier computes the actual amount of
++stack used and both interpreter and most JITed code consume necessary
++amount.
+ 
+ Q: Can BPF be offloaded to HW?
+ ------------------------------
 diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index 3ff15b64925f..19907612a51c 100644
+index 19907612a51c..20f29ea01bda 100644
 --- a/arch/loongarch/net/bpf_jit.c
 +++ b/arch/loongarch/net/bpf_jit.c
-@@ -120,8 +120,8 @@ static void prepare_bpf_tail_call_cnt(struct jit_ctx *ctx, int *store_offset)
-  *                            +-------------------------+
-  *                            |           tcc_ptr       |
-  *                            +-------------------------+
-- *                            |           arena         |
-- *                            |         (optional)      |
-+ *                            |   $s6 (arena/exception) |
-+ *                            |        (optional)       |
-  *                            +-------------------------+ <--BPF_REG_FP
-  *                            |  prog->aux->stack_depth |
+@@ -28,7 +28,8 @@
+ 
+ #define REG_TCC		LOONGARCH_GPR_A6
+ #define REG_ARENA	LOONGARCH_GPR_S6 /* For storing arena_vm_start */
+-#define BPF_TAIL_CALL_CNT_PTR_STACK_OFF(stack) (round_up(stack, 16) - 80)
++/* tcc_ptr sits below $ra, $fp, $s0-$s5 and tcc, see the stack layout below */
++#define BPF_TAIL_CALL_CNT_PTR_FP_OFF	(-80)
+ 
+ /* Memory size/value to protect private stack overflow/underflow */
+ #define PRIV_STACK_GUARD_SZ	16
+@@ -127,12 +128,15 @@ static void prepare_bpf_tail_call_cnt(struct jit_ctx *ctx, int *store_offset)
   *                            |        (optional)       |
-@@ -133,6 +133,13 @@ static void build_prologue(struct jit_ctx *ctx)
- 	int i, stack_adjust = 0, store_offset, bpf_stack_adjust;
+  * current $sp -------------> +-------------------------+
+  *                                        low
++ *
++ * The area from $ra down to the optional $s6 slot is allocated on its own
++ * and addressed with small offsets from $sp or $fp. The BPF stack below
++ * it can be up to MAX_BPF_STACK_JIT bytes plus the may_goto slots, which
++ * do not fit the 12-bit immediate of addi.d, ld.d and st.d.
+  */
+-static void build_prologue(struct jit_ctx *ctx)
++static int jit_save_area_size(const struct jit_ctx *ctx)
+ {
+-	int i, stack_adjust = 0, store_offset, bpf_stack_adjust;
  	const struct bpf_prog *prog = ctx->prog;
- 	const bool is_main_prog = !bpf_is_subprog(prog);
-+	/*
-+	 * Exception boundary and callback programs must agree on the frame
-+	 * layout: the callback reuses the boundary's frame to restore its
-+	 * callee-saved registers, so the s6 slot is always reserved for them.
-+	 */
+-	const bool is_main_prog = !bpf_is_subprog(prog);
+ 	/*
+ 	 * Exception boundary and callback programs must agree on the frame
+ 	 * layout: the callback reuses the boundary's frame to restore its
+@@ -140,27 +144,25 @@ static void build_prologue(struct jit_ctx *ctx)
+ 	 */
+ 	const bool is_exception_prog = prog->aux->exception_boundary ||
+ 				       prog->aux->exception_cb;
+-
+-	bpf_stack_adjust = round_up(ctx->prog->aux->stack_depth, 16);
+-
+-	/* To store ra, fp, s0, s1, s2, s3, s4, s5 */
+-	stack_adjust += sizeof(long) * 8;
+-
+-	/* To store tcc and tcc_ptr */
+-	stack_adjust += sizeof(long) * 2;
++	/* To store ra, fp, s0, s1, s2, s3, s4, s5, tcc and tcc_ptr */
++	int size = sizeof(long) * 10;
+ 
+ 	if (ctx->arena_vm_start || is_exception_prog)
+-		stack_adjust += sizeof(long);
++		size += sizeof(long);
+ 
+-	stack_adjust = round_up(stack_adjust, 16);
++	return round_up(size, 16);
++}
+ 
+-	/*
+-	 * When a private stack is used the BPF stack lives in a per-CPU
+-	 * allocation rather than on the kernel stack, so only the non-BPF
+-	 * part is reserved here.
+-	 */
+-	if (!ctx->priv_sp_used)
+-		stack_adjust += bpf_stack_adjust;
++static void build_prologue(struct jit_ctx *ctx)
++{
++	int i, save_size, store_offset, bpf_stack_adjust;
++	const struct bpf_prog *prog = ctx->prog;
++	const bool is_main_prog = !bpf_is_subprog(prog);
 +	const bool is_exception_prog = prog->aux->exception_boundary ||
 +				       prog->aux->exception_cb;
- 
- 	bpf_stack_adjust = round_up(ctx->prog->aux->stack_depth, 16);
- 
-@@ -142,7 +149,7 @@ static void build_prologue(struct jit_ctx *ctx)
- 	/* To store tcc and tcc_ptr */
- 	stack_adjust += sizeof(long) * 2;
- 
--	if (ctx->arena_vm_start)
-+	if (ctx->arena_vm_start || is_exception_prog)
- 		stack_adjust += sizeof(long);
- 
- 	stack_adjust = round_up(stack_adjust, 16);
-@@ -173,6 +180,19 @@ static void build_prologue(struct jit_ctx *ctx)
- 	if (is_main_prog)
- 		emit_insn(ctx, addid, REG_TCC, LOONGARCH_GPR_ZERO, 0);
- 
-+	if (prog->aux->exception_cb) {
-+		/*
-+		 * The exception callback receives the boundary program's frame
-+		 * pointer as its third argument (a2). Reuse that frame so the
-+		 * (FP-anchored) epilogue restores the boundary's callee-saved
-+		 * registers and returns to the boundary's caller. The boundary
-+		 * already saved them, so nothing is pushed here.
-+		 */
-+		move_reg(ctx, LOONGARCH_GPR_FP, LOONGARCH_GPR_A2);
-+		emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_FP, -stack_adjust);
-+		goto setup_bpf_fp;
-+	}
 +
- 	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -stack_adjust);
++	bpf_stack_adjust = round_up(ctx->prog->aux->stack_depth, 16);
++	save_size = jit_save_area_size(ctx);
  
- 	store_offset = stack_adjust - sizeof(long);
-@@ -201,13 +221,14 @@ static void build_prologue(struct jit_ctx *ctx)
+ 	/*
+ 	 * Save the original return address to a temporary register to prevent
+@@ -189,13 +191,13 @@ static void build_prologue(struct jit_ctx *ctx)
+ 		 * already saved them, so nothing is pushed here.
+ 		 */
+ 		move_reg(ctx, LOONGARCH_GPR_FP, LOONGARCH_GPR_A2);
+-		emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_FP, -stack_adjust);
++		emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_FP, -save_size);
+ 		goto setup_bpf_fp;
+ 	}
  
- 	prepare_bpf_tail_call_cnt(ctx, &store_offset);
+-	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -stack_adjust);
++	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -save_size);
  
--	if (ctx->arena_vm_start) {
-+	if (ctx->arena_vm_start || is_exception_prog) {
- 		store_offset -= sizeof(long);
+-	store_offset = stack_adjust - sizeof(long);
++	store_offset = save_size - sizeof(long);
+ 	emit_insn(ctx, std, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, store_offset);
+ 
+ 	store_offset -= sizeof(long);
+@@ -226,35 +228,57 @@ static void build_prologue(struct jit_ctx *ctx)
  		emit_insn(ctx, std, REG_ARENA, LOONGARCH_GPR_SP, store_offset);
  	}
  
- 	emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_adjust);
+-	emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_adjust);
++	emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, save_size);
  
-+setup_bpf_fp:
+ setup_bpf_fp:
++	ctx->stack_size = save_size;
++
  	if (ctx->priv_sp_used) {
- 		/* Point the BPF frame pointer at the top of this CPU's private stack */
+-		/* Point the BPF frame pointer at the top of this CPU's private stack */
++		/*
++		 * Point the BPF frame pointer at the top of this CPU's private
++		 * stack. The BPF stack lives in that per-CPU allocation rather
++		 * than on the kernel stack, so nothing more is reserved here.
++		 */
  		void __percpu *priv_stack_ptr;
-@@ -229,6 +250,9 @@ static void __build_epilogue(struct jit_ctx *ctx, bool is_tail_call)
+ 
+-		priv_stack_ptr = prog->aux->priv_stack_ptr + PRIV_STACK_GUARD_SZ;
++		priv_stack_ptr = prog->aux->priv_stack_ptr + PRIV_STACK_GUARD_SZ +
++				 bpf_stack_adjust;
+ 		emit_percpu_ptr(ctx, regmap[BPF_REG_FP], priv_stack_ptr);
+-		emit_insn(ctx, addid, regmap[BPF_REG_FP], regmap[BPF_REG_FP], bpf_stack_adjust);
+ 	} else if (bpf_stack_adjust) {
+-		emit_insn(ctx, addid, regmap[BPF_REG_FP], LOONGARCH_GPR_SP, bpf_stack_adjust);
++		/* The BPF stack starts right below the save area */
++		move_reg(ctx, regmap[BPF_REG_FP], LOONGARCH_GPR_SP);
++		if (is_signed_imm12(-bpf_stack_adjust)) {
++			emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP,
++				  -bpf_stack_adjust);
++		} else {
++			move_imm(ctx, LOONGARCH_GPR_T1, bpf_stack_adjust);
++			emit_insn(ctx, subd, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP,
++				  LOONGARCH_GPR_T1);
++		}
++		ctx->stack_size += bpf_stack_adjust;
+ 	}
+ 
+-	ctx->stack_size = stack_adjust;
+-
+ 	if (ctx->arena_vm_start)
+ 		move_imm(ctx, REG_ARENA, ctx->arena_vm_start);
+ }
+ 
+ static void __build_epilogue(struct jit_ctx *ctx, bool is_tail_call)
  {
- 	int stack_adjust = ctx->stack_size;
+-	int stack_adjust = ctx->stack_size;
++	int save_size = jit_save_area_size(ctx);
  	int load_offset;
-+	const struct bpf_prog *prog = ctx->prog;
-+	const bool is_exception_prog = prog->aux->exception_boundary ||
-+				       prog->aux->exception_cb;
+ 	const struct bpf_prog *prog = ctx->prog;
+ 	const bool is_exception_prog = prog->aux->exception_boundary ||
+ 				       prog->aux->exception_cb;
  
- 	load_offset = stack_adjust - sizeof(long);
+-	load_offset = stack_adjust - sizeof(long);
++	/*
++	 * Release the BPF stack, if it is on the kernel stack, by deriving
++	 * $sp from $fp: unlike its size, the offset of the save area from
++	 * $fp always fits an immediate.
++	 */
++	if (ctx->stack_size != save_size)
++		emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_FP, -save_size);
++
++	load_offset = save_size - sizeof(long);
  	emit_insn(ctx, ldd, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, load_offset);
-@@ -261,7 +285,7 @@ static void __build_epilogue(struct jit_ctx *ctx, bool is_tail_call)
- 	/* Skip the unused local 'tcc_ptr' slot to align with arena */
- 	load_offset -= sizeof(long);
  
--	if (ctx->arena_vm_start) {
-+	if (ctx->arena_vm_start || is_exception_prog) {
- 		load_offset -= sizeof(long);
+ 	load_offset -= sizeof(long);
+@@ -290,7 +314,7 @@ static void __build_epilogue(struct jit_ctx *ctx, bool is_tail_call)
  		emit_insn(ctx, ldd, REG_ARENA, LOONGARCH_GPR_SP, load_offset);
  	}
-@@ -2649,6 +2673,17 @@ bool bpf_jit_supports_private_stack(void)
+ 
+-	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, stack_adjust);
++	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, save_size);
+ 
+ 	if (!is_tail_call) {
+ 		/* Set return value */
+@@ -325,7 +349,6 @@ bool bpf_jit_supports_far_kfunc_call(void)
+ static int emit_bpf_tail_call(struct jit_ctx *ctx, int insn)
+ {
+ 	int off, jmp_offset;
+-	int tcc_ptr_off = BPF_TAIL_CALL_CNT_PTR_STACK_OFF(ctx->stack_size);
+ 	u8 a1 = LOONGARCH_GPR_A1;
+ 	u8 a2 = LOONGARCH_GPR_A2;
+ 	u8 t1 = LOONGARCH_GPR_T1;
+@@ -353,7 +376,7 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx, int insn)
+ 	 * if ((*tcc_ptr)++ >= MAX_TAIL_CALL_CNT)
+ 	 *      goto out;
+ 	 */
+-	emit_insn(ctx, ldd, REG_TCC, LOONGARCH_GPR_SP, tcc_ptr_off);
++	emit_insn(ctx, ldd, REG_TCC, LOONGARCH_GPR_FP, BPF_TAIL_CALL_CNT_PTR_FP_OFF);
+ 	emit_insn(ctx, ldd, t3, REG_TCC, 0);
+ 	emit_insn(ctx, addid, t2, LOONGARCH_GPR_ZERO, MAX_TAIL_CALL_CNT);
+ 	jmp_offset = ctx->image ? (ctx->offset[insn + 1] - ctx->idx) : 0;
+@@ -741,7 +764,7 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 	u64 func_addr;
+ 	bool func_addr_fixed, sign_extend;
+ 	int i = insn - ctx->prog->insnsi;
+-	int ret, jmp_offset, tcc_ptr_off;
++	int ret, jmp_offset;
+ 	const u8 code = insn->code;
+ 	const u8 cond = BPF_OP(code);
+ 	const u8 t1 = LOONGARCH_GPR_T1;
+@@ -1274,8 +1297,8 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 			return ret;
+ 
+ 		if (insn->src_reg == BPF_PSEUDO_CALL) {
+-			tcc_ptr_off = BPF_TAIL_CALL_CNT_PTR_STACK_OFF(ctx->stack_size);
+-			emit_insn(ctx, ldd, REG_TCC, LOONGARCH_GPR_SP, tcc_ptr_off);
++			emit_insn(ctx, ldd, REG_TCC, LOONGARCH_GPR_FP,
++				  BPF_TAIL_CALL_CNT_PTR_FP_OFF);
+ 			move_addr(ctx, t1, func_addr);
+ 			emit_insn(ctx, jirl, LOONGARCH_GPR_RA, t1, 0);
+ 			break;
+@@ -1312,8 +1335,8 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 
+ 	/* indirect call to a bpf subprog via the address in dst */
+ 	case BPF_JMP | BPF_CALL | BPF_X:
+-		tcc_ptr_off = BPF_TAIL_CALL_CNT_PTR_STACK_OFF(ctx->stack_size);
+-		emit_insn(ctx, ldd, REG_TCC, LOONGARCH_GPR_SP, tcc_ptr_off);
++		emit_insn(ctx, ldd, REG_TCC, LOONGARCH_GPR_FP,
++			  BPF_TAIL_CALL_CNT_PTR_FP_OFF);
+ 		emit_insn(ctx, jirl, LOONGARCH_GPR_RA, dst, 0);
+ 		break;
+ 
+@@ -2690,6 +2713,11 @@ bool bpf_jit_supports_subprog_tailcalls(void)
  	return true;
  }
  
-+bool bpf_jit_supports_exceptions(void)
++bool bpf_jit_supports_large_stack(void)
 +{
-+	/*
-+	 * Walking kernel and BPF frames from within bpf_throw() relies on
-+	 * arch_bpf_stack_walk(), which is only implemented for the ORC
-+	 * unwinder. ORC reports each frame's stack and frame pointer and
-+	 * walks JITed BPF frames via its frame-pointer fallback.
-+	 */
-+	return IS_ENABLED(CONFIG_UNWINDER_ORC);
++	return true;
 +}
 +
- /* Indicate the JIT backend supports mixing bpf2bpf and tailcalls. */
- bool bpf_jit_supports_subprog_tailcalls(void)
+ bool bpf_jit_supports_timed_may_goto(void)
  {
+ 	return true;
 -- 
 2.53.0
 
