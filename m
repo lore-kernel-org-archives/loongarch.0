@@ -1,100 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795655876;
-	b=eXUD7aRQS1Jv030ISTy+zAKhhXueLbcwesbOyKQmFEYojBB1Q2znNBMANETjRhHbj1Y6
-	 UpkQtbUeYeUxol9WDvZO14EfoIuWLRfdTFPU5E1pLi5KmtK+KDtbjO1MetwE5nq1RRtRN
-	 icJnFJecf8YH75LLadyFylWn3+q//F4yK15UNLy4GTyAdAVoAYxYZFyWP47yCGCMmt8Ut
-	 s6tP+HHOPU9RRXzOMHzDoPzf3Z53GQdQjAGyhFXSiX+FgAeNPnXA9psg06PFHapPQ0fVY
-	 L+hvUF1+qe2T7/2W9/A5Xx4KnGT7kkVhxNsYIwzRdwtztGsiRtQ/M/lJG2xBxQTHhGQ==
+	t=1795658531;
+	b=nyfpvQQNFzFaxti3BRPy+apjLqFoUicVeJuRAsh0GVcbJihg0HFK7vAR46IMQSPvS4RM
+	 II2CgN9LLEC0F4bCSFtIWxYI7vpPbNGGy1LGU60pBMgSNwkc6+0tEt5IC9sfsrxefDh8T
+	 NU5kk5JBbjM4vClaBHlkL9l7ib2GX2XNT/TCsusC9agXz4X0qeSWzsQxvRkTJD8wNuraO
+	 c8KKinbf8WhpmUJYbTXpeAQrRnu4EwqvqAsJQaPU6UVYMPl1/M2D7UNMifQx//cqoyBof
+	 vi29vhEHVCu16yWe+vsFufxtGtUfKHdmiN0tpI46LQx+GanivRCiMW0wuRlCP7pviBQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795655876;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Content-Type:Date:Message-Id:From:To:Cc:Subject:In-Reply-To:
-	 References:Content-Transfer-Encoding:MIME-Version;
-	bh=+aRJH0s7CUutYvHA8qpdJ21NjF0/4sgc7Z7eUI52Igw=;
-	b=3p0BB2SSpEZ/3ofYiqdC6b0Vau8poLuNBr+BipJbbOY5HaXE6bUnTuHL4pJJepjYejkh
-	 YrhSctw/pymC2tAxyTLDO7/68xp+ZcDB8xwhD7o0QmMlcwdr50W4CVjT8c/NA98uVW0tq
-	 KoWL75O7ekB5ZllckHLeAE3+CJSBuAXQ4ZjRaqf1ND5E9KWvNbRub7xkaibEsc7IQRpGL
-	 7caprKhcK4VPEfVf1loNa9jy6pAuhgnMjmIBqGAsN0Ff9NHB14uCU3m31MqW5xhK+JU8v
-	 Ffl4ZmyR+FQrY4jPj4JtSOxnQb4I7Bo5K0S7spiGZq0ONaTskr1xhdYyxzHW+R9RfCQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795658531;
+	h=DMARC-Filter:Received:Received:Subject:To:Cc:References:From:
+	 Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:Content-Type:
+	 Content-Language:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-CM-SenderInfo:X-Coremail-Antispam;
+	bh=F89I1g6d8xmtBB7mY85xmIJWfFhPXLIxLjU4qL0HIPs=;
+	b=pcbBPVGam0w8n3cIAe/5LDZ/NH/WLoRAsRcuRBltYgqKSWAHuT+rQMX7WFFQATYH1mYY
+	 QBceVjn89CbTofXQbYIzLGw5KWfXSy1t3xBM2q0/BYg8XhUtP/bu3tp/j+UHJveTIfOqK
+	 wryg3F4bjVZn9nCP8uMNAp9kwvXaNkkNdAMA7sFqZvnC7ODs5qci7UcSJmL4pOiV8rec6
+	 UzlIeseb6T6FDORVIPIwT2490qCilPKezwZh9QIuQ9+QHrfyOdJ5DRIGSYOKHJl4jWG8u
+	 Be6VFPiz7FZ5SZdsZgiwRJ4Gz70ubbaYR6d82bGT3n9lIjYMDIVVRZ1eYLy1rCmc58Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=X7m+IXsB;
-	arc=none smtp.remote-ip=209.85.215.171
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E4B6606A321
-	for <loongarch@lists.linux.dev>; Thu, 26 Nov 2026 01:17:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8E4B6606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=X7m+IXsB
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-cde7e8abf9cso2321547a12.0
-        for <loongarch@lists.linux.dev>; Wed, 25 Nov 2026 17:17:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795655876; x=1796260676; darn=lists.linux.dev;
-        h=mime-version:content-transfer-encoding:references:in-reply-to
-         :subject:cc:to:from:message-id:date:content-type:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=+aRJH0s7CUutYvHA8qpdJ21NjF0/4sgc7Z7eUI52Igw=;
-        b=X7m+IXsBXP44pqD8FdRzTnUtyF3tnUC0PpF8WmUs20VZrG1wAFYvCLciLai1DjSP4q
-         zK3Ksn33cr5dR8xAwiHZs+aPEFU1QJt/KKBx3U2m6Rx0OK+9vxcBSYr3axLG1eLhNHPQ
-         wtux5AfYa/j3+F7OaVh1A6k7sX2GKxHcEuU8GpH8dfh487IIXKc6hT2tCqZNiFORf+ae
-         bp4Yd7IXGlkPgSTO+hXB1Gvg0hLZGL25NjYWnNUKzMZySALVHxOMyxrYDeLL4DxkoSIG
-         XfTUrRklo/eVfH+UbNry2HHBpLFs28u6ab2MhKPZW4b2oFNlw1An7lQfM8bu00mLE3F4
-         qyQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795655876; x=1796260676;
-        h=mime-version:content-transfer-encoding:references:in-reply-to
-         :subject:cc:to:from:message-id:date:content-type:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=+aRJH0s7CUutYvHA8qpdJ21NjF0/4sgc7Z7eUI52Igw=;
-        b=LGxOyyZbFMpN6PL4N3X+6XRjyq2XNTc/n/4poN8ThHudEMMjBInOOkQHWs8bcMjADi
-         GWIefTZu0O3/NigPN0Zs7qGLDQERB/+Wa3HLGkuKcjO3SMNN5s5kcC+ayJsYr8FMG9OG
-         Tkd6S+Gklz4s6V4Sjx6TrzC3kLFJzx7S0+HoBMi4GKia0w2dg1N+m1clnn6pRc4FXYRH
-         7tUlbN8Ea54bYHUS3ogcxE/167dqIxT7GYpgElBRIh5t2EjncXqcRjet1NfA33LR1DxY
-         U6LKfNVyCR+pD0A5hTSp8fJw/tOyDMKX/8f5NAw0/SGNXXCaQtljqj0iVzwB6FXpTe9e
-         It6g==
-X-Forwarded-Encrypted: i=1; AL+hErHrnThj1D+Rn+nZZm5cLvYhyH78DL8MqbSuZZ6ecASuNVQaE3X4rsiv5ERRO10b7yDRmbjwm9fu0UA=@lists.linux.dev
-X-Gm-Message-State: APuU4Z8oFulCLG8ldPP8tX887358lZpEkTiblN87zDKoJMLUuW6arHZ+
-	SBeGqlaHF1EvzCnqpawRUbs4L3fC/GG2CojKjJkvh036m0h/yGCB4PtD6k/gMg==
-X-Gm-Gg: AZFdTZeBZX1hZVMlwnmCNsveQHuNRtcTdLevjHc37A2pycHsTOm4PK+/bvsaN17rNGD
-	Z3zMux0Las+E+8OA56yMBj/PPEK1cRAgqvwERg72m2hy9Lu7wTTxHtMPQMGcpQnKYhILp77GuKb
-	HKfqJnvRiHnolNkagRzmC78WGOO+cSkmxdbulJT4mT2yUW/mEpfm4Jv74bTrl3aQ0Yri3qHw7rp
-	eGSCSRfc7g4QddXMANIAK1RnctpUSnVtRsekUN8V3ilpWqRJdowVk7ilmjuQjtcCc6IFfD8O9MD
-	dYNu0Yuxr6NU16ARRa9T0V5bcrHtb7odhoc5kz0PsD1+9bt/kpyeODr8jDrIFeHkztLcIkXYNx+
-	yKW3MSqCzhp8S+CRt1m/DUtNYgrgBBu6S1h37eFE/CGNrSR2aTxMso+duQGu3Tv/pNEYb5SDJc7
-	7MAupzp9kX/oHBoO1R4zdY4ddTVJ+0OIev9p1dzl5IxvurCX++liBUjSeetb1T1hNRiTxwqrUtp
-	MvbEIKi7i5nsycmB0zNhacizYNMyb3LfiYhhoGBlyr4JZntHDu/av+xWnBZMULI4qvo9NkQdskm
-	0FUO+gQ6MaQUbLGQ0G61ePIG1xlqDraLKDYTj4aRt87rrJ9U/W7M/hPbEsFKimnq/t3FqFHHO8v
-	AkCSUHHvUswtVtTfWZIZMdu2DXdmGCW81Fw==
-X-Received: by 2002:a17:90a:d44f:b0:3ac:8897:7ba5 with SMTP id 98e67ed59e1d1-3b41c98ec99mr18155731a91.59.1795655875720;
-        Wed, 25 Nov 2026 17:17:55 -0800 (PST)
-Received: from localhost ([153.61.198.249])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b41ad46ef5sm29921315a91.8.2026.11.25.17.17.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Nov 2026 17:17:55 -0800 (PST)
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 26 Nov 2026 01:17:54 +0000
-Message-Id: <DN4QVSWEI27E.32PRRHCUBAZFK@gmail.com>
-From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
-To: "Tiezhu Yang" <yangtiezhu@loongson.cn>, "Daniel Borkmann"
- <daniel@iogearbox.net>, "Andrii Nakryiko" <andrii@kernel.org>, "Eduard
- Zingerman" <eddyz87@gmail.com>, "Kumar Kartikeya Dwivedi"
- <memxor@gmail.com>
-Cc: <bpf@vger.kernel.org>, <loongarch@lists.linux.dev>,
- <linux-kernel@vger.kernel.org>
+	dmarc=none header.from=loongson.cn;
+	spf=pass smtp.mailfrom=loongson.cn;
+	arc=none smtp.remote-ip=114.242.206.163
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CF9B606A31E
+	for <loongarch@lists.linux.dev>; Thu, 26 Nov 2026 02:02:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9CF9B606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [123.138.236.242])
+	by gateway (Coremail) with SMTP id _____8AxqLUfkwdr1BsjAA--.6383S3;
+	Thu, 26 Nov 2026 10:02:07 +0800 (CST)
+Received: from [127.0.0.1] (unknown [123.138.236.242])
+	by front1 (Coremail) with SMTP id qMiowJAxFs0ckwdrMGk3AA--.52566S2;
+	Thu, 26 Nov 2026 10:02:05 +0800 (CST)
 Subject: Re: [PATCH bpf-next v1] selftests/bpf: Restrict JIT tests to 64-bit
  LoongArch
-In-Reply-To: <20261125103208.15242-1-yangtiezhu@loongson.cn>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Eduard Zingerman <eddyz87@gmail.com>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>
+Cc: bpf@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
 References: <20261125103208.15242-1-yangtiezhu@loongson.cn>
-Content-Transfer-Encoding: 8bit
+ <DN4QVSWEI27E.32PRRHCUBAZFK@gmail.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <d308dec5-a310-344b-7ff5-0e67e118d9b8@loongson.cn>
+Date: Thu, 26 Nov 2026 10:02:04 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -104,26 +58,54 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+In-Reply-To: <DN4QVSWEI27E.32PRRHCUBAZFK@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:qMiowJAxFs0ckwdrMGk3AA--.52566S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrKw1kGr1ftF4fGFykJFyUtwc_yoWkJrg_uw
+	4xGryrCr1UAryqy3WFgF1FyrZrJFWDJ3y8XrWfXrZ7uas3Ja1rJFs5Gr1fXFy7JrW0kFn8
+	Gan0vr47XF1UXosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb3AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8
+	JVW8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
+	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v2
+	6r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
+	CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
+	0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
+	AIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIev
+	Ja73UjIFyTuYvjxU70PfDUUUU
 
-On Wed, Nov 25, 2026 at 02:32 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
-> Now that 32-bit LoongArch support has been added to the kernel while the
-> eBPF JIT remains 64-bit only (HAVE_EBPF_JIT depends on 64BIT), limit the
-> BPF JIT-specific test cases and architecture macros to 64-bit LoongArch.
+On 11/26/26 9:17 AM, Alexei Starovoitov wrote:
+> On Wed, Nov 25, 2026 at 02:32 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>> Now that 32-bit LoongArch support has been added to the kernel while the
+>> eBPF JIT remains 64-bit only (HAVE_EBPF_JIT depends on 64BIT), limit the
+>> BPF JIT-specific test cases and architecture macros to 64-bit LoongArch.
+> 
+> Most of them are not JIT-specific.
+> The interpreter runs sdiv, bswap, movsx and gotol.
+> The default build of test_progs fails against such a kernel anyway.
+> dummy_st_ops_success.c takes struct bpf_dummy_ops from vmlinux.h,
+> and that struct is under CONFIG_BPF_JIT.
+> raw_tp and kprobe progs can't load there either:
+> 
+>    select HAVE_PERF_EVENTS if 64BIT
+> 
+>> This is a cleanup patch, inspired by Sashiko AI review:
+>> https://lore.kernel.org/bpf/sashiko-outbox-228693@kernel.org/
+> 
+> That comment is about the new guard in bpf_insn_array.c.
+> Nothing is broken. I don't think we need this patch.
+> Pls don't change 16 files because a bot said so.
 
-Most of them are not JIT-specific.
-The interpreter runs sdiv, bswap, movsx and gotol.
-The default build of test_progs fails against such a kernel anyway.
-dummy_st_ops_success.c takes struct bpf_dummy_ops from vmlinux.h,
-and that struct is under CONFIG_BPF_JIT.
-raw_tp and kprobe progs can't load there either:
+OK, understood, please drop this patch.
 
-  select HAVE_PERF_EVENTS if 64BIT
+Thanks,
+Tiezhu
 
-> This is a cleanup patch, inspired by Sashiko AI review:
-> https://lore.kernel.org/bpf/sashiko-outbox-228693@kernel.org/
-
-That comment is about the new guard in bpf_insn_array.c.
-Nothing is broken. I don't think we need this patch.
-Pls don't change 16 files because a bot said so.
-
-pw-bot: cr
