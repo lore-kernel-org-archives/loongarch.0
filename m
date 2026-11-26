@@ -1,67 +1,73 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=93.77.172.68
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795688140;
-	b=pkdovMaDIToy/Zf/5WYlZsYfmHrTjdQnbC4KmMCxgHdMxfI+4K7IEe23SSip1Ezh8CN1
-	 EIQGWVkMpboffyeNlNRU1uJ0ayQvCDPeqgPj1A7EYSEUJAnfbet7nnAZZZ+AUukmoVpGG
-	 Xg0n1RZU4ryvgUKRHKhXm02uFDUPgIkS2oyGVSb5HrKea9BZjClUMp/XQLVL6UdF0m2GO
-	 7bsnvd0pB1mgTkh2KAT47hUkP5R7bAGcM0RKZEm6bz7RoLCWsibO8uiT9H4aZVFtTgqul
-	 MzIRbYnBb7wdcxDIzxnFbxa1FwByqfp8X683Q7+fblaFDxdvsLeyDjFBCD4L0TC+pWw==
+	t=1795688886;
+	b=IQH0PJErX4wnTNJv7B8bIHS6qOTsUUMfF+Nt4EB+1vVQ0ocBSfujkHiu6OYji9DUFWtY
+	 NkZV7TKBt02l5fkczr+0k+gQ97EXh8zY6cmQC3cyg5sRFvC++DFjAvi+fafSXIUbzPGB3
+	 v/2YckdMtHR63Ol/616ic/0+HmES97xn+iYTQkqfjYpQNuhC9TwQonteeRJsOPH+zJYAZ
+	 Sj6V5UyPqcUaoyxIzJxkCtK+88aVy0zeq7yKYgwQKLFyqWFMQAxB0YqBIswrjJx77aHca
+	 uwQaBOGgXJ4gb0VDxFf0JE28np5x+aN2b0xqhRJGPzmC+Ij7RN6b45V8YJ0Vl4Zmogg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795688140;
-	h=DMARC-Filter:Received:Received:X-Yandex-Fwd:DKIM-Signature:From:To:
-	 Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=6VTmwgM3jPKMLJbdQSkA0PURopOAUivqXzDuEiYHuBc=;
-	b=Ft/MQc6JvjtJa1dvQN5YRoh3LbNJSO4pxw39lRasfr7tkE/SDW8mB4VVDWDLdT1crXtb
-	 gfYhO2gKGbGRFJuhZ3Nhmgv9YhUCMY9xI1RvPlH5veoq3wDLF7F3YfuPIyHgBI1PUQNDU
-	 ommUCGdErSTkvTHm+7PJ5xPr4YOT5QIuVvxMtUiIK1kwk9Viiwxjwjil5vx2Ft9smKW7S
-	 hU0rAPsdtfiz58l0246L7w8cmKHvTxvGNsuHBTRKET0b1fOLqAjp1hU/3/jI0agp+LGnJ
-	 RwhNJFl0e6uCYNWqKdQmjkTDf7k1uZd/iq0AWkYRyKosOoQKNs1ltKkOLQblvQTQmAQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795688886;
+	h=Received:DKIM-Signature:Received:Received:X-ME-Sender:
+	 X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
+	 MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type:Content-Transfer-Encoding;
+	bh=MwPo1SbEkJSMwvyfYZrrVFgF447rpl/A4wWmxlOULV0=;
+	b=AlDXLsAGpYqFrGauXHdW1qgbgP0sxSz5UCYFEi3hGQ35sg2ohBpLutkPpQq3450Gn9wz
+	 UewE7zf0neT/yLiUfZqUL+4cPv1KbfqmrWuL3h64pqPbGHE7Fj0JK121hHUnXDQEMdcBQ
+	 aLoNjsGkYoRhKuY/3DmPi17G6uo2S3qijsEXk6xS0TQexGOYuL90N+9TV/v7NvjZRt85M
+	 RZvqEeMkHnM3Fift8kx4wi0+sB+C52vCkppwsmkZL8fReRcm7IlFmwCMok8sierwUZuzo
+	 5GPpPm64DLMt51LJv5uCqoOfbhhhwqFVn/Isz6byuOet644osFtRW8I2z2ad0hB4ZEg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=yandex.ru;
-	spf=pass smtp.mailfrom=yandex.ru;
-	dkim=pass header.d=yandex.ru header.i=@yandex.ru header.a=rsa-sha256 header.s=mail header.b=St3o9qMW;
-	arc=none smtp.remote-ip=93.77.172.68
-Received: from forward104e.mail.yandex.net (forward104e.mail.yandex.net [93.77.172.68])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mf9bmvjl;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EF0A606A31E
-	for <loongarch@lists.linux.dev>; Thu, 26 Nov 2026 10:15:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8EF0A606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C265606A321
+	for <loongarch@lists.linux.dev>; Thu, 26 Nov 2026 10:28:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=yandex.ru header.i=@yandex.ru header.a=rsa-sha256 header.s=mail header.b=St3o9qMW
-Received: from mail-nwsmtp-smtp-production-main-65 (mail-nwsmtp-smtp-production-main-65.yp-c.yandex.net)
-	by forward104e.mail.yandex.net (postfix) with ESMTPS id 31936C04DE;
-	Thu, 26 Nov 2026 13:15:30 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-65 with ESMTPSA id LFfZVbOZPKo0-3Nht8b5V;
-	Thu, 26 Nov 2026 13:15:28 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1795688128; bh=6VTmwgM3jPKMLJbdQSkA0PURopOAUivqXzDuEiYHuBc=;
-	h=Message-ID:Date:Cc:Subject:To:From;
-	b=St3o9qMW7b6FGt3QVXZ+sR5crQHhMxjWWD8KpmP+YUgHArLoHAOSj8atGzyDYbGHK
-	 DXlV9v7nq/Wd+BTGJ4AhuYJ+N2CU2kLvLX8+X5l6CpMcIkzwKI1c9TKqLHHxGG0SAc
-	 igH0K59CQHb9qPK71TzLgvw8jAFFAe4z3FLlUVT8=
-Authentication-Results: mail-nwsmtp-smtp-production-main-65; dkim=pass header.i=@yandex.ru
-From: Dmitry Antipov <dmantipov@yandex.ru>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	linux-efi@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	loongarch@lists.linux.dev,
-	Dmitry Antipov <dmantipov@yandex.ru>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH] efi/libstub: fix building loongarch32 without zboot enabled
-Date: Thu, 26 Nov 2026 13:14:52 +0300
-Message-ID: <20261126101452.590895-1-dmantipov@yandex.ru>
-X-Mailer: git-send-email 2.56.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mf9bmvjl
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 245571F000CF;
+	Thu, 26 Nov 2026 10:28:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795688885;
+	bh=MwPo1SbEkJSMwvyfYZrrVFgF447rpl/A4wWmxlOULV0=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject;
+	b=mf9bmvjl1U5wqTY1mB2O4KUGGnvMNSNncHPpd9/7PgCYmE64gXL3ndShasXNZruGd
+	 IxDmNoqmFmMkJ8tlnc9veBbALhayjD8YhJzQZKkk93XABb3OjpHFVqGCmCisDUgkBM
+	 Vzrpis23XnVfV13EEynGH3TvaCiZ777UCdMb8O9h5znskZbEGFSUjMmUddg+qNujM0
+	 x3r2chqp9a0Qzn/sKb/Myd+DlAGK4Ih10QPP25STNyD5jCM2uWhwEQmbYAAHRFjNBy
+	 Mi9eNL80zJcmU0PBNJdZtabKtd7+C8hNBob5hcmx8o1ti8weAsG6UEbASg+ZPbaWX2
+	 yaYkrTVmCD61A==
+Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
+	by mailfauth.ams.internal (Postfix) with ESMTP id 62E4D1980052;
+	Thu, 26 Nov 2026 05:28:03 -0500 (EST)
+Received: from ams-imap-11 ([10.64.2.31])
+  by ams-compute-02.internal (MEProxy); Thu, 26 Nov 2026 05:28:03 -0500
+X-ME-Sender: <xms:sAkIa4skbmHC73v2upP0f0Op5b8e1jHAKoUja-N3FKGPna53MW40ew>
+    <xme:sAkIawRFbYYwg9SyMFzPIlBjEtoH1k0ACHvTk-9jY7xuWOjiYIeWU02i93ZYBnMeM
+    S8HJ4vlSqfXB2M3q6FU8aFc2c021BF-ZaIpcPRLfZWAJ3moJNR7BQX5>
+X-ME-Proxy-Cause: dmFkZTELNwvqaE9jHxFHcD+ED4o2ETZsR6w/vYVjUWe3YegFlFpLsxmeHQSIJgyNrG1Q92
+    2KRmGRSNfQh+QqEvaylQ+P9l1fmyBlgWvkkl23T/05sF32Y7IIaw2Tze+e72NAlDYKU3Rz
+    QwabmXJTlGrmsSJ5SLS6V7czjl2luBBtYDbtyX0GlTahKj4wz3Gifp1LUUWopLNyklvcs+
+    RKuP/8wZOq3zTTiNIWLWr2s1DhFvmjB6g0krgJ+FgxbOiKMSgHsPB+BuK0EQz+hJxwKvQ2
+    aKj5UlFyHK1KM4ptgQ/xqfO2GhlaO5qCe4Gm+VGHL/fDmxNqzSKwyFVhdmo0it7Oj/DdGo
+    tj1RxFUgagQ2Pqhh/VIp3Zd0Za3xIM0UOt2QcduxjxUNGzRJ6TKGu2R/klDkeQkXWoY9W7
+    mJ8ICcdLM5C47BDNX8mh05ONIhFIlzJUgwFbSpunZzlQhVMp/58G+9o8zTzaKZwKuveZUw
+    DJxQyfrql4cTERNizKplR1KtpHb3dGJXfP0ggeutXzzXH+M62nsYKVhZE/u4VjiDagckOw
+    4CI60LdBLqD4+bWWiWDpHiXtIwSZIV1LAGxDSvfLffFL+LNHhQ8bDfEcE3ivL6jGgPSyAK
+    WMsJ9ono1c2tHJfnY2T/bGTGBhdGcnmeQfb+ztXTNoUb3FiUXMU1isO27ADw
+X-ME-Proxy: <xmx:swkIa4axoGPvjzw1uZZ23X4uvlN0NrivII5g1pa_XT7XKa7Uazmfnw>
+    <xmx:swkIaxqA6gjXk0pq710itYZE3OP_HBqM_4SrgSrud9Bg10sHeQ2MlA>
+    <xmx:swkIa8QqNhbXv00qX_1fInBQ8rik95iTW3zXTqgmbFC59tr89obd5g>
+    <xmx:swkIa1ogEXscMOOoZgkF3tAG1Lo-w2SVT4IcGR_WApA89kW7YeIpuA>
+    <xmx:swkIa229HngrpqPfgPEC1cjJ1ap903UDIBzgl_LyMoj00Bo1ivKSsoIk>
+Feedback-ID: ice86485a:Fastmail
+Received: by mailuser.ams.internal (Postfix, from userid 501)
+	id 4E101F80093; Thu, 26 Nov 2026 05:28:00 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -71,51 +77,63 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Date: Thu, 26 Nov 2026 11:27:39 +0100
+From: "Ard Biesheuvel" <ardb@kernel.org>
+To: "Dmitry Antipov" <dmantipov@yandex.ru>
+Cc: "Paul Walmsley" <pjw@kernel.org>, "Palmer Dabbelt" <palmer@dabbelt.com>,
+ "Albert Ou" <aou@eecs.berkeley.edu>, "Huacai Chen" <chenhuacai@kernel.org>,
+ "WANG Xuerui" <kernel@xen0n.name>, linux-efi@vger.kernel.org,
+ linux-riscv@lists.infradead.org, loongarch@lists.linux.dev,
+ "kernel test robot" <lkp@intel.com>
+Message-Id: <088e4dcc-8f8d-4b89-b33f-8ec39fb857ae@app.fastmail.com>
+In-Reply-To: <20261126101452.590895-1-dmantipov@yandex.ru>
+References: <20261126101452.590895-1-dmantipov@yandex.ru>
+Subject: Re: [PATCH] efi/libstub: fix building loongarch32 without zboot enabled
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Kernel test robot has reported the following error observed on loongarch:
 
-loongarch64-linux-ld: ./drivers/firmware/efi/libstub/lib-cmdline.stub.o: in function `__efistub_.L47':
-__efistub_cmdline.c:(.init.text+0x258): undefined reference to `__efistub___ashldi3'
-loongarch64-linux-ld: __efistub_cmdline.c:(.init.text+0x268): undefined reference to `__efistub___lshrdi3'
 
-Since this happens with CONFIG_EFI_GENERIC_STUB enabled but
-CONFIG_EFI_ZBOOT disabled, tweak loongarch32 build to hook
-extra library objects on the former rather than latter. And
-this quirk seems no longer neeeded on riscv32 because it has
-architecture-specific implementations of ashldi3() and lsrdi3()
-which are aliased to corresponding EFI stubs via
-arch/riscv/kernel/image-vars.h.
+On Thu, 26 Nov 2026, at 11:14, Dmitry Antipov wrote:
+> Kernel test robot has reported the following error observed on loongarch:
+>
+> loongarch64-linux-ld: 
+> ./drivers/firmware/efi/libstub/lib-cmdline.stub.o: in function 
+> `__efistub_.L47':
+> __efistub_cmdline.c:(.init.text+0x258): undefined reference to 
+> `__efistub___ashldi3'
+> loongarch64-linux-ld: __efistub_cmdline.c:(.init.text+0x268): undefined 
+> reference to `__efistub___lshrdi3'
+>
+> Since this happens with CONFIG_EFI_GENERIC_STUB enabled but
+> CONFIG_EFI_ZBOOT disabled, tweak loongarch32 build to hook
+> extra library objects on the former rather than latter. And
+> this quirk seems no longer neeeded on riscv32 because it has
+> architecture-specific implementations of ashldi3() and lsrdi3()
+> which are aliased to corresponding EFI stubs via
+> arch/riscv/kernel/image-vars.h.
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: 
+> https://lore.kernel.org/oe-kbuild-all/20261122125352.gAcg5yLx-lkp@intel.com/
+> Fixes: 442082297e3d ("riscv: fix building compressed EFI image")
+> Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
+> ---
+>  drivers/firmware/efi/libstub/Makefile | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+>
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/20261122125352.gAcg5yLx-lkp@intel.com/
-Fixes: 442082297e3d ("riscv: fix building compressed EFI image")
-Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
----
- drivers/firmware/efi/libstub/Makefile | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Would this work as well?
 
-diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-index bbab12b8eb4b..77f0d3047b95 100644
---- a/drivers/firmware/efi/libstub/Makefile
-+++ b/drivers/firmware/efi/libstub/Makefile
-@@ -97,11 +97,11 @@ CFLAGS_zboot-decompress-gzip.o	+= -I$(srctree)/lib/zlib_inflate
- zboot-obj-$(CONFIG_KERNEL_ZSTD)	:= zboot-decompress-zstd.o lib-xxhash.o
- CFLAGS_zboot-decompress-zstd.o	+= -I$(srctree)/lib/zstd
+--- a/arch/loongarch/kernel/image-vars.h
++++ b/arch/loongarch/kernel/image-vars.h
+@@ -8,7 +8,8 @@
+ #ifdef CONFIG_EFI_STUB
  
--zboot-riscv-obj-$(CONFIG_32BIT)	:= lib-ashldi3.o lib-lshrdi3.o
--zboot-obj-$(CONFIG_RISCV)	+= lib-clz_ctz.o $(zboot-riscv-obj-y)
--zboot-loongarch-obj-$(CONFIG_32BIT) := lib-ashldi3.o lib-lshrdi3.o
--zboot-obj-$(CONFIG_LOONGARCH)	+= lib-clz_ctz.o $(zboot-loongarch-obj-y)
--lib-$(CONFIG_EFI_ZBOOT)		+= zboot.o $(zboot-obj-y)
-+extra-loongarch-obj-$(CONFIG_32BIT)	:= lib-ashldi3.o lib-lshrdi3.o
-+extra-obj-$(CONFIG_LOONGARCH)	+= $(extra-loongarch-obj-y)
-+lib-$(CONFIG_EFI_GENERIC_STUB)	+= $(extra-obj-y)
-+
-+lib-$(CONFIG_EFI_ZBOOT)		+= zboot.o
+ __efistub_strcmp               = strcmp;
+-
++__efistub___lshrdi3            = __lshrdi3;
++__efistub___ashldi3            = __ashldi3;
+ #endif
  
- lib-$(CONFIG_UNACCEPTED_MEMORY) += unaccepted_memory.o bitmap.o find.o
- 
--- 
-2.56.1
-
+ #endif /* __LOONGARCH_KERNEL_IMAGE_VARS_H */
