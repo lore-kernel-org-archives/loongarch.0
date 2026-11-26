@@ -1,95 +1,73 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795703466;
-	b=hjYeRyApjR8KGmXB3Ok4x6E83uYRu5uC4UYz5k0enGQWjEJQMa1HFq1UHG394J6iVIlJ
-	 zMtxA75dFgIZIraCUaT+0YZ9KenZpRh/oLYzFswdY9NboP6THiU3BemW3hr1jFctvPVrf
-	 eKHpZASw6qMy0X9TjcjKBwVplOwPtJorA0bjdF375+Il5lQcjI/M+17OZEOqVUUL0v4P6
-	 SfRB9aI5nEYEZKmhPwYHRivBWxRSd7QVRDSvtiVsMICuIwwDb1yZKFkqFkWY04R7C04ye
-	 +0YMqzfaOWvhw7EtnP7rbeDq2jCCo7s61kbgM37lmOOpf2LsNCZQYcmHeEf8Begu/LQ==
+	t=1795704298;
+	b=EBZo1VJBmAKZjiLHCWj0PVo/YTSCyH5Uli1YfvyCKWOWq9lsKDKg9k5ya6fw72AwFk0+
+	 BdkSossIaq+ZGAG5njMd9igANzVUDIg7h8atLJLXootLeGyPA1A+bb3qm6eVg/K9muUhd
+	 0JThtsoWTC0tLSZLWLMjVaffhJhQ6UrevEzp8YATEr+ENcH4U8zaPEKWXR/luLP+wNrgc
+	 Hv7h1smQenEb7uV9sBx0WKqaiGqJ4GVvHkGubYJFA5YoB7iex4xon9r3bK5eUkYqdkhWg
+	 eeVzdvxcEZcJMy3Zv5t3ClW9EIbNdsmXgnTMiJiel+C/pY2EEDXqVaaavhmg1f5c0yw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795703466;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=S5r3XjtXFsLjzzhMzj390HKNPBHceWrZJqEAhyaam0k=;
-	b=Aj1GV63d15jG2NbH4/SsSfBccC/HgVwcvBR0taqKClwRS5xsUFoQTqKjtQiTdhH5WuFv
-	 irBmzUpCEMXrispNvw3xBKXBe9JsSk6M+LGDbEZ7hu5JPyMAKzLhCA4WHNyzDSj8IwfFP
-	 ecSu6tQcSr1UjP0Ujrs4l3F5bOm29SrDY5/6dwX/gHhxx63c5OgHRTlUqFT8aMEBiNMsE
-	 vksJqUo4oiALZ3DbWt0Y+Q+8NGzCOPEHblB74Jf+9/sMtN6Y9FLvBsOy26aA7ofcrUhi6
-	 pcHPe/v8PhFj0FQxTxWWULU9zktvt/RlcVES7Kw4odWfQ+ZeFoTAQaTIc3kpCto4bJQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795704298;
+	h=Received:DKIM-Signature:Received:Received:X-ME-Sender:
+	 X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
+	 MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type:Content-Transfer-Encoding;
+	bh=s1k9jwR9uYBykaap37kvFY66tPX/046DsSECGuk7lXo=;
+	b=ig6PGe6qcf4dSSkWy9cmss/y+K42n2QZigAZyOH7TYHwx+NMavTs4D5A/cPacYcHgK84
+	 3S2Wj8cT4o3FgrGGwP8c+DPXruSgkYPy5BN3QSh1pUnNPCDBRzx4KTYGxF/qDC09zrA0c
+	 uNUOoXuJgD4C/6zQER+IEzUCfDK7yijzMHYh3iEEJZJes+vWwxuQL0PclPoU4XliGoD+F
+	 SPhHugpPJYzkFlPoLS+8NR4IpjUlAYFVe22MvH0t02L4j9wJDhkVpIiFkl+OKPmSzKkGy
+	 oXpWiGIUhfxnJxqU73HewEkVlpaiXc38sS24KOrLKeQbI6ROAyu+UAf2tV8P57VPyuw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=arm.com;
-	spf=pass smtp.mailfrom=arm.com;
-	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=LVEeRbRa;
-	arc=none smtp.remote-ip=217.140.110.172
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E51F9606A69A
-	for <loongarch@lists.linux.dev>; Thu, 26 Nov 2026 14:31:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E51F9606A69A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RTv7s221;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECC05606A31C
+	for <loongarch@lists.linux.dev>; Thu, 26 Nov 2026 14:44:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=LVEeRbRa
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CE2881BA8;
-	Thu, 26 Nov 2026 06:31:00 -0800 (PST)
-Received: from e129823.arm.com (e129823.arm.com [10.2.213.3])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3E9F83F86F;
-	Thu, 26 Nov 2026 06:30:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1795703463; bh=Gh8fyK7BLAji0Po7ndrDo9Z/I+fzSOToLbTFsVx3zZg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LVEeRbRacat2kmxF2QkCxag4t6jAyhtj4S+xDo+pF7fMr1Tz/HhujzVMY5tHehXMU
-	 qCzCPO6R0EVjS9S8Iu8MQu60xg6xWeReC2v+YlZNpk+tZF0qOlBkj1aO4wtTScfy+Z
-	 21pgcGpco2AGab9fHjE3qak7bp9yODvWbgfJ3hW4=
-Date: Thu, 26 Nov 2026 14:30:54 +0000
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Yeoreum Yun <yeoreum.yun@arm.com>, Mike Rapoport <rppt@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Barry Song <baohua@kernel.org>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>, Anup Patel <anup@brainfault.org>,
-	Atish Patra <atish.patra@linux.dev>, Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Jonas Bonn <jonas@southpole.se>,
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-	Stafford Horne <shorne@gmail.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
-	linux-openrisc@vger.kernel.org
-Subject: Re: [PATCH RESEND v2 12/21] mm/pgtable: redefine PGTABLE_LEVEL enum
- with ascend order from PGD
-Message-ID: <awhCnpiUc1R_BLx4@e129823.arm.com>
-References: <20261102-dummy_ptxp3-v2-0-78840b2ec73c@arm.com>
- <20261102-dummy_ptxp3-v2-12-78840b2ec73c@arm.com>
- <awXD4i47F-VAG1tD@kernel.org>
- <awXc0MSZl9t9VW8e@e129823.arm.com>
- <682c765f-332f-4ac2-b448-4201c8fae6fc@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RTv7s221
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FA0E1F000CF;
+	Thu, 26 Nov 2026 14:44:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795704297;
+	bh=s1k9jwR9uYBykaap37kvFY66tPX/046DsSECGuk7lXo=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject;
+	b=RTv7s221Z19s5FSW7lxjLnVzl/8cXRUIubBdHfxjexONZtracFVvc8PaCmkgtcXLo
+	 m/FKs8MNCt5fnbDdO6m5HvOKxkQ3FFYLpKzbkr0kqDglOtEzHzwaBXHZCLnHblMvAp
+	 x2OIgWUJN73CtOt/XYSA0KjqqGhsaifiOOrxOIrcj2p2gSYLiiif1QKgtIt2RmbiB4
+	 XFrEvi3lMHOPDTs/G+WHoq4ddQRhrdKWWvhh+HYHAgmHcMKLpHk6YkF86czdy4KfZ2
+	 xFiLeOEYEVs6x2g5Yzeu1mXXTmSQeg1vk96ZsmnPYV1RBOU+024g/didpJwl2zqrHW
+	 77/0b9guVomxA==
+Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
+	by mailfauth.ams.internal (Postfix) with ESMTP id 9D61F1980070;
+	Thu, 26 Nov 2026 09:44:55 -0500 (EST)
+Received: from ams-imap-11 ([10.64.2.31])
+  by ams-compute-02.internal (MEProxy); Thu, 26 Nov 2026 09:44:55 -0500
+X-ME-Sender: <xms:5UUIazjroOeS_NsqlK_KvoNCmuF0--07hyj1FC9-zhKbtGmErI9d6Q>
+    <xme:5UUIa61KB3aNNdub0HDwCyq7kZbjzWjdFjHRJO6uDyWHj0CztMtuX7IXWpiWulGq1
+    xIAOJhR4Svby19-zeq3RAs0_PioAyCe4OfJNkKVbBwj94R8Qlb3jn_s>
+X-ME-Proxy-Cause: dmFkZTFR+pwCH4Jkqo7TrZP06wxT5ArJMD5r0dWWU5tsBlAXr+vN/V4bqjkR1v9E4NNLcC
+    hX+u7qY6qxhTd5Mo/9k679ni9lsQHgQ5ovWLCya94hwULz0lN1S4fziBVYl0zwEE03vZW5
+    HnT/6oic/daFioWCdu5/5zVxLOi/fHWlA5PmrgFzXCpDOHQX4poq2Brkcs+GiSJSNJfmW+
+    Lv+e/I1MY5UiLyVykzK7vNP2mr29dHV0oCDsp5HXqqCZA1d84mUNJfviDDeZ45BSifMI5l
+    MunesqkVHDK2kPQC7Onuh0dWiqMOB73nJBkszoqgWDzShYEb6iN3Gzovd7amVl7N4FVBq5
+    7iv9koEsQbXImZWSqR0CVW/GMIijvYA46yzRyIkGlLSZzFldVLWeslPW6UoNiajtP6TnoQ
+    GVGKlOapXkSVJgEgdCrx+mrWD+Z1a+HSgMq+b+j+301IlN0PDVYaew5PF0USiY6IUZatJq
+    BHWPXGJXc8S7yrvv5caO5yBrFUKgwmVaQV2w+WvdRuud8sD7noR9bHLLcQhIS6cHvsWS3J
+    TokAJy83SVYL+JiuluRHTOqw1uYle6ETbkLqJezq2ujXxIhTs4UlIu6giXvbP8VNmknVLL
+    TTBM9VmtMpw9fiBS9ZH3kkcKahGOLA68nAn0+DUMe45JzysHyjxb7BakuksA
+X-ME-Proxy: <xmx:50UIa1jcpp757eEySbS1h-Stb1TDNtp8lytqbW5iuIpjFXhx-Lyl6g>
+    <xmx:50UIa08AU3eif_K2L7ENvDOZYWuSPWIIs6fIX_RzbytzpP_Yr36euw>
+    <xmx:50UIa0GSejmNYrxj9TewyUf0W09N0LtD4dYvLfMAPwcpeXE6n1yCIQ>
+    <xmx:50UIa_mvUMmHJhaRYAgfCbZ13Z1YTxu9bKT53WV_sF7OrsXwiZs4WA>
+    <xmx:50UIawZ_REgSAEznCIMp0x3r1Riroon7n49stcMnPpHROLlHy1EXV8Dz>
+Feedback-ID: ice86485a:Fastmail
+Received: by mailuser.ams.internal (Postfix, from userid 501)
+	id 98EA8F80093; Thu, 26 Nov 2026 09:44:53 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -99,49 +77,34 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <682c765f-332f-4ac2-b448-4201c8fae6fc@kernel.org>
+Date: Thu, 26 Nov 2026 15:44:33 +0100
+From: "Ard Biesheuvel" <ardb@kernel.org>
+To: "Dmitry Antipov" <dmantipov@yandex.ru>,
+ "Huacai Chen" <chenhuacai@kernel.org>
+Cc: "WANG Xuerui" <kernel@xen0n.name>, linux-efi@vger.kernel.org,
+ loongarch@lists.linux.dev, "kernel test robot" <lkp@intel.com>
+Message-Id: <97a95c9d-6736-4eee-ac9d-cbfb47d60492@app.fastmail.com>
+In-Reply-To: <1ae25bcf-0d13-4aa3-aaf0-b367444f6719@yandex.ru>
+References: <20261126124145.876953-1-dmantipov@yandex.ru>
+ <534a9786-8594-4f0b-8ce8-ea1844581c0b@app.fastmail.com>
+ <1ae25bcf-0d13-4aa3-aaf0-b367444f6719@yandex.ru>
+Subject: Re: [PATCH v2] efi/libstub: fix building loongarch32 without zboot enabled
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Thu, Nov 26, 2026 at 03:19:13PM +0100, David Hildenbrand (Arm) wrote:
-> On 11/24/26 19:52, Yeoreum Yun wrote:
-> > On Tue, Nov 24, 2026 at 07:05:38PM +0200, Mike Rapoport wrote:
-> >> On Mon, Nov 02, 2026 at 11:21:25AM +0000, Yeoreum Yun wrote:
-> >>> The PGTABLE_LEVEL enum values appear to be ordered in the opposite direction
-> >>> from their intended usage.
-> >>>
-> >>> Intuitively, higher page table levels should have smaller enum values,
-> >>> but PTE is currently assigned 0.
-> >>
-> >> That's not what x86 thinks :)
-> >> They even expose it in /proc/vmstat with smaller numbers meaning lower levels
-> >>
-> >> $ grep direct_map /proc/vmstat 
-> >> direct_map_level2_splits 152
-> >> direct_map_level3_splits 4
-> >> direct_map_level2_collapses 0
-> >> direct_map_level3_collapses 0
-> >>
-> >> Just an observation, I don't mind either order.
-> > 
-> > Right. I made this change because a depth-based scheme seems more intuitive.
-> > 
-> > As you pointed out, though, the x86 specification uses smaller
-> > numbers (0) for lower levels (pte), so I think we can leave the
-> > x86-specific direct_map_* entries as they are.
-> 
-> patch #14 depends on this, no?
 
-Interestingly, x86 documentation numbers the PGD level as 4 or 5,
-whereas helpers such as effective_prot_pgd() use 0 for PGD.
+On Thu, 26 Nov 2026, at 14:16, Dmitry Antipov wrote:
+> On 11/26/26 3:53 PM, Ard Biesheuvel wrote:
+>
+>> NAK to the changes below, they break zboot and need to be dropped.
+>
+> Hm... I've tried a few configurations with/without CONFIG_EFI_ZBOOT
+> and found no linking issues. Do you have a configuration to test?
+>
 
-Anyway, this follows the usage and semantics of effective_prot_pXd(),
-rather than architecture-specific level numbering, which varies across
-architectures.
+Build the 32-bit vmlinuz.efi (EFI_ZBOOT=y) target for either architecture using GCC.
 
-And yes, patch #14 depends on this, although changing the condition to
-level != PGD_LEVEL would remove that dependency.
+But actually, let's drop these intrinsics library routine. I'll send out some
+patches that fix this in a different way.
 
--- 
-Sincerely,
-Yeoreum Yun
+
