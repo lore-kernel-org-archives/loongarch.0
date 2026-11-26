@@ -1,68 +1,98 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.131
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.182
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795672473;
-	b=Ob1p32yxJCQLxsKmF4o5rBlw17UmoL6D8h/hwDRE8KICOoh7RnRWEK/7vt4vSm05RYPz
-	 b1o0RBZJ2YgHNcBsXGZep9TRH12DQ7GoS0agAu1QzGwGRY6cbJbJlGk4RFrVIhAT1ftZ+
-	 SRhZO43uFV1vAX4xPRg1n8AwyP4cisH+KbRF/TlCbCTH2IrVkLzL6f+LHNRfR9gtAxS9P
-	 6wyGoGXY22lzEqNMGwWVOTG6TqtCDmIEXJunpD2IeOhpum1IQAixgWBrAI82DqAEgL4uz
-	 wGBlcl2T8lGRvs/It7L3ZgLHUIY14+5Jh4JMX9gUh6jHl72ruMjhWikY+DMqi0aZ7LA==
+	t=1795673206;
+	b=BUCUnb0+ek682u6iJ3Zx+hMI+CLVuoYzQgsgcsKRZZVPRn0/va++ulKfAXEiSDIeIa9c
+	 B7r0Ok9ELq8VWGRt1F73g1mUKvU8x3hiQ+FIJdT6SpP0McgSo+WgU0coMnKQInV4FTFHV
+	 G5qObhOja37uJ/n5+6KqoQoThZRV6RKILqBTZLuSipTOIusKdE/tXicixOAjeS60E8oKS
+	 GziQWh0x3lr3lGCMwNKWiwU/VX+AbHdfmW9J1oshQMEysGnBqO60YaBa17dkX9wE81Idi
+	 CcUHzz4sl6Czx0qv/J2pBVt09qv4mdh+wovUmMILlsR+Vm/aIVAAkdx6IKBcqrtLP0A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795672473;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=/G3zvhNkKdmfVKtWob86Zyxb5hXbqb/ix8g+eNQ40M0=;
-	b=Rmn93BC7/sB8+XMrqfKjhO44LtVVSUKytJ9kPFP9jnabJbwUrDM9bxr9ea6PKpqd5k3U
-	 F4pszkU8TrccGxHWLA5r6AURo7aVG5rMQcMyXwCRkvNPMyJ+36/5Gu++e+Kef+udFiAty
-	 twPqGiKRCF1VlyPdZf6rBlKYURauxOXgjXz1EFvDe3A4+Y5Wv9UrqW7IdqYM9Vius0DVC
-	 NTMkZLAJTrcuSH2LrM5L9LGU6JA/ALffR26fiZvuQGcTkad5X8tvEqTPyBbb4wCh7R57M
-	 N6NTXeWpjQFvdTEZBLauVkknDUsc8qF+NsjfdcypRGI+CfskLzjBc35fuVab9GyA2gQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795673206;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Content-Type:Date:Message-Id:Cc:Subject:From:To:In-Reply-To:
+	 References:Content-Transfer-Encoding:MIME-Version;
+	bh=rgZI8bJgZuUFpcROH1WhHUr+AAZ6H3onNQ6CGieUEr4=;
+	b=GOWkOynKBuYHvrPa/FceIGVTWhXjOM9GBD8IkmO/hQ6TCXOkjpejS4dRR3gSnirg/blj
+	 SUmiX20MbjXNFQS9V7TzhnPKogJf9DgzkYY8ImxFuvU5GbFLoM+blORt4yShb0U23GAka
+	 abzihEFLuqGqT93vJSc8GJosJow/sSqSrjdRR/lTPU5ZyJfsktPLMb1T1OIbPiuDDiHIY
+	 p5IoIlmQq+a+aMvlkWtbf56l4HZ/KzwawnC99oBGvi71f3tZ4M6jJ5iyIj3CP35RjaVeZ
+	 wN3pJ6z/JH6xg6ZknLWJScozwmy5BsB7VnmsYDdHTgh93faVFRO7nfKPBtPFsXrrs6g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=EzcYUoGK;
-	arc=none smtp.remote-ip=91.218.175.131
-Received: from mta0.migadu.com (out-131.mta0.migadu.com [91.218.175.131])
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=iOvDZxXQ;
+	arc=none smtp.remote-ip=209.85.214.182
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA40B606A321
-	for <loongarch@lists.linux.dev>; Thu, 26 Nov 2026 05:54:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EA40B606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B76606A321
+	for <loongarch@lists.linux.dev>; Thu, 26 Nov 2026 06:06:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C0B76606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=EzcYUoGK
-X-Envelope-To: loongarch@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=j+OWHMnYCCCssvX3Hkh8piXzgwLU6h/W1B5YRlmfKt0=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1795672470; v=1; x=1796277270;
- b=EzcYUoGK4JShYalgMxVDzBGCXerkjRT16QYXJMN/V6fkQxbSIHkXZbDdrTdZstiicUBpv20V
- TcCQlIKgH5/wTJ+dlPnsrEoVQLoAEfjmMzaX4lOyIOMHh/YFx9slgN1HUNMUBSmcav7Z0wluPIg
- jgWGbqjmjPPT81xlT7BzWZPc=
-X-Envelope-To: loongarch@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 54099c44540c3c32;
-	Thu, 26 Nov 2026 05:54:30 +0000
-X-Mizu-Trace-ID: 54099c44540c3c32
-X-Migadu-Flow: FLOW_OUT
-From: George Guo <dongtai.guo@linux.dev>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	eddyz87@gmail.com,
-	memxor@gmail.com
-Cc: bpf@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	George Guo <guodongtai@kylinos.cn>
-Subject: [PATCH bpf-next v1 5/5] selftests/bpf: Enable arena atomics tests for LoongArch
-Date: Thu, 26 Nov 2026 14:53:54 +0900
-Message-ID: <20261126055355.9967-6-dongtai.guo@linux.dev>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=iOvDZxXQ
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2f048476ab9so47137375ad.0
+        for <loongarch@lists.linux.dev>; Wed, 25 Nov 2026 22:06:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795673205; x=1796278005; darn=lists.linux.dev;
+        h=mime-version:content-transfer-encoding:references:in-reply-to:to
+         :from:subject:cc:message-id:date:content-type:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=rgZI8bJgZuUFpcROH1WhHUr+AAZ6H3onNQ6CGieUEr4=;
+        b=iOvDZxXQWGnzA2eLsqBqvBIOjI0dad7/mgN0uruzdCaW+DrAU9wy7bIkBrfy7xd/YZ
+         BObEsGKeNnkZcgNHCuFeSaIIFycQ6UAs7ho5s3PosuyFJ2Sr4tHOnrftCmegOXPhsNRy
+         eeQWlxaxf3F3Mcl3sMcaCp9wjimXrAiuLjF3aNNZOfeuNDgnn4nZQVXWbTmnc7nhHV1g
+         w5tOGFwviVbLNoMvaek17yYoMjwlwizIebPZXQNGBfqTX21zWywsZwpJmzAIvHlKnhZ5
+         JnrAKxX82/EgTsr2nT7enE4a7QATBwKB7hbfA87F1YsIbPnhOcLCljab6Y2U2+A4MdIp
+         sOEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795673205; x=1796278005;
+        h=mime-version:content-transfer-encoding:references:in-reply-to:to
+         :from:subject:cc:message-id:date:content-type:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=rgZI8bJgZuUFpcROH1WhHUr+AAZ6H3onNQ6CGieUEr4=;
+        b=RUGEDTejA0Ebw96ApiulFT8nA8rMlyASPJNJQaNtq2BpxHgGWiruiJBDD8gnn6rPJf
+         B/CyStomRYtq65BSr8vesejrl9XspJ0GH0dg4Z7YG2cZnpPs1z+OJiet4uYvMXzs75He
+         t+9Lt14du9FtD/wY7ApI3Xvp/g6HKfSwRAICNyPKqkkrHPs6D0Fxndq63+pTaPFU/4oB
+         GghPikuAof3hA4pAkYm0VZ7NnJR0iJ4C6ILCLZGxF+rTIW3WX4FDr6SVmBEPCUiufAR8
+         3bl3VLQYjFye2xC+Bw57ZxIMu7PD0Lo3YQtRh3Z1gP7IMshJyZCDFz9oE1XihjRcd4Tx
+         0XhQ==
+X-Forwarded-Encrypted: i=1; AL+hErFo1ZKliunnCF8z3la8rBQ8c421vkFbc9EF3eQd/9or0Gm3nDofEVwk/WS1V/rDWwOXdOgF2eZrM5g=@lists.linux.dev
+X-Gm-Message-State: APuU4Z9ewjO3KdYg44G8Zebvv0th1NSgGhTZpTGJlA04538OxhJxhCHf
+	HPE1MJAgEEbmAhyuQpmJF6X22P9cdWF0r+UaCdRsasmvmrUb8E9sZ3ml
+X-Gm-Gg: AZFdTZcSJB00kHscK0fVWW2sBiJAxaBKWDAUuuM8LMOfOSKPIV3OfU9QlSfbJF0UOfS
+	UH6LlsGk9RLbspYB7sdeZEtwENH1+N5BGe05LjeswN0vkeVo0Vvd+QnTtJQXQVyVbVo+i010NgQ
+	pju+sCoTZU3TimOmyhcpq9Ye5vTsPtTIbYrn7deWcnGHqm4EE3nPEoC8yOyqkrQiiTL3OtTp4ig
+	Ldi/jFOdzSnOJFPr/M7JujxIBe3QLyeOnalRdzk15sHtIu5qqUIpqgaVCkjYlBtLAFHLn+Jc91o
+	UcdtPTl1JY0EWEAdwi/XDqanJtbURWWH1f1kanJkV6JVGbyrbvpNsxVaxd3OHT+6ZdG9sHb6LLp
+	HEzGtUltW000yg4l+XZFmM9LMbOxBlGsa0P+hzzPrEuWNhMGvBqRxfDGnohZsnGbs7+CVjfdnDd
+	epqfsvoMed5/Z7jkBMXCiCF5XUu0ESMhIG2HQNutk8AG8HvcJ7c2djDdK/vyS8X20Kr06ZvTxbu
+	32Jvx9i3o93pPF3+4K6IDWdekkUkGFvOV2N2AWSxdNF44cDIdlA5WAOImDUgIVkM3QIPBu66tko
+	Sr4hySOVJ43AR8mLKUOm5QlLBCJPwlZOhEkN1PsD9vlqn0Eipysvtm+xlW7rHe4eOY7MKkrk/UN
+	CtA6KLFGXj8/Uf/joIMnjs9qITloBw7mnEVG+
+X-Received: by 2002:a17:902:da48:b0:2ef:d1ac:c97b with SMTP id d9443c01a7336-2f03f19372dmr200960655ad.61.1795673204870;
+        Wed, 25 Nov 2026 22:06:44 -0800 (PST)
+Received: from localhost ([153.61.198.243])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2f0b58fce71sm44555485ad.45.2026.11.25.22.06.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Nov 2026 22:06:44 -0800 (PST)
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 26 Nov 2026 06:06:44 +0000
+Message-Id: <DN4X0XRWTM33.F4T4JF23X58I@gmail.com>
+Cc: <bpf@vger.kernel.org>, <loongarch@lists.linux.dev>,
+ <linux-kernel@vger.kernel.org>, "George Guo" <guodongtai@kylinos.cn>
+Subject: Re: [PATCH bpf-next v1 0/5] selftests/bpf: Enable private stack,
+ large stack and arena tests for LoongArch
+From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
+To: "George Guo" <dongtai.guo@linux.dev>, <daniel@iogearbox.net>,
+ <andrii@kernel.org>, <eddyz87@gmail.com>, <memxor@gmail.com>
 In-Reply-To: <20261126055355.9967-1-dongtai.guo@linux.dev>
 References: <20261126055355.9967-1-dongtai.guo@linux.dev>
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -72,81 +102,12 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: George Guo <guodongtai@kylinos.cn>
+On Wed, Nov 25, 2026 at 09:53 PM George Guo <dongtai.guo@linux.dev> wrote:
+> This series enables the BPF selftests for the new LoongArch JIT
+> features, and fixes a libarena build failure with clang 19.
 
-As the LoongArch JIT supports arena atomics, add LoongArch to the
-architecture guards of the load-acquire and store-release tests in
-arena_atomics, and of the spmc and bitmap parallel tests in libarena,
-which use atomics on arena too.
+loongarch folks take JIT patches, so pls don't post
+anything to bpf* until trees converge.
 
-With this patch:
-  $ sudo ./test_progs -t arena_atomics | tail -1
-  Summary: 1/11 PASSED, 0 SKIPPED, 0/0 FAILED
-
-  $ sudo ./test_progs -t libarena | tail -1
-  Summary: 2/43 PASSED, 0 SKIPPED, 0/0 FAILED
-
-Signed-off-by: George Guo <guodongtai@kylinos.cn>
----
- .../bpf/libarena/selftests/test_parallel_bitmap.bpf.c          | 1 +
- .../selftests/bpf/libarena/selftests/test_parallel_spmc.bpf.c  | 1 +
- tools/testing/selftests/bpf/progs/arena_atomics.c              | 3 +++
- 3 files changed, 5 insertions(+)
-
-diff --git a/tools/testing/selftests/bpf/libarena/selftests/test_parallel_bitmap.bpf.c b/tools/testing/selftests/bpf/libarena/selftests/test_parallel_bitmap.bpf.c
-index 017add229bef..722971b1eba8 100644
---- a/tools/testing/selftests/bpf/libarena/selftests/test_parallel_bitmap.bpf.c
-+++ b/tools/testing/selftests/bpf/libarena/selftests/test_parallel_bitmap.bpf.c
-@@ -24,6 +24,7 @@ static volatile bool test_abort;
- 	(defined(__TARGET_ARCH_arm64) || defined(__TARGET_ARCH_x86) || \
- 	 defined(__TARGET_ARCH_s390) || \
- 	 defined(__TARGET_ARCH_powerpc) ||				  \
-+	 defined(__TARGET_ARCH_loongarch) || \
- 	 (defined(__TARGET_ARCH_riscv) && __riscv_xlen == 64))
- static bool bitmap_tests_enabled(void)
- {
-diff --git a/tools/testing/selftests/bpf/libarena/selftests/test_parallel_spmc.bpf.c b/tools/testing/selftests/bpf/libarena/selftests/test_parallel_spmc.bpf.c
-index 5fa96eb74095..af577e1e5050 100644
---- a/tools/testing/selftests/bpf/libarena/selftests/test_parallel_spmc.bpf.c
-+++ b/tools/testing/selftests/bpf/libarena/selftests/test_parallel_spmc.bpf.c
-@@ -70,6 +70,7 @@ static volatile u64 round_steals;
-  */
- #if defined(ENABLE_ATOMICS_TESTS) &&		  \
- 	(defined(__TARGET_ARCH_arm64) || defined(__TARGET_ARCH_x86) || \
-+	 defined(__TARGET_ARCH_loongarch) || \
- 	 (defined(__TARGET_ARCH_riscv) && __riscv_xlen == 64))
- static bool spmc_tests_enabled(void)
- {
-diff --git a/tools/testing/selftests/bpf/progs/arena_atomics.c b/tools/testing/selftests/bpf/progs/arena_atomics.c
-index 2a9664f54399..fcb70b984434 100644
---- a/tools/testing/selftests/bpf/progs/arena_atomics.c
-+++ b/tools/testing/selftests/bpf/progs/arena_atomics.c
-@@ -30,6 +30,7 @@ bool skip_all_tests = true;
- 	defined(__BPF_FEATURE_ADDR_SPACE_CAST) && \
- 	(defined(__TARGET_ARCH_arm64) || \
- 	 defined(__TARGET_ARCH_x86) || \
-+	 defined(__TARGET_ARCH_loongarch) || \
- 	 (defined(__TARGET_ARCH_riscv) && __riscv_xlen == 64) || \
- 	 defined(__TARGET_ARCH_s390))
- bool skip_lacq_srel_tests __attribute((__section__(".data"))) = false;
-@@ -454,6 +455,7 @@ int load_acquire(const void *ctx)
- 	defined(__BPF_FEATURE_ADDR_SPACE_CAST) && \
- 	(defined(__TARGET_ARCH_arm64) || \
- 	 defined(__TARGET_ARCH_x86) || \
-+	 defined(__TARGET_ARCH_loongarch) || \
- 	 (defined(__TARGET_ARCH_riscv) && __riscv_xlen == 64) || \
- 	 defined(__TARGET_ARCH_s390))
- 
-@@ -508,6 +510,7 @@ int store_release(const void *ctx)
- 	defined(__BPF_FEATURE_ADDR_SPACE_CAST) && \
- 	(defined(__TARGET_ARCH_arm64) || \
- 	 defined(__TARGET_ARCH_x86) || \
-+	 defined(__TARGET_ARCH_loongarch) || \
- 	 (defined(__TARGET_ARCH_riscv) && __riscv_xlen == 64) || \
- 	 defined(__TARGET_ARCH_s390))
- 
--- 
-2.53.0
-
+pw-bot: cr
