@@ -1,73 +1,121 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.227.132
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795763610;
-	b=PehqJCLL/3YxbQy5y+h5Qu0mtTgBVKbSkL8TK0kwQpeyljr5tKSk4Ts8lFQhAdLFoRm+
-	 kwyG1CidMrSdsY2tlRKFx+PN+8B+CXjN1tf5og8cejYOYN0JI1xNd0AbnLEayILKfZQ76
-	 qwGSLtgF71EAqc7P4bqbc3iye6U7wMETFaopGIQilad38lwSOFBKUYVu5skKH/pXYGjU6
-	 3swtV55atl6rdfoBbnr+NhnLTsyv+Mc8bteVkNaEzjOCt17Tz0ijDDw6MyCqIUgbt6Gfl
-	 9OafZm0Rpn3GowCYWnAmpzfZ+BUlysLAQvo+IR21MRK6v1FYzm5+OvjJezsQSNjz4pw==
+	t=1795770462;
+	b=3vNinvCkTfc2AbVa1t/GwhGuKtRMNr4OVBpz8o6LS6Zlrr5+ltb7UmOVcgDBoQTocAww
+	 icLT2Qoj6bNFDyWmOOAuSDnuEDKwCJJKhY+64rhl3KgL6JyG3M33t/ynNz40NEj1i4/c9
+	 DYOctuvWV7e0FEPbunBrDqyN/VUQpfkUX/Pq8gF/3nZZNSVniavaqckaVkwCEpdDkL528
+	 r+GMIolrBsIhWJuA41/SWSQbmbuu4gaD6+tYws0o+EYho/tXHayt0UDC47i/ijKBTZ4SF
+	 5sVJ5c7EiUTSXUE4s+FmNi8Mfi/5zYnYLJCM7D/B0X85OYq5tv3B4Mnnq8utHTTJTNw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795763610;
-	h=Received:DKIM-Signature:Received:Received:X-ME-Sender:
-	 X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
-	 MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type:Content-Transfer-Encoding;
-	bh=VySj4RtGNOlQjvvgVju7/YNpGHUf/42jTgBkiZKRTR8=;
-	b=gqxhNj7/17lB7WUXWJCQkJvJSfBrjC+SKekp/p408r91VhunUPaYlOSPEjS635zPRHuH
-	 e2oZuzBFHzuk6jbMphBezjP9InKNMmANI/OSXSW1KPAb8Zhcvmm8eET+wErJh85stQzeq
-	 B+rx7NvLFKEtEhzYYcukv4hQ/dPf8LlGXKb15tC2ZYWbWoFWnaw/uXxDTAAy36iKQ98ey
-	 mJ5ZjA+/yLDajus3yT/79Mbd0k+ey9I0lfLleYQVESCHZsw1p1OJq0wccSiJYGMzO0nms
-	 AhKJPDtR15rnIx+V68J5o0/Xyr+LOcE6m3g+OIvCq3ax/5SdnxJYtt6aXe8EKqWnKrg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795770462;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=Y/UMHkeyUCY25NbdTw5rz9oJMH9U+JYd8hruRProdo8=;
+	b=tl3Ysd+Fx39oOWj5fFOZgsErtg4NQ/Xj5thW6ArBOYX0mOxDmFVRuyA3n63cslDxP5KQ
+	 EcmNsC3miHgdT1nKek2Z8UuNTa6Npa0k3BWgo6leGsliwkgI3OLs3p/CH//b+jQRS/m3i
+	 6c59tpF+h4+cnTLJHipKiaGXdoEZe+dSxRvGDZ0pLAfefkHQ0y3cOMLMhwn2XD+RnYcwy
+	 IVKBusqLHd2RrTFEVxqX1qyGK6cO2AutmJ2RxP6WhAFVJQiRuzIpl9D1IbZJAx0iQkHa4
+	 rSj+fNouzWEiw3fU06sQKlXc5SgpnjmD7oJQe1HxDlI3afx8sNAv2qunMVkcjqbra6Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AQ2J7LB+;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=er0dBdVc;
+	arc=none smtp.remote-ip=74.125.227.132
+Received: from mail-pj2-f4.google.com (mail-pj2-f4.google.com [74.125.227.132])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6400B606A31E
-	for <loongarch@lists.linux.dev>; Fri, 27 Nov 2026 07:13:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A9B606A323
+	for <loongarch@lists.linux.dev>; Fri, 27 Nov 2026 09:07:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 81A9B606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AQ2J7LB+
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9377E1F00898;
-	Fri, 27 Nov 2026 07:13:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795763610;
-	bh=VySj4RtGNOlQjvvgVju7/YNpGHUf/42jTgBkiZKRTR8=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=AQ2J7LB+A788Wxhld0tMxUfrfN4UiVT954f4YtPcgEEdo8NgXv57ZlT4yqYtjWzTs
-	 79wgIw0NZc7At0SMW9dSpzl7l1xYZ+Y44iVPli4u0pCOCc8dY13mgXAL4ly4GpsH4O
-	 bu60QLnLhNbJC6DxFpKslWakW31gjjNPPZuOIl7R9qtlAX1MdbysQskBdL0V3T9Ylv
-	 qFWKK1tzgMvA+n7+LkWgsuv6+oRa4fwhir8gpm2PbZifzx1Ysb3Y7wtMx4XpLSCQGB
-	 RIaZwvi174Nhq+cz3Ld1VKLaUIGOCRzKRYQ5t+IN+JQIy3joNesNeE4wHowmprmgy6
-	 P2+oMjNQ+p78g==
-Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
-	by mailfauth.ams.internal (Postfix) with ESMTP id C2B40198005E;
-	Fri, 27 Nov 2026 02:13:27 -0500 (EST)
-Received: from ams-imap-11 ([10.64.2.31])
-  by ams-compute-02.internal (MEProxy); Fri, 27 Nov 2026 02:13:27 -0500
-X-ME-Sender: <xms:lS0Ja_QRS73sgE3tR_Zwv6ZDIE5ZZnerWyLTEBOxTcOq93Sk7aAqmA>
-    <xme:lS0Ja7mwlgsSDZtqkn99HA2Y-FiyJqgkYXusxF0jSl8h8D7gpEUvzDUNH-uiZEvkM
-    Uy3iCQ4Ui7eDPSJ3ilxXIkiaZd_nY_vx2YRYaekHaB6PN9jB2rPACs>
-X-ME-Proxy-Cause: dmFkZTEJqCiaCW7EYidaP5P7zgy4J5/Z41+BzAB2YWUuCz1zM103rrgu13MhHOSHU1Ttwc
-    /Dv3ewGUTqVIklTgsPIcIeJ8g1WTa2EUgWAZUeMxNiTlw/FBtP1AXgdQsek5FoKtb+HW7j
-    Xbbl8mFmIXQiClNAYnhvPqJS7SLoMAAp7qkPBYwwvMin3ONijBUGugYrQ60qbvM8TB/TW8
-    P6QAKMAmCMgooENggMJheOkW+PQw0m51AVy4LIzBQgaHJ+9PHtajdodGot7LqWsfNLvmJ9
-    mWm5bZSVDWpJ++rFSF4+Je4d0ZO6iE+LstXkHdzVscG9cTsg/TeqOe/Z1GCL30qbI/ABtZ
-    PzSP2cqgZT99Ef6BEsDGBwHuQamH3nHN+wUaTYdbi0vRQvDLOrDsLU1FVkvmdAPyXgStok
-    ukvJ2uzAHsLJKKdq+zWXWrovYB4sUXLAcoXuj9lII0nx5MV/mW9i7dNcrqBuBQq1NQHD0M
-    TtP2wzYbt1Rcs8POPepRGh4O9oeZgopXgg84HkEusm++yS4NlbcKOPGafXoJE7un5BKqyR
-    I4lvDlwdCmbhfl+6bGxlEhM+H1d8UMS9uDgmkiVARXYmtDdRCZqqUFLelqnns3YGtMd2nu
-    vhP0vdrQHRS3Mq0oaNZEqxybikHneUkvouhouaXaqSuv/Lor8IzawgVjtzug
-X-ME-Proxy: <xmx:ly0Ja_Rc_0egCGUmT5jfrDkt_Uxb39lgbVTJ7Y-SJAt-9AEr6gxXQw>
-    <xmx:ly0Ja7vqXe3F9oc_lHH67qGcRy61-gxdudNFP7WdbaSJIUiDjjaVnw>
-    <xmx:ly0Jaz1qTQ6S9atWpj648NgLE8B8s-OHrg5EjHPVv3Z89YWDvq7XsA>
-    <xmx:ly0Ja0UOc3k_qjdV7KzQ6PWBb2jjPQhkvDkNfXgBqueMIzqQCeZLYw>
-    <xmx:ly0Ja2Ltrv1zXHkHD-yHCK_7kmAZRt8zngMnzoe5ujGphS0UFGxNDEuO>
-Feedback-ID: ice86485a:Fastmail
-Received: by mailuser.ams.internal (Postfix, from userid 501)
-	id BFC0DF80093; Fri, 27 Nov 2026 02:13:25 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=er0dBdVc
+Received: by mail-pj2-f4.google.com with SMTP id 98e67ed59e1d1-3b426133d98so2052774a91.1
+        for <loongarch@lists.linux.dev>; Fri, 27 Nov 2026 01:07:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795770461; x=1796375261; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Y/UMHkeyUCY25NbdTw5rz9oJMH9U+JYd8hruRProdo8=;
+        b=er0dBdVcQhvlKo6n8ondjyF3IFNB0wpq9fwsoKyGtLxwGqk6K/+KeZCLHL6BtqSB/u
+         NN3vCdFMO/Iv02oZ8iDLbPnc7yC3zL6nSnNEeFR9Q7slNemByWRfS3YieXQfQpBAFr+N
+         yovOpOmr1V6/nhVQiYMUF4uT0sVZRGdfYF00oeYeSsO3xngoMcPz+vwqLFX86alk57LM
+         ak5prgjj/i/352YuS3BMAzu6OWAdZOiHXrqpwGZ+rkiOHWHMkw86FA+Huw2olHtHpnr7
+         1yW5IIkG8DdmWAJY97SRqYOERht9HkVJC0MWXKdcUzD9ICYNWwQVTU/wWm+4eAM1nUf5
+         KIZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795770461; x=1796375261;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=Y/UMHkeyUCY25NbdTw5rz9oJMH9U+JYd8hruRProdo8=;
+        b=0OLoh/sqoGEMvWZObrnGbj0XxNnBJ9Hp7DiNIn2EKvggsA63GkiDrps2rUWEZ6YViK
+         Bt/S/9IVu5gfFTvY9Ygd6OfQE6dF1oY1Ft6iSE7Ms4AJI1C/2LLyU/MpYhmS49M3xy8D
+         0HyI48Z8iQ82S174zJEP0fQGsnHvtEREIhB83EXxJPFwZdv3ZQtX8Qn3qN1gxIsaGLmS
+         M3d754cHejvNsPWiOVBefEjH2muj9XKhV1ewLVdmjELc9dJy5AtpIZqpbYor/7RJqCge
+         l7L/m6DumRP8eDVWSqNXned8svassBCwC4xTbIpAeNegDutm/4uDx7B0CorZduHpmHET
+         j8Kw==
+X-Forwarded-Encrypted: i=1; AL+hErGlJONYuy9iRW56PYDidV+x1wn1l1Ob0Wf3koe701/ZG5D7CLd+RUF3D5mvG2I+gxULEM4z2+tozkc=@lists.linux.dev
+X-Gm-Message-State: APuU4Z9GT5vIRtGYjAZR7Pt1+jMhClcKBotofHtLMhYkasp6JMwUUQbE
+	cvsv6AB7VM6QuibmDk/bAUANN2s+CJTdbD5Ejr1UozbkQpHehZ2J+0sf
+X-Gm-Gg: AZFdTZeoECVcMZ+iTXYcv8225ceA1m4Rn3QZ1VlO2oSfB+Fqa9kt1syoyZ0TWS5X4F8
+	2QAtAeUY/3lVsZMtNmxYJ98exYzXXUYZHe70Pq1sk1EFb/JXjvvNvjB9/aMSFQR2058dMhlLzsd
+	AbNd0ywpdQsk0lQ0nIAlXB91d3I/jz+EKcYBoGSq5srcdN9IhMFbTenz+jpqdgOfaBn47BAkhsD
+	+7j/If11l/115e9q24VsoKZZsYQbME6mfS1vZ0TfleiQtNHIF0A1ySJmJ6MMXkwLGvBplRIdGRt
+	fgcSPbj//k3Da5SmJsz1xk8VeRPqAe4zPHyTmMofTYn3VaaPEWlHlSNBAUoOMTV/qIp+mntfyUa
+	qNSJ5tP2BMEIpXNTxGvPiuEXS5U44jy28uEjjZGaiab2jETXTCSzVBvwHP+mSqc0KB5mADCZxzy
+	EvCv8X3dDBrJfmRt8k0YLm831n9QBdTr8Frq2Jy+612pICv0cJgJIIm2mrUmjZ+j6BF7lJRxjuf
+	6cSkJmTEejPFepjyZ7Z1loZCotUbuDEAQMtiWOpBvTaM/i1RUSiG+08jbwPccMGwzY5XZTAqcct
+	zw8klrMgHJeYw6xgOFUX7RMMV1a6j3D6kOdfApcH8Q==
+X-Received: by 2002:a17:90b:5287:b0:3b0:d35d:bb86 with SMTP id 98e67ed59e1d1-3b41c8fe261mr23255612a91.15.1795770460754;
+        Fri, 27 Nov 2026 01:07:40 -0800 (PST)
+Received: from intel.company.local ([122.11.210.25])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cde6d06ee37sm11718725a12.28.2026.11.27.01.07.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Nov 2026 01:07:39 -0800 (PST)
+From: Wandun Chen <chenwandun1@gmail.com>
+To: pjw@kernel.org,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr,
+	robh@kernel.org,
+	baoquan.he@linux.dev,
+	rppt@kernel.org,
+	m.szyprowski@samsung.com
+Cc: catalin.marinas@arm.com,
+	will@kernel.org,
+	mark.rutland@arm.com,
+	chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	tglx@kernel.org,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	saravanak@kernel.org,
+	akpm@linux-foundation.org,
+	pasha.tatashin@soleen.com,
+	pratyush@kernel.org,
+	ruirui.yang@linux.dev,
+	robin.murphy@arm.com,
+	ruanjinjie@huawei.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	kexec@lists.infradead.org,
+	linux-mm@kvack.org,
+	iommu@lists.linux.dev
+Subject: [PATCH v10 0/8] kdump: reduce vmcore size and capture time
+Date: Fri, 27 Nov 2026 17:07:15 +0800
+Message-ID: <20261127090723.741253-1-chenwandun1@gmail.com>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -77,81 +125,114 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Date: Fri, 27 Nov 2026 08:13:05 +0100
-From: "Ard Biesheuvel" <ardb@kernel.org>
-To: "Huacai Chen" <chenhuacai@kernel.org>,
- "Ard Biesheuvel" <ardb+git@google.com>
-Cc: linux-efi@vger.kernel.org, loongarch@lists.linux.dev,
- "Dmitry Antipov" <dmantipov@yandex.ru>, "WANG Xuerui" <kernel@xen0n.name>
-Message-Id: <b6479785-6d26-43f6-92db-627bc2bfe11f@app.fastmail.com>
-In-Reply-To: 
- <CAAhV-H5fd2K4WTPRSe7bdX3fgqxcC_MkOzwrxfMk1xnJdBW=Yg@mail.gmail.com>
-References: <20261126155017.2401147-5-ardb+git@google.com>
- <20261126155017.2401147-8-ardb+git@google.com>
- <CAAhV-H5fd2K4WTPRSe7bdX3fgqxcC_MkOzwrxfMk1xnJdBW=Yg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] efi/libstub: Provide library helpers only where needed
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+
+From: Wandun Chen <chenwandun@lixiang.com>
+
+On SoCs that carve out large firmware-owned reserved memory (GPU,
+camera ISP, ...), kdump currently dumps those carveouts as part of
+system RAM even though their contents are firmware state that is not
+useful for kernel crash analysis.
+
+ACPI systems already filter reserved memory out of the vmcore through
+their existing path: firmware reports those carveouts as unusable in
+the EFI memory map, they get MEMBLOCK_NOMAP set in memblock.memory
+(is_usable_memory(), efi-init.c), and the ELF header builder has
+always skipped nomap regions; only DT-based systems currently fail
+to filter these regions, which is what this series addresses.
+
+This series introduces a MEMBLOCK_NODUMP flag (suggested by Rob) in
+memblock to filter reserved memory on DT-based architectures. A new
+flag is needed because MEMBLOCK_NOMAP can only express regions without
+a linear mapping, while MEMBLOCK_NODUMP can filter regions that are
+linearly mapped. Reserved regions are marked MEMBLOCK_NODUMP by default
+so kdump omits them; reusable CMA regions are different because their
+pages are handed back to the buddy allocator and may carry crash-relevant
+data.
+
+Since the reserved memory regions are filtered out, the vmcore is
+smaller in size and faster to produce.
+
+The series is based on linux-next and is organized as follows:
+
+Patches 1-3: Preparation and bugfixes: switch riscv crash_mem to
+             memblock, fold the duplicated per-arch memblock walks
+             into the weak defaults, and serialize crash header
+             preparation against memory hotplug.
+Patches 4-7: NODUMP infrastructure: switch crash_core to
+             for_each_mem_region(), introduce the MEMBLOCK_NODUMP
+             flag, add a dumpable flag to struct reserved_mem, and
+             mark /reserved-memory entries with MEMBLOCK_NODUMP.
+Patch 8:     Skip MEMBLOCK_NODUMP regions when building the vmcore
+             ELF header.
 
 
+v9 --> v10:
+1. Rebased on the latest linux-next, which includes the
+   reserved-memory rework.
 
-On Fri, 27 Nov 2026, at 03:28, Huacai Chen wrote:
-> Hi, Ard,
->
-> Does this series wan to solve the same problem as below?
-> https://lore.kernel.org/loongarch/97a95c9d-6736-4eee-ac9d-cbfb47d60492=
-@app.fastmail.com/T/#t
->
+2. Patch 7: fix two issues found by Sashiko [1], by skipping
+   the NODUMP marking entirely when early reservation fail
+   and clamping the marked range to page boundaries.
 
-Yes.
+   The changes only tighten the conditions for marking NODUMP
+   and the overall logic is unchanged, so the Acked-by and
+   Reviewed-by tags are kept -- Marek, Rob, please let me know
+   if you disagree and I will drop them.
 
-> On Thu, Nov 26, 2026 at 11:50=E2=80=AFPM Ard Biesheuvel <ardb+git@goog=
-le.com> wrote:
->>
->> From: Ard Biesheuvel <ardb@kernel.org>
->>
->> Now that dead stub code is being eliminated by the linker, the only
->> remaining user of the 64-bit left shift and clz/ctz helper routines is
->> ZSTD compression, and only in some cases:
->>
->> - the 64-bit left shift is only needed on 32-bit architectures
->> - the clz/ctz helper is needed on all RISC-V and 32-bit reduced
->>   LoongArch
->>
->> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
->> ---
->>  drivers/firmware/efi/libstub/Makefile | 11 ++++++-----
->>  1 file changed, 6 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware=
-/efi/libstub/Makefile
->> index 20b5b77956d1..ba6d67e5cd78 100644
->> --- a/drivers/firmware/efi/libstub/Makefile
->> +++ b/drivers/firmware/efi/libstub/Makefile
->> @@ -98,14 +98,15 @@ CFLAGS_arm32-stub.o         :=3D -DTEXT_OFFSET=3D=
-$(TEXT_OFFSET)
->>
->>  zboot-obj-y                    :=3D zboot-decompress-gzip.o
->>  CFLAGS_zboot-decompress-gzip.o +=3D -I$(srctree)/lib/zlib_inflate
->> -zboot-obj-$(CONFIG_KERNEL_ZSTD)        :=3D zboot-decompress-zstd.o =
-lib-xxhash.o
->> +
->> +zstd-obj-$(CONFIG_32BIT)       :=3D lib-ashldi3.o
->> +zstd-obj-$(CONFIG_RISCV)       +=3D lib-clz_ctz.o
->> +zstd-obj-$(CONFIG_32BIT_REDUCED) +=3D lib-clz_ctz.o # loongarch
-> I don't want to use CONFIG_32BIT_REDUCED outside arch/loongarch, can
-> we use CONFIG_LOONGARCH which is similar  to RISCV?
->
+3. The remaining x86-specific race in patch 3 found by Sashiko [2]
+   (Xen balloon inserting a System RAM resource outside
+   device_hotplug_lock) is pre-existing, and fixing it depends on
+   resolving other pre-existing issues first, so it will be sent
+   separately.
 
-I could change this to
+[1] https://sashiko.dev/#/message/sashiko-outbox-181183@kernel.org
+[2] https://sashiko.dev/#/message/sashiko-outbox-181179@kernel.org
 
-zstd-obj-$(CONFIG_32BIT) :=3D lib-clz_ctz.o
-zstd-obj-$(CONFIG_RISCV) :=3D lib-clz_ctz.o
-zstd-obj-$(CONFIG_32BIT) +=3D lib-ashldi3.o
+An Ack for patch 1 from the riscv maintainers is still pending:
+I have pinged them, but no response yet. The Ack will be added
+once received.
 
-if you prefer? LoongArch64 never needs it, right?
+v8 --> v9:
+1. Patch 7: Avoid a potential boot panic on SH when NODUMP marking requires
+   memblock resizing before it is allowed. SH supports neither
+   CONFIG_KEXEC_FILE nor CONFIG_CRASH_HOTPLUG, so skip marking when both
+   are disabled.
 
-> And it seems the first patch can be folded with this one...
->
+v7: https://lore.kernel.org/lkml/20260922084256.1515554-1-chenwandun1@gmail.com/
+v6: https://lore.kernel.org/lkml/20260902073116.802752-1-chenwandun1@gmail.com/
+v5: https://lore.kernel.org/lkml/20260806093519.2907771-1-chenwandun1@gmail.com/
+v4: https://lore.kernel.org/lkml/20260630074715.4126796-1-chenwandun1@gmail.com/
 
-This is an optimization, the first one is a build fix.
+
+Wandun Chen (8):
+  riscv: build crash_mem ranges from memblock instead of resource tree
+  crash_core: fold duplicated memblock arch hooks into the weak default
+  crash_core: serialize crash header preparation against hotplug
+  crash_core: replace for_each_mem_range() with for_each_mem_region()
+  memblock: introduce MEMBLOCK_NODUMP flag
+  of: reserved_mem: add dumpable flag to opt-in vmcore
+  of: reserved_mem: mark /reserved-memory entries with MEMBLOCK_NODUMP
+  crash_core: skip MEMBLOCK_NODUMP regions when building vmcore ELF
+    header
+
+ arch/arm64/kernel/machine_kexec_file.c     | 29 ------------
+ arch/loongarch/kernel/machine_kexec_file.c | 27 -----------
+ arch/riscv/Kconfig                         |  2 +-
+ arch/riscv/kernel/crash.c                  |  2 +-
+ arch/riscv/kernel/machine_kexec_file.c     | 33 --------------
+ arch/x86/kernel/crash.c                    |  2 +-
+ drivers/of/fdt.c                           |  2 +
+ drivers/of/of_private.h                    |  1 +
+ drivers/of/of_reserved_mem.c               | 30 ++++++++++++
+ include/linux/crash_core.h                 |  2 +
+ include/linux/memblock.h                   |  9 ++++
+ include/linux/of_reserved_mem.h            |  1 +
+ kernel/crash_core.c                        | 53 +++++++++++++++++++++-
+ kernel/dma/contiguous.c                    |  1 +
+ mm/memblock.c                              | 16 +++++++
+ 15 files changed, 116 insertions(+), 94 deletions(-)
+
+-- 
+2.43.0
+
