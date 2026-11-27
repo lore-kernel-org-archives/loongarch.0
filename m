@@ -1,93 +1,52 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795716663;
-	b=mfHQ4ZYHxtXbH5ESMB7UoHLXOlTu6rBUcgNuAEKYY7m2F5HAR1lBoOcx8LfDk2xmn8YD
-	 Xewx2vGlrDswogjyHIq+dEoTmt5KqXe3hNpteNFCTwbqi30+efTKiIhzv7fkbfzjaoTA0
-	 vCJ5btKA1aBfaXWCpsIGl+wJLf44Y8A+zeatGLo/mdVR8RAMKlA1yEPfTuWMTPWDjSbip
-	 lUVLS0nnMpNSdkUFmaeDCf8lPdusRlYF3odoeActfWyQow+BqezzE6QPzzwLgKnySqr8U
-	 GFtP/VjOdtwa3FQR3n4/65pZ87It9RkMB5Ji3JVXWkjgzqvrlikr1VfsM8hPcACCCNA==
+	t=1795741970;
+	b=hRCuqCKbBBwzY09a67TXJSsR23b08ZB1yhafruo/57HJvbTzF1MvWgzPn9X/OoV1XHWc
+	 Tbr687I2IqVi4g8yAQ4fDprJMC73eSN+M+eERjMqYZ1b22uRYVnxQrhsNB6dZV+QXMeKy
+	 GEs+219khLMpH+oFUealcHWQpDAwdnOSsrmMbzJIE6ekwihpQyXaL+kx84zbS5/RP5twO
+	 sExx/DoR17Zlfr2001qxX4Hh7uI5pfAAvArkOfyjyIojyD7D50PxifgiIDddVsFVtWX68
+	 YJ3b8/3Coz2x3XxNOZt+k04s+WwLEBW2lwPGXKpcrRlCr1rwA3GPemJujP/yplH+z+w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795716663;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=u9v575CLn7pmoDOzWOn9peb7SoijlK+LbrKGpES9aRg=;
-	b=zCRBOXk6piKOkjLeYJ25xMi4+S1hRDFTDabLsGrs7ecsDmCjUB0pnRBRIoopF15PKsgl
-	 xLrWzlsgqkxRNosRbNeqFkU2OU25bOCfU/83eejxIV2D/O7xdBq/+JZVNDZeVkqQy1Ysq
-	 4b9Th2KxfZRiwuxivc77n+mKKtnguJ3qe1YEjpUp8DKHK/85Ytdz6WSAau+v2BlL68til
-	 13Gfh7VjzT12cmZW1/5NcLW5I8n0b8DhzzAcQ5F6K15S/2OkeWJHKGl/P7y0l3lssCZgT
-	 /8Nlyo30HEXv8kenWsQE+0qO4Xl9ezX46D5RE8A48xVpBX3MCR8gGlqL9RL1SnNmpVw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795741970;
+	h=DMARC-Filter:Received:Received:Subject:To:Cc:References:From:
+	 Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:Content-Type:
+	 Content-Language:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-CM-SenderInfo:X-Coremail-Antispam;
+	bh=WL6jcyaBgXtjlwf2xKoJMQ4E9Qb5FW6oej1sKLlt6UI=;
+	b=oo/xtqk6V+vgUikiqI70O1p0IIOLIJMOurT2VihwDyTxv+jrkEbvA53HdEe63XI5l7cd
+	 lapUtuy4RDSv1/eH3L7wci8N4SLQIKNKr+Fa/jOl14dtkiu0Q1InaVR94sDezSURSLHCx
+	 tlirbH1gMQKzCPUUY/BeXtv1zkj9eSXjqrfpOvswLRQCZP9QK9BnILyEuidNEaxaRttyM
+	 FiGRHbVJdx4eDbr23z3zRmWong85veIwRv06HiKxmYU9dw3R3BwsjgHKw8hox/5zmHZ0V
+	 Uo6vS7k6Tuxa0b5QMIuWa/5WmBLhSY0H4JDduKeTee3gItKiaI+j/2QBwGi+CMwtlPQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eTrh4ivt;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866D0606A326;
-	Thu, 26 Nov 2026 18:11:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eTrh4ivt
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E52761F00AD3;
-	Thu, 26 Nov 2026 18:10:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795716662;
-	bh=u9v575CLn7pmoDOzWOn9peb7SoijlK+LbrKGpES9aRg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=eTrh4ivtfPOlk36i/Syox5jVW6dXJmhOgZwioO+nYxMKjGShC7TMyjjJl/zzRZ/W3
-	 SkP6MLdWC5iwrRV6uvUn6/rKonHWO56PFB3c75THzdQTim1Mri+dYH52nOteGfRTCj
-	 M+BZepOCmKNRYHvlRa117MS6yceBdzXjdmtuENyHhISgbQTyWosUB771P8KFuwQKC8
-	 pVw08LjMZlVYdDIpRqOeWvsFhzaGdSX4qDT0MagmIoJIq2tNOTskLwvuvj9X76KZmW
-	 omTnmVri/xaVPYJp7AvvaZYW/JxAmTrlzAhShiP47YqYQ+fQwkXl5svB+CMxRIbwv0
-	 XMDyeevoEqAuQ==
-Date: Thu, 26 Nov 2026 20:10:43 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Yeoreum Yun <yeoreum.yun@arm.com>
-Cc: "David Hildenbrand (Arm)" <david@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Barry Song <baohua@kernel.org>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>, Anup Patel <anup@brainfault.org>,
-	Atish Patra <atish.patra@linux.dev>, Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Jonas Bonn <jonas@southpole.se>,
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-	Stafford Horne <shorne@gmail.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
-	linux-openrisc@vger.kernel.org
-Subject: Re: [PATCH RESEND v2 12/21] mm/pgtable: redefine PGTABLE_LEVEL enum
- with ascend order from PGD
-Message-ID: <awh2I4llsjkB7Vds@kernel.org>
-References: <20261102-dummy_ptxp3-v2-0-78840b2ec73c@arm.com>
- <20261102-dummy_ptxp3-v2-12-78840b2ec73c@arm.com>
- <awXD4i47F-VAG1tD@kernel.org>
- <awXc0MSZl9t9VW8e@e129823.arm.com>
- <682c765f-332f-4ac2-b448-4201c8fae6fc@kernel.org>
- <awhCnpiUc1R_BLx4@e129823.arm.com>
+	dmarc=none header.from=loongson.cn;
+	spf=pass smtp.mailfrom=loongson.cn;
+	arc=none smtp.remote-ip=114.242.206.163
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BF1E606A326
+	for <loongarch@lists.linux.dev>; Fri, 27 Nov 2026 01:12:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8BF1E606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8CxPNIH2Qhr1WcjAA--.35101S3;
+	Fri, 27 Nov 2026 09:12:39 +0800 (CST)
+Received: from [127.0.0.1] (unknown [127.0.0.1])
+	by front1 (Coremail) with SMTP id qMiowJCxf88F2Qhr3ac3AA--.46655S2;
+	Fri, 27 Nov 2026 09:12:37 +0800 (CST)
+Subject: Re: [PATCH v2 0/2] KVM: LoongArch: selftests: MAINTAINERS coverage
+ and a VM leak
+To: Gokul K <gokul02k@gmail.com>, Tianrui Zhao <zhaotianrui@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ Shuah Khan <shuah@kernel.org>, kvm@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-kselftest@vger.kernel.org
+Cc: Sean Christopherson <seanjc@google.com>, linux-kernel@vger.kernel.org
+References: <20261126050352.1957454-1-gokul02k@gmail.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <b5d4b059-6561-a68c-e00d-247566a081f8@loongson.cn>
+Date: Fri, 27 Nov 2026 09:13:48 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -97,66 +56,67 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <awhCnpiUc1R_BLx4@e129823.arm.com>
+In-Reply-To: <20261126050352.1957454-1-gokul02k@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxf88F2Qhr3ac3AA--.46655S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7uF13KF4kurW5Cw48Gr1fZrc_yoW8Ar1kpa
+	yfu3ZFyr1vgFs7Ga1qk34jg3ZxXFnrJF1xZ3Z0k34Uurs8Zry8Xrn29r4DXa4DZ39YgFWS
+	ga1Ska4Fga1DXacCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UU
+	UUU==
 
-On Thu, Nov 26, 2026 at 02:30:54PM +0000, Yeoreum Yun wrote:
-> On Thu, Nov 26, 2026 at 03:19:13PM +0100, David Hildenbrand (Arm) wrote:
-> > On 11/24/26 19:52, Yeoreum Yun wrote:
-> > > On Tue, Nov 24, 2026 at 07:05:38PM +0200, Mike Rapoport wrote:
-> > >> On Mon, Nov 02, 2026 at 11:21:25AM +0000, Yeoreum Yun wrote:
-> > >>> The PGTABLE_LEVEL enum values appear to be ordered in the opposite direction
-> > >>> from their intended usage.
-> > >>>
-> > >>> Intuitively, higher page table levels should have smaller enum values,
-> > >>> but PTE is currently assigned 0.
-> > >>
-> > >> That's not what x86 thinks :)
-> > >> They even expose it in /proc/vmstat with smaller numbers meaning lower levels
-> > >>
-> > >> $ grep direct_map /proc/vmstat 
-> > >> direct_map_level2_splits 152
-> > >> direct_map_level3_splits 4
-> > >> direct_map_level2_collapses 0
-> > >> direct_map_level3_collapses 0
-> > >>
-> > >> Just an observation, I don't mind either order.
-> > > 
-> > > Right. I made this change because a depth-based scheme seems more intuitive.
-> > > 
-> > > As you pointed out, though, the x86 specification uses smaller
-> > > numbers (0) for lower levels (pte), so I think we can leave the
-> > > x86-specific direct_map_* entries as they are.
-> > 
-> > patch #14 depends on this, no?
+On 2026/11/26 下午1:03, Gokul K wrote:
+> Two small fixes to the LoongArch KVM selftests. Patch 2 frees the VM on
+> the PMU test's skip path. Patch 1 came out of routing it:
+> get_maintainer.pl did not name the LoongArch KVM maintainers for
+> tools/testing/selftests/kvm/loongarch/, because the MAINTAINERS entry
+> does not cover that directory, so this series would otherwise have
+> gone to Paolo, Sean and Shuah only.
 > 
-> Interestingly, x86 documentation numbers the PGD level as 4 or 5,
-> whereas helpers such as effective_prot_pgd() use 0 for PGD.
+> Based on loongarch-kvm in linux-loongson.git.
 > 
-> Anyway, this follows the usage and semantics of effective_prot_pXd(),
-> rather than architecture-specific level numbering, which varies across
-> architectures.
+> Patch 2's hunk sits next to the one in "KVM: selftests: Convert comma
+> to semicolon" [1], which is not applied yet. They do not overlap and
+> apply in either order.
+> 
+> Compile-tested only. Patch 2 builds: tools/testing/selftests/kvm/loongarch/
+> pmu_test links for loongarch64 with a GCC 15.2.1 cross compiler, using
+> glibc from Debian's loong64 port as the sysroot. The binary was not run.
+> Patch 2 changes the PMU-not-enabled skip path, which only runs on a
+> LoongArch host whose VM config leaves the PMU off.
+> 
+> Changes in v2:
+> - 1/2: also drop the lib/loongarch/ line, which */loongarch/ already
+>    covers, so the entry matches the other arches (Zenghui Yu)
+> - 2/2: unchanged
+> 
+> v1: https://lore.kernel.org/all/20261123100701.1679376-1-gokul02k@gmail.com/
+> 
+> [1] https://lore.kernel.org/all/20260428053204.1018608-1-nichen@iscas.ac.cn/
+> 
+> Gokul K (2):
+>    MAINTAINERS: Add the LoongArch KVM selftests directory
+>    KVM: LoongArch: selftests: Free the VM when the PMU test skips
+> 
+>   MAINTAINERS                                      | 2 +-
+>   tools/testing/selftests/kvm/loongarch/pmu_test.c | 3 ++-
+>   2 files changed, 3 insertions(+), 2 deletions(-)
+> 
+For this series.
+Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 
-I asked an LLM and here's what it told me:
-
-  x86, s390, riscv, LoongArch and powerpc count from the leaf. arm64 and
-  ARM count from the root, and so does the generic page walk and ptdump.
-
-My guess that the only reason that generic ptdump counts from the root is
-because it came from @arm.com :)
-
-> And yes, patch #14 depends on this, although changing the condition to
-> level != PGD_LEVEL would remove that dependency.
-
-I think the only real hard dependency on levels numbering is x86's KVM code
-that manages secondary page tables, but it anyway does not use enum
-pgtable_level but rather x86's own enum pg_level.
-
-> -- 
-> Sincerely,
-> Yeoreum Yun
-
--- 
-Sincerely yours,
-Mike.
