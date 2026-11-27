@@ -1,56 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=113.46.200.218
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=113.46.200.223
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795774207;
-	b=j12B5AtDfiXLz2sw6shcfHJw+Gwh/Lt56GqT4thh93c5LSXYX0jyIL1dBb/2y4Hi9qqy
-	 ZNISDY7ENqQc1oGK0pG70IvVsiV9rj6nQN424oVg1PE4vg/G26S3kw0UBDr/yGQfhOPD9
-	 k/LOJRWHJTV3ypoPRdsdpG5cvfYkOSrUhjJ1E/9zc3nNqEmSm1UwlJaMlKgfMlbETkGXZ
-	 0t9vFl6XoGNj7zTjDmdINeMeYjNJIMzvGi5x0tv13qYzg3heolUGkmcox3wYG1pk82D0Y
-	 7S4Q07a7wXRSnaQ1OydyDYa3HP3BiWIcikgvGMphNHu7cEdYCxxYBKnndDcQR8ZtyBQ==
+	t=1795774210;
+	b=HFcsKetoo7P89MjPIKVAi6rFNUGNzdpfRiYI38rfGDulbBpjYoG8JQ7JW7epevdkfiCI
+	 ZKioFV/0jUpISYWZBXykr0MOVH7aS+En59JI027VMue+KJb32fmqM+VU63h+8G1juZTgq
+	 cWsvFyusRRMriQXHXoXyWGjKdvD91k8Ni0RHxn6Prc8+wdVlcR1pimwZDOWAMCP1G+EXd
+	 eEQZprkxCzFBlyjMENPpe4kzm0Lox2sTAB2jx2b9vmKDJNrySooWmYrtuADpOzcDvqHIo
+	 ADzwWodWHKQu+c8tPbvy2hXQVPwQL3DPJkGq8GhMnrtYIfQCn/P60IzlkAd7G7LS4+A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795774207;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795774210;
 	h=DMARC-Filter:dkim-signature:Received:Received:Received:From:To:CC:
 	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding:Content-Type:X-Originating-IP:
 	 X-ClientProxiedBy;
-	bh=j5utrnwiKYMPXhLTIGusrabxZitsD+sBaIfvDHphdLU=;
-	b=iQNx3sX/gk9uOfHkmlSgu4oXergiEKPTrMd3kqvxEoL3LSIk+r8D4AXvonKTlnLoDkta
-	 hqxSMe35NnKlMfjXTD4I9X7Lrdi2hGJbOMc+eVWk19PYZv4CbgV+l359yTtpCYI3lVGcD
-	 UzNnwwnVqhA9C+z7qPYr5VIsds7WaQoyqfMHmL0jOdKAkO1fXzu9kZuEuFSgEN4r5sKJ6
-	 UMzdOymucDT+mxHEdJA97rTcTuVBVuXf9PavGljksV5qjUFAM+z+lbpuQebsEVxmQGBeA
-	 xP1OH3bL5pus+QOLfKYY0162h6bOHbFjf2MISjq9FaOU8txbeMT4yDg19yde582ugRQ==
+	bh=RD+RhKHkx2ypFB5sfZGqGwGbb8y1IoqlO39za0vFLv4=;
+	b=TC0G1SquNfvSl7EyOUi0KeG9yr5keO9s+NY4X+aeIFMB0qOR/V56vJejA1GHtiohLAoB
+	 /ETgI1P1L3puilxac3hy6EC0OoypPfko6J3pKBXL8i1uQjC3LZZ7CthyCCPKYhcZ74/fI
+	 N41q2GOm88Nphqe/Tj0mU0/vGBc3daEr74DxlFsic6olcHcKHE+VGe/GN0jOWMYG8FjQK
+	 Y+HJiXkWwTA3Qfhvf67+RsQXaBa3Q1frY5duguYbx5DDtTwQSNR9rrS8EIFW0e3IRp2ia
+	 kLKqL7LhAHeug8oP5XsMSbsqWpXd7XFCJwiy1iGaHboVCTN1OY1wHTMiRYovLd8RbWw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=huawei.com;
 	spf=pass smtp.mailfrom=huawei.com;
-	dkim=pass header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=EH9gi59W;
-	arc=none smtp.remote-ip=113.46.200.218
-Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
+	dkim=pass header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=LHau4pfz;
+	arc=none smtp.remote-ip=113.46.200.223
+Received: from canpmsgout08.his.huawei.com (canpmsgout08.his.huawei.com [113.46.200.223])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B27FC606A338
-	for <loongarch@lists.linux.dev>; Fri, 27 Nov 2026 10:10:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B27FC606A338
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85CD9606A6BB
+	for <loongarch@lists.linux.dev>; Fri, 27 Nov 2026 10:10:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 85CD9606A6BB
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=EH9gi59W
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=LHau4pfz
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=j5utrnwiKYMPXhLTIGusrabxZitsD+sBaIfvDHphdLU=;
-	b=EH9gi59WRKCLGVPL7KzLlizykGbVtHwUkJ5qyJtTWeirYCS8rjK4vushHzcDqzzrFYov8fMSD
-	EiYCC7qEx9YGHySFI8g2DBxNie8Nex06nbZD8lVGNaavrql7kNAij9tw5P+oulOnPSLNdol4QVy
-	yUXOGvOhiTkFyhT+ngbz4UQ=
-Received: from mail.maildlp.com (unknown [172.19.162.223])
-	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4jbTdq2VG2zpStD;
-	Fri, 27 Nov 2026 18:08:47 +0800 (CST)
+	bh=RD+RhKHkx2ypFB5sfZGqGwGbb8y1IoqlO39za0vFLv4=;
+	b=LHau4pfz/sVP57FiK2UxBBLN/FUwWdlrRFdKQoAagxZjTMYkKP4CCFom+7r2gExa8cx+uTB6F
+	wM2IgZjUr4H3DMTa89BmZIZ1XA7SPR269+mshFrZgpWGX6xVa85isQLow5DdpnoG5chTDwApz6d
+	kC2XXILcZVAahBiMa/zjgkQ=
+Received: from mail.maildlp.com (unknown [172.19.163.15])
+	by canpmsgout08.his.huawei.com (SkyGuard) with ESMTPS id 4jbTfn5QdGzmV63;
+	Fri, 27 Nov 2026 18:09:37 +0800 (CST)
 Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4210940575;
-	Fri, 27 Nov 2026 18:09:53 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id B4DBB4058E;
+	Fri, 27 Nov 2026 18:10:02 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by kwepemk200008.china.huawei.com
  (7.202.194.74) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Fri, 27 Nov
- 2026 18:09:51 +0800
+ 2026 18:10:00 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
@@ -78,9 +78,9 @@ To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
 	<kexec@lists.infradead.org>
 CC: <ruanjinjie@huawei.com>
-Subject: [PATCH v9 06/11] x86: kexec_file: Use the common segment helpers
-Date: Fri, 27 Nov 2026 18:09:20 +0800
-Message-ID: <20261127100925.3019877-7-ruanjinjie@huawei.com>
+Subject: [PATCH v9 11/11] LoongArch: kexec_file: Fix CMA segment placement retries
+Date: Fri, 27 Nov 2026 18:09:25 +0800
+Message-ID: <20261127100925.3019877-12-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20261127100925.3019877-1-ruanjinjie@huawei.com>
 References: <20261127100925.3019877-1-ruanjinjie@huawei.com>
@@ -98,125 +98,88 @@ Content-Type: text/plain
 X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
  kwepemk200008.china.huawei.com (7.202.194.74)
 
-crash_load_segments() open codes the elf core header loading: it builds
-the header, accounts for crash hotplug and places the segment.
+The file-based kexec system call places segments with kexec_add_buffer(),
+which takes them from CMA when kexec_alloc_contig() succeeds, to avoid
+copying the payload at kexec time.
 
-Use kexec_prepare_elf_core_header() and kexec_add_elf_core_header()
-instead.  The crash hotplug reserved size is still computed and recorded
-here, as the VMCOREINFO, kernel map, CPU and memory range accounting is
-x86 specific.
+When load_other_segments() cannot place the initrd, the segments of the
+attempt are dropped but their CMA pages are leaked.  Release them with
+kexec_rollback_segments() in the retry loop and in the error path of
+load_other_segments().
 
-bzImage64_load() also loads the initrd by hand, use kexec_add_initrd()
-for it.
+The loop makes progress by advancing buf_min past a segment placed by the
+walk.  kexec_alloc_contig() ignores buf_min, so once the pages of a CMA
+segment are released, the next attempt can get the same region again and
+the retry makes no progress.  Disable CMA for the retry.
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Baoquan He <baoquan.he@linux.dev>
-Cc: Mike Rapoport <rppt@kernel.org>
+A CMA segment can be anywhere in RAM, so moving buf_min to its end can
+raise the walk's lower bound close to the top of memory and leave the
+retry with too little space for the initrd, failing with -EADDRNOTAVAIL.
+Only advance buf_min for segments found by the walk.
+
+Tested with a non-crash kexec_file_load() on QEMU virt, 2 GiB RAM and
+cma=64M@0xe8000000, which leaves only 64 MiB above the CMA area.
+
+Before the fix:
+	The retry leaks the CMA pages and kexec_file_load() returns
+	-EADDRNOTAVAIL even though RAM below CMA is free.
+
+After the fix:
+	The kernel and initrd are placed below CMA and the second
+	kernel boots.
+
+Fixes: 55d990f0084c ("LoongArch: Add EFI binary support for kexec_file")
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: Youling Tang <tangyouling@kylinos.cn>
+Cc: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
+Cc: Kees Cook <kees@kernel.org>
+Cc: stable@vger.kernel.org
 Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+Link: https://sashiko.dev/#/patchset/20260729031235.2840255-1-ruanjinjie%40huawei.com
 ---
- arch/x86/kernel/crash.c           | 34 ++++++++++++++-----------------
- arch/x86/kernel/kexec-bzimage64.c |  8 +-------
- 2 files changed, 16 insertions(+), 26 deletions(-)
+ arch/loongarch/kernel/kexec_efi.c          | 12 ++++++++----
+ arch/loongarch/kernel/machine_kexec_file.c |  2 +-
+ 2 files changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index e6f23933a6df..94c0dde6070a 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -348,20 +348,20 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
+diff --git a/arch/loongarch/kernel/kexec_efi.c b/arch/loongarch/kernel/kexec_efi.c
+index 4824c47907ac..1fbd0ee1deb6 100644
+--- a/arch/loongarch/kernel/kexec_efi.c
++++ b/arch/loongarch/kernel/kexec_efi.c
+@@ -82,11 +82,15 @@ static void *efi_kexec_load(struct kimage *image,
+ 			break;
  
- int crash_load_segments(struct kimage *image)
- {
--	int ret;
--	unsigned long pnum = 0;
- 	struct kexec_buf kbuf = { .image = image, .buf_min = 0,
- 				  .buf_max = ULONG_MAX, .top_down = false };
-+	unsigned long hotplug_sz;
-+	unsigned long pnum = 0;
-+	int ret;
- 
- 	/* Prepare elf headers and add a segment */
--	ret = crash_prepare_headers(IS_ENABLED(CONFIG_X86_64), &kbuf.buffer,
--				    &kbuf.bufsz, &pnum);
-+	ret = kexec_prepare_elf_core_header(image, IS_ENABLED(CONFIG_X86_64),
-+					    &pnum);
- 	if (ret)
- 		return ret;
- 
--	image->elf_headers	= kbuf.buffer;
--	image->elf_headers_sz	= kbuf.bufsz;
--	kbuf.memsz		= kbuf.bufsz;
-+	hotplug_sz = image->elf_headers_sz;
-+	kbuf.memsz = hotplug_sz;
- 
- #ifdef CONFIG_CRASH_HOTPLUG
- 	/*
-@@ -374,28 +374,24 @@ int crash_load_segments(struct kimage *image)
- 		pnum += 2 + CONFIG_NR_CPUS;
- 
- 	if (pnum < (unsigned long)PN_XNUM) {
--		kbuf.memsz = pnum * sizeof(Elf64_Phdr);
--		kbuf.memsz += sizeof(Elf64_Ehdr);
--
-+		hotplug_sz = pnum * sizeof(Elf64_Phdr) + sizeof(Elf64_Ehdr);
-+		kbuf.memsz = hotplug_sz;
- 		image->elfcorehdr_index = image->nr_segments;
--
--		/* Mark as usable to crash kernel, else crash kernel fails on boot */
--		image->elf_headers_sz = kbuf.memsz;
- 	} else {
- 		pr_err("number of Phdrs %lu exceeds max\n", pnum);
+ 		/*
+-		 * We couldn't find space for the other segments; erase the
+-		 * kernel segment and try the next available hole.
++		 * kexec_alloc_contig() ignores buf_min and always returns
++		 * CMA memory, so disable it and keep buf_min.
+ 		 */
+-		image->nr_segments -= 1;
+-		kbuf.buf_min = kernel_segment->mem + kernel_segment->memsz;
++		if (image->segment_cma[kernel_segment_number])
++			image->no_cma = true;
++		else
++			kbuf.buf_min = kernel_segment->mem + kernel_segment->memsz;
++
++		kexec_rollback_segments(image, kernel_segment_number);
+ 		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
  	}
- #endif
  
- 	kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
--	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
--	ret = kexec_add_buffer(&kbuf);
-+
-+	ret = kexec_add_elf_core_header(image, &kbuf);
- 	if (ret)
- 		return ret;
--	image->elf_load_addr = kbuf.mem;
--	kexec_dprintk("Loaded ELF headers at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
--		      image->elf_load_addr, kbuf.bufsz, kbuf.memsz);
+diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
+index 00940f20b45e..adf7416ff49f 100644
+--- a/arch/loongarch/kernel/machine_kexec_file.c
++++ b/arch/loongarch/kernel/machine_kexec_file.c
+@@ -190,7 +190,7 @@ int load_other_segments(struct kimage *image,
+ 	return 0;
  
--	return ret;
-+	/* Mark as usable to crash kernel, else crash kernel fails on boot. */
-+	image->elf_headers_sz = hotplug_sz;
-+
-+	return 0;
+ out_err:
+-	image->nr_segments = orig_segments;
++	kexec_rollback_segments(image, orig_segments);
+ 	kfree(modified_cmdline);
+ 	return ret;
  }
- #endif /* CONFIG_KEXEC_FILE */
- 
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index 3aa77006adab..c8e285c9a4c6 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -626,19 +626,13 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
- 
- 	/* Load initrd high */
- 	if (initrd) {
--		kbuf.buffer = initrd;
--		kbuf.bufsz = kbuf.memsz = initrd_len;
- 		kbuf.buf_align = PAGE_SIZE;
- 		kbuf.buf_min = MIN_INITRD_LOAD_ADDR;
--		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
--		ret = kexec_add_buffer(&kbuf);
-+		ret = kexec_add_initrd(image, &kbuf);
- 		if (ret)
- 			goto out_free_params;
- 		initrd_load_addr = kbuf.mem;
- 
--		kexec_dprintk("Loaded initrd at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
--			      initrd_load_addr, initrd_len, initrd_len);
--
- 		setup_initrd(params, initrd_load_addr, initrd_len);
- 	}
- 
 -- 
 2.34.1
 
