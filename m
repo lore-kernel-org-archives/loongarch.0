@@ -1,55 +1,58 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=113.46.200.227
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795746520;
-	b=r83pnO0laelKsVEhVMjp58bBWPKIaq3TVHk1rbUefVzApogKmYwBB4p3qdAu+U3CIW2E
-	 ZnykOU5GAS+k+qy6J5lJuqwYZqny8i4C3/Z96fliGrQWEg/J6cReTLDUsKHDMCQOTTBhr
-	 o+ocuRzr1ucMFiBmV7oDgKZiFAvVRzkjm1nivy8bpbQhimR3gMb3FGqrh+VlQSC9ePBQ/
-	 pkFLJREferqQSjpRP5MkuFIlvThWp/AY3mjuJL/LGbxgc6DF0EytohzNXpFXEUdMJfDDK
-	 QJ+iuaZska/3EgRslG4oQp1uPHZepHbO549/ai7fNUKqdSxmImUe7Kbs8aFSUXArMSQ==
+	t=1795747899;
+	b=FTyeGACJVtekyvMMZEvYJIR8nrl8C0RGmIihsMBk/UhNEKlf71fMpsohXMSglA/7Zuya
+	 FAow2y0L0Eg3229Jts1Qc0nNolPqF4UmMQmrtYFETUTPQ0VIa/rsl8VQyJHxq6ozoBTjX
+	 xUlMfSLOUh7rjPhqLOf5903rsoaS6ZlHiQFGQP7rFyNr3urSSI+1bsO1dFdDavHNL7Oi4
+	 zb0wwM3OjGrMXmsd9btQHvkrmPVK14KjL1BQM2SGcNokgOZmiPP3OUB1HGn+4R0CwESb0
+	 N2XsktSEO38lhEAO1mS5VrPDpsecZXQzBP7JT/rBJJoXCaqesHIALcm7b97cgoRIAkQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795746520;
-	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
-	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
-	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=YVNe8mhn9QJyILwYcZB6LPXFhX67aWAwXGkyrU4Q77s=;
-	b=Cepl3QOrW3ymMSjhkFPDlbODXdD/3ztJk+HWAz55zHRPIEkN6o7nfylDAS4pXjE/wFjG
-	 BI/E9rkJFXDUSITS+glizsxtkVCs7WDi5jRdZDuvpJhqvBTsZ7kvYsQtfPEHPkmCHEMRy
-	 0+sKfBNASv1qKkRCYnqtxiJvrC3rnHJT/1yI+k4pnBffMCkoTYf7Jy7tehDxCYjRIS/PI
-	 ANzoVq7lNy94H2pyw9ysCXo77M9f9Pn+G/P80EEoVc2p/TQ1ADq1ymGXny74cZVwkmJ6I
-	 cMse7XhDnf1dGVWw46qakLy9yb38c1/bdjPemieHvvwfbwUxC6E/FAR3/ppqp6QYWMg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795747899;
+	h=DMARC-Filter:dkim-signature:Received:Received:Received:Message-ID:
+	 Date:MIME-Version:User-Agent:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding:X-Originating-IP:
+	 X-ClientProxiedBy;
+	bh=+E04+1aBGfLLVpwGpqqzD9wY4oSras1xIIjdVXw1Xf4=;
+	b=mElaerN3mHHLo6trsXdCk4PS/mBvj4uoVDL6VwuklMertxPxwLYcwxM07FbsM7BwriTd
+	 H4M/HDEL06TpfMADkj8BF8M7RXcJbLQnYX4bOgbdl8u8qRZtQdsxFiIO1zfLFNit4CEwM
+	 8RGHMmoLuYghoCsDzSlyNUhh3ikFJvNBWmL5oENSZEvFVS2lToTRnxtzZUFxpOUF2eG1V
+	 iKMjcpAqHXik5gQyP4+jtk/Z+NZfExsszHCChlHCo9F7hXuvJbGBtZi+qVN1OhKLOmq6E
+	 l6kqT9HAFvwkomyjNp8HSXp7+fuS4sSfUdMjVLaSAp6yYXkvzp9h7C67/P6JRyZ56jA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=neJ+s76E;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=huawei.com;
+	spf=pass smtp.mailfrom=huawei.com;
+	dkim=pass header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=ej+0fabs;
+	arc=none smtp.remote-ip=113.46.200.227
+Received: from canpmsgout12.his.huawei.com (canpmsgout12.his.huawei.com [113.46.200.227])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4C7606A321
-	for <loongarch@lists.linux.dev>; Fri, 27 Nov 2026 02:28:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87FFD606A31E
+	for <loongarch@lists.linux.dev>; Fri, 27 Nov 2026 02:51:38 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 87FFD606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=neJ+s76E
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF3331F00897
-	for <loongarch@lists.linux.dev>; Fri, 27 Nov 2026 02:28:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795746519;
-	bh=YVNe8mhn9QJyILwYcZB6LPXFhX67aWAwXGkyrU4Q77s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=neJ+s76EAm8N5xVxBerE1c05QvCUlG1/uHzUSpKPavJn0uuO8ImccLGclbxdfbyA5
-	 aRYyQ/k2Y9drH6EdR5EUqwDxH543w01GHl51T/e+FOaInoFQA0v5Bt7i3InC5i/Aic
-	 lmZIq/UjUF4qETQRO+TM2qpSFrfFYReZocqu+EfZ9aGsBbYZfDs01GrsM630r13qor
-	 yguDfwGFA8Dsk4+RaC3rI2bSpe7ZEtXUvf6tGpO0ASpIJdYWFbCXZ3JFIUHH2QQz69
-	 3p6gpAfJ8mAAmMSTLvgjoHrlnvfsxSxs44Ulzrg+9UCeIoNuLENrVtyp+8DApI7RuT
-	 jZh1JenUAF+VQ==
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-6b894d9a075so8424615a12.2
-        for <loongarch@lists.linux.dev>; Thu, 26 Nov 2026 18:28:39 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AL+hErEwKvdZursZIe02v3pxfXGFL996fL96Ja99jhB0DfffUqr+awtFBKGFYKBQMtiURwdiCjCuF2WTeaw=@lists.linux.dev
-X-Gm-Message-State: APuU4Z9ygNOIQb2DtPweggA9sBDp9+E0heSfgG3Ci+1CnkTvpHSI8c+F
-	rlRznGBw9lRIXdKhomXXjctXQh8G1tEDm0z8sCePONbaR2eS5m+eydd/QIsTt4Xr2Zk9iygHKsT
-	OtrF2KpPicevp90EP4bms/JNj830UmfM=
-X-Received: by 2002:a05:6402:42c8:b0:6ba:9b7c:d897 with SMTP id
- 4fb4d7f45d1cf-6ba9b7ce6c6mr11754961a12.33.1795746518388; Thu, 26 Nov 2026
- 18:28:38 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=ej+0fabs
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=+E04+1aBGfLLVpwGpqqzD9wY4oSras1xIIjdVXw1Xf4=;
+	b=ej+0fabsQIXeqdncA0bubFcuvkNmxkRJBYp5ZzHUdRXVaNK3kQGFUUshRhUPEsOAG65yMY32s
+	MdQ8zcRYTEay/Bx9oDxZLdX+dStvMb3ZlVAIovzcHgsDk2OOEW12vqVRfCQf0C7+lm6IwRbKIuy
+	WGoPDhAEM4F8V2D+AlWc0tU=
+Received: from mail.maildlp.com (unknown [172.19.163.15])
+	by canpmsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4jbHwR0X5LznTVd;
+	Fri, 27 Nov 2026 10:50:47 +0800 (CST)
+Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1550340578;
+	Fri, 27 Nov 2026 10:51:35 +0800 (CST)
+Received: from [10.67.110.68] (10.67.110.68) by kwepemk200008.china.huawei.com
+ (7.202.194.74) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Fri, 27 Nov
+ 2026 10:51:32 +0800
+Message-ID: <83aa091e-81c4-408a-af67-18e89b19aca0@huawei.com>
+Date: Fri, 27 Nov 2026 10:51:32 +0800
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -59,81 +62,170 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <20261126155017.2401147-5-ardb+git@google.com> <20261126155017.2401147-8-ardb+git@google.com>
-In-Reply-To: <20261126155017.2401147-8-ardb+git@google.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 27 Nov 2026 10:28:27 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5fd2K4WTPRSe7bdX3fgqxcC_MkOzwrxfMk1xnJdBW=Yg@mail.gmail.com>
-X-Gm-Features: Aa3M54oGQCKOCzrSK42tCJtjPGACWm64JVdOahutBp8ppxToRuoy47-brnsnqk4
-Message-ID: <CAAhV-H5fd2K4WTPRSe7bdX3fgqxcC_MkOzwrxfMk1xnJdBW=Yg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] efi/libstub: Provide library helpers only where needed
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-efi@vger.kernel.org, loongarch@lists.linux.dev, 
-	Ard Biesheuvel <ardb@kernel.org>, Dmitry Antipov <dmantipov@yandex.ru>, WANG Xuerui <kernel@xen0n.name>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 00/11] kexec: Rework segment loading and fix CMA
+ retries
+To: Mike Rapoport <rppt@kernel.org>
+CC: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
+	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
+	<mpe@ellerman.id.au>, <npiggin@gmail.com>, <chleroy@kernel.org>,
+	<ritesh.list@gmail.com>, <sshegde@linux.ibm.com>, <pjw@kernel.org>,
+	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <alex@ghiti.fr>,
+	<tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <akpm@linux-foundation.org>,
+	<baoquan.he@linux.dev>, <pasha.tatashin@soleen.com>, <pratyush@kernel.org>,
+	<leitao@debian.org>, <yeoreum.yun@arm.com>, <mpilaniy@redhat.com>,
+	<robh@kernel.org>, <coiby.xu@gmail.com>, <Yeking@red54.com>,
+	<prudo@redhat.com>, <brads@mainlining.org>, <sourabhjain@linux.ibm.com>,
+	<mkchauras@gmail.com>, <blum@kernel.org>, <adityag@linux.ibm.com>,
+	<qirui.001@bytedance.com>, <hui.wang@canonical.com>,
+	<sohammetha01@gmail.com>, <guoren@kernel.org>, <gaohan@iscas.ac.cn>,
+	<ionut.nechita@windriver.com>, <vishal.l.verma@intel.com>,
+	<seanjc@google.com>, <ardb@kernel.org>, <richard.lyu@suse.com>,
+	<arnd@arndb.de>, <tzimmermann@suse.de>, <rick.p.edgecombe@intel.com>,
+	<kai.huang@intel.com>, <kas@kernel.org>, <piliu@redhat.com>,
+	<thuth@redhat.com>, <shradhagupta@linux.microsoft.com>,
+	<ebiggers@kernel.org>, <jbouron@amazon.com>, <me@linux.beauty>,
+	<mclapinski@google.com>, <graf@amazon.com>, <tangyouling@kylinos.cn>,
+	<x86@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <loongarch@lists.linux.dev>,
+	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
+	<kexec@lists.infradead.org>
+References: <20261112133418.4044428-1-ruanjinjie@huawei.com>
+ <584a0e7a-230e-4a95-9e09-a1d6499a6ea9@huawei.com>
+ <awgmlnibFRpjgG2a@kernel.org>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <awgmlnibFRpjgG2a@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ kwepemk200008.china.huawei.com (7.202.194.74)
 
-Hi, Ard,
 
-Does this series wan to solve the same problem as below?
-https://lore.kernel.org/loongarch/97a95c9d-6736-4eee-ac9d-cbfb47d60492@app.=
-fastmail.com/T/#t
 
-On Thu, Nov 26, 2026 at 11:50=E2=80=AFPM Ard Biesheuvel <ardb+git@google.co=
-m> wrote:
->
-> From: Ard Biesheuvel <ardb@kernel.org>
->
-> Now that dead stub code is being eliminated by the linker, the only
-> remaining user of the 64-bit left shift and clz/ctz helper routines is
-> ZSTD compression, and only in some cases:
->
-> - the 64-bit left shift is only needed on 32-bit architectures
-> - the clz/ctz helper is needed on all RISC-V and 32-bit reduced
->   LoongArch
->
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> ---
->  drivers/firmware/efi/libstub/Makefile | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi=
-/libstub/Makefile
-> index 20b5b77956d1..ba6d67e5cd78 100644
-> --- a/drivers/firmware/efi/libstub/Makefile
-> +++ b/drivers/firmware/efi/libstub/Makefile
-> @@ -98,14 +98,15 @@ CFLAGS_arm32-stub.o         :=3D -DTEXT_OFFSET=3D$(TE=
-XT_OFFSET)
->
->  zboot-obj-y                    :=3D zboot-decompress-gzip.o
->  CFLAGS_zboot-decompress-gzip.o +=3D -I$(srctree)/lib/zlib_inflate
-> -zboot-obj-$(CONFIG_KERNEL_ZSTD)        :=3D zboot-decompress-zstd.o lib-=
-xxhash.o
-> +
-> +zstd-obj-$(CONFIG_32BIT)       :=3D lib-ashldi3.o
-> +zstd-obj-$(CONFIG_RISCV)       +=3D lib-clz_ctz.o
-> +zstd-obj-$(CONFIG_32BIT_REDUCED) +=3D lib-clz_ctz.o # loongarch
-I don't want to use CONFIG_32BIT_REDUCED outside arch/loongarch, can
-we use CONFIG_LOONGARCH which is similar  to RISCV?
+在 2026/11/26 20:31, Mike Rapoport 写道:
+> Hi Jinjie,
 
-And it seems the first patch can be folded with this one...
+Hi Mike,
 
-Huacai
+> 
+> On Mon, Nov 23, 2026 at 03:10:53PM +0800, Jinjie Ruan wrote:
+>>
+>> 在 2026/11/12 21:34, Jinjie Ruan 写道:
+>>> ARM64, LoongArch, RISC-V, x86 and powerpc build the elf core header
+>>> and place it together with the initrd and the DTB with almost identical
+>>> code.
+>>>
+>>> This series reworks that path into common helpers that the architectures
+>>> reuse, and fixes the CMA page and elf core header leaks in the arm64
+>>> and LoongArch placement retry loops.
+>>>
+>>> The patch organization is as follows:
+>>>
+>>> - Patch 1 moves the release of the elf core header into the generic
+>>>   post-load cleanup, so that the architectures no longer free it
+>>>   themselves.
+>>>
+>>> - Patch 2 adds the common helpers
+>>>
+>>> - Patches 3-7 convert arm64, LoongArch, RISC-V, X86 and Powerpc to
+>>>   reuse the common helpers
+>>>
+>>> - Patches 8-11 fix the CMA pages leaked by the retry loops and
+>>>   the loop that makes no progress
+>>>
+>>> Tested with kexec_file_load() on arm64, LoongArch, RISC-V, X86 and
+>>> Powerpc under QEMU, including the CMA retry paths, loading a crash
+>>> kernel and booting the second kernel, with the agent help.
+>>>
+>>> This series is also available at:
+>>> 	https://github.com/ruanjinjie-eng/linux/tree/kexec_rework_cma_bugfx_v9
+>>>
+>>> Changes in v8:
+>>> - Rework the common code as Mike suggested: the core provides building
+>>>   blocks and the architectures uses them (Mike)
+>>> - Build the elf core header once and only place it on the retries (Mike)
+>>> - Keep the segment order and the arch placement policy unchanged (Mike)
+>>> - Convert x86 and powerpc as well
+>>> - Move the CMA fixes to the end of the series (Mike)
+>>
+>> Hi Mike,
+>>
+>> Does this refactoring now meet your expectations?
+> 
+> I only had time for a quick skim, and overall it looks good to me.
+> 
+> The only thing that stood out was kexec_add_fdt() in kexec/kexec_file.c.
+> I believe drivers/of/kexec.c is a better place for it.
 
-> +zboot-obj-$(CONFIG_KERNEL_ZSTD)        :=3D zboot-decompress-zstd.o lib-=
-xxhash.o \
-> +                                  $(zstd-obj-y)
->  CFLAGS_zboot-decompress-zstd.o +=3D -I$(srctree)/lib/zstd
->
-> -zboot-riscv-obj-$(CONFIG_32BIT)        :=3D lib-ashldi3.o lib-lshrdi3.o
-> -zboot-obj-$(CONFIG_RISCV)      +=3D lib-clz_ctz.o $(zboot-riscv-obj-y)
-> -zboot-obj-$(CONFIG_LOONGARCH)  +=3D lib-clz_ctz.o
->  lib-$(CONFIG_EFI_ZBOOT)                +=3D zboot.o $(zboot-obj-y)
-> -
->  lib-$(CONFIG_UNACCEPTED_MEMORY) +=3D unaccepted_memory.o bitmap.o find.o
->
->  targets                                :=3D $(lib-y)
-> --
-> 2.56.1.839.g22a8290db9-goog
->
->
+I got it, of_kexec_alloc_and_setup_fdt() also here, and it will be
+better to name the helper of_kexec_add_fdt().
+
+>  
+>> In my view, there is still an issue worth discussing: should we reserve
+>> for the crash hotplug elf core header in the framework code
+>> kexec_add_elf_core_header(), or only implement it in the x86
+>> architecture code, and consider generalizing it after the ARM64
+>> implementation is available?
+> 
+> I think it's better to keep it in x86 for now and generalize later.
+
+OK, expect this will make the elf core header more cleaner and simplify
+the code. I will follow the instructions. Will also address the issues
+pointed out by Sashiko.
+
+Thanks
+Jinjie
+
+>  
+>> Best regards,
+>> Jinjie
+>>
+>>
+>>> - Link to v7: https://lore.kernel.org/all/20261026075201.699550-1-ruanjinjie@huawei.com/
+>>>
+>>> Previous Versions are as below:
+>>> - v6: https://lore.kernel.org/all/20260921090450.807575-1-ruanjinjie@huawei.com/
+>>> - v5: https://lore.kernel.org/all/20260918100442.3841135-1-ruanjinjie@huawei.com/
+>>> - v4: https://lore.kernel.org/all/20260907125404.922123-1-ruanjinjie@huawei.com/
+>>> - v3: https://lore.kernel.org/all/20260826092541.3905933-1-ruanjinjie@huawei.com/
+>>> - v2: https://lore.kernel.org/all/20260729031235.2840255-1-ruanjinjie@huawei.com/
+>>> - v1: https://lore.kernel.org/all/20260723131242.1537633-1-ruanjinjie@huawei.com/#t
+>>>
+>>> Jinjie Ruan (11):
+>>>   kexec: Free the elf core header in kimage_file_post_load_cleanup()
+>>>   kexec: Add helpers to load the elf core header, initrd and FDT
+>>>   arm64: kexec_file: Load the other segments with common helpers
+>>>   LoongArch: kexec_file: Load the other segments with common helpers
+>>>   riscv: kexec_file: Load the extra segments with common helpers
+>>>   x86: kexec_file: Use the common segment helpers
+>>>   powerpc: kexec_file: Use the common segment helpers
+>>>   kexec: Extract kexec_free_segment_cma() from kimage_free_cma()
+>>>   kexec: Add kexec_rollback_segments() helper
+>>>   arm64: kexec_file: Fix CMA segment placement retries
+>>>   LoongArch: kexec_file: Fix CMA segment placement retries
+>>>
+>>>  arch/arm64/include/asm/kexec.h             |   4 +-
+>>>  arch/arm64/kernel/kexec_image.c            |  15 ++-
+>>>  arch/arm64/kernel/machine_kexec_file.c     |  87 ++++----------
+>>>  arch/loongarch/include/asm/kexec.h         |   3 +-
+>>>  arch/loongarch/kernel/kexec_efi.c          |  15 ++-
+>>>  arch/loongarch/kernel/kexec_elf.c          |   3 +-
+>>>  arch/loongarch/kernel/machine_kexec_file.c |  80 +++++--------
+>>>  arch/powerpc/kexec/elf_64.c                |   9 +-
+>>>  arch/powerpc/kexec/file_load_64.c          |  18 +--
+>>>  arch/riscv/include/asm/kexec.h             |   4 +-
+>>>  arch/riscv/kernel/kexec_elf.c              |   3 +-
+>>>  arch/riscv/kernel/kexec_image.c            |   3 +-
+>>>  arch/riscv/kernel/machine_kexec_file.c     |  83 ++++----------
+>>>  arch/x86/kernel/crash.c                    |  25 +----
+>>>  arch/x86/kernel/kexec-bzimage64.c          |   8 +-
+>>>  arch/x86/kernel/machine_kexec_64.c         |   4 -
+>>>  include/linux/kexec.h                      |  14 +++
+>>>  kernel/kexec_core.c                        |  25 +++--
+>>>  kernel/kexec_file.c                        | 125 +++++++++++++++++++++
+>>>  19 files changed, 254 insertions(+), 274 deletions(-)
+>>>
+>>
+> 
+
