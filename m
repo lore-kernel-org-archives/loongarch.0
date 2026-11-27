@@ -1,72 +1,72 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795770732;
-	b=fVtLEX5aE5iezhECK2Ng0B0rtPWUP7WtrsqQgZ9/mI6xCiaM3nzPqitKW+KJVS8n3lQ+
-	 +WkUnwNbgqc+L6S2Xe8yFzrNAy9fdvChP28QpTsaOsMut1EXv/MlN08Fn2aoVjxqOprdl
-	 x1n+27uZVQhGFOQw+At5CibJW1uzXPN7BhDOHse6yJK0nD81ApZwkr1QCJfGA7kcQKZw8
-	 K5qj39J5tja9+puQNET6IihCN4wsocN2/kNUQVFmA+OrPRaCG+5HCFKvtj6gyOSPfZuGY
-	 7cpsMTuO/YN8S/KVjSEuZO0dOfby5nRqJoWE+FwIYcVWRjRX5zpE9fiqoaspKQJKUCw==
+	t=1795772934;
+	b=hJwY+4xs1+sqiLTRPJB6gfeVU7M3ALO1h+xFieWTek1MIlvXYpMv0+pnArHtvvq5hK/p
+	 L6XvpbFJVH4XbqNf0aX8v71dC6ifKYQZRUoOA73wJtZIZzI41k/m07WtJzLeHyl++mSjH
+	 FvTkzC8pYSmwwjuk3PGZmABCvBpc+2hNrntT3rkZ+86QX/q4bRFF5oO9J8j9eNcrlIzdv
+	 l3PmdXFgOOZ4kVYSvEOzTjQPk/0UpcXoej4/HwdPv0vTKV0OWU3AmdelFFThPK6hs6q/Q
+	 hjX5k8qoeGcZY5oFDZV0CqON6nBTO+o7IIYvUoFZfTleECUogEk9jwr7XBWIDovRvsA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795770732;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795772934;
 	h=Received:DKIM-Signature:Received:Received:X-ME-Sender:
 	 X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
 	 MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
 	 Subject:Content-Type:Content-Transfer-Encoding;
-	bh=rpZ+aThaaf6JKOCZR6eHW8p6EprLy1ZPV/lvnEseKMs=;
-	b=kCHYybvPwB406jeixCwOE+kUeAMcqt7n3EqOVObGFd0spuMSDki4kXIssdgMviYg41VX
-	 mEJ5olgd2z9oZqVI+Hu6dDoBttK8OBQkXfM5+Px3haFt8huAEEEtkHa7gfBJWgvSZxTsp
-	 xUw8W3EJKnmReTJEyXGlzalabcvAby/2y42Lxezs7BcRIjj2NLbO+YQ4oX9ZhYxx6gdCZ
-	 1cNLCq7WXy03Mqjpnoi+Z6kgyUgEoEz+zIxgQdaqcyObBirtE4HPrXtClf9q8wt7c+imj
-	 vIUUzKZSSLBsTNfxf7OhHoF7D0fr+SNnFEti4AO8bvxxVwQMNwE0AXBmKgAP10C/H/Q==
+	bh=YWBXC3kvwSwyXqPeXzUEG7oFOiHipMUkqTWjh0MmG3s=;
+	b=tcxWlZQ2sZOKu5L9QnWfnBzTBJussFEQahM1xbfJ7evN+xhCaoywOrWP1xEXbORAQ3oi
+	 3qeKgAv1z2woUSX655Con7ZB4RFIP7N9k5J2vMBWQKP0m4riOGG9NoT55Vd563Yi74InR
+	 QMGaUdqEwRHVQkxZKZtcKj5aNbKTDVx4v97l9tzqVWhWgQLZoSwxmFfLihiuffZsHWR4v
+	 IdYlbrYNPFs3u09VdFAZ0+kTqTG7hJKzwtCn2Dp/ngPYMxyoFqt3igxu3fVLz2FnrLRgf
+	 Q24sAx1dsdZJYlL+QCuG3Mypk5baB3EwPbP9hld+Oe79Q4Xtsqhn2dwTSuUxkKx3pew==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KHfbXPkG;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KeNDVrQz;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 855DD606A336
-	for <loongarch@lists.linux.dev>; Fri, 27 Nov 2026 09:12:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4504A606A321
+	for <loongarch@lists.linux.dev>; Fri, 27 Nov 2026 09:48:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KHfbXPkG
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43EE91F00936;
-	Fri, 27 Nov 2026 09:12:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KeNDVrQz
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C7631F000C1;
+	Fri, 27 Nov 2026 09:48:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795770731;
-	bh=rpZ+aThaaf6JKOCZR6eHW8p6EprLy1ZPV/lvnEseKMs=;
+	s=k20260515; t=1795772933;
+	bh=YWBXC3kvwSwyXqPeXzUEG7oFOiHipMUkqTWjh0MmG3s=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=KHfbXPkGniNPKEiaggG0YtCFldlwFKA466Cp6jj9d97rZDwcjAap64lKPd9Jz/U0/
-	 BSuNXcfIn5jEiwv/w6yh/QJTqjB+3jGkf8WSfWYMCAqOOXLef6eVlpayvp2HKJvm/K
-	 JVfrelr0GgXopzUIJ+08ipOkVcaz86Y2JSEIrzpnp92pBekpA7cGp2BvQ3LBPUKkQx
-	 ahRTI6qceb2SGMieqMON6ZQHPEWUg9vhHdSjkOdbES9skdRFEDO6YwrPX23XXgZ9mN
-	 Z4sYIsLfgz6oyozS71B6Kf+RCNBbcyB7qPgmTKN+0rd22LQcY3uPFQDCthznggHvrj
-	 /Fh7LNyZcTV6Q==
+	b=KeNDVrQz42fhbBGO+TCcVaeHo6mt9s2nF9Y0DUSpGo0I4POjW977W49rcnJ/CTrtl
+	 5Zrw5QmfN06hrBwCrumERsPN+IQjXxvAqCPmsY9HL0QRwD7fPVqJqjvwoBBHMK6y3x
+	 TyJoaXQdlGaIj7zaFdVXLUqvKRSZ4FBczAi9a5l0TYOmhMUBlYwg/WaR9gTSO3megh
+	 mLGPJrqDas06XOypAHk6VO4JsM9aGeZraKNKW7DBvJjB5OqmEBQ4OQ8nHpYHG/f06N
+	 yREgmf6QfB+ZV/tlfY3D/zXQdsAwHHNB00ADe6lNumXd5FiUac1Gn8tlZb9jvLo7UQ
+	 gTE5e9qCyt+4w==
 Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
-	by mailfauth.ams.internal (Postfix) with ESMTP id 7EB8D1980060;
-	Fri, 27 Nov 2026 04:12:09 -0500 (EST)
+	by mailfauth.ams.internal (Postfix) with ESMTP id 9ED921980047;
+	Fri, 27 Nov 2026 04:48:51 -0500 (EST)
 Received: from ams-imap-11 ([10.64.2.31])
-  by ams-compute-02.internal (MEProxy); Fri, 27 Nov 2026 04:12:09 -0500
-X-ME-Sender: <xms:Z0kJazA017So31OFLsI-Xv62556732b7oJV2uGlLxziDsCB49ILtig>
-    <xme:Z0kJa0UsU_D4jm1BY2K05TFZDPp0J5zgaEPp59jOYFPyeYbDl11bs3k4TmnTFyIn5
-    stAciLqKCMfGylLAILlRAgLju6Xqv2fVp6cyqP2of4GrAGi22lmTzk>
-X-ME-Proxy-Cause: dmFkZTGzX5rbUO1NoG3TCpvZNJ36eub2tKVRe5PnFGGsOG2nDTHVk4T9089xzX9DXjrbO2
-    qBjBsDbmubD1CYxtG0dYD6irpsmrjyBUny364QfbCo+M+wSpG3s8kbhBBrpluFCg7teyvg
-    fUf1fs3KoyEVccMvk6/0y0h6iJB29YSaqbWwWwG4Ne1dxetbI67MfrQYfAnRLJqDtZjED8
-    i0zRCZ0rbl79oSjPbBGXktbmZ71lS+uKps4+tStboVFyvpolcgEIem2tpfKPFjt3RElMBT
-    NoBtGcpmIQG8u/G+C/Th+83Vw2AFe0vv1y0dvRc2DhGWPNw9Xs8fAYN/mCeqhflZKm57NQ
-    gHNt7B2wiYohutSogcD8YMm8vwEBBFg8/4BZn81xs4uOOjBlvkX2o/QCG2E2cArRd51toD
-    44traoyO2oLU54M4Eyl2Ph4LhugvDfb5Ro7ETdI8svNlNsot2bTHGQQRDbzNmCbTCQ19TK
-    v3JFAXcKAydmooH/rCRfClEtd3qvmwpAzAma5TrX64yKlm+cK3YdcSu/itKIRLd8oZUYaC
-    iyExybbeiDDOXPi8eqPb/mLBOTQLk0gjQrw3YZs8/Nxx4sNACoJSpsNZxCDZsaScJdzjst
-    8thuTLq1HEuxW+Vvr4NTkZagwtCO3xaGe0iMmLkxsQSRxpcYU5rax+YRwtSg
-X-ME-Proxy: <xmx:aUkJaxA16lstdj8zk9Xs4DbkkDjPidtq-o7vxkfpWIfun3gXxMClVA>
-    <xmx:aUkJa6cWVej0lp4ePJjnpLj4FhyNnuznVPYyp-va2TptdVXvBbLKsw>
-    <xmx:aUkJa7klkSACnMgnc8zMuPPk6GqToxTWoAoaXKP_l94A8_GdWx4Nsg>
-    <xmx:aUkJaxFKC3mcVRp1LWEKdbFjBy90Sb0M_zAR1nOk0FYlgYdLMKni4A>
-    <xmx:aUkJaz6rSZ_WjzB221EXl5BCQqw-GZ4BKnuqzKRT2Uqa61-HyWrI0kOw>
+  by ams-compute-02.internal (MEProxy); Fri, 27 Nov 2026 04:48:51 -0500
+X-ME-Sender: <xms:AVIJa6GH1Rg_FKqA0ItvPimxQH6JZ_qWRCYYJBE3TKfTlHVtBpePVg>
+    <xme:AVIJa2I5wOwzrV5UAZSCmzhYk_hhHA55pbtszC6NjHEcBFQAlR-F_SJzkgJmL41Jt
+    -g-RwQzyKwz7qsXeAcVO535vDXuNzwskzA56EAKbwyz4n5bQoJ-MCY>
+X-ME-Proxy-Cause: dmFkZTEzBD1GuaugRPsoD94k7LcY6sNPNBZ97D7IoxjY0FKuEOZHQangDJd6MuTTEVWR2g
+    rvtDEKGJiKsTgrw2Nfvb+mBlxzQo4vtX7QK3snS7trYO+o8DvPjsWshEScyovsyEyXEHQH
+    jQ42diYm8SVeelPnGKs9zcrnE8SdRUSiHbTdOwe87rgIIJyhgEb/edgaEg+S1qTeV9S0+h
+    nBrhDhdzPuGvuEO37UAG+F6f5O8cO/gYkiyQX1v6pwdAg9iT+bOrxOPHeGdyjCc9k/vw/C
+    YxBMBqb4D2SVd3JVmlWzN82LueCdstx3rFniBBZZZxpZtbvxt5wqbZz0Ewg1UTQ83K+cFv
+    wz/C0n8r80dMMGzYdGL/LpC34oN9BPfCkWoByE19DaJMhJCilcB5SgmvQLd2/NqBNuJwia
+    1Jcp+m28DBjWfWWpgfTrs5htggzyNxH05bLrSdlB+YLZin6h4m4+Sc2j7iJMkN5y8l/rgZ
+    Y3GbO+a0MQ3/Xk814oBKvzKMp6duuV6rNN6s1SnUJTPiMO1S3hMt08hY8liyog9JyMl1Jx
+    VaqyJbNBOxBrOj2FUJKCtlKXSr+J2XjnJxcj3n4j0tM22ggXB04dcjJYhY9SfMrcBv63+S
+    jSlZ5I9+1XwiHPC0gkRTAEgO89gJbb+2uJDTEDRcQBoXk57CZ1vbOgYCHWAg
+X-ME-Proxy: <xmx:A1IJawm7Xw8RGQKOQ6cY4tZwiNaUEzW8u7KZjFbbVMsmZftnOwuZjQ>
+    <xmx:A1IJa6zXSFd0tvqP6ro5sKXj_BK9Im09jA8vv6KH6toJf0yDhpgkjA>
+    <xmx:A1IJa9rSYKS5bU23hh1a8oyKge-AZ0QJxFTJEUhviuTa1P6-mmzuoA>
+    <xmx:A1IJax6nb2Z6GCjAuURNSbkABqeSw2siEVvnnnC4lcxGbehydpwgwQ>
+    <xmx:A1IJa8f3muyZjHRzNejJNitxh9xRdXbLIRsCuiOH-xG7ef01ItW0pHlM>
 Feedback-ID: ice86485a:Fastmail
 Received: by mailuser.ams.internal (Postfix, from userid 501)
-	id 4D6ABF80093; Fri, 27 Nov 2026 04:12:07 -0500 (EST)
+	id B3D0CF80093; Fri, 27 Nov 2026 04:48:49 -0500 (EST)
 X-Mailer: MessagingEngine.com Webmail Interface
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -77,78 +77,84 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Date: Fri, 27 Nov 2026 10:11:46 +0100
+Date: Fri, 27 Nov 2026 10:48:28 +0100
 From: "Ard Biesheuvel" <ardb@kernel.org>
 To: "Huacai Chen" <chenhuacai@kernel.org>,
  "Ard Biesheuvel" <ardb+git@google.com>
 Cc: linux-efi@vger.kernel.org, loongarch@lists.linux.dev,
  "Dmitry Antipov" <dmantipov@yandex.ru>, "WANG Xuerui" <kernel@xen0n.name>
-Message-Id: <a4e1054d-dc7d-4d62-a539-562dae4b5ee9@app.fastmail.com>
-In-Reply-To: <b6479785-6d26-43f6-92db-627bc2bfe11f@app.fastmail.com>
+Message-Id: <1d7af4f1-240f-4809-9342-27dfd9b6fc77@app.fastmail.com>
+In-Reply-To: <a4e1054d-dc7d-4d62-a539-562dae4b5ee9@app.fastmail.com>
 References: <20261126155017.2401147-5-ardb+git@google.com>
  <20261126155017.2401147-8-ardb+git@google.com>
  <CAAhV-H5fd2K4WTPRSe7bdX3fgqxcC_MkOzwrxfMk1xnJdBW=Yg@mail.gmail.com>
  <b6479785-6d26-43f6-92db-627bc2bfe11f@app.fastmail.com>
+ <a4e1054d-dc7d-4d62-a539-562dae4b5ee9@app.fastmail.com>
 Subject: Re: [PATCH 3/3] efi/libstub: Provide library helpers only where needed
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
 
 
-On Fri, 27 Nov 2026, at 08:13, Ard Biesheuvel wrote:
-> On Fri, 27 Nov 2026, at 03:28, Huacai Chen wrote:
->> Hi, Ard,
+On Fri, 27 Nov 2026, at 10:11, Ard Biesheuvel wrote:
+> On Fri, 27 Nov 2026, at 08:13, Ard Biesheuvel wrote:
+>> On Fri, 27 Nov 2026, at 03:28, Huacai Chen wrote:
+>>> Hi, Ard,
+>>>
+>>> Does this series wan to solve the same problem as below?
+>>> https://lore.kernel.org/loongarch/97a95c9d-6736-4eee-ac9d-cbfb47d604=
+92@app.fastmail.com/T/#t
+>>>
 >>
->> Does this series wan to solve the same problem as below?
->> https://lore.kernel.org/loongarch/97a95c9d-6736-4eee-ac9d-cbfb47d6049=
-2@app.fastmail.com/T/#t
+>> Yes.
 >>
->
-> Yes.
->
->> On Thu, Nov 26, 2026 at 11:50=E2=80=AFPM Ard Biesheuvel <ardb+git@goo=
-gle.com> wrote:
->>>
->>> From: Ard Biesheuvel <ardb@kernel.org>
->>>
->>> Now that dead stub code is being eliminated by the linker, the only
->>> remaining user of the 64-bit left shift and clz/ctz helper routines =
-is
->>> ZSTD compression, and only in some cases:
->>>
->>> - the 64-bit left shift is only needed on 32-bit architectures
->>> - the clz/ctz helper is needed on all RISC-V and 32-bit reduced
->>>   LoongArch
->>>
->>> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
->>> ---
->>>  drivers/firmware/efi/libstub/Makefile | 11 ++++++-----
->>>  1 file changed, 6 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmwar=
-e/efi/libstub/Makefile
->>> index 20b5b77956d1..ba6d67e5cd78 100644
->>> --- a/drivers/firmware/efi/libstub/Makefile
->>> +++ b/drivers/firmware/efi/libstub/Makefile
->>> @@ -98,14 +98,15 @@ CFLAGS_arm32-stub.o         :=3D -DTEXT_OFFSET=3D=
+>>> On Thu, Nov 26, 2026 at 11:50=E2=80=AFPM Ard Biesheuvel <ardb+git@go=
+ogle.com> wrote:
+>>>>
+>>>> From: Ard Biesheuvel <ardb@kernel.org>
+>>>>
+>>>> Now that dead stub code is being eliminated by the linker, the only
+>>>> remaining user of the 64-bit left shift and clz/ctz helper routines=
+ is
+>>>> ZSTD compression, and only in some cases:
+>>>>
+>>>> - the 64-bit left shift is only needed on 32-bit architectures
+>>>> - the clz/ctz helper is needed on all RISC-V and 32-bit reduced
+>>>>   LoongArch
+>>>>
+>>>> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+>>>> ---
+>>>>  drivers/firmware/efi/libstub/Makefile | 11 ++++++-----
+>>>>  1 file changed, 6 insertions(+), 5 deletions(-)
+>>>>
+>>>> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmwa=
+re/efi/libstub/Makefile
+>>>> index 20b5b77956d1..ba6d67e5cd78 100644
+>>>> --- a/drivers/firmware/efi/libstub/Makefile
+>>>> +++ b/drivers/firmware/efi/libstub/Makefile
+>>>> @@ -98,14 +98,15 @@ CFLAGS_arm32-stub.o         :=3D -DTEXT_OFFSET=3D=
 $(TEXT_OFFSET)
+>>>>
+>>>>  zboot-obj-y                    :=3D zboot-decompress-gzip.o
+>>>>  CFLAGS_zboot-decompress-gzip.o +=3D -I$(srctree)/lib/zlib_inflate
+>>>> -zboot-obj-$(CONFIG_KERNEL_ZSTD)        :=3D zboot-decompress-zstd.=
+o lib-xxhash.o
+>>>> +
+>>>> +zstd-obj-$(CONFIG_32BIT)       :=3D lib-ashldi3.o
+>>>> +zstd-obj-$(CONFIG_RISCV)       +=3D lib-clz_ctz.o
+>>>> +zstd-obj-$(CONFIG_32BIT_REDUCED) +=3D lib-clz_ctz.o # loongarch
+> ...
+>>> And it seems the first patch can be folded with this one...
 >>>
->>>  zboot-obj-y                    :=3D zboot-decompress-gzip.o
->>>  CFLAGS_zboot-decompress-gzip.o +=3D -I$(srctree)/lib/zlib_inflate
->>> -zboot-obj-$(CONFIG_KERNEL_ZSTD)        :=3D zboot-decompress-zstd.o=
- lib-xxhash.o
->>> +
->>> +zstd-obj-$(CONFIG_32BIT)       :=3D lib-ashldi3.o
->>> +zstd-obj-$(CONFIG_RISCV)       +=3D lib-clz_ctz.o
->>> +zstd-obj-$(CONFIG_32BIT_REDUCED) +=3D lib-clz_ctz.o # loongarch
-...
->> And it seems the first patch can be folded with this one...
 >>
+>> This is an optimization, the first one is a build fix.
 >
-> This is an optimization, the first one is a build fix.
+> Yes, it does seem that the first patch is superseded by this change, as
+> the left-shift helper is only used in zstd.
+>
 
-Yes, it does seem that the first patch is superseded by this change, as
-the left-shift helper is only used in zstd.
+Hmm the --gc-sections patch does not affect the vmlinux build so the fix
+in patch #1 needs to stay. But I can drop the loongarch pieces from this
+hunk, because its libstub.a already carries those objects.
 
-I'll respin this.
 
