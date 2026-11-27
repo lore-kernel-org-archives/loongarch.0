@@ -1,89 +1,73 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=113.46.200.223
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795774210;
-	b=HFcsKetoo7P89MjPIKVAi6rFNUGNzdpfRiYI38rfGDulbBpjYoG8JQ7JW7epevdkfiCI
-	 ZKioFV/0jUpISYWZBXykr0MOVH7aS+En59JI027VMue+KJb32fmqM+VU63h+8G1juZTgq
-	 cWsvFyusRRMriQXHXoXyWGjKdvD91k8Ni0RHxn6Prc8+wdVlcR1pimwZDOWAMCP1G+EXd
-	 eEQZprkxCzFBlyjMENPpe4kzm0Lox2sTAB2jx2b9vmKDJNrySooWmYrtuADpOzcDvqHIo
-	 ADzwWodWHKQu+c8tPbvy2hXQVPwQL3DPJkGq8GhMnrtYIfQCn/P60IzlkAd7G7LS4+A==
+	t=1795784250;
+	b=PrETTFT2MHEjBWebfcAGPscTubarUoi1Pw+cJOhAJb68eT7crgOhv4RPAzVAdW6eGWpO
+	 /4cK74s9LbySSqmElgBMOw2Z/Pi1XqIWbPARKPbcditJ1/YR1YznDoiFy6SBNQCtuwW4w
+	 CSZkTTn3uoceJARE7O/OcgfsZeW9WqpRNg1J+i/gjyFi/L9s+lGUEpOtMqpxjBlQ7fXvj
+	 iutJVetTk3mg4rKHJhgDTAQSi2ay8RDqIRcFAhEhZ28nFLmbgPqzGN5BKVfzIPZNnWU8+
+	 CobTxqwhIYKu4AeuKkS2F8Z0ygqn1uRi4/USic2h/2fIbajLxxbQCFuVzjOXVTtz7Tw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795774210;
-	h=DMARC-Filter:dkim-signature:Received:Received:Received:From:To:CC:
-	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:Content-Type:X-Originating-IP:
-	 X-ClientProxiedBy;
-	bh=RD+RhKHkx2ypFB5sfZGqGwGbb8y1IoqlO39za0vFLv4=;
-	b=TC0G1SquNfvSl7EyOUi0KeG9yr5keO9s+NY4X+aeIFMB0qOR/V56vJejA1GHtiohLAoB
-	 /ETgI1P1L3puilxac3hy6EC0OoypPfko6J3pKBXL8i1uQjC3LZZ7CthyCCPKYhcZ74/fI
-	 N41q2GOm88Nphqe/Tj0mU0/vGBc3daEr74DxlFsic6olcHcKHE+VGe/GN0jOWMYG8FjQK
-	 Y+HJiXkWwTA3Qfhvf67+RsQXaBa3Q1frY5duguYbx5DDtTwQSNR9rrS8EIFW0e3IRp2ia
-	 kLKqL7LhAHeug8oP5XsMSbsqWpXd7XFCJwiy1iGaHboVCTN1OY1wHTMiRYovLd8RbWw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795784250;
+	h=Received:DKIM-Signature:Received:Received:X-ME-Sender:
+	 X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
+	 MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type:Content-Transfer-Encoding;
+	bh=8pbqAWUo28prTe+MBHoVMlUYCLqcSTjnimmwlUz9h3Q=;
+	b=bjrdqDUGIL2QvvIclaU6fCD1ZT49KlqtT7795uCpwG5ilXWCTgrdD2mGxWzjXWDJ3Y+b
+	 aYs3B7f15fvaqJGCrWXbh8IrR5oYkoH7J8KSe6SZVTNzlRjEIaPuiwac035Nno0L52yCU
+	 f26DqcQTr0JpknhtadFYJ3EspuMZ+q+Vds/xvpSoG9WWQxatMx08CskpXRz5bvXE3dfJX
+	 DvpdGsyBAg2V9edXMKzIXKtST7Ros85B/Yg5MFTZnBZ18AIlwxZtVPqDil3qnjxOxsMzS
+	 HVuCJaUnbcHQ5360phX4Dk7nBIXaum7tdCdSUeoehHtVkD/XqsuDh7jDWmnHiU3kUag==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=huawei.com;
-	spf=pass smtp.mailfrom=huawei.com;
-	dkim=pass header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=LHau4pfz;
-	arc=none smtp.remote-ip=113.46.200.223
-Received: from canpmsgout08.his.huawei.com (canpmsgout08.his.huawei.com [113.46.200.223])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ce5DpEsV;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85CD9606A6BB
-	for <loongarch@lists.linux.dev>; Fri, 27 Nov 2026 10:10:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 85CD9606A6BB
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D910606A31C
+	for <loongarch@lists.linux.dev>; Fri, 27 Nov 2026 12:57:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=LHau4pfz
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=RD+RhKHkx2ypFB5sfZGqGwGbb8y1IoqlO39za0vFLv4=;
-	b=LHau4pfz/sVP57FiK2UxBBLN/FUwWdlrRFdKQoAagxZjTMYkKP4CCFom+7r2gExa8cx+uTB6F
-	wM2IgZjUr4H3DMTa89BmZIZ1XA7SPR269+mshFrZgpWGX6xVa85isQLow5DdpnoG5chTDwApz6d
-	kC2XXILcZVAahBiMa/zjgkQ=
-Received: from mail.maildlp.com (unknown [172.19.163.15])
-	by canpmsgout08.his.huawei.com (SkyGuard) with ESMTPS id 4jbTfn5QdGzmV63;
-	Fri, 27 Nov 2026 18:09:37 +0800 (CST)
-Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id B4DBB4058E;
-	Fri, 27 Nov 2026 18:10:02 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by kwepemk200008.china.huawei.com
- (7.202.194.74) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Fri, 27 Nov
- 2026 18:10:00 +0800
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
-	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
-	<mpe@ellerman.id.au>, <npiggin@gmail.com>, <chleroy@kernel.org>,
-	<ritesh.list@gmail.com>, <sshegde@linux.ibm.com>, <pjw@kernel.org>,
-	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <alex@ghiti.fr>,
-	<tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <robh@kernel.org>,
-	<saravanak@kernel.org>, <akpm@linux-foundation.org>, <baoquan.he@linux.dev>,
-	<rppt@kernel.org>, <pasha.tatashin@soleen.com>, <pratyush@kernel.org>,
-	<ben@cressey.dev>, <leitao@debian.org>, <mpilaniy@redhat.com>,
-	<yeoreum.yun@arm.com>, <coiby.xu@gmail.com>, <Yeking@Red54.com>,
-	<prudo@redhat.com>, <bradley.morgan@linux.dev>, <sourabhjain@linux.ibm.com>,
-	<blum@kernel.org>, <hbathini@linux.ibm.com>, <qirui.001@bytedance.com>,
-	<hui.wang@canonical.com>, <sohammetha01@gmail.com>, <guoren@kernel.org>,
-	<gaohan@iscas.ac.cn>, <ionut.nechita@windriver.com>,
-	<vishal.l.verma@intel.com>, <seanjc@google.com>, <ardb@kernel.org>,
-	<arnd@arndb.de>, <tzimmermann@suse.de>, <kas@kernel.org>,
-	<rick.p.edgecombe@intel.com>, <mhklinux@outlook.com>, <piliu@redhat.com>,
-	<shradhagupta@linux.microsoft.com>, <thuth@redhat.com>,
-	<ebiggers@kernel.org>, <me@linux.beauty>, <mclapinski@google.com>,
-	<graf@amazon.com>, <tangyouling@kylinos.cn>, <x86@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <loongarch@lists.linux.dev>,
-	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<kexec@lists.infradead.org>
-CC: <ruanjinjie@huawei.com>
-Subject: [PATCH v9 11/11] LoongArch: kexec_file: Fix CMA segment placement retries
-Date: Fri, 27 Nov 2026 18:09:25 +0800
-Message-ID: <20261127100925.3019877-12-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20261127100925.3019877-1-ruanjinjie@huawei.com>
-References: <20261127100925.3019877-1-ruanjinjie@huawei.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ce5DpEsV
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 586341F00899
+	for <loongarch@lists.linux.dev>; Fri, 27 Nov 2026 12:57:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795784249;
+	bh=8pbqAWUo28prTe+MBHoVMlUYCLqcSTjnimmwlUz9h3Q=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject;
+	b=ce5DpEsV0T/DmEI0on+Nu5M5KdUx25h62+InM0yVyUlK3h8lf43BhiUwz6UqULlbA
+	 CICrHEvMCi6tomXp2FmXWoh83xJ/RCiLCABFev3QUes2Y4E8tuMZAhwelkBoc8q6XQ
+	 4hNrNfRPxp8E9LMTem096s0yCEb1XUfT0vsdYi3cirOQxBctbQ2r0Jz/GFJXQJCw+W
+	 AgrHMjdbRMLdNehTcHhvqa4F+aLro49xjqisA9qiID9O9bD+gtJ/H0xJyiWfgA4FWe
+	 vX1SR/5CbI4iFRtCZUcbsr2X2pXutVdoyP5twsxfJ1RbXhhConbhmojhgoqByH6i5R
+	 45voguaq6xlMg==
+Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
+	by mailfauth.ams.internal (Postfix) with ESMTP id 899B81980093;
+	Fri, 27 Nov 2026 07:57:27 -0500 (EST)
+Received: from ams-imap-11 ([10.64.2.31])
+  by ams-compute-02.internal (MEProxy); Fri, 27 Nov 2026 07:57:27 -0500
+X-ME-Sender: <xms:NX4Ja0Tv5vsBpDO_v0uO8tCPCL26eveFAyq4zAG6_LrSYjI6_Vnj4g>
+    <xme:NX4Ja8nLiSJ21vxjjQHZ6LJAf5edHieByEmsY19pwxlJWS7NkKFrNLtCxvgYwdiEA
+    j_p4N84AgeZmliGJnP_9biqiteZxCUdAeeVHWEBkuupIyurlw1SDuE>
+X-ME-Proxy-Cause: dmFkZTEyDcnf44wM4/DTGvH1z7F4d1usDZODzOKwLqdRRBqE8o49jnjmQ1wUpy1X0C0pqo
+    p9kjMW31ZCVMthl+18khL9zHsOWoONdcFsSDf76kGzo4UZtC029KSdXlbXoufBkx1/1B48
+    Pfdm2VvtAwc9cKiPhgJhe+INaph06GrJTZlDy6L4GO+tI9CTr2FBjNSu5Jk3elR7sWpbNv
+    VkYyr+eYcxOQO4fpEz5dV+e13jK3ux3nbgTQ7IDVuTCjzEX7DWxwp5rOLDVlwFzkpqvyJk
+    FjRKb4fmj3DI+8cb1hfxMjtCP2vgdrBVIhIlmfW7BdMQRCE/TCodqFiiFZkk1fhH0b2Gp0
+    xvFqRb8q58VCt5Iapj6VW/+i1OgIrrRHjC5+T8hwllwI59mc6+m0og0xGr3sOKbVXLLJC3
+    ittlbLAu+inv03xAvaHmjLOr8+VVlkeVtyVZQOKHZXLvRfjz1d77JxYrgnL88YhopPHS5m
+    og0b3/gSrlI+yAaZVVKK92PlwutuNtvR1Kd2pHetdkZJgdkebdrfarB/jXV6KOxyjoUN9Q
+    GlhuyIWnLht9KB5z9O8Y3ycPRut4nsVKZlA9cofivvQN7oId8QMtfYcnrgtPt3yAUk8/PZ
+    IZk1J9U22n7UqyO0hWAOICl7gEtWwdSsQ9gEoXbES2mZE8AxuXxtt0g7naHQ
+X-ME-Proxy: <xmx:N34Ja8RUb84MfrCeyhrCYFxcp2ZgdzD85rKZLjTBh03abjvvGwCQFw>
+    <xmx:N34Ja0tOb5ceXZrU1ApkXkSg5syP-9wwKnSdgKUhS35HwAozJ4HRww>
+    <xmx:N34Ja40u6L9amauVIkswh8SnNY-Mi1Ut8k1oDb0hS1713ZsOedcD4w>
+    <xmx:N34Ja1WEeH68a1wWbqM80deokbYG2YdAHRzh09dQDV-Du6PRWIbLBg>
+    <xmx:N34JazKS1L_r-tHuzlMyQrzmvIjB9pUXsVF5Y77wYL_zbD371cNImpyc>
+Feedback-ID: ice86485a:Fastmail
+Received: by mailuser.ams.internal (Postfix, from userid 501)
+	id 87777F80096; Fri, 27 Nov 2026 07:57:25 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -93,93 +77,98 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- kwepemk200008.china.huawei.com (7.202.194.74)
+Date: Fri, 27 Nov 2026 13:57:04 +0100
+From: "Ard Biesheuvel" <ardb@kernel.org>
+To: "Huacai Chen" <chenhuacai@kernel.org>,
+ "Ard Biesheuvel" <ardb+git@google.com>
+Cc: linux-efi@vger.kernel.org, loongarch@lists.linux.dev,
+ "Dmitry Antipov" <dmantipov@yandex.ru>, "WANG Xuerui" <kernel@xen0n.name>
+Message-Id: <c259be8b-b5fa-426b-931f-c0d8776ed9a0@app.fastmail.com>
+In-Reply-To: <1d7af4f1-240f-4809-9342-27dfd9b6fc77@app.fastmail.com>
+References: <20261126155017.2401147-5-ardb+git@google.com>
+ <20261126155017.2401147-8-ardb+git@google.com>
+ <CAAhV-H5fd2K4WTPRSe7bdX3fgqxcC_MkOzwrxfMk1xnJdBW=Yg@mail.gmail.com>
+ <b6479785-6d26-43f6-92db-627bc2bfe11f@app.fastmail.com>
+ <a4e1054d-dc7d-4d62-a539-562dae4b5ee9@app.fastmail.com>
+ <1d7af4f1-240f-4809-9342-27dfd9b6fc77@app.fastmail.com>
+Subject: Re: [PATCH 3/3] efi/libstub: Provide library helpers only where needed
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-The file-based kexec system call places segments with kexec_add_buffer(),
-which takes them from CMA when kexec_alloc_contig() succeeds, to avoid
-copying the payload at kexec time.
 
-When load_other_segments() cannot place the initrd, the segments of the
-attempt are dropped but their CMA pages are leaked.  Release them with
-kexec_rollback_segments() in the retry loop and in the error path of
-load_other_segments().
+On Fri, 27 Nov 2026, at 10:48, Ard Biesheuvel wrote:
+> On Fri, 27 Nov 2026, at 10:11, Ard Biesheuvel wrote:
+>> On Fri, 27 Nov 2026, at 08:13, Ard Biesheuvel wrote:
+>>> On Fri, 27 Nov 2026, at 03:28, Huacai Chen wrote:
+>>>> Hi, Ard,
+>>>>
+>>>> Does this series wan to solve the same problem as below?
+>>>> https://lore.kernel.org/loongarch/97a95c9d-6736-4eee-ac9d-cbfb47d60=
+492@app.fastmail.com/T/#t
+>>>>
+>>>
+>>> Yes.
+>>>
+>>>> On Thu, Nov 26, 2026 at 11:50=E2=80=AFPM Ard Biesheuvel <ardb+git@g=
+oogle.com> wrote:
+>>>>>
+>>>>> From: Ard Biesheuvel <ardb@kernel.org>
+>>>>>
+>>>>> Now that dead stub code is being eliminated by the linker, the only
+>>>>> remaining user of the 64-bit left shift and clz/ctz helper routine=
+s is
+>>>>> ZSTD compression, and only in some cases:
+>>>>>
+>>>>> - the 64-bit left shift is only needed on 32-bit architectures
+>>>>> - the clz/ctz helper is needed on all RISC-V and 32-bit reduced
+>>>>>   LoongArch
+>>>>>
+>>>>> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+>>>>> ---
+>>>>>  drivers/firmware/efi/libstub/Makefile | 11 ++++++-----
+>>>>>  1 file changed, 6 insertions(+), 5 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmw=
+are/efi/libstub/Makefile
+>>>>> index 20b5b77956d1..ba6d67e5cd78 100644
+>>>>> --- a/drivers/firmware/efi/libstub/Makefile
+>>>>> +++ b/drivers/firmware/efi/libstub/Makefile
+>>>>> @@ -98,14 +98,15 @@ CFLAGS_arm32-stub.o         :=3D -DTEXT_OFFSET=
+=3D$(TEXT_OFFSET)
+>>>>>
+>>>>>  zboot-obj-y                    :=3D zboot-decompress-gzip.o
+>>>>>  CFLAGS_zboot-decompress-gzip.o +=3D -I$(srctree)/lib/zlib_inflate
+>>>>> -zboot-obj-$(CONFIG_KERNEL_ZSTD)        :=3D zboot-decompress-zstd=
+.o lib-xxhash.o
+>>>>> +
+>>>>> +zstd-obj-$(CONFIG_32BIT)       :=3D lib-ashldi3.o
+>>>>> +zstd-obj-$(CONFIG_RISCV)       +=3D lib-clz_ctz.o
+>>>>> +zstd-obj-$(CONFIG_32BIT_REDUCED) +=3D lib-clz_ctz.o # loongarch
+>> ...
+>>>> And it seems the first patch can be folded with this one...
+>>>>
+>>>
+>>> This is an optimization, the first one is a build fix.
+>>
+>> Yes, it does seem that the first patch is superseded by this change, =
+as
+>> the left-shift helper is only used in zstd.
+>>
+>
+> Hmm the --gc-sections patch does not affect the vmlinux build so the f=
+ix
+> in patch #1 needs to stay. But I can drop the loongarch pieces from th=
+is
+> hunk, because its libstub.a already carries those objects.
 
-The loop makes progress by advancing buf_min past a segment placed by the
-walk.  kexec_alloc_contig() ignores buf_min, so once the pages of a CMA
-segment are released, the next attempt can get the same region again and
-the retry makes no progress.  Disable CMA for the retry.
+Finally, I'll keep patch #1 as a fix, and turn this into
 
-A CMA segment can be anywhere in RAM, so moving buf_min to its end can
-raise the walk's lower bound close to the top of memory and leave the
-retry with too little space for the initrd, failing with -EADDRNOTAVAIL.
-Only advance buf_min for segments found by the walk.
+zstd-riscv-obj-$(CONFIG_32BIT) :=3D lib-ashldi3.o
+zstd-obj-$(CONFIG_32BIT)       :=3D lib-clz_ctz.o
+zstd-obj-$(CONFIG_RISCV)       :=3D lib-clz_ctz.o $(zstd-riscv-obj-y)
+zstd-obj-y                     +=3D lib-xxhash.o
+zboot-obj-$(CONFIG_KERNEL_ZSTD) :=3D zboot-decompress-zstd.o $(zstd-obj-=
+y)
 
-Tested with a non-crash kexec_file_load() on QEMU virt, 2 GiB RAM and
-cma=64M@0xe8000000, which leaves only 64 MiB above the CMA area.
 
-Before the fix:
-	The retry leaks the CMA pages and kexec_file_load() returns
-	-EADDRNOTAVAIL even though RAM below CMA is free.
-
-After the fix:
-	The kernel and initrd are placed below CMA and the second
-	kernel boots.
-
-Fixes: 55d990f0084c ("LoongArch: Add EFI binary support for kexec_file")
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>
-Cc: Youling Tang <tangyouling@kylinos.cn>
-Cc: Mike Rapoport (Microsoft) <rppt@kernel.org>
-Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
-Cc: Kees Cook <kees@kernel.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-Link: https://sashiko.dev/#/patchset/20260729031235.2840255-1-ruanjinjie%40huawei.com
----
- arch/loongarch/kernel/kexec_efi.c          | 12 ++++++++----
- arch/loongarch/kernel/machine_kexec_file.c |  2 +-
- 2 files changed, 9 insertions(+), 5 deletions(-)
-
-diff --git a/arch/loongarch/kernel/kexec_efi.c b/arch/loongarch/kernel/kexec_efi.c
-index 4824c47907ac..1fbd0ee1deb6 100644
---- a/arch/loongarch/kernel/kexec_efi.c
-+++ b/arch/loongarch/kernel/kexec_efi.c
-@@ -82,11 +82,15 @@ static void *efi_kexec_load(struct kimage *image,
- 			break;
- 
- 		/*
--		 * We couldn't find space for the other segments; erase the
--		 * kernel segment and try the next available hole.
-+		 * kexec_alloc_contig() ignores buf_min and always returns
-+		 * CMA memory, so disable it and keep buf_min.
- 		 */
--		image->nr_segments -= 1;
--		kbuf.buf_min = kernel_segment->mem + kernel_segment->memsz;
-+		if (image->segment_cma[kernel_segment_number])
-+			image->no_cma = true;
-+		else
-+			kbuf.buf_min = kernel_segment->mem + kernel_segment->memsz;
-+
-+		kexec_rollback_segments(image, kernel_segment_number);
- 		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
- 	}
- 
-diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
-index 00940f20b45e..adf7416ff49f 100644
---- a/arch/loongarch/kernel/machine_kexec_file.c
-+++ b/arch/loongarch/kernel/machine_kexec_file.c
-@@ -190,7 +190,7 @@ int load_other_segments(struct kimage *image,
- 	return 0;
- 
- out_err:
--	image->nr_segments = orig_segments;
-+	kexec_rollback_segments(image, orig_segments);
- 	kfree(modified_cmdline);
- 	return ret;
- }
--- 
-2.34.1
 
