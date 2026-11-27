@@ -1,64 +1,95 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=158.69.130.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795805905;
-	b=3YeMlTKzZQ1wxyJmdsP5Cnx2pPdNUgLLzizp6hsNve0N9n6vFqLnptEPx/txPiJ4ZJ1V
-	 b6dXYfnbpflBldZdEeuJ7gbX9IwVcJN/Fcf2Xu+o3/EyK97SiR/WBtQ2MvvZ5rrBghCJ4
-	 hZ/sH8Z68vGh+B3+vfWBb2sPRGVNwRq6bwI310+KXbPDtWqzR9pmExBoD6qBWzjeZ91n+
-	 GSSir4TkV5GyviCVeJMaqPEhZBBEGeX1etMmspv9gsktwhvYoIB25UnTWfT3lBFqbBUqg
-	 KwSFBPiWR6DYCzAHmZ9Dg66NRVhRMz77yKkk8o3NRvqFvJ6fWAK/+7r2KerYgAaDU1A==
+	t=1795805906;
+	b=0r75/4Jv76MfmCOfF+/OpORHxDEeUaDO5jF9zDDbvzoQwOyJmsBrzVLEt2hAy72tGbaZ
+	 fys2meSq6Lo4eeYFur56m+KxPF41KSDI33Pi1qfz4VUQndXgOYN4hbRi7pgyXnK1GtcZR
+	 l4IcFTAFnrJoLZTzYFn6UuLAKyClMOgMFPHHGfs/UcvpZVukzF68Qvpkgx0vK0lXCs5+K
+	 xYXI7cvWRHuzxaiSFFd3vC3rJoYW7/8/YHaSGNi963cWWJ1RiT8AviSYU2XUFeYqbDU/K
+	 r6UzFDoX1OlSpAvMM5chQJizApr6fG1lNjH0gZVfuD1XUjf4/6nLcYW1dkblSbCrOng==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795805905;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795805906;
 	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
 	 Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=MfSMwXSAWBd4ItZsKrFa1iXIKNYRq7JCuBaisKgh7Hs=;
-	b=S9W6iS3WQPtH/ZE6FWYU8AHl/syj0lhT1XyXhhEhskVFzyogYkiBFY1t8977a03dGjWT
-	 qNi6+DMsvNBVbVrYR2k1+PeSldHHc+FY6T41nXRA/xgsI/gcyygiLX7c7gmPP4poDuM2m
-	 mC8tABENmgttJRCvtFAzqsrlvV8xEv8UgR4EeRG5Y+QzhAkynv1vN5CBiry58Pl00S+xU
-	 IeEfvmQ7Zrcsv5Xx2L8TxCUu8WY6edI9tjjgr/9HxJuMo2ZJ7v3RNwHL8IxGhJalkFvE8
-	 S2CWSQ/v5jkIEu8ArOoOMjb+JmmoLPKAHEReM1XOoBqV3PTtkZtAAKoM3rkDt7IRrcA==
+	bh=rF8sHZW1cTd+n7KcEI4fz6GZGwqe6JLJYuwVImB7MOs=;
+	b=HoxqR9fJZDFF17T/jsoBQvuPfY9t+CeW+9mYltP5NAb0RcO5eOOIrVN4Q3ufTzzl8fJ5
+	 8ZEVhzP30YpWtmK5QACyd/nq2P32pkz/geC0nPU1+mB7QLCLvs/jthh/JYJ0WDQoh0+kI
+	 1L+KcehimoDn846kih1B3sgd3oYnO1ToyVYITeXGbDgIPhX3tgN1KIb84/ChHKJxsq5K/
+	 +oirZdFcw4hUgS4/OLuhR5XmbWXTFWf3m3QsJRy35agaTkZDhHQwUzisfkPEHG73GNklJ
+	 BfnS+TF5OK4kdAmQ5mxgVLL3etJDQygPulcZqao/sjbuMgb/l1G7E6yGaD3t/3WwZpQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=efficios.com;
 	spf=pass smtp.mailfrom=efficios.com;
-	dkim=pass header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=OPlFvYzz;
+	dkim=pass header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=q4blEadq;
 	arc=none smtp.remote-ip=158.69.130.18
 Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7464E606A326
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF4F7606A32E
 	for <loongarch@lists.linux.dev>; Fri, 27 Nov 2026 18:58:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7464E606A326
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AF4F7606A32E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=OPlFvYzz
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=q4blEadq
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
 	s=smtpout1; t=1795805904;
-	bh=MfSMwXSAWBd4ItZsKrFa1iXIKNYRq7JCuBaisKgh7Hs=;
+	bh=rF8sHZW1cTd+n7KcEI4fz6GZGwqe6JLJYuwVImB7MOs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OPlFvYzzl3RmkV8UMP+tCuHl/Mi7Vj3h4K72V4BBi8JAUkJj+qnDr5SZL0md5zT1X
-	 e2vF0H7dHrA2TeAUNQHK6xQupxtCFdsspq4XbF13ymRy3qwaLR8JtCEIxM/H9G8RUQ
-	 R7gfEP3HPdhLkJJnZOYVhbGdO4Sa7srSKOjtG8sjJIjzfa9yidQk4oVIIse5sEpW9a
-	 xVCjB00i08USYHQnXLG4/PMm8EqYubua7yhlvBswwNcO3J9UfDVnOjMz2lEvFZQLXx
-	 ezW6PVhhstByCqxnPj/yyVepBgZFqvHDyxSZ0AmOkah+JpXhpXyXF1vuOMOEI94hUc
-	 2CJ5Wo4650h6w==
+	b=q4blEadqTvxKYWYF6QajeBr2d9uBZfo+WIzk4gpnujx/mHTrAjMe5mH3goY66EsGl
+	 vfGdAsGfiQflDvHaxbmwHM+xlRM7c/INxYXF19V+sBVp1Fmhv6KuOGV/MKTRrSeaCS
+	 xKC213z7s9QWX1WV+UkDOS22okkKbXWOIvIvsAuao33N7vKYXxssz9lyQlrtsrJ7Hx
+	 UwzzhPermKdzZjFhlGDj8q+XK/U9i4oI+weBMdQGSGg+XUGOWKWviNKHwyFcS7Ke3S
+	 tmGcQgRCsBZNGfHQ65QcH83g7QToF0o3i5Aqb3m5ld2dX+7ueLJxd7t1q5+6AVtXnY
+	 gd5/eYFmUqLwA==
 Received: from thinkos.internal.efficios.com (mtl.efficios.com [216.120.195.104])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4jbjNw4MTyzXWx;
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4jbjNw68h6zXQN;
 	Fri, 27 Nov 2026 13:58:24 -0500 (EST)
 From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Guo Ren <guoren@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-csky@vger.kernel.org,
+	Jonas Bonn <jonas@southpole.se>,
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+	Stafford Horne <shorne@gmail.com>,
+	linux-openrisc@vger.kernel.org,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	linux-sh@vger.kernel.org,
+	Chris Zankel <chris@zankel.net>,
+	Max Filippov <jcmvbkbc@gmail.com>,
 	Huacai Chen <chenhuacai@kernel.org>,
 	WANG Xuerui <kernel@xen0n.name>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
 	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH v2 08/16] LoongArch: membarrier: Add full memory barrier in switch_mm()
-Date: Fri, 27 Nov 2026 13:58:13 -0500
-Message-ID: <20261127185822.158216-9-mathieu.desnoyers@efficios.com>
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	Helge Deller <deller@gmx.de>,
+	linux-parisc@vger.kernel.org,
+	linux-arch@vger.kernel.org
+Subject: [PATCH v2 10/16] Documentation/membarrier: Update the per-architecture barrier list
+Date: Fri, 27 Nov 2026 13:58:15 -0500
+Message-ID: <20261127185822.158216-11-mathieu.desnoyers@efficios.com>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20261127185822.158216-1-mathieu.desnoyers@efficios.com>
 References: <20261127185822.158216-1-mathieu.desnoyers@efficios.com>
@@ -73,129 +104,77 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The expedited membarrier commands need a full memory barrier after
-the scheduler stores to rq->curr, before the CPU returns to
-user-space. membarrier() skips the IPI to a CPU which it sees running
-another mm. This barrier orders the user-space accesses of the
-incoming thread after that check. See scenario (A) in
-kernel/sched/membarrier.c.
+membarrier.rst lists how each architecture provides the full memory
+barrier after the store to rq->curr. The list misses several SMP
+architectures.
 
-LoongArch has no dedicated barrier. It used to get it from
-spin_unlock() in finish_lock_switch(), which was a full barrier
-("dbar 0").
+Add csky, openrisc, sh and xtensa. They use the generic
+smp_store_release(). It issues smp_mb() before the store.
+finish_task() uses it.
 
-This is no longer true. Commit e031a5f3f1ed ("LoongArch: Support dbar
-with different hints") made smp_store_release() an ordering barrier
-("dbar 0b10010"). It does not order a previous store with a following
-load. That commit kept a full barrier in queued_spin_unlock(). Commit
-9c68ece8b2a5 ("LoongArch: Define the __io_aw() hook as mmiowb()") then
-removed it.
+LoongArch and parisc now provide the barrier with
+membarrier_arch_switch_mm(). Add them next to powerpc and riscv.
 
-Nothing else is a full barrier on a switch between two user
-processes. switch_mm_irqs_off() writes CSRs and sets a bit in the mm
-cpumask with a plain "amor". finish_task() uses smp_store_release().
+State the rule which both broke: an architecture which weakens
+smp_store_release() or spin_unlock() must provide the barrier another
+way.
 
-The LoongArch manual lists the instructions which order memory
-accesses: DBAR, IBAR, the AM*_DB instructions and LL/SC pairs. A CSR
-write and ERTN are not among them.
+Update the matching comment in __schedule().
 
-This was found by reading the code and the architecture manual. On
-Loongson-3A6000 or newer, a thread which is scheduled in would run
-user-space code without the barrier which membarrier promised to the
-caller. User-space would see a memory ordering failure: the caller of
-an expedited membarrier command would miss a recent store of that
-thread. Older processors treat every dbar hint as "dbar 0" and are not
-affected.
-
-Do as powerpc and riscv: add membarrier_arch_switch_mm() and call it
-from switch_mm_irqs_off() when the mm changes. It issues smp_mb()
-only when the next mm registered for an expedited command.
-
-Compile-tested only.
-
-Fixes: 9c68ece8b2a5 ("LoongArch: Define the __io_aw() hook as mmiowb()")
-Cc: stable@vger.kernel.org
 Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 ---
- arch/loongarch/Kconfig                   |  1 +
- arch/loongarch/include/asm/membarrier.h  | 33 ++++++++++++++++++++++++
- arch/loongarch/include/asm/mmu_context.h |  4 +++
- 3 files changed, 38 insertions(+)
- create mode 100644 arch/loongarch/include/asm/membarrier.h
+ Documentation/scheduler/membarrier.rst | 14 ++++++++++----
+ kernel/sched/core.c                    | 10 ++++++----
+ 2 files changed, 16 insertions(+), 8 deletions(-)
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index b5ed4881d3c0..be6e7545d646 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -22,6 +22,7 @@ config LOONGARCH
- 	select ARCH_HAS_FORTIFY_SOURCE
- 	select ARCH_HAS_KCOV
- 	select ARCH_HAS_KERNEL_FPU_SUPPORT if 64BIT && CPU_HAS_FPU
-+	select ARCH_HAS_MEMBARRIER_CALLBACKS
- 	select ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
- 	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
- 	select ARCH_HAS_PREEMPT_LAZY
-diff --git a/arch/loongarch/include/asm/membarrier.h b/arch/loongarch/include/asm/membarrier.h
-new file mode 100644
-index 000000000000..1789f878821f
---- /dev/null
-+++ b/arch/loongarch/include/asm/membarrier.h
-@@ -0,0 +1,33 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef _ASM_LOONGARCH_MEMBARRIER_H
-+#define _ASM_LOONGARCH_MEMBARRIER_H
-+
-+static inline void membarrier_arch_switch_mm(struct mm_struct *prev,
-+					     struct mm_struct *next,
-+					     struct task_struct *tsk)
-+{
-+	/*
-+	 * Only need the full barrier when switching between processes.
-+	 * Barrier when switching from kernel to userspace is not
-+	 * required here, given that it is implied by mmdrop(). Barrier
-+	 * when switching from userspace to kernel is not needed after
-+	 * store to rq->curr.
-+	 */
-+	if (IS_ENABLED(CONFIG_SMP) &&
-+	    likely(!(atomic_read(&next->membarrier_state) &
-+		     (MEMBARRIER_STATE_PRIVATE_EXPEDITED |
-+		      MEMBARRIER_STATE_GLOBAL_EXPEDITED))))
-+		return;
-+
-+	/*
-+	 * The membarrier system call requires a full memory barrier
-+	 * after storing to rq->curr, before going back to user-space.
-+	 *
-+	 * Nothing else provides it on this path. spin_unlock() and
-+	 * smp_store_release() are ordering barriers ("dbar 0b10010"):
-+	 * they do not order a previous store with a following load.
-+	 */
-+	smp_mb();
-+}
-+
-+#endif /* _ASM_LOONGARCH_MEMBARRIER_H */
-diff --git a/arch/loongarch/include/asm/mmu_context.h b/arch/loongarch/include/asm/mmu_context.h
-index 304363bd3935..dba62dd7a131 100644
---- a/arch/loongarch/include/asm/mmu_context.h
-+++ b/arch/loongarch/include/asm/mmu_context.h
-@@ -9,6 +9,7 @@
+diff --git a/Documentation/scheduler/membarrier.rst b/Documentation/scheduler/membarrier.rst
+index 2387804b1c63..c5f6f4f57331 100644
+--- a/Documentation/scheduler/membarrier.rst
++++ b/Documentation/scheduler/membarrier.rst
+@@ -28,12 +28,18 @@ architectures are as follows.
+  - alpha, arc, arm, hexagon, mips rely on the full barrier implied by
+    spin_unlock() in finish_lock_switch().
  
- #include <linux/errno.h>
- #include <linux/sched.h>
-+#include <linux/sched/mm.h>
- #include <linux/mm_types.h>
- #include <linux/smp.h>
- #include <linux/slab.h>
-@@ -91,6 +92,9 @@ static inline void switch_mm_irqs_off(struct mm_struct *prev, struct mm_struct *
- 	bool need_flush = false;
- 	unsigned int cpu = smp_processor_id();
- 
-+	if (prev != next)
-+		membarrier_arch_switch_mm(prev, next, tsk);
++ - csky, openrisc, sh, xtensa rely on the generic smp_store_release(),
++   which issues a full barrier before the store.  finish_task() uses it.
 +
- 	/* Check if our ASID is of an older version and thus invalid */
- 	if (!asid_valid(next, cpu))
- 		get_new_mmu_context(next, cpu, &need_flush);
+  - arm64 relies on the full barrier implied by switch_to().
+ 
+- - powerpc, riscv, s390, sparc, x86 rely on the full barrier implied by
+-   switch_mm(), if mm is not NULL; they rely on the full barrier implied
+-   by mmdrop(), otherwise.  On powerpc and riscv, switch_mm() relies on
+-   membarrier_arch_switch_mm().
++ - loongarch, parisc, powerpc, riscv, s390, sparc, x86 rely on the full
++   barrier implied by switch_mm(), if mm is not NULL; they rely on the full
++   barrier implied by mmdrop(), otherwise.  On loongarch, parisc, powerpc and
++   riscv, switch_mm() relies on membarrier_arch_switch_mm().
++
++An architecture which overrides smp_store_release() or spin_unlock() with
++something weaker than a full barrier must provide this barrier another way.
+ 
+ The barrier matches a full barrier in the proximity of the membarrier system call
+ entry, cf. membarrier_{private,global}_expedited().
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index df6d15cf7109..9985c95ecd73 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -7367,10 +7367,12 @@ static void __sched notrace __schedule(int sched_mode)
+ 		 * Here are the schemes providing that barrier on the
+ 		 * various architectures:
+ 		 * - mm ? switch_mm() : mmdrop() for x86, s390, sparc, PowerPC,
+-		 *   RISC-V.  switch_mm() relies on membarrier_arch_switch_mm()
+-		 *   on PowerPC and on RISC-V.
+-		 * - finish_lock_switch() for weakly-ordered
+-		 *   architectures where spin_unlock is a full barrier,
++		 *   RISC-V, LoongArch, PA-RISC.  switch_mm() relies on
++		 *   membarrier_arch_switch_mm() on PowerPC, RISC-V,
++		 *   LoongArch and PA-RISC.
++		 * - finish_task() and finish_lock_switch() for weakly-ordered
++		 *   architectures where smp_store_release() or spin_unlock
++		 *   is a full barrier,
+ 		 * - switch_to() for arm64 (weakly-ordered, spin_unlock
+ 		 *   is a RELEASE barrier),
+ 		 *
 -- 
 2.47.3
 
