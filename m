@@ -1,64 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.111
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795755461;
-	b=mf78aHqjWvVOVqu1kWk7SM41HQp6YvXUVl3zbFJuaXeL9sgryG0tIlzTnrGhfcBGOHN/
-	 qgl5cJI3Rh+ngm84nKEcBnJ+nxjtYRpH4tQD9b/CUyvre8nDoQa17TFzhzdamr24g5mta
-	 jR2VvTa2gYGuXkLDTj9bB2+Lu5K2sTkaQ2QGrkZmyuV1VbQy3g1jU1jWJh6KGoAi3Wkbu
-	 oWXfTkEDbbqjqNAkHXahqayQDXCQoC8bcePHLMHxWPjheUubTH5kqwcS6b21CwQoCiz/e
-	 R8EXKKpm6z2yH17LlSPIFAphzWUGvniVGmpnBGRP5OV+usy4W2THhCv3+mA2mJvBYKA==
+	t=1795762440;
+	b=PLB2DgRcDTJ+55UR1Sbt4S4chIui8esY6ykAQ6YEyfMHWsSWVgjrKUCFUjKR2UZg177q
+	 FXNGS5/371oNM5YOrkRdRXscRM3m7FxEgltihRiEELKg4a0gLvumZGyfZj/dtHmrxKZVz
+	 zj2EzmMPMAE1het5EsZJ1sDPYujqqXAUPxFZHPFEkzOHDQ5MtNpz84YFX/tof9XSlOSL+
+	 5dEs6R0sTkatLKGF0RoX8t295RnbFm6R4V3fWJ6K1tc9UxBSi29JLfNEBpIOvqMuSJ9QC
+	 02nfHbv5SmW2/lCa1H4lfl8b+9BMlei9BTkZ32vwUiDZKw8WjTF+BwCD7UzlMBZRycg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795755461;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=LReKIMGpQMdEwegfAECoPI7D7CsPYco/Xy1/ZIW35fo=;
-	b=a3dPUjZ9jXCW3Yh3oGm7VkjPKs6itkoS4gdzxrj5wVPPXqo/SEBa2TgttDPcydeznuqa
-	 YT/J3XWzltaHxgY4c4+6Jr1I40nqsD+LkeygsnqFjajl64bN2W6gVCdroE1TrH2qo6HJF
-	 2ytI080nwiVQSjUbxiGSE5GJS7Sz58V+1a1s2iWC0HcpaYD2Yiqa44TJkBwHspXWqy7/j
-	 FEfw3ORelSBpVG7g/SWn2kolD2ex7AxEuncL954N0TmbMNYQewYz3U5ywN1Lr4Bb7U5ZD
-	 /j1QzgsQOsLtvYWUHgmfuN0AYVpwCyU5ezIM5PVNvae4jOdw2QM1PJ+qCfa4T8uCR5w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795762440;
+	h=DMARC-Filter:Received:Received:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-CM-SenderInfo:X-Coremail-Antispam;
+	bh=KzxaOAOiMseK9Mjtyg984kDTY9wzMOkYH0cliFv1Y5M=;
+	b=mGoWuQV+9RfyXZcGed8rmW6Jfm4Qib8BFtUDUnorQeeM0y1+jgyR8Ub6/rBTDR/TvKWl
+	 GK71UbpCEQ3HgXDUYe05T5FL5EVKZvEa2J+k6SityS/FSogd7hRWFIS3IxJSQgxV8dqco
+	 hyFVcWP1NDtZTGr7G15nfbTwb7jlW1blkrDrxROUj/8Z1nqH2H0spEgBUQ8+oKtO6IVV0
+	 0Xm5Nj57eY7CBFEmH7NNtITQIVHlkrcM49b+VCSSCkWT3WGezjZX3aeWFTAqdQVZDGloJ
+	 8ukab67CL20L/Kn6lJXwLXMTeVdDci6aHw3jY5HLsRd5N9Zc3HbzCBHvZk6yXIiMlzA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=P+YRs8DM;
-	arc=none smtp.remote-ip=95.215.58.111
-Received: from mta1.migadu.com (out-111.mta1.migadu.com [95.215.58.111])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C8CA606A31C
-	for <loongarch@lists.linux.dev>; Fri, 27 Nov 2026 04:57:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6C8CA606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=P+YRs8DM
-X-Envelope-To: loongarch@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=LReKIMGpQMdEwegfAECoPI7D7CsPYco/Xy1/ZIW35fo=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1795755458; v=1; x=1796360258;
- b=P+YRs8DMwW7OPNyk99iCa5kgli7doqwgnXXqDhTriUxK8YkhcPrmtJzvKmGf5KF9D6/eQSXL
- BxTsTG8K5t9ChvPVLFDPkPAh4e9zQPkQXdK4zzbtM8ngBTAH7UzTd97kEuQYTURH4BOKhlQLqRI
- GQZ2O5ymoPX1jyp0pRh4aeGQ=
-X-Envelope-To: loongarch@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 09a14d0bad91cff5;
-	Fri, 27 Nov 2026 04:57:38 +0000
-X-Mizu-Trace-ID: 09a14d0bad91cff5
-X-Migadu-Flow: FLOW_OUT
-From: George Guo <dongtai.guo@linux.dev>
-To: vincent.mc.li@gmail.com
-Cc: loongarch@lists.linux.dev,
-	yangtiezhu@loongson.cn,
-	hengqi.chen@gmail.com,
-	chenhuacai@loongson.cn
-Subject: Re: Teaching LoongArch BPF to Fail Any Kernel Function
-Date: Fri, 27 Nov 2026 13:57:33 +0900
-Message-ID: <20261127045734.4276-1-dongtai.guo@linux.dev>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <c5f9ff8-ecec-e033-a1d8-4fb53392c41f@gmail.com>
-References: <c5f9ff8-ecec-e033-a1d8-4fb53392c41f@gmail.com>
+	dmarc=none header.from=loongson.cn;
+	spf=pass smtp.mailfrom=loongson.cn;
+	arc=none smtp.remote-ip=114.242.206.163
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A42B7606A321
+	for <loongarch@lists.linux.dev>; Fri, 27 Nov 2026 06:53:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A42B7606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.69.66])
+	by gateway (Coremail) with SMTP id _____8Dx2LUDKQlrnnojAA--.7025S3;
+	Fri, 27 Nov 2026 14:53:55 +0800 (CST)
+Received: from kernelserver (unknown [223.64.69.66])
+	by front1 (Coremail) with SMTP id qMiowJAxFs3_KAlrXbc3AA--.52846S2;
+	Fri, 27 Nov 2026 14:53:52 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Haowei Zheng <zhenghaowei@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v2 0/2] serial: 8250: Add Loongson-2K3000 UART support
+Date: Fri, 27 Nov 2026 14:53:41 +0800
+Message-ID: <cover.1795761142.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.52.0
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -69,15 +62,53 @@ List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAxFs3_KAlrXbc3AA--.52846S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQEECGsI5P0GEQAAsh
+X-Coremail-Antispam: 1Uk129KBj9xXoW7Wr18tw4DKr1UZr4fZry3ZFc_yoW3GFXE93
+	ySv3WkX34DZF1Iy3y2yr98GryrWr4jyF1UCa4UtwnI934qkFyDJFyqk3s8J3WxX3yDuFn8
+	ZFykGry0vr1fGosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbI8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14
+	v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8Zw
+	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
+	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
+	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7J5r
+	UUUUU
 
-Hi Vincent,
+Hi all:
 
-On 2026/11/27 10:25, Vincent Li wrote:
-> FYI, this feature seems cool to have for loongarch.
-> https://lore.kernel.org/bpf/20261114051805.683966-1-alexei.starovoitov@gmail.com/
+This series add UART support for Loongson-2K3000.
 
-Thanks for sharing. This looks interesting. I'd like to look into the
-series and see what it would take to support it on LoongArch.
+Thanks.
+Binbin
 
-Thanks,
-George
+========
+V2:
+- Add Reviewed-by tag;
+- Remove the original patch for the Loongson-2K0300 UART;
+- Add ls2k3000-uart to the existing enum instead of adding a separate
+  two-item block.
+
+Link to V1:
+https://lore.kernel.org/all/cover.1793776192.git.zhoubinbin@loongson.cn/
+
+Binbin Zhou (2):
+  dt-bindings: serial: 8250: Document Loongson-2K3000 UART compatible
+  serial: 8250_loongson: Add Loongson-2K3000 UART support
+
+ Documentation/devicetree/bindings/serial/8250.yaml | 1 +
+ drivers/tty/serial/8250/8250_loongson.c            | 7 +++++++
+ 2 files changed, 8 insertions(+)
+
+
+base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
+-- 
+2.52.0
+
