@@ -1,73 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795794319;
-	b=dOaObYsXXqTvTNwxZWXX/lI9VV6dcKmIEStjZoWsPIwh2pV19apYNy786O3f45JmZ/3E
-	 MA3uvDzjCRDfm/8YxgfsaU+KQOIbE/SwqtddQ8lro1FleepdhfDdugj2oVjoL8T9nLcaa
-	 pkCtxTDnhJJYgjRDDXp2uvS5vPeoWrflsQTrqEy2yCSSXb0TaOXfwL2mlDAE9Ha8YSsrf
-	 fup4zbcUS1OE0izvv+NzPk/8774zftUVFJ7Suj/Rd9XtBGEd2NqNAGh4GwJr4fJ0jE5dC
-	 ZjlJVLuhus/4pWXv23SCCK26lzSXOgSuRVWwE6T3NOMzz/WZ9YIbD227Th5TAVlE3VQ==
+	t=1795794923;
+	b=ZwVRsidD3eUC/eaeniU2B5AxWs4cdsBCJEV5lbjWbHpzP+JlH2CqnjZLRkocBm0QmNaR
+	 7rss+1UuckXQD5ob39ZkPnAA2eOv4y8d+06LUk/cg8zNjMVBPdzVYGVXO+KOk7XC8PM1o
+	 JsUzSvdB/+AzZ8oviyK4wUhgwDinp9QadbWa1nkRNpc0Pgno+XtDf8qEzw5PuwXJURptB
+	 AKLFfEhxe1sEZ4TYs8Kyt67m0lDvNE0eEZbkC/C0lrLfGzoE1eqokdsz2PkTo/5o1slT5
+	 MbNKyBDJcJnu022ZRaBHW76iR7h/hBrT2E4h6REVfH2+TtIE739pgomCADBSxWcchyg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795794319;
-	h=Received:DKIM-Signature:Received:Received:X-ME-Sender:
-	 X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
-	 MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type:Content-Transfer-Encoding;
-	bh=gnDEMS0iHt15gL5KaJ+Nn57X9otTzk+I58v16QdRYcc=;
-	b=P47NFPmGzXNvpG3H28owtCCgjNtQ/OyFpf1LdCHmSb0JoZjWvMboFJAEbXyeUNIj2m5o
-	 AVN6cB9E0u1Zx66OYeT3KZEFhHxkai6fse54FsgwVmIs66peEpAaRtj54qN3PGQD1bCAD
-	 HVTiDWeayZeuflovGqw4bbb5lTqHT+8sIx/akk3knJ6LQ96LrFR6j3MHGBuerDwUwQr0w
-	 Bq2r/VnmVWAX6mxHflBICoHmFmbVNzse1Esyl3/1HwOji0wL9kSRG1s6ysqEjAIZelM3g
-	 qj0EBW+Ix/K6AkBDjnR65Pwb1YCEtwoUApKqfFyS+ycjQb1yKW0iCpTUhOs/MfNCIJg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795794923;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 MIME-Version:X-Developer-Signature:X-Developer-Key:
+	 Content-Transfer-Encoding;
+	bh=UC1kThlbPqW+f+LDYJkhrrmVvgZLypqCj094W+zliBk=;
+	b=gC658uV13LimrRw0kgUoYJVStHjLmLIfWmQ0+82SmRHZYDpsDOSYBY6VN8nhOdjNol0L
+	 C5+CsYJLu3Zxn8d1hezi4WPBv4vAzX/7T5QBxFcN8YYhh6l4g9UuEdHRo/VKbQK73yWkQ
+	 0oWnkLF+YokDBn7NWDURS3JjPI9PRRLlUQMv4W3tH3LhzbbapYaqFCBZj9XxGs6XRo7CC
+	 QgrHxgOhHmmU28V8Ym3G2QKyRLBE2ja8ZANM1D0nsS4NO2iuIAHzqKuUGPqDYVPO4gR+p
+	 AA5efrwhZlTBuN9Wb29WjbW6EeLYQeBK9HpPFtU+IRS9S5INb49pbX2V2h8A9KXqfIA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JB1zssfY;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Tbk3IRWD;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0535606A326;
-	Fri, 27 Nov 2026 15:45:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30FE9606A333
+	for <loongarch@lists.linux.dev>; Fri, 27 Nov 2026 15:55:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JB1zssfY
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1652E1F00893;
-	Fri, 27 Nov 2026 15:45:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Tbk3IRWD
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59EE81F0089A;
+	Fri, 27 Nov 2026 15:55:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795794319;
-	bh=gnDEMS0iHt15gL5KaJ+Nn57X9otTzk+I58v16QdRYcc=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=JB1zssfYw+imHpGzqwtC5bxeRAT3TilT/4N6aggkc/2aQrIFfSKYPjPnNGrDnNuCD
-	 i6Q3iaDTFqGIsVtaIEed0I+jvbQmNjOGY0hNBmtE6voI8JTkFcYDjmfcF92t2aRQN+
-	 ENcGwC6L1Hmee6FlpOuUsmYvSvvIMUcYf885vMlscaWmV719ZBNjtMUuQus6NE4q+1
-	 GuDMExlzxK9s0A0z0wzpLqi6uXoEDtouKh3pCKrlizfJO+Peo0U2usbiuYYHnWVCuf
-	 b3Wmdnn8kJMsf1oSSjL+Rjjv+3RkqB2T8knDrwlRloS6lt1DluS9/MFbEx3LpgZ2JN
-	 Xe/yFxDspXKbg==
-Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
-	by mailfauth.ams.internal (Postfix) with ESMTP id 3DDC4198003A;
-	Fri, 27 Nov 2026 10:45:16 -0500 (EST)
-Received: from ams-imap-11 ([10.64.2.31])
-  by ams-compute-02.internal (MEProxy); Fri, 27 Nov 2026 10:45:16 -0500
-X-ME-Sender: <xms:iKUJa5AkdJxnKccLXcMCurc131x9BzxkyDtyblVcz7UTk0qCfK6l8Q>
-    <xme:iKUJayXFm2YhzIgi9SPInDUX-UJiV53UZOU4RVdrD_eqdQDtpoqTcX_P3iLfD7CKv
-    TjTZCJ83aqifQrHscXBVAfYTsDfYsa4nS7m01fyEiM889CWl_Fv8CmX>
-X-ME-Proxy-Cause: dmFkZTFMcXaa74Ww3Kiq0njNmC6WTjACVv1LMbtEsqeSpRVSFbR/Ii5MZNWGX9Zt0PDC4H
-    QxR9lt1bmXDfrRIrCorv6+5mFL40Wh4Sb/IbRj/BEfQvKKf2rrQS9jZJs2KpQ++T3wSoLD
-    HNqyZ0pThIqEcsGyNXKeRbGfLfgvIjr5ltrRA4kRQMAh57Sv/vW40wLB5ugCQoAwYP+yDn
-    mqcN6PXz8tAquh0HX0rjDTsI5AoO0CDjNZ9dJZhAXhuICxzq9EfL7Fytc6bGOS0h+qgiFD
-    r4m02mBJrAEFL2pn0rfl2R8X7FfezgjnyIqIWsi8BdeUbjGCeYNUokspCipztY5uB13oL4
-    YuyWH8KtSnS4uQoxE7PMGHY1LlmlFxxm1KE3zJprK9tqrPEVmOck569OEc4Z34p1jVo+q2
-    3ivF3fonc3VfONZur+ttGBJiQPDOFX7bO7YbRRwS90s8oKkKqrAOSAp+bDHExf7PFpN9/2
-    MYSpyRRZaH5knqwf1zivHKPr3PkJ8A/L4rbGoWpOAQEudRzQJbmBkT/2j4k+aBm4BxMI8/
-    7ie4vqieF2IT3VtbrVvRPx/II5OdY1AE31VoMtNRQFbUR9Jq9KMDKqtqe5GqBnHYYI6KCZ
-    Osa26CLih0vjr119q8j7LlNbXu+EoLzZC+4Ve+yd15O4D/joKlh0TnVomAvg
-X-ME-Proxy: <xmx:jKUJa_qdFYIe-J18cgVIcEIWWYMT9YX8BlOTTPoAY2dY5zm3U0iWFg>
-    <xmx:jKUJawt29v05zGj1N-U8j50ppQcmBWYQ0-C0cQ6JoAXHx8VrtcezgA>
-    <xmx:jKUJaz5G7PV1fTi4fQ5s08qRx5AGl_yw_XHl41HZSDv4ismPsQ3SZw>
-    <xmx:jKUJa5RQ7EvBTiz9Kx9a6LpxkswJ6z8kJ7JlqwouQwm3fnLCCmpRLg>
-    <xmx:jKUJa7lULcOKouAxtdiZ0dgPwmK6qX1xlLeMs44QyW3EBqEInflytp2p>
-Feedback-ID: ice86485a:Fastmail
-Received: by mailuser.ams.internal (Postfix, from userid 501)
-	id 5658AF80093; Fri, 27 Nov 2026 10:45:12 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20260515; t=1795794922;
+	bh=UC1kThlbPqW+f+LDYJkhrrmVvgZLypqCj094W+zliBk=;
+	h=From:To:Cc:Subject:Date;
+	b=Tbk3IRWDY7B4/OLzhvEmHFfj5aYECWEhodx4JT70zjRcmN1uLkYuY5K5A37TMKt9Q
+	 N4L5jfac24YC53xcrhmTwmLtBaFa18ll8i/lF53RnSIA9znVXQTAtZs3f4yBcyDvwy
+	 Y3i7iHQOWTAIvDZiyk4GZxcH/P6ggImR79045zlwUOIyXNFIfJbg8BI1EQWb3BYb1e
+	 g7E8sptaX9stweQHlrAYzEdHH1W2GcJn4HGkHGjryCeLCdxY+TI8+hpwXGi7/YgHON
+	 acdF0qUDolLDkeme22gacVYGVryX+3BU5pN6SOl9ni997zP56yYIBPYc1bYyemqLTZ
+	 Cj4PoQarPSFRA==
+From: Thorsten Blum <blum@kernel.org>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: loongarch@lists.linux.dev,
+	Thorsten Blum <blum@kernel.org>
+Subject: [PATCH] platform/loongarch: laptop: Reject negative max brightness values
+Date: Fri, 27 Nov 2026 16:55:08 +0100
+Message-ID: <20261127155507.805377-2-blum@kernel.org>
+X-Mailer: git-send-email 2.56.1
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -77,69 +60,38 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Date: Fri, 27 Nov 2026 16:44:51 +0100
-From: "Ard Biesheuvel" <ardb@kernel.org>
-To: "George Guo" <dongtai.guo@linux.dev>,
- "Huacai Chen" <chenhuacai@kernel.org>, "Pratyush Yadav" <pratyush@kernel.org>
-Cc: "Mike Rapoport" <rppt@kernel.org>,
- "Pasha Tatashin" <pasha.tatashin@soleen.com>, shuah@kernel.org,
- "Ilias Apalodimas" <ilias.apalodimas@linaro.org>,
- "Andrew Morton" <akpm@linux-foundation.org>, baoquan.he@linux.dev,
- ruirui.yang@linux.dev, guodongtai@kylinos.cn,
- "WANG Xuerui" <kernel@xen0n.name>, "Alexander Graf" <graf@amazon.com>,
- liukexin@kylinos.cn, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- kexec@lists.infradead.org, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, linux-efi@vger.kernel.org
-Message-Id: <976f1220-a259-4bad-9eb4-ae1cc78a79a7@app.fastmail.com>
-In-Reply-To: <20261119082252.9120-1-dongtai.guo@linux.dev>
-References: 
- <CAAhV-H5Vse=pKC3Beqhqxa7fqadiGVNqkSy_06HZ3Luw2Pmj5Q@mail.gmail.com>
- <20261119082252.9120-1-dongtai.guo@linux.dev>
-Subject: Re: [PATCH v6 1/8] efi: Pass KHO state to the next kernel in a configuration
- table
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1142; i=blum@kernel.org; h=from:subject; bh=1c86cRxhf79ZIh5VyJY41/r3ydJUYRVyK+rtUtUFBR8=; b=owGbwMvMwCUWt7pQ4caZUj3G02pJDNmcy28H9r9duZ7xhZfMwcDkFxfeCGn4bT2aPv2twUK94 kdSW3g/dJSyMIhxMciKKbI8mPVjhm9pTeUmk4idMHNYmUCGMHBxCsBEjvxl+KclldaW0l3gLvHr rxjHrVXPrPovO1WrRHNM1Fx+9IK2GBsjw49tt6xfPcjg1rsj+lJT9NFWu5S2cO+3nrISUz1d8+c aMwIA
+X-Developer-Key: i=blum@kernel.org; a=openpgp; fpr=1D60735E8AEF3BE473B69D84733678FD8DFEEAD4
+Content-Transfer-Encoding: 8bit
 
+laptop_backlight_register() uses the maximum brightness reported by the
+ECLL ACPI method without validating it. A negative result could cause
+the driver to register a backlight with an invalid brightness range.
 
+Return -EINVAL for negative values before powering on and registering
+the backlight.
 
-On Thu, 19 Nov 2026, at 09:22, George Guo wrote:
-> Hi Huacai, Ard, Pratyush,
->
-> On Wed, Nov 04 2026, Huacai Chen wrote:
->> I prefer to keep it in LoongArch until a second architecture, and I
->> think Ard is the same. But this is not a strong objection to Pratyush.
->
-> Kexin Liu and I have tried x86 as the second user, to see whether the
-> common table holds up. It needed only small changes:
->
-> - The x86 EFI stub installs the table, as the LoongArch stub does.
->   install_kho_table() moves from efi-stub.c to efi-stub-helper.c so
->   that the x86 stub can call it.
->
-> - kexec_file_load() skips the SETUP_KEXEC_KHO record when the table
->   exists and the next kernel will get efi_info. Otherwise, for example
->   on a legacy BIOS boot or with noefi, it falls back to setup_data.
->
-> - When there is no SETUP_KEXEC_KHO record, the decompressor's KASLR
->   code looks up the KHO bootmem areas in the table, so the kernel is
->   not decompressed onto preserved memory.
->
-> The table layout did not change. The only change to the common code is
-> that efi_kho_table_found() is no longer __init, since x86 calls it at
-> kexec load time.
->
-> Tested in QEMU on x86_64. With OVMF, the KHO vmtest and
-> luo_kexec_simple pass, and the second kernel finds the KHO state
-> through the table. With SeaBIOS, the KHO vmtest passes through
-> setup_data.
->
-> So I would like to keep the table common in v7.
+Fixes: 6246ed09111f ("LoongArch: Add ACPI-based generic laptop driver")
+Signed-off-by: Thorsten Blum <blum@kernel.org>
+---
+Found by code inspection and compile-tested only.
 
-Fair enough.
+ drivers/platform/loongarch/loongson-laptop.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-> Would you prefer the
-> x86 patches in the same series, so that the generic code comes with a
-> second user, or as a separate series on top?
->
-
-I'd like to see both tbh, but only if it is not too much of a hassle.
+diff --git a/drivers/platform/loongarch/loongson-laptop.c b/drivers/platform/loongarch/loongson-laptop.c
+index 4ec56621db24..d582eec765ef 100644
+--- a/drivers/platform/loongarch/loongson-laptop.c
++++ b/drivers/platform/loongarch/loongson-laptop.c
+@@ -415,6 +415,11 @@ static int laptop_backlight_register(void)
+ 	if (!acpi_evalf(hotkey_handle, &status, "ECLL", "d"))
+ 		return -EIO;
+ 
++	if (status < 0) {
++		pr_err("Invalid maximum brightness: %d\n", status);
++		return -EINVAL;
++	}
++
+ 	ret = ec_backlight_set_power(true);
+ 	if (ret)
+ 		return ret;
