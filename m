@@ -1,131 +1,58 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=158.69.130.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=113.46.200.226
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795805906;
-	b=o7imVjMtN8fAtra8vWHuXQBT6+w+Q5gkKxa/vY06RzG97Nww2P+afxBK3OgJEDP7O3L0
-	 /2RPJIKE32DwgChhEYLCXQ8mGHRb/UcXYE7dd0D3hmWs8Qwt4IWRm3fmeGfLH2RC7DONd
-	 SA2/i1GcMFZfc8Xqob1LJAJh1BiEvs9mR0ZmN4rqdT0bY8Au8yRi5xPDpf/K+cqqFj3dV
-	 JoPnNQHjjNxfiqvrgPAF+EkFXIVNw3akSSnpFoC/0xSr0vg/yVaaa/TxqNH28PnXTvzSE
-	 sAMhTwhjbqKgxCVHGAqgwujKVU1JXcYsC12+xFPbjkMV/8JUGyAcLorrvALebO2NZyA==
+	t=1795831412;
+	b=ozK3zAt4VWGU4rvfZApy6hpr1lJl3wmHpL++fawsju+6tFUkWxhZEaKc02zbNVSTP8Vv
+	 o4ZjgWC/K/+nPxkx7YhP8qDADsJ9bksBAYxoEJXmyXQlYatA6JEnDAOw9heGSL1/iCj6Q
+	 rA+kzReYi92Ji7jk0IzbbcYaVP5OmERQ+8G+rXZzGyveQ7r2jjEi1vSj03mCYfdzoxAhx
+	 /ME90VLXMSkUHuwUco0QDzAb9tg8ZIf9qSy3/369WO1+qNOZ+SWFYB+3AvBA32YcOfYLt
+	 Wbo+R9BoDa0CRIolI5XSDcp+dtICQep89yOpX2n2FMWIifhzDpkBlgnAfWy4seMNZxg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795805906;
-	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
-	 Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=zuf19/Sm9DL6ZOPD0E1irSSwGTnKZXB6/6sdFafIiyg=;
-	b=C9g0b61gCOr3l6OcB9Do+RCSMwxom6idfVAgjGEcXJarGbT3VyUPN52ARm4z8MLR6s0e
-	 TFNAUE0XvT+/oCP80C6GSxYRiIb3aFMZcSkRMAre5cerHuVQsx6xRNWzl4L4qETfXAD7B
-	 /yK8lj6+5voZBE2u5Ny0yy8d67+UX/SDnYVZwIJAX3rApI6uMHqo88DtfRtoJlPvccq71
-	 OEP+OMpFHbEr5j11gOolKQofB4QK68Bl9CdGDckBnCjSqP+7OkILpZ5jzUaRDFEEwpVRW
-	 21hZZN51VEVEwRbafaCFUZbRAUxrBtA6nKtL3ujEwckV0XmGK4JkGtVK9kXO0GOw9Ug==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795831412;
+	h=DMARC-Filter:dkim-signature:Received:Received:Received:Message-ID:
+	 Date:MIME-Version:User-Agent:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding:X-Originating-IP:
+	 X-ClientProxiedBy;
+	bh=Bb02QMbPzYGMZl2XBsuZPs04tkTOlgjVE/NIsauxzp4=;
+	b=t16v4h3LlZpLbYTdjPCSkMzoH0osRYBqMe/svgtvqctvNsRE++R1Yl8JYrksPZAK5Cfl
+	 vmnhBnc5dV0ZPkXWcN1GFwuh0Sx+GoRqwlxrpeo1X+K6KdzMgh/GS+4sJXrCjSuwq52nO
+	 qxk7o5/jDVcGF9meCJEIXV3fMR7GyHBXhjdw47YfV9KytmD0xEzyOCJR7HxKWspIfy/H6
+	 bC/CAhu+5mTJR2FYuus/aWv6V5xTHp4kSbj6/dMTDt1HvzI8fR1unilrkZqE7aB9cUUup
+	 WPQxaQ53lHNlI0TRcLcQlwi6ool6JDNgndNusAmAa/ttpmSTG82k6epQrJT1hnLHGlg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=efficios.com;
-	spf=pass smtp.mailfrom=efficios.com;
-	dkim=pass header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=C1em5emX;
-	arc=none smtp.remote-ip=158.69.130.18
-Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
+	dmarc=pass header.from=huawei.com;
+	spf=pass smtp.mailfrom=huawei.com;
+	dkim=pass header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=5dAoixTz;
+	arc=none smtp.remote-ip=113.46.200.226
+Received: from canpmsgout11.his.huawei.com (canpmsgout11.his.huawei.com [113.46.200.226])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC821606A324;
-	Fri, 27 Nov 2026 18:58:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EC821606A324
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E97606A31E;
+	Sat, 28 Nov 2026 02:03:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A6E97606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=C1em5emX
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-	s=smtpout1; t=1795805903;
-	bh=zuf19/Sm9DL6ZOPD0E1irSSwGTnKZXB6/6sdFafIiyg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=C1em5emXbpmwbUaychggQSZrT3/kvUnR68z3W0GT1P/KTN19CUjYc2REt7KFklvVF
-	 J8ry+o1VdxlmxoI+X886jiZoEdbjCzH0pgZlg5BvEB4Y6+RxL3+wiFZCoNWiE5hg94
-	 f7LHNRAybdMcAiNE53dIeZ6shefiwO8hFGsCtqfr9BRFRqP3hIkjZpjLniFGxpJTE1
-	 tHV46If6OOv3tjaOmG0aNuRMZ3sxMzj/fRgNPMhfMxRoVKW3Y1oroobsD5q2j9K0bW
-	 m/M98kcEHIDkPJPyzTY5YMyUrYtiXgLO3X72Jba1FZUJUA3zbA4Bz1BjRsuzUVP3j1
-	 wLoVrol/jTNkw==
-Received: from thinkos.internal.efficios.com (mtl.efficios.com [216.120.195.104])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4jbjNv3kpyzXT5;
-	Fri, 27 Nov 2026 13:58:23 -0500 (EST)
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	linux-kernel@vger.kernel.org,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Michal Clapinski <mclapinski@google.com>,
-	Andrei Vagin <avagin@gmail.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Aniket Gattani <aniketgattani@google.com>,
-	linux-kselftest@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Chris Gellermann <christian.gellermann@codasip.com>,
-	Bala-Vignesh-Reddy <reddybalavignesh9979@gmail.com>,
-	Wei Yang <richard.weiyang@gmail.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	Helge Deller <deller@gmx.de>,
-	John David Anglin <dave.anglin@bell.net>,
-	linux-parisc@vger.kernel.org,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Guo Ren <guoren@kernel.org>,
-	linux-doc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-csky@vger.kernel.org,
-	Jonas Bonn <jonas@southpole.se>,
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-	Stafford Horne <shorne@gmail.com>,
-	linux-openrisc@vger.kernel.org,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	linux-sh@vger.kernel.org,
-	Chris Zankel <chris@zankel.net>,
-	Max Filippov <jcmvbkbc@gmail.com>,
-	linux-arch@vger.kernel.org,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Andy Lutomirski <luto@kernel.org>,
-	Alan Stern <stern@rowland.harvard.edu>,
-	Andrea Parri <parri.andrea@gmail.com>,
-	Boqun Feng <boqun@kernel.org>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	David Howells <dhowells@redhat.com>,
-	Jade Alglave <j.alglave@ucl.ac.uk>,
-	Luc Maranget <luc.maranget@inria.fr>,
-	Akira Yokosawa <akiyks@gmail.com>,
-	Daniel Lustig <dlustig@nvidia.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	lkmm@lists.linux.dev,
-	bpf@vger.kernel.org,
-	Naveen N Rao <naveen@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 00/16] membarrier: fixes, selftests and documentation
-Date: Fri, 27 Nov 2026 13:58:05 -0500
-Message-ID: <20261127185822.158216-1-mathieu.desnoyers@efficios.com>
-X-Mailer: git-send-email 2.47.3
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=5dAoixTz
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=Bb02QMbPzYGMZl2XBsuZPs04tkTOlgjVE/NIsauxzp4=;
+	b=5dAoixTzdi5Pva3FlAw+4G4gvuRSbcuNIp9u6jt4z68aplPRUSy8CmEDY1bii9n7+mU75QUxP
+	s5A0vr9IzCzDScYnVJHNow//t6iWbrZ46GCsHh9kMtlyDcQkW7OdSxett+AHYn6ZaJFvgQk+BOj
+	M3+5IMQ/nsRWxs/EB7JtCUI=
+Received: from mail.maildlp.com (unknown [172.19.163.163])
+	by canpmsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4jbtpt197czKm6c;
+	Sat, 28 Nov 2026 10:03:02 +0800 (CST)
+Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8271540563;
+	Sat, 28 Nov 2026 10:03:22 +0800 (CST)
+Received: from [10.67.110.68] (10.67.110.68) by kwepemk200008.china.huawei.com
+ (7.202.194.74) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Sat, 28 Nov
+ 2026 10:03:21 +0800
+Message-ID: <6448a512-9c1a-441b-a8b8-7bf654e8b2a5@huawei.com>
+Date: Sat, 28 Nov 2026 10:03:20 +0800
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Post: <mailto:loongarch@lists.linux.dev>
@@ -135,210 +62,151 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:loongarch+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 3/8] crash_core: serialize crash header preparation
+ against hotplug
+To: Wandun Chen <chenwandun1@gmail.com>, <pjw@kernel.org>,
+	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <alex@ghiti.fr>,
+	<robh@kernel.org>, <baoquan.he@linux.dev>, <rppt@kernel.org>,
+	<m.szyprowski@samsung.com>
+CC: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
+	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <tglx@kernel.org>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<x86@kernel.org>, <hpa@zytor.com>, <saravanak@kernel.org>,
+	<akpm@linux-foundation.org>, <pasha.tatashin@soleen.com>,
+	<pratyush@kernel.org>, <ruirui.yang@linux.dev>, <robin.murphy@arm.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linux-riscv@lists.infradead.org>,
+	<devicetree@vger.kernel.org>, <kexec@lists.infradead.org>,
+	<linux-mm@kvack.org>, <iommu@lists.linux.dev>
+References: <20261127090723.741253-1-chenwandun1@gmail.com>
+ <20261127090723.741253-4-chenwandun1@gmail.com>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <20261127090723.741253-4-chenwandun1@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-
-This series comes from a review of the membarrier system call. The
-review covered the code, its selftests and the fixes applied over
-time. It also covered the barrier and core serialization requirements
-of each architecture.
-
-The series fixes four kernel issues:
-
- - Patch 1: update the runqueue membarrier state when the scheduler
-   switches from a kernel thread or an exited task which borrowed the
-   mm. MEMBARRIER_CMD_GLOBAL_EXPEDITED no longer skips a registered
-   process.
-
- - Patch 2: report a registration in MEMBARRIER_CMD_GET_REGISTRATIONS
-   only when it completed. An rseq or sync core registration is no
-   longer reported as a private expedited registration as well.
-
- - Patch 8 and patch 9: add a full memory barrier in switch_mm() for
-   registered processes, on LoongArch and on parisc. The expedited
-   commands need it after the store to rq->curr.
-
-Patch 1 and patch 2 were reproduced from user-space on v7.4-rc2.
-
-Patch 8 and patch 9 were found by reading the code and the
-architecture manuals. Feedback from the LoongArch and parisc
-maintainers is welcome.
-
-The series fixes and extends the selftests:
-
- - Patch 3: rebuild the tests when membarrier_test_impl.h changes.
-
- - Patch 4: issue the sync core command in the test which is named
-   after it.
-
- - Patch 5: run the tests on nohz_full kernels, which only lack
-   MEMBARRIER_CMD_GLOBAL.
-
- - Patch 6: add membarrier_test_ipi. It checks which CPUs each
-   expedited command interrupts. Two of its test cases fail without
-   patch 1.
-
- - Patch 7: add membarrier_test_cmd. It checks the command arguments
-   and the registrations across fork, exec and CLONE_VM. Two of its
-   tests fail without patch 2.
-
- - Patch 13: add litmus tests of the memory ordering scenarios, for
-   the Linux kernel memory model. One variant shows the LoongArch and
-   parisc issue.
-
- - Patch 14: add the selftests to the MEMBARRIER SUPPORT entry of
-   MAINTAINERS.
-
- - Patch 15: add membarrier_test_barrier, a stress test for x86-64.
-   BPF programs on kprobes count, for each thread, the memory
-   barriers which membarrier relies on. The test also checks the
-   barriers of the scheduler. Two of its test cases fail without
-   patch 1. It adds no kernel code.
-
- - Patch 16: extend membarrier_test_barrier to the sync core
-   command. It counts the core serializing instructions in the same
-   way.
-
-The series updates the documentation:
-
- - Patch 10: add the missing architectures to the list of barriers
-   after the store to rq->curr.
-
- - Patch 11: describe what the sync core command relies on for x86
-   with FRED and for arm64 with FEAT_ExS.
-
- - Patch 12: remove two stale x86 entry comments.
-
-The sync core requirements were checked against the architecture
-manuals of x86 (Intel SDM and AMD APM), arm, arm64, powerpc, s390 and
-riscv. These are the architectures which support the sync core
-command. No return path to user-space was found to miss its documented
-serialization.
-
-Testing:
-
- - The six membarrier test programs pass in an x86-64 KVM guest
-   with 8 CPUs and lockdep.
-
- - With nohz_full=2-7, the six programs pass. Only the
-   MEMBARRIER_CMD_GLOBAL test is skipped.
-
- - With nosmp and with maxcpus=2, membarrier_test_ipi is skipped
-   because it needs 3 CPUs. membarrier_test_barrier skips the two
-   test cases which need 3 CPUs. The four other programs pass.
-
- - With pti=on, membarrier_test_barrier passes and does not check
-   the core serialization.
-
- - Patch 8 and patch 9 are compile-tested only: LoongArch and parisc
-   (32-bit, SMP), default configuration.
-
- - herd7 reports the expected result for each of the 13 litmus tests.
-
-The series is based on v7.4-rc2.
-
-Changes since RFC v1:
-
- - Patch 15: fix three issues reported by Sashiko in
-   membarrier_test_barrier. The lazy TLB test case now sees the target
-   switch back to its CPU. The test is skipped, instead of failing,
-   on a kernel without CONFIG_BPF_EVENTS or CONFIG_KPROBE_EVENTS. A
-   test case no longer reuses the counter slots of the previous one.
-
- - Patch 16: context changes only.
-
-RFC v1: https://lore.kernel.org/lkml/20261113131903.157186-1-mathieu.desnoyers@efficios.com/
-
-An LLM coding assistant did this work at my request: the review, the
-reproducers, the fixes, the tests and the changelogs. I actively
-steered it and reviewed the result.
-
-Thanks,
-
-Mathieu
-
-Mathieu Desnoyers (16):
-  sched/membarrier: Fix stale runqueue state after a lazy mm switch
-  sched/membarrier: Report only completed registrations
-  selftests/membarrier: Rebuild the tests when their header changes
-  selftests/membarrier: Issue the sync core command in its test
-  selftests/membarrier: Run the tests on nohz_full kernels
-  selftests/membarrier: Test which CPUs the expedited commands interrupt
-  selftests/membarrier: Test command arguments and registration lifetime
-  LoongArch: membarrier: Add full memory barrier in switch_mm()
-  parisc: membarrier: Add full memory barrier in switch_mm()
-  Documentation/membarrier: Update the per-architecture barrier list
-  Documentation/features: Update the membarrier sync core requirements
-  x86/entry: Remove stale membarrier sync core comments
-  selftests/membarrier: Add litmus tests of the memory ordering
-  MAINTAINERS: Add the membarrier selftests to MEMBARRIER SUPPORT
-  selftests/membarrier: Check the memory barriers of each thread
-  selftests/membarrier: Check the core serialization of the sync core
-    command
-
- .../membarrier-sync-core/arch-support.txt     |   35 +-
- Documentation/scheduler/membarrier.rst        |   14 +-
- MAINTAINERS                                   |    1 +
- arch/loongarch/Kconfig                        |    1 +
- arch/loongarch/include/asm/membarrier.h       |   33 +
- arch/loongarch/include/asm/mmu_context.h      |    4 +
- arch/parisc/Kconfig                           |    1 +
- arch/parisc/include/asm/membarrier.h          |   33 +
- arch/parisc/include/asm/mmu_context.h         |    2 +
- arch/x86/entry/entry_32.S                     |    5 -
- arch/x86/entry/entry_64.S                     |    4 -
- arch/x86/include/asm/sync_core.h              |    2 +-
- kernel/sched/core.c                           |   16 +-
- kernel/sched/membarrier.c                     |   32 +-
- kernel/sched/sched.h                          |   15 +
- tools/testing/selftests/membarrier/.gitignore |    6 +
- tools/testing/selftests/membarrier/Makefile   |   20 +
- tools/testing/selftests/membarrier/config     |    9 +
- .../selftests/membarrier/litmus/README        |   52 +
- .../litmus/ipi-after-thread-no-exit-mb.litmus |   36 +
- .../ipi-after-thread-no-handler-mb.litmus     |   36 +
- .../membarrier/litmus/ipi-after-thread.litmus |   47 +
- .../ipi-before-thread-no-entry-mb.litmus      |   37 +
- .../ipi-before-thread-no-handler-mb.litmus    |   37 +
- .../litmus/ipi-before-thread.litmus           |   46 +
- .../litmus/sched-in-no-entry-mb.litmus        |   34 +
- .../membarrier/litmus/sched-in-no-mb.litmus   |   33 +
- .../membarrier/litmus/sched-in-release.litmus |   38 +
- .../membarrier/litmus/sched-in.litmus         |   51 +
- .../litmus/sched-out-no-exit-mb.litmus        |   34 +
- .../litmus/sched-out-no-sched-mb.litmus       |   34 +
- .../membarrier/litmus/sched-out.litmus        |   49 +
- .../membarrier/membarrier_test_barrier.bpf.c  |  173 +++
- .../membarrier/membarrier_test_barrier.c      | 1364 +++++++++++++++++
- .../membarrier/membarrier_test_barrier.h      |   54 +
- .../membarrier/membarrier_test_cmd.c          |  352 +++++
- .../membarrier/membarrier_test_impl.h         |   14 +-
- .../membarrier/membarrier_test_ipi.c          |  739 +++++++++
- 38 files changed, 3443 insertions(+), 50 deletions(-)
- create mode 100644 arch/loongarch/include/asm/membarrier.h
- create mode 100644 arch/parisc/include/asm/membarrier.h
- create mode 100644 tools/testing/selftests/membarrier/config
- create mode 100644 tools/testing/selftests/membarrier/litmus/README
- create mode 100644 tools/testing/selftests/membarrier/litmus/ipi-after-thread-no-exit-mb.litmus
- create mode 100644 tools/testing/selftests/membarrier/litmus/ipi-after-thread-no-handler-mb.litmus
- create mode 100644 tools/testing/selftests/membarrier/litmus/ipi-after-thread.litmus
- create mode 100644 tools/testing/selftests/membarrier/litmus/ipi-before-thread-no-entry-mb.litmus
- create mode 100644 tools/testing/selftests/membarrier/litmus/ipi-before-thread-no-handler-mb.litmus
- create mode 100644 tools/testing/selftests/membarrier/litmus/ipi-before-thread.litmus
- create mode 100644 tools/testing/selftests/membarrier/litmus/sched-in-no-entry-mb.litmus
- create mode 100644 tools/testing/selftests/membarrier/litmus/sched-in-no-mb.litmus
- create mode 100644 tools/testing/selftests/membarrier/litmus/sched-in-release.litmus
- create mode 100644 tools/testing/selftests/membarrier/litmus/sched-in.litmus
- create mode 100644 tools/testing/selftests/membarrier/litmus/sched-out-no-exit-mb.litmus
- create mode 100644 tools/testing/selftests/membarrier/litmus/sched-out-no-sched-mb.litmus
- create mode 100644 tools/testing/selftests/membarrier/litmus/sched-out.litmus
- create mode 100644 tools/testing/selftests/membarrier/membarrier_test_barrier.bpf.c
- create mode 100644 tools/testing/selftests/membarrier/membarrier_test_barrier.c
- create mode 100644 tools/testing/selftests/membarrier/membarrier_test_barrier.h
- create mode 100644 tools/testing/selftests/membarrier/membarrier_test_cmd.c
- create mode 100644 tools/testing/selftests/membarrier/membarrier_test_ipi.c
+X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
+ kwepemk200008.china.huawei.com (7.202.194.74)
 
 
-base-commit: 7475ea8b58616b33c04afb976cf0fbaad9dd63fb
--- 
-2.47.3
+
+在 2026/11/27 17:07, Wandun Chen 写道:
+> From: Wandun Chen <chenwandun@lixiang.com>
+> 
+> crash_prepare_headers() counts memory ranges before populating the
+> allocated crash_mem array. The weak implementation used by ARM64,
+> RISC-V and LoongArch walks memblock.memory, while x86 performs the
+> same two-pass operation over system RAM resources. Concurrent memory
+> hotplug can change range source between the two walks and make the
+> populate pass overflow cmem->ranges.
+> 
+> Take device_hotplug_lock when preparing crash headers during
+> kexec_file_load(). The x86/riscv memory hotplug path already takes
+> device_hotplug_lock, so call __crash_prepare_headers() directly
+> to avoid recursive locking.
+> 
+> Sashiko reported this issue in [1].
+> 
+> Fixes: 3751e728cef2 ("arm64: kexec_file: add crash dump support")
+> Fixes: 1bcca8620a91 ("LoongArch: Add crash dump support for kexec_file")
+> Fixes: 8acea455fafa ("RISC-V: Support for kexec_file on panic")
+> Fixes: dd5f726076cc ("kexec: support for kexec on panic using new system call")
+> Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
+> Link: https://sashiko.dev/#/message/20260806101002.1F84E1F000E9@smtp.kernel.org [1]
+> Acked-by: Baoquan He <baoquan.he@linux.dev>
+> ---
+>  arch/riscv/kernel/crash.c  |  2 +-
+>  arch/x86/kernel/crash.c    |  2 +-
+>  include/linux/crash_core.h |  2 ++
+>  kernel/crash_core.c        | 17 +++++++++++++++--
+>  4 files changed, 19 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/riscv/kernel/crash.c b/arch/riscv/kernel/crash.c
+> index fe5a4b306aae..ac8df2edf2a7 100644
+> --- a/arch/riscv/kernel/crash.c
+> +++ b/arch/riscv/kernel/crash.c
+> @@ -70,7 +70,7 @@ void arch_crash_handle_hotplug_event(struct kimage *image, void *arg)
+>  	 * Create the new elfcorehdr reflecting the changes to CPU and/or
+>  	 * memory resources.
+>  	 */
+> -	if (crash_prepare_headers(true, &elfbuf, &elfsz, NULL)) {
+> +	if (__crash_prepare_headers(true, &elfbuf, &elfsz, NULL)) {
+>  		pr_err("unable to create new elfcorehdr");
+>  		goto out;
+>  	}
+> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> index e6f23933a6df..bef008a0cb22 100644
+> --- a/arch/x86/kernel/crash.c
+> +++ b/arch/x86/kernel/crash.c
+> @@ -465,7 +465,7 @@ void arch_crash_handle_hotplug_event(struct kimage *image, void *arg)
+>  	 * Create the new elfcorehdr reflecting the changes to CPU and/or
+>  	 * memory resources.
+>  	 */
+> -	if (crash_prepare_headers(IS_ENABLED(CONFIG_X86_64), &elfbuf, &elfsz, NULL)) {
+> +	if (__crash_prepare_headers(IS_ENABLED(CONFIG_X86_64), &elfbuf, &elfsz, NULL)) {
+>  		pr_err("unable to create new elfcorehdr");
+>  		goto out;
+>  	}
+> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+> index bc087124cd78..28e7a81cf263 100644
+> --- a/include/linux/crash_core.h
+> +++ b/include/linux/crash_core.h
+> @@ -61,6 +61,8 @@ extern int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_ma
+>  				       void **addr, unsigned long *sz);
+>  extern int crash_prepare_headers(int need_kernel_map, void **addr,
+>  				 unsigned long *sz, unsigned long *nr_mem_ranges);
+> +int __crash_prepare_headers(int need_kernel_map, void **addr, unsigned long *sz,
+> +			    unsigned long *nr_mem_ranges);
+>  extern int crash_exclude_core_ranges(struct crash_mem **cmem);
+>  
+>  struct kimage;
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index faa0f22dbb41..8a861a946e26 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/mm.h>
+>  #include <linux/cpuhotplug.h>
+>  #include <linux/memblock.h>
+> +#include <linux/device.h>
+>  #include <linux/kmemleak.h>
+>  #include <linux/crash_core.h>
+>  #include <linux/reboot.h>
+
+The order of the header files is completely messed up now.
+
+> @@ -344,8 +345,8 @@ int crash_exclude_core_ranges(struct crash_mem **cmem)
+>  	return 0;
+>  }
+>  
+> -int crash_prepare_headers(int need_kernel_map, void **addr, unsigned long *sz,
+> -			  unsigned long *nr_mem_ranges)
+> +int __crash_prepare_headers(int need_kernel_map, void **addr, unsigned long *sz,
+> +			    unsigned long *nr_mem_ranges)
+>  {
+>  	unsigned int max_nr_ranges;
+>  	struct crash_mem *cmem;
+> @@ -382,6 +383,18 @@ int crash_prepare_headers(int need_kernel_map, void **addr, unsigned long *sz,
+>  	return ret;
+>  }
+>  
+> +int crash_prepare_headers(int need_kernel_map, void **addr, unsigned long *sz,
+> +			  unsigned long *nr_mem_ranges)
+> +{
+> +	int ret;
+> +
+> +	lock_device_hotplug();
+> +	ret = __crash_prepare_headers(need_kernel_map, addr, sz, nr_mem_ranges);
+> +	unlock_device_hotplug();
+> +
+> +	return ret;
+
+otherwise, LGTM
+Reviewed-by: Jinjie Ruan <ruanjinjie@huawei.com>
+
+> +}
+> +
+>  /**
+>   * crash_exclude_mem_range - exclude a mem range for existing ranges
+>   * @mem: mem->range contains an array of ranges sorted in ascending order
 
